@@ -1,60 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E29528A3F9;
-	Thu, 24 Apr 2025 16:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DF428C5DC;
+	Thu, 24 Apr 2025 16:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512103; cv=none; b=lxs8EeufXHYYotz+lDpZkNhjVWrB3OPzUEPIwA901JmXY8xfR4O3EppHs5kwYYJdBLxGNQ0ImRQdXCaUb4sipj5YVdocOKQTp46a+nL2mCPC/vc9/YND5b8WSb/yPhFFBZ+R4Tts3WUXlTMVveGXeCxcidS3DhzeXQzvsjT9E9Q=
+	t=1745512106; cv=none; b=nx8/AS/Lkdd18eFLIwGpDCTlaRtyTDnbip1RdqJ/uEJCAmfTkEXCJ/K0hADDVTfJ3WzRajRRfoRn0yT6PO3hlka7plbKVSouk3d1KJ8yelHE3E3xyqBt3crKNCgrUDDtCzzMPzGNsRG2TabrnZX6hBSZsF7aRt0F9STh+nIYB5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512103; c=relaxed/simple;
-	bh=4WMCh8NBjTaV4M9SrxgBR1w7kMq66hiK3n4SxDFcays=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NN2ztNO4K0mGsf3qmFbyRpOe4VyyTnRS0O3xV8VejU4fYHAWcW/ybA2QWrP44RAYz4ztqan8COA+be3LZHj6bFKcNcMfzpxlJclb479BGQDzlJk8gi9vJltpc7pNrVt7zIIEETcLhKPhaKqALPDh5BX9gcIy24xfDF4kXmqZpPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MT+8RRFJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745512106; c=relaxed/simple;
+	bh=Wh4U3nBzrU2K1jT6zuyYDKJn0hR3cN2FV8zyY1+WwQs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aGU7QNkgdszV9MyzdCkXJQ4qBtvm0wlVcu45r+X0ufNdhP2BP/mmC5qsJUoNsXLfvB4tP58Ouyb0Zxh8j/IbxH3tA7e6B+MG2bAU48c42h+V6hUXZo/dj34//5lx1VCIAkUaR8J05QEGOPJFqhE5SvlB+TnWyv8THEz5AXEEweE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7SMJQuT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT+8RRFJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C17C4CEE3;
-	Thu, 24 Apr 2025 16:28:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7SMJQuT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C841C4CEE3;
+	Thu, 24 Apr 2025 16:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745512103;
-	bh=4WMCh8NBjTaV4M9SrxgBR1w7kMq66hiK3n4SxDFcays=;
+	s=k20201202; t=1745512106;
+	bh=Wh4U3nBzrU2K1jT6zuyYDKJn0hR3cN2FV8zyY1+WwQs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=MT+8RRFJhGiStu13+mgI26NCoXCcaqcfM4rNGgqbPmm7w9ucVu6o0fSSyms3bU0q5
-	 3VPfY5hlS5DP3lAMLhitZhpBA3apLf3/2NT3ywCfNZBhgoGbxZPW4Cs7Qp4610itEg
-	 T+owoa648SpOn8vFxqCW/6Adv2Z3OYoZn6BYVmR9cvdFxCTeNbmEav1GqphB5SQKx5
-	 PlasxjaVJPXoPKLg+iq1CmW+F2Fijkq5Ge+iN758elfvdZR2pLoiBasYg7Dfybotmz
-	 avcENAfUf40s5FWIG2QJ34T8js66hZ1Jap/aFvaqz/HFTWAqYseMJO+6CTGCnTeyWb
-	 j7PzkiP7q6w5g==
+	b=g7SMJQuT3jtdhOthNR48m7mFL2fTzMz98fwU/bZsEAf/QIdy6lBtGZO+h2Vr18fnS
+	 iE4yv9oStB7gBO+U/EoUhw2Hn4snau8b23zLJv5FY2iCL79FpXcx76C1c0BJN2mysd
+	 reIoPxYDWm++uEXvgqjtBtZWI9kilTC958/QPQmsU6qCT20fYRVBhOkmIW+okFEH5e
+	 6IIXll3ZmdIZwNB79frD+5ezm+zDH1cVMWPVDbMfLgNYaoa5dODDeDGVWXc8pMM6i8
+	 Pt8F4jHBl3FmJTcfvP9Iec2jGQBAWxzVFMXRaBacIzg5/8chHxB45Lbhr3QoQqhgf7
+	 Ktc9iyCf8hnmg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BD64A380CFD9;
-	Thu, 24 Apr 2025 16:29:02 +0000 (UTC)
-Subject: Re: [GIT PULL] Networking for v6.15-rc4
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB011380CFD9;
+	Thu, 24 Apr 2025 16:29:05 +0000 (UTC)
+Subject: Re: [GIT PULL] Crypto Fixes for 6.15
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250424110659.163332-1-pabeni@redhat.com>
-References: <20250424110659.163332-1-pabeni@redhat.com>
-X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250424110659.163332-1-pabeni@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc4
-X-PR-Tracked-Commit-Id: cc0dec3f659d19805fcaf8822204137c9f27a912
+In-Reply-To: <aAn_NWZjdX-wYHxR@gondor.apana.org.au>
+References: <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
+ <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
+ <ZbstBewmaIfrFocE@gondor.apana.org.au>
+ <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
+ <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
+ <ZvDbn6lSNdWG9P6f@gondor.apana.org.au>
+ <Z11ODNgZwlA9vhfx@gondor.apana.org.au>
+ <Z-ofAGzvFfuGucld@gondor.apana.org.au>
+ <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+ <Z_89K7tSzQVKRqr6@gondor.apana.org.au> <aAn_NWZjdX-wYHxR@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-crypto.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aAn_NWZjdX-wYHxR@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p5
+X-PR-Tracked-Commit-Id: 8006aff15516a170640239c5a8e6696c0ba18d8e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e72e9e6933071fbbb3076811d3a0cc20e8720a5b
-Message-Id: <174551214157.3411799.2593289565638624789.pr-tracker-bot@kernel.org>
-Date: Thu, 24 Apr 2025 16:29:01 +0000
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 288537d9c9364356a4b2f6bd947f2e89cdaa353e
+Message-Id: <174551214449.3411799.922824770184674490.pr-tracker-bot@kernel.org>
+Date: Thu, 24 Apr 2025 16:29:04 +0000
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 24 Apr 2025 13:06:59 +0200:
+The pull request you sent on Thu, 24 Apr 2025 17:07:01 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc4
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e72e9e6933071fbbb3076811d3a0cc20e8720a5b
+https://git.kernel.org/torvalds/c/288537d9c9364356a4b2f6bd947f2e89cdaa353e
 
 Thank you!
 
