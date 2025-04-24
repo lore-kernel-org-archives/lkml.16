@@ -1,79 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E531222655E
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9F27DA6D;
+	Thu, 24 Apr 2025 11:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745492845; cv=none; b=J4sbaVSKzTBKJH7NprXeQD33QFFKM8nKHnaWwMYvN2ebLJple5/ZQEQL81f0uDnygALhOs/4tsxxTG63v1SqDuAcrQ1IX89c1UwdiAfzm2nyR4eoxVp8w5ZKad5WR8LIYv5pgYZilUitL4pr9LHu3BzAY1V15wjqvQtYQ2+Fp3Y=
+	t=1745493020; cv=none; b=TWkwpLqiRMw8dNKsU/Bf5/lwLuTRekcHi20MMJkoCD/m8i2pB9sy5Tcie8J20o4sEs3bYhN6IPh2M294OAz4Tni0AckrIGUvXoasovytAPnDq+STomzI1jKfF/1as6uzYdbY1pq8FxeDE5me7jnAHAscyhC0IMFMvHDegUS4OHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745492845; c=relaxed/simple;
-	bh=r8UZ/Tr8XFBGpxb6rMI9tPh8zudbagKkA5ZM6wlikU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovT3BXnB2F0ft3a2s4Lm2sR9yvKBasmCMsxmYEjEpz7g/oAwFO0klyiL8KYzZfjsOlaol2lIDIeNc1/37W/gDXNRsDvRk0W7Rol5o4t8Rf17jfBVXb1tt50mCJF2tiq8PmlkWDmEdiZ+Xtyd3rKdYhXSZLxYfJjOOQ3SPbiuJg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u9AdSKBB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tMEeZJol; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745493020; c=relaxed/simple;
+	bh=EBmzYjRbebv4qIoiExkmv+m49DGHvhfcueTp/G1yKGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GpwM7G4JI3qzInpJDUitZbpCMwNkZqvO/iGj1SA/PL6aQyyJKDUan3Zg8Pp4LHo7EKwFK9fviLuCJi9TJ0OVUjRdB6Y8Xi6brZHtcXEhdcw9KxuGm1QKCBtwSw/Ykd0+0yoabWGElZvlN0xGI6VuxSslaoSnRlMuofJAVcoknqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qq9SgvIX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u9AdSKBB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tMEeZJol"
-Date: Thu, 24 Apr 2025 13:07:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745492841;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WRJsuHkDetOeCN8MPWHiqr/L5HQKRxuly+CBMzqRXis=;
-	b=u9AdSKBBB5CcKRicReLrZ4FapV3FfC3Qi902J9m+SA6U63wiwB0idV+Ms1RKnwSDsGLWzG
-	XUaaySGdSI8E52xU8UfwE1imvcrdGFQLcbp+2XdbjYs0kJX2CESzNoLhFrcDq0ooxC+/Nv
-	IN8aEi+AVM7QmzPqzfMAjLJwTAMNioSHQwf211fFRkqYUP+cmTzzfBd2sMTWz0VgJO1sKd
-	fjlgzkC0Ri3j+kMtzgU9+LQL1qW1vPanMeR42m2o8FUfkde5ubOhnbb+dxaV4lUnoA5qJ3
-	CbErxpKCQb7ki4ohy4gddVl/ENF4Ext9xu7XWAhRMx2W+1bJU8uOvUTj+CtoaQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745492841;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WRJsuHkDetOeCN8MPWHiqr/L5HQKRxuly+CBMzqRXis=;
-	b=tMEeZJolyjLH6TovceH/DF/Ix/DrWOhmw28qzshSH6VlxUcj1rO7fWTiJ3QfMvfSeVxug6
-	0ANGOGJa70Jf2jCg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "Chang, Junxiao" <junxiao.chang@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rt-devel@lists.linux.dev" <linux-rt-devel@lists.linux.dev>
-Subject: Re: RE: [PATCH] drm/i915/gsc: mei interrupt top half should be in
- irq disabled context
-Message-ID: <20250424110719.A8HbMKQO@linutronix.de>
-References: <20250424065609.624457-1-junxiao.chang@intel.com>
- <20250424071553.yT9-dWWM@linutronix.de>
- <87zfg6yq1k.fsf@intel.com>
- <BN9PR11MB537042DD2F672D85765565FAEC852@BN9PR11MB5370.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qq9SgvIX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F414C4CEE3;
+	Thu, 24 Apr 2025 11:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745493019;
+	bh=EBmzYjRbebv4qIoiExkmv+m49DGHvhfcueTp/G1yKGA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qq9SgvIXNgouEU3wGByn+W2/sUlAyBzIFvzlqX2nQ6g9WscZG9Er1u6dVHNhVmUmK
+	 2LdQ+x26RcIn0zAdVaR1wxMCGYhxk77UPK9w4rf1TGv1FaWY7N6Yk5uXtJFYIEHOHz
+	 0+wp9q/VepJ2DcQuaLQ9yRSaBSbT4us6JqqEovRmQTZPu67/p2KHpaUyDexrsonzDC
+	 m6WOcO8sU6mG6blwFqZQZnrfNXpHwa14eCMb8d0O6aZEqc2koQS9IscP9khW/fa2Pz
+	 U1Q7G7fObsGJZbPeByXn10/P49ZbW8jci5mwnm+DjIu3pKvqTYCqTZL0UnxlGbcj2J
+	 7aVMc/a53bZ9w==
+Message-ID: <94a5f0d7-b152-4fe3-b312-a0f7792cc076@kernel.org>
+Date: Thu, 24 Apr 2025 13:10:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB537042DD2F672D85765565FAEC852@BN9PR11MB5370.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/10] Add support for videocc, camcc, dispcc and gpucc
+ on Qualcomm QCS615 platform
+To: Taniya Das <quic_tdas@quicinc.com>, Bjorn Andersson
+ <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <lumag@kernel.org>
+References: <20250424-qcs615-mm-v7-clock-controllers-v8-0-bacad5b3659a@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250424-qcs615-mm-v7-clock-controllers-v8-0-bacad5b3659a@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-24 10:53:31 [+0000], Chang, Junxiao wrote:
-> >> This should have a Fixes when generic_handle_irq() was introduced.
+On 24/04/2025 11:32, Taniya Das wrote:
+> Add support for multimedia clock controllers on Qualcomm QCS615 platform.
+> Update the defconfig to enable these clock controllers.
 > 
-> If PREEMPT_RT is disabled, original driver works fine. I prefer to not
-> add "Fixes:"?
+> Global clock controller support
+> https://lore.kernel.org/all/20241022-qcs615-clock-driver-v4-0-3d716ad0d987@quicinc.com/
+> 
+> Changes in v8:
+> - Drop the properties which are already covered as part of gcc.yaml [Krzysztof]
+> - Drop the RB tag for dt-bindings for Camera clock controller.
 
-PREEMPT_RT is mainline. It deserves the same fixes as other parts of the
-kernel.
+Why?
 
-Sebastian
+Best regards,
+Krzysztof
