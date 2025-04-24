@@ -1,46 +1,45 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41ADA1B0420;
-	Thu, 24 Apr 2025 04:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C071B0420;
+	Thu, 24 Apr 2025 04:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745469610; cv=fail; b=ecW+yAKnpe5GLlMTpYmkQN1fT1A9CrUSE3I8i1I72x7PI5Ui7gEGpPvAYC7gMkIr3pTqFGO4JcONqX53rXhnIp+E2BRbwhWahKNhA54Iz3rFOCLvCz5kB0uPUfIm68M13Y+l+LFVuIzF4LPW194rx3oSzUDJvogYclAl7yjFRh4=
+	t=1745469770; cv=fail; b=G1zw0fLAmBjP+7YjAEYe+UeoZwO4AOLpYpZjjYE7MMFbQdGPwc2WnsR3z/XT3P3+2vnbMc7hTexz5gICi3kdrEDoag7HNGkv0yExFl5pZ8SsjPEqlPx8NQjkJkYbD7/kynjR6j+HNA+yET50jNWNIp4lrPdx1nriF5wYfojZPxo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745469610; c=relaxed/simple;
-	bh=SmKI3GfNez1nNaLZ5SOWrvgILQxTcAoDvJhanu+GTaY=;
+	s=arc-20240116; t=1745469770; c=relaxed/simple;
+	bh=uYHHPdOE5txkETjOcONJDsP7V/3V6tW7YGyaG5I9fuk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YOGJdGSiHNaxpm3Ik7/6ZEdcydT2PPE3TfPlzSErhy5A5JExw5lyiaRfIiOtwinuJ7Cgphjzp7ylpcXHVEY9Zi/YGBkCO7MfHrd7HrYWKWSphUjbpj11Jx+CMxp4kQwXOG+uo2FWDmppbP2Flb0a9LIzHulreCBSqeUOHTyJTnI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u5+DPu8A; arc=fail smtp.client-ip=40.107.92.67
+	 In-Reply-To:Content-Type; b=skV4auuiDoq8mo69sdAWBOLvk/Y8TlUy/23z+lgkOeHhUg3iLcOAmbdEYbDuMuCcuZimh8+XEfNZY3jQ2qDOEcgEWjmBVyaKEpvxDfZ+gnayx5LDuuK3/0b79NiZP/JMcIcNTVHnUK4r+EvzbDewYafCJMNxX7v+lbUbQ82/LeY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R7LOo3xJ; arc=fail smtp.client-ip=40.107.93.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u5+DPu8A"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R7LOo3xJ"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sl0tUyt4aDxjpglFd49NZRHpOa92LiNe6Z7yaMNyqABqu/uMgiKw+DIONPXx6rVmVHDCYVVkn1DJXpoYsz5GV3rgW0R1egBfYetJLOEcTg9HnwVTTefc8777l3f4Ih6XMg42y6p+v8blW2aQyHHOhuxOoJwDR+u7o48CGrXCb3XEmFCL1RrGvr84Yav7BI0mbyuR1eB6AH5YMzMnmpHD4k0Pwjw0wn/dbH6UhBSMODg5OpRco6/wnVQeFxux6NLEoQw/9PhBylz2+zf4Q7su7d1mTRbMYgImjaZi5IfB/pPsNKDJ0uHA0jr3kyCEdOJ1GhNv0kY/p5vr6Ue7CUeRHQ==
+ b=A8mGwJnhTEEHOB4/BVAFUXL0kN9oGS9QFbxkiLCbKtoYYHHCnTy9zex6a0xBvVIByqlfmMrLL90zPndNSqQFlSPtFmuPrrZDMVH+SBaIGr7rTM9Km6K1+3t3SDtavrSpEaSzr5IuWVDk/Hmab2qsdDgYe56TqXh1uaGlMXCZZAgcsZexVc3wKinr7QXdYtJVVYaOQx7FxI1FV7HYBWwA/7gwABsNdMalB1bich1eQJm8mmtvzlSZAluDMTebz1Lk2um95tDw5trKeSqm9TLVzZYY6FcYlIXPPpuUVOFSC9lIvBDv29zk7qjdKxWXoZhtGtcBLX78d3uYBTN4ey2B7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6euvhKUaDaRGdDRW7q02t0Ih2rsnvPGUAq6hlzFwKZA=;
- b=jCzh5YS3S7cdJaWXgMCCpL8cg41iD9Dx6hYhfu9/rfOVyC1Gw38mnUVGvFgyWAcfWVtaeMKhLTustXMsSfp/iVcI2PFlEFvxdO7R1+lYZl9L3R/k8m9y2Y91d+QdXUWMPEeu65HCRnjJTQroeGi3yAeCXN3K/1KxpOset9jKDJswzslGObb0awlBMd8yb8Hurs8n123yv92urBThYhFTjO93P6CiY4q7TD0GeDyadtFYkBclGf8CQGJzyfEQQBrS93SE1qn2d0dsJR0YrB4He3kyDngCVN6UsIx2eFlWJ2qPKsj6OubEiHs6uM5sigw3k1Gow1Puw+jCZHEMMa8GOQ==
+ bh=facezBp/oZo7ZpupVB1fyjftxF2iCzt5Cl5P0SBzPCI=;
+ b=frSfeae/dcYXLIwFQKBshDTubpvwgNFYwDeBQBpzMltmj4csto3h5+xSUHdr9Nz01k/m8Y/Xu57IskkjYOBF7TCjuFo5ACRDkweTlipLxwEwB4xh5xxs+/7k9pgrCRqD+ES+qRmsgpkCawYABM2jcDT3WXVQXUNLnJ2HLl34AuhSAKw2VjbXroHzD9zNpDRFgb3P89KdyAjs6OekMBJi4hz1gsvk4eO4ovnnFj3DU++lTPtAyWJQWMEx3+/c1GX7HbaQ5RdqqzVrWjliLlbMrx/35w23ynT3ep9kSLe2k+/FWaI4ki6iJXkEqbH0v1c/8yeXzi9NGSetTobfNLbOgg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ 165.204.84.17) smtp.rcpttodomain=oracle.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6euvhKUaDaRGdDRW7q02t0Ih2rsnvPGUAq6hlzFwKZA=;
- b=u5+DPu8A9vb3U2czO0vbvqC6LlLcCk7EkHN9qiqhYf+6u16F8dudnTv9adRRjrWOrq/BubBVNXVey5y1dBa6Hk62ELVXLwyOBGWHwbfZ4svEaCz9reBgaa/HG7WEeE/RKGCf4uBMjIIMixwrsL5h758lyRF6UB86RZHAyfBb5bw=
-Received: from SJ0PR13CA0184.namprd13.prod.outlook.com (2603:10b6:a03:2c3::9)
- by MW4PR12MB7016.namprd12.prod.outlook.com (2603:10b6:303:218::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Thu, 24 Apr
- 2025 04:40:00 +0000
-Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
- (2603:10b6:a03:2c3:cafe::aa) by SJ0PR13CA0184.outlook.office365.com
- (2603:10b6:a03:2c3::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Thu,
- 24 Apr 2025 04:40:00 +0000
+ bh=facezBp/oZo7ZpupVB1fyjftxF2iCzt5Cl5P0SBzPCI=;
+ b=R7LOo3xJb4ceU39lGq+ximoSuGdeAQv6EfmmOuYg21DMNRxS1ehgzwM2y/imBmR8gvRbNTPicoh7CsF+90SEShT1DSnWWryh85QnjN4zs2JrX5+bOA2cpWWhFSe97Y6vNWjzbNeq0vVzGYcMN88D7vdddlusuyYcE9OHLEjnLhg=
+Received: from DM6PR01CA0001.prod.exchangelabs.com (2603:10b6:5:296::6) by
+ PH0PR12MB7077.namprd12.prod.outlook.com (2603:10b6:510:21d::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.23; Thu, 24 Apr 2025 04:42:41 +0000
+Received: from DS1PEPF00017093.namprd03.prod.outlook.com
+ (2603:10b6:5:296:cafe::37) by DM6PR01CA0001.outlook.office365.com
+ (2603:10b6:5:296::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
+ 24 Apr 2025 04:42:16 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,15 +47,15 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ DS1PEPF00017093.mail.protection.outlook.com (10.167.17.136) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 04:40:00 +0000
-Received: from [10.85.41.53] (10.180.168.240) by SATLEXMB04.amd.com
+ 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 04:42:40 +0000
+Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
- 2025 23:39:56 -0500
-Message-ID: <1fa0f7f8-be88-4617-a0b2-57d4204c6d6f@amd.com>
-Date: Thu, 24 Apr 2025 10:09:49 +0530
+ 2025 23:42:34 -0500
+Message-ID: <98092a32-f903-49a3-a5b6-7edffa9edd55@amd.com>
+Date: Thu, 24 Apr 2025 10:12:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,419 +63,141 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 33/67] KVM: x86: Dedup AVIC vs. PI code for identifying
- target vCPU
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
-	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
-CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Joao
- Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
-References: <20250404193923.1413163-1-seanjc@google.com>
- <20250404193923.1413163-34-seanjc@google.com>
+Subject: Re: [PATCH v5 0/2] sched/numa: Skip VMA scanning on memory pinned to
+ one NUMA node via cpuset.mems
+To: Libo Chen <libo.chen@oracle.com>, <akpm@linux-foundation.org>,
+	<rostedt@goodmis.org>, <peterz@infradead.org>, <mgorman@suse.de>,
+	<mingo@redhat.com>, <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+	<tj@kernel.org>, <llong@redhat.com>
+CC: <sraithal@amd.com>, <venkat88@linux.ibm.com>, <raghavendra.kt@amd.com>,
+	<yu.c.chen@intel.com>, <tim.c.chen@intel.com>, <vineethr@linux.ibm.com>,
+	<chris.hyser@oracle.com>, <daniel.m.jordan@oracle.com>,
+	<lorenzo.stoakes@oracle.com>, <mkoutny@suse.com>, <linux-mm@kvack.org>,
+	<cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250424024523.2298272-1-libo.chen@oracle.com>
 Content-Language: en-US
-From: Sairaj Kodilkar <sarunkod@amd.com>
-In-Reply-To: <20250404193923.1413163-34-seanjc@google.com>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250424024523.2298272-1-libo.chen@oracle.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|MW4PR12MB7016:EE_
-X-MS-Office365-Filtering-Correlation-Id: dddddae9-5812-4185-52a7-08dd82ea12df
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017093:EE_|PH0PR12MB7077:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ce65af2-d528-4741-f553-08dd82ea725a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|7053199007;
+	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QXhZZDhZc3plTmppOURLeExFejZQdnF5NW1qdS9nR2ZEbEVZZFZPMDFnZUkx?=
- =?utf-8?B?UEs4a3ZldVNML0xOMFI2cC9XZkF5eWt3ZzVkY0ZROU9FdDArQTc2VXhuQk5n?=
- =?utf-8?B?NGJBcFdEcHJ0MVNXNHJxNDNxcUhCM29NanpwWW5MaDIxTnppeHV3ZDU1RUhr?=
- =?utf-8?B?LzA3bUM4UlpTZ2lzMERZU20zSjVnR3IwTE9kVXRWRDB1SE02TkxSSy82cDRj?=
- =?utf-8?B?SnZ4K25tbHVQYWFiTkVHdDR6ZGhVbFBjUHdHNmxsMDZvZjdacDh0R29HYUxl?=
- =?utf-8?B?dUhTeWtCSFkzYzJSbnBxRjRIdS8vbDJWakhWWUdzQVg2Q0MzdEVQZklNSGJE?=
- =?utf-8?B?dzArSjZ2S04zL3RCRUxQcU9LZko2ZnlwY1ExSDhHSVkxb3FaaUtIeGN1a2Yx?=
- =?utf-8?B?VzcvcGRiRjlaMXBUZkxiWGVJNUdybmVXb09BcjZ6UXB1RmpqekJzUnlIY0xl?=
- =?utf-8?B?YUY1VllHZ3JxSTlMTVhXWFZFT1NzUWNGeDU2bHYzRGttenBBWGFCK1ZtREtZ?=
- =?utf-8?B?N0Z6YW1ycEpDaXBnazZzVE9kTjRyaHBybGFkK2FNNTRERHhhZUtTWGFQNVZk?=
- =?utf-8?B?RGNHTXhzUHhQN2R4UU1Qek13L1llWVBCN0wwZUgwaDM1WXhNRnFJLzhjQ3Vo?=
- =?utf-8?B?djlKVitMNjBBZ09Ia1Jpc1ZEYzZKcHN3NkVUTGZvUlkxeGhlcGt4SUkzR1ls?=
- =?utf-8?B?dHBqeUJFZzJacE1sWUNXc1pXWWJSUHVSejY3WjhsSm5vQjJyL241R2c2TWZE?=
- =?utf-8?B?M29lQXhxNEM1RHNESi91TEFrWUxpVWxGdGRlZXh4Zlc1alJ0eEhlV1g5RUJO?=
- =?utf-8?B?YXdObXJnNkxDeGxybU9NaTRVMXRjdTRiN2RzS1VsS01nODE1ME9ScVRlaTVM?=
- =?utf-8?B?dFU0YStvVUFXaVhEZWtjQlBVRjNHdEdnWWtreWpReGlSNUc4NW1BWldzdlNU?=
- =?utf-8?B?aHdaV1gyQnNoTk54Sndtb1FlTXovdmxhZE9NMHQwbFN5bWI5cXNaUDgza2lp?=
- =?utf-8?B?ck1MbHhyU3EyV1BhTklhTjY5d0h6ZFFrVURJRjBFcmpTT1JNWkU0bmFYbFdh?=
- =?utf-8?B?N3BIcUJ5T1R3UHAvQUxZZUI3OFlHN3RFU1hTenNZNmFnNUh6Ky9IZXlTT2Ro?=
- =?utf-8?B?UmZnN2l3Wm5kYzBLbXlmUjkzRXRsOHducDd3SytvTjA0aDJRTk44QWNGVkdZ?=
- =?utf-8?B?ZGNsOU1IRDFURmhzbmpQSXFoZmN3Q3dUejgxL1Z6Ym1jSEp4a2h1WFQ4bHFo?=
- =?utf-8?B?c3VwV3YxQ2gyUklLQzgySXk0MWVvQ3FiSmNRTkZiMFdxVTVTNlNCOVhGcEFn?=
- =?utf-8?B?azN1Um14K2Q2S09vdm9qOXhHelhjcmk0VEpyS1VnTGdHNy9JS3FoTzh4ajJt?=
- =?utf-8?B?NkVYREJzWWhCc3JRK2dFVmxYY1RkdkFCYlFTVCtCbkVKbStJMk5QWnFENXdX?=
- =?utf-8?B?Ui9ZY1c4SFdOZEQ0Qld5RFZVbm1pRlJOOWRmcEpRUTlYaG9YOHg3cWZUNGxQ?=
- =?utf-8?B?cUxIQ0dMczZXR2ZaT1JGUGZXUzM4U05WNnI1RGg5aEpodFpjSnBTSnRhYWxk?=
- =?utf-8?B?N25kTUR5anhIL1hkVEF4M0gvTnpRbDA0Z09SSjJDUnQyS2RsTmZNcFBYM1Bi?=
- =?utf-8?B?RzRuUXVXUG9DeWl2YjR6bWNQSEVzTW16MkRqQjRmWk9OT3hKZ0NtYndSU2hT?=
- =?utf-8?B?dDJVS1ptdHg3ejFDWGw2VXFXbmJtYnEwUGhBcEY0cEhuUm1neG9UcVZqdTFh?=
- =?utf-8?B?QVJEUERZbEtINHR1M0dqckVGTTB6cmhwVkFKeC9pUFREOGtMVjF6NjJGVlJz?=
- =?utf-8?B?Q041OEkzVWk4b2d1aEFzcTIxOUpmTnNMelNXazBiSlFZaXpoVGZ1azlHUDBj?=
- =?utf-8?B?L2hDVkxRU29zSHVhdTIydVplMXlEN2JDZDI0YmZ4VmthcG1vanI4Mm9Jckxx?=
- =?utf-8?B?c2t4VVY5OGJGbDZzNWxxVWlSeXdnYTRZYVE0Z3dPUm9mUEJScTJtRUN5cU5W?=
- =?utf-8?B?eVl6Y05Md1lkcW5yN3Y3RXBIc3BWUGhxQVRkOGZ2ZGcyZXRueE03Tlp6c3VE?=
- =?utf-8?Q?rIjire?=
+	=?utf-8?B?c0REdXNCOEtvZjNiUWpacGRXOWlxSGJzekdKb2hxZE1BQWZISGVyNzA4Qm1S?=
+ =?utf-8?B?cVZxMStWR0EvR1RBV1FjSGMzNjZxQXhqdDJCcnNmQ0FlT3g1WHZsYWZYWTFx?=
+ =?utf-8?B?OFd1ZHV4OFFSVjgza0ZmcFBZWWZUMUxJcDJKVTZFS2trZk0vTTdFS2JYdzky?=
+ =?utf-8?B?QWJVK0RjdFNGRDRhNHZIeEhBYjRjWnJTWTdremQ3SHBuR2JPYjYzSHlFSkFu?=
+ =?utf-8?B?VWluRUVuQ0hFOUM1ZEJubWJ5ZkhPN1FYZWVJNFRYUEVLTXFCUGQ3YXhtVWZX?=
+ =?utf-8?B?WUwzY2lka3BBejFFY2ZaYXVDV1BsakNYUFpENG5YelFzejloYyt0M3JjS1hB?=
+ =?utf-8?B?eUJUZnh4SFB1dERSL21pMFl5NGFuVkpGblJKUzJqWWtrOTg5R1VuN3ZtUHRj?=
+ =?utf-8?B?cUJtQzJSSjFmWEM0OVNDUXNCeVVKNmJXWUxRTldEVWlZZHVKZkVWdVAvQm44?=
+ =?utf-8?B?Q3RpQ2p2VWtUZUhDbmRXQUVielpkSHZxcGUrOTNBaVV6K2xIMTZ4d1dONkJP?=
+ =?utf-8?B?SHp5L1g0RzZoV2hKaHErajFGT2pBc1BYcFhZOWdGZHZkK3hTT1pMdFFLZWEz?=
+ =?utf-8?B?THAvY1gveG55c20zREIyY1JoNXVySVdRcUpRRDhVaU9NYzZkcGhOR01uSEJ2?=
+ =?utf-8?B?c3hWZXdGdkVrdWVhMkVvcHhJQWswTkdjVlVvYVFkSEdMdFpoUEtZMVNCN3cz?=
+ =?utf-8?B?MGhqQyt0S096K3dmRWpYOElGM01wc01vbHlxVmhCbW1YaHNLRHFVdUVZR0ln?=
+ =?utf-8?B?RzRpeU1GRWtESHhxQTY3cW8xQUJxT1hJZ3VxU01rRHZXb3ZTK2xrdkljcWJG?=
+ =?utf-8?B?TFRXeWdjbUtYQlFEV0FJOVhtUC8wZ21YeEF2WXA1Ym1oUHdhT0FwcDlTTVl2?=
+ =?utf-8?B?bGpNd2pMdXkwWmxHUDk1b0huNytyZ1BycGo1cjJBcmx4OTBuRVJpa25DdWp5?=
+ =?utf-8?B?T3ZhNmM5dFpOLzgzZ2tNZWFSR3o4amFyQ1M3TTRwQkVBVmpxSFRrUXVqVDFG?=
+ =?utf-8?B?KzhybUQ0ZnBad2Z4Q0RBRUxzQ2FRRUhLUUcxSERONTJML2JsOVgyTmFlMUMw?=
+ =?utf-8?B?ay90NUFHNnJHWE9MbkpjTUltSGhsbUY1dEhQa2hkcFhHV0g3RHdXZnAzQ2E0?=
+ =?utf-8?B?Z3R2by9vT21XaTZ6Yzg1cXdkQitnYXpVelR4a2tmSXI0b1JTejJSMlNQd0xr?=
+ =?utf-8?B?bE92YlhnbW1jVkVOaStmQTUyZk15R21ZZ1d4NFk2ZEo4K29JcFp2WWJ4dUFu?=
+ =?utf-8?B?QzRXSlFQYkxJTUNOSHl5U2gvS1JzbUdMZGE0Y1VsZ2F2Z2RpQTAwMXZ5eVl6?=
+ =?utf-8?B?andYWnNTd0ZTbWVaUGZOTWhTWW9ITTR5NHlwcHFOM3BQSG1iTU1UZ01GekJZ?=
+ =?utf-8?B?VGZzTjc5ZWtmUFVrdVVCcnFXOXpKeUFjejJSbktQZ2lzZklDbVc4MUxuK00v?=
+ =?utf-8?B?Z1JHaFZZVDNnYTcrN1gycUhHczVEU2UxZHhZUUNkU1pPU2RsNUJQRktQRERp?=
+ =?utf-8?B?RWVXaERPOGI1QkZHSHJzT3EzcDZJMmZBLzBWY0EyNHBTS040ZUE3UzQrV1E2?=
+ =?utf-8?B?OEpjQi9yaVlBVFkzYVp2NHZmSjFwUlozYXkwKy9uOWErL3JOVUhnSkVHcE9P?=
+ =?utf-8?B?MDM2UWxNem5vMUFaNUJWU1Mwc09YZ3RWWU4wM1Q4WGhFWEFwb05lUzB6ZXps?=
+ =?utf-8?B?TmRwSURQdGVjVEQ4dnJKdExxQlNXVitvMWtXUzZtakpoeTZjNDM2YVhESTE4?=
+ =?utf-8?B?Q1lCc1VqSDE2REloNnNrYnhhU0I4MmdIekplNWdOa0l6TG1yT1FpN3FkRjZa?=
+ =?utf-8?B?S2tyV1I4RXBadEdrVnJZSm9GL0FQdWxYSmszWU0wM1FYVHhpSi9SamNpNiti?=
+ =?utf-8?B?SHVONGVTdDNuMEJLTzlvVlNSZlZGNlZhS1R1NjJrZWh6TWRhSGtMK3hER2FX?=
+ =?utf-8?B?ZXBBRS9iMFAwbm1zc1FKSzRsQkpEcUJwWUtkejNvQzRwYUMranA3RXNMdjVH?=
+ =?utf-8?B?Zjh4RlhyRDdBbjg5b0tRb3U5V1BCMllTcHUzWmJhcVRDeG5aWS9Ra3NLcFUw?=
+ =?utf-8?B?OUJJRHFmeEVTM1UvK1ZjR3F1b3pjT3FVcDQ5UT09?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 04:40:00.5343
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 04:42:40.8062
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dddddae9-5812-4185-52a7-08dd82ea12df
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ce65af2-d528-4741-f553-08dd82ea725a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE1.namprd05.prod.outlook.com
+	DS1PEPF00017093.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7016
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7077
 
-On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> Hoist the logic for identifying the target vCPU for a posted interrupt
-> into common x86.  The code is functionally identical between Intel and
-> AMD.
+Hello Libo,
+
+On 4/24/2025 8:15 AM, Libo Chen wrote:
+> v1->v2:
+> 1. add perf improvment numbers in commit log. Yet to find perf diff on
+> will-it-scale, so not included here. Plan to run more workloads.
+> 2. add tracepoint.
+> 3. To peterz's comment, this will make it impossible to attract tasks to
+> those memory just like other VMA skippings. This is the current
+> implementation, I think we can improve that in the future, but at the
+> moment it's probabaly better to keep it consistent.
+
+I tested the series with hackbench running on a dual socket system with
+memory pinned to one node and I could see the skip_cpuset_numa traces
+being logged:
+
+  sched-messaging-9430    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9430 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9640    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9640 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9645    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9645 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9637    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9637 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9629    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9629 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9639    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9639 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9630    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9630 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9487    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9487 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9635    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9635 tgid=9007 ngid=0 mem_nodes_allowed=0
+  sched-messaging-9647    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9647 tgid=9007 ngid=0 mem_nodes_allowed=0
+  ...
+
+Feel free to add:
+
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+-- 
+Thanks and Regards,
+Prateek
+
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/include/asm/kvm_host.h |  3 +-
->   arch/x86/kvm/svm/avic.c         | 83 ++++++++-------------------------
->   arch/x86/kvm/svm/svm.h          |  3 +-
->   arch/x86/kvm/vmx/posted_intr.c  | 56 ++++++----------------
->   arch/x86/kvm/vmx/posted_intr.h  |  3 +-
->   arch/x86/kvm/x86.c              | 46 +++++++++++++++---
->   6 files changed, 81 insertions(+), 113 deletions(-)
+> v2->v3:
+> 1. add enable_cpuset() based on Mel's suggestion but again I think it's
+> redundant.
+> 2. print out nodemask with %*p.. format in the tracepoint.
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 85f45fc5156d..cb98d8d3c6c2 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1838,7 +1838,8 @@ struct kvm_x86_ops {
->   
->   	int (*pi_update_irte)(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   			      unsigned int host_irq, uint32_t guest_irq,
-> -			      struct kvm_kernel_irq_routing_entry *new);
-> +			      struct kvm_kernel_irq_routing_entry *new,
-> +			      struct kvm_vcpu *vcpu, u32 vector);
->   	void (*pi_start_assignment)(struct kvm *kvm);
->   	void (*apicv_pre_state_restore)(struct kvm_vcpu *vcpu);
->   	void (*apicv_post_state_restore)(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index ea6eae72b941..666f518340a7 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -812,52 +812,13 @@ static int svm_ir_list_add(struct vcpu_svm *svm,
->   	return 0;
->   }
->   
-> -/*
-> - * Note:
-> - * The HW cannot support posting multicast/broadcast
-> - * interrupts to a vCPU. So, we still use legacy interrupt
-> - * remapping for these kind of interrupts.
-> - *
-> - * For lowest-priority interrupts, we only support
-> - * those with single CPU as the destination, e.g. user
-> - * configures the interrupts via /proc/irq or uses
-> - * irqbalance to make the interrupts single-CPU.
-> - */
-> -static int
-> -get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
-> -		 struct vcpu_data *vcpu_info, struct kvm_vcpu **vcpu)
-> -{
-> -	struct kvm_lapic_irq irq;
-> -	*vcpu = NULL;
-> -
-> -	kvm_set_msi_irq(kvm, e, &irq);
-> -
-> -	if (!kvm_intr_is_single_vcpu(kvm, &irq, vcpu) ||
-> -	    !kvm_irq_is_postable(&irq)) {
-> -		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
-> -			 __func__, irq.vector);
-> -		return -1;
-> -	}
-> -
-> -	pr_debug("SVM: %s: use GA mode for irq %u\n", __func__,
-> -		 irq.vector);
-> -	vcpu_info->vector = irq.vector;
-> -
-> -	return 0;
-> -}
-> -
->   int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   			unsigned int host_irq, uint32_t guest_irq,
-> -			struct kvm_kernel_irq_routing_entry *new)
-> +			struct kvm_kernel_irq_routing_entry *new,
-> +			struct kvm_vcpu *vcpu, u32 vector)
->   {
-> -	bool enable_remapped_mode = true;
-> -	struct vcpu_data vcpu_info;
-> -	struct kvm_vcpu *vcpu = NULL;
->   	int ret = 0;
->   
-> -	if (!kvm_arch_has_assigned_device(kvm) || !kvm_arch_has_irq_bypass())
-> -		return 0;
-> -
->   	/*
->   	 * If the IRQ was affined to a different vCPU, remove the IRTE metadata
->   	 * from the *previous* vCPU's list.
-> @@ -865,7 +826,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   	svm_ir_list_del(irqfd);
->   
->   	pr_debug("SVM: %s: host_irq=%#x, guest_irq=%#x, set=%#x\n",
-> -		 __func__, host_irq, guest_irq, !!new);
-> +		 __func__, host_irq, guest_irq, !!vcpu);
->   
->   	/**
->   	 * Here, we setup with legacy mode in the following cases:
-> @@ -874,23 +835,23 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   	 * 3. APIC virtualization is disabled for the vcpu.
->   	 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
->   	 */
-> -	if (new && new && new->type == KVM_IRQ_ROUTING_MSI &&
-> -	    !get_pi_vcpu_info(kvm, new, &vcpu_info, &vcpu) &&
-> -	    kvm_vcpu_apicv_active(vcpu)) {
-> -		struct amd_iommu_pi_data pi;
-> -
-> -		enable_remapped_mode = false;
-> -
-> -		vcpu_info.pi_desc_addr = avic_get_backing_page_address(to_svm(vcpu));
-> -
-> +	if (vcpu && kvm_vcpu_apicv_active(vcpu)) {
->   		/*
->   		 * Try to enable guest_mode in IRTE.  Note, the address
->   		 * of the vCPU's AVIC backing page is passed to the
->   		 * IOMMU via vcpu_info->pi_desc_addr.
->   		 */
-> -		pi.ga_tag = AVIC_GATAG(to_kvm_svm(kvm)->avic_vm_id, vcpu->vcpu_id);
-> -		pi.is_guest_mode = true;
-> -		pi.vcpu_data = &vcpu_info;
-> +		struct vcpu_data vcpu_info = {
-> +			.pi_desc_addr = avic_get_backing_page_address(to_svm(vcpu)),
-> +			.vector = vector,
-> +		};
-> +
-> +		struct amd_iommu_pi_data pi = {
-> +			.ga_tag = AVIC_GATAG(to_kvm_svm(kvm)->avic_vm_id, vcpu->vcpu_id),
-> +			.is_guest_mode = true,
-> +			.vcpu_data = &vcpu_info,
-> +		};
-> +
->   		ret = irq_set_vcpu_affinity(host_irq, &pi);
->   
->   		/**
-> @@ -902,12 +863,11 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   		 */
->   		if (!ret)
->   			ret = svm_ir_list_add(to_svm(vcpu), irqfd, &pi);
-> -	}
->   
-> -	if (!ret && vcpu) {
-> -		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id,
-> -					 guest_irq, vcpu_info.vector,
-> -					 vcpu_info.pi_desc_addr, !!new);
-> +		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
-> +					 vector, vcpu_info.pi_desc_addr, true);
-> +	} else {
-> +		ret = irq_set_vcpu_affinity(host_irq, NULL);
->   	}
->   
->   	if (ret < 0) {
-> @@ -915,10 +875,7 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   		goto out;
->   	}
->   
-> -	if (enable_remapped_mode)
-> -		ret = irq_set_vcpu_affinity(host_irq, NULL);
-> -	else
-> -		ret = 0;
-> +	ret = 0;
->   out:
->   	return ret;
->   }
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 6ad0aa86f78d..5ce240085ee0 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -741,7 +741,8 @@ void avic_apicv_post_state_restore(struct kvm_vcpu *vcpu);
->   void avic_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu);
->   int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   			unsigned int host_irq, uint32_t guest_irq,
-> -			struct kvm_kernel_irq_routing_entry *new);
-> +			struct kvm_kernel_irq_routing_entry *new,
-> +			struct kvm_vcpu *vcpu, u32 vector);
->   void avic_vcpu_blocking(struct kvm_vcpu *vcpu);
->   void avic_vcpu_unblocking(struct kvm_vcpu *vcpu);
->   void avic_ring_doorbell(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
-> index 786912cee3f8..fd5f6a125614 100644
-> --- a/arch/x86/kvm/vmx/posted_intr.c
-> +++ b/arch/x86/kvm/vmx/posted_intr.c
-> @@ -266,46 +266,20 @@ void vmx_pi_start_assignment(struct kvm *kvm)
->   
->   int vmx_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   		       unsigned int host_irq, uint32_t guest_irq,
-> -		       struct kvm_kernel_irq_routing_entry *new)
-> +		       struct kvm_kernel_irq_routing_entry *new,
-> +		       struct kvm_vcpu *vcpu, u32 vector)
->   {
-> -	struct kvm_lapic_irq irq;
-> -	struct kvm_vcpu *vcpu;
-> -	struct vcpu_data vcpu_info;
-> -
-> -	if (!vmx_can_use_vtd_pi(kvm))
-> -		return 0;
-> -
-> -	/*
-> -	 * VT-d PI cannot support posting multicast/broadcast
-> -	 * interrupts to a vCPU, we still use interrupt remapping
-> -	 * for these kind of interrupts.
-> -	 *
-> -	 * For lowest-priority interrupts, we only support
-> -	 * those with single CPU as the destination, e.g. user
-> -	 * configures the interrupts via /proc/irq or uses
-> -	 * irqbalance to make the interrupts single-CPU.
-> -	 *
-> -	 * We will support full lowest-priority interrupt later.
-> -	 *
-> -	 * In addition, we can only inject generic interrupts using
-> -	 * the PI mechanism, refuse to route others through it.
-> -	 */
-> -	if (!new || new->type != KVM_IRQ_ROUTING_MSI)
-> -		goto do_remapping;
-> -
-> -	kvm_set_msi_irq(kvm, new, &irq);
-> -
-> -	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> -	    !kvm_irq_is_postable(&irq))
-> -		goto do_remapping;
-> -
-> -	vcpu_info.pi_desc_addr = __pa(vcpu_to_pi_desc(vcpu));
-> -	vcpu_info.vector = irq.vector;
-> -
-> -	trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
-> -				 vcpu_info.vector, vcpu_info.pi_desc_addr, true);
-> -
-> -	return irq_set_vcpu_affinity(host_irq, &vcpu_info);
-> -do_remapping:
-> -	return irq_set_vcpu_affinity(host_irq, NULL);
-> +	if (vcpu) {
-> +		struct vcpu_data vcpu_info = {
-> +			.pi_desc_addr = __pa(vcpu_to_pi_desc(vcpu)),
-> +			.vector = vector,
-> +		};
-> +
-> +		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
-> +					 vcpu_info.vector, vcpu_info.pi_desc_addr, true);
-> +
-> +		return irq_set_vcpu_affinity(host_irq, &vcpu_info);
-> +	} else {
-> +		return irq_set_vcpu_affinity(host_irq, NULL);
-> +	}
->   }
-> diff --git a/arch/x86/kvm/vmx/posted_intr.h b/arch/x86/kvm/vmx/posted_intr.h
-> index a586d6aaf862..ee3e19e976ac 100644
-> --- a/arch/x86/kvm/vmx/posted_intr.h
-> +++ b/arch/x86/kvm/vmx/posted_intr.h
-> @@ -15,7 +15,8 @@ void __init pi_init_cpu(int cpu);
->   bool pi_has_pending_interrupt(struct kvm_vcpu *vcpu);
->   int vmx_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
->   		       unsigned int host_irq, uint32_t guest_irq,
-> -		       struct kvm_kernel_irq_routing_entry *new);
-> +		       struct kvm_kernel_irq_routing_entry *new,
-> +		       struct kvm_vcpu *vcpu, u32 vector);
->   void vmx_pi_start_assignment(struct kvm *kvm);
->   
->   static inline int pi_find_highest_vector(struct pi_desc *pi_desc)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b8b259847d05..0ab818bba743 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -13567,6 +13567,43 @@ bool kvm_arch_has_irq_bypass(void)
->   }
->   EXPORT_SYMBOL_GPL(kvm_arch_has_irq_bypass);
->   
-> +static int kvm_pi_update_irte(struct kvm_kernel_irqfd *irqfd,
-> +			      struct kvm_kernel_irq_routing_entry *old,
-
-the argument 'old' is redundant in this function.
-
-Regards
-Sairaj Kodilkar
-
-> +			      struct kvm_kernel_irq_routing_entry *new)
-> +{
-> +	struct kvm *kvm = irqfd->kvm;
-> +	struct kvm_vcpu *vcpu = NULL;
-> +	struct kvm_lapic_irq irq;
-> +
-> +	if (!irqchip_in_kernel(kvm) ||
-> +	    !kvm_arch_has_irq_bypass() ||
-> +	    !kvm_arch_has_assigned_device(kvm))
-> +		return 0;
-> +
-> +	if (new && new->type == KVM_IRQ_ROUTING_MSI) {
-> +		kvm_set_msi_irq(kvm, new, &irq);
-> +
-> +		/*
-> +		 * Force remapped mode if hardware doesn't support posting the
-> +		 * virtual interrupt to a vCPU.  Only IRQs are postable (NMIs,
-> +		 * SMIs, etc. are not), and neither AMD nor Intel IOMMUs support
-> +		 * posting multicast/broadcast IRQs.  If the interrupt can't be
-> +		 * posted, the device MSI needs to be routed to the host so that
-> +		 * the guest's desired interrupt can be synthesized by KVM.
-> +		 *
-> +		 * This means that KVM can only post lowest-priority interrupts
-> +		 * if they have a single CPU as the destination, e.g. only if
-> +		 * the guest has affined the interrupt to a single vCPU.
-> +		 */
-> +		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +		    !kvm_irq_is_postable(&irq))
-> +			vcpu = NULL;
-> +	}
-> +
-> +	return kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, irqfd->producer->irq,
-> +					    irqfd->gsi, new, vcpu, irq.vector);
-> +}
-> +
->   int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
->   				      struct irq_bypass_producer *prod)
->   {
-> @@ -13581,8 +13618,7 @@ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
->   	irqfd->producer = prod;
->   
->   	if (irqfd->irq_entry.type == KVM_IRQ_ROUTING_MSI) {
-> -		ret = kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, prod->irq,
-> -						   irqfd->gsi, &irqfd->irq_entry);
-> +		ret = kvm_pi_update_irte(irqfd, NULL, &irqfd->irq_entry);
->   		if (ret)
->   			kvm_arch_end_assignment(irqfd->kvm);
->   	}
-> @@ -13610,8 +13646,7 @@ void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *cons,
->   	spin_lock_irq(&kvm->irqfds.lock);
->   
->   	if (irqfd->irq_entry.type == KVM_IRQ_ROUTING_MSI) {
-> -		ret = kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, prod->irq,
-> -						   irqfd->gsi, NULL);
-> +		ret = kvm_pi_update_irte(irqfd, &irqfd->irq_entry, NULL);
->   		if (ret)
->   			pr_info("irq bypass consumer (token %p) unregistration fails: %d\n",
->   				irqfd->consumer.token, ret);
-> @@ -13628,8 +13663,7 @@ int kvm_arch_update_irqfd_routing(struct kvm_kernel_irqfd *irqfd,
->   				  struct kvm_kernel_irq_routing_entry *old,
->   				  struct kvm_kernel_irq_routing_entry *new)
->   {
-> -	return kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, irqfd->producer->irq,
-> -					    irqfd->gsi, new);
-> +	return kvm_pi_update_irte(irqfd, old, new);
->   }
->   
->   bool kvm_arch_irqfd_route_changed(struct kvm_kernel_irq_routing_entry *old,
+> v3->v4:
+> 1. fix an unsafe dereference of a pointer to content not on ring buffer,
+> namely mem_allowed_ptr in the tracepoint.
+> 
+> v4->v5:
+> 1. add BUILD_BUG_ON() in TP_fast_assign() to guard against future
+> changes (particularly in size) in nodemask_t.
+> 
+> Libo Chen (2):
+>    sched/numa: Skip VMA scanning on memory pinned to one NUMA node via
+>      cpuset.mems
+>    sched/numa: Add tracepoint that tracks the skipping of numa balancing
+>      due to cpuset memory pinning
+> 
+>   include/trace/events/sched.h | 33 +++++++++++++++++++++++++++++++++
+>   kernel/sched/fair.c          |  9 +++++++++
+>   2 files changed, 42 insertions(+)
+> 
 
