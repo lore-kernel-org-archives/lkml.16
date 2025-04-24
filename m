@@ -1,111 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4377B5BAF0;
-	Thu, 24 Apr 2025 16:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1E72820AA
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511623; cv=none; b=ldx72u8cw/iHUcSzkeqq1vNml2qAVX9CWfIxtSO7xygfcrrxyuJbqSeuBmDUvji6Pyg740DoRG7KZW2EEKIB/PGn9t37NIJY6C5RNWJaOTJ08E99TAw51wZcyxdsB6+lbqjHa504tFPqzbeK6tw2ZoIbhDngrjT76VmJF1ubl8s=
+	t=1745511628; cv=none; b=pVyTfWF6/58tDIBAJvHXl6kQAlAIVzAu+YZWIueu9gyiQty73cLXiFq5iIp/3QB18e5yejmIJzK8XTGhrE1GlG9dHMv1sI38mWmZCBuca6CKVezdaJPWGFEppPtQOZb5eL82N3jIeNzYWXeTcTittu2wNuqvCzpsqSt4pWXhPyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511623; c=relaxed/simple;
-	bh=6ljqckhANoBqw3YchiUNPsDCe7CdD/3KO0hDL4Rve1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=in8wsDj0uq0euq/m6+vJNMLlSqdElxtlcnCuFAxuHk+nI4AQ/DZykxQuhi1E1IAflHnZnk7Dpg4y2JNn7OaglHIsOMfNYSHlydkEAZ7DAZcvpvqKrSf+k4eBxuuClawl/cKCevNvWUFicmFOLE2nQ03PyfM0yDmUoRUEmv6HRKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSobpsIx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745511628; c=relaxed/simple;
+	bh=3qPXP5abEoIx66HUunPoFY8QVhFVv3wWgnMK2ckSKL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MCq22L4sZhSyfmofF2EYF0pHVVlMLlNLmiKN0i0CosPN2xDJktniZE7IT/CUYSEEXvv8V1/8jTUQh56k1bPzMZGR1WJDmJCcXxRMlpm/Sl0yRdtRWxnWdASJ+cAmsXbKpcPP+ej4QK9BB7o5GNqCY3udTxUGSjVUhMMrH0uYdFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UF7ArqIY; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSobpsIx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECCCC4CEE3;
-	Thu, 24 Apr 2025 16:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745511623;
-	bh=6ljqckhANoBqw3YchiUNPsDCe7CdD/3KO0hDL4Rve1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kSobpsIxRHPCbYVAvP9UEgh8ge5jddMoUCQ0yOa137tXWJaKce0wErqAAzMGICdy6
-	 vAWlYVdw5+jUZAbI3fFFSy+ZGqv3YE4y9KqMGL4yZKO9kmnUC7rRt7HpmcJiabdW6U
-	 AVkKuuNNtX1IiIAwhb+5tqtuV0R8yCfzzkZ0m0CVTap39G3B7V8KnVp1etohxI1qKs
-	 YOoLBo+KMEsL4imPfJGXwTALJGBUGjcEWK6XGg28jfX3urBpYO3+EoGkG0cRcLcp0O
-	 M1e3ihpfQ9nVEL7ztFtGCw/BcuIGUrd/aMHY+xQJf2jCbHD/dAMVZFzoxpIQ8aDx3X
-	 6dAocR38TFrNw==
-Date: Thu, 24 Apr 2025 18:20:17 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Luo Gengkun <luogengkun@huaweicloud.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86: Fix open counting event error
-Message-ID: <aApkwfEUCJcc9PXn@gmail.com>
-References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UF7ArqIY"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224191d92e4so14145865ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745511626; x=1746116426; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZK3U1zqX+QbRkc5CUf+8j98MPDC5LORQqlarEVgjRww=;
+        b=UF7ArqIYVIESzY0DmZDLUgrw+qilHJO3LabR8vFf9ECv1kGGkyC3BHWpPMzRm9HRMt
+         9nGqA7ODB3+1u5wNo/hMN6r/aYeSLJ3ckBEHY1Rta4hwghJF1Y3JrYKJsZPVp1c7zhlT
+         ryrppQjzzVG6RLxuY1jAznTL4qxZVMajmKRpo8PEjB2F3wyAA5vcGbdwVLqgF4dToAId
+         TiijfOlEpMx8D7j6kPjVkHmwaSSLdBOzhHiGVzFf4FgNsaiE6T1G90yb1+Pc3VBX4pxV
+         fChc0BIUiSVp47d8SGtuZegmh0DYFyvI1l2sQCGVn9tz8AMZUfWw7DFioH36U9LFgVpQ
+         w3KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745511626; x=1746116426;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZK3U1zqX+QbRkc5CUf+8j98MPDC5LORQqlarEVgjRww=;
+        b=tS2p7HqIaCJPmDvlLvLgawEnAsBO1ZZinpBuGS/hiW1gVyhQ6tYtTckRoZjugwVSWA
+         vb0k/j9kD2kt9jbqjwrjZ7TwIwvflvXWSoH4eGLN7uF50z+VcQMsXiPSWpD4OkuQtsQf
+         aGGuyp7fdXh4E5Nv+JghjBMJOWBQ7947XTbpL59SzkKBBYXtSjGtJpk9n6E0KDuGOyUk
+         v58rYgk51fMidgh4XnWDFpuuREJuXpp4SiGObLv4NOIbSU/YfQJ/PcHz8B8ZDhCPh20i
+         HQ8BCBtaENWTYf8S9/iG2FDCDxtFMkv0uAtYgjMcXPEeyiVWc1Av8HiKNzzm3OSpl0yr
+         P3jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVR0Wc1e1phLBd6PabhWY8/yJq41Qogi0ZPS+p4j1Kk8vvq7FePXJZ+Ur+Jq3+0e5P9A7qBrLdzlwBOmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpdapPVwwy00UJOUsO26Fv1BJUhsF6eqhtkLbAy8qo30if4APj
+	c9QaMh/BolSQQTSWNKUp75CALALB6/8PCQ6iI/SuSRyO2Lh2D2FJkJY2h7l9NqA=
+X-Gm-Gg: ASbGnct0RxA9PeU98Mr9OBC7/vvelX27GIaZlMLLmrkNLgQ6EbxWJ5NRC8xCFFj3ZIk
+	RcR3m1CCvRh8i03TltQzZYAEQBK6GbEmwFDHkt1W1AfRe+uexZXa5urhC/dsl+EeCOpgIRKEN8p
+	omj6m4QOtU6Pb4fm2Iqq7NNx75G8xpVbHbxPo4irDIPTChzVGnGJ8WYf21kj4KtAl3uYAzh+uZy
+	IjUwoG2vznlgQN27HB+VppebgTgrgG7edLHBJsCIYrVfcVA0mbcshLwfJ+sydbFeQe+zavtUNg+
+	LMPmQRe3cFZGnNo3jVlpzfXotBkYzIgh7wy7b8cANA==
+X-Google-Smtp-Source: AGHT+IEDSR0/PqlNDM2o73GF73qCXfMIvf5kzIhE4JxAny5lKNQoi84TfP+O1loAWvOMlNHIFWnnOQ==
+X-Received: by 2002:a17:903:1b0e:b0:21f:45d:21fb with SMTP id d9443c01a7336-22dbd3e86efmr1434585ad.3.1745511626183;
+        Thu, 24 Apr 2025 09:20:26 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5216770sm15387365ad.218.2025.04.24.09.20.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 09:20:25 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Lifeng Zheng <zhenglifeng1@huawei.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nicholas Chin <nic.c3.14@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH V2 0/5] cpufreq: Boost related cleanups / fixes
+Date: Thu, 24 Apr 2025 21:50:13 +0530
+Message-Id: <cover.1745511526.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hello,
 
-* Luo Gengkun <luogengkun@huaweicloud.com> wrote:
+This series tries to fix boost related issues found recently.
 
-> Perf doesn't work at perf stat for hardware events:
-> 
->  $perf stat -- sleep 1
->  Performance counter stats for 'sleep 1':
->              16.44 msec task-clock                       #    0.016 CPUs utilized
->                  2      context-switches                 #  121.691 /sec
->                  0      cpu-migrations                   #    0.000 /sec
->                 54      page-faults                      #    3.286 K/sec
->    <not supported>	cycles
->    <not supported>	instructions
->    <not supported>	branches
->    <not supported>	branch-misses
-> 
-> The reason is that the check in x86_pmu_hw_config for sampling event is
-> unexpectedly applied to the counting event.
-> 
-> Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> ---
->  arch/x86/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 6866cc5acb0b..3a4f031d2f44 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
->  	if (event->attr.type == event->pmu->type)
->  		event->hw.config |= x86_pmu_get_event_config(event);
->  
-> -	if (!event->attr.freq && x86_pmu.limit_period) {
-> +	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
+The first patch fixes the boost related breakage introduced recently. It should
+be applied for v6.15-rc4.
 
-Hm, so how come it works here, on an affected x86 system:
+The other four patches are general optimizations and fixes for boost handling in
+general. These can be applied to -rc or next merge window.
 
-$ perf stat -- sleep 1
+--
+Viresh
 
- Performance counter stats for 'sleep 1':
+V1->V2:
+- Drop one patch.
+- Fix the commit log of 1/5.
+- Add Reviewed-by and Tested-by tags.
 
-              0.64 msec task-clock:u                     #    0.001 CPUs utilized             
-                 0      context-switches:u               #    0.000 /sec                      
-                 0      cpu-migrations:u                 #    0.000 /sec                      
-                73      page-faults:u                    #  114.063 K/sec                     
-           325,849      instructions:u                   #    0.56  insn per cycle            
-                                                  #    0.88  stalled cycles per insn   
-           580,323      cycles:u                         #    0.907 GHz                       
-           286,348      stalled-cycles-frontend:u        #   49.34% frontend cycles idle      
-            72,623      branches:u                       #  113.474 M/sec                     
-             4,713      branch-misses:u                  #    6.49% of all branches           
+Viresh Kumar (5):
+  cpufreq: acpi: Re-sync CPU boost state on system resume
+  cpufreq: Don't unnecessarily call set_boost()
+  cpufreq: Introduce policy_set_boost()
+  cpufreq: Preserve policy's boost state after resume
+  cpufreq: Force sync policy boost with global boost on sysfs update
 
+ drivers/cpufreq/acpi-cpufreq.c | 15 +++++++--
+ drivers/cpufreq/cpufreq.c      | 58 ++++++++++++++++++++--------------
+ 2 files changed, 47 insertions(+), 26 deletions(-)
 
-?
+-- 
+2.31.1.272.g89b43f80a514
 
-Thanks,
-
-	Ingo
