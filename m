@@ -1,150 +1,127 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6A51CEAB2;
-	Thu, 24 Apr 2025 05:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A3B45BE3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745474388; cv=none; b=U6Fd6sEFvnW1wwYH+36FaJ2m/rRHESpubzS+YyCfm+bM53JVV0aJn2ecfhyv5JwgSAGysOHKJmJm5l1YY6NUcGI1k0KGPJyAQOHFHnDXK2TbIMeHMcuve7F8J4CCHtuVakMkv/BKqUnCT0tG3H3HBdMwhARsIvixXUnsfaumM4g=
+	t=1745474519; cv=none; b=k+MQR/wH4kKaoYGjCbQdSbzo/NMRmEVWz7nQLdWd7aLX9DsC2QNQC7Lb4VQZWMQLuPgR5HUL0fHNMJdWHkqhqRSG0CxHeY6r8nKokfd6O7mmCg8mIOewfmiV3GTClpac9zwuJbwjDXuzLjCNqrj+acaC1mnyFf2MxeGCt8owouE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745474388; c=relaxed/simple;
-	bh=UUEdb0ar5fMVdcKaE+6aK1SlHkXxvV3PK7HyvINycTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cXSpxbmw2YJxxxh9f6LgPbDFFdMREtBE4nfyo0j7oxEZ0UL9JDvQOxWkYggpZGXZ4Us1ZJGyRJHi+l2Ca3LE+i4Lo0noAPwbTNDL2GeJvOuCkRS5Lb1puAvkK7FJuWxpYCngKIZlTb0yxqiSrvsppGp90sX/5gxrnfRwOVMF6t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YK4kYFaq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745474519; c=relaxed/simple;
+	bh=Z6mlm1vaiSd8DkRsHlERytRx9CV4SLqbuOmSjuJ/xNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4obXSq+l2akL6pUc+wN4pKKtLZD4PzDK9udzRa1H0w2Cc0YyLSP2/FSWBVsdyMOUOu12atcRcmvng5TiZ0b9Nm5oFabbe74OaaB20ew/rQoQJ7FPbReh701GDdjck2m3R1DL7qiG3nRw8yYtVnbkfcID2/3TPYdGymhQZUv614=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YvVTv8SI; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YK4kYFaq"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F88U030993;
-	Thu, 24 Apr 2025 05:59:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9mAQti71pCT+WDKDo6iUmcSu7YhWwHVsSJ/POdQ+63s=; b=YK4kYFaqX5BNWU3U
-	Ti0X7GLP320RQy4fTkGwrhA4U6HStU/cehhW47Xf5x9e7d2f6Kyscefx9PtU1rdJ
-	gLMuNaIDqCXj3MnBM+wRhNJNCaaXhvUiQk5v16Fqw9II+dNhlKxuV5/mU7GexwDR
-	FjWJ9rFSQXVAAwIRpbFbEpJ43dmX/77JM2Xe9eqA39axWHqmYWAN3jeIOWBR0mnD
-	RlbNq12APhRfYoa//xP6zIEYE3cokZ4ePMP6sEYUmaGF2NFTQRsAir19cSTqxbPC
-	WNGw6pJxnd4TzZcGOerJtGHvrwIPUtZcUNjS95c4pv7r5VuRs+dcoR8n750zKMC4
-	NuOEKA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5ccs1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 05:59:41 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O5xeZJ015856
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 05:59:40 GMT
-Received: from [10.239.133.118] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
- 2025 22:59:35 -0700
-Message-ID: <1fab200f-c7fd-4772-ae8b-6b8f4f1f4adb@quicinc.com>
-Date: Thu, 24 Apr 2025 13:59:04 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YvVTv8SI"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so556652b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745474516; x=1746079316; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ItVzBTSerAAYDc2jtmllBIZUTwNzEBk5YDQRurUUd5o=;
+        b=YvVTv8SIm/1ziikgPqOLmgvOOGO1SmfsO0yH2y9W/MobGSKdWIRQvTjyBckrmZaZBA
+         23jVRF+rlKM7WIg7fTHeNaG7NlPKOZJ1lprvcz10MrSoyvoSN0nCmoB3Tt00w4kDJN4r
+         Yf04VxktpC4gnVRqRHgeD/GHDTydV0DYk1ZWE3LkpMilt6JCiB7SUB9oBfG0dz2q2lsL
+         7QbKgv9Cccz1PRngy7P5ozQQ59RB2k+4iVqcM54OxW9UEbN6Lz8BaS5j7dmhc9uwe2Bx
+         ky0gTyM4LjyRLfOYEvso4OiQnGc3vyj+oqJuOWgMWv0VUcF6pApnKSGMn/PnxBScYUE+
+         E5IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745474516; x=1746079316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ItVzBTSerAAYDc2jtmllBIZUTwNzEBk5YDQRurUUd5o=;
+        b=P8mSW6pbIIpgfuLpmyHCgXh8Cxy3g9V/ZweOVPHJW5+KLOvhMDsC7KL7LbWkwnpajp
+         vyIP/C5yaNKyN66MZa7InpIVFRQ/XtSQ8FS0yZWePOEMro/RwUu/WZpRj3wOLoeWiQ87
+         /G3haKhvVjm6CACPLc/jhnhaXz8kxMiryhpr0K2VCECxmA2iiBBIpv7/zfy/3SVu2qA3
+         j2Dd+mC6w3PU0A8PvfHoVlUeYhtCXqi5A0rqAk6HII0gR40JJ0f/VuFWsXjCfK2kwp2h
+         sZ4Pv3Rxnoq1UrwvPy/KXJgWTQOP/AuTQeuU25qDxvzm8jL8NKwcqfb3vcfM4SlgYPj0
+         rrFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFoY/XvvaubdhTSoIp5n+rkB9ydNhhWvk5jCyrjcWyt2UkY7gmW41gzxpcl7z3Y0PnTgq6gl5rL6pQhFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjxzDmM6gNX1iVQwhkiH5VMLdNuSY35jUdmPTXpEEn9ZGDr/td
+	ab2x3zAQDwquxikVXMseNmMKU5EJdx0T7TBSzcC/MEJ/oUkv9RsfIyVxyxooGD8=
+X-Gm-Gg: ASbGncsVY2/RuzmNI50JckUiH5WoOCz7KuziTGp0EoYwKT+qxBSCuVslwWPOquAHASz
+	rbXsQXOpBP5WdxRWEMjwKAeO0OvhhcBxn5V+HpowslOrzu3Cg57JpwiIG8GIV7UOh3cjqfp2R6F
+	oJo6BPrpEaCZeI/Vh5HLkaWOxbHNa2mB0AjPEs2MmpsjUotk1Yit371AAanLG3JTJXzSyhA87rq
+	0iWpIb/g7XPxlOxBAwRbbECHDvfgWq21MgXzhFLrIRNFQpOgKCWtutDOGKwHZi3IrC0cTl5Ehpp
+	0Z9x9/MwvcxYd27YBMVWTbj7G/I4USMCjYRMjUGqSQ==
+X-Google-Smtp-Source: AGHT+IHpb+KQKs+bCW6EMMLRqMG+2nRuFK3vtw1oUdYl0ZcihCBk4ttWoQ5lM8jVKKGTONgQMih/FQ==
+X-Received: by 2002:a05:6a00:ac86:b0:73c:3060:d53 with SMTP id d2e1a72fcca58-73e24ac977amr1991976b3a.18.1745474515750;
+        Wed, 23 Apr 2025 23:01:55 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e259412b2sm603446b3a.66.2025.04.23.23.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 23:01:55 -0700 (PDT)
+Date: Thu, 24 Apr 2025 11:31:52 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V11 13/15] rust: cpufreq: Extend abstractions for driver
+ registration
+Message-ID: <20250424060152.gsrdz3fonnnpn4oz@vireshk-i7>
+References: <cover.1745218975.git.viresh.kumar@linaro.org>
+ <a14f6927488b5c7d15930c37a3069f46a5c888a2.1745218976.git.viresh.kumar@linaro.org>
+ <975c8346-dddc-44ef-ab24-71cadfbce23a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615-ride: Add PSCI SYSTEM_RESET2
- types
-To: "Rob Herring (Arm)" <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <kernel@quicinc.com>,
-        <linux-kernel@vger.kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20250422-add_psci_sys_reset2_modes_for_qcs615-v1-1-7faaf877366e@quicinc.com>
- <174532908966.1111913.12713682553446003215.robh@kernel.org>
-Content-Language: en-US
-From: Song Xue <quic_songxue@quicinc.com>
-In-Reply-To: <174532908966.1111913.12713682553446003215.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAzNyBTYWx0ZWRfX3+jYuXeeOvGI rvsvA824Y/AcjH7OsJ3GNc4rRns+lNLKLI07Pl1htd3V9yZhNlGI+stQjBnttEmzJMQNQgAOgmI oRUtGjznxWC3Q93p3hlihidCBu2MU/qR/nSVGRS6W4o39g4ToK8BZ4UqAJtlUc6/d49GbFxGVGA
- TYUAWfEQLH1b1kfdyJmdZ26LKb9V+MkMjVn+9PiyFlbLei7bNh8f2RSZ/tTKzaWbvdHBtaUqMeO RJFIU+jr2ADw716fxbEvWTbcKsNnChUdeTdSr9weR6SKHtJeZ5EZ3jD9oIeWcGD/sk8XR2mA8JN +H5isQUf5baBZ3FOkuwm19bZuzBp3ugv0QhnBHLPLj/sFUQT0riYy+y9bt1uciLT+Psx8Gf3gnV
- X9PSVNPOa+zjdl3ngDJznUjoJMvxhSV0Ev4C4+xO7E861bVZpUSubOydp8YeHpIqvOghHDN0
-X-Proofpoint-GUID: KfZt-K97T0lsWcthoO2GmCIGbzfbACX1
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=6809d34d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=gEfo2CItAAAA:8
- a=COk6AnOGAAAA:8 a=4CDoZJVVFqlZavh4jk8A:9 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: KfZt-K97T0lsWcthoO2GmCIGbzfbACX1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_02,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240037
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <975c8346-dddc-44ef-ab24-71cadfbce23a@kernel.org>
 
+On 23-04-25, 14:05, Danilo Krummrich wrote:
+> On 4/21/25 9:22 AM, Viresh Kumar wrote:
+> > +    /// Registers a CPU frequency driver with the cpufreq core.
+> > +    pub fn new() -> Result<Self> {
+> > +        // We can't use `&Self::VTABLE` directly because the cpufreq core modifies some fields in
+> > +        // the C `struct cpufreq_driver`, which requires a mutable reference.
+> > +        let mut drv = KBox::new(UnsafeCell::new(Self::VTABLE), GFP_KERNEL)?;
+> 
+> Maybe add a comment that it would be desired to make a struct cpufreq_driver
+> capable of being declared as static const in the future.
 
+Is it really the case ? I am not sure if that's how the C code sees
+these structures.
 
-On 4/22/2025 9:38 PM, Rob Herring (Arm) wrote:
-> 
-> On Tue, 22 Apr 2025 15:39:54 +0800, Song Xue wrote:
->> Add properties to support Bootloader and Edl mode for PSCI system
->> reset2 reboot modes. The cookie and magic values set will be used
->> by SYSTEM_RESET2 call.
->>
->> Signed-off-by: Song Xue <quic_songxue@quicinc.com>
->> ---
->> Dependencies:
->> Link to bindings and driver changes:
->> https://lore.kernel.org/all/20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com/
->> ---
->>   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
->>   arch/arm64/boot/dts/qcom/qcs615.dtsi     | 2 +-
->>   2 files changed, 8 insertions(+), 1 deletion(-)
->>
-> 
-> 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->    pip3 install dtschema --upgrade
-> 
-> 
-> This patch series was applied (using b4) to base:
->   Base: using specified base-commit e21edb1638e82460f126a6e49bcdd958d452929c
-> 
-> If this is not the correct base, please add 'base-commit' tag
-> (or use b4 which does this automatically)
-> 
-> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250422-add_psci_sys_reset2_modes_for_qcs615-v1-1-7faaf877366e@quicinc.com:
-> 
-> arch/arm64/boot/dts/qcom/qcs615-ride.dtb: psci (arm,psci-1.0): 'reset-types' does not match any of the regexes: '^pinctrl-[0-9]+$', '^power-domain-'
-> 	from schema $id: http://devicetree.org/schemas/arm/psci.yaml#
-> 
-My patch is depend on the 
-bindings:https://lore.kernel.org/all/20250303-arm-psci-system_reset2-vendor-reboots-v9-1-b2cf4a20feda@oss.qualcomm.com/
+Most of the driver structures (platform, etc) contain `struct
+device_driver`, which is mostly modified from the bus layer when the
+driver is registered, and so it can't be a `const`. Apart from that
+too, the drivers many sometimes carry flags.
 
-In this bindings, we can see the property definition of 'reset-types' 
-which only has "mode-" property.
+File operations (with just callbacks) can be `const` though.
 
-Best regards,
-Song Xue
+> Either way,
 > 
-> 
-> 
-> 
+> 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
 
+Thanks a lot Danilo.
+
+-- 
+viresh
