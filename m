@@ -1,106 +1,225 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4088B20F076
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D53D21CFFF
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745480070; cv=none; b=QuyDPejmqpFLFVGL1FqwNLrcUBoK/RPXywN2qT7q8ELX1gw2G8AsEPRb4cp4/4HKvRHN0w7c7s2cHL8Z54a0foyZxH2bzA2CXdgFNCYdYBSMpofYVPFjvpL9MHIPqfeE2D+SCiP7kibDIaWet3lOOB3Uq2j/B9PUAM/t6cYEaz0=
+	t=1745480074; cv=none; b=bFqqqR1W/1a+pqHnaba4Grb/wNXKQtcakCOzABGwvCUTSvoQbF0jhArI42Z5G5pcADpVm+cTBAX6zR8J58dk63xznHxb4tE5vNfm3wIaMe7m2emUBxnHc5pSAgISyr4gNJIHRHLH2GqBRgFI6YisZ3GE7jeuKbmBQX2wwMlJF5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745480070; c=relaxed/simple;
-	bh=u2Nrcgw7jkwsuXcOLlFIjL5vyZPM1WYAtiGtFnUjhwA=;
+	s=arc-20240116; t=1745480074; c=relaxed/simple;
+	bh=Dj1Lv1vYfLYfue1RADdfX9+Lvh8P7qLve8owX8a0Zq4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D3eCaaHPkiuL3RGVRfE1OM59buJ/ErPSaEtQHBIl1/zNymmkc91KH/aivvPV1XtOmtb5GWhCnfh/rTLAqYelnG+vU0NgMQo7dKvM4YxjnvEIS6NuFa7dIFPWLnr3MbukrhI/cOU+EQNe38RH2+uC4O1BmxbZEc2l2wlsyXC0I9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86ba07fe7a4so717542241.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:34:27 -0700 (PDT)
+	 To:Cc:Content-Type; b=srhANDRVAh0rDdMlXikQt0EG2bulKV2ObBEYi4tWbDK4igizJj1NB9kaZiAbMeyj98++r6K/l3CPLk7SyXk1bp8cZArvwrhh/J/lJCVVQMKAWAYM7Y5/PThW5XMvC5WYQDie80CAT++xZFtg7wFG/RbtVSZ+otQGCQ7J0Tlgq7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GKGa1ROO; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKGa1ROO"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5240764f7c1so294104e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745480070; x=1746084870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hg1fJUqFPUmaQAIOsB514eMr/+6dxVQ5q9mfZaUqhwI=;
+        b=GKGa1ROODnysSVQ4zmsUObNjIU8w1tiKFlKx4ole+tgDlSUFroaNivVQrAzl+6d6zY
+         racDe/XhMUQnUH1CiW0nEw8WFYwUwhej+fEZIp43mY/jfzVjrmnA9SgbJJ5qMUxNrH+e
+         iBQPT9d15G9rdipVJLMCrgtWHHx3q335rY6QIWIqq7WtRJrKHlZtDk2Rv4qILtRv+n3D
+         NCE5AjscL4tJunumOeZVF/0ZIyZaSNeuqpO7z4aaMGvcfWwpkbzu9aliIXvXAqg7WXlx
+         93YxTxb0gs4vEb4aWIccy81ATsBhWaPDf9aBhFAdKRigvRnQVOP7iEywCd5+KV+h8PLM
+         1I0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745480066; x=1746084866;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TTjQn1pRO29n/BIx3/Uvj8AT+NnaG1jO3iBKpZy4Wb8=;
-        b=sATcwwfrdPeJ6Ly2y3Jn8PaFS3RwyRzPepplaVJUwYWeM5ros4g1jocU0eRqi7Ghmr
-         TqD3x3GQ2Fy2KucyZ2tMPahm7uArE/If1L2Lzd483/jYvVOyKOhb1Yj7uOGHb/eqyFdC
-         vHt2W0UJ+08+5H6cuXCiYgv1EFVAZ21HjxNWL0abt3lnX3eVntZvgoSgGu7W2rkXf4EE
-         jYxvEJ5qfrSRj/KZk1T/4kv0p5E6o2sZRgW05dS5UEtiWykZIIOOBWViX6Y9pLFVSgCl
-         wRX9QP7YMmqg6Qg14uXHF7OwTvlOz6ysb8wEZAfCnHtkrydKtf2pLqgJfMFmVBeomS9/
-         w1Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKShcseYlLzyHFGRXQnTiiPJGWZqho8CvWhZSggj0AKsq2IUwVgB6GUJSO9wkmUZXcBWBFlSuMQx+Kjww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXaiiCHr8hUu5fng990IqG9uein+fVnxzHTVdfaOayqB73uTRg
-	71bqlMlitIogmQyFmCL9hKyh6JCMddW98VGlZlMOIGytuJdleJWN9ncjoA4/
-X-Gm-Gg: ASbGncuSSw/Onp6OyDWVEO8PFwa6U5jIms1PaeRUngt7Q2XRh2zJJe7ptG6UfkSUubj
-	nYXvZePnUG6E+IVXu+mA0vl8+0g9bQ2cgtBONY1ctqhVk+hw5BINnFGXEuNZRBh39cKZN3GVGDG
-	HdgVFzlbixFyfnw78w80evFTsngM8MZjoatCuY0c50gom4DY9WHojXI57s1dspsP+uppXqPEiUE
-	ERG3y0ZdyqeF+uD15hxGhrz14r07XEcTElWD30Ngf/FS3LOMJekHzQGaSSxphVwd6ec0it53zGF
-	V7pyMhLswVW2ZmMi7DlnJpxRZuw64MJoZxift+4ed3VdyZCa2FK7ZdpTuJbY/BnsB3y1R4/3dZi
-	VJUo=
-X-Google-Smtp-Source: AGHT+IE+R+g/xCkDqYVqMXZeL+xQU7Bvw0g2zr5DJH7+YAbDKBWFFc9XUsVZE8CSTvpeFuPbhnZuqg==
-X-Received: by 2002:a05:6102:292b:b0:4c1:a15c:ab5c with SMTP id ada2fe7eead31-4d38ebe8f73mr1154271137.20.1745480066573;
-        Thu, 24 Apr 2025 00:34:26 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-877aedf91c7sm196396241.6.2025.04.24.00.34.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 00:34:26 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-8777084a3c0so701683241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:34:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUl750ybOzPQ6WEvmUJyGmXC9hCmnsvif3BrdAgqja3IFfYZKFmZyDZkhAJQbz5L8KixpxlqLd0cE6yyI=@vger.kernel.org
-X-Received: by 2002:a05:6102:292b:b0:4c1:a15c:ab5c with SMTP id
- ada2fe7eead31-4d38ebe8f73mr1154262137.20.1745480065531; Thu, 24 Apr 2025
- 00:34:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745480070; x=1746084870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hg1fJUqFPUmaQAIOsB514eMr/+6dxVQ5q9mfZaUqhwI=;
+        b=l+LE4ZIAs8G8C49dF2T7ZzyGXkagvJ1ARxatwRRMoPH2PF+WU7SogIouUtcFQlBw7l
+         LI9L9TILHzVqYWgU9oHbHadmZ+rIAv+ELV3yhq0WqIpRBOzbx/cIFJZPmtXH0aqINC2m
+         aXnGHUqmhN3OkNpgDJfrmeG0EcqIO0qwmeMNGQPpl93Lvt4Uvar/gAFSZRJMP4dTxUd6
+         GxPGlE3rrE/uearTbWT38+Jf9rctXF1dpTUw58+aIyIX+oD9c3yeXHgQpYT4TY3yCJ1s
+         8KSpG3uq/z2dMQlpLq2+WdJgFPbrD9MCxtsoxyW0W3svXWO+qxv98EQhSuE3fJuNeaZl
+         GeMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkihKBE9lWEKqOzTUKrFC6MdHeAgaXR6KAhOz+XfM6a84/Rjl2/iD6Wwq9B43aRBD1UochIaBqdi83Pr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yztm26MJc7/GLANuKHDExr9nCsa1Hm++QlSAzzpVtxleHyqhV87
+	oamPBJkU4VQaamaglXMOgzxQDm84Jf5Y4ywUBMpBayvUKUxTlxRWldipakrv1zboQH+O+qFm4v+
+	jEvLc2s6PwhcnvYwX6pp0M485Z5ivtFhl89MkgQ==
+X-Gm-Gg: ASbGncsF1IlXqcsJTYblJ5xekDRpOx7D0irir/2fPHoKKsRmbJixsmDwhmqZkg4E3+J
+	OXYIJ6aKhUufrqhejcQM5Myi3aXPdkwlNd5BIuhFgOGZCKYInCCGY6Oal1GcntQu65AE2NYTVwg
+	21Jd+5oQKPQbu2Wn+NypyVtokyZkFOG6B/h/UMNgpr7Oll2yZs8ju4aMY/
+X-Google-Smtp-Source: AGHT+IH+AZQn/RXsq4aIiZBGFx6kcOfNTWST3Ud9lzCO1h/OKWqCizwpNOX6zINAICkkJCKhYFL2SJd/kzv5SZujIxg=
+X-Received: by 2002:a05:6122:1353:b0:526:2210:5b64 with SMTP id
+ 71dfb90a1353d-52a7840b1e6mr978639e0c.9.1745480070478; Thu, 24 Apr 2025
+ 00:34:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423164006.2661372-1-arnd@kernel.org>
-In-Reply-To: <20250423164006.2661372-1-arnd@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 24 Apr 2025 09:34:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWzLuVjA=8PMm3UPXXPUEwBQjnTmp_W9oi_KHCx=m-QZA@mail.gmail.com>
-X-Gm-Features: ATxdqUGQnUlzm5W2tVtEkcCP0cHDrWqBr1nsmTcSEp-9WZNmnHDiuaEyg8EZoF4
-Message-ID: <CAMuHMdWzLuVjA=8PMm3UPXXPUEwBQjnTmp_W9oi_KHCx=m-QZA@mail.gmail.com>
-Subject: Re: [PATCH] iommu: ipmmu-vmsa: avoid Wformat-security warning
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Magnus Damm <damm+renesas@opensource.se>, Arnd Bergmann <arnd@arndb.de>, 
-	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250423142617.120834124@linuxfoundation.org>
+In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 24 Apr 2025 13:04:18 +0530
+X-Gm-Features: ATxdqUF7KMwodSuA0qtPO12X0tglypY1DQaBNL6jLImWiASW8rwygFekJbp9zOU
+Message-ID: <CA+G9fYtT4eEO8Bz54gsvhA-rLp2yP=LDFV-evO2Dacm45zHX9w@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/223] 6.12.25-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 Apr 2025 at 18:43, Arnd Bergmann <arnd@kernel.org> wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 23 Apr 2025 at 20:15, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> iommu_device_sysfs_add() requires a constant format string, otherwise
-> a W=1 build produces a warning:
+> This is the start of the stable review cycle for the 6.12.25 release.
+> There are 223 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> drivers/iommu/ipmmu-vmsa.c:1093:62: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
->  1093 |         ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
->       |                                                                     ^~~~~~~~~~~~~~~~~~~~
-> drivers/iommu/ipmmu-vmsa.c:1093:62: note: treat the string as an argument to avoid this
->  1093 |         ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
->       |                                                                     ^
->       |                                                                     "%s",
+> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
+> Anything received after that time might be too late.
 >
-> This was an old bug but I saw it now because the code was changed as part
-> of commit d9d3cede4167 ("iommu/ipmmu-vmsa: Register in a sensible order").
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.25-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
 >
-> Fixes: 7af9a5fdb9e0 ("iommu/ipmmu-vmsa: Use iommu_device_sysfs_add()/remove()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> thanks,
+>
+> greg k-h
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Gr{oetje,eeting}s,
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-                        Geert
+## Build
+* kernel: 6.12.25-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 56d2398227a26c9827858b438ba125e54ae8b9f2
+* git describe: v6.12.24-224-g56d2398227a2
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.24-224-g56d2398227a2
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+## Test Regressions (compared to v6.12.23-393-g7b7562936f80)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+## Metric Regressions (compared to v6.12.23-393-g7b7562936f80)
+
+## Test Fixes (compared to v6.12.23-393-g7b7562936f80)
+
+## Metric Fixes (compared to v6.12.23-393-g7b7562936f80)
+
+## Test result summary
+total: 126085, pass: 105995, fail: 3148, skip: 16539, xfail: 403
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 137 passed, 2 failed
+* arm64: 57 total, 57 passed, 0 failed
+* i386: 18 total, 18 passed, 0 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 40 passed, 0 failed
+* riscv: 25 total, 23 passed, 2 failed
+* s390: 22 total, 21 passed, 1 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 49 passed, 0 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
