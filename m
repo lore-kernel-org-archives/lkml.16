@@ -1,126 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2E8184F;
-	Thu, 24 Apr 2025 06:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0922E1DD9AB
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745475575; cv=none; b=WT6z6wYVrtLdW1JT//OmVAdMch49IqBl/nYroIxXu4ZVkAUJBtfsbeg4HQgI6cfomqGhKoDdjROZu9xv7WxWQ42KGyh5AztMjHO2tzm4eXdeC+qLYsjzOzXuL2ldwhQZvIhT6GWbQiMn4qYul6vaO5OgGCGaKVATDSwVUg1GLZY=
+	t=1745475590; cv=none; b=U7k8TR4UugLx10TDbvTqsKaVHnUC3r2K21hoy3HrYrVmU/yGdAAcTuCpUlGpwnTudfujiIJmFFW8hZqkKj9VSPjoUqJIAVbI1hLOz0m/Rt2vJLAszHT8tcqyJOh3uFgrvFYBSB58LRCEKERuv7m1C5NEVPAlcofVFn0CgAGITjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745475575; c=relaxed/simple;
-	bh=KZtC/m7aE/hNp6U1Oyz3oKbW0Ev7R9lpkziTGa8wOq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T04cMiynGcW9XgiXi8wG23n3UfDvj4ac6bblWKMx5E1oKN1Thq4Kn2FZlSXZY9P23BnLJMh2nEmKPuVfjXOAjlvRy5q0mCUKtBcceLJHXbKIkUAx0XAwngrGkuuRQJ9DDVLOViJVBytw/3JD0ZTQV+ftfqDNUKjKg/XYpj+ltxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqJVex7d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745475590; c=relaxed/simple;
+	bh=uKM6b8hRCbdGIXJ+G3E7aphwQX16oUYjbw/riWxMSl8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=WlXCp1hvmKEZ+fqjb70CJM5cPuN1qlXoylf5uO4Oie/nXVJuBShrCrX5VOJDDgU9dAPHTzPDYPQa7G57oS1ASLTD3J0juIDzOH9c+tXP9GDCBS+Rne8UA6FgZ/gebLa/iS06PLDlMr4Jm7E2myJ+N0MQhJpLotCkcO81VPNz33c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lD6NvCFE; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqJVex7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F86C4CEE3;
-	Thu, 24 Apr 2025 06:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745475575;
-	bh=KZtC/m7aE/hNp6U1Oyz3oKbW0Ev7R9lpkziTGa8wOq4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IqJVex7daoaax+okMGRx+tynSurJHFFW0fzzghEVvfgO8/WT7T6QWb6Ja6ykm2DUU
-	 A7F3B6lwCvYm28u7HEg1w4xaT1+yejKI3Vm6I8lE02HC0C8WgyCmrqQx5IzBnIaUEG
-	 pwlObLhPKs41Qp+ANodTiFW40At9KaxiRgswmVxPclpMZj56rxpmC1y1uhOZG7GbLe
-	 ZRX8FNzatM+2DIY/HGjuPVPNe+NEInDOCZjEx0cWOnePlurVmToWXQw4YtiqYmhNyB
-	 Y2LXbeKdPpnCScec7gT5tzEa+shFy+fS9sxlcLpnYpk+WHgZQLiGtSyhbEJuuDUo/y
-	 +j501HPcWunbw==
-Message-ID: <f385c9eb-31ef-47c3-84a5-9f4dc86ce6f0@kernel.org>
-Date: Thu, 24 Apr 2025 08:19:30 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lD6NvCFE"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b115fb801bcso689166a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745475588; x=1746080388; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9S8SNMhpasxMLVFHseAVldD3PxPQ7S0bH+GLSZ6X/b4=;
+        b=lD6NvCFEtURvKPah3GVfAoqBAchxjDw1ksHT9C2soO2SX8dYyClH7w5ZT9T2OaUIpa
+         mYkEgWFPWy6MTqG2r1W3ZcqvCq2CrZCFLPHuCnDzlrXuWHelSyKN1xAUsjT0Nh/zhA7d
+         TOFbI7YRKizab9XobH1hj0V8mgwlGWYTgK34aYjLcvtyaoRPWkGea6zBXo6KERcUpIIt
+         OSjlKpKaUfoBYxpRgaee0OEnmICSbWh0fu3jK2yc2Txl9hR/Bt/A35Zoe4BYqGwIZZE2
+         yhoIOVnREw4qStrmZcVN1SeBuRRK5P4z5BHnyvEcrUKXipzyHhtud88/dWZHmBISkJm/
+         1Lkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745475588; x=1746080388;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9S8SNMhpasxMLVFHseAVldD3PxPQ7S0bH+GLSZ6X/b4=;
+        b=mvZ8S8cYcOaEnC9av8Bt9aqRcXFkciSTyA2tavO0s2vtpHDvru6kDfx5wGlgh6YBbT
+         92AEeUz2uQ5e7HL9UPY0hMRptSyUHt2bEtv9g6WL8IqxYBt0S6ZCiFt8pLPTvv60kwJz
+         Qk/OYb0598XrxaRgwWRMq9dp5dWLB+bN9CVbyIk/uFPeRICmNgG4bBBqYF2IYVQ8Jx8R
+         46yCNW/sO7vbyUKMi/qhyntH3Rbu9GtqPNEEhQr3v5eiSAJBDiW+eAdH8yybgF6dQqFJ
+         vDmCnStcW7kE5qck4whGcagsYUbJhpCO2PDAiYp9tl+5gw6RE50X2vHsV5W9SizcB7Kj
+         Wp7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVAZ1YDW74dj/KpD3QufFfbPNj+f7k5D/j3To3FoSg9CVV1p2jwIjlEGluyLVR6GmxmCOh3XhCFYfVGtmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrnkH+xeOvR5QkE+33U4ReQNw8er03sFKI8fxxtwiWcjUJRVQ6
+	nx+dRfeqy2NjumlhSdSLXDS2dWrqVonBPUw0XPCnjkoXuuOPS8jzwnC3qzAuvvwOTb9jcbUMswu
+	XGlNBfg==
+X-Google-Smtp-Source: AGHT+IFWUAHIIuHEw9jie99vFA3LR2NLYFGOPTprvrz3yVe0D0uOAGvA3gDCPdLxh3JhDAlAja5k/UG5TkOu
+X-Received: from pgbdl2.prod.google.com ([2002:a05:6a02:d02:b0:b0e:c90f:8078])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4a41:b0:1f5:7873:3052
+ with SMTP id adf61e73a8af0-20444e9b546mr1684984637.11.1745475588199; Wed, 23
+ Apr 2025 23:19:48 -0700 (PDT)
+Date: Wed, 23 Apr 2025 23:19:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: dts: qcom: add initial support for qcom
- sa8255p-ride
-To: Deepti Jaggi <quic_djaggi@quicinc.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, quic_psodagud@quicinc.com
-Cc: quic_ptalari@quicinc.com, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shazad Hussain <quic_shazhuss@quicinc.com>
-References: <20250422231249.871995-1-quic_djaggi@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250422231249.871995-1-quic_djaggi@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250424061943.1321025-1-irogers@google.com>
+Subject: [PATCH v1 0/5] perf: Default use of build IDs and improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	James Clark <james.clark@linaro.org>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Leo Yan <leo.yan@arm.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
+	"=?UTF-8?q?Martin=20Li=C5=A1ka?=" <m.liska@foxlink.cz>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 23/04/2025 01:12, Deepti Jaggi wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/sa8255p-ride.dts b/arch/arm64/boot/dts/qcom/sa8255p-ride.dts
-> new file mode 100644
-> index 000000000000..cb866f897d0a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sa8255p-ride.dts
-> @@ -0,0 +1,94 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +#include "sa8255p.dtsi"
-> +#include "sa8255p-pmics.dtsi"
-> +#include "sa8255p-scmi.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. SA8255P Ride";
-> +	compatible = "qcom,sa8255p-ride", "qcom,sa8255p";
+Build ID mmap2 events have been available since Linux v5.12 and avoid
+post-processing the perf.data file to inject build IDs for DSOs
+referenced by samples. Enable these by default as discussed in:
+https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
 
-NAK
+The dso_id is used to indentify a DSO that may change by being
+overwritten. The inode generation isn't present in /proc/pid/maps and
+so was already only optionally filled in. With build ID mmap events
+the other major, minor and inode varialbes aren't filled in. Change
+the dso_id implementation to make optional values explicit, rather
+than injecting a dso_id we want to improve it during find operations,
+add the buildid to the dso_id for sorting and so that matching fails
+when build IDs vary between DSOs.
 
-Missing bindings. This is some weird process you have there. Reach to
-your internal guideline before you start posting. It explains this.
+Other minor bits of build_id clean up.
 
-Best regards,
-Krzysztof
+Ian Rogers (5):
+  perf build-id: Reduce size of "size" variable
+  perf build-id: Truncate to avoid overflowing the build_id data
+  perf build-id: Change sprintf functions to snprintf
+  perf dso: Move build_id to dso_id
+  perf record: Make --buildid-mmap the default
+
+ tools/perf/builtin-buildid-cache.c            |  12 +-
+ tools/perf/builtin-buildid-list.c             |   6 +-
+ tools/perf/builtin-inject.c                   |  32 ++---
+ tools/perf/builtin-record.c                   |  35 ++++--
+ tools/perf/builtin-report.c                   |  11 +-
+ tools/perf/include/perf/perf_dlfilter.h       |   2 +-
+ tools/perf/tests/symbols.c                    |   4 +-
+ tools/perf/util/build-id.c                    |  40 +++----
+ tools/perf/util/build-id.h                    |   8 +-
+ tools/perf/util/disasm.c                      |   2 +-
+ tools/perf/util/dso.c                         | 111 ++++++++++--------
+ tools/perf/util/dso.h                         |  75 ++++++------
+ tools/perf/util/dsos.c                        |  20 ++--
+ tools/perf/util/event.c                       |   2 +-
+ tools/perf/util/header.c                      |   2 +-
+ tools/perf/util/machine.c                     |  28 ++---
+ tools/perf/util/map.c                         |  15 ++-
+ tools/perf/util/map.h                         |   5 +-
+ tools/perf/util/probe-file.c                  |   4 +-
+ .../scripting-engines/trace-event-python.c    |   7 +-
+ tools/perf/util/sort.c                        |  27 +++--
+ tools/perf/util/symbol.c                      |   2 +-
+ tools/perf/util/symbol_conf.h                 |   2 +-
+ tools/perf/util/synthetic-events.c            |  42 ++++---
+ 24 files changed, 271 insertions(+), 223 deletions(-)
+
+-- 
+2.49.0.805.g082f7c87e0-goog
+
