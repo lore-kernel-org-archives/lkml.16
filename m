@@ -1,89 +1,91 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29D8289364;
-	Thu, 24 Apr 2025 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811D4284685;
+	Thu, 24 Apr 2025 16:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513024; cv=none; b=aEFTeht/4YikhZ9k+7eU16gvf4gkkYEnWWG614QmfkC5FqMIg0xSLt4BWDwlPtf6hSfzrvGRtPWCj6h5kc5c+GZ2+hbk7nZJmUSfiuCDnwvAZN6NJTKz68MWK6SxvhesRqZyk81HwagOdmNvCwaVhFZk2MuXcM0QeingVpURqmw=
+	t=1745513093; cv=none; b=KvQJHZRZ47H4QWOA0s1EUQ51zsg2et1U53JqxvvXxh25W/JdUAcXNGHKjM3PSHfypqe60MXUxAEVopPi9KYgLUXUZfgB8t6ub9ESxLj0vKz5W3GdQ3+MPdrD/sqFmNVAnw/eH6+GpaeT0n0HeyeYcC3yZ5mFfhNnwM/arL+cVSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513024; c=relaxed/simple;
-	bh=1RBK2Q9ahQnBbtJntTBQY0ipwwDqIjPeeAtr2SSUqLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uw/gM2gBAkw6ezks544bA7Gg1IXPa+cTkFRjH1ruN++sqkfje/9FsgELqo5dDH5Ngzk5C+5T5dovggtozLmekN07ICgZNVl8PabZg3BNHdXGosjmDG7TvXIU/mbz0lVZW//VCgrsAdPgCU/UPDeMppOcM9DbF76nCldFUUWhO9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FnWs9dTi; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745513093; c=relaxed/simple;
+	bh=7NCmOr8ivNGpObb9WZ6jd5tfqxQcsNUuuFxY9SHRXRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=daINND96914+w0qEjfTQmxcAzfsayymXrtSMRKO42rKVl07hWqEKW4/adUlrPy2WWGGGMWzXFLcdCiVx0+6v8jYOpuFHDzKyrjFTg3ADOVnpeDcHq41fESGUd1kmRaJoxAFVjX1vX61tHx5+Dc96kafuE2dX0JIfTvs0zTpNqeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DHhLeZB6; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FnWs9dTi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=W+/9EqQuci/NV2Gog2+DdNgVaNDmWVcoA608wVF69qQ=; b=FnWs9dTiWm5SFw+TgxoQ2BJgNC
-	mJVB5L/5aMJXm38UOdGlDkOvk6h0G9arIm3fTnkBqMVibTCFeQuZR+bephsOecZb4zpvrZE0fwbbr
-	89a7fUIRkbU2MCy9jRFZlZpJvmSZNZ0GYxFqGiK9x0tcSF2ypr+KdhERg9igTdiqOIbU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u7zfg-00AUV9-Vk; Thu, 24 Apr 2025 18:43:32 +0200
-Date: Thu, 24 Apr 2025 18:43:32 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-Message-ID: <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-6-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHhLeZB6"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4775ce8a4b0so23582061cf.1;
+        Thu, 24 Apr 2025 09:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745513090; x=1746117890; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7NCmOr8ivNGpObb9WZ6jd5tfqxQcsNUuuFxY9SHRXRE=;
+        b=DHhLeZB6SyBzfDLaqc6yJCeLTFzzFATT/5c1kBzOu6prTSRO56Rd1lYMFzb0QD/hB2
+         73HMIGpFhUmdwWRkGSuHCU5LBfW8aJf9F0xNpRD62P3S2+w7n7kLmPXZvqjh2UxU4ev6
+         6nf4VNP39PkRtrZKF5XdIU/k1JVA2tK88f1Ef6ORMb2HkcCiFjD+fjRMAOozSJfu22C/
+         fZfr9QQj9w1vH0+rYJ3gAIKpFMdIuEOB6e3d0v/Eet8IdF8DfGjWszr1KEmDA1dOUpDW
+         pMvahxWwQXWKWRU/6ldtYK4ipSzrUakghNaok4LdzUyemPUsfBn/G51sKPKG8b4OxAWX
+         Eh0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745513090; x=1746117890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7NCmOr8ivNGpObb9WZ6jd5tfqxQcsNUuuFxY9SHRXRE=;
+        b=NF6D7FLGn+l0Oj7OW5FRpSWN3mWo0KLRFrr6JkhXUgtQzc9YmAnvTmakWnLIK6EJPj
+         /d5Ae+7EX8NivKlThBp4b2ESjiJT+NSocpYQCu9mdePsOuV5NDZ1imHSc4Y+RW/nhgUG
+         qM/mV8jFotkJMRrWKUJos4Q/YRnwt3sKEl+vMRaGOoFzhTotBWebl3ZZdWyxwoza/JJ/
+         icE+P2Ebdrxeic7d+1P839kmNW17h2zSBv+dYfYzIgo4cOoXVYrHaBo+T99FdxUXIVun
+         9gBKvaRzQ40DIUQFbDOABoYbkglg7/qwIp3FdOzC7Fg5pi0pgiCb+IFybZynRuHA4T3m
+         PI3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU9ZHI+7hGwdWkD/JWBVXZzclUmEtBxWsNCpoL/3z0WEH1sIBqv333ZtTVHtlGt3ym3+bVLmw6QO2AY37Ii@vger.kernel.org, AJvYcCVGPgqs22MjSG2kcuKFJusEUzi9tW0LvV4d5QsnGewcPJAcwgIGMw5Acz0AFfDbXuEP90fon0QMmDKe@vger.kernel.org, AJvYcCWIa0M8B2oORYCXarKtuJUeIs2LioZdkgy0hK36eB4XRlZy39ZxgpZJs0zelfpKF2A8nugqtnsU6vZp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIBFnzVkk7dUTdu4jPuqPV/O5yYPsRpgQkvUpLLP2VGsODdawV
+	MMxbpwvAVbb+tqGkOjPurOU9NX8DFxPOi2SefJU+IDQ4KUwtCcGdGjNM4qbnD0uWQxEDh9Ul6Cj
+	xb64PtPKDe15JgxTX+sL1TMEAQFY=
+X-Gm-Gg: ASbGncvPUPsRqcylEJpI8BvX1A08987opJWBnJTPULMYftp3+EVtfTgptFSm0vDnqqB
+	md1ZfLjFZJopY78M/oOEdRzkAf0jVm8Qjls56fy6pd0Q0XUedzlvCIfshLIYCm6iVWnSMz1tMoF
+	NjkNXWGw4yT5aWX/Ruz/ysJJalR7fLkH/W2StmV6C94l6OWqo8bCKyEZE=
+X-Google-Smtp-Source: AGHT+IGwl9qg5A47WQV5p425vPqexd2FWCCDotFZYmPIcXKIAZfxaFLI9IbWZk6/iOtRT3QN34xhomcTq3HV9qCkZj4=
+X-Received: by 2002:a05:622a:15cb:b0:476:97d3:54f with SMTP id
+ d75a77b69052e-47fb9bd7a15mr6813021cf.14.1745513090302; Thu, 24 Apr 2025
+ 09:44:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424154722.534284-6-ivecera@redhat.com>
+References: <20250423-vt8500-ehci-binding-v1-1-1edcb0d330c2@gmail.com> <20250424-chaffing-mating-e512c198c0e6@spud>
+In-Reply-To: <20250424-chaffing-mating-e512c198c0e6@spud>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Thu, 24 Apr 2025 20:44:58 +0400
+X-Gm-Features: ATxdqUGf0ng_ZmgBzRLblE9E8xZ_d46r02HWPlW-sjruIqBiqFg4Xxg7sTs7hGw
+Message-ID: <CABjd4YzyUfE7YUGw+B5VbVzhVJevsbODnSJ14gwyydvfJxfb6Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: usb: generic-ehci: Add VIA/WonderMedia compatible
+To: Conor Dooley <conor@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> +static int
-> +zl3073x_write_reg(struct zl3073x_dev *zldev, unsigned int reg, const void *val)
-> +{
-> +	unsigned int len;
-> +	u8 buf[6];
-> +	int rc;
-> +
-> +	/* Offset of the last item in the indexed register or offset of
-> +	 * the non-indexed register itself.
-> +	 */
-> +	if (ZL_REG_OFFSET(reg) > ZL_REG_MAX_OFFSET(reg)) {
-> +		dev_err(zldev->dev, "Index of out range for reg 0x%04lx\n",
-> +			ZL_REG_ADDR(reg));
-> +		return -EINVAL;
-> +	}
-> +
-> +	len = ZL_REG_SIZE(reg);
+On Thu, Apr 24, 2025 at 7:27=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Wed, Apr 23, 2025 at 11:49:45PM +0400, Alexey Charkov wrote:
+> > VIA/WonderMedia SoCs use a plain vanilla EHCI controller with a
+> > compatible string "via,vt8500-ehci". Add it to the binding.
+>
+> You should elaborate here that this is already in the driver and dts
+> files. With that,
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-I suggested you add helpers for zl3073x_write_reg_u8(),
-zl3073x_write_reg_u16(), zl3073x_write_reg_32(), and
-zl3073x_write_reg_48(). The compiler will then do type checking for
-val, ensure what you pass is actually big enough.
+Thanks a lot Conor! Will submit v2 with your tag and elaborate in the
+commit message.
 
-Here you have a void *val. You have no idea how big a value that
-pointer points to, and the compiler is not helping you.
-
-I suggest you add the individual helpers. If you decided to keep the
-register meta data, you can validate the correct helper has been
-called.
-
-	Andrew
+Best regards,
+Alexey
