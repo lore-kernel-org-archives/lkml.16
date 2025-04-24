@@ -1,122 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A521B0435
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2736F1DFDBB
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745477769; cv=none; b=MM2HjapIji5n/k3fZMExEbo4QfzuBQ7sLgKbqKYTC71JrrVOGajfEs7K/1b8IOdfIQkSmLr97qaddNaU8x67JL/wjgZ0uRPtiBVucs3qK6hTZynsd5VcrJ5bbfYWxifXmtHoDY09hC9E548mvGC/zv9ADBN90GdrOJ3ZahYD5y8=
+	t=1745477806; cv=none; b=QUnfG14xTuaTehHRC2W1wsMCM7DMxKJYhEI7cUAR/CqtavnjH6vkJL5D5jJSDiR1WOa4wCHrKWotbDk/KF0BNdl2ihrkaoVph28Ce/4N26uKq1AL1jdGfrEtpWLG/bk00sN8KIYc2QxJv6kINxIDAUveceXd5igjQn5xutP/EWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745477769; c=relaxed/simple;
-	bh=Ir3SSYARcOB2QW3Bh2EUraLS/CBw+CKFmNvfHpUxzVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QYqncszetTEHo1r6jx7T0+eMFlpUpKPQQzzPinud48sDqFdNmJPEDRMDf5x5peU5sp8LpTsS3KymwVvn52fEIBlPEFnjTNeCGNGpLrbtwDnnI5d6u9wqxs2n3z9XzDOdtwTVOROpidySp0Yy+nM4iFBgr7jxB5FOTGr6L3Bofx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fSd/EgbH; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745477806; c=relaxed/simple;
+	bh=KaDurauswI188KUjZ3KNQvsryIeiaUhlpIHOyWF2O0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OtoE6Q0IopyjkW+NiUBTIJJMJwxwR9XYvZFcBVGr4B8jFW4N3LCGc//Id7cCkwOUKhAyplI6f50VvBdD4+uzXBMQ2UgaNbZ7V9tRS/fsnv49xVWqwFs81rJ4X3rzOeuKp/r5MqLY9/wp8JzWM41uqFFNtEMBbovsC9uJtJ5sL+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpAcP0ul; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fSd/EgbH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745477767; x=1777013767;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ir3SSYARcOB2QW3Bh2EUraLS/CBw+CKFmNvfHpUxzVg=;
-  b=fSd/EgbHZXLRgUcyWNsXiB89VP2DTcpgOMc2LnpOwGwJrV49i8ku3TAX
-   1hzu/dds7kNXSrcNh/+82Cgf9lN+xnArx+GYqyXWCTlWQFn6xckuuYK2X
-   WvsObi7Gad+bEX55iZwQc10mitSaP4rbdCu/o1fTmt+LhE46kNXBmToSQ
-   BeOQhkXKqb5C6i1DyUZAJauEXPD0+HUepBGMbKh9OU2R7e3E0xGu9J88r
-   Tjp+tq4vgVxrCo+tFqdocF1DCvFJQE/3t9nJUhzP6fU0HHdPyOeXIWLZd
-   JR2FRO76bRzR4xZY0jh4eAPzo/Eh26E3BRJoCKYV0Tyg1PskwUkJmOdUh
-   A==;
-X-CSE-ConnectionGUID: nSt+uSuyQyyL2TxCnZIjUA==
-X-CSE-MsgGUID: hqaixEqLTCqBgh0sY5KXjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57292844"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="57292844"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 23:56:06 -0700
-X-CSE-ConnectionGUID: Hv9IHME7RL60tTAWX4oaPA==
-X-CSE-MsgGUID: cgZo7lo+ReG/4taaxT42OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="163505032"
-Received: from junxiaochang.bj.intel.com ([10.238.157.86])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 23:56:03 -0700
-From: Junxiao Chang <junxiao.chang@intel.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: junxiao.chang@intel.com
-Subject: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq disabled context
-Date: Thu, 24 Apr 2025 14:56:08 +0800
-Message-Id: <20250424065609.624457-1-junxiao.chang@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpAcP0ul"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso1166547a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745477802; x=1746082602; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7kzVv79whvRhzEeD6JG5Yuqa4/y4qdCf+2FXelQG1Yg=;
+        b=QpAcP0ull37osyzz0lwmfHbM6xwEU6yYa1hORanq77BXJc36z1RgOTaQPsXD2k8122
+         bO9/CqpUcrK07DTpAeexhlaDBbeOJyKUw+CkmrSztl0By8FCn28+32swlC6BAzjGd3uK
+         Ju36Alpzn+KeDeAWQQSpT1vF9VInhuMsLBu6BhSXifDq9h+wT9J5Ve+UDwg+9WWiP4mQ
+         3wucdPs4KneMVdSxlJ6/VilaaWKpUrutOSJdEjVu8dZA+zPVsSPTpCSx5/hN759fXjyx
+         Aq6TqNJWgzbWmJK7s6fRO1BFovKuMhhfCobqB6YeJ1JWgGul3Mk2vZ+i91oQU8wPqLyi
+         DJCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745477802; x=1746082602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7kzVv79whvRhzEeD6JG5Yuqa4/y4qdCf+2FXelQG1Yg=;
+        b=sUbDxD/xKtm7x+oDV5NXitEdCxB/y7FaSjR17w5v0UFBNaJ/XlSIsui+EF72/S/mDF
+         AZsBNxfKq9qs1nEhDaISaRQTUVHhL0x7p7IT917troKrV9ahpH8qdQuAcSSuiUWs8x+j
+         Sdeh7zHeeXUARXbKHo4AQ5fag8jbu/oM8c4oSggtzRaQ/hqCEP5ixvxDMx5x4oz/JVxO
+         HmlzsEbYtK2lcU1jCJuLeIVUOSJkwocIqNDCKs46wnM9n16JKbQchRkqaDKQcx3k75Yz
+         rgeq4Hc1OgArDaHeY39v4RQTvl9HJfaGgyTJUQeaomiPnqcdUbZrlsTcT1vftVfhJK+8
+         olrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuZ7fpIViFDaXZ6LHQfrsVTioDFPWXqu2Zz7rwr2vN5c0jOyGH7FQ9UyJBMv0gsDfpdMUVz3Atif7WB6M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywwrdb0w5qGZtReY9aqJjPNjKjBmwvAVms4c87pb/Kq4hfsYMcp
+	R8hqsnEZVmXf8qUuA+QUxlBcMmdWHOWlhvyEvMah8axhKH2VrFNXywRoKkK7QHo=
+X-Gm-Gg: ASbGnctGQsZFy38khHVFTRu6TdVc/tYhwUH4tsJ2NaKbABosC5h1PRjR+q3vyK6ulMS
+	zJzy/NcoITd/ga5fLEoZTc+hpHnEIvKShx/y93NEQBkWiXfFBToh7t2Eia960T24QDE+p/xjj7N
+	5blV4x2JSnovwuOmb/woxvevw5CIGjzNZlLujzZIXL7A1g0cvLnf3Na+XL30TOwe1yXBZDLoRRk
+	5LuIRltE21W2xbE1aw5hTD2iE4odQ/ixGKEBMXdZ/NhUg168w8kJPz3Yp0gd614Me4xHite18ps
+	s7UpUyeSviUTYpF46GfyxIP1t8dqGjMu+03FIQ==
+X-Google-Smtp-Source: AGHT+IHGr9cBdHuxjSZWLqVT9rmChGPepYhM4CQE7w0ih4cdp+SrjuSnVfBVqnG9DIEOEXWf/Vdtbw==
+X-Received: by 2002:a05:6402:254b:b0:5f4:c499:54e8 with SMTP id 4fb4d7f45d1cf-5f6de697effmr1551743a12.15.1745477802488;
+        Wed, 23 Apr 2025 23:56:42 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6ed9e0936sm674611a12.71.2025.04.23.23.56.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 23:56:41 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:56:40 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Melody Olvera <melody.olvera@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Fix PINGROUP defination for sm8750
+Message-ID: <aAngqFUPUxJfHhXJ@linaro.org>
+References: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
 
-MEI GSC interrupt comes from i915. It has top half and bottom half.
-Top half is called from i915 interrupt handler. It should be in
-irq disabled context.
+On 25-04-24 10:17:10, Maulik Shah wrote:
+> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+> 
+> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
+> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
+> 
+> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
 
-With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
-top half might be in threaded IRQ context. In this case, local IRQ
-should be disabled for MEI GSC interrupt top half.
+Nitpick: in commit subject, fix spelling of definition.
 
-This change fixes A380/A770 GPU boot hang issue with RT kernel.
+With that fixed, LGTM:
 
-Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
----
- drivers/gpu/drm/i915/gt/intel_gsc.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
-index 1e925c75fb080..9c72117263f78 100644
---- a/drivers/gpu/drm/i915/gt/intel_gsc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
-@@ -270,6 +270,9 @@ static void gsc_init_one(struct drm_i915_private *i915, struct intel_gsc *gsc,
- static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
- {
- 	int ret;
-+#ifdef CONFIG_PREEMPT_RT
-+	int irq_disabled_flag;
-+#endif
- 
- 	if (intf_id >= INTEL_GSC_NUM_INTERFACES) {
- 		gt_warn_once(gt, "GSC irq: intf_id %d is out of range", intf_id);
-@@ -284,7 +287,18 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
- 	if (gt->gsc.intf[intf_id].irq < 0)
- 		return;
- 
-+#ifdef CONFIG_PREEMPT_RT
-+	/* mei interrupt top half should run in irq disabled context */
-+	irq_disabled_flag = irqs_disabled();
-+	if (!irq_disabled_flag)
-+		local_irq_disable();
-+#endif
- 	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
-+#ifdef CONFIG_PREEMPT_RT
-+	if (!irq_disabled_flag)
-+		local_irq_enable();
-+#endif
-+
- 	if (ret)
- 		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
- }
--- 
-2.34.1
-
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
