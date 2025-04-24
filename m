@@ -1,121 +1,161 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4681F4187;
-	Thu, 24 Apr 2025 07:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6AF1F4701;
+	Thu, 24 Apr 2025 07:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481367; cv=none; b=Sceg4nrjIppb4d60oo8K758rV/9TzrRAe2SBkT+dUOLG5mPkpbatCAVOGJ0JooMQ8PAgkttW7ILCvAEe2gEiTR3ADrZsGPbIu3pzOODAUqS6xieT1K7C+venyi/qcbE0tjT3ijL8wDSzUf+y4l9EU7ZR/QtE0uAj+F++6MXguKU=
+	t=1745481378; cv=none; b=DgVbDBozO5X0MAjXweX9VK2XTbkAb3Q8eSfYJBiW8gtAtm1YqqBcefBxIavWx/avYXyhc+Qo7mZnNBmt22kp6AK5qG2KeTDMdqaklhew+ZfJKsqcHqnIXyMq/ImkGoRTsfn7TQYC5Kl7j5wvxu+sdwTGIKgqCNU7VAncvRhPgek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481367; c=relaxed/simple;
-	bh=De9UShe1/X3LNdWVN26pT+PmYrdXKnozkBuEegsfHFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fB5ctPmacr3aKXvlv1B9Ju9Qf09j9pr/e4DcbSGRMScfkxz3PmQiIOuyFauooA7DlS9RFfzCbHDMhl7zM12ZyR5aLPG9FLJLMAOizucJ9J+b9rrdOeKKAyweyXACgC0dYe4jByu0LXxKGENueHqw65QXHTWW0h5ucF+zxal2+jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=YAwADi+h; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m0gLsZFK; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1745481378; c=relaxed/simple;
+	bh=f3eIIVDimPRFiUePYtS3GnqRY+fghTickcLjZYIfygI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YfIv/mJCX+BUNOarlKpmzxZ/Q9+A+EfGgWltPCzWiA14qCrX487RrwY0TGGzWD3BIVXUNyg0wBHbs87xLg5+X4SX6HXZ1Lrzvge/rXH2u9JqaQiFpE4oAFY5ikzREngvKAmnJTYgF9zJfWCSRTN08BIFsd8/STFZbpatciNtaoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mMyYm0Ep; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="YAwADi+h";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m0gLsZFK"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id D232B1380773;
-	Thu, 24 Apr 2025 03:56:04 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 24 Apr 2025 03:56:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1745481364; x=
-	1745567764; bh=4tkLLmFEY+c9SdxK/vQyV8fujxfOxzgi0/53sas8r0M=; b=Y
-	AwADi+h6kNC89D9yEj9u/umkCp68ghlQOzsVVVK7G8xVKP0Giuog5Ve8H3bOE1Sd
-	QBhqp0dVxIYhcV23KBk3ln3sAwBuiWqpVfFlbmv6n4G20OCUhmFMaE9JxqykuHgm
-	Z3zicH24hln/ah9q3Y4LH9XNP8qw2TxpQ8sEP+zDoVw5dPMWgQjjZOvbB5n7wjJM
-	E08BZ7+m1P/+skOCb/tlz6+6/EhhHYCRNXeqyZgeJ3Z02GJDruxMKqu0ml7eg/Dn
-	4E09dKnTlmSBxJuAgk6qSjoEmmfuFj4Hz60NbG6iSg6Ea14INdo3ljDNOBtmCRHr
-	KAIkxpaBKqc5WJksEPytg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1745481364; x=1745567764; bh=4tkLLmFEY+c9SdxK/vQyV8fujxfOxzgi0/5
-	3sas8r0M=; b=m0gLsZFKIZPACqMiT2XxXdKSpr4scaqNRcI+3SgbBUoEpwxEF9E
-	P5e1RWn6eKMaeHLxXOwIkyL0aKYBCKxNam0PUJrNbq9wpRaYqGrruNjUkdFidBtu
-	auw3+U6Ca11xyl2PiDsGaAaYWeAi8w75tr9psiKcykiPTjNL6HTuKOLSxohsgBjC
-	uZILv9t1omLZOaVHwyf5BytycEyaNBzhuANTN/CjTtvhqa72TCY57apPJCqbFoYb
-	UY0TdObP1EbLWX4j4U9pQQ5qU97RR24nchRJotoAQNf7OiL6OIyDjTLPjQ4635Qf
-	QzuJfYh1UxNpncJhUPsmdBQ5BR1mQT9uw+g==
-X-ME-Sender: <xms:lO4JaGP-ZMhtd6XhI56X6omJi4P3NB-9ByBeEzDCzxeHO4eccpkJVQ>
-    <xme:lO4JaE9ex7T2cGlQUeDHz8T7p_GJxy0ENuOAM6l0FwixbUjFaDQbCXFO-izCERegr
-    KAMVEcnfwoZEMTCW6I>
-X-ME-Received: <xmr:lO4JaNR50oHnpCrS3xuu4kdnYI4TS0rlEzSPE0HXqPmqZEBcb9TeccSuAiRrEbEp9CDxvA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekleefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
-    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
-    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepvdejpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopeihrghnrdihrdiihhgrohesihhnthgvlhdrtghomhdprhgtphhtthhopehp
-    sghonhiiihhnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepshgvrghnjhgtsehgoh
-    hoghhlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghk
-    rdhprdgvughgvggtohhmsggvsehinhhtvghlrdgtohhmpdhrtghpthhtohepuggrvhgvrd
-    hhrghnshgvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehkihhrihhllhdrshhhuhht
-    vghmohhvsehinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:lO4JaGvDZcyIUMKmHbMjiKceP6rKNglh6Dzo0t02V_lgUHaWxiuGMQ>
-    <xmx:lO4JaOcazqGjG6oLpmMKDnEW4E7COSB18qKyfCPeKz1DDsjGfhJu7g>
-    <xmx:lO4JaK2ax7DSdB4FmgImL3AayLZWv28pO3f7QaauCNaMWKQfcqgZOw>
-    <xmx:lO4JaC_bDaoBVcVleMCqs1PUntR5ntmWOL52mPFz58rW85FsGkrzzA>
-    <xmx:lO4JaIJqD7XPkWuLv0JF_xwciiLHzIeOOX3p69iZgQKIk8VoscvPQqjV>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Apr 2025 03:55:56 -0400 (EDT)
-Date: Thu, 24 Apr 2025 10:55:53 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com, 
-	dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com, 
-	ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, david@redhat.com, 
-	vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
-	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, xiaoyao.li@intel.com, 
-	binbin.wu@linux.intel.com, chao.p.peng@intel.com
-Subject: Re: [RFC PATCH 04/21] KVM: TDX: Enforce 4KB mapping level during TD
- build Time
-Message-ID: <g3htfhtzg23aynnmv4pqwothiub5ojewvm3xgoyfn7rpfwru5j@fdnrdiz3to7a>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <20250424030500.32720-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mMyYm0Ep"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F8nc010153;
+	Thu, 24 Apr 2025 07:56:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jDYVcaD2vgHMNkALouL+nXyl+PSA4fkxHhUjBnz1ibs=; b=mMyYm0Ep5uMkPPln
+	uLDN4f6M5xdwP8l2coQKztvjoC8QI1VhlBZs2WYMQCmSeL9K6kIitlun2ojOez2k
+	51pXhoOI2pOnTvhHjTJkL3Y+bPbZjFj9Hj2Si01Usd4LM4r4AaTHC+kCVNCJE3sX
+	uER27aibYDEZP4rgs9lBupugC7qWDHBXZkaN1A43Mt/uxD9dY3gFH9zML1/p+d+i
+	EIZqj2syBIMtgAe6M9H7PySW+1RtZgraV6YfM6137IhdkLW+37vgkfuq7i7tFdQy
+	kH7ir8FR8x9FsPqzOl2SJgzdSHslfttH5Z7eT1CHFXU4jTjtCgitJwdXQns1TenT
+	+D/V/w==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0cqr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 07:56:12 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O7uBWB008328
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 07:56:11 GMT
+Received: from [10.239.132.205] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 24 Apr
+ 2025 00:56:05 -0700
+Message-ID: <774c2476-937b-4d3a-b0dc-d66f12d9f60e@quicinc.com>
+Date: Thu, 24 Apr 2025 15:56:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424030500.32720-1-yan.y.zhao@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] arm64: dts: qcom: qcs615: add ADSP and CDSP nodes
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250423-add_qcs615_remoteproc_support-v1-0-a94fe8799f14@quicinc.com>
+ <20250423-add_qcs615_remoteproc_support-v1-5-a94fe8799f14@quicinc.com>
+ <654e4b69-dac2-4e05-bbe7-61a3396da52d@oss.qualcomm.com>
+From: Lijuan Gao <quic_lijuang@quicinc.com>
+In-Reply-To: <654e4b69-dac2-4e05-bbe7-61a3396da52d@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: J9UjFCVBTYp1o4G95W1CGXiAyle7td8d
+X-Proofpoint-ORIG-GUID: J9UjFCVBTYp1o4G95W1CGXiAyle7td8d
+X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6809ee9c cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=_vx_Gu03EpfxpjJPsgkA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA1MiBTYWx0ZWRfXykghJYI7SWYF DPP7WpT/NQvfHg5SovNtkpcLn2s9OI5aJzxcV4OnZTN8YwkxL+cMDD15co34ntIaWuAV4svAtLp GLRJo0Ksqk1LgCgCEtB0ZSIWk8wvPKwOFFJnY8V5aNuMIL/rMgj5rEcoNSt4miqVEnVO2/MJ+Wv
+ AEMnRxdHmNsADwvAE5/TL3ArwzwLwg81BpkxdWDV31qODnmsM0sX82XDeyBsxyQJNBzhDpVxGuD jdJ73ayCDDMwTTSTrd98fssCBml3AytATFuqmIbm6MhgMD1lkxmoz9tqIhB7MhXOxk2WPFbttMR 3Q4dP4w9lRnvzWbtn9ML90fuA1R9vaQSBFPKy48JOUzkBogMQU8rQsu4n5a/w5rH8Sdz7nAj1cq
+ FD+IqVZJNvcTRn51BNbu+zGYxwB0eAG0YYwvIFVnW8zQ4ZmuhSwsR/6QHLuOrmGOinfkChkz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=949 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240052
 
-On Thu, Apr 24, 2025 at 11:05:00AM +0800, Yan Zhao wrote:
-> During the TD build phase (i.e., before the TD becomes RUNNABLE), enforce a
-> 4KB mapping level both in the S-EPT managed by the TDX module and the
-> mirror page table managed by KVM.
-> 
-> During this phase, TD's memory is added via tdh_mem_page_add(), which only
-> accepts 4KB granularity. Therefore, return PG_LEVEL_4K in TDX's
-> .private_max_mapping_level hook to ensure KVM maps at the 4KB level in the
-> mirror page table. Meanwhile, iterate over each 4KB page of a large gmem
-> backend page in tdx_gmem_post_populate() and invoke tdh_mem_page_add() to
-> map at the 4KB level in the S-EPT.
-> 
-> Still allow huge pages in gmem backend during TD build time. Based on [1],
-> which gmem series allows 2MB TPH and non-in-place conversion, pass in
 
-s/TPH/THP/
+
+在 4/23/2025 5:34 PM, Konrad Dybcio 写道:
+> On 4/23/25 11:17 AM, Lijuan Gao wrote:
+>> Add nodes for remoteprocs: ADSP and CDSP for QCS615 SoC to enable proper
+>> remoteproc functionality.
+>>
+>> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs615.dtsi | 86 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 86 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> index fe9fda6b71c4..c0e2d8699d05 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+>> @@ -503,6 +503,16 @@ smem_region: smem@86000000 {
+>>   			no-map;
+>>   			hwlocks = <&tcsr_mutex 3>;
+>>   		};
+>> +
+>> +		rproc_cdsp_mem: rproc-cdsp@93b00000 {
+>> +			reg = <0x0 0x93b00000 0x0 0x1e00000>;
+>> +			no-map;
+>> +		};
+>> +
+>> +		rproc_adsp_mem: rproc-adsp@95900000 {
+>> +			reg = <0x0 0x95900000 0x0 0x1e00000>;
+>> +			no-map;
+>> +		};
+> 
+> Please double check these addresses, I'm not saying they're necessarily
+> wrong, but I can't find a confirmation for them either
+> 
+After double-checking, the addresses match those on the latest memory map.
+> 
+>>   	};
+>>   
+>>   	soc: soc@0 {
+>> @@ -3124,6 +3134,44 @@ cti@7900000 {
+>>   			clock-names = "apb_pclk";
+>>   		};
+>>   
+>> +		remoteproc_cdsp: remoteproc-cdsp@8300000 {
+> 
+> remoteproc@
+> 
+> [...]
+> 
+Understood, it will be updated in the next patch.
+>> +		remoteproc_adsp: remoteproc-adsp@62400000 {
+>> +			compatible = "qcom,qcs615-adsp-pas", "qcom,sm8150-adsp-pas";
+>> +			reg = <0x0 0x62400000 0x0 0x100>;
+> 
+> The size is 0x100000 (1 MiB)
+
+Sorry, my mistake. I checked the latest datasheet, and the size should 
+be 0x4040. I will update the register size for both ADSP and CDSP
+> 
+> Konrad
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Thx and BRs
+Lijuan Gao
+
