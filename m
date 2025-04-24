@@ -1,144 +1,155 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37C1214226;
-	Thu, 24 Apr 2025 12:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F472147EA;
+	Thu, 24 Apr 2025 12:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496580; cv=none; b=kjI6dSBB8L/g1oTZut3Qnqd317F59c5wFtFZzFoJ5SyMPmrypdEkMyeOsUn4FXW9Avt5+Fr6EoQbNfFI/B4E+bFlx4kVxVtp/w/2K4QdIATc0EcnP2vgBbIS1ycPqxsYZtSEvcE1QWygnmLMQiXY2d9+rxaEd2AaEbn8tIYxxWU=
+	t=1745496610; cv=none; b=MK7w5dtRn3SjTH8rJX4CC1cEpjjsxYeebvVjH9PlqKfKJm/t6vEH0vkLIE1Zp9MPnBIev1ssCaIgsh861ufcQp65MlW2wiYz5N9RlkpyGLXBnGCl2fjdDzv0O1+wiDOHbuzu641fu89UwJlq8Mz+BOplEYkobENwt31czZN6uwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496580; c=relaxed/simple;
-	bh=IOumbczHSOU8shFA9xhjl3Y6Jgz3e7dJu7qT1Z8tdcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CWAVfDphZRZFjDkKGVyAQoJ4iB97EwPGTxTxMCrhCRQZC2og9xRCeOEtrCdxMW4e0DRlAtmbWNePXuiQNl/vXokQKuWXB6Gplvzr1uhHZV8paDI2DG24nfuah0cz5Ru0FOsTLU8QWwU4TYq6JOI4Njy+9CkMYYToGzro6m6wFAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aN11xwPy; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1745496610; c=relaxed/simple;
+	bh=YkxuED/HPMVTzxMfaj/13xIMhTlcrbMb1CQQCsqaRK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oTmk1h1GGR431zfte54UFMqFCdJF8+eAm0/MR7Qb8htCvDrCVIQd6/o/jJ/rmexrmCBLQt6x9AX9BRh5nAE0cH3F48VKkDpti2+pkxj7tcdfYLdPtKGfoLQl26iJiOy7ZYuBfURwxMLz7dahgnlF02S+eYvbcZdYhNcdj5dGtNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlVIXJju; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aN11xwPy"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-391342fc0b5so702661f8f.3;
-        Thu, 24 Apr 2025 05:09:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlVIXJju"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-227b828de00so9101095ad.1;
+        Thu, 24 Apr 2025 05:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745496577; x=1746101377; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1nz+uql6hTd/t+4gkWeKbIjPQ0uF/fdZdNIgPAqo7po=;
-        b=aN11xwPyz2VCLWOG0n/N4w5N0Eoh+bhKWIctxaiX6i8AftUFuPSY+ArDcijZEAFigu
-         GnaNeDQBPFK8pXxfTsXy+eRvlYSpNmo71Hp10dV8Jt7xEM8CdeeecLvhPhwid/PM+/hR
-         5UcmZkxNcvITBNt3O0jmVIQ0PWHlbv8TWJVLfOKRk2Jq2ZzeV1sPiM3pFtuI/zoUkIvv
-         xB9MRyyo7LkWNGv+pyZiMz5oYTu8ANz5KI77nTmFEL+7N4RNoyfgK+3hoBOSvrWY2Ofw
-         rXgquvDbU4z1nlWyiG0beNAt+aDGTymoH5LP3sAgTsV6t6FwtPACHdwC7fxQDmU4B8C+
-         Dcwg==
+        d=gmail.com; s=20230601; t=1745496607; x=1746101407; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=EX3SgmhMPLeBJmDhxjtUamBoOEgguGRipxPe692JA7E=;
+        b=IlVIXJjuDAoStRUqTXEHzoZI2fXFYUx8vEF6IOTpU4WLdH9HUo+WcHuOjo76Kf4LOh
+         1iNdABTgIDVAHwh+OelC1QhUkMynVn/lx6xfVnanxLI4cvKkG6/qDZ8g7+UP2LBTj1Sg
+         SMGoaWSTuGV/ukF0nFP580jWdOYj0BwE2hJVNHmqGTJuTIHJoTLnR5XW69LvO1/KadJW
+         BZ1ErK4g0AclxI5a7WciiEwTBs3bGPwOnQjtxLAQYJ3ZK/cOQEY5vQofcWONcos+RVQX
+         Ql5t1OSLnfi9GZpMadcH+YoxXxOwpgYpQLhgDDtZXz54oPJxry97yUtYdBUA1bM/pYsG
+         NPBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496577; x=1746101377;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1nz+uql6hTd/t+4gkWeKbIjPQ0uF/fdZdNIgPAqo7po=;
-        b=fyOv5+ogxO+Hyf7F6OWuJY4DWIQBz7MisiSZ0UG1L013Gzl8tCeUKz4nQtJ10dkcdh
-         fYENfzx9172s5RTbZpu3uQJ3daGPK5g4GM+JlXxjw06a+gM3fTO8uVURM9DBm2LZCPo0
-         CZDq+OiZmGCgUXLdLDvAmOybyVn4v6Swci7mOtnWKwfNyHdjA0wRx3xVy2t2nxTykxgF
-         jAAcuTOMEQ2h6OxEPCGkcIC96siJFq+mkKLQE24zvbVFW51T+wl4/gWn8Ze7UF5WQmfY
-         jEy9fEo7IwsqssrNj7WLHGafPw1uLv8L2XuzFkrd81Wsrh/Ir8qqWKU5p/T5BM8nnRds
-         IWtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyLyA5jBY5rCPUV+ueMSfmbhC7AU9x7nCdcTLQpVXMONyOvQ7oRB4pmslRoSPJXXiBL86Ji5FWzgAGBSU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLG4uJFABt+oGqGzdtSgxMF9CNFHpkuoMO4dhX0BaB5JeRh4lZ
-	cV1cL2wO2UQLqOlWDZXt7aWSYGeTM/5jBjxPWfMuvwpla8rPWmEhBSbmqg==
-X-Gm-Gg: ASbGncuzbsBImCH5+cFj6sFugNEXS9gOm1GBuUQgum/Gehk7MKJ8ExHw45woYOBZECn
-	mmhfUltEITQ38tlkMEhyByi1nZP3Nn3UxTeeKCzKO5XPEQ2NP6f2t28z2Y2H1pOA0MCa3kc9777
-	H66s+fgnh/PO6z9Ken4gV8hgcPVabz1Iazx8hot1v4KeN824fOMYOy3/PxGFnFQ0wQ+XoS7qEpp
-	9gZga/460sjA3SiZnVDEqggw1ISykz28/uDFUc5cahjqFaRkUcJM1LTkIE2eKtNmDSISN3yOZNF
-	IOXAv//goaW2UmmZ+KHFnR094tNqbs2aOeNp6PrE
-X-Google-Smtp-Source: AGHT+IFyuJc5iMfORqLWaUkPx5BMXp0/hSTNVRPe2oz/ZmrD8Ypvnz+cc5jNpalZZkJwjJJ+NAeV3A==
-X-Received: by 2002:a05:6000:2209:b0:39e:e588:6731 with SMTP id ffacd0b85a97d-3a06cf4b832mr1814144f8f.12.1745496576773;
-        Thu, 24 Apr 2025 05:09:36 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4408d839711sm59142365e9.0.2025.04.24.05.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:09:36 -0700 (PDT)
-Date: Thu, 24 Apr 2025 14:09:34 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: all crypto selftests failed on linux-next-20250424
-Message-ID: <aAop_uMhxVh2l5Fy@Red>
+        d=1e100.net; s=20230601; t=1745496607; x=1746101407;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EX3SgmhMPLeBJmDhxjtUamBoOEgguGRipxPe692JA7E=;
+        b=P8sqPrtc/KkZl+f7rtktKd257d7tGxKRjO6arylQNdaCp3sCOmdsf7DvtWmNF7nu2i
+         ZGwGMrkXtmSN32b84OfMLeBlbYPC6ldrpJuVp3s1eq+dPdsVvHR7birXpI0dOtnXUnDl
+         cugoeaYF96QQ6FVB59cV+rCcJXLx5lh4dfQoM2vRErilybVJpzPBi2GfU/+4EQmlXA3R
+         Z/O97FMgPQZVpmoBAsVURCpRqX9Ft1wtupBZ3lR0iclPdmOBa2Fh2dhGgjnQnJvZd6kb
+         x4aWkFLgTUeDvNgNIhfawi5cqnOScZtfC4mgoUyNO4O5vmWCNrvS/a/LwAPFTelOHc9c
+         ycTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIoJaRH2fUwOUJ5KZSxw3KzVoLeob8GJAHYh0Bg1xnfQkEaocOFC97jiR0bzAkCYXKk6IQbhxBSGpMEwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGyqfy0IPAwG9Kx0fUn0/kkdGLbWCiXoldAhtoDxWPU6iJ7ASj
+	QzbjnOiOomYjoMgp/ZHdmzb5XBJezYIi8uO9Y6r0m6tycwM5D6KW
+X-Gm-Gg: ASbGncu0CdIzaw/lrGij6hiw92RNMW5ChC2IgZOPf5QlmwBjoElG5urfYZ6BLRp3Mv+
+	x1zQ4M9CgizlO675LY1gcjwcynTLFq1tuW24m1zKVHf5dOHa3iXWVyIjXdm6J+w85CuKIk1zigN
+	jhkQQk1qZn+14jXijOWcef0Td0Pt+6eaJzqQZ1WDs2cpTDUFrOL2CI6UXF6DKagPX5qAEdEsaqR
+	w8b/fu0AxFICHtn1XbxN79ucGHvaWEqDXCCT07sV4K7u/rl2vgogu73oviKCZ/hWtAoNAH4Y4QT
+	u//WIn6y+sHJIfFoVErmrRcixxh57uEWELjtaKMjgZWeXkd3cRVBs67kMG7GGdeL2DSi+RIHaqC
+	hOdloftLYawomh8QygqcL11s3
+X-Google-Smtp-Source: AGHT+IFiMwRg9krBKjHCGQ2cWM8EFLEJICW5R0MKaOqIXB69g0tVB5p4duEFx3SzKPfcdMO5SBhSyA==
+X-Received: by 2002:a17:902:e5c8:b0:220:c813:dfd1 with SMTP id d9443c01a7336-22db3d777c4mr35729795ad.36.1745496607318;
+        Thu, 24 Apr 2025 05:10:07 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbcb0dsm11496585ad.73.2025.04.24.05.10.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 05:10:06 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <e5b126df-a311-49e5-bf6f-fe59dd083bb2@roeck-us.net>
+Date: Thu, 24 Apr 2025 05:10:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] watchdog: lenovo_se30_wdt: Fix null-ptr-deref in
+ lenovo_se30_wdt_probe()
+To: Henry Martin <bsdhenrymartin@gmail.com>, wim@linux-watchdog.org
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250424071648.89016-1-bsdhenrymartin@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250424071648.89016-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello
+On 4/24/25 00:16, Henry Martin wrote:
+> devm_ioremap() returns NULL on error. Currently, lenovo_se30_wdt_probe()
+> does not check for this case, which results in a NULL pointer
+> dereference.
+> 
+> Add NULL check after devm_ioremap() to prevent this issue.
+> 
+> Fixes: c284153a2c55 ("watchdog: lenovo_se30_wdt: Watchdog driver for Lenovo SE30 platform")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 
-All crypto selftests failed on top of linux-next-20250424
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Example on x86_64:
-[    4.637589] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[    4.637822] #PF: supervisor instruction fetch in kernel mode
-[    4.637931] #PF: error_code(0x0010) - not-present page
-[    4.638166] PGD 0 P4D 0 
-[    4.638359] Oops: Oops: 0010 [#1] SMP NOPTI
-[    4.638808] CPU: 0 UID: 0 PID: 64 Comm: virtio1-engine Not tainted 6.15.0-rc1-g63dc06cd12f9 #1 PREEMPT(voluntary) 
-[    4.639068] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-20240910_120124-localhost 04/01/2014
-[    4.639338] RIP: 0010:0x0
-[    4.640112] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-[    4.640253] RSP: 0018:ffffb2d8c025fe68 EFLAGS: 00010202
-[    4.640451] RAX: 0000000000000000 RBX: ffffa1d009a937b0 RCX: ffffa1d009a93768
-[    4.640579] RDX: ffffa1d009a93768 RSI: ffffa1d009b10920 RDI: ffffa1d009a93728
-[    4.640706] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000055
-[    4.640829] R10: 0000000000000000 R11: 000000000000004b R12: ffffa1d009a93760
-[    4.640952] R13: ffffa1d009b10920 R14: ffffa1d009a93768 R15: 0000000000000282
-[    4.641126] FS:  0000000000000000(0000) GS:ffffa1d0c0efe000(0000) knlGS:0000000000000000
-[    4.641272] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    4.641379] CR2: ffffffffffffffd6 CR3: 0000000017e32000 CR4: 00000000000006f0
-[    4.641592] Call Trace:
-[    4.642112]  <TASK>
-[    4.642234]  crypto_pump_work+0x151/0x290
-[    4.642693]  ? __pfx_crypto_pump_work+0x10/0x10
-[    4.642780]  kthread_worker_fn+0x94/0x250
-[    4.642860]  ? __pfx_kthread_worker_fn+0x10/0x10
-[    4.642942]  kthread+0xf6/0x1f0
-[    4.643003]  ? __pfx_kthread+0x10/0x10
-[    4.643086]  ret_from_fork+0x2f/0x50
-[    4.643163]  ? __pfx_kthread+0x10/0x10
-[    4.643234]  ret_from_fork_asm+0x1a/0x30
-[    4.643345]  </TASK>
-[    4.643434] Modules linked in:
-[    4.643615] CR2: 0000000000000000
-[    4.643899] ---[ end trace 0000000000000000 ]---
-[    4.644059] RIP: 0010:0x0
-[    4.644128] Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-[    4.644240] RSP: 0018:ffffb2d8c025fe68 EFLAGS: 00010202
-[    4.644330] RAX: 0000000000000000 RBX: ffffa1d009a937b0 RCX: ffffa1d009a93768
-[    4.644449] RDX: ffffa1d009a93768 RSI: ffffa1d009b10920 RDI: ffffa1d009a93728
-[    4.644561] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000055
-[    4.644672] R10: 0000000000000000 R11: 000000000000004b R12: ffffa1d009a93760
-[    4.644783] R13: ffffa1d009b10920 R14: ffffa1d009a93768 R15: 0000000000000282
-[    4.644894] FS:  0000000000000000(0000) GS:ffffa1d0c0efe000(0000) knlGS:0000000000000000
-[    4.645019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    4.645142] CR2: ffffffffffffffd6 CR3: 0000000017e32000 CR4: 00000000000006f0
-[    4.645326] note: virtio1-engine[64] exited with irqs disabled
+> ---
+>   drivers/watchdog/lenovo_se30_wdt.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/watchdog/lenovo_se30_wdt.c b/drivers/watchdog/lenovo_se30_wdt.c
+> index 024b842499b3..1c73bb7eeeee 100644
+> --- a/drivers/watchdog/lenovo_se30_wdt.c
+> +++ b/drivers/watchdog/lenovo_se30_wdt.c
+> @@ -271,6 +271,8 @@ static int lenovo_se30_wdt_probe(struct platform_device *pdev)
+>   		return -EBUSY;
+>   
+>   	priv->shm_base_addr = devm_ioremap(dev, base_phys, SHM_WIN_SIZE);
+> +	if (!priv->shm_base_addr)
+> +		return -ENOMEM;
+>   
+>   	priv->wdt_cfg.mod = WDT_MODULE;
+>   	priv->wdt_cfg.idx = WDT_CFG_INDEX;
 
-Example for arm
-[    0.293756] alg: self-tests for sha1 using sha1-ce failed (rc=-22)
-[    0.293762] ------------[ cut here ]------------
-[    0.293766] alg: self-tests for sha1 using sha1-ce failed (rc=-22)
-[    0.293809] WARNING: CPU: 7 PID: 104 at crypto/testmgr.c:5871 alg_test+0x5e4/0x608
-[    0.293833] Modules linked in:
-[    0.293844] CPU: 7 UID: 0 PID: 104 Comm: cryptomgr_test Not tainted 6.15.0-rc3-next-20250424-00005-g954547706c5d #8 PREEMPT
-[    0.293856] Hardware name: Radxa A5E (DT)
-[    0.293861] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.293871] pc : alg_test+0x5e4/0x608
-[    0.293882] lr : alg_test+0x5e4/0x608
-[    0.293893] sp : ffff80008175bd40
-[    0.293896] x29: ffff80008175bde0 x28: 00000000000000bc x27: 0000000000000000
-[    0.293911] x26: 00000000ffffffff x25: ffff800080fe1f58 x24: 00000000ffffffea
-[    0.293925] x23: 0000000000000177 x22: ffff0000c202de80 x21: 000000000500000e
-[    0.293939] x20: ffff0000c202de00 x19: ffff800080a05710 x18: 00000000fffffffe
-[    0.294032] Call trace:
-[    0.294036]  alg_test+0x5e4/0x608 (P)
-[    0.294051]  cryptomgr_test+0x24/0x44
-[    0.294063]  kthread+0x12c/0x204                                  
-Regards
