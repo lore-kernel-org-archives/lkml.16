@@ -1,324 +1,215 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BE6214A7D
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A562147F6
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745485742; cv=none; b=kT1CUzkB1qdf+Fl+jljOFkrUBNf+B+TE5sL8mEi2fF41dzfhacTY0f7JOwQdXgnr/a4DTMKQUw42C5DvIZXniC/20evWK46WT2bQ99gh+lYDAnC2cwOzWApdNWFYGTPieEeBS/9cGrLQHN7w1BvA5Uxbk6iHF+nWFDHq4yhbuyk=
+	t=1745485891; cv=none; b=BS1tIDagXTrkO5N6Zn7WBCU9ChNbfcHFV4C/pvOxSQJA2jy/2A28Wepme1pQN8mFMpeWINoip/t70cFunNTFFSkTV2KCgwy2GrFSRiE4SNPskf/itCcbakjWlGIN6YUwupnG02fliGJmP5Qm6+Nqm33S7h4Cx4Pq6QUgTvuXMDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745485742; c=relaxed/simple;
-	bh=UAsSnCZGsDqQTiTpVbn0ixPBpHqio4DIzSXgqkSakzY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rn/Yl2K+CffzlPU7tc3QZYfdEPI5J/RoVkarMCuzNQSRLJ8PBNxMmW538ugU8c5ajGDhniVktCDf0k/x6nLDc0L4/+w0Tt5N9rleLhd3diyAPYnRkhoQNEzc1zAepi6XsZFDxq+Sye+A4XO16n88gB3FSBpeUBebWU6G1C/2E8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YpV0sqbe; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YpV0sqbe; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745485891; c=relaxed/simple;
+	bh=D0+QLnTTaA8BoAdM+fBMbb/li+nh5U0QU3E85OBSLLA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WvULyxKKSfBCEkPks3P8ykthEqMRHw6Wue7Y1pj/bh4McUh7Jr7UwD3e0fedmq6rENkgQbnwErWfCrqH7fCuOiQhhnVhB81ak5a0VZeZckT48StpMmocFV0pUp91WsPmKMEph4NhDtxz95eOeRB8d4usISpTdIl3djgLR3T/2yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C4pPYpxS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YpV0sqbe";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YpV0sqbe"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F8C71F38C;
-	Thu, 24 Apr 2025 09:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745485737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UAsSnCZGsDqQTiTpVbn0ixPBpHqio4DIzSXgqkSakzY=;
-	b=YpV0sqbe2x7nb/576c0zEvJ6PxAv709DbUEyGvmPoYk55JlhxAy/vcQKJp4Vyc6ewneVCH
-	xeaeCPHrlXaKwflFLLqgiVx6YF9r1du6UlllAyp4lNKXqoif5CMg5FHKCxrlJqMIFtIHlj
-	31q4nhQgoDk/rz2AZR1FTBYZkI/KdrI=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745485737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UAsSnCZGsDqQTiTpVbn0ixPBpHqio4DIzSXgqkSakzY=;
-	b=YpV0sqbe2x7nb/576c0zEvJ6PxAv709DbUEyGvmPoYk55JlhxAy/vcQKJp4Vyc6ewneVCH
-	xeaeCPHrlXaKwflFLLqgiVx6YF9r1du6UlllAyp4lNKXqoif5CMg5FHKCxrlJqMIFtIHlj
-	31q4nhQgoDk/rz2AZR1FTBYZkI/KdrI=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 789B5139D0;
-	Thu, 24 Apr 2025 09:08:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HPTLG6j/CWgMFAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 24 Apr 2025 09:08:56 +0000
-Message-ID: <f7fe0d58-c6a0-4d25-8c5f-73f7b747970f@suse.com>
-Date: Thu, 24 Apr 2025 11:08:55 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C4pPYpxS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745485888;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S9HOt8K1x3ctE3BWSKA9qeH3oq86sKFq23Km/AG9m9c=;
+	b=C4pPYpxS81l2+KLqeFQm4g4yMBZHyVwfuMI/F5XN+ibi31BSp0FoNlACl9HfHM7hnkdzen
+	Am/hgIltRfMAUymhPA0rgNZBMQnZ4LYGUOUPKsT6yhaaltspawp/Y4z54iNhiGzjviQNn/
+	X868ZzOsjY60UTc8tROdEyTNkS5rM9g=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-153-ZaE1gfTlOAeznCTMK1-aPw-1; Thu, 24 Apr 2025 05:11:26 -0400
+X-MC-Unique: ZaE1gfTlOAeznCTMK1-aPw-1
+X-Mimecast-MFC-AGG-ID: ZaE1gfTlOAeznCTMK1-aPw_1745485885
+Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-72a48b91fbbso180572a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:11:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745485885; x=1746090685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S9HOt8K1x3ctE3BWSKA9qeH3oq86sKFq23Km/AG9m9c=;
+        b=P8Q9Nb5TQQiFiXfaDaFmRxwlMtWKQceg0SYSxZxdf8ARHZWWfXGaUpblK8Ji8xw3O2
+         CSZPRoFdhBH2eGgcKZXmOLYHr2rOwPTQbAZmpZyP7wX/UNyLSsiOFZ65+CpL6dMFpwsa
+         ytQf+3aWn+UDXy7bxGRnYb1jwJhUVmE1qWVX3etutweMA4FKuOIBGWkSkFd8foQ/l/Kg
+         2Q7ZS1UmLFe37Z9GU6gfGwcPpbIfxusiCC6j1AyVCsbb5wtUtLTCxIcG/gLZHqJDXMbx
+         T929fAf8UO9cgRZzosLUDfnVuJ/i4ftf8jaZcMTUku1mNdxVi51HdDC6D4mQxjoYYTkS
+         5QOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTY9ZM1lBmXGV5dBa3tBpqAdigAWZ+sz/14ZbMhwvorkgbnzw+1NwY9i3DSGz4Qf/hS5BPBgYF1QbwHow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUWHOcBj9pE69sbCJq1BvBopVsWt3qL8hsnGEA0sAgyTabfsHJ
+	QmowzXco3HS/V23hhLKz2iCV6UX+SHOi96AL1Y/LBTE2kf/7BaeaLWSNnLK1DSnzVb74wVF0LFD
+	ZzE4TFtWKwNT6EplNTJE4m8g0bzfNmzCFtdf02RWgi0yCEYfsrETRBrmeRWF7Sf/No38Isf93Lm
+	L6UXcHlLdk+7TQKOCQejNrjRg6d7cXTEslyemc
+X-Gm-Gg: ASbGncvmT75vMS1ytninFkryRJZY08g1bfQ2Zx5A0KBryjvsrHgilF3oywZSOaQsbCO
+	whdXJBr3cOFqcuWxi5nYlaPLzJDva1afua08KNOnU2T8sk6atw2DmqfoqxDJKtKGiOeE=
+X-Received: by 2002:a05:6871:7406:b0:2c8:234d:971b with SMTP id 586e51a60fabf-2d96e6aa4ebmr380756fac.9.1745485885525;
+        Thu, 24 Apr 2025 02:11:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFK7qUeJJwQjklraK2nHiUwpH65h8T9xweuQl27N0LwRhvIakqeaQOVUhg1tEDsLwCPFdAeBvDc3b678FCalLc=
+X-Received: by 2002:a05:6871:7406:b0:2c8:234d:971b with SMTP id
+ 586e51a60fabf-2d96e6aa4ebmr380751fac.9.1745485885149; Thu, 24 Apr 2025
+ 02:11:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/21] KVM: TDX huge page support for private memory
-To: "Kirill A. Shutemov" <kirill@shutemov.name>,
- Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
- dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
- ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
- david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
- thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
- fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
- chao.p.peng@intel.com
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <e735cpugrs3k5gncjcbjyycft3tuhkm75azpwv6ctwqfjr6gkg@rsf4lyq4gqoj>
- <aAn3SSocw0XvaRye@yzhao56-desk.sh.intel.com>
- <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------UZ8TilJqpfLBedWDbrv00s83"
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.19 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	NEURAL_HAM_LONG(-0.99)[-0.992];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
-	HAS_ATTACHMENT(0.00)[]
-X-Spam-Score: -5.19
-X-Spam-Flag: NO
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------UZ8TilJqpfLBedWDbrv00s83
-Content-Type: multipart/mixed; boundary="------------OeOH79kSNo1j1oTSQ3Rt6NOY";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>,
- Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
- dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
- ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
- david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
- thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
- fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
- chao.p.peng@intel.com
-Message-ID: <f7fe0d58-c6a0-4d25-8c5f-73f7b747970f@suse.com>
-Subject: Re: [RFC PATCH 00/21] KVM: TDX huge page support for private memory
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <e735cpugrs3k5gncjcbjyycft3tuhkm75azpwv6ctwqfjr6gkg@rsf4lyq4gqoj>
- <aAn3SSocw0XvaRye@yzhao56-desk.sh.intel.com>
- <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
-In-Reply-To: <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
-
---------------OeOH79kSNo1j1oTSQ3Rt6NOY
-Content-Type: multipart/mixed; boundary="------------nvtTbheBbcELWQCP8HZ2WejF"
-
---------------nvtTbheBbcELWQCP8HZ2WejF
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMjQuMDQuMjUgMTE6MDUsIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gT24gVGh1
-LCBBcHIgMjQsIDIwMjUgYXQgMDQ6MzM6MTNQTSArMDgwMCwgWWFuIFpoYW8gd3JvdGU6DQo+
-PiBPbiBUaHUsIEFwciAyNCwgMjAyNSBhdCAxMDozNTo0N0FNICswMzAwLCBLaXJpbGwgQS4g
-U2h1dGVtb3Ygd3JvdGU6DQo+Pj4gT24gVGh1LCBBcHIgMjQsIDIwMjUgYXQgMTE6MDA6MzJB
-TSArMDgwMCwgWWFuIFpoYW8gd3JvdGU6DQo+Pj4+IEJhc2ljIGh1Z2UgcGFnZSBtYXBwaW5n
-L3VubWFwcGluZw0KPj4+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+
-Pj4gLSBURCBidWlsZCB0aW1lDQo+Pj4+ICAgIFRoaXMgc2VyaWVzIGVuZm9yY2VzIHRoYXQg
-YWxsIHByaXZhdGUgbWFwcGluZ3MgYmUgNEtCIGR1cmluZyB0aGUgVEQgYnVpbGQNCj4+Pj4g
-ICAgcGhhc2UsIGR1ZSB0byB0aGUgVERYIG1vZHVsZSdzIHJlcXVpcmVtZW50IHRoYXQgdGRo
-X21lbV9wYWdlX2FkZCgpLCB0aGUNCj4+Pj4gICAgU0VBTUNBTEwgZm9yIGFkZGluZyBwcml2
-YXRlIHBhZ2VzIGR1cmluZyBURCBidWlsZCB0aW1lLCBvbmx5IHN1cHBvcnRzIDRLQg0KPj4+
-PiAgICBtYXBwaW5ncy4gRW5mb3JjaW5nIDRLQiBtYXBwaW5ncyBhbHNvIHNpbXBsaWZpZXMg
-dGhlIGltcGxlbWVudGF0aW9uIG9mDQo+Pj4+ICAgIGNvZGUgZm9yIFREIGJ1aWxkIHRpbWUs
-IGJ5IGVsaW1pbmF0aW5nIHRoZSBuZWVkIHRvIGNvbnNpZGVyIG1lcmdpbmcgb3INCj4+Pj4g
-ICAgc3BsaXR0aW5nIGluIHRoZSBtaXJyb3IgcGFnZSB0YWJsZSBkdXJpbmcgVEQgYnVpbGQg
-dGltZS4NCj4+Pj4gICAgDQo+Pj4+ICAgIFRoZSB1bmRlcmx5aW5nIHBhZ2VzIGFsbG9jYXRl
-ZCBmcm9tIGd1ZXN0X21lbWZkIGR1cmluZyBURCBidWlsZCB0aW1lDQo+Pj4+ICAgIHBoYXNl
-IGNhbiBzdGlsbCBiZSBsYXJnZSwgYWxsb3dpbmcgZm9yIHBvdGVudGlhbCBtZXJnaW5nIGlu
-dG8gMk1CDQo+Pj4+ICAgIG1hcHBpbmdzIG9uY2UgdGhlIFREIGlzIHJ1bm5pbmcuDQo+Pj4N
-Cj4+PiBJdCBjYW4gYmUgZG9uZSBiZWZvcmUgVEQgaXMgcnVubmluZy4gVGhlIG1lcmdpbmcg
-aXMgYWxsb3dlZCBvbiBURCBidWlsZA0KPj4+IHN0YWdlLg0KPj4+DQo+Pj4gQnV0LCB5ZXMs
-IGZvciBzaW1wbGljaXR5IHdlIGNhbiBza2lwIGl0IGZvciBpbml0aWFsIGVuYWJsaW5nLg0K
-Pj4gWWVzLCB0byBhdm9pZCBjb21wbGljYXRpbmcga3ZtX3RkeC0+bnJfcHJlbWFwcGVkIGNh
-bGN1bGF0aW9uLg0KPj4gSSBhbHNvIGRvbid0IHNlZSBhbnkgYmVuZWZpdCB0byBhbGxvdyBt
-ZXJnaW5nIGR1cmluZyBURCBidWlsZCBzdGFnZS4NCj4+DQo+Pj4NCj4+Pj4gUGFnZSBzcGxp
-dHRpbmcgKHBhZ2UgZGVtb3Rpb24pDQo+Pj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQ0KPj4+PiBQYWdlIHNwbGl0dGluZyBvY2N1cnMgaW4gdHdvIHBhdGhzOg0KPj4+PiAo
-YSkgd2l0aCBleGNsdXNpdmUga3ZtLT5tbXVfbG9jaywgdHJpZ2dlcmVkIGJ5IHphcHBpbmcg
-b3BlcmF0aW9ucywNCj4+Pj4NCj4+Pj4gICAgICBGb3Igbm9ybWFsIFZNcywgaWYgemFwcGlu
-ZyBhIG5hcnJvdyByZWdpb24gdGhhdCB3b3VsZCBuZWVkIHRvIHNwbGl0IGENCj4+Pj4gICAg
-ICBodWdlIHBhZ2UsIEtWTSBjYW4gc2ltcGx5IHphcCB0aGUgc3Vycm91bmRpbmcgR0ZOcyBy
-YXRoZXIgdGhhbg0KPj4+PiAgICAgIHNwbGl0dGluZyBhIGh1Z2UgcGFnZS4gVGhlIHBhZ2Vz
-IGNhbiB0aGVuIGJlIGZhdWx0ZWQgYmFjayBpbiwgd2hlcmUgS1ZNDQo+Pj4+ICAgICAgY2Fu
-IGhhbmRsZSBtYXBwaW5nIHRoZW0gYXQgYSA0S0IgbGV2ZWwuDQo+Pj4+DQo+Pj4+ICAgICAg
-VGhlIHJlYXNvbiB3aHkgVERYIGNhbid0IHVzZSB0aGUgbm9ybWFsIFZNIHNvbHV0aW9uIGlz
-IHRoYXQgemFwcGluZw0KPj4+PiAgICAgIHByaXZhdGUgbWVtb3J5IHRoYXQgaXMgYWNjZXB0
-ZWQgY2Fubm90IGVhc2lseSBiZSByZS1mYXVsdGVkLCBzaW5jZSBpdA0KPj4+PiAgICAgIGNh
-biBvbmx5IGJlIHJlLWZhdWx0ZWQgYXMgdW5hY2NlcHRlZC4gU28gS1ZNIHdpbGwgaGF2ZSB0
-byBzb21ldGltZXMgZG8NCj4+Pj4gICAgICB0aGUgcGFnZSBzcGxpdHRpbmcgYXMgcGFydCBv
-ZiB0aGUgemFwcGluZyBvcGVyYXRpb25zLg0KPj4+Pg0KPj4+PiAgICAgIFRoZXNlIHphcHBp
-bmcgb3BlcmF0aW9ucyBjYW4gb2NjdXIgZm9yIGZldyByZWFzb25zOg0KPj4+PiAgICAgIDEu
-IFZNIHRlYXJkb3duLg0KPj4+PiAgICAgIDIuIE1lbXNsb3QgcmVtb3ZhbC4NCj4+Pj4gICAg
-ICAzLiBDb252ZXJzaW9uIG9mIHByaXZhdGUgcGFnZXMgdG8gc2hhcmVkLg0KPj4+PiAgICAg
-IDQuIFVzZXJzcGFjZSBkb2VzIGEgaG9sZSBwdW5jaCB0byBndWVzdF9tZW1mZCBmb3Igc29t
-ZSByZWFzb24uDQo+Pj4+DQo+Pj4+ICAgICAgRm9yIGNhc2UgMSBhbmQgMiwgc3BsaXR0aW5n
-IGJlZm9yZSB6YXBwaW5nIGlzIHVubmVjZXNzYXJ5IGJlY2F1c2UNCj4+Pj4gICAgICBlaXRo
-ZXIgdGhlIGVudGlyZSByYW5nZSB3aWxsIGJlIHphcHBlZCBvciBodWdlIHBhZ2VzIGRvIG5v
-dCBzcGFuDQo+Pj4+ICAgICAgbWVtc2xvdHMuDQo+Pj4+ICAgICAgDQo+Pj4+ICAgICAgQ2Fz
-ZSAzIG9yIGNhc2UgNCByZXF1aXJlcyBzcGxpdHRpbmcsIHdoaWNoIGlzIGFsc28gZm9sbG93
-ZWQgYnkgYQ0KPj4+PiAgICAgIGJhY2tlbmQgcGFnZSBzcGxpdHRpbmcgaW4gZ3Vlc3RfbWVt
-ZmQuDQo+Pj4+DQo+Pj4+IChiKSB3aXRoIHNoYXJlZCBrdm0tPm1tdV9sb2NrLCB0cmlnZ2Vy
-ZWQgYnkgZmF1bHQuDQo+Pj4+DQo+Pj4+ICAgICAgU3BsaXR0aW5nIGluIHRoaXMgcGF0aCBp
-cyBub3QgYWNjb21wYW5pZWQgYnkgYSBiYWNrZW5kIHBhZ2Ugc3BsaXR0aW5nDQo+Pj4+ICAg
-ICAgKHNpbmNlIGJhY2tlbmQgcGFnZSBzcGxpdHRpbmcgbmVjZXNzaXRhdGVzIGEgc3BsaXR0
-aW5nIGFuZCB6YXBwaW5nDQo+Pj4+ICAgICAgIG9wZXJhdGlvbiBpbiB0aGUgZm9ybWVyIHBh
-dGgpLiAgSXQgaXMgdHJpZ2dlcmVkIHdoZW4gS1ZNIGZpbmRzIHRoYXQgYQ0KPj4+PiAgICAg
-IG5vbi1sZWFmIGVudHJ5IGlzIHJlcGxhY2luZyBhIGh1Z2UgZW50cnkgaW4gdGhlIGZhdWx0
-IHBhdGgsIHdoaWNoIGlzDQo+Pj4+ICAgICAgdXN1YWxseSBjYXVzZWQgYnkgdkNQVXMnIGNv
-bmN1cnJlbnQgQUNDRVBUIG9wZXJhdGlvbnMgYXQgZGlmZmVyZW50DQo+Pj4+ICAgICAgbGV2
-ZWxzLg0KPj4+DQo+Pj4gSG0uIFRoaXMgc291bmRzIGxpa2UgZnVua3kgYmVoYXZpb3VyIG9u
-IHRoZSBndWVzdCBzaWRlLg0KPj4+DQo+Pj4gWW91IG9ubHkgc2F3IGl0IGluIGEgc3ludGhl
-dGljIHRlc3QsIHJpZ2h0PyBObyByZWFsIGd1ZXN0IE9TIHNob3VsZCBkbw0KPj4+IHRoaXMu
-DQo+PiBSaWdodC4gSW4gc2VsZnRlc3Qgb25seS4NCj4+IEFsc28gaW4gY2FzZSBvZiBhbnkg
-Z3Vlc3QgYnVncy4NCj4+DQo+Pj4gSXQgY2FuIG9ubHkgYmUgcG9zc2libGUgaWYgZ3Vlc3Qg
-aXMgcmVja2xlc3MgZW5vdWdoIHRvIGJlIGV4cG9zZWQgdG8NCj4+PiBkb3VibGUgYWNjZXB0
-IGF0dGFja3MuDQo+Pj4NCj4+PiBXZSBzaG91bGQgY29uc2lkZXIgcHV0dGluZyBhIHdhcm5p
-bmcgaWYgd2UgZGV0ZWN0IHN1Y2ggY2FzZSBvbiBLVk0gc2lkZS4NCj4+IElzIGl0IGFjY2Vw
-dGFibGUgdG8gcHV0IHdhcm5pbmdzIGluIGhvc3Qga2VybmVsIGluIGNhc2Ugb2YgZ3Vlc3Qg
-YnVncyBvcg0KPj4gYXR0YWNrcz8NCj4gDQo+IHByX3dhcm5fb25jZSgpIHNob3VsZG4ndCBi
-ZSBhIGJpZyBkZWFsLg0KDQpTaG91bGRuJ3Qgc3VjaCBhIHdhcm5pbmcgYmUgb25jZSBwZXIg
-Z3Vlc3Q/DQoNClNvIGVpdGhlciB3ZSBuZWVkIGEgcGVyIGd1ZXN0IGZsYWcsIG9yIHdlIGNv
-dWxkIHVzZSBwcl93YXJuX3JhdGVsaW1pdGVkKCkuDQoNCg0KSnVlcmdlbg0K
---------------nvtTbheBbcELWQCP8HZ2WejF
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
+References: <20250415072724.3565533-1-peter.chen@cixtech.com>
+In-Reply-To: <20250415072724.3565533-1-peter.chen@cixtech.com>
+From: Enric Balletbo i Serra <eballetb@redhat.com>
+Date: Thu, 24 Apr 2025 11:11:00 +0200
+X-Gm-Features: ATxdqUE5d3FPvXzpICK8B6GZkItGWuDz2HbxbB6ClXETUq4KFHFcvwKgyIo7a18
+Message-ID: <CALE0LRsnuAfaXWPvZAktRk-RKkbhv9DAvdfAfg-AwbMbPynsig@mail.gmail.com>
+Subject: Re: [PATCH v6 00/10] arm64: Introduce CIX P1 (SKY1) SoC
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	cix-kernel-upstream@cixtech.com, maz@kernel.org, kajetan.puchalski@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Hi Peter,
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+On Tue, Apr 15, 2025 at 9:30=E2=80=AFAM Peter Chen <peter.chen@cixtech.com>=
+ wrote:
+>
+> Cixtech P1 (internal name sky1) is high performance generic Armv9 SoC.
+> Orion O6 is the Arm V9 Motherboard built by Radxa. You could find brief
+> introduction for SoC and related boards at:
+> https://radxa.com/products/orion/o6#overview
+>
+> In this series, we add initial SoC and board support for Kernel building.
+> Patch 1-2: add dt-binding doc for CIX and its sky1 SoC
+> Patch 3-4: add Arm64 build support
+> Patch 5-7: add CIX mailbox driver which needs to support SCMI clock proto=
+col.
+> Patch 8-9: add initial dts support for SoC and Orion O6 board
 
---------------nvtTbheBbcELWQCP8HZ2WejF--
+Many thanks for these patches, with these I was able to run the latest
+mainline kernel on boot to the console on my Orion O6 board. I think
+others already tested just wanted to point out if you can keep me in
+the loop, thanks.
 
---------------OeOH79kSNo1j1oTSQ3Rt6NOY--
+If you feel is useful you can add:
 
---------------UZ8TilJqpfLBedWDbrv00s83
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Tested-by: Enric Balletbo i Serra <eballetb@redhat.com>
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+  Enric
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgJ/6cFAwAAAAAACgkQsN6d1ii/Ey9e
-xggAlJDAvofSl3cnDEsF0qZ5PDDp8B2JGDuhg/9mL8GOzyHmbBIDM4/kCgYtm0JNKe4op2YxORmz
-u2c71CY+lfsOG9gKAAIegrQDlxeGX8u+lD6yeLApfeZumyWuBqvWppz83z7EO7G21YkQjxmW8knc
-F/hWphHqU+HGj205GrjW37MeZ5qwEZxBYBV+WQkU4cTtRh4cmgcFdD8H0iWDa4PstgCDr7X3bPfJ
-E4X34InObIwYCkvZ3XkMNS7WbhGZHQKx6ysKqhtsREC04vFXIU8Z7Vg3hXlPR++ZUsCkWWBNZDuT
-LIy8tT8gv9hD/a7sA9zmf5qG7y0jHbTDG927scw76w==
-=Ug5P
------END PGP SIGNATURE-----
+> Patch 10: add MAINTAINERS entry
+>
+> Currently, to run upstream kernel at Orion O6 board, you need to
+> use BIOS released by Radxa, and add "clk_ignore_unused=3D1" at bootargs.
+> https://docs.radxa.com/en/orion/o6/bios/install-bios
+>
+> Changes for v6:
+> - Rebase to v6.15-rc2
+> - Add mailbox driver
+> - Add device tree description for uart, mailbox and scmi firmware (for cl=
+ock).
+>
+> Changes for v5:
+> - Patch 5: Delete pmu-spe node which need to refine, and add it in future
+> - Patch 6: Refine MAINTAINERS for all CIX SoC and adding code tree locati=
+on
+>
+> Changes for v4:
+> - Move add MAINTAINERS entry patch to the last, and add two dts files ent=
+ry in it.
+> - Add three Krzysztof Kozlowski's Reviewed-by Tags
+> - For sky1.dtsi, makes below changes:
+>         - Add ppi-partition entry for gic-v3 node, and let pmu-a520 and p=
+mu-a720's interrupt entry
+>         get its handle
+>         - Remove gic-v3's #redistributor-regions and redistributor-stride=
+ properties
+>         - Change gic-v3's #interrupt-cells as 4, and change all interrupt=
+ specifiers accordingly
+>         - Remove "arm,no-tick-in-suspend" for timer due to global counter=
+ is at always-on power domain
+>         - Remove timer's clock frequency due to firmware has already set =
+it
+>
+> Changes for v3:
+> - Patch 1: Add Krzysztof Kozlowski's Acked-by Tag
+> - Patch 2: Add Krzysztof Kozlowski's Reviewed-by Tag
+> - Patch 6: Fix two dts coding sytle issues
+>
+> Changes for v2:
+> - Pass dts build check with below commands:
+> make O=3D$OUTKNL dt_binding_check DT_SCHEMA_FILES=3Dvendor-prefixes.yaml
+> make O=3D$OUTKNL dt_binding_check DT_SCHEMA_FILES=3Darm/cix.yaml
+> make O=3D$OUTKNL CHECK_DTBS=3Dy W=3D1 cix/sky1-orion-o6.dtb
+> - Re-order the patch set, and move vendor-perfixes to the 1st patch.
+> - Patch 4: Ordered Kconfig config entry by alpha-numerically
+> - Patch 5: Corrects the Ack tag's name
+> - Patch 6: see below.
+> 1) Corrects the SoF tag's name
+> 2) Fix several coding sytle issues
+> 3) move linux,cma node to dts file
+> 4) delete memory node, memory size is passed by firmware
+> 5) delete uart2 node which will be added in future patches
+> 6) Improve for pmu and cpu node to stands for more specific cpu model
+> 7) Improve the timer node and add hypervisor virtual timer irq
+>
+> Fugang Duan (1):
+>   arm64: Kconfig: add ARCH_CIX for cix silicons
+>
+> Gary Yang (1):
+>   dt-bindings: clock: cix: Add CIX sky1 scmi clock id
+>
+> Guomin Chen (2):
+>   dt-bindings: mailbox: add cix,sky1-mbox
+>   mailbox: add CIX mailbox driver
+>
+> Peter Chen (6):
+>   dt-bindings: vendor-prefixes: Add CIX Technology Group Co., Ltd.
+>   dt-bindings: arm: add CIX P1 (SKY1) SoC
+>   arm64: defconfig: Enable CIX SoC
+>   arm64: defconfig: enable CIX mailbox
+>   arm64: dts: cix: add initial CIX P1(SKY1) dts support
+>   MAINTAINERS: Add CIX SoC maintainer entry
+>
+>  .../devicetree/bindings/arm/cix.yaml          |  26 +
+>  .../bindings/mailbox/cix,sky1-mbox.yaml       |  71 ++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  MAINTAINERS                                   |  11 +
+>  arch/arm64/Kconfig.platforms                  |   6 +
+>  arch/arm64/boot/dts/Makefile                  |   1 +
+>  arch/arm64/boot/dts/cix/Makefile              |   2 +
+>  arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |  39 ++
+>  arch/arm64/boot/dts/cix/sky1.dtsi             | 335 ++++++++++
+>  arch/arm64/configs/defconfig                  |   2 +
+>  drivers/mailbox/Kconfig                       |  10 +
+>  drivers/mailbox/Makefile                      |   2 +
+>  drivers/mailbox/cix-mailbox.c                 | 632 ++++++++++++++++++
+>  include/dt-bindings/clock/sky1-clk.h          | 279 ++++++++
+>  14 files changed, 1418 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cix.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/cix,sky1-mb=
+ox.yaml
+>  create mode 100644 arch/arm64/boot/dts/cix/Makefile
+>  create mode 100644 arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+>  create mode 100644 arch/arm64/boot/dts/cix/sky1.dtsi
+>  create mode 100644 drivers/mailbox/cix-mailbox.c
+>  create mode 100644 include/dt-bindings/clock/sky1-clk.h
+>
+> --
+> 2.25.1
+>
+>
 
---------------UZ8TilJqpfLBedWDbrv00s83--
