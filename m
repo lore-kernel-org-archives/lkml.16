@@ -1,177 +1,196 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FA42253BD
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23D2214211
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745483763; cv=none; b=JZOc8InIgH0ivoCXw0ICI362yUFnxvnHXOYjtCsvkWxX3tsITSu8YIzQqWl7ebaszo9asuMjrylKSq5XBQ+NS6B0EAO4mYK9T0JhHNTMpfbgc6ZztuICiP84cXGkNjq0NozyylyOSQ2Y1FQIZzX3AfLrxcnNkpLcYAtzYA/VW6k=
+	t=1745483826; cv=none; b=ZrqCzu4nzaBqw8+bedSignilrab0+f/Fo0d8DqVHJjpY2sxTIMT7jZsj91AJen/Z7RogBA5P3S6a5UtimfJcxpO64g2bqYHmrdSukLqhSPLoEYBVnjgFCPLmVpkwVMwoE0nk+DC36/16SzUYtsm8K3X4jlauTbsCsNDBspHoOGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745483763; c=relaxed/simple;
-	bh=iJgBNsG6lNFWVLQiSa+DhOTeGMwUTZl4FTd44fGqDV0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IrWJRfk5giEhv4H3VVAPfIFYzFnAr+KG++cZJksgEj51efs/SienKYrpjX2IkwIjGctuh2YU3WFc78e+Bc9Kx22MZR4Nqp4+LUFdUt6Hxc7/ZXtXDH2ITyxuijSConZiIGznv9nAwbqiSoCVmeMB7eyUtVIjivq9g+Ys4b+ykz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RPtK9kC4; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745483826; c=relaxed/simple;
+	bh=fPeja0QKwMSDRTJx03tZ5pM4veCCSXRBmgYEmRDUSpA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s1ppX9NnGkoOTlhc9E/CD+zYK5E78eo34eC7VHsLbR03yVpuUqU9tozhrcu0jymkpVaNiHSQntgtN69vQ51/BfQhirSpJKN7lC9Ztcml9Ftzh50gevqIOeVAZx6CPB+jN8huwHq9iSKGV++9F7LWLhywgKwcCC4K6me9tV3vRQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h6kx5pfI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RPtK9kC4"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso6255125e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:36:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745483760; x=1746088560; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wyD1ibYwZZNQjABTauO+kWeZmIcgNLsOAbjC6l1tSrA=;
-        b=RPtK9kC4LjSXD1qQFOsA0rKWaD0QeJc64AIgG33BrCZCJmOAxZ52LrclzBfUqrrXtm
-         mA9trdleq54MLvugQI59/uqHVrgHOnDwAJB26qU9VCLDSSbCyD9+SgMwVaH9UsRUK/uo
-         u9H6AfGBahjDSZXIrVd0/owWqf8hLb5BwAHxEM8IAcbtNqx09s8NXM4/H2+uJomieZeV
-         GcsN1KnhTxxjys9o1NYmtY26rvOd5IXOFSANNydM2cHpUWt+WUAVVbtA3u8CwGg1yRLg
-         J6eLDLijB25QuitRErqmqkrM9HuU/ANu4Fvv40MMTU9yCUAEYgih6eSxdpcwdkPlgpNB
-         Hu9Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h6kx5pfI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745483823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6fmlstr9ginyDig4RAQsNh+6aO603AT1tDfj5LgGrKc=;
+	b=h6kx5pfI0J/DnXenjy2KATMKzTR3WWelyQqChV41c+o5MNYnNz/4OPlBo11XMZERJydFzy
+	2z/n7nycriFPLxg26g/CUf3Ex6Uh19zpsq3/6OoNHP+SvUht3DOSRqABcLPZnqdMsXIUnx
+	SwwAtWoa7n7+s+moNDgaa+iBhhZmPaI=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-428-k_NRwWS_Mf-d_yeLexodbw-1; Thu, 24 Apr 2025 04:37:01 -0400
+X-MC-Unique: k_NRwWS_Mf-d_yeLexodbw-1
+X-Mimecast-MFC-AGG-ID: k_NRwWS_Mf-d_yeLexodbw_1745483821
+Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e54d9b54500so1024994276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:37:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745483760; x=1746088560;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wyD1ibYwZZNQjABTauO+kWeZmIcgNLsOAbjC6l1tSrA=;
-        b=N3AbU84TvgbLewY38+vLKdbksCQYUnbHFE3MVZecoJa4/lUdrF7DbQnizzqrh25Noy
-         SG9nGf7aDoL5VBoxO91Vgjgv7YhV4p4qTR+jc9V0g08dHe0vs9KNV9O38ZPyCb2Gv/Cb
-         TGfNMVhVUfuqwKjYTg1u2g7g4es+y9D/OhsRVmrDWEwdP4Jsr70HHBxtCkYeU/TJHGlC
-         BUUHF96D9XzDA1pFUs7PTNQ2UxROdKDg1iBpFGwjCKGCS32nJQ4S3p/im8eYMZNEZckv
-         +XyL6/oBWyop33DicuGQ9sHVxxPIVVWf04Vs6StFCITCtJWYVM/ijC6NJymDllL5EM/j
-         apeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZjOzegnfzJO4jVlDPC2Fm7+K5JTfBojdTQw8vw+xnYrQOJ0951jdGUQY6w9kshLAexvQVU8phPu1oOFc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPP1WQ+1PDsJdnsilgvSNV4YP5FU+xwdSFwtZK/OSN6r1i9qf0
-	qn1/fXtQfbJaWW6k2Jed8evupODAKniAwo34VR7ZbAAAQz2Z847j2jOQbQn9aJQ=
-X-Gm-Gg: ASbGncsiq1mPJZXzf0e4I3SQXsFIR0txpBPR9bmtxcCjef68yYxWD1Be/FMwEeA4bKM
-	HcVDd2IE4g/wWxRtbEPgvXPK/EqWUnXuwL52MbS472H+7BspQYMD7TAs1fWo0zK8zpquAejOFI0
-	n/J+sWKfKzWyTcDFgeQWkWqQogilLkHlhcSS9SRoroNaMC9HEAf3a0A7UQvdo8//vqfHOMJ4r8y
-	k6FTIwDVdp+TEa5pDfscuA7BcPFUxymgTmePi6VhK/SL2hoAM1v/ts+104evn85Buvxo8qyR36/
-	0HhUAnqp6Q3Syu+9nhbmeeV1NzhSAhWFQkrG1Y9PpR0J
-X-Google-Smtp-Source: AGHT+IH6QOMYk+VJrhRN0zGGVgIfy1D2k+1MN8UGZUw2MzoHJ3Lm78KvUsSoh9H7JaBXZAa1kpHpxw==
-X-Received: by 2002:a05:600c:1d02:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-4409bdb032cmr18240795e9.30.1745483760212;
-        Thu, 24 Apr 2025 01:36:00 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:6266:7750:57ce:7cb4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d54ee11sm1295376f8f.97.2025.04.24.01.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 01:35:59 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 24 Apr 2025 10:35:35 +0200
-Subject: [PATCH 12/12] pinctrl: samsung: use new GPIO line value setter
- callbacks
+        d=1e100.net; s=20230601; t=1745483821; x=1746088621;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6fmlstr9ginyDig4RAQsNh+6aO603AT1tDfj5LgGrKc=;
+        b=Wmvx4/yZBvTdiLoNI1ZkMSffldxYR3hd25hMoUEQnSwgcUW6/xid6yOhBqRVXaVogi
+         n+vAOWWKpcqgCmaBZ7P8venjUK2aW+g7NDL2ZPC0aT7B6VKcN5+15WtUkF4CRI3HUC84
+         dhhy/ve1dASZA0GEuBLVGrh8dKzV+qoSpRwwkQH9vTOwKlIxXLeHbJjAxzDLW+A/57GI
+         FRqwA5uezf8LZqae6MsWyjhNpdJ6kf/k/t1dGQUwi1T+rIyYN9TBADxEUqnlBxY6kq8z
+         51G8t4Mqt1pn9G6Pi4iMQCHYIlMiSHS4ykFMwF3VcqZWHx5Y51bLW6prozvnF7pxscLQ
+         w6lg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOQBgc4FcJRI/UQSz9/7R8n6UuDgcrB/swrSzV9jlP3cQn53+Hl7PChsQsFBJ6zIDeklPKb8AooB6zqU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiTxGsJMEdz6MFfvkqHzQD2hx7fjx4S0BTDPseDGkVHj5Xc5Fx
+	CvWzZM3VHfhpBU4/16aVujSxOm6FnSFUqJcQ2VYrYfsRgsDxVpnOn0wybXgRZm3eobmx5lkgZpl
+	dya/BgCwzLkBm0QamH5Y+rsxzrXg/rCHVPC7GlnjaNd26HF7vpLPwiWu/nMyHFEFurdTuxZsVnC
+	PEiqXiWSlLYLgzXNK0FA5P8iJ0HgX6QtV6PzA2
+X-Gm-Gg: ASbGncuocCPGaPvzmFDuFUFeKD6TT/c7soaQAQH973QfvsOnj6PF5e8Weluw4QjPTSZ
+	wku2KNxMwCM5Yd1FxP3hXmpwkhWcv4+Cjtzh5dld9uJEv8oz1w6TEvdCj51EN2JgJFiaFF9c=
+X-Received: by 2002:a05:6902:2186:b0:e72:9693:7b36 with SMTP id 3f1490d57ef6-e73036372e0mr2271542276.42.1745483821380;
+        Thu, 24 Apr 2025 01:37:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHUfymtjS1vLei+DBOMXzLqv89tvpRz1tTcENml/8LK4mc8Ke+xAHKIP1Qw42phxCq+/NuBAxZdcPmq6bth+u8=
+X-Received: by 2002:a05:6902:2186:b0:e72:9693:7b36 with SMTP id
+ 3f1490d57ef6-e73036372e0mr2271517276.42.1745483821066; Thu, 24 Apr 2025
+ 01:37:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-gpiochip-set-rv-pinctrl-part2-v1-12-504f91120b99@linaro.org>
-References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Chen-Yu Tsai <wens@csie.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Paul Cercueil <paul@crapouillou.net>, 
- Steen Hegelund <Steen.Hegelund@microchip.com>, 
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
- Ludovic Desroches <ludovic.desroches@microchip.com>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Andrew Lunn <andrew@lunn.ch>, 
- Gregory Clement <gregory.clement@bootlin.com>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, 
- linux-mips@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1963;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=eG2KW5x0cqyXDN96Y9D3KPo3rE0JJ5CGRPpl+iXxy5M=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCffdVG5Ygxdkgp3G4S/J2z4z5Tlan+vD7V30h
- TZ7h0V/5sqJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAn33QAKCRARpy6gFHHX
- cjrUD/4wlY3EyRbxHX7pcMIAP/3DRyfsZNReCKH3ZrZK01gpg0foFUc8R9H0I7tpjEjSAcAY76v
- HT6Cav5kSBB36HXaJHFnbS5jDeLX1My/AARxYsg4hUeZMPsEdhdyug5NLPV4v9U5qGYyscWQJyQ
- IwWtL5S1/tZAIxzE73GS7fBnvaLvxdKHbO+ihsBKDN+CICZsABKHeqmX8HC/mpf/Pn3VZDLdxw/
- v370ttF11vBuDqxQFqucfxlUgG44NsRTH7slXcpLFqsmYFiyQ+60Kr8qtR4uG0wjgcD84YTAWTA
- jnMOBMJyWoX60aJoqOu+7ntHGuUA7AfUId1TflJw4qGZZhayvH7YZWSFpZChBh+R4GzP2lrJnH1
- /l3WSICXjyuCbO00KEg0M/ETEdHzDfqcXsC++m0uUp+XVVbx+NvevmZ076l6BhVpake9w8udGP+
- Y6lwhiWZ8sd+/nec1W16T+R/feEwjS3Uv+zzSP+uImKmEA6Rt/EFeZ0kppvf1XgXTXagAHYRfnq
- AX4Z1SXHpFfCHXYrPNMxv8w2uM1/eIljOwRAW3Xye5WYWe5bWWR/tmOB8O64R331D1+UTdeTv/x
- ZuaGKlVB7ySPckXnPWzWBP1UHZQiR7DAHXC2juTTX1w+v4NAGx137CcqLE/rrfEgbdhjBoA9iFy
- +HWM7daAr7IScLg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
+ <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co> <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
+ <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
+ <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co> <wnonuiluxgy6ixoioi57lwlixfgcu27kcewv4ajb3k3hihi773@nv3om2t3tsgo>
+ <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
+In-Reply-To: <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Thu, 24 Apr 2025 10:36:49 +0200
+X-Gm-Features: ATxdqUF_58noK2_e9QPMXCT-pjwdIdBihMopt3yWeIxTGLAFMTKaBY4Kl-orunU
+Message-ID: <CAGxU2F6YSwrpV4wXH=mWSgK698sjxfQ=zzXS8tVmo3D84-bBqw@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
+To: Michal Luczaj <mhal@rbox.co>
+Cc: Luigi Leonardi <leonardi@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, 24 Apr 2025 at 09:53, Michal Luczaj <mhal@rbox.co> wrote:
+>
+> On 4/24/25 09:28, Stefano Garzarella wrote:
+> > On Wed, Apr 23, 2025 at 11:06:33PM +0200, Michal Luczaj wrote:
+> >> On 4/23/25 18:34, Stefano Garzarella wrote:
+> >>> On Wed, Apr 23, 2025 at 05:53:12PM +0200, Luigi Leonardi wrote:
+> >>>> Hi Michal,
+> >>>>
+> >>>> On Mon, Apr 21, 2025 at 11:50:41PM +0200, Michal Luczaj wrote:
+> >>>>> Currently vsock's lingering effectively boils down to waiting (or timing
+> >>>>> out) until packets are consumed or dropped by the peer; be it by receiving
+> >>>>> the data, closing or shutting down the connection.
+> >>>>>
+> >>>>> To align with the semantics described in the SO_LINGER section of man
+> >>>>> socket(7) and to mimic AF_INET's behaviour more closely, change the logic
+> >>>>> of a lingering close(): instead of waiting for all data to be handled,
+> >>>>> block until data is considered sent from the vsock's transport point of
+> >>>>> view. That is until worker picks the packets for processing and decrements
+> >>>>> virtio_vsock_sock::bytes_unsent down to 0.
+> >>>>>
+> >>>>> Note that such lingering is limited to transports that actually implement
+> >>>>> vsock_transport::unsent_bytes() callback. This excludes Hyper-V and VMCI,
+> >>>>> under which no lingering would be observed.
+> >>>>>
+> >>>>> The implementation does not adhere strictly to man page's interpretation of
+> >>>>> SO_LINGER: shutdown() will not trigger the lingering. This follows AF_INET.
+> >>>>>
+> >>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+> >>>>> ---
+> >>>>> net/vmw_vsock/virtio_transport_common.c | 13 +++++++++++--
+> >>>>> 1 file changed, 11 insertions(+), 2 deletions(-)
+> >>>>>
+> >>>>> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> >>>>> index 7f7de6d8809655fe522749fbbc9025df71f071bd..aeb7f3794f7cfc251dde878cb44fdcc54814c89c 100644
+> >>>>> --- a/net/vmw_vsock/virtio_transport_common.c
+> >>>>> +++ b/net/vmw_vsock/virtio_transport_common.c
+> >>>>> @@ -1196,12 +1196,21 @@ static void virtio_transport_wait_close(struct sock *sk, long timeout)
+> >>>>> {
+> >>>>>   if (timeout) {
+> >>>>>           DEFINE_WAIT_FUNC(wait, woken_wake_function);
+> >>>>> +         ssize_t (*unsent)(struct vsock_sock *vsk);
+> >>>>> +         struct vsock_sock *vsk = vsock_sk(sk);
+> >>>>> +
+> >>>>> +         /* Some transports (Hyper-V, VMCI) do not implement
+> >>>>> +          * unsent_bytes. For those, no lingering on close().
+> >>>>> +          */
+> >>>>> +         unsent = vsk->transport->unsent_bytes;
+> >>>>> +         if (!unsent)
+> >>>>> +                 return;
+> >>>>
+> >>>> IIUC if `unsent_bytes` is not implemented, virtio_transport_wait_close
+> >>>> basically does nothing. My concern is that we are breaking the
+> >>>> userspace due to a change in the behavior: Before this patch, with a
+> >>>> vmci/hyper-v transport, this function would wait for SOCK_DONE to be
+> >>>> set, but not anymore.
+> >>>
+> >>> Wait, we are in virtio_transport_common.c, why we are talking about
+> >>> Hyper-V and VMCI?
+> >>>
+> >>> I asked to check `vsk->transport->unsent_bytes` in the v1, because this
+> >>> code was part of af_vsock.c, but now we are back to virtio code, so I'm
+> >>> confused...
+> >>
+> >> Might your confusion be because of similar names?
+> >
+> > In v1 this code IIRC was in af_vsock.c, now you pushed back on virtio
+> > common code, so I still don't understand how
+> > virtio_transport_wait_close() can be called with vmci or hyper-v
+> > transports.
+> >
+> > Can you provide an example?
+>
+> You're right, it was me who was confused. VMCI and Hyper-V have their own
+> vsock_transport::release callbacks that do not call
+> virtio_transport_wait_close().
+>
+> So VMCI and Hyper-V never lingered anyway?
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+I think so.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/samsung/pinctrl-samsung.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Indeed I was happy with v1, since I think this should be supported by
+the vsock core and should not depend on the transport.
+But we can do also later.
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index ef557217e173..fe1ac82b9d79 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -570,15 +570,18 @@ static void samsung_gpio_set_value(struct gpio_chip *gc,
- }
- 
- /* gpiolib gpio_set callback function */
--static void samsung_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
-+static int samsung_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int value)
- {
- 	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
- 	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
- 	unsigned long flags;
-+	int ret;
- 
--	if (clk_enable(drvdata->pclk)) {
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
- 		dev_err(drvdata->dev, "failed to enable clock\n");
--		return;
-+		return ret;
- 	}
- 
- 	raw_spin_lock_irqsave(&bank->slock, flags);
-@@ -586,6 +589,8 @@ static void samsung_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
- 	clk_disable(drvdata->pclk);
-+
-+	return 0;
- }
- 
- /* gpiolib gpio_get callback function */
-@@ -1062,7 +1067,7 @@ static int samsung_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
- static const struct gpio_chip samsung_gpiolib_chip = {
- 	.request = gpiochip_generic_request,
- 	.free = gpiochip_generic_free,
--	.set = samsung_gpio_set,
-+	.set_rv = samsung_gpio_set,
- 	.get = samsung_gpio_get,
- 	.direction_input = samsung_gpio_direction_input,
- 	.direction_output = samsung_gpio_direction_output,
+Stefano
 
--- 
-2.45.2
+>
+> >> vsock_transport::unsent_bytes != virtio_vsock_sock::bytes_unsent
+> >>
+> >> I agree with Luigi, it is a breaking change for userspace depending on a
+> >> non-standard behaviour. What's the protocol here; do it anyway, then see if
+> >> anyone complains?
+> >>
+> >> As for Hyper-V and VMCI losing the "lingering", do we care? And if we do,
+> >> take Hyper-V, is it possible to test any changes without access to
+> >> proprietary host/hypervisor?
+> >>
+> >
+> > Again, how this code can be called when using vmci or hyper-v
+> > transports?
+>
+> It cannot, you're right.
+>
+> > If we go back on v1 implementation, I can understand it, but with this
+> > version I really don't understand the scenario.
+> >
+> > Stefano
+> >
+>
 
