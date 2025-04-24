@@ -1,86 +1,115 @@
-Received: from freeshell.de (freeshell.de [116.202.128.144])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BCD19994F;
-	Thu, 24 Apr 2025 08:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDD219994F;
+	Thu, 24 Apr 2025 08:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745482527; cv=none; b=s7YDqkjJ7u/HWfmIhLwSKt6d/VV5e6qsyn1KrbQWqUDw/cFGRXLws80hJit06egSotZLv61zqplG+GTrcKoBj5sj3p9L/IdciEcZPZrdjr1yq/usPrYNNENvZvsVlVtBWkCA075W0NIHF4VaP141FJSN8vQZgyAQ26dNcbdLptw=
+	t=1745482539; cv=none; b=KJSv1SDrwe0LviM8ZCe5OtFa0TO5uJz6aTaYPB2m2BxGTp0OPnit8D45v1eAUyfy6HayeYO+ODzbYjJhDhQa6Rz3ygI83YN2hj0wP6JI67i4ts1tSqlh8HWrjbyGxay9x5CLTKzfGSyjt3pnzEW2o12gXiOAE+CdUBMtxAN7JN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745482527; c=relaxed/simple;
-	bh=p1rDUK8rdI5Szwyaio0ijicup4XX8ctN1sOZD2658Mw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fsIp6QZTpFpIYF5TsbsLXYC0xuqdiaXGWXOkQogVPK4Y77ERcgBzt7mo8yzKMmm/hryKDrJydzgqpSdXMgiXjvLo8eFAVgUF6v29ZX4rA3XPS7bqy/xODQuxxBnXLJJ/S/embR6YdTo0kj0sLlUD75eI3pc6qZ7aBNdoUJfipSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-Received: from [192.168.2.35] (unknown [98.97.25.173])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id 712A4B2C201A;
-	Thu, 24 Apr 2025 10:15:19 +0200 (CEST)
-Message-ID: <60891c52-eeca-4358-8f38-789533016495@freeshell.de>
-Date: Thu, 24 Apr 2025 01:15:16 -0700
+	s=arc-20240116; t=1745482539; c=relaxed/simple;
+	bh=GAWx67WGM/vCu98zyuNJqXqV08Fjwm1iN7BtJT0noBM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YzFg37jAG+KUSaFaN3TLulrg0E8X2UZny/FU3QQ44Qi9EeKozbQOx+aXZU74+EEaZ5gAptolbjE9ksam46a1e4wcxbIFCpGCHxTAmj8HPEV+Yv+0KLdfAA8YYiAuRF6Ow6V7o7ZbCR7sqdnTzKc//39o6hTqhNCzYsbJdmcFdQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ITEZAVZh; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ITEZAVZh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745482538; x=1777018538;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GAWx67WGM/vCu98zyuNJqXqV08Fjwm1iN7BtJT0noBM=;
+  b=ITEZAVZh+I5iTpNtGaj49v385WIbQMNwdMgQcDYTgUgaOpRmzl1lD+dg
+   plBTRqZb3syUuwyA3v06+eejjYISmY3Ne3CpOYh1vNENpf3abzy2t9/S/
+   n4coHoW+zPpe14w1tPU6QhHTkGAUzpT+L2GMxtx+kp/Pm/KtKH04wYGAg
+   o9r6g5g++O7xl9sr5itRxmd0fGHXCRg3ZWToI2XV6OPfixw7NPw4poiDy
+   uTew2ozZAk8mtoJhsGvPKwWleaUjfdqIhJvWSTjmvlWwExeJ1unXrYt3r
+   R8jmsOCfRqjlFKWGdUKISecroRWZBia+TgyVLUL0L1PTbICJfLSUjER9X
+   A==;
+X-CSE-ConnectionGUID: YEaohb3wShKQ4IKK9w66Yg==
+X-CSE-MsgGUID: BdP1z+5sQ0CbylzN0ntDKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47013635"
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="47013635"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 01:15:37 -0700
+X-CSE-ConnectionGUID: DZV5zNX+RKmJjesJpTyTBg==
+X-CSE-MsgGUID: sRLJ2u/QTP2s8sJj0+KA4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="132433286"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 01:15:34 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Borislav Petkov <bp@alien8.de>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Yi Lai <yi1.lai@intel.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] EDAC/i10nm: Fix the bitwise operation between variables of different sizes
+Date: Thu, 24 Apr 2025 16:14:54 +0800
+Message-ID: <20250424081454.2952632-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-To: Icenowy Zheng <uwu@icenowy.me>, Emil Renner Berthing <kernel@esmil.dk>,
- Jianlong Huang <jianlong.huang@starfivetech.com>,
- Hal Feng <hal.feng@starfivetech.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20250424062017.652969-1-uwu@icenowy.me>
- <20250424062017.652969-2-uwu@icenowy.me>
-Content-Language: en-US
-From: E Shattow <e@freeshell.de>
-In-Reply-To: <20250424062017.652969-2-uwu@icenowy.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/23/25 23:20, Icenowy Zheng wrote:
-> The JH7110 SoC could support internal GPI signals to be routed to not
-> external GPIO but internal low/high levels.
-> 
-> Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two virtual
-> "pads" to represent internal GPI sources with fixed low/high levels.
-> 
-> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
-> ---
->  include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> index 3865f01396395..3cca874b2bef7 100644
-> --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
-> @@ -126,6 +126,10 @@
->  #define	PAD_GMAC0_TXEN		18
->  #define	PAD_GMAC0_TXC		19
->  
-> +/* virtual pins for forcing GPI */
-> +#define PAD_INTERNAL_LOW	254
-> +#define PAD_INTERNAL_HIGH	255
-> +
->  #define GPOUT_LOW		0
->  #define GPOUT_HIGH		1
->  
+The tool of Smatch static checker reported the following warning:
 
-Asking about the choice of 255 and 254 values for virtual high/low pins,
-here. There's not much result when grep Linux source for 'virtual pin'
-to compare with. Are these the best values for this approach?
+  drivers/edac/i10nm_base.c:364 show_retry_rd_err_log()
+  warn: should bitwise negate be 'ullong'?
 
-What happens when devicetree has in it to route PAD_INTERNAL_LOW to
-PAD_INTERNAL_HIGH and other unlikely combinations?  Or a devicetree blob
-with this computed value is paired to Linux kernel that does not have
-the code to handle these virtual pins, for compatibility concern?
+This warning was due to the bitwise NOT/AND operations between
+'status_mask' (a u32 type) and 'log' (a u64 type), which resulted in
+the high 32 bits of 'log' were cleared.
 
-Do we know yet if JH8100 will share some of this design?
+This was a false positive warning, as only the low 32 bits of 'log' was
+written to the first RRL memory controller register (a u32 type).
 
--E
+To improve code sanity, fix this warning by changing 'status_mask' to
+a u64 type, ensuring it matches the size of 'log' for bitwise operations.
+
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/aAih0KmEVq7ch6v2@stanley.mountain/
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+This patch is on top of the RAS tree edac-for-next branch [1] with the
+top commit [2].
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
+[2] f53deda1a997 ("Merge branch 'edac-drivers' into edac-for-next")
+
+ drivers/edac/i10nm_base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/edac/i10nm_base.c b/drivers/edac/i10nm_base.c
+index 8863f1fb4caf..a3fca2567752 100644
+--- a/drivers/edac/i10nm_base.c
++++ b/drivers/edac/i10nm_base.c
+@@ -327,10 +327,10 @@ static void show_retry_rd_err_log(struct decoded_addr *res, char *msg,
+ {
+ 	int i, j, n, ch = res->channel, pch = res->cs & 1;
+ 	struct skx_imc *imc = &res->dev->imc[res->imc];
+-	u32 offset, status_mask;
++	u64 log, corr, status_mask;
+ 	struct reg_rrl *rrl;
+-	u64 log, corr;
+ 	bool scrub;
++	u32 offset;
+ 	u8 width;
+ 
+ 	if (!imc->mbase)
+-- 
+2.43.0
+
