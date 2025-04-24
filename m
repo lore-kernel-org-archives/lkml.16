@@ -1,239 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1048C1E502;
-	Thu, 24 Apr 2025 02:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EB4188CB1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745463091; cv=none; b=fEIrrBoiMtH4vanigvKuwzYpUZOG0YXPFJkppdg6ile++/eUMSq+4AOBcsIlnxezETnLIpAeF9jc9P2qLcyGxoEMOWIF2yjatEhWmyu9KIYtqwoZfFl6+lpNacQh7y4tcMkkcpi/CjSHn/Tyixf4RLsTaWDJG2VYax09bertsJs=
+	t=1745463304; cv=none; b=YuBOTdx2BZxruYXVY88pei6wwvswA9AIpTWkq2dFRdSY76wzM2CQG0+Nu48TDvZnPXBUKCyck2ocWYQLfptBghQcp+Qw7qu9WqM2YZ+tGAD/LhuVwS3ZJUeCoW9qGQb7zk/XfKuNTvo3ZHYejH0n8xb9GumV2wrSzFSIY2xbWqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745463091; c=relaxed/simple;
-	bh=5eLimYjAs9IUgV4p8sHo53fodXOGP+VyuSVvK8Jm/hM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TwsC25BOplcZMcZcDITDY+gHA9U9SHdF8czWsPfSnrQ0vuqFkKrL4SRBWCBDYlZEzjO2ZgIo0nyuh2D8YyKxlrysOnkNFkF4ClLhl1wBHomf3wMrogvd00Ye51g/bjGEwc7EOvR677aR6VWWW7liCWqE+wB0GCQYaxh6nfdpUpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLGctXxc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLGctXxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B2D7C4CEE2;
-	Thu, 24 Apr 2025 02:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745463090;
-	bh=5eLimYjAs9IUgV4p8sHo53fodXOGP+VyuSVvK8Jm/hM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aLGctXxcQyYMWbhmm0iRzI0ZJj/r44OWLqzwD/UgzAgwNANRjm3bqG3y/spF0ccR0
-	 KxojT4Gsfxa1GbJA0y7SKKlQTnP+MLldDot9Ikcy6s2lzNnLVPI0ySHWiFtAlgnqSj
-	 wmnRa33KIQ9YsGjHF9BtKFDow6WADGnnB3EhdnJD/0NvJGdyRyatqkG+gJmwqCks55
-	 LfJUjz40QFYR02eYAt+hrSqq1ltKAYEsYJdLgbbAO5wtv7kIi9py2UJUUa8vKh1ckS
-	 lJsFhqrXZjdUj2L1fbPQgorZK9m5Df9KsyGjUW6PoB21RM2n7artmLLHJVpaCrqJ98
-	 edXvZm48o2Gmw==
-From: SeongJae Park <sj@kernel.org>
-To: Ye Liu <ye.liu@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	linux-debuggers@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-toolchains@vger.kernel.org,
-	osandov@osandov.com,
-	paulmck@kernel.org,
-	sweettea-kernel@dorminy.me,
-	liuye@kylinos.cn
-Subject: Re: [PATCH v3] tools/mm: Add script to display page state for a given PID and VADDR
-Date: Wed, 23 Apr 2025 19:51:28 -0700
-Message-Id: <20250424025128.48038-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <758b1d83-f1b3-43d2-8c37-324cc89c78f7@linux.dev>
-References: 
+	s=arc-20240116; t=1745463304; c=relaxed/simple;
+	bh=VokZQrmYwbUA6gnrEVK//m0k8hND7smhj9mn+ebaMWI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f/nmO0G365PRNRbLQ7BiJIPQS/EHKIA9C+L3RAHDqL0ptV+3IWi87hvsyFyXk+GxSb/yRUEykHbXEttIDN5WgLK31HrvR4tZlmzMiHx1X3MwbSBPnPtAhH8fIY8O3HHqBsQN9pTNTyoVs58rtaMkHrKC8wx8qBNn970O5M6mNCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 53O2sVGQ063286;
+	Thu, 24 Apr 2025 10:54:31 +0800 (+08)
+	(envelope-from baisheng.gao@unisoc.com)
+Received: from SHDLP.spreadtrum.com (shmbx06.spreadtrum.com [10.0.1.11])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZjgWd3CQcz2LkD14;
+	Thu, 24 Apr 2025 10:53:01 +0800 (CST)
+Received: from BJ15137PCW.spreadtrum.com (10.0.73.32) by
+ shmbx06.spreadtrum.com (10.0.1.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.48; Thu, 24 Apr 2025 10:54:29 +0800
+From: Baisheng Gao <baisheng.gao@unisoc.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim
+	<namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>
+CC: "open list:PERFORMANCE EVENTS SUBSYSTEM"
+	<linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM"
+	<linux-kernel@vger.kernel.org>,
+        <cixi.geng@linux.dev>, <hao_hao.wang@unisoc.com>
+Subject: [PATCH] perf/core: Handling the race between exit_mmap and perf sample
+Date: Thu, 24 Apr 2025 10:54:29 +0800
+Message-ID: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ shmbx06.spreadtrum.com (10.0.1.11)
+X-MAIL:SHSQR01.spreadtrum.com 53O2sVGQ063286
 
-On Thu, 24 Apr 2025 09:55:22 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+In order to fix the race condition between exit_mmap and
+perf_output_sample below, forbidding to copy the user stack
+of an exiting process.
 
-> 
-> 在 2025/4/24 06:00, SeongJae Park 写道:
-> > On Wed, 23 Apr 2025 09:48:50 +0800 Ye Liu <ye.liu@linux.dev> wrote:
-> >
-> >> From: Ye Liu <liuye@kylinos.cn>
-> >>
-> >> Introduces a new drgn script, `show_page_info.py`, which allows users
-> >> to analyze the state of a page given a process ID (PID) and a virtual
-> >> address (VADDR). This can help kernel developers or debuggers easily
-> >> inspect page-related information in a live kernel or vmcore.
-> >>
-> >> The script extracts information such as the page flags, mapping, and
-> >> other metadata relevant to diagnosing memory issues.
-> >>
-> >> Output example:
-> >> sudo ./show_page_info.py 1 0x7f43df5acf00
-> >> PID: 1 Comm: systemd mm: 0xffff8881273bbc40
-> >> Raw: 0017ffffc000416c ffffea00043a4508 ffffea0004381e08 ffff88810f086a70
-> >> Raw: 0000000000000000 ffff888120c9b0c0 0000002500000007 ffff88812642c000
-> >> User Virtual Address: 0x7f43df5acf00
-> >> Page Address:         0xffffea00049a0b00
-> >> Page Flags:           PG_referenced|PG_uptodate|PG_lru|PG_head|PG_active|
-> >> 		      PG_private|PG_reported
-> >> Page Size:            16384
-> > Should this be called folio size?  Or, could this simply removed since Compound
-> > Order is given below?
-> 
-> 
-> Page size refers to the base page size, which equals PAGESIZE.
+ Internal error: synchronous external abort: ffffffff96000010 [#1]
+  PREEMPT SMP
+ CPU: 3 PID: 2651 Comm: binder:2649_1 Tainted: G        W  OE
+  5.15.149-android13-8-00008-gbe074b05e5af-ab12096863 #1
+ Hardware name: Spreadtrum UMS9230 1H10 SoC (DT)
+ pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+ pc : __arch_copy_from_user+0x180/0x218
+ lr : arch_perf_out_copy_user+0xb0/0x17c
+ sp : ffffffc00801baf0
+ x29: ffffffc00801baf0 x28: ffffffc00801bbf8 x27: ffffffc00801bbe8
+ x26: 0000000000000000 x25: 0000000000001000 x24: 000000000000feb8
+ x23: 00000000000005f0 x22: ffffff80613c8000 x21: ffffff8143102a10
+ x20: 0000007c239643c0 x19: 00000000000005f0 x18: ffffffc00801d058
+ x17: ffffffc16e677000 x16: ffffffc008018000 x15: 0000007c239643c0
+ x14: 0000000000000002 x13: 0000000000000003 x12: ffffffc008000000
+ x11: ffffff8000090000 x10: ffffffc008090000 x9 : 0000007fffffffff
+ x8 : 0000007c239643c0 x7 : 000000000000feb8 x6 : ffffff8143102a10
+ x5 : ffffff8143103000 x4 : 0000000000000000 x3 : ffffff8093cad140
+ x2 : 0000000000000570 x1 : 0000007c239643c0 x0 : ffffff8143102a10
+ Call trace:
+  __arch_copy_from_user+0x180/0x218
+  perf_output_sample+0x14e4/0x1904
+  perf_event_output_forward+0x90/0x130
+  __perf_event_overflow+0xc8/0x17c
+  perf_swevent_hrtimer+0x124/0x290
+  __run_hrtimer+0x134/0x4a0
+  hrtimer_interrupt+0x2e4/0x560
+  arch_timer_handler_phys+0x5c/0xa0
+  handle_percpu_devid_irq+0xc0/0x374
+  handle_domain_irq+0xd8/0x160
+  gic_handle_irq.34215+0x58/0x26c
+  call_on_irq_stack+0x3c/0x70
+  do_interrupt_handler+0x44/0xa0
+  el1_interrupt+0x34/0x64
+  el1h_64_irq_handler+0x1c/0x2c
+  el1h_64_irq+0x7c/0x80
+  release_pages+0xac/0x9b4
+  tlb_finish_mmu+0xb0/0x238
+  exit_mmap+0x1b8/0x538
+  __mmput+0x40/0x274
+  mmput+0x40/0x134
+  exit_mm+0x3bc/0x72c
+  do_exit+0x294/0x1160
+  do_group_exit+0xc8/0x174
+  get_signal+0x830/0x95c
+  do_signal+0x9c/0x2a8
+  do_notify_resume+0x98/0x1ac
+  el0_svc+0x5c/0x84
+  el0t_64_sync_handler+0x88/0xec
+  el0t_64_sync+0x1b8/0x1bc
 
-Shouldn't 'prog["PAGE_SIZE"]' is used for what you are saying?  This tool is
-using drgn.helpers.linux.page_size()[1] to print this, though?
+Signed-off-by: Baisheng Gao <baisheng.gao@unisoc.com>
+---
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-    +def show_page_state(page, addr, mm, pid, task):
-    +    """Display detailed information about a page."""
-    +    print(f'PID: {pid} Comm: {task.comm.string_().decode()} mm: {hex(mm)}')
-    +    print(format_page_data(prog.read(page.value_(), 64)))
-    +    fields = {
-    +        "User Virtual Address": hex(addr),
-    +        "Page Address": hex(page.value_()),
-    +        "Page Flags": decode_page_flags(page),
-    +        "Page Size": page_size(page).value_(),
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e93c19565914..9c9b571b812d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7867,7 +7867,8 @@ void perf_output_sample(struct perf_output_handle *ha=
+ndle,
+                }
+        }
 
-[1] https://drgn.readthedocs.io/en/stable/helpers.html#drgn.helpers.linux.mm.page_size
+-       if (sample_type & PERF_SAMPLE_STACK_USER) {
++       if (sample_type & PERF_SAMPLE_STACK_USER &&
++                       !(current->flags & PF_EXITING)) {
+                perf_output_sample_ustack(handle,
+                                          data->stack_user_size,
+                                          data->regs_user.regs);
+--
+2.34.1
 
-> Folio size can be calculated using the Compound Order, but of course,
-> it can also be shown directly as a result.
-> 
-> >> Page PFN:             0x12682c
-> >> Page Physical:        0x12682c000
-> >> Page Virtual:         0xffff88812682c000
-> >> Page Refcount:        37
-> >> Page Mapcount:        7
-> >> Page Index:           0x0
-> >> Page Memcg Data:      0xffff88812642c000
-> >> Memcg Name:           init.scope
-> >> Memcg Path:           /sys/fs/cgroup/memory/init.scope
-> >> Page Mapping:         0xffff88810f086a70
-> >> Page Anon/File:       File
-> >> Page VMA:             0xffff88810e4af3b8
-> >> VMA Start:            0x7f43df5ac000
-> >> VMA End:              0x7f43df5b0000
-> >> This page is part of a compound page.
-> >> This page is the head page of a compound page.
-> >> Head Page:            0xffffea00049a0b00
-> >> Compound Order:       2
-> >> Number of Pages:      4
-> >>
-> >> Signed-off-by: Ye Liu <liuye@kylinos.cn>
-> >>
-> >> Changes in v3:
-> >> - Adjust display style.
-> >> - Link to v2:https://lore.kernel.org/all/20250421080748.114750-1-ye.liu@linux.dev/
-> >>
-> >> Changes in v2:
-> >> - Move the show_page_info.py file to tools/mm.
-> >> - Link to v1: https://lore.kernel.org/all/20250415075024.248232-1-ye.liu@linux.dev/
-> >> ---
-> >>  MAINTAINERS                |   5 ++
-> >>  tools/mm/show_page_info.py | 120 +++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 125 insertions(+)
-> >>  create mode 100755 tools/mm/show_page_info.py
-> >>
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 17ed0b5ffdd2..85686a30dc72 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -18351,6 +18351,11 @@ F:	Documentation/mm/page_table_check.rst
-> >>  F:	include/linux/page_table_check.h
-> >>  F:	mm/page_table_check.c
-> >>  
-> >> +PAGE STATE DEBUG SCRIPT
-> >> +M:	Ye Liu <liuye@kylinos.cn>
-> >> +S:	Maintained
-> >> +F:	tools/mm/show_page_info.py
-> >> +
-> >>  PANASONIC LAPTOP ACPI EXTRAS DRIVER
-> >>  M:	Kenneth Chan <kenneth.t.chan@gmail.com>
-> >>  L:	platform-driver-x86@vger.kernel.org
-> >> diff --git a/tools/mm/show_page_info.py b/tools/mm/show_page_info.py
-> >> new file mode 100755
-> >> index 000000000000..8622c5499dfe
-> >> --- /dev/null
-> >> +++ b/tools/mm/show_page_info.py
-> > [...]
-> >> +def main():
-> >> +    """Main function to parse arguments and display page state."""
-> >> +    parser = argparse.ArgumentParser(description=DESC, formatter_class=argparse.RawTextHelpFormatter)
-> >> +    parser.add_argument('pid', metavar='PID', type=int, help='Target process ID (PID)')
-> >> +    parser.add_argument('vaddr', metavar='VADDR', type=str, help='Target virtual address in hexadecimal format (e.g., 0x7fff1234abcd)')
-> >> +    args = parser.parse_args()
-> >> +
-> >> +    try:
-> >> +        vaddr = int(args.vaddr, 16)
-> >> +    except ValueError:
-> >> +        print(f"Error: Invalid virtual address format: {args.vaddr}")
-> >> +        return
-> >> +
-> >> +    task = find_task(args.pid)
-> >> +    mm = task.mm
-> >> +    page = follow_page(mm, vaddr)
-> > I tried this script on my test machine and got the below error:
-> >
-> > $ cat ./a.c
-> > #include <stdio.h>
-> >
-> > int main(void)
-> > {
-> >         int foo;
-> >         printf("hello\n");
-> >         printf("%x\n", &foo);
-> 
-> To avoid address truncation, you can use the %p format specifier
-> instead of %x or %lx when printing a pointer (memory address).  
-
-Ah, you're correct, thank you.  After fixing my test, the error I reported
-before is disappeared.  But I think the follow_page() error handling would
-better to be updated to catch the exception and provide a better error message?
-
-Also, I'm getting below new error:
-
-    $ sudo ./tools/mm/show_page_info.py 47657 0x7fffaf925b6c
-    PID: 47657 Comm: a.out mm: 0xffff959c8a022100
-    Raw: 0017ffffc0020828 ffffea6b0c201408 ffffea6b0fc65648 ffff959d32bec9c1
-    Raw: 00000007fffffffc 0000000000000000 0000000100000000 ffff959cba058000
-    Traceback (most recent call last):
-      File "/usr/local/bin/drgn", line 33, in <module>
-        sys.exit(load_entry_point('drgn==0.0.30+82.ge2b60e4b', 'console_scripts', 'drgn')())
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      File "/usr/local/lib/python3.11/dist-packages/drgn-0.0.30+82.ge2b60e4b-py3.11-linux-x86_64.egg/drgn/cli.py", line 461, in _main
-        runpy.run_path(script, init_globals={"prog": prog}, run_name="__main__")
-      File "<frozen runpy>", line 291, in run_path
-      File "<frozen runpy>", line 98, in _run_module_code
-      File "<frozen runpy>", line 88, in _run_code
-      File "./tools/mm/show_page_info.py", line 120, in <module>
-        main()
-      File "./tools/mm/show_page_info.py", line 115, in main
-        show_page_state(page, vaddr, mm, args.pid, task)
-      File "./tools/mm/show_page_info.py", line 63, in show_page_state
-        memcg_name, memcg_path = get_memcg_info(page)
-                                 ^^^^^^^^^^^^^^^^^^^^
-      File "./tools/mm/show_page_info.py", line 43, in get_memcg_info
-        return cgroup_name(cgrp).decode(), f"/sys/fs/cgroup/memory{cgroup_path(cgrp).decode()}"
-               ^^^^^^^^^^^^^^^^^
-      File "/usr/local/lib/python3.11/dist-packages/drgn-0.0.30+82.ge2b60e4b-py3.11-linux-x86_64.egg/drgn/helpers/linux/cgroup.py", line 71, in cgroup_name
-        return kernfs_name(cgrp.kn)
-               ^^^^^^^^^^^^^^^^^^^^
-      File "/usr/local/lib/python3.11/dist-packages/drgn-0.0.30+82.ge2b60e4b-py3.11-linux-x86_64.egg/drgn/helpers/linux/kernfs.py", line 32, in kernfs_name
-        return kn.name.string_() if kn.parent else b"/"
-                                    ^^^^^^^^^
-    AttributeError: 'struct kernfs_node' has no member 'parent'. Did you mean: '__parent'?
-
-Seems not entirely this script's fault but due to the recent 'struct
-kernfs_node' change or my old version of drgn?  But anyway, I think it is
-better to provide a better error message to users.  I'm also curious if you
-have a plan for finding and fixing or avoiding this kind of future breakages.
-
-
-Thanks,
-SJ
-
-[...]
+________________________________
+ This email (including its attachments) is intended only for the person or =
+entity to which it is addressed and may contain information that is privile=
+ged, confidential or otherwise protected from disclosure. Unauthorized use,=
+ dissemination, distribution or copying of this email or the information he=
+rein or taking any action in reliance on the contents of this email or the =
+information herein, by anyone other than the intended recipient, or an empl=
+oyee or agent responsible for delivering the message to the intended recipi=
+ent, is strictly prohibited. If you are not the intended recipient, please =
+do not read, copy, use or disclose any part of this e-mail to others. Pleas=
+e notify the sender immediately and permanently delete this e-mail and any =
+attachments if you received it in error. Internet communications cannot be =
+guaranteed to be timely, secure, error-free or virus-free. The sender does =
+not accept liability for any errors or omissions.
+=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=E4=BB=B6=E5=85=B7=E6=
+=9C=89=E4=BF=9D=E5=AF=86=E6=80=A7=E8=B4=A8=EF=BC=8C=E5=8F=97=E6=B3=95=E5=BE=
+=8B=E4=BF=9D=E6=8A=A4=E4=B8=8D=E5=BE=97=E6=B3=84=E9=9C=B2=EF=BC=8C=E4=BB=85=
+=E5=8F=91=E9=80=81=E7=BB=99=E6=9C=AC=E9=82=AE=E4=BB=B6=E6=89=80=E6=8C=87=E7=
+=89=B9=E5=AE=9A=E6=94=B6=E4=BB=B6=E4=BA=BA=E3=80=82=E4=B8=A5=E7=A6=81=E9=9D=
+=9E=E7=BB=8F=E6=8E=88=E6=9D=83=E4=BD=BF=E7=94=A8=E3=80=81=E5=AE=A3=E4=BC=A0=
+=E3=80=81=E5=8F=91=E5=B8=83=E6=88=96=E5=A4=8D=E5=88=B6=E6=9C=AC=E9=82=AE=E4=
+=BB=B6=E6=88=96=E5=85=B6=E5=86=85=E5=AE=B9=E3=80=82=E8=8B=A5=E9=9D=9E=E8=AF=
+=A5=E7=89=B9=E5=AE=9A=E6=94=B6=E4=BB=B6=E4=BA=BA=EF=BC=8C=E8=AF=B7=E5=8B=BF=
+=E9=98=85=E8=AF=BB=E3=80=81=E5=A4=8D=E5=88=B6=E3=80=81 =E4=BD=BF=E7=94=A8=
+=E6=88=96=E6=8A=AB=E9=9C=B2=E6=9C=AC=E9=82=AE=E4=BB=B6=E7=9A=84=E4=BB=BB=E4=
+=BD=95=E5=86=85=E5=AE=B9=E3=80=82=E8=8B=A5=E8=AF=AF=E6=94=B6=E6=9C=AC=E9=82=
+=AE=E4=BB=B6=EF=BC=8C=E8=AF=B7=E4=BB=8E=E7=B3=BB=E7=BB=9F=E4=B8=AD=E6=B0=B8=
+=E4=B9=85=E6=80=A7=E5=88=A0=E9=99=A4=E6=9C=AC=E9=82=AE=E4=BB=B6=E5=8F=8A=E6=
+=89=80=E6=9C=89=E9=99=84=E4=BB=B6=EF=BC=8C=E5=B9=B6=E4=BB=A5=E5=9B=9E=E5=A4=
+=8D=E9=82=AE=E4=BB=B6=E7=9A=84=E6=96=B9=E5=BC=8F=E5=8D=B3=E5=88=BB=E5=91=8A=
+=E7=9F=A5=E5=8F=91=E4=BB=B6=E4=BA=BA=E3=80=82=E6=97=A0=E6=B3=95=E4=BF=9D=E8=
+=AF=81=E4=BA=92=E8=81=94=E7=BD=91=E9=80=9A=E4=BF=A1=E5=8F=8A=E6=97=B6=E3=80=
+=81=E5=AE=89=E5=85=A8=E3=80=81=E6=97=A0=E8=AF=AF=E6=88=96=E9=98=B2=E6=AF=92=
+=E3=80=82=E5=8F=91=E4=BB=B6=E4=BA=BA=E5=AF=B9=E4=BB=BB=E4=BD=95=E9=94=99=E6=
+=BC=8F=E5=9D=87=E4=B8=8D=E6=89=BF=E6=8B=85=E8=B4=A3=E4=BB=BB=E3=80=82
