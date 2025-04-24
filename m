@@ -1,254 +1,116 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448A219ADA2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7152242A82
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745464625; cv=none; b=QkNJIZIln1/Fua6h1VYdxFIJRhRZCyxzDq4ispQyMeqijrclXKJK3k1A6sciglov/8JT/wzN5z43Wwr9SNE9SS7IYzvGzZimFZHaHka/Ii52sDWarDR5Ius7RfXmkq/aYAaWHmIqTe2Q7hwrNiW8ELlPgsUzZdp5t8WNUO9EJLQ=
+	t=1745464796; cv=none; b=Z+aGV3nj52HvdRvDOiGZa9VxHVLK8RvZ/sEnVrsv0d3IbpaHsjJ2CHXETtM+I1PgdzdKvufnfUuaoeANkvo9qtgTdIZ0HFcIPbErPed1+ojWUVAMV37PYSgH4mZaYOxcirpzyXsmAE3lvZFP0g6pD8F3R4yDniiuRblx8xyIoyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745464625; c=relaxed/simple;
-	bh=UVCFOg19+s13dmCTwGHiyBdefPnTw16zPmpkfRlg8hA=;
+	s=arc-20240116; t=1745464796; c=relaxed/simple;
+	bh=p/JHZN5AEdHCeGt0IoxDMqzVTfr9TPtbMaHKRsG7adU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlBVQiHaNDPlZiLiASKtmk3hRp34ETtgCNOQo8NuHmYBuadV03O4TTfsjwU2JSw+8v0zXxRmW06LAwOEzn3WwZ+YrQVQdBlwD/eyM9zneKUiuI+jhDDYgXwmpYmrM9GZaHRC/GZjHh6jXeeVgh+XeBcYz9jTWIEsVsNGofesDfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kL521BJ1; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKHc9SqC3txKuCldf/UQsqQAIDsuF5uKrbc8Ky20mr+wg7JlYXHxTPgdo3xyUmItCIlhS9VhpnSycOByGimxdAq4TXBqInXX5Gpp0AUd6XAsXye/Rfa6UR+4OtpTeOAgh/qaJEThCyQ8mo6OoKiQKgsVRHETK71ena/hzZ/Vg+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jJpTxu8/; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kL521BJ1"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736a7e126c7so411960b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745464622; x=1746069422; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XUAwJhWsStgPPiYel2m5dmuZ8PujmZM+CaGE2sUsiqI=;
-        b=kL521BJ1GCIh/6lApmzBn9i2whQlemVa9/Exj/8nk2M90qz/RlpVMtbsyxMmxh9SdM
-         6a6KF+tHiHMn/sJYVfJbI0F8h+a1kK0il/Zyv2/aBl/ffi8WFvVJlAojLzyCNrYSCITG
-         zigNEJySmaSRFJ41TwLE+wYQSn+VAadnGYF3z8tp/Nk49W5XF4fzRjucmpipPvzQBeKQ
-         WJcIRQAuMeLDZKSqthk3gWD2wNrA2+r4VOfvLrGI/WSDwFY4jb5gh+A5KatKo7LKlep1
-         uqK/9UhmbOi10zO5fB+kLWqRq5bSO6d6G/kSSbaAwtKOdUgICn6KdthBXCkKEcT86d2i
-         XR7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745464622; x=1746069422;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XUAwJhWsStgPPiYel2m5dmuZ8PujmZM+CaGE2sUsiqI=;
-        b=p/Uxmh/t1axRkHximrWOjKyGYIZvXXcIyU9BbN0CtZZ9iWgYAaLyzRUXxqQTkj5Nfa
-         CIgDKEeGVNb/vRYzVY6lr6hAJ/U8RgIFvispFPVULu0LY0gUHz6u2bVnERwRWqrnHSq4
-         cJk4DzL/GS/hFAqCtEMFJS3dXL/MpCiHn6JCM3AG6WHCWGezXu3FxxKnv71sA5EEmL6f
-         BRYql3wfOHNm4TQfiT4WhWzmKvTEd1yIC+eFujntX3AJZd5nQ0f2UR57aReTlyFLyx+7
-         73SrTw+8L912jZ93tn8/4o6GWqZxGMVKch9kENX2qw8nyCDl3r9a/kq6UQ0wWIUSbsOG
-         CxLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyHolYtyYEOjxkcS1ygpeCBcm4oCv/32N4KK2AwwHEaKLqdv62d5dFtUAeJIfYxd9l79Veq/xgCzZQyG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+vXA1ZqC/t6NfpGojVIT9uZ46PWEOxVGtWcEDFnY7owy9S9BU
-	OV6Kx11M3e/jKWbZ44Z40MKkhbyqpqMNgm0uG3iGoQEYbjfYN9gXsJFHRDIynDk=
-X-Gm-Gg: ASbGnctsYp8cSfjEKpPaSXgTpyGhyEF6aPT8ZaYLNtdoDP7PahEzfYgvewprn2JIwDQ
-	W80oVv2m9QS2PdLB+I9i2aSyhawvN6aYR9hFM2KnmDFfb4ATVIR3/0WgQZaeRifl8UJgc5bMwg2
-	Ht5xNnegJDMK/i4BcwkbUnvmu1cQw1SS5RoK5AkHM331BgDyIsMnehLcTQUk7pLsQzMVzDrKse+
-	cgdQSwDXiKaqYMkyc2DXs6l0V7SfcSS+LA9kjx+nCYBdQ3oS9u9J+sRqk8ikx6QJ9CvoI3qXj35
-	OqoDwvCf/s+ddmmggMtV04qb68jVirYtS3hhlocl82Y+6PPDh7k=
-X-Google-Smtp-Source: AGHT+IHFdvA0DlIcVCkE1m7fhwPnPK/+qUF0hzp1UIxp5PRqy2sOJJ28/GW1knmKmyzytkf5QLtSrA==
-X-Received: by 2002:a05:6a20:9f4f:b0:1f5:9208:3ad6 with SMTP id adf61e73a8af0-20444f9f316mr1339520637.41.1745464622463;
-        Wed, 23 Apr 2025 20:17:02 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941fd9sm354190b3a.53.2025.04.23.20.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 20:17:02 -0700 (PDT)
-Date: Wed, 23 Apr 2025 20:16:58 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>,
-	linux-riscv <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH v12 10/28] riscv/mm: Implement map_shadow_stack() syscall
-Message-ID: <aAmtKhlwKV7oz7RF@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-10-e51202b53138@rivosinc.com>
- <D92VAWLM8AGD.3CF1VH6NYHCYV@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jJpTxu8/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=u690wCMwhfUO4csc3E0cwZEDChOGhKpWac0W2zW2q+c=; b=jJpTxu8/MrrakHRU+9VIbxsRg2
+	8z/BSiRxH0TeO9l5Woe+kfKWjPs7Cs+LARNdx/i9Fpu/ue21iKHbdRFV6Cu/oIeMwkkNHY6BOXRZS
+	VUhZx+pLs4S6SZ+iqH8XXE/S7AKi5ITNUckiz+xtx7fJnnK+/x8NCxb0GP4dgWQvdJCOJB3SoQBBE
+	drXXwsyqTjbs+dXGewgHt5enxhqIRvI5LCVRXfJRRLlGA9fMU55qcTiuZdxaEKKaub/XibRiUj2yB
+	plCLdkIyKckDyMrObj3yfK4Wp+6x2CoL1kKUiPxMFqQAbTzKmyY3OfgkV5RCyxaKUUMCbqbOj77kQ
+	YoFTYWPQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7n7k-0000000ApCi-1vFI;
+	Thu, 24 Apr 2025 03:19:40 +0000
+Date: Thu, 24 Apr 2025 04:19:40 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shivank Garg <shivankg@amd.com>, shaggy@kernel.org,
+	wangkefeng.wang@huawei.com, jane.chu@oracle.com, ziy@nvidia.com,
+	donettom@linux.ibm.com, apopple@nvidia.com,
+	jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
+Subject: Re: [PATCH V4 1/2] mm: add folio_migration_expected_refs() as inline
+ function
+Message-ID: <aAmtzAv6ZbbRpKHM@casper.infradead.org>
+References: <20250422114000.15003-1-shivankg@amd.com>
+ <20250422114000.15003-2-shivankg@amd.com>
+ <20250422164111.f5d3f0756ad94d012180ece5@linux-foundation.org>
+ <aAg1-hZ0a-44WW6b@casper.infradead.org>
+ <b84b6c31-578f-4abe-9b06-6e7cf4882eb3@redhat.com>
+ <8f24de4d-5088-498a-968d-9e8bb85201ac@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D92VAWLM8AGD.3CF1VH6NYHCYV@ventanamicro.com>
+In-Reply-To: <8f24de4d-5088-498a-968d-9e8bb85201ac@redhat.com>
 
-On Thu, Apr 10, 2025 at 11:56:44AM +0200, Radim Krčmář wrote:
->2025-03-14T14:39:29-07:00, Deepak Gupta <debug@rivosinc.com>:
->> As discussed extensively in the changelog for the addition of this
->> syscall on x86 ("x86/shstk: Introduce map_shadow_stack syscall") the
->> existing mmap() and madvise() syscalls do not map entirely well onto the
->> security requirements for shadow stack memory since they lead to windows
->> where memory is allocated but not yet protected or stacks which are not
->> properly and safely initialised. Instead a new syscall map_shadow_stack()
->> has been defined which allocates and initialises a shadow stack page.
->>
->> This patch implements this syscall for riscv. riscv doesn't require token
->> to be setup by kernel because user mode can do that by itself. However to
->> provide compatibility and portability with other architectues, user mode
->> can specify token set flag.
->
->RISC-V shadow stack could use mmap() and madvise() perfectly well.
+On Wed, Apr 23, 2025 at 09:25:05AM +0200, David Hildenbrand wrote:
+> On 23.04.25 09:22, David Hildenbrand wrote:
+> > On 23.04.25 02:36, Matthew Wilcox wrote:
+> > > On Tue, Apr 22, 2025 at 04:41:11PM -0700, Andrew Morton wrote:
+> > > > > +/**
+> > > > > + * folio_migrate_expected_refs - Count expected references for an unmapped folio.
+> > > > 
+> > > > "folio_migration_expected_refs"
+> > > 
+> > > What I do wonder is whether we want to have such a specialised
+> > > function existing.  We have can_split_folio() in huge_memory.c
+> > > which is somewhat more comprehensive and doesn't require the folio to be
+> > > unmapped first.
+> > 
+> > I was debating with myself whether we should do the usual "refs from
+> > ->private, refs from page table mappings" .. dance, and look up the
+> > mapping from the folio instead of passing it in.
+> > 
+> > I concluded that for this (migration) purpose the function is good
+> > enough as it is: if abused in wrong context (e.g., still ->private,
+> > still page table mappings), it would not fake that there are no
+> > unexpected references.
+> 
+> Sorry, I forgot that we still care about the reference from ->private here.
+> We expect the folio to be unmapped.
 
-Deviating from what other arches are doing will create more thrash. I expect
-there will be merging of common logic between x86, arm64 and riscv. Infact I
-did post one such RFC patch set last year (didn't follow up on it). Using
-`mmap/madvise` defeats that purpose of creating common logic between arches.
+Right, so just adding in folio_mapcount() will be a no-op for migration,
+but enable its reuse by can_split_folio().  Maybe.  Anyway, the way I
+explain page refocunts to people (and I need to put this in a document
+somewhere):
 
-There are pitfalls as mentioned with respect to mmap/madivse because of
-unique nature of shadow stack. And thus it was accepted to create a new syscall
-to create such mappings. RISC-V will stick to that.
+There are three types of contribution to the refcount:
 
->Userspace can always initialize the shadow stack properly and the shadow
->stack memory is never protected from other malicious threads.
+ - Expected.  These are deducible from the folio itself, and they're all
+   findable.  You need to figure out what the expected number of
+   references are to a folio if you're going to try to freeze it.
+   These can be references from the mapcount, the page cache, the swap
+   cache, the private data, your call chain.
+ - Temporary.  Someone else has found the folio somehow; perhaps through
+   the page cache, or by calling GUP or something.  They mean you can't
+   freeze the folio because you don't know who has the reference or how
+   long they might hold it for.
+ - Spurious.  This is like a temporary reference, but worse because if
+   you read the code, there should be no way for there to be any temporary
+   references to the folio.  Someone's found a stale pointer to this
+   folio and has bumped the reference count while they check that the
+   folio they have is the one they expected to find.  They're going
+   to find out that the pointer they followed is stale and put their
+   refcount soon, but in the meantime you still can't freeze the folio.
 
-Shadow stack memory is protected from inadvertent stores (be it same thread
-or a different thread in same address space). Malicious code which can do
-`sspush/ssamoswap` already assumes that code integrity policies are broken.
-
->
->I think that the compatibility argument is reasonable.  We'd need to
->modify the other syscalls to allow a write-only mapping anyway.
-
-
->
->> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
->> +static noinline unsigned long amo_user_shstk(unsigned long *addr, unsigned long val)
->> +{
->> +	/*
->> +	 * Never expect -1 on shadow stack. Expect return addresses and zero
->> +	 */
->> +	unsigned long swap = -1;
->> +	__enable_user_access();
->> +	asm goto(
->> +		".option push\n"
->> +		".option arch, +zicfiss\n"
->
->Shouldn't compiler accept ssamoswap.d opcode even without zicfiss arch?
-
-Its illegal instruction if shadow stack aren't available. Current toolchain
-emits it only if zicfiss is specified in march.
-
->
->> +		"1: ssamoswap.d %[swap], %[val], %[addr]\n"
->> +		_ASM_EXTABLE(1b, %l[fault])
->> +		RISCV_ACQUIRE_BARRIER
->
->Why is the barrier here?
-
-IIRC, I was following `arch_cmpxchg_acquire`.
-But I think that's not needed. 
-What we are doing is `arch_xchg_relaxed` and barrier is not needed.
-
-I did consider adding it to arch/riscv/include/asm/cmpxchg.h but there is
-limited usage of this primitive and thus kept it limited to usercfi.c
-
-Anyways I'll re-spin removing the barrier.
-
->
->> +		".option pop\n"
->> +		: [swap] "=r" (swap), [addr] "+A" (*addr)
->> +		: [val] "r" (val)
->> +		: "memory"
->> +		: fault
->> +		);
->> +	__disable_user_access();
->> +	return swap;
->> +fault:
->> +	__disable_user_access();
->> +	return -1;
->
->I think we should return 0 and -EFAULT.
->We can ignore the swapped value, or return it through a pointer.
-
-Consumer of this detects -1 and then return -EFAULT.
-We would eventually need this when creating shadow stack tokens for
-kernel shadow stack. I believe `-1` is safe return value which can't
-be construed as negative kernel address (-EFAULT will be)
-
-
->
->> +}
->> +
->> +static unsigned long allocate_shadow_stack(unsigned long addr, unsigned long size,
->> +					   unsigned long token_offset, bool set_tok)
->> +{
->> +	int flags = MAP_ANONYMOUS | MAP_PRIVATE;
->
->Is MAP_GROWSDOWN pointless?
-
-Not sure. Didn't see that in x86 or arm64 shadow stack creation.
-Let me know if its useful.
-
->
->> +	struct mm_struct *mm = current->mm;
->> +	unsigned long populate, tok_loc = 0;
->> +
->> +	if (addr)
->> +		flags |= MAP_FIXED_NOREPLACE;
->> +
->> +	mmap_write_lock(mm);
->> +	addr = do_mmap(NULL, addr, size, PROT_READ, flags,
->
->PROT_READ implies VM_READ, so won't this select PAGE_COPY in the
->protection_map instead of PAGE_SHADOWSTACK?
-
-PROT_READ is pointless here and redundant. I haven't checked if I remove it
-what happens.
-
-`VM_SHADOW_STACK` takes precedence (take a look at pte_mkwrite and pmd_mkwrite.
-Only way `VM_SHADOW_STACK` is possible in vmflags is via `map_shadow_stack` or
-`fork/clone` on existing task with shadow stack enabled.
-
-In a nutshell user can't specify `VM_SHADOW_STACK` directly (indirectly via
-map_shadow_stack syscall or fork/clone) . But if set in vmaflags then it'll
-take precedence.
-
->
->Wouldn't avoiding VM_READ also allow us to get rid of the ugly hack in
->pte_mkwrite?  (VM_WRITE would naturally select the right XWR flags.)
-
->
->> +		       VM_SHADOW_STACK | VM_WRITE, 0, &populate, NULL);
->> +	mmap_write_unlock(mm);
->> +
->> +SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsigned int, flags)
->> +{
->> [...]
->> +	if (addr && (addr & (PAGE_SIZE - 1)))
->
->if (!PAGE_ALIGNED(addr))
+So I don't love the idea of having a function with the word "expected"
+in the name that returns a value which doesn't take into account all
+the potential contributors to the expected value.  And sure we can keep
+adding qualifiers to the function name to indicate how it is to be used,
+but at some point I think we should say "It's OK for this to be a little
+less efficient so we can understand what it means".
