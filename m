@@ -1,95 +1,62 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD761E5B95;
-	Thu, 24 Apr 2025 19:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F87120F070;
+	Thu, 24 Apr 2025 19:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522823; cv=none; b=faExlepASy+Y7HzkBghPo+kQJnL0yvpWAwcc4ZocourKS+EVKmS16ao6GJu4dmE7h7c/L9nErezymF7/w/JCqYxOSJ7M4bntCC/vIzMBayZRxTzKxIboCCR3Jd8U3+6LwelVqis/RLd4e6rLNZp2yR0FGBlEMKS60e6qUf+z1AU=
+	t=1745522867; cv=none; b=rj+xXg1sLzdWTCljEgJCk2oTYXCZYDTYDjvFsp+a/ulPjEWbygUhfujkIkgnq0yWK3EMsqN92WF0IBPaA2Z74sQTCAwsDPFaNrscoCpg/qoCwjZjbY/tNs5UYUzFfVJWOvjDwLZzOdeaY3rh6mbwM72d//+YVMiqq8yrZJ+etb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745522823; c=relaxed/simple;
-	bh=FbQNuNG+a+QwOTzKXpP9P0iAjBjElMqiAwdzMsfzOMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vonm3GWGNuyBM1wZ37kPbJNkTRIFvCsO1JUCovabuOpHI4RpYJbdl33W8RcKP7t/XZtGVm9Ovj/BEkpHAkME+8yGUtdp01MOevB0cIBpkdt6o6Yl9aBlRSggrL0DNXqQbeGHaS4LXO2zvguYGuggVcPnt8dOkRIMonrjSyAi3qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iCwNa1Pw; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iCwNa1Pw"
-Received: from [100.70.202.48] (unknown [172.200.70.35])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C9726211308C;
-	Thu, 24 Apr 2025 12:26:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C9726211308C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745522821;
-	bh=74cZhWXIm6DNK3Mg2kUV74aTfyWRc7iRAWJvXq6yXtI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iCwNa1PwnNR0onB/ijUlvcweRa6CXTmWKW14JsO29ycskZ7nGodrZpYFyGzH9k9V4
-	 Sdk8+5Ymip2FoMrWkmBxEIDODYBWY+4iSWanqiEWUPN4Atf0HypxCtZ5KUIiX4oTmi
-	 88xcyWJpxjt5nND9W+FXauji5KZmGss+dee/xv9Y=
-Message-ID: <8909e6a6-4f3a-49a7-a3fe-f6ab9d925aaf@linux.microsoft.com>
-Date: Thu, 24 Apr 2025 12:26:57 -0700
+	s=arc-20240116; t=1745522867; c=relaxed/simple;
+	bh=N1XG3jyOjkQ6x7wHNsp8O2x06iBDYxKQu0BlC/Fi6lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GYii9/1A8m1mCl0hUJ84FNsN+RmzEjgdIlbySlfC3zCumiCTvdi6YPtvsm4Ckgdskgn7YiXaqavOsQ+waJ8DPz5Zxe3HT6v10v3vXAjUueZQPDUYZ3DQ8/X/uppjF8CzjJj4izkoZ+MA6yAmsDVQ4wfPp9AXbUXwMxNmKq1QDg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89601C4CEE3;
+	Thu, 24 Apr 2025 19:27:42 +0000 (UTC)
+Date: Thu, 24 Apr 2025 15:29:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens
+ Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, Blake Jones
+ <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
+Subject: Re: [PATCH v5 0/9] tracing: Deferred unwinding of user space stack
+ traces
+Message-ID: <20250424152938.0922463b@gandalf.local.home>
+In-Reply-To: <20250424192456.851953422@goodmis.org>
+References: <20250424192456.851953422@goodmis.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/9] ima: kexec: measure events between kexec load and
- execute
-To: Baoquan He <bhe@redhat.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
- nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- vgoyal@redhat.com, dyoung@redhat.com
-References: <20250421222516.9830-1-chenste@linux.microsoft.com>
- <aApMnEl1Xzarmimn@fedora>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <aApMnEl1Xzarmimn@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/24/2025 7:37 AM, Baoquan He wrote:
-> Hi Steven,
->
-> Could you test below code and post a formal patch to not copy
-> measurement list buffer to kdump kernel? Below log is just for your
-> reference, please feel free to modify or rephrase.
->
-> ===
-> Kdump kernel doesn't need IMA to do integrity measurement.
-> Hence the measurement list in 1st kernel doesn't need to be copied to
-> kdump kenrel.
->
-> Here skip allocating buffer for measurement list copying if loading
-> kdump kernel. Then there won't be the later handling related to
-> ima_kexec_buffer.
-> ===
->
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 38cb2500f4c3..7362f68f2d8b 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
->   	void *kexec_buffer = NULL;
->   	int ret;
->   
-> +	if (image->type == KEXEC_TYPE_CRASH)
-> +		return;
-> +
->   	/*
->   	 * Reserve extra memory for measurements added during kexec.
->   	 */
+On Thu, 24 Apr 2025 15:24:56 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Hi Baoquan,
+> This series focuses on implementing the deferred unwinding for ftrace
+> (and LTTng could use it).
 
-I will work on it and I will post a patch after this patch set merged.
+I forgot to say that this is based on top of this series, and does not yet
+include sframe support.
 
-Thanks,
+  https://lore.kernel.org/all/20250424162529.686762589@goodmis.org/
 
-Steven
-
+-- Steve
