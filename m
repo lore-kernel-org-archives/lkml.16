@@ -1,33 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CBD8BE8;
-	Thu, 24 Apr 2025 07:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7CC199396;
+	Thu, 24 Apr 2025 07:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478761; cv=none; b=Ew9MZSzwJd3TKNEZnammKr4UI5kPLvnRP7lQPLHRMAVl1Xfos7YHXBZDmZRNhjhP0GoLcbu0SJN+jAC448IUOLglRluC7SHmZEnLHWUdrnfW4TumsX27SwNQlL2zj0wM6u7LmFFPupy+e+ZLkXNgn/7Slog+tAYIz3XX0rzWFTg=
+	t=1745478761; cv=none; b=sx/HAmkk9XqHHC+E43gR8waEO9MKspZ+SXy0B4ajdqxl1Y/dqteceLs9DZ1cjFTUgOVLwW9i3lDNJgHVFDUXL9ilOAZoHKEr3UJ4Hv+os89okXM2h7aZGm9mLogFrTyRYJQVgfYqP3d8TQiUr0DT7c2ihx5cHNBeYVZWmDir5Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745478761; c=relaxed/simple;
-	bh=lHcMVN6gR3huhb4HD/G2e6A5kirMHkpsrZdynPaOKYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h8zRW3giHqhrzFIlurxtMQaWpKN/fSJ1xyNDwFU0lgST7IGse6GUjpti2YLw4CTDXI8TDD2lSk+jh/t1+b5n92znQIFJIOBjOoXH2I31r4GgmUJmn/WyRUeLx5QVlXZTu63qjnhonH/1ft/7aDzaWVZxkk8K8kT7eNt1+DulRwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CbCZT+Rd; arc=none smtp.client-ip=217.70.183.197
+	bh=t/pWsp/zfbzUo9GXCLAE30G9UHFVepGNcZmmwItA5p8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fep8bh19IiFfMvzM37y4CoVYL48yLOtfSSm9+euzY7ed4CmmeuKBKtSZNoFIQ9dNdxWWVNY70RAjP+r4CR9kKYMGprQsGpp+DZpE1pdjdVJWdbbM/Wh6TK2/nJ1Fsa/cxccX6npUH79/8Do54+4t5aKO0HZkzd8V3fgvSRsl2Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FH64OYzN; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CbCZT+Rd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3975143A4E;
-	Thu, 24 Apr 2025 07:12:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FH64OYzN"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C216243A39;
+	Thu, 24 Apr 2025 07:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745478750;
+	t=1745478752;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=CGBKQP0ozZgi8SSFu8gigr2mI4CbgnOZryTHhEPMZd8=;
-	b=CbCZT+Rdeqcs/wB6DjINTQ7gct4Pv/v0ovBacHSLBoggDrnVKL9cYb9y0QYiK/Jj0UjGi5
-	j1k6aEKBDyY4DXp+Oeg9rEQjQr7qUYQb0eaPp3ceSnBB4+b9OL8jewRrWX7KCjDKJNqTNt
-	+nJnLE02xC7P36rwG0DJJnc4KWUvtlIJydXrw8O8LO4SkT/poQoDS1IyTu6NF7ycoy6u9S
-	G6LmCYrXwkSxOPeXGTRukAqfQk9RPkkCNDxwpWu4U2MtB8TQGVjL/zapprBDBiBFOuJUYc
-	SZ/z0c+VSTQ2t8Ve0QcaEIir5dFn2k7Y46HPt/RlgW00qkVU14t89GVMXkyWNg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GcCvskkAvrE3dpzstivzwhhvcSYs52ScThWYLV//VMw=;
+	b=FH64OYzN4ny6D8XvWJGI1+JqPMBtzoiw0J5FosX91MoJQ77obJ9tlfJacevOlh2LwkDCdW
+	mdzeLjuoAjddgSIm4zn9NNwj3GHnYK1T471kttz1fPQFjmYIGkUJaODH+86Pn/sNWw2IJ1
+	B24reWtN+2yu625G1qI6G+L98W8fQ653NwLnMe+xz04OFcEeGzivoPFLeCNkLe1oKS5gmn
+	xGtxyBFT8U5a+63nzv6Zi9hr4vSKSKAs6V6NjJh09GIA59r4odws4C7IWxaHod71fQqFYA
+	cJ3AneYbCufIv3qa4ZHVo23GzUPrL/RsTiha6Jp2w148fXxCN5LaCpG8gWvTbQ==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -43,10 +45,12 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v3 0/3] net: stmmac: socfpga: 1000BaseX support and cleanups
-Date: Thu, 24 Apr 2025 09:12:19 +0200
-Message-ID: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v3 2/3] net: stmmac: socfpga: Don't check for phy to enable the SGMII adapter
+Date: Thu, 24 Apr 2025 09:12:21 +0200
+Message-ID: <20250424071223.221239-3-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
+References: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,50 +60,57 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefhleeihefgffeiffdtffeivdehfeetheekudekgfetffetveffueeujeeitdevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheplhhinhhugiesrghrmhhli
- hhnuhigrdhorhhgrdhukhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhto
+ hepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi everyone,
+The SGMII adapter needs to be enabled for both Cisco SGMII and 1000BaseX
+operations. It doesn't make sense to check for an attached phydev here,
+as we simply might not have any, in particular if we're using the
+1000BaseX interface mode.
 
-This V3 is simply a re-send of V2, targeting net-next instead of net as
-the V2 did by mistake.
+Make so that we only re-enable the SGMII adapter when it's present, and
+when we use a phy_mode that is handled by said adapter.
 
-No other changes besides a rebase on net-next were made.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-This small series sorts-out 1000BaseX support and does a bit of cleanup
-for the Lynx conversion.
-
-Patch 1 makes sure that we set the right phy_mode when working in
-1000BaseX mode, so that the internal GMII is configured correctly.
-
-Patch 2 removes a check for phy_device upon calling fix_mac_speed(). As
-the SGMII adapter may be chained to a Lynx PCS, checking for a
-phy_device to be attached to the netdev before enabling the SGMII
-adapter doesn't make sense, as we won't have a downstream PHY when using
-1000BaseX.
-
-Patch 3 cleans an unused field from the PCS conversion.
-
-Changes in V3:
- - None besides targeting net-next instead of net
-
-Changes in V2: 
- - Added Russell's review tags
- - Reworked patch 2 to check for phy_interface when configuring the
-   adapter, as suggested by Russell.
-
-V1: https://lore.kernel.org/netdev/20250422094701.49798-1-maxime.chevallier@bootlin.com/
-V2: https://lore.kernel.org/netdev/20250423104646.189648-1-maxime.chevallier@bootlin.com/
-
-Maxime Chevallier (3):
-  net: stmmac: socfpga: Enable internal GMII when using 1000BaseX
-  net: stmmac: socfpga: Don't check for phy to enable the SGMII adapter
-  net: stmmac: socfpga: Remove unused pcs-mdiodev field
-
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c   | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index 027356033e5e..c832a41c1747 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -62,14 +62,13 @@ struct socfpga_dwmac {
+ 	struct mdio_device *pcs_mdiodev;
+ };
+ 
+-static void socfpga_dwmac_fix_mac_speed(void *priv, int speed, unsigned int mode)
++static void socfpga_dwmac_fix_mac_speed(void *bsp_priv, int speed,
++					unsigned int mode)
+ {
+-	struct socfpga_dwmac *dwmac = (struct socfpga_dwmac *)priv;
++	struct socfpga_dwmac *dwmac = (struct socfpga_dwmac *)bsp_priv;
++	struct stmmac_priv *priv = netdev_priv(dev_get_drvdata(dwmac->dev));
+ 	void __iomem *splitter_base = dwmac->splitter_base;
+ 	void __iomem *sgmii_adapter_base = dwmac->sgmii_adapter_base;
+-	struct device *dev = dwmac->dev;
+-	struct net_device *ndev = dev_get_drvdata(dev);
+-	struct phy_device *phy_dev = ndev->phydev;
+ 	u32 val;
+ 
+ 	if (sgmii_adapter_base)
+@@ -96,7 +95,9 @@ static void socfpga_dwmac_fix_mac_speed(void *priv, int speed, unsigned int mode
+ 		writel(val, splitter_base + EMAC_SPLITTER_CTRL_REG);
+ 	}
+ 
+-	if (phy_dev && sgmii_adapter_base)
++	if ((priv->plat->phy_interface == PHY_INTERFACE_MODE_SGMII ||
++	     priv->plat->phy_interface == PHY_INTERFACE_MODE_1000BASEX) &&
++	     sgmii_adapter_base)
+ 		writew(SGMII_ADAPTER_ENABLE,
+ 		       sgmii_adapter_base + SGMII_ADAPTER_CTRL_REG);
+ }
 -- 
 2.49.0
 
