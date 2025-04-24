@@ -1,265 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8A528E60C;
-	Thu, 24 Apr 2025 17:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA3628E607
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745517249; cv=none; b=QNU/DXQk7Gp4/C3sQ/Lx2TcpLvba+3pL/7ebWIMRnn3Mkpbznd973i4UBOPnhSpc26FLnIt84Nf2ux8VnmGjwirZYi1IxtvQkFX8pITPjEX0I09QbRY29csG3kf9F/W5HXlFYN5OgzOQrBu8h+ab/9OhKnpMNoO2hk9RSirCbvY=
+	t=1745517401; cv=none; b=uPICT6ldojSpgTr2Kr3wMT0mIBT1Ffw+Kle0B7RGqs4ZFB625WcXvbuJgLRy9IFCyTFlovBaEfu2UBcCcfJT8GPNJgWb5P3z9fkcNv6b+FYbcKSKie6mAd1mvKBqRd91hLYWa4h2+j5VOIWwP73hKv416zhFUqdmm1FMuWcuo/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745517249; c=relaxed/simple;
-	bh=1kn9najvnV8gdb1NXZM+ASr0mMAJoT09AB4GZcvfjGc=;
+	s=arc-20240116; t=1745517401; c=relaxed/simple;
+	bh=H+WVN8dXMu4VVGlDt8K/6nV5Fu+NlPxMpEedLUpBf70=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GvdFJfw/jV7uLTbCkQd/2Uv8vvfyvXzx1yyywzIhb9/VLnHqHVLw0p3Ij8BdcL8jVMLuga2k8ll5236aon1dPLJrbnu5MZJ8PB5ShUlHQbSu1RdZgx3S9hezSIYOUBXe09J42I8MMABOQ7/Bg8YFAShAauyiCRGBLr0szP3ctJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZoyHsVa+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uRpvjNIV9MyeODROnkJUgQ/AmAmDBaOhEohgLEZmwuDHNQ5je4H0D4xxf9bfVSIabYvgFkzaFA/4qSfVWBZGa2dG7v0po5/b+ZAIT6FXRwSLr3SFHcfEZH0Mef6gxLDpJAyfusf3Yl8luuFomFUvxm1Wmrq49UyGPd1ryerWmpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=HBBpqt9K; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZoyHsVa+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F02FBC4CEEA;
-	Thu, 24 Apr 2025 17:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745517248;
-	bh=1kn9najvnV8gdb1NXZM+ASr0mMAJoT09AB4GZcvfjGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZoyHsVa+SRVHpA13JEdsTo9HIsoQERWOLDc+n+d9PwwQv7WcGs20nfvuCzSJ2gMvP
-	 o/2AHmPkg/DbRVHJHuXW/X7paqrKMzlpmncUMnUylxQFrS3ew510WVBYXyJ0yxKdZ+
-	 sUpyxAU6OOHr723CtjCml748hJukFd1GnIrih4i2mE8GQi9L0vaaZgmA3k7O/HYIxc
-	 /tMu1h2Mw2eSI3x/8VRKCUyMssoXzAysMLfeIGfPyDbslgU+YyXgVNIEqmXrTpMNtR
-	 S1LXeRtumexnGf2l0VMKa/Bjb8zpn2JyxCPv9TUDwlltwOOV6BXBWG5IEWcKZnEKRT
-	 ip6x7hvVCRfQA==
-Date: Thu, 24 Apr 2025 19:54:03 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="HBBpqt9K"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1822631b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745517398; x=1746122198; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KOLy/80XFfLxXJDNfbBZwCZ4HqYR8Mbf5OU8mj5q3uc=;
+        b=HBBpqt9KIGTf8v2jOqTTdlAfcz9kwaqf7mHomP6hOLCcRR+I0n097mmb1YKNakIQuq
+         oOcwwBNZ0MTG28FUnEgX0VCbDAGGKbyyES4CDzuRecLikf8Jyr+4puwFYpaBt3iLSMjt
+         n05XoaDgzqjvldrrcuKVPTYsnoIGaGyXh+Gx6A4j5E3FABylK4dv8PwhtNWpIaTeyz3k
+         Wz8iat9Z8M4S1wFKPNnXW9gTYnCcev5DNO7f4lOFR7gBR++EoS76otidVRlqUIPBYmd+
+         +C8q8MPSYL9xDEbraGgXX8v7w1y7RiGq6uWO7P1dDBYbWGGZJgOBcs0xWwQ7AAuJZ3gI
+         zjwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745517398; x=1746122198;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KOLy/80XFfLxXJDNfbBZwCZ4HqYR8Mbf5OU8mj5q3uc=;
+        b=ppHdP202/3rsgNhWwSqu1cRDFTVpNp6Njz2E/OUzSNAJon88ujnp1HYfyhQn5b4q8/
+         o8qiUl2H4ytIS8YT7KkOQaOqBnKkhmy3Tsaf3zmV3+uJRILdUHeXW2URQTNJ7HXS5EDz
+         0raJa/DK/VBf33Ib+YsmYT/2clDccbnFjPd53p9726sQJG7rvVWMxKlkDtE89oub7TyB
+         8zVkVm2fT2r0BMTRw+revEfXALyKpwIkcmFUaQASW8FNE7hO0p58wRQPiKnQwGDLXSTl
+         vo6D0m2ir5ylLwpdPM6COdxZWAyI0f9R+cpXlZntK4BIMHS/Pn/+1WV0g5L5SvpCkrzm
+         NhcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWp06CT3Yx+EO1IeJYSf301WEMDtx/TSPP86O3Y4mojdcGBVNjayn1a7zCY9bC2RIwJTXyrKIve7qBpJYY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd+Xy04H9lWl6kbx1BKgYKUwRO1ipUXSyRgRn18ZtwzJDB5YXc
+	kjhL2+q9PAcyV87lv0qzIsbWzagxLAFmiIXDcAGIDsJz++GMuXp6rcxUQGiRHoQ=
+X-Gm-Gg: ASbGnctm6bKHIKkm6FkYWf/4zNne4xejiiItzsuxjzTQnwp+tiaElqU6jgERnEhu5oY
+	tpCeHXiVgPbzOnjnUYIBv2G3uD5eTr8RJW/hyN8XfVRbyJJcTkneMfL6Rr53qJ3Z3EszWx1duKs
+	E4BSQMPYjbe5GVulW3A166EKkKukjYrOaXdRz+EXYJkRH6x0uHuba6xskspkRKbM/MfessMbw9T
+	k0hQnoU7bKAbVcsEm4N5RPaGu7kVlYKxE/GYOVW9Hiv7YKWYmNKRDNBCnk0wC9m0ZYId2NvTG1e
+	BilXnqSY94GnJvzcO3g7U0CET3EzO0Ll4hpiKDlXXY8sglrV4Ro=
+X-Google-Smtp-Source: AGHT+IEvwKAWcL1BB3CDYo6zsE5OWQQndt5nVMjDwtZXDpnZ2rdOW1imvzSm4O5fk1CTzTK9UpqvkQ==
+X-Received: by 2002:a05:6a00:1744:b0:735:d89c:4b8e with SMTP id d2e1a72fcca58-73e32fbafeemr709517b3a.5.1745517398496;
+        Thu, 24 Apr 2025 10:56:38 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9940esm1697082b3a.129.2025.04.24.10.56.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 10:56:38 -0700 (PDT)
+Date: Thu, 24 Apr 2025 10:56:34 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less CPUs
-Message-ID: <aAp6u9ylKCpvMJRF@gmail.com>
-References: <202504211553.3ba9400-lkp@intel.com>
- <59198081-15e2-4b02-934f-c34dd1a0ac93@app.fastmail.com>
- <aAmeJmL0hUx2kcXC@xsang-OptiPlex-9020>
- <f1ccb8b4-bbe2-42bc-bb86-c2bf3f9c557d@app.fastmail.com>
- <CAHk-=wi6k0wk89u+8vmOhcLHPmapK13DDsL2m+xeqEwR9iTd9A@mail.gmail.com>
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, broonie@kernel.org, rick.p.edgecombe@intel.com,
+	Zong Li <zong.li@sifive.com>,
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and save/restore
+ of CSR_SSP on trap entry/exit
+Message-ID: <aAp7Un415hNqtshd@debug.ba.rivosinc.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
+ <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
+ <aAl_HRk49lnseiio@debug.ba.rivosinc.com>
+ <D9EUJBQ5OHN0.2KUJHGXK262TR@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi6k0wk89u+8vmOhcLHPmapK13DDsL2m+xeqEwR9iTd9A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9EUJBQ5OHN0.2KUJHGXK262TR@ventanamicro.com>
+
+On Thu, Apr 24, 2025 at 01:52:43PM +0200, Radim Krčmář wrote:
+>2025-04-23T17:00:29-07:00, Deepak Gupta <debug@rivosinc.com>:
+>> On Thu, Apr 10, 2025 at 01:04:39PM +0200, Radim Krčmář wrote:
+>>>2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+>>>> @@ -62,6 +62,9 @@ struct thread_info {
+>>>>  	long			user_sp;	/* User stack pointer */
+>>>>  	int			cpu;
+>>>>  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
+>>>> +#ifdef CONFIG_RISCV_USER_CFI
+>>>> +	struct cfi_status	user_cfi_state;
+>>>> +#endif
+>>>
+>>>I don't think it makes sense to put all the data in thread_info.
+>>>kernel_ssp and user_ssp is more than enough and the rest can comfortably
+>>>live elsewhere in task_struct.
+>>>
+>>>thread_info is supposed to be as small as possible -- just spanning
+>>>multiple cache-lines could be noticeable.
+>>
+>> I can change it to only include only `user_ssp`, base and size.
+>
+>No need for base and size either -- we don't touch that in the common
+>exception code.
+
+got it.
+
+>
+>> But before we go there, see below:
+>>
+>> $ pahole -C thread_info kbuild/vmlinux
+>> struct thread_info {
+>>          long unsigned int          flags;                /*     0     8 */
+>>          int                        preempt_count;        /*     8     4 */
+>>
+>>          /* XXX 4 bytes hole, try to pack */
+>>
+>>          long int                   kernel_sp;            /*    16     8 */
+>>          long int                   user_sp;              /*    24     8 */
+>>          int                        cpu;                  /*    32     4 */
+>>
+>>          /* XXX 4 bytes hole, try to pack */
+>>
+>>          long unsigned int          syscall_work;         /*    40     8 */
+>>          struct cfi_status          user_cfi_state;       /*    48    32 */
+>>          /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+>>          long unsigned int          a0;                   /*    80     8 */
+>>          long unsigned int          a1;                   /*    88     8 */
+>>          long unsigned int          a2;                   /*    96     8 */
+>>
+>>          /* size: 104, cachelines: 2, members: 10 */
+>>          /* sum members: 96, holes: 2, sum holes: 8 */
+>>          /* last cacheline: 40 bytes */
+>> };
+>>
+>> If we were to remove entire `cfi_status`, it would still be 72 bytes (88 bytes
+>> if shadow call stack were enabled) and already spans across two cachelines.
+>
+>It has only 64 bytes of data without shadow call stack, but it wasted 8
+>bytes on the holes.
+>a2 is somewhat an outlier that is not used most exception paths and
+>excluding it makes everything fit nicely even now.
+
+But we can't exclude shadow call stack. It'll lead to increased size if that
+config is selected. A solution has to work for all the cases and not half
+hearted effort.
+
+>
+>> if shadow call stack were enabled) and already spans across two cachelines. I
+>> did see the comment above that it should fit inside a cacheline. Although I
+>> assumed its stale comment given that it already spans across cacheline and I
+>> didn't see any special mention in commit messages of changes which grew this
+>> structure above one cacheline. So I assumed this was a stale comment.
+>>
+>> On the other hand, whenever enable/lock bits are checked, there is a high
+>> likelyhood that user_ssp and other fields are going to be accessed and
+>> thus it actually might be helpful to have it all in one cacheline during
+>> runtime.
+>
+>Yes, although accessing enable/lock bits will be relatively rare.
+>It seems better to have the overhead during thread setup, rather than on
+>every trap.
+>
+>> So I am not sure if its helpful sticking to the comment which already is stale.
+>
+>We could fix the holes and also use sp instead of a0 in the
+>new_vmalloc_check, so everything would fit better.
+>
+>We are really close to fitting into a single cache-line, so I'd prefer
+>if shadow stack only filled thread_info with data that is used very
+>often in the exception handling code.
+
+I don't get what's the big deal if it results in two cachelines. We can
+(re)organize data structure in a way the most frequently accessed members are
+together in a single cacheline. We just need to find those members.
+
+In the hot path of exception handling, I see accesses to pt_regs on stack as
+well. These are definitley different cacheline than thread_info.
+
+I understand the argument of one member field crossing into two cachelines can
+have undesired perf effects. I do not understand reasoning that thread_info
+exactly has to fit inside one cacheline.
+
+If this was always supposed to fit in a single cacheline, clearly this
+invariant isn't/wasn't maintained as changes trickled in. I would like to see
+what maintainers have to say or someone who did data analysis on this.
 
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+>I think we could do without user_sp in thread_info as well, so there are
+>other packing options.
 
-> I really get the feeling that it's time to leave i486 support behind. 
-> There's zero real reason for anybody to waste one second of 
-> development effort on this kind of issue.
+Sure, probably somewhere in task_struct. But fact of the matter is that it has
+to be saved/restore during exception entry/exit. But then load/store to
+task_struct is essentially a different cachline. Not sure what we will achieve
+here?
 
-Fully agreed!
+>
+>Btw. could ssp be added to pt_regs?
 
-And to turn this idea into code, here's a very raw RFC series that 
-starts removing non-TSC 586 and 486 code and related support code from 
-the x86 architecture, with the goal to make TSC and CX8 (CMPXCHG8B) 
-support unconditionally available:
+I had that earlier. It breaks user abi. And it was a no go.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/cpu
-
-The full diffstat is nice, primarily due to the removal of the math-emu 
-library:
-
-   83 files changed, 30 insertions(+), 14683 deletions(-)
-
-But even without the math-emu/ removal and the drivers/ pruning it's a 
-substantial simplification:
-
-   20 files changed, 29 insertions(+), 629 deletions(-)
-
-The patches most relevant to this discussion should be:
-
-      x86/cpu: Remove M486/M486SX/ELAN support
-      ...
-      x86/cpu: Remove TSC-less CONFIG_M586 support
-      x86/cpu: Make CONFIG_X86_TSC unconditional
-      x86/cpu: Make CONFIG_X86_CX8 unconditional
-      x86/percpu: Remove !CONFIG_X86_CX8 methods
-      x86/atomics: Remove !CONFIG_X86_CX8 methods
-
-If there's no big objections about the scope of removal I'll finish it 
-by removing the non-TSC complications as well, and send out the series 
-to lkml for further review.
-
-( Note that some of the patches in there are still WIP, as the branch 
-  name suggests. )
-
-Thanks,
-
-	Ingo
-
-================>
-
-Ingo Molnar (17):
-      x86/cpu: Remove M486/M486SX/ELAN support
-      x86/cpu: Remove the CONFIG_X86_INVD_BUG quirk
-      x86/cpu, cpufreq: Remove AMD ELAN support
-      x86/fpu: Remove MATH_EMULATION and related glue code
-      x86/fpu: Remove the 'no387' boot option
-      x86/fpu: Remove the math-emu/ FPU emulation library
-      x86/platform: Remove CONFIG_X86_RDC321X support
-      arch/x86, gpio: Remove GPIO_RDC321X support
-      arch/x86, watchdog: Remove the RDC321X_WDT watchdog driver
-      arch/x86, mfd: Remove MFD_RDC321X support
-      x86/reboot: Remove the RDC321X reboot quirk
-      x86/cpu: Remove CPU_SUP_UMC_32 support
-      x86/cpu: Remove TSC-less CONFIG_M586 support
-      x86/cpu: Make CONFIG_X86_TSC unconditional
-      x86/cpu: Make CONFIG_X86_CX8 unconditional
-      x86/percpu: Remove !X86_CX8 methods
-      x86/atomics: Remove !CONFIG_X86_CX8 methods
-
- Documentation/admin-guide/kernel-parameters.txt |    4 -
- arch/x86/Kconfig                                |   71 +-
- arch/x86/Kconfig.cpu                            |   73 +-
- arch/x86/Kconfig.cpufeatures                    |    2 -
- arch/x86/Makefile                               |    1 -
- arch/x86/Makefile_32.cpu                        |    6 -
- arch/x86/include/asm/asm-prototypes.h           |    4 -
- arch/x86/include/asm/atomic64_32.h              |   17 +-
- arch/x86/include/asm/cmpxchg_32.h               |   86 +-
- arch/x86/include/asm/fpu/api.h                  |    6 -
- arch/x86/include/asm/percpu.h                   |    6 +-
- arch/x86/include/asm/vermagic.h                 |    8 -
- arch/x86/kernel/cpu/common.c                    |    7 -
- arch/x86/kernel/cpu/umc.c                       |   26 -
- arch/x86/kernel/fpu/core.c                      |    5 -
- arch/x86/kernel/fpu/init.c                      |    9 +-
- arch/x86/kernel/reboot_fixups_32.c              |   14 -
- arch/x86/kernel/traps.c                         |   21 -
- arch/x86/lib/Makefile                           |    4 -
- arch/x86/lib/atomic64_386_32.S                  |  195 ---
- arch/x86/lib/cmpxchg8b_emu.S                    |   97 --
- arch/x86/math-emu/Makefile                      |   30 -
- arch/x86/math-emu/README                        |  427 ------
- arch/x86/math-emu/control_w.h                   |   46 -
- arch/x86/math-emu/div_Xsig.S                    |  367 -----
- arch/x86/math-emu/div_small.S                   |   48 -
- arch/x86/math-emu/errors.c                      |  686 ----------
- arch/x86/math-emu/exception.h                   |   51 -
- arch/x86/math-emu/fpu_arith.c                   |  153 ---
- arch/x86/math-emu/fpu_asm.h                     |   32 -
- arch/x86/math-emu/fpu_aux.c                     |  267 ----
- arch/x86/math-emu/fpu_emu.h                     |  218 ---
- arch/x86/math-emu/fpu_entry.c                   |  718 ----------
- arch/x86/math-emu/fpu_etc.c                     |  136 --
- arch/x86/math-emu/fpu_proto.h                   |  157 ---
- arch/x86/math-emu/fpu_system.h                  |  130 --
- arch/x86/math-emu/fpu_tags.c                    |  116 --
- arch/x86/math-emu/fpu_trig.c                    | 1649 -----------------------
- arch/x86/math-emu/get_address.c                 |  401 ------
- arch/x86/math-emu/load_store.c                  |  322 -----
- arch/x86/math-emu/mul_Xsig.S                    |  179 ---
- arch/x86/math-emu/poly.h                        |  115 --
- arch/x86/math-emu/poly_2xm1.c                   |  146 --
- arch/x86/math-emu/poly_atan.c                   |  209 ---
- arch/x86/math-emu/poly_l2.c                     |  245 ----
- arch/x86/math-emu/poly_sin.c                    |  379 ------
- arch/x86/math-emu/poly_tan.c                    |  213 ---
- arch/x86/math-emu/polynom_Xsig.S                |  137 --
- arch/x86/math-emu/reg_add_sub.c                 |  334 -----
- arch/x86/math-emu/reg_compare.c                 |  479 -------
- arch/x86/math-emu/reg_constant.c                |  123 --
- arch/x86/math-emu/reg_constant.h                |   26 -
- arch/x86/math-emu/reg_convert.c                 |   47 -
- arch/x86/math-emu/reg_divide.c                  |  183 ---
- arch/x86/math-emu/reg_ld_str.c                  | 1220 -----------------
- arch/x86/math-emu/reg_mul.c                     |  116 --
- arch/x86/math-emu/reg_norm.S                    |  150 ---
- arch/x86/math-emu/reg_round.S                   |  711 ----------
- arch/x86/math-emu/reg_u_add.S                   |  169 ---
- arch/x86/math-emu/reg_u_div.S                   |  474 -------
- arch/x86/math-emu/reg_u_mul.S                   |  150 ---
- arch/x86/math-emu/reg_u_sub.S                   |  274 ----
- arch/x86/math-emu/round_Xsig.S                  |  142 --
- arch/x86/math-emu/shr_Xsig.S                    |   89 --
- arch/x86/math-emu/status_w.h                    |   68 -
- arch/x86/math-emu/version.h                     |   12 -
- arch/x86/math-emu/wm_shrx.S                     |  207 ---
- arch/x86/math-emu/wm_sqrt.S                     |  472 -------
- drivers/cpufreq/Kconfig.x86                     |   26 -
- drivers/cpufreq/Makefile                        |    2 -
- drivers/cpufreq/elanfreq.c                      |  227 ----
- drivers/cpufreq/sc520_freq.c                    |  137 --
- drivers/gpio/Kconfig                            |    8 -
- drivers/gpio/Makefile                           |    1 -
- drivers/gpio/gpio-rdc321x.c                     |  197 ---
- drivers/mfd/Kconfig                             |    9 -
- drivers/mfd/Makefile                            |    1 -
- drivers/mfd/rdc321x-southbridge.c               |   96 --
- drivers/watchdog/Kconfig                        |   11 -
- drivers/watchdog/Makefile                       |    1 -
- drivers/watchdog/rdc321x_wdt.c                  |  281 ----
- include/linux/mfd/rdc321x.h                     |   27 -
- lib/atomic64_test.c                             |    4 +-
- 83 files changed, 30 insertions(+), 14683 deletions(-)
- delete mode 100644 arch/x86/kernel/cpu/umc.c
- delete mode 100644 arch/x86/lib/atomic64_386_32.S
- delete mode 100644 arch/x86/lib/cmpxchg8b_emu.S
- delete mode 100644 arch/x86/math-emu/Makefile
- delete mode 100644 arch/x86/math-emu/README
- delete mode 100644 arch/x86/math-emu/control_w.h
- delete mode 100644 arch/x86/math-emu/div_Xsig.S
- delete mode 100644 arch/x86/math-emu/div_small.S
- delete mode 100644 arch/x86/math-emu/errors.c
- delete mode 100644 arch/x86/math-emu/exception.h
- delete mode 100644 arch/x86/math-emu/fpu_arith.c
- delete mode 100644 arch/x86/math-emu/fpu_asm.h
- delete mode 100644 arch/x86/math-emu/fpu_aux.c
- delete mode 100644 arch/x86/math-emu/fpu_emu.h
- delete mode 100644 arch/x86/math-emu/fpu_entry.c
- delete mode 100644 arch/x86/math-emu/fpu_etc.c
- delete mode 100644 arch/x86/math-emu/fpu_proto.h
- delete mode 100644 arch/x86/math-emu/fpu_system.h
- delete mode 100644 arch/x86/math-emu/fpu_tags.c
- delete mode 100644 arch/x86/math-emu/fpu_trig.c
- delete mode 100644 arch/x86/math-emu/get_address.c
- delete mode 100644 arch/x86/math-emu/load_store.c
- delete mode 100644 arch/x86/math-emu/mul_Xsig.S
- delete mode 100644 arch/x86/math-emu/poly.h
- delete mode 100644 arch/x86/math-emu/poly_2xm1.c
- delete mode 100644 arch/x86/math-emu/poly_atan.c
- delete mode 100644 arch/x86/math-emu/poly_l2.c
- delete mode 100644 arch/x86/math-emu/poly_sin.c
- delete mode 100644 arch/x86/math-emu/poly_tan.c
- delete mode 100644 arch/x86/math-emu/polynom_Xsig.S
- delete mode 100644 arch/x86/math-emu/reg_add_sub.c
- delete mode 100644 arch/x86/math-emu/reg_compare.c
- delete mode 100644 arch/x86/math-emu/reg_constant.c
- delete mode 100644 arch/x86/math-emu/reg_constant.h
- delete mode 100644 arch/x86/math-emu/reg_convert.c
- delete mode 100644 arch/x86/math-emu/reg_divide.c
- delete mode 100644 arch/x86/math-emu/reg_ld_str.c
- delete mode 100644 arch/x86/math-emu/reg_mul.c
- delete mode 100644 arch/x86/math-emu/reg_norm.S
- delete mode 100644 arch/x86/math-emu/reg_round.S
- delete mode 100644 arch/x86/math-emu/reg_u_add.S
- delete mode 100644 arch/x86/math-emu/reg_u_div.S
- delete mode 100644 arch/x86/math-emu/reg_u_mul.S
- delete mode 100644 arch/x86/math-emu/reg_u_sub.S
- delete mode 100644 arch/x86/math-emu/round_Xsig.S
- delete mode 100644 arch/x86/math-emu/shr_Xsig.S
- delete mode 100644 arch/x86/math-emu/status_w.h
- delete mode 100644 arch/x86/math-emu/version.h
- delete mode 100644 arch/x86/math-emu/wm_shrx.S
- delete mode 100644 arch/x86/math-emu/wm_sqrt.S
- delete mode 100644 drivers/cpufreq/elanfreq.c
- delete mode 100644 drivers/cpufreq/sc520_freq.c
- delete mode 100644 drivers/gpio/gpio-rdc321x.c
- delete mode 100644 drivers/mfd/rdc321x-southbridge.c
- delete mode 100644 drivers/watchdog/rdc321x_wdt.c
- delete mode 100644 include/linux/mfd/rdc321x.h
+>
+>Thanks.
