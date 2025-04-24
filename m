@@ -1,119 +1,157 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77A3223DEB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E16F223DEB;
+	Thu, 24 Apr 2025 12:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499201; cv=none; b=pjAVFAaBwCGWMel5ifBo4GS9C0p6xypkc8NulEA90/ATgIP56JzP1NzW9xTg7FRQSAo9Hk/dCL1LWbTsziui1zKBHcxNuHdMO8vNAJ6IWVGue/FFScca5GU01za+23QSr4/Geg/+DwSyzTBa90HbYRZLg7JRgWAwsOfKWXNIS4A=
+	t=1745499226; cv=none; b=jyDDhj6o1ziQFK/yB8hvoPgfy037OuPTHRiOhu1qhOW8SpedWAKnbtu29gPUD9y1OCwL8jMdBTyPtJZP4suntRJ/+SAMscKIBvatIOnDtWLsqKD9QciWj1hEZ4A9FUYMHFIoVGR26KEZTC+ZxoTnq5vRj+xxYcpmDy/jh+CcjoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499201; c=relaxed/simple;
-	bh=DxBNQJBPeh8jU6Xckk6xFrDJjMmrCmkkKoxjle3sUXk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BbDgRe84+QtAuM3SqpAX9toTlmQq5+hXe9frwuUioQa09JBLDijxmKKaLF7+FMC63a3eIi6V8jAxwkAetjFf7YpdlTSH7x4vvsjv9TkbkunwqA+X9vpwzM9UZrCYS43Zq6a4XOTATyeaCNRxT4LuiKk585RMMcO2schisTqEwmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re; spf=pass smtp.mailfrom=mwa.re; dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b=fKuh/Lkq; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
+	s=arc-20240116; t=1745499226; c=relaxed/simple;
+	bh=P86oE7d+/laopXXLm4l/4blWBmnOYmZlRzNXI5Cbk/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bw8LBBuQy6z/GnZUUpF5XfjV0Y5O/COQUTqigTS2BGY8uN2LXevN/iZPstIp0kCSVcj7x0t+YuQrwdtizhCoe5LZv5SxKclkW4wDhTgkOZhZks70k1BzV7k8CA6jpexXGAVKJ2UuUNylH6XifnUsO76Ib+nzYwyRKXmI5IU+/p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=sgkcfejB; arc=none smtp.client-ip=82.68.155.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="fKuh/Lkq"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso8499475e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mwa.re; s=google; t=1745499197; x=1746103997; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LBeAKJ7KUcW1dQvt6wdl3NV+6b3AZQYzsiqjB7Iqsd4=;
-        b=fKuh/LkqOZju5xY0QNfjc+bbIMzJspTkQUc5EsF0fxLrfjYdPELWjzQx7XUy5c5/tA
-         cMzz1Kozrxro1WCt5ZSPviclG5emk3I7G/o7kK1Fpz1ZVcRodNTIQ2jS2wMPL4Guu+kR
-         ei8qtvBO+l2NTFknc5sKEBuPav1Qr3bkI21yD6mpkIHGxJc7AZRu5hSOffD1Pv3rl4mv
-         4skA/Iqx6k/ZDM6CcHjJTey1pgiJVSnr//SfZIwZis+t7EaQpvkYK5r2Azq/uO9AsMzI
-         7kQlHxlG37T/3eVKMxU0t/c4tzRPPuQ2P1MnNRo67TyHEFZaTRm3FXoQ+1WALXeOElzp
-         XY6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745499197; x=1746103997;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LBeAKJ7KUcW1dQvt6wdl3NV+6b3AZQYzsiqjB7Iqsd4=;
-        b=PUj3I9yG40LZB/+nfWMwnTy3bNtvqFjau0DPp6LmnMWRzVjVb9eQRtmgVy788CTo6A
-         ezDRsYwYv7l5SKqtFY55xz4V/SvifKg88Up8aYpI4iGftSOY7aU5l6wpTu7KHfF4AtBw
-         S4sbJXbhYv76CDTIdEskQlfh+LJ6Qr540qzJwqOwbwAe+ZVHYs/ry/vxHK5etJtAyMyc
-         rmOlDPW4Ws5eSTYbh/s0h/9VHUUK04yu6fuVqyGh+YRigVN7IMb9/RXtKwsZ7scTWjc3
-         hXv/lpbP3qkm7s4vxgivc3aU7kWX1RpMoXLuPayRygUPVN0Lckxry5mj2VroGc6rL/jN
-         hOeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvJlnMIEXcgNJaGqVE2SKBOgTIPEaPz0sAU1nwWQ8ZOvG4SyTlysEU95ZG/2TvSsTg1JKqmGt3SoCQLBc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY3bPSvLvRr/GQEdvKSzoPAZojPt4SfyZJ+2VQaPK2tjKy18rU
-	Ge6xTZI5RLqrnc4xkOyBNq2ANB6Hofzffh5htr9tweFeGlLugjSitXA/AdFC2pc=
-X-Gm-Gg: ASbGncsOECKU0kTJQ+5GaPwyvZkMQJk6GRBy9sZ182bay3ykZCaZcX4zw7135pkms0e
-	sny5RsE2854/QKepIEsDbDb3lq5HoLvUmNxDOjS2eBDOWqbZk5laj1GOJITMVF4nea2x/uWkem1
-	XMRVMGpzMlXLFGvzxe/HFHeYewbYF38O3tL1q5CVRqQD8IYBg+P/Z1cdRsLuXFxKVNbAwYMrjtk
-	H6V65HoLlKTHUiVVJ5sRWgUDXp8L2yt1ktkqnxc80THoIwjn5UzDPxVp4n7pfZ4etUnvQzioy88
-	suyzRSf7A/ndHYTNRjY0vWkW5WTjbZRYPVnccEINlTi9IhlCqf03teCEpAbk/cRA1VX6S00yJeB
-	b
-X-Google-Smtp-Source: AGHT+IEppmH4zKcBOoPZazDeFre0hec+YmCx5L9B/fZlDtqDoVt95EXVe+b4uRH2rTi83dPaArW3UQ==
-X-Received: by 2002:a05:600c:46c9:b0:43d:ac5:11e8 with SMTP id 5b1f17b1804b1-4409bd8fca2mr16008835e9.21.1745499196866;
-        Thu, 24 Apr 2025 05:53:16 -0700 (PDT)
-Received: from mw-ac-stu-3.corp.mwa.re (static-195-14-251-13.nc.de. [195.14.251.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b8a9csm20471435e9.29.2025.04.24.05.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:53:16 -0700 (PDT)
-From: Antonios Salios <antonios@mwa.re>
-To: rcsekar@samsung.com
-Cc: mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr,
-	linux-can@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lukas@mwa.re,
-	jan@mwa.re,
-	Antonios Salios <antonios@mwa.re>
-Subject: [PATCH] can: m_can: initialize spin lock on device probe
-Date: Thu, 24 Apr 2025 14:52:20 +0200
-Message-ID: <20250424125219.47345-2-antonios@mwa.re>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="sgkcfejB"
+Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
+	by wylie.me.uk (Postfix) with ESMTP id D6145120897;
+	Thu, 24 Apr 2025 13:53:31 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+	s=mydkim006; t=1745499211;
+	bh=P86oE7d+/laopXXLm4l/4blWBmnOYmZlRzNXI5Cbk/4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=sgkcfejB+MzMEtjvZcAhWSxSOL+ajLWRHA4hn14nvgR1mNN1EoN6YWcRYRXibv7Pz
+	 cVu8aqIgBsE8zplzKI56Q43zb22vMEwjpUXsVbb/+UN1PZfHXlZvkv8lDzAXwXomwc
+	 7qLiJ05u47pWLFVx48PIq+4JtNijO7VWmAitAQkNfKLUlfJWkAlRIxHYdFZQXky0a2
+	 wTcfK3LdKIV+fTRHI8uXgQvAgLa1Gk//MkfPPrEczyQwTyRHfyPuv5rqhajb8tPvU7
+	 jao/H58KOS2ZrM4dxEdOagEZXy3MtvnKPtEHN0EzDqQlWpNFUsm/8wrF/QLm85veaA
+	 jpdqmfh6RBLRQ==
+Date: Thu, 24 Apr 2025 13:53:31 +0100
+From: "Alan J. Wylie" <alan@wylie.me.uk>
+To: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>,
+ Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Jiri
+ Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>, Toke
+ =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+ stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <20250424135331.02511131@frodo.int.wylie.me.uk>
+In-Reply-To: <aAlAakEUu4XSEdXF@pop-os.localdomain>
+References: <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+ <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+ <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+ <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+ <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+ <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+ <20250422214716.5e181523@frodo.int.wylie.me.uk>
+ <aAgO59L0ccXl6kUs@pop-os.localdomain>
+ <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
+ <aAlAakEUu4XSEdXF@pop-os.localdomain>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The spin lock tx_handling_spinlock in struct m_can_classdev is not being
-initialized. This leads to bug complaints from the kernel, eg. when
-trying to send CAN frames with cansend from can-utils.
+> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffst=C3=A4tte wrote:
 
-This patch fixes that by initializing the spin lock in the corresponding
-device probe functions.
+> Meanwhile, if you could provide a reliable (and ideally minimum)
+> reproducer, it would help me a lot to debug.
 
-Signed-off-by: Antonios Salios <antonios@mwa.re>
----
- drivers/net/can/m_can/m_can_pci.c      | 1 +
- drivers/net/can/m_can/m_can_platform.c | 1 +
- 2 files changed, 2 insertions(+)
+I've found a reproducer. Below is a stripped down version of the shell scri=
+pt
+that I posted in my initial report.
 
-diff --git a/drivers/net/can/m_can/m_can_pci.c b/drivers/net/can/m_can/m_can_pci.c
-index 9ad7419f8..06243cd43 100644
---- a/drivers/net/can/m_can/m_can_pci.c
-+++ b/drivers/net/can/m_can/m_can_pci.c
-@@ -143,6 +143,7 @@ static int m_can_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_put_noidle(dev);
- 	pm_runtime_allow(dev);
-+	spin_lock_init(&mcan_class->tx_handling_spinlock);
- 
- 	return 0;
- 
-diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-index b832566ef..c09c61d25 100644
---- a/drivers/net/can/m_can/m_can_platform.c
-+++ b/drivers/net/can/m_can/m_can_platform.c
-@@ -154,6 +154,7 @@ static int m_can_plat_probe(struct platform_device *pdev)
- 	ret = m_can_class_register(mcan_class);
- 	if (ret)
- 		goto out_runtime_disable;
-+	spin_lock_init(&mcan_class->tx_handling_spinlock);
- 
- 	return ret;
- 
--- 
-2.49.0
+Running this in a 1 second loop is enough to cause the panic very quickly.
 
+It seems a bit of network traffic is needed, too.
+
+
+# while true; do ./tc.sh; sleep 1; done
+13:33:43 7196kbit 29296kbit
+13:33:44 7196kbit 29296kbit
+...
+13:35:38 7196kbit 29296kbit
+13:35:39 7196kbit 29296kbit
+[panic]
+
+# while true; do ./tc.sh; sleep 1; done
+13:44:31 7196kbit 29296kbit
+13:44:32 7196kbit 29296kbit
+...
+13:44:52 7196kbit 29296kbit
+13:44:53 7196kbit 29296kbit
+[panic]
+
+The same place as usual
+ htb_dequeue+0x42f/0x610 [sch_htb]
+
+--------8<--------8<--------8<--------8<--------8<--------8<--------8<-----=
+---8<--------8<
+#!/usr/bin/bash
+
+set -o nounset
+set -o errexit
+
+export PATH=3D/usr/bin
+
+ext=3Dppp0
+ext_ingress=3Dppp0ifb0
+
+ext_up=3D7196kbit
+ext_down=3D29296kbit
+
+printf "%(%T)T $ext_up $ext_down\n"
+
+q=3D1486
+quantum=3D300
+
+modprobe act_mirred
+modprobe ifb
+modprobe sch_cake
+modprobe sch_fq_codel
+
+ethtool -K "$ext" tso off gso off gro off=20
+
+tc qdisc del dev "$ext" root		>& /dev/null || true
+tc qdisc del dev "$ext" ingress		>& /dev/null || true
+tc qdisc del dev "$ext_ingress" root	>& /dev/null || true
+tc qdisc del dev "$ext_ingress" ingress	>& /dev/null || true
+ip link del "$ext_ingress"  		>& /dev/null || true
+
+tc qdisc add dev "$ext" handle ffff: ingress
+
+ip link add name "$ext_ingress"  type ifb
+ip link set dev "$ext_ingress" up || true=20
+
+tc filter add dev "$ext" parent ffff: protocol all u32 match u32 0 0 action=
+ mirred egress redirect dev "$ext_ingress"
+tc qdisc add dev "$ext_ingress" root handle 1: htb default 11 r2q 20
+tc class add dev "$ext_ingress" parent 1: classid 1:1 htb rate $ext_down=20
+tc class add dev "$ext_ingress" parent 1:1 classid 1:11 htb rate $ext_down =
+prio 0 quantum $q
+tc qdisc add dev "$ext_ingress" parent 1:11 fq_codel quantum $quantum ecn
+tc qdisc add dev "$ext" root handle 1: htb default 11
+tc class add dev "$ext" parent 1: classid 1:1 htb rate $ext_up
+tc class add dev "$ext" parent 1:1 classid 1:11 htb rate $ext_up prio 0 qua=
+ntum $q
+tc qdisc add dev "$ext" parent 1:11 fq_codel quantum $quantum noecn
+--------8<--------8<--------8<--------8<--------8<--------8<--------8<-----=
+---8<--------8<
+
+--=20
+Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
+
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
