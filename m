@@ -1,56 +1,41 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C62A1BD9E3;
-	Thu, 24 Apr 2025 09:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1925D528;
+	Thu, 24 Apr 2025 09:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745486190; cv=none; b=K6jOD/y1+kBJfKeWhzBNTDLcKNElrlYznT9/U3wNrmXS/aQlQESy20K9F8rcNcMK8fDKnVHbYQZTmQL8fOgNckpoHNevWxR107I6yOrNY5FZTn6l3hBul+IOgatB4YdpNaIO8wZXB36gOWwWm/kc/IWfm52OQpeV8+TTM4EbWWo=
+	t=1745486426; cv=none; b=unSBOOzWh/irtp/S17PtQujf6yBHa6C67HUPvdxePeYiclmYxcTxVoHoDuDhm4MW02nm2I/rf3cpR+zU3m5NBqkFJT3KfaKJqAt5n2QDlPccE8QebYE7pGhZd4EUajtxtXFmgiPV+017TiyX6pJMpyyB/0obHdEXOKMMJarL+pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745486190; c=relaxed/simple;
-	bh=g/SM5fos9s1JWgDeomN4ApobEUC9D4OEO0rlFYul9D8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jzh6RtQvp6TJ0yaYweAHZP2dq2wJrl4ajn9GqCzvEy6yzF9d1yLXLslSPDKfypMaEVAyONKFnwuPwjbSfTPQlb0hRMeyVV7kNc1wh/nPKEWzOvoHif2/uJYr/xx+CsVusm7imD8JoDTQRoxZ1k7IHXAbsUHxj8Y2OofpbaW9Kpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jOzEvNZE; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745486426; c=relaxed/simple;
+	bh=J+s2IDD97hzCAXuo10wy9fNsBAoFpA6MdfthgasVkrM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KZVpLce9n6BhIUgO9ixfsn1DhfwExnUUtrrwzWlhXn+ZqIZDDjzmFjSEXqrMBkHpgQs/HJYZOw7aT/f8dOdPUaT87OWmP4IbfnFHP0IP0TDToplYF72mKPGXqAoXfcFfPRB6RZ3LTIvi0FVg6Z1mjvzq3SGPFdJPewsCEiM1jIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mkh2rTUq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jOzEvNZE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E5C60439EB;
-	Thu, 24 Apr 2025 09:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745486186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qfTMyxnIB01quA/V2nunnWHVUVFti2y/BX9X/pdrGWY=;
-	b=jOzEvNZEShCzsxTs+NkBn1qOJdqxA8tHkP08L2Lg6qAXRL/5ijL0AN/edPlIv/jmiSmARl
-	NS8waoNweatYVMlJWYeHqQ4afL9NF36QodTJy5W/g3V3N+bfMFZ9pEL9xyF6Q4/NXGPMAu
-	zreIAtnVZ73Ff1kZzA+DZb4UsChwu9yPMkmp6eDzvmVymwn9GHvUkLgDmk+ZIPh/sbPdDI
-	abEzn7l+jHbpLFF2IsSSutGq8smCtIwtFMVqCrx6d+eT+MUKvvaEetsN82PPVjK9cTe+xs
-	y4BKUkoBslN4Uq/+QWbZcxGwXZpJe4eHVUq7z7Oqb0NZ8I1loxiTym8acAgUyA==
-Date: Thu, 24 Apr 2025 11:16:23 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Biao
- Huang <biao.huang@mediatek.com>, Yinghua Pan <ot_yinghua.pan@mediatek.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, kernel@collabora.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net v2 2/2] net: ethernet: mtk-star-emac: rearm
- interrupts in rx_poll only when advised
-Message-ID: <20250424111623.706c1acc@device-40.home>
-In-Reply-To: <20250424-mtk_star_emac-fix-spinlock-recursion-issue-v2-2-f3fde2e529d8@collabora.com>
-References: <20250424-mtk_star_emac-fix-spinlock-recursion-issue-v2-0-f3fde2e529d8@collabora.com>
-	<20250424-mtk_star_emac-fix-spinlock-recursion-issue-v2-2-f3fde2e529d8@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mkh2rTUq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B46C4CEE3;
+	Thu, 24 Apr 2025 09:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745486425;
+	bh=J+s2IDD97hzCAXuo10wy9fNsBAoFpA6MdfthgasVkrM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=Mkh2rTUqx5+5DEVfdDlxz4LmNS+te3IrDaAudUo9R8VMmQJQgT0G20pvAyuQAEdPw
+	 2+2b1bflmUwxxPHDetb3iCVkLqyixWXNars/t6powJiMDBOUZI3iHLEeO3MUVd7zXO
+	 U2cAeNMr3QKZhqTRUybLKIJ86bBridbWNcfmfDzHJFXJIICUyZhr/FU/3hbwBR+Y1q
+	 nFxH+Ka3sNEjEXH+7y2QZhBY7kVd+YN0qh2dz2HsefBAAfxyCZakwvfreQCLgSOF4O
+	 P08Ebo1H7cMM9e4IZ/10oONzH0RQqtExWQtL4P2YsqAr9FzAcdPJFBUptCfjAhmmcp
+	 mthOenrGSzdvA==
+Date: Thu, 24 Apr 2025 11:20:22 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Werner Sembach <wse@tuxedocomputers.com>
+cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Disable touchpad on firmware level while not in
+ use
+In-Reply-To: <df09a3f9-6131-435a-ad68-4cea71237e42@tuxedocomputers.com>
+Message-ID: <9q411092-1170-qr2r-27or-96594p19qrqo@xreary.bet>
+References: <20250211133950.422232-1-wse@tuxedocomputers.com> <20250211133950.422232-2-wse@tuxedocomputers.com> <df09a3f9-6131-435a-ad68-4cea71237e42@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,32 +43,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeltdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopeguvghvihgtvgdqgedtrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopehlohhuihhsrghlvgigihhsrdgvhihrrghuugestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehnsggusehnsggurdhnrghmvgdprhgtphhtthhopehsvggrnhdrfigrnhhgsehmv
- gguihgrthgvkhdrtghomhdprhgtphhtthhopehlohhrvghniihosehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi,
+On Tue, 4 Mar 2025, Werner Sembach wrote:
 
-On Thu, 24 Apr 2025 10:38:49 +0200
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> wrote:
-
-> In mtk_star_rx_poll function, on event processing completion, the
-> mtk_star_emac driver calls napi_complete_done but ignores its return
-> code and enable RX DMA interrupts inconditionally. This return code
-> gives the info if a device should avoid rearming its interrupts or not,
-> so fix this behaviour by taking it into account.
+> > Using the new on_hid_hw_open and on_hid_hw_close functions to disable the
+> > touchpad on firmware level while not being in use.
+> >
+> > This safes some battery and triggers touchpad-disabled-leds hardwired to
+> > the touchpads firmware, that exist for example on some TongFang barebones.
+> >
+> > For a lengthy discussion with all the details see
+> > https://gitlab.freedesktop.org/libinput/libinput/-/issues/558
 > 
-> Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+> Any comments if this is a good idea or not?
 
-I'm unsure wether this counts as a bugfix, as no bug was
-seen, and there are quite a few divers that already ignore the return
-from napi_complete_done().
+Sorry for the delay.
 
-I don't think the patch is wrong, but maybe it should be sent to
-net-next :/
+To me this looks like generally a good idea; Benjamin, any comments on the 
+hid-mt part?
 
-Maxime
+BTW you'd need to adjust the Subject line of the patches to conform to the 
+subsystem style (i.e. HID: core: ....)
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
