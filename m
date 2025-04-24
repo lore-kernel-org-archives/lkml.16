@@ -1,108 +1,138 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF4E18B495
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C6127A126
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513219; cv=none; b=Uur58vPTxsvPs7u/lcvAu6qJ7T7WXFJBhwoh6J6n8yebQH9rryOTFEjcE2y1CxlkIaMTBe3HrT02ju7C3lDETUKcMQdMaFRyxkLkFpAadO9GW5vLBgFKTvhxMum/7lDitQmXgZiyLkcC0bDV1r5UDJCXXYJEVhkBT8SmFowQaFk=
+	t=1745513292; cv=none; b=rgU59ZvXRxptogwcFr2Prv9eSKwTIHdUBYauOoQF7lK8qk8qRnhFlqh5GT5ii+Wdamxzl1fD6LOcIo9pW3y3rUOUPL5tXA7+2erHO6zHBdN84ynxjzr3GNbboOmLMhOhU7hYAYNCB4V3XuQADjAs4J/5J/uYcyYayR0SvZCe2vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513219; c=relaxed/simple;
-	bh=DnRed+2MKUgAgSOFAHNxY55sUYcrnMx6/ynGP7lOLk4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fjLiWfEiLBj/dCqUG+f2wYRubpCVnx3acEtDLz2zOiuH6sWvRqqGrTWD5ZU4LJV6eTU8cyl5bBUVT0gDcSAZ6PP/U0XpcWMj28k3LjRKQdswepEtNhLYQ0v9aB2LrSGB+iWqFPnW53AQV9hufKlXNRcl3Qp4Bvk/RwE33OKjytg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwAlL8Y6; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745513292; c=relaxed/simple;
+	bh=ySwKksoJVylHv17+76jDGSBW5NovddheXIa8c/3FWGc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Oat6pmO3TGtRJd7ZDJiLsezy2zfvylu0GdAsTUibvm+YsMsew5nlX+5c05NNR3znY5GNfQ6Us+Oj0AF9DAnQ2uBiSoWLTWeeaV6sr6i6IJnMsiPiYArLUFSTfj3sGro7dGOKgKW4Zd04jR9VtOik7Y6ZFQZz1OmC8BK6zLJeeSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=POHImNsL; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwAlL8Y6"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3995ff6b066so757374f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745513216; x=1746118016; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tX6BYTT8dOmFs+pdX/MFx3gTZUblYOPi9JW4PiTBaik=;
-        b=RwAlL8Y6JL9Z9PBq3SbbH20WadmAVsX33K9VlYuEK2P8aOl3uBnhp87sKGqG11NOFe
-         H8A020oCy3ZUz0D5opFKOxbUGpibuutgVEAGi6N3gMdq1kkCAb6g/mo15qSt47cDQr9r
-         NjnjNgqOCt3FSsPAVLikpEMGt8HMx5fCGNl6ULWMX8sGz43tXtsWT8UNfBVdC7PxfpKO
-         /x60DFHOdy7iSGvd0j8Zu162kIg032T5Q+Xyn4uun1Xn6U+Dzv9bn/HbvjzlWyQP3Jqx
-         GnKlug3MavzAU0ygcLdV9HyrLBUcFa93EiOrEQUJdu/xXRdjEfbOvTziM83LaejAPDeT
-         Hg0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513216; x=1746118016;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tX6BYTT8dOmFs+pdX/MFx3gTZUblYOPi9JW4PiTBaik=;
-        b=MyVVSrQ/OuKBKX3bU0iTKcZ4C5oMceRmvKeHr2sx1tMWTu/Hzj9091nbSGQzwc+FpD
-         wNFb9Gi4vhl7C9o9dggujcrY6xtiTNpgZUDyWymNQ7+75HsEDADgLZwypN9aq6VfOAeo
-         vBATJ4aXHSLYqWn3faTcpcX3wD2of1PfMCjL/Snk0NEnaNiNAMpXMDHfaOZ5pmkHLmTC
-         Yw7P3X2f0zsST7sOFnIunnef5eC7PjX1etdi5ReR+34ZIzXU5a7UtCV3z14Vc0LSXICL
-         r+OR7HznSXGGE6cMbjDNlJ2yC85+wov8gilJqWV/gxKRzC8H5pEohAYgRZvVrmCHGv/W
-         fiYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGnykU+LhgXoBqjbKC374mQl6cGEJE72UvvfrFjQ2hl/bLh5TpFDqn67CLPgufmWeFX0OdQoygE5/Xnxg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+x1fByNj4LB0vskD+ewXuZWuy0IMqHjY/XVHKa8HV2NrEeHsV
-	2zMd/3E7Xu6HUUGPhj9S+2IabkbSbf+5OTXLF8GveZB9V5zMEdH4Fehl65LoTC4=
-X-Gm-Gg: ASbGncuhwK75xZrkvZRH8orMLE3p/s0N1OLkIbWClQt8deTuc5Wq+X9mfFKbGrmsbLi
-	h6rjp1tcXncs+MAnefoVZtSl5g2FS5qljIMBUU4SJsz1+4youQwWUyztVpRdbNELxrLqm9+uI+J
-	YcFwJ9rLnkpuYhQPJ1XtqgoKm5doYrKokwQ9LxtHjm7LfT2uUfCuMg0cv7UU4rOSXga7np7T5ya
-	gaqV3xMgc4DncBD4BUot+iqjJIDaZGhwkj4O+odtp/xI2fUa6nGQkwwWsTfH0xhPt4J45/Tp/rn
-	k8WF9uQJeo+NLoKc+5KWGh/loXwrLso+2ltiNRcuUBwJM2QYnN4WH1jTaMxyVtrr6QQQCGfvXAa
-	37081VoA9kONK8SBTntLoI1gA
-X-Google-Smtp-Source: AGHT+IGbtUZ1epAFM71uoldTFr4VYxXQceNxeQpoJpuw+knCHDf5n5FvydE+by/rlcAYTosCU00hYw==
-X-Received: by 2002:a05:6000:184d:b0:39c:13fd:ea9c with SMTP id ffacd0b85a97d-3a072bb7529mr36617f8f.47.1745513215697;
-        Thu, 24 Apr 2025 09:46:55 -0700 (PDT)
-Received: from andreas-VirtualBox (089144201082.atnat0010.highway.a1.net. [89.144.201.82])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a807bsm2633243f8f.20.2025.04.24.09.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 09:46:54 -0700 (PDT)
-Date: Thu, 24 Apr 2025 18:46:52 +0200
-From: Andreas Kleinbichler <andi.kleinbichler@gmail.com>
-To: Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [Patch]: staging: greybus: camera: fix alignment should
- match open parentheses
-Message-ID: <aApq_JPIBhnGqfiR@andreas-VirtualBox>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="POHImNsL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745513290; x=1777049290;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ySwKksoJVylHv17+76jDGSBW5NovddheXIa8c/3FWGc=;
+  b=POHImNsLrQssdm2bjdASlda8hS1oV8buGi4M4vPq4Cj2yTHBBd9rW1C1
+   vsUaEc+Wv17TghpsDpCQSWvga+XJ3/iHs7KpFaVaQPF4gRXzYR/D8Rh94
+   +LKb3yazNq3ENFMWq+AQwkP1dgPICnK4yxln+//Py/pvod0v5idb+J32O
+   pxHPlYHzrSc1bBt/qOn5h2H2q5/FB7z/bI8lTkLGgT81DFRqhJb5zz1LF
+   QydKE24mIVY04Dojg7F1l1PLyvBAr3g6MKc226oqH+4Z2J96RGaLFbKG9
+   9fmuCRE03UBgfztnVAsdQbTvWU8n2FQ5GRf2Zx5AUhnLc7d6w0wNgR6F/
+   g==;
+X-CSE-ConnectionGUID: udOCCI9FSqqFp0VOR8r0JQ==
+X-CSE-MsgGUID: P5GUYVgxTNCwl7HPRe7CRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="49816908"
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="49816908"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 09:48:09 -0700
+X-CSE-ConnectionGUID: rQ1ocbUzQhuWSA1zOhprqw==
+X-CSE-MsgGUID: sO9y2MC2RBmDNooNgnf5Rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="132661087"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 24 Apr 2025 09:48:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D4F221AC; Thu, 24 Apr 2025 19:48:04 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Vlastimil Babka <vbabka@suse.cz>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] mm, slab: fold need_slab_obj_ext() into its only user
+Date: Thu, 24 Apr 2025 19:48:00 +0300
+Message-ID: <20250424164800.2658961-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Correct the alignment of the parameters to match the open parenthesis.
+need_slab_obj_ext() is used only in one place, fold it into there.
+Without that, clang can't build kernel with `make W=1` when
+CONFIG_WERROR=y, which is default in the x86 configurations.
 
-Reported by checkpatch:
+mm/slub.c:2079:20: error: unused function 'need_slab_obj_ext' [-Werror,-Wunused-function]
 
-        CHECK: Alignment should match open parenthesis
+To solve this, fold need_slab_obj_ext() into its only user.
 
-Signed-off-by: Andreas Kleinbichler <andi.kleinbichler@gmail.com>
+Fixes: e33b7ae3d802 ("mm, slab: clean up slab->obj_exts always")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/staging/greybus/camera.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ mm/slub.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/greybus/camera.c b/drivers/staging/greybus/camera.c
-index ec9fddfc0b14..a1b76df39a8f 100644
---- a/drivers/staging/greybus/camera.c
-+++ b/drivers/staging/greybus/camera.c
-@@ -263,9 +263,10 @@ static int gb_camera_get_max_pkt_size(struct gb_camera *gcam,
-  * Validate the stream configuration response verifying padding is correctly
-  * set and the returned number of streams is supported
-  */
--static const int gb_camera_configure_streams_validate_response(struct gb_camera *gcam,
--		struct gb_camera_configure_streams_response *resp,
--		unsigned int nstreams)
-+static const int gb_camera_configure_streams_validate_response
-+	(struct gb_camera *gcam,
-+	 struct gb_camera_configure_streams_response *resp,
-+	 unsigned int nstreams)
+diff --git a/mm/slub.c b/mm/slub.c
+index 966785362a62..50e9730828a6 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2048,18 +2048,6 @@ static inline void free_slab_obj_exts(struct slab *slab)
+ 	slab->obj_exts = 0;
+ }
+ 
+-static inline bool need_slab_obj_ext(void)
+-{
+-	if (mem_alloc_profiling_enabled())
+-		return true;
+-
+-	/*
+-	 * CONFIG_MEMCG creates vector of obj_cgroup objects conditionally
+-	 * inside memcg_slab_post_alloc_hook. No other users for now.
+-	 */
+-	return false;
+-}
+-
+ #else /* CONFIG_SLAB_OBJ_EXT */
+ 
+ static inline void init_slab_obj_exts(struct slab *slab)
+@@ -2076,11 +2064,6 @@ static inline void free_slab_obj_exts(struct slab *slab)
  {
- 	unsigned int i;
+ }
+ 
+-static inline bool need_slab_obj_ext(void)
+-{
+-	return false;
+-}
+-
+ #endif /* CONFIG_SLAB_OBJ_EXT */
+ 
+ #ifdef CONFIG_MEM_ALLOC_PROFILING
+@@ -2128,7 +2111,11 @@ __alloc_tagging_slab_alloc_hook(struct kmem_cache *s, void *object, gfp_t flags)
+ static inline void
+ alloc_tagging_slab_alloc_hook(struct kmem_cache *s, void *object, gfp_t flags)
+ {
+-	if (need_slab_obj_ext())
++	/*
++	 * CONFIG_MEMCG creates vector of obj_cgroup objects conditionally
++	 * inside memcg_slab_post_alloc_hook(). No other users for now.
++	 */
++	if (mem_alloc_profiling_enabled())
+ 		__alloc_tagging_slab_alloc_hook(s, object, flags);
+ }
  
 -- 
-2.43.0
+2.47.2
 
