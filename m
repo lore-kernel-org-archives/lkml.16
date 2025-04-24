@@ -1,134 +1,69 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23D71A2381;
-	Thu, 24 Apr 2025 13:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7679118E34A;
+	Thu, 24 Apr 2025 13:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501929; cv=none; b=uNB7Iv45XPxbUi0tP2WPuSVsG4c0c5hDArU5VJtejSy93//XWmq0LBiQXKrxgQYuWc/+ZezISI0VUx8G+KDlrwGBiUUhDbvpFHfmvRsVHbApEcnBt//Q1q55xzpBYNFFJelr9sbnuWfgBUZ/BwQ1m8vkEq79CjGsVU3WOjNi/k4=
+	t=1745501951; cv=none; b=i685Cr8jotv6snFVWE7RRq1UM95kjG/C6YCLdof4CXlbp7rAJ9+0RPfxxSIvXcBcA0rY6CX1gOP9EgfG1qsbUu7rznAU1vgl6cXoP5OpyK70R5KO51bq53K8+LC8Loh9XxqnQBg8pexAiko+gxPW7Rh883Yi5mkdZBTwVhZQqXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501929; c=relaxed/simple;
-	bh=JT9l/+e3r1Y05jUzOsZqr8YD8XUbFvoCajdKIzKQ9jU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=LVEy96ewaPV/JUlOihiskUl8xsnVeCAq8gFeFt9LeYq2vFmxePVbZ5hYbH1bYby6q25PSfpugM5MEC+U+1fj50mvWN3oGwPhP46YCMyNL9mh4NRWRrvaqWh7PV3uywxcT5ePDixWSZqGjp8/1WvIsD/o0MUZSzgOI1OTRAwG+fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gI9Qi8iA; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gI9Qi8iA"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DD20543A18;
-	Thu, 24 Apr 2025 13:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745501918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JT9l/+e3r1Y05jUzOsZqr8YD8XUbFvoCajdKIzKQ9jU=;
-	b=gI9Qi8iAoHo/gBxh9R+vG0T3VpMLo5YARKDaRzoVfMvD3Kkj1HD5Uvt33GjFv5WHHyIurg
-	ECYtVZKxvk99eb/wdY73MvgT6BzLddjF5SjDB51Tw5uNtdrI33XtLLs80gHarB744Bkjc8
-	DWrmSkphdd1Al/1SSUT7QCcJtagYi/1cUE7+PJ4EEaJDPM57AcgG2SDDwq8/AKzS/+FWLy
-	kwRznWKkWuxRt2VhPK65YLXmKWOid1ZPnDfDQYQF93h6yR1YeZIAcY73oWHtOV17t61Y2q
-	E2lW9ycVZgB6kUDduFAin8Sbas/RVeP+GBA5ls/GR2BGECqPv+IEs2bEhMpV2A==
+	s=arc-20240116; t=1745501951; c=relaxed/simple;
+	bh=qgnyhI7G1sbn3+oID5OpHpCLMNHcLsKjgs4//IEb2I8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pP+rqfyoyc6kwIFHs1kGQwGVq9upHMrW9Hekj0fnr+drup9OXVdGU/tdmb0ODkE5SsE5E+ZgubOF9bY02q47DHFiQvhzoTC3RvkGcRlpE126x1GY+3OnaUuQB7JEc6Ct/iFjdzbfld0yTyvG7AUYsPoo/jCLgDgusK4YNfb4bew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D063CC4CEE3;
+	Thu, 24 Apr 2025 13:39:07 +0000 (UTC)
+Date: Thu, 24 Apr 2025 09:41:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu
+ Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Jens Remus
+ <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 12/39] unwind_user: Add frame pointer support
+Message-ID: <20250424094102.0004f8f8@gandalf.local.home>
+In-Reply-To: <20250124181610.zdqvdaeqrp7kyzis@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+	<10b92f2fd065b67e6e3fd473ca145c34ea74b73a.1737511963.git.jpoimboe@kernel.org>
+	<CAEf4BzaQr1ruCh1beyhJ_i+aGuw4rGSftF_Zr5ZB=8Jim1jyyQ@mail.gmail.com>
+	<20250124181610.zdqvdaeqrp7kyzis@jpoimboe>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 24 Apr 2025 15:38:35 +0200
-Message-Id: <D9EWSDXHDGFJ.FIDSHIR1OP80@bootlin.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
- <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
- <revest@chromium.org>, "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Andrii Nakryiko"
- <andrii.nakryiko@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
- <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
- <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
- <6b6472c3-0718-4e60-9972-c166d51962a3@huaweicloud.com>
-In-Reply-To: <6b6472c3-0718-4e60-9972-c166d51962a3@huaweicloud.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelieduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelkeehiefhfeehvefhtdegueelkeehffffffeuvdekkeekuddvueeguefgieeukeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtohepgihukhhuohhhrghisehhuhgrfigvihgtlhhouhgurdgtohhmpdhrtghpthhtoheprghnughrihhirdhnrghkrhihihhkohesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhn
- hdrfhgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomh
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Xu,
+On Fri, 24 Jan 2025 10:16:10 -0800
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-On Thu Apr 24, 2025 at 2:00 PM CEST, Xu Kuohai wrote:
-> On 4/24/2025 3:24 AM, Alexis Lothor=C3=A9 wrote:
->> Hi Andrii,
->>=20
->> On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
->>> On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
->>> <alexis.lothore@bootlin.com> wrote:
->>>>
->>>> Hi Andrii,
->>>>
->>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
->>>>> On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Fou=
-ndation)
->>>>> <alexis.lothore@bootlin.com> wrote:
+> > Do you plan to reuse this logic for stack unwinding done by perf
+> > subsystem in perf_callchain_user()? See is_uprobe_at_func_entry()
+> > parts and also fixup_uretprobe_trampoline_entries() for some of the
+> > quirks that have to be taken into account when doing frame
+> > pointer-based unwinding. It would be great not to lose those in this
+> > new reimplementation.
+> > 
+> > Not sure what's the best way to avoid duplicating the logic, but I
+> > thought I'd bring that up.  
+> 
+> Indeed!  That was on the todo list and somehow evaporated.
 
-[...]
+I'm getting ready to post an update of these patches, but I want to mention
+that this has not been addressed, and I'm replying here to make sure it
+stays on the radar.
 
->> Thanks for the pointer, I'll take a look at it. The more we discuss this
->> series, the less member size sounds relevant for what I'm trying to achi=
-eve
->> here.
->>=20
->> Following Xu's comments, I have been thinking about how I could detect t=
-he
->> custom alignments and packing on structures, and I was wondering if I co=
-uld
->> somehow benefit from __attribute__ encoding in BTF info ([1]). But
->> following your hint, I also see some btf_is_struct_packed() in
->> tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see =
-if
->> I can manage to make something work with all of this.
->>
->
-> With DWARF info, we might not need to detect the structure alignment anym=
-ore,
-> since the DW_AT_location attribute tells us where the structure parameter=
- is
-> located on the stack, and DW_AT_byte_size gives us the size of the struct=
-ure.
-
-I am not sure to follow you here, because DWARF info is not accessible
-from kernel at runtime, right ? Or are you meaning that we could, at build
-time, enrich the BTF info embedded in the kernel thanks to DWARF info ?
-
-Thanks,
-
-Alexis
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+-- Steve
