@@ -1,199 +1,188 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A91F14E2E2;
-	Thu, 24 Apr 2025 21:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9886A14E2E2
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745529151; cv=none; b=MGthlM0hKI+S6vvYvU1hNB4Dv8xvaN2uIilf8YbOyzLhfYH7PQjLY76gZhzF2jDhMU4Dswycj7O1JfNynMIaN7mLYS7dwcWoPXF6KYRm+9KJiZu/huPqzuJFMctz6pJ9DsXLN1k115ZCx8kfd/LiMrrwPyAhV4fZaPbF8QxVU2U=
+	t=1745529205; cv=none; b=ep7BwVCplsNxEXOE/lb6hy7z79fH8oFOpBVf+udLZoXzaVJS69yk9d14WlYBkWw8EoEaaGuNxXTFT1jdIO2aqgNR6PfKDGK3Oge4LKHDY6FAgzoh+sg2KQEbRkjuoRDqjKMaSrzqtkLvkEIkHp/NrMquFfb1Fx06VRa+85Kcz20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745529151; c=relaxed/simple;
-	bh=VgnxegN+AiUdHNvx/OGE0VJqyEaMhxw5IosVNS2ul8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HTccxUgaZip4oZqx/C5OHnpykQs1SecsbA8U/t+xOyDLKgN+fjqJHj+krXju1WFHfnDwBrws2md4QCaW4B3Sm3IOa5H2lbwRrmr1is3rQZTJeJMr+D0HozX9KFKQfiaFvF5LEF4H+Rz0g7ZBhhb20/1oTkq4RgNFWxQ/8XNZpKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxbk79Cv; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745529205; c=relaxed/simple;
+	bh=rNkS7M4cu/FvczZ3XpjBuce/tBiY87IwonEo2s6h3hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kjHmjoHtCZTKjsBN0gigTAY91fSSKOos05FyU/ah2sCPYe6IQq0rBdnGOcLkagYeDS4MM58u5nXF7kZunZtmkVvp5FO2n+WSBf0IXypaVlHUnOrPLQ6bm4Vr+JrijeLDiTgSxQuqJK34U6+gHdEyzSfF0m0UERcGwO/pTs0ABKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dwGBnVQW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxbk79Cv"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d589ed2b47so4645625ab.2;
-        Thu, 24 Apr 2025 14:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745529148; x=1746133948; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5jecia6s2JNR2xEO3HrUkYsvVoWooMAU8KQ0rtFmv/c=;
-        b=bxbk79CvnOEj0VaIzpp2RX8We98u+wWdZBl11XhqHe7s+/plBbsu3OAk7xgvICkpdH
-         C9HxGxtRHQqY3kTp1x4VxDN6/bCmAdT9I1j284ALDwZYdDboCPctEMTnhx/sexEmx3c0
-         wE2VU6kzMIwEa1XQ+Zt/OeDRu/oBZXH1eAlAIMDOPQXfN41L/BGhFPJWU6/sFLH8M9lg
-         6Rb6f7C59JsU/KMj4FaDrtRtiwpnNYlByr0zBeP0zuMDI4kJEc0hYANev4kYWIGeLG2g
-         zRrkI5j+pu74ASqqpKygfRh5jEMHWCXExwcpeCvTL4PKSMy/6gHc0vRI2A4I0lJu+oMd
-         2nJQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dwGBnVQW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745529202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=TOXhqaJnJp2+DQnqUGdABkzPsXEKdnuTwS+DW6VMcYU=;
+	b=dwGBnVQWsD8hza+FzCA18t+ZEyFZsbdkKr2E9oOXVqxepMBJjW1fDU7cbrb5JA8SD9BHXN
+	JOL2CtcvgKGUpPffuvJlfrTnPbnMmjau/ILK7UIpZRXSt6hYohV3qF1/7RmhyE9hhZE/OQ
+	Y8w2IADU3coCYD/We/OXp265v7Bq5sw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-ei8urkV8PvKXyRVcTf5NEg-1; Thu, 24 Apr 2025 17:13:21 -0400
+X-MC-Unique: ei8urkV8PvKXyRVcTf5NEg-1
+X-Mimecast-MFC-AGG-ID: ei8urkV8PvKXyRVcTf5NEg_1745529200
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ea256f039so11024085e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:13:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745529148; x=1746133948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5jecia6s2JNR2xEO3HrUkYsvVoWooMAU8KQ0rtFmv/c=;
-        b=vRmjsIPVOZ2QTLnjglDwbG92DHowA0wJeqjuZqGB5Z58hJHwXzoo0DcO7GxiIKyAqq
-         iFlYiQnsN3TES2tZGqAtLduI8+gtUvkw0hNiXj8sxBtTgbYqVWt9OhpIQ5i5OfJqsaV+
-         7Q+Oa9PY/xNilzzf7wcONrKhZZpmr+CuvW79mhUK7uEBDozF8gNHWiZAPhdlgk91Mw31
-         VDoxPGJUc/UeqeCagLlWNGyzMsLNPb8VcBYLOgvH+WNl9OBMt4PPqPOpTjQ52G6036GB
-         PnxpnLliX5QpL51dfeszVbOnk6gQJy+KA6IuC5AZ9vIv9118ZyjqQ7z0jZiA+hvH9OtN
-         tEOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCYHd/t2mZoEf+MibdAaS7JevI4pOF23Di35ybhdy6+HqxnsoxYxM26AfGRJUP9AUZNa+09+t8tvXjrVFZ@vger.kernel.org, AJvYcCWrAzNBMA1OFKgfz0gFYqA6AdJzVEXKRK8woDcmk/xSU/XNn0V4Euv15R6Cn7Yox4ZgmUgjje4+KS5CuiX6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTetSN7PsllBvpmrwyrnl7u7AzMhYc5NIY8M7kaKdCtzMwwqLW
-	AOlP3TRRiORVBfgH5LORAEJOfkjuKWq2IdYTYLDlI7uPvy8bt6CR0Gxxhiv9Y5+JeV7KwXOgxon
-	3t8j88T98mqWbqovYfD3wv3hzf04=
-X-Gm-Gg: ASbGnctTP8o23tHpfDdpTNGhzmluWeE0yVUcXbTFBzi5SlkmZSetB/Q7Q7W8Aq/AeGM
-	8486fjYra8Wvbi0HfA7zRoz70KbUPVdVXeJbVIGpM8hghtIsCd45DJm63Cz3yIo/jiSXeFH0auA
-	O3IsD/VehDvF/cSCrdaXztlpT4OeWGrlp/a+D72QPi9s+CUj8T3B/ous1P
-X-Google-Smtp-Source: AGHT+IGwg57PbGCAJtcA1b9fqEb8SXvQsj9ID0gfQZuJ29n4nfIKh+iiGOC7fjlxHKkpbrZ6VyFzhutJKQUYzyyRRFU=
-X-Received: by 2002:a05:6e02:188f:b0:3d6:cbed:330c with SMTP id
- e9e14a558f8ab-3d9303b7774mr45553075ab.11.1745529148486; Thu, 24 Apr 2025
- 14:12:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745529200; x=1746134000;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TOXhqaJnJp2+DQnqUGdABkzPsXEKdnuTwS+DW6VMcYU=;
+        b=ZHy45m57YcpNHPFesi8NwHgITB9FNNY0lZlb2HqRea/5S9TyqaGbZE3IoJIo+sCfNt
+         nZboLEnE8t+/sdA8mr1gUZpx5Kjh9n6xKXrJuIr/uql+qgOy9kbNhwj2GCyNgPImruIp
+         qpusu4cWCBwWTZSB4o/fgkq2d75tHRNjL2qrWnMzIXQiFZUeew2hjHRuIrOqIt7bWAO5
+         cjCfjqJtFWHvzI9fKAj7NWdrH4mfegVDycrmpD9wfNAhHiqHg3cFNGIuv4+0jSUfLfk0
+         WRg8RCZdCJc2FkoZzopYncSqELgngt/vIeaNqIf0JVyHUiIEECLy5hQI9xoIrZPq7iIL
+         Jm+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVyoz6VO+5+kcO5/NAGB3RGLKXrAUqqNt+pYT+JQAbjewOP4HMPAMYLM869XqYYJitx/MLNwTim1rrA7aM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG/uhsaNcOFM1UARzi4HcerpzmPGC9Il5BV/W2JUzhaH1BbPdP
+	zR7KbXFm+aEQUj8WUXYLALTnh1vsKcBVY4tLTvFW30uPcrMwKZyWaWy9iiw9VBeiw1mwzpaU4AK
+	jmDH4Gwq6poxbIOrPpQp7LUY38c5ezcwFReBd/D8lNoxBIjvYs/sJ86vX+2lnPg==
+X-Gm-Gg: ASbGncuj8L1j5VhOmHTYZrk/iaSPpToVlXZfINnLspKpzQQmSqwWF6Ruyn/Rc5X2cNI
+	aHmUWqSQZc+Z9R7e8UYq7Wp6k5Z7V1rIOEFgaB5zB2ky4DlJF7vnXp/U4rmOdzfrhBn/Kr+KTJY
+	w9Ez/EO6/cMnUZigoY1aMxf8GAFxJxSb1ii96oleY6K3CwYZrOO4X8Yru7yB2myznKtct5lC72G
+	L3NT2YvTkdSzN1YuPZ1rqIpXviHBJIcBVpv0j9zYrRDQiSn9mNh97tV0dWIOEmvCA4P1IIOXH74
+	gFTn0MR3TEWpTmM+BpUTmAAS0El9GhTG55tZovZ6hI10pysTolO/E825VhyZu8SPoq1/ED7sWV9
+	FTbMp8EqMYM7XwvlkO5j2sH4fRQN6TnFdgAg7
+X-Received: by 2002:a05:600c:524c:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-440a310818dmr7773185e9.9.1745529199950;
+        Thu, 24 Apr 2025 14:13:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHXu7rx60czPGcmWU0+8461KGJT0DcvIUYSs2uaUCrKVXSoMHpwGwItsZlEECqxxyTiY6BuTg==
+X-Received: by 2002:a05:600c:524c:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-440a310818dmr7773115e9.9.1745529199621;
+        Thu, 24 Apr 2025 14:13:19 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c74e:ff00:f734:227:6936:cdab? (p200300cbc74eff00f73402276936cdab.dip0.t-ipconnect.de. [2003:cb:c74e:ff00:f734:227:6936:cdab])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a530f6e6sm1830695e9.17.2025.04.24.14.13.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 14:13:19 -0700 (PDT)
+Message-ID: <5569da56-4bd7-4ebf-88bf-a9edf7310f51@redhat.com>
+Date: Thu, 24 Apr 2025 23:13:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
-In-Reply-To: <20250417021349.148911-1-alex.vinarskis@gmail.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 24 Apr 2025 14:12:15 -0700
-X-Gm-Features: ATxdqUHz6DZ9blgWAq2Iad4ekg_aVkIGiDF4KqqZFyT1Q27qjUmJcTIdj9Q8vng
-Message-ID: <CAF6AEGs5Sw76kVS6_GaK6=VZ3jWPuqN9bc+7UvVU=jfaBBTLDQ@mail.gmail.com>
-Subject: Re: drm/msm/dp: Introduce link training per-segment for LTTPRs
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, dmitry.baryshkov@oss.qualcomm.com, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, laurentiu.tudor1@dell.com, abel.vesa@linaro.org, 
-	johan@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/7] mm: Implement for_each_valid_pfn() for
+ CONFIG_FLATMEM
+To: David Woodhouse <dwmw2@infradead.org>, Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Sauerwein, David" <dssauerw@amazon.de>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Ruihan Li <lrh2000@pku.edu.cn>
+References: <20250423133821.789413-1-dwmw2@infradead.org>
+ <20250423133821.789413-3-dwmw2@infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250423133821.789413-3-dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 7:13=E2=80=AFPM Aleksandrs Vinarskis
-<alex.vinarskis@gmail.com> wrote:
->
-> Recently added Initial LTTPR support in msm/dp has configured LTTPR(s)
-> to non-transparent mode to enable video output on X1E-based devices
-> that come with LTTPR on the motherboards. However, video would not work
-> if additional LTTPR(s) are present between sink and source, which is
-> the case for USB Type-C docks (eg. Dell WD19TB/WD22TB4), and at least
-> some universal Thunderbolt/USB Type-C monitors (eg. Dell U2725QE).
->
-> First, take into account LTTPR capabilities when computing max link
-> rate, number of lanes. Take into account previous discussion on the
-> lists - exit early if reading DPCD caps failed. This also fixes
-> "*ERROR* panel edid read failed" on some monitors which seems to be
-> caused by msm_dp_panel_read_sink_caps running before LTTPR(s) are
-> initialized.
->
-> Finally, implement link training per-segment. Pass lttpr_count to all
-> required helpers.
-> This seems to also partially improve UI (Wayland) hanging when
-> changing external display's link parameters (resolution, framerate):
-> * Prior to this series, via direct USB Type-C to display connection,
->   attempt to change resolution or framerate hangs the UI, setting does
->   not stick. Some back and forth replugging finally sets desired
->   parameters.
-> * With this series, via direct USB Type-C to display connection,
->   changing parameters works most of the time, without UI freezing. Via
->   docking station/multiple LTTPRs the setting again does not stick.
-> * On Xorg changing link paramaters works in all combinations.
->
-> These appear to be mainlink initialization related, as in all cases LT
-> passes successfully.
->
-> Test matrix:
-> * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland (myself)
->         * Left USB Type-C, Right USB Type-C
->         * Direct monitor connection, Dell WD19TB, Dell WD22TB4, USB
->           Type-C to HDMI dongle, USB Type-C to DP dongle
->         * Dell AW3423DWF, Samsung LS24A600, dual Samsung LS24A600 (one
->           monitor per USB Type-C connector)
-> * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland (myself)
->         * Left USB Type-C, Right USB Type-C
->         * Direct monitor connection
->         * Samsung S34BG85 (USB Type-C), Dell U2725QE (universal
->           Thunderbolt/USB Type-C, probes with an LTTPR when in USB
->           Type-C/DP Alt mode)
-> * Dell XPS 9345, Debian trixie/sid, Gnome 48, Wayland (Stefan Schmidt)
->         * Left USB Type-C, Right USB Type-C
->         * Dell WD15 Dock with DisplayPort connected
->         * Dell HD22Q dock with HDMI connected
->         * USB Type-C to HDMI dongle
->         * Dell U3417W
-
-For the series,
-
-Tested-by: Rob Clark <robdclark@gmail.com>  # yoga slim 7x
-
-patch 4/4 had a number of conflicting hunks, you might need to rebase
-on msm-next
-
-BR,
--R
-
-> In both cases, "Thunderbot Support"/"USB4 PCIE Tunneling" was disabled
-> in UEFI to force universal Thunderbolt/USB Type-C devices to work in
-> DP Alt mode.
-> In both cases laptops had HBR3 patches applied [1], resulting in
-> maximum successful link at 3440x1440@100hz and 4k@60hz respectively.
-> When using Dell WD22TB4/U2725QE, USB Type-C pin assigment D got enabled
-> and USB3.0 devices were working in parallel to video ouput.
->
-> Known issues:
-> * As mentioned above, it appears that on Gnome+Wayland framerate and
->   resolution parameter adjustment is not stable.
->
-> Due to lack of access to the official DisplayPort specfication, changes
-> were primarily inspired by/reverse engineered from Intel's i915 driver.
->
-> [1] https://lore.kernel.org/all/20250226231436.16138-2-alex.vinarskis@gma=
-il.com/
->
-> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
->
+On 23.04.25 15:33, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> In the FLATMEM case, the default pfn_valid() just checks that the PFN is
+> within the range [ ARCH_PFN_OFFSET .. ARCH_PFN_OFFSET + max_mapnr ).
+> 
+> The for_each_valid_pfn() function can therefore be a simple for() loop
+> using those as min/max respectively.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
->
-> Changes in v3:
-> - Split 1st patch into 3
-> - Simplified handling of max_lttpr_lanes/max_lttpr_rate
-> - Moved lttpr_common_caps to msm_dp_link (not msm_dp_panel, as LTTPRs
->   are link related, not panel related)
-> - Picked Stefan's T-b tag (last patch only, as 1st one is getting split)
-> - Droped Abel's R-b tags from 1st patch that got split due to high diff
-> - Fixed alignment issues, initialization of variables, debug prints
-> - Moved lttpr_count to avoid ugly pointer
-> - Link to v2: https://lore.kernel.org/all/20250311234109.136510-1-alex.vi=
-narskis@gmail.com/
->
-> Changes in v2:
-> - Picked up Abel's R-b tags
-> - Fixed typo as per Abel, fixed readability as per Johan
-> - Updated cover and commit message on mailink issue which appears to be
->   specific to Gnome+Wayland. No problems on Xorg.
-> - Link to v1: https://lore.kernel.org/all/20250310211039.29843-1-alex.vin=
-arskis@gmail.com/
->
-> Aleksandrs Vinarskis (4):
->   drm/msm/dp: Fix support of LTTPR initialization
->   drm/msm/dp: Account for LTTPRs capabilities
->   drm/msm/dp: Prepare for link training per-segment for LTTPRs
->   drm/msm/dp: Introduce link training per-segment for LTTPRs
->
->  drivers/gpu/drm/msm/dp/dp_ctrl.c    | 126 ++++++++++++++++++++--------
->  drivers/gpu/drm/msm/dp/dp_display.c |  27 ++++--
->  drivers/gpu/drm/msm/dp/dp_link.h    |   4 +
->  drivers/gpu/drm/msm/dp/dp_panel.c   |  12 ++-
->  4 files changed, 122 insertions(+), 47 deletions(-)
->
-> --
-> 2.45.2
->
+>   include/asm-generic/memory_model.h | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
+> index a3b5029aebbd..74d0077cc5fa 100644
+> --- a/include/asm-generic/memory_model.h
+> +++ b/include/asm-generic/memory_model.h
+> @@ -30,7 +30,15 @@ static inline int pfn_valid(unsigned long pfn)
+>   	return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
+>   }
+>   #define pfn_valid pfn_valid
+> -#endif
+> +
+> +#ifndef for_each_valid_pfn
+> +#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			 \
+> +	for ((pfn) = max_t(unsigned long, (start_pfn), ARCH_PFN_OFFSET); \
+> +	     (pfn) < min_t(unsigned long, (end_pfn),			 \
+> +			   ARCH_PFN_OFFSET + max_mapnr);		 \
+> +	     (pfn)++)
+> +#endif /* for_each_valid_pfn */
+> +#endif /* valid_pfn */
+
+"pfn_valid"
+
+>   
+>   #elif defined(CONFIG_SPARSEMEM_VMEMMAP)
+>   
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
