@@ -1,242 +1,555 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE477E9
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A591A5BB1;
+	Thu, 24 Apr 2025 02:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745463550; cv=none; b=gyh0OXySEPBBLR6Siyq74owC7DlOKMWSrIOJ4cIzChCAXjNZI9d3PodO5+yum8mjqMIRk9fQgr628y8XxtrMvOdqRSXGkTtyYviTVQWneSOGqITj/R1iu0mcfaTr+t8HlLA4dYL/+0NjxMADD/Y6wA1dDZ4WnX3k8N3EWOhMUrA=
+	t=1745463553; cv=none; b=kKfg0BlJ7d/7OAObFIMVUijaCjdi9grz+1ad6K9jNP5uoiURyEqHZ5uzKtGik0zho+GSIhU5/5kW4iRj79lzP/zcv23BpOvWvenWJZr/5PzqO7tnhd2Jux4xOLYvrsYPfh0Xaq8UsqqVYnGyJVA45OSXk5r07FQudyaucM5Oaa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745463550; c=relaxed/simple;
-	bh=Sh890rGKudDlXxi7yitLnH+1F5vTwN4R/Va0ZLwNZDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TDAfjtJRb1lQ77TrEzg5VD0hTwj3E4R/Dy/xWz5sFhn8CD40agawagJUtYVMXVL2Rv+5QYuiGuQifX6Gt4p2uLEENIJzAJUa0VskbCt/jyTYBPTxZdfHaF5IjKEM3qKRRn7vyJezwsYyNgsysAP6FGscsA/dB/Mbm1V2VB1P37c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l6crTg6+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745463553; c=relaxed/simple;
+	bh=fxMOSTeWF4gTTvTARekkkBNlyM3mNYmCqO9haMVO4TU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d5zWq3VO3oBIB2AUBBIARzr2FSGFctdlxNCWKNNxzlRXWDoFN5bOwnITH55+pfrwdFCUbHt/Cu8qmVyz8DMYv6+wts8TQLzjWRdGCpgfJOFbBqMYFeYh2+oomGITF/gqdhYFf+nZ0HuLZe0r+NzgVA0aC2ryB0eh6uRNo6F4pGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeE1RD9C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l6crTg6+"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0Fl9A007098
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:59:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AY8TuvINZq3xaLhDJPXgJlOQHqLQNDKDcNKgYWGRTk4=; b=l6crTg6+kMI1540S
-	ky4VuzKWaBxcvgVVLXxBnyvhFjH7vCr00jRgLrveGff9wpRhZKW26yx957FDEL4T
-	TkbekYOptWOpA4q7cwjNRT9uSA6KTg/+nnXVMnQhRRxpTGpRgDVU4tElbuFhRjT5
-	kNzzNe3eHSCOLB43mpthliHh8Rly98Bv0W59WAFlol2njVhN5E5Hz+1MCiswE6Qb
-	3qq8eabENHCQKHJz92zn05zjlNNDKuHLm0bhKRx6jDNj6NySwhWfqdvbBk4s7QL3
-	4RZSXmXLybbd8N/0eYp+gHpivlKct+noQWsvCMPWXYw0qLC/tHOgf18445kfEPPZ
-	HgOyrg==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0410b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:59:06 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-223fd6e9408so9789785ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745463545; x=1746068345;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AY8TuvINZq3xaLhDJPXgJlOQHqLQNDKDcNKgYWGRTk4=;
-        b=mRmurUXPcirh+eIbyxmVmORDRDJgkVdb3+BGYXPcc413EOh40QXJAROKghbCLn+GaQ
-         GGh13JkLgHFEhADx7Pl+XvjnaBN03+86yDsOcIhiH4/Ts8idb2klzAAna+3c+Lhi90H5
-         Zew3EI1H4ukv0xOa29yfy3OAaMIX643rVuQg5yeFQxO4PnOGwSCIdfQZXiDKrpyxguKr
-         CLeIyRcyWZe1NMTBOHuhVbE50VME/DzUnvMzxflTj9KldOPZvgon7ri7OmcpwnoAilQs
-         auwyFV0xMhNByYRBpRWbaoaVrGkk5ZJCKg6/hvME/7LvcKWr8mMgPUSm4DNnlhoeyTq+
-         pRgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXCAY7vlMLfnSDrYbFJI9LgGVi1d3dWvKdHZA9BUC04hoBFKfPU+a6eV/u5yqdlhMaBKnfJlzicU+cLJRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7dJPrKryNLBvMvM0ir0ZpizkNE1pzadc1c5X9CVl73S8eV2Ct
-	8xCoYXnn1K3EAnqYVZ4osS9dGj7ytN+uo2mbfHPSshLH5M4LBmyaUu45ERMAyBNaWua+FBbccaw
-	nzBPKO+/XfW2Kh2MYGW0z8CD2bcoof7C3RFougAmcoD0/zlnUDmiZHUdKGSzzmq0=
-X-Gm-Gg: ASbGncucEt3k662HtUBHsA9Ud+68enojTs1v0kMqdORhTuaNUIrzzDKpzwYX9CQ4ILN
-	U4bCJvzKnSUs97wl+rzmMHC27JtrSR/FxHFF1pVEAdKFDMTGVG/N0aSZqS47ZdFAihn+6yuKIlF
-	qWPWyKYuskfw7AB/+Jg3JnH5RwfSKl5mTmCXF5RO4PFHPLO8Vj9Au1p5miuR4JeHkyQvZyguxVs
-	zKoum7SYoocWFolb8zxUluMM087tgQWulRr92M0XZ12/RGOeBTa0V0lCo/1OmCJr99rJYDYL3PA
-	wceFu0ieooH0CsnVTiQb/He5w09Kt60MMvQ0ClNNFuZ1HA+POJH5Zvja+ytcIn4EIkSBPNIk
-X-Received: by 2002:a17:90b:5104:b0:2ff:53d6:2b82 with SMTP id 98e67ed59e1d1-309ee3f9ac3mr1009144a91.11.1745463545401;
-        Wed, 23 Apr 2025 19:59:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1uoQJIfPOjYS5c0t8qEcdJBa/XSSVaDhhDbxUVf2wYW3p+2ufJ1iKpn+iSg1y1zlPpsMSVQ==
-X-Received: by 2002:a17:90b:5104:b0:2ff:53d6:2b82 with SMTP id 98e67ed59e1d1-309ee3f9ac3mr1009128a91.11.1745463544995;
-        Wed, 23 Apr 2025 19:59:04 -0700 (PDT)
-Received: from [10.133.33.184] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef1246d2sm120027a91.36.2025.04.23.19.59.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 19:59:04 -0700 (PDT)
-Message-ID: <87314d4c-e98e-4fc2-950c-52593a7a9ffb@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 10:59:00 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeE1RD9C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B65C4CEE2;
+	Thu, 24 Apr 2025 02:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745463552;
+	bh=fxMOSTeWF4gTTvTARekkkBNlyM3mNYmCqO9haMVO4TU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WeE1RD9CkVv3hjxChKHjUI52b7t2/VjNao2QczXAHYtqNPyz0y41jqdj/2hRJxs9i
+	 G+Dv7y7rIHXQnzZMy3IJcaCsfaWTSd6K2MC6ZtmBfNdb+Q+CVDGyE0lh72NXbZxJjt
+	 5T/JQpowLTcFkpHF1/F7QVFBNilx+hkHh3u7E90frtiQtmrt/d/Nh+AZyO1mR1QOWO
+	 6ak/pjtLVTuzTP8WU8InXPHJyVdE1S1vkp7FDNTbZavxxlzA7sCglIFJGDu4KOENCh
+	 sbm4xU62M687iKrzPUi+kNqEqclXaptRls2nOLBeUmZYQfhl8wMiWNO/ImQSAI3GDC
+	 h+hhG27kTiGZA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so686677a12.2;
+        Wed, 23 Apr 2025 19:59:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcFzRI5eVj4VkBNKvQjU5zYbTApRufnfY3Bbs7X2HzxKKSGIBHECj5xt6C8l+keZkTYDpGcLTQwdnd@vger.kernel.org, AJvYcCUx6bz+VGFRZS5noc7iO0p0N6gR9yisfsB7hNiHUq1G4L4mLd900ao+g5ems3qWZcYZiqKvOqRRjFGsKmAe@vger.kernel.org, AJvYcCXFSRcN2r41VKu1pxcNglgOS7NhJtY5/dS7iJyZwnE1RDQ9dDemFB82BsF9jGGLybs9m4/tbAS0RF35@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAStMgAvnoj7YzMdYauSwXfaMyPYD+D8ktjTyfPHiHS1ZYjQ9x
+	MG+KSupguN8yPf6hSRNlnYrklhL1qCd4SrNBgIPBvvDbmsaIG9EL2okM8F9M0TPEeoKcMJm0uMt
+	P55hwZJcraqT1vZDfjqDNaugJiQ==
+X-Google-Smtp-Source: AGHT+IFv4KhcMp5wwuGxhIkPJA2U3LF3Shm+u2l+eIKkq6EP5MBdSy6E4xX6A6kwzo0gpdONN/LaKrKAcZalBTwkD4k=
+X-Received: by 2002:a05:6402:4407:b0:5ee:497:67d6 with SMTP id
+ 4fb4d7f45d1cf-5f6df53e6dfmr1066009a12.33.1745463550895; Wed, 23 Apr 2025
+ 19:59:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight: tmc: fix failure to disable/enable ETF after
- reading
-To: Mike Leach <mike.leach@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Yabin Cui <yabinc@google.com>,
-        Tingwei Zhang <quic_tingweiz@quicinc.com>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>
-References: <20250423103744.475-1-jie.gan@oss.qualcomm.com>
- <CAJ9a7Vi9sZBMfkwp445im8fbjeEZOB5_8saTsXhYj3aoRRPdFw@mail.gmail.com>
-Content-Language: en-US
-From: Jie Gan <jie.gan@oss.qualcomm.com>
-In-Reply-To: <CAJ9a7Vi9sZBMfkwp445im8fbjeEZOB5_8saTsXhYj3aoRRPdFw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAxNSBTYWx0ZWRfXxrj4lgporbsd cT38csithc6iPmqLEAMq2kIY2DIjt6nmQgc5u8L4Z1d6oIaflBYuyaJC0Yx8ZydzYfAZNVb7uul YoRPmvz5/5+jgsHEqdjxL6hVL4yr5Hq6jFmozEsZwJVmYeD+Bpofu4ZIfkHM5SqGickasQ0X87E
- S+li9UB9idWG7aMjds9NXUJ2KoaU/TvcLlzA0WkcuWX4Ef4EDZ3zp8HfhoEmekZS2+hFSVyPG73 fpSaJOEOigFM4BEEkHfRzekCYs9bC1tDbOD8Ux9Xogdsf/7qco8HQ2gK5W7Qmhl7OYpriK6OKE7 JICwaJEMEb+BS5vDz7WxVRADGC+56ow59HWGE6QAHhxlAe3HPUSDChPtlxRH+aTuyZI3fBC84sY
- FW0Bxu+ksYwcwT2lCtTmNXWbq9xrJj88cWa6mdSB3tjwzHW/LEPpQalq2lOUzT4nEITqjQIE
-X-Proofpoint-GUID: ADvgjEgwGX6WW4rt9aju48T7VHeQQntl
-X-Authority-Analysis: v=2.4 cv=ZuTtK87G c=1 sm=1 tr=0 ts=6809a8fa cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=7CQSdrXTAAAA:8
- a=6sRczlYm9dJ-c3QEjcgA:9 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22 a=TjNXssC_j7lpFel5tvFf:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: ADvgjEgwGX6WW4rt9aju48T7VHeQQntl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 suspectscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240015
+References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
+ <20250411103656.2740517-6-hans.zhang@cixtech.com> <20250411202420.GA3793660-robh@kernel.org>
+ <CH2PPF4D26F8E1C8ABE8B2902E5775F594FA2B32@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <CH2PPF4D26F8E1C8ABE8B2902E5775F594FA2B32@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 23 Apr 2025 21:58:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLNteS0m_32HuCjY8Mk9Wf+z6=HBpM7Wv=zLVqNs-7Y1Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFu9CpzyR3MpZWb8PUFUdjFEzWRxSIpaUljVIXKyFhbcTtKtiOOHQCd9vg
+Message-ID: <CAL_JsqLNteS0m_32HuCjY8Mk9Wf+z6=HBpM7Wv=zLVqNs-7Y1Q@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "hans.zhang@cixtech.com" <hans.zhang@cixtech.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Apr 13, 2025 at 10:52=E2=80=AFPM Manikandan Karunakaran Pillai
+<mpillai@cadence.com> wrote:
+>
+> >> +void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int
+> >devfn,
+> >> +                               int where)
+> >> +{
+> >> +    struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
+> >> +    struct cdns_pcie_rc *rc =3D pci_host_bridge_priv(bridge);
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    unsigned int busn =3D bus->number;
+> >> +    u32 addr0, desc0, desc1, ctrl0;
+> >> +    u32 regval;
+> >> +
+> >> +    if (pci_is_root_bus(bus)) {
+> >> +            /*
+> >> +             * Only the root port (devfn =3D=3D 0) is connected to th=
+is bus.
+> >> +             * All other PCI devices are behind some bridge hence on
+> >another
+> >> +             * bus.
+> >> +             */
+> >> +            if (devfn)
+> >> +                    return NULL;
+> >> +
+> >> +            return pcie->reg_base + (where & 0xfff);
+> >> +    }
+> >> +
+> >> +    /*
+> >> +     * Clear AXI link-down status
+> >> +     */
+> >
+> >That is an odd thing to do in map_bus. Also, it is completely racy
+> >because...
+> >
+> >> +    regval =3D cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
+> >CDNS_PCIE_HPA_AT_LINKDOWN);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >CDNS_PCIE_HPA_AT_LINKDOWN,
+> >> +                         (regval & GENMASK(0, 0)));
+> >> +
+> >
+> >What if the link goes down again here.
+> >
+> >> +    desc1 =3D 0;
+> >> +    ctrl0 =3D 0;
+> >> +
+> >> +    /*
+> >> +     * Update Output registers for AXI region 0.
+> >> +     */
+> >> +    addr0 =3D CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
+> >> +            CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
+> >> +            CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(busn);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(0),
+> >addr0);
+> >> +
+> >> +    desc1 =3D cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
+> >> +
+> >CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0));
+> >> +    desc1 &=3D ~CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK;
+> >> +    desc1 |=3D CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
+> >> +    ctrl0 =3D CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
+> >> +            CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
+> >> +
+> >> +    if (busn =3D=3D bridge->busnr + 1)
+> >> +            desc0 |=3D
+> >CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
+> >> +    else
+> >> +            desc0 |=3D
+> >CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
+> >> +
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_DESC0(0), desc0);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(0), ctrl0);
+> >
+> >This is also racy with the read and write functions. Don't worry, lots
+> >of other broken h/w like this...
+> >
+> >Surely this new h/w supports ECAM style config accesses? If so, use
+> >and support that mode instead.
+> >
+>
+> As an IP related driver, the  ECAM address in the SoC is not available. F=
+or SoC, the
+> Vendor can override this function in their code with the ECAM address.
 
 
+>
+> >> +
+> >> +    return rc->cfg_base + (where & 0xfff);
+> >> +}
+> >> +
+> >>  static struct pci_ops cdns_pcie_host_ops =3D {
+> >>      .map_bus        =3D cdns_pci_map_bus,
+> >>      .read           =3D pci_generic_config_read,
+> >>      .write          =3D pci_generic_config_write,
+> >>  };
+> >>
+> >> +static struct pci_ops cdns_pcie_hpa_host_ops =3D {
+> >> +    .map_bus        =3D cdns_pci_hpa_map_bus,
+> >> +    .read           =3D pci_generic_config_read,
+> >> +    .write          =3D pci_generic_config_write,
+> >> +};
+> >> +
+> >>  static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
+> >>  {
+> >>      u32 pcie_cap_off =3D CDNS_PCIE_RP_CAP_OFFSET;
+> >> @@ -154,8 +220,14 @@ static void
+> >cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+> >>  {
+> >>      u32 val;
+> >>
+> >> -    val =3D cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> >> -    cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val |
+> >CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> >> +    if (!pcie->is_hpa) {
+> >> +            val =3D cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> >> +            cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val |
+> >CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> >> +    } else {
+> >> +            val =3D cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG,
+> >CDNS_PCIE_HPA_LM_PTM_CTRL);
+> >> +            cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG,
+> >CDNS_PCIE_HPA_LM_PTM_CTRL,
+> >> +                                 val |
+> >CDNS_PCIE_HPA_LM_TPM_CTRL_PTMRSEN);
+> >> +    }
+> >>  }
+> >>
+> >>  static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+> >> @@ -340,8 +412,8 @@ static int cdns_pcie_host_bar_config(struct
+> >cdns_pcie_rc *rc,
+> >>               */
+> >>              bar =3D cdns_pcie_host_find_min_bar(rc, size);
+> >>              if (bar !=3D RP_BAR_UNDEFINED) {
+> >> -                    ret =3D cdns_pcie_host_bar_ib_config(rc, bar, cpu=
+_addr,
+> >> -                                                       size, flags);
+> >> +                    ret =3D pcie->ops->host_bar_ib_config(rc, bar, cp=
+u_addr,
+> >> +                                                        size, flags);
+> >>                      if (ret)
+> >>                              dev_err(dev, "IB BAR: %d config failed\n"=
+, bar);
+> >>                      return ret;
+> >> @@ -366,8 +438,7 @@ static int cdns_pcie_host_bar_config(struct
+> >cdns_pcie_rc *rc,
+> >>              }
+> >>
+> >>              winsize =3D bar_max_size[bar];
+> >> -            ret =3D cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, w=
+insize,
+> >> -                                               flags);
+> >> +            ret =3D pcie->ops->host_bar_ib_config(rc, bar, cpu_addr, =
+winsize,
+> >flags);
+> >>              if (ret) {
+> >>                      dev_err(dev, "IB BAR: %d config failed\n", bar);
+> >>                      return ret;
+> >> @@ -408,8 +479,8 @@ static int cdns_pcie_host_map_dma_ranges(struct
+> >cdns_pcie_rc *rc)
+> >>      if (list_empty(&bridge->dma_ranges)) {
+> >>              of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> >>                                   &no_bar_nbits);
+> >> -            err =3D cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0,
+> >> -                                               (u64)1 << no_bar_nbits=
+, 0);
+> >> +            err =3D pcie->ops->host_bar_ib_config(rc, RP_NO_BAR, 0x0,
+> >> +                                                (u64)1 << no_bar_nbit=
+s, 0);
+> >>              if (err)
+> >>                      dev_err(dev, "IB BAR: %d config failed\n",
+> >RP_NO_BAR);
+> >>              return err;
+> >> @@ -467,17 +538,159 @@ int
+> >cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+> >>              u64 pci_addr =3D res->start - entry->offset;
+> >>
+> >>              if (resource_type(res) =3D=3D IORESOURCE_IO)
+> >> -                    cdns_pcie_set_outbound_region(pcie, busnr, 0, r,
+> >> -                                                  true,
+> >> -                                                  pci_pio_to_address(=
+res-
+> >>start),
+> >> -                                                  pci_addr,
+> >> -                                                  resource_size(res))=
+;
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   true,
+> >> +                                                   pci_pio_to_address=
+(res-
+> >>start),
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >> +            else
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   false,
+> >> +                                                   res->start,
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >> +
+> >> +            r++;
+> >> +    }
+> >> +
+> >> +    return cdns_pcie_host_map_dma_ranges(rc);
+> >> +}
+> >> +
+> >> +int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
+> >> +{
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    u32 value, ctrl;
+> >> +
+> >> +    /*
+> >> +     * Set the root complex BAR configuration register:
+> >> +     * - disable both BAR0 and BAR1.
+> >> +     * - enable Prefetchable Memory Base and Limit registers in type =
+1
+> >> +     *   config space (64 bits).
+> >> +     * - enable IO Base and Limit registers in type 1 config
+> >> +     *   space (32 bits).
+> >> +     */
+> >> +
+> >> +    ctrl =3D CDNS_PCIE_HPA_LM_BAR_CFG_CTRL_DISABLED;
+> >> +    value =3D CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE
+> >|
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_ENABLE |
+> >> +            CDNS_PCIE_HPA_LM_RC_BAR_CFG_IO_32BITS;
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_IP_CFG_CTRL_REG,
+> >> +                         CDNS_PCIE_HPA_LM_RC_BAR_CFG, value);
+> >> +
+> >> +    if (rc->vendor_id !=3D 0xffff)
+> >> +            cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
+> >> +
+> >> +    if (rc->device_id !=3D 0xffff)
+> >> +            cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+> >> +
+> >> +    cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
+> >> +    cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
+> >> +    cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE,
+> >PCI_CLASS_BRIDGE_PCI);
+> >> +
+> >> +    return 0;
+> >> +}
+> >> +
+> >> +int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
+> >> +                                 enum cdns_pcie_rp_bar bar,
+> >> +                                 u64 cpu_addr, u64 size,
+> >> +                                 unsigned long flags)
+> >> +{
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    u32 addr0, addr1, aperture, value;
+> >> +
+> >> +    if (!rc->avail_ib_bar[bar])
+> >> +            return -EBUSY;
+> >> +
+> >> +    rc->avail_ib_bar[bar] =3D false;
+> >> +
+> >> +    aperture =3D ilog2(size);
+> >> +    addr0 =3D CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+> >> +            (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+> >> +    addr1 =3D upper_32_bits(cpu_addr);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_MASTER,
+> >> +                         CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR0(bar),
+> >addr0);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_MASTER,
+> >> +                         CDNS_PCIE_HPA_AT_IB_RP_BAR_ADDR1(bar),
+> >addr1);
+> >> +
+> >> +    if (bar =3D=3D RP_NO_BAR)
+> >> +            return 0;
+> >> +
+> >> +    value =3D cdns_pcie_hpa_readl(pcie, REG_BANK_IP_CFG_CTRL_REG,
+> >CDNS_PCIE_HPA_LM_RC_BAR_CFG);
+> >> +    value &=3D ~(HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
+> >> +               HPA_LM_RC_BAR_CFG_APERTURE(bar,
+> >bar_aperture_mask[bar] + 2));
+> >> +    if (size + cpu_addr >=3D SZ_4G) {
+> >> +            if (!(flags & IORESOURCE_PREFETCH))
+> >> +                    value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+> >> +            value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+> >> +    } else {
+> >> +            if (!(flags & IORESOURCE_PREFETCH))
+> >> +                    value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+> >> +            value |=3D
+> >HPA_LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+> >> +    }
+> >> +
+> >> +    value |=3D HPA_LM_RC_BAR_CFG_APERTURE(bar, aperture);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_IP_CFG_CTRL_REG,
+> >CDNS_PCIE_HPA_LM_RC_BAR_CFG, value);
+> >> +
+> >> +    return 0;
+> >> +}
+> >> +
+> >> +int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *=
+rc)
+> >> +{
+> >> +    struct cdns_pcie *pcie =3D &rc->pcie;
+> >> +    struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(rc);
+> >> +    struct resource *cfg_res =3D rc->cfg_res;
+> >> +    struct resource_entry *entry;
+> >> +    u64 cpu_addr =3D cfg_res->start;
+> >> +    u32 addr0, addr1, desc1;
+> >> +    int r, busnr =3D 0;
+> >> +
+> >> +    entry =3D resource_list_first_type(&bridge->windows,
+> >IORESOURCE_BUS);
+> >> +    if (entry)
+> >> +            busnr =3D entry->res->start;
+> >> +
+> >> +    /*
+> >> +     * Reserve region 0 for PCI configure space accesses:
+> >> +     * OB_REGION_PCI_ADDR0 and OB_REGION_DESC0 are updated
+> >dynamically by
+> >> +     * cdns_pci_map_bus(), other region registers are set here once f=
+or all.
+> >> +     */
+> >> +    addr1 =3D 0;
+> >> +    desc1 =3D CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(0),
+> >addr1);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
+> >> +
+> >> +    addr0 =3D CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
+> >> +            (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+> >> +    addr1 =3D upper_32_bits(cpu_addr);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR0(0),
+> >addr0);
+> >> +    cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> >> +                         CDNS_PCIE_HPA_AT_OB_REGION_CPU_ADDR1(0),
+> >addr1);
+> >> +
+> >> +    r =3D 1;
+> >> +    resource_list_for_each_entry(entry, &bridge->windows) {
+> >> +            struct resource *res =3D entry->res;
+> >> +            u64 pci_addr =3D res->start - entry->offset;
+> >> +
+> >> +            if (resource_type(res) =3D=3D IORESOURCE_IO)
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   true,
+> >> +                                                   pci_pio_to_address=
+(res-
+> >>start),
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >>              else
+> >> -                    cdns_pcie_set_outbound_region(pcie, busnr, 0, r,
+> >> -                                                  false,
+> >> -                                                  res->start,
+> >> -                                                  pci_addr,
+> >> -                                                  resource_size(res))=
+;
+> >> +                    pcie->ops->set_outbound_region(pcie, busnr, 0, r,
+> >> +                                                   false,
+> >> +                                                   res->start,
+> >> +                                                   pci_addr,
+> >> +                                                   resource_size(res)=
+);
+> >>
+> >>              r++;
+> >>      }
+> >> @@ -489,11 +702,11 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+> >>  {
+> >>      int err;
+> >>
+> >> -    err =3D cdns_pcie_host_init_root_port(rc);
+> >> +    err =3D rc->pcie.ops->host_init_root_port(rc);
+> >>      if (err)
+> >>              return err;
+> >>
+> >> -    return cdns_pcie_host_init_address_translation(rc);
+> >> +    return rc->pcie.ops->host_init_address_translation(rc);
+> >>  }
+> >>
+> >>  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+> >> @@ -503,7 +716,7 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc
+> >*rc)
+> >>      int ret;
+> >>
+> >>      if (rc->quirk_detect_quiet_flag)
+> >> -            cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> >> +            pcie->ops->detect_quiet_min_delay_set(&rc->pcie);
+> >>
+> >>      cdns_pcie_host_enable_ptm_response(pcie);
+> >>
+> >> @@ -566,8 +779,12 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+> >>      if (ret)
+> >>              return ret;
+> >>
+> >> -    if (!bridge->ops)
+> >> -            bridge->ops =3D &cdns_pcie_host_ops;
+> >> +    if (!bridge->ops) {
+> >> +            if (pcie->is_hpa)
+> >> +                    bridge->ops =3D &cdns_pcie_hpa_host_ops;
+> >> +            else
+> >> +                    bridge->ops =3D &cdns_pcie_host_ops;
+> >> +    }
+> >>
+> >>      ret =3D pci_host_probe(bridge);
+> >>      if (ret < 0)
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >> index b24176d4df1f..8d5fbaef0a3c 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+> >> @@ -43,7 +43,30 @@ static u64 cdns_plat_cpu_addr_fixup(struct cdns_pci=
+e
+> >*pcie, u64 cpu_addr)
+> >>  }
+> >>
+> >>  static const struct cdns_pcie_ops cdns_plat_ops =3D {
+> >> +    .link_up =3D cdns_pcie_linkup,
+> >>      .cpu_addr_fixup =3D cdns_plat_cpu_addr_fixup,
+> >> +    .host_init_root_port =3D cdns_pcie_host_init_root_port,
+> >> +    .host_bar_ib_config =3D cdns_pcie_host_bar_ib_config,
+> >> +    .host_init_address_translation =3D
+> >cdns_pcie_host_init_address_translation,
+> >> +    .detect_quiet_min_delay_set =3D
+> >cdns_pcie_detect_quiet_min_delay_set,
+> >> +    .set_outbound_region =3D cdns_pcie_set_outbound_region,
+> >> +    .set_outbound_region_for_normal_msg =3D
+> >> +
+> >cdns_pcie_set_outbound_region_for_normal_msg,
+> >> +    .reset_outbound_region =3D cdns_pcie_reset_outbound_region,
+> >> +};
+> >> +
+> >> +static const struct cdns_pcie_ops cdns_hpa_plat_ops =3D {
+> >> +    .start_link =3D cdns_pcie_hpa_startlink,
+> >> +    .stop_link =3D cdns_pcie_hpa_stop_link,
+> >> +    .link_up =3D cdns_pcie_hpa_linkup,
+> >> +    .host_init_root_port =3D cdns_pcie_hpa_host_init_root_port,
+> >> +    .host_bar_ib_config =3D cdns_pcie_hpa_host_bar_ib_config,
+> >> +    .host_init_address_translation =3D
+> >cdns_pcie_hpa_host_init_address_translation,
+> >> +    .detect_quiet_min_delay_set =3D
+> >cdns_pcie_hpa_detect_quiet_min_delay_set,
+> >> +    .set_outbound_region =3D cdns_pcie_hpa_set_outbound_region,
+> >> +    .set_outbound_region_for_normal_msg =3D
+> >> +
+> >cdns_pcie_hpa_set_outbound_region_for_normal_msg,
+> >> +    .reset_outbound_region =3D cdns_pcie_hpa_reset_outbound_region,
+> >
+> >What exactly is shared between these 2 implementations. Link handling,
+> >config space accesses, address translation, and host init are all
+> >different. What's left to share? MSIs (if not passed thru) and
+> >interrupts? I think it's questionable that this be the same driver.
+> >
+> The address of both these have changed as the controller architecture has
+> changed. In the event these driver have to be same driver, there will lot=
+ of
+> sprinkled "if(is_hpa)" and that was already rejected in earlier version o=
+f code.
 
-On 4/23/2025 9:56 PM, Mike Leach wrote:
-> Hi,
-> 
-> On Wed, 23 Apr 2025 at 11:37, Jie Gan <jie.gan@oss.qualcomm.com> wrote:
->>
->> From: Mao Jinlong <quic_jinlmao@quicinc.com>
->>
->> From: Mao Jinlong <quic_jinlmao@quicinc.com>
->>
-> 
-> What are these extra email addresses for?
+I'm saying they should *not* be the same driver because you don't
+share hardly anything. Again, what is really common here?
 
-Sorry for the mistake. I did not aware the commit author is changed from 
-me to the original author.
+> Hence it was done similar to other drivers by architecture specific "ops"=
+.
 
-> 
->> ETF may fail to re-enable after reading, and driver->reading will
->> not be set to false, this will cause failure to enable/disable to ETF.
->> This change set driver->reading to false even if re-enabling fail.
->>
->> Fixes: 669c4614236a7 ("coresight: tmc: Don't enable TMC when it's not ready.")
-> 
-> This SHA and message appear not be present in any upstream / coresight branch.
-> 
+Yes, and IMO driver private/custom ops is the wrong direction to go.
+Read my prior reply below again.
 
-detail for the commit from linux-next git:
+> The "if(is_hpa)" is now very limited where a specific ops functions does =
+not make
+> any sense.
 
-commit 669c4614236a7f78a2b693d0024cbdfa8536eb5a
-Author: Yabin Cui <yabinc@google.com>
-Date:   Fri Jan 27 23:10:01 2023 +0000
+But you still have them. In a separate driver, you would have 0.
 
-     coresight: tmc: Don't enable TMC when it's not ready.
-
-     If TMC ETR is enabled without being ready, in later use we may
-     see AXI bus errors caused by accessing invalid addresses.
-
-     Signed-off-by: Yabin Cui <yabinc@google.com>
-     [ Tweak error message ]
-     Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-     Link: 
-https://lore.kernel.org/r/20230127231001.1920947-1-yabinc@google.com
-
-
->> Co-developed-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
->> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
->> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
->> Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
->> ---
->>   drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 +++++++------
->>   1 file changed, 7 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> index d858740001c2..8c9f14e36bc2 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> @@ -87,6 +87,12 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->>   {
->>          CS_UNLOCK(drvdata->base);
->>
->> +       /* Check if the etf already disabled*/
->> +       if (!(readl_relaxed(drvdata->base + TMC_CTL) & TMC_CTL_CAPT_EN)) {
->> +               CS_LOCK(drvdata->base);
->> +               return;
->> +       }
->> +
-> 
-> What does this have to do with the stated function of the patch - this
-> is unnecessary.
-
-I agree with you. I think it's ok to disable a disabled device again.
-
-> Under what scenario can this function be called with the ETB
-> previously disabled?
-
-Combined with the fix code below. It may appear a scenario that the ETB 
-is disabled but the mode is CS_MODE_SYSFS.
-
-> 
->>          tmc_flush_and_stop(drvdata);
->>          /*
->>           * When operating in sysFS mode the content of the buffer needs to be
->> @@ -747,7 +753,6 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
->>          char *buf = NULL;
->>          enum tmc_mode mode;
->>          unsigned long flags;
->> -       int rc = 0;
->>
->>          /* config types are set a boot time and never change */
->>          if (WARN_ON_ONCE(drvdata->config_type != TMC_CONFIG_TYPE_ETB &&
->> @@ -773,11 +778,7 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
->>                   * can't be NULL.
->>                   */
->>                  memset(drvdata->buf, 0, drvdata->size);
->> -               rc = __tmc_etb_enable_hw(drvdata);
->> -               if (rc) {
->> -                       raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
->> -                       return rc;
->> -               }
->> +               __tmc_etb_enable_hw(drvdata);
-> 
-> Dropping a valid error check is not acceptable. If a TMC cannot be
-> re-enabled, then that is a hardware error that needs noting and
-> dealing with.
-> 
-
-That's the issue about the error check. __tmc_etb_enable_hw may fail due 
-to hardware issue or just a timeout for tmcready(may restore). The error 
-check captures the error and returns directly without setting 
-drvdata->reading = false.
-
-So the current mode for ETB is CS_MODE_SYSFS, which implies the device 
-is enabled but actually not. This prevents us from processing another 
-enable/disable session for the ETF if drvdata->reading remains true.
-
-Thanks,
-Jie
-
-> Regards
-> 
-> Mike
-> 
->>          } else {
->>                  /*
->>                   * The ETB/ETF is not tracing and the buffer was just read.
->> --
->> 2.34.1
->>
-> 
-> 
-
+> >A bunch of driver specific 'ops' is not the right direction despite
+> >other drivers (DWC) having that. If there are common parts, then make
+> >them library functions multiple drivers can call.
