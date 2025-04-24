@@ -1,110 +1,144 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8E32222D5;
-	Thu, 24 Apr 2025 08:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E23D221F15
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484854; cv=none; b=Wl5DErQ6g9vLk5yIYo5tGeog/XgcCCBAGKMozs61GCpDmWFSYodlN1b1hp3+yc01ka/K2eG4Wg2xGfPE0wetfS+9nPgwSPK+jqhQDakbJ+BjKg8rteTodlVvgoWltKyS/iUI6SvoeUo6DU7KYGNzK5xuVpkX5Y3UPrnXnd4FE9s=
+	t=1745484855; cv=none; b=BhQF/oLxHvkpuqwJZHJqzi8uyn6n1icaCQokv78yAgsl/pDZ/eMGJbjwCG+I8pdofR/7kHijJ9dJXjkckeE504OWQRCrfzHiM6iwadU+LMFLufQMHOdDYYOcpyZ5X29s66QCyFKvdDEsAnbLTrtFg+z9vPe+d9mpOqo7YDPP3g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484854; c=relaxed/simple;
-	bh=wGDFD9zJe7KzUguhrDRaAxXmamzUcDV0trDJav1Dxj8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=khBJHPq7zV77t9sOtxSVKsvuL27JHQZOyAqELOaVr6qBzHosZwZVtVf1h7tFRH1/RGD1Q/QttNSbUyOiopVdAGhRClx+qvQIEPj02SB0s8fXKon3hTLy5Cq4OC0tJWhQHkvFuS8LqO61HSSE5xUQunsykEJeQ8xS1e+RrYjZODI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h7W8cXSD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745484855; c=relaxed/simple;
+	bh=paGGoyoZnRW1m7g7h1F3XFqoQ0+nQRGX9p7YkqYjVWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o56WQxNwopsPRmApBBCXroQOKp62J7g1er5HhBrWV6m1v3U0j27mGUdyvBAEvmz77k2muYOqNLP+MUy7VF/BaNMEsQm/l6t6GTUy6UNFFgypZC9GUHq8jNCT1Q1TJZtiBaM7P1Lewtzt3/GLEkRhCAIFlji6DFEgD+mq7PytRoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WCbAHyCz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h7W8cXSD"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F9Mw031013;
-	Thu, 24 Apr 2025 08:54:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0/DcslFiTMnEAel9tKXyzhbpkoNYUd2Fcf8Xc+Vbdg4=; b=h7W8cXSDoDOUQ7AS
-	CxSA92YPgpvKaEXgH5wTgfag7ChNrMXYuts7fAsY+Tjj+OaOalnAOYwUSwNZ8Vdu
-	ap5nNCRu60m6/+BM9AdWrxpLfcK490XlgIGHAcC6xyYrDLPU4hYKAWopBrOy1NHO
-	ZKzjhwEEJUHFXZ3t3UkxrdnQbg6ZIQyp/sGz/Mqb7YxC7S+elP850jrakWbaDB/q
-	cugdAP3MsHAkNRC6QYpN1UBWhefal3VoVK2z5KH2MnXB/qVqNvF0boCQxzWRImx/
-	YgJ9vWZNCsXA2FY2jhO8nZo9nOSxkxC47RjOi4wFUaaDExSmg0GmoEI0+XALKMFu
-	uN/HHA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5cvh8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 08:54:09 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O8s8hq016038
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 08:54:08 GMT
-Received: from [10.216.12.43] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 24 Apr
- 2025 01:54:04 -0700
-Message-ID: <43fb1be8-ca7d-7481-1e31-b3457e76518d@quicinc.com>
-Date: Thu, 24 Apr 2025 14:24:01 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WCbAHyCz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745484852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pftB6zmblfz1vCxU5fqCKgvx+TE18dKtjoYVArm5R6Q=;
+	b=WCbAHyCznq/5vYkE6Zw5Pmta0D8S0F5DN04arSGb7maUmovyDNGEl+In4jzfF/geEmxfxP
+	Lt1Ey1xtVhrDtWsZcVuIMpG8jmb3fk82sxf6RBhe+W57YSLf2AsluiEd7KZfK8imvcQPHo
+	fYlrHUFh5pjrv+CmROmIzXfkNSjApZg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-618-JBaFIS1CPlSJbfTlsCAGnw-1; Thu, 24 Apr 2025 04:54:10 -0400
+X-MC-Unique: JBaFIS1CPlSJbfTlsCAGnw-1
+X-Mimecast-MFC-AGG-ID: JBaFIS1CPlSJbfTlsCAGnw_1745484849
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d08915f61so3702945e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:54:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745484849; x=1746089649;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pftB6zmblfz1vCxU5fqCKgvx+TE18dKtjoYVArm5R6Q=;
+        b=b4tF3hepwxLfq/Y+jVCeL7uPQzSVp4+k7vNeMncYZgic3MFodBKriGOurJnEkiY+cQ
+         ho6Oi+iP7OLXHbENPJ85urORFrCnbnmz/OLIpUt5M3zrNCwQ3smmqIoNfQp+Gswb1ZMA
+         liIKSWq47PzecveLaUwra94VQuRb/syjC3QIhIvUgxJVg0G1yEFo5sZlYKl7oM4jEvFR
+         fOQwlX+aKntN4rQbHjhd8Wp80/O5tjiVFBGK/PUbj9BWS1dPZQ6l7R6pDj9Z2M5+By6r
+         +grUPX4DY4raNB9PvNXkdMRiUo4P3UH++Zf+d2i3UHDCWNlA4wSMsvl5N+enp0JvA/fs
+         nAMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSleIZiJCzPG78EyzjnGJxmOQ1NKXg/onoihK4pZMRoSW6j3Dq8uy1u7gG5a/ZqSLV7mi+2w0frmAETS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRMVFDQ/S0wwfyDsuy4ZLxrRaknjrOi3p22EcTHGw5rnLmXdbO
+	UFDU4ZIM1HQEp1ET26PEHaYsVN8ezvTlPRnffxLKQUEO1PWXS1NMZ3d3wx2p0t3LJXcKLiGYxSO
+	q6mNvxUATcaygpeHITAb/aWkZyJ0qaDrm0GPKkfW1vquhrotIE5/8Z/3l7tEgo1obpVmxZA==
+X-Gm-Gg: ASbGncsacnWlOUga3AbqBLIsFFMJLVohNQajDVq6PEZSy2510vaWOQhz0RsbbL6R772
+	l9pnod2y1deDrR9UUgBbNOrDNaD/4UF7SjTP0TsxSxK9Dclm/IURECsDp0Q/B7886eqxdApiw5r
+	Gxfs2aqdXaoQYtx0ua5V5jZZqKogJpPuFHagBcktAey7sunRC2QS9RU9yae5MjlnzO1ZrTigJuz
+	cKuoIv7g6RrZH2sGBN8rJD+wPV2pODyxfnR1lRfP4mPjdhJ+YzvFJgzyeO7sXsyVp9LxQSAh//4
+	oqTVGf6ZnPVCI/x9wfEMfuo3UMguTHZX0GTARWg=
+X-Received: by 2002:a05:600c:4e0c:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-4409bd86819mr13058175e9.25.1745484849208;
+        Thu, 24 Apr 2025 01:54:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqstuVMKXRfIfjVGAhmeakWqDfpmADfftb5xQky926OxvT8IMDcEdyz8TdVKcbRypTiAhDLA==
+X-Received: by 2002:a05:600c:4e0c:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-4409bd86819mr13057925e9.25.1745484848793;
+        Thu, 24 Apr 2025 01:54:08 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-7-183.dyn.eolo.it. [146.241.7.183])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a3afbsm11871335e9.16.2025.04.24.01.54.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 01:54:08 -0700 (PDT)
+Message-ID: <d5114fb3-4ca8-4ab8-acb2-120a7b940d6f@redhat.com>
+Date: Thu, 24 Apr 2025 10:54:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 3/5] media: iris: add qcs8300 platform data
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net V2] amd-xgbe: Fix to ensure dependent features are
+ toggled with RX checksum offload
+To: "Badole, Vishal" <vishal.badole@amd.com>,
+ Jacob Keller <jacob.e.keller@intel.com>, Shyam-sundar.S-k@amd.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, Thomas.Lendacky@amd.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org, Raju.Rangoju@amd.com
+References: <20250421140438.2751080-1-Vishal.Badole@amd.com>
+ <d0902829-c588-4fba-93c0-9c0dfcc221f6@intel.com>
+ <c1d1ce25-8b5f-4638-bcd3-0d96c3139fd7@amd.com>
 Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com>
- <20250424-qcs8300_iris-v4-3-6e66ed4f6b71@quicinc.com>
- <0e1030b2-0bf1-4fb7-8588-4019d7dfeedf@linaro.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <0e1030b2-0bf1-4fb7-8588-4019d7dfeedf@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <c1d1ce25-8b5f-4638-bcd3-0d96c3139fd7@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA1OCBTYWx0ZWRfX6OdCFeCLWknb B01stuDU+fEMdIOTgNP7fATD4XyXw6zqbT3ZFtySfPRaNH6UyTYT359yBHFc+cuNtRkjTKBoYg6 6Wb5cPoAFKQLaKssKVUCXCLsLuVtvWhHQ5rdgy3Ywaa7O0n8VDMC5DbYDEtWAjkR/OExOOivbd7
- OZ6SktA6DSTl3DSo5d5rwIyh8F4HPz2mNLuTkdLRsHXJ4wvIgRAsEH1L8CLXMWLGcXkPIoV9TGW er0UE9byKfRKtCcEMYm5d+sk4u8ELXnzbnnYUDfo9KUIPG2ZCE5KMUsoDHlNAI/KCIGG+TRfvdn XdCD/7vWwMn+GgCm4ujT6tdViuOt0L3NvJ/JEe+FP6FaVVzbK4uoVGjEllgeNr8KQ7RUdliwlmo
- YB4yu9vy5lqe/EUcdKIKiuamgnd1w4cltuUV1Ng5WVSMgt69f9DboKhd8BUxTRA0MW41CpK3
-X-Proofpoint-GUID: FU4YmYxxW1VVszuLTmWlK7_fjSrEKZtW
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=6809fc31 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=FQAQLTzl-ImsQm_QpX8A:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: FU4YmYxxW1VVszuLTmWlK7_fjSrEKZtW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=970
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240058
 
-
-On 4/24/2025 3:06 AM, Bryan O'Donoghue wrote:
-> On 23/04/2025 20:33, Vikash Garodia wrote:
->> Add platform data for QCS8300, which has different capabilities compared
->> to SM8550. Introduce a QCS8300 header that defines these capabilities
->> and fix the order of compat strings.
+On 4/23/25 9:57 AM, Badole, Vishal wrote:
+> On 4/23/2025 3:50 AM, Jacob Keller wrote:
+>> On 4/21/2025 7:04 AM, Vishal Badole wrote:
+>>> According to the XGMAC specification, enabling features such as Layer 3
+>>> and Layer 4 Packet Filtering, Split Header, Receive Side Scaling (RSS),
+>>> and Virtualized Network support automatically selects the IPC Full
+>>> Checksum Offload Engine on the receive side.
+>>>
+>>> When RX checksum offload is disabled, these dependent features must also
+>>> be disabled to prevent abnormal behavior caused by mismatched feature
+>>> dependencies.
+>>>
+>>> Ensure that toggling RX checksum offload (disabling or enabling) properly
+>>> disables or enables all dependent features, maintaining consistent and
+>>> expected behavior in the network device.
+>>>
+>>
+>> My understanding based on previous changes I've made to Intel drivers,
+>> the netdev community opinion here is that the driver shouldn't
+>> automatically change user configuration like this. Instead, it should
+>> reject requests to disable a feature if that isn't possible due to the
+>> other requirements.
+>>
+>> In this case, that means checking and rejecting disable of Rx checksum
+>> offload whenever the features which depend on it are enabled, and reject
+>> requests to enable the features when Rx checksum is disabled.
 > 
-> I'll drop the "and fix the order of compat strings" no need to resend.
-Fixed it and sent v5, there was another comment to address.
-
-Regards,
-Vikash
+> Thank you for sharing your perspective and experience with Intel 
+> drivers. From my understanding, the fix_features() callback in ethtool 
+> handles enabling and disabling the dependent features required for the 
+> requested feature to function correctly. It also ensures that the 
+> correct status is reflected in ethtool and notifies the user.
 > 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> However, if the user wishes to enable or disable those dependent 
+> features again, they can do so using the appropriate ethtool settings.
+
+AFAICS there are two different things here:
+
+- automatic update of NETIF_F_RXHASH according to NETIF_F_RXCSUM value:
+that should be avoid and instead incompatible changes should be rejected
+with a suitable error message.
+
+- automatic update of header split and vxlan depending on NETIF_F_RXCSUM
+value: that could be allowed as AFAICS the driver does not currently
+offer any other method to flip modify configuration (and make the state
+consistent).
+
+Thanks,
+
+Paolo
+
+
