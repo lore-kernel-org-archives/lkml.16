@@ -1,63 +1,63 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA34288C94
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2F428A414
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504046; cv=none; b=gvDDI2We2MuS7ZNDDFfU/rVf1YnEBgyf8eWHV30dD/tfbLlEpuHCFAuiE+enSdc5HXau/h9vStTit2yfhgY4GENmAAqbTIk/L+G2xGMawi2jFGm7ggHl6SMjVV9o5h/80yAAgTvkXCdBmmADP5t066iLEuy5Pcb9lbvdKAuVspM=
+	t=1745504050; cv=none; b=M0N+IzJ1ZWZ22ICZmmRupvVSinxosfINAmelkRwCmxwf50JT0pG40c8Ie82V47Fkf2m+uW8l6e7eYf+YjFmdlFyrgLHbpPv5P061BnCKyEpVB70Ot5d+Mjla5Pp+wD3Kbh95u1XKLXwYofLBYtQHbln4tp5tj2P4AS7oUZDniXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504046; c=relaxed/simple;
-	bh=cRJdZ/BvpG7Nf2HfvkjONlA6iN6G9YZT/kvCa6h8Pqk=;
+	s=arc-20240116; t=1745504050; c=relaxed/simple;
+	bh=r3nd9vghu4s4uBkV+N+7fBpy1dkBUZqwpUsMh9tj/Uw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T6yRULJQ7TsQxXKV6ODxkoEUp0ixzfs63rgB6a/X7MlfGgtbZU4Ct+to6vH+2EEFkCWmJ/0N6mYXDoFdgYafYphtbcYUdPcSZDFyt1M+wrmXQNMXIJzP/42gTkCmWjapVPnHEv1Er0Q4shmV+Yc7qW5ZSMHlIJ7pjDRpTbRhmbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aAsLp2wi; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=fMxo2pE52rA9FZFRAcQYg9STwwn6j3gBGmFoVQUqECLZuCXxihl1kj4QvpKGZPbiLyUgCvGrsafYyoihGpH3/B2KVNifUPWvdOOKDTVZoDdxxnk7bW/hU9iqnij7Bzd/TOoi1iHQxq1Ldq35G3/q/Hwts/NAigTk6/57U59FE8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VQsAJJKu; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aAsLp2wi"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso6357635e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:14:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VQsAJJKu"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe574976so7692675e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745504042; x=1746108842; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745504045; x=1746108845; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Iugp3VZMso7R61paVQ20sor9LWthQ+vE2iyUDGP7wsk=;
-        b=aAsLp2wiL4SnGGfuvk26Iktqh4BJnxFfKcsSxvjPEagGx7fi/GliYmXzZdgxm3FCgY
-         R/qwu/efZXZX7uKjiHZUoXchN/W/kcp5mMR2C5anR2hcIJ3vbCm0XaoUacmQvPV2g4gC
-         HvHEBkPZop2ckBPqpxuors2ZNP2+rwt8rpotniV0U9YiCzMm2V0lXTsv1bEPFgXatILl
-         U/awvhfv2MzQmr0N5FntwhNSvD/lPVBu2z7/NmOrnMklRKIOceLIopPA4Y1gRvEZFHOD
-         9Kr+mQE/POTKy/7qng9AwhhvaG/MFOECRAnsoxCXf/aZag79pLOhLgzi7sjdzUZ9WG4K
-         /FNg==
+        bh=XrxJtuJG442F2RUwTFuDHGt6qjNm8WZW6h3yhfXqCrI=;
+        b=VQsAJJKu0h2qk9A9xzNKMZK6r7K8M27J7ZmUtQbNAP1wZYFB/nBWgwA/ggE5n+Qd0I
+         TAXhGrBlm1ThQgmwgmbNAZv+Yo9Ay/NQMbTr8OY4Nptw/Bewli5OGnagneHTc/Wjotm9
+         AJn7JH7o4LC3fD6XeYIMbpPwyxx8UCMxwPcHCgpQXXD+BNlzCmkt/71/U4tNSiUyG4xk
+         Rll0CsbyHj5CQEjj6X4hZHyoFYjVUJzJBfOjvNIasG3FXHLXEcGxcewR++AvyQPTVTDP
+         qHEIzbgBpFkjq7gi12n50ADGWVrJWD9RwThMWmj+qfGF3o2bPCldXWF5lBMrjjtVuQYm
+         QUgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745504042; x=1746108842;
+        d=1e100.net; s=20230601; t=1745504045; x=1746108845;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Iugp3VZMso7R61paVQ20sor9LWthQ+vE2iyUDGP7wsk=;
-        b=q+w+kVfFwKv28NBN0gyB2iZhcWjx08UB+ZxcWsFx95t0g/YRbArpIUUBPs63LoxurE
-         VM2t9fzXkwouC5VgG9zwqDcoWE6Fb/h1zgoF+Vxajoaw7/M9sTRseCZdOzxQL+hBJWQ5
-         QjznTDQXzolMoRAOfx4qt2bI3C+7qt+II3nROYwayGSimf2d956wzJ4/NzuP9o1gshDN
-         vu8jUdvL0szUD4wyRZJvufWuiTJbtvnIpzLN6TQ//lGAtw/5NiPEDhl9qs93bOhu6l+H
-         Y8quChXGrwpPVAJ5ZqigiQ/dkmRXbocTT1ORzSaX4fDiZFElfrvM/2l04yoUcl7NDMII
-         2yxw==
-X-Gm-Message-State: AOJu0Yz/6Ljr1EWleJ3Gi7jtHyPY2+X2POsXN//zf2sFCpL9ufgeWVpv
-	UnTXDn2rINPeyeUgqv99d+3iHswqJJ/YH3H2JklifS77aArqqhSVcfdOVGSVgHD07/Lu++ph4d9
-	x
-X-Gm-Gg: ASbGncvLsMeb0z4oKgepzrUlHIW1lxxPhIIW7mPhTTR74CM5g8lNNlv6KEoWAsdtm+u
-	r8a6otn4XXdLBCExqpLIIz5g02sRoveTbfiuWAPCFKiVkegNw2oiNdtmEUC/qCJokPe2treI7nv
-	4fbA7jqfymZ18kOJdJzvwx1YHz3eQrexTzcypnmFaYIcwBdkq/bMGZti+ZmzoNV+SYD2NjORN69
-	93kVUC6uKIeJlaKh5SP0mzLbMtyZVA/qFQM4NId0uQBCGQKHPhTJvFu+tYxq/LKzuwIqp3mIqaR
-	dYvH8cQaRpmCghjzy21yxFtdDZQDDc/T6/n11KH9/80zsRkdjkO6SVAY7pypVRVPDCPNVg7uxII
-	q5wqvL+Mlk5L90xY+
-X-Google-Smtp-Source: AGHT+IFb5JrKaNG2KfYhmzfwfaDb/IjykBP33KVSW9og9BEhgmgsW+e69hlvAOQj6I5jNodxA+AwfQ==
-X-Received: by 2002:a05:600c:c092:b0:43c:e2dd:98ea with SMTP id 5b1f17b1804b1-4409c3b1e1amr23970305e9.22.1745504042259;
-        Thu, 24 Apr 2025 07:14:02 -0700 (PDT)
+        bh=XrxJtuJG442F2RUwTFuDHGt6qjNm8WZW6h3yhfXqCrI=;
+        b=Dubh1QPOaSup9NiK1A8EIkc7nYqwegwOkfpnn7kZm7r95GAyno9l/Enx4ogOcsY/iv
+         CYmFnc1MxkuSbKD3LJdtafzn62/V2nZ74BI2GN/1cpOfkgZMs5x79VIxmmIGUAGQrn8A
+         r/mo7unoAG4Rs57nGmFGfszgoDJV6kfU3Q7Ys4g+OJb2nhPwCnMimNylLgEpmGL/GSTn
+         zPC23G2YD2WXhNZPyYJ2JYvkNbpjH2wYUrfsgwJGey6u8a7YzEQDwpiCcbkMBU/uE4y+
+         7+CZnMoOLjExEoQl4GYz7fZkBpYwVp/zJcgSh7yctPJQLdru9cnTEoJgUF8DrTfUouOF
+         Wg2g==
+X-Gm-Message-State: AOJu0YxuTXWoNwQY1UUxCqKQ1sy5sWXFC/7rm/aI3hiA4J0qNMXJi15j
+	rcf7ISnLvXvUY5RP/s8ZZQbdsr8Pb7BCUBsDz2C/fMsrkSVUkj1HVQ/G5oIbqZuTdBbK8/t+ob7
+	k
+X-Gm-Gg: ASbGncszm2JUyNiRmmLpygm+ExJj8LdeecvGl5RiS3ZDAaawfqCgwUt1Vf9lyQIXGq+
+	iJPW1EscUmPHLzIWzY4JkLtrdQ7jDVGEzS6MfSTew7zXq/hMfcXsIW3e0aSXdE2YIoHKYx9HJUM
+	84ppR9K4PgLc6wvMqsbygBFv5rqdj72l6EzDReCBBAxIh1mtkLE4AE1PdG+2QQJgpFMsuVLlH7+
+	j5sjJebSjccc7JPjqqsQJxz0WOoAnkLOSRvE6KsnhEIYtCtdmc6RH8vp92qYYp/0LrxqadVA/mc
+	28IHHHkXpyYxtBbOw3po0tfrbK/00o4FVu3OnoJkBXCxiLM+qW3vWQ5hKyMNbRKY3CSRZmSP+nJ
+	coZ6w+GMyY4eutH2E
+X-Google-Smtp-Source: AGHT+IF2yQw22hjehK9elALveIYUJReJwgCD95mE9PZgbazIybojHN298a9GDoCEMK47GVkaXYd77A==
+X-Received: by 2002:a05:600c:4e48:b0:439:8c80:6af4 with SMTP id 5b1f17b1804b1-4409bd23f55mr24505185e9.19.1745504045045;
+        Thu, 24 Apr 2025 07:14:05 -0700 (PDT)
 Received: from seksu.systems-nuts.com (stevens.inf.ed.ac.uk. [129.215.164.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.14.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.14.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:14:01 -0700 (PDT)
+        Thu, 24 Apr 2025 07:14:04 -0700 (PDT)
 From: Karim Manaouil <karim.manaouil@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
@@ -88,12 +88,10 @@ Cc: Karim Manaouil <karim.manaouil@linaro.org>,
 	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
 	Trilok Soni <tsoni@quicinc.com>,
 	Stefan Schmidt <stefan.schmidt@linaro.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Alex Elder <elder@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 13/34] gunyah: Add hypercalls to send and receive messages
-Date: Thu, 24 Apr 2025 15:13:20 +0100
-Message-Id: <20250424141341.841734-14-karim.manaouil@linaro.org>
+	Elliot Berman <quic_eberman@quicinc.com>
+Subject: [RFC PATCH 15/34] gunyah: Add VM lifecycle RPC
+Date: Thu, 24 Apr 2025 15:13:22 +0100
+Message-Id: <20250424141341.841734-16-karim.manaouil@linaro.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
 References: <20250424141341.841734-1-karim.manaouil@linaro.org>
@@ -107,105 +105,379 @@ Content-Transfer-Encoding: 8bit
 
 From: Elliot Berman <quic_eberman@quicinc.com>
 
-Add hypercalls to send and receive messages on a Gunyah message queue.
+Add Gunyah Resource Manager RPC interfaces to launch an unauthenticated
+virtual machine.
 
-Reviewed-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+Reviewed-by: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
 Signed-off-by: Karim Manaouil <karim.manaouil@linaro.org>
 ---
- arch/arm64/gunyah/gunyah_hypercall.c | 55 ++++++++++++++++++++++++++++
- include/linux/gunyah.h               |  8 ++++
- 2 files changed, 63 insertions(+)
+ drivers/virt/gunyah/Makefile      |   2 +-
+ drivers/virt/gunyah/rsc_mgr_rpc.c | 252 ++++++++++++++++++++++++++++++
+ include/linux/gunyah_rsc_mgr.h    |  79 +++++++++-
+ 3 files changed, 331 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/virt/gunyah/rsc_mgr_rpc.c
 
-diff --git a/arch/arm64/gunyah/gunyah_hypercall.c b/arch/arm64/gunyah/gunyah_hypercall.c
-index d44663334f38..1302e128be6e 100644
---- a/arch/arm64/gunyah/gunyah_hypercall.c
-+++ b/arch/arm64/gunyah/gunyah_hypercall.c
-@@ -37,6 +37,8 @@ EXPORT_SYMBOL_GPL(arch_is_gunyah_guest);
+diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
+index c2308389f551..b1bdf3e84155 100644
+--- a/drivers/virt/gunyah/Makefile
++++ b/drivers/virt/gunyah/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
  
- /* clang-format off */
- #define GUNYAH_HYPERCALL_HYP_IDENTIFY		GUNYAH_HYPERCALL(0x8000)
-+#define GUNYAH_HYPERCALL_MSGQ_SEND		GUNYAH_HYPERCALL(0x801B)
-+#define GUNYAH_HYPERCALL_MSGQ_RECV		GUNYAH_HYPERCALL(0x801C)
- /* clang-format on */
+-gunyah_rsc_mgr-y += rsc_mgr.o
++gunyah_rsc_mgr-y += rsc_mgr.o rsc_mgr_rpc.o
  
- /**
-@@ -58,5 +60,58 @@ void gunyah_hypercall_hyp_identify(
- }
- EXPORT_SYMBOL_GPL(gunyah_hypercall_hyp_identify);
- 
-+/**
-+ * gunyah_hypercall_msgq_send() - Send a buffer on a message queue
-+ * @capid: capability ID of the message queue to add message
-+ * @size: Size of @buff
-+ * @buff: Address of buffer to send
-+ * @tx_flags: See GUNYAH_HYPERCALL_MSGQ_TX_FLAGS_*
-+ * @ready: If the send was successful, ready is filled with true if more
-+ *         messages can be sent on the queue. If false, then the tx IRQ will
-+ *         be raised in future when send can succeed.
+ obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o
+diff --git a/drivers/virt/gunyah/rsc_mgr_rpc.c b/drivers/virt/gunyah/rsc_mgr_rpc.c
+new file mode 100644
+index 000000000000..626ad2565548
+--- /dev/null
++++ b/drivers/virt/gunyah/rsc_mgr_rpc.c
+@@ -0,0 +1,252 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
-+enum gunyah_error gunyah_hypercall_msgq_send(u64 capid, size_t size, void *buff,
-+					     u64 tx_flags, bool *ready)
++
++#include <linux/error-injection.h>
++
++#include <linux/gunyah_rsc_mgr.h>
++
++/* Message IDs: VM Management */
++/* clang-format off */
++#define GUNYAH_RM_RPC_VM_ALLOC_VMID		0x56000001
++#define GUNYAH_RM_RPC_VM_DEALLOC_VMID		0x56000002
++#define GUNYAH_RM_RPC_VM_START			0x56000004
++#define GUNYAH_RM_RPC_VM_STOP			0x56000005
++#define GUNYAH_RM_RPC_VM_RESET			0x56000006
++#define GUNYAH_RM_RPC_VM_CONFIG_IMAGE		0x56000009
++#define GUNYAH_RM_RPC_VM_INIT			0x5600000B
++#define GUNYAH_RM_RPC_VM_GET_HYP_RESOURCES	0x56000020
++#define GUNYAH_RM_RPC_VM_GET_VMID		0x56000024
++#define GUNYAH_RM_RPC_VM_SET_BOOT_CONTEXT	0x56000031
++#define GUNYAH_RM_RPC_VM_SET_DEMAND_PAGING	0x56000033
++#define GUNYAH_RM_RPC_VM_SET_ADDRESS_LAYOUT	0x56000034
++/* clang-format on */
++
++struct gunyah_rm_vm_common_vmid_req {
++	__le16 vmid;
++	__le16 _padding;
++} __packed;
++
++/* Call: VM_ALLOC */
++struct gunyah_rm_vm_alloc_vmid_resp {
++	__le16 vmid;
++	__le16 _padding;
++} __packed;
++
++/* Call: VM_STOP */
++#define GUNYAH_RM_VM_STOP_FLAG_FORCE_STOP BIT(0)
++
++#define GUNYAH_RM_VM_STOP_REASON_FORCE_STOP 3
++
++struct gunyah_rm_vm_stop_req {
++	__le16 vmid;
++	u8 flags;
++	u8 _padding;
++	__le32 stop_reason;
++} __packed;
++
++/* Call: VM_CONFIG_IMAGE */
++struct gunyah_rm_vm_config_image_req {
++	__le16 vmid;
++	__le16 auth_mech;
++	__le32 mem_handle;
++	__le64 image_offset;
++	__le64 image_size;
++	__le64 dtb_offset;
++	__le64 dtb_size;
++} __packed;
++
++/*
++ * Several RM calls take only a VMID as a parameter and give only standard
++ * response back. Deduplicate boilerplate code by using this common call.
++ */
++static int gunyah_rm_common_vmid_call(struct gunyah_rm *rm, u32 message_id,
++				      u16 vmid)
 +{
-+	struct arm_smccc_res res;
++	struct gunyah_rm_vm_common_vmid_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++	};
 +
-+	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_MSGQ_SEND, capid, size,
-+			  (uintptr_t)buff, tx_flags, 0, &res);
-+
-+	if (res.a0 == GUNYAH_ERROR_OK)
-+		*ready = !!res.a1;
-+
-+	return res.a0;
++	return gunyah_rm_call(rm, message_id, &req_payload, sizeof(req_payload),
++			      NULL, NULL);
 +}
-+EXPORT_SYMBOL_GPL(gunyah_hypercall_msgq_send);
 +
 +/**
-+ * gunyah_hypercall_msgq_recv() - Send a buffer on a message queue
-+ * @capid: capability ID of the message queue to add message
-+ * @buff: Address of buffer to copy received data into
-+ * @size: Size of @buff
-+ * @recv_size: If the receive was successful, recv_size is filled with the
-+ *             size of data received. Will be <= size.
-+ * @ready: If the receive was successful, ready is filled with true if more
-+ *         messages are ready to be received on the queue. If false, then the
-+ *         rx IRQ will be raised in future when recv can succeed.
++ * gunyah_rm_alloc_vmid() - Allocate a new VM in Gunyah. Returns the VM identifier.
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: Use 0 to dynamically allocate a VM. A reserved VMID can be supplied
++ *        to request allocation of a platform-defined VM.
++ *
++ * Return: the allocated VMID or negative value on error
 + */
-+enum gunyah_error gunyah_hypercall_msgq_recv(u64 capid, void *buff, size_t size,
-+					     size_t *recv_size, bool *ready)
++int gunyah_rm_alloc_vmid(struct gunyah_rm *rm, u16 vmid)
 +{
-+	struct arm_smccc_res res;
++	struct gunyah_rm_vm_common_vmid_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++	};
++	struct gunyah_rm_vm_alloc_vmid_resp *resp_payload;
++	size_t resp_size;
++	void *resp;
++	int ret;
 +
-+	arm_smccc_1_1_hvc(GUNYAH_HYPERCALL_MSGQ_RECV, capid, (uintptr_t)buff,
-+			  size, 0, &res);
++	ret = gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_ALLOC_VMID, &req_payload,
++			     sizeof(req_payload), &resp, &resp_size);
++	if (ret)
++		return ret;
 +
-+	if (res.a0 == GUNYAH_ERROR_OK) {
-+		*recv_size = res.a1;
-+		*ready = !!res.a2;
++	if (!vmid) {
++		resp_payload = resp;
++		ret = le16_to_cpu(resp_payload->vmid);
++		kfree(resp);
 +	}
 +
-+	return res.a0;
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(gunyah_hypercall_msgq_recv);
++ALLOW_ERROR_INJECTION(gunyah_rm_alloc_vmid, ERRNO);
 +
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Gunyah Hypervisor Hypercalls");
-diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
-index 33bcbd22d39f..acd70f982425 100644
---- a/include/linux/gunyah.h
-+++ b/include/linux/gunyah.h
-@@ -141,4 +141,12 @@ gunyah_api_version(const struct gunyah_hypercall_hyp_identify_resp *gunyah_api)
- void gunyah_hypercall_hyp_identify(
- 	struct gunyah_hypercall_hyp_identify_resp *hyp_identity);
++/**
++ * gunyah_rm_dealloc_vmid() - Dispose of a VMID
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ */
++int gunyah_rm_dealloc_vmid(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_DEALLOC_VMID,
++					  vmid);
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_dealloc_vmid, ERRNO);
++
++/**
++ * gunyah_rm_vm_reset() - Reset a VM's resources
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ *
++ * As part of tearing down the VM, request RM to clean up all the VM resources
++ * associated with the VM. Only after this, Linux can clean up all the
++ * references it maintains to resources.
++ */
++int gunyah_rm_vm_reset(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_RESET, vmid);
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_vm_reset, ERRNO);
++
++/**
++ * gunyah_rm_vm_start() - Move a VM into "ready to run" state
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ *
++ * On VMs which use proxy scheduling, vcpu_run is needed to actually run the VM.
++ * On VMs which use Gunyah's scheduling, the vCPUs start executing in accordance with Gunyah
++ * scheduling policies.
++ */
++int gunyah_rm_vm_start(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_START, vmid);
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_vm_start, ERRNO);
++
++/**
++ * gunyah_rm_vm_stop() - Send a request to Resource Manager VM to forcibly stop a VM.
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ */
++int gunyah_rm_vm_stop(struct gunyah_rm *rm, u16 vmid)
++{
++	struct gunyah_rm_vm_stop_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++		.flags = GUNYAH_RM_VM_STOP_FLAG_FORCE_STOP,
++		.stop_reason = cpu_to_le32(GUNYAH_RM_VM_STOP_REASON_FORCE_STOP),
++	};
++
++	return gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_STOP, &req_payload,
++			      sizeof(req_payload), NULL, NULL);
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_vm_stop, ERRNO);
++
++/**
++ * gunyah_rm_vm_configure() - Prepare a VM to start and provide the common
++ *			  configuration needed by RM to configure a VM
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier allocated with gunyah_rm_alloc_vmid
++ * @auth_mechanism: Authentication mechanism used by resource manager to verify
++ *                  the virtual machine
++ * @mem_handle: Handle to a previously shared memparcel that contains all parts
++ *              of the VM image subject to authentication.
++ * @image_offset: Start address of VM image, relative to the start of memparcel
++ * @image_size: Size of the VM image
++ * @dtb_offset: Start address of the devicetree binary with VM configuration,
++ *              relative to start of memparcel.
++ * @dtb_size: Maximum size of devicetree binary.
++ */
++int gunyah_rm_vm_configure(struct gunyah_rm *rm, u16 vmid,
++			   enum gunyah_rm_vm_auth_mechanism auth_mechanism,
++			   u32 mem_handle, u64 image_offset, u64 image_size,
++			   u64 dtb_offset, u64 dtb_size)
++{
++	struct gunyah_rm_vm_config_image_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++		.auth_mech = cpu_to_le16(auth_mechanism),
++		.mem_handle = cpu_to_le32(mem_handle),
++		.image_offset = cpu_to_le64(image_offset),
++		.image_size = cpu_to_le64(image_size),
++		.dtb_offset = cpu_to_le64(dtb_offset),
++		.dtb_size = cpu_to_le64(dtb_size),
++	};
++
++	return gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_CONFIG_IMAGE, &req_payload,
++			      sizeof(req_payload), NULL, NULL);
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_vm_configure, ERRNO);
++
++/**
++ * gunyah_rm_vm_init() - Move the VM to initialized state.
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VM identifier
++ *
++ * RM will allocate needed resources for the VM.
++ */
++int gunyah_rm_vm_init(struct gunyah_rm *rm, u16 vmid)
++{
++	return gunyah_rm_common_vmid_call(rm, GUNYAH_RM_RPC_VM_INIT, vmid);
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_vm_init, ERRNO);
++
++/**
++ * gunyah_rm_get_hyp_resources() - Retrieve hypervisor resources (capabilities) associated with a VM
++ * @rm: Handle to a Gunyah resource manager
++ * @vmid: VMID of the other VM to get the resources of
++ * @resources: Set by gunyah_rm_get_hyp_resources and contains the returned hypervisor resources.
++ *             Caller must free the resources pointer if successful.
++ */
++int gunyah_rm_get_hyp_resources(struct gunyah_rm *rm, u16 vmid,
++				struct gunyah_rm_hyp_resources **resources)
++{
++	struct gunyah_rm_vm_common_vmid_req req_payload = {
++		.vmid = cpu_to_le16(vmid),
++	};
++	struct gunyah_rm_hyp_resources *resp;
++	size_t resp_size;
++	int ret;
++
++	ret = gunyah_rm_call(rm, GUNYAH_RM_RPC_VM_GET_HYP_RESOURCES,
++			     &req_payload, sizeof(req_payload), (void **)&resp,
++			     &resp_size);
++	if (ret)
++		return ret;
++
++	if (!resp_size)
++		return -EBADMSG;
++
++	if (resp_size < struct_size(resp, entries, 0) ||
++	    resp_size !=
++		    struct_size(resp, entries, le32_to_cpu(resp->n_entries))) {
++		kfree(resp);
++		return -EBADMSG;
++	}
++
++	*resources = resp;
++	return 0;
++}
++ALLOW_ERROR_INJECTION(gunyah_rm_get_hyp_resources, ERRNO);
+diff --git a/include/linux/gunyah_rsc_mgr.h b/include/linux/gunyah_rsc_mgr.h
+index 87e919cc1e28..294e847c27ed 100644
+--- a/include/linux/gunyah_rsc_mgr.h
++++ b/include/linux/gunyah_rsc_mgr.h
+@@ -19,9 +19,86 @@ int gunyah_rm_notifier_register(struct gunyah_rm *rm,
+ int gunyah_rm_notifier_unregister(struct gunyah_rm *rm,
+ 				  struct notifier_block *nb);
  
-+/* Immediately raise RX vIRQ on receiver VM */
-+#define GUNYAH_HYPERCALL_MSGQ_TX_FLAGS_PUSH BIT(0)
++struct gunyah_rm_vm_exited_payload {
++	__le16 vmid;
++	__le16 exit_type;
++	__le32 exit_reason_size;
++	u8 exit_reason[];
++} __packed;
 +
-+enum gunyah_error gunyah_hypercall_msgq_send(u64 capid, size_t size, void *buff,
-+					     u64 tx_flags, bool *ready);
-+enum gunyah_error gunyah_hypercall_msgq_recv(u64 capid, void *buff, size_t size,
-+					     size_t *recv_size, bool *ready);
++enum gunyah_rm_notification_id {
++	/* clang-format off */
++	GUNYAH_RM_NOTIFICATION_VM_EXITED		 = 0x56100001,
++	GUNYAH_RM_NOTIFICATION_VM_STATUS		 = 0x56100008,
++	/* clang-format on */
++};
 +
++enum gunyah_rm_vm_status {
++	/* clang-format off */
++	GUNYAH_RM_VM_STATUS_NO_STATE		= 0,
++	GUNYAH_RM_VM_STATUS_INIT		= 1,
++	GUNYAH_RM_VM_STATUS_READY		= 2,
++	GUNYAH_RM_VM_STATUS_RUNNING		= 3,
++	GUNYAH_RM_VM_STATUS_PAUSED		= 4,
++	GUNYAH_RM_VM_STATUS_LOAD		= 5,
++	GUNYAH_RM_VM_STATUS_AUTH		= 6,
++	GUNYAH_RM_VM_STATUS_INIT_FAILED		= 8,
++	GUNYAH_RM_VM_STATUS_EXITED		= 9,
++	GUNYAH_RM_VM_STATUS_RESETTING		= 10,
++	GUNYAH_RM_VM_STATUS_RESET		= 11,
++	/* clang-format on */
++};
++
++struct gunyah_rm_vm_status_payload {
++	__le16 vmid;
++	u16 reserved;
++	u8 vm_status;
++	u8 os_status;
++	__le16 app_status;
++} __packed;
++
++int gunyah_rm_alloc_vmid(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_dealloc_vmid(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_vm_reset(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_vm_start(struct gunyah_rm *rm, u16 vmid);
++int gunyah_rm_vm_stop(struct gunyah_rm *rm, u16 vmid);
++
++enum gunyah_rm_vm_auth_mechanism {
++	/* clang-format off */
++	GUNYAH_RM_VM_AUTH_NONE			= 0,
++	GUNYAH_RM_VM_AUTH_QCOM_PIL_ELF		= 1,
++	GUNYAH_RM_VM_AUTH_QCOM_ANDROID_PVM	= 2,
++	/* clang-format on */
++};
++
++int gunyah_rm_vm_configure(struct gunyah_rm *rm, u16 vmid,
++			   enum gunyah_rm_vm_auth_mechanism auth_mechanism,
++			   u32 mem_handle, u64 image_offset, u64 image_size,
++			   u64 dtb_offset, u64 dtb_size);
++int gunyah_rm_vm_init(struct gunyah_rm *rm, u16 vmid);
++
++struct gunyah_rm_hyp_resource {
++	u8 type;
++	u8 reserved;
++	__le16 partner_vmid;
++	__le32 resource_handle;
++	__le32 resource_label;
++	__le64 cap_id;
++	__le32 virq_handle;
++	__le32 virq;
++	__le64 base;
++	__le64 size;
++} __packed;
++
++struct gunyah_rm_hyp_resources {
++	__le32 n_entries;
++	struct gunyah_rm_hyp_resource entries[];
++} __packed;
++
++int gunyah_rm_get_hyp_resources(struct gunyah_rm *rm, u16 vmid,
++				struct gunyah_rm_hyp_resources **resources);
+ 
+ int gunyah_rm_call(struct gunyah_rm *rsc_mgr, u32 message_id,
+ 		   const void *req_buf, size_t req_buf_size, void **resp_buf,
+ 		   size_t *resp_buf_size);
+-
  #endif
 -- 
 2.39.5
