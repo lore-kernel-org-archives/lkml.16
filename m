@@ -1,123 +1,151 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940A02701CD;
-	Thu, 24 Apr 2025 15:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69478267391
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745509656; cv=none; b=A3/7UGbmjeUyer/84Pmbf0Z9NwOdZMxMufenwrAOWvmMwYh5jt0Ecg+ahFE0uvCPIw0Ds9oi7EFw9TILk1hZkIfSSFaTNGjFOhd75jmoxNntCtSguGeTuV1KcsRSWO0BshE3LnVb6U9AP5qhgVKxVOwjZeeI65BizcHGe+FUK1M=
+	t=1745509659; cv=none; b=hUGNjDQxmdj/h3VqfzXE5jzxsiyKWy250Npr+ASEDhkf4r26ajc28uXFHyuXlru25mXY/rIOt37IK/frMe93KZHzxn3PF9qn6ElIwBSDCi9WHTuQ9Zkd3nWUAnlrnfhnZYwO8Vn7TztI+hgrielDgXFn8lpzinDsosTGa39OkNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745509656; c=relaxed/simple;
-	bh=74ZeLRpXZfizCoPEQzJTdJMtwnw1+9U/A+HDQpq+26g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WwRsZT5KU2vGonRajAIakeKyT1bf3cnZMH0vLkG8RPKpkVDLLItNmdhMkoYsjrjbISoCIvM1Z/OkF/8TSDWORVgK+CofOaq00uxhBUoi+ZjLc5vdvC+ptkQ1l5mXM7ARvNK92iwJ1GnEDPJHzZ2J/zUQE+nt0lxyNgZSNpw6MYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bKlHMFOs; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745509659; c=relaxed/simple;
+	bh=+K1+hSqZMGMgnvGbysJZENgSxEPnVTnWFTQBWhIn0mU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DFAuFM0ZQ5Xl9aKuo6tjsuGczMsrkGoqwpMWd3Moiirpkh8xgLWVCg9EbO14UnpKazqLV/HKhyw6oIDXoT2n5SBdcVMUHXclG/3E7Wd7+l14PJpaHDcRAq5lZD52o2f26fRCUG81iI2QxLtwOHRPn96RhIN+5Zpy6X16QwI/5dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HD/HSWlj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bKlHMFOs"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224100e9a5cso15354655ad.2;
-        Thu, 24 Apr 2025 08:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745509654; x=1746114454; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=74ZeLRpXZfizCoPEQzJTdJMtwnw1+9U/A+HDQpq+26g=;
-        b=bKlHMFOs/6Q0B5YwRG+dSm8BkaBpTlAKmYs2pB8jLZKh8X2cF5XOsUilZ3fApOAq5Q
-         HuVVNOJrexZ5wL/92+IZ0gSwtNowJnOnUMWw0MXaKvJ+RVMCZh8epQqO/ZFRX1aFv/MV
-         He5CGLm67/qTaXqClLRWNySzH6iOBLvIlCYaVfAargwevEQ+vrTduArYjhZtxCXvGjSO
-         OHHVZ7D4n3FdAS5aAa2y/6qY56GIUfu1Ks9d7vg3XY4j64MAo1RIVr4A7rUttzqGKPE5
-         wwHFUUCrwdsTJa1nsuhKwFxCtbBmFBln/DPvivoXrmX7LPf86KvAgICHuvom9tPBc+L/
-         Vddg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745509654; x=1746114454;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=74ZeLRpXZfizCoPEQzJTdJMtwnw1+9U/A+HDQpq+26g=;
-        b=KeAf0BDjHkxfD6p5R9x0NyfDLTgiofkFfsSq9RZQLDcwrCbrxxcsFRw8AgJJHYW6q2
-         g0IFR4TKVCFxsm5JqMaYFW+a601n2fsESbNJpb/sr7TxFfd4Cr9l9Bypj32hx1hURCF6
-         YQSWMLWHxzUp73VU5tBqnhquxfG+yVf0eK3c2NjsxuXLWaNvZV34u2tdzjsnlGkUVPPR
-         e3VPeD3/2/wkOf2jqlvIXsL6cnj1jwQTZhPck4JEkK7nM8gnGkus1amPjXS5BvWsbyBm
-         P7HBW+xs3XgDSsX0ops7psX3tLeUg7Pf/bE/69a/J//emdITKQ0bABAnEZm6Zc6mT06Z
-         1nSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUc0yISSCgYBI2fNZJpkEatMPcu1ctmzKX9ONN0x/uxCC2bijiURpdBux3UGATLZtK8VWgL1cDJnfJII6+a@vger.kernel.org, AJvYcCXGvjNmufCdCg+Ry54CW0SAQzSPmXZmrX4JDhGTlT8hMlfqF9Xh4upLR/tRbXMMgANIH9SgrruI/r8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd1gI2WskO5FqlJO0GZlqk0UyIn8ZJBnZi7oYLusOFtlabgtsP
-	Lj1Ow1U2q+WLZ1mWlN6tDxEEWSyGq+rgFd3uAefGfx1NKCDEvTBs7nc9KDR7MnNjyQ==
-X-Gm-Gg: ASbGncuoQmlxZOXq54d1vGBnF4Px0iWTZn/GIysQQG/bbR3K+SPRktXAkLYXzD1r7kp
-	G577Twyg9unadryd3LXar3qAc7p9KrSe1wn5pgpi/NmqrKse6cwIBo0UZGkrryfy9IbPstxmLaz
-	KjqWcqLBqAx1Zwg9605QYbTD+zRk+Gj0qtrLSFSqasl896WtwKefbOeAsd4HKpcCi8Skt6cH/z1
-	Fhif+FqWggKtc28zu/UbpWxqHU3/nKE6MxjtMWIcLGzvvwTD+McCemrvlEkaWOs02Wf02BhWXQk
-	wWUDu11ZMHQn4YHuxlCmOUiNb8OynhvqGyH83GtC8lXTJX3S
-X-Google-Smtp-Source: AGHT+IFrqb6lN5+lsml1n8RT6jAybU7JqCpvKfKYKDxfbmkx6EypKo8ZO0kkxmWhNag4a5baPsqqjA==
-X-Received: by 2002:a17:903:4052:b0:223:5c33:56a2 with SMTP id d9443c01a7336-22db3c1d84bmr44081245ad.28.1745509653441;
-        Thu, 24 Apr 2025 08:47:33 -0700 (PDT)
-Received: from [10.16.12.253] ([61.83.230.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7a40sm15045355ad.147.2025.04.24.08.47.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 08:47:33 -0700 (PDT)
-Message-ID: <72d355b4-73f8-458d-99e8-8e4f02d5dd79@gmail.com>
-Date: Thu, 24 Apr 2025 21:17:28 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HD/HSWlj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745509655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pCCw2y7rjOMwmvyc3bwQQjYfg0gQzRevmgfAdbV2Kig=;
+	b=HD/HSWljwGcxNYIhqnlEKHq0sFu1TwMcnlO1j2U1iXjm5Srstqu9alMAK+zoEgKxxBk8Mh
+	Z15tLfRc1OG5Tj9KqdqlnUWghNcABl74qlGuaaHcAP9uhEGSbJ5/5gpuNR0FQdWJ0l8LLq
+	7baqxtOQKgCaUdp/CnNQIb9jSlu/Bdc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-368-P70tYrKkNhKAYvLWYrsYrA-1; Thu,
+ 24 Apr 2025 11:47:31 -0400
+X-MC-Unique: P70tYrKkNhKAYvLWYrsYrA-1
+X-Mimecast-MFC-AGG-ID: P70tYrKkNhKAYvLWYrsYrA_1745509649
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B97C91800374;
+	Thu, 24 Apr 2025 15:47:28 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.32.28])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 70DD719560A3;
+	Thu, 24 Apr 2025 15:47:23 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v4 0/8] Add Microchip ZL3073x support (part 1)
+Date: Thu, 24 Apr 2025 17:47:14 +0200
+Message-ID: <20250424154722.534284-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [PATCH] cxl: trace: Fix macro safety in
- CXL_EVT_TP_fast_assign
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: dan.j.williams@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Shiju Jose <shiju.jose@huawei.com>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250421184520.154714-1-shaikhkamal2012@gmail.com>
- <20250421151239.7981f1fa@gandalf.local.home>
-Content-Language: en-US
-From: shaikh kamaluddin <shaikhkamal2012@gmail.com>
-In-Reply-To: <20250421151239.7981f1fa@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the common MFD driver that provides an access to the bus
+that can be either I2C or SPI.
 
-On 4/22/25 00:42, Steven Rostedt wrote:
-> On Tue, 22 Apr 2025 00:15:17 +0530
-> "shaikh.kamal" <shaikhkamal2012@gmail.com> wrote:
->
->> Fix checkpatch.pl detected error
-> First, checkpatch.pl should never be used on existing code unless it's
-> yours. As the name suggests, it's for checking patches. It's not to check
-> what's already been accepted. Please do not submit patches against accepted
-> code because of what checkpatch.pl reports.
-Thanks for your suggestion.
->
-> If you run it on code and it reports something that you find is a real bug,
-> then sure, fix it. But don't submit patches on code you do not understand
-> just because checkpatch.pl says there's an issue with it.
-Okay got it.
->
->> The CXL_EVT_TP_fast_assign macro assigns multiple fields, but does not
->> wrap the body in a `do { ... } while (0)` block. This can lead to
->> unexpected behavior when used in conditional branches.
-> Next, this is not a normal macro. It's a trace event macro and
-> checkpatch.pl fails miserably on pretty much all tracing macros.
->
-> Thanks for your comments.
->
->> Add checks to ensure cxlmd is valid before accessing its fields.
-> If it is invalid, and we do what your patch suggests and just not write
-> anything, the event it was writing into has already been created. If we
-> exit out of this macro, then the event will simply contain garbage, but is
-> already on its way to user space. That means the output to user space will
-> be garbage. That's a bug. In other words, if cxlmd is NULL, it had better
-> not be calling this macro in the fist place!
->
-> -- Steve
-> Thanks for your suggestions and comments.
+The next part of the series is bringing the DPLL driver that will
+covers DPLL functionality. Another series will bring PTP driver and
+flashing capability via devlink in the MFD driver will follow soon.
+
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
+
+Patch breakdown
+===============
+Patch 1 - Common DT schema for DPLL device and pin
+Patch 2 - DT bindings for microchip,zl3073* devices
+Patch 3 - Basic support for I2C, SPI and regmap configuration
+Patch 4 - Devlink device registration and info
+Patch 5 - Helpers for reading and writing register mailboxes
+Patch 6 - Fetch invariant register values used by DPLL/PTP sub-drivers
+Patch 7 - Clock ID generation for DPLL driver
+Patch 8 - Register/create DPLL device cells
+
+---
+v3->v4:
+* fixed shortcomings in DT patches
+* completely reworked register access
+* removed a need to manage locking during mailbox accesses by callers
+* regcache switched to maple
+* dev_err_probe() in probe path
+* static mfd cells during sub-devices registration
+
+v1->v3:
+* dropped macros for generating register access functions
+* register access functions are provided in <linux/mfd/zl3073x_regs.h>
+* fixed DT descriptions and compatible wildcard usage
+* reworked regmap locking
+  - regmap uses implicit locking
+  - mailbox registers are additionally protected by extra mutex
+* fixed regmap virtual address range
+* added regmap rbtree cache (only for page selector now)
+* dropped patches for exporting strnchrnul and for supporting mfg file
+  this will be maybe added later
+
+Ivan Vecera (8):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  mfd: Add Microchip ZL3073x support
+  mfd: zl3073x: Add support for devlink device info
+  mfd: zl3073x: Add functions to work with register mailboxes
+  mfd: zl3073x: Fetch invariants during probe
+  mfd: zl3073x: Add clock_id field
+  mfd: zl3073x: Register DPLL sub-device during init
+
+ .../devicetree/bindings/dpll/dpll-device.yaml |   76 ++
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |   45 +
+ .../bindings/dpll/microchip,zl30731.yaml      |  115 ++
+ MAINTAINERS                                   |   11 +
+ drivers/mfd/Kconfig                           |   32 +
+ drivers/mfd/Makefile                          |    5 +
+ drivers/mfd/zl3073x-core.c                    | 1011 +++++++++++++++++
+ drivers/mfd/zl3073x-i2c.c                     |   68 ++
+ drivers/mfd/zl3073x-regs.h                    |  155 +++
+ drivers/mfd/zl3073x-spi.c                     |   68 ++
+ drivers/mfd/zl3073x.h                         |   31 +
+ include/linux/mfd/zl3073x.h                   |  308 +++++
+ 12 files changed, 1925 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 drivers/mfd/zl3073x-core.c
+ create mode 100644 drivers/mfd/zl3073x-i2c.c
+ create mode 100644 drivers/mfd/zl3073x-regs.h
+ create mode 100644 drivers/mfd/zl3073x-spi.c
+ create mode 100644 drivers/mfd/zl3073x.h
+ create mode 100644 include/linux/mfd/zl3073x.h
+
+-- 
+2.49.0
+
