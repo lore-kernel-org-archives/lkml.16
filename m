@@ -1,191 +1,269 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AE418A6AD
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530CE17A316
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745503792; cv=none; b=cinU6H3t715DVXSNsuGLe2wjqL7+NaskfYSFoTRv/d2mjmUP4yM79/q67kKVZaA7qp+8Nrpvi60lB7n7Z7uSIgumu+1ABGA/nBUky2wS1j5BeGYMTQUUZC277JQlJLAS7n3vFFKYIPzZEQSPY2KLiQHxCgkYgJ10MocF8Rplgak=
+	t=1745503844; cv=none; b=b+FS3xC11yQ1dlpJo935mLCIbYNVcVh/oUMGGcyxDYy3VeQ4el+Jfd8ToitAjcX1IDwFOlsdkKvj5uaVVnWGqVVYG023PKwBWZWeukph+t+O47UPDFX9iGJaJI8FlA0xEPlPWonIjePdtNwvHIARPtbPN9xnfPJtuPmHTQwD9Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745503792; c=relaxed/simple;
-	bh=Byl8wGqJTtnl74RJ2YKMT0DDlnonSferfdT8IKzK5+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J2ORUVERkJtojOR7FneF1c33zMdukrCu3UbkJgNTunW1rHmaScSA71WfTMpVh5OgB7QIeh0A023tEehCEGmB2zscygElawAYrtOYSaIR6noelj0pulnfZHCW4T9ab56wl5l3KoltegfjZ8sZ4wDlM1laATHEIZySPICwDLJHRfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gqI10tR6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745503844; c=relaxed/simple;
+	bh=F+Wja2ADrz1zv00eM7+FHcJd4flj4VeWlpXuRLNxVCo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dhjV057E97pTiE9cQbnpk744G55gbfMKWX0JfzU7e7/0UAHm4Rp3PHjzoEdaS9QXWs/kPJuBHw0e3yH7wj5tOuVxHt/PzSWvGDtkdKqMGeH1hpZ9n4mUz2oity8lTz8of4qBl+UcC0swiYAbcujlpLwHXF9jDbTyr25+Xd0TJG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tO0+FS0F; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gqI10tR6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745503789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kcd6o2tvUH9Wlq0TU9ZCul/Ej7huhlgPAxSc9bD4eg0=;
-	b=gqI10tR6664EVHaUzsi6pGv6tz0HdbE9geKp9ilsJrCv/IGdHdIl3F+t87ZV5iEWJ36BFT
-	90ww/K6AwKDagRwpzvjf85EZ5QIlj0H5iBbyf6dpvyMJHbcAUl6S24WnFsa6qAyHGrCAeF
-	PakxFVdr+Mlayu7wN0mHe39Alz4ycjw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-HWxBboayONCgymVSkwlNJA-1; Thu, 24 Apr 2025 10:09:47 -0400
-X-MC-Unique: HWxBboayONCgymVSkwlNJA-1
-X-Mimecast-MFC-AGG-ID: HWxBboayONCgymVSkwlNJA_1745503787
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3913b2d355fso366586f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:09:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tO0+FS0F"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2263428c8baso161795ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745503841; x=1746108641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KMrvBQHRfYfkGh/Um2a6kp7PNJoeWsTC0p7ApqTxhJ4=;
+        b=tO0+FS0FKIRYHGZ8PWrzhQywfXGvjj7t+Ahs4Ir8XMcJ8fmnVV51W6F9YSXfJw2gFy
+         B9ydyVFoetFUCIbttukmOA2VXv+nN2n9g3BER2/pcx5RcUMYHsG3rfnKZ7G/47tgTJX3
+         c3sHBmfQ823B+7c1GgqBJ1jG1jbOxI9BkYZPgla7rBqGu9qbok82AKIuOzpg8Bi4MM9Y
+         94GzNZ2ezRzl6/OVUyN1X2TDSZjtWIqQYmQ9DZcfLHyO6XXVzmFGIPHRIXiT8zniSt5v
+         KlBd+MZxvm63an9z2Y5pn1MPN0KO6U5tfsiCsjXX2RFx9XqWtPcITBDZuxF+Hbzd6L9Q
+         b6BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745503786; x=1746108586;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kcd6o2tvUH9Wlq0TU9ZCul/Ej7huhlgPAxSc9bD4eg0=;
-        b=aDqrza19I/JPwlQeckg8TUyLUgHwMDvX2p5T9HixT6YAyFYuVoK/EF6YATCo/z5lTR
-         mG856Gxlek02v0eQ584ohhbjsy4JPESjx48Xqxg52R0RI8mA3vmrzC+JE3N/l7i/ltQs
-         jGUAVQu3YR9CdZdwLzVsiESW5bZMXOfekwb+/+/WC4sbHWoSkBddpjRAwJUFUE27pim0
-         K3Jd87eNNz/Su6Lcnlw9VQvHCU/+FbUYddTDUgJzueB55CAXXmnl9YV6druyn+53qE4+
-         kZSplgvVNc/CrTRiZOk51dgJAnlGGhEI2wD8Y0B/I9OlEGDXZGLjC7xMBvgQ+ttXqxMT
-         H7Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvdpOQEbBNqSMaAL+eyui8m3eOUSux+dSEf+67b24uYYAJRxIKYQ+Z0P1M7NKhwRKupT5QzKrfNYiys38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwarDmRog6Yn8C6ukvfWHT1vTjP0UURKzriaw/8MA+H/M8yX6XL
-	IddM0NiyE70DkkNeuxQogT9jcD8VS3ZY6pMmnt/BSLmwACQl6E+JFwnn6rZI7+OuKir6xLexYm9
-	EwotsjJNyhSdCUw/cYMjdwShrf5odymCq0g6+XVakK2+vujfDS1uQVQ72+tyIaw==
-X-Gm-Gg: ASbGncsC6z8BeZJFpNBgBjkKVaIng+eLWLgJu3bDCxTa2XrI4mkm8fstk3Kj+w/8nOy
-	oeTMrhRFhxHWN4lSFO3NZPXutjpblfcnk2V7rSOBanbiVU+AxostQINVXxF6AwIeD/X1qEtFE1Z
-	RwY754mef9D3StW1Cb1+9aBzxfQpIdx5W2jZ0VLwcVyCO/ZgTGsgf9KnSNrFvU4srP5E9kHudxU
-	BDz/UXeWmOGUBQsGc2Ct0Pz4sJtDOg8cTdb1Yy9rs4XprTSJ3GaP3fEy/H3zgspSxpALUbg3WUW
-	EUfJcP7xsnI5bszLnxezUEfpQA==
-X-Received: by 2002:a05:6000:40dd:b0:39c:2669:d786 with SMTP id ffacd0b85a97d-3a06cf564f6mr2030215f8f.19.1745503786450;
-        Thu, 24 Apr 2025 07:09:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCLnvnPrTr2kA4EPsTX8eBJWla0qlNHBLrDC/aXaOPuzLScpVQ0iwMUi89EkItUdIH45LJew==
-X-Received: by 2002:a05:6000:40dd:b0:39c:2669:d786 with SMTP id ffacd0b85a97d-3a06cf564f6mr2030125f8f.19.1745503785858;
-        Thu, 24 Apr 2025 07:09:45 -0700 (PDT)
-Received: from t14ultra (109-81-82-22.rct.o2.cz. [109.81.82.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c4945sm2217236f8f.47.2025.04.24.07.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:09:44 -0700 (PDT)
-Date: Thu, 24 Apr 2025 16:10:04 +0200
-From: Jan Stancek <jstancek@redhat.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>,
-	jstancek@redhat.com
-Subject: Re: [PATCH 08/19] vdso/gettimeofday: Prepare do_hres_timens() for
- introduction of struct vdso_clock
-Message-ID: <aApGPAoctq_eoE2g@t14ultra>
-References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
- <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de>
+        d=1e100.net; s=20230601; t=1745503841; x=1746108641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KMrvBQHRfYfkGh/Um2a6kp7PNJoeWsTC0p7ApqTxhJ4=;
+        b=Nri7JeOiumDPTyppCOenXER6Py6ESGkUN65wjy6ekFJry48TtrvkRCdV7+BjPJ5JaB
+         Nnl+lb/71DqKUaDGN73FBThFy7RFclaS7nUZxWtcqYtar/iMZVtL28eNI7RpQtiRGI07
+         KO6TmUfM+PhVlt9MIAmImhFCUmMIUN+R4m30jv5sfXNBKJZUzj1Xm6QbggCVIvgQMKy6
+         8mPj9zfGoM7MzLKsJwioz6aepavaX4eWr1PgafmRNo9EvrG44FExDjFhBxdYFw8ZkU0/
+         DgXaDqTvOr7iLkFD2RS5RYUwIDxvV8UMxD/1eJubRY2ej0TrLIARv8Q7Rqd7Txvm0aFw
+         2vDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVe9Yqn8nZoXrFo6n2lHuSGRWUcFORLW9gs8bE6hfnQyKx/ZOjC2JjCRfvknDgl+N1/ccE7nuU70ubR6Mw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm/T53WCqRrLXAa1/8wAMFV2N/RknrcpzpULIEK+sAVPNJflMh
+	7YQcSO9EjrTNwe6rE5XULdEHePQwM+xhr05RJ+qoC15mjumgIVV2JjbAZk3YRyR3pVfXjp5E0UN
+	jOP6ttXEvpWBqYK8//V5rNJDVak2Tde33nj/r
+X-Gm-Gg: ASbGncsRCeIb8War8J+H0G7hn/A1nHVUvB+jcbuyi7GpFPM7BmkS/8ZkobH6mzj7fty
+	xRVdAHQ6VUGFsq8uw23jj4oiY7uq5C71lEwH4D1okIxQaYZH2VADMkG4cRZFKiI2PP8NuvT9yb+
+	o7542C+65VpSxZsiX4tQvU8M/T0YUt0qNLEf9XFA5VkGVuOYIhv2NLBw==
+X-Google-Smtp-Source: AGHT+IFD9PMIDjYVZIu4XeDCEmXm5JJ9kqk0ET3qsJ1IGuscVnIeFyKraOFTxsj8pEhDs0FmSrqFKcRZTv0WGcRk6BM=
+X-Received: by 2002:a17:903:190d:b0:223:7f8f:439b with SMTP id
+ d9443c01a7336-22db331d4fcmr2342005ad.29.1745503840777; Thu, 24 Apr 2025
+ 07:10:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de>
+References: <cover.1726009989.git.ackerleytng@google.com> <38723c5d5e9b530e52f28b9f9f4a6d862ed69bcd.1726009989.git.ackerleytng@google.com>
+ <Z+6AGxEvBRFkN5mN@yzhao56-desk.sh.intel.com> <diqzh62ezgdh.fsf@ackerleytng-ctop.c.googlers.com>
+ <aAmPQssuN9Zba//b@yzhao56-desk.sh.intel.com> <aAm9OHGt6Ag7ztqs@yzhao56-desk.sh.intel.com>
+ <c4dae65f-b5e6-44fa-b5ab-8614f1d47cb5@intel.com> <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 24 Apr 2025 07:10:28 -0700
+X-Gm-Features: ATxdqUEQE_t-BEFR1W0udJMvfpqwrx52O_-L1cdq80rEE8HhadLoddGPwZuyCFg
+Message-ID: <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
+Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
+ HugeTLB page
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Chenyi Qiang <chenyi.qiang@intel.com>, Ackerley Tng <ackerleytng@google.com>, tabba@google.com, 
+	quic_eberman@quicinc.com, roypat@amazon.co.uk, jgg@nvidia.com, 
+	peterx@redhat.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
+	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
+	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
+	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 03, 2025 at 12:11:10PM +0100, Thomas Weiﬂschuh wrote:
->From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+On Thu, Apr 24, 2025 at 1:15=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wro=
+te:
 >
->To support multiple PTP clocks, the VDSO data structure needs to be
->reworked. All clock specific data will end up in struct vdso_clock and in
->struct vdso_time_data there will be array of it. By now, vdso_clock is
->simply a define which maps vdso_clock to vdso_time_data.
+> On Thu, Apr 24, 2025 at 01:55:51PM +0800, Chenyi Qiang wrote:
+> >
+> >
+> > On 4/24/2025 12:25 PM, Yan Zhao wrote:
+> > > On Thu, Apr 24, 2025 at 09:09:22AM +0800, Yan Zhao wrote:
+> > >> On Wed, Apr 23, 2025 at 03:02:02PM -0700, Ackerley Tng wrote:
+> > >>> Yan Zhao <yan.y.zhao@intel.com> writes:
+> > >>>
+> > >>>> On Tue, Sep 10, 2024 at 11:44:10PM +0000, Ackerley Tng wrote:
+> > >>>>> +/*
+> > >>>>> + * Allocates and then caches a folio in the filemap. Returns a f=
+olio with
+> > >>>>> + * refcount of 2: 1 after allocation, and 1 taken by the filemap=
+.
+> > >>>>> + */
+> > >>>>> +static struct folio *kvm_gmem_hugetlb_alloc_and_cache_folio(stru=
+ct inode *inode,
+> > >>>>> +                                                           pgoff=
+_t index)
+> > >>>>> +{
+> > >>>>> +       struct kvm_gmem_hugetlb *hgmem;
+> > >>>>> +       pgoff_t aligned_index;
+> > >>>>> +       struct folio *folio;
+> > >>>>> +       int nr_pages;
+> > >>>>> +       int ret;
+> > >>>>> +
+> > >>>>> +       hgmem =3D kvm_gmem_hgmem(inode);
+> > >>>>> +       folio =3D kvm_gmem_hugetlb_alloc_folio(hgmem->h, hgmem->s=
+pool);
+> > >>>>> +       if (IS_ERR(folio))
+> > >>>>> +               return folio;
+> > >>>>> +
+> > >>>>> +       nr_pages =3D 1UL << huge_page_order(hgmem->h);
+> > >>>>> +       aligned_index =3D round_down(index, nr_pages);
+> > >>>> Maybe a gap here.
+> > >>>>
+> > >>>> When a guest_memfd is bound to a slot where slot->base_gfn is not =
+aligned to
+> > >>>> 2M/1G and slot->gmem.pgoff is 0, even if an index is 2M/1G aligned=
+, the
+> > >>>> corresponding GFN is not 2M/1G aligned.
+> > >>>
+> > >>> Thanks for looking into this.
+> > >>>
+> > >>> In 1G page support for guest_memfd, the offset and size are always
+> > >>> hugepage aligned to the hugepage size requested at guest_memfd crea=
+tion
+> > >>> time, and it is true that when binding to a memslot, slot->base_gfn=
+ and
+> > >>> slot->npages may not be hugepage aligned.
+> > >>>
+> > >>>>
+> > >>>> However, TDX requires that private huge pages be 2M aligned in GFN=
+.
+> > >>>>
+> > >>>
+> > >>> IIUC other factors also contribute to determining the mapping level=
+ in
+> > >>> the guest page tables, like lpage_info and .private_max_mapping_lev=
+el()
+> > >>> in kvm_x86_ops.
+> > >>>
+> > >>> If slot->base_gfn and slot->npages are not hugepage aligned, lpage_=
+info
+> > >>> will track that and not allow faulting into guest page tables at hi=
+gher
+> > >>> granularity.
+> > >>
+> > >> lpage_info only checks the alignments of slot->base_gfn and
+> > >> slot->base_gfn + npages. e.g.,
+> > >>
+> > >> if slot->base_gfn is 8K, npages is 8M, then for this slot,
+> > >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [4K, 2M+8K)=
+;
+> > >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M+8K, 4M+=
+8K);
+> > >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M+8K, 6M+=
+8K);
+> > >> lpage_info[2M][3].disallow_lpage =3D 1, which is for GFN [6M+8K, 8M+=
+8K);
+> >
+> > Should it be?
+> > lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [8K, 2M);
+> > lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M, 4M);
+> > lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M, 6M);
+> > lpage_info[2M][3].disallow_lpage =3D 0, which is for GFN [6M, 8M);
+> > lpage_info[2M][4].disallow_lpage =3D 1, which is for GFN [8M, 8M+8K);
+> Right. Good catch. Thanks!
 >
->Prepare for the rework of these structures by adding struct vdso_clock
->pointer argument to do_hres_timens(), and replace the struct vdso_time_data
->pointer with the new pointer arugment whenever applicable.
+> Let me update the example as below:
+> slot->base_gfn is 2 (for GPA 8KB), npages 2000 (for a 8MB range)
 >
->No functional change.
+> lpage_info[2M][0].disallow_lpage =3D 1, which is for GPA [8KB, 2MB);
+> lpage_info[2M][1].disallow_lpage =3D 0, which is for GPA [2MB, 4MB);
+> lpage_info[2M][2].disallow_lpage =3D 0, which is for GPA [4MB, 6MB);
+> lpage_info[2M][3].disallow_lpage =3D 0, which is for GPA [6MB, 8MB);
+> lpage_info[2M][4].disallow_lpage =3D 1, which is for GPA [8MB, 8MB+8KB);
 >
->Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
->Signed-off-by: Nam Cao <namcao@linutronix.de>
->Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
->---
-> lib/vdso/gettimeofday.c | 35 ++++++++++++++++++-----------------
-> 1 file changed, 18 insertions(+), 17 deletions(-)
+> lpage_info indicates that a 2MB mapping is alllowed to cover GPA 4MB and =
+GPA
+> 4MB+16KB. However, their aligned_index values lead guest_memfd to allocat=
+e two
+> 2MB folios, whose physical addresses may not be contiguous.
 >
+> Additionally, if the guest accesses two GPAs, e.g., GPA 2MB+8KB and GPA 4=
+MB,
+> KVM could create two 2MB mappings to cover GPA ranges [2MB, 4MB), [4MB, 6=
+MB).
+> However, guest_memfd just allocates the same 2MB folio for both faults.
+>
+>
+> >
+> > >>
+> > >>   ---------------------------------------------------------
+> > >>   |          |  |          |  |          |  |          |  |
+> > >>   8K        2M 2M+8K      4M  4M+8K     6M  6M+8K     8M  8M+8K
+> > >>
+> > >> For GFN 6M and GFN 6M+4K, as they both belong to lpage_info[2M][2], =
+huge
+> > >> page is allowed. Also, they have the same aligned_index 2 in guest_m=
+emfd.
+> > >> So, guest_memfd allocates the same huge folio of 2M order for them.
+> > > Sorry, sent too fast this morning. The example is not right. The corr=
+ect
+> > > one is:
+> > >
+> > > For GFN 4M and GFN 4M+16K, lpage_info indicates that 2M is allowed. S=
+o,
+> > > KVM will create a 2M mapping for them.
+> > >
+> > > However, in guest_memfd, GFN 4M and GFN 4M+16K do not correspond to t=
+he
+> > > same 2M folio and physical addresses may not be contiguous.
 
-Hi,
+Then during binding, guest memfd offset misalignment with hugepage
+should be same as gfn misalignment. i.e.
 
-starting with this patch, I'm seeing user-space crashes when using clock_gettime():
-   BAD  -> 83a2a6b8cfc5 vdso/gettimeofday: Prepare do_hres_timens() for introduction of struct vdso_clock
-   GOOD -> 64c3613ce31a vdso/gettimeofday: Prepare do_hres() for introduction of struct vdso_clock
+(offset & ~huge_page_mask(h)) =3D=3D ((slot->base_gfn << PAGE_SHIFT) &
+~huge_page_mask(h));
 
-It appears to be unique to aarch64 with 64k pages, and can be reproduced with
-LTP clock_gettime03 [1]:
-   command: clock_gettime03 
-   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
-   tst_test.c:1903: TINFO: LTP version: 20250130-231-gd02c2aea3
-   tst_test.c:1907: TINFO: Tested kernel: 6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k #1 SMP PREEMPT_DYNAMIC Wed Apr 23 23:23:54 UTC 2025 aarch64
-   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
-   tst_test.c:1720: TINFO: Overall timeout per run is 0h 05m 24s
-   clock_gettime03.c:121: TINFO: Testing variant: vDSO or syscall with libc spec
-   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct 10000ms
-   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
-   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct 10000ms
-   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
-   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct -10000ms
-   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
-   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct -10000ms
-   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
-   tst_test.c:438: TBROK: Child (233649) killed by signal SIGSEGV
+For non guest_memfd backed scenarios, KVM allows slot gfn ranges that
+are not hugepage aligned, so guest_memfd should also be able to
+support non-hugepage aligned memslots.
 
-or with:
---------------------- 8< ----------------------
-#define _GNU_SOURCE
-#include <sched.h>
-#include <time.h>
-#include <unistd.h>                                                                                                                                                                                                                          #include <sys/wait.h>
-
-int main(void)
-{
-         struct timespec tp;
-         pid_t child;
-         int status;
-
-         unshare(CLONE_NEWTIME);
-
-         child = fork();
-         if (child == 0) {
-                 clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
-         }
-
-         wait(&status);
-         return status;
-}
-
-# ./a.out ; echo $?
-139
---------------------- >8 ----------------------
-
-RPMs and configs can be found at Fedora koji, latest build is at [2] (look for kernel-64k).
-
-Regards,
-Jan
-
-[1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/clock_gettime/clock_gettime03.c
-[2] https://koji.fedoraproject.org/koji/buildinfo?buildID=2704401
-
+> > >
+> > >
+> > >> However, for TDX, GFN 6M and GFN 6M+4K should not belong to the same=
+ folio.
+> > >> It's also weird for a 2M mapping in KVM to stride across 2 huge foli=
+os.
+> > >>
+> > >>> Hence I think it is okay to leave it to KVM to fault pages into the
+> > >>> guest correctly. For guest_memfd will just maintain the invariant t=
+hat
+> > >>> offset and size are hugepage aligned, but not require that
+> > >>> slot->base_gfn and slot->npages are hugepage aligned. This behavior=
+ will
+> > >>> be consistent with other backing memory for guests like regular shm=
+em or
+> > >>> HugeTLB.
+> > >>>
+> > >>>>> +       ret =3D kvm_gmem_hugetlb_filemap_add_folio(inode->i_mappi=
+ng, folio,
+> > >>>>> +                                                aligned_index,
+> > >>>>> +                                                htlb_alloc_mask(=
+hgmem->h));
+> > >>>>> +       WARN_ON(ret);
+> > >>>>> +
+> > >>>>>         spin_lock(&inode->i_lock);
+> > >>>>>         inode->i_blocks +=3D blocks_per_huge_page(hgmem->h);
+> > >>>>>         spin_unlock(&inode->i_lock);
+> > >>>>>
+> > >>>>> -       return page_folio(requested_page);
+> > >>>>> +       return folio;
+> > >>>>> +}
+> > >
+> >
