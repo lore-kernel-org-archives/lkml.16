@@ -1,235 +1,142 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E60D433B1;
-	Thu, 24 Apr 2025 08:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5AF2080E8;
+	Thu, 24 Apr 2025 08:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745483087; cv=none; b=nsiSkU5pmYNeomwx5RT1WSuJqMM5pPPNWakmylL4lPA2E6duLUvFoRG3jx2+PbBYazYwwAOfGP9EttEXpl916n3p4kQer0GdOd3NxMgBlWTH2zFioWlWwfSn4tK3MNApctOfKTOuGH1s4YAnArXZl8aVovAk7K6H8ylZ73AD0vg=
+	t=1745483103; cv=none; b=g79A18CS6sW5p4HJ+xhGtElh5UqEh7fQuIGR3PXmB96QcfzJSSYag71fGJ/F87fxoPGw6Ru9/8/4GXevl/xKqMJKWCYmK+0kQ9YW++L7Dz6bZ57P64pSDFPO5397Ntdk2y0byq218Dl4y68giaGhghBu2dk48+7ktHhbABeGi+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745483087; c=relaxed/simple;
-	bh=FGlp0gi7Lh2frL5hssZboAJCoHSJSQJT5DYPXkGLO7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t+Qt4JSaQqptHp2oy9/+PQgNmh939ab98pkuZQWccy+qpUzTtbw6V6wRQi9Ieo4E69ULtk8nAet93xbdI6++9Jmap7bNsk5mDym9fc4b6bVtbOUZ7LnoSA1no9wRFx2keukvlyFguPgZHqB0GOuEG1M0MELABPTivdU/xJaMv0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso330439241.2;
-        Thu, 24 Apr 2025 01:24:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745483081; x=1746087881;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f/HIGD5CEBqAUzJn6SybcBiQ48Vv8hvyMcmx+mxfZnQ=;
-        b=ZysoJr/bkv7B/nRm+xmEmIAmdRL779VXMFjWCg12o3rgCxWhaJHoTj4iJ9VZ1Ym53X
-         19C5QdGNCrtjd3cIbdYY0VV2S8QSN5Tx1NFAlnHeR51MDxOv6pCHa5a/dbBo4JQPoYec
-         +8oJVpug5xk62+e5peTJC2og6h8JcssFTFR9Ba5VXMmQO4u5oLegCQIbDGnPPiINlKTe
-         jFR9gGAQp5zUPVvX7XyVAaHPAiLV6Wxif5HAy/biTwmW90hckZTZT8Ew7u/+eyDIR2Qj
-         SXJBIcUj43bgFcl97dNLf4MDyE6aWZuoxBvy6fKb2LeuxHHne9IlmRGX3sblGeu6sYBF
-         +AMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuagJ8uBI2pcxpRhOM2ja5QfjokfS7em7eYIIC4+vs2KdD1IHJssSGzzgEx7ZUadDG62yij55rohs=@vger.kernel.org, AJvYcCXJ71e8FMjOCxOmcT+kNu0X/Zt9uEPBc0BA8hXZB+hj0ldKNVoAW7wfm8C/f9Sed2+Ivts99SgsE248uoqO@vger.kernel.org, AJvYcCXgxv66vCOIocUdglkT6MqFS/3GyqwcYFD29w0Yy1mR1P2HtMw40/j63FbLxASx5xEhFeCkvKuDrx2HDS4Xn5CoxRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUtU8dxPDHpTxIQWhhzIbOZRVH80uXZigKZN8sGGja2iSLBaSu
-	dt7buAhc+Iftkt12dCRnSFjQJxhXRJbQtdGWvQYMCYY3anYEUfU21Qp8/TUA
-X-Gm-Gg: ASbGncseCxZFa0Wm+j7OplCOJgnr9K56cfXgbhmSO9vOpdpee3Chyj0jKT0/D+IqSgD
-	sSg5NCBNd/Y4ZOohjdAaX3IntWLDICzwpy99N9LG9r8m445CZx9waszybK5nVn8gkzfGxfnw1Ui
-	iEzTkBCLT6NSmp20Mk2O8Cko5aaYXXXWM7IvWwpA3AZv+XI0os1JqkQlX+6hAEr1UD0pjjxySfx
-	xQ2o3NWrPcg8UTnbASUTU45ytt0Y5vzVI312IKbD93BTruL0gDGwPA7Mk8NODVnDmpzpvYO6oBG
-	sEAqU6QfJmwn8s7sT+cqx4FM652/FNLvrzVxdsBDFGI4JMJcadi/xUk+Ou4crPKS5qWY96+An3m
-	9piA=
-X-Google-Smtp-Source: AGHT+IHZrFCA/RqsRFDOhWaEqQLAbfWXi2jesv4HS7p+A8Max+urozTf7xeCHSx5A6z+gmLMLXeExQ==
-X-Received: by 2002:a05:6102:c06:b0:4bb:b809:36c6 with SMTP id ada2fe7eead31-4d38dc19ccemr1399255137.11.1745483080841;
-        Thu, 24 Apr 2025 01:24:40 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4d3d4e9c417sm159583137.9.2025.04.24.01.24.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 01:24:40 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso331702241.1;
-        Thu, 24 Apr 2025 01:24:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUqs+knq8vnREjXRsEUtdemeiiQ2bk6DQrYN/lI7p37zt1Jrwf9aJ9fiV1iOYYVKS2KNO9WfgL8iaU=@vger.kernel.org, AJvYcCXHuyls24IARSAt9MMfQT80/a3Wd1nRRUfsenhj/qaJugCXypfeWwkcnppTOfwBcPeBhbziTcgyLlUWiI3l6X30W6k=@vger.kernel.org, AJvYcCXZqiUm9LOPDaKT32+t/WGNw7s9QX2EjQfuFur3/FEpmFlHEB9C0BGjQCYTIEYZyj3voIOhDv8N3OMcONet@vger.kernel.org
-X-Received: by 2002:a05:6102:508c:b0:4c4:fdb9:2ea with SMTP id
- ada2fe7eead31-4d38d524305mr1285747137.7.1745483080095; Thu, 24 Apr 2025
- 01:24:40 -0700 (PDT)
+	s=arc-20240116; t=1745483103; c=relaxed/simple;
+	bh=/kURxAv85/R9nmfKxscR2c+P1UMMh/RofM96bZm11kE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gEnxlTGv7HYQNEasWNeCmlWk8h8sLb0S8GqEJtvwJtqgovEQ+xobJy1RI8R9wvpSxzs58Nze7s8ndzJ50k/O9G5ihU7LmmTyPeAy5TQT5Kh42j6sTAjE/TnolgpbUfcTYvmRx+1VUhh71OkXybROSrkXYYcvrgKsEgMpDCd3xXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AWZPp1dh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AWZPp1dh"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F7Gr013249;
+	Thu, 24 Apr 2025 08:24:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Yj3QKd2vXLmrqdOQoEJB7FhdvGD+3GnjwQ2O9St9B+s=; b=AWZPp1dh7KLYuQjR
+	y08OWS6aPBTT+zrXkDGJ4VxR7MlADYQsC99Na5f+egc2RohUhNyiRdIQWOOS5qSd
+	G6ONaxLlpiDZG++ECV+okdJyTCkFJtBcO5ahOH9aiavcDIiPaAr6uJK1tt/5ANpv
+	UBHpzyz+bXvN5o/zEBZ57eMBoxCLhJXh7++h4C1/zc580r3NoDe0Edh+e/o2+EGN
+	dKt2KiSP+WIIOftaR+m1X9i39ShZjHLebcSnGmeKnIDQTSmUBfn9mY4NujEATkIp
+	3U5AspMSph0m/Q3xQlz1INfeqOxtFa8/CCMT5i/Uz5e2nUlSBxS3vpAUQVnrkj17
+	+Xie4Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2cshq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 08:24:56 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O8OtLr029078
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 08:24:55 GMT
+Received: from [10.239.132.205] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 24 Apr
+ 2025 01:24:49 -0700
+Message-ID: <bf865b42-fcfc-4bc7-8fc9-56b8b26b8ef8@quicinc.com>
+Date: Thu, 24 Apr 2025 16:24:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com>
- <20250403212919.1137670-7-thierry.bultel.yh@bp.renesas.com>
- <CAMuHMdVpiZ+F0TMbLm000M_Scwozj2-SHPrUwTHqFKckVcmufQ@mail.gmail.com>
- <TYCPR01MB11492BCF416760E978541AFE18ABF2@TYCPR01MB11492.jpnprd01.prod.outlook.com>
- <CAMuHMdVQPbP0Fi5SDN8uOJ23S=_8pqHRVR2QFS8vHNfohzae2g@mail.gmail.com>
- <TYCPR01MB11492F29C81C6A33A9ED90F888ABA2@TYCPR01MB11492.jpnprd01.prod.outlook.com>
- <CAMuHMdUV-kHD7BZ7zU71f8GD4sKqSnSTfoDhTU+s8wyVfXgq=A@mail.gmail.com> <TYCPR01MB114927B2ECBF040D48CB460CE8A852@TYCPR01MB11492.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYCPR01MB114927B2ECBF040D48CB460CE8A852@TYCPR01MB11492.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 24 Apr 2025 10:24:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVWPzbN7C05H5v-pjaohJJ1uprmPmWjcY61hsVk=_35Ow@mail.gmail.com>
-X-Gm-Features: ATxdqUGt-mj0oN1VU3WvXubGWzX6m6hwzDgb5qAY0Ye5AFSVfDRqlBgLe6vYLyA
-Message-ID: <CAMuHMdVWPzbN7C05H5v-pjaohJJ1uprmPmWjcY61hsVk=_35Ow@mail.gmail.com>
-Subject: Re: [PATCH v7 06/13] clk: renesas: Add support for R9A09G077 SoC
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: "thierry.bultel@linatsea.fr" <thierry.bultel@linatsea.fr>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: qcs615-ride: enable remoteprocs
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, <kernel@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250423-add_qcs615_remoteproc_support-v1-0-a94fe8799f14@quicinc.com>
+ <20250423-add_qcs615_remoteproc_support-v1-6-a94fe8799f14@quicinc.com>
+ <n3o4a7jokelces4jioccoub26ikwpeyzuc4ac5uzvumqkilha6@gc7w3qpb23q4>
+From: Lijuan Gao <quic_lijuang@quicinc.com>
+In-Reply-To: <n3o4a7jokelces4jioccoub26ikwpeyzuc4ac5uzvumqkilha6@gc7w3qpb23q4>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Ff19Aj6UQu-9WTQ2KsaQyMveLYpME24n
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA1NCBTYWx0ZWRfXyubPYz8q9T74 2E7JoldZi2wH01DFmNr700G0oTa8GcEx7wwtIB/nhHT3jupg5ar6BBtwmm8Ac/MH5AriJreUJlT GLTV2Gc3B1o8EGmAsrJkId0TO1/atYMjVEWVyvLRKH1fymbK1CnXf9MKFOFInMqQlX99gCUSbbw
+ d2o5/p0oZgftWIxcCwp+YC5fRFtDPYb6hIQwDgax+aozUJwecUR939auZr+Fdf3KT/gan5zzvzY zZkM2FAZC9hskeL9TW/GXchwd7NL4aDgh4BGNbqNpebrByMRMw495wD8bb4TX16bCYCfQWoJCPJ 9NrvgenuUz9qeE5VXZ8v/RI+JOyI054trGub9VpKMfGqAVQWCefuI8saur64kQZREG8UbR2GFHJ
+ r9ujbbdx7Zmx7AyEd1RzPtw/qC/7jHEAr9SmK/OwMm0FnuEYkQvcywTkSPfxKz4+hssFNScv
+X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=6809f558 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=wT7F-tmgBku578Ps1UwA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: Ff19Aj6UQu-9WTQ2KsaQyMveLYpME24n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=833 bulkscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240054
 
-Hi Thierry,
 
-On Thu, 24 Apr 2025 at 09:53, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Wed, 23 Apr 2025 at 09:36, Thierry Bultel
-> > <thierry.bultel.yh@bp.renesas.com> wrote:
-> > > > From: Geert Uytterhoeven <geert@linux-m68k.org> On Fri, 18 Apr 2025
-> > > > at 23:22, Thierry Bultel <thierry.bultel.yh@bp.renesas.com> wrote:
-> > > >  > +};
-> > > > > > > +
-> > > > > > > +static const struct mssr_mod_clk r9a09g077_mod_clks[]
-> > > > > > > +__initconst =3D
-> > > > {
-> > > > > > > +       DEF_MOD("sci0", 108, R9A09G077_PCLKM),
-> > > > > >
-> > > > > > Shouldn't that be 8 instead of 108?
-> > > > > > Using R9A09G077_PCLKM as the parent is a temporary
-> > > > > > simplification,
-> > > > right?
-> > > > >
-> > > > > I am probably missing something, isn=E2=80=99t PCKML actually the=
- parent
-> > clock ?
-> > > >
-> > > > According to Figure 7.1 ("Block diagram of clock generation
-> > > > circuit"), it is PCLKSCI0, which can be switched to PCLKM.  I guess
-> > > > that is the default, hence my "temporary simplification" question.
-> > > >
-> > > > As the actual switching is controlled through the SCI's CCR3
-> > > > register, the SCI block should have two clock inputs in DT (PCLKM
-> > > > and PCLKSCIn), and thus the DT bindings should be amended.  See als=
-o
-> > > > Figure 33.1 ("SCI block diagram").
-> > > >
-> > >
-> > > Thanks for clarifying.
-> > > Indeed, this is the default setting (and the one we have at this stag=
-e).
-> > > I think that support for PCLKSCIn can be added at the time we support
-> > > baudrate setting.
-> >
-> > I am not sure we can do that in a clean backwards-compatible way.
-> > Currently the DT bindings describe a single clock:
-> >
-> >   clock-names:
-> >     const: fck # UART functional clock
-> >
-> > The documentation calls the two clocks:
-> >   - Bus clock (PCLKM),
-> >   - Operation clock (PCLKSCIn).
-> >
-> > Which one is the functional clock? I'd say the latter...
-> > Currently, DT says:
-> >
-> >         clocks =3D <&cpg CPG_MOD 8>;
-> >         clock-names =3D "fck";
-> >
-> > and the clock driver uses PCLKM as the module's parent clock, I think y=
-ou
-> > will have a very hard time to synchronize all of the clock driver, sci
-> > driver, and DTS when transitioning to something like:
-> >
-> >         clocks =3D <&cpg CPG_MOD 8>, <&cpgR9A09G077_PCLKM>;
-> >         clock-names =3D "fck", "bus";
-> >
-> > where the modulo clock has to become PCLKSCIn (actually SCInASYNC, as s=
-een
-> > from the CPG).
-> >
-> > Does that make sense, or am I missing something?
->
-> You are right, I completely understand how hard it would be to have backw=
-ard compatibility.
-> However, doing so:
->
->                 clocks =3D <&cpg CPG_MOD R9A09G077_PCLK_SCI0>, <&cpg CPG_=
-CORE R9A09G077_CLK_PCLKM>;
->                 clock-names =3D "fck", "bus";
->
-> without modifying the sh-sci driver (yet) would lead to this bogus clk_su=
-mmary:
->
->   clock                          count    count    count        rate   ac=
-curacy phase  cycle    enable   consumer                         id
-> -------------------------------------------------------------------------=
---------------------------------------------------------------------
->  loco                                0       0        0        1000000   =
-  0          0     50000      Y   deviceless                      no_connec=
-tion_id
->  extal                               1       1        0        25000000  =
-  0          0     50000      Y   clock-controller@80280000       extal
->                                                                          =
-                                  deviceless                      no_connec=
-tion_id
->     .pll4                            1       1        0        2400000000=
-  0          0     50000      Y      deviceless                      no_con=
-nection_id
->        .sel_pll4                     1       1        0        2400000000=
-  0          0     50000      Y         deviceless                      no_=
-connection_id
->           .sel_clk_pll4              1       1        0        2400000000=
-  0          0     50000      Y            deviceless                      =
-no_connection_id
->              .pll4d1                 1       1        0        2400000000=
-  0          0     50000      Y               deviceless                   =
-   no_connection_id
->                 .sci0async           1       1        0        100000000 =
-  0          0     50000      Y                  deviceless                =
-      no_connection_id
->                    sci0              2       2        0        100000000 =
-  0          0     50000      Y                     80005000.serial        =
-         fck
->                                                                          =
-                                                    deviceless             =
-         of_clk_get_from_provider
->                                                                          =
-                                                    deviceless             =
-         no_connection_id
->
-> it is wrong because the actual default state is that PCKLM is used, not s=
-ci0async.
-> Having PCKML consumed by sci0 is an obvious fix in sci_init_clocks, but i=
-t won't show up that only one clock is used at a time.
 
-So your rsci patch should modify the sh-sci driver to handle this correctly=
-...
+在 4/23/2025 9:40 PM, Dmitry Baryshkov 写道:
+> On Wed, Apr 23, 2025 at 05:17:42PM +0800, Lijuan Gao wrote:
+>> Enable all remoteproc nodes on the qcs615-ride board and point to the
+>> appropriate firmware files to allow proper functioning of the remote
+>> processors.
+>>
+>> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+>> index 2b5aa3c66867..b0db2c3ad409 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+>> @@ -240,6 +240,16 @@ &qupv3_id_0 {
+>>   	status = "okay";
+>>   };
+>>   
+>> +&remoteproc_adsp {
+>> +	firmware-name = "qcom/qcs615/adsp.mbn";
+>> +	status = "okay";
+> 
+> Empty line before status properties.
+> 
+I see, it will be updated in next patch.
+>> +};
+>> +
+>> +&remoteproc_cdsp {
+>> +	firmware-name = "qcom/qcs615/cdsp.mbn";
+>> +	status = "okay";
+>> +};
+>> +
+>>   &rpmhcc {
+>>   	clocks = <&xo_board_clk>;
+>>   };
+>>
+>> -- 
+>> 2.46.0
+>>
+> 
 
-> Couldn't it be better be solved by introducing an extra mux clock ? (the =
-one controlled by BPEN) ?
+-- 
+Thx and BRs
+Lijuan Gao
 
-I don't think that will simplify anything:  as the BPEN bit is located
-inside the RSCI register space, that mux clock must be handled by the
-sh-sci/rsci driver itself, so you cannot just refer to it in the clocks
-property in DT.
-In theory, several other control bits (e.g. BGDM (Baud Rate Generator
-Double-Speed Mode Select), ABCS (Asynchronous Mode Base Clock Select),
-and ABCSE (Asynchronous Mode Extended Base Clock Select) in CCR2)
-could also be modelled using the common clock framework, but that
-wouldn't simplify the serial driver...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
