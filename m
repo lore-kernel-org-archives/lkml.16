@@ -1,206 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA92813B58A
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AFC13B58A;
+	Thu, 24 Apr 2025 08:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484594; cv=none; b=D3sDQy9yKADzr4xEyD5oP2oYoCpg1+yfHmNdUOhPSDEhEdPyzVMmbm+HoUCA0lIl9eLFIHN+P9h960MKLIV39HdeEZ4T7SA87dEjnbfnhwEd+Q/IMteaFOzQrOZvth9XUEI9cp0xAgDGP/R0kXUsrxYohsUiy+tAbnnBeuWoKQc=
+	t=1745484629; cv=none; b=qoSOCCev2bYM3rRFolNWFdASf1635YGuKcX3FukHfyur8Cc9lw3B/a9LJzDo+iJfVHYMP5n4h5Ks1nfUaUZE838o34HUNKBI/WGGM0qoEEsvKyQLmfu3yx8tPRg3jMS3xJGjIU8oy7R/IiUH7d5ob3Zk0WDDap6AVerTncJvBv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484594; c=relaxed/simple;
-	bh=Om4JRNVymGuc3sz0zva+opvIkgXrCXZRv+XehyXPvHs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=CVRN1drMNu6dro+PYWQlpCgz0vGzjITECk0qqc1BjnlnibwBX3duLtf+zLGeqEvYyANUibwJ8JCkSfbZN1PRub75+VN3d+zYsTaaz3z8bI68aoPfjnJd9NU692D9asCZ9iDisGDLh/PRpl37XRoRfpiX/74IjhIS7PCv7AMlBdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cS6+oFjf; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745484629; c=relaxed/simple;
+	bh=s/xjxH81nfhobfanoVxHjL/I3uP/Vbv6gkNi09tXOug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jc9FAMz0QLmpeEGAReGH4Jixpp+8RxwNmgK+M683Fd4zUdKBbkZeEWat4EvFyvcjBtPd11L1KHqY12X4zZagpXTEyoHGNi7IQ8/+0G6WxaEEu8cnc1Clou8r8ON4gog3z0eXcuSY8ZJU4/+iHjfqm2N2tGoChxJ8cAUO0KIBr1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uPaIs8zN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cS6+oFjf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745484593; x=1777020593;
-  h=date:from:to:cc:subject:message-id;
-  bh=Om4JRNVymGuc3sz0zva+opvIkgXrCXZRv+XehyXPvHs=;
-  b=cS6+oFjf29EHYckK2ZoXwH6XVbvKWl+Q2hS55gcYhit9neWFTdA1OMD4
-   GEI6qSx4vPkNfQogQoWovxD6VZnOmPbmlXZpT01ej/rbZVMX72YcBbGTG
-   3haQr4S5+hXQgSX94E51BCvlT2ABZT0cH2MMZvl1f9Atj4nMHciaaUEhE
-   j+JVZmBkC+zq3S5CdtP1wqlRdNPuObd5ui+nv8EOPRLpBdv3l1RfwttSX
-   gZggW12VzCUh/5qaTVYzdiJq581PdasurRsC9mX75G3iZ09a2sTtY1fLN
-   jwxBKU0ybuprvpWLhpWK/PXohlo2WpzWGS+M0NTnNTmaH5Zmh/J5wpXIW
-   Q==;
-X-CSE-ConnectionGUID: Cppp0dilSjumI/Ihmw2flQ==
-X-CSE-MsgGUID: ab7VoyJXTGS7+mo9Yp91HQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58477394"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="58477394"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 01:49:50 -0700
-X-CSE-ConnectionGUID: IkRV6L/fTvaeHZnuTptbuQ==
-X-CSE-MsgGUID: 0hnVSnztS1Wen9SO+trSnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="163534853"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 24 Apr 2025 01:49:49 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u7sHC-00040K-2c;
-	Thu, 24 Apr 2025 08:49:46 +0000
-Date: Thu, 24 Apr 2025 16:49:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 6fe20f70360a01faeaf6a62f9faa395f4473130e
-Message-ID: <202504241606.WQeVsfh8-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uPaIs8zN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0504FC4CEE3;
+	Thu, 24 Apr 2025 08:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745484629;
+	bh=s/xjxH81nfhobfanoVxHjL/I3uP/Vbv6gkNi09tXOug=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uPaIs8zN4QMyUEFKHFX/R5BUNROD57WEUMwVXABv/DfhswMS9yMf2YS/ogJ8yEw4Z
+	 ZZvt82QUxowT7LgfUv7nuljTMDCdjnCfTkKr10DE4bmq4RtlPWbv4Q3olyyURsGtkN
+	 kMfCFRCOFMzhW4wSRh5GSOH7QX0zmsa3GBIMLCfT1w0yZpKtIm9DmnhIAo0vr20jRM
+	 pLwcEbDckyLv3ZkcZcYr+5abl0IM3opLMnGjcx3p1BX6t1XvVAEmTIGkb7+iOmQJiw
+	 oT+RNparrLrZL338r8OWr73ICp1ZbQGJQQ5etH6FGG4AbrMy5ia23VRbzjBQUwdoJI
+	 Vy0dQGIN2Qe3w==
+Message-ID: <d978a394-40c0-442c-82b5-58abfaa19f64@kernel.org>
+Date: Thu, 24 Apr 2025 10:50:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] dt-bindings: ASoC: Document Tegra264 APE support
+To: "Sheetal ." <sheetal@nvidia.com>, broonie@kernel.org,
+ linux-sound@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jonathanh@nvidia.com, thierry.reding@gmail.com, mkumard@nvidia.com,
+ spujar@nvidia.com
+References: <20250422072805.501152-1-sheetal@nvidia.com>
+ <20250422072805.501152-2-sheetal@nvidia.com>
+ <af965f9a-97c9-4e80-8d28-06532b16e80b@kernel.org>
+ <22d4729d-590d-4082-ad02-7d4fdbfd08b6@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <22d4729d-590d-4082-ad02-7d4fdbfd08b6@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: 6fe20f70360a01faeaf6a62f9faa395f4473130e  Merge branch into tip/master: 'x86/sev'
+On 24/04/2025 09:12, Sheetal . wrote:
+> 
+> On 23-04-2025 18:16, Krzysztof Kozlowski wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On 22/04/2025 09:27, Sheetal . wrote:
+>>> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-graph-card.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-graph-card.yaml
+>>> index b4bee466d67a..ee33f056b125 100644
+>>> --- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-graph-card.yaml
+>>> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-graph-card.yaml
+>>> @@ -21,6 +21,7 @@ allOf:
+>>>   properties:
+>>>     compatible:
+>>>       enum:
+>>> +      - nvidia,tegra264-audio-graph-card
+>>>         - nvidia,tegra210-audio-graph-card
+>>>         - nvidia,tegra186-audio-graph-card
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-asrc.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-asrc.yaml
+>>> index e15f387c4c29..26e1ed7ec7a7 100644
+>>> --- a/Documentation/devicetree/bindings/sound/nvidia,tegra186-asrc.yaml
+>>> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-asrc.yaml
+>>> @@ -31,7 +31,9 @@ properties:
+>>>
+>>>     compatible:
+>>>       oneOf:
+>>> -      - const: nvidia,tegra186-asrc
+>>> +      - enum:
+>>> +          - nvidia,tegra264-asrc
+>>> +          - nvidia,tegra186-asrc
+>> Keep proper order, not random, not reversed.
+>>
+>> <form letter>
+>> Please use scripts/get_maintainers.pl to get a list of necessary people
+>> and lists to CC. It might happen, that command when run on an older
+>> kernel, gives you outdated entries. Therefore please be sure you base
+>> your patches on recent Linux kernel.
+>>
+>> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+>> people, so fix your workflow. Tools might also fail if you work on some
+>> ancient tree (don't, instead use mainline) or work on fork of kernel
+>> (don't, instead use mainline). Just use b4 and everything should be
+>> fine, although remember about `b4 prep --auto-to-cc` if you added new
+>> patches to the patchset.
+>>
+>> You missed at least devicetree list (maybe more), so this won't be
+>> tested by automated tooling. Performing review on untested code might be
+>> a waste of time.
+>>
+>> Please kindly resend and include all necessary To/Cc entries.
+>> </form letter>
+> 
+> 
+> I realized after sending the original series that I had missed the DT 
+> reviewers and already re-sent the complete series including the DT 
+> reviewers, with the subject prefix |*"RESEND PATCH"*|. Please review 
+> that version and ignore this one. Apologies for the inconvenience.
+No, you got review here, so implement the feedback.
 
-elapsed time: 1454m
 
-configs tested: 129
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250423    gcc-14.2.0
-arc                   randconfig-002-20250423    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                       aspeed_g4_defconfig    clang-21
-arm                   randconfig-001-20250423    gcc-10.5.0
-arm                   randconfig-002-20250423    gcc-10.5.0
-arm                   randconfig-003-20250423    gcc-7.5.0
-arm                   randconfig-004-20250423    clang-21
-arm                             rpc_defconfig    clang-18
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250423    gcc-5.5.0
-arm64                 randconfig-002-20250423    gcc-7.5.0
-arm64                 randconfig-003-20250423    clang-17
-arm64                 randconfig-004-20250423    gcc-7.5.0
-csky                             alldefconfig    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250423    gcc-13.3.0
-csky                  randconfig-002-20250423    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250423    clang-21
-hexagon               randconfig-002-20250423    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250423    gcc-12
-i386        buildonly-randconfig-002-20250423    clang-20
-i386        buildonly-randconfig-003-20250423    clang-20
-i386        buildonly-randconfig-004-20250423    clang-20
-i386        buildonly-randconfig-005-20250423    gcc-12
-i386        buildonly-randconfig-006-20250423    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250423    gcc-14.2.0
-loongarch             randconfig-002-20250423    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip32_defconfig    clang-21
-mips                   sb1250_swarm_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250423    gcc-11.5.0
-nios2                 randconfig-002-20250423    gcc-9.3.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250423    gcc-12.4.0
-parisc                randconfig-002-20250423    gcc-12.4.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                      pcm030_defconfig    clang-21
-powerpc               randconfig-001-20250423    gcc-9.3.0
-powerpc               randconfig-002-20250423    clang-21
-powerpc               randconfig-003-20250423    gcc-9.3.0
-powerpc                        warp_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250423    gcc-5.5.0
-powerpc64             randconfig-002-20250423    gcc-7.5.0
-powerpc64             randconfig-003-20250423    clang-18
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250423    gcc-9.3.0
-riscv                 randconfig-002-20250423    gcc-7.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250423    clang-21
-s390                  randconfig-002-20250423    gcc-8.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                          r7780mp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250423    gcc-7.5.0
-sh                    randconfig-002-20250423    gcc-13.3.0
-sh                           se7619_defconfig    gcc-14.2.0
-sh                           se7722_defconfig    gcc-14.2.0
-sh                             sh03_defconfig    gcc-14.2.0
-sh                          urquell_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250423    gcc-6.5.0
-sparc                 randconfig-002-20250423    gcc-6.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250423    gcc-12.4.0
-sparc64               randconfig-002-20250423    gcc-12.4.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250423    clang-21
-um                    randconfig-002-20250423    gcc-12
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250423    gcc-12
-x86_64      buildonly-randconfig-002-20250423    gcc-12
-x86_64      buildonly-randconfig-003-20250423    gcc-12
-x86_64      buildonly-randconfig-004-20250423    clang-20
-x86_64      buildonly-randconfig-005-20250423    gcc-12
-x86_64      buildonly-randconfig-006-20250423    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                  cadence_csp_defconfig    gcc-14.2.0
-xtensa                          iss_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250423    gcc-8.5.0
-xtensa                randconfig-002-20250423    gcc-8.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
