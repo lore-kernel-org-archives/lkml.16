@@ -1,62 +1,62 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39686291158
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEC12918DC
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513463; cv=none; b=JaEPwfmzkbPaUTNleRq63P7DLnj5i2fzmGW6yTmD2KAnUDQAZmXjhDEK5mpxzuzrJw1IK2fKg89ki1rkcd8VAZai1uBKGXzOGDFUxkzJPnp5VBoF7WebDI1oOrurupXFjW9j+XzErfvdwQpNWPduVk7ZVlfWKWH9Xq30VD6lheQ=
+	t=1745513466; cv=none; b=TLzeFUcGxT3tWUOeC7z3V6JvKqT1M9FaQR/t38z2RS14MFiQJ8IDHQwozkoPliTMw3Kv7Kj10X0lXDZz0Q3nAHoncHja6KlReO0/ivlmWAafX645oRRdVgmMpFx5944qPlOOoB+C2+j4oIWGZ4VCnytGYpP/5D6NtHtWImkefTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513463; c=relaxed/simple;
-	bh=hUi0pMy5Cqhathph59WzODpUH0Rto3mKQRA3vrZzR4s=;
+	s=arc-20240116; t=1745513466; c=relaxed/simple;
+	bh=j0DoxpKjCJhhU+yir274VL1deTlL0JGM8AR24S7KyNw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bZEk4OQsRoQP/W+f4DZ1Udk307pmQ1TYCeIrGEjzHLf35FLcNAvInLhyY43VzJNf7ZGrN7hKkO41+E8j/OMvE0jZ65yydusP20jC3AglfOpuwoxgnSi+e/X/OJl26EUUt9XJPjBLY7u2sB+cxXSgDHR3sU+gqmeRSlBt7kVmNBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=qFgtL46t; arc=none smtp.client-ip=209.85.210.45
+	 MIME-Version; b=gYcmf6eUGanmyhrN22aX/upBX/vI+hL8d3IzRjAJC8UCIslWrYiJL92NVDNyobq/fpoPw0lZcFRwUPd7izre2dbKRCB17Sa+D5XTTkmnfFmxB26R7cJJGR20mvDbeoi2DjJAvteiZL4hDgz6IC7QDjy3DenrlzzVYk4T3SxKZkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=dF4pnKU1; arc=none smtp.client-ip=209.85.167.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="qFgtL46t"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bc3987a05so758918a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:51:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="dF4pnKU1"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3fa6c54cdb2so1197297b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513461; x=1746118261; darn=vger.kernel.org;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513464; x=1746118264; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hBLLv3lBQauMahCNm+2PIxA3w9/5v8v0uZ/gJ4AQluo=;
-        b=qFgtL46tEtdRpVHQs0HJxAjypVmFnZGjmsMG1kY3RHenETGYUvF/FNnhwZjs2+yLnX
-         JO0IF6cbdEqAEPnBi8XOJjSWG+C8AJsAdxOu6tYpdmyC3hgxUSc7SrxdDRgHukUNovU8
-         hmA3Wi32sTTFuym5deS5MqV/rP27IvmYfPzZiSu4zk7ePK1Q4GJAAHWWygJpa3GYmvxw
-         YE9Afl2yILrp6d5C9Kyn6DAWrZ8Ymfr1mc58zoQu/HVzwN0v1DOzqi8EUl1qjvqATIk3
-         dzzhsYlWJPy/hiJ5wndHN90Fp7tqyuAutm2+BbHvHeQPiTF7KNt/2QHv6EDLtJcHcU/N
-         fofw==
+        bh=VH64OM6I6nosuLY4RSxIBPH85WXV+oEeTJ6j2dq97QM=;
+        b=dF4pnKU1O7aWBqtFZRkV3P9THmkTIMUrFhSezKUKutrt/Hh4qb1eJCG9jnud0eKiCu
+         pkLlIfLUN5WzcmDEY61TDEYd0/aLKAJ8+pjUt6ojKiVpPPvSTnsVVUsAF9PDtz3iVm8q
+         /Rir2VL9LmQ4nCCeUkmJrAFOfa+DBUXvMy6Xzwe6FoEfivEnXn6/Iy08Dye0ZIjDMx7x
+         K3ZlRM61N5m5e/hpNCyikEUCVJ2ARn6HyHFSsGn0mb+bSSCErDPpQinWxbfOUllXG9uT
+         oXfn/ywnoSDdcGyPNBf8eBMOOraqGamLWdOTJn095uAYK/O0XeVKJLGqXIhs4aRyaG2x
+         7svQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513461; x=1746118261;
+        d=1e100.net; s=20230601; t=1745513464; x=1746118264;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hBLLv3lBQauMahCNm+2PIxA3w9/5v8v0uZ/gJ4AQluo=;
-        b=Aa8XElxh9XX+uL+EECvpLgErus/nAkaaP1Kx3bQkpJChirPRzelpImpMZksEXYo0nS
-         c7HtXBMfhCa5tXfscjpu3MJYYMSG0rjyg0p956CBs/jfSb6xh3qaVc2OB0KcBj/i/510
-         i9zY+T1DKkYdwLmOcveUcoxRSSuiWrQmZCzKfgtAmmqvjOVg1eqJEFkiY089jXyqbQi0
-         mxrxcx0GUgaxbygpcJjd53/lzGf7q6yY+tME09Ym6y4ZezZ+UUiU/a0PhvSb0LpCXRxn
-         YZ9zavtdyGtpSRPhbFSfymPejf+UUs9bcJE9af/CVF96BQ56xHBaAcRcnyYPtIH/3dII
-         s9LQ==
-X-Gm-Message-State: AOJu0YxXI+0mDmG6wSXGq1teneaAj2ZDI1yoozT0VclAi9oOWhN6Ac5S
-	CaR3cqoTalbaC0ZtijtH8Pg/p2460a9PTMM9lreG73bJbaJSe3Eg4cAUtOP9aob2LWtwCnUM2nu
-	m
-X-Gm-Gg: ASbGnctCMCyOeABoM8Ws4hRlRmsT+VfBXnJkmxI+PXeTYYoHoxEosYaBG53+OI/Ch+l
-	Yzee6f/N146SSiSzZmEVeravfcyaSTlpWqTc1Z+nI6c8hiGU7wUQj59Qurlup9kzeHQm4u7bzaG
-	RP/VYeuq1HfgNIIDzewvtqo4QS33bHC6efjwqXkjwINYDbCcFyHhJTzdLB9QXfCO4MF8QsNum4s
-	IfOdsVa3W8LT4Wet4P5P9M/JX/SnzG2pk65IKaD3Bjxt7/z3XVDU4UeWN5A2nMo6qT61bJ3ttgc
-	a6qh4Up0BS+FaOw7K+08rKWeNxzFWBSS8rkJGkXSdV0sqQ==
-X-Google-Smtp-Source: AGHT+IE8rOflQid2RZybnE7oYt//PQVoakrhLTkTbYiVydjxxNfwTgHdK3bahsZQOYX2nqAIz9IazQ==
-X-Received: by 2002:a05:6830:620d:b0:72a:b78:1c5a with SMTP id 46e09a7af769-7304fab52c2mr2030378a34.10.1745513460875;
-        Thu, 24 Apr 2025 09:51:00 -0700 (PDT)
+        bh=VH64OM6I6nosuLY4RSxIBPH85WXV+oEeTJ6j2dq97QM=;
+        b=ssBgtKcpy+XNjv+oYEKjfCIj30e1zp9ZO8xcUo06sDtaIT3LhpDvGaCwzvYsmIqgxc
+         88a89meUu/yxyq8M+itftk/AExZVxXkSQXOtcekfZ9LJ/H0b0Z5sWlWAmxnoyu9JqNvS
+         kk9CoTEJUjnQU2P5FgN8YtQkjQsdzDSjIP8DNgifah1aJ3kVOYReAjqEnliyhhhL6mk5
+         JXjTknKTmoV1NmDShuGbg6WuzAwK5GOkl4rye5CAsQNOYZCRgFBiNUIGRlhBH2x06KjP
+         5EkBBPIO0kdlJn+pomWjlp+1KtLKuvAbQ0VOdmgc6P+4ANCcX2NTzQqjDCCoUaptgElt
+         HsEQ==
+X-Gm-Message-State: AOJu0Yxh/cc469fbxI2R2VpHonN5QYx47HL18Dsuf+J5KjYCVFsHJV35
+	ZPSXW4tvtTizDYflCJzmj2u2jEk/Q0WFfBQ8sw0USJssSPUk5WeNpUHZOTTJsSxNYi0U9bXedpk
+	H
+X-Gm-Gg: ASbGnctAfMGmfVzB9IOCwKFHdUqwT5wY7rXhSvnlklT8AD7bwKnBYVNKcSEtBb6LC42
+	rf6AsGA9aLACHex6qHu94fKE/EcP9mWBrAioGIt6B3padQM/JkNeM0m1eJzs21zklvs1sSGC1Hy
+	p8uhaMNlfM5LXiZmEbLJKJpyeItnvmEuBK7pVO2PLXMf9xij+O3QgZ+50n+8s6S1uh/YrdLHo+n
+	sqPTaHkWj9qOZOEmglFsqqBRxSN6EXuebMfCW4y/4nimr8Hzm9PsZ5KHOCrjV4m9e/kS1JXHtaO
+	8rMpPbKQYxoSquPb3CedXyJQGoEL6kYfCms=
+X-Google-Smtp-Source: AGHT+IHEXQA1OTb7rMWfEAZZ0DvXP5Khkqdlv7WV286ube6xvxznKifB3RDkqvSozgqpVp+14zNUjw==
+X-Received: by 2002:a05:6808:6a89:b0:3f8:f8c6:5500 with SMTP id 5614622812f47-401f1254c03mr56299b6e.34.1745513463964;
+        Thu, 24 Apr 2025 09:51:03 -0700 (PDT)
 Received: from localhost ([2001:470:b8f6:1b:af2e:7abf:8abe:2726])
-        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-7304f1a62absm301288a34.28.2025.04.24.09.51.00
+        by smtp.gmail.com with UTF8SMTPSA id 5614622812f47-401ec8b0484sm306647b6e.4.2025.04.24.09.51.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 09:51:00 -0700 (PDT)
+        Thu, 24 Apr 2025 09:51:02 -0700 (PDT)
 From: Corey Minyard <corey@minyard.net>
 To: linux-kernel@vger.kernel.org,
 	openipmi-developer@lists.sourceforge.net,
@@ -65,9 +65,9 @@ Cc: "Paul E . McKenney" <paulmck@kernel.org>,
 	Breno Leitao <leitao@debian.org>,
 	Corey Minyard <corey@minyard.net>,
 	Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 19/23] ipmi:msghandler: Don't deliver messages to deleted users
-Date: Thu, 24 Apr 2025 11:49:56 -0500
-Message-ID: <20250424165020.627193-20-corey@minyard.net>
+Subject: [PATCH 20/23] ipmi:ssif: Fix a shutdown race
+Date: Thu, 24 Apr 2025 11:49:57 -0500
+Message-ID: <20250424165020.627193-21-corey@minyard.net>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250424165020.627193-1-corey@minyard.net>
 References: <20250424165020.627193-1-corey@minyard.net>
@@ -79,67 +79,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Check to see if they have been destroyed before trying to deliver a
-message.
+It was possible for the SSIF thread to stop and quit before the
+kthread_stop() call because ssif->stopping was set before the
+stop.  So only exit the SSIF thread is kthread_should_stop()
+returns true.
+
+There is no need to wake the thread, as the wait will be interrupted
+by kthread_stop().
 
 Signed-off-by: Corey Minyard <cminyard@mvista.com>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ drivers/char/ipmi/ipmi_ssif.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index c72ff523216c..938c566624d9 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -1327,6 +1327,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
- 	unsigned long    flags;
- 	struct cmd_rcvr  *rcvr;
- 	struct cmd_rcvr  *rcvrs = NULL;
-+	struct ipmi_recv_msg *msg, *msg2;
- 
- 	if (!refcount_dec_if_one(&user->destroyed))
- 		return;
-@@ -1377,6 +1378,15 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
- 		kfree(rcvr);
- 	}
- 
-+	mutex_lock(&intf->user_msgs_mutex);
-+	list_for_each_entry_safe(msg, msg2, &intf->user_msgs, link) {
-+		if (msg->user != user)
-+			continue;
-+		list_del(&msg->link);
-+		ipmi_free_recv_msg(msg);
-+	}
-+	mutex_unlock(&intf->user_msgs_mutex);
-+
- 	release_ipmi_user(user);
+diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+index 506d9988721e..b016fabaac68 100644
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -481,8 +481,6 @@ static int ipmi_ssif_thread(void *data)
+ 		/* Wait for something to do */
+ 		result = wait_for_completion_interruptible(
+ 						&ssif_info->wake_thread);
+-		if (ssif_info->stopping)
+-			break;
+ 		if (result == -ERESTARTSYS)
+ 			continue;
+ 		init_completion(&ssif_info->wake_thread);
+@@ -1270,10 +1268,8 @@ static void shutdown_ssif(void *send_info)
+ 	ssif_info->stopping = true;
+ 	del_timer_sync(&ssif_info->watch_timer);
+ 	del_timer_sync(&ssif_info->retry_timer);
+-	if (ssif_info->thread) {
+-		complete(&ssif_info->wake_thread);
++	if (ssif_info->thread)
+ 		kthread_stop(ssif_info->thread);
+-	}
  }
  
-@@ -4844,8 +4854,22 @@ static void smi_work(struct work_struct *t)
- 		struct ipmi_user *user = msg->user;
- 
- 		list_del(&msg->link);
--		atomic_dec(&user->nr_msgs);
--		user->handler->ipmi_recv_hndl(msg, user->handler_data);
-+
-+		/*
-+		 * I would like for this check (and user->destroyed)
-+		 * to go away, but it's possible that an interface is
-+		 * processing a message that belongs to the user while
-+		 * the user is being deleted.  When that response
-+		 * comes back, it could be queued after the user is
-+		 * destroyed.  This is simpler than handling it in the
-+		 * interface.
-+		 */
-+		if (refcount_read(&user->destroyed) == 0) {
-+			ipmi_free_recv_msg(msg);
-+		} else {
-+			atomic_dec(&user->nr_msgs);
-+			user->handler->ipmi_recv_hndl(msg, user->handler_data);
-+		}
- 	}
- 	mutex_unlock(&intf->user_msgs_mutex);
- 
+ static void ssif_remove(struct i2c_client *client)
 -- 
 2.43.0
 
