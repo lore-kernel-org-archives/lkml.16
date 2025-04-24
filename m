@@ -1,120 +1,108 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFE3CA52
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB2E84FAD
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478965; cv=none; b=mwd9wI0d2fNILU2dbPvFahllx2hy1B1LNI8KYiYtDVHp4Z5OxDnbdmcq+zO91YztYFnjILneY4wpp9aRMVthARbWZiiKEbtH5pB6gHC4nR+HZSITPVXmDTzhExFbwrc6AxbPvFfEZHup1LFNetcAazE2r84EoHYvZPp9YetJvLQ=
+	t=1745479023; cv=none; b=GTDQRacrhhW+LwbgyVK3YqxtLdIgYQWjLnjcC/8ltupRhFRvmIKAyjOKUjONWfa23ipLd4aDPGQ6PfzHsA4MjMB8Ma0W9EYsKIWNydEdNV3DSjFG/uvAHZ9O7TyPfkpqRl3uadDA998THrKPqwOn9MBTVYGWo2AAupqInFOuf9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478965; c=relaxed/simple;
-	bh=zkhUNRFxN1wVZxu5dT7cU/HABXTx8rHe+Sl1o/dwW24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHdNubt6CcqpC4hLhX6Zhh1SnrQjquv1yzhwFMiNnCUQ5D83C6mLcHfy3w0cjGLkrpBdvsa/wkR44LM+XlPWjOrsXf+q1q5GJIefy4wkmoSlVZz5savhO5CYRpA04N+p4DQLxCzrebrgNlh+yAXNWFtKMVwFOtCH530++ztmqKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=toHVGeMe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IsLUglRE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745479023; c=relaxed/simple;
+	bh=guNwUuYB1XS70rv7UL0LfJmT859rRszSPJy1YBjgdfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZWzTTdLz4KczkWvRs8c57Z/fs8YlRHLu/ZfNNQioPDekEhzVrwa2zFgsd4U3FaKKZgb7D0mrYJp9MVJhZgMrAqU/J97ThahlMyf8uSNVYSkbasi8h/DSjh/TQZiiEP+GL+BGGhneOUOc2IgBYX9Ag9BmBbYnzNr/OIELOE6hPsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iFgq2CrK; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="toHVGeMe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IsLUglRE"
-Date: Thu, 24 Apr 2025 09:15:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745478955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2PCGrdmxoQ3SbHA+7E+kNOmoS0qvn21yo5rrDA+j3rw=;
-	b=toHVGeMeU2cfiS1J7qzC0zNuHQNrnhoBv7pm+YyFA3l0Mqtw5VpFwwyrR8ACkHbSMh8PUZ
-	bRVRhtLFL7PudO4ZIEFTTQ/J5srMRBTxCT/qAgA30CLEX22Kv1EpEIZX9ZWiNwX6MjcEAz
-	RCgJYeR8dj17UUs2MeSz9pP1GOLkmEW9PF0pqfJGKgmrF7YmCDMabd5gNpxAu05vIaGx3T
-	uTk8WkvgRXlPgXe8o4qoF0nDoyC/TCBUGyvXAcMrmh9MVmF5vA5JWpmytYFWDbMdRvUgWV
-	nPPhD9aWKvF5NzI/jNGBRAiMM4MrxlvDJd8IRKmA3NCIm5mcvp+y0pAB8aJ43g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745478955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2PCGrdmxoQ3SbHA+7E+kNOmoS0qvn21yo5rrDA+j3rw=;
-	b=IsLUglREf3JqL+7nt64O8XhbXk70GcRbLMhGRAWmAsPhBPqp+BJcAtp61Q84B7+dvXom/5
-	Rc9wphuvfPmPqMBQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Junxiao Chang <junxiao.chang@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq
- disabled context
-Message-ID: <20250424071553.yT9-dWWM@linutronix.de>
-References: <20250424065609.624457-1-junxiao.chang@intel.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iFgq2CrK"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5499614d3d2so638231e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745479020; x=1746083820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=guNwUuYB1XS70rv7UL0LfJmT859rRszSPJy1YBjgdfM=;
+        b=iFgq2CrKN5ooXXvj1AdN3AukOU1QQBrq7qbmTZwNi+gDnVp28ahPlbABX2zKqj433Q
+         iOx5eplyI5CJpxSRGEOecMF5Yf1p+OUiI6NWbThKgfJhlVGmTUMds0LZBzCf6zIVXn9L
+         o80BJ1t0pVW9nkFbuHkSPFyhnoNYSAerCS8gVuO9I2fL6gO1Va/XEgFpWnYMBY36CWlE
+         XwLTrTrpcGQArNPz/zB3W6na1sNp3a5sTiTA7kg/79slgAlE1F83UjHVar+nw5LLtSoT
+         wGztuShaeoNOdNgZUVRDY/mURz4bG4ANHSFlDfcwWJ/9B0z7N8iUwY8fiuTKlEAeay6y
+         BAuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745479020; x=1746083820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=guNwUuYB1XS70rv7UL0LfJmT859rRszSPJy1YBjgdfM=;
+        b=XVP7VUC4zhFaaSXX13Buak0kf1Vn0HNXqxIkY9sKw0jCoJYLd28DrEEDkd9lVOPuPt
+         bJBZpu1+iMWUTx8fN9M3C9z3v1UIMMFUHoHLL/zzkztOIOxwbkjX9PCG5ELcC5MS2lnr
+         x3tlOdjxLIwoaeeF1qsc+7RWvb1DMIVsFXWQK6KFFd1lmlJ0NBhnFdt2n4KrLfZV61sP
+         CFwLVSds8izUXI6rB2SoeApvEWMCE8lOXxxzzF5y+Y2vF3ROVZVJk+MK17W7jPv+4lhc
+         zcG4pzxDDVRgdk7JgbTxqd8ALR4VAzcDwdpZYUEWzKVBuFHJsALZrVnNQShLtTtr2SJt
+         FRiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZu7XdNXdLqocOhGtbXIy6IR4MFlbjclklKPSVdspQQePsPRQ0g/tMtErtiwri0rVH81ALT0fsjZ3a5WQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKyzpXwwBhYSXd2uEXIr1F5fhAbvkmce5DfIn+i/pClTMSSsCl
+	OTzKuunqnSei3lngNY8IdpwiqbkQVC7r44Fet2FSBFu5fdQtr9uJYwHKAllyRqLPcLl22y5jP3C
+	qAOZyAdKUlcJ9A5/LfEUkijR+/wveuY5GNRSkyg==
+X-Gm-Gg: ASbGncuQLQxeSyR3NXGGmGeAcTFCYfAiOoFP/VK0a2/EDJ/3cMrYxvib9Dgt5VK/YUS
+	aS52gtYON/cNmoFqQDT75vL37JHDlQsp3SZvwPMlzLw7hB55cc7VQnbVHgqUtxmdQTgR2x5SURb
+	koqcw21ezlvPTUind/VSgU5u/waJwdrbHoIDCB9fqnb9sbklCgHDXGlA==
+X-Google-Smtp-Source: AGHT+IG7sbNkW6K4E+gZCj9BvmRurRuIOdRBZYRXKnKeo9MdE3o52+XU5EDUC66JU8GTial2FaxDd9hruPwHijYGY+Q=
+X-Received: by 2002:a05:6512:15a5:b0:549:8e54:da9c with SMTP id
+ 2adb3069b0e04-54e7c41682fmr591334e87.4.1745479019474; Thu, 24 Apr 2025
+ 00:16:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250424065609.624457-1-junxiao.chang@intel.com>
+References: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org> <16b14e5e-e5eb-5203-4cdf-44fbde9a5688@axentia.se>
+In-Reply-To: <16b14e5e-e5eb-5203-4cdf-44fbde9a5688@axentia.se>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 24 Apr 2025 09:16:48 +0200
+X-Gm-Features: ATxdqUGJSrKABbl7cdx0FUWA6bl4aWMdgNufCjq59VS62rLqVUFNqJgqC7ohSmc
+Message-ID: <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
+Subject: Re: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter callbacks
+To: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, 
+	Andi Shyti <andi.shyti@kernel.org>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-24 14:56:08 [+0800], Junxiao Chang wrote:
-> MEI GSC interrupt comes from i915. It has top half and bottom half.
-> Top half is called from i915 interrupt handler. It should be in
-> irq disabled context.
-> 
-> With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
-> top half might be in threaded IRQ context. In this case, local IRQ
-> should be disabled for MEI GSC interrupt top half.
-> 
-> This change fixes A380/A770 GPU boot hang issue with RT kernel.
+On Mon, Apr 7, 2025 at 10:08=E2=80=AFAM Peter Rosin <peda@axentia.se> wrote=
+:
+>
+> Hi!
+>
+> 2025-04-07 at 09:17, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > struct gpio_chip now has callbacks for setting line values that return
+> > an integer, allowing to indicate failures. Convert the driver to using
+> > them.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> > Peter: I know you've not been very active recently. If you prefer to
+> > just Ack it and let me take it through the GPIO tree, please do.
+>
+> What normally happens is that I just Ack trivial things like this, and
+> then either Wolfram or Andi picks it. The risk of future conflicts in
+> this area (and cycle) should be low, so I don't think it really matters
+> if you pick it, but Wolfram/Andi should have first dibs, since it makes
+> for slightly neater PRs during the merge window.
+>
+> Acked-by: Peter Rosin <peda@axentia.se>
+>
 
-This should have a Fixes when generic_handle_irq() was introduced. 
+I just realized their emails didn't pop up in b4 --auto-to-cc. Cc'ed
+now. Wolfram, Andi: do you want to pick it up or should I take it via
+the GPIO tree?
 
-> Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
-> ---
->  drivers/gpu/drm/i915/gt/intel_gsc.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
-> index 1e925c75fb080..9c72117263f78 100644
-> --- a/drivers/gpu/drm/i915/gt/intel_gsc.c
-> +++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
-> @@ -270,6 +270,9 @@ static void gsc_init_one(struct drm_i915_private *i915, struct intel_gsc *gsc,
->  static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
->  {
->  	int ret;
-> +#ifdef CONFIG_PREEMPT_RT
-> +	int irq_disabled_flag;
-> +#endif
->  
->  	if (intf_id >= INTEL_GSC_NUM_INTERFACES) {
->  		gt_warn_once(gt, "GSC irq: intf_id %d is out of range", intf_id);
-> @@ -284,7 +287,18 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
->  	if (gt->gsc.intf[intf_id].irq < 0)
->  		return;
->  
-> +#ifdef CONFIG_PREEMPT_RT
-> +	/* mei interrupt top half should run in irq disabled context */
-> +	irq_disabled_flag = irqs_disabled();
-> +	if (!irq_disabled_flag)
-> +		local_irq_disable();
-> +#endif
->  	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
-
-What about generic_handle_irq_safe() instead the whole ifdef show?
-
-> +#ifdef CONFIG_PREEMPT_RT
-> +	if (!irq_disabled_flag)
-> +		local_irq_enable();
-> +#endif
-> +
->  	if (ret)
->  		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
->  }
-
-Sebastian
+Bartosz
