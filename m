@@ -1,104 +1,150 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23DA253F31
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190E8230BC0;
+	Thu, 24 Apr 2025 12:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745497468; cv=none; b=LOhvGIRiZy6sqQ87qpZ+fFhpNcABkMCGjWpoz1HQuxl/HQxomOBn3DrU/xvpz4TuCJSJDQ4Mk9zjKJAHX7CJPH/wgXScxjgCEtBBLasn5AMpBhGn05Js8JLUodU1JjtwAynOnj2XOn6UGXQeBRwyutWobLEC4T8zWwGuVrFNKJ8=
+	t=1745497514; cv=none; b=RxEm1Q4e2xNslnNv6LEq/iik7aJgf8Sb369SfQFt5OOBSRX8MmlwNXaiDeYbeVtjFZtjt/9iHvX7cNWCvrR2kgmEWzHYdT6VD3W228CDCJ9hGlbEB+IqQ53izn6Cvq0UllwJS1pu1IuG8nkq8wXxeH8y1MUwVd4PGgEnSxK+rdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745497468; c=relaxed/simple;
-	bh=EPY4acWajNcExtL2mcawm0yfatLm/mqsxg6yAKcSxr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uaIxk9XWahaBzkSU8DUXXC2yEPCgHvOa7X57jiJ/J1v3gvrZjrAtUqTtsHMMnvm2I3kl/ViwahpZhfz0yRK0oWHJN97ITqpJye+48ea6/ZY5C/pWRO7J7ffnMCNyqJTsYY/Wi0tp9R95TzYw2h4K1el0rsdXa36KmlBvJFj0zwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AwMt9hiz; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745497514; c=relaxed/simple;
+	bh=H85T7UL7vYG9a6vaHAoCybvewWCdAIkCbhDvrv1eS+M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GRjwWRcNGe/vNXlPwbQBTX+eoCZuLo73aDxKonfdP3TwizA7pvVTN1ldwM/jw5F4QgBd2mskIa7EXhIUmyy+SWzS8+CYpwI5FaD64T2IZZlklHC4gLppEUrWniNxXS6082GUbConSe9eokwF8Ur6NMQLQuLg7rwThXoY/bp93W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QD23BqKg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AwMt9hiz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745497463;
-	bh=EPY4acWajNcExtL2mcawm0yfatLm/mqsxg6yAKcSxr4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AwMt9hizlsUfdTJa22FZiJuTZaWs5y7Pq9Ov9K8ft1YhS2qaotOIhTNyTQwysKZlm
-	 QRzX9q1Li8BeZeBQbzr9o5QIqlwcBjfMrdVUNQsbBzt5Sh+r1EDFIDl2Au7zbWcADS
-	 dXxfGflQ7Dr+Tgk5ccJlW0vJIMa46rWTaQ+GbrIqu3v3nCzCr+W9M7LaWHf9PTj47J
-	 D/t1OAKQ1w12LqLGJatGVgQrRCzrcRLbKyrBCgeUbutUY8kLZ4x9CTB9uePE4CrM2t
-	 EKhozYI+i823fwXoJdPoir4Ls1fffTm26pgnhV0jihtzIjkji/D920CpJFy60om/nN
-	 +T6soN5qS+WTA==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4F18317E3610;
-	Thu, 24 Apr 2025 14:24:23 +0200 (CEST)
-Date: Thu, 24 Apr 2025 14:24:19 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, "Steven Price"
- <steven.price@arm.com>, "Liviu Dudau" <liviu.dudau@arm.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Dave
- Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>, "Dmitry
- Osipenko" <dmitry.osipenko@collabora.com>, "Florent Tomasin"
- <florent.tomasin@arm.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panthor: fix building without CONFIG_DEBUG_FS
-Message-ID: <20250424142419.47b9d457@collabora.com>
-In-Reply-To: <41cd0579-698c-4e1e-82c4-3d46a1cd5e3e@app.fastmail.com>
-References: <20250424112637.3432563-1-arnd@kernel.org>
-	<20250424134105.087ec2f8@collabora.com>
-	<41cd0579-698c-4e1e-82c4-3d46a1cd5e3e@app.fastmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QD23BqKg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF7E5C4CEE3;
+	Thu, 24 Apr 2025 12:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745497513;
+	bh=H85T7UL7vYG9a6vaHAoCybvewWCdAIkCbhDvrv1eS+M=;
+	h=From:Subject:Date:To:Cc:From;
+	b=QD23BqKgWk9drOUY4Y9QR6+T7l+8feIj5Yp/3k4t3zx5lbKVAMUrZsUDw6r6p/fQ9
+	 vyXFHapMSfJRVJPRVK/mmEKDxiHOMf4aPS2idnAcmBPaRGb3wa3UuRZ6MvAbYxU6gl
+	 ewoahy5JF31WAzBaYZ3Tpr+B6v2QYgvdH/gLqguFqt64pxQw1xgIKVHAyQO5widdgE
+	 6JNjBJRJ/X90jzfW251uhsGK8zRJX2mJXvn6pSJ8pZp5a0Kgvf1F+K7x6lsTHaaSaj
+	 d3PyyBIn6BEPa3HMKH8Vo9Bl3YNpjQzP4mNHibTcXgN0jp6gQ9cEL9yOZTFxXeTWvn
+	 xm3bq1mBNh79A==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH RFC 0/4] net, pidfs: enable handing out pidfds for reaped
+ sk->sk_peer_pid
+Date: Thu, 24 Apr 2025 14:24:33 +0200
+Message-Id: <20250424-work-pidfs-net-v1-0-0dc97227d854@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIEtCmgC/x2MywrCMBAAf6Xs2S15aCheBT/Aa/GQx9YuQlo2U
+ gul/27scQZmNigkTAWuzQZCCxeecgV9aiCOPr8IOVUGo8xFnY3F7yRvnDkNBTN9MESlO22cTba
+ DGs1CA6/HsIfH/QbPKoMvhEF8juP/tdTWtdq1xwb2/QfFUJTwhgAAAA==
+X-Change-ID: 20250423-work-pidfs-net-bc0181263d38
+To: Oleg Nesterov <oleg@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ netdev@vger.kernel.org, David Rheinsberg <david@readahead.eu>, 
+ Jan Kara <jack@suse.cz>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
+ Luca Boccassi <bluca@debian.org>, 
+ Lennart Poettering <lennart@poettering.net>, 
+ Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
+ Christian Brauner <brauner@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4056; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=H85T7UL7vYG9a6vaHAoCybvewWCdAIkCbhDvrv1eS+M=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRw6S7N0bq2fM3X7qRi7csRtho/shLD52q9uKqj8vli4
+ 6Tpa/dxdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExktgjDf1eb1gvWkqv0Q50z
+ Ex/E3PwpxyEY33g+bqf7ywPHvpyI3czI8PGa6KHpUSd/5rKf4jddbqVzs9au+YjdItU4s16Vohf
+ r2QE=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-On Thu, 24 Apr 2025 14:10:16 +0200
-"Arnd Bergmann" <arnd@arndb.de> wrote:
+SO_PEERPIDFD currently doesn't support handing out pidfds if the
+sk->sk_peer_pid thread-group leader has already been reaped. In this
+case it currently returns EINVAL. Userspace still wants to get a pidfd
+for a reaped process to have a stable handle it can pass on.
+This is especially useful now that it is possible to retrieve exit
+information through a pidfd via the PIDFD_GET_INFO ioctl()'s
+PIDFD_INFO_EXIT flag.
 
-> On Thu, Apr 24, 2025, at 13:41, Boris Brezillon wrote:
-> > On Thu, 24 Apr 2025 13:25:47 +0200  
-> >> +#ifdef CONFIG_DEBUG_FS
-> >>  	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-> >> -}
-> >> -
-> >> -#else
-> >> -void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
-> >>  #endif
-> >> +}
-> >>    
-> >
-> > Oops. I actually don't see a good reason to expose this function, so
-> > could we go for something like that instead?  
-> 
-> I think moving it into pantor_gem.c makes sense, and it certainly
-> avoids the build warning.
-> 
-> >  #else
-> >  static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
-> >                                        struct panthor_gem_object *bo)
-> >  {}
-> >  static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
-> > +static void panthor_gem_debugfs_set_usage_flags(struct 
-> > panthor_gem_object *bo,
-> > +                                               u32 usage_flags)
-> > +{  
-> 
-> Side note: I think the panthor_gem_debugfs_bo_{add,rm} stubs could
-> actually be replaced with an IS_ENABLED() check in the normal
-> functions, but that wouldn't work for
-> panthor_gem_debugfs_set_usage_flags or
-> panthor_gem_debugfs_print_bos().
+Another summary has been provided by David in [1]:
 
-Yeah, I think I prefer consistency over saving a few LoC ;-).
-Do you plan to send a v2 with the suggested changes, or should we take
-care of that?
+> A pidfd can outlive the task it refers to, and thus user-space must
+> already be prepared that the task underlying a pidfd is gone at the time
+> they get their hands on the pidfd. For instance, resolving the pidfd to
+> a PID via the fdinfo must be prepared to read `-1`.
+>
+> Despite user-space knowing that a pidfd might be stale, several kernel
+> APIs currently add another layer that checks for this. In particular,
+> SO_PEERPIDFD returns `EINVAL` if the peer-task was already reaped,
+> but returns a stale pidfd if the task is reaped immediately after the
+> respective alive-check.
+>
+> This has the unfortunate effect that user-space now has two ways to
+> check for the exact same scenario: A syscall might return
+> EINVAL/ESRCH/... *or* the pidfd might be stale, even though there is no
+> particular reason to distinguish both cases. This also propagates
+> through user-space APIs, which pass on pidfds. They must be prepared to
+> pass on `-1` *or* the pidfd, because there is no guaranteed way to get a
+> stale pidfd from the kernel.
+> Userspace must already deal with a pidfd referring to a reaped task as
+> the task may exit and get reaped at any time will there are still many
+> pidfds referring to it.
+
+In order to allow handing out reaped pidfd SO_PEERPIDFD needs to ensure
+that PIDFD_INFO_EXIT information is available whenever a pidfd for a
+reaped task is created by PIDFD_INFO_EXIT. The uapi promises that reaped
+pidfds are only handed out if it is guaranteed that the caller sees the
+exit information:
+
+TEST_F(pidfd_info, success_reaped)
+{
+        struct pidfd_info info = {
+                .mask = PIDFD_INFO_CGROUPID | PIDFD_INFO_EXIT,
+        };
+
+        /*
+         * Process has already been reaped and PIDFD_INFO_EXIT been set.
+         * Verify that we can retrieve the exit status of the process.
+         */
+        ASSERT_EQ(ioctl(self->child_pidfd4, PIDFD_GET_INFO, &info), 0);
+        ASSERT_FALSE(!!(info.mask & PIDFD_INFO_CREDS));
+        ASSERT_TRUE(!!(info.mask & PIDFD_INFO_EXIT));
+        ASSERT_TRUE(WIFEXITED(info.exit_code));
+        ASSERT_EQ(WEXITSTATUS(info.exit_code), 0);
+}
+
+To hand out pidfds for reaped processes we thus allocate a pidfs entry
+for the relevant sk->sk_peer_pid at the time the sk->sk_peer_pid is
+stashed and drop it when the socket is destroyed. This guarantees that
+exit information will always be recorded for the sk->sk_peer_pid task
+and we can hand out pidfds for reaped processes.
+
+Note, I'm marking this as RFC mostly because I'm open to other
+approaches to solving the pidfs registration. The functionality in
+general we should really provide either way.
+
+Link: https://lore.kernel.org/lkml/20230807085203.819772-1-david@readahead.eu [1]
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Christian Brauner (4):
+      pidfs: register pid in pidfs
+      net, pidfs: prepare for handing out pidfds for reaped sk->sk_peer_pid
+      pidfs: get rid of __pidfd_prepare()
+      net, pidfs: enable handing out pidfds for reaped sk->sk_peer_pid
+
+ fs/pidfs.c                 | 70 ++++++++++++++++++++++++++++++++----
+ include/linux/pidfs.h      |  3 ++
+ include/uapi/linux/pidfd.h |  2 +-
+ kernel/fork.c              | 78 +++++++++++++---------------------------
+ net/core/sock.c            |  4 ++-
+ net/unix/af_unix.c         | 90 ++++++++++++++++++++++++++++++++++++++++------
+ 6 files changed, 174 insertions(+), 73 deletions(-)
+---
+base-commit: b590c928cca7bdc7fd580d52e42bfdc3ac5eeacb
+change-id: 20250423-work-pidfs-net-bc0181263d38
+
