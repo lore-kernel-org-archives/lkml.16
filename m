@@ -1,197 +1,89 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5228819CCEA;
-	Thu, 24 Apr 2025 08:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEC219CCEA;
+	Thu, 24 Apr 2025 08:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481822; cv=none; b=nEXwQTJIxtTG2Z/U2xJi7ER9cRJWNTV/AsGNqmQUw3e5VMWzcokZQDAIPRiB2blRlvz56F47o/6iPWy+lQozPK6cI4BxrXIA6SUZBw73Ev1Ql5/NwFU/EmWq58iClt2ioP6k3smPvzY0vDd0oav6yYa8lqXP58BBSfRgh9hba2s=
+	t=1745481827; cv=none; b=N3+jiJa6oYm0eIEzEZP0gvPGyc+HmfCSBS9IYsUzH3GPiev3+C0OIvxZREgiYU3sQyqeiaHkyYWKsO8rtuwtFi/+AG+IcPj49VYf7N+fp8J0+RH5RsSoAOuYX2OjCNZ5+XsT9MTKZCiPAqr3HkKjvJgoqpjV2HDnUTt8bWpeApw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481822; c=relaxed/simple;
-	bh=UuwUPwUSTGYxPTu1YkffEmfzAPXQ8DoDae6O5xuiLUw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b4js/icL+zbrvmvEccRj58RXpLwiSMs3/5SNbVKTRwdq3mOtpoWS68+SIELfWHLPMpczIfMnNaFuh0y9fbIjU4FCkI7k7slSOo1MS7d1QlnxoPfBHCwMSPcbQBG+qDRHbq5REUIo9O4eTaUxO6fUQ/mFxGCE6rsHeT5TmMAO+rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZH0uz0nq; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745481827; c=relaxed/simple;
+	bh=yE8LuY/N+dXgVtHCmocmCD2z6tU/Hf9npEsFFbSKxX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AK5+bPwsK9sqoO6XumAdNU6o04yWmrysjVmpI6b5Wu4NQ/sngshLXYlkwXKzQsM//DwJ7ka7HE/tAVo5Fve1PfPdgl4mg5tiN9jNhodr3vVXRewtFkX6Vbk0PuuDaJ4c/Khmd9ce81y+dMdNt8tJidj0jcHEowluvk3JiTTk/z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyF0OaGF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZH0uz0nq"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53O83VRj2441366
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 03:03:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745481811;
-	bh=L43dQiegPYpneLKcAtCosvHEVIgw9bb5bt2UjeqpDLo=;
-	h=From:To:CC:Subject:Date;
-	b=ZH0uz0nqyRN67KY2s63FBUrgw2kTt3gc8xVvLa8Nple2ewIcYPCxdF8q9Vv537bPG
-	 pBk1dmbqxmGNUJOpIcxu46X1tZOOA8rOngmeglN2mV7nzUxb8BvZMnFyQdmu+RUPFp
-	 t+W6zLksx/dv0Kg7VBHQoTGFLQ5QBh1nBwFoH4TY=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53O83VcK029688
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 24 Apr 2025 03:03:31 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 24
- Apr 2025 03:03:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 24 Apr 2025 03:03:30 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53O83TFc007282;
-	Thu, 24 Apr 2025 03:03:30 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <u-kumar1@ti.com>, <devarsht@ti.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <j-choudhary@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-j721e-common-proc-board-infotainment: Fix nodes for dtbs warnings
-Date: Thu, 24 Apr 2025 13:33:28 +0530
-Message-ID: <20250424080328.57671-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyF0OaGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E01C4CEE3;
+	Thu, 24 Apr 2025 08:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745481824;
+	bh=yE8LuY/N+dXgVtHCmocmCD2z6tU/Hf9npEsFFbSKxX0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uyF0OaGFxy+ZC3XCBALcUCeaJAMgCzBbVXOwMSTDrWTLYhGA1IB5KjJEL+FNBlD+d
+	 ++Tyr9rZYp3e+Ovq8fOSc2m6Fm7Y0RUn+XjuNSjG/Peh5/kA2tlO4cYPzqespW3rUh
+	 YxU/vROMhZ6EhISGgGhz8wbBh8F9UQCDNaRSpr6+u4BHpG+YDwMq3l4kNBgUk+9kS6
+	 CTZDmC9csTSZpXYk8MuBnnlFEAZeEOLsVipquGBO+jGDStcSS3EEfcQahpJOi9/K/j
+	 A38Dp83+afyNTxm5oxaXjdZhKpcOD9xcUtrglHlqASmRzf/UtmSZJF96MPjwvkkP/b
+	 IpSGEZlx9SQXg==
+Message-ID: <c332c760-fa48-4159-a3af-e33bedc0e4ef@kernel.org>
+Date: Thu, 24 Apr 2025 10:03:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V11 13/15] rust: cpufreq: Extend abstractions for driver
+ registration
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org,
+ Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd
+ <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+ rust-for-linux@vger.kernel.org,
+ Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+ =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+ Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+ Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org
+References: <cover.1745218975.git.viresh.kumar@linaro.org>
+ <a14f6927488b5c7d15930c37a3069f46a5c888a2.1745218976.git.viresh.kumar@linaro.org>
+ <6fc3e178-60f9-4b0f-9c56-6d983e4d1eed@kernel.org>
+ <20250424062910.6zk7amxq4gjxtw66@vireshk-i7>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250424062910.6zk7amxq4gjxtw66@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Fix hdmi-connector and tfp bridge node as per the bindings,
-- remove 'digital' property which is required for DVI connector not HDMI
-- Add 'ti,deskew' property which is a required property
-- Fix ports property for tfp410 bridge
-- Change node names appropriately
+On 4/24/25 8:29 AM, Viresh Kumar wrote:
+> On 23-04-25, 14:08, Danilo Krummrich wrote:
+>> On 4/21/25 9:22 AM, Viresh Kumar wrote:
+>>>
+>>> +    /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
+>>> +    ///
+>>> +    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
+>>> +    /// device is detached.
+>>> +    pub fn new_foreign_owned(dev: &Device) -> Result<()> {
+>>> +        Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)
+>>> +    }
+>>
+>> Btw. if you take it for v6.16-rc1, expect a conflict with [1].
+>>
+>> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git/commit/?h=driver-core-next&id=f720efda2db5e609b32100c25d9cf383f082d945
+> 
+> Thanks for pointing this out. I believe this branch is immutable and
+> so I can rebase over f720efda and send my pull request after yours is
+> merged ?
 
-Redefine the ports for dss and for k3-j721e-common-proc-board.dts,
-add reg property for the port (@0) to get rid of dtbs_warnings in
-infotainment overlay when ports for dss are re-defined.
-
-Fixes: 9c0fa304fa56 ("arm64: dts: ti: k3-j721e: Add overlay for J721E Infotainment Expansion Board")
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
- ...-j721e-common-proc-board-infotainment.dtso | 57 +++++++++++--------
- .../dts/ti/k3-j721e-common-proc-board.dts     |  6 +-
- 2 files changed, 38 insertions(+), 25 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-index 65a7e54f0884..e4e5f941f20b 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-@@ -15,12 +15,11 @@
- #include "k3-pinctrl.h"
- 
- &{/} {
--	hdmi-connector {
-+	connector-hdmi {
- 		compatible = "hdmi-connector";
- 		label = "hdmi";
- 		type = "a";
- 		ddc-i2c-bus = <&main_i2c1>;
--		digital;
- 		/* P12 - HDMI_HPD */
- 		hpd-gpios = <&exp6 10 GPIO_ACTIVE_HIGH>;
- 
-@@ -31,28 +30,32 @@ hdmi_connector_in: endpoint {
- 		};
- 	};
- 
--	dvi-bridge {
--		#address-cells = <1>;
--		#size-cells = <0>;
-+	bridge-dvi {
- 		compatible = "ti,tfp410";
- 		/* P10 - HDMI_PDn */
- 		powerdown-gpios = <&exp6 8 GPIO_ACTIVE_LOW>;
-+		ti,deskew = <0>;
- 
--		port@0 {
--			reg = <0>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
- 
--			tfp410_in: endpoint {
--				remote-endpoint = <&dpi_out0>;
--				pclk-sample = <1>;
-+				tfp410_in: endpoint {
-+					remote-endpoint = <&dpi_out0>;
-+					pclk-sample = <1>;
-+				};
- 			};
--		};
- 
--		port@1 {
--			reg = <1>;
-+			port@1 {
-+				reg = <1>;
- 
--			tfp410_out: endpoint {
--				remote-endpoint =
--					<&hdmi_connector_in>;
-+				tfp410_out: endpoint {
-+					remote-endpoint =
-+						<&hdmi_connector_in>;
-+				};
- 			};
- 		};
- 	};
-@@ -148,17 +151,23 @@ p11-hog {
- &dss {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&dss_vout0_pins_default>;
--};
- 
--&dss_ports {
--	#address-cells = <1>;
--	#size-cells = <0>;
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 
--	port@1 {
--		reg = <1>;
-+		port@0 {
-+			reg = <0>;
-+			dpi0_out: endpoint {
-+				remote-endpoint = <&dp0_in>;
-+			};
-+		};
- 
--		dpi_out0: endpoint {
--			remote-endpoint = <&tfp410_in>;
-+		port@1 {
-+			reg = <1>;
-+			dpi_out0: endpoint {
-+				remote-endpoint = <&tfp410_in>;
-+			};
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 4421852161dd..e3d0ef6913b2 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -804,7 +804,11 @@ &dss {
- };
- 
- &dss_ports {
--	port {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
- 		dpi0_out: endpoint {
- 			remote-endpoint = <&dp0_in>;
- 		};
--- 
-2.34.1
-
+Yes, driver-core-next won't be rebased.
