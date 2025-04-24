@@ -1,281 +1,163 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2040.outbound.protection.outlook.com [40.107.92.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEA51B392B
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745472433; cv=none; b=Z3r5gl27+JEHYCUKJsHZbAIy2oCGOQdtfuqFAFeBIyK59remX2naWPQ4ahrhaX66Zb9SRrbF1X283aD7U8+c6rXo1x8H1YVFGqtGgyO8XSdTdVXXpHKsCb+aWPs035KqxTOmajyynyD5+iJr6Tu3T7vjIY6FZY7505MZMXHaXSw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745472433; c=relaxed/simple;
-	bh=QVve6SNFxQ7c7t5apaYCSIxKah6vut+7W/vl9gX9VUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVmw9cmN+K9gh0PIMt/5OTho/147DReqrVSt4Lfw51GTHrL+i1kWC2U96kMXZ4/taP6PHcJO98zLU7JPtWNY1LAZjVl0qcWRWERCsfz3mmJzofaB3LHaj3A1+jWEJScuw0Im8Cel8wl46Lvn3cBOQm1TRdti+OwjMyczSzorxz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xriiRtkx; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198A58F5C;
+	Thu, 24 Apr 2025 05:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745472844; cv=fail; b=GF+Oz9OLhmXb1H117dTYYiCSYCfkAldGxs0gWipn4wsRhvbuFeT7QBKbPcpyuo4Eqscn+TO7QCGwSRHSfaa9dAk4YIoJjoPN1G8f/Jg0hFuElt9R9gGI/eMQN9Xoh8wClj9DPZ9yHf30H8RHmf+nVktcZ7UPaBc/5JXSMnb75pM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745472844; c=relaxed/simple;
+	bh=zx3XgtaqzjznZauA83EPjORemynJVQ60sMi95/78lkE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OC3ZJ0vzsI7akRMO3AKNtW9bxrVylEGC5adKfjFF5WwTWo3VrLBpjn4yIwxguc5OaVcY0aQ2imFNvbTg/2DuYEIZTXxQ3BJ/fcHbX3Uw5kGyclTnA8TUkDXsNTvr5pySYBMeFEDq2cpQ2uh4iIHQ0RDz8DrPjkTUMwDixAxXoEk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=smiVdXAN; arc=fail smtp.client-ip=40.107.92.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xriiRtkx"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30820167b47so631548a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745472431; x=1746077231; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cZUPcM2JRXU1EZUeYvnEV+B9VdnBQw7RuAghQfhbC98=;
-        b=xriiRtkxxm0kjh+F4DHHvxldPNPL4fcvEUhzYMNIh++uvqEFYuMZh8znb1bQxm5b85
-         OhtIlENpFeS5cFrNYe2EWYqdyy49AWpHBAMwaKASNg04rjI4bYA+ihax4x0yFUcYI24t
-         jzgq/qslOn/ymlxiHA18zkxhBvBJQRRCdafUfgG6ZYth0pKKYGRWgHZnkTxUixKlbwE9
-         hru2CE2FZ24m4EkbeuO1ZhZT7hnLup9Ay5uJy7Z6p+dDkK7h5OEYhoakeOTpPQJhRrCT
-         xIhxaeFS5ALbacJ/Gk36YSIZqqM956HBXdKrFKnBcr1gU4bOdpw6e15Z4EvNl/1VD62n
-         blfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745472431; x=1746077231;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cZUPcM2JRXU1EZUeYvnEV+B9VdnBQw7RuAghQfhbC98=;
-        b=Pfz1x/qGoaLq6pyr89rhOfJaQQHv4KB61mLiQNrQLMHZxn/KAF6kJ7I/2c1iFGTVEu
-         2YVSee55kZ92yVLR0T+Jm15g8cp11BSg721ottU8cJyNBGZ3iJfmkKJVaE2SFL8qYRId
-         FtgODxbOs0IEimvHIs6++KRITPDawikEteykuap5jnn3WW3PjFcDntDlb1/msMb1+9ST
-         kmOJq0wdtXQ73eY8y9ERSJMLO6se41qg1NFgTUUfVSqB47VoXtm4ycZInXy7ni5COw7/
-         38IJyA5WDwLlBSKHpjabhyT93N6dHZCbQN3sq8Koea6EnAYdBskfvObTIrRcKUf/jB+f
-         eAQw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0FdMCniqHbJjApOTDAYCktXBOsyzmgsWLfDt9SWTPYdrFKgk30IpIzEddHaXuY+0cA/pOSKqt1ouufaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL4pf6o7uVgjLUNVyPGHPysr0CBNsX2adkHNcVb7rZ9cfkraMx
-	O6bq4aSZQAD1SqlClTJPJnZP5PTfJ+3b8jRRr19w0pdKaFMkjN2daDswS4Kb8A==
-X-Gm-Gg: ASbGncuBnhhIuKmrZyhp2FC5PSvLteIxztXcJmC9n4iH6L8oKytqAWxUm05Kvc5vrQx
-	3pWb5EWEoXXJIWSPVO/SC3J/bwtJkLuRc/DPywZbnlz78tt+Q1KWCQin6oli5FTVIFjjFR7oqhL
-	C34Vo4pV0eNyCK4PEjUUdIUn16MMOzUalnYY1mjKzk9xnCJgui+w4Ry4MuTtfwdsovzCJqJlqJO
-	NM3KJ+UzAdhU2xiU1AAxKwD4HTfmQQc67bZxauNtV2iU3Zdcy/zW2pOzz4y4hlSyLTgo75J0hE1
-	KUZEE1SauR7dM+7Vv4xnYt9Ich/egJysTVXONf4uhkosNheMWCg=
-X-Google-Smtp-Source: AGHT+IEwbpxTA4Qj4NM5rAHZdl1TYE4GZFHTARebZEX16BK4YArP6CGqoSYBRcTbYJYiLhgXJ62sqw==
-X-Received: by 2002:a17:90b:45:b0:2f9:d0cd:3403 with SMTP id 98e67ed59e1d1-309ee3b5de0mr1568292a91.16.1745472430905;
-        Wed, 23 Apr 2025 22:27:10 -0700 (PDT)
-Received: from thinkpad ([120.60.139.78])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef1385d2sm347425a91.41.2025.04.23.22.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 22:27:10 -0700 (PDT)
-Date: Thu, 24 Apr 2025 10:57:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 5/5] PCI: qcom: Add support for resetting the slot due
- to link down event
-Message-ID: <mr5kunnsv5syckqbclcw2xi6es36fnsnfvrvughqlmv2kblxof@tltliisb5upf>
-References: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
- <20250417-pcie-reset-slot-v3-5-59a10811c962@linaro.org>
- <f32b2ece-f7ed-45ab-2867-9d276b88cf62@oss.qualcomm.com>
- <hmyeha6ygi6mxzsdivo2z5ccpvl5l2xietr3axxpl4zwojiavo@wuli4qazg446>
- <31f071d7-db56-f032-749e-92bc387238b8@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="smiVdXAN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JM99ATB19EYzcuzkaUXF7PpKJMGYl8nQ70JimN3kacygOQb0LMknUqmfTI7qfhCuop7fUsh5QIk/DTiOLZ32sVAW6hY5n9mJn90NAf/vK7sNgaIfEaOJc+kJBy9hpx9ByPWAawjvcDTlANqnRxPB18BRwDLHVqw05kuvYuIYZDj2SRDm0y4J1wRj3W3/z9uhl78BNYulUN+5XJ4fsYnfKJVPoiIq/s+fQyOjswOaJgt/zGSOzdtptpwy4lyCBufC54zmZOua2kcdtVqxQTiLURQ1zMy8RoLmxPK3r5NWizHvkj70wZIXikd9SQgGtemIaFQGBMlONw5i3101fYYJfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AnN2auT+5LLEeLzgKurinturUTdahwXIL4XZLKFRx5g=;
+ b=IRbAHLtBI7JHexku06nUOFlCRjr5zizUeTEQ3IYKK+1l3oNDfw09x4IBfFbDHwcrJ1IfxsF19c0K+8yOJWK0B/bQhyEYJ5MfHKKZ88KEenwlSr+3+mj+adzg6jn22bAu6wyqXuu54Q9cH/nul/h4lUdIw4R9Y0LMVfnhyylKP5m/CvNRTZK13V23bcOluHqdTrIJ3w1rdSct9T4/Vq0k8RoseGJnaEMgzPdfCzUj5M4WO1S1vwaXV9CNXCSRhewM3QbnqmGjV/Y+bkMKPZCKpicRSyb1IdpWvYJVKXdNOdiSNlOH6sSHkAEgGcWzdrr/Ga9RS8nG53iWmkLgukyGiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AnN2auT+5LLEeLzgKurinturUTdahwXIL4XZLKFRx5g=;
+ b=smiVdXANZOw+QtWlRC6R0PfeoVMyRekyXy8C8AkNlH7idMEcBA+5atsxoOvU07xKW0AvCw3lTrF1rTUoP/orCFuFUZZWnrcCCE8zwf98N3BFldVn63YTl6BnJtA5yrMkenJ95NgjGkP2oKZcxAxCxBXLavQkleurn4ebMz8hpduhJvGa8qJ1HxtYTqcbpYM24Jlxn5L/HKvetJT0hA+BKbrvOiceohDe6iHDslH8cM03l8eYdqV5aPsBGU/510RcWBjurj8xXSomFlWhURrLzu8VjbMr3Sxt5Gau/UZ0STTVb/Pdb0W/cyTz9iPPFX9XXTvQR4ttukFObCc60a1Y8g==
+Received: from MW3PR06CA0005.namprd06.prod.outlook.com (2603:10b6:303:2a::10)
+ by CH3PR12MB8969.namprd12.prod.outlook.com (2603:10b6:610:17c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Thu, 24 Apr
+ 2025 05:33:58 +0000
+Received: from MWH0EPF000989E7.namprd02.prod.outlook.com
+ (2603:10b6:303:2a:cafe::28) by MW3PR06CA0005.outlook.office365.com
+ (2603:10b6:303:2a::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
+ 24 Apr 2025 05:33:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ MWH0EPF000989E7.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 05:33:57 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 23 Apr
+ 2025 22:33:39 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 23 Apr
+ 2025 22:33:38 -0700
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Wed, 23 Apr 2025 22:33:35 -0700
+From: Akhil R <akhilrajeev@nvidia.com>
+To: <ldewangan@nvidia.com>, <digetx@gmail.com>, <andi.shyti@kernel.org>,
+	<thierry.reding@gmail.com>, <jonathanh@nvidia.com>, <wsa@kernel.org>,
+	<linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Akhil R <akhilrajeev@nvidia.com>, Thierry Reding <treding@nvidia.com>
+Subject: [PATCH v2 RESEND] i2c: tegra: check msg length in SMBUS block read
+Date: Thu, 24 Apr 2025 11:03:20 +0530
+Message-ID: <20250424053320.19211-1-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <31f071d7-db56-f032-749e-92bc387238b8@oss.qualcomm.com>
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E7:EE_|CH3PR12MB8969:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77359d3c-a66a-425b-d4e1-08dd82f19c34
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?MwATC47g3drs+xdXbC8iyd2lqn7/ShB3qqVFbYbDMCwHxQ6l2OejNUxg+O5W?=
+ =?us-ascii?Q?xHFwlJtu4xeQuRVNSg+ObjiCVNmd1vBe75vtMnw+EdJyi67um4PszuTNFpmJ?=
+ =?us-ascii?Q?W6Be0FMomwk4zi3Btk5Kv5g8X4YriWJyTaeqgsMDaKbqBrfOlDiLJ6vFkBho?=
+ =?us-ascii?Q?T3SWwa+Rbh8v0xDshEF44eVR0NDQ05vOJoK4L6FOaBzjlzbpoi5u7ObGNsYx?=
+ =?us-ascii?Q?UIjHjKmXRv71DaRhSn3f08LKDhxx1zfoQdWCQLIPmyMFXGWTYQ5DPVRMF2NU?=
+ =?us-ascii?Q?sNisPd2Zss3qU2dLdIS3InDZC+0Hx+hZrq3NRe/TmFs+Cj4nSEWaG0Kxsb1Q?=
+ =?us-ascii?Q?fFYAZ9y+JY4q+6IWbzECWa5mhpJUIoG8xahnheoyI6zR/GhH0XrCHvJSMRLd?=
+ =?us-ascii?Q?4C9qPJIkfLa8kv7W09HWFMFqvCCsc/F2QmvCy68qM8m1A9d439v3Mm5ZBguK?=
+ =?us-ascii?Q?RHS9/G7RdpXKALGm0TVPvFLgbnkK2pQVk3nguv4n8x8l3h3/LQNhYY0EOJj+?=
+ =?us-ascii?Q?3hgX4hIoxNK9QL98L8LeCW0eS21T2zXRLxmMgRz2Ipj9MihH5rVjq4Bfk2YL?=
+ =?us-ascii?Q?t0SS0zLflZJE8s8usfvRPnQrIYHmjXGKtkU4S41AtWZxSVDKv+CzzNjboKQi?=
+ =?us-ascii?Q?+BDweEaAG56BsT3C4QicTNAu4+ekSdMtl46EYLpmqNhrby6aCWIU7+0BGpLM?=
+ =?us-ascii?Q?L5uvjmhjdle+pvii/MZSD09lobiY/gXrbaYfLhnZ83oaYiUWEWkV+RC9LIuA?=
+ =?us-ascii?Q?8RPeKWwoZIgrTSlvDAcgPf4sqWRCReMgSXgkCJZ/JuO4+pzP81AEdQ/ti8Gg?=
+ =?us-ascii?Q?vjwfF+mng23Ckn1PWgYZfdmOvK7Jj29ymxQl+5vYoLfNoJdKA+7Kns8NMYw2?=
+ =?us-ascii?Q?P5SQ7s1JdTihwbnC6oImPcxMly2fRf0xOb31nl89hm+Csm++8QOyY1U/NPv4?=
+ =?us-ascii?Q?/zCBs413VlUDL4Uesb085RHIxCGI1Em0VsT0j9u0rUPFpo2ObJlkjKDfmron?=
+ =?us-ascii?Q?4tfrGRyEvrmWF210kLtAVo0WDcjOM8kOhf3gHlRGexB7B2V9GvCVWm86NKVk?=
+ =?us-ascii?Q?DurF4E3MIdTr5T2LVnehHuOGBE19u3VRCxhyBxubGylbuzdTT9h7reCRhyes?=
+ =?us-ascii?Q?jhvYSykJRFCdR1IBBQkoRlDPeoZr97BzjP3nmElQtf4EsdatL7YRrYhb470V?=
+ =?us-ascii?Q?sFeNef6NNDNT/U/5Q3I52xMeFt7Zn7V0ZOZW87aPzmemeQ3k49TA6t51QGgn?=
+ =?us-ascii?Q?Dl6mydji59LvKEz8dJsfMQeFD00eE1kloTRdq1KekFVB8erO+fpNN4DL0Toh?=
+ =?us-ascii?Q?qetBIhO7wEKks8z9QeshoZZRWbiW+AodtlQyrSsMHlULEvMDKOQkYDl6JBVZ?=
+ =?us-ascii?Q?7d4LRb9RGSb8RFNMUamt6xsZN74IsibOOGhiFBE7ZHFXz7/+RpnQA+FmQvgV?=
+ =?us-ascii?Q?/JyAhYujvlYWbF3Fls5UjpEsi/qPYwoiQmic3QVWFaNVZzHkGyCh8sQX1Wzd?=
+ =?us-ascii?Q?wSEj8dM5os3QApX5uOVaLA71M7Mj4ZPpkC8a?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 05:33:57.4966
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77359d3c-a66a-425b-d4e1-08dd82f19c34
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E7.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8969
 
-On Thu, Apr 24, 2025 at 10:41:24AM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 4/24/2025 10:30 AM, Manivannan Sadhasivam wrote:
-> > On Fri, Apr 18, 2025 at 08:11:47AM +0530, Krishna Chaitanya Chundru wrote:
-> > > 
-> > > 
-> > > On 4/17/2025 10:46 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > 
-> > > > The PCIe link can go down under circumstances such as the device firmware
-> > > > crash, link instability, etc... When that happens, the PCIe slot needs to
-> > > > be reset to make it operational again. Currently, the driver is not
-> > > > handling the link down event, due to which the users have to restart the
-> > > > machine to make PCIe link operational again. So fix it by detecting the
-> > > > link down event and resetting the slot.
-> > > > 
-> > > > Since the Qcom PCIe controllers report the link down event through the
-> > > > 'global' IRQ, enable the link down event by setting PARF_INT_ALL_LINK_DOWN
-> > > > bit in PARF_INT_ALL_MASK register.
-> > > > 
-> > > > Then in the case of the event, call pci_host_handle_link_down() API
-> > > > in the handler to let the PCI core handle the link down condition.
-> > > > 
-> > > > The API will internally call, 'pci_host_bridge::reset_slot()' callback to
-> > > > reset the slot in a platform specific way. So implement the callback to
-> > > > reset the slot by first resetting the PCIe core, followed by reinitializing
-> > > > the resources and then finally starting the link again.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >    drivers/pci/controller/dwc/Kconfig     |  1 +
-> > > >    drivers/pci/controller/dwc/pcie-qcom.c | 90 +++++++++++++++++++++++++++++++++-
-> > > >    2 files changed, 89 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > > > index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..ce04ee6fbd99cbcce5d2f3a75ebd72a17070b7b7 100644
-> > > > --- a/drivers/pci/controller/dwc/Kconfig
-> > > > +++ b/drivers/pci/controller/dwc/Kconfig
-> > > > @@ -296,6 +296,7 @@ config PCIE_QCOM
-> > > >    	select PCIE_DW_HOST
-> > > >    	select CRC8
-> > > >    	select PCIE_QCOM_COMMON
-> > > > +	select PCI_HOST_COMMON
-> > > >    	help
-> > > >    	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
-> > > >    	  PCIe controller uses the DesignWare core plus Qualcomm-specific
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > index dc98ae63362db0422384b1879a2b9a7dc564d091..6b18a2775e7fcde1d634b3f58327ecc7d028e4ec 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > @@ -34,6 +34,7 @@
-> > > >    #include <linux/units.h>
-> > > >    #include "../../pci.h"
-> > > > +#include "../pci-host-common.h"
-> > > >    #include "pcie-designware.h"
-> > > >    #include "pcie-qcom-common.h"
-> > > > @@ -55,6 +56,7 @@
-> > > >    #define PARF_INT_ALL_STATUS			0x224
-> > > >    #define PARF_INT_ALL_CLEAR			0x228
-> > > >    #define PARF_INT_ALL_MASK			0x22c
-> > > > +#define PARF_STATUS				0x230
-> > > >    #define PARF_SID_OFFSET				0x234
-> > > >    #define PARF_BDF_TRANSLATE_CFG			0x24c
-> > > >    #define PARF_DBI_BASE_ADDR_V2			0x350
-> > > > @@ -130,8 +132,11 @@
-> > > >    /* PARF_LTSSM register fields */
-> > > >    #define LTSSM_EN				BIT(8)
-> > > > +#define SW_CLEAR_FLUSH_MODE			BIT(10)
-> > > > +#define FLUSH_MODE				BIT(11)
-> > > >    /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > > > +#define PARF_INT_ALL_LINK_DOWN			BIT(1)
-> > > >    #define PARF_INT_ALL_LINK_UP			BIT(13)
-> > > >    #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
-> > > > @@ -145,6 +150,9 @@
-> > > >    /* PARF_BDF_TO_SID_CFG fields */
-> > > >    #define BDF_TO_SID_BYPASS			BIT(0)
-> > > > +/* PARF_STATUS fields */
-> > > > +#define FLUSH_COMPLETED				BIT(8)
-> > > > +
-> > > >    /* ELBI_SYS_CTRL register fields */
-> > > >    #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
-> > > > @@ -169,6 +177,7 @@
-> > > >    						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
-> > > >    #define PERST_DELAY_US				1000
-> > > > +#define FLUSH_TIMEOUT_US			100
-> > > >    #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
-> > > > @@ -274,11 +283,14 @@ struct qcom_pcie {
-> > > >    	struct icc_path *icc_cpu;
-> > > >    	const struct qcom_pcie_cfg *cfg;
-> > > >    	struct dentry *debugfs;
-> > > > +	int global_irq;
-> > > >    	bool suspended;
-> > > >    	bool use_pm_opp;
-> > > >    };
-> > > >    #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> > > > +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> > > > +				  struct pci_dev *pdev);
-> > > >    static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> > > >    {
-> > > > @@ -1263,6 +1275,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
-> > > >    			goto err_assert_reset;
-> > > >    	}
-> > > > +	pp->bridge->reset_slot = qcom_pcie_reset_slot;
-> > > > +
-> > > >    	return 0;
-> > > >    err_assert_reset:
-> > > > @@ -1300,6 +1314,73 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
-> > > >    	.post_init	= qcom_pcie_host_post_init,
-> > > >    };
-> > > > +static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
-> > > > +				  struct pci_dev *pdev)
-> > > > +{
-> > > > +	struct pci_bus *bus = bridge->bus;
-> > > > +	struct dw_pcie_rp *pp = bus->sysdata;
-> > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-> > > > +	struct device *dev = pcie->pci->dev;
-> > > > +	u32 val;
-> > > > +	int ret;
-> > > > +
-> > > > +	/* Wait for the pending transactions to be completed */
-> > > > +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_STATUS, val,
-> > > > +					 val & FLUSH_COMPLETED, 10,
-> > > > +					 FLUSH_TIMEOUT_US);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Flush completion failed: %d\n", ret);
-> > > > +		goto err_host_deinit;
-> > > > +	}
-> > > > +
-> > > > +	/* Clear the FLUSH_MODE to allow the core to be reset */
-> > > > +	val = readl(pcie->parf + PARF_LTSSM);
-> > > > +	val |= SW_CLEAR_FLUSH_MODE;
-> > > > +	writel(val, pcie->parf + PARF_LTSSM);
-> > > > +
-> > > > +	/* Wait for the FLUSH_MODE to clear */
-> > > > +	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_LTSSM, val,
-> > > > +					 !(val & FLUSH_MODE), 10,
-> > > > +					 FLUSH_TIMEOUT_US);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Flush mode clear failed: %d\n", ret);
-> > > > +		goto err_host_deinit;
-> > > > +	}
-> > > > +
-> > > > +	qcom_pcie_host_deinit(pp);
-> > > > +
-> > > > +	ret = qcom_pcie_host_init(pp);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Host init failed\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	ret = dw_pcie_setup_rc(pp);
-> > > > +	if (ret)
-> > > > +		goto err_host_deinit;
-> > > > +
-> > > > +	/*
-> > > > +	 * Re-enable global IRQ events as the PARF_INT_ALL_MASK register is
-> > > > +	 * non-sticky.
-> > > > +	 */
-> > > > +	if (pcie->global_irq)
-> > > > +		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
-> > > > +			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
-> > > do we need to enable linkup again here, since all the devices are
-> > > enumerated previously, the linkup irq will do a rescan again which is
-> > > not needed.
-> > 
-> > Right. I was trying to keep the irq enablement on par with probe(), but LINK_UP
-> > is strictly not needed. I will drop it.
-> > 
-> > > Instead of linkup we update icc & opp bandwidths after
-> > > dw_pcie_wait_for_link() in the below.
-> > > 
-> > 
-> > Why do we need to update ICC and OPP?
-> After link retrain, if the link data rate has reduced due to some
-> electrical issue or some other reason we may need to update the icc and
-> opp votings here.
-> 
+For SMBUS block read, do not continue to read if the message length
+passed from the device is '0' or greater than the maximum allowed bytes.
 
-Hmm, I was not expecting it to get changed, but considering the fact that the
-link down might be happening due to any link stability issues, it is plausible.
+Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+v1->v2: Add check for the maximum data as well.
 
-I will add a call to qcom_pcie_icc_opp_update().
+ drivers/i2c/busses/i2c-tegra.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- Mani
-
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 87976e99e6d0..049b4d154c23 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1395,6 +1395,11 @@ static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
+ 			ret = tegra_i2c_xfer_msg(i2c_dev, &msgs[i], MSG_END_CONTINUE);
+ 			if (ret)
+ 				break;
++
++			/* Validate message length before proceeding */
++			if (msgs[i].buf[0] == 0 || msgs[i].buf[0] > I2C_SMBUS_BLOCK_MAX)
++				break;
++
+ 			/* Set the msg length from first byte */
+ 			msgs[i].len += msgs[i].buf[0];
+ 			dev_dbg(i2c_dev->dev, "reading %d bytes\n", msgs[i].len);
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.2
+
