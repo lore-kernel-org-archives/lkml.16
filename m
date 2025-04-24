@@ -1,93 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D97A7F9;
-	Thu, 24 Apr 2025 13:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878E77F9;
+	Thu, 24 Apr 2025 13:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499680; cv=none; b=ivUdjKA1d3rfGTrgg4wZv4TrvuOZPzQTq5VOLghq2rEhpujLwpZ8e/fp4gBfSxGY1ZR3rQR0CZPCf2501cElbwdvki9nYHFtCkGkOOKM97ofHFwUGRt5CZxnm3nhSSmlt0GChhLQeBylBatXUfetYMdBdQU9/vVrheNbXvrxDhI=
+	t=1745499704; cv=none; b=gKtEgkRw0PIqz9/YhBrvrvZ22/jUVsJaMUhkPZKuGqc/k/whsyE1axWBCR749bldwHPQe/hA65vMypqppNJew5WbBk0REmdKEbKNhHArvGnMRadjC7DrLWVk44R9+uRb0m6ti28HNFM2meFBgv78qxYj2wEdWi1ChsxswuXASZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499680; c=relaxed/simple;
-	bh=w4ERmlgT37R8fqbbx4uVzFLB0bFMUP+qmxc5xgde/7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXtFgVrlsoRjST+hhnbzGHxcG1sfGhkI5uBskoCC+FPnTW0SwrYbvOYgICwUC6idfrMMA8kbWyLWqudv5GZNBV7ruo0CxKjGnZHAneYSrpkm8ZQyvjz3238S6S+B9KvuMBb6zH3pyeLiUT2yAhqAL2McW8mdrBJ9JiIk13nDrpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxm6+iDH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745499704; c=relaxed/simple;
+	bh=TRjcVnbo9iVwByfN8XX61dcat0VDS8AJSl4mOmCqd8U=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=cVIRsD90mNNR1h5PgH0Phgv5OkuzD/f0XVeoWJQGrQmP93eRcfggvPvzjkvnwBPzQ+FGVPVU6tqKkcnGRFKmxnYt6F+f04hKp1VoacPUZBOep5vZrjebYqrHxm8omDtHG5t9QdaVWlXFrU1dasAG1QxyVbXmAaEXXvgtGmWl/cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qh8hlfNO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MnuemMGP; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxm6+iDH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE734C4CEE8;
-	Thu, 24 Apr 2025 13:01:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745499679;
-	bh=w4ERmlgT37R8fqbbx4uVzFLB0bFMUP+qmxc5xgde/7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pxm6+iDHVTleShgiF8bFeJvckCUPbkg57ANzPMtBwns7jfQzzmQz0EFJ05T112lwB
-	 WMYmpudJjzcHgAOUsrdINVZwv2/j3JmqCXznxVSHQq2h8faiVnOKb2RPegnUC/8c7p
-	 CHaM/QMNsb9S3xfYYv2Uod/Thx792cyS2aY6xTHFYMs9lM9RC3snvzyGXMCbGnsq0q
-	 S9nGIj8WSYURRlSOIHYy78OF6pj5n9fb8Tqqt9Sn/E9qC4HqxLGOVqzFxJrudWvFAS
-	 cqzpZUf5gYP+kfQp7RKfjlVq62KmV3pjTBFhnjHgok0FqDpTUNUI3do98G9jOCTAvJ
-	 KbiBb+ril+iaQ==
-Date: Thu, 24 Apr 2025 14:01:12 +0100
-From: Lee Jones <lee@kernel.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: ukleinek@kernel.org, alexandre.torgue@foss.st.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jic23@kernel.org, daniel.lezcano@linaro.org,
-	tglx@linutronix.de, robh@kernel.org, catalin.marinas@arm.com,
-	will@kernel.org, devicetree@vger.kernel.org, wbg@kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	olivier.moysan@foss.st.com
-Subject: Re: [PATCH v4 2/8] mfd: stm32-lptimer: add support for stm32mp25
-Message-ID: <20250424130112.GD8734@google.com>
-References: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
- <20250314171451.3497789-3-fabrice.gasnier@foss.st.com>
- <20250404144006.GB372032@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qh8hlfNO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MnuemMGP"
+Date: Thu, 24 Apr 2025 13:01:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745499700;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mufq346iA/QgHaWNhMsVwIv5hZEByGrwzYGfPFBTwpI=;
+	b=Qh8hlfNO6NOy1bW4ZVV4rI0sPRS5TQLijIoxd9+XXb/lq6axbih0rBTR0AjN1d9FT53GcI
+	j6yszvVMx1vkYe7nTeQRiVAL2AtbZfPKt2Zw40vVr/DS759e3x8QopijrAaxxak1bl7yMo
+	UPvLHv8d0jdvmeMCm4lUP7yddo5bEdZIgyfezv5IISFNUNcwNBLSLM0IwS3voRLSxkq9bB
+	zyU0LnD6BzUNWHoYZPJp2ZNcPZ8sXr/HavGr0brSzrWsGKr+h3xORTmI+J3yvTLjGloUjB
+	a7lOI7UeiQSkluOu317dvk0B6gHzkHP5rdIo7rkZRXnB/tuhnXRFtoxVIZ/dLA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745499700;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mufq346iA/QgHaWNhMsVwIv5hZEByGrwzYGfPFBTwpI=;
+	b=MnuemMGP8DTQLYFRRMmYP6Fbk3jAX9IjQA5wEnIEpJrIzocJ1tGoDgk9XRqU7U3eLwAaI1
+	p5MZ3kZ+sqX1/KAA==
+From: "tip-bot2 for Suzuki K Poulose" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/gic-v2m: Prevent use after free of
+ gicv2m_get_fwnode()
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <68053cf43bb54_7205294cc@dwillia2-xfh.jf.intel.com.notmuch>
+References: <68053cf43bb54_7205294cc@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250404144006.GB372032@google.com>
+Message-ID: <174549967937.31282.3096387842170950901.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, 04 Apr 2025, Lee Jones wrote:
+The following commit has been merged into the irq/urgent branch of tip:
 
-> On Fri, 14 Mar 2025, Fabrice Gasnier wrote:
-> 
-> > Add support for STM32MP25 SoC.
-> > A new hardware configuration register (HWCFGR2) has been added, to gather
-> > number of capture/compare channels, autonomous mode and input capture
-> > capability. The full feature set is implemented in LPTIM1/2/3/4. LPTIM5
-> > supports a smaller set of features. This can now be read from HWCFGR
-> > registers.
-> > 
-> > Add new registers to the stm32-lptimer.h: CCMR1, CCR2, HWCFGR1/2 and VERR.
-> > Update the stm32_lptimer data struct so signal the number of
-> > capture/compare channels to the child devices.
-> > Also Remove some unused bit masks (CMPOK_ARROK / CMPOKCF_ARROKCF).
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-> > ---
-> > Changes in V4:
-> > - Add DIEROK, ARROK status flags, and their clear flags.
-> > Changes in V2:
-> > - rely on fallback compatible as no specific .data is associated to the
-> >   driver. Compatibility is added by reading hardware configuration
-> >   registers.
-> > - read version register, to be used by clockevent child driver
-> > - rename register/bits definitions
-> > ---
-> >  drivers/mfd/stm32-lptimer.c       | 33 ++++++++++++++++++++++++++-
-> >  include/linux/mfd/stm32-lptimer.h | 37 ++++++++++++++++++++++++++++---
-> 
-> At least the Clocksource driver depends on this.
-> 
-> I need Acks from the other Maintainers before I can merge this.
+Commit-ID:     637cf959dac97d5b7b5ce5e6cd91dd3a2c2fc324
+Gitweb:        https://git.kernel.org/tip/637cf959dac97d5b7b5ce5e6cd91dd3a2c2fc324
+Author:        Suzuki K Poulose <suzuki.poulose@arm.com>
+AuthorDate:    Tue, 22 Apr 2025 17:16:16 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 24 Apr 2025 14:47:52 +02:00
 
-Suggest you resubmit the set as a [RESEND] to re-gain traction.
+irqchip/gic-v2m: Prevent use after free of gicv2m_get_fwnode()
 
--- 
-Lee Jones [李琼斯]
+With ACPI in place, gicv2m_get_fwnode() is registered with the pci
+subsystem as pci_msi_get_fwnode_cb(), which may get invoked at runtime
+during a PCI host bridge probe. But, the call back is wrongly marked as
+__init, causing it to be freed, while being registered with the PCI
+subsystem and could trigger:
+
+ Unable to handle kernel paging request at virtual address ffff8000816c0400
+  gicv2m_get_fwnode+0x0/0x58 (P)
+  pci_set_bus_msi_domain+0x74/0x88
+  pci_register_host_bridge+0x194/0x548
+
+This is easily reproducible on a Juno board with ACPI boot.
+
+Retain the function for later use.
+
+Fixes: 0644b3daca28 ("irqchip/gic-v2m: acpi: Introducing GICv2m ACPI support")
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/all/20250422161616.1584405-1-suzuki.poulose@arm.com
+Link: https://lkml.kernel.org/r/68053cf43bb54_7205294cc@dwillia2-xfh.jf.intel.com.notmuch
+---
+ drivers/irqchip/irq-gic-v2m.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index c698948..dc98c39 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -421,7 +421,7 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
+ #ifdef CONFIG_ACPI
+ static int acpi_num_msi;
+ 
+-static __init struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
++static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
+ {
+ 	struct v2m_data *data;
+ 
