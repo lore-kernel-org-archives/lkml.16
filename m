@@ -1,197 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8579C14E2E2;
-	Thu, 24 Apr 2025 22:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DA319DF7D;
+	Thu, 24 Apr 2025 22:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745534435; cv=none; b=MQTQvJyChBoiCmW1JDotdnuYfru7Jg9ckN97bO8Pr4cu4p3l+82bjxrMmHvGDhaW6PJQntWsUFTiPqnfGQRP23OtIMAlgHkxOb7GfTwSbrb6Q53d8jO9LoWwT/tGBa+mbc9UpXF8ik88LsoZeYsoQ7W4APpKuIHw0FkPq1R5i0A=
+	t=1745535162; cv=none; b=GL+3cXaquWM5Y0LB1v0mgINgzF4cCjjGgDoeWqNk0HJ7c1y3R1YF6cJR9v9PWco4Nk8w/H3dDgmqt7iuQ9qnf7ZngzjBfQp4lM1L8KVqGIKeI8L65WvR4JNNjfsaga898vFIcaoRFXHzN463XWa+WsQ/dLI9i32KFXIRZN0aXpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745534435; c=relaxed/simple;
-	bh=v5/+UAKc9qT69qSy9qPG/eu0NlxYHHKNbbJhCwkRNsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=feswkFn+DWzbMjjYMYVdsc9IrJIWbMHBt/NZwVxRMG3KeqgidQzwsi3A/rcMUDy7rSA5p4PI+wB4c0eTfzQIK7zZkCogG/jlys4uU6j1XMdCoijuSoaIlsP4BJj0QfQFMmzll82wbDiBokBH97O6vvcDY1U3Viye6jtP58TBON4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZmh21Gm; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745535162; c=relaxed/simple;
+	bh=vPcIZ8pDaO2fxwVC5G00kxdWjIdGTsiuQwohPKn5T0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KVsZQV6bMbtvJ+IXTHIju4PHCCdsfDbyRr94wsj7DFppxRyXiuJNpeJt2bErV1NYemvz5uLHw7Gof43I5iTmutfZQ4iTXX2S41iuSjdsN8hAR8+AMVqqYf7v+hpPuQ+EMvArzyQ809RyKBB0qJkhwgLdU1q2u/1GKTCK2rGW3a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYasCJ+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZmh21Gm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745534434; x=1777070434;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=v5/+UAKc9qT69qSy9qPG/eu0NlxYHHKNbbJhCwkRNsM=;
-  b=iZmh21GmZzTJPSHtrqtqV/YVSjJFOpRN/4z96x+0xt5Dc4BQFngNVfM3
-   RrvnxT3bZhrZmwe9dqp3eXEiYapotTP08eKIFBLlkppllmiOKuVD2iesS
-   rUT6JvYtR4/07xbBaN4rUbaN2kpnHI4pgDjt2FkwHrgESJSALHZvMiLaJ
-   Lc+2Bk6EmTG7eEFrr5u/nZQy616ldM3Q2TgFpNUv3/4WiRxFUUbXCZhcU
-   RhGCjVynN6SgBOYC9EFHuyQBhOCzqqUmb+SzGnECN3KAhIv4F5MxvQLfP
-   dy+VS7xwUVk/5NVb8cBIMokfkufs4cdzggAPFJ5dowAdAy7JCHLZtTBs8
-   Q==;
-X-CSE-ConnectionGUID: VL7W81txTHeYAU/lVYX3Kg==
-X-CSE-MsgGUID: FJj/6U6aTWWvuCkiqQ1hNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47204980"
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="47204980"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 15:40:33 -0700
-X-CSE-ConnectionGUID: 4TX2q2ACSeq1fI3IZjbhwg==
-X-CSE-MsgGUID: /ZpJP2SFRXunevsJLKTCAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="132482508"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.108.124]) ([10.125.108.124])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 15:40:32 -0700
-Message-ID: <a6e386bf-c9d4-4b3c-ad6e-dd1689330782@intel.com>
-Date: Thu, 24 Apr 2025 15:40:28 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYasCJ+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5211C4CEE3;
+	Thu, 24 Apr 2025 22:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745535160;
+	bh=vPcIZ8pDaO2fxwVC5G00kxdWjIdGTsiuQwohPKn5T0Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EYasCJ+PCKWsJfy6QKCS+dED2eee1eSGBrM6XFnNE259pPlh18AJDP8PmN1suzJQQ
+	 cH/grB+hHocnc8k+6xVMygiJ+X27thXwsQ25O+O9YSsSDOUpCj1QXmQFORXYlAcZt+
+	 KcByJOBeC3WcI8zrYfr+IGT1+tjjWEXc1uteTduLxmiG40HnS17N046oN3r2/ltS+7
+	 FL/k75eqNsXpmOhGT8IOdM8AzQAK7SmVbHWfHsycpJmKk9j+TXCQeONjrE3JmYzY/L
+	 h0t8O9Mc1LIPwprxr8tA7o6dVSp6g+jdCQTENRnKq2RUZyU7D3udtg33XZXgthg0U7
+	 2xxPaLfNpOp+A==
+Date: Thu, 24 Apr 2025 15:52:38 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Jeff Layton <jlayton@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim
+ Ijaz <qasdev00@gmail.com>, Nathan Chancellor <nathan@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] net: register debugfs file for net_device refcnt
+ tracker
+Message-ID: <20250424155238.7d0d2a29@kernel.org>
+In-Reply-To: <4118dbd6-2b4b-42c3-9d1e-2b533fc92a66@lunn.ch>
+References: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
+	<20250418-reftrack-dbgfs-v4-7-5ca5c7899544@kernel.org>
+	<20250423165323.270642e3@kernel.org>
+	<a07cd1c64b16b074d8e1ec2e8c06d31f4f27d5e5.camel@kernel.org>
+	<20250423173231.5c61af5b@kernel.org>
+	<cdfc5c6f260ee1f81b8bb0402488bb97dd4351bb.camel@kernel.org>
+	<4118dbd6-2b4b-42c3-9d1e-2b533fc92a66@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] iommu: Allow attaching static domains in
- iommu_attach_device_pasid()
-To: Jack Vogel <jack.vogel@oracle.com>, Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Kevin Tian <kevin.tian@intel.com>,
- Jason Gunthorpe <jgg@nvidia.com>,
- "shangsong2@lenovo.com" <shangsong2@lenovo.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250424034123.2311362-1-baolu.lu@linux.intel.com>
- <4764ACC2-6D38-4CAE-8A6B-451AB3DAF3E0@oracle.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <4764ACC2-6D38-4CAE-8A6B-451AB3DAF3E0@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Thu, 24 Apr 2025 14:10:03 +0200 Andrew Lunn wrote:
+> > > > > How much naming the objects in a "user readable" fashion actually
+> > > > > matter? It'd be less churn to create some kind of "object class"
+> > > > > with a directory level named after what's already passed to
+> > > > > ref_tracker_dir_init() and then id the objects by the pointer value 
+> > > > > as sub-dirs of that?    
+> > > > 
+> > > > That sounds closer to what I had done originally. Andrew L. suggested
+> > > > the flat directory that this version represents. I'm fine with whatever
+> > > > hierarchy, but let's decide that before I respin again.  
+> > > 
+> > > Sorry about that :(
+> > >   
+> > 
+> > No worries...but we do need to decide what this directory hierarchy
+> > should look like.
+> > 
+> > Andrew's point earlier was that this is just debugfs, so a flat
+> > "ref_tracker" directory full of files is fine. I tend to agree with
+> > him; NAME_MAX is 255, so we have plenty of room to make uniquely-named
+> > files.
+> > 
+> > We could build a dir hierarchy though. Something like:
+> > 
+> > - ref_tracker
+> >     + netdev
+> >     + netns  
+> 
+> How do you make that generic? How due the GPU users of reftracker fit
+> in? And whatever the next users are? A flat directory keeps it
+> simple. Anybody capable of actually using this has to have a level of
+> intelligence sufficient for glob(3).
+> 
+> However, a varargs format function does make sense, since looking at
+> the current users, many of them will need it.
+
+No preference on my side about the hierarchy TBH. I just defaulted to
+thinking about it in terms of a hierarchy class/id rather than class-id
+but shouldn't matter.
+
+The main point I was trying to make was about using a synthetic ID -
+like the pointer value. For the netdevs this patchset waits until 
+the very end of the registration process to add the debugfs dir
+because (I'm guessing) the name isn't assigned when we alloc 
+the device (and therefore when we call ref_tracker_dir_init()).
+
+Using synthetic ID lets us register the debugfs from
+ref_tracker_dir_init().
+
+In fact using "registered name" can be misleading. In modern setups
+where devices are renamed based on the system topology, after
+registration.
+
+The Ethernet interface on my laptop is called enp0s13f0u1u1,
+not eth0. It is renamed by systemd right _after_ registration.
+
+[45224.911324] r8152 2-1.1:1.0 eth0: v1.12.13
+[45225.220032] r8152 2-1.1:1.0 enp0s13f0u1u1: renamed from eth0
+
+so in (most?) modern systems the name we carefully printed
+into the debugfs name will in fact not match the current device name.
+What more we don't try to keep the IDs monotonically increasing. 
+If I plug in another Ethernet card it will also be called eth0 when
+it's registered, again. You can experiment by adding dummy devices:
+
+# ip link add type dummy
+# ip link
+...
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether b2:51:ee:5b:4b:83 brd ff:ff:ff:ff:ff:ff
+
+# ip link set dev dummy0 name other-name
+[  206.747381][  T670] other-name: renamed from dummy0
+# ip link
+...
+2: other-name: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether b2:51:ee:5b:4b:83 brd ff:ff:ff:ff:ff:ff
+
+# ip link add type dummy
+# ip link
+...
+2: other-name: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether b2:51:ee:5b:4b:83 brd ff:ff:ff:ff:ff:ff
+3: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether b2:51:ee:5b:4b:83 brd ff:ff:ff:ff:ff:ff
 
 
+The second device is called dummy0, again, because that name was
+"free". So with the current code we delay the registration of debugfs
+just to provide a name which is in fact misleading :S
 
-On 4/24/25 3:34 PM, Jack Vogel wrote:
-> I am having test issues with this patch, test system is running OL9, basically RHEL 9.5, the kernel boots ok, and the dmesg is clean… but the tests in accel-config dont pass. Specifically the crypto tests, this is due to vfio_pci_core not loading.  Right now I’m not sure if any of this is my mistake, but at least it’s something I need to keep looking at.
-> 
-> Also, since I saw that issue on the latest I did a backport to our UEK8 kernel which is 6.12.23, and on that kernel it still exhibited  these messages on boot:
-> 
-> *idxd*0000:6a:01.0: enabling device (0144 -> 0146)
-> 
-> [   21.112733] *idxd*0000:6a:01.0: failed to attach device pasid 1, domain type 4
-> 
-> [   21.120770] *idxd*0000:6a:01.0: No in-kernel DMA with PASID. -95
-> 
-> 
-> Again, maybe an issue in my backporting… however I’d like to be sure.
-
-Can you verify against latest upstream kernel plus the patch and see if you still see the error?
-
-DJ
-
-> 
-> Cheers,
-> 
-> Jack
-> 
-> 
->> On Apr 23, 2025, at 20:41, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>
->> The idxd driver attaches the default domain to a PASID of the device to
->> perform kernel DMA using that PASID. The domain is attached to the
->> device's PASID through iommu_attach_device_pasid(), which checks if the
->> domain->owner matches the iommu_ops retrieved from the device. If they
->> do not match, it returns a failure.
->>
->>        if (ops != domain->owner || pasid == IOMMU_NO_PASID)
->>                return -EINVAL;
->>
->> The static identity domain implemented by the intel iommu driver doesn't
->> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
->> for the idxd driver if the device translation mode is set to passthrough.
->>
->> Generally the owner field of static domains are not set because they are
->> already part of iommu ops. Add a helper domain_iommu_ops_compatible()
->> that checks if a domain is compatible with the device's iommu ops. This
->> helper explicitly allows the static blocked and identity domains associated
->> with the device's iommu_ops to be considered compatible.
->>
->> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
->> Cc: stable@vger.kernel.org
->> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
->> Link: https://lore.kernel.org/linux-iommu/20250422191554.GC1213339@ziepe.ca/
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->> drivers/iommu/iommu.c | 21 ++++++++++++++++++---
->> 1 file changed, 18 insertions(+), 3 deletions(-)
->>
->> Change log:
->> v3:
->> - Convert all places checking domain->owner to the new helper.
->> v2: https://lore.kernel.org/linux-iommu/20250423021839.2189204-1-baolu.lu@linux.intel.com/
->> - Make the solution generic for all static domains as suggested by
->>   Jason.
->> v1: https://lore.kernel.org/linux-iommu/20250422075422.2084548-1-baolu.lu@linux.intel.com/
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 4f91a740c15f..b26fc3ed9f01 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -2204,6 +2204,19 @@ static void *iommu_make_pasid_array_entry(struct iommu_domain *domain,
->> return xa_tag_pointer(domain, IOMMU_PASID_ARRAY_DOMAIN);
->> }
->>
->> +static bool domain_iommu_ops_compatible(const struct iommu_ops *ops,
->> +struct iommu_domain *domain)
->> +{
->> +if (domain->owner == ops)
->> +return true;
->> +
->> +/* For static domains, owner isn't set. */
->> +if (domain == ops->blocked_domain || domain == ops->identity_domain)
->> +return true;
->> +
->> +return false;
->> +}
->> +
->> static int __iommu_attach_group(struct iommu_domain *domain,
->> struct iommu_group *group)
->> {
->> @@ -2214,7 +2227,8 @@ static int __iommu_attach_group(struct iommu_domain *domain,
->> return -EBUSY;
->>
->> dev = iommu_group_first_dev(group);
->> -if (!dev_has_iommu(dev) || dev_iommu_ops(dev) != domain->owner)
->> +if (!dev_has_iommu(dev) ||
->> +   !domain_iommu_ops_compatible(dev_iommu_ops(dev), domain))
->> return -EINVAL;
->>
->> return __iommu_group_set_domain(group, domain);
->> @@ -3435,7 +3449,8 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->>    !ops->blocked_domain->ops->set_dev_pasid)
->> return -EOPNOTSUPP;
->>
->> -if (ops != domain->owner || pasid == IOMMU_NO_PASID)
->> +if (!domain_iommu_ops_compatible(ops, domain) ||
->> +   pasid == IOMMU_NO_PASID)
->> return -EINVAL;
->>
->> mutex_lock(&group->mutex);
->> @@ -3511,7 +3526,7 @@ int iommu_replace_device_pasid(struct iommu_domain *domain,
->> if (!domain->ops->set_dev_pasid)
->> return -EOPNOTSUPP;
->>
->> -if (dev_iommu_ops(dev) != domain->owner ||
->> +if (!domain_iommu_ops_compatible(dev_iommu_ops(dev), domain) ||
->>    pasid == IOMMU_NO_PASID || !handle)
->> return -EINVAL;
->>
->> -- 
->> 2.43.0
->>
-> 
-
+But with all that said, I guess you still want the "meaningful" ID for
+the netns, and that one is in fact stable :S
