@@ -1,68 +1,67 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E121A0B08
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A49D1A5BBD
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502723; cv=none; b=Euw5EuyKJ3uz8MBBJ2lZlZmMnLCLruS1/+hcie1j7uu3BZxL/WON4kes6JVA/YhAk0b1S6EhVLbJ6ixcryMsftv3eqQzRMeUgfadUsBkjfLHtRRg2/61eK4lU2NWTCtVvSeWOtg1y8j/4d1wzy3FDD1TCMYWeGjLNAF55hnOd6I=
+	t=1745502738; cv=none; b=G+5gUnLWtPk97FTaTNow45gEb1payv277D+c7c9fcavaqJDfcTDSi4y/kHoJ9/M/qk8XXwnNlzY7lwfs6d6HuH3sLBYH9+f0XsAD1Ng7CZHkwPkBhOSA2+nxi56XmezZfjjve9ULcs5HqZQO5/TK00eFGaF+jlYror2BBuJPDw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502723; c=relaxed/simple;
-	bh=HuSOrMsBPvuGrn3yCiHEz7f6WJyDx/K7FHHcANFQ3v4=;
+	s=arc-20240116; t=1745502738; c=relaxed/simple;
+	bh=rhbP5XkQ6X097qPz7EVXCKsH39vG5Wdg9pzdYO/O0W8=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Cn5Hj3MHNsWu9mvPyDPFDTrm+uSEzJ2JoGx8cBjClObDVv0k0dmnM7z1ZWsMFZdNmPXzKBVl6mhMZKvlHijJKj6/3N7DPK+/vps4GXrpRR0x4Al6czFPEVHaVZO/80qS5lPkKqZJs18yzHXv3wYlegIcGbZa1BTFOYc9XxWCJc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LbJAJE0R; arc=none smtp.client-ip=209.85.221.51
+	 In-Reply-To:Content-Type; b=POt1ywMzLa8Dqrd5376ieUhsjIjvmaevw1oFRb1xlu/GOTWKwxz8XO+OBsuB/x+DGp9WwM4xRd9HlGGJ/hv2l/0OmlnkjzytQUoNWT0N6KNFx02s+FplQNigL+7bmKt7zFKCjtexgon5gWhm+D+38jR9WdiVimLN2svLR+bH/mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Udgb1KSZ; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbJAJE0R"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c0dfba946so764104f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:52:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Udgb1KSZ"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913b539aabso559711f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745502720; x=1746107520; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745502735; x=1746107535; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ol+RP36G4w38iAX1eUTpERYoeJnh8WjSro9BvevXWbw=;
-        b=LbJAJE0RonQRNOqt3LtqDyXav18CEHyT4p+BINufoiJKCiZS0qLXdC8Rd716QSmAQm
-         7BIj7kq0ibcARscoaWNbgxbm2b1hm1yOYCr0c8+NIIv6XHNn9yyTmCQOFniDAat/rmsH
-         lvyWZz/OeOwrPaTiEEFsC+GuwH2AVC5A/6yD1ASaVwFaE/Fmb6xjZAaAftbOSOiqmE/i
-         eJOx49HEnrZf057V5AeOP89tf/dtc/yoaxTgke/OxqaquJdkSxQHbEy/UYoXnV8G+VRh
-         PhGQpDTa+xPS+80TrA0A67fmOQsJTvh/2On4sSv476YyT+cfIQVFWa3xRnm4+1r2txv9
-         E+pw==
+        bh=94knGJ71ZirGM0g1BU+o9ybsSO6EkD/aLUYDflsXGA0=;
+        b=Udgb1KSZsgsKRnxIDXsift0+s/fWbsEJz6kXOJKl3gCWVIFJYqdyOzg9up/k7qw5vS
+         rXnAG5ysnZCfuH2YrRBXbzsACEcAA3bgi9ojf98MhPyoFXLODnwJCy13yvpLYg03MXpw
+         mO0aswRWyCdvTjNJ7p7Ubx3UKUvWjD6SI5q1fQq3/VxGuwtkup316ikSlSs2HywFXo7f
+         ijiouTqFJl4fiMh83wGOnZ1I0+Hdk/JibUhgJRSx0Hdjhe+nzk8S14CAL044Fzh6U/90
+         cWZSe+CI62l9O2/JriZzPS9AnVMSEvSgRRDF0xgmmiREIVXneW8t5C6fXKZzOjf5cdPi
+         nuTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745502720; x=1746107520;
+        d=1e100.net; s=20230601; t=1745502735; x=1746107535;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Ol+RP36G4w38iAX1eUTpERYoeJnh8WjSro9BvevXWbw=;
-        b=Kp0+OAS8M3TqAyR2iKDm90wweN6mLQClK5EzjfasEEkQyo/2PERpQQC/rok+iTmL+Y
-         cJ+GJP/CNVka2SJUovltnGMNd0E9tAJf0w1oz2Rt5uPBiWHwShpWVtDBmoDHrEy+MrPm
-         p5ZZTH//UFVMtfuvgsnf3WG5zA9bWQP3vhVvtgZxAY4KE8Q2+VuOIhLBlWDPvW19vOVY
-         4n0FdzaGVg7WueLDJ4O1EeuY+qkqsOmKhPZhv0Kcu+iXbeSM7Jd0ckUy/w9OZp4XMgW7
-         zE6ToL5NEySize8IMJLO6Z+QNcAAvCDPtfZIkkkmv4Hg092b5ukiGoYWq2CFGYdKpAGd
-         xz4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV0X9njq6LXuXeaz8fa2QfgWzjal5hOAU/1Q8FVNyEoCzhbZTg5+su/4dWR0KTJupZdJK+sIHjkeJRQH30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynWFzyVNgSVxRIbGCuvrHOsvIzLGq+LJxKYAJ7Io84pM441b/S
-	L/TbU9KRNBKLjOMXvBvmggRD8BQ+wW5cHJ2l9QssZ3WVtzgyKEjgYJlkpVtJHzMsU1tooK4syN7
-	9
-X-Gm-Gg: ASbGncvAya77mezO8dJp17l4N77zGuDZp90gPDtLfRIUF9fEn9OzDawXGTxxw+Sg4ek
-	RNL8krJroKSWv61PTraifgvDHRQW9qqZQnTWDdNBC1HhpXFoqi/2+axyvUNyGQ27ps+wNQ20pRm
-	m/CCDJYtOhKfD0yAKflyghPWEwMLPB4KqD7P7CJGxdFLV7P4gg1zLZ9gYDeSyvNGfXsAfIuTcFp
-	PbE3znAc0fMnolaXSVG0MaHX8CZy6eHjs4ut+7I7PoGyQwWGIG1kDj1ic9mgQisqZMw2wy/vd8L
-	gSWHQDXtQ5WPbm2ZJlyRAKSTQhV8A0IR5Rl0e11VvOnTca9Wo1MIlkY14QEduAG7fmJm5AA6HCe
-	Wm5eYeqmKZyLpZtlXNw==
-X-Google-Smtp-Source: AGHT+IGt0ddBz4oRFk+JyZ3+u5ZV6Qt1q6gXu50XzgPpKAgL/bI02kyNDZx6wTjkCqJ8NEWTMa8wfw==
-X-Received: by 2002:a05:6000:178a:b0:391:4674:b10f with SMTP id ffacd0b85a97d-3a06cfa2c6amr2261345f8f.36.1745502720246;
-        Thu, 24 Apr 2025 06:52:00 -0700 (PDT)
+        bh=94knGJ71ZirGM0g1BU+o9ybsSO6EkD/aLUYDflsXGA0=;
+        b=NOxVroZ+19d/Pce1xOnvR7Zg0rCg7BfQsBBM4AmAAR9kHLS0qQ5FhNhXJxuyezcz9a
+         UcgZcM0v4lpdL6hxjdeSu65oYgelCIlCjqkl0+YVpjvsxY4hIe9YH42X7DxKBwvqgpUi
+         8/9smvdk3w4vdBkIxtELecTV51R2BAmihOov0FI7CAQtv6CEcjMoY4T1tzr+B4CsZowB
+         RzA2D4MP+eh6TBWLWPR92inDhuXZhIu/e+ZLyfVeNCp3SXGrqRopg/nzZdxFzEIPae2V
+         FzFxgPH1gozu+z1rFwQ7gpPBA+sscAbvATptA9dn17u5nR+roP62lU/q/DWHrq5IzRv4
+         8mxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4wMZlb7xa8D/50kLDj+2c5DX6mLwPz6Cs0QXs1X/MI3/huHbaSWgx4CY5giksQGfANWJZGaGbn3znbRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT2lePBzMJ+yV4FcEwA13aSOgzYwY7LQMlrHPyoa6V9r6KQHDs
+	u5+Jd0yKbXwcTcO7PEOx3NSBirf0KD6PsuGqx7k/qhvzLEBlknwLXYIXOO09r2c=
+X-Gm-Gg: ASbGncs7e+JwvxntnimtVcHT/qUpmnn2p8sEeSiqB47sF0oy2aTUbe7NUbYTvLPKLPX
+	f3Cs/YOt6cS309mfLjUb6WrDZRwnhtMcoY8o2GHaBJuxIvaQHw+YS+h3T/UIJxj7GLrqdSUBzG2
+	WhFy6OCBRTVv/Bbgs/CfVK+vMediNpdAMMZ7wNWfB3Uc8UtDGSnyM0NovHuQnQVOlfVzNH26uQH
+	66A5AgowFC87Bc7jtHxugjYQrtnGidmFn/yNPYYjR6czNH2uEaLKQOfy3aWEDZfr13MUgnOjAT3
+	M8/h2h173ynEV7mOicslHQy1HSD6aUURBsE1Bylarr0e/7/tp8GV95i7/HAwB2j/5LulI/vvf6s
+	NcCSsvfrNYo8KDeO5LQ==
+X-Google-Smtp-Source: AGHT+IE8bCi/1gtJ/3UiylMOikIwlsDkRI0Npi+UN1WfULrYkQGHsvlTutYB0ZzB44iY6EWcuAgz4w==
+X-Received: by 2002:a05:6000:4013:b0:391:1222:b444 with SMTP id ffacd0b85a97d-3a06cf56420mr2551913f8f.20.1745502734803;
+        Thu, 24 Apr 2025 06:52:14 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:a24a:bfda:f031:720d? ([2a01:e0a:3d9:2080:a24a:bfda:f031:720d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a815bsm2169998f8f.8.2025.04.24.06.51.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4be673sm2140220f8f.23.2025.04.24.06.52.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 06:51:59 -0700 (PDT)
-Message-ID: <479224f1-86f1-4561-af28-01b6354b4829@linaro.org>
-Date: Thu, 24 Apr 2025 15:51:59 +0200
+        Thu, 24 Apr 2025 06:52:14 -0700 (PDT)
+Message-ID: <e7aa786d-26aa-4a3d-92bf-7f14dcb79b8c@linaro.org>
+Date: Thu, 24 Apr 2025 15:52:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,8 +71,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC/WIP 3/4] arm64: dts: qcom: sm8750-mtp: Enable USB
- headset and Type-C altmode
+Subject: Re: [PATCH RFC/WIP 4/4] arm64: dts: qcom: sm8750-mtp: Enable
+ DisplayPort over USB
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  Bjorn Andersson <andersson@kernel.org>,
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -83,7 +82,7 @@ Cc: Jessica Zhang <jesszhan@quicinc.com>, Abhinav Kumar
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250424-sm8750-display-dts-v1-0-6fb22ca95f38@linaro.org>
- <20250424-sm8750-display-dts-v1-3-6fb22ca95f38@linaro.org>
+ <20250424-sm8750-display-dts-v1-4-6fb22ca95f38@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -110,110 +109,58 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250424-sm8750-display-dts-v1-3-6fb22ca95f38@linaro.org>
+In-Reply-To: <20250424-sm8750-display-dts-v1-4-6fb22ca95f38@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 24/04/2025 15:04, Krzysztof Kozlowski wrote:
-> MTP8750 does not have audio jack connected and relies on USB mux
-> (WCD9395).  Add necessary nodes for proper audio headset support along
-> with USB Type-C altmode and orientation.
+> Hook up DisplayPort parts over Type-C USB on MTP8750.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->   arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 58 +++++++++++++++++++++++++++++++++
->   1 file changed, 58 insertions(+)
+>   arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 8 ++++++++
+>   arch/arm64/boot/dts/qcom/sm8750.dtsi    | 2 ++
+>   2 files changed, 10 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
-> index bd0918e8a7a7e03530eea577c7609454fecfdaf7..c3470e1daa6b7f31196645759be23fb168ce8eb7 100644
+> index c3470e1daa6b7f31196645759be23fb168ce8eb7..69a54ac0f85d5ae20d005a09fbf8da7d769a9c2e 100644
 > --- a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
 > +++ b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
-> @@ -53,6 +53,15 @@ wcd939x: audio-codec {
->   		vdd-mic-bias-supply = <&vreg_bob1>;
->   
->   		#sound-dai-cells = <1>;
-> +
-> +		mode-switch;
-> +		orientation-switch;
-> +
-> +		port {
-> +			wcd_codec_headset_in: endpoint {
-> +				remote-endpoint = <&wcd_usbss_headset_out>;
-> +			};
-> +		};
->   	};
->   
->   	chosen {
-> @@ -220,6 +229,14 @@ port@1 {
->   					pmic_glink_ss_in: endpoint {
->   					};
->   				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +
-> +					pmic_glink_sbu: endpoint {
-> +						remote-endpoint = <&wcd_usbss_sbu_mux>;
-> +					};
-> +				};
->   			};
->   		};
->   	};
-> @@ -845,6 +862,42 @@ vreg_l7n_3p3: ldo7 {
->   	};
->   };
->   
-> +&i2c3 {
-> +	status = "okay";
-> +
-> +	wcd_usbss: typec-mux@e {
-> +		compatible = "qcom,wcd9395-usbss", "qcom,wcd9390-usbss";
-> +		reg = <0xe>;
-> +
-> +		vdd-supply = <&vreg_l15b_1p8>;
-> +		reset-gpios = <&tlmm 152 GPIO_ACTIVE_HIGH>;
-> +
-> +		mode-switch;
-> +		orientation-switch;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +
-> +				wcd_usbss_sbu_mux: endpoint {
-> +					remote-endpoint = <&pmic_glink_sbu>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +
-> +				wcd_usbss_headset_out: endpoint {
-> +					remote-endpoint = <&wcd_codec_headset_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &lpass_vamacro {
->   	pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
->   	pinctrl-names = "default";
-> @@ -973,6 +1026,11 @@ &pmih0108_eusb2_repeater {
->   	vdd3-supply = <&vreg_l5b_3p1>;
->   };
->   
-> +&qup_i2c3_data_clk {
-> +	/* Use internal I2C pull-up */
-> +	bias-pull-up = <2200>;
-> +};
-> +
->   &qupv3_1 {
+> @@ -910,6 +910,14 @@ &mdss {
 >   	status = "okay";
 >   };
+>   
+> +&mdss_dp0 {
+> +	status = "okay";
+> +};
+> +
+> +&mdss_dp0_out {
+> +	data-lanes = <0 1>;
+> +};
+> +
+>   &mdss_dsi0 {
+>   	vdda-supply = <&vreg_l3g_1p2>;
+>   
+> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> index 753b069cab1de636a3b1108747f300bec0f33980..b20fc5b5bdfab598fc7b9be53eef96cc16bc5985 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> @@ -2965,6 +2965,7 @@ port@1 {
+>   						reg = <1>;
+>   
+>   						mdss_dp0_out: endpoint {
+> +							remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+>   						};
+>   					};
+>   				};
+> @@ -3064,6 +3065,7 @@ port@2 {
+>   					reg = <2>;
+>   
+>   					usb_dp_qmpphy_dp_in: endpoint {
+> +						remote-endpoint = <&mdss_dp0_out>;
+>   					};
+>   				};
+>   			};
 > 
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
