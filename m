@@ -1,150 +1,162 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF0B14F9EB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D0E14F9EB;
+	Thu, 24 Apr 2025 15:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507911; cv=none; b=XegQqyDqBAyh/k6AvW76JWMMnP2nprCMyWIyLrJdBtmC0cj9vH9y9bQMnZ4ciE0UaPRYvJje7iCmkSosfcgXOvZ8f1qH6Lf2l/d62VliKPTAfyKCPkQhsRa8LKdNza/+Wju6OXGJvTBVjQYm57oiGrUgYA4HSc4588ti3kxBfhc=
+	t=1745507928; cv=none; b=f67fAfih1sdbHwMUc6y+fhvn9WjZc5GMju2eJ4Q3DmdjvXHzfHulkSrjpaVgEUz5RZk56VwSfMtz709VCcJa/JjcOK+qpU3wAjhLspGc3XUVENOqNmdKKtx8/flAjSuG1riWl3tI7Eo6/c/99iqIfjuRiEPaO1++huZr4FHxIs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507911; c=relaxed/simple;
-	bh=9BNIxnc9r804rmE7+FXrComHgep37vSfqHSO0rVjenE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EwoTDIIY1O3tOTv8dQjd+zYSQoPjKwo4PA+D32p216Wd/yrqXg835cAsB305d6xtJg4gdFrLj8aBAYVqRGesrwTz9xZO2nD3Hye5d0ZIJiqkt4WIvIdPT7u44qKK8lpCND8lPJ4KItSL+t6abjeOAhMKqefFOyD3wHlS/ETwaPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0W0/oTRz; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1745507928; c=relaxed/simple;
+	bh=Cfwo3zn+LUVCR2Nba2kjhqU4b8JvbapZ+dJDwNIQvR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EpAfHHM/cZW7QZDcODT5v0gXgGQUq9JGpQnUL0jhw5qEFqJ3uxspALMaQT6hra1eHfVdreNJzdhQRVZRFYMCvUXs+zH/Rs2a3P1+iZzGqNOQmTdRiApqYiXlpAcvye58xJPlbxrLFaQhvgd6N4CLZtLGe84wVeDr+SCL2c+w8Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FtyAuiP8; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0W0/oTRz"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so8185665e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745507908; x=1746112708; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cfA5KJ+Q12EFPpKOtsI5SxxVVjHn+/t0FQnzxOZ5ksc=;
-        b=0W0/oTRzQVbau4AbZlDZ19TifVo7XetwHL5h3BmpiFoB0q14/X3NwKklSPMGjQ4zib
-         7F2B5PDVU8epHDOrTRZMjYMySzw/6lC6ohqEwWb/3A7AwnRnCL3UUMUB/oA54QLAA1uJ
-         Ym9Vc6tzYdwaoyb/2OVr/UAmgIeqPUWP1pndEZ5feFsxq6F+jgllB3CAP+t3biyp/F/k
-         xIatNNZEQY9OMf+cGi0e9+vmn06RGs4kf0RLXCFETewtzth90o+VsLpy7npdCbszZaQN
-         GRpC8ZR5zUc4ygZdg5Qc1ZhqWqdE80b6mps+45QWDkXCFRnIdcE8jDfZnM6246LjrSSs
-         shtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745507908; x=1746112708;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cfA5KJ+Q12EFPpKOtsI5SxxVVjHn+/t0FQnzxOZ5ksc=;
-        b=bh7WlxNPW3xUPVvWASkMo7qi9mDubEI7H1kM0tWyw9HGcG0tbx8+Bac6ueOFJwOPBx
-         PElLhKYlmnRlRZna06LjJJISpKI3Y0uE2KfaxSEwWSQtKEfzeKSQ1beLOSjBjV2E352i
-         Og4QW2ZYXDleSmq9yaQ9RWavSHYJY5pypKRiluuomXjgghq8Aj9bU/Nzj+NCfiAdSPTx
-         XdIcERVZJqTL4Q92pxsMUnCwOAlM88JFmHcG6J2G5eJzigeDZ1POAdD26j/8yXYSy5Fw
-         YjvpSnk47t04oCg+Bt5jwmrErtVILBVp3XyHxYKfKRaDgJg9JxBzO3S6BDet/9Gs4lTO
-         +Zig==
-X-Forwarded-Encrypted: i=1; AJvYcCV/qDVloECRcWKwQRYZpOIZOLzXiO27g83Gq2qok5LvO68MyHBhFaZs6wpYJ0II9VZWuWESqtvGAU/K/w0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4KAAA68JyymjCyB9gyUfv/3QW4mYVj7db7wO/0hfTtOAwYwjw
-	VhLBiAK3I8jtFX9uj9RtNJ2sfPFIADs9Hy/iYDeAd80rfEUwJSvGrESFEX94Ki8oA+5Npqxy1Ky
-	iOeYvtrE047ikZQ==
-X-Google-Smtp-Source: AGHT+IFYlRdWdDBWEytA3wAsf7mafXhWXPvUDFxyzQdqN7Sx421ZAojDUsD1snyQx+fuZBzGtNoo+knrTEpnQPE=
-X-Received: from wmsp1.prod.google.com ([2002:a05:600c:1d81:b0:43c:f5f7:f76a])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3482:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-4409bd23196mr37607955e9.13.1745507907748;
- Thu, 24 Apr 2025 08:18:27 -0700 (PDT)
-Date: Thu, 24 Apr 2025 15:17:48 +0000
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FtyAuiP8"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4481743B2E;
+	Thu, 24 Apr 2025 15:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745507923;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8IVmwrk7aGTZcp/7NN8zrGIfqqXduX0J3M9hpB/pHPA=;
+	b=FtyAuiP8ARUUv2xs4PPtC4FuRrb5XYgrq7nTPDnp6BcGNmDvjt3hiUhZJ4gakGWOTMm285
+	izxLY19qRdbJgJHFDSKAmWuF147STQIQIY3Vvwl7qEaG7qJvaXjNpLiY9Vfya0P+MRrZDU
+	AaSSvmPNKnk2zfXYGcIo6csHPDBpesNfnl+mfWjAWossSdTGC2MKU8egwvpd6GBwyGo54M
+	fRZ/GwgbtAhX6Rj0x9SRnbLCNylZJ2rKp10NgYWNfJY6XoWyZWuZlAVflEcsvXYf2Mdzcj
+	OQ1uc5DdEPbXp2iO9ebp0rO3bbg1DWD4/1SRv2zche6VhM3c2W8AAxGm0SHemw==
+Date: Thu, 24 Apr 2025 17:18:38 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
+ =?UTF-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Hui Pu
+ <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 34/34] drm/bridge: panel: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250424171838.21a95d80@booty>
+In-Reply-To: <20250408-thankful-husky-of-weather-355cae@houat>
+References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
+	<20250407-drm-bridge-convert-to-alloc-api-v1-34-42113ff8d9c0@bootlin.com>
+	<20250408-thankful-husky-of-weather-355cae@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIABtWCmgC/x3MMQ6AIAxA0auYzjZBog5exTgoFO0gkKJGY7i7x
- PEP77+QSJgSDNULQhcnDr5EU1dgttmvhGxLg1a6U61uMR3iTXzQSdjxLBobp63qF2WsJSguCjm +/+c45fwBd4u50WMAAAA=
-X-Change-Id: 20250424-strncpy-from-user-1f2d06b0cdde
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2100; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=9BNIxnc9r804rmE7+FXrComHgep37vSfqHSO0rVjenE=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoClY8RSQvWwEQndvmFwi89glgqILwEhoVJ15aK
- lPvvfLhCO+JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaApWPAAKCRAEWL7uWMY5
- Rp8CD/9tbXhInLSabFWUztQR3lTNjgICrtdrNs8ftT/5o1QwiqRAXwe+2l6q+rZ+MdGyBIErAF0
- zoYJ4F+KhawbAH5je3edyYmeyMRtiKGuhTA6Sb8F3BLWGtKd/7VIa1yA0fN3jnHCnJ3v9/9AMn4
- 0glbkXdhjSrmkFlzuLU7WpmioBBrQ4kqNsKH0ChZNjpbOyQsMDFP7ddc9946nics9IOVQQJKW6y
- +9WyHYv3bQsb3Y7qP8VHsbh7UATHKmmnmugN5CvN8nygEXFBxsvOj2C/HW4BzqVOwKlyfDzh+Ox
- Rq5wzXNx4Wq9rDb4K7rAFH/+6+nSXDmdkk8vDnU2sc//hhvPMBWAjVLVX/n65FfB8RHiE27ftoR
- fY7DNC5FwUAd4pA/rJNYLjwUdBxbQ3HBtB62r1kBcXCsOv+dDga5G99P1ydDjwPrJ6bn5Xxw45L
- Jbwn1i8zX+nVbT/TI0kc/skSqiAikiN/QnaltMqHktjePIoIZdy7XpiBeRZv5Rt+OMTj0aWX6Aj
- vGzaTYDf6VGrwwrSnKF9PFnYyP94TfTNFpa9GXrEG0kli0kaKrNg+zvBnu73Wt/puU1pQ/8CB9G
- umW+ioYL8CfXPyX2xGv7pZ4rc6R90LBVhRccZbYOc6FVCXuz2kF/Ci/OQRfiZIs2o2Q8xa3l0bF 6kWUsHPzoa7/X9Q==
-X-Mailer: b4 0.14.2
-Message-ID: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
-Subject: [PATCH] uaccess: rust: add strncpy_from_user
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrn
+ hhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This is needed for ioctls that operate on a user-provided string.
+Hi Maxime,
 
-It is somewhat unfortunate that strncpy_from_user does not nul-terminate
-the string when the end of `buf` is reached. This implies that we can't
-return a &CStr from the function, since the buffer may not always be
-nul-terminated.
+On Tue, 8 Apr 2025 17:51:08 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
 
-That said, we could add more convenient helpers on top that add a NUL
-byte in that case.
+> Hi,
+> 
+> On Mon, Apr 07, 2025 at 05:27:39PM +0200, Luca Ceresoli wrote:
+> > This is the new API for allocating DRM bridges.
+> > 
+> > The devm lifetime management of this driver is peculiar. The underlying
+> > device for the panel_bridge is the panel, and the devm lifetime is tied the
+> > panel device (panel->dev). However the panel_bridge allocation is not
+> > performed by the panel driver, but rather by a separate entity (typically
+> > the previous bridge in the encoder chain).
+> > 
+> > Thus when that separate entoty is destroyed, the panel_bridge is not
+> > removed automatically by devm, so it is rather done explicitly by calling
+> > drm_panel_bridge_remove(). This is the function that does devm_kfree() the
+> > panel_bridge in current code, so update it as well to put the bridge
+> > reference instead.
+> > 
+> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-This method isn't defined on UserSliceReader because it complicates the
-semantics. The UserSliceReader type also has its own maximum length, so
-we would have to limit the read by that length too.
+[...]
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/uaccess.rs | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+> > --- a/drivers/gpu/drm/bridge/panel.c
+> > +++ b/drivers/gpu/drm/bridge/panel.c
+> > @@ -287,15 +287,14 @@ struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
+> >  	if (!panel)
+> >  		return ERR_PTR(-EINVAL);
+> >  
+> > -	panel_bridge = devm_kzalloc(panel->dev, sizeof(*panel_bridge),
+> > -				    GFP_KERNEL);
+> > -	if (!panel_bridge)
+> > -		return ERR_PTR(-ENOMEM);
+> > +	panel_bridge = devm_drm_bridge_alloc(panel->dev, struct panel_bridge, bridge,
+> > +					     &panel_bridge_bridge_funcs);
+> > +	if (IS_ERR(panel_bridge))
+> > +		return (void *)panel_bridge;
+> >  
+> >  	panel_bridge->connector_type = connector_type;
+> >  	panel_bridge->panel = panel;
+> >  
+> > -	panel_bridge->bridge.funcs = &panel_bridge_bridge_funcs;
+> >  	panel_bridge->bridge.of_node = panel->dev->of_node;
+> >  	panel_bridge->bridge.ops = DRM_BRIDGE_OP_MODES;
+> >  	panel_bridge->bridge.type = connector_type;
+> > @@ -327,7 +326,7 @@ void drm_panel_bridge_remove(struct drm_bridge *bridge)
+> >  	panel_bridge = drm_bridge_to_panel_bridge(bridge);
+> >  
+> >  	drm_bridge_remove(bridge);
+> > -	devm_kfree(panel_bridge->panel->dev, bridge);
+> > +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
+> >  }
+> >  EXPORT_SYMBOL(drm_panel_bridge_remove);  
+> 
+> I'm fine with it on principle, but as a temporary measure.
+> 
+> Now that we have the panel allocation function in place, we can just
+> allocate a bridge for each panel and don't need drm_panel_bridge_add_*
+> at all.
+> 
+> As I was saying before, it doesn't need to happen right now, or before
+> the rest of your work for hotplug goes in. But this needs to be tackled
+> at some point.
 
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 80a9782b1c6e98ed6eae308ade8551afa7adc188..1bd82045e81ea887008e30241bd6de27f096b639 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -369,3 +369,30 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-         Ok(())
-     }
- }
-+
-+/// Reads a nul-terminated string into `buf` and returns the length.
-+///
-+/// Fails with [`EFAULT`] if the read happens on a bad address. If the end of `buf` is reached,
-+/// then the buffer will not be nul-terminated.
-+#[inline]
-+pub fn strncpy_from_user(ptr: UserPtr, buf: &mut [u8]) -> Result<usize> {
-+    // CAST: Slice lengths are guaranteed to be `<= isize::MAX`.
-+    let len = buf.len() as isize;
-+
-+    // SAFETY: `buf` is valid for writing `buf.len()` bytes.
-+    let res = unsafe {
-+        bindings::strncpy_from_user(
-+            buf.as_mut_ptr(),
-+            ptr as *const u8,
-+            len,
-+        )
-+    };
-+
-+    if res < 0 {
-+        Err(Error::from_errno(res as i32))
-+    } else {
-+        #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
-+        assert!(res <= len);
-+        Ok(res as usize)
-+    }
-+}
+I totally agree this needs to be handled eventually, and also to get
+there in steps.
 
----
-base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-change-id: 20250424-strncpy-from-user-1f2d06b0cdde
+The current status of this driver is not ideal, so I paid attention to
+not make it unnecessarily worse when writing this patch. Do you think
+the current patch is OK for the next step? I'm going to send v2 in a
+few hours, so don't hesitate to mention any improvements you deem
+necessary.
 
-Best regards,
+Luca
+
 -- 
-Alice Ryhl <aliceryhl@google.com>
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
