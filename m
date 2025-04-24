@@ -1,144 +1,141 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D21C91A4F12;
-	Thu, 24 Apr 2025 02:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from baidu.com (mx24.baidu.com [111.206.215.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D3A19CCEA;
+	Thu, 24 Apr 2025 02:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745463375; cv=none; b=oXHISJ95YwN8bitzEjSPsUG6TlG7LDLzLJuqEA0It/9K3nY1f5cXRRxAnwIFgjfKG0H9fybcG7RgRJg1EDDad3jTPd43SliS43cNCg5NtWY3vTX3wqs5i8+IWOuLztKC5M7a8+YwRPX/5bwK3dR3wHMFLLKyT74A80iNAaY61E4=
+	t=1745463401; cv=none; b=pARz3S7Zmm74HrBQVaTy+O6lFLEaKkDZBJDUaeBwpx9Sa9AT22KeOFfFC+22FNbbMBFZiWVUENhMvPudsTOrt3nW+r3WtMrBvCaYycOSBqr2D7VKbRz/6dlf200/FGOB9LC4X7ivz7t4XVREewMdHTSmtRy78xicVXdk7q9cbko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745463375; c=relaxed/simple;
-	bh=3g+VyygBY32+8LDEI0khE/JAkeRjxxSE7M9xcwEsscY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X78ZPJFi5RZN9BylZ+Sgv5B3KZcQM7kZsWk8xdQW1zo9utj1r8BUIh6KQqQc8beDZQn/b6GUNbKUh70Y4/FG+Wivo6YjX/by/umQ2lP0Wktrt0ctIHJlykMJ/Zgr0qyvofUmASB5+VgQrEmPQe6fSFAhj1EktljkmKz5vbVtHMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=LKodL/4w; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LKodL/4w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ZyWGd
-	L4fQntO+YSj4uhZTWjk9DIBPdHQjqeylVNy+pc=; b=LKodL/4w1+PguPYD/a3LM
-	SjgoRzu9HO0CRJT7QC+pduMeRqc/IC5iSvLCYK8vK16Dego7BtrD7pwNObI6ExLH
-	MAuT7PpH+VlN/yHbinMKwsdpkl48RooPbuUhdgmVoq0+ClJ1UynBEXuvV9WloZwf
-	MeFZBi1SkGVYnVqC6BbxAc=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wB3U1csqAloHYubCA--.21713S4;
-	Thu, 24 Apr 2025 10:55:42 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: rodrigo.vivi@intel.com,
-	joonas.lahtinen@linux.intel.com,
-	tursulin@ursulin.net,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	gustavo.sousa@intel.com
-Cc: intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 RESEND] drm/i915/display: Add check for alloc_ordered_workqueue() and alloc_workqueue()
-Date: Thu, 24 Apr 2025 10:55:39 +0800
-Message-Id: <20250424025539.3504019-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1745463401; c=relaxed/simple;
+	bh=zQalGsbxTBX06jBm/oT6wKizmyMtivzPZ9QWHX/5RRI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LRASfcQECnp9gukdUUiK1XtPj+llpwe9ZIZ0qyiOzsRlg9KIbpaiVDBfn69jMd+4dFVnlEpX0g0RFN40XcovNdKFi1j6nn/Mwl4yTs27p5Lj3S6J+L8JfMbZfahYad4yNZIrKQivDmlXr8CYrDa5eZp/Q4Mln3D8npMZ0luvBgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: "Li,Rongqing" <lirongqing@baidu.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Li,Zhaoxin(ACG CCN)" <lizhaoxin04@baidu.com>
+Subject: =?gb2312?B?tPC4tDogWz8/Pz9dIFJlOiBbUEFUQ0hdIEtWTTogVXNlIGNhbGxfcmN1KCkg?=
+ =?gb2312?B?aW4ga3ZtX2lvX2J1c19yZWdpc3Rlcl9kZXY=?=
+Thread-Topic: [????] Re: [PATCH] KVM: Use call_rcu() in
+ kvm_io_bus_register_dev
+Thread-Index: AQHbtDGgrzSppzuzck+TBQD3uwy4MbOw0jWAgAFLEUA=
+Date: Thu, 24 Apr 2025 02:56:22 +0000
+Message-ID: <4bfe7a8f5020448e903e6335173afc75@baidu.com>
+References: <20250423092509.3162-1-lirongqing@baidu.com>
+ <aAkAY40UbqzQNr8m@google.com>
+In-Reply-To: <aAkAY40UbqzQNr8m@google.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wB3U1csqAloHYubCA--.21713S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4xGw1xAF18WrykKryfZwb_yoW5Ar1xpw
-	4fXFyUArW5XFs2kay7Xa18uFyxW3409w15GF1fC3Wqq3WUAw4jg3W0kFyUXryDGF1xXF1f
-	AFWqyF429r1DCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pimhF7UUUUU=
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqAQ5bmgJpmBSsgAAs8
+X-FEAS-Client-IP: 172.31.50.16
+X-FE-Last-Public-Client-IP: 100.100.100.38
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-Add check for the return value of alloc_ordered_workqueue()
-and alloc_workqueue(). Furthermore, if some allocations fail,
-cleanup works are added to avoid potential memory leak problem.
-
-Fixes: 40053823baad ("drm/i915/display: move modeset probe/remove functions to intel_display_driver.c")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
-Changes in v2:
-- Split the compound conditional statement into separate
-  conditional statements to facilitate cleanup works.
-- Add cleanup works to destory work queues if allocations fail,
-  and modify the later goto destination to do the full excercise.
-- modify the patch description. Thanks, Jani!
----
- .../drm/i915/display/intel_display_driver.c   | 30 +++++++++++++++----
- 1 file changed, 25 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_display_driver.c b/drivers/gpu/drm/i915/display/intel_display_driver.c
-index 31740a677dd8..ac94561715dc 100644
---- a/drivers/gpu/drm/i915/display/intel_display_driver.c
-+++ b/drivers/gpu/drm/i915/display/intel_display_driver.c
-@@ -241,31 +241,45 @@ int intel_display_driver_probe_noirq(struct intel_display *display)
- 	intel_dmc_init(display);
- 
- 	display->wq.modeset = alloc_ordered_workqueue("i915_modeset", 0);
-+	if (!display->wq.modeset) {
-+		ret = -ENOMEM;
-+		goto cleanup_vga_client_pw_domain_dmc;
-+	}
-+
- 	display->wq.flip = alloc_workqueue("i915_flip", WQ_HIGHPRI |
- 						WQ_UNBOUND, WQ_UNBOUND_MAX_ACTIVE);
-+	if (!display->wq.flip) {
-+		ret = -ENOMEM;
-+		goto cleanup_wq_modeset;
-+	}
-+
- 	display->wq.cleanup = alloc_workqueue("i915_cleanup", WQ_HIGHPRI, 0);
-+	if (!display->wq.cleanup) {
-+		ret = -ENOMEM;
-+		goto cleanup_wq_flip;
-+	}
- 
- 	intel_mode_config_init(display);
- 
- 	ret = intel_cdclk_init(display);
- 	if (ret)
--		goto cleanup_vga_client_pw_domain_dmc;
-+		goto cleanup_wq_cleanup;
- 
- 	ret = intel_color_init(display);
- 	if (ret)
--		goto cleanup_vga_client_pw_domain_dmc;
-+		goto cleanup_wq_cleanup;
- 
- 	ret = intel_dbuf_init(i915);
- 	if (ret)
--		goto cleanup_vga_client_pw_domain_dmc;
-+		goto cleanup_wq_cleanup;
- 
- 	ret = intel_bw_init(i915);
- 	if (ret)
--		goto cleanup_vga_client_pw_domain_dmc;
-+		goto cleanup_wq_cleanup;
- 
- 	ret = intel_pmdemand_init(display);
- 	if (ret)
--		goto cleanup_vga_client_pw_domain_dmc;
-+		goto cleanup_wq_cleanup;
- 
- 	intel_init_quirks(display);
- 
-@@ -273,6 +287,12 @@ int intel_display_driver_probe_noirq(struct intel_display *display)
- 
- 	return 0;
- 
-+cleanup_wq_cleanup:
-+	destroy_workqueue(display->wq.cleanup);
-+cleanup_wq_flip:
-+	destroy_workqueue(display->wq.flip);
-+cleanup_wq_modeset:
-+	destroy_workqueue(display->wq.modeset);
- cleanup_vga_client_pw_domain_dmc:
- 	intel_dmc_fini(display);
- 	intel_power_domains_driver_remove(display);
--- 
-2.25.1
-
+DQo+IE9uIFdlZCwgQXByIDIzLCAyMDI1LCBsaXJvbmdxaW5nIHdyb3RlOg0KPiA+IEZyb206IExp
+IFJvbmdRaW5nIDxsaXJvbmdxaW5nQGJhaWR1LmNvbT4NCj4gPg0KPiA+IFVzZSBjYWxsX3JjdSgp
+IGluc3RlYWQgb2YgY29zdGx5IHN5bmNocm9uaXplX3NyY3VfZXhwZWRpdGVkKCksIHRoaXMNCj4g
+PiBjYW4gcmVkdWNlIHRoZSBWTSBib290dXAgdGltZSwgYW5kIHJlZHVjZSBWTSBtaWdyYXRpb24g
+ZG93bnRpbWUNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IGxpemhhb3hpbiA8bGl6aGFveGluMDRA
+YmFpZHUuY29tPg0KPiANCj4gSWYgbGl6aGFveGluIGlzIGEgY28tYXV0aG9yLCB0aGVuIHRoaXMg
+bmVlZHM6DQo+IA0KPiAgIENvLWRldmVsb3BlZC1ieTogbGl6aGFveGluIDxsaXpoYW94aW4wNEBi
+YWlkdS5jb20+DQo+IA0KDQpUaGFua3MsIEkgd2lsbCBhZGQNCg0KPiBJZiB0aGV5IGFyZSBfdGhl
+XyBhdXRob3IsIHRoZW4gdGhlIEZyb206IGFib3ZlIGlzIHdyb25nLg0KPiANCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBMaSBSb25nUWluZyA8bGlyb25ncWluZ0BiYWlkdS5jb20+DQo+ID4gLS0tDQo+ID4g
+IGluY2x1ZGUvbGludXgva3ZtX2hvc3QuaCB8ICAxICsNCj4gPiAgdmlydC9rdm0va3ZtX21haW4u
+YyAgICAgIHwgMTEgKysrKysrKysrLS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNlcnRp
+b25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
+dXgva3ZtX2hvc3QuaCBiL2luY2x1ZGUvbGludXgva3ZtX2hvc3QuaCBpbmRleA0KPiA+IDI5MWQ0
+OWIuLmU3NzI3MDQgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9rdm1faG9zdC5oDQo+
+ID4gKysrIGIvaW5jbHVkZS9saW51eC9rdm1faG9zdC5oDQo+ID4gQEAgLTIwMyw2ICsyMDMsNyBA
+QCBzdHJ1Y3Qga3ZtX2lvX3JhbmdlIHsgICNkZWZpbmUgTlJfSU9CVVNfREVWUw0KPiAxMDAwDQo+
+ID4NCj4gPiAgc3RydWN0IGt2bV9pb19idXMgew0KPiA+ICsJc3RydWN0IHJjdV9oZWFkIHJjdTsN
+Cj4gPiAgCWludCBkZXZfY291bnQ7DQo+ID4gIAlpbnQgaW9ldmVudGZkX2NvdW50Ow0KPiA+ICAJ
+c3RydWN0IGt2bV9pb19yYW5nZSByYW5nZVtdOw0KPiA+IGRpZmYgLS1naXQgYS92aXJ0L2t2bS9r
+dm1fbWFpbi5jIGIvdmlydC9rdm0va3ZtX21haW4uYyBpbmRleA0KPiA+IDJlNTkxY2MuLmFmNzMw
+YTUgMTAwNjQ0DQo+ID4gLS0tIGEvdmlydC9rdm0va3ZtX21haW4uYw0KPiA+ICsrKyBiL3ZpcnQv
+a3ZtL2t2bV9tYWluLmMNCj4gPiBAQCAtNTg2NSw2ICs1ODY1LDEzIEBAIGludCBrdm1faW9fYnVz
+X3JlYWQoc3RydWN0IGt2bV92Y3B1ICp2Y3B1LA0KPiBlbnVtIGt2bV9idXMgYnVzX2lkeCwgZ3Bh
+X3QgYWRkciwNCj4gPiAgCXJldHVybiByIDwgMCA/IHIgOiAwOw0KPiA+ICB9DQo+ID4NCj4gPiAr
+c3RhdGljIHZvaWQgZnJlZV9rdm1faW9fYnVzKHN0cnVjdCByY3VfaGVhZCAqcmN1KSB7DQo+ID4g
+KwlzdHJ1Y3Qga3ZtX2lvX2J1cyAqYnVzID0gY29udGFpbmVyX29mKHJjdSwgc3RydWN0IGt2bV9p
+b19idXMsIHJjdSk7DQo+ID4gKw0KPiA+ICsJa2ZyZWUoYnVzKTsNCj4gPiArfQ0KPiA+ICsNCj4g
+PiAgaW50IGt2bV9pb19idXNfcmVnaXN0ZXJfZGV2KHN0cnVjdCBrdm0gKmt2bSwgZW51bSBrdm1f
+YnVzIGJ1c19pZHgsDQo+IGdwYV90IGFkZHIsDQo+ID4gIAkJCSAgICBpbnQgbGVuLCBzdHJ1Y3Qg
+a3ZtX2lvX2RldmljZSAqZGV2KSAgeyBAQCAtNTkwMyw4ICs1OTEwLDgNCj4gQEANCj4gPiBpbnQg
+a3ZtX2lvX2J1c19yZWdpc3Rlcl9kZXYoc3RydWN0IGt2bSAqa3ZtLCBlbnVtIGt2bV9idXMgYnVz
+X2lkeCwgZ3BhX3QNCj4gYWRkciwNCj4gPiAgCW1lbWNweShuZXdfYnVzLT5yYW5nZSArIGkgKyAx
+LCBidXMtPnJhbmdlICsgaSwNCj4gPiAgCQkoYnVzLT5kZXZfY291bnQgLSBpKSAqIHNpemVvZihz
+dHJ1Y3Qga3ZtX2lvX3JhbmdlKSk7DQo+ID4gIAlyY3VfYXNzaWduX3BvaW50ZXIoa3ZtLT5idXNl
+c1tidXNfaWR4XSwgbmV3X2J1cyk7DQo+ID4gLQlzeW5jaHJvbml6ZV9zcmN1X2V4cGVkaXRlZCgm
+a3ZtLT5zcmN1KTsNCj4gPiAtCWtmcmVlKGJ1cyk7DQo+ID4gKw0KPiA+ICsJY2FsbF9zcmN1KCZr
+dm0tPnNyY3UsICZidXMtPnJjdSwgZnJlZV9rdm1faW9fYnVzKTsNCj4gDQo+IEkgZG9uJ3QgdGhp
+bmsgdGhpcyBpcyBzYWZlIGZyb20gYSBmdW5jdGlvbmFsIGNvcnJlY3RuZXNzIHBlcnNwZWN0aXZl
+LCBhcyBLVk0gbXVzdA0KPiBndWFyYW50ZWUgYWxsIHJlYWRlcnMgc2VlIHRoZSBuZXcgZGV2aWNl
+IGJlZm9yZSBLVk0gcmV0dXJucyBjb250cm9sIHRvDQo+IHVzZXJzcGFjZS4NCj4gRS5nLiBJJ20g
+cHJldHR5IHN1cmUgS1ZNX1JFR0lTVEVSX0NPQUxFU0NFRF9NTUlPIGlzIHVzZWQgd2hpbGUgdkNQ
+VXMgYXJlDQo+IGFjdGl2ZS4NCj4gDQo+IEhvd2V2ZXIsIEknbSBwcmV0dHkgc3VyZSB0aGUgb25s
+eSByZWFkZXJzIHRoYXQgYWN0dWFsbHkgcmVseSBvbiBTUkNVIGFyZSB2Q1BVcywNCj4gc28gSSBf
+dGhpbmtfIHRoZSBzeW5jaHJvbml6ZV9zcmN1X2V4cGVkaXRlZCgpIGlzIG5lY2Vzc2FyeSBpZiBh
+bmQgb25seSBpZiB2Q1BVcw0KPiBoYXZlIGJlZW4gY3JlYXRlZC4NCj4gDQo+IFRoYXQgY291bGQg
+cmFjZSB3aXRoIGNvbmN1cnJlbnQgdkNQVSBjcmVhdGlvbiBpbiBhIGZldyBmbG93cyB0aGF0IGRv
+bid0IHRha2UNCj4ga3ZtLT5sb2NrLCBidXQgdGhhdCBzaG91bGQgYmUgb2sgZnJvbSBhbiBBQkkg
+cGVyc3BlY3RpdmUuICBGYWxzZQ0KPiBrdm0tPnBvc2l0aXZlcyAodkNQVQ0KPiBjcmVhdGlvbiBm
+YWlscykgYXJlIGJlbmlnbiwgYW5kIGZhbHNlIG5lZ2F0aXZlcyAodkNQVSBjcmVhdGVkIGFmdGVy
+IHRoZSBjaGVjaykgYXJlDQo+IGluaGVyZW50bHkgcmFjeSwgaS5lLiB1c2Vyc3BhY2UgY2FuJ3Qg
+Z3VhcmFudGVlIHRoZSB2Q1BVIHNlZXMgYW55IHBhcnRpY3VsYXINCj4gb3JkZXJpbmcuDQo+IA0K
+PiBTbyB0aGlzPw0KPiANCj4gCWlmIChSRUFEX09OQ0Uoa3ZtLT5jcmVhdGVkX3ZjcHVzKSkgew0K
+PiAJCXN5bmNocm9uaXplX3NyY3VfZXhwZWRpdGVkKCZrdm0tPnNyY3UpOw0KPiAJCWtmcmVlKGJ1
+cyk7DQo+IAl9IGVsc2Ugew0KPiAJCWNhbGxfc3JjdSgma3ZtLT5zcmN1LCAmYnVzLT5yY3UsIGZy
+ZWVfa3ZtX2lvX2J1cyk7DQo+IAl9DQoNCg0KSWYgY2FsbF9zcmN1IGlzIGFibGUgdG8gdXNlZCBv
+bmx5IGJlZm9yZSBjcmVhdGluZyB2Q1BVLCB0aGUgdXBwZXIgd2lsbCBoYXZlIGxpdHRsZSBlZmZl
+Y3QsIHNpbmNlIG1vc3QgZGV2aWNlIGFyZSBjcmVhdGVkIGFmdGVyIGNyZWF0aW5nIHZDUFUNCg0K
+V2Ugd2FudCB0byBvcHRpbWl6ZSB0aGUgaW9ldmVudGZkIGNyZWF0aW9uLCBzaW5jZSBhIFZNIHdp
+bGwgY3JlYXRlIGxvdHMgb2YgaW9ldmVudGZkLCBjYW4gaW9ldmVudGZkIHVzZXMgY2FsbF9zcmN1
+Pw0KDQpMaWtlOg0KDQoNCi0tLSBhL3ZpcnQva3ZtL2V2ZW50ZmQuYw0KKysrIGIvdmlydC9rdm0v
+ZXZlbnRmZC5jDQpAQCAtODUzLDggKzg1Myw4IEBAIHN0YXRpYyBpbnQga3ZtX2Fzc2lnbl9pb2V2
+ZW50ZmRfaWR4KHN0cnVjdCBrdm0gKmt2bSwNCg0KICAgICAgICBrdm1faW9kZXZpY2VfaW5pdCgm
+cC0+ZGV2LCAmaW9ldmVudGZkX29wcyk7DQoNCi0gICAgICAgcmV0ID0ga3ZtX2lvX2J1c19yZWdp
+c3Rlcl9kZXYoa3ZtLCBidXNfaWR4LCBwLT5hZGRyLCBwLT5sZW5ndGgsDQotICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICZwLT5kZXYpOw0KKyAgICAgICByZXQgPSBfX2t2bV9p
+b19idXNfcmVnaXN0ZXJfZGV2KGt2bSwgYnVzX2lkeCwgcC0+YWRkciwgcC0+bGVuZ3RoLA0KKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcC0+ZGV2LCBmYWxzZSk7DQogICAg
+ICAgIGlmIChyZXQgPCAwKQ0KICAgICAgICAgICAgICAgIGdvdG8gdW5sb2NrX2ZhaWw7DQoNCmRp
+ZmYgLS1naXQgYS92aXJ0L2t2bS9rdm1fbWFpbi5jIGIvdmlydC9rdm0va3ZtX21haW4uYw0KaW5k
+ZXggMmU1OTFjYy4uZmYyOTRiMCAxMDA2NDQNCi0tLSBhL3ZpcnQva3ZtL2t2bV9tYWluLmMNCisr
+KyBiL3ZpcnQva3ZtL2t2bV9tYWluLmMNCkBAIC01ODY1LDggKzU4NjUsMTUgQEAgaW50IGt2bV9p
+b19idXNfcmVhZChzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUsIGVudW0ga3ZtX2J1cyBidXNfaWR4LCBn
+cGFfdCBhZGRyLA0KICAgICAgICByZXR1cm4gciA8IDAgPyByIDogMDsNCiB9DQoNCi1pbnQga3Zt
+X2lvX2J1c19yZWdpc3Rlcl9kZXYoc3RydWN0IGt2bSAqa3ZtLCBlbnVtIGt2bV9idXMgYnVzX2lk
+eCwgZ3BhX3QgYWRkciwNCi0gICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQgbGVuLCBzdHJ1
+Y3Qga3ZtX2lvX2RldmljZSAqZGV2KQ0KK3N0YXRpYyB2b2lkIGZyZWVfa3ZtX2lvX2J1cyhzdHJ1
+Y3QgcmN1X2hlYWQgKnJjdSkNCit7DQorICAgICAgIHN0cnVjdCBrdm1faW9fYnVzICpidXMgPSBj
+b250YWluZXJfb2YocmN1LCBzdHJ1Y3Qga3ZtX2lvX2J1cywgcmN1KTsNCisNCisgICAgICAga2Zy
+ZWUoYnVzKTsNCit9DQorDQoraW50IF9fa3ZtX2lvX2J1c19yZWdpc3Rlcl9kZXYoc3RydWN0IGt2
+bSAqa3ZtLCBlbnVtIGt2bV9idXMgYnVzX2lkeCwgZ3BhX3QgYWRkciwNCisgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBpbnQgbGVuLCBzdHJ1Y3Qga3ZtX2lvX2RldmljZSAqZGV2LCBib29sIHN5
+bmMpDQogew0KICAgICAgICBpbnQgaTsNCiAgICAgICAgc3RydWN0IGt2bV9pb19idXMgKm5ld19i
+dXMsICpidXM7DQpAQCAtNTkwMywxMiArNTkxMCwyMiBAQCBpbnQga3ZtX2lvX2J1c19yZWdpc3Rl
+cl9kZXYoc3RydWN0IGt2bSAqa3ZtLCBlbnVtIGt2bV9idXMgYnVzX2lkeCwgZ3BhX3QgYWRkciwN
+CiAgICAgICAgbWVtY3B5KG5ld19idXMtPnJhbmdlICsgaSArIDEsIGJ1cy0+cmFuZ2UgKyBpLA0K
+ICAgICAgICAgICAgICAgIChidXMtPmRldl9jb3VudCAtIGkpICogc2l6ZW9mKHN0cnVjdCBrdm1f
+aW9fcmFuZ2UpKTsNCiAgICAgICAgcmN1X2Fzc2lnbl9wb2ludGVyKGt2bS0+YnVzZXNbYnVzX2lk
+eF0sIG5ld19idXMpOw0KLSAgICAgICBzeW5jaHJvbml6ZV9zcmN1X2V4cGVkaXRlZCgma3ZtLT5z
+cmN1KTsNCi0gICAgICAga2ZyZWUoYnVzKTsNCisNCisgICAgICAgaWYgKHN5bmMpIHsNCisgICAg
+ICAgICAgICAgICBzeW5jaHJvbml6ZV9zcmN1X2V4cGVkaXRlZCgma3ZtLT5zcmN1KTsNCisgICAg
+ICAgICAgICAgICBrZnJlZShidXMpOw0KKyAgICAgICB9DQorICAgICAgIGVsc2UNCisgICAgICAg
+ICAgICAgICBjYWxsX3NyY3UoJmt2bS0+c3JjdSwgJmJ1cy0+cmN1LCBmcmVlX2t2bV9pb19idXMp
+Ow0KDQogICAgICAgIHJldHVybiAwOw0KIH0gDQoNCg0KVGhhbmtzDQoNCi1MaQ0K
