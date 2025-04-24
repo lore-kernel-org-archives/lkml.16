@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083B92820D1
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:07:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED54728468B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:08:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745514464; cv=none; b=r5zkDRFcG2jbbtG6N+mFK2eeKIAw41lVcrFnPosjzpHM+Py0Ex/VzYiR6q/kmooVtCsW99qvLmuELBQoXbZchOHFNDvIe/4RXTgVAZpSgbgHwsVEuG78w+MweA7fxY4AcoTBFzVji2ZuAH7Lbv6e/pHKGpHAxpe2ZaX+aNiAqE4=
+	t=1745514494; cv=none; b=Z7EHF0bd+wujlyuAbxTJ/w5FQ9OpZxpyR9ONOovtHOt6RbHDs4FniCj+ceqzOzZePye3FCQDAOZccQx47Lh1zY3xMkRqcQD2rEIWCWqZI7QudnHPBVlFiS1ws3z7TILLooQyMJQQO46nh5NpLm3MWuPseBGqeeVOiwQ6bYe+xqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745514464; c=relaxed/simple;
-	bh=3Mb71N1HHQBg5V60dy6jE45PBJVPZjuhI2qEZlnROnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pjPAbwoolYhdUfuYHvH1MIvL9gvxXdyzgDxFAyxcAiGN8hPleoH+B8Aj1udkljzTK7LID+NZhwYovPg/DSdmaayerasKSqKZMUt8hhsJEp/n7LlfR6wkrrKWaV4TeCkuHCdHBTXB1M5NLkklNn0YYTmexJp3dHg2/4gY7B7JRyY=
+	s=arc-20240116; t=1745514494; c=relaxed/simple;
+	bh=tVlQkasqROqwRz3vMlycb+/C3ehK1UaXvPfLj3rs7T0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I/59bJ8xT4GkCczsh6EdV6jYD+3q6TzUg/PCbarWFQqiY5sGfJVHcaiUveOAYriDBTh5xwNbvkO3J1ii8mgqopuJWsu1ltX/dajk6o+zquMzWVKV2JwiH4a7GSsupZdx0KMtCdbBzby1UojsntI99RSMwJC5fB3VNLPHF2sbTw8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1A661063;
-	Thu, 24 Apr 2025 10:07:35 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 154321063;
+	Thu, 24 Apr 2025 10:08:06 -0700 (PDT)
 Received: from [10.1.196.43] (eglon.cambridge.arm.com [10.1.196.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64EC93F66E;
-	Thu, 24 Apr 2025 10:07:39 -0700 (PDT)
-Message-ID: <2d6bf83a-85ad-404a-b34f-c8777e373aaa@arm.com>
-Date: Thu, 24 Apr 2025 18:07:37 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250BF3F66E;
+	Thu, 24 Apr 2025 10:08:08 -0700 (PDT)
+Message-ID: <fe6d8592-7b54-4017-80f0-cc37dd2a0ba5@arm.com>
+Date: Thu, 24 Apr 2025 18:08:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,71 +27,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] cpumask: add cpumask_{first,next}_andnot() API
-To: Yury Norov <yury.norov@gmail.com>, Tony Luck <tony.luck@intel.com>,
+Subject: Re: [PATCH v8 16/21] x86/resctrl: Always initialise rid field in
+ rdt_resources_all[]
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
  Reinette Chatre <reinette.chatre@intel.com>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20250407153856.133093-1-yury.norov@gmail.com>
- <20250407153856.133093-4-yury.norov@gmail.com>
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
+References: <20250411164229.23413-1-james.morse@arm.com>
+ <20250411164229.23413-17-james.morse@arm.com> <Z_6uoqLNCXuc2COl@agluck-desk3>
 Content-Language: en-GB
 From: James Morse <james.morse@arm.com>
-In-Reply-To: <20250407153856.133093-4-yury.norov@gmail.com>
+In-Reply-To: <Z_6uoqLNCXuc2COl@agluck-desk3>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Yury,
+Hi Tony,
 
-On 07/04/2025 16:38, Yury Norov wrote:
-> From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> 
-> With the lack of the functions, client code has to abuse less efficient
-> cpumask_nth().
+On 15/04/2025 20:08, Luck, Tony wrote:
+> On Fri, Apr 11, 2025 at 04:42:24PM +0000, James Morse wrote:
+>> x86 has an array, rdt_resources_all[], of all possible resources.
+>> The for-each-resource walkers depend on the rid field of all
+>> resources being initialised.
+>>
+>> If the array ever grows due to another architecture adding a resource
+>> type that is not defined on x86, the for-each-resources walkers will
+>> loop forever.
 
+> This feels a bit weird. Having rdt_resources_all[] be a "swiss cheese"
+> array full of holes where other architectures defined events that aren't
+> supported by x86.
 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index 0f816092c891..9067c3411cd0 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-
-> @@ -458,6 +490,33 @@ unsigned int cpumask_any_and_but(const struct cpumask *mask1,
->  	return cpumask_next_and(cpu, mask1, mask2);
->  }
->  
-> +/**
-> + * cpumask_andnot_any_but - pick an arbitrary cpu from *mask1 & ~*mask2, but not this one.
-> + * @mask1: the first input cpumask
-> + * @mask2: the second input cpumask
-> + * @cpu: the cpu to ignore
-> + *
-> + * If @cpu == -1, the function returns the first matching cpu.
-> + * Returns >= nr_cpu_ids if no cpus set.
-> + */
-> +static __always_inline
-> +unsigned int cpumask_andnot_any_but(const struct cpumask *mask1,
-> +				    const struct cpumask *mask2,
-> +				    unsigned int cpu)
-
-Nit: Shouldn't this be named cpumask_any_andnot_but()?
-It's any cpu from the first-mask, then 'andnot' the second. This fits with the other
-instances of this, e.g. cpumask_any_and_but().
+Today, there are none of those for x86. The MPAM driver has to do this, but so far the
+array is small. I agree if the array becomes large, and no architecture implements
+everything then some other structure would be better.
 
 
-> +{
-> +	unsigned int i;
-> +
-> +	/* -1 is a legal arg here. */
-> +	if (cpu != -1)
-> +		cpumask_check(cpu);
-> +
-> +	i = cpumask_first_andnot(mask1, mask2);
-> +	if (i != cpu)
-> +		return i;
-> +
-> +	return cpumask_next_andnot(cpu, mask1, mask2);
-> +}
+> But it does work, so it can go in like this. But someday I may revisit
+> some experimental patches I did a while back that:
+> 1) Split the rdt_resource structure into separate "ctrl" and "mon"
+> pieces.
+> 2) Replaced this array with a pair of lists, one each for enabled
+> ctrl and mon resources.
+> 3) Changed the resource walkers to use list_for_each*() macros.
+
+Sounds good - this matches what the schema list has become.
+The only oddity is the newly proposed "resctrl_online_domains_exist()" that would
+sanity-check a resctrl_exit() call - but I don't see a problem walking one list after the
+other there.
 
 
 Thanks,
