@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A427317FAC2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8107518DB34
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502468; cv=none; b=lotRlL2/+iAaOR1ZZk0dgZPHiZPVdqIrv7TbQWYNLENiYcKkOORWGnYX4FyYWpVboxTe0XmEw52eiU5XhaYqbLeZ9lQB7kQkU7rr42LCRaYcKCeHZeO0yISKgNKDcKj0Ag69is6gd6h/rPwKO89fzmAFMgM38Dg+B6BICOUJ4Is=
+	t=1745502469; cv=none; b=N0w189YavigCk0zhMgkQKDm0fIozqQmmr/anrBIZxTNcGe/GXsInFl4wj8TYLs2yjtXjepM4QdvblToceyEMl8BY+1xJCOT8YlkmACM2xRExR3arrpWupKQC3rslsreSRWJfCvIvXpzpvLjlJjB8eu+r0XrLSxIothOKVCblwNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502468; c=relaxed/simple;
-	bh=e8tbn6z5Wzsvp7tPLqFuVaLqmzq6ZAwM8Ecg0eO97Fo=;
+	s=arc-20240116; t=1745502469; c=relaxed/simple;
+	bh=ZdZJog103PjdTsGGO0CcUxRKRwD5l2l9ILCbQlG9Z9k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RkQCg01yruWPjWxgPi/1h4oVH6yZWnvHHPX2RwzbeT/qQyh41CJTwAJHpmERUnwVEA2CLUzHvtOZUu8sZ1BZi6ZFriafXkN1zWlotZYPy+ppw4dzBdQPTblGjZxnFxnAbcJ5o6Bo3oPhSSY/Z33YTHltuyYpkdmU0TzkQzOkIKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cbb0+Xfe; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=NypzyNsbsEXHeRz1XQaWtUNUHPIwaO1b8yGit44Jw1MtkIKiGGcRvcIuExZmH6aJloJQW+Z8dZSl/SCBfFICGSByOL+OXfR4g9N8LyIvDsifg6XoHWoJXgZL1nQ7E9gSMpvSzaVy2jWsu5++b5U0KI3VLLGMlle/UYY1N/RG/Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NmeD5rY2; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cbb0+Xfe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NmeD5rY2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745502466; x=1777038466;
+  t=1745502467; x=1777038467;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=e8tbn6z5Wzsvp7tPLqFuVaLqmzq6ZAwM8Ecg0eO97Fo=;
-  b=Cbb0+Xfeb8iiuV1Z9Fku8x0+jSPCJvXLK4vy3R2LQOI/qBipbv4Mt0y8
-   b1QkZgzvgtEE5XXVcjX4A9Aty3iAoAnrZxNl9+wuhQMFOathJ56QOllTc
-   CuktOBDPh9s/w+u9Mqe6QRQkBSyCJyOh3Dw+GltpCG3yg03mhjdEE3Lcb
-   jwa0hXJB2+7jno9wRWhmlDoUtA1tygpCyEDjUKZ8xor7Q/RFSTyU47Zc3
-   sGPBaOZG3IHJcUqHoMXnVb7UeGeNftMPn9ZisI2Z0CRY21JLR2S9Z/8W8
-   dP7QIAT5iZFYRg6ewf5GQrQThzerRgq9Jc2qayYg5OCWCAISdI7kyMvbq
-   Q==;
-X-CSE-ConnectionGUID: DiC64V1FRyqgI4P1TVOY7g==
-X-CSE-MsgGUID: 8ah2dR6AQSGKnVPfUi/k5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58508208"
+  bh=ZdZJog103PjdTsGGO0CcUxRKRwD5l2l9ILCbQlG9Z9k=;
+  b=NmeD5rY2AQvGWNZz9iRnAzx3MVvi4YiI443E36RcM0ox3SJjbRyKy+KC
+   4DUmNWF/fYm1Wk29+WShhEdI//v4MI0fVntQAfO9MkLUYqDJoiNlpWj4N
+   Md+LfCUotaUKk7IwRLcloUpV/opm6d0dvrrkbtM7C06zaZS+0lF0L88HR
+   emkWFiT/eECrh7p08VJepzLSIxgVMLZo3BMd7CAXrJglF4HIGMFTgymKk
+   HRhZwQvVWKjdhmPMhwO2IxSVQqnXSpJ6PFlOH4qHQRcoVqiN6brJwikWz
+   DbnlZlmZQFBrWI3tBzhAPti6FYZtybo4DdD9rIku3vHLRijZDMg4r0lfg
+   A==;
+X-CSE-ConnectionGUID: eDXpCZUFSsa8s1iYVuUxcQ==
+X-CSE-MsgGUID: 1OXxS6feT+asAs7eI6qlaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58508213"
 X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="58508208"
+   d="scan'208";a="58508213"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
   by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 06:47:44 -0700
-X-CSE-ConnectionGUID: eEJ7OrSaT0ea8OUV7Prh9g==
-X-CSE-MsgGUID: 6/Ui7NI2QR+uSegqm47ZuQ==
+X-CSE-ConnectionGUID: Vw3gdJ8hQBSZce4R1O6gcw==
+X-CSE-MsgGUID: IibXVzH4S2uQcRdGse4OjA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="137718963"
+   d="scan'208";a="137718966"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by fmviesa004.fm.intel.com with ESMTP; 24 Apr 2025 06:47:44 -0700
 From: kan.liang@linux.intel.com
@@ -51,9 +51,9 @@ To: peterz@infradead.org,
 	irogers@google.com,
 	linux-kernel@vger.kernel.org
 Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 3/5] perf/x86/intel: Check the X86 leader for ACR group
-Date: Thu, 24 Apr 2025 06:47:16 -0700
-Message-Id: <20250424134718.311934-4-kan.liang@linux.intel.com>
+Subject: [PATCH V2 4/5] perf/x86: Optimize the is_x86_event
+Date: Thu, 24 Apr 2025 06:47:17 -0700
+Message-Id: <20250424134718.311934-5-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250424134718.311934-1-kan.liang@linux.intel.com>
 References: <20250424134718.311934-1-kan.liang@linux.intel.com>
@@ -67,27 +67,48 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The auto counter reload group also requires a group flag in the leader.
-The leader must be a X86 event.
+The current is_x86_event has to go through the hybrid_pmus list to find
+the matched pmu, then check if it's a X86 PMU and a X86 event. It's not
+necessary.
+
+The X86 PMU has a unique type ID on a non-hybrid machine, and a unique
+capability type. They are good enough to do the check.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/core.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index fd409d70e568..bac252ba3da6 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -129,7 +129,7 @@ static inline bool is_pebs_counter_event_group(struct perf_event *event)
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index b0ef07d14c83..43053ddd7073 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -757,15 +757,16 @@ void x86_pmu_enable_all(int added)
  
- static inline bool is_acr_event_group(struct perf_event *event)
+ int is_x86_event(struct perf_event *event)
  {
--	return event->group_leader->hw.flags & PERF_X86_EVENT_ACR;
-+	return check_leader_group(event->group_leader, PERF_X86_EVENT_ACR);
- }
+-	int i;
+-
+-	if (!is_hybrid())
+-		return event->pmu == &pmu;
+-
+-	for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
+-		if (event->pmu == &x86_pmu.hybrid_pmu[i].pmu)
+-			return true;
+-	}
++	/*
++	 * For a non-hybrid platforms, the type of X86 pmu is
++	 * always PERF_TYPE_RAW.
++	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
++	 * is a unique capability for the X86 PMU.
++	 * Use them to detect a X86 event.
++	 */
++	if (event->pmu->type == PERF_TYPE_RAW ||
++	    event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
++		return true;
  
- struct amd_nb {
+ 	return false;
+ }
 -- 
 2.38.1
 
