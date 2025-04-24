@@ -1,300 +1,332 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2050.outbound.protection.outlook.com [40.107.101.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B268D5695;
-	Thu, 24 Apr 2025 14:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505819; cv=none; b=ZEq3K1EawtiBoBsKx2r2QVKAMttgLuq0gDpohBzxfT6P2HBx1skx7p7AIxL3+EVJDv53w2nrqr7chO79bjwJSsExyZYwSitaj3KvP8p3kcCZtJcXYMl7fuFfZO8DBNgXs7XwjVmyDRMxYYB0iwp5fYa6e1YOP/F6AcLuVVgS3pA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505819; c=relaxed/simple;
-	bh=haTsVyL6icLCcdfS8saM05W0XIrG15THpFXntbBmkvw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MXi1+5gkotgo/peb3I7L/JWeV/NvniuN2rOaDT295RUHc5iJ0A//aQgbjsO4gUVg1XTyGaJcs3xoi0q7wP1bxqQth3/GXqFb0mKedS1+egRJYa+3dAyiCN8l+6OVgTwwPb5Sa26zbJkS3NpbPm34SqDOM6aEtwpf/H+tF8WnAvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsH5c5Yz; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD015695;
+	Thu, 24 Apr 2025 14:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745505836; cv=fail; b=rsrEahmgAN6QfTd/oa7nO1sh35nG4uGxlp/SfdMfXv4yIDOgt1aiwBoc6a03moMm1Enj7rHV/FgyoGg0VNw6Zp6kUXegAu+RFhxFqxqOMhdHdR4y3qwCPEZdYASmgnu88HpxvUjbN2l+YThRz1VnKVE7tOaTooLhwbry2KPKQRc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745505836; c=relaxed/simple;
+	bh=50qyd7CzUDZN8Q2eOMyEiSbOEE/U0jl5BLDGPPswLHM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Hflb9FcmYWqM/3Hu56alW41HmbYQzh5x5u8BusRwBoGKhTG4uuwdYU7DtiqF3yeeJ3M80sAVWla40n+gtYthQkzf4rXOBuhZmiC+66ezR4Jq1OY0DtlWRUQmAT01cVC3nAbJJjkzRsOHfFlc6Xng+NAgbVnVQYKuMfZMUoLLPpQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=vMghe87A; arc=fail smtp.client-ip=40.107.101.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsH5c5Yz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC76C4CEE3;
-	Thu, 24 Apr 2025 14:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745505819;
-	bh=haTsVyL6icLCcdfS8saM05W0XIrG15THpFXntbBmkvw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=fsH5c5YzrTOflsXw1b1VSl5zK28dE05TJhpwrTC9Ley4NmtXTCvXbVqM+gNc85MGf
-	 R3+Bfed6E5Mg/jy1KnUI1FLMLy/GyfDSZMGjX4PjA6rxFSvB/Lp8fdCmmrePgLJRRH
-	 xrvS8uYUqW7N58y4ga63KFzx2m5u9dT5Eeek9M8y7gPhug2O805tJVdBb9984FhIlD
-	 k06G1bLd5oHwzAiuE/cyMluFDmnpLUoLnJM3kL0eAV1eTqgr+iwsK20+/wl4ZCmrzY
-	 O+kRCPiekTcFISH1T/kjGN7/HLjwD3mmVWgLaBDXifDzrWj+plrer7MToVcwAa+6EL
-	 6p/DDy80/9/Fg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id C94A5CE076F; Thu, 24 Apr 2025 07:43:38 -0700 (PDT)
-Date: Thu, 24 Apr 2025 07:43:38 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	"Aithal, Srikanth" <sraithal@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="vMghe87A"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K8LxUP/Po+KNvKVEGwqEXPL8Tbu5LnGO3AdTudPi8fqW4HBFVL9YgKNJQekAT69vAbMBrZ3F7TAc5QKst7Fz34UAq/Cx5IKjINpPN2iP5nwjZmjUDd8wFZnKBUDlIfh8HavIlNJm7snXaWA+GISH3fRKU4cWuq+O/YuvcUAAwVzNu8r9jHqfJv5hYp5DzV+1g7SvtFqEiBkulj2rV2xH5TG9OEkBVyTv5yHWMAlz6kih1L+20StPhtB/s/0J+OB0aurR8aov5jCUwI6ButDhgFGiukEyfzkbg0GuOrA9cj3rh2M7HgjFArGZ2EM64+hra9HwD2q+Yg6RIF2io4X+Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LqfSYcFG5J3e9lbRqEYfrv+wqOY+ZjF8JM5VGhMy2VU=;
+ b=YdR3rUg9Az7qhkInWpejYitafNB40UYErH6ua2jHju+gXxv3uXVb0a97xRwZ67xmE6bW60QiZ4ZmYWYI9nDQMctuM0bkHWkFlDydbB7Jm/b+mfo0WrQ4N6I2/FWFlfG8ECFuAFHLNvj0t5hSfyYEv+BLbu1e3qcABuoL1DUqzAPflwLTg9eCo2RbgHqRhTV53XO9axw3hBGhZL1Arqyv73idUkpY348xe8Gz7ih6AdQSKbjKaZEsbQ3OIRk8UniiiAiF90xAmvK8KqsbypiO0WpGTWYXKzgXO9qlAGm4KaenPEapM4bIqTMZZPKVnPt0r25UpamGyCO8or8riDDF6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LqfSYcFG5J3e9lbRqEYfrv+wqOY+ZjF8JM5VGhMy2VU=;
+ b=vMghe87ArfL5I+1wXbGtBCGW5X/Yt1x3OSWKaKVEoZqAbmRDb+5PmrYvaB2lMB5suB5b+fgp+CiZr29DY1eTYqKWQlGMU+HbscaGzLmtvvaxRe2nRWnjnN42AOye9B86BbWNMKISq49n06+UVN3CoUc0uHsUaslvVQQmyP/Bpl2KHfuHZtY7IBKzsypN6I1hZY4PDsNTPqo5Ejnj+8tlT+EvV/jHHT39SzCMexqKMyj9yJ73vw2Rjh9U/DiHqQz1d/IhwR0Egum7wUi5ljzsDSXELAOc46qWBgaU8OfA9aksSuqmEOsRNDYBPlDrNyhlE6Ukj+Y46pqEA/ASpRKHqQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
+ by BL1PR03MB6056.namprd03.prod.outlook.com (2603:10b6:208:316::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.26; Thu, 24 Apr
+ 2025 14:43:49 +0000
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c%5]) with mapi id 15.20.8678.023; Thu, 24 Apr 2025
+ 14:43:49 +0000
+From: Matthew Gerlach <matthew.gerlach@altera.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	dinguyen@kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-Message-ID: <f54c213e-b8e2-418f-b7f4-a2fa72f098b1@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250423115409.3425-1-spasswolf@web.de>
- <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
- <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
- <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
- <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
- <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
- <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
- <aAnp9rdPhRY52F7N@pathway.suse.cz>
+	linux-clk@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@altera.com>
+Subject: [PATCH v3] dt-bindings: clock: socfpga: convert to yaml
+Date: Thu, 24 Apr 2025 07:43:41 -0700
+Message-Id: <20250424144341.45828-1-matthew.gerlach@altera.com>
+X-Mailer: git-send-email 2.35.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0206.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::31) To BYAPR03MB3461.namprd03.prod.outlook.com
+ (2603:10b6:a02:b4::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAnp9rdPhRY52F7N@pathway.suse.cz>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|BL1PR03MB6056:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1bfae70-e3c4-4a0e-4536-08dd833e6c8f
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?uUfQ0PoFjtxV1TSQNnyBCHY28SDslggRM1hudatT8xVUFS/nAmIoBcaBkA6r?=
+ =?us-ascii?Q?fGb7ZVjsAuVCyPIlqeOneybMNwB2NH5CKxZJhuVLhyV7c5ICiYEjFiWnE1BQ?=
+ =?us-ascii?Q?A7yhWHizI/QzvPeGOd9WrtxP22wNTzzthPzBdRqS6d4wgHtCR8BRjT78OCLE?=
+ =?us-ascii?Q?giY8iIex/Lu3ODs5H9yy1jIalfwizfDUOPf6//fardiqNNwr9BRDRHcBlxQy?=
+ =?us-ascii?Q?j53fvql12Txm6gXnrBTyPsiya4QV25BA6AVT2m88/bDan23BrAWNkYkI3fSW?=
+ =?us-ascii?Q?6FyVyshzkqloyT7Z4TS0zTpLKPcZzyNVoK4UHl0khR+T0RXG1hgwkAqOQqKM?=
+ =?us-ascii?Q?0dy8qYvZHqNQcJzodZwAPxfndgptlSVqWAEZyAXmchagepNdW4B3Tde7Q36+?=
+ =?us-ascii?Q?AqJnjPVW78oh+Is9/S2PP6yHoyVDXRNO9YJPJY9ZqQHmal9EClg5rzbn/I6f?=
+ =?us-ascii?Q?qi5rTmNh9sWibLBE25DCHjm+ZKKnPXKSadVOnkjbBmtQfYp2YBIfSuYddHcr?=
+ =?us-ascii?Q?9JwY81iYXxghISe1wfU7bSwv8YfQy8W+WIy5OYn9lpLkpti2RZlbOkvqcuB5?=
+ =?us-ascii?Q?Aae3QXCvconwSbMZADNLKEP2zrJCEB2R5nIEQjwTjSP+5rL8mgjWhyNRjrSg?=
+ =?us-ascii?Q?AwJ7eQT81YlY87V+cubTaG/8hAgKNYUtmHCAJ3Y2pE17U6x8wyL89EAyRlHy?=
+ =?us-ascii?Q?0ongbFmARj5BZ2EH0TmQFCxz+ppqxV2Q2p1PKdI7phRoQZbXUAqH2PxyGujj?=
+ =?us-ascii?Q?022wZyRLPMr7T6VoTP8VDTNDKPXroF+zqvHTpYxkeVUAYTFyK70SuU9KCLA9?=
+ =?us-ascii?Q?hMah0pWS/BmBWI7sXiue/nDJh9gPUFkSWpC4TLA/iW3826IfnNKUHCSt+c4m?=
+ =?us-ascii?Q?vzDswN0k7lCQKVagl2JtxujZTE6Rf4IQdEy7zhZjEB8Ri2ItYYmtk640ToVM?=
+ =?us-ascii?Q?V1+/bCGgo0uULLmUNnbzIWt7h5CeWiH6Qx7aMfydwf3SqA+ABViX79rjIi95?=
+ =?us-ascii?Q?SCx61dDfpZn6e0KS0jUZZyJXbxehPYcIx5ig2fmZdM1FndQddyzgbuvZG7Go?=
+ =?us-ascii?Q?py2AJdDbdjk0tt5JxI32k/XfQpoISBVe79FmTAoXeDXKmrU02G3B3MQHWQZ9?=
+ =?us-ascii?Q?msljjpy7RZB7wX91QiVEj5D4a4bUWjERzNl7lLoBAvpz9lciE74Kxr4wyYj1?=
+ =?us-ascii?Q?JxRYb6VIRiHsrDS5EXcQBg2c2JKS4YZe18vX6gu/4YSIUMY5n7oETCVemR9D?=
+ =?us-ascii?Q?uuu1GVzm1YzIglFj/Ea6I36Rn7nsoFsOZJzaCqkBPPi/FEqrFZzR0qk6qMHQ?=
+ =?us-ascii?Q?dLOnMUIyiP/pEQI1QYlmsiVJFtLG1Kv/RKcI+eGXd/ulHh6jF9qzJZRqSA4p?=
+ =?us-ascii?Q?JhGh/XPJJkLMXtrbbmUv1wrRbPdHqsxP8q/GzqDsViKJ19dUup8HCxrNVw0H?=
+ =?us-ascii?Q?Qv0ZirCfllc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gvP1yOKbs5O8Bxr+bxVzZRu/6mVT5pXs9/8w9AAQu1dKGAmOYoA+DdXB8h9i?=
+ =?us-ascii?Q?0VoIIicRi/e2NwiaEmX7OZrmZC5RWImXJdm8LGmk6JCEkfDG4pxoWWn34m1/?=
+ =?us-ascii?Q?0n7B9XHR7ftFBYeMGXnxH+tYz0zxycaVNrZSS8LWSuH5Ja8gkLx5FmLTDm0X?=
+ =?us-ascii?Q?p33rNTbOHYUpxsVaJmtKWX1xJyzVcm7lyNjx2g9DHUiRR7ZS1s1YZCTYMvpu?=
+ =?us-ascii?Q?HizIT0XNEIwLuyk9hCGswF1FcE6IOKtZwAOHGyyWnZVuD2lbFzIG3YmF/b8Q?=
+ =?us-ascii?Q?lK2gSClcSylzGV37Y8Q2hkGbXcKTuWvEX8tGtaMvBtiLQy+k3ZS+IDxynIQe?=
+ =?us-ascii?Q?fJ+a8Fffp979VY4ZWgcw1RwW17/15EjvrlqzueLZl8NoYrV2dfiWiKhZLOcS?=
+ =?us-ascii?Q?My+IwV4lV3kZOIV/4cnFdTZ6FWsHinMTFLYnu5a3WLhjU8WPZ5E2LhGuwpTJ?=
+ =?us-ascii?Q?tfy0Al/h22jrwh5g+bTq9PvohCtbP+MvEd5DMeE7ttvQ3Civ4RfIHZou0GiT?=
+ =?us-ascii?Q?I7xt1tKxOQMgaJw2IT0fzreRe2D7Zyq7b7id7dvgkrLO56SR+UF1l+lB7hWj?=
+ =?us-ascii?Q?9yY/4+rS+1o0FWsgE5ntBC8VWivz7na5UANwacrDNb2xroK+gNHjsNv0cLlK?=
+ =?us-ascii?Q?MFse3KpIFnV/W+T6Pisd5IVjKz2GKuqwhSE7eY2kvVeIFN55NeWm6p/QWT7P?=
+ =?us-ascii?Q?r59ullCY7/091tbVOlzAwiJy5fYY++T1qgtqDW0Tq/B2+woFgDfPGyLBpxO+?=
+ =?us-ascii?Q?3fj97ekQCbg5pAK6k+Rwkgm5Lof4bshGudEeJ1UCEJFwcsevv1nQku7B+ltA?=
+ =?us-ascii?Q?UoJRwcKbevDop0LH/RQQbi9098m6LidsCez1lhFkPK/trnrgo555J7A1Dc1A?=
+ =?us-ascii?Q?lv03aIt2ktBkzQs/31wCtlUyhvi6BJF17fes2JDa/RHygjPMeK6LVKpDaxpl?=
+ =?us-ascii?Q?MxUbqnAF3VNPNYoqKjdxzB2/vOPGo0oC4vgpAWpLywcmeQOyVq/cCE11gIyk?=
+ =?us-ascii?Q?0zYSdokanI8dFJVVhnNsn7Pt6muOFeOehwL9w5S1hELcFXKK0igSVfLx9oHh?=
+ =?us-ascii?Q?BA3T1YedJGcDQkebpyb8P1VbvJqV8CttXl8C9d4oRxgDRTn+X9ptPCRj3KtT?=
+ =?us-ascii?Q?9rB2YUwRaNVoQ+bAo29jSFPoQkR4FlHEikJ4kWMxT5Pm6pO+rnOLXtoxYoDo?=
+ =?us-ascii?Q?Xr6uCs0fEni6Yx663osbiM3LaoCMldretoTHajAYok35lKqn5JyVs2Cafvb6?=
+ =?us-ascii?Q?oBvij+0NK3NFyKc3ha3zuB1Tgj0dULhX8EnksEmT6sxfXQ5+46Prwp/VVOnb?=
+ =?us-ascii?Q?58QaoyD4k8zmb4ojkd4qwiNnHA2iKEcMoOm4NnGrqMmEORuYyto4eXiZYWsV?=
+ =?us-ascii?Q?cZZlpAoJVwmDVVkL80/GCP3w1B6F/9uhoSALc5Vy+OUJvwpCo/J+j8Lt5KpS?=
+ =?us-ascii?Q?rKc0KYwPvOlNsBFPMOaVJTO9WHQjf7TEolaVhQ+3puKTBeuIRf0qDzSyPIbG?=
+ =?us-ascii?Q?Xax896S/RB1XgBZIxOQAB37TSK9IjjpikhGj+bF1lG0+HquVZNBq9Cl/IrTi?=
+ =?us-ascii?Q?G0bvI3DodRzK6lLP8Tb4j2SsLIcqtPINQGjivKS2p6yI4gq2+8P7ykyFG1KN?=
+ =?us-ascii?Q?UQ=3D=3D?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1bfae70-e3c4-4a0e-4536-08dd833e6c8f
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 14:43:49.2364
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r61DwBGe2iufkS3bPC+rKC3o2lUu6XyoaYONXAE8GDo+5wL5JTCfPuxWqfVURc7rbj3H4M4oYAv6IYBIl6KQq+gp7nbPq3qNudNiXx+w/6s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR03MB6056
 
-On Thu, Apr 24, 2025 at 09:36:22AM +0200, Petr Mladek wrote:
-> On Wed 2025-04-23 12:56:53, Paul E. McKenney wrote:
-> > On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
-> > > Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
-> > > > On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
-> > > > > On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
-> > > > > > On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
-> > > > > > > On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
-> > > > > > > > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
-> > > > > > > > debian sid. When booting kernel message appear on screen but no messages from
-> > > > > > > > init (systemd). There are also no logs written even thought emergency sync
-> > > > > > > > via magic sysrq works (a message is printed on screen), presumably because
-> > > > > > > > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
-> > > > > > > > commit dd4cf8c9e1f4 as the first bad commit.
-> > > > > > > > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > Hello,
-> > > > > > > 
-> > > > > > > On AMD platform as well boot failed starting next-20250422, bisecting the
-> > > > > > > issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
-> > > > > > > logs.
-> > > > > > 
-> > > > > > Thank you all for the bisection and the report!
-> > > > > > 
-> > > > > > Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
-> > > > > > Force re-initialization when rate-limiting re-enabled"):
-> > > > > > 
-> > > > > > 13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
-> > > > > > 
-> > > > > > Then please apply the patch shown below, and let me know what happens?
-> > > > > > (Yes, I should have split that commit up...)
-> > > > > > 
-> > > > > > 							Thanx, Paul
-> > > > > > 
-> > > > > > ------------------------------------------------------------------------
-> > > > > > 
-> > > > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > > > > index 04f16b8e24575..13ed636642270 100644
-> > > > > > --- a/lib/ratelimit.c
-> > > > > > +++ b/lib/ratelimit.c
-> > > > > > @@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > > > > >   	unsigned long flags;
-> > > > > >   	int ret;
-> > > > > > -	if (!interval || !burst)
-> > > > > > +	if (interval <= 0 || burst <= 0)
-> > > > > >   		return 1;
-> > > > > >   	/*
-> > > > > 
-> > > > > 
-> > > > > I applied above patch on top of 13fa70e052dd ("ratelimit: Allow zero ->burst
-> > > > > to disable ratelimiting") [linux-20250423]. This is fixing the boot issue.
-> > > > > 
-> > > > > Tested-by: Srikanth Aithal <sraithal@amd.com>
-> > > > 
-> > > > Thank you both, and to Bert for intuiting the correct -next commit!
-> > > > 
-> > > > Could you please try the next increment, which is this patch, again
-> > > > on top of 24ff89c63355 ("ratelimit: Allow zero ->burst to > disable
-> > > > ratelimiting")?
-> > > > 
-> > > > In the meantime, I will expose the version you two just tested to
-> > > > -next.
-> > > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > ------------------------------------------------------------------------
-> > > > 
-> > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > > index 04f16b8e24575..8f6c54f719ef2 100644
-> > > > --- a/lib/ratelimit.c
-> > > > +++ b/lib/ratelimit.c
-> > > > @@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > > >  	unsigned long flags;
-> > > >  	int ret;
-> > > >  
-> > > > -	if (!interval || !burst)
-> > > > +	if (interval <= 0 || burst <= 0) {
-> > > > +		ret = burst > 0;
-> > > >  		return 1;
-> > > > +	}
-> > > >  
-> > > >  	/*
-> > > >  	 * If we contend on this state's lock then just check if
-> > > 
-> > > If you set "ret = burst > 0", but "return 1" this will make no difference
-> > > (except in the case of a major compiler bug, probably), as I wrote in my other
-> > > email which overlapped yours, this fixes the issue in next-20250422:
-> > > 
-> > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > index b5c727e976d2..fc28f6cf8269 100644
-> > > --- a/lib/ratelimit.c
-> > > +++ b/lib/ratelimit.c
-> > > @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > >          * interval says never limit.
-> > >          */
-> > >         if (interval <= 0 || burst <= 0) {
-> > > -               ret = burst > 0;
-> > > +               ret = 1;
-> > >                 if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
-> > >                     !raw_spin_trylock_irqsave(&rs->lock, flags))
-> > >                         return ret;
-> > 
-> > You are quite right, your patch does fix the issue that you three say.
-> 
-> Honestly, I do not understand what a ratelimit user could cause this
-> issue. And I am not able to reproduce it on my test system (x86_64,
-> kvm). I mean that my system boots and I see the systemd meesages.
+Convert the clock device tree bindings to yaml for the Altera SoCFPGA
+Cyclone5, Arria5, and Arria10 chip families. Since the clock nodes are
+subnodes to Altera SOCFPGA Clock Manager, the yaml was added to
+socfpga-clk-manager.yaml.
 
-My bug was that interval==0 suppressed all ratelimited output, when
-it is instead supposed to never suppress it, as illustrated by the
-RATELIMIT_STATE_INIT_DISABLED() macro that I somehow managed to ignore.
-(Yes, I need more tests!  And I will do so.)
+Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+---
+v3:
+ - Add a properties level to $defs to improve reuse.
 
-> > Unfortunately, it prevents someone from completely suppressing output
-> > by setting burst to zero.  Could you please try the patch below?
-> 
-> I wondered whether some code used a non-initialized struct ratelimit_state.
-> I tried the following patch:
-> 
-> diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> index b5c727e976d2..f949a18e9c2b 100644
-> --- a/lib/ratelimit.c
-> +++ b/lib/ratelimit.c
-> @@ -35,6 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
->  	unsigned long flags;
->  	int ret;
->  
-> +	WARN_ONCE(interval <= 0 || burst <= 0,
-> +		  "Possibly using a non-initilized ratelimit struct with interval:%d, burst:%d\n",
-> +		  interval, burst);
-> +
->  	/*
->  	 * Non-positive burst says always limit, otherwise, non-positive
->  	 * interval says never limit.
-> 
-> 
-> And it triggered:
-> 
-> [    2.874504] ------------[ cut here ]------------
-> [    2.875552] Possibly using a non-initilized ratelimit struct with interval:0, burst:0
-> [    2.876990] WARNING: CPU: 2 PID: 1 at lib/ratelimit.c:38 ___ratelimit+0x1e8/0x200
-> [    2.878435] Modules linked in:
-> [    2.879045] CPU: 2 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.15.0-rc3-next-20250422-default+ #22 PREEMPT(full)  f5d77f8de4aec34e420e26410c34bcb56f692aae
-> [    2.881287] Tainted: [W]=WARN
-> [    2.882010] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
-> [    2.886452] RIP: 0010:___ratelimit+0x1e8/0x200
-> [    2.888405] Code: 00 00 e9 b5 fe ff ff 41 bc 01 00 00 00 e9 f2 fe ff ff 89 ea 44 89 e6 48 c7 c7 f8 40 eb 92 c6 05 b5 4d 0f 01 01 e8 28 a0 de fe <0f> 0b e9 71 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 80 00 00
-> [    2.891223] RSP: 0000:ffffcf1340013bd8 EFLAGS: 00010282
-> [    2.892033] RAX: 0000000000000000 RBX: ffff8a8cc2bfbaf0 RCX: 0000000000000000
-> [    2.893091] RDX: 0000000000000002 RSI: 00000000ffff7fff RDI: 00000000ffffffff
-> [    2.894158] RBP: 0000000000000000 R08: 00000000ffff7fff R09: ffff8a8d3fe3ffa8
-> [    2.895168] R10: 00000000ffff8000 R11: 0000000000000001 R12: 0000000000000000
-> [    2.896150] R13: ffffffff92e08d38 R14: ffff8a8cc369e400 R15: ffff8a8cc2e39f00
-> [    2.897138] FS:  0000000000000000(0000) GS:ffff8a8da6f3c000(0000) knlGS:0000000000000000
-> [    2.898224] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    2.899181] CR2: 0000000000000000 CR3: 0000000153256001 CR4: 0000000000370ef0
-> [    2.901865] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [    2.903516] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [    2.906593] Call Trace:
-> [    2.907143]  <TASK>
-> [    2.907582]  __ext4_msg+0x6e/0xa0
+v2:
+ - Fix node name regexs.
+ - Remove redundant type for clocks.
+ - Put repeated properties under '$defs'.
+ - Move reg property after compatible.
+---
+ .../arm/altera/socfpga-clk-manager.yaml       | 102 +++++++++++++++++-
+ .../bindings/clock/altr_socfpga.txt           |  30 ------
+ 2 files changed, 101 insertions(+), 31 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/altr_socfpga.txt
 
-Ths is the ->s_msg_ratelimit_state field of the ext4_sb_info structure,
-which is allocated via kzalloc().  It looks like these two statements:
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+index 572381306681..a758f4bb2bb3 100644
+--- a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+@@ -9,20 +9,120 @@ title: Altera SOCFPGA Clock Manager
+ maintainers:
+   - Dinh Nguyen <dinguyen@kernel.org>
+ 
+-description: test
++description:
++  This binding describes the Altera SOCFGPA Clock Manager and its associated
++  tree of clocks, pll's, and clock gates for the Cyclone5, Arria5 and Arria10
++  chip families.
+ 
+ properties:
+   compatible:
+     items:
+       - const: altr,clk-mgr
++
+   reg:
+     maxItems: 1
+ 
++  clocks:
++    type: object
++    additionalProperties: false
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    patternProperties:
++      "^osc[0-9]$":
++        type: object
++
++      "^[a-z0-9,_]+(clk|pll|clk_gate|clk_divided)(@[a-f0-9]+)?$":
++        type: object
++        $ref: '#/$defs/clock-props'
++        unevaluatedProperties: false
++
++        properties:
++          compatible:
++            enum:
++              - altr,socfpga-pll-clock
++              - altr,socfpga-perip-clk
++              - altr,socfpga-gate-clk
++              - altr,socfpga-a10-pll-clock
++              - altr,socfpga-a10-perip-clk
++              - altr,socfpga-a10-gate-clk
++              - fixed-clock
++
++          clocks:
++            description: one or more phandles to input clock
++            minItems: 1
++            maxItems: 5
++
++          "#address-cells":
++            const: 1
++
++          "#size-cells":
++            const: 0
++
++        patternProperties:
++          "^[a-z0-9,_]+(clk|pll)(@[a-f0-9]+)?$":
++            type: object
++            $ref: '#/$defs/clock-props'
++            unevaluatedProperties: false
++
++            properties:
++              compatible:
++                enum:
++                  - altr,socfpga-perip-clk
++                  - altr,socfpga-gate-clk
++                  - altr,socfpga-a10-perip-clk
++                  - altr,socfpga-a10-gate-clk
++
++              clocks:
++                description: one or more phandles to input clock
++                minItems: 1
++                maxItems: 4
++
++            required:
++              - compatible
++              - clocks
++              - "#clock-cells"
++
++        required:
++          - compatible
++          - "#clock-cells"
++
+ required:
+   - compatible
++  - reg
+ 
+ additionalProperties: false
+ 
++$defs:
++  clock-props:
++    properties:
++      reg:
++        maxItems: 1
++
++      "#clock-cells":
++        const: 0
++
++      clk-gate:
++        $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - description: gating register offset
++          - description: bit index
++
++      div-reg:
++        $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - description: divider register offset
++          - description: bit shift
++          - description: bit width
++
++      fixed-divider:
++        $ref: /schemas/types.yaml#/definitions/uint32
++
+ examples:
+   - |
+     clkmgr@ffd04000 {
+diff --git a/Documentation/devicetree/bindings/clock/altr_socfpga.txt b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+deleted file mode 100644
+index f72e80e0dade..000000000000
+--- a/Documentation/devicetree/bindings/clock/altr_socfpga.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-Device Tree Clock bindings for Altera's SoCFPGA platform
+-
+-This binding uses the common clock binding[1].
+-
+-[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-
+-Required properties:
+-- compatible : shall be one of the following:
+-	"altr,socfpga-pll-clock" - for a PLL clock
+-	"altr,socfpga-perip-clock" - The peripheral clock divided from the
+-		PLL clock.
+-	"altr,socfpga-gate-clk" - Clocks that directly feed peripherals and
+-		can get gated.
+-
+-- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
+-- clocks : shall be the input parent clock phandle for the clock. This is
+-	either an oscillator or a pll output.
+-- #clock-cells : from common clock binding, shall be set to 0.
+-
+-Optional properties:
+-- fixed-divider : If clocks have a fixed divider value, use this property.
+-- clk-gate : For "socfpga-gate-clk", clk-gate contains the gating register
+-        and the bit index.
+-- div-reg : For "socfpga-gate-clk" and "socfpga-periph-clock", div-reg contains
+-	the divider register, bit shift, and width.
+-- clk-phase : For the sdmmc_clk, contains the value of the clock phase that controls
+-	the SDMMC CIU clock. The first value is the clk_sample(smpsel), and the second
+-	value is the cclk_in_drv(drvsel). The clk-phase is used to enable the correct
+-	hold/delay times that is needed for the SD/MMC CIU clock. The values of both
+-	can be 0-315 degrees, in 45 degree increments.
+-- 
+2.35.3
 
-EXT4_RW_ATTR_SBI_PI(msg_ratelimit_interval_ms, s_msg_ratelimit_state.interval);
-EXT4_RW_ATTR_SBI_PI(msg_ratelimit_burst, s_msg_ratelimit_state.burst);
-
-Allow the sysadm to specify rate-limiting if desired, with the default of
-no rate limiting.  And zero-initialization seems like a reasonable thing
-to allow for a default-never-ratelimited ratelimit_state structure, not?
-
-So given Bert's survey of the users, would it make sense to have your
-WARN_ONCE(), but only if either burst or interval is negative?
-
-Unless you tell me otherwise, I will add that with your Signed-off-by,
-and noting Bert's good work.
-
-							Thanx, Paul
-
-> [    2.908132]  ? lock_is_held_type+0xd8/0x130
-> [    2.908755]  ext4_check_feature_compatibility+0x15e/0x2c0
-> [    2.909427]  __ext4_fill_super+0x543/0x1480
-> [    2.910049]  ext4_fill_super+0xcc/0x280
-> [    2.910641]  ? setup_bdev_super+0xfc/0x200
-> [    2.911265]  ? __pfx_ext4_fill_super+0x10/0x10
-> [    2.911882]  get_tree_bdev_flags+0x13e/0x1e0
-> [    2.912485]  vfs_get_tree+0x29/0xe0
-> [    2.912958]  ? capable+0x3a/0x60
-> [    2.913407]  do_new_mount+0x176/0x360
-> [    2.913920]  init_mount+0x5a/0x90
-> [    2.914389]  do_mount_root+0xa2/0x130
-> [    2.914923]  mount_root_generic+0xdd/0x270
-> [    2.916127]  ? mount_root+0x147/0x190
-> [    2.917989]  prepare_namespace+0x1e0/0x230
-> [    2.919124]  kernel_init_freeable+0x1ec/0x200
-> [    2.920907]  ? __pfx_kernel_init+0x10/0x10
-> [    2.922113]  kernel_init+0x1a/0x130
-> [    2.922616]  ret_from_fork+0x31/0x50
-> [    2.923093]  ? __pfx_kernel_init+0x10/0x10
-> [    2.923612]  ret_from_fork_asm+0x1a/0x30
-> [    2.924110]  </TASK>
-> [    2.924433] irq event stamp: 1696665
-> [    2.924955] hardirqs last  enabled at (1696675): [<ffffffff913fa54e>] __up_console_sem+0x5e/0x70
-> [    2.926072] hardirqs last disabled at (1696686): [<ffffffff913fa533>] __up_console_sem+0x43/0x70
-> [    2.927149] softirqs last  enabled at (1696612): [<ffffffff9135134e>] handle_softirqs+0x32e/0x400
-> [    2.928221] softirqs last disabled at (1696591): [<ffffffff91351509>] __irq_exit_rcu+0xd9/0x150
-> [    2.929167] ---[ end trace 0000000000000000 ]---
-> [    3.003162] EXT4-fs (vda2): mounted filesystem 587ae802-e330-4059-9b48-d5b845e1075a ro with ordered data mode. Quota mode: none.
-> 
-> I guess that it happens because the structure is initialized too late,
-> see:
-> 
-> static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
-> {
-> 
-> 	[ ... skipping a lot of initialization code ... ]
-> 
-> 	/* Enable message ratelimiting. Default is 10 messages per 5 secs. */
-> 	ratelimit_state_init(&sbi->s_err_ratelimit_state, 5 * HZ, 10);
-> 	ratelimit_state_init(&sbi->s_warning_ratelimit_state, 5 * HZ, 10);
-> 	ratelimit_state_init(&sbi->s_msg_ratelimit_state, 5 * HZ, 10);
-> 
-> 	[...]
-> }
-> 
-> I guess that it is on purpose. They most likely do not want to
-> ratelimit the _very initial messages_ printed when the initialization
-> fails.
-> 
-> Maybe, it is not a good idea to allow to disable the ratelimit by
-> zero burst.
-> 
-> Best Regards,
-> Petr
