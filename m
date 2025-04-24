@@ -1,140 +1,100 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F28027A92A;
-	Thu, 24 Apr 2025 12:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3641427BF94
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499091; cv=none; b=bhRRiXuq40ADOk4WsWQ5uxXLZy3oZsdsP5vQf7mQQmEiW1OP2QhYF2vg6UkGpkj+2ZbnxRain7i3SETXeyg0R71VmpSg0W5juZvPY1C+1XyxvJfdfEFjbXbwgJ+vWDlfFSV/4GhsnN1Wv3RZ6YCUFf7HU+qkP7X15HZs+PklKo8=
+	t=1745499095; cv=none; b=US95hLzjsBez6+bhiwVAhcqg3WlyExIltmWzU/ZS6pi25SvJ/q3mF10L+Ba5Ip4qwqCjpvLtzTsNV9sx3TXR4HoSG5yAyz1nRfHBo8PthEYmk5767CFdq3efopKEvNxvq+iqc1DJzKCZfW2AET8jLKCXzFlrA28hN4xnxV6v9Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499091; c=relaxed/simple;
-	bh=1gjsb9NkSqMfNHlNKdtHGqO2zMQ8vXUc1iNCKWvHVOM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VxSyUgGqFPVo6m67DjecRA0ZcSqAoI2lO6ZUc7UFD0xH3SWd2yJIplXR+YKQDK+UnaZ8OcgCwekwN//Ka9hoB+0618K/LE4czpi3Iyh2SCqtusjJjeuras1KG8XPAsKhuLSjpEd9XAkm15kAQ6HiQP+zqAwS3L/uPT6nzN83Z7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OrhpR7r3; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrhpR7r3"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so161922366b.1;
-        Thu, 24 Apr 2025 05:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745499088; x=1746103888; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g7x4P6/o/1RuBbUUxeX5Et6jW21wH4n+BIhd6MZxDSM=;
-        b=OrhpR7r3mf+ueq29iawuPfNxiBAPMzHw/rWfdX2XgXAx2rnPdIO/Cf0trYg0RGaXDU
-         GaqIxsJ6WR3rPHNHdwC0Pq/oOyzbsUIFnveV6disEGe2wS7nK7MecvFqzF4vR6woF4DF
-         z9lSzUL867AP61LP9B2tBq2SC2OE39glD6vOWyHFT+LxgwWJQNUF4H4Tt+GJEy7PyuyA
-         kNnuiTXBcPmBHr/3gcj6tPPs74IH9LB6KqukFwdlnvf5w2+oBFOsqamQ66VryoWdSZlA
-         nijPi9kqqTT0RMYoWftK6vSm37Eu0HhjRQdD/tSZ50kiRFzSmXUlSiIwd/y4r8Cb41W4
-         UhQg==
+	s=arc-20240116; t=1745499095; c=relaxed/simple;
+	bh=5D5/0LzL83w5CwpzVO/3IUS4QnFdqrpA9CPTI/PQNsk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=F9Y0JFHiF5F9EkvfGGBy7iDxTL0+XYVuOezV78V8MaA9wPb8Tbtp0yLILM4UkPTi7TmgODXPy4NRVNfsA4ojdrQq0LJzn1absHSTcEfR9aSLgFtxkbGenoa5tmp8YSUGPtX3dogMDVCHpf4GHq2sMePD8Shs8244NsTj1r/JOFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d438be189bso11246605ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:51:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745499088; x=1746103888;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g7x4P6/o/1RuBbUUxeX5Et6jW21wH4n+BIhd6MZxDSM=;
-        b=AZPiBiirMTNUKsWT5qllklLWTyEEdN66NrzO/wCfKJxb94xgqqk+wNIfqPNx7sjXXV
-         XwDDNI0XW7tGY+GTKyEHJTpc+C4sOZ/yzEaLgkOrCWysbcFeTfmm2a2um6Et/PRzC51n
-         ryGjFoengpj3s3oakB2F/p2pZrXIqppSt9NkCSzVt/35xrPUVEcTfQVUiAig8/OIQvzL
-         IpjIywwxL5BlcK7szxciOfunvSH802utpX+RUIfsMbr1EN/bzXi2urUzzSoGS0a7acyZ
-         hBCVrhZ54sHJsR7svCa9rm1SbXE2sQQHHx3l/jKUIlvG+1x3sYcHg3ak1nX4MZ//7j2R
-         zBOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVK+/ih8bAOWFVIKN9joCKavKfecirV33BTYK+6FQGIzKsMClobpw6NtvhcJTbTdJ/fePw=@vger.kernel.org, AJvYcCVU4MNa0gDsTrLOWM6E9JierglKoZlGSKBAodqyuKMxZVdN9PTDVhI+LY4awuCb9syJpt6dDOt9/IsoaUS7vfIx4OvU@vger.kernel.org, AJvYcCW0OvQ3G0c9DuplJNfRZlliAmJsN01UwtxtuO12navYEb3B94jGKLRTrx/lMBTteMxEY7Ji1duvcVHLqhRL@vger.kernel.org
-X-Gm-Message-State: AOJu0YynCq/esDpHZTlbEhwT0+1jb4qv4CCG10/MmW6NghT+A7lirx7n
-	UkOxlRjG7Jg90VQNqcUNE1UaM5rxfkNr5zoLHnNtZB2P8rEngWZf
-X-Gm-Gg: ASbGnctfdw8/plgUhkmtc9NWqe2ARnk2Vt7mYPOROqcivSdoUGVqIYuMi8hnF7Q5RYy
-	NBMQijIVwZvTfLw8GzWlmS84TE/EP30cqIpUk06/xOcdPR8p2tj5U1tBy3XhkjncAAQbhJJi7lp
-	/Phg/i4D21/zv8rhGH4/aYvBr7xWFVz8GouSUFg1pzsYpnDI4Tdwnosi+21E59/sTK9pqU/vUTZ
-	vXd11Yhh/nxQISokA68Z89AqAFWhqgI7zRBQOgcJhikDHfW7e+xelarxx+lgUcq5Ih9+oIxREgf
-	bYk4Kojt5V8Hehx5A83wsD+RR+E=
-X-Google-Smtp-Source: AGHT+IGH3Af6vLJPl3/jTKvaQl8vTs+F5eGn8wCShrqSNYAbF39JzgvbjKB6TISi8idom0YHrGMK9w==
-X-Received: by 2002:a17:907:6e8c:b0:aca:a687:3af4 with SMTP id a640c23a62f3a-ace573c2f7bmr203373066b.42.1745499087585;
-        Thu, 24 Apr 2025 05:51:27 -0700 (PDT)
-Received: from krava ([173.38.220.55])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59bbd6b5sm104701566b.100.2025.04.24.05.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:51:27 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 24 Apr 2025 14:51:25 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 15/22] selftests/bpf: Add hit/attach/detach
- race optimized uprobe test
-Message-ID: <aAozzY6ls7LLXNSc@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-16-jolsa@kernel.org>
- <CAEf4Bzb+LT2nTTjVXi3ATu9AsYSxZJr2XzegA09Cm8izNG=grg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745499093; x=1746103893;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TXeQR3Sx467CreFuYozB+CwcPPf8At1T2RKk614NSIM=;
+        b=GNnWTGmAju0ulIKCeGC+dJiaxc2qHPaEkuBAzZkVEtOqEbS7X3adfLHI3SkbV89T15
+         2jcCoCrR5oca1AbA+pjv/249UNKbOeGwHhX/B8C6OKxWnZXBLWr+berSQJ85LGKgvKFl
+         Taz2TvOJzlYIhmQOyK//7nw3FrXX79dK28RqHi7axlGk5LTOBFy76ginP25v7H2uvbO1
+         3pl2Ej9XzakYMkmE/BLS3fgr4WHXsEsFXkNV51UwtonywKnzBonOL8bhIroegkPIRKmi
+         tzdCUJkv0tWxc9bTUKdr6kB16o2TZT6RRcU26iRaD0lRgUMgdwbucnkvIeTkYmFh3Jcy
+         equw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDZPRJIiY5HaANpQc1YSkR08kQp+HFVJkDCs3C9Zn5pHkduDD0kXJNwlXPOR+KdaSaohuJA+9mRYiwB60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOB6da2pW4fdBmu6i8uzg56H0Y4HU/lqx+a2JdVNnIA2gFgp2B
+	8UvTTQdY+s3kFLmUPKAQ9lY3MUxu9gkL48vYOO0McfGcdsoZpXMZNDbKlkd0Q6HQqdbg6letwI2
+	DpKN19poT0GdpEdCIb3TIdFUV5hpJyutkbyS0czso1yBNw9EVRx2Ldf8=
+X-Google-Smtp-Source: AGHT+IFbFt3HSXR88BYSQzj51++/VfgmJ/IPefkHR6Ckckpg9vTik2GiXujwkU8Gg++jibwHOKkP3ofhpGNJ8IpzpN82gk8IP0VZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4Bzb+LT2nTTjVXi3ATu9AsYSxZJr2XzegA09Cm8izNG=grg@mail.gmail.com>
+X-Received: by 2002:a05:6e02:216a:b0:3d8:1d2d:60ab with SMTP id
+ e9e14a558f8ab-3d930388dc0mr27240175ab.3.1745499093220; Thu, 24 Apr 2025
+ 05:51:33 -0700 (PDT)
+Date: Thu, 24 Apr 2025 05:51:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680a33d5.050a0220.10d98e.0006.GAE@google.com>
+Subject: [syzbot] [kernel?] net test error: UBSAN: negation-overflow in corrupted
+From: syzbot <syzbot+76fd07ed2518fb9303f9@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, davem@davemloft.net, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 23, 2025 at 10:42:43AM -0700, Andrii Nakryiko wrote:
+Hello,
 
-SNIP
+syzbot found the following issue on:
 
-> > +
-> > +static void test_uprobe_race(void)
-> > +{
-> > +       int err, i, nr_threads;
-> > +       pthread_t *threads;
-> > +
-> > +       nr_threads = libbpf_num_possible_cpus();
-> > +       if (!ASSERT_GE(nr_threads, 0, "libbpf_num_possible_cpus"))
-> 
-> I hope there are strictly more than zero CPUs... ;)
-> 
-> > +               return;
-> > +
-> > +       threads = malloc(sizeof(*threads) * nr_threads);
-> > +       if (!ASSERT_OK_PTR(threads, "malloc"))
-> > +               return;
-> > +
-> > +       for (i = 0; i < nr_threads; i++) {
-> > +               err = pthread_create(&threads[i], NULL, i % 2 ? worker_trigger : worker_attach,
-> > +                                    NULL);
-> 
-> What happens when three is just one CPU?
-> 
+HEAD commit:    cc0dec3f659d Merge branch 'net-stmmac-fix-timestamp-snapsh..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=131c21b3980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ac0f76cd0f8e093a
+dashboard link: https://syzkaller.appspot.com/bug?extid=76fd07ed2518fb9303f9
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-right, we need at least 2 threads, how about the change below
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1d6f321414b4/disk-cc0dec3f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/072c28c931b0/vmlinux-cc0dec3f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/bcb44ff40c55/bzImage-cc0dec3f.xz
 
-thanks,
-jirka
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+76fd07ed2518fb9303f9@syzkaller.appspotmail.com
+
+virtio-scsi blksize=512 sectors=4194304 = 2048 MiB
+drive 0x000f27f0: PCHS=0/0/0 translation=lba LCHS=520/128/63 s=4194304
+Sending Seabios boot VM event.
+Booting from Hard Disk 0...
+[    0serialport: Connected to syzkaller.us-central1-c.ci-upstream-net-this-kasan-gce-test-1 port 1 (session ID: e72bd3249fa5f4b40b974e21e6d99e16e8384254f2e85c0fe39918dcc479fa4d, active connections: 1).
+.000000][    T0] UBSAN: negation-overflow in lib/sort.c:199:36
 
 
 ---
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index d55c3579cebe..c885f097eed4 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -701,8 +701,9 @@ static void test_uprobe_race(void)
- 	pthread_t *threads;
- 
- 	nr_threads = libbpf_num_possible_cpus();
--	if (!ASSERT_GE(nr_threads, 0, "libbpf_num_possible_cpus"))
-+	if (!ASSERT_GT(nr_threads, 0, "libbpf_num_possible_cpus"))
- 		return;
-+	nr_threads = max(2, nr_threads);
- 
- 	threads = malloc(sizeof(*threads) * nr_threads);
- 	if (!ASSERT_OK_PTR(threads, "malloc"))
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
