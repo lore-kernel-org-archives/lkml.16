@@ -1,82 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738841CD1F;
-	Thu, 24 Apr 2025 00:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E356F7F9;
+	Thu, 24 Apr 2025 00:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745455758; cv=none; b=U52l+uIUCpZpsHNo493CQBnnOAUe8BlNuA7hoo68FX4/uETEwi83ARM9gpKnNvbitsuyRu63gtkHFP0Ngs8LIvWAMTp9deyYgEf27hBA+Mf1i+smxT+WJnT+CprfLVfEbjXy+/1DjKNxkPz/DKMbjzVCVP/EKZF/z+UreicCpzQ=
+	t=1745456246; cv=none; b=NRwxGsouBh9uMvB7i/U74aHrrfFx1flPd0T/i/UVbJrYh9Bg0wK7U94g/qVZHZlpK3skNpSTXi/NBbI1fJPvGs6wwXUMOjYnGtQZOf8NAMNId1nurO6HakYwJmgu2lmqfIhh802lsqhGnacyKUeBmhGsdeu7Gf7Y+5QDQjjIvtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745455758; c=relaxed/simple;
-	bh=zusig3qLBleVLe8c6TOyPoq3whGUoz030vo8nxvGgXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fvanfhl7RLqnQq/MlC78DTFYEMvUESEgRk3oVgkqKfUk/r5cSgQSM95PmLGcx7DyYkIFmPQgr6N0CKPMDVJajnbmliGdSwDE/Not9oabSaB945Fi+gSarWTVdLkxVbRMdCslBsY1GKy918an69eI8W7N0znwmsoE5zJlHj6WcGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3D641063;
-	Wed, 23 Apr 2025 17:49:11 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B7DD3F59E;
-	Wed, 23 Apr 2025 17:49:14 -0700 (PDT)
-Date: Thu, 24 Apr 2025 01:48:14 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 2/5] dt-bindings: arm: sunxi: Add A523 EMAC0 compatible
-Message-ID: <20250424014814.4f1d51f0@minigeek.lan>
-In-Reply-To: <20250423-01-sun55i-emac0-v1-2-46ee4c855e0a@gentoo.org>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
-	<20250423-01-sun55i-emac0-v1-2-46ee4c855e0a@gentoo.org>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1745456246; c=relaxed/simple;
+	bh=twNrkgTQH31gK1fJFkA/E0nmLZE3WNKozOwHMS7H+9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HQJ2PDIFtcZaOnxEs6PueHHu9JQTaCgl4mdgm5mjCN0IGNnY/6cDywNzx6oEL1uylmWWCzrLqObzTfhXP/iKsFsyDTUGiF8xahVJkInAbRCfHuYKIP0TW3Jt4Dvadrcm5kT8sISEC4L5VsyHFBj8Suc7MQHGzo592lPJUIkQ3O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=O/OOlBpf; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="O/OOlBpf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=EV+pGXit6jruqR5l0B3y9qAw5ucfY7EZKsVJtMM02YA=; b=O/OOlBpf5y/wJvYuHV5rZkXU2b
+	D6/ugZiCsZZ0ysPEYMbomGQoM1W1RXeE/Ha1kFSotMusyfPFdTs+6EFCoqASCERKG1EnLaLkUIQ0I
+	fUaYnKpd/tT+UjCowkgKXDwtf5yPszqbf9Gwe7tLrgcFKDFenCrD6xvfOXNnX9mM5ZFYVVLVDFUCR
+	JfsxXcOar2gPRWw4yREiOAfkhn3447qAzfwYLk1uhUY8tG+qr4l9gzb0qQA+A8OLND+Yrb03Ea9Px
+	kCSBtfwwFxA+faVCtZynkLXQ4YKI6bdmPtzLZE2UdXpp+jatniHP7fyvXjvKeIkyK+a3K8iWBR0fR
+	e9MQoz3g==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u7ktG-000Y0u-1h;
+	Thu, 24 Apr 2025 08:56:35 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 24 Apr 2025 08:56:34 +0800
+Date: Thu, 24 Apr 2025 08:56:34 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+	Uros Bizjak <ubizjak@gmail.com>, Eric Biggers <ebiggers@kernel.org>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: x86/sha256 - Include asm/fpu/api.h directly
+Message-ID: <aAmMQl7MNwhP8aPl@gondor.apana.org.au>
+References: <20250423162548.2072707-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423162548.2072707-1-arnd@kernel.org>
 
-On Wed, 23 Apr 2025 22:03:23 +0800
-Yixun Lan <dlan@gentoo.org> wrote:
-
-> Allwinner A523 SoC variant (A527/T527) contains an "EMAC0" Ethernet
-> MAC compatible to the A64 version.
+On Wed, Apr 23, 2025 at 06:25:45PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-
-I can confirm that the register and DMA descriptor layout in the
-manual looks the same as for the A64, and the driver also works, so:
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre
-
+> This was previously included through another header, but now causes
+> a build failure in some configurations:
+> 
+> arch/x86/crypto/sha256_ssse3_glue.c:63:2: error: call to undeclared function 'kernel_fpu_begin'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>    63 |         kernel_fpu_begin();
+>       |         ^
+> arch/x86/crypto/sha256_ssse3_glue.c:65:2: error: call to undeclared function 'kernel_fpu_end'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>    65 |         kernel_fpu_end();
+>       |         ^
+> 
+> Include the header directly to make it build again.
+> 
+> Fixes: 8e7547473875 ("crypto: x86/sha256 - Use API partial block handling")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-> index 7fe0352dff0f8d74a08f3f6aac5450ad685e6a08..7b6a2fde8175353621367c8d8f7a956e4aac7177 100644
-> --- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-> @@ -23,6 +23,7 @@ properties:
->                - allwinner,sun20i-d1-emac
->                - allwinner,sun50i-h6-emac
->                - allwinner,sun50i-h616-emac0
-> +              - allwinner,sun55i-a523-emac0
->            - const: allwinner,sun50i-a64-emac
->  
->    reg:
-> 
+>  arch/x86/crypto/sha256_ssse3_glue.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
+Sorry, I had pushed out the wrong tree.  It should be fixed in
+cryptodev already:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/commit/?id=eba187a6e7141a1166a68c4d27b4ee5a27670b3b
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
