@@ -1,122 +1,186 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CC81A5BA0;
-	Thu, 24 Apr 2025 02:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D10149C7D;
+	Thu, 24 Apr 2025 02:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745462787; cv=none; b=MKMvhoG3nLkumdexIifGIszhcJMelxJ4DAJN/F3ia6AkCbYJNN9mAFrfIhTb2q+0h5HPlXx5BD7KAhwKUv4IqT8nZFqX2umPChyXRNMCPt9FQdiqabfBOJlXxpS9Ud/HEyPnAzK4AsitrfFRhOfksSKPrSPaZ4MMgrpT+JRfz7M=
+	t=1745463005; cv=none; b=GOn4KWhw86/cHRUjE/GPu6/XJ2a0p3fn7vzdwE+F3Z+IhtZyS3NVWAkaUoB28dpbVkipq2sUE1TIiyfpogDmyXwvva94kSF3FSxNpjxhkNqyNBbTqfuu18DSdSQ9pydAa3agLPcaqyEUe7S6I9Ewd0MHZk9M3M/GtGx581tjWIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745462787; c=relaxed/simple;
-	bh=NYUWSLy6QpMvRrzAdRxpnbaZep79ljUxsyBdwOU4Jwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t3UetK2hCsHsgR22N/61bFI6sSrFHVPZXhwhZOTT7GUdNT4LVyy7ra12iJWDU95RHCJcqju0G6fPe1tivzGKBh45q50CJFE/F+CSNJpkOLbrIzVuZxGbpikob6n2RmZRsBv3kEJBFoE3WCB/DrppBCcF3H9n5dV9o2v+HsPcd/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cHOotX4i; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1745463005; c=relaxed/simple;
+	bh=vHeg8GaJ5xwZUPAanyE5rPxSdim+soTGFogK0AZiI78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dLYvMJtrCc9m/2KJE5x8jDrjIcO2y74/XIT6c/+V70kkFrKepZ5thksOTwsTOSSHD+iWZgFooBHohstjbhxvGumQgh0saqKm+6ppsOI16J4vr7DJDmVHzP+KYHd+dmSDezSEQ5WTNZrSHpBQYy6mxVb75Mv7/tVlJuITzRCmSoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SBBeK5hy; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cHOotX4i"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NLNBPF014981;
-	Thu, 24 Apr 2025 02:45:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=pokXB
-	CX5Ded9Lnz+unOijz8gr7rZOR1qtecYySzC12Y=; b=cHOotX4i+/1nJPgKroPJ3
-	xb48u1cYS3R5NeZ+XxzCBNBoMJJEoWF/A4W9nt0/oSDILU2cWPkuW80T0HuNj3GN
-	8+fdIK7sBm4rhSzU43wPeI4EUtd+AXxTUa3g8BItYp0yRv9+MHMegW2cpDCnKYEF
-	q44/zoKjhoWSlb0UnQ74jt8b8yyUVuIeBGroABXHCBhzlSfS+2L+24zhe8GR0Cbp
-	Dia/lVpb8KKBN5VHVCl868B1G3BxBhWKA2KvuorhmGYIVYSWSpvyCmjX8AuyDbae
-	iNHACVxIpvxljYrzAHzMIeyUHrdoLK/zZQMB73lmu8xVTb5zyAcG61l1c1EkHdiv
-	A==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jhdjuxv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 02:45:30 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53O1USYA028195;
-	Thu, 24 Apr 2025 02:45:30 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 466jx6xs0j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 02:45:29 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53O2jQBH033048;
-	Thu, 24 Apr 2025 02:45:29 GMT
-Received: from clb-2-bm-ad2.osdevelopmeniad.oraclevcn.com (clb-2-bm-ad2.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.254.172])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 466jx6xrxs-2;
-	Thu, 24 Apr 2025 02:45:29 +0000
-From: Libo Chen <libo.chen@oracle.com>
-To: akpm@linux-foundation.org, rostedt@goodmis.org, peterz@infradead.org,
-        mgorman@suse.de, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, tj@kernel.org, llong@redhat.com
-Cc: sraithal@amd.com, venkat88@linux.ibm.com, kprateek.nayak@amd.com,
-        raghavendra.kt@amd.com, yu.c.chen@intel.com, tim.c.chen@intel.com,
-        vineethr@linux.ibm.com, chris.hyser@oracle.com,
-        daniel.m.jordan@oracle.com, lorenzo.stoakes@oracle.com,
-        mkoutny@suse.com, linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] sched/numa: Skip VMA scanning on memory pinned to one NUMA node via cpuset.mems
-Date: Wed, 23 Apr 2025 19:45:22 -0700
-Message-ID: <20250424024523.2298272-2-libo.chen@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250424024523.2298272-1-libo.chen@oracle.com>
-References: <20250424024523.2298272-1-libo.chen@oracle.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SBBeK5hy"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0Gsan011348;
+	Thu, 24 Apr 2025 02:49:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Rca/eem/BOQiBAaf+4UHL7JahyGwKQJ/TPpP1dQHKg0=; b=SBBeK5hyqMoQRAyY
+	+b1e4fdfM9iObX+ggyxfFTv9amZhUhf4Mu1EeQzkN5itR7qTElocawUoSv+c6O+N
+	P2uH9DheMwB555mYsDTnJ8M8dR0O+Zc5+fm7E+iPAeNsMqdBQtLo6hCNqf6UGDms
+	7JXQ6G+HbcdYkZG5bCNC2l3k9O9LsrPE8xa9jR7vDZcwPVM/IOOQSGYm0myMl8Ig
+	/5cTwAbQAzM2BxYmJoOwnlJotxphHmoE71hqd5n/fSs6qpzJVtQ1LFx0xtyGQyPl
+	LmGK6UFESOArojKRryOgsRfvEgEpoai65bvZ6KuTRYGbUZ3xM3SWlYKOmeUNPQ8v
+	Rt3MfA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3c023-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 02:49:45 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O2nivX011197
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 02:49:44 GMT
+Received: from [10.239.28.138] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 19:49:41 -0700
+Message-ID: <d862f711-428c-4e3a-b80d-e45d14e7b781@quicinc.com>
+Date: Thu, 24 Apr 2025 10:49:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
+To: Niklas Cassel <cassel@kernel.org>
+CC: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <krishna.chundru@oss.qualcomm.com>,
+        <quic_vbadigan@quicinc.com>, <quic_mrana@quicinc.com>,
+        <quic_cang@quicinc.com>, <quic_qianyu@quicinc.com>
+References: <20250422103623.462277-1-quic_wenbyao@quicinc.com>
+ <aAjqEUifc-W-MmJy@ryzen>
+Content-Language: en-US
+From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
+In-Reply-To: <aAjqEUifc-W-MmJy@ryzen>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: od01w4dmcm09ZFaivKw-CHXdp2o9XDL2
+X-Proofpoint-GUID: od01w4dmcm09ZFaivKw-CHXdp2o9XDL2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAxNSBTYWx0ZWRfX4vfCw1y3J64e QxDaL+2yDFqi5Cf1VYIW3fJqtuboI5jacBf6Q0eUkbzTFQvvhZNm//FrSXwqL9WVAJDATCXaj2U VKWReCSIKJZLHyOUiQRgK/DVVTNrF9NRKoNz/f+h8ef8bsGnS5zFEJoeS+7yXlNsqBFnRVO+qwr
+ CaX5tg9fArgRPnV6K0fSG5nDhGZwVhpwQP0fCFcdcUOFiynM4bSysG1XJcf90nAteRtD4pthC9N Gk9yveWJ5wXH2P2g8L6S+IK53fR31ZSZHLIXzNMJMWXujsEDw4vcpFuF4OpdYYUVgFKSfdN4BBA 2zP5mSktBpdLzc6tPGTjy0z4Cx0tvRwH+ff9Ps7hi77GsEnoNLWsWrXtzFjyhT4FZRMGmt2BZMd
+ uvlvUrT11+wGC8SPIxm4B1OjnnsEvDfVPTCmGOsDUAOdnyu39wtGl6J+gI1+dOSLEezc0PHN
+X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=6809a6c9 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=DqbCYaATtFW9elj9MxEA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1011
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504240015
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAxNSBTYWx0ZWRfX/7I4T7Soeja9 2p3LGOEagnXQCIiGZaHZXOHwRdjoTYWCt2hQGQ7C9/efi+15rPylAPUVP3fMf7X+rtAy/YtlOtr CgPd1zJ4UtcghHMAJwgZRNnW2224VviyjAPro/5x6TLP+LHrY9Oby/RrYqmenkA+i3I+Q8Mk/Xk
- 6DukNzxROzM21a9hF5lKTblMRFmI8pSUlcnYxvJooydjEylwp21EL+a2KHyLKLW8b+BqaVg33vT NR0P6HAQCcqI0r88r8fPiGLEnncOv/hCdh0i2r3ojGTZq1nhanc7/905xhvKdLJS8AdN9ITaI9q aOVxIq0O6sQmteHgBYxom0l+rFpYWucgkhED+4DtMTPNtOmxtQ0Ph08doH8cYrHgwbRPQmK69U/ kcxBSfHB
-X-Proofpoint-ORIG-GUID: CIIDRKJUiTeV3GCHxneGef8f3ZwrMuXL
-X-Proofpoint-GUID: CIIDRKJUiTeV3GCHxneGef8f3ZwrMuXL
 
-When the memory of the current task is pinned to one NUMA node by cgroup,
-there is no point in continuing the rest of VMA scanning and hinting page
-faults as they will just be overhead. With this change, there will be no
-more unnecessary PTE updates or page faults in this scenario.
+On 4/23/2025 9:24 PM, Niklas Cassel wrote:
+> On Tue, Apr 22, 2025 at 06:36:23PM +0800, Wenbin Yao wrote:
+>> As per DWC PCIe registers description 4.30a, section 1.13.43, NUM_OF_LANES
+>> named as PORT_LOGIC_LINK_WIDTH in PCIe DWC driver, is referred to as the
+>> "Predetermined Number of Lanes" in section 4.2.6.2.1 of the PCI Express
+>> Base 3.0 Specification, revision 1.0. This section explains the conditions
+>> need be satisfied for entering Polling.Configuration:
+>>
+>> "Next state is Polling.Configuration after at least 1024 TS1 Ordered Sets
+>> were transmitted, and all Lanes that detected a Receiver during Detect
+>> receive eight consecutive training sequences.
+>>
+>> Otherwise, after a 24 ms timeout the next state is:
+>> Polling.Configuration if
+>> (i) Any Lane, which detected a Receiver during Detect, received eight
+>> consecutive training sequences and a minimum of 1024 TS1 Ordered Sets are
+>> transmitted after receiving one TS1 or TS2 Ordered Set.
+>> And
+>> (ii) At least a predetermined set of Lanes that detected a Receiver during
+>> Detect have detected an exit from Electrical Idle at least once since
+>> entering Polling.Active.
+>>
+>> Note: This may prevent one or more bad Receivers or Transmitters from
+>> holding up a valid Link from being configured, and allow for additional
+>> training in Polling.Configuration. The exact set of predetermined Lanes is
+>> implementation specific.
+>>
+>> Note: Any Lane that receives eight consecutive TS1 or TS2 Ordered Sets
+>> should have detected an exit from Electrical Idle at least once since
+>> entering Polling.Active."
+>>
+>> In a PCIe link that supports multiple lanes, if PORT_LOGIC_LINK_WIDTH is
+>> set to lane width hardware supports, all lanes that detect a receiver
+>> during the Detect phase must receive eight consecutive training sequences.
+>> Otherwise, the LTSSM cannot enter Polling.Configuration and link training
+>> will fail.
+>>
+>> Therefore, always set PORT_LOGIC_LINK_WIDTH to 1, regardless of the number
+>> of lanes the port actually supports, to make linking up more robust. This
+>> setting will not affect the intended link width if all lanes are
+>> functional. Additionally, the link can still be established with at least
+>> one lane if other lanes are faulty.
+>>
+>> Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
+>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+>> ---
+>> Changes in v2:
+>> - Reword commit message.
+>> - Link to v1: https://lore.kernel.org/all/1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com/
+>>
+>>   drivers/pci/controller/dwc/pcie-designware.c | 5 +----
+>>   1 file changed, 1 insertion(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 97d76d3dc..be348b341 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -797,22 +797,19 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
+>>   	/* Set link width speed control register */
+>>   	lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+>>   	lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
+>> +	lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
+>>   	switch (num_lanes) {
+>>   	case 1:
+>>   		plc |= PORT_LINK_MODE_1_LANES;
+>> -		lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
+>>   		break;
+>>   	case 2:
+>>   		plc |= PORT_LINK_MODE_2_LANES;
+>> -		lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
+>>   		break;
+>>   	case 4:
+>>   		plc |= PORT_LINK_MODE_4_LANES;
+>> -		lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
+>>   		break;
+>>   	case 8:
+>>   		plc |= PORT_LINK_MODE_8_LANES;
+>> -		lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
+>>   		break;
+>>   	default:
+>>   		dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
+>> -- 
+>> 2.34.1
+>>
+> I still see the link to my EP (which also have this patch) using all
+> four lanes according to lspci, so:
+>
+> Tested-by: Niklas Cassel <cassel@kernel.org>
 
-We have seen up to a 6x improvement on a typical java workload running on
-VMs with memory and CPU pinned to one NUMA node via cpuset in a two-socket
-AARCH64 system. With the same pinning, on a 18-cores-per-socket Intel
-platform, we have seen 20% improvment in a microbench that creates a
-30-vCPU selftest KVM guest with 4GB memory, where each vCPU reads 4KB
-pages in a fixed number of loops.
+This setting will not affect the intended link width if all lanes are
+functional. Additionally, the link can still be established with at least
+one lane if other lanes are faulty.
 
-Signed-off-by: Libo Chen <libo.chen@oracle.com>
-Tested-by: Chen Yu <yu.c.chen@intel.com>
----
- kernel/sched/fair.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e43993a4e580..c9903b1b3948 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3329,6 +3329,13 @@ static void task_numa_work(struct callback_head *work)
- 	if (p->flags & PF_EXITING)
- 		return;
- 
-+	/*
-+	 * Memory is pinned to only one NUMA node via cpuset.mems, naturally
-+	 * no page can be migrated.
-+	 */
-+	if (cpusets_enabled() && nodes_weight(cpuset_current_mems_allowed) == 1)
-+		return;
-+
- 	if (!mm->numa_next_scan) {
- 		mm->numa_next_scan = now +
- 			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
 -- 
-2.43.5
+With best wishes
+Wenbin
 
