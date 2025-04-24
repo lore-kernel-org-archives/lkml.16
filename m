@@ -1,101 +1,66 @@
-Received: from NOTESERV1.attotech.com (sw.attotech.com [208.69.85.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCA81B0437;
-	Thu, 24 Apr 2025 15:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.69.85.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF2B1A841C;
+	Thu, 24 Apr 2025 15:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508816; cv=none; b=kQL7a8/yHAWp5McZVtURhjdmsjWSEGO3qN4iAlWQuvwyi7+8SCj/RMbyiLrYqc9TZtNPa8hApc0QDJGJKVZWY7TtW7hSSUkltyKgzYtCDJ4/+FMhrZoM4WJ+Qmkn0yY6xn7lHHf8VDJdq/C1/fp1z7XQR4bC5ixpS5jZCEu8CLA=
+	t=1745508821; cv=none; b=V3yI2MWr0yQsPjWWL6rczGXKdiiq9pfpIJ9KJZiaruGMk/G+BLKFamb0NpZWhCTCRlsGzz0pWxub9gpunf29HY5d22RLFd8HvF6VNhtI4jpqoBr/oVWiP6dZa97HpDqc6MVQvcj7djkvyf5GCmHngBTHqxAdlDz9K09N/EtobPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508816; c=relaxed/simple;
-	bh=Xfc8GKtKubTRv/XopZVJMagIqooOj7Vc/rTv+DHGaME=;
-	h=Message-ID:Date:Subject:To:Cc:From:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=s5lg5FEgDHujFAN5Eqf3e+B4FNn9Opl2RtTKKVtO8aFA2tyZOjgwpyfZOXSCBzclYYFwKdinSM5+X1t1zGqkK2s5oueeSj/FU1TvWyH7N+9OfglOb49Ur9hOj6kLWONKCnIXRuXCtkj1lkHTtromQsQJFbs11FLVAMuhgB0kWrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=atto.com; spf=pass smtp.mailfrom=atto.com; arc=none smtp.client-ip=208.69.85.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=atto.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atto.com
-Received: from [10.20.0.14] ([10.20.0.14])
-          by NOTESERV1.attotech.com (HCL Domino Release 12.0.2FP3 HF86)
-          with ESMTP id 2025042411332402-909 ;
-          Thu, 24 Apr 2025 11:33:24 -0400 
-Message-ID: <05faf356-0bc7-4fdf-8a74-f738365fad20@atto.com>
-Date: Thu, 24 Apr 2025 11:33:23 -0400
-Subject: Re: [PATCH] scsi: sd_zbc: Limit the report zones buffer size to
- UIO_MAXIOV
-To: Damien Le Moal <dlemoal@kernel.org>, Christoph Hellwig <hch@infradead.org>
-Cc: bgrove@atto.com, James.Bottomley@hansenpartnership.com,
- linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
- martin.petersen@oracle.com, Steve Siwinski <stevensiwinski@gmail.com>
-From: "Siwinski, Steve" <ssiwinski@atto.com>
-In-Reply-To: <8454a55d-bfcc-441a-837e-157123e881fe@kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
+	s=arc-20240116; t=1745508821; c=relaxed/simple;
+	bh=wU9jfyce70/Gvv2ki/06OL17ud+SeMYiIauhmhd6z1g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=apZWf0/77yxTaJd6EXoXadG8KwWyvKnQjTXKQ3/VTqHuWB01lNw4zo7QR0S4Yw6EC74yiIGM4XEI5OHhb/8iViDIWlQsB0V8vYk8XxwkiXAgDXfyq8cAHbc5u5C/rDGiLrX2y6Tni87KUVQqOf+mJ8TcnHpYIZTRIsQ7QxzQ62M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSUPMNRp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSUPMNRp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83DE8C4CEE3;
+	Thu, 24 Apr 2025 15:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745508820;
+	bh=wU9jfyce70/Gvv2ki/06OL17ud+SeMYiIauhmhd6z1g=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=MSUPMNRpw+9NAbENzEu/+kpPuwRDFbBT5B3WQ6jEWpnVUdLMhWgHBwMRVnbg6HvLp
+	 2QhU+fICktAQ8iVtXMB9jSnerbcSQJrM0LikVBpAS6i/kT81Hm5fx7kXKbGXGQcuPu
+	 f3DOiCgZuEbUidiRV3U0vNZYphBr9t4toROxbXNtmF7DgcTRh70Og3B22oP/6FWmcj
+	 ljppaKAvTLvJJYLm4vZ9KnwnDEYiwGLfuNU460dcn7SD87T9B2pnqKpGYJJhLn+ckE
+	 P5uQwsWXmzJkvCDL7IEvaJsjX2D61B/tGTLMrY9+f0MFiT9Im3csqvbG47k4G+Cykt
+	 eR9+sf18dq+/A==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ matthias.bgg@gmail.com, mandyjh.liu@mediatek.com, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ kernel@collabora.com
+In-Reply-To: <20250416120225.147826-1-angelogioacchino.delregno@collabora.com>
+References: <20250416120225.147826-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: (subset) [PATCH] dt-bindings: mfd: mediatek,mt8195-scpsys: Add
+ support for MT6893
+Message-Id: <174550881826.1465250.14293935570790727278.b4-ty@kernel.org>
+Date: Thu, 24 Apr 2025 16:33:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-References: <20250411203600.84477-1-ssiwinski@atto.com>
- <Z_yinytV0e_BbNrF@infradead.org>
- <OFA5AB0241.ED5C089D-ON85258C70.0068BDE0-85258C70.00721A7A@atto.com>
- <8454a55d-bfcc-441a-837e-157123e881fe@kernel.org>
-X-MIMETrack: Itemize by SMTP Server on NOTESERV1/SERV/ATTO(Release 12.0.2FP3 HF86|December
- 17, 2024) at 04/24/2025 11:33:24 AM
-X-TNEFEvaluated: 1
-X-Disclaimed: 41067
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-On 4/18/2025 5:29 PM, Damien Le Moal wrote:
-> On 4/19/25 05:46, SSiwinski@atto.com wrote:
->>
->> "Christoph Hellwig" <hch@infradead.org> wrote on 04/14/2025 01:52:31 AM:
->>
->>> On Fri, Apr 11, 2025 at 04:36:00PM -0400, Steve Siwinski wrote:
->>>> The report zones buffer size is currently limited by the HBA's
->>>> maximum segment count to ensure the buffer can be mapped. However,
->>>> the user-space SG_IO interface further limits the number of iovec
->>>> entries to UIO_MAXIOV when allocating a bio.
->>>
->>> Why does the userspace SG_IO interface matter here?
->>> sd_zbc_alloc_report_buffer is only used for the in-kernel
->>> ->report_zones call.
->>
->> I was referring to the userspace SG_IO limitation (UIO_MAXIOV) in
->> bio_kmalloc(), which gets called when the report zones command is
->> executed and the buffer mapped in bio_map_kern().
->>
->> Perhaps my wording here was poor and this is really a limitation of bio?
+On Wed, 16 Apr 2025 14:02:25 +0200, AngeloGioacchino Del Regno wrote:
+> Add a compatible string for the scpsys block found in the MediaTek
+> Dimensity 1200 (MT6893) SoC.
 > 
-> sd_zbc_alloc_report_buffer() is called only from sd_zbc_report_zones() which is
-> the disk ->report_zones() operations, which is NOT called for passthrough
-> commands. So modifying sd_zbc_alloc_report_buffer() will not help in any way
-> solving your issue with an SG_IO passthrough report zones command issued by the
-> user.
-> 
-> For reference, libzbc uses ioctl(SG_GET_SG_TABLESIZE) * sysconf(_SC_PAGESIZE) as
-> the max buffer size and allocates page aligned buffers to avoid these SG_IO
-> buffer mapping limitations.
 > 
 
-My issue is not with passthough report zones.
+Applied, thanks!
 
-The report zones command is failing on driver load and causing the drive 
-to fail to appear as a block device. If queue_max_segments is set to a 
-value over 1024, then nr_vecs in bio_alloc() will be greater than 
-UIO_MAXIOV and bio_alloc() will return NULL.
+[1/1] dt-bindings: mfd: mediatek,mt8195-scpsys: Add support for MT6893
+      commit: ce37cf8b8520aa292d2eb975b009e15e38347351
 
-This causes the error.
-```
-sd 8:0:0:0: [sdb] REPORT ZONES start lba 0 failed
-sd 8:0:0:0: [sdb] REPORT ZONES: Result: hostbyte=0xff driverbyte=DRIVER_OK
-sdb: failed to revalidate zones
-```
+--
+Lee Jones [李琼斯]
 
-You can reproduce this by setting the max_sgl_entries parameter to 2k or 
-greater in the mpt3sas driver. Other drivers can also reproduce this 
-behavior.
-
-
-This electronic transmission and any attachments hereto are intended only for the use of the individual or entity to which it is addressed and may contain confidential information belonging to ATTO Technology, Inc. If you have reason to believe that you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution or the taking of any action in reliance on the contents of this electronic transmission is strictly prohibited. If you have reason to believe that you have received this transmission in error, please notify ATTO immediately by return e-mail and delete and destroy this communication.   
