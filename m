@@ -1,98 +1,175 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF872143C69;
-	Thu, 24 Apr 2025 12:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749351DEFC8;
+	Thu, 24 Apr 2025 12:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745498471; cv=none; b=koW69w6BpGf/wB0s7p3lw+b4sXpWoVYA0+EbnW2EdUcaD2jz2IDevvZLYm+CljHvy1UahSgrFKe1DJPEgXVl2EMsifTmcyVr45BVqLsuapML/Lb7sm5tnpHjSrp0EQsBT1aSuSt2GPKM58OjA/EcVZdRESqdbsIln4DrdQvF/hw=
+	t=1745498494; cv=none; b=B2RI0euhPpuONhvvGqYji0dk7wUkcDnk1zKvATSFcMHeBwxcGo3iJBlfdzG6eZBrlj8Afa5blh2bljjAFK4Se0Tr5rXJxpchIdP/JUe60hoytFi/F8k4Odr7lDkWswRXomPDtsygRJqogEypVbZauJU1S2rXKWeS4/wjHpgMV0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745498471; c=relaxed/simple;
-	bh=3vzDDu7OwP6S6+fBr+nhlCKhneY3lwT02jKazU0DDI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=buL3pkm1l2oHhgf5WzxOkI9C6S8kW6j1r/GStkCEFOXdCAb2K3bZ7+CH4oBY4QPu+C+DrGFcqOFs1LWOWQO7rcdiz/M3xxDkJck7gLl6jR7iC250JeI/eOjq/cPYcs4zC4M9HXUPGruhZIEoGMcN+UWQrozfEezGtUv+KNdzIlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 569A51063;
-	Thu, 24 Apr 2025 05:41:04 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F21163F59E;
-	Thu, 24 Apr 2025 05:41:06 -0700 (PDT)
-Date: Thu, 24 Apr 2025 13:41:04 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
- Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
- Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
- board
-Message-ID: <20250424134104.18031a70@donnerap.manchester.arm.com>
-In-Reply-To: <835b58a3-82a0-489e-a80f-dcbdb70f6f8d@lunn.ch>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
-	<20250423-01-sun55i-emac0-v1-4-46ee4c855e0a@gentoo.org>
-	<aa38baed-f528-4650-9e06-e7a76c25ec89@lunn.ch>
-	<20250424014120.0d66bd85@minigeek.lan>
-	<835b58a3-82a0-489e-a80f-dcbdb70f6f8d@lunn.ch>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1745498494; c=relaxed/simple;
+	bh=Ao0dg1JtVGrD54HmD0TeUgV+jkCOoUQZVd9T++hcFMQ=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=efrB8Icekbp81URw28z615OQSORgGBQv2aaJtQm9FCI0sw0lJrc1Gxwh2W9OizlRKCHDgTrhY/n2qqDexUESVCcVorwk+BGCntKOl/MN1rtIx8vu8JCZBwAJLytj9q/G2wTSpas2KW5dhpmlgLx7xgnBmg9GGjK51vTm9Bn7JPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rh5AZas8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qJAbNOyN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rh5AZas8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qJAbNOyN"
+Date: Thu, 24 Apr 2025 12:41:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745498490;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1K02YRnYXcFgHWzTd2Acww7Rvsxw9kJk0oAf3uzO/kU=;
+	b=rh5AZas8BVaaWs6IIldQWUPhD6gdGybk+V733fNXYZhx7x6GWIQS9P24BHauz1Ns9ff8wG
+	SKjYzsL61UFQbo4EQnNmaQYI2Pxj2DHA+I6a/N7A0ciBX7tO4vzXBp7MANtWjGQSF8ElFm
+	O52a4et3Is++9AsjF6IJy3dl0xxPL0IitMyxQgbdkgxgg9YAHR6TrJiwTju9DN2kEJLl5F
+	v5dhd/SOQ3Jn294oBdsE397ImDZ2fOeu1ANYXUOupWs6GzWt62RXZgpRA1lUZGSeLV8W2M
+	3JNXjDz7g0l4Nt7SRPST/7fzrK6ZCgKhNT0/w7wKr+LRjOWKkTxY+2rlvEYyvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745498490;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1K02YRnYXcFgHWzTd2Acww7Rvsxw9kJk0oAf3uzO/kU=;
+	b=qJAbNOyNLv64WB4SaK5TQ+hd27i/xldfZJm+8vE1YY6nJBB5bDvsHkXprYT6btA3Oz8lDu
+	2jZbEF4n5ffPclDA==
+From: "tip-bot2 for Dr. David Alan Gilbert" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] timers: Remove unused __round_jiffies(_up)
+Cc: "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250418200803.427911-1-linux@treblig.org>
+References: <20250418200803.427911-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <174549848950.31282.3516934679529036592.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Apr 2025 14:16:16 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+The following commit has been merged into the timers/core branch of tip:
 
-> On Thu, Apr 24, 2025 at 01:42:41AM +0100, Andre Przywara wrote:
-> > On Wed, 23 Apr 2025 18:58:37 +0200
-> > Andrew Lunn <andrew@lunn.ch> wrote:
-> > 
-> > Hi,
-> >   
-> > > > +&emac0 {
-> > > > +	phy-mode = "rgmii";    
-> > > 
-> > > Does the PCB have extra long clock lines in order to provide the
-> > > needed 2ns delay? I guess not, so this should be rgmii-id.  
-> > 
-> > That's a good point, and it probably true.
-> >   
-> > >   
-> > > > +	phy-handle = <&ext_rgmii_phy>;
-> > > > +
-> > > > +	allwinner,tx-delay-ps = <300>;
-> > > > +	allwinner,rx-delay-ps = <400>;    
-> > > 
-> > > These are rather low delays, since the standard requires 2ns. Anyway,
-> > > once you change phy-mode, you probably don't need these.  
-> > 
-> > Those go on top of the main 2ns delay  
-> 
-> Which 2ns delay? "rgmii" means don't add 2ns delay, the PCB is doing
-> it. So if there is a 2ns delay, something is broken by not respecting
-> "rgmii".
-> 
-> > I just tried, it also works with some variations of those values, but
-> > setting tx-delay to 0 stops communication.  
-> 
-> Just to be clear, you tried it with "rgmii-id" and the same <300> and
-> <400> values?
+Commit-ID:     49916e22d9530d6cf027e635a5d824c7d698d67f
+Gitweb:        https://git.kernel.org/tip/49916e22d9530d6cf027e635a5d824c7d698d67f
+Author:        Dr. David Alan Gilbert <linux@treblig.org>
+AuthorDate:    Fri, 18 Apr 2025 21:08:03 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 24 Apr 2025 14:31:35 +02:00
 
-Yes, sorry, I wasn't clear: I used rgmii-id, then experimented with those
-values. I briefly tried "rgmii", and I couldn't get a lease, so I quite
-confident it's rgmii-id, as you said. The vendor DTs just use "rgmii", but
-they might hack the delay up another way (and I cannot be asked to look at
-that awful code).
+timers: Remove unused __round_jiffies(_up)
 
-Cheers,
-Andre
+Remove two trivial but long unused functions.
+
+__round_jiffies() has been unused since 2008's
+commit 9c133c469d38 ("Add round_jiffies_up and related routines")
+
+__round_jiffies_up() has been unused since 2019's
+commit 7ae3f6e130e8 ("powerpc/watchdog: Use hrtimers for per-CPU
+heartbeat")
+
+Remove them.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250418200803.427911-1-linux@treblig.org
+
+---
+ include/linux/timer.h |  2 +--
+ kernel/time/timer.c   | 42 +------------------------------------------
+ 2 files changed, 44 deletions(-)
+
+diff --git a/include/linux/timer.h b/include/linux/timer.h
+index 10596d7..e17aac7 100644
+--- a/include/linux/timer.h
++++ b/include/linux/timer.h
+@@ -172,12 +172,10 @@ extern void init_timers(void);
+ struct hrtimer;
+ extern enum hrtimer_restart it_real_fn(struct hrtimer *);
+ 
+-unsigned long __round_jiffies(unsigned long j, int cpu);
+ unsigned long __round_jiffies_relative(unsigned long j, int cpu);
+ unsigned long round_jiffies(unsigned long j);
+ unsigned long round_jiffies_relative(unsigned long j);
+ 
+-unsigned long __round_jiffies_up(unsigned long j, int cpu);
+ unsigned long __round_jiffies_up_relative(unsigned long j, int cpu);
+ unsigned long round_jiffies_up(unsigned long j);
+ unsigned long round_jiffies_up_relative(unsigned long j);
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 4d915c0..1b2a884 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -386,32 +386,6 @@ static unsigned long round_jiffies_common(unsigned long j, int cpu,
+ }
+ 
+ /**
+- * __round_jiffies - function to round jiffies to a full second
+- * @j: the time in (absolute) jiffies that should be rounded
+- * @cpu: the processor number on which the timeout will happen
+- *
+- * __round_jiffies() rounds an absolute time in the future (in jiffies)
+- * up or down to (approximately) full seconds. This is useful for timers
+- * for which the exact time they fire does not matter too much, as long as
+- * they fire approximately every X seconds.
+- *
+- * By rounding these timers to whole seconds, all such timers will fire
+- * at the same time, rather than at various times spread out. The goal
+- * of this is to have the CPU wake up less, which saves power.
+- *
+- * The exact rounding is skewed for each processor to avoid all
+- * processors firing at the exact same time, which could lead
+- * to lock contention or spurious cache line bouncing.
+- *
+- * The return value is the rounded version of the @j parameter.
+- */
+-unsigned long __round_jiffies(unsigned long j, int cpu)
+-{
+-	return round_jiffies_common(j, cpu, false);
+-}
+-EXPORT_SYMBOL_GPL(__round_jiffies);
+-
+-/**
+  * __round_jiffies_relative - function to round jiffies to a full second
+  * @j: the time in (relative) jiffies that should be rounded
+  * @cpu: the processor number on which the timeout will happen
+@@ -483,22 +457,6 @@ unsigned long round_jiffies_relative(unsigned long j)
+ EXPORT_SYMBOL_GPL(round_jiffies_relative);
+ 
+ /**
+- * __round_jiffies_up - function to round jiffies up to a full second
+- * @j: the time in (absolute) jiffies that should be rounded
+- * @cpu: the processor number on which the timeout will happen
+- *
+- * This is the same as __round_jiffies() except that it will never
+- * round down.  This is useful for timeouts for which the exact time
+- * of firing does not matter too much, as long as they don't fire too
+- * early.
+- */
+-unsigned long __round_jiffies_up(unsigned long j, int cpu)
+-{
+-	return round_jiffies_common(j, cpu, true);
+-}
+-EXPORT_SYMBOL_GPL(__round_jiffies_up);
+-
+-/**
+  * __round_jiffies_up_relative - function to round jiffies up to a full second
+  * @j: the time in (relative) jiffies that should be rounded
+  * @cpu: the processor number on which the timeout will happen
