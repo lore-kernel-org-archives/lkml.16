@@ -1,114 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D30223DFF;
-	Thu, 24 Apr 2025 15:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2582187FE4
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508880; cv=none; b=saaaJ5Ju8XUibaXhd5zqzPr2aFjJnNaw7pkm6zHf+BDSKeQOOpl4ChU7FbZOLYvYIC09pnl8ODGzpneU+sQpqs/BHtWZQMmf6ey5l8xBM1DF4HKTLMzpQ+ZLE0OwHWIowl6KIqieigzI8+OXwWQV+0OlR2v/w+N1i2oI5te6iDc=
+	t=1745508924; cv=none; b=i1w23IiL7C/hvoCnvavDJu/3/rH5RsN5QjOMcVV53iIoXw9xjHWAEpoC9UspnrSjYqIwesxRnOukUAWpGv/wjgHp1CCwE2+NskoIeAWiFxdM5AQ1Mp7COzl5ZtjdSm4j0h4565QHXicx5eDTc+2zSknlR1tDrbILWmOEMdbYdLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508880; c=relaxed/simple;
-	bh=bxClbLQLTNjuI9XodLLxLGe6sAL6f77wxXbHj6qSftg=;
+	s=arc-20240116; t=1745508924; c=relaxed/simple;
+	bh=JnnJiDGwNig+VJDSU2cyGVNNE8jT8igWXXznUgHTtzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hoz0myVcp5q05RfzYHTl1Hfecl5i+705rKsu4TsUNv+RmWBNry6eINuOYtcs+RkxGvDXVdLfnYADi9Knt1nXOluYAFI0KLMY42DaF8Yn5Gp+lJR1k+klZ830i1hjTuTiDKD8l4CFDDjFGe7Khtil8Ryi4HaRdZdGfkae5qccnOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaVQycdF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGI5R3kTFE00+z5Jm0bIR+ZDu2l/XIato174XMAEQ2bFKw2/5YD0v/EPczoIIrDmYMPVg5PLkoVyIsYOma8ANusg0bwZvssORjBSvR7F1caAjvNBLrDPgoLD0KMF/jH/Dg/Iubzid8M8nlsIL7SvvuFzpt2wNC/lsBtee0KrbsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uPlvWy8m; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaVQycdF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45CFC4CEE3;
-	Thu, 24 Apr 2025 15:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745508880;
-	bh=bxClbLQLTNjuI9XodLLxLGe6sAL6f77wxXbHj6qSftg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kaVQycdFEh57ptKQMkU3phV47PdSHrqw0ImT/A/ChbtZXARReZjSQcAo0qAg9ou/4
-	 8ytM9dvOcEt/+ZXzgqtGyWM1G+lAn+A2bnYWcAOnz98SDiCWZpj6kpUJTjv7SxdOu+
-	 JJ33e60tOTDzmKdxSksrmc6lm2BEOmqrqX8NfAqQieXqN5sDmAcbrjpT7OsnHg+Vqx
-	 lMx5PukWerWoacnvxQ01VK75QM3Pc46vCRuKUvwN15DcjnRqbja8OfeYXUWQNNoyw6
-	 I5DHIajSgutzhGjRzJoJcwZ7gpdn5JkSB6I54A0t5cZJkgniFPohYoi6rDYw71NDcU
-	 uiU+3EV9YqqkA==
-Date: Thu, 24 Apr 2025 16:34:34 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 8/8] mfd: zl3073x: Register DPLL sub-device
- during init
-Message-ID: <20250424153434.GF8734@google.com>
-References: <20250416162144.670760-1-ivecera@redhat.com>
- <20250416162144.670760-9-ivecera@redhat.com>
- <20250417162044.GG372032@google.com>
- <335003db-49e5-4501-94e5-4e9c6994be7d@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uPlvWy8m"
+Date: Thu, 24 Apr 2025 08:34:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745508918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56D9mlZ7M1G0UnSJJ2M8dPTg3+XAXsTfHIm3FcS4+KU=;
+	b=uPlvWy8mqcGR38PBfc5+PqGpUgQvemUopmsCBqLVIoh839eUhODfU/26KLKzoSaLttPLvb
+	gz7zKbif6GXHNzHYVSixNwTvM02m6fCFHtG9RXkVn/9kR5KcNgxYlVK2zrbq78l4qXykvi
+	NmVcZf0rqKXbNPdrMCYklhj0ccawDR4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Karim Manaouil <karim.manaouil@linaro.org>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, Alexander Graf <graf@amazon.com>,
+	Alex Elder <elder@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Fuad Tabba <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
+	Quentin Perret <qperret@google.com>, Rob Herring <robh@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
+	Will Deacon <will@kernel.org>,
+	Haripranesh S <haripran@qti.qualcomm.com>,
+	Carl van Schaik <cvanscha@qti.qualcomm.com>,
+	Murali Nalajala <mnalajal@quicinc.com>,
+	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
+	Trilok Soni <tsoni@quicinc.com>,
+	Stefan Schmidt <stefan.schmidt@linaro.org>
+Subject: Re: [RFC PATCH 00/34] Running Qualcomm's Gunyah Guests via KVM in EL1
+Message-ID: <aApaGnFPhsWBZoQ2@linux.dev>
+References: <20250424141341.841734-1-karim.manaouil@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <335003db-49e5-4501-94e5-4e9c6994be7d@redhat.com>
+In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 17 Apr 2025, Ivan Vecera wrote:
+On Thu, Apr 24, 2025 at 03:13:07PM +0100, Karim Manaouil wrote:
+> This series introduces the capability of running Gunyah guests via KVM on
+> Qualcomm SoCs shipped with Gunyah hypervisor [1] (e.g. RB3 Gen2).
+> 
+> The goal of this work is to port the existing Gunyah hypervisor support from a
+> standalone driver interface [2] to KVM, with the aim of leveraging as much of the
+> existing KVM infrastructure as possible to reduce duplication of effort around
+> memory management (e.g. guest_memfd), irqfd, and other core components.
+> 
+> In short, Gunyah is a Type-1 hypervisor, meaning that it runs independently of any
+> high-level OS kernel such as Linux and runs in a higher CPU privilege level than VMs.
+> Gunyah is shipped as firmware and guests typically talk with Gunyah via hypercalls.
+> KVM is designed to run as Type-2 hypervisor. This port allows KVM to run in EL1 and
+> serve as the interface for VM lifecycle management,while offloading virtualization
+> to Gunyah.
 
-> 
-> 
-> On 17. 04. 25 6:20 odp., Lee Jones wrote:
-> > On Wed, 16 Apr 2025, Ivan Vecera wrote:
-> > 
-> > > Register DPLL sub-devices to expose this functionality provided
-> > > by ZL3073x chip family. Each sub-device represents one of the provided
-> > > DPLL channels.
-> > > 
-> > > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-> > > ---
-> > >   drivers/mfd/zl3073x-core.c | 15 +++++++++++++++
-> > >   1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-> > > index 0bd31591245a2..fda77724a8452 100644
-> > > --- a/drivers/mfd/zl3073x-core.c
-> > > +++ b/drivers/mfd/zl3073x-core.c
-> > > @@ -6,6 +6,7 @@
-> > >   #include <linux/device.h>
-> > >   #include <linux/export.h>
-> > >   #include <linux/math64.h>
-> > > +#include <linux/mfd/core.h>
-> > >   #include <linux/mfd/zl3073x.h>
-> > >   #include <linux/mfd/zl3073x_regs.h>
-> > >   #include <linux/module.h>
-> > > @@ -774,6 +775,20 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
-> > >   	if (rc)
-> > >   		return rc;
-> > > +	/* Add DPLL sub-device cell for each DPLL channel */
-> > > +	for (i = 0; i < chip_info->num_channels; i++) {
-> > > +		struct mfd_cell dpll_dev = MFD_CELL_BASIC("zl3073x-dpll", NULL,
-> > > +							  NULL, 0, i);
-> > 
-> > Create a static one of these with the maximum amount of channels.
-> 
-> Like this?
-> 
-> static const struct mfd_cell dpll_cells[] = {
-> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
-> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
-> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
-> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
-> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 5),
-> };
-> 
-> rc = devm_mfd_add_devices(zldev->dev, PLATFORM_DEVID_AUTO, dpll_cells,
->                           chip_info->num_channels, NULL, 0, NULL);
+If you're keen on running your own hypervisor then I'm sorry, you get to
+deal with it soup to nuts. Other hypervisors (e.g. mshv) have their own
+kernel drivers for managing the host / UAPI parts of driving VMs.
 
-Yes, looks better, thank you.
+The KVM arch interface is *internal* to KVM, not something to be
+(ab)used for cramming in a non-KVM hypervisor. KVM and other hypervisors
+can still share other bits of truly common infrastructure, like
+guest_memfd.
 
--- 
-Lee Jones [李琼斯]
+I understand the value in what you're trying to do, but if you want it
+to smell like KVM you may as well just let the user run it at EL2.
+
+Thanks,
+Oliver
