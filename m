@@ -1,139 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5596F1EB5D4;
-	Thu, 24 Apr 2025 10:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EBF31EB5D4
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489210; cv=none; b=QmgFctegt34t02xynE9DnWO/8l5Kx2zBt7JDn8jPwYeiIPUqCQNPbQEgkxfKIDpPcnlIj0HACM9qW++mrj7pebwqlUEh24u95m2x2S9lcY8CxXVmHNyE+QLj95btuVuHMBUoZASkrdfCD8pFrhxnO4G0bJAckxbUm8MfPcZ+NbU=
+	t=1745489244; cv=none; b=A4nuP/ZI9bJI/6yfdxxd5MGldeeyHra9RgJzpwcGj2NoxWuvD6s1Pd6nssFmD0UWp5eG8ktwg3Q6ltCHeueYmxN2oNnpFhwqRAPyz7YnbkpnMVEblyWpDOGnEdLkXqKOdPOOSPzchxXBUjf3DDzt/OrSTOKcOGl7AvJTtAfAAdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489210; c=relaxed/simple;
-	bh=ohWISbUI5Hdqkvh3YTzjrPdr0SXkU3j2Fcx45MwThg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J2djdOD7RdLrJohAwY794QJ9EWB2N91V6RFafZzgJSUHiqE+p7AaoXaYMZrCmrsmyEuoXFIy5NCK8RgDVuGxAj4j+4PfHLNer32jStTaipfEHjCSvM8OUt4V1VMRPLA/xkwGaCfQdOB6uc3BPdYUKCzv11f3UEb52VUcYwi/q+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HscU/1vM; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HscU/1vM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745489209; x=1777025209;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ohWISbUI5Hdqkvh3YTzjrPdr0SXkU3j2Fcx45MwThg8=;
-  b=HscU/1vMSV66+z8117S8dr5HfKjK0+dU+JIW+5WvrXHaUSYDOgdVWDvK
-   IiGbB0fJsL+ZMw9fEmuF2CVtzXBuncIhppREMvwMRCJkgLvIVMtr9yPS/
-   kM5qqTJ8xLKIa86VlvM7a7yq4MY/x+HdZg5/gBknDzoiLEeaVOmDo2g/D
-   Jip3u3dkfe4P7qVA1KplNPcw8MwNQ+LoYoJkT7kdi8v9gXWrmQt7hNVfZ
-   bq/shjmWgYBe+51syxzSWDkZB5QgU8sVJGhwazp5vgPb8v6uFUZWb30i6
-   Fyqh7PACKM5KG1dDDVO8BfQfD/RzS9hKANDH4x9qV6Vt/d0u+Y8sUiUOk
-   w==;
-X-CSE-ConnectionGUID: Ku0crXDMRAu8c8PXxv8Idg==
-X-CSE-MsgGUID: UL13JzeWQiaGJOJHM4tI0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46821430"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="46821430"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 03:06:44 -0700
-X-CSE-ConnectionGUID: M87gWBuhQQW769P5s2kxjA==
-X-CSE-MsgGUID: 8NT3xrSgTm60P/0pBA820Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="169788122"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa001.jf.intel.com with ESMTP; 24 Apr 2025 03:06:40 -0700
-Date: Thu, 24 Apr 2025 18:02:05 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sam Winchenbach <sam.winchenbach@framepointer.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
-	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
-	trix@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, michal.simek@amd.com,
-	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Sam Winchenbach <swinchenbach@arka.org>
-Subject: Re: [PATCH 1/2] dt-bindings: fpga: zynq: Document ICAP on boot
-Message-ID: <aAoMHV4cPrMWPHNk@yilunxu-OptiPlex-7050>
-References: <20250328141944.119504-1-sam.winchenbach@framepointer.org>
- <02496a88-3d9c-49ee-93ab-8f1400fc0c6b@kernel.org>
- <p4bujnmgkcvsu4qipmgh2j2loedepmwgp7zlaxrurhaveb6tbc@ibqtbjnbzdzj>
- <14b12882-119d-4c24-9634-e4cc37a39212@kernel.org>
- <2ccsnpv67gsu354uo7xe7syrxs265ncj6hl26v3cwf2dfm7hyu@ihkemyajuiag>
+	s=arc-20240116; t=1745489244; c=relaxed/simple;
+	bh=nIJrBOxV2fY4KsfCXgDrbulkNCNzBs5FuVqs1vGLeYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oSizN1dZ8qgrkvpt/70e5ZZQE9VIAhVtoEuzD0N2U8Jxv/bGFRfnGIdt6CaBYmVfQ9iZitSojrefMD2ndIXZF2mTd2rb1spL+v0ExCpkXGrG9fNlFJKMaNEK91HUxb8vG9uVjq9zz8QvDBQ0DU9C7GCMIJ6M9rNh/hsN3lsQ6KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D4481063;
+	Thu, 24 Apr 2025 03:07:14 -0700 (PDT)
+Received: from [10.57.83.110] (unknown [10.57.83.110])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4790A3F66E;
+	Thu, 24 Apr 2025 03:07:18 -0700 (PDT)
+Message-ID: <fbba5d43-d740-401a-b5c5-9dfc222db5c4@arm.com>
+Date: Thu, 24 Apr 2025 11:07:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ccsnpv67gsu354uo7xe7syrxs265ncj6hl26v3cwf2dfm7hyu@ihkemyajuiag>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] arm64/mm: Re-organise setting up FEAT_S1PIE registers
+ PIRE0_EL1 and PIR_EL1
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250416035604.2717188-1-anshuman.khandual@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250416035604.2717188-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 31, 2025 at 09:07:03AM -0400, Sam Winchenbach wrote:
-> On Mon, Mar 31, 2025 at 02:43:59PM +0200, Krzysztof Kozlowski wrote:
-> > On 31/03/2025 14:30, Sam Winchenbach wrote:
-> > >>
-> > >>> +    type: boolean
-> > >>> +    description: If present, the ICAP controller will be enabled when
-> > >>> +      the driver probes. This is useful if the fabric is loaded
-> > >>> +      during the boot process and contains a core, such as the SEM,
-> > >>
-> > >> I don't get how this is suitable for DT. If you decide to load the
-> > >> fabric from driver, that's driver decision so not DT.
-> > > 
-> > > Before writing the fabric to the FPGA the driver disables the ICAP, enabling
-> > > the PCAP. Once writing is complete it unconditionally disables the PCAP,
-> > > enabling the ICAP. This patch just makes it so, depending on the use case,
-> > > the ICAP can be enabled at boot. This will not prevent the system from being
-> > > able to load a fabric through the driver. I added in this boolean so existing
-> > > behavior would be maintained.
-> > > 
-> > > Do you recommend another approach such as writing to a sysfs attribute to
-> > > switch from PCAP to ICAP?
-> > Not sure yet. Can't you check the status of ICAP before programming and
-> > then enable it only if was enabled before?
+On 16/04/2025 04:56, Anshuman Khandual wrote:
+> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+> as expected if those macro constants contain some 128 bit layout elements,
+> that are required for D128 page tables. The primary issue is that for D128,
+> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
+> which the assembler can't accommodate.
 > 
-> I am having a bit of difficulty understanding this so let's talk about cases
-> where the ICAP is enabled/disabled -
+> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
+> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
 > 
-> 1. When writing the fabric from the driver
->    In this situation it might make sense to read the state of the ICAP
->    interface when preparing the fabric, before enabling PCAP. When the write
->    completes you could re-enable the ICAP if it was previously enabled.
+> While here also move PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides into
+> arch/arm64/kernel/asm-offsets.c to ensure PIRE0_EL1/PIR_EL1 are calculated
+> in assembly without arm64_use_ng_mappings and lpa2_is_enabled() symbols
+> being accessible. Also move the corresponding comment as well.
 > 
->    This might be outside the scope of this change - and I am not comfortable
->    enough with this use-case to understand potential side effects from doing
->    this. Logically it makes sense, but there may be a very specific reason that
->    the ICAP must be enabled after doing a fabric load or partial
->    reconfiguration.
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This patch applies on v6.15-rc2
 > 
-> 2. When the FPGA driver loads and is probed by the DTS
->    In this situation, which is covered by this patch, the FPGA is loaded by
->    BootROM/FSBL but contains functionality that requires the ICAP. Unless the
->    user has made modifications to the FSBL or 3rd stage bootloader there is no
->    clear way to enable the ICAP interface. Checking to see if it had been
+> Changes in V2:
+> 
+> - Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
+> - Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
+>   along with the corresponding comment as per Ard
+> 
+> Changes in V1:
+> 
+> https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
+> 
+>  arch/arm64/kernel/asm-offsets.c | 16 ++++++++++++++++
+>  arch/arm64/mm/proc.S            | 19 ++-----------------
+>  2 files changed, 18 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> index eb1a840e4110..5b99a78f6882 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -182,5 +182,21 @@ int main(void)
+>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>    DEFINE(FTRACE_OPS_DIRECT_CALL,	offsetof(struct ftrace_ops, direct_call));
+>  #endif
+> +	/*
+> +	 * The PROT_* macros describing the various memory types may resolve to
+> +	 * C expressions if they include the PTE_MAYBE_* macros, and so they
+> +	 * can only be used from C code. The PIE_E* constants below are also
+> +	 * defined in terms of those macros, but will mask out those
+> +	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
+> +	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
+> +	 */
+> +#undef PTE_MAYBE_NG
+> +#define PTE_MAYBE_NG		0
+> +
+> +#undef PTE_MAYBE_SHARED
+> +#define PTE_MAYBE_SHARED	0
 
-I don't think this should be a property for fpga_mgr device. It is for
-FPGA reprogramming. You insmod the reprograming driver not for
-reprogramming, just to enable the already programmed functionality.
+My toolchain at least is smart enough to figure out that the bits of interest in
+PIE_E1 are all contstant so it works without this hack.
 
-My idea is, to load the fpga_region with an image tagged "external-fpga-config".
+I'd prefer to drop this hack on that basis. Or if there are issues with other
+toolchains that mean we need to keep it, I think the wording of the comment
+should be changed since we are now in C code so the "can only be used from C
+code" bit doesn't really make sense.
 
 Thanks,
-Yilun
+Ryan
 
->    enabled prior to loading this driver does not (in my opinion) make a lot of
->    sense here.
-> 
->    Perhaps the name of the DTS is confusing? The suffix '-on-load' was meant to
->    indicate when the driver was loaded, not the fabric. Would the suffix
->    '-on-probe' be more clear?
-> 
-> Let me know your thoughts,
-> -Sam
-> 
-> >
-> > Best regards,
-> > Krzysztof
-> 
+> +
+> +  DEFINE(PIE_E0_ASM, PIE_E0);
+> +  DEFINE(PIE_E1_ASM, PIE_E1);
+>    return 0;
+>  }
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index fb30c8804f87..80d470aa469d 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -512,26 +512,11 @@ alternative_else_nop_endif
+>  	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
+>  	cbz	x1, .Lskip_indirection
+>  
+> -	/*
+> -	 * The PROT_* macros describing the various memory types may resolve to
+> -	 * C expressions if they include the PTE_MAYBE_* macros, and so they
+> -	 * can only be used from C code. The PIE_E* constants below are also
+> -	 * defined in terms of those macros, but will mask out those
+> -	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
+> -	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
+> -	 */
+> -
+> -#define PTE_MAYBE_NG		0
+> -#define PTE_MAYBE_SHARED	0
+> -
+> -	mov_q	x0, PIE_E0
+> +	mov_q	x0, PIE_E0_ASM
+>  	msr	REG_PIRE0_EL1, x0
+> -	mov_q	x0, PIE_E1
+> +	mov_q	x0, PIE_E1_ASM
+>  	msr	REG_PIR_EL1, x0
+>  
+> -#undef PTE_MAYBE_NG
+> -#undef PTE_MAYBE_SHARED
+> -
+>  	orr	tcr2, tcr2, TCR2_EL1_PIE
+>  	msr	REG_TCR2_EL1, x0
+>  
+
