@@ -1,129 +1,174 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514F71E51D
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B7D12253A5
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745492455; cv=none; b=Dz8fdTPd+zsx800sZJs4/c0IwplwAaQUrBOJUyzu/QGFrizs49zZgKkMjQC7oglzd/0qmoLiG+mCxwAVHzbCIgtg4feDDhTDrNIV7kv+QwmpyU2lE1+TW2qbRktZ1MC7RRGnqtzTsI7gwVaP8jHtU5OVNl/AGkv51QUVHz4JOto=
+	t=1745492459; cv=none; b=gAYt/MJmnPrJ5wmfqSxQGlWtfpVlkeH5PB5TuU7MTMKcqssQ6kvR53dsv2h2RmSY/V2nozPd9MoQGvj/BmpCpEeD7mNVszIGqLQhChyZhsYEgtCesjRiprDYHylSPcJKw+aSyJQWVmznxY1nDXcVM/4fSmgMS/IIQnlXPmILClI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745492455; c=relaxed/simple;
-	bh=ilVhurOAgxRINQp4J4plZnQ/Sve+oq9bjuZtm3BKBho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QvC/6QPzI8D2uGEGLKZBk+6PWGQIXS7t4jaMO8B0CBDSMbcMmeDYlzRkr0J0wAjQnqZs3Po+TA0prftS7EcB4CHWx/RF+J2fXddDdMlA6Ir7dJXf40ObgAi2tJjP0ypZ/tPZ+qe5Ymll5AmEoU/iwKQ5gSzRfqTBsr3Il5OfZXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Efqg4ej0; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Efqg4ej0"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so8124565e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745492451; x=1746097251; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zHHJnHHyOrnNtHHA6vr6DrZ0IO7tPD+NYSLx8YKZu70=;
-        b=Efqg4ej0lfczL7FUZMe+hb4klNfVw/eDNsSA+9s0AdXbElMqmfSag5n8/TalQ4w67U
-         rYN0sFThg8wrStkkiUfwGCTGnU6FCTOK27qaeiA5YrPR1prbXomZx3wkyWFhhULs6p+s
-         e+rDC7xWWv5L8pP0W2VgLErtPHmcCWM89Av8+km5aujoYhqgM5pDHkZcHMlV1CRGzMct
-         o824a2B4a24tvH/2Z6ozeTJbefOZ4O6ACD+9hCcd20FUkvOnS5gIhuCu6ob2/Npc8G3u
-         5rjNFcXH3GTFfIMZw3F38cnncuzVp0g+eM3lKdBqPJhljMeoFyhvG1snvHKaWPaYAmaX
-         nFNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745492451; x=1746097251;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zHHJnHHyOrnNtHHA6vr6DrZ0IO7tPD+NYSLx8YKZu70=;
-        b=RxB7f+7I8A1/WWIJ6/keUSEBlfIPnays9KVrWaeQomS2fUzTBgeM0M5Mcz7+/YdmpO
-         uv0Qgi5pXz5qO8O+bkusYmEJMM7dwqn+PxDpvbmRwwzZwQLurHh3SruSIpw1UJoWMnZ4
-         d3nwyQf3PMIqKSteLky0VAspk23VyGQ+t0qi4I8SB71E0Wbj1SapRrRg1KD6Y/OXIURH
-         IsQW7IK4pgRCS62bDUPxMuWCV/VOdtK7sTvYM9OoUeOE7RMc5Vm/t67tVhg6oTqaCky2
-         ZahjwwBJ7+ctooJfm6tanwgj7X4KrnOCmWCPbsDIPTQQtzqEAY/x7IxIfXQ+rkeyNXqL
-         5EIg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Lagi5a2H2dL2q+izZqbh4d4F34CiQDrGVXXgB+q30q/TzP4L5Y1QwGADwHykrWONU282VIfbtIe+3/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4VlyJpe79iVholg59QeRoqIlg6p3gvM9RZRecS8ZHnWlnls9f
-	VlW8UZOVqj23eFHt143tsbmkJskJt9ny0W0kI6YUMz2uomrk5+cd8WWQroGl3rM=
-X-Gm-Gg: ASbGnctk5yUtf2/xASAKUYbc2SWD+QurSTvr+fVOA7TmdqIXr2RFUWqxeWCmNJObJET
-	NDa2gWiidSA2/IcVrOcKRtGQojs5wphsNixqEkPKnaZJlFsDbjLN0MtB/5hJh7dFvzOFUQfRH5A
-	DfSv3swIOAb+nL6DAoWZsjyFqGa4uxTdYNrBMl7ncF6N8d1kRD6V8At8v/qKYvAIUIhY3mnj1Uv
-	7rLPC40mNTad38Z7grvpyBIuQxoPawdqlWpT4AnGU+ERoNP8h5ZnLNBNtbY5wcRR7bZPDP7kBlK
-	ZDiWhm9eIs2c4U0VengdrDysvKQxPamROG3jQYU=
-X-Google-Smtp-Source: AGHT+IGP6Ut82q/OqGuYzCaYu8ri2NvYSY5EYxmJ9hg0Kbk3eysivoE/mXbwZrGhC5aaW7QaraDYhg==
-X-Received: by 2002:a05:600c:3b9a:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-4409bd8a761mr17964535e9.30.1745492451468;
-        Thu, 24 Apr 2025 04:00:51 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::f716])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8479sm16884645e9.29.2025.04.24.04.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 04:00:51 -0700 (PDT)
-Date: Thu, 24 Apr 2025 13:00:50 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v5 03/13] riscv: sbi: add FWFT extension interface
-Message-ID: <20250424-c85c9d2f189fe4470038b519@orel>
-References: <20250417122337.547969-1-cleger@rivosinc.com>
- <20250417122337.547969-4-cleger@rivosinc.com>
+	s=arc-20240116; t=1745492459; c=relaxed/simple;
+	bh=NiHd+pdDh1BzEml5Vs3D5Ib3JpNc7/L+tRzLuaYjMbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bl8k5cBTQCruyTEeRsW+HWEAP1C8KS+IMpaoasH/u1BNq/ueW8YJdQTuK2h+amr6X9W4x9TOmgdx3NbA1SHCj4AG5zro8ywwqdBCt5yk0vQchWwHOMnaglwXZo1mmUZ1ZVO7HKCvsUCs0jXNIpuSSK1WHzNd11rNH/FQp1F6hSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC7FC1063;
+	Thu, 24 Apr 2025 04:00:51 -0700 (PDT)
+Received: from [10.163.49.106] (unknown [10.163.49.106])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 586AF3F59E;
+	Thu, 24 Apr 2025 04:00:54 -0700 (PDT)
+Message-ID: <c0c95b67-2dec-43f1-8f3a-0e1e624292bf@arm.com>
+Date: Thu, 24 Apr 2025 16:30:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250417122337.547969-4-cleger@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] arm64/mm: Re-organise setting up FEAT_S1PIE registers
+ PIRE0_EL1 and PIR_EL1
+To: Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250416035604.2717188-1-anshuman.khandual@arm.com>
+ <fbba5d43-d740-401a-b5c5-9dfc222db5c4@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <fbba5d43-d740-401a-b5c5-9dfc222db5c4@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 02:19:50PM +0200, Clément Léger wrote:
-> This SBI extensions enables supervisor mode to control feature that are
-> under M-mode control (For instance, Svadu menvcfg ADUE bit, Ssdbltrp
-> DTE, etc). Add an interface to set local features for a specific cpu
-> mask as well as for the online cpu mask.
+
+
+On 4/24/25 15:37, Ryan Roberts wrote:
+> On 16/04/2025 04:56, Anshuman Khandual wrote:
+>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+>> as expected if those macro constants contain some 128 bit layout elements,
+>> that are required for D128 page tables. The primary issue is that for D128,
+>> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
+>> which the assembler can't accommodate.
+>>
+>> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
+>> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
+>>
+>> While here also move PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides into
+>> arch/arm64/kernel/asm-offsets.c to ensure PIRE0_EL1/PIR_EL1 are calculated
+>> in assembly without arm64_use_ng_mappings and lpa2_is_enabled() symbols
+>> being accessible. Also move the corresponding comment as well.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> This patch applies on v6.15-rc2
+>>
+>> Changes in V2:
+>>
+>> - Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
+>> - Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
+>>   along with the corresponding comment as per Ard
+>>
+>> Changes in V1:
+>>
+>> https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
+>>
+>>  arch/arm64/kernel/asm-offsets.c | 16 ++++++++++++++++
+>>  arch/arm64/mm/proc.S            | 19 ++-----------------
+>>  2 files changed, 18 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+>> index eb1a840e4110..5b99a78f6882 100644
+>> --- a/arch/arm64/kernel/asm-offsets.c
+>> +++ b/arch/arm64/kernel/asm-offsets.c
+>> @@ -182,5 +182,21 @@ int main(void)
+>>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>>    DEFINE(FTRACE_OPS_DIRECT_CALL,	offsetof(struct ftrace_ops, direct_call));
+>>  #endif
+>> +	/*
+>> +	 * The PROT_* macros describing the various memory types may resolve to
+>> +	 * C expressions if they include the PTE_MAYBE_* macros, and so they
+>> +	 * can only be used from C code. The PIE_E* constants below are also
+>> +	 * defined in terms of those macros, but will mask out those
+>> +	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
+>> +	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
+>> +	 */
+>> +#undef PTE_MAYBE_NG
+>> +#define PTE_MAYBE_NG		0
+>> +
+>> +#undef PTE_MAYBE_SHARED
+>> +#define PTE_MAYBE_SHARED	0
 > 
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->  arch/riscv/include/asm/sbi.h | 17 +++++++++++
->  arch/riscv/kernel/sbi.c      | 57 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 74 insertions(+)
+> My toolchain at least is smart enough to figure out that the bits of interest in
+> PIE_E1 are all contstant so it works without this hack.
 > 
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 7ec249fea880..c8eab315c80e 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -503,6 +503,23 @@ int sbi_remote_hfence_vvma_asid(const struct cpumask *cpu_mask,
->  				unsigned long asid);
->  long sbi_probe_extension(int ext);
->  
-> +int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags);
-> +int sbi_fwft_local_set_cpumask(const cpumask_t *mask, u32 feature,
-> +			       unsigned long value, unsigned long flags);
+> I'd prefer to drop this hack on that basis. Or if there are issues with other
+> toolchains that mean we need to keep it, I think the wording of the comment
 
-I'm confused by the naming that includes 'local' and 'cpumask' together
-and...
+So could we keep these for some more time and later drop them off just to be
+on the safer side ?
 
-> +/**
-> + * sbi_fwft_local_set() - Set a feature on all online cpus
-> + * @feature: The feature to be set
-> + * @value: The feature value to be set
-> + * @flags: FWFT feature set flags
-> + *
-> + * Return: 0 on success, appropriate linux error code otherwise.
-> + */
-> +static inline int sbi_fwft_local_set(u32 feature, unsigned long value,
-> +				     unsigned long flags)
-> +{
-> +	return sbi_fwft_local_set_cpumask(cpu_online_mask, feature, value, flags);
+> should be changed since we are now in C code so the "can only be used from C
+> code" bit doesn't really make sense.
 
-...that something named with just 'local' is applied to all online cpus.
-I've always considered 'local' functions to only affect the calling cpu.
+Dropped that. Does this look better ?
 
-Thanks,
-drew
+	/*
+	 * The PROT_* macros describing the various memory types may resolve
+	 * to C expressions if they include the PTE_MAYBE_* macros. The PIE_E*
+	 * constants below are also defined in terms of those macros, but will
+	 * mask out those PTE_MAYBE_* constants, whether they are set or not.
+	 * So #define them as 0x0 here so we can evaluate the PIE_E* constants
+	 * in asm context.
+ 	 */
+
+> 
+> Thanks,
+> Ryan
+> 
+>> +
+>> +  DEFINE(PIE_E0_ASM, PIE_E0);
+>> +  DEFINE(PIE_E1_ASM, PIE_E1);
+>>    return 0;
+>>  }
+>> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+>> index fb30c8804f87..80d470aa469d 100644
+>> --- a/arch/arm64/mm/proc.S
+>> +++ b/arch/arm64/mm/proc.S
+>> @@ -512,26 +512,11 @@ alternative_else_nop_endif
+>>  	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
+>>  	cbz	x1, .Lskip_indirection
+>>  
+>> -	/*
+>> -	 * The PROT_* macros describing the various memory types may resolve to
+>> -	 * C expressions if they include the PTE_MAYBE_* macros, and so they
+>> -	 * can only be used from C code. The PIE_E* constants below are also
+>> -	 * defined in terms of those macros, but will mask out those
+>> -	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
+>> -	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
+>> -	 */
+>> -
+>> -#define PTE_MAYBE_NG		0
+>> -#define PTE_MAYBE_SHARED	0
+>> -
+>> -	mov_q	x0, PIE_E0
+>> +	mov_q	x0, PIE_E0_ASM
+>>  	msr	REG_PIRE0_EL1, x0
+>> -	mov_q	x0, PIE_E1
+>> +	mov_q	x0, PIE_E1_ASM
+>>  	msr	REG_PIR_EL1, x0
+>>  
+>> -#undef PTE_MAYBE_NG
+>> -#undef PTE_MAYBE_SHARED
+>> -
+>>  	orr	tcr2, tcr2, TCR2_EL1_PIE
+>>  	msr	REG_TCR2_EL1, x0
+>>  
+> 
