@@ -1,169 +1,123 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E042701C1;
-	Thu, 24 Apr 2025 15:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780E61B3939
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507128; cv=none; b=YNed1wQUxbFy4MYyJArjfss69djIlCIAu2vkq61pEF/LQqzmAoOkRLjyaHL1B+fVCl2cNXaZ2QCaKMFRYY7Uq5kvjXd4sZJHbY+7bMtDjgHzJG6qUY4ocbZR0tgNT2DZDT67HrzuqdT1MOGbDLfddpLs9EYJklSueE4xTzvBCNg=
+	t=1745507133; cv=none; b=QEEU+S3WwYOWZxsbANKVHsdAY2WP8o8W2Fk1GEJE/IGMGY0bB3q9q19s7Whj/UmZYcEJB3PLKtLpuAw+adwnL8wSRIwEJGdj/k4sMegpYima2Cui632QIPP7jGhBf+fsfpYFVuxiQbD8Lod6cCQ/2ASZLtSflG5IqWORUNWiBvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507128; c=relaxed/simple;
-	bh=DZadV4dYY/zC+SdX3Ciq88DCbQxa2Avy7+9rB/BkoX0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MgAgUIeqzR8MVBKcpLxYXzcgwuBhfoIBeB3XxfoyNYhBw8R0xvonUanCpOljlUGio5Er/0wRnJm93ntd4DjtoerXdcixSAAYyXRmJXVys6kAsRCE8bvpXTjrIFiPZaFn0Z6l0ZCCZCMX3vVtYHAJIVgAZ1b1e5BPFO0RvsNkFNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bGNZrkbg; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1745507133; c=relaxed/simple;
+	bh=unMncNq2brLx3SFqedtBHI7Svfe3aKAUdpwvabhKt5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPZ+PZeHyZ4wa+oy8kZ08FdJPkld53W4dW/UuDxIThzrdicTfUlNBz7dvyLtGHXs3ip2LAqDPyR0adI+nQIDIC+87R8xx4tJKq4R5ezZiS/GjM8TG7gis3aAP4bRKYIS2UOwWNGcvwAOOAQ9iu+6+7NwYU/xqahcaNbdbwOSneg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=G4RlSguV; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bGNZrkbg"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBPMk1019163;
-	Thu, 24 Apr 2025 17:04:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	EbzdNbMuPcQgyg/32v679V2kcITSnqgFdSJKF+onCu4=; b=bGNZrkbgM7hP0A4d
-	0huWCtfENxlTtZ2hD9QWgmb98DIFXK5fBmBupMzY6axYs0FrA/0LWmfz0WhsStka
-	AUXFj0pYsKuCM2wNw3Noz8aYCKXGStw8mUCIHn1PU8SS3MuLYegugGWwOdnCglQS
-	so57zD+/Q1kPH+lUcNiN2fR6/+s7xU5O1AjiWYlDUID34TOZerwOJJCOsxm/73wD
-	AKWfN54uWLHEgaWECt+7UHmgOfzc5a9lH3nXnAz3hT37RZh9W27f0QUDHzBg/F3h
-	2H+eskpgY2tz9SOoLS7XLLDm437GAqrqDrmqZ4wiJvlEm8NsT0+VsUGPYke1l5R3
-	kW1R0Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjvg1q7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 17:04:21 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7BB1040046;
-	Thu, 24 Apr 2025 17:01:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A4E6D9C40B5;
-	Thu, 24 Apr 2025 16:59:49 +0200 (CEST)
-Received: from [10.48.86.196] (10.48.86.196) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
- 2025 16:59:48 +0200
-Message-ID: <fe3323d0-161c-498d-92e8-7a723f8d9780@foss.st.com>
-Date: Thu, 24 Apr 2025 16:59:47 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="G4RlSguV"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394a823036so11259535e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745507130; x=1746111930; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=unMncNq2brLx3SFqedtBHI7Svfe3aKAUdpwvabhKt5s=;
+        b=G4RlSguVPSmqiPxmn1cdPJ2bxkg/+d/SdEQmbiGanFXuubcqJ1+1PIVZExoqzhSyq5
+         +DIg19t6x7hGVTaB92AEcHd/CXKUd263M+/Xu+XUWJldnShde5BLvNhxn40OEoKwn3xm
+         kqRBm2iXbCUl5vbSiZZD/v08PMT/eqclhHCVct3HrFFoAgShufWqJCdDD9t0SUaUHiCn
+         iyhX7dCZXL/vs6tqRQhqU+3p7IGiwMO65abo5orRGn5y2fUUOx0cVpDG+YBGjAZ5DS8G
+         ZF7542jgQf2/wIU1Kfg6OoT0KhqhQIDnx3FyisULIgXum8sVJaz6m9jkSmtuROqQC+N/
+         kzlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745507130; x=1746111930;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=unMncNq2brLx3SFqedtBHI7Svfe3aKAUdpwvabhKt5s=;
+        b=uH/6UiKT7cYtv88Qe0Am2npuMdriVGNrJpzgxEUTXo++3BbhLLNrpoz0xC8YOGO/iP
+         HodcFx7/SYb9BSSbWMK3bp2iRMxqVIMUaTSJ9xUHo8rt2fkfdfpohclFw/2JVgmCVfpQ
+         6ciBQOGFUejEiJOWY7IrHJzXzYBFAyjynbcgD5Cywh2Ite1QSfW/pGDWzr1dowX708ly
+         TLOZ//0+s8fmGUL1rXWq/mDI6vwgOi3FWi3u1bnLAK9AkF9XzoB0P7hohD+O3ThgEBi7
+         awXaSMedeNoZMeA3KFbXpryTsixXX9KCTXbas7gKPVj4fpfrxesWWhMJ12/0rjlr3EUL
+         HkBA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9mw6g+vDc1k6GNBwTuvs4ylhwOw41QDA6VS9ILi7sOuLTA3pYG318D0RCVgXMZLKEFdBKCRTfLpVfs/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXvsdozre4bVodxP6VSYoQVWH5xunZutHT7zT0uT0kXDjUBHBf
+	DxYtxpI0qhO0jCGoBG7Bc0s3eeDXpmECCZvFoi/A6WDERkIAdP8ClJWLVRlyYs4=
+X-Gm-Gg: ASbGnctUhPhMhJqq63r5a5TR4JxfRQxdLQXQ6d3u/NLEC9gBBnQq9GRVl8fFY46lL8H
+	gG65OFeMaTNEnTV+4BXRgfEOjzOiWBGrM33LqdM8szFNvingNHqpLUB3nyXHTn1zMlK/JzeHT9X
+	Mmrskpl87aYX2dwTQ2YKlVah1Y8V9byABijePOuEV5wOLfpGLXLkM8DCMt4vjeFsOiUIFv6ZsSu
+	Itbyt4Yu08YnvykwmkBSDJrFc0dkfDJJkb68wg2IYNpru1ofFzBjuzeLbMPUHbAq58o0LOVl7Le
+	hu0EaldJKln/M2DuoVU+6sYtI6RipBFGscHwFtWtuvniPHQz91JWeUJnQmMi2gLEOzU+TF7AbRP
+	X+7n+zGc=
+X-Google-Smtp-Source: AGHT+IGZerVnzzo+3licesW6Rjehtmkd5CAagkG0LYgOKDQGkVRLoR8KgscNzd0tm4Vv9ry8z/vBqw==
+X-Received: by 2002:a05:600c:698d:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-4409bd76f40mr21710945e9.21.1745507126313;
+        Thu, 24 Apr 2025 08:05:26 -0700 (PDT)
+Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4408d8d191bsm63019605e9.1.2025.04.24.08.05.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 08:05:25 -0700 (PDT)
+Date: Thu, 24 Apr 2025 17:05:23 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Vladimir Zapolskiy <vz@mleia.com>, 
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two
+ SoC PWMs
+Message-ID: <hbz3gikjqwuqmexzrxis43gmxcviiryihi7pdp3btdb3sopqi4@mssyr62bunxk>
+References: <20250403104915.251303-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux-stm32] [PATCH 03/12] pinctrl: stmfx: use new GPIO line
- value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar
-	<Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?=
-	<afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Steen Hegelund
-	<Steen.Hegelund@microchip.com>,
-        Daniel Machon <daniel.machon@microchip.com>,
-        <UNGLinuxDriver@microchip.com>,
-        Ludovic Desroches
-	<ludovic.desroches@microchip.com>,
-        Nicolas Ferre
-	<nicolas.ferre@microchip.com>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>
-CC: <linux-samsung-soc@vger.kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>,
-        <linux-actions@lists.infradead.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
- <20250424-gpiochip-set-rv-pinctrl-part2-v1-3-504f91120b99@linaro.org>
-Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-3-504f91120b99@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kubdbvpqoinlop4p"
+Content-Disposition: inline
+In-Reply-To: <20250403104915.251303-2-u.kleine-koenig@baylibre.com>
 
 
+--kubdbvpqoinlop4p
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two
+ SoC PWMs
+MIME-Version: 1.0
 
-On 4/24/25 10:35, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello,
 
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+On Thu, Apr 03, 2025 at 12:49:14PM +0200, Uwe Kleine-K=F6nig wrote:
+> If these PWMs are to be used, a #pwm-cells property is necessary. The
+> right location for that is in the SoC's dtsi file to not make
+> machine.dts files repeat the value for each usage. Currently the
+> machines based on nxp/lpc/lpc32xx.dtsi don't make use of the PWMs, so
+> there are no properties to drop there.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-> ---
->   drivers/pinctrl/pinctrl-stmfx.c | 13 ++++++++-----
->   1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-> index aae01120dc52..f4fdcaa043e6 100644
-> --- a/drivers/pinctrl/pinctrl-stmfx.c
-> +++ b/drivers/pinctrl/pinctrl-stmfx.c
-> @@ -115,14 +115,14 @@ static int stmfx_gpio_get(struct gpio_chip *gc, unsigned int offset)
->   	return ret ? ret : !!(value & mask);
->   }
->   
-> -static void stmfx_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-> +static int stmfx_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
->   {
->   	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
->   	u32 reg = value ? STMFX_REG_GPO_SET : STMFX_REG_GPO_CLR;
->   	u32 mask = get_mask(offset);
->   
-> -	regmap_write_bits(pctl->stmfx->map, reg + get_reg(offset),
-> -			  mask, mask);
-> +	return regmap_write_bits(pctl->stmfx->map, reg + get_reg(offset),
-> +				 mask, mask);
->   }
->   
->   static int stmfx_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> @@ -161,8 +161,11 @@ static int stmfx_gpio_direction_output(struct gpio_chip *gc,
->   	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
->   	u32 reg = STMFX_REG_GPIO_DIR + get_reg(offset);
->   	u32 mask = get_mask(offset);
-> +	int ret;
->   
-> -	stmfx_gpio_set(gc, offset, value);
-> +	ret = stmfx_gpio_set(gc, offset, value);
-> +	if (ret)
-> +		return ret;
->   
->   	return regmap_write_bits(pctl->stmfx->map, reg, mask, mask);
->   }
-> @@ -694,7 +697,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
->   	pctl->gpio_chip.direction_input = stmfx_gpio_direction_input;
->   	pctl->gpio_chip.direction_output = stmfx_gpio_direction_output;
->   	pctl->gpio_chip.get = stmfx_gpio_get;
-> -	pctl->gpio_chip.set = stmfx_gpio_set;
-> +	pctl->gpio_chip.set_rv = stmfx_gpio_set;
->   	pctl->gpio_chip.set_config = gpiochip_generic_config;
->   	pctl->gpio_chip.base = -1;
->   	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
-> 
+I wonder if this patch is still on someone's radar. I didn't hear
+anything back and it's not in next.
+
+Best regards
+Uwe
+
+--kubdbvpqoinlop4p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgKUzAACgkQj4D7WH0S
+/k773QgAt0YvjENQdbx0qGBqEFrZ7A2MKIrQOmIzi5tHb4ZU5atUQjFVrspi85w7
+8E9dp57nMgLABhMSLsq9jFfOCEConixxOGhnnQ3uw8wi04mFHmicB0DJTIMAbT9S
+4VqYdC6GDtQXZfTjoSIYhas3c5n140j9rNEDYKvbmKfQye2cp6YifjKxeeWEF92M
+vB/e9r4X//tv3o3ZqrgRYuAan8T6xF7XjxyqHieZ3JcP+ZD/MwRksBMMgQBMLXyE
+uI1vrPLOKMiakQICU4pTT+JRR2+Kj0XufdXfAI+oz5GEiR8JwDDAl8XCdna6Vfjd
+KRhgqVp9RXsYnuWiOjkkCa80mr/xqQ==
+=nKWo
+-----END PGP SIGNATURE-----
+
+--kubdbvpqoinlop4p--
