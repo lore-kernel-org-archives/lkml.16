@@ -1,203 +1,244 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C071B0420;
-	Thu, 24 Apr 2025 04:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745469770; cv=fail; b=G1zw0fLAmBjP+7YjAEYe+UeoZwO4AOLpYpZjjYE7MMFbQdGPwc2WnsR3z/XT3P3+2vnbMc7hTexz5gICi3kdrEDoag7HNGkv0yExFl5pZ8SsjPEqlPx8NQjkJkYbD7/kynjR6j+HNA+yET50jNWNIp4lrPdx1nriF5wYfojZPxo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745469770; c=relaxed/simple;
-	bh=uYHHPdOE5txkETjOcONJDsP7V/3V6tW7YGyaG5I9fuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=skV4auuiDoq8mo69sdAWBOLvk/Y8TlUy/23z+lgkOeHhUg3iLcOAmbdEYbDuMuCcuZimh8+XEfNZY3jQ2qDOEcgEWjmBVyaKEpvxDfZ+gnayx5LDuuK3/0b79NiZP/JMcIcNTVHnUK4r+EvzbDewYafCJMNxX7v+lbUbQ82/LeY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R7LOo3xJ; arc=fail smtp.client-ip=40.107.93.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D671C1F12
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745469857; cv=none; b=iKPoCOsa3rRFyvLfBvrtHanu4oPdiJpgrSZ7TXblvS95LFCpihFN5/8H1coos854YLXG5Bfnh7o8bjKJ95ItBcoLmi6jO36cJiJuJn1Uq9dn7Fo6MLbjvKHgaIiy+p6zOFAqZx2LrG5MdirSmS2APFLv5rkmL2wkyq1/1+B8b78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745469857; c=relaxed/simple;
+	bh=scumeHQ1EWeXtDCiWxXsvS1GGnP6lxnjhn7+ttz3yqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hImJ9thTI2uB/1ptqm5treYT4tE0pBKo1D5SiUGQb2QLRIvKpLL0x7WjUixEXt1BmYpvXK5ahMOBNO2ANAK64c9S2i0NvU25wxt3G/kEQNGoMmlaMCtTzJ3Yd+LBKIzWZQQLpTL4ZBfRl9aNnvyyrbrZ8P/n7c2vB6schttWaKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ZjA4nAE5; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R7LOo3xJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A8mGwJnhTEEHOB4/BVAFUXL0kN9oGS9QFbxkiLCbKtoYYHHCnTy9zex6a0xBvVIByqlfmMrLL90zPndNSqQFlSPtFmuPrrZDMVH+SBaIGr7rTM9Km6K1+3t3SDtavrSpEaSzr5IuWVDk/Hmab2qsdDgYe56TqXh1uaGlMXCZZAgcsZexVc3wKinr7QXdYtJVVYaOQx7FxI1FV7HYBWwA/7gwABsNdMalB1bich1eQJm8mmtvzlSZAluDMTebz1Lk2um95tDw5trKeSqm9TLVzZYY6FcYlIXPPpuUVOFSC9lIvBDv29zk7qjdKxWXoZhtGtcBLX78d3uYBTN4ey2B7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=facezBp/oZo7ZpupVB1fyjftxF2iCzt5Cl5P0SBzPCI=;
- b=frSfeae/dcYXLIwFQKBshDTubpvwgNFYwDeBQBpzMltmj4csto3h5+xSUHdr9Nz01k/m8Y/Xu57IskkjYOBF7TCjuFo5ACRDkweTlipLxwEwB4xh5xxs+/7k9pgrCRqD+ES+qRmsgpkCawYABM2jcDT3WXVQXUNLnJ2HLl34AuhSAKw2VjbXroHzD9zNpDRFgb3P89KdyAjs6OekMBJi4hz1gsvk4eO4ovnnFj3DU++lTPtAyWJQWMEx3+/c1GX7HbaQ5RdqqzVrWjliLlbMrx/35w23ynT3ep9kSLe2k+/FWaI4ki6iJXkEqbH0v1c/8yeXzi9NGSetTobfNLbOgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=oracle.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=facezBp/oZo7ZpupVB1fyjftxF2iCzt5Cl5P0SBzPCI=;
- b=R7LOo3xJb4ceU39lGq+ximoSuGdeAQv6EfmmOuYg21DMNRxS1ehgzwM2y/imBmR8gvRbNTPicoh7CsF+90SEShT1DSnWWryh85QnjN4zs2JrX5+bOA2cpWWhFSe97Y6vNWjzbNeq0vVzGYcMN88D7vdddlusuyYcE9OHLEjnLhg=
-Received: from DM6PR01CA0001.prod.exchangelabs.com (2603:10b6:5:296::6) by
- PH0PR12MB7077.namprd12.prod.outlook.com (2603:10b6:510:21d::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.23; Thu, 24 Apr 2025 04:42:41 +0000
-Received: from DS1PEPF00017093.namprd03.prod.outlook.com
- (2603:10b6:5:296:cafe::37) by DM6PR01CA0001.outlook.office365.com
- (2603:10b6:5:296::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
- 24 Apr 2025 04:42:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017093.mail.protection.outlook.com (10.167.17.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 04:42:40 +0000
-Received: from [172.31.188.187] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
- 2025 23:42:34 -0500
-Message-ID: <98092a32-f903-49a3-a5b6-7edffa9edd55@amd.com>
-Date: Thu, 24 Apr 2025 10:12:32 +0530
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ZjA4nAE5"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7376e311086so668602b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745469854; x=1746074654; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=d8Qiq1brGqi76YM1jZPx/K29TOoSYoqtc1NwyaTJxB8=;
+        b=ZjA4nAE5C43SKeMg2lonMk0udTssP7uWcQGLa0ByW/qtijdIvBtCJFJykP47pThHrl
+         uhmqJuWDfESGeJPodQLWjKUthkZOQQrTNvFswyRpSC+FNa2D8pbwV0i+vj1Sr3wkBFuE
+         tmgnibOExIPfmGIgP/GatTadLh+QQUvKpZ8JMfhHOi6ub8spvTqyUB36pZAq2SD1lFrS
+         a6MidcIQmCSwxDs+xz2fQ9mXiKkysadTbj1iycRBhjX+W56deBL3vIW4LM7EnWxb54RR
+         pWXRq9oudnEw4nKJCH0Gh5JgtcRaapN2llz645Waw8/wZhztoYZ2M0bXJ9vU7uMO/MfJ
+         6ZmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745469854; x=1746074654;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d8Qiq1brGqi76YM1jZPx/K29TOoSYoqtc1NwyaTJxB8=;
+        b=fHgQOimTQt2vha0cTGPfK+tAx0PN2T19w9fvUyRaed8D33IKEYm5UhiFTexCKGssk5
+         mafmqhDJ12Yz3UGP7pCQeniX34Fu5dG+PyXlfUp1fL6xoEOi3wWSBkJjz7qVpBoEoMrW
+         8ks5V6HdDyXa/jVNTgHemLPFhOhFEuHUDQgaARbR9vD3fE8FPutXK+xWOThNjDqyxceh
+         GMWx9MDhAlRu80ekBZqXKd/B6ZSUrZtmhFMrz1mD+M64J1gdoTOcJbMVTX7Ton86d61i
+         w3pYosgSZdZsbIE0WrGmbX4jKREYPOZPlrF5C7h38Yn/KFctsVsugp5JTjgNEQu4XGwW
+         mG5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVd5Eqc4dRF8EG+tsHUO33nPMZcwkRKw+NmFIqoLlt/stgYMOEa3IJYI1PcwAnwRIt7uHWI8HBaZ/3tTY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2iU03YvgHT38AX4X2iMXU4bUxwo842ho73eh2bR02yU51Tfa6
+	zF1UGzWvT0PPm4H6rTj/G76F+7u8WN6uJ7TX2E2JJjvbx/GtWYHn/OlG4Y7Tows=
+X-Gm-Gg: ASbGnctFMN1xuHW3g4owVdHTy+1yukLtR1kuDmpYj2X5Eg/MHGH3ICXeshiMNa8TjDH
+	lmGhY1V4Z6+uOb7PurbOyvd8UZ1mDndm1xczjrVL0xCO22TtPUVM/lTUxe/Xe9Lc3GvTMfwv6oF
+	OlqDZq7im8CFWtNGuoZiw7EWIVxmij09B1dxFyNcl101QjmORlSNGEcgKsJ0ZZHkAv6F0UJ5dF1
+	/YH7eqtrWJ9Un1N1zT+WnFQp9u11Mu+KUMvjpgrpUndQh/eEgs1G1VLVTrPfO8WF8dGQBuovYld
+	0UAYH2z9+CPhtkNc5D9tKtuQqrF/0d7XCpkdhcoqXO8I+309fPM=
+X-Google-Smtp-Source: AGHT+IEitFVHRTgSCgRhWMe9hU5oQbZR2x7Kpm268qxNcn6QnDdeucUqxqlmgTha+1K/W91b8N7XWQ==
+X-Received: by 2002:a05:6a00:2182:b0:736:73ad:365b with SMTP id d2e1a72fcca58-73e246647e4mr1767338b3a.14.1745469854052;
+        Wed, 23 Apr 2025 21:44:14 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6aa52sm463483b3a.94.2025.04.23.21.44.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 21:44:13 -0700 (PDT)
+Date: Wed, 23 Apr 2025 21:44:09 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com,
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
+ prctls
+Message-ID: <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
+ <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/2] sched/numa: Skip VMA scanning on memory pinned to
- one NUMA node via cpuset.mems
-To: Libo Chen <libo.chen@oracle.com>, <akpm@linux-foundation.org>,
-	<rostedt@goodmis.org>, <peterz@infradead.org>, <mgorman@suse.de>,
-	<mingo@redhat.com>, <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-	<tj@kernel.org>, <llong@redhat.com>
-CC: <sraithal@amd.com>, <venkat88@linux.ibm.com>, <raghavendra.kt@amd.com>,
-	<yu.c.chen@intel.com>, <tim.c.chen@intel.com>, <vineethr@linux.ibm.com>,
-	<chris.hyser@oracle.com>, <daniel.m.jordan@oracle.com>,
-	<lorenzo.stoakes@oracle.com>, <mkoutny@suse.com>, <linux-mm@kvack.org>,
-	<cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250424024523.2298272-1-libo.chen@oracle.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250424024523.2298272-1-libo.chen@oracle.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017093:EE_|PH0PR12MB7077:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ce65af2-d528-4741-f553-08dd82ea725a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0REdXNCOEtvZjNiUWpacGRXOWlxSGJzekdKb2hxZE1BQWZISGVyNzA4Qm1S?=
- =?utf-8?B?cVZxMStWR0EvR1RBV1FjSGMzNjZxQXhqdDJCcnNmQ0FlT3g1WHZsYWZYWTFx?=
- =?utf-8?B?OFd1ZHV4OFFSVjgza0ZmcFBZWWZUMUxJcDJKVTZFS2trZk0vTTdFS2JYdzky?=
- =?utf-8?B?QWJVK0RjdFNGRDRhNHZIeEhBYjRjWnJTWTdremQ3SHBuR2JPYjYzSHlFSkFu?=
- =?utf-8?B?VWluRUVuQ0hFOUM1ZEJubWJ5ZkhPN1FYZWVJNFRYUEVLTXFCUGQ3YXhtVWZX?=
- =?utf-8?B?WUwzY2lka3BBejFFY2ZaYXVDV1BsakNYUFpENG5YelFzejloYyt0M3JjS1hB?=
- =?utf-8?B?eUJUZnh4SFB1dERSL21pMFl5NGFuVkpGblJKUzJqWWtrOTg5R1VuN3ZtUHRj?=
- =?utf-8?B?cUJtQzJSSjFmWEM0OVNDUXNCeVVKNmJXWUxRTldEVWlZZHVKZkVWdVAvQm44?=
- =?utf-8?B?Q3RpQ2p2VWtUZUhDbmRXQUVielpkSHZxcGUrOTNBaVV6K2xIMTZ4d1dONkJP?=
- =?utf-8?B?SHp5L1g0RzZoV2hKaHErajFGT2pBc1BYcFhZOWdGZHZkK3hTT1pMdFFLZWEz?=
- =?utf-8?B?THAvY1gveG55c20zREIyY1JoNXVySVdRcUpRRDhVaU9NYzZkcGhOR01uSEJ2?=
- =?utf-8?B?c3hWZXdGdkVrdWVhMkVvcHhJQWswTkdjVlVvYVFkSEdMdFpoUEtZMVNCN3cz?=
- =?utf-8?B?MGhqQyt0S096K3dmRWpYOElGM01wc01vbHlxVmhCbW1YaHNLRHFVdUVZR0ln?=
- =?utf-8?B?RzRpeU1GRWtESHhxQTY3cW8xQUJxT1hJZ3VxU01rRHZXb3ZTK2xrdkljcWJG?=
- =?utf-8?B?TFRXeWdjbUtYQlFEV0FJOVhtUC8wZ21YeEF2WXA1Ym1oUHdhT0FwcDlTTVl2?=
- =?utf-8?B?bGpNd2pMdXkwWmxHUDk1b0huNytyZ1BycGo1cjJBcmx4OTBuRVJpa25DdWp5?=
- =?utf-8?B?T3ZhNmM5dFpOLzgzZ2tNZWFSR3o4amFyQ1M3TTRwQkVBVmpxSFRrUXVqVDFG?=
- =?utf-8?B?KzhybUQ0ZnBad2Z4Q0RBRUxzQ2FRRUhLUUcxSERONTJML2JsOVgyTmFlMUMw?=
- =?utf-8?B?ay90NUFHNnJHWE9MbkpjTUltSGhsbUY1dEhQa2hkcFhHV0g3RHdXZnAzQ2E0?=
- =?utf-8?B?Z3R2by9vT21XaTZ6Yzg1cXdkQitnYXpVelR4a2tmSXI0b1JTejJSMlNQd0xr?=
- =?utf-8?B?bE92YlhnbW1jVkVOaStmQTUyZk15R21ZZ1d4NFk2ZEo4K29JcFp2WWJ4dUFu?=
- =?utf-8?B?QzRXSlFQYkxJTUNOSHl5U2gvS1JzbUdMZGE0Y1VsZ2F2Z2RpQTAwMXZ5eVl6?=
- =?utf-8?B?andYWnNTd0ZTbWVaUGZOTWhTWW9ITTR5NHlwcHFOM3BQSG1iTU1UZ01GekJZ?=
- =?utf-8?B?VGZzTjc5ZWtmUFVrdVVCcnFXOXpKeUFjejJSbktQZ2lzZklDbVc4MUxuK00v?=
- =?utf-8?B?Z1JHaFZZVDNnYTcrN1gycUhHczVEU2UxZHhZUUNkU1pPU2RsNUJQRktQRERp?=
- =?utf-8?B?RWVXaERPOGI1QkZHSHJzT3EzcDZJMmZBLzBWY0EyNHBTS040ZUE3UzQrV1E2?=
- =?utf-8?B?OEpjQi9yaVlBVFkzYVp2NHZmSjFwUlozYXkwKy9uOWErL3JOVUhnSkVHcE9P?=
- =?utf-8?B?MDM2UWxNem5vMUFaNUJWU1Mwc09YZ3RWWU4wM1Q4WGhFWEFwb05lUzB6ZXps?=
- =?utf-8?B?TmRwSURQdGVjVEQ4dnJKdExxQlNXVitvMWtXUzZtakpoeTZjNDM2YVhESTE4?=
- =?utf-8?B?Q1lCc1VqSDE2REloNnNrYnhhU0I4MmdIekplNWdOa0l6TG1yT1FpN3FkRjZa?=
- =?utf-8?B?S2tyV1I4RXBadEdrVnJZSm9GL0FQdWxYSmszWU0wM1FYVHhpSi9SamNpNiti?=
- =?utf-8?B?SHVONGVTdDNuMEJLTzlvVlNSZlZGNlZhS1R1NjJrZWh6TWRhSGtMK3hER2FX?=
- =?utf-8?B?ZXBBRS9iMFAwbm1zc1FKSzRsQkpEcUJwWUtkejNvQzRwYUMranA3RXNMdjVH?=
- =?utf-8?B?Zjh4RlhyRDdBbjg5b0tRb3U5V1BCMllTcHUzWmJhcVRDeG5aWS9Ra3NLcFUw?=
- =?utf-8?B?OUJJRHFmeEVTM1UvK1ZjR3F1b3pjT3FVcDQ5UT09?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 04:42:40.8062
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ce65af2-d528-4741-f553-08dd82ea725a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017093.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7077
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
 
-Hello Libo,
+On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Krčmář wrote:
+>2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
+>> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
+>> @@ -14,7 +15,8 @@ struct kernel_clone_args;
+>>  struct cfi_status {
+>>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
+>> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
+>> +	unsigned long ubcfi_locked : 1;
+>> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
+>
+>The rsvd field shouldn't be necessary as the container for the bitfield
+>is 'unsigned long' sized.
+>
+>Why don't we use bools here, though?
+>It might produce a better binary and we're not hurting for struct size.
 
-On 4/24/2025 8:15 AM, Libo Chen wrote:
-> v1->v2:
-> 1. add perf improvment numbers in commit log. Yet to find perf diff on
-> will-it-scale, so not included here. Plan to run more workloads.
-> 2. add tracepoint.
-> 3. To peterz's comment, this will make it impossible to attract tasks to
-> those memory just like other VMA skippings. This is the current
-> implementation, I think we can improve that in the future, but at the
-> moment it's probabaly better to keep it consistent.
+If you remember one of the previous patch discussion, this goes into
+`thread_info` Don't want to bloat it. Even if we end shoving into task_struct,
+don't want to bloat that either. I can just convert it into bitmask if
+bitfields are an eyesore here.
 
-I tested the series with hackbench running on a dual socket system with
-memory pinned to one node and I could see the skip_cpuset_numa traces
-being logged:
+>
+>> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
+>> @@ -24,6 +24,16 @@ bool is_shstk_enabled(struct task_struct *task)
+>> +bool is_shstk_allocated(struct task_struct *task)
+>> +{
+>> +	return task->thread_info.user_cfi_state.shdw_stk_base ? true : false;
+>
+>I think that the following is clearer:
+>
+>  return task->thread_info.user_cfi_state.shdw_stk_base
+>
+>(Similar for all other implicit conversion ternaries.)
 
-  sched-messaging-9430    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9430 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9640    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9640 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9645    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9645 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9637    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9637 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9629    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9629 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9639    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9639 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9630    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9630 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9487    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9487 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9635    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9635 tgid=9007 ngid=0 mem_nodes_allowed=0
-  sched-messaging-9647    ...: sched_skip_cpuset_numa: comm=sched-messaging pid=9647 tgid=9007 ngid=0 mem_nodes_allowed=0
-  ...
+Hmm... noted.
 
-Feel free to add:
+>
+>> @@ -42,6 +52,26 @@ void set_active_shstk(struct task_struct *task, unsigned long shstk_addr)
+>> +void set_shstk_status(struct task_struct *task, bool enable)
+>> +{
+>> +	if (!cpu_supports_shadow_stack())
+>> +		return;
+>> +
+>> +	task->thread_info.user_cfi_state.ubcfi_en = enable ? 1 : 0;
+>> +
+>> +	if (enable)
+>> +		task->thread.envcfg |= ENVCFG_SSE;
+>> +	else
+>> +		task->thread.envcfg &= ~ENVCFG_SSE;
+>> +
+>> +	csr_write(CSR_ENVCFG, task->thread.envcfg);
+>
+>There is a new helper we could reuse for this:
+>
+>  envcfg_update_bits(task, ENVCFG_SSE, enable ? ENVCFG_SSE : 0);
 
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+Yeah it's in switch_to.h header. I'll think about it.
 
--- 
-Thanks and Regards,
-Prateek
+>
+>> +}
+>> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
+>> +int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status)
+>> +{
+>> +	/* Request is to enable shadow stack and shadow stack is not enabled already */
+>> +	if (enable_shstk && !is_shstk_enabled(t)) {
+>> +		/* shadow stack was allocated and enable request again
+>> +		 * no need to support such usecase and return EINVAL.
+>> +		 */
+>> +		if (is_shstk_allocated(t))
+>> +			return -EINVAL;
+>> +
+>> +		size = calc_shstk_size(0);
+>> +		addr = allocate_shadow_stack(0, size, 0, false);
+>
+>Why don't we use the userspace-allocated stack?
+>
+>I'm completely missing the design idea here...  Userspace has absolute
+>over the shadow stack pointer CSR, so we don't need to do much in Linux:
+>
+>1. interface to set up page tables with -W- PTE and
+>2. interface to control senvcfg.SSE.
+>
+>Userspace can do the rest.
 
-> 
-> v2->v3:
-> 1. add enable_cpuset() based on Mel's suggestion but again I think it's
-> redundant.
-> 2. print out nodemask with %*p.. format in the tracepoint.
-> 
-> v3->v4:
-> 1. fix an unsafe dereference of a pointer to content not on ring buffer,
-> namely mem_allowed_ptr in the tracepoint.
-> 
-> v4->v5:
-> 1. add BUILD_BUG_ON() in TP_fast_assign() to guard against future
-> changes (particularly in size) in nodemask_t.
-> 
-> Libo Chen (2):
->    sched/numa: Skip VMA scanning on memory pinned to one NUMA node via
->      cpuset.mems
->    sched/numa: Add tracepoint that tracks the skipping of numa balancing
->      due to cpuset memory pinning
-> 
->   include/trace/events/sched.h | 33 +++++++++++++++++++++++++++++++++
->   kernel/sched/fair.c          |  9 +++++++++
->   2 files changed, 42 insertions(+)
-> 
+Design is like following:
 
+When a user task wants to enable shadow stack for itself, it has to issue
+a syscall to kernel (like this prctl). Now it can be done independently by
+user task by first issuing `map_shadow_stack`, then asking kernel to light
+up envcfg bit and eventually when return to usermode happens, it can write
+to CSR. It is no different from doing all of the above together in single
+`prctl` call. They are equivalent in that nature.
+
+Background is that x86 followed this because x86 had workloads/binaries/
+functions with (deep)recursive functions and thus by default were forced
+to always allocate shadow stack to be of the same size as data stack. To
+reduce burden on userspace for determining and then allocating same size
+(size of data stack) shadow stack, prctl would do the job of calculating
+default shadow stack size (and reduce programming error in usermode). arm64
+followed the suite. I don't want to find out what's the compatiblity issues
+we will see and thus just following the suite (given that both approaches
+are equivalent). Take a look at static `calc_shstk_size(unsigned long size)`.
+
+Coming back to your question of why not allowing userspace to manage its
+own shadow stack. Answer is that it can manage its own shadow stack. If it
+does, it just have to be aware of size its allocating for shadow stack.
+
+There is already a patch series going on to manage this using clone3.
+https://lore.kernel.org/all/20250408-clone3-shadow-stack-v15-4-3fa245c6e3be@kernel.org/
+
+I fully expect green thread implementations in rust/go or swapcontext
+based thread management doing this on their own.
+
+Current design is to ensure existing apps dont have to change a lot in
+userspace and by default kernel gives compatibility. Anyone else wanting
+to optimize the usage of shadow stack can do so with current design.
+
+- 
+>
+>> +int arch_lock_shadow_stack_status(struct task_struct *task,
+>> +				  unsigned long arg)
+>> +{
+>> +	/* If shtstk not supported or not enabled on task, nothing to lock here */
+>> +	if (!cpu_supports_shadow_stack() ||
+>> +	    !is_shstk_enabled(task) || arg != 0)
+>> +		return -EINVAL;
+>
+>The task might want to prevent shadow stack from being enabled?
+
+But Why would it want to do that? Task can simply not issue the prctl. There
+are glibc tunables as well using which it can be disabled.
+
+>
+>Thanks.
