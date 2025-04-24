@@ -1,52 +1,40 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EF21F1936
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E951F1936;
+	Thu, 24 Apr 2025 07:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479471; cv=none; b=Tb7xG4YhchdmQ891Ufjb5r8QV4Es+nrejJgpqA7wnlgTCvY7kBH87I43DkJoH8yxb+nelOFNY/DrAcDMSYpqyCQsiod/8Xt48ypyzaFQiVgkUK4qIL0H0KypaTW6HvH8ivVjFK1FvN6fnuQuNJTZwGCl8JxkbripSMNW9JUhYdY=
+	t=1745479482; cv=none; b=PKfuep2jWcWogbRDVtlY/R8SumZjBoDRMinJFvBXNqgRoEVT+ZYL2Ja+B6DqxN6ojUWb9l1P9hDN2xBERZ9WPFHNq6oelGRBq4zyTyX4HQtISDg+VzgebI7Vc497Isi6ks790qWkA3r4+YOHrzppfRzT/hEZ0edyiE4p/0oTsEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479471; c=relaxed/simple;
-	bh=SUiXSBVTodsrxvc8tpfjLeU3KmNzaV31IvgnMHDrvC0=;
+	s=arc-20240116; t=1745479482; c=relaxed/simple;
+	bh=TrAcmBN6lYfQHtdSnYmDwJwiksUZsL1Y2yFtmp2AxNg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M4HWGqCcYeMoOV33ACAgp7aU+3FsUpjViJ4OpCjpHQLx0EhOgGdoqKz4V4dRlBVyrG/+jGwj/uRnRDL9Tjs/ukz2QqG8f4hLZYKLy24ruiLgnvpy27daqSluV3X/0iIi6Y0ADCe0fWKRCvn658V4kcmh0sXNEqBwsXbA7LSkCWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=JEertdZn; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	 In-Reply-To:Content-Type; b=IRv2ZSssGdb1KP1VcTi6Cd7hgVQNSzczgOPBBYkQoK8zaDwAU+I1KOlII5UQOy2czdxaG0Den3USF1v2BQQQ9vVIcR63OD4uxuXrW2updL0IOXhzPqYZvcd6vo1jf+pGVyY+vEbn4oig2yMz5K7GTtuRd6fVz/m2yH3GPkgpyDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d4mBnTPC; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="JEertdZn"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id 7qHZu50i4Afjw7qweuCncp; Thu, 24 Apr 2025 07:24:28 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 7qweuvDBRRlrs7qweuvcDV; Thu, 24 Apr 2025 07:24:28 +0000
-X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=6809e72c
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=X0g7uYtjAU900BSEm/gH4H5kkUda235ZpSk8sDLp9FU=; b=JEertdZn1xU8EIvEHfORzbQfYl
-	Ssz0j4gC+phdcnVPUbgBp+Wjcq/e0o4nTzpqJzHmbt3VI+WCTNrIYrAOYdiUHhyjNw9Uxa/k7ilLH
-	ucxTvAsA9gG8E6pNoeCgPYGx9TTn+LNYHssLvaetB8bzGOr88sKGeq7JD5d/kPZR2TMcY41s8XJIa
-	7gLouEGTxOvNUcnEK+zdLXCAohAfoihSoXtBwSF9qWea7eyCOgPg6mwASy6Xn5zRKRyrRaIBBzhz0
-	Yx9d2VjcETuRPmVH5zefh754mZgJb4fr5nHVEN0Y359fnxZMIK16KhPr93wq9L8IyRfvgt3VyNj22
-	WMW0csXw==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:41186 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u7qwc-00000002ukl-0vxZ;
-	Thu, 24 Apr 2025 01:24:26 -0600
-Message-ID: <dbf52b63-df88-40a7-9a7d-2cde88d62ba9@w6rz.net>
-Date: Thu, 24 Apr 2025 00:24:22 -0700
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d4mBnTPC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745479479;
+	bh=TrAcmBN6lYfQHtdSnYmDwJwiksUZsL1Y2yFtmp2AxNg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d4mBnTPCkhGkmkL6MG3tORhqckVQKeUum9QYt2CKbeafi2L/P/jEo/DTXD9opnqWM
+	 AnB+FFRQWvSOZHILTx5opYylQi9sfFLBTlZzfeaSRoEbmgXJSFsZah/DPd/IONQFfz
+	 q4c+bZom/5KruvlWgx6dXzvvHYogQ2SvZsQS+8IK9ZkurBhsaPgZ6wPUP6tw5c3DE4
+	 Ub3524o9344Ifs3Y/gSH1lpxliW8KWn2XkmeQlpen2Bggc+7RpjGf4GnskWSMAi0O8
+	 SNywYTdhxXNJciyr/JiFd/4IieZNALuoJjN2omWk4YnDpwlC4dggywnJUbO5ByLaJO
+	 NzVT6ZbMKXoLg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 86B0C17E0808;
+	Thu, 24 Apr 2025 09:24:38 +0200 (CEST)
+Message-ID: <eb350c96-379a-46db-8a54-e1b9c71be431@collabora.com>
+Date: Thu, 24 Apr 2025 09:24:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +42,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/393] 6.6.88-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250423142643.246005366@linuxfoundation.org>
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8390-genio-common: Force ssusb2
+ dual role mode to host
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250331-mtk-genio-510-700-fix-bt-detection-v1-1-34ea2cf137f3@collabora.com>
+ <2da6560b-8444-48ae-bb01-397756cecbc0@notapiano>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250423142643.246005366@linuxfoundation.org>
+In-Reply-To: <2da6560b-8444-48ae-bb01-397756cecbc0@notapiano>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u7qwc-00000002ukl-0vxZ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:41186
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFbKZaeGDBbHWRNmTdWUbUjO8MqLD55oHcdXlHxTRj2s2Yn6xkQIxTTJl6KRUVJvZYe6iTK9+47DXviqgcbDNwyluOLyatUlnb/UYdtCs7m4dNR4wsU0
- BfpKGGFPqVGY3hRlUgkIb3L3bcdacc/aBzVhqh3Pa5IzrSw8SOqf/dmkACfZ4Qeqx+p+9h6UP5BDZFWtMIfHv129Sy8oXjVHq00=
+Content-Transfer-Encoding: 8bit
 
-On 4/23/25 07:38, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.88 release.
-> There are 393 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.88-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Il 23/04/25 22:48, Nícolas F. R. A. Prado ha scritto:
+> On Mon, Mar 31, 2025 at 11:25:52AM +0200, Louis-Alexis Eyraud wrote:
+>> On the Mediatek Genio 510-EVK and 700-EVK boards, ssusb2 controller is
+>> one but has two ports: one is routed to the M.2 slot, the other is on
+>> the RPi header who does support full OTG.
+>> Since Mediatek Genio 700-EVK USB support was added, dual role mode
+>> property is set to otg for ssusb2. This config prevents the M.2
+>> Wifi/Bluetooth module, present on those boards and exposing Bluetooth
+>> as an USB device to be properly detected at startup, so configure for
+>> the ssusb2 dr_mode property as host instead.
+>>
+>> Fixes: 1afaeca17238 ("arm64: dts: mediatek: mt8390-genio-700: Add USB, TypeC Controller, MUX")
+>> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+>> ---
+>> I've tested this patch on Mediatek Genio 510-EVK board with a kernel
+>> based on linux-next (tag: next-20250331).
+>> ---
+>>   arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+>> index 60139e6dffd8e0e326690d922f3360d829ed026b..3a9d429f0f14b501ae41551dfe7272f242345138 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+>> @@ -1199,7 +1199,13 @@ xhci_ss_ep: endpoint {
+>>   };
+>>   
+>>   &ssusb2 {
+>> -	dr_mode = "otg";
+>> +	/*
+>> +	 * the ssusb2 controller is one but we got two ports : one is routed
+>> +	 * to the M.2 slot, the other is on the RPi header who does support
+>> +	 * full OTG but we keep it disabled otherwise the BT on the M.2 slot
+>> +	 * USB line goes obviously dead if switching to gadget mode.
+>> +	 */
+>> +	dr_mode = "host";
+> 
+> Hi,
+> 
+> while I agree with this change, now that this controller is fixed to host mode,
+> the connector child node here which is supposed to probe with driver
+> usb-conn-gpio, which would monitor the ID and VBUS lines and change the USB role
+> as needed, will fail to probe with:
+> 
+>    platform 112a1000.usb:connector: deferred probe pending: usb-conn-gpio: failed to get role switch
+> 
+> as indeed there no longer is a role switch registered.
+> 
+> For that reason, I believe as part of this commit you should also disable the
+> connector. Since role switching is no longer supported by this controller,
+> there's no sense in even trying to probe this driver.
+> 
+> Thanks,
+> Nícolas
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Can we instead go for role-switch-default-mode = "host", with a big comment
+in the devicetree saying that the controller is shared between BT and the other
+port? :-)
 
-Tested-by: Ron Economos <re@w6rz.net>
-
+Cheers,
+Angelo
