@@ -1,185 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033501ACEBB;
-	Thu, 24 Apr 2025 15:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D30223DFF;
+	Thu, 24 Apr 2025 15:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508875; cv=none; b=NWx3tj6oGUrvi1wdSN2E7v/+eehnRCbd5yqm65hwddUdaxb58U+AUiodeVHdC/wBGnYqjI6jcQ0b45y/5hBR4LOObdzaIzw8INGkDzYk2WxdKEHRhtp7gmjI1IeMkCzXby1MjE0j9Tw8IlYqdMLp5T9J20YKCQWV+ANpPuqfg2w=
+	t=1745508880; cv=none; b=saaaJ5Ju8XUibaXhd5zqzPr2aFjJnNaw7pkm6zHf+BDSKeQOOpl4ChU7FbZOLYvYIC09pnl8ODGzpneU+sQpqs/BHtWZQMmf6ey5l8xBM1DF4HKTLMzpQ+ZLE0OwHWIowl6KIqieigzI8+OXwWQV+0OlR2v/w+N1i2oI5te6iDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508875; c=relaxed/simple;
-	bh=LZTHQrtct7I0W/ebUGRhLcTlWogxfJUTN7BhmEfy4Y8=;
+	s=arc-20240116; t=1745508880; c=relaxed/simple;
+	bh=bxClbLQLTNjuI9XodLLxLGe6sAL6f77wxXbHj6qSftg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hd041uqtKzoaihiXHEvanMwsWj2O6AAbv1ggtBwJsv2yNbZ8fptyCT0UD45eJu0w1GayqqdhMSXPtovDUmg+8r5ieDxM6sTk+07uCEZwVc0uXzM6gvShgM91kPivm5ZSt3owb3srZB6OE4MvbouzdHbY6wxS+sk+MiNMPUqwFog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6X94TCR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hoz0myVcp5q05RfzYHTl1Hfecl5i+705rKsu4TsUNv+RmWBNry6eINuOYtcs+RkxGvDXVdLfnYADi9Knt1nXOluYAFI0KLMY42DaF8Yn5Gp+lJR1k+klZ830i1hjTuTiDKD8l4CFDDjFGe7Khtil8Ryi4HaRdZdGfkae5qccnOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaVQycdF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6X94TCR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE39DC4CEE3;
-	Thu, 24 Apr 2025 15:34:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaVQycdF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45CFC4CEE3;
+	Thu, 24 Apr 2025 15:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745508874;
-	bh=LZTHQrtct7I0W/ebUGRhLcTlWogxfJUTN7BhmEfy4Y8=;
+	s=k20201202; t=1745508880;
+	bh=bxClbLQLTNjuI9XodLLxLGe6sAL6f77wxXbHj6qSftg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S6X94TCRJcZtfi5tbgYAV51PuZVmZvMGxpnte/WLJIGFkd9qSiA+B8J7C923cIFIw
-	 i+tTOjmb0vdTGCvfIF1pNrfQgdeg9EftHilwxM2wc26UhArimvjhBRGeiXRPcWF2AN
-	 es+QNEPyZtunCbc+hvbg8qBVvNz80LON2Jbn/vS95DQY1nZLFFl5g0RYOjU5nfjv63
-	 EE6Y/tZMKEFlHfxRaVmryRsDfoXlCqkFULQrcYMWSxetKiPiG7+GUwS067evGzrH/N
-	 bQxlJKKz1umurrAX/hjJ2W7j0O8eZ3ROgHj5CR1LFZvUTouwGRuhHVCED47l3vCta3
-	 fmgkBZL7M7ZJQ==
-Date: Thu, 24 Apr 2025 17:34:00 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>
-Subject: [PATCH] x86/sev: Share the sev_secrets_pa value again
-Message-ID: <aApZ6JwPQ8Cde3OK@gmail.com>
-References: <20250418141253.2601348-8-ardb+git@google.com>
- <20250418141253.2601348-11-ardb+git@google.com>
- <cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com>
+	b=kaVQycdFEh57ptKQMkU3phV47PdSHrqw0ImT/A/ChbtZXARReZjSQcAo0qAg9ou/4
+	 8ytM9dvOcEt/+ZXzgqtGyWM1G+lAn+A2bnYWcAOnz98SDiCWZpj6kpUJTjv7SxdOu+
+	 JJ33e60tOTDzmKdxSksrmc6lm2BEOmqrqX8NfAqQieXqN5sDmAcbrjpT7OsnHg+Vqx
+	 lMx5PukWerWoacnvxQ01VK75QM3Pc46vCRuKUvwN15DcjnRqbja8OfeYXUWQNNoyw6
+	 I5DHIajSgutzhGjRzJoJcwZ7gpdn5JkSB6I54A0t5cZJkgniFPohYoi6rDYw71NDcU
+	 uiU+3EV9YqqkA==
+Date: Thu, 24 Apr 2025 16:34:34 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+Message-ID: <20250424153434.GF8734@google.com>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-9-ivecera@redhat.com>
+ <20250417162044.GG372032@google.com>
+ <335003db-49e5-4501-94e5-4e9c6994be7d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <335003db-49e5-4501-94e5-4e9c6994be7d@redhat.com>
 
+On Thu, 17 Apr 2025, Ivan Vecera wrote:
 
-* Tom Lendacky <thomas.lendacky@amd.com> wrote:
-
-> On 4/18/25 09:12, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> 
+> On 17. 04. 25 6:20 odp., Lee Jones wrote:
+> > On Wed, 16 Apr 2025, Ivan Vecera wrote:
 > > 
-> > Disentangle the SEV core code and the SEV code that is called during
-> > early boot. The latter piece will be moved into startup/ in a subsequent
-> > patch.
+> > > Register DPLL sub-devices to expose this functionality provided
+> > > by ZL3073x chip family. Each sub-device represents one of the provided
+> > > DPLL channels.
+> > > 
+> > > Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> > > ---
+> > >   drivers/mfd/zl3073x-core.c | 15 +++++++++++++++
+> > >   1 file changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+> > > index 0bd31591245a2..fda77724a8452 100644
+> > > --- a/drivers/mfd/zl3073x-core.c
+> > > +++ b/drivers/mfd/zl3073x-core.c
+> > > @@ -6,6 +6,7 @@
+> > >   #include <linux/device.h>
+> > >   #include <linux/export.h>
+> > >   #include <linux/math64.h>
+> > > +#include <linux/mfd/core.h>
+> > >   #include <linux/mfd/zl3073x.h>
+> > >   #include <linux/mfd/zl3073x_regs.h>
+> > >   #include <linux/module.h>
+> > > @@ -774,6 +775,20 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
+> > >   	if (rc)
+> > >   		return rc;
+> > > +	/* Add DPLL sub-device cell for each DPLL channel */
+> > > +	for (i = 0; i < chip_info->num_channels; i++) {
+> > > +		struct mfd_cell dpll_dev = MFD_CELL_BASIC("zl3073x-dpll", NULL,
+> > > +							  NULL, 0, i);
 > > 
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > Create a static one of these with the maximum amount of channels.
 > 
-> This patch breaks SNP guests. The SNP guest boots, but no longer has
-> access to the VMPCK keys needed to communicate with the ASP, which is
-> used, for example, to obtain an attestation report.
+> Like this?
 > 
-> It looks like the secrets_pa is defined as static in both startup.c and
-> core.c. It is set by a function in startup.c and so when used in core.c
-> its value will be 0.
+> static const struct mfd_cell dpll_cells[] = {
+> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
+> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
+> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
+> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
+> 	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 5),
+> };
 > 
-> The following fixed the issue for me. Let me know if it can be squashed
-> in or a full patch is needed. Although, it likely should be named
-> sev_secrets_pa since it is no longer static.
+> rc = devm_mfd_add_devices(zldev->dev, PLATFORM_DEVID_AUTO, dpll_cells,
+>                           chip_info->num_channels, NULL, 0, NULL);
 
-Thanks for the fix!
+Yes, looks better, thank you.
 
-I wrote a changelog for it and also included the suggested rename to 
-sev_secrets_pa as it's now a global symbol. I've added your SOB as 
-well. Does this patch look good to you?
-
-Thanks,
-
-	Ingo
-
-==========================================>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Date: Wed, 23 Apr 2025 10:22:31 -0500
-Subject: [PATCH] x86/sev: Share the sev_secrets_pa value again
-
-This commits breaks SNP guests:
-
-  234cf67fc3bd ("x86/sev: Split off startup code from core code")
-
-The SNP guest boots, but no longer has access to the VMPCK keys needed
-to communicate with the ASP, which is used, for example, to obtain an
-attestation report.
-
-The secrets_pa value is defined as static in both startup.c and
-core.c. It is set by a function in startup.c and so when used in
-core.c its value will be 0.
-
-Share it again and add the sev_ prefix to put it into the global
-SEV symbols namespace.
-
-[ mingo: Renamed to sev_secrets_pa ]
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Kevin Loughlin <kevinloughlin@google.com>
-Link: https://lore.kernel.org/r/cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com
----
- arch/x86/boot/startup/sev-startup.c | 4 ++--
- arch/x86/coco/sev/core.c            | 7 ++-----
- arch/x86/include/asm/sev-internal.h | 1 +
- 3 files changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
-index 36a75c5096b0..f901ce9680e6 100644
---- a/arch/x86/boot/startup/sev-startup.c
-+++ b/arch/x86/boot/startup/sev-startup.c
-@@ -55,7 +55,7 @@ struct ghcb *boot_ghcb __section(".data");
- u64 sev_hv_features __ro_after_init;
- 
- /* Secrets page physical address from the CC blob */
--static u64 secrets_pa __ro_after_init;
-+u64 sev_secrets_pa __ro_after_init;
- 
- /* For early boot SVSM communication */
- struct svsm_ca boot_svsm_ca_page __aligned(PAGE_SIZE);
-@@ -1367,7 +1367,7 @@ bool __head snp_init(struct boot_params *bp)
- 		return false;
- 
- 	if (cc_info->secrets_phys && cc_info->secrets_len == PAGE_SIZE)
--		secrets_pa = cc_info->secrets_phys;
-+		sev_secrets_pa = cc_info->secrets_phys;
- 	else
- 		return false;
- 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 617988a5f3d7..ac400525de73 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -80,9 +80,6 @@ static const char * const sev_status_feat_names[] = {
- 	[MSR_AMD64_SNP_SMT_PROT_BIT]		= "SMTProt",
- };
- 
--/* Secrets page physical address from the CC blob */
--static u64 secrets_pa __ro_after_init;
--
- /*
-  * For Secure TSC guests, the BSP fetches TSC_INFO using SNP guest messaging and
-  * initializes snp_tsc_scale and snp_tsc_offset. These values are replicated
-@@ -109,7 +106,7 @@ static u64 __init get_snp_jump_table_addr(void)
- 	void __iomem *mem;
- 	u64 addr;
- 
--	mem = ioremap_encrypted(secrets_pa, PAGE_SIZE);
-+	mem = ioremap_encrypted(sev_secrets_pa, PAGE_SIZE);
- 	if (!mem) {
- 		pr_err("Unable to locate AP jump table address: failed to map the SNP secrets page.\n");
- 		return 0;
-@@ -1599,7 +1596,7 @@ struct snp_msg_desc *snp_msg_alloc(void)
- 	if (!mdesc)
- 		return ERR_PTR(-ENOMEM);
- 
--	mem = ioremap_encrypted(secrets_pa, PAGE_SIZE);
-+	mem = ioremap_encrypted(sev_secrets_pa, PAGE_SIZE);
- 	if (!mem)
- 		goto e_free_mdesc;
- 
-diff --git a/arch/x86/include/asm/sev-internal.h b/arch/x86/include/asm/sev-internal.h
-index e54847a69107..a78f97208a39 100644
---- a/arch/x86/include/asm/sev-internal.h
-+++ b/arch/x86/include/asm/sev-internal.h
-@@ -5,6 +5,7 @@
- extern struct ghcb boot_ghcb_page;
- extern struct ghcb *boot_ghcb;
- extern u64 sev_hv_features;
-+extern u64 sev_secrets_pa;
- 
- /* #VC handler runtime per-CPU data */
- struct sev_es_runtime_data {
+-- 
+Lee Jones [李琼斯]
