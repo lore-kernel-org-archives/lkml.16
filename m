@@ -1,193 +1,119 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C7728EA4A
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33AA27F74E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745519783; cv=none; b=Nv+mjBAmle8ZfPP4wgOkt/zvxroARaCvr37jX0oDlZFV/x/bUtpPjRJYe0WQPCfUHAnZUV7bA527YYl3ReVerGOZWGyJQlrqwsPIDu4Nbg2HhTY3H8XdB0COoSXmDYDQw53ks9e0ej3W4flOjZDh3eEVcWtTH4GFxxcbI5mVjss=
+	t=1745519842; cv=none; b=blIxQ4mVM0FljnWwDnYoGr59wFsWW6Da64uQlnAb0OOnd7Oq0t5WMwclnJd7vAYfmFXjtfuF6qb4Yv+v8LTdMTI2Nsr9sXeK2byq/SgPv0fnxNcpyWSGPAJKP7LiJ/nZ7rs5NKN2RBoNKJcu17o5dKhP9ZILMQmVUonUfFwijxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745519783; c=relaxed/simple;
-	bh=ZvhDtpu1XnYczmFh42T13jRZysqmiKlyJitHmezAOec=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DNMbV9cbSYrvX/aJdygtBP9OyNAWdJ2F4X+XUDBZgvisSEMhIopNoe2WKAILFVe8POfi5pYfsw3MG1M4/l8QOOWp+2nC4QqoRtoNAYQItJXE68XPV4Mih3LI1STu0XLAZqs6X7SbcV+W6Msa473ACxTckKFGo7OrHe56vcXHTdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cT3jF2I4; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745519842; c=relaxed/simple;
+	bh=+ObrAILT9MkV5shE5b54uVUAUE30hCzzXTVkWGYXhw8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cmsfQZgqAWE6Llyh4XESMeybefctD6EQD5VRZEISGYQK7FyS/9JM83mbx/iMMtGSNzHJaYFKwyw4TS+JX/BDF5wYvXpZsmvvNzLM00Cu2NXENSiA+lFo9hf0gl6gXTrOfNLrjGbXnT6PO7tLjz+sXLMp+WJTRPkEBajSRTykYy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KEkR48Nm; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT3jF2I4"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fd89d036so18209835ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:36:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KEkR48Nm"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso5365e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745519781; x=1746124581; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V7d2y3ul5N0Mf7A+x8KbqIBRsyxegjHYdT7Sjr9I/BQ=;
-        b=cT3jF2I4SedIegVrGt9jCeA7HeQkWeqDxpNw67UxUwTRj4lYwKwtrF85yHDTf9xT5t
-         5WR6BqGLoUIpYobinQ9LCrvFX3thwgm0qram7zt2eJH7va38ovrDWaKyiOhw5jKVOOxx
-         ptRAxQY9K7mGCzcj77nhmGY7BMh2qadC50ceaeb/RLnxawlTLU+DccjlTa2Y0v+htzKs
-         U9OxBjO6yJv5jXM31QtqbNi7+4OgQIsVaJRtdGNP89pch+TwYtw+fifVR6tf2C07M/NV
-         w1SzuH4vLpT0Tbwrc/xtT9+MarQQGPUVUixOHlsdr2y+tUcSZODOpWYx31vjUME8u2Be
-         mzoA==
+        d=google.com; s=20230601; t=1745519839; x=1746124639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yNqctYL3THrGPUgjPioxVFaahQ/pztGGq3mgBrGdeIA=;
+        b=KEkR48Nmw3ARC98RUya/+7ej53CBzhGZXZN0R9eQHTvrufmKK2/FzYklC//bw3JciR
+         yK9nYiEKti2OfipZrKXr5p7sDtaNfWYGKisfDTTUCdiaSg+Fjr7JC+Mxbs3WrsVdETJn
+         CuekIjCAkY6kpM1bkcZHlralAJJ4mhl4F0kTpv52gOAUi7FmnXT7LwG3yvtde7IVv004
+         qju9AU+8x2Xcc0XZ3tzlm3GlxmBYHsc1CzAe9ydNcNciqhlyMELZ5OdibRNnqAjo72DA
+         rIQtFovm1ZhjEwjIoCp6tCFIcZnXmZiftsLuULeHe1LJ2L4uQ5BP+MApJ3EDROSEB/HB
+         ySkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745519781; x=1746124581;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745519839; x=1746124639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V7d2y3ul5N0Mf7A+x8KbqIBRsyxegjHYdT7Sjr9I/BQ=;
-        b=Z2qpSZ+yTLerAPY6LxvYrDOaeR+ykovYW6lSn31H7EwWzbeI/bJM79ACeZIEzxDFys
-         jJhi/GvhDkN5cPcJZx1aKNNlaplrDuOiRNU2ZBpMHJ9Wpg7WfI+cXTBOgHxu/6wUybuw
-         NsOVc1jSXgniN7Mefr8OklvFDqJNOwKgqP9kQfnZV3OIqGsoFF/wWkNBWP5FcfOIatke
-         W4JK9+6kfLSxFv8rWPMjuQ/KJI5O+rljNZRt9QE6aH9Kbyy36pc8FB0LHHDL4EfXjkbo
-         8zsoRAaE6QG84ad2aI9cdHQdqT0WoKgawtujgs9C2Tb6DioVKAuKuiKKdJ2DIT73ieo+
-         ETZA==
-X-Gm-Message-State: AOJu0Yz5ghVhTKiLlS5LgmmZOMg2sokTMuub/GcdQcVcOjwLuw9D5IR6
-	IKsyd39R+qeudwWAlEEcFuQppCN6daFA3vQTYQ9uSyC+TEAX/7AilCbno4cPfcU=
-X-Gm-Gg: ASbGncs+oBAVKYJWZz0gKJCVbDtjt3bzO5048bMjlLhZTRLvnE+DBpIpGPEPNPadoKl
-	WJKYo/pstrTSpopLgSeblD+FmJX8C3lLTlB9fSv6sb6bXy+FR6QC4mxcPNCpxCD+UJQOY7InTZw
-	fG5DL7dxj62F3F3ivAwjHetehwC1CtpviOjHF2+Ixh7HBD1ReOUlAYpjNIDscfR7zFs5zZlZwCC
-	Lluhky1RY0OIBFGzMBT8IzDNoqEC9CEvNkoJoaaciWDVZmTTOtZUqEXWNsMZVkfa+G0xrWbzJSA
-	RyGt5HYDXdAtlWMFUKNVgVK7qAlzaWhXvKfiBh6plLAWoQIKLeXW
-X-Google-Smtp-Source: AGHT+IEvTVhxG/HEpoGdmUvZL3DCkshSAemk2nnUG/eNuUy+xBFFooJCg81CWaxVrYyBfyYOjuULjA==
-X-Received: by 2002:a17:90b:5252:b0:305:2d27:7cb0 with SMTP id 98e67ed59e1d1-309f554f7b3mr796266a91.21.1745519780757;
-        Thu, 24 Apr 2025 11:36:20 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef0b9df8sm1744660a91.35.2025.04.24.11.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 11:36:20 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 24 Apr 2025 22:35:46 +0400
-Subject: [PATCH 5/5] irqchip: vt8500: Use fewer global variables and add
- error handling
+        bh=yNqctYL3THrGPUgjPioxVFaahQ/pztGGq3mgBrGdeIA=;
+        b=v5af+CXYt1Yno/l6jtlQ/67eTIGrXPjfrWTi9QD45MsBaJwYEYdW0Kld1C2JuXFNcq
+         I/kWQ3pMFud+Wyl8h8KeytlTGB2VhwLPcIE4ED/1EOt0iDJP66al54FY5apC123Nm2BQ
+         IHvM3I3LPM5mOcpYveT0Xmteq3cY2UUI72Ne7Ih4yemH41TFbA3apVlgjRo0GpehhqE7
+         1z4RcohzRZYsuvzCcdjKFWLonyGkgHNFQqXqAQhMfLT1i+dMc8OCbUcfdCjg1cLO3Qdn
+         OthIQpXdBpZHnCeUHYyCP7wm8x2FZtE5gvyFnTnrwI87vdDES/KvB4wh5cKtTzXbyDRI
+         BJZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNu7oMdgj9w66b+QxYBA3pwezURP4GRTcQPIPG4z1GCX1EjOrH877nDcDbuHmWANYwtVFUiLmMWKVot/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwibdbkOgYbvYI/0l6Cfvexbh2ZWNxYhmLy1IXD7Euh0bh5cSCK
+	VirFu7Z3q97UYH6aqxwCfigzFqhYf4Hh0UPy1LuAmXxjWyn/Qz4uDIkEDfhI6uGFJ7k4c8Zpd17
+	SfOg6wMg/Bf4hbVJLjTWXpGYFJIZAd7WQupo+
+X-Gm-Gg: ASbGncudvAbchsnh2fyrMPE18XDWKUrRrKvtTOsrD1PA756zUXLcsrFGAV0hR7JCO86
+	N6a0Rvjm+eUVw9xSxiQBVPihzDdyJm2aKk+1ihlCLMrw2s9GqtUQ7tH+4eV6R8ONU/ETi72VgWv
+	4iQIwFletJEtiKG40ydNHvzysx0UgU+7I5M/1ZNzLIevSav8abz7/O
+X-Google-Smtp-Source: AGHT+IEHp5xBpPTtWdZMCzH+i0q9BEJGwYBYE7/dAlz0v4nOND8LIunN0ki4CNECu8NBZl9yPLxj0Z18YNBl1Z62spA=
+X-Received: by 2002:a7b:ce10:0:b0:43b:bf3f:9664 with SMTP id
+ 5b1f17b1804b1-440a44c1c39mr72835e9.5.1745519838948; Thu, 24 Apr 2025 11:37:18
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-vt8500-intc-updates-v1-5-4ab7397155b3@gmail.com>
-References: <20250424-vt8500-intc-updates-v1-0-4ab7397155b3@gmail.com>
-In-Reply-To: <20250424-vt8500-intc-updates-v1-0-4ab7397155b3@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745519768; l=3067;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=ZvhDtpu1XnYczmFh42T13jRZysqmiKlyJitHmezAOec=;
- b=bxYbJszU9Ih3oQcgQ22sUUyhzKZ5U10yKce/YCYZElGTjmrBbnI76TANVVuNwV0vHa5kjA9b1
- 7cWE9X3r1hGBvTgGKCrfwBkIuYZXGepvyYgpJCikl4fZqwKysm70/vL
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+References: <20250417204323.3902669-1-hramamurthy@google.com> <20250423171431.2cd8ca21@kernel.org>
+In-Reply-To: <20250423171431.2cd8ca21@kernel.org>
+From: Ziwei Xiao <ziweixiao@google.com>
+Date: Thu, 24 Apr 2025 11:37:07 -0700
+X-Gm-Features: ATxdqUHZZkXp_HEGK61LJUBhezgIo7ojwCvAQNi8CpuLohtbOPKgVVzGIJimasw
+Message-ID: <CAG-FcCPexBHubfzRcVUsBXRYkY0v-ricG-yqLd5q1j051cbEoQ@mail.gmail.com>
+Subject: Re: [PATCH net] gve: Add adminq lock for creating and destroying
+ multiple queues
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org, jeroendb@google.com, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	pabeni@redhat.com, pkaligineedi@google.com, willemb@google.com, 
+	shailend@google.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Controller private data doesn't really need to be in a global
-statically allocated array - kzalloc it per controller instead,
-keeping only one pointer to the primary controller global.
+On Wed, Apr 23, 2025 at 5:14=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Thu, 17 Apr 2025 20:43:23 +0000 Harshitha Ramamurthy wrote:
+> > Also this patch cleans up the error handling code of
+> > gve_adminq_destroy_tx_queue.
+>
+> >  static int gve_adminq_destroy_tx_queue(struct gve_priv *priv, u32 queu=
+e_index)
+> >  {
+> >       union gve_adminq_command cmd;
+> > -     int err;
+> >
+> >       memset(&cmd, 0, sizeof(cmd));
+> >       cmd.opcode =3D cpu_to_be32(GVE_ADMINQ_DESTROY_TX_QUEUE);
+> > @@ -808,11 +820,7 @@ static int gve_adminq_destroy_tx_queue(struct gve_=
+priv *priv, u32 queue_index)
+> >               .queue_id =3D cpu_to_be32(queue_index),
+> >       };
+> >
+> > -     err =3D gve_adminq_issue_cmd(priv, &cmd);
+> > -     if (err)
+> > -             return err;
+> > -
+> > -     return 0;
+> > +     return gve_adminq_issue_cmd(priv, &cmd);
+> >  }
+>
+> You mean this cleanup? That's not appropriate for a stable fix...
+>
+> Could you also explain which callers of this core are not already
+> under rtnl_lock and/pr the netdev instance lock?
+I discovered this and thought that this applied more widely, but upon
+rereading it turns out it only applies to upcoming timestamping
+patches and a previous flow steering code attempt that was scuttled.
+Current callers are under rtnl_lock or netdev_lock. Should not have
+been sent to the net. So will send as part of the timestamping series.
+Thanks.
 
-While at that, also add proper error return statuses in the init
-path and respective cleanup of resources on errors.
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- drivers/irqchip/irq-vt8500.c | 49 +++++++++++++++++++++++---------------------
- 1 file changed, 26 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/irqchip/irq-vt8500.c b/drivers/irqchip/irq-vt8500.c
-index aea43c838430d2a541aa9b3127a215531abecad8..0bf478c6541ede30719eb1e403d9cafe6474643a 100644
---- a/drivers/irqchip/irq-vt8500.c
-+++ b/drivers/irqchip/irq-vt8500.c
-@@ -64,9 +64,6 @@ struct vt8500_irq_data {
- 	struct irq_domain	*domain;	/* Domain for this controller */
- };
- 
--/* Global variable for accessing io-mem addresses */
--static struct vt8500_irq_data intc[VT8500_INTC_MAX];
--static u32 active_cnt = 0;
- /* Primary interrupt controller data */
- static struct vt8500_irq_data *primary_intc;
- 
-@@ -203,50 +200,56 @@ static void vt8500_handle_irq_chained(struct irq_desc *desc)
- static int __init vt8500_irq_init(struct device_node *node,
- 				  struct device_node *parent)
- {
--	int irq, i;
-+	struct vt8500_irq_data *intc;
-+	int irq, i, ret = 0;
- 
--	if (active_cnt == VT8500_INTC_MAX) {
--		pr_err("%s: Interrupt controllers > VT8500_INTC_MAX\n",
--								__func__);
--		goto out;
--	}
--
--	intc[active_cnt].base = of_iomap(node, 0);
--	intc[active_cnt].domain = irq_domain_add_linear(node, 64,
--			&vt8500_irq_domain_ops,	&intc[active_cnt]);
-+	intc = kzalloc(sizeof(*intc), GFP_KERNEL);
-+	if (!intc)
-+		return -ENOMEM;
- 
--	if (!intc[active_cnt].base) {
-+	intc->base = of_iomap(node, 0);
-+	if (!intc->base) {
- 		pr_err("%s: Unable to map IO memory\n", __func__);
--		goto out;
-+		ret = -ENOMEM;
-+		goto err_free;
- 	}
- 
--	if (!intc[active_cnt].domain) {
-+	intc->domain = irq_domain_add_linear(node,
-+					     64,
-+					     &vt8500_irq_domain_ops,
-+					     intc);
-+	if (!intc->domain) {
- 		pr_err("%s: Unable to add irq domain!\n", __func__);
--		goto out;
-+		ret = -ENOMEM;
-+		goto err_unmap;
- 	}
- 
--	vt8500_init_irq_hw(intc[active_cnt].base);
-+	vt8500_init_irq_hw(intc->base);
- 
- 	pr_info("vt8500-irq: Added interrupt controller\n");
- 
--	active_cnt++;
--
- 	/* check if this is a chained controller */
- 	if (of_irq_count(node) != 0) {
- 		for (i = 0; i < of_irq_count(node); i++) {
- 			irq = irq_of_parse_and_map(node, i);
- 			irq_set_chained_handler_and_data(irq,
- 				vt8500_handle_irq_chained,
--				&intc[active_cnt]);
-+				intc);
- 		}
- 
- 		pr_info("vt8500-irq: Enabled slave->parent interrupts\n");
- 	} else {
--		primary_intc = &intc[active_cnt];
-+		primary_intc = intc;
- 		set_handle_irq(vt8500_handle_irq);
- 	}
--out:
-+
- 	return 0;
-+
-+err_unmap:
-+	iounmap(intc->base);
-+err_free:
-+	kfree(intc);
-+	return ret;
- }
- 
- IRQCHIP_DECLARE(vt8500_irq, "via,vt8500-intc", vt8500_irq_init);
-
--- 
-2.49.0
-
+> --
+> pw-bot: cr
