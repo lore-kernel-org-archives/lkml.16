@@ -1,209 +1,215 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0291B9831
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E031927F73C
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504670; cv=none; b=dcB92xhG5U/fMdC/wsQPyAb9LA0FanXhMaJcwy1aoQmHwKCXZ+7S/Yc6qQFWnmjbetuy+MwNtNNp6MWci53AXrw5VoMflmdsa25W16Kac1eC29AYyEzlGLUDMoHevhE3AoLFs98iCcYBfTrjiuIJQXZFcbYpt4cxzsvwDa+SFUo=
+	t=1745504688; cv=none; b=WgdB9AjYdZsyUpLhp53UIxftAG9nYnKMzberRp6o4/7LM+MCOgIcPSU/nk6dXMONhAS1U4cC8kNdZMvU1EmIG2cDmk3CW6W9WGk4HDvQ4N4BH2aorHBa6Y1+YXpPDWXAR7eG0JXQ1vJ2QC0CblU7f/rQ9pEomjXXVnUH/NvUTPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504670; c=relaxed/simple;
-	bh=Tz47M5iSwvuJI43VgdSbVvZXDbfVclPcKwW5AF1Dppo=;
+	s=arc-20240116; t=1745504688; c=relaxed/simple;
+	bh=ITEJU5E+U8k3jYhXGW3lQ1NkLPi5MlRGY624NYpem6s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVRtdajT7t017NqwPdNB7fWJ4coHQgeheh11kWqn5kWszDX/5Y7KBUSiZozE6kpNNcGas56isz7T0zmRamZJLFSWoILv3J9qXp7/7PfCF8+d5FESAsl7WergAOvXyHOAxwJjcxcy1bXFgSUmD9CI+djoS+ZBlNvhOToMYyLjleU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=J+oi5kaV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OtFRLVtw3pRViDlXMdCNGvwM5vuq3ZyyW4LhpzY7zlYnSc/Y10TcIYi0CLPdCj44B+smHhR8wZzfnSbn/Qv0/EeVzF+jvcOuPMuP6Spf8ky37dw2eW5nASgubDtgjVoKyE68yLXzM6At0tCdFN6NGrvY60UcrFG1GTro+llHNaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MWLPUnfp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="J+oi5kaV"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OC3TFc012320
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:24:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=aCpv1/9HQmDsE2c9o+kjey5K
-	k7J2MtEAbNBgEXq7aGU=; b=J+oi5kaV6+sm0mAyOvWVj14wdp/0IZTosSQp/WAJ
-	x/2r1yBDDOIyFOt9hYCybBAL5s9BedLQf7EUWdtHEgz83lMjfjDvoRHJdPEskmUP
-	hYAu9QhBEElArModXFUn6t/k1ZbjDfrAvWBobH8ixNJRyavJKVCbNQ6v3UMIxP5j
-	1CmnBjnrwS9gFb7fKyzGt0TiEuP+ZRuKZcTHl87JmsI962dbtcunzewmU2fycqq7
-	6OT7gLlURnziTxIBE58/jXTEBGnXu40/LVGyqtHr26F9iAAIehDDsJ4A+OoWIMPM
-	C7mTsbh7x5bhiWf8biaoyXlKyoH+XQcct0N6HrhIQqLi1A==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3duud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:24:28 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c9abdbd3so111465285a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:24:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MWLPUnfp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745504685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nV8jVW/8nt8ZwTGGNIL9yTSPGZZ29xDmvRWgbdJwWX4=;
+	b=MWLPUnfpcvNHHJ1WBQzKNa+lMz9pMQUPOxryCpQW87xhpJbLZFeNeNgr/cEJ8IygNa0fqK
+	4uWYxOF5s2ShK96NGJ94luvvc3gNo7Si5lfM/Y8jp0ACH4T+i/XgOfOog5eKBvbet2ZtR4
+	ApMiqvEcTKyIYrnhSG9ZU5O+I5ypgOg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-533-gPwoh4amOXqNYfGmWhuLBg-1; Thu, 24 Apr 2025 10:24:42 -0400
+X-MC-Unique: gPwoh4amOXqNYfGmWhuLBg-1
+X-Mimecast-MFC-AGG-ID: gPwoh4amOXqNYfGmWhuLBg_1745504681
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912fc9861cso385632f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:24:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745504667; x=1746109467;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aCpv1/9HQmDsE2c9o+kjey5Kk7J2MtEAbNBgEXq7aGU=;
-        b=PkUnnyoTYIVlci0v0tmDuRlVv724Iz4hbiH1t+KWjVFhPBGZ/OATqwHA7+iE93NNgX
-         +yymXRZYCrdTa4XQtxV5qiT+wkcJm9BS4qrbpSKMHrCVpYTrxfvIDcalTKZ6wZNWXcKS
-         ypSRYzN8e27jaiHXHOulNTcngKWynhM73bis0+KVwj2FYifkryZbO8sqVYovV4LCzxTc
-         sClyT1t7Y22oAbLxAoHXwcyzhg+SaKo8FzGNniXaA8kOd3ewgow8xg7V/GViq2/hSc9i
-         v6+tApM/FpSXkWJoBRR+Pa8qs2hgrpkJlzwJVjXO/32oA8nBilYF7dMOx7587HVShLQm
-         DgHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXyT/qTMiPaserP0gu/T30WDPP416b1mjg8YbyQMjfr9vH0KCafbKoeDWfq1OFQF/L5LcPXqXN1M4OThLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx33RefrVAzOeFEFQSX9geN1ts3aq2l8o9cHmi5ONeH/Iwu7yI0
-	Y3VP5QfcV67mN9jgv9MH4sS9WAwQwrdj9Xuuwu/KV0HJTePn6pSp025zO+GfD0iCsGcaNqSco5X
-	v5WZs4i7MEnhVmHV+/J2K+6WbF+xOBYb14Q3LuUXnnfS43063cSDOercB9pB7dFI=
-X-Gm-Gg: ASbGnctkE9eKeTimJ4PHOrx+n3ea94U4dJDtuwnKYLYnf6Fnfy/mLm/xAhx3fXBi3Z6
-	wzMgqNj+ipxGX2Z/S9ESXy1BltW6A7MPJM26jzGt2IHRl7ierZu8dl5ss9JmsGFVTmjx0H/F7lG
-	EbUYWJD7tYYoZM9OoyclmD0z0/5Q/cMACRnax9F5v+UDFPh/lGBGZY43yZ9e0BVIKSONq1mcsAN
-	ctD8lvnTq7YWufuqg+Bvp//2tVdH0/5zVLbmUfanbT+JCVtP5Lypv3/CySvA0YS8BgMLNYWoDEf
-	52urvSebFhI/1dTHI5zrHMVVPWOKLL0fAKnnlAyIILVoVPhEoh5spDXsfQCKVlsAWG2cPI53dcE
-	=
-X-Received: by 2002:a05:620a:1a88:b0:7c5:5286:4369 with SMTP id af79cd13be357-7c956ed827emr388682285a.28.1745504666865;
-        Thu, 24 Apr 2025 07:24:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGfMCTiWC271FmjAeFR05t6YSH7H+j2ilbNg+3NlJxeCkNaMiYMkNfy1W2POn/mCNlUl/nf/w==
-X-Received: by 2002:a05:620a:1a88:b0:7c5:5286:4369 with SMTP id af79cd13be357-7c956ed827emr388679485a.28.1745504666491;
-        Thu, 24 Apr 2025 07:24:26 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cc9e8d5sm254689e87.123.2025.04.24.07.24.25
+        d=1e100.net; s=20230601; t=1745504681; x=1746109481;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nV8jVW/8nt8ZwTGGNIL9yTSPGZZ29xDmvRWgbdJwWX4=;
+        b=SgkFXfuLwOFCcrnmDmIrvPYOL5XPV2aiUHRg/2ZV8SfxyYcfK9qhvPEEjt29oPuqmn
+         pmyX+5YTAhGNnbq7F0KeWFru477ofZwfrKKGWv6nl7Jg3/Ex7p42b+zShcB/jszKSsSE
+         siAg4ex9+u9T99z8hL93iVOhonIE5orS/nnIyVgJZNRNrK263hSOttggZfV3D9DyTkzf
+         kuY62mwhtpIk9T4u/R1oqT/rqPn3c57y5rL8ggTsy11EoVHcVRmPFqvhhG361QSSW7Ln
+         HO48c28kIcwOOW+r+LVbnvSSfRd+/OAxPL9yZYdacuhWXDZWsHcw4AeJakkOqQPZ8ubC
+         7Adg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNEftkZ/PrK267ChUgcbWL+TSAekN9faNeDUSULDiWgV/jTQYrv1RtiAW8yihY3uQmFY/+Ym6jyWTS7ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx00QSLp/Nm0asdRhvvS2vCbgGyuMrGJNTPmq0jkpQnFKe7cQNL
+	tXZvASd7NBqQRQ86yX6QAansng5lZqLvgAgsNi7d8wRPVR0RdBAmLqCLwH/69vNPyLw7XZ9c/4f
+	2aOoZ+RdbhakGU76sVhLbQF86jw8eEUNN/5rZkqUG2kkjPZIUO6Pwt5BHTXhrdw==
+X-Gm-Gg: ASbGnctndO00TxqJTDErfsD4iYTj+k4P8lXpNwvQTjsG8IKC1jnaJn5dwL5QM4bRQSy
+	+xhFRhtM6DPcsbAkv1ieXM907C+SnIv0iQf1IbMwNdy13vIDHmfLKkYrNaAz++XkyvGxMWoOwUw
+	0naX2uoFcRFxseNHOKaPz+J1vqaJSoiwtdQh2MoQgX2S76OjUhqyuVIVV/wQWd/C91I7LNaSbH+
+	wcjJcIU3bB8aXZg7LqSNApYCefr4BYjT/bOy3v9VvkPx6AZAiabglAJ6Wx0VTh+qH6atMOvPbUH
+	Jlq08Q==
+X-Received: by 2002:a05:6000:240a:b0:39a:ca0b:e7c7 with SMTP id ffacd0b85a97d-3a06cfaba23mr2493036f8f.36.1745504681013;
+        Thu, 24 Apr 2025 07:24:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwBzD5hh+2Z62EditO+ortaghgO8pvR6NguSzN5/Fukq1qShODNoWcevMtBiQSBYPeBcmOdg==
+X-Received: by 2002:a05:6000:240a:b0:39a:ca0b:e7c7 with SMTP id ffacd0b85a97d-3a06cfaba23mr2493006f8f.36.1745504680461;
+        Thu, 24 Apr 2025 07:24:40 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a7ff8sm2347237f8f.13.2025.04.24.07.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:24:25 -0700 (PDT)
-Date: Thu, 24 Apr 2025 17:24:24 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8650: add iris DT node
-Message-ID: <hdoa3sxaxrg6ibxj4sp34zjczdslq3hx4vz4dalbzgrksvl5mz@gaf5ru6jqrs3>
-References: <20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org>
- <asfwnyn5grm426vq5qatrxfffv3wmbuzx6266rblanzqepffzx@7773dcxfaqe4>
- <571b6484-d3ac-4aca-a055-c143f7e4a5dd@linaro.org>
- <i3kzq27v2cqhyuyqjq6dll4h6u2hjl5kpbws3qioe3lzarkhnl@oz7gzssnx7kq>
- <dafa92f7-1bcf-46a1-9a86-5b41e31ab7bc@linaro.org>
+        Thu, 24 Apr 2025 07:24:39 -0700 (PDT)
+Date: Thu, 24 Apr 2025 10:24:37 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] vhost/net: Defer TX queue re-enable until
+ after sendmsg
+Message-ID: <20250424102351-mutt-send-email-mst@kernel.org>
+References: <20250420010518.2842335-1-jon@nutanix.com>
+ <a0894275-6b23-4cff-9e36-a635f776c403@redhat.com>
+ <20250424080749-mutt-send-email-mst@kernel.org>
+ <1CE89B73-B236-464A-8781-13E083AFB924@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dafa92f7-1bcf-46a1-9a86-5b41e31ab7bc@linaro.org>
-X-Proofpoint-ORIG-GUID: TWlrHc9tRWRJN-37ARfEMPbnngX3S4e6
-X-Proofpoint-GUID: TWlrHc9tRWRJN-37ARfEMPbnngX3S4e6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5NyBTYWx0ZWRfX2Mh2gzl1MoUe cOWMoDNNUEzP8zQEL6i2XNehnz6t4hwbXfy4+4qMjdBh9co4Ynu7MaTdpkIVRF4FdRpSKZtvnaO SIBePVyj/R//uZivYnt5FmGONaYNmwmPGSZDq68jxBjTJl/IkrXeIMVYCZGqmwcRhj8WtZU+3ch
- oxt8gMfSRK/5jIphKvQc8Zf+IFVUiM/WbGT4sVLV1ZewMgkFwJ4HACFQeuc4oE11ra/pYJDCgjg XH6wSalSiuLvFlXk6XRzoCtddnBAGv5YHDLbc9OwajXtsS7LPJqxDC5JIpvF0r4zXanYWbE8LDP uzrQOOY1hEA4IpB9XDx+kEJMEKsdzm0kmRWcN/0uIVuysxWqiX0/XG3YleFXQJIYwy8N90Y1LEN
- jWTVm1BwD+E1Q+uwsKmeXa31QwndywMgCbbafMQXHSYgR9UXzsoTv9wseVP9paumHjT7lIkW
-X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=680a499c cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=drfrMuxTHZ_Whhv-szoA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240097
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1CE89B73-B236-464A-8781-13E083AFB924@nutanix.com>
 
-On Thu, Apr 24, 2025 at 02:43:21PM +0200, Neil Armstrong wrote:
-> On 24/04/2025 13:17, Dmitry Baryshkov wrote:
-> > On Tue, Apr 22, 2025 at 09:07:41AM +0200, Neil Armstrong wrote:
-> > > On 19/04/2025 01:05, Dmitry Baryshkov wrote:
-> > > > On Fri, Apr 18, 2025 at 03:20:35PM +0200, Neil Armstrong wrote:
-> > > > > Add DT entries for the sm8650 iris decoder.
-> > > > > 
-> > > > > Since the firmware is required to be signed, only enable
-> > > > > on Qualcomm development boards where the firmware is
-> > > > > available.
-> > > > > 
-> > > > > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > > > > ---
-> > > > >    arch/arm64/boot/dts/qcom/sm8650-hdk.dts |  5 ++
-> > > > >    arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  5 ++
-> > > > >    arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  5 ++
-> > > > 
-> > > > I'd say that these are 4 commits.
-> > > 
-> > > I could make 10 and still be coherent, but do we really need 4 here ?
+On Thu, Apr 24, 2025 at 01:53:34PM +0000, Jon Kohler wrote:
+> 
+> 
+> > On Apr 24, 2025, at 8:11 AM, Michael S. Tsirkin <mst@redhat.com> wrote:
 > > 
-> > The usual pattern was sm8650.dtsi + one for each board.
+> > !-------------------------------------------------------------------|
+> >  CAUTION: External Email
+> > 
+> > |-------------------------------------------------------------------!
+> > 
+> > On Thu, Apr 24, 2025 at 01:48:53PM +0200, Paolo Abeni wrote:
+> >> On 4/20/25 3:05 AM, Jon Kohler wrote:
+> >>> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+> >>> index b9b9e9d40951..9b04025eea66 100644
+> >>> --- a/drivers/vhost/net.c
+> >>> +++ b/drivers/vhost/net.c
+> >>> @@ -769,13 +769,17 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+> >>> break;
+> >>> /* Nothing new?  Wait for eventfd to tell us they refilled. */
+> >>> if (head == vq->num) {
+> >>> + /* If interrupted while doing busy polling, requeue
+> >>> + * the handler to be fair handle_rx as well as other
+> >>> + * tasks waiting on cpu
+> >>> + */
+> >>> if (unlikely(busyloop_intr)) {
+> >>> vhost_poll_queue(&vq->poll);
+> >>> - } else if (unlikely(vhost_enable_notify(&net->dev,
+> >>> - vq))) {
+> >>> - vhost_disable_notify(&net->dev, vq);
+> >>> - continue;
+> >>> }
+> >>> + /* Kicks are disabled at this point, break loop and
+> >>> + * process any remaining batched packets. Queue will
+> >>> + * be re-enabled afterwards.
+> >>> + */
+> >>> break;
+> >>> }
+> >> 
+> >> It's not clear to me why the zerocopy path does not need a similar change.
+> > 
+> > It can have one, it's just that Jon has a separate patch to drop
+> > it completely. A commit log comment mentioning this would be a good
+> > idea, yes.
 > 
-> For big changes per board yes, I still don't think we need separate commits
-> for boards.
-
-Well, either way:
-
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-
+> Yea, the utility of the ZC side is a head scratcher for me, I can’t get it to work
+> well to save my life. I’ve got a separate thread I need to respond to Eugenio
+> on, will try to circle back on that next week.
 > 
-> Neil
+> The reason this one works so well is that the last batch in the copy path can
+> take a non-trivial amount of time, so it opens up the guest to a real saw tooth
+> pattern. Getting rid of that, and all that comes with it (exits, stalls, etc), just
+> pays off.
 > 
 > > 
-> > > 
-> > > > 
-> > > > >    arch/arm64/boot/dts/qcom/sm8650.dtsi    | 94 +++++++++++++++++++++++++++++++++
-> > > > >    4 files changed, 109 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-> > > > > index d0912735b54e5090f9f213c2c9341e03effbbbff..69db971d9d2d32cdee7bb1c3093c7849b94798a0 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
-> > > > > @@ -894,6 +894,11 @@ &ipa {
-> > > > >    	status = "okay";
-> > > > >    };
-> > > > > +&iris {
-> > > > > +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
-> > > > 
-> > > > You shouldn't need to specify this, it matches the default one.
-> > > 
-> > > Hmm ok
-> > > 
-> > > > 
-> > > > > +	status = "okay";
-> > > > > +};
-> > > > > +
-> > > > >    &gpu {
-> > > > >    	status = "okay";
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-> > > > > index 76ef43c10f77d8329ccf0a05c9d590a46372315f..04108235d9bc6f977e9cf1b887b0c89537723387 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-> > > > > @@ -585,6 +585,11 @@ vreg_l7n_3p3: ldo7 {
-> > > > >    	};
-> > > > >    };
-> > > > > +&iris {
-> > > > > +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
-> > > > > +	status = "okay";
-> > > > > +};
-> > > > > +
-> > > > >    &lpass_tlmm {
-> > > > >    	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
-> > > > >    		pins = "gpio21";
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-> > > > > index 71033fba21b56bc63620dca3e453c14191739675..58bdc6619ac55eda122f3fe6e680e0e61967d019 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-> > > > > @@ -824,6 +824,11 @@ &ipa {
-> > > > >    	status = "okay";
-> > > > >    };
-> > > > > +&iris {
-> > > > > +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
-> > > > > +	status = "okay";
-> > > > > +};
-> > > > > +
-> > > > >    &gpu {
-> > > > >    	status = "okay";
-> > > > 
-> > > 
-> > > Thanks,
-> > > Neil
-> > > 
+> >>> @@ -825,7 +829,14 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+> >>> ++nvq->done_idx;
+> >>> } while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
+> >>> 
+> >>> + /* Kicks are still disabled, dispatch any remaining batched msgs. */
+> >>> vhost_tx_batch(net, nvq, sock, &msg);
+> >>> +
+> >>> + /* All of our work has been completed; however, before leaving the
+> >>> + * TX handler, do one last check for work, and requeue handler if
+> >>> + * necessary. If there is no work, queue will be reenabled.
+> >>> + */
+> >>> + vhost_net_busy_poll_try_queue(net, vq);
+> >> 
+> >> This will call vhost_poll_queue() regardless of the 'busyloop_intr' flag
+> >> value, while AFAICS prior to this patch vhost_poll_queue() is only
+> >> performed with busyloop_intr == true. Why don't we need to take care of
+> >> such flag here?
+> > 
+> > Hmm I agree this is worth trying, a free if possibly small performance
+> > gain, why not. Jon want to try?
+> 
+> I mentioned in the commit msg that the reason we’re doing this is to be
+> fair to handle_rx. If my read of vhost_net_busy_poll_try_queue is correct,
+> we would only call vhost_poll_queue iff:
+> 1. The TX ring is not empty, in which case we want to run handle_tx again
+> 2. When we go to reenable kicks, it returns non-zero, which means we
+> should run handle_tx again anyhow
+> 
+> In the ring is truly empty, and we can re-enable kicks with no drama, we
+> would not run vhost_poll_queue.
+> 
+> That said, I think what you’re saying here is, we should check the busy
+> flag and *not* try vhost_net_busy_poll_try_queue, right?
+
+yes
+
+> If so, great, I did
+> that in an internal version of this patch; however, it adds another conditional
+> which for the vast majority of users is not going to add any value (I think)
+> 
+> Happy to dig deeper, either on this change series, or a follow up?
+
+it just seems like a more conservate thing to do, given we already did
+this in the past.
+
+> > 
+> > 
+> >> @Michael: I assume you prefer that this patch will go through the
+> >> net-next tree, right?
+> >> 
+> >> Thanks,
+> >> 
+> >> Paolo
+> > 
+> > I don't mind and this seems to be what Jon wants.
+> > I could queue it too, but extra review  it gets in the net tree is good.
+> 
+> My apologies, I thought all non-bug fixes had to go thru net-next,
+> which is why I sent the v2 to net-next; however if you want to queue
+> right away, I’m good with either. Its a fairly well contained patch with
+> a huge upside :) 
+> 
+> > 
+> > -- 
+> > MST
 > > 
 > 
 
--- 
-With best wishes
-Dmitry
