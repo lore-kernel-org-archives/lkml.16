@@ -1,122 +1,136 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2EE38DEC
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6DD27456;
+	Thu, 24 Apr 2025 14:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505217; cv=none; b=ThgNOiG93zisdfKBY3/DIcDVXubIvr0wRq5kovxdSGPfoTWR2dsn8lZatjGviRO21c4FQ9Q7LwD9fJVwPCe+ptsCdiM01jwY2fR0vYJ+/PGqYr+cDKFvsUtBs+qK5u8vob2r9JJJmEnaLsih18LwATRCWzBWL25whaozbszQPww=
+	t=1745505270; cv=none; b=CRmvvYTgbOAcD0gme15Fsf+5MM2kpruCE61XJgagZho2x5qbtoo9no5gQ6c73wJGJvIrSl4B8uqvpYN17MOEchosP7p+QqSlyiDYqgjQSLHOt4akcfN7hOMC+b2czRoWjxhS6gmAL8bSG+PRuZ4u90qANDVZSJhl3qb6r0Z6amQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505217; c=relaxed/simple;
-	bh=jMpiOwiOVMAi86J76T/7cZ3gnTHVBJSDvooJIBTkBBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q7nBEBSFFiJ7TLyV82Br8BxjdPycRNxHHNTUvcfJop7Vh82nfAF7g3vRia6aY5IlENCNIAK4KzyzquGvSHoIX8kJkiFxqCRDkTXAYyIhpAaVdBPvDnmXbQ+0KQjf5Qvr3iSdBVJeDtNjFkuELN+Ykuxmybyb4sTVQH3QC0+9wpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwiYTRqA; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745505270; c=relaxed/simple;
+	bh=lBY632yHFONY6RYE7IZBlTMj+ZH0jJ67pll7LbVsi50=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=QwfYOm5JOT6Gnh0P4FYgMFMQbYN/HlK8VJEDv8gteDWwz4Piz2qiTmRiOF2r16YWXEV49vsU//Z8Gy4vpbMBXdoq+6a67sZwNrufIwwBRssiQuOF+TKcY3jqxM5lFkAUsXwhHk0LeO/0mRrECJB7PfewCopmeNlQDvjK+av6828=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fcyInJHC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=J1cOdWPH; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwiYTRqA"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7396f13b750so1211188b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745505215; x=1746110015; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xkpv3eutKSVxUAeX7VS2J9T/6sjpELMJr+ORogjI7os=;
-        b=KwiYTRqAgDmuQZq5sVGvuMYsd7DL+UB6z0RK6v2N0ZTQkk67xWca3+jrqAUOsbE029
-         TyQ86WY8wBLj8ZJt27LJFchtm0BispiyYVZDOVgrPR+MQFTjwd2ivJsHpr+62BmJRVzM
-         6WcOmztnwHSIhuWYBZyeoJzJGByIucSRpnh6W8WN4F5//aWNma9B/iMHZiVB/EDgv3s/
-         tZfcGEbuiR2Rel9W3olNGS7UpwMsRLOxTr2EZT1KwGU+6D6M0Zl1cAHpyeYWRqsN2HO+
-         8GdeftOxYZoJAB9Gi28LmTNx6ONCiPKIuCIjQfAuWpiHTGIbs5qwOLA9lHKgNtbyLP3f
-         trCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745505215; x=1746110015;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xkpv3eutKSVxUAeX7VS2J9T/6sjpELMJr+ORogjI7os=;
-        b=iJy5I+L0boNYaQ7I6xY81HNU+AS5ejSSFJzGwUfSd0NuxjwtZBtfq8bH2N5LEXFmcx
-         ePfQHOBOS/waN6VavHp6vo25oGV+3/arurY7j8P6yD1ZYZAMP0B0LMQgcHOg+Lj0XaL3
-         f5KJHqzlw0K6Ik4PbaXPBkDmPb7mWeYlDHixgyOniVZorNbVBb8+uOqnFM8SKrDiXTEP
-         EjIsU17YE2r7dP31ZczeoWormB5+wvPt8YxG/TVnyFwHFbEJ2JK2uR1B1vR92KlnTFy0
-         HjvqlF7T7oVvHtueaqMnUxGjNBQ8zPb6/Es0EuNWr9+Muhb5osPBjz6nMCk2mWFgGpLN
-         bFmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVE+LLAu7DSFCyjfY/mgkRWyQ439BmtawpsAQPe04b0TkneBL/14GA4nXviZSe2kALS3akRORL/JbyTAVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI78kyYj8v8Hy+dQU6aaceckbv9K4dGL2CVUakgbpFXbp6fw7e
-	miTiLZknPTgT/xkKUQ1NmX3G0E3QmcguWgAwTWjZ7TnQK4GU3VI9
-X-Gm-Gg: ASbGncvbJdqxr0TQ5TEQmZbtnL248vdKoyaIT5l7jBOElTI5FleJDTdAXKRhho8VSeN
-	/fa/Nl7ZKhH12ddPeqnmUJ7ZsZgQdXniucP2TPbEB8EwfJTlf18UUvi6rn58+NlJSnTJqiq0geT
-	bscwWX+wJbn/oV9YQygHyC491V3I1e8E01Jc0vMlFdo4lxYp7HtT+XQObLs9LGkhEfqGVbeQeZP
-	ddEBh9rCtBGVKnd7IpSGYDqa/W/7GOodVhMRC83eiAnNLncUAYDUddfv7+Cvw3eRcy0Z1KiQxJG
-	B52smtkLj755RWc1U7V7Zz0n20Zvz/GMaOa14YpYTV0kcHhb7QH9JkbdQuUxb5TUcsziYm2phtF
-	ujJ0N
-X-Google-Smtp-Source: AGHT+IE+bgMGe+2UdmLilAKyNGi2q1uAeA/1zgkIgVklHFeGwvmkTKwAHEFRvLwr6K6GDd7kqUWWwg==
-X-Received: by 2002:a05:6a21:32a9:b0:1ee:efa5:6573 with SMTP id adf61e73a8af0-20444e71b60mr4969589637.8.1745505215041;
-        Thu, 24 Apr 2025 07:33:35 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597f5csm1283969a12.43.2025.04.24.07.33.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:33:34 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: akpm@linux-foundation.org,
-	Liam.Howlett@Oracle.com
-Cc: lorenzo.stoakes@oracle.com,
-	willy@infradead.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+a2b84e569d06ca3a949c@syzkaller.appspotmail.com,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH v3] ipc: fix to protect IPCS lookups using RCU
-Date: Thu, 24 Apr 2025 23:33:22 +0900
-Message-ID: <20250424143322.18830-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fcyInJHC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J1cOdWPH"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id E4EAC1140230;
+	Thu, 24 Apr 2025 10:34:25 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Thu, 24 Apr 2025 10:34:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745505265;
+	 x=1745591665; bh=zTkvCEnROr1A65wAUwD/pBdGL1QA1EttebQzh1cAxms=; b=
+	fcyInJHC855hzAWTZ2h3AVxngjSc+fFcc6loF5MtVM9qaOJ8prCdjio44QD9CK9Z
+	zMo6bJmPFq12CjR1VuSXrd9eKceErfiaxlG6nx9Z7ae4o7FBSAupTULqA4oaTzBi
+	VHseiiHlUY3DYaU9iEeeiFN0sUD//cd46MTtY0QsHBQRIQoL1SU58lLjwrVzsE4A
+	0naxzbGQQ+THgQA6O8wCmaTaQs6j1l5B9duv7w3CEhDfE4YWon6WVJ7kCg6hDP7C
+	eTovsz+eXTyq6p1ex5NUN7QUvL83hA19JJ4ygoXSxvI9UYxU+GV3q4xQUHHkcAXQ
+	n74I3uYZO/bsuUkm0O4aYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745505265; x=
+	1745591665; bh=zTkvCEnROr1A65wAUwD/pBdGL1QA1EttebQzh1cAxms=; b=J
+	1cOdWPHspr4C/scac8IbOUvSOQvD7e9hdQwop/kh5GV3ew7KZ9gna1X5H4LDUafk
+	bMF07kCGYjRO6/eVREigZDQmrZAa/8YYA9RipNYfDARrAMMTzl5sNVl4YXwq0cF8
+	yMQ2fMouIDZDqpIf2vMwqpwX5vmGgZ0MB5luG2puRjIeadnYxzhsrUK+uIB2G+cE
+	NH5bgY2PzEDF1NUyVxjqH1DP22r1E2sHXZiqjjanV2hdDL3e79rgr8ec3VzSSLxO
+	f8J/xt5hufP1MwdiDV6GunboWKjvSbd3JiG/Gn1pu04tvK+O9fBSZe/Kim1qKwUf
+	OaK3PxMkaKdOC9gbawmEw==
+X-ME-Sender: <xms:8EsKaJNuqCDjxjPu2DaEr7dsZ_7l5s-hCob_4zL0GrheSqjJGNUtxw>
+    <xme:8EsKaL9CiezppF3Q0XmZ1flUGkn9nl3Co3i0yHskhUc9UC2_3bFu86TBe9Z6NblJm
+    tqHA6SWF7UOn-TIsi0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeljedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    vdejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvvghmsegurghvvghmlh
+    hofhhtrdhnvghtpdhrtghpthhtohepphgrvhgvlhesuggvnhigrdguvgdprhgtphhtthho
+    pehfrdhfrghinhgvlhhlihesghhmrghilhdrtghomhdprhgtphhtthhopehsuhguihhpmh
+    drmhhukhhhvghrjhgvvgesghhmrghilhdrtghomhdprhgtphhtthhopehrfigrrhhsohif
+    sehgmhigrdguvgdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegtohhnohhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:8EsKaIRd3Sl6rsoO-64VW8JMHzPSHZHnQEFXsQgChAQ5zl4caKg0Xw>
+    <xmx:8EsKaFvV2KflmPXyAtdb-mxtNoD6jzwtux6j6qlRaEZk9tQXOdCcTg>
+    <xmx:8EsKaBdeKh2DeonmkhAqgy2IqsLyOLIKpI9ahv7V0oMJFbIKmdqcIQ>
+    <xmx:8EsKaB1WrauUdokUwXNaVmdICfNCsKJYwzgs3ppl8MxOgLlLbqsEcA>
+    <xmx:8UsKaLtlJLq9XUVq_FgwPc-FdeQNxlAG4nvOIao8z4kjl0lxY1b-AarP>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CA59F2220075; Thu, 24 Apr 2025 10:34:24 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T573a13c25518dc45
+Date: Thu, 24 Apr 2025 16:34:04 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Guenter Roeck" <linux@roeck-us.net>, shuah <shuah@kernel.org>,
+ patches@kernelci.org, lkft-triage@lists.linaro.org,
+ "Pavel Machek" <pavel@denx.de>, "Jon Hunter" <jonathanh@nvidia.com>,
+ "Florian Fainelli" <f.fainelli@gmail.com>,
+ "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>,
+ "Slade Watkins" <srw@sladewatkins.net>, rwarsow@gmx.de,
+ "Conor Dooley" <conor@kernel.org>, hargar@microsoft.com,
+ "Mark Brown" <broonie@kernel.org>, Netdev <netdev@vger.kernel.org>,
+ clang-built-linux <llvm@lists.linux.dev>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>, "Jakub Kicinski" <kuba@kernel.org>
+Message-Id: <e77b24ce-e91b-4c90-82d6-0fa91fcce163@app.fastmail.com>
+In-Reply-To: <2025042443-ibuprofen-scavenger-c4df@gregkh>
+References: <20250423142624.409452181@linuxfoundation.org>
+ <CA+G9fYu+FEZ-3ye30Hk2sk1+LFsw7iO5AHueUa9H1Ub=JO-k2g@mail.gmail.com>
+ <2025042443-ibuprofen-scavenger-c4df@gregkh>
+Subject: Re: [PATCH 6.1 000/291] 6.1.135-rc1 review
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-syzbot reported that it discovered a use-after-free vulnerability, [0]
+On Thu, Apr 24, 2025, at 15:41, Greg Kroah-Hartman wrote:
+> On Thu, Apr 24, 2025 at 07:01:02PM +0530, Naresh Kamboju wrote:
+>> 
+>> ## Build error:
+>> net/sched/act_mirred.c:265:6: error: variable 'is_redirect' is used
+>> uninitialized whenever 'if' condition is true
+>> [-Werror,-Wsometimes-uninitialized]
+>>   265 |         if (unlikely(!(dev->flags & IFF_UP)) ||
+>> !netif_carrier_ok(dev)) {
+>>       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Odd this isn't showing up in newer releases, as this is an old commit
+> and nothing has changed in this file since then (it showed up in 6.8.)
+>
+> Is there some follow-up commit somewhere that I'm missing that resolved
+> this issue?
 
-[0]: https://lore.kernel.org/all/67af13f8.050a0220.21dd3.0038.GAE@google.com/
+I think the difference is commit 16085e48cb48 ("net/sched: act_mirred:
+Create function tcf_mirred_to_dev and improve readability") from 
+v6.8, which adds the initialization that 166c2c8a6a4d ("net/sched:
+act_mirred: don't override retval if we already lost the skb")
+relies on.
 
-idr_for_each() is protected by rwsem, but this is not enough. If it is not
-protected by RCU read-critical region, when idr_for_each() calls
-radix_tree_node_free() through call_rcu() to free the radix_tree_node
-structure, the node will be freed immediately, and when reading the next
-node in radix_tree_for_each_slot(), the already freed memory may be read.
-
-Therefore, we need to add code to make sure that idr_for_each() is protected
-within the RCU read-critical region when we call it in shm_destroy_orphaned().
-
-Reported-by: syzbot+a2b84e569d06ca3a949c@syzkaller.appspotmail.com
-Fixes: b34a6b1da371 ("ipc: introduce shm_rmid_forced sysctl")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
----
-v3: Add necessary descriptions and links as advised by Lorenzo Stoakes
-- Link to v2: https://lore.kernel.org/all/20250422124843.17188-1-aha310510@gmail.com/
-
-v2: Change to use RCU read critical section only when it is certain that idr_for_each() is called
-- Link to v1: https://lore.kernel.org/all/20250219132905.8214-1-aha310510@gmail.com/
----
- ipc/shm.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/ipc/shm.c b/ipc/shm.c
-index 99564c870084..492fcc699985 100644
---- a/ipc/shm.c
-+++ b/ipc/shm.c
-@@ -431,8 +431,11 @@ static int shm_try_destroy_orphaned(int id, void *p, void *data)
- void shm_destroy_orphaned(struct ipc_namespace *ns)
- {
- 	down_write(&shm_ids(ns).rwsem);
--	if (shm_ids(ns).in_use)
-+	if (shm_ids(ns).in_use) {
-+		rcu_read_lock();
- 		idr_for_each(&shm_ids(ns).ipcs_idr, &shm_try_destroy_orphaned, ns);
-+		rcu_read_unlock();
-+	}
- 	up_write(&shm_ids(ns).rwsem);
- }
- 
---
+      Arnd
