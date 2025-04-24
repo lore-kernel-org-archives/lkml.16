@@ -1,60 +1,100 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA5328B4F4
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 19:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA8A2918F6
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 19:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745524281; cv=none; b=dj+Pqym44QhS4kjbIDaiNacOWwbecyE83p1s0a1z59PpLwtVNkNOBR2dQcEo/i4ccj2zDHYDptZQLR04bIkVvhDIAZxizKB7AUk2vs69a/8M+3uhXF2E+HDHfG11opL9CvtrEBUcGm1AN/XVHeWW+OYZ8jkamUh4WI98dDg/xuQ=
+	t=1745524437; cv=none; b=LA7C1MUX0nocfvaXP4xD9ETJmBgonRWf3ATk69k75Gr4NkZDsaqwzvjpb/pCoSuiqUfumv7P7x0HcO4rtAHhMaH/FdxJ2LPmsD13uEf/GMY/LJ/bd8IAnZTSGFo6lfDQRJhcuhoDD5cavj8CuSzYip4yVva+4Ez4Qq9OZlh1M6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745524281; c=relaxed/simple;
-	bh=aCl37Hz5cL4TialPLF9Bo0Z6/5UWbEdQ1EvxktnwbaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KqLzVPuQ7KewRLX2S+5IxfrHE2CRtVhj7kRR88rG5GzZ0XtiAgqWlqNIQ7uzTdfVyduglMoaPQZ9YoCaRtUr9qBDaA3utiQOnJDc3gsFTgFgNaxeXQNprQgfDIQF5rNyoKOq9IZQqZKVK8OaDoTqo6eCfm1xxrMmF3IQXJO6auk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=BMKQliB7; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1745524437; c=relaxed/simple;
+	bh=DNuxbwxEeFug/FXNMVi+tNl0Z2xT6Mw5Dv5Mh+OaEE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pMJwtbpzNyCXMn9Oz72co1tC/NDfgddVjJ52/7H+4izNIXH2yuiVkTCZhpWCredhQXdtUJpXhWl5tAWolu4N1dbDIlRAs4fDrWnwR0jJfLDkjNvRRmXvgvUlCLASGWBFtUmbT5OPIjrKtOcTWKofmnT3vvVjGZN6amZgzXDdMKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JstsVFhM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="BMKQliB7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BnQ0RRLrmDxrzcqwVc/gOHYotLtupDD4X/LfEigcVB4=; b=BMKQliB7tjnct54r1JbytgsH4f
-	RBrOCWAtycLnk9gljywcZrNE3szpY6BA8oRcOveORMeYn0L6YpkZtRfA/1BiFC/r2lfnZWYr0Kdz9
-	mKzR/2Q2iGwhJ4gRmJkG3DixhflWB62lygYoeweoYcTUvZogO1K6m3J07uWbu1zW4XaC4Ro/wUyJ3
-	UTLEKY3H7JKH4giSgYsTdH6nw5lec9CMjjw9H82DUcJ5abvqXAyhseHIFR/IM5a9fWGPVbPEzBKxd
-	k1Yc6jZE2hQMr8AGba2e1LtdyA8LFmvwoA5YwhZzXAe5/J8T8k9TniE7b8h0fSCHC9oVv+PHJ9u29
-	2l72G6qQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u82bI-00000000gDO-1JH1;
-	Thu, 24 Apr 2025 19:51:12 +0000
-Date: Thu, 24 Apr 2025 20:51:12 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: syzbot <syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com>
-Cc: hdanton@sina.com, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] INFO: task hung in vfs_rename (2)
-Message-ID: <20250424195112.GI2023217@ZenIV>
-References: <20250424110546.4284-1-hdanton@sina.com>
- <680a27ff.050a0220.2c0118.0bf5.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JstsVFhM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745524434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iU/3VyFMOfD63tP5kzXYfWr/+peX2XaMqzrC6eK+CtI=;
+	b=JstsVFhMpZZ9a+3Q5A5Arw0eyWA0QbSg9NYc6dYS4CQafBnp7I+JivXdw0FMtaaUY8j8fX
+	dfFDLEqEmhDmmTBo5N6IA+FIODX4XN+/c5QcBLrFqLpcT1LdEzD49dwq5EUq0nq+IgCnBl
+	LRvh8d8B6rvJRd2h3BnFTjKU0xyMQeY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-DyQdFEH0Oo6vg5QkMrlHNg-1; Thu,
+ 24 Apr 2025 15:53:49 -0400
+X-MC-Unique: DyQdFEH0Oo6vg5QkMrlHNg-1
+X-Mimecast-MFC-AGG-ID: DyQdFEH0Oo6vg5QkMrlHNg_1745524427
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE43C1956086;
+	Thu, 24 Apr 2025 19:53:46 +0000 (UTC)
+Received: from [10.44.32.28] (unknown [10.44.32.28])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 59D5530001A2;
+	Thu, 24 Apr 2025 19:53:41 +0000 (UTC)
+Message-ID: <ea9cd028-3d74-4d46-b355-a74ad549269b@redhat.com>
+Date: Thu, 24 Apr 2025 21:53:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <680a27ff.050a0220.2c0118.0bf5.GAE@google.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-6-ivecera@redhat.com>
+ <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
+ <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+ <8082254c-01a6-4aca-84de-76083fdcbb3b@lunn.ch>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <8082254c-01a6-4aca-84de-76083fdcbb3b@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Thu, Apr 24, 2025 at 05:01:03AM -0700, syzbot wrote:
-> Hello,
+
+
+On 24. 04. 25 9:18 odp., Andrew Lunn wrote:
+>> During taking 613cbb91e9ce ("media: Add MIPI CCI register access helper
+>> functions") approach I found they are using for these functions u64
+>> regardless of register size... Just to accommodate the biggest
+>> possible value. I know about weakness of 'void *' usage but u64 is not
+>> also ideal as the caller is forced to pass always 8 bytes for reading
+>> and forced to reserve 8 bytes for each read value on stack.
 > 
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> INFO: task hung in vfs_rename
+> In this device, how are the u48s used? Are they actually u48s, or are
+> they just u8[6], for example a MAC address? The network stack has lots
+> of functions like:
+> 
+> eth_hw_addr_set(struct net_device *dev, const u8 *addr)
 
-Would it be too much to ask for the "proposed patch" to be posted on the same lists?
-Not everyone is willing to start a browser and go digging for links just to get
-some context...
+u48 registers always represent 48bit integer... they read from device 
+using bulk read as big-endian 48bit int. The same is valid also for u16
+and u32.
+
+Ivan
+
