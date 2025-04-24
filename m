@@ -1,224 +1,207 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118101AB530;
-	Thu, 24 Apr 2025 07:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481118; cv=none; b=OxmCNZJm0eHP9eYXDtyrAkFhA+evtoH6S7Hq7D3ezqi2cbrvetovupD0bacHw7/uot2c7BDf90Khi3k3yY4oJjpH0b8jb5MB8JE+C00nZURyBZ8137KNwD1rt/nGOk1MzPnHkFUmsvo1cFqG+ZBPO5f/dyUImpCoCXtCy4Ggg/c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481118; c=relaxed/simple;
-	bh=4AZFZSmc3tQJqAQh2QZKQ7f5PRHrwE+6Rtqt+watsHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V81qqbOm5KuWn+tYHBxjaNxh0LiheBIlyqnea3cHuTWcsHQIiyXpEidnO0g7o7E6toTfWcqPWgRSNaVF585kw/3BRX9o7au1zVxGIpLMVrTME/ZaAbQHmBT0HMLx+FC/oMNAY/HWqQa9j1BeUzHIsD5fPyspr3rBkd1KGiRLd1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KSXnKJVh; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7378C1F2C3B;
+	Thu, 24 Apr 2025 07:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745481151; cv=fail; b=urtuQ/JFf8cqXuC3FqtyTad/VdYhJwPJ2jMzyD3Y64dXox6tjT7azXpUfWd+YnYz9wSQxznH/B5wLpys65RvUBiT7OG3MIOCa601M3gG/5i7PS9tg9hH0PQIs6+Rwttg2UNEOZ3fu0HfKCYJJUm+BQV/anwUzbrC2uGysvseXUo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745481151; c=relaxed/simple;
+	bh=dPnrlJDlcj853rLdQ+oUAYFTFq4msU90lD7JoE3yXes=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=h93RM8CeEZ4ICNqLYFyx+OTFmhkHT6jygo+cji5XvM6VsH+HY/zBq0uqFue0LXQJW6P3heoAChB0h860Rt/T5XDRv0pRucFvg2LdVnlPcM3dM2uZwRM4m3kBe4rZ6Z8BG3rYCXBk2h/ZFN1EATQaweAaMh0LpxiIthDbYCT06+8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L0sphla0; arc=fail smtp.client-ip=40.107.243.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KSXnKJVh"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745481112; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=66EBE6//T4b858PvX3WkhRuMXFKHkqm2EIhR70lCzm0=;
-	b=KSXnKJVhdwjcVdeKBS6o76b2k45HK1cM5ZObJKC/Gu6b6x5nzGGTaZv2o2g10CYKlKflxv9PoZncbVhtRMzS6tjPDfJOoLwbYDLPxvLX+5tMY+TCu8Lahj7TwzwEE1ninOjIVHmcPYDwsvmgAa2iGfrzbRB5/Av1o0H/TEtI0mY=
-Received: from 30.74.146.225(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXyHI1o_1745481108 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 24 Apr 2025 15:51:49 +0800
-Message-ID: <5187c3fb-bf2a-41a0-902d-2661f1b3a2c9@linux.alibaba.com>
-Date: Thu, 24 Apr 2025 15:51:48 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L0sphla0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iy7vYeChJ5evgCsYLNx+ZFnGliRsqnriCABi/0/k7CY/ENtilRHPa6ZvJGGv4f2gkbYcvOAlpbvQcMaQqFjM5M8qrwZCbsd0UKgktBT+sl1qZ87jBH/PqxiCuN8hyFe7N7WtqARYanZ3buIGCNs6OP6QmMv/HmaDI4HRAy8nAtyls/eGnrB1I4F8mbWtJE73ZWNeCWePF/b+WismXW1YEsWKgl0Vb7ejzlpY6NMj+eXEuYg1lluP5skQwa6MCH1+3vaJyYBsh2UESFaDrVCGFBktpqCZKDjCmgoqkF5WylgVcaCyc0y5dnejz7jTYYQVML5CZRjxvgqDvgwfME16Yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=chScDdYdRtqO2M52xKVL8kmk/7Y2uiiLfbfVwUv8Iyg=;
+ b=SUkEOUe62s2hNK0yUb1PBRFanMFbnd019Ao9WUI4yP8agn9N2Mh6+CxXmC3aI0L+oR8C/riMRPsI6nmDl0OruzFBTShV4pqYW4HmBxX9oz9udVdFLZy/sofBqS27ggP3zgUXoDqkCYdA+mKVhRbqEvkHvHZXAtWqfTwk2m4gFgTYef/UdrC0xwf3fBre16vzovTH2vCPft0RiXdFJNdwRt3gjp6z6vdH9mZPoRzpr4F5GKMLpZTGqEhezcW+AkEC420sF+ca8mvHzvjKUVzVSG34i39fI4ORn1TVtQ+ddOhxDvmdUfyjUTliuM2GohVQgQWw8FXyT5/ObeJ3vF4DTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chScDdYdRtqO2M52xKVL8kmk/7Y2uiiLfbfVwUv8Iyg=;
+ b=L0sphla0zVazi9p7GLCdJVVZlrXwcvOKKsEbbGShOYZizbx824JVrQwxfjmcyMl0BftXWlkzngBlO9kSZ8EeeIm4Lp6lt0Q2zUgDggpdv1QAe5W9yoL4mb2wIMnVlzX31X6wvFO6AwvLK/5VDI2ceO++xDYawCDaY4cmLrOpxeY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
+ by PH8PR12MB6841.namprd12.prod.outlook.com (2603:10b6:510:1c8::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.24; Thu, 24 Apr
+ 2025 07:52:25 +0000
+Received: from IA1PR12MB6460.namprd12.prod.outlook.com
+ ([fe80::c819:8fc0:6563:aadf]) by IA1PR12MB6460.namprd12.prod.outlook.com
+ ([fe80::c819:8fc0:6563:aadf%4]) with mapi id 15.20.8655.033; Thu, 24 Apr 2025
+ 07:52:24 +0000
+Message-ID: <aabedb46-8fce-4f4f-823d-b1ef7b440c8e@amd.com>
+Date: Thu, 24 Apr 2025 13:22:11 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] sched/numa: Skip VMA scanning on memory pinned to
+ one NUMA node via cpuset.mems
+To: Libo Chen <libo.chen@oracle.com>, akpm@linux-foundation.org,
+ rostedt@goodmis.org, peterz@infradead.org, mgorman@suse.de,
+ mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ tj@kernel.org, llong@redhat.com
+Cc: venkat88@linux.ibm.com, kprateek.nayak@amd.com, raghavendra.kt@amd.com,
+ yu.c.chen@intel.com, tim.c.chen@intel.com, vineethr@linux.ibm.com,
+ chris.hyser@oracle.com, daniel.m.jordan@oracle.com,
+ lorenzo.stoakes@oracle.com, mkoutny@suse.com, linux-mm@kvack.org,
+ cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250424024523.2298272-1-libo.chen@oracle.com>
+Content-Language: en-US
+From: "Aithal, Srikanth" <sraithal@amd.com>
+In-Reply-To: <20250424024523.2298272-1-libo.chen@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0075.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9a::15) To IA1PR12MB6460.namprd12.prod.outlook.com
+ (2603:10b6:208:3a8::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/12] khugepaged: improve tracepoints for mTHP orders
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
- baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
- peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
- usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250417000238.74567-1-npache@redhat.com>
- <20250417000238.74567-11-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250417000238.74567-11-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|PH8PR12MB6841:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c349ec3-3b58-400a-3236-08dd8304f37f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c056eFdaendlZjlMNDRUSVJjdWliMXpTTHY2S3RNM25WdVdDZTJvV01nYzlT?=
+ =?utf-8?B?M3U1SGQwQVVwb21JckkxcTFHMHV5YWErUVRCTTZuL2txRFRhZGd0Tlkyb3NG?=
+ =?utf-8?B?K01YU0k2WXdWa3lMUUdSU0JQRmUvNEVxamJuMFcxb0ZUd3kvRUpWY0IycGdp?=
+ =?utf-8?B?SE96SUg5S05PRFpla3Z0cno0LzFKem5LOTFFSFhCVVlCWGoyamlpc2JSSmI4?=
+ =?utf-8?B?Y1RJdCtidjlmaVFaUjNsbitnbDk0TGl6ay9neVRvLzQydmkrR3VNY3JTNXpX?=
+ =?utf-8?B?QlVLc1QzRkt5Z3hYZ05KazA5NHNNWE5GTDg0VXkwTGFiZnkxMEFPOXNnTEtO?=
+ =?utf-8?B?Z3VwbERWb3pucHdEazRBZVBGenZ4NzRWZUVkUG5ESmRSbnhNdGtKY000ZVVi?=
+ =?utf-8?B?ODY4VkNmUVZDbVhZQWJGZnp2THYwOCtKdHRESnBTM1FReEMwN0x2ZWRXYzU3?=
+ =?utf-8?B?Rm5PRjNOVnNDampiRkpRdmhsQXo2UnlxYWVDdFBHUWUyN2YyVXBnSmQrSklz?=
+ =?utf-8?B?TUJaTXFaRGN1Um9xVEkwOTlUUkxtaVA5bFBLTU9USkRSUFBTOTdtQW5SNHBs?=
+ =?utf-8?B?WDZRVEtoRUFucXpMYTNFaXhUN2hpMlMvdCtYUWlMaDFFbTBYY0hyUWpJSGV4?=
+ =?utf-8?B?dFdIZTFVejVwaE9GWG5PbUFIUGVURTUyNHpSVjU5eEI5ZTBwWlVXOHgzWW1N?=
+ =?utf-8?B?RTlwd1A2enFaNFZ6aHF6b3RVSUVzZXJ5QUl5SUs1UGNvZjhXMVNlSmtwOE95?=
+ =?utf-8?B?eitGQm1TYTMrbEM1djBMVURQSnRXQ2NkZGVTTnE5Y2hES0c2NzdNN2VPb1FQ?=
+ =?utf-8?B?ZEExVC9OMGpMbmNRVlBwS3p6YlJFMUx3d1dnUlFqR2ExKy82UnFVOTlxVFFH?=
+ =?utf-8?B?TzlJTWxJVURUd0JZNjBrcmFxbXpRVFJLZ2hhSnBMM0V0QUV3a2lKTWtwZEdE?=
+ =?utf-8?B?ZFErSEVVYmJudXVlUTBpcC85NldsODg3b3IyUy9SUGE0SEhVZVVtY2ordUZV?=
+ =?utf-8?B?cUw3VEdDMHpObFcyWk5OZ1N1UWFpRmlPYm5xRUJCWGl2dEM5eTB2cjVwZ2li?=
+ =?utf-8?B?dzVSZUtOYWFHc3ZiMDRqYWZiZ2ZnTW8zOTRxL21CUFBCVVYwVFA3UWhTTUxB?=
+ =?utf-8?B?bVplb1dVMnUrYWgvRGJGMlNES0N4UjBjOVovWjNzZ2hzemlBRFdGOE5zQnNn?=
+ =?utf-8?B?aGJjeEpkK1FLQ3RIM3RTem9sUzNaWFZOVmtDSE9DZDBrckhmNUw3WUxOenlp?=
+ =?utf-8?B?ckRQcEx2Ny8zbXF5NjZMRi9PRWt1aHNOOGNlUlVPTGN3bXU5aU56SUJqTlpJ?=
+ =?utf-8?B?L0lvRDRxaDA0VnI3MzFkWWZuOXJuOG93MFRYYXAraTllRndpYW50emVZMEZ5?=
+ =?utf-8?B?LzV1bmhhU2NDcVRiWXI5MjVmbThKS2tFQ2c3eVNtWlR1WThWWEJzKytXVGxI?=
+ =?utf-8?B?V3VNRFQ1SloxczVOcUZzVGxsNHBpUWdJOEZ6WWNaaytETERTczN5VlRIaE5r?=
+ =?utf-8?B?cEU4cWFpbldOZ2VXbk5kWWJsd0krdVh2ajhjR0lWQ255VmZtYVlIWndNcE05?=
+ =?utf-8?B?QXdsdUlPUVd2bHg5SnpvdkhoOWFHdlpLelozQWs4N0pCM1AwTjFZN2hpbjhn?=
+ =?utf-8?B?RWF2TlUyWEQwTzhOT0drMFYxa3FYUlZxdE9UaFA1ZnZUL1NvTHV1RFBmSlJ2?=
+ =?utf-8?B?aFJnbU5SWUZQdFdtY3FNaURLVndCc1ZmdVdBZ3BLN0RYbXVlVW1yZzg4cEh1?=
+ =?utf-8?B?QW9RaDFXVTBWZGRIRCtpUy9pUzZUZTlPcjc2VGZqU1l5Z3hVODVFUE9DeDgv?=
+ =?utf-8?B?RW1yL1FvZjJ0ejd1TWNvT2tZeUV3VmFmbHN0T1pDVWZkS2ZNNW5NNVJWR0RO?=
+ =?utf-8?B?Z3U4QmhHQWpvcWZ5T1RMMi9WKzcralY5SXM2clkwRytXM1JaZHluL0ZLWnMr?=
+ =?utf-8?B?em1ZRmFYSUNkcTN0THdWRVVSaElSNmNkUHVrcGV2Mm1veU9KZU82WWg4UU5z?=
+ =?utf-8?B?bTJ1WFQxQUNnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UXBSMXNYUHFaVXIyT0N6R1RDSFJqWHN5eGR5SDVjUzFacnNxZVNaVndVSEY1?=
+ =?utf-8?B?YU5ITm4xeHEyRUFqd1Bpb1FjaEtSYmRsYWxLbnlJdmIzTWR4NmhuOGV4M0Ra?=
+ =?utf-8?B?YzFSOGtaR2JZVWduUEtVWkFHckpJbHM2a0JqNXkzeDhRcWk2RHVqTjZPWUFx?=
+ =?utf-8?B?QzRuYWZFQSs4ejFBOXl0Z2VvUGIzOVd3OGJWYkpnbnlnYVh0SHMxWURJcHYw?=
+ =?utf-8?B?dHhkTzU3QjIyTXhCOG5zU01TNmRkb1JteFVVM3pjbzZIZmNGM1Z0WHNDOU43?=
+ =?utf-8?B?WU1iNWhrNmZWN201cUZFTitpRkUyUUREMGoreTY1UXB2U29BNndpSmw5NlZa?=
+ =?utf-8?B?d3hlMElrcHRZMkQvYXZ0RzJEMnZuUm54VUpXTGdYcnE5clhNcWVpRlNtbnZs?=
+ =?utf-8?B?SkNCSUJDQTRFRGx0ZHR6QWg4R1NHYzdCQ0Fla0c2Z1lreDdkMExScDBNR0xP?=
+ =?utf-8?B?N2NjVmVIbmNLcWZuZWM0QU0rcEVkbDRORHFNZGFrMHd0MnlZaWJXcnFDSUth?=
+ =?utf-8?B?enZ5WFg1cDY1WHZWQkNsa2lxSko0cWQ1MEdnRzQxVkFQQ3pLandReUg1ci90?=
+ =?utf-8?B?MUppVUY5emxrcTlVRXE4Q0FIT1dBZ29hNENydkdDZCtHZzBuWGZyWXcrRnZR?=
+ =?utf-8?B?bnZpVGQyT0kzUVd1VmpINXZXQmpzM2VHR0VQZWdFbXFXVzArd2h6R21VYTdB?=
+ =?utf-8?B?ZWNXNkVzaDFhMG5KR0xPczBWQTEzbUVWd0o2czU3RHczVkF3OWhlcUF6TjZi?=
+ =?utf-8?B?alJKTUxkcjljbXdTWW4wNTFSSWJEMGJ3NW5QV0RqMVFpT3VpejZlaEZCWHFq?=
+ =?utf-8?B?bGRrQkdJK0VkUGhtNVI2eExnQmYrejhqTmNxdEp6d0gxVjJsSTU5YlQyU3JM?=
+ =?utf-8?B?VDg4TVJzcHNsZzEyalkrNTZvbkdjcG9tTGtSc3hLYTdEZHlVdjE4ZzZodUlr?=
+ =?utf-8?B?cHNYdUpXSC9SbnBSUVgxNGo4bEV2WTBLM2ZjZG43a3doYThiUnhCZnpDS3pa?=
+ =?utf-8?B?NHFqamNheExLWnlUbmRjY05ZWGVLR1pEYmxQMllyVWVpWGYvWVc5ZUNVdmZo?=
+ =?utf-8?B?bnU0Z1ZlTEhUTGREamxpN2NLOHcrQ1BtdU5UanJxb2tORHp4YTZybEZzd0cv?=
+ =?utf-8?B?Qnhoby9BOFlaY1Z1Um10R0NPdFRDUmxuQkhBNDBXcWtoT0U2VVFqeEorN1d6?=
+ =?utf-8?B?NkdPbXVuTCtsak1NN2ZjeHMrZGhITTlOZjFtd1NubDFReFRWSHZuMTI3NU5P?=
+ =?utf-8?B?T3pyei9udGdzQUVGS0hqNytIWjdXWnNyWnRUdGp6MkhyL1NOUTA3NXg4Rnkv?=
+ =?utf-8?B?ZHVRNSttdnY3eUp5NWI1WlczNWdWcWhDWTVhNlFHS0hpeS9FcmZrenRMU01k?=
+ =?utf-8?B?b0hiN3FFVjhYcitEZTFjVDJRVHZKQncxakN2R2tRM0xiTUJSS1gxVUY3Y29M?=
+ =?utf-8?B?ejhqNmhVclpUNlJ3Q21QQkpLOE1QV3loVUcrU1pRTE8xMmhHdTEvMHJxUU1i?=
+ =?utf-8?B?WVZ2M3F2VmppMjRsai8ySThtZHJLVDIwU0QySzBjRHFmaDNZRUgxSjkxR0tY?=
+ =?utf-8?B?a2lkOU85eDNCOHJhaDNPNVdta1IyZXZBY05vSUkwbUQ1bEhVemVZamUzT2Nl?=
+ =?utf-8?B?dGZaY1pieTVhWmdyN21JRWpqTkxXT2lseHNqKzFoWlhEdWUzS0lqUGoyYUxm?=
+ =?utf-8?B?b2VuMmVWTkQvMlJVNU53YnFMVGo4eU1DM0VqQzhUdmVuVi83MEYrWFduN0lj?=
+ =?utf-8?B?TE9Ba1NoUkZLMXUvdVZqRU5ScDFJWUZndy8vajlGQlVncWZNRzBDdGQvTmla?=
+ =?utf-8?B?WkVJMUJmVExGSTVVTlNhL3B4Vk9kdVVRaWUveEdHblhtNWJxeGV0UERZNlJy?=
+ =?utf-8?B?cUhHTnVWRDV4SFRUWU9pem9OQXJqdUhpYThiSklOL3UzOEtXcE1VTllsMldt?=
+ =?utf-8?B?YTNNUG5XeVAwYUZ3N3lvYkxqUnFNMHRTbC9IY3djeWhZejQ4Wk1jb0dPcHF0?=
+ =?utf-8?B?bGQ4bzN6eWYyNEd6UU80VldtRjNJNjlOaldWUTliMkRSak1yd1NOa2kydEI4?=
+ =?utf-8?B?OFBSeDM5Q0grZURvQ0VZanF1S0xwdVdDemNaamdheGZzK082ajFpbFVkK29w?=
+ =?utf-8?Q?96lW5KVlAxjnx6h4nFGaVor/C?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c349ec3-3b58-400a-3236-08dd8304f37f
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 07:52:24.7909
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vhZsBIyH7vtAkwxYTXY2RHzgir8zgIrCvr/4QymUn04Dt9P5LVy9Sk5Hm+lZGb7UjXd1pSA5w/rbdJRpd0gbwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6841
 
-
-
-On 2025/4/17 08:02, Nico Pache wrote:
-> Add the order to the tracepoints to give better insight into what order
-> is being operated at for khugepaged.
+On 4/24/2025 8:15 AM, Libo Chen wrote:
+> v1->v2:
+> 1. add perf improvment numbers in commit log. Yet to find perf diff on
+> will-it-scale, so not included here. Plan to run more workloads.
+> 2. add tracepoint.
+> 3. To peterz's comment, this will make it impossible to attract tasks to
+> those memory just like other VMA skippings. This is the current
+> implementation, I think we can improve that in the future, but at the
+> moment it's probabaly better to keep it consistent.
 > 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> ---
->   include/trace/events/huge_memory.h | 34 +++++++++++++++++++-----------
->   mm/khugepaged.c                    | 10 +++++----
->   2 files changed, 28 insertions(+), 16 deletions(-)
+> v2->v3:
+> 1. add enable_cpuset() based on Mel's suggestion but again I think it's
+> redundant.
+> 2. print out nodemask with %*p.. format in the tracepoint.
 > 
-> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
-> index 9d5c00b0285c..ea2fe20a39f5 100644
-> --- a/include/trace/events/huge_memory.h
-> +++ b/include/trace/events/huge_memory.h
-> @@ -92,34 +92,37 @@ TRACE_EVENT(mm_khugepaged_scan_pmd,
->   
->   TRACE_EVENT(mm_collapse_huge_page,
->   
-> -	TP_PROTO(struct mm_struct *mm, int isolated, int status),
-> +	TP_PROTO(struct mm_struct *mm, int isolated, int status, int order),
->   
-> -	TP_ARGS(mm, isolated, status),
-> +	TP_ARGS(mm, isolated, status, order),
->   
->   	TP_STRUCT__entry(
->   		__field(struct mm_struct *, mm)
->   		__field(int, isolated)
->   		__field(int, status)
-> +		__field(int, order)
->   	),
->   
->   	TP_fast_assign(
->   		__entry->mm = mm;
->   		__entry->isolated = isolated;
->   		__entry->status = status;
-> +		__entry->order = order;
->   	),
->   
-> -	TP_printk("mm=%p, isolated=%d, status=%s",
-> +	TP_printk("mm=%p, isolated=%d, status=%s order=%d",
->   		__entry->mm,
->   		__entry->isolated,
-> -		__print_symbolic(__entry->status, SCAN_STATUS))
-> +		__print_symbolic(__entry->status, SCAN_STATUS),
-> +		__entry->order)
->   );
->   
->   TRACE_EVENT(mm_collapse_huge_page_isolate,
->   
->   	TP_PROTO(struct page *page, int none_or_zero,
-> -		 int referenced, bool  writable, int status),
-> +		 int referenced, bool  writable, int status, int order),
->   
-> -	TP_ARGS(page, none_or_zero, referenced, writable, status),
-> +	TP_ARGS(page, none_or_zero, referenced, writable, status, order),
->   
->   	TP_STRUCT__entry(
->   		__field(unsigned long, pfn)
-> @@ -127,6 +130,7 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
->   		__field(int, referenced)
->   		__field(bool, writable)
->   		__field(int, status)
-> +		__field(int, order)
->   	),
->   
->   	TP_fast_assign(
-> @@ -135,27 +139,31 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
->   		__entry->referenced = referenced;
->   		__entry->writable = writable;
->   		__entry->status = status;
-> +		__entry->order = order;
->   	),
->   
-> -	TP_printk("scan_pfn=0x%lx, none_or_zero=%d, referenced=%d, writable=%d, status=%s",
-> +	TP_printk("scan_pfn=0x%lx, none_or_zero=%d, referenced=%d, writable=%d, status=%s order=%d",
->   		__entry->pfn,
->   		__entry->none_or_zero,
->   		__entry->referenced,
->   		__entry->writable,
-> -		__print_symbolic(__entry->status, SCAN_STATUS))
-> +		__print_symbolic(__entry->status, SCAN_STATUS),
-> +		__entry->order)
->   );
->   
->   TRACE_EVENT(mm_collapse_huge_page_swapin,
->   
-> -	TP_PROTO(struct mm_struct *mm, int swapped_in, int referenced, int ret),
-> +	TP_PROTO(struct mm_struct *mm, int swapped_in, int referenced, int ret,
-> +			int order),
->   
-> -	TP_ARGS(mm, swapped_in, referenced, ret),
-> +	TP_ARGS(mm, swapped_in, referenced, ret, order),
->   
->   	TP_STRUCT__entry(
->   		__field(struct mm_struct *, mm)
->   		__field(int, swapped_in)
->   		__field(int, referenced)
->   		__field(int, ret)
-> +		__field(int, order)
->   	),
->   
->   	TP_fast_assign(
-> @@ -163,13 +171,15 @@ TRACE_EVENT(mm_collapse_huge_page_swapin,
->   		__entry->swapped_in = swapped_in;
->   		__entry->referenced = referenced;
->   		__entry->ret = ret;
-> +		__entry->order = order;
->   	),
->   
-> -	TP_printk("mm=%p, swapped_in=%d, referenced=%d, ret=%d",
-> +	TP_printk("mm=%p, swapped_in=%d, referenced=%d, ret=%d, order=%d",
->   		__entry->mm,
->   		__entry->swapped_in,
->   		__entry->referenced,
-> -		__entry->ret)
-> +		__entry->ret,
-> +		__entry->order)
->   );
->   
->   TRACE_EVENT(mm_khugepaged_scan_file,
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 738dd9c5751d..67da0950b833 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -721,13 +721,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   	} else {
->   		result = SCAN_SUCCEED;
->   		trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
-> -						    referenced, writable, result);
-> +						    referenced, writable, result,
-> +						    order);
->   		return result;
->   	}
->   out:
->   	release_pte_pages(pte, _pte, compound_pagelist);
->   	trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
-> -					    referenced, writable, result);
-> +					    referenced, writable, result, order);
->   	return result;
->   }
->   
-> @@ -1097,7 +1098,8 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
->   
->   	result = SCAN_SUCCEED;
->   out:
-> -	trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, result);
-> +	trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, result,
-> +						order);
->   	return result;
->   }
->   
-> @@ -1318,7 +1320,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	*mmap_locked = false;
->   	if (folio)
->   		folio_put(folio);
-> -	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
-> +	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result, order);
->   	return result;
->   }
->   
+> v3->v4:
+> 1. fix an unsafe dereference of a pointer to content not on ring buffer,
+> namely mem_allowed_ptr in the tracepoint.
+> 
+> v4->v5:
+> 1. add BUILD_BUG_ON() in TP_fast_assign() to guard against future
+> changes (particularly in size) in nodemask_t.
+> 
+> Libo Chen (2):
+>    sched/numa: Skip VMA scanning on memory pinned to one NUMA node via
+>      cpuset.mems
+>    sched/numa: Add tracepoint that tracks the skipping of numa balancing
+>      due to cpuset memory pinning
+> 
+>   include/trace/events/sched.h | 33 +++++++++++++++++++++++++++++++++
+>   kernel/sched/fair.c          |  9 +++++++++
+>   2 files changed, 42 insertions(+)
+> 
+
+Tested on top of next-20250424. The boot warning[1] is fixed with this 
+version.
+
+Tested-by: Srikanth Aithal <sraithal@amd.com>
+
+
+[1]: https://lore.kernel.org/all/20250422205740.02c4893a@canb.auug.org.au/
