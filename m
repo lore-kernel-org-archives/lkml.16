@@ -1,95 +1,119 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767A3146A72;
-	Thu, 24 Apr 2025 13:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DE8158858;
+	Thu, 24 Apr 2025 13:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502792; cv=none; b=dbXgFozkuPrwa/95nI4o/jScf684LWiudsscUNVY9HpgAuQMnMj8cJPoRe+OZoyJuFSOAlryvF0yYwDpo5KxWYdpUsiPNHEQ/9eKcVJqmtp6CC/C+siUJAcdD6Pb64tPZq4yIRfFJxLIWqrQ4uW6qBFVcFrTWFQ1ZwRrvKn+yc0=
+	t=1745502829; cv=none; b=mD3WDcBQ3Y+2qOC17XHMk2mU1AqIZDYtIA3bMH8hiJkpfXoKWdHu2B4S76cexfZUc5RZNimVmLlCj3p85Th8VuPv15jxVGxtU4HiVR5e/s5lISpGPYTd3s2hlaNBTmCGxGheDWrJCsH/0vgvu5dz2uo++OcRuX5hjKksVgyla4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502792; c=relaxed/simple;
-	bh=gX3o4fqyzJc2xoJ/Uezx0Z/ZcUfhP4pJRiCdZwiPSIY=;
+	s=arc-20240116; t=1745502829; c=relaxed/simple;
+	bh=XCdDB8vyzVodNj24dGQS42DgtCQbWMXuCM3lTeB9QzI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rX10ubaOs2TCe5nY6NuUf98uHaXwvxBK/X6qt/sSMomT0fcfmrUCnLhXC1QyBi0YHVPXZQowk1ww5I/n40uw3h8K7QQ99LU4mAfUBGFmFrT16OTmW2cbmEYWnEy2w1/kUKA9P1cozDWo8viQrWHoeuNXpLFC7qtQrDSmUl5upTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGUY7/kD; arc=none smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=RLVP8Btw+Dv3BBAkkfviyZVXc63evo2Iees/8LMZJrPWJT9Ms/gGvzyOvewft0r3yBNmPb4VMLsS9rglVa6if/t4alcEBrC4n0ch4ztRrrEOfrcfpIcS2MkUhqaRS8jNGMfXCpE+9Iu8gs7D3hOrGjyiWE0QwrlNbaGAs3NYVi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KyWu7Yl5; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGUY7/kD"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240ff0bd6eso2048385ad.0;
-        Thu, 24 Apr 2025 06:53:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyWu7Yl5"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b061a06f127so645333a12.2;
+        Thu, 24 Apr 2025 06:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745502789; x=1746107589; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745502827; x=1746107627; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gX3o4fqyzJc2xoJ/Uezx0Z/ZcUfhP4pJRiCdZwiPSIY=;
-        b=bGUY7/kDrvHPeoS4CXmOwwZmEdHTLcGvHvrYgew6LndlJ49sdNqE1Lum96sJGrrb1n
-         GfCT1xoqm+TAvaZIhePXjGOKQOLUF73/cNc9vUF3Phwf5NYEmAuFkiDkIy4640EuUyTl
-         fCeFRyOLRUO8lbhhHr8SDajmGnp2Of8VwRoqceWohpI7ohYWs+6GZ2jHGOLF/dzi52Yq
-         oaNLPzoU6JSyF66sez7449vQRvH2FFM/QaIAwv873/qJO0ACx4vMilQyEl4iLfV7eDPO
-         UG7y30IyxmeH0w+htU0IIZmKGm+qCwozKmeudfear7adUX1gCdqjfLZrrPGOkAubHGvW
-         Vb+A==
+        bh=XCdDB8vyzVodNj24dGQS42DgtCQbWMXuCM3lTeB9QzI=;
+        b=KyWu7Yl5vxNqDfxlLBQhqbPkBtdAZOxvugvLEj1Ino3NXs6K78Df65OeSAew11lM69
+         tgpp8fl0t5/2Rakc6606jTA5JWvOG2L9YQFy1SfUUtIF/WGRY3VH6rdzSgzDtfpClCxq
+         ZjJHnxzCjHyzeK2bbFda9Bxc6QKgbUHLcMX6UbEnuwnoeo5eJkJvYIrYN/iSmFfwgEkU
+         81tIFDPYfEFQq7Q4c/Uv771whg05yn6JIiyn5RMwLQZWCJ4DFSXRooctQ6EtH8j0UWEk
+         deHgp+nJ1kbI0X0h4K2pp5nmffO/cn6c1MA6HLWTGzbi5PJ2yMQH3djwwA0nJnXiV3P8
+         zRzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745502790; x=1746107590;
+        d=1e100.net; s=20230601; t=1745502827; x=1746107627;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gX3o4fqyzJc2xoJ/Uezx0Z/ZcUfhP4pJRiCdZwiPSIY=;
-        b=HqEn/EN8h0I+m/CZFaN8Rhfa+4WYJnaA6tHcfT1VFZrVt6YoPXsfeZWXpXkC491ZDK
-         HeEVt9CU8FI4wxdGxbtDkCmXTV3ag2/GG6QWo1YEx/3U3llhN702f66s6SgGEKJP5CK5
-         NA0G4hI8gVc/W+bgzG/A1//9MIqZwuYt6cWMAOV6dZrlqE4nXoXQSV/ADfhKOI7o08tZ
-         vFuoY0YI01yLxswqJ1X9ZDdMdMQFom89S/pXMEJiVELSHQZR/02d+KxLFVPRqpS1yBax
-         znF/pFuYOl/DNzKkFp4MKu0MPSj+I4VVlDmmqfMyX1h9WYASvjx2kx67Z10bQBQ+jbap
-         z9/w==
-X-Forwarded-Encrypted: i=1; AJvYcCX6IbKjaNEtUcJF+B5zAGLqW4uzWxoKOglvzLHkpQGFdMvFZacMPGuVnuPD5lMvkoxMoirFWyobR71QZg6V@vger.kernel.org, AJvYcCXuuQn1+u8xWB+GvJTc+jsn6+nBbwOoEQ5v4OQIE2djxri+6aUsQ29Ml1eItMhgzKawvkoGiD8tnB4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaKFjV/q59eQWcTHA4AoPG3PDVuvt9h9ETvzvVdFaNLfOd8SwL
-	SsNc/kBSTE7RU0NoMJJQV53f+T0Wh3abmRbSYiTvsnQs/n96SOCZr8Hd0/CzQQ3YsYgNmLjSB0J
-	Ra+3T/g+J11K8hKQB8cidhSOtL6c=
-X-Gm-Gg: ASbGncsD08SYg5moDE16jxpGlvgXGySJDfc21/cDSb7Wiu6f9MwJGFoZkDZILi6wx5x
-	9010JMCiLyhL2A8PJH7U6NobQKV4gcSjNmfgoPPs0/ZSDphjXD7IMzwTazZchWTti87YKKvF/Ce
-	YIhwpZQ7I1XzQZMS8pRjztZg==
-X-Google-Smtp-Source: AGHT+IFxk20VNo54XGCzsfIek1K1n9S08YBK/30d3tfR36ldUpJBLcJkO2QijZyYCgdC5GzKzmyaOkbef7SiZ66MG+M=
-X-Received: by 2002:a17:902:e5cd:b0:22c:36d1:7a4d with SMTP id
- d9443c01a7336-22db3dacd65mr11784105ad.14.1745502789616; Thu, 24 Apr 2025
- 06:53:09 -0700 (PDT)
+        bh=XCdDB8vyzVodNj24dGQS42DgtCQbWMXuCM3lTeB9QzI=;
+        b=wxnmbbBOnbP3uIVZWEEDSu2tohWpScUjQF7tRXFmtJ3iPTf36Uokmp39QxkMFnBnhg
+         Wt+gtl0916ncZThwHUHv6vwYe05K7dI92p6JW2qrPep4F7AUo+xVhx57UBaZqf6RMVa8
+         Tm3gacDawn2XdQwEc3aM6XPJDca4XRBi8BlVZ44uH2rF5haXXh76PnYo+r+//+v4sNoh
+         9d3UagQDHoiH+oOQGF7X1hZ1RWj8iC9wA4MvDf+KDU24lfV0Kq2kOTY/lX7G9FKg9A4V
+         +wQiP4cABvI99D+diwal6pD64EYK7KXZqkccwbY7+PEm/dOL4CgkhE1rP5sgBAuN76bZ
+         qP3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU9bWSIX0Oig02V5aKd2BgGadVEXxPMpOU3wG2eKHY8K+/U6JH2w12Ip0AfIGCDGH6l3lJZG2FTbH7zRm0jO1EpIzjPRNTe@vger.kernel.org, AJvYcCUd/4Wz/2oF03PCGcDG4kS3e4AKOvmBcOvg/CtAoOVHQfWQuXb62EpMSXFRPCrKJ9Y9cpssU8yvkj40W0cW@vger.kernel.org, AJvYcCVK8BBCUd3X5vdPGIRHp334Qp4pzk4o+6ZkPugD/Oza+MxBx0Q3zKFV4EUc1Kki8rsnABKhug2g3W9F9tHu@vger.kernel.org, AJvYcCVpJPrbZYIOBEPHe+UZq/AYltoeyFNQkO8VeARP2uCIythDOh6K1Muf/4vrnxWYG8xivmkv56jo/Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXQrbO5C5pcWEgvMNdWRx35zTsasJy+60HEduXvflWjJtqUws0
+	NXiHjdnms0RsyTLsXRX9cgpIQpcDz+W/7t3rhVLZoC7i+aWgU7I59TOSl8WvjLzTBtNgX5qZFXt
+	cEHBjS6J+q+yrUHyMFO0rJrTnFiE=
+X-Gm-Gg: ASbGncuRUHDAdq3eHVSHFixaO8czyElK3gsmcDSdM32xhJ98ENqKn5N7FOA5yAQxYyo
+	BbSQeDdM6U7D4NdADYv+D/T/tEdkI5/NVPvVKlYvRd0MtmYHF/kVWyIESrApGrkFk+vWTxw7wqm
+	emIvK7k0EQqjRCJvUTP82KFA==
+X-Google-Smtp-Source: AGHT+IHmiV2rWP6yv3KQljQsE888DhuQ4aI9hOeNLvxVP5Y3ADd1TyB7LHDhH+1TrQbcBvhVAu6u5FeMtJmFNvogQgY=
+X-Received: by 2002:a17:90b:5252:b0:2fa:228d:5b03 with SMTP id
+ 98e67ed59e1d1-309ed285c0dmr3563798a91.19.1745502827291; Thu, 24 Apr 2025
+ 06:53:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745453655.git.mchehab+huawei@kernel.org> <ae1c54ddacf6ded1f7154897b10798d4b3fdaf96.1745453655.git.mchehab+huawei@kernel.org>
-In-Reply-To: <ae1c54ddacf6ded1f7154897b10798d4b3fdaf96.1745453655.git.mchehab+huawei@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 24 Apr 2025 15:52:56 +0200
-X-Gm-Features: ATxdqUG8bw5uUkZS5IdK_6YULUcw5uZ1DGQ7_xFekyh5NYc4YczU_MqiAcsEtwE
-Message-ID: <CANiq72kZ1x94uFfqxC+GahrYvtkEhut69L5C28qfXYaWgP2P4g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] .gitignore: ignore Python compiled bytecode
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Ard Biesheuvel <ardb@kernel.org>, Kris Van Hees <kris.van.hees@oracle.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250424124644.4413-1-stephen.smalley.work@gmail.com> <2025042427-hardship-captive-4d7b@gregkh>
+In-Reply-To: <2025042427-hardship-captive-4d7b@gregkh>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 24 Apr 2025 09:53:36 -0400
+X-Gm-Features: ATxdqUGgUngJcCmJc0s7SBLYKDMz9Vn2SWYGB2QfAAKIVQW0WWNLSTPolwBxgCU
+Message-ID: <CAEjxPJ5LGH_Vyf2KCL0HNwa-U70GVAOVvyFMnhpnzi-CEKvC5w@mail.gmail.com>
+Subject: Re: [PATCH] vfs,shmem,kernfs: fix listxattr to include security.* xattrs
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: paul@paul-moore.com, omosnace@redhat.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 2:17=E2=80=AFAM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+On Thu, Apr 24, 2025 at 9:12=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> While the building system doesn't create any Python JIT bytecode,
-> if one manually runs kernel-doc.py or get_abi.py, Python will,
-> by default, create a bytecode and store it under scripts/lib/*.
+> On Thu, Apr 24, 2025 at 08:46:43AM -0400, Stephen Smalley wrote:
+> > The vfs has long had a fallback to obtain the security.* xattrs from th=
+e
+> > LSM when the filesystem does not implement its own listxattr, but
+> > shmem/tmpfs and kernfs later gained their own xattr handlers to support
+> > other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
+> > filesystems like sysfs no longer return the synthetic security.* xattr
+> > names via listxattr unless they are explicitly set by userspace or
+> > initially set upon inode creation after policy load. coreutils has
+> > recently switched from unconditionally invoking getxattr for security.*
+> > for ls -Z via libselinux to only doing so if listxattr returns the xatt=
+r
+> > name, breaking ls -Z of such inodes.
+> >
+> > Before:
+> > $ getfattr -m.* /run/initramfs
+> > <no output>
+> > $ getfattr -m.* /sys/kernel/fscaps
+> > <no output>
+> >
+> > After:
+> > $ getfattr -m.* /run/initramfs
+> > security.selinux
+> > $ getfattr -m.* /sys/kernel/fscaps
+> > security.selinux
+> >
+> > Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=3DiOawX4y77=
+ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
+> > Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.sma=
+lley.work@gmail.com/
+> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 >
-> This is normal, and not controlled by the Kernel itself. So,
-> add *.pyc as an extension to be ignored.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> As this "changed" in the past, shouldn't it have a "Fixes:" tag?
 
-Looks sorted now, thanks!
-
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-
-Cheers,
-Miguel
+Yes, I'll add that on v2. Also appears that it doesn't quite correctly
+handle the case where listxattr() is called with size =3D=3D 0 to probe
+for the required size.
