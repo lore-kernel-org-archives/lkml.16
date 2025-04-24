@@ -1,54 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDB91BC3C;
-	Thu, 24 Apr 2025 00:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3A050276;
+	Thu, 24 Apr 2025 00:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745453838; cv=none; b=gcw4I1G187rIZBfgAFSsZnba9BxZ8raBQzajwfnZnLyDqCCN2Ll35p6s3iuPtqVnzMA0IT8eyDKwUN73wOWLgfxM11hH92s7exZXOdvbPbiMFxC1/pCZTbcSHgvc/iv20DB0fnZx0cQGFn4yp6/ouqtDU56WXmgrO10BmoPeNHE=
+	t=1745453843; cv=none; b=KVk0ORp0jZrnsC6iD1HT/EP5tqrhq2l1OMQgwvX2YNgV4e8CXRgalBjY63ElzybS9nEHdh5nIz1brN6t3fdEyf7GOMn00SFCv2/Ya0XUUMT1yRJKkikz1Pd8ynl6NEUbCPQdWZXs1EHZB5doSgEYzpZFZyMVxRawtPvizLIZb34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745453838; c=relaxed/simple;
-	bh=1eKuPB985sA7XP0k/Jaz595uT7gavw91h7GkNlCQrZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oxhlPBFozyBGU4GX0+AOx4Wsxt3mkEvu3ySHeQOOt1tIwf3yKG3RKZjU17i7kmY7UK/92r0B9o5SqNuu68VXpxSBuGR5kPWrQBKUXlAsIX6Anp4Hfb+Z/2Ar2oQSXW88NGIYFi03X7ZR5NoyuLVHPmmAwWgWEX02RQgwHQDMTY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sqlfk8lx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745453843; c=relaxed/simple;
+	bh=GKemA9+yIN791fDKjS2xhXmmMfgA17FoAz9ccfBch3w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uoymVjwGot4DowlCWkahOmyNavcwJ4SnWMgj6fX6diGGiLKuhXyVeUGgZz+hd/9T/La9spAaf48K9J7sw6sVNwQjmiCgNmOS2a5/W4OVJFredwi4VojOoFEu3v1sf3EKKELoJP/sRjMGBVXCjxreDnVjaz/by18nsE8MfIl/LDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ox1L8Ojm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sqlfk8lx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23BBBC4CEEA;
-	Thu, 24 Apr 2025 00:17:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ox1L8Ojm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E65AFC4CEE2;
+	Thu, 24 Apr 2025 00:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745453838;
-	bh=1eKuPB985sA7XP0k/Jaz595uT7gavw91h7GkNlCQrZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sqlfk8lxSpKOB3EAfi8c3iHzcjySZ81rIuKKP4FNJZ1nzQwaJMeSiTk16raQakhuP
-	 AMgR+9DGpXI9RpY5aF5TmXZfp2/xlNDK1vGXH+evOngAmuToZb3C0Uct6t1dFkzqrB
-	 yN5qUyzyXKrHQAoyG3R947PwdUhsiTWT3aMi1lie4yDVw4d5zOffEj2ZaBnT38aDJB
-	 ThmUNx4xaX/mySbSU1fLUCpfDBVvbS4+GM2n5qckNbfwkDtYvaFYsh05cqefWiks6T
-	 VljDz/l6zN6liFFOzlQ9QEtbfbuk+2ICjbeB8bNlMlFInBpKRZc9xqqY9+529CBYWV
-	 8xC/kcfQluhWQ==
+	s=k20201202; t=1745453843;
+	bh=GKemA9+yIN791fDKjS2xhXmmMfgA17FoAz9ccfBch3w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ox1L8OjmZGe7yqpVdVdB46si/+gfTqdR4jeyVWs8zwCleOMo1DQoZM1S7jf+3ctor
+	 /jaUdHBhJtdn/S+SGJ5wfJ2yZY+nPeCoi/3/y+Eyit8YHabgiiM8IGRK+ClXz6QZDo
+	 F2ekWgVgQGxXZHc5QDZkNTjLeLRD3SQf6q5BS1hqe5bmUdkbzmmzDKqESkUGKzbGmJ
+	 lSh+3jLgnZ6Hwbg8bBc94kPBPkQqX0s3ziXuOa1tOByLRm+X64mpnEUVTE4MHzr2rW
+	 OAihIp5lA/XGyMt+solxdGASZkIgQ5oqtiDVlUAxk/AlmziSV8DXvV4ai14F+IOL52
+	 LtDSgHrldB3hg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u7kH5-0000000049c-2FLv;
+	id 1u7kH5-0000000049Q-1q83;
 	Thu, 24 Apr 2025 08:17:07 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Kris Van Hees <kris.van.hees@oracle.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-kernel@vger.kernel.org,
+	David Airlie <airlied@gmail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Masahiro Yamada <masahiroy@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] .gitignore: ignore Python compiled bytecode
-Date: Thu, 24 Apr 2025 08:16:24 +0800
-Message-ID: <ae1c54ddacf6ded1f7154897b10798d4b3fdaf96.1745453655.git.mchehab+huawei@kernel.org>
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH v4 0/4] Don't create Python bytecode when building the kernel
+Date: Thu, 24 Apr 2025 08:16:20 +0800
+Message-ID: <cover.1745453655.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1745453655.git.mchehab+huawei@kernel.org>
-References: <cover.1745453655.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,30 +62,60 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-While the building system doesn't create any Python JIT bytecode,
-if one manually runs kernel-doc.py or get_abi.py, Python will,
-by default, create a bytecode and store it under scripts/lib/*.
+As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
+when W=1. Due to Python's normal behavior, its JIT compiler will create
+a bytecode and store it under scripts/lib/*/__pycache__.  As one may be using
+O= and even having the sources on a read-only mount point, disable its
+creation during build time.
 
-This is normal, and not controlled by the Kernel itself. So,
-add *.pyc as an extension to be ignored.
+This is done by adding PYTHONDONTWRITEBYTECODE=1 on every place
+where the script is called within Kbuild and when called via another script.
+ 
+This only solves half of the issue though, as one may be manually running
+the script by hand, without asking Python to not store any bytecode.
+This should be OK, but afterwards, git status will list the __pycache__ as
+not committed. To prevent that, add *.pyc to .gitignore.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+This series contain 4 patches:
+
+- patch 1 adjusts a variable that pass extra data to scripts/kerneldoc.py;
+- patch 2moves scripts/kernel-doc location to the main makefile
+  and exports it, as scripts/Makefile.build will need it;
+- patch 3 disables __pycache__ generation and ensure that the entire Kbuild
+  will use KERNELDOC var for the location of kernel-doc;
+- patch 4 adds *.pyc at the list of object files to be ignored.
+
 ---
- .gitignore | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/.gitignore b/.gitignore
-index f2f63e47fb88..bf5ee6e01cd4 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -40,6 +40,7 @@
- *.o
- *.o.*
- *.patch
-+*.pyc
- *.rmeta
- *.rpm
- *.rsi
+v4:
+- placed *.pyc at the alphabetical order at the final patch
+
+v3:
+- move KERNELDOC to the main Makefile;
+- get rid of the badly-named KERNELDOC_CONF var.
+
+v2:
+- added a .gitignore file;
+- add PYTHONDONTWRITEBYTECODE=1 to the places where kernel-doc
+  is called.
+
+Mauro Carvalho Chehab (4):
+  docs: Makefile: get rid of KERNELDOC_CONF env variable
+  Makefile: move KERNELDOC macro to the main Makefile
+  scripts/kernel-doc.py: don't create *.pyc files
+  .gitignore: ignore Python compiled bytecode
+
+ .gitignore                    | 1 +
+ Documentation/Makefile        | 5 ++---
+ Makefile                      | 5 +++++
+ drivers/gpu/drm/Makefile      | 2 +-
+ drivers/gpu/drm/i915/Makefile | 2 +-
+ include/drm/Makefile          | 2 +-
+ scripts/Makefile.build        | 2 +-
+ scripts/find-unused-docs.sh   | 2 +-
+ 8 files changed, 13 insertions(+), 8 deletions(-)
+
 -- 
 2.49.0
+
 
