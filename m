@@ -1,81 +1,49 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C909E27A126
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58AE28B4E6
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513330; cv=none; b=baGQbvlQkVkXesefQijlqi//dN9MyczHxus/rqQji5oAA+Qhc1m5KyCH5idWp0zvARn6WN0UF9Du6eBZfHouloTgZGZ8kmmSMM7TdSSdjJWi5HZDmkSY9gWpgyxvIp9Z8J7KVHAe6kjlcYXqYmLBj/8QSCF6/RZGezsstjGCpQc=
+	t=1745513388; cv=none; b=l6dv+hPSB0qS/SAqsnXT/5n7BliQ/Rdx+131uAvMNJ71Anj7amm8eP3/aR3JQYHwdGEOsV6da68asaja1m/cWT9pkM9lUko62DOJChHtm7fFNXi6CNj8KmMFwX2UGRC2DdFqv4+l1C2Eu6u2gzsMFGXjkBTsnGijTDKYeN6sirA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513330; c=relaxed/simple;
-	bh=WEAmWmTyadq4tZy79KRqoMe5OHW2oj3tasUdeA9eBhY=;
+	s=arc-20240116; t=1745513388; c=relaxed/simple;
+	bh=yaFz9KVuXbQ3WoPpBhphcE4kDzD4jDZLdKjUo00JrCg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VwILZULLOhK/lLxy5aBVuYtOA54yd4nevFI0WrJOAkydHN799/qNLiDOMn9l9dEepFid5NbfqaXSWNaSSS72LllCBa7G4iROSW0tf7bKXu6jq9IlNF8Z0vvjihpfCaXj2iO/yFGJAZaFQg/vEqMl7lo9vueB+lq1ZEoooD6qOmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hwxB+nrq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gzWdM6IN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hwxB+nrq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gzWdM6IN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=PFp10zvELJIctsgLls6RqQWH+ZOVRL5fGb9byPvnbo88jmPBPsP+1T0FvwrUC6mg9XJTmj+F6f3638xHdbz0sIOoUpuUaCFtjvNdanfAGe4folCUqBvAUtLy1NLqddbNnmOLxXOiNZZZNl0NHqydsOOBHdXriHrm412rgjmb4h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FILa/3/K; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hwxB+nrq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gzWdM6IN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hwxB+nrq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gzWdM6IN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FILa/3/K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745513386;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hJKWPsrSIdki3Sut593ts9jKeKHpTjZdnwCIv+v7d1Q=;
+	b=FILa/3/KM0KgL47QW9NXs0Fh2uV9AgT3IVJ64V/CuptuhJWXU25caRwYDlSbv7Qc9iEhNw
+	npC3wKkBms/DDLlvwsSIr2Ypl9wZeYkL3tch7tig2vxafjTxAOglA3KTZGxEHvfj/GLvG5
+	DMbkjQwMogyr6MqzsHAY8iqsPNyNI3I=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-250-3aBPdaY6NSOa_mg84J2AZw-1; Thu,
+ 24 Apr 2025 12:49:39 -0400
+X-MC-Unique: 3aBPdaY6NSOa_mg84J2AZw-1
+X-Mimecast-MFC-AGG-ID: 3aBPdaY6NSOa_mg84J2AZw_1745513376
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B53351F443;
-	Thu, 24 Apr 2025 16:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745513326; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZ3/IkNkXWt3JF1YRfJFrc9hUTOhCPhBfi9idPBI0hc=;
-	b=hwxB+nrqgFLbt/mPUj8I3mD48TymDWR55/i/kYwf4N34sJP0zwFkt6XanIlxrQh3WWZxaG
-	o1WcjfIQVtnKNvpcbtHamURYGMhxvAFDP2JCQLsFSHfWFEUN5UVkEV2/svil4dXxzpPppa
-	fcNUWoRMt+RMWui6Qk9p1YyjJZImZJQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745513326;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZ3/IkNkXWt3JF1YRfJFrc9hUTOhCPhBfi9idPBI0hc=;
-	b=gzWdM6INLMsdZzL3ucZSkuxBh/8Uzzu0XO7KfSYzhZejEoFrtAAnDgpIWUyPuSfCrmaCNl
-	gmK0J0vtoC2w7hCg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=hwxB+nrq;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=gzWdM6IN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745513326; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZ3/IkNkXWt3JF1YRfJFrc9hUTOhCPhBfi9idPBI0hc=;
-	b=hwxB+nrqgFLbt/mPUj8I3mD48TymDWR55/i/kYwf4N34sJP0zwFkt6XanIlxrQh3WWZxaG
-	o1WcjfIQVtnKNvpcbtHamURYGMhxvAFDP2JCQLsFSHfWFEUN5UVkEV2/svil4dXxzpPppa
-	fcNUWoRMt+RMWui6Qk9p1YyjJZImZJQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745513326;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZ3/IkNkXWt3JF1YRfJFrc9hUTOhCPhBfi9idPBI0hc=;
-	b=gzWdM6INLMsdZzL3ucZSkuxBh/8Uzzu0XO7KfSYzhZejEoFrtAAnDgpIWUyPuSfCrmaCNl
-	gmK0J0vtoC2w7hCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 95A01139D0;
-	Thu, 24 Apr 2025 16:48:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Bjg5JG5rCmjFIAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 24 Apr 2025 16:48:46 +0000
-Message-ID: <da89dcd6-9369-4a87-9794-a0bf5772509b@suse.cz>
-Date: Thu, 24 Apr 2025 18:48:46 +0200
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7A54D1955DCD;
+	Thu, 24 Apr 2025 16:49:35 +0000 (UTC)
+Received: from [10.44.32.28] (unknown [10.44.32.28])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 08B2619560A3;
+	Thu, 24 Apr 2025 16:49:29 +0000 (UTC)
+Message-ID: <c67a65c2-e0c2-438e-a71b-3325e8e2bc3f@redhat.com>
+Date: Thu, 24 Apr 2025 18:49:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,67 +51,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm, slab: clean up slab->obj_exts always
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: cl@linux.com, rientjes@google.com, roman.gushchin@linux.dev,
- harry.yoo@oracle.com, surenb@google.com, pasha.tatashin@soleen.com,
- akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- quic_tingweiz@quicinc.com, stable@vger.kernel.org
-References: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
- <aApoFXmDE-k2KFFV@black.fi.intel.com>
+Subject: Re: [PATCH net-next v4 3/8] mfd: Add Microchip ZL3073x support
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-4-ivecera@redhat.com>
+ <4fae1a96-ac19-46b8-8eff-2a38d28414fc@lunn.ch>
 Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <aApoFXmDE-k2KFFV@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <4fae1a96-ac19-46b8-8eff-2a38d28414fc@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B53351F443
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:dkim];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 4/24/25 18:34, Andy Shevchenko wrote:
-> On Mon, Apr 21, 2025 at 03:52:32PM +0800, Zhenhua Huang wrote:
->> When memory allocation profiling is disabled at runtime or due to an
->> error, shutdown_mem_profiling() is called: slab->obj_exts which
->> previously allocated remains.
->> It won't be cleared by unaccount_slab() because of
->> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
->> should always be cleaned up in unaccount_slab() to avoid following error:
->> 
->> [...]BUG: Bad page state in process...
->> ..
->> [...]page dumped because: page still charged to cgroup
+
+
+On 24. 04. 25 6:34 odp., Andrew Lunn wrote:
+>> +++ b/drivers/mfd/zl3073x-regs.h
+>> @@ -0,0 +1,74 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +
+>> +#ifndef __ZL3073X_REGS_H
+>> +#define __ZL3073X_REGS_H
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bits.h>
+>> +
+>> +/*
+>> + * Register address structure:
+>> + * ===========================
+>> + *  25        19 18   16 15     7 6           0
+>> + * +-------------------------------------------+
+>> + * | max_offset | width |  page  | page_offset |
+>> + * +-------------------------------------------+
+>> + *
+>> + * page_offset ... <0x00..0x7F>
+>> + * page .......... HW page number
+>> + * size .......... register byte size (1, 2, 4 or 6)
+>> + * max_offset .... maximal offset for indexed registers
+>> + *                 (for non-indexed regs max_offset == page_offset)
+>> + */
 > 
-> Please, always compile test with `make W=1`. Since CONFIG_WERROR=y this
-> effectively breaks the build with Clang.
+> Something i missed earlier. This does not really describe
+> hardware. The upper half is meta data about the register, which you
+> encode into the register number.
+> 
+> How many other Linux drivers do you know about which does this?
 
-I don't see why, nor observe any W=1 warnings, can you be more specific? Thanks.
+This was proposed by Andy S.
+
+Cite:
+V4L2 (or media subsystem) solve the problem by providing a common
+helpers for reading and writing tons of different registers in cameras.
+See the commit 613cbb91e9ce ("media: Add MIPI CCI register access helper
+functions").
+
+They encode register address and size in register value. I have just
+extend this approach to cover indexed registers. The max_offset is for
+sanity during access to such registers, potential access out of
+bounds is detected and error returned.
+
+One can use just two simple functions for both register types:
+zl3073x_read_reg(zldev, ZL_REG_NONIDX1, &value);
+zl3073x_read_reg(zldev, ZL_REG_IDX1(idx), &value);
+
+> 
+> Also width vs size.
+
+I'm sorry, just a typo during reworking.
+
+
+Ivan
+
