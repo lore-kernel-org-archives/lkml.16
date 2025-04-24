@@ -1,246 +1,150 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868AE4315C;
-	Thu, 24 Apr 2025 14:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10F513CA9C;
+	Thu, 24 Apr 2025 14:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505917; cv=none; b=hxJjByaUbmqlosU3eVCt9ROml/wEcMRhbUKWoY+CArzpdfWJyn4NnYqzp3C/kAu0QBX+oIXIcKCGWkUrN1rr7NaQ00zRFQxtFJGFDOH4Iui3IelCFC/zUlKSB5VOjTELkTlDgQu8jhTL6yK83ZOZ6JGunzVaKJfVUPq3lbun5z8=
+	t=1745505925; cv=none; b=MiZdHK5vXg6YPd7coHZCkZNNdCZwVbQRGV4zHj6684jTit1OIOe7ODecJtDr4dNS57FUVj10QkmphIYnCf6rrgIpcv6YWZIW2bNZF7/r0qUhM13bv8Yxh/UUXSIIIWMkT2KmgI5Ff0IFTKOrQ56mUjzKGDjv15Z5LJg5yhKQzBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505917; c=relaxed/simple;
-	bh=e/pV65hErRueNpRvdOmYqfYxpkH23pEZFx4z5Jq351U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KGo2RTQtYjZALQUm3b6JmOimNLKS47TEssZ/+0g5myX7H6BeK64utvYDRxvFWw+1u2iNTwhZIEyXB6aSGbwzGFJyozT3RYXMghVWUmCL3+ctLzxdKwB+FigXRKRYEx/0cvrGqPv+Iyl53x521I0B4wWNBGGIYAtda5S4x08XdL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLzHX6a2; arc=none smtp.client-ip=209.85.161.53
+	s=arc-20240116; t=1745505925; c=relaxed/simple;
+	bh=WfFFauBOimAA1xG7/eaugx9UY2R4AXtESa3PSQzg0KU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jngROzsK/hN9ZmlcI3bj6VTOvZwexHN2KzY25Ko0YvGKDSOLUGjUHFyVJsJf6AC/fGxBw/rhe8vDqVEU3Kdaeg6jqYOe5lrjLyQhXcUZ6TmCEN/OdlV7dAZ5LTDcthJx4U1z8cKd9Q8NEWu/XYxSpwZIRtx2VbfpJiQMv2BsOMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhKu4kC9; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLzHX6a2"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6062e41916dso651600eaf.1;
-        Thu, 24 Apr 2025 07:45:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhKu4kC9"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1495296b3a.2;
+        Thu, 24 Apr 2025 07:45:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745505914; x=1746110714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ivYN5mDklFLzKiOVUifLYvXVJ3uDlc8wINIXNGqMTP8=;
-        b=NLzHX6a26jZjg+vQMGWAAQ36ub9zGvqfNnum34mB3SNF9mW6hL16WN1iXaOUOsJFx1
-         N01UcyNXKux+12uMGgkqfReo2NzDNosJHI5Qybq0OdS/KE6Q0nSJegG4A2e/MEKJL30Q
-         5BsHJfWtac2flm6bP+NuHQZw45Xgk55tw+6QMEjRMLjvCjFzKqrItFpsrHkcSZ7hay2F
-         Y0USNQQyj0bnROwFSfua0y1xCDojUNjTSv2qYWV7TFIdu/0mqWSagRaFPnhkPAmKp6sh
-         4ST/pRRBtkkSScikZpAYhgPVyv5hboGY4j8fJvnFBQTtDHFLdpRPPuL0BAeD4z2kGTwk
-         980g==
+        d=gmail.com; s=20230601; t=1745505923; x=1746110723; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4PAGLeinOTw1BegEcFTcz+g2dJ2nTYeNG2yLekJHkNo=;
+        b=ZhKu4kC948GYQQf0HzrVY5w+PpKrvbIARLw2ZoPdGrfnQonoqW8pyCzdNMN9n5gCvZ
+         Z5ZfJwu8AKb4ZEPpkWOrMeceAL8Y/UHG/cWAkL5TMK13tYgG7HN8DNyDNuq81NzmKgzB
+         cv4VLkD9w0J4j3cPLG0Xhkn+sdQEiZOzmvSeW5sYmv0VJj6B9edODN89D4e+BSBxai4w
+         rt5Rh4Cq7icOpvrY5gUY36rh0Z62q7/WYulbHaa5Td//bBQMt7eFwXoJNxTZkbQWsGli
+         n0Bkh3STpKk6/4NfkHBDC8+PShP7aCIlM0/hBlV7paW+OxiXmhCQ7rw8U0FRfiyFNdb8
+         4BYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745505914; x=1746110714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ivYN5mDklFLzKiOVUifLYvXVJ3uDlc8wINIXNGqMTP8=;
-        b=mwBntbSftTkeBHA62uWqD2EMn5k+09O0dDLBTKAzmylkxWhVZfMLf+ULiJHp3TI1xL
-         y225rwdVnITcpWB7JQ+05VSU3CuVATaDXnP/T0NDND05VdFZhspV/BDfDFAz03gqcHpH
-         BrjOil864QiMRKAVfUmLP/rLB3MjqIp33FhU8mXEuHObHL1UevbCMy4uqmmzyfLKBa/G
-         0nEhrF++D4x+fZe4Lr2+XFrSxvQqBbaOIzZhA3shz8yT57825Hg7NsRwM8KhB8kslcT9
-         fIOBXk/A73iXOe151eWvbBFOshu8BiTkO1kspfXcv32/oREHAZ0mwfearUDjM3FKj0Hp
-         vKwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaCFfL5fmnGN+vXiSP4YMX+enp/k9+UsI7ygNCIjEp9fGo2PCk19gFbPJ1lVBgPdjtOovUSc0hp9tSzuSmHw==@vger.kernel.org, AJvYcCVPC8X4a8b/hvUB2bU5gU2kUymHITb6BCeryJJjB0EuapwiEnuxbx6Ygcz/suyJ5qZ23Fk7PoNC0KfQR1tu@vger.kernel.org, AJvYcCXVqd0GrWk4BwDL6Ccq7M/JaolC+wIEgiRlX54O+0XuuVR2nj6/tH1WsCymy3dkK6hSAjyli+2foA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG37aBG6x/JiiB9crAK15GEoTElPCNAf1HYNh5fQ0WLNjDh6b1
-	pYL1ySKzBMGbUqDOKsXsB3/zP35npsM0vu19ojc8JvQszVJAMjLE+FrnALFYXusF32OtS/2ZPD6
-	QlZUThiiHnsHZ+zHaRWQoxDL8OqE=
-X-Gm-Gg: ASbGncsK7frwcMBzkZ6cOjfhdFhXlrsNTXZ9e2AIXfkFMBjcOpC9Yg6kD0sUbkqWeZF
-	4aXF7NmG3joYmrd4LF8hPhq1hOpk4g3Kl94NIbVyuAqyv1R/9AsKJ/nVmDpqffU98sxHA6CD7MW
-	kdfnUy3sM1WlWqpbIj1PDK+xVbK/cjJIaSVQ==
-X-Google-Smtp-Source: AGHT+IFQSaMuNjk+yxCa9qzVf4T3bP4fN/vKiQkFhG6TF8LpTaQahDSpm6uB6amyKRxrxFgXnFNjb4mL7e265AZNAH8=
-X-Received: by 2002:a05:6870:238d:b0:296:b568:7901 with SMTP id
- 586e51a60fabf-2d96e311871mr1601156fac.16.1745505914450; Thu, 24 Apr 2025
- 07:45:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745505923; x=1746110723;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PAGLeinOTw1BegEcFTcz+g2dJ2nTYeNG2yLekJHkNo=;
+        b=urJXbN3ui5VkJ93wPp/hkkWdFoTpUGTBd5vLt4BMrEasFPiV7ZSzzW46XjhI6mvMSH
+         TIu3affq9Hj18Otwr8oYuI+MfA+2NOLi5i9DEcrN7GYhZitVzyYnoMRfeiwGa7VJo4LG
+         XkZArDDIRIqPEP64+H7JaYm0kjymlV4PfDcbYdcrtGUx2vHU7Fgiuxdh/NQ5KfEYmI+g
+         OlzOrl20DBBj6h6mtvojh0rHXQGm3g7kvZacnNJwuzx0pBCAsa6FSfsKOjrErhpi16mt
+         yDM6AHmltcVTamHkuhQBIF905BgMOs698Nkxmxb5S9tiCA7rz0/wI13naTlozwc0m2K5
+         TyLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfoWllnK1DAGm1YEgJ5hnbZrY+HV8xVOq3CLnh+ivfQlkwtFz65oozP5ldkQ3fHF0IGLE=@vger.kernel.org, AJvYcCXMViui7smLkkh1PMciRg8jgDEP1YYRafvC7W0M/dc2eShXxMb3mpEWgHWhNm7KIAhnZClsIHSQVsN+in+n@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEQpxkGNFRaA2YxQYVnpz0KIGi6Sb5kiV+57yYC68EUTo22eFF
+	001aXOglqRpodkIeUKpp3+ewzExadq+sOozZ3EmvNS1iSkzzuaNR
+X-Gm-Gg: ASbGncvA1hgLdM0qRgXDOxdfbDt/s7tz9MtqLHFrUaKSOW2CpZSdYEyZUMh7I04PpCu
+	S17ZwDOwm2OAO1Je2KPLgFlF8J7rM4HltuAZ4pnmo/WfaefrAwQHuk34agAvanWZHEO5KfgWNXa
+	3yEoyQtKiIWOE+WGUdTN64/74aewLeTwau+fpFhDvzC5BsMvg6m38yGteKPQrY2vSZPNrYXmugR
+	yuJ7p+I6+uD7xHid7SHWWQk9S4W0Y+vwQ5rxUZHnOJt8tz8FT+u3X2UneQdrd0SwbenSNk3v7Ns
+	OzZM7gtwPVip74A8iu+NOdbz2RBhIPBueoJqMsPAUfifSzs+Af+7tMXBJhs+/quKTEFNyIqLsnZ
+	2NG7N3bEA76EzZEXMw7U=
+X-Google-Smtp-Source: AGHT+IFVuYKB/RLifTofF8XnjcJX6TCVuQ5lhxXULqxxcU1gSNRlAOIL1o0jpGAizcAW5raamumQWA==
+X-Received: by 2002:a05:6a00:391b:b0:737:6e1f:29da with SMTP id d2e1a72fcca58-73e24e05a1cmr4301845b3a.21.1745505922795;
+        Thu, 24 Apr 2025 07:45:22 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:f632:6238:46f4:702e? ([2001:ee0:4f0e:fb30:f632:6238:46f4:702e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e2593f557sm1474503b3a.42.2025.04.24.07.45.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 07:45:22 -0700 (PDT)
+Message-ID: <9cb42173-e394-4c5b-aef2-fe9ce737689e@gmail.com>
+Date: Thu, 24 Apr 2025 21:45:15 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com> <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk> <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk> <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
- <cac3a5c9-e798-47f2-81ff-3c6003c6d8bb@kernel.dk> <CANHzP_uJft1FPJ0W++0Zp5rUjayaULEdpAQRn1VuuqDVq3DmJA@mail.gmail.com>
- <5c20b5ca-ce41-43c4-870a-c50206ab058d@kernel.dk>
-In-Reply-To: <5c20b5ca-ce41-43c4-870a-c50206ab058d@kernel.dk>
-From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Date: Thu, 24 Apr 2025 22:45:01 +0800
-X-Gm-Features: ATxdqUHq0xvp_kAPKUb6ho_n4ukUomRbsXEEodCWwwWOleA8px4xCz-CIo3C81w
-Message-ID: <CANHzP_u2SA3uSoG-4LQ-e9BvW6t-Zo1wn8qnKM0xYGoekL74bA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault scenarios
-To: Jens Axboe <axboe@kernel.dk>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] xsk: respect the offsets when copying frags
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250423101047.31402-1-minhquangbui99@gmail.com>
+ <34e2c7f7-4d83-4e5c-af56-d91e68b3e7e1@intel.com>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <34e2c7f7-4d83-4e5c-af56-d91e68b3e7e1@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Jens Axboe <axboe@kernel.dk> =E4=BA=8E2025=E5=B9=B44=E6=9C=8824=E6=97=A5=E5=
-=91=A8=E5=9B=9B 22:13=E5=86=99=E9=81=93=EF=BC=9A
+On 4/24/25 21:02, Alexander Lobakin wrote:
+> From: Bui Quang Minh <minhquangbui99@gmail.com>
+> Date: Wed, 23 Apr 2025 17:10:47 +0700
 >
-> On 4/24/25 8:08 AM, ??? wrote:
-> > Jens Axboe <axboe@kernel.dk> ?2025?4?24??? 06:58???
-> >>
-> >> On 4/23/25 9:55 AM, Jens Axboe wrote:
-> >>> Something like this, perhaps - it'll ensure that io-wq workers get a
-> >>> chance to flush out pending work, which should prevent the looping. I=
-'ve
-> >>> attached a basic test case. It'll issue a write that will fault, and
-> >>> then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL ba=
-sed
-> >>> looping.
-> >>
-> >> Something that may actually work - use TASK_UNINTERRUPTIBLE IFF
-> >> signal_pending() is true AND the fault has already been tried once
-> >> before. If that's the case, rather than just call schedule() with
-> >> TASK_INTERRUPTIBLE, use TASK_UNINTERRUPTIBLE and schedule_timeout() wi=
-th
-> >> a suitable timeout length that prevents the annoying parts busy loopin=
-g.
-> >> I used HZ / 10.
-> >>
-> >> I don't see how to fix userfaultfd for this case, either using io_urin=
-g
-> >> or normal write(2). Normal syscalls can pass back -ERESTARTSYS and get
-> >> it retried, but there's no way to do that from inside fault handling. =
-So
-> >> I think we just have to be nicer about it.
-> >>
-> >> Andrew, as the userfaultfd maintainer, what do you think?
-> >>
-> >> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> >> index d80f94346199..1016268c7b51 100644
-> >> --- a/fs/userfaultfd.c
-> >> +++ b/fs/userfaultfd.c
-> >> @@ -334,15 +334,29 @@ static inline bool userfaultfd_must_wait(struct =
-userfaultfd_ctx *ctx,
-> >>         return ret;
-> >>  }
-> >>
-> >> -static inline unsigned int userfaultfd_get_blocking_state(unsigned in=
-t flags)
-> >> +struct userfault_wait {
-> >> +       unsigned int task_state;
-> >> +       bool timeout;
-> >> +};
-> >> +
-> >> +static struct userfault_wait userfaultfd_get_blocking_state(unsigned =
-int flags)
-> >>  {
-> >> +       /*
-> >> +        * If the fault has already been tried AND there's a signal pe=
-nding
-> >> +        * for this task, use TASK_UNINTERRUPTIBLE with a small timeou=
-t.
-> >> +        * This prevents busy looping where schedule() otherwise does =
-nothing
-> >> +        * for TASK_INTERRUPTIBLE when the task has a signal pending.
-> >> +        */
-> >> +       if ((flags & FAULT_FLAG_TRIED) && signal_pending(current))
-> >> +               return (struct userfault_wait) { TASK_UNINTERRUPTIBLE,=
- true };
-> >> +
-> >>         if (flags & FAULT_FLAG_INTERRUPTIBLE)
-> >> -               return TASK_INTERRUPTIBLE;
-> >> +               return (struct userfault_wait) { TASK_INTERRUPTIBLE, f=
-alse };
-> >>
-> >>         if (flags & FAULT_FLAG_KILLABLE)
-> >> -               return TASK_KILLABLE;
-> >> +               return (struct userfault_wait) { TASK_KILLABLE, false =
-};
-> >>
-> >> -       return TASK_UNINTERRUPTIBLE;
-> >> +       return (struct userfault_wait) { TASK_UNINTERRUPTIBLE, false }=
-;
-> >>  }
-> >>
-> >>  /*
-> >> @@ -368,7 +382,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, =
-unsigned long reason)
-> >>         struct userfaultfd_wait_queue uwq;
-> >>         vm_fault_t ret =3D VM_FAULT_SIGBUS;
-> >>         bool must_wait;
-> >> -       unsigned int blocking_state;
-> >> +       struct userfault_wait wait_mode;
-> >>
-> >>         /*
-> >>          * We don't do userfault handling for the final child pid upda=
-te
-> >> @@ -466,7 +480,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, =
-unsigned long reason)
-> >>         uwq.ctx =3D ctx;
-> >>         uwq.waken =3D false;
-> >>
-> >> -       blocking_state =3D userfaultfd_get_blocking_state(vmf->flags);
-> >> +       wait_mode =3D userfaultfd_get_blocking_state(vmf->flags);
-> >>
-> >>          /*
-> >>           * Take the vma lock now, in order to safely call
-> >> @@ -488,7 +502,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, =
-unsigned long reason)
-> >>          * following the spin_unlock to happen before the list_add in
-> >>          * __add_wait_queue.
-> >>          */
-> >> -       set_current_state(blocking_state);
-> >> +       set_current_state(wait_mode.task_state);
-> >>         spin_unlock_irq(&ctx->fault_pending_wqh.lock);
-> >>
-> >>         if (!is_vm_hugetlb_page(vma))
-> >> @@ -501,7 +515,11 @@ vm_fault_t handle_userfault(struct vm_fault *vmf,=
- unsigned long reason)
-> >>
-> >>         if (likely(must_wait && !READ_ONCE(ctx->released))) {
-> >>                 wake_up_poll(&ctx->fd_wqh, EPOLLIN);
-> >> -               schedule();
-> >> +               /* See comment in userfaultfd_get_blocking_state() */
-> >> +               if (!wait_mode.timeout)
-> >> +                       schedule();
-> >> +               else
-> >> +                       schedule_timeout(HZ / 10);
-> >>         }
-> >>
-> >>         __set_current_state(TASK_RUNNING);
-> >>
-> >> --
-> >> Jens Axboe
-> > I guess the previous io_work_fault patch might have already addressed
-> > the issue sufficiently. The later patch that adds a timeout for
-> > userfaultfd might
+>> Add the missing offsets when copying frags in xdp_copy_frags_from_zc().
+>>
+>> Fixes: 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb conversion")
+>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+>> ---
+>>   net/core/xdp.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/net/core/xdp.c b/net/core/xdp.c
+>> index f86eedad586a..a723dc301f94 100644
+>> --- a/net/core/xdp.c
+>> +++ b/net/core/xdp.c
+>> @@ -697,7 +697,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
+>>   	nr_frags = xinfo->nr_frags;
+>>   
+>>   	for (u32 i = 0; i < nr_frags; i++) {
+>> -		u32 len = skb_frag_size(&xinfo->frags[i]);
+>> +		const skb_frag_t *frag = &xinfo->frags[i];
+>> +		u32 len = skb_frag_size(frag);
+>>   		u32 offset, truesize = len;
+>>   		netmem_ref netmem;
+>>   
+>> @@ -707,8 +708,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
+>>   			return false;
+>>   		}
+>>   
+>> -		memcpy(__netmem_address(netmem),
+>> -		       __netmem_address(xinfo->frags[i].netmem),
+>> +		memcpy(__netmem_address(netmem) + offset,
+>> +		       __netmem_address(frag->netmem) + skb_frag_off(frag),
+>>   		       LARGEST_ALIGN(len));
+>>   		__skb_fill_netmem_desc_noacc(sinfo, i, netmem, offset, len);
+> Incorrect fix.
 >
-> That one isn't guaranteed to be safe, as it's not necessarily a safe
-> context to prune the conditions that lead to a busy loop rather than the
-> normal "schedule until the condition is resolved". Running task_work
-> should only be done at the outermost point in the kernel, where the task
-> state is known sane in terms of what locks etc are being held. For some
-> conditions the patch will work just fine, but it's not guaranteed to be
-> the case.
+> page_pool_dev_alloc_netmem() allocates a buffer of skb_frag_size() len,
+> but then you pass offset when copying, which may lead to access beyond
+> the end of the buffer.
 >
-> > not be necessary  wouldn?t returning after a timeout just cause the
-> > same fault to repeat indefinitely again? Regardless of whether the
-> > thread is in UN or IN state, the expected behavior should be to wait
-> > until the page is filled or the uffd resource is released to be woken
-> > up, which seems like the correct logic.
->
-> Right, it'll just sleep timeout for a bit as not to be a 100% busy loop.
-> That's unfortunately the best we can do for this case... The expected
-> behavior is indeed to schedule until we get woken, however that just
-> doesn't work if there are signals pending, or other conditions that lead
-> to TASK_INTERRUPTIBLE + schedule() being a no-op.
->
-> --
-> Jens Axboe
-In my testing, clearing the NOTIFY flag in the original io_work_fault
-ensures that the next schedule correctly waits. However, adding a
-timeout causes the issue to return to multiple faults again.
-Also, after clearing the NOTIFY flag in handle_userfault,
-it=E2=80=99s possible that some task work hasn=E2=80=99t been executed.
-But if task_work_run isn=E2=80=99t added back, tasks might get lost?
-It seems like there isn=E2=80=99t an appropriate place to add it back.
-So, do you suggest adjusting the fault frequency in userfaultfd
-to make it more rhythmic to alleviate the issue?
+> I know that my code here is incorrect as well, but the idea was to
+> allocate only skb_frag_size() and copy the actual payload without any
+> offset to the new buffer. So, you need to pass the offset only to the
+> second argument of memcpy() and then pass 0 as @offset to
+> __skb_fill_netmem_desc_noacc().
+
+I'm not quite familiar with the page_pool API so I might be wrong. 
+AFAICS, the netmem_ref is just a wrapper around struct page now. 
+page_pool_dev_alloc_netmem(pp, &offset, &truesize) returns the allocated 
+page for our request but we must use the returned offset to access our 
+allocated space. The start of page may be currently used by other user.
+
+That's my understanding when looking at this code path
+
+page_pool_dev_alloc_netmem
+-> page_pool_alloc_netmem
+     -> page_pool_alloc_frag_netmem <- specifically this function
+
+Thanks,
+Quang Minh.
