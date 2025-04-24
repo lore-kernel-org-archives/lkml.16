@@ -1,92 +1,65 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3525819F40B;
-	Thu, 24 Apr 2025 10:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A0C19F40B;
+	Thu, 24 Apr 2025 10:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490022; cv=none; b=jVaVYHZ3HnconBmV/5pGamud2VpTLlk4nYhI5iDgol/LNO14hRlIbvhrNUwyX507PHT8aBYMZuVYuYBD7J3itwIiPyB3MF4DWJKtjtt3kQu8gc6TtPZRGPy6xZIUUjglLnXSW8M5NYXgHoFp6bAVtUkolJiywdCtn3Uc/EwaVKs=
+	t=1745490033; cv=none; b=JZroSnj1OFPOoTkCjas/BaXewkT2CUr/6jF0z5X6aXhSv14I9ZlW3xjaHWP4+Ru6lOK79FM/6PSBcQ+IXjoxnSoyhPgAEfXvFo/G/xTvOFq7TMB+5nyninq96TMjQMvClMn0s91f334AaqdIFp05+VwwqK8SbtX43/EEY68+PYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490022; c=relaxed/simple;
-	bh=iRBOvEPQp0xpjzARc+Ce2T9xzyhYnjAoFFTZIi+L7EY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cUqZJS/56ZkXfNEk5nYIqg9LW0W4vHbS5N9MTPwXz4h1h+Yoyx8exL+oGvQzGQ5lE7n3Dp0LjLu6OQEZSnjVAsx+tHv9p1Cco3v8t5JIAcbmz6h5PoEqKlsKGD0Ii4dv5rVO6F+EFNpuXJ5HzKwvdcuZ4fCh0ORC+yoc3HOFx1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=JvSR2w7t; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1745490033; c=relaxed/simple;
+	bh=ylaAx5opMqeYfZu8A3uF5GKQeSacubIL0auxBuPWB6E=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=pR4dUrdiE05M3QnBEpIcnOxiO6+0EfbRLdjsKNU3YYtgNUae/Db3xde1AjjAclH88eTS+fMEtcGeGov9P1PNJO7UCvhN9oALDU+GdaQwCjeXQ1WB7VUo0/pZ3wmldVodTnI/tUEiA6t167eqbeEouCg9uA1ovx2ciT75CaeofIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhCIFdtU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JvSR2w7t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1745489600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iRBOvEPQp0xpjzARc+Ce2T9xzyhYnjAoFFTZIi+L7EY=;
-	b=JvSR2w7tExtylhEf/zsQNl60zLCBe9icAMA0eDkdcWJRUOih7tGcqxyTztFwWBYLyiBiHs
-	hSCsSNGYRzR7zWzhyy/ziIZ7Vc1qn0nz3/ySepQwFoumCKnvkqgPKnu9KUZ/AecaB/CShI
-	P/EOhu193xm4+esD8tWmtQrw/wR6nKA=
-Message-ID: <0c86e52bdc0a130bcf5fe152c062c2c6c07418c8.camel@crapouillou.net>
-Subject: Re: [PATCH 4/7] rtc: jz4740: drop unused module alias
-From: Paul Cercueil <paul@crapouillou.net>
-To: Johan Hovold <johan+linaro@kernel.org>, Alexandre Belloni
-	 <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea	
- <claudiu.beznea@tuxon.dev>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Sebastian Reichel
- <sre@kernel.org>, linux-rtc@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Thu, 24 Apr 2025 12:13:08 +0200
-In-Reply-To: <20250423130318.31244-5-johan+linaro@kernel.org>
-References: <20250423130318.31244-1-johan+linaro@kernel.org>
-	 <20250423130318.31244-5-johan+linaro@kernel.org>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
- LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
- FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
- z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
- +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
- 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
- 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
- 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
- dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
- 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
- rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
- lBwgAhlGy6nqP7O3u7q23hRU=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhCIFdtU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8C4FC4CEE3;
+	Thu, 24 Apr 2025 10:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745490033;
+	bh=ylaAx5opMqeYfZu8A3uF5GKQeSacubIL0auxBuPWB6E=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=EhCIFdtU7jNAQUHpDaFUxKGyRNriMMhll95pMRxe35sSQtNMAilhnGFqvSjtxwrO6
+	 CeNPawdeAvPIFkvjgmlwoGEfVAqWo4SwsnLwVquWPSWtYXDVVcW+PBmVzLR7qccizi
+	 of9x26uhtGyFBaJc3T74K1IdxtGRYyOwTt+tZ9WC4Ff8P71jcRN560VV+o1YN71hT9
+	 +/sDjcoNi7YX6b3bR4K1LnGlPF1WAcfuo5WkLHvXQdMjB2XglaTdXaRuLDeJPZZNVk
+	 pSyqy297yUOZmXYw2e63v16/3fHEzhyV/AGqfKrNyQNBeOfrD/VZmBnDmT+GCnzO2i
+	 thdBzJbFUdzZw==
+Date: Thu, 24 Apr 2025 12:20:30 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+cc: Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: appletb-kbd: Use secs_to_jiffies() instead of
+ msecs_to_jiffies()
+In-Reply-To: <20250407082930.742229-2-thorsten.blum@linux.dev>
+Message-ID: <4675r5rp-s218-8r10-q1q3-rosr80p36969@xreary.bet>
+References: <20250407082930.742229-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Johan,
+On Mon, 7 Apr 2025, Thorsten Blum wrote:
 
-Le mercredi 23 avril 2025 =C3=A0 15:03 +0200, Johan Hovold a =C3=A9crit=C2=
-=A0:
-> The driver only support OF probe so drop the unused platform module
-> alias.
->=20
-> Fixes: 24e1f2c9383e ("rtc: ingenic: Only support probing from
-> devicetree")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> Use secs_to_jiffies() instead of msecs_to_jiffies() and avoid scaling
+> the module params 'appletb_tb_idle_timeout' and 'appletb_tb_dim_timeout'
+> to milliseconds. secs_to_jiffies() expands to simpler code and reduces
+> the size of 'hid-appletb-kbd.ko'.
+> 
+> Reformat the code to silence multiple checkpatch warnings.
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Acked-by: Paul Cercueil <paul@crapouillou.net>
+Applied, thanks.
 
-Cheers,
--Paul
+-- 
+Jiri Kosina
+SUSE Labs
 
-> ---
-> =C2=A0drivers/rtc/rtc-jz4740.c | 1 -
-> =C2=A01 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-> index 44bba356268c..11fce47be780 100644
-> --- a/drivers/rtc/rtc-jz4740.c
-> +++ b/drivers/rtc/rtc-jz4740.c
-> @@ -437,4 +437,3 @@ module_platform_driver(jz4740_rtc_driver);
-> =C2=A0MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
-> =C2=A0MODULE_LICENSE("GPL");
-> =C2=A0MODULE_DESCRIPTION("RTC driver for the JZ4740 SoC\n");
-> -MODULE_ALIAS("platform:jz4740-rtc");
