@@ -1,116 +1,95 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE767433A8;
-	Thu, 24 Apr 2025 11:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE15221FDE
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745494096; cv=none; b=DXfDeqmytS2DtM36d9QGvSOwQp83NGbqtmYw7B3JcZTYPcN3Cz3DEsN5xYfVGFXVvj8iTx0qrmBJgqhV4oYVui/4DziRwitP+1YO4BNZK0aKRffGcFfRnimNVL9XNnHJuZMh0S17WUMzHLm2YHl2oekRMzCCaUPzLMlgCqZQv30=
+	t=1745494111; cv=none; b=JYcRKNWCAsiLcNup64GS0NReFzpOrPArtuQ55ER0Snef73Xdt3DHLkF3gl6P6wa0iFVjQYfKfvZ3UqsmQtfKRCEUitSEuQMchfPxliQXkb56GMK6oxVw+Ycw1h96HpUDiMK8GdAlsJ5QW2RVfpQ8ca3KbW959qr6kb8KPqt9PFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745494096; c=relaxed/simple;
-	bh=CyJVoe2ZUL2gvSariDtI00c71P95ZF57iP9ul8EBZy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bwzw219P8xy4gPJpRxTlZeR9FJFmKFCz6PGBJx3KiiEIRfye5hOTSmch2XUjYIOHbAe97bsCN7XbN9Iv6QHggXAwty3Pm+auBFrQosbeAf8NK75S02EVmjL/QG+CDc0tcyFyiGg5XUzBfNaj34hAP6KREGh+D51qJP2LgXWBL38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WTO+fOKy; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WTO+fOKy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3AD1F43A07;
-	Thu, 24 Apr 2025 11:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745494091;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bz9b9HTv2sWKqYaZLjCkIaHyjCRTMEZ4N5CM7lBAIjs=;
-	b=WTO+fOKy08+k3R6VOo4FgIrrMPsiB/nAVAOfJMQAdVSxjWQogtIY5cFgPAk1SOOSNg84v5
-	YAycUQfirISNqB46b6Rq2Kb0/kVJ/dVEDf6CJhl7XDUG4q1uUDmCk208gBMtVQ1QLCcowA
-	g+fPgfDstAalRZjliFX6HSgfLCdZRZcUtPau+3ZpOneb+uQBqfC5TO3g1NgDEjHo5A2vBl
-	J+gh7wITo8g5J8vLAI13NXWX+GLjyMQP1oVXIARzj/ipCf1WquNYUKY8S/ZYFKBK0oZlOQ
-	bt2f1BodPSa+XQVEebdOJs0qRrfqWeThlK3iYiydfl+WN4DaUXnuKi9a5EyTRA==
-Date: Thu, 24 Apr 2025 13:28:04 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski
- <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, =?UTF-8?B?SGVy?=
- =?UTF-8?B?dsOp?= Codina <herve.codina@bootlin.com>, Hui Pu
- <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
- Michal Simek <michal.simek@amd.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH 29/34] drm: zynqmp_dp: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250424132804.30bcc49a@booty>
-In-Reply-To: <6b699329-8ed4-4be6-81bb-17b4bf800d34@ideasonboard.com>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-	<20250407-drm-bridge-convert-to-alloc-api-v1-29-42113ff8d9c0@bootlin.com>
-	<6b699329-8ed4-4be6-81bb-17b4bf800d34@ideasonboard.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1745494111; c=relaxed/simple;
+	bh=wrr6iKvTJh4nKQN21VKqRjWOK2sb/czCDBemrxckoUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ifsLUklMnbt/CRojuk6DQ+ZLP+GJILIJtkVZuhraoBZrvlQU1c+IY6u7gq1jgOaYmvZZ0tkKzukSKS/d40F1RZPX/vd+VWULhEpy+uJU3x6eqY79BMR5ISismBHy7/U/gIZniauPQuf16EPvlIP/KF5I8+JC1t0hoZhlbYbpHgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E5FC1063;
+	Thu, 24 Apr 2025 04:28:23 -0700 (PDT)
+Received: from [10.163.78.97] (unknown [10.163.78.97])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CE1C3F59E;
+	Thu, 24 Apr 2025 04:28:24 -0700 (PDT)
+Message-ID: <45a10934-f8af-49c5-8d8f-dbd97193158d@arm.com>
+Date: Thu, 24 Apr 2025 16:58:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add mm THP section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelfeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedvpdhrtghpthhtohepthhomhhirdhvrghlkhgvihhnvghnsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopegrshhrihhvrghtshesrhgvughhrghtrdgtohhmpdhrtghpthhtohepphgruhhlkhesshihshdqs
- ggrshgvrdhiohdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hello Tomi,
 
-On Wed, 16 Apr 2025 15:31:41 +0300
-Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
 
-> Hi,
+On 24/04/25 4:46 pm, Lorenzo Stoakes wrote:
+> As part of the ongoing efforts to sub-divide memory management
+> maintainership and reviewership, establish a section for Transparent Huge
+> Page support and add appropriate maintainers and reviewers.
 > 
-> On 07/04/2025 17:23, Luca Ceresoli wrote:
-> > This is the new API for allocating DRM bridges.
-> > 
-> > This driver has a peculiar structure. zynqmp_dpsub.c is the actual driver,
-> > which delegates to a submodule (zynqmp_dp.c) the allocation of a
-> > sub-structure embedding the drm_bridge and its initialization, however it
-> > does not delegate the drm_bridge_add(). Hence, following carefully the code
-> > flow, it is correct to change the allocation function and .funcs assignment
-> > in the submodule, while the drm_bridge_add() is not in that submodule.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-[...]
+If you don't mind, I'd also like to be added as reviewer, I am primarily
+active in THP stuff : )
 
-> To add to my last mail, this clearly cannot be right, as it changes 
-> kzalloc call to devm_* call, without removing the kfree()s...
+> ---
+>   MAINTAINERS | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4015227645cc..85cd47a28a0a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15563,6 +15563,29 @@ S:	Maintained
+>   F:	include/linux/secretmem.h
+>   F:	mm/secretmem.c
+>   
+> +MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +M:	David Hildenbrand <david@redhat.com>
+> +R:	Zi Yan <ziy@nvidia.com>
+> +R:	Baolin Wang <baolin.wang@linux.alibaba.com>
+> +R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> +R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> +R:	Nico Pache <npache@redhat.com>
+> +R:	Ryan Roberts <ryan.roberts@arm.com>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +W:	http://www.linux-mm.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	Documentation/admin-guide/mm/transhuge.rst
+> +F:	include/linux/huge_mm.h
+> +F:	include/linux/khugepaged.h
+> +F:	include/trace/events/huge_memory.h
+> +F:	mm/huge_memory.c
+> +F:	mm/khugepaged.c
+> +F:	tools/testing/selftests/mm/khugepaged.c
+> +F:	tools/testing/selftests/mm/split_huge_page_test.c
+> +F:	tools/testing/selftests/mm/transhuge-stress.c
+> +
+>   MEMORY MANAGEMENT - USERFAULTFD
+>   M:	Andrew Morton <akpm@linux-foundation.org>
+>   R:	Peter Xu <peterx@redhat.com>
 
-Thank you very much for having tested this patch and found the mistake!
-I have checked all other patches in the series and found no other
-instance of this specific flaw, but a couple flaws of a different
-nature. I'm now fixing all of them and will send v2 later today.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
