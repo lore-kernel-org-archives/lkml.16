@@ -1,106 +1,141 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8665028466A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19331284673
 	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511635; cv=none; b=OsOkgORe8pkey+X4U+afcNt7vDvZrXiLw05ceFfMtRuQxlqM7zpvaHGv95z1orKHpOXh3EXpbH0lWnznSuxjxof38vm4Mh9WEZrekACXaO214yCSGa2W4ryjMNbcnY+iiu2VPEbRMs9TJ99EjrQxB0PVf1ETLLwZBp/D0A9ASSs=
+	t=1745511635; cv=none; b=k9c+nT/YiozHJOFySymXPlNxFkpMb3LSZ/HbKIOxFKg868CAfrjBH3OBGKlVm5pZxF1dRGMeZZtPY4+Y9LqIoaZE7wCj6gGmpRQtOw8YrJoqq/CLgCSQ3/TInER5DKoV8QJIEvRMbp/0bO5krNFZhSrgRU6abg91vnFpoIqqbxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745511635; c=relaxed/simple;
-	bh=N86G+xPvh3Fs6OA8eDZ5k/0ObrQcBlpZHqZBKD5QejE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nem95Tf3fmEVVWn+F/gezajcuJVPqFu2LhKNkkbgOd3r4ysd+mRKtG4uTaLzJFCfZBp4OSNZF0lCC8Ra056ogkyaVGkdF4oNAfyonJW9zEC03LSsf6zSE+YeOs79N5HM/9XLfZOHN78SpgMrMGEW2jCRVNhj8cVYMn0tj0j+AFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Czv/FUBV; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=InCEXlPry0Shz7qVuW3hH1vNAWeUV5R/D7hsRSK5cXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BmHln913krcmiMpjwk3O8TEaaU1eOy/abcBsIXQmavT3pTXujjCKBIlVD7W9tuoakMxz5zkge/bh2Tb/mtzSxeH+cNPFBRhVUNEuBLBr9F1XsQXhyjnu3vLA8U7JoHnqz2Rsfo7uGzXGYqmBNserF4Gx5n+7wmDoaN94sFBmt44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rMdsQgZ9; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Czv/FUBV"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7396f13b750so1355313b3a.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMdsQgZ9"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-224171d6826so19498185ad.3
         for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:20:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745511633; x=1746116433; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=29re1A6IAQcw58La3we0Qeu64CWcO3h8durF8s3FMdc=;
-        b=Czv/FUBVFtDpsxyQt6JZM3F3PhUj1i65g3DJlWttU/PYQHRSRFkMbt6xDBTBFHdu7B
-         FOlSWPD/fmgkcacag1ccoIU0hAHvu5MiPo9WADLP1PVXUz+f1P056PQtPw87PhD5GIKu
-         mYtkyucrqvFrysNVqLQIR1yYsPKgA/KPkglu1sgmYdKiY2mufI9GnTRsgYhVG3oUWhC3
-         khwdzoWy5BjOr4/LEdSrER1LtdGSu8+9/UPoKVFCnjol9BDjGE2j+fi50Y89VB+eX+cA
-         HyS79E+T8e53Obvw39zb5YsHPJmWIXKLEr6hFKGe1nXI869aQ6b8l2EzgYc5Xfo9kld/
-         op9A==
+        d=google.com; s=20230601; t=1745511633; x=1746116433; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AjA0zRqOdoO65aeGmUVGM27lVhB2Fk68FwOzncHTk4I=;
+        b=rMdsQgZ9PGjTsS+tEjtyRiXuk08i4ku/GiVOjbm8rSjCfY4Czjr28w2JqWMIsgkZc7
+         Mx6h9K5OEMXERb/9WTH1MmRwXk/NFk5W8Nd6hpSGAtn+GQRNdIFdK9fPDGTv3bpx+Kjq
+         WiEOBTDMAxiCLRZ7Xg3ekjZX7g/pz3zogzUE8gxEnWPTS/MqgCKmPMu7rtSE0sc/nTcS
+         CwjcOxIB2FR4/YbadvC1JgfKmX9mxEGob6CQjOwVJlwnflDQoL12x81n9h52BmK4WkJO
+         l+ICwq2gNX/MMaQ+ILcDzTc2htxhjvBGIvmcpWLO1KIdK5K39xPMolpHCjnX9gU5nsou
+         i9XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1745511633; x=1746116433;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=29re1A6IAQcw58La3we0Qeu64CWcO3h8durF8s3FMdc=;
-        b=VFYlVH1M8cPzXCPPO/tqHY1PaHNjklGLH8Je+luC2KJrJoh46Ke9IbiNyqtzkvXDjb
-         3aMfW39Op8cNbchw4de6iHV0VONy62V8pf9boSxwpOc38BPzgNNQMRWwEPQRY0H46XCt
-         g+9qLQlQV9qNl7PZTeyi11FB4UQwEkiztthNhpWMgPZUsVCci60e0EQFlemErE2burBa
-         dU9ot+TatczC9F6eePUw/r5Cu4EuZ88z26Ju8f0A1YkGePLzQQ80hbwHnYWBeqHpOnWX
-         hTTAKnLrLWsHwmOjALhvczx0nEDuvf7ftBxAsHG5uXV1o11cP5b4VWIqZ6QI7+cqRLZX
-         hMtw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6BmGfQMmpyKOtnNsbyOqY0OXl/+7YGTzM1IaKacF68SIDXgTb18BnyuFMDxNMeSHi2bJlOAIFXZ2bUf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNSacl40BsPSAAMVNwH6OGAm5aV6slH+HUju3wDsJzYk7RWisq
-	WGP05InIEGSIbHpzwiW02RdBMDfm6x6+5sRXaXzYEncjZxAy+Hd7xgPXimGKThQ=
-X-Gm-Gg: ASbGnctrSRd/sMKVOII7RTSk+0Qwc/2o0etqPC88uzQ87jE94q1TYfUHgkFOvGR0xbr
-	VJIcLHRy6ML58GJYAxzW89OROiGO/UCBhPrdfR2r1sFSoJ2PuAYOn4zJeDZj4yqFHWhutvzVQbO
-	Qj2Q31pUpWXRmVvJl9cKTM67jrUcNRJnCvdJVn1rFqWvICPSismpBcvqbjfFyCyjLCf98zkATMd
-	X+UoNbTrwIIX7gLd/PFb81bApTxeK03xau9qbyl9qT6JXC2XGu8je35eBFulyeMuT12bttG4XUf
-	faAG9UF0qsdK3Zc9gJ0hRITQ99BNzEAs20y8tXuaPA==
-X-Google-Smtp-Source: AGHT+IG578Ic64K8QbKa3qjFUhYhINjMm+PC0YZTjvGdvoBcCT0kxu+uUXe6zvVhuX1i3Rbt1n0WTQ==
-X-Received: by 2002:a05:6a00:3987:b0:73d:b1ff:c758 with SMTP id d2e1a72fcca58-73e247d7bfemr4497488b3a.18.1745511632704;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AjA0zRqOdoO65aeGmUVGM27lVhB2Fk68FwOzncHTk4I=;
+        b=L6On6QKdnloYVzVW2oGIRsmv/NdDKs9yBxpWd5kaRDoCnRj1eZQYRAHAbQIcIWvjOV
+         TUErTiAHZ/qpzlihVHrac1ABoaAo1p/rNyCShR/qUWB66XvmXLCAIGO4MDjzzm7rDcr6
+         xazkff2nlmpD3Wo9ArndKZfL01My9CEfugcCROY5KOcX0NwrTIeOtl/cLGUO2wPu8384
+         xHCSrev8FRFIJRDPTWe/OJhXXX2NRf9ILWJ9zA0Sk5vLPLATkEcfNYkGvHt3/lBsDada
+         2ZA7f2108sd/hmRKJnDGJJNp/CFB4SuWyBSN+OjiFlR75ChaciYrIImBJ+B8rm+OoLt8
+         OItQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtfrMi8wAWq5x+rRISf07VdZ2ZH6BkDoThNOwGcBLlVHVRzryLNCIiOL/x2bNj5GmEdkRXO94SGY3wDGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT2oM/tFKCTWT1dIR4XFELPFyion9HHKicZRC7+G9QAqYVXuJe
+	5skCiKYtM17INdx2QekggdpOzOKEMNPR76iYyWKZlXtcfVmnKFCRKkIY+0EdzQ==
+X-Gm-Gg: ASbGncsPUYqYiUc4vssuif2qacNhZEXLcajkFD9T32omAMmrtUpzz0OiHhSU4s0D2Zo
+	WbimEzeqdTxhoshJMX3MxbkI5oYZyuHPwOIh064CmO7EgXzrX+/LbVUcMc5C7rhqbY9xakRrWPd
+	r//rpoqokBlYbsm+dPMIYDuttyi1L/Gnr3p4T3JbRz7KNp2GivICaLJxS8l3lR3oyQG819lq+gr
+	yJocOtuEgl4N9AAktkwxNKeytImrQIr6Wd3LIQPGazDm12e9HViYrV9+7IW072uKzdokEroshhC
+	NsksJVB5bNPk4uujpXHFsp7Wtj1LvBBqIbBKqH8/UDh9bWJxSDe2180l83jm6NBp9jt5w8fWyjy
+	guA==
+X-Google-Smtp-Source: AGHT+IG8P6+pJNOxYWYGXFazufP063CNc7E1r2Vnv478yECDez1ity5Va93DLn+NqSzjAaI191FlTA==
+X-Received: by 2002:a17:90a:d88d:b0:2ff:4f04:4261 with SMTP id 98e67ed59e1d1-309f5724fcemr351652a91.34.1745511632805;
         Thu, 24 Apr 2025 09:20:32 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a415sm1588401b3a.85.2025.04.24.09.20.31
+Received: from google.com (30.176.125.34.bc.googleusercontent.com. [34.125.176.30])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef03bb7fsm1597107a91.9.2025.04.24.09.20.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 09:20:32 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Lifeng Zheng <zhenglifeng1@huawei.com>,
-	Nicholas Chin <nic.c3.14@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/5] cpufreq: Don't unnecessarily call set_boost()
-Date: Thu, 24 Apr 2025 21:50:15 +0530
-Message-Id: <3003fbdcc1850128fe7fb653d7ddb8afc4d66170.1745511526.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1745511526.git.viresh.kumar@linaro.org>
-References: <cover.1745511526.git.viresh.kumar@linaro.org>
+        Thu, 24 Apr 2025 09:20:31 -0700 (PDT)
+Date: Thu, 24 Apr 2025 16:20:25 +0000
+From: Benson Leung <bleung@google.com>
+To: Andrei Kuchynski <akuchynski@chromium.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jameson Thies <jthies@google.com>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
+	Pooja Katiyar <pooja.katiyar@intel.com>,
+	Madhu M <madhu.m@intel.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] usb: typec: ucsi: displayport: Fix NULL pointer
+ access
+Message-ID: <aApkyew8pxtOonFK@google.com>
+References: <20250424084429.3220757-1-akuchynski@chromium.org>
+ <20250424084429.3220757-3-akuchynski@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yN6CB+ZP4HAxLcf/"
+Content-Disposition: inline
+In-Reply-To: <20250424084429.3220757-3-akuchynski@chromium.org>
 
-The policy specific boost value may already be set correctly in
-cpufreq_boost_trigger_state(), don't update it again unnecessarily.
 
-Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--yN6CB+ZP4HAxLcf/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 3841c9da6cac..e31891c7b500 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2861,7 +2861,7 @@ static int cpufreq_boost_trigger_state(int state)
- 
- 	cpus_read_lock();
- 	for_each_active_policy(policy) {
--		if (!policy->boost_supported)
-+		if (!policy->boost_supported || policy->boost_enabled == state)
- 			continue;
- 
- 		policy->boost_enabled = state;
--- 
-2.31.1.272.g89b43f80a514
+On Thu, Apr 24, 2025 at 08:44:29AM +0000, Andrei Kuchynski wrote:
+> This patch ensures that the UCSI driver waits for all pending tasks in the
+> ucsi_displayport_work workqueue to finish executing before proceeding with
+> the partner removal.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: af8622f6a585 ("usb: typec: ucsi: Support for DisplayPort alt mode")
+> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
+Reviewed-by: Benson Leung <bleung@chromium.org>
+
+> ---
+>  drivers/usb/typec/ucsi/displayport.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/usb/typec/ucsi/displayport.c b/drivers/usb/typec/ucs=
+i/displayport.c
+> index acd053d4e38c..8aae80b457d7 100644
+> --- a/drivers/usb/typec/ucsi/displayport.c
+> +++ b/drivers/usb/typec/ucsi/displayport.c
+> @@ -299,6 +299,8 @@ void ucsi_displayport_remove_partner(struct typec_alt=
+mode *alt)
+>  	if (!dp)
+>  		return;
+> =20
+> +	cancel_work_sync(&dp->work);
+> +
+>  	dp->data.conf =3D 0;
+>  	dp->data.status =3D 0;
+>  	dp->initialized =3D false;
+> --=20
+> 2.49.0.805.g082f7c87e0-goog
+>=20
+
+--yN6CB+ZP4HAxLcf/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCaApkyQAKCRBzbaomhzOw
+wmZOAQCJHSNgJn3fio8LE2QNBerK0r8asdS4fi/alefs3cAcqgD/Y50z1pEaIDoS
+Ne3XXI4RGAwgX1RNf4VOHCVJcSyczwk=
+=L2jV
+-----END PGP SIGNATURE-----
+
+--yN6CB+ZP4HAxLcf/--
