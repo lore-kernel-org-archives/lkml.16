@@ -1,195 +1,81 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377DF21D3EB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484015; cv=fail; b=s/tE39E6kMCamq35qqIEln1AKkogNsCW3ltipmtmQGoyUh9/RxfSkSARf3XAubAl4YT4smmjFAngwonaRpiWMBDTGz8RMWrHXwEDq4RYTMRkRy7ZRU+E30ZpLkifSZTm7SnWR/GcevzZtieLpVA7ygiaCliEUbNmb5fYJinwOYo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484015; c=relaxed/simple;
-	bh=vjmDnSkdlZt/DhCTho+/Avo1f7AVJwHzyIdzmT9zBKs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VMzz0fVmuR3m6xZEWE0DFfJwsGnM4ISHaHJ/A/Ur7VlVoEsKQZcebC1KALSYi2IddsBb5ywnot1B9m7k6b0Ohm16xjl7wc2UZc3sadcTBo5VRHudHbVf0OGmZqF60CxtzvfzzBjflpx2DWsc+hlaSHS2Nax/U2JNKwcxfdGP0fc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fcXhxTZl; arc=fail smtp.client-ip=40.107.92.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9F02206BB;
+	Thu, 24 Apr 2025 08:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745484021; cv=none; b=hLEoa1lig+d8FUMvXkfxNzYywR7Be7xNWg6pSmkW9ZMh9uUyRB8B5W8Fc1eiuNDYrmyk0g6V2t7POGYV9CbSwtU1WZieV3h9SboMUwAwrbC97Ml7MdByZ0b/TI0Lm36NyTMB+bramGiFuq5rdkfQgkwqfSFlqbTNmOf1drQXAvQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745484021; c=relaxed/simple;
+	bh=sVIlkPEQeG3DxeMz+vLqRh28tiKBnygsKuB6DCumRl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAMV/1lYmxrsvsoLKwRRDFejm6KkEQDpAmGhUHOXMLj596jbo8so7v195bvIbH7rHf1gSGUrWfQNiu4z/x9EXQCD5EbH90BZ3DTlj/LOEo1jzHqrom+8y5dYEOvmXpEqpON1iSuCRAEJh8DLB/V2KZ/ur6Dol/kqCWAXE3YMKEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akfXnO4d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fcXhxTZl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SHNEdIk4x1nfCpqcRS9Yya4d2nHfKG7xvI619FuDGWok6B6/64V2xfNYwh9h+A5YCN7t9RIsV+ZDOtrMKvaLHKBwd/BUBE3FtDCJhhyTjzHi8sPU/7e8cm3R1Nl6lPo4gHscJIx64QYNvzHcW+giQ5IqKUJLad/7rP91OSPlhQIFXzjxCjUYwtV9arbwUgS5bM/8+4lXdCXjbwPUa6cPXVdVsv9iZWsAbuCMtVhfFINxsC6v98DVvB+8PzqXGQsNMZcqnSFeahza79KWCvBKDBN9CJvMlk8qmhAmKA/MtRTUEPU8gjezzIp0gBDViNZdxlxN6vLRcr/2d/3G4JDndA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YExrLBNmjk0Jky++4o/V4jEROgJRqTpVnrXzJ5VrY0A=;
- b=ReBNLYDVisgK7tJrl5kHUX1DruSk6/LzbbJFSR25pzOeQKadjs/+CknwTMxcWaBxdcsY/tewZOZRrokjohHr6OBRRyk7Rof+wihmrG0hexjASaDq6bm8qnqIpqhG/UkF5oWIQk5/e3S/3icahvCRxGKcs8Og/BGoGfa2WQaG3QCzxLHlZcHm3uhDb92NWZN3gKc9/ohZY+tMSINlIbCp2VHPin6JJBqgvFzj3hKBNQVS3N6NcblHgf2hRaqkqP5U+XfnPZRwybvnbM+VnCTTRat4ZSSh7WHx0y09BMpPz5hRa8F59N8PPTjXXRBdWgls4jR8Rd0J8PtBfpm7egbdtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YExrLBNmjk0Jky++4o/V4jEROgJRqTpVnrXzJ5VrY0A=;
- b=fcXhxTZlXO6JVb59zl0TBecGz93jvJ7voJ/vIXMkjzPsuOmKJZnqIxASSLSL2qYpaRWj3AF0KMWMQpohXzO7dLdbqdpUtfX0KHcmHeKfRDREOKNB/09ohDyjKJwvtk1MJ9nh5XpXeq5fuzbhLMSEatR/jT9af/ouGPHEdtf4dB8=
-Received: from DM6PR03CA0070.namprd03.prod.outlook.com (2603:10b6:5:100::47)
- by PH8PR12MB6721.namprd12.prod.outlook.com (2603:10b6:510:1cc::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Thu, 24 Apr
- 2025 08:40:09 +0000
-Received: from CH3PEPF00000011.namprd21.prod.outlook.com
- (2603:10b6:5:100:cafe::fb) by DM6PR03CA0070.outlook.office365.com
- (2603:10b6:5:100::47) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
- 24 Apr 2025 08:40:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.1 via Frontend Transport; Thu, 24 Apr 2025 08:40:08 +0000
-Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
- 2025 03:40:06 -0500
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 01/10] drm/debugfs: output client_id in in drm_clients_info
-Date: Thu, 24 Apr 2025 10:38:13 +0200
-Message-ID: <20250424083834.15518-2-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akfXnO4d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDD5C4CEEC;
+	Thu, 24 Apr 2025 08:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745484020;
+	bh=sVIlkPEQeG3DxeMz+vLqRh28tiKBnygsKuB6DCumRl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=akfXnO4dERto9TNmT2ocyhltse8MkqWj6RyweWyMXLAxGdxLPzD/YKVtb4NNyynU8
+	 jgBuECVcxRiH+X8ZsnipqVsU4Rdx2zw1sOFb1/RKSsiz8WTjttDQTDswjC1+blPsoI
+	 ZWRBVk5V36LLdT6wZgHj3bjR79cbmEVU6G8HSZcGWdGiSPqYPHFmCIVJnuNKBntoek
+	 kuX5FiF3N5tXhlnANp6F01OGiStqEA1vRKD+XBFuq4pQwjrvljg41La7inctrJhrgi
+	 YHeIlxI/hNjXVd7QGlhlQTy5pAL8rb48nUp+lb/SXOh019IYIF6NjLAv/VBh49HX8E
+	 NX6kiwZfceLtg==
+Date: Thu, 24 Apr 2025 10:40:14 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Christoph Hellwig <hch@lst.de>, rafael@kernel.org, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hca@linux.ibm.com, 
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>, Xiao Ni <xni@redhat.com>
+Subject: Re: [PATCH] devtmpfs: don't use vfs_getattr_nosec to query i_mode
+Message-ID: <20250424-waldgebiet-mitinhaber-886939383e1f@brauner>
+References: <20250423045941.1667425-1-hch@lst.de>
+ <20250423-wettkampf-zahnlos-87fa8f273df7@brauner>
+ <2025042305-timid-unusable-0501@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|PH8PR12MB6721:EE_
-X-MS-Office365-Filtering-Correlation-Id: c92efeee-3118-4f41-9a69-08dd830b9eb9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YjV2UnV3TlR0emEyV3pyUXljM2dCS2lpbldUckxUNTBDZnV3aXdVSmpPbmN2?=
- =?utf-8?B?Uis4K2llTk10VzY0aFQ0M2k1NDA5ZS9ja1lTa3BTWDhETS9BM1p3MVFFcktn?=
- =?utf-8?B?WS84QlFYVG40ajB0ZGZROWN6Nngzajg5RjVoNmN0VlFuc0hLTFg1SitWUk9E?=
- =?utf-8?B?aG5LU09Rd3VkUVFYQ1ZJWFNGQVVlSVc2S0IrS2tod2Jwc25OcTRNVG96c1Zs?=
- =?utf-8?B?dTFBRm9za3dqOFdjTzJBQmw3bHRBVlIvaGJ2S2V4cWd6eGVXY0RITTlLVHdR?=
- =?utf-8?B?TldaV1JrRFB0MXVUWGtqZzhDMnduOHhwdm9OUTVta3k3QjNwdWd5Sy9iS1dp?=
- =?utf-8?B?eitkMXliUWxhQ1pDZHlqRlF0WVZxOWtuRVIybUF2eURMdytVZ3FjOHIwdWdx?=
- =?utf-8?B?ZGJYbW53S2s4SjVwMFk2VUJoem5GcXkwbFZzVEwwV1NIZy9obFpuZTNBclp2?=
- =?utf-8?B?ci83S3NuZ0hPd0dzRWVFTEpPSm85dnY3cS82N2dNanNPdEF0NzB0V08rcWRR?=
- =?utf-8?B?SXRJc1RLN3I5NDNiU1BEa3ZlOE9MQlM2czVTZG91aE5Zc0FpOExaZmtTVndX?=
- =?utf-8?B?NWlRYnpEL3A0MEZWNW9abUFpOWx0THduVDE0NHNqRDZUUEFmZUJ1ZkNTR0RT?=
- =?utf-8?B?QkFhZU5tZ2FYNWN5L0NUZnpRRTQ5RmJ3NG5BV29jTEVSVzFyNE5NL3BtTTJR?=
- =?utf-8?B?RndHV01FM0RvUmk5QTNYREF6UzlWUDJ3cXRkWnQySHRycXYrdUdveWcwRXJF?=
- =?utf-8?B?clRFQzZaS0xFMExhT2ltRFBicFk3N3k4UVlWb1FuNFlXTnhDWXY0ek8wcDhB?=
- =?utf-8?B?UVJWdGR2T3YwcERUbWRFZ2tBcDVac1hVOHpGdXAwTmFSOEdXMm1rVDU0Qklu?=
- =?utf-8?B?Z3RZVC8rS0tJUDFaTEJLZUg5K3RqZ2Z3K05vSXoycFp2YWo0bnlkZ3hnaFMz?=
- =?utf-8?B?QzF1VGtuSlFZVUVmemkxaCt3VVFQOWxtQWE3d1NMRUpKR0J2VVBwMDI3azFn?=
- =?utf-8?B?UmJsNExvUXFTTURJc0dlZjY5UWtoNTlWWmIzeURza3Z0Z2RjMy9GcHJsV2Jl?=
- =?utf-8?B?R3pyeTd0NDZnRWJ2TFg2Z1pxOThhWHMyVW50LzF1SXk0c3JHT1B5Ukk3dmtz?=
- =?utf-8?B?cm1BSG9sQVZ1TnhWSENsNjA1YllkWmhaMll1TVJKMjB3TEFZcXQ5UXUxWDN4?=
- =?utf-8?B?T0NYZlY5Qkk3ME80UHJDZW1UUWdDOXhXcWtrY1UrY0VSNVA2RmpENmpYUnha?=
- =?utf-8?B?RWZtNjhKV0tTNXZjRWRSVXBEb3FNVFNTNzYwSTJCUjFVaXdWMXpjVEdwWnlF?=
- =?utf-8?B?QkdVMDh0OW9IR0N0TkZvNlliMlVMK241NCs0VGkwZ1BOMUtVWjh5cUlYMFNR?=
- =?utf-8?B?ZFc2Qi84WVlyMmlqcmpkV0I5azhmbWJlUms4dExIU0RXR2lMTDAzTmFUeDdm?=
- =?utf-8?B?N0IvTjE2cWdqQzltQnJpbVhRUlFPNW5TaXRuOVc0dzJGR2JJZW5GRlkxcldH?=
- =?utf-8?B?WFl5UkJyRThDcGQ3N3hTMU45Q3JGWUtnOWRDQTFha0txcEhTa1dQNDczNkFk?=
- =?utf-8?B?YUpOdHFRdWZqQ0lOa2RpeHBsbFJaNGlaNDFjNk00NitUOWN5bEEvUG5uV2ZI?=
- =?utf-8?B?Z3NMellLai9taXhna2szdmRLUit4bVEzTURPM3RIYWhwbEIrU0trZDFGSUxR?=
- =?utf-8?B?R0J5NUdZTzM2VHpzUzcxSWNTNDEyTWo5dmhIM0R3RVJMSlc3V0xkY2dyc1hk?=
- =?utf-8?B?WnhqblNJa3FDN25WZTYyMUtXanQ4TVZkSVVHMmliVzZRcXhYWkV4RVFiTHU5?=
- =?utf-8?B?TC9za1gzYVVCajJWM3Z2dVBNNHRCNFNkQkNCOUlncWFJK2ptSW9EaXZjNGRK?=
- =?utf-8?B?K2lmekNBTXdmd2pPMnFJbG5pTkU2TXVGa1M3aUI2b0tPZ2NiL1pJOFVDVzJ6?=
- =?utf-8?B?SFJobmpFS29nK0JkTG1tdDFaL0ZzUlQ2K25FRm05SStNWU4zZUxaRDgvZTFu?=
- =?utf-8?B?UnJRUUQrQktlckpPYzNWUFU3bUE4UHNBTzFsNW45cy9iTU5yUlFjUUZTRkNk?=
- =?utf-8?Q?5naasE?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 08:40:08.6662
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c92efeee-3118-4f41-9a69-08dd830b9eb9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000011.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6721
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2025042305-timid-unusable-0501@gregkh>
 
-client_id is a unique id used by fdinfo. Having it listed in 'clients'
-output means a userspace application can correlate the fields, eg:
-given a fdinfo id get the fdinfo name.
+On Wed, Apr 23, 2025 at 08:42:34AM +0200, Greg KH wrote:
+> On Wed, Apr 23, 2025 at 07:54:51AM +0200, Christian Brauner wrote:
+> > On Wed, Apr 23, 2025 at 06:59:41AM +0200, Christoph Hellwig wrote:
+> > > The recent move of the bdev_statx call to the low-level vfs_getattr_nosec
+> > > helper caused it being used by devtmpfs, which leads to deadlocks in
+> > > md teardown due to the block device lookup and put interfering with the
+> > > unusual lifetime rules in md.
+> > > 
+> > > But as handle_remove only works on inodes created and owned by devtmpfs
+> > > itself there is no need to use vfs_getattr_nosec vs simply reading the
+> > > mode from the inode directly.  Switch to that to avoid the bdev lookup
+> > > or any other unintentional side effect.
+> > > 
+> > > Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> > > Reported-by: Xiao Ni <xni@redhat.com>
+> > > Fixes: 777d0961ff95 ("fs: move the bdex_statx call to vfs_getattr_nosec")
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> > > Tested-by: Xiao Ni <xni@redhat.com>
+> > > ---
+> > 
+> > Reviewed-by: Christian Brauner <brauner@kernel.org>
+> 
+> Do you want me to take this through the driver-core tree, or is this a
+> fs-specific thing as that's where the regression showed up from?  Either
+> is fine with me.
 
-Geiven that client_id is a uint64_t, we use a %20llu printf format to
-keep the output aligned (20 = digit count of the biggest uint64_t).
+I'd grab it because it's a fixes for an earlier commit from Christoph.
+I also need to check whether we need to revert the bdev_statx() addition
+to vfs_getattr_nosec().
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
----
- drivers/gpu/drm/drm_debugfs.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 3dfd8b34dceb..abceb28b23fc 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -77,14 +77,15 @@ static int drm_clients_info(struct seq_file *m, void *data)
- 	kuid_t uid;
- 
- 	seq_printf(m,
--		   "%20s %5s %3s master a %5s %10s %*s\n",
-+		   "%20s %5s %3s master a %5s %10s %*s %20s\n",
- 		   "command",
- 		   "tgid",
- 		   "dev",
- 		   "uid",
- 		   "magic",
- 		   DRM_CLIENT_NAME_MAX_LEN,
--		   "name");
-+		   "name",
-+		   "id");
- 
- 	/* dev->filelist is sorted youngest first, but we want to present
- 	 * oldest first (i.e. kernel, servers, clients), so walk backwardss.
-@@ -100,7 +101,7 @@ static int drm_clients_info(struct seq_file *m, void *data)
- 		pid = rcu_dereference(priv->pid);
- 		task = pid_task(pid, PIDTYPE_TGID);
- 		uid = task ? __task_cred(task)->euid : GLOBAL_ROOT_UID;
--		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u %*s\n",
-+		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u %*s %20llu\n",
- 			   task ? task->comm : "<unknown>",
- 			   pid_vnr(pid),
- 			   priv->minor->index,
-@@ -109,7 +110,8 @@ static int drm_clients_info(struct seq_file *m, void *data)
- 			   from_kuid_munged(seq_user_ns(m), uid),
- 			   priv->magic,
- 			   DRM_CLIENT_NAME_MAX_LEN,
--			   priv->client_name ? priv->client_name : "<unset>");
-+			   priv->client_name ? priv->client_name : "<unset>",
-+			   priv->client_id);
- 		rcu_read_unlock();
- 		mutex_unlock(&priv->client_name_lock);
- 	}
--- 
-2.43.0
-
+Thanks, Greg!
