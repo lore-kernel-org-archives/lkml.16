@@ -1,121 +1,112 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2D7E20B1E8;
-	Thu, 24 Apr 2025 07:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA6C1F3BA3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479416; cv=none; b=DfPPu1l0c91oksX50y0Rh2grscX+8h5vEPkIvBDPeZ8t1RNfdKy5Dz0/0wzwT9R8AWc2k1sxR6VsT40kKar9RROuOmC+Rl5hlmVSNu0qWcFDR8i1NJtFXF6tgpMdJO7Qj3UoNd8/UC6ZLaVXHv7KUqAv0h+/HbLVDjVQESkXS/g=
+	t=1745479438; cv=none; b=fQJYNv/s1GZr2NWb8wBKvOR9ZCFjMOvLV0c7FmdlB+PtbLs+Nw38EkZsKfr515mrkkgPgAwQAkWPQek9oTpg2Z6ZWMYJc3cKvod7J6TDF2lDmP23S5tFUXTaOIKTa+++rsrADjaN1WJXnZe6iWSHq8a+XsoZ9Kpl91AP2ZjlTHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479416; c=relaxed/simple;
-	bh=sCE3zOKQu+v4U8QbYK2c41yXFWGS4hqC53keo15tqbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WxcOar5VGvZh/GkYhMB5jQ0IplF5BGwzgf5L240T59Z7TY7rLs1L96f5yqOZqFPNm8eXxicKtlAM1Gs169jVWUOVOO9OIoH9KPJEcp9ZXyCx2ultJkIEQXBEADBNC32XuHw+lRRA33/gsuAFA++FKfhq4f1wcMjMXPfkm/H1wjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8Bxlmny5gloTibFAA--.64495S3;
-	Thu, 24 Apr 2025 15:23:30 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMDxfRur5glo5CaTAA--.5456S5;
-	Thu, 24 Apr 2025 15:23:24 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Yanteng Si <si.yanteng@linux.dev>,
-	Feiyang Chen <chris.chenfeiyang@gmail.com>,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Henry Chen <chenx97@aosc.io>,
-	Biao Dong <dongbiao@loongson.cn>,
-	Baoqi Zhang <zhangbaoqi@loongson.cn>
-Subject: [PATCH net-next V3 3/3] net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
-Date: Thu, 24 Apr 2025 15:22:09 +0800
-Message-ID: <20250424072209.3134762-4-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250424072209.3134762-1-chenhuacai@loongson.cn>
-References: <20250424072209.3134762-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1745479438; c=relaxed/simple;
+	bh=18ICa3vI58dM0qDe75yctcopTR/UnLzuwYeVLptThgg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YMLXOtqqmiCgr8gBBT9pm5/g8UHVYS75Vpp3d8QTdAwuwaTxmO09GaqKvwbv6991Pzh6AVc7hWEb0pXmczR9m9cItqXLIRpnd1AuiKcPiAaBxNIo3TTzBt/ltB2wFsHvWReV6K91BuNDyuW7Mw2S/+fWsaJhBVhfY9knvktQ9ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HPCmVUph; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HPCmVUph"
+Message-ID: <b9814fec-a9b6-4cd5-a0b1-1c2ddb214a03@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745479433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dEOx6KONvXmNWax6EDI3+Zvv3tm8dvdgjEx8wQxaCaI=;
+	b=HPCmVUphENqglFaZwSxEirHJmCjBUI2OAE6jcjz+bA4iJ56y6KT6UX/y0D25nt0rlrGmIG
+	6IwEPvUj5YiWMfKLD9JnBiCOZn8auJsZPmImRIAYRyBDuVRkexeWYCyshKZ0tEm/XwwC3u
+	9Abg0QV7BMkHy3T8WF482j3K7pXTvIg=
+Date: Thu, 24 Apr 2025 15:23:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxfRur5glo5CaTAA--.5456S5
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWrtrykCrW8Kw48Cr45Jwc_yoW8KFWxpr
-	W5ZasFgrZ3GF45Cw4vqrWDWry5ZFZxG3srCF42yw4UWF93J342q3sF9Fs8Aw17ur45XFy2
-	vrWkCw48CFs8GwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0XdjtUUUUU==
+Subject: Re: [PATCH 02/12] sched_ext: Avoid NULL scx_root deref through
+ SCX_HAS_OP()
+To: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
+ linux-kernel@vger.kernel.org
+References: <20250423234542.1890867-1-tj@kernel.org>
+ <20250423234542.1890867-3-tj@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250423234542.1890867-3-tj@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Add a new GMAC's PCI device ID (0x7a23) support which is used in
-Loongson-2K3000/Loongson-3B6000M. The new GMAC device use external PHY,
-so it reuses loongson_gmac_data() as the old GMAC device (0x7a03), and
-the new GMAC device still doesn't support flow control now.
+On 2025/4/24 07:44, Tejun Heo wrote:
+> SCX_HAS_OP() tests scx_root->has_op bitmap. The bitmap is currently in a
+> statically allocated struct scx_sched and initialized while loading the BPF
+> scheduler and cleared while unloading, and thus can be tested anytime.
+> However, scx_root will be switched to dynamic allocation and thus won't
+> always be deferenceable.
+> 
+> Most usages of SCX_HAS_OP() are already protected by scx_enabled() either
+> directly or indirectly (e.g. through a task which is on SCX). However, there
+> are a couple places that could try to dereference NULL scx_root. Update them
+> so that scx_root is guaranteed to be valid before SCX_HAS_OP() is called.
+> 
+> - In handle_hotplug(), test whether scx_root is NULL before doing anything
+>    else. This is safe because scx_root updates will be protected by
+>    cpus_read_lock().
+> 
+> - In scx_tg_offline(), test scx_cgroup_enabled before invoking SCX_HAS_OP(),
+>    which should guarnatee that scx_root won't turn NULL. This is also in line
+>    with other cgroup operations. As the code path is synchronized against
+>    scx_cgroup_init/exit() through scx_cgroup_rwsem, this shouldn't cause any
+>    behavior differences.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> ---
+>   kernel/sched/ext.c | 11 ++++++++++-
+>   1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 975f6963a01b..ad392890d2dd 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -3498,6 +3498,14 @@ static void handle_hotplug(struct rq *rq, bool online)
+>   
+>   	atomic_long_inc(&scx_hotplug_seq);
+>   
+> +	/*
+> +	 * scx_root updates are protected by cpus_read_lock() and will stay
+> +	 * stable here. Note that we can't depend on scx_enabled() test as the
+> +	 * hotplug ops need to be enabled before __scx_enabled is set.
+> +	 */
+> +	if (!scx_root)
+> +		return;
+> +
+>   	if (scx_enabled())
+>   		scx_idle_update_selcpu_topology(&scx_root->ops);
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-Tested-by: Henry Chen <chenx97@aosc.io>
-Tested-by: Biao Dong <dongbiao@loongson.cn>
-Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Just be curious, does the comments added above mean we shouldn't
+check scx_enabled() here anymore?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 57917f26ab4d..e1591e6217d4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -66,7 +66,8 @@
- 					 DMA_STATUS_TPS | DMA_STATUS_TI  | \
- 					 DMA_STATUS_MSK_COMMON_LOONGSON)
- 
--#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_GMAC1	0x7a03
-+#define PCI_DEVICE_ID_LOONGSON_GMAC2	0x7a23
- #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
- #define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
- #define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
-@@ -371,7 +372,7 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
- 	/* Loongson GMAC doesn't support the flow control. Loongson GNET
- 	 * without multi-channel doesn't support the half-duplex link mode.
- 	 */
--	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
-+	if (pdev->device != PCI_DEVICE_ID_LOONGSON_GNET) {
- 		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
- 	} else {
- 		if (ld->multichan)
-@@ -659,7 +660,8 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
- 			 loongson_dwmac_resume);
- 
- static const struct pci_device_id loongson_dwmac_id_table[] = {
--	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GMAC1, &loongson_gmac_pci_info) },
-+	{ PCI_DEVICE_DATA(LOONGSON, GMAC2, &loongson_gmac_pci_info) },
- 	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
- 	{}
- };
--- 
-2.47.1
+Thanks!
 
+>   
+> @@ -3994,7 +4002,8 @@ void scx_tg_offline(struct task_group *tg)
+>   
+>   	percpu_down_read(&scx_cgroup_rwsem);
+>   
+> -	if (SCX_HAS_OP(scx_root, cgroup_exit) && (tg->scx_flags & SCX_TG_INITED))
+> +	if (scx_cgroup_enabled && SCX_HAS_OP(scx_root, cgroup_exit) &&
+> +	    (tg->scx_flags & SCX_TG_INITED))
+>   		SCX_CALL_OP(SCX_KF_UNLOCKED, cgroup_exit, NULL, tg->css.cgroup);
+>   	tg->scx_flags &= ~(SCX_TG_ONLINE | SCX_TG_INITED);
+>   
