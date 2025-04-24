@@ -1,128 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1281422AB;
-	Thu, 24 Apr 2025 15:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE944C77;
+	Thu, 24 Apr 2025 15:31:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508643; cv=none; b=JlTrhelYfv56clCAD1t5GALLZSD3WwUviHg6ou33tJ949pIKsRvnNwHYeBPfz35R6YgVGG2dCIjh1v2a2bg0GRQTGWBVkAFv25VQMk8ZUUDzbl9uW2urU/sgKFWRYv9Tk73S175dnwS5kT8qf7x4ONS4yj4iGMoKEcNFH8etwNU=
+	t=1745508684; cv=none; b=a8Gt7NerOQjgz9IRYee7LJpIRrCE/MAia2TmsbJBTM9vwBhMaFmlO55oD5/vWVrRJnGin0DT5M0HO4R4mFWmAEO1rgMktWGo04aAoRFWhCruubi+Z3DMj+21P40PgFoFjVfIXxEzq6VCP9czCngUdnAbU0nmU7GCnNFWw7b4zoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508643; c=relaxed/simple;
-	bh=F2Zu0d83wpmzJlR6hgO8n1irqHavV/MPiGgpkEDFoNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bmu42jwAOnniqxvYmtZhtHOyd6MzKrqciHUVuC1Ofl1GiYdnlJ2YGw4vJJJt70/WWSS6gAWzAZ+j8UT1FK8uEmnA89y8fhVJABfcFuNJgFhpX/qhor4zy1CH7pAe6I3GxsKetqmAjqC7ybEQkHz4rLl5lQxyVhKzKageI0QEe+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evU1wmVS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745508684; c=relaxed/simple;
+	bh=ggnqC+sRhooCK5oEVXjCBnDM2VOyq0O6DNpXNKZNRF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TQAChfY7hIQkW3+PY89C5LIm4dq+odpPkdSagb1R7kccJwHQZCohhqT19uyY8SkDff5YdDtCu6pT+34xuGWTWOsaFBgUaTfPMrHQGeo+2C55c8Yqtlw3HV4lteW7+4ZHfwS+dGYsNGXqTiJsc8JcRYX38kN6dNcB8cQmcgYeG6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4CBKwly; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evU1wmVS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FCF8C4CEE3;
-	Thu, 24 Apr 2025 15:30:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4CBKwly"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278D1C4CEE3;
+	Thu, 24 Apr 2025 15:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745508642;
-	bh=F2Zu0d83wpmzJlR6hgO8n1irqHavV/MPiGgpkEDFoNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=evU1wmVS8ajBXXfPEORI3cWyfH2tPHntaBg6lFcqMUxVnYovlUsBbW6M1DJLwKZ3w
-	 6XkiWJh2/6r57vFUWfRhAlYpdj4eRsW5SyD87EGXYGO0JrXKAoIkUxh4GELZVf6jy4
-	 dm6VGkgfC0UbTIZBSxJCf7+gYrsj/CC5hhCNBqc/ZGUv6T7/IVLpDZmeHfinRahR0e
-	 okXlXh00ZfnpwzIsEkRc8dMwvwjrWKnJ7xUSeBrCFkNhUTxnY5IC/14CpN/hVrvu54
-	 EMmlYNbW4gdX9WNhGmFKA1Si9/eZ1xeLfuXrHl5MsarNKL8PFtRN75mcSC/KJQBH1+
-	 FUxX4zMjspxNQ==
-Date: Thu, 24 Apr 2025 16:30:37 +0100
-From: Conor Dooley <conor@kernel.org>
-To: hans.zhang@cixtech.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, peter.chen@cixtech.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manikandan K Pillai <mpillai@cadence.com>
-Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
- new EP configurations
-Message-ID: <20250424-proposal-decrease-ba384a37efa6@spud>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-3-hans.zhang@cixtech.com>
- <20250424-elm-magma-b791798477ab@spud>
+	s=k20201202; t=1745508683;
+	bh=ggnqC+sRhooCK5oEVXjCBnDM2VOyq0O6DNpXNKZNRF8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X4CBKwly6dh6eQb/Hq2ar0IvUVwlmhzEkl43VEf2jmIptexk12GVwoq+HWxHPsNGH
+	 5cAUNxTb/Q7gfF2oChV35sdQpHx7aLpYs3XmO6989GRDlHe2+A1e7Y2Q0vUVUmMInu
+	 Vl4ogRz8gjnCkT+MRPAzIBYQcZP+5uDtU6a38u6cmti+0PfNOLMod5bYQZn2xB3Qyw
+	 zlTmTtRbdqXiQTm0u4kGgYICzkoypjWeMfnTnDfyJ1X6UCRgUgE9ZKsev4C/7iLcoD
+	 Tn2jUze8MVlhS0Q90qAiMp8Ll3d0d9BkUKtGgT/kqj52gZoK0UcdQxx3M3rkmwfhuf
+	 Ux/AC95mz54ug==
+Message-ID: <1355515c-477e-455c-a910-a69dc1b77f07@kernel.org>
+Date: Thu, 24 Apr 2025 17:31:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GFIonBy2QUjipRLN"
-Content-Disposition: inline
-In-Reply-To: <20250424-elm-magma-b791798477ab@spud>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 06/10] dt-bindings: clock: Add Qualcomm QCS615 Graphics
+ clock controller
+To: Taniya Das <quic_tdas@quicinc.com>, Bjorn Andersson
+ <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250424-qcs615-mm-v7-clock-controllers-v8-0-bacad5b3659a@quicinc.com>
+ <20250424-qcs615-mm-v7-clock-controllers-v8-6-bacad5b3659a@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250424-qcs615-mm-v7-clock-controllers-v8-6-bacad5b3659a@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 24/04/2025 11:33, Taniya Das wrote:
+> Add DT bindings for the Graphics clock on QCS615 platforms. Add the
+> relevant DT include definitions as well.
+> 
+> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+> ---
+>  .../bindings/clock/qcom,qcs615-gpucc.yaml          | 49 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,qcs615-gpucc.h      | 39 +++++++++++++++++
+>  2 files changed, 88 insertions(+)
+> 
 
---GFIonBy2QUjipRLN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
-> On Thu, Apr 24, 2025 at 09:04:41AM +0800, hans.zhang@cixtech.com wrote:
-> > From: Manikandan K Pillai <mpillai@cadence.com>
-> >=20
-> > Document the compatible property for HPA (High Performance Architecture)
-> > PCIe controller EP configuration.
->=20
-> Please explain what makes the new architecture sufficiently different
-> from the existing one such that a fallback compatible does not work.
->=20
-> Same applies to the other binding patch.
-
-Additionally, since this IP is likely in use on your sky1 SoC, why is a
-soc-specific compatible for your integration not needed?
-
->=20
-> Thanks,
-> Conor.
->=20
-> >=20
-> > Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
-> > Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> > ---
-> >  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml          | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.ya=
-ml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> > index 98651ab22103..a7e404e4f690 100644
-> > --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> > @@ -7,14 +7,16 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
-> >  title: Cadence PCIe EP Controller
-> > =20
-> >  maintainers:
-> > -  - Tom Joseph <tjoseph@cadence.com>
-> > +  - Manikandan K Pillai <mpillai@cadence.com>
-> > =20
-> >  allOf:
-> >    - $ref: cdns-pcie-ep.yaml#
-> > =20
-> >  properties:
-> >    compatible:
-> > -    const: cdns,cdns-pcie-ep
-> > +    enum:
-> > +      - cdns,cdns-pcie-ep
-> > +      - cdns,cdns-pcie-hpa-ep
-> > =20
-> >    reg:
-> >      maxItems: 2
-> > --=20
-> > 2.47.1
-> >=20
-
-
-
---GFIonBy2QUjipRLN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaApZHQAKCRB4tDGHoIJi
-0h91AQCl6p1lnD7DkZJBQGatyBpgmjcCvY6y3d8js+Mbf1hBUAD4n6/pTLDh6mpo
-JwqSQwAfhCxv8hBjwJwMbAtwYOAiDA==
-=N1px
------END PGP SIGNATURE-----
-
---GFIonBy2QUjipRLN--
+Best regards,
+Krzysztof
