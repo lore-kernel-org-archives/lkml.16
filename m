@@ -1,113 +1,426 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BB219F422
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC36E18FC89
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501883; cv=none; b=fY6a85rLScHRSj1vk1YrKms9o2xp2Zu27WM0gkX3dv8Q1rnqP+XOr1ULBoNBF1Wy27sNwShBqxeq7ENuR+V/hmwvSazj/9YRfFxs5YhX8u/UnyQzmEsI3oHwgL8Jl2J8lrAX+mnDaymNK6aosXoUK7uURKcESaQoK21E6xhcuks=
+	t=1745501885; cv=none; b=C0s/dJrSCGvMzYKFugumyRrNrioHTT0eltRscQ/24ambAHe1j0XBreygLhRp3kRIVc+m4iKT7mYZAksXLnOvv4SmIYcEIS7oOoG0LgbKJamXZ439o/NpKyXgtzsrjGG9RzGPyervC4QmZUF0N4EjGJmiJd74Sja+3gQy1lUDzyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501883; c=relaxed/simple;
-	bh=D/eBCecqGJOsPMhoyOTAom8n4mwMCJ8cEqE7fC+WqRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fdzet4XxgNMLRd7R+UFSx58ENO0/nXHq/uNqnXZIiZlJ42NHI0OPPtBisN73Gq5DlHoaQ23EN90I66r9msWRudBUUBDxut475gZ0eI97nf+XfhiPr9Ats2MWp1tUP7cHCHNF8PHW4amkNJss6QAxcW0mc3SZlIQC9Qk9UPtyNKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=S0EIKPw7; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1745501885; c=relaxed/simple;
+	bh=9ukI5iPUv8J84CoV1OEbUeSFBHIZ7pB9cPVw1XNT34Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EnbIpEW3E99ZxpL9somRwNxPuVwp6ziMF5a3g/szOgTPxt/BmyfJoiiv26c/jENqNuqx79Wf8fJzR6+vzcNdNoDV1bLujnfocr+s81PJ/ne52aluvV0aUR4u50K5PGZtRj1zi3VJjIjsfsLGc28fuAJ1b0FiW34hcdVqImYEIWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZtH5Rn+b; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="S0EIKPw7"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso12554836d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745501881; x=1746106681; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U/W3GC3oatAl2njW4tqC6hVInIU5fJ/grm/o1CEX900=;
-        b=S0EIKPw7Sx6dOPkPXEYxxenV+AJPQ7ez+emvKZsmH0K6+D8WxpKQjfkQAP0u80ZXS+
-         4LisAYHfaqzmpaQ/mm6rM6NjPdCVuliEiDtZs62w/C5LD1NGMRmUHM2+tj4MR1Ue8+83
-         MCRXFLNkBFjAZK+2TRn2kvebwjTMcIbFBqqYhNDeL+1fbDVGdktReNREduybgEsd7KyM
-         LEML0lZdoRLxH1EeFsMhcnCD35qokLOB0JxvC6cwxfBByhFIJvMy4mEVMS/PIMiLgOTw
-         tqA8EBGqx6p6HIZvMBRCzo72qrHEihSONvVEtf+55T8ND1dMs7kUWXmJH9hf44/+NU/i
-         HFnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745501881; x=1746106681;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U/W3GC3oatAl2njW4tqC6hVInIU5fJ/grm/o1CEX900=;
-        b=EDTOB/CeG2SQvqY5SsQkNBjF3hANpU9zv6Qe2stwzLv4iZiNlCdOmDX/bQk9mpqTXT
-         pvkbqX/TQBDodC9ojGl1/88Xj19KjqyPfqJ+NPerRBBwF6jBx++PoRksMM/cpzLKh0mj
-         YvDCT/0IqxjQ4xMz5xwzd5avwrrYYw6xuM38Vc/srevb0gDzi964j4jfss+CtU73XN+Z
-         WEgwjf9M2qac+Sq8/97ZN3V8HLq2LXyFgEXJlD69o+lZUBOsBzEdo0MNY/pjxU3u7v/V
-         HIat6S8Jqd12xh5SLHWpyaKMPcTZLF9OWzQjbO+iW7mZUhvIUKpKUqXfj11jPD59gijq
-         /dsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWotxPAWbPCFQaGtmDMoVQD+oXmGyOvFBnErs2azB5u6oRnbVHIDTuIRev/u/sjbPrhWmZGKBt3J8t3frc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAHmzodO/OdbOprSsLni6/Fn+1KjEYCsHEAj5oLycy2XeCJFM9
-	EK8gKNhXptXhvhkiOroSZMxiF7gpmDAP8OORoxvtXxo/I1Ja69Ml/yHTQBq52wc=
-X-Gm-Gg: ASbGncskkXUfZanaxhQlRFq57r7obcu6zMTnWH4WjMP47f+W8dLlSq4j7LO3GdpWS19
-	CShdNapkC6DHADzQZ5Ugj9aOJQ4turvaMNW6GlYFDUK/yfloavv4+tl9P+Mq6saJtJ8tqJczDam
-	kA1qzcmJTmmD8VmhZW+g0i4/4unweTd+dLwDnikuiTrG4mdUO6tNKHHyTI+jgVy3iR9GL1DNDEI
-	w9loHP0TKJ7hfqSknUPlILt4xVg8OzshWftXICr61ZYH48yTMDRS7bArr+K2VPGMODZLbTHpaxo
-	ooXSfYsbx9SZn7DNWCFvX0kyRX4sa1uHy1h4KUJMg1DjoaTaFIQMqU/YBk8b/ERohtV9lBq7lT1
-	S5lBheaOoWQXWJQnk5zw=
-X-Google-Smtp-Source: AGHT+IE64NqIpTP8d6nXJqLNWT3jPXbllYrtohUGLpe1Dgn/vUIkQeRm20MtXG4dpykW621IkSP7/A==
-X-Received: by 2002:a05:6214:2aae:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f4bfc742a1mr45162376d6.34.1745501880600;
-        Thu, 24 Apr 2025 06:38:00 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c093452fsm9500826d6.44.2025.04.24.06.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 06:38:00 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7wm7-00000007UU5-2Apr;
-	Thu, 24 Apr 2025 10:37:59 -0300
-Date: Thu, 24 Apr 2025 10:37:59 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] iommu/vt-d: Simplify domain_attach_iommu()
-Message-ID: <20250424133759.GA1213339@ziepe.ca>
-References: <20250423031020.2189546-1-baolu.lu@linux.intel.com>
- <20250423031020.2189546-4-baolu.lu@linux.intel.com>
- <BN9PR11MB527619613B8615A94A01FF598C852@BN9PR11MB5276.namprd11.prod.outlook.com>
- <42e8c668-e72d-490a-8a5e-8e94af90fda4@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZtH5Rn+b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745501884; x=1777037884;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9ukI5iPUv8J84CoV1OEbUeSFBHIZ7pB9cPVw1XNT34Y=;
+  b=ZtH5Rn+b0lcX64j4zpNoyxAdwZvyGm7dc7ZFy/Mkgks9Tb0ulwcwjsa4
+   ZjIeqUQM9fYQPNZ2TiNXzzebHInqsF+9+NTssUoEFh1AST61dPHKjuoi9
+   cejlEPjNTCzOXb7vIbFIYkCi3+p+RV166+7hHvj4X2+n/fzizp5O/RkIQ
+   XeL/gOLSGdi5HHQ5i8zxX/OrE3LnCSKV2ctHXqA3wFpImfPeUjLkcSxrC
+   np7MdnJv2/mVF+r+FO5Fp4EOi7qFtok3hAsGYwsQfOwoZq3FOFSkapbUK
+   KlUtBAFSmLBOmcia4AfKQj3jxD8hHHYNTa3aw3r5GVeu6eJIAlA0Ji1yT
+   g==;
+X-CSE-ConnectionGUID: LGR7vqwDRqq57n6UrwkGVw==
+X-CSE-MsgGUID: /6n4C4yZS5yvnwfHPuY1tQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="46368094"
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="46368094"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 06:38:03 -0700
+X-CSE-ConnectionGUID: zUkG+3VpThGnZb0q0jdJpg==
+X-CSE-MsgGUID: 5bDNf/KFQfyvSbEBVZx7QQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="136701385"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 06:37:57 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>,
+	linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Tomas Winkler <tomasw@gmail.com>,
+	Vitaly Lubart <lubvital@gmail.com>
+Subject: [PATCH v9 05/12] mtd: intel-dg: register with mtd
+Date: Thu, 24 Apr 2025 16:25:29 +0300
+Message-ID: <20250424132536.3043825-6-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250424132536.3043825-1-alexander.usyskin@intel.com>
+References: <20250424132536.3043825-1-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42e8c668-e72d-490a-8a5e-8e94af90fda4@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 05:22:48PM +0800, Baolu Lu wrote:
+Register the on-die nvm device with the mtd subsystem.
+Refcount nvm object on _get and _put mtd callbacks.
+For erase operation address and size should be 4K aligned.
+For write operation address and size has to be 4bytes aligned.
 
-> > > -err_clear:
-> > > -	ida_free(&iommu->domain_ida, info->did);
-> > > -err_unlock:
-> > > -	kfree(info);
-> > > -	return ret;
-> > > +	return xa_err(xa_store(&domain->iommu_array, iommu->seq_id,
-> > > +			       no_free_ptr(info), GFP_KERNEL));
-> > >   }
-> > 
-> > no_free_ptr() should be used before successful return. Here xa_store()
-> > could return error but at that point no auto free as no_free_ptr() already
-> > changes 'info' to NULL. then memory leak.
->
-> Hmm, I've considered this. My thought was that xa_store() failure only
-> occurs due to the system running out of memory, and the Linux kernel
-> can't recover from it. In that case, the system is already broken;
-> hence, handling the failure case here doesn't make things better.
+CC: Rodrigo Vivi <rodrigo.vivi@intel.com>
+CC: Lucas De Marchi <lucas.demarchi@intel.com>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Co-developed-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Tomas Winkler <tomasw@gmail.com>
+Co-developed-by: Vitaly Lubart <lubvital@gmail.com>
+Signed-off-by: Vitaly Lubart <lubvital@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ drivers/mtd/devices/mtd_intel_dg.c | 230 ++++++++++++++++++++++++++++-
+ 1 file changed, 226 insertions(+), 4 deletions(-)
 
-That's not the kernel pattern, you are supposed to unwind correctly in
-those failures
+diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
+index 6f67cf966d05..4023f2ebc344 100644
+--- a/drivers/mtd/devices/mtd_intel_dg.c
++++ b/drivers/mtd/devices/mtd_intel_dg.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
++#include <linux/cleanup.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/intel_dg_nvm_aux.h>
+@@ -12,6 +13,8 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/partitions.h>
+ #include <linux/string.h>
+ #include <linux/slab.h>
+ #include <linux/sizes.h>
+@@ -19,6 +22,8 @@
+ 
+ struct intel_dg_nvm {
+ 	struct kref refcnt;
++	struct mtd_info mtd;
++	struct mutex lock; /* region access lock */
+ 	void __iomem *base;
+ 	size_t size;
+ 	unsigned int nregions;
+@@ -177,7 +182,6 @@ static int idg_nvm_is_valid(struct intel_dg_nvm *nvm)
+ 	return 0;
+ }
+ 
+-__maybe_unused
+ static unsigned int idg_nvm_get_region(const struct intel_dg_nvm *nvm, loff_t from)
+ {
+ 	unsigned int i;
+@@ -209,7 +213,6 @@ static ssize_t idg_nvm_rewrite_partial(struct intel_dg_nvm *nvm, loff_t to,
+ 	return len;
+ }
+ 
+-__maybe_unused
+ static ssize_t idg_write(struct intel_dg_nvm *nvm, u8 region,
+ 			 loff_t to, size_t len, const unsigned char *buf)
+ {
+@@ -266,7 +269,6 @@ static ssize_t idg_write(struct intel_dg_nvm *nvm, u8 region,
+ 	return len;
+ }
+ 
+-__maybe_unused
+ static ssize_t idg_read(struct intel_dg_nvm *nvm, u8 region,
+ 			loff_t from, size_t len, unsigned char *buf)
+ {
+@@ -325,7 +327,6 @@ static ssize_t idg_read(struct intel_dg_nvm *nvm, u8 region,
+ 	return len;
+ }
+ 
+-__maybe_unused
+ static ssize_t
+ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_addr)
+ {
+@@ -414,6 +415,147 @@ static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
+ 	return n;
+ }
+ 
++static int intel_dg_mtd_erase(struct mtd_info *mtd, struct erase_info *info)
++{
++	struct intel_dg_nvm *nvm = mtd->priv;
++	unsigned int idx;
++	u8 region;
++	u64 addr;
++	ssize_t bytes;
++	loff_t from;
++	size_t len;
++	size_t total_len;
++
++	if (WARN_ON(!nvm))
++		return -EINVAL;
++
++	if (!IS_ALIGNED(info->addr, SZ_4K) || !IS_ALIGNED(info->len, SZ_4K)) {
++		dev_err(&mtd->dev, "unaligned erase %llx %llx\n",
++			info->addr, info->len);
++		info->fail_addr = MTD_FAIL_ADDR_UNKNOWN;
++		return -EINVAL;
++	}
++
++	total_len = info->len;
++	addr = info->addr;
++
++	guard(mutex)(&nvm->lock);
++
++	while (total_len > 0) {
++		if (!IS_ALIGNED(addr, SZ_4K) || !IS_ALIGNED(total_len, SZ_4K)) {
++			dev_err(&mtd->dev, "unaligned erase %llx %zx\n", addr, total_len);
++			info->fail_addr = addr;
++			return -ERANGE;
++		}
++
++		idx = idg_nvm_get_region(nvm, addr);
++		if (idx >= nvm->nregions) {
++			dev_err(&mtd->dev, "out of range");
++			info->fail_addr = MTD_FAIL_ADDR_UNKNOWN;
++			return -ERANGE;
++		}
++
++		from = addr - nvm->regions[idx].offset;
++		region = nvm->regions[idx].id;
++		len = total_len;
++		if (len > nvm->regions[idx].size - from)
++			len = nvm->regions[idx].size - from;
++
++		dev_dbg(&mtd->dev, "erasing region[%d] %s from %llx len %zx\n",
++			region, nvm->regions[idx].name, from, len);
++
++		bytes = idg_erase(nvm, region, from, len, &info->fail_addr);
++		if (bytes < 0) {
++			dev_dbg(&mtd->dev, "erase failed with %zd\n", bytes);
++			info->fail_addr += nvm->regions[idx].offset;
++			return bytes;
++		}
++
++		addr += len;
++		total_len -= len;
++	}
++
++	return 0;
++}
++
++static int intel_dg_mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
++			     size_t *retlen, u_char *buf)
++{
++	struct intel_dg_nvm *nvm = mtd->priv;
++	ssize_t ret;
++	unsigned int idx;
++	u8 region;
++
++	if (WARN_ON(!nvm))
++		return -EINVAL;
++
++	idx = idg_nvm_get_region(nvm, from);
++
++	dev_dbg(&mtd->dev, "reading region[%d] %s from %lld len %zd\n",
++		nvm->regions[idx].id, nvm->regions[idx].name, from, len);
++
++	if (idx >= nvm->nregions) {
++		dev_err(&mtd->dev, "out of range");
++		return -ERANGE;
++	}
++
++	from -= nvm->regions[idx].offset;
++	region = nvm->regions[idx].id;
++	if (len > nvm->regions[idx].size - from)
++		len = nvm->regions[idx].size - from;
++
++	guard(mutex)(&nvm->lock);
++
++	ret = idg_read(nvm, region, from, len, buf);
++	if (ret < 0) {
++		dev_dbg(&mtd->dev, "read failed with %zd\n", ret);
++		return ret;
++	}
++
++	*retlen = ret;
++
++	return 0;
++}
++
++static int intel_dg_mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
++			      size_t *retlen, const u_char *buf)
++{
++	struct intel_dg_nvm *nvm = mtd->priv;
++	ssize_t ret;
++	unsigned int idx;
++	u8 region;
++
++	if (WARN_ON(!nvm))
++		return -EINVAL;
++
++	idx = idg_nvm_get_region(nvm, to);
++
++	dev_dbg(&mtd->dev, "writing region[%d] %s to %lld len %zd\n",
++		nvm->regions[idx].id, nvm->regions[idx].name, to, len);
++
++	if (idx >= nvm->nregions) {
++		dev_err(&mtd->dev, "out of range");
++		return -ERANGE;
++	}
++
++	to -= nvm->regions[idx].offset;
++	region = nvm->regions[idx].id;
++	if (len > nvm->regions[idx].size - to)
++		len = nvm->regions[idx].size - to;
++
++	guard(mutex)(&nvm->lock);
++
++	ret = idg_write(nvm, region, to, len, buf);
++	if (ret < 0) {
++		dev_dbg(&mtd->dev, "write failed with %zd\n", ret);
++		return ret;
++	}
++
++	*retlen = ret;
++
++	return 0;
++}
++
+ static void intel_dg_nvm_release(struct kref *kref)
+ {
+ 	struct intel_dg_nvm *nvm = container_of(kref, struct intel_dg_nvm, refcnt);
+@@ -422,9 +564,80 @@ static void intel_dg_nvm_release(struct kref *kref)
+ 	pr_debug("freeing intel_dg nvm\n");
+ 	for (i = 0; i < nvm->nregions; i++)
+ 		kfree(nvm->regions[i].name);
++	mutex_destroy(&nvm->lock);
+ 	kfree(nvm);
+ }
+ 
++static int intel_dg_mtd_get_device(struct mtd_info *mtd)
++{
++	struct mtd_info *master = mtd_get_master(mtd);
++	struct intel_dg_nvm *nvm = master->priv;
++
++	if (WARN_ON(!nvm))
++		return -EINVAL;
++	pr_debug("get mtd %s %d\n", mtd->name, kref_read(&nvm->refcnt));
++	kref_get(&nvm->refcnt);
++
++	return 0;
++}
++
++static void intel_dg_mtd_put_device(struct mtd_info *mtd)
++{
++	struct mtd_info *master = mtd_get_master(mtd);
++	struct intel_dg_nvm *nvm = master->priv;
++
++	if (WARN_ON(!nvm))
++		return;
++	pr_debug("put mtd %s %d\n", mtd->name, kref_read(&nvm->refcnt));
++	kref_put(&nvm->refcnt, intel_dg_nvm_release);
++}
++
++static int intel_dg_nvm_init_mtd(struct intel_dg_nvm *nvm, struct device *device,
++				 unsigned int nparts, bool writable_override)
++{
++	unsigned int i;
++	unsigned int n;
++	struct mtd_partition *parts = NULL;
++	int ret;
++
++	dev_dbg(device, "registering with mtd\n");
++
++	nvm->mtd.owner = THIS_MODULE;
++	nvm->mtd.dev.parent = device;
++	nvm->mtd.flags = MTD_CAP_NORFLASH | MTD_WRITEABLE;
++	nvm->mtd.type = MTD_DATAFLASH;
++	nvm->mtd.priv = nvm;
++	nvm->mtd._write = intel_dg_mtd_write;
++	nvm->mtd._read = intel_dg_mtd_read;
++	nvm->mtd._erase = intel_dg_mtd_erase;
++	nvm->mtd._get_device = intel_dg_mtd_get_device;
++	nvm->mtd._put_device = intel_dg_mtd_put_device;
++	nvm->mtd.writesize = SZ_1; /* 1 byte granularity */
++	nvm->mtd.erasesize = SZ_4K; /* 4K bytes granularity */
++	nvm->mtd.size = nvm->size;
++
++	parts = kcalloc(nvm->nregions, sizeof(*parts), GFP_KERNEL);
++	if (!parts)
++		return -ENOMEM;
++
++	for (i = 0, n = 0; i < nvm->nregions && n < nparts; i++) {
++		if (!nvm->regions[i].is_readable)
++			continue;
++		parts[n].name = nvm->regions[i].name;
++		parts[n].offset  = nvm->regions[i].offset;
++		parts[n].size = nvm->regions[i].size;
++		if (!nvm->regions[i].is_writable && !writable_override)
++			parts[n].mask_flags = MTD_WRITEABLE;
++		n++;
++	}
++
++	ret = mtd_device_register(&nvm->mtd, parts, n);
++
++	kfree(parts);
++
++	return ret;
++}
++
+ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+ 			      const struct auxiliary_device_id *aux_dev_id)
+ {
+@@ -454,6 +667,7 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+ 		return -ENOMEM;
+ 
+ 	kref_init(&nvm->refcnt);
++	mutex_init(&nvm->lock);
+ 
+ 	nvm->nregions = nregions;
+ 	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
+@@ -483,6 +697,12 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
+ 		goto err;
+ 	}
+ 
++	ret = intel_dg_nvm_init_mtd(nvm, device, ret, invm->writable_override);
++	if (ret) {
++		dev_err(device, "failed init mtd %d\n", ret);
++		goto err;
++	}
++
+ 	dev_set_drvdata(&aux_dev->dev, nvm);
+ 
+ 	return 0;
+@@ -499,6 +719,8 @@ static void intel_dg_mtd_remove(struct auxiliary_device *aux_dev)
+ 	if (!nvm)
+ 		return;
+ 
++	mtd_device_unregister(&nvm->mtd);
++
+ 	dev_set_drvdata(&aux_dev->dev, NULL);
+ 
+ 	kref_put(&nvm->refcnt, intel_dg_nvm_release);
+-- 
+2.43.0
 
-I think you should not use cleanup.h for something complicated like
-this..
-
-Jason
