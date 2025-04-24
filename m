@@ -1,91 +1,150 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611881A5BB2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB0F1990D8;
+	Thu, 24 Apr 2025 03:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745464046; cv=none; b=sqH91isJjD5LgPahN8dm4Cp8OVJ6DxgQGWad7cYaKXuElr43F75PlaQ8TlZ27/0CEbEBd0cbBInXhFICUxdvt/mmTVjdEVkDq7oXzB2ne3DpBFNVBjjb0qa5e++exW8h6XGqZo3snWe98BtPYTVcPJNcXRSe+I0VY1/Eqvbi4VA=
+	t=1745464064; cv=none; b=pMx//PZfnASQ55QjRG2J0N+Y8DCFjlXrplkZB3ElxSiVC+4fzakCCjcFw5iSLkUh+r2cFdJL3te+tIta914wY+vASMLon/GTjP1rcS7d1xyf7Fh1e8QsSJ/K7HiG5zDSM95OT2Mt2BfA/P6VtEIQvH0Flsi/D4YLD//HaQzwQ7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745464046; c=relaxed/simple;
-	bh=6yz9SDRx3eNUERDUWclK/fQ/tgNsEuCKqYIUBAdNxM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=giJXjrSyZQLUnM4V9CyKFrl0D64EYbfztQFJgsE/qKqFApCuEwLd5voGNHSIDD8rQFW5XE6QR+b1K9X532TAHiowmzXJUsa/FKvYC271CptFUMDP6avDhT5++8boKcCUeAMl+vZDsWwVfK77o8hVD2nswptMsNLgNiaXz8a7fgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Yn6tkvCY; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745464064; c=relaxed/simple;
+	bh=+TU6VJeQC6TltCIOY1v9uQGCKkI59WgTKNbvK/Sq5xc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gSWIDqEhXglwOxEj3SSr54apC0qRMvuX/sH/8Ftv2nGS/78ZYw4hLiwkGy3Qo27z9Kv5jvx8mNuLMoBanWXoecFuhB2CtqHKLcu3vi1rUj/MLk47aNeZJH4wqTTijybfMO+KtRC5ING6i2kcb1J5zOn6P+MGiohHlH2Rz90YqZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e4Hn9NCT; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Yn6tkvCY"
-Message-ID: <f5ac4ab8-bd1a-4009-bf09-1ac34eb47ec1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745464042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eH5A1aKc65oiuiH9DMP/7aJj2gAA7/rhAd8AecnDlpM=;
-	b=Yn6tkvCYBbrQLuPGV6B4VLcmEvj9S1gWzxpkwa+IYgATjTfRsqsqII6Y7ugn+gH3PuAc4G
-	/lvxY9rR2AWng9YoxOd1pumsREGK1DPP9MKpi21RHMI1tj4r5E5zRAGYoKsjNGlKwqxgUf
-	80g2Yom1hR/s1M8kfI8KMJvdU6EOGNE=
-Date: Thu, 24 Apr 2025 11:06:59 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e4Hn9NCT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745464063; x=1777000063;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+TU6VJeQC6TltCIOY1v9uQGCKkI59WgTKNbvK/Sq5xc=;
+  b=e4Hn9NCTS7J0DaFils1PH5XKSZ7xFYj0gbGWNbjoB4vXSwm/LkKjYp62
+   R9j587P1ZzZl/IzG7BCgnmtSwJj2WQ88hJQZwB37GD9y8Nor+0g8MtoLh
+   Oz5BasA/xC4WdiDOPH2mvVJ5xK2MLxE3P7dE6jNwW5Q/8buI3AEoALxdI
+   nYQQwymuzXkkdCOnTaNoisUS8X0JekfOTMyB2s5XiRZmH6VUzyWSAA4or
+   qV1w9mOzr386y1tG7zPp0D09+R3qZts/bJ8NSSusgO5t1Mdw31u7iq8J8
+   wiRMa9bfnGWsUZ1xQ7PVr2I+rWcQO9YCGZrl90wxXYecgirlHWu1tfZLv
+   w==;
+X-CSE-ConnectionGUID: Aa0TISx0TaGNsRPaYBNR+g==
+X-CSE-MsgGUID: ce/Sq42ASPyE7oF1BBsZFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="64491311"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="64491311"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:07:41 -0700
+X-CSE-ConnectionGUID: bLRInpVpT8SDVBtslMZ/bw==
+X-CSE-MsgGUID: S957K9OqQM6P1QDg7yQWvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="136564864"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:07:35 -0700
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	x86@kernel.org,
+	rick.p.edgecombe@intel.com,
+	dave.hansen@intel.com,
+	kirill.shutemov@intel.com,
+	tabba@google.com,
+	ackerleytng@google.com,
+	quic_eberman@quicinc.com,
+	michael.roth@amd.com,
+	david@redhat.com,
+	vannapurve@google.com,
+	vbabka@suse.cz,
+	jroedel@suse.de,
+	thomas.lendacky@amd.com,
+	pgonda@google.com,
+	zhiquan1.li@intel.com,
+	fan.du@intel.com,
+	jun.miao@intel.com,
+	ira.weiny@intel.com,
+	isaku.yamahata@intel.com,
+	xiaoyao.li@intel.com,
+	binbin.wu@linux.intel.com,
+	chao.p.peng@intel.com,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [RFC PATCH 07/21] KVM: TDX: Add a helper for WBINVD on huge pages with TD's keyID
+Date: Thu, 24 Apr 2025 11:05:49 +0800
+Message-ID: <20250424030549.305-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20250424030033.32635-1-yan.y.zhao@intel.com>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] bpf, docs: iterator: Rectify non-standard line break
-To: WangYuli <wangyuli@uniontech.com>, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, corbet@lwn.net
-Cc: bpf@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, void@manifault.com, psreep@gmail.com,
- yhs@fb.com, zhanjun@uniontech.com, niecheng1@uniontech.com,
- guanwentao@uniontech.com, Chen Linxuan <chenlinxuan@uniontech.com>
-References: <DB66473733449DB0+20250423030632.17626-1-wangyuli@uniontech.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <DB66473733449DB0+20250423030632.17626-1-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-在 4/23/25 11:06 AM, WangYuli 写道:
-> Even though the kernel's coding-style document does not explicitly
-> state this, we generally put a newline after the semicolon of every
-> C language statement to enhance code readability.
->
-> Adjust the placement of newlines to adhere to this convention.
->
-> Reported-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+After a guest page is removed from the S-EPT, KVM calls
+tdh_phymem_page_wbinvd_hkid() to execute WBINVD on the page using the TD's
+keyID.
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+Add a helper function that takes level information to perform WBINVD on a
+huge page.
 
+[Yan: split patch, added a helper, rebased to use struct page]
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ arch/x86/kvm/vmx/tdx.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-Thanks,
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 69f3140928b5..355b21fc169f 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1586,6 +1586,23 @@ int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
+ 	return tdx_mem_page_record_premap_cnt(kvm, level);
+ }
+ 
++static inline u64 tdx_wbinvd_page(struct kvm *kvm, u64 hkid, struct page *page, int level)
++{
++	unsigned long nr = KVM_PAGES_PER_HPAGE(level);
++	unsigned long idx = 0;
++	u64 err;
++
++	while (nr--) {
++		err = tdh_phymem_page_wbinvd_hkid(hkid, nth_page(page, idx++));
++
++		if (KVM_BUG_ON(err, kvm)) {
++			pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err);
++			return err;
++		}
++	}
++	return err;
++}
++
+ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
+ 				      enum pg_level level, struct page *page)
+ {
+@@ -1625,12 +1642,9 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
+ 		return -EIO;
+ 	}
+ 
+-	err = tdh_phymem_page_wbinvd_hkid((u16)kvm_tdx->hkid, page);
+-
+-	if (KVM_BUG_ON(err, kvm)) {
+-		pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err);
++	err = tdx_wbinvd_page(kvm, kvm_tdx->hkid, page, level);
++	if (err)
+ 		return -EIO;
+-	}
+ 
+ 	tdx_clear_page(page, level);
+ 	tdx_unpin(kvm, page);
+-- 
+2.43.2
 
-Yanteng
-
-> ---
->   Documentation/bpf/bpf_iterators.rst | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/bpf/bpf_iterators.rst b/Documentation/bpf/bpf_iterators.rst
-> index 7f514cb6b052..385cd05aabf5 100644
-> --- a/Documentation/bpf/bpf_iterators.rst
-> +++ b/Documentation/bpf/bpf_iterators.rst
-> @@ -323,8 +323,8 @@ Now, in the userspace program, pass the pointer of struct to the
->   
->   ::
->   
-> -  link = bpf_program__attach_iter(prog, &opts); iter_fd =
-> -  bpf_iter_create(bpf_link__fd(link));
-> +  link = bpf_program__attach_iter(prog, &opts);
-> +  iter_fd = bpf_iter_create(bpf_link__fd(link));
->   
->   If both *tid* and *pid* are zero, an iterator created from this struct
->   ``bpf_iter_attach_opts`` will include every opened file of every task in the
