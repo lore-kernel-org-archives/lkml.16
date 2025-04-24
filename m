@@ -1,151 +1,115 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E05F2820B9;
-	Thu, 24 Apr 2025 14:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD1A1C84DF
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504735; cv=none; b=DrZdIcsLCYms9UnKnftUJiA4YT17g6Ei+8DxQY/3Lmv58cfC2HqDLivkjCH7BK1GEEdPkf5k10LYYs6443lJq6AT5NZRDBM7GgXZlGqSDdtrU+OFQmraSTaZEg8JW33adH/pu336iYuZDcnyXNZ5JNinNbuS5b0eIVnbZ54N6KI=
+	t=1745504854; cv=none; b=NFUcqLW7eppXWIeWj1/pCKLg0PbcRAtEnrNqfe1mi/5DDNIwjWY6oTWAH7T2CoqsfEF9PSydHoeesEF+o0WKvYyfGRRTJKdmGgVul6dQdSCFYbw2i7J5eMK6dL88LckqyYf2Sptprd4GtfHDEwNZyUlxdM/XqjQ9kR5ase8hOPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504735; c=relaxed/simple;
-	bh=ctJUQqsDIJ4N/zUvhphAU/Viu/T5q5vuPpSV4mT1pBU=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=tlPSqi/szTJmuwLyRFFDIxG6NHdRrouoeCcW3jWGCyJKyFebaySGJMT6GvvSZwM/HlGwIX/biO+MN0xMTlKZ7XHjMz9a5EUvdYULowzUusc+um1NyZHP7fPWuLB9BRYES7lF5Z7jZKD9uIJfUTxsJHRvZcBcNQzhHaxqm1xxsaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=LAVTvL+j; arc=none smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	s=arc-20240116; t=1745504854; c=relaxed/simple;
+	bh=F1YJqwR1H6hHO182e1YH6Y4+1p4GU9R6+42/wafryRw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jCo7OAUAmLI5mbSfCMvEEr28Yvb04701PI2nFnyLEFt1LtiXaJWds6RkBSblD33rRbTL9ra5UNSqNybM6rRXpJzNhGgFc/Mr46lbE6yR4r1fT51pLObWYV/8TLNBVFSPSbpgMixUKFmBrPxjtK5SN7cgiUtIy5KrI68JzNFkcd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re; spf=pass smtp.mailfrom=mwa.re; dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b=ZdQjyXpG; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="LAVTvL+j"
-Message-ID: <e0b7f4902af6c758b5cdb7c2b7892b43@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1745504731;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qihysb7F6c8dcZhnGNX5LEKZVBHLri51T3P5qA9Nth0=;
-	b=LAVTvL+jyTLTPukfCmxmlAI8/KfahgZ8acBCNWtG4W4vhzl2tzxe960o92gZA+UHXfG/yM
-	PkJNUvgy2LKhSb9Mn2TBhJUNMp7yWXAkI4NBsnNRwtp2Ru+QsiP01TkmRMcbpnxOtdyHJG
-	n4b5xfKG+d1ZSrA9y8gcZUvXsQ1pTPrb2ntNQu4gEafcbYq8wb/wVYTuO6STUgsGpKkjgK
-	A92DW93VNKQxlFlJxkjpULpOcGAkJwDpgmr9wohl+/3FpDNzMczteV2y421ThuyuGr7uLx
-	0EpX3r2ojdnXvtdtjezNeTd73Qv3IgQ7G3Nw9wgUUH1zESStEXu4G2nCWYqRkw==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Nicolas Baranger <nicolas.baranger@3xo.fr>
-Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
- <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
- <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
- <brauner@kernel.org>
-Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when
- files are on CIFS share
-In-Reply-To: <a25811b8d4f245173f672bdfa8f81506@3xo.fr>
-References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
- <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
- <48685a06c2608b182df3b7a767520c1d@3xo.fr>
- <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
- <5087f9cb3dc1487423de34725352f57c@3xo.fr>
- <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
- <e63e7c7ec32e3014eb758fd6f8679f93@3xo.fr>
- <53697288e2891aea51061c54a2e42595@manguebit.com>
- <bb5f1ed84df1686aebdba5d60ab0e162@3xo.fr>
- <af401afc7e32d9c0eeb6b36da70d2488@3xo.fr>
- <a25811b8d4f245173f672bdfa8f81506@3xo.fr>
-Date: Thu, 24 Apr 2025 11:25:26 -0300
+	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="ZdQjyXpG"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so17407775e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mwa.re; s=google; t=1745504851; x=1746109651; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9d7NqJO4EtxlTXgpDiP0f6RU3e65rl//+9+R1L+ng+k=;
+        b=ZdQjyXpGnn6/objJHdwZBw86xsV4OBhHOXxbBn9DvdWQ8hWzAmurgvaDHkU5KdVEMX
+         F9P6IcIsHd85ZE7Tj1r9P8KYzVCfiVP+Bi0VifxZevZtB7AWDdHQ/RkIP7sLXALms4K+
+         IfCnNm8HereNRsPcDzq4NxfF3PZ+1ySLfAX6vqrbY2kCx3zlkic35epbfMw9dj2xhQ8/
+         v3vAppntfAHmCWV8wlDCKNIH6TfYfSzEDPoLifHOJiiZpqT+KuwT1+WQN29ghvyh2/pX
+         G3WYcOWhxDhnNCedVhc4DQpLFDUoGVenxkQVYQgQBlUNxfRyA7NDiOjVNN23+F2Je4lC
+         dHmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745504851; x=1746109651;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9d7NqJO4EtxlTXgpDiP0f6RU3e65rl//+9+R1L+ng+k=;
+        b=la6CSkHQU2ptaPfdnvIlINPfNRC78V289cZl9IcCjZWBh5n4nLVzRTfDYwf5IPZ2qE
+         wA+BolBqO3ROSr2GSvjF12HzM9c4DfnbvHMsEH22/qdvpBYg45DB/mw85RBTLc1x7SXG
+         eMHsZF7hpCWrzVq80I8O7dbp8ygDaUIiBRDGBgBF0EynBu+WHHUvmYYJJC+Kxm15QIqn
+         vTw8Y+kux/KA84MgPNz9EOm6y0y8/mFKI2LJOH4NR4nDzDYnwnDkGqtAuz7YEri87fgU
+         HBWXtFf/bNHe/XD8JaQUwvRX91Pq/I7SVZWmbcCtO7LSJEIEnGpHzKU8JWV+e5FUw0gk
+         d7mg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+8lqmUQU5FYFT+5eaLw2fEiDLD8n5QuKjiW7UkT3apS9K2F7Uxo3ihDMwvDpBRNP8P20UC/eOd3F4tRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdzwiDLPO3LsyvulWCVYzZw88ixDzOYhBxD3tMu32gBUgALQ6S
+	lnYg9xNivh2LN0xM9RzstXj++dl2pw1uIu1reF2w+S0K3UHygycc04BbgepMqKU=
+X-Gm-Gg: ASbGncv9ROzdW5X7ihCIom2LiCB1nPGccLR5uUAWvp5rzF/J39dOP1LelRJufcXpyZa
+	LcYQgOHgxclZihrJ6Yet3axP+Onae+clc4HJx/l2lzHaVf+X6vrcjPW1e/kpJ4aXyXB41XEbIGr
+	K/8Vky+fHpmpLcY175dlksil/zR1AFjgS7b/Jf517MTPpE4j+p3ST3v3sVcjn+zGAlYVx+VG3oK
+	+Rcuhi+O987JYONtzphd9g5xYQW7b/D4onz0b8e54ziSI8ESiBfAeAvFW2MO7R1DIuOuAtou5Ha
+	N2uNDAi4UJgGdLeDFjQmBqEROuVXOyXqf8i+y8OqxrIkfsVNHljIuzuKWNpzeAiQ0WRMIlf5yJI
+	h
+X-Google-Smtp-Source: AGHT+IEMsAKqZvQKv1HURFPLcJMP9q2fFIiW//bzYr0WFnNqRgNJbE3RCkzOZJu0K7dFBbOpVgGL1Q==
+X-Received: by 2002:a05:600c:91a:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-4409c4938ebmr19886315e9.9.1745504849577;
+        Thu, 24 Apr 2025 07:27:29 -0700 (PDT)
+Received: from mw-ac-stu-3.corp.mwa.re (static-195-14-251-13.nc.de. [195.14.251.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b892asm22807565e9.32.2025.04.24.07.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 07:27:29 -0700 (PDT)
+From: Antonios Salios <antonios@mwa.re>
+To: rcsekar@samsung.com
+Cc: mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	linux-can@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lukas@mwa.re,
+	jan@mwa.re,
+	msp@baylibre.com,
+	Antonios Salios <antonios@mwa.re>
+Subject: [PATCH v2] can: m_can: initialize spin lock on device probe
+Date: Thu, 24 Apr 2025 16:25:26 +0200
+Message-ID: <20250424142525.69930-2-antonios@mwa.re>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi Nicolas,
+The spin lock tx_handling_spinlock in struct m_can_classdev is not being
+initialized. This leads to bug complaints from the kernel, eg. when
+trying to send CAN frames with cansend from can-utils.
 
-Thanks for the very detailed information and testing.
+This patch fixes that by initializing the spin lock in the corresponding
+device probe functions.
 
-Nicolas Baranger <nicolas.baranger@3xo.fr> writes:
+Fixes: 1fa80e23c150 ("can: m_can: Introduce a tx_fifo_in_flight counter")
 
-> In fact, I think there is somethings wrong:
->
-> After a remount, I sucessfully get the good buffers size values in 
-> /proc/mounts (those defined in /etc/fstab).
->
-> grep cifs /proc/mounts
-> //10.0.10.100/FBX24T /mnt/fbx/FBX-24T cifs 
-> rw,nosuid,nodev,noexec,relatime,vers=3.1.1,cache=none,upcall_target=app,username=*****,domain=*****,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.10.100,file_mode=0666,dir_mode=0755,iocharset=utf8,soft,nounix,serverino,mapposix,mfsymlinks,reparse=nfs,rsize=4194304,wsize=4194304,bsize=16777216,retrans=1,echo_interval=60,actimeo=1,closetimeo=1 
-> 0 0
+Signed-off-by: Antonios Salios <antonios@mwa.re>
+---
 
-Interesting.  When you do 'mount -o remount ...' but don't pass rsize=
-and wsize=, the client is suppposed to reuse the existing values of
-rsize and wsize set in the current superblock.  The above values of
-rsize, wsize and bsize are also the default ones in case you don't pass
-them at all.
+Changes since v1:
+ * Move spin_lock_init from device probe functions to classdev alloc function
+ * Add a fixes tag
+---
+ drivers/net/can/m_can/m_can.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I'll look into that when time allows it.
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 884a6352c..12e313998 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -2379,6 +2379,8 @@ struct m_can_classdev *m_can_class_allocate_dev(struct device *dev,
+ 	SET_NETDEV_DEV(net_dev, dev);
+ 
+ 	m_can_of_parse_mram(class_dev, mram_config_vals);
++
++	spin_lock_init(&class_dev->tx_handling_spinlock);
+ out:
+ 	return class_dev;
+ }
+-- 
+2.49.0
 
-> But here is what I constat: a 'dd' with a block size smaller than 65536 
-> is working fine:
-> LANG=en_US.UTF-8
->
-> dd if=/dev/urandom of=/mnt/fbx/FBX-24T/dd.test3 bs=65536 status=progress 
-> conv=notrunc oflag=direct count=128
-> 128+0 records in
-> 128+0 records out
-> 8388608 bytes (8.4 MB, 8.0 MiB) copied, 0.100398 s, 83.6 MB/s
->
->
->
-> But a 'dd' with a block size bigger than 65536 is not working:
-> LANG=en_US.UTF-8
->
-> dd if=/dev/urandom of=/mnt/fbx/FBX-24T/dd.test3 bs=65537 status=progress 
-> conv=notrunc oflag=direct count=128
-> dd: error writing '/mnt/fbx/FBX-24T/dd.test3'
-> dd: closing output file '/mnt/fbx/FBX-24T/dd.test3': Invalid argument
->
-> And kernel report:
-> Apr 24 10:01:37 14RV-SERVER.14rv.lan kernel: CIFS: VFS: \\10.0.10.100 
-> Error -32 sending data on socket to server
-
-This seems related to unaligned DIO reads and writes.  With O_DIRECT,
-the client will set FILE_NO_INTERMEDIATE_BUFFERING when opening the
-file, telling the server to not do any buffering when reading from or
-writing to the file.  Some servers will fail the read or write request
-if the file offset or length isn't a multiple of block size, where the
-block size is >= 512 && <= PAGE_SIZE, as specified in MS-FSA 2.1.5.[34].
-
-Since you're passing bs= with a value that is not multiple of block
-size, then the server is failing the request with
-STATUS_INVALID_PARAMETER as specified in MS-FSA.
-
-I've tested it against Windows Server 2022 and it seems to enforce the
-alignment only for DIO reads.  While samba doesn't enforce it at all.
-
-win2k22:
-
-$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65536
-$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65537
-dd: error reading '/mnt/1/foo': Invalid argument
-$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=$((65536+512))
-
-$ xfs_io -d -f -c "pread 0 4096" /mnt/1/foo
-read 4096/4096 bytes at offset 0
-4 KiB, 1 ops; 0.0009 sec (4.260 MiB/sec and 1090.5125 ops/sec)
-$ xfs_io -d -f -c "pread 1 4096" /mnt/1/foo
-pread: Invalid argument
-
-samba:
-
-$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65536
-$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65537
-$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=$((65536+512))
-
-$ xfs_io -d -f -c "pread 0 4096" /mnt/1/foo
-read 4096/4096 bytes at offset 0
-4 KiB, 1 ops; 0.0071 sec (557.880 KiB/sec and 139.4700 ops/sec)
-$ xfs_io -d -f -c "pread 1 4096" /mnt/1/foo
-read 4096/4096 bytes at offset 1
-4 KiB, 1 ops; 0.0010 sec (3.864 MiB/sec and 989.1197 ops/sec)
-
-Note that the netfslib fix is for short DIO reads, so this bug is
-related to unaligned DIO reads and writes and need to be fixed in the
-client.  I'll let you know when I have patches for that.
