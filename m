@@ -1,148 +1,191 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E8F227581
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20B6F510;
+	Thu, 24 Apr 2025 10:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745491645; cv=none; b=MqBoPQjtRm+wlyKjiCY19ln1Pw5qW6ys9Dk/w1meKVvFbD5ghMrZDt4PSpPxfAXDZrII0T7p2uQgbPEV7qUBLooPdAk3Sa6BM4KMk4pODTjnVfoC1two9RqAZqyCeWM8iXVn9GKaBEut61qFiousCC/6roTlSuoBXWxdirGj0t0=
+	t=1745491759; cv=none; b=n/4w2S6/HjKOhAJDIdQubB2SMQpya/qW0h43PXLkKBDkl4nfCt2Dm9NwFDYn8c/AuxpXsvasXSE5YJq3MXYv7ISVx+pwxZTOBCOXNIYFtx+5Qg19Ie94ilMcCqGX4ptmamFc+1W68DuU77seAMhFFsDk0/iJHqxbxhGV9YaM4lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745491645; c=relaxed/simple;
-	bh=rXm85CIlHrNq9qgdiuCvVcSM3qP9rnxicDeaNAhBC7w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=IpL9rtlKXT3FN0sQwc9xMFH//YYgVNEi4MahGEhJGplbenHCE8a62jD7nEtOeAD43ilwBCjWnUWf/yaGzecu7XpiRYSox4sTWIe3Fc6xSWMfhZ0r6txFOzGt9ZcyHWbiHXWakFgGQm2EH27vzXPVtZiV1iGIrx9QMhRcGEcsYok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=e8s1BmGY; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745491759; c=relaxed/simple;
+	bh=mqWPrwTyWntUN2VetXvoc4/yqzcGd25/TQDIPFZscK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvV9Tf4qI+px1JoD+M9zXsNakHhlrLPY1nlfJBMdoQKvW00JWaI6iUYUjLFdRiZqq0UOzNYFC+qxnr0xyM0ONfsb5CqJ1HYDiIK/4zKXxwMyX7CqNkvgbRknTSasPE9loDfF6tei8b8P/XkQ4ATFZJQFwkfAs8FlRxDjkkED7Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BH0J527G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e8s1BmGY"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53OAl4Y31836161
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 05:47:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745491624;
-	bh=jh4FnYk80pv2AQJY2LMZ461mxQWUhiwR+r0euZp7KRM=;
-	h=Date:Subject:From:To:CC:References:In-Reply-To;
-	b=e8s1BmGYjdmOm7+v+3DYNuWrqpEErmUKYVoiHmc9cYRrV4tvhGv1x3sQuV2t+e/sX
-	 QGodd3a23yvkERvg0KY8C+LHR9TyCURyEt+RKpM6ktrdmHL1Ka8DMH3T8qzGs/8U/Y
-	 M+XGr6sfzVtf8+D6wwObAa/LnU0Dz5adkhRI/nss=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53OAl3jr012357
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 24 Apr 2025 05:47:03 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 24
- Apr 2025 05:47:02 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 24 Apr 2025 05:47:02 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53OAkwR2066159;
-	Thu, 24 Apr 2025 05:46:59 -0500
-Message-ID: <526c1714-95f1-49ea-9bf1-a778e00ad6bf@ti.com>
-Date: Thu, 24 Apr 2025 16:16:58 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BH0J527G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73357C4CEE4;
+	Thu, 24 Apr 2025 10:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745491758;
+	bh=mqWPrwTyWntUN2VetXvoc4/yqzcGd25/TQDIPFZscK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BH0J527GnzV00glYPFQKqBPecciMw4nWolX9ixxuZw+IXKKIh6WaRWECI84/KmVGt
+	 cwcpEUhwekxaCDH8MztWHBXkG7nwdbI8lVoeZHm3+db4lHZqYzdzTRPpJLq2zLDToP
+	 2woe3GLnozM2yL9CS8fTHHI/tnG01Xr09hKOOxB8Kk81mkXim96TDTrpjwOjISBUd4
+	 rucKmQ9loaYWfhdrI4voitdtzW2ug4kh++koWa53+fK0y1PrjbXxu4BdSzd1wc1oRQ
+	 FefFhGTwtM5yOKoRH+0hAqk6rcgV3QTdYZta4iD2radSkuhMIpElszYZAW86tP8bk2
+	 fX002j0O8dXuQ==
+Date: Thu, 24 Apr 2025 13:49:12 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Shiraz Saleem <shirazsaleem@microsoft.com>
+Cc: Konstantin Taranov <kotaranov@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH rdma-next 4/4] net: mana: Add support for auxiliary
+ device servicing events
+Message-ID: <20250424104912.GR48485@unreal>
+References: <1744655329-13601-1-git-send-email-kotaranov@linux.microsoft.com>
+ <1744655329-13601-5-git-send-email-kotaranov@linux.microsoft.com>
+ <20250420105309.GC10635@unreal>
+ <BL1PR21MB3089EF4639B5CC2AD5E70B96C9852@BL1PR21MB3089.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Add necessary DSI flags
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: Doug Anderson <dianders@chromium.org>
-CC: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>
-References: <20250411092307.238398-1-j-choudhary@ti.com>
- <CAD=FV=Vkj_YnmYnDF3K+eYZ5M4fFPgGdmryHS8ijZOLZWbt6ZA@mail.gmail.com>
- <d6e864d9-53ea-44d3-832c-55a6e58ac6d3@ti.com>
-Content-Language: en-US
-In-Reply-To: <d6e864d9-53ea-44d3-832c-55a6e58ac6d3@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL1PR21MB3089EF4639B5CC2AD5E70B96C9852@BL1PR21MB3089.namprd21.prod.outlook.com>
 
-Hello Doug,
-
-On 17/04/25 02:40, Jayesh Choudhary wrote:
-> Hello Doug,
+On Thu, Apr 24, 2025 at 02:33:24AM +0000, Shiraz Saleem wrote:
+> > Subject: [EXTERNAL] Re: [PATCH rdma-next 4/4] net: mana: Add support for
+> > auxiliary device servicing events
+> > 
+> > On Mon, Apr 14, 2025 at 11:28:49AM -0700, Konstantin Taranov wrote:
+> > > From: Shiraz Saleem <shirazsaleem@microsoft.com>
+> > >
+> > > Handle soc servcing events which require the rdma auxiliary device
+> > > resources to be cleaned up during a suspend, and re-initialized during a
+> > resume.
+> > >
+> > > Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
+> > > Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+> > > ---
+> > >  .../net/ethernet/microsoft/mana/gdma_main.c   | 11 +++-
+> > >  .../net/ethernet/microsoft/mana/hw_channel.c  | 19 ++++++
+> > > drivers/net/ethernet/microsoft/mana/mana_en.c | 60
+> > +++++++++++++++++++
+> > >  include/net/mana/gdma.h                       | 18 ++++++
+> > >  include/net/mana/hw_channel.h                 |  9 +++
+> > >  5 files changed, 116 insertions(+), 1 deletion(-)
+> > 
+> > <...>
+> > 
+> > > @@ -1474,6 +1481,8 @@ static void mana_gd_cleanup(struct pci_dev
+> > *pdev)
+> > >  	mana_hwc_destroy_channel(gc);
+> > >
+> > >  	mana_gd_remove_irqs(pdev);
+> > > +
+> > > +	destroy_workqueue(gc->service_wq);
+> > >  }
+> > 
+> > <...>
+> > 
+> > > +static void mana_handle_rdma_servicing(struct work_struct *work) {
+> > > +	struct mana_service_work *serv_work =
+> > > +		container_of(work, struct mana_service_work, work);
+> > > +	struct gdma_dev *gd = serv_work->gdma_dev;
+> > > +	struct device *dev = gd->gdma_context->dev;
+> > > +	int ret;
+> > > +
+> > > +	switch (serv_work->event) {
+> > > +	case GDMA_SERVICE_TYPE_RDMA_SUSPEND:
+> > > +		if (!gd->adev || gd->is_suspended)
+> > > +			break;
+> > > +
+> > > +		remove_adev(gd);
+> > > +		gd->is_suspended = true;
+> > > +		break;
+> > > +
+> > > +	case GDMA_SERVICE_TYPE_RDMA_RESUME:
+> > > +		if (!gd->is_suspended)
+> > > +			break;
+> > > +
+> > > +		ret = add_adev(gd, "rdma");
+> > > +		if (ret)
+> > > +			dev_err(dev, "Failed to add adev on resume: %d\n",
+> > ret);
+> > > +		else
+> > > +			gd->is_suspended = false;
+> > > +		break;
+> > > +
+> > > +	default:
+> > > +		dev_warn(dev, "unknown adev service event %u\n",
+> > > +			 serv_work->event);
+> > > +		break;
+> > > +	}
+> > > +
+> > > +	kfree(serv_work);
+> > 
+> > The series looks ok to me, except one question. Are you sure that it is safe to
+> > have not-connected and not-locked general work while
+> > add_adev/remove_adev can be called in parallel from different thread? For
+> > example getting event GDMA_SERVICE_TYPE_RDMA_SUSPEND while
+> > mana_gd_probe() fails or some other intervention with PCI
+> > (GDMA_SERVICE_TYPE_RDMA_SUSPEND and PCI shutdown).
+> > 
+> > What type of protection do you have here?
+> > 
+> Hi Leon,
 > 
-> On 13/04/25 07:22, Doug Anderson wrote:
->> Hi,
->>
->> On Fri, Apr 11, 2025 at 2:23 AM Jayesh Choudhary <j-choudhary@ti.com> 
->> wrote:
->>>
->>> Enable NO_EOT and SYNC flags for DSI to use VIDEO_SYNC_PULSE_MODE
->>> with EOT disabled.
->>
->> Any chance you could add some details to this commit message? Your
->> subject says that these flags are "necessary", but people have been
->> using this driver successfully for many years now. Why did these flags
->> suddenly become necessary and why were things working before?
->>
->> I'm not saying that we shouldn't use these flags, just trying to
->> understand. I actually don't know a ton about these details in MIPI,
->> so it would help me :-).
->>
+> Thanks for spotting this.
 > 
-> Definitely.
-> I will add more details for the commit message.
+> There are two cases.
 > 
-> For more context here, I was working with cadence dsi driver for TI
-> SoCs. So to be more accurate, this is required for CDNS_DSI
+> -Probe / Resume
+> add_adev() stores gd->adev only after auxiliary_device_add() succeeds.
+> While gd->adev is still NULL the worker drops any GDMA_SERVICE_TYPE_RDMA_SUSPEND event, so an early suspend that arrives during probe is harmless and cannot race with the later add_adev().
 > 
-> I observed other bridges like lt-9211, where I have seen such flags
-> being set for dsi-controller by vendors.
+> -Remove / Suspend / Shutdown
+> During teardown the worker may still be inside add_adev()/remove_adev() while the PCI thread starts its own remove_adev(). 
+> 
+> In v2 I ll serialize them with flag + flush pattern.
+> 
+> void mana_rdma_remove(struct gdma_dev *gd)
+> {
+> [....]
+>         WRITE_ONCE(gd->rdma_teardown, true);   /* block new events      */
+>         flush_workqueue(gc->service_wq);       /* wait running worker   */
+> 
+>         if (gd->adev)
+>                 remove_adev(gd);
+> 
+> [....]
+> }
+> i.e. during teardown, we stop the producer and drain the queue
+> 
+> and,
+> 
+> static void mana_handle_rdma_servicing(struct work_struct *work)
+> {
+> [....]
+> 	if (READ_ONCE(gd->rdma_teardown))
+> 		goto out;
+> [.....]
+> }
+> The flag blocks any new work, and flush_workqueue() waits for anything already running. This serialises the two paths and removes
+> the race you pointed out.
 
-Upon testing with modes other than video sync pulse mode,
-I found that with the upcoming fixes in cdns-dsi-core driver made by
-Tomi[0], this patch is no longer necessary.
+Yes, I also think that it solves, so let's post v2 please.
 
-[0]: 
-https://lore.kernel.org/all/20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com/
+Just remember that WRITE_ONCE/READ_ONCE is not a replacement for locks.
 
-I apologies for the noise in the mailing list.
-
-Warm Regards,
-Jayesh
+Thanks
 
 > 
->>
->>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>> ---
->>>   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 3 ++-
->>>   1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c 
->>> b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> index f72675766e01..8e9a7eb927da 100644
->>> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> @@ -707,7 +707,8 @@ static int ti_sn_attach_host(struct 
->>> auxiliary_device *adev, struct ti_sn65dsi86
->>>          /* TODO: setting to 4 MIPI lanes always for now */
->>>          dsi->lanes = 4;
->>>          dsi->format = MIPI_DSI_FMT_RGB888;
->>> -       dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
->>> +       dsi->mode_flags = MIPI_DSI_MODE_VIDEO | 
->>> MIPI_DSI_MODE_NO_EOT_PACKET |
->>> +                         MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
->>
->> FWIW, I can confirm that on my board the screen still seems to light
->> up after this change. ...so I'd be OK w/
->>
->> Tested-by: Douglas Anderson <dianders@chromium.org>
->>
->> ...before giving a Reviewed-by I'd want a description that helps me
->> understand it better.
+> Shiraz
 > 
->>
->> -Doug
