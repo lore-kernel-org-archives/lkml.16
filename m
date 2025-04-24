@@ -1,150 +1,205 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10F513CA9C;
-	Thu, 24 Apr 2025 14:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12705146D6A;
+	Thu, 24 Apr 2025 14:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505925; cv=none; b=MiZdHK5vXg6YPd7coHZCkZNNdCZwVbQRGV4zHj6684jTit1OIOe7ODecJtDr4dNS57FUVj10QkmphIYnCf6rrgIpcv6YWZIW2bNZF7/r0qUhM13bv8Yxh/UUXSIIIWMkT2KmgI5Ff0IFTKOrQ56mUjzKGDjv15Z5LJg5yhKQzBY=
+	t=1745505960; cv=none; b=JqSz5rh4EJjiou6LLBrhCUxCpp1Dw1GUqkwacKIlJp1KTKOyn7w2Zg+xcYx8tEx8PBMwq4GJkqjWq9cGA+1bjGVVWzWoDrsPg+wCaho6ec1Mquea9ObGDhdeooWiKdK+KNCo1IPOa0rRxCa14aotYaf1QD0O/cRZiOlAcauqrrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505925; c=relaxed/simple;
-	bh=WfFFauBOimAA1xG7/eaugx9UY2R4AXtESa3PSQzg0KU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jngROzsK/hN9ZmlcI3bj6VTOvZwexHN2KzY25Ko0YvGKDSOLUGjUHFyVJsJf6AC/fGxBw/rhe8vDqVEU3Kdaeg6jqYOe5lrjLyQhXcUZ6TmCEN/OdlV7dAZ5LTDcthJx4U1z8cKd9Q8NEWu/XYxSpwZIRtx2VbfpJiQMv2BsOMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhKu4kC9; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745505960; c=relaxed/simple;
+	bh=oF6ZNTQYzF5wP50g9xs0e8/oXcBOMKj3NPuH+sGnPZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XF1dfujq04pXKYGJ3/M1z82H0M7JWiRq3fE8i/DJa643qUgo3yx28pIv0px4gqFvfOQSsTi0folIrrnLPtlrX0/X5b8l5/7SNUmg/RD6j7CtGivnrCAv58/6OLTJ+d/rDBaRQIppmnE+BTi9rqCZL8wh+Gdk+jQLsl3ItQ3EikA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGRnqjoZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhKu4kC9"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1495296b3a.2;
-        Thu, 24 Apr 2025 07:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745505923; x=1746110723; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4PAGLeinOTw1BegEcFTcz+g2dJ2nTYeNG2yLekJHkNo=;
-        b=ZhKu4kC948GYQQf0HzrVY5w+PpKrvbIARLw2ZoPdGrfnQonoqW8pyCzdNMN9n5gCvZ
-         Z5ZfJwu8AKb4ZEPpkWOrMeceAL8Y/UHG/cWAkL5TMK13tYgG7HN8DNyDNuq81NzmKgzB
-         cv4VLkD9w0J4j3cPLG0Xhkn+sdQEiZOzmvSeW5sYmv0VJj6B9edODN89D4e+BSBxai4w
-         rt5Rh4Cq7icOpvrY5gUY36rh0Z62q7/WYulbHaa5Td//bBQMt7eFwXoJNxTZkbQWsGli
-         n0Bkh3STpKk6/4NfkHBDC8+PShP7aCIlM0/hBlV7paW+OxiXmhCQ7rw8U0FRfiyFNdb8
-         4BYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745505923; x=1746110723;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4PAGLeinOTw1BegEcFTcz+g2dJ2nTYeNG2yLekJHkNo=;
-        b=urJXbN3ui5VkJ93wPp/hkkWdFoTpUGTBd5vLt4BMrEasFPiV7ZSzzW46XjhI6mvMSH
-         TIu3affq9Hj18Otwr8oYuI+MfA+2NOLi5i9DEcrN7GYhZitVzyYnoMRfeiwGa7VJo4LG
-         XkZArDDIRIqPEP64+H7JaYm0kjymlV4PfDcbYdcrtGUx2vHU7Fgiuxdh/NQ5KfEYmI+g
-         OlzOrl20DBBj6h6mtvojh0rHXQGm3g7kvZacnNJwuzx0pBCAsa6FSfsKOjrErhpi16mt
-         yDM6AHmltcVTamHkuhQBIF905BgMOs698Nkxmxb5S9tiCA7rz0/wI13naTlozwc0m2K5
-         TyLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfoWllnK1DAGm1YEgJ5hnbZrY+HV8xVOq3CLnh+ivfQlkwtFz65oozP5ldkQ3fHF0IGLE=@vger.kernel.org, AJvYcCXMViui7smLkkh1PMciRg8jgDEP1YYRafvC7W0M/dc2eShXxMb3mpEWgHWhNm7KIAhnZClsIHSQVsN+in+n@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEQpxkGNFRaA2YxQYVnpz0KIGi6Sb5kiV+57yYC68EUTo22eFF
-	001aXOglqRpodkIeUKpp3+ewzExadq+sOozZ3EmvNS1iSkzzuaNR
-X-Gm-Gg: ASbGncvA1hgLdM0qRgXDOxdfbDt/s7tz9MtqLHFrUaKSOW2CpZSdYEyZUMh7I04PpCu
-	S17ZwDOwm2OAO1Je2KPLgFlF8J7rM4HltuAZ4pnmo/WfaefrAwQHuk34agAvanWZHEO5KfgWNXa
-	3yEoyQtKiIWOE+WGUdTN64/74aewLeTwau+fpFhDvzC5BsMvg6m38yGteKPQrY2vSZPNrYXmugR
-	yuJ7p+I6+uD7xHid7SHWWQk9S4W0Y+vwQ5rxUZHnOJt8tz8FT+u3X2UneQdrd0SwbenSNk3v7Ns
-	OzZM7gtwPVip74A8iu+NOdbz2RBhIPBueoJqMsPAUfifSzs+Af+7tMXBJhs+/quKTEFNyIqLsnZ
-	2NG7N3bEA76EzZEXMw7U=
-X-Google-Smtp-Source: AGHT+IFVuYKB/RLifTofF8XnjcJX6TCVuQ5lhxXULqxxcU1gSNRlAOIL1o0jpGAizcAW5raamumQWA==
-X-Received: by 2002:a05:6a00:391b:b0:737:6e1f:29da with SMTP id d2e1a72fcca58-73e24e05a1cmr4301845b3a.21.1745505922795;
-        Thu, 24 Apr 2025 07:45:22 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:f632:6238:46f4:702e? ([2001:ee0:4f0e:fb30:f632:6238:46f4:702e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e2593f557sm1474503b3a.42.2025.04.24.07.45.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 07:45:22 -0700 (PDT)
-Message-ID: <9cb42173-e394-4c5b-aef2-fe9ce737689e@gmail.com>
-Date: Thu, 24 Apr 2025 21:45:15 +0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGRnqjoZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E980C4CEE3;
+	Thu, 24 Apr 2025 14:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745505959;
+	bh=oF6ZNTQYzF5wP50g9xs0e8/oXcBOMKj3NPuH+sGnPZk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DGRnqjoZ3tgw0kyQOhOioT+fKR+ls/DfAgNumGpln9wXAgnQCBKzrSqztS3VxDUtw
+	 +yt0EacLoqHkbRHJ1O8PiZPtG1ZzC7TaJ+TvhES21W/rIPO5geU8yMw/XmoWdv2+lK
+	 h/Iaw2/2+YQUGFh9C327y5kEs2BXHAi3COGdAxPUbxq12MHH3EdKu1PIEPidLyuuVk
+	 7/eoAs+E7rkmj5/v5gt6ogeIDghxLbzE3dXf0sRpiUIFM+ZXOwmpPiCjpc1OBHmAsc
+	 cIn6GhiyfUEOFGDSoM+tsWVJYMTvGf45jDFLa3sy5D/TuH+BUBVe9NJqVmb1q86/Do
+	 p+qvj7K956Pbg==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	Pavel Machek <pavel@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org
+Cc: jacek.anaszewski@gmail.com
+Subject: [PATCH 1/1] leds: Provide skeleton KUnit testing for the LEDs framework
+Date: Thu, 24 Apr 2025 15:45:38 +0100
+Message-ID: <20250424144544.1438584-1-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] xsk: respect the offsets when copying frags
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423101047.31402-1-minhquangbui99@gmail.com>
- <34e2c7f7-4d83-4e5c-af56-d91e68b3e7e1@intel.com>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <34e2c7f7-4d83-4e5c-af56-d91e68b3e7e1@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/24/25 21:02, Alexander Lobakin wrote:
-> From: Bui Quang Minh <minhquangbui99@gmail.com>
-> Date: Wed, 23 Apr 2025 17:10:47 +0700
->
->> Add the missing offsets when copying frags in xdp_copy_frags_from_zc().
->>
->> Fixes: 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb conversion")
->> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
->> ---
->>   net/core/xdp.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/core/xdp.c b/net/core/xdp.c
->> index f86eedad586a..a723dc301f94 100644
->> --- a/net/core/xdp.c
->> +++ b/net/core/xdp.c
->> @@ -697,7 +697,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
->>   	nr_frags = xinfo->nr_frags;
->>   
->>   	for (u32 i = 0; i < nr_frags; i++) {
->> -		u32 len = skb_frag_size(&xinfo->frags[i]);
->> +		const skb_frag_t *frag = &xinfo->frags[i];
->> +		u32 len = skb_frag_size(frag);
->>   		u32 offset, truesize = len;
->>   		netmem_ref netmem;
->>   
->> @@ -707,8 +708,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
->>   			return false;
->>   		}
->>   
->> -		memcpy(__netmem_address(netmem),
->> -		       __netmem_address(xinfo->frags[i].netmem),
->> +		memcpy(__netmem_address(netmem) + offset,
->> +		       __netmem_address(frag->netmem) + skb_frag_off(frag),
->>   		       LARGEST_ALIGN(len));
->>   		__skb_fill_netmem_desc_noacc(sinfo, i, netmem, offset, len);
-> Incorrect fix.
->
-> page_pool_dev_alloc_netmem() allocates a buffer of skb_frag_size() len,
-> but then you pass offset when copying, which may lead to access beyond
-> the end of the buffer.
->
-> I know that my code here is incorrect as well, but the idea was to
-> allocate only skb_frag_size() and copy the actual payload without any
-> offset to the new buffer. So, you need to pass the offset only to the
-> second argument of memcpy() and then pass 0 as @offset to
-> __skb_fill_netmem_desc_noacc().
+Apply a very basic implementation of KUnit LED testing.
 
-I'm not quite familiar with the page_pool API so I might be wrong. 
-AFAICS, the netmem_ref is just a wrapper around struct page now. 
-page_pool_dev_alloc_netmem(pp, &offset, &truesize) returns the allocated 
-page for our request but we must use the returned offset to access our 
-allocated space. The start of page may be currently used by other user.
+More tests / use-cases will be added steadily over time.
 
-That's my understanding when looking at this code path
+CMD:
+  tools/testing/kunit/kunit.py run --kunitconfig drivers/leds
 
-page_pool_dev_alloc_netmem
--> page_pool_alloc_netmem
-     -> page_pool_alloc_frag_netmem <- specifically this function
+OUTPUT:
+  [15:34:19] Configuring KUnit Kernel ...
+  [15:34:19] Building KUnit Kernel ...
+  Populating config with:
+  $ make ARCH=um O=.kunit olddefconfig
+  Building with:
+  $ make all compile_commands.json scripts_gdb ARCH=um O=.kunit --jobs=20
+  [15:34:22] Starting KUnit Kernel (1/1)...
+  [15:34:22] ============================================================
+  Running tests with:
+  $ .kunit/linux kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
+  [15:34:23] ===================== led (1 subtest) ======================
+  [15:34:23] [PASSED] led_test_class_register
+  [15:34:23] ======================= [PASSED] led =======================
+  [15:34:23] ============================================================
+  [15:34:23] Testing complete. Ran 1 tests: passed: 1
+  [15:34:23] Elapsed time: 4.268s total, 0.001s configuring, 3.048s building, 1.214s running
 
-Thanks,
-Quang Minh.
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ drivers/leds/.kunitconfig |  4 +++
+ drivers/leds/Kconfig      |  7 ++++
+ drivers/leds/Makefile     |  1 +
+ drivers/leds/led-test.c   | 76 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 88 insertions(+)
+ create mode 100644 drivers/leds/.kunitconfig
+ create mode 100644 drivers/leds/led-test.c
+
+diff --git a/drivers/leds/.kunitconfig b/drivers/leds/.kunitconfig
+new file mode 100644
+index 000000000000..5180f77910a1
+--- /dev/null
++++ b/drivers/leds/.kunitconfig
+@@ -0,0 +1,4 @@
++CONFIG_KUNIT=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_KUNIT_TEST=y
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a104cbb0a001..c3684b148f18 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -55,6 +55,13 @@ config LEDS_BRIGHTNESS_HW_CHANGED
+ 
+ 	  See Documentation/ABI/testing/sysfs-class-led for details.
+ 
++config LEDS_KUNIT_TEST
++	tristate "KUnit tests for LEDs"
++	depends on KUNIT && LEDS_CLASS
++	default KUNIT_ALL_TESTS
++	help
++	  Say Y here to enable KUnit testing for the LEDs framework.
++
+ comment "LED drivers"
+ 
+ config LEDS_88PM860X
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 2f170d69dcbf..9a0333ec1a86 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
+ obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
+ obj-$(CONFIG_LEDS_CLASS_MULTICOLOR)	+= led-class-multicolor.o
+ obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
++obj-$(CONFIG_LEDS_KUNIT_TEST)		+= led-test.o
+ 
+ # LED Platform Drivers (keep this sorted, M-| sort)
+ obj-$(CONFIG_LEDS_88PM860X)		+= leds-88pm860x.o
+diff --git a/drivers/leds/led-test.c b/drivers/leds/led-test.c
+new file mode 100644
+index 000000000000..068c9d0eb683
+--- /dev/null
++++ b/drivers/leds/led-test.c
+@@ -0,0 +1,76 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Google LLC
++ *
++ * Author: Lee Jones <lee@kernel.org>
++ */
++
++#include <kunit/device.h>
++#include <kunit/test.h>
++#include <linux/device.h>
++#include <linux/leds.h>
++
++struct led_test_ddata {
++	struct led_classdev cdev;
++	struct device *dev;
++};
++
++static void led_test_class_register(struct kunit *test)
++{
++	struct led_test_ddata *ddata = test->priv;
++	struct led_classdev *cdev = &ddata->cdev;
++	struct device *dev = ddata->dev;
++	int ret;
++
++	cdev->name = "led-test";
++
++	ret = devm_led_classdev_register(dev, cdev);
++	KUNIT_ASSERT_EQ(test, ret, 0);
++	if (ret)
++		return;
++}
++
++static struct kunit_case led_test_cases[] = {
++	KUNIT_CASE(led_test_class_register),
++	{ }
++};
++
++static int led_test_init(struct kunit *test)
++{
++	struct led_test_ddata *ddata;
++	struct device *dev;
++
++	ddata = kunit_kzalloc(test, sizeof(*ddata), GFP_KERNEL);
++	if (!ddata)
++		return -ENOMEM;
++
++	test->priv = ddata;
++
++	dev = kunit_device_register(test, "led_test");
++	if (IS_ERR(dev))
++		return PTR_ERR(dev);
++
++	ddata->dev = get_device(dev);
++
++	return 0;
++}
++
++static void led_test_exit(struct kunit *test)
++{
++	struct led_test_ddata *ddata = test->priv;
++
++	if (ddata && ddata->dev)
++		put_device(ddata->dev);
++}
++
++static struct kunit_suite led_test_suite = {
++	.name = "led",
++	.init = led_test_init,
++	.exit = led_test_exit,
++	.test_cases = led_test_cases,
++};
++kunit_test_suite(led_test_suite);
++
++MODULE_AUTHOR("Lee Jones <lee@kernel.org>");
++MODULE_DESCRIPTION("KUnit tests for the LED framework");
++MODULE_LICENSE("GPL");
+-- 
+2.49.0.901.g37484f566f-goog
+
