@@ -1,65 +1,65 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3952421D58C
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A01422127A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745533115; cv=none; b=njGv0UbJVHRLObAaZl6L/2eT1rcdE6grOeIYxB880LID9c3K9y89zv+0INno2ukvyXYia6dHnkvlfqwlaKiTqYAjDTW3fsyZ6OjjbjU3pV9emYODRcNrDeu3z15qwPCm71VwaL36qTYeDqVJDYiJFAfVdtvy++S/zkM4EMkQAy4=
+	t=1745533116; cv=none; b=Xn7SIPastfjPohBspBm3DwM7EUQbn0mkl0S89Rq+OdLTZPGzllnFnCKWmtSImAvKaacFXrh7zstO2/7lvTliu83yXwWU7LuUFMd9C35YMNt/7Lq0RILQZ5Ga3gTw4vaKLhtBssnKnLYaC+QCgKikRuSTbH5ECL6xXK5Y8tuaIFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745533115; c=relaxed/simple;
-	bh=w6LlIf28NyGBFtutNuc3GI4ql9DOzl5pnXCFXvIoaBo=;
+	s=arc-20240116; t=1745533116; c=relaxed/simple;
+	bh=h7bS8t6pLBwRLFNubDUutpACHo61OxsUV8u730LTnig=;
 	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=atmciWhLGBgRC62j1gQE46W8YYoKLjB6rsL5oOFiixNo5jnA7XMsfbfXkyHQS02f4ts+n0oIw3iTadFojp3n3Q0koy1INd/oQNkf2zFdyTI1q0+bXlbYUAxm9l0WrWDOtOfP9X++euC1sBzU937aqYr9cyKuDPTaY4jfvHadRGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=MBxCA2bI; arc=none smtp.client-ip=209.85.160.177
+	 References:In-Reply-To; b=m7BWJZEivMVRlbUIOXWqapYv5gfy5VKt4iaPNpYCv5ZowWA34fYP1iCG3WFsax6IETMYPF7gKkzTW/iK2zUKE6GQToNXn1orIRBuTY8SG/pfhTu0PLRdHE5AUzVEOUu548vgvuoV99oQx9tqA++PZd6zU3b5SvdREUYZ5BXjWaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=WuL+ZVmF; arc=none smtp.client-ip=209.85.219.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="MBxCA2bI"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47698757053so21100491cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:18:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="WuL+ZVmF"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so18329906d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1745533112; x=1746137912; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1745533114; x=1746137914; darn=vger.kernel.org;
         h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
          :mime-version:message-id:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cDD9yFwsvgkEFtZxZyeicpTkbPdB1oQ+j/wziWiSwI8=;
-        b=MBxCA2bItPsPob9u0o8EBGhOsAhxlVxo+kz2s2V0nCXdfDARVjg9LRIDIyEKmNZt2y
-         Wd9qCgezgSPWnSz6lKNsjMUGZR6AlS/3UAwInpNh4SznGocQ+Y8TS3ZjixUqhzVgoo6y
-         9iqs5mze4I8Zx03UgLcLAksuWDuAcgXkv0H+McXjTqcj0hbtunwiziKa1SHuMPsx9OzR
-         y/aJ/2mnaVnUjNZiZd22QiECQPGqN2+OfoZ1IaOBPQ3JMZrZrCKbxlIdq7zYdS/ssibD
-         0rL0o8B60fzQrJMIUnPKsdWDJ+j+6edJ2nKhWBNfkODYhYUL8XxuRYWVBuSgs4s2RepI
-         dlQw==
+        bh=hAjyXB+CyDav4k4P6PubMcZjSZyXZYM+TboJS0Fnb7s=;
+        b=WuL+ZVmFB3eGhyW1vpV1hiagAKqGRt34rxaY37woXQl6y2AJJQ42uty6YuYkOQdhuR
+         TYSvY5oo1bmaP3V4aXdl8wCoZhs08vDnw46tqTm1Znm+Y860XC+UFXmaVZRtjKKk9Dqo
+         8LOpa7w/tVe4teV//GfSpzdriWNK91pKHsDph6e9JgNub3lRWWyrUDDiOZL5NK81NnRr
+         On0wCjVpf1NkFUexqskbDEmEM2Yg7TjfTjvgPQkdWPJE8pF4auz/0ajEPZD8IAWRn6kL
+         UJ6+w0uOVCk7xbyY/tsRv7jbVscQ5xtbpN1RRowvKH13sbFToTzmwWTfd2aVLmzknJrW
+         C/uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745533112; x=1746137912;
+        d=1e100.net; s=20230601; t=1745533114; x=1746137914;
         h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
          :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=cDD9yFwsvgkEFtZxZyeicpTkbPdB1oQ+j/wziWiSwI8=;
-        b=SfZv1vEIxBxok3BdeJxhLHtiMKkPt1D8W+/60mAUCtw5Y/145yyxCSJ0QdvxYDYhtd
-         ifwB8Nvf4CWKwJ5OYfuixqjl1Yqm/nveLYkxK8Du0xtG/3VKJQxCH4myPBHE1bh4SWTY
-         S0FJmPBHCLtvxdNauwqufUPWzREaveoSlRIXqzd6vJ8tUp2VVPtMk+MN5VrM0FsgyOXL
-         86SXeBaAX3OOOFuj5wzkWQ/+CNKbHAIcuCnRQTv8ICWQAZuKZonBRNOlVrbh9vx3Bmhz
-         bnFXX6D0Fvk6j/YEEyM/1NtXHl1ibe8j3Yj+wADiTCkf+BTlce0pv+c2TQHNRlRV7W+C
-         M/0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWN52nIT3TAp1odUkZ0f3oK0Vw/GCLqRGarDMJQiaE1mM3c4/rNFFYqgEEAiC4CyCwUh/6Ed8eKt97cnuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6La8VBUdvKacWjlRuaBgL4hQNVJ2lcxt+2cy6SXX0nCHT/mfX
-	7+8gQkj3IcCVo7vxINAOy8FUVTW3XcC5FXyn1I0JBUdu3FV3rqfAVVClg6dX2w==
-X-Gm-Gg: ASbGnctq1y/MfOFtycZjpycH1boiVErF6O6FV+RwY3A1XLVz17OJ21kNE80+Hq1WAIc
-	hs00hI0kzsV00yMmdxzo+0q0nicGEp/N7JIIjkL3jH0VWBQ+N8EEUEPXC8flUR6Q9fNFEQjofGT
-	QoSJjMVy2VO6XzlmvPhr715KaqbIDGgxcHHBFMeuPByrK0TRgXrbKjGTsOiHfYpOOMBJFD3Tu0q
-	A1So9jLCjTx5F4szTvzRLSiAPHuPbmvGCi+kMjkis+qWeItkNEipbZ6+xvq/ZQBZn1t/APYtWRk
-	1M+T+1VL5O+YJ1Tn4htPxjzqwEYbfd8OcifrHTAfgD+23kH1jiS1dsXYVkAs043tYqwQ8fgwYbY
-	bp44Cu/o6Fw==
-X-Google-Smtp-Source: AGHT+IEHD12ufMOYwnkTSyFoER3memBLGPBgeX0kZrL8caC70GLQkKQCwxWZrvj3Wif6jPcsY3zXRg==
-X-Received: by 2002:ac8:5911:0:b0:477:ea0:1b27 with SMTP id d75a77b69052e-4801d049f45mr1896491cf.26.1745533112047;
-        Thu, 24 Apr 2025 15:18:32 -0700 (PDT)
+        bh=hAjyXB+CyDav4k4P6PubMcZjSZyXZYM+TboJS0Fnb7s=;
+        b=uarr0pA39bwn/SqtWbA9CEHV/RzDdWOHDR/HbysqhdF5JIOcQWZ3FheDQPGY2NbwGR
+         mcIguQCv5t8WFctYLSH3LM2LR5tos69tPHDxPnHm0haIy96Z2mjraPSJ/Nm83Vu6PyNb
+         IXBvKUWdRZanASGlMGMpRRzFSDINaeEi/VZbtY3R2Yy6EwQixj0dVFVxXcHHq8gVIiGh
+         Ojmr1E3Pgu2Fv3+rwSyOgFk6hbONNq0ny3MlBAUec90VUaZQ7l3djWI+aAuIs//ug2XW
+         cKOou4CslvzWrirwFLcw2jcs3MuYL/qpdd9RVTQDluh3UhwQ9dD5uHdju9/5UtxU8bxy
+         VhjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFg+JUrs7uIfRvTQPjxIUnKY5lkMps8TGwm67wVqPD3+1w/914J9AAIz6/3En9jkr74pqaLnDmjBP95PY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpIGahn/6sAxkJ7gfSKPM0cC7sKzmbJTJTORAcPXoujwsLvqbw
+	FOVg4Q7x8LPTV6o67Apg3XBqS7JEkj7z6VDSuDJpkFKb1QXoyQwDSNGnlkw7Fw==
+X-Gm-Gg: ASbGncu3tbhcwSE0+Gpp0oLg9SS5yrp2gPpFLUqzmPO+zcXTiD3fRQe7FK/0gAHBLnm
+	+rWaIDWR10Bk9pQeYmJ728X8hSVMEPffxFek9SlJloSSPUHMCjnuIzou7mjsrvL0UtUtb0oXjTI
+	dr29RGgCcVpPaHoA379XkyDUBwoOhfO6kWqnoPlM4Qd7/nRezVU7Orb7x3a7/SnekMBvKc/YRpU
+	qRm0a5Qku/4UEuhjUgqieJPnbzjc3+1VauKU2bIc5xM26jlRaLMvFy0jd4L0qoFP0SrkgjcTwLx
+	WNqmQPXvhVXQf6LwFXrF7FD9ynkrsCoz80hjUibXC0L4UbCAGEItFJ2zvZLvQEFk0IfZ2DlR32y
+	Ek3UpTkLn5Q==
+X-Google-Smtp-Source: AGHT+IGXqCgssDpLUT5Km+2/uYfoayGN7KEZy1Sw7rm2oXTApNyBMkE2ly+T0vaDsF3ffw6xOmoIag==
+X-Received: by 2002:a05:6214:242d:b0:6d8:ada3:26c9 with SMTP id 6a1803df08f44-6f4cbcb37femr1511986d6.10.1745533114161;
+        Thu, 24 Apr 2025 15:18:34 -0700 (PDT)
 Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47ea2299710sm17345031cf.81.2025.04.24.15.18.31
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f4c0a7433bsm14465726d6.93.2025.04.24.15.18.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 15:18:31 -0700 (PDT)
-Date: Thu, 24 Apr 2025 18:18:31 -0400
-Message-ID: <b515a68481217f0dee0424464d56955a@paul-moore.com>
+        Thu, 24 Apr 2025 15:18:33 -0700 (PDT)
+Date: Thu, 24 Apr 2025 18:18:33 -0400
+Message-ID: <0211e4c6561bf2eabbad2bf75a760e03@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,74 +72,25 @@ X-Mailer: pstg-pwork:20250424_1707/pstg-lib:20250424_1742/pstg-pwork:20250424_17
 From: Paul Moore <paul@paul-moore.com>
 To: Casey Schaufler <casey@schaufler-ca.com>, casey@schaufler-ca.com, eparis@redhat.com, linux-security-module@vger.kernel.org, audit@vger.kernel.org
 Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] LSM: security_lsmblob_to_secctx module selection
-References: <20250319222744.17576-3-casey@schaufler-ca.com>
-In-Reply-To: <20250319222744.17576-3-casey@schaufler-ca.com>
+Subject: Re: [PATCH v3 4/5] Audit: multiple subject lsm values for netlabel
+References: <20250319222744.17576-5-casey@schaufler-ca.com>
+In-Reply-To: <20250319222744.17576-5-casey@schaufler-ca.com>
 
 On Mar 19, 2025 Casey Schaufler <casey@schaufler-ca.com> wrote:
 > 
-> Add a parameter lsmid to security_lsmblob_to_secctx() to identify which
-> of the security modules that may be active should provide the security
-> context. If the value of lsmid is LSM_ID_UNDEF the first LSM providing
-> a hook is used. security_secid_to_secctx() is unchanged, and will
-> always report the first LSM providing a hook.
+> Refactor audit_log_task_context(), creating a new audit_log_subj_ctx().
+> This is used in netlabel auditing to provide multiple subject security
+> contexts as necessary.
 > 
 > Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> Tested-by: Fan Wu <wufan@kernel.org>
 > ---
->  include/linux/security.h     |  6 ++++--
->  kernel/audit.c               |  4 ++--
->  kernel/auditsc.c             |  8 +++++---
->  net/netlabel/netlabel_user.c |  3 ++-
->  security/security.c          | 13 +++++++++++--
->  5 files changed, 24 insertions(+), 10 deletions(-)
+>  include/linux/audit.h        |  7 +++++++
+>  kernel/audit.c               | 28 +++++++++++++++++++++-------
+>  net/netlabel/netlabel_user.c |  9 +--------
+>  3 files changed, 29 insertions(+), 15 deletions(-)
 
-...
-
-> diff --git a/security/security.c b/security/security.c
-> index 143561ebc3e8..55f9c7ad3f89 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -4312,6 +4312,7 @@ EXPORT_SYMBOL(security_ismaclabel);
->   * security_secid_to_secctx() - Convert a secid to a secctx
->   * @secid: secid
->   * @cp: the LSM context
-> + * @lsmid: which security module to report
->   *
->   * Convert secid to security context.  If @cp is NULL the length of the
->   * result will be returned, but no data will be returned.  This
-> @@ -4338,9 +4339,17 @@ EXPORT_SYMBOL(security_secid_to_secctx);
->   *
->   * Return: Return length of data on success, error on failure.
->   */
-> -int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp)
-> +int security_lsmprop_to_secctx(struct lsm_prop *prop, struct lsm_context *cp,
-> +			       int lsmid)
->  {
-> -	return call_int_hook(lsmprop_to_secctx, prop, cp);
-> +	struct lsm_static_call *scall;
-> +
-> +	lsm_for_each_hook(scall, lsmprop_to_secctx) {
-> +		if (lsmid != 0 && lsmid != scall->hl->lsmid->id)
-> +			continue;
-
-As mentioned in the v2 review:
-
- "Let's use LSM_ID_UNDEF instead of 0 here to add some clarity on
-  how an undefined ID is handled.  The function header comment
-  should also explain the special handling when LSM_ID_UNDEF is
-  specified."
-
-https://lore.kernel.org/audit/5838489ecd5186900315f8f6c6e02f22@paul-moore.com/
-
-> +		return scall->hl->hook.lsmprop_to_secctx(prop, cp);
-> +	}
-> +	return LSM_RET_DEFAULT(lsmprop_to_secctx);
->  }
->  EXPORT_SYMBOL(security_lsmprop_to_secctx);
->  
-> -- 
-> 2.47.0
+Other than moving to the subject count supplied by the LSM
+initialization patchset previously mentioned, this looks fine to me.
 
 --
 paul-moore.com
