@@ -1,75 +1,130 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DAC19F40B
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2BA19F40B;
+	Thu, 24 Apr 2025 10:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490129; cv=none; b=W86ckDDyAhPblFr18sTEEukcXKVfsB344vmzyetvFya6wbUopbOhXBx28LLhoGkVW07Vu99cAb3SpY/z3EuyRQd8cQjQEAgo4dUZErFmBwIyWpxqKg/PDmU525yfQqFx7ofisg35NdbnNF+X5bWEV6GJzkqKGba1zd3NiUsuGNA=
+	t=1745490157; cv=none; b=SaVkVyz1RyxfOF5gHayAcC0aKk0w6OAPbwAAIPv1R/YCSZxFVXFymS900da7DRnCaE6rxLKBP/AZQZvVV9kd2lNXi2ET4BHg4p/uirLdpjeefK8+1M1JADUssGyuH1C/4IDuQ28pLokcUphCSQyruhi0cl3pcTA0JFAGTrkECh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490129; c=relaxed/simple;
-	bh=DjWV+iyUfNjwjx7gVg2kl3E5NyWIUSHxz7PKe9j1ogA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=onXVshB/Mvd2P2SKP1rq880g0px3HcM06jw4Tetb0x6L1pO9g742L7J3l5rKeDymtHx3ODHUjX17eMh+L77VXeaHAo1s7yOYXhpGuaf0olItuEGlvGyQTtFwPofXOEVgN/y+KLWbrHYbwlXvquoxmCi6j5x3Ytpm02p1ng2wyFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=WSWeZy8t; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1745490157; c=relaxed/simple;
+	bh=Eamh7vthfoRmbWEo5vKkBaCdNQ6uoy/kDRFc+SnM//0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCip+h5HgIZEnnCkWsYUMCqrcpbMgRaNWXqr25r1XFyNXAf9ekc3oXDtko/dbRvXjG9Q0ptRwZN+7YDwe2Kp8g/gABdbBjHgONAn2HvDIyd0l07lQaxBSPWUeALcze79VY8pPGC1kIUNmk2vdZ9oWmzgb6yimnbexBoGiXOQ5JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TXeWBApD; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WSWeZy8t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=G/Gm0iaohoSUpFALDcDYkX48JKnw9ZtngTxphpD+oZ4=; b=WSWeZy8tdQ5+hNrDfHXaJP/mBc
-	MMNrqvUk7fzxVuQtqKUWvqHicHn9KQ4vbgZS3df6ZfBVfzzm5XVJibPsvsiXLlDcB68ctT4ylEzY5
-	FsUYrZOiXKTb0KnKWFySK7uw52huudu6QuNaWdV/VX2cIZQaLuI3wPuJWwq3j+XqFuAc1qfoMycmf
-	YCJE3ZXIV6dZGga8UZJVCWgTQ8nsUFOO+bbW5B2EA3IBvwXhCrcWi/dtASngsFAe1Q5jG51+K55L8
-	YdKbpkOc5EKVVafkUewbejioRaB+S4lmZ2vEkBYzzsZH8KDM3OVujyjlPH6l/kIVexAS/wzyYi7sM
-	+092G0Wg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42566)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7tiP-0007Bh-0p;
-	Thu, 24 Apr 2025 11:21:57 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7tiM-0000zm-2N;
-	Thu, 24 Apr 2025 11:21:54 +0100
-Date: Thu, 24 Apr 2025 11:21:54 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: xieyuanbin1 <xieyuanbin1@huawei.com>
-Cc: sfr@canb.auug.org.au, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, will@kernel.org,
-	nixiaoming@huawei.com, liaohua4@huawei.com, wangbing6@huawei.com,
-	lincheng8@huawei.com, wangfangpeng1@huawei.com
-Subject: Re: [PATCH] ARM: spectre-v2: fix unstable cpu get
-Message-ID: <aAoQwsldwmxAKA0A@shell.armlinux.org.uk>
-References: <20250424100437.27477-1-xieyuanbin1@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TXeWBApD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745490156; x=1777026156;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Eamh7vthfoRmbWEo5vKkBaCdNQ6uoy/kDRFc+SnM//0=;
+  b=TXeWBApDin8N6mhdyDRfuI6i6RWwgsIokzdZXy1q6oy53DMBPFEO1Fro
+   fVF0cRKs7RCRa5EmgLHCcENQgwYu0V60pdRW20fXGPLu8EKKyTXt5RJ51
+   1sEtZbLlT3lVm8qfQU/KGOCv73DAjTUpjJnWg3AmrsHO+e9e/EYZ+78mo
+   qqrZCoGn0Cr7Q0/5J0VRORIfEAvI6Ab/touSoSIN6s6IoQQ26Fkll0n6h
+   kb+v14UbnP1/W426Ux1FXHq/xZFq6S7yB53GfCijpzSvpykOPOzkHItEs
+   PyUelHZwKWuohMNMSw4GyB9mfAtSqs3YqMnYbCXbP/Y+KYGENMEt5FKEm
+   A==;
+X-CSE-ConnectionGUID: uf53PQJOQKOswAQA4cLn5Q==
+X-CSE-MsgGUID: PbQ2jbAKTMq8kJ9bJBpjlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46232608"
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="46232608"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 03:22:35 -0700
+X-CSE-ConnectionGUID: 6d2rlWgpRmC7Bg1v+3s/7w==
+X-CSE-MsgGUID: i74F4pZbQEa57aEhCIn7ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="155806431"
+Received: from acushion-mobl2.ger.corp.intel.com (HELO [10.245.83.152]) ([10.245.83.152])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 03:22:34 -0700
+Message-ID: <80f49ba8-caea-47d5-be38-dd1eefd09988@linux.intel.com>
+Date: Thu, 24 Apr 2025 12:22:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424100437.27477-1-xieyuanbin1@huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] accel/ivpu: Add handling of
+ VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Karol Wachowski <karol.wachowski@intel.com>
+References: <20250408095711.635185-1-jacek.lawrynowicz@linux.intel.com>
+ <2025042227-crumb-rubble-7854@gregkh>
+Content-Language: en-US
+From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
+ Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <2025042227-crumb-rubble-7854@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 06:04:37PM +0800, xieyuanbin1 wrote:
-> From: Xie Yuanbin <xieyuanbin1@huawei.com>
+Hi,
+
+On 4/22/2025 2:17 PM, Greg KH wrote:
+> On Tue, Apr 08, 2025 at 11:57:11AM +0200, Jacek Lawrynowicz wrote:
+>> From: Karol Wachowski <karol.wachowski@intel.com>
+>>
+>> commit dad945c27a42dfadddff1049cf5ae417209a8996 upstream.
+>>
+>> Trigger recovery of the NPU upon receiving HW context violation from
+>> the firmware. The context violation error is a fatal error that prevents
+>> any subsequent jobs from being executed. Without this fix it is
+>> necessary to reload the driver to restore the NPU operational state.
+>>
+>> This is simplified version of upstream commit as the full implementation
+>> would require all engine reset/resume logic to be backported.
 > 
-> When a user program accesses the kernel address,
+> We REALLY do not like taking patches that are not upstream.  Why not
+> backport all of the needed patches instead, how many would that be?
+> Taking one-off patches like this just makes it harder/impossible to
+> maintain the code over time as further fixes in this same area will NOT
+> apply properly at all.
+> 
+> Think about what you want to be touching 5 years from now, a one-off
+> change that doesn't match the rest of the kernel tree, or something that
+> is the same?
 
-Please see
-https://lore.kernel.org/all/795c9463-452e-bf64-1cc0-c318ccecb1da@I-love.SAKURA.ne.jp/T/
+Sure, I'm totally on board with backporting all required patches.
+I thought it was not possible due to 100 line limit.
 
-As I see it, this can't be fixed - certainly not in this way due to the
-reasons I set out in the above thread.
+This would be the minimum set of patches:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Patch 1:
+ drivers/accel/ivpu/ivpu_drv.c   | 32 +++-----------
+ drivers/accel/ivpu/ivpu_drv.h   |  2 +
+ drivers/accel/ivpu/ivpu_job.c   | 78 ++++++++++++++++++++++++++-------
+ drivers/accel/ivpu/ivpu_job.h   |  1 +
+ drivers/accel/ivpu/ivpu_mmu.c   |  3 +-
+ drivers/accel/ivpu/ivpu_sysfs.c |  5 ++-
+ 6 files changed, 75 insertions(+), 46 deletions(-)
+
+Patch 2:
+ drivers/accel/ivpu/ivpu_job.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+Patch 3:
+ drivers/accel/ivpu/ivpu_job.c     |   2 +-
+ drivers/accel/ivpu/ivpu_jsm_msg.c |   3 +-
+ drivers/accel/ivpu/vpu_boot_api.h |  45 +++--
+ drivers/accel/ivpu/vpu_jsm_api.h  | 303 +++++++++++++++++++++++++-----
+ 4 files changed, 293 insertions(+), 60 deletions(-)
+
+Patch 4:
+ drivers/accel/ivpu/ivpu_job.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+First patch needs some changes to apply correctly to 6.12 but the rest of them apply pretty cleanly.
+Is this acceptable?
+
+Regards,
+Jacek
+
