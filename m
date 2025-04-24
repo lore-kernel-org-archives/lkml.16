@@ -1,94 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5DD1AF0C7
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BF91F4E39
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745497385; cv=none; b=XSqzwjyKyOKN9hULWK9uyXOW93AU4JJc2rk7Y92gvxwziz8pSZ3bFsWPcgftFVaK5/a22DhrCdy2jsVlAmVMXrOTB1QVnZUSc+RE9n5PaV7htuNY4dam4PXZaO5I4W0I8OPWym+lkISKOVxlOId3UAFC6IC1gFQWbZB3QrLePoI=
+	t=1745497419; cv=none; b=ggZo6he8Ftwvkcv7dmNFum875hrs6k8YD+HDjYUENgeKwMACrWd73MjnYM8w4LMZbZoZzzv+RGajVtk3SQ1y5PiQ9yedII7nJ5a230Uao+QpFSDTDafF7rcUZvVTZJKxYxgY9iyjh1zT5XWKgc9fq16XFY6IPptz4xMMa11jKyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745497385; c=relaxed/simple;
-	bh=e6TIk1k6gaYrJri9pmd1FONaT03IBpI7iPR3MjIaPbc=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=M+nkB8gEmSTg6bV/8pPO1qGPGfr1HyOI1CaAYKWZnCYI4VskAhoNyVPmqv+4xuMyIbPQ5Vmxt/wd0GhacFnHTB6F7jiw8C5HSJXat/m7pIe/a8opM85/goyJMBjzv7+ZrsrQipvdD4CfFULNt9UXKSzrQJvcEMMAe4sPQ9J/vu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmqWHxIN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745497419; c=relaxed/simple;
+	bh=mXZOHEUBupZHktCPTVKd8yB6QTUCIvtbcbVx6DCjiDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iyLdz8Sd4dfrEB8NyMGq8dui25FUoVKitQagB8tufyUoPzL7BujZKGdeZPYLmy/pYdrYwoCx5yXWSL2yyxqXUfRhuAtQxilMoCUmZNqtQPoGmvueW6nDmwuTMTRG9yyrtgvCUfk+KvB9pv/vHZ3VatszqIo7xANZPH3a3+FrG6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Wi2J5lgm; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmqWHxIN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745497382;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y7Ap0RPtUmDAb/aCd6HFvT2KxgtdQAWYYK6uDU1o8uU=;
-	b=SmqWHxINchybyE9J+aLRN8TnLysJw0nDO4XDebNN+eFmC4ArW+hbG8TiZ31Kyz1AoWBKup
-	bT7wDEkxnntg5w9MNGZv49ZkboHUOaZ3Jv3QCMI62Dhqo/QZMk2DQdYCjz25eLGiQJPW/2
-	tsh/0FMN8Jlla+LSKJnQkQ8IF1tNNxw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-151-6UyWrLWYO1--sLyphaECkg-1; Thu,
- 24 Apr 2025 08:23:01 -0400
-X-MC-Unique: 6UyWrLWYO1--sLyphaECkg-1
-X-Mimecast-MFC-AGG-ID: 6UyWrLWYO1--sLyphaECkg_1745497379
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 552AE1800360;
-	Thu, 24 Apr 2025 12:22:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.16])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0E097180047F;
-	Thu, 24 Apr 2025 12:22:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250422235147.146460-1-linux@treblig.org>
-References: <20250422235147.146460-1-linux@treblig.org>
-To: linux@treblig.org
-Cc: dhowells@redhat.com, horms@kernel.org, marc.dionne@auristor.com,
-    davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-    pabeni@redhat.com, corbet@lwn.net, linux-afs@lists.infradead.org,
-    netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] rxrpc: Remove deadcode
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Wi2J5lgm"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745497413; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zpub1jmjoji2uYCdEiNcOjtnZyPJVo9jnaF8plubUf4=;
+	b=Wi2J5lgm4BTfVzU8QGKLb9j6tvL2ww1PXJqrCIVbWALePmn0SIrHR5ZUa6TfKpZfWjeSHxgZRI86GBejNP8Hp1+3fPEx6jJDb5oRhdvZfrcU8QwsGFLclECbNfEznCL3n6QJDV+8HO1dN4/fgE7Hgl4pqiJBQdQjSQdR2l+/HPo=
+Received: from 192.168.1.7(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXzOCae_1745497412 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 20:23:32 +0800
+Message-ID: <e5b17a65-fa66-4fc8-9acd-d58800b48a1c@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 20:23:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3098547.1745497373.1@warthog.procyon.org.uk>
-Date: Thu, 24 Apr 2025 13:22:53 +0100
-Message-ID: <3098548.1745497373@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add mm THP section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-linux@treblig.org wrote:
 
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> Remove three functions that are no longer used.
-> 
-> rxrpc_get_txbuf() last use was removed by 2020's
-> commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
-> local processor work")
-> 
-> rxrpc_kernel_get_epoch() last use was removed by 2020's
-> commit 44746355ccb1 ("afs: Don't get epoch from a server because it may be
-> ambiguous")
-> 
-> rxrpc_kernel_set_max_life() last use was removed by 2023's
-> commit db099c625b13 ("rxrpc: Fix timeout of a call that hasn't yet been
-> granted a channel")
-> 
-> Both of the rxrpc_kernel_* functions were documented.  Remove that
-> documentation as well as the code.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Acked-by: David Howells <dhowells@redhat.com>
+On 2025/4/24 19:16, Lorenzo Stoakes wrote:
+> As part of the ongoing efforts to sub-divide memory management
+> maintainership and reviewership, establish a section for Transparent Huge
+> Page support and add appropriate maintainers and reviewers.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
+Thanks.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+> ---
+>   MAINTAINERS | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4015227645cc..85cd47a28a0a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15563,6 +15563,29 @@ S:	Maintained
+>   F:	include/linux/secretmem.h
+>   F:	mm/secretmem.c
+>   
+> +MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +M:	David Hildenbrand <david@redhat.com>
+> +R:	Zi Yan <ziy@nvidia.com>
+> +R:	Baolin Wang <baolin.wang@linux.alibaba.com>
+> +R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> +R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> +R:	Nico Pache <npache@redhat.com>
+> +R:	Ryan Roberts <ryan.roberts@arm.com>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +W:	http://www.linux-mm.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	Documentation/admin-guide/mm/transhuge.rst
+> +F:	include/linux/huge_mm.h
+> +F:	include/linux/khugepaged.h
+> +F:	include/trace/events/huge_memory.h
+> +F:	mm/huge_memory.c
+> +F:	mm/khugepaged.c
+> +F:	tools/testing/selftests/mm/khugepaged.c
+> +F:	tools/testing/selftests/mm/split_huge_page_test.c
+> +F:	tools/testing/selftests/mm/transhuge-stress.c
+> +
+>   MEMORY MANAGEMENT - USERFAULTFD
+>   M:	Andrew Morton <akpm@linux-foundation.org>
+>   R:	Peter Xu <peterx@redhat.com>
