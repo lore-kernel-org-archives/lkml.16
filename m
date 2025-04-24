@@ -1,156 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADB628B4EB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A024D284681
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745516309; cv=none; b=pjep+R8YDwHOxEW083FY5AA7uevSToREtu5/ofoea5yGxa28LoehtnLRyq2TQjfA33zGznxuQJRW8fvtqVRZS40tRFpz9T9CutriUpLRVRbeiNN04uMjdxoiwLWoEMHdal6i/dQ+8+0PFcwK/TA+g1ttJlm7r6gBWyItlxjuOaM=
+	t=1745516345; cv=none; b=k/8Gi4ny1Z8JiYpMkzltp/qkgWtXgsErPRzEYtD2/POUXGBVvkPPy8ldT5uN9OkkP0vvA4Zk3qUPTLm/NYFNXCXvfxXzJcTVPXGbbA3+pNCAASQB9W6X6o/rVddXXt2sDwXkOXOt/NW4eVIo4K3P01RqcXTjgFhmgH6TeU/jUDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745516309; c=relaxed/simple;
-	bh=+3qGCQZl/U0MkFm/X6EpDwwucSxPvMb3L7QjZX6gyww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JhNHheQ83iXF+XLycwsMy5SdK7N1i6p+ybpvkVRMTPQuXHea6YCiCMk2b674dfo9kGaRdFdi8XKbaxgHFm3ZYIhzZhQ6sV2eErtSe0jlOeRkIlUPq8rYfvmKLhWQk+KBS9V5fdLHdV6KpPYXaFxsE6E+7eug7euzsiRwPdVYqdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UgJ+lrlS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745516345; c=relaxed/simple;
+	bh=778C7L6jHkuS9sL9E7t1piWeaUfftWC+i44EveEJyWg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=tyhknqg0uFY4luKc3tGjK2pk6AhvKG4y1ki0CH5MJ9/YsAMKLSTqG7AG+ESCK6SnCiYpy+oCI3L6DIE++eEixlsjd/JIYlz9czMQU6rfvqkw8zq4wVANf0S0t5hTcHiFqxWEDhNngs0hDj5+Ma9kHUk0GoGYJEKzqv6ky9QRZ7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pYnBL/zS; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UgJ+lrlS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745516306;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=M6iPlq0+lPq47ekL78NC2y1kZ/SereiKHjDQ5zOpW38=;
-	b=UgJ+lrlS2MS4TR8PGGedgYAphPSuP9L/j+pD/PAIjblvpGXowHvNdsG1VEtxt8VCWB+m/h
-	IGqTCbKe1B5bgR6HLXmX81Kdc2ftIN46tNl5pMacvXHvvyNJNqQYuIVlucSpqsL5+seppn
-	cFEFJsYIqdnVkcHH9OhekAHjv5pIXdw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-85-WBF-oPjYP6ez6M-vHu7P4g-1; Thu, 24 Apr 2025 13:38:24 -0400
-X-MC-Unique: WBF-oPjYP6ez6M-vHu7P4g-1
-X-Mimecast-MFC-AGG-ID: WBF-oPjYP6ez6M-vHu7P4g_1745516303
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912e4e2033so496189f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:38:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pYnBL/zS"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4774611d40bso22911cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745516342; x=1746121142; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AQve8Z1vW/P2YOkExAreJok4GWtTgHefYj/Q8y+Ff4I=;
+        b=pYnBL/zSIYqy9Sse3HvCyIqFQ2uctO9G9wxJVgR+0lid9MuT6p0IntTRBYANzZIoIi
+         rjA8xdTXcqL7K2LSm+R4LW/1o305PZP0u9qvZ6moqQp4ML8XG8PDUhBSvO7WIe+d1B2p
+         PhlR7PQTt1WGnl7xV76tAjHxqGCwX76ZS6vaMoTqau4UqJJUrTaQaZR5ncqEcDUR2zCN
+         YJGFwO9y+NCzndYbTf0HA2PafUBaSp4CnKspAzSMMhC+PR0ZIU0ehDMGYTJgJ5RAAxRF
+         XRbXcNqhMm8mMBxe1EPYyPuvsOSI4B6OxRNar8iUKzwQqr4GQcEAkB/JX0X9bSG9AxPC
+         3yMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745516303; x=1746121103;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M6iPlq0+lPq47ekL78NC2y1kZ/SereiKHjDQ5zOpW38=;
-        b=pMe0Aefgge9X13jIxzCiCbxlTK2ncca83SFP08LEgi2QyoOENvi0oqWgiEWwfkmgNK
-         2lDOQeJGsNlfudpzFQJfBBkea4FMNYyWhdO7kFQV2MKWqHKFQDLFMq8Fw5IB5E430MyY
-         fpWZHHO31iklW2CoEMiotr/wOKP8a3EZIowdHQ6psxHuj8xg2mxkKifM7Al8FQCjgz/4
-         JABGWcDsDu7w3WFfgZOXyP39OqcOJ/eVhS2ESBpSnjfhU4YQTAeaJDiRdqe7BL+TMCSB
-         ReGzUHZuf1TzINFzpEaWnNPA+eFj2VFFDc4X+rv3ks68UEEBBghKgIDy+WGzjDhzpwQM
-         0sWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXlOOf/haDZAp3NjFhb/4hhi69dPrOc/gAfUYsgBA2iSNq4y8vB3AePK7KiRnawWK9wxTbgpG/yrOl0F8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAVPPf2eQXaMHnpHwowlO8isAnPPja1i7aIQxokF75seXeqsCG
-	FAJMoQ5CpG2LdIkbVINLKJFGln9sb6d+2B4DvLvxLCnvvE7HDZP1vWCwKk58EzpPSzllrAaM337
-	xQuf9Ai6jz3inJ+J0RoaYpcInuuStVOQImD7t972LE/MJtHJKTZ96cOnoWtIDrcYql2rUPw==
-X-Gm-Gg: ASbGncvk0V/ippy2+ZgAYzQhAZPrr3cfHFyW/aU3xhbhiTYH8BnF5ivvwyKaQFTCCZ0
-	X8UFHxLIqvQIken+X9f2XQAcspoDru9sgKvHH0kOz52u93uqJSvwNTJfnNR7zN6tIbxiSOJ9fyL
-	+W+r6gscaMrAJBwIG7IJC5nOfgutAQBGUfLi7bW/VzFMt3P/70CfUUEff7zccZrteKU0pftNcBw
-	qqa1sXrhSGo3r0RFv2n8EirM42bJJXUfQGS9/J01LpOv+th+zHQ/lApoqN5ki6/IjD3O9yIf7Fx
-	WM3uXeE0EraF
-X-Received: by 2002:a5d:47cd:0:b0:391:2fe3:24ec with SMTP id ffacd0b85a97d-3a072a85d1emr194603f8f.14.1745516303017;
-        Thu, 24 Apr 2025 10:38:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG5D2IdhVkkhzZ2u4E9jNLM9y6rqvZsJQWcjcm75UgkS2t3YqrF/hXRwT+JfZpueEpjqert+g==
-X-Received: by 2002:a5d:47cd:0:b0:391:2fe3:24ec with SMTP id ffacd0b85a97d-3a072a85d1emr194592f8f.14.1745516302620;
-        Thu, 24 Apr 2025 10:38:22 -0700 (PDT)
-Received: from [192.168.1.84] ([93.56.161.39])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a06d4a804fsm2858556f8f.10.2025.04.24.10.38.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 10:38:22 -0700 (PDT)
-Message-ID: <df3b44a7-70b8-4952-a7d7-231e69c8d3eb@redhat.com>
-Date: Thu, 24 Apr 2025 19:38:21 +0200
+        d=1e100.net; s=20230601; t=1745516342; x=1746121142;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AQve8Z1vW/P2YOkExAreJok4GWtTgHefYj/Q8y+Ff4I=;
+        b=lpMZW0kFVLdkEtxsKwtpRd241HjAPUxYEq9aW8DgpW0yFcWaZkPYgkT8JWPNDDvoWl
+         QbTW6JhhBgqWvGcNFsRcfFR64Lo8QUQRgRyhzyfawcMwBB3w+62DvBMZ15kafAn4ITNU
+         2pbHfxs6t5MSpzIjaBUxcU+l9/guHwb4F49rm4foyfHauuEejI4Ild1iM/5VTg3sVshW
+         kDabd+TOKFfn9tFwSZdtXdLh1R2jVpXcisS2e6C+MJuoELXjQvqPzISK6urzCdPGLiTu
+         yyQ+pmd0fn+KmZg6PEJT5+YDLVtjj1tuQYUzkmb9PH8/H7OGRVxjv+VUVefA/6sD4WKI
+         HCwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWt23NOh8YZHTO/Ms2F0Xw0nZ/xV780uG+u5etv0nf02u3CgVz82Qd/vwVkByfzBV6VqcfJAtN+GPa8hvE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg/csdOvzzD7Sf3QlQ4Aohf92MXVmq4U2V5vzKbxPYBhhb6LxQ
+	eOgHLvxdKIz+2Fu1KVWO8orZrNqOdwEBxJBUQdpZ2ci2tDTCT+Ns+GZBhWru/R+/pmHXnfzNvwp
+	zn4yGsYwwCXhjDyntjm1M1fP9NLF1Lud29Hvs
+X-Gm-Gg: ASbGncszZ28STQWvJyVT48rEjBMqevXclQ6MD+rabo8lb+BJzSLHhXKBXRAbW3WLE7Q
+	TzQ9DSsfhkUnRg6wUV9s7WbMhCcFGiTwomSSXeHLzp+ZPmS60HBKsfsjewjEhIjWBjFlmmuib1c
+	Yi5HzVJ9d+JpNdnHryQn/Z0CZoyT37huvTPfTmjs3BXZ1DTq+3wfps
+X-Google-Smtp-Source: AGHT+IEaeLExckdIth/b7h0UkPH6TCrtID8z1DnhzMSXKNMJB5xFB7I7YwWnciAgMdM0WUca1IkmZJFJkD5T7GZBSZ8=
+X-Received: by 2002:a05:622a:5a95:b0:47d:cd93:5991 with SMTP id
+ d75a77b69052e-47ea4e482fcmr4499751cf.21.1745516342030; Thu, 24 Apr 2025
+ 10:39:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the kvm-fixes tree
-To: Sean Christopherson <seanjc@google.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: KVM <kvm@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250422124310.2e9aee0d@canb.auug.org.au>
- <20250422173341.0901ebaf@canb.auug.org.au> <aAeg8A7DMvTAjqVO@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <aAeg8A7DMvTAjqVO@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
+ <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
+ <CAJuCfpE_jJ0Xq5T0HcLpquRzO+NdvN3T3_JXEwSjt2NG9Ryy5g@mail.gmail.com>
+ <CAEf4BzYctDuS4DRTzdRQyyhCYvFTggOz=wcbizXEYvC_z_SSng@mail.gmail.com>
+ <6ay37xorr35nw4ljtptnfqchuaozu73ffvjpmwopat42n4t6vr@qnr6xvralx2o>
+ <CAJuCfpGc-23xpEYZQQevkzx+iN3AAqXXzbyqJAQjd4TQP9j9Dg@mail.gmail.com>
+ <CAEf4BzYBdG95Zhi0M0CDTHAU6V9sF+kGSLB+346dq0Aa4Timmg@mail.gmail.com> <by4pd6zomtvo64vjddthqu3ps2n7fqzaeqttinmy5nzttxjjd6@ch2uxmy2bgks>
+In-Reply-To: <by4pd6zomtvo64vjddthqu3ps2n7fqzaeqttinmy5nzttxjjd6@ch2uxmy2bgks>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 24 Apr 2025 10:38:50 -0700
+X-Gm-Features: ATxdqUHNYGXmEC72FqW87V5mUP50xMoSw_i6A76PXBjs9grB8Rv_KLgtJdCe72k
+Message-ID: <CAJuCfpEAJGwCTUcQx1wjKkE2PJTf_EtX=xAwxLSdVqWn-cQTGw@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, 
+	david@redhat.com, vbabka@suse.cz, peterx@redhat.com, jannh@google.com, 
+	hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, 
+	adobriyan@gmail.com, brauner@kernel.org, josef@toxicpanda.com, 
+	yebin10@huawei.com, linux@weissschuh.net, willy@infradead.org, 
+	osalvador@suse.de, andrii@kernel.org, ryan.roberts@arm.com, 
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/22/25 16:00, Sean Christopherson wrote:
-> On Tue, Apr 22, 2025, Stephen Rothwell wrote:
->> Hi all,
->>
->> On Tue, 22 Apr 2025 12:43:10 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>
->>> After merging the kvm-fixes tree, today's linux-next build (x86_64
->>> allmodconfig) failed like this:
->>>
->>> ERROR: modpost: "kvm_arch_has_irq_bypass" [arch/x86/kvm/kvm-amd.ko] undefined!
->>>
->>> Caused by commit
->>>
->>>    73e0c567c24a ("KVM: SVM: Don't update IRTEs if APICv/AVIC is disabled")
->>>
->>> I have used the kvm-fixes tree from next-20250417 for today.
->>
->> I also had to use the kvm tree from next-20250417.
-> 
-> It's a known issue[*], just waiting on Paolo to resurface.  :-/
+On Thu, Apr 24, 2025 at 9:42=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Andrii Nakryiko <andrii.nakryiko@gmail.com> [250424 12:04]:
+> > On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > >
+> > > On Wed, Apr 23, 2025 at 5:24=E2=80=AFPM Liam R. Howlett <Liam.Howlett=
+@oracle.com> wrote:
+> > > >
+> > > > * Andrii Nakryiko <andrii.nakryiko@gmail.com> [250423 18:06]:
+> > > > > On Wed, Apr 23, 2025 at 2:49=E2=80=AFPM Suren Baghdasaryan <suren=
+b@google.com> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 22, 2025 at 3:49=E2=80=AFPM Andrii Nakryiko
+> > > > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <=
+surenb@google.com> wrote:
+> > > > > > > >
+> > > > > > > > With maple_tree supporting vma tree traversal under RCU and=
+ vma and
+> > > > > > > > its important members being RCU-safe, /proc/pid/maps can be=
+ read under
+> > > > > > > > RCU and without the need to read-lock mmap_lock. However vm=
+a content
+> > > > > > > > can change from under us, therefore we make a copy of the v=
+ma and we
+> > > > > > > > pin pointer fields used when generating the output (current=
+ly only
+> > > > > > > > vm_file and anon_name). Afterwards we check for concurrent =
+address
+> > > > > > > > space modifications, wait for them to end and retry. While =
+we take
+> > > > > > > > the mmap_lock for reading during such contention, we do tha=
+t momentarily
+> > > > > > > > only to record new mm_wr_seq counter. This change is design=
+ed to reduce
+> > > > > > >
+> > > > > > > This is probably a stupid question, but why do we need to tak=
+e a lock
+> > > > > > > just to record this counter? uprobes get away without taking =
+mmap_lock
+> > > > > > > even for reads, and still record this seq counter. And then d=
+etect
+> > > > > > > whether there were any modifications in between. Why does thi=
+s change
+> > > > > > > need more heavy-weight mmap_read_lock to do speculative reads=
+?
+> > > > > >
+> > > > > > Not a stupid question. mmap_read_lock() is used to wait for the=
+ writer
+> > > > > > to finish what it's doing and then we continue by recording a n=
+ew
+> > > > > > sequence counter value and call mmap_read_unlock. This is what
+> > > > > > get_vma_snapshot() does. But your question made me realize that=
+ we can
+> > > > > > optimize m_start() further by not taking mmap_read_lock at all.
+> > > > > > Instead of taking mmap_read_lock then doing drop_mmap_lock() we=
+ can
+> > > > > > try mmap_lock_speculate_try_begin() and only if it fails do the=
+ same
+> > > > > > dance we do in the get_vma_snapshot(). I think that should work=
+.
+> > > > >
+> > > > > Ok, yeah, it would be great to avoid taking a lock in a common ca=
+se!
+> > > >
+> > > > We can check this counter once per 4k block and maintain the same
+> > > > 'tearing' that exists today instead of per-vma.  Not that anyone sa=
+id
+> > > > they had an issue with changing it, but since we're on this road an=
+yways
+> > > > I'd thought I'd point out where we could end up.
+> > >
+> > > We would need to run that check on the last call to show_map() right
+> > > before seq_file detects the overflow and flushes the page. On
+> > > contention we will also be throwing away more prepared data (up to a
+> > > page worth of records) vs only the last record. All in all I'm not
+> > > convinced this is worth doing unless increased chances of data tearin=
+g
+> > > is identified as a problem.
+> > >
+> >
+> > Yep, I agree, with filling out 4K of data we run into much higher
+> > chances of conflict, IMO. Not worth it, I'd say.
+>
+> Sounds good.
+>
+> If this is an issue we do have a path forward still.  Although it's less
+> desirable.
+>
+> >
+> > > >
+> > > > I am concerned about live locking in either scenario, but I haven't
+> > > > looked too deep into this pattern.
+> > > >
+> > > > I also don't love (as usual) the lack of ensured forward progress.
+> > >
+> > > Hmm. Maybe we should add a retry limit on
+> > > mmap_lock_speculate_try_begin() and once the limit is hit we just tak=
+e
+> > > the mmap_read_lock and proceed with it? That would prevent a
+> > > hyperactive writer from blocking the reader's forward progress
+> > > indefinitely.
+> >
+> > Came here to say the same. I'd add a small number of retries (3-5?)
+> > and then fallback to the read-locked approach. The main challenge is
+> > to keep all this logic nicely isolated from the main VMA
+> > search/printing logic.
+> >
+> > For a similar pattern in uprobes, we don't even bother to rety, we
+> > just fallback to mmap_read_lock and proceed, under the assumption that
+> > this is going to be very rare and thus not important from the overall
+> > performance perspective.
+>
+> In this problem space we are dealing with a herd of readers caused by
+> writers delaying an ever-growing line of readers, right?
 
-*bubbles noise*
+I don't know if we have a herd of readers. The problem statement was
+for a low-priority reader (monitors) blocking a high-priority writer.
+Multiple readers are of course possible, so I think as long as we can
+guarantee forward progress we should be ok. Is that reasonable?
 
-Done, pushed to kvm/master and will resend the PR to Linus as soon as 
-Stephen updates linux-next.
+>
+> Assuming there is a backup caused by a writer, then I don't know if the
+> retry is going to do anything more than heat the data centre.
+>
+> The readers that take the read lock will get the data, while the others
+> who arrive during read locked time can try lockless, but will most
+> likely have a run time that extends beyond the readers holding the lock
+> and will probably be interrupted by the writer.
+>
+> We can predict the new readers will also not make it through in time
+> because the earlier ones failed.  The new readers will then take the
+> lock and grow the line of readers.
+>
+> Does that make sense?
 
-Paolo
+Yeah. I guess we could guarantee forward progress if the readers would
+take mmap_read_lock on contention and produce one page worth of output
+under that lock before dropping it and continuing with speculation
+again. If contention happens again it grabs the mma_read_lock and
+repeats the dance. IOW, we start with speculation, on contention we
+grab the lock to produce one page and go back to speculation. Repeat
+until all vmas are reported. OTOH I guess Paul's benchmark would show
+some regression though... Can't have everything :)
 
-> [*] https://lore.kernel.org/all/20250418171609.231588-1-pbonzini@redhat.com
-> 
-
+>
+> Thanks,
+> Liam
+>
+>
