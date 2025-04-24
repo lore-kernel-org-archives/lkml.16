@@ -1,173 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F214E2DF68;
-	Thu, 24 Apr 2025 14:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B92715533F;
+	Thu, 24 Apr 2025 14:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505530; cv=none; b=Biqrj9yPGpAE5XL+wIhARnXj3GDWbaAVQmNcgLBs4nnVKZD4WdHQXmziI81TkWByTUaLCYbAeR+fyXJ7RLEzIfMqYqgvY0PlLwkseqnHZAYIIkxnH0jXwV5jY/zZxaofTbRFkPd2U59+MDvMUeLchFDQ8spvMSsAvE/wlyPduis=
+	t=1745505544; cv=none; b=aSDK3qrcyFv+Mkp2t0Gs1ty5ICFRARNAFyz6jZRk9Dja3+JK4uYnJyjtOQzoffviE5FXftUqnfJLknRF1DZhSq2smyCu8fNzA4XP2NvKl9hku1oZr1DjhSzw9UfraussVZKbNVOE4+ape82ItuBWhjKc0yyBJJA24wbFhRwgAj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505530; c=relaxed/simple;
-	bh=WM7zfm0bT2ItDzzbHgZkWzBdQu/I59c8crE3d85m7Sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hs2jKbQjazKSkqt0BDPOLrrrJe66VYXTPgRRonxxb00gLtX8ct51Bgn2O6zNSimYOBJt5/CeuGgIx2D+vPtk6+WIBw5A14Jb7shCAanAc6NPmKzA5tVJ6pDW3oApXlu4stWrryYYloLVju932m8Ixo6+Rhf+S3qPArc5gNn2YFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJVGWmn4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745505544; c=relaxed/simple;
+	bh=TLVz/CTjw1SW9cTVLZDqmNJSZsjwJqxJYyBQRUZ2vG0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=cj0kY4L7SzRr831PXLBzgkgo6k+Oxkx7wATqEFcUZ39f0auYhjM4koCIGimralGmbEc8/QKT4cXhoy9Cg8T1lpUA3UgV+1fw8qxHejbSK9ZmwAm763xJNQUWI1gtN3NFBnEC0ROrJTvJFhSKNMsv90LU4oKjlGuR/DOsg7JMCN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJePo/ng; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJVGWmn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60655C4CEE3;
-	Thu, 24 Apr 2025 14:38:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745505529;
-	bh=WM7zfm0bT2ItDzzbHgZkWzBdQu/I59c8crE3d85m7Sg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fJVGWmn4v45l8WbiQwosdrijUHNMc637MOvicJxYlgxabqPeQTrlGaPCp6FRNvW4t
-	 5VwyC/mU9NdVJtmH4Vuf7Qr6pY9v29qFYa12FPzKlM2an91t1wSg4+H2+klzjQzwT9
-	 hS2beHMQTDgyeic7qRYktPe1ypBYTEDPD9xfrtzMP0npkfbxngnLfDFm9ECrIqu4Ar
-	 8mxrgHrltGVe6EBrkAUzvgBR4795/tVd/is3RuDRvIRc1TrnZVIS+Z8txKTNTwoyDE
-	 H6IoCmJavtTmgwwoqwG7fl56NAwc7SG0TwW9KSoyArW/nDLh8QQHxm++8njNhHX5/h
-	 rJ23St7P5TFlA==
-Date: Thu, 24 Apr 2025 07:38:48 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredb.hu>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Luis Henriques <luis@igalia.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
-Message-ID: <20250424143848.GN25700@frogsfrogsfrogs>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-14-john@groves.net>
- <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJePo/ng"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so8044105e9.0;
+        Thu, 24 Apr 2025 07:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745505540; x=1746110340; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=He1Y9ktqx1lW20BpUlUu2/rAP5XgA+Dn5l+R6PEz93M=;
+        b=OJePo/ng/AqMarQCDSzT6H6ruSuD5KfXshF5MJYSWlcTNSghmBfZxCFHuBfYWkxqCW
+         NlkYoLyK2LghjDA+tTrNRf9Yt5fMQldT6lznNXqmmVSNgvNW9VRD+2ScSbl8CWE30j4k
+         3pZcNKPGyEkf2uopnOSG083znxyJ6WFQ/urkcd021jsFBsoLDBcf1HCU3BeaDKj25B6G
+         8RR77nqAiImCnJgQ1U3f+1dDq4r0Ftto8MG8MW+YBKe8CBwyFsMov6y+E2kJ1Cy/W1GX
+         DTfYY2bGfJlBgIsDvctjnx3TW5YT9GgcF9xvwcl1oYLnSmmJcEjM4H2v49ASs2yqIxDl
+         /FoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745505540; x=1746110340;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=He1Y9ktqx1lW20BpUlUu2/rAP5XgA+Dn5l+R6PEz93M=;
+        b=p2NEwzSoYV5Eh4femfe85x2rJtoxlqnA0pbIQWhjpqpzU8NUY/wG/gjZE86EWN3mhK
+         Xg8RMgNKQpeeDJCv78NrSzXM5ZQkAqKrCYfOWNztoxEWqWfoUUnO4GLOYM02nuSb1Qjz
+         Da7DPY0XepSRwpaR5tf8tGthzZ7AdeB0iQVLfhN3l7JXAw4jQ5owoRiRbsqXmAhU3npv
+         l9q64JFBUseDjDjQYIIiAOS2HOytpc0GdVi5igb0EEPeaQNzg0COOPZto+08S8XuQIKw
+         5x9pppJU/5cI7K1dDfouZaMjgibcgruVeJp3l5VsI8l1OVmSJkFppqIAFVm9dDsW54bz
+         Z3hA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXS1YgAQ/kO5CcscXa6zwpffTd99jglbtlNfyiaXvisZAebjOcQLNfVBqBOAa6SQ3hy/s=@vger.kernel.org, AJvYcCWgPl9t0ZDqjQvhgQHAdDC4DmGzjb+cD18IVtihZL3y8YnI/mARJ2hH/qG7oJwezUsHvuwuYr1/qZO2k2WW@vger.kernel.org, AJvYcCXfanbnSgNKxzSVPhJrB+UEdunIhqOaQ6J4NHjxvstaVrzLv3Xm4kgZIt8pM7jCm9vX7jB2t+eKpyDjeTJJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLJPultxfHt0LklKGiv5iELd2dxHrmkva0zMphRdlA09XJ1727
+	iFMPnvNGdXwI8evIyllX63ENh1NxUAt6IaO2yToUfvKH0qDQZgwX5bXGvsUI
+X-Gm-Gg: ASbGncuIO6Katmrlkjae3hkduehSW8zlrBYl2hkCbNEmGj3RwyCha+DNVmzz9+Eujhu
+	/nsI2j+3PGexwXT6trA2WgN3bfwuKlODrMdE+c90F+xjv3Beh6hlf4Go5wOdpTtG54pmkI+2yJB
+	k6+rT7AE2GITVgZplMWdBytAHlhIiT5gGo9QCv9S0CpKn3j/TGWp9RttlaB4xRmC41CDd+t1TSY
+	Jv7WekhSF9rd2JlSDq4qAbwzHE1Q9DmIfWn2Suk397wXWNjP6DIYqStrLEczJe7jl3CAV/g9wl6
+	MgWGMUAcFxgbD25eKMXoMgVSVY2fXfWWobr9Qw3kpO7KNKOr1HmjawoqMh5cGAk9m0KpUcoQuYe
+	lwF4w9wh17jvAPZ2kQ6GjGQ==
+X-Google-Smtp-Source: AGHT+IHguIgZwJYV78SWBgbaRJqi2L28fF8iAgoCSk/UNtw4z12GqAm7g8nXeMSLOYYgnmRBoYQR5g==
+X-Received: by 2002:a05:600c:1f93:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-4409bd8cf5amr25620225e9.20.1745505540103;
+        Thu, 24 Apr 2025 07:39:00 -0700 (PDT)
+Received: from ?IPv6:2001:b07:5d29:f42d:16d3:1272:6f9c:e726? ([2001:b07:5d29:f42d:16d3:1272:6f9c:e726])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b8940sm23938575e9.30.2025.04.24.07.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 07:38:59 -0700 (PDT)
+Message-ID: <7da931d3e045aad6349879c16db9a8bf17aa0d60.camel@gmail.com>
+Subject: Re: [PATCH v3 2/4] crypto: ccp: Add support for SNP_FEATURE_INFO
+ command
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+To: ashish.kalra@amd.com
+Cc: bp@alien8.de, dave.hansen@linux.intel.com, davem@davemloft.net, 
+ herbert@gondor.apana.org.au, hpa@zytor.com, john.allen@amd.com, 
+ kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  michael.roth@amd.com, mingo@redhat.com,
+ pbonzini@redhat.com, seanjc@google.com,  tglx@linutronix.de,
+ thomas.lendacky@amd.com, x86@kernel.org
+Date: Thu, 24 Apr 2025 16:38:58 +0200
+In-Reply-To: <0ec035a24116dce7c8b2a36a29cf5eed96e0eb52.1745279916.git.ashish.kalra@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
 
-On Thu, Apr 24, 2025 at 08:43:33AM -0500, John Groves wrote:
-> On 25/04/20 08:33PM, John Groves wrote:
-> > On completion of GET_FMAP message/response, setup the full famfs
-> > metadata such that it's possible to handle read/write/mmap directly to
-> > dax. Note that the devdax_iomap plumbing is not in yet...
-> > 
-> > Update MAINTAINERS for the new files.
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  MAINTAINERS               |   9 +
-> >  fs/fuse/Makefile          |   2 +-
-> >  fs/fuse/dir.c             |   3 +
-> >  fs/fuse/famfs.c           | 344 ++++++++++++++++++++++++++++++++++++++
-> >  fs/fuse/famfs_kfmap.h     |  63 +++++++
-> >  fs/fuse/fuse_i.h          |  16 +-
-> >  fs/fuse/inode.c           |   2 +-
-> >  include/uapi/linux/fuse.h |  42 +++++
-> >  8 files changed, 477 insertions(+), 4 deletions(-)
-> >  create mode 100644 fs/fuse/famfs.c
-> >  create mode 100644 fs/fuse/famfs_kfmap.h
-> > 
+On 2025-04-22 at 0:24, Ashish Kalra wrote:
+> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-
+> dev.c
+> index b08db412f752..f4f8a8905115 100644
+> --- a/drivers/crypto/ccp/sev-dev.c
+> +++ b/drivers/crypto/ccp/sev-dev.c
+> @@ -232,6 +232,7 @@ static int sev_cmd_buffer_len(int cmd)
+>  	case SEV_CMD_SNP_GUEST_REQUEST:		return
+> sizeof(struct sev_data_snp_guest_request);
+>  	case SEV_CMD_SNP_CONFIG:		return sizeof(struct
+> sev_user_data_snp_config);
+>  	case SEV_CMD_SNP_COMMIT:		return sizeof(struct
+> sev_data_snp_commit);
+> +	case SEV_CMD_SNP_FEATURE_INFO:		return sizeof(struct
+> snp_feature_info);
 
-<snip>
+This function is supposed to return the size of the command buffer, so
+for this command it should return sizeof(struct
+sev_data_snp_feature_info).
 
-> > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> > index d85fb692cf3b..0f6ff1ffb23d 100644
-> > --- a/include/uapi/linux/fuse.h
-> > +++ b/include/uapi/linux/fuse.h
-> > @@ -1286,4 +1286,46 @@ struct fuse_uring_cmd_req {
-> >  	uint8_t padding[6];
-> >  };
-> >  
-> > +/* Famfs fmap message components */
-> > +
-> > +#define FAMFS_FMAP_VERSION 1
-> > +
-> > +#define FUSE_FAMFS_MAX_EXTENTS 2
-> > +#define FUSE_FAMFS_MAX_STRIPS 16
-> 
-> FYI, after thinking through the conversation with Darrick,  I'm planning 
-> to drop FUSE_FAMFS_MAX_(EXTENTS|STRIPS) in the next version.  In the 
-> response to GET_FMAP, it's the structures below serialized into a message 
-> buffer. If it fits, it's good - and if not it's invalid. When the
-> in-memory metadata (defined in famfs_kfmap.h) gets assembled, if there is
-> a reason to apply limits it can be done - but I don't currently see a reason
-> do to that (so if I'm currently enforcing limits there, I'll probably drop
-> that.
+>  	default:				return 0;
+>  	}
+> =20
+> @@ -1072,6 +1073,50 @@ static void snp_set_hsave_pa(void *arg)
+>  	wrmsrq(MSR_VM_HSAVE_PA, 0);
+>  }
+> =20
+> +static void snp_get_platform_data(void)
+> +{
+> +	struct sev_device *sev =3D psp_master->sev_data;
+> +	struct sev_data_snp_feature_info snp_feat_info;
+> +	struct snp_feature_info *feat_info;
+> +	struct sev_data_snp_addr buf;
+> +	int error =3D 0, rc;
+> +
+> +	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
+> +		return;
+> +
+> +	/*
+> +	 * The output buffer must be firmware page if SEV-SNP is
+> +	 * initialized.
+> +	 */
+> +	if (sev->snp_initialized)
+> +		return;
+> +
+> +	buf.address =3D __psp_pa(&sev->snp_plat_status);
+> +	rc =3D __sev_do_cmd_locked(SEV_CMD_SNP_PLATFORM_STATUS, &buf,
+> &error);
+> +
+> +	/*
+> +	 * Do feature discovery of the currently loaded firmware,
+> +	 * and cache feature information from CPUID 0x8000_0024,
+> +	 * sub-function 0.
+> +	 */
+> +	if (!rc && sev->snp_plat_status.feature_info) {
+> +		/*
+> +		 * Use dynamically allocated structure for the
+> SNP_FEATURE_INFO
+> +		 * command to handle any alignment and page boundary
+> check
+> +		 * requirements.
+> +		 */
+> +		feat_info =3D kzalloc(sizeof(*feat_info), GFP_KERNEL);
 
-You could also define GET_FMAP to have an offset in the request buffer,
-and have the famfs daemon send back the next offset at the end of its
-reply (or -1ULL to stop).  Then the kernel can call GET_FMAP again with
-that new offset to get more mappings.
-
-Though at this point maybe it should go the /other/ way, where the fuse
-server can sends a "notification" to the kernel to populate its mapping
-data?  fuse already defines a handful of notifications for invalidating
-pagecache and directory links.
-
-(Ugly wart: notifications aren't yet implemented for the iouring channel)
-
---D
-
-> 
-> > +
-> > +enum fuse_famfs_file_type {
-> > +	FUSE_FAMFS_FILE_REG,
-> > +	FUSE_FAMFS_FILE_SUPERBLOCK,
-> > +	FUSE_FAMFS_FILE_LOG,
-> > +};
-> > +
-> > +enum famfs_ext_type {
-> > +	FUSE_FAMFS_EXT_SIMPLE = 0,
-> > +	FUSE_FAMFS_EXT_INTERLEAVE = 1,
-> > +};
-> > +
-> > +struct fuse_famfs_simple_ext {
-> > +	uint32_t se_devindex;
-> > +	uint32_t reserved;
-> > +	uint64_t se_offset;
-> > +	uint64_t se_len;
-> > +};
-> > +
-> > +struct fuse_famfs_iext { /* Interleaved extent */
-> > +	uint32_t ie_nstrips;
-> > +	uint32_t ie_chunk_size;
-> > +	uint64_t ie_nbytes; /* Total bytes for this interleaved_ext; sum of strips may be more */
-> > +	uint64_t reserved;
-> > +};
-> > +
-> > +struct fuse_famfs_fmap_header {
-> > +	uint8_t file_type; /* enum famfs_file_type */
-> > +	uint8_t reserved;
-> > +	uint16_t fmap_version;
-> > +	uint32_t ext_type; /* enum famfs_log_ext_type */
-> > +	uint32_t nextents;
-> > +	uint32_t reserved0;
-> > +	uint64_t file_size;
-> > +	uint64_t reserved1;
-> > +};
-> >  #endif /* _LINUX_FUSE_H */
-> > -- 
-> > 2.49.0
-> > 
+The SEV firmware requires the supplied memory range to not cross a page
+boundary, but kzalloc() does not guarantee that the allocated memory
+fits this requirement. You need to allocate a larger chunk of memory (2
+* sizeof(*feat_info) will be enough), and possibly set
+feature_info_paddr to an offset from the start of the allocated memory.
