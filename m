@@ -1,81 +1,54 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A5D27BF8A
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521BD27B517;
+	Thu, 24 Apr 2025 12:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499547; cv=none; b=VJjd8NdlLNWAEyg+htTQJDChcZxsINQBz1h1Dd61l0Bp4WQNniUR7vtuzSV9kBv0nM0D3m0AgYXJi51aMIyzA/2yl0IU5poUCXHABYcw78PeZSBAQzFoVXzwqWLsSoE1u1AhlWK0eDb/vq6z6QzK0WVJzi4Rdf1dhENuHl1Lcq0=
+	t=1745499573; cv=none; b=K1bBrI4ZMpNd4/aQ7uwGBCzldP3uJkspAN2NKOA2NRnsozH1zFxNLG8mI/BhdID+pnF7xc7eiAKMw86VRbrX2COlaDWH4gZuj8WbAhEXBZ/Mf0sTvermPzfbGdbHM81SErwrpL3ggYUeMWaJvhNhNOHRnLjYtsNDrmR+WaxlHN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499547; c=relaxed/simple;
-	bh=tJdKg0AM7bnavIX4fjpcO9tgoXWYFgs3Zwbw1mNNCAM=;
+	s=arc-20240116; t=1745499573; c=relaxed/simple;
+	bh=gfirCOB8zzFpOG+53gxCTqJLceHrN9rNqDBbYgX72uk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4hMp2u9fTxypqVEvaSV4s9z+/pmI4CPhVm+eHprvQIBtpHCXEGh3FfFl+IC0PZ7AKnBe78tx06t34eEn/dGipWwSHpBRo7OaWiYoj58hIMXkpapcdqXJoR+mczuu5Bn4q2JcWOCWLJ24jUiEp/ge7lA6oTnle3QBm+sIw7S1NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A859A1F445;
-	Thu, 24 Apr 2025 12:59:03 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BEB2139D0;
-	Thu, 24 Apr 2025 12:59:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 65bLH5c1Cmg+VgAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Thu, 24 Apr 2025 12:59:03 +0000
-Date: Thu, 24 Apr 2025 14:58:58 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Daniel Wagner <wagi@kernel.org>, 
-	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 10/14] nvmet-fcloop: don't wait for lport cleanup
-Message-ID: <11c9e291-b7dd-453c-82d8-09d068b6b69c@flourine.local>
-References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
- <20250423-nvmet-fcloop-v5-10-3d7f968728a5@kernel.org>
- <05ac9a81-66a9-4bbc-92e0-6ff47a6dc7ad@suse.de>
- <c1f207f3-6657-4803-90df-a059353ba6da@flourine.local>
- <8a3093b6-d5b2-496d-828a-0667abbf1670@suse.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0wQaKCIORm4lxZAUgBxKbjluD9dzpn1llnlAjKNPlFKPPP4Jp7FZOcaYIOParx0MQeke52auhVAqXq28Hw3eKXd/KNqwTm8RajvBNBSTCyNHKhnEjLNgKBarwCVQfkcC4F0Tre5oJeetXFOe4MTYDckIVzGF+OTWmpDcX8ifi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 53OCx3UX030607;
+	Thu, 24 Apr 2025 14:59:03 +0200
+Date: Thu, 24 Apr 2025 14:59:03 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/3] tools/nolibc: make all headers usable directly
+Message-ID: <20250424125903.GE30489@1wt.eu>
+References: <20250424-nolibc-header-check-v1-0-011576b6ed6f@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8a3093b6-d5b2-496d-828a-0667abbf1670@suse.de>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: A859A1F445
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250424-nolibc-header-check-v1-0-011576b6ed6f@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Apr 24, 2025 at 02:10:20PM +0200, Hannes Reinecke wrote:
-> My point was more: you call kmem_cache_destroy() unconditionally upon
-> exit. But the boilerplate says that you have to free all allocations
-> from the kmem_cache before that call.
-> Yet the exit function doesn't do that.
-> Question is: what are the guarantees that the cache is empty upon exit?
+Hi Thomas,
 
-The first loop will only terminate when all request have been freed,
-thus it is safe to destroy the cache afterwards.
+[ quick response ]
+
+On Thu, Apr 24, 2025 at 01:48:10PM +0200, Thomas Weißschuh wrote:
+> Make sure that any nolibc header can be included in any order.
+> Even if nolibc.h was not pre-included already.
+
+I've been wondering how to do this already and didn't come up with any
+great solution. I think that your approach is the right one, indeed,
+to include it out of the guards will force to respect ordering. That's
+a great idea.  I'm all for it!
+
+Acked-by: Willy Tarreau <w@1wt.eu>
+
+Willy
