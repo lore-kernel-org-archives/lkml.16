@@ -1,59 +1,52 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C59E38382;
-	Thu, 24 Apr 2025 13:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F7D1E9B32
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500570; cv=none; b=Pt97+0U8dbi71+W2lXU+viLPCbfIJ8d9gk7hKYRtMRSUUFY13CKpjPfyIAllOOPlw8LentawzjkFQlZ8u59m/3bGABC8ovx9tqu7KZHmY0Orygd8wmQX3LmqgnP2ERNpI8KCk78+uhju0xfhKPMvw8dSxIBLwTK9mD44N9w7Mgw=
+	t=1745500577; cv=none; b=AFqfQJ6E/wbdqaTlQB0yiDAR4RKTMLbvqde6jITS5fzWNG4GSmYOSmM2gQ3gzqF5qjAcYPtb9tMxDNJDHMvJrBoE8442DpTDLmJMlJJKAgkQC7YGogOTxkr+1X8lIzhINnc+QLZvYFiMk6ELeNYHS8hM49oL/mrt4+DxeF5LyUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500570; c=relaxed/simple;
-	bh=qzUsdhyiDAim2N+Z2iPJ48vlRURb+HIsCR7o6LjpGq8=;
+	s=arc-20240116; t=1745500577; c=relaxed/simple;
+	bh=sf/bhdFMSup+LU7n6TlPHSwZkkX6OA+LrdGX0WgIx9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hESwzeqCx9ga/mTzDJuksnuamBdCuwLE6wc0cZKPk3IYVWar5pP5DVLcRv2VDRPUsfOf6mGZy/DHozFtXgd/4BwepGkWatqb7B7yzq+g14rzu7253IwwtRQTaY2ndd4N4eIBQ9v5KdFI6ys1F+CfTMYJwts5gPp7RtagIHFH6Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=nmXsIYc5; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nmXsIYc5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=c7bLomCZpqDubF9RdsvnzZ8Fg/C45eKGcMI2hsfw8O4=; b=nmXsIYc5SUcs/AQUOBvVMQRQgO
-	UjnEYbvGUaAmOfT9+gacJgtJea5caekfgm5MkYXCWrByLTdEMpBc8IbIZdqlfKXETAy0Bv8dBOzhS
-	cP9FMJjK5TnUbyD6habxLPrlBSia8ETQBb3ysmrGImWR+VA4CxSOR1gKsGsAc7YOZmYui1u7RYBUf
-	VPWnYJkPsh6+wbGquxJJjAkQZEl/rJR/yrzmX077ZTryfFL2+5wgRXiB16+iYdmF2dhOw/EEe4p7q
-	SeFxaupjB6IhdJK5xXJgch+4QsHCryY96E2MKyoYOAH6RRZD+AtXkZSlR+gjKrNyGJ6ej81BryEyx
-	gvRFHLPA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36258)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHvWvK9Ow4CMWIVMstatzvsuj2iQ07M6oQyKS4YHABj/LLQYCwdm8Lwz/tM1WLBP+w93eHTsQLVdMYc0XTgEFoWM+p5IOgXEge0dV3NoHgPyt7keOz/ZgIaQRWkv5d01NOdLQ118hlnuyGKkpBErdGeH/3pw48MkwO0y20XYonM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1u7wQv-0000NW-Vb; Thu, 24 Apr 2025 15:16:05 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7wQs-0007QW-22;
-	Thu, 24 Apr 2025 14:16:02 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7wQr-00017w-0u;
-	Thu, 24 Apr 2025 14:16:01 +0100
-Date: Thu, 24 Apr 2025 14:16:01 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v1 4/4] net: phy: Always read EEE LPA in
- genphy_c45_ethtool_get_eee()
-Message-ID: <aAo5keWOAVWxj9_o@shell.armlinux.org.uk>
-References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
- <20250424130222.3959457-5-o.rempel@pengutronix.de>
+	(envelope-from <sha@pengutronix.de>)
+	id 1u7wQv-001tDv-1k;
+	Thu, 24 Apr 2025 15:16:05 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1u7wQv-001Myw-1M;
+	Thu, 24 Apr 2025 15:16:05 +0200
+Date: Thu, 24 Apr 2025 15:16:05 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Artur Rojek <artur@conclusive.pl>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-wireless@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jakub Klama <jakub@conclusive.pl>,
+	Wojciech Kloska <wojciech@conclusive.pl>,
+	Ulf Axelsson <ulf.axelsson@nordicsemi.no>
+Subject: Re: [RFC PATCH 1/2] net: wireless: Add Nordic nRF70 series Wi-Fi
+ driver
+Message-ID: <aAo5leoKBdCUvImP@pengutronix.de>
+References: <20250324211045.3508952-1-artur@conclusive.pl>
+ <20250324211045.3508952-2-artur@conclusive.pl>
+ <Z-v0Ftp-oIJ0zIPR@pengutronix.de>
+ <CAGhaMFNENkcwvz1yxTLVZAXuWes5OKT6HqfWAHh+=SCLc=foeQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,46 +55,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424130222.3959457-5-o.rempel@pengutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <CAGhaMFNENkcwvz1yxTLVZAXuWes5OKT6HqfWAHh+=SCLc=foeQ@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Apr 24, 2025 at 03:02:22PM +0200, Oleksij Rempel wrote:
-> Previously, genphy_c45_ethtool_get_eee() used genphy_c45_eee_is_active(),
-> which skips reading the EEE LPA register if local EEE is disabled. This
-> prevents ethtool from reporting the link partner's EEE capabilities in
-> that case.
+On Fri, Apr 18, 2025 at 02:46:34PM +0200, Artur Rojek wrote:
+> Hi Sascha,
 > 
-> Replace it with genphy_c45_read_eee_lpa(), which always reads the LPA
-> register regardless of local EEE state. This allows users to see the
-> link partner's EEE advertisement even when EEE is disabled locally.
+> thanks for the review, reply inline.
 > 
-> Example before the patch:
+ >
+> > > +
+> > > +     ret = gpiod_direction_output(priv->buck_en, 0);
+> > > +     if (ret) {
+> > > +             dev_err(dev, "Unable to set buck_en direction\n");
+> > > +             return -EIO;
+> > > +     }
+> >
+> > Should this "bucken" GPIO rather be a regulator?
+> >
+> > Is this really mandatory? It sounds like it could be hardwired to some
+> > fixed voltage.
 > 
->   EEE settings for lan1:
->           EEE status: disabled
->           Tx LPI: disabled
->           Supported EEE link modes:  100baseT/Full
->                                      1000baseT/Full
->           Advertised EEE link modes:  Not reported
->           Link partner advertised EEE link modes:  Not reported
+> Take this with a grain of salt, as I am not a hardware designer.
+> Nordic's Product Specification document [1] stipulates that BUCKEN line
+> controls the PWR IP core. In order to start the IC, a power up sequence
+> is required: first the various power supply lines, then BUCKEN, then
+> IOVDD signal. Similar with a power down sequence.
+> To me, this reads that BUCKEN cannot be simply wired to some fixed
+> voltage and needs some sort of state control. Additionally, it is
+> the (only?) way for the software to reset the IC and put it into a known
+> state during probe, or after a hang.
+> At least for the second case, the driver needs some sort of power
+> control, whether it's directly the BUCKEN line, or some other circuit
+> that in turn flicks the BUCKEN. I could rename it to 'vpwr-supply' if
+> that makes things more transparent. I would risk saying that it makes
+> it mandatory.
 > 
-> After the patch:
-> 
->   EEE settings for lan1:
->           EEE status: disabled
->           Tx LPI: disabled
->           Supported EEE link modes:  100baseT/Full
->                                      1000baseT/Full
->           Advertised EEE link modes:  Not reported
->           Link partner advertised EEE link modes:  100baseT/Full
->                                                    1000baseT/Full
+> PS. The annoying part about the regulator API is that it reference
+> counts its usage, and as such regulator_disable() cannot be called
+> without a prior call to regulator_enable(). So to power-cycle the IC via
+> the BUCKEN line, I will need to do the following sequence:
+> regulator_enable() -> regulator_disable() -> regulator_enable()
+> But I can live with that ;)
 
-Seems to me this takes the opposite view to patch 3... not sure there's
-much consistency here.
+Ok, With this explanation I think it's best to use it as GPIO like you
+did. It just sounded like the regulator API would fit here, hence the
+question.
 
-However, I've no objection to reading the LPA EEE state and
-reporting it.
+Sascha
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
