@@ -1,153 +1,169 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E364223DF9;
-	Thu, 24 Apr 2025 11:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CEF223DEA
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745494713; cv=none; b=nW6w6mbeiHVrWFuu2Z2XWgoq7757q687g5LZff1xLuiuM5aGAFkEIDwz6eDdOvSvd4GFfiRLzc/AFqoRWvFWEmzMklr2DB9/5EIYg33xOyz3zwMvlfYDiKrfHd5BeNLk94ulD0ZGnGPOczLxrcSpdODjVuGu1yOOTBsaN/prjl8=
+	t=1745494780; cv=none; b=LIKkfHUocSavMQMx1Q93JVsL6fTuJRUUwV4Jr5c8AimhIGlhmi/KblaC1okkbXmImA+f1N1wm7UY5tfQIck7cleYsAm8PC+fvsy/EdpCbjgyuu2zCkBViKZT4/FoDTDyxvGTEAmizKl9w6g5pnBdQ7LDHVm6RXS6YV+CvbHhD/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745494713; c=relaxed/simple;
-	bh=YnVdP5JrfoFnV+HtyKFHOIak+9oIvNBw6PGZQxnXm3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WiUmbCM7giZeC0C2MXN2E9Ws1HNu2IpdUogQSlCgLKxWV7QSagR5/0QEDJAbB93cw7mR6qz0vpbT4sA22AxuaweSmZsz6lsKjyhepoYxj+skZ6stmirosX0gH1nrb/+XbZhxxjzuAR181Ies2BvFx7BDPZoDOmkjfkWSgiZQfSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCED11063;
-	Thu, 24 Apr 2025 04:38:25 -0700 (PDT)
-Received: from [10.57.73.163] (unknown [10.57.73.163])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00F4C3F59E;
-	Thu, 24 Apr 2025 04:38:29 -0700 (PDT)
-Message-ID: <7f4207ff-42ec-46ee-beb6-cb27835f955d@arm.com>
-Date: Thu, 24 Apr 2025 12:38:28 +0100
+	s=arc-20240116; t=1745494780; c=relaxed/simple;
+	bh=p/iA1aOs81ozYfLqBjwCGoqgA0/reQeD9IhdoGQZhR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EuiOdbtN1AUIidBAXEs1dydpdbBVBFhp5g7RwDgl83G268LOw3ijdFOmFdKdO7Z137KFDuYMHWU068P8nQwEU9QnLY5SD3uNZqw5Bi+KAaqoRsix7o+He+KJMoVkOLuovgBFtU4ucvztNWP+de1zwxBbxQz6jBzqmDFqhyUAeQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=25wm+t35; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mhXLE/qc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=25wm+t35; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mhXLE/qc; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="25wm+t35";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mhXLE/qc";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="25wm+t35";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mhXLE/qc"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CC80D1F445;
+	Thu, 24 Apr 2025 11:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745494776; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ow+0LWKmJJfC77IxmPqmE/uvBg7B41voNt86HZPe9Es=;
+	b=25wm+t35ZGS/JyEAQ8iux3WSjW/d1l2FSxvhW4ZlLlcHOWaK+kws5qFrnxceBBMoGkuiju
+	dug4Fm2ykABpNSI4G70eRc8NW3FIGCEi4YH5PyfTl3CXjqS0qwy8WKdkslYTkoMYXTrC3R
+	ZkZVtqktDy/J0PHG0UGcXtpfYRm+px8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745494776;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ow+0LWKmJJfC77IxmPqmE/uvBg7B41voNt86HZPe9Es=;
+	b=mhXLE/qc12dNhUMUOZMTxtufc1m3XupHYyBnG06NFnacTLCM5QrfDxbP3XzNSFVexLYkPw
+	6dYmZE2PU6pU7dDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745494776; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ow+0LWKmJJfC77IxmPqmE/uvBg7B41voNt86HZPe9Es=;
+	b=25wm+t35ZGS/JyEAQ8iux3WSjW/d1l2FSxvhW4ZlLlcHOWaK+kws5qFrnxceBBMoGkuiju
+	dug4Fm2ykABpNSI4G70eRc8NW3FIGCEi4YH5PyfTl3CXjqS0qwy8WKdkslYTkoMYXTrC3R
+	ZkZVtqktDy/J0PHG0UGcXtpfYRm+px8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745494776;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ow+0LWKmJJfC77IxmPqmE/uvBg7B41voNt86HZPe9Es=;
+	b=mhXLE/qc12dNhUMUOZMTxtufc1m3XupHYyBnG06NFnacTLCM5QrfDxbP3XzNSFVexLYkPw
+	6dYmZE2PU6pU7dDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B70311393C;
+	Thu, 24 Apr 2025 11:39:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yfapLPgiCmiHPwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 24 Apr 2025 11:39:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 56066A0921; Thu, 24 Apr 2025 13:39:36 +0200 (CEST)
+Date: Thu, 24 Apr 2025 13:39:36 +0200
+From: Jan Kara <jack@suse.cz>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Arnd Bergmann <arnd@arndb.de>, Jan Kara <jack@suse.cz>, 
+	Zhang Yi <yi.zhang@huawei.com>, Ojaswin Mujoo <ojaswin@linux.ibm.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, Shida Zhang <zhangshida@kylinos.cn>, 
+	Baokun Li <libaokun1@huawei.com>, Jann Horn <jannh@google.com>, Brian Foster <bfoster@redhat.com>, 
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: avoid -Wformat-security warning
+Message-ID: <6vjo6wo5c5tadvhnrvo2affcqu2cf6ecrx4ol5jxl6mvz7vu3z@6wgvyptlpq4p>
+References: <20250423164354.2780635-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
- <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
- <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
- <aAjTg8dgvxqLQOwQ@vaman>
- <CAMuHMdXQKG0qptWMi169MVBL1S3hPo1TsaOSxWspoHAwRd+fug@mail.gmail.com>
- <aAjaPV/2DSyPAGRB@vaman> <b7557def-d0a1-4035-9586-a2651e28ab24@arm.com>
- <CAMuHMdWoxPc71YYrEMdPwdq-HOhmP2jNiwo1+-8o6_v4YJ0NHQ@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAMuHMdWoxPc71YYrEMdPwdq-HOhmP2jNiwo1+-8o6_v4YJ0NHQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423164354.2780635-1-arnd@kernel.org>
+X-Spam-Score: -2.30
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[mit.edu,dilger.ca,arndb.de,suse.cz,huawei.com,linux.ibm.com,kernel.org,infradead.org,gmail.com,kylinos.cn,google.com,redhat.com,vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 2025-04-23 3:34 pm, Geert Uytterhoeven wrote:
-> Hi Robin,
+On Wed 23-04-25 18:43:49, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> On Wed, 23 Apr 2025 at 15:29, Robin Murphy <robin.murphy@arm.com> wrote:
->> On 2025-04-23 1:17 pm, Vinod Koul wrote:
->>> On 23-04-25, 14:13, Geert Uytterhoeven wrote:
->>>> On Wed, 23 Apr 2025 at 13:48, Vinod Koul <vkoul@kernel.org> wrote:
->>>>> On 23-04-25, 13:11, Geert Uytterhoeven wrote:
->>>>>> On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
->>>>>>> On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
->>>>>>>> The Arm DMA-350 controller is only present on Arm-based SoCs.
->>>>>>>
->>>>>>> Do you know that for sure? I certainly don't. This is a licensable,
->>>>>>> self-contained DMA controller IP with no relationship whatsoever to any
->>>>>>> particular CPU ISA - our other system IP products have turned up in the
->>>>>>> wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
->>>>>>> wouldn't either.
->>>>>>
->>>>>> The dependency can always be relaxed later, when the need arises.
->>>>>> Note that currently there are no users at all...
->>
->> Huh? There is now an upstream DT binding, and DTs using that binding
->> most certainly already exist - not least the one I have, but I'm not the
->> only one. We don't have a requirement that bindings must have
->> upstream-supported consumers.
+> check_igot_inode() prints a variable string, which causes a harmless
+> warning with 'make W=1':
 > 
-> Dependencies in Kconfig are not related to DT bindings, they only
-> control what can be built?
-
-I was questioning how you have decided that there are "no users at all", 
-and how you know "the need" hasn't already arisen...
-
->>>>> True, but do we have any warnings generated as a result, if there are no
->>>>> dependency should we still limit a driver to an arch?
->>>>
->>>> I am not aware of any warnings (I built it on MIPS yesterday ;-).
->>>> It is just one more question that pops up during "make oldconfig",
->>>> and Linus may notice and complain, too...
->>
->> Well, yeah? It's a new driver for some (relatively) new hardware; every
->> release always adds loads of new drivers for things I don't personally
->> care about, so I press "n" a lot when updating my config, just like I
->> imagine most other people do, Linus included.
+> fs/ext4/inode.c:4763:45: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
+>  4763 |         ext4_error_inode(inode, function, line, 0, err_str);
 > 
-> Please read [1] and ask yourself if Linux wants to see a question
-> about Arm DMA-350 when configuring a kernel for his AMD Threadripper
-> workstation...
-
-...because the whole point here is that it's *not* "completely 
-nonsensical". I am well aware of Linus' view and I share it myself. This 
-is not a driver for some deeply platform-vendor-specific firmware 
-function. PCIe FPGA prototyping cards are a thing, so yes, just like 
-with XILINX_DMA, anyone with one of those and access to the IP could 
-absolutely synthesise and drive a functional DMA-350 in their x86 PC 
-today if they wish.
-
-Conversely, Linus doesn't have a DMA-350 in his Ampere box or his Mac 
-either, so in that context it's still just as meaningless to prompt him 
-for his ARM64 builds. And I doubt he has all of the dozens of new IIO 
-sensors, USB HIDs, etc. which pop up every release either. I'm not sure 
-what point you're trying to make there.
-
-People are building hardware now, which by the time it comes out might 
-be able to run a standard distro kernel and use this driver, if said 
-distro has already built and shipped the module. Why is that such an 
-unacceptably terrible thing?
-
->>> True, give there are no users, lets pick this and drop if we get a non
->>> arm user
->>
->> Well by that logic surely it should just depend on COMPILE_TEST, because
->> there are no ARM or ARM64 "users" either?
+> Use a trivial "%s" format string instead.
 > 
-> If you want to push it that far, fine for me ;-)
-> 
->> FWIW the not-quite-upstream platform I developed on (a custom build of
->> fvp-base-revc with a DMA-350 component added) did happen to be ARM64, as
->> are some other Arm-internal designs and one available SoC that I do know
->> of containing DMA-350; I am not aware of any Linux-capable 32-bit
->> platforms to justify an ARM dependency, so I'd consider that just as
->> arbitrarily pulled out of thin air.
-> 
-> OK, then the ARM dependency can be dropped for now.
-> I had done a quick Google search to find SoCs that contain a DMA-350
-> instance, and had only found a Cortex-M0-based SoC, so I assumed it
-> would be used on ARM, too.
-> 
->> But then to pick another example at random, XILINX_DMA equally has no
->> "users", so please make that depend on something arbitrary as well for
->> consistency; it's only fair.
-> 
-> Sure, there are lots of Kconfig symbols that could benefit from
-> additional dependencies. Unfortunately my time is limited, so usually
-> I create and send patches for new Kconfig symbols only....
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Dare I suggest your time could be less limited if you avoided spending 
-it on nonsensical and unnecessary gatekeeping? ;)
+Frankly I don't care much either way but if my memory serves me well year
+or two ago someone was going through the kernel and was replacing pointless
+("%s", str) cases with printing the string directly. So we should make up
+our minds how we want this... In my opinion this is one of the warnings
+which may be useful but have false positives too often (like here where
+err_str is just a selection from several string literals) so I'm not sure
+it's worth the effort to try to silence it.
 
-Yes, config options with a clear dependency on a particular platform 
-should clearly be restricted to configs which include support for that 
-platform. Config options which do not have any such dependency are just 
-that - *options*, for the distro/end user to decide whether they might 
-be (or become) relevant within the scope and lifetime of the kernel 
-being built.
+								Honza
 
-Thanks,
-Robin.
+> ---
+>  fs/ext4/inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 94c7d2d828a6..3cfb1b670ea4 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4760,7 +4760,7 @@ static int check_igot_inode(struct inode *inode, ext4_iget_flags flags,
+>  	return 0;
+>  
+>  error:
+> -	ext4_error_inode(inode, function, line, 0, err_str);
+> +	ext4_error_inode(inode, function, line, 0, "%s", err_str);
+>  	return -EFSCORRUPTED;
+>  }
+>  
+> -- 
+> 2.39.5
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
