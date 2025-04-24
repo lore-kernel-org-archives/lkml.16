@@ -1,162 +1,108 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D0E14F9EB;
-	Thu, 24 Apr 2025 15:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE75D17FAC2;
+	Thu, 24 Apr 2025 15:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507928; cv=none; b=f67fAfih1sdbHwMUc6y+fhvn9WjZc5GMju2eJ4Q3DmdjvXHzfHulkSrjpaVgEUz5RZk56VwSfMtz709VCcJa/JjcOK+qpU3wAjhLspGc3XUVENOqNmdKKtx8/flAjSuG1riWl3tI7Eo6/c/99iqIfjuRiEPaO1++huZr4FHxIs4=
+	t=1745507975; cv=none; b=TrcdkYQJgaAIcy7gCxoAm25Pto/pm45L10jdk2ImCnrXjAtH2oQcl3+DQW+i+wSYagQDGTen+Eiab1glAsuLpC4raptwf5bhX3OL/uo6OVZExMLdAal72JTLa60qiCrmq/8VBUlnSyRKMFQgLq/MlNdVmLN0dJKw6Izi6G2LvxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507928; c=relaxed/simple;
-	bh=Cfwo3zn+LUVCR2Nba2kjhqU4b8JvbapZ+dJDwNIQvR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EpAfHHM/cZW7QZDcODT5v0gXgGQUq9JGpQnUL0jhw5qEFqJ3uxspALMaQT6hra1eHfVdreNJzdhQRVZRFYMCvUXs+zH/Rs2a3P1+iZzGqNOQmTdRiApqYiXlpAcvye58xJPlbxrLFaQhvgd6N4CLZtLGe84wVeDr+SCL2c+w8Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FtyAuiP8; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745507975; c=relaxed/simple;
+	bh=fTRmjYed2VIYs6hY1s+vikS1UZUUZfpCUTS1lkr5CbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJ8KZZ142xs3vBMBH+V1tUOcz/gw7tmjkuws59h2I/w87bf1qqcYR4MSIkPUm3Z2mT07zOgj1aXTBP9ZQW2L++AzvINk01lCzRH2c4RF4XmeyJnYYKymM+w90YEM7Y+e6pFDncQ4Z6kPBjNJmKBnWsWfiGj1EmzfjnJSV0nMsAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8q1ZZz1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FtyAuiP8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4481743B2E;
-	Thu, 24 Apr 2025 15:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745507923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8IVmwrk7aGTZcp/7NN8zrGIfqqXduX0J3M9hpB/pHPA=;
-	b=FtyAuiP8ARUUv2xs4PPtC4FuRrb5XYgrq7nTPDnp6BcGNmDvjt3hiUhZJ4gakGWOTMm285
-	izxLY19qRdbJgJHFDSKAmWuF147STQIQIY3Vvwl7qEaG7qJvaXjNpLiY9Vfya0P+MRrZDU
-	AaSSvmPNKnk2zfXYGcIo6csHPDBpesNfnl+mfWjAWossSdTGC2MKU8egwvpd6GBwyGo54M
-	fRZ/GwgbtAhX6Rj0x9SRnbLCNylZJ2rKp10NgYWNfJY6XoWyZWuZlAVflEcsvXYf2Mdzcj
-	OQ1uc5DdEPbXp2iO9ebp0rO3bbg1DWD4/1SRv2zche6VhM3c2W8AAxGm0SHemw==
-Date: Thu, 24 Apr 2025 17:18:38 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
- =?UTF-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Hui Pu
- <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 34/34] drm/bridge: panel: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250424171838.21a95d80@booty>
-In-Reply-To: <20250408-thankful-husky-of-weather-355cae@houat>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
-	<20250407-drm-bridge-convert-to-alloc-api-v1-34-42113ff8d9c0@bootlin.com>
-	<20250408-thankful-husky-of-weather-355cae@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8q1ZZz1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5902DC4CEE3;
+	Thu, 24 Apr 2025 15:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745507975;
+	bh=fTRmjYed2VIYs6hY1s+vikS1UZUUZfpCUTS1lkr5CbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m8q1ZZz1RpxrYmw2qzQZMKJfdpd9Olan3KNX/XD1bYAHAv1gPQw/K2JbynEZTE58u
+	 Zz6dzDsY8G9RWGecpLGAWEbORehbRzrV4aT/0tS5FO0/GxCVCAeCf3Hz1NpVLowXwA
+	 kXPnypu6UcdE5yDjB827LL26t52MXqdkfotnQNuvkjFi/aEOvDm0j1VXdz3u7i2ilv
+	 dMH3WI8yTDQHyTt+1c2DDDL5m2dI5sCG3S/DqgeqcloBG62MYQIPHm3zwt7dLr1Xv7
+	 Dky4OIMOwV7N1fslgftxWLdYo/bhAOmMLaWA/9Vb+AlD+ENqzG3IiNnByzVUt6P3CP
+	 YWw2jxsvH+37w==
+Date: Thu, 24 Apr 2025 17:19:28 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: David Rheinsberg <david@readahead.eu>
+Cc: Oleg Nesterov <oleg@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	Jan Kara <jack@suse.cz>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
+	Luca Boccassi <bluca@debian.org>, Lennart Poettering <lennart@poettering.net>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>
+Subject: Re: [PATCH RFC 2/4] net, pidfs: prepare for handing out pidfds for
+ reaped sk->sk_peer_pid
+Message-ID: <20250424-chipsatz-verpennen-afa9e213e332@brauner>
+References: <20250424-work-pidfs-net-v1-0-0dc97227d854@kernel.org>
+ <20250424-work-pidfs-net-v1-2-0dc97227d854@kernel.org>
+ <c4a2468b-f6b1-4549-8189-ec2f72bef45e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrn
- hhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c4a2468b-f6b1-4549-8189-ec2f72bef45e@app.fastmail.com>
 
-Hi Maxime,
-
-On Tue, 8 Apr 2025 17:51:08 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
-
-> Hi,
+On Thu, Apr 24, 2025 at 02:44:13PM +0200, David Rheinsberg wrote:
+> Hi
 > 
-> On Mon, Apr 07, 2025 at 05:27:39PM +0200, Luca Ceresoli wrote:
-> > This is the new API for allocating DRM bridges.
+> On Thu, Apr 24, 2025, at 2:24 PM, Christian Brauner wrote:
+> [...]
+> > Link: 
+> > https://lore.kernel.org/lkml/20230807085203.819772-1-david@readahead.eu 
+> > [1]
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> 
+> Very nice! Highly appreciated!
+> 
+> > ---
+> >  net/unix/af_unix.c | 90 
+> > +++++++++++++++++++++++++++++++++++++++++++++++-------
+> >  1 file changed, 79 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> > index f78a2492826f..83b5aebf499e 100644
+> > --- a/net/unix/af_unix.c
+> > +++ b/net/unix/af_unix.c
+> > @@ -100,6 +100,7 @@
+> >  #include <linux/splice.h>
+> >  #include <linux/string.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/pidfs.h>
+> >  #include <net/af_unix.h>
+> >  #include <net/net_namespace.h>
+> >  #include <net/scm.h>
+> > @@ -643,6 +644,14 @@ static void unix_sock_destructor(struct sock *sk)
+> >  		return;
+> >  	}
 > > 
-> > The devm lifetime management of this driver is peculiar. The underlying
-> > device for the panel_bridge is the panel, and the devm lifetime is tied the
-> > panel device (panel->dev). However the panel_bridge allocation is not
-> > performed by the panel driver, but rather by a separate entity (typically
-> > the previous bridge in the encoder chain).
-> > 
-> > Thus when that separate entoty is destroyed, the panel_bridge is not
-> > removed automatically by devm, so it is rather done explicitly by calling
-> > drm_panel_bridge_remove(). This is the function that does devm_kfree() the
-> > panel_bridge in current code, so update it as well to put the bridge
-> > reference instead.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
-[...]
-
-> > --- a/drivers/gpu/drm/bridge/panel.c
-> > +++ b/drivers/gpu/drm/bridge/panel.c
-> > @@ -287,15 +287,14 @@ struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
-> >  	if (!panel)
-> >  		return ERR_PTR(-EINVAL);
-> >  
-> > -	panel_bridge = devm_kzalloc(panel->dev, sizeof(*panel_bridge),
-> > -				    GFP_KERNEL);
-> > -	if (!panel_bridge)
-> > -		return ERR_PTR(-ENOMEM);
-> > +	panel_bridge = devm_drm_bridge_alloc(panel->dev, struct panel_bridge, bridge,
-> > +					     &panel_bridge_bridge_funcs);
-> > +	if (IS_ERR(panel_bridge))
-> > +		return (void *)panel_bridge;
-> >  
-> >  	panel_bridge->connector_type = connector_type;
-> >  	panel_bridge->panel = panel;
-> >  
-> > -	panel_bridge->bridge.funcs = &panel_bridge_bridge_funcs;
-> >  	panel_bridge->bridge.of_node = panel->dev->of_node;
-> >  	panel_bridge->bridge.ops = DRM_BRIDGE_OP_MODES;
-> >  	panel_bridge->bridge.type = connector_type;
-> > @@ -327,7 +326,7 @@ void drm_panel_bridge_remove(struct drm_bridge *bridge)
-> >  	panel_bridge = drm_bridge_to_panel_bridge(bridge);
-> >  
-> >  	drm_bridge_remove(bridge);
-> > -	devm_kfree(panel_bridge->panel->dev, bridge);
-> > +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
-> >  }
-> >  EXPORT_SYMBOL(drm_panel_bridge_remove);  
+> > +	if (sock_flag(sk, SOCK_RCU_FREE)) {
+> > +		pr_info("Attempting to release RCU protected socket with sleeping 
+> > locks: %p\n", sk);
+> > +		return;
+> > +	}
 > 
-> I'm fine with it on principle, but as a temporary measure.
+> unix-sockets do not use `SOCK_RCU_FREE`, but even if they did, doesn't
+> this flag imply that the destructor is delayed via `call_rcu`, and
+> thus *IS* allowed to sleep? And then, sleeping in the destructor is
+> always safe, isn't it? `SOCK_RCU_FREE` just guarantees that it is
+> delayed for at least an RCU grace period, right? Not sure, what you
+> are getting at here, but I might be missing something obvious as well.
+
+Callbacks run from call_rcu() can be called from softirq context and in
+general are not allowed to block. That's what queue_rcu_work() is for
+which uses system_unbound_wq.
+
 > 
-> Now that we have the panel allocation function in place, we can just
-> allocate a bridge for each panel and don't need drm_panel_bridge_add_*
-> at all.
-> 
-> As I was saying before, it doesn't need to happen right now, or before
-> the rest of your work for hotplug goes in. But this needs to be tackled
-> at some point.
+> Regardless, wouldn't you want WARN_ON_ONCE() rather than pr_info?
 
-I totally agree this needs to be handled eventually, and also to get
-there in steps.
-
-The current status of this driver is not ideal, so I paid attention to
-not make it unnecessarily worse when writing this patch. Do you think
-the current patch is OK for the next step? I'm going to send v2 in a
-few hours, so don't hesitate to mention any improvements you deem
-necessary.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Sure.
