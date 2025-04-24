@@ -1,80 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AB72820AA;
-	Thu, 24 Apr 2025 16:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8923727FD4D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511889; cv=none; b=UrJ4sN8LvMisjULZ10x1QmNOOKQuuyGkQyJpVKsfwK0DCP56iVYjYLd1Ykx9ca/XhN9cuw3plSHzWv60R2Ydb+5MpQfn0GKLNTEEL+4zTxT6o3/xT+CMcW6PA69H2c2iaTWwpumV7CrmDxkrpr36RsZloVKbopfYdJ80QckmH8U=
+	t=1745511922; cv=none; b=I81GsrVz/Qf3WE1DT/z3tHzP2H+ivFznOfUlumRK8Rm2ZI119p26hjYd6IA6xuVyofF+TXbnjV6O+q7yi6p/MfIJ6IWEtq1lZI+TNc/1PyITYv1MRjX3noMG1CDiMVIIQ2wLCzIMzPuacEYe7bYMXmmuZlbjH1Wf6e+0wmNYxtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511889; c=relaxed/simple;
-	bh=ehthhJRsT67ePCHd7tekdu+92oqaTFfVHKePVSJFtCA=;
+	s=arc-20240116; t=1745511922; c=relaxed/simple;
+	bh=DtpT7xWNCKJCP1wtqX3ELlicJiarxdeHGximxQW4Xsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EejDKRAzWFYiLznfyj32IXLB6F86Ys/D9T/bg3+WvoP6rfuChCOUbucZOzujSxcuzp4M4JP3WjTF9hS1QVcDKSiPXJxNN2BLE9K8ksDjfM9ltzDs+gnH40xDiaNd0L0yUl206sOj3glnkK0bncp0n1Q1Wibpnrmv/8NUs4OjyqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4qjxZvR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kyLSDML2BHVnNXtYDktexDljWr0FSTamfQkO45zenKR3JfsYpfN3RdYqpF2k7fs5h5PZEHv++n26nmxcd3adEJREKKAsFJRqyzOYuuA9ZcAsptfE0OoRp0ZiTYXnIYXhZzcXnaMS1p7OIKqqhYu5C0Np4tpEtTUWOgauKj+axWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuf30jNc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4qjxZvR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B101C4CEE3;
-	Thu, 24 Apr 2025 16:24:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuf30jNc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD233C4CEE3;
+	Thu, 24 Apr 2025 16:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745511889;
-	bh=ehthhJRsT67ePCHd7tekdu+92oqaTFfVHKePVSJFtCA=;
+	s=k20201202; t=1745511921;
+	bh=DtpT7xWNCKJCP1wtqX3ELlicJiarxdeHGximxQW4Xsg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q4qjxZvR6FaqZL4R+VVLTh009Rpx+NCL7vIjuEb3ilJm/CfGsr2sP411UqEsJFwZ+
-	 Py/Uo/xbi8SxuQ/rkxVjQ+hZulcPX8hjFyqk3YlO6rUw/Spq20yz4sBCYua/PQb02C
-	 V3erMw/pp/3x0K9ybnA/g/IvKSuDpnF7u8aqYCVH9L8u0VC6lmPVwf7tpiYgkr/MuA
-	 vCO2zwMKfeq7/YhEv0S0edvlZkF7sPV5FbCUicNwsyV8G7c/IcbQI1X9mC4xKBYdT9
-	 RXCtJ0PLSX7PhG8oehjhjroD+/n/9RsldsOhLmzEX55LVt8J0BNbTXsV2yhlOcZybG
-	 H+PH/FeUioUPQ==
-Date: Thu, 24 Apr 2025 17:24:44 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jacek Kowalski <jacek@jacekk.info>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] e1000e: disregard NVM checksum on tgp when valid
- checksum mask is not set
-Message-ID: <20250424162444.GH3042781@horms.kernel.org>
-References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
+	b=fuf30jNc9sPzyD9aqbcysibPXpg3o3SjWNpJb7KDQmn2G/DC9xlezLiKh0cVDMJYG
+	 dPZ05ybqm5fU6eGUHDyCFaJMgfbrwYt5Fo4pMkDsTSX1kd/D/Ws9W3t1ydF1JZAnu8
+	 LuixoK5ENSL+s4e1nGn0y/OsxRmuvRCTrL7EliSEyzRy7qXDIIQzV0Lmt2QZ2u8d/a
+	 n5s1m8N6OpdM+WBu/ZMTWQmo/ySHXbvVb9YNrPACSDiiQiEATRYYz5HF5ZSjpUsfTF
+	 5X+kuX7++NJhqqnplTqEZCMvdkDVmB3VZLR93wHjH25vb2BHOpFVcRSp6OdGdg4/9B
+	 GdiQpixtr7oRA==
+Date: Thu, 24 Apr 2025 18:25:18 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: phasta@kernel.org
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH] x86/boot: Work around broken busybox truncate tool
+Message-ID: <aApl7iqRl--uZFZE@gmail.com>
+References: <20250424101917.1552527-2-ardb+git@google.com>
+ <cc549efcd078fdefafc12442b08ae7ceaa197eb9.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cc549efcd078fdefafc12442b08ae7ceaa197eb9.camel@mailbox.org>
 
-On Tue, Apr 22, 2025 at 09:43:01AM +0200, Jacek Kowalski wrote:
-> Some Dell Tiger Lake systems have incorrect NVM checksum. These also
-> have a bitmask that indicates correct checksum set to "invalid".
+
+* Philipp Stanner <phasta@mailbox.org> wrote:
+
+> Thank you very much for this fix :)
 > 
-> Because it is impossible to determine whether the NVM write would finish
-> correctly or hang (see https://bugzilla.kernel.org/show_bug.cgi?id=213667)
-> it makes sense to skip the validation completely under these conditions.
+> On Thu, 2025-04-24 at 12:19 +0200, Ard Biesheuvel wrote:
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> > 
+> > The GNU coreutils version of truncate, which is the original, accepts
+> > a
+> > % prefix for the -s size argument which means the file in question
+> > should be padded to a multiple of the given size. This is currently
+> > used
+> > to pad the setup block of bzImage to a multiple of 4k before
+> > appending
+> > the decompressor.
+> > 
+> > busybux reimplements truncate but does not support this idiom, and
 > 
-> Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
-> Fixes: 4051f68318ca9 ("e1000e: Do not take care about recovery NVM checksum")
+> typo, busybox.
 
-I think that while the commit cited above relates to this problem,
-this bug actually dates back to the patch I'm citing immediately below.
-And I think we should cite that commit here. IOW, I'm suggesting:
+Fixed, thx.
 
-Fixes: fb776f5d57ee ("e1000e: Add support for Tiger Lake")
+> 
+> > therefore fails the build since commit
+> > 
+> >   9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool
+> > that generates it")
+> 
+> Should this be marked as an official bug?
+> 
+> If so, I'd put this as a Fixes: tag below.
 
-> Cc: stable@vger.kernel.org
+So I've added a Fixes tag, because it's informative, but 9c54baab4401 
+is new in v6.15-rc1 so there's no backporting need.
 
-That not withstanding, based on the commit message,
-and the use of e1000_pch_tgp in another Tiger Lake fix [1],
-I think this patch looks good.
+> > Work around this by avoiding truncate altogether, and relying on dd
+> > to
+> > perform the padding.
+> > 
+> > Reported-by: <phasta@kernel.org>
+> 
+> Tested-by: Philipp Stanner <phasta@kernel.org>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Thanks!
 
-[1] commit ffd24fa2fcc7 ("e1000e: Correct NVM checksum verification flow")
-
+	Ingo
