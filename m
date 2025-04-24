@@ -1,129 +1,123 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9991F4163;
-	Thu, 24 Apr 2025 07:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF241DED52;
+	Thu, 24 Apr 2025 07:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478399; cv=none; b=L79/znHT37AKAHpPHsG8HrhWmNaD8w352UY2sRpK0FLzKOkH6o10D6GJz/8ebSPhf7zz4YrkQSmk1Oq0xXz+agG/wqHfiDDataCAU+hINDa/NYrodr+fs49mz+d9b/K9s36zQQ7E16Civv44EcgqqP/6/Ni+hiEVYP6lyaHyvfs=
+	t=1745478422; cv=none; b=kxOdmd/gkjuT0jr1dNPl1iY8L7ojtjBL9m9WC86RdHpUwXSbZ15VFhPpAf5BnUbOxCKXhYcVntQfqYkBZnU8Kzcwf+JRCjAplE2rc/T4m/Y9HoljWrkU5+0nVgZWyOZ0eUsrwU/rJ2O/5ReQ3ZIFv9mifL2NlEB2SIf1YliYdPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478399; c=relaxed/simple;
-	bh=xhH0XMxjiI3yb2Cbwo/0uvupPBVxsULcWWPLtlgIQds=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fqb9b25kfwAFvCm5dhHgoyE4ABOZC7SK/cSUW1M6u2hCd6FhCWh/Y/VatsgdgCzWI4g+FbAMN8E9jzPFDAHO8ZNSg/bPao2jL0HifYoreceFjEdkISdk+IqnbKSexHWJjwHpJX+lgQqskmpPH8jqh58uS2ptV8lPftHtjGHy70I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=uEv+IJqh; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uEv+IJqh"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AD9E51666;
-	Thu, 24 Apr 2025 09:06:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745478388;
-	bh=xhH0XMxjiI3yb2Cbwo/0uvupPBVxsULcWWPLtlgIQds=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=uEv+IJqh/UNYUWA3hLM1GEC6yNkPA2mIZRNMRiS8PoGc6OGV1jUFbSCYqTV07LGWi
-	 aPoa2w02BDhTOwQaOfp/C8uq+gs3yH9JuDk5mUPa/tcnzlKUf97W/c9ryeaymCFyk/
-	 mJ0bmmKG2u5Frn2fNAgQVYynIaEcXQfdzvYZOJDk=
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Thu, 24 Apr 2025 10:05:36 +0300
-Subject: [PATCH v2 4/4] media: rcar-vin: Fix RAW10
+	s=arc-20240116; t=1745478422; c=relaxed/simple;
+	bh=Cm/cNrvc88Dk3pDmdPfKEoW8B86JZMfXK8wzgIhwaQA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TPR70XSnlZc8AVE5Yp4Ig7z293KhPtzTAs8NXTEJvfX4BcYTLty9ESrh12PWSx758tq9xAIWCZM4N1wJAhKct5HHslBMMpnkrg1+oTdHvpPNm+RGUt4wkcjO7bsxI1Xv4Ybq2JpPnxiCDLG79AeC2Bgoq82xssyU2qYP8wiYtKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxzOIP4wloriLFAA--.64601S3;
+	Thu, 24 Apr 2025 15:06:55 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMBxn8UN4wloXSGTAA--.40573S3;
+	Thu, 24 Apr 2025 15:06:55 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Fully clear some registers when VM reboot
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250424063846.3927992-1-maobibo@loongson.cn>
+ <CAAhV-H51WRgk8Bs5dsF1LrgdaqL7dk9ioy7H79voZKapov9U2g@mail.gmail.com>
+From: bibo mao <maobibo@loongson.cn>
+Message-ID: <883cb562-9236-f161-71fa-0b963db22a11@loongson.cn>
+Date: Thu, 24 Apr 2025 15:05:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-rcar-fix-raw-v2-4-f6afca378124@ideasonboard.com>
-References: <20250424-rcar-fix-raw-v2-0-f6afca378124@ideasonboard.com>
-In-Reply-To: <20250424-rcar-fix-raw-v2-0-f6afca378124@ideasonboard.com>
-To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1917;
- i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=xhH0XMxjiI3yb2Cbwo/0uvupPBVxsULcWWPLtlgIQds=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoCeLybYS0CNhsdk1MUMpQFpXEXJxMDs57bV46n
- TQ7SZEGQW+JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaAni8gAKCRD6PaqMvJYe
- 9SJ+D/93EeRGUEnSSMrmFLwqwg1LDisXgEnzXc1gecAkOpk1YxxttctnEVJ8Ge/vd0lZizdetuZ
- tnfSMiBMgFfaJ7e6BBuZH3t7Ts5Bi0KUDGGVPC3auV52/UzRMlRLiiH9Q9dO7YIIeUHtpnwXQuI
- 4Mtrg+xLvS78QNkMXE5fTvAeEPX5z8G5gDXNtfXpSBEND2yA6PzVO01+614eiKkyyBJghjIwCTp
- DSLOkInF6N24xXSZeMm2qvF0ZSPvgEeYL27446OcihyezUDeyXEW6q4a5+LgMbWCnW+RBUHeVrc
- CuZzSNVdFJIPspT4+OcuSZH72dik79Ld34Rel8psT91GOSdf2ugm8tZ7sTs1O6wpQmf83Fy5FLK
- uVtVXuir4Po2hlI1tBTA9HYDls5H8mmoJVgyMPt/9Z9aMNJGMcXhCh6JXgX8qntJ3yVeNTdRwe0
- tq/WGWJEHYCoXOTxYeqGUuFbGGuz7gtVRlGVJVSWXJisk0XnGmSGXs+SXEWICuPqVYfcJrLO+Qh
- +//hLNxFGYTxlkRGC/dgEv66pMJRHE1TzZfy1qxMh/dWX9IfU4tN5thA4ulU6pyDcLY6y3ZF7gN
- 6V95H0WM31T9eifRhNGu+NPY5OR+wb9z0y/gr34hoJ/pxW+77mgaWa+3Tk7WOqfPCwC4mPGRdAM
- JxJOYMJbtx8xmPg==
-X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+In-Reply-To: <CAAhV-H51WRgk8Bs5dsF1LrgdaqL7dk9ioy7H79voZKapov9U2g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxn8UN4wloXSGTAA--.40573S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw1kKrWUXFWkGFyktF48KrX_yoW8uF1Dpr
+	yjkF1UWr48WrnrG3W7XrsYgFyYgrZ7Kr48ZF9IqF9Fkrn0v34DKF40krWayF98J348JF1S
+	vFy5C3yS9F4qy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU24SoDUUUU
 
-Fix the following to get RAW10 formats working:
 
-In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
-16-bit containers, the bpp should be 2.
 
-Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
-Through Mode", used for YUV formats and should not be set for RAW10.
+On 2025/4/24 下午2:53, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Thu, Apr 24, 2025 at 2:38 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> Some registers such as LOONGARCH_CSR_ESTAT and LOONGARCH_CSR_GINTC
+>> are partly cleared with function _kvm_set_csr(). This comes from hardware
+> I cannot find the _kvm_set_csr() function, maybe it's a typo?
+oop, it is _kvm_setcsr(), will refresh in next version.
 
-Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
----
- drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 2 +-
- drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+> And the tile can be "LoongArch: KVM: Fully clear some CSRs when VM reboot"
+yeap, this title is more suitable.
 
-diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-index a38c7b835231..9de1d3d91fa6 100644
---- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-@@ -890,7 +890,7 @@ static int rvin_setup(struct rvin_dev *vin)
- 	case V4L2_PIX_FMT_SGBRG10:
- 	case V4L2_PIX_FMT_SGRBG10:
- 	case V4L2_PIX_FMT_SRGGB10:
--		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
-+		dmr = VNDMR_RMODE_RAW10;
- 		break;
- 	default:
- 		vin_err(vin, "Invalid pixelformat (0x%x)\n",
-diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-index 756fdfdbce61..65da8d513b52 100644
---- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-+++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-@@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
- 	},
- 	{
- 		.fourcc			= V4L2_PIX_FMT_SBGGR10,
--		.bpp			= 4,
-+		.bpp			= 2,
- 	},
- 	{
- 		.fourcc			= V4L2_PIX_FMT_SGBRG10,
--		.bpp			= 4,
-+		.bpp			= 2,
- 	},
- 	{
- 		.fourcc			= V4L2_PIX_FMT_SGRBG10,
--		.bpp			= 4,
-+		.bpp			= 2,
- 	},
- 	{
- 		.fourcc			= V4L2_PIX_FMT_SRGGB10,
--		.bpp			= 4,
-+		.bpp			= 2,
- 	},
- };
- 
-
--- 
-2.43.0
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>> specification, some bits are read only in VM mode, and however it can be
+>> written in host mode. So it is partly cleared in VM mode, and can be fully
+>> cleared in host mode.
+>>
+>> These read only bits show pending interrupt or exception status. When VM
+>> reset, the read-only bits should be cleared, otherwise vCPU will receive
+>> unknown interrupts in boot stage.
+>>
+>> Here registers LOONGARCH_CSR_ESTAT/LOONGARCH_CSR_GINTC are fully cleared
+>> in ioctl KVM_REG_LOONGARCH_VCPU_RESET vCPU reset path.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/vcpu.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index 8e427b379661..80b2316d6f58 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -902,6 +902,14 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
+>>                          vcpu->arch.st.guest_addr = 0;
+>>                          memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
+>>                          memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
+>> +
+>> +                       /*
+>> +                        * When vCPU reset, clear the ESTAT and GINTC registers
+>> +                        * And the other CSR registers are cleared with function
+>> +                        * _kvm_set_csr().
+>> +                        */
+>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_GINTC, 0);
+>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_ESTAT, 0);
+>>                          break;
+>>                  default:
+>>                          ret = -EINVAL;
+>>
+>> base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+>> --
+>> 2.39.3
+>>
+>>
 
