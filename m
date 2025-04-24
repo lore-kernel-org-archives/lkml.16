@@ -1,144 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E23D221F15
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484855; cv=none; b=BhQF/oLxHvkpuqwJZHJqzi8uyn6n1icaCQokv78yAgsl/pDZ/eMGJbjwCG+I8pdofR/7kHijJ9dJXjkckeE504OWQRCrfzHiM6iwadU+LMFLufQMHOdDYYOcpyZ5X29s66QCyFKvdDEsAnbLTrtFg+z9vPe+d9mpOqo7YDPP3g0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484855; c=relaxed/simple;
-	bh=paGGoyoZnRW1m7g7h1F3XFqoQ0+nQRGX9p7YkqYjVWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o56WQxNwopsPRmApBBCXroQOKp62J7g1er5HhBrWV6m1v3U0j27mGUdyvBAEvmz77k2muYOqNLP+MUy7VF/BaNMEsQm/l6t6GTUy6UNFFgypZC9GUHq8jNCT1Q1TJZtiBaM7P1Lewtzt3/GLEkRhCAIFlji6DFEgD+mq7PytRoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WCbAHyCz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093F8204F83;
+	Thu, 24 Apr 2025 08:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745485149; cv=pass; b=PJ5o9LQMLb9/ynXx3/ElZg9BE7wudXapdYoOth8yz23/ICxNb2ZQ8c3MPcJYICHzhKHJ7Gxdyn4hImQiAq+7grPuMODo7LufoMsv2F+FNSQ2QWWHHDd4m1LChgVTJR7WaYiwdHTlpmnS/IiU03WcYsm743ksPgjImvWTiCU0TfA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745485149; c=relaxed/simple;
+	bh=zDWc6nxv/h21OoGkVTdcFrzjcHE7JIncVZ3LhKXbeB4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CUbLM3Eazhf77kLhjky96Bm9IPon2OWchqHFNT+eJutUSwVsn3szuIxiTkn/R3avj6G2TCmsJMsTpnEzY2h+4+wmrLfjHR0POB/ap7s7dV5jEenGgWlW82g+0nT6RByOmiLSkRZW7K8/kPS+kllSo4vMYlNaWQ9l+NVROV2LRo8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=PVQCVxDx; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WCbAHyCz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745484852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pftB6zmblfz1vCxU5fqCKgvx+TE18dKtjoYVArm5R6Q=;
-	b=WCbAHyCznq/5vYkE6Zw5Pmta0D8S0F5DN04arSGb7maUmovyDNGEl+In4jzfF/geEmxfxP
-	Lt1Ey1xtVhrDtWsZcVuIMpG8jmb3fk82sxf6RBhe+W57YSLf2AsluiEd7KZfK8imvcQPHo
-	fYlrHUFh5pjrv+CmROmIzXfkNSjApZg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-618-JBaFIS1CPlSJbfTlsCAGnw-1; Thu, 24 Apr 2025 04:54:10 -0400
-X-MC-Unique: JBaFIS1CPlSJbfTlsCAGnw-1
-X-Mimecast-MFC-AGG-ID: JBaFIS1CPlSJbfTlsCAGnw_1745484849
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d08915f61so3702945e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:54:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745484849; x=1746089649;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pftB6zmblfz1vCxU5fqCKgvx+TE18dKtjoYVArm5R6Q=;
-        b=b4tF3hepwxLfq/Y+jVCeL7uPQzSVp4+k7vNeMncYZgic3MFodBKriGOurJnEkiY+cQ
-         ho6Oi+iP7OLXHbENPJ85urORFrCnbnmz/OLIpUt5M3zrNCwQ3smmqIoNfQp+Gswb1ZMA
-         liIKSWq47PzecveLaUwra94VQuRb/syjC3QIhIvUgxJVg0G1yEFo5sZlYKl7oM4jEvFR
-         fOQwlX+aKntN4rQbHjhd8Wp80/O5tjiVFBGK/PUbj9BWS1dPZQ6l7R6pDj9Z2M5+By6r
-         +grUPX4DY4raNB9PvNXkdMRiUo4P3UH++Zf+d2i3UHDCWNlA4wSMsvl5N+enp0JvA/fs
-         nAMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSleIZiJCzPG78EyzjnGJxmOQ1NKXg/onoihK4pZMRoSW6j3Dq8uy1u7gG5a/ZqSLV7mi+2w0frmAETS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRMVFDQ/S0wwfyDsuy4ZLxrRaknjrOi3p22EcTHGw5rnLmXdbO
-	UFDU4ZIM1HQEp1ET26PEHaYsVN8ezvTlPRnffxLKQUEO1PWXS1NMZ3d3wx2p0t3LJXcKLiGYxSO
-	q6mNvxUATcaygpeHITAb/aWkZyJ0qaDrm0GPKkfW1vquhrotIE5/8Z/3l7tEgo1obpVmxZA==
-X-Gm-Gg: ASbGncsacnWlOUga3AbqBLIsFFMJLVohNQajDVq6PEZSy2510vaWOQhz0RsbbL6R772
-	l9pnod2y1deDrR9UUgBbNOrDNaD/4UF7SjTP0TsxSxK9Dclm/IURECsDp0Q/B7886eqxdApiw5r
-	Gxfs2aqdXaoQYtx0ua5V5jZZqKogJpPuFHagBcktAey7sunRC2QS9RU9yae5MjlnzO1ZrTigJuz
-	cKuoIv7g6RrZH2sGBN8rJD+wPV2pODyxfnR1lRfP4mPjdhJ+YzvFJgzyeO7sXsyVp9LxQSAh//4
-	oqTVGf6ZnPVCI/x9wfEMfuo3UMguTHZX0GTARWg=
-X-Received: by 2002:a05:600c:4e0c:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-4409bd86819mr13058175e9.25.1745484849208;
-        Thu, 24 Apr 2025 01:54:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEqstuVMKXRfIfjVGAhmeakWqDfpmADfftb5xQky926OxvT8IMDcEdyz8TdVKcbRypTiAhDLA==
-X-Received: by 2002:a05:600c:4e0c:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-4409bd86819mr13057925e9.25.1745484848793;
-        Thu, 24 Apr 2025 01:54:08 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-7-183.dyn.eolo.it. [146.241.7.183])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a3afbsm11871335e9.16.2025.04.24.01.54.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 01:54:08 -0700 (PDT)
-Message-ID: <d5114fb3-4ca8-4ab8-acb2-120a7b940d6f@redhat.com>
-Date: Thu, 24 Apr 2025 10:54:07 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="PVQCVxDx"
+ARC-Seal: i=1; a=rsa-sha256; t=1745485127; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jaV0x3qj/eqBLIwubtgE8KUAQn2b86GxCDmo0XTJPYmIQTCRZbHHx0dxGpQTlkucxhzTG8QN0tqyWNwbybF2orNap/vE+IniaHZmVhYTKUglVdEtAjxrRAN0Wl+Bo3LED2AF7NTBBIMkwPo5qwWvSn9acvulMqHIjcwXx+oew/Q=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745485127; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=J3UW6p735sL0uDpuTdjeAlDlTVS5KOHJnqXmFJV22mw=; 
+	b=PmhFNP+E145dBDrIHOeTs0XSN9iyyy8OMNz0BuUQwX46Mkf5FxF5MGKd1dBTFthSHwJf8+8aQ1joZbq8rqJyIebtkFxVGo+yWMl41irPEGix+JVYVESlFrASouINYXD3iWsUFA59uxtpFr0t6XJGkr9ib8FZLt/yza5kr2Hk5C8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
+	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745485127;
+	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=J3UW6p735sL0uDpuTdjeAlDlTVS5KOHJnqXmFJV22mw=;
+	b=PVQCVxDx9e3a/r7iDgv31fTD2bXDL/+qSkeZBxJWbJ8zNwiBRVfcuBefy6RXabAe
+	Sc2ek7+pOwcCZIEVeI1Yum4rlDFRBOahhVZqOXaRDYlQ0yK0R+/u04vJf80yQSppVeh
+	WMk3rWdafvd4LohpsEpBvGwUy/zpt8OxbD86yNf4=
+Received: by mx.zohomail.com with SMTPS id 1745485124022311.75237554150374;
+	Thu, 24 Apr 2025 01:58:44 -0700 (PDT)
+Message-ID: <fd4f9f760c4860216aeb58a91a75c24dda64919c.camel@collabora.com>
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8390-genio-common: Force ssusb2
+ dual role mode to host
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado"
+	 <nfraprado@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, kernel@collabora.com, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Date: Thu, 24 Apr 2025 10:58:39 +0200
+In-Reply-To: <eb350c96-379a-46db-8a54-e1b9c71be431@collabora.com>
+References: 
+	<20250331-mtk-genio-510-700-fix-bt-detection-v1-1-34ea2cf137f3@collabora.com>
+	 <2da6560b-8444-48ae-bb01-397756cecbc0@notapiano>
+	 <eb350c96-379a-46db-8a54-e1b9c71be431@collabora.com>
+Organization: Collabora Ltd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net V2] amd-xgbe: Fix to ensure dependent features are
- toggled with RX checksum offload
-To: "Badole, Vishal" <vishal.badole@amd.com>,
- Jacob Keller <jacob.e.keller@intel.com>, Shyam-sundar.S-k@amd.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, Thomas.Lendacky@amd.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org, Raju.Rangoju@amd.com
-References: <20250421140438.2751080-1-Vishal.Badole@amd.com>
- <d0902829-c588-4fba-93c0-9c0dfcc221f6@intel.com>
- <c1d1ce25-8b5f-4638-bcd3-0d96c3139fd7@amd.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <c1d1ce25-8b5f-4638-bcd3-0d96c3139fd7@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 4/23/25 9:57 AM, Badole, Vishal wrote:
-> On 4/23/2025 3:50 AM, Jacob Keller wrote:
->> On 4/21/2025 7:04 AM, Vishal Badole wrote:
->>> According to the XGMAC specification, enabling features such as Layer 3
->>> and Layer 4 Packet Filtering, Split Header, Receive Side Scaling (RSS),
->>> and Virtualized Network support automatically selects the IPC Full
->>> Checksum Offload Engine on the receive side.
->>>
->>> When RX checksum offload is disabled, these dependent features must also
->>> be disabled to prevent abnormal behavior caused by mismatched feature
->>> dependencies.
->>>
->>> Ensure that toggling RX checksum offload (disabling or enabling) properly
->>> disables or enables all dependent features, maintaining consistent and
->>> expected behavior in the network device.
->>>
->>
->> My understanding based on previous changes I've made to Intel drivers,
->> the netdev community opinion here is that the driver shouldn't
->> automatically change user configuration like this. Instead, it should
->> reject requests to disable a feature if that isn't possible due to the
->> other requirements.
->>
->> In this case, that means checking and rejecting disable of Rx checksum
->> offload whenever the features which depend on it are enabled, and reject
->> requests to enable the features when Rx checksum is disabled.
-> 
-> Thank you for sharing your perspective and experience with Intel 
-> drivers. From my understanding, the fix_features() callback in ethtool 
-> handles enabling and disabling the dependent features required for the 
-> requested feature to function correctly. It also ensures that the 
-> correct status is reflected in ethtool and notifies the user.
-> 
-> However, if the user wishes to enable or disable those dependent 
-> features again, they can do so using the appropriate ethtool settings.
+Hi Angelo,
 
-AFAICS there are two different things here:
+On Thu, 2025-04-24 at 09:24 +0200, AngeloGioacchino Del Regno wrote:
+> Il 23/04/25 22:48, N=C3=ADcolas F. R. A. Prado ha scritto:
+> > On Mon, Mar 31, 2025 at 11:25:52AM +0200, Louis-Alexis Eyraud
+> > wrote:
+> > > On the Mediatek Genio 510-EVK and 700-EVK boards, ssusb2
+> > > controller is
+> > > one but has two ports: one is routed to the M.2 slot, the other
+> > > is on
+> > > the RPi header who does support full OTG.
+> > > Since Mediatek Genio 700-EVK USB support was added, dual role
+> > > mode
+> > > property is set to otg for ssusb2. This config prevents the M.2
+> > > Wifi/Bluetooth module, present on those boards and exposing
+> > > Bluetooth
+> > > as an USB device to be properly detected at startup, so configure
+> > > for
+> > > the ssusb2 dr_mode property as host instead.
+> > >=20
+> > > Fixes: 1afaeca17238 ("arm64: dts: mediatek: mt8390-genio-700: Add
+> > > USB, TypeC Controller, MUX")
+> > > Signed-off-by: Louis-Alexis Eyraud
+> > > <louisalexis.eyraud@collabora.com>
+> > > ---
+> > > I've tested this patch on Mediatek Genio 510-EVK board with a
+> > > kernel
+> > > based on linux-next (tag: next-20250331).
+> > > ---
+> > > =C2=A0 arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 8
+> > > +++++++-
+> > > =C2=A0 1 file changed, 7 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-
+> > > common.dtsi b/arch/arm64/boot/dts/mediatek/mt8390-genio-
+> > > common.dtsi
+> > > index
+> > > 60139e6dffd8e0e326690d922f3360d829ed026b..3a9d429f0f14b501ae41551
+> > > dfe7272f242345138 100644
+> > > --- a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+> > > +++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
+> > > @@ -1199,7 +1199,13 @@ xhci_ss_ep: endpoint {
+> > > =C2=A0 };
+> > > =C2=A0=20
+> > > =C2=A0 &ssusb2 {
+> > > -	dr_mode =3D "otg";
+> > > +	/*
+> > > +	 * the ssusb2 controller is one but we got two ports :
+> > > one is routed
+> > > +	 * to the M.2 slot, the other is on the RPi header who
+> > > does support
+> > > +	 * full OTG but we keep it disabled otherwise the BT on
+> > > the M.2 slot
+> > > +	 * USB line goes obviously dead if switching to gadget
+> > > mode.
+> > > +	 */
+> > > +	dr_mode =3D "host";
+> >=20
+> > Hi,
+> >=20
+> > while I agree with this change, now that this controller is fixed
+> > to host mode,
+> > the connector child node here which is supposed to probe with
+> > driver
+> > usb-conn-gpio, which would monitor the ID and VBUS lines and change
+> > the USB role
+> > as needed, will fail to probe with:
+> >=20
+> > =C2=A0=C2=A0 platform 112a1000.usb:connector: deferred probe pending: u=
+sb-
+> > conn-gpio: failed to get role switch
+> >=20
+> > as indeed there no longer is a role switch registered.
+> >=20
+> > For that reason, I believe as part of this commit you should also
+> > disable the
+> > connector. Since role switching is no longer supported by this
+> > controller,
+> > there's no sense in even trying to probe this driver.
+> >=20
+> > Thanks,
+> > N=C3=ADcolas
+>=20
+> Can we instead go for role-switch-default-mode =3D "host", with a big
+> comment
+> in the devicetree saying that the controller is shared between BT and
+> the other
+> port? :-)
+>=20
+> Cheers,
+> Angelo
+Using role-switch-default-mode property (set to host) does work as an
+alternative fix in order to keep the dr_mode set to otg and also not
+having a error about the connector too.
+But I also needed to change the associated GPIO polarity, otherwise the
+role mode would remain device and the BT module would not still be
+detected.
+I'll make those changes in the v2 patch.=20
 
-- automatic update of NETIF_F_RXHASH according to NETIF_F_RXCSUM value:
-that should be avoid and instead incompatible changes should be rejected
-with a suitable error message.
-
-- automatic update of header split and vxlan depending on NETIF_F_RXCSUM
-value: that could be allowed as AFAICS the driver does not currently
-offer any other method to flip modify configuration (and make the state
-consistent).
-
-Thanks,
-
-Paolo
-
-
+Regards,
+Louis-Alexis
