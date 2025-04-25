@@ -1,94 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895385695;
-	Fri, 25 Apr 2025 12:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AFB5695
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745584495; cv=none; b=JoXf1O0I6EwGmue5e+9Pp4tgWj9LAQtbr0rPHtRYqidLb39tPORnRVnDtdre/1/Iu8Qkals594W//NEGMAQ8pGLk3PXau0vzrBw8fA02xUeIsVFMBGlv80x4A9HWB94uUT64cGauXcSAjA55erf9+Z1a9pUJOO3G5BKIFUtK3WE=
+	t=1745584504; cv=none; b=m4GD80c671DVErDmwy5tYPpDL0azYjrpOPkoQvSFsUzmgBWOpP0UzjnHLG0y9rxZT+oPD1LDRpXIPDOifiMM2r6OJarJvl4fRCZW4DWXnRa557+QSQKRIpOUdkjBWPAEFWCk5UBzi9n7jgdxaMbzCkwIhAeAqHSO22CbNHN5XNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745584495; c=relaxed/simple;
-	bh=0jC+f8mlnZwJBUtQlx0T8zUGzXV8KJCXfOyP3vLVigw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=juV0TerbDrKk5Udh53+Dh9UPAdMtR/nQRTRPJ0CKyTC0vJZp/KCRNeWown2Y+DWpQwwXNbv1o5DF9/F5zVmEt5k6lF10MltusMT7JqEJnf5nLxFcO0q8iAcswZgv1XwbQcgX8NbPE0SyDVwx/UvjxTSeVhNwip0sttVKZ5H3twA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgMdU2He; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745584504; c=relaxed/simple;
+	bh=GQzt17MyqX8uuTm5v+Ec3RbmyAPRhmV9zL9hzbmniBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j6fRZ6RkwXwEi3o+y+wYNuqq7ixnchPnXtWtNxQPJWcCGUP5kxJqC79ry1D2ASVLiJNpLlUDlZa61cnuAl1QoXiYRgqcH67JplX7p8T9GfwZi3hCmWgV+Z/KYboYNUcygRMZFNYnVUwnIWl6x0q0yk0gUiOIC117a1f1+t87yPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HuuAVsCO; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgMdU2He"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21467C4CEE4;
-	Fri, 25 Apr 2025 12:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745584495;
-	bh=0jC+f8mlnZwJBUtQlx0T8zUGzXV8KJCXfOyP3vLVigw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=AgMdU2HeBbp1QKCYJ6Icni1zXm+0+lmyILLqSAoeke1HIyTBc46589nPsGLSehqxP
-	 d6T5xMQyIHGttiTPk2R5S8CFQE/AcqM8AZTCdvLhb5p7enckwSarO2UpS5tw35FwkH
-	 tOysSlwX3Q0VOWetFR74l52IdzFZBgdKKLfTKKaZ9DppPv7q7xDblmajuSasaTMV6B
-	 Rrpb+iYJrtwOAkZQE4aplwJZj+1C6k8ytPF3wLioiYsd64vjfQZgMnOWbxx4PcYnXg
-	 0jJg5JVnVAexE6ydahaBcWKgTkFcxx//FAScpwOxIN8uEXCt7CvDfcutDg4D0jVKNS
-	 BAIcWyoa8jZlA==
-From: Mark Brown <broonie@kernel.org>
-To: biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
- lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linux-sound@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
-In-Reply-To: <20250410141525.4126502-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250410141525.4126502-1-claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH] ASoC: renesas: rz-ssi: Use NOIRQ_SYSTEM_SLEEP_PM_OPS()
-Message-Id: <174558449287.45647.11999550141673145450.b4-ty@kernel.org>
-Date: Fri, 25 Apr 2025 13:34:52 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HuuAVsCO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+A9u+ebGFXpWrBdzblr4M9bejgEoUFrV8zWN6KJE79M=; b=HuuAVsCOtfijz17vlxhnpOz8Ug
+	h5WkyYDKjkoKiqx5Ez3sr7YYZNPzG5khl99k+w38j+ej7QEBG/jSGD70ynE4HZzNpkhKyACAKsDAh
+	EDa1fWP7Z2GbIZbr6OFmaJeq2B8NZV8TZWH64l6X0IgqcTMEfv5fYfcKbc6Ow1+cMcX0FFKnX8NWJ
+	ViAr+HaMhBn0+jMVL4DkT39BVLRlNFthgfYHRdKPp1MNCq60ODm1xgeEH/Cq1L1Y+suU9Dbd/7NOC
+	/B4rQTux5hUgoHsoe9zB27Uh3vja+LF3xzJ6lR3WZbkKAG5HoewDugMRVJmJdB8AlZJzxy/ncgRj/
+	nZWfhVYw==;
+Received: from [77.26.4.178] (helo=[192.168.50.63])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u8IGN-008KA0-Ve; Fri, 25 Apr 2025 14:34:39 +0200
+Message-ID: <f8ffe67d-5267-4e97-9e36-359d39eadb71@igalia.com>
+Date: Fri, 25 Apr 2025 14:34:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] drm/v3d: fix client obtained from axi_ids on V3D 4.1
+To: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
+ Melissa Wen <mwen@igalia.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+ Emma Anholt <emma@anholt.net>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250409155504.1093400-2-jmcasanova@igalia.com>
+ <ee5cbc11-b909-4754-ab62-de9581d9785e@igalia.com>
+From: Chema Casanova <jmcasanova@igalia.com>
+Content-Language: en-US
+Organization: Igalia
+In-Reply-To: <ee5cbc11-b909-4754-ab62-de9581d9785e@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 10 Apr 2025 17:15:25 +0300, Claudiu wrote:
-> In the latest kernel versions system crashes were noticed occasionally
-> during suspend/resume. This occurs because the RZ SSI suspend trigger
-> (called from snd_soc_suspend()) is executed after rz_ssi_pm_ops->suspend()
-> and it accesses IP registers. After the rz_ssi_pm_ops->suspend() is
-> executed the IP clocks are disabled and its reset line is asserted.
-> 
-> Since snd_soc_suspend() is invoked through snd_soc_pm_ops->suspend(),
-> snd_soc_pm_ops is associated with soc_driver (defined in
-> sound/soc/soc-core.c), and there is no parent-child relationship between
-> soc_driver and rz_ssi_driver the power management subsystem does not
-> enforce a specific suspend/resume order between the RZ SSI platform driver
-> and soc_driver.
-> 
-> [...]
+El 10/4/25 a las 14:31, Maíra Canal escribió:
+> Hi Chema,
+>
+> On 09/04/25 12:55, Jose Maria Casanova Crespo wrote:
+>> The client that causes an MMU error is expected to be reported.
+>> But in the case of MMU TFU errors, a non existing client
+>
+> "In the case of MMU errors caused by the TFU unit, [...]"
 
-Applied to
+Message updated.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+>
+>> was being reported. This happened because because the client
+>
+> There are two "because" in the sentence. Could you add an example of the
+> a MMU error with a non-existing client in the commit message?
+>
+Example added.
 
-Thanks!
+[...]
+>>           }
+>>             dev_err(v3d->drm.dev, "MMU error from client %s (%d) at 
+>> 0x%llx%s%s%s\n",
+>
+> As we are declaring `begin` and `end` as hexadecimal numbers in the
+> code, could we display AXI ID as a hexadecimal as well? Just to ease
+> future debugging. You would need to change "(%d)".
+>
+Change done.
+>
+> Please, don't forget to mention this change in the commit message of v2.
+>
+Already included in v2.
 
-[1/1] ASoC: renesas: rz-ssi: Use NOIRQ_SYSTEM_SLEEP_PM_OPS()
-      commit: c1b0f5183a4488b6b7790f834ce3a786725b3583
+Thanks for your review Maíra.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Kind regards.
+Chema Casanova
 
