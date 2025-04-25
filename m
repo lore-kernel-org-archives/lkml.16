@@ -1,180 +1,138 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0B518C02E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8169B189F20
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745597097; cv=none; b=SxYX3M74PgLvF5nS5+jP4rwpIqPOoV76ZGfU09YeP3gkUj1bFPYiUkPhcCxY802IvbwlQV7bPDhuVZPOqf06tKag7owryo/zSP3Mr0w68p4ASyY7LRTdqpn3N2nK+fZ3nTfdmLUVoRkNQhXa5bciY8DjXw++TPlHhXsJnEMEVaM=
+	t=1745597135; cv=none; b=LqxXue+jBEZMgLwYgSW70M3LhR/Qtxklj7ag4/b/cj4QuiLNIHnOJCND0arDwPR/5V7ERrjqmKZnCUMv+y8PgOc0Qjm8hxQhJj8O/CtJJUoyZ3vQo9vQieWw/OWW5uFLeIdkN1v00EnEIkXW6hVXeShk0H9F+iP1sgOsecqE+u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745597097; c=relaxed/simple;
-	bh=23QgPi6XF0jIetS0s+QPwlevn+YBcwsl063Mh1cXQaU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=LZhjVq2rBeEkSmKUjNvSa6/K/o0jWzm72M2QMUfwPsx59gJmRScEfc6JCU+ygWqLbsBMjqyjzLLdG7tfCCatL7/Bvk/Y6pkQSdcbbKOsgasneaV9289bkMlF6toheIPo3hyOQP0jRckH0tkiKnFvsEVMnWsctj4QnhdbJd5yPyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=JdVNc3E1; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745597135; c=relaxed/simple;
+	bh=5QOikvIpFJpAn4LvksqDdxME5NqzJU/6HMKXaTAmFIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VqeBqYa4P7g3FW9xhfJp9573xxw6GEwZBy0xZYrplNO3rna0dQVIVCuPfF9zpsClYcyv6Yb3g2DXNoPM6diYF9cmWNeKZkgKWO3jvv3hfRvmeyLI4lYKiIrgoJQDwJVFpwjbu3/jtU+GR58Gs6r1UN3FHP2GxczkbVad/IKJg1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RgbPxNwX; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="JdVNc3E1"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3912ebb8e88so158789f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745597093; x=1746201893; darn=vger.kernel.org;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vVmQISaVL5Cg2XsgzQXK0sbbtQNmhL4LdWnCYGEZ450=;
-        b=JdVNc3E1vu+5NCR6xLM5WpSyAA6nYltdhfBvxzkGHaU4GOFNIt/DvRYUsJkogEwf/p
-         kZMo10t6xroBvou/QD+GvXOHg6BzwLzi+jO3aqzNjfkAHXqkoMbows2AkCr3hZ016fo5
-         giUQnhM1Pi07aqIm1tv1shGr1DjcBIYz3BYLTvoeMwQQ2bZfI3DnFs0SuHG4KXuSbKpZ
-         FC+iyb8/kahe4wfzYrXzqSBmhCGhS6NeEw2LKgFZx0h+RbjcEw29qqRDTYgL1Eh6FUAg
-         vBpw+u0YNuDELKUZlmeDL4t42OeDYhjTG8ISAWz2YjPqA7zqBKqI3dUEHWwBvwoGL2Kk
-         27yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745597093; x=1746201893;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vVmQISaVL5Cg2XsgzQXK0sbbtQNmhL4LdWnCYGEZ450=;
-        b=dkq8caNlblrIp4kh/0YVoiL9vIMy8V9wKakvb3YYEuSoDOLuqqBd1roZzb/au2a2df
-         t6JRMW/n65xaqpVuvs95BcymCy8TEExw2uMuv2uCZCx9ihJEIBVPM6xJ/k2AzB+uj37T
-         8djOaIj+LRsTfkUG1XUal9AGXbSjDtUKCkp4XDvKyDJE4P5i6244S5BwBrHssx70MOjr
-         L03Ep3eUkAXoQ/CN2XgYg47dfOnLuwc9Tkrt2bHSmWtfioVVOE9bLByDIwEN79p1Bk8X
-         e65boAMuZT68CDKPc/L4isJwda6YqyW3e7RF0ZNRN1BFeqGBbY+43BuK1MzHLrLZHYhI
-         BusA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcvPZY8QsvwkNdjQhi0iw+bOCsQzasFS0S0q+D/OB3VcW6YuWOkMXdvZIjR43/fGQA9YjP+6RBXAVrsSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvnqSkJwdKt+N0uqFwxgeQR9dXnU5WV0GodafDHTYUdiO74ygQ
-	YwknK3eO1TAXwu73GUWMjWVZ+RkND2dU3aQjv6Oz3fT9m4PIoBuy7WrUWU0CSb0=
-X-Gm-Gg: ASbGncutiEQ9zcN00YRloWu/DU6yRp8txLIREfCPlCCJEPmStwpdzMGXClhe6TDFxVr
-	ne0DZdug9CJzS/7K/Vs1bI69FdxpmS9HUoM+ZDGPi9s2BRsq4Jvxk4tqqW1Emnvo1sQAICCQSS9
-	BfvrTC8tQjJ/LWyGJxndpnxmLSv8dEEBqcyuijnKxZo1UT5gZr30FxmZy+aBpBn+JsYt2s6kttc
-	ccIs6a4Rp73uv6zimUeFNVV+PAit4RONnxWtOwD9jQ9Qi9Wlprj/zUZ+oa2YDltQoJqXqcfnxwk
-	wN6i0Je2tbAhCpjSkkBq3fvqo+xWyGyVI1LtOQXtafexGMd+
-X-Google-Smtp-Source: AGHT+IFygwyNuR6Mluia/w4Oq01jCNKf5/yVIETD2X/Y28L1PTlwfkhtOAURq+PQcMZWcGjTeDYsfw==
-X-Received: by 2002:a05:6000:2211:b0:3a0:1d90:f7c1 with SMTP id ffacd0b85a97d-3a074d90429mr834424f8f.0.1745597093416;
-        Fri, 25 Apr 2025 09:04:53 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:84a3:2b0a:bdb8:ce08])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46981sm2731522f8f.66.2025.04.25.09.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:04:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RgbPxNwX"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PAEckf001860;
+	Fri, 25 Apr 2025 16:05:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=OVBNyZ
+	RHCPpzSSHMY3VqwIMIHRvAFKA2l4bEjmWWMXM=; b=RgbPxNwXUuPGznwiP9fwp2
+	D+AMO2pty/kC6gAIorfkkQyAEJCkUaFCdYqtlX7ZTJC0YfY1JbjP/OOPzWK/IoPP
+	s9bpgKVXnrFM9lvQgsP3l6p/ikhwEcSi0HZzVnOl4SbrrWEJoFXASaIGjgC4wySX
+	00pb5iaj1N9Teer995rHhMFrRL9s5drpq2mGNLYZcAcxaazG5464/HxfG/b5RSz2
+	D3WvZ3ASJFXcEydSCg+ijb6k6e1hprUYWYJhUQ0J9etFHTlYGl46mj8iT0WndUz7
+	ZTv35FLRSlcN3mt4tPZQRjlW9rt9PcFAhXPZYVzNCvfJiVscdGbDSGjWitN7ThVw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467vvkveh4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 16:05:17 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53PG5HwW027221;
+	Fri, 25 Apr 2025 16:05:17 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467vvkveh2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 16:05:17 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53PCvo4G005884;
+	Fri, 25 Apr 2025 16:05:16 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxp0p5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 16:05:16 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53PG5EJg56885648
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 16:05:14 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 184DB2004B;
+	Fri, 25 Apr 2025 16:05:14 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0E93720043;
+	Fri, 25 Apr 2025 16:05:11 +0000 (GMT)
+Received: from [9.124.216.146] (unknown [9.124.216.146])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 25 Apr 2025 16:05:10 +0000 (GMT)
+Message-ID: <895d688d-64aa-4321-9978-8773e726aee2@linux.ibm.com>
+Date: Fri, 25 Apr 2025 21:35:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 25 Apr 2025 18:04:52 +0200
-Message-Id: <D9FUIXQ1FIHS.2BLRCEWLXZL45@ventanamicro.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming
- runnable
-Cc: <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Anup
- Patel" <anup@brainfault.org>, "Atish Patra" <atishp@atishpatra.org>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Mayuresh Chitale" <mchitale@ventanamicro.com>
-To: "Andrew Jones" <ajones@ventanamicro.com>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
- <20250425-2bc11e21ecef7269702c424e@orel>
-In-Reply-To: <20250425-2bc11e21ecef7269702c424e@orel>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/fair: reduce false sharing on sched_balance_running
+To: Eric Dumazet <edumazet@google.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Sean Christopherson <seanjc@google.com>, Josh Don <joshdon@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+References: <20250423174634.3009657-1-edumazet@google.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250423174634.3009657-1-edumazet@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDExMSBTYWx0ZWRfX16njmbsy1kK8 p0b+MZ3Ez0sim1kt7GZLc/VIK8RUqd0zMBdRH0zizo8wdhWvB53Ro21znWOYhNkHsxPCNlQ1uul Fmq15T1bBl3eagQPnZNcAzDaaeU0m41pls0srRHTIJeF0QZnPcijKipzMcrkkq3H48koid+m/vZ
+ DeCmSOf1ln6LQ3bUf+jo3wn32ZCBbhvCbqB+AXskMTe8Y9Jd1tikb5o1NygOp8x06GTYRMy0t+7 WvvT4UH4JjTII2lrBYJ44buvMpYWm8lQuNUueg5mlLHU14Ly2Rys2BjxflSQ5iGOIMXmRJRva0a +eJUgb76yxy4Sr4tBh6gRZHpIcedPXxDw2vk6GJyXV2CW1EJQKFJGFR5gae0nc8DFN/CtmteYch
+ Wc3uu0VjxMNlI9Xwh7d98Iu8VloWfv5s6WRHRnmOpJykh6A05JU0AVpl4xSh7ZmLpC7rXPAJ
+X-Proofpoint-ORIG-GUID: IFZmFdJrWV6Iu1uVoe2fmKOy4tx1YNYn
+X-Proofpoint-GUID: kppcrlXmEiPooCRtiMmdjiuPn2uMrhlA
+X-Authority-Analysis: v=2.4 cv=HoF2G1TS c=1 sm=1 tr=0 ts=680bb2bd cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=pGLkceISAAAA:8
+ a=JeRp_uJUotQMxpzSFH4A:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10 a=zZCYzV9kfG8A:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=812
+ lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250111
 
-2025-04-25T15:26:08+02:00, Andrew Jones <ajones@ventanamicro.com>:
-> On Thu, Apr 03, 2025 at 01:25:23PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
-te:
->> Beware, this patch is "breaking" the userspace interface, because it
->> fixes a KVM/QEMU bug where the boot VCPU is not being reset by KVM.
->>=20
->> The VCPU reset paths are inconsistent right now.  KVM resets VCPUs that
->> are brought up by KVM-accelerated SBI calls, but does nothing for VCPUs
->> brought up through ioctls.
->
-> I guess we currently expect userspace to make a series of set-one-reg
-> ioctls in order to prepare ("reset") newly created vcpus,
 
-Userspace should currently get-one-reg a freshly reset VCPU to know what
-KVM SBI decides is the correct reset.  Userspace shouldn't set-one-reg
-anything other than what KVM decides, hence we can currently just let
-KVM do it.
 
->                                                           and I guess
-> the problem is that KVM isn't capturing the resulting configuration
-> in order to replay it when SBI HSM reset is invoked by the guest.
+On 4/23/25 23:16, Eric Dumazet wrote:
+> rebalance_domains() can attempt to change sched_balance_running
+> more than 350,000 times per second on our servers.
+> 
+> If sched_clock_irqtime and sched_balance_running share the
+> same cache line, we see a very high cost on hosts with 480 threads
+> dealing with many interrupts.
+> 
+> This patch only acquires sched_balance_running when sd->last_balance
+> is old enough.
+> 
+> It also moves sched_balance_running into a dedicated cache line on SMP.
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Josh Don <joshdon@google.com>
+> ---
 
-That can also be a solution, but it's not possible to capture the
-desired reset state with current IOCTLs, because the first run of a VCPU
-can just as well be a resume from a mid-execution.
+Hi Eric.
 
->                                                                   But,
-> instead of capture-replay we could just exit to userspace on an SBI
-> HSM reset call and let userspace repeat what it did at vcpu-create
-> time.
+Please check this thread which does the same thing AFAIU.
+https://lore.kernel.org/all/20250416035823.1846307-1-tim.c.chen@linux.intel.com/
 
-Right, I like the idea.  (It doesn't fix current userspaces, though.)
+You could also try:
+https://lore.kernel.org/all/82baaf6c-f3d9-4c3e-be69-24389eadb18c@linux.ibm.com/
 
->> We need to perform a KVM reset even when the VCPU is started through an
->> ioctl.  This patch is one of the ways we can achieve it.
->>=20
->> Assume that userspace has no business setting the post-reset state.
->> KVM is de-facto the SBI implementation, as the SBI HSM acceleration
->> cannot be disabled and userspace cannot control the reset state, so KVM
->> should be in full control of the post-reset state.
->>=20
->> Do not reset the pc and a1 registers, because SBI reset is expected to
->> provide them and KVM has no idea what these registers should be -- only
->> the userspace knows where it put the data.
->
-> s/userspace/guest/
+Thanks
 
-Both are correct...  I should have made the context clearer here.
-I meant the initial hart boot, where userspace loads code/dt and sets
-pc/a1 to them.
-
->> An important consideration is resume.  Userspace might want to start
->> with non-reset state.  Check ran_atleast_once to allow this, because
->> KVM-SBI HSM creates some VCPUs as STOPPED.
->>=20
->> The drawback is that userspace can still start the boot VCPU with an
->> incorrect reset state, because there is no way to distinguish a freshly
->> reset new VCPU on the KVM side (userspace might set some values by
->> mistake) from a restored VCPU (userspace must set all values).
->
-> If there's a correct vs. incorrect reset state that KVM needs to enforce,
-> then we'll need a different API than just a bunch of set-one-reg calls,
-> or set/get-one-reg should be WARL for userpace.
-
-Incorrect might have been too strong word... while the SBI reset state
-is technically UNSPECIFIED, I think it's just asking for bugs if the
-harts have different initial states based on their reset method.
-
->    set/get-one-reg should be WARL for userpace.
-
-WAAAA! :)
-
->> The advantage of this solution is that it fixes current QEMU and makes
->> some sense with the assumption that KVM implements SBI HSM.
->> I do not like it too much, so I'd be in favor of a different solution if
->> we can still afford to drop support for current userspaces.
->>=20
->> For a cleaner solution, we should add interfaces to perform the KVM-SBI
->> reset request on userspace demand.
->
-> That's what the change to kvm_arch_vcpu_ioctl_set_mpstate() in this
-> patch is providing, right?
-
-It does.  With conditions to be as compatible as possible.
-
->> I think it would also be much better
->> if userspace was in control of the post-reset state.
->
-> Agreed. Can we just exit to userspace on SBI HSM reset?
-
-Yes.  (It needs an userspace toggle if we care about
-backward-compatiblity, though.)
-
-How much do we want to fix/break current userspaces?
-
-Thanks.
