@@ -1,91 +1,100 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1202218592;
-	Fri, 25 Apr 2025 22:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56790231CB0
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618973; cv=none; b=ai2s4t4xn6GMrggoVzI3uU4en3Krlwf7caLMefbVhEXN9q+5xX2LiuXzuHIVeQb1x4IqjhhIvyB8PHuzeX7IQHK0IYXz1txRiforSd9n+6tsjHnMFtCi5FapU51fCnQMap+s5bje18HVodLOasot8atPi7zX8iKB4CyipMFQhF0=
+	t=1745619013; cv=none; b=rwK2CtHbhdyNo9LiFKiyERb9mGh6D8ZktgJtDSZC9egAEQ/J9xNnagMi+HHG5WQ88/q3sv97rJ2YEhANAfkP5UW1c8c6SEQRde4YJlKkxP7QkbP8DAXOQtHLMk+TlMbQhm0crb3Dz6plFDZHws5SgLet7k3+41aWg2w7v2hIUXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618973; c=relaxed/simple;
-	bh=xlnD3QHWa+7MUgoy3f5aIfPeC6qtSBgmxlA3LctdjjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ec+6kD/2o6ZgGO+Wua9PsWeTFNqfui/KkZkdbaPZNeknpEbRoOYzRTcVeGt/e74VAWafDd0MWLUMEHP8LXTHrINeYHgSE25ogsiJ4X2vWiczryzwXN7Sfq0mzd3dEycTwzTgaBAiZwM/EdPAM+SmZS2X24OOcyGdxpwX8UesQeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=R2A0oH31; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1745619013; c=relaxed/simple;
+	bh=QDpNpdZSVvNzvd5MLR7pzG4I1iT2a6SWMqrV4UoqPjM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CTBv6pjXi3IJkCVPy2tx7p6VRHXHwzYq2wno9zQZ6jdLBlLUjgiikcNv4AJSuKKrsFvMT+v+pRJKMuyjnQnBsc1ci2yd54jLMrhv8RwFfF4dnDSlCt95Wqi0dnjZjc5oIGGrW1JAExs8T9vgcJomlLToHdSFrsM/n86Rmy9fwEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L+LlPTpq; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="R2A0oH31"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=U33urWJ0nbHUSj4/Ei55DnraHJ93Xd3t00xN2jKFwUw=; b=R2A0oH31L8HOyJJ3pZ3Q+UUzRc
-	o8mEE4btAzk82MmSOlVcj24R+jgnLh+OsOAczxgLLgS7G3hElozLwNVypRWDYOepIbpoVJYYpl+LF
-	afGJodDUn06LsKLeAysAE0DoQVb269hnPe18BDB6CbXe1pT0+m5eOJ81KEBdzwIb6gFoOffAhiPeu
-	KUnwTRFJuKDYHk42LkkmxZsEWzULaSispPBUoLgj9Szq1ggFQvwQamvith2pRqh8E0cfSxpxyfVmu
-	evz/qWNUPvxPBnP/IKu7+r7HYvCLQ7LVaFIi7Nz0dAkZj5B97TD25ozt98qv8jDXvXg0BjQ/+Pu2p
-	xi4wANtQ==;
-Received: from i53875aba.versanet.de ([83.135.90.186] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1u8REO-0008Uk-72; Sat, 26 Apr 2025 00:09:12 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: srinivas.kandagatla@linaro.org,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	detlev.casanova@collabora.com,
-	sebastian.reichel@collabora.com
-Subject: Re: (subset) [PATCH RESEND v2 0/6] RK3576 OTP support
-Date: Sat, 26 Apr 2025 00:09:02 +0200
-Message-ID: <174561877790.431677.17884049982561107688.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250210224510.1194963-1-heiko@sntech.de>
-References: <20250210224510.1194963-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L+LlPTpq"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736d30d2570so2356919b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745619010; x=1746223810; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KP7SMXC0UpOU8ebuPaD2r2QZRSGge8gBq4uVn0V+Tno=;
+        b=L+LlPTpqPRnCx7GgCslDOfN2aYRsMKD2Y8PL3Xsi+CNHogAdOyz6RqJsvPKgeD+gV+
+         LdkTFNPx+yCSVE+hYA70vT6DZNVzfb4DIJOqdM4odkc57y9WGJuVseU4IVp1ofvUk/T0
+         e3HrtzV8QAffZmawffOBFCSb10QRL3Uyc3Qt4Bp96GX52vFslkxXEs+J6IjyhFP36qYZ
+         5Jahtw8NJaI3FNJhSuh1BiutOfzFBJiPzHkqWhG+LYNNpVYifyMV5sFFETN9tX0IiSjm
+         VcyQy5Ry91KjrENITxQRVx+UWwI0BlXjP4EFlBDo3POxxXODd3Ees+zPt053JUUSEhqM
+         mQMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745619010; x=1746223810;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KP7SMXC0UpOU8ebuPaD2r2QZRSGge8gBq4uVn0V+Tno=;
+        b=JY1rPAasRhL/t0o1Z0I2I0JJ163Te0v2O/sfkKuDbmE0pOCwPLdwiWRgm4Vin5x/lj
+         K7iuxXS6QZ0aZTBvWs0wyTgNcuicnkT3C2qAQAGK2FosyeGYASoJV+SaSX7Aznsq++Tj
+         mydgnhvpPKaYgsbDTsVsb+soV8jLt6oTXIi3lomwLMXH4zh3QuwMC8iCe4MB+bB9idof
+         A9fWcOy/9i++qzRsI398KIAIOd/STFwtqe1dPP7XcoIS1CogkB/x9OIHy8/ZPd3R0Ogi
+         XzL6HrCGjdxWNwPPE1EcrvcOy54CUnrEemxzPcmMUPZUiNXdcGa7tBeJteOaJhAFR6B4
+         OXOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnSlvA2zfL4XAfqBLA0UfaiXRmnX87TT5HyFWbGP3bW6wce34VFeQVpY9k+XR9C5YlUKIb8cex2fjVHyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/jHQMWJVOVvapPjpozMI5e9FZda5cc0+QIXaBib4tONAwFvrz
+	nRA83Ozj0NiE4FJJat6PjNfoF9XUqtSHQg01Df/5K+6m8DqHrQ/lunfJHh/UrhF+6siuK/dfuBZ
+	OPQ==
+X-Google-Smtp-Source: AGHT+IHlxsqOZTM+LSrc0NBMmc8B9QyOShS3ixyiaGAbKud07pM591093aslJMz7+/hiacjkdUWS8cPxxuk=
+X-Received: from pfbhx20.prod.google.com ([2002:a05:6a00:8994:b0:73b:c271:ad40])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:179e:b0:736:476b:fcd3
+ with SMTP id d2e1a72fcca58-73fd9145c92mr6310645b3a.24.1745619010562; Fri, 25
+ Apr 2025 15:10:10 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:08:58 -0700
+In-Reply-To: <20250414171207.155121-1-m.lobanov@rosa.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250414171207.155121-1-m.lobanov@rosa.ru>
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <174559665447.890486.10602051835802598167.b4-ty@google.com>
+Subject: Re: [PATCH v3] KVM: SVM: forcibly leave SMM mode on vCPU reset
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Mikhail Lobanov <m.lobanov@rosa.ru>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-
-On Mon, 10 Feb 2025 23:45:04 +0100, Heiko Stuebner wrote:
-> This enables OTP support in the nvmem driver for rk3576.
+On Mon, 14 Apr 2025 20:12:06 +0300, Mikhail Lobanov wrote:
+> Previously, commit ed129ec9057f ("KVM: x86: forcibly leave nested mode
+> on vCPU reset") addressed an issue where a triple fault occurring in
+> nested mode could lead to use-after-free scenarios. However, the commit
+> did not handle the analogous situation for System Management Mode (SMM).
 > 
-> I expect to pick the clock patch (patch1) and the arm64-dts patch (patch6)
-> myself, after the nvmem-driver and -binding patches have been applied
-> (patches 2-5).
-> 
-> But kept them together for people wanting to try this series.
+> This omission results in triggering a WARN when a vCPU reset occurs
+> while still in SMM mode, due to the check in kvm_vcpu_reset(). This
+> situation was reprodused using Syzkaller by:
+> 1) Creating a KVM VM and vCPU
+> 2) Sending a KVM_SMI ioctl to explicitly enter SMM
+> 3) Executing invalid instructions causing consecutive exceptions and
+> eventually a triple fault
 > 
 > [...]
 
-Applied, thanks!
+Applied to kvm-x86 fixes.  I massaged the shortlog+changelog, as firing INIT
+isn't architectural behavior, it's simply the least awful option, and more
+importantly, it's KVM's existing behavior.
 
-[1/6] clk: rockchip: rk3576: define clk_otp_phy_g
-      commit: d934a93bbcccd551c142206b8129903d18126261
+Thanks!
 
-While the original nvmem applied message [0] listed the clock patch,
-it was in fact not applied there - probable for being a clock patch.
+[1/1] KVM: SVM: forcibly leave SMM mode on vCPU reset
+      commit: a2620f8932fa9fdabc3d78ed6efb004ca409019f
 
-So I've done that now, hopefully as fix for 6.15 to make the
-nvmem work in this timeframe.
-
-
-[0] https://lore.kernel.org/linux-arm-kernel/173978599692.25901.15315285566342669137.b4-ty@linaro.org/
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+--
+https://github.com/kvm-x86/linux/tree/next
