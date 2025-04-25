@@ -1,55 +1,49 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC6D82367A7;
-	Fri, 25 Apr 2025 09:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4758A1EA7CA;
+	Fri, 25 Apr 2025 10:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575129; cv=none; b=FOhuYXgp8PA/lz1FFcg1q+YggMUhupqUdI6PeBVqXaftwmCbWmdiCPTaxxMMmQ71oguw1DfCShdAU/cvDAR8nV6b/GmsA56ZNwZCCHuNbmcBluGB8KdLWOjKa8u0AwegOS/yqQ2PeF4ksdyVK9XNOP5TOIbfS0P9AjveKvMnRQ8=
+	t=1745575220; cv=none; b=mgE4PsuRplBNfkuSu7t7Og9elb54h38bA0gmbfeiOjcgANrWArEuC6KBpH3EaaiBmc7IwuxCwbc/8iTOtcYE0SMKrnhgfR+sK5qPf6RCupjF2a35s22Omuc/extT0ZtKLzTe6OoqZo54R8Zjz8dIyzpa1AdpN5dvfHq/jduDqic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575129; c=relaxed/simple;
-	bh=a5Q2NDtt9juFbbGm6oBY4b2wE1/JswxDiFchnEZWsHE=;
+	s=arc-20240116; t=1745575220; c=relaxed/simple;
+	bh=y+hgsSoW5escKGuyH+qvE+QoIRRp1etqeugtEPrXybU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NNff2yFhPUuCGsl8bsxxvMH8sNc97ugWWmPZSzn1iBLiayixMiGiI/pkyhWz10Iz0MbnKnZ+Ml15fl09fGsg/yp27bll8cdhjwEYym6Jpvh2hhBCDed+/huy8P6itMc20TjdayGq4hbSiqwQ7aEZGtEcviwE4r4BiRQbk9ilFMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Jehkz7ub; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Jehkz7ub"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xmLII
-	sSXZlE0yxGj02mf0oBCyw8RS0RVRfp2xWsIfpc=; b=Jehkz7ubRygGolxPxQNMg
-	IcYsez6GN8mfFRtntr2kdYWZZL9Mf4Ws8fTuBicJ2wzAm6aAfXAk3Arew7yZjCx9
-	0V4tO6BIsp3/cNDwrs2rcnWdDFjVQyDXSlmhsgYNBlpofAyO8OQeq3t9R7TbZNfM
-	zQIrlFpvQQA/2+FIGlGpZ0=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgAnfJt2XAtowU4iAw--.17018S3;
-	Fri, 25 Apr 2025 17:57:14 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	heiko@sntech.de,
-	thomas.petazzoni@bootlin.com,
-	manivannan.sadhasivam@linaro.org,
-	yue.wang@Amlogic.com
-Cc: pali@kernel.org,
-	neil.armstrong@linaro.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	khilman@baylibre.com,
-	jbrunet@baylibre.com,
-	martin.blumenstingl@googlemail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	 MIME-Version; b=rD4jSEwbgvVEvA7y6oFN+a2bA5F57cyY1eOrsG+UnB/K1GtdINcKGoYGTJsZI4Bu9cryvQyVX04XArYV/goZlKfiY5KuVsTqRFSVdkterEd3KWnufANJdFGo1aZ7SqrIOef/xMJAXFbw0GVXu0WoGE9rPPoffe8uSSTpxkxjdXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from localhost.localdomain (unknown [119.122.214.249])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 131fd5406;
+	Fri, 25 Apr 2025 18:00:10 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: dlan@gentoo.org
+Cc: amadeus@jmu.edu.cn,
+	andre.przywara@arm.com,
+	andrew+netdev@lunn.ch,
+	conor+dt@kernel.org,
+	davem@davemloft.net,
+	devicetree@vger.kernel.org,
+	edumazet@google.com,
+	jernej.skrabec@gmail.com,
+	krzk+dt@kernel.org,
+	kuba@kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 1/2] PCI: Configure root port MPS to hardware maximum during host probing
-Date: Fri, 25 Apr 2025 17:57:07 +0800
-Message-Id: <20250425095708.32662-2-18255117159@163.com>
+	linux-kernel@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	mripard@kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	samuel@sholland.org,
+	wens@csie.org
+Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E board
+Date: Fri, 25 Apr 2025 18:00:05 +0800
+Message-Id: <20250425100005.103807-1-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250425095708.32662-1-18255117159@163.com>
-References: <20250425095708.32662-1-18255117159@163.com>
+In-Reply-To: <20250425074621-GYC50408@gentoo>
+References: <20250425074621-GYC50408@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,71 +51,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgAnfJt2XAtowU4iAw--.17018S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCw1rKw18Cw47Wr1ftFWUurg_yoW5Jw1Upa
-	yYkw48Jr48Gry3Wa1kt3Wv9rWYqFn5CrW3trZ8XwnIv3W5Aa4jqrW2ka1rXF97GFZayryY
-	qr4qqFyUuanYvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziZYFAUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhI6o2gLWelYOwABsA
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaHx4aVh9JHx5KTE8dHUsYH1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKT1VJT0JZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSEJVSktLVU
+	pCS0tZBg++
+X-HM-Tid: 0a966c63efae03a2kunm131fd5406
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MSI6Cgw*PzIBET0LPjIcFiM5
+	PhBPCQNVSlVKTE9OTkxOSUpJSkJLVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
+	QlVKSUlVSUpPVUlPQllXWQgBWUFKQktJNwY+
 
-Current PCIe initialization logic may leave root ports operating with
-non-optimal Maximum Payload Size (MPS) settings. While downstream device
-configuration is handled during bus enumeration, root port MPS values
-inherited from firmware or hardware defaults might not utilize the full
-capabilities supported by the controller hardware. This can result in
-suboptimal data transfer efficiency across the PCIe hierarchy.
+Hi,
 
-During host controller probing phase, when PCIe bus tuning is enabled,
-the implementation now configures root port MPS settings to their
-hardware-supported maximum values. By iterating through bridge devices
-under the root bus and identifying PCIe root ports, each port's MPS is set
-to 128 << pcie_mpss to match the device's maximum supported payload size.
-The Max Read Request Size (MRRS) is subsequently adjusted through existing
-companion logic to maintain compatibility with PCIe specifications.
+> > > On Radxa A5E board, the EMAC0 connect to an external YT8531C PHY,
+> > > which features a 25MHz crystal, and using PH8 pin as PHY reset.
+> > >
+> > > Tested on A5E board with schematic V1.20.
+> >
+> > Although the schematic says it is YT8531C, the PHY on the V1.20 board
+> > is Maxio MAE0621A. The article of cnx-software also mentioned this:
+>
+> IMO, then the schematic should be updated, I could definitely adjust
+> the commit message to reflect this change, but don't know if further
+> action need to take, like writing a new phy driver, I guess a fallback
+> to generic phy just works?
 
-Explicit initialization at host probing stage ensures consistent PCIe
-topology configuration before downstream devices perform their own MPS
-negotiations. This proactive approach addresses platform-specific
-requirements where controller drivers depend on properly initialized root
-port settings, while maintaining backward compatibility through
-PCIE_BUS_TUNE_OFF conditional checks. Hardware capabilities are fully
-utilized without altering existing device negotiation behaviors.
+The schematic on the radxa website is still V1.10. [1]
+So how did you test it on the A5E board? Both PHYs
+on the board (V1.20) are Maxio MAE0621A.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/probe.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+dmesg should show the PHY driver used:
+dwmac-sun8i ... eth0: PHY [stmmac-0:01] driver [YT8531 Gigabit Ethernet] (irq=POLL)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 364fa2a514f8..3973c593fdcf 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3206,6 +3206,7 @@ EXPORT_SYMBOL_GPL(pci_create_root_bus);
- int pci_host_probe(struct pci_host_bridge *bridge)
- {
- 	struct pci_bus *bus, *child;
-+	struct pci_dev *dev;
- 	int ret;
- 
- 	pci_lock_rescan_remove();
-@@ -3228,6 +3229,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
- 	 */
- 	pci_assign_unassigned_root_bus_resources(bus);
- 
-+	if (pcie_bus_config != PCIE_BUS_TUNE_OFF) {
-+		/* Configure root ports MPS to be MPSS by default */
-+		for_each_pci_bridge(dev, bus) {
-+			if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+				continue;
-+
-+			pcie_write_mps(dev, 128 << dev->pcie_mpss);
-+			pcie_write_mrrs(dev);
-+		}
-+	}
-+
- 	list_for_each_entry(child, &bus->children, node)
- 		pcie_bus_configure_settings(child);
- 
--- 
+[1] https://radxa.com/products/cubie/a5e/#downloads
+
+Thanks,
+Chukun
+
+--
 2.25.1
 
