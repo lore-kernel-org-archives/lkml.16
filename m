@@ -1,198 +1,133 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F36169AE6
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5DF169AE6;
+	Fri, 25 Apr 2025 16:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599164; cv=none; b=jAhQ+Q++BgkLBf937fdhpCvdVuj1Tthpu2AVDXD59onjds1Hkqp5FrZed5n5LTX+9c4/N+LnlTy2yHFMHWyWyF74lw2lzJHZ9z2F3ypQuPtoO/Ln0gs5c3OAv3eYEWjmfNZ66Zv/KtKa9qHbL14wFTOwDP1ZcTi6H9IwK/lu8iA=
+	t=1745599172; cv=none; b=V2fgTTDMTdJMyHbEi6YGWzLlv3P4bsZX7rz/HZZ9kkXEUdnVSt//QSPT6Avv0optpUYqdnyDMODrnUnSpP5J+GVSFiAXeKAlw0aE6taNa9Mu9MNpUA2zynlsobKOFeKj/t0Ih5sS3Z/Le1fZNbGnq0/GpzIpyE8cGBCEKI3gXSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599164; c=relaxed/simple;
-	bh=qkCd8/HmV6AfmTU+1hru+x2meizjAEoGcJvos3klyC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J6LA6XQ4mPTpBVpscGWwNU3XGRyCBqKd+l4M2fqaEjy5Iq0i6CAE8Mf98iLNt693kwhGT+90xJKiZqvlDkB7qF5CIqYxSUvlJZBn0VhXBLklQD6HuRgeDipcw0aV931DCSLuc7LasSYn3L2aHNs+6Qi0Ns2ECWT8klxJKn+BN3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=h5bB/9FH; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1745599172; c=relaxed/simple;
+	bh=kJppPNHkNpoSTVJHZawRj5UdBz23b9vR67EeA8OJ1XI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jk/kk8+d2v1t51tIC5C7+ikudJ2Wc99GOES/HQbILsio2rq9KJcVQgZUUtei3TQDJ0J7b/W7qlPD16LdnondMSU+np08T0pYWk8AOIutVtu/Gsj1MadoPqVUf4AYaWdVXXZ5tXYyH/v0zaIbG9+5GbuHvvQRA7rKShV2u+bHYoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIMYx6s8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="h5bB/9FH"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22438c356c8so30031165ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745599162; x=1746203962; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uObhd6griCLVRMAdAUyHQB5JJqltVnuTe7FYQAThLL4=;
-        b=h5bB/9FH3uuFQB9MGVTFRuKmBfYMZdnWjj+zXWRTiOZToLNMdi+oX2MEW6t/ZPmpHl
-         GK73pGy/PVb8Si66FZz5Eggh9C//4G65TVGNbv3fntfkXlfc0s129oVt105q+Cu/CRpb
-         tFgk+8ge7Nb+LoWbSpKZ6lYgW4UZ7SkwTY4Fo0YkFowVFL4l2sYOvu+0dznaZqAwJx8R
-         bjcvRsADqsfd5g4IFp8kTTsUuYraRKKQxPOecO4EVAgr0w6lVTaVfvr1qPD6oA6FmfDY
-         gNmgDyjMTHFINntIJeebAXPqCkWqkdPr9JyZPeXeLQZ5pF5swa7F5BKEbsqj94LmDd0g
-         NngA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745599162; x=1746203962;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uObhd6griCLVRMAdAUyHQB5JJqltVnuTe7FYQAThLL4=;
-        b=LRvwUPQQh8dBePQvU6IExEp6DkH2+rFIDyCtFOwdw19vER02Tg94dE0srCJXilMwZz
-         ahGcelNd0aMwsyWf9zNmXzph1WhlJLZ/9jU4k/RIdMln1s5nuNAHssDQLEO7xgdLVeD2
-         ixzjTqB2Ip1hWJXJAmeKAM11fYbFULE7b3bXAgMuXW8m/oFiMeqkGtsjT1CMit+6WbEm
-         HQiBzy6jFIqZuARgHuELgZk/8iZh0MF0Ce6/ELixMwO74UfsdehzJcUIY6GzPIusRpPj
-         B6gxhhU17fM+9XSM/O3KsfU9nAuyZbsFNzsmtdMqXS1S59rlI0bRjz5IvuPGBH7jebZk
-         ydzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwmoqkz0SdAu0MJR7uYGk9l/62XkhjL+IJuKBiuT9fA73IKMcSA0Vt+5+IPoCKAi50TFiNw6xZLppBJ+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzal6i7mkxfk8/GHJsy7n8qy+9M+OIrtxzXYir5hFZJQtYcc0ln
-	59EWwKkxASXpXBeXoyZDZ09sa9PIBjE+V3eriEROhy72N0d/aG4CbhzzXbkU2Xk=
-X-Gm-Gg: ASbGncsMUG9pp/g9eDAX7Ut0QA3+uUdiwyXFCKC9OghNJk3u8YR3Tyl6Pf8hWpgT45X
-	+sQpxP3I4QZdjBzQUyzsicoNnMgEQ725EFXtf5H/BU12GF9yzZnD0ckrADad/TVE/KYkqW/x5Mr
-	+cTUzlPqh6wLdgRln7QfE4yJygnnXIK1Ndr9mXq8qex+cXhY7Osk0ucYWqVp7qXmvHUi9kdZ2LI
-	yqvysm9JYHi5yBu1hxy+jD/lALH0hPrcfi1yXRUGDHtT7PhNSmWf1L53aUjhHDE5a3Q+XJ1aMgd
-	zfWl/TAxtkSpMSlKV+9haz0Xht2XgLnGxIExhsNKyQo7i2CxMYQ=
-X-Google-Smtp-Source: AGHT+IFNazEr6ZYOzQGCXjgc58dYoHgOgILSppSPlOaxKyAejkPiwQZrkFFar4hARLXGCzwX+g5Izw==
-X-Received: by 2002:a17:903:40c9:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-22dbf4db64dmr47389315ad.5.1745599161894;
-        Fri, 25 Apr 2025 09:39:21 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51028basm34556395ad.196.2025.04.25.09.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:39:21 -0700 (PDT)
-Date: Fri, 25 Apr 2025 09:39:18 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com,
-	linux-riscv <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
- prctls
-Message-ID: <aAu6toR4VkcPMTlH@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
- <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
- <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
- <D9EWR3RQK0FD.3GF55KNS53YSR@ventanamicro.com>
- <aAp_87-Xr6gn_hD7@debug.ba.rivosinc.com>
- <D9FOY8JACYTH.1FU7ZTEHFC5NI@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIMYx6s8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45907C4CEE4;
+	Fri, 25 Apr 2025 16:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745599172;
+	bh=kJppPNHkNpoSTVJHZawRj5UdBz23b9vR67EeA8OJ1XI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=KIMYx6s8btvFCZq8uw9Ft9JRZz99wpDLx7MLzfvP7E5EjOxzrM4WRGtiVR7o+h1YP
+	 Ti5co0T2KWTC0MYg4QZg2JyP0ul0NiyWvaTbAI+yYko4h7QNw3eJ+gbmKXMzgXVC0K
+	 1b/OoVUCSjmwmlxJK8yWvURxD8CyCEN0S9W75/DzgG3qYT6vG5zGQ9ivI1UwrHyZ/q
+	 1j4aswVE6/T6LjUewESS8xVplMNXR9lzIPBqiY/0NKdnLPmi23dn9KjBserc/2YjtH
+	 1WiiE5LJt2+NUe+09AgH9a+coFHVSO4YwW+9WCsBhGy6ByA9u7WeWBizJxsHys/4md
+	 e6SsgkOwy9hDA==
+Message-ID: <bca0cf4a-421c-404e-8161-4eab64cdbc57@kernel.org>
+Date: Fri, 25 Apr 2025 18:39:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9FOY8JACYTH.1FU7ZTEHFC5NI@ventanamicro.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64: dts: imx8qm: add ethernet aliases
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250422100239.58799-1-francesco@dolcini.it>
+ <16a98816-f43c-4f4d-940e-9da30cb1f73f@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <16a98816-f43c-4f4d-940e-9da30cb1f73f@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 01:42:44PM +0200, Radim Krčmář wrote:
->2025-04-24T11:16:19-07:00, Deepak Gupta <debug@rivosinc.com>:
->> On Thu, Apr 24, 2025 at 03:36:54PM +0200, Radim Krčmář wrote:
->>>2025-04-23T21:44:09-07:00, Deepak Gupta <debug@rivosinc.com>:
->>>> On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Krčmář wrote:
->>>>>2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
->>>>>> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
->>>>>> @@ -14,7 +15,8 @@ struct kernel_clone_args;
->>>>>>  struct cfi_status {
->>>>>>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
->>>>>> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
->>>>>> +	unsigned long ubcfi_locked : 1;
->>>>>> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
->>>>>
->>>>>The rsvd field shouldn't be necessary as the container for the bitfield
->>>>>is 'unsigned long' sized.
->>>>>
->>>>>Why don't we use bools here, though?
->>>>>It might produce a better binary and we're not hurting for struct size.
->>>>
->>>> If you remember one of the previous patch discussion, this goes into
->>>> `thread_info` Don't want to bloat it. Even if we end shoving into task_struct,
->>>> don't want to bloat that either. I can just convert it into bitmask if
->>>> bitfields are an eyesore here.
->>>
->>>  "unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);"
->>>
->>>is an eyesore that defines exactly the same as the two lines alone
->>>
->>>  unsigned long ubcfi_en : 1;
->>>  unsigned long ubcfi_locked : 1;
->>>
->>>That one should be removed.
->>>
->>>If we have only 4 bits in 4/8 bytes, then bitfields do generate worse
->>>code than 4 bools and a 0/4 byte hole.  The struct size stays the same.
->>>
->>>I don't care much about the switch to bools, though, because this code
->>>is not called often.
+On 25/04/2025 18:36, Krzysztof Kozlowski wrote:
+> On 22/04/2025 12:02, Francesco Dolcini wrote:
+>> From: Francesco Dolcini <francesco.dolcini@toradex.com>
 >>
->> I'll remove the bitfields, have single `unsigned long cfi_control_state`
->> And do `#define RISCV_UBCFI_EN 1` and so on.
->
->I might have seemed too much against the bitfieds, sorry.  I am against
->the rsvd fields, because it is a pointless cognitive overhead and even
->this series already had a bug in them.
-
-Aah got it.
-
->
->#defines should generate the same code as bitfields (worse than bools),
->so the source code is really a matter of personal preference.
->(I do prefer bitfields.)
->
->>>>>> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
->>>>>> +int arch_lock_shadow_stack_status(struct task_struct *task,
->>>>>> +				  unsigned long arg)
->>>>>> +{
->>>>>> +	/* If shtstk not supported or not enabled on task, nothing to lock here */
->>>>>> +	if (!cpu_supports_shadow_stack() ||
->>>>>> +	    !is_shstk_enabled(task) || arg != 0)
->>>>>> +		return -EINVAL;
->>>>>
->>>>>The task might want to prevent shadow stack from being enabled?
->>>>
->>>> But Why would it want to do that? Task can simply not issue the prctl. There
->>>> are glibc tunables as well using which it can be disabled.
->>>
->>>The task might do it as some last resort to prevent a buggy code from
->>>enabling shadow stacks that would just crash.  Or whatever complicated
->>>reason userspace can think of.
->>>
->>>It's more the other way around.  I wonder why we're removing this option
->>>when we don't really care what userspace does to itself.
->>>I think it's complicating the kernel without an obvious gain.
+>> Add ethernet aliases, they are used by the firmware to set the MAC
+>> address and by systemd to rename network interfaces to predictable
+>> interface names, e.g. end0 and end1.
 >>
->> It just feels wierd. There isn't anything like this for other features lit-up
->> via envcfg. Does hwprobe allow this on per-task basis? I'll look into it.
->
->I think PMM doesn't allow to lock and the rest don't seem configurable
->from userspace.
->
->It's not that important and we hopefully won't be breaking any userspace
->if we decided to allow it later, so I'm fine with this version.
+>> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+>> ---
+>>  arch/arm64/boot/dts/freescale/imx8qm.dtsi | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+>> index 6fa31bc9ece8..eccd0087efa7 100644
+>> --- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+>> @@ -17,6 +17,8 @@ / {
+>>  	#size-cells = <2>;
+>>  
+>>  	aliases {
+>> +		ethernet0 = &fec1;
+>> +		ethernet1 = &fec2;
+> Can't they be disabled (e.g. because MAC is external?) on actual board?
+> IOW, aliases for exposed interfaces are properties of boards, not SoC.
+> 
+> What's more, I cannot find these in this DTSI, so how can you add alias
+> to non-existing node?
+
+I found them (terrible design by NXP) but they are disabled so that's
+the point - adding aliases to disabled nodes is clear sign you are doing
+it wrong.
+
+Best regards,
+Krzysztof
