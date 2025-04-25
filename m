@@ -1,126 +1,145 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C80521D5A6;
-	Fri, 25 Apr 2025 08:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD78A1EB182;
+	Fri, 25 Apr 2025 08:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745571330; cv=none; b=PE1HHBduG3lWDTBsXYMJTCLjU+E2K4tkHwTj4xTUVfi5FAC0IkoDYWGgGbYyGr1GYoNYNgTM3iI4CGc27Z23GUSarh9I73StjBIo4Wn81wqDFezHwA+Tt5Pq74TtwB5jbWujzkWJAdBr/9SBHzsDIgOpYAurqfMeG4FIUdZ9das=
+	t=1745571445; cv=none; b=B/Zvp/6dGCbx7kgTPOiyrkHPN4Ax50B6CYXuo8iWWJ1zKzU7RI7eaIrMM9ZkAdhK367F9mnuWI3uN0dR8c9ahb8UL/IRwluXFukarl0rwNgxjUEqPrHY1UF2fN84VVndYUw5gKpHsTICVAMrM5IfR5T10IpjwDnZTRC+cBD2Xhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745571330; c=relaxed/simple;
-	bh=2rHqo5iAjG0b/hNzovE1R8cm9rsn9pApt5tCHJ1LOPA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=BY/pSNNg0IoeFUuvTtk5Pv56DY3+IGMV15PXg1ECKQiQpDoXUbUsoCjI4BYWeYmeZ4ppivhHqKDRojUpP9gIa5qa/3c28BT8PS9lJ6IYyR41qbQ4T7gb/otzIftvfNr3okUvarKerc/FLL6P9KwF/wNTIBuQ9Gb1rYl1+JuUbRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iGMDy2bN; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1745571445; c=relaxed/simple;
+	bh=4OSoVjosSdcBjZotNu4R/Z3jYCJgRB1HOGSrMN18SeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cc8roQHzhjpXjYKNGmPbcZLifYH9SLXiYrC0ne6HlmoBcJdbokfwfvtz/6h5VUeOFhyPguNckjK/M8EUlpegb98dn4+mh58y/hP1Jt3KcYSMyfKfFIHSOXvmuQFtzfAIVX6WQs0ceqOwRPEeXNsV1R1xYiu81DDgQPNyT9T7gl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=stJOLVOW; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iGMDy2bN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1745571317; x=1746176117; i=markus.elfring@web.de;
-	bh=2rHqo5iAjG0b/hNzovE1R8cm9rsn9pApt5tCHJ1LOPA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=iGMDy2bN2m3KL0jkWCUdZDelp6CzZdbPTWPRzyQAbCZA4HYGz3D+BQ+Uo1qdv+CX
-	 Mz7F0bp8QvcjDPS5L2L5285ZEXjL2tWMhNHf7IB9g+Y4VXuu5uVNmWiXp3Cqnf3XY
-	 D6nwml0A5iyPrLemqV3JmxEcR08my2UW24vD07zjaU4ny+ax8x6ljebgghvGRZZy1
-	 Ngq5+bY5Jsb2xMZHXnvWw/RnnNCrzn/w5U4/16PeTrYCKeyH6wJ2HEMlHRUKGAktp
-	 Iv8XUKMqa7LrEamUKJfgDjPTT7GBCHRQcOY3//Tfs16T81S3Q3Rbb9VtR+hYP4gJq
-	 MGYLoawV8ot3GYyW0g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.30]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MK52w-1uO6jT22xC-00Z2H8; Fri, 25
- Apr 2025 10:55:17 +0200
-Message-ID: <6f4ee1e8-aa28-4d20-96bc-b2a7343ddbcc@web.de>
-Date: Fri, 25 Apr 2025 10:55:16 +0200
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="stJOLVOW"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4ZkRYS5N69z1HSD;
+	Fri, 25 Apr 2025 08:57:16 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.107]) by freedom.nl (Postfix) with ESMTPSA id 4ZkRYS1rJ1z4Q;
+	Fri, 25 Apr 2025 08:57:16 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=stJOLVOW;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1745571436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yf2aYlIcxVVGizSpVvZ8JYPJ5Jj59wgeBFtKAKlHX44=;
+	b=stJOLVOWx5GkguUtGMLMoFigcK95Jw2D7GXH9p6YNilXkgZ2HaaZLEwbrqoupPitn80RuM
+	DtsNM9E+wwEQl5IKo1LYO9efYKjLbE8/Av7y1g/VRID7JWJr3jbUyRdmG0xdM/7E/T6/xx
+	+HgChgF7Tq9tMxY3JJxSzYrs+oxE8ViFevb2gboYpK76PKJc00vWzfdDjvK3malUPb8RtJ
+	VL2rX4WDCpl9lFFECjL4FEY4lMYo7QJW1ncf09eBfDxaBd7xhN33KFPifK5OVZKOExbafR
+	eSJDKo/zzwywnMYCh0CApxCGMxk0HQhSgs+w5m/VlBk7xmgf50sMbVXhgoSvPQ==
+X-CM-Envelope: MS4xfGH9ubBhWtgw+qry96p0p2CY3MAqye7DnTYvFFgCU+PBQbprOMA8/jc/PvCT7GLQ/9y7TYUZl9I9bi4GLgODAMu4H+QFItiyxwBDkgn3acszxm8ZccrJ qWVoq3RzX8yvSYmPiMujJZPjuMgGifWBNb277zoeG02hBMW1bb3iohnm0nrI0aXmM7xmfxBZ3EWaFdrRXn9tWbQWGI8QH6Qo/HLt7C7O4wGUap0j0/WdH9AS KwQK+XFmnWgJrgHjQ5ds6KA/NvyrWfxrHWqh+DINtRusCrtoaETywDG6UdsRq2WTfWxr2j4fHEm28jSbtWyZwwOkcPyKHTcdJ8i6QJdTU0l/xidBUIHt4ljf kgy1GIQgTCU3lWqCG1g8eu3oxhtpj0I4wuzhJB9J5WK+nDcLjab9GQdTRUfmmZ8MxG24YqPDDVxLAofWtYelUJjHpDpNmu/9ofVtqihGMT/eA7Y4GBFU5MXe Z9DAsMrhyw1tQyrv7ADcHlNIarbpxXphHC5pfQ==
+X-CM-Analysis: v=2.4 cv=I7afRMgg c=1 sm=1 tr=0 ts=680b4e6c a=xVxOAnYOZqKVbrsbIgLjXQ==:117 a=xVxOAnYOZqKVbrsbIgLjXQ==:17 a=IkcTkHD0fZMA:10 a=xq3W2uTSAAAA:8 a=EuBBl-eGEdlqjvPoGpYA:9 a=QEXdDO2ut3YA:10 a=P5L7wpMTXyg1GfFA3Gwx:22
+Message-ID: <ab1cdc06-5fbd-420f-a917-cf9604772de1@jjverkuil.nl>
+Date: Fri, 25 Apr 2025 10:57:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Basavaraj Hiregoudar <Basavaraj.Hiregoudar@amd.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jaroslav Kysela <perex@perex.cz>, Liam Girdwood <lgirdwood@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Mark Brown <broonie@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Sunil-kumar Dommati <Sunil-kumar.Dommati@amd.com>,
- Syed Saba Kareem <Syed.SabaKareem@amd.com>, Takashi Iwai <tiwai@suse.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-References: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
-Subject: Re: [PATCH 1/3] ASoC: amd: acp: Fix NULL pointer deref on acp resume
- path
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
+Subject: Re: [PATCH RESEND] media: platform: Add hardware sync wait to
+ fimc_is_hw_change_mode()
+To: Wentao Liang <vulab@iscas.ac.cn>, s.nawrocki@samsung.com,
+ mchehab@kernel.org, krzk@kernel.org, alim.akhtar@samsung.com
+Cc: linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422021345.1940-1-vulab@iscas.ac.cn>
+Content-Language: en-US, nl
+From: Hans Verkuil <hans@jjverkuil.nl>
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ xsFNBFQ84W0BEAC7EF1iL4s3tY8cRTVkJT/297h0Hz0ypA+ByVM4CdU9sN6ua/YoFlr9k0K4
+ BFUlg7JzJoUuRbKxkYb8mmqOe722j7N3HO8+ofnio5cAP5W0WwDpM0kM84BeHU0aPSTsWiGR
+ yw55SOK2JBSq7hueotWLfJLobMWhQii0Zd83hGT9SIt9uHaHjgwmtTH7MSTIiaY6N14nw2Ud
+ C6Uykc1va0Wqqc2ov5ihgk/2k2SKa02ookQI3e79laOrbZl5BOXNKR9LguuOZdX4XYR3Zi6/
+ BsJ7pVCK9xkiVf8svlEl94IHb+sa1KrlgGv3fn5xgzDw8Z222TfFceDL/2EzUyTdWc4GaPMC
+ E/c1B4UOle6ZHg02+I8tZicjzj5+yffv1lB5A1btG+AmoZrgf0X2O1B96fqgHx8w9PIpVERN
+ YsmkfxvhfP3MO3oHh8UY1OLKdlKamMneCLk2up1Zlli347KMjHAVjBAiy8qOguKF9k7HOjif
+ JCLYTkggrRiEiE1xg4tblBNj8WGyKH+u/hwwwBqCd/Px2HvhAsJQ7DwuuB3vBAp845BJYUU3
+ 06kRihFqbO0vEt4QmcQDcbWINeZ2zX5TK7QQ91ldHdqJn6MhXulPKcM8tCkdD8YNXXKyKqNl
+ UVqXnarz8m2JCbHgjEkUlAJCNd6m3pfESLZwSWsLYL49R5yxIwARAQABzSBIYW5zIFZlcmt1
+ aWwgPGhhbnNAamp2ZXJrdWlsLm5sPsLBlAQTAQoAPhYhBAUs3nvCFQU7aJ8byr0tYUhmFDtM
+ BQJoBTEAAhsDBQkX+5V7BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEL0tYUhmFDtMb8EQ
+ AK6Ecb5mGBanCa0R+J/WkWxGVsgqsaTjNU6nS5sl9lkiY64Tad6nF8RNO9YKRyfuokm2pxAD
+ a91Tk92DFstszKGwiisEG7PQ3zXHEJTqxIosy9ueLbHTOvB4CnWVChcvaBWZ2uilyKFsWNTq
+ mbDQf3/0UC3LxbEvGsYNU1Q6Pz+h+Pdv7GgdOJhYGKSLCpQyPYOyaU9tenHDKx6aNedNG4ZI
+ 2OAM18nDfKrEplSjDF9E9Ras65/n9iWQfGoUdxSlGrxM/t3EVgi1FXEq14FaCi6HhvreBZuw
+ 3NTHg4Za6bqnYsZnbyHY36bgnxi2YJYxKlh+IMT/TpfEh8nf2nnJTgs3bsNIVVaaYxJtl4w/
+ Y48gKt6YzcWsHR6l0CSMQhZXQqp/Ljpi+/xtE6JJ/tJnG9Wyi3+hA11GFQ50uciXTpp9/w8s
+ fScrv8qrfRiUsd+zfd0MC6EJmHSlW7qSVQjEauWDsdCFmsER8y/ab3DQb5uhrsyuooB+V7uj
+ 476vUbH/fM3KMrvh8HOTUBoAE/Mf82/bMlrduuU5PkbO+3/PcUR0WFUSK2yRK32GX/Tt2tD+
+ YJq0RnyR8UeYslVLzyehrt8Cgc9KgHa8VUi/vkSTenjieYJYxgrd+oTYXB38gKlADnhw+zyp
+ CsqeGGZu+SS2qrPUyUkeruRX7kC2tQ6gNoYpzsFNBFQ84W0BEADcy4iOoB5CIQUCnkGmLKdk
+ kqhfXPvvSzsucep20OLNF96EymjBnwWboipJFOjZxwkmtAM+UnEVi2kRrtT844HFcM5eTrA2
+ sEdQbThv16D0TQdt+dT0afvlvE1qNr4mGGNLiRyhRzC/pLvatD/jZHU8xRiSz/oZ+8dEUwzG
+ 4Skxztx9sSc+U1zRPc0ybiHxgM90oQ6Yo782InmN99Ac2WH6YLwpZQ1TOROF4HxeBfzfdMFi
+ rudHzANNbn8LvvfRhMExVRtms+U/Ul3e730oEUpM18u4XJ8Y+CITnzOk7POfwYzHiKXqskw3
+ bLnrQYF/QzDFsTFpewS3ojMzBq35CeLb5aH9LFY7q14m04m2cn8hkdq4nIPIk2x8hWgM19rh
+ VaGWj8a6e7nQ30PerH89IXrBfWYvHezZzZzGG1JlLWktPNy/5dhAyrwiJIUo3ePFxfmjvFYa
+ wn211qRkWi3GP4MYtk10WBvcQmuzyDYM/Usjt+LC+k3hT0mZ+Gz0FeTtY/OQ4+IwXnAdZM9m
+ q88JVlijGVG0dOB03gLrr2LwihDJ31twAc3aJ4e9EHaiW6UBnwBdqeP4ghEylrqnn4jmJ6Uf
+ D6qEANQ2L97e8vQyDeScP/Do+cDnhMm8Or0zAdK658fiWl78Xh0pRcx4g+opfwoQw5CfSf3o
+ wh1ECJeNMC0g0QARAQABwsF8BBgBCgAmAhsMFiEEBSzee8IVBTtonxvKvS1hSGYUO0wFAmaU
+ 3McFCRf7ldoACgkQvS1hSGYUO0zJTw//aaYKzeGfYF7WvSHUvGvtBO5Y/3XNC5xfU+jDKmlA
+ vghX304jqDQ5314fLH7Kk4wE+dE7FaXZR+mMj5W1ORUfGwvMJ7ayemUVg3RyYggy6jQP5Rlb
+ SCj9WFvHwNNbYTHFVMkAnVVKpwcjCYiUA82WK1/hP2ClE4dkS+WHtH6ABhO0hs32WoCNAzmT
+ fdsOfXtSYN8wYWF0CI8wW4RiMu7rAX7xPPNhnVGz9vWyn06XDipCSIDuivsPNg/9XeUzjUg9
+ eOvlMkphJ42MRyPJAWGmSeLm8mKwxoF094yAT6vIvYmT9yUnmf9BfVCJV+CnjEhvMpoAkUqi
+ 9cvaZfUdnsAnqQmoRJE0+yInhlMyWc+3xlGsa0snsTxNfqjaLH61CLt8oUQOgCI4cD4rJWks
+ A8SyOqlgxEHnljUGmFEhCBUOV5GcXf1TfCXjMBiAKtex5cpvic4wZIJJtS1fS18PQ/DEC3vL
+ UnhF1/AWSHp+sv8vlNgnncxLDCho8uVjZrn4jzswd6ticBUAsPAKDYnO7KDzfQlQhIHdq10v
+ jlGW/FbxA1UUiuWH+/Ub3qh75oQHTTlYe9H+Qr8Ef231/xItks8c+OyoWV6Z9ZcZnHbOmy2I
+ 0wGRdGp8puOL7LzhLkIN66sY/+x4s+ANxyJK6U1nJVeq7tbbhqf2Se2mPG3b87T9ik8=
+In-Reply-To: <20250422021345.1940-1-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eIdHnT89rCkS98IKHq2dzDYSrd2l7G7FiHWxoJLvaoiJJqUoU+V
- SFLBbfRsBieyYQYcTZbwgsMZndheHKhEkzFY3AWzYEWsGwDAdi6nY01fAHzR0MRic0Kh4Av
- M9UR8PhegAFlJzjAwRpQLWaQ479ze4HCWm9XH91gt5G7c9rf2s+cL6HpQ+wHYkHqCeRy/3A
- AUd+22rDyk5rmoO00udlg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bmmKuV/3kyA=;N1Dc1Br7anU8H4uR3L6l0IjYBbo
- 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
- 8V1trREApySn7803S2skJc=
+Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-> update chip data using dev_get_drvdata(dev->parent) instead of
-> dev_get_platdata(dev).
-=E2=80=A6
+On 22/04/2025 04:13, Wentao Liang wrote:
+> In fimc_is_hw_change_mode(), the function changes camera modes without
+> waiting for hardware completion, risking corrupted data or system hangs
+> if subsequent operations proceed before the hardware is ready.
+> 
+> Add fimc_is_hw_wait_intmsr0_intmsd0() after mode configuration, ensuring
+> hardware state synchronization and stable interrupt handling.
 
-* Would you get into the mood to replace the text =E2=80=9Cderef=E2=80=9D =
-in the summary phrase?
+Just for future reference: please don't resend. If it is in
+https://patchwork.linuxtv.org/ then it will be picked up eventually.
 
-* Can a cover letter usually be helpful for such a patch series?
-
+Also, always add the driver name in the subject line, that makes it much easier
+to identify who should pick up the patch.
 
 Regards,
-Markus
+
+	Hans
+
+> 
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+> index 366e6393817d..5f9c44e825a5 100644
+> --- a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+> +++ b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+> @@ -164,6 +164,7 @@ int fimc_is_hw_change_mode(struct fimc_is *is)
+>  	if (WARN_ON(is->config_index >= ARRAY_SIZE(cmd)))
+>  		return -EINVAL;
+>  
+> +	fimc_is_hw_wait_intmsr0_intmsd0(is);
+>  	mcuctl_write(cmd[is->config_index], is, MCUCTL_REG_ISSR(0));
+>  	mcuctl_write(is->sensor_index, is, MCUCTL_REG_ISSR(1));
+>  	mcuctl_write(is->setfile.sub_index, is, MCUCTL_REG_ISSR(2));
+
