@@ -1,94 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA8122615;
-	Fri, 25 Apr 2025 08:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20417A2EE
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569607; cv=none; b=dRn7X/BdFiqeMaEwrMUKxy+AlBZN72NFzXmIeBse03W9APWpOZKMT2vAmjj8+95WDKPI+tZqVIUKRDHjGbpJ9CiY3E7ekF8GkwLW2urMcPSleF9SHXkojuxEOZchOLBQb/+Mp6L9xn4YP5hyrefvJsjDFaHTrD2yEAtuA/chUFI=
+	t=1745569652; cv=none; b=mK+Y8lxKGshh9ssAH3zCX+TMN07FV3/4qperfd6kjMQe7lO1eUGCXIac9LH6ZXQL9owyacaXQw1luv/2e0H3ZYrVKsOYXAdfBHcWB7F/6N9tAPtRWmTfL400Viai7woGEzKnVxfsY/GIQVS8W3evyEdvF7sFqph/YSMX90WhhAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569607; c=relaxed/simple;
-	bh=3hyYZAdzYUDm/qiRZiyh2oVm8XKUZX7B2vVFFia68xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZHqTJKxmMCs93Hic/O13B81S5XoXG46mAzT1ahS2sc+dZhEeTwRSkm9pGPsYlsYb2Jt3tAtfmon8UyXDUcgo8Y0yV6bHd0JK3nWF5JKmlMkvF6ZnNCwFZg74IjqDePxGaKRrjUs/65C2WvGrhXgseOb7erImYsNAoXoRTR2mJ7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKjbqAU9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745569652; c=relaxed/simple;
+	bh=dj0VyeZM4DQ+yC1nQ6mYmlEHFimAQiSWDvopuv5UeSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LvjINvwQHuIIpZCAn3p25r60ApablYUOQXTz6VJz35zSua6BdlzU0BYv8YULhfbI9OagILhczXxZIOKmIQ9L4rRXkM4HAtjnrtRuFr5mz710X/NuZt0+ViLoOjy0p9g8fPTsQiVCfu68hCbrS85/QYERBwsQN6WPhFo6Jkl0zA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KZBKIpvw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PVOi/gi6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKjbqAU9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E95C4CEE4;
-	Fri, 25 Apr 2025 08:26:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745569606;
-	bh=3hyYZAdzYUDm/qiRZiyh2oVm8XKUZX7B2vVFFia68xg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bKjbqAU9VzJTI6ooBoSzm4opSTonEAXPBzv+uSe5rGiZ6alQsb3d6JkidnXEXkyog
-	 VIoCnCoEfWgGEgHsX7NT4T+Kk+Kl41q8AzGHQxeofx1J0+nV7kkmU5OcM552Dou5T8
-	 bNRGtDWxJRSO9g8CWJUPzjXTpv5DHvSBPJclJ+RXzncU4Ew6gi0pB2wNNCako7uoVf
-	 RUYk6ElTrwR0kWaxEShcwokyI8AWsU/nfJwA0fVWv3M4PhucHUz7L7TcRsB0yq7vEh
-	 W1ofP0vRDSooOEiMMhfCFMupSMkjXhMHZGNMQXUBklusM43N7iZnT5W4GyGiHbdOyO
-	 82dZSEZOeMIRg==
-Date: Fri, 25 Apr 2025 09:26:37 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: "Paller, Kim Seer" <KimSeer.Paller@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, "Sa, Nuno" <Nuno.Sa@analog.com>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Message-ID: <20250425092637.0c019531@jic23-huawei>
-In-Reply-To: <aAkavQVd7Px3qPU0@smile.fi.intel.com>
-References: <20250421-togreg-v5-0-94341574240f@analog.com>
-	<20250421-togreg-v5-3-94341574240f@analog.com>
-	<20250421144800.0db0a84e@jic23-huawei>
-	<PH0PR03MB7141E6D1A077B0E02368CBDDF9BA2@PH0PR03MB7141.namprd03.prod.outlook.com>
-	<aAkavQVd7Px3qPU0@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KZBKIpvw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PVOi/gi6"
+Date: Fri, 25 Apr 2025 10:27:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745569648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bwKc8vWDzsGShvSx8/ujEE3vSUGRy3MUCHV+p+G4yOM=;
+	b=KZBKIpvwvkXoKwK4SyKQlVDvDURRV3Awgp4XWdhfCQ/kvw4/+prjS74f+0cfZTiCNThQHP
+	SUZTrzh1MqpfaTFgfxOL/Afi+rwNmZBqAPsv2g7rI6q/eRAAMqF2FarnHsoyOcQuHdCyoh
+	JCVgXkCcXxVT8EVeE7hjmKgkDN1X2oDZheVA/sMvcomZJO05Kb3ph6BW+cf1N/4lTVqsG1
+	D0l1Pu/1LwDemaCW6wg55nnXsE+qCHjQaaWHitNqZ5dUh6k9Lx+iazIsojLEVu8xtKAUQS
+	6A4nYAkyLYUS9okHgSGVkrl/mJlkNdjsLYFG7qzUqU/95ezUtQ4pJzWp43THjA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745569648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bwKc8vWDzsGShvSx8/ujEE3vSUGRy3MUCHV+p+G4yOM=;
+	b=PVOi/gi69ZVtKyEIcPPxTfvtIYIfLesnLQgo3tRdrBwYTCpNcLJHYy2PtD0qW+oqfHAwhV
+	QaQ37ecJPxP0TNAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Junxiao Chang <junxiao.chang@intel.com>
+Cc: tomas.winkler@intel.com, Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
+	Vitaly Lubart <vitaly.lubart@intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	furong.zhou@intel.com
+Subject: Re: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq
+ disabled context
+Message-ID: <20250425082726.Z3fE3m9I@linutronix.de>
+References: <20250424065609.624457-1-junxiao.chang@intel.com>
+ <20250425060455.641008-1-junxiao.chang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250425060455.641008-1-junxiao.chang@intel.com>
 
-On Wed, 23 Apr 2025 19:52:13 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+On 2025-04-25 14:04:54 [+0800], Junxiao Chang wrote:
+> MEI GSC interrupt comes from i915. It has top half and bottom half.
+> Top half is called from i915 interrupt handler. It should be in
+> irq disabled context.
+> 
+> With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
+> top half might be in threaded IRQ context. generic_handle_irq_safe API
+> could be called from either IRQ or process context, it disables local
+> IRQ then calls MEI GSC interrupt top half.
+> 
+> This change fixes A380/A770 GPU boot hang issue with RT kernel.
+> 
+> Fixes: 1e3dc1d8622b ("drm/i915/gsc: add gsc as a mei auxiliary device")
+> Tested-by: Furong Zhou <furong.zhou@intel.com>
+> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
+> ---
+>  drivers/gpu/drm/i915/gt/intel_gsc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
+> index 1e925c75fb080..a099d885508ac 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_gsc.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
+> @@ -284,7 +284,9 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
+>  	if (gt->gsc.intf[intf_id].irq < 0)
+>  		return;
+>  
+> -	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
+> +	/* It can be called in both irq context and in thread context */
 
-> On Wed, Apr 23, 2025 at 07:50:51AM +0000, Paller, Kim Seer wrote:
-> > > From: Jonathan Cameron <jic23@kernel.org>
-> > > Sent: Monday, April 21, 2025 9:48 PM
-> > > To: Paller, Kim Seer <KimSeer.Paller@analog.com>
-> > > On Mon, 21 Apr 2025 12:24:54 +0800
-> > > Kim Seer Paller <kimseer.paller@analog.com> wrote:  
-> 
-> ...
-> 
-> > > > +	mask = GENMASK(chan->address + 1, chan->address);  
-> > > 
-> > > I think maybe we need a macro to get the mask from the channel number?
-> > > Using address for this seems overkill given how simple that maths is.
-> > > Ideally that macro could perhaps be used in the code below to avoid
-> > > all the defines I suggested.  
-> > 
-> > The motivation for using the chan->address field was to hide the calculation a bit.
-> > However, would using a macro like 
-> > #define AD3530R_OP_MODE_CHAN_MSK(chan)	GENMASK(2 * chan + 1, 2 * chan) 
-> > be a good approach in this case? This drops the need for the address field and
-> > can also be used to explicitly set the operating mode for the 4 fields of the register.
-> > What do you think?  
-> 
-> Please, note that doing GENMASK(foo + X, foo) is highly discouraged as it may
-> give a very bad generated code (although I haven't checked recently if it's
-> still the case). The preferred way is GENMASK(X, 0) << foo. Where X is a
-> compile time constant.
-> 
+I don't know why this deserves a comment. However, generic_handle_irq()
+is used from the IRQ chip, everything that signals the interrupt. This,
+if it comes from an interrupt handler itself, should use the _safe()
+variant. It used to be a issue also with threaded interrupts on !RT but
+for other reasons this is no longer the case.
 
-With what Andy suggested as the implementation, this sort of macro
-looks like a good solution to me.
+> +	ret = generic_handle_irq_safe(gt->gsc.intf[intf_id].irq);
+> +
+>  	if (ret)
+>  		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
+>  }
 
-Jonathan
+Sebastian
