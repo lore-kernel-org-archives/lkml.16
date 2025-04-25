@@ -1,44 +1,44 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAB1218EBD;
-	Fri, 25 Apr 2025 19:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6210E21CC4B;
+	Fri, 25 Apr 2025 19:34:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609664; cv=none; b=gO3Z2615EFWNLBIrmAdvW/EnfShQdUCGekI97dHLN0Lzg7NeGZn++3ZidyMQnsFQV47WPjnHZJ1fqxRmniGV0W08e7Y5kIrHLCI9xiUeZAvjquwqlVbSYmriN8QKWrPuJ7Mz00DPpA623CPBO6PXRqZ+DLkYP7U0CGUPTZZN6+c=
+	t=1745609665; cv=none; b=hIssARVMahAC8Md9CvuTAnOS6RbLta0RteU4e5EQoDNHfbZSbnHV/SWDXFVn4b7j91xe9gQsNV/D9Y0KaSuNW2KvylVKsfPsSqCLpgqDy8I2l9mvMGKjPPCrB0Kprog3hvyz4uR0Fl7wOp+fvS6CTIaTBOGcTgwwpxZYj0/JsvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609664; c=relaxed/simple;
-	bh=S4iIUQi57lzah0776a4YX+dVuF+D72rkHNVDEtCHcxw=;
+	s=arc-20240116; t=1745609665; c=relaxed/simple;
+	bh=D42QO1gk2SkTnno/j5B058OApOyGNgwSqdsvv9VF+0g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NUwDtoCf4id1JIvYkXKTZKBmB2W9Dpi/uJlIDxZYmeLciz8fQpwd++GbV5S+dMPdrOleKGupIzBAkZPXn9Veq/Y+g9qwU8Tqda+n2fjqn3MRehvk5drys2RA/umlkA4RqS83/xqUFal0+r0vd0ms5zJEVR1f0ITwMxfXZ68wO1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=hzV3VUOQ; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=kVBH/UDAPEnQ6kx1x+TwLCdNXsgY+SYorDGYWMLM8Mg01uNme5cv+iu1F2pMUQbM3y4P6wk026j7+9kz1tnNWHXoKjikGzXbq9WqytCoQ/8c2MCQU6aUg0WbeVwFPgYhx5sd3UjUqT7d7s/wbRyVngR6RV6USwdOTe+f3yln7B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=kGYlpr4o; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="hzV3VUOQ"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="kGYlpr4o"
 Received: from kreacher.localnet (unknown [217.114.34.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id DD6826643E6;
-	Fri, 25 Apr 2025 21:34:13 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id B8F966645E9;
+	Fri, 25 Apr 2025 21:34:15 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745609654;
-	bh=S4iIUQi57lzah0776a4YX+dVuF+D72rkHNVDEtCHcxw=;
+	s=dkim; t=1745609656;
+	bh=D42QO1gk2SkTnno/j5B058OApOyGNgwSqdsvv9VF+0g=;
 	h=From:Subject:Date;
-	b=hzV3VUOQ11bX/cIKSPN5sGlhjxHOfB0IaEi60kRGijDR4Kloyg21UGTi1fxUIVxAt
-	 c9t5zW3ltQKbK5fnxE8pLz+rrdABb/pBQkHjArfxEDxWlHDjhgsZqPsg4npjkGyW+p
-	 mgy1uiAE86iKcaFSW7nNuL90giIfJU+be2yEP2o7ICQjLBV9bqxrsjSoGzwKoq/oaU
-	 fiQfsMZ2sj9CRg7RZYxP+LS5F/VCP3na/R6hTCbZx7O7ebSpawhu6QTq54JPSgX2Dq
-	 xrofB9GzfXV8VjVQO/+dtd8v5MYUvKtYtB56ipavdVjpTDrUmN2Fx05pbB5iZdkb/q
-	 balPaoH3CpNTQ==
+	b=kGYlpr4oouhxeVkWQc6/cfLdzls1wS+Auu5DLf+kOLftyXTUItgd18OYJbUbzByWD
+	 XNT2YQW/2c/CWCOVTo6bb7uUCgMbd+ow7B+1DNiSnuOwoHJlfIZ6NwzH/eKlTgoODO
+	 lE+vOxPMG0iBPB6RBEjDDurkNNgD5eB5yMO294kO/kmeVQn4lU0aWdYkgzjfdFLRI9
+	 mPmqhqbF84XqtDBXcQBeq5JppiNFFV6KsOcljrKkFkyl6ZfnsXqMZ9xa9vA7/HGCLs
+	 d6ZI53edBpQIq5h4obqUI3zugnQoDjR55HNi2xDhpHR5BixC2FtSbPdEb9HSpcyt59
+	 eEL76jf/XVFSQ==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
-Subject: [PATCH v1 15/19] ACPICA: Adjust the position of code lines
-Date: Fri, 25 Apr 2025 21:29:48 +0200
-Message-ID: <2670567.Lt9SDvczpP@rjwysocki.net>
+Subject: [PATCH v1 13/19] ACPICA: Apply ACPI_NONSTRING
+Date: Fri, 25 Apr 2025 21:28:34 +0200
+Message-ID: <2039736.usQuhbGJ8B@rjwysocki.net>
 In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
 References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -52,40 +52,75 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 217.114.34.19
 X-CLIENT-HOSTNAME: 217.114.34.19
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-From: Zhe Qiao <qiaozhe@iscas.ac.cn>
+From: Kees Cook <kees@kernel.org>
 
-ACPICA commit 5da6daf5691169d2bf2e5c9e55baf093757312ca
+ACPICA commit ed68cb8e082e3bfbba02814af4fd5a61247f491b
 
-In the acpica/utcache.c file, adjust the position of the
-"ACPI_MEM_TRACKING(cache->total_allocated++);" code line
-to ensure that the increment operation on total_allocated
-is included within the ACPI_DBG_TRACK_ALLOCATIONS configuration.
+Add ACPI_NONSTRING annotations for places found that are using char
+arrays without a terminating NUL character. These were found during
+Linux kernel builds and after looking for instances of arrays of size
+ACPI_NAMESEG_SIZE.
 
-Link: https://github.com/acpica/acpica/commit/5da6daf5
-Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
+Link: https://github.com/acpica/acpica/commit/ed68cb8e
+Signed-off-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/acpica/utcache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpica/aclocal.h   | 4 ++--
+ drivers/acpi/acpica/nsnames.c   | 2 +-
+ drivers/acpi/acpica/nsrepair2.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/acpica/utcache.c b/drivers/acpi/acpica/utcache.c
-index 85a85f7cf750..046e6ba127d4 100644
---- a/drivers/acpi/acpica/utcache.c
-+++ b/drivers/acpi/acpica/utcache.c
-@@ -251,9 +251,9 @@ void *acpi_os_acquire_object(struct acpi_memory_list *cache)
- 	} else {
- 		/* The cache is empty, create a new object */
+diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
+index 6481c48c22bb..b40e9a520618 100644
+--- a/drivers/acpi/acpica/aclocal.h
++++ b/drivers/acpi/acpica/aclocal.h
+@@ -293,7 +293,7 @@ acpi_status (*acpi_internal_method) (struct acpi_walk_state * walk_state);
+  * expected_return_btypes - Allowed type(s) for the return value
+  */
+ struct acpi_name_info {
+-	char name[ACPI_NAMESEG_SIZE] __nonstring;
++	char name[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;
+ 	u16 argument_list;
+ 	u8 expected_btypes;
+ };
+@@ -370,7 +370,7 @@ typedef acpi_status (*acpi_object_converter) (struct acpi_namespace_node *
+ 					      converted_object);
  
-+#ifdef ACPI_DBG_TRACK_ALLOCATIONS
- 		ACPI_MEM_TRACKING(cache->total_allocated++);
+ struct acpi_simple_repair_info {
+-	char name[ACPI_NAMESEG_SIZE] __nonstring;
++	char name[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;
+ 	u32 unexpected_btypes;
+ 	u32 package_index;
+ 	acpi_object_converter object_converter;
+diff --git a/drivers/acpi/acpica/nsnames.c b/drivers/acpi/acpica/nsnames.c
+index d91153f65700..22aeeeb56cff 100644
+--- a/drivers/acpi/acpica/nsnames.c
++++ b/drivers/acpi/acpica/nsnames.c
+@@ -194,7 +194,7 @@ acpi_ns_build_normalized_path(struct acpi_namespace_node *node,
+ 			      char *full_path, u32 path_size, u8 no_trailing)
+ {
+ 	u32 length = 0, i;
+-	char name[ACPI_NAMESEG_SIZE];
++	char name[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;
+ 	u8 do_no_trailing;
+ 	char c, *left, *right;
+ 	struct acpi_namespace_node *next_node;
+diff --git a/drivers/acpi/acpica/nsrepair2.c b/drivers/acpi/acpica/nsrepair2.c
+index 330b5e4711da..0075fc80d498 100644
+--- a/drivers/acpi/acpica/nsrepair2.c
++++ b/drivers/acpi/acpica/nsrepair2.c
+@@ -25,7 +25,7 @@ acpi_status (*acpi_repair_function) (struct acpi_evaluate_info * info,
+ 				     return_object_ptr);
  
--#ifdef ACPI_DBG_TRACK_ALLOCATIONS
- 		if ((cache->total_allocated - cache->total_freed) >
- 		    cache->max_occupied) {
- 			cache->max_occupied =
+ typedef struct acpi_repair_info {
+-	char name[ACPI_NAMESEG_SIZE] __nonstring;
++	char name[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;
+ 	acpi_repair_function repair_function;
+ 
+ } acpi_repair_info;
 -- 
 2.43.0
 
