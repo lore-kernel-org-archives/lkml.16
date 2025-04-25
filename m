@@ -1,48 +1,35 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from outbound.pv.icloud.com (p-west1-cluster4-host6-snip4-8.eps.apple.com [57.103.65.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138742288D5;
-	Fri, 25 Apr 2025 11:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6679323DEB6
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.65.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745580024; cv=none; b=Z8ebfHmCCgsPNE0gCXuqY0WHSJWWldOJCGIjjdbSQHPsXtOXlFV5MJ9iBIPSywsSnEe8VZggmNeeFk0k45m1GmQxYvPPZwYemz0OgYN3Q1neNqeXnEwCxVBtcMtXnxcngeOA5FITsZuUHilUC+CU7jITLFytxiTYsDVeV/macLQ=
+	t=1745580085; cv=none; b=SYffG3aKJDHTlwwjiu/zg/LxnmqEhoSH5CfYxRMsMsq/++5SQJ14TTxSmhpJTpot5X5AxMlwlkWu+sjdC9iPxrQVOZtdzH1j+eif3vo25yw64szI/ASbugyjgun8FcUiYkNtQ3Y+UthDf5tfAy1y7If63TFxYGIAOpneLloGiH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745580024; c=relaxed/simple;
-	bh=TJZh81SjEZBDNhoT9ldG/mkGWaLykL+jklT1+eZXI38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Vi5rkVEIYV31iQOZVyAZ7VPyvn4hurccjKFMmY87Dx89NH4usTUWbhHCpaWfzmr4TqBLc+9+2Fc/VbU5jfGYkOtPFWvL90EOiB7nQhWHCWoMsjXyAr+qsv3QQeLOd+FAdrTHCwVygK5QXVoCt+WWrdtgXMyUSU0rEoUcBbq8MGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QVSZywrF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745580085; c=relaxed/simple;
+	bh=14AoEbRStqztA4Ljceq3MLOlXVn2knuUhP5ZsZEpVuk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f5kwfUris+08RZYa+qiMCzbFGbA9/TcTkwoFBQMJ+QeCUFnu82WrUkT1QisLlBvBr9xvqZysOt72/AJ5XadsuVt5yo6FLF12906HsV3XzTsLH7N1xhTU8SFfAZFE6fYA279Ewr7SzV4fGW7V6z9HG48oBuihKXNgfvdbii4Mkmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Lh35U0+a; arc=none smtp.client-ip=57.103.65.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QVSZywrF"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8T9H6023852;
-	Fri, 25 Apr 2025 11:20:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	oQSr+itK2RuL/7zySkrXmf0a0tlBOxk8aa7gHC44CDQ=; b=QVSZywrFH8vDP09C
-	FZJS+L6X2WhQKKHhy0dek5Ijh6TZVr2AHUKJfxsgWcDcpholwQUAnFxcvRne+aWd
-	Fh7einHAmDWzyAd29q2qjkLl5aXEQ6f9qKey1n9fGHiffYib1d+wVbfbDhqu7gF3
-	vY3R4OwBzHyeXegoMS5HXy9NFniwG1SsQBwvBwNPGlZsM78ZlbObpt+1KP+Qx4VV
-	jpuM03rLeLb0LtS1862BPG6307f9Trm7KRuMFP3xs322Q90jPRO+n0NltYwBr+dL
-	bsMSdWKuvoAXU0qjnop6SE4SGqKYYjlxQPeN841uDDzuZ1CEn3gP9gL9wqId+ZZm
-	XUhvdA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1rtgu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 11:20:15 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PBKE4K016706
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 11:20:14 GMT
-Received: from [10.253.74.112] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
- 2025 04:20:12 -0700
-Message-ID: <fe68d36d-f8b2-42ac-88d9-aeabf3499fd0@quicinc.com>
-Date: Fri, 25 Apr 2025 19:20:10 +0800
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Lh35U0+a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=WTzGg3KDeNWnZ7BGsdPuQxd44aiGvH+K5sJokIuJ8r0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=Lh35U0+amnwHTl0AEcvp49zrAHy2hWbRluciOb8G3Os84LDhiwrOPSN62n+PMPFBW
+	 awgj7U6jlLWheCfluhxAoXOg010cm5QFDTwehVYoD9rdh7Vaw1vmAlRSkqkUmTehUC
+	 0Wj0uaww+b/yZmSj94q/eMWeC9cSi/p1aPG6CWhHoD/J9EJ+y25mA0nd23KgTrCtQy
+	 6WMUkLvvAdXRpi2rWn3hbuFfcvE+UdIjeb2sLTe3F2l/wu6fKcf41kw1Ay8LoafiE9
+	 5u9uVnE6pR6Izh/MUUbbTRDr3D1nd02o/VBGMcxp21vTGZ1udEBEQNUYDLVomNi8/P
+	 uIcGCg7umDP1w==
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 2D70818000A5;
+	Fri, 25 Apr 2025 11:21:19 +0000 (UTC)
+Message-ID: <6621335c-b099-43f3-8c4e-eff7dfec57ac@icloud.com>
+Date: Fri, 25 Apr 2025 19:21:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,90 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PM: QoS: Add support for CPU affinity mask-based CPUs
- latency QoS
-To: Christian Loehle <christian.loehle@arm.com>, <rafael@kernel.org>,
-        <pavel@kernel.org>, <len.brown@intel.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250424095228.1112558-1-quic_zhonhan@quicinc.com>
- <31742ec7-c1c5-4cb9-8c13-a30b7a6033be@arm.com>
+Subject: Re: [PATCH] fbdev/nvidiafb: Correct const string length in
+ nvidiafb_setup()
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+ Antonino Daplas <adaplas@gmail.com>, Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250407-fix_nvidia-v1-1-843f8d031c7d@quicinc.com>
+ <87o6wky613.fsf@intel.com>
 Content-Language: en-US
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-In-Reply-To: <31742ec7-c1c5-4cb9-8c13-a30b7a6033be@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <87o6wky613.fsf@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: sJBj20LxjBKR4w6FHmX0sxSMdrn_TBP6
-X-Proofpoint-ORIG-GUID: sJBj20LxjBKR4w6FHmX0sxSMdrn_TBP6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA4MSBTYWx0ZWRfX7uMFVfnMRP86 01wl2i3UKngLMqRlCt6Kei0vc4MMQ/773ieLUqrNMVyv+3EH/AShz3lHSjQ9sqzZfRjYdlXfdbM AZcqCltUVMB8Kis+PEHg2WXtfmyNgwLejyuToEyVaZlCb+WvlVobuTA5er/Pv+yqiy9K8FVGlIR
- whNqFfYea6c1gay74pTq2kLIIOLJ+tFuMChXP4vIdRn4IbIjJ2mZuTTJ8hNUUQPxgiNO4Rj1T9m 913PF80C/J1CYDCN2EQ40MAHQCAlJ7ip2vRmPpCnEGJcx3MCqf/CcGTq5i7j8S72U2mbD/s5lV0 vx34Qc2jGt3U0bwv8R6GVd9nJRzdSDGYZVovjj6hYaUp3sPUg4/tvjlExFgJ6LVP7i0mcmMFUjU
- 6P6R5FuDnGWvsn3ZQgbhNoK/lvSc9V55NolnYjEObNVjicUKmul92o7DR7vkNnpaG8kh2cgM
-X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=680b6fef cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=aQTRFtgv6h2UHWNZ-SkA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: Fs3s1X-d5AZMGskkSyGQsTMDJro4jJx1
+X-Proofpoint-ORIG-GUID: Fs3s1X-d5AZMGskkSyGQsTMDJro4jJx1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-25_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 mlxlogscore=955 spamscore=0 impostorscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250081
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011
+ bulkscore=0 suspectscore=0 spamscore=0 mlxlogscore=708 phishscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503100000 definitions=main-2504250082
 
-On 4/24/2025 6:25 PM, Christian Loehle wrote:
-> On 4/24/25 10:52, Zhongqiu Han wrote:
->> Currently, the PM QoS framework supports global CPU latency QoS and
->> per-device CPU latency QoS requests. An example of using global CPU
->> latency QoS is a commit 2777e73fc154 ("scsi: ufs: core: Add CPU latency
->> QoS support for UFS driver") that improved random io performance by 15%
->> for ufs on specific device platform.
->>
->> However, this prevents all CPUs in the system from entering C states.
->> Typically, some threads or drivers know which specific CPUs they are
->> interested in. For example, drivers with IRQ affinity only want interrupts
->> to wake up and be handled on specific CPUs. Similarly, kernel thread bound
->> to specific CPUs through affinity only care about the latency of those
->> particular CPUs.
->>
->> This patch introduces support for partial CPUs PM QoS using a CPU affinity
->> mask, allowing flexible and more precise latency QoS settings for specific
->> CPUs. This can help save power, especially on heterogeneous platforms with
->> big and little cores, as well as some power-conscious embedded systems for
->> example:
->>
->>                    driver A       rt kthread B      module C
->> QoS cpu mask:       0-3              2-5              6-7
->> target latency:     20               30               50
->>                      |                |                |
->>                      v                v                v
->>                      +---------------------------------+
->>                      |        PM  QoS  Framework       |
->>                      +---------------------------------+
->>                      |                |                |
->>                      v                v                v
->> cpu mask:          0-3            2-3,4-5            6-7
->> actual latency:    20             20, 30             50
->>
->> Implement this support based on per-device CPU latency PM QoS.
->>
->> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
-> 
-> I like the idea!
-> The interface does need an in-tree user, why not convert the UFS driver?
-> 
+On 2025/4/25 16:55, Jani Nikula wrote:
+>>  		} else if (!strncmp(this_opt, "noscale", 7)) {
+>>  			noscale = 1;
+> A further cleanup could be to replace all of the strncmp's with
+> str_has_prefix(this_opt, "...") to avoid this class of errors
+> altogether. It also returns the length of the prefix on match, and that
+> can be used to drop more magic numbers.
 
-Thanks Christian for the review.
+very agree with your point. may use strstarts().
 
-As far as I know, the UFS IRQ affinity varies across different
-platforms, so a universal solution is needed (we need to investigate
-whether there is already a solution or add parameters like intr_mask to
-represent the IRQ affinity mask). Let me investigate it, or raise other
-user patches as a patch series in PATCH v2 as soon as possible. Thanks
+there are many strncmp() usages with long const string and hardcoded
+string length. some usages are wrong.
 
 
--- 
-Thx and BRs,
-Zhongqiu Han
+
