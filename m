@@ -1,88 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB3A233707;
-	Fri, 25 Apr 2025 09:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29F422D792
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574446; cv=none; b=sxDMzGwmjsXHxh/oe8Lmupk4fShZDpKr08GdI+ASwi0b+VZO7R1xf23LgXS1s/mf7h+6NR/dAeHXPngyjToDRuKofx0q5/F4KtwcCN0xDbZf1ylJEXYRGONwn2H0M1RAAehCNFAkD5QdgvhevqTh/xz/1hB10YLb1wAzxJ1ayFY=
+	t=1745574625; cv=none; b=pfeZovApMtwrpZf9vr9sCF0DCf4e6JNbD0xxM7lopT1y0FW637UCc7CY4oibbjM+IBUn3tEBamo/LJmFQP53KyIRFI1Uk2XVCPMjtnexNItVs/CYeh8hgIBBEhFb9LNbdmg99Jr+7mc5UKSz7UbueTH6BNUDQMCrqQn0bfL563Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574446; c=relaxed/simple;
-	bh=hwJ0UFkl9vhPKzbNWc1Xi5cv3PU5yR6pZ52y0oNJg78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=isdfpotXvA4q9JKaMUtHIf22c6pVUkCZkXg1cP9XITNf6KtQInLlC2HdMcPMEMyVFpaKdNxZrt67gbKS1HonvuQ/+J1OpNzvTQ9MPoVb8OUM0jIsF83fjivkKE3dvkRhTN2X5uBfiNsgAlAfzMzWm/AqLO4lyYo+R3FCgfsPiSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hd+sQnwz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745574625; c=relaxed/simple;
+	bh=xYcDInfl6MyhBGw8H6RT6sqORSq6b7IgXKxCqJkX3YM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EBRqhEPPUMTKj9+7Yibz+c+UkkK+15190jQtnvpDWrxz+uT/U45+RAhiQSqsru9Nhf0n3rwZgOGTpcJY2QHNHJwMv3Y5NgM+upm0umYmg1e0ZIWhOtTz/gAHr73kn/rwt74pLx9UZ8ZCB7WsTn5g/AZE7ttmPt3o42EnXYIiuHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GHyzIEEn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hd+sQnwz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C343C4CEE4;
-	Fri, 25 Apr 2025 09:47:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745574445;
-	bh=hwJ0UFkl9vhPKzbNWc1Xi5cv3PU5yR6pZ52y0oNJg78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hd+sQnwzEGfn4d5AnNfPaRDuzzQi4Cyu8Q7fz7oaU3zLXUrK7swqNXkfSAsDskk90
-	 Ef5QPXoRtMp0DZI9lMCtMP/XnBTJvQt+51cCMz7h1HaX5QSFpSYOZp1nGf6Ti/0kD5
-	 PvTjNzvmguHd4GdEeJFmK/LPwwCdxk7CX3Sf5d1wUpdXkZR0/oMC+noNPAENwRl7By
-	 jgz31BduQXpbrQzUnyVg5ifyiKjlxFRazACxcZZ2KbN7RXbjSGyRBvHfQOcdqjbPo3
-	 fXvht/Mf5thEx5KPVgpkeb7Uf/1TJAJEI3hHcJYvxLo6F151Kba+D0DfAE/ULnJw1x
-	 NCNpC1iRCrGGg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u8FeY-000000000Ej-1xWm;
-	Fri, 25 Apr 2025 11:47:26 +0200
-Date: Fri, 25 Apr 2025 11:47:26 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Wenbin Yao <quic_wenbyao@quicinc.com>
-Cc: catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, quic_cang@quicinc.com,
-	quic_qianyu@quicinc.com
-Subject: Re: [PATCH v2 1/4] arm64: Kconfig: enable PCI Power Control Slot
- driver for QCOM
-Message-ID: <aAtaLm253EtlXwan@hovoldconsulting.com>
-References: <20250425092955.4099677-1-quic_wenbyao@quicinc.com>
- <20250425092955.4099677-2-quic_wenbyao@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GHyzIEEn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745574622;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WbO8sDKR1DYgNfD0PC4T5pYoJ24jGI0MZMOqn7zpeAc=;
+	b=GHyzIEEnb+G9N6XG6CxE3JwBrp2eCQ+Vrdgd71KLetYIl0lGNbUoA26aS/KhqPe5NDdneN
+	n8YdrXYYZfX8Ec4pitDbTAS1og6JK1g/V9UOuoAX+Cdq1NRrWQ1Ade4+H52Xmj+AATacGI
+	Pp5rRbMBlcH8P7f8h/+/sDDcCnmgP/0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-472-bwYedG-9MYqo-s-gtvjDmw-1; Fri,
+ 25 Apr 2025 05:50:17 -0400
+X-MC-Unique: bwYedG-9MYqo-s-gtvjDmw-1
+X-Mimecast-MFC-AGG-ID: bwYedG-9MYqo-s-gtvjDmw_1745574616
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B554F1956078;
+	Fri, 25 Apr 2025 09:50:15 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.44.34.172])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2EA0F195608D;
+	Fri, 25 Apr 2025 09:50:08 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v7 0/8] drm/i915: Add drm_panic support
+Date: Fri, 25 Apr 2025 11:37:46 +0200
+Message-ID: <20250425094949.473060-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425092955.4099677-2-quic_wenbyao@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Fri, Apr 25, 2025 at 05:29:52PM +0800, Wenbin Yao wrote:
-> From: Qiang Yu <quic_qianyu@quicinc.com>
-> 
-> Enable the pwrctrl driver, which is utilized to manage the power supplies
-> of the devices connected to the PCI slots. This ensures that the voltage
-> rails of the standard PCI slots on some platforms eg. X1E80100-QCP can be
-> correctly turned on/off if they are described under PCIe port device tree
-> node.
-> 
-> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> ---
->  arch/arm64/Kconfig.platforms | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 8b76821f1..14d2742c8 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -270,6 +270,7 @@ config ARCH_QCOM
->  	select GPIOLIB
->  	select PINCTRL
->  	select HAVE_PWRCTL if PCI
-> +	select PCI_PWRCTL_SLOT if PCI
+This is a draft of drm_panic support for i915.
 
-Note that this symbol is getting renamed for 6.16:
+I've tested it on the 4 intel laptops I have at my disposal.
+ * Haswell with 128MB of eDRAM.
+ * Comet Lake  i7-10850H
+ * Raptor Lake i7-1370P (with DPT, and Y-tiling).
+ * Lunar Lake Ultra 5 228V (with DPT, and 4-tiling, and using the Xe driver.
 
-	 https://lore.kernel.org/lkml/20250402132634.18065-2-johan+linaro@kernel.org/
+I tested panic in both fbdev console and gnome desktop.
 
-Johan
+Best regards,
+
+v2:
+ * Add the proper abstractions to build also for Xe.
+ * Fix dim checkpatch issues.
+
+v3:
+ * Add support for Y-tiled framebuffer when DPT is enabled.
+
+v4:
+ * Add support for Xe driver, which shares most of the code.
+ * Add support for 4-tiled framebuffer found in newest GPU.
+
+v5:
+ * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+ * Use struct intel_display instead of drm_i915_private.
+ * Use iosys_map for intel_bo_panic_map().
+
+v6:
+ * Rebase on top of git@gitlab.freedesktop.org:drm/i915/kernel.git drm-intel-next
+ * Use struct intel_display instead of drm_i915_private for intel_atomic_plane.c
+
+v7:
+ * Fix mismatch {} in intel_panic_flush() (Jani Nikula)
+ * Return int for i915_gem_object_panic_map() (Ville Syrjälä)
+ * Reword commit message about alignment/size when disabling tiling (Ville Syrjälä)
+
+Jocelyn Falempe (8):
+  drm/i915/fbdev: Add intel_fbdev_get_map()
+  drm/i915/display/i9xx: Add a disable_tiling() for i9xx planes
+  drm/i915/display: Add a disable_tiling() for skl planes
+  drm/i915/gem: Add i915_gem_object_panic_map()
+  drm/i915/display: Add drm_panic support
+  drm/i915/display: Flush the front buffer in panic handler
+  drm/i915/display: Add drm_panic support for Y-tiling with DPT
+  drm/i915/display: Add drm_panic support for 4-tiling with DPT
+
+ drivers/gpu/drm/i915/display/i9xx_plane.c     |  23 +++
+ .../gpu/drm/i915/display/intel_atomic_plane.c | 172 +++++++++++++++++-
+ drivers/gpu/drm/i915/display/intel_bo.c       |   5 +
+ drivers/gpu/drm/i915/display/intel_bo.h       |   1 +
+ .../drm/i915/display/intel_display_types.h    |   2 +
+ drivers/gpu/drm/i915/display/intel_fb_pin.c   |   5 +
+ drivers/gpu/drm/i915/display/intel_fb_pin.h   |   2 +
+ drivers/gpu/drm/i915/display/intel_fbdev.c    |   5 +
+ drivers/gpu/drm/i915/display/intel_fbdev.h    |   6 +-
+ .../drm/i915/display/skl_universal_plane.c    |  27 +++
+ drivers/gpu/drm/i915/gem/i915_gem_object.h    |   2 +
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c     |  29 +++
+ drivers/gpu/drm/i915/i915_vma.h               |   5 +
+ drivers/gpu/drm/xe/display/intel_bo.c         |   7 +
+ drivers/gpu/drm/xe/display/xe_fb_pin.c        |   5 +
+ 15 files changed, 294 insertions(+), 2 deletions(-)
+
+
+base-commit: 93d33af699f271b908d3eacf7e5872a8784e5a6d
+-- 
+2.49.0
+
