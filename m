@@ -1,65 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2C923C8B3
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7529B238C04;
+	Fri, 25 Apr 2025 09:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574669; cv=none; b=gZc0JqNsJTEKSuTMWTvlFteKaFNFONZRb2372kLkOjkyq8n9T5ynVBkByz8wOFywMDx1BUCnrQ7YJl6Z/VyNbsLeHNg/zfkRJ1m6ATVTpOT4bpUF/UKnupd89ygcbp8c7EYJOsjZTlxAzlv4SMz9QWfGm/aDwLetzj2FgrJ47A4=
+	t=1745574677; cv=none; b=SYOkff3DP8ZEpGh8QiMGnpXPq6RAJv9PhGb+Xo7GTebZNM7kgvyC5BWCI+BrOMUjvVKdJfyYfEGYuBQiWKMp5cGpUJcVgOnnwTpUlfvi5BRmHNxt5uHLZP5yytAPFgz3KCllygDysU43Q3ny0KMSLFTFAgFy3/Cp7tNzKZPnxjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574669; c=relaxed/simple;
-	bh=R+3dXGcqdWoPB3PGVDS4SNaq4pKHeC8krWozmapyagA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j2tUPRN1yUpFPKlxAPObelQL2P7CZnFp2EKayCVNnN5WolxRmjBIW3SUQXLY5ZDJeY5PLaG4C//uLShjYhtPrz7wjmDThBYTe2BXwMfXIoNE3U4UPKgJ1CIll1aG7R0uiiZjgqpRssuoFMUn/4K4Pwo6y8jidlQkSJdM3S0IRzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P6uqWP6M; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P6uqWP6M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745574667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rrTtdbTmzvnOy8pX766xRKvGV170LBDM/dlFUCWRyQE=;
-	b=P6uqWP6MDFBPIpYotoqg3019PF3CkIgrKbxT9GpxC3wYYSQMvwVBCgSg0N1Sqw0E8eAigF
-	E7ldqZe9ZpBwjF3glXWtSv99KS+hr1q2sOr3faqitDbC2RR5GsHFmBk4eaylElV7l8jMXj
-	PaPHwujUFD5bLWhTgSKPReFWG7UYSZ8=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-452-zGTNvaNNMXKjluUE1G_nTg-1; Fri,
- 25 Apr 2025 05:51:02 -0400
-X-MC-Unique: zGTNvaNNMXKjluUE1G_nTg-1
-X-Mimecast-MFC-AGG-ID: zGTNvaNNMXKjluUE1G_nTg_1745574660
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A91D1956095;
-	Fri, 25 Apr 2025 09:51:00 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.44.34.172])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3BD75195608F;
-	Fri, 25 Apr 2025 09:50:47 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v7 6/8] drm/i915/display: Flush the front buffer in panic handler
-Date: Fri, 25 Apr 2025 11:37:52 +0200
-Message-ID: <20250425094949.473060-7-jfalempe@redhat.com>
-In-Reply-To: <20250425094949.473060-1-jfalempe@redhat.com>
-References: <20250425094949.473060-1-jfalempe@redhat.com>
+	s=arc-20240116; t=1745574677; c=relaxed/simple;
+	bh=aCnbddNjcpDZwKRa9tup09qc7MePN4i0Whw6J3J7Wjs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=avkrTVk0KVmG5DMI51Ed0bH/WfT1/OaBmkBNSUpRpqluppncwxGKu+F02bRiAM36vvQBZ606+uUoMu4euPZVVx84MRyCW+dxPMsjjLpAxgHVLK8mp8Cj+oEzLQiNcWc8Y3cqsYAygJ5B4ce/R8e/mm5mwxvs7dxJ+DPlVYMfRtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ceea4baa21ba11f0a216b1d71e6e1362-20250425
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR
+	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_C_CI, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:0ddfab29-0e91-4b04-bf02-984af4606283,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:0ddfab29-0e91-4b04-bf02-984af4606283,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:7782e4460cd16490f63496accad47f71,BulkI
+	D:250425175109UY6YW1YJ,BulkQuantity:0,Recheck:0,SF:19|24|44|66|72|78|102,T
+	C:nil,Content:0|50,EDM:-3,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
+X-UUID: ceea4baa21ba11f0a216b1d71e6e1362-20250425
+X-User: jianghaoran@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1796518417; Fri, 25 Apr 2025 17:51:06 +0800
+From: Haoran Jiang <jianghaoran@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: daniel@iogearbox.net,
+	ast@kernel.org,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	trix@redhat.com,
+	bpf@vger.kernel.org,
+	llvm@lists.linux.dev,
+	chenhuacai@kernel.org,
+	yangtiezhu@loongson.cn,
+	zhangxi <zhangxi@kylinos.cn>
+Subject: [PATCH] samples/bpf: Fix compilation failure for samples/bpf on LoongArch Fedora
+Date: Fri, 25 Apr 2025 17:50:42 +0800
+Message-Id: <20250425095042.838824-1-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,47 +76,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Lunar Lake, if the panic occurs when fbcon is active, the panic
-screen is only partially visible on the screen. Adding this
-intel_frontbuffer_flush() call solves the issue.
-It's probably not safe to do that in the panic handler, but that's
-still better than nothing.
+When building the latest samples/bpf on LoongArch Fedora
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+     make M=samples/bpf
+
+There are compilation errors as follows:
+
+In file included from ./linux/samples/bpf/sockex2_kern.c:2:
+In file included from ./include/uapi/linux/in.h:25:
+In file included from ./include/linux/socket.h:8:
+In file included from ./include/linux/uio.h:9:
+In file included from ./include/linux/thread_info.h:60:
+In file included from ./arch/loongarch/include/asm/thread_info.h:15:
+In file included from ./arch/loongarch/include/asm/processor.h:13:
+In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
+./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin.h' file not found
+         ^~~~~~~~~~~~~~~
+1 error generated.
+
+larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
+and the header file location is specified at compile time.
+
+Test on LoongArch Fedora:
+https://github.com/fedora-remix-loongarch/releases-info
+
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+Signed-off-by: zhangxi <zhangxi@kylinos.cn>
+Change-Id: I5fca6f0cee21e429982c5a3865efc5afeb3fa757
 ---
- drivers/gpu/drm/i915/display/intel_atomic_plane.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ samples/bpf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index c863249ab980..505719f53411 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -59,6 +59,7 @@
- #include "intel_fb.h"
- #include "intel_fb_pin.h"
- #include "intel_fbdev.h"
-+#include "intel_frontbuffer.h"
- #include "skl_scaler.h"
- #include "skl_universal_plane.h"
- #include "skl_watermark.h"
-@@ -1272,8 +1273,14 @@ static void intel_panic_flush(struct drm_plane *plane)
- 	drm_clflush_virt_range(panic_map.vaddr, fb->height * fb->pitches[0]);
- 
- 	/* Don't disable tiling if it's the fbdev framebuffer.*/
--	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev))
-+	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
-+		struct intel_frontbuffer *front = to_intel_frontbuffer(fb);
-+		struct drm_gem_object *obj = intel_fb_bo(fb);
-+
-+		intel_bo_flush_if_display(obj);
-+		intel_frontbuffer_flush(front, ORIGIN_DIRTYFB);
- 		return;
-+	}
- 
- 	if (fb->modifier && iplane->disable_tiling)
- 		iplane->disable_tiling(iplane);
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 3fa16412db15..927d72659173 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -392,7 +392,7 @@ $(obj)/%.o: $(src)/%.c
+ 	@echo "  CLANG-bpf " $@
+ 	$(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS) \
+ 		-I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
+-		-I$(LIBBPF_INCLUDE) \
++		-I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
+ 		-D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
+ 		-D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
+ 		-Wno-gnu-variable-sized-type-not-at-end \
 -- 
-2.49.0
+2.25.1
 
