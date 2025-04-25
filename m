@@ -1,94 +1,148 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1C6235C14;
-	Fri, 25 Apr 2025 12:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4874E2472A4;
+	Fri, 25 Apr 2025 12:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745583800; cv=none; b=Q0omUd3obdyC6JG0LN/d3AQof7SlFCwHPsCY2ZKKy8puX+JdjBZt842/wksQ4sU1BAgGvUuripxsVcFXAuIkeHJAYDEL3Bp6V0RM05oIUsTCgrAHsLHQKcTY7Qu7FzaI1InTsq98p9+Au6fp+pD7P1XpLANBDEcj+5RIRPOmaFo=
+	t=1745583894; cv=none; b=jE4CfyWLFgDLqDldRDR5nHj2ifiOsKAXKo6/7+gpfkvgI97zeFkUqDX8gzRXWJs5GWndFLtTDMvB+4Nj3M8DpWFBYikgdxNo6+6AV6VFxqOP8AT+nZK3gWN261XPp5No0kwd1r71iA2eGbO3J/C0Fbp299soG6Ub5oVDk9MkT0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745583800; c=relaxed/simple;
-	bh=Ab61uosn7VGc1mYzTTvPpiQv4En8lI+mouNLvFVx3hU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RYV4jlBXbjEh6/z8GEo+S6QwcenUNhEe+izZOThUFtb9Wn2wn1yXVCFEOP6NkmCh7ho8Q4g9wPqskMW9mT5QVqBnXBt7ktIdWc+9bzksH/2KiSaCL5gr/Xjfq1z0rVkNpvv/4FDzWc2liFISCJi7ua4SGG7veFt6w63iiFONtQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LTX0wYqB; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745583894; c=relaxed/simple;
+	bh=o0G2Agd2ibaLb8R6Vx4aLbFASWkHWp0MhHcs9AOgB4Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WtN3D7dkxEo4WKbfS8zRS/9pbjMDGgJyWjsUafUuWoEGPYp5VJiPFyG9qpy9N8KyVnuduaUm+XOmg6eUouVT8xLeYcpaBbd3IQc9ZNWsZGerk41C0li9xka3SubCKOq8xUEtlWFbkaC5bYzxid0xS5KGdjRKgUR/BPOElJPVvB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cTNSIKhW; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LTX0wYqB"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PCN8SK2140246
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 07:23:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745583788;
-	bh=qd3ans2EkaBFSKx6PD7a98Rs0x5sNPpf7cnb9HK+FLY=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=LTX0wYqBk2O2QL+9ub+Nx4C8e9rQ+tTj1vmNvrDt/Mjg4srwkoXVoaI/iCOxbB9dW
-	 i18HMg57N8kc30AJ5bYk6Z0rnTY6FX2apUMBJMtn+ZWusO6nCwnaMSSW3XnQHmCrEm
-	 KP51QYUBeQU30x83PNAf5vxmBZZZQMgYMwdHnwWU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PCN8fE012517
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 07:23:08 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 07:23:07 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 07:23:08 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PCN7QR014264;
-	Fri, 25 Apr 2025 07:23:07 -0500
-Date: Fri, 25 Apr 2025 07:23:07 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Judith Mendez <jm@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Enable PWMs
-Message-ID: <20250425122307.4o257gnwq52ctctv@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250422000851.4118545-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cTNSIKhW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745583892; x=1777119892;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=o0G2Agd2ibaLb8R6Vx4aLbFASWkHWp0MhHcs9AOgB4Q=;
+  b=cTNSIKhWxsRvZCRzQwB88RB+dXZvBsUL/a0t+cOfOSQeG8F8uFv7N3Qo
+   Y6MWJB+gOcUGQ2rg3CU+0FuQlZZumlAcddOlVyoQZkF8a93qQkpUoUC4E
+   oUFqDrYu3DT0YdNEa5n5qaN60MMrKULKdJ2N1Vksm8h2/9xXVC7as9ox9
+   FA9K8dweUR0OFIAlNbvDQ20bE8Eaw8p/Fb5deuywV3jRaLpWQbywLNveb
+   QWvr5bs1kiB2iIwpQwFZKUSn6weYB5FwzB4iUIFyllQNoA4cQuCazp6PR
+   sP+FiM2KnG0OH1VXYR4vqRa1N5ec2dgWmk/WRgSYvTXg4zjjWvfQy4Asz
+   Q==;
+X-CSE-ConnectionGUID: ADDYL31+TjORD/XdoyzcGw==
+X-CSE-MsgGUID: qKAk/pv7RvS8YaDTwNmfjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="58615646"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="58615646"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 05:24:51 -0700
+X-CSE-ConnectionGUID: eGaKsxZvS+GeZKpa8TKIsQ==
+X-CSE-MsgGUID: YGxb5wC5QmCgcvgYPUdp5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132637150"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 05:24:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Apr 2025 15:24:45 +0300 (EEST)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN
+ flag
+In-Reply-To: <aAtgIfG8VG7vLDPN@wunner.de>
+Message-ID: <e154f382-629e-f910-ea56-7cce262df079@linux.intel.com>
+References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com> <aAi734h55l7g6eXH@wunner.de> <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com> <aAnOOj91-N6rwt2x@wunner.de> <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
+ <aAtgIfG8VG7vLDPN@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20250422000851.4118545-1-jm@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/mixed; boundary="8323328-2091258201-1745583885=:950"
 
-On April 21, 2025 thus sayeth Judith Mendez:
-> This patch series enables PWM signal outputs on am625 SK,
-> am62 lp SK, am62a7 SK, and am62p5 SK boards.
-> 
-> For am625 SK and am62 lp SK, add pinmux, eCAP, and eHRPWM
-> nodes in the k3-am62x-sk-common.dtsi so as to not duplicate
-> nodes in the board files.
-> 
-> Judith Mendez (3):
->   arm64: dts: ti: k3-am62p5-sk: Enable PWM
->   arm64: dts: ti: k3-am62a7-sk: Enable PWM
->   arm64: dts: ti: k3-am625-sk: Enable PWM
-> 
->  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts       | 40 ++++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       | 54 +++++++++++++++++++
->  .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 40 ++++++++++++++
->  3 files changed, 134 insertions(+)
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Looks Good! Thanks Judith
+--8323328-2091258201-1745583885=:950
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Reviewed-by: Bryan Brattlof <bb@ti.com>
+On Fri, 25 Apr 2025, Lukas Wunner wrote:
+> On Thu, Apr 24, 2025 at 03:37:38PM +0300, Ilpo J=E4rvinen wrote:
+> > On Thu, 24 Apr 2025, Lukas Wunner wrote:
+> > >   The only concern here is whether the cached
+> > >   link speed is updated.  pcie_bwctrl_change_speed() does call
+> > >   pcie_update_link_speed() after calling pcie_retrain_link(), so that
+> > >   looks fine.  But there's a second caller of pcie_retrain_link():
+> > >   pcie_aspm_configure_common_clock().  It doesn't update the cached
+> > >   link speed after calling pcie_retrain_link().  Not sure if this can
+> > >   lead to a change in link speed and therefore the cached link speed
+> > >   should be updated?  The Target Link Speed isn't changed, but maybe
+> > >   the link fails to retrain to the same speed for electrical reasons?
+> >=20
+> > I've never seen that to happen but it would seem odd if that is forbidd=
+en=20
+> > (as the alternative is probably that the link remains down).
+> >=20
+> > Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as =
+the=20
+> > last step, then the irq handler returning IRQ_NONE doesn't matter.
+>=20
+> Why pcie_reset_lbms()?  I was rather thinking that pcie_update_link_speed=
+()
+> should be called from pcie_retrain_link().  Maybe right after the final
+> pcie_wait_for_link_status().
 
-~Bryan
+My reasonale for having it in pcie_reset_lbms() is that LBMS is cleared
+there which races with the irq handler reading LBMS. If LBMS is cleared=20
+before the irq handler reads linksta register, it returns IRQ_NONE and=20
+will misses the LBMS event. So this race problem is directly associated=20
+with the write-to-clear of LBMS.
+
+> That would ensure that the speed is updated in case retraining from
+> pcie_aspm_configure_common_clock() happens to lead to a lower speed.
+> And the call to pcie_update_link_speed() from pcie_bwctrl_change_speed()
+> could then be dropped.
+>
+> PCIe r6.2 sec 7.5.3.19 says the Target Link Speed "sets an upper limit
+> on Link operational speed", which implies that the actual negotiated
+> speed might be lower.
+
+While I don't disagree with that spec interpretation, in case of ASPM, the=
+=20
+question is more complex than that. The link was already trained to speed=
+=20
+x, can the new link training result in failing to train to x (in=20
+practice).
+
+The funny problem here is that all 3 places have a different, but good=20
+reason to call pcie_update_link_speed():
+
+1) pcie_reset_lbms() because of the LBMS race mentioned above.
+
+2) pcie_retrain_link() because Link Speed could have changed because of=20
+   the link training.
+
+3) pcie_bwctrl_change_speed() because it asked to change link speed, and=20
+   also due to the known HW issue that some platforms do not reliably send=
+=20
+   LBMS (I don't recall if it was interrupt triggering issue or issue=20
+   with asserting LBMS itself, the effect is the same regardless).
+
+In addition, in the code 3) calls 2) and 2) calls 1), which leaves=20
+pcie_reset_lbms() as the function where all roads always lead to including=
+=20
+those that only call pcie_reset_lbms(). So if pcie_update_link_speed() is=
+=20
+to be placed not all those three places but only one, the best place seems=
+=20
+to be pcie_reset_lbms() as it covers all cases including those that only=20
+calls it directly.
+
+--=20
+ i.
+
+--8323328-2091258201-1745583885=:950--
