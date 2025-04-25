@@ -1,107 +1,174 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBE5235355;
-	Fri, 25 Apr 2025 09:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DFE23536E;
+	Fri, 25 Apr 2025 09:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572997; cv=none; b=bfVDnFyrNv62ua06XF4al/ru4IEj9m5xp+RgnhrSovgrxQ6lYBKr08ZLxUyp7HbZy9zPyNXSZry4wnUgVgYYzc0+k5Hv+PJSaMa+mvPfXqSr+GrmI00aAewTN6ULmEIe1Rd/gXZP998OEFjvyMWIdWwYohTy+Qr3O7ke2MLiDpE=
+	t=1745573019; cv=none; b=mq754SfzJWyRfp25xjnJqEmXsKvMHPZgSVxYlKSGjs/gJF3q0RlSg4JSVkzgdx07ycyyONXAym1LK4BbXiyGSBarHOwJbW2+XJCFhiayqWZnP0nrM9eTyD9vAup249WWUiFI0CyYtNDE3Q6t5lA2xvg0Y+SLpIKdUqDjaso+/0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572997; c=relaxed/simple;
-	bh=ffY7Q4rlrmxii2Prj1cpCmRIrpTO+xhsuf3ZLnjbGNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K8C2U1oJVVVDeGJAtWPjD5/wz20q5wplyXeKeoASjJ7KIiSxdaW0WIoq8XFoQgR3HMEnCg3V0EiPYAQqXRoJ4Ja4Zj83nCbJ8l6zyMXlufcQOK8likGk/U3uT016enN0eklnQd9sO6OerQmF1Qa6QiFGrM4bxjPJf5qu9XZ2JCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H4mVCVUs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VgmjdXyM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H4mVCVUs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VgmjdXyM"
-Date: Fri, 25 Apr 2025 11:23:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745572993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ih43SeP3AvPws8Ja/DpJaS10rdIhAj94U/C//bSlS88=;
-	b=H4mVCVUsKX3mjoNRoMadHyALmVXQDcP4T7TmwkGNTLPXa2pFOGeh8sbKFsPHHgQOTnUPmn
-	Fbu1GsJAg3e+whF7MSkutyHX9hyci44/Cr2f1nVmEdMoVeoxsVRYaAA60Q66tGJkrWn9NT
-	+QS3kcuSOmOHWEHd8sb1ZDoYCC0jEg5r/sVx7xQxsMrmLbenACwYfwzFzMGnaQPUBtbUvZ
-	fvVtI7jxy9r3pOXWXY3xexl3H9O1wA2x7EZlKxFiCE/hAqHnXGLEDnV0An5GjO9HeTKRok
-	hP/da6C015GbKnCAhvx7IPhakzLzkaXw0caaefq4ZsOoUINq0XShyB425XI7UQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745572993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ih43SeP3AvPws8Ja/DpJaS10rdIhAj94U/C//bSlS88=;
-	b=VgmjdXyMqBedxFuLonmwfkc8/An+9VnsTUk3ZRQltRv6R9s42B/F3MxXjjY7uxVGuv8FLX
-	EXb/rwQl8tHhXKBA==
-From: Nam Cao <namcao@linutronix.de>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
-Message-ID: <20250425092309.nuWnAPa3@linutronix.de>
-References: <cover.1745390829.git.namcao@linutronix.de>
- <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
- <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
- <20250425063456.NBE35YHR@linutronix.de>
- <84ecxgit04.fsf@jogness.linutronix.de>
- <84a584isvo.fsf@jogness.linutronix.de>
+	s=arc-20240116; t=1745573019; c=relaxed/simple;
+	bh=4QFKN2RwaxOmLvvE85MgQNg6/UMRv3I7Se3dUA5myy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b6hVfFyC6Er/D9cmbLw/MlYR05B8aJj/+BmSTOW6YEcYfbzVBbycRLJDR0zS00xRP9B5QnY2a6n64rHj9wPx/hep2aAnHvLtXAUrs7L81UXElHje7JDbsHSfazHW23PKA9kmgaF/2Rwct/bvkmBaJT63BXQ/5FF2PehsF5l2B1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZkS7F5sqwz4f3lWF;
+	Fri, 25 Apr 2025 17:23:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 572381A07BD;
+	Fri, 25 Apr 2025 17:23:31 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP1 (Coremail) with SMTP id cCh0CgAHanqRVAtoENpoKQ--.39960S2;
+	Fri, 25 Apr 2025 17:23:30 +0800 (CST)
+Message-ID: <2f13f928-9148-44e0-a44c-872a3779b0ef@huaweicloud.com>
+Date: Fri, 25 Apr 2025 17:23:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84a584isvo.fsf@jogness.linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
+ func model
+Content-Language: en-US
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Puranjay Mohan <puranjay@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Florent Revest <revest@chromium.org>,
+ Bastien Curutchet <bastien.curutchet@bootlin.com>, ebpf@linuxfoundation.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+ <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
+ <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
+ <6b6472c3-0718-4e60-9972-c166d51962a3@huaweicloud.com>
+ <D9EWSDXHDGFJ.FIDSHIR1OP80@bootlin.com>
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <D9EWSDXHDGFJ.FIDSHIR1OP80@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAHanqRVAtoENpoKQ--.39960S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw4DtFW8Gry3urWkury7trb_yoW5Ar48pF
+	WftFyktrs7GF1xZF1qqw4IvFWDtwsxKr18W3yDtr18Aws0q3saqr1jkF1Y9FWxKw1kWw47
+	XayY9ayxCFy5ZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	4xRDUUUUU==
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
-On Fri, Apr 25, 2025 at 09:54:27AM +0206, John Ogness wrote:
-> On 2025-04-25, John Ogness <john.ogness@linutronix.de> wrote:
-> > If I understand this correctly, trace_sched_switch() is reporting
-> > accurate state transition information, but by the time it is reported
-> > that state may have already changed (in which case another
-> > trace_sched_switch() occurs later).
-> >
-> > So in this example, the task did go to sleep. Why do you think it was
-> > preempted instead?
+On 4/24/2025 9:38 PM, Alexis Lothoré wrote:
+> Hi Xu,
+> 
+> On Thu Apr 24, 2025 at 2:00 PM CEST, Xu Kuohai wrote:
+>> On 4/24/2025 3:24 AM, Alexis Lothoré wrote:
+>>> Hi Andrii,
+>>>
+>>> On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
+>>>> On Thu, Apr 17, 2025 at 12:14 AM Alexis Lothoré
+>>>> <alexis.lothore@bootlin.com> wrote:
+>>>>>
+>>>>> Hi Andrii,
+>>>>>
+>>>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+>>>>>> On Fri, Apr 11, 2025 at 1:32 PM Alexis Lothoré (eBPF Foundation)
+>>>>>> <alexis.lothore@bootlin.com> wrote:
+> 
+> [...]
+> 
+>>> Thanks for the pointer, I'll take a look at it. The more we discuss this
+>>> series, the less member size sounds relevant for what I'm trying to achieve
+>>> here.
+>>>
+>>> Following Xu's comments, I have been thinking about how I could detect the
+>>> custom alignments and packing on structures, and I was wondering if I could
+>>> somehow benefit from __attribute__ encoding in BTF info ([1]). But
+>>> following your hint, I also see some btf_is_struct_packed() in
+>>> tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see if
+>>> I can manage to make something work with all of this.
+>>>
+>>
+>> With DWARF info, we might not need to detect the structure alignment anymore,
+>> since the DW_AT_location attribute tells us where the structure parameter is
+>> located on the stack, and DW_AT_byte_size gives us the size of the structure.
+> 
+> I am not sure to follow you here, because DWARF info is not accessible
+> from kernel at runtime, right ? Or are you meaning that we could, at build
+> time, enrich the BTF info embedded in the kernel thanks to DWARF info ?
+>
 
-You are right, the task did go to sleep. Scratch what I said earlier.
+Sorry for the confusion.
 
-The monitor checks that if an RT task going to sleep, it will be woken by a
-"RT-friendly" source. The problem is that trace_sched_switch() may appear
-after trace_sched_waking(). The monitor sees the task sleeps, and waits
-until the task is woken and checks the waker. But the monitor doesn't see
-the task being woken, because it has already happened before the task
-sleeps.
+What I meant is that there are two DWARF attributes, DW_AT_location and
+DW_AT_byte_size, which tell us the position and size of function parameters.
 
-For correct ordering, we could:
+For the example earlier:
 
-  - Use trace_sched_wakeup() instead of trace_sched_waking(). This would
-    have correct order, but information about the waker is gone at
-    trace_sched_wakeup(), so it doesn't work.
+struct s2 {
+       __int128 x;
+} __attribute__((aligned(64)));
 
-  - Use trace_set_current_state() instead of trace_sched_switch() to
-    determine task going to sleep.
+int f2(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s2 g)
+{
+     return 0;
+}
 
-The latter option works, but then "sleep" would be defined as task doing
-set_current_state(TASK_INTERRUPTIBLE). This new definition is probably not
-precise? But for the monitor, it's fine.
+On my build host, the DW_AT_location attributes for "e", "f", and "g" are:
 
-Btw, while testing this, I discovered another bug. Real-time thread may
-"legally" sleep by a 'restart' syscall after 'nanosleep'. The monitor
-doesn't recognize this syscall as valid sleep reason and flags it :(
+<2><ee>: Abbrev Number: 2 (DW_TAG_formal_parameter)
+     <ef>   DW_AT_name        : e
+     ...
+     <f6>   DW_AT_location    : 2 byte block: 91 0       (DW_OP_fbreg: 0)
 
-> On 2025-04-25, Gabriele Monaco <gmonaco@redhat.com> wrote:
-> > Peter's fix [1] landed on next recently, I guess in a couple of days
-> > you'll get it on the upstream tree and you may not see the problem.
+<2><f9>: Abbrev Number: 2 (DW_TAG_formal_parameter)
+     <fa>   DW_AT_name        : f
+      ...
+     <101>   DW_AT_location    : 2 byte block: 91 10     (DW_OP_fbreg: 16)
 
-This patch fixes stale prev_state due to signaling. It doesn't fix this
-case.
+<2><104>: Abbrev Number: 2 (DW_TAG_formal_parameter)
+     <105>   DW_AT_name        : g
+      ...
+     <10c>   DW_AT_location    : 2 byte block: 83 0      (DW_OP_breg19 (x19): 0)
 
-Best regards,
-Nam
+We can see "e" and "f" are at fp+0 and fp+16, but "g" is in x19+0. Disassembly shows x19
+holds a 64-byte aligned stack address.
+
+For the two questions you mentioned, I’m not sure if we can access DWARF attributes
+at runtime. As for adding parameter locations to BTF at building time, I think it
+means we would need to record CPU-related register info in BTF, which I don’t think
+is a good idea.
+
+> Thanks,
+> 
+> Alexis
+> 
+
