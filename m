@@ -1,83 +1,88 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1A8238D5A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3DA23D290
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745576479; cv=none; b=mt7MlvufyRqQTTS6bAEm22bUkTe0uQ8Huo9XoEY+iBWxjsBq2Oc62XrXaZdY/MHrB3/zC4XZd7JkhsIS5I+7CAwvWx52owiXSkqF1yg2WYBr3RYPFGaXJ+y+Ipp4Suyi4duwqs5DuMVRuGsy2CdNoyG6L7+A8m7kXpH/0LgkXxI=
+	t=1745576483; cv=none; b=OsQGZD1+aclHHaX2eIZl6p+IDWZzTL4/uhnk55co+ncV6fZUXzLWm3at424o2EI9wNz9VkbSyFtKrBL2YGDIAMxlcVpo5VLKEYNZBfeMd0W2EJlxWEdlLIFr99SoIxjeWGfHH+PW91fkaHrKXRQOQSrb36jEt7H9itGIf168OXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745576479; c=relaxed/simple;
-	bh=bea2MAWR2xePWrRZDSwx6U/cct68IawnA8pK7VpVqac=;
+	s=arc-20240116; t=1745576483; c=relaxed/simple;
+	bh=5aRIMiRABy1PGTOKgctdnys84VTQ4AhqhUvl/MwXJMQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PRmlLwQDCARkNVHDNpVLVKn/CnpSdJwBtw9O17ufQn6ntVCcriX0yUG+XwudVGoO7qf6Rrta53Pqs7+OvnwLip8blGvbSuumGYVMtjhECRsX/aSTcJatO0S9tZKkWwsJTyjkFKREgustWY5livC+SqYr/Wwzt5QmibB/Auxwe78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pYQ2pLQw; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=REzkqFfVPYuQ52wrxmGkuP5wAlnsG19DgLehMa3RmNqZ9evKUcIMx9dTY7s4ogxqQO/Cfr7EZUc+qGCjxgb7IanpyzO1izcydsHoGwDX5rIUeYsTAok56lMIx64yORjXN71KZGiPLbHhfwyTr8c7Zvh+ZgHS3BI86HXw12Ph5Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eUUMkiTT; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pYQ2pLQw"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7053f85f059so20071217b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:21:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eUUMkiTT"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-707d3c12574so17730787b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745576476; x=1746181276; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745576480; x=1746181280; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4xtlWzmg2HNhGfo1n6j6VZxV97pQa994I7X0fglbPbg=;
-        b=pYQ2pLQw7RRly8kASM2fnwPGu5txqC0V03JcFX+3sAdpNhASp1KUas1PdBoQkhV1Xp
-         qUfvvfwyLbe/Yo71EZ46W6jntyzwIjKqwwOD2BaTYqRU1j7gv/uEy0BMDIWTT+y6Ltgq
-         8E6bWn94SKa3MgIdSyfOpzt3PlSnLWeyeKtix/VoOpZNofc9j/3bZacJXYEQcCUg/YAD
-         5OeImXyixZv2KQBruhIP7k9RHvXoBSOQYPoQgVGqxflI5J4vmT535yq1++ypzpBiTn0e
-         wBa3h4uFoS2ESq6g8eCL0uEwiT3Wbji1DjN3DxvTmourvcfWEE+tj2gSiqnNk+Os4gd+
-         ko9A==
+        bh=2dy23SZTpPz/OtRsVa67VPlSbZbxd200TTdg7Zq9HNk=;
+        b=eUUMkiTT/TJ72ObG/86gWFM8lydzff2WEWBNYCnp9i2KLqJSzd1XNyi4o8FPHIR1Z8
+         TBoOmY0v8/aR+QTbvXqYDtNqZ9672nvlc87pm5kXASo3CVlE6jiSG0eprxUmtUdQP/Th
+         SjBivRuzB5mSxsZqVeZKUd46M/yQm8sbgk09skKzlf5CJwWjrK8zXkDOw4gLR37Xf11q
+         FTcBdQG0lLom1m31goeTJU9EJTLeCtrrkDa+kQch2y2WFXqEW/yl8OgDdxai4vI5qbAN
+         8VR7Uzg1pJW0MzI3/RixThuZkSF7cledK6IdIUyInQAn0jDe8qgJDxaUCuJ6Eo/1/KDO
+         IL0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745576476; x=1746181276;
+        d=1e100.net; s=20230601; t=1745576480; x=1746181280;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4xtlWzmg2HNhGfo1n6j6VZxV97pQa994I7X0fglbPbg=;
-        b=tfTiAheRRVmwTp395lgw2SXpajK6Smc35u1e14SCD1yToJsVpehj816Dx+ISalENxQ
-         hogzUKx3atDN7FQxgl3bKRYxL42cEvzR6weoo3SiKkS8BiZdA47I4Uj1MJc8JWfgHFo4
-         ZE0268TcdUpTH6yX7CRIWH9CmoT+0hZSAxa57xtOwfD5Dco3jZ/f6lAfpHRyFKzP48mN
-         +J46QqMbt2UoG87kGvfnxqzTy9Mkx7U+XZACmkCKtjmpblFErh2TRQ3n2Ac/z1rCmR+n
-         w2c+EdNAnaQtl3SOlZiSCcC5mPgGBYPyzaXL8HplACM2jscrt+G0nBz8dV5xGiIo/tGm
-         HNOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtqgwbkiAsfrcj/iRoU6/KA/y60xHBvS76eeq+z9/joUu/U76mLedlD4S+C6pCTWWzgn+LpNwhv21/KzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJtt75B5B9y3pwWtLP5s46whytyvGduwlgf02TCpubLdhsjwSN
-	lV98Ia7IEPhEMR1TGF2ImtXDobbUqgIHOfjqWU7JpHHguYGUqIuDXtzc+asnu2khaQXZSEsKDOD
-	8dDTuYkrYP7OLXgBV9jXu50ZxCPgxrjGEQAAucQ==
-X-Gm-Gg: ASbGncutfcsGOsQTLrXIQK87iuhUPhEfVXmuATcHZpmnH1kyPN9mdLADiRTZUxDVp/J
-	AMkMQU7iS0ZnwzfIWLxEL2b0hn2jocfQcQaPSQGcvEX6F62V/nfxy8hW1wJl3U4jmVtTurtc+KZ
-	tlAcRko1SkRqp5yN/slksmFUM=
-X-Google-Smtp-Source: AGHT+IFwzWvVcQW2OIuOPuNm7S3wzxb/4DZpY2/AfSEZfPmecvdAWyRMS5KH+2afz+oKQvj6DmCUtklI/lnuHoLlgh8=
-X-Received: by 2002:a05:6902:2411:b0:e6d:e8d4:681f with SMTP id
- 3f1490d57ef6-e73168936fdmr2304939276.35.1745576476343; Fri, 25 Apr 2025
- 03:21:16 -0700 (PDT)
+        bh=2dy23SZTpPz/OtRsVa67VPlSbZbxd200TTdg7Zq9HNk=;
+        b=QIXqx/wijY3LvuPDuGPiGMCmMXOxA3tIfaBS4QqzleAGTebJ9UH+xInYVidJEzI7ra
+         PaHn4RcjmrvCdlG3yu0S2Cd6SVw4miRkzIBLWttj0y8gkW+hKhW8S88eOdjm7XFrvtvr
+         drxf306DvpOQtim7OP8LSG4UeqQLVBuxRkx/BNMq7/gXbKnUseTv1N3aRJFSdsuZ0lmQ
+         BUeOkvsL8aexFreSuyrmXb/F9v66IMi+JIdHOsysOkMJKL2XTxj1f6OkXxyp3CW/+Qek
+         kt5lnPwnVoYa6k+C0SeRkI3c5n2Bk6+O1oANotxWjnuQd2YXk7MExsaDLrRqfCySE1Eo
+         +GqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXG/vNYXuk+ZzyTUtJbmQecG2tAEKCVRSjj25KZ0mUPTsql0pTXBUo7Tn0Nc7pELv1eVhnD6TT2wxBcwkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqn1xOLZDX494IGeuUzsVGkZTsnAHoF9iGVaxIKzthj+LPkWZJ
+	ZNVXUsBmvRKcoW6krFfkV8ALeNfL/QSMs1lu1119pv7fWrxsKNcAhEVij4F5EWAsUJWeYeYAIMc
+	6uvEUm7hOIvJLyrVMwLM5+0qOV3juJLr0D8npLg==
+X-Gm-Gg: ASbGncvSlClM12elXUen3YXPUA0xDzRR1yq5A+qK2q+Gfhq5M37KFHiak0xcQcpART4
+	/uzAxmr6Q0tgaZZ4w760sytZNn04K8pM/YC5F3GgxJXNvqnhtiYDpVBOly9criAN5OZt5rfqvYy
+	id+efr4w72uCzfGYGHbOp0s3M=
+X-Google-Smtp-Source: AGHT+IGCkeBYkL01Ob0/q+cYVVyOOQUT9d0JdZJ2RLVPcS+2b1wB0bERA+PHNQouav0l20rXKN6j1bHrWfsqVHaUuzI=
+X-Received: by 2002:a05:690c:61c8:b0:705:6afe:4580 with SMTP id
+ 00721157ae682-708544de4demr18549377b3.19.1745576480517; Fri, 25 Apr 2025
+ 03:21:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417074645.81480-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250417074645.81480-1-krzysztof.kozlowski@linaro.org>
+References: <20250421090951.395467-1-wenst@chromium.org>
+In-Reply-To: <20250421090951.395467-1-wenst@chromium.org>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 25 Apr 2025 12:20:40 +0200
-X-Gm-Features: ATxdqUFX3-aj6uGzZ6MjZfzJuyAtiwi1E0if2kOJDDTWutgbL5RxXK5HHoQxSiU
-Message-ID: <CAPDyKFpTKxA1fvppkADP=XVbU5YroczNMfYtjELK_TyGR54f2A@mail.gmail.com>
-Subject: Re: [PATCH] pmdomain: arm: Do not enable by default during compile testing
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 25 Apr 2025 12:20:44 +0200
+X-Gm-Features: ATxdqUFyawKWbJKKMCdA_eJxPR8YeUvlb5__azoGszdJwBU8e_s7VHYVEWsbp3g
+Message-ID: <CAPDyKFroHJt7u6CzmPLnWv6rii4+adsFNDgoVqA-2AvN6S911g@mail.gmail.com>
+Subject: Re: [PATCH] pmdomain: mediatek: Add error messages for missing regmaps
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 17 Apr 2025 at 09:46, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Mon, 21 Apr 2025 at 11:09, Chen-Yu Tsai <wenst@chromium.org> wrote:
 >
-> Enabling the compile test should not cause automatic enabling of all
-> drivers, but only allow to choose to compile them.
+> A recent change to the syscon regmap API caused the MediaTek power
+> controller drivers to fail, as the required regmap could no longer be
+> retrieved. The error did not have an accompanying message, making the
+> failure less obvious. The aforementioned change has since been reverted.
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Add error messages to all the regmap retrievals, thereby making all
+> error paths in scpsys_add_one_domain() have visible error messages.
+>
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
 Applied for next, thanks!
 
@@ -85,46 +90,44 @@ Kind regards
 Uffe
 
 
->
 > ---
+>  drivers/pmdomain/mediatek/mtk-pm-domains.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 >
-> For longer rationale:
-> https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
-> ---
->  drivers/pmdomain/arm/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
+> index b866b006af69..22cdd34ed008 100644
+> --- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
+> +++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
+> @@ -397,20 +397,26 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
 >
-> diff --git a/drivers/pmdomain/arm/Kconfig b/drivers/pmdomain/arm/Kconfig
-> index efa139c34e08..afed10d382ad 100644
-> --- a/drivers/pmdomain/arm/Kconfig
-> +++ b/drivers/pmdomain/arm/Kconfig
-> @@ -2,7 +2,7 @@
->  config ARM_SCMI_PERF_DOMAIN
->         tristate "SCMI performance domain driver"
->         depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-> -       default y
-> +       default ARM_SCMI_PROTOCOL
->         select PM_GENERIC_DOMAINS if PM
->         help
->           This enables support for the SCMI performance domains which can be
-> @@ -14,7 +14,7 @@ config ARM_SCMI_PERF_DOMAIN
->  config ARM_SCMI_POWER_DOMAIN
->         tristate "SCMI power domain driver"
->         depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-> -       default y
-> +       default ARM_SCMI_PROTOCOL
->         select PM_GENERIC_DOMAINS if PM
->         help
->           This enables support for the SCMI power domains which can be
-> @@ -27,7 +27,7 @@ config ARM_SCMI_POWER_DOMAIN
->  config ARM_SCPI_POWER_DOMAIN
->         tristate "SCPI power domain driver"
->         depends on ARM_SCPI_PROTOCOL || (COMPILE_TEST && OF)
-> -       default y
-> +       default ARM_SCPI_PROTOCOL
->         select PM_GENERIC_DOMAINS if PM
->         help
->           This enables support for the SCPI power domains which can be
+>         pd->infracfg = syscon_regmap_lookup_by_phandle_optional(node, "mediatek,infracfg");
+>         if (IS_ERR(pd->infracfg))
+> -               return ERR_CAST(pd->infracfg);
+> +               return dev_err_cast_probe(scpsys->dev, pd->infracfg,
+> +                                         "%pOF: failed to get infracfg regmap\n",
+> +                                         node);
+>
+>         smi_node = of_parse_phandle(node, "mediatek,smi", 0);
+>         if (smi_node) {
+>                 pd->smi = device_node_to_regmap(smi_node);
+>                 of_node_put(smi_node);
+>                 if (IS_ERR(pd->smi))
+> -                       return ERR_CAST(pd->smi);
+> +                       return dev_err_cast_probe(scpsys->dev, pd->smi,
+> +                                                 "%pOF: failed to get SMI regmap\n",
+> +                                                 node);
+>         }
+>
+>         if (MTK_SCPD_CAPS(pd, MTK_SCPD_HAS_INFRA_NAO)) {
+>                 pd->infracfg_nao = syscon_regmap_lookup_by_phandle(node, "mediatek,infracfg-nao");
+>                 if (IS_ERR(pd->infracfg_nao))
+> -                       return ERR_CAST(pd->infracfg_nao);
+> +                       return dev_err_cast_probe(scpsys->dev, pd->infracfg_nao,
+> +                                                 "%pOF: failed to get infracfg-nao regmap\n",
+> +                                                 node);
+>         } else {
+>                 pd->infracfg_nao = NULL;
+>         }
 > --
-> 2.45.2
+> 2.49.0.805.g082f7c87e0-goog
 >
