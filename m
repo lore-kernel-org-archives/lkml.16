@@ -1,137 +1,97 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C049221C9F0
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C887317C21C;
+	Fri, 25 Apr 2025 19:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609526; cv=none; b=CNZvsUbP9bhZxgl+sMdOsDRrxeO0hEk5OiDCn6JahY1YGMV994qz9O38xr2HUfLV0by2Y+lz9WIQjDNHEAqMoWZcPBqhUFOUtoTJsxacMELrtsevnFA0PaxYuyG17Vf/Lxsdbb3XvdKxQ3wtowK64rSzfPafsdYyi60BMha8e2c=
+	t=1745609636; cv=none; b=JOMkz47iO6MsBpD5J8ekb9m+H9gUxf0UPuipZ/G2Zeo0Kagst7qJOJU0Stks4RieRuC15LrO1y1gj+Zz6mZvzO4NHDOsZ7eQ0s/+wY0B7vsUw22jft3YzWuego0f8oN9+Y0/q3ZmnrEuX4lOYOInHikeIk29AM/yl41Hjn+ya/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609526; c=relaxed/simple;
-	bh=cZYLFWcK+AS89wAOfGjXpAYwM+Shr97crXMQH84vsEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EhgSMqowVeQu7Jqfx5/Xrh4hMim3SMLQeoCSZedsJjDP957j1x1J/ePNQStqvM7DaAwTIAef01ynP+vvXe4PNVjTySRan2B3g0Z+SGYPXQCLYG5C5Z1HKaBF9PW3hdyYOlzY6NsODyHiK0gesFaUKrc1t+q3334ty00bCOTzBYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eaPxL6V7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745609636; c=relaxed/simple;
+	bh=g9uoLweess0UFEoDVPSTAjUBbZbADxAufBW+76LC3CE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PuQZob1k/DGH2wyO+4K+NWvtmB4mq+mUUAGih3P+9oILsSAjSxhjFTn+HwpKm1T14ldXNzgdYkhmfp5C2kbVU2HZ39iprLM9H3Xh9r0PXNK6IY07Wjxh0Y9vHt9cqbpATaBUBjsBk7NCV5RE0bdtJShOI8BbtJlBOx/T7vtKBYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eum0Yd1v; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eaPxL6V7"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJttE004033
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:32:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=KGuUzdqtIhx93PP1UIylBLxl
-	AAkaFyJuQQ5Zgzaz5MM=; b=eaPxL6V7mSSc0vuu4BknBscaogTBxNnAb3CNmZI6
-	Z+8MzdnD8UWOPaNeq7Bvic1r6/iBxd1MVHkkVWAp9/7MLqAdolLB085qSZSE4lOo
-	rdlmcwg/TCFpkv88F2ABGBWLV6eF6aoINK1GATwzyEkX4HO69gtR2WDLPOKAwvap
-	Fxz6ZCGrwSV7q4yx6GP2L8e2p5Uhp5XMw3WpBfIxlNIPrdqYBNyefrlHp03Z0Ypj
-	0SLRpMS4x9MiE+zv6Hm6+5E0IPiP2HV+jruZ8NeOkfJfju4nppQU/EHL/MWviWlZ
-	yU7+7xKFDcWbrvd9aVIgo9gLwwSeVWaW1rG6wxdSAi46rw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2a68v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:32:03 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5cd0f8961so525916285a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:32:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eum0Yd1v"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70814384238so25100967b3.0;
+        Fri, 25 Apr 2025 12:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745609634; x=1746214434; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kc/neZMRjay1nZyyrhx8oGxyv6pQLxfgMETmX5ZmEto=;
+        b=eum0Yd1v2890b2vinZv3Zw6njAACMvjmytykI+jCM8zgt7w6+76dapY649N4cvpY2l
+         auk/+0JLIwCFZcJGaNZwC1mFaZHLACVMSYb2dijNcHMOJgi+HHPuWKRHZeh9D4mYV+y/
+         z/4Tbjw/gnxtUJ9in0cDj028QA9o/A3EiWTqvDNoe7qaCfSF6204ZP6LD/pNe94Xk6in
+         NwCnb/xVqSWONtV9k0O4ZJpnBCfHOudlP76UHS2U3Est6Oi6HRWJaW/tNuryAWAKoFg1
+         JNXPYV+T6NZKcOETnn1DaSv/q0cJL/CtzxJ7kb+eNJH5hXilbnL3rdaoIVo08nn4edP1
+         CKEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745609522; x=1746214322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KGuUzdqtIhx93PP1UIylBLxlAAkaFyJuQQ5Zgzaz5MM=;
-        b=gT4mxJ0WFvF3KkT8s1VoQ8eZHupPMt6GkgbzEczaV5m9tnYHPztihKy7c+xXIDd181
-         DUUNxCvBp+FvohXiq/OCZR4qIbi0WJSrIzpikQ7y/jL3jASLNpycEO1Kg7WpADKfXcgi
-         42R3PT1vf6C+GXSI8hDygMMOjiTNQqonWAmgkQ9hlY24ye7vQgsAboAYLlXZfF/oKD72
-         uC9iTtMoF/7raa1yT9NEUCecPdpNzcuKMOKmhDOOmcZDvHQJ4Uv4g1Fph4xbxMNLU6UO
-         8RRJ3RvKo8BsLyp43zVD0aBk5W42Yn4R4SA2oYMPSFP4lddmGFTPAnnNalL9B64f1HjG
-         ZoSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXihFyhRSTAE5UPc7+GhLIV01vJdCX/75l8GMPyX90oam+r134BhgE6pa71rVJ5T0ZoudQmJjbF90K2H0g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRxGnUz73TDdBMuEc1Z+qVT/VUk4SekT6p0VNaIYcy1ELrPTV/
-	tisKbjFa829byghX/9SrTR09BwlGLiprUGTab7nLd02NnX+YvTPMLunvAAg0GnbbJuTdwWz1OLh
-	KsWwrWXBDY9oD/exnLRWNWWIdy7/uMS88bL02UpBPokrsmWmrathcOnqDuIWsDQc=
-X-Gm-Gg: ASbGnctgPAzWEbCCnTzcq657Vgu50tIHcX2uBD0ZnGvqBn+rHTuK6cMurDCKBtmwacE
-	etDemodLxjrpxxVU9/E/5eJNt/R+Yd0Hwg8UFobSCe+m5A0GG5us6O0CmW4+wiC/hz/LybNUgIu
-	YMLzjqic6cCeWEivLhO7VKlWxOjGAhEW1z52Ipx+a/i+xxtdCRbvhzhVeVyEEul+T7+zj6lLmB1
-	pWJAiifSIpoa4mdn+w4gfddAdhSTodiN7vDbDzHVlSCrIfzyhSScLzrtzPyW2QA6AECif3TTLFX
-	Yq/VgZwW04ce8tFTNQg7Q+8vLJ/u3yB9F5Jc4QIiHkr0BTVszRaENXNESQAkUfISmDAYSt8NAGo
-	=
-X-Received: by 2002:a05:620a:4113:b0:7c5:48bc:8c77 with SMTP id af79cd13be357-7c9606b0aefmr440892185a.12.1745609522378;
-        Fri, 25 Apr 2025 12:32:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGzn/o6ObQ/xxhr7InTaJwrYRheiEdWShDWyF+W4eomGBtYByJsXx/Wd9e7WmCER8UrfAZSLQ==
-X-Received: by 2002:a05:620a:4113:b0:7c5:48bc:8c77 with SMTP id af79cd13be357-7c9606b0aefmr440890285a.12.1745609522096;
-        Fri, 25 Apr 2025 12:32:02 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d16a834bsm8773091fa.73.2025.04.25.12.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 12:32:01 -0700 (PDT)
-Date: Fri, 25 Apr 2025 22:31:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: neil.armstrong@linaro.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-Subject: Re: [PATCH v3] arm64: dts: qcom: sm8550: add iris DT node
-Message-ID: <hqltmh3pixqnimr4zp4brcy2hn3qpqkz4q6bhb3cga4w4ndtux@gft5cjqj47oy>
-References: <20250424-topic-sm8x50-upstream-iris-8550-dt-v3-1-92f6b692bd52@linaro.org>
+        d=1e100.net; s=20230601; t=1745609634; x=1746214434;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kc/neZMRjay1nZyyrhx8oGxyv6pQLxfgMETmX5ZmEto=;
+        b=KIIzZ5GYvPAAQSnCBapezzsvrYepCd/xyQ0jh+5VW/aE/HhFx2FVbNWRMDapgnP5Ja
+         78phRn4kJbhIDsvTsMD4y/aLbsOHFIJ13whiyZjt/mNrDbxaKHLVCGXTrXT07DDcm95K
+         JNJHBloCkUM8aT6h9rhQYsj5ie0bE+18KZsxtq/+ROEMK7BJkcKT2vBUh3p7qAtQVaSB
+         QDyk8PgmWR+Cb13Ct0mm9OGuv6WGefR8nqCDHvv3sv8VEg8TIUhpXQraLt/oSq/ALwmN
+         svtdKVzx+axCSoQWHO7OG8b2aCXmi+VkgSV9rQHnNLbXravcq1WMkTPvdimFMYFCKmdR
+         kwxg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Tu66xjePUQU7PYrRTorjjtAxjaGlUL/NkHAAbdIsjetaA2u8twW5nl7o7eRtmTT5MhDq841G46Y=@vger.kernel.org, AJvYcCUPvhUzmWc2x9rHCyQ1yFcu5SWZe8nEH92kq9aijZsmoQV6RfIsXfRDURJvnPPWL7Q/l5w7fli5z1/1RBBd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx4YN2AlTGHyGpukdXI0EaQrNUDAuhA+pbGVEBq2oRvxyBYzlw
+	RMDF3PPxubVf3dQtYG4mpAvkWyvFaj94flzXbmsJ5JCbZGOFXdv5g/lZaHRur7CSrqU6y8WdWDx
+	BIVpXm25hiNcmHaMVfANiSD/m85SE5Q==
+X-Gm-Gg: ASbGncsBTU44Q82Fn3xe3BfxCUaL6BNfFTCCPuVXf1IJMkNTvWiLqYDbrpW1Z99oDOZ
+	+Tx/fD0/oPOii9YuKelvSYbqUqXLJopYTRTS6ddauz/7lKmD60R9NnHlYQVE4Ni+K3b3yF2G31W
+	QJK4sUQX96/+WYIMaFuR7S4Mo=
+X-Google-Smtp-Source: AGHT+IF4h/6M8r2AxTAJ5kvndU2HLttpz+95GrNi4OfE2k8/eGw7eKVI70YUgPiSRB5UzhfyKI+FlG5XtQjMLS7o6fU=
+X-Received: by 2002:a05:690c:640c:b0:6ff:1fac:c502 with SMTP id
+ 00721157ae682-708540c7572mr54412357b3.6.1745609633676; Fri, 25 Apr 2025
+ 12:33:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-topic-sm8x50-upstream-iris-8550-dt-v3-1-92f6b692bd52@linaro.org>
-X-Authority-Analysis: v=2.4 cv=EtLSrTcA c=1 sm=1 tr=0 ts=680be333 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=gEkYAqE2pGcBd09D3BMA:9
- a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: msB4XYJe-uRxUHCIV_ZM7wtHvTVVFl1T
-X-Proofpoint-ORIG-GUID: msB4XYJe-uRxUHCIV_ZM7wtHvTVVFl1T
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzOSBTYWx0ZWRfX58Un4z62K0VR /l9cBRMKu/hMIXzEuKnPuzagxWJ6pIeexAHhIc8evJ9m94sPFoVirsakxOP1paG5z4A+ureoQmx Z8kd37fjsZdHX0cZ3pdFY7czrkJ6KcxFc2WXJaER4s9FPnwHh/0Nl0aqgnUIo3THLPK0wAEZGIc
- Nvk5Gh7l5siWpWN4p2c5zsxkL2QPYH/Mtrf7PT6Nd7kjluXakvAejosZZ/t6L8+aIOTsqkTM9/P 6a1ADHpry/F59IOnQnJvtErfJUiUTQtsFwv3bMwYPB9NvX4KDKe1qiLsve5/SvAiI7qibGs3vE/ 72yASWa/+ZnPW8W2N8vN/iPy4R5Fdn49PzOdbtrGhypCGC9ZhnqQ2XB8o1QsfD1DAm3gph82hFZ
- YWQ1RMBm3+4+TNNUMLauOXhCeUNxEg28plqK+FNGIjaW7+Vp3KIm1VvHXKf3//ZCt3MLyOHi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250139
+From: Mikko Juhani Korhonen <mjkorhon@gmail.com>
+Date: Fri, 25 Apr 2025 22:33:17 +0300
+X-Gm-Features: ATxdqUHoo8h_wvWqc5HIIys87snkBzHx1zyXv4mfHFsFAh3hio4siqhe-Ttmuak
+Message-ID: <CAAZ0mTfSFZoL_CS9s1L0JhfaoyMGJ6Up5Z9_YvU-pX05MOZ99w@mail.gmail.com>
+Subject: [PATCH v3] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 24, 2025 at 06:34:28PM +0200, neil.armstrong@linaro.org wrote:
-> From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> 
-> Add DT entries for the sm8550 iris decoder.
-> 
-> Since the firmware is required to be signed, only enable
-> on Qualcomm development boards where the firmware is
-> publicly distributed.
-> 
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> Changes in v3:
-> - remove useless firmware-name
-> - Link to v2: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8550-dt-v2-1-9218636acbdd@linaro.org
-> 
-> Changes in v2:
-> - Only enable on qcom dev boards
-> - Link to v1: https://lore.kernel.org/r/20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
-> ---
->  arch/arm64/boot/dts/qcom/sm8550-hdk.dts |  4 ++
->  arch/arm64/boot/dts/qcom/sm8550-mtp.dts |  4 ++
->  arch/arm64/boot/dts/qcom/sm8550-qrd.dts |  4 ++
->  arch/arm64/boot/dts/qcom/sm8550.dtsi    | 76 +++++++++++++++++++++++++++++++++
->  4 files changed, 88 insertions(+)
-> 
+Make WDC WD20EFAX-68FB5N0 hard drives work again after regression in
+6.9.0 when LPM was enabled, so disable it for this model.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Mikko Korhonen <mjkorhon@gmail.com>
+---
+drivers/ata/libata-core.c | 5 +++++
+1 file changed, 5 insertions(+)
 
--- 
-With best wishes
-Dmitry
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 773799cfd443..5c2f26945d61 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4239,6 +4239,11 @@ static const struct ata_dev_quirks_entry
+__ata_dev_quirks[] = {
+       { "WDC WD3000JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+       { "WDC WD3200JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+
++       /*
++        * This specific WD SATA-3 model has problems with LPM.
++        */
++       { "WDC WD20EFAX-68FB5N0",       NULL,   ATA_QUIRK_NOLPM },
++
+       /*
+        * This sata dom device goes on a walkabout when the ATA_LOG_DIRECTORY
+        * log page is accessed. Ensure we never ask for this log page with
+
+base-commit: 14a3cc755825ef7b34c986aa2786ea815023e9c5
+--
+2.47.2
