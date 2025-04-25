@@ -1,73 +1,53 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3456A25DB05;
-	Fri, 25 Apr 2025 14:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2FF255E30
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745590541; cv=none; b=sr75jlv6m85Lrz3b7qdk/W7hKUFGadnYY/bRid+hXsdf+/WEbuze/VqgpoR6vle9FCEZRbs+CQe44jbaQnxFb0DyIfrUIQSHKSVHvpK9ZOv0Qws7mi0u7UYCV7dSI4wkQe6USLEiSv+MUwFZYYgetoXlFAFSwYfALq9/1i6R2ik=
+	t=1745590665; cv=none; b=CHwYgJM0IZI+Bidr6lZqcfK+Q2uTMKfGwAiKJudtaK1RXKbzJB+xsF6fySgEH9U3mTxxdoCFsBQWxjAEHSN0kr3vzripDElGhe2Aq8bTtpK1C8iIVUx7wK5Y4B7QEoFNm2KLHXoMf0xSSCAVW+ZvurBdDow8x8mjaVZ79+O4XPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745590541; c=relaxed/simple;
-	bh=Db9qQGiPZ0TTN7FGospWfUBApSHcBjmwbE1tAUnYMuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NieERhHw9Cv4mdz2upExVW1dZmq8eGv3uzqI2b61bZtUusm4bz9Hnu7zhgQwuu3P/dNLjG3hZb0BjByas5FdXT/OtGnAxA0dHyMlToaHn+bDTwRy9jJKDiJdBNDuf0oYKj0fxht4lYvS8zCCGGsSVy9nVG8iwO5g1ryHptELcKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GP5mtgAn; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745590665; c=relaxed/simple;
+	bh=fH/frdL2bOaSon7Fx79vcYibtR1RwRHpxY8Bjyl6usU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Me+q9Tbj1Dw108trGHFV3AbXpN+7ao+b/8dFJSDLN/jJTqlDwDGdbmDiA57V+/WyB61X97HWy3OqijUuQ1gq/rILWW/YlHvUJMan4qrNScSC0HII93T56Pp4S1NHU6Lv3RL4JResUy87I+10JlsHPuzUkTJgPu/F9G4D3yylFcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=biNrtMnU; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GP5mtgAn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 763A9441FF;
-	Fri, 25 Apr 2025 14:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745590537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=puQGlCteO+0GFnat6rHWd7r7OMccCL/gwNOR4Sh2duc=;
-	b=GP5mtgAnbWm/4roNfbAJY2UUpTl3Dlcul901ASRraFr7jk8SCSuDUl9zckcroSh7EkL40m
-	gmQH7D/zR34nNfSHJ6pXFSWc20cu3YdSMPkPdNFW09i0UgVRzBbPFyZqfmUGCASREiRwQM
-	Eb476xdBNBTtRpyxCOl+WoOULMMX1RmJlbEsS9Qd8OUyjickyhxUxjvf4nng116FY49Ymv
-	6+twc4l97OmgjHtZxk521Tn+gP6umdOhOCoIOho/6MtXkd+k7jDD8E9I2VQ5gt1wBGN+SO
-	BvAPcb8972VyPj4zQcJXENUBKWtOlN9qGpxrZCCyUz9d9FkQXpp4ZocC8qDIDA==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="biNrtMnU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=OgRFlnCvjj648D8iR0QQBHGxrbfFaZPGsHm3wINncqI=; b=biNrtMnU9rZ9tJTJodO4ZWVmDQ
+	lOXqNJFbJgLvAvqg/9g73LjENxIYaudnuIeBOu0tVe0LA75xrnhLZTLr8pip8lz9yM+zbWZP8plb4
+	RzV3YP5TFZZAif+lC1UkDTq3FyuYM8w1TJyyK5mO0JZYQTMzUEPqf6kEnhtIf2KD9uoIsxPeY4eOW
+	/Ai/9Guurye8mumDh8y/7sg0uiFPZ1lm7gadQX6udLIVKZPMQvHW4ZnuOB1LauAJVUUpAUOMPng52
+	ZVYX0Htjdp4FmcDrZJbE+zil1uMp9krPvPQqxRs9go3y95KltlCV45k/XnNgpe2wdbXK+YoDfoSNO
+	Ii7ZRk9g==;
+Received: from [77.26.4.178] (helo=edoras.jupiter)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1u8Jrq-008MK6-Jc; Fri, 25 Apr 2025 16:17:26 +0200
+From: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
+To: Melissa Wen <mwen@igalia.com>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: Jose Maria Casanova Crespo <jmcasanova@igalia.com>,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: [PATCH net-next v5 14/14] Documentation: networking: Document the phy_port infrastructure
-Date: Fri, 25 Apr 2025 16:15:07 +0200
-Message-ID: <20250425141511.182537-15-maxime.chevallier@bootlin.com>
+	kernel-dev@igalia.com
+Subject: [PATCH v2 1/2] drm/v3d: fix client obtained from axi_ids on V3D 4.1
+Date: Fri, 25 Apr 2025 14:25:07 +0200
+Message-ID: <20250425122522.18425-1-jmcasanova@igalia.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425141511.182537-1-maxime.chevallier@bootlin.com>
-References: <20250425141511.182537-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,164 +55,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgepuddtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefuddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrr
- dhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-This documentation aims at describing the main goal of the phy_port
-infrastructure.
+In the case of MMU errors caused by the TFU unit, the
+client that causes the MMU error is expected to be reported.
+But in the case of MMU TFU errors, a non existing client was
+being reported. This happened because the client calculation
+was taking into account more than the bits 0-7 from the
+axi_id that were representing the client.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+[   27.845132] v3d fec00000.v3d: MMU error from client ? (13) at 0x3bb1000, pte invalid
+
+Masking the bits and using the correct exi_id ranges fixes the
+calculation to report the real guilty client on V3D 4.1 and 4.2.
+
+Make the MMU error print axi_id with hexadecimal as used in the
+ranges.
+
+Fixes: 38c2c7917adc ("drm/v3d: Fix and extend MMU error handling.")
+Signed-off-by: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
 ---
- Documentation/networking/index.rst    |   1 +
- Documentation/networking/phy-port.rst | 111 ++++++++++++++++++++++++++
- MAINTAINERS                           |   1 +
- 3 files changed, 113 insertions(+)
- create mode 100644 Documentation/networking/phy-port.rst
+ drivers/gpu/drm/v3d/v3d_irq.c | 37 +++++++++++++++++++++++------------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index ac90b82f3ce9..f60acc06e3f7 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -96,6 +96,7 @@ Contents:
-    packet_mmap
-    phonet
-    phy-link-topology
-+   phy-port
-    pktgen
-    plip
-    ppp_generic
-diff --git a/Documentation/networking/phy-port.rst b/Documentation/networking/phy-port.rst
-new file mode 100644
-index 000000000000..6d9d46ebe438
---- /dev/null
-+++ b/Documentation/networking/phy-port.rst
-@@ -0,0 +1,111 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. _phy_port:
+Changes in v2:
+- Now axi_id is showed in hexadecimal in error message (Maira Canal)
+- Improved commit log description with error example. (Maira Canal)
+- Fixed typos in commit log (Maira Canal)
+
+diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
+index 29f63f572d35..d6ce1324905d 100644
+--- a/drivers/gpu/drm/v3d/v3d_irq.c
++++ b/drivers/gpu/drm/v3d/v3d_irq.c
+@@ -186,27 +186,38 @@ v3d_hub_irq(int irq, void *arg)
+ 		u32 axi_id = V3D_READ(V3D_MMU_VIO_ID);
+ 		u64 vio_addr = ((u64)V3D_READ(V3D_MMU_VIO_ADDR) <<
+ 				(v3d->va_width - 32));
+-		static const char *const v3d41_axi_ids[] = {
+-			"L2T",
+-			"PTB",
+-			"PSE",
+-			"TLB",
+-			"CLE",
+-			"TFU",
+-			"MMU",
+-			"GMP",
++		static const struct {
++			u32 begin;
++			u32 end;
++			const char *client;
++		} v3d41_axi_ids[] = {
++			{0x00, 0x20, "L2T"},
++			{0x20, 0x21, "PTB"},
++			{0x40, 0x41, "PSE"},
++			{0x60, 0x80, "TLB"},
++			{0x80, 0x88, "CLE"},
++			{0xA0, 0xA1, "TFU"},
++			{0xC0, 0xE0, "MMU"},
++			{0xE0, 0xE1, "GMP"},
+ 		};
+ 		const char *client = "?";
+ 
+ 		V3D_WRITE(V3D_MMU_CTL, V3D_READ(V3D_MMU_CTL));
+ 
+ 		if (v3d->ver >= V3D_GEN_41) {
+-			axi_id = axi_id >> 5;
+-			if (axi_id < ARRAY_SIZE(v3d41_axi_ids))
+-				client = v3d41_axi_ids[axi_id];
++			size_t i;
 +
-+=================
-+Ethernet ports
-+=================
-+
-+This document is a basic description of the phy_port infrastructure,
-+introduced to represent physical interfaces of Ethernet devices.
-+
-+Without phy_port, we already have quite a lot of information about what the
-+media-facing interface of a NIC can do and looks like, through the
-+:c:type:`struct ethtool_link_ksettings <ethtool_link_ksettings>` attributes,
-+which includes :
-+
-+ - What the NIC can do through the :c:member:`supported` field
-+ - What the Link Partner advertises through :c:member:`lp_advertising`
-+ - Which features we're advertising through :c:member:`advertising`
-+
-+We also have info about the number of lanes and the PORT type. These settings
-+are built by aggregating together information reported by various devices that
-+are sitting on the link :
-+
-+  - The NIC itself, through the :c:member:`get_link_ksettings` callback
-+  - Precise information from the MAC and PCS by using phylink in the MAC driver
-+  - Information reported by the PHY device
-+  - Information reported by an SFP module (which can itself include a PHY)
-+
-+This model however starts showing its limitations when we consider devices that
-+have more than one media interface. In such a case, only information about the
-+actively used interface is reported, and it's not possible to know what the
-+other interfaces can do. In fact, we have very few information about whether or
-+not there are any other media interfaces.
-+
-+The goal of the phy_port representation is to provide a way of representing a
-+physical interface of a NIC, regardless of what is driving the port (NIC through
-+a firmware, SFP module, Ethernet PHY).
-+
-+Multi-port interfaces examples
-+==============================
-+
-+Several cases of multi-interface NICs have been observed so far :
-+
-+Internal MII Mux::
-+
-+  +------------------+
-+  | SoC              |
-+  |          +-----+ |           +-----+
-+  | +-----+  |     |-------------| PHY |
-+  | | MAC |--| Mux | |   +-----+ +-----+
-+  | +-----+  |     |-----| SFP |
-+  |          +-----+ |   +-----+
-+  +------------------+
-+
-+Internal Mux with internal PHY::
-+
-+  +------------------------+
-+  | SoC                    |
-+  |          +-----+ +-----+
-+  | +-----+  |     |-| PHY |
-+  | | MAC |--| Mux | +-----+   +-----+
-+  | +-----+  |     |-----------| SFP |
-+  |          +-----+       |   +-----+
-+  +------------------------+
-+
-+External Mux::
-+
-+  +---------+
-+  | SoC     |  +-----+  +-----+
-+  |         |  |     |--| PHY |
-+  | +-----+ |  |     |  +-----+
-+  | | MAC |----| Mux |  +-----+
-+  | +-----+ |  |     |--| PHY |
-+  |         |  +-----+  +-----+
-+  |         |     |
-+  |    GPIO-------+
-+  +---------+
-+
-+Double-port PHY::
-+
-+  +---------+
-+  | SoC     | +-----+
-+  |         | |     |--- RJ45
-+  | +-----+ | |     |
-+  | | MAC |---| PHY |   +-----+
-+  | +-----+ | |     |---| SFP |
-+  +---------+ +-----+   +-----+
-+
-+phy_port aims at providing a path to support all the above topologies, by
-+representing the media interfaces in a way that's agnostic to what's driving
-+the interface. the struct phy_port object has its own set of callback ops, and
-+will eventually be able to report its own ksettings::
-+
-+             _____      +------+
-+            (     )-----| Port |
-+ +-----+   (       )    +------+
-+ | MAC |--(   ???   )
-+ +-----+   (       )    +------+
-+            (_____)-----| Port |
-+                        +------+
-+
-+Next steps
-+==========
-+
-+As of writing this documentation, only ports controlled by PHY devices are
-+supported. The next steps will be to add the Netlink API to expose these
-+to userspace and add support for raw ports (controlled by some firmware, and directly
-+managed by the NIC driver).
-+
-+Another parallel task is the introduction of a MII muxing framework to allow the
-+control of non-PHY driver multi-port setups.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a6f554905eb..ed4e3726d0cf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8773,6 +8773,7 @@ F:	Documentation/devicetree/bindings/net/ethernet-connector.yaml
- F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
- F:	Documentation/devicetree/bindings/net/mdio*
- F:	Documentation/devicetree/bindings/net/qca,ar803x.yaml
-+F:	Documentation/networking/phy-port.rst
- F:	Documentation/networking/phy.rst
- F:	drivers/net/mdio/
- F:	drivers/net/mdio/acpi_mdio.c
++			axi_id = axi_id & 0xFF;
++			for (i = 0; i < ARRAY_SIZE(v3d41_axi_ids); i++) {
++				if (axi_id >= v3d41_axi_ids[i].begin &&
++				    axi_id < v3d41_axi_ids[i].end) {
++					client = v3d41_axi_ids[i].client;
++					break;
++				}
++			}
+ 		}
+ 
+-		dev_err(v3d->drm.dev, "MMU error from client %s (%d) at 0x%llx%s%s%s\n",
++		dev_err(v3d->drm.dev, "MMU error from client %s (0x%x) at 0x%llx%s%s%s\n",
+ 			client, axi_id, (long long)vio_addr,
+ 			((intsts & V3D_HUB_INT_MMU_WRV) ?
+ 			 ", write violation" : ""),
 -- 
 2.49.0
 
