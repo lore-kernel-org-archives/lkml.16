@@ -1,59 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650241C8621;
-	Fri, 25 Apr 2025 04:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31C3215F52;
+	Fri, 25 Apr 2025 04:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745555712; cv=none; b=TiQRRKfqfa3KJ8Axk9mbfL8867OAMIcidu4/l3H1QwdC9mg9JFrca1UvrvpGatIAjBCTfGmLF+DGqwHzJgYzZ4lfaqVkhddkJJUnnxFYgOOOocrA0xs8E/QfU47tSBguKjt2vhZU+KSZziprEzMOEQQvqNFDMxSN/Ni8r1lu4Go=
+	t=1745555734; cv=none; b=r6SRQP4BXUSbidT7avxv6cy/uUcoWVrZDz79ZqDEAFNV1zHou4qkmR4cBeAQwd4gCbxAcLxlcRabD7lcCYhoGC5+etAiy0RPLN47GhHZO5ERO5QKPxhutppEFVa4BQxPn+84bkhthvi6KScsS/U7YLzqAVpuot1NkzioKq/XrME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745555712; c=relaxed/simple;
-	bh=zFyR+2o7S0aUhjQmUVl3U33tj4FHp8BKub3BSNHl6wY=;
+	s=arc-20240116; t=1745555734; c=relaxed/simple;
+	bh=ttzySczgm8ypQHZzev8w8YPjMjW+EnWk7s5O2mrag3c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+9TpLkpIBg8WURBp8+ule9AWRWuB0BOtZaq4EUby+xu/llptHLLqe92pjUKZ4ri7/2tsn2I8j++yRbJSxikaS+fWxloIIGEyhCMl49wnpftb1p9Eukaw/E8+075z7AtsiCA4bKDS27lnjGRfgYevZfAkos1b65JpalaXRpxahc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b/ba33Qk; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DNc1PgRXGK1E74AMqmP7HxhnRGVUIKMUyEAZEgC8fY6YFGHgQx5UM4onXRIWrbhhz+b6dpkyE1du5jy7NiiUWgGNYI76TovOorDn8e7kItYn7vhgzc7Uy77VksWnIGHoBsVj8tYbCmDA2sjnW5D6M6q1Vxk91yqVtbKif7I1mPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qCmKPfQV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b/ba33Qk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745555712; x=1777091712;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zFyR+2o7S0aUhjQmUVl3U33tj4FHp8BKub3BSNHl6wY=;
-  b=b/ba33QkNloD//9+XrG1Jt1cF21CUVXyhbVTvWZNHkJd8Fww+1ZXkufe
-   vZ5nb+kktbi2Y5/bzc3rqj6Pz20coPHWpd1lmLUTz/9qW+HnTvyt7zJEk
-   QQFHL0Yoak9t9NeCrD8Xfpo/nv+5mmkNrRiq22SnXMuPeFhBiaN/avxj1
-   cLfjqYc5DYU84E+OHnUG5HLYck5GteGi3uza/CzLPoXJBSGRiKcp7JJvs
-   0kn2EDdn6BMZp23w6sEnDy+fdwDnZutUfOCrx2tSveuMAzwP2KuADvOI6
-   B/Ecu+YUPUbx1cef3G1QWI84eBpeNasd+q+cXGARqYmywsgE64uCKpDSC
-   Q==;
-X-CSE-ConnectionGUID: 7zZQ7Yb8SCmZZGCX6YPRJA==
-X-CSE-MsgGUID: rs/Ib9i5RmqWjdXEpEdN2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47226321"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="47226321"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 21:35:11 -0700
-X-CSE-ConnectionGUID: a5diDpipRK+sn2VbOI8q7A==
-X-CSE-MsgGUID: Y0y1V/sdS+yAeW6i4Gp4uQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="137644770"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 24 Apr 2025 21:35:08 -0700
-Date: Fri, 25 Apr 2025 12:30:30 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Qasim Ijaz <qasdev00@gmail.com>
-Cc: mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com, trix@redhat.com,
-	akpm@linux-foundation.org, marpagan@redhat.com, arnd@arndb.de,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Marco Pagani <marco.pagani@linux.dev>
-Subject: Re: [PATCH v2 RESEND] fpga: fix potential null pointer deref in
- fpga_mgr_test_img_load_sgt()
-Message-ID: <aAsP5qZ9+kGcmps0@yilunxu-OptiPlex-7050>
-References: <20250422153737.5264-1-qasdev00@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qCmKPfQV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OpLvPEgMNJelRwjlOYq5KIQsfCtG8tk9z9qOlmY49hE=; b=qCmKPfQVdojQvLhSagwK14y4Lz
+	o/szmMWhAtG2hMB8e1aBc7Lg7ZVc2Mw+O8dB7ZIdxrUVHWqgmZr2/Q/aLiSwN/qtk3CjOiPuppM73
+	Kj00vhsc06zY8hpb1TqoQm2OPldcHEOrf6zIlvKTBEAfy684Ea6OAUw3SgkQG3RwgPo7+nDrGVnkH
+	VUsO9RZWaPs1cMetrxGAwQ89MgukfkVkFltvaA+/OBzMCcl24qg8fkW7apk5gi1XEQAsRSDLeED+S
+	i828G4oZWNbftE1RSMms4SvJGYhcjyl8pkWfO7DdymJfxKm/YjQ+yvkGX3oRKRWrC24y39n52RWNF
+	kwVSZBog==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8AmY-0000000Dkxs-12xD;
+	Fri, 25 Apr 2025 04:35:22 +0000
+Date: Fri, 25 Apr 2025 05:35:22 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Huan Yang <link@vivo.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Francesco Valla <francesco@valla.it>,
+	Raul E Rangel <rrangel@chromium.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Guo Weikang <guoweikang.kernel@gmail.com>,
+	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com
+Subject: Re: [PATCH v3 0/3] Use kmem_cache for memcg alloc
+Message-ID: <aAsRCj-niMMTtmK8@casper.infradead.org>
+References: <20250425031935.76411-1-link@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,46 +59,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422153737.5264-1-qasdev00@gmail.com>
+In-Reply-To: <20250425031935.76411-1-link@vivo.com>
 
-On Tue, Apr 22, 2025 at 04:37:37PM +0100, Qasim Ijaz wrote:
-> fpga_mgr_test_img_load_sgt() allocates memory for sgt using
-> kunit_kzalloc() however it does not check if the allocation failed. 
-> It then passes sgt to sg_alloc_table(), which passes it to
-> __sg_alloc_table(). This function calls memset() on sgt in an attempt to
-> zero it out. If the allocation fails then sgt will be NULL and the
-> memset will trigger a NULL pointer dereference.
-> 
-> Fix this by checking the allocation with KUNIT_ASSERT_NOT_ERR_OR_NULL().
-> 
-> Reviewed-by: Marco Pagani <marco.pagani@linux.dev>
-> Fixes: ccbc1c302115 ("fpga: add an initial KUnit suite for the FPGA Manager")
-> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+On Fri, Apr 25, 2025 at 11:19:22AM +0800, Huan Yang wrote:
+> Key Observations:
+>   1. Both structures use kmalloc with requested sizes between 2KB-4KB
+>   2. Allocation alignment forces 4KB slab usage due to pre-defined sizes
+>      (64B, 128B,..., 2KB, 4KB, 8KB)
+>   3. Memory waste per memcg instance:
+>       Base struct: 4096 - 2312 = 1784 bytes
+>       Per-node struct: 4096 - 2896 = 1200 bytes
+>       Total waste: 2984 bytes (1-node system)
+>       NUMA scaling: (1200 + 8) * nr_node_ids bytes
+> So, it's a little waste.
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+[...]
 
-Applied to for-next.
+> This indicates that the `mem_cgroup` struct now requests 2312 bytes
+> and is allocated 2368 bytes, while `mem_cgroup_per_node` requests 2896 bytes
+> and is allocated 2944 bytes.
+> The slight increase in allocated size is due to `SLAB_HWCACHE_ALIGN` in the
+> `kmem_cache`.
+> 
+> Without `SLAB_HWCACHE_ALIGN`, the allocation might appear as:
+> 
+>   # mem_cgroup struct allocation
+>   sh-9269     [003] .....    80.396366: kmem_cache_alloc:
+>     call_site=mem_cgroup_css_alloc+0xbc/0x5d4 ptr=000000005b12b475
+>     bytes_req=2312 bytes_alloc=2312 gfp_flags=GFP_KERNEL|__GFP_ZERO node=-1
+>     accounted=false
+> 
+>   # mem_cgroup_per_node allocation
+>   sh-9269     [003] .....    80.396411: kmem_cache_alloc:
+>     call_site=mem_cgroup_css_alloc+0x1b8/0x5d4 ptr=00000000f347adc6
+>     bytes_req=2896 bytes_alloc=2896 gfp_flags=GFP_KERNEL|__GFP_ZERO node=0
+>     accounted=false
+> 
+> While the `bytes_alloc` now matches the `bytes_req`, this patchset defaults
+> to using `SLAB_HWCACHE_ALIGN` as it is generally considered more beneficial
+> for performance. Please let me know if there are any issues or if I've
+> misunderstood anything.
 
-> ---
-> v2:
-> - Remove stable CC tag since its just a kunit test
-> 
->  drivers/fpga/tests/fpga-mgr-test.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/fpga/tests/fpga-mgr-test.c b/drivers/fpga/tests/fpga-mgr-test.c
-> index 9cb37aefbac4..1902ebf5a298 100644
-> --- a/drivers/fpga/tests/fpga-mgr-test.c
-> +++ b/drivers/fpga/tests/fpga-mgr-test.c
-> @@ -263,6 +263,7 @@ static void fpga_mgr_test_img_load_sgt(struct kunit *test)
->  	img_buf = init_test_buffer(test, IMAGE_SIZE);
->  
->  	sgt = kunit_kzalloc(test, sizeof(*sgt), GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, sgt);
->  	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  	sg_init_one(sgt->sgl, img_buf, IMAGE_SIZE);
-> -- 
-> 2.39.5
-> 
-> 
+This isn't really the right way to think about this.  Memory is ultimately
+allocated from the page allocator.  So what you want to know is how many
+objects you get per page.  Before, it's one per page (since both objects
+are between 2k and 4k and rounded up to 4k).  After, slab will create
+slabs of a certain order to minimise waste, but also not inflate the
+allocation order too high.  Let's assume it goes all the way to order 3
+(like kmalloc-4k does), so you want to know how many objects fit in a
+32KiB allocation.
+
+With HWCACHE_ALIGN, you get floor(32768/2368) = 13 and
+floor(32768/2944) = 11.
+
+Without HWCACHE_ALIGN( you get floor(32768/2312) = 14 and
+floor(32768/2896) = 11.
+
+So there is a packing advantage to turning off HWCACHE_ALIGN (for the
+first slab; no difference for the second).  BUT!  Now you have cacheline
+aliasing between two objects, and that's probably bad.  It's the kind
+of performance problem that's really hard to see.
+
+Anyway, you've gone from allocating 8 objects per 32KiB to allocating
+13 objects per 32KiB, a 62% improvement in memory consumption.
