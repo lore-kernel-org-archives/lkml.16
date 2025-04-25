@@ -1,153 +1,193 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021117.outbound.protection.outlook.com [52.101.129.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DFC1DDC08
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599661; cv=none; b=pWyEnQqYL1jKdszt68MyVGS2FYQh9rTMJCkrsSsKqdHpTNBGVReV/vERnsMgSTi2vgrpynpb8d12gKi9dCRiMTP4BdkEMzhD0EJVmFvvfRu2dhIFXk838BGcg38oU2Jr1bIFRwJLF15MBsdUw9rvR4Cj/1mpCoocmwGMMjxUEjY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599661; c=relaxed/simple;
-	bh=aV+e3F8mAzBUf2Bp1xvLIc7M86ZpGwplUq8NhxsAMs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zd04ItPfqIt6QRWIMD9hTKza8pxdUqlDMqlnRSL7T5ZiSun3bowR0Ba1aF7FsdosXBIBpcFcRvcRzxU3IU3l2Ibufk0boCIYh0ijsPbOpQkJkXtY3Kf12/3WOfx97We8yLu87qRd+1lNxExTA/S1Phc6KPs/PN/xJaL5ib1H+yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C89/MkKp; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C89/MkKp"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so2475001a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745599659; x=1746204459; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eHnQmsHLpTkXpk9pCYWZ2+u9EL7Tjau9DVeHds4Cfpo=;
-        b=C89/MkKpM4GEUSuMC8ZIUOUOYtQrilRiWLdHUovVGQsDFRNF82l8QSSgu51nhGxGw8
-         49mcVgSlnpN04hpgO4MHFGEW7G18NxYNgyBbwr86Xkft8qMF4jVNxv0OLLzFlgMO7KdB
-         BxKVguwbXw5gnjOCkx8JEcpESaPCyq8sJvmqsn+ORAl6ps3VLgVKCbJvsVNhS8cir2dj
-         iDBVX+cboiOsFVrlny3L74Y7vFKzENP7XSv0DtxEFW19Z2UEtms3lrN9wgL57prgJgho
-         LzZnwTyAMUTeljR83AYE8ekAm8T85b7IGEunYYTLkrW2X14P5tQj99O6HymXscShIWhT
-         DfDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745599659; x=1746204459;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eHnQmsHLpTkXpk9pCYWZ2+u9EL7Tjau9DVeHds4Cfpo=;
-        b=GW1SZv1QmNSqdpkFjvniG8lflhN/5+eZIIhiUmeOSu+7ooDNlaIuliA3VlxmgLDfxw
-         2vXT7bl+CSQASj8LySPRJ0uajTWCCulkhSQknVbEomim41ctNWXQBEwhV2LcpOhvwd00
-         rvgSTLHU/kiooMwmI7ibPllYaHMi0YBf7bJAq7Z+ku9ayc4pBCYezpdaRIw0pL13rhhh
-         qFNjiwqS3dqGrqxSUEC/U9v+lvOMqawlk9Je1uqCY+Vvkw/Gap7tHyJTHogEUQ2Ycebw
-         iFEVGK9BqXp0nLo9feU6Z8mrhBuhVmgAR+HhzCs3wF/lTe9Yg+mGH4EfuYuvFx50e+Bw
-         KNHA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Stx7xlp5y4mfxpfLhT0Cf5KmEhuVxtuTB1rYTwZdH/PB5yVkAR7J6mGqRAdF65rWK9mwBhKc1/88FPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygFDe4wTjO+UBSkOgEYGaivpTcRZTeAzEBZiGM2Qzpvw2DP4B7
-	pJcc5EgjRMnPRtqDiq864KovLo1FdM5ZS+KGm3brxxDV0LdwkWD4RrZj1MVTLzg=
-X-Gm-Gg: ASbGncsFk2EW2Qhfe0VChDDEATj4f9YIynhkEVzzlgR4aUnbxbnU6OsXr9daYEzJoO6
-	VimnE24XP0hLNfa47BRZt32v4N4I7nZIFLkTGYIbj6n3TMtxz61r5Le9dQc611GD6YX2ZqAubpV
-	8cf0IhOMT8vb9LLvtkGR80PIvvhoCSQmGi/jTf7mHA4btFp5/4ISEXRVSeQ4SYwcb1+mz1QAIku
-	Xk3YjLIVxJ8J4xgs1L+6lgFCJ8b+/PjKf1aj3RZ/UBDvjMmtLjminyES3FhANY7f8hT2icRuwk3
-	IQBhCMt47xfoZVx+wZ5vHcyUPa+5LFaAoYVQxZWxzCoC
-X-Google-Smtp-Source: AGHT+IEFtm0kx9ryjYyAugqM7VqnMN866ofICD5304SL4j5RNB8nYzku/8tyb6zQ0c1+PCz7Hhe9FQ==
-X-Received: by 2002:a05:6a21:920b:b0:1ee:c390:58ac with SMTP id adf61e73a8af0-2045b98feb4mr4519768637.34.1745599659333;
-        Fri, 25 Apr 2025 09:47:39 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:e9ed:84f3:2e15:1cdc])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a420sm3487235b3a.107.2025.04.25.09.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:47:38 -0700 (PDT)
-Date: Fri, 25 Apr 2025 10:47:36 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc: andersson@kernel.org, shawnguo@kernel.org, festevam@gmail.com,
-	kernel@pengutronix.de, linux-remoteproc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] remoteproc: imx_rproc: release carveout under
- imx_rproc after rproc_attach() fails
-Message-ID: <aAu8qPl7EpcIU0oe@p14s>
-References: <20250424122252.2777363-1-xiaolei.wang@windriver.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E7F1DDA31;
+	Fri, 25 Apr 2025 16:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745599664; cv=fail; b=qjGpcV9hBSLTr+kZnN+nEJRLRO7ONYZOfpsSDtsSXfndG2VHW9P2/hlU1WhGkeAMXOafk7mrUbLlfL/POeNejfLrGx0CcXqe/QxWVnd5ygxo4D1DINUaegS2jBD3GWdcZi5S7Z99wdSSKtJmnFnbC/pXCqo8c6Y0rWjy45sQgHQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745599664; c=relaxed/simple;
+	bh=MQN6u8xjaNd3vllZQxrA0NbNi0CLgkKP9SRlNJYJ9bo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ObPEdqYjSyEZ4ogEmnnmPdpepLaS8hk8PJPOKTVKc0j6r8WzgmQFFqRPQWEcZJr7Xjgq3O9u+VAA00vAo0btyGPqUSdskkuMxw2XMjqpo1/VnctMbruupSVLhelNYP+WjNpQRKnA+r+oNww333u6fiWZOIKaKxQANf5EhONy2dA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KQ+s+kAaRQnmOPxFeHhV+8pBWAuKlqW9qLlNHWjz3vnyryilbVyf7psNFG0d/PqtD7ml3X2tZH6q9ysCOejX/veHMyqOPpspO/a7ZJc2MTRk/tF5JmoeGHSSzBtit6oWOaRPWxp/vTuxU2xnnFg6iIHRZAZkl7ZGDV8LfwzQMuOE8V/QTLR7UBrLAdC2rCD3Cyf4I1UtD+eI7WWJmZUWwqHBqkcluVCKrqafYwZWbJ1dufT6sTuvPPsbfmNaAWdDIRutZK0rCTHNEcsnxtqMcl8D251zrouLJU/EvQLVJatZ0WccW1AisLemBnaSKQ2OXIdf5O25BEU66T/TVJ08Rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wSJCRRP6Pn6iWRiZvLOOXbaI7O4Cx9EoU1qStjwXR+4=;
+ b=dxcdEhcP3CmF8ZCMV3nC0Q5Wyyqd2WenKkpQp+wHcGDgejahuYBmocUaonjLCdKlm9Ar1uLFRPYVpOVZGg4ikm9j45tNHumUVQAgSgOMXrFAatFm26fbGSYx80/kLhWKd6RdlyR6sep9J0KgsWUlLWl5Rb9n+pnHNXkTgmgeQS8EeGw4qei5psazjudQZ6ble9yG1A7rQZcQU+Yq4AoLYGe77m7EqUUkWrGhzyPnsI/c7riiiUP/ksN0haTdtPtEaOMHXCwhR/puGj2rqvbCr/Mbh3TrsZoLhfQako8t9P2es2FbbcGd3OJyQKvI4zJbZZz15ktqrCVOdHUzGEhOLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCP286CA0338.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:38e::17)
+ by JH0PR06MB6851.apcprd06.prod.outlook.com (2603:1096:990:42::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Fri, 25 Apr
+ 2025 16:47:34 +0000
+Received: from OSA0EPF000000C8.apcprd02.prod.outlook.com
+ (2603:1096:400:38e:cafe::e) by TYCP286CA0338.outlook.office365.com
+ (2603:1096:400:38e::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Fri,
+ 25 Apr 2025 16:47:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000C8.mail.protection.outlook.com (10.167.240.54) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 16:47:32 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id F202F41604EB;
+	Sat, 26 Apr 2025 00:47:31 +0800 (CST)
+Message-ID: <20d64403-d778-4601-80a4-b782225f70ff@cixtech.com>
+Date: Sat, 26 Apr 2025 00:47:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424122252.2777363-1-xiaolei.wang@windriver.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
+ new EP configurations
+To: Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>,
+ Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-3-hans.zhang@cixtech.com>
+ <20250424-elm-magma-b791798477ab@spud>
+ <20250424-proposal-decrease-ba384a37efa6@spud>
+ <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250425-drained-flyover-4275720a1f5a@spud>
+ <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+ <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000C8:EE_|JH0PR06MB6851:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90cb3ba4-cb55-43a1-155e-08dd8418e034
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|7416014|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eTFuNWRrcFpJdW5hY29jMm1QN0d3REJQZFZSdkJ0YmdGZTQ3RFZqV1gySHF2?=
+ =?utf-8?B?RHBqVmxGVXhNVnBibVMyMUMzYi9jSTF2aFJCSHNWRHZHV0t6cHVuSEs1cVd0?=
+ =?utf-8?B?eVZTRy9CZ3VmSXppeGZ3cHJWOEhBYlVJUElad3ljV3VXNFRhMmg0S0lueDZo?=
+ =?utf-8?B?RTBqcmVhL0VFbTg4aGhrWXhXSk5SM1ZCT2pNTHZsREFNQitmY3FoRnUzWmZC?=
+ =?utf-8?B?alFCWjhEckJWaG8yUmtkNDlyaHRMT1A4NEovaHZRblZmeURMckplRzJFSlRB?=
+ =?utf-8?B?cVlxQjRQQksvRVZEdk43U1BqcGRGdUhEWkM1dW1hQWdvRDdZQms0Ui9OZFh5?=
+ =?utf-8?B?K2NkS2REM2VOOXhtMkhtYUZTYm9uQlRVblZscFdsRGhURld5WGlJWUJlODFq?=
+ =?utf-8?B?OUJ2b3lRUWlEQ0lnQzB5R1JnbXc2aWpISUc1NEY4allveHc0T1krdzF6bzVB?=
+ =?utf-8?B?U2lTRDlBUzdLYXF0czRseDBicm9NM3BEL05tRmJwblR5ZExhbUt0clFCRG4r?=
+ =?utf-8?B?QnlKLzhWZVlZelEzWGJwa2xqd3ViaGFpSmNhR0tIZmcxU05HMzRKNEgyVURk?=
+ =?utf-8?B?a3k1aWFoNCtMWTJzWGtQRUo2WURlVWsxWEIwVXlFYy9rZzlKckFjb2lCSnhE?=
+ =?utf-8?B?eDhxZnhOL2dOTXI0TjBnSWhKZzFGSjVNQWt3bUdtbHdCTGVGS2dFYTg0Vi94?=
+ =?utf-8?B?ZFFNcWVwNUZQcjc1aDFTeXVDVVJpV3VnLzZTUDBCVGpRSW9zRUMweUY1THZV?=
+ =?utf-8?B?UG9WeVVTZ0NqUFgreFAyUjFRaGtpL1RSZ0V3UXJRN0VNcWZTMWM3ZklZRFZo?=
+ =?utf-8?B?WEkxMGxjZEgzQythQzVPbXUzR3VnSFlqNFBSd21LdmQ0M3VuZ0RETmc0OHVh?=
+ =?utf-8?B?bytsMzNpRzR6OUZUWUhBa2dJVDZ4eEM0aGhEd1llTmErcy9JS215aytKU3lk?=
+ =?utf-8?B?ckxLSXBKRWw3bEpRTmE1MHhWeTVoSTVlUFZ6UytIS2FLNkFMbFF6a0xqVG5n?=
+ =?utf-8?B?MXA5cDF2UDBQNzBXTktDS2Y5aTZKTk9DK2dDK1FlWGJIVUxUcnBYVG1ZL2dL?=
+ =?utf-8?B?dVRzS2hXbU1iQnFFY2dYK0RhbUMvNXVaNTJseFMzRDRydnRwb1l5dFowWUt1?=
+ =?utf-8?B?dWFTVC93VGRZL2dIbUYrVU1NQ1ZTVkJnMDJKSkwvWjkvbUtTbW1CTmlBL251?=
+ =?utf-8?B?UFJJL0xHU0wzeldIQ05ZWDR5NnI2bjZhQjB6RXlwblEwazF5KzJhMGVMd2xk?=
+ =?utf-8?B?VmVoQVExS0FnYngyNHNrVDQxZzFsT2dRSWdGd2svcHdkMEE0dmVsOXRvNEI3?=
+ =?utf-8?B?UkZQMkRHSXpXdTFTMUx2eUthaG1MWERIRjExTFREVmUrRHJhNUw2VzJJT3E2?=
+ =?utf-8?B?S2xydjFiTjNzWElnNCtqOWVqSjdqVjFBRGJzNE9DVEJPZ3ZtQVdxN2pkU29t?=
+ =?utf-8?B?UmZLdzY5SUdOTEg5NGhsNDBOZ20vN1NCVjZVSm9aU29EL0l6S3Q3bmYrWSt0?=
+ =?utf-8?B?b1VKZnFmZlVtOEtydnR3b0ljaFFRbzFIUFJQV3hod0hJOXpDeThUV3JrL2ZK?=
+ =?utf-8?B?K2NvcE1lUVAxb1RyNko2YzcxSWhmQkY0dnRvUG15bUFDbFpUaE9SRE5Yc3RF?=
+ =?utf-8?B?OEI5c2RucTYxTFRNYmt1QnJrQ296NEErVVRJWmV2Q2lEOWdnZ0FBYnJ1MVlh?=
+ =?utf-8?B?REhtWmhaR1A5OC9SaklEZGdnRDNhZzc2WnBISXJmbzdSb0FpQThIVzRUR0Vv?=
+ =?utf-8?B?NWNMeDJabERtajYzNWZwOU84L01QMU53and2Zm05TFVybjRROGpoTXZNOFF5?=
+ =?utf-8?B?TG1ocjJSbmRqeGNpdzJzMStDZWpuUERiVVdXdXR3MHZYV2FicWtmTm15TDIw?=
+ =?utf-8?B?N1QvTStHY1dnbHZKOGdGaE5MbGNQc1lyMVhRUkU4cVp2QkhIMGVPZG1WQjNG?=
+ =?utf-8?B?bWtSYSttOEIrdjdYMjRoVEVRclcrSUZmZkkvL1d1TXQxZ2VFa05mcWkwR3k4?=
+ =?utf-8?B?aHBWUS92RHZXdjl6b2tPNTVRbk9aMEtRcjlubmlDOWc2RWlyakxTbFQ3ZDJI?=
+ =?utf-8?Q?ZacmoJ?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(82310400026)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 16:47:32.9568
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90cb3ba4-cb55-43a1-155e-08dd8418e034
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C8.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6851
 
-On Thu, Apr 24, 2025 at 08:22:51PM +0800, Xiaolei Wang wrote:
-> Release all carveouts under imx_rproc after rproc_attach() fails to solve
-> the following kmemleak:
->
 
-Please provide more details on the steps needed to reproduce this problem and
-where in rproc_attach() the original failure occured.
 
-Thanks,
-Mathieu
-
-> unreferenced object 0xffff0000861c5d00 (size 128):
-> comm "kworker/u12:3", pid 59, jiffies 4294893509 (age 149.220s)
-> hex dump (first 32 bytes):
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-> 00 00 02 88 00 00 00 00 00 00 10 00 00 00 00 00 ............
-> backtrace:
->  [<00000000f949fe18>] slab_post_alloc_hook+0x98/0x37c
->  [<00000000adbfb3e7>] __kmem_cache_alloc_node+0x138/0x2e0
->  [<00000000521c0345>] kmalloc_trace+0x40/0x158
->  [<000000004e330a49>] rproc_mem_entry_init+0x60/0xf8
->  [<000000002815755e>] imx_rproc_prepare+0xe0/0x180
->  [<0000000003f61b4e>] rproc_boot+0x2ec/0x528
->  [<00000000e7e994ac>] rproc_add+0x124/0x17c
->  [<0000000048594076>] imx_rproc_probe+0x4ec/0x5d4
->  [<00000000efc298a1>] platform_probe+0x68/0xd8
->  [<00000000110be6fe>] really_probe+0x110/0x27c
->  [<00000000e245c0ae>] __driver_probe_device+0x78/0x12c
->  [<00000000f61f6f5e>] driver_probe_device+0x3c/0x118
->  [<00000000a7874938>] __device_attach_driver+0xb8/0xf8
->  [<0000000065319e69>] bus_for_each_drv+0x84/0xe4
->  [<00000000db3eb243>] __device_attach+0xfc/0x18c
->  [<0000000072e4e1a4>] device_initial_probe+0x14/0x20
+On 2025/4/26 00:21, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
 > 
-> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> On 25/04/2025 17:33, Hans Zhang wrote:
+>>
+>>
+>> On 2025/4/25 22:48, Conor Dooley wrote:
+>>> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
+>>>>>
+>>>>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
+>>>>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
+>>>>>>> From: Manikandan K Pillai<mpillai@cadence.com>
+>>>>>>>
+>>>>>>> Document the compatible property for HPA (High Performance
+>>>>> Architecture)
+>>>>>>> PCIe controller EP configuration.
+>>>>>> Please explain what makes the new architecture sufficiently different
+>>>>>> from the existing one such that a fallback compatible does not work.
+>>>>>>
+>>>>>> Same applies to the other binding patch.
+>>>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
+>>>>> soc-specific compatible for your integration not needed?
+>>>>>
+>>>> The sky1 SoC support patches will be developed and submitted by the Sky1
+>>>> team separately.
+>>> Why? Cixtech sent this patchset, they should send it with their user.
+>>
+>> Hi Conor,
+>>
+>> Please look at the communication history of this website.
+>>
+>> https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
 > 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 74299af1d7f1..c489bd15ee91 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -595,6 +595,19 @@ static int imx_rproc_prepare(struct rproc *rproc)
->  	return  0;
->  }
->  
-> +static int imx_rproc_unprepare(struct rproc *rproc)
-> +{
-> +	struct rproc_mem_entry *entry, *tmp;
-> +
-> +	rproc_coredump_cleanup(rproc);
-> +	/* clean up carveout allocations */
-> +	list_for_each_entry_safe(entry, tmp, &rproc->carveouts, node) {
-> +		list_del(&entry->node);
-> +		kfree(entry);
-> +	}
-> +	return  0;
-> +}
-> +
->  static int imx_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
->  {
->  	int ret;
-> @@ -675,6 +688,7 @@ imx_rproc_elf_find_loaded_rsc_table(struct rproc *rproc, const struct firmware *
->  
->  static const struct rproc_ops imx_rproc_ops = {
->  	.prepare	= imx_rproc_prepare,
-> +	.unprepare	= imx_rproc_unprepare,
->  	.attach		= imx_rproc_attach,
->  	.detach		= imx_rproc_detach,
->  	.start		= imx_rproc_start,
-> -- 
-> 2.25.1
+> And in that thread I asked for Soc specific compatible. More than once.
+> Conor asks again.
 > 
+> I don't understand your answers at all.
+
+Dear Krzysztof,
+
+I'm very sorry. Due to the environmental issue of Manikandan sending 
+patches, I just want to express that I'm forwarding the patches for 
+Manikandan. Some parts were developed together by us and verified by me.
+
+Please also ask Manikandan to reply to Conor and Krzysztof's questions.
+
+Best regards,
+Hans
