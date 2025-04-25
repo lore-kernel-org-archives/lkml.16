@@ -1,70 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC372571B0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DA1256C8D;
 	Fri, 25 Apr 2025 11:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579927; cv=none; b=HwX9dCZzDveItjd9xtxuoKHNhA2DTKGpCVNxtRzaNYNzQSuMcmhBLGYDmDOvJV+uJBb/l8NDzBbpmJvTWcv3HE2HBXqxrXwMrettf0r8RyQ55NlfkJVOmggo3QKzQ4/zRlBL/QjN9MMgm8zgbqwI2Ra+DEnwpIZvI6A3wr3jI+0=
+	t=1745579927; cv=none; b=msBMxDLaH+OTHLDUfTYod8jbFuqwc4Kgpqe3592nNGkvq0F3razYwuE09kLwAORHiVh/XT2VR8abAIHKN6mLO8BXPxksijgWd+LYp26DpQYRSno9vlY8FrKJ99RSe6VBbWT1oH/fZlQuwVvOQhUj/6n2cDSt8urylGJBHT3MGz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745579927; c=relaxed/simple;
-	bh=NqgGdkd8g5cQ3OKGc4RKIxtEOuoRmO3gUTre8U3aPfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGeC12N3u972t7Q9qvmL5QVuVIVqyNWox1cWLZ0ACUqwqCGv5lDw72dGjzC9wZ6BMJSBL9mduPYkR/YRcmAsFDTuM32O7DOn59AJhdMEMXuoI/J39Bvky4oW/VEPo4PB5+Uq4y5V9wO2gll5Jfcnl4ND+GHUXNyc4Wr5ZWOTq4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U70uki6V; arc=none smtp.client-ip=10.30.226.201
+	bh=9oV0RAXjgZPgX4bJl0iXP3AyceiTlXZbI6u/9AcEd34=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VLingKbqVbnzhJPtq3KgL2nn4V0fCwONDc3ZKtgMNFEJy5i9LHoFOnO7HhGyoMIFWq19YISotbIj6LbzBxNH+O7gJ1liwV+NSYOJMHPZ+iPWpzu7gve4D1IXguYd9SyWrdh6lcweR8Y+/GFCHcMuR4v8dPbwHt49lU3zRWmV8JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=PTMou2Km; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U70uki6V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04964C4CEE9;
-	Fri, 25 Apr 2025 11:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745579925;
-	bh=NqgGdkd8g5cQ3OKGc4RKIxtEOuoRmO3gUTre8U3aPfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U70uki6V7H3WduGjz/GRRmi5rOak9aAX2Q6yKONn7YHn3T1PVH3Gitavn4j97BhEg
-	 sRAcrTy3Zot/eYQao2xeNQVA8zvzWzP6tjAxlbZaSPz8G7vfSFIwzCBBJI206avGgT
-	 U5v1qHodWaPdRiLfndj0KJYmmVF/GXuOk/0XhKLQbnQYuA1LzUeKynbUbqXW7t4pnk
-	 HdECg/sk8b0FMS1ecwnh3s6pVaEHor9ewIu8gxStZ/sBsyaFiPeqwBpXjeGRNCOwD7
-	 Zh9uL2CVzBUG+A4o4xEkVnF1cZqZhu2W4xh2BRzDN+na1zqpAT69q/3FRD/DjP40ps
-	 eqGV8N/FOVTmg==
-Date: Fri, 25 Apr 2025 13:18:40 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 3/5] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
- definition to amd/fch.h
-Message-ID: <iuq72okvc4nhy2ddgkkyb43mhm55ujxru3duqi3whnmgt4zrp3@i5nxnsl2nyc5>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-4-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="PTMou2Km"
+Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8a3b:5a00:3490:6581:3910:8337])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 826992E08D31;
+	Fri, 25 Apr 2025 14:18:41 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1745579923;
+	bh=gXOg+mPEJn+J6EYJM9On4ifLChbXUraaMbSMCOiL9l0=; h=From:To:Subject;
+	b=PTMou2KmxZkao9KQpoPxkTwmy9G4/O7+iOk0TGMijNP7XCqVLkOoH0bwWcSm5a6uW
+	 GeeiafRYBGwLWcvgxr64FDBh1GecS57lUqMXRdmCc4GIHYEhmLT35x9lRBYNgn3v9I
+	 TuKCmgokD8I7x9XQ7tzp1/7rrNEOkKb7zWyauD3c=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a02:2149:8a3b:5a00:3490:6581:3910:8337) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+	Derek J Clark <derekjohn.clark@gmail.com>,
+	Kevin Greenberg <kdgreenberg234@protonmail.com>,
+	Joshua Tam <csinaction@pm.me>,
+	Parth Menon <parthasarathymenon@gmail.com>,
+	Eileen <eileen@one-netbook.com>,
+	linux-kernel@vger.kernel.org,
+	sre@kernel.org,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	mario.limonciello@amd.com,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v10 12/16] platform/x86: oxpec: Follow reverse xmas convention
+ for tt_toggle
+Date: Fri, 25 Apr 2025 13:18:17 +0200
+Message-ID: <20250425111821.88746-13-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
+References: <20250425111821.88746-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422234830.2840784-4-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174557992239.22999.6367353196272731325@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Hi,
+Since the rest of the driver follows this convention, apply it to the
+tt_toggle attribute as well.
 
-On Tue, Apr 22, 2025 at 06:48:28PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> SB800_PIIX4_FCH_PM_ADDR is used to indicate the base address for the
-> FCH PM registers.  Multiple drivers may need this base address, so
-> move it to a common header location and rename accordingly.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/oxpec.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 45dfe0a7578b7..96e9b7205be42 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -275,9 +275,9 @@ static const struct dmi_system_id dmi_table[] = {
+ /* Helper functions to handle EC read/write */
+ static int read_from_ec(u8 reg, int size, long *val)
+ {
+-	int i;
+-	int ret;
+ 	u8 buffer;
++	int ret;
++	int i;
+ 
+ 	if (!lock_global_acpi_lock())
+ 		return -EBUSY;
+@@ -389,8 +389,8 @@ static ssize_t tt_toggle_store(struct device *dev,
+ 			       struct device_attribute *attr, const char *buf,
+ 			       size_t count)
+ {
+-	int rval;
+ 	bool value;
++	int rval;
+ 
+ 	rval = kstrtobool(buf, &value);
+ 	if (rval)
+@@ -411,8 +411,8 @@ static ssize_t tt_toggle_show(struct device *dev,
+ 			      struct device_attribute *attr, char *buf)
+ {
+ 	int retval;
+-	u8 reg;
+ 	long val;
++	u8 reg;
+ 
+ 	switch (board) {
+ 	case oxp_mini_amd_a07:
+-- 
+2.49.0
 
-Thanks,
-Andi
