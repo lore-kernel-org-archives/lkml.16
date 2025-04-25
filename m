@@ -1,71 +1,132 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A411C28E;
-	Fri, 25 Apr 2025 03:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166D42701AE;
+	Fri, 25 Apr 2025 03:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745550023; cv=none; b=pxq/zIBIm5KNlB+4ZMueRFDRZrnnyLj/AV896LfZDOHDIlHN/8nzFXce5mvXLLJYpofahUgRNPurY9RpxJaq3o7v3Ctmx0CVB6cFX7rn6neNDmPhp4K4A5118I55dtqyLOSuN+nqhRZ2Cpl6eEJfpK1WWHYyZ6aEQjp1WC9onWI=
+	t=1745550228; cv=none; b=oLUd/VLRCycxozkZAbSyi7ZMTTgERKzuhxOS+mY24uGvCat0nQ/rL3uLO6lNfQoNSPmXoeM4F7fChBdO6KjASiKH43aRsRkQ8KbKkT+Zh3URMalDrw00LlU5OhcXSl+Jm/VcEJRbErkfwVgePFY3NY6apN2+zdq54EmxNltXBPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745550023; c=relaxed/simple;
-	bh=LVmXxPc0GsxJCoufkyTtR1wIh6N17gyPoDGVcYXM0fk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tg9yWv3KgFeD6X4JlcqUTFnyPxKAaTmhZ9IMRwPi4a39uXDGzx+Ie9wIqdrwDregxV0Ag7n5iqKUFhrfUUIR2HGU5AtPC3dVryzCEBikSFq5qWrijktOvsO0+3+XqeIZ94jnukbIfnBfiVmqxDNl4zqGmxv+vSm8m12V56HjRIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from localhost.localdomain (unknown [119.122.214.249])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 131194130;
-	Fri, 25 Apr 2025 11:00:10 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: dlan@gentoo.org
-Cc: amadeus@jmu.edu.cn,
-	andre.przywara@arm.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	jernej.skrabec@gmail.com,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	robh@kernel.org,
-	samuel@sholland.org,
-	wens@csie.org
-Subject: Re: [PATCH 1/1] arm64: dts: allwinner: correct the model name for Radxa Cubie A5E
-Date: Fri, 25 Apr 2025 11:00:06 +0800
-Message-Id: <20250425030006.45169-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250425023527-GYA50272@gentoo>
-References: <20250425023527-GYA50272@gentoo>
+	s=arc-20240116; t=1745550228; c=relaxed/simple;
+	bh=PbrTW9Nb3NrHcVwh2uM1HWLU9tSO0MnJRZBwUbnBVL0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=cAZDsZ5FSwfNaClyUBC6IHl8f65aB5QzlmRIyXZ90OXCufdKZPF8AKbrcbaGlrNg2Uf6gzg6Pt5MGw8i/8dShyLpL0SVS7sBeekP1t0QXeWgMotZAQ7cq1Hp/r4h1/LhCnP2bolIe8VJV+qeuDJ6TPslc8Lb3vziiSEk9ZBHdoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NY3Q2Aod; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NY3Q2Aod"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745550227; x=1777086227;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=PbrTW9Nb3NrHcVwh2uM1HWLU9tSO0MnJRZBwUbnBVL0=;
+  b=NY3Q2Aodw/+ExeUtZhELwWKZmiXIMAuZ2+xlMa3sdpfzw0VDL0OYxX6g
+   ciY0SlETOdAY4x/9jizOtS+XdTR58zU5Jgcw//HFUNmPCozApZqHiXKek
+   4HH2gGBaevOki7Pd7PT6UYHbJ4TQBg1p+rDfYZsc0uC3QExJhqfZJvWbG
+   tEEmGB23rj6CxZsMb8h4A2W0kCKDYA1wxlaspwFTVHIsGMlPtiS+rCX0E
+   MTiHOWIWG8IZSLVA4bUYpuz3Cj34WXwTRLjB9jgUaIYIzLyB3E16770vS
+   hcZnT25Zn7x13CA6tEyXFi8UVFKCWc1UTSlvNzu8bTA7sY+iqcmpaanYu
+   g==;
+X-CSE-ConnectionGUID: ChGvJbipRnOoLizS4jH7pQ==
+X-CSE-MsgGUID: fRRXzPL+TNa4qLaFoyNWbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57404506"
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="57404506"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 20:03:46 -0700
+X-CSE-ConnectionGUID: AdA3GsKPSe+gUpEo+rXnjA==
+X-CSE-MsgGUID: 2wUPDRRrROKdrn9fLmgO4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="136858169"
+Received: from ipu5-build.bj.intel.com (HELO [10.238.232.136]) ([10.238.232.136])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 20:03:43 -0700
+Subject: Re: [PATCH 2/2] udmabuf: fix vmap missed offset page
+To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>, Huan Yang
+ <link@vivo.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ Gerd Hoffmann <kraxel@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Dave Airlie <airlied@redhat.com>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
+References: <20250415031548.2007942-1-link@vivo.com>
+ <20250415031548.2007942-3-link@vivo.com>
+ <IA0PR11MB7185796FAA2A065CBE4EAB37F8BB2@IA0PR11MB7185.namprd11.prod.outlook.com>
+From: Bingbu Cao <bingbu.cao@linux.intel.com>
+Message-ID: <70a4ae40-dbfe-a8ff-c4d7-a11c35490b3a@linux.intel.com>
+Date: Fri, 25 Apr 2025 10:59:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQkNJVk1OSEpPHktPTB5IGVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKT1VJT0JZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE5VSktLVU
-	pCS0tZBg++
-X-HM-Tid: 0a966ae36a7503a2kunm131194130
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PRw6FAw*GTIBSj83AzhNIlEK
-	FBIaCypVSlVKTE9OTk5LS0pJSklPVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	QlVKSUlVSUpPVUlPQllXWQgBWUFKS0NLNwY+
+In-Reply-To: <IA0PR11MB7185796FAA2A065CBE4EAB37F8BB2@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-> It seems I'm a little bit late for this, but while we are here,
-> Can we also append 'cubie' to dts file name?
-> e.g. - sun55i-a527-radxa-cubie-a5e.dts
+On 4/22/25 1:22 PM, Kasireddy, Vivek wrote:
+> Hi Huan,
+> 
+>> Subject: [PATCH 2/2] udmabuf: fix vmap missed offset page
+>>
+>> Before invoke vmap, we need offer a pages pointer array which each page
+>> need to map in vmalloc area.
+>>
+>> But currently vmap_udmabuf only set each folio's head page into pages,
+>> missed each offset pages when iter.
+>>
+>> This patch set the correctly offset page in each folio into array.
+>>
+>> Signed-off-by: Huan Yang <link@vivo.com>
+>> Fixes: 5e72b2b41a21 ("udmabuf: convert udmabuf driver to use folios")
+>> ---
+>>  drivers/dma-buf/udmabuf.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+>> index 79845565089d..af5200e360a6 100644
+>> --- a/drivers/dma-buf/udmabuf.c
+>> +++ b/drivers/dma-buf/udmabuf.c
+>> @@ -120,7 +120,8 @@ static int vmap_udmabuf(struct dma_buf *buf, struct
+>> iosys_map *map)
+>>  		return -ENOMEM;
+>>
+>>  	for (pg = 0; pg < ubuf->pagecount; pg++)
+>> -		pages[pg] = &ubuf->folios[pg]->page;
+>> +		pages[pg] = folio_page(ubuf->folios[pg],
+>> +				       ubuf->offsets[pg] >> PAGE_SHIFT);
+> IIUC, it does not look like vm_map_ram() or the other functions it calls would
+> write to these tail page pointers (struct page*), which should be safe even
+> when HVO is enabled (based on your conversations with Muchun). However,
+> I am wondering whether Bingbu can test this out with HVO enabled?
 
-Usually we use the device name (without the vendor name),
-maybe sun55i-a527-cubie-a5e.dts would be better?
+Sorry, I cannot test HVO enabled case. I was running my case with local
+revert patch. :)
 
-Thanks,
-Chukun
+> 
+> Regardless,
+> Acked-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
+> 
+> Thanks,
+> Vivek
+> 
+>>
+>>  	vaddr = vm_map_ram(pages, ubuf->pagecount, -1);
+>>  	kvfree(pages);
+>> --
+>> 2.48.1
+> 
 
---
-2.25.1
-
+-- 
+Best regards,
+Bingbu Cao
