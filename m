@@ -1,139 +1,125 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066B4197A76
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29A197A76;
+	Fri, 25 Apr 2025 06:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745562886; cv=none; b=hWwvDQPyzMzDwL4jfOGFUADilIe3OWsWZdImKf/EqlGTFsHavEmLDFAjHJFjc7Gfy3olZLWhx4nHoABnL2wlNLSzEszR9s2ohWAbhi3krh3A5v+i1IPTXBSZQmOzRdzLT3sq0g1/ddJKl/bU0+WNmaJW8UpTB5GtxTMzAbZaZ8M=
+	t=1745562906; cv=none; b=cQ1K6uXZXg98D3In86od7+z8lQM5U38BB2kLSEMlMGV7iQ4O39xNopKa2iSPhL+G4LGxaPDY4fWrFUN6XE/umaXfqRhFFM7//ZPH9mjhJESv9v8l7Z+34bab9s+rKwmmk3JJifo/yLcn6phZgyxQIL9K6358N8/88fQkSLrNhfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745562886; c=relaxed/simple;
-	bh=RMClceeEw3Pp0PNyByhiQncZIxpsyEXKvuwaBOZuuyk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LktCaT8flx8eP8DuaIPHzwR4Kkha+IvjtXOKQsDoPZ3lf7raOLzDoRBwqznB+/QZQahkeSG+OVHVxqEI+zS5X2XAmdHl+IvYdummNqXoEBk2vWdwrj49rhJ3R1NDHnZvd4pG5wiNPFMBYig97Y0ddItpA2+ppsMWGZ9mC9+4Xgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re; spf=pass smtp.mailfrom=mwa.re; dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b=fsHfh106; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
+	s=arc-20240116; t=1745562906; c=relaxed/simple;
+	bh=Aqx/cGOnrFZrNXciPbrn78v2PMFDC23F0QG2WsnTUAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KBVc48hBAFSb4lFkHVtOXEBDojUSJ4hhMHqD3eghinYk1qkxI8xebFpz21i1/bcIY1QKD5gbTDCfT0FAWcGwXrX1JUHq2wiZFox4pvdRJfkeu0eARHg1zmluQpnBqZKHkEg+mwvXyfOKvTGTL4TIrjW/NoXdnGivLI+5o45aB/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QP+MzwIH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ylRA9HdN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="fsHfh106"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso8292625e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mwa.re; s=google; t=1745562882; x=1746167682; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ATm0YZIizzqFO6NYHckSCKHB/wQRMDp7NKOB7TkKpD4=;
-        b=fsHfh106jHqDfxNlwUvWPP084ZhAH4YKb1DTm3gOHyjzxxcieJ7NudGCZL4taHqaFe
-         WaOd+8BN7wv28CRSjpl+tDT8SC4nEpxJVR1VMXXSVgbNJoQ3rFn1YhrCYIhMg+ErKsxA
-         7y7zQVeC3HiOU4lDIHtlzzSRv0PtLdjcRyEQh6NZbRijJhnttKD/BT/kBKcyVWvB8F31
-         Q96CwPc9HmJLVU7dJ1jzX8axtb80fYa20nQxE0N4/mOMMfIL98NRwNmbTxL6o0zlvz4f
-         2Sxes+1yE/yfrFxS/Y+G68DSpqyJkfjwVhrNR/d8anDcxgBIwlJ1WoCLSPqxNWb9vKMt
-         V+iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745562882; x=1746167682;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ATm0YZIizzqFO6NYHckSCKHB/wQRMDp7NKOB7TkKpD4=;
-        b=mz2eBau3nEC0+ZHWBPVlgtF2/iV3YGwecqCtOGTH+p7qzC0x+61Podu3wB8XlGaBhS
-         e/fzhpmRdVgb2O8ouuMP3esoQdm1oCadcfvm6Ihifu5475YGGQOtdbbDeom9R9JeIz8i
-         UropxJqDs2b2l9VnOXgl1xJQIeUYO1TfnCDI19tnKlANLCt2OZWqa+WSIxKORitwrgQR
-         4hVFk3UkdTbUvSTjNgIbtwNCNnaGpq0FBGl02wke+RUQ62yw6Hg6RNu8miCSeeBoHCpO
-         O6RHf0lSioXdgzFd47oqYwMt8lLUtrFBsFfg5JqoIYkv1XY7Tg7L7S0XAZw7UHBaPgIt
-         Ynog==
-X-Forwarded-Encrypted: i=1; AJvYcCV9eU8gX7hiVOq1SlJr3P/w7KoJAXQ7AAdhQ82kQx+LaqdiHRLjj1Oszhox+WQZX/wo7IDsNaeF7RXRdys=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9n7kzGG/OGokD9TL/Hs4A0IG/0mfTFRIN0ey98k5fZ8YtcaZD
-	TiiMLnHKzXX6XcE4QzwTfMKcNQ1BKbawnf72JZIPp22d//Qp2ARdDqLvb6GRXwk=
-X-Gm-Gg: ASbGnctX9zFx+BmIe69gGbZVok9RXvSZE4e453EZeQToXe39kl0EczbDEfI9xwBbviM
-	dt3A51TlMsqALo/kutE0wG9tWvDF6JGPBP5aWvNP4fug2Y0iZDez7qTfbmS92O0wdxG752RsWgR
-	O7jxYTRPZCQbMwYlsHbkyTmQ9Hrk0OpgM0rHmoKCsDq4h9cUylM6JtvikBaLzHCebHLz5C8+Kci
-	qiOZWcQopdIWCUvXsgc2rPW1KrivwrGnK/2niMkjseVyzKjFMInuukDmkKG47DhlTkG5qghsPLF
-	bCKXOJ8b4JDNS/boZXEX4OvJkkkXfBDMBKruBWSfQp8Rg5ZS4L7orIgHGp6zEXAJU2DIx6QEuXK
-	I
-X-Google-Smtp-Source: AGHT+IHPBT1arHfn8aZXNBeNYhIoxB+S8InwNRMy21+W9UbsMjZ0BWEzOSiZGSJc8p5mtzw9g/gcYQ==
-X-Received: by 2002:a05:600c:83ca:b0:43c:fb36:d296 with SMTP id 5b1f17b1804b1-440a669b391mr7033735e9.25.1745562882041;
-        Thu, 24 Apr 2025 23:34:42 -0700 (PDT)
-Received: from mw-ac-stu-3.corp.mwa.re (static-195-14-251-13.nc.de. [195.14.251.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29b8efsm47310045e9.6.2025.04.24.23.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 23:34:40 -0700 (PDT)
-Message-ID: <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
-Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
-From: Antonios Salios <antonios@mwa.re>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, Marc Kleine-Budde
-	 <mkl@pengutronix.de>
-Cc: rcsekar@samsung.com, linux-can@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@mwa.re, jan@mwa.re, Markus
- Schneider-Pargmann	 <msp@baylibre.com>
-Date: Fri, 25 Apr 2025 08:34:40 +0200
-In-Reply-To: <a5684bfe-981e-4ba3-bbea-d713b5b83160@wanadoo.fr>
-References: <20250424125219.47345-2-antonios@mwa.re>
-	 <20250424-industrious-rottweiler-of-attack-e7ef77-mkl@pengutronix.de>
-	 <a5684bfe-981e-4ba3-bbea-d713b5b83160@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QP+MzwIH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ylRA9HdN"
+Date: Fri, 25 Apr 2025 08:34:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745562902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gN1TQUuXLsT2GFpQe5TlMWweD4/kCA/3ex6aTZSUynk=;
+	b=QP+MzwIHrh3yixUpvyxhXttXLqSsRO67GyQEnS+Jfgv3+4B3KZLaAZtvAXSa1OVZgjEpo2
+	tXouI1+GGKPI9UkbGXj7Je9aYTMLjRJEUHCWhapAV8RKwOAMzqMPBLW2MiTpM/qbTKuDPd
+	wZjqd462yiTY4zBIiwGfWJs8vgdLcvI2rRd8QOkClX0iIuiCwcSG8XAIOuMn8qyc4JqgRQ
+	pfNa+uGHNVcfCA9wSMDPy1c8xlXNk6FJaGfGet5xIdvL0ol0WPtTZyBsBUDxhY7zPdFDk3
+	LkI/HCfwq9T7UTMhdhN4bV8q/weGirzjbSHZcwRRDqXdYghPZ4H8WLdTzNSQ+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745562902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gN1TQUuXLsT2GFpQe5TlMWweD4/kCA/3ex6aTZSUynk=;
+	b=ylRA9HdNcA4lGr446Fp7K5Sc9rG4TOiJbQhHtCK10Wa360QNdEZdtI1NXoUXIdT6OXqOuN
+	soSqi48tUvoDn9Dg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
+Message-ID: <20250425063456.NBE35YHR@linutronix.de>
+References: <cover.1745390829.git.namcao@linutronix.de>
+ <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
+ <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
 
-On Fri, 2025-04-25 at 00:23 +0900, Vincent Mailhol wrote:
-> Maybe you can briefly describe what kind of bug (NULL pointer
-> dereference).
+On Thu, Apr 24, 2025 at 03:55:34PM +0200, Gabriele Monaco wrote:
+> I've been playing with these monitors, code-wise they look good.
+> I tested a bit and they seem to work without many surprises by doing
+> something as simple as:
+> 
+> perf stat -e rv:error_sleep stress-ng --cpu-sched 1 -t 10s
+>   -- shows several errors --
 
-It's a spinlock bad magic bug that occurs when one tries to send a CAN
-frame using cansend. The frame gets transferred nonetheless.
-I'm testing the driver in an virtual RISC-V 64-bit environment with a
-recent mainline kernel. The M_CAN controller is io-mapped to the
-system.
+This one is a monitor's bug.
 
-> Also, if you have the dmesg log of the error, this is something you
-> can add at
-> the end of the patch description.
+The monitor mistakenly sees the task getting woken up, *then* sees it going
+to sleep.
 
-Will do, I'm just waiting for more feedback on the patch before sending
-a v3. In the meantime, the dmesg log looks like this:
+This is due to trace_sched_switch() being called with a stale 'prev_state'.
+'prev_state' is read at the beginning of __schedule(), but
+trace_sched_switch() is invoked a bit later. Therefore if task->__state is
+changed inbetween, 'prev_state' is not the value of task->__state.
 
-$ cansend can0 123#deadbeef
-[   10.631450] BUG: spinlock bad magic on CPU#0, cansend/95
-[   10.631462]  lock: 0xff60000002ec1010, .magic: 00000000, .owner:
-<none>/-1, .owner_cpu: 0
-[   10.631479] CPU: 0 UID: 0 PID: 95 Comm: cansend Not tainted 6.15.0-
-rc3-00032-ga79be02bba5c #5 NONE
-[   10.631487] Hardware name: MachineWare SIM-V (DT)
-[   10.631490] Call Trace:
-[   10.631493] [<ffffffff800133e0>] dump_backtrace+0x1c/0x24
-[   10.631503] [<ffffffff800022f2>] show_stack+0x28/0x34
-[   10.631510] [<ffffffff8000de3e>] dump_stack_lvl+0x4a/0x68
-[   10.631518] [<ffffffff8000de70>] dump_stack+0x14/0x1c
-[   10.631526] [<ffffffff80003134>] spin_dump+0x62/0x6e
-[   10.631534] [<ffffffff800883ba>] do_raw_spin_lock+0xd0/0x142
-[   10.631542] [<ffffffff807a6fcc>] _raw_spin_lock_irqsave+0x20/0x2c
-[   10.631554] [<ffffffff80536dba>] m_can_start_xmit+0x90/0x34a
-[   10.631567] [<ffffffff806148b0>] dev_hard_start_xmit+0xa6/0xee
-[   10.631577] [<ffffffff8065b730>] sch_direct_xmit+0x114/0x292
-[   10.631586] [<ffffffff80614e2a>] __dev_queue_xmit+0x3b0/0xaa8
-[   10.631596] [<ffffffff8073b8fa>] can_send+0xc6/0x242
-[   10.631604] [<ffffffff8073d1c0>] raw_sendmsg+0x1a8/0x36c
-[   10.631612] [<ffffffff805ebf06>] sock_write_iter+0x9a/0xee
-[   10.631623] [<ffffffff801d06ea>] vfs_write+0x184/0x3a6
-[   10.631633] [<ffffffff801d0a88>] ksys_write+0xa0/0xc0
-[   10.631643] [<ffffffff801d0abc>] __riscv_sys_write+0x14/0x1c
-[   10.631654] [<ffffffff8079ebf8>] do_trap_ecall_u+0x168/0x212
-[   10.631662] [<ffffffff807a830a>] handle_exception+0x146/0x152
+The monitor checks (prev_state & TASK_INTERRUPTIBLE) to determine if the
+task is going to sleep. This can be incorrect due to the race above. The
+monitor sees the task going to sleep, but actually it is just preempted.
 
---=20
-Antonios Salios
-Software Engineer
+I think this also answers the race you observed with the srs monitor?
 
-MachineWare GmbH | www.machineware.de
-H=C3=BChnermarkt 19, 52062 Aachen, Germany
-Amtsgericht Aachen HRB25734
+> perf stat -e rv:error_sleep stress-ng --prio-inv 1 --prio-inv-policy rr
+>   -- shows only 1 error (normal while starting the program?) --
+> 
+> Not quite sound, but does it look a reasonable test to you?
 
-Gesch=C3=A4ftsf=C3=BChrung
-Lukas J=C3=BCnger
-Dr.-Ing. Jan Henrik Weinstock
+The above command use mutexes with priority inheritance. That is good for
+real-time. The errors are due to real-time tasks being delayed by
+waitpid().
+
+Priority inheritance can be disabled with "--prio-inv-type none". Then you
+will see lots of errors with mutexes.
+
+> I quickly tried the same with the other monitor comparing the number of
+> errors with the page_faults generated by perf, but that didn't make too
+> much sense. Perhaps I'm doing something wrong here though (the number
+> reported by perf for page faults feels a bit too high).
+> 
+> perf stat -e page-faults -e rv:error_pagefault stress-ng --cyclic 1
+
+This command run a non-real-time thread to do setup, and a cyclic real-time
+thread. The number of pagefaults of each thread would be roughly
+proportional to the code size executed by each thread. As the non-real-time
+thread's code size is bigger, it sounds reasonable that the number of
+pagefaults is greater than the number of monitor's warnings.
+> 
+> Anyway, the monitor looks good to me
+> 
+>   Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> 
+> but it'd be nice if you have tips to share how to quickly test it (e.g.
+> without writing a custom workload).
+
+I tested the monitor on a real system. My system has some real-time audio
+processing processes (pipewire, firefox running youtube), yours also
+should.
+
+But thanks so much for testing with stress-ng. My testing didn't stress the
+system enough for the above race to happen. I will give stress-ng a few
+runs before the next version.
+
+Best regards,
+Nam
