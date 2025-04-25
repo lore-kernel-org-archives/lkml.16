@@ -1,122 +1,154 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FEE21638A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DCF21638A;
+	Fri, 25 Apr 2025 09:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573114; cv=none; b=YElnKaOh3xiag3nUbWC1CdQQFboW+LDdmwGX7ifwlMzXakcFZ5Erb86SOYri2b4inVnBz1QgcSVsjQk4y55oQkyRn48WAE0XQfetm3n+UwoER6CP/7CkIuJysFDJjAlha4DsoOzNozSO9c9vpgZgrkEQvV9Mk9efCayaFqTp77c=
+	t=1745573119; cv=none; b=p2xyKyxeEv/XRbYHCGnjFla3byyLY8UTlcRp8OcEJHalX9u726UuErGdJBTT9OiXFACqDQewdipJUgjNjbUjka4i2kYfqznDxXLWJooRKYKJDvFvnNKyTfQBoDguMpT9ptVBQoMoggIha6e0IGOvu08R7tRmar2xo+BG5wBbkeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573114; c=relaxed/simple;
-	bh=G0hOz6DNdSKOs8IoQHUNYBXS3Y3PbyezYqyLTvSy5ec=;
+	s=arc-20240116; t=1745573119; c=relaxed/simple;
+	bh=cLDw/pFiQMKKNBt2vgKzSce0c1mxZowhfJuiq/FLoMg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TrIGrRyFJ0JmdSl1iSQKXdC3pkT7QkiJRHu39SQq6IRlo+q42WSlKAh8KEbY1unEEDgXXWedYQBjiPqDhUvPlqocjRbCyRsXAtV+rXO0GeiCFaNTugdqz9x6jB5FU6b1aV7s/J58/N0mu0nEE9JANcEMKaysekNSquHcanYfBKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N52Y/I+V; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cOOrqdjrZwI3KRTo7p1zpjuqVdxuoubpDNPqFT2iQ8cqv663QQIoc6xPHx4YHq6tvnZgoN9zCWVFK56fLnMBkcnN7QLDz0TraTzSygQTaiG6pV73BpPkux033Tu9NmBouFro7jCQrWb64VB2E4wpBR/25bDrXPjGIIo1x+EAuOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=GziSayXt; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N52Y/I+V"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ace3b03c043so310668166b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745573110; x=1746177910; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G0hOz6DNdSKOs8IoQHUNYBXS3Y3PbyezYqyLTvSy5ec=;
-        b=N52Y/I+V3ACemQLv936eo7Z0/rXBey46tnZ4Ks7c6XsgYETpQob34Jwu7PJZdsLkDv
-         U40fQYoqhDcQcdjFxld5JEDsMGr6nicpybk14xPmzyIqMJyl9BLvZPq6zZQnffM31bnk
-         g667xYRnRdfKemdnwoM+e3rBKTLnlxyFITDdXve1Cck6Wc1Wz802Jr+Bp+38RCf/5eVL
-         PLl6I1sIcTSqSaJYmNF3N7M7PIdQtKjdVf1wHSwqgDPmlfks6vOJzfTpL5itfsb5BX4w
-         ps2Xei5FxzzY4TkKPBmArZrShCdBpZ9l/Vz0OoNfNTeGE+hU9btti2GI6k4eAvg6ONAB
-         dMMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573110; x=1746177910;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G0hOz6DNdSKOs8IoQHUNYBXS3Y3PbyezYqyLTvSy5ec=;
-        b=Cm7gnWgh9wb53oKj5uKsZEHohU5IQAzsFDNnaS814n7NjCbEVUY+sGdi/U+GPPb/JE
-         H0IECCJFxRzlN+tQw1evVsYSVOz8cn38HX7nT8rDa1Mfb1oZqme80/JQ+/nOQzLdX2pd
-         Zqw9pBnD8KG8JeGeO8VxJhgTFeddSeIDx5T8E/Wwa5D0A6IYi5TQ2wENw1IUOlgXiQJG
-         wh5ZuEBHRf23xnd3LddMxFroeYac8+dOwpaaWEU/qOPgIOSPADZllshRXS7KG0eTXkV9
-         Q7UkfXrvRALCRuMVTtEjbEQPoOhncSS515thXdbwuc58szcb/jat9MueO+mZJt5gtMRQ
-         oPPQ==
-X-Gm-Message-State: AOJu0YyuokZZ7niPw3KrnTHtnKu6AGKa+gKgevQNa56v0BAg9qWuK4pB
-	A7WcC12sCeAayBpYgO91BziGAFT9FlXhCMBs+D6eTjrjbsEGEt53t3UTr5Dsmsg=
-X-Gm-Gg: ASbGncsrwRaAZeuxp5yjowj/EqKkQxZ0cxw6xk/BNGD1fFkpm3LyhztjXQk2p2csPM4
-	jQqHCJKES/L/uOclxMm17MI32fe3Uj6gwlMF01jxbkmrjeUtowhjptvPFFQw5NF+bx+aN1Ow0Ru
-	byyysHQ2FeFRe5FOCi1SWNaxLUNi07JR2PhHRblDsnyzalYy/ecbeDZleI1m1Dw8sSBe7gdIKLN
-	wgeUbZFGYeBc1t9vCRBG4PSzGDW+EjmKcylZdUnN8EsxAGFwGhAErr5njYmnUA3pwPkcfdwl5Ee
-	FJQoXj5jyGM/f9Z2lb/gZvbRZ1DnYI5znt6R4F/L/qA=
-X-Google-Smtp-Source: AGHT+IH0wCHAOi8ex9uAqIDR6bWzii4pyjUQL80boICM441o6kiS0sTsJYEabkXpySlPuvWHV/co/w==
-X-Received: by 2002:a17:907:a088:b0:ace:50e3:c76c with SMTP id a640c23a62f3a-ace710c694fmr143524366b.21.1745573110093;
-        Fri, 25 Apr 2025 02:25:10 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edafb3fsm105172966b.172.2025.04.25.02.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:25:09 -0700 (PDT)
-Date: Fri, 25 Apr 2025 11:25:07 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: linux-kernel@vger.kernel.org, mrpre@163.com, 
-	syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com, syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com, 
-	syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com, Andrew Morton <akpm@linux-foundation.org>, 
-	Christian Brauner <brauner@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Oleg Nesterov <oleg@redhat.com>, Joel Granados <joel.granados@kernel.org>, 
-	Bill O'Donnell <bodonnel@redhat.com>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v2] pid: annotate data-races around pid_ns->pid_allocated
-Message-ID: <fo436hdqzkevk7jqszyprjjwehqge7rrqxz6gqbmgoqqsqwdxl@efe2r5jeouwl>
-References: <20250425055824.6930-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GziSayXt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lxGr4WcpRX1IjJ/LypAJtCvOD84z/5iROdqFg9S4Asc=; b=GziSayXtt09diC+kfs0/9nXHRZ
+	ieNIDpJPy1pHf705DcK2RkuJ0u2udgnRQEIg3YWp3qcbgwPStTt2CHPpGO+qKX5xUzbBv8YCm2dLn
+	q6WR2sxlJpNUW5wCuQq54EcJMFzD7gVgaOgTkO2tjg2Oj5xYut+atmYaA94Ofd2dvaZwdAgo35q/H
+	FrTDW/t1PrxTwU41GtxLo7fTFjqF8MR6Fbmcxgj7nR0voxO/sPRtmZzhlp6E3gCP7+NkHOaUadY8l
+	okMGCMPIUg0wc3OYsUmmL3ihHfp7D4n+TyfkyWj/MuxcVFiZIj/BKFm3ziDa3W1dNodxjjLLxZCPO
+	Y9rhxgcA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52702)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u8FIn-00005f-2k;
+	Fri, 25 Apr 2025 10:24:57 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u8FIh-00021A-1a;
+	Fri, 25 Apr 2025 10:24:51 +0100
+Date: Fri, 25 Apr 2025 10:24:51 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v1 1/1] Documentation: networking: expand and
+ clarify EEE_GET/EEE_SET documentation
+Message-ID: <aAtU45S6HChgb0_V@shell.armlinux.org.uk>
+References: <20250425084941.253961-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nxm7bwc2c62nhmpx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425055824.6930-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250425084941.253961-1-o.rempel@pengutronix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Fri, Apr 25, 2025 at 10:49:41AM +0200, Oleksij Rempel wrote:
+> +``ETHTOOL_A_EEE_ACTIVE`` indicates whether EEE is currently active on the link.
+> +This is determined by the kernel as a combination of the currently active link
+> +mode, locally advertised EEE modes, and peer-advertised EEE modes:
+> +
+> +    active = (current_link_mode & advertised & link_partner)
 
---nxm7bwc2c62nhmpx
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v2] pid: annotate data-races around pid_ns->pid_allocated
-MIME-Version: 1.0
+... and EEE is enabled.
 
-On Fri, Apr 25, 2025 at 01:58:14PM +0800, Jiayuan Chen <jiayuan.chen@linux.dev> wrote:
-> Suppress syzbot reports by annotating these accesses using data_race().
+EEE active is more "EEE is enabled and has been successfully negotiated
+at the current link speed", rather than "the link is in LPI state"
+which I think some people have thought it meant in the past. I'm also
+wondering whether this should also include "and autonegotiation via
+ETHTOOL_SLINKSETTINGS is enabled" as that is necessary to allow the
+PHY to exchange autoneg pages which include the EEE page.
 
-Thanks for trying this approach.
-scripts/checkpatch.pl has quite some remarks about the current form :-)
-I mean, the data_race annotation should document why the race is
-harmless. I only glanced over this so I can't tell myself whether it's a
-bug or OK.
+> +Detailed behavior:
+> +
+> +``ETHTOOL_A_EEE_MODES_OURS`` can specify the list of advertised link modes.
+> +
+> +``ETHTOOL_A_EEE_ENABLED`` is a software flag that tells the kernel to prepare
+> +EEE functionality. If autonegotiation is enabled, this means writing the EEE
+> +advertisement register so that the PHY includes the EEE-capable modes in the
+> +autonegotiation pages it transmits. The actual advertisement set is a subset
+> +derived from PHY-supported modes, MAC capabilities, and possible blacklists.
+> +This subset can be further restricted by ``ETHTOOL_A_EEE_MODES_OURS``. If
+> +autonegotiation is disabled, EEE advertisement is not transmitted and EEE will
+> +not be negotiated or used.
 
-> Reported-by: syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com
-> Reported-by: syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com
-> Reported-by: syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com
+Maybe similar here.
 
-How can I get to see full syzbot reports? (Stacktrace would be helpful,
-I cannot resolve those as message-ids on (LK)ML.)
+> +
+> +``ETHTOOL_A_EEE_TX_LPI_ENABLED`` controls whether the system should enter the
+> +Low Power Idle (LPI) state. In this state, the MAC typically notifies the PHY,
+> +which then transitions the medium (e.g., twisted pair) side into LPI. The exact
+> +behavior depends on the active link mode:
+> +
+> + - In **100BaseT/Full**, an asymmetric LPI configuration (local off, peer on)
+> +   leads to asymmetric behavior: the local TX line remains active, while the RX
+> +   line may enter LPI.
+> + - In **1000BaseT/Full**, there are no separate TX/RX lines; the wire is silent
+> +   only if both sides enter the LPI state.
 
-Thanks,
-Michal
+I'm not sure this belongs in the API documentation, as (1) this is part
+of the hardware specification and (2) it brings up "what about faster
+link modes" which do support EEE as well.
 
---nxm7bwc2c62nhmpx
-Content-Type: application/pgp-signature; name="signature.asc"
+If they're going to be looking at whether the physical signals are
+entering low power mode, they're going to have hardware to probe the
+signals, thus they've probably got hardware experience and thus would
+surely refer to the documentation to work out what's supposed to be
+happening, and probably wouldn't look at API documentation.
 
------BEGIN PGP SIGNATURE-----
+> +
+> +- ``ETHTOOL_A_EEE_TX_LPI_TIMER`` configures the delay after the last
+> +  transmitted frame before the MAC enters the LPI state. This single timer
+> +  value applies to all link modes, although using the same value for all modes
+> +  may not be optimal in practice. A value that is too high may effectively
+> +  prevent entry into the LPI state.
 
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaAtU5QAKCRAt3Wney77B
-STz2AP43iBbiSATsIWMKE7hTyoKhUHTCRsiUauvvn2341G5HNAD/YasZJdwtKK5z
-hG4ym9ABCSCrEDI9BGdPtgB3CFVsKgo=
-=Twjq
------END PGP SIGNATURE-----
+As an interesting side note, stmmac defaults to one second, and it
+doesn't prevent LPI entry.
 
---nxm7bwc2c62nhmpx--
+Having a high value might be what an application wants - EEE introduces
+additional latency to an ethernet link, and one may wish LPI mode to be
+entered when e.g. a machine in a data centre has all users migrated off
+it, thus allowing the ethernet connection to it to fall silent.
+Otherwise one may wish the link to stay out of LPI mode, so choosing a
+high LPI timer would suit that.
+
+So, this is policy. I'm not sure statements about that should be in an
+API specification. I'm also thinking that surely one would understand
+that if one sets this to 1 second, then there needs to be no traffic
+for 1 second before the link enters LPI state.
+
+Finally, I'm wondering about the duplication of documentation between
+this document and include/uapi/linux/ethtool.h. The struct definitions
+are documented in the header file, and it seems we're describing the
+same thing in two different places which means there's a possibility
+for things to be described differently thus creating confusion. I
+think we should have only one description and reference it from
+other places.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
