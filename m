@@ -1,208 +1,87 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB991DEFDA;
-	Fri, 25 Apr 2025 17:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C86C1DEFDA
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745601272; cv=none; b=SVHePKHYwHCXz6MxioZKL2XCADj1XWYWbrv5naaVvsQPQQqJqHdeICOgIvHkUm2YkYm+pTRTKxdHmQGMH1doWaqFEMl15bIeGjEGjDNRUQKZdx3icLCmDEmlvtv6S0L24657pFBillePlIv8Iq+s58+kQNvEyrhtJQTnrJ/5TBc=
+	t=1745601278; cv=none; b=gSTFo33gSpMLWNJ3RWNhD/eGGycg2rtncsMj1o0aw+amNErUaPVWv4t2RffLZ+GNrm2oV/nOF/E1ZWQ+L/J8IKReQCCL+uZ+HXjx5Uex8aBDcba8NHD/D1nSef0XAl93n6wEmOtm/j1nRDPIDoqQZ9JCYEztnaM+W0DpGLe1kFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745601272; c=relaxed/simple;
-	bh=xDbZxDJFIusrxmYrFN1b3l22rU68GRLxUNx+mEoirpE=;
+	s=arc-20240116; t=1745601278; c=relaxed/simple;
+	bh=Lm2N0n4u1FlM9Vtf3w6Fx40mc0HytZ/KQT9CUeJY2p0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RcIpBooaokqVyzlgEw1Djc+k3Oi1W+6/GShnYcum0172M7vQoNIyHnTGY8R4hXjbU0HpLd8U3LAqXxvApxr1eXxD2maCdnxVokZQ2pr0a6XVJU3lm1fsWs5s9pBW5eVnAxZXeHmvUySqn5hcnwrIiGELMZ/Rs9+Mqxk8YyeaGJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GVXmDSBR; arc=none smtp.client-ip=91.218.175.182
+	 In-Reply-To:Content-Type; b=BDWaCSz71qy7q0maHGh8n3vHGh9rRupVzNZc0GTsAazCVqTjxtwvI0+4qxbvOcaXCZZt1qTD0AvRHJWHPPULTkaoO8hk3HtgdlQ3FuVhVSkUcKmlutnOPcAMLbbhzaxqQyFBZe35R5GdS0g5d65+OFrq9PMEKKVkiJj3p86dUwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xmmbQezi; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GVXmDSBR"
-Message-ID: <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xmmbQezi"
+Message-ID: <dc069aec-8f34-4745-804b-936e0466559c@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745601266;
+	t=1745601263;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+6DLrO2Q4qtiuClsf/uksu1pDJHL8/bIE28qq6F3Ww8=;
-	b=GVXmDSBR2LHpVPi6b1jnBFxkF36uUD+nMcIboY+dU7GzwAeXHQDoCfFtrr64hfKLtb4jYy
-	Y/MVZkZGnhJuR1FsXwR/+hQ1bK1No/cJUoMn7zmXiWAFpWWTwOx8e8PcfFnmhsdnvKDiUg
-	/Ers0GDCF7imvS/NqytOaImsrtGleRw=
-Date: Fri, 25 Apr 2025 19:12:33 +0200
+	bh=R5HHbZEVfAo5xHjVAfeinei8cc6O8D95xrShblmNxCw=;
+	b=xmmbQeziKHWdI391OleiVoTdZ0Ul+dSemlipkTYjGz6VcQh4o4OAvsCsiJ5Oau5gRqJCd+
+	XV8ASeYUA2sBQ0rXIL3o+BK8h5efUDaE+TVs5vxNJ3kAkyf8lQ+gQxKADk7L9OQD6bm7QU
+	hCFCHNLQMcDNNOSj5DNth/RVDa25peQ=
+Date: Fri, 25 Apr 2025 18:35:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1] soundwire: intel_auxdevice: Fix system suspend/resume
- handling
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
-References: <5891540.DvuYhMxLoT@rjwysocki.net>
+Subject: Re: [PATCH 2/2] soundwire: bus: Add internal slave ID and use for
+ IRQs
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: vkoul@kernel.org, yung-chuan.liao@linux.intel.com,
+ sanyog.r.kale@intel.com, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+References: <20250422104245.958678-1-ckeepax@opensource.cirrus.com>
+ <20250422104245.958678-3-ckeepax@opensource.cirrus.com>
+ <b286bbf3-0da9-4e84-8d21-7720970833c3@linux.dev>
+ <aAeHgqcQCtuFKW/A@opensource.cirrus.com>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <5891540.DvuYhMxLoT@rjwysocki.net>
+In-Reply-To: <aAeHgqcQCtuFKW/A@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
-On 4/24/25 20:13, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 4/22/25 14:11, Charles Keepax wrote:
+> On Tue, Apr 22, 2025 at 01:50:13PM +0200, Pierre-Louis Bossart wrote:
+>> On 4/22/25 12:42, Charles Keepax wrote:
+>> I see the patch add a limit during probe, so now that
+>> means the number of ACPI devices MUST be lower than 11. That
+>> doesn't sound right to me and could cause some configurations
+>> to fail. It's perfectly ok to have ghost devices and no limits
+>> on how many our BIOS colleagues decide to list.
 > 
-> The code in intel_suspend() and intel_resume() needs to be properly
-> synchronized with runtime PM which is not the case currently, so fix
-> it.
+> Yeah it will limit the ACPI to 11 devices. I can't say I am a
+> huge fan of the "ghost" devices, like its ACPI it is for
+> describing the hardware, so it should describe the hardware.
 > 
-> First of all, prevent runtime PM from triggering after intel_suspend()
-> has started because the changes made by it to the device might be
-> undone by a runtime resume of the device.  For this purpose, add a
-> pm_runtime_disable() call to intel_suspend().
+> That said my thinking on this was I have not seen a system with
+> more than 4 real devices on a single bus, and not more than a
+> couple ghosts in the ACPI. So this didn't look like a big issue.
+> 
+>> Using a dedicated IDA for IRQ mapping looks like a good
+>> idea to me, but I don't think you can really use the same IDA
+>> for dev_num
+> 
+> If you are really concerned about the ghost devices I could back
+> out the part that reuses the ID for the dev_num. However I do
+> need to know the maximum number of devices when the IRQ domain is
+> allocated. So I can't really see a way to avoid picking a maximum
+> number of devices for the bus. What number of real + ghosts would
+> you be comfortable with? Although I guess if not using it for the
+> dev_num it is then fairly easy to expand if needed so perhaps I
+> just back out the dev_num bit, but stick with 11 for now and we
+> can expand if necessary?
 
-Allow me to push back on this, because we have to be very careful with a hidden state transition that needs to happen.
-
-If a controller was suspended by pm_runtime, it will enter the clock stop mode.
-
-If the system needs to suspend, the controller has to be forced to exit the clock stop mode and the bus has to restart before we can suspend it, and that's why we had those pm_runtime_resume().
-
-Disabling pm_runtime when entering system suspend would be problematic for Intel hardware, it's a known can of worms.
-
-It's quite possible that some of the code in intel_suspend() is no longer required because the .prepare will resume the bus properly, but I wanted to make sure this state transition out of clock-stop is known and taken into consideration.
-
-Bard, is this a configuration you've tested?
- 
-> Next, once runtime PM has been disabled, the runtime PM status of the
-> device cannot change, so pm_runtime_status_suspended() can be used
-> instead of pm_runtime_suspended() in intel_suspend().
-> 
-> Moreover, checking the runtime PM status of the device in intel_resume()
-> is pointless because the device is going to be resumed anyway and the
-> code running in the case when the pm_runtime_suspended() check in
-> intel_resume() returns 'true' is harmful.  Namely, calling
-> pm_runtime_resume() right after pm_runtime_set_active() has no effect
-> and calling pm_runtime_idle() on the device at that point is invalid
-> because the device is technically still suspended (it has not been
-> resumed yet).  Remove that code altogether along with the check leading
-> to it.
-> 
-> Finally, call pm_runtime_set_active() at the end intel_resume() to set
-> the runtime PM status of the device to "active" because it has just been
-> resumed and re-enable runtime PM for it after that.
-
-
-
-> Additionally, drop the setting of DPM_FLAG_SMART_SUSPEND from the
-> driver because it has never been necessary and should not have been
-> done.
-
-IIRC it was your recommendation to add this flag many moons ago... No issue to remove it, it's just not something any of the 'SoundWire' folks are knowledgeable with.
-
-> This addresses a functional regression after commit bca84a7b93fd ("PM:
-> sleep: Use DPM_FLAG_SMART_SUSPEND conditionally") that effectively
-> caused the fatal pm_runtime_suspended() check in intel_resume() to
-> trigger.
-> 
-> Fixes: bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally")
-> Cc: 6.2+ <stable@vger.kernel.org> # 6.2+
-> Reported-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Tested-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> This change fixes an issue predating commit bca84a7b93fd that simply
-> uncovered the problem and it needs to be backported to 6.2 and later
-> kernels.
-> 
-> Since it fixes a recent regression in 6.15-rc, I can route it through the
-> PM tree unless that would be a major concern.
-> 
-> ---
->  drivers/soundwire/intel_auxdevice.c |   36 +++++++++++++-----------------------
->  1 file changed, 13 insertions(+), 23 deletions(-)
-> 
-> --- a/drivers/soundwire/intel_auxdevice.c
-> +++ b/drivers/soundwire/intel_auxdevice.c
-> @@ -353,9 +353,6 @@
->  	/* use generic bandwidth allocation algorithm */
->  	sdw->cdns.bus.compute_params = sdw_compute_params;
->  
-> -	/* avoid resuming from pm_runtime suspend if it's not required */
-> -	dev_pm_set_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
-> -
->  	ret = sdw_bus_master_add(bus, dev, dev->fwnode);
->  	if (ret) {
->  		dev_err(dev, "sdw_bus_master_add fail: %d\n", ret);
-> @@ -640,7 +637,10 @@
->  		return 0;
->  	}
->  
-> -	if (pm_runtime_suspended(dev)) {
-> +	/* Prevent runtime PM from racing with the code below. */
-> +	pm_runtime_disable(dev);
-> +
-> +	if (pm_runtime_status_suspended(dev)) {
->  		dev_dbg(dev, "pm_runtime status: suspended\n");
->  
->  		clock_stop_quirks = sdw->link_res->clock_stop_quirks;
-> @@ -648,7 +648,7 @@
->  		if ((clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET) ||
->  		    !clock_stop_quirks) {
->  
-> -			if (pm_runtime_suspended(dev->parent)) {
-> +			if (pm_runtime_status_suspended(dev->parent)) {
->  				/*
->  				 * paranoia check: this should not happen with the .prepare
->  				 * resume to full power
-> @@ -715,7 +715,6 @@
->  	struct sdw_cdns *cdns = dev_get_drvdata(dev);
->  	struct sdw_intel *sdw = cdns_to_intel(cdns);
->  	struct sdw_bus *bus = &cdns->bus;
-> -	int link_flags;
->  	int ret;
->  
->  	if (bus->prop.hw_disabled || !sdw->startup_done) {
-> @@ -724,23 +723,6 @@
->  		return 0;
->  	}
->  
-> -	if (pm_runtime_suspended(dev)) {
-> -		dev_dbg(dev, "pm_runtime status was suspended, forcing active\n");
-> -
-> -		/* follow required sequence from runtime_pm.rst */
-> -		pm_runtime_disable(dev);
-> -		pm_runtime_set_active(dev);
-> -		pm_runtime_mark_last_busy(dev);
-> -		pm_runtime_enable(dev);
-> -
-> -		pm_runtime_resume(bus->dev);
-> -
-> -		link_flags = md_flags >> (bus->link_id * 8);
-> -
-> -		if (!(link_flags & SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE))
-> -			pm_runtime_idle(dev);
-> -	}
-> -
->  	ret = sdw_intel_link_power_up(sdw);
->  	if (ret) {
->  		dev_err(dev, "%s failed: %d\n", __func__, ret);
-> @@ -761,6 +743,14 @@
->  	}
->  
->  	/*
-> +	 * Runtime PM has been disabled in intel_suspend(), so set the status
-> +	 * to active because the device has just been resumed and re-enable
-> +	 * runtime PM.
-> +	 */
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +
-> +	/*
->  	 * after system resume, the pm_runtime suspend() may kick in
->  	 * during the enumeration, before any children device force the
->  	 * master device to remain active.  Using pm_runtime_get()
-> 
-> 
-> 
+A maximum of 16 devices total is probably ok. That's 10 more than the worst-case configuration we've seen so far, and I can't think of a case where more than 10 ghost devices would be listed.
 
