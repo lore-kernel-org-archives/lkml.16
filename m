@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE81227E82
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A30229B36
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617228; cv=none; b=QgCsDLKjOcWoXaeNP8PmZ9CJseTgCcPQ/P1zrF68cIhgGvTtzVkJBRd2185zNz0NkRZslbzjdv2XV2fnf3bnNR4JtBW2o53151VMTF/N2dPNvSP0Tm+zGZ+iAXO14cIaDZIVGT1mTOHoUWyTHMsNevB6uM+HGI8hO/zVqX8DkBY=
+	t=1745617230; cv=none; b=Be7C4hdF3VTxorR1+3LQqnSq5XVLXnej/L3ufP0xQaVpFjp2Tcn+rQujrLSnFDFE37ihNRj98Wf8nskrMXdA2cnEYeAMpC6yE0kEje4+mxoluBAk4SbTHg+XX0wQIsY3j8uRd/sS0lCCgrVA4hdbl51nvo0xHf0on4pIGZiroGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617228; c=relaxed/simple;
-	bh=NW04OdUCBUXB0XwIkvNApQLAwj8ekPQOiMfdRIxQWTE=;
+	s=arc-20240116; t=1745617230; c=relaxed/simple;
+	bh=gbjo4h3GHQFtFeOpJumdcLDVg3ih8INOSDQkXhcieIM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Pn+23usexM1sqjxLHZiKhPtc9drdvjM32XCWhRH6tjIpJx96i4xLSlWCnnXmA/8XrCBwdlvbI/BnvTh2XOO2YV49QaebBe9iozAvqCIiEdQhfFHTn6ea6JoAFyguzl6rnjvNszpQP/cPmX+bKjyaeD7LtHWmD6+Jie7C34PmaTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rT+VduVM; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=HvPrJIv6QHKYNssM/mQdcFpjPpQE2rRW52AfXQQAPbN3NQjdeUkFkXGzYCG9BLKvjVHzTx7EQFaWp3/e05ZktkhZJQ7d1eZuXifMaf8SsZnE/uRsek+/Y9b2Qevq1K2KZr+WkxtshzYsOdF/NRmY2GTibZFzGaAWGaPoFrruo8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XdLYba0l; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rT+VduVM"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff64898e2aso2828460a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:40:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XdLYba0l"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b048d1abbbfso2618547a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:40:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745617226; x=1746222026; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745617228; x=1746222028; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZBRzvY9/oqGcvbYk2oQ/5pWM3xndZw3DROLAFfIr7HU=;
-        b=rT+VduVMIASn2Mtjy8X+n8ZMTqllJQjpATimXQDfB/2Wb9SAgPUUglsncOp9P3yGWz
-         f40Rzv4CzbE0NGXzgepuXt8Efb0oebzbmtgtSdR5aTOIusuFsfd6NYxBzoDq1/dwucBC
-         AO6c/xDdXKEQ3aXXpmZffBEp/I3m6yPAQ2pVK2atwh52Orj3caTe5x0gWRjz9geahNEw
-         UslxmGtoClL0vK6G6H/Ae71Ci1mmGAq398betV3yc0o2BCAFsTCaypXa06DSLTCDyQm/
-         +f454oe6+eGQMH/heHqY6wROMidhMhhHwnHK97m/di+JnlAVdw3RFX8QSkL8s4C0UbzH
-         Xmmg==
+        bh=bR45kodXZkA7EQ9UBPLhC24dTzfJslYN2Nb1yPoIsJQ=;
+        b=XdLYba0l+X8n6rkMQT8Xj350nyZz6Qg78/3VH2nwTepRw+Kw4qqsq3hFQkZO+ex+Xu
+         C59ILn0/o5H8xOA5er286nwcUglG81PHsDEzuFywVNMg/elUx1SLFrFhv46WuL6kTvfP
+         CLsQjNFsEy+xdmFLFU/QWdHXa/t9oBAZRXC4DQbL4Tbe0dkvGFN3JK2DfYVT76w3hc+/
+         k+rxf3ZfmAPJ0eocXMq5ifELflQpueyMbnUb5Lmc1lku2ZVq/ot3OrjPBfSr8ZJqqOrh
+         gUsx2zr7Xn3eJEtwDtCQJys4DkCZ0Ks3YztQ1HKg0nCU8ts+t6zGw2+aftF8/sKuvCer
+         tRhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745617226; x=1746222026;
+        d=1e100.net; s=20230601; t=1745617228; x=1746222028;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZBRzvY9/oqGcvbYk2oQ/5pWM3xndZw3DROLAFfIr7HU=;
-        b=ZYvUqs/yqICnUyawohn9FyjOZHsRXqHL6UQlsS43y2qDLoH2IKFOjhfK7yL3xM455Q
-         /LmUN8YF848RdRJfZhUc63cuEc6ovBIbLBG8u2g40o8pHtvJrUBzfa5uJqnPc36CPQcv
-         TsDes0K/frYKDVLxn/V/6iskVDMLPyKScUrMCNhlxnB+rI2dXSe1AdR9GJmFf1BUZnt1
-         E5LU/t/pBkoyOnEE8WEMq6TE3SMtS6/7GNmmUwRa4prrOq2r4GZQzSHOaCE7zjtF6lip
-         ZQCkAvZz7qCvzTOXj4LCNPUK4M+p3HJu28qbZRTYi30DsBi1Zbl/hX78kWiSG1eTvSGb
-         m+Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKGHJMoKHtbAn8Mxan6Xe4LUk18bmdhloLLaNLAUS1NZcxNWqz4lhVbq4v2obW5mEdq6ChT57haba68iQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh9Ev/0z5WYAQEkTvFG24tTIz8op5oCvHDSmXKIa89JF07zh+M
-	MHyRrDRYGqUqwnVArC23TOQGVmC9PRQu3tU/21gE/JO4LoVsaP51gjsMqBrN+fJQHU2SIE0q/ax
-	WRAttwA==
-X-Google-Smtp-Source: AGHT+IGGlxlrXc4zeoAxvuCibveLAo4hf2bW6wySquqYWmKShkqKk+8FF4aoVv7ok9S5AQIRvxzmpRZUU6A2
-X-Received: from pjbpa14.prod.google.com ([2002:a17:90b:264e:b0:2ef:95f4:4619])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5104:b0:2ff:53d6:2b82
- with SMTP id 98e67ed59e1d1-309ee3f9ac3mr11267255a91.11.1745617226120; Fri, 25
- Apr 2025 14:40:26 -0700 (PDT)
-Date: Fri, 25 Apr 2025 14:40:00 -0700
+        bh=bR45kodXZkA7EQ9UBPLhC24dTzfJslYN2Nb1yPoIsJQ=;
+        b=XC/9TZiD2Y+80alJkR73U9/8eXhMsckqqVz0LIdPDNj+etQrp27TGQ0eUTIeunbLOP
+         GesTqlW8iGOeUMnghTLJg0+ciAjZO4RLRWraOlp9AM8RB2j2vwSt/x55B6YgoYdvv+nh
+         eowAmsWWbrisxZNEoHZx7SprbAipGiM0qTG7U8449zTyF3l6nG3PiX5LHEVaxAgHoJ5C
+         kW+DXXXvA24ozWK3n8IFCnumAWxoiUXGy1CLgdjXSCTGKdx7+HmPwfyHUX8r9gxqrmFc
+         DqTAeqpsQN49z2h3l449/vWuhAVY0gOA+hwYKrsnHWvn+bJjt2hQ+4PlL7VpFbJINesN
+         qhng==
+X-Forwarded-Encrypted: i=1; AJvYcCVFv3l3eXWer7NUUn+K4VvwqrFDWp+0IqIL3BdDhM9TQlPaK7pTtnCElm1nS8tGUdUXQ+aFtIYJEomVIEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxhw17+HzcELd+XHHuM6KSqI/R3tQ+f6JHXUO1TmnZsMi1VwBH6
+	9E4yq5fiMV4KkfVHmSxqmUjhgG5wd3HNnP+ig31x2rlpFlaEYcew+w2VezUYb9K02gZUvh81Wex
+	U2K1EZQ==
+X-Google-Smtp-Source: AGHT+IHu6jNsVxg2hinctPs3rIG3x23hifof5G2en1Olm7EYab4lBNXfdy6kgi4Gh069LsoL9yjCAM48VRnS
+X-Received: from pgbcl20.prod.google.com ([2002:a05:6a02:994:b0:af2:7bd1:57e6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:12c4:b0:1ee:ef0b:7bf7
+ with SMTP id adf61e73a8af0-2046a57d131mr1026446637.19.1745617227918; Fri, 25
+ Apr 2025 14:40:27 -0700 (PDT)
+Date: Fri, 25 Apr 2025 14:40:01 -0700
 In-Reply-To: <20250425214008.176100-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250425214008.176100-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250425214008.176100-3-irogers@google.com>
-Subject: [PATCH v3 02/10] perf target: Separate parse_uid into its own function
+Message-ID: <20250425214008.176100-4-irogers@google.com>
+Subject: [PATCH v3 03/10] perf parse-events: Add parse_uid_filter helper
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,100 +77,73 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow parse_uid to be called without a struct target. Rather than have
-two errors, remove TARGET_ERRNO__USER_NOT_FOUND and use
-TARGET_ERRNO__INVALID_UID as the handling is identical.
+Add parse_uid_filter filter as a helper to parse_filter, that
+constructs a uid filter string. As uid filters don't work with
+tracepoint filters, add a is_possible_tp_filter function so the
+tracepoint filter isn't attempted for tracepoint evsels.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/target.c | 22 ++++++++++++----------
- tools/perf/util/target.h |  3 ++-
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ tools/perf/util/parse-events.c | 19 ++++++++++++++++++-
+ tools/perf/util/parse-events.h |  1 +
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/target.c b/tools/perf/util/target.c
-index 0f383418e3df..f3ad59ccfa99 100644
---- a/tools/perf/util/target.c
-+++ b/tools/perf/util/target.c
-@@ -94,15 +94,13 @@ enum target_errno target__validate(struct target *target)
- 	return ret;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 2a60ea06d3bc..540864fc597c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2460,6 +2460,12 @@ foreach_evsel_in_last_glob(struct evlist *evlist,
+ 	return 0;
  }
  
--enum target_errno target__parse_uid(struct target *target)
-+uid_t parse_uid(const char *str)
- {
- 	struct passwd pwd, *result;
- 	char buf[1024];
--	const char *str = target->uid_str;
- 
--	target->uid = UINT_MAX;
- 	if (str == NULL)
--		return TARGET_ERRNO__SUCCESS;
-+		return UINT_MAX;
- 
- 	/* Try user name first */
- 	getpwnam_r(str, &pwd, buf, sizeof(buf), &result);
-@@ -115,16 +113,22 @@ enum target_errno target__parse_uid(struct target *target)
- 		int uid = strtol(str, &endptr, 10);
- 
- 		if (*endptr != '\0')
--			return TARGET_ERRNO__INVALID_UID;
-+			return UINT_MAX;
- 
- 		getpwuid_r(uid, &pwd, buf, sizeof(buf), &result);
- 
- 		if (result == NULL)
--			return TARGET_ERRNO__USER_NOT_FOUND;
-+			return UINT_MAX;
- 	}
- 
--	target->uid = result->pw_uid;
--	return TARGET_ERRNO__SUCCESS;
-+	return result->pw_uid;
++/* Will a tracepoint filter work for str or should a BPF filter be used? */
++static bool is_possible_tp_filter(const char *str)
++{
++	return strstr(str, "uid") == NULL;
 +}
 +
-+enum target_errno target__parse_uid(struct target *target)
-+{
-+	target->uid = parse_uid(target->uid_str);
-+
-+	return target->uid != UINT_MAX ? TARGET_ERRNO__SUCCESS : TARGET_ERRNO__INVALID_UID;
+ static int set_filter(struct evsel *evsel, const void *arg)
+ {
+ 	const char *str = arg;
+@@ -2472,7 +2478,7 @@ static int set_filter(struct evsel *evsel, const void *arg)
+ 		return -1;
+ 	}
+ 
+-	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT) {
++	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT && is_possible_tp_filter(str)) {
+ 		if (evsel__append_tp_filter(evsel, str) < 0) {
+ 			fprintf(stderr,
+ 				"not enough memory to hold filter string\n");
+@@ -2508,6 +2514,17 @@ int parse_filter(const struct option *opt, const char *str,
+ 					  (const void *)str);
  }
  
- /*
-@@ -142,7 +146,6 @@ static const char *target__error_str[] = {
- 	"BPF switch overriding UID",
- 	"BPF switch overriding THREAD",
- 	"Invalid User: %s",
--	"Problems obtaining information for user %s",
- };
- 
- int target__strerror(struct target *target, int errnum,
-@@ -171,7 +174,6 @@ int target__strerror(struct target *target, int errnum,
- 		break;
- 
- 	case TARGET_ERRNO__INVALID_UID:
--	case TARGET_ERRNO__USER_NOT_FOUND:
- 		snprintf(buf, buflen, msg, target->uid_str);
- 		break;
- 
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index 2ee2cc30340f..e082bda990fb 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -48,12 +48,13 @@ enum target_errno {
- 
- 	/* for target__parse_uid() */
- 	TARGET_ERRNO__INVALID_UID,
--	TARGET_ERRNO__USER_NOT_FOUND,
- 
- 	__TARGET_ERRNO__END,
- };
- 
- enum target_errno target__validate(struct target *target);
++int parse_uid_filter(struct evlist *evlist, uid_t uid)
++{
++	struct option opt = {
++		.value = &evlist,
++	};
++	char buf[128];
 +
-+uid_t parse_uid(const char *str);
- enum target_errno target__parse_uid(struct target *target);
++	snprintf(buf, sizeof(buf), "uid == %d", uid);
++	return parse_filter(&opt, buf, /*unset=*/0);
++}
++
+ static int add_exclude_perf_filter(struct evsel *evsel,
+ 				   const void *arg __maybe_unused)
+ {
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index e176a34ab088..289afd42d642 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -45,6 +45,7 @@ static inline int parse_events(struct evlist *evlist, const char *str,
+ int parse_event(struct evlist *evlist, const char *str);
  
- int target__strerror(struct target *target, int errnum, char *buf, size_t buflen);
+ int parse_filter(const struct option *opt, const char *str, int unset);
++int parse_uid_filter(struct evlist *evlist, uid_t uid);
+ int exclude_perf(const struct option *opt, const char *arg, int unset);
+ 
+ enum parse_events__term_val_type {
 -- 
 2.49.0.850.g28803427d3-goog
 
