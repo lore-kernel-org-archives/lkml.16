@@ -1,83 +1,139 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A7E15B543
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345A2192D9D;
+	Fri, 25 Apr 2025 16:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598217; cv=none; b=BXqdX2kkxs/9tXrhVc0x4FMvwgBR8Adb9ls4C7w+wpmBAL3wtXzXhxU1ScMRK2IpiOr9QrODKHWZli+ssy9TSOiZ8QLn0Husp9aL/wAJSU+JJI2QS9zZbKuvPTh+nnscj7RI+lcPtorZonh1O3t80L21bAi0hocfjraG4SgJVVE=
+	t=1745598277; cv=none; b=A/uvZFB53z6QynSWOUOLdNdn1SYbKOcipB0dGX9KSYfyXO4T6/0KP3QC0dGiPgqvu+NJwwxmmh/1isfjZjPKw+N2n3Yx3v1mvEKOHr15Z9BzBPgPQyMC0HgkjnsJo5dxZ8f91Bm/ItzgKNh2CWCYl2lVea3q9xwoUjoZkHB7M6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598217; c=relaxed/simple;
-	bh=H+fW7Wlpu8aJdTi4gApR4bCPJd9Lfy8PXNCMEMvnBh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ILdSdU11QvLI0os3okCgDf/+2Wsp7bnh3JucqNYFUqCzqSB8GG2Ona4j5KPyIcFDs5jUXHK5nWA83fUcND9Aot1DglD+lPHzdqCpNzjeZ/Gqlgg83oaOf2GumRJbaDCuZwl0GEEyXOG9zz6143y1hePHO557hdXcMC/9gNE5Dg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=djEJ3HED; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mk7sP/Sv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745598277; c=relaxed/simple;
+	bh=0GFMS3oQO3Rfhk5zSJVgp9cNKNXDLQ3zkyosWiK6rY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YkNxCuY/qmdBfTQtv5lV1BNHmItzPum968PRwE5e1t/WvGMzPxyW4/v7PZUqYSQ8vc6H/mJkt9uCB0z2AuGgHFU94OXm41GZ0CMYJnrySISTTTiXVsew/HVP2SGQvuAGLvJXEUVgbCRHuWOwcZYM3NLYvncPcSxn4LW5ToTMMuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h87yuawY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="djEJ3HED";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mk7sP/Sv"
-Date: Fri, 25 Apr 2025 18:23:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745598213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jAaSIMhxlsFVyasL4fNhdLj8S0Zxik+9V6e2ixNYehw=;
-	b=djEJ3HEDJRMRiGfx411Itey1aaOMWN2KekJ08l9mt561flfUhUVsE+AYrsYIMNmlS/tJ6X
-	PBcYjys6hC4CcV7KFD2HTvY0ABTgHLprCLM4T1bxBY0qSSYwjBCmBEb0kf9IR/DSb84byK
-	s4lFh2zz3klwQX4CyD5NlZjlIgUyHDzIXRQGsK3mER82gvHJ/Woi7xzBKy2WCsl03gzK6S
-	cFoMe/rDLpb0Vaw40FgqO6mT1mYyLyV5HOzequpg4lpKw/BzzhVlVGWTQdngmaXCOKGDa/
-	bRPi8r/EH+v4qbKxBQKJj3G1u8i56z4njC5ZXLBVec6SJeqf4OrddHYAkpah6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745598213;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jAaSIMhxlsFVyasL4fNhdLj8S0Zxik+9V6e2ixNYehw=;
-	b=mk7sP/SvMwdYxg/KeT/YGVBt3XA+4NXrRJo4uu3EVWVMZWny8roE8rsz+EiYa34nNrtx5W
-	Q1Sy1hJ7iejTDlDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: npiggin@gmail.com, vaibhav@linux.ibm.com, maddy@linux.ibm.com,
-	linuxppc-dev@lists.ozlabs.org, christophe.leroy@csgroup.eu,
-	gautam@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] powerpc: kvm: use generic transfer to guest mode work
-Message-ID: <20250425162331.qwpzuc-8@linutronix.de>
-References: <20250421102837.78515-1-sshegde@linux.ibm.com>
- <20250421102837.78515-2-sshegde@linux.ibm.com>
- <20250424144215._ooDjDz9@linutronix.de>
- <365ba747-9311-45ab-b798-80ba4e578796@linux.ibm.com>
- <20250424183811.7_MLThpt@linutronix.de>
- <2891b989-6249-4e84-969e-f11af3f92b0b@linux.ibm.com>
- <20250425133131.DTvWJE29@linutronix.de>
- <5cc88718-13ff-4220-a8f6-c988a919aa65@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h87yuawY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC211C4CEE4;
+	Fri, 25 Apr 2025 16:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745598276;
+	bh=0GFMS3oQO3Rfhk5zSJVgp9cNKNXDLQ3zkyosWiK6rY0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h87yuawYT+EKcR4ArMVXNZPbEuY1HCk3rkbmyoVXdv8miu/hBa40JymGrA6n/zVA/
+	 OeQKiPxNJoEhMD5LWcHT2EG3rRa9aDYVXlRarAAiwuLLEKDGP4OYOb0dmZbLXWc2oj
+	 Wh0UWtMQmerqCAZ63G5s00LxsBfoBt0xMC7yPwsVAt9fhGyrbB94mn9XU4sZ6J2b1X
+	 oArEu7niQa+jMcBtHp1h+hP9dE8iqXsSEUT9GQhuBIpgpmozvxXNthD+DSvNUT2Sws
+	 X554GUKukZ1gr1f94Mr3NA5YP2k/6kozZZpHDWOz2s3MJCvDAXNsPpfA7nlSdhWh7D
+	 V3MOroidqWlaw==
+Message-ID: <df9da79c-dc1a-4e90-82eb-f3af71f13494@kernel.org>
+Date: Fri, 25 Apr 2025 18:24:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5cc88718-13ff-4220-a8f6-c988a919aa65@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] Enhance the PCIe controller driver
+To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
+ kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: peter.chen@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-25 19:54:56 [+0530], Shrikanth Hegde wrote:
-> > > But looking at the semantics of usage of xfer_to_guest_mode_work
-> > > I think using schedule is probably right over here.
-> > > Correct me if i got it all wrong.
-> > 
-> > No, if you do xfer_to_guest_mode_work() then it will invoke schedule()
-> > when appropriate. It just the thing in kvmhv_run_single_vcpu() looks odd
-> > and might have been duct tape or an accident and could probably be
-> > removed.
-> > 
+On 24/04/2025 03:04, hans.zhang@cixtech.com wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
 > 
-> I was wondering xfer_to_guest_mode_work could also call cond_resched
-> instead of schedule since for preempt=full/lazy is preemptible
-> as early as possible right?
+> Enhances the exiting Cadence PCIe controller drivers to support
+> HPA (High Performance Architecture) Cadence PCIe controllers.
+> 
+> The patch set enhances the Cadence PCIe driver for HPA support.
+> The "compatible" property in DTS is added with  more enum to support
+> the new platform architecture and the register maps that change with
+> it. The driver read register and write register functions take the
+> updated offset stored from the platform driver to access the registers.
+> The driver now supports the legacy and HPA architecture, with the
+> legacy code changes beingminimal.
+> 
+> SoC related changes are not available in this patch set.
+> 
+> The TI SoC continues to be supported with the changes incorporated.
+> 
+> The changes are also in tune with how multiple platforms are supported
+> in related drivers.
+> 
+> The scripts/checkpatch.pl has been run on the patches with and without
+> --strict. With the --strict option, 4 checks are generated on 1 patch
+> (PATCH v3 3/6) of the series), which can be ignored. There are no code
+> fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
+> is clean.
+> 
+> The ./scripts/kernel-doc --none have been run on the changed files.
+> 
+> The changes are tested on TI platforms. The legacy controller changes are
+> tested on an TI J7200 EVM and HPA changes are planned for on an FPGA
+> platform available within Cadence.
+> 
+> Changes for v4
+> 	- Add header file bitfield.h to pcie-cadence.h.
+> 	- Addressed the following review comments.
+> 	  Merged the TI patch as it.
+> 	  Removed initialization of struct variables to '0'.
 
-No, I think it is okay. For preempt=full you shouldn't observe the 
-flag in xfer_to_guest_mode_work() so it does not matter.
+So the rest you did not address?
 
-Sebastian
+That's not acceptable. You ignored several comments such way. Either
+discussion did not finish or you agree to implement all comments. If you
+do not agree, then sending new version hides the previous discussion.
+Best regards,
+Krzysztof
