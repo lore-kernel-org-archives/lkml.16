@@ -1,148 +1,112 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3BF423D289
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D35923A9AD;
+	Fri, 25 Apr 2025 10:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575678; cv=none; b=TacLLeepq50LhDADGFxsO0K+7ueyd/PHtgUguDCttwbWHKU8kiomw4r7cFmH16R/qM/nWweNMFNWLbmPwcsKAvn++kr2c0h66m9YKBaF5S9IkeJU9pT8jzUs2yF9X92sB9lzvTv8LCD9KpzvrSA6RAL0fdXcSzel2WCM4+X3gdg=
+	t=1745575679; cv=none; b=GH4OqlGODtV8Rnxz9TEbD3jT5oOwPz4OjeMLf7eupwqK91+qqb0yvqQfs6qBc4fSlG1sARVcOZngsjumaRxBFZmH/MAcxfq2mCT8oDjbcsEa2jeICXEJ5pkn/7nFCIJBxEbf8q43HFXmeBOViqw04tE/WDIymKMzBDvpdczlNXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575678; c=relaxed/simple;
-	bh=gMfPESXVEcHFW7aCs7FCE1eoGX1vKGJ5//35Wtfc/wk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PFaev16aGwB6DtRu9g23ueog3WrxxInD6RP74qM2wOhx3MMd9gvIKo+Cqe0rVnAOMp/IqzYW6mouTRc8Ssi3MC0KPArl75S38vtzY8Y1yA6tS+5LCEmXz0yO8ozxH8nXdxacUefpIzjL+U0RRjifw5TTg5vEmdduDjxOhVX1rb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MExBNHst; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1745575679; c=relaxed/simple;
+	bh=E1N3uydZYxb6NmwdYyU4qdeY7atKa7K2XsdZZPOcJhQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OXEpDx/VnEYXCdUKRd71EQhQgOJsj9IuFmh40C6MO5G1ijH0UIhcFJte4qS54kQD5HfClM4w5aabnSUUcv35x40P/mRZD74lW3GGRjCixitWTu34Esms8fYVszfkdeGvCccZ+zOPDUGwTuYcKZ+bVnsh1+1r5TkXz07j9GYNvOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XvTyGxfO; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MExBNHst"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-227c7e57da2so16993015ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745575676; x=1746180476; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qL/GfRaKKdsAK+0kAIMrtxaOj8SSMTgBlKehhO/P69U=;
-        b=MExBNHstst+XK1XSn677+eThyDa9I03J5pApCiVUMUrUdqWm/Y8ysMIJ/qaUVlEXxA
-         AgCOxCzqgeKWcV6hnJWrzbXVhSMDUm/0CQLbgNi/mxWhNoRrJ/cPm3KhipMcGgbuRSpV
-         L684Yej7Flf32ppzSg/cQqIKfC8m3xjBifwqw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575676; x=1746180476;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qL/GfRaKKdsAK+0kAIMrtxaOj8SSMTgBlKehhO/P69U=;
-        b=qWXlVw9h9CurneDgM1rzmj6o9XhDqyak8tGlqg3Zl1tYp6keVmGzTQs89H8NsPRTZT
-         1nUJI2IoobgQKXGlDW2gYRGEo8NEFkIexg88e6MPW+7TwUyA2AuaFzgOwSp2+qeHmnIs
-         YmkWLTSu2wjxdsEV4Z1TdheXp14FM7ib5WRqfGxFAMT/FSG+q6RFkHXKWJQnUgcsXfLJ
-         Jv54JU/bRpKyF41FPln1U42Zi/5fTdMg0zfBonw5fKyatvoriKV28d3yQg0zPtzL6M0l
-         USelya+IfG5BOtqp3WTO7EHClFzTJA7mVu3zunWD5gm32YMLjUoyqbBDKVr7STnaCw+v
-         nuUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHEdl81A4olmykVPiYogUvfxl3ZASS5EWAzwDBf76CovV9vkLOdEDQrzvZbRTl8HBkzCxEccTifAtWQe8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWee/hoVCgUFB82zNg3yg8xHEF5pbMnEiYgDgPYSV5cRE0PWtD
-	hWZ0xq1CKwDWmvgcOYgakwhKEEbjBtZJaRsIyEOsK+WJbhlmM50NV/10cCcLYQ==
-X-Gm-Gg: ASbGnctKpKO3GDTYC3sePXYdh5ZgYA3zm8JLQzOYjmPQs44YSCnln44BDmbEdiMJhCY
-	tPIYOi/xbkp24EIm+TeZlGdvnKA/TFxLFeenV6s9iakbUPitwYPxss3Mfucm/rEuz4cMp3BbWx6
-	pPVEQRCFCMm+qaDz2ZfGbxm/oo37pMYRiOiU1cgBV9wDlqlOzZNj2G9YYDczJzQ5BPw+gxCj7OG
-	6yDz1eYC5oxZPED63Fbp5JhanM3CmM0tGHSFsMVF65sidzjG9AtUXEyicjmGrXCIw6wnXEdYwKh
-	c8irFafPMxa/xD7doqYTjO+0fpLyyQnKrB1o8iSEqyD0Fabfi1sGyCAIV4T7woZfBP+eCcDKZmL
-	kme/fSgi9d6+nXiC8ySgx1aY3FeqtvLbwFw==
-X-Google-Smtp-Source: AGHT+IGJly1kAkAD/iMSo8eYESOtBt5XFa27wC92s+9+rjyn8NGcwgtok/8JfVLMz7TNZGrC97pXKg==
-X-Received: by 2002:a17:903:2450:b0:216:794f:6d7d with SMTP id d9443c01a7336-22dbf6354d8mr28313265ad.48.1745575676208;
-        Fri, 25 Apr 2025 03:07:56 -0700 (PDT)
-Received: from [192.168.1.105] (88-187-52-200.subs.proxad.net. [88.187.52.200])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f48b2sm2564155a12.8.2025.04.25.03.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 03:07:55 -0700 (PDT)
-Message-ID: <e6207e73-05bc-4a50-a23f-0d4b3dc02c4d@broadcom.com>
-Date: Fri, 25 Apr 2025 12:07:44 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XvTyGxfO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745575678; x=1777111678;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=E1N3uydZYxb6NmwdYyU4qdeY7atKa7K2XsdZZPOcJhQ=;
+  b=XvTyGxfOdimZvHm+0YEsCzrzxs0LfIvyz+3ZtI9bOQZsBrf6Hdofrw+V
+   /XInd+i5kPkAArSnT+hPZVhP7OI02BJCXAiIM5UoCtCjzsJRyGUoRjM9o
+   FEFsVBFZJPwqE0IdQmWiwHKWr2xCrJ7z37vFqmNSh7u/dhZtac57GFyny
+   R798WxMDZRLEixgB+lR3oDbE1u40mzsabXrQsDc2w7B303+mJfb0SDeZj
+   R86EbhHf2ek9D3+mszCNqWL1245bHOmZ7I6b4HA+pYm9/Ewxzt6+UJDMN
+   khe8uoQQBh1c633HfPAaxg0b4w5xXk9zMaUDWfGoQ/xr57yJcR893/G+W
+   w==;
+X-CSE-ConnectionGUID: FQpcc3fyRCWmi91mIsY7pQ==
+X-CSE-MsgGUID: H+LlXwyjRL2FAgn0a+khFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="46353296"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="46353296"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:07:58 -0700
+X-CSE-ConnectionGUID: UPSrGiqQQqq6bfvVG5wXBw==
+X-CSE-MsgGUID: RTR4pQxzTRCm3O2wU84C2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="133848678"
+Received: from bjledic266.bj.intel.com ([172.16.127.175])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:07:54 -0700
+From: Dongcheng Yan <dongcheng.yan@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	sakari.ailus@linux.intel.com,
+	hverkuil@xs4all.nl,
+	andriy.shevchenko@linux.intel.com,
+	hdegoede@redhat.com,
+	u.kleine-koenig@baylibre.com,
+	ricardo.ribalda@gmail.com,
+	bingbu.cao@linux.intel.com
+Cc: stable@vger.kernel.org,
+	dongcheng.yan@linux.intel.com,
+	hao.yao@intel.com
+Subject: [PATCH v2 2/2] media: i2c: change lt6911uxe irq_gpio name to "hpd"
+Date: Fri, 25 Apr 2025 18:07:39 +0800
+Message-Id: <20250425100739.3099535-2-dongcheng.yan@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250425100739.3099535-1-dongcheng.yan@intel.com>
+References: <20250425100739.3099535-1-dongcheng.yan@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 -next 12/12] arm64: defconfig: Enable OF_OVERLAY option
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <8baf7818aae1fe5be046015e4bd8121ccc9acb20.1745347417.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <8baf7818aae1fe5be046015e4bd8121ccc9acb20.1745347417.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Lt6911uxe is used in IPU6 / x86 platform, worked with an out-of-tree
+int3472 patch and upstream intel/ipu6 before. It is only used on ACPI
+platforms till now and there are no devicetree bindings for this
+driver.
 
+The upstream int3472 driver uses "hpd" instead of "readystat" now.
+this patch updates the irq_gpio name to "hpd" accordingly, so that
+mere users can now use the upstream version directly without relying
+on out-of-tree int3472 pin support.
 
-On 4/22/2025 8:53 PM, Andrea della Porta wrote:
-> The RP1 driver uses the infrastructure enabled by OF_OVERLAY config
-> option. Enable that option in defconfig in order to produce a kernel
-> usable on RaspberryPi5 avoiding to enable it separately.
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+The new name "hpd" (Hotplug Detect) aligns with common naming
+conventions used in other drivers(like adv7604) and documentation.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Fixes: e49563c3be09d4 ("media: i2c: add lt6911uxe hdmi bridge driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
+---
+ drivers/media/i2c/lt6911uxe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/i2c/lt6911uxe.c b/drivers/media/i2c/lt6911uxe.c
+index c5b40bb58a37..24857d683fcf 100644
+--- a/drivers/media/i2c/lt6911uxe.c
++++ b/drivers/media/i2c/lt6911uxe.c
+@@ -605,10 +605,10 @@ static int lt6911uxe_probe(struct i2c_client *client)
+ 		return dev_err_probe(dev, PTR_ERR(lt6911uxe->reset_gpio),
+ 				     "failed to get reset gpio\n");
+ 
+-	lt6911uxe->irq_gpio = devm_gpiod_get(dev, "readystat", GPIOD_IN);
++	lt6911uxe->irq_gpio = devm_gpiod_get(dev, "hpd", GPIOD_IN);
+ 	if (IS_ERR(lt6911uxe->irq_gpio))
+ 		return dev_err_probe(dev, PTR_ERR(lt6911uxe->irq_gpio),
+-				     "failed to get ready_stat gpio\n");
++				     "failed to get hpd gpio\n");
+ 
+ 	ret = lt6911uxe_fwnode_parse(lt6911uxe, dev);
+ 	if (ret)
 -- 
-Florian
+2.34.1
 
