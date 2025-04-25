@@ -1,127 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63592235354;
-	Fri, 25 Apr 2025 08:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D7D23C390
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569078; cv=none; b=i8zk6eyISQbA1DwR+Gsy46OhQw8ZvWET2mphv1WYGWxViflGPcU90riJqP4k2LWAbxS0WGu2zhfWASonWQD2XpW7z3hQf7+X7WPRAeMeYLmoxGgI3LxAm/wrO2nN7cOhAW4/+jxj++ayd9qvZra4oMjeWoqR7A8ndgJ0VVmacbY=
+	t=1745569082; cv=none; b=LnFlpbBmefEdoPjXFlzVJcVoOuaPP7CDRQkbwNneO4i0kIc4Kxazhsipb9JBNq3dKDMOGElMxt/AFYG7heI9L5sAUVxvChb/BZGkp2s9HQ+qxm0IO2E5Fnp5Gu54YJ4tHoMBWmBlZKeRFH4w2UpzzTxwNipuARcaBP/WMc87ch0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569078; c=relaxed/simple;
-	bh=dIsIfNWPh4pCz7BGWzAp5hEA101BvYn+yM42BX3fm/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ILXJDX+hFE9lQ6qbHJzVu6XcJt3qeUHGYCwR742DCW6XX1AUxpNIpRhdFxu1NTtgylvDc/MzagCAAShhLQ53k+H7zg8e9r871idRu8Hq/vJpwjsrH/j8PSZGie66XsmipheosZgpKVALs0MvY8NqAZ9jO9B/HQTUhIM9c8pFnIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlQcK00e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745569082; c=relaxed/simple;
+	bh=ockCoErXJYNNWIE4F1OGfTdTciM14pc2rGFj8KF/fos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rjaq/+ZtBPh72VsTjaLCc6U74WGWuCfIqlFzw15h1bT/I5i4Fyr1TSnSE5V2NTiRaJzmuP9mdmeRo9UleUfdGIKbGwXiu/kxVfrztQ5CY9qoK5Clj5bAqssQPUavbD1N1hiVXtvElAcmBmf9YnmGWf62Knb79ruE1LZUcDgnnrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i8KCNbjb; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlQcK00e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6FAC4CEE4;
-	Fri, 25 Apr 2025 08:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745569077;
-	bh=dIsIfNWPh4pCz7BGWzAp5hEA101BvYn+yM42BX3fm/A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GlQcK00ex9c+3BjQc/0nVKEIU3/rknFLInQP4eRYbNtNy9VM1EHV/ISH6rtmKBmsG
-	 xalKn78G8U1pdamgvJi+ombtaJUZtZfUNtRo21GsDAJCrOgB07nwBR1+EcGR/B2xGw
-	 8eVwUIf6HGxsYgVEUR4B3zSeVZjDKQSeJESpk3cJ3TQGDGLuyhWBJAbZZU1xB9SvX0
-	 /PcesbOMue+77zyHg29xEjI2oNV2+Ida8udoPQYEvd89SLDYsZTI3QphgimOl3Zo5N
-	 wabpOUsseaL8hii5RCKhREAL5nKCElDb9W+xn2uj3342UzdtcAfyIIPysS9ejPby/7
-	 h/QCXuKaSl11g==
-From: Philipp Stanner <phasta@kernel.org>
-To: Cezary Rojewski <cezary.rojewski@intel.com>,
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sound-open-firmware@alsa-project.org
-Subject: [PATCH v3 1/4] ASoC: sof: Use pure devres PCI
-Date: Fri, 25 Apr 2025 10:17:40 +0200
-Message-ID: <20250425081742.61623-3-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250425081742.61623-2-phasta@kernel.org>
-References: <20250425081742.61623-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i8KCNbjb"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso12839735e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745569077; x=1746173877; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pIik2Dicc6zrNNPkgRyVhu5BjNjWoGlcqMwS0QNX8Sk=;
+        b=i8KCNbjbmdKc4sIjtJQPP7WgaU8u7kgQvvJRDHolwlBVdzQNI9ZnLo81t6/elcoa2k
+         NUlaEF7k01WJT916nRHvbKnszFcNNlbw4nove37EEIIoXPLw0S1h0mJH8J4phPb1gJWx
+         Zku/gMC7L32R8ibcJfkj+eBWyLn8Pi3MnTJaD8XIOEkBoP/VKl2cA+/9OSwvILIi+mjn
+         fBW9W5Utg7nbmYjM3S2POgZQ9q3w6nsPAsh7LvqS1oNUGJe7cOTruTBSDuzPveswgDoz
+         td+zByLQKPBhOzRw1zB+EAhdDTeJJstKvhOYG8JF0hDcUkSVrjefeA5c1msW6+gwu+w0
+         hZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745569077; x=1746173877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pIik2Dicc6zrNNPkgRyVhu5BjNjWoGlcqMwS0QNX8Sk=;
+        b=s35mQ/3c4Bv9xWt+iySlc+eX/71IEhm5uSPrkqMMhE1eX7sFBr+Zou7p7Oq5/bKsGn
+         pibmYXHCuKN6eIKcvgEJQRjOt9+eAsR2rfhXhylTvwcFD36wc92G5BxDQ6OHRMN+ZbfD
+         mIJeiwNYX8+VtiS6eqYhoIgi2Lfi9sxRDf4v0Pbl4iKxCdHaRPHcRgxz1KPvBqCD5Bgi
+         pKErq+AHbdVBzczTjc3x9OYAfSZnWoxqnNYbKzhiZUYxGx9zTwElFwF0oV7J5Vh0i7is
+         VUfurPXtzibZj42YJK6/ExDZnjGWreBdgUh5zdPajvQhwNe0JKOgxMq270YQWX22SVgA
+         nJBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzi4IVrFOFYm5Z9R96kisFlXPGjNywACA3hcb7Sk3D70T6h5fddA6+W0haQsBXR7KWvJbbJCQ5iQU0KTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN+A0SF6aKg+piLWvSBRUIGjOyvWiiGaaLsZDH/QZ4ijERZ9C3
+	sTgsR3f0Qdjb4EoZPZLYlhk+O9NHGR+ZKF4Bovivhnzt4h/gs19MpWme6c5bbt/NFNX4Yx8/KpJ
+	j
+X-Gm-Gg: ASbGnct+45n3xOItRuaMiCJrnSVTTz9/u1NafDaC38Nu8EtB0sO5Jt3qVdaavVA8zEG
+	toWx5d5JbunkdDfsFYDn/yj/LHiIINHXn5neu6XGLsspLrHg8SfK5p8cC7s97V76z6HSHts0+Wl
+	d4jGRaluBv1aJCao7q6aEa5Pu6lUp95eS1I3QxdP1IBls8Df94p9mgqWJmcnXSpqWlEw52Gle2Q
+	3GM5L+6XCvpdGxSHCbmmPwLkZAwh9JV+4XhVJ6KJjE3cBI2zaiQ41oBXNjBZkpT/KGsu/4iCMZt
+	i/GhVhxLQzAJZSe1/0kijTliEb0StpvX8DS2Wum5sN6R2w==
+X-Google-Smtp-Source: AGHT+IFtIhw338SCwM97fT8DE36JSktmwAws0V+m2whiTCc2WvjhYcfxYH8N3RZVkd/V19BgPW5uag==
+X-Received: by 2002:a05:600c:3d0b:b0:43c:fc04:6d48 with SMTP id 5b1f17b1804b1-440a6346aabmr12093055e9.0.1745569077572;
+        Fri, 25 Apr 2025 01:17:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073c8d1a5sm1671072f8f.13.2025.04.25.01.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 01:17:57 -0700 (PDT)
+Date: Fri, 25 Apr 2025 11:17:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org, patches@lists.linux.dev,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Marek Vasut <marex@denx.de>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH] rpmsg: qcom_smd: Fix uninitialized return variable in
+ __qcom_smd_send()
+Message-ID: <1cb8c180-a93e-4d5d-a17a-6452dd154801@stanley.mountain>
+References: <CA+G9fYs+z4-aCriaGHnrU=5A14cQskg=TMxzQ5MKxvjq_zCX6g@mail.gmail.com>
+ <aAkhvV0nSbrsef1P@stanley.mountain>
+ <CA+G9fYu1GagoVWnhNFnknWf0_zk-O+5XQXDiL-XUdt8knhJYaQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYu1GagoVWnhNFnknWf0_zk-O+5XQXDiL-XUdt8knhJYaQ@mail.gmail.com>
 
-pci_request_regions() is a hybrid function which becomes managed if
-pcim_enable_device() was called before. This hybrid nature is deprecated
-and should not be used anymore.
+On Fri, Apr 25, 2025 at 11:36:24AM +0530, Naresh Kamboju wrote:
+> On Wed, 23 Apr 2025 at 22:52, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >
+> > The "ret" variable isn't initialized if we don't enter the loop.  For
+> > example,  if "channel->state" is not SMD_CHANNEL_OPENED.
+> >
+> > Fixes: 33e3820dda88 ("rpmsg: smd: Use spinlock in tx path")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > Naresh, could you test this patch and see if it fixes the boot
+> > problems you saw?
+> 
+> Dan, This patch fixes the reported problem.
+> 
+> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> 
 
-Replace pci_request_regions() with the always-managed function
-pcim_request_all_regions().
+Thanks Naresh,
 
-Remove surplus calls to PCI release functions, since pcim_ functions do
-cleanup automatically.
+I left off your reported by tag as well.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- sound/soc/sof/sof-pci-dev.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
-index 2fc14b9a33d4..c50249aadea9 100644
---- a/sound/soc/sof/sof-pci-dev.c
-+++ b/sound/soc/sof/sof-pci-dev.c
-@@ -216,7 +216,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = pci_request_regions(pci, "Audio DSP");
-+	ret = pcim_request_all_regions(pci, "Audio DSP");
- 	if (ret < 0)
- 		return ret;
- 
-@@ -240,8 +240,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 		path_override->ipc_type = sof_pci_ipc_type;
- 	} else {
- 		dev_err(dev, "Invalid IPC type requested: %d\n", sof_pci_ipc_type);
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	path_override->fw_path = fw_path;
-@@ -271,13 +270,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 	sof_pdata->sof_probe_complete = sof_pci_probe_complete;
- 
- 	/* call sof helper for DSP hardware probe */
--	ret = snd_sof_device_probe(dev, sof_pdata);
--
--out:
--	if (ret)
--		pci_release_regions(pci);
--
--	return ret;
-+	return snd_sof_device_probe(dev, sof_pdata);
- }
- EXPORT_SYMBOL_NS(sof_pci_probe, "SND_SOC_SOF_PCI_DEV");
- 
-@@ -290,9 +283,6 @@ void sof_pci_remove(struct pci_dev *pci)
- 	if (snd_sof_device_probe_completed(&pci->dev) &&
- 	    !(sof_pci_debug & SOF_PCI_DISABLE_PM_RUNTIME))
- 		pm_runtime_get_noresume(&pci->dev);
--
--	/* release pci regions and disable device */
--	pci_release_regions(pci);
- }
- EXPORT_SYMBOL_NS(sof_pci_remove, "SND_SOC_SOF_PCI_DEV");
- 
--- 
-2.48.1
+regards,
+dan carpenter
 
