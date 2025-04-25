@@ -1,84 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953B043AA8;
-	Fri, 25 Apr 2025 02:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3AD1AAC4;
+	Fri, 25 Apr 2025 02:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745547048; cv=none; b=olJdM3pTBefoWaMluytXNkJG/SEb3tatoQiLsu3XrzlQtTlLwQLPr4umWN0ahNz0CRFC5UxRREjSsRDBSetlS9bQT0DyNKY/Qs3OrFdUtaZUtkWUkhETpAE+6woMrMCZiAHbxb2KSJ+Ov1cmEfSZggKGvqPgvJ2xRHZx5jZmx/0=
+	t=1745547104; cv=none; b=C/Rv+v5WNkXsDp4HJUpc21ZOi/jNuXqTyMqIwHdS8y1z6srhn38HEjHLgT6AfgqM9FUTSZc7j2Wz2gf8xLD5DSCjABTVpGpUIwIFiGOBXcuAtY9MftZfX4sERfkRFNbres6O2NW5BIOqciXtGbdrrU63ABtgaXD24/7VsQqCyA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745547048; c=relaxed/simple;
-	bh=QRw/DYAEbDloOCSEsv2ywKTtmu3aHUR7BaB6HZib6wM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R0weXIgBgDqjzBxzFv3oyomVtRUl+cCC+rJcfWFRvAyA5SS092NDYd9ZgpxCBCg3mA2QbTDuTbs0D9uVgOIFIxsLsyKXuciOsEIlkhsinX43E0wL8QECltzSWEbwOCAomYnP5cBzjfpzhJA1RNM2kpr52Y2ZzbiEE6G2CEcXzYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+R+F4NF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745547104; c=relaxed/simple;
+	bh=D2+vNAluRK4Dl/4yxS0rI+QGdXT+hzGHu9oUTwoSaGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ga1oBAn574PUzCB+9scbgVcgnXzmbC6UzyhXuSY3vCIgu5q96Alijtk61tYiQ7sjVgEFr6XRIoRelZ+7KHMStdpn0EAIRWuMKRvpTPVwOBKjaqKxmiq/xkpgjLjKfAxncIzr0fhnTvMETvto/t4RTDC6h19G84tLXjSsl8g62Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8GAz0Ci; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+R+F4NF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0421EC4CEE3;
-	Fri, 25 Apr 2025 02:10:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8GAz0Ci"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86629C4CEE3;
+	Fri, 25 Apr 2025 02:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745547048;
-	bh=QRw/DYAEbDloOCSEsv2ywKTtmu3aHUR7BaB6HZib6wM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s+R+F4NFC237tjSlVacoyM9H1w6BD1NCkul7bNNG/I9DDPY06EL/ptwxpcRoEFbur
-	 FVJdEsCRgmI7RlusgdOey1F4mgLu6n9ZazFryUnkndZqphStmCG3enRz4NzizaR72n
-	 qDmcuHKr2ycYw4YPg+XYnEUUCVBp9E/yUpAffhiKJYIbbBmO/U26JLkAOdjzRk2XPK
-	 OZWHGUMXw/5BzGlOf3ATwPC3U3lSaxBe47OcL5zealmO0gvcAamn81t0eoPxGOhlaR
-	 3ob7ZAcI7alRC/l10h71D/PJY/KHz9ypGrynGG8ftUlqz5YdXa585FGehQ8QIFL90l
-	 De5yUUqg/0avw==
-Date: Thu, 24 Apr 2025 19:10:46 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Gur Stavi <gur.stavi@huawei.com>
-Cc: Fan Gong <gongfan1@huawei.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Bjorn
- Helgaas <helgaas@kernel.org>, luosifu <luosifu@huawei.com>, Xin Guo
- <guoxin09@huawei.com>, Shen Chenyang <shenchenyang1@hisilicon.com>, Zhou
- Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>, Shi Jing
- <shijing34@huawei.com>, Meny Yossefi <meny.yossefi@huawei.com>, Lee Trager
- <lee@trager.us>, Michael Ellerman <mpe@ellerman.id.au>, Suman Ghosh
- <sumang@marvell.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>, Joe
- Damato <jdamato@fastly.com>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH net-next v12 1/1] hinic3: module initialization and
- tx/rx logic
-Message-ID: <20250424191046.523383fd@kernel.org>
-In-Reply-To: <cc01acb5ebc96c4edc7f85955379fb50ce27484b.1745411775.git.gur.stavi@huawei.com>
-References: <cover.1745411775.git.gur.stavi@huawei.com>
-	<cc01acb5ebc96c4edc7f85955379fb50ce27484b.1745411775.git.gur.stavi@huawei.com>
+	s=k20201202; t=1745547102;
+	bh=D2+vNAluRK4Dl/4yxS0rI+QGdXT+hzGHu9oUTwoSaGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i8GAz0CiJC7ccRPuqlpa6/9AHElEWMOVKLgwHRbjy/V9X1agZ6mOu2MUJtZXR/gap
+	 1t76HOrEi7FI5R/01w2SzJ0qRIs/WtAxMcUsSN5pXBffC2ErU0CwJNdwZ/T+OGROCE
+	 UqBPVIWuHLHS+B3jMLHnHp5Z0UWWV0QF4OEcRefIGAQgnsmgNXOwVz5VSmwbobxCKr
+	 N0z6kQgw7Bw2orp0BnF9An9X39m7YuzH7X9XGpIFgaU2xdSKkmYB3dnqYoQHLP70qX
+	 6vQ7zkcyV3ojKLWl3n89w42ukyjJzT5okIs3XTZaZvxYxhRKOPCLVxkzPaHx4u71Bs
+	 TuUpv6IGaptXw==
+Date: Thu, 24 Apr 2025 21:11:38 -0500
+From: Nathan Chancellor <nathan@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: Adding __popcountsi2 and __popcountdi2
+Message-ID: <20250425021138.GA3800209@ax162>
+References: <20250425003342.GA795313@ax162>
+ <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com>
 
-On Wed, 23 Apr 2025 15:41:53 +0300 Gur Stavi wrote:
-> +	/* flip page offset to other buffer */
-> +	rx_info->page_offset ^= rxq->buf_len;
-> +	get_page(page);
+On Thu, Apr 24, 2025 at 06:36:33PM -0700, Linus Torvalds wrote:
+> On Thu, 24 Apr 2025 at 17:33, Nathan Chancellor <nathan@kernel.org> wrote:
+> >
+> > I figured added
+> > these may not be as bad as the wcslen() case because most architectures
+> > generally have an optimized popcount implementation and I am not sure
+> > compiler builtins are banned entirely from the kernel but I can
+> > understand if it is still contentious.
+> 
+> Why does the compiler even bother to do this if the architecture
+> doesn't have the popcount instruction? The function call is quite
+> possibly more expensive than just doing it the stupid way.
 
-Please don't implement local page recycling. Use page_pool instead,
-it's been around for almost a decade and because its explicitly
-managed by the networking stack its much more effective.
+Not entirely sure what the motivation is from the compiler side but I
+cannot immagine that they would be doing this if it was not more
+efficient in some way.
 
-I pointed the same thing out during Yunsilicon XSC driver review,
-which is ongoing in parallel. You should really read the mailing list
-if you want to make progress with work within the community.
+> But if you want to do this, put the damn thing as an alias on the code
+> that actually *does* the SW fallback in lib/hweight.c.
+> 
+> Because the way your patch does it now, it takes "I'm doing stupid
+> things" to the next level by turning that function call into *two*
+> function calls - first calling __popcountsi2, which then calls
+> __sw_hweight32.
+> 
+> Let's not do stupid things, ok?
 
-> +reuse_rx_page:
-> +	hinic3_reuse_rx_page(rxq, rx_info);
-> +	return;
-> +
-> +unmap_page:
-> +	/* we are not reusing the buffer so unmap it */
-> +	dma_unmap_page(rxq->dev, rx_info->buf_dma_addr, rxq->dma_rx_buff_size, DMA_FROM_DEVICE);
+I will test declaring __popcount{s,d}i2() as aliases of
+__sw_hweight{32,64}() to see what effect that has but I figured that
+calling the __arch_hweight variants was more correct because some
+architectures (at least RISC-V and x86 when I looked) use alternatives
+in that path to use hardware instructions and avoid the software path
+altogether. While there would still be the overhead from the function
+call, I figured not using the software fallback would at least soften
+that blow.
 
-nit: please wrap the lines at 80 chars, unless it hurts readability.
-You can use --max-line-length=80 with checkpatch
--- 
-pw-bot: cr
+Cheers,
+Nathan
