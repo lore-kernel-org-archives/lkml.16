@@ -1,106 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E84823315A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F55B2356A2;
+	Fri, 25 Apr 2025 08:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569068; cv=none; b=UmdSfXxqoBhCh6kxy5Zk6WEz3glX31x6gL7rg/mCR0NnYfBUsae8QVbHh3QPq2uwaVQqXNZ/zkvxSwJxf0M8CmZzgjjkI1eVsO/9p/68FQFpQyGwkn1doAcj8sQHHDW8/HG9Nr6fwpdvlq/ZqfXQTIECfykp98DQIgDddfkEDOM=
+	t=1745569073; cv=none; b=PvbrIjNrOcKTXFOMATH+3R0TAnFHU7IDUKhoGQzoI/TBkMzd+Ys4gQCLKs9VgRE3cIWyeIRLjX22S7D2j3MpB5MtkgmX5jlsQOc4ygthdVCgT412Zn+KVku3fTTGBez0h8FDqdo2Be4F8zR2Skrsi8NsuDzkfUe1AmuBgeww1oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569068; c=relaxed/simple;
-	bh=P7aLK3l8yeYUwMXGvA+hIFjujX8ye0jfjOGlf8dWspU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t82HSxvpZdMCpqSaip6zgDurG7KmVm6V+UG8aWz7T4RWJEw7e5XG12PDbG9BurQANZOtUVD1IiVQRv+nAp/zIIGaWEmQOW0zT0rV8ddBe5YOgxthLdWS57nE2X1ZX8FbCNoSAuFeDLNbuyIcb27ngzcB6T025UgssyaNguvrtNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FolyDqRx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745569073; c=relaxed/simple;
+	bh=WpwWKRJr1JlzgpUrnmqNWxSCeyZ0M65DMFmMraoBV4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e65Nf64Ow7RISNLCITnnH529rkp7Q6zabQBomBI8xq6ybJqvS5GrBF7xyWqrgVBX6vf1FwnyQW46WfosxtS0wtETx+Ycl0AIQGRq8B+gPGZTl/4g7qEzIFOs5+/OFCyc9UkxojvaEVSH5JuAmME/TKgxPJPY11NZWn7l7XvpYIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/WmELJB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FolyDqRx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745569066;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W6VKic5wKMEIAlcOpats+61qo+m5NRwuI82rD38neOc=;
-	b=FolyDqRxFS0hEOEiuIPJkD/qHGFYtTwd/B+99OgUpX7LQttCc5/wGF3edqKuJR+Ay7M0Qj
-	srBjGkKA3cVIwvX6o3OvaiGsado9moKygFmSlHMcE+l3ijHCZa3MDt5z+i1yv7afOLsANr
-	cRABNybgELJAANdyxyqB5F2IbyptnzU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-nAq2T-JoNtud6EGWzAWiBg-1; Fri, 25 Apr 2025 04:17:44 -0400
-X-MC-Unique: nAq2T-JoNtud6EGWzAWiBg-1
-X-Mimecast-MFC-AGG-ID: nAq2T-JoNtud6EGWzAWiBg_1745569064
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so14332345e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:17:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745569063; x=1746173863;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W6VKic5wKMEIAlcOpats+61qo+m5NRwuI82rD38neOc=;
-        b=BePNQqOpP9m/La57mp1h96YR73cWbocs8nu7y2AxFJrWcMGH5M6W3KdCkCWsGOgI1H
-         I4JOf9wVuBO6LMV2ZClc6hGMlfBh6IwY/CndX00ntf0CNwshj7BbLF2eZw6TEzNC8m4M
-         VPIYe/MW3UY4kHD5LdFPbf18to4QVgWXkkHgXjS5yxL6+aXfcT22EZcDuWwZt/1xGuIG
-         OEyaioZl2YK7MEqm1TLyzPnaojn7yK96vR66LmyOKAxr71FCtVbijVKZ9a671oQVb9f4
-         AlyBPl97Hr1lTVPspNSiWV8r8p/CNmC+7GpIgt1TCY+M0zK2IoWvPKajLKGP5yC8YzfH
-         AVbg==
-X-Gm-Message-State: AOJu0Yz4v5+QWRgURIml6Y5u7rYVy18jEzYiSYaFEfZMjomae++Lf3Af
-	SX7k6mWdmm2E3ANstsQCSWjWRyvenYmVge2TL7N6bEhoZuYmFxGZlaBUXcJNd8PfICSlXWW6baW
-	zv4LAwSrAHevGMSFNhDJ1BYIMUvHT+aqE9RSXWXAFmwkaFKlttHG4haNLrEOjRWwul0HxHWXc9Z
-	cZuDif5jTrLEGNVrMMbMvvRvKwMbHysWEshi43shya3Q==
-X-Gm-Gg: ASbGncsyt/cdGi06/LKtb5QbJgNKXreNmbLsIiKsb0mLTuIi7rVwG0EMlBjNpD0PgPa
-	HsYpWruth3NbLlbUjC76o7CK6k81LMAtvykiS91lftNtIZ8JT3g4Fe+DwcpiJuhrGtIVHh4NygL
-	U9p2U4j0CeJeTaCkco8AblXrZKwLU1Eo0nEzYFrCSFeQkWLnTGGq41odF9+B3Cbob8EB4vBnU4z
-	NerUNd1nJq9ZtgtY+nP8GjzQOtNGY40xGXgirPBcrRxD0dYmsaqBmG8peXsuijMpj1Mf/WUwOij
-	QaeGvaD/ihkiILA/XZp5UwVdOpnKKYGacfPbBSWapDDHaGFfo3lARlKjE63UloXVBdKqRJQ=
-X-Received: by 2002:a05:600c:a418:b0:43c:fad6:fa5a with SMTP id 5b1f17b1804b1-440a66d91cbmr9335465e9.24.1745569063637;
-        Fri, 25 Apr 2025 01:17:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZBsLQHuNB03USKo+AemF2nPVLejdezBsqoRXAvjTmH+TtvceXr84oTyLSWQmeHt1CNvX3vA==
-X-Received: by 2002:a05:600c:a418:b0:43c:fad6:fa5a with SMTP id 5b1f17b1804b1-440a66d91cbmr9334915e9.24.1745569063186;
-        Fri, 25 Apr 2025 01:17:43 -0700 (PDT)
-Received: from localhost (p200300cbc70f69006c5680f80c146d2a.dip0.t-ipconnect.de. [2003:cb:c70f:6900:6c56:80f8:c14:6d2a])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073ca5467sm1591850f8f.28.2025.04.25.01.17.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 01:17:42 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	x86@kernel.org,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Peter Xu <peterx@redhat.com>
-Subject: [PATCH v1 11/11] mm/io-mapping: track_pfn() -> "pfnmap tracking"
-Date: Fri, 25 Apr 2025 10:17:15 +0200
-Message-ID: <20250425081715.1341199-12-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425081715.1341199-1-david@redhat.com>
-References: <20250425081715.1341199-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/WmELJB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85563C4CEEE;
+	Fri, 25 Apr 2025 08:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745569073;
+	bh=WpwWKRJr1JlzgpUrnmqNWxSCeyZ0M65DMFmMraoBV4g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=D/WmELJB9FL0rqxBlCWZhH9Rlr1FIoGe55MXWcpcE2fj53lLZFB8FQzygT/6MR1xj
+	 csoIHRbQJVFyjaO2sVjp1NoLTLQvu1SO+MGSWSQVrB7rEo5VZQwza10bOcgTn10NPB
+	 7/CqomeIv0A1ac7Bhwsj4h7/xWscLvhDvdB5eN/93e7PHnl7yTwlzDy+bieE21Fe5Y
+	 rv70Lu+cddGjtq7TmYqaLQdzO5qGcCPtHulXdhtpqEZW7tFDF2ANCohqqot786dP6g
+	 YRA2exi4TKf5fKMxKRDzvw8KhTYM0ep+apaO+KyuNXGn+WftuY8T2hSi+fouBgDtFh
+	 PJZ4gLS3pt4AQ==
+From: Philipp Stanner <phasta@kernel.org>
+To: Cezary Rojewski <cezary.rojewski@intel.com>,
+	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sound-open-firmware@alsa-project.org
+Subject: [PATCH v3 0/4] AsoC: Phase out hybrid PCI devres
+Date: Fri, 25 Apr 2025 10:17:39 +0200
+Message-ID: <20250425081742.61623-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -109,27 +56,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-track_pfn() does not exist, let's simply refer to it as "pfnmap
-tracking".
+Changes in v3:
+  - Remove two forgotten calls to pci_release_regions(). (Amadeusz)
+  - Adjust commit titles to common format. (Amadeusz, Cezary)
+  - Apply RB by Czeray (not everywhere, two patches changed, see point
+    1 above)
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/io-mapping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+  - sof: simplify return. (Andy)
+  - intel/atom: simplify return. (Andy)
+  - Send a separate series for AsoC. (Andy)
+  - intel/atom: Add another patch that switches EINVAL to ENOMEM. (Andy)
 
-diff --git a/mm/io-mapping.c b/mm/io-mapping.c
-index 01b3627999304..7266441ad0834 100644
---- a/mm/io-mapping.c
-+++ b/mm/io-mapping.c
-@@ -21,7 +21,7 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
- 	if (WARN_ON_ONCE((vma->vm_flags & expected_flags) != expected_flags))
- 		return -EINVAL;
- 
--	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
-+	/* We rely on prevalidation of the io-mapping to skip pfnmap tracking. */
- 	return remap_pfn_range_notrack(vma, addr, pfn, size,
- 		__pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
- 			 (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK)));
+Hi,
+
+a year ago we spent quite some work trying to get PCI into better shape.
+Some pci_ functions can be sometimes managed with devres, which is
+obviously bad. We want to provide an obvious API, where pci_ functions
+are never, and pcim_ functions are always managed.
+
+Thus, everyone enabling his device with pcim_enable_device() must be
+ported to pcim_ functions. Porting all users will later enable us to
+significantly simplify parts of the PCI subsystem. See here [1] for
+details.
+
+This patch series does that for sound.
+
+Feel free to squash the commits as you see fit.
+
+P.
+
+[1] https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/pci/devres.c#L18
+
+Philipp Stanner (4):
+  ASoC: sof: Use pure devres PCI
+  ASoC: intel: avs: Use pure devres PCI
+  AsoC: intel: atom: Use pure devres PCI
+  AsoC: intel: atom: Return -ENOMEM if pcim_iomap() fails
+
+ sound/soc/intel/atom/sst/sst_pci.c | 59 ++++++++++++------------------
+ sound/soc/intel/avs/core.c         |  8 +---
+ sound/soc/sof/sof-pci-dev.c        | 16 ++------
+ 3 files changed, 29 insertions(+), 54 deletions(-)
+
 -- 
-2.49.0
+2.48.1
 
