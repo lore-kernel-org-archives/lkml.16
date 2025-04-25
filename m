@@ -1,66 +1,66 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FFD2973D9
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24902973CB
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745623435; cv=none; b=WasDS6nsWp3VmR6bcG3AvmxwkbAP/JHh43zol+8QrITHPRUwz7hnz2Y5DA9eRwwe4dIiywhugHz5kDjcQyjjol03MTJmn4HSXog5KJLg9OCul/6pHLMIlKDlcZjnzeO66ZAjE2KLYd8Kv/Ox7LEmOmmCaoPSqTx/PZg6iZe9XSg=
+	t=1745623453; cv=none; b=TOzWhe0FfH1fbv1cCq1/c7MCWFy9W+41ZDaPIFByGPXVNHgQ6+wDgJ2jKVs7j7gzy5vrHvUSUCD1IHAxBoT/saulLbYiMw1LB69hesvtXEgLg6p+8utyNV0Ls1tQm5XaF1FRuC59G2xix0AtBnkWNh23N+AI9aj2ZtSDXic0hzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745623435; c=relaxed/simple;
-	bh=wuuN7iOZFG4lR7kqhMA4uEBLa8MH72iBh6btbqH8OQk=;
+	s=arc-20240116; t=1745623453; c=relaxed/simple;
+	bh=eU23Khxo6QVrG+xcpZQb6AudzGFSiClXqZNoEgUpAbE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QrMwZO2C5uFz38CfdE490H3piPTo34O3T4iGKhdLaOoZ6G/4iEpk4YFrQUmIInCU7Pj1ilpL6Tk23SaJDAsB0PJMKHZmooF+ANV2HI7GlTY5rRMiK4WxVZA+pDXt2h5yJ1pK1PVZ1MpgUm5pVRFeOj84I4YKiXK/hJab1MHoZOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcLM/C/f; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=W7d+GqYXiRbNIIbE+Qbes2x8e1pWpB7kbi5Aj4QEgG48eq0oat8+PO+jdjXxm7l++YUjxvMpHXfiYdGmmOuS9H2IN3Yfj5meXEU9191/yf5k2A6lPUD79G2P2rCffdTwz6Fv+SGR57gBSVg3cUFVvJB6AVh7KGFnBqetMVvPjpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mcrIBV58; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcLM/C/f"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3082946f829so4066794a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:23:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mcrIBV58"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-227e2faab6dso24867455ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745623433; x=1746228233; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745623451; x=1746228251; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XJ5gLSrci4Aw+MzrITEjedWtV5V0wkfqlcC7WoEJtmE=;
-        b=XcLM/C/fdnoQCZhRXS6rssTlypHqY2ttuNXAXlTTsvOBtIfBrKbxBi85T0O4rWlj18
-         H+Y+vvE5oQHz45YpDsIn+e2zJzak5MIlzpFK7sABHWa3+ANCJ/7u30GOictkwoAi4/GR
-         Czv4Et9NSJoPqEEoRLYrGfSDVbr15CkKCuFcD5J6vYZxbumpZYsv2mJPd9+30Vae4fv0
-         VfRviCuyXJvCBwHxUP6krc2u9G8XGRY7V8yCN94oXGILZRVEPK7K+QlYsfxd+ncYfi9B
-         9WiD0cbclDYtVvpF+CfREHGTvbysXvW8ouAVmcqNZd2p+Kwx388yAx53LI2ZbIs9tupD
-         dJVg==
+        bh=7FXtnJ9UyaGmOcl1sXGT6vD1s14MbjAk7SQ/VduIgwo=;
+        b=mcrIBV584i0SlsF6/GGN287cnMqMeb3Y6SX/X6K7+NG4J/l2xSnte6RGdB8fpzkrp2
+         udCiunnRxfUhG9fqhZ/IjDBzCr2V655g2EsdazClLhkpWXHmhwrBmbagIkRfcwYPyYq6
+         zwg7YCJ2kzL9yJN/FM+6YZf3xZQMZqP5gUeCDlujaowfy+5bFj/CorhNNhzL3aj/TDD7
+         jlJ/mlBM/Wry5mBM7gG3vfWVUy5WGOAvzgHVBv1sCdosu1VsQnF92pUDPWlNn4W2l7A+
+         AHPbgWrG7Ljej63EkFUwx2vT2mM7UXrmnUb9gqcmteLNWrXNpMgfVE0xHoNoweLN0YsV
+         HbRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745623433; x=1746228233;
+        d=1e100.net; s=20230601; t=1745623451; x=1746228251;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XJ5gLSrci4Aw+MzrITEjedWtV5V0wkfqlcC7WoEJtmE=;
-        b=encdD7VaSvm+wD4/vYynjLhR82yFrbUPW/H8dSUDhRojn+qjvNzjDdCLeIK/EFPd6Q
-         rPgahAnDRNybOirKxJ29V/UUhXBFXMEByfNUZUtO8MWzFfWey9EiJvOY+pjUT7ZSsVBG
-         T6DVtQZJuPfjVDGsRLD8rfPS5UEDoxs1M0NzCW+RM4843grnNOkiDQsG1FZs16uHmmAf
-         TgbRPCd8ofRUXdyG5uYPWFKuw3i9g+ga+MxkdSw+CEI7waOHHvfhkFR4MGszw6dc8Xxz
-         E2TrQZ2RcZXRfS2R22GItfigv/4DTUr7fw5Nmwt5rTrEabQr1XqAIbZd3pyc0Ctd9nt6
-         AdMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOXqD9GeoHA1I7Jq0LzK0CmFHw5DmWr0lgiVJ0nHNJ1KfjHsGnzwu5WLA9uOcqZNwtQ+Kixt736hPWtoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7LnJOEz/N8EzniJRjZzQmGsQRZ0S4E5VOizt9e9j0IyIkgcqK
-	HBbqwGuY6YietM3URNWnBY6QsQrCUQato1x+2zE82TOt9OPKDXdb8srAc1TW31D0E8q5tiDh5k+
-	lvQ==
-X-Google-Smtp-Source: AGHT+IFwFKINyR6hf5b8W3KsnyJYWEnQMZg540yanE+eHmwOxKRoKlfsLFGK/Ath0f1cxL8IM6fdIC/1VTo=
-X-Received: from pjxx14.prod.google.com ([2002:a17:90b:58ce:b0:2f7:d453:e587])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2741:b0:2ee:c91a:acf7
- with SMTP id 98e67ed59e1d1-309f7da6d24mr6070582a91.4.1745623433539; Fri, 25
- Apr 2025 16:23:53 -0700 (PDT)
-Date: Fri, 25 Apr 2025 16:23:20 -0700
-In-Reply-To: <cover.1742477213.git.thomas.lendacky@amd.com>
+        bh=7FXtnJ9UyaGmOcl1sXGT6vD1s14MbjAk7SQ/VduIgwo=;
+        b=aGExQAyriKn5WWFOHNrVmmZponLhLoxsZ18PDugqXW4b/nvi8Q3mtyrTEF0i7gRCqx
+         ARsJfyKE6nwl4/s7bTmqlKH0jU0csLa3ze/Sg81uHAmKoD6eGkjmh9+aTD/cCzIjsQ+e
+         kcoSHDhMW7pIjHcX5o0RR95B5OWz735DyUCFt8I8nDm85FPChxqLRXO0fel/WRCvVmkp
+         1yZaNrOdhscQb8mDdu30sz7V/jeLAxLH3oj3DdsK/dfKXqWnqHzmp/a0unizY1rCb/ht
+         FFakt1lj9YxgRoOJwKa0FfYD/kFo6qi8LzNT46QKyE+tIFQJKvKagGhg6rxIJY2rXKtv
+         WEkA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1bV7UKF+G0FsR11xJfR+i8a1KeE0NExMel1WJzWj3vHogHLTtNY7a5Lo3JFCH7qv9DXBJbJKe6VjLykk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4QY7o9UTbelQlvCxG/6BUuG/4HVioh1RWksBzO5sZFS6sD0Zx
+	3yXrnj2S92CK7KeZ6rnKsYSRho8Rpg/cMLemipmsnQcxIy0bgGseG/hcKLsoHtT9TTMBeK9AToi
+	QoA==
+X-Google-Smtp-Source: AGHT+IFpg5xsm7tH3r5zXRSMp+yzbOmBsQ4tpIU1CxtM705zYwh9a5V2gKapCV+AKq69RjR5EvTVKI5SHhg=
+X-Received: from plge14.prod.google.com ([2002:a17:902:cf4e:b0:22c:360d:9a60])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4d1:b0:224:76f:9e59
+ with SMTP id d9443c01a7336-22dc69f3b0fmr18926575ad.10.1745623451047; Fri, 25
+ Apr 2025 16:24:11 -0700 (PDT)
+Date: Fri, 25 Apr 2025 16:23:22 -0700
+In-Reply-To: <fe2c885bf35643dd224e91294edb6777d5df23a4.1743097196.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1742477213.git.thomas.lendacky@amd.com>
+References: <fe2c885bf35643dd224e91294edb6777d5df23a4.1743097196.git.thomas.lendacky@amd.com>
 X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <174562167852.1002481.1333824218465912701.b4-ty@google.com>
-Subject: Re: [PATCH 0/5] Provide SEV-ES/SEV-SNP support for decrypting the VMSA
+Message-ID: <174562142846.1001255.4839400657801617260.b4-ty@google.com>
+Subject: Re: [PATCH v2] KVM: SVM: Fix SNP AP destroy race with VMRUN
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>
@@ -69,33 +69,29 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
 Content-Type: text/plain; charset="utf-8"
 
-On Thu, 20 Mar 2025 08:26:48 -0500, Tom Lendacky wrote:
-> This series adds support for decrypting an SEV-ES/SEV-SNP VMSA in
-> dump_vmcb() when the guest policy allows debugging.
+On Thu, 27 Mar 2025 12:39:56 -0500, Tom Lendacky wrote:
+> An AP destroy request for a target vCPU is typically followed by an
+> RMPADJUST to remove the VMSA attribute from the page currently being
+> used as the VMSA for the target vCPU. This can result in a vCPU that
+> is about to VMRUN to exit with #VMEXIT_INVALID.
 > 
-> It also contains some updates to dump_vmcb() to dump additional guest
-> register state, print the type of guest, print the vCPU id, and adds a
-> mutex to prevent interleaving of the dump_vmcb() messages when multiple
-> vCPU threads call dump_vmcb(). These last patches can be dropped if not
-> desired.
+> This usually does not happen as APs are typically sitting in HLT when
+> being destroyed and therefore the vCPU thread is not running at the time.
+> However, if HLT is allowed inside the VM, then the vCPU could be about to
+> VMRUN when the VMSA attribute is removed from the VMSA page, resulting in
+> a #VMEXIT_INVALID when the vCPU actually issues the VMRUN and causing the
+> guest to crash. An RMPADJUST against an in-use (already running) VMSA
+> results in a #NPF for the vCPU issuing the RMPADJUST, so the VMSA
+> attribute cannot be changed until the VMRUN for target vCPU exits. The
+> Qemu command line option '-overcommit cpu-pm=on' is an example of allowing
+> HLT inside the guest.
 > 
 > [...]
 
-Applied to kvm-x86 svm, with Tom's fixups.  Please double check I didn't botch
-those, the last few days have been a never ending comedy of errors on my end.
+Applied to kvm-x86 svm, thanks!
 
-Thanks!
-
-[1/5] KVM: SVM: Decrypt SEV VMSA in dump_vmcb() if debugging is enabled
-      https://github.com/kvm-x86/linux/commit/962e2b6152ef
-[2/5] KVM: SVM: Dump guest register state in dump_vmcb()
-      https://github.com/kvm-x86/linux/commit/22f5c2003a18
-[3/5] KVM: SVM: Add the type of VM for which the VMCB/VMSA is being dumped
-      https://github.com/kvm-x86/linux/commit/db2645096105
-[4/5] KVM: SVM: Include the vCPU ID when dumping a VMCB
-      https://github.com/kvm-x86/linux/commit/0e6b677de730
-[5/5] KVM: SVM: Add a mutex to dump_vmcb() to prevent concurrent output
-      https://github.com/kvm-x86/linux/commit/468c27ae0215
+[1/1] KVM: SVM: Fix SNP AP destroy race with VMRUN
+      https://github/kvm-x86/linux/commit/309d28576f0a
 
 --
 https://github.com/kvm-x86/linux/tree/next
