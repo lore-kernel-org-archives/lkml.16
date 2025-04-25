@@ -1,150 +1,149 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B98288A5;
-	Fri, 25 Apr 2025 13:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D61E288A5
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745589225; cv=none; b=fHxz2TlvsySmi/aQBPlpVAum6bSzoMo7EJUFrK5AUxJer3fHm+J6ufzNtlDsQcHskJyxYIk32hJzmbcJzt8ME+JkAg+3qfCntP7SuxeVqZU6O/CFXI63cPnWh1oiQ4ws+zL0W2zpX4ZS49/FGGjuEdgysIXdUWsAuiJAMYgYv/U=
+	t=1745589263; cv=none; b=NuSn7Jp7U+Ndr1WIcWAxop1Ea/RQPIgVLI6epSAXLHptVMzm2h2OFloPeYliWb0iaBA+caiDJ7baGZeGXRjh1Tsy3g9mZ/TbXNfvoouYt1ri6r9Y3w9ZyfyHJKtsXxZV5/YCt8UEbXdxNynL4bObSY3GJozJck/9Z6cQvtZL4gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745589225; c=relaxed/simple;
-	bh=Tgdzoq0uRKVDCSs++A8sHBpH8+Vxgrwn5HHj2Ya/53I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G2zrJSKRgRiw9Cs35Auifa/b0O/AR7LAFGCGD7bMyCILyRFZ0KFlpltNgq1pGF/ccpa8maBBIQSdz16AifuaqdkfjgL5E9UpsnLZKhEfL4rRC2uzXhi+tkSwgjScmoo3iEbHzBzoTXay+FCnYyoxT047Hvz6erKlHJezL57JXFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzJznMju; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745589263; c=relaxed/simple;
+	bh=3zvfee43E+7OopCkTYkkPp7qMzZFVlrE2lTwOoa1kVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nmKXlz81NhIDzxl4+pCnYn9xGA5WsIqW+1buwl1gUpj7Qj7GOsOslfQcJp6GOWIwEISgYUzXG1/QChOUY3n/eUSy9yqWlh/CoLUDrd/bJiizk4F2rWjo7VmfxTs1DTTqlVssr7053y2I7gDAKzxjMAqG5xg0sToRN68T5qjYDbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PJBV6Uye; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzJznMju"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1477713f8f.0;
-        Fri, 25 Apr 2025 06:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745589222; x=1746194022; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zC5qCt8mPMFjOd0IN3TufN+hresnNEqhnO+6fQbRG2I=;
-        b=KzJznMjuiDpy8JDbqzlzYUC6p1sNwMTtE++JTReH4YTZH6DFOe93+pBaxa6tMJFU74
-         6RcWw+PPeUfXLcG85hoGxdGXZY4YoHuITX6AGIpHi08n8dX9W0C9u2CytZtTR9kHLbTI
-         VrSFmoNtohjE8cV6uAH8iwyEZX/xeDBGaLJub+qRzVR8JIhEDHqNWWdMhYOUONTsZkxV
-         lun2pwrGjA7DBBB2KYq8/8V6Hh1L5HhmB3nDf7p+IJ/vlHmymHzM6RPQCk1c4q7c8hVZ
-         nfygAOX17rdS8TKD2STZ4LSsQg+HUiunESeUzlhuC+n5BIOFSYRun3Z7y2E6SU9Rlrt0
-         0+uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745589222; x=1746194022;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zC5qCt8mPMFjOd0IN3TufN+hresnNEqhnO+6fQbRG2I=;
-        b=VCeLnzshq/CKprPxuSulTzZ9vDoJg3NHlK5GPzr1Bp6kRIUOIHlht/UZpWIa0TbQZY
-         sgmqEueh5XiCh16/udfqK1N1mG0A08fHIfcpJljz1tKaAJuFdh6tnkb8KiTMXqczBMhF
-         1v/cj2YomMeiw5wSyiZi8oEazh6lRwuNsv9EgFY+rbz1SniOh7e0tZWNyKXLZPX87lcA
-         ls16F3th0A/EmpFjqSmMnHmZ1xFFHa3u/psa3OaANRczSn7rvj4GS1EH2w2BEGwA749W
-         VvHfyHMk9nXH1yaqROCnNmhfXkBSq5eOOMAQHCPSjjFs/89ObLxmA6Emvo52a5nne3U3
-         hm7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3OThrRXUfa9rk88OX4vbCQwTQchek0NilLZ/0P0u+0/1PDNeHp2xbKdH96NenAikrO9Rwqn9QNtH67kjy@vger.kernel.org, AJvYcCWl9MZ2c70aEZEvQ+1snpT5BUG8KuQLnXoza4dUlp4iSiAscpeKT79Vk68TvmqPBnsnR6hhcuc+w7EGONg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaHaDbSBkWW6WqUjPraMSpAQRXeXfP7KkpawCaF6zlntO/r2lZ
-	RwcMniN4m1kKVVEKnfi/ffz1nyj5NKg4+KGFGHf8tDeGsGR/guCk
-X-Gm-Gg: ASbGnctaq4P1b6BbY9urDbWyX+6ukbWjp4tqQCIPrQ+AMPWb8JKKeXWLEMFbwaY/Dbf
-	N3TJ7FxdJwaXNNQ+lLMv0c11iRfur+Tkzwh+N0DIH/Q4olBdoE9UhS3mlH/h1KhKqE45JliUxOK
-	O0HjmF90gcY3OmiPngotxsASzmGnnAF673Gtz1FttY2ZoRA4S7KhTVqrRZ1VBNYco08INErC/ax
-	HsIY4v8ecruPPVWTWh+2s9pBTJmqtIsNrK1sxxcaQ3IuEv9FkgYHSUhrYd1HFBbRTE3z/QixHin
-	DsNninCHvaPYycpSdRdc+WrjToJ5LSl5B6UmvmxB
-X-Google-Smtp-Source: AGHT+IGIeg9vP39s+96LGPXe7HvCLrwPRTVeAxK0tbQco/f365rtXoIkERRGnWA87K7ViQhH9sGePw==
-X-Received: by 2002:a05:6000:1849:b0:39a:cd84:a77a with SMTP id ffacd0b85a97d-3a074f398f1mr1823393f8f.37.1745589221600;
-        Fri, 25 Apr 2025 06:53:41 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073e46a54sm2462098f8f.67.2025.04.25.06.53.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:53:41 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:53:39 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, wens@csie.org,
-	jernej.skrabec@gmail.com, samuel@sholland.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] crypto: sun8i-ce-cipher - use IS_ENABLED() checks
- for debugfs stats
-Message-ID: <aAuT4z3XC2mayIf4@Red>
-References: <20250425124517.2225963-1-ovidiu.panait.oss@gmail.com>
- <20250425124517.2225963-3-ovidiu.panait.oss@gmail.com>
- <aAuOdDhpnLE5bM_y@Red>
- <7653bf7c-03ac-4f94-a80c-2bfa3004d287@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PJBV6Uye"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745589262; x=1777125262;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3zvfee43E+7OopCkTYkkPp7qMzZFVlrE2lTwOoa1kVc=;
+  b=PJBV6UyenaaRPtfr/Z13ij5NW2xibQ5GT94OxgBjubcGDfL7sMBmjTfV
+   2NQAOeAdf/fgA+UxaNh6V9Go/M5OZoYrph184SXtSmJRZVTfgyt8sCvIa
+   Odfqza6YvGkXaPfa87gHn5KROmXPEO/9Xn+0ej+h0uuMjwHdb2cTrY0YM
+   MryXfRwFQUMCI8Py7oKiv96YbKKnibAz0SUp2j5sFBoCJu34KiDzev+jl
+   ajLK2n1n7UdMae9XLjmcjG9eIL4GLS+L7O4ivBDnczv+UdMakOiK63lKd
+   gZ0haoFqpk3GK2CnxacPjFwBx2xedjEhS9ucjcO4Ze/YraATbOoqvvODD
+   g==;
+X-CSE-ConnectionGUID: 54MtYyN6ThOvqylVWEoUpg==
+X-CSE-MsgGUID: 5PirQgyiSQ+GDdXKsZDXYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47378890"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47378890"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:54:21 -0700
+X-CSE-ConnectionGUID: Ie4pCktjRuGTJenEFn20XQ==
+X-CSE-MsgGUID: 93lM721eSdy38pQG3qCNuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132827116"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:54:21 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id AFAC220B5736;
+	Fri, 25 Apr 2025 06:54:19 -0700 (PDT)
+Message-ID: <1c9acb0c-50ae-4343-8deb-c5d04e75ca2a@linux.intel.com>
+Date: Fri, 25 Apr 2025 09:54:18 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7653bf7c-03ac-4f94-a80c-2bfa3004d287@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/5] Several fixes for group flag and
+ counters-snapshotting
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, linux-kernel@vger.kernel.org
+References: <20250424134718.311934-1-kan.liang@linux.intel.com>
+ <20250424142528.GD1166@noisy.programming.kicks-ass.net>
+ <c919a36c-f343-48ce-a262-401159c5bf30@linux.intel.com>
+ <20250425125556.GD22125@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250425125556.GD22125@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le Fri, Apr 25, 2025 at 04:47:35PM +0300, Ovidiu Panait a écrit :
-> Hi,
-> 
-> On 4/25/25 4:30 PM, Corentin Labbe wrote:
-> > Le Fri, Apr 25, 2025 at 03:45:16PM +0300, Ovidiu Panait a écrit :
-> >> Add IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG) checks before the
-> >> fallback counter updates to make sure the code is not included when
-> >> debugfs statistics support is not enabled.
-> >>
-> >> Also, drop the existing ifdef guards, since 'struct sun8i_ce_alg_template'
-> >> is always defined, even with CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG disabled.
-> >>
-> >> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-> >> ---
-> >>  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 46 ++++++++++++-------
-> >>  1 file changed, 30 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> >> index f03a8fa7bfa2..433cd18f0b5b 100644
-> >> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> >> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> >> @@ -34,22 +34,30 @@ static int sun8i_ce_cipher_need_fallback(struct skcipher_request *areq)
-> >>  
-> ...
-> >> @@ -101,9 +117,7 @@ static int sun8i_ce_cipher_fallback(struct skcipher_request *areq)
-> >>  		algt = container_of(alg, struct sun8i_ce_alg_template,
-> >>  				    alg.skcipher.base);
-> >>  
-> >> -#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-> >>  		algt->stat_fb++;
-> >> -#endif
-> > 
-> > Hello
-> > 
-> > You put IS_ENABLED everywhere, but here you remove it, why ?
-> > I think you forgot it.
-> > 
-> 
-> This is already part of an IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)
-> block, so no need to add an extra IS_ENABLED() check here. Just the
-> ifdef was dropped, as it was not really necessary.
-> 
-> Original code:
-> 
-> 	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)) {
-> 		struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
-> 		struct sun8i_ce_alg_template *algt __maybe_unused;
-> 
-> 		algt = container_of(alg, struct sun8i_ce_alg_template,
-> 				    alg.skcipher.base);
-> 
-> #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-> 		algt->stat_fb++;
-> #endif
-> 	}
-> 
 
-Oups sorry didnt check with enough diff context.
 
-So:
-Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
-Acked-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+On 2025-04-25 8:55 a.m., Peter Zijlstra wrote:
+> On Thu, Apr 24, 2025 at 12:00:02PM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 2025-04-24 10:25 a.m., Peter Zijlstra wrote:
+>>> On Thu, Apr 24, 2025 at 06:47:13AM -0700, kan.liang@linux.intel.com wrote:
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> The patch series includes several fixes for the new Intel features.
+>>>>
+>>>> The first 4 patches are to fix the group flag issue which impacts the
+>>>> branch counters, PEBS counters-snapshotting and ACR.
+>>>> The V1 can be found at
+>>>> https://lore.kernel.org/lkml/20250423221015.268949-1-kan.liang@linux.intel.com/
+>>>>
+>>>> The last patch is to fix an issue of counters-snapshotting.
+>>>> The V1 can be found at
+>>>> https://lore.kernel.org/lkml/20250204210514.4089680-1-kan.liang@linux.intel.com/
+>>>>
+>>>> Kan Liang (5):
+>>>>   perf/x86/intel: Only check the group flag for X86 leader
+>>>>   perf/x86/intel: Check the X86 leader for pebs_counter_event_group
+>>>>   perf/x86/intel: Check the X86 leader for ACR group
+>>>>   perf/x86: Optimize the is_x86_event
+>>>>   perf/x86/intel/ds: Fix counter backwards of non-precise events
+>>>>     counters-snapshotting
+>>>
+>>> It didn't apply cleanly,
+>>
+>> Sorry for it.
+>>
+>>> but I stomped on it and pushed out new
+>>> perf/urgent and perf/core branches that contain these patches. Hopefully
+>>> I didn't mess it up ;-)
+>>
+>> Something is missed in this patch 5d4d71ebc737 ("perf/x86/intel: Only
+>> check the group flag for X86 leader")
+>>
+>> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+>> index a73b1ff031b2..1f72a4f77b5c 100644
+>> --- a/arch/x86/events/perf_event.h
+>> +++ b/arch/x86/events/perf_event.h
+>> @@ -119,7 +119,7 @@ static inline bool check_leader_group(struct
+>> perf_event *leader, int flags)
+>>
+>>  static inline bool is_branch_counters_group(struct perf_event *event)
+>>  {
+>> -	return check_leader_group(event->group_leader, PERF_X86_EVENT_PEBS_CNTR);
+>> +	return check_leader_group(event->group_leader,
+>> PERF_X86_EVENT_BRANCH_COUNTERS);
+>>  }
+>>
+>>  static inline bool is_pebs_counter_event_group(struct perf_event *event)
+> 
+> Right.
+> 
+>> @@ -1123,7 +1123,6 @@ static struct perf_pmu_format_hybrid_attr
+>> format_attr_hybrid_##_name = {\
+>>  	.pmu_type	= _pmu,                                         \
+>>  }
+>>
+>> -int is_x86_event(struct perf_event *event);
+>>  struct pmu *x86_get_pmu(unsigned int cpu);
+>>  extern struct x86_pmu x86_pmu __read_mostly;
+> 
+> See, that isn't there in tip/perf/urgent :-)
+> >
+> I've pushed out an updated set. Please check.
 
-Thanks
-Regards
+It looks good to me. Thanks a lot! :)
+
+Kan
