@@ -1,90 +1,114 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8D122AE71
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408D6217727;
+	Fri, 25 Apr 2025 07:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566595; cv=none; b=cZhT+JbB0cM4OPp8VM/aMrJ8i8b5jY6vVwCXAuAz9tGOgcqDVcHrbxzYsDY+mI2E+M3sBteC04C1g2Y/tVshBg3OiGGcSTxNVTjuuW3adfrzR3K5uNTfHALHOKNrz2czp2KUPEBXS3LxlvVZ07yGV3z5j11u6yT5Rg1jODP8kC8=
+	t=1745566663; cv=none; b=WRxyCv2wPE2l8DeKKrPsDnbePsKztIRO4SWcvsaYoJ/zTARWEY6h3vJsczZUi6dj/WaBV9hjf/wZRONTb031yZSmN2hz1J3M4CL0NU9TYGJPGDcsS28zDPUOJFIiglCol3cIyZMLpuiLNdTwUlcKaMsVtI6/cvMlT8cJMJA9dCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566595; c=relaxed/simple;
-	bh=pzB+ULPjZJoXWNCIbG47lG7lxSlV7q022ronMCkd2Co=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IXa5OTeso5pBG67oBjJwqwPp3wbUK274Mo/PMtmp/4fPAlIePRI8N98zbuRSyHE3woOJO+lAhTleCCXuLSnZRbC621eLJb8S/kv9Cz4Oy3ho6wNKSl8auNZabB1vppiXbM5X76fmJDapjdWqfO6FSsfTmUp720zf6TLbJNq4h84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=HG0avtgt; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1745566663; c=relaxed/simple;
+	bh=t+c7p3hXTF+xTlc0Km+48d+pPuhuJBf8m+A71HAjDKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=id5IK8ageLnAsoSnINVmwDuU5wukGAYE96GVOS4fJrJSrb0bA7+UBDjsoRXoYBbcJ4U1SAm7VwZ7JIbPJnLJG1Z7rff4AvtkbaxkewMlkdhO14DQGIvDlgjUU/K1506IYQDmAcSCIWw0kqZDNWEvRCHqIgRAzkaRn1eQEU2lQ60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9q8wI5E; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="HG0avtgt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1745566590; x=1745825790;
-	bh=pzB+ULPjZJoXWNCIbG47lG7lxSlV7q022ronMCkd2Co=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=HG0avtgtjX1JJplmZ2W+xPmQcxNkKBLhOg5j0EHiybAfRtWMWBmgyWc7J+sACxz0L
-	 R9lHs89Py8lV2OveRBpvGfGmn1ttoBTbngs99N0ue/vD1CIvGJkuRZiIzoijQWelRa
-	 rDwXt1bv3YIzoUcegnBYrd/pYq9y9p2t1yyo4bGMPp1yp3QT/W4uUwdprHofNPAHpk
-	 LWRtYy2cZfFCmffg2nHgSL4+ihoF4XeEBpPij3zWLHNSlH4hw8CNjpkff1U8P8oFQG
-	 Moewtq6Rp9sB6j63t+9HQU0VZr8Q101D7BO0QEPsDJ++uSbQtdCkMhuBIzow/xHe13
-	 UBPlHVw22Vu3w==
-Date: Fri, 25 Apr 2025 07:36:23 +0000
-To: intel-xe@lists.freedesktop.org
-From: Harry Austen <hpausten@protonmail.com>
-Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Harry Austen <hpausten@protonmail.com>, Lucas De Marchi <lucas.demarchi@intel.com>, =?utf-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Jani Nikula <jani.nikula@linux.intel.com>
-Subject: [PATCH v2] drm/xe: Allow building as kernel built-in
-Message-ID: <20250425073534.101976-1-hpausten@protonmail.com>
-Feedback-ID: 53116287:user:proton
-X-Pm-Message-ID: d1dccf1a1237e941559f5aa11cd9a2ed1b6e14c6
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9q8wI5E"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54e6788d07eso3271202e87.1;
+        Fri, 25 Apr 2025 00:37:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745566660; x=1746171460; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mnIim+RQL+Hrsqs0xdul+xxqVCFsVQjL6+9pVyg8PoQ=;
+        b=W9q8wI5E1KVpDB7nElC/rP2ciPFIs71BkYPSafHNItPGt/klm9H6czO5mrD4SkCglA
+         gIzapSmgXklLmGtCFvIqeJKYGpXY24koNHnthvX1vA2X/RSnHUfnyqBvhSDqU0jQJNa6
+         oz7O26gsYx3U4kh8RTWAN6DPigk4dXaqVzl7QkKrEXAxbmgTOheIa6qX7nhusXiZrv/B
+         4vujw+PfCngFkbaloEJXspEjrmreSmwV95wWIBC6wOpahSaFpkS1kwphyXqEBrLUhAFS
+         Fp/M1ArYwxFZ4H34RDL8Ia4Y8d0Rcar5oZl+Q8eDq5Y+lkYRr3vdb07OxRQwI4d4S617
+         mT5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745566660; x=1746171460;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mnIim+RQL+Hrsqs0xdul+xxqVCFsVQjL6+9pVyg8PoQ=;
+        b=bA9il0MX6U8mS6XiJ2coCTtZAGWzdGPI/Zyl1SmFrX8iYGu1hZNvMX0WvLN7JN/Rdh
+         stndtQagEwyHcM6gi5zeem5b6yAQAvAV2DoOacI10i/+W00+QYQmTPD8NeSDHyMbubw9
+         ldzQWoVyigpduYHnWoSw23TO4fezCeqbtkOz5gLj7HLZSJ1Tv1S5K9H3fiyhIExGwit8
+         UY3kW4e5fGpYdCsn5uhHAib8fXMTT9BYZwXxGtzN+17D8o7s7SUrm5Qc4PsfscwmRGYn
+         VKkifht7B4dKh6wbr88TNgsp4XGak7p0RWhnXyIhggXXYCEb6l9bcvBFEqq7HCdWraET
+         d2yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKmYzoXUy9cZ33yECwev8WXT1rqF+QFAdJKjkibCjQD4xDXwRe0jDWycqIPmWGMynJi2igmx0kXrv2tdU=@vger.kernel.org, AJvYcCXWWeG1qFBf3ppO7npxoMaZk2UaWaJYKsQLKnIJoDhAeo6t1jTTcFUmL6wCFMuSfvi2lcvWt5cutJDYVnbkLPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBSnUXy7aIfDP7CiO3OzSPXJC3E1pLVFj47g4tNGaRSzaGA47U
+	agTUQmq5apkjwnRPN6ozwsyEuqXoVlUEb6ySsjEPTdxauaT877wo
+X-Gm-Gg: ASbGncsr4vkadH2kquloLeBeIWZakrCbifBsUBt1nXJ578KSkItlO2EwqEb1v/EkkfW
+	H5i6tRPo7M12aiwj5M+/2DSHxVRbInmSv90Xim8sdEByPo8FlKWgJgRoP6LFaPvyKMoN8toXHjV
+	KIt31fkc3qcPA/oq8ClqyonaAmHyWBymi277wYZTpi8Sc+hXLvimNa18g7/WAA0iNa0Zm5c+OjA
+	PKATEjiAKUIsP0/uq+PjbzcZC46TV4dNkz/ozlcPij19TKSH+arvoic/VkXzess18lXcz6Ea4Fn
+	QcKxHk1bO6n0YZEUW7rK7D5UWT8rruqgrXsSmvm7EkI8UUmeGwqVJitaQE/74oU8UtmHPVKonDX
+	b7mt2mD84jB9OBIsegg==
+X-Google-Smtp-Source: AGHT+IEZcJwlsd0sqDyVM7rduSdPLrkIpl5/mpahAAlSrYeCBg72J5O925aQVXmVaHNs9sZE2AniFg==
+X-Received: by 2002:a05:6512:33cf:b0:545:2474:2c9b with SMTP id 2adb3069b0e04-54e8ced7fe0mr299265e87.22.1745566659971;
+        Fri, 25 Apr 2025 00:37:39 -0700 (PDT)
+Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cc9e9a5sm504391e87.132.2025.04.25.00.37.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 00:37:39 -0700 (PDT)
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: dakr@kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kernel@vger.kernel.org (open list),
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	airlied@redhat.com,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Subject: [PATCH v3 0/3] Additional improvements for dma coherent allocator
+Date: Fri, 25 Apr 2025 10:35:39 +0300
+Message-ID: <20250425073726.1027068-1-abdiel.janulgue@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Fix Kconfig symbol dependency on KUNIT, which isn't actually required
-for XE to be built-in. However, if KUNIT is enabled, it must be built-in
-too.
+Changes since v2:
+- Rebase update, add fix from Alexandre Courbot, commit clarifications,
+  minor sample driver improvements in error handling.
+Link to v1: https://lore.kernel.org/lkml/20250410085916.546511-1-abdiel.janulgue@gmail.com/
 
-Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
-isn't, since that results in duplicate symbol errors.
+Changes since v1:
+- Pull in reviewed-by tags and include links.
+- Improve error handling in rust dma sample driver.
+- Clarifications in documentation.
 
-Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=3Dm")
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Signed-off-by: Harry Austen <hpausten@protonmail.com>
----
-v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
+Abdiel Janulgue (3):
+  rust: dma: clarify wording and be consistent in `coherent`
+    nomenclature
+  rust: dma: convert the read/write macros to return Result
+  rust: dma: add as_slice/write functions for CoherentAllocation
 
- drivers/gpu/drm/xe/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ rust/kernel/dma.rs       | 151 +++++++++++++++++++++++++++++++--------
+ samples/rust/rust_dma.rs |  28 ++++----
+ 2 files changed, 137 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-index 9bce047901b22..bc63c396d7fef 100644
---- a/drivers/gpu/drm/xe/Kconfig
-+++ b/drivers/gpu/drm/xe/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config DRM_XE
- =09tristate "Intel Xe Graphics"
--=09depends on DRM && PCI && MMU && (m || (y && KUNIT=3Dy))
-+=09depends on DRM && PCI && MMU && (m || (y && KUNIT!=3Dm))
- =09select INTERVAL_TREE
- =09# we need shmfs for the swappable backing store, and in particular
- =09# the shmem_readpage() which depends upon tmpfs
-@@ -51,7 +51,7 @@ config DRM_XE
-=20
- config DRM_XE_DISPLAY
- =09bool "Enable display support"
--=09depends on DRM_XE && DRM_XE=3Dm && HAS_IOPORT
-+=09depends on DRM_XE && (DRM_XE=3Dm || DRM_I915!=3Dy) && HAS_IOPORT
- =09select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
- =09select I2C
- =09select I2C_ALGOBIT
---=20
-2.49.0
 
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+-- 
+2.43.0
 
