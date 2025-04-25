@@ -1,153 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115FB7E9;
-	Fri, 25 Apr 2025 18:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE8F216E1B;
+	Fri, 25 Apr 2025 18:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745606626; cv=none; b=f9uXfZlbnmu1OV42zxscVNSwcf+fJsDsQWdooTIwc2D6rOzzCShPTtLwWyg+iItSP3/m5mAqRCdQcGeL30jYgPvDxb29IvDreUVauOUi7qpEVlBjMXTTaYvqhszoMH5uiH0CZOwFFvqUG9fE22nwDiJEy/FCyC6jWiVZczKeFys=
+	t=1745606671; cv=none; b=T7Si1ViUih417qTegztSoR2l0HY26LHH6iyr5WdLH10abFmIhezEgYN6T74GxoFuMar7EzApak1KwlWnmRtHXjWJwWbxNiCMdJY7tMOvfyghIkuXy5htNBz+WvOBjhiZhJ0xyO7rvBduTU+4GYn/L+X6MB5UD+WovfMp3Pg7Bh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745606626; c=relaxed/simple;
-	bh=oRbnULd+pvgyIqyXUcH4ldEzy+X/hNIXnhxXaeZ8Hw8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YojI1N5fwoLaRWI00QJPzd8N3sSagM0bOujUaZEL1eDQ1TrFr/vQF66Ac10FZcmUvWGT10wKhBTDfzZw8yCELzf811CC6FVk8Nf3awkOcwQVjk6qtNE9SrKF2aiZSyZx0mKwTkhb5ArWQwrowNq6h9r+ZLbSURqhvY0H4jEnNVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+Bnb1LO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745606671; c=relaxed/simple;
+	bh=kqRG1XBJc9DW5Ecd0qIWYW6BijL3k7/p0zlS9agGn1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EfXwRdScZRiT2NS03ctZ/F2XuXFJGlVRl8Rb0A16+7hPHhr6e08rwiEtpdkmK/rbXmuyGySD96xW+D3NN0IbpQk/pvFZgiYHDd1dnoK0bJ3nzcpEPvfdSHtO3wieXKzY+4tB0UbB4l2PgoXQ1OUPDdKOwsB+0fOnQgtyQudrBu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWLSz1ka; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+Bnb1LO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7635FC4CEE4;
-	Fri, 25 Apr 2025 18:43:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWLSz1ka"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D56C4CEE4;
+	Fri, 25 Apr 2025 18:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745606625;
-	bh=oRbnULd+pvgyIqyXUcH4ldEzy+X/hNIXnhxXaeZ8Hw8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W+Bnb1LOq5ZBEL8q0M0ErEPb+ekqsXPe3SW8i1lI2RszJd9U8UAkzGBs2OZ8byObs
-	 2jrVP9i4B4rjAzPC2UimN06DyI+WluhpoGx5EZznaxeCnmLgtCtUxKw8eAAOENwJyc
-	 3Vze4UNzq0Je/dpfQseZ5JyeYMnhDnDgoCVsmKfTugxqE8FaRows39XGkBc2DHt+8w
-	 k3ZzdNOH57gJgHTQyD3TxWTPsFByBV3znJd3oW90lj7vaPCWVtUQiC9kE4eHRDQvqI
-	 br5x8QWNj9reJhuogPhy5m8+OWr127s4YN0RqOcmC8AiEMpjIGVz4odidCQJp4d1MV
-	 xzjgTEdp7K5tQ==
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2d0364e9231so712968fac.1;
-        Fri, 25 Apr 2025 11:43:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUC1BQicbgyplyoNDUiKAN/6tb9/NuDp99zap8KBMzNaiLKQuSSuxBAvnFFiGl/FnpcN8+ip3FijWs=@vger.kernel.org, AJvYcCUomGpVvWoxCxaipPKnk359CwLyI7+Akr5n56qiCo/t2sNQ/WuDzzaxMstzjTMoUAxZSwESp9kfnJ4l1eE=@vger.kernel.org, AJvYcCX6Ieuh5jxGtD6Ut940lnavW/JCTtWvfC9k7/YEPbdno+nMyncegmf84s9Vs3yKx6ykWKRKCcdQti4qO+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwETHiEulO1UNwvOwvksD0gToV34aZmXoP7vkX4TObJ8JbI0VqV
-	p2a/YgRExJ7PVsG3W26nJwOpS8PQlrUa6ak+C5+OTYkPripIFqtaOF+7IbYiiiWeOVdbVcc4wtr
-	L+ZS/+1gOWYVz1Y8iOHwkiaCe+sU=
-X-Google-Smtp-Source: AGHT+IFy5Eym5BLJREteVInWqHA/TWsIsW/7cwsZQtmYkh4ff8Mkq0LbyQQdNCvFoGFRP8o/LocCXeX48LxmPmlXrik=
-X-Received: by 2002:a05:6870:819a:b0:2c1:62e9:584b with SMTP id
- 586e51a60fabf-2d99de905e9mr2032853fac.39.1745606624720; Fri, 25 Apr 2025
- 11:43:44 -0700 (PDT)
+	s=k20201202; t=1745606670;
+	bh=kqRG1XBJc9DW5Ecd0qIWYW6BijL3k7/p0zlS9agGn1k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kWLSz1kaJ0Ibzi6tDPWApcg7ivnePju8rKj/SBaB0c/jYi5wHP7JBTFgO/EK2SUSW
+	 5V+aK+cdxCP1/+l/U97Tkm9PgjuHOlhK87s1jt9un3juXj7sptaI8VDFUmXCKRPbMN
+	 WeCtmZeTFZmN8jTRX0j42ZQqXmgLxC8hA+HZA4m2ocO4cAMLirp29fKmqU5llRxyDc
+	 /vDgpt/biXLg4VxQDW55IYoqLRyGMtL1/9h6Nfb+dD6XfyMZ69LoSEBQFGnyjTNP2f
+	 2rWzSc80AUBtE0hh736gtBSTUk+0dFXo1MRDChDzXEIR/knrvjUGGOMYCrD5NWqd57
+	 St26DEUJcsztg==
+From: Kees Cook <kees@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	linux-wireless@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Daniel Gabay <daniel.gabay@intel.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] wifi: iwlwifi: mld: Work around Clang loop unrolling bug
+Date: Fri, 25 Apr 2025 11:44:22 -0700
+Message-Id: <20250425184418.it.308-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5891540.DvuYhMxLoT@rjwysocki.net> <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
- <CAJZ5v0iCsd8fdXRdicT7mqsRte39WC+SVjgfz2NHS9QpvSnDdw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iCsd8fdXRdicT7mqsRte39WC+SVjgfz2NHS9QpvSnDdw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 25 Apr 2025 20:43:33 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iFPf=WT3CjNqtioUoiX9jc5nmZLJnAkQOhBTmGq_ioAw@mail.gmail.com>
-X-Gm-Features: ATxdqUH2gpi0z3_zPVJ3Dy1t6lghfw6a3CE-Su7_syymO_e7p_CEWdwpVYRZjNA
-Message-ID: <CAJZ5v0iFPf=WT3CjNqtioUoiX9jc5nmZLJnAkQOhBTmGq_ioAw@mail.gmail.com>
-Subject: Re: [PATCH v1] soundwire: intel_auxdevice: Fix system suspend/resume handling
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Bard Liao <yung-chuan.liao@linux.intel.com>, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3599; i=kees@kernel.org; h=from:subject:message-id; bh=kqRG1XBJc9DW5Ecd0qIWYW6BijL3k7/p0zlS9agGn1k=; b=owGbwMvMwCVmps19z/KJym7G02pJDBncN9jqps6KXXlo4yvXc+6vhFislq2LfRzo9+DD1Uqh7 g1O855IdpSyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAExkmTTDfxfHE7XPWU4tW6gY 6aCVat+/O+dh5RvpUBeXQ59zhWpvv2H4n3pl5wfXSykf7U+bv+f2vZX1/IPtH/8LG35Urbd0Oh0 xjREA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 8:10=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Fri, Apr 25, 2025 at 7:14=E2=80=AFPM Pierre-Louis Bossart
-> <pierre-louis.bossart@linux.dev> wrote:
-> >
-> > On 4/24/25 20:13, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > The code in intel_suspend() and intel_resume() needs to be properly
-> > > synchronized with runtime PM which is not the case currently, so fix
-> > > it.
-> > >
-> > > First of all, prevent runtime PM from triggering after intel_suspend(=
-)
-> > > has started because the changes made by it to the device might be
-> > > undone by a runtime resume of the device.  For this purpose, add a
-> > > pm_runtime_disable() call to intel_suspend().
-> >
-> > Allow me to push back on this, because we have to be very careful with =
-a hidden state transition that needs to happen.
-> >
-> > If a controller was suspended by pm_runtime, it will enter the clock st=
-op mode.
-> >
-> > If the system needs to suspend, the controller has to be forced to exit=
- the clock stop mode and the bus has to restart before we can suspend it, a=
-nd that's why we had those pm_runtime_resume().
-> >
-> > Disabling pm_runtime when entering system suspend would be problematic =
-for Intel hardware, it's a known can of worms.
->
-> No, it wouldn't AFAICS.
->
-> > It's quite possible that some of the code in intel_suspend() is no long=
-er required because the .prepare will resume the bus properly, but I wanted=
- to make sure this state transition out of clock-stop is known and taken in=
-to consideration.
->
-> This patch doesn't change the functionality in intel_suspend(), it
-> just prevents runtime resume running in parallel with it or after it
-> from messing up with the hardware.
->
-> I don't see why it would be unsafe to do and please feel free to prove me=
- wrong.
+The nested loop in iwl_mld_send_proto_offload() confuses Clang into
+thinking there could be final loop iteration past the end of the "nsc"
+array (which is only 4 entries). The FORTIFY checking in memcmp()
+(via ipv6_addr_cmp()) notices this (due to the available bytes in the
+out-of-bounds position of &nsc[4] being 0), and errors out, failing
+the build. For some reason (likely due to architectural loop unrolling
+configurations), this is only exposed on ARM builds currently. Due to
+Clang's lack of inline tracking[1], the warning is not very helpful:
 
-Or just tell me what I'm missing in the reasoning below.
+include/linux/fortify-string.h:719:4: error: call to '__read_overflow' declared with 'error' attribute: detected read beyond size of object (1st parameter)
+  719 |                         __read_overflow();
+      |                         ^
+1 error generated.
 
-This code:
+But this was tracked down to iwl_mld_send_proto_offload()'s
+ipv6_addr_cmp() call.
 
--    if (pm_runtime_suspended(dev)) {
--        dev_dbg(dev, "pm_runtime status was suspended, forcing active\n");
+An upstream Clang bug has been filed[2] to track this, but for now.
+Fix the build by explicitly bounding the inner loop by "n_nsc", which is
+what "c" is already limited to. Additionally do not repeat the ns_config
+and targ_addrs array sizes with their open-coded names since they can
+be determined at compile-time with ARRAY_SIZE().
+
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2076
+Link: https://github.com/llvm/llvm-project/pull/73552 [1]
+Link: https://github.com/llvm/llvm-project/issues/136603 [2]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v2:
+  - move "j < n_nsc" forward to stabilize loop bounds (Nathan)
+  - use ARRAY_SIZE() for robustness
+ v1: https://lore.kernel.org/all/20250421204153.work.935-kees@kernel.org/
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Avraham Stern <avraham.stern@intel.com>
+Cc: <linux-wireless@vger.kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/mld/d3.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mld/d3.c b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+index dc736fdc176d..c51a6596617d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mld/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+@@ -1728,17 +1728,13 @@ iwl_mld_send_proto_offload(struct iwl_mld *mld,
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	struct iwl_mld_vif *mld_vif = iwl_mld_vif_from_mac80211(vif);
+ 	struct iwl_mld_wowlan_data *wowlan_data = &mld_vif->wowlan_data;
+-	struct iwl_ns_config *nsc;
+-	struct iwl_targ_addr *addrs;
+-	int n_nsc, n_addrs;
++	const int n_addrs = ARRAY_SIZE(cmd->targ_addrs);
++	struct iwl_targ_addr *addrs = cmd->targ_addrs;
++	const int n_nsc = ARRAY_SIZE(cmd->ns_config);
++	struct iwl_ns_config *nsc = cmd->ns_config;
+ 	int i, c;
+ 	int num_skipped = 0;
+ 
+-	nsc = cmd->ns_config;
+-	n_nsc = IWL_PROTO_OFFLOAD_NUM_NS_CONFIG_V3L;
+-	addrs = cmd->targ_addrs;
+-	n_addrs = IWL_PROTO_OFFLOAD_NUM_IPV6_ADDRS_V3L;
 -
--        /* follow required sequence from runtime_pm.rst */
--        pm_runtime_disable(dev);
--        pm_runtime_set_active(dev);
--        pm_runtime_mark_last_busy(dev);
--        pm_runtime_enable(dev);
--
--        pm_runtime_resume(bus->dev);
--
--        link_flags =3D md_flags >> (bus->link_id * 8);
--
--        if (!(link_flags & SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE))
--            pm_runtime_idle(dev);
--    }
+ 	/* For each address we have (and that will fit) fill a target
+ 	 * address struct and combine for NS offload structs with the
+ 	 * solicited node addresses.
+@@ -1759,7 +1755,7 @@ iwl_mld_send_proto_offload(struct iwl_mld *mld,
+ 
+ 		addrconf_addr_solict_mult(&wowlan_data->target_ipv6_addrs[i],
+ 					  &solicited_addr);
+-		for (j = 0; j < c; j++)
++		for (j = 0; j < n_nsc && j < c; j++)
+ 			if (ipv6_addr_cmp(&nsc[j].dest_ipv6_addr,
+ 					  &solicited_addr) == 0)
+ 				break;
+-- 
+2.34.1
 
-that is being removed by my patch (because it is invalid - more about
-that later) had never run before commit bca84a7b93fd ("PM: sleep: Use
-DPM_FLAG_SMART_SUSPEND conditionally") because setting
-DPM_FLAG_SMART_SUSPEND had caused the core to call
-pm_runtime_set_active() on the device in the noirq resume phase, so it
-had never been seen as runtime-suspended in intel_resume().  After
-commit bca84a7b93fd the core doesn't do that any more, so if the
-device has been runtime-suspended before intel_suspend() runs,
-intel_resume() will see that its status is RPM_SUSPENDED.  The code in
-question will run and it will crash and burn if
-SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE is set in the link flags.
-
-The reason why that code is invalid is because the
-pm_runtime_set_active() call in it causes the status to change to
-RPM_ACTIVE, but it doesn't actually change the state of the device
-(that is still physically suspended).  The subsequent
-pm_runtime_resume() sees that the status is RPM_ACTIVE and it doesn't
-do anything.  At this point, the device is still physically suspended,
-but its runtime PM status is RPM_ACTIVE, so if pm_runtime_idle() runs,
-it will trigger an attempt to suspend and that will break because the
-device is already suspended.
-
-So this code had never run before and it demonstrably doesn't work, so
-I don't see why removing it could be incorrect.
-
-Thanks!
