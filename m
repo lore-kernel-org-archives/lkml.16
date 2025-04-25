@@ -1,105 +1,222 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04F8187332;
-	Fri, 25 Apr 2025 03:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E228195808;
+	Fri, 25 Apr 2025 03:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745552466; cv=none; b=nO/gLtZYCXJLqnykLyphdLMAIMoRfsEX8blWdS+1RX5cbp8xiWIAqgvrCH7oz9Bk02sNlCU4fP4ytXNKywhpGlqZ5/WLVpWcd+ZYK2xeY5mxgfR35PC/AyNpS7lT+fDzY0TY1VhF9/ZjE6l65VEYZOC8pGE1bnKGxQPQpu9C/98=
+	t=1745552653; cv=none; b=cyyy4PqZqKO4LpgjoOycZzIqSe8Z956MvCienKv+z9kd7ludEPN0nFLnhnxAzqXQOxEOwADy0Spaetn9c6gUPpxH+hdfnBJaNEJY/2L8aFGhcHIwo3bRy7PdBshJzsHnXWAzRe91MWRMHLD9wWt70MxljBpJ51M83JD1UD8Uqq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745552466; c=relaxed/simple;
-	bh=wPvyuyfU1DAjAWhrRG/W1tcYDV8l4b+Yl+1azMhL93k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sYrTk/pfwd/u3euZGm8oTiIOUmOkz6iP3Ibf0BOLuP8zCR1HyQYKvjKHbS2vufIHGEWmeOW5bVAHaGcRQ93TJQpfKpVV16qFIpybd+PVYGlzgwiyhaBk21Gnad4zNsVv4rAQ6z6JyfkbEAcgynxs7hurgTKxSgGQQ7nisU0Ba6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P33LLm029783;
-	Thu, 24 Apr 2025 20:41:00 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 466jhd384p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 24 Apr 2025 20:41:00 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Thu, 24 Apr 2025 20:40:59 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Thu, 24 Apr 2025 20:40:57 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>
-CC: <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: [PATCH] loop: Add sanity check for read/write_iter
-Date: Fri, 25 Apr 2025 11:40:57 +0800
-Message-ID: <20250425034057.3133195-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <680a45db.050a0220.10d98e.000a.GAE@google.com>
-References: <680a45db.050a0220.10d98e.000a.GAE@google.com>
+	s=arc-20240116; t=1745552653; c=relaxed/simple;
+	bh=C+PlvwyiVxvSAR/Lb3vYBgjgbXtxr++0MUnqWe5M/I4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CRo7nTXhhOrY1Mklku28epFAO7Zu+JFPsPFpZjRtDQUFN7Aq1xhsHtMTq7GXZnBGhfOORS0MjShoORcjSnGobUNzTivOO88T7vw9bgdoEqdLiZA4NW2HQNyHsy7VHF1q9lPw5iMNIY6J70/rioW6b2V+M4XaTdUKGNWXKgWbT+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZkJbk4vSNz4f3jLm;
+	Fri, 25 Apr 2025 11:43:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 678A61A06D7;
+	Fri, 25 Apr 2025 11:44:05 +0800 (CST)
+Received: from [10.67.108.244] (unknown [10.67.108.244])
+	by APP1 (Coremail) with SMTP id cCh0CgBHq3sBBQtosqhRKQ--.26866S3;
+	Fri, 25 Apr 2025 11:44:02 +0800 (CST)
+Message-ID: <f0f1d9d1-ffae-4075-ab39-b96516e247db@huaweicloud.com>
+Date: Fri, 25 Apr 2025 11:44:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
+ group
+Content-Language: en-US
+To: "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+ <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
+ <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
+ <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
+ <f142d45d-4164-4883-ac4c-ea5b1c20c1c0@linux.intel.com>
+ <a9d12369-9aca-473a-a660-478bfe969396@linux.intel.com>
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+In-Reply-To: <a9d12369-9aca-473a-a660-478bfe969396@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=ZNDXmW7b c=1 sm=1 tr=0 ts=680b044c cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=5yON4tJlvpFzjYmBgeMA:9 a=DcSpbTIhAlouE1Uv7lRv:22
- a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: lqNWFcyHey-Bm6QNdnYGMW3-o9h4qBYy
-X-Proofpoint-GUID: lqNWFcyHey-Bm6QNdnYGMW3-o9h4qBYy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDAyNCBTYWx0ZWRfX7V26i8R6fC+b DFQHxqIDwy3XF8AlzTzA+TbNH+WWJ14inoiE2zBjce3R9em5gHWOCmnAIlBPhsDWnpMgtWaASeP cgJMZOx38Gku7zMr0jukIZW7BXoP/Q6Afw3eIAbO7q5avshA+/o0qwVtJc0WxiIjqWBnrRkWp34
- 4WTVOfxjTO3hlaxHLXoaSZBHiy3mubV/c15qEM4baziqeknKTRfXb3K423lmnR/CEVvHVpttXAh kecvMVstrmq7WvH2g/BcxvFgjU8X7H0utMGWHDGzSck+krI8+wd/BjTZeYzsCioYnNYCVUYSuNL IknxDUudOG2IozPKH8EC4Jez83rjK4Zyy5k9FWcgiYt1jLydwApUlcZt1/GSxZQxpPE5gmn7LlM
- JUYadnABwQd1w4An56dFfeWdfSny9qmAXxWYAjgbgh2hkAi6yAja+shDoGVhQZ/zn5Qun3an
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 adultscore=0 spamscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=893 mlxscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2504250024
+X-CM-TRANSID:cCh0CgBHq3sBBQtosqhRKQ--.26866S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3JFyUKF4xAFyfWr1rKr1ftFb_yoW7ur1Dpr
+	n5JF4UKFWUWwn5u348tr1UtFyUtrykt3Z5Wr1UJFyUJr1qvr1aqF4UX34Y9r95Gr48JFyr
+	Xw1UXr17ZFy5JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	aFAJUUUUU==
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Some file systems do not support read_iter or write_iter, such as selinuxfs
-in this issue.
-So before calling them, first confirm that the interface is supported and
-then call it.
 
-Reported-by: syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=6af973a3b8dfd2faefdc
-Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
----
- drivers/block/loop.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+On 2025/4/24 6:11, Liang, Kan wrote:
+>
+> On 2025-04-21 10:56 a.m., Liang, Kan wrote:
+>>
+>> On 2025-04-19 12:50 a.m., Luo Gengkun wrote:
+>>> On 2025/4/19 10:25, Luo Gengkun wrote:
+>>>> On 2025/4/14 22:29, Liang, Kan wrote:
+>>>>> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
+>>>>>> The following perf command can trigger a warning on
+>>>>>> intel_pmu_lbr_counters_reorder.
+>>>>>>
+>>>>>>    # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+>>>>>>
+>>>>>> The reason is that a lbr event are placed in non lbr group. And the
+>>>>>> previous implememtation cannot force the leader to be a lbr event in
+>>>>>> this
+>>>>>> case.
+>>>>> Perf should only force the LBR leader for the branch counters case, so
+>>>>> perf only needs to reset the LBRs for the leader.
+>>>>> I don't think the leader restriction should be applied to other cases.
+>>>> Yes, the commit message should be updated.  The code implementation only
+>>>>
+>>>> restricts the leader to be an LBRs.
+>>>>
+>>>>>> And is_branch_counters_group will check if the group_leader supports
+>>>>>> BRANCH_COUNTERS.
+>>>>>> So if a software event becomes a group_leader, which
+>>>>>> hw.flags is -1, this check will alway pass.
+>>>>> I think the default flags for all events is 0. Can you point me to where
+>>>>> it is changed to -1?
+>>>>>
+>>>>> Thanks,
+>>>>> Kan>
+>>>> The hw_perf_event contains a union, hw.flags is used only for hardware
+>>>> events.
+>>>>
+>>>> For the software events, it uses hrtimer. Therefor, when
+>>>> perf_swevent_init_hrtimer
+>>>>
+>>>> is called, it changes the value of hw.flags too.
+>>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>> Gengkun
+>>>
+>>> It seems that using union is dangerous because different types of
+>>> perf_events can be
+>>> placed in the same group.
+>> Only the PMU with perf_sw_context can be placed in the same group with
+>> other types.
+>>
+>>> Currently, a large number of codes directly
+>>> access the hw
+>>> of the leader, which is insecure.
+>> For X86, the topdown, ACR and branch counters will touch the
+>> leader.hw->flags. The topdown and ACR have already checked the leader
+>> before updating the flags. The branch counters missed it. I think a
+>> check is required for the branch counters as well, which should be good
+>> enough to address the issue.
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 16f8aea33243..406f58b3b5d4 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -4256,6 +4256,12 @@ static int intel_pmu_hw_config(struct perf_event
+>> *event)
+>>   		 * group, which requires the extra space to store the counters.
+>>   		 */
+>>   		leader = event->group_leader;
+>> +		/*
+>> +		 * The leader's hw.flags will be used to determine a
+>> +		 * branch counter logging group. Force it a X86 event.
+>> +		 */
+>> +		if (!is_x86_event(leader))
+>> +			return -EINVAL;
+>>   		if (branch_sample_call_stack(leader))
+>>   			return -EINVAL;
+>>   		if (branch_sample_counters(leader)) {
+>>
+> The above check may not enough, since the
+> intel_pmu_lbr_counters_reorder() can be invoked without branch counters
+> event.
+>
+> I've posted a fix to address the issue. Please take a look.
+> https://lore.kernel.org/lkml/20250423221015.268949-1-kan.liang@linux.intel.com/
+>
+> Thanks,
+> Kan
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 674527d770dc..4f968e3071ed 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -449,10 +449,15 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
- 	cmd->iocb.ki_flags = IOCB_DIRECT;
- 	cmd->iocb.ki_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
- 
--	if (rw == ITER_SOURCE)
--		ret = file->f_op->write_iter(&cmd->iocb, &iter);
--	else
--		ret = file->f_op->read_iter(&cmd->iocb, &iter);
-+	ret = 0;
-+	if (rw == ITER_SOURCE) {
-+		if (likely(file->f_op->write_iter))
-+			ret = file->f_op->write_iter(&cmd->iocb, &iter);
-+	}
-+	else {
-+		if (likely(file->f_op->read_iter))
-+			ret = file->f_op->read_iter(&cmd->iocb, &iter);
-+	}
- 
- 	lo_rw_aio_do_completion(cmd);
- 
--- 
-2.43.0
+
+LGTM.
+Thanks,
+Gengkun
+>>> This part of the logic needs to be
+>>> redesigned to void
+>>> similar problems. And I am happy to work for this.
+>>>
+>> OK. Please share your idea.
+>>
+>> Thanks,
+>> Kan
+>>> Thanks,
+>>> Gengkun
+>>>>>> To fix this problem, using has_branch_stack to judge if leader is lbr
+>>>>>> event.
+>>>>>>
+>>>>>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+>>>>>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>>>>>> ---
+>>>>>>    arch/x86/events/intel/core.c | 14 +++++++-------
+>>>>>>    1 file changed, 7 insertions(+), 7 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/
+>>>>>> core.c
+>>>>>> index 09d2d66c9f21..c6b394019e54 100644
+>>>>>> --- a/arch/x86/events/intel/core.c
+>>>>>> +++ b/arch/x86/events/intel/core.c
+>>>>>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct
+>>>>>> perf_event *event)
+>>>>>>                event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>>>>        }
+>>>>>>    +    /*
+>>>>>> +     * Force the leader to be a LBR event. So LBRs can be reset
+>>>>>> +     * with the leader event. See intel_pmu_lbr_del() for details.
+>>>>>> +     */
+>>>>>> +    if (has_branch_stack(event) && !has_branch_stack(event-
+>>>>>>> group_leader))
+>>>>>> +        return -EINVAL;
+>>>>>> +
+>>>>>>        if (branch_sample_counters(event)) {
+>>>>>>            struct perf_event *leader, *sibling;
+>>>>>>            int num = 0;
+>>>>>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct
+>>>>>> perf_event *event)
+>>>>>>                  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+>>>>>>                    PERF_SAMPLE_BRANCH_COUNTERS)))
+>>>>>>                event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>>>> -
+>>>>>> -        /*
+>>>>>> -         * Force the leader to be a LBR event. So LBRs can be reset
+>>>>>> -         * with the leader event. See intel_pmu_lbr_del() for details.
+>>>>>> -         */
+>>>>>> -        if (!intel_pmu_needs_branch_stack(leader))
+>>>>>> -            return -EINVAL;
+>>>>>>        }
+>>>>>>          if (intel_pmu_needs_branch_stack(event)) {
+>>
 
