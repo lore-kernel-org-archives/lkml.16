@@ -1,226 +1,137 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19761805A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995EE1805A;
+	Fri, 25 Apr 2025 13:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587092; cv=none; b=r2U8jscIkgtQ3edJviEzxxLsaEczWnC1QBJPZ1105xDjANWupUKIFnypAJybEVydBcvPw/d5XcPVLy8fxjmqzddYu58iTNPlKXBbReJa7NcIk7gE2iCPpdZCJ5CYfcs5j//5MCsG75Hb2imbHRSx1iDNgRCB5NoKDy/ZoJ6zWiE=
+	t=1745587137; cv=none; b=p6qGDyUVQbs9Y67Tj6gUxe794WPIo/vIsgPaXXnQQ3E3PTPGHxGqzBNrL5c/J7h9NB0fOcccRnxpo5JHXGtpgCdkfR1skaJguYYFm9qmGQZ9ZVQXt08gVwvm75JnT2mUYqIRD5PLZ/g5m3JEXlrC0rqVAfmkcvFd6WtKiFpVjkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587092; c=relaxed/simple;
-	bh=9juRr8sLTz6yET5bKxGWoa/rfH2ALpXj1tjC+No5OIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lP6HFHdxO6B/HsBlvHuPxcKrHS7c4u0WzjsdT7o11Om668urO3QIM0l77YfwlAYW0GHCpzoGvuBJc1aNyE4LOdKqQ4A78w6QYt3Ll/5vh6GdqEIPm3n3J/CsqFyEm6kYAKiQ3rD6wRo9dLM5TwFyqtGtN5VHUH+hf1d4l01e/GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SSIJ6EpO; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SSIJ6EpO"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso10701405e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745587088; x=1746191888; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WiZQEQXbMAh4QSTUazeZTDFr/XgIvOyC1vsWeFbPWQo=;
-        b=SSIJ6EpOQHGtxCVRlcZO1nXaURtpTb/0CxK8rh4yPLpVgDFPuBuBLBE7ho6cpghRPW
-         gGTA2lJhezpU/77kPBbmO2nH0xDBhJ0uyjAAZ4gasPW9F3LlM5xUE9SprM5fft6pQCJj
-         ICxMrUKI9s2bRCVCal3av+RWPP79jHsgdaJkBitLd/aQm160gk6K54151KI8jiQERGvp
-         EbzX8K6kJoHrQdOaMaCxURKk5Q+hq8Oz5gX2UMb9VsCI00yXSSlr4ReYCsmkb/6DeWMH
-         f7AlQ/oWYk+ocPTsv6VUBQrAIeR3Vt/u8zeqIApZVAnz8X3K2yZkfJhPGpHExIwo2kgh
-         ccjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745587088; x=1746191888;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WiZQEQXbMAh4QSTUazeZTDFr/XgIvOyC1vsWeFbPWQo=;
-        b=RDJyA6JckuG188eItsZn6aaFH0hwHpaQw5BG50ARbmRN9trgVGH1n/0iRQFFgeWmsN
-         FFfOl2qwqlzNK2yeVgeWC3YNJIN8IuGASWRd59q0nhfDfpedyoAKQpqbqv9mx5pDGRKQ
-         simcwg3GZldtAytPb1y/A+6CFRKrxkrx2PTfQ2In8krdZuHAMmZ98dLG2IiSYwVgSNCr
-         p0RFXcRZMe37DaQZiH92MeoTnZADU540xh77fqRntXqGrsEpcX8DQpS0hxSI9bwEMrvu
-         Zhr9tCVkzeFrjh9qCKS+2vj0Qv6r9/It3tkwNRkLQU/vHHPuxddiMXdmjKJtb8ELs9wg
-         Ejlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbzpBN69fAqAZ5tAPsoun1BdZX7aJwJibgbR6gBWYbDq+oLx8/eWgH6fWW3TFle9YyPKe/h4dCAYEmLJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuT0mnzcQYLIuZS3yFuHlUbnyXAQj+8n/mG1/U4haiiNxYuEwV
-	MJ++bgxF5zWosCfDQJ8dtacpGO6E9u0OLEY6lPdAy2BZUPLiVE6Dh1uBvFFrU+4=
-X-Gm-Gg: ASbGncuQOPncKPsxnclOmDH4BR3QusWM8RuKzMW3Z2mVpIt3miWxPM70SxxMwGQVn4w
-	WVn4wAwNMZ+bd1E2UvASNhFQZUlgj1chxKrQwKTjP1Q5BqkgxoInxUNcZP+W8s/VCBC4fARn4oy
-	lt9d+kYL3gQOYicuIOHW6FiNalDDZqBKjGN9Cl/dGRBLBNxQ1FG/jsfjp/v0ndwma+aUK1q23ag
-	XI7ZyBXx6Qye5GfMwSM5dOsScF+CfjkRgz3m/VE1mhUIweGJ/4lcwHZglkkozNJtYxtHphLshY3
-	mVlvnPFLghIzI8uyP8lvwd+RihWBsOg2p0v+ylva521cOw==
-X-Google-Smtp-Source: AGHT+IHbDjS1PQI7NTlpMT+Bu2EFu2dfDgHH1BOBPjpV0q2B/rN6BZiZF+DNqb4h89r5ixKpK9+CrA==
-X-Received: by 2002:a05:600c:3b83:b0:43d:ed:acd5 with SMTP id 5b1f17b1804b1-440a65def49mr25292515e9.10.1745587087859;
-        Fri, 25 Apr 2025 06:18:07 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073cbe386sm2330109f8f.42.2025.04.25.06.18.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:18:07 -0700 (PDT)
-Date: Fri, 25 Apr 2025 16:18:04 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: andy@kernel.org, dlechner@baylibre.com, gregkh@linuxfoundation.org,
-	jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	Michael.Hennerich@analog.com, nuno.sa@analog.com,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] staging: iio: frequency: ad9832: Refactor
- powerdown control
-Message-ID: <0771a9a7-ec49-487e-afaa-46a39f0b8ba2@stanley.mountain>
-References: <20250424223210.91317-1-gshahrouzi@gmail.com>
- <20250424223210.91317-3-gshahrouzi@gmail.com>
+	s=arc-20240116; t=1745587137; c=relaxed/simple;
+	bh=GkamC2rWovlJbCByU0gcXkWzvk2KsH8qmuNFe/IrxiA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m++DsDnZ522Yn+HMzW/fyspuSpp3KhI9cvmMIgxj/tPOCq0zxKbH9ZInxOsUEMRuf0V+B710XmegZUr+iI+iqEMpbEkumEYhnWP+yLqDy54qQtEVndhsEIiGD1tag36PQ40DQy8YWpIgo6r8hVY9fjRhcIwrYvAgQF+enn0XTWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZkYGQ5ZpHz6M4Hf;
+	Fri, 25 Apr 2025 21:14:38 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 39DD71404F5;
+	Fri, 25 Apr 2025 21:18:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 25 Apr
+ 2025 15:18:50 +0200
+Date: Fri, 25 Apr 2025 14:18:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v8 04/16] cxl/aer: AER service driver forwards CXL error
+ to CXL driver
+Message-ID: <20250425141849.00003c92@huawei.com>
+In-Reply-To: <e473fbc9-8b46-4e76-8653-98b84f6b93a6@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-5-terry.bowman@amd.com>
+	<20250423160443.00006ee0@huawei.com>
+	<e473fbc9-8b46-4e76-8653-98b84f6b93a6@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424223210.91317-3-gshahrouzi@gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Apr 24, 2025 at 06:32:09PM -0400, Gabriel Shahrouzi wrote:
-> Replace custom implementation with out_altvoltage_powerdown ABI. The
-> attribute's logic is inverted (1 now enables powerdown) to match the
-> standard.
+On Thu, 24 Apr 2025 09:17:45 -0500
+"Bowman, Terry" <terry.bowman@amd.com> wrote:
+
+> On 4/23/2025 10:04 AM, Jonathan Cameron wrote:
+> > On Wed, 26 Mar 2025 20:47:05 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >  
+> >> The AER service driver includes a CXL-specific kfifo, intended to forward
+> >> CXL errors to the CXL driver. However, the forwarding functionality is
+> >> currently unimplemented. Update the AER driver to enable error forwarding
+> >> to the CXL driver.
+> >>
+> >> Modify the AER service driver's handle_error_source(), which is called from
+> >> process_aer_err_devices(), to distinguish between PCIe and CXL errors.
+> >>
+> >> Rename and update is_internal_error() to is_cxl_error(). Ensuring it
+> >> checks both the 'struct aer_info::is_cxl' flag and the AER internal error
+> >> masks.
+> >>
+> >> If the error is a standard PCIe error then continue calling pcie_aer_handle_error()
+> >> as done in the current AER driver.
+> >>
+> >> If the error is a CXL-related error then forward it to the CXL driver for
+> >> handling using the kfifo mechanism.
+> >>
+> >> Introduce a new function forward_cxl_error(), which constructs a CXL
+> >> protocol error context using cxl_create_prot_err_info(). This context is
+> >> then passed to the CXL driver via kfifo using a 'struct work_struct'.
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>  
+> > Hi Terry,
+> >
+> > Finally got back to this.  I'm not following how some of the reference
+> > counting in here is working.  It might be fine but there is a lot
+> > taking then dropping device references - some of which are taken again later.
+> >  
+> >> @@ -1082,10 +1094,44 @@ static void cxl_rch_enable_rcec(struct pci_dev *rcec)
+> >>  	pci_info(rcec, "CXL: Internal errors unmasked");
+> >>  }
+> >>  
+> >> +static void forward_cxl_error(struct pci_dev *_pdev, struct aer_err_info *info)
+> >> +{
+> >> +	int severity = info->severity;  
+> > So far this variable isn't really justified.  Maybe it makes sense later in the
+> > series?  
 > 
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
-> V3 -> v4:
-> 	- Use guard(mutex) for simplified locking.
-> 	- Use an extended attribute.
-> v2 -> v3:
-> v1 -> v2:
-> 	Refactor powerdown functionality.
-> ---
->  drivers/staging/iio/frequency/ad9832.c | 69 +++++++++++++++++++-------
->  1 file changed, 51 insertions(+), 18 deletions(-)
+> This is used below in call to cxl_create_prot_err_info().
+Sure, but why not just do
+
+if (cxl_create_prot_error_info(pdev, info->severity, &wd.err_info)) {
+
+There isn't anything modifying info->severity in between so that local
+variable is just padding out the code to no real benefit.
+
+
 > 
-> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-> index 2e555084ff98a..b8b52302abf36 100644
-> --- a/drivers/staging/iio/frequency/ad9832.c
-> +++ b/drivers/staging/iio/frequency/ad9832.c
-> @@ -174,6 +174,32 @@ static int ad9832_write_phase(struct ad9832_state *st,
->  	return spi_sync(st->spi, &st->phase_msg);
->  }
->  
-> +static ssize_t ad9832_write_powerdown(struct iio_dev *indio_dev, uintptr_t private,
-> +				      const struct iio_chan_spec *chan,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct ad9832_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +	bool val;
+> >> +		pci_err(pdev, "Failed to create CXL protocol error information");
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	struct device *cxl_dev __free(put_device) = get_device(err_info->dev);  
+> > Also this one.  A reference was acquired and dropped in cxl_create_prot_err_info()
+> > followed by retaking it here.  How do we know it is still about by this call
+> > and once we pull it off the kfifo later?  
+> 
+> Yes, this is a problem I realized after sending the series.
+> 
+> The device reference incr could be changed for all the devices to the non-cleanup
+> variety. Then would add the reference incr in the caller after calling cxl_create_prot_err_info().
+> I need to look at the other calls to to cxl_create_prot_err_info() as well.
+> 
+> In addition, I think we should consider adding the CXL RAS status into the struct cxl_prot_err_info.
+> This would eliminate the need for further accesses to the CXL device after being dequeued from the
+> fifo. Thoughts?
 
-Declare val before ret.  Use reverse Christmas tree order.
+That sounds like a reasonable solution to me.
 
-	long long long_name;
-	medium name;
-	short name;
-
-> +
-> +	ret = kstrtobool(buf, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	guard(mutex)(&st->lock);
-> +	if (val)
-> +		st->ctrl_src |= AD9832_SLEEP;
-> +	else
-> +		st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
-> +				 AD9832_CLR);
-> +
-> +	st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
-> +					  st->ctrl_src);
-> +	ret = spi_sync(st->spi, &st->msg);
-> +
-> +	return ret ? ret : len;
-> +}
-> +
->  static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
->  			    const char *buf, size_t len)
->  {
-> @@ -185,9 +211,9 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
->  
->  	ret = kstrtoul(buf, 10, &val);
->  	if (ret)
-> -		goto error_ret;
-> +		return ret;
-
-This is unrelated.  Do this in a separate patch.
-
->  
-> -	mutex_lock(&st->lock);
-> +	guard(mutex)(&st->lock);
-
-same.
-
->  	switch ((u32)this_attr->address) {
->  	case AD9832_FREQ0HM:
->  	case AD9832_FREQ1HM:
-> @@ -232,22 +258,9 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
->  						  st->ctrl_fp);
->  		ret = spi_sync(st->spi, &st->msg);
->  		break;
-> -	case AD9832_OUTPUT_EN:
-> -		if (val)
-> -			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP | AD9832_CLR);
-> -		else
-> -			st->ctrl_src |= FIELD_PREP(AD9832_SLEEP, 1);
-> -
-> -		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
-> -						  st->ctrl_src);
-> -		ret = spi_sync(st->spi, &st->msg);
-> -		break;
-
-This is related.  Keep this.
-
->  	default:
->  		ret = -ENODEV;
->  	}
-> -	mutex_unlock(&st->lock);
-> -
-> -error_ret:
->  	return ret ? ret : len;
-
-Unrelated.
-
->  }
->  
-> @@ -270,8 +283,6 @@ static IIO_CONST_ATTR_PHASE_SCALE(0, "0.0015339808"); /* 2PI/2^12 rad*/
->  
->  static IIO_DEV_ATTR_PINCONTROL_EN(0, 0200, NULL,
->  				ad9832_write, AD9832_PINCTRL_EN);
-> -static IIO_DEV_ATTR_OUT_ENABLE(0, 0200, NULL,
-> -				ad9832_write, AD9832_OUTPUT_EN);
->  
->  static struct attribute *ad9832_attributes[] = {
->  	&iio_dev_attr_out_altvoltage0_frequency0.dev_attr.attr,
-> @@ -285,7 +296,6 @@ static struct attribute *ad9832_attributes[] = {
->  	&iio_dev_attr_out_altvoltage0_pincontrol_en.dev_attr.attr,
->  	&iio_dev_attr_out_altvoltage0_frequencysymbol.dev_attr.attr,
->  	&iio_dev_attr_out_altvoltage0_phasesymbol.dev_attr.attr,
-> -	&iio_dev_attr_out_altvoltage0_out_enable.dev_attr.attr,
->  	NULL,
->  };
->  
-> @@ -293,6 +303,27 @@ static const struct attribute_group ad9832_attribute_group = {
->  	.attrs = ad9832_attributes,
->  };
->  
-> +static const struct iio_chan_spec_ext_info ad9832_ext_info[] = {
-> +	{
-> +		.name = "powerdown",
-> +		.shared = IIO_SEPARATE,
-> +		.write = ad9832_write_powerdown,
-> +	},
-> +	{ },
-           ^
-No comma after a sentinal.
-
-> +};
-> +
-
-regards,
-dan carpenter
+Jonathan
 
