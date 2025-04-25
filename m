@@ -1,128 +1,145 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13EE51401B;
-	Fri, 25 Apr 2025 15:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEF327A10E;
+	Fri, 25 Apr 2025 15:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745596004; cv=none; b=pqwjbMh45fxJmTY5p9EV2p8ok0ZIrbNVbD9eUFd2Ar8q0j/L2vGaQoWAZj0YRgpPNZA4WinpB+QqnAfnTX1TpISPio/6T2ST4J3bG7PTdfNrCbTLcS5Lz9rLryUipWRiM6D6znVpiUhjXszlFX3fIuUVaijdLmfzWzrPQJfyCwo=
+	t=1745596118; cv=none; b=iiEHw6w/GWs8Q3S5STkBr2MPWEbAQAdbA3oDyeqpenLn7WUpG9mulWFvipCu53S8qmK9fDOHJM6Wwl8V9LUf0GqnEkAmng84z8ynpkORbdBNfjinspRHs0qA35Uwc0sDyoB6khsXFOxjGfZGRIwjQZSlznWQBgMRJ9VEwZ2hmhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745596004; c=relaxed/simple;
-	bh=jhP8pFJFcwBKmqgVvkl1aJ2stKtsos/RlAxiW6YqGoo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f+SqZ1DsSssg2FCFlCIAMSULg0OUnirEz29zo17MhRpj7pAsGuH1bjC+S7Kx9z/kfDQoBRoYE8QsDD0tgCS6+bwSMW9MmTcgddf8Wj/MRqPhi2LBfyASfBHXaWPS9MCezwK8/0YQF/p7yKlo7spwP7w92gHp/mDiF8LU5xL9g2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWI7xSIm; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745596118; c=relaxed/simple;
+	bh=gbP/LTJ4bOaqyh9iK33lI3eC1HyFQnqEr9G9WVBueew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpx41sezLDWUxUDomzCk5N3JiTR/+xcAuewse5aNOP2bBzAiAx1CMsgFAE+xouVnLaZw0Qj80iEvsP1Oq9f8Dxniv5QSTBzj62hVLA6Fxm3UXfs5NF+5SqWNRblVO5DiASeBcGf2miERdy3Ro20HSy2yAcyrrxah2tXoCaU0A6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccOKCHgS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWI7xSIm"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736bfa487c3so2027504b3a.1;
-        Fri, 25 Apr 2025 08:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745596001; x=1746200801; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O0oyziaAOyLAcOk9gAqKZJBNWc6/cPKz3UDQ0hjmN14=;
-        b=PWI7xSImnUPzYSWqXYOkQZaZXBBLisPDepkhFWxU/xS2MH/eyCzYN8tQqd1D0LvNJa
-         2WeCe+KeTXtnzBbQPUV09PUqP/CA2ac6OFjDEfoJZ36Zh/YK+N6KjePr/kTzretqmm+w
-         Da4h0zbb7g2Fdrr+8PaytOPkkmqyuNSnxxd7Gn9eaOJ4PrC+yRC/SE78VR2w6cjUD5h8
-         prvya+Kc5sXhFF6Ghq9N8cSX/PytG+Qi6vhns41alOJXkZgH1m4bSoTAaksB42HxWudt
-         N2i6IPgQwaNa+klRUTubUl6QWh8kd0+2eN/y1h0MJ1Gyb2agFD5fK+eWoU8xqn5F+VV2
-         wR4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745596001; x=1746200801;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O0oyziaAOyLAcOk9gAqKZJBNWc6/cPKz3UDQ0hjmN14=;
-        b=ciClwsJcWIRGfP7eKtMOvtcTPFaP0RWzRvciALXx+7eFmGtH7VtsSUdn4HDkOCSrX8
-         QLcPca1NK50ge3U+4WcXz1gN+Y3FB14FSrC+6IsuvCRaZ0/Is6SeMmVORBoqfjz9p9sx
-         LAQvf/WpMtxOTMK9dIgE5Ukr2cl9CSE250jqFGH59C/2vlSkerjt30fwoytP8DDHSfy4
-         6suRI6dFYiRdafCA0G+UICfLlSHbKMaPLWFcWyHomkfGTOJRlwz+JvUCA6C6m9Hy3PsB
-         VSo2z9pZHK4Wwn3VL7K0M7QyV96e/RYcZMkmr8s42ADQlyhvgJrvSN0ub5dx6oJeb3h3
-         LwnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXC/xCDgH+u8BQY3Rejfwua2UW/IaVjSbMcL5AhfOTLo8wijtrfQCkG85HbSspRWdO8QXY/aseg3Dk7pNNy@vger.kernel.org, AJvYcCXip1/78hX+X0DqphPybbHVJ7YuzyO3/A8p1IUnyGrVxZYmY3E223kXWqyjyL34s2n3tFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywxRVLFdm/V6CLBddL0fRsHdFakSQrJfYa2FMMMnuCmnT2DpLQ
-	JnCeLv8AfpcXpejuXa4AvlJlhkgxroH72ttGzugu5RUppIlWYamxClraZqWi
-X-Gm-Gg: ASbGnctvLap//qTQEzEKXAlM7SXcfWQd6VCKigtsEZwxOWD6b+0CjTQLRFkYiy3MQzy
-	vESN3xJ+S9betWMlOFznng2BQSuSqp3MeMOgapq2JYcLcAs/hif0cNp6TXScTHuxIPPC47An8vp
-	C8v3R11Ms0+x6u2FVuP97N0kXVQADGAgxHM1oSmSkZfKBmK9VPvZMWDKqC01Zk2gYmO55JJxNp5
-	r41IIJxL1bDvtO/v3YzhPTMN3BGZ9kaNElDxuXg0zcLXQDDoE/AhkWRX/g9xElzRD5fQcGqqVVf
-	9f0nr9SRwh+vbtK12nK6rnm8Q6mTdGZyhSxlxDtJFxTFpeDhluJGR86JVgmjzHtcMCOoLq28c7I
-	BFiHbE0p+sj/cGGqrMUU=
-X-Google-Smtp-Source: AGHT+IG9TW8cW87auP5BlEdU5WIaXA04pqBbguxPDnyixb+I1bwF2Ef/mftKrl1hMR+zWJlnM+W2CQ==
-X-Received: by 2002:a05:6a00:2311:b0:736:62a8:e52d with SMTP id d2e1a72fcca58-73fd74be6ffmr3279577b3a.12.1745596001228;
-        Fri, 25 Apr 2025 08:46:41 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:8bc6:71ac:67d1:e6ee? ([2001:ee0:4f0e:fb30:8bc6:71ac:67d1:e6ee])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9a993sm3430521b3a.144.2025.04.25.08.46.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 08:46:40 -0700 (PDT)
-Message-ID: <7a6f896f-fade-47ed-b101-72be264dcf2b@gmail.com>
-Date: Fri, 25 Apr 2025 22:46:35 +0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccOKCHgS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32522C4CEE4;
+	Fri, 25 Apr 2025 15:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745596117;
+	bh=gbP/LTJ4bOaqyh9iK33lI3eC1HyFQnqEr9G9WVBueew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ccOKCHgStsMm/dwByxT8FVp1XCET4mKAtX35WQ+CVQv1LA0HVQ67um2ecEMtd+Nxg
+	 c6jighDrmifLWcB11WhELXLSBcL8CGMf54GVmQCTDKwa3Ysuuj38z6rSUok8jINF/t
+	 YjIZCDBilL1dNBu/WEin8MmJhNqLKHn+ujcXvKMuvXtmTm3VexxDOkiPWe1XZbcJUA
+	 0c4QLBeSfb/poMKMUfaEWMmcJLp/DsAQ75Qilr5Mi8eoEH6BOpxvfFXq+PGTGCmiq9
+	 dh9+IU+vosIbN8xK17vxzgQkpIjvsytz7qo7cMk6iQQ2cYiWfg5JA68GLhXZIL0kAu
+	 BeNRDGiRW0+0Q==
+Date: Fri, 25 Apr 2025 17:48:31 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 2/7] rust: property: Enable printing fwnode name and
+ path
+Message-ID: <aAuuz8BfATawK5oL@pollux>
+References: <20250425150130.13917-1-remo@buenzli.dev>
+ <20250425150130.13917-3-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] xsk: respect the offsets when copying frags
-To: netdev@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423101047.31402-1-minhquangbui99@gmail.com>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <20250423101047.31402-1-minhquangbui99@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425150130.13917-3-remo@buenzli.dev>
 
-On 4/23/25 17:10, Bui Quang Minh wrote:
-> Add the missing offsets when copying frags in xdp_copy_frags_from_zc().
->
-> Fixes: 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb conversion")
-> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+On Fri, Apr 25, 2025 at 05:01:25PM +0200, Remo Senekowitsch wrote:
+> Add two new public methods `display_name` and `display_path` to
+> `FwNode`. They can be used by driver authors for logging purposes. In
+> addition, they will be used by core property abstractions for automatic
+> logging, for example when a driver attempts to read a required but
+> missing property.
+> 
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 > ---
->   net/core/xdp.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/net/core/xdp.c b/net/core/xdp.c
-> index f86eedad586a..a723dc301f94 100644
-> --- a/net/core/xdp.c
-> +++ b/net/core/xdp.c
-> @@ -697,7 +697,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
->   	nr_frags = xinfo->nr_frags;
->   
->   	for (u32 i = 0; i < nr_frags; i++) {
-> -		u32 len = skb_frag_size(&xinfo->frags[i]);
-> +		const skb_frag_t *frag = &xinfo->frags[i];
-> +		u32 len = skb_frag_size(frag);
->   		u32 offset, truesize = len;
->   		netmem_ref netmem;
->   
-> @@ -707,8 +708,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
->   			return false;
->   		}
->   
-> -		memcpy(__netmem_address(netmem),
-> -		       __netmem_address(xinfo->frags[i].netmem),
-> +		memcpy(__netmem_address(netmem) + offset,
-> +		       __netmem_address(frag->netmem) + skb_frag_off(frag),
->   		       LARGEST_ALIGN(len));
->   		__skb_fill_netmem_desc_noacc(sinfo, i, netmem, offset, len);
->   
+>  rust/kernel/device/property.rs | 78 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+> index d89715f7d..28850aa3b 100644
+> --- a/rust/kernel/device/property.rs
+> +++ b/rust/kernel/device/property.rs
+> @@ -49,6 +49,84 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
+>          self.0.get()
+>      }
+>  
+> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> +    /// printing the name of a node.
+> +    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
+> +        struct FwNodeDisplayName<'a>(&'a FwNode);
+> +
+> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
+> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> +                // SAFETY: self is valid by its type invariant
+> +                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
+> +                if name.is_null() {
+> +                    return Ok(());
+> +                }
+> +                // SAFETY: fwnode_get_name returns null or a valid C string and
+> +                // name is not null
+> +                let name = unsafe { CStr::from_char_ptr(name) };
+> +                write!(f, "{name}")
+> +            }
+> +        }
+> +
+> +        FwNodeDisplayName(self)
+> +    }
+> +
+> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> +    /// printing the full path of a node.
+> +    pub fn display_path(&self) -> impl core::fmt::Display + '_ {
+> +        struct FwNodeDisplayPath<'a>(&'a FwNode);
+> +
+> +        impl core::fmt::Display for FwNodeDisplayPath<'_> {
+> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> +                // The logic here is the same as the one in lib/vsprintf.c
+> +                // (fwnode_full_name_string).
+> +
+> +                let num_parents = unsafe { bindings::fwnode_count_parents(self.0.as_raw()) };
+> +
+> +                for depth in (0..=num_parents).rev() {
+> +                    let fwnode = if depth == 0 {
+> +                        self.0.as_raw()
+> +                    } else {
+> +                        // SAFETY: `self.0.as_raw()` is valid
+> +                        unsafe { bindings::fwnode_get_nth_parent(self.0.as_raw(), depth) }
+> +                    };
+> +
+> +                    // SAFETY: fwnode is valid, it is either `self.0.as_raw()` or
+> +                    // the return value of `bindings::fwnode_get_nth_parent` which
+> +                    // returns a valid pointer to a fwnode_handle if the provided
+> +                    // depth is within the valid range, which we know to be true.
+> +                    let prefix = unsafe { bindings::fwnode_get_name_prefix(fwnode) };
+> +                    if !prefix.is_null() {
+> +                        // SAFETY: fwnode_get_name_prefix returns null or a
+> +                        // valid C string
+> +                        let prefix = unsafe { CStr::from_char_ptr(prefix) };
+> +                        write!(f, "{prefix}")?;
+> +                    }
+> +                    // SAFETY: fwnode is valid for the reasons stated above
+> +                    let name = unsafe { bindings::fwnode_get_name(fwnode) };
+> +                    if !name.is_null() {
+> +                        // SAFETY: fwnode_get_name returns null or a valid
+> +                        // C string
+> +                        let name = unsafe { CStr::from_char_ptr(name) };
+> +                        write!(f, "{name}")?;
+> +                    }
 
-I know it's very unlikely but do we need to 
-kmap_local_page(skb_frag_page(frag) before using 
-__netmem_address(frag->netmem) to make sure the frag's page is mapped? 
-Or it is impossible that the frag's page to be highmem and unmapped? Thanks,
-Quang Minh.
+I think you should be able to just call
+
+	FwNodeDisplayName(self).fmt(f)?
+
+for this part, which saves you the duplicated code.
