@@ -1,90 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8DA233707
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB3A233707;
+	Fri, 25 Apr 2025 09:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574415; cv=none; b=PF6H4hj5n8N3xlmFAtkO+PVOKOr5vOUWhwYuTuO+JagIJcBtl7YIAefydsvBAZvq0hCcEl1GZ6tIBeIz/Dn99vhGqd13YDsuMYzYn6P/bIOBbXzOI6nBVSVifduuo5YsV6vkJk4NzGj1mf7gBoHhacU8OXZ2GZPgXaDtGzTOrUo=
+	t=1745574446; cv=none; b=sxDMzGwmjsXHxh/oe8Lmupk4fShZDpKr08GdI+ASwi0b+VZO7R1xf23LgXS1s/mf7h+6NR/dAeHXPngyjToDRuKofx0q5/F4KtwcCN0xDbZf1ylJEXYRGONwn2H0M1RAAehCNFAkD5QdgvhevqTh/xz/1hB10YLb1wAzxJ1ayFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574415; c=relaxed/simple;
-	bh=+v7I5BfsAnpI3Ghl6PqO0VR1yzMNwIO2yDsIR04w+N4=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=SodmwpRahazFDSNUBgnS1LEGDam03JVnH7NHC7zmQGGfN8OP6P9rK2e/m43ctg/GHPFV3SgAwvP20W5TOXlL0dGa/CiT8oMHdzOohoC5Lb1stXsi0y+wmh5V2ZPa+rLeBlnS8oK9VLCxLz0sX8WV9VTrbYHrgoHh2ifqNdFv3H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=amQTInMR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745574446; c=relaxed/simple;
+	bh=hwJ0UFkl9vhPKzbNWc1Xi5cv3PU5yR6pZ52y0oNJg78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=isdfpotXvA4q9JKaMUtHIf22c6pVUkCZkXg1cP9XITNf6KtQInLlC2HdMcPMEMyVFpaKdNxZrt67gbKS1HonvuQ/+J1OpNzvTQ9MPoVb8OUM0jIsF83fjivkKE3dvkRhTN2X5uBfiNsgAlAfzMzWm/AqLO4lyYo+R3FCgfsPiSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hd+sQnwz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amQTInMR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745574412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sOZGGLjYzY6quFmu6RJ8chWL/8DejjBW+kNPKkZQ5w=;
-	b=amQTInMRwZhrSqXret2/6uk8Srs2B7BqBwoF/hHhOcs8VgEPrzYS23I2m+rYmKegs29OQB
-	e8sUdIDbIiqskZEKlnbNKSYiMBmfjTG6QKE0bWfEncgjUwhLUTGTcL+fgIu55VsQprwDC2
-	9IDXlefws1BlYPOvYW0xeKOvCFGFsjY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-649--7fs-_SNPk-MxCB5TQKlmQ-1; Fri,
- 25 Apr 2025 05:46:48 -0400
-X-MC-Unique: -7fs-_SNPk-MxCB5TQKlmQ-1
-X-Mimecast-MFC-AGG-ID: -7fs-_SNPk-MxCB5TQKlmQ_1745574407
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22B94195608C;
-	Fri, 25 Apr 2025 09:46:47 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.16])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B56C318001EF;
-	Fri, 25 Apr 2025 09:46:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <7b468f16-f648-4432-aa59-927d37a411a7@lunn.ch>
-References: <7b468f16-f648-4432-aa59-927d37a411a7@lunn.ch> <3452224.1745518016@warthog.procyon.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
-Cc: dhowells@redhat.com, Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
-    Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-    Tony Nguyen <anthony.l.nguyen@intel.com>,
-    Paulo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: Is it possible to undo the ixgbe device name change?
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hd+sQnwz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C343C4CEE4;
+	Fri, 25 Apr 2025 09:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745574445;
+	bh=hwJ0UFkl9vhPKzbNWc1Xi5cv3PU5yR6pZ52y0oNJg78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hd+sQnwzEGfn4d5AnNfPaRDuzzQi4Cyu8Q7fz7oaU3zLXUrK7swqNXkfSAsDskk90
+	 Ef5QPXoRtMp0DZI9lMCtMP/XnBTJvQt+51cCMz7h1HaX5QSFpSYOZp1nGf6Ti/0kD5
+	 PvTjNzvmguHd4GdEeJFmK/LPwwCdxk7CX3Sf5d1wUpdXkZR0/oMC+noNPAENwRl7By
+	 jgz31BduQXpbrQzUnyVg5ifyiKjlxFRazACxcZZ2KbN7RXbjSGyRBvHfQOcdqjbPo3
+	 fXvht/Mf5thEx5KPVgpkeb7Uf/1TJAJEI3hHcJYvxLo6F151Kba+D0DfAE/ULnJw1x
+	 NCNpC1iRCrGGg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u8FeY-000000000Ej-1xWm;
+	Fri, 25 Apr 2025 11:47:26 +0200
+Date: Fri, 25 Apr 2025 11:47:26 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Wenbin Yao <quic_wenbyao@quicinc.com>
+Cc: catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, quic_cang@quicinc.com,
+	quic_qianyu@quicinc.com
+Subject: Re: [PATCH v2 1/4] arm64: Kconfig: enable PCI Power Control Slot
+ driver for QCOM
+Message-ID: <aAtaLm253EtlXwan@hovoldconsulting.com>
+References: <20250425092955.4099677-1-quic_wenbyao@quicinc.com>
+ <20250425092955.4099677-2-quic_wenbyao@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3616571.1745574403.1@warthog.procyon.org.uk>
-Date: Fri, 25 Apr 2025 10:46:43 +0100
-Message-ID: <3616572.1745574403@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425092955.4099677-2-quic_wenbyao@quicinc.com>
 
-Andrew Lunn <andrew@lunn.ch> wrote:
+On Fri, Apr 25, 2025 at 05:29:52PM +0800, Wenbin Yao wrote:
+> From: Qiang Yu <quic_qianyu@quicinc.com>
+> 
+> Enable the pwrctrl driver, which is utilized to manage the power supplies
+> of the devices connected to the PCI slots. This ensures that the voltage
+> rails of the standard PCI slots on some platforms eg. X1E80100-QCP can be
+> correctly turned on/off if they are described under PCIe port device tree
+> node.
+> 
+> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+> ---
+>  arch/arm64/Kconfig.platforms | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 8b76821f1..14d2742c8 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -270,6 +270,7 @@ config ARCH_QCOM
+>  	select GPIOLIB
+>  	select PINCTRL
+>  	select HAVE_PWRCTL if PCI
+> +	select PCI_PWRCTL_SLOT if PCI
 
-> It is systemd which later renames it to enp1s0 or enp1s0np0. If you
-> ask me, you are talking to the wrong people.
+Note that this symbol is getting renamed for 6.16:
 
-Aha!  It can be configured with systemd-udev.
+	 https://lore.kernel.org/lkml/20250402132634.18065-2-johan+linaro@kernel.org/
 
-See https://systemd.io/PREDICTABLE_INTERFACE_NAMES/
-
-And also "man systemd.link".
-
-# cat /etc/systemd/network/10-testnet.link
-[Match]
-MACAddress=00:11:22:33:44:55  <--- your MAC address here
-[Link]
-Description=Test Network
-Name=enp1s0  <--- the name you want here
-
-
-David
-
+Johan
