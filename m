@@ -1,147 +1,114 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E81288A5;
-	Fri, 25 Apr 2025 13:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925512701D7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588860; cv=none; b=YBpUf+TiS7q0qpOU9QD+XJcjECDoftt6lfGfThk/ioa9w06VB7psdHQGZk7MpS+52YIy+PnTaFRSy+llhasbcvkHPa9mHQX3Rlc3ILtVEp//JmEuI7Bb4Zl504RW91O3iIX4aGTYgnkaslZ8jQBmjIUA+NantQY76mi1CdfEg7o=
+	t=1745588878; cv=none; b=i3lQxhTyEmCACPrrjXTqQPwo2rW7DUizetf3jrsV9rQq9kgTZ//y+oDwELO8yX92zZrPVS1DwQ0bdsWke6vvYl8Vlt0vrCoO8CZZJRm1coGzp+6tTKMFLGo3pJPP8BkYxlM8mDtVIwqjlnyObdn5Gqg1NHhxWsli7wvEXoC6RIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588860; c=relaxed/simple;
-	bh=A0BqI1OhWECGRoHXOwEM5A1fqp0J7utKdtX59nddDMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IrmaXLaHhqFfTQZeLDBQLow6LO8WRnmRs1F+fNv0jYFImf70SnkjrP1f19RnByFxyszRAspSfOj8lxyaICQPfpk89DkgDJm4yG2wmnGfh0ksR3wZG4uWJkxHGAxdUHci9SptahQlRLfz3wr70Xjvwb5LQvOdjovPCA6n8t/giCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXdIWQ78; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745588878; c=relaxed/simple;
+	bh=/ywt+NrcLhg07jckumGrdFuBAmmAoNb6SfXQAnUnsNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OxDcDQbtDeVcxME9dMevkQXrB0xvuIKPgKy32zkx+pChaRztVvNz63E2pnn8IwN9MgOuCocd0mWgUwl/CrV/StfIBsOsRWWfjg+Tqf7IijRDeMqvdTw/f8JPnrhIQYUEzK7IKqSuRbR32FW9IikbH7XIYuU8yoDfBiF9JPipKvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2CyKRApy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXdIWQ78"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so3601292a12.3;
-        Fri, 25 Apr 2025 06:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745588857; x=1746193657; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7b2k/0/MRDFBkYnkScGuwVZ9DXdXvkWRFpO84oyIems=;
-        b=EXdIWQ789nRnW0vE8NKmuUGjwMieBqTUJwcoxA5Bw9qmNPrdGbOLNfb6sGnlej8H9o
-         eU7H6b5PHx0gea7dmg1dvdOcvqmVUQFJq5xYwkM0IGq+pyRfxoY0VXbhZOUTO3Une+1c
-         m1vyDHBgZz5O3sJ3SlZc7lQ2K6fMql95UNqdXJeAI9NGg4Tz0wtNFx77vy1+ITGVhYD+
-         S8GM9wfUS5q3xy11m54hpIcJeCXBRkbA4XIb12Ah0m6SadTMPF2sa4k8lvHsja8GKihm
-         39/JwX9v8QgzKe7DXv4a6ZWseUGNqlcb1qGOFSa59MwOckMUI/4qyYDzQN6OYXdKU5mk
-         vF/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745588857; x=1746193657;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7b2k/0/MRDFBkYnkScGuwVZ9DXdXvkWRFpO84oyIems=;
-        b=L/S7FgnjHOACvJG3VvMD6ehBW3/1dZ3iwoZOWtmbTyxOJUhH26RzdqbLGgouXxaDct
-         pfBZ6LPSOJePVjcoviNEYQbGHeg06Zxe8ZhKRyYk/CfbzS/2w+1bEs99pGZbNEGPjsTO
-         AsKjcgBogSFpiK0I4Vi1U/AWOWAv6oAQi8mOuBtrO8oeZiURdMnytiXgb7X95nKJQ5c6
-         PGx/hJZ81XDmOOUi7O4yZF+PXK5asU3SvRKzwpemYtujRi/B+jyHrotRj/66TzVIFK5O
-         o1IVyn1/1/RMhKKoVVZpoGmDGzO7uKpGRBgeHchYvPRHaUq4Q5srK7/fUoj91wgdv/3/
-         eHYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6OEOU+hyfyAryLYcqLhN9qnKT08x6AoxeHArRSWpJDyhNNtx7iMGRRr4p0vyH3O5aDWUUzNPmfJnlW44Z@vger.kernel.org, AJvYcCV5rdlG8t6Tn0flBlHsTY3hr47bd+Gc/CGYlNmcGk9NmyZ1rFZllf6bHwGEEG8NPkI5+vWMJPedzIuPE6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi/BANE3+AUdis50RNDUGHSHyu4RCEvR02dDBiXd2J331pz4XS
-	deuwEs04osUASu0j55xCK/sYXBNreuK80YS7EkJAe2clnK7blZQH
-X-Gm-Gg: ASbGnctacnwNndKOOXCr/AW1Gt4mqj2T85Z20LVZrS+mjrjRfRXZoa0GVyyhwM8o0Ok
-	iDRYBY2I3KKG2AZvkm7apCVzzAfRm0P46sj47IohqaWR6R42LOYjOHVjupIRtG6umEhORHpxMyq
-	qcxl06iTBCm6KtCTmfGbXtN6VsF9gcypX1oYztwpkuBBnNOti8ObrcSoovcTzei8S3pis09PTSo
-	nObf6hVlhG4KQLWUS9TjAcRVYBh0qIVYntH3xSDi6QWsexc6p5bDgq5NkT//ecvE+CSBvqADvpa
-	VXcD2KNJjwN0PlSCXNpnZyfb8uBOKomKxdSMjlY3ptRgN60DSDpkZP6imkY+KDLuClzZEmuPssm
-	+Tzv4u5D/D5CnU5/koegAMJyHug0ZRTOP8qst
-X-Google-Smtp-Source: AGHT+IE3+U9lKdyIw2HglYpHlU5Ju6Jvd02RlixVwiVpib47lTMUqn1jZXSuE/LNf8JT5D2FHFI2jQ==
-X-Received: by 2002:a17:907:3f0b:b0:ac3:3e40:e182 with SMTP id a640c23a62f3a-ace7109ff27mr235634766b.19.1745588856499;
-        Fri, 25 Apr 2025 06:47:36 -0700 (PDT)
-Received: from ?IPV6:2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6? ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41cb2asm143227566b.10.2025.04.25.06.47.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 06:47:36 -0700 (PDT)
-Message-ID: <7653bf7c-03ac-4f94-a80c-2bfa3004d287@gmail.com>
-Date: Fri, 25 Apr 2025 16:47:35 +0300
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2CyKRApy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A280AC4CEE4;
+	Fri, 25 Apr 2025 13:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745588878;
+	bh=/ywt+NrcLhg07jckumGrdFuBAmmAoNb6SfXQAnUnsNg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=2CyKRApyQ91T+PMZQJIXceqzG7jFUPt9CJ4nuo10LQ4ShefU7j1y4XblQ1VFbCSWi
+	 mWAcP9N77fOnG/t/r1NS3NZqy6CWNA01H9P+NGd+WhGzfZ/SVnwm5X05gt3jDSYSa2
+	 VDfpBDNTSxm5UnVa+yF0aSj/wyhZxSaMUFb8QFtc=
+Date: Fri, 25 Apr 2025 15:47:55 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [GIT PULL] Driver core fixes for 6.15-rc4
+Message-ID: <aAuSi9YCYEN46yXf@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] crypto: sun8i-ce-cipher - use IS_ENABLED() checks for
- debugfs stats
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
- linux-crypto@vger.kernel.org, wens@csie.org, jernej.skrabec@gmail.com,
- samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250425124517.2225963-1-ovidiu.panait.oss@gmail.com>
- <20250425124517.2225963-3-ovidiu.panait.oss@gmail.com> <aAuOdDhpnLE5bM_y@Red>
-Content-Language: en-US
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-In-Reply-To: <aAuOdDhpnLE5bM_y@Red>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-On 4/25/25 4:30 PM, Corentin Labbe wrote:
-> Le Fri, Apr 25, 2025 at 03:45:16PM +0300, Ovidiu Panait a écrit :
->> Add IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG) checks before the
->> fallback counter updates to make sure the code is not included when
->> debugfs statistics support is not enabled.
->>
->> Also, drop the existing ifdef guards, since 'struct sun8i_ce_alg_template'
->> is always defined, even with CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG disabled.
->>
->> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
->> ---
->>  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 46 ++++++++++++-------
->>  1 file changed, 30 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> index f03a8fa7bfa2..433cd18f0b5b 100644
->> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
->> @@ -34,22 +34,30 @@ static int sun8i_ce_cipher_need_fallback(struct skcipher_request *areq)
->>  
-...
->> @@ -101,9 +117,7 @@ static int sun8i_ce_cipher_fallback(struct skcipher_request *areq)
->>  		algt = container_of(alg, struct sun8i_ce_alg_template,
->>  				    alg.skcipher.base);
->>  
->> -#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
->>  		algt->stat_fb++;
->> -#endif
-> 
-> Hello
-> 
-> You put IS_ENABLED everywhere, but here you remove it, why ?
-> I think you forgot it.
-> 
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-This is already part of an IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)
-block, so no need to add an extra IS_ENABLED() check here. Just the
-ifdef was dropped, as it was not really necessary.
+are available in the Git repository at:
 
-Original code:
+  git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git tags/driver-core-6.15-rc4
 
-	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)) {
-		struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
-		struct sun8i_ce_alg_template *algt __maybe_unused;
+for you to fetch changes up to b9792abb76ae1649080b8d48092c52e24c7bbdc2:
 
-		algt = container_of(alg, struct sun8i_ce_alg_template,
-				    alg.skcipher.base);
+  drivers/base/memory: Avoid overhead from for_each_present_section_nr() (2025-04-15 18:19:49 +0200)
 
-#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-		algt->stat_fb++;
-#endif
-	}
+----------------------------------------------------------------
+Driver core fixes for 6.15-rc4
 
-Thanks,
-Ovidiu
+Here are some small driver core fixes to resolve a number of reported
+problems.  Included in here are:
+  - driver core sync fix revert to resolve a much reported problem,
+    hopefully this is finally resolved
+  - MAINTAINERS file update, documenting that the driver-core tree is
+    now under a "shared" maintainership model, thanks to Rafael and
+    Danilo for offering to do this!
+  - auxbus documentation and MAINTAINERS file update
+  - MAINTAINERS file update for Rust PCI code
+  - firmware rust binding fixup
+  - software node link fix
 
+All of these have been in linux-next for over a week with no reported
+issues.
 
-> Thanks
-> Regards
-> 
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      device property: Add a note to the fwnode.h
+
+Christian Schrefl (1):
+      rust: firmware: Use `ffi::c_char` type in `FwFunc`
+
+Danilo Krummrich (1):
+      MAINTAINERS: pci: add entry for Rust PCI code
+
+Dmitry Torokhov (3):
+      Revert "drivers: core: synchronize really_probe() and dev_uevent()"
+      driver core: introduce device_set_driver() helper
+      driver core: fix potential NULL pointer dereference in dev_uevent()
+
+Gavin Shan (1):
+      drivers/base/memory: Avoid overhead from for_each_present_section_nr()
+
+Greg Kroah-Hartman (1):
+      MAINTAINERS: update the location of the driver-core git tree
+
+Leon Romanovsky (2):
+      drivers/base: Extend documentation with preferred way to use auxbus
+      drivers/base: Add myself as auxiliary bus reviewer
+
+Lizhi Xu (1):
+      software node: Prevent link creation failure from causing kobj reference count imbalance
+
+ MAINTAINERS              | 17 ++++++++++++++---
+ drivers/base/auxiliary.c | 10 ++++++++++
+ drivers/base/base.h      | 17 +++++++++++++++++
+ drivers/base/bus.c       |  2 +-
+ drivers/base/core.c      | 38 ++++++++++++++++++++++++++++++++------
+ drivers/base/dd.c        |  7 +++----
+ drivers/base/memory.c    | 41 +++++++++++++++++------------------------
+ drivers/base/swnode.c    |  3 +--
+ include/linux/fwnode.h   |  5 +++++
+ rust/kernel/firmware.rs  |  8 ++++++--
+ 10 files changed, 106 insertions(+), 42 deletions(-)
