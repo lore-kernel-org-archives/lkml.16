@@ -1,355 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DBB10957;
-	Fri, 25 Apr 2025 05:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D2310957;
+	Fri, 25 Apr 2025 05:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745559992; cv=none; b=N6ox30gu1W1TJsnq2jiczV6sGPYXxjayStjdMK0KceYgzaSzkyyrpmMg1Xv1d8SHkFUy1mu+PXGHohubM1kU0WJuTZOhqjvF+xXmoPJXq4lum/tXHLTZn+7Qqqmssat5pS9vTknlBAS5XY+7epJZ0v0ZyTRwZh00aIJP1yKDiao=
+	t=1745560113; cv=none; b=Nv6GNqyl1GM70htpf15993yJ7iKZwplu8H5M33Seevu6fJPQwp8ONfXPLCK4xdJSl61q56fKSH9cCaxrIsfq9bsklm1/1y8K9BJEhjabHjN7MLWANvN0priwPt1eumKhss8oEtQIi1V9vvNmETbA43dGlMCWBXe5MIrfd1hX0i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745559992; c=relaxed/simple;
-	bh=sDVXspGyyoyMVwq3rjp3VZVC/oLgFQDcBOXE4fzGneM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJL8rx7labpelo2oBgL79B8Z2aLTtcnehyFfwM0G4b/017yenLZGv0VlnQSrO5+Cq0TzPznnYUuLyo73rR6rxhpdlHDIg8Z3YP7rWNefV+o7zIOTWAmRjpYAW/A8aKt5DnIX4AFjid+3EB94NdVAUK9587AM/HCX78ig1SMlzdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtdSGj7q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745560113; c=relaxed/simple;
+	bh=BBjmjPectrPGAcY4myZkJlcjUVghCIetgXgh3U6vdrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MLuhBjujCYCX7oYTbQMqbvHyDXW2Vnro9wZK56erwFfkd5Sne0lDQH4QrsPqWUxahGbO3WAa8I+ruXcxcttO3PXPYfLzXww/8XlL6hLA/KI18Mn5gixtsBhoFpdwz2c2w4KYhOki3/IFQtTjIznXOYB5cNXuuP3AOk4Gr1hpwrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AuCC/HAX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtdSGj7q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9422FC4CEE4;
-	Fri, 25 Apr 2025 05:46:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AuCC/HAX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F12EC4CEE4;
+	Fri, 25 Apr 2025 05:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745559992;
-	bh=sDVXspGyyoyMVwq3rjp3VZVC/oLgFQDcBOXE4fzGneM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dtdSGj7qzfeM3V+ymwnIcF+Mn94PTGxWdmOcbbbgNmCJA4fOHw+umQKAhV4Nq2PXU
-	 fdN7L/DHYDWMZ+WfGvsbUml2RS5BqiJwhsZhYjA0CniPNXJsq7iyOVFXwrddUQ5kSY
-	 ZMNnN9eNpqvy53nU7ZjnsQnd3fNtbHSlMKXAYQgWdiuZrl+5o3FH7xflOVhXbv+ITO
-	 tIzNBuWHDzvAOI9n+vAPomXR5nEoOa0mSsVjOiS23CeFWVmnVAJvTjGcLtDK0S1vFZ
-	 sM4Ax5sg0GMzHrNjCqwKCxZL2NT0hxFWq5fC0LvZyaOGl84Hwrpqwc3d8sbLyVEvf2
-	 erARNFA0/U9Ag==
-Date: Fri, 25 Apr 2025 13:46:26 +0800
-From: Coly Li <colyli@kernel.org>
-To: Zhou Jifeng <zhoujifeng@kylinos.com.cn>
-Cc: kent.overstreet@linux.dev, linux-bcache@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, xiahua@kylinos.com.cn, dengwangbo@kylinos.com.cn
-Subject: Re: [PATCH] bcache: add the deferred_flush IO processing path in the
- writeback mode
-Message-ID: <ug3sqyn42af4bjsp3l5d5ymiabtc767oaoud3ddzv6jnw2eh27@4gcxqaq5tatf>
-References: <20250425035021.921-1-zhoujifeng@kylinos.com.cn>
+	s=k20201202; t=1745560112;
+	bh=BBjmjPectrPGAcY4myZkJlcjUVghCIetgXgh3U6vdrM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AuCC/HAXNbfUmkDWPEKHnkEn+K4MsQp5GltmzkAFPhwv0pD/EMUFOWiuprFNOGUqk
+	 yzI35vcar18Uqc7YOVu/DgaASBpjlDdwmeyFVwxd4xeG+fF6DQx2uPV9OG9o5qa/OJ
+	 a/Djh3ymQUV5rCyap9tdgWLBZHIEMogN+fA8RWH5rKPqTPB9ocGc+w/9Tc6k9Tr6dj
+	 A/SIh46NVx/SMtN8SRm6RdnICEVynEzLvv5MAy8o3SifX8PBS04/ki7oOI8BBImgoG
+	 GBwoDaJ0J6evbjn4rgLwclzAVsiOB/3WEbFnVcpc2DyCDT3gGUgS0FANPJ3m0ElkYc
+	 r7SjB6RHCB/5Q==
+Message-ID: <47d9c1f4-e521-4e46-ad48-a23228d06fbb@kernel.org>
+Date: Fri, 25 Apr 2025 07:48:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250425035021.921-1-zhoujifeng@kylinos.com.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/10] Add support for videocc, camcc, dispcc and gpucc
+ on Qualcomm QCS615 platform
+To: Taniya Das <quic_tdas@quicinc.com>, Bjorn Andersson
+ <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <lumag@kernel.org>
+References: <20250424-qcs615-mm-v7-clock-controllers-v8-0-bacad5b3659a@quicinc.com>
+ <94a5f0d7-b152-4fe3-b312-a0f7792cc076@kernel.org>
+ <8552c048-df45-49ba-83b3-5c39d4b770fe@quicinc.com>
+ <3bbef5c3-1859-4a4a-b25a-83428dc15e98@kernel.org>
+ <dfa2ed59-ba7c-4cb4-ac78-97f3de716b9b@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <dfa2ed59-ba7c-4cb4-ac78-97f3de716b9b@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jifeng,
-
-Thanks for posting the patch.
-
-On Fri, Apr 25, 2025 at 11:50:21AM +0800, Zhou Jifeng wrote:
-> In some scenarios with high requirements for both data reliability and
-> write performance, the various cache modes of the current bcache cannot
-
-Could you provide the detail workload or circumstance which requires both
-data reliability and write performance that current bcache cannot serve?
-
-
-> fully match the requirements. deferred_flush aims to increase the
-> reliability of writeback write-back. And reduce the sending of PREFLUSH
-> requests to the backing device to enhance data security and dsync write
-> performance in wrieback mode.
-
-I'd like to see the detailed description on how deferred flush is defined,
-and how it works. And why deferred flush may provide the data reliability
-and performance better than current bcache code.
-
-And a explicit and clear benchmakr for general workload is quite helpful
-for me to understand your idea and how it works better.
-
-I don't look into the patch yet, just with my intuition the overall
-performance won't be quite optimized by setting FUA on writeback I/Os.
-
-And the cache mode can swtich arbitarily in run time, if cache mode was none
-or writethough, then switch to writeback, I don't see your patch handles
-such situation.
-
-Anyway, for performance optimization patch, an explicit markbench is
-helpful. If the result is ideal, I'd like to reproduce it on my side.
-
-Thanks.
-
-Coly Li
-
-
- 
-> deferred_flush supports three selectable modes:
-> none: do nothing (default )
-> normal: sequential I/O bypasses the cache disk
-> force: sequential I/O cannot bypass the cache disk
-> 
-> Signed-off-by: Zhou Jifeng <zhoujifeng@kylinos.com.cn>
-> ---
->  drivers/md/bcache/bcache.h        |  6 ++++
->  drivers/md/bcache/bcache_ondisk.h |  5 +++
->  drivers/md/bcache/request.c       | 32 ++++++++++++++++--
->  drivers/md/bcache/sysfs.c         | 54 +++++++++++++++++++++++++++++++
->  drivers/md/bcache/writeback.c     |  7 ++++
->  drivers/md/bcache/writeback.h     |  4 +++
->  6 files changed, 106 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-> index 785b0d9008fa..d2654c449d1c 100644
-> --- a/drivers/md/bcache/bcache.h
-> +++ b/drivers/md/bcache/bcache.h
-> @@ -405,6 +405,12 @@ struct cached_dev {
->  	 */
->  #define BCH_WBRATE_UPDATE_MAX_SKIPS	15
->  	unsigned int		rate_update_retry;
-> +
-> +	/*
-> +	 * In the deferred flush mode, 0 indicates that there is no
-> +	 * need to send flush to the backing device.
-> +	 */
-> +	atomic_t		need_flush;
->  };
->  
->  enum alloc_reserve {
-> diff --git a/drivers/md/bcache/bcache_ondisk.h b/drivers/md/bcache/bcache_ondisk.h
-> index 6620a7f8fffc..822dcdc0caaf 100644
-> --- a/drivers/md/bcache/bcache_ondisk.h
-> +++ b/drivers/md/bcache/bcache_ondisk.h
-> @@ -294,6 +294,11 @@ BITMASK(BDEV_CACHE_MODE,		struct cache_sb, flags, 0, 4);
->  #define CACHE_MODE_WRITEBACK		1U
->  #define CACHE_MODE_WRITEAROUND		2U
->  #define CACHE_MODE_NONE			3U
-> +BITMASK(BDEV_DEFERRED_FLUSH,		struct cache_sb, flags, 4, 3);
-> +#define DEFERRED_FLUSH_NONE		0U
-> +#define DEFERRED_FLUSH_NORMAL		1U
-> +#define DEFERRED_FLUSH_FORCE		2U
-> +
->  BITMASK(BDEV_STATE,			struct cache_sb, flags, 61, 2);
->  #define BDEV_STATE_NONE			0U
->  #define BDEV_STATE_CLEAN		1U
-> diff --git a/drivers/md/bcache/request.c b/drivers/md/bcache/request.c
-> index af345dc6fde1..8dc17d9c5f75 100644
-> --- a/drivers/md/bcache/request.c
-> +++ b/drivers/md/bcache/request.c
-> @@ -1026,16 +1026,28 @@ static void cached_dev_write(struct cached_dev *dc, struct search *s)
->  		bio->bi_end_io = backing_request_endio;
->  		closure_bio_submit(s->iop.c, bio, cl);
->  
-> +		if (BDEV_DEFERRED_FLUSH(&dc->sb))
-> +			atomic_set(&dc->need_flush, 1);
-> +
->  	} else if (s->iop.writeback) {
->  		bch_writeback_add(dc);
->  		s->iop.bio = bio;
->  
->  		if (bio->bi_opf & REQ_PREFLUSH) {
-> +			struct bio *flush;
-> +
-> +			/*
-> +			 * When DEFERRED_FLUSH is enabled, if need_flush is 0,
-> +			 * there is no need to send a flush to the backing device.
-> +			 */
-> +			if (BDEV_DEFERRED_FLUSH(&dc->sb) &&
-> +				 (!atomic_cmpxchg(&dc->need_flush, 1, 0)))
-> +				goto insert_data;
-> +
->  			/*
->  			 * Also need to send a flush to the backing
->  			 * device.
->  			 */
-> -			struct bio *flush;
->  
->  			flush = bio_alloc_bioset(bio->bi_bdev, 0,
->  						 REQ_OP_WRITE | REQ_PREFLUSH,
-> @@ -1050,6 +1062,9 @@ static void cached_dev_write(struct cached_dev *dc, struct search *s)
->  			closure_bio_submit(s->iop.c, flush, cl);
->  		}
->  	} else {
-> +		if (BDEV_DEFERRED_FLUSH(&dc->sb))
-> +			atomic_set(&dc->need_flush, 1);
-> +
->  		s->iop.bio = bio_alloc_clone(bio->bi_bdev, bio, GFP_NOIO,
->  					     &dc->disk.bio_split);
->  		/* I/O request sent to backing device */
-> @@ -1066,14 +1081,27 @@ static CLOSURE_CALLBACK(cached_dev_nodata)
->  {
->  	closure_type(s, struct search, cl);
->  	struct bio *bio = &s->bio.bio;
-> +	struct cached_dev *dc = container_of(s->d, struct cached_dev, disk);
->  
-> -	if (s->iop.flush_journal)
-> +	if (s->iop.flush_journal) {
->  		bch_journal_meta(s->iop.c, cl);
->  
-> +		/*
-> +		 * When deferred flush is enabled, it is necessary to determine
-> +		 * whether the flush request can be sent to the backing device.
-> +		 */
-> +		if (BDEV_DEFERRED_FLUSH(&dc->sb) &&
-> +				 (!atomic_cmpxchg(&dc->need_flush, 1, 0))) {
-> +			s->iop.status = BLK_STS_OK;
-> +			goto end;
-> +		}
-> +	}
-> +
->  	/* If it's a flush, we send the flush to the backing device too */
->  	bio->bi_end_io = backing_request_endio;
->  	closure_bio_submit(s->iop.c, bio, cl);
->  
-> +end:
->  	continue_at(cl, cached_dev_bio_complete, NULL);
->  }
->  
-> diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-> index e8f696cb58c0..3f343fba2f96 100644
-> --- a/drivers/md/bcache/sysfs.c
-> +++ b/drivers/md/bcache/sysfs.c
-> @@ -28,6 +28,25 @@ static const char * const bch_cache_modes[] = {
->  	NULL
->  };
->  
-> +/*
-> + * Deferred flush: In writeback mode, reduce unnecessary PREFLUSH
-> + * passed to the backend disk to speed up the performance of dsync
-> + * requests.Enhance data writeback security through FUA when dirty
-> + * data is written back
-> + *
-> + * Default is 0 ("none")
-> + * none: Do nothing
-> + * normal: Sequential I/O bypasses the cache disk
-> + * force: Sequential I/O cannot bypass the cache disk
-> + */
-> +static const char * const bch_deferred_flush[] = {
-> +	"none",
-> +	"normal",
-> +	"force",
-> +	NULL
-> +};
-> +
-> +
->  static const char * const bch_reada_cache_policies[] = {
->  	"all",
->  	"meta-only",
-> @@ -151,6 +170,7 @@ rw_attribute(copy_gc_enabled);
->  rw_attribute(idle_max_writeback_rate);
->  rw_attribute(gc_after_writeback);
->  rw_attribute(size);
-> +rw_attribute(deferred_flush);
->  
->  static ssize_t bch_snprint_string_list(char *buf,
->  				       size_t size,
-> @@ -283,6 +303,11 @@ SHOW(__bch_cached_dev)
->  		return strlen(buf);
->  	}
->  
-> +	if (attr == &sysfs_deferred_flush)
-> +		return bch_snprint_string_list(buf, PAGE_SIZE,
-> +					       bch_deferred_flush,
-> +					       BDEV_DEFERRED_FLUSH(&dc->sb));
-> +
->  #undef var
->  	return 0;
->  }
-> @@ -295,6 +320,7 @@ STORE(__cached_dev)
->  	ssize_t v;
->  	struct cache_set *c;
->  	struct kobj_uevent_env *env;
-> +	struct bio flush;
->  
->  	/* no user space access if system is rebooting */
->  	if (bcache_is_reboot)
-> @@ -383,6 +409,12 @@ STORE(__cached_dev)
->  			SET_BDEV_CACHE_MODE(&dc->sb, v);
->  			bch_write_bdev_super(dc, NULL);
->  		}
-> +
-> +		/* It's not the writeback mode that can't enable deferred_flush */
-> +		if (BDEV_DEFERRED_FLUSH(&dc->sb) && ((unsigned int) v != CACHE_MODE_WRITEBACK)) {
-> +			SET_BDEV_DEFERRED_FLUSH(&dc->sb, 0);
-> +			bch_write_bdev_super(dc, NULL);
-> +		}
->  	}
->  
->  	if (attr == &sysfs_readahead_cache_policy) {
-> @@ -451,6 +483,27 @@ STORE(__cached_dev)
->  	if (attr == &sysfs_stop)
->  		bcache_device_stop(&dc->disk);
->  
-> +	if (attr == &sysfs_deferred_flush) {
-> +		v = __sysfs_match_string(bch_deferred_flush, -1, buf);
-> +		if (v < 0)
-> +			return v;
-> +
-> +		if ((unsigned int) v != BDEV_DEFERRED_FLUSH(&dc->sb)) {
-> +			if (v && (BDEV_CACHE_MODE(&dc->sb) != CACHE_MODE_WRITEBACK)) {
-> +				pr_err("It's not the writeback mode that can't enable deferred_flush.\n");
-> +				return -EINVAL;
-> +			}
-> +
-> +			SET_BDEV_DEFERRED_FLUSH(&dc->sb, v);
-> +			bch_write_bdev_super(dc, NULL);
-> +			if (v) {
-> +				bio_init(&flush, dc->bdev, NULL, 0, REQ_OP_WRITE | REQ_PREFLUSH);
-> +				/* I/O request sent to backing device */
-> +				submit_bio_wait(&flush);
-> +			}
-> +		}
-> +	}
-> +
->  	return size;
->  }
->  
-> @@ -541,6 +594,7 @@ static struct attribute *bch_cached_dev_attrs[] = {
->  #endif
->  	&sysfs_backing_dev_name,
->  	&sysfs_backing_dev_uuid,
-> +	&sysfs_deferred_flush,
->  	NULL
->  };
->  ATTRIBUTE_GROUPS(bch_cached_dev);
-> diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-> index 453efbbdc8ee..68bf655f3b96 100644
-> --- a/drivers/md/bcache/writeback.c
-> +++ b/drivers/md/bcache/writeback.c
-> @@ -435,6 +435,13 @@ static CLOSURE_CALLBACK(write_dirty)
->  	if (KEY_DIRTY(&w->key)) {
->  		dirty_init(w);
->  		io->bio.bi_opf = REQ_OP_WRITE;
-> +
-> +		/* When DEFERRED_FLUSH is enabled, you need to ensure that
-> +		 * data is flushed to disk.
-> +		 */
-> +		if (BDEV_DEFERRED_FLUSH(&dc->sb))
-> +			io->bio.bi_opf |= REQ_FUA | REQ_SYNC | REQ_PREFLUSH;
-> +
->  		io->bio.bi_iter.bi_sector = KEY_START(&w->key);
->  		bio_set_dev(&io->bio, io->dc->bdev);
->  		io->bio.bi_end_io	= dirty_endio;
-> diff --git a/drivers/md/bcache/writeback.h b/drivers/md/bcache/writeback.h
-> index 31df716951f6..0c92a607a875 100644
-> --- a/drivers/md/bcache/writeback.h
-> +++ b/drivers/md/bcache/writeback.h
-> @@ -117,6 +117,10 @@ static inline bool should_writeback(struct cached_dev *dc, struct bio *bio,
->  				    bio_sectors(bio)))
->  		return true;
->  
-> +	/* Prevent IO from bypassing the cache disk */
-> +	if (BDEV_DEFERRED_FLUSH(&dc->sb) == DEFERRED_FLUSH_FORCE)
-> +		return true;
-> +
->  	if (would_skip)
->  		return false;
->  
-> -- 
-> 2.18.1
+On 24/04/2025 18:28, Taniya Das wrote:
 > 
 > 
+> On 4/24/2025 8:59 PM, Krzysztof Kozlowski wrote:
+>> On 24/04/2025 13:13, Taniya Das wrote:
+>>>
+>>>
+>>> On 4/24/2025 4:40 PM, Krzysztof Kozlowski wrote:
+>>>> On 24/04/2025 11:32, Taniya Das wrote:
+>>>>> Add support for multimedia clock controllers on Qualcomm QCS615 platform.
+>>>>> Update the defconfig to enable these clock controllers.
+>>>>>
+>>>>> Global clock controller support
+>>>>> https://lore.kernel.org/all/20241022-qcs615-clock-driver-v4-0-3d716ad0d987@quicinc.com/
+>>>>>
+>>>>> Changes in v8:
+>>>>> - Drop the properties which are already covered as part of gcc.yaml [Krzysztof]
+>>>>> - Drop the RB tag for dt-bindings for Camera clock controller.
+>>>>
+>>>> Why?
+>>>
+>>> It had comments, so wanted to share the latest RB-by.
+>> So there were some comments and that's the basis to ask to do review
+>> twice? So anyone can comment on anything and you will remove people's
+>> review? I am not going through this again.
+>>
+> 
+> It was your comments, so I thought it would not be good to keep the RB
+> tag if it has so many comments. That was the reason to drop it.
+I was fine with the binding, then I gave some comments on other
+bindings, you implemented these comments and you claim that result:
 
--- 
-Coly Li
+	code already reviewed by me + implemented my comments
+
+could be something I would not consider reviewed. Basically
+
+	my review + implemented my comments != my review
+
+I think it means I would be very inconsequential and unpredictable. I
+think this is creating unnecessary workload on me, but sure, if that was
+the intention I will do the work again.
+
+Best regards,
+Krzysztof
