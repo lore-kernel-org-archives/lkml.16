@@ -1,108 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376622126C
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209CC22170B;
+	Fri, 25 Apr 2025 12:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745583050; cv=none; b=tNDbibv7SEiV1APiZZGq+56b2xP3M/ouI5VqRbwsqQgQQ9HtB+IuYL4NdpCdjS5HELA51RXeHctVaUCIM7ITWmq9SN7I0HPr9O2fbvFZ/0Aq6YR2SntJTWzd+uIJfQyUrZ4GX06AnXikMP87n0WsapYwHoetQ0sf0i66H7Ig6ZE=
+	t=1745583112; cv=none; b=dA02FeFy31fO8BBcHV703FSbuGpOIcTijsJlFJYdB7P5/f1vjxJmM35puUQg0e0eKW7uZqBfLFUhn5F0Ix/LBGJkX97bB0nCLVOY6qKZe4tNaP4TckHB2CO4DPmUSZtyylkhMs/m75LqGUdQ92Q2Vg9PHOT7eAlZf0khmqnxE4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745583050; c=relaxed/simple;
-	bh=FVLdy/reYIaU7YLW3jcTrS26AvzbBotUMnk7uUPToP8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NCJ2xHhV9uI/VJZx2UdiCXTQcZIfU4PDnyCTptInXIt7cZYzKbZbX43+D4w6WIgZyMq+4bTkZibk+Ob5mibB9pJTqkovb3jVt2pNL380fvdBM2KjjNvf2sVoVJ2IWXoSV3SxAaozD5WFIWO1R2i2dK1Vu9YqcQvjXwDGnGKHJjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk3DXMfo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745583112; c=relaxed/simple;
+	bh=25Gq2pA3kprdCJxS3eq0hR1lrKQfi5uu9mUgXtFY62M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rla3ITJML8V3orcyTvZSi6WC5DN9Nu2BndetOgi8OK/+3LMSklpa8kMnQ5Z0c8JMSLODAf5Kc42/Xnv1MIoxaQ4vqVJ8y/DrVTZCsVTYwyJVBIMjcDhb2DXgmFVNRDV7wZnejq+2W9UWfDJ5JEnXinqhjGB0JqH+pdP3RDCkrKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=m0/OmJzV; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk3DXMfo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64729C4CEE9;
-	Fri, 25 Apr 2025 12:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745583049;
-	bh=FVLdy/reYIaU7YLW3jcTrS26AvzbBotUMnk7uUPToP8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=pk3DXMfo8n5FX9sh79Ao35bt1zWuaJ8I7jfJSvDmR1Zj/vQjVEn66MndX5EakgYc9
-	 qxblgy29DYCj6UWyRs/UatAGDdq+2Ho79/gi2Do/NeRtSOEx7uoYhzTIoaUzU76BWg
-	 3AHrnpUEe2slskEXaPZG852DJ5g8viK07ohgrRSmyhPwaIxoYQks+iOcmst/drRRyL
-	 TFCugs5pSPk13WjTEQSljAwVtgw3x+sUwwkNiqmZr8LeC3ztyuQinGs27mNrLK+Qh2
-	 ANZD0YQs5EM92mjnHZqixN+3KXlYI5wUtXNhk8a49banTMoLMNLx5QZeQm02BXRUKy
-	 QX/3pSXw1Orig==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 6EC901200043;
-	Fri, 25 Apr 2025 08:10:48 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Fri, 25 Apr 2025 08:10:48 -0400
-X-ME-Sender: <xms:yHsLaAa3hQQziR5QSaZDrSrC8AoSGuDsaO7CFir28h-YWnCP2Hz_PA>
-    <xme:yHsLaLZt3ERCl04ydlDf7WURTxF5YglLRF5H278oYxNQCMh9E0P4fGIa3lTLGtr59
-    gzofpzQx1c5xL2-UBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvfedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnh
-    gvlhdrohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfef
-    feeitdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvg
-    hlrdhorhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegrnh
-    gurhgvfidrtghoohhpvghrfeestghithhrihigrdgtohhmpdhrtghpthhtohepphgvthgv
-    rhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegurghrfihisehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepjhhohhhnrdhogh
-    hnvghssheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehtghhlgieslhhinhhu
-    thhrohhnihigrdguvgdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouh
-    hnuggrthhiohhnrdhorhhg
-X-ME-Proxy: <xmx:yHsLaK-SlEsG46a6ztLYJ-hIdqNdBQ3bgl3w0IJCvOdI40eynh2Xpg>
-    <xmx:yHsLaKoaQ-rNUNgyu1Uo9m76lAZ6U18ZDkH4rZyURzz8bLDSJLRUbA>
-    <xmx:yHsLaLragkWw-1XOTiAN1qjtmWHf2uGvwuEq2ow6mc-ibrN4sD9Xow>
-    <xmx:yHsLaITZmJl50QKA3CWAFgJ6b7ETcnfWFPzAE4Rv6x16NCe4hP0Ckw>
-    <xmx:yHsLaLrGzimQskFbU0o0Zy14dJxdqnv38UUPKnKVe1SdQL2tAevDsQgF>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3D8992220074; Fri, 25 Apr 2025 08:10:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="m0/OmJzV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=CUpdrH/ZFAXHl51ysjVDk22kdqFFa21IA1blC1XUfOo=; b=m0/OmJzVaZQh87A1923YHZEW6W
+	fIjBM03gZuCghRoGehvOb724F6xNmO4yqsPDbL3zIjXMhxekHKqGB+iEqgFE6DOZRWxV0zDqzqCKx
+	vCSswBaq0M1qhn5G86owpRVgFXMRM9vPbxQYatZjrC0/u1EpKOKpQzr38hLXdUHkZQhM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u8HuB-00AZZb-IM; Fri, 25 Apr 2025 14:11:43 +0200
+Date: Fri, 25 Apr 2025 14:11:43 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: David Howells <dhowells@redhat.com>
+Cc: Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Paulo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Is it possible to undo the ixgbe device name change?
+Message-ID: <64be8692-ea6a-4f49-9b5c-396761957b81@lunn.ch>
+References: <7b468f16-f648-4432-aa59-927d37a411a7@lunn.ch>
+ <3452224.1745518016@warthog.procyon.org.uk>
+ <3531595.1745571515@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Td35c5eaba32a0728
-Date: Fri, 25 Apr 2025 14:10:27 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Ingo Molnar" <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: "Ahmed S . Darwish" <darwi@linutronix.de>,
- "Andrew Cooper" <andrew.cooper3@citrix.com>,
- "Ard Biesheuvel" <ardb@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "John Ogness" <john.ogness@linutronix.de>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-Message-Id: <956412a3-43c2-4d6e-bea2-2573c98233ae@app.fastmail.com>
-In-Reply-To: <20250425084216.3913608-14-mingo@kernel.org>
-References: <20250425084216.3913608-1-mingo@kernel.org>
- <20250425084216.3913608-14-mingo@kernel.org>
-Subject: Re: [PATCH 13/15] x86/cpu: Make CONFIG_X86_CX8 unconditional
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3531595.1745571515@warthog.procyon.org.uk>
 
-On Fri, Apr 25, 2025, at 10:42, Ingo Molnar wrote:
-> @@ -257,7 +256,7 @@ config X86_MINIMUM_CPU_FAMILY
->  	int
->  	default "64" if X86_64
->  	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || 
-> MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
-> -	default "5" if X86_32 && X86_CX8
-> +	default "5" if X86_32
->  	default "4"
+On Fri, Apr 25, 2025 at 09:58:35AM +0100, David Howells wrote:
+> Andrew Lunn <andrew@lunn.ch> wrote:
 > 
+> > Are you sure this patch is directly responsible? Looking at the patch
+> 
+> I bisected it to that commit.  Userspace didn't change.
 
-I just noticed this one: the final 'default "4"' is no longer possible
-here and can be removed. All the remaining CPUs report family "5" or
-higher.
+As Jakub pointed out, the kernel is now providing additional
+information to user space, via devlink. That causes systemd's 'stable'
+names to change. The naming rules are documented somewhere.
 
-There is an old issue for some rare CPUs (Geode LX and Crusoe) that
-support CMOV but report family=6. These to boot a kernel with X86_MINIMUM_CPU_FAMILY=6 because it triggers the boot time check.
+> > Notice the context, not the change. The interface is being called
+> > eth%d, which is normal. The kernel will replace the %d with a unique
+> > number. So the kernel will call it eth42 or something. You should see
+> > this in dmesg.
+> 
+> Something like this?
+> 
+> ... systemd-udevd[2215]: link_config: autonegotiation is unset or enabled, the speed and duplex are not writable.
+> ... kernel: ixgbe 0000:01:00.0 enp1s0: renamed from eth0
+> 
+> or:
+> 
+> ... systemd-udevd[2568]: link_config: autonegotiation is unset or enabled, the speed and duplex are not writable.
+> ... kernel: ixgbe 0000:01:00.0 enp1s0np0: renamed from eth0
+> 
+> I presume the kernel message saying that the renaming happened is triggered by
+> systemd-udevd?
 
-     Arnd
+systemd-udevd is not really triggering it. It is providing the new
+name and asking the kernel to change the name. To some extent, you can
+think of this as policy. The kernel tries to avoid policy, it leaves
+it up to user space. The kernel provides a default name for the
+interface, but it is policy in user space which gives it its final
+name.
+
+	Andrew
