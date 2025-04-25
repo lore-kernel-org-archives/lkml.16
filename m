@@ -1,48 +1,48 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268B61EB5F1;
-	Fri, 25 Apr 2025 08:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127A3230278;
+	Fri, 25 Apr 2025 08:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745571224; cv=none; b=VMvlrjjJEb2pFKL4vXqAMWOnG7kqOmK6GS5V6Xs6ttpLWgv+9u48tvVn+h1u8iTXswRNCFh+4luUbtrA4hR3ue4m1RzXcmc8QNm4fYbqHojXCZKm2LRnfsLnq+8J5EAm5KSFMu8j4dQ8ngXw3SmK4nRYl39S/g1YZ0maKoNV2L4=
+	t=1745571226; cv=none; b=XTXSvJozd0KK3GrVtc6/nY9mVXLaBDlcqBAhE4fqcPjbb/Sl3r+GlKQYFvUaq36sqYNocFVEh9zcNqlBhkIW3v/qSPPr0NeFRjqyZ1w+h+NDhiRPtL/84fAwpt3Bvtn7YVZ92/nsVkDYDoLeyIjyoqCKpgpMNoYGiigFiSVGL70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745571224; c=relaxed/simple;
-	bh=KdYVehXKAXbdRYBoX+6ISsvo0qtZWKtbz0P0OcC7F2o=;
+	s=arc-20240116; t=1745571226; c=relaxed/simple;
+	bh=pWzwjgQ2f/53kmF5n7c7UlKrqztnmqHU0+OyfCWG1ss=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kIMvxAB4s4f4Yiam6EW+F25JrSXd/U/m8i515oR5yRgppGrq8naNN1pUMM39xJhqly4QpsP0jRGi6TzmmWkzBqarwtBHTE7BJQuMcgWyfhdRpci7n5SC/L3sGg2Cv15lNabbalhxDm4+iwV1ryqiHHbuM/XQUliPZwkM9rnjVAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=WJvkx/6Q; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=hgWuFjKnxrlJOS7tG0fwxYTT09uEmJI4/A6CsPbOEuuz8MUXiFQyaa2uA8dQNQ+5bKze4bJFCN76WCIE5BtQ07YoVrkS7u2dmPbkXvxpVGwZQdAUabByUmvNU7hrWUkurluYufT53VNHVzjwNI0BA/stsB9f8Yd8UUp5wyqIA58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=J4OHsRb2; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WJvkx/6Q"
-X-UUID: c5bf439421b211f09b6713c7f6bde12e-20250425
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="J4OHsRb2"
+X-UUID: c7d36c5a21b211f0980a8d1746092496-20250425
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JpC3bMATM3lf+XV0YiTWcXgm6sU8WRjyf2ObtC447xA=;
-	b=WJvkx/6Qlxsd2WoT+EAsW/oPbhzpGE+QmiXxLNHhRrUadyQH9UZGIb54PwVE057xXvThdbNQQoMG9T1j+vO7fIAYaYSaX5EYAtymKDLCdpEPexzlmuCXopdxkXhZrLE6BhVonOh6uqr5dtVK40n1bHbHzlJ8DUcNhkRtTqwnnzo=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=MafHlrK67o/d3FGCy1u+Y7qasnBcS5mIW6WlhV/wvWA=;
+	b=J4OHsRb2a36VvKD+LHZQGH6InKrJBM9GnyV5WGoQ9RfMhYWmOa57TEB8mNu2XVSkE1Uwyv77J81rHYVe/ATgvpxAqBacBOnYB3RS7RGPxOXo/Oi3UA6Fe8zrwfynxtMIHjfNAeWAbR9EeDPdSCA+IGbxY0FkaNCN3c3fNzbTwj0=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:d90044d3-b469-44eb-8da9-ca5140a12e5a,IP:0,UR
-	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:0ef645f,CLOUDID:60c8ca76-5fec-4b3e-b8cb-933843551e81,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:2,
-	IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
-	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.2.1,REQID:7b602f53-85b2-404c-8e62-6083fcd0f5e5,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:91c8ca76-5fec-4b3e-b8cb-933843551e81,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 5,DFT
 X-CID-BAS: 5,DFT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c5bf439421b211f09b6713c7f6bde12e-20250425
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+X-UUID: c7d36c5a21b211f0980a8d1746092496-20250425
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
 	(envelope-from <kyrie.wu@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 921407682; Fri, 25 Apr 2025 16:53:35 +0800
+	with ESMTP id 790284496; Fri, 25 Apr 2025 16:53:38 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 25 Apr 2025 16:53:34 +0800
+ 15.2.1258.39; Fri, 25 Apr 2025 16:53:37 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 25 Apr 2025 16:53:33 +0800
+ 15.2.1258.39 via Frontend Transport; Fri, 25 Apr 2025 16:53:36 +0800
 From: Kyrie Wu <kyrie.wu@mediatek.com>
 To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
 	<mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
@@ -53,9 +53,9 @@ To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
 CC: Kyrie Wu <kyrie.wu@mediatek.com>
-Subject: [PATCH v3 02/12] dt-bindings: media: mediatek,jpeg: Add mediatek, mt8196-jpgenc compatible
-Date: Fri, 25 Apr 2025 16:53:18 +0800
-Message-ID: <20250425085328.16929-3-kyrie.wu@mediatek.com>
+Subject: [PATCH v3 06/12] media: mediatek: jpeg: refactor jpeg buffer payload setting
+Date: Fri, 25 Apr 2025 16:53:22 +0800
+Message-ID: <20250425085328.16929-7-kyrie.wu@mediatek.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250425085328.16929-1-kyrie.wu@mediatek.com>
 References: <20250425085328.16929-1-kyrie.wu@mediatek.com>
@@ -69,42 +69,53 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-MTK: N
 
-Compared to the previous generation IC, the MT8196 uses SMMU
-instead of IOMMU and supports features such as dynamic voltage
-and frequency scaling. Therefore, add "mediatek,mt8196-jpgenc"
-compatible to the binding document.
+1. for multi-core jpegdec:
+   core0: |<-------- decoding buffer0 and resolution changed to smaller
+   core1:  |<-------- decoding buffer1
+   core0:   |<- handling resolution changing
+   core0:    |<- vb2_set_plane_payload
+2. the payload size is changed on the step of set format. Because core1
+is running and streaming has not been stopped, the format cannot be
+set again, resulting in no change in the payload size.
+3. at this time, the payload size is bigger than buffer length,
+it will print a warnning call trace
+4. set payload size must less than buffer length
 
 Signed-off-by: Kyrie Wu <kyrie.wu@mediatek.com>
 ---
- .../bindings/media/mediatek,mt8195-jpegenc.yaml           | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../platform/mediatek/jpeg/mtk_jpeg_core.c     | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegenc.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegenc.yaml
-index 596186497b68..e2d772ea0fb0 100644
---- a/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegenc.yaml
-+++ b/Documentation/devicetree/bindings/media/mediatek,mt8195-jpegenc.yaml
-@@ -14,7 +14,9 @@ description:
+diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
+index 0074d1edb534..52d59bb5c9ad 100644
+--- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
++++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
+@@ -720,10 +720,22 @@ static int mtk_jpeg_buf_prepare(struct vb2_buffer *vb)
+ 		plane_fmt = q_data->pix_mp.plane_fmt[i];
+ 		if (ctx->enable_exif &&
+ 		    q_data->fmt->fourcc == V4L2_PIX_FMT_JPEG)
+-			vb2_set_plane_payload(vb, i, plane_fmt.sizeimage +
+-					      MTK_JPEG_MAX_EXIF_SIZE);
++			if (vb->planes[i].length > (plane_fmt.sizeimage +
++			    MTK_JPEG_MAX_EXIF_SIZE))
++				vb2_set_plane_payload(vb, i,
++						      plane_fmt.sizeimage +
++						      MTK_JPEG_MAX_EXIF_SIZE);
++			else
++				vb2_set_plane_payload(vb, i,
++						      vb->planes[i].length);
++
+ 		else
+-			vb2_set_plane_payload(vb, i,  plane_fmt.sizeimage);
++			if (vb->planes[i].length > plane_fmt.sizeimage)
++				vb2_set_plane_payload(vb, i,
++						      plane_fmt.sizeimage);
++			else
++				vb2_set_plane_payload(vb, i,
++						      vb->planes[i].length);
+ 	}
  
- properties:
-   compatible:
--    const: mediatek,mt8195-jpgenc
-+    enum:
-+      - mediatek,mt8195-jpgenc
-+      - mediatek,mt8196-jpgenc
- 
-   power-domains:
-     maxItems: 1
-@@ -44,7 +46,9 @@ patternProperties:
- 
-     properties:
-       compatible:
--        const: mediatek,mt8195-jpgenc-hw
-+        enum:
-+          - mediatek,mt8195-jpgenc-hw
-+          - mediatek,mt8196-jpgenc-hw
- 
-       reg:
-         maxItems: 1
+ 	return 0;
 -- 
 2.46.0
 
