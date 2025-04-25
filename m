@@ -1,108 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085AB22F75A;
-	Fri, 25 Apr 2025 10:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3953823BCE2
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575881; cv=none; b=glTbWnVqbC3iBnCjbry6Bndg51C3Bv8mr4vmGtSE7kUzgaLsAK1+uoqiVkzGlqUGERSZ34lUKa/R3BEzfpz5pm4dOssdZ8xIfA0LvGZDso5A6sS9pcNYFyIU+h676HGlL+ZMyyPLDsMwjzZ9YS1fvGFhJzM7Ien76iEv/5Maptw=
+	t=1745575884; cv=none; b=jf92Fp9Zl0fA4yhxal8mXTN4JbewBRFwv0TrLZDik04bsopR7z/pcdiQs0s5/KCYLtt5E/mm/W1s2v3mnLtHV/tn/RybuZHkTQjUvSgIqSplc9KlMCQAbxSQyG7qIdxyPNeneh3jnd2tRsZsDntTm3FnQ7CGVLlC8t+qRoJhYsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575881; c=relaxed/simple;
-	bh=kvvnHvigW0VQbIe0ZGV9v0oum5k9cSu8YzHMjbx3H6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h9VB5X6tkpt/ixWCVtUm8JFUSHKiXRbldEa604JxaMe/vbPd2WEJfvBMu3njxiRYOI4LPEP0EZYRvfMKSZSyHnwgVWSFX34vZz99vC8RqndOdV41RMtUDUjunrSy/skx1A3Uijg7+ZChlf56f9P/KbfFrX91Z4VuV6GEEky6SMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mS24obDf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745575884; c=relaxed/simple;
+	bh=2XTlxLm6HhjD5NksRt/hceGdAq7tvii4hFXdGKcaMBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KjlykyzRP863Ty4JfyQ2gYqh2ai23cS8OtwbZGMR4A+O2jKnKOPi6xwjTpuZ8o4roTOL6d8Bxa1RkU9wYIHKbhrK97nJEuLImoG65g74Z8io7alRq00ld/rmZz9yWPBlUxhBt0/Y7fUPGCQ+4znjM1UaF3nblxzTDc+ds/Da2PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aCHlm4IM; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS24obDf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7230BC4CEEB;
-	Fri, 25 Apr 2025 10:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745575877;
-	bh=kvvnHvigW0VQbIe0ZGV9v0oum5k9cSu8YzHMjbx3H6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mS24obDflvZCOBToupjgcFflGEET7oy3pnjXDwArZ3/F0z5+giauG00F+eIlB9Hfq
-	 j0Ihhc5pWkdBTlgEz009tUXKAlE001tYI6aockGWu8b0Taf4mD4ge60FW6WhBukP8m
-	 S73o1gCe2hC2pWdvT56nNCsaF0Id5DEy3lU6U9vAT9gLwDFOWGYHVllGDUevXjwoPI
-	 OmLkfmx0nIr74pNxQuzAOTwiks8+7PLbScWIgoZuR2Y9qMEFznpXcFwIxc8ljCSnmM
-	 a+NY0FoQ/IRgWNVK+TE4dJGGo+hg6F4HwyoOYEuey2AJ5CiF+mVCunpxt0KdFFwteg
-	 W6GtTyChAUEbw==
-Date: Fri, 25 Apr 2025 11:11:12 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nam Tran <trannamatk@gmail.com>
-Cc: pavel@kernel.org, christophe.jaillet@wanadoo.fr, krzk+dt@kernel.org,
-	robh@kernel.org, conor+dt@kernel.org, corbet@lwn.net,
-	devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] leds: add new LED driver for TI LP5812
-Message-ID: <20250425101112.GB1567507@google.com>
-References: <20250422190121.46839-1-trannamatk@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aCHlm4IM"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6fead317874so18539347b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745575881; x=1746180681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M6prVsylQnKDMIBjZXP4uOELttil8ar/HvFRq0ET36k=;
+        b=aCHlm4IMPVCU77HKh0v3RVgGxG4PsL8OzUM50d5cTV7RZBnscQxBgJcXx+ZcO/Rzx2
+         NhE211gq/gGrWZIi4uc3cjJWftgjuAwyTL9PilRgj/dCiz0awYSZXtzHuiWIb+DAtTn/
+         3ZgCbF7Dfl0rHl8mMGpFC/eJ/CZuepH6hB/kSCz70V7/ahq8eaH93FIglY/pGJ6m+dvX
+         l3ikh1X4up5ZqMRTi1AssyX1hcsb7mZDusH9JMH+QtVIZOKukPXHEqrSFKqyX/bbnhIL
+         rpph2iAk7Pih9gHQz+0jWh2bX1lzzh/MK9hb9hx2Bj+6TTGsQCYvJlv9leUBbhmtWbmP
+         oH0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745575881; x=1746180681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M6prVsylQnKDMIBjZXP4uOELttil8ar/HvFRq0ET36k=;
+        b=m7IYAV1rbLPJ6imU5W5Ccaxwf43h9hPsLGQybdjpZ1Dg+Jk3mKMmlrNzND1GCpJvt+
+         +CMCjTBooc9DcnkNSCpVppriDUtOCDamc0OwOslut/aCRRzVuAiqvfx833GuCFUijhUc
+         pdCAvPbc5kck8m8SbNXRa06gB1MNpqAVaF1qXqeRzJYNZzxYb4hkvJBjeKQZ+UmmY270
+         +MjKHWGRQp+vuT+2amOV7YY1Zt5hLpzyHnO7+3llOKOdDUdapqUd2exbHPf9R5DrLScJ
+         EzZB4BX/LpQC2AfOtdUG4RsU3q4PUmH5XwrkPNdB4i8TTzo/S0ywiQBNe2xSPK814CdE
+         lL9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW+sZE4ZOWR9tUvkByOe5Raygfo+3sVovR2ILKdMrKxL3nsckLLDyYqtPgai8BLzOxUKrXO9xcbPRhlnwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5U6qQKVqZUEAihdj+i9HWBAvCSrPS4iuxX2N0cRFjsVvD5zf5
+	iotU3fMEr8nOTXWuKZfG5/laA3ZozAvyMN+0VoW6G32OHeVF448jZ84mB8O6EbMNrKED+2Q9IqU
+	o7CKiGXXHgtz5i5BWZlEprBWcmjCXBCk3p2Xr7g==
+X-Gm-Gg: ASbGncshjN/NZHSztffaol1VrS+v9JaF41OYUhmHs+XESCTX6hXNdGlPBhYGpEzrP8+
+	wAdJyP9gSIMjO6aNjsvT3vGXomrM7QIBqkOBROTMS0v86UUeKdu9M/WrThnYaxnWyXMxq6UUT+v
+	A+3pVohb4GGaitGy8WgspUspc=
+X-Google-Smtp-Source: AGHT+IGurFHGYwar2TKD3VtJNgOfTgLYu73UwsY3fMeiKx/80V1BEROWuydsOdDJ1TKv9Y5NtKhSq17Sa7k73YOZM/k=
+X-Received: by 2002:a05:690c:4b0a:b0:708:3a47:3d2c with SMTP id
+ 00721157ae682-70854107cf6mr20217487b3.13.1745575881129; Fri, 25 Apr 2025
+ 03:11:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422190121.46839-1-trannamatk@gmail.com>
+References: <CGME20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028@eucas1p1.samsung.com>
+ <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
+ <20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
+ <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
+ <b9c4182d-38c2-4173-a35a-0e1773c8f2ed@samsung.com> <CAJZ5v0gE0anjW_mDSwNXY8xoZ_0=bDDxiSbUq1GP7-NycDojrQ@mail.gmail.com>
+ <cbf20469-02ab-403a-8db7-2b66e9936b4f@samsung.com> <CAPDyKFqND2JrH8nLUzAqwWgHkwia6M9XOJoY6AqxtR0t120JUA@mail.gmail.com>
+ <20250425-lumpy-marmot-of-popularity-cdbbcd@houat>
+In-Reply-To: <20250425-lumpy-marmot-of-popularity-cdbbcd@houat>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 25 Apr 2025 12:10:45 +0200
+X-Gm-Features: ATxdqUE_JbjUe45S3EVZ15Z84FoHvfu8q4ysbH-yq1WIOchBVAmKx33KA3qSxvM
+Message-ID: <CAPDyKFp-Bguqukn0my9mVDdSyG2eQ3EPP+diD-BBg-P_E8S9=A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed flag
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Michal Wilczynski <m.wilczynski@samsung.com>, Stephen Boyd <sboyd@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, m.szyprowski@samsung.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 Apr 2025, Nam Tran wrote:
+On Fri, 25 Apr 2025 at 09:09, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi,
+>
+> On Thu, Apr 24, 2025 at 06:51:00PM +0200, Ulf Hansson wrote:
+> > On Thu, 17 Apr 2025 at 18:19, Michal Wilczynski
+> > <m.wilczynski@samsung.com> wrote:
+> > > On 4/16/25 16:48, Rafael J. Wysocki wrote:
+> > > > On Wed, Apr 16, 2025 at 3:32=E2=80=AFPM Michal Wilczynski
+> > > > <m.wilczynski@samsung.com> wrote:
+> > > >>
+> > > >> On 4/15/25 18:42, Rafael J. Wysocki wrote:
+> > > >>> On Mon, Apr 14, 2025 at 8:53=E2=80=AFPM Michal Wilczynski
+> > > >>> <m.wilczynski@samsung.com> wrote:
+> > > >>>>
+> > > >>>> Introduce a new dev_pm_info flag - platform_resources_managed, t=
+o
+> > > >>>> indicate whether platform PM resources such as clocks or resets =
+are
+> > > >>>> managed externally (e.g. by a generic power domain driver) inste=
+ad of
+> > > >>>> directly by the consumer device driver.
+> > > >>>
+> > > >>> I think that this is genpd-specific and so I don't think it belon=
+gs in
+> > > >>> struct dev_pm_info.
+> > > >>>
+> > > >>> There is dev->power.subsys_data->domain_data, why not use it for =
+this?
+> > > >>
+> > > >> Hi Rafael,
+> > > >>
+> > > >> Thanks for the feedback.
+> > > >>
+> > > >> You're right =E2=80=94 this behavior is specific to genpd, so embe=
+dding the flag
+> > > >> directly in struct dev_pm_info may not be the best choice. Using
+> > > >> dev->power.subsys_data->domain_data makes more sense and avoids bl=
+oating
+> > > >> the core PM structure.
+> > > >>
+> > > >>>
+> > > >>> Also, it should be documented way more comprehensively IMV.
+> > > >>>
+> > > >>> Who is supposed to set it and when?  What does it mean when it is=
+ set?
+> > > >>
+> > > >> To clarify the intended usage, I would propose adding the followin=
+g
+> > > >> explanation to the commit message:
+> > > >>
+> > > >> "This flag is intended to be set by a generic PM domain driver (e.=
+g.,
+> > > >> from within its attach_dev callback) to indicate that it will mana=
+ge
+> > > >> platform specific runtime power management resources =E2=80=94 suc=
+h as clocks
+> > > >> and resets =E2=80=94 on behalf of the consumer device. This implie=
+s a delegation
+> > > >> of runtime PM control to the PM domain, typically implemented thro=
+ugh
+> > > >> its start and stop callbacks.
+> > > >>
+> > > >> When this flag is set, the consumer driver (e.g., drm/imagination)=
+ can
+> > > >> check it and skip managing such resources in its runtime PM callba=
+cks
+> > > >> (runtime_suspend, runtime_resume), avoiding conflicts or redundant
+> > > >> operations."
+> > > >
+> > > > This sounds good and I would also put it into a code comment somewh=
+ere.
+> > > >
+> > > > I guess you'll need helpers for setting and testing this flag, so
+> > > > their kerneldoc comments can be used for that.
+> > > >
+> > > >> This could also be included as a code comment near the flag defini=
+tion
+> > > >> if you think that=E2=80=99s appropriate.
+> > > >>
+> > > >> Also, as discussed earlier with Maxime and Matt [1], this is not a=
+bout
+> > > >> full "resource ownership," but more about delegating runtime contr=
+ol of
+> > > >> PM resources like clocks/resets to the genpd. That nuance may be w=
+orth
+> > > >> reflecting in the flag name as well, I would rename it to let's sa=
+y
+> > > >> 'runtime_pm_platform_res_delegated', or more concise
+> > > >> 'runtime_pm_delegated'.
+> > > >
+> > > > Or just "rpm_delegated" I suppose.
+> > > >
+> > > > But if the genpd driver is going to set that flag, it will rather m=
+ean
+> > > > that this driver will now control the resources in question, so the
+> > > > driver should not attempt to manipulate them directly.  Is my
+> > > > understanding correct?
+> > >
+> > > Yes, your understanding is correct =E2=80=94 with one minor clarifica=
+tion.
+> > >
+> > > When the genpd driver sets the flag, it indicates that it will take o=
+ver
+> > > control of the relevant PM resources in the context of runtime PM, i.=
+e.,
+> > > via its start() and stop() callbacks. As a result, the device driver
+> > > should not manipulate those resources from within its RUNTIME_PM_OPS
+> > > (e.g., runtime_suspend, runtime_resume) to avoid conflicts.
+> > >
+> > > However, outside of the runtime PM callbacks, the consumer device dri=
+ver
+> > > may still access or use those resources if needed e.g for devfreq.
+> > >
+> > > >
+> > > > Assuming that it is correct, how is the device driver going to know
+> > > > which resources in particular are now controlled by the genpd drive=
+r?
+> > >
+> > > Good question =E2=80=94 to allow finer-grained control, we could repl=
+ace the
+> > > current single boolean flag with a u32 bitmask field. Each bit would
+> > > correspond to a specific category of platform managed resources. For
+> > > example:
+> > >
+> > > #define RPM_TAKEOVER_CLK        BIT(0)
+> > > #define RPM_TAKEOVER_RESET      BIT(1)
+> > >
+> > > This would allow a PM domain driver to selectively declare which
+> > > resources it is taking over and let the consumer driver query only th=
+e
+> > > relevant parts.
+> >
+> > Assuming we are targeting device specific resources for runtime PM;
+> > why would we want the driver to be responsible for some resources and
+> > the genpd provider for some others? I would assume we want to handle
+> > all these RPM-resources from the genpd provider, if/when possible,
+> > right?
+> >
+> > The tricky part though (maybe Stephen had some ideas in his talk [a]
+> > at OSS), is to teach the genpd provider about what resources it should
+> > handle. In principle the genpd provider will need some kind of device
+> > specific knowledge, perhaps based on the device's compatible-string
+> > and description in DT.
+> >
+> > My point is, using a bitmask doesn't scale as it would end up having
+> > one bit for each clock (a device may have multiple clocks), regulator,
+> > pinctrl, phy, etc. In principle, reflecting the description in DT.
+>
+> My understanding is that it's to address a situation where a "generic"
+> driver interacts with some platform specific code. I think it's tied to
+> the discussion with the imagination GPU driver handling his clocks, and
+> the platform genpd clocks overlapping a bit.
+>
+> But then, my question is: does it matter? clocks are refcounted, and
+> resets are as well iirc, so why do we need a transition at all? Can't we
+> just let the platform genpd code take a reference on the clock, the GPU
+> driver take one as well, and it's all good, right?
 
-> This patch series adds support for the TI/National Semiconductor LP5812
-> 4x3 matrix RGB LED driver. The driver supports features such as autonomous
-> animation and time-cross-multiplexing (TCM) for dynamic LED effects.
-> 
-> Signed-off-by: Nam Tran <trannamatk@gmail.com>
-> ---
-> Changes in v7:
-> - Mark `chip_leds_map` as const.
-> - Use consistent `ret` initialization.
-> - Simplify the function `set_mix_sel_led()`.
-> - Refactor `dev_config_show()` and `led_auto_animation_show()` to avoid temp buffer, malloc/free.
-> - Simplify the code and ensure consistent use of mutex lock/unlock in show/store functions.
-> - Remove `total_leds` and `total_aeu`.
-> - Link to v6: https://lore.kernel.org/linux-leds/20250419184333.56617-1-trannamatk@gmail.com/
-> 
-> Changes in v6:
-> - Add `vcc-supply` property to describe the LP5812 power supply.
-> - Remove `chan-name` property and entire LED subnodes, as they are not needed.
-> - Update LP5812 LED driver node to Raspberry Pi 4 B Device Tree, based on updated binding.
-> - Link to v5: https://lore.kernel.org/linux-leds/20250414145742.35713-1-trannamatk@gmail.com/
-> 
-> Changes in v5:
-> - Rebase on v6.15-rc2
-> - Removed unused functions (lp5812_dump_regs, lp5812_update_bit).
-> - Address Krzysztof's review comments
-> - Link to v4: https://lore.kernel.org/linux-leds/20250405183246.198568-1-trannamatk@gmail.com/
-> ---
-> 
-> Nam Tran (5):
->   dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
->   leds: add TI/National Semiconductor LP5812 LED Driver
->   docs: ABI: Document LP5812 LED sysfs interfaces
->   docs: leds: Document TI LP5812 LED driver
->   arm64: dts: Add LP5812 LED node for Raspberry Pi 4 Model B
-> 
->  .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |  144 +
->  .../devicetree/bindings/leds/ti,lp5812.yaml   |   46 +
->  Documentation/leds/leds-lp5812.rst            |   79 +
->  MAINTAINERS                                   |   12 +
->  .../arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts |   10 +
->  drivers/leds/Kconfig                          |   16 +
->  drivers/leds/Makefile                         |    1 +
->  drivers/leds/leds-lp5812.c                    | 2736 +++++++++++++++++
->  drivers/leds/leds-lp5812.h                    |  348 +++
->  9 files changed, 3392 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
->  create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
->  create mode 100644 Documentation/leds/leds-lp5812.rst
->  create mode 100644 drivers/leds/leds-lp5812.c
->  create mode 100644 drivers/leds/leds-lp5812.h
+The problem is the power-sequencing that is needed to initialize the
+GPU. Have a look at patch3's commit message - and I think it will be
+clearer what is needed.
 
-Nothing about this driver has anything to do with the LEDs subsystem.
+In my last reply for patch 3/4, I am suggesting this whole thing may
+be better modeled as a real power-sequence, using the new subsystem in
+drivers/power/sequencing/*
 
-Suggest moving it to drivers/auxdisplay instead.
-
--- 
-Lee Jones [李琼斯]
+Kind regards
+Uffe
