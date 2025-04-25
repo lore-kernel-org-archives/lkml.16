@@ -1,41 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04082741A3;
-	Fri, 25 Apr 2025 15:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C582741C2;
+	Fri, 25 Apr 2025 15:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593929; cv=none; b=n06+n4yWqebvtdu+vswIMr2pLOFpcVSPDg8LUqph6xqL3gO9jyFxv5KpnYFbta7AwuLj18bbs63cGkTmgEl+uxLZExeKd4sW46OqRHGwNoCw4tg6Ea0AkfGIUq7hT2quOPCWBsY/cAFb3ZOL6wIt7t4YHOTNHlYIVDoogAKHr7Y=
+	t=1745593948; cv=none; b=PvmaX/xkC7akXJvKYZPZ7VXM+Q5z14dAYE7tNVleNGOba0gzP2B5m3BcGyyuYgISq3ptDOH8CklJ3WRP8+n6pwKSnWkDsjBdcwvuJAQikOvFGmK6T14j5uw4cvpUA7q8lwf43CZ1tcIls3bNcSYAlGxsgqn985eCkoYiAn/3/OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593929; c=relaxed/simple;
-	bh=XI/Deu8LTxLa7duV848jtLmb25tqeQOUxLBukXOOhzU=;
+	s=arc-20240116; t=1745593948; c=relaxed/simple;
+	bh=k2dlEjW6bN02EsPsXZP+WGuAK1XkqzdWBG/Yeze9+j8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aQlf1/uPTe75xRXUtfW2V7yeOB56vUaoH1ttbzheNkKC40XRxvEv/ZPN3ywzx8aJ2qcwVGDHmhr6p4QsnUHhoyFVZ2XtPQQd3jldqepYIDth/GcIwDG5BBMCQXB7oa73NwcA9QiCWQRP2+GGh/cmNPK2tOxvsH545BKJ5fZlw90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBJJkakh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajBVi08jST8f9Z3ScJFtGgAj7kW0Raxj8GjUdQkYigYPRISoGm9OB9mLsgwgvToJ1GzXAPK+1u2UxllUGE/+F+JgTVSjOTBvQfMdp86pAspn/MvAYxZFw60O+L4WEN1prlrRkHe28AC0bzcovLlSvTnTGXlcHwXfFeR47u6gdeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPu5hOPv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBJJkakh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36685C4CEE4;
-	Fri, 25 Apr 2025 15:12:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPu5hOPv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D668AC4CEE8;
+	Fri, 25 Apr 2025 15:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745593929;
-	bh=XI/Deu8LTxLa7duV848jtLmb25tqeQOUxLBukXOOhzU=;
+	s=k20201202; t=1745593948;
+	bh=k2dlEjW6bN02EsPsXZP+WGuAK1XkqzdWBG/Yeze9+j8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pBJJkakh/tCio3mwtHj5m9wYww+eqAKP7XnjcOIY733gx9/weGNk5mM5/DcEJ6vAG
-	 9wmJbUkoZ6A4N5hv02QZMBKIPO+v1DqY2AHIJP6M0GVQnbQ70yYQ0Qz+2wwrgKgKX2
-	 MTlwOCoJoiop4JZ7lTGiID4OlF01EtOQgy5ALQXfbP/MBsMa+2OBX5yRuFYJ6ThDkz
-	 ekeMQHDulX+vHcAcTGtBCniD16/VwUE1m+M1Ie+cvxWbc9sPROhUynFNw0dh6D0+ux
-	 mZSaKEI4a+5N7XE/2/fUU9rpsp8acEe4U5c6p3rO4ZnCFPm83nQrpq/x5nSt6BRVo9
-	 ijdj9IT/+EaUg==
-Date: Fri, 25 Apr 2025 08:12:08 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Chi Zhiling <chizhiling@163.com>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Chi Zhiling <chizhiling@kylinos.cn>
-Subject: Re: [RFC PATCH 1/2] xfs: Add i_direct_mode to indicate the IO mode
- of inode
-Message-ID: <20250425151208.GN25675@frogsfrogsfrogs>
-References: <20250425103841.3164087-1-chizhiling@163.com>
- <20250425103841.3164087-2-chizhiling@163.com>
+	b=WPu5hOPvekUKrQ8NrtZfaTIhpMWEA58RcxLRWr/rEG8Am2Ienbfqm0UECzivtl3M7
+	 j9DZu54zUgRiRRcqJdTD39IsJYXFDJskuxktOj3VisE6ykt3bqQ/+LeLr+NDrr6AFD
+	 Gus0XSgED4bjV3vYLHtuUDoK7a6qNYmuZHNBd32RGgtzouzZz06f+D/LtVBePdb9WN
+	 5VOruMAKK+3OxnSW50ZgIHn9rZfej92CwhivqHeewasZH6CpvL0uU4J6F0qTvYi6S+
+	 pNbAIIPnvQT2/6jYL7/kYlbrJTUJbYrznd/sSdFhUPUx9ssnF0J1hUc9zQ9ja4u1HZ
+	 Kn+JibzISQe3Q==
+Date: Fri, 25 Apr 2025 12:12:25 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Martin Liska <martin.liska@hey.com>,
+	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] perf jitdump: Directly mark the jitdump DSO
+Message-ID: <aAumWUWXB05qLez6@x1>
+References: <20250424195831.1767457-1-irogers@google.com>
+ <20250424195831.1767457-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,153 +65,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425103841.3164087-2-chizhiling@163.com>
+In-Reply-To: <20250424195831.1767457-3-irogers@google.com>
 
-On Fri, Apr 25, 2025 at 06:38:40PM +0800, Chi Zhiling wrote:
-> From: Chi Zhiling <chizhiling@kylinos.cn>
-> 
-> Direct IO already uses shared lock. If buffered write also uses
-> shared lock, we need to ensure mutual exclusion between DIO and
-> buffered IO. Therefore, Now introduce a flag `i_direct_mode` to
-> indicate the IO mode currently used by the file. In practical
-> scenarios, DIO and buffered IO are typically not used together,
-> so this flag is usually not modified.
-> 
-> Additionally, this flag is protected by the i_rwsem lock,
-> which avoids the need to introduce new lock. When reading this
-> flag, we need to hold a read lock, and when writing, a write lock
-> is required.
-> 
-> When a file that uses buffered IO starts using DIO, it needs to
-> acquire a write lock to modify i_direct_mode, which will force DIO
-> to wait for the previous IO to complete before starting. After
-> acquiring the write lock to modify `i_direct_mode`, subsequent
-> buffered IO will need to acquire the write lock again to modify
-> i_direct_mode, which will force those IOs to wait for the current
-> IO to complete.
-> 
-> Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+On Thu, Apr 24, 2025 at 12:58:25PM -0700, Ian Rogers wrote:
+> The DSO being generated was being accessed through a thread's maps,
+> this is unnecessary as the dso can just be directly found. This avoids
+> problems with passing a NULL evsel which may be inspected to determine
+> properties of a callchain when using the buildid DSO marking code.
+
+And this patch had to be moved after:
+
+"perf dso: Move build_id to dso_id"
+
+As it uses fields that were introduced there.
+
+Thanks,
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  fs/xfs/xfs_file.c  | 37 +++++++++++++++++++++++++++++++++----
->  fs/xfs/xfs_inode.h |  6 ++++++
->  2 files changed, 39 insertions(+), 4 deletions(-)
+>  tools/perf/util/jitdump.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 84f08c976ac4..a6f214f57238 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -206,7 +206,8 @@ xfs_ilock_iocb(
->  static int
->  xfs_ilock_iocb_for_write(
->  	struct kiocb		*iocb,
-> -	unsigned int		*lock_mode)
-> +	unsigned int		*lock_mode,
-> +	bool			is_dio)
-
-Is an explicit flag required here, or can you determine directness from
-IS_DAX() || (iocb->ki_flags & IOCB_DIRECT) ?
-
-Hmm, I guess not, since a directio falling back to the pagecache for an
-unaligned out of place write doesn't clear IOCB_DIRECT?
-
-How does this new flag intersect with XFS_IREMAPPING?  Are we actually
-modelling three states here: bufferedio <-> directio <-> remapping?
-
->  {
->  	ssize_t			ret;
->  	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
-> @@ -226,6 +227,21 @@ xfs_ilock_iocb_for_write(
->  		return xfs_ilock_iocb(iocb, *lock_mode);
->  	}
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index 624964f01b5f..b062b1f234b6 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -14,9 +14,9 @@
+>  #include <sys/mman.h>
+>  #include <linux/stringify.h>
 >  
-> +	/*
-> +	 * If the i_direct_mode need update, take the iolock exclusively to write
-> +	 * it.
-> +	 */
-> +	if (ip->i_direct_mode != is_dio) {
-> +		if (*lock_mode == XFS_IOLOCK_SHARED) {
-> +			xfs_iunlock(ip, *lock_mode);
-> +			*lock_mode = XFS_IOLOCK_EXCL;
-> +			ret = xfs_ilock_iocb(iocb, *lock_mode);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +		ip->i_direct_mode = is_dio;
+> -#include "build-id.h"
+>  #include "event.h"
+>  #include "debug.h"
+> +#include "dso.h"
+>  #include "evlist.h"
+>  #include "namespaces.h"
+>  #include "symbol.h"
+> @@ -531,9 +531,22 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+>  	/*
+>  	 * mark dso as use to generate buildid in the header
+>  	 */
+> -	if (!ret)
+> -		build_id__mark_dso_hit(tool, event, &sample, NULL, jd->machine);
+> -
+> +	if (!ret) {
+> +		struct dso_id dso_id = {
+> +			{
+> +				.maj = event->mmap2.maj,
+> +				.min = event->mmap2.min,
+> +				.ino = event->mmap2.ino,
+> +				.ino_generation = event->mmap2.ino_generation,
+> +			},
+> +			.mmap2_valid = true,
+> +			.mmap2_ino_generation_valid = true,
+> +		};
+> +		struct dso *dso = machine__findnew_dso_id(jd->machine, filename, &dso_id);
+> +
+> +		if (dso)
+> +			dso__set_hit(dso);
 > +	}
-> +
->  	return 0;
->  }
->  
-> @@ -247,6 +263,19 @@ xfs_file_dio_read(
->  	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
->  	if (ret)
->  		return ret;
-> +
-> +	if (!ip->i_direct_mode) {
-> +		xfs_iunlock(ip, XFS_IOLOCK_SHARED);
-> +		ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_EXCL);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ip->i_direct_mode = 1;
-> +
-> +		/* Update finished, now downgrade to shared lock */
-> +		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
-> +	}
-> +
->  	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL, 0, NULL, 0);
->  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
->  
-> @@ -680,7 +709,7 @@ xfs_file_dio_write_aligned(
->  	unsigned int		iolock = XFS_IOLOCK_SHARED;
->  	ssize_t			ret;
->  
-> -	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
-> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock, true);
->  	if (ret)
->  		return ret;
->  	ret = xfs_file_write_checks(iocb, from, &iolock, ac);
-> @@ -767,7 +796,7 @@ xfs_file_dio_write_unaligned(
->  		flags = IOMAP_DIO_FORCE_WAIT;
->  	}
->  
-> -	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
-> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock, true);
->  	if (ret)
->  		return ret;
->  
-> @@ -898,7 +927,7 @@ xfs_file_buffered_write(
->  
->  write_retry:
->  	iolock = XFS_IOLOCK_EXCL;
-> -	ret = xfs_ilock_iocb(iocb, iolock);
-> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock, false);
->  	if (ret)
->  		return ret;
->  
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index eae0159983ca..04f6c4174fab 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -51,6 +51,12 @@ typedef struct xfs_inode {
->  	uint16_t		i_checked;
->  	uint16_t		i_sick;
->  
-> +	/*
-> +	 * Indicates the current IO mode of this inode, (DIO/buffered IO)
-> +	 * protected by i_rwsem lock.
-> +	 */
-> +	uint32_t		i_direct_mode;
-
-Yeesh, a whole u32 to encode a single bit.  Can you use i_flags instead?
-
---D
-
-> +
->  	spinlock_t		i_flags_lock;	/* inode i_flags lock */
->  	/* Miscellaneous state. */
->  	unsigned long		i_flags;	/* see defined flags below */
+>  out:
+>  	perf_sample__exit(&sample);
+>  	free(event);
 > -- 
-> 2.43.0
-> 
-> 
+> 2.49.0.850.g28803427d3-goog
