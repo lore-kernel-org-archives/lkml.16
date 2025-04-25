@@ -1,144 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA251A0B0E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503204A24;
+	Fri, 25 Apr 2025 16:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745597904; cv=none; b=jUwSBOfjf15X64Vrdi3M9oqnXhlNjEoFt4D8k04fbmyUDwjwe8lnG0yI39giacaLZSLn6+w0zij69st1ZtYD3bVLT/cPoIu6n/NghmzqB9A+5cTPq0NX0Rq2lGOv605VxUK39NsrxNkLlCAdz9F8r2NEmQPUvDhYljo0JfzC4Tg=
+	t=1745598116; cv=none; b=IIrAWvV3WnobCoDg1p6zKlE5+u6LtkH4QaAe1vVSz7TFyBOO8n53doQSwmq8NPD01KQFuGAb6c+v4B05CSLqul3EcVxlQNzl5/wRqv5Uoh46z8F0Apm0JdwVLV7gIUF13zxPG37MzG63t9JSfyp6jhtDjAjF5qe2+Gj+63AC4Go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745597904; c=relaxed/simple;
-	bh=Nm2akZaIe8xG3/z8g6ddWt75x8LZZwq+llujZPN+xlU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uja1E6Cwvunz8v0sEuDSd3mr6FBTLnkLXQS9ZY1ibTyCBoOAHGEChqlbXfEXy/Apo6U1dJ8dPPhbtNT2u12TQPvVPdHo6EBbOy/b/WtVHpPQsbiiVdsKWSE95y4a959KMxVIN1X6VqhCKqJgM1okZnTI5cRhiR+r61ywLjVpOlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QDk439lc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745598116; c=relaxed/simple;
+	bh=Pp16t66j9BUD//eaUqtZsRjkT1g9gyY129We4+Jq8uY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d/olZ2hXTkr6c1bNqcPGqRKKTbX0artdsSTkHFMnNhvlB3Scc8jVdXKdelpnPru7qWUcN+ieEsnKktxzfaxNL6SwDcrB3Q3+IuHZ7X9JrZXi+eY6wtk8FDwGekhu/RYYRcWI/oAWD7BBhd87b8PHKYTCYyCGgzRT3gkLKZU9xUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQ2Ozn56; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QDk439lc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745597901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cu53oqTc+C8gda1ySOFmpg10bk110VGp4bnnOvH2U+U=;
-	b=QDk439lcfadCdDY2Mp28wkNtf3KII3IkUYpNargEaLljRfF0HGx1xkoDraKcpUxc3liZ0U
-	lBbRriToH/qTvfV9zPEsND4OXXQOeaTcju1gERK9MJN0MZtIREVpxM5y7THspCl4sn0fK/
-	HfgiqtdWHguesiOTVcFbcmJcN+sH5E8=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-mqfI0yXbMVGrnDEKLSotwg-1; Fri, 25 Apr 2025 12:18:19 -0400
-X-MC-Unique: mqfI0yXbMVGrnDEKLSotwg-1
-X-Mimecast-MFC-AGG-ID: mqfI0yXbMVGrnDEKLSotwg_1745597899
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c54a6b0c70so241471885a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:18:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745597899; x=1746202699;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cu53oqTc+C8gda1ySOFmpg10bk110VGp4bnnOvH2U+U=;
-        b=uKTp8HLG1XVnBKGAeulWcfsIOZ19x4I1dx3N2Zv3TAGTbWgI019gACfi9gAbH24SYZ
-         NrO6zfjWlMYxXgmsKH3X7Kvod7js57WO2Re4YCXw027GMTf3TP3e/sUJPdL7jnmOJ70O
-         RRuVxs6dDvixhSTFxqWY9ABbbuzBOE9DhbVxEdHrLl9dyUl5+kcaof6FbLHIAkU9fJgv
-         7zMG/s9eiJsvcGBquOQcNb3y5KrU/90xP3MLIsoR9CekOjifnCEuBELD3Gk3xpbAnCn2
-         ef0W4fP8swQfd51J0GRiClx1U+qOz5L7s5Pjx10efAKgId704IrP0RHr9dgTozHjIUPP
-         STJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdGSOLAPLBVM4EYf6DKXGYkPiKgzcWZrPjS4IMDaLV7nDIQonoBU0dNS7MUoX0wD6MMbPI9g0GQC5q9CI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9H9+2RHaMHDW4mzh9RP5oEvpE4pkWYCROHFOCJzVyU/+b6Bo0
-	OyTLrj8OJH3DgW3r3Qjb9nLIXkaWELeeMDmh4XnDlT7zytpSH7XHIaJBCg0x3/pDVqNcOjFSXy9
-	FNGTscT7E5FhgLENzPdO6iRH1GRWaiFxeYeKrzlyxAVO0cVOipVk+u2DgMgjHdA==
-X-Gm-Gg: ASbGncuT2IyUa3wbF33oCTD5jWY5vsGKxsU85h+D5VHNnMA+q6aGftz3mmIUZeAE7vl
-	iB+dcGS3zt222zkdaBi6mXsT7ZarFNCEZnQAxI5kAJAIF+ztm5onDbbVdERbFn+WtxcyI64MtpG
-	OCyiJw2YLmAzaZ7gSDFEDx9wQwXxoOItyf6Jydw1nIn8rDII2D9XmV+L1Ah+MJ0kpGayy7HfiQN
-	nDsmAsuwfrH5gcVWOLKElWciLJR4yoaIHl2ERiSMrNkGv34cTfiRSfxSGXJNxPGqRtDIOXoV39A
-	T1o=
-X-Received: by 2002:a05:620a:4391:b0:7c5:49ee:86aa with SMTP id af79cd13be357-7c9606a46cbmr537421185a.4.1745597899428;
-        Fri, 25 Apr 2025 09:18:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrLdFny2R1FgEH3lIqliuXD907AsPxqmNeiniGwqA0CvEOnR4ynP+sN+5f9GAHtx4ns0D9Cg==
-X-Received: by 2002:a05:620a:4391:b0:7c5:49ee:86aa with SMTP id af79cd13be357-7c9606a46cbmr537417285a.4.1745597899096;
-        Fri, 25 Apr 2025 09:18:19 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958cbe596sm235356885a.45.2025.04.25.09.18.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:18:18 -0700 (PDT)
-Date: Fri, 25 Apr 2025 12:18:14 -0400
-From: Peter Xu <peterx@redhat.com>
-To: James Houghton <jthoughton@google.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/2] mm/userfaultfd: Fix uninitialized output field for
- -EAGAIN race
-Message-ID: <aAu1xnKPVCTqX0G7@x1.local>
-References: <20250424215729.194656-1-peterx@redhat.com>
- <CADrL8HXuZkX0CP6apHLw0A0Ax4b4a+-=XEt0dH5mAKiN7hBv3w@mail.gmail.com>
- <dfc6db2d-0af2-44c2-8582-7e783b0292ab@redhat.com>
- <CADrL8HW--e8GVe+6aW7ZvDEBBDHp3cBC9Tcs_6duOJ5H+ZWNpQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQ2Ozn56"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B51C4CEE4;
+	Fri, 25 Apr 2025 16:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745598115;
+	bh=Pp16t66j9BUD//eaUqtZsRjkT1g9gyY129We4+Jq8uY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XQ2Ozn56t6c+UjaG1t4ey2DSK551MgyG4HFkZ/Ew45G65wPgF+NdyFNMrtG5KmoM0
+	 OHJFaFePEInFrNtLK/0vEJ5U2e2BqT+Bj/j96TFFX0OY29ZI5/2RzL1nNiEqRNFHYE
+	 szUktDf2F3VkEPn/YS6dgKP86ORvyNWsKzNtCWlsUXcrTTv8VqqDG5o8geP0zMpRV7
+	 r7s7+alqadplye5QdpyEdeBxQTUMchJUbE+dT1lyDU2kIZw+Cjy0dY8fz4cjwzyNaB
+	 /hVKsXPTIJc0LgIlABYVWzPWO0l3dhnIccjinEHERjb1VgUM7QhrSRqXXbvQa9jqvz
+	 aAjU0uD2G2WuA==
+Message-ID: <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
+Date: Fri, 25 Apr 2025 18:21:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADrL8HW--e8GVe+6aW7ZvDEBBDHp3cBC9Tcs_6duOJ5H+ZWNpQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
+ new EP configurations
+To: Hans Zhang <hans.zhang@cixtech.com>, Conor Dooley <conor@kernel.org>,
+ Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-3-hans.zhang@cixtech.com>
+ <20250424-elm-magma-b791798477ab@spud>
+ <20250424-proposal-decrease-ba384a37efa6@spud>
+ <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250425-drained-flyover-4275720a1f5a@spud>
+ <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 12:07:31PM -0400, James Houghton wrote:
-> On Fri, Apr 25, 2025 at 11:58 AM David Hildenbrand <david@redhat.com> wrote:
-> >
-> > On 25.04.25 17:45, James Houghton wrote:
-> > > On Thu, Apr 24, 2025 at 5:57 PM Peter Xu <peterx@redhat.com> wrote:
-> > >>
-> > >> When discussing some userfaultfd issues with Andrea, Andrea pointed out an
-> > >> ABI issue with userfaultfd that existed for years.  Luckily the issue
-> > >> should only be a very corner case one, and the fix (even if changing the
-> > >> kernel ABI) should only be in the good way, IOW there should have no risk
-> > >> breaking any userapp but only fixing.
-> > >
-> > > FWIW, my userspace basically looks like this:
-> > >
-> > > struct uffdio_continue uffdio_continue;
-> > > int64_t target_len = /* whatever */;
-> > > int64_t bytes_mapped = 0;
-> > > int ioctl_ret;
-> > > do {
-> > >    uffdio_continue.range = /* whatever */;
-> > >    uffdio_continue.mapped = 0;
-> > >    ioctl_ret = ioctl(uffd, UFFDIO_CONTINUE, &uffdio_continue);
-> > >    if (uffdio_continue.mapped < 0) { break; }
-> > >    bytes_mapped += uffdio_continue.mapped;
-> > > } while (bytes_mapped < target_len && errno == EAGAIN);
-> > >
-> > > I think your patch would indeed break this. (Perhaps I shouldn't be
-> > > reading from `mapped` without first checking that errno == EAGAIN.)
-> > >
-> > > Well, that's what I would say, except in practice I never actually hit
-> > > the mmap_changing case while invoking UFFDIO_CONTINUE. :)
-> >
-> > Hm, but what if mfill_atomic_continue() would already return -EAGAIN
-> > when checking mmap_changing etc?
-> >
-> > Wouldn't code already run into an issue there?
+On 25/04/2025 17:33, Hans Zhang wrote:
 > 
-> Ah, thanks David. You're right, my code is already broken! :(
 > 
-> So given that we already have a case where -EAGAIN is put in the
-> output field, I change my mind, let's keep putting -EAGAIN in the
-> output field, and I'll go fix my code.
+> On 2025/4/25 22:48, Conor Dooley wrote:
+>> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
+>>>>
+>>>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
+>>>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
+>>>>>> From: Manikandan K Pillai<mpillai@cadence.com>
+>>>>>>
+>>>>>> Document the compatible property for HPA (High Performance
+>>>> Architecture)
+>>>>>> PCIe controller EP configuration.
+>>>>> Please explain what makes the new architecture sufficiently different
+>>>>> from the existing one such that a fallback compatible does not work.
+>>>>>
+>>>>> Same applies to the other binding patch.
+>>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
+>>>> soc-specific compatible for your integration not needed?
+>>>>
+>>> The sky1 SoC support patches will be developed and submitted by the Sky1
+>>> team separately.
+>> Why? Cixtech sent this patchset, they should send it with their user.
+> 
+> Hi Conor,
+> 
+> Please look at the communication history of this website.
+> 
+> https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
 
-Thanks both for the comments.
+And in that thread I asked for Soc specific compatible. More than once.
+Conor asks again.
 
-AFAIU it shouldn't affect any app that doesn't use UFFD_FEATURE_EVENT_* as
-mentioned in cover letter.  But I tend to agree a fix is good, that any app
-should better check ioctl retval and errno, before anything else..
+I don't understand your answers at all.
 
--- 
-Peter Xu
-
+Best regards,
+Krzysztof
