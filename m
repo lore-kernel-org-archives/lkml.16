@@ -1,101 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFEE253949
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3082459D4;
+	Fri, 25 Apr 2025 13:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745589344; cv=none; b=amOhnixTbOLBEMbjkDUFpa2OsoTl8QIT+Xr3YKYsFFCKo9+Jo9AwDyr2fvO4GVMPMK/mpeuJhSDNsnKOjNE3+Xmd6CL0r/NsTyv/o4eC22MTmcLWlaKtRNMLNDnPdIAObEYttPfzOIXsxaHWvyyMR+qYt0EO1QgwByHmaGLnH1E=
+	t=1745589385; cv=none; b=h7Px84cHNUohzlWJiWDrPQC2T+9pVWWLYPsLM+Jda3/FaZ+ZFsGf/JKGR8AkhINLugi0oHIkQfnUbgNS42kMKT+tEX4F1Z4/V3PbHC8ICIh5rF9kq9CW+L1a5uTP2HUaRNkXwTj/gYHhHUr8/vFluuSxjtDNp3GeZT3A0NZ1fJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745589344; c=relaxed/simple;
-	bh=4sj9iDnjyACR9Ifsrqmh5zn0gaIOK/D3AZ1jijsPi00=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=W/CMy00Jp92uYWEDeZsFkxL9321Mo4R16V+Zt4P36UtAKo+DWomVO6AhPgeQR9y70jttN7xz9nwu+OILQcW6V9N2JsyzYu796S8+05QAbjv/Yoat9EQiVR0T2FOoHXC6oYDdsS/OHD/DJ4W+Z/FJalaqgnvwHoT8nj76VExwPeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVRptpDC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745589385; c=relaxed/simple;
+	bh=YTddCksM45cgoHHNYv8q+OWh8E+7R8mg1AEXjvW90DU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z69TNez8pyaSiOffQ18z90OXMwIEw+Qq8KvPkN/Fw/dhfD+IxctJMhCTYQYJ2jUQVGfR1TuKg7Nv9ZPnqvXSWk3UL1BcuWhJVT+1Y0l/mB0Ml0+38JnYHmjmeLlxE59aZWr1U82krOzh994/Ssu35s3LC/FswS7WYxSuG7Nv5Bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d2JFGerP; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVRptpDC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76364C4CEE8;
-	Fri, 25 Apr 2025 13:55:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745589343;
-	bh=4sj9iDnjyACR9Ifsrqmh5zn0gaIOK/D3AZ1jijsPi00=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=XVRptpDCNLY3v2NvWw6o2JAUaVzGLGGqs6sF3CKLNtcUz5DC++rsJ+HEFCMP0Q/oF
-	 76X/ciOy+sfU9aFJe/UXY3fo0on5L9SB/1B323sdOKMcV9G0CxseKNDKjUfH8p87qJ
-	 0m6GRFgManCTvrt8bzxYQFc1fxMYgLu4l3nE6vnS46+8IJ1X4IMI17c9E3lYhloPHy
-	 fPtpBV5TakF2Bfr050xrzP0EnvI6ths4QwjxWR/41JWu4YqcnuWcGwXbdyQuq+smYg
-	 F0ofXZe/wMt1qYIqKvMGnsqQLHosoK2CpcNXBpVg1N+LgGGKQBoPvUR733MUCFW3p1
-	 3HY1O+dFFxF1g==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8304A1200070;
-	Fri, 25 Apr 2025 09:55:42 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Fri, 25 Apr 2025 09:55:42 -0400
-X-ME-Sender: <xms:XpQLaM_gIYNZWs0BeNJm0dydNpseUCxzG3oeATy0mCq2P2qS21OBOQ>
-    <xme:XpQLaEvOME5gGy5IK8lKU2zPfqFGHEBKEz8XmleI0XkqDyqYy0bJKK8_khA0B4zIP
-    Dynpv_ACVTEqHv0J4M>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvheduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnh
-    gvlhdrohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfef
-    feeitdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvg
-    hlrdhorhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegrnh
-    gurhgvfidrtghoohhpvghrfeestghithhrihigrdgtohhmpdhrtghpthhtohepphgvthgv
-    rhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegurghrfihisehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepjhhohhhnrdhogh
-    hnvghssheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehtghhlgieslhhinhhu
-    thhrohhnihigrdguvgdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouh
-    hnuggrthhiohhnrdhorhhg
-X-ME-Proxy: <xmx:XpQLaCCQo1LKqtYUquUjZjtl5xCD-mCxyP70k-gVYp3B7PNpA3jOUg>
-    <xmx:XpQLaMeJhAUHs4X8JKZHP4OyZbeN5DRBCvXMAwwzJwXU__waV-xX1g>
-    <xmx:XpQLaBM47z4GRpD9HrR97HXajpxou2oHBXyVT2YHbQOTza-5X9jYHA>
-    <xmx:XpQLaGmOpmQsCEnNNKTRbSS7X-CCc3pTIHmxu1Oewyzyg8uRcXEPXA>
-    <xmx:XpQLaDuKRkjc0K7vyHOUC75wSZhSdI0T0II38zvjRS6DfXKNzNJwbkpq>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5B4F82220073; Fri, 25 Apr 2025 09:55:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d2JFGerP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745589383; x=1777125383;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YTddCksM45cgoHHNYv8q+OWh8E+7R8mg1AEXjvW90DU=;
+  b=d2JFGerPgp7UhqTZ3J1LepxVwlS6Ol2H693zUybdS5p3hf5D/hKM1IEA
+   enCy8Awjgaix32hGJf4Qfyb6cbo+vh3xf0qwp6wbD/n0uxeDJ70sPaolD
+   5IeWHgw/6mnA8BaGxjVXkzGTRp9wnl2aXlbhSS2LP56+tIV83pXOQuV4N
+   rBkHivd/miow6H/Yehb+v96uN2Q1ClSDRFQC9HRA8hmKUxwPbDfv+R9j/
+   Ca/sbZ8UZwtndGaMiNEoZbZ+1t84wakdMfmdqcbxCKUgAuUZKKrKvWu0Y
+   vO/0epdV4Jw9GDx/64hJ+/6t9OjygSAO0hPfv32mbX7vKLDr3OA/Lc+0a
+   g==;
+X-CSE-ConnectionGUID: YLk967teTvqEjzxzDCsnMQ==
+X-CSE-MsgGUID: E1w2JK9fQHaFe3GyBFq+Xg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47163291"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47163291"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:56:23 -0700
+X-CSE-ConnectionGUID: 0C/TsEehTiOd20iYZ2SJ6Q==
+X-CSE-MsgGUID: ArfhGeCUTl+u7Hph6IbiWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="133222259"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:56:21 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id DF61E20B5736;
+	Fri, 25 Apr 2025 06:56:17 -0700 (PDT)
+Message-ID: <dacd4a8e-5104-4043-b647-63e2df6d6a94@linux.intel.com>
+Date: Fri, 25 Apr 2025 09:56:16 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T7f4ee6b822a03030
-Date: Fri, 25 Apr 2025 15:55:21 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Ingo Molnar" <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: "Ahmed S . Darwish" <darwi@linutronix.de>,
- "Andrew Cooper" <andrew.cooper3@citrix.com>,
- "Ard Biesheuvel" <ardb@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "John Ogness" <john.ogness@linutronix.de>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-Message-Id: <39e5a78e-6079-4469-95b8-71cc9e756259@app.fastmail.com>
-In-Reply-To: <20250425084216.3913608-16-mingo@kernel.org>
-References: <20250425084216.3913608-1-mingo@kernel.org>
- <20250425084216.3913608-16-mingo@kernel.org>
-Subject: Re: [PATCH 15/15] x86/atomics: Remove !CONFIG_X86_CX8 methods
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/38] perf/x86: Support switch_guest_ctx interface
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
+ Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>,
+ Eranian Stephane <eranian@google.com>, Shukla Manali
+ <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-11-mizhang@google.com>
+ <20250425111531.GG1166@noisy.programming.kicks-ass.net>
+ <e2f3b1d5-ed91-47a1-aead-28675bcca2c8@linux.intel.com>
+ <20250425134323.GA35881@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250425134323.GA35881@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025, at 10:42, Ingo Molnar wrote:
 
-> +#define arch_cmpxchg64			__cmpxchg64
-> +#define arch_cmpxchg64_local		__cmpxchg64_local
-> +#define arch_try_cmpxchg64		__try_cmpxchg64
-> +#define arch_try_cmpxchg64_local	__try_cmpxchg64_local
+
+On 2025-04-25 9:43 a.m., Peter Zijlstra wrote:
+> On Fri, Apr 25, 2025 at 09:06:26AM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 2025-04-25 7:15 a.m., Peter Zijlstra wrote:
+>>> On Mon, Mar 24, 2025 at 05:30:50PM +0000, Mingwei Zhang wrote:
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> Implement switch_guest_ctx interface for x86 PMU, switch PMI to dedicated
+>>>> KVM_GUEST_PMI_VECTOR at perf guest enter, and switch PMI back to
+>>>> NMI at perf guest exit.
+>>>>
+>>>> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+>>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>>>> ---
+>>>>  arch/x86/events/core.c | 12 ++++++++++++
+>>>>  1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>>>> index 8f218ac0d445..28161d6ff26d 100644
+>>>> --- a/arch/x86/events/core.c
+>>>> +++ b/arch/x86/events/core.c
+>>>> @@ -2677,6 +2677,16 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> +static void x86_pmu_switch_guest_ctx(bool enter, void *data)
+>>>> +{
+>>>> +	u32 guest_lvtpc = *(u32 *)data;
+>>>> +
+>>>> +	if (enter)
+>>>> +		apic_write(APIC_LVTPC, guest_lvtpc);
+>>>> +	else
+>>>> +		apic_write(APIC_LVTPC, APIC_DM_NMI);
+>>>> +}
+>>>
+>>> This, why can't it use x86_pmu.guest_lvtpc here and call it a day? Why
+>>> is that argument passed around through the generic code only to get back
+>>> here?
+>>
+>> The vector has to be from the KVM. However, the current interfaces only
+>> support KVM read perf variables, e.g., perf_get_x86_pmu_capability and
+>> perf_get_hw_event_config.
+>> We need to add an new interface to allow the KVM write a perf variable,
+>> e.g., perf_set_guest_lvtpc.
 > 
->  #define system_has_cmpxchg64()		boot_cpu_has(X86_FEATURE_CX8)
+> But all that should remain in x86, there is no reason what so ever to
+> leak this into generic code.
+> 
 
-system_has_cmpxchg64() should now become a constant.
+Sure. I will change it in the V5.
 
-     Arnd
+Thanks,
+Kan
