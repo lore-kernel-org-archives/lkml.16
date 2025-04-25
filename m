@@ -1,46 +1,49 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669B8219A81;
-	Fri, 25 Apr 2025 23:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F634635;
+	Fri, 25 Apr 2025 23:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745622514; cv=none; b=tLZ/ovqrNdPHPIc8HxPKAnvXnoMj3lq1An+5Hx3rxyI3RIPrm5sBq5Bz33k9rf5J4Bpfz4F30OSTl+dqx2jYZBynEd8XCT5wqcOnDTUIQYQs27Kn3P+MhxpStpCa45n74bs2GoxEvjhi9ASJGtMUxPV/g6SfaySqIgj0Ij6yEMM=
+	t=1745622552; cv=none; b=Ket0yqsFLXxTZBCaD/ZvA7bbWu9c9sZdXVddFjqB+EK/EjTn+tUIxgIPlu0WCMhe6XIzIk4rSP5qDoZlVwzalcpSVRPD3TgZXfKWbyeWIuDxNXTX4VJqYr/G8DDNKZUmYLdODes1eNNHVcP8IGLdxT3FJQ12TTIoBWQBqfy4r1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745622514; c=relaxed/simple;
-	bh=QSlpVdCmty8zjinThYVRSUQ7qHMcIae9ToWwHSZ5E44=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bduRahpRC6iUS0ZJ/kWu63pYIjGvCszHklA324gSVIV9DS7DiERaSboRADqxqmdlYwBCTq2tYKI5kzVAEQtzZLpBxQx8svAEAxUz9l7CvwbWE6toV88se7lJJ00J6gdAY6LTmJDTAR1zeEwhwctfs2eIKfnFE/LIXFD9CqKa20c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1u8S3r-000000006ep-4AcF;
-	Fri, 25 Apr 2025 23:08:19 +0000
-Date: Sat, 26 Apr 2025 00:08:16 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next] net: ethernet: mtk_eth_soc: add support for
- MT7988 internal 2.5G PHY
-Message-ID: <aAwV4AOKYs3TljM0@makrotopia.org>
-References: <ab77dc679ed7d9669e82d8efeab41df23b524b1f.1745617638.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1745622552; c=relaxed/simple;
+	bh=Z8WeYorZeDjDZWfM4rFlcel7nAPZCgpzkVZIFGzpr9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBg0FZt6jmkibKM5IVPPdPts+BdvrxRtIAOO5KcAyc3qRX/i1/JSYdXyiYZm5OVoLZQduQbOYQJ+GxF1H9tW8asrTEUDiBO40ToSW66IycEGMufkA4VgRySQZkkTS2W7ovHp0Y7dOXsccD4dqfEf9gtg5I0sCPaQB6BliKQLlVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7W5bR60; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7W5bR60"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175CFC4CEE4;
+	Fri, 25 Apr 2025 23:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745622552;
+	bh=Z8WeYorZeDjDZWfM4rFlcel7nAPZCgpzkVZIFGzpr9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i7W5bR60HZ/wlLofVNshaQsLtdPMd2kNRArwI3YjlQG2/GjWTmHTy9Oqb82F38LPw
+	 LN8HWxdbRwPcrSaZ5KKtjpoQn7MKsPRjwyGASpJqObVMxLGDswnQlmb+a8irH2Tgh7
+	 0CuLvUfRE9Ho0G6vNYyZ1lQRwLW0RvGqpFtyer51he6xbxJz102/s3fGsPRBxvoqxk
+	 Rqp9dTVIoFsxMySu2tDpGSymU3emjg00eMgtXcymMP3QV8N3FhJHyjSPqmcNFbr+a9
+	 EUTS4+1ILs6TYsuaqjIjgls1Wsz5SVLJz2Qmn4QdlHHTZBp2ke9T0xKDkXtx90h0Cu
+	 2DOH+UwbEjnsg==
+Date: Fri, 25 Apr 2025 16:09:08 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, bpf@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
+Subject: Re: [RFC][PATCH 2/2] treewide: Have the task->flags & PF_KTHREAD
+ check use the helper functions
+Message-ID: <202504251558.AA50716@keescook>
+References: <20250425204120.639530125@goodmis.org>
+ <20250425204313.784243618@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,40 +52,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ab77dc679ed7d9669e82d8efeab41df23b524b1f.1745617638.git.daniel@makrotopia.org>
+In-Reply-To: <20250425204313.784243618@goodmis.org>
 
-On Fri, Apr 25, 2025 at 10:51:18PM +0100, Daniel Golle wrote:
-> The MediaTek MT7988 SoC comes with an single built-in Ethernet PHY
-> supporting 2500Base-T/1000Base-T/100Base-TX/10Base-T link partners in
-> addition to the built-in MT7531-like 1GE switch. The built-in PHY only
-> supports full duplex.
+On Fri, Apr 25, 2025 at 04:41:22PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Add muxes allowing to select GMAC2->2.5G PHY path and add basic support
-> for XGMAC as the built-in 2.5G PHY is internally connected via XGMII.
-> The XGMAC features will also be used by 5GBase-R, 10GBase-R and USXGMII
-> SerDes modes which are going to be added once support for standalone PCS
-> drivers is in place.
+> Getting the check if a task is a kernel thread or a user thread can be
+> error prone as it's not easy to see the difference.
 > 
-> In order to make use of the built-in 2.5G PHY the appropriate PHY driver
-> as well as (proprietary) PHY firmware has to be present as well.
+> 	if (!(task->flags & PF_KTHREAD))
 > 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
-> [...]
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> index 88ef2e9c50fc..e3a8b24dd3d3 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> [...]
-> @@ -587,6 +603,10 @@
->  #define GEPHY_MAC_SEL          BIT(1)
->  
->  /* Top misc registers */
-> +#define TOP_MISC_NETSYS_PCS_MUX	0x84
+> Is not immediately obvious that it's checking for a user thread.
+> 
+> 	if (is_user_thread(task))
+> 
+> Is much easier to review, as it is obvious that it is checking if the task
+> is a user thread.
+> 
+> Using a coccinelle script, convert these checks over to using either
+> is_user_thread() or is_kernel_thread().
+> 
+>   $ cat kthread.cocci
+>   @@
+>   identifier task;
+>   @@
+>   -	!(task->flags & PF_KTHREAD)
+>   +	is_user_thread(task)
+>   @@
+>   identifier task;
+>   @@
+>   -	(task->flags & PF_KTHREAD) == 0
+>   +	is_user_thread(task)
+>   @@
+>   identifier task;
+>   @@
+>   -	(task->flags & PF_KTHREAD) != 0
+>   +	is_kernel_thread(task)
+>   @@
+>   identifier task;
+>   @@
+>   -	task->flags & PF_KTHREAD
+>   +	is_kernel_thread(task)
+> 
+>   $ spatch --dir --include-headers kthread.cocci . > /tmp/t.patch
+>   $ patch -p1 < /tmp/t.patch
+> 
+> Make sure to undo the conversion of the helper functions themselves!
+> 
+>   $ git show include/linux/sched.h | patch -p1 -R
 
-This offset still assumes topmisc syscon to start at 0x11d10000.
-If the pending series[1] adding that syscon at 0x11d10084 gets merged
-first, this offset will have to be changed to
-#define TOP_MISC_NETSYS_PCS_MUX	0x0
+FYI, the "file in" test can be helpful. I use it to exclude tools and
+samples regularly, and *I think* it would work for excluding individual
+files too:
 
-[1]: https://patchwork.kernel.org/project/linux-mediatek/patch/20250422132438.15735-8-linux@fw-web.de/
+@name_of_rule depends !(file in "tools") && !(file in "samples")@
+
+I've been collecting random notes like this here:
+
+https://github.com/kees/kernel-tools/tree/trunk/coccinelle
+
+>  tools/sched_ext/scx_central.bpf.c          |  2 +-
+>  tools/sched_ext/scx_flatcg.bpf.c           |  2 +-
+>  tools/sched_ext/scx_qmap.bpf.c             |  2 +-
+
+I think these are fine. The Makefile is pulling in standard kbuild
+Makefiles, so I think the correct include directories (outside of
+tools/) are being used.
+
+But yeah, easy mechanical change and a readability improvement. :)
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-- 
+Kees Cook
