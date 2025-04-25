@@ -1,117 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE9B231A51
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50C0217648;
+	Fri, 25 Apr 2025 08:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567963; cv=none; b=XrryYY5iOc3NkxSnpiiaeUg+rKVjgSCuRXWSFJuxGjsedkmJSpOya+GR06D2zFB5+/WvGSQ7sojGi44S5CeM/6jNQ9jlK1UdbkYccxsTZTYO2hry/BDvDxCTighCwSvxmcftntofe5Lo4wVqNxTbUSO0k+bSV4RrL2WslhJrdWA=
+	t=1745568017; cv=none; b=oCEP/iGcwUZWzrZWDwyakUAc3wuLUOmHU7Edq5saOHOkR+OOKl3XlmWRp9C+gMru007nhK6wkXukhrJLr3DmtYWEu3Bid2Fpi/po0dYxU7oQpw3wUmjoTS/Grk3l21Hb19g1GS7o8zXeLLamV0HjuGYDC6jUNFDZysEEhYtv+0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567963; c=relaxed/simple;
-	bh=h4iOBZ59fktIHjN9U/oodWigLneksyn9qeVhjdbT7/I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OQf7feViHIqCb/5OqJH05rzUE0joH3iqepsGKyhGtqgKTfe59KiDqzwe7jYBb7HGANlKnIvV4ed2A8SwrIU07kcj9DPd3I44dlYRF4+XezdYqHLv3i9OSCLaFsfID/rrjvDxXnscTwQZ6nwG0dBzXMSTw071ZI2K6hnwPSldUIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VkVkQwnt; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745568017; c=relaxed/simple;
+	bh=erqJqGRXXM7MQJf6wrEuF5NDmvnYTzOgQlAxA2Yswo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bt7s5zq/GpjWdEStCn0zptUek9gaGwcG0Eg9MAQ4M87Gddo0wNdYuRthySFVo6HYY7vOzpAxktzIo/jdnWNfCRDWuTZrJ+YYR69G1MC0oL8UCgeSdN24iULjnDLagWX3q4Npxnr/5LwndfBB9GEJKmaocqw12Ynx3v3LPszfVBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcOxh7pU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VkVkQwnt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745567962; x=1777103962;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=h4iOBZ59fktIHjN9U/oodWigLneksyn9qeVhjdbT7/I=;
-  b=VkVkQwntTeWpoSJ4dzBSFGGoUG16N5ZPP1aVBZ+FvGVavU6FvTnn70Pc
-   fe/n6EpsPDNW2PX2m1KfMqabBJx6wfIgsR2BM6B//2GM6naMKnsZr9ya0
-   pAuqFHBpvmwmtLQQQq+bFk8YkyOb7cmJiOqSoa2YRLeEJ2cOkptROt59j
-   v91lYFvZRKO/AGRO4TfbYX92uCI5m/mk5f9hndYgxFSDHqF51CQPymMMk
-   eNaunbRb82ogPcD0MxTsTQGLLvjsJMGH4nx3rji2FIGInLv3K+jucGuA1
-   7YqD8nBivcfzx7Y/Y5gXP26Rv94Z91GjC63YOVnz2U+3QwmGSALbBcux1
-   w==;
-X-CSE-ConnectionGUID: +253/tEDSJiiTsUlRAsBwg==
-X-CSE-MsgGUID: rY+AgvusSNmQzdCOeQipZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="50889547"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="50889547"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:59:20 -0700
-X-CSE-ConnectionGUID: mLApreHQRv2F+ccffiznuA==
-X-CSE-MsgGUID: iogPStJpTTGNOTRU+QdKJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="132724960"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.83])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:59:17 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Harry Austen <hpausten@protonmail.com>, intel-xe@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Harry
- Austen <hpausten@protonmail.com>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
- <thomas.hellstrom@linux.intel.com>
-Subject: Re: [PATCH v2] drm/xe: Allow building as kernel built-in
-In-Reply-To: <20250425073534.101976-1-hpausten@protonmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250425073534.101976-1-hpausten@protonmail.com>
-Date: Fri, 25 Apr 2025 10:59:12 +0300
-Message-ID: <87y0voy8mn.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcOxh7pU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F2FC4CEE4;
+	Fri, 25 Apr 2025 08:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745568016;
+	bh=erqJqGRXXM7MQJf6wrEuF5NDmvnYTzOgQlAxA2Yswo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HcOxh7pUaiPLiLCU7eu7Ap0wNFksdYoCZR6ofN13HHRhOgvqds6tLCP+3+kFrj4ec
+	 jD0cvBj+Sxb4rK/S/u2lfOZiQ9lu6C4x2L5o/z3FTNEV2OYCTYBA1D0Z/FPBJNcB5J
+	 fmr1fWjtROPSeKi+brDdMOmD6LYFf1SCBZcgxyZcEO0pEcJWuL/uNmGZT+XJGV+571
+	 kq90kwXgPGz7KIC+7mndRQwc37oXN+jkUkIOVtGkfu1X7xjdN3Q+qOhFksEz/nolqm
+	 WJRH4xJseQgvM/Xq9I5uftgYr8tHa4JKgizwFYJAXKmqUxjh2LLLT5ur2N0w4LAdMK
+	 EZ5tYkyYwxKlQ==
+Date: Fri, 25 Apr 2025 10:00:10 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Serge Semin <fancer.lancer@gmail.com>, kernel@collabora.com,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: ata: rockchip-dwc-ahci: add RK3576
+ compatible
+Message-ID: <aAtBCgthlNieNUx5@ryzen>
+References: <20250424-rk3576-sata-v1-0-23ee89c939fe@collabora.com>
+ <20250424-rk3576-sata-v1-1-23ee89c939fe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-rk3576-sata-v1-1-23ee89c939fe@collabora.com>
 
-On Fri, 25 Apr 2025, Harry Austen <hpausten@protonmail.com> wrote:
-> Fix Kconfig symbol dependency on KUNIT, which isn't actually required
-> for XE to be built-in. However, if KUNIT is enabled, it must be built-in
-> too.
->
-> Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
-> isn't, since that results in duplicate symbol errors.
->
-> Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=3Dm")
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Signed-off-by: Harry Austen <hpausten@protonmail.com>
+On Thu, Apr 24, 2025 at 08:52:22PM +0200, Nicolas Frattaroli wrote:
+> The Rockchip RK3576 has two SATA controllers. They work the same as the
+> RK3568 SATA controllers, having the same number of clocks and ports.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > ---
-> v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
->
->  drivers/gpu/drm/xe/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-> index 9bce047901b22..bc63c396d7fef 100644
-> --- a/drivers/gpu/drm/xe/Kconfig
-> +++ b/drivers/gpu/drm/xe/Kconfig
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  config DRM_XE
->  	tristate "Intel Xe Graphics"
-> -	depends on DRM && PCI && MMU && (m || (y && KUNIT=3Dy))
-> +	depends on DRM && PCI && MMU && (m || (y && KUNIT!=3Dm))
+>  Documentation/devicetree/bindings/ata/rockchip,dwc-ahci.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/rockchip,dwc-ahci.yaml b/Documentation/devicetree/bindings/ata/rockchip,dwc-ahci.yaml
+> index 13eaa8d9a16e5a4bd43b3e184f9277494acf27a1..b5ecaabfe2e2537afe6093558fb0ab975dcf6058 100644
+> --- a/Documentation/devicetree/bindings/ata/rockchip,dwc-ahci.yaml
+> +++ b/Documentation/devicetree/bindings/ata/rockchip,dwc-ahci.yaml
+> @@ -20,6 +20,7 @@ select:
+>        contains:
+>          enum:
+>            - rockchip,rk3568-dwc-ahci
+> +          - rockchip,rk3576-dwc-ahci
+>            - rockchip,rk3588-dwc-ahci
+>    required:
+>      - compatible
+> @@ -29,6 +30,7 @@ properties:
+>      items:
+>        - enum:
+>            - rockchip,rk3568-dwc-ahci
+> +          - rockchip,rk3576-dwc-ahci
+>            - rockchip,rk3588-dwc-ahci
+>        - const: snps,dwc-ahci
+>  
+> @@ -83,6 +85,7 @@ allOf:
+>            contains:
+>              enum:
+>                - rockchip,rk3568-dwc-ahci
+> +              - rockchip,rk3576-dwc-ahci
+>      then:
+>        properties:
+>          clocks:
+> 
+> -- 
+> 2.49.0
+> 
 
-I can't make heads or tails about that. I think expressing the kunit
-dependency on a separate line like this is both much more common and
-clear:
-
-	depends on KUNIT || KUNIT=3Dn
-
->  	select INTERVAL_TREE
->  	# we need shmfs for the swappable backing store, and in particular
->  	# the shmem_readpage() which depends upon tmpfs
-> @@ -51,7 +51,7 @@ config DRM_XE
->=20=20
->  config DRM_XE_DISPLAY
->  	bool "Enable display support"
-> -	depends on DRM_XE && DRM_XE=3Dm && HAS_IOPORT
-> +	depends on DRM_XE && (DRM_XE=3Dm || DRM_I915!=3Dy) && HAS_IOPORT
->  	select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
->  	select I2C
->  	select I2C_ALGOBIT
-
---=20
-Jani Nikula, Intel
+Looks good to me:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
