@@ -1,121 +1,248 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC488F5E;
-	Fri, 25 Apr 2025 13:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327358F5E
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587439; cv=none; b=Cg+jLeNqfygGaQqRRX0c8Ont0pB/YNVx2svad6rWzP0jBhnrWf3VRwEhImk+P4vNm6ubgKih/d4yllpDr/8paJIU/b0qKZMqK6JUes4USZAdhyDj6MiGjFoBgRcEql8cW9ML7EkiUyVh/SpBrhCkXuonsX0GFuX71iM3AAxh9Xo=
+	t=1745587573; cv=none; b=K029FmyFUyoiAEAS19ZXrL5TacMmneJDuIRSeKcvT9V6IKcKVjjvJFooPRFA7PPik9k0jz0WHp+y0XthORgcp3hyCEqfUK02bKJkm62uNPGL7aIwGNXbXcMUsU1MoinwHHtHdXJEuDsq12XWWDvpUA3dwL6vZEdX67DRduIiDmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587439; c=relaxed/simple;
-	bh=1wzGwsHJk6GM4JVSRc5JQFv98aaci3bQp14s5F5hZj4=;
+	s=arc-20240116; t=1745587573; c=relaxed/simple;
+	bh=j7KaWQjb0PncCTrObU98DGteOGAKCmk9pRp7BnXKXsA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FsiYHW4LIIi1KlzZl1uM1gSMA0ALgMyntrp0E0drJBCmICc+ExdP5/X3B9UufrY6WIScNfK8yNP8/sMiH0DmAlo9pvpBCYFSOVS/25uYkqJsMCIYd9spl445H5p2Ap7hPVCULCgEF9J5qdAzbyxPbu1O9xAc042ikH6hUhT5md8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0CALfVR; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RvhE+TB+p0BoDg9HdAOVrWGaZm4AWQjLMILdukIkkJPEomJ533utahUjXaR9HFQBIh8OsU5fuXDLibsd6/m54mtrhTn0iknZ0RtybxYabf0/sUYLBvk7v6ZFkF32xkf9i5LY4mBcXpQ62nH5JjhfaDOlezDv5SUMWXGF9d8N7lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=M3O/0FPm; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0CALfVR"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c14016868so2116122f8f.1;
-        Fri, 25 Apr 2025 06:23:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="M3O/0FPm"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39149bccb69so1999777f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745587436; x=1746192236; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1745587569; x=1746192369; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=pKYXe62kLy/PK+NiFHwGFhROYiWY2U4thO9lzKIe64I=;
-        b=C0CALfVRdwOze56YM4iy6F/xUCcLuVmr99HqY2Oa8L80J6nQZUJjY1acyOYLbjSAmz
-         L7wtGA3Xds/HREylvIKVZyTDkfgAwBRFjHXwZ1SLJlSr54LvuyE3W25bWak517SnhO42
-         nUROsblKDKpnf/XnGDfg7Y9EDnLZPtUBd9ZwpQSdFWRWM0YAJ8MM8i0Q5pYRB/qJQN7w
-         Dt2Ho4mJN5surkqcwzgBbuBAC+ECdMTpVzkSYYO01W1QqMh8deY63liWTAmB2qw1AiPX
-         /YcKj38ux42TWpoDWI+ySwSJJJypnnDNRUlvLoFrxGnrztP+pPg38MvZJVlCWeXfY7fO
-         IDSA==
+        bh=TvlFep0NPTyeHOqXKhU3kd0cu/zjg3rVdkJdrD1m0V0=;
+        b=M3O/0FPmKufPGBttCeDM9qAKBjfCMh8j2t51JyKw5Ec6Yvse7VWKZP4OcPSANMMMr6
+         dqaPa1XiVkIKIcMbZ//mm1M5jCeMZ0lr1RGuxmG8BikHEg23+eE3JWhkhnk/QX+jGd3V
+         67OVElPxAquNyQAHVfrqIYhu32aoNjmkBQ2Sa9uDzIdy+Ob6by94M6EK7F1Bmvzu5fK8
+         RuQgbyPWXxKTtrCZoNfvV6b+uvEsjl2EeDXPvIit4am8DIfMfuL4Iq3iPWNUR8saH2k8
+         0tKiuKkH6fX4gtGaJlhlRZO/14ykP3fCmo9HdhcYmwLSiTwPONwYTX012qRAjm/rLJvP
+         VxUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745587436; x=1746192236;
+        d=1e100.net; s=20230601; t=1745587569; x=1746192369;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pKYXe62kLy/PK+NiFHwGFhROYiWY2U4thO9lzKIe64I=;
-        b=ZPmknTIhuNk/ELxTRvyWxBH7CN/zfeop7ai7pp5apT8BTTTziBFuX3+c9wXVJBTXnM
-         e+hLTXQcW1XIr+zmSrog6eXoJWyPVmpbamFTK10A6AADSkjSi6mDj89zMUx+ugXfH92Y
-         J9R0vwUBoKKJOX9wIiTXz7qI9tq4Z2w3oNe3h4Apwpxf4LQ1QOb+SmzbfsuIXPzTK6kI
-         LvzmBm6s9GMkk9P/HChIWGWmZFw55ohl6EbIizwxPIWJJdrbJGq6sP/ms8aBupmzD0aJ
-         vJ0jNXLMoCuosbgL3ZvraCnyyk8yI2Zjx1e/fpRuQzN3ZgZs2CO3EbSZhrIRe1Wszqiq
-         jhsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXa5Ru79abPQypukA3AdYfa8o2RCMoTfWI2fAC7yCC09ydWbtXS3+RHQ+EdLzAC8khW30Hvgi11BMoLArc=@vger.kernel.org, AJvYcCXhuDua/ZrhJB+l1I9DBfmBXR219SW6TM84B052HqXzQNbTfw+/4QDvag8ftoar6VNktntQv2noSZwBWATE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpWsF+88eQHhvqw0GmyaaxGczZ27wAbAxhBmF+D+9kL6MniwPA
-	bHDa26sWUi4eTpvdoI1hUCKVS7ec2MzFnFAoCd5mw1/8G+wHeUl3
-X-Gm-Gg: ASbGnctBUvxj/6Cl74nd+0Z5HinWkhO9u08aX2cHeNgowoOsN2guY7JNuLn0e8K6EuR
-	YNeWzMtseNOZbvN2UWHB5W+elPRN8dIvvkAsq3A22057uwvcggkBgQOy7ucs1y7s8HrNFybGwZ0
-	1cH9x0oUVSt4XseWDELc8sucO5uPnYXqkiqs++MPKdmDs8wMY5cM6B11SqjZrkGjdqT7aLWkD/E
-	FqkPpkWSGQs7oG7vbRLW1Gh5RvASJqHInM8UDFYwPhI/HDAX606ixHP0148TmGQ1o57vKdoUvJs
-	4FjL0dU6+LR4ie4YDFBpUYHIvqriFNIQH8S5aJta
-X-Google-Smtp-Source: AGHT+IFII0EqynEWPZzvrGLmpKWfS7u49UoGkuCQiAlKncT8hgoImF1ZrCzzJCNwbFrIyYmCHxOPfw==
-X-Received: by 2002:a05:6000:400f:b0:39c:266c:12a5 with SMTP id ffacd0b85a97d-3a074e2e6a3mr2130241f8f.13.1745587436006;
-        Fri, 25 Apr 2025 06:23:56 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073e5d4b0sm2320381f8f.89.2025.04.25.06.23.55
+        bh=TvlFep0NPTyeHOqXKhU3kd0cu/zjg3rVdkJdrD1m0V0=;
+        b=k8xb4ZEQEcUe9w1SRFgmaZZSaneR+kghtX9d+qBw7pOLD2EJOggxuFxPZpCFoxem60
+         dRjQXFWCpjj6mc4oaRM9jltrE6aAnZm2km4QAY4/uQhONvp5uiVWjTDKvlLrfBlF5NLS
+         1qqu/43FFkq2xCEvA+L/iKUUhMDOcclSvFyuPu4j7Gtv/Om+6L7cu3LuoCooFbbGBpjH
+         2NT1zKjC3hxCVgT1HU79iU2RwnFddeEnp2L6ypmGXDnJr3w3ODt0PL14ji0WvzhTU0yk
+         BH0qb6D8g2nJQf1uspTShCFBDilCAhKsZO+HXFzGmjLQEbLjHJ5x9dDrgMaAeXJTVErB
+         qOZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXohDE1itHDR+usH2b04+b2FWddFrTF/0IebcRQRmx0NUBOr4BVLFnw4XNJHblaOqvoxe2ZOoOz0o1Tnlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1hS4GHdiAIqN6mFhiEECVByRd2tWTzps12xcWFbtigL+IYke9
+	Nn02NETdJFEE1crF5Sc9nZtsPYxGfLdqj3VLqhKse8JCGpxoN6OFeS/YeVleLuw=
+X-Gm-Gg: ASbGnct+HD3wXFtxYxV2rSZwxvkopLMd3B+dUQOv/D3fvCbw/qYPDl9PvOhwstp6h/x
+	LHI5mUP0qNxi4+Z2fUGCYgHE88J+TRIX74Os5cWr/MmBNzZLuN0K+yarm+2HYLRTccNxH+kk3UI
+	j0yOFW3Fa4x3J+fIjOa99JDV+aNRIldLkJFFGt4HqJXkfYB2WoE5lmy/1R1b19aZqw4hNDkVGyR
+	3FX878vPmUeiH9IIO5rlXMFu3jyntXJfIZUoIk+X/3nnJ3BKBrCrZgXXQqbLTofGTl4xhayuMpq
+	d2xj8aq5NmSjBHRJUdsnO7kiTyOj
+X-Google-Smtp-Source: AGHT+IHAbwTDTK6qggDHRlhV93l9pLMtShZ8GEckKUdC0DHFBCYPix0OUA97YQ1vX0PSGamSi/CZFQ==
+X-Received: by 2002:a05:6000:2505:b0:38f:6287:6474 with SMTP id ffacd0b85a97d-3a074e1d88amr1847317f8f.15.1745587569386;
+        Fri, 25 Apr 2025 06:26:09 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::f716])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46976sm2369788f8f.63.2025.04.25.06.26.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:23:55 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:23:53 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, wens@csie.org,
-	jernej.skrabec@gmail.com, samuel@sholland.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] crypto: sun8i-ce-cipher - use
- crypto_skcipher_driver_name()
-Message-ID: <aAuM6SmS4Dhsdxfo@Red>
-References: <20250425124517.2225963-1-ovidiu.panait.oss@gmail.com>
- <20250425124517.2225963-2-ovidiu.panait.oss@gmail.com>
+        Fri, 25 Apr 2025 06:26:08 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:26:08 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Mayuresh Chitale <mchitale@ventanamicro.com>
+Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming runnable
+Message-ID: <20250425-2bc11e21ecef7269702c424e@orel>
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+ <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250425124517.2225963-2-ovidiu.panait.oss@gmail.com>
+In-Reply-To: <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
 
-Le Fri, Apr 25, 2025 at 03:45:15PM +0300, Ovidiu Panait a �crit :
-> Use crypto_skcipher_driver_name() helper from <crypto/skcipher.h>, instead
-> of accessing struct crypto_alg directly.
+On Thu, Apr 03, 2025 at 01:25:23PM +0200, Radim Krčmář wrote:
+> Beware, this patch is "breaking" the userspace interface, because it
+> fixes a KVM/QEMU bug where the boot VCPU is not being reset by KVM.
 > 
-> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+> The VCPU reset paths are inconsistent right now.  KVM resets VCPUs that
+> are brought up by KVM-accelerated SBI calls, but does nothing for VCPUs
+> brought up through ioctls.
+
+I guess we currently expect userspace to make a series of set-one-reg
+ioctls in order to prepare ("reset") newly created vcpus, and I guess
+the problem is that KVM isn't capturing the resulting configuration
+in order to replay it when SBI HSM reset is invoked by the guest. But,
+instead of capture-replay we could just exit to userspace on an SBI
+HSM reset call and let userspace repeat what it did at vcpu-create
+time.
+
+> 
+> We need to perform a KVM reset even when the VCPU is started through an
+> ioctl.  This patch is one of the ways we can achieve it.
+> 
+> Assume that userspace has no business setting the post-reset state.
+> KVM is de-facto the SBI implementation, as the SBI HSM acceleration
+> cannot be disabled and userspace cannot control the reset state, so KVM
+> should be in full control of the post-reset state.
+> 
+> Do not reset the pc and a1 registers, because SBI reset is expected to
+> provide them and KVM has no idea what these registers should be -- only
+> the userspace knows where it put the data.
+
+s/userspace/guest/
+
+> 
+> An important consideration is resume.  Userspace might want to start
+> with non-reset state.  Check ran_atleast_once to allow this, because
+> KVM-SBI HSM creates some VCPUs as STOPPED.
+> 
+> The drawback is that userspace can still start the boot VCPU with an
+> incorrect reset state, because there is no way to distinguish a freshly
+> reset new VCPU on the KVM side (userspace might set some values by
+> mistake) from a restored VCPU (userspace must set all values).
+
+If there's a correct vs. incorrect reset state that KVM needs to enforce,
+then we'll need a different API than just a bunch of set-one-reg calls,
+or set/get-one-reg should be WARL for userpace.
+
+> 
+> The advantage of this solution is that it fixes current QEMU and makes
+> some sense with the assumption that KVM implements SBI HSM.
+> I do not like it too much, so I'd be in favor of a different solution if
+> we can still afford to drop support for current userspaces.
+> 
+> For a cleaner solution, we should add interfaces to perform the KVM-SBI
+> reset request on userspace demand.
+
+That's what the change to kvm_arch_vcpu_ioctl_set_mpstate() in this
+patch is providing, right?
+
+> I think it would also be much better
+> if userspace was in control of the post-reset state.
+
+Agreed. Can we just exit to userspace on SBI HSM reset?
+
+Thanks,
+drew
+
+> 
+> Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
 > ---
->  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  arch/riscv/include/asm/kvm_host.h     |  1 +
+>  arch/riscv/include/asm/kvm_vcpu_sbi.h |  3 +++
+>  arch/riscv/kvm/vcpu.c                 |  9 +++++++++
+>  arch/riscv/kvm/vcpu_sbi.c             | 21 +++++++++++++++++++--
+>  4 files changed, 32 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> index 05f67661553c..f03a8fa7bfa2 100644
-> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> @@ -17,6 +17,7 @@
->  #include <linux/io.h>
->  #include <linux/pm_runtime.h>
->  #include <crypto/scatterwalk.h>
-> +#include <crypto/skcipher.h>
->  #include <crypto/internal/des.h>
->  #include <crypto/internal/skcipher.h>
->  #include "sun8i-ce.h"
-> @@ -438,7 +439,7 @@ int sun8i_ce_cipher_init(struct crypto_tfm *tfm)
->  				    crypto_skcipher_reqsize(op->fallback_tfm));
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index 0c8c9c05af91..9bbf8c4a286b 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -195,6 +195,7 @@ struct kvm_vcpu_smstateen_csr {
 >  
->  	memcpy(algt->fbname,
-> -	       crypto_tfm_alg_driver_name(crypto_skcipher_tfm(op->fallback_tfm)),
-> +	       crypto_skcipher_driver_name(op->fallback_tfm),
->  	       CRYPTO_MAX_ALG_NAME);
+>  struct kvm_vcpu_reset_state {
+>  	spinlock_t lock;
+> +	bool active;
+>  	unsigned long pc;
+>  	unsigned long a1;
+>  };
+> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> index aaaa81355276..2c334a87e02a 100644
+> --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> @@ -57,6 +57,9 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
+>  				     u32 type, u64 flags);
+>  void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
+>                                        unsigned long pc, unsigned long a1);
+> +void __kvm_riscv_vcpu_set_reset_state(struct kvm_vcpu *vcpu,
+> +                                      unsigned long pc, unsigned long a1);
+> +void kvm_riscv_vcpu_sbi_request_reset_from_userspace(struct kvm_vcpu *vcpu);
+>  int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
+>  int kvm_riscv_vcpu_set_reg_sbi_ext(struct kvm_vcpu *vcpu,
+>  				   const struct kvm_one_reg *reg);
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index b8485c1c1ce4..4578863a39e3 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -58,6 +58,11 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
+>  	struct kvm_vcpu_reset_state *reset_state = &vcpu->arch.reset_state;
+>  	void *vector_datap = cntx->vector.datap;
 >  
->  	err = pm_runtime_get_sync(op->ce->dev);
+> +	spin_lock(&reset_state->lock);
+> +	if (!reset_state->active)
+> +		__kvm_riscv_vcpu_set_reset_state(vcpu, cntx->sepc, cntx->a1);
+> +	spin_unlock(&reset_state->lock);
+> +
+>  	memset(cntx, 0, sizeof(*cntx));
+>  	memset(csr, 0, sizeof(*csr));
+>  
+> @@ -520,6 +525,10 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+>  
+>  	switch (mp_state->mp_state) {
+>  	case KVM_MP_STATE_RUNNABLE:
+> +		if (riscv_vcpu_supports_sbi_ext(vcpu, KVM_RISCV_SBI_EXT_HSM) &&
+> +				vcpu->arch.ran_atleast_once &&
+> +				kvm_riscv_vcpu_stopped(vcpu))
+> +			kvm_riscv_vcpu_sbi_request_reset_from_userspace(vcpu);
+>  		WRITE_ONCE(vcpu->arch.mp_state, *mp_state);
+>  		break;
+>  	case KVM_MP_STATE_STOPPED:
+> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+> index 3d7955e05cc3..77f9f0bd3842 100644
+> --- a/arch/riscv/kvm/vcpu_sbi.c
+> +++ b/arch/riscv/kvm/vcpu_sbi.c
+> @@ -156,12 +156,29 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
+>  	run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
+>  }
+>  
+> +/* must be called with held vcpu->arch.reset_state.lock */
+> +void __kvm_riscv_vcpu_set_reset_state(struct kvm_vcpu *vcpu,
+> +                                      unsigned long pc, unsigned long a1)
+> +{
+> +	vcpu->arch.reset_state.active = true;
+> +	vcpu->arch.reset_state.pc = pc;
+> +	vcpu->arch.reset_state.a1 = a1;
+> +}
+> +
+>  void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
+>                                        unsigned long pc, unsigned long a1)
+>  {
+>  	spin_lock(&vcpu->arch.reset_state.lock);
+> -	vcpu->arch.reset_state.pc = pc;
+> -	vcpu->arch.reset_state.a1 = a1;
+> +	__kvm_riscv_vcpu_set_reset_state(vcpu, pc, a1);
+> +	spin_unlock(&vcpu->arch.reset_state.lock);
+> +
+> +	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
+> +}
+> +
+> +void kvm_riscv_vcpu_sbi_request_reset_from_userspace(struct kvm_vcpu *vcpu)
+> +{
+> +	spin_lock(&vcpu->arch.reset_state.lock);
+> +	vcpu->arch.reset_state.active = false;
+>  	spin_unlock(&vcpu->arch.reset_state.lock);
+>  
+>  	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
 > -- 
 > 2.48.1
 > 
-
-Acked-by: Corentin LABBE <clabbe.montjoie@gmail.com>
-Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
-
-Thanks
