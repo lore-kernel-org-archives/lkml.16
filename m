@@ -1,568 +1,107 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A002472A6;
-	Fri, 25 Apr 2025 14:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02B72580C7;
+	Fri, 25 Apr 2025 14:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745591901; cv=none; b=oorO7Qm93qMpnLi/rnqJOzODqQobeVYXLxPS2LMw0sV27YlfFWCB05RPM1cp8FBxyQ1Uh/X5sOoCvmWxtJUxpv8bOXn6HJfUHzP9C5x2NNiRWH5HB4CxpikWMU/ROvRUiNZwwwUKcEq6mfiuMaKJ5emUHTY9RUWaFSR8XCMdXRY=
+	t=1745591968; cv=none; b=lvfWT2dHJNSN89bjhpOHRaADNIE3fXjfT/DgKq1FULBmMDyx3RhtM+cLiHTzwJtbzw8q5d7lpAislVavmPRJySl4pgI1Mhjd48i10ZbHfpxDRCAEV418ai27YE1ontbj3E2pJ+lpCjMrBrl2EXZ0+OvCc3nq+sPG2J1xQ0aV1is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745591901; c=relaxed/simple;
-	bh=idNfLkiSgUVkiZCV56AhL5Zg1XHHF/WBcjWVZoadsr0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ct9DdrqHKD0P7qkM4Moc4r3iYnLF9uGBkQ0o0PPT1XBCmk9ytiZyrqYza0ZGXx/1BJll6RrwlYevttaESKrgZs2GyTFKr/xpejTJnOQf16u4Pn3BqKFTDIPMO1YKw5WDhgw+Xk9/xgZSG5dVwhWsJYN2M69Sxxssk2ogmawTygA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85ea482e3adso100696239f.0;
-        Fri, 25 Apr 2025 07:38:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745591893; x=1746196693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jfqBRvfPPDpi0p6yGNanQ9Wexx6tabtfBunndyiN/Do=;
-        b=XW21PhrxXcxZ6uYpyYu7h6YceZHlj4LqP38pJoTm6WOqGaNCrsm9gbLUrrV6ZbWLCG
-         TLKFH4JYR/4NkQuusl4eaLVRM/hO3USFZAl1wzKyAthnhZdpoMMGNd1A2nadtXTY1YbY
-         JfhjG4TeWvbo3rdWLxB026OScRwI7Rtz2PNtlESm7zBLkDnNKbV8HrdGGfLX7ngOOWnV
-         ezsk/J+Zi3GiPLgItqer8B+KMa4e6b4HZUnC72VLqr2+gxUC8FTOSf9rsYsOGIYgAZnL
-         nSM290KQifalxGY0plyanI4hw8rSKfQDEDaUXKsnyGsfHaMCYi1nTuQoNdqR7Oxdd2FM
-         GzuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHlUY+D5orLh8l4BLV6Dw5KkgNJUldQOwcDQ6D5uzSE0PrgfHt/XxaiwAqjLJg1UCJCP40JJTCQJjK@vger.kernel.org, AJvYcCWrOune61JCAWD5wOAxLKRz7Z9nOr47n/4/mTlJPsv7oZ2+k+YjsWiryH+oWEPuA0puoieKuiNdjThWwm8W@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/RLwLDFL53MYv8zm4+4OovIq2FDvT7o4OaByrURlFlUXNM6lW
-	CBrNgCTLZhF35xI3d3CGMv8ZW+HEqj+mKrqjc5ljQyiJFOrgehmYtYN8yr3vE6s=
-X-Gm-Gg: ASbGnctr8YhoozKxJevvE4CN029n7TvZy8YrVhv+4qQgQDgdbOjnfkCJGDCN449eOXU
-	ORdp7+wa2tABW4GTsA8p+UnvaeY+IrCX9TGsJ/pCg8aw0kjCd2HBSwq9jz9BTWSavirT2AumMWu
-	Y6dy2QPR5AF1wVyG2N5+8UQUtfRDoDissxhoW3AOQxcPKMYkrQHdycTykLnNgto88IZD+ZhPjmG
-	+OyPakwyZ7gGBIl4HNx20xn7LFSjLTnPwmfe5HwJCR78npjDtGERvDc5PNO9nTeJLn5iXbtE+8n
-	QxHXY+YdyiKxGakvl70zbt4X7cVOcmFwOl27TqSRdlIJpX4GMvvUvDk4INVVWDFw+mZlETF0h6N
-	AkIpO
-X-Google-Smtp-Source: AGHT+IGyYZNNHaI1D+hDdys69WkWDlwS5XdYAnztvzSqmLnOhkzr1wPhottjFIv1/qWqkpuhD5z3cg==
-X-Received: by 2002:a05:6e02:19c9:b0:3d9:2992:671b with SMTP id e9e14a558f8ab-3d93158d416mr69085245ab.4.1745591892971;
-        Fri, 25 Apr 2025 07:38:12 -0700 (PDT)
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com. [209.85.166.51])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f824a38de7sm816180173.35.2025.04.25.07.38.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 07:38:11 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85db3475637so103617839f.1;
-        Fri, 25 Apr 2025 07:38:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUaM+B3hyEoYTg1mW+QuTlAgl16ac8sTdypgIQwpfIMaPEiSHy8PxCfF2xDXz+w1tQVWyS+MH9PkBmxm0SZ@vger.kernel.org, AJvYcCX6X7xdQapxwYNRvKlr67odnYIwHYbv079FCGhZnbzkzqcvM2APocqaYdshMNOhmpbF4hbXiMoB166u@vger.kernel.org
-X-Received: by 2002:a05:6e02:1073:b0:3d4:346e:8d49 with SMTP id
- e9e14a558f8ab-3d931628480mr62227045ab.9.1745591891305; Fri, 25 Apr 2025
- 07:38:11 -0700 (PDT)
+	s=arc-20240116; t=1745591968; c=relaxed/simple;
+	bh=cjtjsjbpssW6UAfWKgY83pMAqTjtOCyKN6e98BJ7T7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nFoMgBOPHfrBg/3D8Cprt2utTEXfTzwbi+hk5BsP504QQmvRN/07Bg7B1x78Mqk1VhEPwdScwaREe0PEm1MwOtKmMb8Pr84RFcQDmxxX+RJ6J7jTzyRPOQx1qYOL2/NKQy5+4REGLOei29jsccrFV64cL43znSJmM8FVBLEb6PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6LX2SW/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6LX2SW/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF59C4CEE4;
+	Fri, 25 Apr 2025 14:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745591968;
+	bh=cjtjsjbpssW6UAfWKgY83pMAqTjtOCyKN6e98BJ7T7o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=S6LX2SW/NWs7snB8spmKeqwjMHoodW/mZA9EkQcujUed7Thp4uVrrPXvnNsXqtQ6V
+	 brk70ABY+f6X5I/1V58VwqUTpE+ZZifFSeVC//9B3psb4IzQJEbZlT3tGP6aDmdU/Z
+	 a4POccIe1oGrxma2t4dSqc3Dc2rUKwSihWKPdgutocnkuu9PvFLPXqIRzGtPjnryQK
+	 5/QequEo/O6tQLx6wB0CrdJreyoFbRAD02DUlcCqEhOQvsYbRWD62RUkUn1ghNG1ah
+	 wychPCrDfv20BUQo2uX8ckr73Zd3YB60guM358n4fbjD/5kaT3H0gjLWtEA67rQj0y
+	 IDQnC2SlxTnhQ==
+Message-ID: <7c647ca4-6874-4f41-91fa-828f0eafcb51@kernel.org>
+Date: Fri, 25 Apr 2025 16:39:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413134318.66681-1-jernej.skrabec@gmail.com>
- <20250413134318.66681-3-jernej.skrabec@gmail.com> <20250425135429.174a1871@donnerap.manchester.arm.com>
-In-Reply-To: <20250425135429.174a1871@donnerap.manchester.arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Fri, 25 Apr 2025 22:37:57 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64uoeY-=4Dw5c5Zc5LxYqtUys76Bbe_S5P6_9xiC9eC3g@mail.gmail.com>
-X-Gm-Features: ATxdqUFrMTPPODJj9edJnZR-Ay_KQrK9fut9CUOsKaMHTTZCEqlbKWQQRihfrhg
-Message-ID: <CAGb2v64uoeY-=4Dw5c5Zc5LxYqtUys76Bbe_S5P6_9xiC9eC3g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, samuel@sholland.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dt-bindings: arm: qcom,ids: add SoC ID for SM8750
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250425140346.1087527-1-mukesh.ojha@oss.qualcomm.com>
+ <20250425140346.1087527-2-mukesh.ojha@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250425140346.1087527-2-mukesh.ojha@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 8:54=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> On Sun, 13 Apr 2025 15:42:57 +0200
-> Jernej Skrabec <jernej.skrabec@gmail.com> wrote:
->
-> Hi Jernej,
->
-> thanks for sending this, I now went through this in more detail and
-> compared against the schematic, so some more nits below.
-> I added the two comments from my other email before, so you can ignore th=
-at
-> one now.
->
-> > OrangePi 3 LTS is quite similar to original OrangePi 3, but it has a lo=
-t
-> > small changes that makes DT sharing unpractical with it.
-> >
-> > OrangePi 3 LTS has following features:
-> > - Allwinner H6 quad-core 64-bit ARM Cortex-A53
-> > - GPU Mali-T720
-> > - 2 GB LPDDR3 RAM
-> > - AXP805 PMIC
-> > - AW859A Wifi/BT 5.0
-> > - 2x USB 2.0 host port (A)
-> > - USB 3.0 Host
-> > - Gigabit Ethernet (Motorcomm YT8531C phy)
-> > - HDMI 2.0 port
-> > - soldered 8 GB eMMC
-> > - 2x LED
-> > - microphone
-> > - audio jack
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
-> >  .../allwinner/sun50i-h6-orangepi-3-lts.dts    | 351 ++++++++++++++++++
-> >  2 files changed, 352 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-=
-lts.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/d=
-ts/allwinner/Makefile
-> > index 00bed412ee31..72c43bd0e2ab 100644
-> > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > @@ -33,6 +33,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero=
--plus.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
-> > +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3-lts.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
-> >  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts=
- b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
-> > new file mode 100644
-> > index 000000000000..c8830d5c2f09
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
-> > @@ -0,0 +1,351 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +// Copyright (C) 2025 Jernej Skrabec <jernej.skrabec@gmail.com>
-> > +// Based on sun50i-h6-orangepi-3.dts, which is:
-> > +// Copyright (C) 2019 Ond=C5=99ej Jirman <megous@megous.com>
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sun50i-h6.dtsi"
-> > +#include "sun50i-h6-cpu-opp.dtsi"
-> > +#include "sun50i-h6-gpu-opp.dtsi"
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/leds/common.h>
-> > +
-> > +/ {
-> > +     model =3D "OrangePi 3 LTS";
-> > +     compatible =3D "xunlong,orangepi-3-lts", "allwinner,sun50i-h6";
-> > +
-> > +     aliases {
-> > +             ethernet0 =3D &emac;
-> > +             ethernet1 =3D &aw859a;
-> > +             serial0 =3D &uart0;
-> > +     };
-> > +
-> > +     chosen {
-> > +             stdout-path =3D "serial0:115200n8";
-> > +     };
-> > +
-> > +     connector {
-> > +             compatible =3D "hdmi-connector";
-> > +             ddc-en-gpios =3D <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-> > +             type =3D "a";
-> > +
-> > +             port {
-> > +                     hdmi_con_in: endpoint {
-> > +                             remote-endpoint =3D <&hdmi_out_con>;
-> > +                     };
-> > +             };
-> > +     };
-> > +
-> > +     ext_osc32k: ext_osc32k_clk {
->
-> For the sake of completeness, as mentioned in the other mail, I think we
-> want dashes in the node name.
->
-> > +             #clock-cells =3D <0>;
-> > +             compatible =3D "fixed-clock";
-> > +             clock-frequency =3D <32768>;
-> > +             clock-output-names =3D "ext_osc32k";
->
-> Should the output name also contain dashes instead?
->
-> > +     };
-> > +
-> > +     leds {
-> > +             compatible =3D "gpio-leds";
-> > +
-> > +             led-0 {
-> > +                     function =3D LED_FUNCTION_POWER;
-> > +                     color =3D <LED_COLOR_ID_RED>;
-> > +                     gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 *=
-/
-> > +                     default-state =3D "on";
->
-> Maybe something for a follow up patch, but I noticed that the schematic
-> does not show current limiting resistors for the LEDs. This probably work=
-s
-> because the default drive strength is 0b01, so level 1 (in a range from 0
-> to 3, which we map to 10, 20, 30, 40 mA). The exact LED is not mentioned,
-> but I would imagine that more than 20 mA would not be healthy, and even
-> this might be a stretch over longer times.
->
-> So should we force the drive-strength to <10> or <20> somewhere? How does
-> this even work for those gpios references?
+On 25/04/2025 16:03, Mukesh Ojha wrote:
+> Add the unique ID for Qualcomm SM8750 SoC.
+> This value is used to differentiate the SoC across qcom targets.
+> 
+> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
 
-I think it's possible to have a pinctrl setting node without the
-"function" property? That way the pin config settings are applied,
-but no function is muxed, thereby not conflicting with GPIO usage.
+Huh, surprised to see this patch so late...
 
-I've not actually tried it though.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-This is also why I didn't want new pinctrl bindings that "force"
-one to mux the pin.
-
-ChenYu
-
-> > +             };
-> > +
-> > +             led-1 {
-> > +                     function =3D LED_FUNCTION_STATUS;
-> > +                     color =3D <LED_COLOR_ID_GREEN>;
-> > +                     gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 *=
-/
-> > +             };
-> > +     };
-> > +
-> > +     reg_gmac_3v3: gmac-3v3 {
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "gmac-3v3";
-> > +             regulator-min-microvolt =3D <3300000>;
-> > +             regulator-max-microvolt =3D <3300000>;
-> > +             startup-delay-us =3D <150000>;
-> > +             enable-active-high;
-> > +             gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
->
-> Can you please add a "vin-supply =3D <&reg_vcc5v>;" line here, to chain t=
-hem
-> up nicely?
->
-> > +     };
-> > +
-> > +     reg_vcc5v: vcc5v {
-> > +             /* board wide 5V supply directly from the DC jack */
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "vcc-5v";
-> > +             regulator-min-microvolt =3D <5000000>;
-> > +             regulator-max-microvolt =3D <5000000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     reg_wifi_3v3: wifi-3v3 {
-> > +             /* 3.3V regulator for WiFi and BT */
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "wifi-3v3";
-> > +             regulator-min-microvolt =3D <3300000>;
-> > +             regulator-max-microvolt =3D <3300000>;
-> > +             enable-active-high;
-> > +             gpio =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
->
-> Same vin-supply here, please, this discrete regulator is fed by DCIN 5V.
->
-> > +     };
-> > +
-> > +     wifi_pwrseq: wifi-pwrseq {
-> > +             compatible =3D "mmc-pwrseq-simple";
-> > +             clocks =3D <&rtc 1>;
->
-> As mentioned yesterday, please use CLK_OSC32K_FANOUT.
->
-> > +             clock-names =3D "ext_clock";
-> > +             reset-gpios =3D <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
-> > +             post-power-on-delay-ms =3D <200>;
-> > +     };
-> > +};
-> > +
-> > +&cpu0 {
-> > +     cpu-supply =3D <&reg_dcdca>;
-> > +};
-> > +
-> > +&de {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&dwc3 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&ehci0 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&ehci3 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&emac {
-> > +     pinctrl-names =3D "default";
-> > +     pinctrl-0 =3D <&ext_rgmii_pins>;
-> > +     phy-mode =3D "rgmii-rxid";
->
-> So relating to what Andrew said earlier today, should this read rgmii-id
-> instead? Since the strap resistors just set some boot-up value, but we
-> want the PHY driver to enable both RX and TX delay programmatically?
->
-> > +     phy-handle =3D <&ext_rgmii_phy>;
-> > +     phy-supply =3D <&reg_gmac_3v3>;
-> > +     allwinner,rx-delay-ps =3D <0>;
-> > +     allwinner,tx-delay-ps =3D <700>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&gpu {
-> > +     mali-supply =3D <&reg_dcdcc>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&hdmi {
-> > +     hvcc-supply =3D <&reg_bldo2>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&hdmi_out {
-> > +     hdmi_out_con: endpoint {
-> > +             remote-endpoint =3D <&hdmi_con_in>;
-> > +     };
-> > +};
-> > +
-> > +&mdio {
-> > +     ext_rgmii_phy: ethernet-phy@1 {
-> > +             compatible =3D "ethernet-phy-ieee802.3-c22";
-> > +             reg =3D <1>;
-> > +
-> > +             motorcomm,clk-out-frequency-hz =3D <125000000>;
-> > +
-> > +             reset-gpios =3D <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-> > +             reset-assert-us =3D <15000>;
-> > +             reset-deassert-us =3D <100000>;
-> > +     };
-> > +};
-> > +
-> > +&mmc0 {
-> > +     vmmc-supply =3D <&reg_cldo1>;
-> > +     cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-> > +     disable-wp;
-> > +     bus-width =3D <4>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&mmc1 {
-> > +     vmmc-supply =3D <&reg_wifi_3v3>;
-> > +     vqmmc-supply =3D <&reg_bldo3>;
-> > +     mmc-pwrseq =3D <&wifi_pwrseq>;
-> > +     bus-width =3D <4>;
-> > +     non-removable;
-> > +     status =3D "okay";
-> > +
-> > +     aw859a: wifi@1 {
-> > +             reg =3D <1>;
-> > +     };
-> > +};
-> > +
-> > +&mmc2 {
-> > +     vmmc-supply =3D <&reg_cldo1>;
-> > +     vqmmc-supply =3D <&reg_bldo2>;
-> > +     cap-mmc-hw-reset;
-> > +     non-removable;
-> > +     bus-width =3D <8>;
-> > +     status =3D "okay";
->
-> Given that it's 1.8V on the I/O lines, I think we would need the
-> mmc-ddr-1_8v and mmc-hs200-1_8v properties, for higher speed modes? Or
-> does that not work?
->
-> > +};
-> > +
-> > +&ohci0 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&ohci3 {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&pio {
-> > +     vcc-pc-supply =3D <&reg_bldo2>;
-> > +     vcc-pd-supply =3D <&reg_cldo1>;
-> > +     vcc-pg-supply =3D <&reg_bldo3>;
-> > +};
-> > +
-> > +&r_ir {
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&r_i2c {
-> > +     status =3D "okay";
-> > +
-> > +     axp805: pmic@36 {
-> > +             compatible =3D "x-powers,axp805", "x-powers,axp806";
-> > +             reg =3D <0x36>;
-> > +             interrupt-parent =3D <&r_intc>;
-> > +             interrupts =3D <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
-> > +             interrupt-controller;
-> > +             #interrupt-cells =3D <1>;
-> > +             x-powers,self-working-mode;
-> > +             vina-supply =3D <&reg_vcc5v>;
-> > +             vinb-supply =3D <&reg_vcc5v>;
-> > +             vinc-supply =3D <&reg_vcc5v>;
-> > +             vind-supply =3D <&reg_vcc5v>;
-> > +             vine-supply =3D <&reg_vcc5v>;
-> > +             aldoin-supply =3D <&reg_vcc5v>;
-> > +             bldoin-supply =3D <&reg_vcc5v>;
-> > +             cldoin-supply =3D <&reg_vcc5v>;
-> > +
-> > +             regulators {
-> > +                     reg_aldo1: aldo1 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc-pl-led-ir";
-> > +                     };
-> > +
-> > +                     reg_aldo2: aldo2 {
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc33-audio-tv-ephy-m=
-ac";
-> > +                     };
-> > +
-> > +                     /* ALDO3 is shorted to CLDO1 */
-> > +                     reg_aldo3: aldo3 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;cl
-> > +                             regulator-name =3D "vcc33-io-pd-emmc-sd-u=
-sb-uart-1";
-> > +                     };
-> > +
-> > +                     reg_bldo1: bldo1 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc18-dram-bias-pll";
-> > +                     };
-> > +
-> > +                     reg_bldo2: bldo2 {
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc-efuse-pcie-hdmi-p=
-c";
-> > +                     };
-> > +
-> > +                     reg_bldo3: bldo3 {
-> > +                             regulator-min-microvolt =3D <1800000>;
-> > +                             regulator-max-microvolt =3D <1800000>;
-> > +                             regulator-name =3D "vcc-pm-pg-dcxoio-wifi=
-";
->
-> As you mention in the name, this rail is connected to VCC_DCXO, which IIU=
-C
-> is an essential supply, for the crystal oscillator circuit. So I think th=
-is
-> needs to be always on?
->
-> > +                     };
-> > +
-> > +                     bldo4 {
-> > +                             /* unused */
-> > +                     };
-> > +
-> > +                     reg_cldo1: cldo1 {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <3300000>;
-> > +                             regulator-max-microvolt =3D <3300000>;
-> > +                             regulator-name =3D "vcc33-io-pd-emmc-sd-u=
-sb-uart-2";
-> > +                     };
-> > +
-> > +                     cldo2 {
-> > +                             /* unused */
-> > +                     };
-> > +
-> > +                     cldo3 {
-> > +                             /* unused */
-> > +                     };
-> > +
-> > +                     reg_dcdca: dcdca {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <800000>;
-> > +                             regulator-max-microvolt =3D <1160000>;
-> > +                             regulator-ramp-delay =3D <2500>;
-> > +                             regulator-name =3D "vdd-cpu";
-> > +                     };
->
-> Can you maybe add a comment here to say that DCDCB is polyphased to DCDCA=
-?
->
-> I went through the whole rest and compared against the schematic
-> (looking at GPIOs and power rails), and that looks OK from what I can see=
-.
->
-> Thanks,
-> Andre
->
->
-> > +
-> > +                     reg_dcdcc: dcdcc {
-> > +                             regulator-enable-ramp-delay =3D <32000>;
-> > +                             regulator-min-microvolt =3D <810000>;
-> > +                             regulator-max-microvolt =3D <1080000>;
-> > +                             regulator-ramp-delay =3D <2500>;
-> > +                             regulator-name =3D "vdd-gpu";
-> > +                     };
-> > +
-> > +                     reg_dcdcd: dcdcd {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <960000>;
-> > +                             regulator-max-microvolt =3D <960000>;
-> > +                             regulator-name =3D "vdd-sys";
-> > +                     };
-> > +
-> > +                     reg_dcdce: dcdce {
-> > +                             regulator-always-on;
-> > +                             regulator-min-microvolt =3D <1200000>;
-> > +                             regulator-max-microvolt =3D <1200000>;
-> > +                             regulator-name =3D "vcc-dram";
-> > +                     };
-> > +
-> > +                     sw {
-> > +                             /* unused */
-> > +                     };
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&rtc {
-> > +     clocks =3D <&ext_osc32k>;
-> > +};
-> > +
-> > +&uart0 {
-> > +     pinctrl-names =3D "default";
-> > +     pinctrl-0 =3D <&uart0_ph_pins>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&usb2otg {
-> > +     dr_mode =3D "host";
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&usb2phy {
-> > +     usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
-> > +     usb0_vbus-supply =3D <&reg_vcc5v>;
-> > +     usb3_vbus-supply =3D <&reg_vcc5v>;
-> > +     status =3D "okay";
-> > +};
-> > +
-> > +&usb3phy {
-> > +     status =3D "okay";
-> > +};
->
->
+Best regards,
+Krzysztof
