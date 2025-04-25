@@ -1,231 +1,126 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42B0219303;
-	Fri, 25 Apr 2025 20:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5780A221574
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745612330; cv=none; b=j4dvAPoFBmxpXQIruvFIA62j4U8R2G7niadKOi/3ziZFnb1LwiD7bFZWY3W9Ord3mxubBmtDjIChtcJDc7obQXOMeK+OQ9ekdFqsqKPE2Q8p/ZRujvJoBuxdG7Bx3bSk1pLtiElwoyXLCiSnX0PHtZMsKArNpGtxmfaKmauUE0w=
+	t=1745612339; cv=none; b=E7vwPb5964M71usw+Gzesx+C75ztR1ulS+w1wYfbTYiT+I6jnHGMf5Uuo/x1DWYMCPRBre4aClyPFUUgSHQJuWf8dJNExrYWpYkQTi45DULtYU23QAf4L/t6rC+WCDMk1D/tidCtgM2epqHYNnLvy8f1ChNIGMF6VpViI5jaPjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745612330; c=relaxed/simple;
-	bh=Jpc1CrEVegDd5Xt4FhfLLXyyfwQH1Ukcih9vJbhZtI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=i5sfwTch3NjI2l2yHeGZIa1hhm4t4iwCoUT48jWmMM7QPxjoSlm44EtEq5Xs7OQVtZ/4dIavjuniQ5EgAUGcVrEjdYGnQloi+Zi3Ng3jrGI5RnX90O9A+IalTv1B8mY4/bZZfuWza95gXeAgvsE/Io9Vee6oDcJJ12LZt7sMUjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GsCTsUfB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745612339; c=relaxed/simple;
+	bh=J+AK7wunnpEB2JMYQXv1n/WSaKOAkcue33/P70CTFH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uqzotfI8VYpjGRQNApEOcy7eECedhkpb4IwMMQQnw9dVnFGxBPkC38MytrgeKxVBWbbCFl3gG4RqwPkXDL1upwqbcokIzQ/DL/NRMoSnSdWqz7j5qf/9eKyhr++FU5vEN8ojWTKaow/8AdhUpITdK3YPV7K55yY9TN51lLprbEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BIk2XVRN; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GsCTsUfB"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGKFaZ011555;
-	Fri, 25 Apr 2025 20:18:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Jb9+4U5bJYoG9U+NjqLUlxxwi6BkpsXYG5eQggFwoa4=; b=GsCTsUfBZEcbbopO
-	kPWMX0ng5SPQsNpv9qEu3KB5oB36pYdrzELRnfjyXvo2I2Ac2nEKUptMRSqylO1V
-	Zxk11vXTj/pylvdd8ZzKZqzSKBcI/xSBe/UOw3+/MakgxpLV/8DPREw7qcPWvm2e
-	nc8j2iOeX+n2xyUYr5H4BqUHvmWuc8pPgxaRk7uCZzm19clZRsfLIRp+/hqcN6Qu
-	PZtgcou49JPtLCxZUCajRXqEAVGvrf9JDsIMUcogMKJG2+Q7i7PihL3LXbbqUtoF
-	WuSJLM82LVUBniOSn1VFxfb0pAHOG6/jPWvbRnojn3IWVs1f1q9DZkbMhNaN42dZ
-	fht89g==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0jc8w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 20:18:37 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PKIaXq031318
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 20:18:36 GMT
-Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
- 2025 13:18:36 -0700
-Message-ID: <7f1df90b-7b6d-4f39-838a-60adc3ceb043@quicinc.com>
-Date: Fri, 25 Apr 2025 13:18:35 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BIk2XVRN"
+Date: Fri, 25 Apr 2025 13:18:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745612324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FNLMf/5dW9WvMGj/QQPYDD8kv32KN5l1w2IaTPelp/4=;
+	b=BIk2XVRNb4D0juBRNjJUrBrAmiC3GfLU66rJWolBEHCXWioRWFqLyuvixVTkjjMXiykt8D
+	nZGs1le6vWy3J+gO2LBm/ZmpoY6yT/enKU6OryPyHe5nL9g7IvtIc7Vq/bbRnl4eHc6YDS
+	u+S7cVpqd9DnGVX2fpLUV6g5u94/34U=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, 
+	cgroups@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <as5cdsm4lraxupg3t6onep2ixql72za25hvd4x334dsoyo4apr@zyzl4vkuevuv>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] drm/msm/dpu: enable SmartDMA on SC8280XP
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-CC: Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        "Sean Paul" <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        "David Airlie" <airlied@gmail.com>, Simona
- Vetter <simona@ffwll.ch>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250308-dpu-rework-vig-masks-v1-0-f1b5d101ae0b@linaro.org>
- <20250308-dpu-rework-vig-masks-v1-3-f1b5d101ae0b@linaro.org>
- <aae55674-1ef1-4cf8-b1ef-e2b67c086b77@quicinc.com>
- <6kgxzonjqfmup7xvpddlk76w7zcnpf6c6x7isqy6plxk5los5z@hznswxtjoz4r>
- <acdc6e46-4c58-4756-a7c9-e4e30a0ae94d@quicinc.com>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <acdc6e46-4c58-4756-a7c9-e4e30a0ae94d@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TPXeEXZ3d6xebz-WCjum4qRxZvhg24hv
-X-Proofpoint-ORIG-GUID: TPXeEXZ3d6xebz-WCjum4qRxZvhg24hv
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=680bee1d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=RT-ccWwgCe_0oFCcBdMA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0NSBTYWx0ZWRfX5CNV8tATgQsH 7o4Sy/pcppwHRRdliKS4OI2gtG+XQZmVW2TpbZd/HMsCNBVz1cK8yetDVmQFYM+EDopV+0E6pKR O8pnk+t2CCc52/LNzklNNKt2M24WySRkTSvZB9Y3Mr9CLjm3x2orc1VuIgxEH0Fp2KgWFzeJ6uy
- Hxh/C4mu/hIsCExWijEtQCaUvlhtbHmULqxjQZy5GFJdBqNMU/ZwHf77HiPz25g3arocP4ommpZ MspRN0EiEDvCCYtTTAirsoGAX/VFep10dGuSTjJ3kz+gOW9nVR1d1c9HdOQRs+a2nvOXOkPXH7o QFBW+YsP+G8xDwMPHzk0PMk64ltQ7qpTotSlut+Eid+hCPOxNALFKxTk/U/pBVH41dudwP9GnoR
- mMtSrXBwoCBCGQQb8znVFYKedTeWMBMExm7agL/n2CeHBEV4q5CRUaQVhw0qxYL9G6/Sa4h7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
+Hi Andrew,
 
+Another fix for this patch. Basically simplification of refill_stock and
+avoiding multiple cached entries of a memcg.
 
-On 4/25/2025 12:30 PM, Abhinav Kumar wrote:
-> 
-> 
-> On 4/25/2025 12:00 PM, Dmitry Baryshkov wrote:
->> On Fri, Apr 25, 2025 at 11:34:18AM -0700, Jessica Zhang wrote:
->>>
->>>
->>> On 3/7/2025 9:38 PM, Dmitry Baryshkov wrote:
->>>> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
->>>>
->>>> In order to support more versatile configuration of the display 
->>>> pipes on
->>>> SC8280XP, enable SmartDMA for this platform.
->>>>
->>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>
->>> Hi Dmitry,
->>>
->>> Seems like Abhinav's signed-off-by is missing for the patches that 
->>> list him
->>> as author.
->>>
->>
->> Good point. I don't remember, why these patches mark him as an author,
->> but lack SoB. Googling doesn't point out any previous patches. I think
->> the easiest way to fix the issue would be for Abhinav to respond with
->> the SoB. Another option would be for me to reset the author.
->>
-> 
-> I dont recall myself. You can go ahead and drop me as the author.
+From 6f6f7736799ad8ca5fee48eca7b7038f6c9bb5b9 Mon Sep 17 00:00:00 2001
+From: Shakeel Butt <shakeel.butt@linux.dev>
+Date: Fri, 25 Apr 2025 13:10:43 -0700
+Subject: [PATCH] memcg: multi-memcg percpu charge cache - fix 2
 
-Sounds good. With the authorship fixed,
+Simplify refill_stock by avoiding goto and doing the operations inline
+and make sure the given memcg is not cached multiple times.
 
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+---
+ mm/memcontrol.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-> 
->>> Thanks,
->>>
->>> Jessica Zhang
->>>
->>>> ---
->>>>    drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h | 16 +++ 
->>>> +++++--------
->>>>    1 file changed, 8 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/ 
->>>> dpu_8_0_sc8280xp.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/ 
->>>> dpu_8_0_sc8280xp.h
->>>> index 
->>>> fcee1c3665f88a9defca4fec38dd76d56c97297e..923afc202f5195fa15bcfc1e141fc44134c965e4 100644
->>>> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
->>>> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
->>>> @@ -74,7 +74,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
->>>>        {
->>>>            .name = "sspp_0", .id = SSPP_VIG0,
->>>>            .base = 0x4000, .len = 0x2ac,
->>>> -        .features = VIG_SDM845_MASK,
->>>> +        .features = VIG_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_vig_sblk_qseed3_3_0,
->>>>            .xin_id = 0,
->>>>            .type = SSPP_TYPE_VIG,
->>>> @@ -82,7 +82,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
->>>>        }, {
->>>>            .name = "sspp_1", .id = SSPP_VIG1,
->>>>            .base = 0x6000, .len = 0x2ac,
->>>> -        .features = VIG_SDM845_MASK,
->>>> +        .features = VIG_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_vig_sblk_qseed3_3_0,
->>>>            .xin_id = 4,
->>>>            .type = SSPP_TYPE_VIG,
->>>> @@ -90,7 +90,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
->>>>        }, {
->>>>            .name = "sspp_2", .id = SSPP_VIG2,
->>>>            .base = 0x8000, .len = 0x2ac,
->>>> -        .features = VIG_SDM845_MASK,
->>>> +        .features = VIG_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_vig_sblk_qseed3_3_0,
->>>>            .xin_id = 8,
->>>>            .type = SSPP_TYPE_VIG,
->>>> @@ -98,7 +98,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
->>>>        }, {
->>>>            .name = "sspp_3", .id = SSPP_VIG3,
->>>>            .base = 0xa000, .len = 0x2ac,
->>>> -        .features = VIG_SDM845_MASK,
->>>> +        .features = VIG_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_vig_sblk_qseed3_3_0,
->>>>            .xin_id = 12,
->>>>            .type = SSPP_TYPE_VIG,
->>>> @@ -106,7 +106,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] 
->>>> = {
->>>>        }, {
->>>>            .name = "sspp_8", .id = SSPP_DMA0,
->>>>            .base = 0x24000, .len = 0x2ac,
->>>> -        .features = DMA_SDM845_MASK,
->>>> +        .features = DMA_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_dma_sblk,
->>>>            .xin_id = 1,
->>>>            .type = SSPP_TYPE_DMA,
->>>> @@ -114,7 +114,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] 
->>>> = {
->>>>        }, {
->>>>            .name = "sspp_9", .id = SSPP_DMA1,
->>>>            .base = 0x26000, .len = 0x2ac,
->>>> -        .features = DMA_SDM845_MASK,
->>>> +        .features = DMA_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_dma_sblk,
->>>>            .xin_id = 5,
->>>>            .type = SSPP_TYPE_DMA,
->>>> @@ -122,7 +122,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] 
->>>> = {
->>>>        }, {
->>>>            .name = "sspp_10", .id = SSPP_DMA2,
->>>>            .base = 0x28000, .len = 0x2ac,
->>>> -        .features = DMA_CURSOR_SDM845_MASK,
->>>> +        .features = DMA_CURSOR_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_dma_sblk,
->>>>            .xin_id = 9,
->>>>            .type = SSPP_TYPE_DMA,
->>>> @@ -130,7 +130,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] 
->>>> = {
->>>>        }, {
->>>>            .name = "sspp_11", .id = SSPP_DMA3,
->>>>            .base = 0x2a000, .len = 0x2ac,
->>>> -        .features = DMA_CURSOR_SDM845_MASK,
->>>> +        .features = DMA_CURSOR_SDM845_MASK_SDMA,
->>>>            .sblk = &dpu_dma_sblk,
->>>>            .xin_id = 13,
->>>>            .type = SSPP_TYPE_DMA,
->>>>
->>>
->>
-> 
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 997e2da5d2ca..9dfdbb2fcccc 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1907,7 +1907,8 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 	struct mem_cgroup *cached;
+ 	uint8_t stock_pages;
+ 	unsigned long flags;
+-	bool evict = true;
++	bool success = false;
++	int empty_slot = -1;
+ 	int i;
+ 
+ 	/*
+@@ -1931,26 +1932,28 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	for (i = 0; i < NR_MEMCG_STOCK; ++i) {
+-again:
+ 		cached = READ_ONCE(stock->cached[i]);
+-		if (!cached) {
+-			css_get(&memcg->css);
+-			WRITE_ONCE(stock->cached[i], memcg);
+-		}
+-		if (!cached || memcg == READ_ONCE(stock->cached[i])) {
++		if (!cached && empty_slot == -1)
++			empty_slot = i;
++		if (memcg == READ_ONCE(stock->cached[i])) {
+ 			stock_pages = READ_ONCE(stock->nr_pages[i]) + nr_pages;
+ 			WRITE_ONCE(stock->nr_pages[i], stock_pages);
+ 			if (stock_pages > MEMCG_CHARGE_BATCH)
+ 				drain_stock(stock, i);
+-			evict = false;
++			success = true;
+ 			break;
+ 		}
+ 	}
+ 
+-	if (evict) {
+-		i = get_random_u32_below(NR_MEMCG_STOCK);
+-		drain_stock(stock, i);
+-		goto again;
++	if (!success) {
++		i = empty_slot;
++		if (i == -1) {
++			i = get_random_u32_below(NR_MEMCG_STOCK);
++			drain_stock(stock, i);
++		}
++		css_get(&memcg->css);
++		WRITE_ONCE(stock->cached[i], memcg);
++		WRITE_ONCE(stock->nr_pages[i], stock_pages);
+ 	}
+ 
+ 	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+-- 
+2.47.1
 
