@@ -1,374 +1,355 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5A47E9
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DF41C7019;
+	Fri, 25 Apr 2025 11:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745580971; cv=none; b=ViwDSvHud3CNce0AgTiL6aDAhqRE0fkZzd1DL4vEE9S20drrAI3pem3OH4uMKSzWiyDpo05VxHjzW/Dmhc+Sc6L1E6s2OeAfeN1zJvzUncEomcEfu292T47yohYCDI7efXBV30Q4wmrbnP26ktXv/kIwXVIrgXS+lR2/APF6uSU=
+	t=1745580987; cv=none; b=s2tzPjw8sDiL9mAKBCUQNtyr2y1Uk3aPq5bRaBn+59L0HAzoMt/WITmOPTCmi2APX/bPLj2QYHix65amv+agW5UmJUSbS4WLayZks76y625E6aNoy271qHRgTQsJ64yxiD+HzgtNs2HwkVUvc6UWzfSUsnHmN8BhxyM+S1Bd5R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745580971; c=relaxed/simple;
-	bh=ectO4fwhjO+/xJg06cgXt40EEqO+yG3Xo8g4Thu3QMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8CpHikVW6Zk8kp6Bj+aBWuAAWOrglsFi3g32V+fz7Q73EqITNU2wAb/BzGVMO5R68uauoSu3wa85kLIk3vknc5H4OO1fA+mLPDiqmWGtLBvYczv0OzyZBSJPrBJ5TGAcsg36YqLs1u1VH4+BQIhoQPoFafZ81wa8xFG1G02aWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GbTttXX/; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745580987; c=relaxed/simple;
+	bh=DiVgONnmv/ugt2vXgBHByfcgfOzKwAvtnmcDLB08c48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C9uFnbXl/U3S47ig+kQ+VFWiKWW0XCOcAraNHnfoIs/Hy2U4dqO1p2+6CacVYJjDm8CYAOc1UMytr1ioOxjsk6e/MBmltAImmYakqSSC+SkeR+vDbLeftXVBy/+tDC6XwdkVKO8UtbVOQuKjX/4nep8WlNdBZ+ayXz9IbyImLHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Xh1Wztcr; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GbTttXX/"
-Date: Fri, 25 Apr 2025 17:05:46 +0530
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745580956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bVKei5aVMPfJlUQVkr0Ho/XvVolQTZAT0nof14LXCKA=;
-	b=GbTttXX/rnh4YxvlzOcmfUhkDItOdL6++qu/CHSKLzvBg56GF8hDNnAC92AngRb9/m1GhB
-	UVN6oOMGDWTdor5+C6NyevqwLt1MpbYHS0pjARU2JvSDw0Wc4X6eAREdAr4h+ceHSzbF44
-	IiewGUFhTgBr9SKd+6NrR4fxX+ZdZyo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Jai Luthra <jai.luthra@linux.dev>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: mripard@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, devarsht@ti.com, 
-	y-abhilashchandra@ti.com, mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com, 
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl, tomi.valkeinen@ideasonboard.com, 
-	jai.luthra@ideasonboard.com, changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com, 
-	laurent.pinchart@ideasonboard.com
-Subject: Re: [PATCH v3 13/13] media: ti: j721e-csi2rx: Change the drain
- architecture for multistream
-Message-ID: <5zz3ojgkk6uggx5moglrwn44g7vdnraa4skqkxt4k6pjvta4lh@oproxefudzrt>
-X-PGP-Key: http://jailuthra.in/files/public-key.asc
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-14-r-donadkar@ti.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Xh1Wztcr"
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id BC4F366335E;
+	Fri, 25 Apr 2025 13:36:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1745580982;
+	bh=DiVgONnmv/ugt2vXgBHByfcgfOzKwAvtnmcDLB08c48=;
+	h=From:Subject:Date;
+	b=Xh1WztcrBn6Z0N8rI9ujPfXHzoBBMnammm5dJBa4+ukPiiJzt0UC9Ds+3wB1PbL0c
+	 bW28ctLiJFDK+TXtLy6jaH6HRNqkLgS4pQSBz6VVSlasdQsNTqpDaCdb1+SN9pBSIN
+	 WrColXPuEijNtoY74JuvWIglayPwXJMhUA+KD44z89XPzZVvdtkp1IRnSHmCCaR3BB
+	 tedRW1xOZFtUl/FKiY0cH6IEdGUMfccKaSrAdVaa3CQc045/qJLf3k0NfMt1Q/IZWZ
+	 NlTJAo8mr3R8YYmEbwOmzlsn0GqPm32nl4fHGrbRDxrPQjr3uhkh8WK5cv8pZsjW/b
+	 dnIedOPccElcg==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Christian Loehle <christian.loehle@arm.com>,
+ LKML <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Sultan Alsawaf <sultan@kerneltoast.com>,
+ Stephan Gerhold <stephan.gerhold@linaro.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject:
+ [PATCH v2] cpufreq: Fix setting policy limits when frequency tables are used
+Date: Fri, 25 Apr 2025 13:36:21 +0200
+Message-ID: <5896780.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gvy5bgo5bv6kbv5p"
-Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-14-r-donadkar@ti.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeelpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnhdrlhhovghhlhgvsegrrhhmrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehsrhh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
+
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Commit 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and
+policy->max") overlooked the fact that policy->min and policy->max were
+accessed directly in cpufreq_frequency_table_target() and in the
+functions called by it.  Consequently, the changes made by that commit
+led to problems with setting policy limits.
+
+Address this by passing the target frequency limits to __resolve_freq()
+and cpufreq_frequency_table_target() and propagating them to the
+functions called by the latter.
+
+Fixes: 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and policy->max")
+Link: https://lore.kernel.org/linux-pm/aAplED3IA_J0eZN0@linaro.org/
+Reported-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+The v1 is here: https://lore.kernel.org/linux-pm/12665363.O9o76ZdvQC@rjwysocki.net/
+
+v1 -> v2:
+   * Do clamp_val(target_freq, min, max) before checking freq_table against
+     NULL in __resolve_freq().
+   * Update comment in cpufreq_frequency_table_target() to match the new code.
+
+---
+ drivers/cpufreq/cpufreq.c          |   22 ++++++---
+ drivers/cpufreq/cpufreq_ondemand.c |    3 -
+ drivers/cpufreq/freq_table.c       |    6 +-
+ include/linux/cpufreq.h            |   83 ++++++++++++++++++++++++-------------
+ 4 files changed, 73 insertions(+), 41 deletions(-)
+
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -491,14 +491,18 @@
+ EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
+ 
+ static unsigned int __resolve_freq(struct cpufreq_policy *policy,
+-		unsigned int target_freq, unsigned int relation)
++				   unsigned int target_freq,
++				   unsigned int min, unsigned int max,
++				   unsigned int relation)
+ {
+ 	unsigned int idx;
+ 
++	target_freq = clamp_val(target_freq, min, max);
++
+ 	if (!policy->freq_table)
+ 		return target_freq;
+ 
+-	idx = cpufreq_frequency_table_target(policy, target_freq, relation);
++	idx = cpufreq_frequency_table_target(policy, target_freq, min, max, relation);
+ 	policy->cached_resolved_idx = idx;
+ 	policy->cached_target_freq = target_freq;
+ 	return policy->freq_table[idx].frequency;
+@@ -532,8 +536,7 @@
+ 	if (unlikely(min > max))
+ 		min = max;
+ 
+-	return __resolve_freq(policy, clamp_val(target_freq, min, max),
+-			      CPUFREQ_RELATION_LE);
++	return __resolve_freq(policy, target_freq, min, max, CPUFREQ_RELATION_LE);
+ }
+ EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+ 
+@@ -2351,8 +2354,8 @@
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
+ 
+-	target_freq = clamp_val(target_freq, policy->min, policy->max);
+-	target_freq = __resolve_freq(policy, target_freq, relation);
++	target_freq = __resolve_freq(policy, target_freq, policy->min,
++				     policy->max, relation);
+ 
+ 	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
+ 		 policy->cpu, target_freq, relation, old_target_freq);
+@@ -2650,8 +2653,11 @@
+ 	 * compiler optimizations around them because they may be accessed
+ 	 * concurrently by cpufreq_driver_resolve_freq() during the update.
+ 	 */
+-	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
+-	new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
++	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max,
++					       new_data.min, new_data.max,
++					       CPUFREQ_RELATION_H));
++	new_data.min = __resolve_freq(policy, new_data.min, new_data.min,
++				      new_data.max, CPUFREQ_RELATION_L);
+ 	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
+ 
+ 	trace_cpu_frequency_limits(policy);
+--- a/drivers/cpufreq/cpufreq_ondemand.c
++++ b/drivers/cpufreq/cpufreq_ondemand.c
+@@ -76,7 +76,8 @@
+ 		return freq_next;
+ 	}
+ 
+-	index = cpufreq_frequency_table_target(policy, freq_next, relation);
++	index = cpufreq_frequency_table_target(policy, freq_next, policy->min,
++					       policy->max, relation);
+ 	freq_req = freq_table[index].frequency;
+ 	freq_reduc = freq_req * od_tuners->powersave_bias / 1000;
+ 	freq_avg = freq_req - freq_reduc;
+--- a/drivers/cpufreq/freq_table.c
++++ b/drivers/cpufreq/freq_table.c
+@@ -115,8 +115,8 @@
+ EXPORT_SYMBOL_GPL(cpufreq_generic_frequency_table_verify);
+ 
+ int cpufreq_table_index_unsorted(struct cpufreq_policy *policy,
+-				 unsigned int target_freq,
+-				 unsigned int relation)
++				 unsigned int target_freq, unsigned int min,
++				 unsigned int max, unsigned int relation)
+ {
+ 	struct cpufreq_frequency_table optimal = {
+ 		.driver_data = ~0,
+@@ -147,7 +147,7 @@
+ 	cpufreq_for_each_valid_entry_idx(pos, table, i) {
+ 		freq = pos->frequency;
+ 
+-		if ((freq < policy->min) || (freq > policy->max))
++		if (freq < min || freq > max)
+ 			continue;
+ 		if (freq == target_freq) {
+ 			optimal.driver_data = i;
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -788,8 +788,8 @@
+ int cpufreq_generic_frequency_table_verify(struct cpufreq_policy_data *policy);
+ 
+ int cpufreq_table_index_unsorted(struct cpufreq_policy *policy,
+-				 unsigned int target_freq,
+-				 unsigned int relation);
++				 unsigned int target_freq, unsigned int min,
++				 unsigned int max, unsigned int relation);
+ int cpufreq_frequency_table_get_index(struct cpufreq_policy *policy,
+ 		unsigned int freq);
+ 
+@@ -852,12 +852,12 @@
+ 	return best;
+ }
+ 
+-/* Works only on sorted freq-tables */
+-static inline int cpufreq_table_find_index_l(struct cpufreq_policy *policy,
+-					     unsigned int target_freq,
+-					     bool efficiencies)
++static inline int find_index_l(struct cpufreq_policy *policy,
++			       unsigned int target_freq,
++			       unsigned int min, unsigned int max,
++			       bool efficiencies)
+ {
+-	target_freq = clamp_val(target_freq, policy->min, policy->max);
++	target_freq = clamp_val(target_freq, min, max);
+ 
+ 	if (policy->freq_table_sorted == CPUFREQ_TABLE_SORTED_ASCENDING)
+ 		return cpufreq_table_find_index_al(policy, target_freq,
+@@ -867,6 +867,14 @@
+ 						   efficiencies);
+ }
+ 
++/* Works only on sorted freq-tables */
++static inline int cpufreq_table_find_index_l(struct cpufreq_policy *policy,
++					     unsigned int target_freq,
++					     bool efficiencies)
++{
++	return find_index_l(policy, target_freq, policy->min, policy->max, efficiencies);
++}
++
+ /* Find highest freq at or below target in a table in ascending order */
+ static inline int cpufreq_table_find_index_ah(struct cpufreq_policy *policy,
+ 					      unsigned int target_freq,
+@@ -920,12 +928,12 @@
+ 	return best;
+ }
+ 
+-/* Works only on sorted freq-tables */
+-static inline int cpufreq_table_find_index_h(struct cpufreq_policy *policy,
+-					     unsigned int target_freq,
+-					     bool efficiencies)
++static inline int find_index_h(struct cpufreq_policy *policy,
++			       unsigned int target_freq,
++			       unsigned int min, unsigned int max,
++			       bool efficiencies)
+ {
+-	target_freq = clamp_val(target_freq, policy->min, policy->max);
++	target_freq = clamp_val(target_freq, min, max);
+ 
+ 	if (policy->freq_table_sorted == CPUFREQ_TABLE_SORTED_ASCENDING)
+ 		return cpufreq_table_find_index_ah(policy, target_freq,
+@@ -935,6 +943,14 @@
+ 						   efficiencies);
+ }
+ 
++/* Works only on sorted freq-tables */
++static inline int cpufreq_table_find_index_h(struct cpufreq_policy *policy,
++					     unsigned int target_freq,
++					     bool efficiencies)
++{
++	return find_index_h(policy, target_freq, policy->min, policy->max, efficiencies);
++}
++
+ /* Find closest freq to target in a table in ascending order */
+ static inline int cpufreq_table_find_index_ac(struct cpufreq_policy *policy,
+ 					      unsigned int target_freq,
+@@ -1005,12 +1021,12 @@
+ 	return best;
+ }
+ 
+-/* Works only on sorted freq-tables */
+-static inline int cpufreq_table_find_index_c(struct cpufreq_policy *policy,
+-					     unsigned int target_freq,
+-					     bool efficiencies)
++static inline int find_index_c(struct cpufreq_policy *policy,
++			       unsigned int target_freq,
++			       unsigned int min, unsigned int max,
++			       bool efficiencies)
+ {
+-	target_freq = clamp_val(target_freq, policy->min, policy->max);
++	target_freq = clamp_val(target_freq, min, max);
+ 
+ 	if (policy->freq_table_sorted == CPUFREQ_TABLE_SORTED_ASCENDING)
+ 		return cpufreq_table_find_index_ac(policy, target_freq,
+@@ -1020,7 +1036,17 @@
+ 						   efficiencies);
+ }
+ 
+-static inline bool cpufreq_is_in_limits(struct cpufreq_policy *policy, int idx)
++/* Works only on sorted freq-tables */
++static inline int cpufreq_table_find_index_c(struct cpufreq_policy *policy,
++					     unsigned int target_freq,
++					     bool efficiencies)
++{
++	return find_index_c(policy, target_freq, policy->min, policy->max, efficiencies);
++}
++
++static inline bool cpufreq_is_in_limits(struct cpufreq_policy *policy,
++					unsigned int min, unsigned int max,
++					int idx)
+ {
+ 	unsigned int freq;
+ 
+@@ -1029,11 +1055,13 @@
+ 
+ 	freq = policy->freq_table[idx].frequency;
+ 
+-	return freq == clamp_val(freq, policy->min, policy->max);
++	return freq == clamp_val(freq, min, max);
+ }
+ 
+ static inline int cpufreq_frequency_table_target(struct cpufreq_policy *policy,
+ 						 unsigned int target_freq,
++						 unsigned int min,
++						 unsigned int max,
+ 						 unsigned int relation)
+ {
+ 	bool efficiencies = policy->efficiencies_available &&
+@@ -1044,29 +1072,26 @@
+ 	relation &= ~CPUFREQ_RELATION_E;
+ 
+ 	if (unlikely(policy->freq_table_sorted == CPUFREQ_TABLE_UNSORTED))
+-		return cpufreq_table_index_unsorted(policy, target_freq,
+-						    relation);
++		return cpufreq_table_index_unsorted(policy, target_freq, min,
++						    max, relation);
+ retry:
+ 	switch (relation) {
+ 	case CPUFREQ_RELATION_L:
+-		idx = cpufreq_table_find_index_l(policy, target_freq,
+-						 efficiencies);
++		idx = find_index_l(policy, target_freq, min, max, efficiencies);
+ 		break;
+ 	case CPUFREQ_RELATION_H:
+-		idx = cpufreq_table_find_index_h(policy, target_freq,
+-						 efficiencies);
++		idx = find_index_h(policy, target_freq, min, max, efficiencies);
+ 		break;
+ 	case CPUFREQ_RELATION_C:
+-		idx = cpufreq_table_find_index_c(policy, target_freq,
+-						 efficiencies);
++		idx = find_index_c(policy, target_freq, min, max, efficiencies);
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		return 0;
+ 	}
+ 
+-	/* Limit frequency index to honor policy->min/max */
+-	if (!cpufreq_is_in_limits(policy, idx) && efficiencies) {
++	/* Limit frequency index to honor min and max */
++	if (!cpufreq_is_in_limits(policy, min, max, idx) && efficiencies) {
+ 		efficiencies = false;
+ 		goto retry;
+ 	}
 
 
---gvy5bgo5bv6kbv5p
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 13/13] media: ti: j721e-csi2rx: Change the drain
- architecture for multistream
-MIME-Version: 1.0
 
-Hi Rishikesh,
-
-Thanks for the patch.
-
-On Thu, Apr 17, 2025 at 12:25:54PM +0530, Rishikesh Donadkar wrote:
-> In Multistream use cases, we may face buffer starvation due to various
-> reasons like slow downstream element in gstreamer pipeline. In these
-> scenarios we need to make sure that the data corresponding to the slow
-> pipeline is pulled out of the shared HW FIFO in CSI2RX IP to prevent
-> other streams to get stalled due to FIFO overflow.
->=20
-> Previously, in case of buffer starvation, dma was marked IDLE and the
-> next buffer_queue() would drain the data before marking new buffer ready
-> for DMA transaction. Here the driver waits for the next VIDIOC_QBUF
-> ioctl callback to drain the stale data from the HW FIFO, if there is a
-> delay in this callback being called, HW FIFO will overflow leading all
-> the other camera pipelines in the media graph to hang.
-
-The above description is a little hard to follow, and not correct. A "late"=
-=20
-QBUF callback is what buffer starvation *is*. With single-stream scenarios =
-the=20
-older drain architecture worked fine, as the goal there was to drain out st=
-ale=20
-data in the FIFOs when buffers are available again.
-
->=20
-> Introduce a new architecture where, CSI data is always pulled out of
-> the shared HW FIFO irrespective of the availability of buffers from
-> userspace.
-
-I think this description does not make it very clear why multiple streams=
-=20
-(VCs) cause the older drain architecture to not work, and what exactly is t=
-he=20
-limitation in the hardware FIFOs.
-
-How about the following instead:
-
-    On buffer starvation the DMA is marked IDLE, and the stale data in the=
-=20
-    internal FIFOs gets drained only on the next VIDIOC_QBUF call from the=
-=20
-    userspace. This approach works fine for a single stream case.
-
-    But in multistream scenarios, buffer starvation for one stream i.e. one=
-=20
-    virtual channel, can block the shared HW FIFO of the CSI2RX IP. This ca=
-n=20
-    stall the pipeline for all other virtual channels, even if buffers are=
-=20
-    available for them.
-
-    This patch introduces a new architecture, that continuously drains data=
-=20
-    from the shared HW FIFO into a small (32KiB) buffer if no buffers are m=
-ade=20
-    available to the driver from the userspace. This ensures independence=
-=20
-    between different streams, where a slower downstream element for one=20
-    camera does not block streaming for other cameras.
-
->=20
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-> ---
->  .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 96 +++++++------------
->  1 file changed, 33 insertions(+), 63 deletions(-)
->=20
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/driv=
-ers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index 23d63d8bcd36a..7f476c78c4a92 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -57,7 +57,6 @@
->  #define TI_CSI2RX_MAX_SOURCE_PADS	TI_CSI2RX_MAX_CTX
->  #define TI_CSI2RX_MAX_PADS		(1 + TI_CSI2RX_MAX_SOURCE_PADS)
-> =20
-> -#define DRAIN_TIMEOUT_MS		50
->  #define DRAIN_BUFFER_SIZE		SZ_32K
-
-As you are draining 32KiB chunks, it is likely that the hardware is in the=
-=20
-middle of a frame when the userspace queues a new buffer and you stop=20
-draining, and change the target address to a user-facing buffer. How does t=
-he=20
-PSIL/DMA engine handle the SoF/EoF boundaries in such a case?
-
-Would it be possible for you to verify if the first user-facing buffer afte=
-r=20
-draining has valid data? And if not, please highlight it so it may get fixe=
-d=20
-in the future.
-
-> =20
->  struct ti_csi2rx_fmt {
-> @@ -77,7 +76,6 @@ struct ti_csi2rx_buffer {
-> =20
->  enum ti_csi2rx_dma_state {
->  	TI_CSI2RX_DMA_STOPPED,	/* Streaming not started yet. */
-> -	TI_CSI2RX_DMA_IDLE,	/* Streaming but no pending DMA operation. */
->  	TI_CSI2RX_DMA_ACTIVE,	/* Streaming and pending DMA operation. */
->  };
-> =20
-> @@ -238,6 +236,10 @@ static const struct ti_csi2rx_fmt ti_csi2rx_formats[=
-] =3D {
->  static int ti_csi2rx_start_dma(struct ti_csi2rx_ctx *ctx,
->  			       struct ti_csi2rx_buffer *buf);
-> =20
-> +/* Forward declarations needed by ti_csi2rx_drain_callback. */
-> +static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx *ctx);
-> +static int ti_csi2rx_dma_submit_pending(struct ti_csi2rx_ctx *ctx);
-> +
->  static const struct ti_csi2rx_fmt *find_format_by_fourcc(u32 pixelformat)
->  {
->  	unsigned int i;
-> @@ -589,9 +591,28 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_ct=
-x *ctx)
-> =20
->  static void ti_csi2rx_drain_callback(void *param)
->  {
-> -	struct completion *drain_complete =3D param;
-> +	struct ti_csi2rx_ctx *ctx =3D param;
-> +	struct ti_csi2rx_dma *dma =3D &ctx->dma;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&dma->lock, flags);
-> =20
-> -	complete(drain_complete);
-> +	if (dma->state =3D=3D TI_CSI2RX_DMA_STOPPED) {
-> +		spin_unlock_irqrestore(&dma->lock, flags);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * If dma->queue is empty, it signals no buffer has arrived from
-> +	 * user space, so, queue more transaction to drain dma
-> +	 */
-> +	if (list_empty(&dma->queue)) {
-> +		if (ti_csi2rx_drain_dma(ctx))
-> +			dev_warn(ctx->csi->dev, "DMA drain failed\n");
-> +	} else {
-> +		ti_csi2rx_dma_submit_pending(ctx);
-> +	}
-> +	spin_unlock_irqrestore(&dma->lock, flags);
->  }
-> =20
->  /*
-> @@ -609,12 +630,9 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx =
-*ctx)
->  {
->  	struct ti_csi2rx_dev *csi =3D ctx->csi;
->  	struct dma_async_tx_descriptor *desc;
-> -	struct completion drain_complete;
->  	dma_cookie_t cookie;
->  	int ret;
-> =20
-> -	init_completion(&drain_complete);
-> -
->  	desc =3D dmaengine_prep_slave_single(ctx->dma.chan, csi->drain.paddr,
->  					   csi->drain.len, DMA_DEV_TO_MEM,
->  					   DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> @@ -624,7 +642,7 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx *=
-ctx)
->  	}
-> =20
->  	desc->callback =3D ti_csi2rx_drain_callback;
-> -	desc->callback_param =3D &drain_complete;
-> +	desc->callback_param =3D ctx;
-> =20
->  	cookie =3D dmaengine_submit(desc);
->  	ret =3D dma_submit_error(cookie);
-> @@ -633,13 +651,6 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx =
-*ctx)
-> =20
->  	dma_async_issue_pending(ctx->dma.chan);
-> =20
-> -	if (!wait_for_completion_timeout(&drain_complete,
-> -					 msecs_to_jiffies(DRAIN_TIMEOUT_MS))) {
-> -		dmaengine_terminate_sync(ctx->dma.chan);
-> -		dev_dbg(csi->dev, "DMA transfer timed out for drain buffer\n");
-> -		ret =3D -ETIMEDOUT;
-> -		goto out;
-> -	}
->  out:
->  	return ret;
->  }
-> @@ -687,9 +698,11 @@ static void ti_csi2rx_dma_callback(void *param)
-> =20
->  	ti_csi2rx_dma_submit_pending(ctx);
-> =20
-> -	if (list_empty(&dma->submitted))
-> -		dma->state =3D TI_CSI2RX_DMA_IDLE;
-> -
-> +	if (list_empty(&dma->submitted)) {
-> +		if (ti_csi2rx_drain_dma(ctx))
-> +			dev_warn(ctx->csi->dev,
-> +				"DMA drain failed on one of the transactions\n");
-
-Checkpatch warning here:
-
-CHECK: Alignment should match open parenthesis
-#138: FILE: drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c:704:
-+			dev_warn(ctx->csi->dev,
-+				"DMA drain failed on one of the transactions\n");
-
-total: 0 errors, 0 warnings, 1 checks, 167 lines checked
-
-> +	}
->  	spin_unlock_irqrestore(&dma->lock, flags);
->  }
-> =20
-> @@ -742,7 +755,7 @@ static void ti_csi2rx_stop_dma(struct ti_csi2rx_ctx *=
-ctx)
->  		 * enforced before terminating DMA.
->  		 */
->  		ret =3D ti_csi2rx_drain_dma(ctx);
-> -		if (ret && ret !=3D -ETIMEDOUT)
-> +		if (ret)
->  			dev_warn(ctx->csi->dev,
->  				 "Failed to drain DMA. Next frame might be bogus\n");
->  	}
-> @@ -809,57 +822,14 @@ static void ti_csi2rx_buffer_queue(struct vb2_buffe=
-r *vb)
->  	struct ti_csi2rx_ctx *ctx =3D vb2_get_drv_priv(vb->vb2_queue);
->  	struct ti_csi2rx_buffer *buf;
->  	struct ti_csi2rx_dma *dma =3D &ctx->dma;
-> -	bool restart_dma =3D false;
->  	unsigned long flags =3D 0;
-> -	int ret;
-> =20
->  	buf =3D container_of(vb, struct ti_csi2rx_buffer, vb.vb2_buf);
->  	buf->ctx =3D ctx;
-> =20
->  	spin_lock_irqsave(&dma->lock, flags);
-> -	/*
-> -	 * Usually the DMA callback takes care of queueing the pending buffers.
-> -	 * But if DMA has stalled due to lack of buffers, restart it now.
-> -	 */
-> -	if (dma->state =3D=3D TI_CSI2RX_DMA_IDLE) {
-> -		/*
-> -		 * Do not restart DMA with the lock held because
-> -		 * ti_csi2rx_drain_dma() might block for completion.
-> -		 * There won't be a race on queueing DMA anyway since the
-> -		 * callback is not being fired.
-> -		 */
-> -		restart_dma =3D true;
-> -		dma->state =3D TI_CSI2RX_DMA_ACTIVE;
-> -	} else {
-> -		list_add_tail(&buf->list, &dma->queue);
-> -	}
-> +	list_add_tail(&buf->list, &dma->queue);
->  	spin_unlock_irqrestore(&dma->lock, flags);
-> -
-> -	if (restart_dma) {
-> -		/*
-> -		 * Once frames start dropping, some data gets stuck in the DMA
-> -		 * pipeline somewhere. So the first DMA transfer after frame
-> -		 * drops gives a partial frame. This is obviously not useful to
-> -		 * the application and will only confuse it. Issue a DMA
-> -		 * transaction to drain that up.
-> -		 */
-> -		ret =3D ti_csi2rx_drain_dma(ctx);
-> -		if (ret && ret !=3D -ETIMEDOUT)
-> -			dev_warn(ctx->csi->dev,
-> -				 "Failed to drain DMA. Next frame might be bogus\n");
-> -
-> -		spin_lock_irqsave(&dma->lock, flags);
-> -		ret =3D ti_csi2rx_start_dma(ctx, buf);
-> -		if (ret) {
-> -			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-> -			dma->state =3D TI_CSI2RX_DMA_IDLE;
-> -			spin_unlock_irqrestore(&dma->lock, flags);
-> -			dev_err(ctx->csi->dev, "Failed to start DMA: %d\n", ret);
-> -		} else {
-> -			list_add_tail(&buf->list, &dma->submitted);
-> -			spin_unlock_irqrestore(&dma->lock, flags);
-> -		}
-> -	}
->  }
-> =20
->  static int ti_csi2rx_get_vc(struct ti_csi2rx_ctx *ctx)
-> --=20
-> 2.34.1
->=20
-
-Thanks,
-Jai
-
---gvy5bgo5bv6kbv5p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmgLc5IACgkQQ96R+SSa
-cUWlPxAAqmWJq/5qoPrmSaLEA7yWzJlMugFolYdVzSIzvY1oLfNyo1HIvgT+6WM3
-oIgDrzneIKUm6FbKjeESvrFmM2N5yiuIR5uKzaCGjKTnKB9RG+Fn/8li6nOMMf+K
-GkoPu9CRQFVGruPux1HlOlnvOHPr1MSwcrE4yy3J1PtQnaGpCmDgGm1hTh02JCUt
-UaurPqNSKywH9saAwIKIOp8EiWGV9N5zdFVB1a9qv5nrVSdXrL43VSwZm4OXYLZl
-iuMh0eqvqHZsxHl5Q4I4GpPPKTtDvi+WsnE/PAr03+et5u1egJy7HQZK+Hqm0PzW
-Zekl4qsh9R54laOif3GN4YTbPRYnnntzj+fB8Bu6Wq3+JwYIrXr0UqODEMDlRxsO
-1PsZLkeVoU/401XZ4212AH5QuHNDxwOxhxDmGLBYWzVugy7Flkjf2L0xkj3IAE04
-/j9zLTuuR84FQlZxOFoD4ovc8QT7FVSlfDXyDYM/0BDEtoJyL8GB3UtqgLVbgtk8
-QuxDkLPGGA9PpSb9KyQ1Jk8bi9L95Mv+47VnBXXLz5JLopft3qOJddJ3TacufNCi
-/rROUyCYTRvrxkUogzbKHKXplB/6+GO8lswQvwOrdnMnYSM/5Cd0ytxFbRBmOzV1
-UfRe5z7F/UyV8dZG8fz1YodusmFFqporUcOafxvyPttDALELyUU=
-=Rr94
------END PGP SIGNATURE-----
-
---gvy5bgo5bv6kbv5p--
