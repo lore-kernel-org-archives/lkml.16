@@ -1,142 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022181A5BA0;
-	Fri, 25 Apr 2025 17:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB991DEFDA;
+	Fri, 25 Apr 2025 17:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745601138; cv=none; b=rN+eSwwNS4xNanNRC2lHFIW8XMnSsrqJtjXH59n0etttvKeD44WXSE42daowEaH6Rc6tkEsgdtPRtQkNNVXgxP/vmRF09GqQEZxmMEmyaUT6UbD2dMNbetNYk9GCDBQu4fLvn4Lutzd9w9OKIy02C8D7M+25BfcWCA1BMgI8FiQ=
+	t=1745601272; cv=none; b=SVHePKHYwHCXz6MxioZKL2XCADj1XWYWbrv5naaVvsQPQQqJqHdeICOgIvHkUm2YkYm+pTRTKxdHmQGMH1doWaqFEMl15bIeGjEGjDNRUQKZdx3icLCmDEmlvtv6S0L24657pFBillePlIv8Iq+s58+kQNvEyrhtJQTnrJ/5TBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745601138; c=relaxed/simple;
-	bh=3U78nk8+OCaeXgDy4P6JXWxliABBj1zQnA3H/RaZDHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8UFL9EkNTF4ffmc3o1jCrUv56tUov+jtGw1ylLE8xtDtroorgWbbmeuGrkJovGownoyb0vN8l+JbpjBELzax24SrVeUfou81C6On0mt/7jowTjI7vHc/ztN2sIRS8WukO2e/ygYcQ7RnY0Pkn6SVkyUqQLuw51YqBQb2i0AX3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meH8PVrv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745601272; c=relaxed/simple;
+	bh=xDbZxDJFIusrxmYrFN1b3l22rU68GRLxUNx+mEoirpE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RcIpBooaokqVyzlgEw1Djc+k3Oi1W+6/GShnYcum0172M7vQoNIyHnTGY8R4hXjbU0HpLd8U3LAqXxvApxr1eXxD2maCdnxVokZQ2pr0a6XVJU3lm1fsWs5s9pBW5eVnAxZXeHmvUySqn5hcnwrIiGELMZ/Rs9+Mqxk8YyeaGJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GVXmDSBR; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meH8PVrv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE266C4CEE4;
-	Fri, 25 Apr 2025 17:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745601137;
-	bh=3U78nk8+OCaeXgDy4P6JXWxliABBj1zQnA3H/RaZDHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=meH8PVrvMt3xXKv0+RutK/uTNkhuORnaRPsqFBrurq9b2X7jON8JVhUqynwBfTAb5
-	 BUfHGI11ypsuqUdKEKoq0y0oiRNFZBXK6U9Ba8RopuRE6hco2lCUOge7XxWBiAJW3h
-	 Hxo6gpBSBm0tI00doKzBV66QdrnRME3QE+bbhB4F6iytJdf3MSRPRI2/HUrWaBRA1m
-	 JCcgQY0qdX1r6/M4p1NyvzLlFg/s+oS9oM4vWfEftg51+HfFIBV8P4ccO7Kvf1izPi
-	 DCKR6urteIZU/xLjvpfkl9nXB1B1jmkZ0a86G1z9vsytA/JyT4qbjwoZ8qW1dy6yKY
-	 ozJXJgq8V19eQ==
-Date: Fri, 25 Apr 2025 10:12:14 -0700
-From: Kees Cook <kees@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mm: perform VMA allocation, freeing, duplication in
- mm
-Message-ID: <202504251010.C5CCE66@keescook>
-References: <cover.1745528282.git.lorenzo.stoakes@oracle.com>
- <0f848d59f3eea3dd0c0cdc3920644222c40cffe6.1745528282.git.lorenzo.stoakes@oracle.com>
- <51903B43-2BFC-4BA6-9D74-63F79CF890B7@kernel.org>
- <7212f5f4-f12b-4b94-834f-b392601360a3@lucifer.local>
- <n6lrbjs4o6luzl3fydpo4frj35q6kvoz74mhlyae5gp7t5loyy@ubmfmzwfhnwq>
- <CAJuCfpErtLvktCsbFSGmrT_zir9z0g+uuVvhr=QEitA7ARkdkw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GVXmDSBR"
+Message-ID: <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745601266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+6DLrO2Q4qtiuClsf/uksu1pDJHL8/bIE28qq6F3Ww8=;
+	b=GVXmDSBR2LHpVPi6b1jnBFxkF36uUD+nMcIboY+dU7GzwAeXHQDoCfFtrr64hfKLtb4jYy
+	Y/MVZkZGnhJuR1FsXwR/+hQ1bK1No/cJUoMn7zmXiWAFpWWTwOx8e8PcfFnmhsdnvKDiUg
+	/Ers0GDCF7imvS/NqytOaImsrtGleRw=
+Date: Fri, 25 Apr 2025 19:12:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpErtLvktCsbFSGmrT_zir9z0g+uuVvhr=QEitA7ARkdkw@mail.gmail.com>
+Subject: Re: [PATCH v1] soundwire: intel_auxdevice: Fix system suspend/resume
+ handling
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
+References: <5891540.DvuYhMxLoT@rjwysocki.net>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <5891540.DvuYhMxLoT@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 25, 2025 at 08:32:48AM -0700, Suren Baghdasaryan wrote:
-> On Fri, Apr 25, 2025 at 6:55 AM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
-> >
-> > * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250425 06:40]:
-> > > On Thu, Apr 24, 2025 at 08:15:26PM -0700, Kees Cook wrote:
-> > > >
-> > > >
-> > > > On April 24, 2025 2:15:27 PM PDT, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-> > > > >+static void vm_area_init_from(const struct vm_area_struct *src,
-> > > > >+                        struct vm_area_struct *dest)
-> > > > >+{
-> > > > >+  dest->vm_mm = src->vm_mm;
-> > > > >+  dest->vm_ops = src->vm_ops;
-> > > > >+  dest->vm_start = src->vm_start;
-> > > > >+  dest->vm_end = src->vm_end;
-> > > > >+  dest->anon_vma = src->anon_vma;
-> > > > >+  dest->vm_pgoff = src->vm_pgoff;
-> > > > >+  dest->vm_file = src->vm_file;
-> > > > >+  dest->vm_private_data = src->vm_private_data;
-> > > > >+  vm_flags_init(dest, src->vm_flags);
-> > > > >+  memcpy(&dest->vm_page_prot, &src->vm_page_prot,
-> > > > >+         sizeof(dest->vm_page_prot));
-> > > > >+  /*
-> > > > >+   * src->shared.rb may be modified concurrently when called from
-> > > > >+   * dup_mmap(), but the clone will reinitialize it.
-> > > > >+   */
-> > > > >+  data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->shared)));
-> > > > >+  memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
-> > > > >+         sizeof(dest->vm_userfaultfd_ctx));
-> > > > >+#ifdef CONFIG_ANON_VMA_NAME
-> > > > >+  dest->anon_name = src->anon_name;
-> > > > >+#endif
-> > > > >+#ifdef CONFIG_SWAP
-> > > > >+  memcpy(&dest->swap_readahead_info, &src->swap_readahead_info,
-> > > > >+         sizeof(dest->swap_readahead_info));
-> > > > >+#endif
-> > > > >+#ifdef CONFIG_NUMA
-> > > > >+  dest->vm_policy = src->vm_policy;
-> > > > >+#endif
-> > > > >+}
-> > > >
-> > > > I know you're doing a big cut/paste here, but why in the world is this function written this way? Why not just:
-> > > >
-> > > > *dest = *src;
-> > > >
-> > > > And then do any one-off cleanups?
-> > >
-> > > Yup I find it odd, and error prone to be honest. We'll end up with uninitialised
-> > > state for some fields if we miss them here, seems unwise...
-> > >
-> > > Presumably for performance?
-> > >
-> > > This is, as you say, me simply propagating what exists, but I do wonder.
-> >
-> > Two things come to mind:
-> >
-> > 1. How ctors are done.  (v3 of Suren's RCU safe patch series, willy made
-> > a comment.. I think)
-> >
-> > 2. Some race that Vlastimil came up with the copy and the RCU safeness.
-> > IIRC it had to do with the ordering of the setting of things?
-> >
-> > Also, looking at it again...
-> >
-> > How is it safe to do dest->anon_name = src->anon_name?  Isn't that ref
-> > counted?
+On 4/24/25 20:13, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> dest->anon_name = src->anon_name is fine here because right after
-> vm_area_init_from() we call dup_anon_vma_name() which will bump up the
-> refcount. I don't recall why this is done this way but now looking at
-> it I wonder if I could call dup_anon_vma_name() directly instead of
-> this assignment. Might be just an overlooked legacy from the time we
-> memcpy'd the entire structure. I'll need to double-check.
+> The code in intel_suspend() and intel_resume() needs to be properly
+> synchronized with runtime PM which is not the case currently, so fix
+> it.
+> 
+> First of all, prevent runtime PM from triggering after intel_suspend()
+> has started because the changes made by it to the device might be
+> undone by a runtime resume of the device.  For this purpose, add a
+> pm_runtime_disable() call to intel_suspend().
 
-Oh, is "dest" accessible to other CPU threads? I hadn't looked and was
-assuming this was like process creation where everything gets built in
-isolation and then attached to the main process tree. I was thinking
-this was similar.
+Allow me to push back on this, because we have to be very careful with a hidden state transition that needs to happen.
 
--- 
-Kees Cook
+If a controller was suspended by pm_runtime, it will enter the clock stop mode.
+
+If the system needs to suspend, the controller has to be forced to exit the clock stop mode and the bus has to restart before we can suspend it, and that's why we had those pm_runtime_resume().
+
+Disabling pm_runtime when entering system suspend would be problematic for Intel hardware, it's a known can of worms.
+
+It's quite possible that some of the code in intel_suspend() is no longer required because the .prepare will resume the bus properly, but I wanted to make sure this state transition out of clock-stop is known and taken into consideration.
+
+Bard, is this a configuration you've tested?
+ 
+> Next, once runtime PM has been disabled, the runtime PM status of the
+> device cannot change, so pm_runtime_status_suspended() can be used
+> instead of pm_runtime_suspended() in intel_suspend().
+> 
+> Moreover, checking the runtime PM status of the device in intel_resume()
+> is pointless because the device is going to be resumed anyway and the
+> code running in the case when the pm_runtime_suspended() check in
+> intel_resume() returns 'true' is harmful.  Namely, calling
+> pm_runtime_resume() right after pm_runtime_set_active() has no effect
+> and calling pm_runtime_idle() on the device at that point is invalid
+> because the device is technically still suspended (it has not been
+> resumed yet).  Remove that code altogether along with the check leading
+> to it.
+> 
+> Finally, call pm_runtime_set_active() at the end intel_resume() to set
+> the runtime PM status of the device to "active" because it has just been
+> resumed and re-enable runtime PM for it after that.
+
+
+
+> Additionally, drop the setting of DPM_FLAG_SMART_SUSPEND from the
+> driver because it has never been necessary and should not have been
+> done.
+
+IIRC it was your recommendation to add this flag many moons ago... No issue to remove it, it's just not something any of the 'SoundWire' folks are knowledgeable with.
+
+> This addresses a functional regression after commit bca84a7b93fd ("PM:
+> sleep: Use DPM_FLAG_SMART_SUSPEND conditionally") that effectively
+> caused the fatal pm_runtime_suspended() check in intel_resume() to
+> trigger.
+> 
+> Fixes: bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally")
+> Cc: 6.2+ <stable@vger.kernel.org> # 6.2+
+> Reported-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Tested-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> This change fixes an issue predating commit bca84a7b93fd that simply
+> uncovered the problem and it needs to be backported to 6.2 and later
+> kernels.
+> 
+> Since it fixes a recent regression in 6.15-rc, I can route it through the
+> PM tree unless that would be a major concern.
+> 
+> ---
+>  drivers/soundwire/intel_auxdevice.c |   36 +++++++++++++-----------------------
+>  1 file changed, 13 insertions(+), 23 deletions(-)
+> 
+> --- a/drivers/soundwire/intel_auxdevice.c
+> +++ b/drivers/soundwire/intel_auxdevice.c
+> @@ -353,9 +353,6 @@
+>  	/* use generic bandwidth allocation algorithm */
+>  	sdw->cdns.bus.compute_params = sdw_compute_params;
+>  
+> -	/* avoid resuming from pm_runtime suspend if it's not required */
+> -	dev_pm_set_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
+> -
+>  	ret = sdw_bus_master_add(bus, dev, dev->fwnode);
+>  	if (ret) {
+>  		dev_err(dev, "sdw_bus_master_add fail: %d\n", ret);
+> @@ -640,7 +637,10 @@
+>  		return 0;
+>  	}
+>  
+> -	if (pm_runtime_suspended(dev)) {
+> +	/* Prevent runtime PM from racing with the code below. */
+> +	pm_runtime_disable(dev);
+> +
+> +	if (pm_runtime_status_suspended(dev)) {
+>  		dev_dbg(dev, "pm_runtime status: suspended\n");
+>  
+>  		clock_stop_quirks = sdw->link_res->clock_stop_quirks;
+> @@ -648,7 +648,7 @@
+>  		if ((clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET) ||
+>  		    !clock_stop_quirks) {
+>  
+> -			if (pm_runtime_suspended(dev->parent)) {
+> +			if (pm_runtime_status_suspended(dev->parent)) {
+>  				/*
+>  				 * paranoia check: this should not happen with the .prepare
+>  				 * resume to full power
+> @@ -715,7 +715,6 @@
+>  	struct sdw_cdns *cdns = dev_get_drvdata(dev);
+>  	struct sdw_intel *sdw = cdns_to_intel(cdns);
+>  	struct sdw_bus *bus = &cdns->bus;
+> -	int link_flags;
+>  	int ret;
+>  
+>  	if (bus->prop.hw_disabled || !sdw->startup_done) {
+> @@ -724,23 +723,6 @@
+>  		return 0;
+>  	}
+>  
+> -	if (pm_runtime_suspended(dev)) {
+> -		dev_dbg(dev, "pm_runtime status was suspended, forcing active\n");
+> -
+> -		/* follow required sequence from runtime_pm.rst */
+> -		pm_runtime_disable(dev);
+> -		pm_runtime_set_active(dev);
+> -		pm_runtime_mark_last_busy(dev);
+> -		pm_runtime_enable(dev);
+> -
+> -		pm_runtime_resume(bus->dev);
+> -
+> -		link_flags = md_flags >> (bus->link_id * 8);
+> -
+> -		if (!(link_flags & SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE))
+> -			pm_runtime_idle(dev);
+> -	}
+> -
+>  	ret = sdw_intel_link_power_up(sdw);
+>  	if (ret) {
+>  		dev_err(dev, "%s failed: %d\n", __func__, ret);
+> @@ -761,6 +743,14 @@
+>  	}
+>  
+>  	/*
+> +	 * Runtime PM has been disabled in intel_suspend(), so set the status
+> +	 * to active because the device has just been resumed and re-enable
+> +	 * runtime PM.
+> +	 */
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +
+> +	/*
+>  	 * after system resume, the pm_runtime suspend() may kick in
+>  	 * during the enumeration, before any children device force the
+>  	 * master device to remain active.  Using pm_runtime_get()
+> 
+> 
+> 
+
