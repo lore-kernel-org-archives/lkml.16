@@ -1,139 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBA32798F8;
-	Fri, 25 Apr 2025 15:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF0F279914;
+	Fri, 25 Apr 2025 15:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745594142; cv=none; b=CSNRnDTPmrJZ1VX7XdmJcAWOLRpLVa9QNTCZKa8syaO8lXFi2SEkkLfkftZhwVjlWcnBDMrcx/v7gDU3fzAv98/0roA9IGM2djBQmiNkSQamzVXWqG3wh09MDjkAqCfMdeolNES+PlO2UKWd9zF7hTycV9u927h0jSrW/cSWj7Q=
+	t=1745594150; cv=none; b=oK+ODc8LYXZQds94epo3Mu26Doi1roblMvbFhqNgZ9HlzbyxHiCKoEA2ustqq4ccfjeiWcyKMqzpfKxcYvgAbXvX6Mv0xf2eEW4qVaqb2c7eNIaNqtGlm6hZf2G8nqv/DO9mwIrilGd5MZQPfOZw7q6NwizEfyEfzOV3KSXsnoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745594142; c=relaxed/simple;
-	bh=C8FYTYQnzVootuMsrCRmSfUtojWm8zdXdoSIa4cnad0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxfOD/i0JUEZiba10lWdN4qjUDcPT2Vn9jNEFBzM8DCDAGOFPBXfUKhoFCMbTKXTcKzgoVR64bXM8GS+zF3ESG/UMMzClPLqzOy6JNeP9SwURMgcxAa92zlDXzPxFcb33v+gX5nAhWPrjn9pTMya5+0Jgs3HkOjPGZHJmZ8oiKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TA/WAoHG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745594150; c=relaxed/simple;
+	bh=cHoR1mvhfJvEkOnqx7+B37rDrUCFYjzoaPlGXi4c4Ic=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dLAczHPRMGC6vyEWRGlr7wszfnNEa7YI50kaxxuYD1/x6EPWDuksePfLHjypbP8u4VSswpgEAyhGCRnAdJBF1qNxcWpUD4Omr+OIaI5I6ukTC3+tKEZKvAenr1bThyjVOoJotFITW5Th5C3TahZ2VL7+2cNJbP21xvk0gBTL35c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DLwoxkMZ; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TA/WAoHG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505FFC4CEE4;
-	Fri, 25 Apr 2025 15:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745594140;
-	bh=C8FYTYQnzVootuMsrCRmSfUtojWm8zdXdoSIa4cnad0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TA/WAoHG8B/vfXAZVI2vircaK33q5sO+5Yij8KhVqH2Xx6aJMwuhSM+lNErabPqF+
-	 BYoth885LHHkpn7bJrFarLnuGWa9OPtUJWyBWTnRlL1pRfeWFcf000TZU7Z368BDpA
-	 FT8WjbnayGrv//EM/5mlCLkKe0FQHuLNuOhrmei1fZlHKNI0sxZa1Z16oCXdO1jHr7
-	 KoxVKKWcBHW2UfiySgkTVqHB7vxhSFkQkuaTInOpMoOuAMeK0R99DGiziPVkra801S
-	 RNWcWus2DFYbKJu/DTlKVDBh8+mGrgovrCMQb4WdmIRgauYbZuMYloYQgxk5LCiz8P
-	 wH1M68q02ucvA==
-Date: Fri, 25 Apr 2025 08:15:39 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Chi Zhiling <chizhiling@163.com>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Chi Zhiling <chizhiling@kylinos.cn>
-Subject: Re: [RFC PATCH 2/2] xfs: Enable concurrency when writing within
- single block
-Message-ID: <20250425151539.GO25675@frogsfrogsfrogs>
-References: <20250425103841.3164087-1-chizhiling@163.com>
- <20250425103841.3164087-3-chizhiling@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DLwoxkMZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745594148; x=1777130148;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=cHoR1mvhfJvEkOnqx7+B37rDrUCFYjzoaPlGXi4c4Ic=;
+  b=DLwoxkMZtMc04QOA8AOOTAR+JLQOO3TVU9ixJRd2jCBxWX7XG2o73Xw0
+   j2Zt9HnIDKnvjXQopbojaQ/rTUKb57Yn2CeYv1JOm9irl6ZFxjuyk4MWV
+   09Fj6z0J6pwH+xofteoI53f/+yrBj/Vay2LNVkihkwfCoenRQmb2l1D6/
+   e7pmQl6vwyGqxdoa+UIyY7hjfq/CNyGp+NCGpnhzHJ/CjZEydwbRXt4k5
+   8siuL++pldyewm+MH3hT1BUWL6e/zHNoBPcwjytQHLOmndugXY+Y2YexS
+   2W1asDYurbEngAaNNOskpNu4OSw3vKW6WHVibrfuq3CEzEW2ajkRGQ17d
+   w==;
+X-CSE-ConnectionGUID: Y1fGxSZtSCmyAn0NiJKYZA==
+X-CSE-MsgGUID: EBQcHp27QM+trQecYeYvDQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47134060"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47134060"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:15:48 -0700
+X-CSE-ConnectionGUID: owMVK2VfR7SJ3nW0awWvtg==
+X-CSE-MsgGUID: WJ9SURBmQKKbQky7t0+CKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="137916568"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:15:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Apr 2025 18:15:42 +0300 (EEST)
+To: Alvin1 Chen <alvin1.chen@lcfc.corp-partner.google.com>
+cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panel: samsung-atna33xc20: extend msleep in
+ atana33xc20_disable to avoid glitch
+In-Reply-To: <20250425105822.4061016-1-alvin1.chen@lcfc.corp-partner.google.com>
+Message-ID: <a75efa75-a113-842c-d598-2c1405a5c29b@linux.intel.com>
+References: <20250425105822.4061016-1-alvin1.chen@lcfc.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425103841.3164087-3-chizhiling@163.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Apr 25, 2025 at 06:38:41PM +0800, Chi Zhiling wrote:
-> From: Chi Zhiling <chizhiling@kylinos.cn>
+On Fri, 25 Apr 2025, Alvin1 Chen wrote:
+
+> samsung-atna40ct03 encouters glitch when powering off, extend msleep
+
+encounters
+
+msleep()
+
+I'd also suggest you describe the glitch a bit more than that.
+
+> in atana33xc20_disable to 40 can avoid this symptom.
 > 
-> For unextending writes, we will only update the pagecache and extent.
-> In this case, if our write occurs within a single block, that is,
-> within a single folio, we don't need an exclusive lock to ensure the
-> atomicity of the write, because we already have the folio lock.
-> 
-> Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+> Change-Id: I4d052621d3c3e0fdae0ac472fe5da151f46be237
+> Signed-off-by: Alvin1 Chen <alvin1.chen@lcfc.corp-partner.google.com>
 > ---
->  fs/xfs/xfs_file.c | 34 +++++++++++++++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
+>  drivers/gpu/drm/panel/panel-samsung-atna33xc20.c | 4 ++--
+
+Please use scripts/get_maintainer.pl to send this v2 of this patch to 
+correct lists and people. Thanks.
+
+-- 
+ i.
+
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index a6f214f57238..8eaa98464328 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -914,6 +914,27 @@ xfs_file_dax_write(
->  	return ret;
+> diff --git a/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c b/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
+> index 9a482a744b8c..87a4e1c47aaa 100644
+> --- a/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
+> +++ b/drivers/gpu/drm/panel/panel-samsung-atna33xc20.c
+> @@ -154,10 +154,10 @@ static int atana33xc20_disable(struct drm_panel *panel)
+>  	p->el3_was_on = true;
+>  
+>  	/*
+> -	 * Sleeping 20 ms here (after setting the GPIO) avoids a glitch when
+> +	 * Sleeping 40 ms here (after setting the GPIO) avoids a glitch when
+>  	 * powering off.
+>  	 */
+> -	msleep(20);
+> +	msleep(40);
+>  
+>  	return 0;
 >  }
->  
-> +#define offset_in_block(inode, p) ((unsigned long)(p) & (i_blocksize(inode) - 1))
-
-Is it correct to cast an loff_t (s64) to unsigned long (u32 on i386)
-here?
-
-> +
-> +static inline bool xfs_allow_concurrent(
-
-static inline bool
-xfs_allow_concurrent(
-
-(separate lines style nit)
-
-> +	struct kiocb		*iocb,
-> +	struct iov_iter		*from)
-> +{
-> +	struct inode		*inode = iocb->ki_filp->f_mapping->host;
-> +
-> +	/* Extending write? */
-> +	if (iocb->ki_flags & IOCB_APPEND ||
-> +	    iocb->ki_pos >= i_size_read(inode))
-> +		return false;
-> +
-> +	/* Exceeds a block range? */
-> +	if (iov_iter_count(from) > i_blocksize(inode) ||
-> +	    offset_in_block(inode, iocb->ki_pos) + iov_iter_count(from) > i_blocksize(inode))
-> +		return false;
-> +
-> +	return true;
-> +}
-
-...and since this helper only has one caller, maybe it should be named
-xfs_buffered_write_iolock_mode and return the lock mode directly?
-
-> +
->  STATIC ssize_t
->  xfs_file_buffered_write(
->  	struct kiocb		*iocb,
-> @@ -925,8 +946,12 @@ xfs_file_buffered_write(
->  	bool			cleared_space = false;
->  	unsigned int		iolock;
->  
-> +	if (xfs_allow_concurrent(iocb, from))
-> +		iolock = XFS_IOLOCK_SHARED;
-> +	else
-> +		iolock = XFS_IOLOCK_EXCL;
-> +
->  write_retry:
-> -	iolock = XFS_IOLOCK_EXCL;
->  	ret = xfs_ilock_iocb_for_write(iocb, &iolock, false);
->  	if (ret)
->  		return ret;
-> @@ -935,6 +960,13 @@ xfs_file_buffered_write(
->  	if (ret)
->  		goto out;
->  
-> +	if (iolock == XFS_IOLOCK_SHARED &&
-> +	    iocb->ki_pos + iov_iter_count(from) > i_size_read(inode)) {
-> +		xfs_iunlock(ip, iolock);
-> +		iolock = XFS_IOLOCK_EXCL;
-> +		goto write_retry;
-> +	}
-> +
->  	trace_xfs_file_buffered_write(iocb, from);
->  	ret = iomap_file_buffered_write(iocb, from,
->  			&xfs_buffered_write_iomap_ops, NULL);
-> -- 
-> 2.43.0
-> 
 > 
