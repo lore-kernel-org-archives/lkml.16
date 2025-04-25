@@ -1,136 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C644438B;
-	Fri, 25 Apr 2025 10:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E8623F291;
+	Fri, 25 Apr 2025 10:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745578455; cv=none; b=pUNqCR2dn53t712PBlyghhuSZ2exSCZFHDUH9dYpKoQLUgu8wOue2VM/ne6d6Kr+EnCK1xoeHa/uObDLtwQhrbchic9XYJawrsO0tpkSJiJs+pkJZAYrMZiettt03pBD67ORZs2WKgR9TqxCdCcaW8d3qWRrBjJPftSujAfTZSg=
+	t=1745578463; cv=none; b=Td5NMK+WM8T8pC6L9drG1cm+laowe+dwz2DBXyIQfVwy6i/b65fi7Cu3pD1EoKXJR+BrE11RTP7Q40w2nQ6zrZJfQqQjyb8xB6vaH7N8u/Gf/bfDRibV7tLP6wddjNazOlghQcI4xvkicVMFmRviSdVDJ6tChjJAPTO53pC7IUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745578455; c=relaxed/simple;
-	bh=Q1UpatpvFGBLzYGAyyXZ93HJKBvu4YFVvySAmdpewO4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UnA/HAfcxOUOCJ8F02OLKaAluqXVuUA3jDzfA8coZ/zR507/auAg/JOpEuXTuSh7K4fekWW8Z/YjWJfuX56mT77ErQJem1omTTcrthxkKLiG32qrYoqwFh6MrAwwQr8EKeFGfBcqqarr6DKas+zAHXk6/3+PWSUwRMCFI1ZTa08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hpwn17Ns; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745578463; c=relaxed/simple;
+	bh=xm/l0LBXRRC3O+XjK4qdRF0SDIkwF7Yuz+CMVMni0+E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=gT2+OJzBd7VNNt+mbfleOTrES8EaPzONWWY+3N6kz79+0SkH1JHrLwKc+SZohYhAlod3wW+LU5WOnOEMvRoziNPvDQGKpaG/tG21a0fnj+xc+hBa7x9LkSmLoCqAdSphFaA4UcR7bYWeyCCrx71iSTHinhJfzfBTXX2lrSeqhpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PBl4NX38; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hpwn17Ns"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745578454; x=1777114454;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Q1UpatpvFGBLzYGAyyXZ93HJKBvu4YFVvySAmdpewO4=;
-  b=Hpwn17Ns8VnsVqiI69GEdfw24UeQ0bO3VBhpFqOW3nNApRc/j5uEbasp
-   yXpvS1lJkGmDuG4VOgng3sUyqPaJ2LZRMfn8X3T/5xPxKpdMrthMHLFE4
-   kW78Z1rmUZNCnhoejH0c8yMPKTpnImXrwPQBHiQQGYZ/hrRgOJtq7jHS8
-   CD2c0ZbtXWxWrcq6N+7NztQ+H4uz8VcyAyN2VLst01Q5dQKc8jKddaZTO
-   xU/JJ7TGY3CZudWB1L4E7YB+4iNxu+teYDPbz2kyWqRCwh5Ofntyst85c
-   GB1qt5uzKRFvakKv5U/rXSf5FbQrNtrhqlGc+gWwSRMtGhUGXHJTiKlDb
-   w==;
-X-CSE-ConnectionGUID: KUfNXON1TiqvDzZ9XW5GPw==
-X-CSE-MsgGUID: wEAUD2K4T9ChAF9EUVU/0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58609255"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="58609255"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:54:13 -0700
-X-CSE-ConnectionGUID: G7QNP++rQ4GJv/RsJIXUWg==
-X-CSE-MsgGUID: tRlSAd2RSoK//IUddIVdDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133403841"
-Received: from reyongqi-mobl.ccr.corp.intel.com (HELO [10.238.225.6]) ([10.238.225.6])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:54:09 -0700
-Message-ID: <3da17cf1-f489-42af-aef5-a7a9f800fe17@linux.intel.com>
-Date: Fri, 25 Apr 2025 18:54:06 +0800
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PBl4NX38"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 5A42B2020957; Fri, 25 Apr 2025 03:54:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5A42B2020957
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745578461;
+	bh=Q1I1rZep87fjsOhFJmwl3GYR2qXH5ffLe7tbt73M3+c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PBl4NX38aGWJEZIBAbWLLX82b6xYx74arlGwbYrsu4r2sLrfwhz9kw4NfIow2gEGh
+	 hnIgzrIdDV41f4d0RGtiJBwHYjOy57YVErcUko8U7Lrm5Fid46II907cdbl6DogX7x
+	 bggjIc6fZNctz14qf7Z81+pAPgFJSRuy3g6iHl+M=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>
+Cc: Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v2 2/3] PCI: hv: Allow dynamic MSI-X vector allocation
+Date: Fri, 25 Apr 2025 03:54:19 -0700
+Message-Id: <1745578459-15084-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
-To: Dongcheng Yan <dongcheng.yan@intel.com>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, sakari.ailus@linux.intel.com,
- hverkuil@xs4all.nl, andriy.shevchenko@linux.intel.com, hdegoede@redhat.com,
- u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
- bingbu.cao@linux.intel.com
-Cc: stable@vger.kernel.org, hao.yao@intel.com
-References: <20250425104331.3165876-1-dongcheng.yan@intel.com>
-Content-Language: en-US
-From: "Yan, Dongcheng" <dongcheng.yan@linux.intel.com>
-In-Reply-To: <20250425104331.3165876-1-dongcheng.yan@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi reviewers,
+Allow dynamic MSI-X vector allocation for pci_hyperv PCI controller
+by adding support for the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and using
+pci_msix_prepare_desc() to prepare the descriptors.
 
-I'm sorry for that I forget to rm cc:stable@vger.kernel.org in maillist
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ Changes in v2:
+ * split the patch to keep changes in PCI and pci_hyperv controller
+   seperate
+ * replace strings "pci vectors" by "MSI-X vectors"
+---
+ drivers/pci/controller/pci-hyperv.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Best Regards,
-Dongcheng
-
-On 4/25/2025 6:43 PM, Dongcheng Yan wrote:
-> Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
-> being received. On the host side this is wired to a GPIO for polling or
-> interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
-> lt6911uxe and lt6911uxc.
-> 
-> The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
-> here as well.
-> 
-> Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
-> ---
->  drivers/platform/x86/intel/int3472/common.h   | 1 +
->  drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-> index 51b818e62a25..4593d567caf4 100644
-> --- a/drivers/platform/x86/intel/int3472/common.h
-> +++ b/drivers/platform/x86/intel/int3472/common.h
-> @@ -23,6 +23,7 @@
->  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
->  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
->  #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
-> +#define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
->  
->  #define INT3472_PDEV_MAX_NAME_LEN				23
->  #define INT3472_MAX_SENSOR_GPIOS				3
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index 394975f55d64..efa3bc7af193 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -191,6 +191,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->  		*con_id = "privacy-led";
->  		*gpio_flags = GPIO_ACTIVE_HIGH;
->  		break;
-> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
-> +		*con_id = "hpd";
-> +		*gpio_flags = GPIO_ACTIVE_HIGH;
-> +		break;
->  	case INT3472_GPIO_TYPE_POWER_ENABLE:
->  		*con_id = "avdd";
->  		*gpio_flags = GPIO_ACTIVE_HIGH;
-> @@ -221,6 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->   * 0x0b Power enable
->   * 0x0c Clock enable
->   * 0x0d Privacy LED
-> + * 0x13 Hotplug detect
->   *
->   * There are some known platform specific quirks where that does not quite
->   * hold up; for example where a pin with type 0x01 (Power down) is mapped to
-> @@ -290,6 +295,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  	switch (type) {
->  	case INT3472_GPIO_TYPE_RESET:
->  	case INT3472_GPIO_TYPE_POWERDOWN:
-> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
->  		if (ret)
->  			err_msg = "Failed to map GPIO pin to sensor\n";
-> 
-> base-commit: 4d1e8c8f11c611db5828e4bae7292bc295eea8ef
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ac27bda5ba26..f2fa6bdb6bb8 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+ 	return cfg->vector;
+ }
+ 
+-#define hv_msi_prepare		pci_msi_prepare
++#define hv_msi_prepare			pci_msi_prepare
++#define hv_msix_prepare_desc		pci_msix_prepare_desc
+ 
+ /**
+  * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
+@@ -727,6 +728,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+ #define FLOW_HANDLER		NULL
+ #define FLOW_NAME		NULL
+ #define hv_msi_prepare		NULL
++#define hv_msix_prepare_desc	NULL
+ 
+ struct hv_pci_chip_data {
+ 	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+@@ -2063,6 +2065,7 @@ static struct irq_chip hv_msi_irq_chip = {
+ static struct msi_domain_ops hv_msi_ops = {
+ 	.msi_prepare	= hv_msi_prepare,
+ 	.msi_free	= hv_msi_free,
++	.prepare_desc	= hv_msix_prepare_desc,
+ };
+ 
+ /**
+@@ -2084,7 +2087,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+ 	hbus->msi_info.ops = &hv_msi_ops;
+ 	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+ 		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+-		MSI_FLAG_PCI_MSIX);
++		MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN);
+ 	hbus->msi_info.handler = FLOW_HANDLER;
+ 	hbus->msi_info.handler_name = FLOW_NAME;
+ 	hbus->msi_info.data = hbus;
+-- 
+2.34.1
 
