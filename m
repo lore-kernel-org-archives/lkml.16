@@ -1,84 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3AD1AAC4;
-	Fri, 25 Apr 2025 02:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF51AAC4;
+	Fri, 25 Apr 2025 02:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745547104; cv=none; b=C/Rv+v5WNkXsDp4HJUpc21ZOi/jNuXqTyMqIwHdS8y1z6srhn38HEjHLgT6AfgqM9FUTSZc7j2Wz2gf8xLD5DSCjABTVpGpUIwIFiGOBXcuAtY9MftZfX4sERfkRFNbres6O2NW5BIOqciXtGbdrrU63ABtgaXD24/7VsQqCyA0=
+	t=1745547235; cv=none; b=oZ92Ae/VcLIMaP9KW+R+VvdXV8rwpz3OttF8zVuCgm40tJ5MMD9M/t65rOvHs3EniASQ6X9cKgEp2UAIbtBtiDR8p0ZXi/LdJjNtJrHSJe9ytpmgRsLt5VSrVar0dvnIRa49c408+VRi4IqiyORc1G18RwhN82/UZaKThOiehqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745547104; c=relaxed/simple;
-	bh=D2+vNAluRK4Dl/4yxS0rI+QGdXT+hzGHu9oUTwoSaGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ga1oBAn574PUzCB+9scbgVcgnXzmbC6UzyhXuSY3vCIgu5q96Alijtk61tYiQ7sjVgEFr6XRIoRelZ+7KHMStdpn0EAIRWuMKRvpTPVwOBKjaqKxmiq/xkpgjLjKfAxncIzr0fhnTvMETvto/t4RTDC6h19G84tLXjSsl8g62Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8GAz0Ci; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745547235; c=relaxed/simple;
+	bh=zhKRqLVd26FfGbO14mufcGFlylQAXcG1racRs/okgag=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fo9ojmJLNaRaTvObYttOa3wU6NbQbCMMulPVRyO3lXq/1bmqQxsm58JWBoiZkfwhG5LYCBeg/TOlOEahwjBWk2fo0EPkIy3RipoXAJNFe98TH03H5co+MpksRrgy+OF0zaddwnhScx2K6WtCRWW8rCLm4tjOvpWHsVhorf3bICI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8xHJ3QH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8GAz0Ci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86629C4CEE3;
-	Fri, 25 Apr 2025 02:11:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8xHJ3QH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDCE4C4CEE3;
+	Fri, 25 Apr 2025 02:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745547102;
-	bh=D2+vNAluRK4Dl/4yxS0rI+QGdXT+hzGHu9oUTwoSaGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i8GAz0CiJC7ccRPuqlpa6/9AHElEWMOVKLgwHRbjy/V9X1agZ6mOu2MUJtZXR/gap
-	 1t76HOrEi7FI5R/01w2SzJ0qRIs/WtAxMcUsSN5pXBffC2ErU0CwJNdwZ/T+OGROCE
-	 UqBPVIWuHLHS+B3jMLHnHp5Z0UWWV0QF4OEcRefIGAQgnsmgNXOwVz5VSmwbobxCKr
-	 N0z6kQgw7Bw2orp0BnF9An9X39m7YuzH7X9XGpIFgaU2xdSKkmYB3dnqYoQHLP70qX
-	 6vQ7zkcyV3ojKLWl3n89w42ukyjJzT5okIs3XTZaZvxYxhRKOPCLVxkzPaHx4u71Bs
-	 TuUpv6IGaptXw==
-Date: Thu, 24 Apr 2025 21:11:38 -0500
-From: Nathan Chancellor <nathan@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: Adding __popcountsi2 and __popcountdi2
-Message-ID: <20250425021138.GA3800209@ax162>
-References: <20250425003342.GA795313@ax162>
- <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com>
+	s=k20201202; t=1745547233;
+	bh=zhKRqLVd26FfGbO14mufcGFlylQAXcG1racRs/okgag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=H8xHJ3QHyW32cpizyk44/SZZ7fLssnULuTJhyh73dm6ah7nOv+8lQkBFycU3KCBQb
+	 gjtKPXLpOLt2qIOu5gy+XDnYUYQpXo3IPhkXuCPr5JhYb2E/zRHT5iPtEiCrTbA8vk
+	 0AtJeKfurLux9WVFiolGd6zSbmHF8wlHaDhwftUxAHifydoa4sIC1MSNia9uuKtfNs
+	 x0zkRhpUpZDzLXR0ubHxp+qINQrvRLFOKckCEjDzbJVQ1guaZSlY9kZFDQdW3DAvCX
+	 /DYOYrQans7jn++GyA6TCj3zsMcytNJQCpANb+tW9D/Q1gAObp27PuYKF1u3xeM+VM
+	 R9ahJvStFzGDA==
+Date: Thu, 24 Apr 2025 19:13:50 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Parvathi Pudi <parvathi@couthit.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, nm@ti.com,
+ ssantosh@kernel.org, tony@atomide.com, richardcochran@gmail.com,
+ glaroque@baylibre.com, schnelle@linux.ibm.com, m-karicheri2@ti.com,
+ s.hauer@pengutronix.de, rdunlap@infradead.org, diogo.ivo@siemens.com,
+ basharath@couthit.com, horms@kernel.org, jacob.e.keller@intel.com,
+ m-malladi@ti.com, javier.carrasco.cruz@gmail.com, afd@ti.com,
+ s-anna@ti.com, linux-arm-kernel@lists.infradead.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pratheesh@ti.com, prajith@ti.com,
+ vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+ krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+Subject: Re: [PATCH net-next v6 04/11] net: ti: prueth: Adds link detection,
+ RX and TX support.
+Message-ID: <20250424191350.7bf69fdb@kernel.org>
+In-Reply-To: <20250423072356.146726-5-parvathi@couthit.com>
+References: <20250423060707.145166-1-parvathi@couthit.com>
+	<20250423072356.146726-5-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 06:36:33PM -0700, Linus Torvalds wrote:
-> On Thu, 24 Apr 2025 at 17:33, Nathan Chancellor <nathan@kernel.org> wrote:
-> >
-> > I figured added
-> > these may not be as bad as the wcslen() case because most architectures
-> > generally have an optimized popcount implementation and I am not sure
-> > compiler builtins are banned entirely from the kernel but I can
-> > understand if it is still contentious.
-> 
-> Why does the compiler even bother to do this if the architecture
-> doesn't have the popcount instruction? The function call is quite
-> possibly more expensive than just doing it the stupid way.
+On Wed, 23 Apr 2025 12:53:49 +0530 Parvathi Pudi wrote:
+> +static inline void icssm_prueth_write_reg(struct prueth *prueth,
+> +					  enum prueth_mem region,
+> +					  unsigned int reg, u32 val)
+> +{
+> +	writel_relaxed(val, prueth->mem[region].va + reg);
+> +}
 
-Not entirely sure what the motivation is from the compiler side but I
-cannot immagine that they would be doing this if it was not more
-efficient in some way.
-
-> But if you want to do this, put the damn thing as an alias on the code
-> that actually *does* the SW fallback in lib/hweight.c.
-> 
-> Because the way your patch does it now, it takes "I'm doing stupid
-> things" to the next level by turning that function call into *two*
-> function calls - first calling __popcountsi2, which then calls
-> __sw_hweight32.
-> 
-> Let's not do stupid things, ok?
-
-I will test declaring __popcount{s,d}i2() as aliases of
-__sw_hweight{32,64}() to see what effect that has but I figured that
-calling the __arch_hweight variants was more correct because some
-architectures (at least RISC-V and x86 when I looked) use alternatives
-in that path to use hardware instructions and avoid the software path
-altogether. While there would still be the overhead from the function
-call, I figured not using the software fallback would at least soften
-that blow.
-
-Cheers,
-Nathan
+Please don't use "inline" unnecessarily.
+The compiler will inline a single-line static function.
