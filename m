@@ -1,80 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD0A29B0;
-	Fri, 25 Apr 2025 00:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5902382;
+	Fri, 25 Apr 2025 00:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540193; cv=none; b=U775tziOahKmUVk2ah7XWcbr4HPnilaMsbhBDVWHZiOqUqyUB7iaOwzdVOmHIxt9895tSVxfmecRSx2Dpl7+FvgQncTQNMUk2SUS+JnjDm7gpfneWWhHTMF0AFVp0eVT2I4dt++l5+nl/lzT7e6RVWF4+6bQKwJ+izW0fZADJCw=
+	t=1745540264; cv=none; b=Ue3zQ+AUAStcHEN2Jz9KxC6nO+8tuXc/t/3OP5Zwgxe1ES7tr8bM3oun+5GphKY1G5btFeASClihl/ezEp7vHJhKs7PRJIEysSw1QoBqfi/f92LL4RTbK0uQZQgIhMIro8JvIhS8phlJHkzoO7f9iSAqAy67gyi9ctt2tuP8RlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540193; c=relaxed/simple;
-	bh=X5QUwLh6bjuZ1jpA1tIasHLNn246FNdG4/i4LkkXpo0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=szOSy/W5jnfFQV2/KNIR/KvGQLYidAXxNih8IM4zVo4hIRtd9DLSpHNnd3fKjgyIAd3YN7PILEleqhMcmQ4vgjQO0B7trZ6CdbmPZp6aWsn+uMAwfakJllYkCx1tKyW73lXD1hoxcNsIpMK9f4ZYCWq31HNJCZeEXH5hixe4/W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kDMuMaSy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745540264; c=relaxed/simple;
+	bh=hBejx/ayd+GyQ+0SkZMatW7XvWQxt2+ga5tDFrKq55Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nWxeJIN6FQgG2b2wrnTMBfp/IU/xGiKo/lADDGOm324jEkIOMnIWWna8lw+LkdfOlEEfO9F0cmKjOq+0yqdMaGSf5e2ePjKUqCwHJK1jG8znImCnmpv8BSRG1Kl/Qlble+OoVWnLG4NuFmmmKG0RWNNzk2qA0IBCgEiHl4IyGDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAwHIjtn; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDMuMaSy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C74CC4CEE3;
-	Fri, 25 Apr 2025 00:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745540193;
-	bh=X5QUwLh6bjuZ1jpA1tIasHLNn246FNdG4/i4LkkXpo0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kDMuMaSyNY6AOejA4NJperRvNHhiTmqk2a0fL8iVWg29SI0HDL3VH4uMDpc46jiEh
-	 Oqlr94D1ijIVqyOy5viDclGChgdckGXq05HmYTJWaN2FyvFJlmmGPFei0v7SALvnbc
-	 VAmAb1xC5Ux+QBT4nu5BlGFco2Be2HoJb7+8dFjNdncVnXd5Zatb3RWVrBJCTH+dL1
-	 KiPYC/608qBaesBbuQdb4i5saHksO8/FqZTscuZCb7YTLNpzPVAiYbn6N46MifmYO7
-	 QUMZOZjFXr8bSYW6uyxeSBP+DrEJ7CoLlJbnKuL1pRNYhHnQBNff7We/DtkLkIXTXi
-	 4udOvsyeNK0+g==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.6 000/393] 6.6.88-rc1 review
-Date: Fri, 25 Apr 2025 02:16:16 +0200
-Message-ID: <20250425001616.62576-1-ojeda@kernel.org>
-In-Reply-To: <20250423142643.246005366@linuxfoundation.org>
-References: <20250423142643.246005366@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAwHIjtn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745540263; x=1777076263;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hBejx/ayd+GyQ+0SkZMatW7XvWQxt2+ga5tDFrKq55Q=;
+  b=HAwHIjtnoEEeyygPoH0U0vRrxpIYdr0PVVLMu3BiSUl5pTYfwi9Fm3gY
+   5Ri2hC8lPkb9ta8jCrZuSbrQRfMWO4geG89NDqAHSEDVznn+tmRapAopm
+   UggXO1XFbD6MbWhycsEIskZyXV37fAn5s4pWwZ1dpokcof8CjSZWTlUe+
+   JA5Z8HfB4BWdhe33kjsekJ6EbmWWw0YkZEq5HlNvasgSHZxm0SqlD0MFO
+   76VXX+az7iQvSBH7CMAY4A+29J8K/OQhyR8qHT5FysRBOWTOffHeoEwph
+   7o5WyzK/sTrcxtfKyP/wHMblclhYwfHetjd/2x7AXhmrkfX21DYmFng6i
+   g==;
+X-CSE-ConnectionGUID: +iYAUrizRo+tboUd3xdLNA==
+X-CSE-MsgGUID: 6McV+jX2QRGI8mPVZTyzFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="64612561"
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="64612561"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 17:17:41 -0700
+X-CSE-ConnectionGUID: PJfJ+tfnQl+P6lFjPBpldQ==
+X-CSE-MsgGUID: 26kbLsDHTNGSalFA9BBFUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="163815423"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 17:17:38 -0700
+Message-ID: <1fd8dd31-faf4-4657-ab06-ccba3e790d01@linux.intel.com>
+Date: Fri, 25 Apr 2025 08:17:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: kvm guests crash when running "perf kvm top"
+To: Sean Christopherson <seanjc@google.com>
+Cc: Seth Forshee <sforshee@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <Z_VUswFkWiTYI0eD@do-x1carbon>
+ <27175b8e-144d-42cb-b149-04031e9aa698@linux.intel.com>
+ <aAo445Nzi5DuAQAR@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aAo445Nzi5DuAQAR@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Apr 2025 16:38:16 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+On 4/24/2025 9:13 PM, Sean Christopherson wrote:
+> On Thu, Apr 24, 2025, Dapeng Mi wrote:
+>> Is the command "perf kvm top" executed in host or guest when you see guest
+>> crash? Is it easy to be reproduced? Could you please provide the detailed
+>> steps to reproduce the issue with 6.15-rc1 kernel?
+> Host.  I already have a fix, I'll get it posted today.
 >
-> This is the start of the stable review cycle for the 6.6.88 release.
-> There are 393 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
+> https://lore.kernel.org/all/Z_aovIbwdKIIBMuq@google.com
 
-Boot-tested under QEMU for Rust x86_64:
+Thumbs up! Glad to see it has been root caused. Thanks.
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
-Thanks!
-
-Cheers,
-Miguel
