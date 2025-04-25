@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34B1256C8D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8461642A96;
 	Fri, 25 Apr 2025 14:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745590528; cv=none; b=h2xLEcMcXq3LAwLjpxPx7u7het+HKdHHJMTjC3Aaj9kj/VU6ACNUA7ExBqlJgucZqUMhxbY/m/QlwUgIp5ZCxM0Oe4niHubMiHn04w9itzJd0lcOnMFZcRc/RfzUanbT3VlQdE1Q3yvVhqD7cRw951Xss5ANAGOZAcmaE0ucyTw=
+	t=1745590528; cv=none; b=e99/8uPcjIV8JXbvbvJPrQlheponcI3upJiIySIG6CCf1UNcwHbw2n/pIcezgTOPkSn79T48EUMc17fPN4cYFt/Z8ypUrrfz/y8my3tlEH0BHhNn7efPD4uE5Qpsh3n8dNrDZYq7d5OvtEtNIzhTMBMrP8GKSm0MJzuUnNz4hcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745590528; c=relaxed/simple;
-	bh=jISt2WkV2l7yA3kLF+JSqtHKkiqQBLDBaJrOvdeRU6s=;
+	bh=BMb7B5hhR1Jf9OxI7j18SO0PfAg6EO2cmDfv+EQ8Zf0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ma0QlPyDPLwAK7iyhE6a0s7zigWHr0jLrFEfg1Np4UIclzxuZFtG0yHGsf9SzQ8UkCd6BJcjs+WvboFa0Qles6Ce9dYCKdrO5CHqNaCICtQ8IagTD/kVCzSVcfR8CK6zV2dtjx3ReYubaIHCU1/J8sVteRrWlO3aTHAKSXtycHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ljijN1YK; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=PLxZNdKmxM7fj0NgYbe9/lyxCYmryI9UaArZWLM0UvQrCqOMH/VbhgArjBVO6yUdL+iakzdqkWqrpHxJHGbmis/UKTmo7FZZFmp5KvEx8qkdrcp56oGRqF20D1x8JoGWI8qxAN1S342JAu99Bpgw/ND5pSOcdIfm3rQgl7w3xaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CSQwZd0r; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ljijN1YK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AFB4043A16;
-	Fri, 25 Apr 2025 14:15:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CSQwZd0r"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E106439CA;
+	Fri, 25 Apr 2025 14:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745590524;
+	t=1745590517;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C8w5ALTriP5T/mRvVHqp5sZDbeSXWemuqbarruCRerk=;
-	b=ljijN1YKzbVOc8phpZwNtIMC4purf/MhY4YLDSlo5JwJQKzPiozu03aewd0Y6WKvMD0NRt
-	O1e9bMcbRQotwpPg53sLIML0I0zQq7xZc/ptr6rHwlCyADH/QhVt4cXNt9bDE6J1OcC24n
-	XZQKLsw40WX3ZBbVckKCNjRs3V/65UEs2P8RvcA8Ik98gZsFckY1PBqO3isUCVm+KsCQD3
-	CcWcoVnuB1jcFA3PmIliq93TYg6pVDUwIa2RXK+Ps8+0swEum6QxbLP/rI5aWCd2OQvbun
-	6ACe4bXh+sOFeMqSJoyEMrNWyGN7DSMU/XVzTEn4XIRADpZ55NJLmdI/YPz5EQ==
+	bh=Kp67ZW4VcxmgHTrtBfgJeiGeHmwYCxCqWvLs7V5/pwk=;
+	b=CSQwZd0rzUkioacYVX8POLUlhoDsX2VhebrVJu1Vkuiww3zFnwZ3UHCtPnEDLHloU+C80c
+	R9EXGAzvRg0UNV9aVdMwiF3sxVr2VtGvNlQoLKdKIVxenSSbrHj23AzmRIZ6qi0sqFdhmS
+	uIbHTPIVu9JX4m3DWR2aBuBXVzwfvMAcHlBse1X5b0vlpgHvWWsmo5DYJa7/w4FvHnL9V9
+	us6G9+UbIwXqdieMd2yXqg8Tr3E2GMEhlveOgUk9XPBIuovnz82szbDxqke159Kb8qUE39
+	xfmhlXAXj59VsaeEvBQplOTbYrYh5AOIyPmzyigyUA7BmznFZMYWwY73CrozyA==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -62,9 +62,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Romain Gantois <romain.gantois@bootlin.com>,
 	Daniel Golle <daniel@makrotopia.org>,
 	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: [PATCH net-next v5 05/14] net: phy: Create a phy_port for PHY-driven SFPs
-Date: Fri, 25 Apr 2025 16:14:58 +0200
-Message-ID: <20250425141511.182537-6-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v5 01/14] dt-bindings: net: Introduce the ethernet-connector description
+Date: Fri, 25 Apr 2025 16:14:54 +0200
+Message-ID: <20250425141511.182537-2-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250425141511.182537-1-maxime.chevallier@bootlin.com>
 References: <20250425141511.182537-1-maxime.chevallier@bootlin.com>
@@ -77,104 +77,141 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepueelgfdvtdfhkeekudegieekuedukefhkefghefgleekkeekkefhjeekgfevhfeinecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefuddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrt
+ ghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Some PHY devices may be used as media-converters to drive SFP ports (for
-example, to allow using SFP when the SoC can only output RGMII). This is
-already supported to some extend by allowing PHY drivers to registers
-themselves as being SFP upstream.
+The ability to describe the physical ports of Ethernet devices is useful
+to describe multi-port devices, as well as to remove any ambiguity with
+regard to the nature of the port.
 
-However, the logic to drive the SFP can actually be split to a per-port
-control logic, allowing support for multi-port PHYs, or PHYs that can
-either drive SFPs or Copper.
+Moreover, describing ports allows for a better description of features
+that are tied to connectors, such as PoE through the PSE-PD devices.
 
-To that extent, create a phy_port when registering an SFP bus onto a
-PHY. This port is considered a "serdes" port, in that it can feed data
-to anther entity on the link. The PHY driver needs to specify the
-various PHY_INTERFACE_MODE_XXX that this port supports.
+Introduce a binding to allow describing the ports, for now with 2
+attributes :
+
+ - The number of lanes, which is a quite generic property that allows
+   differentating between multiple similar technologies such as BaseT1
+   and "regular" BaseT (which usually means BaseT4).
+
+ - The media that can be used on that port, such as BaseT for Twisted
+   Copper, BaseC for coax copper, BaseS/L for Fiber, BaseK for backplane
+   ethernet, etc. This allows defining the nature of the port, and
+   therefore avoids the need for vendor-specific properties such as
+   "micrel,fiber-mode" or "ti,fiber-mode".
+
+The port description lives in its own file, as it is intended in the
+future to allow describing the ports for phy-less devices.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/net/phy/phy_device.c | 21 +++++++++++++++++++++
- drivers/net/phy/phy_port.c   | 17 +++++++++++++++++
- 2 files changed, 38 insertions(+)
+ .../bindings/net/ethernet-connector.yaml      | 47 +++++++++++++++++++
+ .../devicetree/bindings/net/ethernet-phy.yaml | 18 +++++++
+ MAINTAINERS                                   |  1 +
+ 3 files changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ethernet-connector.yaml
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 4bb177d99d45..5ab08d5f1a5b 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1490,6 +1490,23 @@ static void phy_del_port(struct phy_device *phydev, struct phy_port *port)
- 	phydev->n_ports--;
- }
+diff --git a/Documentation/devicetree/bindings/net/ethernet-connector.yaml b/Documentation/devicetree/bindings/net/ethernet-connector.yaml
+new file mode 100644
+index 000000000000..2aa28e6c1523
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ethernet-connector.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ethernet-connector.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic Ethernet Connector
++
++maintainers:
++  - Maxime Chevallier <maxime.chevallier@bootlin.com>
++
++description:
++  An Ethernet Connectr represents the output of a network component such as
++  a PHY, an Ethernet controller with no PHY, or an SFP module.
++
++properties:
++
++  lanes:
++    description:
++      Defines the number of lanes on the port, that is the number of physical
++      channels used to convey the data with the link partner.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  media:
++    description:
++      The mediums, as defined in 802.3, that can be used on the port.
++    items:
++      enum:
++        - BaseT
++        - BaseK
++        - BaseS
++        - BaseC
++        - BaseL
++        - BaseD
++        - BaseE
++        - BaseF
++        - BaseV
++        - BaseMLD
++        - BaseX
++
++required:
++  - lanes
++  - media
++
++additionalProperties: true
++
++...
+diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+index 71e2cd32580f..6bf670beb66f 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+@@ -277,6 +277,17 @@ properties:
  
-+static int phy_setup_sfp_port(struct phy_device *phydev)
-+{
-+	struct phy_port *port = phy_port_alloc();
-+
-+	if (!port)
-+		return -ENOMEM;
-+
-+	port->parent_type = PHY_PORT_PHY;
-+	port->phy = phydev;
-+
-+	port->is_serdes = true;
-+
-+	phy_add_port(phydev, port);
-+
-+	return 0;
-+}
-+
- /**
-  * phy_sfp_probe - probe for a SFP cage attached to this PHY device
-  * @phydev: Pointer to phy_device
-@@ -1511,6 +1528,10 @@ int phy_sfp_probe(struct phy_device *phydev,
- 		ret = sfp_bus_add_upstream(bus, phydev, ops);
- 		sfp_bus_put(bus);
- 	}
-+
-+	if (phydev->sfp_bus)
-+		ret = phy_setup_sfp_port(phydev);
-+
- 	return ret;
- }
- EXPORT_SYMBOL(phy_sfp_probe);
-diff --git a/drivers/net/phy/phy_port.c b/drivers/net/phy/phy_port.c
-index f54917cada39..617a68417795 100644
---- a/drivers/net/phy/phy_port.c
-+++ b/drivers/net/phy/phy_port.c
-@@ -8,6 +8,8 @@
- #include <linux/of.h>
- #include <linux/phy_port.h>
+     additionalProperties: false
  
-+#include "phy-caps.h"
++  mdi:
++    type: object
 +
- /**
-  * phy_port_alloc: Allocate a new phy_port
-  *
-@@ -146,6 +148,21 @@ void phy_port_update_supported(struct phy_port *port)
- 		ethtool_medium_get_supported(supported, i, port->lanes);
- 		linkmode_or(port->supported, port->supported, supported);
- 	}
++    patternProperties:
++      '^connector-[a-f0-9]+$':
++        $ref: /schemas/net/ethernet-connector.yaml#
 +
-+	/* Serdes ports supported may through SFP may not have any medium set,
-+	 * as they will output PHY_INTERFACE_MODE_XXX modes. In that case, derive
-+	 * the supported list based on these interfaces
-+	 */
-+	if (port->is_serdes && linkmode_empty(supported)) {
-+		unsigned long interface, link_caps = 0;
++        unevaluatedProperties: false
 +
-+		/* Get each interface's caps */
-+		for_each_set_bit(interface, port->interfaces,
-+				 PHY_INTERFACE_MODE_MAX)
-+			link_caps |= phy_caps_from_interface(interface);
++    additionalProperties: false
 +
-+		phy_caps_linkmodes(link_caps, port->supported);
-+	}
- }
- EXPORT_SYMBOL_GPL(phy_port_update_supported);
+ required:
+   - reg
  
+@@ -313,5 +324,12 @@ examples:
+                     default-state = "keep";
+                 };
+             };
++
++            mdi {
++              connector-0 {
++                lanes = <2>;
++                media = "BaseT";
++              };
++            };
+         };
+     };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 82e4b96030df..0a400524e578 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8769,6 +8769,7 @@ R:	Russell King <linux@armlinux.org.uk>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-net-phydev
++F:	Documentation/devicetree/bindings/net/ethernet-connector.yaml
+ F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
+ F:	Documentation/devicetree/bindings/net/mdio*
+ F:	Documentation/devicetree/bindings/net/qca,ar803x.yaml
 -- 
 2.49.0
 
