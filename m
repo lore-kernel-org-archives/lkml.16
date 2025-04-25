@@ -1,141 +1,196 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71425258
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EE45258;
+	Fri, 25 Apr 2025 01:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745542830; cv=none; b=JALAkzwe6WnqZJQnb555VnLcTic7aBuNsb/zaM2snVmPEqF/e99uRFTYBKy/KPEO1qqLktrA46RHIzMsAOIyfjIxSpZL7GgupoA/IX3bCYRs4VYmSsayhKPkTNgHb7XwwWtPIaGvQMKREJBCyJG4kBC9j5No/wdvaN00CUc2wj4=
+	t=1745542844; cv=none; b=cSVYo8tyVdfbGWvEIdMk55xIfEFcw52MJDD0NoC7WJvW/YhI6pu97FjlnKceD737B4XIYpDO/6oqPkAu+fbID/720hzvJStltjFcP4ypS9m4WuNjz4UnRQgzf3bM86w2UOdDwx9Onc0gDhexnFZs2y/E133npPWax2CilWjXE1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745542830; c=relaxed/simple;
-	bh=+110KUY/xR4mN9EPy2VveR/SqdtfMuUoBJeg1u4C3tI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B+tfiN+TUkNCTuxKTVRPDIEsfcURCR6z6amSCh07XBfc2h+Up3dm5GjY6kB+gI1R0kes/K2g4erj67AOI6ycqbayx3rokb5KibSdgtAQ9mQurz2G4xPIRfBOFvid0/4YmFafwaThsMTiH1Opuf/2O3jmZfs/Vz/AG250fYmU9wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=GD/V85Ai; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="GD/V85Ai"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224172f32b3so3473475ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745542828; x=1746147628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VgVKQefSPO6v/paTmlYFEPshSYpszOpPFJZJH+sNyKc=;
-        b=GD/V85AiTR+POsbB2qW2YQ3H6l5tbRnMJgt1XhMjrb2owEiXdr4WxWPfr0i0DqZeVf
-         9V9dIAFm0CFjPbsc41O7AmSEipxShdwATrN1+WKiEgwicIRSHrPFXTHGrEEB4d10jWNI
-         33KZQjh8Gv4doz0edPUPF+K64kNkVoXhDVS2phAhsuZ+xgz6v0KWNi1N/IxyP080wTq7
-         81FtQuL7M9xRFy9nNFQMG5+wBJTQHsDrBvrwEx4npe9LL5NuQG2Gror6p30ktvLMq8Nb
-         pq+Tlj/pwZ7VH07KaVZM4tu6AiCb9GLTV3wDNY1kJM2uCcwCL4lIhorOVAGkLXPMYdhN
-         K+nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745542828; x=1746147628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VgVKQefSPO6v/paTmlYFEPshSYpszOpPFJZJH+sNyKc=;
-        b=fSd+Hgcn7QtfgZq3oyba2aRTSpOMxR8lQoXk/ztsPs/7XLh7Q6V3H5cQOePtPJ8kgJ
-         3zoF7D/w5uTiKt3npNOTt7CIUQtH3xSWRyIc0LhjDD88PJwpNubFtqgCKzwc20EuDrqx
-         8IloL9fU4nMkh5UEuhC3c5w1rG6jsMOoIJR7Mk7+DUhHF39u1j9gvk50xWj/uvwGAn0t
-         OWQ2uWB3jc0fVvWr3GSgaLbMAztwkVj61Or5FFDXn566hmzdhgdihNvK0PPRc9MGiQwg
-         ywVbt74OyV39qFGpRHUV+5+jhE9k2MCMvkYZsFpxVnTNVG+7Dg50HEzGmf2qu/P9w/GS
-         LFEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmIff/WTudGoHWGtsbBedjRzqwMyl/Qj1Z0vquRPQtLhqLOs0QGWA2LXNq0vl5vuvzrop2cUOdDtG3G5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsH7n5IyVuLuJ1Lr0BRkgY7Q59FxxifiuEJYPZcsZ7NTCV5VxC
-	WUHNYqH2wgi3O30wpNZCvYtu9qwU+f709jDEfMezmx613aiYyxlO4e9deAslR4knSo7/g7R078K
-	85I2XCBUdcvMBS+Q20QA0Qs66TC/Wrle7o8JyeQ==
-X-Gm-Gg: ASbGncuyrv3qBvLNqrsJAvwTONhn3UXRVkuklrlZrMSARudAVEpPwLqmHAO440Bg4Tb
-	3HxqwHsm2CCADMbYzD6fwftndvnBn9BBa3QZsMr8svdw0w9d7D4TME8fISCgllH3w/j53ifOHsB
-	ocOl/LxJk7lU6k8LqaycHR
-X-Google-Smtp-Source: AGHT+IGCb4UYqBB8ozaTmvNC2LbrKC8acJbrLTqjrzO9z4hNn35hiWgqpQh7i/O7NLqRTJ/YYJh3Itk7bz6cJYtrTBc=
-X-Received: by 2002:a17:902:d483:b0:224:e0e:e08b with SMTP id
- d9443c01a7336-22dbf155e64mr2476255ad.0.1745542827993; Thu, 24 Apr 2025
- 18:00:27 -0700 (PDT)
+	s=arc-20240116; t=1745542844; c=relaxed/simple;
+	bh=q3/Ou0SX5DeHbn9YI7b/g85lWDwehl99b7xfTwAuLdA=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ATugirr9JXZuPcOpTtJ4hNrOjCw02MczTntVqJ9IcJqZL7OY8mc+eVo5s++j4zUqlJpRzf1TUCjXpmtmHrYDRxrEg9HUMcE1/0ozBN4IldpgJ146zQPFDYhzkq+Kowtv8ZkMtZ/2Wf0guMw5J85H7vetZEv+KEYr7BI3cM6qJOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZkDyH1Qbpz1d0t6;
+	Fri, 25 Apr 2025 08:59:35 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2F1DC180B46;
+	Fri, 25 Apr 2025 09:00:36 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 25 Apr 2025 09:00:34 +0800
+Subject: Re: [RESEND PATCH v18 1/2] ACPI: APEI: send SIGBUS to current task if
+ synchronous memory error not recovered
+To: Shuai Xue <xueshuai@linux.alibaba.com>, "Luck, Tony"
+	<tony.luck@intel.com>, <rafael@kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <linux-edac@vger.kernel.org>, <x86@kernel.org>,
+	<justin.he@arm.com>, <ardb@kernel.org>, <ying.huang@linux.alibaba.com>,
+	<ashish.kalra@amd.com>, <baolin.wang@linux.alibaba.com>,
+	<tglx@linutronix.de>, <dave.hansen@linux.intel.com>, <lenb@kernel.org>,
+	<hpa@zytor.com>, <robert.moore@intel.com>, <lvying6@huawei.com>,
+	<xiexiuqi@huawei.com>, <zhuo.song@linux.alibaba.com>, <sudeep.holla@arm.com>,
+	<lpieralisi@kernel.org>, <linux-acpi@vger.kernel.org>,
+	<yazen.ghannam@amd.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+	<robin.murphy@arm.com>, <Jonathan.Cameron@Huawei.com>, <bp@alien8.de>,
+	<linux-arm-kernel@lists.infradead.org>, <wangkefeng.wang@huawei.com>,
+	<tanxiaofei@huawei.com>, <mawupeng1@huawei.com>, <linmiaohe@huawei.com>,
+	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <tongtiangen@huawei.com>,
+	<gregkh@linuxfoundation.org>, <will@kernel.org>, <jarkko@kernel.org>
+References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
+ <20250404112050.42040-2-xueshuai@linux.alibaba.com>
+ <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
+ <709ee8d2-8969-424c-b32b-101c6a8220fb@linux.alibaba.com>
+ <353809e7-5373-0d54-6ddb-767bc5af9e5f@huawei.com>
+ <653abdd4-46d2-4956-b49c-8f9c309af34d@linux.alibaba.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <de5d2417-dc92-b276-1125-4feb5151de7f@huawei.com>
+Date: Fri, 25 Apr 2025 09:00:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423205127.2976981-1-csander@purestorage.com>
- <20250423205127.2976981-4-csander@purestorage.com> <aAoiq1AsoD-k_kp3@infradead.org>
-In-Reply-To: <aAoiq1AsoD-k_kp3@infradead.org>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Thu, 24 Apr 2025 18:00:16 -0700
-X-Gm-Features: ATxdqUF2Kg7I4OqvugG6rzIUHrQVccl2R2M4E_rPalYCcq-E9ht0LATbrfNqQKQ
-Message-ID: <CADUfDZpDg5hXeShhd9GX70uVbqv7RU+u-grf7S8j2qdgFXDxYw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] block: avoid hctx spinlock for plug with multiple queues
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <653abdd4-46d2-4956-b49c-8f9c309af34d@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Thu, Apr 24, 2025 at 4:38=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> > +static void blk_mq_extract_queue_requests(struct rq_list *rqs,
-> > +                                       struct rq_list *queue_rqs,
-> > +                                       unsigned *queue_depth)
-> > +{
-> > +     struct rq_list matched_rqs =3D {}, unmatched_rqs =3D {};
-> > +     struct request *rq =3D rq_list_pop(rqs);
-> > +     struct request_queue *this_q =3D rq->q;
-> > +     unsigned depth =3D 1;
-> > +
-> > +     rq_list_add_tail(&matched_rqs, rq);
-> > +     while ((rq =3D rq_list_pop(rqs))) {
-> > +             if (rq->q =3D=3D this_q) {
-> > +                     rq_list_add_tail(&matched_rqs, rq);
-> > +                     depth++;
-> > +             } else {
-> > +                     rq_list_add_tail(&unmatched_rqs, rq);
-> > +             }
->
-> This might be moe efficient if you keep an extra iterator and never
-> mode the request for another queue.
+On 2025/4/18 20:35, Shuai Xue wrote:
+> 
+> 
+> 在 2025/4/18 15:48, Hanjun Guo 写道:
+>> On 2025/4/14 23:02, Shuai Xue wrote:
+>>>
+>>>
+>>> 在 2025/4/14 22:37, Hanjun Guo 写道:
+>>>> On 2025/4/4 19:20, Shuai Xue wrote:
+>>>>> Synchronous error was detected as a result of user-space process 
+>>>>> accessing
+>>>>> a 2-bit uncorrected error. The CPU will take a synchronous error 
+>>>>> exception
+>>>>> such as Synchronous External Abort (SEA) on Arm64. The kernel will 
+>>>>> queue a
+>>>>> memory_failure() work which poisons the related page, unmaps the 
+>>>>> page, and
+>>>>> then sends a SIGBUS to the process, so that a system wide panic can be
+>>>>> avoided.
+>>>>>
+>>>>> However, no memory_failure() work will be queued when abnormal 
+>>>>> synchronous
+>>>>> errors occur. These errors can include situations such as invalid PA,
+>>>>> unexpected severity, no memory failure config support, invalid GUID
+>>>>> section, etc. In such case, the user-space process will trigger SEA 
+>>>>> again.
+>>>>> This loop can potentially exceed the platform firmware threshold or 
+>>>>> even
+>>>>> trigger a kernel hard lockup, leading to a system reboot.
+>>>>>
+>>>>> Fix it by performing a force kill if no memory_failure() work is 
+>>>>> queued
+>>>>> for synchronous errors.
+>>>>>
+>>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>>>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+>>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+>>>>> Reviewed-by: Jane Chu <jane.chu@oracle.com>
+>>>>> ---
+>>>>>   drivers/acpi/apei/ghes.c | 11 +++++++++++
+>>>>>   1 file changed, 11 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+>>>>> index b72772494655..50e4d924aa8b 100644
+>>>>> --- a/drivers/acpi/apei/ghes.c
+>>>>> +++ b/drivers/acpi/apei/ghes.c
+>>>>> @@ -799,6 +799,17 @@ static bool ghes_do_proc(struct ghes *ghes,
+>>>>>           }
+>>>>>       }
+>>>>> +    /*
+>>>>> +     * If no memory failure work is queued for abnormal synchronous
+>>>>> +     * errors, do a force kill.
+>>>>> +     */
+>>>>> +    if (sync && !queued) {
+>>>>> +        dev_err(ghes->dev,
+>>>>> +            HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable 
+>>>>> error (SIGBUS)\n",
+>>>>> +            current->comm, task_pid_nr(current));
+>>>>> +        force_sig(SIGBUS);
+>>>>> +    }
+>>>>
+>>>> I think it's reasonable to send a force kill to the task when the
+>>>> synchronous memory error is not recovered.
+>>>>
+>>>> But I hope this code will not trigger some legacy firmware issues,
+>>>> let's be careful for this, so can we just introduce arch specific
+>>>> callbacks for this?
+>>>
+>>> Sorry, can you give more details? I am not sure I got your point.
+>>>
+>>> For x86, Tony confirmed that ghes will not dispatch x86 synchronous 
+>>> errors
+>>> (a.k.a machine check exception), in previous vesion.
+>>> Sync is only used in arm64 platform, see is_hest_sync_notify().
+>>
+>> Sorry for the late reply, from the code I can see that x86 will reuse
+>> ghes_do_proc(), if Tony confirmed that x86 is OK, it's OK to me as well.
+> 
+> Hi, Hanjun,
+> 
+> Glad to hear that.
+> 
+> I copy and paste in the original disscusion with @Tony from mailist.[1]
+> 
+>> On x86 the "action required" cases are signaled by a synchronous 
+>> machine check
+>> that is delivered before the instruction that is attempting to consume 
+>> the uncorrected
+>> data retires. I.e., it is guaranteed that the uncorrected error has 
+>> not been propagated
+>> because it is not visible in any architectural state.
+> 
+>> APEI signaled errors don't fall into that category on x86 ... the 
+>> uncorrected data
+>> could have been consumed and propagated long before the signaling used 
+>> for
+>> APEI can alert the OS.
+> 
+> I also add comments in the code.
+> 
+> /*
+>   * A platform may describe one error source for the handling of 
+> synchronous
+>   * errors (e.g. MCE or SEA), or for handling asynchronous errors (e.g. SCI
+>   * or External Interrupt). On x86, the HEST notifications are always
+>   * asynchronous, so only SEA on ARM is delivered as a synchronous
+>   * notification.
+>   */
+> static inline bool is_hest_sync_notify(struct ghes *ghes)
+> {
+>      u8 notify_type = ghes->generic->notify.type;
+> 
+>      return notify_type == ACPI_HEST_NOTIFY_SEA;
+> }
+> 
+> 
+> If you are happy with code, please explictly give me your reviewed-by 
+> tags :)
 
-Sure, will do.
+Call force_sig(SIGBUS) directly in ghes_do_proc() is not my favourite,
+but I can bear that, please add
 
->
-> > +     }
-> > +
-> > +     *queue_rqs =3D matched_rqs;
-> > +     *rqs =3D unmatched_rqs;
-> > +     *queue_depth =3D depth;
->
-> .. and I'd return the queue depth here instead of making it another
-> output argument.
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 
-Okay.
-
->
-> > +static void blk_mq_dispatch_multiple_queue_requests(struct rq_list *rq=
-s)
-> > +{
-> > +     do {
-> > +             struct rq_list queue_rqs;
-> > +             unsigned depth;
-> > +
-> > +             blk_mq_extract_queue_requests(rqs, &queue_rqs, &depth);
-> > +             blk_mq_dispatch_queue_requests(&queue_rqs, depth);
-> > +             while (!rq_list_empty(&queue_rqs)) {
-> > +                     blk_mq_dispatch_list(&queue_rqs, false);
-> > +             }
->
-> No need for the braces in the inner while loop here.
-
-Old habits die hard :)
-
->
-> The other caller of blk_mq_dispatch_list loops until the list is empty,
-> why don't we need that here?
-
-This loop does continue calling blk_mq_dispatch_list() until queue_rqs
-is empty. And the outer loop keeps repopulating queue_rqs until the
-entire rqs list is empty. Am I misunderstanding you?
-
-Thanks for the review,
-Caleb
+Thanks
+Hanjun
