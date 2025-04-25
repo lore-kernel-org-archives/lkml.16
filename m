@@ -1,505 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1BF25CC57;
-	Fri, 25 Apr 2025 14:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF53D28EC
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592976; cv=none; b=r1LwU+mcevjeG1RO3jGOduY1HG3AxU/Nmhx+OU4m0V92pl82hQ7Bk4wWptmWaxWxV7vA7kbtBy9Rio60MyqzahzbxnMT5g+7uPC6A0gMa1T9KyJVEYlR0owJ328iwqG9SQpNMEll2E0e/YdKAwlnSNOwFshtj02iWvlSwVrdxrk=
+	t=1745593088; cv=none; b=YM1z8r/FqM7Suh2oNCZF/w8OhvUn1slR+Wf841BD+kM5z2rKJU3yqdLVq4l8isBlxV73hD5+stqxL3yhwBKfWM8hdNbYZ58ppbpkmQxDfXCH7bGVdU7GxHXHdsAQik4hoA0rUDbSj6ktLZ4NM2/YvrJmeaD38uvFxtT8vMGP3zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592976; c=relaxed/simple;
-	bh=ahzkbLUOXIGyN0buJ9wjOjV9ETziIAkrHCulbZWzJV4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=DTye83NgINUFdltQwjxP2cSVi4rOrNL6TnOdgH3JtYpNNlsw65qLv2zQ9JlXozORV/O7PwXwq+fal9rCyh58Q3mxcZeXFouUMQCR1DTvKKcgjOO9DKVEJ/RuFS5jHMUj6ofj1XsVovElGwIKNRhWZjx0mb+rqDj6xWbskF9Nn3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01163C4CEEF;
-	Fri, 25 Apr 2025 14:56:15 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1u8KVK-0000000HSmu-0lZw;
-	Fri, 25 Apr 2025 10:58:14 -0400
-Message-ID: <20250425145814.033122445@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 25 Apr 2025 10:54:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- x86@kernel.org,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org,
- Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org,
- Jordan Rome <jordalgo@meta.com>,
- Sam James <sam@gentoo.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Florian Weimer <fweimer@redhat.com>,
- Andy Lutomirski <luto@kernel.org>,
- Weinan Liu <wnliu@google.com>,
- Blake Jones <blakejones@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v6 14/18] perf: Support deferred user callchains
-References: <20250425145422.132820147@goodmis.org>
+	s=arc-20240116; t=1745593088; c=relaxed/simple;
+	bh=/OKM3YtB1u7t4llITDX/LmLKKxVYmX8r8f4jO8mJyfk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OeazQThV1ZT1ATq9M+juxKDz5cycG0aAWjgJfXIDRQB4DpLvZs+HS8qLbdvWAjW65YwR1k1uPdyK+ywC1BG2GP4VJ3td2EOEeUHNCZmupoGR6nTYdZNVB8ICREUmrUGVkTVh0o8c8NO2RLfUIXpzwqt1j4cnbLCgvmw5PHkXkq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIefl8f2; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIefl8f2"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7299e3ab5cso1869049276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:58:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745593085; x=1746197885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n+JfgXLgZyCYxu7B7mUIKQ4/DMO5+uHVG4Enqm6k6wU=;
+        b=LIefl8f2OCZ4ODUHVf3NgBiso0nHhT8MOUdOKHio2Mgg6qEAy56mohySXsz31K0NZl
+         9PNkbR59mvdSWTrGJZRmeaoN+l/XBDAtTZKzTEdK5hUggbteh4PIJc3Hfm2OEPPUFGRR
+         JqHAGkRQ7v0z/IoGG9ZxhGjaf1KlTeFWKZWb+Hb+YRyaaGzk0MbDljYBlL6zbJdyI7+N
+         QKkvvzmOpWhjSYJdcfzRmr8bwHQtvz57jrlrJ/NRvlOBDHFfdio6GThvOCoGEZWn3jKt
+         UqAzNR11g465TzUJxvzgbC4srHOAN6ekjxPaBdZt8sgL3WbyFdiWjpAnDuSjVtA3R5zm
+         djNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745593085; x=1746197885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n+JfgXLgZyCYxu7B7mUIKQ4/DMO5+uHVG4Enqm6k6wU=;
+        b=tkNIaEkMV4d4fhzljlJgS7vxTS+l3flv5nyP9XgOvyuNBCv2x0pekKP3oWQbjFh7xE
+         LGbBAxFpO2r1AqWu3VSuEBoaBUB8tjFzPHqN6vnmQlkws7E7ePxQLLDjM/9xDlas43cP
+         YF06j+hR6/JBctPh2GiVBxlga8h9D/JJ6a/XMUXI+bZgMsm7rrT8uTund21cy9722i8V
+         eye/ALV3UEZ5ZSdL8o0hQqtzzs4XXxfjF9p0xJTaMXvfqM3M8gTfQqweO+embEevYPb9
+         nvKwdEcNeMhwF1G050OFd6WVktgoOvPDaJ8l/gVWARE6WADiIoIAxEdusS759nyqn5J2
+         LOug==
+X-Forwarded-Encrypted: i=1; AJvYcCWQuxEB2ZzR0r9QWOV4re0hiNNbUJkb5bfkR7WA5gd0opEdm+vfxp7Mc7pLKgG1813tY30Tv4WChh71EPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywvbk3bIngJH0hI9ZOwLd0QIp+mMcSYuZ0ICHqrn5la0g9ta6cl
+	/rqo03BoJcL+TQiPLSyobfIQs3egWrtiPxBeUOjEpy7jGXQPDQgEpZJgkOTVSf1uWpMCWprN9vU
+	T4P+emANY3tgXpFhFzzdSEDU7K6E=
+X-Gm-Gg: ASbGncubD1goodFWW9rZEmx42tIJ29laXc3NDu4cUdlwrDn74xX9cIEL1dVAoClHTew
+	e6G6M8N0D9TiWbegFvBzpdD2MXN5yNWw3BE5A9RHGXX8/dL5ZtdrcAD2fg0Anzh2gMCg8tN71II
+	ed4/sABzAM313/z+K+kzJIFlhQgaGZ3JWSig==
+X-Google-Smtp-Source: AGHT+IEo7ARr7g02UpjCXpp5GUfKWlGgEmFddHaeQwxNo6PWnqJ2zIiDARe5QyTYEKSdmvHqXaz07LR62euwob5p1Zg=
+X-Received: by 2002:a05:6902:140b:b0:e6b:80e3:2d00 with SMTP id
+ 3f1490d57ef6-e73167d2953mr3499792276.17.1745593085330; Fri, 25 Apr 2025
+ 07:58:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250424153815.4003-1-haowenchao22@gmail.com> <8905cbf7-7507-44de-8721-b3e75e80732b@linux.alibaba.com>
+In-Reply-To: <8905cbf7-7507-44de-8721-b3e75e80732b@linux.alibaba.com>
+From: Wenchao Hao <haowenchao22@gmail.com>
+Date: Fri, 25 Apr 2025 22:57:54 +0800
+X-Gm-Features: ATxdqUEg70XJjGEjqzqthCjr_rv-cR_B85mtW4y2_0_YdVO9cQCkVBrryBfOaCY
+Message-ID: <CAOptpSMZtw8xEHqgu-ufdQouiAHpitkQtBdFXmEbRGQ+FSAWYA@mail.gmail.com>
+Subject: Re: [PATCH] mm/compaction: do not break pages whose order is larger
+ than target order
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+On Fri, Apr 25, 2025 at 2:53=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2025/4/24 23:38, Wenchao Hao wrote:
+> > When scanning free pages for memory compaction, if the compaction targe=
+t
+> > order is explicitly specified, do not split pages in buddy whose order
+> > are larger than compaction target order.
+>
+> We've already checked this in suitable_migration_target(), so how did
+> you observe that there are still attempts to isolate such non-suitable
+> free large folios? Please explain your usecase in detail.
+>
 
-Use the new unwind_deferred_trace() interface (if available) to defer
-unwinds to task context.  This will allow the use of .sframe (when it
-becomes available) and also prevents duplicate userspace unwinds.
+I found such non-suitable during testing proactive compaction on
+android device (6.6 kernel), and I want to use proactive compaction
+to produce order4 pages for mthp.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v5: https://lore.kernel.org/20250424162633.390748816@goodmis.org
+The test device did not include your patch "mm: compaction: limit the suita=
+ble
+target page order to be less than cc->order".
 
-- Fix whitespace issues (Peter Zijlstra)
+However, from the analysis of the code flow, even if it is included,
+similar non-suitable free large folios may still appear.
 
-- Use current->flags & PF_KTHREAD instead of current->mm == NULL to
-  determine if the task is a kthread or not.
+suitable_migration_target() only check before isolate_freepages_block(), an=
+d
+check is based on the starting page of pageblock.
 
- arch/Kconfig                          |   3 +
- include/linux/perf_event.h            |  13 +-
- include/uapi/linux/perf_event.h       |  19 ++-
- kernel/bpf/stackmap.c                 |   4 +-
- kernel/events/callchain.c             |  11 +-
- kernel/events/core.c                  | 163 +++++++++++++++++++++++++-
- tools/include/uapi/linux/perf_event.h |  19 ++-
- 7 files changed, 224 insertions(+), 8 deletions(-)
+If the target order is relatively small(order4 for example), just one check=
+ in
+suitable_migration_target() is not enough, because there may be other free
+folios which are larger than order4 in this pageblock.
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index dbb1cc89e040..681946b5f2c4 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -446,6 +446,9 @@ config HAVE_UNWIND_USER_COMPAT_FP
- 	bool
- 	depends on HAVE_UNWIND_USER_FP
- 
-+config HAVE_PERF_CALLCHAIN_DEFERRED
-+	bool
-+
- config HAVE_PERF_REGS
- 	bool
- 	help
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 3cc0b0ea0afa..564594548d82 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -62,6 +62,7 @@ struct perf_guest_info_callbacks {
- #include <linux/security.h>
- #include <linux/static_call.h>
- #include <linux/lockdep.h>
-+#include <linux/unwind_deferred.h>
- #include <asm/local.h>
- 
- struct perf_callchain_entry {
-@@ -830,6 +831,10 @@ struct perf_event {
- 	struct callback_head		pending_task;
- 	unsigned int			pending_work;
- 
-+	unsigned int			pending_unwind_callback;
-+	struct callback_head		pending_unwind_work;
-+	struct rcuwait			pending_unwind_wait;
-+
- 	atomic_t			event_limit;
- 
- 	/* address range filters */
-@@ -1652,12 +1657,18 @@ extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct p
- extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
- extern struct perf_callchain_entry *
- get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
--		   u32 max_stack, bool crosstask, bool add_mark);
-+		   u32 max_stack, bool crosstask, bool add_mark, bool defer_user);
- extern int get_callchain_buffers(int max_stack);
- extern void put_callchain_buffers(void);
- extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
- extern void put_callchain_entry(int rctx);
- 
-+#ifdef CONFIG_HAVE_PERF_CALLCHAIN_DEFERRED
-+extern void perf_callchain_user_deferred(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
-+#else
-+static inline void perf_callchain_user_deferred(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs) {}
-+#endif
-+
- extern int sysctl_perf_event_max_stack;
- extern int sysctl_perf_event_max_contexts_per_stack;
- 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 5fc753c23734..65fe495c012e 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -462,7 +462,8 @@ struct perf_event_attr {
- 				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
- 				remove_on_exec :  1, /* event is removed from task on exec */
- 				sigtrap        :  1, /* send synchronous SIGTRAP on event */
--				__reserved_1   : 26;
-+				defer_callchain:  1, /* generate PERF_RECORD_CALLCHAIN_DEFERRED records */
-+				__reserved_1   : 25;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -1228,6 +1229,21 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_AUX_OUTPUT_HW_ID		= 21,
- 
-+	/*
-+	 * This user callchain capture was deferred until shortly before
-+	 * returning to user space.  Previous samples would have kernel
-+	 * callchains only and they need to be stitched with this to make full
-+	 * callchains.
-+	 *
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				nr;
-+	 *	u64				ips[nr];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CALLCHAIN_DEFERRED		= 22,
-+
- 	PERF_RECORD_MAX,			/* non-ABI */
- };
- 
-@@ -1258,6 +1274,7 @@ enum perf_callchain_context {
- 	PERF_CONTEXT_HV			= (__u64)-32,
- 	PERF_CONTEXT_KERNEL		= (__u64)-128,
- 	PERF_CONTEXT_USER		= (__u64)-512,
-+	PERF_CONTEXT_USER_DEFERRED	= (__u64)-640,
- 
- 	PERF_CONTEXT_GUEST		= (__u64)-2048,
- 	PERF_CONTEXT_GUEST_KERNEL	= (__u64)-2176,
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index ec3a57a5fba1..339f7cbbcf36 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -315,7 +315,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 		max_depth = sysctl_perf_event_max_stack;
- 
- 	trace = get_perf_callchain(regs, kernel, user, max_depth,
--				   false, false);
-+				   false, false, false);
- 
- 	if (unlikely(!trace))
- 		/* couldn't fetch the stack trace */
-@@ -452,7 +452,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 		trace = get_callchain_entry_for_task(task, max_depth);
- 	else
- 		trace = get_perf_callchain(regs, kernel, user, max_depth,
--					   crosstask, false);
-+					   crosstask, false, false);
- 
- 	if (unlikely(!trace) || trace->nr < skip) {
- 		if (may_fault)
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 2798c0c9f782..50c637e960b9 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -218,7 +218,7 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
- 
- struct perf_callchain_entry *
- get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
--		   u32 max_stack, bool crosstask, bool add_mark)
-+		   u32 max_stack, bool crosstask, bool add_mark, bool defer_user)
- {
- 	struct perf_callchain_entry *entry;
- 	struct perf_callchain_entry_ctx ctx;
-@@ -251,6 +251,15 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 			regs = task_pt_regs(current);
- 		}
- 
-+		if (defer_user) {
-+			/*
-+			 * Foretell the coming of PERF_RECORD_CALLCHAIN_DEFERRED
-+			 * which can be stitched to this one.
-+			 */
-+			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER_DEFERRED);
-+			goto exit_put;
-+		}
-+
- 		if (add_mark)
- 			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ec9edf602974..06c700296f72 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5537,6 +5537,31 @@ static bool exclusive_event_installable(struct perf_event *event,
- 	return true;
- }
- 
-+static void perf_pending_unwind_sync(struct perf_event *event)
-+{
-+	might_sleep();
-+
-+	if (!event->pending_unwind_callback)
-+		return;
-+
-+	/*
-+	 * If the task is queued to the current task's queue, we
-+	 * obviously can't wait for it to complete. Simply cancel it.
-+	 */
-+	if (task_work_cancel(current, &event->pending_unwind_work)) {
-+		event->pending_unwind_callback = 0;
-+		local_dec(&event->ctx->nr_no_switch_fast);
-+		return;
-+	}
-+
-+	/*
-+	 * All accesses related to the event are within the same RCU section in
-+	 * perf_event_callchain_deferred(). The RCU grace period before the
-+	 * event is freed will make sure all those accesses are complete by then.
-+	 */
-+	rcuwait_wait_event(&event->pending_unwind_wait, !event->pending_unwind_callback, TASK_UNINTERRUPTIBLE);
-+}
-+
- static void perf_free_addr_filters(struct perf_event *event);
- 
- /* vs perf_event_alloc() error */
-@@ -5604,6 +5629,7 @@ static void _free_event(struct perf_event *event)
- {
- 	irq_work_sync(&event->pending_irq);
- 	irq_work_sync(&event->pending_disable_irq);
-+	perf_pending_unwind_sync(event);
- 
- 	unaccount_event(event);
- 
-@@ -7248,6 +7274,65 @@ static void perf_pending_irq(struct irq_work *entry)
- 		perf_swevent_put_recursion_context(rctx);
- }
- 
-+
-+struct perf_callchain_deferred_event {
-+	struct perf_event_header	header;
-+	u64				nr;
-+	u64				ips[];
-+};
-+
-+static void perf_event_callchain_deferred(struct callback_head *work)
-+{
-+	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
-+	struct perf_callchain_deferred_event deferred_event;
-+	u64 callchain_context = PERF_CONTEXT_USER;
-+	struct unwind_stacktrace trace;
-+	struct perf_output_handle handle;
-+	struct perf_sample_data data;
-+	u64 nr;
-+
-+	if (!event->pending_unwind_callback)
-+		return;
-+
-+	if (unwind_deferred_trace(&trace) < 0)
-+		goto out;
-+
-+	/*
-+	 * All accesses to the event must belong to the same implicit RCU
-+	 * read-side critical section as the ->pending_unwind_callback reset.
-+	 * See comment in perf_pending_unwind_sync().
-+	 */
-+	guard(rcu)();
-+
-+	if (current->flags & PF_KTHREAD)
-+		goto out;
-+
-+	nr = trace.nr + 1 ; /* '+1' == callchain_context */
-+
-+	deferred_event.header.type = PERF_RECORD_CALLCHAIN_DEFERRED;
-+	deferred_event.header.misc = PERF_RECORD_MISC_USER;
-+	deferred_event.header.size = sizeof(deferred_event) + (nr * sizeof(u64));
-+
-+	deferred_event.nr = nr;
-+
-+	perf_event_header__init_id(&deferred_event.header, &data, event);
-+
-+	if (perf_output_begin(&handle, &data, event, deferred_event.header.size))
-+		goto out;
-+
-+	perf_output_put(&handle, deferred_event);
-+	perf_output_put(&handle, callchain_context);
-+	perf_output_copy(&handle, trace.entries, trace.nr * sizeof(u64));
-+	perf_event__output_id_sample(event, &handle, &data);
-+
-+	perf_output_end(&handle);
-+
-+out:
-+	event->pending_unwind_callback = 0;
-+	local_dec(&event->ctx->nr_no_switch_fast);
-+	rcuwait_wake_up(&event->pending_unwind_wait);
-+}
-+
- static void perf_pending_task(struct callback_head *head)
- {
- 	struct perf_event *event = container_of(head, struct perf_event, pending_task);
-@@ -8097,6 +8182,61 @@ static u64 perf_get_page_size(unsigned long addr)
- 
- static struct perf_callchain_entry __empty_callchain = { .nr = 0, };
- 
-+/* Returns the same as deferred_request() below */
-+static int deferred_request_nmi(struct perf_event *event)
-+{
-+	struct callback_head *work = &event->pending_unwind_work;
-+	int ret;
-+
-+	if (event->pending_unwind_callback)
-+		return 1;
-+
-+	ret = task_work_add(current, work, TWA_NMI_CURRENT);
-+	if (ret)
-+		return ret;
-+
-+	event->pending_unwind_callback = 1;
-+	return 0;
-+}
-+
-+/*
-+ * Returns:
-+*     > 0 : if already queued.
-+ *      0 : if it performed the queuing
-+ *    < 0 : if it did not get queued.
-+ */
-+static int deferred_request(struct perf_event *event)
-+{
-+	struct callback_head *work = &event->pending_unwind_work;
-+	int pending;
-+	int ret;
-+
-+	if (!current->mm || !user_mode(task_pt_regs(current)))
-+		return -EINVAL;
-+
-+	if (in_nmi())
-+		return deferred_request_nmi(event);
-+
-+	guard(irqsave)();
-+
-+	/* callback already pending? */
-+	pending = READ_ONCE(event->pending_unwind_callback);
-+	if (pending)
-+		return 1;
-+
-+	/* Claim the work unless an NMI just now swooped in to do so. */
-+	if (!try_cmpxchg(&event->pending_unwind_callback, &pending, 1))
-+		return 1;
-+
-+	/* The work has been claimed, now schedule it. */
-+	ret = task_work_add(current, work, TWA_RESUME);
-+	if (WARN_ON_ONCE(ret)) {
-+		WRITE_ONCE(event->pending_unwind_callback, 0);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
- struct perf_callchain_entry *
- perf_callchain(struct perf_event *event, struct pt_regs *regs)
- {
-@@ -8107,12 +8247,27 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
- 	bool crosstask = event->ctx->task && event->ctx->task != current;
- 	const u32 max_stack = event->attr.sample_max_stack;
- 	struct perf_callchain_entry *callchain;
-+	bool defer_user = IS_ENABLED(CONFIG_UNWIND_USER) && user &&
-+			  event->attr.defer_callchain;
- 
- 	if (!kernel && !user)
- 		return &__empty_callchain;
- 
--	callchain = get_perf_callchain(regs, kernel, user,
--				       max_stack, crosstask, true);
-+	/* Disallow cross-task callchains. */
-+	if (event->ctx->task && event->ctx->task != current)
-+		return &__empty_callchain;
-+
-+	if (defer_user) {
-+		int ret = deferred_request(event);
-+		if (!ret)
-+			local_inc(&event->ctx->nr_no_switch_fast);
-+		else if (ret < 0)
-+			defer_user = false;
-+	}
-+
-+	callchain = get_perf_callchain(regs, kernel, user, max_stack,
-+				       crosstask, true, defer_user);
-+
- 	return callchain ?: &__empty_callchain;
- }
- 
-@@ -12944,6 +13099,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	if (err)
- 		return ERR_PTR(err);
- 
-+	if (event->attr.defer_callchain)
-+		init_task_work(&event->pending_unwind_work,
-+			       perf_event_callchain_deferred);
-+
- 	/* symmetric to unaccount_event() in _free_event() */
- 	account_event(event);
- 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 5fc753c23734..65fe495c012e 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -462,7 +462,8 @@ struct perf_event_attr {
- 				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
- 				remove_on_exec :  1, /* event is removed from task on exec */
- 				sigtrap        :  1, /* send synchronous SIGTRAP on event */
--				__reserved_1   : 26;
-+				defer_callchain:  1, /* generate PERF_RECORD_CALLCHAIN_DEFERRED records */
-+				__reserved_1   : 25;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -1228,6 +1229,21 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_AUX_OUTPUT_HW_ID		= 21,
- 
-+	/*
-+	 * This user callchain capture was deferred until shortly before
-+	 * returning to user space.  Previous samples would have kernel
-+	 * callchains only and they need to be stitched with this to make full
-+	 * callchains.
-+	 *
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				nr;
-+	 *	u64				ips[nr];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CALLCHAIN_DEFERRED		= 22,
-+
- 	PERF_RECORD_MAX,			/* non-ABI */
- };
- 
-@@ -1258,6 +1274,7 @@ enum perf_callchain_context {
- 	PERF_CONTEXT_HV			= (__u64)-32,
- 	PERF_CONTEXT_KERNEL		= (__u64)-128,
- 	PERF_CONTEXT_USER		= (__u64)-512,
-+	PERF_CONTEXT_USER_DEFERRED	= (__u64)-640,
- 
- 	PERF_CONTEXT_GUEST		= (__u64)-2048,
- 	PERF_CONTEXT_GUEST_KERNEL	= (__u64)-2176,
--- 
-2.47.2
-
-
+> > Signed-off-by: Wenchao Hao <haowenchao22@gmail.com>
+> > ---
+> >   mm/compaction.c | 11 +++++++++++
+> >   1 file changed, 11 insertions(+)
+> >
+> > diff --git a/mm/compaction.c b/mm/compaction.c
+> > index 3925cb61dbb8..b0ed0831c400 100644
+> > --- a/mm/compaction.c
+> > +++ b/mm/compaction.c
+> > @@ -656,6 +656,17 @@ static unsigned long isolate_freepages_block(struc=
+t compact_control *cc,
+> >
+> >               /* Found a free page, will break it into order-0 pages */
+> >               order =3D buddy_order(page);
+> > +
+> > +             /*
+> > +              * Do not break free pages whose order is larger than
+> > +              * compact's desired order
+> > +              */
+> > +             if (cc->order !=3D -1 && order >=3D cc->order) {
+> > +                     blockpfn +=3D (1 << order) - 1;
+> > +                     page +=3D (1 << order) - 1;
+> > +                     goto isolate_fail;
+> > +             }
+> > +
+> >               isolated =3D __isolate_free_page(page, order);
+> >               if (!isolated)
+> >                       break;
