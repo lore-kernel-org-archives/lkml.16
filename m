@@ -1,55 +1,72 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D7E22A4F3;
-	Fri, 25 Apr 2025 05:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895CFCA6B;
+	Fri, 25 Apr 2025 05:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745560385; cv=none; b=VlAjthhqzQi9joWmXJBk9vUZdE98uzCWO6fr5/xKWXwQROLagm9Oy/KOcGadV6SeJqnj0WHelkL0M+mXcvEjEMPZmES9pY8z62MSuouqJs2SYuaRWtJCWJLRR7/6pliZHABOMbxvyt1cbqEKH4VXJb68IcKRhSFfFVN3JFa0pxo=
+	t=1745560488; cv=none; b=uSPLLzdFK2nYx/XcocIS6nCNfzHDRwZPjg8TzSGROPtwbi7U7Gnk/8iRQH7HLgb0uxy67oBeyTz0rIArT3y29IQyoPRFfggfpIMm5YvzlxFbKYkkuGcGvsdmG3E6XeupvrJKgm7R0GT6x0fUxr903/eId96StZxOm5rdMKt18j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745560385; c=relaxed/simple;
-	bh=7ZvFXhNY8gnq82v3dNyEoFqX8xDYnTNWAxehS3YFPz4=;
+	s=arc-20240116; t=1745560488; c=relaxed/simple;
+	bh=zENiA+8d0IhJjfPxWwwfs9ZcAsneaxT6zAQN291Gz1Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PNpss5LTO8y8Rffo8MX0WjoLpK2IZSU8B5ZF+JGuWY1roW5PMt3xIwSNlIL2E78brpa2XAILUk2btXK0pNuk2ccfonkKtZ1TPGz8cTJEP/f04Qnmzej4xQ30W2srv+qsDD7vwGCL3RmrigrW7DWWndzCfIOyG8AzQtOkzEvar64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=yuheSb8h; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxoCLV60xIqqYs68bZ/3ume01/omVZw/oOun5Q94TYuHbbTuoA3AdDzO9OV/OsFtQIKOyhpR6b3eh18AM49aRHS3cNHJPoSCwrrcJJ+XUzAL48MvXETXuinVr5km931MohuD9UhboCnmQTDYy6mk9VpGm5suNXch746bTo98PPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrlAwQ7N; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="yuheSb8h"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 083881F944;
-	Fri, 25 Apr 2025 07:52:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1745560373;
-	bh=UyQprxTrTzeJEuddDXNiYr4ctzPhYLZ6Cp5WEsAgS9s=;
-	h=Received:From:To:Subject;
-	b=yuheSb8htIWbOcxaC4uxXuHyj0CX6UJYao3KmcRicGjt3irM9wHqvMVjc4T3ol8NN
-	 rK8IkJo+Hm6qk+L8FoHUQyue8CZ6yn/iWFiuJpYoulREypk49UYHf+O89rHlwEq5yg
-	 XRM1O0COTqgzcgB2kIwV76mGvhoZzqLZgcb8sZ5G7LnHokIOPXrIiyng+16M8qZlDr
-	 kiFJENmxo9Y2jfp9BZB9mbgU9j0XWjyNvpSENR+D9OfPCrw1tHKGAEcE89y/IPahTh
-	 Mgigt1E8PCarR6soLXSVo4hGNQh+DKfeUwv6Kszss1GDw6xhYpIOtsqVI4/CzGhpHG
-	 mxWZJ9MBSeyVw==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 9BD827F94C; Fri, 25 Apr 2025 07:52:52 +0200 (CEST)
-Date: Fri, 25 Apr 2025 07:52:52 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Philippe Schenker <philippe.schenker@impulsing.ch>,
-	Manuel Traut <manuel.traut@mt.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v4] arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to
- usdhc2
-Message-ID: <aAsjNP_2jo-zDeEk@gaggiata.pivistrello.it>
-References: <20250424095916.1389731-1-Wojciech.Dubowik@mt.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrlAwQ7N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745560486; x=1777096486;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zENiA+8d0IhJjfPxWwwfs9ZcAsneaxT6zAQN291Gz1Q=;
+  b=JrlAwQ7NhjA7cfaG8vN2M91Tl0AdzdnbvoXBjnnYMc2YYSpWnT4XxhEV
+   7P5bOljpyVOt0quekymJpQeYZE7W9BPbi13V4KDNQAjX0LypkTQ/qrHxu
+   iVbcNd6jP3p32X8jmdbrssZfaAZbB1EylhR4h+zPQ5sSZtC4GC7rwDBJC
+   k3zxDvfEoRYzZ+fkXbMWZhrnUykQp5C2Hg2CfYYwQNvN9Ak1gox0qMpDA
+   WVxRo2zRNnbqxyYpdYwHAA9rhnKmL7a5XcR/P7+KTpGkEcSLO0m6feZ5+
+   Bp6QrenzOye/AmwKCCIVwOzVK2uUaX447Hrn1hG+r6rw6DUlnDCi2JLDF
+   A==;
+X-CSE-ConnectionGUID: ZvdfP55GRg2uC9wTSBCmBw==
+X-CSE-MsgGUID: m8WVFhCNRB6dBORfS7BLcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57414116"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="57414116"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 22:54:46 -0700
+X-CSE-ConnectionGUID: nNYDGWTXTR6rc05PW2jwvw==
+X-CSE-MsgGUID: G6VaPPKST1GLakkZd0kQKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132809043"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 22:54:43 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 8C48511FA28;
+	Fri, 25 Apr 2025 08:54:40 +0300 (EEST)
+Date: Fri, 25 Apr 2025 05:54:40 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+To: Tarang Raval <tarang.raval@siliconsignals.io>
+Cc: "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>,
+	"Shravan.Chippa@microchip.com" <Shravan.Chippa@microchip.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Mikhail Rudenko <mike.rudenko@gmail.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/9] media: i2c: imx334: Miscellaneous cleanups and
+ improvements
+Message-ID: <aAsjoNHVHzCxmA_6@kekkonen.localdomain>
+References: <20250329054335.19931-1-tarang.raval@siliconsignals.io>
+ <PN3P287MB1829D27A21BFFEC97C8F5B678BB22@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,32 +75,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424095916.1389731-1-Wojciech.Dubowik@mt.com>
+In-Reply-To: <PN3P287MB1829D27A21BFFEC97C8F5B678BB22@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
 
-On Thu, Apr 24, 2025 at 11:59:14AM +0200, Wojciech Dubowik wrote:
-> Define vqmmc regulator-gpio for usdhc2 with vin-supply
-> coming from LDO5.
+Hi Tarang,
+
+On Tue, Apr 15, 2025 at 09:23:41AM +0000, Tarang Raval wrote:
+> Hi Sakari, Kieran
 > 
-> Without this definition LDO5 will be powered down, disabling
-> SD card after bootup. This has been introduced in commit
-> f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5").
-> 
-> Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support for verdin imx8m mini")
-> Tested-by: Manuel Traut <manuel.traut@mt.com>
-> Reviewed-by: Philippe Schenker <philippe.schenker@impulsing.ch>
-> Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+> Do you have any further comments or feedback on this patch series? 
 
-Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
+Thanks for the ping. They're now in my tree.
 
-FYI, you can have multiple fixes tag, and to be safe to not introduce regression
-on some stable backport because the 2 patches are not back-ported at the same
-time, better to have both the Fixes tags here.
+-- 
+Regards,
 
-No need to send a v5, the tag should be picked up from this email.
-
-Francesco
-
-
+Sakari Ailus
