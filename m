@@ -1,102 +1,195 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33011A2545;
-	Fri, 25 Apr 2025 18:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A87215160;
+	Fri, 25 Apr 2025 18:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745604526; cv=none; b=F/t+l0EjVs/0kSjj5lABJejHDLmtxaY8CDx96LVyCdEhmBFTk0xneTgWhr2/WbGZpRFnX32gcCh9dtbu4Ia40NJ3qGtU99lhUWf9acwHE+IR81ysLtGYW+pE6I8P4QSk5DI0QKLUJWXmKXjlU4/j6v4HT7EP6DHSIqajDxXKHfU=
+	t=1745604585; cv=none; b=bOyCHfy1Kr7ASxhnRsgda0bZQjZpheHuzksTuVgv0xXF7fW0M8mlgHJoafHJo2Jc55tSvclGrZiyXyjeh9SNcgPn5ZaJIKmbrm1RaGldFb5jcVlty40XV4DCaEx+9Qcp/5FY4FDqJHhno1COZEP5pCkuamoP6yLLAZQXXmoWTWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745604526; c=relaxed/simple;
-	bh=mxIIRoUKUip7kdGYkldw/Ddl/8kVuZoZEj2BPQ5UWIs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FqnIUFnUmjAjSwYpI9u6TFSh7vqiuKNwuCJ7sVFsZuoZcY52FSqcC+tiYztPXf51tnprUTJdimQUmTjJg3yUuSpmBknSzwrhoSRrHh+JR+g4g59ZnlTeU0M42HmOSjkyEXnO5YXrEabelWodz+HWvRauOupN5kwj9kMy0JTXiHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaAt62NS; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745604585; c=relaxed/simple;
+	bh=pMELV2EHY1s4olryg5HS3dbdlw56dydOjSqV4AnBReg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KbtlHfz271ETG4hoU2q1aPWtZeRCaU6zVGfeDZetgJS7IsSKiGMnccSgPB5/AA7Arxj0IxQIn8stcFmbLZPGCzfRnRyYcGWmWRMrmwmTzlQsMNqaKOSwcijeoUmHPCxR7awOtLyb5PI4nOMk+npp5h/pVltj17uwlidk8fDqk+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=eUjC8g6O; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaAt62NS"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f4b7211badso4240681a12.2;
-        Fri, 25 Apr 2025 11:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745604523; x=1746209323; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mxIIRoUKUip7kdGYkldw/Ddl/8kVuZoZEj2BPQ5UWIs=;
-        b=MaAt62NS53Jn1QNaiyskiDZYuCyj9bHrP/Tvuso0gVpWP9q5K9Yo6FaoY2e94cqFFw
-         +r6IOWxk3BDuPhJ1HYSTtIUaIYC3n3LXwRP6z8xBG2gkUO2TDEPB6fTvyeyReaBzSgO0
-         NdN2t3CCqjTW5Lm4xGDqHHtw7ceL978aEh8H/ok16hU0LRfokMdXo00pMco+P1VpuTRY
-         4l0CLNIXnlJ3um611x7bFv1mZtSfr8yi7XwO98JDe6Q8Hh4+YZu94ln8Flns+1BpU/v/
-         DEx7j8X0MLUXKDb5NVc6p8I1YflJCcXnLJ45gKpxSn4GhLisHSIFNm2jYNY+nmI8h49y
-         QfKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745604523; x=1746209323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mxIIRoUKUip7kdGYkldw/Ddl/8kVuZoZEj2BPQ5UWIs=;
-        b=w2Q8oOUnOJu5ynG/F+FLPsJlraLzThlVOcotDAQbeqhF7IolU0CCozM4BlqzP5zL25
-         FSqOHSvqSNw6VuFI2H/MANmre0s9Rp2XhjqhdA4m3CBTHWXDjD1riu62a8jtfKhoxoUD
-         O7DE1VDCwi6Lfssb57rkomlQRvZwj/cGmJQCJwyiCSh1NURQZrGY2s/uEqCcJDutSEF0
-         XuzunqDWLVuxv9kJbLQZ7KvS1xG3tCWcxo69WrSiC5ojRzuM26FKNasIwJpQzTs+pXVt
-         nRv/4YOPK+P+su2drJ9mFrbhtBrmXb3YL1vGyCGkNryX8ydXUUYK0xCJNknJQ45Ga/hn
-         voNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsLfgr4Jru0MOy59/lt/xNlc4VsRKLaVbufa+mSWVifdSwlVvxQZuO4ejF1Oijk3M2icds1ZD6FEUe1HzJ@vger.kernel.org, AJvYcCVnBpXrqx2ejpXie0IRBpbNK7t8PxrZo6/6EbQnr50y12O3MSm8IgJRFPSIneJ5RZkFolnBcshHFwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPw2RAWo1Jtz92uweIMvCjOdFwQa7+NadF2OCh6u9Q+enETbUH
-	DUTNteKn/z3Rpy6ShTKMWY6BQcZ0UGhNhYKh9XfY3PielihVDymoMXkcJjnpz+pOCTZQC9sIKL5
-	YiNT+41A/fbQkfL+QMT/vKnAADDI=
-X-Gm-Gg: ASbGncukd7HGTvyvwA00PaZJHY8NNdK1/wJezLVZ55dotmFRvnhKQ6ZtdWP1gPXoOgJ
-	zt9pTZ4sdhGsGIpo7bVrk+J4tWvV0C1RIu49dCc0p2N+aYA5zKhMq0/Ypm5sEoNoULCETbMv3D9
-	5pG+3ncEt5mGkL3KjDFWox/blOs22g+8HWOLU=
-X-Google-Smtp-Source: AGHT+IG2/QrV9Q7UUJuXl3dcOxL6dx6R358d0ZswlMA6nN4DaR5wF2/FlYtAQbu/NWX427+xy/ZM5XQJj84uWvnFMoQ=
-X-Received: by 2002:a17:907:9493:b0:acb:5583:6fe4 with SMTP id
- a640c23a62f3a-ace7104e803mr291216966b.6.1745604522766; Fri, 25 Apr 2025
- 11:08:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="eUjC8g6O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=pmQvN/9Dfv4IzoRrIrpKUSf9ee8VerBr2wdD0jogigA=;
+	t=1745604583; x=1746814183; b=eUjC8g6OpOt4jw48xC+khK9962jCZhjF/uVl1jW9++PNaOj
+	Mqqo3jnp36bnNlqvPLsB/BMgxNU2N2mMa/Hy8WObE02EdNz2wtLFsQ6OAB30KiPSTUK1GZs88Mi9j
+	ntMsMDpdu1qXVEDmoURVMvtDCdXcUmaCWzfe/yeN9Q+YsuZPst/axIc71dJMNxLF9EKDE6y37YUsW
+	9YCRzhyIz2cuFAD8fD7yUK9Kv4cy2+ABqVATw+4x75PhIqt0vexFOCu10D+H4Y5YeirwLyASObkmj
+	a4veI6S67rcUEL30tOM5pMlurgfYEziwhndDmsEHd/gpVnFeOva5bUEyG3SeCQDg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u8NUT-00000002FPo-1oRL;
+	Fri, 25 Apr 2025 20:09:33 +0200
+Message-ID: <67cac31400c485ffee3bac24728fbfe128b73f6b.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Artur Rojek <artur@conclusive.pl>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
+ linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jakub Klama <jakub@conclusive.pl>, Wojciech
+ Kloska	 <wojciech@conclusive.pl>, Ulf Axelsson <ulf.axelsson@nordicsemi.no>
+Date: Fri, 25 Apr 2025 20:09:32 +0200
+In-Reply-To: <CAGhaMFO_f_bvFB+39-z6xVF+y446ONwm1ROHQ=rXj=s4MnL54w@mail.gmail.com>
+References: <20250422175918.585022-1-artur@conclusive.pl>
+	 <20250422175918.585022-3-artur@conclusive.pl>
+	 <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
+	 <CAGhaMFO_f_bvFB+39-z6xVF+y446ONwm1ROHQ=rXj=s4MnL54w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
- <CAHp75VfHkKC81EinO+oN1b0=NRkwmNBLPky=HkrvPJCmt4njDQ@mail.gmail.com> <a06a5b07-8b99-495d-8e84-200923b277c7@baylibre.com>
-In-Reply-To: <a06a5b07-8b99-495d-8e84-200923b277c7@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 25 Apr 2025 21:08:06 +0300
-X-Gm-Features: ATxdqUFeC_NFn9YdtNzOp_S3srDTg1hDYwJnG87Fwqul6I2W5I1tPh7_5OHzsX4
-Message-ID: <CAHp75Vc4L3NukGriXHUu3=XjU_d-V1qL6tQcFtgcyC7A8WKPSw@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7173: fix compiling without gpiolib
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Guillaume Ranquet <granquet@baylibre.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-malware-bazaar: not-scanned
 
-On Fri, Apr 25, 2025 at 7:55=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
-> On 4/22/25 4:03 PM, Andy Shevchenko wrote:
-> > On Tue, Apr 22, 2025 at 11:12=E2=80=AFPM David Lechner <dlechner@baylib=
-re.com> wrote:
+Hi,
 
-> >> Fix compiling the ad7173 driver when CONFIG_GPIOLIB is not set by
-> >> selecting GPIOLIB to be always enabled and remove the #if.
-> >
-> > I'm not sure we need to select GPIOLIB. If you want it, depend on it.
-> > GPIOLIB is not a hidden symbol, so why "select"?
-> >
-> Since this parts of the driver unrelated to GPIO provider/consumer rely o=
-n this
-> being enabled to function, select seems more appropriate.
+> This is commercial work. I am employed by Conclusive Engineering, and
+> was tasked with writing this driver. It was done for our internal needs
+> (we sell hardware [1] with nRF70 on-board), however I was also asked to
+> send the series upstream.
 
-Hmm... The current state of affairs is 177 for select vs. 231 for
-depends on. I dunno how many of them are historical, for now it seems
-like 40%/60%. So if you think so, go for it!
+Makes sense.
 
+> Nordic showed interest in this work, hence why their representative is
+> CCd to this conversation. They agreed to use our hardware as a reference
+> board for nRF70 used in Linux context.
 
---=20
-With Best Regards,
-Andy Shevchenko
+:)
+
+> I fully understand your concerns with maintenance (I am privately
+> a kernel contributor as well), and discussed this topic internally with
+> appropriate decision making people. They understand the responsibilities
+> involved and agreed to allocate time for me to support this driver long
+> term. As such, I will add myself to MAINTAINERS in v3.
+
+Cool good to hear :)
+
+> > https://lore.kernel.org/linux-wireless/21896d2788b8bc6c7fcb534cd43e7567=
+1a57f494.camel@sipsolutions.net/
+>=20
+> Bearing in mind above time constraints, I have no objections to helping
+> out. That said, this is my first Wi-Fi driver, and as such I am not that
+> familiar with the cfg80211 subsystem (hence why this series is RFC), so
+> my expertise will be limited at best.
+> What sort of help would you expect from me with the reviews?
+
+I'm just handwaving I guess ;-) It'd just be good to see people a bit
+involved in the community. Some apparently don't even have anyone who
+follows the list and what happens in the community at all.
+
+But it's a bit of a tit-for-tat thing - why would anyone review your
+code? Why would you even expect anyone to? The already overloaded
+maintainer? But on the other hand PHBs often think that sending their
+code upstream magically makes it better. There's real effort involved in
+keeping that true. :)
+
+> > That CPU_LITTLE_ENDIAN seems like a cop-out. Do we really want that?
+> > Asking not specifically you I guess...
+>=20
+> I addressed this in the cover letter (Patch 0/2), but nRF70 communicates
+> using little-endian, byte packed messages, where each message type has
+> a unique set of fields.
+
+Sorry. Reading comprehension: 1, Johannes: 0. Guess I should look at
+that and reply there too.
+
+> This makes it a challenge to prepare said
+> messages on a big-endian system. I am aware of the packing API [2],
+
+I'm not familiar with it, tbh.
+
+> however a cursory look at it indicates that I would need to provide
+> custom code for each and every message (there's almost 150 of those in
+> total, even if the driver doesn't support all of them at the moment -
+> take a look at nrf70_cmds.h).
+
+Looking at this, I don't see why? They're all just fixed structures? The
+packing API appears (I never saw it before) to be for some form of bit-
+packing, I'd think?
+
+Looking at how you define the structures and how you use them, I'd say
+all you need to do is replace u32/s32 by __le32, u16 by __le16, and then
+fix the resulting sparse warnings by doing cpu_to_leXY()?
+
+> Unless the __packed attribute is guaranteed to align the bytes the same
+> way regardless of the endianness, and so calling cpu_to_le* for every
+> field of a message is good enough (these messages are byte packed, not
+> bit packed)?
+
+Now I'm confused, what did you think would happen? If you have=20
+
+struct foo {
+  u16 a;
+  u32 b;
+} __packed;
+
+you will get the 6 bytes, regardless of whether that's __le16/__le32 or
+u16/u32. 'a' will be two bytes, and 'b' will be 4 bytes, and all you
+need to do is convert the individual fields?
+
+Maybe I don't understand the question.
+
+> > > +struct __packed nrf70_fw_img {
+> > > +     u32 type;
+> > > +     u32 length;
+> > > +     u8 data[];
+> > > +};
+> >=20
+> > making the u32's here __le32's (and fixing sparse) would probably go a
+> > long way of making it endian clean. The __packed is also placed oddly.
+>=20
+> When declaring structure members for the messages (in nrf70_cmds.h),
+> I noticed that this attribute has to go before the braces:
+> > struct __packed { ... } name;
+> rather than after braces:
+> > struct { ... } __packed name;
+
+Wait .. that syntax isn't right either way? But it can be
+
+struct name { ... } __packed;
+
+and that's what roughly everyone else does?
+
+> > This sounds like you pretty much built the firmware for cfg80211 ;-)
+>=20
+> That's because the firmware *is* cfg80211.
+
+Actually it appears to be also mac80211?
+
+> Perhaps I am opening a can of worms here,
+
+Heh, I guess.
+
+>  but it has to be opened at some point during firmware
+> upstream. From what I've seen, part of the nRF70 firmware (called UMAC)
+> is derived from the cfg80211 project. Nordic makes the source code
+> publicly available at this location [3]. I have also asked Nordic to
+> provide a matching version of the source code for the fw blob they will
+> be upstreaming to the linux-firmware project (I believe I will be
+> assisting in that process as well). I hope everything there is dandy
+> license-wise, as I am not a lawyer :)
+
+Neither am I but the SFC says you have to have a way to build it. That
+might be a real challenge since this integrates cfg80211/mac80211 (GPL)
+and clearly unpublished proprietary code ("lmac").
+
+Nordic folks might want to consult their lawyers on this.
+
+johannes
