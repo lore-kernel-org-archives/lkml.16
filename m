@@ -1,133 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA1822A801;
-	Fri, 25 Apr 2025 07:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFDB22A801;
+	Fri, 25 Apr 2025 07:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745564749; cv=none; b=SvGHKGUFBFbsj6lm7cdOp9AeeSwjV2z6I2g1DbI9vVBTeIG8bi7gxyizhXxP5+cMgHa4YxLvxGDw2XFMlAgJRNZ+LcfMgsGd/8vg2gugHlzNMCd4XuxcZvGLaWf4GCi+lxLBI9S54Vu991CM0bHJVsfic9HygqEPXF8vpaE3Ht4=
+	t=1745564787; cv=none; b=izAwf7wKAtLXjPDuP6ohpkm3CscccsbArmfndaenxLvNJXUlpbkaiZQp6Rrdvia6mx2HQInR3KJOZmnIrj+f92enVHe0ahkeBplC36bcTMUW0GSBmDZfQgCocpUA+Cxt/a7eDf7LpruhcsPML9HQQzvw93bNcYMtnbMhBrKZZAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745564749; c=relaxed/simple;
-	bh=N9+UJn6y4cFBdFcoyH2JNE8g1T9WsgLzOAr9war2gvE=;
+	s=arc-20240116; t=1745564787; c=relaxed/simple;
+	bh=ctvHIsXYgGV/juygw8FG9JQyVXTMWfgzu1EuIdKbLnE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSmh21CiyZgJTdFewj84vg7EgyG2dSd7XPNLRvAHmIrF3uP62q6jdoDy50bG5FZ1Rt0ioMxUTHGkAdfJQDHCJzSxOFYa01Hp9P2yvyWFc43lXnP6CaLbf3jnD2dhQinkoq0BEZpcdPAg+GS3qDq91qHojVDSg8AvjdvEwDzcfIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QmsjvKXF; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QmsjvKXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745564747; x=1777100747;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N9+UJn6y4cFBdFcoyH2JNE8g1T9WsgLzOAr9war2gvE=;
-  b=QmsjvKXFoSEFZJJhz+1ITEOZQk9MQZaytPsb9wvzGwXt6sT3+A7RNkMz
-   pVR2a9IsnE3fi22bYfawLvghK8WtuxmyQasgNtTrjJaHckgK3r7ClgTH8
-   S0aOb3R0mhL80wdI0rOAEmY+lYQyBhMkJPw0BgUv1XIuXRbtoVZvzi2da
-   8pjqQfOQHj1IkOmsy+LuBn5bgtOVZgLc11QUfYluhJ2m4oTqVxaZ4MqL+
-   r8weBJB5TAJcT6ixCuBlURrm4K4VWcYDEgrELkg/+m46aZ/QGjv88IfJI
-   X25QJ5CT7X01CUR2aUUCzusLX23ECs97myy7g0Iv/NdJ570P1SuwKAtAp
-   Q==;
-X-CSE-ConnectionGUID: 7hArsK8SSzWhSc+1J+VBiA==
-X-CSE-MsgGUID: 87PfgpVYTCGQ3ZcKPfg8Vg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="49877224"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="49877224"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:05:46 -0700
-X-CSE-ConnectionGUID: 5XZttJ3MSH6P0E+RUKkd/w==
-X-CSE-MsgGUID: wlvduCpeStiokvFAcP1zww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="163789917"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 25 Apr 2025 00:05:44 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8D81-0004uH-0o;
-	Fri, 25 Apr 2025 07:05:41 +0000
-Date: Fri, 25 Apr 2025 15:05:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] LoongArch: KVM: Add parameter exception code with
- exception handler
-Message-ID: <202504251458.EJKsZMLH-lkp@intel.com>
-References: <20250424064625.3928278-2-maobibo@loongson.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hHoTLrKHX555rxAN6v9uNEBp5mLgwtreQd8W0WoBPW/qE+wcyTBkzbo7vPjh7tqRoJYMtIfmL/GVQo+nggH97wskNl+gPmy5CLCTvWvPtVnW331o/Dwmz+93VUAR/IT+7mDIOa3K2c+PzYQU+er5WA10W/wPBt59DAJ5wMAPwWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id CE285340BEA;
+	Fri, 25 Apr 2025 07:06:24 +0000 (UTC)
+Date: Fri, 25 Apr 2025 07:06:20 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Corentin Labbe <clabbe.montjoie@gmail.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet
+ MAC
+Message-ID: <20250425070120-GYB50408@gentoo>
+References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
+ <20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org>
+ <CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250424064625.3928278-2-maobibo@loongson.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
 
-Hi Bibo,
+Hi Chen-Yu,
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 9d7a0577c9db35c4cc52db90bc415ea248446472]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Bibo-Mao/LoongArch-KVM-Add-parameter-exception-code-with-exception-handler/20250424-144905
-base:   9d7a0577c9db35c4cc52db90bc415ea248446472
-patch link:    https://lore.kernel.org/r/20250424064625.3928278-2-maobibo%40loongson.cn
-patch subject: [PATCH 1/2] LoongArch: KVM: Add parameter exception code with exception handler
-config: loongarch-randconfig-001-20250425 (https://download.01.org/0day-ci/archive/20250425/202504251458.EJKsZMLH-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250425/202504251458.EJKsZMLH-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504251458.EJKsZMLH-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> arch/loongarch/kvm/exit.c:734: warning: Function parameter or struct member 'ecode' not described in 'kvm_handle_fpu_disabled'
-
-
-vim +734 arch/loongarch/kvm/exit.c
-
-2737dee1067c2f Bibo Mao     2025-01-13  725  
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  726  /**
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  727   * kvm_handle_fpu_disabled() - Guest used fpu however it is disabled at host
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  728   * @vcpu:	Virtual CPU context.
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  729   *
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  730   * Handle when the guest attempts to use fpu which hasn't been allowed
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  731   * by the root context.
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  732   */
-74303fac8d0580 Bibo Mao     2025-04-24  733  static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02 @734  {
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  735  	struct kvm_run *run = vcpu->run;
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  736  
-db1ecca22edf27 Tianrui Zhao 2023-12-19  737  	if (!kvm_guest_has_fpu(&vcpu->arch)) {
-db1ecca22edf27 Tianrui Zhao 2023-12-19  738  		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
-db1ecca22edf27 Tianrui Zhao 2023-12-19  739  		return RESUME_GUEST;
-db1ecca22edf27 Tianrui Zhao 2023-12-19  740  	}
-db1ecca22edf27 Tianrui Zhao 2023-12-19  741  
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  742  	/*
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  743  	 * If guest FPU not present, the FPU operation should have been
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  744  	 * treated as a reserved instruction!
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  745  	 * If FPU already in use, we shouldn't get this at all.
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  746  	 */
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  747  	if (WARN_ON(vcpu->arch.aux_inuse & KVM_LARCH_FPU)) {
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  748  		kvm_err("%s internal error\n", __func__);
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  749  		run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  750  		return RESUME_HOST;
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  751  	}
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  752  
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  753  	kvm_own_fpu(vcpu);
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  754  
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  755  	return RESUME_GUEST;
-37cdfc6dbf0416 Tianrui Zhao 2023-10-02  756  }
-71f4fb845874c3 Tianrui Zhao 2023-10-02  757  
+On 13:26 Fri 25 Apr     , Chen-Yu Tsai wrote:
+> On Thu, Apr 24, 2025 at 6:09 PM Yixun Lan <dlan@gentoo.org> wrote:
+> >
+> > Add EMAC0 ethernet MAC support which found on A523 variant SoCs,
+> > including the A527/T527 chips. MAC0 is compatible to the A64 chip which
+> > requires an external PHY. This patch only add RGMII pins for now.
+> >
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 40 ++++++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> > index ee485899ba0af69f32727a53de20051a2e31be1d..c9a9b9dd479af05ba22fe9d783e32f6d61a74ef7 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> > @@ -126,6 +126,15 @@ pio: pinctrl@2000000 {
+> >                         interrupt-controller;
+> >                         #interrupt-cells = <3>;
+> >
+> > +                       rgmii0_pins: rgmii0-pins {
+> > +                               pins = "PH0", "PH1", "PH2", "PH3", "PH4",
+> > +                                      "PH5", "PH6", "PH7", "PH9", "PH10",
+> > +                                      "PH14", "PH15", "PH16", "PH17", "PH18";
+> > +                               allwinner,pinmux = <5>;
+> > +                               function = "emac0";
+> > +                               drive-strength = <40>;
+> 
+> We should probably add
+> 
+>                                   bias-disable;
+> 
+> to explicitly turn off pull-up and pull-down.
+> 
+I will test this and address in v3
+(saw your comment in v1, but I sent v2 too quickly)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yixun Lan (dlan)
