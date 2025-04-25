@@ -1,146 +1,130 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F8B23AE84;
-	Fri, 25 Apr 2025 10:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC4F219305;
+	Fri, 25 Apr 2025 10:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745577648; cv=none; b=MtLqitgSloD4L167LqadqPSoRl8gx+C9CD9zyOwVZWMvqTrdk+l2s/c3r2kbmkywWkcE5D8AZm91ARuW8pw9TGs0a7XBsh1Nj80mQdhJ+W1vuX4v6/sfipYkCrDoNbmBbc9TCYJ8gLuT/tl1MlZOJZ2AHhJsIBibr/fAhzjrvmY=
+	t=1745577714; cv=none; b=GVY+VhsnERZfNnCmRlGow2VaC40RHI1ltavGflbm/TOZAQ4TvLOi/UKOP4tBE3bZmOFUZ2hBJWI3sYte9Fxp9PSW3lnLsxaBsljCK4BBzH3vSia1X8bsfp30la8KfmwOlsR9lqaWFBu4AIRH+A738GjEaxzEVpCUyKLvytK7xXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745577648; c=relaxed/simple;
-	bh=rH7CPNRp05Z0JQmX8Qf8GkEK87wkQ/GsTFIMRZ059GE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nlGjiSDITm315OUQ7ZMO/IXTpPbg51dpGUih7+p0La/B1aYhfmXJYLNQ7nMXeMZCBOGqktuaPQbjahBi0Te5nPCP7io++sTYyRs8pamfXHdMXUw0K1QBAueuXWtngvo99uFJta7Qg6Otli4iKdU8gwRdIAvod5jfGeje8NQ0RiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=Q4gu7Q0O; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	s=arc-20240116; t=1745577714; c=relaxed/simple;
+	bh=bGHZJR9nuiPTf0BX+FFOrGumZ9tfd/I6Eeo2PBKKoew=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tctBu+dYGWXqtfOUdxBjYbHcaxVwlgyqCAxkguC0r/A7bQu1gkDNfx9Sy13lDlHdHSBcLGyx1rsx1tpH0Y0FYwKi/PPiTykp1vuooPTKd9YbZ6Bc4ivWrTR/1y+0IJvloUlJER2FlTaA0kacFN7lBzuIPCb2YPrMOTBgVv997SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uEL3Xog/; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="Q4gu7Q0O"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4ZkTrd6gg4z1Lkv;
-	Fri, 25 Apr 2025 10:40:33 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4ZkTrd4G31z2xMR;
-	Fri, 25 Apr 2025 10:40:33 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=Q4gu7Q0O;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1745577633;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4MfLqZEQ+s19X5oTD1LxHZmZx+O9BQunYqjRjKsVqRY=;
-	b=Q4gu7Q0OuvpsXsAML6zcqzoMnkiYfWo5d+LNAI1NKdGes++0nUjjKqOQWYZoEjqcX+2gkS
-	SUErzY0nYXtCGf9qpoiFOVPGzmrIUtCTjrTlOsfnUhHWTuCFXdUP9wTBTfmr4zRhI0YmuP
-	tA8VG6V0j0VNSuNrb3031fxkW4l1H6QVYTKB1aoa65od33TOeFFCOA+++zwND/y4jilH7l
-	cB5lKszTkHcL1i0/ZOvHn8m7O/P4MwAIXNe6AOEFsxYy80IIqFNrUOJjwKDOaX6457WWzn
-	RK3JxupTVQ11Z8JHY0oeMe66zg2aBALU9Z1WWYGRTmX43dAPJ9DLSMnOTi6p0g==
-X-CM-Envelope: MS4xfLphYkkDwIaufVMxzIP/pP3y2f48uuSdyDPdOMz1F2zRnzusx4xsIwVFITFo3edKRDrdIs8Bd3jTDkJcjd7q4BcPbxLN6AdLfPOz4iJvyTU620n9vd7l rvhF89BpznVXIUP3Dr6uvplIpucQJcHInRrxhtEEYDRWJHmLoiibpbGcdtq6mdkl56R4ahDQDvw1uPiw03MOtTk0kY0izq1wRSANWP4oCHhkutx/u9sx2cCw MjAnETf4HYGUM6IaZvAA5yBj5ZISZyyeiz+7w+QTiXPo+xnrC2tdGujVEFgbfdYXlVK7Z8F/yqty78XnYK0OQUFjKVMgYv1WYrXD17wDsJA=
-X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=680b66a1 a=xVxOAnYOZqKVbrsbIgLjXQ==:117 a=xVxOAnYOZqKVbrsbIgLjXQ==:17 a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=xq3W2uTSAAAA:8 a=dZbOZ2KzAAAA:8 a=hSkVLCK3AAAA:8 a=pGLkceISAAAA:8 a=F3-pEc6xSE51ynyxvqIA:9 a=QEXdDO2ut3YA:10 a=P5L7wpMTXyg1GfFA3Gwx:22 a=cQPPKAXgyycSBL8etih5:22
-Message-ID: <caf60be2-490e-4457-9cac-fffc7f54449a@jjverkuil.nl>
-Date: Fri, 25 Apr 2025 12:40:33 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uEL3Xog/"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PAfiTn2767590
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 05:41:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745577704;
+	bh=qACSKB90BcULWMIKQAGFIv9E8gIxXb28f68g5v9lb7c=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=uEL3Xog/c3DhF5YC8sCB54hQij7dTB5Eo9UdKKuJuAt0Olx0Uuav9HNt8KA9R7vRE
+	 zUmlIjU4znP65/IgRGnckv8OzdpUN/euTCuRSqxgWonh8u0hpZeacNeFw4FXOqtSzQ
+	 pEtuaWYYHutbmBnRPtGatolEw/lAA6x88CgKOgG8=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PAfiDh087099
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 05:41:44 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 05:41:44 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 05:41:43 -0500
+Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PAfaZM038329;
+	Fri, 25 Apr 2025 05:41:40 -0500
+From: Beleswar Padhi <b-padhi@ti.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
+CC: <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>, <b-padhi@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 01/35] remoteproc: k3-r5: Drop check performed in k3_r5_rproc_{mbox_callback/kick}
+Date: Fri, 25 Apr 2025 16:11:01 +0530
+Message-ID: <20250425104135.830255-2-b-padhi@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250425104135.830255-1-b-padhi@ti.com>
+References: <20250425104135.830255-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] media: cxusb: fix uninitialized var in
- cxusb_gpio_tuner()
-To: Penglei Jiang <superman.xpt@gmail.com>, mkrufky@linuxtv.org,
- mchehab@kernel.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250405073159.87021-1-superman.xpt@gmail.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hans@jjverkuil.nl>
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250405073159.87021-1-superman.xpt@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Penglei Jiang.
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-On 05/04/2025 09:31, Penglei Jiang wrote:
-> The function cxusb_ctrl_msg() may not set the value of the variable i,
-> but the code uses it later. Initialize the local variable i to 0 to
-> prevent potential issues.
-> 
-> Reported-by: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/67f092b5.050a0220.0a13.0229.GAE@google.com
-> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+Commit f3f11cfe8907 ("remoteproc: k3-r5: Acquire mailbox handle during
+probe routine") introduced a check in the "k3_r5_rproc_mbox_callback()"
+and "k3_r5_rproc_kick()" callbacks, causing them to exit if the remote
+core's state is "RPROC_DETACHED". However, the "__rproc_attach()"
+function that is responsible for attaching to a remote core, updates
+the state of the remote core to "RPROC_ATTACHED" only after invoking
+"rproc_start_subdevices()".
 
-FYI: I marked this as Obsolete since this patch is a better solution:
+The "rproc_start_subdevices()" function triggers the probe of the Virtio
+RPMsg devices associated with the remote core, which require that the
+"k3_r5_rproc_kick()" and "k3_r5_rproc_mbox_callback()" callbacks are
+functional. Hence, drop the check in the callbacks.
 
-https://patchwork.linuxtv.org/project/linux-media/patch/tencent_DCC6C1B37B437AC965C3A2845B5779D76305@qq.com/
+Fixes: f3f11cfe8907 ("remoteproc: k3-r5: Acquire mailbox handle during probe routine")
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+Tested-by: Judith Mendez <jm@ti.com>
+---
+v11: Changelog:
+1. Carried T/B tag.
 
-Regards,
+Link to v10:
+https://lore.kernel.org/all/20250417182001.3903905-2-b-padhi@ti.com/
 
-	Hans
+v10: Changelog:
+1. Re-ordered this patch to come at the start of the series.
 
-> ---
-> V1 -> V2: Updated the Subject
-> 
->  drivers/media/usb/dvb-usb/cxusb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-> index f44529b40989..7fe858bb665e 100644
-> --- a/drivers/media/usb/dvb-usb/cxusb.c
-> +++ b/drivers/media/usb/dvb-usb/cxusb.c
-> @@ -111,7 +111,7 @@ int cxusb_ctrl_msg(struct dvb_usb_device *d,
->  static void cxusb_gpio_tuner(struct dvb_usb_device *d, int onoff)
->  {
->  	struct cxusb_state *st = d->priv;
-> -	u8 o[2], i;
-> +	u8 o[2], i = 0;
->  
->  	if (st->gpio_write_state[GPIO_TUNER] == onoff &&
->  	    !st->gpio_write_refresh[GPIO_TUNER])
+Link to v9:
+https://lore.kernel.org/all/20250317120622.1746415-7-b-padhi@ti.com/
+
+ drivers/remoteproc/ti_k3_r5_remoteproc.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+index dbc513c5569cb..3fc0b97dec600 100644
+--- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
++++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+@@ -194,10 +194,6 @@ static void k3_r5_rproc_mbox_callback(struct mbox_client *client, void *data)
+ 	const char *name = kproc->rproc->name;
+ 	u32 msg = omap_mbox_message(data);
+ 
+-	/* Do not forward message from a detached core */
+-	if (kproc->rproc->state == RPROC_DETACHED)
+-		return;
+-
+ 	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+ 
+ 	switch (msg) {
+@@ -233,10 +229,6 @@ static void k3_r5_rproc_kick(struct rproc *rproc, int vqid)
+ 	mbox_msg_t msg = (mbox_msg_t)vqid;
+ 	int ret;
+ 
+-	/* Do not forward message to a detached core */
+-	if (kproc->rproc->state == RPROC_DETACHED)
+-		return;
+-
+ 	/* send the index of the triggered virtqueue in the mailbox payload */
+ 	ret = mbox_send_message(kproc->mbox, (void *)msg);
+ 	if (ret < 0)
+-- 
+2.34.1
 
