@@ -1,58 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from abb.hmeau.com (unknown [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD0915278E;
-	Fri, 25 Apr 2025 02:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8A529D05;
+	Fri, 25 Apr 2025 02:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745549373; cv=none; b=ZmLNtPzC3cchjmjath9uxbdedNEs1WVU0PHq4xllJD2Icymp5B71YjUZCzp7dScvWdJupbhQ882z72h9k3gojW1ri3OQAg5OAS2Iips5TuktlUaRVFKHXcYKS9+SI4jrBYyaRAfU+byFtIyPEPZgWqb+2ieQy1xZb6TAXxIh2rs=
+	t=1745549425; cv=none; b=rLie+E/ak5wdlsyK6N4VTUxWcQcU5tBY5K/ZP1Z2hNPpRZovafMXAgy6swON61WogYyXxgfyhPTabOFKgf/FMbauAmBpBh9WEjWXRRO069Ea3f5iJ61nQ4s73EXC6NQ5dF+uJaRavOGCmT+4rBc5YlUcJHv3pbH4/eil5AJHW9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745549373; c=relaxed/simple;
-	bh=8E8IPQ8U3c2ao7zZDmLXSVYieew5+uk0JR1rHWGzBoU=;
+	s=arc-20240116; t=1745549425; c=relaxed/simple;
+	bh=r8mHunVlq49P5IxUdHY3/lnK36Co8V7pk9knPjWzEtw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=axRa8CQ74ea6qSMbILLOFGY98KOVk5J0EPSH6w38+q99RNenYf1OoZNb5wIhC95AdHIS7WmheShXASovAut3ILcbtUhAjrNdd/x59E0MaQ1hFrca02psqppeCxFvssrWi3YhdUy2DFI1jZpmBgIUHXyDgi7+lOd1GRUbdRVnYaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fa8wa+o2; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jHzALkHSq5XktWM91NyXqSY4WQR+Ur6GXBdubkeYGAMKR3qlPejQjxQ0utmXHlxs7TC/ZmrFm2D/0jo8ivHJkCY2E8+SmNPsLWQ48bGjdJVecAttuvROf3kOO9C4C3hfoc2guddr1a1yaHBLqNEu7z2f1ZX0HjRJIYTxpyxkLiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=FqqAK3Yl; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fa8wa+o2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745549372; x=1777085372;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8E8IPQ8U3c2ao7zZDmLXSVYieew5+uk0JR1rHWGzBoU=;
-  b=fa8wa+o2th3yWcR1gUXuRF1UU1g8VTmw8x8wuWViRLNikc+SKK6+m1Pt
-   9WyEv/TetFqWtg9F/qrVYPYAHlSeGIWGm0I5e5YL2bKKxo+mOuqUF9/WL
-   dvWFFQerF/5ou0q8Ky/wYfupBiQEuwCnpeRDPhCq+nbuyK3FoQCO3PUjR
-   Vo5OyzE0z729MSlJoHZLheDuzLn4c/lnr6jl8pFm+bT0MwjW2wOalEqAQ
-   4psBmXTzeHubVK6dBL8QUr4LZdiNHM9YDtM3uXTP//xmMHQDGaSGWnadN
-   2tqkowWOABcfeuXZnaHn+zxcOPbWHOUwirKCm8Y/dObhQHxz0dWw/hs0P
-   A==;
-X-CSE-ConnectionGUID: xb3NQ+f2TVSqrDoQV6Q1Jw==
-X-CSE-MsgGUID: QWTD2tL9QdiEUuwBPu6fxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47338898"
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="47338898"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 19:49:31 -0700
-X-CSE-ConnectionGUID: mpvrp5zDSty4AMy8tcCmIQ==
-X-CSE-MsgGUID: yy+q4g9SQBaoBD2IoB/oLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="133769368"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa008.jf.intel.com with ESMTP; 24 Apr 2025 19:49:28 -0700
-Date: Fri, 25 Apr 2025 10:44:51 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Gerlach, Matthew" <matthew.gerlach@altera.com>
-Cc: Peter Colberg <peter.colberg@altera.com>, Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-fpga@vger.kernel.org, Peter Colberg <peter@colberg.org>
-Subject: Re: [PATCH] fpga: m10bmc-sec: change contact for secure update driver
-Message-ID: <aAr3I65zkNDu//il@yilunxu-OptiPlex-7050>
-References: <20250317210136.72816-1-peter.colberg@altera.com>
- <2b218680-ea43-43af-96a8-33f2609510f5@altera.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="FqqAK3Yl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ifAmGRLxgSXeOVYd6H/dg41LDvyQgzkUQ0ByWFHsOwU=; b=FqqAK3YlMEpfYMIAXk7Og2rmTZ
+	DlohGcEPPMRWFdG75VsIvLuw1fQCh3XJ6XOKs+WgZ9QdOQyS2ih6zJqyvNQpEMcYWRRhmXdGk8KT0
+	LH+5EOCQx98bC6fhka5e1R7f7+nGAlnYD0FKjfKDfsbkbCSs/WwLsmD8i6B/caGbNu+Gi3wHwltH7
+	zIR4EeNe/VdtnH10z+zPB7oQkx3QjdIAp2w8A39syucERlsOao5dTRUmB4XOUlw+gT8bNd4Hj1D6r
+	dWRNNy7IzCaPJ2vK89iViWvjNNmJsb8xgKu0Z0MeJKXrrcFn9Mn5qyamEuL0k3hSISvn2Mj1tR7G9
+	9COrEfww==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u898p-000reU-1c;
+	Fri, 25 Apr 2025 10:50:16 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 25 Apr 2025 10:50:15 +0800
+Date: Fri, 25 Apr 2025 10:50:15 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] crypto: testmgr - replace
+ CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS
+Message-ID: <aAr4Z1iLDgKfyLyf@gondor.apana.org.au>
+References: <20250422152151.3691-6-ebiggers@kernel.org>
+ <aAoKDnfJLyI7n58S@gondor.apana.org.au>
+ <20250424155617.GD2427@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,17 +51,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2b218680-ea43-43af-96a8-33f2609510f5@altera.com>
+In-Reply-To: <20250424155617.GD2427@sol.localdomain>
 
-On Mon, Mar 17, 2025 at 03:34:46PM -0700, Gerlach, Matthew wrote:
-> 
-> On 3/17/2025 2:01 PM, Peter Colberg wrote:
-> > Change the maintainer for the Intel MAX10 BMC Secure Update driver from
-> > Peter Colberg to Matthew Gerlach and update the ABI documentation.
-> > 
-> > Signed-off-by: Peter Colberg <peter.colberg@altera.com>
-> Acked-by: Matthew Gerlach <matthew.gerlach@altera.com>
+On Thu, Apr 24, 2025 at 08:56:17AM -0700, Eric Biggers wrote:
+>
+> If there's going to be a dependency to keep most users from seeing this,
+> wouldn't DEBUG_KERNEL be more appropriate?
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+Sure, I just don't want Linus to start bitching about yet another
+new symbol.
 
-Applied to for-next.
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
