@@ -1,583 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2088.outbound.protection.outlook.com [40.107.237.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C9E179A3
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745547767; cv=none; b=M18B2kV2j5Z7ngrov0PX7cm1DeE6uYRf6NM1HU6APMsXo8VKv9FoTBFSVlK6Z6m3g8K/bhWR3Y2QKIpZN6R7/+Ske7phVJTZTjmxS/rBLe237HiVf2GO8BbfNm3HxgeKZDY8lLkS30nyRPVrBTs+bg9CwXlO8ZyTt7XlfUM2Dqs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745547767; c=relaxed/simple;
-	bh=vKPYmKQmNwWvYT3ghQV1KqbFRkNEdBINr9RM4fFdmdY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aowraHui/jeB6IvOauwgGQ/kRA4lrK0A2yjZ8x9xU1b2pwCrM6C/n8xwmLXrT9vfTNGQaxDT6DA4jT6QdXk9Ux9pbKjXT2HWkdgoVi1sYFvgHeTGxAkXzuJJ+tWBMP+4f4fKHeBlGp2bvjcUqV4rfg7GAyneLQMb0mcQMp0Pylo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dn/SojpR; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3394654763;
+	Fri, 25 Apr 2025 02:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745548009; cv=fail; b=hLB22y2LO2jF64Rrl6HBvHwmML894jnZcI97vpjIQRLFKztVnsGKhArQUaNyi2uawQ1e72yF3v3oji9K28NK8+1tYqubJJMAWKoep3q0tER4hrTikE1BDh5moy8G0fe0hf7VFANVcKU7tk854Jfs7M44iMk2YMq4Uk3RnEeTBJU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745548009; c=relaxed/simple;
+	bh=PjgsNaHVsUuhI38nD7dTim0mTB0x2d9bfsQ6Z7w2ni0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=T+mw1Y7yuCBS9zSkgX7LUrlb2EesRU2mgyj1nQki9bnhvADWw4n62W8C4p1KjhFxZYwFpRHiLChQ9s54JsQafaH1VG5ipggxKDQ/tgXMFVOkq2zbVavuH5Gq+ShqPj7h1r2kZ3t3rjMQtSmLx8g/A+PGQUFvPdlTDxsrMIAN/GI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lxd7lyF6; arc=fail smtp.client-ip=40.107.237.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dn/SojpR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08205C4CEE3;
-	Fri, 25 Apr 2025 02:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745547767;
-	bh=vKPYmKQmNwWvYT3ghQV1KqbFRkNEdBINr9RM4fFdmdY=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=dn/SojpRhOkjOL8Y7FecfgOQi7zSeptlXt10cxWQkm5la1N8p1Xzsykc+Ifkv6YqA
-	 FZ+X6bgFK81Vtw8KPNGx74zPc8j5JCcZtOOKSEOX4oVh9xF56DlnPslu+eWo2qZOjm
-	 rF420pPDGkaOV+LLbIbS3B2gglT0eZvkaI3wA2jOlZhcIh43vOcCdBpJ+/4dc78o5s
-	 YN0OrSy61rtbanNY98KggkF+wPEm9LAksUUIBuKhGu1A2Jxr/K9FKvKMAxH79h62Ml
-	 Fp2WP/8k5OfZMpRh51/o2uftZ9S+BIQL4CS3fe7nS5MRXjbY2UBlOJg0T23CjTbFYO
-	 R1uebc1h48tOQ==
-Message-ID: <1cccb564-7156-40fb-9750-95c1aee22677@kernel.org>
-Date: Fri, 25 Apr 2025 10:22:44 +0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lxd7lyF6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dgX+1ZiyMLcgpwLKquW29kWukgLb05q8iA7SHzQcF2WLgyaIKpMcxepniFgJ9NjQaWbKDO2Cn7bYYMJV9b7Xhl74OggD6QevTSpjXB+peSkzm/Q5onjw5o/r0/qpVnMe6bvzcDS9zjVHdkzDGaiVvLqlc8OkFbWxjG04jxQv99NEBb2QKCThyGjkYOPlZ16Jcv6hldid6Gyn33Sb7PJv0pBJIENvH+mf2S1BHfSWtF6US+BHqCgQ0A5yZl44ugCouv6KfuRGTVCVNoWK2lNHLYmqv7pwJd5U9VOfVyZFwuHjkqp6Bdr6P29Yz9jx7QO+7kqc45tCYFL/2aXe6iKDKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IMvO8FCpN79fQdRxvhCqWKDBlbrNvZrEUpHccEZ7UQQ=;
+ b=aObrwB1ndo9d0EN6wSAj+1bNSKmIs+wRyQYVcg0eOhWUd5s4M6YTc6RGPwUQH2AAwOg0MpKDcmBIRW04FcfSDWeuRxeLZMMiZ/1JsFID6oEYlsqZCAFDzQVCaX5wjtAc7fQfmt6RhYBaeFvBN2o3C0wf+5Qh8GrVNJdvlpJhatM18nqY3G2YMYyCpTnm8ruKjEyUmsn843fTgMmRtFc9A0taV9AaG7/EXB6808Rl1bS+H0gYnX5GiguWAxsJGlha1XsDGOsKhCMyts0HNH3mKR84o3ztB4MQWOXTZPNZcrRYT+2298JkcjDroHKY7a0Pi7yG8/9L2MpxNGa1Hdj3ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IMvO8FCpN79fQdRxvhCqWKDBlbrNvZrEUpHccEZ7UQQ=;
+ b=lxd7lyF60yozZMEow0FxEmI7ZZG9I2wMO3/iKr/DbUAaeyHUi+pahTAK1LLLDza5yBdVHwBC/ZdR4R01xeOW/ZCRs+OJuS+gmkktbjdSuYRfnFVKE6mD1es0tut+7tAVU2L7hqcFi978Msx/uVzZ/dykvkGomoBcVYhegRNpEdR78b/YiWBgorQ9r178IQN1LoVvcffTnhgjWotrgN4CjlNbFvLFRnVtmVlkhEj7xMNG4F09CS22e1Yzilaj8qWXfPBr05pjL6ahHN+gggZV24XJuIGHpwTU/0tpcPWEWVF6Ar920+UlvwX4ea+JWOOZhY6jWWGUldHFMmCZ25eB9Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by MW4PR12MB7384.namprd12.prod.outlook.com (2603:10b6:303:22b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
+ 2025 02:26:42 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
+ 02:26:42 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Danilo Krummrich <dakr@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?iso-8859-1?q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [13/16] gpu: nova-core: Add support for VBIOS ucode extraction for boot
+Date: Fri, 25 Apr 2025 02:26:40 -0000
+Message-ID: <174554800015.876.6160811355899255959@patchwork.local>
+In-Reply-To: <aAqaU-nX0YRKIGyl@pollux>
+References: <aAqaU-nX0YRKIGyl@pollux>
+Content-Type: text/plain; charset=utf-8
+X-ClientProxiedBy: BN9PR03CA0239.namprd03.prod.outlook.com
+ (2603:10b6:408:f8::34) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
- Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs-tools: introduce fault injection to fsck
-To: Daeho Jeong <daeho43@gmail.com>
-References: <20250418165601.3050393-1-daeho43@gmail.com>
- <1f50d7cf-2c08-4dc5-8b64-2d30dc24f3bb@kernel.org>
- <CACOAw_wO+uO4FmAYujo1uV5=SGRUmxqh_O_vAuofdyUuH=_m2Q@mail.gmail.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <CACOAw_wO+uO4FmAYujo1uV5=SGRUmxqh_O_vAuofdyUuH=_m2Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW4PR12MB7384:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31b43388-0dad-4efd-3aff-08dd83a09daf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q2pYM3Q3aXlGTG5VVkZLQkxEQlVLbVhEalhwQmc5VjF0MmUzZjdPUkxEdXkv?=
+ =?utf-8?B?Z2hHbkczU1c4T0FNbEEyMlg5RkkrT2RpYlNmdlRvZ0I0dS9kSEFOZ3dmUGk3?=
+ =?utf-8?B?YzMxSVNlS0tsMmdkckhiYmdnaUJaeUZyS0Qxa2dZNy9zWUdDWWZmRURGWExW?=
+ =?utf-8?B?bkhiRkN3LzlJWU1qUmN2MVk5WjRCOVNMbGVNOWlvNGRzbTNvQTRwamJReG5R?=
+ =?utf-8?B?dnVSSzdRejBwMTJ2WmxXakRjWGhQMnBkZjFub2djTUJreU0zMlhDU0xZd2pk?=
+ =?utf-8?B?UU1RRDNHRUlIbHBqbHB2NFRDTlZCM0JOTWNsYXhQQ1ZBc3VwejlHTTBERTJp?=
+ =?utf-8?B?clZjdlFFUlZELzNjclArNWVoSkZJTVI0V1BrMU83TnNKS1lTazJBdURpK3ho?=
+ =?utf-8?B?UWZna1ZYQjE1VU9VTVc1ZHZsZFNLTXd3YkhLQ1lrUFVTRHhGK2RheXFuallH?=
+ =?utf-8?B?TU5zM2xhMGM0Z2pyNTB6SmZic0ZvNHhFUlRKWlJyYWIyVERDb0haM2J2eG56?=
+ =?utf-8?B?anRHNzFyaTg3dTZ6MkFtQ2J4NlRtK3hMaEJFSnFPWE9CTWt1KythcmlvTkVp?=
+ =?utf-8?B?dHBaeHNYSGlvUjZlNHZ0cEhsaHEwRzRYUVRVOUN1bVkrc1JIQjJDMEI5ZHhB?=
+ =?utf-8?B?azYvZ3EzLy94SXB1T05EL1pjc054ZXFVWmtEc1p1dnJRTlpFT0NyWTF2RWta?=
+ =?utf-8?B?UnR6Y2syL3pWNVFlZWtrVkt0dFNKK21KRVlHY3c3ekFIWUV4T05FYmxoV3pt?=
+ =?utf-8?B?SGdlempzbnBrRTBJbWxlTkE5TVRZRVFkMENSYXBlOExYUklIS1h2Z2pHUlUv?=
+ =?utf-8?B?Q3htWmtTR2pNL2xFTU82S2Vwa1ZZekhSNzFqNytoSzRIVWRYZU5FUDlaOXhv?=
+ =?utf-8?B?YXJBM3F3RFMvVnRYV2wwWXhKQjN1dElsU1c2Si9aMkY0dDFhSkxoSUdKeHFT?=
+ =?utf-8?B?SnEvazBPRWRzWXlsL0VFMXlBT0ZPTWlOMkRsZW52eHVpd09jUGpyMGkzdVdN?=
+ =?utf-8?B?RXhIUllXekM1OURwQnJXODVWZmFGZk82NktOY1RxS0VmWXFEVk94NG9RcEZr?=
+ =?utf-8?B?MWgyNEZoYjlRaG1hRWl4ZWNlUXV1dk5Pa29sQTcrWGFVVG93bExacnp1VHJy?=
+ =?utf-8?B?M2NjMGFGOVlSWk1oemlXZm0vZ3VsNkdYY2plZk5keG5HQW9FOVM1a0RkM1dU?=
+ =?utf-8?B?VnVXOVB0blJSSE9EODZRditJVWV3L3FvZXp5dThtdk9qVU92dUF3VlhwTklU?=
+ =?utf-8?B?UmFLMkoyS29mNmg3YTEvUFZaWm5JaEgyUVRkSEJoU3Rjc3V2cjNBaTFVNGRB?=
+ =?utf-8?B?ZnlPL2lpMGZ0d0gvS3krVXVFaHRSN1FFWEhYc2xSejhPdVg3SkpQSVdBWkQ2?=
+ =?utf-8?B?b3VpWjBDOG9vNXlhYkNVZ2diQXBzRjVneEwzaytGMXMvTWx3TjZ4SUhFVDZy?=
+ =?utf-8?B?dXA2ME96ZzlWbFdiRHJldDZIQ1FKUDA0UlJIVm5hQTdhb2c3d1g0WUxEQ3VR?=
+ =?utf-8?B?aDhQN2hFR245WHJzc2Yzb0JMbG1IQnNvNzVrMVA0YjkvdDhWcnZTb05jZm1q?=
+ =?utf-8?B?akIzNEZERFBmbko5NUl1RnBka241NmlTU1B2RCtBdUxZY1dmRmVSRXg5MWZn?=
+ =?utf-8?B?N3ZxRFZ5WE9zUUZaSTk0SXUyTS9ieWFTWDVFVzhwd2M1d3BJVWpnWlVtOWN1?=
+ =?utf-8?B?bmNqVXNwb2Y4aUpEZVJJS3NZWElkd3dLRWZyd2w1emhEMWV1dTVPRXVFWUo3?=
+ =?utf-8?B?cFBRZWtIVWVNazhmUjNER1c1R2Vkby9jbVJ1QmJ0aENaSytYbW03NkhtQ052?=
+ =?utf-8?B?Mit3OXZXODRQQnYvSU1obU1HbHNDWUYyYUpoOHl1VXZHOEdORVVYcitIRlFL?=
+ =?utf-8?B?T2EwMGE2czF4S3NISXhJQlJSZzZ4d3EzZi94K2U1eWtwT2xLU2lkQXFiYTVq?=
+ =?utf-8?Q?eOJ0Z+79lIw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cUNXd3dmQTVkOVZTV2lWYnp6eDZ0ZDFnTVV0ZXBkcDJWNHg0Z3pOdmdIUU9X?=
+ =?utf-8?B?ekVpNXNFTWYvUDNjMWhCei9SbFp6U1FxS1BRRGxLakQ2QjN1N25hOHhMRGJC?=
+ =?utf-8?B?bmRrTytCbWtzcFM1NGM0ZU9MV1lZSHFwWitrSm5Jemp6MHJZbno1WWw2WU93?=
+ =?utf-8?B?V3NjVEttcC9DK2RUM29BZ2JoNTBmOFppdDVWZmRGQUs5emZUZkd6MnFwUC9i?=
+ =?utf-8?B?YVRaZWlhRDFSR2JLd1BvK3BTNzR1WUpuSjRHS2dVdWgrZVVpTjN5Z0ZwY3ZN?=
+ =?utf-8?B?U0RxNnBLT3F1U3JUTnBYR0FWWWMxV1g0Z1ZiS2FBdFd2ejJrOTdFbndDZmpt?=
+ =?utf-8?B?S0JOais1VmdlRDhqc1ZiV0loSXVFWWt3VjAvaHdER25jemEyNUFaMUFiM0hs?=
+ =?utf-8?B?R1RhYUFMU2F6aTk1NzUrWXduQS9xT1dCVDNZSHZiR1lBK2hZZlR3TmJBblk0?=
+ =?utf-8?B?WDRaWUova1FRZFJ2TWxSYWltSzFrenJFS284akJvNUpWdWJaZGR1TFYwdElC?=
+ =?utf-8?B?ZUN6c0ZpT0VyZnNFcWsvUUFEVjd1VFdxZ25YZ05SLy9DcXcyQ3RhaURteDNO?=
+ =?utf-8?B?NUE5UjM1aFpEdkZFMk8zZ2ZmdzZEOUZtd1dKcTE1dDRHcWlJVHBNQ3ZSc1ZG?=
+ =?utf-8?B?TFgxdmNnakdJL1lNTGQ5RWZuZE9HSGl0Wnd6M1hrRDNIUFpodTRyN21wTkoy?=
+ =?utf-8?B?Rjc4OWVPY3N4NUh0OG9Md2tYZXFsVU92c29tSitQY1E2V3JreGR4dXR5VVY3?=
+ =?utf-8?B?dk56bUlFVHgrR1p4U2tTTERJMXpWbjYyL2JNb0lQY3VGSmdNRUtWS0xDcDhz?=
+ =?utf-8?B?RlZQWCtkbkhwVnhZSGJKU1U2bVd4VWZRVnE5cFhOUUc5MDFSaVN2ejVna1Vn?=
+ =?utf-8?B?dDJaeldjTU1Wc3ZEeHNSYzBzS1lEMWpZd3NaS0hqL05FSTZ4YXlheWllV2d2?=
+ =?utf-8?B?WVU5SzRtTEZ3SzVXSWExMitqS1lnSHI1OVhwYUh3UUhYbUh2Sm5rZVRMZ1dS?=
+ =?utf-8?B?TTRlRXBOK296YjRUclMyNkw1elJtcjloSTJkUVVCR29BSzFiK2EvbkNoVEdr?=
+ =?utf-8?B?RTBmN1JhamNCWkNoWHhOcWh1SzNIblpObExOL1Z2UFFiSm5mZVNjY2tiM3lJ?=
+ =?utf-8?B?T3dad3N6M2FwS1RyM3pWbkl5TStXSHlkdTFvQml0cGJhUjhJcEI1Tk1VdXI0?=
+ =?utf-8?B?VHhPN3FKSFV5QUxrNGtxMDFqVnJsOXdXRVVYOUNHbWlWNHB6REYxN25weTNX?=
+ =?utf-8?B?bjBnYURoL1c4WFNsOWM4bE5FRzg0L2JBVUF2WWJpdzA2WDlUWjgwMFQxbk04?=
+ =?utf-8?B?NDJvYmp1V1BZTERwQkVUajNFbC92SDcxSENWNnFhYzNSSms2aTV3bmYrTnBF?=
+ =?utf-8?B?elRCc01lMG5vaHY3c2ZSWlJCcGZOUTA2WnIvR0liYlpGeTU4NnF4MEYzdnJU?=
+ =?utf-8?B?WG1VaFY3a0dRNVhZVEpkRHc4MVRvbVBSRjB3TzJiY01xTmhjUkNjVGx1Z2dU?=
+ =?utf-8?B?VXd3UFpHQU5ZTjFKMmdtb05oYzh5aXllWm84TEpObzcyQjk0bmczVm41eTFG?=
+ =?utf-8?B?MUlnT1M0c3MvbmdUa281MEdlcW96ZjFoMjMzNU53bk9uYXJLR2dNTkVacVpJ?=
+ =?utf-8?B?SHNpS0V6L1ZUb1JGM2xFSzVxTVMwVnBOcHBHUHk4eUU3UGE0YlZrcXRDc2Nn?=
+ =?utf-8?B?SmpKOGp4SzRXZnhuYnI5SktBMnEyOC80cXpoS2VLRWtFYUhpQTNZbTUxK0d6?=
+ =?utf-8?B?Mm5jeFg4UHZlcFhnMEFvM0VwUklSL0NNS1RWb1pQYk5xd2Y1dk1jSTAwVVB0?=
+ =?utf-8?B?RDJDak92b0RnUDRiYk50ay94VjhLMk5oM01jNlA5UGZvdW9mdG1tbllvWTJH?=
+ =?utf-8?B?NEdzQ2xiSDhtaEl1bWFGTVZmVVU2bUYzTm01VU5ETzB3cjNBYy9UNDFWUGtL?=
+ =?utf-8?B?M1JDTkxLTmNsdU84TEp6c1MxWjZ0RUhTdFJTa0Mrc3J1NDNoSEZlREx0UEVW?=
+ =?utf-8?B?c3NKV3dzcnVDMW9aTUpnQU9uTGUvcWFWNVNzc0pYV1F6SmNFMWt3T09KSm1K?=
+ =?utf-8?B?cVBOS3hUancyck93c0liSGFJdDcvOTJITzhINGZxNWd4TUNoTlYrMVB6VHB1?=
+ =?utf-8?Q?R8Axy0ZpRtOOXKsVeMjFXeF7o?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31b43388-0dad-4efd-3aff-08dd83a09daf
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 02:26:42.1971
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BgMqiep7NT6szjuaSfuPT8LnID6UU3e9fM78dTDW1QK/GZ4hfKaja8eOlWvNGLaAWDk037AQxI1ZxbiXgY+hNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7384
 
-On 4/25/25 00:22, Daeho Jeong wrote:
-> On Wed, Apr 23, 2025 at 7:01 PM Chao Yu <chao@kernel.org> wrote:
->>
->> On 4/19/25 00:56, Daeho Jeong wrote:
->>> From: Daeho Jeong <daehojeong@google.com>
->>>
->>> Due to the difficulty of intentionally corrupting specific metadata on
->>> some storage devices like zoned storage devices, it is challenging to
->>> effectively verify fsck functionality. To facilitate this verification,
->>> it is necessary to add a fault injection mode.
->>
->> Daeho,
->>
->> What do you think of adding some stats for how many time it was injected
->> for each fault type? then we can check whether all faults we needed have
->> been triggered and also we can get the triggered count.
+Hello, Danilo,
+
+On April 24, 2025, 8:08 p.m. UTC   Danilo Krummrich wrote:
+> On Thu, Apr 24, 2025 at 02:54:42PM -0400, Joel Fernandes wrote:
+> > 
+> > 
+> > On 4/23/2025 10:06 AM, Danilo Krummrich wrote:
+> > [...]
+> > >> +
+> > >> +    /// Probe for VBIOS extraction
+> > >> +    /// Once the VBIOS object is built, bar0 is not read for vbios purposes anymore.
+> > >> +    pub(crate) fn probe(bar0: &Devres<Bar0>) -> Result<Self> {
+> > > 
+> > > Let's not call it probe(), what about VBios::parse(), or simply VBios::new()?
+> > > 
+> > 
+> > Yes, new() is better. I changed it.
+> > 
+> > >> +        // VBIOS data vector: As BIOS images are scanned, they are added to this vector
+> > >> +        // for reference or copying into other data structures. It is the entire
+> > >> +        // scanned contents of the VBIOS which progressively extends. It is used
+> > >> +        // so that we do not re-read any contents that are already read as we use
+> > >> +        // the cumulative length read so far, and re-read any gaps as we extend
+> > >> +        // the length
+> > >> +        let mut data = KVec::new();
+> > >> +
+> > >> +        // Loop through all the BiosImage and extract relevant ones and relevant data from them
+> > >> +        let mut cur_offset = 0;
+> > > 
+> > > I suggest to create a new type that contains data and offset and implement
+> > > read_bios_image_at_offset() and friends as methods of this type. I think this
+> > > would turn out much cleaner.
+> > I moved it into struct Vbios {} itself instead of introducing a new type. Is
+> > that Ok?
+> > 
+> > I agree it is cleaner. Please see below link for this particular refactor
+> > (moving data) and let me know if it looks Ok to you: http://bit.ly/4lHfDKZ
 > 
-> Sounds good. Then, can we show the result at the end of the fsck run?
+> I still think a new type would be better, the Option<KVec<u8>> that is only used
+> for the construction of the actual type instance is a bit weird. It's basically
+> two types in one, which is also why you need two options -- better separate
+> them.
 
-Yeah, I think so. :)
+Ok, makes sense. Will make this change and see what it
+looks like.
 
-Thanks,
+thanks,
 
-> 
->>
->> Thanks,
->>
->>>
->>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>> ---
->>>  fsck/fsck.c       | 106 +++++++++++++++++++++++++++++++++-------------
->>>  fsck/main.c       |  22 ++++++++++
->>>  fsck/mkquota.c    |   3 ++
->>>  include/f2fs_fs.h |  54 +++++++++++++++++++++++
->>>  man/fsck.f2fs.8   |  36 ++++++++++++++++
->>>  5 files changed, 192 insertions(+), 29 deletions(-)
->>>
->>> diff --git a/fsck/fsck.c b/fsck/fsck.c
->>> index 8155cbd..e879d8c 100644
->>> --- a/fsck/fsck.c
->>> +++ b/fsck/fsck.c
->>> @@ -16,6 +16,20 @@
->>>  char *tree_mark;
->>>  uint32_t tree_mark_size = 256;
->>>
->>> +const char *f2fs_fault_name[FAULT_MAX] = {
->>> +     [FAULT_SEG_TYPE]        = "invalid segment type",
->>> +     [FAULT_SUM_TYPE]        = "invalid summary type",
->>> +     [FAULT_SUM_ENT]         = "invalid summary entry",
->>> +     [FAULT_NAT]             = "invalid nat entry",
->>> +     [FAULT_NODE]            = "invalid node block",
->>> +     [FAULT_XATTR_ENT]       = "invalid xattr entry",
->>> +     [FAULT_COMPR]           = "invalid compression type",
->>> +     [FAULT_INODE]           = "invalid inode info",
->>> +     [FAULT_DENTRY]          = "invalid dentry",
->>> +     [FAULT_DATA]            = "invalid data block",
->>> +     [FAULT_QUOTA]           = "invalid quota",
->>> +};
->>> +
->>>  int f2fs_set_main_bitmap(struct f2fs_sb_info *sbi, u32 blk, int type)
->>>  {
->>>       struct f2fs_fsck *fsck = F2FS_FSCK(sbi);
->>> @@ -23,9 +37,9 @@ int f2fs_set_main_bitmap(struct f2fs_sb_info *sbi, u32 blk, int type)
->>>       int fix = 0;
->>>
->>>       se = get_seg_entry(sbi, GET_SEGNO(sbi, blk));
->>> -     if (se->type >= NO_CHECK_TYPE)
->>> -             fix = 1;
->>> -     else if (IS_DATASEG(se->type) != IS_DATASEG(type))
->>> +     if (time_to_inject(FAULT_SEG_TYPE) ||
->>> +                     (se->type >= NO_CHECK_TYPE) ||
->>> +                     (IS_DATASEG(se->type) != IS_DATASEG(type)))
->>>               fix = 1;
->>>
->>>       /* just check data and node types */
->>> @@ -168,7 +182,8 @@ static int is_valid_ssa_node_blk(struct f2fs_sb_info *sbi, u32 nid,
->>>
->>>       sum_blk = get_sum_block(sbi, segno, &type);
->>>
->>> -     if (type != SEG_TYPE_NODE && type != SEG_TYPE_CUR_NODE) {
->>> +     if (time_to_inject(FAULT_SUM_TYPE) ||
->>> +                     (type != SEG_TYPE_NODE && type != SEG_TYPE_CUR_NODE)) {
->>>               /* can't fix current summary, then drop the block */
->>>               if (!c.fix_on || type < 0) {
->>>                       ASSERT_MSG("Summary footer is not for node segment");
->>> @@ -189,7 +204,8 @@ static int is_valid_ssa_node_blk(struct f2fs_sb_info *sbi, u32 nid,
->>>
->>>       sum_entry = &(sum_blk->entries[offset]);
->>>
->>> -     if (le32_to_cpu(sum_entry->nid) != nid) {
->>> +     if (time_to_inject(FAULT_SUM_ENT) ||
->>> +                     (le32_to_cpu(sum_entry->nid) != nid)) {
->>>               if (!c.fix_on || type < 0) {
->>>                       DBG(0, "nid                       [0x%x]\n", nid);
->>>                       DBG(0, "target blk_addr           [0x%x]\n", blk_addr);
->>> @@ -282,7 +298,7 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
->>>       struct f2fs_summary *sum_entry;
->>>       struct seg_entry * se;
->>>       u32 segno, offset;
->>> -     int need_fix = 0, ret = 0;
->>> +     int need_fix = 0, ret = 0, fault_sum_ent = 0;
->>>       int type;
->>>
->>>       if (get_sb(feature) & F2FS_FEATURE_RO)
->>> @@ -293,7 +309,8 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
->>>
->>>       sum_blk = get_sum_block(sbi, segno, &type);
->>>
->>> -     if (type != SEG_TYPE_DATA && type != SEG_TYPE_CUR_DATA) {
->>> +     if (time_to_inject(FAULT_SUM_TYPE) ||
->>> +                     (type != SEG_TYPE_DATA && type != SEG_TYPE_CUR_DATA)) {
->>>               /* can't fix current summary, then drop the block */
->>>               if (!c.fix_on || type < 0) {
->>>                       ASSERT_MSG("Summary footer is not for data segment");
->>> @@ -314,7 +331,10 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
->>>
->>>       sum_entry = &(sum_blk->entries[offset]);
->>>
->>> -     if (le32_to_cpu(sum_entry->nid) != parent_nid ||
->>> +     if (time_to_inject(FAULT_SUM_ENT))
->>> +             fault_sum_ent = 1;
->>> +
->>> +     if (fault_sum_ent || le32_to_cpu(sum_entry->nid) != parent_nid ||
->>>                       sum_entry->version != version ||
->>>                       le16_to_cpu(sum_entry->ofs_in_node) != idx_in_node) {
->>>               if (!c.fix_on || type < 0) {
->>> @@ -333,7 +353,8 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
->>>                       DBG(0, "Target data block addr    [0x%x]\n", blk_addr);
->>>                       ASSERT_MSG("Invalid data seg summary\n");
->>>                       ret = -EINVAL;
->>> -             } else if (is_valid_summary(sbi, sum_entry, blk_addr)) {
->>> +             } else if (!fault_sum_ent &&
->>> +                             is_valid_summary(sbi, sum_entry, blk_addr)) {
->>>                       /* delete wrong index */
->>>                       ret = -EINVAL;
->>>               } else {
->>> @@ -397,6 +418,9 @@ err:
->>>  static int sanity_check_nat(struct f2fs_sb_info *sbi, u32 nid,
->>>                                               struct node_info *ni)
->>>  {
->>> +     if (time_to_inject(FAULT_NAT))
->>> +             return -EINVAL;
->>> +
->>>       if (!IS_VALID_NID(sbi, nid)) {
->>>               ASSERT_MSG("nid is not valid. [0x%x]", nid);
->>>               return -EINVAL;
->>> @@ -436,6 +460,9 @@ static int sanity_check_nid(struct f2fs_sb_info *sbi, u32 nid,
->>>       struct f2fs_fsck *fsck = F2FS_FSCK(sbi);
->>>       int ret;
->>>
->>> +     if (time_to_inject(FAULT_NODE))
->>> +             return -EINVAL;
->>> +
->>>       ret = sanity_check_nat(sbi, nid, ni);
->>>       if (ret)
->>>               return ret;
->>> @@ -865,7 +892,7 @@ int chk_extended_attributes(struct f2fs_sb_info *sbi, u32 nid,
->>>                               "end of list", nid);
->>>               need_fix = true;
->>>       }
->>> -     if (need_fix && c.fix_on) {
->>> +     if ((time_to_inject(FAULT_XATTR_ENT) || need_fix) && c.fix_on) {
->>>               memset(ent, 0, (u8 *)last_base_addr - (u8 *)ent);
->>>               write_all_xattrs(sbi, inode, xattr_size, xattr);
->>>               FIX_MSG("[0x%x] nullify wrong xattr entries", nid);
->>> @@ -907,7 +934,8 @@ void fsck_chk_inode_blk(struct f2fs_sb_info *sbi, u32 nid,
->>>       if (!compressed)
->>>               goto check_next;
->>>
->>> -     if (!compr_supported || (node_blk->i.i_inline & F2FS_INLINE_DATA)) {
->>> +     if (time_to_inject(FAULT_COMPR) || !compr_supported ||
->>> +                     (node_blk->i.i_inline & F2FS_INLINE_DATA)) {
->>>               /*
->>>                * The 'compression' flag in i_flags affects the traverse of
->>>                * the node tree.  Thus, it must be fixed unconditionally
->>> @@ -943,12 +971,13 @@ check_next:
->>>                       f2fs_set_main_bitmap(sbi, ni->blk_addr,
->>>                                                       CURSEG_WARM_NODE);
->>>
->>> -                     if (i_links == 0 && (ftype == F2FS_FT_CHRDEV ||
->>> +                     if (time_to_inject(FAULT_INODE) ||
->>> +                             (i_links == 0 && (ftype == F2FS_FT_CHRDEV ||
->>>                               ftype == F2FS_FT_BLKDEV ||
->>>                               ftype == F2FS_FT_FIFO ||
->>>                               ftype == F2FS_FT_SOCK ||
->>>                               ftype == F2FS_FT_SYMLINK ||
->>> -                             ftype == F2FS_FT_REG_FILE)) {
->>> +                             ftype == F2FS_FT_REG_FILE))) {
->>>                               ASSERT_MSG("ino: 0x%x ftype: %d has i_links: %u",
->>>                                                       nid, ftype, i_links);
->>>                               if (c.fix_on) {
->>> @@ -1008,7 +1037,8 @@ check_next:
->>>               if (c.feature & F2FS_FEATURE_EXTRA_ATTR) {
->>>                       unsigned int isize =
->>>                               le16_to_cpu(node_blk->i.i_extra_isize);
->>> -                     if (isize > 4 * DEF_ADDRS_PER_INODE) {
->>> +                     if (time_to_inject(FAULT_INODE) ||
->>> +                                     (isize > 4 * DEF_ADDRS_PER_INODE)) {
->>>                               ASSERT_MSG("[0x%x] wrong i_extra_isize=0x%x",
->>>                                               nid, isize);
->>>                               if (c.fix_on) {
->>> @@ -1038,8 +1068,9 @@ check_next:
->>>                       unsigned int inline_size =
->>>                               le16_to_cpu(node_blk->i.i_inline_xattr_size);
->>>
->>> -                     if (!inline_size ||
->>> -                                     inline_size > MAX_INLINE_XATTR_SIZE) {
->>> +                     if (time_to_inject(FAULT_INODE) ||
->>> +                                     (!inline_size ||
->>> +                                     inline_size > MAX_INLINE_XATTR_SIZE)) {
->>>                               ASSERT_MSG("[0x%x] wrong inline_xattr_size:%u",
->>>                                               nid, inline_size);
->>>                               if (c.fix_on) {
->>> @@ -1056,9 +1087,10 @@ check_next:
->>>       }
->>>       ofs = get_extra_isize(node_blk);
->>>
->>> -     if ((node_blk->i.i_flags & cpu_to_le32(F2FS_CASEFOLD_FL)) &&
->>> -         (!S_ISDIR(le16_to_cpu(node_blk->i.i_mode)) ||
->>> -          !(c.feature & F2FS_FEATURE_CASEFOLD))) {
->>> +     if (time_to_inject(FAULT_INODE) ||
->>> +              ((node_blk->i.i_flags & cpu_to_le32(F2FS_CASEFOLD_FL)) &&
->>> +               (!S_ISDIR(le16_to_cpu(node_blk->i.i_mode)) ||
->>> +                !(c.feature & F2FS_FEATURE_CASEFOLD)))) {
->>>               ASSERT_MSG("[0x%x] unexpected casefold flag", nid);
->>>               if (c.fix_on) {
->>>                       FIX_MSG("ino[0x%x] clear casefold flag", nid);
->>> @@ -1077,7 +1109,8 @@ check_next:
->>>                       qf_szchk_type[cur_qtype] = QF_SZCHK_INLINE;
->>>               block_t blkaddr = le32_to_cpu(node_blk->i.i_addr[ofs]);
->>>
->>> -             if (blkaddr != NULL_ADDR) {
->>> +             if (time_to_inject(FAULT_INODE) ||
->>> +                             (blkaddr != NULL_ADDR)) {
->>>                       ASSERT_MSG("[0x%x] wrong inline reserve blkaddr:%u",
->>>                                       nid, blkaddr);
->>>                       if (c.fix_on) {
->>> @@ -1088,7 +1121,8 @@ check_next:
->>>                               need_fix = 1;
->>>                       }
->>>               }
->>> -             if (i_size > inline_size) {
->>> +             if (time_to_inject(FAULT_INODE) ||
->>> +                             (i_size > inline_size)) {
->>>                       ASSERT_MSG("[0x%x] wrong inline size:%lu",
->>>                                       nid, (unsigned long)i_size);
->>>                       if (c.fix_on) {
->>> @@ -1118,7 +1152,7 @@ check_next:
->>>               block_t blkaddr = le32_to_cpu(node_blk->i.i_addr[ofs]);
->>>
->>>               DBG(3, "ino[0x%x] has inline dentry!\n", nid);
->>> -             if (blkaddr != 0) {
->>> +             if (time_to_inject(FAULT_INODE) || (blkaddr != 0)) {
->>>                       ASSERT_MSG("[0x%x] wrong inline reserve blkaddr:%u",
->>>                                                               nid, blkaddr);
->>>                       if (c.fix_on) {
->>> @@ -1728,6 +1762,9 @@ static int f2fs_check_hash_code(int encoding, int casefolded,
->>>                       struct f2fs_dir_entry *dentry,
->>>                       const unsigned char *name, u32 len, int enc_name)
->>>  {
->>> +     if (time_to_inject(FAULT_DENTRY))
->>> +             return 1;
->>> +
->>>       /* Casefolded Encrypted names require a key to compute siphash */
->>>       if (enc_name && casefolded)
->>>               return 0;
->>> @@ -1799,7 +1836,8 @@ static int __chk_dots_dentries(struct f2fs_sb_info *sbi,
->>>       int fixed = 0;
->>>
->>>       if ((name[0] == '.' && len == 1)) {
->>> -             if (le32_to_cpu(dentry->ino) != child->p_ino) {
->>> +             if (time_to_inject(FAULT_DENTRY) ||
->>> +                             (le32_to_cpu(dentry->ino) != child->p_ino)) {
->>>                       ASSERT_MSG("Bad inode number[0x%x] for '.', parent_ino is [0x%x]\n",
->>>                               le32_to_cpu(dentry->ino), child->p_ino);
->>>                       dentry->ino = cpu_to_le32(child->p_ino);
->>> @@ -1809,13 +1847,16 @@ static int __chk_dots_dentries(struct f2fs_sb_info *sbi,
->>>
->>>       if (name[0] == '.' && name[1] == '.' && len == 2) {
->>>               if (child->p_ino == F2FS_ROOT_INO(sbi)) {
->>> -                     if (le32_to_cpu(dentry->ino) != F2FS_ROOT_INO(sbi)) {
->>> +                     if (time_to_inject(FAULT_DENTRY) ||
->>> +                                     (le32_to_cpu(dentry->ino) !=
->>> +                                      F2FS_ROOT_INO(sbi))) {
->>>                               ASSERT_MSG("Bad inode number[0x%x] for '..'\n",
->>>                                       le32_to_cpu(dentry->ino));
->>>                               dentry->ino = cpu_to_le32(F2FS_ROOT_INO(sbi));
->>>                               fixed = 1;
->>>                       }
->>> -             } else if (le32_to_cpu(dentry->ino) != child->pp_ino) {
->>> +             } else if (time_to_inject(FAULT_DENTRY) ||
->>> +                             (le32_to_cpu(dentry->ino) != child->pp_ino)) {
->>>                       ASSERT_MSG("Bad inode number[0x%x] for '..', parent parent ino is [0x%x]\n",
->>>                               le32_to_cpu(dentry->ino), child->pp_ino);
->>>                       dentry->ino = cpu_to_le32(child->pp_ino);
->>> @@ -1826,7 +1867,7 @@ static int __chk_dots_dentries(struct f2fs_sb_info *sbi,
->>>       if (f2fs_check_hash_code(get_encoding(sbi), casefolded, dentry, name, len, enc_name))
->>>               fixed = 1;
->>>
->>> -     if (name[len] != '\0') {
->>> +     if (time_to_inject(FAULT_DENTRY) || (name[len] != '\0')) {
->>>               ASSERT_MSG("'.' is not NULL terminated\n");
->>>               name[len] = '\0';
->>>               memcpy(*filename, name, len);
->>> @@ -1889,7 +1930,8 @@ static int __chk_dentries(struct f2fs_sb_info *sbi, int casefolded,
->>>                       i++;
->>>                       continue;
->>>               }
->>> -             if (!IS_VALID_NID(sbi, le32_to_cpu(dentry[i].ino))) {
->>> +             if (time_to_inject(FAULT_DENTRY) ||
->>> +                             !IS_VALID_NID(sbi, le32_to_cpu(dentry[i].ino))) {
->>>                       ASSERT_MSG("Bad dentry 0x%x with invalid NID/ino 0x%x",
->>>                                   i, le32_to_cpu(dentry[i].ino));
->>>                       if (c.fix_on) {
->>> @@ -1903,7 +1945,9 @@ static int __chk_dentries(struct f2fs_sb_info *sbi, int casefolded,
->>>               }
->>>
->>>               ftype = dentry[i].file_type;
->>> -             if ((ftype <= F2FS_FT_UNKNOWN || ftype > F2FS_FT_LAST_FILE_TYPE)) {
->>> +             if (time_to_inject(FAULT_DENTRY) ||
->>> +                             (ftype <= F2FS_FT_UNKNOWN ||
->>> +                              ftype > F2FS_FT_LAST_FILE_TYPE)) {
->>>                       ASSERT_MSG("Bad dentry 0x%x with unexpected ftype 0x%x",
->>>                                               le32_to_cpu(dentry[i].ino), ftype);
->>>                       if (c.fix_on) {
->>> @@ -1918,7 +1962,8 @@ static int __chk_dentries(struct f2fs_sb_info *sbi, int casefolded,
->>>
->>>               name_len = le16_to_cpu(dentry[i].name_len);
->>>
->>> -             if (name_len == 0 || name_len > F2FS_NAME_LEN) {
->>> +             if (time_to_inject(FAULT_DENTRY) ||
->>> +                             (name_len == 0 || name_len > F2FS_NAME_LEN)) {
->>>                       ASSERT_MSG("Bad dentry 0x%x with invalid name_len", i);
->>>                       if (c.fix_on) {
->>>                               FIX_MSG("Clear bad dentry 0x%x", i);
->>> @@ -2153,6 +2198,9 @@ int fsck_chk_data_blk(struct f2fs_sb_info *sbi, struct f2fs_inode *inode,
->>>               return 0;
->>>       }
->>>
->>> +     if (time_to_inject(FAULT_DATA))
->>> +             return -EINVAL;
->>> +
->>>       if (!f2fs_is_valid_blkaddr(sbi, blk_addr, DATA_GENERIC)) {
->>>               ASSERT_MSG("blkaddress is not valid. [0x%x]", blk_addr);
->>>               return -EINVAL;
->>> diff --git a/fsck/main.c b/fsck/main.c
->>> index 47ba6c9..29792d8 100644
->>> --- a/fsck/main.c
->>> +++ b/fsck/main.c
->>> @@ -91,6 +91,8 @@ void fsck_usage()
->>>       MSG(0, "  --no-kernel-check skips detecting kernel change\n");
->>>       MSG(0, "  --kernel-check checks kernel change\n");
->>>       MSG(0, "  --debug-cache to debug cache when -c is used\n");
->>> +     MSG(0, "  --fault_injection=%%d to enable fault injection with specified injection rate\n");
->>> +     MSG(0, "  --fault_type=%%d to configure enabled fault injection type\n");
->>>       exit(1);
->>>  }
->>>
->>> @@ -263,6 +265,8 @@ void f2fs_parse_options(int argc, char *argv[])
->>>                       {"no-kernel-check", no_argument, 0, 2},
->>>                       {"kernel-check", no_argument, 0, 3},
->>>                       {"debug-cache", no_argument, 0, 4},
->>> +                     {"fault_injection", required_argument, 0, 5},
->>> +                     {"fault_type", required_argument, 0, 6},
->>>                       {0, 0, 0, 0}
->>>               };
->>>
->>> @@ -287,6 +291,24 @@ void f2fs_parse_options(int argc, char *argv[])
->>>                       case 4:
->>>                               c.cache_config.dbg_en = true;
->>>                               break;
->>> +                     case 5:
->>> +                             val = atoi(optarg);
->>> +                             if ((unsigned int)val <= 1) {
->>> +                                     MSG(0, "\tError: injection rate must be larger "
->>> +                                                     "than 1: %d\n", val);
->>> +                                     fsck_usage();
->>> +                             }
->>> +                             c.fault_info.inject_rate = val;
->>> +                             c.fault_info.inject_type = F2FS_ALL_FAULT_TYPE;
->>> +                             break;
->>> +                     case 6:
->>> +                             val = atoi(optarg);
->>> +                             if (val >= (1UL << (FAULT_MAX))) {
->>> +                                     MSG(0, "\tError: Invalid inject type: %x\n", val);
->>> +                                     fsck_usage();
->>> +                             }
->>> +                             c.fault_info.inject_type = val;
->>> +                             break;
->>>                       case 'a':
->>>                               c.auto_fix = 1;
->>>                               MSG(0, "Info: Automatic fix mode enabled.\n");
->>> diff --git a/fsck/mkquota.c b/fsck/mkquota.c
->>> index 2451b58..eb63fc9 100644
->>> --- a/fsck/mkquota.c
->>> +++ b/fsck/mkquota.c
->>> @@ -372,6 +372,9 @@ errcode_t quota_compare_and_update(struct f2fs_sb_info *sbi,
->>>       dict_t *dict = qctx->quota_dict[qtype];
->>>       errcode_t err = 0;
->>>
->>> +     if (time_to_inject(FAULT_QUOTA))
->>> +             return -EINVAL;
->>> +
->>>       if (!dict)
->>>               goto out;
->>>
->>> diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
->>> index bb40adc..3e1056c 100644
->>> --- a/include/f2fs_fs.h
->>> +++ b/include/f2fs_fs.h
->>> @@ -1476,6 +1476,33 @@ enum {
->>>       F2FS_FEATURE_NAT_BITS = 0x0001,
->>>  };
->>>
->>> +/* Fault inject control */
->>> +enum {
->>> +     FAULT_SEG_TYPE,
->>> +     FAULT_SUM_TYPE,
->>> +     FAULT_SUM_ENT,
->>> +     FAULT_NAT,
->>> +     FAULT_NODE,
->>> +     FAULT_XATTR_ENT,
->>> +     FAULT_COMPR,
->>> +     FAULT_INODE,
->>> +     FAULT_DENTRY,
->>> +     FAULT_DATA,
->>> +     FAULT_QUOTA,
->>> +     FAULT_MAX
->>> +};
->>> +
->>> +#define F2FS_ALL_FAULT_TYPE  ((1UL << (FAULT_MAX)) - 1)
->>> +
->>> +struct f2fs_fault_info {
->>> +     int inject_ops;
->>> +     int inject_rate;
->>> +     unsigned int inject_type;
->>> +};
->>> +
->>> +extern const char *f2fs_fault_name[FAULT_MAX];
->>> +#define IS_FAULT_SET(fi, type) ((fi)->inject_type & (1UL << (type)))
->>> +
->>>  struct f2fs_configuration {
->>>       uint32_t conf_reserved_sections;
->>>       uint32_t reserved_segments;
->>> @@ -1604,6 +1631,9 @@ struct f2fs_configuration {
->>>               struct f2fs_journal nat_jnl;
->>>               char nat_bytes[F2FS_MAX_BLKSIZE];
->>>       };
->>> +
->>> +     /* Fault injection control */
->>> +     struct f2fs_fault_info fault_info;
->>>  };
->>>
->>>  extern int utf8_to_utf16(char *, const char *, size_t, size_t);
->>> @@ -2131,4 +2161,28 @@ static inline void check_block_struct_sizes(void)
->>>                       + NR_DENTRY_IN_BLOCK * F2FS_SLOT_LEN * sizeof(u8) == F2FS_BLKSIZE);
->>>  }
->>>
->>> +/* Fault inject control */
->>> +#define time_to_inject(type) __time_to_inject(type, __func__, \
->>> +                                     __builtin_return_address(0))
->>> +static inline bool __time_to_inject(int type, const char *func,
->>> +             const char *parent_func)
->>> +{
->>> +     struct f2fs_fault_info *ffi = &c.fault_info;
->>> +
->>> +     if (!ffi->inject_rate)
->>> +             return false;
->>> +
->>> +     if (!IS_FAULT_SET(ffi, type))
->>> +             return false;
->>> +
->>> +     ffi->inject_ops++;
->>> +     if (ffi->inject_ops >= ffi->inject_rate) {
->>> +             ffi->inject_ops = 0;
->>> +             MSG(0, "inject %s in %s of %p\n",
->>> +                             f2fs_fault_name[type], func, parent_func);
->>> +             return true;
->>> +     }
->>> +     return false;
->>> +}
->>> +
->>>  #endif       /*__F2FS_FS_H */
->>> diff --git a/man/fsck.f2fs.8 b/man/fsck.f2fs.8
->>> index e39a846..3762e6d 100644
->>> --- a/man/fsck.f2fs.8
->>> +++ b/man/fsck.f2fs.8
->>> @@ -67,6 +67,42 @@ Enable to show every directory entries in the partition.
->>>  Specify the level of debugging options.
->>>  The default number is 0, which shows basic debugging messages.
->>>  .TP
->>> +.BI \-\-fault_injection=%d " enable fault injection"
->>> +Enable fault injection in all supported types with specified injection rate.
->>> +.TP
->>> +.BI \-\-fault_type=%d " configure fault injection type"
->>> +Support configuring fault injection type, should be enabled with
->>> +fault_injection option, fault type value is shown below, it supports
->>> +single or combined type.
->>> +.br
->>> +===========================      ===========
->>> +.br
->>> +Type_Name                        Type_Value
->>> +.br
->>> +===========================      ===========
->>> +.br
->>> +FAULT_SEG_TYPE                   0x000000001
->>> +.br
->>> +FAULT_SUM_TYPE                   0x000000002
->>> +.br
->>> +FAULT_SUM_ENT                    0x000000004
->>> +.br
->>> +FAULT_NAT                        0x000000008
->>> +.br
->>> +FAULT_NODE                       0x000000010
->>> +.br
->>> +FAULT_XATTR_ENT                  0x000000020
->>> +.br
->>> +FAULT_COMPR                      0x000000040
->>> +.br
->>> +FAULT_INODE                      0x000000080
->>> +.br
->>> +FAULT_DENTRY                     0x000000100
->>> +.br
->>> +FAULT_DATA                       0x000000200
->>> +.br
->>> +FAULT_QUOTA                      0x000000400
->>> +.TP
->>>  .SH AUTHOR
->>>  Initial checking code was written by Byoung Geun Kim <bgbg.kim@samsung.com>.
->>>  Jaegeuk Kim <jaegeuk@kernel.org> reworked most parts of the codes to support
->>
+- Joel
 
+
+>
