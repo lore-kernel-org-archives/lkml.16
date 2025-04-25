@@ -1,248 +1,147 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBCC25395B;
-	Fri, 25 Apr 2025 08:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113C92356B8
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570160; cv=none; b=kJPrbxqNjOx3Avic6+/BSglt0eyElQqZ4HFg3MruYVIWL/Y/Qv267ysnpXYq+B8OV0f6i6PIxvMmiihe9H/Whhci9QspS3YPJrt12kXRttB5IICig0XputimhhId+1E8O4XyybtxwEnliwsN78hSq6TmZ7hbtuZEDihMNRsCPIc=
+	t=1745570315; cv=none; b=d3IZu7gdG0eKaK8tK5NixvXDJJ6AFCzTS4tVxK5diHpDkOlqL31A6a0qFwXHo+g0df32nP1yRhYSG/yEuqCfuCNJFYuS35JoO5ohT29qrQud8nYIX8Tao+Nma7Gi785VYN1+/fSPbLA2CZKiRx+4T3w9GNpp8VXI1n9EcbiNpsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570160; c=relaxed/simple;
-	bh=NDognvLvDHWzs0ZVdpZxgIq4j8zsUyk3xC2JBzkjl6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nm7noHBR0KoKuUBRdGTTs8PGfHnhdUvqgsf7pEnNphTCCBBDzovp5J/RhGxxn/JYvffqkIIUxnS/uJnFbH8xmrCtzZPaL9fA8Q7uIUPvB3c0Ua5NuzxioBD4UyXJFyRU9P8Rrc0jDq5tLhhk+S3SCNcV3yAD+P5mEl1wJ7GeKJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LAHupr+a; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745570315; c=relaxed/simple;
+	bh=1mMtj98z3YShJdLxUAd5dw43PD6KBTkoMvJI6Gyi9wM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g4cjxPg8byTrCF2+3KZ0bm3VeKGNQ3JBlE38duxaMKGFZqC4oQ8UkxDohVJWEFki9CswohERXSyLaM/XmASCkc+cT/SVSSccZP0bOtCwylcKsqpfT5P98FzzI8Qjf8Zj+dFbdg5Wrh9Y0nYzyzKWU91/WSYrtwNichRPjAqv9Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dlFvvZ0R; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LAHupr+a"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5b2390085
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 25 Apr 2025 01:35:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5b2390085
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745570116;
-	bh=uv41QT4bUCUeg9kRJU+Ll1R/EUQNWmYyobPhZDDnvG0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LAHupr+aVuwBpQ/lNk4VRYfQ8YqH5gxJ2rbpQnBuRb4FaPPs70H6aY1LwvgqiZm7g
-	 HGijy5UeFm73/eBXR+IGsU6GUt8lk0uW2ujOhjHd+8YFP6FlTKaPe4NoqX38awxYPk
-	 /xIGSplFs/IhIrHT35jWYZVGRoIeRgbzT1lZOmuyNtXHKUuFWzrhnryI2+qkXFrVTN
-	 TY5LUhj34npFxPcxFG7+6q0Ud1MXC09OUc5i8nZbZf+9zaMDQf/GlSdPVLQbd+lBGC
-	 WCjWDfnBVN4vbnbd4hlZgXwvR+IWnKB3H6jRhkgL304Rs2jXmKs1f9GQRy0wpbeZsY
-	 ZKoo8rEiZWH1g==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-Subject: [PATCH v3 13/14] x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
-Date: Fri, 25 Apr 2025 01:34:36 -0700
-Message-ID: <20250425083442.2390017-14-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425083442.2390017-1-xin@zytor.com>
-References: <20250425083442.2390017-1-xin@zytor.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dlFvvZ0R"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4E1D6982;
+	Fri, 25 Apr 2025 10:38:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745570309;
+	bh=1mMtj98z3YShJdLxUAd5dw43PD6KBTkoMvJI6Gyi9wM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dlFvvZ0RsAmZZnruhIOvgP/1hcZ71oMlzTUhKVDxi2Dmb81X8/EphUiA0KWueYZHI
+	 hQ3waux+4qNoKag7YlgA6h3TEHo/99FqJWnNHkilLNejAeWTei7tRRFjCW5XJDZaaz
+	 fn6nh6CRi/MyNdvQPfCaBoC6I4RQjwR6YcC0WRE4=
+Message-ID: <c432aca1-cbab-476c-ba3a-e0d9cc940da7@ideasonboard.com>
+Date: Fri, 25 Apr 2025 11:38:28 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Vishal Sagar <vishal.sagar@amd.com>,
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+ <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+ <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+ <20250327112009.6b4dc430@eldfell>
+ <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+ <20250327175842.130c0386@eldfell>
+ <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+ <20250331105446.098f0fbe@eldfell>
+ <20250331082135.GB13690@pendragon.ideasonboard.com>
+ <20250331135337.61934003@eldfell> <20250401162732.731ef774@eldfell>
+ <73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
+ <20250417111315.62a749e5@eldfell>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250417111315.62a749e5@eldfell>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The third argument in wrmsr(msr, low, 0) is unnecessary.  Instead, use
-wrmsrq(msr, low), which automatically sets the higher 32 bits of the
-MSR value to 0.
+Hi Pekka,
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/hyperv/hv_apic.c                 | 6 +++---
- arch/x86/include/asm/apic.h               | 2 +-
- arch/x86/include/asm/switch_to.h          | 2 +-
- arch/x86/kernel/cpu/amd.c                 | 2 +-
- arch/x86/kernel/cpu/common.c              | 8 ++++----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 4 ++--
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 2 +-
- arch/x86/kernel/cpu/umwait.c              | 4 ++--
- arch/x86/kernel/kvm.c                     | 2 +-
- 9 files changed, 16 insertions(+), 16 deletions(-)
+On 17/04/2025 11:13, Pekka Paalanen wrote:
+>> My understanding is that the Y-only pixel formats behave in a well
+>> defined way (or, as well defined as the YUV formats), and there's
+>> nothing more to add here. Is that right?
+> 
+> There are two things:
+> 
+> - Y8 follows COLOR_RANGE property, just like all other YUV formats.
+> - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values).
+> 
+> I'd like these explicitly written down, so that they become obvious to
+> everyone. I suspect either one might be easy to forget when writing
+> code and taking shortcuts without thinking.
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index c450e67cb0a4..4d617ee59377 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -75,10 +75,10 @@ static void hv_apic_write(u32 reg, u32 val)
- {
- 	switch (reg) {
- 	case APIC_EOI:
--		wrmsr(HV_X64_MSR_EOI, val, 0);
-+		wrmsrq(HV_X64_MSR_EOI, val);
- 		break;
- 	case APIC_TASKPRI:
--		wrmsr(HV_X64_MSR_TPR, val, 0);
-+		wrmsrq(HV_X64_MSR_TPR, val);
- 		break;
- 	default:
- 		native_apic_mem_write(reg, val);
-@@ -92,7 +92,7 @@ static void hv_apic_eoi_write(void)
- 	if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
- 		return;
- 
--	wrmsr(HV_X64_MSR_EOI, APIC_EOI_ACK, 0);
-+	wrmsrq(HV_X64_MSR_EOI, APIC_EOI_ACK);
- }
- 
- static bool cpu_is_self(int cpu)
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 0174dd548327..68e10e30fe9b 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -209,7 +209,7 @@ static inline void native_apic_msr_write(u32 reg, u32 v)
- 	    reg == APIC_LVR)
- 		return;
- 
--	wrmsr(APIC_BASE_MSR + (reg >> 4), v, 0);
-+	wrmsrq(APIC_BASE_MSR + (reg >> 4), v);
- }
- 
- static inline void native_apic_msr_eoi(void)
-diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
-index 4f21df7af715..499b1c15cc8b 100644
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -61,7 +61,7 @@ static inline void refresh_sysenter_cs(struct thread_struct *thread)
- 		return;
- 
- 	this_cpu_write(cpu_tss_rw.x86_tss.ss1, thread->sysenter_cs);
--	wrmsr(MSR_IA32_SYSENTER_CS, thread->sysenter_cs, 0);
-+	wrmsrq(MSR_IA32_SYSENTER_CS, thread->sysenter_cs);
- }
- #endif
- 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 0bbe79862aa6..5e28ec2fe4e8 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1200,7 +1200,7 @@ void amd_set_dr_addr_mask(unsigned long mask, unsigned int dr)
- 	if (per_cpu(amd_dr_addr_mask, cpu)[dr] == mask)
- 		return;
- 
--	wrmsr(amd_msr_dr_addr_masks[dr], mask, 0);
-+	wrmsrq(amd_msr_dr_addr_masks[dr], mask);
- 	per_cpu(amd_dr_addr_mask, cpu)[dr] = mask;
- }
- 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index cefc99990bde..ef9751d577c3 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1982,9 +1982,9 @@ void enable_sep_cpu(void)
- 	 */
- 
- 	tss->x86_tss.ss1 = __KERNEL_CS;
--	wrmsr(MSR_IA32_SYSENTER_CS, tss->x86_tss.ss1, 0);
--	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)(cpu_entry_stack(cpu) + 1), 0);
--	wrmsr(MSR_IA32_SYSENTER_EIP, (unsigned long)entry_SYSENTER_32, 0);
-+	wrmsrq(MSR_IA32_SYSENTER_CS, tss->x86_tss.ss1);
-+	wrmsrq(MSR_IA32_SYSENTER_ESP, (unsigned long)(cpu_entry_stack(cpu) + 1));
-+	wrmsrq(MSR_IA32_SYSENTER_EIP, (unsigned long)entry_SYSENTER_32);
- 
- 	put_cpu();
- }
-@@ -2198,7 +2198,7 @@ static inline void setup_getcpu(int cpu)
- 	struct desc_struct d = { };
- 
- 	if (boot_cpu_has(X86_FEATURE_RDTSCP) || boot_cpu_has(X86_FEATURE_RDPID))
--		wrmsr(MSR_TSC_AUX, cpudata, 0);
-+		wrmsrq(MSR_TSC_AUX, cpudata);
- 
- 	/* Store CPU and node number in limit. */
- 	d.limit0 = cpudata;
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 324bd4919300..1190c48a16b2 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -905,7 +905,7 @@ int resctrl_arch_measure_cycles_lat_fn(void *_plr)
- 	 * Disable hardware prefetchers.
- 	 */
- 	rdmsr(MSR_MISC_FEATURE_CONTROL, saved_low, saved_high);
--	wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
-+	wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
- 	mem_r = READ_ONCE(plr->kmem);
- 	/*
- 	 * Dummy execute of the time measurement to load the needed
-@@ -1001,7 +1001,7 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
- 	 * Disable hardware prefetchers.
- 	 */
- 	rdmsr(MSR_MISC_FEATURE_CONTROL, saved_low, saved_high);
--	wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
-+	wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
- 
- 	/* Initialize rest of local variables */
- 	/*
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 26f4d820ee6e..2ec6d7d843c5 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1707,7 +1707,7 @@ void resctrl_arch_mon_event_config_write(void *_config_info)
- 		pr_warn_once("Invalid event id %d\n", config_info->evtid);
- 		return;
- 	}
--	wrmsr(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config, 0);
-+	wrmsrq(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config);
- }
- 
- static void mbm_config_write_domain(struct rdt_resource *r,
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 0050eae153bb..933fcd7ff250 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -33,7 +33,7 @@ static DEFINE_MUTEX(umwait_lock);
- static void umwait_update_control_msr(void * unused)
- {
- 	lockdep_assert_irqs_disabled();
--	wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
-+	wrmsrq(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached));
- }
- 
- /*
-@@ -71,7 +71,7 @@ static int umwait_cpu_offline(unsigned int cpu)
- 	 * the original control MSR value in umwait_init(). So there
- 	 * is no race condition here.
- 	 */
--	wrmsr(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached, 0);
-+	wrmsrq(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached);
- 
- 	return 0;
- }
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 44a45df7200a..bc9d21d7395f 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -399,7 +399,7 @@ static void kvm_disable_steal_time(void)
- 	if (!has_steal_clock)
- 		return;
- 
--	wrmsr(MSR_KVM_STEAL_TIME, 0, 0);
-+	wrmsrq(MSR_KVM_STEAL_TIME, 0);
- }
- 
- static u64 kvm_steal_clock(int cpu)
--- 
-2.49.0
+I didn't find a suitable place in the docs for this, but would this, in 
+the drm_fourcc.h, be enough:
+
+/*
+  * Y-only (greyscale) formats
+  *
+  * The Y-only formats are handled similarly to the YCbCr formats in the 
+display
+  * pipeline, with the Cb and Cr implicitly neutral (0.0 in nominal 
+values). This
+  * also means that COLOR_RANGE property applies to the Y-only formats.
+  *
+  */
+
+#define DRM_FORMAT_Y8		fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
+#define DRM_FORMAT_Y10_P32	fourcc_code('Y', 'P', 'A', '4')  /* [31:0] 
+x:Y2:Y1:Y0 2:10:10:10 little endian */
+
+  Tomi
 
