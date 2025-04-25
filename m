@@ -1,116 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D9722B581
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016AF22B595;
+	Fri, 25 Apr 2025 06:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745561096; cv=none; b=QcpeKirgDQ17eRtlh21kuNaKa1/gZohCLN5zArT2ONRtRXQ4ymlkOAdp670mFR3rmJ8MnJNnHDVsq04h9ZYzSoMne8Nq1kdQ7wNCtnbCidwYyz0RaPP9d++pXiGiN6VL/4R9irQ4e4NUKslq1jTUB3pW0Z+W2gpqBLyQWZUzfnU=
+	t=1745561181; cv=none; b=LAt4q1ecx+kYB2/CQbngScoio8c71I/VXc07qIlAARndoJIoMm7l8uAryock3zG8O6sKe9fXj4yBBT8WTmtidRHRr72IXY47iuZAqXYGnKk9APAek19HATGmW92SyA/5MeJx/VUTjxv9GXMubO7WDwoXxqbv1RKZt218KTR0AxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745561096; c=relaxed/simple;
-	bh=3t+D9Lfr67XaN/OQI2Y5+/XH4J/b8IDwoIxmQNpmNHk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JdWI7ZKuiCdGGuksP16BZox7KRXi/0HcajULg72/mO1IAewwxFjNKrkJS3vQYmtvtidn74aMNy2nWostTC0VzUw573Q3fc5IyYVE3TJdIGa4uZTK2ueCViKbzYbOLZiBRq1UiHsk3xWavfyxfI2mJsiK+rYfwITFoZf4Urd35zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+dDc3Ts; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745561181; c=relaxed/simple;
+	bh=VtArZyvh3OJVlev1TuT+mhv7J+r5VPbKR7V2yD85l78=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gg5i2UAmLpvUY2lTOCx3fmiooSJVfwy/C//MLXY6waPtJLsLuEo8qNMBebU2AAewxx7j8TXeehreFk4Im9ne//DvbfGHt+s/o7pyq/oU90NVZOzTg/LyTgE4ULq2GpT8Qw6CGEQAZUvSOqwEvR3RRk8QhdO5eskzTJxB8rk35o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Hw/Oj/IO; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+dDc3Ts"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745561095; x=1777097095;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3t+D9Lfr67XaN/OQI2Y5+/XH4J/b8IDwoIxmQNpmNHk=;
-  b=e+dDc3Tsr77J22NcSt69IM+nFwHyR/jjYsy7dHoooF1f0FSrhdgtb5LS
-   MTk4lG2QuEqLnmAGbYq65eDRa6oMe4uvtJ5KrK+DsythCAUTdlfPQa6mS
-   3CJ/+vTs32X0lgLPR21ynjSoOhY0eknn+a+P47Avk0eucSunwA3XkEyO3
-   ULV+xsFNMGFQiqj/RmRpExwpMXNRA8M4HrHn370UML4mqZVe+Xv3GE8Mn
-   4j4Vop2rM2j99AxRE9Nu1TSihOZH/qH6gWL9w3IkU1ZVMSJqNVbx2ft7X
-   8GULg7irBbyE5NZqzfhXxAkVesWLZVcbHe1FHAbRbtYOQpY+mVq8+t4fC
-   A==;
-X-CSE-ConnectionGUID: tEfb9nOeS5Ov1AyctZe+Dw==
-X-CSE-MsgGUID: VmW96ro5Tq+RphQ0zSMa8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="51021646"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="51021646"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 23:04:54 -0700
-X-CSE-ConnectionGUID: kxh1GToFSUq1UwgD/emrLw==
-X-CSE-MsgGUID: bMWV5gwtTsmWaKtljNz7Ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133350476"
-Received: from junxiaochang.bj.intel.com ([10.238.157.86])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 23:04:50 -0700
-From: Junxiao Chang <junxiao.chang@intel.com>
-To: tomas.winkler@intel.com,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
-	Vitaly Lubart <vitaly.lubart@intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: junxiao.chang@intel.com,
-	furong.zhou@intel.com
-Subject: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq disabled context
-Date: Fri, 25 Apr 2025 14:04:54 +0800
-Message-Id: <20250425060455.641008-1-junxiao.chang@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250424065609.624457-1-junxiao.chang@intel.com>
-References: <20250424065609.624457-1-junxiao.chang@intel.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Hw/Oj/IO"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 26943102E13D0;
+	Fri, 25 Apr 2025 08:06:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1745561170; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=ef+EBezQpcy3FcBFm+eU7MkGtMSmPuuasBxJN60QVdI=;
+	b=Hw/Oj/IO4Av7kOb3s35NwLPns3+xpbMuJVuqH+xEDaSFwjxveKEzr7E6GkEmGAbQ6i35dM
+	xfOtt+ma5ftYQe0YIuzr79f1lSRMvhwmHrJ1MKL1Op+VIQRjqdCRHl+OHvEnjjOZFJ+2Wa
+	LtflvHzHZfua9V3s/vsxEA9p/kxptvSAfc7b76Z9sg6Ev2gHQTqPZMgpYWon2RLzLaBCt2
+	4eoUgjaLQqtWm1M1X9UOXtMvYvlshLvuIQD/NRGIjBf/RLx1pizmf2RUTYAxUobIlbDqLt
+	ch/aX+sPqLBv6lvEWY1nDorOB4GpeiZ3MwqBpoZ7xZCUbBWY95Mbz5LJzCAHiQ==
+Date: Fri, 25 Apr 2025 08:05:56 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>
+Subject: Re: [net-next v7 4/7] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250425080556.138922a8@wsk>
+In-Reply-To: <0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
+References: <20250423072911.3513073-1-lukma@denx.de>
+	<20250423072911.3513073-5-lukma@denx.de>
+	<20250424181110.2734cd0b@kernel.org>
+	<0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/8.TKQ2DIg4Q.iOHILDMF3JC";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-MEI GSC interrupt comes from i915. It has top half and bottom half.
-Top half is called from i915 interrupt handler. It should be in
-irq disabled context.
+--Sig_/8.TKQ2DIg4Q.iOHILDMF3JC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
-top half might be in threaded IRQ context. generic_handle_irq_safe API
-could be called from either IRQ or process context, it disables local
-IRQ then calls MEI GSC interrupt top half.
+Hi Krzysztof, Jakub,
 
-This change fixes A380/A770 GPU boot hang issue with RT kernel.
+> On 25/04/2025 03:11, Jakub Kicinski wrote:
+> > On Wed, 23 Apr 2025 09:29:08 +0200 Lukasz Majewski wrote: =20
+> >> This patch series provides support for More Than IP L2 switch
+> >> embedded in the imx287 SoC.
+> >>
+> >> This is a two port switch (placed between uDMA[01] and
+> >> MAC-NET[01]), which can be used for offloading the network traffic.
+> >>
+> >> It can be used interchangeably with current FEC driver - to be more
+> >> specific: one can use either of it, depending on the requirements.
+> >>
+> >> The biggest difference is the usage of DMA - when FEC is used,
+> >> separate DMAs are available for each ENET-MAC block.
+> >> However, with switch enabled - only the DMA0 is used to
+> >> send/receive data to/form switch (and then switch sends them to
+> >> respecitive ports). =20
+> >=20
+> > Lots of sparse warnings and build issues here, at least on x86.
+> >=20
+> > Could you make sure it's clean with an allmodconfig config,=20
+> > something like:
+> >=20
+> > make C=3D1 W=3D1 drivers/net/ethernet/freescale/mtipsw/  =20
+>=20
+> ... and W=3D1 with clang as well.
+>=20
 
-Fixes: 1e3dc1d8622b ("drm/i915/gsc: add gsc as a mei auxiliary device")
-Tested-by: Furong Zhou <furong.zhou@intel.com>
-Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
----
- drivers/gpu/drm/i915/gt/intel_gsc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The sparse warnings are because of struct switch_t casting and register
+access with this paradigm (as it is done with other drivers).
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
-index 1e925c75fb080..a099d885508ac 100644
---- a/drivers/gpu/drm/i915/gt/intel_gsc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
-@@ -284,7 +284,9 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
- 	if (gt->gsc.intf[intf_id].irq < 0)
- 		return;
- 
--	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
-+	/* It can be called in both irq context and in thread context */
-+	ret = generic_handle_irq_safe(gt->gsc.intf[intf_id].irq);
-+
- 	if (ret)
- 		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
- }
--- 
-2.34.1
+What is the advise here from the community?
 
+> Best regards,
+> Krzysztof
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/8.TKQ2DIg4Q.iOHILDMF3JC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgLJkQACgkQAR8vZIA0
+zr03Fgf+KfcqvqXrwV6oo9XJVMdSNQIoB0p4NlpvVAe5aBxAydJI1xm3RrEZXNPB
+TrcywFHW7nVupYx2HApaLOvpgBFWEK0WbXSfc2EbwtFXWaaUQ+HGbpV4jAmvHbul
+RWNftPG+5U26bQE9B6hrXU7Ceve1/wAscafs+U677XofK1RyE33ZOZYsuUsKbVgo
+duYePABd2Vo4o97byc0pHVPqCmjhfPA0ID+Arzs+7aGx2ym7JqZUjRjmbADnmKg3
+7dRtO0/LmgzGdP9i4B7AvcYeHox7iUjmmqp9yXfbqyagRKcsOKqguUVviqtSjwmP
+AlDFyZxoEjM8RW9Jw2Lyzwycn6MhzA==
+=ESLF
+-----END PGP SIGNATURE-----
+
+--Sig_/8.TKQ2DIg4Q.iOHILDMF3JC--
