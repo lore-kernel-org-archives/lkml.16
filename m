@@ -1,131 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F38119F43A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6539619CD17
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598430; cv=none; b=S9pAYWS0+bY5Yy5hdrTMvWrzfIjWeUS1f7vSCYZ2yKY6WFWSIF9tJIrx76nyNtny/z/qUfq8GtX12PLJaGeT0LoJ14USp2taWos0zlwvFbn6QH9o8K2tiX+aez2uPHwZL8lH9RkOmDC6teur4ITOvfV9VIoYlVBqtsSC00lbi68=
+	t=1745598576; cv=none; b=MUMepwUw2mxd6oiRmXelBNh/TAYJE3ejDtncEbn7rVQ+YJq/IRdhL1HRONSxcx4A8ZBPissd8/STNG9l1R7sjvKE/dbvetPiHdKUWbY9eUEwxpt8OPnPfCfsCarLJUT3XaDq7NHdIowccrhDzMkCRvehbuJwSCKZ592S7awOhyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598430; c=relaxed/simple;
-	bh=gfj6qfAB2+A2B2FUesZrGJqPp4VulFSQvkvzvy8kgwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nmybpX5Xtg7Q2Jry9TE8kGMkfHc7xf/n9JzVlQBkivDjehbfHMOIxA9SIVUBGPJcvSuBQ3s7DFRJ5puuBjwldsC9LmKb2BJov6Lluwd/dLuVI4qySvJA+PDEt0eD9brTP/+zZeO9nmT8PamR7YX8ToEJ/4Xiktwrvj10NUZwo+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RHBtXhP8; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1745598576; c=relaxed/simple;
+	bh=dNOEF3deb1Hli7ypZNkU8omKQmciXb9+hWXBOwVIgw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U4kru17aCoZZBKIBDahoAwAsz91UNV5WAt+X7BqjJW4+a3BixGmdqlT8VJlSeE31g5PBEW4TRN7jN3OPbYGCMKa4iQqJtcALV4RhXXLxVOEr6B4Y3s5CeJx7FGwsBv32AKSTL5WHuqRvi3Cpq9BIovljIT2QZfzePOxKQ5CDiEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Crayupu+; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHBtXhP8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Crayupu+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745598428;
+	s=mimecast20190719; t=1745598573;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/MhH+JzUZ4LUQs+r61lBHwV7dFz4bYUCQFljM9RbcvE=;
-	b=RHBtXhP8da7XjrpJifMEMvv8WBYSqUbkxy6QHOGE7laRgDmWcre/qob9HHDoBjPQva6gxQ
-	FQvffRNy8SlBxBZCDG9D443OS23CjdvsU6VDaZNhOzEzM+4/9BvFjmNJXp/2U5JuYVrpb+
-	EkjTULrIyaWCjfwJYVtpzwFKYFyVkZ4=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-BNeni7X6MJ6jXL6zdSpOVQ-1; Fri, 25 Apr 2025 12:27:04 -0400
-X-MC-Unique: BNeni7X6MJ6jXL6zdSpOVQ-1
-X-Mimecast-MFC-AGG-ID: BNeni7X6MJ6jXL6zdSpOVQ_1745598424
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f2c9e1f207so40474766d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:27:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745598424; x=1746203224;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/MhH+JzUZ4LUQs+r61lBHwV7dFz4bYUCQFljM9RbcvE=;
-        b=NmLIJayM9EAsPUuVUKGXNTKp86h33GtzXOHmXKAU6JneDCmazKRl6KG+nnBGyU5Q2F
-         Yp1x2Y27eIoR4pHXWqEQ0cXKVh2rhLaAMyzK5a2uG+iuIvTO8T5w16ATi4tK3cw8mbEg
-         shYmUjoLe0fDz8tJpBiz/w5RcD9D224jrpGC6jNS7D0bEVRrgN0LiEeCBOFsI0/6ZpSK
-         SL9xsjgG4ivOVxGfGRHFm6guxNCM6DeOBUsMy+6kr22M+dAZ4O1QCfzrjYC7M+R3so8l
-         PLZUfBkH02f2n0kzdSWZfFwH8oTPYNBA3ZaRz1QzaoV2OhEmKYSRSCcHZCiYCmkB6CgQ
-         Zv/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX7y06uohW5XTp3LFlNqG5pDtJk86yBdab+/2A1ugkJZwJ5gB0OYMOd77voYRYzc9HbOMjD20djZgIg4aY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjBSaAXH+tmpVu1DksQ99u4yYY9T/pIF2P6djVX71XvFMcehaD
-	DBHC+uOb54Kdv91zfuyx68YXQ5KoLCsdO1zYr/kJhGJoR/efIKkC5NL2EptqBgfNBKwWv/IsWbn
-	k290/SApBb90I7KWT6dyiEtMycgycQj43ehaRMF4RqYO1hU9XwatTIYKS9/YyUw==
-X-Gm-Gg: ASbGncvizw+zIrXo1voCyO9SBfOax4ZNpZheB+09tfW9SYTp/3PChbC0QGiXliNrd/7
-	uNn2Uc2vNyCf4mlS5mCNyedhuhQZYG8iTjp+qG0nA8fhnJfXPm39K3uoLlJb/kkJeLne7h7wAdf
-	6Mghz1/C4UuYhWkbLeaA0ydhipKWA8d1KlJx8oz8aI8hVpMk/+4uZICkDITLgsiLRyWKHgVXsE1
-	8Wj0PkxZMa/UHi3PNEELdH3h3/sdZcHtcAdUgFDQR4GtXwvrNYrLFXhLfhRmYUTBDoHXJmdeWqJ
-	b+A=
-X-Received: by 2002:a05:6214:c2a:b0:6e6:65a6:79a4 with SMTP id 6a1803df08f44-6f4d1f9e216mr223246d6.44.1745598424262;
-        Fri, 25 Apr 2025 09:27:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGrsTAOZevjGCechpgS5uQE6KpTPiMl2lEp9QFsRSucLuWkkusPkRPE26kdYaQ3TBFsbWONiw==
-X-Received: by 2002:a05:6214:c2a:b0:6e6:65a6:79a4 with SMTP id 6a1803df08f44-6f4d1f9e216mr222976d6.44.1745598423934;
-        Fri, 25 Apr 2025 09:27:03 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c08ef0cdsm23874656d6.18.2025.04.25.09.27.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 09:27:03 -0700 (PDT)
-Date: Fri, 25 Apr 2025 12:27:00 -0400
-From: Peter Xu <peterx@redhat.com>
-To: James Houghton <jthoughton@google.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-stable <stable@vger.kernel.org>,
-	Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH 1/2] mm/userfaultfd: Fix uninitialized output field for
- -EAGAIN race
-Message-ID: <aAu31E7CSbhw6Yh9@x1.local>
-References: <20250424215729.194656-1-peterx@redhat.com>
- <20250424215729.194656-2-peterx@redhat.com>
- <23e2d207-58ac-49d3-b93e-4105a0624f9d@redhat.com>
- <CADrL8HVhMhG6_nSwLfVr4g8XpjA9xh+maLPrC1=jv+L6LNxxkA@mail.gmail.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hPhE2xp2EJWLrFm/riS/NVNoWM3TbNL/Rtdl7+CGpZI=;
+	b=Crayupu+SjO93zWU0WVz+85fQ4SMzyw5cy8/WQocW6nTVEEEXwMtGXP2OMre/j7a5jHDaV
+	fpTqwZg8gamYlpLi03PS3s9BWbnkkrFw35W0WNi+Y5fIdQW9jYQUjj6bpkRmGrGC95Zrb+
+	ApsqwmuJ5yEe/g2W2IjxdpM3FXCQFSc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-vkm8F_U0NriBp0kIqjty5Q-1; Fri,
+ 25 Apr 2025 12:29:30 -0400
+X-MC-Unique: vkm8F_U0NriBp0kIqjty5Q-1
+X-Mimecast-MFC-AGG-ID: vkm8F_U0NriBp0kIqjty5Q_1745598569
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CBF5F1800264;
+	Fri, 25 Apr 2025 16:29:28 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3F551180045C;
+	Fri, 25 Apr 2025 16:29:28 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 6.15-rc4
+Date: Fri, 25 Apr 2025 12:29:27 -0400
+Message-ID: <20250425162927.404532-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADrL8HVhMhG6_nSwLfVr4g8XpjA9xh+maLPrC1=jv+L6LNxxkA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Apr 25, 2025 at 11:54:47AM -0400, James Houghton wrote:
-> On Fri, Apr 25, 2025 at 11:12 AM David Hildenbrand <david@redhat.com> wrote:
-> >
-> > On 24.04.25 23:57, Peter Xu wrote:
-> > > While discussing some userfaultfd relevant issues recently, Andrea noticed
-> > > a potential ABI breakage with -EAGAIN on almost all userfaultfd ioctl()s.
-> >
-> > I guess we talk about e.g., "man UFFDIO_COPY" documentation:
-> >
-> > "The copy field is used by the kernel to return the number of bytes that
-> > was actually copied,  or an  error  (a  negated errno-style value).  The
-> > copy field is output-only; it is not read by the UFFDIO_COPY operation."
-> >
-> > I assume -EINVAL/-ESRCH/-EFAULT are excluded from that rule, because
-> > there is no sense in user-space trying again on these errors either way.
-> > Well, there are cases where we would store -EFAULT, when we receive it
-> > from mfill_atomic_copy().
-> >
-> > So if we store -EAGAIN to copy.copy it says "we didn't copy anything".
-> > (probably just storing 0 would have been better, but I am sure there was
-> > a reason to indicate negative errors in addition to returning an error)
-> 
-> IMHO, it makes more sense to store 0 than -EAGAIN (at least it will
-> mean that my userspace[1] won't break).
-> 
-> Userspace will need to know from where to restart the ioctl, and if we
-> put -EAGAIN in `mapped`/`copy`/etc., userspace will need to know that
-> -EAGAIN actually means 0 anyway.
+Linus,
 
-Yes agreed, the API might be easier to follow if the kernel will only
-update >=0 values to copy.copy and only if -EAGAIN is returned, so that
-errno will be the only source of truth on the type of error that userapp
-must check first. For now, we may need to stick with the current API.
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
--- 
-Peter Xu
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 2d7124941a273c7233849a7a2bbfbeb7e28f1caa:
+
+  Merge tag 'kvmarm-fixes-6.15-2' of https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2025-04-24 13:28:53 -0400)
+
+Compared to last week's botched attempt, this includes your suggestion
+to make kvm_arch_has_irq_bypass() inline and a new ARM fix.
+
+Paolo
+
+----------------------------------------------------------------
+ARM:
+
+* Single fix for broken usage of 'multi-MIDR' infrastructure in PI
+  code, adding an open-coded erratum check for everyone's favorite pile
+  of sand: Cavium ThunderX
+
+x86:
+
+* Bugfixes from a planned posted interrupt rework
+
+* Do not use kvm_rip_read() unconditionally to cater for guests
+  with inaccessible register state.
+
+----------------------------------------------------------------
+Adrian Hunter (2):
+      KVM: x86: Do not use kvm_rip_read() unconditionally in KVM tracepoints
+      KVM: x86: Do not use kvm_rip_read() unconditionally for KVM_PROFILING
+
+Marc Zyngier (1):
+      arm64: Rework checks for broken Cavium HW in the PI code
+
+Paolo Bonzini (2):
+      KVM: arm64, x86: make kvm_arch_has_irq_bypass() inline
+      Merge tag 'kvmarm-fixes-6.15-2' of https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+
+Sean Christopherson (8):
+      KVM: SVM: Don't update IRTEs if APICv/AVIC is disabled
+      KVM: SVM: Allocate IR data using atomic allocation
+      KVM: x86: Reset IRTE to host control if *new* route isn't postable
+      KVM: x86: Explicitly treat routing entry type changes as changes
+      KVM: x86: Take irqfds.lock when adding/deleting IRQ bypass producer
+      iommu/amd: Return an error if vCPU affinity is set for non-vCPU IRTE
+      iommu/amd: WARN if KVM attempts to set vCPU affinity without posted intrrupts
+      KVM: SVM: WARN if an invalid posted interrupt IRTE entry is added
+
+ arch/arm64/include/asm/kvm_host.h |  5 +++
+ arch/arm64/include/asm/mmu.h      | 11 -------
+ arch/arm64/kernel/cpu_errata.c    |  2 +-
+ arch/arm64/kernel/image-vars.h    |  4 ---
+ arch/arm64/kernel/pi/map_kernel.c | 25 +++++++++++++-
+ arch/arm64/kvm/arm.c              |  5 ---
+ arch/x86/include/asm/kvm_host.h   |  6 ++++
+ arch/x86/kvm/svm/avic.c           | 68 +++++++++++++++++++++------------------
+ arch/x86/kvm/trace.h              | 13 ++++++--
+ arch/x86/kvm/vmx/posted_intr.c    | 28 ++++++----------
+ arch/x86/kvm/x86.c                | 28 ++++++++++------
+ drivers/iommu/amd/iommu.c         | 15 +++------
+ 12 files changed, 116 insertions(+), 94 deletions(-)
 
