@@ -1,152 +1,131 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D7961FF2;
-	Fri, 25 Apr 2025 13:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4471747;
+	Fri, 25 Apr 2025 13:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745589047; cv=none; b=n/TPEjsb4hicRZ/qi1qtwsqpGaMP8YF6Gns7wEbUFWR9RRI6HzliYK6/ONuikr6K/s2727g5VdRgDz2Dhv+kFZekJiwtPxFYNW3F318/naC8/X9LqvsXVt25gee+lI3+HwTIdpGvwJvgyGn48o3Kw4jmsEaL8ZTX1SbFfxqQPf8=
+	t=1745589072; cv=none; b=QZf7ZHWSrjWcNcYSevLMWVqYrUR5VrhKvh6K4uHnNbJsWhTF9iFZjQTvcuWVyf1btXGwMH5Anc2HoovfTIrr9iD9gLcfT/33NCTItSEKdY8vWc4NA0vfjpyB5fT+00GYRraifdc0+aYPWttIR3i7Iz16Gg4ZrMZHPRBiGoLMZLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745589047; c=relaxed/simple;
-	bh=WxQ5Ou/fI09he56FhDFzuvM5OvovP9p41Kpo80ZlRI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YdOSypDgMJNC1x2yymFIx4XHrx6Rk8opYLTyV0+6wCagYkS82U7iOLV5VUUZiQK7x64KYAvkiyMfMYh/euiPOTBPu75lWKxbMdJRHSHpv20gHOIJch5BkRK85J2MgMee1a9Nz4LRorPNEKYuTCQ9aqw258qaNWMsYWsDYBZzN0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mN0LkFd0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745589072; c=relaxed/simple;
+	bh=OhZMVslTMFHk1PYXUziNNqXZhgpB08GxxfE5qfU9SMk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Y3uBEwUTz1y/AdR/MWlV+Z2dbkK/10ijvrcSykTek4CawjFz1m1L2ctc99MM2TdlIuQrtTYKJcz96JOf3/Az5Gx1iJHdSI8BB+6GdhcD0BvOo/TpVuKSB9dLWh/nOfFKYYkhAfocgk/esZxa+bBmEa2dHLCt6D2/yDXPthqCsm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAVPoJQL; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mN0LkFd0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hgYA6FEh3vjzB5qqCTmatdfoxf97Onxqc6wILtW6+qs=; b=mN0LkFd0GR/+ivo3qlMWXNGLgi
-	h9IJb5yyG9G4IoK0Lcj/MhbXl2a516EmM+1/AO/mUId6aN08ZsT9ue6rF4TUb/pPLf22G09xAwg4h
-	Y1yhoxu36dqnKz6Ywv4uPYzbio8Lh14wg9f/yIT41WKIhsWCl5OGHFJFO1isF1WrPlDoOnFKW9q+s
-	tcgVr0e5+ZIBsx7GflmOcxfNjuPxDJaCZf22eamqXu9K0kINXUbXOUidX6jb/NEhvL9Y7t/zuYqMg
-	z4BGNK3sgxIjlm3vI/4LLu+TwfABBUSfEY43J/GHzfqlDg2kmoOZm5vH2jon1Di/5Qz5S8VpeY0I4
-	weqzQKvQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u8JRf-0000000EcS2-2PpK;
-	Fri, 25 Apr 2025 13:50:23 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EE817300583; Fri, 25 Apr 2025 15:50:22 +0200 (CEST)
-Date: Fri, 25 Apr 2025 15:50:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "x86@kernel.org" <x86@kernel.org>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"kees@kernel.org" <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-	"samitolvanen@google.com" <samitolvanen@google.com>,
-	"ojeda@kernel.org" <ojeda@kernel.org>
-Subject: Re: [PATCH 4/6] x86,hyperv: Clean up hv_do_hypercall()
-Message-ID: <20250425135022.GB35881@noisy.programming.kicks-ass.net>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.285564821@infradead.org>
- <SN6PR02MB41576A943191D154521C23C8D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAVPoJQL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745589071; x=1777125071;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=OhZMVslTMFHk1PYXUziNNqXZhgpB08GxxfE5qfU9SMk=;
+  b=ZAVPoJQLRHhmJ2advrNRsFva3K7C9aGDvJBcxDwNlg+1oy7u8BxdV3iV
+   ybh5VxV0CLWl9/xtMTZtIqzd0ZSiFwtWOoVgDCyq5xceJaIg3YBY5gGBR
+   lQMvOWAL7iBjXty/8NYXaERN4JP/YuHePGMj9TNoV2U0KKJDa2saMP6FW
+   do4WbVV1WKdF3okTErJndahHzNSeUV0Zrze7hH/huN2MUsYLm+BxzDqyJ
+   xAXsFjMcsWfqW7Fg3MqjoD01ehx+7Y+W3czuE8Pivq2J0dcaygtF+LB5t
+   OnCBELDIre0ITrFmVAK197LB1DJudSVWlmiUKi+pPJOlU17YdL0kcs1Xc
+   w==;
+X-CSE-ConnectionGUID: 77xyvPGySFi2WBKZPmBQ9w==
+X-CSE-MsgGUID: aj6lyNgmT9ubvaAOL7uahA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="50917497"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="50917497"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:51:10 -0700
+X-CSE-ConnectionGUID: bD/JDR3LQ9yWdeM3F6uVBA==
+X-CSE-MsgGUID: VK6mzkL+SLKFFR+xFJka7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="137722441"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:51:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, 
+ Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
+ Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
+ Derek J Clark <derekjohn.clark@gmail.com>, 
+ Kevin Greenberg <kdgreenberg234@protonmail.com>, 
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
+ Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org, 
+ sre@kernel.org, linux@weissschuh.net, hdegoede@redhat.com, 
+ mario.limonciello@amd.com
+In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
+References: <20250425111821.88746-1-lkml@antheas.dev>
+Subject: Re: [PATCH v10 00/16] hwmon: (oxpsensors) Add devices, features,
+ fix ABI and move to platform/x86
+Message-Id: <174558905993.2965.3080490340204327476.b4-ty@linux.intel.com>
+Date: Fri, 25 Apr 2025 16:50:59 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41576A943191D154521C23C8D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Mon, Apr 21, 2025 at 06:27:57PM +0000, Michael Kelley wrote:
-> From: Peter Zijlstra <peterz@infradead.org> Sent: Monday, April 14, 2025 4:12 AM
-> > 
-> > What used to be a simple few instructions has turned into a giant mess
-> > (for x86_64). Not only does it use static_branch wrong, it mixes it
-> > with dynamic branches for no apparent reason.
-> > 
-> > Notably it uses static_branch through an out-of-line function call,
-> > which completely defeats the purpose, since instead of a simple
-> > JMP/NOP site, you get a CALL+RET+TEST+Jcc sequence in return, which is
-> > absolutely idiotic.
-> > 
-> > Add to that a dynamic test of hyperv_paravisor_present, something
-> > which is set once and never changed.
-> > 
-> > Replace all this idiocy with a single direct function call to the
-> > right hypercall variant.
+On Fri, 25 Apr 2025 13:18:05 +0200, Antheas Kapenekakis wrote:
+
+> This four part series updates the oxpsensors module to bring it in line
+> with its Windows OneXPlayer counterpart. First, it adds support for all
+> 2024, 2025 OneXPlayer handhelds and their special variants. Then, it moves
+> the module to platform/x86 to allow for including more EC features.
 > 
-> This did indeed need cleaning after all the CoCo VM and paravisor
-> stuff got added. Thanks for doing it.
+> Then, it adds the new charge limiting and bypass features that were first
+> introduced in the X1 and retrofit to older OneXFly variants and for
+> controlling the turbo led found in the X1 models. For Bypass, it adds a new
+> charge_behaviour variant called inhibit-charge-s0.
 > 
-> From looking at the code changes, I believe the 32-bit hypercall paths
-> are unchanged, as they weren't affected the CoCo VM and paravisor
-> additions. Perhaps explicitly state that intent in the commit message.
-> 
-> I've tested this patch set against linux-next-20250411 on normal Hyper-V
-> guests. Basic smoke tests pass, along with taking a panic, and
-> suspend/resume for guest hibernation. But getting into kdump after a
-> panic does not work. See comments in Patch 5 for the likely reason why.
-> 
-> I've also tested SNP and TDX VMs with a paravisor, and basic smoke
-> tests pass. But I'm testing in the Azure cloud, and I don't have access to an
-> environment where I can test without a paravisor. So my testing doesn't
-> cover the SNP and TDX specific static call paths. Maybe someone at
-> Microsoft can test that configuration.
-
-Excellent, thanks!
+> [...]
 
 
-> > +#ifdef CONFIG_X86_64
-> > +u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
-> 
-> Could this get a different name so we don't have the confusion of
-> hv_hypercall_pg vs hv_pg_hypercall?  Some possibilities:
-> 
-> hv_std_hypercall
-> hv_basic_hypercall
-> hv_core_hypercall
-> hv_normal_hypercall
-> hv_simple_hypercall
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Sure, I'll throw a dice an pick one ;-)
+The list of commits applied:
+[01/16] hwmon: (oxp-sensors) Distinguish the X1 variants
+        commit: 217d55ca13d22ba6af7e96ac2d28c2ef6927fc54
+[02/16] hwmon: (oxp-sensors) Add all OneXFly variants
+        commit: 9f4c9ec158fa8fa4afcdbcbff9c9a9a900dc9c2f
+[03/16] platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
+        commit: fe812896e55d0d8e2a45bcf994cadc80fe912fb5
+[04/16] ABI: testing: sysfs-class-oxp: add missing documentation
+        commit: 05f8e5928bfd37416380e8e0994c5f4fd1b615c8
+[05/16] ABI: testing: sysfs-class-oxp: add tt_led attribute documentation
+        commit: 7ba14e4eec62985ae2021ef7e06d537b8e4c8712
+[06/16] platform/x86: oxpec: Rename ec group to tt_toggle
+        commit: 8e1963b9d84a3db10cdd2a807dc3fe401837d228
+[07/16] platform/x86: oxpec: Add turbo led support to X1 devices
+        commit: 5485a80150ff03b6784bfbb194858244ae5f991d
+[08/16] platform/x86: oxpec: Move pwm_enable read to its own function
+        commit: aa682cff3097dfa2370298ecebd33ff1fb64bab8
+[09/16] platform/x86: oxpec: Move pwm value read/write to separate functions
+        commit: 0ba0d67b0608c15b407491712af1c2a3d5140492
+[10/16] platform/x86: oxpec: Move fan speed read to separate function
+        commit: 653feeccdd2eb1dfe44923f4c0bbf50a948c7a07
+[11/16] platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
+        commit: 7dea472a8b2814013213f4fed290f5f86c6cc7cb
+[12/16] platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
+        commit: bb9854e9819ae5c29602d4985313cde2d07f6847
+[13/16] power: supply: add inhibit-charge-awake to charge_behaviour
+        commit: 468182a839f88fecab915792cbb98ad7328be266
+[14/16] platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
+        commit: 202593d1e86bf3ccb1c1091713760b6f44641718
+[15/16] platform/x86: oxpec: Rename rval to ret in tt_toggle
+        commit: 57c775a990a742f7cc2650a5cbfc103d6b4a015d
+[16/16] platform/x86: oxpec: Convert defines to using tabs
+        commit: f5612600314bcce86934318601501e2d8301176d
 
+--
+ i.
 
-> > @@ -483,14 +484,16 @@ static void __init ms_hyperv_init_platfo
-> >  			ms_hyperv.shared_gpa_boundary =
-> >  				BIT_ULL(ms_hyperv.shared_gpa_boundary_bits);
-> > 
-> > -		hyperv_paravisor_present = !!ms_hyperv.paravisor_present;
-> > -
-> >  		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
-> >  			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
-> > 
-> > 
-> >  		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
-> >  			static_branch_enable(&isolation_type_snp);
-> > +#if defined(CONFIG_AMD_MEM_ENCRYPT) && defined(CONFIG_HYPERV)
-> > +			if (!ms_hyperv.paravisor_present)
-> > +				static_call_update(hv_hypercall, hv_snp_hypercall);
-> > +#endif
-> 
-> This #ifdef (and one below for TDX) are really ugly. They could be avoided by adding
-> stubs for hv_snp_hypercall() and hv_tdx_hypercall(), and making the hv_hypercall static
-> call exist even when !CONFIG_HYPERV (and for 32-bit builds). Or is there a reason to
-> not do that?
-
-I'll try and make it so.
