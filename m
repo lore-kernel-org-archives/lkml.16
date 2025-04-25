@@ -1,107 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2821D23BCE3
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C289F23BD09
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575685; cv=none; b=ed6tx99iF9nzP38jCfXOGgLAM7ut6J2Schcbv+pf0A0/AXp+JgGKhliI69GaKjLCIG3ycxKZQcWwKF42Pvn0YhQhq8kfTUtgZfXjzyHMQPOR0WbiPQTfKU4JOxgL9b+U6nYQseqNVyYKL8MfuLYqiufLLpRYNy6d+VY2f9/0TP0=
+	t=1745575695; cv=none; b=sMGqsiaJpehFg6GRH56Wpd8zIzfvWyZR9WRcjTHLjqnprnJ3mWuPRwwnl66LcFXyPLdLPQF+47rSXZfWQvHdIh8zD9hIglCpQolig4s4YUFVkHGwVeTW+l2nCj/lJ9fKeSp5SK1zZHTyvH9GkcARqWXX8evl4KoAWSeaFVLWuLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575685; c=relaxed/simple;
-	bh=RbOCfUpnNaUeMgS18nPHmR6Rsmt7FCEuf9nQm74xq3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gegpp7ydvwQSYQeqzgvAoFvCBSpF3gagY7mk4aYu5AzXLLS1+w2/s3i7eL5HRRZTRJNL0/VNwjA1r+CZJXHSgLnPL7duiy8VhLvCF2/1ZKrtvrsXq5D/8sHaz8cX+pYEC7PF88sWO7slFba132HNyEpCNLPp0t/h95gyeqrISwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KYcECwT9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745575695; c=relaxed/simple;
+	bh=8W6PDJRTnPXYvMLSNBG6flWYTbiSLNvRa3oqH8q/3YE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JWjHEaR4qJJ5lH9u3N+mI1UFdDTWFWTnYWCdscEo5AbVHbmb2Uj9Yg5tvM0AIZsZpy63vPBiXSFh4F7ElgsScdYKlTSchV8XbX7cb0Bvt0BJGhrz3rP5MOD6iHan6KNKg+9y72nOzwGfoTfO59delvoy8e854Hrp06wMv/+qIpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=fh+Rcq4J; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KYcECwT9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745575683;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wCWDXuJuaWOovXQdKzwU0ohDqLv9bgc+JZP0GesYdB4=;
-	b=KYcECwT9WGPudHzFwXegrZ7uCBn7wLm1LQ+EX5y3B+SsoKVLm7i6cYu0qIESL86iDDB/6g
-	asCeVru+q4p6FJo6Wfou4Dvz7ejWPyQAZf+NxHLOFG/3i3Bm/enxLfS2Ep0weLa/SdtN++
-	7DHbz6g5TSl71RRB2uDFZmgvI3jFG4M=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-381-YPOQJynNO4CzyAgpMYVfxw-1; Fri,
- 25 Apr 2025 06:07:57 -0400
-X-MC-Unique: YPOQJynNO4CzyAgpMYVfxw-1
-X-Mimecast-MFC-AGG-ID: YPOQJynNO4CzyAgpMYVfxw_1745575675
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CE8C180087A;
-	Fri, 25 Apr 2025 10:07:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.93])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 79E5B1800352;
-	Fri, 25 Apr 2025 10:07:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 25 Apr 2025 12:07:16 +0200 (CEST)
-Date: Fri, 25 Apr 2025 12:07:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: linux-kernel@vger.kernel.org, mrpre@163.com, mkoutny@suse.com,
-	syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com,
-	syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com,
-	syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Bill O'Donnell <bodonnel@redhat.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v2] pid: annotate data-races around pid_ns->pid_allocated
-Message-ID: <20250425100707.GA8093@redhat.com>
-References: <20250425055824.6930-1-jiayuan.chen@linux.dev>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fh+Rcq4J"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227d6b530d8so22239715ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1745575693; x=1746180493; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=5njHyJvz30qiVz7OEO7ktfy/1HyqmXVebkk5L4HQaNE=;
+        b=fh+Rcq4JmW5i5WWJGrDjuzs0Flq4KXcmgvEwcuk1iqrxDB2mdGspBQvf2XxXNidf8K
+         6UX5rBwlIHmzVDLhsE7/mhkCwlZXn9tPBMrZWG9iQ14240YDsl45HZwDkWQELKm9RnbT
+         STytZ08x9l1Dg13e+sLNEFy5Qdw0Gv/2XcjNg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745575693; x=1746180493;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5njHyJvz30qiVz7OEO7ktfy/1HyqmXVebkk5L4HQaNE=;
+        b=PmDzYaoNHNi0uS2IGYqrF3IxhOKSFUMiBZg7VxloYYQezJymf7c+kTClU92jTsja2X
+         VarP9UMKoJcnMOwU0Mk9nK+SMA3RyPtYlRMkafQRDNz08IPvMGF9o+J8EfXYkaLTPzOx
+         K6LESOG15duKwyYwHUcFCi9Z3rCXZfuSpeh9n/rxqGlTOftT28cGfI5ERGKqqCvHrAsG
+         jlJjJ3OrdRopRvsnks3xyEMuwd/EQ0Gff0IIKvQerwrsGFpzsytaxIAdd8zEJc6rpGLg
+         h8fY9YKy8y7H/BJR3HmSLUfPYNCvP4M0RhPHMGkdUVmczE5cReM5GQDsyMAnJpvk3xkT
+         3c3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUlf1aVcwnLLIQQv7x8J63Gg/268HdXk3Qgrh1mWxyXv1MB4PQedXbWas6paFb7eheGNhMoo08C+VDdrDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnzqdZ15VZYVUoLeIUSRXoyPqFbKgFHwUAmjbOro256hm2W8o7
+	sBjZdR30Zv6DXkZT8l4by/WLw7XESRReqQGMlOzt5T9I3fLKE616/I2cku3ocQ==
+X-Gm-Gg: ASbGncuTfHthwvRpOC0oli4k7Jx3v6/jGNHJzz6C7dN5rinQP6BZvX4HYmnZWkBr6sw
+	plK/klBBYC+MWOchLHWy3vGBsVrz919nNmg+6iLJyMzf+hwV4swQwQSribxmJJjyJSTlpacI97J
+	nKmCxzS9lwWk2eh8LYHKleK2Z6tReefHhyiwGNYHL7yIzvWpAQ0z5KSRIv0Qmgnl51h5swCF5k4
+	mk3/AB5REKLRIFp781OJjCGqzYLah+8dsTVXF6A97mO0uriJ9OA5F7gMtXQuDFkkCAXY2VhtY/S
+	a+TWkppzObC60yeRt4cgwFtt5lKVj7MmSgZUV8kCx7KPpj4DV5mLC+x12jXffKAnrfkSSq2v6Jy
+	88ATqqMwaiLfQdA1zjgkkZ1P7zkk/k8whFw==
+X-Google-Smtp-Source: AGHT+IEiRvydw+zpgaMow96w2Xm30w4pgcn8Jd4sCNL+n0Zk30vooImhsYXcKB8Md13tN2KuPsGqvg==
+X-Received: by 2002:a17:903:1947:b0:223:26da:4b8e with SMTP id d9443c01a7336-22dbf5d9eeemr28512845ad.4.1745575693162;
+        Fri, 25 Apr 2025 03:08:13 -0700 (PDT)
+Received: from [192.168.1.105] (88-187-52-200.subs.proxad.net. [88.187.52.200])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faee2d59sm2546400a12.70.2025.04.25.03.08.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 03:08:12 -0700 (PDT)
+Message-ID: <49011014-8ad7-4392-b2be-736ecd25cf22@broadcom.com>
+Date: Fri, 25 Apr 2025 12:08:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425055824.6930-1-jiayuan.chen@linux.dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 10/12] arm64: dts: broadcom: Add overlay for RP1
+ device
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <4bd8dbb374f15a01e3b3ea27f9e802cd702c1bab.1745347417.git.andrea.porta@suse.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <4bd8dbb374f15a01e3b3ea27f9e802cd702c1bab.1745347417.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/25, Jiayuan Chen wrote:
->
-> @@ -2584,7 +2584,7 @@ __latent_entropy struct task_struct *copy_process(
->  	rseq_fork(p, clone_flags);
->
->  	/* Don't start children in a dying pid namespace */
-> -	if (unlikely(!(ns_of_pid(pid)->pid_allocated & PIDNS_ADDING))) {
-> +	if (unlikely(!(data_race(ns_of_pid(pid)->pid_allocated & PIDNS_ADDING)))) {
 
-Well. data_race() just hides the potential problem. READ_ONCE() makes more
-sense imo, even if I think there are no real problems with the current code.
 
-Either way,
+On 4/22/2025 8:53 PM, Andrea della Porta wrote:
+> Define the RP1 node in an overlay. The inclusion tree is
+> as follow (the arrow points to the includer):
+> 
+>                        rp1.dtso
+>                            ^
+>                            |
+> rp1-common.dtsi ----> rp1-nexus.dtsi
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-> @@ -271,13 +271,13 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  	upid = pid->numbers + ns->level;
->  	idr_preload(GFP_KERNEL);
->  	spin_lock(&pidmap_lock);
-> -	if (!(ns->pid_allocated & PIDNS_ADDING))
-> +	if (!(data_race(ns->pid_allocated & PIDNS_ADDING)))
-
-again, you do not need data_race() or READ_ONCE() if you read the
-data protected by pidmap_lock. But you still need WRITE_ONCE() when
-->pid_allocated is modified.
-
-Oleg.
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
