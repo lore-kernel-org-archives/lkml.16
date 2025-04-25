@@ -1,91 +1,91 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45322231CB0
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1202218592;
+	Fri, 25 Apr 2025 22:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618957; cv=none; b=nzutcfOV0ktZSDHi1EAXHjAOq652er7qjlodbwtbb/lQN+T20CvOVWl4RXuVNMYbQAbjnJX36FM0509V6XF+Pe25w50NE0kY7zwav7oYO9fh3KuZai1qL30wayTnOUhgfwdO94zlEArtnZ3rc4BcKAkZX7FZtaF95xNKAL+4GqI=
+	t=1745618973; cv=none; b=ai2s4t4xn6GMrggoVzI3uU4en3Krlwf7caLMefbVhEXN9q+5xX2LiuXzuHIVeQb1x4IqjhhIvyB8PHuzeX7IQHK0IYXz1txRiforSd9n+6tsjHnMFtCi5FapU51fCnQMap+s5bje18HVodLOasot8atPi7zX8iKB4CyipMFQhF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618957; c=relaxed/simple;
-	bh=D6uCt3M5nUftHdnO587l7uapyumvFCQFOaKN0b6Chh8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KjS0OtoMKxgqhltBrjtt85OJ39x12qVh89ZxwZ8pkIWNcieA0V/hy/VcOMc7lNrP82nLtfCQ1We+uV8cXc3D3a7jUZJecjH6SWZOayHDbMJsG3SnC07nKmi8SNrsqMsttypHS3+7KlLmK7+pjxaz+it2XZKYdd0ozGfSxhy4gCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XN0VELUT; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745618973; c=relaxed/simple;
+	bh=xlnD3QHWa+7MUgoy3f5aIfPeC6qtSBgmxlA3LctdjjE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ec+6kD/2o6ZgGO+Wua9PsWeTFNqfui/KkZkdbaPZNeknpEbRoOYzRTcVeGt/e74VAWafDd0MWLUMEHP8LXTHrINeYHgSE25ogsiJ4X2vWiczryzwXN7Sfq0mzd3dEycTwzTgaBAiZwM/EdPAM+SmZS2X24OOcyGdxpwX8UesQeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=R2A0oH31; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XN0VELUT"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso1905373b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745618955; x=1746223755; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e2GzbD4EGM+CSzFK8kCRHdpCdCIIlXbfHT6y+sz5OQE=;
-        b=XN0VELUT76uH+yHhm5VB59A9ZY8rET0N9w5MW4DIgDsBg7s0w5hheyybtqhdr/P+qd
-         RmjzDAcg4tiGcj9/gfIOGGK73MtAAbIuB0YqxT/sVV6lTRvdYeqMm1UOpLYQY9dBRSxY
-         FAFbjcBOom32ftQ6uLZVpKRGLncVqorMPWpfEpiZLXVtGXPVlVK7g7S1721HBeNSFCXv
-         X4qQMBKkHwOeMnUrE9fQgDxvgSF+eohtdWurMTObYEDeMcT5cOnUar10NDo8Yfno5bjl
-         rx+wn3MipWjvG8kYFZMbMcHIWAcm1ffqZvbEUItHOd6xYiAvnuzvpAb2AUjQLLnWQ9+D
-         L6EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745618955; x=1746223755;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e2GzbD4EGM+CSzFK8kCRHdpCdCIIlXbfHT6y+sz5OQE=;
-        b=Xm4eqkxa91kGtkNJwuCulzc+GHEY9/cRvfilstwirwHI/t0v27phORKImKesP2iXM2
-         wnyCMiG6cxkZMtwOrsnfv7Z0K7ghjKiSKHRvt6RlUk516xBf2LTmbZ8T3ADFBe90zyTh
-         PQHKt707hrNBAwVv3Ld0tKN930JFQIwP0fSL4LYUoqlUVALIfa763ZgWgz0Jq/mwARSh
-         tkQCBKnEtgMyHJRafydp3j37x49bdgEIBPYv8Mcw6Xp3OtUjJTgqdJySCPOeZxzz0IeS
-         3GYjcS0F3sqPPDwrXozPdtAgKBFF1heBU4qaMQ8PWHIXeaE8eSCvt6RssSM6NqZdXvOw
-         steg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmIsqrw6L9kWn36e2jmeEsTlH6MNOmz9TbI0k+rL9zQ7WiJzI/FjugMi6aDnbrRqdUPk2qSmzzENfAEMM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycREZasPY10h1ZkF8IuxiGMaAWyLAn1yrqGJMGfu8r2yS9RuXN
-	x3oamvhdBZcW80HtMUyhirUCicYid560DrcoAmxzsFM6BIDsSBJSwg6JiwWsHgPFQbiYAE31S4C
-	wXA==
-X-Google-Smtp-Source: AGHT+IEFA0r9U63O0zZjEatvnLlSDLoztxBfWPQXiWY/NYkA4ig26Zev691zUOoFw1e1JFnipYoUwsgVtv8=
-X-Received: from pfbna13.prod.google.com ([2002:a05:6a00:3e0d:b0:732:9235:5f2])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9299:b0:736:6279:ca25
- with SMTP id d2e1a72fcca58-73fd9043a02mr6057722b3a.24.1745618955316; Fri, 25
- Apr 2025 15:09:15 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:08:55 -0700
-In-Reply-To: <ec25aad1-113e-4c6e-8941-43d432251398@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="R2A0oH31"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=U33urWJ0nbHUSj4/Ei55DnraHJ93Xd3t00xN2jKFwUw=; b=R2A0oH31L8HOyJJ3pZ3Q+UUzRc
+	o8mEE4btAzk82MmSOlVcj24R+jgnLh+OsOAczxgLLgS7G3hElozLwNVypRWDYOepIbpoVJYYpl+LF
+	afGJodDUn06LsKLeAysAE0DoQVb269hnPe18BDB6CbXe1pT0+m5eOJ81KEBdzwIb6gFoOffAhiPeu
+	KUnwTRFJuKDYHk42LkkmxZsEWzULaSispPBUoLgj9Szq1ggFQvwQamvith2pRqh8E0cfSxpxyfVmu
+	evz/qWNUPvxPBnP/IKu7+r7HYvCLQ7LVaFIi7Nz0dAkZj5B97TD25ozt98qv8jDXvXg0BjQ/+Pu2p
+	xi4wANtQ==;
+Received: from i53875aba.versanet.de ([83.135.90.186] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u8REO-0008Uk-72; Sat, 26 Apr 2025 00:09:12 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: srinivas.kandagatla@linaro.org,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	detlev.casanova@collabora.com,
+	sebastian.reichel@collabora.com
+Subject: Re: (subset) [PATCH RESEND v2 0/6] RK3576 OTP support
+Date: Sat, 26 Apr 2025 00:09:02 +0200
+Message-ID: <174561877790.431677.17884049982561107688.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250210224510.1194963-1-heiko@sntech.de>
+References: <20250210224510.1194963-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <ec25aad1-113e-4c6e-8941-43d432251398@stanley.mountain>
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <174559663411.890078.15043837914578345884.b4-ty@google.com>
-Subject: Re: [PATCH next] KVM: x86: Check that the high 32bits are clear in kvm_arch_vcpu_ioctl_run()
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Pankaj Gupta <pankaj.gupta@amd.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Mar 2025 13:51:28 +0300, Dan Carpenter wrote:
-> The "kvm_run->kvm_valid_regs" and "kvm_run->kvm_dirty_regs" variables are
-> u64 type.  We are only using the lowest 3 bits but we want to ensure that
-> the users are not passing invalid bits so that we can use the remaining
-> bits in the future.
+
+On Mon, 10 Feb 2025 23:45:04 +0100, Heiko Stuebner wrote:
+> This enables OTP support in the nvmem driver for rk3576.
 > 
-> However "sync_valid_fields" and kvm_sync_valid_fields() are u32 type so
-> the check only ensures that the lower 32 bits are clear.  Fix this by
-> changing the types to u64.
+> I expect to pick the clock patch (patch1) and the arm64-dts patch (patch6)
+> myself, after the nvmem-driver and -binding patches have been applied
+> (patches 2-5).
+> 
+> But kept them together for people wanting to try this series.
 > 
 > [...]
 
-Applied to kvm-x86 fixes, thanks!
+Applied, thanks!
 
-[1/1] KVM: x86: Check that the high 32bits are clear in kvm_arch_vcpu_ioctl_run()
-      commit: a476cadf8ef1fbb9780581316f0199dfc62a81f2
+[1/6] clk: rockchip: rk3576: define clk_otp_phy_g
+      commit: d934a93bbcccd551c142206b8129903d18126261
 
---
-https://github.com/kvm-x86/linux/tree/next
+While the original nvmem applied message [0] listed the clock patch,
+it was in fact not applied there - probable for being a clock patch.
+
+So I've done that now, hopefully as fix for 6.15 to make the
+nvmem work in this timeframe.
+
+
+[0] https://lore.kernel.org/linux-arm-kernel/173978599692.25901.15315285566342669137.b4-ty@linaro.org/
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
