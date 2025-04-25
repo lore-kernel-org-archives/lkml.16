@@ -1,25 +1,25 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5A6267F75;
-	Fri, 25 Apr 2025 15:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CD425F7A7;
+	Fri, 25 Apr 2025 15:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593331; cv=none; b=Ma6VdbpN1HJUcTY2EMOGmNvRJhnBbO6Ow4NjIVrHT3y8wF39ObADE/5jqfSBaBzO2Og3w0OHz4w+JS6ksZlZm6hlhGOwtZcff798CyKRGjEuLqAFaKR4Oy7gtP8s22FlhD4QuVnGKBBMayvYIfcSVf1BcNuv68OgojIMbUHxLOA=
+	t=1745593333; cv=none; b=qrc1ibZdbv5fdgZ0byoFVBUlMcq3Q97Rs7FmswEUxzQFnBKFOYfOru0YO2CNmUrmEHSjXkqG/Zo0KYH/J8ukncxJJFQp0rzcyPDYSZLFRtac4uxfs5D277KqApqZGdUbGXtWi7Z+pHtyPufh2ayWxDstgBvyN8cnAFR59AKysCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593331; c=relaxed/simple;
-	bh=iTu3xyMaen6N4lYL60lO/zs4WK1E+diSLwDbJZm8Ee8=;
+	s=arc-20240116; t=1745593333; c=relaxed/simple;
+	bh=apsOcyCRGG4zui5ahb4QBp/DW5Zg8A1uNMLm3N7c5jI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oa4blcwvTO6pbHnZot0RYbkzR+pkhY7TZIEAxbVMWmH6LviALerEHMbpZrHtXcYksTvvjDagl0B3u5iupSjTBlzFIPh/U7/hC5XyuX0LOfccSm+GNcTJyCXxztw0uEVt3/lpDUbhLiVLyuo7YC9fxABvpXA1Z+ZjaIgiUJzr3dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
+	 MIME-Version; b=TWNsv4tblpg9BaWnSn2H7tl+/l2898Ewa0+Ka3SZE/VQTjXlitK0xkJCPuBJ4jcoXFUHRD0Y2k0Ft8zNHO2Z2PrChR8K1qN0O19A9EMWBPorqZ5DZf6Z/iwNrj696IY1sYDHeFlNnRCHnbvsAQDSnqHxwTa/CpY+3JB1T2/lvM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
 Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZkbfF4thPz9srM;
-	Fri, 25 Apr 2025 17:01:57 +0200 (CEST)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZkbfK5TnFz9t1w;
+	Fri, 25 Apr 2025 17:02:01 +0200 (CEST)
 From: Remo Senekowitsch <remo@buenzli.dev>
 To: Rob Herring <robh@kernel.org>,
 	Saravana Kannan <saravanak@google.com>,
@@ -40,9 +40,9 @@ To: Rob Herring <robh@kernel.org>,
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v3 1/7] rust: property: Move property_present to separate file
-Date: Fri, 25 Apr 2025 17:01:24 +0200
-Message-ID: <20250425150130.13917-2-remo@buenzli.dev>
+Subject: [PATCH v3 2/7] rust: property: Enable printing fwnode name and path
+Date: Fri, 25 Apr 2025 17:01:25 +0200
+Message-ID: <20250425150130.13917-3-remo@buenzli.dev>
 In-Reply-To: <20250425150130.13917-1-remo@buenzli.dev>
 References: <20250425150130.13917-1-remo@buenzli.dev>
 Precedence: bulk
@@ -52,186 +52,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4ZkbfF4thPz9srM
+X-Rspamd-Queue-Id: 4ZkbfK5TnFz9t1w
 
-Not all property-related APIs can be exposed directly on a device.
-For example, iterating over child nodes of a device will yield
-fwnode_handle. Thus, in order to access properties on these child nodes,
-the property access methods must be implemented on the abstraction over
-fwnode_handle.
-
-While it's possible to expose similar methods on `Device` directly for
-convenience, those methods would have to get the `FwNode` first, which
-is a fallible operation, making the API inconsistent. For this reason,
-such duplicated methods are omitted. Users who need to read properties
-of a device will have to explictily get the `FwNode` first (handle the
-`None` case) and then read properties on that.
+Add two new public methods `display_name` and `display_path` to
+`FwNode`. They can be used by driver authors for logging purposes. In
+addition, they will be used by core property abstractions for automatic
+logging, for example when a driver attempts to read a required but
+missing property.
 
 Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 ---
- MAINTAINERS                              |  3 +-
- rust/helpers/helpers.c                   |  1 +
- rust/helpers/property.c                  |  8 +++
- rust/kernel/{device.rs => device/mod.rs} |  9 +--
- rust/kernel/device/property.rs           | 70 ++++++++++++++++++++++++
- 5 files changed, 83 insertions(+), 8 deletions(-)
- create mode 100644 rust/helpers/property.c
- rename rust/kernel/{device.rs => device/mod.rs} (97%)
- create mode 100644 rust/kernel/device/property.rs
+ rust/kernel/device/property.rs | 78 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c8d9e8187..4585f9e7f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7112,7 +7112,8 @@ F:	include/linux/kobj*
- F:	include/linux/property.h
- F:	include/linux/sysfs.h
- F:	lib/kobj*
--F:	rust/kernel/device.rs
-+F:	rust/kernel/device/mod.rs
-+F:	rust/kernel/device/property.rs
- F:	rust/kernel/device_id.rs
- F:	rust/kernel/devres.rs
- F:	rust/kernel/driver.rs
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 0640b7e11..b4eec5bf2 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -23,6 +23,7 @@
- #include "platform.c"
- #include "pci.c"
- #include "pid_namespace.c"
-+#include "property.c"
- #include "rbtree.c"
- #include "rcu.c"
- #include "refcount.c"
-diff --git a/rust/helpers/property.c b/rust/helpers/property.c
-new file mode 100644
-index 000000000..08f68e2da
---- /dev/null
-+++ b/rust/helpers/property.c
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/property.h>
-+
-+void rust_helper_fwnode_handle_put(struct fwnode_handle *fwnode)
-+{
-+	fwnode_handle_put(fwnode);
-+}
-diff --git a/rust/kernel/device.rs b/rust/kernel/device/mod.rs
-similarity index 97%
-rename from rust/kernel/device.rs
-rename to rust/kernel/device/mod.rs
-index db2d9658b..e49107452 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device/mod.rs
-@@ -6,7 +6,6 @@
- 
- use crate::{
-     bindings,
--    str::CStr,
-     types::{ARef, Opaque},
- };
- use core::{fmt, ptr};
-@@ -14,6 +13,8 @@
- #[cfg(CONFIG_PRINTK)]
- use crate::c_str;
- 
-+pub mod property;
-+
- /// A reference-counted device.
- ///
- /// This structure represents the Rust abstraction for a C `struct device`. This implementation
-@@ -181,12 +182,6 @@ unsafe fn printk(&self, klevel: &[u8], msg: fmt::Arguments<'_>) {
-             )
-         };
-     }
--
--    /// Checks if property is present or not.
--    pub fn property_present(&self, name: &CStr) -> bool {
--        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
--        unsafe { bindings::device_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
--    }
- }
- 
- // SAFETY: Instances of `Device` are always reference-counted.
 diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-new file mode 100644
-index 000000000..d89715f7d
---- /dev/null
+index d89715f7d..28850aa3b 100644
+--- a/rust/kernel/device/property.rs
 +++ b/rust/kernel/device/property.rs
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -49,6 +49,84 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
+         self.0.get()
+     }
+ 
++    /// Returns an object that implements [`Display`](core::fmt::Display) for
++    /// printing the name of a node.
++    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
++        struct FwNodeDisplayName<'a>(&'a FwNode);
 +
-+//! Unified device property interface.
-+//!
-+//! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
-+
-+use core::ptr;
-+
-+use crate::{bindings, device::Device, str::CStr, types::Opaque};
-+
-+impl Device {
-+    /// Obtain the fwnode corresponding to the device.
-+    pub fn fwnode(&self) -> Option<&FwNode> {
-+        // SAFETY: `self` is valid.
-+        let fwnode_handle = unsafe { bindings::__dev_fwnode(self.as_raw()) };
-+        if fwnode_handle.is_null() {
-+            return None;
++        impl core::fmt::Display for FwNodeDisplayName<'_> {
++            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
++                // SAFETY: self is valid by its type invariant
++                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
++                if name.is_null() {
++                    return Ok(());
++                }
++                // SAFETY: fwnode_get_name returns null or a valid C string and
++                // name is not null
++                let name = unsafe { CStr::from_char_ptr(name) };
++                write!(f, "{name}")
++            }
 +        }
-+        // SAFETY: `fwnode_handle` is valid. Its lifetime is tied to `&self`. We
-+        // return a reference instead of an `ARef<FwNode>` because `dev_fwnode()`
-+        // doesn't increment the refcount. It is safe to cast from a
-+        // `struct fwnode_handle*` to a `*const FwNode` because `FwNode` is
-+        // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
-+        Some(unsafe { &*fwnode_handle.cast() })
-+    }
-+}
 +
-+/// A reference-counted fwnode_handle.
-+///
-+/// This structure represents the Rust abstraction for a
-+/// C `struct fwnode_handle`. This implementation abstracts the usage of an
-+/// already existing C `struct fwnode_handle` within Rust code that we get
-+/// passed from the C side.
-+///
-+/// # Invariants
-+///
-+/// A `FwNode` instance represents a valid `struct fwnode_handle` created by the
-+/// C portion of the kernel.
-+///
-+/// Instances of this type are always reference-counted, that is, a call to
-+/// `fwnode_handle_get` ensures that the allocation remains valid at least until
-+/// the matching call to `fwnode_handle_put`.
-+#[repr(transparent)]
-+pub struct FwNode(Opaque<bindings::fwnode_handle>);
-+
-+impl FwNode {
-+    /// Obtain the raw `struct fwnode_handle *`.
-+    pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
-+        self.0.get()
++        FwNodeDisplayName(self)
 +    }
 +
-+    /// Checks if property is present or not.
-+    pub fn property_present(&self, name: &CStr) -> bool {
-+        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-+        unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
-+    }
-+}
++    /// Returns an object that implements [`Display`](core::fmt::Display) for
++    /// printing the full path of a node.
++    pub fn display_path(&self) -> impl core::fmt::Display + '_ {
++        struct FwNodeDisplayPath<'a>(&'a FwNode);
 +
-+// SAFETY: Instances of `FwNode` are always reference-counted.
-+unsafe impl crate::types::AlwaysRefCounted for FwNode {
-+    fn inc_ref(&self) {
-+        // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
-+        unsafe { bindings::fwnode_handle_get(self.as_raw()) };
++        impl core::fmt::Display for FwNodeDisplayPath<'_> {
++            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
++                // The logic here is the same as the one in lib/vsprintf.c
++                // (fwnode_full_name_string).
++
++                let num_parents = unsafe { bindings::fwnode_count_parents(self.0.as_raw()) };
++
++                for depth in (0..=num_parents).rev() {
++                    let fwnode = if depth == 0 {
++                        self.0.as_raw()
++                    } else {
++                        // SAFETY: `self.0.as_raw()` is valid
++                        unsafe { bindings::fwnode_get_nth_parent(self.0.as_raw(), depth) }
++                    };
++
++                    // SAFETY: fwnode is valid, it is either `self.0.as_raw()` or
++                    // the return value of `bindings::fwnode_get_nth_parent` which
++                    // returns a valid pointer to a fwnode_handle if the provided
++                    // depth is within the valid range, which we know to be true.
++                    let prefix = unsafe { bindings::fwnode_get_name_prefix(fwnode) };
++                    if !prefix.is_null() {
++                        // SAFETY: fwnode_get_name_prefix returns null or a
++                        // valid C string
++                        let prefix = unsafe { CStr::from_char_ptr(prefix) };
++                        write!(f, "{prefix}")?;
++                    }
++                    // SAFETY: fwnode is valid for the reasons stated above
++                    let name = unsafe { bindings::fwnode_get_name(fwnode) };
++                    if !name.is_null() {
++                        // SAFETY: fwnode_get_name returns null or a valid
++                        // C string
++                        let name = unsafe { CStr::from_char_ptr(name) };
++                        write!(f, "{name}")?;
++                    }
++
++                    if depth != 0 {
++                        // SAFETY: `fwnode` is valid, because `depth` is
++                        // a valid depth of a parent of `self.0.as_raw()`.
++                        // `fwnode_get_nth_parent` increments the refcount and
++                        // we are responsible to decrement it.
++                        unsafe { bindings::fwnode_handle_put(fwnode) }
++                    }
++                }
++
++                Ok(())
++            }
++        }
++
++        FwNodeDisplayPath(self)
 +    }
 +
-+    unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-+        // SAFETY: The safety requirements guarantee that the refcount is non-zero.
-+        unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
-+    }
-+}
+     /// Checks if property is present or not.
+     pub fn property_present(&self, name: &CStr) -> bool {
+         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
 -- 
 2.49.0
 
