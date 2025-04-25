@@ -1,66 +1,75 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49AF101DE;
-	Fri, 25 Apr 2025 13:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35DE3D3B3;
+	Fri, 25 Apr 2025 13:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588613; cv=none; b=T5j3OdxvZka2Y3e7rf4pELUrFgAo6CVJaKLShWxFkq2kdaLPylIKxhiGCfDO3WGR2yv9/dwYDju3tsPIkJEYzcBPDZ9uxoGkMtUnJ7sIkFmmKHcnAdBxgrj/xXFR50RiOW0FUVc0dwh1Dk6ZwXMKYGVJtuIGBwHJxaL6rQgxPao=
+	t=1745588722; cv=none; b=Aqw6heKmY9DO2K5byaGSLybBvVj9Tt8lxwhNL4tPqj4RjQ8bLMqICfTAB9Xc6wLDHXIL9CNyMgxNZVA0td958fsY4fmtYSMJf7w7lerTIpeNcUVtVSWzalwrEtLWGNgAESZkrB4JcF9JNvrITG/ClaxlX034VYPe/jmiFq2+rx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588613; c=relaxed/simple;
-	bh=KhwXeELsWDYEQCmuxsv+B9NmOYsLV/pEyvPPekakcYU=;
+	s=arc-20240116; t=1745588722; c=relaxed/simple;
+	bh=s+wGkxQdQOZAumMeKgpW5m+jjq14RmoCE/zy+aB2ZDw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uiHbnRqYUvdRN1vvcQxl5FhNjnSqejWYJ3N1nRvBhghIfDnQhE0ufMbLjqQNleyy8IJv7hguUXCsqZciE3TgGRTO7h+9yYHXCRiT8rFyurdib0nfv9meoiGZr5O3wKzYKnpysyadFZYoX07b21ZgyOW3D/F6dAhAEiE0ZhtPeV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZpdqvbuO; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pqyd3P7zo3h+Cppmj6A78KRZYqQRer/Oc35+I8UofZ5w+tbr6rFAIwxdFKrVFORcXK1zlZwL0aJEGG8kpF0KP42PSFZUpwYMGATo2e74DiBcVwnh1150u5HXYhz/5TRBOXtAZ8IL1CcJbH0eiVd6oThh99eidM9hR7F+rWd3bKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSIz1yXv; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZpdqvbuO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tP0vclURKejKrLfHzLq1zJzE82HWQ3VGQ6mvSLSkqbY=; b=ZpdqvbuOz2MyYaepUuvK0xFPb1
-	e5eEUNpwPk6ar/8Hx/LSoDZINZLH+8T1eU3EyY0qjSsHiEIEe2PbqsVkdsxwg/x8hCarnzr8lYY2y
-	4Xt74KSpw4Lkr71WVqfjQyh2mJx9wzADgPyoL+ctWeWHdDOrPjWPNUUOI8wQLHlrSOAzBoRVzVWrv
-	P3ZTpORX9bif5ThQBelxQMIBpkVivIrsPEfzvzGuhRnXxq4Ftalf+wgMSp/2I/bwbDSZ5lpCBL2Kb
-	dWdlh5QbNa+w1asMH5qA8gMecNonTP80DNolqG7SR5GeY+9EYC747CcxzUtQvUHMcbZnUynO3m7Km
-	I6GC0x+Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u8JKu-0000000C3QE-0v5E;
-	Fri, 25 Apr 2025 13:43:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5FD483003C4; Fri, 25 Apr 2025 15:43:23 +0200 (CEST)
-Date: Fri, 25 Apr 2025 15:43:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Jim Mattson <jmattson@google.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Eranian Stephane <eranian@google.com>,
-	Shukla Manali <Manali.Shukla@amd.com>,
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Subject: Re: [PATCH v4 10/38] perf/x86: Support switch_guest_ctx interface
-Message-ID: <20250425134323.GA35881@noisy.programming.kicks-ass.net>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-11-mizhang@google.com>
- <20250425111531.GG1166@noisy.programming.kicks-ass.net>
- <e2f3b1d5-ed91-47a1-aead-28675bcca2c8@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSIz1yXv"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso495865866b.0;
+        Fri, 25 Apr 2025 06:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745588719; x=1746193519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ElIjdAp6Y4lmYtJ6XWCfaS1fwcVpaJWdZTEkWJEeiVM=;
+        b=DSIz1yXvDrL+FtMDhXl0D5/cslCieb4QdAdY3AguRhNHWNhsBsHziBMuatMjpIeAkv
+         AMgOv+eA04IQUokHTxIR/EusQRSrw++DYYJ6/d1GrZSlw68G333469sYDABDeU58GlIW
+         Bn5bldsZG2VDnKaPSAbzxgIW7XeobXfDeUdETp7aljgJUq6ZWPi18ktDUmRRoYN6+50d
+         82q+oaL1dAd6+mvNAX8T02WXHkD6O5MwXhNXGF1yIHsZL91AVAvJi76mPvq1pctvPJfq
+         5QL3/ZItF7mPi42k/jx1LShgrU4XT7FUb0r65H8AxVnRc8mbArMeVCVSHTWnqQmuIrzg
+         /Z6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745588719; x=1746193519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ElIjdAp6Y4lmYtJ6XWCfaS1fwcVpaJWdZTEkWJEeiVM=;
+        b=aqT4gIXU3qrLhJgrWADmiynCPiMeUq2cFwutL5u6/FliyAtKYdHkrB9cu5lOdY5206
+         dGGwq3Gu0vayH2ZXxI6NjoYF2KVqnGvqG6BwfkbiMXAoz0N7FCfH0rLDK3cBJffu5rY0
+         EdUWDEkIlLSOmXtsLAZxs9tAWJLmKxN4MSSNYM4zNPl8+c8ZSB5IsnHnYi38Z1ZRCgVL
+         st18jZ9hlvSwGwJkrhIaf0bhImfX1on3cATiUebbYNuB+tqpdjmdyYShol5Ef3mGWSjb
+         DzBxCudQyBwRNyDOUWRV1CDMa8iLrHoCv+/hJiHxH1LNhcUE1vbN3bRHuVtM0Cugs5dM
+         uFtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUULwJxKEs55EMfLrT6Kmy9YUox/2HNc30Dyze9eS3UeU4fTAT5a0l3Bb/nE0iomQ0fqjdGUDwTUnij@vger.kernel.org, AJvYcCWYbQOqBR3laXbovY1ZgP/jD6gQqF0042bPpoCZtV1EzVzDFXSzUQJ8PewWVjUDuSOn9PVcbhjaCcZ8QR/T@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCrXTvIFGcjiVn9ZoDQYYJu6zlL+2qLTFK0eYV+fgEYDswEJKa
+	apYaiGzLZjK4BUr053A0NNXx8xXYvR/cAckO5MbczFTKYcKpPRj3
+X-Gm-Gg: ASbGncsopJHuKSdsEyiMEbRLPl5Kd9lJ2FZyOEc/aepLx1NMl72qutQ0I69B2CD1W4D
+	ls1cmAMcT6JGtUKjcIEzx6AeCq1u6I0jx3nPjZziDZ15pTIFBhQN8dm9xusXhOhmcSq4xz96W8T
+	e3sivCGi598pgp4dkn7FChoDgPHXAvB7Bb8U1kR2UJunRcRSBH5qr0blwcBG/nkCPGmMG2HdnE2
+	qM9FRlwq/zzHGwjWej9Z3IW35Kh5IsVn4U6y4gqFnrEgKo7hGvpf2Qtmk6PnpnY5ns3AirIFeNu
+	P9VzGb4R8HSKV4ZE7jSbBOzhWQVkjMm5lGXjbBQeb5UfgYljGXMVURI=
+X-Google-Smtp-Source: AGHT+IGNWxosw6tYKct4NcUyBZgI0Q/yEcMUb40Dma2Svsw8igWh4KZ3iIt+8W119rSVYItTMA9Veg==
+X-Received: by 2002:a17:906:4795:b0:acb:6746:8754 with SMTP id a640c23a62f3a-ace7111ef01mr227275466b.27.1745588719048;
+        Fri, 25 Apr 2025 06:45:19 -0700 (PDT)
+Received: from localhost ([217.151.144.138])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ace6e41cb08sm143849366b.19.2025.04.25.06.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 06:45:18 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:44:25 +0200
+From: Oliver Graute <oliver.graute@gmail.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: imx8qm: add ethernet aliases
+Message-ID: <aAuRuVq92b1G0T7H@graute-macos>
+References: <20250422100239.58799-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,54 +78,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2f3b1d5-ed91-47a1-aead-28675bcca2c8@linux.intel.com>
+In-Reply-To: <20250422100239.58799-1-francesco@dolcini.it>
 
-On Fri, Apr 25, 2025 at 09:06:26AM -0400, Liang, Kan wrote:
+On 22/04/25, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
 > 
+> Add ethernet aliases, they are used by the firmware to set the MAC
+> address and by systemd to rename network interfaces to predictable
+> interface names, e.g. end0 and end1.
 > 
-> On 2025-04-25 7:15 a.m., Peter Zijlstra wrote:
-> > On Mon, Mar 24, 2025 at 05:30:50PM +0000, Mingwei Zhang wrote:
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> Implement switch_guest_ctx interface for x86 PMU, switch PMI to dedicated
-> >> KVM_GUEST_PMI_VECTOR at perf guest enter, and switch PMI back to
-> >> NMI at perf guest exit.
-> >>
-> >> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> >> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >> ---
-> >>  arch/x86/events/core.c | 12 ++++++++++++
-> >>  1 file changed, 12 insertions(+)
-> >>
-> >> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> >> index 8f218ac0d445..28161d6ff26d 100644
-> >> --- a/arch/x86/events/core.c
-> >> +++ b/arch/x86/events/core.c
-> >> @@ -2677,6 +2677,16 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
-> >>  	return ret;
-> >>  }
-> >>  
-> >> +static void x86_pmu_switch_guest_ctx(bool enter, void *data)
-> >> +{
-> >> +	u32 guest_lvtpc = *(u32 *)data;
-> >> +
-> >> +	if (enter)
-> >> +		apic_write(APIC_LVTPC, guest_lvtpc);
-> >> +	else
-> >> +		apic_write(APIC_LVTPC, APIC_DM_NMI);
-> >> +}
-> > 
-> > This, why can't it use x86_pmu.guest_lvtpc here and call it a day? Why
-> > is that argument passed around through the generic code only to get back
-> > here?
-> 
-> The vector has to be from the KVM. However, the current interfaces only
-> support KVM read perf variables, e.g., perf_get_x86_pmu_capability and
-> perf_get_hw_event_config.
-> We need to add an new interface to allow the KVM write a perf variable,
-> e.g., perf_set_guest_lvtpc.
-
-But all that should remain in x86, there is no reason what so ever to
-leak this into generic code.
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Acked-by: Oliver Graute <oliver.graute@kococonnector.com>
