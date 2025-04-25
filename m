@@ -1,84 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF961A0BCA;
-	Fri, 25 Apr 2025 16:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68320146D6A;
+	Fri, 25 Apr 2025 16:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598600; cv=none; b=eM0nNJusUul86f+CWmOOypRgkQgbkG7QovmT38OQXQPuTZdl+9aVIxjD+ayVFV7FBDbo18TWa28bIN/ibV6VSs+IZZp/SAYka9xOVoJbCu8Lp4yFoQCh6wCToKLIE1gkJVeBLXUWm3y7ROwpqMCnoGlHspGK7pl/eIT0Rr61ZnU=
+	t=1745598648; cv=none; b=G/V+UEDNmwucNnkr0Lhhjgv7EcWIU9JOSz7RWzKSfd017ZnTntafT6//CnVjfZezLuUTYIUfj7nxFQ1Ncta/NcleqI2swyNBpt+0uFTvbaE8EDz3Al+Tbxu4nPsfYsqGWhhZw29Vta4mIWgR2vQ9zPaK9VSgtObPkSCv3fvTI7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598600; c=relaxed/simple;
-	bh=7i4/x8IKTcwtudhB9CjmkK5JX9DdTZYqVkkUUgqIi7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pAglxSYXmN9Z0mfZe9oSNCJQ32TfwrYdkhUvw42rup0VWu0aypzbVoPtK2u9fzU3/xNorV//Q5T/1Lh85FGZMXxYwiAYX96zsTaUTg/1zrdGngmXwwyYMUvcbUp0eOc05C0Tpq4CfjXE4JYJHgapO678KOZsCBNfmKmlyyuksuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtgNqyPq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745598648; c=relaxed/simple;
+	bh=ZVOH0fGJ+NNMBDhLqyv661QsoghbN4nluN8aYFDUn3o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IFMRaBO5cd6Ptuj9JzPMSvHPULvxxqj2sDkBvLnz1JFnACp4ZGnoxDiOeu/BH0XJhO1vWc/M/2oybbBfNbyD3CWohjP5In6D9j5gdtft2fuSc4ZBWBIYe+rXLflM64kkH+xMmZ5ngaupUdTSfQKyFj5Nbs8FNwzMYdACJ08x45c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOfzTKB2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtgNqyPq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4101DC4CEE8;
-	Fri, 25 Apr 2025 16:29:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOfzTKB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A45C4CEE8;
+	Fri, 25 Apr 2025 16:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745598600;
-	bh=7i4/x8IKTcwtudhB9CjmkK5JX9DdTZYqVkkUUgqIi7I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KtgNqyPqNOcaZ+x6QsbkaghX45RndHZw/CILJqa0WUxcNQOyMn7Q58z8F9hZ5C27x
-	 yXBWFipXNODPTla4BlO/OfMuoqm38GO6KoOtSOLBEFAqOXp/OEM5vYIVKydNmlcxgl
-	 ME9xT6KtqER6LMsff6JYuDurju/LWr2idLyfyMhg0jxMOpbvDNPXfaNWMM0bPFsYwn
-	 edA00cur7DpEOgnz6QDq2AR+tq9vAUuG/vcSyxb+iyGZO2MzNY7Du45RcJ+x4zkHHb
-	 eIi/nzMm05y2yGgFmd14hMtuvtNzASoNnsfxM9w1NMJZmZQ9OJZFmlk6TWQge2z8Et
-	 Aiiryfp2m1lcQ==
-From: Mario Limonciello <superm1@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
-	linux-kernel@vger.kernel.org (open list),
-	platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v4 2/2] platform/x86/amd: pmf: Use META + L for screen lock command
-Date: Fri, 25 Apr 2025 11:29:49 -0500
-Message-ID: <20250425162949.2021325-2-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250425162949.2021325-1-superm1@kernel.org>
-References: <20250425162949.2021325-1-superm1@kernel.org>
+	s=k20201202; t=1745598647;
+	bh=ZVOH0fGJ+NNMBDhLqyv661QsoghbN4nluN8aYFDUn3o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TOfzTKB2E/ncXeGCdcTniBwqJXhvGy+Zda87lmuRV9ujRJ1yUwrf+PKm3uQVz0OrV
+	 4HcCaqlq1GSnSn/YUCHwIkSrawS6KIVuwDu8dg1WGNHVanNfaEGm933paX8yNAoV4x
+	 ES9/dNf4rcSZ5sGKReNMxRa6stiU2OjlyRbnCnDkwDxYJOtRcDHBQL1/pWDJjJd5jp
+	 hSVLknGVq+JqAIjD02qee2EgaVJIgKvwjhmQFcYEwaiiCQX3k8B7GYoqXWLn6aG7cj
+	 z2ZZbzf37JrjX4V4Z10VVk9gQ5diPOzsEk6m/ZE8zydicfw3gVcXhCylLodwE6Oa60
+	 oZVzQV/jVjy4A==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-401e77e5443so1534096b6e.3;
+        Fri, 25 Apr 2025 09:30:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUhuTy+fFPnAyO7afR3Decebupa9snveVsm3xfXZkHNtDtPjEmIcvqtYjkS8RbfGqcTCHghYEeGFPM=@vger.kernel.org, AJvYcCVBMnN+GYawl+VM3VBHJsidCz11yntvPhKiv5fVWrXV/AhfSlynm7UxLbCK39O3+67MykDIUbuS0BtaSJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7J9gP3Ddsq/+/1iKvupiofhlPCMxJ+bD0oZm7rZuAssUcWXuU
+	rI2UKXgjeKIrGalVDtpRZqjlo1wSA0L96lvsaxeh54HNsUCD42X1549XStIj1hsEVDF1B79HSIz
+	tYI5w2zSSriwZpRb1YwosyEFU3/0=
+X-Google-Smtp-Source: AGHT+IHIIywKL5CeFQsvH24NdW1NI0V/XAkgf7084BRpxorSkIfA89Z5n/cX/UPU3V8arOottYtsMIvsy1kXs+mVaxU=
+X-Received: by 2002:a05:6870:b156:b0:2d4:ef88:97bb with SMTP id
+ 586e51a60fabf-2d99d7520c7mr1872783fac.1.1745598647182; Fri, 25 Apr 2025
+ 09:30:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1745511526.git.viresh.kumar@linaro.org> <9c7de55fb06015c1b77e7dafd564b659838864e0.1745511526.git.viresh.kumar@linaro.org>
+In-Reply-To: <9c7de55fb06015c1b77e7dafd564b659838864e0.1745511526.git.viresh.kumar@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 25 Apr 2025 18:30:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jW+ivsWjMgwaQKmhNxxz2wByYuLQL7i-hRamjH2We+8g@mail.gmail.com>
+X-Gm-Features: ATxdqUFKf17uuUP6FxDVeRUPULk3MU-swqAjg0ZkDyVNq3xjwkmwUX6IuG3OyJg
+Message-ID: <CAJZ5v0jW+ivsWjMgwaQKmhNxxz2wByYuLQL7i-hRamjH2We+8g@mail.gmail.com>
+Subject: Re: [PATCH V2 1/5] cpufreq: acpi: Re-sync CPU boost state on system resume
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Nicholas Chin <nic.c3.14@gmail.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, Apr 24, 2025 at 6:20=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> During CPU hotunplug events (such as those occurring during
+> suspend/resume cycles), platform firmware may modify the CPU boost
+> state.
+>
+> If boost was disabled prior to CPU removal, it correctly remains
+> disabled upon re-plug. However, if firmware re-enables boost while the
+> CPU is offline, the CPU may return with boost enabled=E2=80=94even if it =
+was
+> originally disabled=E2=80=94once it is hotplugged back in. This leads to
+> inconsistent behavior and violates user or kernel policy expectations.
+>
+> To maintain consistency, ensure the boost state is re-synchronized with
+> the kernel policy when a CPU is hotplugged back in.
+>
+> Note: This re-synchronization is not necessary during the initial call
+> to ->init() for a CPU, as the cpufreq core handles it via
+> cpufreq_online(). At that point, acpi_cpufreq_driver.boost_enabled is
+> initialized to the value returned by boost_state(0).
+>
+> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu=
+_init()")
+> Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220013
+> Tested-by: Nicholas Chin <nic.c3.14@gmail.com>
+> Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-In practice userspace software doesn't react to KEY_SCREENLOCK by default.
-So any time that the PMF policies would suggest to lock the screen (for
-example from an HPD sensor event) userspace isn't configured to do it.
+I gather that this patch is for 6.15 and the rest of the series is for
+6.16, so applied accordingly.
 
-However userspace is configured for META + L as this is the default
-in the PC ecosystem. Adjust the PMF driver to select the Kconfig option
-that makes the input core send META + L.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v3:
-    * Use Kconfig from linux-input
----
- drivers/platform/x86/amd/pmf/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-index 25b8f7ae3abde..10089c69ce582 100644
---- a/drivers/platform/x86/amd/pmf/Kconfig
-+++ b/drivers/platform/x86/amd/pmf/Kconfig
-@@ -12,6 +12,7 @@ config AMD_PMF
- 	depends on TEE && AMDTEE
- 	depends on AMD_SFH_HID
- 	depends on HAS_IOMEM
-+	select INPUT_SCREENLOCK_EMULATION
- 	help
- 	  This driver provides support for the AMD Platform Management Framework.
- 	  The goal is to enhance end user experience by making AMD PCs smarter,
--- 
-2.43.0
-
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufre=
+q.c
+> index 924314cdeebc..d26b610e4f24 100644
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -909,8 +909,19 @@ static int acpi_cpufreq_cpu_init(struct cpufreq_poli=
+cy *policy)
+>         if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].freq=
+uency)
+>                 pr_warn(FW_WARN "P-state 0 is not max freq\n");
+>
+> -       if (acpi_cpufreq_driver.set_boost)
+> -               policy->boost_supported =3D true;
+> +       if (acpi_cpufreq_driver.set_boost) {
+> +               if (policy->boost_supported) {
+> +                       /*
+> +                        * The firmware may have altered boost state whil=
+e the
+> +                        * CPU was offline (for example during a suspend-=
+resume
+> +                        * cycle).
+> +                        */
+> +                       if (policy->boost_enabled !=3D boost_state(cpu))
+> +                               set_boost(policy, policy->boost_enabled);
+> +               } else {
+> +                       policy->boost_supported =3D true;
+> +               }
+> +       }
+>
+>         return result;
+>
+> --
+> 2.31.1.272.g89b43f80a514
+>
