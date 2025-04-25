@@ -1,298 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ABA17C21C
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C049221C9F0
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609519; cv=none; b=aGCRu467RXf6Sdng7wfQfGwVucbzmE/HpQapmhchQAZ55X6UVJQCeaPCyPISkxBgBptbx8yQjObbWuhg6YXqeP1hMyrZiNPWOGn6HgJ17LphDbDh1MNzUa5bA7068qiurFwCXZDdPjh/7TGsiD/wG24gWTO82sK2Wcpbp1BXY1c=
+	t=1745609526; cv=none; b=CNZvsUbP9bhZxgl+sMdOsDRrxeO0hEk5OiDCn6JahY1YGMV994qz9O38xr2HUfLV0by2Y+lz9WIQjDNHEAqMoWZcPBqhUFOUtoTJsxacMELrtsevnFA0PaxYuyG17Vf/Lxsdbb3XvdKxQ3wtowK64rSzfPafsdYyi60BMha8e2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609519; c=relaxed/simple;
-	bh=D/Bi3qtltnNhmUOYmj1e8bbmuHRkIDfLolmIrIZxEaA=;
+	s=arc-20240116; t=1745609526; c=relaxed/simple;
+	bh=cZYLFWcK+AS89wAOfGjXpAYwM+Shr97crXMQH84vsEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLspFr1Nya72p/PWf9/nJZa7yBzluPgHA29bJQfK9fkroFPLpkoCe9f6I4ubWI3ISz/eGrMIAxSHPbDdu4zmPxRwWCuDQ/lx+AkegrNIqVfehDF4LAEsVT91iX8eBNcdMW1Rmg7//NF+wGdWYZBMO6w+f6zoMp6LWzoyVKcab+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PB2D6l5e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhgSMqowVeQu7Jqfx5/Xrh4hMim3SMLQeoCSZedsJjDP957j1x1J/ePNQStqvM7DaAwTIAef01ynP+vvXe4PNVjTySRan2B3g0Z+SGYPXQCLYG5C5Z1HKaBF9PW3hdyYOlzY6NsODyHiK0gesFaUKrc1t+q3334ty00bCOTzBYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eaPxL6V7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PB2D6l5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745609516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nrYbbQSySK8OLKh12FO2t07RFwtdpfiRESaN7ZV7Leo=;
-	b=PB2D6l5e9kPe0fS0ZUfcO/TgfrI3DlNvIwQSFiOFe7WVb5eiAsxRcptGwqf/rJ1bno3Ktq
-	xWA7tNLOYd+xQlMfo1YMS8NJFmXxLz2r77MO5M+9AymUpUlcagsrKjXpPfHEuKnI8O8OUf
-	AOuvCF3R7Hk7z78MeGmEZnTFeWPMp5c=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-ow7BhBU3MF6kjeMQh92LtQ-1; Fri, 25 Apr 2025 15:31:54 -0400
-X-MC-Unique: ow7BhBU3MF6kjeMQh92LtQ-1
-X-Mimecast-MFC-AGG-ID: ow7BhBU3MF6kjeMQh92LtQ_1745609514
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6ed0526b507so44748346d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:31:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eaPxL6V7"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJttE004033
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:32:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=KGuUzdqtIhx93PP1UIylBLxl
+	AAkaFyJuQQ5Zgzaz5MM=; b=eaPxL6V7mSSc0vuu4BknBscaogTBxNnAb3CNmZI6
+	Z+8MzdnD8UWOPaNeq7Bvic1r6/iBxd1MVHkkVWAp9/7MLqAdolLB085qSZSE4lOo
+	rdlmcwg/TCFpkv88F2ABGBWLV6eF6aoINK1GATwzyEkX4HO69gtR2WDLPOKAwvap
+	Fxz6ZCGrwSV7q4yx6GP2L8e2p5Uhp5XMw3WpBfIxlNIPrdqYBNyefrlHp03Z0Ypj
+	0SLRpMS4x9MiE+zv6Hm6+5E0IPiP2HV+jruZ8NeOkfJfju4nppQU/EHL/MWviWlZ
+	yU7+7xKFDcWbrvd9aVIgo9gLwwSeVWaW1rG6wxdSAi46rw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2a68v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:32:03 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5cd0f8961so525916285a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:32:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745609514; x=1746214314;
+        d=1e100.net; s=20230601; t=1745609522; x=1746214322;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nrYbbQSySK8OLKh12FO2t07RFwtdpfiRESaN7ZV7Leo=;
-        b=UsJgCkP+3y72Yz4YbIOyhNdE/OWif00u9x3NgGyt/mq74N9FieJ/S4OAzW7iUkpF3U
-         27vfjgld85Iid0h6e6pgdYkOtNLW5SXSX5ebwE6MNFXvil+IICzC8dxgr8+UtTAiASCR
-         b+CIt3gLiLjurVb63mA5S+wt8l+CIAHaL6Ju/9rnB0reBVle8IMowRg8o+HRfLBA1B6L
-         NmOHMQfxz1GCrQwVeLShgd8MJUdULnRo3wq0yp8ptSGBWHYQ6gecev3uZu4vPCrLXqXV
-         qlwSTy58XdxLGR7YRpWgmCpuRXfLb9IiRKlf0PxlCxi2BfHIxxghriPaBrzfTEbqD3/N
-         NTFw==
-X-Gm-Message-State: AOJu0YySvHUj8OVFPih2aLCL9DKUYTnFiCsEYbxxikWuDz3WfVYPaZ98
-	Jr3L4+ZZQ7MqG7fPFVqIJnmPgdjx0pXQwGPVRquozdtPGX44IR2vWqnHtc5VPJM0YUVPzd7kcDl
-	ye6UqFvuV0qrwMHy/iSkF3vayr8JWco3t94R7TGVrPzq5TFt37i7NSngkQVl2K1rfU+XoNg==
-X-Gm-Gg: ASbGncvVLlc/o14/YERRs+wdMBKvgpbtFxsjgf6T+Vm6aWrpQBwT5wh+0Otlwi+5KNv
-	x3E45OzeIHz/DZC7j2UKNSKa4qoMyGWOoLddrNoQ82CJXx5lmrxXXfvpiXr8lVQTP+b7uf264ET
-	BWmyPY/uw8nPClYvkMD97fXCQ6Y85jex2j1ei/zP1hztr9GSxSsfYSPhUWsC2RbhlPqDAsxqrBg
-	y+kzuo6btp+vZnD+I8wqpfoV7sg/jDmXC2UeuIr3giTBgkrj7uYGhVYnQk5yvHDnekFmhRrIqLy
-	Wao=
-X-Received: by 2002:a05:6214:260e:b0:6e4:4011:9df7 with SMTP id 6a1803df08f44-6f4cb9d3063mr67389916d6.16.1745609513942;
-        Fri, 25 Apr 2025 12:31:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHuFeye1Pg4uChOid/ZXXFZAWI36zPtd4Gkr5VYk4K8JYNC09QMimMlctuGeX7CWMMP3iJGqQ==
-X-Received: by 2002:a05:6214:260e:b0:6e4:4011:9df7 with SMTP id 6a1803df08f44-6f4cb9d3063mr67389486d6.16.1745609513528;
-        Fri, 25 Apr 2025 12:31:53 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aae675sm25488566d6.100.2025.04.25.12.31.51
+        bh=KGuUzdqtIhx93PP1UIylBLxlAAkaFyJuQQ5Zgzaz5MM=;
+        b=gT4mxJ0WFvF3KkT8s1VoQ8eZHupPMt6GkgbzEczaV5m9tnYHPztihKy7c+xXIDd181
+         DUUNxCvBp+FvohXiq/OCZR4qIbi0WJSrIzpikQ7y/jL3jASLNpycEO1Kg7WpADKfXcgi
+         42R3PT1vf6C+GXSI8hDygMMOjiTNQqonWAmgkQ9hlY24ye7vQgsAboAYLlXZfF/oKD72
+         uC9iTtMoF/7raa1yT9NEUCecPdpNzcuKMOKmhDOOmcZDvHQJ4Uv4g1Fph4xbxMNLU6UO
+         8RRJ3RvKo8BsLyp43zVD0aBk5W42Yn4R4SA2oYMPSFP4lddmGFTPAnnNalL9B64f1HjG
+         ZoSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXihFyhRSTAE5UPc7+GhLIV01vJdCX/75l8GMPyX90oam+r134BhgE6pa71rVJ5T0ZoudQmJjbF90K2H0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRxGnUz73TDdBMuEc1Z+qVT/VUk4SekT6p0VNaIYcy1ELrPTV/
+	tisKbjFa829byghX/9SrTR09BwlGLiprUGTab7nLd02NnX+YvTPMLunvAAg0GnbbJuTdwWz1OLh
+	KsWwrWXBDY9oD/exnLRWNWWIdy7/uMS88bL02UpBPokrsmWmrathcOnqDuIWsDQc=
+X-Gm-Gg: ASbGnctgPAzWEbCCnTzcq657Vgu50tIHcX2uBD0ZnGvqBn+rHTuK6cMurDCKBtmwacE
+	etDemodLxjrpxxVU9/E/5eJNt/R+Yd0Hwg8UFobSCe+m5A0GG5us6O0CmW4+wiC/hz/LybNUgIu
+	YMLzjqic6cCeWEivLhO7VKlWxOjGAhEW1z52Ipx+a/i+xxtdCRbvhzhVeVyEEul+T7+zj6lLmB1
+	pWJAiifSIpoa4mdn+w4gfddAdhSTodiN7vDbDzHVlSCrIfzyhSScLzrtzPyW2QA6AECif3TTLFX
+	Yq/VgZwW04ce8tFTNQg7Q+8vLJ/u3yB9F5Jc4QIiHkr0BTVszRaENXNESQAkUfISmDAYSt8NAGo
+	=
+X-Received: by 2002:a05:620a:4113:b0:7c5:48bc:8c77 with SMTP id af79cd13be357-7c9606b0aefmr440892185a.12.1745609522378;
+        Fri, 25 Apr 2025 12:32:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzn/o6ObQ/xxhr7InTaJwrYRheiEdWShDWyF+W4eomGBtYByJsXx/Wd9e7WmCER8UrfAZSLQ==
+X-Received: by 2002:a05:620a:4113:b0:7c5:48bc:8c77 with SMTP id af79cd13be357-7c9606b0aefmr440890285a.12.1745609522096;
+        Fri, 25 Apr 2025 12:32:02 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d16a834bsm8773091fa.73.2025.04.25.12.32.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 12:31:52 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:31:48 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
- pfnmap_sanitize_pgprot()
-Message-ID: <aAvjJOmvm5GsZ-JN@x1.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-3-david@redhat.com>
+        Fri, 25 Apr 2025 12:32:01 -0700 (PDT)
+Date: Fri, 25 Apr 2025 22:31:59 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: neil.armstrong@linaro.org
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dikshita Agarwal <quic_dikshita@quicinc.com>
+Subject: Re: [PATCH v3] arm64: dts: qcom: sm8550: add iris DT node
+Message-ID: <hqltmh3pixqnimr4zp4brcy2hn3qpqkz4q6bhb3cga4w4ndtux@gft5cjqj47oy>
+References: <20250424-topic-sm8x50-upstream-iris-8550-dt-v3-1-92f6b692bd52@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425081715.1341199-3-david@redhat.com>
+In-Reply-To: <20250424-topic-sm8x50-upstream-iris-8550-dt-v3-1-92f6b692bd52@linaro.org>
+X-Authority-Analysis: v=2.4 cv=EtLSrTcA c=1 sm=1 tr=0 ts=680be333 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=gEkYAqE2pGcBd09D3BMA:9
+ a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: msB4XYJe-uRxUHCIV_ZM7wtHvTVVFl1T
+X-Proofpoint-ORIG-GUID: msB4XYJe-uRxUHCIV_ZM7wtHvTVVFl1T
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzOSBTYWx0ZWRfX58Un4z62K0VR /l9cBRMKu/hMIXzEuKnPuzagxWJ6pIeexAHhIc8evJ9m94sPFoVirsakxOP1paG5z4A+ureoQmx Z8kd37fjsZdHX0cZ3pdFY7czrkJ6KcxFc2WXJaER4s9FPnwHh/0Nl0aqgnUIo3THLPK0wAEZGIc
+ Nvk5Gh7l5siWpWN4p2c5zsxkL2QPYH/Mtrf7PT6Nd7kjluXakvAejosZZ/t6L8+aIOTsqkTM9/P 6a1ADHpry/F59IOnQnJvtErfJUiUTQtsFwv3bMwYPB9NvX4KDKe1qiLsve5/SvAiI7qibGs3vE/ 72yASWa/+ZnPW8W2N8vN/iPy4R5Fdn49PzOdbtrGhypCGC9ZhnqQ2XB8o1QsfD1DAm3gph82hFZ
+ YWQ1RMBm3+4+TNNUMLauOXhCeUNxEg28plqK+FNGIjaW7+Vp3KIm1VvHXKf3//ZCt3MLyOHi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250139
 
-On Fri, Apr 25, 2025 at 10:17:06AM +0200, David Hildenbrand wrote:
-> ... by factoring it out from track_pfn_remap().
+On Thu, Apr 24, 2025 at 06:34:28PM +0200, neil.armstrong@linaro.org wrote:
+> From: Dikshita Agarwal <quic_dikshita@quicinc.com>
 > 
-> For PMDs/PUDs, actually check the full range, and trigger a fallback
-> if we run into this "different memory types / cachemodes" scenario.
-
-The current patch looks like to still pass PAGE_SIZE into the new helper at
-all track_pfn_insert() call sites, so it seems this comment does not 100%
-match with the code?  Or I may have misread somewhere.
-
-Maybe it's still easier to keep the single-pfn lookup to never fail..  more
-below.
-
+> Add DT entries for the sm8550 iris decoder.
 > 
-> Add some documentation.
+> Since the firmware is required to be signed, only enable
+> on Qualcomm development boards where the firmware is
+> publicly distributed.
 > 
-> Will checking each page result in undesired overhead? We'll have to
-> learn. Not checking each page looks wrong, though. Maybe we could
-> optimize the lookup internally.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  arch/x86/mm/pat/memtype.c | 24 ++++++++----------------
->  include/linux/pgtable.h   | 28 ++++++++++++++++++++--------
->  mm/huge_memory.c          |  7 +++++--
->  mm/memory.c               |  4 ++--
->  4 files changed, 35 insertions(+), 28 deletions(-)
+> Changes in v3:
+> - remove useless firmware-name
+> - Link to v2: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8550-dt-v2-1-9218636acbdd@linaro.org
 > 
-> diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-> index edec5859651d6..193e33251b18f 100644
-> --- a/arch/x86/mm/pat/memtype.c
-> +++ b/arch/x86/mm/pat/memtype.c
-> @@ -1031,7 +1031,6 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->  		    unsigned long pfn, unsigned long addr, unsigned long size)
->  {
->  	resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
-> -	enum page_cache_mode pcm;
->  
->  	/* reserve the whole chunk starting from paddr */
->  	if (!vma || (addr == vma->vm_start
-> @@ -1044,13 +1043,17 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->  		return ret;
->  	}
->  
-> +	return pfnmap_sanitize_pgprot(pfn, size, prot);
-> +}
-> +
-> +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size, pgprot_t *prot)
-> +{
-> +	resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
-> +	enum page_cache_mode pcm;
-> +
->  	if (!pat_enabled())
->  		return 0;
->  
-> -	/*
-> -	 * For anything smaller than the vma size we set prot based on the
-> -	 * lookup.
-> -	 */
->  	pcm = lookup_memtype(paddr);
->  
->  	/* Check memtype for the remaining pages */
-> @@ -1065,17 +1068,6 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->  	return 0;
->  }
->  
-> -void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot, pfn_t pfn)
-> -{
-> -	enum page_cache_mode pcm;
-> -
-> -	if (!pat_enabled())
-> -		return;
-> -
-> -	pcm = lookup_memtype(pfn_t_to_phys(pfn));
-> -	pgprot_set_cachemode(prot, pcm);
-> -}
-> -
->  /*
->   * untrack_pfn is called while unmapping a pfnmap for a region.
->   * untrack can be called for a specific region indicated by pfn and size or
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index b50447ef1c921..91aadfe2515a5 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -1500,13 +1500,10 @@ static inline int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->  	return 0;
->  }
->  
-> -/*
-> - * track_pfn_insert is called when a _new_ single pfn is established
-> - * by vmf_insert_pfn().
-> - */
-> -static inline void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
-> -				    pfn_t pfn)
-> +static inline int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
-> +		pgprot_t *prot)
->  {
-> +	return 0;
->  }
->  
->  /*
-> @@ -1556,8 +1553,23 @@ static inline void untrack_pfn_clear(struct vm_area_struct *vma)
->  extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->  			   unsigned long pfn, unsigned long addr,
->  			   unsigned long size);
-> -extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
-> -			     pfn_t pfn);
-> +
-> +/**
-> + * pfnmap_sanitize_pgprot - sanitize the pgprot for a pfn range
-
-Nit: s/sanitize/update|setup|.../?
-
-But maybe you have good reason to use sanitize.  No strong opinions.
-
-> + * @pfn: the start of the pfn range
-> + * @size: the size of the pfn range
-> + * @prot: the pgprot to sanitize
-> + *
-> + * Sanitize the given pgprot for a pfn range, for example, adjusting the
-> + * cachemode.
-> + *
-> + * This function cannot fail for a single page, but can fail for multiple
-> + * pages.
-> + *
-> + * Returns 0 on success and -EINVAL on error.
-> + */
-> +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
-> +		pgprot_t *prot);
->  extern int track_pfn_copy(struct vm_area_struct *dst_vma,
->  		struct vm_area_struct *src_vma, unsigned long *pfn);
->  extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index fdcf0a6049b9f..b8ae5e1493315 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
->  			return VM_FAULT_OOM;
->  	}
->  
-> -	track_pfn_insert(vma, &pgprot, pfn);
-> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
-> +		return VM_FAULT_FALLBACK;
-
-Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
-trigger, though.
-
-Maybe we could have a "void pfnmap_sanitize_pgprot_pfn(&pgprot, pfn)" to
-replace track_pfn_insert() and never fail?  Dropping vma ref is definitely
-a win already in all cases.
-
-> +
->  	ptl = pmd_lock(vma->vm_mm, vmf->pmd);
->  	error = insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write,
->  			pgtable);
-> @@ -1577,7 +1579,8 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
->  	if (addr < vma->vm_start || addr >= vma->vm_end)
->  		return VM_FAULT_SIGBUS;
->  
-> -	track_pfn_insert(vma, &pgprot, pfn);
-> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
-> +		return VM_FAULT_FALLBACK;
->  
->  	ptl = pud_lock(vma->vm_mm, vmf->pud);
->  	insert_pfn_pud(vma, addr, vmf->pud, pfn, write);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 424420349bd3c..c737a8625866a 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2563,7 +2563,7 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
->  	if (!pfn_modify_allowed(pfn, pgprot))
->  		return VM_FAULT_SIGBUS;
->  
-> -	track_pfn_insert(vma, &pgprot, __pfn_to_pfn_t(pfn, PFN_DEV));
-> +	pfnmap_sanitize_pgprot(pfn, PAGE_SIZE, &pgprot);
->  
->  	return insert_pfn(vma, addr, __pfn_to_pfn_t(pfn, PFN_DEV), pgprot,
->  			false);
-> @@ -2626,7 +2626,7 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
->  	if (addr < vma->vm_start || addr >= vma->vm_end)
->  		return VM_FAULT_SIGBUS;
->  
-> -	track_pfn_insert(vma, &pgprot, pfn);
-> +	pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot);
->  
->  	if (!pfn_modify_allowed(pfn_t_to_pfn(pfn), pgprot))
->  		return VM_FAULT_SIGBUS;
-> -- 
-> 2.49.0
+> Changes in v2:
+> - Only enable on qcom dev boards
+> - Link to v1: https://lore.kernel.org/r/20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
+> ---
+>  arch/arm64/boot/dts/qcom/sm8550-hdk.dts |  4 ++
+>  arch/arm64/boot/dts/qcom/sm8550-mtp.dts |  4 ++
+>  arch/arm64/boot/dts/qcom/sm8550-qrd.dts |  4 ++
+>  arch/arm64/boot/dts/qcom/sm8550.dtsi    | 76 +++++++++++++++++++++++++++++++++
+>  4 files changed, 88 insertions(+)
 > 
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
-Peter Xu
-
+With best wishes
+Dmitry
