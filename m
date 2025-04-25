@@ -1,120 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45591FE474;
-	Fri, 25 Apr 2025 17:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED546FC3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745603446; cv=none; b=tn8K8NIYlq0oBjZ1xL+rHUhrj4bXBiWM3CjUFltaAQ/FEuePV0+K6/MNQo8hxIsCWLdiDS+lC2xQ+uHcQhh9cZ9sSSOoNIdPyN6t0J52Z1G+dQZGdUQCAdYMzNTzmD22ja1tTI5qcbJX02Gwa4IPt1is4xr4CfdGDApIcfVgu5k=
+	t=1745603686; cv=none; b=QV2o/fV4BDo6NZ8PWZdSCHcp1ldfbFqCsiD9XzTmyGE00Qgs4kSm7BkECLvZwf4Apy6O5mdi/hdSpwk0ibdAK9IL/tayaakIozyt9+2Ybzj192VPGK4zgc3FNYjhixgHGDUogjouWP13Pk1/RnQ2UCwXAGTWmgjFW0dhPtWVstY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745603446; c=relaxed/simple;
-	bh=TBq9KdPLCYipEt3LMjYzBCNDiYSUDsww3Xlc/H/UU+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TYd4U4IthUoxPTTbWx0DPfwGkl9+Rb6ywz9fRuk1dd1htNFhXjuihojEb1KLprvLr57T95gr1tEAHOA5smlUaPveaeH2NPI7hg4dZ37QZ8O2kvdGgoAfL9JIG3Gfdbo76w7YJpHGyGgZAfwap3El2Ptk3eyi/VeGhrZXn5tqDHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbfCDDr+; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745603686; c=relaxed/simple;
+	bh=TDcDG4961RqBZwRUnI6OzSCYnyhIUCqoI2dBjdnGAnE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IlZWZwhnl2gRmku6cqp0QaJ0tTfZk5NXPVcaLFSzHX6iHiIzcY5wVo+XXYksvtMN0O5PJVxs1ajm3jyzinXNrJxDyrbkLOl/zGVyr1apD6sI3TBJI6F0MmX2Zlp/tbC/HQJXMuCdWtQT77NGKAzdlrEbNgUUDgeZD8OLosKLhtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--brianvv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o9I2+0qP; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--brianvv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbfCDDr+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745603443; x=1777139443;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TBq9KdPLCYipEt3LMjYzBCNDiYSUDsww3Xlc/H/UU+M=;
-  b=cbfCDDr+zTzIKiw22K3BVohSoV27ka4hCifE4eZMUULts5OHs7Z2er20
-   Dx9IMI6Ib50jiqhRX7QQ/9poKg9WFk+LWkRxlfZyp7xuMpczNuwvJcWTe
-   /jR++co2/r2akqDQldT3oabZwoWW8RDMSyxS4IARdimYTdD5dtvEjyRLY
-   VbxQ6rTOXJfpVpconvstJV9HZnZWQo5aAJe8DfMYS+lcJspAOMrE6r+ky
-   FZOGX+aoAG92qUshDUgZVXte70qNRZuH7pn9Z3VIxsDLV6lb/WME3sZdx
-   TMROR22asioXvsqr1NOCfZmyyAyC577nXEwfYZ0kNj0UibvuN5dida0ma
-   g==;
-X-CSE-ConnectionGUID: cD8V9hISTCa+HKE+No7tsA==
-X-CSE-MsgGUID: HxGRcQBKQkm/VegN/UHJkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="57469605"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="57469605"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 10:50:43 -0700
-X-CSE-ConnectionGUID: u3EXHBnuTkygiJUYesUmYw==
-X-CSE-MsgGUID: 5pbw/rdKSqSbz0y4Pol9Iw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133488699"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 25 Apr 2025 10:50:41 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8NCA-0005Pd-0P;
-	Fri, 25 Apr 2025 17:50:38 +0000
-Date: Sat, 26 Apr 2025 01:50:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 3/4] PCI: dwc: Add debugfs support for PTM context
-Message-ID: <202504260156.kvLvB9N3-lkp@intel.com>
-References: <20250424-pcie-ptm-v3-3-c929ebd2821c@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9I2+0qP"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af534e796baso1427186a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745603682; x=1746208482; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wUyDDDATMAbAlsjuyDcvLPYobzWIS7zLHCptp+fvkNY=;
+        b=o9I2+0qPNcz8MGXrwOqP5+f3/L6j2tW8ByuLI5NZ5R1Mq667QY9ThTdKvOcovHQVeP
+         82wKHK7bM4go7iJguU1n07LfWLEhK/oYe/MOYouZt9jwWcdR5hcNq0Yt++HkcKKHQz6Y
+         pzzjd3BZJRaZ0Sy43RcQJxE49mERYTYId+q9cuQ9Zc5YBjkOuw0oJiJ9f3o4IFvuFYOR
+         4ewDdmk1WHk/wk1trEPfM9OJdq2zGBtfwoDy07rXi977xRICmo2hK693cXqwCHoAu31z
+         YCvqBpTrArIiWHYi8Wcz919cSv2/Rabq+IAuFN/ayJZlAHHrRedNTisV4hqXEi2szuuX
+         28YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745603682; x=1746208482;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wUyDDDATMAbAlsjuyDcvLPYobzWIS7zLHCptp+fvkNY=;
+        b=GkCS55N7TCwXbqdigRmZzSQUv3J61rGH7kmu+WCQdTaXhGGOa5My/nuASXwfVEwux0
+         DIzxFRvZEJAO2RgxMX95WJpdS5DF6W8tSTnD8Op2bqszUFJl8bSH8UQgY9cBad/Ca/dQ
+         58uGodhGA6Vqfey88d5BKopOAweOKUBG3NrMlR+DDWbtYM3l+NOWuAw6u9oaTUXBD1M/
+         zzOfxqDykRfymQDqyqqQYnhyJBSQBMUBf6TP2Uz8l46ztha9eVgXpstlPrD32QgIYXsX
+         GHhBWbF1X5zAS1EUeeFhADfGwrP+xckOJZBHUZD6/gekczBTAU4zZXuopzdNyZIpZ0iR
+         6j0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUff7IhgoU6gK7iTM3uv0s/Ftruz3kDENXijwihLgaH71NDuIgVm7pFqvvK3MsrJw+SxVRaLFUzvbGoCvI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx84RMM5rv/Gtzmo9F6ycuiAIMNDgXRhJydHui4qxuwfTkoCPzK
+	mEuNAg99HJ9KOv37n0KJf/OFUEyC88lM/CkriSDOxmFOLskuUOsdfOFeEsxqHc2wODNGYEL6P5j
+	D7NLJfg==
+X-Google-Smtp-Source: AGHT+IEJMb0ZmvksR4COBHZqXiP7tE9JuIPcnR5oiaXvoL19IqL5V1QRPcjHRCuU+i31xkfihBjXX09nyPlC
+X-Received: from pfvf11.prod.google.com ([2002:a05:6a00:1acb:b0:739:485f:c33e])
+ (user=brianvv job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:1085:b0:1f5:5b2a:f641
+ with SMTP id adf61e73a8af0-2045b986d2amr4582036637.28.1745603681950; Fri, 25
+ Apr 2025 10:54:41 -0700 (PDT)
+Date: Fri, 25 Apr 2025 17:54:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-pcie-ptm-v3-3-c929ebd2821c@linaro.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <20250425175426.3353069-1-brianvv@google.com>
+Subject: [iwl-next PATCH] idpf: fix a race in txq wakeup
+From: Brian Vazquez <brianvv@google.com>
+To: Brian Vazquez <brianvv.kernel@gmail.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	intel-wired-lan@lists.osuosl.org
+Cc: David Decotigny <decot@google.com>, Anjali Singhai <anjali.singhai@intel.com>, 
+	Sridhar Samudrala <sridhar.samudrala@intel.com>, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, emil.s.tantilov@intel.com, 
+	Brian Vazquez <brianvv@google.com>, Josh Hay <joshua.a.hay@intel.com>, 
+	Luigi Rizzo <lrizzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Manivannan,
+Add a helper function to correctly handle the lockless
+synchronization when the sender needs to block. The paradigm is
 
-kernel test robot noticed the following build warnings:
+        if (no_resources()) {
+                stop_queue();
+                barrier();
+                if (!no_resources())
+                        restart_queue();
+        }
 
-[auto build test WARNING on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+netif_subqueue_maybe_stop already handles the paradigm correctly, but
+the code split the check for resources in three parts, the first one
+(descriptors) followed the protocol, but the other two (completions and
+tx_buf) were only doing the first part and so race prone.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam/PCI-Add-debugfs-support-for-exposing-PTM-context/20250425-001237
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250424-pcie-ptm-v3-3-c929ebd2821c%40linaro.org
-patch subject: [PATCH v3 3/4] PCI: dwc: Add debugfs support for PTM context
-config: i386-buildonly-randconfig-005-20250425 (https://download.01.org/0day-ci/archive/20250426/202504260156.kvLvB9N3-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504260156.kvLvB9N3-lkp@intel.com/reproduce)
+Luckly netif_subqueue_maybe_stop macro already allows you to use a
+function to evaluate the start/stop conditions so the fix only requires
+to pass the right helper function to evaluate all the conditions at once.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504260156.kvLvB9N3-lkp@intel.com/
+The patch removes idpf_tx_maybe_stop_common since it's no longer needed
+and instead adjusts separetely the conditions for singleq and splitq.
 
-All warnings (new ones prefixed by >>):
+Note that idpf_rx_buf_hw_update doesn't need to check for resources
+since that will be covered in idpf_tx_splitq_frame.
 
-   In file included from drivers/perf/dwc_pcie_pmu.c:18:
-   include/linux/pci.h: In function 'pcie_ptm_create_debugfs':
-   include/linux/pci.h:1911:39: warning: no return statement in function returning non-void [-Wreturn-type]
-    1911 |                          const struct pcie_ptm_ops *ops) { }
-         |                                       ^~~~~~~~~~~~
-   In file included from drivers/perf/dwc_pcie_pmu.c:16:
-   include/linux/pcie-dwc.h: At top level:
->> include/linux/pcie-dwc.h:38:38: warning: 'dwc_pcie_ptm_vsec_ids' defined but not used [-Wunused-const-variable=]
-      38 | static const struct dwc_pcie_vsec_id dwc_pcie_ptm_vsec_ids[] = {
-         |                                      ^~~~~~~~~~~~~~~~~~~~~
+To reproduce:
 
+Reduce the threshold for pending completions to increase the chances of
+hitting this pause by locally changing the kernel:
 
-vim +/dwc_pcie_ptm_vsec_ids +38 include/linux/pcie-dwc.h
+drivers/net/ethernet/intel/idpf/idpf_txrx.h
 
-    37	
-  > 38	static const struct dwc_pcie_vsec_id dwc_pcie_ptm_vsec_ids[] = {
-    39		{ .vendor_id = PCI_VENDOR_ID_QCOM, /* EP */
-    40		  .vsec_id = 0x03, .vsec_rev = 0x1 },
-    41		{ .vendor_id = PCI_VENDOR_ID_QCOM, /* RC */
-    42		  .vsec_id = 0x04, .vsec_rev = 0x1 },
-    43		{ }
-    44	};
-    45	
+-#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> 1)
++#define IDPF_TX_COMPLQ_OVERFLOW_THRESH(txcq)   ((txcq)->desc_count >> 4)
 
+Use pktgen to force the host to push small pkts very aggresively:
+
+./pktgen_sample02_multiqueue.sh -i eth1 -s 100 -6 -d $IP -m $MAC \
+  -p 10000-10000 -t 16 -n 0 -v -x -c 64
+
+Signed-off-by: Josh Hay <joshua.a.hay@intel.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+Signed-off-by: Luigi Rizzo <lrizzo@google.com>
+---
+ .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  9 ++--
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 44 +++++++------------
+ drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  8 ----
+ 3 files changed, 21 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+index c6b927fa9979..fb85270c69d6 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+@@ -364,15 +364,16 @@ netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
+ 	struct idpf_tx_buf *first;
+ 	unsigned int count;
+ 	__be16 protocol;
+-	int csum, tso;
++	int csum, tso, needed;
+ 
+ 	count = idpf_tx_desc_count_required(tx_q, skb);
+ 	if (unlikely(!count))
+ 		return idpf_tx_drop_skb(tx_q, skb);
+ 
+-	if (idpf_tx_maybe_stop_common(tx_q,
+-				      count + IDPF_TX_DESCS_PER_CACHE_LINE +
+-				      IDPF_TX_DESCS_FOR_CTX)) {
++	needed = count + IDPF_TX_DESCS_PER_CACHE_LINE + IDPF_TX_DESCS_FOR_CTX;
++	if (!netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
++				       IDPF_DESC_UNUSED(tx_q),
++				       needed, needed)) {
+ 		idpf_tx_buf_hw_update(tx_q, tx_q->next_to_use, false);
+ 
+ 		u64_stats_update_begin(&tx_q->stats_sync);
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
+index 970fa9e5c39b..cb41b6fcf03f 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
+@@ -2184,6 +2184,19 @@ void idpf_tx_splitq_build_flow_desc(union idpf_tx_flex_desc *desc,
+ 	desc->flow.qw1.compl_tag = cpu_to_le16(params->compl_tag);
+ }
+ 
++/* Global conditions to tell whether the txq (and related resources)
++ * has room to allow the use of "size" descriptors.
++ */
++static inline int txq_has_room(struct idpf_tx_queue *tx_q, u32 size)
++{
++	if (IDPF_DESC_UNUSED(tx_q) < size ||
++	    IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
++		IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq) ||
++	    IDPF_TX_BUF_RSV_LOW(tx_q))
++		return 0;
++	return 1;
++}
++
+ /**
+  * idpf_tx_maybe_stop_splitq - 1st level check for Tx splitq stop conditions
+  * @tx_q: the queue to be checked
+@@ -2194,29 +2207,10 @@ void idpf_tx_splitq_build_flow_desc(union idpf_tx_flex_desc *desc,
+ static int idpf_tx_maybe_stop_splitq(struct idpf_tx_queue *tx_q,
+ 				     unsigned int descs_needed)
+ {
+-	if (idpf_tx_maybe_stop_common(tx_q, descs_needed))
+-		goto out;
+-
+-	/* If there are too many outstanding completions expected on the
+-	 * completion queue, stop the TX queue to give the device some time to
+-	 * catch up
+-	 */
+-	if (unlikely(IDPF_TX_COMPLQ_PENDING(tx_q->txq_grp) >
+-		     IDPF_TX_COMPLQ_OVERFLOW_THRESH(tx_q->txq_grp->complq)))
+-		goto splitq_stop;
+-
+-	/* Also check for available book keeping buffers; if we are low, stop
+-	 * the queue to wait for more completions
+-	 */
+-	if (unlikely(IDPF_TX_BUF_RSV_LOW(tx_q)))
+-		goto splitq_stop;
+-
+-	return 0;
+-
+-splitq_stop:
+-	netif_stop_subqueue(tx_q->netdev, tx_q->idx);
++	if (netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
++				      txq_has_room(tx_q, descs_needed), 1, 1))
++		return 0;
+ 
+-out:
+ 	u64_stats_update_begin(&tx_q->stats_sync);
+ 	u64_stats_inc(&tx_q->q_stats.q_busy);
+ 	u64_stats_update_end(&tx_q->stats_sync);
+@@ -2242,12 +2236,6 @@ void idpf_tx_buf_hw_update(struct idpf_tx_queue *tx_q, u32 val,
+ 	nq = netdev_get_tx_queue(tx_q->netdev, tx_q->idx);
+ 	tx_q->next_to_use = val;
+ 
+-	if (idpf_tx_maybe_stop_common(tx_q, IDPF_TX_DESC_NEEDED)) {
+-		u64_stats_update_begin(&tx_q->stats_sync);
+-		u64_stats_inc(&tx_q->q_stats.q_busy);
+-		u64_stats_update_end(&tx_q->stats_sync);
+-	}
+-
+ 	/* Force memory writes to complete before letting h/w
+ 	 * know there are new descriptors to fetch.  (Only
+ 	 * applicable for weak-ordered memory model archs,
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.h b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
+index c779fe71df99..36a0f828a6f8 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_txrx.h
++++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
+@@ -1049,12 +1049,4 @@ bool idpf_rx_singleq_buf_hw_alloc_all(struct idpf_rx_queue *rxq,
+ 				      u16 cleaned_count);
+ int idpf_tso(struct sk_buff *skb, struct idpf_tx_offload_params *off);
+ 
+-static inline bool idpf_tx_maybe_stop_common(struct idpf_tx_queue *tx_q,
+-					     u32 needed)
+-{
+-	return !netif_subqueue_maybe_stop(tx_q->netdev, tx_q->idx,
+-					  IDPF_DESC_UNUSED(tx_q),
+-					  needed, needed);
+-}
+-
+ #endif /* !_IDPF_TXRX_H_ */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0.850.g28803427d3-goog
+
