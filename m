@@ -1,101 +1,115 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F30263F4B
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7CC25E44D;
+	Fri, 25 Apr 2025 15:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593243; cv=none; b=SAmVJtz5VMAAfc0wJpo7XdiQMv+UnA+6FIStVSosqOCdEUTebOjsze5MyPN0q905ORg12w4BJFE3hQoACBQd82UbDgqgXUkc4+pf1NI3hQsNuWRciYn40mLIt+Qq2i4oIaUkt3eGVds5mz5v+J0JVbrfRDd69P5aJ4tR19lsaEQ=
+	t=1745593322; cv=none; b=po5v0AMSWgZwNmam/szuH0dHRJK4pGL/ZcrETRu3bE268vSWmZf/d0UXXI5aAw2usZg63JnEs8qdXoU0Dkz3ugc4PMPwvu2Qf6YE1O/vNveQDEJ/BiRP7E8YEDvXd/B2SrYrmBwpW8MwsC6eXNltsOB+8qHDSroe7nqgoYaoqj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593243; c=relaxed/simple;
-	bh=uxDBH+20OeRJluPE3VADYF6JFroNBRh9iAYHl6+LXU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=msUAS2e1PVd1ng6/8GCQFXPiOJfN4/DV37AdBiRWmzfoDJvTmaTAs9N+r/nlV1Wr16J2VWlpZ3inOViRDiM8v3mKSybQj3vPC58kWVZfXYQYIoKyjPzX0GBZTggus1odV8t3LaZFPxTlbv0pMA5qhQzUsiHsvkO6P7XDa0qe2bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMG4GgC9; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMG4GgC9"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso21971171fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745593239; x=1746198039; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VXTK96kbD7de3pGGb+sXJSFNJydbvcy15WDTiYkGeaw=;
-        b=IMG4GgC9L15Cb6+/EWxyIEz2a5FNuvTN0F932sRs5cprHZQfmD+4LMIoGGWm2ZzsQj
-         HfdQRuqud4ai7NJyg4Jy9ijHOFVimZSRH4+VphMTMzPVBi84V+gSaou78uR51q/f8zWb
-         +EV2BBs7V91mJaEFeWwFSSaAuyQVVOjsJkqwrg+84eR4uoqb2vC/ZtZZ2FaC5z+D8gWO
-         LypptxbVfdPKCJXAf0cX1eATk9Vq8+sTPEv/wlm+ljI2fdpYd8wa5KRfmOXA6IgQTQ5j
-         OxMqzKGPSLuNvmg3vgUuGJYmw6SG5RMUu0NR2CNCGMIP1QfAViX8itprhgVPpQQNOOyj
-         FSfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745593239; x=1746198039;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VXTK96kbD7de3pGGb+sXJSFNJydbvcy15WDTiYkGeaw=;
-        b=c2s3AYJDSEJVDW6hirFgFAR3c+MMxEewuKYJeQFDVRC7WxWSPnFXAMG7BOOM/NA5MM
-         pTGaoDCgMbSTAtW2OIdFJ3kr+mh3RSZ+y/Xj3IQlR2s31+LYH6IIQyvRss6/rVkviY4W
-         KhR8xKQofnPVcpQRRFPeZbY8DvFtPAFNCM0AyIdtU+FF0sH1ntvi0W9gEzBawF27gLqm
-         HeQOJdjvxLP7JJGReu7MxBcNalYZ7JWOvINaIBtRYq8lNd52L4eCfpJrROhJGnvpqw28
-         9vGlHiMNr5sxnQUKWwneg4LBgexG52dZs9KwijuWYdnVY8Sw1SjIES9Su5+gh1HxxI4T
-         2viw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDYHY4kvsEWSELstYmYeX1WV8h8oi4guAF1J3GxOQ2zfMHuI6CFL+IfM1UUwu3LcUTcqjhwNGm41lrqww=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0odDNn4vKH+aFQebDKcJDa/gsDka2Rb2aNHVSgE0rVj1dskJj
-	nZK/KK7c91dVDYSy5gWcdJHZ7e4UkRHR7Gz3Dr2z/i/MxzcUJat6ZvAd74U2o812JPC6qkgE/aG
-	Q5l3Y9jNWcymDJWkIKhMh+94DKQ==
-X-Gm-Gg: ASbGncsVzXVmC6IA9LXGG7pldUHd5gPMIP8gidcwYRk8vGZI3yGBufCUp3VKP6yHqYp
-	tl9PZ3AzsS9Ym+yuO2NnGFDNLrN1BRCUU7Pubz0KqvAntoQzb40pTjiUs1PL3UrXHvkK9+l3a+5
-	bA9Pae3gricdRBI2qhEtMnwc3q23j1/JLKwQDDdEYpVOp67Q8=
-X-Google-Smtp-Source: AGHT+IEi0LYyQmhmFK06NP5kvYsQT0h5/QiJbUK/rIXcZ/50iKlQuvmIiO+gQ3IVv2Xja9qC38fQd6tVgGaiHP673Zs=
-X-Received: by 2002:a2e:bc83:0:b0:30d:e104:9ad1 with SMTP id
- 38308e7fff4ca-319088ad0fcmr9401871fa.38.1745593238892; Fri, 25 Apr 2025
- 08:00:38 -0700 (PDT)
+	s=arc-20240116; t=1745593322; c=relaxed/simple;
+	bh=TATDdWHubxkqnktZL0woFYkT0+jsr8JhaVnmyrpNueQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gaAFOqT/THsowV8LiIxMuqAZkrEiK8bPIuBE1BZkZ8nuqBKXPJUPZeTBFD+rEF56Yq7uOMa2Kxuc4dQP9YFYIGWP3w8N58sCJaXD3tRNEDSVV26l/azVAxU1EI8fF+8O4h2cjSZ4omFhFbf5REAE+8QEIWoUIruPSi1VWQJpmuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZkbfB0qCVz9svM;
+	Fri, 25 Apr 2025 17:01:54 +0200 (CEST)
+From: Remo Senekowitsch <remo@buenzli.dev>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v3 0/7] More Rust bindings for device property reads
+Date: Fri, 25 Apr 2025 17:01:23 +0200
+Message-ID: <20250425150130.13917-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425084216.3913608-1-mingo@kernel.org> <20250425084216.3913608-16-mingo@kernel.org>
- <5c175b6a-e9c8-2546-a4fe-98572c3f4935@gmail.com>
-In-Reply-To: <5c175b6a-e9c8-2546-a4fe-98572c3f4935@gmail.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Fri, 25 Apr 2025 11:00:26 -0400
-X-Gm-Features: ATxdqUE4OetGFfkvoeLJ63u7rs_KcBVuvnpTKeBbxgn4WmlaNKLlGSsWFag6k5k
-Message-ID: <CAMzpN2jNPxAF75iuNwNjz7PqYygYgLeCM77rQV2ZCj=o6-qJDQ@mail.gmail.com>
-Subject: Re: [PATCH 15/15] x86/atomics: Remove !CONFIG_X86_CX8 methods
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-	"Ahmed S . Darwish" <darwi@linutronix.de>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	John Ogness <john.ogness@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4ZkbfB0qCVz9svM
 
-On Fri, Apr 25, 2025 at 10:30=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wr=
-ote:
->
->
->
-> On 25. 04. 25 10:42, Ingo Molnar wrote:
->
-> > -#endif
-> > +#define arch_cmpxchg64                       __cmpxchg64
-> > +#define arch_cmpxchg64_local         __cmpxchg64_local
-> > +#define arch_try_cmpxchg64           __try_cmpxchg64
-> > +#define arch_try_cmpxchg64_local     __try_cmpxchg64_local
-> >
-> >   #define system_has_cmpxchg64()              boot_cpu_has(X86_FEATURE_=
-CX8)
->
-> #define system_has_cmpxchg64()          1
+This adds more Rust bindings for reading device properties, based on
+Rob Herring's work. I'm working on a driver[1] that uses these, but the
+driver has more dependencies than this.
 
-Or just outright removed, since x86 was the only arch that defined it.
+Best regards,
+Remo
 
+changes in v3:
+* (started testing myself with Rust 1.78 and doctests enabled)
+* Fix doctest and platform driver sample.
+* Move property.rs to device/property.rs (a submodule of device).
+* Make `Device::fwnode` fallible, avoiding a panic.
+* Remove the duplicated property reading methods on Device. Now that
+  `Device::fwnode` is fallible, these methods would have confusingly
+  different signatures than the ones on `FwNode`. It will be clearer for
+  users to explicitly convert from `&Device` to `&FwNode` first,
+  handling that error case separately, and then reading properties on
+  `FwNode`.
+* Split off separate commits for:
+  - printing fwnode name and path
+  - adding PropertyGuard
+* Do not access `fwnode_handle.dev` in PropertyGuard for
+  device-associated logging, fwnode_handle doesn't own a reference to
+  the device.
+* Rename some extension trait methods to be more descriptive:
+  - Property::read => read_from_fwnode_property
+  - PropertyInt::read_array => read_array_from_fwnode_property
+  These methods are not meant to be used directly and won't be
+  accessible unless their traits are in scope. (And there is no reason
+  for API users to pull them into scope.) Nevertheless, this reduces the
+  risk of confusion caused by non-descriptive methods like "read" being
+  attached to primitive types.
+* Implement fwnode printing logic in Rust directly instead of calling
+  scnprintf.
+* Improve some safety comments.
 
-Brian Gerst
+Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/DS90UB954.20driver.20done.2C.20ready.20to.20upstream.3F/with/507874342 [1]
+
+Remo Senekowitsch (7):
+  rust: property: Move property_present to separate file
+  rust: property: Enable printing fwnode name and path
+  rust: property: Introduce PropertyGuard
+  rust: property: Add bindings for reading device properties
+  rust: property: Add child accessor and iterator
+  rust: property: Add property_get_reference_args
+  samples: rust: platform: Add property read examples
+
+ MAINTAINERS                                  |   3 +-
+ drivers/of/unittest-data/tests-platform.dtsi |   3 +
+ rust/helpers/helpers.c                       |   1 +
+ rust/helpers/property.c                      |   8 +
+ rust/kernel/{device.rs => device/mod.rs}     |   9 +-
+ rust/kernel/device/property.rs               | 578 +++++++++++++++++++
+ samples/rust/rust_driver_platform.rs         |  72 ++-
+ 7 files changed, 663 insertions(+), 11 deletions(-)
+ create mode 100644 rust/helpers/property.c
+ rename rust/kernel/{device.rs => device/mod.rs} (97%)
+ create mode 100644 rust/kernel/device/property.rs
+
+-- 
+2.49.0
+
