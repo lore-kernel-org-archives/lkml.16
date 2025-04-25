@@ -1,50 +1,65 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A6C156228
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF9A2253B7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617448; cv=none; b=GkDWCDI0s5QWinM/3utO3/k5tj1aPKwu6KEOePvZh3WFYP7f1qaYCWmNxFB6iU4kvxbsTLHaY8r4Peiu9c+v9oOMwz+6tbjb38w/fZikXLrRVC4GcPWmj04QWj86KLc9YvnGcYufwIy4ZhOYP/7qgJ71JfvyJCKzpUhob+nfWoA=
+	t=1745617466; cv=none; b=MtDWhFExZ9S9lE6MKD7mHfzgswRhD0wqfgwYP2TCmhIm5SIMY8TvFESQusaC7URFK32qPpa24sh60ojP21YW54DwCIbGOjAAHnBYjhvKEs13J70R6pebMX9w4FtNBab4+26K2DthOSFguRDZz2FJ3jvoP0HIxUZmGeLbsyZYUX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617448; c=relaxed/simple;
-	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	s=arc-20240116; t=1745617466; c=relaxed/simple;
+	bh=0PGOU404WR3ZZT5UO5ZutPGEui+7NlIYTJrsKba4mAI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d3hRxn5mDs67xcdExA7QZQbX8xxnV0JAvGQdDUcrymCIFFzCDgNWu3QCUnlhpmeLwFvbZSZtz73JpMt8glrwBRHUcTfDXorRzsDArqA1iu5tlKmbm3exTzWDvYBhXPz0Kuv9y1gC9IANrhNg7asYAed1BjeR5HWp810A3anLpwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so2110956f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:44:05 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=kTVB574/J4irsTBLGrFER12N1fK9ZhH0DDYNGcciPAxvvHr/3B830QdX3L6yw9dChNCfD3etcdU8JBRnEXU39AzcsM4iO5N0RlfJDNPUSmwRsUHtQd1cU6ntSUSng+WafgGgeDMswM3kf7OJIsS+lT+TS2D7c+M8Gl490h6yj5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ecdIgtzW; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ecdIgtzW"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-401c43671ecso1494375b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745617463; x=1746222263; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Vetl9XpldH8JvL8GlwOYXmdLs3vxDNII55h0sSj3lYc=;
+        b=ecdIgtzWNSzsQn2U0k23mm0eBPvHL1C1TcUx5drufKdFJWPjIQ7GsvtCZNtt5PLkrQ
+         WnTYAnIngoJxMKPjvGQiafQHc11uLmi+6WacfOsAoF51wtpj5OD1KLHbuqOxW9MJ+gqu
+         5dnK7M15p2Ba7STyIzHw8yQ2C07rw8o15cRsmQMj8XCNaYuV4Xz4PUCW26zxhpCC1VG5
+         46kunNXqj5N6793pab6hLib2fv9d4od8dWNR/iV2yFkzw4n8YTPKs+UFmFcwE9gaYloe
+         CVGYnFNqsC2iAGruFEhIv3ZuPkZEJxVIArXn+geM9L4Mb+yzI1VWxaB1nUXsqcfJTKI3
+         kjVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745617444; x=1746222244;
-        h=content-transfer-encoding:in-reply-to:from:content-language
+        d=1e100.net; s=20230601; t=1745617463; x=1746222263;
+        h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=sFHWmuBVHkC0fGQ1lNaWOtt4XK9KBfNqNli7NrUYpliqsf/9q8iPFQMDKXjbQkfSkU
-         2uHEdKgg+ipxU3G4pFtIS9qkAfccGC6iFlDDNbbXrvR8xjTPkW2ziyhQJdldXD2Mk4NT
-         qt09GtR/7a2KeLZMME+DDfABAbid3VeKoZeFLrUmVBw/XQBnVkFnCrUp6XZT32eJubDX
-         d1zl8HEKaT/I+wRaN0ZTjQ9AkziXx6XBunwoc+pLkkuG7i3tMxpJCJ2a8ea4RzVIx9Rt
-         p60h+zaNWvS7g/8Bm2QziczXFDtbKl8LCO283yw60XCTgZA0XcB1Ts6KTIcC/3c6CCDW
-         hC1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUtn3jegrT4LyIxH2XD5FPUG5CXVgqVe5pX2FOZJBu9nkBpMU4ZJeQyAnc/WVcPZEyAdwUl/sGb4h2JEtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTLbK2Qea7MoR3oUwA+OxJ/DIpiTszGB5xmHakZa3OPRIG8ILJ
-	jwnw5GucVWXOWFoZSthWHdWM7pCsz+Ge0oWJc0GTRj1tzMrU7OgG
-X-Gm-Gg: ASbGncudbonWqQSSxHEw2/Jw2xAvxdq6OcELpTJjHNje5/96/d5Ncv3PTJMnavAdjRn
-	5sirjDlg71lq7FbjJFOAvHGloI/VxmFgTpIVQbsc/ZinupOpSypAzKjU1mTHa1y76Iu26+4/nRO
-	b8E4UpVULxj9FRLtJHycWf7XA68A6KiAh5CN/rMrzeUmq9uaZmljlXZwBaQdoaF3o6HdR89p8q1
-	w/w+hsh9ihtehHOAjWAzyad1m72WScgbsJS/fVlAW/EGW/Tj+T/yS9ZnSyz46vmjScd785Z9raV
-	WskQPA3Dei1nbKFaFXebLcajaAoDstqInMXPANjk
-X-Google-Smtp-Source: AGHT+IHNkUTzqCyklk8CwfKfnU0VUbuqBmBVcnaK+gzvvYblitq/tJPzGKIQecXGKo4apnbeSc0a3w==
-X-Received: by 2002:a5d:64ee:0:b0:398:fd9b:b935 with SMTP id ffacd0b85a97d-3a074f7ba84mr3132716f8f.53.1745617444011;
-        Fri, 25 Apr 2025 14:44:04 -0700 (PDT)
-Received: from [10.100.102.74] ([95.35.174.203])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46a49sm3448346f8f.61.2025.04.25.14.44.02
+        bh=Vetl9XpldH8JvL8GlwOYXmdLs3vxDNII55h0sSj3lYc=;
+        b=T8U6NNIQ5eWTGoZ9Jp4IQvRxMHDY+7bXYAsNa8+cBbClELawxUydXIS1rsd3KpLBk4
+         VOtWB05e/0iunkm+hHzVY4OtlZ4cM9+6UbtcizVXxJCwpTryHpSEeKPhFU7c3FR3oNZK
+         tzRZ8WwPaqRhdV4mFkJqkOsFF7MUc7gZbBV9Bcy7wbgI8mPS9SMq7mm81USbm8UtF8iE
+         U83k/yyipYU4hohzFE5ax+8+s8ndUWNGUuxPrnkxAQjTBjjYBbkWvrsQutzzS6+3f0To
+         SSN1nxj2gY56Ejd9YD11BCc1yktHyaKdKSaPJ0Q0uN9OOzbGoJao2mEevtvdCY2xDJVH
+         kHwg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9yUutDy5ctKAo8NtaGdE0bgFGrZSp559jaoCCa6sTaMrZQCSbnLewHfO/RPz1FGYbqstbEx4CMeVho9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybnbMBV1asjLmgNhZeoHFaUt4DG8VU5zuCZVpgjRK36yoDZiLG
+	C+s0AsW4mrOVTxXSe+Pf+eYyQh/jwRvT2zjVEeQNbE+NC/2q/7adHn29YBX6Uyk=
+X-Gm-Gg: ASbGncsdEy4akJXX/tJTXvZ3MjLbsc0EkH4iofCJvbcjYXB2HLmjzgpokgxsYuedMvp
+	RMawqANF5cLRY2HYPo3yR9XafNWUBznw867QaQbfytFDhlq8SlwTR7mmM6j9KZr+f8Nvhg4kNZP
+	+K+BI6h8nh5X7SIc40onAmaZKgHWCAlgnYoy71Srg0HBG02+2PXAW/gVgvNR9fXlsMDsgMZLnfx
+	5/l3AjlSU2YSFUxRbU6YMPTSe/OCdzOPG6Ck7RDWviBpReuuMViEIrNE4rSGrS9+ttD3AOhmOL7
+	J1eSazmlehKnyE/+nOdz25YoYiRtq5rl17MJIdFG2zzgfeJtRPF3QqeL/qy1OK6KsBm8eWosxpk
+	wBfFwF9Z39HQx
+X-Google-Smtp-Source: AGHT+IGYSYK/NgbfRtntiLX0fyD882sY0Y9kI7JKZ0e9QJqEQnnrOLa7rFd/SxmE01a29TeJbZfoUg==
+X-Received: by 2002:a05:6808:178e:b0:400:fa6b:94bf with SMTP id 5614622812f47-401ec44c715mr4767354b6e.4.1745617462686;
+        Fri, 25 Apr 2025 14:44:22 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:96a3:e28:3f6:dbac? ([2600:8803:e7e4:1d00:96a3:e28:3f6:dbac])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401ec8afb1esm939069b6e.10.2025.04.25.14.44.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 14:44:03 -0700 (PDT)
-Message-ID: <7c5309ff-3a7a-464d-8088-a58da7b66a1b@grimberg.me>
-Date: Sat, 26 Apr 2025 00:44:01 +0300
+        Fri, 25 Apr 2025 14:44:21 -0700 (PDT)
+Message-ID: <9f5b0709-f795-44c5-aa64-aaed81a459bf@baylibre.com>
+Date: Fri, 25 Apr 2025 16:44:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,18 +67,181 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] dmapool: add NUMA affinity support
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250422220952.2111584-1-csander@purestorage.com>
- <20250422220952.2111584-2-csander@purestorage.com>
+Subject: Re: [PATCH v2 4/5] docs: iio: new docs for ad4052 driver
+To: Jorge Marques <jorge.marques@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-4-638af47e9eb3@analog.com>
+From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250422220952.2111584-2-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20250422-iio-driver-ad4052-v2-4-638af47e9eb3@analog.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On 4/22/25 6:34 AM, Jorge Marques wrote:
+> This adds a new page to document how to use the ad4052 ADC driver.
+> 
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+>  Documentation/iio/ad4052.rst | 95 ++++++++++++++++++++++++++++++++++++++++++++
+
+Also need to update the table of contents in Documentation/iio/index.rst,
+otherwise this page won't be build (and will cause a build error).
+
+You can run `make htmldocs SPHINXDIRS=iio` to speed things up and only build
+the iio directory to make sure you have it right.
+
+More info: https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html
+
+>  MAINTAINERS                  |  1 +
+>  2 files changed, 96 insertions(+)
+> 
+> diff --git a/Documentation/iio/ad4052.rst b/Documentation/iio/ad4052.rst
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..410aaa437ed5fea6a2924d374fa5f816f5754e22
+> --- /dev/null
+> +++ b/Documentation/iio/ad4052.rst
+> @@ -0,0 +1,95 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +=============
+> +AD4052 driver
+> +=============
+> +
+> +ADC driver for Analog Devices Inc. AD4052 and similar devices.
+
+Please don't put newline after every period. Here and throughout the document.
+It makes it harder to read.
+
+> +The module name is ``ad4052``.
+> +
+> +Supported devices
+> +=================
+> +
+> +The following chips are supported by this driver:
+> +
+> +* `AD4050 <https://www.analog.com/AD4050>`_
+> +* `AD4052 <https://www.analog.com/AD4052>`_
+> +* `AD4056 <https://www.analog.com/AD4056>`_
+> +* `AD4058 <https://www.analog.com/AD4058>`_
+> +
+> +Wiring modes
+> +============
+> +
+> +The ADC uses SPI 4-wire mode, and contain two programmable GPIOs and
+> +a CNV pin.
+> +
+> +The CNV pin is exposed as the ``cnv-gpios`` and triggers a ADC conversion.
+> +GP1 is ADC conversion ready signal and GP0 Threshold event interrupt, both
+> +exposed as interrupts.
+> +
+> +Omit ``cnv-gpios`` and tie CNV and CS together to use the rising edge
+> +of the CS as the CNV signal.
+> +
+> +Device attributes
+> +=================
+> +
+> +The ADC contain only one channels, and the following attributes:
+> +
+> +.. list-table:: Driver attributes
+> +   :header-rows: 1
+> +
+> +   * - Attribute
+> +     - Description
+> +   * - ``in_voltage0_raw``
+> +     - Raw ADC voltage value
+
+No scale attribute? How do we convert raw to millivolts?
+
+> +   * - ``in_voltage0_oversampling_ratio``
+> +     - Enable the device's burst averaging mode to over sample using
+> +       the internal sample rate.
+> +   * - ``in_voltage0_oversampling_ratio_available``
+> +     - List of available oversampling values. Value 0 disable the burst
+> +       averaging mode.
+
+Typically 1 means no oversampling, not zero. (It is a ratio, divide by 1 is the
+same as doing nothing, but divide by 0 is undefined.)
+
+> +   * - ``conversion_frequency``
+
+Needs to be updated to ``oversampling_frequency``.
+
+> +     - Device internal sample rate used in the burst averaging mode.
+> +   * - ``conversion_frequency_available``
+> +     - List of available sample rates.
+> +
+> +Threshold events
+> +================
+> +
+> +The ADC supports a monitoring mode to raise threshold events.
+> +The driver supports a single interrupt for both rising and falling
+> +readings.
+> +
+> +The feature is enabled/disabled by setting ``thresh_either_en``.
+> +During monitor mode, the device continuously operates in autonomous mode until
+> +put back in configuration mode, due to this, the device returns busy until the
+> +feature is disabled.
+
+Probably worth mentioning the ``events/sampling_frequency`` and
+``sampling_frequency_available`` attributes since we've mentioned all of the
+other attributes.
+
+> +
+> +Low-power mode
+> +==============
+> +
+> +The device enters low-power mode on idle to save power.
+> +Enabling an event puts the device out of the low-power since the ADC
+> +autonomously samples to assert the event condition.
+> +
+> +SPI offload support
+> +===================
+> +
+> +To be able to achieve the maximum sample rate, the driver can be used with the
+> +`AXI SPI Engine`_ to provide SPI offload support.
+> +
+> +.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/index.html
+> +
+> +When SPI offload is being used, additional attributes are present:
+> +
+> +.. list-table:: Additional attributes
+> +   :header-rows: 1
+> +
+> +   * - Attribute
+> +     - Description
+> +   * - ``in_voltage0_sampling_frequency``
+> +     - Set the sampling frequency.
+> +   * - ``in_voltage0_sampling_frequency_available``
+> +     - Get the sampling frequency range.
+
+In the driver, this is currently info_mask_shared_by_type, so would be
+``in_voltage_sampling_frequency``. And there currently isn't 
+``in_voltage_sampling_frequency_available`` in the driver, so it needs to be
+added in the driver (or removed here).
+
+> +
+> +The scan type is different when the buffer with offload support is enabled.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 81fbe7176475c48eae03ab04115d4ef5b6299fac..04aa8db44bee418382a2e74cb6b1d03a810bd781 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1334,6 +1334,7 @@ M:	Jorge Marques <jorge.marques@analog.com>
+>  S:	Supported
+>  W:	https://ez.analog.com/linux-software-drivers
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
+> +F:	Documentation/iio/ad4052.rst
+>  
+>  ANALOG DEVICES INC AD4130 DRIVER
+>  M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
+> 
+
