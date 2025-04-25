@@ -1,47 +1,58 @@
-Received: from abb.hmeau.com (unknown [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEF74C6D;
-	Fri, 25 Apr 2025 02:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD0915278E;
+	Fri, 25 Apr 2025 02:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745549347; cv=none; b=h2ABYomVpWfPUvHC9nvEo6tegQ/HnL8IBpsT+xQeAnbJG61Vnw7leJdv086yOEEPDWf36gXPkSFG83ILaYBBLEhY+79PSeojI8dmcGl5qZnGe9SZvte5zsYkzIXAMVLuJfgI3xzC0lO1j89neC251sSMawufTMcG9q4oewFVq+k=
+	t=1745549373; cv=none; b=ZmLNtPzC3cchjmjath9uxbdedNEs1WVU0PHq4xllJD2Icymp5B71YjUZCzp7dScvWdJupbhQ882z72h9k3gojW1ri3OQAg5OAS2Iips5TuktlUaRVFKHXcYKS9+SI4jrBYyaRAfU+byFtIyPEPZgWqb+2ieQy1xZb6TAXxIh2rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745549347; c=relaxed/simple;
-	bh=IjZgThLJOqvB9xuumimrb2GgbbBBWLz6m6/8mqn+R3A=;
+	s=arc-20240116; t=1745549373; c=relaxed/simple;
+	bh=8E8IPQ8U3c2ao7zZDmLXSVYieew5+uk0JR1rHWGzBoU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pjv4dZBFsZ6NSJTQKgTYPZ9i2aQh5MzhzfuJvH2OMSvLsnZfMtr78KEftYJAPny0WdOGyQ8vqvdBQdqjvVcPajxwGBGYX2Jv+k3hmyPgml1JNuuC9vLtjwQzfsOeCw/BDMleYJE8OfbozK4FrSeO4DekrXQfjUgz8geHqs1Cjzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ANccXNGd; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=axRa8CQ74ea6qSMbILLOFGY98KOVk5J0EPSH6w38+q99RNenYf1OoZNb5wIhC95AdHIS7WmheShXASovAut3ILcbtUhAjrNdd/x59E0MaQ1hFrca02psqppeCxFvssrWi3YhdUy2DFI1jZpmBgIUHXyDgi7+lOd1GRUbdRVnYaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fa8wa+o2; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ANccXNGd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=cnV8pteBUZTuj+uhOfEOc824fXoOdF+CLlRvwwfF0wI=; b=ANccXNGdGcg2JeipvXlhXmq2p1
-	kOhXe1gyb33uDHyNvPxiIN9ZmFF1oQmf7i9p8dT6Usdeqsxia/QmihmTYdiCK2oRCRCExSKgvIt6P
-	IiK9JUiK0T91CqTXL5/W1Z89FX5nMz3a9BC/c3pTpOkoCbP73bO1bbSteqoOUojhrn+1wFeEvagDH
-	ELlsKqjlhgpYvzc0q5y3FigvrvR1oqsWq3Ip0iJp0yBU8Km5u4acHS5mdjb0XUSVqmxH2p0MNfz5h
-	0nZ1hY8DfbgtyAbIS3gvjfGePHljQIRNQY927YkhFzF07YTqix8Y70UrX/bmbQ9LDZPs3kM4eDXpy
-	+Y0LY7UQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u897M-000rbH-26;
-	Fri, 25 Apr 2025 10:48:45 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 25 Apr 2025 10:48:44 +0800
-Date: Fri, 25 Apr 2025 10:48:44 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] riscv: crypto - Use SYM_FUNC_START for functions only
- called directly
-Message-ID: <aAr4DFlbPiNKpBmp@gondor.apana.org.au>
-References: <20250424-riscv-crypto-fix-cfi-build-v1-1-2d7516737379@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fa8wa+o2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745549372; x=1777085372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8E8IPQ8U3c2ao7zZDmLXSVYieew5+uk0JR1rHWGzBoU=;
+  b=fa8wa+o2th3yWcR1gUXuRF1UU1g8VTmw8x8wuWViRLNikc+SKK6+m1Pt
+   9WyEv/TetFqWtg9F/qrVYPYAHlSeGIWGm0I5e5YL2bKKxo+mOuqUF9/WL
+   dvWFFQerF/5ou0q8Ky/wYfupBiQEuwCnpeRDPhCq+nbuyK3FoQCO3PUjR
+   Vo5OyzE0z729MSlJoHZLheDuzLn4c/lnr6jl8pFm+bT0MwjW2wOalEqAQ
+   4psBmXTzeHubVK6dBL8QUr4LZdiNHM9YDtM3uXTP//xmMHQDGaSGWnadN
+   2tqkowWOABcfeuXZnaHn+zxcOPbWHOUwirKCm8Y/dObhQHxz0dWw/hs0P
+   A==;
+X-CSE-ConnectionGUID: xb3NQ+f2TVSqrDoQV6Q1Jw==
+X-CSE-MsgGUID: QWTD2tL9QdiEUuwBPu6fxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47338898"
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="47338898"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 19:49:31 -0700
+X-CSE-ConnectionGUID: mpvrp5zDSty4AMy8tcCmIQ==
+X-CSE-MsgGUID: yy+q4g9SQBaoBD2IoB/oLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="133769368"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa008.jf.intel.com with ESMTP; 24 Apr 2025 19:49:28 -0700
+Date: Fri, 25 Apr 2025 10:44:51 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Gerlach, Matthew" <matthew.gerlach@altera.com>
+Cc: Peter Colberg <peter.colberg@altera.com>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-fpga@vger.kernel.org, Peter Colberg <peter@colberg.org>
+Subject: Re: [PATCH] fpga: m10bmc-sec: change contact for secure update driver
+Message-ID: <aAr3I65zkNDu//il@yilunxu-OptiPlex-7050>
+References: <20250317210136.72816-1-peter.colberg@altera.com>
+ <2b218680-ea43-43af-96a8-33f2609510f5@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,42 +61,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424-riscv-crypto-fix-cfi-build-v1-1-2d7516737379@kernel.org>
+In-Reply-To: <2b218680-ea43-43af-96a8-33f2609510f5@altera.com>
 
-On Thu, Apr 24, 2025 at 05:23:22PM -0700, Nathan Chancellor wrote:
-> After some recent changes to the RISC-V crypto code that turned some
-> indirect function calls into direct ones, builds with CONFIG_CFI_CLANG
-> fail with:
+On Mon, Mar 17, 2025 at 03:34:46PM -0700, Gerlach, Matthew wrote:
 > 
->   ld.lld: error: undefined symbol: __kcfi_typeid_sm3_transform_zvksh_zvkb
->   >>> referenced by arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.o:(.text+0x2) in archive vmlinux.a
-> 
->   ld.lld: error: undefined symbol: __kcfi_typeid_sha512_transform_zvknhb_zvkb
->   >>> referenced by arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.o:(.text+0x2) in archive vmlinux.a
-> 
->   ld.lld: error: undefined symbol: __kcfi_typeid_sha256_transform_zvknha_or_zvknhb_zvkb
->   >>> referenced by arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.o:(.text+0x2) in archive vmlinux.a
-> 
-> As these functions are no longer indirectly called (i.e., have their
-> address taken), the compiler will not emit __kcfi_typeid symbols for
-> them but SYM_TYPED_FUNC_START expects these to exist at link time.
-> 
-> Switch the definitions of these functions to use SYM_FUNC_START, as they
-> no longer need kCFI type information since they are only called
-> directly.
-> 
-> Fixes: 1523eaed0ac5 ("crypto: riscv/sm3 - Use API partial block handling")
-> Fixes: 561aab1104d8 ("crypto: riscv/sha512 - Use API partial block handling")
-> Fixes: e6c5597badf2 ("crypto: riscv/sha256 - Use API partial block handling")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
->  arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S | 4 ++--
->  arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S           | 4 ++--
->  arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S               | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
+> On 3/17/2025 2:01 PM, Peter Colberg wrote:
+> > Change the maintainer for the Intel MAX10 BMC Secure Update driver from
+> > Peter Colberg to Matthew Gerlach and update the ABI documentation.
+> > 
+> > Signed-off-by: Peter Colberg <peter.colberg@altera.com>
+> Acked-by: Matthew Gerlach <matthew.gerlach@altera.com>
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Acked-by: Xu Yilun <yilun.xu@intel.com>
+
+Applied to for-next.
