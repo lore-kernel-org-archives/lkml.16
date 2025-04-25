@@ -1,117 +1,103 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE8534CF5
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3AC34CF5;
+	Fri, 25 Apr 2025 07:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745565998; cv=none; b=sFgjmNMUjp/3Yx2PtiKfJ/6BgmWj21AdGIf9qbSSpu4JkXojWcFeod5ijwEs7uumH4ehZaAUPwB2fMH1OizNXIW2notIVau0+bh4+mVaJeZGle5DylfVy4WcuioqojQ5idCtou81AMOPhg62wQESNL5a2F1wSHote5DL0/zOQPs=
+	t=1745566046; cv=none; b=T3YT6wDITW1hPplql0ye8DBdy0N8x+WZWI8t7SEW0FKUOWlhSgqt07+xStSVIyXiwij0ObwV820arKK0mAAvTUSy7tfkunBezJsE4xPcx4xCDK9tb9gTgT3dfWSKGxCsdUeZYcmHsO0Mobc2A3y2xofgu/7NonU1JPbcVx58SFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745565998; c=relaxed/simple;
-	bh=WOBxNFfwoRaqVofbA8CFrImfGjl5LQJoK5Bx9c4gVxY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ee8dWtoLRA7mdAtK4Zq7xeT9RlXD/4BaZhvkUbbHrzkbf7LFi/xbwBtSLtpqHwwVbdayffmIPcCgNKM5zv0a3aSawqWQgwUSGhhNYoq/wkZDA+3qyRI5WsALpRmL/yULkAU+3l+dp2DDS3Ijw/T9NUYSUEiHWGHXBw+oOPRvl24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=G+Ng+RFl; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745566046; c=relaxed/simple;
+	bh=Se6m6y9sZN9J3EHuJl9Vxwvd6h6QBpXAImKVKhBleeA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JoIQCMDMOzQc/KLf2Nlf8uA/nC9VW63Jp3D5Px3Oa8jkN8fELlTGIq9Vg68HdZzuhykLbyzCEUkJclFs5wcIlTYDy0v8qlierKzmbMZGLE3pv++u0bEBAFOKzyFFDyJFm0UnAm+7ex6Xnkmyq1/4HbkOHudx/OzZBrph2T1BjzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=f9nflK8v; arc=none smtp.client-ip=193.252.22.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="G+Ng+RFl"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so17593995e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:26:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745565995; x=1746170795; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8rOWai1sdUbgwofhh5Gm/RhS+Xf+8kuHnQc4bFrAWfA=;
-        b=G+Ng+RFlzYMB95D9S5v5mPE8PcsRJ+L1L53MKVN24KeRO0aiqd2jh6Bld+oP7/FTnF
-         SkxdVOfCuS0AZftZ3RNo9LdO4Yt3nbRjbTHDkTEA+Yf+5ufOIkCN8NoC98ct4dlRMpX6
-         FAcm9IFJHebAuAI7TC36AJWyR22iT1O2emh7tqsxGApLAPznuLaWnD9e1gy3XkVbF3QK
-         h7+WTN6oqgnfLWpBmJIDkCiar93TU0TO+Ibhauzt5GbaZjzlGI9dJ0ZAq9T+Nhienavx
-         kGVyJcBQB2LtVdNcJDqV5Vc+W6GL4vQAAHmDWGOU/2erL2LypG9vDzNR9n1VNVIpz8Fc
-         3LzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745565995; x=1746170795;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rOWai1sdUbgwofhh5Gm/RhS+Xf+8kuHnQc4bFrAWfA=;
-        b=VGyJSi1rhn0A8THb1JvnLSSavGNnNzVbmlidDzLEw7V4uPwwbxbi4J+abLoAtFJeER
-         RwtQdNQdj2ho5CMzM9C6Di9B+3KX79vlj6EHRwqNg/FEOsrYMTN0xRyT8X5EaWI3jgc0
-         aDYlmVFdg3Onvvq0sAcsY53HFW1RBiP13vlPjHVTrF0Y4T9ryVeE/xJxIO+6HS0YdPP6
-         rR88xy3JG9ntxUApXNugrINhNbJpxMP8jflRMvxXHVptDbL1P+Xgb17kXgqoLTJ9B0A+
-         tOB8uModxkgpcf19SqQ3XQfy4hrWLIsdZpaYl6tHsWrQzLyq2E6EHCuVgJesVvRcNW74
-         OF8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXPu0pn9ickoPxFW38KwMGNgLMtLhEXz27nvaT6zHGy/5wX/ZtC/mPBQrm1CsnDO0gWtPZhj3NIIEyQvSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJEtWkQ+WGJH/RWT8blAP4XwLYT9cpTcFzukJBYPTI8f50x148
-	mQ9ALqQ+cycGlFtOZ7SaB0Rqv4eN+zInG2HvH3F6QWzPi75FvmQIrRSQzzjuZCs=
-X-Gm-Gg: ASbGnctT/9nYl4BuZQ02XU+9wtFzk7TzLT5wAoB1k/H5cThxlSYInIF8hmIcOW/BUCo
-	VOi8IOOtjonXC/GhgabR3ZvQOYHHN8dNTXkBpqHiM9i7i0oBN4KgwntLQSNlC9x0BDlHix0UGDx
-	A9LVDmdxo4Y6y3w84N7VEgj6p4pjJlttzw0XCb6WZcIxyjjM8+2yMTy6Tq3qn8/D7aWyC2K99mA
-	aE6tKjyg2UrBxYsp34EPkNOxavSUupVzD1XDJJw8DgK6UqDg+How2ySyzkbm0EYIfolBufrF6IN
-	Eh0/N4okuTbpN2v/QvZ1GbF0wdXK
-X-Google-Smtp-Source: AGHT+IHyL/iAGxsNCgxot5kbeyyZgpCwkYAozWtkwnyndNThNfSseLduEbxfeuXjaZvP1Jxj6O0QvQ==
-X-Received: by 2002:a05:600c:34ca:b0:43e:a7c9:8d2b with SMTP id 5b1f17b1804b1-440a66aaf1bmr8945465e9.24.1745565994713;
-        Fri, 25 Apr 2025 00:26:34 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::f716])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2aab65sm46521075e9.17.2025.04.25.00.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 00:26:34 -0700 (PDT)
-Date: Fri, 25 Apr 2025 09:26:33 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/3] riscv: Strengthen duplicate and inconsistent
- definition of RV_X()
-Message-ID: <20250425-93c9f462a1980ebd7bbc515d@orel>
-References: <20250422082545.450453-1-alexghiti@rivosinc.com>
- <20250422082545.450453-3-alexghiti@rivosinc.com>
- <20250424-f322adab22126ae97dd7c5b4@orel>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="f9nflK8v"
+Received: from mail-ej1-f48.google.com ([209.85.218.48])
+	by smtp.orange.fr with ESMTPSA
+	id 8DKLuQzncXKsE8DKOuD0HC; Fri, 25 Apr 2025 09:18:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1745565509;
+	bh=9MXYhfLDZ8sZbT5kwKmQD0pmgRml2HdigMCY0fKRBow=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=f9nflK8vOGeLNHBUFgEJhoLnthzXyfcR8scN2J/LiE5oXLRQfHt9HzouptysiS9Di
+	 g2KrGk7KOX9GsAinJdfxH2ujQw+tqV4c6au/TKojKMsiHB/s/AOwO5mpfzUolMbNTV
+	 tRbbCBOjxqYbhYjKmfn7CWPWZI5eEqvtaGc2EI9O5iiAJs95lRSg7+/mC3WZCJFu0f
+	 dYN2C3J/1OMIOhi6mBW9ojH6vVyth7iNBglWOkb7U/BGxe731uq+rp7PJaG80R6Rsv
+	 Ij9v12Yr66GJpsXFrLJYErm/3fs0ugUJxmBKVgSgl3mYJEzT8DaLNovc2JF4vvngqP
+	 HKWx4GZJioXgA==
+X-ME-Helo: mail-ej1-f48.google.com
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 25 Apr 2025 09:18:29 +0200
+X-ME-IP: 209.85.218.48
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso351057066b.0;
+        Fri, 25 Apr 2025 00:18:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVObnGUjIlQmPkRgRof0bSmwIiUFdL/JAmKL9Tyuinc4j/90MFH/g0jS//yaqZ3lYzkbisBWOLb7Hk=@vger.kernel.org, AJvYcCWnwFKPqz3DoRtT3ixgMshKJEtvSVlOSh7Fj3X6jq8eS1bICyUYRcEc2E81uS2ATa2IlfpnEkN6hNmS1QJu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuYfw/kITE/imp+QgScvOlKgC9sFq5RsozXo4NZG2LFIZDTeMt
+	SIjlRTUPFX9POuU91zlTsaJA9LINIEUCRdNR3dRBjgBEU7+Xyxdfh8Shrp8AoNgpzKuU/ez3mvS
+	nYV2MYI+wY/epCM7PXdZ8ybZ/kTc=
+X-Google-Smtp-Source: AGHT+IGrec0S8ejf3QeHROL33sZQ5R1s3Y99LeRod6Z2yTrMqhM0sZC+BJ1CYHCgmoPuDFbs5EHVnuxhZnpbrA+1h4U=
+X-Received: by 2002:a17:907:1c92:b0:ac2:dc00:b34d with SMTP id
+ a640c23a62f3a-ace73b469f0mr84570466b.53.1745565505472; Fri, 25 Apr 2025
+ 00:18:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-f322adab22126ae97dd7c5b4@orel>
+References: <20250424125219.47345-2-antonios@mwa.re> <20250424-industrious-rottweiler-of-attack-e7ef77-mkl@pengutronix.de>
+ <a5684bfe-981e-4ba3-bbea-d713b5b83160@wanadoo.fr> <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
+In-Reply-To: <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Date: Fri, 25 Apr 2025 16:18:14 +0900
+X-Gmail-Original-Message-ID: <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
+X-Gm-Features: ATxdqUEIr0eIXQ8_SCkkchVgXe4gjbCfeg1hy5EZFXU1ZytGNyoezpTiOmcsor4
+Message-ID: <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
+Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
+To: Antonios Salios <antonios@mwa.re>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, rcsekar@samsung.com, linux-can@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lukas@mwa.re, jan@mwa.re, 
+	Markus Schneider-Pargmann <msp@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 24, 2025 at 10:45:46AM +0200, Andrew Jones wrote:
-> On Tue, Apr 22, 2025 at 10:25:44AM +0200, Alexandre Ghiti wrote:
-> > RV_X() macro is defined in two different ways which is error prone.
-> > 
-> > So harmonize its first definition and add another macro RV_X_mask() for
-> > the second one.
-> > 
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > ---
-> >  arch/riscv/include/asm/insn.h        | 39 ++++++++++++++--------------
-> >  arch/riscv/kernel/elf_kexec.c        |  1 -
-> >  arch/riscv/kernel/traps_misaligned.c |  1 -
-> >  arch/riscv/kvm/vcpu_insn.c           |  1 -
-> >  4 files changed, 20 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-> > index 2a589a58b291..4063ca35be9b 100644
-> > --- a/arch/riscv/include/asm/insn.h
-> > +++ b/arch/riscv/include/asm/insn.h
-> > @@ -288,43 +288,44 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
-> >  
-> >  #define RV_IMM_SIGN(x) (-(((x) >> 31) & 1))
-> >  #define RVC_IMM_SIGN(x) (-(((x) >> 12) & 1))
-> > -#define RV_X(X, s, mask)  (((X) >> (s)) & (mask))
-> > -#define RVC_X(X, s, mask) RV_X(X, s, mask)
-> > +#define RV_X(X, s, n) (((X) >> (s)) & ((1 << (n)) - 1))
-> 
-> Assuming n is arbitrary then we should be using BIT_ULL.
+On Fry. 25 Apr. 2025 at 15:34, Antonios Salios <antonios@mwa.re> wrote:
+> On Fri, 2025-04-25 at 00:23 +0900, Vincent Mailhol wrote:
+> > Maybe you can briefly describe what kind of bug (NULL pointer
+> > dereference).
 >
+> It's a spinlock bad magic bug that occurs when one tries to send a CAN
+> frame using cansend. The frame gets transferred nonetheless.
+> I'm testing the driver in an virtual RISC-V 64-bit environment with a
+> recent mainline kernel. The M_CAN controller is io-mapped to the
+> system.
 
-Eh, scratch this. We know n has to be 31 or less since these macros are
-for instruction encodings.
+I guess this is because your kernel has CONFIG_DEBUG_SPINLOCK:
 
-Thanks,
-drew
+  https://elixir.bootlin.com/linux/v6.14.3/source/lib/Kconfig.debug#L1437
+
+Without it, this would have been a more severe NULL pointer dereference.
+
+> > Also, if you have the dmesg log of the error, this is something you
+> > can add at
+> > the end of the patch description.
+>
+> Will do, I'm just waiting for more feedback on the patch before sending
+> a v3. In the meantime, the dmesg log looks like this:
+
+Great!
+
+My comments on the patch description are just nitpicks anyway. You can add my:
+
+Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+
+to the v3.
+
+Thanks a lot!
+
+
+Yours sincerely,
+Vincent Mailhol
