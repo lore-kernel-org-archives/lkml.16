@@ -1,125 +1,384 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35DC23BCEF;
-	Fri, 25 Apr 2025 11:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579098; cv=pass; b=NP6w9AVTZRLM4dt3HIU2KJbzcnP1X2lQwwJMwO3P+4BXxvWzWu6T8Kcsm0wPO4+pOto+owRjwg7ShbkBLQBtClI0oTrXy/XMBthj+pt2cBB2s8k5MskyzSohrIA3xhLsWkuvO231Kmg/G0pLvUhPloMW6gTpJDX3nnMIKdf22Do=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579098; c=relaxed/simple;
-	bh=R5RaXLvDCvMqzJ58JAifIRcl8VCg0JtJ+rpcb5X3YP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vy4xS3iVtxWqZl1hPT3Y5CivsGCFxXYfe9nSPf7kb8/mooZsrSUkXSbcppQHLYwJRmoNhW8888yHz8H1qaLnUGoNFZY6ZwI23zKtLFnKnwHBAOg7ul1QkyJgGf+/NIbwDrlGQH9/VU0qcaT9ijlgP3l2c3LVK9lsgOTiFPeH294=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=OKrrAkNo; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF3023373B;
+	Fri, 25 Apr 2025 11:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745579128; cv=none; b=rBvJ0V5hQ6Y2FHkUeB96V6czz7Kfs0EcIBpd2bB2EeW7crsBiYqHG6iWxktWkp4r5cl+Mqg3Sa0uZvJaZeqYOJM2EZ//LLcFbpXR7ljsyghyxLEIbPCvPogpxoTBSpAASgi3YjNz+198O0sv7zDuHClpWzL9DWtm+A8Y8xwgU0c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745579128; c=relaxed/simple;
+	bh=YpqP70C3h3hK64vKubewZtLum1drWQcRIC0SIq5nfXQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Dv7TeAcjzKq4+RQtrm8AauDtUgjpJMSr1p4Ig8Vdu1Ux8Vu3TtHfyXe3CsI6R26uZEpLYROLAeLrpXDnuDLsnNJd/1Imx9MUTPJjyifzX9kAIyBGluZknSGYfWyobQATwxX7cxbmVMfY6tBXV8AmX5Jk6wrhYgq7D4S48cS2c1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXdu0Vhv; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="OKrrAkNo"
-ARC-Seal: i=1; a=rsa-sha256; t=1745579078; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=SDxugJswpvqGNeOltQ62andLbcYyYkk6tBkmbAEuHalmZghxA/ccO8uScVLIN/CcOWdhpxJ6q4b88nM4pUcpy9/305gGpVzCXBlZ6R0eBOUk5fp9cpesPVB3RVDKvw7F5Rmm8DgR3TNJdEZnCExltqlNQQK5+vnCt/tiaCgEeqg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745579078; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=N1uwz7nrK036EroOS9mgvLkD2zXocDQ8jq3fui4KRxs=; 
-	b=GdlPAqGHZE3Z8m6A9QEEzINpvp5anyFLblBfWIEev7GMXHGcDG8F8fBu8XkiNMS1nBKFJHd+5ASSXWLqnq47NWmUBXVNzUmrkezF5KtL3jLzh/SA4FcYYlm83LwruuIFoCSmplaw/yOFts5kzhwd876ehXk+vLD3dLDGvKQwZrQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745579078;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=N1uwz7nrK036EroOS9mgvLkD2zXocDQ8jq3fui4KRxs=;
-	b=OKrrAkNo96A8Okjd6LiZSUnjYvH+sOi9QWH4sifoa0/gNY6TSVPrHuAs1jS50c1Y
-	v1AgRhREXsMvdJEBVliA8kNKiWbujXLpNtJy6HAEXAxpjdeJ6yqKQumlpouMxjEI6br
-	KemfPyoazD+I3GlijPn2gxE7ZqBgaYPLXhKtxeQI=
-Received: by mx.zohomail.com with SMTPS id 1745579075334246.23503787793652;
-	Fri, 25 Apr 2025 04:04:35 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: quic_bqiang@quicinc.com,
-	jeff.johnson@oss.qualcomm.com,
-	Jeff Johnson <jjohnson@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] wifi: ath11k: Fix MHI target memory reuse logic
-Date: Fri, 25 Apr 2025 16:04:23 +0500
-Message-ID: <20250425110424.2530460-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXdu0Vhv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745579126; x=1777115126;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YpqP70C3h3hK64vKubewZtLum1drWQcRIC0SIq5nfXQ=;
+  b=RXdu0VhvUbK6qWugH8vxtexdLkcuhBS4FpB0cLL/ytg4BH7IV1+sgmHB
+   R5mwhwp4PPXlokADlabP3yD7wG6r/cnrga7nmPom9KkijM4eNqzTVI6Hc
+   RespTyP/yF0YUlxBvCp70tP0TtVX3HTfBChc6UcZSSpUHEWoD1ytcR2Hy
+   xd1rq+NpC06zhbwENsZo9BZzcC/B7Dm86aFLKEZJebNEVxhGb/0KPLz02
+   q4VZTAtnGWlSZXSPA2wYAUoCx7jfRHtNerpfFhy+tO3AjKAmlGKV0IY9W
+   tjNNrklYDm3p4cGmcZ2L68OT9aIv4N60OaR+DtsMBmKP49SQA/+5/GyZk
+   w==;
+X-CSE-ConnectionGUID: To32BRnTQaeQknd8h7hujQ==
+X-CSE-MsgGUID: 2xB24WUySzqPHrCDccREeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47122786"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47122786"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 04:05:25 -0700
+X-CSE-ConnectionGUID: fDL2LiscTfCwM1vqjg2lig==
+X-CSE-MsgGUID: kcyAqKSJTZ+izEBgt72wCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="170098556"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 04:05:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Apr 2025 14:05:14 +0300 (EEST)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
+    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
+    Jonathan Corbet <corbet@lwn.net>, 
+    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
+    Derek J Clark <derekjohn.clark@gmail.com>, 
+    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
+    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
+    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
+    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
+    mario.limonciello@amd.com
+Subject: Re: [PATCH v9 14/15] platform/x86: oxpec: Add charge threshold and
+ behaviour to OneXPlayer
+In-Reply-To: <CAGwozwEmiUtFndi3KaGKN_8MocpJj1R21ENbnjEeyBco8P3KSg@mail.gmail.com>
+Message-ID: <6193cf3a-f5a3-2e91-50d0-ef980cad334d@linux.intel.com>
+References: <20250417175310.3552671-1-lkml@antheas.dev> <20250417175310.3552671-15-lkml@antheas.dev> <5423a653-01ac-95d2-fa52-31d849df65ef@linux.intel.com> <CAGwozwEmiUtFndi3KaGKN_8MocpJj1R21ENbnjEeyBco8P3KSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: multipart/mixed; boundary="8323328-1201764611-1745579114=:950"
 
-Firmware requests 2 segments at first. The first segment is of 6799360
-whose allocation fails due to dma remapping not available. The success
-is returned to firmware. Then firmware asks for 22 smaller segments
-instead of 2 big ones. Those get allocated successfully. At suspend/
-hibernation time, these segments aren't freed as they will be reused
-by firmware after resuming.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-After resuming, the firmware asks for the 2 segments again with the
-first segment of 6799360 size. Since chunk->vaddr is not NULL, the
-type and size are compared with the previous type and size to know if
-it can be reused or not. Unfortunately, it is detected that it cannot
-be reused and this first smaller segment is freed. Then we continue to
-allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
-is called which frees the second smaller segment as well. Later success
-is returned to firmware which asks for 22 smaller segments again. But
-as we had freed 2 segments already, we'll allocate the first 2 new
-smaller segments again and reuse the remaining 20. Hence 20 small
-segments are being reused instead of 22.
+--8323328-1201764611-1745579114=:950
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Add skip logic when vaddr is set, but size/type don't match. Use the
-same skip and success logic as used when dma_alloc_coherent() fails.
-By skipping, the possibility of resume failure due to kernel failing to
-allocate memory for QMI can be avoided.
+On Thu, 24 Apr 2025, Antheas Kapenekakis wrote:
 
-	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
-	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+> On Thu, 24 Apr 2025 at 15:49, Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Thu, 17 Apr 2025, Antheas Kapenekakis wrote:
+> >
+> > > With the X1 (AMD), OneXPlayer added a charge limit and charge inhibit
+> > > feature to their devices. Charge limit allows for choosing an arbitra=
+ry
+> > > battery charge setpoint in percentages. Charge ihibit allows to instr=
+uct
+> > > the device to stop charging either when it is awake or always.
+> > >
+> > > This feature was then extended for the F1Pro as well. OneXPlayer also
+> > > released BIOS updates for the X1 Mini, X1 (Intel), and F1 devices tha=
+t
+> > > add support for this feature. Therefore, enable it for all F1 and
+> > > X1 devices.
+> > >
+> > > Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> > > Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > > ---
+> > >  drivers/platform/x86/Kconfig |   1 +
+> > >  drivers/platform/x86/oxpec.c | 155 +++++++++++++++++++++++++++++++++=
++-
+> > >  2 files changed, 155 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
+fig
+> > > index 739740c4bb535..6c9e64a03aaef 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -1204,6 +1204,7 @@ config SEL3350_PLATFORM
+> > >  config OXP_EC
+> > >       tristate "OneXPlayer EC platform control"
+> > >       depends on ACPI_EC
+> > > +     depends on ACPI_BATTERY
+> > >       depends on HWMON
+> > >       depends on X86
+> > >       help
+> > > diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpe=
+c.c
+> > > index f0b9fff704de2..ce20bf70027df 100644
+> > > --- a/drivers/platform/x86/oxpec.c
+> > > +++ b/drivers/platform/x86/oxpec.c
+> > > @@ -24,6 +24,7 @@
+> > >  #include <linux/module.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/processor.h>
+> > > +#include <acpi/battery.h>
+> > >
+> > >  /* Handle ACPI lock mechanism */
+> > >  static u32 oxp_mutex;
+> > > @@ -60,6 +61,7 @@ enum oxp_board {
+> > >  };
+> > >
+> > >  static enum oxp_board board;
+> > > +static struct device *oxp_dev;
+> > >
+> > >  /* Fan reading and PWM */
+> > >  #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 regi=
+sters long */
+> > > @@ -93,6 +95,23 @@ static enum oxp_board board;
+> > >  #define OXP_X1_TURBO_LED_OFF           0x01
+> > >  #define OXP_X1_TURBO_LED_ON            0x02
+> > >
+> > > +/* Battery extension settings */
+> > > +#define EC_CHARGE_CONTROL_BEHAVIOURS (BIT(POWER_SUPPLY_CHARGE_BEHAVI=
+OUR_AUTO)             | \
+> > > +                                      BIT(POWER_SUPPLY_CHARGE_BEHAVI=
+OUR_INHIBIT_CHARGE)    | \
+> >
+> > Please change the endings to:
+> >
+> > ...) | <tabs>\
+> >
+> > > +                                      BIT(POWER_SUPPLY_CHARGE_BEHAVI=
+OUR_INHIBIT_CHARGE_AWAKE))
+> > > +
+> > > +#define OXP_X1_CHARGE_LIMIT_REG      0xA3 /* X1 charge limit (%) */
+> > > +#define OXP_X1_CHARGE_INHIBIT_REG     0xA4 /* X1 bypass charging */
+> >
+> > Please use tabs for aligning the values (there were a few other defines
+> > in the earlier patches with spaces too). (I know the earlier ones used
+> > space but they don't seem to be in the same group so lets just move to
+> > tabs with new stuff, optionally, you can add a patch to change also the
+> > pre-existing ones to use space).
+> >
+> > > +
+> > > +#define OXP_X1_CHARGE_INHIBIT_MASK_AWAKE 0x01
+> > > +/*
+> > > + * X1 Mask is 0x0A, OneXFly F1Pro is just 0x02
+> > > + * but the extra bit on the X1 does nothing.
+> >
+> > Reflow to fill 80 chars.
+> >
+> > > + */
+> > > +#define OXP_X1_CHARGE_INHIBIT_MASK_OFF 0x02
+> > > +#define OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS (OXP_X1_CHARGE_INHIBIT_MAS=
+K_AWAKE | \
+> > > +     OXP_X1_CHARGE_INHIBIT_MASK_OFF)
+> >
+> > Align to (.
+>=20
+> I made the corrections.
+>=20
+> Should I send a revision now or wait?
 
-Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+Just send a new version please so I can apply these, I think people have=20
+had enough time to comment on them. :-) (I was basically applying these=20
+while I noticed those issues and some of them were a little awkward to=20
+change/tweak while applying so I left the updating in your hands instead).
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-Changes since v1:
-- Update description
+--=20
+ i.
 
-Changes since v2:
-- Update description
-
-Changes since v3:
-- Update description
----
- drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index 47b9d4126d3a9..2782f4723e413 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
- 			    chunk->prev_size == chunk->size)
- 				continue;
- 
-+			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
-+				ath11k_dbg(ab, ATH11K_DBG_QMI,
-+					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
-+					    chunk->size, chunk->type,
-+					    chunk->prev_size, chunk->prev_type);
-+				ab->qmi.target_mem_delayed = true;
-+				return 0;
-+			}
-+
- 			/* cannot reuse the existing chunk */
- 			dma_free_coherent(ab->dev, chunk->prev_size,
- 					  chunk->vaddr, chunk->paddr);
--- 
-2.43.0
-
+>=20
+> Antheas
+>=20
+> > --
+> >  i.
+> >
+> > > +
+> > >  static const struct dmi_system_id dmi_table[] =3D {
+> > >       {
+> > >               .matches =3D {
+> > > @@ -507,6 +526,129 @@ static ssize_t tt_led_show(struct device *dev,
+> > >
+> > >  static DEVICE_ATTR_RW(tt_led);
+> > >
+> > > +/* Callbacks for charge behaviour attributes */
+> > > +static bool oxp_psy_ext_supported(void)
+> > > +{
+> > > +     switch (board) {
+> > > +     case oxp_x1:
+> > > +     case oxp_fly:
+> > > +             return true;
+> > > +     default:
+> > > +             break;
+> > > +     }
+> > > +     return false;
+> > > +}
+> > > +
+> > > +static int oxp_psy_ext_get_prop(struct power_supply *psy,
+> > > +                                    const struct power_supply_ext *e=
+xt,
+> > > +                                    void *data,
+> > > +                                    enum power_supply_property psp,
+> > > +                                    union power_supply_propval *val)
+> > > +{
+> > > +     long raw_val;
+> > > +     int ret;
+> > > +
+> > > +     switch (psp) {
+> > > +     case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
+> > > +             ret =3D read_from_ec(OXP_X1_CHARGE_LIMIT_REG, 1, &raw_v=
+al);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +             if (raw_val < 0 || raw_val > 100)
+> > > +                     return -EINVAL;
+> > > +             val->intval =3D raw_val;
+> > > +             return 0;
+> > > +     case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
+> > > +             ret =3D read_from_ec(OXP_X1_CHARGE_INHIBIT_REG, 1, &raw=
+_val);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +             if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS) =3D=
+=3D
+> > > +                 OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS)
+> > > +                     val->intval =3D POWER_SUPPLY_CHARGE_BEHAVIOUR_I=
+NHIBIT_CHARGE;
+> > > +             else if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_AWAKE) =
+=3D=3D
+> > > +                      OXP_X1_CHARGE_INHIBIT_MASK_AWAKE)
+> > > +                     val->intval =3D POWER_SUPPLY_CHARGE_BEHAVIOUR_I=
+NHIBIT_CHARGE_AWAKE;
+> > > +             else
+> > > +                     val->intval =3D POWER_SUPPLY_CHARGE_BEHAVIOUR_A=
+UTO;
+> > > +             return 0;
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +}
+> > > +
+> > > +static int oxp_psy_ext_set_prop(struct power_supply *psy,
+> > > +                                    const struct power_supply_ext *e=
+xt,
+> > > +                                    void *data,
+> > > +                                    enum power_supply_property psp,
+> > > +                                    const union power_supply_propval=
+ *val)
+> > > +{
+> > > +     long raw_val;
+> > > +
+> > > +     switch (psp) {
+> > > +     case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
+> > > +             if (val->intval > 100)
+> > > +                     return -EINVAL;
+> > > +             return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval=
+);
+> > > +     case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
+> > > +             switch (val->intval) {
+> > > +             case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
+> > > +                     raw_val =3D 0;
+> > > +                     break;
+> > > +             case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE=
+:
+> > > +                     raw_val =3D OXP_X1_CHARGE_INHIBIT_MASK_AWAKE;
+> > > +                     break;
+> > > +             case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
+> > > +                     raw_val =3D OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS;
+> > > +                     break;
+> > > +             default:
+> > > +                     return -EINVAL;
+> > > +             }
+> > > +
+> > > +             return write_to_ec(OXP_X1_CHARGE_INHIBIT_REG, raw_val);
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +}
+> > > +
+> > > +static int oxp_psy_prop_is_writeable(struct power_supply *psy,
+> > > +                                         const struct power_supply_e=
+xt *ext,
+> > > +                                         void *data,
+> > > +                                         enum power_supply_property =
+psp)
+> > > +{
+> > > +     return true;
+> > > +}
+> > > +
+> > > +static const enum power_supply_property oxp_psy_ext_props[] =3D {
+> > > +     POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+> > > +     POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
+> > > +};
+> > > +
+> > > +static const struct power_supply_ext oxp_psy_ext =3D {
+> > > +     .name                   =3D "oxp-charge-control",
+> > > +     .properties             =3D oxp_psy_ext_props,
+> > > +     .num_properties         =3D ARRAY_SIZE(oxp_psy_ext_props),
+> > > +     .charge_behaviours      =3D EC_CHARGE_CONTROL_BEHAVIOURS,
+> > > +     .get_property           =3D oxp_psy_ext_get_prop,
+> > > +     .set_property           =3D oxp_psy_ext_set_prop,
+> > > +     .property_is_writeable  =3D oxp_psy_prop_is_writeable,
+> > > +};
+> > > +
+> > > +static int oxp_add_battery(struct power_supply *battery, struct acpi=
+_battery_hook *hook)
+> > > +{
+> > > +     return power_supply_register_extension(battery, &oxp_psy_ext, o=
+xp_dev, NULL);
+> > > +}
+> > > +
+> > > +static int oxp_remove_battery(struct power_supply *battery, struct a=
+cpi_battery_hook *hook)
+> > > +{
+> > > +     power_supply_unregister_extension(battery, &oxp_psy_ext);
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static struct acpi_battery_hook battery_hook =3D {
+> > > +     .add_battery    =3D oxp_add_battery,
+> > > +     .remove_battery =3D oxp_remove_battery,
+> > > +     .name           =3D "OneXPlayer Battery",
+> > > +};
+> > > +
+> > >  /* PWM enable/disable functions */
+> > >  static int oxp_pwm_enable(void)
+> > >  {
+> > > @@ -847,11 +989,22 @@ static int oxp_platform_probe(struct platform_d=
+evice *pdev)
+> > >  {
+> > >       struct device *dev =3D &pdev->dev;
+> > >       struct device *hwdev;
+> > > +     int ret;
+> > >
+> > > +     oxp_dev =3D dev;
+> > >       hwdev =3D devm_hwmon_device_register_with_info(dev, "oxp_ec", N=
+ULL,
+> > >                                                    &oxp_ec_chip_info,=
+ NULL);
+> > >
+> > > -     return PTR_ERR_OR_ZERO(hwdev);
+> > > +     if (IS_ERR(hwdev))
+> > > +             return PTR_ERR(hwdev);
+> > > +
+> > > +     if (oxp_psy_ext_supported()) {
+> > > +             ret =3D devm_battery_hook_register(dev, &battery_hook);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > >  }
+> > >
+> > >  static struct platform_driver oxp_platform_driver =3D {
+> > >
+>=20
+--8323328-1201764611-1745579114=:950--
