@@ -1,100 +1,114 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD3322E3E1
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7EF42A96;
+	Fri, 25 Apr 2025 14:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745591335; cv=none; b=StOtzToUO1JKayxDzJywkVwW1el47i4HX/b0dPLzGiKo+P9L0es9GV11pFraeSb3XZZYDm/pDSq44VKhIzV+R8dOlrWozovloQrwaF+Q1HnzITe0uD3kvRjmVPLzGKsydziXCQfju4e9Kct89urEC5OKEtgxTvT1uPQy5NXMu+8=
+	t=1745591397; cv=none; b=RRGvKHlN3QmVK/sxTvqz//iMPh5dw79eruRJyGUEoF3aNRPPyOiQCmkOlI/9XVxS+JnwugLmuJORwCxNLNmAZ/TOqZWUVfU/4ZWeOUqdqng9YpXkX9cSGDaAsP+kMfRRCQNWcQJE7Jd67n2ZYzse3GkHfTh25/uFtNsPWkmZhuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745591335; c=relaxed/simple;
-	bh=0IZ1Z5kXbWNbw+/eh5Jjbjxv2FVYLBId14o5vdtEp90=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=emtjCu93Z3X9lL8ayA6J8cTFGP6lKLMdC1f/y3Le+QN43pFqvo6FjnS+Y5yLqKR0RnD92glCRXPfKXKZk/LCJ+emqlHvybYZU9+4RGCCdgTYcAKmf/n1p71lEISiAYLV0pWj0zSG2LCWJ8xLY+mIRWmvg8eO0SZ3NeqnteC/p8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WfEjLZmC; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745591397; c=relaxed/simple;
+	bh=+XqOAPew5a1b5gfu8o+UlqkLvmOLpEvfcxPMD/2pIHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qeHv67bZrUDs9np1ayVTOa41Xn0e+1JQIuf2fi+aNIO5TeX8a/PRBFqBqQ3WqwlmbFoWBpJO0q73GGIrPb+Zx/lsNVfZHqGDXBU1qGelW6dAye8T9ndVjZCDLsi5puEXIvZzDAuaJ6uHtDrk6Vrzr8fdnvaCYoOZPsJtHlgFUyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JbS5112T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfEjLZmC"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e461015fbd4so2126247276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745591333; x=1746196133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0IZ1Z5kXbWNbw+/eh5Jjbjxv2FVYLBId14o5vdtEp90=;
-        b=WfEjLZmCGUkN9c1SSxN4OWtp7Ax6G2eAX0T04tWly56ONQIQWOsPOWdAy6ChosMlmj
-         TXMEfl7PL5QimkHprruyU5VkoPre5ZmgOwygm4b3ccOzS/32QJbL29PkIqmOmzxe2QK8
-         q0QwKxSLX6QkyFE6TUhZzabVs3EN05P7XD4vtqG83Gn/ydVV1PzNoYx+b9OVSOtuS6p0
-         NIGEp6OxAxMhMLxe1Q4K2ltH+Dhg+deMydZBg29L2TguAtRvw3UFamZDgrd03a+4cNEg
-         YqbHk5rGz9ParfGI6SxJmRrviKpZXKOM1ckPBJdR4zDWk10zDAhejIrTitaPy9YKEbd0
-         Jo1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745591333; x=1746196133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0IZ1Z5kXbWNbw+/eh5Jjbjxv2FVYLBId14o5vdtEp90=;
-        b=bc53jX63Kr8Mh9XLbSJPP2SvYPLL+eSAY5IuxicvzFg8iT1vqv/MInOr0Mx1plKZzF
-         4GORF1KsYeCmSepgwk0qOLY107oO46/jcUcKiZPeqpJcJZmKD//avi0ivOdBW21DQDjT
-         MbSIZZEcUcyLloMHKZCT2jpX11YfDi/wkUQDPkQFHnvSqBwfSdh4YC9JSPHF3575tCyI
-         3aQWR29xvscRRFipFCggCxoUHKxZ5eGqBPdVoTXsMIGEy+zq+3hvAEb9+yGsE/nM91Mi
-         dMK6L/+shuXI5UMiUilmAP26BKu9+qmUrVHC3nHkWGg9l677Zgo2ojCPdkwF1ewJftME
-         jH1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUYbF/bKhdLzvyFZnRtFehyJ8VWJu3FU93WiT+ux2rTJAWLACsw29A6qnABeUJzaSySOTwTenPANObki7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf64C17/4Ey4giXWtluF2wk28AVEaNqasZpbvmMm4AyAJRs7dH
-	RAknwXnIPSSMx01J3zCVjhCHF88DZcQOBF+8W4L6QfR0dilVzxPEJ00M0nGJnAwWvPQfjNr4GN7
-	TdLp3H4kB8HGFpAqSWjNkjf3LNj/eRb2XI9Q=
-X-Gm-Gg: ASbGncvWVl7wnT4V2W2hL3MZesPlZAQ7YgmLYkUPqW79WIKKs41CVQY2yyNnZDSTWk6
-	oYAV35Q5NlCpQVZHLcJ/lgoqlrw1Hp+YrelW/9+xarD6JNvRiJxPvrbk4FUJ6ltBRxjC5yRAmQM
-	el/3mLn9oXGPjSLP26sQLBZRBUuUw=
-X-Google-Smtp-Source: AGHT+IEkV/RgXiDW1D8bFaCv+KKAgjpHm568eaTLfIKUTtEBWXzInj8ZP8S4Inyj5ExQY+g0lXgDbTw947IrRNQtLjo=
-X-Received: by 2002:a05:6902:2b83:b0:e73:126c:fdfa with SMTP id
- 3f1490d57ef6-e7316829eaamr3328647276.29.1745591332754; Fri, 25 Apr 2025
- 07:28:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JbS5112T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976CCC4CEE4;
+	Fri, 25 Apr 2025 14:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745591396;
+	bh=+XqOAPew5a1b5gfu8o+UlqkLvmOLpEvfcxPMD/2pIHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JbS5112ToWDXcpzzgUQG25+mP6+L6Ns+1G48SI3CcZ5QpiPgsq0jgTeAUYRiKfigT
+	 BFMqLZBPAC8JrAAt3tJLj+ZJ4Sjfene6T3qBmg3thahovInns0tFALqLnCJ+1JR4iL
+	 0XiaaGhzoQ1lY2GNCFAyxgjDXFZsvks6KiWoYdSw=
+Date: Fri, 25 Apr 2025 16:29:52 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Nicolas Pitre <nico@fluxnic.net>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Nicolas Pitre <npitre@baylibre.com>,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/14] vt: implement proper Unicode handling
+Message-ID: <2025042517-defacing-lushly-10d5@gregkh>
+References: <20250417184849.475581-1-nico@fluxnic.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424153815.4003-1-haowenchao22@gmail.com> <20250424194200.GD840@cmpxchg.org>
-In-Reply-To: <20250424194200.GD840@cmpxchg.org>
-From: Wenchao Hao <haowenchao22@gmail.com>
-Date: Fri, 25 Apr 2025 22:28:42 +0800
-X-Gm-Features: ATxdqUGPWMKahfXsbho5V4QfMOQWdI9zAo2KvWvl_MBadhn3O8BUxSa77qltUjM
-Message-ID: <CAOptpSPoc76ZSzbKJSnnfxtcDubJHC8a1zU7b=C=wdF6_wC3ww@mail.gmail.com>
-Subject: Re: [PATCH] mm/compaction: do not break pages whose order is larger
- than target order
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417184849.475581-1-nico@fluxnic.net>
 
-On Fri, Apr 25, 2025 at 3:42=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> On Thu, Apr 24, 2025 at 11:38:15PM +0800, Wenchao Hao wrote:
-> > When scanning free pages for memory compaction, if the compaction targe=
-t
-> > order is explicitly specified, do not split pages in buddy whose order
-> > are larger than compaction target order.
->
-> Have you observed this to be an issue in practice?
->
-> compact_finished() would have bailed if such a page had existed.
->
+On Thu, Apr 17, 2025 at 02:45:02PM -0400, Nicolas Pitre wrote:
+> The Linux VT console has many problems with regards to proper Unicode
+> handling:
+> 
+> - All new double-width Unicode code points which have been introduced since
+>   Unicode 5.0 are not recognized as such (we're at Unicode 16.0 now).
+> 
+> - Zero-width code points are not recognized at all. If you try to edit files
+>   containing a lot of emojis, you will see the rendering issues. When there
+>   are a lot of zero-width characters (like "variation selectors"), long
+>   lines get wrapped, but any Unicode-aware editor thinks that the content
+>   was rendered properly and its rendering logic starts to work in very bad
+>   ways. Combine this with tmux or screen, and there is a huge mess going on
+>   in the terminal.
+> 
+> - Also, text which uses combining diacritics has the same effect as text
+>   with zero-width characters as programs expect the characters to take fewer
+>   columns than what they actually do.
+> 
+> Some may argue that the Linux VT console is unmaintained and/or not used
+> much any longer and that one should consider a user space terminal
+> alternative instead. But every such alternative that is not less maintained
+> than the Linux VT console does require a full heavy graphical environment
+> and that is the exact antithesis of what the Linux console is meant to be.
+> 
+> Furthermore, there is a significant Linux console user base represented by
+> blind users (which I'm a member of) for whom the alternatives are way more
+> cumbersome to use reducing our productivity. So it has to stay and
+> be maintained to the best of our abilities.
+> 
+> That being said...
+> 
+> This patch series is about fixing all the above issues. This is accomplished
+> with some Python scripts leveraging Python's unicodedata module to generate
+> C code with lookup tables that is suitable for the kernel. In summary:
+> 
+> - The double-width code point table is updated to the latest Unicode version
+>   and the table itself is optimized to reduce its size.
+> 
+> - A zero-width code point table is created and the console code is modified
+>   to properly use it.
+> 
+> - A table with base character + combining mark pairs is created to convert
+>   them into their precomposed equivalents when they're encountered.
+>   By default the generated table contains most commonly used Latin, Greek,
+>   and Cyrillic recomposition pairs only, but one can execute the provided
+>   script with the --full argument to create a table that covers all
+>   possibilities. Combining marks that are not listed in the table are simply
+>   treated like zero-width code points and properly ignored.
+> 
+> - All those tables plus related lookup code require about 3500 additional
+>   bytes of text which is not very significant these days. Yet, one
+>   can still set CONFIG_CONSOLE_TRANSLATIONS=n to configure this all out
+>   if need be.
+> 
+> Note: The generated C code makes scripts/checkpatch.pl complain about
+>       "... exceeds 100 columns" because the inserted comments with code
+>       point names, well, make some inlines exceed 100 columns. Please make
+>       an exception for those files and disregard those warnings. When
+>       checkpatch.pl is used on those files directly with -f then it doesn't
+>       complain.
+> 
+> This series was tested on top of v6.15-rc2.
 
-Yes, when proactive memory compaction is enabled, there may be situations
-where the order of isolated free pages is greater than the compaction
-requested order, and compact_finished() will return continue.
+I've taken the first version of this, should I revert all of them and
+then apply these, or do you want to send a diff between this and what is
+in the tty-next tree?
 
+thanks,
 
-> compaction_capture() would steal such a page upon production.
->
-> It could help with blocks freed by chance from somewhere else, where
-> you'd preserve it to grab it later from the allocation retry. But if
-> that's the target, it might be better to indeed isolate the page, and
-> then capture it inside compaction_alloc()?
+greg k-h
