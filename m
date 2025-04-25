@@ -1,46 +1,46 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69A521E0A8;
-	Fri, 25 Apr 2025 19:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907ED221567;
+	Fri, 25 Apr 2025 19:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609665; cv=none; b=rKbc50s5K5+hOycFgI1UiMoEBefA49AbcJPTDhH8zlluq2RlyWgUUtDqviUwoQ96NQYy3xequzdEwftqRHZdesI+nkUN8VDHVy76lIPrLI3T7Dbwtl9Tx8SnRu1LyNHLLvkJRzoBEIkhRf7XKLH2hBNhdV96i4JiqUMTZAfJGIQ=
+	t=1745609666; cv=none; b=JXtP7dahvVAoO2NARydL2kMVmZgyl6pppAXHiZP3NQ0HPuRbI1TXX5k/tBTWt/4e9ow6L2fnqEbWtD8nOmrbMuV/m5yJdeKHMMblD1b/EQi2R8kjnNqI5rdiYe+CKyKdQRvI46DKxbqAIiWWcOlBvpc5XqiOVSxyDSdCUbDCHz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609665; c=relaxed/simple;
-	bh=0MI0aBmXATawN3V0PUL/WS1ALDsJbUtNJjz41S1xg0U=;
+	s=arc-20240116; t=1745609666; c=relaxed/simple;
+	bh=ttESHxoGQS0X2vMOzL67rlzoGp6Qjw1IZDEeuKq7kjs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b7NGOGNiHrg6Sr4NKP+CXMlCprCPkBmt4DJyy6LbIBaRhk29h8pPuyD1yLCcr1HgjN/UDlx2TeopCdbPosPNHn+1lyZ4yGGdqhtLCrnbTYgrfKSWdwh3pXjlME5b79zmreNtHKRnfbSmA+MURlCbGGpCyZIbC1EHetrSmud6wCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=KlZDEm/Y; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=gFDy5ICjh/H+6jyqjc+jTDhDta4zohx4JX7VLtbWoYZOLBUzeXULBRbwshoDOZJ8vdWbXyyAbA25c2M6mOlTuEkQsrIFaijwHtj7winztgDGXK3Q8pBQ2nHtF8t5JfXMOlowGzU1CWXRFZmJz7FvTCUfT9k70NfYyr+hTKkFxek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=yHukXgLJ; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="KlZDEm/Y"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="yHukXgLJ"
 Received: from kreacher.localnet (unknown [217.114.34.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id CA4836644DF;
-	Fri, 25 Apr 2025 21:34:14 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id CC874664706;
+	Fri, 25 Apr 2025 21:34:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745609655;
-	bh=0MI0aBmXATawN3V0PUL/WS1ALDsJbUtNJjz41S1xg0U=;
+	s=dkim; t=1745609659;
+	bh=ttESHxoGQS0X2vMOzL67rlzoGp6Qjw1IZDEeuKq7kjs=;
 	h=From:Subject:Date;
-	b=KlZDEm/Yf4nJBS0tj28RYxlfsutp5v1Ifsbz5Pm1HkHZX1iYTVA/VHA54HKnHE82q
-	 WmUJu+3yDBDAvg5L0AAXm3Z3qsWytSCkMmCSDve4xyUErBByyku5LvrWetHCZb77CF
-	 L8VHR8RbPfR3KOELrdjrvhMYBO+8QAT2vmZBY6LchUGE8DCHo8Qcjsxm2hn1g7v8S3
-	 3857eJyApqByqCt0ybylFj5U7P7CVIiMDtCVmVMHwn7tpr99AH6Rwv0KcAaLyO7g5c
-	 GBAcE4cXgqyjYS0JS7jSlQVKykpL+sn2/DfLOsfgUnwMjcoBSATYyKPwpmw1ovp9Um
-	 YiTbl6Te1CeGQ==
+	b=yHukXgLJ/i9xuHSWC3Yp1LmbTRuuanzy9LXMoFD4x7SPQePsI7YVSLD0UqeQ+k/Jl
+	 Y5/9H/Gnp6429frwOt3BLlaT4E1MvEQLeNOT8UsEhky82nRqIw9IcRJU4e4tV2eS16
+	 495mOM6d8ddzkA98RPlVRMojUPUrrJUkxsCokeMPOLH74jlvh3trnRkFfG1EpXWCJB
+	 tH0B7otG7vXKHcSuXHuRvXFbmzuXO7nnGuzLIwBG/uNEQNcSJtQpWoeODS/FfUrTrE
+	 gL3a53RIf7V+MDm+oIHsoD/MecsZHBq1b/diQ0ea2gqL+oaJWgB4Evqchcfej9n+vL
+	 bLfKuQlPwVV+g==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
 Subject:
- [PATCH v1 14/19] ACPICA: actbl2.h: ACPI 6.5: RAS2: Rename structure and field
- names of the RAS2 table
-Date: Fri, 25 Apr 2025 21:29:12 +0200
-Message-ID: <1942053.CQOukoFCf9@rjwysocki.net>
+ [PATCH v1 10/19] ACPICA: infrastructure: Add new DMT_BUF types and  shorten a
+ long name
+Date: Fri, 25 Apr 2025 21:26:44 +0200
+Message-ID: <3643286.iIbC2pHGDl@rjwysocki.net>
 In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
 References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -54,78 +54,54 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 217.114.34.19
 X-CLIENT-HOSTNAME: 217.114.34.19
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-From: Shiju Jose <shiju.jose@huawei.com>
+From: Tony Luck <tony.luck@intel.com>
 
-ACPICA commit 2c8a38f747de9d977491a494faf0dfaf799b777b
+ACPICA commit b8713f71b4023a0396fe61503bbbf5226e5eed1b
 
-Rename the structure and field names of the RAS2 table to shorten them and
-avoid long lines in the ACPI RAS2 drivers.
+Some ERDT subtables have 11 and 24 byte reserved fields.
 
- 1. struct acpi_ras2_shared_memory to struct acpi_ras2_shmem
+Add the ACPI_DMT_BUF11 and ACPI_DMT_BUF24 types to describe these reserved
+fields in struct acpi_dmtable_info structures.
 
- 2. In struct acpi_ras2_shared_memory: fields,
-    - set_capabilities[16] to set_caps[16]
-    - num_parameter_blocks to num_param_blks
-    - set_capabilities_status to set_caps_status
+Shorten the ACPI_SUBTABLE_HEADER_16 name to ACPI_SUBTBL_HDR
 
- 3. struct acpi_ras2_patrol_scrub_parameter to
-    struct acpi_ras2_patrol_scrub_param
-
- 4. In struct acpi_ras2_patrol_scrub_parameter: fields,
-    - patrol_scrub_command to command
-    - requested_address_range to req_addr_range
-    - actual_address_range to actl_addr_range
-
-Link: https://github.com/acpica/acpica/commit/2c8a38f7
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Link: https://github.com/acpica/acpica/commit/b8713f71
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/acpi/actbl2.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ include/acpi/actbl1.h | 2 +-
+ include/acpi/actbl2.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+index b403b0b60bf6..6d2cc181e3a4 100644
+--- a/include/acpi/actbl1.h
++++ b/include/acpi/actbl1.h
+@@ -157,7 +157,7 @@ struct acpi_aspt_acpi_mbox_regs {
+ 
+ /* Larger subtable header (when Length can exceed 255) */
+ 
+-struct acpi_subtable_header_16 {
++struct acpi_subtbl_hdr_16 {
+ 	u16 type;
+ 	u16 length;
+ };
 diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-index ccbf543bceeb..3c2c0730165d 100644
+index 274b3b85b6d7..2c07b097ef9f 100644
 --- a/include/acpi/actbl2.h
 +++ b/include/acpi/actbl2.h
-@@ -3035,15 +3035,15 @@ struct acpi_ras2_pcc_desc {
+@@ -1764,7 +1764,7 @@ struct acpi_table_mrrm {
+ 	******************************************************************************/
  
- /* RAS2 Platform Communication Channel Shared Memory Region */
- 
--struct acpi_ras2_shared_memory {
-+struct acpi_ras2_shmem {
- 	u32 signature;
- 	u16 command;
- 	u16 status;
- 	u16 version;
- 	u8 features[16];
--	u8 set_capabilities[16];
--	u16 num_parameter_blocks;
--	u32 set_capabilities_status;
-+	u8 set_caps[16];
-+	u16 num_param_blks;
-+	u32 set_caps_status;
- };
- 
- /* RAS2 Parameter Block Structure for PATROL_SCRUB */
-@@ -3056,11 +3056,11 @@ struct acpi_ras2_parameter_block {
- 
- /* RAS2 Parameter Block Structure for PATROL_SCRUB */
- 
--struct acpi_ras2_patrol_scrub_parameter {
-+struct acpi_ras2_patrol_scrub_param {
- 	struct acpi_ras2_parameter_block header;
--	u16 patrol_scrub_command;
--	u64 requested_address_range[2];
--	u64 actual_address_range[2];
-+	u16 command;
-+	u64 req_addr_range[2];
-+	u64 actl_addr_range[2];
- 	u32 flags;
- 	u32 scrub_params_out;
- 	u32 scrub_params_in;
+ struct acpi_mrrm_mem_range_entry {
+-	struct acpi_subtable_header_16 header;
++	struct acpi_subtbl_hdr_16 header;
+ 	u32 reserved0;		/* Reserved */
+ 	u64 addr_base;		/* Base addr of the mem range */
+ 	u64 addr_len;		/* Length of the mem range */
 -- 
 2.43.0
 
