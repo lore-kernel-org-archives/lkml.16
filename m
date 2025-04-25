@@ -1,102 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C128B51F;
-	Fri, 25 Apr 2025 17:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CFA215760
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745602827; cv=none; b=PPIhq3PLIR5+LIyJ1OQZ1s/FAymS9mg+iqGl/muSIvZgYmntGL6r5YfnuSXa7Z76h9gNG3t/ZgcqkbQ/Go+ZVU9wFwWy7003keWpGJLt27qvZmKazbzF7jvggR2sox32SFuOfYKEmLWjtUpbZ9icqlINrItx2IwGueT5zdbqmaE=
+	t=1745602835; cv=none; b=JckPmFB3d+ax03ZYI5yHEOfyN2VBhE/iPQxS8JH5nVuFXvIY7ebEbA71pucbTrrpxbXdVF7pN4kShiVPZXjiy2xqvOcZhr7FsHxdxc4rU27fvmw62nXlutvqo0msgIueJhYmm6PSu4xZClyqjZgqjI7UqMPjm8qjTWHIamSa8AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745602827; c=relaxed/simple;
-	bh=6ocjWhYSI8qotqytj7xpemjZ9TvHkYufmHU9wQ6o7PQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rD0orqJifCiJG1ZNHDWFeVkYUhuAjVyy9gJ1XDfZ9/haeOov0jSbc83t22R07WDcxjmqOkJaqU7bdGjoh9bt9T0GvUFtj2N/3N4mklxzK/uGNwHVr8Vist0N+Q5O+6M6i+vmP0w8T0YYgHaOxOnHT92TLV9wic/EwzOzE9pk/5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4GTHISz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4GTHISz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6E7C4CEE9;
-	Fri, 25 Apr 2025 17:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745602827;
-	bh=6ocjWhYSI8qotqytj7xpemjZ9TvHkYufmHU9wQ6o7PQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=A4GTHISzejxDwVKOH6fbq91E3XqWLQyoA/9kHeuIDqP51fHYLTEErd2TWcN4ObL8z
-	 t7N++svDsnUYfhFJazaG6x6e2IXo5go8b+7ki9HoV98yxAm0aNFGZydeOPDJpY/hcd
-	 ewRXEsoPMtuv6hFAZyfGODi8tbB3eB4KBKcXTLqcDa90jVgwJSr9l9h176by+nKfxh
-	 +MT3mE9DVGMM2taTLIZEfv7pUFhzZOSicNttNykMXCN6YzdkF9tZcFbWCA6V19gAiJ
-	 QOTFJ5hUfA7E/zVHnfQkd3UVz4C1JfkeyrAhSD6Zvx96PXrtqDqqRSaIyxMniYoOCM
-	 rlseESokSw6Cw==
-From: Mark Brown <broonie@kernel.org>
-To: alsa-devel@alsa-project.org, 
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com, 
- Sunil-kumar.Dommati@amd.com, syed.sabakareem@amd.com, 
- mario.limonciello@amd.com, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- Greg KH <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>, 
- "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
- open list <linux-kernel@vger.kernel.org>
-In-Reply-To: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
-References: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
-Subject: Re: [PATCH 1/3] ASoC: amd: acp: Fix NULL pointer deref on acp
- resume path
-Message-Id: <174560282390.225473.13689303737740038724.b4-ty@kernel.org>
-Date: Fri, 25 Apr 2025 18:40:23 +0100
+	s=arc-20240116; t=1745602835; c=relaxed/simple;
+	bh=YG3IJ0pr2YK1vpBhILPp6xAT9mzDFnHcLo5bnq08t+w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nD2odS/26etefPYoU62alyhMpjnMTdpFYzmt1BKVjCqvxI1jeoqfSGiIEWnqaRSpW1CyEyZV8bCtk/UU3R0kc3g2bqnklYB2b8krhuZeC/x9yO0BwGNIRBdXjeQvAQ85ZeowxKf1910zYvWrua8PA3WqCBmrA1N2pk8B7SYypC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D0C522FA;
+	Fri, 25 Apr 2025 10:40:27 -0700 (PDT)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B1643F762;
+	Fri, 25 Apr 2025 10:40:28 -0700 (PDT)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	fenghuay@nvidia.com,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	Babu Moger <babu.moger@amd.com>
+Subject: [PATCH v9 23/27] x86,fs/resctrl: Remove duplicated trace header files
+Date: Fri, 25 Apr 2025 17:38:05 +0000
+Message-Id: <20250425173809.5529-24-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250425173809.5529-1-james.morse@arm.com>
+References: <20250425173809.5529-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Apr 2025 11:31:39 +0530, Venkata Prasad Potturu wrote:
-> update chip data using dev_get_drvdata(dev->parent) instead of
-> dev_get_platdata(dev).
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000010
-> Call Trace:
->  <TASK>
->  ? __pfx_platform_pm_resume+0x10/0x10
->  platform_pm_resume+0x28/0x60
->  dpm_run_callback+0x51/0x1a0
->  device_resume+0x1a6/0x2b0
->  dpm_resume+0x168/0x230
-> 
-> [...]
+The copy-pasting python script creates some empty trace point header
+files. These can cause a build warning from ftrace.
 
-Applied to
+Remove them.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Peter Newman <peternewman@google.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
+Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
+Tested-by: Babu Moger <babu.moger@amd.com>
+---
+Changes since v8:
+ * Removed stale CFLAGS_monitor.o for ftrace from arch/x86's Makefile.
+---
+ arch/x86/kernel/cpu/resctrl/Makefile        |  1 -
+ arch/x86/kernel/cpu/resctrl/monitor.c       |  4 ----
+ arch/x86/kernel/cpu/resctrl/monitor_trace.h | 17 -----------------
+ fs/resctrl/pseudo_lock.c                    |  4 ----
+ fs/resctrl/pseudo_lock_trace.h              | 17 -----------------
+ 5 files changed, 43 deletions(-)
+ delete mode 100644 arch/x86/kernel/cpu/resctrl/monitor_trace.h
+ delete mode 100644 fs/resctrl/pseudo_lock_trace.h
 
-Thanks!
-
-[1/3] ASoC: amd: acp: Fix NULL pointer deref on acp resume path
-      commit: ba85883d160515129b58873f74376a89faf21c7c
-[2/3] ASoC: amd: acp: Fix NULL pointer deref in acp_i2s_set_tdm_slot
-      commit: 6d9b64156d849e358cb49b6b899fb0b7d262bda8
-[3/3] ASoC: amd: acp: Fix devm_snd_soc_register_card(acp-pdm-mach) failure
-      commit: 138e6da0392ed067d0db7b5b5b4582c3668cfcf9
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
+index 909be78ec6da..d8a04b195da2 100644
+--- a/arch/x86/kernel/cpu/resctrl/Makefile
++++ b/arch/x86/kernel/cpu/resctrl/Makefile
+@@ -5,4 +5,3 @@ obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
+ 
+ # To allow define_trace.h's recursive include:
+ CFLAGS_pseudo_lock.o = -I$(src)
+-CFLAGS_monitor.o = -I$(src)
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index bec251dcd581..c0a04fe2bcd9 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -27,10 +27,6 @@
+ 
+ #include "internal.h"
+ 
+-#define CREATE_TRACE_POINTS
+-
+-#include "monitor_trace.h"
+-
+ /*
+  * Global boolean for rdt_monitor which is true if any
+  * resource monitoring is enabled.
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor_trace.h b/arch/x86/kernel/cpu/resctrl/monitor_trace.h
+deleted file mode 100644
+index b5a142dd0f0e..000000000000
+--- a/arch/x86/kernel/cpu/resctrl/monitor_trace.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#undef TRACE_SYSTEM
+-#define TRACE_SYSTEM resctrl
+-
+-#if !defined(_FS_RESCTRL_MONITOR_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _FS_RESCTRL_MONITOR_TRACE_H
+-
+-#include <linux/tracepoint.h>
+-
+-#endif /* _FS_RESCTRL_MONITOR_TRACE_H */
+-
+-#undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH .
+-
+-#define TRACE_INCLUDE_FILE monitor_trace
+-
+-#include <trace/define_trace.h>
+diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
+index 29682dd46871..7305b232384e 100644
+--- a/fs/resctrl/pseudo_lock.c
++++ b/fs/resctrl/pseudo_lock.c
+@@ -30,10 +30,6 @@
+ #include "../../events/perf_event.h" /* For X86_CONFIG() */
+ #include "internal.h"
+ 
+-#define CREATE_TRACE_POINTS
+-
+-#include "pseudo_lock_trace.h"
+-
+ /*
+  * Major number assigned to and shared by all devices exposing
+  * pseudo-locked regions.
+diff --git a/fs/resctrl/pseudo_lock_trace.h b/fs/resctrl/pseudo_lock_trace.h
+deleted file mode 100644
+index 7a6a1983953a..000000000000
+--- a/fs/resctrl/pseudo_lock_trace.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#undef TRACE_SYSTEM
+-#define TRACE_SYSTEM resctrl
+-
+-#if !defined(_X86_RESCTRL_PSEUDO_LOCK_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _X86_RESCTRL_PSEUDO_LOCK_TRACE_H
+-
+-#include <linux/tracepoint.h>
+-
+-#endif /* _X86_RESCTRL_PSEUDO_LOCK_TRACE_H */
+-
+-#undef TRACE_INCLUDE_PATH
+-#define TRACE_INCLUDE_PATH .
+-
+-#define TRACE_INCLUDE_FILE pseudo_lock_trace
+-
+-#include <trace/define_trace.h>
+-- 
+2.39.5
 
