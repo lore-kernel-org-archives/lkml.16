@@ -1,96 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 580BE20C000;
-	Fri, 25 Apr 2025 21:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467E1221FAE;
+	Fri, 25 Apr 2025 21:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745616746; cv=none; b=FK6WZgZb77uYIL+QPE8cQpjMwlw/zuI6bpv2ritEFKsLQ76Ni/7vrdBrHyTBHKR+m9umQt/LAwfXCBnOnM6hTGvTG8WFZ6mvqUcfAQtlPRetIrXrY25HEOV/yvVJhYMtQimfTkr2vqEbNXhvkS7AbuAh99ah+GB1g+amgHE4lws=
+	t=1745616763; cv=none; b=ALoax+zg2Wb2TV5oOc7MlyyldWbgk66vh49vAuaOXfPwIdCAYLzw4SpHcdlhuulp3+9x+N3AZz5CnqNsMzTNCncZ9iTWmfe+5jnEZAy4vPjs3Jpl3f8cQA1qd4AeWtqs8Fs9rKdeVAXeykuTQRRzlZHtv0k1jgIL6/2RDjw43Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745616746; c=relaxed/simple;
-	bh=6lXg65MUiOuqW0EOoABffYufulqRAP6hL9vJPvekLSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QmTTZDZeOVaprtaVmZhq8pPQNEZ3H/NhTEPIjG1H7O092TBrdWeQ94LJg34XMMk1bSoXD8uY5GvHITRbQAYIGgxnuc/QC7kfIN/vBJKFGfWoz3GrbNpTTuDXwsJOjRT3dlZbppTi2J1GwvN8SiKbFJgD1ZIOaAfF4gR+IoWaqSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB873106F;
-	Fri, 25 Apr 2025 14:32:16 -0700 (PDT)
-Received: from [10.57.71.211] (unknown [10.57.71.211])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2F8C3F59E;
-	Fri, 25 Apr 2025 14:32:19 -0700 (PDT)
-Message-ID: <1c6b70d1-279c-4d9d-ae31-2751daed04f6@arm.com>
-Date: Fri, 25 Apr 2025 22:32:17 +0100
+	s=arc-20240116; t=1745616763; c=relaxed/simple;
+	bh=Ukg4eJzpSRuoQnTM3/yr1cnOPT5Y7DCcKzHuHDThJho=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I9A13aQP15tSj9Bv2qC2fzUP+rdPo9qI7CeH5o+sbERY15ET13lyjcipvQ1BDa9Jxt3LZnUpMHU/e2qM5+lyQtfAnvnzs7ZhsiBdnar2sDiHQXed3OlTZrT5qkKjIwfr7WZ1baCpHpwtF5i5zgPBrc4h6DWSh2KYMUwWPFtduPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXWPsN6a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXWPsN6a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8552FC4CEE4;
+	Fri, 25 Apr 2025 21:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745616762;
+	bh=Ukg4eJzpSRuoQnTM3/yr1cnOPT5Y7DCcKzHuHDThJho=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rXWPsN6a3S/O2HqshFlBZjg4UdXZYUvmBH/lO42cU47ZkjuHOsDk+gVhCqvHkD8GG
+	 8eccAxSCbFLCOaIbQ0g0fdQNeiuUO/tps3q13lVWCT0c0ht37Va20UC6q8/C9AS+f+
+	 88wAYWvO5252vwj9ECP9fAalNquUVPztB6r+HMGLR462v41laeEgqK54VOYYg/txb6
+	 guh8vxEr8gT6v/Voy7I0h1Gb1OBcLvKftiNJ33du0mr3vuZMI5qFzr77pv5B4JHMVk
+	 awHbdiYwwwo/1gXB4ElBV3BjfC0RLB+kMze2oNS+tI7gF9yqlW2YN6ZlvhIU1VMtNp
+	 Agx3RQqnmlv/g==
+From: SeongJae Park <sj@kernel.org>
+To: damon@lists.linux.dev
+Cc: SeongJae Park <sj@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: DAMON Beer/Coffee/Tea chat reminder for the week of 2025-04-28
+Date: Fri, 25 Apr 2025 14:32:39 -0700
+Message-Id: <20250425213239.55435-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFT][PATCH v1 8/8] cpufreq: intel_pstate: EAS: Increase cost for
- CPUs using L3 cache
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Morten Rasmussen <morten.rasmussen@arm.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- Pierre Gondois <pierre.gondois@arm.com>
-References: <3344336.aeNJFYEL58@rjwysocki.net>
- <47159248.fMDQidcC6G@rjwysocki.net>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <47159248.fMDQidcC6G@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/16/25 19:12, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> On some hybrid platforms some efficient CPUs (E-cores) are not connected
-> to the L3 cache, but there are no other differences between them and the
-> other E-cores that use L3.  In that case, it is generally more efficient
-> to run "light" workloads on the E-cores that do not use L3 and allow all
-> of the cores using L3, including P-cores, to go into idle states.
-> 
-> For this reason, slightly increase the cost for all CPUs sharing the L3
-> cache to make EAS prefer CPUs that do not use it to the other CPUs with
-> the same perf-to-frequency scaling factor (if any).
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/cpufreq/intel_pstate.c |    8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -979,6 +979,7 @@
->  			   unsigned long *cost)
->  {
->  	struct pstate_data *pstate = &all_cpu_data[dev->id]->pstate;
-> +	struct cpu_cacheinfo *cacheinfo = get_cpu_cacheinfo(dev->id);
->  
->  	/*
->  	 * The smaller the perf-to-frequency scaling factor, the larger the IPC
-> @@ -991,6 +992,13 @@
->  	 * of the same type in different "utilization bins" is different.
->  	 */
->  	*cost = div_u64(100ULL * INTEL_PSTATE_CORE_SCALING, pstate->scaling) + freq;
-> +	/*
-> +	 * Inrease the cost slightly for CPUs able to access L3 to avoid litting
+Hello,
 
-s/Inrease/Increase
-and I guess s/litting/littering
 
-> +	 * it up too eagerly in case some other CPUs of the same type cannot
-> +	 * access it.
-> +	 */
-> +	if (cacheinfo->num_levels >= 3)
-> +		(*cost)++;
+This is yet another reminder of upcoming DAMON Beer/Coffee/Tea chats
+(https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing)
+for the week of 2025-04-28.
 
-This makes cost(OPP1) of the SoC Tile e-core as expensive as cost(OPP0) of a
-normal e-core.
-Is that the intended behaviour?
+We will have the two meetings in the week as usual.
+
+Any-topic discussions
+---------------------
+
+Next three time slots for any topic (no reservation is required) are scheduled
+as below:
+
+- 2025-04-30 (Wed) 09:30 PT (https://meet.google.com/ndx-evoc-gbu)
+- 2025-05-12 (Mon) 18:00 PT (https://meet.google.com/ndx-evoc-gbu)
+- 2025-05-28 (Wed) 09:30 PT (https://meet.google.com/ndx-evoc-gbu)
+
+Dedicated-topic discussions
+---------------------------
+
+Next three time slots that I reserved in advance for possible future dedicated
+topic discussions are as below.
+
+- 2025-04-28 (Mon) 18:00 PT (not yet reserved)
+- 2025-05-14 (Wed) 09:30 PT (not yet reserved)
+- 2025-05-26 (Mon) 18:00 PT (not yet reserved)
+
+Please reach out to me (sj@kernel.org or whatever) to reserve the
+not-yet-reserved time slots for your topics.  The reservation is made in a
+First-Come First-Served way, and I will send a Google Meet link to
+reservation-confirmed attendees.
+
+Please note that other time slots are also available on demands.
+
+Shared Calendar
+---------------
+
+You can get the schedule via this shared Google Calendar:
+https://calendar.google.com/calendar/u/0?cid=ZDIwOTA4YTMxNjc2MDQ3NTIyMmUzYTM5ZmQyM2U4NDA0ZGIwZjBiYmJlZGQxNDM0MmY4ZTRjOTE0NjdhZDRiY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t
+
+You can also get the past and upcoming schedules via
+https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing
+
+
+Thanks,
+SJ
