@@ -1,243 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06473202C31
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60EB221266
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610538; cv=none; b=GmQe6bZIFwdE8rE5gL/R766SrOrOfUTbyTsd1GjTiq2PCwwv3WvXFzJazlYjS0IIDiQlxjzynog4rADeLnjLFABiOmjrr5l4hTrNdq68z/IowFbWbGuaLKxGumt7DWQl9FYzB5HUNdONtDeKlnOKq6ZIHHxejQu8W47tKO/KHAE=
+	t=1745610556; cv=none; b=SS2gEauIxYo4JgFWMfvn08NdppSs3iFOOXTTsDOdKqyiQZNu7cqw4H+pe1qvOBSMnoaosuH+RYm02Mp2KBc9gUct28umhvMUrDtkheDrvX/6WCEe/GcXrK+6Fxve78W/TyuTFwApIwn62LeI4wxRwszBYeuu7s4OhQIRgQFjlOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610538; c=relaxed/simple;
-	bh=aqtGkRqBbu1U2b+axzTR7k2vGKCBOVbewJQT47q4o40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ir7I8/2Moi3vlEdgAjFA6ozYAD9CRhii19Fqxopf43lN6Nw7+e0v+29pt0AvXz6f0qiY4vFEOaqoduNvS9PRuMYou+NwWrg14oQQcBPBAJXtZfNeuvtmPga0EstBkUSGOx4Tn+/sSTcTjeS7IcIw3pGt09Tn/2Q1X+RYHyV52Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O+t1bQU4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745610556; c=relaxed/simple;
+	bh=xiXYEHCnpydgNxOjmQEiL855gJzsxvVYn2BH/KS7CTw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PPQ2J4CQR2+Y3gXOrG8x+gUKA1T5tyqKrWLYzxMpO0osj7THBcDiZqHcw2VLQh9lqbXFKFuTnek7XXGXfeb3MH6/LmzHH8Dp8xI4cdAN4oI9cYfK5759p2jsPYSMIt/aYZW/Knj3kmj251fqtmXtGO2JbOFnVpLPe6UN63aR1mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SZvvYB8i; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+t1bQU4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745610535;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Iyio0+rdGGHZ3rJEpArzIbX1q77xWWWNHXXnWo3MTWI=;
-	b=O+t1bQU41M+2cIK0CrRj1GH+/nN8ZWeWkjCX7E9U9RKtm9WyRVhGIz06TLtkbBiFKkMA67
-	/Bwd9mk2ovTPx16+Uj2oUU2H7rtUPNhuehfRTi+jVINHC3t1G+taZhnAjMcE2tv0LToRMs
-	OImxAX0pLQd6uEiC81mKlse7AghMK0Y=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-664-gT8P-k62NiK-ZaX5fI25vw-1; Fri, 25 Apr 2025 15:48:54 -0400
-X-MC-Unique: gT8P-k62NiK-ZaX5fI25vw-1
-X-Mimecast-MFC-AGG-ID: gT8P-k62NiK-ZaX5fI25vw_1745610533
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso16356855e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SZvvYB8i"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJtdO001325
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=QVF8qBKl2B8UgSSWNGQxTY
+	skqSEtcYIfpjzN6wFXrIk=; b=SZvvYB8iEz3In35Ka6cSz6aCwXIGmYgn/avNAw
+	9nINTBGkTIT38+rOhBV5VJ+Eb0W+B3Zk9HtH7WSDyCckfs6BOWRhJSZzi2jxVAR3
+	H44LaTmGwtq0Jf6IoV+LIK/rZKvbjQkOvdfJX+hp+BNyRSg0EE0qTBx/aZqz1+eA
+	bFIQxn4glIU8y+r4ocjDtBzmGC4hkegsPbUvsKymXpx/u0hMKMV1oAHuHNVt+16U
+	4FKqOWR6rLN72cSUTQvrKvUVAin5TROHsZK8hIAb9I1H5DakjrkYMnu4yb6kzKdK
+	f+aB/vMJZ6/X/2OvPXElqA3B3JFOZ9QPPPUtcq/V7V8uX43g==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3j5s6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:14 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47ae87b5182so46085531cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:49:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610533; x=1746215333;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Iyio0+rdGGHZ3rJEpArzIbX1q77xWWWNHXXnWo3MTWI=;
-        b=llNLFvixpRMidUzY6YHYNSLa3spZaFxT4gbmUsu7dAUus/kIWVA6JNO2xwM65Q9f/j
-         cC7fAGZbGivD30OG2Y6XH5g2IiN+u1Mkcq3MeLvx3/sS+fXmo0eKr0LafeMpx5gLAhyV
-         wvTywc/9sikOXtUl65oMOceEjFZl6vriWWqFq3BUOfYSIzvt3YTLdcIzf9uqMuS8Q6VR
-         RByhguQa1mirK/QhGg/7lbAaHXAU+nUsTz9U7wYGAKOQXc2PVeCM6MXmDZ72VPKa41B1
-         rwTKVk4VsjX+g3/BjVkgq8h/TyrVVJCK6dHFVkObnVSdSNTbMN26AZapTGv1/76yUDPb
-         3yYQ==
-X-Gm-Message-State: AOJu0YyUDOUSrhdk4MHXazPeIaOJYXLVqBMZQZDrD0BxV/rPI60Ee9EU
-	NR22SKE3c66yaBu4IVTEyXCONZgmPqSoYOpiNy8ySxphCej+a/fuHS7+lCJAGPaZYZusgyJrc+p
-	vQX83zUyLgnrWd6xm3AWC8UhThm1sCbEnh5gzfuWEnKaYz5aORQRe43BzYC7poQ==
-X-Gm-Gg: ASbGncs2KgsSkOuilFh3gJCjxJaArG0nIfLuSWI9Ir8Q42IEEkzuvMz3Ksk1tOnHwx3
-	LUqFOkd5Lf+I2ZVm487TxAsD0aQX9mRo0jm675oSUjPgpPatj+X/t4xkS7kD/jVcHDz6MsHq4Vq
-	Sh+cC+ySLOh9vm46oTSyl92uJcReWRsyUlz5jXzEcWiCFIshvZq0EGy+mvX//eixahIUwNAZmoo
-	B95CC4wkwoSVex5lgBR/UVFirzt0rH70nsOOYIqK28xsgQ5KfmA0ZTTA2PrgndNsA+fgXVigoQj
-	Ngljn64BrSDzGcSKO8za6HhoQzIv1Zk1qWjIYOC7Fw==
-X-Received: by 2002:a05:600c:45d0:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409c4de02dmr67828725e9.11.1745610533009;
-        Fri, 25 Apr 2025 12:48:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCFfrtzSc+UtPRGo0BIvDxCf3n2hnwRdIbAoPATpGWLsnc5w/p+CDOEbj1RMEvVgHKgNRMBw==
-X-Received: by 2002:a05:600c:45d0:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409c4de02dmr67828555e9.11.1745610532645;
-        Fri, 25 Apr 2025 12:48:52 -0700 (PDT)
-Received: from [192.168.3.141] (p4ff23df8.dip0.t-ipconnect.de. [79.242.61.248])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5310ad2sm34335985e9.21.2025.04.25.12.48.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 12:48:52 -0700 (PDT)
-Message-ID: <78f88303-6b00-42cf-8977-bf7541fa45a9@redhat.com>
-Date: Fri, 25 Apr 2025 21:48:50 +0200
+        d=1e100.net; s=20230601; t=1745610552; x=1746215352;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QVF8qBKl2B8UgSSWNGQxTYskqSEtcYIfpjzN6wFXrIk=;
+        b=D/jwS3qMueiStGTYoLPmuOoUjTIKZ4YHYc7SVvBKfkwoN3zwD5qorGvB8VzFdP+z5F
+         GFEpi0vyC0JewmsLkzSk8TvRubXJzRl6ho++PcznPKHPdxygevUgzsyUo8sakV2EhyU/
+         e3Bjqpsi+Rv8LZH5T7SzgcjJpmE8iFAqaIZgpEV3EkjDyJws5Kv05yGsbYG8tJqYFcUN
+         mPZiI1X3IS/FmZ+BAvx4YrjRGUc9AcUKsYAlfkfQe0uNNaWdI5FB3rwAu2g+uYEet2Vz
+         ZxNthUYthASeEAM4pYhonEwO1tADrm+h7gMusouiP1TN7eh4LHp3isY7qRBLlLYWwBuK
+         7kuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbXQhnTlr533Y2sDVP6+asQpU7rqoHJzoqTodYH6vX3LEb58BlDsid1ZGDbUWPJvYR6qrOhcfYmaIy1uI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9DcaK5LRZ9Lgezhd5WOR3Bw9yVYdYIaLxPGIR63OZg25JcqsO
+	ABVulEEp5YH+QHCtCCvMGVp7+Rzerbm5DKOsDdxXC8PuFhGnp+JOjiftt8nz6jsSZ9KnA7r8ys1
+	Hf/EmI/B7vzeJoI6l8Ou3S70+Ly3f3tBDslw//FsD2gPIqDhNMnv37myhAu4Y9PAefGVmrVU=
+X-Gm-Gg: ASbGnct02THWDJotCYIpJx5e1TQ5ftp7T9HlfXd3jUKbmAL5xRsC+BlCeCBJwAKCgjV
+	sp6xkbPGO1e73I2pqJ7W6GRf1eSmmfszSrDBqGCBC9PMD9iswfpsqFMDdedaCFjFPX0W5EOrXW8
+	lENn1DcTzfv7tqqp31KwZp1t2GFQEY0fuJdIdkTlUr1dIIOPS/f5YDyFe+eWPLANibmrI4n0fTp
+	3BI25F7Yd3mPDVM8fy2kHfE9I1+aIABdtSmMCIolhGahRB6AzAWhOJdUdXEoaBQ9mlMYVW9oHeb
+	adqzi/sCUVKc76LMGbgx+IeLlhnuVljMlKNebRUpmDHDMt15JpwMC1SRa7itvtAaGKfg1/1xfmh
+	+ZJXLdnpJU/njhZAuZezPNnwT
+X-Received: by 2002:a05:622a:1886:b0:477:1161:2361 with SMTP id d75a77b69052e-4801ca7cde2mr53690861cf.16.1745610552049;
+        Fri, 25 Apr 2025 12:49:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGe12+bSLXzF7eqw872nV8cM5KVYfx4GqOPCVUm/H+/NHn2EpcmQOmblco4sM1BMKL0eK7+Q==
+X-Received: by 2002:a05:622a:1886:b0:477:1161:2361 with SMTP id d75a77b69052e-4801ca7cde2mr53690541cf.16.1745610551638;
+        Fri, 25 Apr 2025 12:49:11 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb258b7sm725313e87.22.2025.04.25.12.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 12:49:10 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: [PATCH v2 0/5] drm/msm/dpu: update SmartDMA feature masks
+Date: Fri, 25 Apr 2025 22:49:07 +0300
+Message-Id: <20250425-dpu-rework-vig-masks-v2-0-c71900687d08@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
- pfnmap_sanitize_pgprot()
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-3-david@redhat.com> <aAvjJOmvm5GsZ-JN@x1.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aAvjJOmvm5GsZ-JN@x1.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADPnC2gC/32OQQ6CMBBFr0Jm7WgLkhhW3sOwKDDFCUJxWhBDu
+ LsV9y7f5M/7fwVPwuShSFYQmtmzGyKkhwTquxlaQm4iQ6rSXGXqgs04odDLSYczt9gb33msG7L
+ Knm1WUQ3xdRSyvOzaW/ljoecU7eF3hMp4wtr1PYciGWgJp2gKJPCN39kHJ+991Kz3/P/+WaNCq
+ 6u80UobUtX1wYMRd3TSQrlt2we5zp1n6AAAAA==
+X-Change-ID: 20250308-dpu-rework-vig-masks-cdef0f4f3bec
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2018;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=xiXYEHCnpydgNxOjmQEiL855gJzsxvVYn2BH/KS7CTw=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoC+c17deoKA0iAJh/+DZAGse+ko22l2hMwtKUq
+ xGp25hijyKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAvnNQAKCRCLPIo+Aiko
+ 1UybB/4pmAg7PHT7ety/HAwm+pTqqAj6iNMngLsn/aKcZ6g8ABF6CUMcSWWV3FqQIqKNhoK6w/a
+ NUg+RnoDADw9qYjLZL9srANPWDU1PbB44qt7gWXaAT36ZQ2WZg02RreScinr8EzwscjEGg3pO42
+ yWCg3MFuVF7dDxE2HfSpiBoUS1TXmw3S8x7+DQdyzTbGPUg5yPtpNvBXJT9UPOl08ClHReHtFcR
+ S2LvFKKpxQqYMnrR/pbrgV3PTYGYaXBkd1/8DSd1hwWtoeEGeCHGLLgplLCkmbaNuDR7WTVY8Gj
+ MUBD0WOWKWPdRGO503yxxM9P2bxiMH00obD0KuPwZmvluGuG
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0MSBTYWx0ZWRfX95oe5dZ5X3ae kCUVVJqqsKOuGevqwGFSsxQi5tf9a7ZWy+akdqgVBK2AaEkU9qxg2tpivKzMCukfjVrQ3OF8FtP 7taGTBE/MPcO7FFDAd81C/oomBZbitSyCa7IQ2dtBtMwm37SA06IzMIBdIHiKfo67aZinMFWKFM
+ VpFNZtItc+EVja1TKOpfpzgCkCcv9RxLbaVDT/uatKg9PAJJ1pvhBz2ps+xPsUBDiVeqjXl/5yq 8zYFP+UNjod2GenmsPh57t78sJsRtyY2zMwN8tMs6MzYsBbhj70ARRpcRe096YPwW6xdRcgHV3Y e7dTbmYLbxrAJe4LHVgVIedQCYeJ6DvCIEKflyD084BDuZGFJLQJLD71jhK9/oSF2IVmcMpwHRC
+ ouoI/2xMcjp/AMSgdTMckOfDg2DVPTBsyBEMtxVrWfpFjYnPNfSG9w8xGvoLgsy3UzrVu5Rk
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=680be73a cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=uRdDJePGNZSGe7RuJwkA:9 a=QEXdDO2ut3YA:10
+ a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: xOg8RN-9F0BwI1494G8iy4xSue5cY7w8
+X-Proofpoint-GUID: xOg8RN-9F0BwI1494G8iy4xSue5cY7w8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=888 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250141
 
-On 25.04.25 21:31, Peter Xu wrote:
-> On Fri, Apr 25, 2025 at 10:17:06AM +0200, David Hildenbrand wrote:
->> ... by factoring it out from track_pfn_remap().
->>
->> For PMDs/PUDs, actually check the full range, and trigger a fallback
->> if we run into this "different memory types / cachemodes" scenario.
-> 
-> The current patch looks like to still pass PAGE_SIZE into the new helper at
-> all track_pfn_insert() call sites, so it seems this comment does not 100%
-> match with the code?  Or I may have misread somewhere.
+It is easy to skip or ignore the fact that the default SSPP feature
+masks for SDM845+ don't include the SmartDMA bit (both during
+development and during the review stage).
 
-No, you're right, while reshuffling the patches I forgot to add the 
-actual PMD/PUD size.
+Enable SmartDMA on SC8180X, SC8280XP, SM8150 and SM8550. Then rename
+SSPP feature masks to make it more explicit that using non-SmartDMA
+masks should not be an exception rather than the rule.
 
-> 
-> Maybe it's still easier to keep the single-pfn lookup to never fail..  more
-> below.
-> 
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+Changes in v2:
+- Reset Abhinav's authorshiop onto patches 3,4 (Abhinav)
+- Link to v1: https://lore.kernel.org/r/20250308-dpu-rework-vig-masks-v1-0-f1b5d101ae0b@linaro.org
 
-[...]
+---
+Dmitry Baryshkov (5):
+      drm/msm/dpu: enable SmartDMA on SM8150
+      drm/msm/dpu: enable SmartDMA on SC8180X
+      drm/msm/dpu: enable SmartDMA on SC8280XP
+      drm/msm/dpu: enable SmartDMA on SM8550
+      drm/msm/dpu: rename non-SmartDMA feature masks to be more explicit
 
->>   /*
->> @@ -1556,8 +1553,23 @@ static inline void untrack_pfn_clear(struct vm_area_struct *vma)
->>   extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->>   			   unsigned long pfn, unsigned long addr,
->>   			   unsigned long size);
->> -extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
->> -			     pfn_t pfn);
->> +
->> +/**
->> + * pfnmap_sanitize_pgprot - sanitize the pgprot for a pfn range
-> 
-> Nit: s/sanitize/update|setup|.../?
-> 
-> But maybe you have good reason to use sanitize.  No strong opinions.
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h   | 16 ++++++++--------
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h  | 16 ++++++++--------
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h   | 10 +++++-----
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h   |  6 +++---
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h   |  8 ++++----
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h   |  4 ++--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h   |  8 ++++----
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h  |  2 +-
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h   |  4 ++--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h | 16 ++++++++--------
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h   | 20 ++++++++++----------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c       | 16 ++++++++--------
+ 12 files changed, 63 insertions(+), 63 deletions(-)
+---
+base-commit: 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
+change-id: 20250308-dpu-rework-vig-masks-cdef0f4f3bec
 
-What it does on PAT (only implementation so far ...) is looking up the 
-memory type to select the caching mode that can be use.
-
-"sanitize" was IMHO a good fit, because we must make sure that we don't 
-use the wrong caching mode.
-
-update/setup/... don't make that quite clear. Any other suggestions?
-
-> 
->> + * @pfn: the start of the pfn range
->> + * @size: the size of the pfn range
->> + * @prot: the pgprot to sanitize
->> + *
->> + * Sanitize the given pgprot for a pfn range, for example, adjusting the
->> + * cachemode.
->> + *
->> + * This function cannot fail for a single page, but can fail for multiple
->> + * pages.
->> + *
->> + * Returns 0 on success and -EINVAL on error.
->> + */
->> +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
->> +		pgprot_t *prot);
->>   extern int track_pfn_copy(struct vm_area_struct *dst_vma,
->>   		struct vm_area_struct *src_vma, unsigned long *pfn);
->>   extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index fdcf0a6049b9f..b8ae5e1493315 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
->>   			return VM_FAULT_OOM;
->>   	}
->>   
->> -	track_pfn_insert(vma, &pgprot, pfn);
->> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
->> +		return VM_FAULT_FALLBACK;
-> 
-> Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
-> trigger, though.
-> 
-> Maybe we could have a "void pfnmap_sanitize_pgprot_pfn(&pgprot, pfn)" to
-> replace track_pfn_insert() and never fail?  Dropping vma ref is definitely
-> a win already in all cases.
-
-It could be a simple wrapper around pfnmap_sanitize_pgprot(), yes. 
-That's certainly helpful for the single-page case.
-
-Regarding never failing here: we should check the whole range. We have 
-to make sure that none of the pages has a memory type / caching mode 
-that is incompatible with what we setup.
-
-
-Thanks a bunch for the review!
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
