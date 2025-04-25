@@ -1,344 +1,192 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021104.outbound.protection.outlook.com [52.101.129.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056921B4140
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599778; cv=none; b=qeK16lp+iS+sfvvtbziSZMzVCoIN9ip/8UXvIncM2fL1xC6cupg9kEhdnoi9hPZGJiOBFFMo4iNwnhVXHggjqYTvVWkWHhfHHgcRPpYCl/bFOZH52fcqILsqez8ccWTC2U4hjbZwbPQeLQXT90SLeX5zMIoO0j10AQ867GlM648=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599778; c=relaxed/simple;
-	bh=Lsf0S+vUVkTKSmrTusoRK1riqmlMVBxIhTwbVEI953E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bMdiH5eQQtAKRGeoInnfnR6Kkznx+ZVUdU2kDoEKFIlL+2+13IplXuK2pmKqFapP7g6bGuB7zrUjyiFF44pMNLrQZnBpAnD/tNEK539+U4jCQXrlGpy5wBMFPhw9y+NHzxmSv/pu+AsaLM125C5rjl//U1GFzQvBPFETW8G5sY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=conclusive.pl; spf=pass smtp.mailfrom=conclusive.pl; dkim=pass (2048-bit key) header.d=conclusive.pl header.i=@conclusive.pl header.b=SOq/Gh4v; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=conclusive.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=conclusive.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=conclusive.pl header.i=@conclusive.pl header.b="SOq/Gh4v"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so3203367a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conclusive.pl; s=google; t=1745599773; x=1746204573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kbKgincIXwNS069akmSCof3QJASoEBvfuiSMsRimGso=;
-        b=SOq/Gh4v9+SBkMqNTQ3MZvLfzlCkarb8njY4USLEg+/yp/qswlLn5PrGfydLtIYcss
-         cuqgCc/AWZ6SnG6W7V65wrv5T0Udcu9xpUvST3AZJtuE1XdL5vdj6+jYtMIW71hqpBqL
-         c1PwqdRmW6uKaRQqckQJHaRkwrGrf83RcSbBCnT2D76Vv2jzzrk9C/U4ymYdhGegXSyn
-         eaFKH84mlh98TSG/ho95UKprZtjUElBEMtOvYz40Djis7l74934/BTia6j36/xytmV4c
-         BofYYpvqSlmVUfutcat92IX9QwNcGyAlE2inwwmbap3Ol4AE55JslPvNkaky7hsRcHEM
-         aMdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745599773; x=1746204573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kbKgincIXwNS069akmSCof3QJASoEBvfuiSMsRimGso=;
-        b=HLWd0VCVFdIr7XLr261W5xqdJuLScC0e34jgyQkfqTTcYHlEYDQU4sgICLNRdxmPZ6
-         Oafe92xktSgFJhTuWJIQoeLOwC5Afw7m9vNKahpriPKpvqw1oWOs6icSwJdspEnzHzi8
-         HzGdu+3gFnQ2aVyACAw6dArZO528KYBFjiuZ+zA91STuPiPiag51GNV1UYxIwwno9UaO
-         U61sdUfMnfSkq0M5cNceynKQCTtBVy8a4wWabOi1uGRdNIsxDe7pnKI8wirLYVW+VyAh
-         XR7UHfYYLWATlPs7nZ/JUN1SCCnQaCXSh41Mnp/Y0Mvpq4uL1bE8IMKN/6anine6guZ4
-         77ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUkYZHg0XYvfRyYdeB+8mSLbtLbCTG0n3IeJcNkVhVkMmpgzeT7ckfhZphSFkwc35/3SlQ6pRN3/YCktMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweGe8vvScsUju3ySV6zO102Sq/oXWiBhqBpuqDqFcYPuM72+iK
-	n5Noc27MIZDjqOS5Im58O6yjjyDTAKVirgBnMNEPzjkKLGWQJIylhA4ua+f6AGY6NsyNTZVtyfB
-	xWm74m0Ak/IVej2k/2EGxSLSv6BNDTPZJV1+v9A==
-X-Gm-Gg: ASbGnctdlCSCt0IQPcphXOWvllpiIeB48BW3xTvHph/QXnu9hCfji+UKZPIPO+xUlHT
-	JRKIdYPN95wvjzCMVQ0BnIpQhSWFcj0nT4KO3diW5rmDUyvQhUW+bQtEBvRkA3Z8bmvZ0x9vEke
-	r/jKnRPc8MkHbutC2+2R1DwCgRZVwAXMAoJA==
-X-Google-Smtp-Source: AGHT+IF+K/Y/hteHUL1Z1Houp7sxak6tVG3ZmtYLQ81YFGs/nLav2zw2Js385WaP/0YCdeVMq4A3IVLkIyFbhxRyO8U=
-X-Received: by 2002:a05:6402:254c:b0:5f6:59e5:5c6e with SMTP id
- 4fb4d7f45d1cf-5f73982bd97mr62863a12.26.1745599773147; Fri, 25 Apr 2025
- 09:49:33 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FE51DC98B;
+	Fri, 25 Apr 2025 16:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.104
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745599910; cv=fail; b=D6rUG37NaKc2XTRLMsfkY96Cf2I9NCRyvNpxcZhEQqHsWecU4FjiHyIBj3t6XG4cmIhbFc/I64rlwiWUXBCMin1SfEKNaGIV5BTn25f0hp1nG1hEviibkmHNckwzJZreoGuU7UJGSa+hqkpwUsLvRVPpFV7IrOvztCLzE9NWdOw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745599910; c=relaxed/simple;
+	bh=oypVbg1NErWPm5xfBnRIBiyKvTcu+nesDvtZRlWYSbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G5//6mIEh5RYYMIHRXVcGXC4xrVYJ3LDhUNPdYNMWYdiBHC/0PAOY9NzUHrIN+hk1mgob0wTRJEY4VKJNqUE69YTdaU5p+xJzQ4yV7SCtbMZy6SjPLM39yTmxIcOBIdbhSeIXzazrWN64SGHxHz+n5Pi88a9Dl+UTHFL2KqKwPk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NiBqeTh3Ud0TPW/MsSdB5d/GUx9hivYQPEy6ZmHeiVOthhPZU+O9nKmOYFfH5gzNf9DaRqpV+nwfWJBJyxzOuTZ+cwgMw8SPfW73wfI4AbYGtykXZIWOT5yTigSQsATbiv/a5Sld3Xu0KTIQhY7uBh5HVIvPHMMFY1IXeCX2yoOsc+mgp+GycKkN1EPz1hQh8CCSkWE9NTUhqAKnTEVweuPH/2Z0AtNPhlE1tu1JsP0zNJ6XkZ7pUZ5MLiQrl1FhOJhjBNgYcjT4pFWfpFKtNqWYZQcFvY4DwmQvmkEHLKZZ9AeSrNWBKLg9wj32o5sMrLxnnvGaXSDLdT5NN94lew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k0zQyp1CHTDi52dNyCdGyr/hvXjfaYJjAMZd9RQr5rU=;
+ b=d+sOU/v6NbeVlKEMMc+gJi7m+TIgCDho/70rDUAwLR3aLy4p3965jbKh+ZblVvJ1fjMZK7lKufvd8TxcLNtQ6xu+5onoahb0L8XLeEX5LCtktY0bHrjoCJXBi+KoNMD9dA6R12J+Th8Vbe/TxFrV75wPn3isZ+wpPbBkRJ/qr/tyuuS5xzFllVJ03dNHYohbygMqKvIIyV8lBoVWeCBppgVlBxWLYW/d1HKgXUdYvvvgxP7u8dcg6Z2uH8TiX56j3kqMef5+jPaWs+R7aqBfbXXKiR/0w/stzEHzqFvNMIYspN4laW10QFWerVfPUO3tZK520KkWYLlHca6AXGLfKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PUZP153CA0008.APCP153.PROD.OUTLOOK.COM (2603:1096:301:c2::23)
+ by SEZPR06MB6531.apcprd06.prod.outlook.com (2603:1096:101:184::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
+ 2025 16:51:43 +0000
+Received: from OSA0EPF000000C8.apcprd02.prod.outlook.com
+ (2603:1096:301:c2:cafe::cf) by PUZP153CA0008.outlook.office365.com
+ (2603:1096:301:c2::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.11 via Frontend Transport; Fri,
+ 25 Apr 2025 16:51:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000C8.mail.protection.outlook.com (10.167.240.54) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 16:51:41 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 5935940A5BFE;
+	Sat, 26 Apr 2025 00:51:40 +0800 (CST)
+Message-ID: <e6c84c59-e784-4631-8076-98c6461b8c15@cixtech.com>
+Date: Sat, 26 Apr 2025 00:51:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422175918.585022-1-artur@conclusive.pl> <20250422175918.585022-3-artur@conclusive.pl>
- <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
-In-Reply-To: <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
-From: Artur Rojek <artur@conclusive.pl>
-Date: Fri, 25 Apr 2025 18:49:22 +0200
-X-Gm-Features: ATxdqUGbZqRqLun2t5seqE0xBbyhBwhTsJOfC8_PKvG7-cB8xXWfuYtVPvY4uP0
-Message-ID: <CAGhaMFO_f_bvFB+39-z6xVF+y446ONwm1ROHQ=rXj=s4MnL54w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jakub Klama <jakub@conclusive.pl>, 
-	Wojciech Kloska <wojciech@conclusive.pl>, Ulf Axelsson <ulf.axelsson@nordicsemi.no>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and EP
+ controller
+To: Krzysztof Kozlowski <krzk@kernel.org>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: peter.chen@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Manikandan K Pillai <mpillai@cadence.com>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-6-hans.zhang@cixtech.com>
+ <25f5e8e4-1b64-478f-84ab-eede2c669655@kernel.org>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <25f5e8e4-1b64-478f-84ab-eede2c669655@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000C8:EE_|SEZPR06MB6531:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52321e5d-9544-41b7-8a4a-08dd8419747a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RlA4U1dhMGNOc2I5U1RqQWdNKzVrbzRTRXVvSm5peS9RN0NkMFlQSW1jSC8r?=
+ =?utf-8?B?TWhMdHpENVZhYjhUcEpiVUNKKzk5cmZJckw1YW1QYmNaTklNc3krWHFyR3lK?=
+ =?utf-8?B?MFF6emNlL0RUTWU0clYza0luc08wdVdPL0o2VklKRHpSVTJLU2tVeU9BMFpG?=
+ =?utf-8?B?S3NwUGtkeXdUTmFsK2lqOHVLMWRkZ0I2VEh0Z2U3UU9IQktvcDQxZmhibStF?=
+ =?utf-8?B?dmtsNmtCU2JEZEx0dEE3aHlZTXd2Nm81cVBwcm5vTUdoazBjamdXd0hWekh0?=
+ =?utf-8?B?blVhbmJKcXBDNE9VM0RobE52MGU0WkJTcWFkdkt6d1phaGlEVUpJUzJXY2dM?=
+ =?utf-8?B?WDcvay9SSS8yTkJzL0NTYVdtb25wK1dCQ3AyT3V6SUkrbTNCdUxWU1BaNXg3?=
+ =?utf-8?B?TnNaTkNEM2tMNDdFT0JKVi9MZlJnZVI3TURmamJXeTBidkJBMUF1ZGRQWHRI?=
+ =?utf-8?B?cHNXZWlCUExEQWlHVDFoLzc2ZzNEY2tyZiswcitzZUN1V2ZGaDhySjNxdVJa?=
+ =?utf-8?B?c0dsSkR2UXNPcjJabm9EWks5UVJrREs0NXh1TDZ5OWtJK3RKWjRaRWNGRndK?=
+ =?utf-8?B?YkFOd1U5MTFYaUNZTzNPZFI1ZE9oUmtiYmdieDgvOHAyaDVtUi92eGVPQ3A2?=
+ =?utf-8?B?ZkR0TlNQenVDVkthd3drcllkMzYwdTBFbmlTTkxUTzZURjhzVU1QVjJxYWJr?=
+ =?utf-8?B?dndtRzhsR09MZEFsNHVFYTJ1bDFWRkpCRXlSZ3UxUFZ4d2FkYlhaRW8zRnBD?=
+ =?utf-8?B?M2ZTaEVGK28vZ2w2d2dyQ1ZqUVBTOWw4Vm02aEJLWWFDRUJHbU1aS0E4L1lC?=
+ =?utf-8?B?WGJ2dCsva0ZycGNsQnhvaVpoUG0ySEFmNHJFNkU3cWFVSXBDV1NUQ082Mm53?=
+ =?utf-8?B?em9vVGRTWUw4VCt1VGk1Q1ZkMUZrNmdHbXVFV2szanBUMTlQbWtnOXJidUdR?=
+ =?utf-8?B?YTZiRjQ0S2xrUjkxNDZ6YmVlTVI0TmJkZFBZazBCWXRCV2N1allHdWJBSWlU?=
+ =?utf-8?B?cE5wYzkrb2o2aG0zZE5EckNZRVNOY0wrWHhjZEREZElDZis0aEJISDJNVDZL?=
+ =?utf-8?B?Ly9vQzN4eUpKMGJpMXJjckhlOXQ4SGtUalhVS3dncklHK2FjTGlySFpLbkFC?=
+ =?utf-8?B?QlBDemp5bW43UVM4R0p4YWFndXVwZFRMMHVoNXhQNVMyUnNvSlJYVW9xS2RM?=
+ =?utf-8?B?SU5peTFJczQwdnlLd241VFJWd0Eya1VQbGxWVDNPQW1HdXRJSjJWU29SL1Bo?=
+ =?utf-8?B?SlJkVCtLMkQyWFJYY25qTGFSMWtpS0ZQSy85Wjd1VE5qVXpTOGxaUVBoc0Zt?=
+ =?utf-8?B?UDVxYUVNWnUzRnJqNTV2aVBxTENJM0NEL0c5QVJVcXBmQlAwQ0FQZW5rMUNs?=
+ =?utf-8?B?L1FtTXpDU2wyeXdPTmxCd0NmNFp1bS8vamtKbGdPTzV1SURaMjdIZlBoOFBo?=
+ =?utf-8?B?ejIwTGM3dFN2Z2p0ckxlakJkZ3pPUXJJU3hHbDNYNVY0TXorbWdmajFFaHcv?=
+ =?utf-8?B?YlRMaFZyY0ZvR1pIY1NYOWxUT0xkRllmbERZekM0dmptNjU2NXJiSWpPY01S?=
+ =?utf-8?B?M2dUai8rdHo3S3d1djNPUmZGL3ZPZUtBQUpTcXVWaG0xcmNvV1BFUmZIZFZo?=
+ =?utf-8?B?RDcrYmVCOEJ2SmE1VkV0aHMySWtsTWpyK2x0dFVnZ1dBTmNNajNLSW5sWmoy?=
+ =?utf-8?B?TkN0QVI2TnAyUFZma1NhRURjSXUwZGpZS3hxZ0w1V2krY21NUVpvOGpjbW9j?=
+ =?utf-8?B?Nm5BRDZqdzc2QyttTFZ0UXIza0NnU0thT2pOR1FtUjlQeUJIRnZ5aitiRE9r?=
+ =?utf-8?B?cVV6cjBNTyt1NGZ3REc0REVBdnoyL21rN2pFUU04UDN0R040QUZxenVoeUph?=
+ =?utf-8?B?QVFscUY4SWFyWWRNVm5JcnQ3WHBDUmNuYllqKzI1TUFWMlB6blFqODM2dXdI?=
+ =?utf-8?B?amRod3N1VE0xM1UxeGpubVVhVWNkWnBQRWZDTzV3WCs4SHAxQTJ6QXNIRVJS?=
+ =?utf-8?B?dXZBd250eGwzbGoyOWYwQ280c3diZzJwaEU4UHVEZzJJdTE0dFRnUENHeURY?=
+ =?utf-8?Q?nmVANc?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 16:51:41.6901
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52321e5d-9544-41b7-8a4a-08dd8419747a
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C8.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6531
 
-Hi Johannes,
-thanks for the review thus far!
 
-Replies inline.
 
-On Thu, Apr 24, 2025 at 5:07=E2=80=AFPM Johannes Berg <johannes@sipsolution=
-s.net> wrote:
->
-> On Tue, 2025-04-22 at 19:59 +0200, Artur Rojek wrote:
-> > Introduce support for Nordic Semiconductor nRF70 series wireless
-> > companion IC.
->
-> Seems simple enough ... but I notice you're not even adding a
-> MAINTAINERS file entry. Does that mean you're not going to stick around
-> to maintain it at all? I'm definitely _not_ going to. Please don't
-> expect the community to.
->
-> Are you doing this for your customers? Or are you just doing this a
-> contract for someone who needs it? I don't really care all that much but
-> contracts have a tendency to go away and then we're left with nothing
-> upstream ...
+On 2025/4/26 00:27, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
+> 
+> On 24/04/2025 03:04, hans.zhang@cixtech.com wrote:
+>> From: Manikandan K Pillai <mpillai@cadence.com>
+>>
+>> Add support for the Cadence PCIe HPA controller by adding
+>> the required callback functions. Update the common functions for
+>> RP and EP configuration. Invoke the relevant callback functions
+>> for platform probe of PCIe controller using the callback function.
+>> Update the support for TI J721 boards to use the updated Cadence
+>> PCIe controller code.
+>>
+>> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+>> Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
+>> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+>> ---
+>>   drivers/pci/controller/cadence/pci-j721e.c    |  12 +
+>>   .../pci/controller/cadence/pcie-cadence-ep.c  |  29 +-
+>>   .../controller/cadence/pcie-cadence-host.c    | 263 ++++++++++++++++--
+>>   .../controller/cadence/pcie-cadence-plat.c    |  27 +-
+>>   drivers/pci/controller/cadence/pcie-cadence.c | 197 ++++++++++++-
+>>   drivers/pci/controller/cadence/pcie-cadence.h |  11 +-
+>>   6 files changed, 495 insertions(+), 44 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+>> index ef1cfdae33bb..154b36c30101 100644
+>> --- a/drivers/pci/controller/cadence/pci-j721e.c
+>> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+>> @@ -164,6 +164,14 @@ static const struct cdns_pcie_ops j721e_pcie_ops = {
+>>        .start_link = j721e_pcie_start_link,
+>>        .stop_link = j721e_pcie_stop_link,
+>>        .link_up = j721e_pcie_link_up,
+>> +     .host_init_root_port = cdns_pcie_host_init_root_port,
+>> +     .host_bar_ib_config = cdns_pcie_host_bar_ib_config,
+>> +     .host_init_address_translation = cdns_pcie_host_init_address_translation,
+>> +     .detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
+>> +     .set_outbound_region = cdns_pcie_set_outbound_region,
+>> +     .set_outbound_region_for_normal_msg =
+>> +                                         cdns_pcie_set_outbound_region_for_normal_msg,
+>> +     .reset_outbound_region = cdns_pcie_reset_outbound_region,
+> 
+> How did you resolve Rob's comments?
+> 
+> These were repeated I think three times finally with:
+> 
+> "Please listen when I say we do not want the ops method used in other
+> drivers. "
+> 
+> I think you just send the same ignoring previous discussion which is the
+> shortest way to get yourself NAKed.
 
-This is commercial work. I am employed by Conclusive Engineering, and
-was tasked with writing this driver. It was done for our internal needs
-(we sell hardware [1] with nRF70 on-board), however I was also asked to
-send the series upstream.
-Nordic showed interest in this work, hence why their representative is
-CCd to this conversation. They agreed to use our hardware as a reference
-board for nRF70 used in Linux context.
+Hi Manikandan,
 
-I fully understand your concerns with maintenance (I am privately
-a kernel contributor as well), and discussed this topic internally with
-appropriate decision making people. They understand the responsibilities
-involved and agreed to allocate time for me to support this driver long
-term. As such, I will add myself to MAINTAINERS in v3.
+Please reply to Krzysztof's question.
 
->
-> Also, related, what are your plans to help out with wireless in general,
-> particularly reviews? You're building on the shoulders of everyone who
-> did work before ... I'll do a _very_ cursory review, but if you want to
-> get this merged I would expect you to also become a part of the
-> community and help review other people's code:
->
-> https://lore.kernel.org/linux-wireless/21896d2788b8bc6c7fcb534cd43e75671a=
-57f494.camel@sipsolutions.net/
-
-Bearing in mind above time constraints, I have no objections to helping
-out. That said, this is my first Wi-Fi driver, and as such I am not that
-familiar with the cfg80211 subsystem (hence why this series is RFC), so
-my expertise will be limited at best.
-What sort of help would you expect from me with the reviews?
-
->
-> > +config NRF70
-> > +     tristate "Nordic Semiconductor nRF70 series wireless companion IC=
-"
-> > +     depends on CFG80211 && INET && SPI_MEM && CPU_LITTLE_ENDIAN
->
-> That CPU_LITTLE_ENDIAN seems like a cop-out. Do we really want that?
-> Asking not specifically you I guess...
-
-I addressed this in the cover letter (Patch 0/2), but nRF70 communicates
-using little-endian, byte packed messages, where each message type has
-a unique set of fields. This makes it a challenge to prepare said
-messages on a big-endian system. I am aware of the packing API [2],
-however a cursory look at it indicates that I would need to provide
-custom code for each and every message (there's almost 150 of those in
-total, even if the driver doesn't support all of them at the moment -
-take a look at nrf70_cmds.h).
-So I decided that until someone actually needs to use nRF70 on
-a big-endian machine, implementation of big-endian support can be
-postponed.
-Unless the __packed attribute is guaranteed to align the bytes the same
-way regardless of the endianness, and so calling cpu_to_le* for every
-field of a message is good enough (these messages are byte packed, not
-bit packed)?
-
->
->
-> > +#define      NRF70_RADIOTAP_PRESENT_FIELDS                           \
-> > +     cpu_to_le32((1 << IEEE80211_RADIOTAP_RATE) |            \
-> > +                 (1 << IEEE80211_RADIOTAP_CHANNEL) |         \
-> > +                 (1 << IEEE80211_RADIOTAP_DBM_ANTSIGNAL))
->
-> You did some work on making it little endian properly ..
->
->
-> > +
-> > +#define      NRF70_FW_FEATURE_RAW_MODE       BIT(3)
-> > +struct __packed nrf70_fw_header {
-> > +     u32 signature;
-> > +     u32 num_images;
-> > +     u32 version;
-> > +     u32 feature_flags;
-> > +     u32 length;
-> > +     u8 hash[NRF70_FW_HASH_LEN];
-> > +     u8 data[];
-> > +};
-> > +
-> > +struct __packed nrf70_fw_img {
-> > +     u32 type;
-> > +     u32 length;
-> > +     u8 data[];
-> > +};
->
-> making the u32's here __le32's (and fixing sparse) would probably go a
-> long way of making it endian clean. The __packed is also placed oddly.
-
-When declaring structure members for the messages (in nrf70_cmds.h),
-I noticed that this attribute has to go before the braces:
-> struct __packed { ... } name;
-rather than after braces:
-> struct { ... } __packed name;
-
-I then went and applied the same style elsewhere in the driver. I guess
-I can restore the latter syntax where it makes sense.
-
->
-> > +static int nrf70_verify_firmware(struct device *dev,
-> > +                              const struct nrf70_fw_header *fw)
->
->
-> What's the point in doing this? The hash is trivially adjusted if
-> someone wants to play with the file, if hw doesn't check anything, and
-> ... not sure we really need such a thing for "file is corrupt by
-> accident"? *shrug*
-
-No idea if the hw does any verification of the hash, but sure, I can
-drop this.
-
->
-> > +     ret =3D request_firmware(&firmware, "nrf70.bin", dev);
->
->
-> You might want to make that async so that the driver can be built-in
-> without requiring the firmware to also be built-in.
->
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "Failed to request firmware: %d\n", ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     header =3D (const struct nrf70_fw_header *)firmware->data;
->
-> (const void *) cast would probably be sufficient
->
->
-> > +     return ret ? ret : (wait_for_completion_timeout(&priv->init_done,=
- HZ) ?
-> > +                         0 : -ETIMEDOUT);
->
-> that construct seems a bit questionable :)
->
->
-> > +static void nrf70_handle_rx_mgmt(struct spi_mem *mem,
-> > +                              struct nrf70_event_mlme *ev)
-> > +{
-> > +     struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
-> > +     struct nrf70_vif *vif =3D nrf70_get_vif(priv, ev->header.idx.wdev=
-_id);
-> > +
-> > +     if (IS_ERR(vif))
-> > +             return;
-> > +
-> > +     (void)cfg80211_rx_mgmt(&vif->wdev, ev->frequency, ev->rx_signal_d=
-bm,
-> > +                            ev->frame.data, ev->frame.len, ev->wifi_fl=
-ags);
->
->
-> shouldn't need the (void) cast?
->
->
-> > +static int nrf70_change_bss(struct wiphy *wiphy, struct net_device *nd=
-ev,
-> > +                         struct bss_parameters *params)
->
->
-> See also this discussion:
-> https://lore.kernel.org/linux-wireless/29fa5ea7f4cc177bed823ec3489d610e1d=
-69a08f.camel@sipsolutions.net/
->
-> > +static int nrf70_dequeue_umac_event(struct spi_mem *mem, void *data)
-> > +{
-> > +     struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
-> > +     struct device *dev =3D &mem->spi->dev;
-> > +     struct nrf70_umac_header *header =3D data;
-> > +     struct nrf70_vif *vif =3D nrf70_get_vif(priv, header->idx.wdev_id=
-);
-> > +     struct cfg80211_scan_info scan_info =3D { .aborted =3D true };
-> > +
-> > +     if (IS_ERR(vif))
-> > +             return PTR_ERR(vif);
-> > +
-> > +     switch (header->id) {
-> > +     case NRF70_UMAC_EVENT_TRIGGER_SCAN_START:
-> > +             break;
->
->
-> This sounds like you pretty much built the firmware for cfg80211 ;-)
-
-That's because the firmware *is* cfg80211. Perhaps I am opening a can of
-worms here, but it has to be opened at some point during firmware
-upstream. From what I've seen, part of the nRF70 firmware (called UMAC)
-is derived from the cfg80211 project. Nordic makes the source code
-publicly available at this location [3]. I have also asked Nordic to
-provide a matching version of the source code for the fw blob they will
-be upstreaming to the linux-firmware project (I believe I will be
-assisting in that process as well). I hope everything there is dandy
-license-wise, as I am not a lawyer :)
-
->
->
-> > +#define      NRF70_MSG_SYSTEM                0
-> > +#define      NRF70_MSG_DATA                  2
-> > +#define      NRF70_MSG_UMAC                  3
-> > +
-> > +struct __packed nrf70_msg {
-> > +     u32 len;
-> > +     u32 resubmit;
-> > +     u32 type;
-> > +     u8 data[];
->
->
-> similar comments here throughout this entire file wrt __packed and
-> __le32, obviously
-
-Addressed above wrt __packed.
-
->
-> > +/* Undocumented PHY configuration parameters. */
-> >
->
-> haha :)
-
-Yep :)
-To be clear on the development process of this driver, no proprietary
-documentation has been used. I've written it entirely based on the
-publicly available Nordic's SDK [4], their Zephyr driver [5], the
-aforementioned UMAC source code, and a fair amount of guess work. This
-means there is some undocumented stuff available only as magic numbers.
-
->
->
-> Oh and before I forget, how about firmware availability?
-
-Nordic gave us permission to upstream it, see the cover letter.
-
-PS. I was oblivious to the specific patch submission rules for
-linux-wireless until after I've sent v2 series. Sorry for any
-inconvenience! The v3 will be formatted appropriately.
-
-Cheers,
-Artur
-
-[1] https://conclusive.tech/products/kstr-imx93-sbc/
-[2] https://www.kernel.org/doc/html/latest/core-api/packing.html
-[3] https://files.nordicsemi.com/ui/native/developerDoc/external/oss/nRF700=
-x/
-[4] https://github.com/nrfconnect/sdk-nrfxlib/tree/v2.7-branch/nrf_wifi
-[5] https://github.com/zephyrproject-rtos/zephyr/tree/main/drivers/wifi/nrf=
-_wifi
-
->
-> johannes
+Best regards,
+Hans
