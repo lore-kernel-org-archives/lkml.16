@@ -1,43 +1,33 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CE54C6E;
-	Fri, 25 Apr 2025 14:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12802580F9;
+	Fri, 25 Apr 2025 14:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592884; cv=none; b=svHp1T8XezSyqIjDKP5B4NOmw2XgBtBrXJqEenhtxKaiYooyMotEf/apdHiF7AFoymvEpVsn0dRNbZY/fylPZOe8X7SSEJ5dzkH9mjfpZRhI92FzNVGTRYRRiiVN3VUJ7zJaRMIyNND3zvUT5SyyxD4/GdOExzOWZ2neLM934NM=
+	t=1745592899; cv=none; b=haWBiynjopMy34zHsmxe+yzPuP+nU3cG4KEAfIxPSPw3KrP+tt6cfiTRvq+AVhSYBsFXjFdyjopEmKqCYPEMXjoUNaq6Epssx4xDL1lRTG0AS1/RFbAkm/0O4ApWUWK50VjzA5OX0mXJ8/dD/zxgSK6L7zTk9FShq3E4sR/YvFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592884; c=relaxed/simple;
-	bh=RvPz9P/xWFbjN4R/44F2CD5ntYfESh0QayO1nYK55/I=;
+	s=arc-20240116; t=1745592899; c=relaxed/simple;
+	bh=dRE45UE6pb6M/g3CkrnQM1V7s7IWXP4ZfxX2a91cle4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=chFBPZe3uiM2mbmaOMWx6sx8Th4nKyZ8Zz8E+5h7Wx+LAKd07VeKjdELoUM8VRp7kvvUjqJv+oaw3XwO5loFn+g33Fbl1Q7BdIiRk5Eqr2Sgde48KluVDxUEHNqz3gjbEZKqjNeyzhbg025D1rX51UpNT/qJbwnC5yGx0h77uAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oqloO3x5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oqloO3x5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xDAcHLmzqgw7fTCKYdHAySGHJ9PTRatNCyZPLqDB0bs=; b=oqloO3x5xqYlVPjq9Bc6WJVcHB
-	R9ahThx0dVeOJ0LbbhE9RD9HmaT5DEZGBPK0A9sgEk+pc1D5SjFVQqupR6u2gd9/DxqIOzOJBxCLT
-	smSj8DsTGTIYhPdBdulHAyMMjRxb1ci7/bjhObh/JqyAwYkbVNNeWfnyBDDxoaajzl4xhJuvSV8G6
-	Wq08yCEtmw1Tq+acnTe+hv/Y3QbcbfNZ2ge9VkviiOANeDLGJZxWAAF/AErWT9BKi+/+oiV5CKnRg
-	sn3CdSbFwIPaOXztK2OI8AxUuZs2qWRbLSwDjnk1cd2HS3rmPEvJ9+rYxI1dHAhReAU/ba2ZNUkm4
-	JvKqFeyA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u8KRu-0000000HUvj-13BS;
-	Fri, 25 Apr 2025 14:54:42 +0000
-Date: Fri, 25 Apr 2025 07:54:42 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, linux-man@vger.kernel.org
-Subject: Re: newlines in filenames; POSIX.1-2024
-Message-ID: <aAuiMqkjVbW3c8nx@infradead.org>
-References: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
- <20250422222131.GE569616@mit.edu>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOIpUC2h4UUovN1/JbBbUyrUg4+Kw6b3wmTHe3bEbw4zDK8Blw8sQ8NnHcdXsrYTsI3GCTFMfmSlV04qlZx8YfcxG5av/ySnbp9HbYEol9F67n2ct59KfyTu5IEY249gyofOQ19n0nRW8DgbSo5Aeexou8nNSYYGTJ2V3+Qtsug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 6494568BEB; Fri, 25 Apr 2025 16:54:51 +0200 (CEST)
+Date: Fri, 25 Apr 2025 16:54:50 +0200
+From: hch <hch@lst.de>
+To: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
+Cc: Waiman Long <llong@redhat.com>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	hch <hch@lst.de>, "kbusch@kernel.org" <kbusch@kernel.org>,
+	"sagi@grimberg.me" <sagi@grimberg.me>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: cgroup null pointer dereference
+Message-ID: <20250425145450.GA12664@lst.de>
+References: <BY5PR04MB68495E9E8A46CA9614D62669BCBB2@BY5PR04MB6849.namprd04.prod.outlook.com> <a5eac08e-bdb4-4aa2-bb46-aa89b6eb1871@redhat.com> <BY5PR04MB684951591DE83E6FD0CBD364BC842@BY5PR04MB6849.namprd04.prod.outlook.com> <623427dc-b555-4e38-a064-c20c26bb2a21@redhat.com> <642a7d6f-9d8b-4204-bc81-4d8e0179715d@redhat.com> <BY5PR04MB68493FB61BF28B5268815381BC842@BY5PR04MB6849.namprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,49 +36,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422222131.GE569616@mit.edu>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <BY5PR04MB68493FB61BF28B5268815381BC842@BY5PR04MB6849.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Apr 22, 2025 at 05:21:31PM -0500, Theodore Ts'o wrote:
-> Do we have any information of which implementations (if any) might
-> decide to disallow new-line characters?
-
-AFAIK: none.  At least none that matters.
-
-> Personally, I'm not convinced a newline is any different from any
-> number of weird-sh*t characters, such as zero-width space Unicode
-> characters, ASCII ETX or EOF characters, etc.
-
-It isn't any different in a substantial way.
-
-> I suppose we could add a new mount option which disallows the
-> weird-sh*t characters, but I bet it will break some userspace
-> programs, and it also begs the question of *which* weird-sh*t
-> characters should be disallowed by the kernel.
-
-Don't go there.  The only limitations that does make some limited
-sense in some limited environment is limiting to valid utf8.  We've
-already done that for CI, and that's causing enough problems despite
-having a use case.  Adding random mount options to limit random
-characters has a lot of downside but absolutely no actual upside.
-
+On Fri, Apr 25, 2025 at 02:22:31AM +0000, Kamaljit Singh wrote:
+> >It should also be in v6.15-rc1 branch but is missing in the nvme branch
+> >that you are using. So you need to use a more updated nvme, when
+> >available, to avoid this problem.
+> >
+> Thank you for finding that commit. I'll look for it.
 > 
-> > I guess there's no intention to change that behavior.  But I should
-> > ask.  I thought of adding this paragraph to all pages that create
-> > file names:
-> > 
-> > 	+.SH CAVEATS
-> > 	+POSIX.1-2024 encourages implementations to
-> > 	+disallow creation of filenames containing new-line characters.
-> > 	+Linux doesn't follow this,
-> > 	+and allows using new-line characters.
-> > 
-> > Are there any comments?
-> 
-> I think this is giving the Austin Group way more attention/respect
-> than they deserve, especially when it's an optional "encourage", but
-> whatever...
+> Christoph, Sagi, Keith, Others,
+> Can this commit be merged into the nvme-6.15 branch please?
 
-Yeah.  Don't even mention these idiotic recommendations, any attention
-spent on this is too much.
+What commit?
 
