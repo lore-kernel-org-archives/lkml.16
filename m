@@ -1,145 +1,99 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688A328936E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA4D28F50E
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745619396; cv=none; b=blzcRV3/uyml7CZULeP82qtyk5AvGZ5XCrNzdIPCqbBuSraZqok1cWcS5Dms79KQE2gH81KAbampdR9of4p60efXdATz2LfrNu2TT6NkWll/aj2MlEzKdfQ7ruxs6YK/DUUOzx2z/gKqLTXanqSwxvsLFPnD3sdNeqM1nJ40cTg=
+	t=1745619426; cv=none; b=ITnb9b8WkKwur7QOSwhluWF395YcvPVehkHKitz+bdi8UkSFb+LGYH9QFTjl8315cOURTlaa9w0IWRtf8CTP/tEWhXMlpSxy+qvDe360DKN1mPTOlcy4W4KVZJ7diqSgq4RgvHPoRges00gvneFD7gG4UDovQMtCfvOx8aokV8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745619396; c=relaxed/simple;
-	bh=W30Elu0BPXUZLgDMxTxpH20ZLIU0eYAyb8+7H14ZRjE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=akaUYciEYbPSV/EamuxHNf41TcuvqRiecjOg48pCw9aiBp2I02ywOdx7VUr2F+AGZbGYnwruCnW3PNxWBShleBBA6M2r993hjqijPVqC32NPKrjmHhg3DyDMxH6M5oMMqyzvuWxwjLfdCGlBh2fMwAzRTpOAkd6kfq3hiRD6/Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=StnhT1Dw; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	s=arc-20240116; t=1745619426; c=relaxed/simple;
+	bh=NZS0pLxphm++YoQ+lY/XIRS6f24N+LZCWzNnPoFPAh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ASl3m8Pq1lVeqoh9Fhb+0Vwqcdk8j3MOM4jvOOPaz1a2H33Po6glJYBg0o8L7g3hsPA/oEQSag9tBb1kvpr1YCc/eCGhnaMWYFZ3pnLiKZGLr28Fdc8H+tQKQipzNYwNHwxesSFWP55ZR/Oe/P4sVpusFLpzyDvpPSAw1id+lbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lZ8UFzzn; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="StnhT1Dw"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c1138ae5so2766816b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1745619394; x=1746224194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WgXD6hkPKUGRTdY1zhGVp/H0Rv3gRoc0tuevqLhxiZs=;
-        b=StnhT1DwrphxpWMTf+Y/JEzLMG3JkwBbljfQQAsYTbqZDhS1cuVzVU1fOo8EYeDSLt
-         sV7GuBSYBsbN5NnUZ+rib0r4MaNOQDErIkvHEIUvBbFWGBryhdeOLPmt+HckATBax3cs
-         n/Xy7gmfZ75jVfiSYnjfXPgo9u/3cD7J0RK60hDW33t8ScPXAcCiz9xHZ95ASnnZRED4
-         ORWuKX5gvag2Xa8mU7pxlGyAzL0HNXOlZfjPCmPrbxqWpP+21/fh27cFTPzvz3R+HSGo
-         tDfR0FD/0VNhv2zEX7vgucuXdg8d9uQSj+UTCfiOzK0HqsjUdDgelc8KEXZMuOiKUKhv
-         CeRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745619394; x=1746224194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WgXD6hkPKUGRTdY1zhGVp/H0Rv3gRoc0tuevqLhxiZs=;
-        b=McpbZWHucXzA3GQ8I4COlRhitAFfJyLhr+2pXCx+kfo3ziA1UabLcdxCVY8oglzwfu
-         FIiPYLSmmLczRs8WmN3NFh3s2vul3wAuPXtWv182Ww+eHCJOlYhxkTu0wHOnH3SHE16t
-         v09zZ0iYHHal71+pl337P3b94cGJdso91qE0rBz/QEzUKkwQe2kIAgeqJuRDd12IIPiV
-         ITH+kfW3f/eCNjT0pYvrkrwWF+ZbG4Cz0ZZyXu9rkTKa1fokbRMousq+9hL2C0fOqfWE
-         6y9cSp1qQ3az1JCfsk0KQE+/D14W2LgtBb+Nk7yOBBDGUJMv7NjDDTsFn93Xv30cWVT1
-         yCWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVunYv30XDzeXOgqasw8klOQJdvzYlqObMdKNFD6V4HupNJh7r5OHUCX7iYliF8DvxIlRYX7OIinGcaV6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBjUgD2HNo9g0bniIFHpSIVlF1xXm/zDqrJDcjvuECt3L686JW
-	CDx4SmZWLQsJXEkjnIjRitiqhL01GamnUcyLm0q+p/M4ifzCJubssappj/nd66VgFzSsS0EdEZV
-	GcouKirlvgsgWkB+1swdBy3C2aw/FxndVGfYgfw==
-X-Gm-Gg: ASbGnctHaYOCj5Rrcj+27zj0xTk1ADgLRqllpuT4ifZasXT1NBVXPioPJbdi9t+kMQg
-	oFdnNAgftDC9kcsLNS/pMlXRdscPIumVI48BOCoYi++7BkylFzwtT5pAkBZFg44+c/xAs/do3cz
-	tWbarfNuBSo+2CdcM4IhakkjadTMSddLDvVy2sgdbGVjXmQsUYgBkRVVUq
-X-Google-Smtp-Source: AGHT+IH2N4ln+J9HVbv+8+sHBp1P/isBj0gkTrIzOTOJCwbUCAtU7RG/jp9P807JAV09WP22RBF21hsTQbnlFLBbfcE=
-X-Received: by 2002:a05:6a00:218c:b0:736:5c8e:baaa with SMTP id
- d2e1a72fcca58-73ff7255d1fmr1386610b3a.2.1745619394656; Fri, 25 Apr 2025
- 15:16:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZ8UFzzn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745619424; x=1777155424;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=NZS0pLxphm++YoQ+lY/XIRS6f24N+LZCWzNnPoFPAh8=;
+  b=lZ8UFzznveEc6aYO8FE3+CgXxRWv2yvSdxxBKNykkApKLFo7vNoZARhB
+   +GXL7Bdsj70kmOky3XOKXcIvXqa6PR5tdC3xxamWZA4KuFf5IzHXHrdiB
+   xNNur5SKAqxYEYtlzb4IfpiEwnuMb07CJ7++FQUJ3LJ3bOIXPIVlfqwDL
+   d8CgNkae61bVhxnZuNsNf8AyMR47xoOy5mcF7Wd6/u5zTemMwz8NuA1PI
+   5UnFprfjeB4b0oqVsUXCN8MNseqI7zoCF9EjwN/ciCeWc67UY2wAY7fu/
+   XjLXVbx3USSB0fjZx1v58PPpuzIaYPNCwRgBGzt46Peq3pEYx3nWYQfZL
+   g==;
+X-CSE-ConnectionGUID: QtOLzFUdSlGbzyEoE9F9BA==
+X-CSE-MsgGUID: qYjcIhF1SHquRPaFzs2ajg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="57486697"
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="57486697"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:17:04 -0700
+X-CSE-ConnectionGUID: /7eZaxymSH+ozLcp7jYBNQ==
+X-CSE-MsgGUID: PVY2jz9iQoODAgupB5unCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="138110039"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 25 Apr 2025 15:17:02 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8RLv-0005YL-2A;
+	Fri, 25 Apr 2025 22:16:59 +0000
+Date: Sat, 26 Apr 2025 06:16:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Subject: ERROR: modpost: "__ubsan_handle_add_overflow" [fs/fuse/virtiofs.ko]
+ undefined!
+Message-ID: <202504260602.AgMbjS8a-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415232521.2049906-1-william@wkennington.com> <79400920-22b4-4bce-b204-c58087495c22@kernel.org>
-In-Reply-To: <79400920-22b4-4bce-b204-c58087495c22@kernel.org>
-From: William Kennington <william@wkennington.com>
-Date: Fri, 25 Apr 2025 15:16:23 -0700
-X-Gm-Features: ATxdqUG71cOtnC9xnSIu_N-FLI_cL9Ilck2vh1utGY_dfZmPABCB1UECKPYRuu0
-Message-ID: <CAD_4BXiaqLa563LoyGsPV=C164KxREzs0H+VcXPGR9QagzKs0A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Fix nuvoton 8xx clock properties
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
-	Tali Perry <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, openbmc@lists.ozlabs.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Apr 15, 2025 at 11:55=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
->
-> On 16/04/2025 01:25, William A. Kennington III wrote:
-> > The latest iteration of the clock driver got rid of the separate clock
->
-> I don't see the binding deprecated.
->
-> > compatible node, merging clock and reset devices.
-> >
-> > Signed-off-by: William A. Kennington III <william@wkennington.com>
-> > ---
-> >  .../boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 16 ++++++----------
-> >  .../boot/dts/nuvoton/nuvoton-npcm845-evb.dts     |  8 ++++++++
-> >  2 files changed, 14 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/=
-arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-> > index ecd171b2feba..4da62308b274 100644
-> > --- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-> > +++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-> > @@ -47,17 +47,13 @@ ahb {
-> >               interrupt-parent =3D <&gic>;
-> >               ranges;
-> >
-> > -             rstc: reset-controller@f0801000 {
-> > +             clk: rstc: reset-controller@f0801000 {
-> >                       compatible =3D "nuvoton,npcm845-reset";
-> >                       reg =3D <0x0 0xf0801000 0x0 0x78>;
->
-> So now it lacks quite a bit of address space. This must be explained in
-> commit msg.
+Hi Kees,
 
-Can do that when i make the updated series. Basically the old value
-was just never consumed by an actual driver and the chip reserves that
-entire 0x1000 size address space for clock registers. However, only
-0xC4 bytes (0x78 was incorrect) of that space are used for these
-registers.
+First bad commit (maybe != root cause):
 
->
-> >                       #reset-cells =3D <2>;
-> >                       nuvoton,sysgcr =3D <&gcr>;
-> > -             };
-> > -
-> > -             clk: clock-controller@f0801000 {
-> > -                     compatible =3D "nuvoton,npcm845-clk";
-> > +                     clocks =3D <&refclk>;
-> >                       #clock-cells =3D <1>;
-> > -                     reg =3D <0x0 0xf0801000 0x0 0x1000>;
-> >               };
-> >
-> >               apb {
-> > @@ -81,7 +77,7 @@ timer0: timer@8000 {
-> >                               compatible =3D "nuvoton,npcm845-timer";
-> >                               interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL=
-_HIGH>;
-> >                               reg =3D <0x8000 0x1C>;
-> > -                             clocks =3D <&clk NPCM8XX_CLK_REFCLK>;
-> > +                             clocks =3D <&refclk>;
->
-> Not explained in commit msg.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: 47f4af43e7c0cf702d6a6321542f0c0d9c4216e3 ubsan/overflow: Enable ignorelist parsing and add type filter
+date:   7 weeks ago
+config: s390-randconfig-002-20250426 (https://download.01.org/0day-ci/archive/20250426/202504260602.AgMbjS8a-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504260602.AgMbjS8a-lkp@intel.com/reproduce)
 
-Yeah, I can do that WRT using an on board refclk instead of a value
-that comes from the SoC.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504260602.AgMbjS8a-lkp@intel.com/
 
->
->
-> Best regards,
-> Krzysztof
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/fuse/virtiofs.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/fuse/virtiofs.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/ecryptfs/ecryptfs.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_mul_overflow" [fs/ecryptfs/ecryptfs.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/ecryptfs/ecryptfs.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/jffs2/jffs2.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/jffs2/jffs2.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/overlayfs/overlay.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_mul_overflow" [fs/overlayfs/overlay.ko] undefined!
+>> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/overlayfs/overlay.ko] undefined!
+WARNING: modpost: suppressed 52 unresolved symbol warnings because there were too many)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
