@@ -1,101 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2156D189B80;
-	Fri, 25 Apr 2025 20:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C97122332B;
+	Fri, 25 Apr 2025 20:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745614580; cv=none; b=FCUyz2eBJIDO0XTD+HrtG5d4f8qlDjmM9fnlTz+9kJFN52NEoyTzwgd2+33HC0VXJ6adwjaI90QF/IOrcy19rQ1kgJud8VKz/qbQ/6CqHQwoEqu+KPPQuCGSjnKI2m2EZt2+9QIULa0xe8kKBN31N9i9JyzvG4XF8lUEdPzYRUs=
+	t=1745614677; cv=none; b=uQPIeO4s6ZnMAiq1O6kWrc9XUlrmm5VKbj5OA1siGb9Y4gZOXKgI0s52TjDGtA+6ZnJFS6ETlx+IIVBGiG43sRUySjTEFB5VCuijGAXZcp112kHDMhsWiTBTOEaLuMMudkflH1mRtfqLKj1lo53jS3LyQ07a4uYqJnTuAzOnrt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745614580; c=relaxed/simple;
-	bh=T8fYF24SwYfu9rErGNxqBq2jkVKo0vdh4XoZjEwljK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTLiWX79Kf8OcynbjrCunvRth2AlrUN898wYwiP68zHmekv4fGed7z+DFBCbzhc3qqF5Tq1zR6iNpFhnhCQwF0Z6xLBlXUhsNMv4m5kxvJpN2QIwTf1BHDSOCzDBJEgcyHT/BQizjfDKR+FdBwaHz+SgY2eK9VmPH+Ti1XrMqeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfSm/T6/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745614677; c=relaxed/simple;
+	bh=7YdCjmZzTK1ePXQex1Lq91xIumBUVkfwQPrg+J7xiB4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SwMo5/mc9L9bSU2LopTOk25gjqZFnIVolOwFK5/REuA8dsmPTYXyHP26WgYvCzsQMRsSLq+cSyKp1YpCuf2ug8O3XQwWPcIeu5+TAlyI+GNumbOwEI3+DScWBBHVRbwLd6/K4ncsscOdVB8+2ncyOPa2+WfrEfI+b5cOFZnEk6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FvwKJhDg; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfSm/T6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D301AC4CEE4;
-	Fri, 25 Apr 2025 20:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745614575;
-	bh=T8fYF24SwYfu9rErGNxqBq2jkVKo0vdh4XoZjEwljK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CfSm/T6/esF2jtxHiPEPXjIBobhYAsv2+tXl2IfgpjaJeNefSSfFxqxL9kD6QDGvP
-	 a5mzsBVqtplL/E/7NA3HkVG339eQtwtoRR+5zqA2hwKQmD1V/q54gRzs+ov39XXD1k
-	 lgu4rufRPt63LBbtS1lvSnfBQ96rivGatMUpzqUqaJXABX4BN8sqw2h/jyCkqfcOE/
-	 6f6MGiZZRSTuzZdv3WIVU5ZuWPZRdpfMI/2ijchgFiE4JoAu1Snp9tW83o0GaCR5LB
-	 leswjaZW8hEeRkGWR3QSqlBajZhjshUSTM4lLXbgdT03jr8+rXtyhFIyBCRihUvWpr
-	 18EodjpUiCVFQ==
-Date: Fri, 25 Apr 2025 21:56:09 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Srinivas Kandagatla <srini@kernel.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 2/5] ASoC: qcom: sm8250: set card driver name from
- match data
-Message-ID: <d65b5d50-d0f5-43b9-b657-3fcb455efbbe@sirena.org.uk>
-References: <20250425-fp5-dp-sound-v3-0-7cb45180091b@fairphone.com>
- <20250425-fp5-dp-sound-v3-2-7cb45180091b@fairphone.com>
- <36904d64-68e1-43b2-baed-50b5fddc2bcb@sirena.org.uk>
- <D9FXE4TJ23QB.1CS3D6PU2FGMR@fairphone.com>
- <ccca5e19-5a4e-423b-923e-ea0de6682752@sirena.org.uk>
- <D9G0JHKZ0RXB.3LI5UGS7QTVQN@fairphone.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FvwKJhDg"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKvbT92272945
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 15:57:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745614657;
+	bh=ZdV4EQHcUtI6VgU4H+9WjA2nwXCkPIw4KWofrqNZb/c=;
+	h=From:To:CC:Subject:Date;
+	b=FvwKJhDgEkLirgeaz675eRoBXbK+yrtW0omsa/o50GNtGH2RwPlydSq19mX0Yn8lR
+	 9RN2SiLdEMB7LgQFj9l/sAcGnuzu2Q+U43Sf8PIGU1zk/276M8hUS03XcPL//DnUfu
+	 JL1FtTS+TQ6tMyELO4dWvuHcuUVblwIX58Bxkb28=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKvbrH065704
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 15:57:37 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 15:57:36 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 15:57:36 -0500
+Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PKvabJ078933;
+	Fri, 25 Apr 2025 15:57:36 -0500
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+To: <lgirdwood@gmail.com>, <broonie@kernel.org>, <aaro.koskinen@iki.fi>,
+        <andreas@kemnade.info>, <khilman@baylibre.com>, <rogerq@kernel.org>,
+        <tony@atomide.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v7 0/4] Add TI TPS65214 & TPS65215 Regulator Support
+Date: Fri, 25 Apr 2025 15:57:32 -0500
+Message-ID: <20250425205736.76433-1-s-ramamoorthy@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uwgD5b/ZvDIIBNta"
-Content-Disposition: inline
-In-Reply-To: <D9G0JHKZ0RXB.3LI5UGS7QTVQN@fairphone.com>
-X-Cookie: Debug is human, de-fix divine.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Rebase patch series for 6.16 cycle. The related MFD series was integrated 
+in mainline during 6.15 cycle [0].
 
---uwgD5b/ZvDIIBNta
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+TPS65214 and TPS65215 are Power Management Integrated Circuits (PMICs) that
+have significant register map overlap with TPS65219 and each other. The 
+series introduces the 2 new PMICs and restructures the existing driver to 
+support multiple devices.
 
-On Fri, Apr 25, 2025 at 10:47:42PM +0200, Luca Weiss wrote:
-> On Fri Apr 25, 2025 at 9:03 PM CEST, Mark Brown wrote:
+- TPS65214, TPS65215, and TPS65219 each have 3 Buck regulators
+- TPS65214 has 2 LDOS and 1 GPO, whereas TPS65219 has 4 LDOs and 2 GPOs.
+- TPS65214's LDO1 maps to TPS65219's LDO3.
+- A key difference between TPS65215 & TPS65214 are the LDO current and
+  voltage output ranges and the configurable options available.
+- TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
+- TPS65215's LDO2 maps to TPS65219's LDO3.
+- TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
 
-> > Or base it on my tree and let things get sorted in the merge, I don't
-> > know what the conflicts might be?
+TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
+TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
 
-> For this patch here it might be okay but patch 3/5 from this series very
-> much depends on the patch in Greg's tree, given it refactors/expands on
-> the USB_RX if there. Resolving this through merge wouldn't be very
-> pretty.
+AM62L + TPS65214 Test Logs:
+https://gist.github.com/ramamoorthyhs/0793f7813332d94423ca1baee02f62c9
+AM62L + TPS65215 Test Logs:
+https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
 
-Well, unfortunately Greg didn't put things on a branch so yeah waiting
-for next release might be easiest.
+---
+Change Log:
+v6 -> v7:
+- Rebase series for 6.16 cycle
+- Revert changes made in v5 and v6 to combine MFD & regulator driver series
+v5 -> v6:
+- Combine MFD & regulator series to help with dependencies when 
+  maintainers take this series
+v4 -> v5:
+- TPS65214 dt-binding patch: Remove duplicated "then:", combine "if:" 
+  statements with enum.
+v3 -> v4:
+- Update commit header to be "regulator: tps65219" since the driver name 
+  has not been changed from TPS65219.
+- Combined TPS65214 & TPS65215 regulator patches into 1 series, since the 
+  series' share a dependency & these patches have overlapping changes
+- Drop tps65215_regulator_irq_types empty array and instead: set irq_types 
+  to NULL and dev_irq_size to 0
+v2 -> v3:
+dt-bindings: 
+- Alphanumeric order for PMIC list
+- add allOf:if:then: which will disallow :false two LDOs and their supplies
+regulator.c:
+- Revert addition of 2 probe helper functions
+- Add empty tps65215_regulator_irq_types struct to minimize loops in probe
+- Consolidate patches to define and use func/structs in the same patches to
+  prevent build error due to no users of the defined functions
+- Apply reverse xmas tree style to variable defintions in functions
+- Remove unnecessary new lines & add new line after declarations
+v1 -> v2:
+- have any PMIC lists be in alpha-numeric order: TPS65215, then TPS65219
+- Add driver prefix to chip_data struct
+- Have probe() helper functions use dev_err_probe instead of dev_err() to 
+  log the error code in a human readable format & combined with return, it 
+  saves a few LoC since { } can be removed.
+- Add error handling of 'irq_data' in probe() as previously done.
+---
+[0]: https://lore.kernel.org/all/173928615760.2233464.12306998726512431222.b4-ty@kernel.org/
 
---uwgD5b/ZvDIIBNta
-Content-Type: application/pgp-signature; name="signature.asc"
+Shree Ramamoorthy (4):
+  regulator: tps65219: Update struct names
+  regulator: tps65219: Add support for TPS65215 regulator resources
+  regulator: tps65219: Add support for TPS65215 Regulator IRQs
+  regulator: tps65219: Add TI TPS65214 Regulator Support
 
------BEGIN PGP SIGNATURE-----
+ drivers/regulator/Kconfig              |  12 +-
+ drivers/regulator/tps65219-regulator.c | 242 ++++++++++++++++++++-----
+ 2 files changed, 202 insertions(+), 52 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgL9ugACgkQJNaLcl1U
-h9DXQAf+JaH2w6iyAMP0Bjh76NxowG+Y8EcaCQPReo9JeAOyppcpfB4NnjGm1uNL
-upySVWVCRrkZWXbmUTIINtq21b5f23HllaDiB6tV7hig27nhWVixom/DydlPRdvg
-1Itqw6ge9SDFd2AJ5Pao9mKwC62RaeRKqBFX3CwPnIEgokaoPZJwTVwWCO6UzAAg
-duA2KDdSy0R2aLXN8hMlrv1YIGxKmuX2Si5a1rk1zqfKC7Hja+Eu/9GENzUdsI2t
-agMzo/YxmoeZBFKhaUUAcsNSUE4OYrebbAw8NkzNwwPJp1W32xOIhE43MfdEhYpq
-qYkie4IDHDQ3G1+BngZVG7woqsxCzQ==
-=Hj7X
------END PGP SIGNATURE-----
+-- 
+2.43.0
 
---uwgD5b/ZvDIIBNta--
