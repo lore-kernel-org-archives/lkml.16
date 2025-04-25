@@ -1,81 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9722F191;
-	Fri, 25 Apr 2025 00:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47923748F;
+	Fri, 25 Apr 2025 00:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540084; cv=none; b=OPoUlrgJZAnB6g9Sr0Nl5ybvqxeeVkmin3YOPnUK/O++s5Tm2rvz3DlJOrPgUR3JoPD1clH8AqWGV94HQCEkVssQq7meGDLrWqRiK/QDen8HNsUbC6GNDMDLYMZvIBFp5g1KbUk2QuvAb3btuLP/kCU64bkbfFz41DLq+A+gSTQ=
+	t=1745540098; cv=none; b=lEfYYNgoZOd79lEh15tE1sRKzp2ml+FW5Qg3e+PtS/pChLBpmDP/tvm6/QySM7M30GwFtHVQ3c8/Ys68ABsFuWp3GwlsIdg5t0VPj9e1nFGn6YRiOqlx4lnrb1nOL4pJ5MSFWUw7+Qm4A9+FTySfJ6ghy6PWH8LpLBQYeGE9HQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540084; c=relaxed/simple;
-	bh=4eZUBazFf9ayGgk0U60/oYAzj34pgTS2mZIiBFLS1Vs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h9My4z35C+0YsIn12PMAJtrL/BFZtPUlG9qm8MglmgmS0wDV55qvrIlvwxU8tJSeIHI7g/cTv9rLmHXNFOHtJ9oDJOB2aNURdeiKgYDI0h/U81djRuAUmxNsU+60/Gm8/ibleKVw8s5XFYd1gehHKey2EkoVVGYiKf4WTBdbcEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ed58ypxK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745540098; c=relaxed/simple;
+	bh=CoEPTIATxfGm6/ospC3WvWVyiWwjXysbcgPQFi8ViSo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Jru1xSwbte+SCWMIIFwLvrVEewO+1MFvDNILRLUAEFc/iL9o67ROyE7j9ynVfhFqqebFooy1dGfwVWCtWYWW/NOrwQZGPYvetmqorxnTA+a7EV3JqKCO5W1995oCBM9Ex4MiXv9FlZ6eSx8WY5jqZ8eqODT+SKqcVy5LSn1ZcvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NZwR6dVP; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ed58ypxK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98EA2C4CEE3;
-	Fri, 25 Apr 2025 00:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745540081;
-	bh=4eZUBazFf9ayGgk0U60/oYAzj34pgTS2mZIiBFLS1Vs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ed58ypxKwxormM75MN6qHmefaviuFilFoBGLhadbQUx+w7X9kpAYM0+/y77ik+APv
-	 6IAK6SZObKiykEeWDficRdzZyGyMpE9UGDeWP4CQtvyqiRSLyH9OFVO8B+MvcVg6x+
-	 yZSotJeRGNq2rLfbaXCAmQjqquMEo9ijXLUxi0uDerUR6xrXX2XmX54CqBLrWvUFmI
-	 kEG9ESeL7BqXdospd8a96486NxOzF0b6Mo/MHwqtKvqS1RNL2pMvL4pjWiYrGuKn8I
-	 2W20sQ1bnlpAt2vI7D2hPTXWiEbAwX7WGtupXqQ2Mk0iD+lc/kNpREJ8O2un5/x99+
-	 iwEnqku8WVQWQ==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.12 000/223] 6.12.25-rc1 review
-Date: Fri, 25 Apr 2025 02:14:28 +0200
-Message-ID: <20250425001428.62311-1-ojeda@kernel.org>
-In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
-References: <20250423142617.120834124@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZwR6dVP"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227a8cdd241so22654095ad.3;
+        Thu, 24 Apr 2025 17:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745540096; x=1746144896; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mlGba7pFFT/RzOIVC6cM7hCjpsJp+0aTxjK3ENj03PQ=;
+        b=NZwR6dVPRrIGpYj822WiwC6DYSuoQEjdx7/rhMqKCOfIqFjvZrj3JlbXXYWPTioKnV
+         LHokMt6YaAPmZAvcYhdjWNoyei9wZZXMPWInhU9/+4OL4h9tZOAdfsnTrUni1pUIe4Zh
+         0UogI0KPD1Eg8v1OKqqxQYgh70cVfXZhXkCQN+DDsysNWOr4o/8367TPXWqWV6gHDOVR
+         4ZiAzey/fRuxjAYnrYCnZVTsAqUyGA79M0csUzPGKf3O6WtGh5PqxfDnQsYd3i0J1LMC
+         mMx4f4jD9LaLX/RyGQRwL+nr+vS5cRl+t/muCblVxvJIi+UtpWNXI+o2dztHBUlTRjWX
+         uhzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745540096; x=1746144896;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mlGba7pFFT/RzOIVC6cM7hCjpsJp+0aTxjK3ENj03PQ=;
+        b=sdugqbFv0ZYGSISui5gECd98F3TsN/HK5plUOa9578GgOSu09qzrgGXT6MeLcctelg
+         gNPbOtXsHUqKZ3gTyX1e0Sxs68XWdVCULSEsiorFJsL9bHmeqf2Nn5UZNoGUJjftbvJ2
+         04vvuO/vjLCUX9uI7qhWElo3W9o0dIitOLJhookR0YMVZ++kh6IyjRibfA4cZadHAs4k
+         swRUIRDFH1VONs4MNXmC3avIJWr+1TctoKEbykyq7pKEQjp3ZUMXyoIvqbAmqci6qcS+
+         m3g55nax0wqlWStjQpI7VNg879T9S5J5Hn0JaHwB5tUJfesixg4qkxf1pO1JnWXUZSI6
+         ab3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXuOyNOOA56KsE3THYXjDqJaTAfMBm0jjTiEHnwwa/Fv9VuiKa5e3hU8AcHfMYAZbXDoTkhsbrEZPkjo6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5gwkHZmT6VS2uVv9wda78y4lXYodbtSi6oUMaaBwF3ciBC5f6
+	MJTHSOVCX8nIsE3wlh3LnfEog5rM+Cau2MHid326ciZo830eOQBL/l2Deghi
+X-Gm-Gg: ASbGncu9kf0BwzqEVXjWq5Ri2z5XYwj2PIMSABl5d9jZ1Ep1X2pLWJPl61rWxe+bFxg
+	tWZDwR69PDSyLwK1gjED3HiWWwBd5VGosu42ddHtMC36jhsNWeE24TEAutCUo8fMIj5+jFq0lIN
+	JNzhg/pFMYVhQ+fK8hrpn+KhIJ//yA0iPL1t3b0bD4iuPNQJ4I8aoMFPsTdvaALI9l6t4X/HtTK
+	r0zWK3fDf58HYYKIt+TWkKJiQGUsnSdk/Qwnbc5GzgtC2yhpONXmDo1dPUnHQOujRzbPcfZyNbZ
+	Xg1eqoBk47dneNPs9tFVOv5fMYsSd6BDqn7nQR7zL+dMSFeJ/lk=
+X-Google-Smtp-Source: AGHT+IGH6mnt84oPU0reFGj1i8tWcThJ/AaFjNZWkwx8vtkBdghBBLiLAhYpjWdoMZFdlSWihaT5Fg==
+X-Received: by 2002:a17:903:114:b0:224:256e:5e3f with SMTP id d9443c01a7336-22dbf5efe71mr3602415ad.25.1745540096330;
+        Thu, 24 Apr 2025 17:14:56 -0700 (PDT)
+Received: from [192.168.0.110] ([189.101.161.220])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbdf7bsm20035165ad.87.2025.04.24.17.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 17:14:56 -0700 (PDT)
+From: Gustavo Silva <gustavograzs@gmail.com>
+Subject: [PATCH 0/3] BMI270: Add support for step counter and motion events
+Date: Thu, 24 Apr 2025 21:14:49 -0300
+Message-Id: <20250424-bmi270-events-v1-0-a6c722673e5f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPnTCmgC/x2MQQqAIBAAvxJ7TrBNE/pKdChbaw9ZaEgg/j3pO
+ AwzGSIFpghjkyFQ4siXr9C1Ddhj8TsJ3ioDStRSoRLryWikoET+icIoO5DTrpoeanMHcvz+v2k
+ u5QPgLwn7XwAAAA==
+X-Change-ID: 20250424-bmi270-events-74c6ef5f4243
+To: Alex Lanzano <lanzano.alex@gmail.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gustavo Silva <gustavograzs@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745540093; l=866;
+ i=gustavograzs@gmail.com; s=20250111; h=from:subject:message-id;
+ bh=CoEPTIATxfGm6/ospC3WvWVyiWwjXysbcgPQFi8ViSo=;
+ b=+1sW7BadGStHyJ3p8QaCG3efxQp5AeIH6GRAa55MnnKyEqvlvAlVw16mL1wolUcVaJ9tCv3QU
+ WFciEPY1xW5DP6PL6qvxfwTVe/6ByFrZxvjVHeMK4B54gGBAfcaBd6J
+X-Developer-Key: i=gustavograzs@gmail.com; a=ed25519;
+ pk=g2TFXpo1jMCOCN+rzVoM9NDFNfSMOgVyY0rlyvk4RTM=
 
-On Wed, 23 Apr 2025 16:41:12 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.25 release.
-> There are 223 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
+This series adds support for step counter and motion events using
+interrupts in the BMI270 driver.
 
-Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
-for loongarch64:
+The step counter can be enabled, disabled, and configured with a
+watermark, all from userspace.
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+Any-motion and no-motion events are generated by detecting changes
+in the acceleration slope on each axis.
 
-Thanks!
+Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+---
+Gustavo Silva (3):
+      iio: imu: bmi270: add channel for step counter
+      iio: imu: bmi270: add step counter watermark event
+      iio: imu: bmi270: add support for motion events
 
-Cheers,
-Miguel
+ drivers/iio/imu/bmi270/bmi270_core.c | 523 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 520 insertions(+), 3 deletions(-)
+---
+base-commit: b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
+change-id: 20250424-bmi270-events-74c6ef5f4243
+
+Best regards,
+-- 
+Gustavo Silva <gustavograzs@gmail.com>
+
