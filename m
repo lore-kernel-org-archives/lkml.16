@@ -1,99 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E67134A8;
-	Fri, 25 Apr 2025 07:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1E2134A8
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745565922; cv=none; b=AL+c19oBFW6LTbZidwdc3uCOiOrCGNnp8mS161767MAk/8O6ATBWTBHnIj0Avai8lY2MRb/ZHGLcB4bMxwKWMj5AZ0SZTbREEi/Wy97fYzQMkiaDWYv3noUJORym8UGPN5+MrVEWFElMeLwW2pTPVmnZa9LggqSL1UyDTyzc/F0=
+	t=1745565957; cv=none; b=tLysWF8MvNHVTy3/mCVlJal6+ElbEKIw3VNVP6gni/gtZbpdL+RQXHTasG57ZQa2o7k8uK2t0/mHMa3KOPLZrUgBQxqOTSJKufEr1KgZdlPpVztnDPAQluGyTom0ED92/y8lJyAn+qgvAnvTo30DxqSIu2pxhPLWli3RO0fcp/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745565922; c=relaxed/simple;
-	bh=OSzvSNriURJD0afIhu4/ueRDsc2WgjRVHGzjYaUrp2o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dPGi/t5rQIl5/4PgzEjz5bYW61Jf2gd/6HlpLhTdAUlbZUw3e2DoiXcVUxzADxflaGZEjxPqCYXiFaosYPPQjlD6LzHagRoXRJ2VgPHpBRRXy7c2baAifBZkzzjyJ8SliTUuoiqw2n54LC+mUrVkmCc50nY+FkAiFI5MSt6Oz9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KNphlBOb; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745565957; c=relaxed/simple;
+	bh=gWw4+tx/Z6dHwfJVz3ptWAQkN4YYonKFNp6plN2PBsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxIIaHbkMB1jQ6jg2EnRxT06MsEH9Vb7VpnD0XJ9VRBgDI+dBEur3sF1gx2rg2VUZawPyETRWeghEjeDXhtwNrBQzktTPbxX6IHaeyDiOupiqKtO4v0GkHzRj8+7Dl/ol+Wucng0ljOvmbVTHh9Dn1fZCy9lI2EWz3GzXZqdAoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfexoPMm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KNphlBOb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745565921; x=1777101921;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OSzvSNriURJD0afIhu4/ueRDsc2WgjRVHGzjYaUrp2o=;
-  b=KNphlBObda0qxuQjqt5gSUiSMoHsFGsoZCxYhU2TNtr2a9y9jbWYSfoO
-   QnDqreoM0/avXlAh0PmWULZdpMBqdkKgm21BtHzP0OSwpMrncTOEymRiL
-   hEvB8DNXaqf+9hrta2bOLSC+JfXt8jpGtZBt8q4FmxoKMk+OoRGzyrIu6
-   BX0oAmxoDuF2YCZFK4xv9ZeC3i/TQ5/WjTnUAl45cqLZQ/zmAAkgIHwbz
-   lRPCp7cMaIcvqpwcO0I4vARBV1pSLveOT4pbR+3pOXEk9JUsPv1xs5GPL
-   EGIgCMrrIO7tCD4yJN2Yb48y6Y9X54KV4G0Vu+kVRGA/2B2X59/fCGVmR
-   A==;
-X-CSE-ConnectionGUID: uhnvy5wvQGOpjyT+ANiX1w==
-X-CSE-MsgGUID: 48NzfkMaTsKYjN4IUteThQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57420590"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="57420590"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:25:20 -0700
-X-CSE-ConnectionGUID: 4EgUmxgkTJusLEPeGPuzVQ==
-X-CSE-MsgGUID: bjkkdP/lQG6xE877BZKp1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="132757664"
-Received: from yijiemei-mobl.ccr.corp.intel.com (HELO [10.238.2.108]) ([10.238.2.108])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:25:14 -0700
-Message-ID: <55990bb0-9fbe-4b38-95db-bd257914b157@linux.intel.com>
-Date: Fri, 25 Apr 2025 15:25:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfexoPMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B79C4CEE4;
+	Fri, 25 Apr 2025 07:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745565956;
+	bh=gWw4+tx/Z6dHwfJVz3ptWAQkN4YYonKFNp6plN2PBsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bfexoPMmFJsrr1zsPEM6dlSGe4vv2RG2LM3T3uvAbo4W4VPxJCbGGe5CoAZFpFpQo
+	 gRqO+2RhtNV6JJtrFd2SHBAInj0jbCrZeV7G+hFLOFsOwgm8CfTI6dajWBgXGc5nBy
+	 RbCa5KYIYj2f0vaporrgysVK6I4Tx0QV6WqTLoI/fITUmeX9culx5C8TDP9fNgvSNq
+	 BEHZMD90QO2glxFu++ZoA4tc9lGPWmf1gN6Su6LQ1GvlemNcPOZq7w8ZVIcdKZbLzw
+	 DdN8Y4FT1invAG9OyMGF4ODz59eDCpl8oy+DRGVx4n6e4+sGvEa+B99HJfCNaiAAPk
+	 IG5BR4ehT0nkg==
+Date: Fri, 25 Apr 2025 00:25:54 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: objtool errors and warnings with clang-21
+Message-ID: <syqx3hcoksstmadl7yimnwt6kueohkbvwfpoux2v5gsebalign@rq6lynvv5ppr>
+References: <ed3bdbc7-63d0-4d9f-be2f-22fcdb52d32c@app.fastmail.com>
+ <abzlhhff6zbzlehvc37f6thdprqlw4vu2zsvckjjbvlcomdmse@vxbsdxl555ne>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 03/21] x86/virt/tdx: Add SEAMCALL wrapper
- tdh_mem_page_demote()
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
- dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
- ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
- david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
- thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
- fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
- isaku.yamahata@intel.com, xiaoyao.li@intel.com, chao.p.peng@intel.com
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <20250424030445.32704-1-yan.y.zhao@intel.com>
- <8e15c41e-730f-493e-9628-99046af50c1e@linux.intel.com>
- <aAs3I2GW8hBR0G5N@yzhao56-desk.sh.intel.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <aAs3I2GW8hBR0G5N@yzhao56-desk.sh.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <abzlhhff6zbzlehvc37f6thdprqlw4vu2zsvckjjbvlcomdmse@vxbsdxl555ne>
 
+On Thu, Apr 24, 2025 at 02:18:25PM -0700, Josh Poimboeuf wrote:
+> On Wed, Apr 23, 2025 at 04:25:54PM +0200, Arnd Bergmann wrote:
+> > Here is a list of issues I currently see with linux-next and llvm-21 from
+> > https://apt.llvm.org/bookworm, along with the .config files:
+> > 
+> > https://pastebin.com/mRxkgudJ 
+> > drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool: vmw_host_printf+0xe: unknown CFA base reg 0
+> > make[8]: *** [/home/arnd/arm-soc/scripts/Makefile.build:195: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o] Error 255
 
+This is KMSAN using a new register (%rax) for the DRAP prologue.  I have
+a pending fix for this one which adds %rax support to ORC.
 
-On 4/25/2025 3:17 PM, Yan Zhao wrote:
-> On Fri, Apr 25, 2025 at 03:12:32PM +0800, Binbin Wu wrote:
->>
->> On 4/24/2025 11:04 AM, Yan Zhao wrote:
->>> From: Xiaoyao Li <xiaoyao.li@intel.com>
->>>
->>> Add a wrapper tdh_mem_page_demote() to invoke SEAMCALL TDH_MEM_PAGE_DEMOTE
->>> to demote a huge leaf entry to a non-leaf entry in S-EPT. Currently, the
->>> TDX module only supports demotion of a 2M huge leaf entry. After a
->>> successful demotion, the old 2M huge leaf entry in S-EPT is replaced with a
->>> non-leaf entry, linking to the newly-added page table page. The newly
->>> linked page table page then contains 512 leaf entries, pointing to the 2M
->> 2M or 4K?
-> The 512 leaf entries point to 2M guest private pages together,
-If this, it should be 2M range, since it's not a huge page after demotion.
-Also, the plural "pages" is confusing.
+> > https://pastebin.com/7XEcstHP
+> > drivers/input/misc/uinput.o: warning: objtool: uinput_str_to_user+0x17f: undefined stack state
+> > drivers/input/misc/uinput.o: warning: objtool: uinput_str_to_user+0x17c: unknown CFA base reg -1
+> > make[7]: *** [/home/arnd/arm-soc/scripts/Makefile.build:195: drivers/input/misc/uinput.o] Error 255
+> > 
+> > https://pastebin.com/6wAzkUL5
+> > vmlinux.o: warning: objtool: ___bpf_prog_run+0x208: sibling call from callable instruction with modified stack frame
+> > vmlinux.o: warning: objtool: __ubsan_handle_type_mismatch+0xdb: call to __msan_memset() with UACCESS enabled
+> > vmlinux.o: warning: objtool: __ubsan_handle_type_mismatch_v1+0xf8: call to __msan_memset() with UACCESS enabled
+> > 
+> > https://pastebin.com/PQZDZV18
+> > fs/fat/dir.o: warning: objtool: fat_ioctl_filldir+0x717: stack state mismatch: cfa1=4+168 cfa2=4+160
 
->   each pointing to
-> 4K.
->
->>> guest private pages.
+I haven't looked at these yet, but they also have KMSAN+UBSAN which
+always manages to produce "interesting" code.
 
+> > https://pastebin.com/StQRVCfQ
+> > sound/soc/codecs/snd-soc-wcd9335.o: warning: objtool: wcd9335_slimbus_irq() falls through to next function __cfi_wcd9335_set_channel_map()
+
+This is UBSAN inserting undefined behavior due to potential shift out of
+bounds (negative shift) in wcd9335_slimbus_irq().  I have a pending fix
+(convert i, j, and port_id to unsigned).
+
+> > 
+> > and a bunch more fallthrough warnings that are likely all related to that one:
+> > 
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/basics/fixpt31_32.o: warning: objtool: dc_fixpt_recip() falls through to next function __cfi_dc_fixpt_sinc()
+> > drivers/gpu/drm/msm/msm.o: warning: objtool: msm_dp_catalog_ctrl_config_msa() falls through to next function msm_dp_catalog_ctrl_set_pattern_state_bit()
+> > drivers/iio/imu/bmi160/bmi160_core.o: warning: objtool: bmi160_setup_irq() falls through to next function bmi160_data_rdy_trigger_set_state()
+> > drivers/media/i2c/ccs/ccs-core.o: warning: objtool: ccs_set_selection() falls through to next function ccs_propagate()
+> > sound/soc/codecs/aw88399.o: warning: objtool: aw_dev_dsp_update_cfg() falls through to next function aw_dev_get_int_status()
+
+I haven't looked at these yet.  If other recent bugs are any indication,
+these are likely caused by undefined behavior triggered by UBSAN and/or
+KCOV.  Sometimes the bugs don't seem possible, sometimes they're real.
+Either way it's a good idea to tweak the code to avoid the UB.
+
+Usually they're something like a negative shift or divide-by-zero in the
+given function.
+
+I'm traveling this weekend, but I can look at these next week if you
+send me the configs.  Or, if you want to take a look in the meantime,
+the fixes may be fairly obvious if you look for potential UB.
+
+-- 
+Josh
