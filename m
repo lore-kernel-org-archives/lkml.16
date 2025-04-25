@@ -1,197 +1,123 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD7218DB02;
-	Fri, 25 Apr 2025 16:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63AB18BC3D
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745597638; cv=none; b=kHzfgKVdX6RLqcrWzvQcvoZednJPVb6+5yxftVL0+XaRGSWZAbzamcSHjeke5qlDw1Ek3Y+AzU3g5B1gApIubLm6cydUywJIr06ip7fsSot1+E451VK8pRJJYUKWl/+3vqu/QspFbacTH3wa8xFwdDycvVIN0ajfnooRbkp38qQ=
+	t=1745597638; cv=none; b=Hw7m0SOQNdRjXgdELvtC3yvNq+3U6/7/vCjzfxLn/tAlBTND8lA5b8X1CYBAEBi1VW12unCwd5CbwQbq5H6Rhfqz6YlYGbJWUxqR/nXJm1fPiFa7pceBGgx8JueEqu/DFSpG4rRJ1WN8Wk4+x746SMvcdILlHPF1C3xDxiqwIKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745597638; c=relaxed/simple;
-	bh=AuyWfrx+dvQzrTxgKjoCW6rOdYeZI6fYUeL+Q/ZBG4k=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=HqVNseBpH1PsllOMtJ4cNj3mBZPp5s5eI56J1oV5Z26ueLyGbUSWkgM9bGTjj1oGpMjVLgdaVEscMcOJ7N9us1E9YdQj9rf3UonWwKh2nfeCJirFOQA+CAzn/U2Pe6IVlRGPo3pr1cJPlAaQU5tVWnjgK/3qAIKNGscnEAjE/qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=i0DDBjj4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=puyFUw+t; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	bh=z2qcIReGdWDgjaVsRflVHOmsmwfsRCsphenb425LUUQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=dLZvNC8wQh72tl151xNcKYLNFXFxDHiEVxYrr/6eqAhwwX+kGzq7WdRr3/jGfUtOQ9UAk4ZfkM98aRinRci+PgaSZjbWruAX4ebWNGODk7WjEnd4fhI/QTX9CGG245692SkoEbns0LtOuD8ns2bStUMrt4+Ny6reZK8tBD2/B5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Naad5GFe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Lp6aCUm/; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="i0DDBjj4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="puyFUw+t"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C81B625401F0;
-	Fri, 25 Apr 2025 12:13:53 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Fri, 25 Apr 2025 12:13:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Naad5GFe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Lp6aCUm/"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 87A6013803F8;
+	Fri, 25 Apr 2025 12:13:54 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Fri, 25 Apr 2025 12:13:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1745597633;
-	 x=1745684033; bh=gu5XKhpxKX7r1k09RdqlZZq6m7CirpXTD87nnSUIIsk=; b=
-	i0DDBjj45+tOoDXX+WAZXYetG8Ifb5PSUy1CRf3nYVPtXGURGdK9F/m8gBoUEtT1
-	V3CaedFFI9XZ4dtjP98IaPN9zVmwZ3SH7btBvIiRceT4GB+rsiEcEcqcrX3gpqRT
-	RCU8XbPKZUatotnBWmvEawlEH2rZHHRBA1Jwk0Pdj9f9Porqeiscvj/Lm2HUDNJe
-	fSTCDIDF5Zr/2cZvE7Mel4Bdu1n5RF9p862C3NT0LpkF2wJDkpgM+mXTgDvj0K8x
-	rdmgQoCDXHO1Cr/O3zQrfLAJ/7GRY4AVddVWCW98vrkTQyICAmOMQWA46qSysTmD
-	8vgZj+BbohjIImaJ7w/KdA==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745597634;
+	 x=1745684034; bh=Yvg2W7pOPhvpDT95VcvdJxrIJY08qpA5cIKwqfTORTY=; b=
+	Naad5GFeWYwQrTjdLfyOV77bbd2AkMddHFS2vgyO9i1KrLIGD/+LDdmVJbs0ASqm
+	lDprKhuAOVbVNaIWeRqnYqJFjtMCESkrtWiHkQuY7CO6o5GVzBm133gLWtpYpG8/
+	dpyEjvBa4/dARmhYiiiu35CJgVHruzBap+1J73pv3TsbUwjscNx+iJD4uIUpbuV9
+	Y9FOw2Nt+KcNCls4py4oTDFo0cEjUsU2lhhxhVoTnNdvKx/8m5GS7TzU7w85t61y
+	Or+klb2b6lp4/CJ9iiErJSO8CGah/I5mERH7s+z/ZfxVN2opGK/76chVJ/q+g2lA
+	jLULe/s7RxKAFtYvaCFpHQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745597633; x=
-	1745684033; bh=gu5XKhpxKX7r1k09RdqlZZq6m7CirpXTD87nnSUIIsk=; b=p
-	uyFUw+t0LhgFBcqSVnZc83CizGVQVk1cW6A0fpmbOAmjaIykXQmVIdT9LEb2aNWr
-	kFoHmwtlbxYDeJH5APY4Q2mi16WjrPBoWn1IuGMWqYLjP5hS0Fdg6/CIjNNvVjoI
-	YZ9eS86L9Y3UMU9EydrEMRbkSCy+0EgfqQJqMHImccdGAEGKETJgFDC3nkt8LQFN
-	daoKClvwhhH05LYStricOtTX7V8n0JiVyx6/rEykj6XpUgomIIlR5WOVcPbv/ui0
-	tQSNvjL3Q1wf8SogErx25/i/+4TnrXFZkWt9tNZK+nriJMJwfcRdP4Ll6ydAJUij
-	bSYxhG8j/RomEb3vNyTfg==
-X-ME-Sender: <xms:wbQLaEKDBhlLyqNKlG1e_sCMIjaVXdulvnO0SgvVhEISTDVRwgjc5g>
-    <xme:wbQLaEJLgQYKhSJvRVDxWOGyCea2e41fOwtovKSEy47jwtTRz4bOT2vyI6F-ef3dx
-    GAZYvMr8JojizJ2-M4>
-X-ME-Received: <xmr:wbQLaEuv4oIkbXQBcmH38OU9KtFvm4WdQr2W4oJ3jX6T2i03tllIGdT_W2uJqPr4Lpa_SmwcSoafrXVHvSlnPfhPHC_mFThgROZhDv9d5qVjN3M_yA>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745597634; x=
+	1745684034; bh=Yvg2W7pOPhvpDT95VcvdJxrIJY08qpA5cIKwqfTORTY=; b=L
+	p6aCUm/0PsRC5l8WdrWL3golhsxVaDBgp7c/rPDw9Q5q/NFWU0VdmlY5+jNt0QTu
+	qdnY/QUzZvh3x1vEkhEY9slS8t8b3Zh4hluJIM+g70vk+tIw1ioFR2yR3eGZTShu
+	Z/fCPeM9oU5zYeGsDrAW0YJFEmuVzAOKA3WZh41REcXoGOpJF57BtuxAKTYyfzZk
+	G97qJl3UiwvvRFCOM2LAVHjYy1dqFCAw3/sIVrJVnNG5xa4jRRu+mT0JedQLdeWJ
+	h5pT6B3KVj5cpOBJDEqMHVMSiCyOYAQaHulDmdCE8rfyKcluoGG275vS+78HfGyy
+	bP8wo8G1/cwwia5SqXHXA==
+X-ME-Sender: <xms:wLQLaHp2tb94smK6g90t71KWpC6jZx2bDxPng9mKqywhqdxDC-nw6Q>
+    <xme:wLQLaBoqI_UZqWP1YDLAa4zTp3rx6Qs_G2MinX485YfeaV2dL48ka7WuuughkAmuQ
+    5ud796Q1yfgs6ZK_Nk>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvjeelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurheptgfghfggufffkfhfvegjvffosehtqhhmtdhh
-    tdejnecuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnih
-    gtrdhnvghtqeenucggtffrrghtthgvrhhnpeeuudejheeltdeikefgleefledtvdekgffg
-    ffffueetvdduueduledvtdekleefieenucfkphepudekjedrudehvddrudeikedrleenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihgtohes
-    fhhluhignhhitgdrnhgvthdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepnhhpihhtrhgvsegsrgihlhhisghrvgdrtghomhdprhgtphhtthho
-    pehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhh
-    eslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhk
-    vghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hsvghrihgrlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:wbQLaBZxCUyiRo_NBA1XWbALgkjApUSj-bKLrk5tyhmoknKYKcDIaA>
-    <xmx:wbQLaLauKmx5cCvi_X__LyRMm4EsTHj30O6DQr96-6HKmxarSwvmWQ>
-    <xmx:wbQLaNCD0stycjs7yIlIBcJMVj8nH0NGZW0EzFcZOY8Mg0zDJ6Oo_w>
-    <xmx:wbQLaBaRbEF4cJz4je0uzpJFm_W0bhlNdETn0Ar5t1wzAsZlvIr7DQ>
-    <xmx:wbQLaBpznivKYl_RoWeTZOet3aT98pf7Mwie_GQttSkjLayRRrWXovie>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 25 Apr 2025 12:13:53 -0400 (EDT)
-Received: from smtpclient.apple (unknown [187.152.168.9])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 380ED115C2ED;
-	Fri, 25 Apr 2025 12:13:52 -0400 (EDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Nicolas Pitre <nico@fluxnic.net>
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    udejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+    dprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
+    pegrlhgvgigrnhguvghrrdhushihshhkihhnsehinhhtvghlrdgtohhmpdhrtghpthhtoh
+    eprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugeskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    igkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhn
+    ihigrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvg
+    hlrdgtohhm
+X-ME-Proxy: <xmx:wLQLaEOhJEv0oYYsVYfyzmYUSp9pAhgUhKJ2Ri2uYxyOFqLYX4bM4Q>
+    <xmx:wLQLaK5HIvDo_c-bsOw4b-cSc-jjR7kfO-CPlpDbHW-o9cebCPLPqA>
+    <xmx:wLQLaG6dqj8QzvQpBZRwzX5_KhFyy6YmgAENRQv-2M-16qCk0ECsjA>
+    <xmx:wLQLaCh4ZGvLeTwKKeSXf_0llKg28o3D8ev4AHtW93IuQmmMeFFDIg>
+    <xmx:wrQLaHfI90MILvt6A9aWTPE1_R_OExpxtVSaC1qUMNPKYNP5eKO0tR1R>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A08062220073; Fri, 25 Apr 2025 12:13:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v3 00/14] vt: implement proper Unicode handling
-Date: Fri, 25 Apr 2025 11:13:40 -0500
-Message-Id: <2EDC209B-7D6B-4EFB-ADD0-58D494D8AF98@fluxnic.net>
-References: <2025042517-defacing-lushly-10d5@gregkh>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Nicolas Pitre <npitre@baylibre.com>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <2025042517-defacing-lushly-10d5@gregkh>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-X-Mailer: iPhone Mail (22E252)
+MIME-Version: 1.0
+X-ThreadId: T6ef4c78fde3bfaf8
+Date: Fri, 25 Apr 2025 18:13:31 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "H. Peter Anvin" <hpa@zytor.com>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: "Juergen Gross" <jgross@suse.com>,
+ "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+ "Alexander Usyskin" <alexander.usyskin@intel.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+ "Mike Rapoport" <rppt@kernel.org>, "Ard Biesheuvel" <ardb@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Message-Id: <09e26f91-9a62-45c8-b94e-eddb307251f4@app.fastmail.com>
+In-Reply-To: <7CEE8E85-D7B1-4066-AD4D-747CA4340F65@zytor.com>
+References: <20250425141740.734030-1-arnd@kernel.org>
+ <7CEE8E85-D7B1-4066-AD4D-747CA4340F65@zytor.com>
+Subject: Re: [PATCH] [RFC] x86/cpu: rework instruction set selection
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+On Fri, Apr 25, 2025, at 17:34, H. Peter Anvin wrote:
+> On April 25, 2025 7:15:15 AM PDT, Arnd Bergmann <arnd@kernel.org> wrote:
+>
+> I really don't like testing an unrelated feature (CMOV for PAE); 
 
+How about a new symbol with the opposite polarity, e.g. CONFIG_CPU_586?
+In that case, X86_HAVE_PAE and X86_CMOV could both depend on that
+not being set.
 
-> Le 25 avr. 2025 =C3=A0 09:29, Greg Kroah-Hartman <gregkh@linuxfoundation.o=
-rg> a =C3=A9crit :
->=20
-> =EF=BB=BFOn Thu, Apr 17, 2025 at 02:45:02PM -0400, Nicolas Pitre wrote:
->> The Linux VT console has many problems with regards to proper Unicode
->> handling:
->>=20
->> - All new double-width Unicode code points which have been introduced sin=
-ce
->>  Unicode 5.0 are not recognized as such (we're at Unicode 16.0 now).
->>=20
->> - Zero-width code points are not recognized at all. If you try to edit fi=
-les
->>  containing a lot of emojis, you will see the rendering issues. When ther=
-e
->>  are a lot of zero-width characters (like "variation selectors"), long
->>  lines get wrapped, but any Unicode-aware editor thinks that the content
->>  was rendered properly and its rendering logic starts to work in very bad=
+I only picked the X86_CMOV symbol because it already exists in .config
+files, but that is not the important bit here.
 
->>  ways. Combine this with tmux or screen, and there is a huge mess going o=
-n
->>  in the terminal.
->>=20
->> - Also, text which uses combining diacritics has the same effect as text
->>  with zero-width characters as programs expect the characters to take few=
-er
->>  columns than what they actually do.
->>=20
->> Some may argue that the Linux VT console is unmaintained and/or not used
->> much any longer and that one should consider a user space terminal
->> alternative instead. But every such alternative that is not less maintain=
-ed
->> than the Linux VT console does require a full heavy graphical environment=
+> furthermore, at least some old hypervisors were known to have
+> broken PAE.
 
->> and that is the exact antithesis of what the Linux console is meant to be=
-.
->>=20
->> Furthermore, there is a significant Linux console user base represented b=
-y
->> blind users (which I'm a member of) for whom the alternatives are way mor=
-e
->> cumbersome to use reducing our productivity. So it has to stay and
->> be maintained to the best of our abilities.
->>=20
->> That being said...
->>=20
->> This patch series is about fixing all the above issues. This is accomplis=
-hed
->> with some Python scripts leveraging Python's unicodedata module to genera=
-te
->> C code with lookup tables that is suitable for the kernel. In summary:
->>=20
->> - The double-width code point table is updated to the latest Unicode vers=
-ion
->>  and the table itself is optimized to reduce its size.
->>=20
->> - A zero-width code point table is created and the console code is modifi=
-ed
->>  to properly use it.
->>=20
->> - A table with base character + combining mark pairs is created to conver=
-t
->>  them into their precomposed equivalents when they're encountered.
->>  By default the generated table contains most commonly used Latin, Greek,=
+I'm not following. What does that have to do with my patch?
 
->>  and Cyrillic recomposition pairs only, but one can execute the provided
->>  script with the --full argument to create a table that covers all
->>  possibilities. Combining marks that are not listed in the table are simp=
-ly
->>  treated like zero-width code points and properly ignored.
->>=20
->> - All those tables plus related lookup code require about 3500 additional=
-
->>  bytes of text which is not very significant these days. Yet, one
->>  can still set CONFIG_CONSOLE_TRANSLATIONS=3Dn to configure this all out
->>  if need be.
->>=20
->> Note: The generated C code makes scripts/checkpatch.pl complain about
->>      "... exceeds 100 columns" because the inserted comments with code
->>      point names, well, make some inlines exceed 100 columns. Please make=
-
->>      an exception for those files and disregard those warnings. When
->>      checkpatch.pl is used on those files directly with -f then it doesn'=
-t
->>      complain.
->>=20
->> This series was tested on top of v6.15-rc2.
->=20
-> I've taken the first version of this, should I revert all of them and
-> then apply these, or do you want to send a diff between this and what is
-> in the tty-next tree?
-Please remove what you have and replace with this v3. Will be much cleaner t=
-his way.=20
-
-
->=20
-> thanks,
->=20
-> greg k-h
+     Arnd
