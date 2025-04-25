@@ -1,144 +1,143 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B21A9B58
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61E81A9B58;
+	Fri, 25 Apr 2025 20:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745613082; cv=none; b=QAMpuaXic+ke/UW2HRljgSgu9xHGNZAaiVOnmsjrcuHgPtnhC6qc2JUTx2X7WMC+cFXkYyYExz/irerh6FXurgVKQBASJGAzEAiNehkCDBMZ4VeBHmD71hvspURXDENLevRPMrBH6ZrbHzNj2vZU7L3Owoj21sA9YFpgMYtCgrQ=
+	t=1745613103; cv=none; b=ghrCHpumtuP3ABAwaP9NS/AkzAyY4NSAe3fkz5OLy8FVmsN2X8Bp3OvWQd0aCFyFE45jLTd7XmgOsJ20YUWKXOMoHXNMRyhItg+9dJbyhwJ9QYvArsE97XbbrxHwLQIYFwmhpui+gMi/hs5rPiTPwHN1ea0Ttajuugltp2dZBqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745613082; c=relaxed/simple;
-	bh=IjHSoesetz3uxvPn7iLP5qeEI8S+hsTSVRSyfU7OeSQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=if9Rf7XAAvPpLd9mN5KTnuF3JvUCAi0k6sXQUQ7quUgrqpThGFLa7wkH26fgjVsvYEKey5N2P0FCpyOWOALz+T+unb54UZGmpeUFEGrdzuifpkxdAk5ZcM+TVR8pTreSYrirbbWFCqj4yONa20BCmbdVr2gHcU1pcc96rvT9rlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=W6U48iou; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
+	s=arc-20240116; t=1745613103; c=relaxed/simple;
+	bh=J/CfV7ABYcMpi+VmLI4vt/x9fR05FiOmIWNOgEfDFnM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+CEuH7WhnjVhj0DtmI2Rbh9KeRJMNpmmPFY5iT2BJqgl5NwmfIy+z1p9GuuTKmNIMZj8x7AVNwKF1tD28k+jwOorKJKDMwLV3ZkAuy4XE3MFF97lP++4+TmzrTus+TFdo7Q1fq13UGqGo+hOUNttyvV29UO03xu+xxkJ4PM6bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Zf6mqFb/; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="W6U48iou"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c7913bab2cso277363985a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=libre.computer; s=google; t=1745613080; x=1746217880; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GF1xjuBmQCLqhbqJW9dfNwD3/0r4qJdVkbILuVmlmn8=;
-        b=W6U48iousV0gmkFDZblo4xtEbG1FhIwxfmbmczbMDw7HgqLNzzzgd7OfeQ4dOgUPdV
-         NYiCIawgG7y47h/NxckyW864zJE9be9UJBWIc8C8JPNqWLP+RtlERzv2JW49EqZnfzbg
-         7xXFIaC87gPVgCtpalKhznaILcR7kTvAXdK3pGstn+/vvCq83qUILFgnIbc5OcwvSHzo
-         P2NzWKpLUzIxvzqR9jr1/RIRsUvPw4EnMH/17Z6M2JUI0KhaLjPFbfc1czgXNDf8n6wU
-         LrRp1R1wCmx93dU6G3oO7UVdlSGdyuK7EBCevxjle/wVMWSdmueSxW1b59z/znkgYgfS
-         +6jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745613080; x=1746217880;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GF1xjuBmQCLqhbqJW9dfNwD3/0r4qJdVkbILuVmlmn8=;
-        b=onc8NL5b2D680qI6MxvgOo4ooZ2gFEZeVyvOFEwFP2SGHfEegZ0Ss5GFCMJMM2k3ot
-         MWuPf99GH/WeFlRvuRUByuokZqBdE6hqdRP/frG00eSQgEJj351I5hPlog6iwA+TKR+m
-         bTTjFwbcaTKUzc90vYAJO6AaWrtKrAIhwefjRh+59wjbAO817qP2kgV0OS0UwUpVU7s4
-         HfaocHrpPgat33MrUggLVyrOw7WfUWJh3Q1Iz+hMDmfb1QaE2XwMI9IXyDv9EWrDc6Hp
-         lY5TEQ6+pD7fDwyIMiyIIlyz6px5iKXppmamQjT/cn1gBFRK7mQtLxiX8yT6g5gMutcj
-         UAFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfAYzoEVRD+uRvEDYkw9rcPhPob1HDCVuGiMXTbztDhiGqbsf1QAuXW9Cyr379kkwi0EaNrfFqIQx9T2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGoz6H41xGL0EFSlw36pJaTZWtemKLRi+OpbvKGNMCoN7BQnqc
-	rQlxS0bhf07NPQ42A5p9G9DMInsPK1gD6ZO1XYBQqnJrAjZ5GTlhdsRexS17Pg==
-X-Gm-Gg: ASbGncuBKG3FXa5xNC1ZZSAmEswWXOa5LsbbVFEjNPo7G5gTKUeoJvSAbDoNhUlv/T3
-	daz8T14v4OrUCLXmWkfEAKn7u2KAe0BFze54OXlVdmlcXHbPjRLehyfT0NWknhkI66ua76CPH+k
-	priwHsdk9OCYhcoAjYxAXCfy1o4IceY/tPb042s7Ev6m2LPUXzn7P75g3NhnSJecvRv9eMNqHRb
-	YUH/Sxyf93cRFQjEZKu2qKe7KyxqlW1+4mixrEwE9hnndjmutC7GXknY/Thhps7L2E1UHnNQR1x
-	zMloXaKP7Tpmhwn0dV9+ySrgiCXJEijwQFXe
-X-Google-Smtp-Source: AGHT+IExy7byNjnzr61Qn1ql3vlbeCJFkmt8dfGkcDuwiloO0OM0ew357yO9XtgDpkXGc3h67FnjWA==
-X-Received: by 2002:a05:620a:27d6:b0:7c5:56c0:a8 with SMTP id af79cd13be357-7c9668634b0mr182306685a.1.1745613079619;
-        Fri, 25 Apr 2025 13:31:19 -0700 (PDT)
-Received: from localhost ([2607:fb91:bdd9:47ad:b39:2164:cbe2:1695])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958ce4e97sm263041685a.65.2025.04.25.13.31.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 13:31:19 -0700 (PDT)
-From: Da Xue <da@libre.computer>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Da Xue <da@libre.computer>
-Subject: [PATCH] arm64: dts: amlogic: gxl: set i2c bias to pull-up
-Date: Fri, 25 Apr 2025 16:31:18 -0400
-Message-Id: <20250425203118.1444481-1-da@libre.computer>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zf6mqFb/"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKVVpp2267729
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 15:31:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745613092;
+	bh=IR4JDRdfHYKvdpk6HtZwrxcJOGiIo5P5StChQCWf82w=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Zf6mqFb/fq0fZ7nw1aYYVoCqbYVnFsQSwK8dAtk9Sei68sx8cvNybn+Vf0N9W8twf
+	 dfr4IIlzhd/MUYc8mGbnChsFrHutbygUtgboOyGd665b8DRq4hFCuCFdnUIQGNfEXY
+	 p5OGoelufueHvwuyPtPaNwx2QXe5Lvw6tO1o3sj0=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKVVKJ019061
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 15:31:31 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 15:31:31 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 15:31:31 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PKVVJD064112;
+	Fri, 25 Apr 2025 15:31:31 -0500
+Date: Fri, 25 Apr 2025 15:31:31 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Matt Coster <matt.coster@imgtec.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Frank Binns
+	<frank.binns@imgtec.com>,
+        Alessio Belle <alessio.belle@imgtec.com>,
+        Alexandru
+ Dadu <alexandru.dadu@imgtec.com>,
+        Luigi Santivetti
+	<luigi.santivetti@imgtec.com>,
+        Randolph Sapp <rs@ti.com>, Darren Etheridge
+	<detheridge@ti.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: ti: k3-j721s2: Add GPU node
+Message-ID: <20250425203131.ueswwq2kifozt7m2@footwear>
+References: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
+ <20250422-bxs-4-64-dts-v3-2-ec6657bde135@imgtec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250422-bxs-4-64-dts-v3-2-ec6657bde135@imgtec.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-GXL I2C pins need internal pull-up enabled to operate if there
-is no external resistor. The pull-up is 60kohms per the datasheet.
+On 16:26-20250422, Matt Coster wrote:
+> The J721S2 binding is based on the TI downstream binding in commit
+> 54b0f2a00d92 ("arm64: dts: ti: k3-j721s2-main: add gpu node") from [1]
+> but with updated compatible strings.
+> 
+> The clock[2] and power[3] indices were verified from HTML docs, while
+> the intterupt index comes from the TRM[4] (appendix
+       ^^ spell check interrupt (please use checkpatch.pl --strict --codespell
+to catch these minor nuisance bugs)
 
-We should set the bias when i2c pinmux is enabled.
+> "J721S2_Appendix_20241106_Public.xlsx", "Interrupts (inputs)",
+> "GPU_BXS464_WRAP0_GPU_SS_0_OS_IRQ_OUT_0").
+> 
+> [1]: https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel
+> [2]: https://downloads.ti.com/tisci/esd/latest/5_soc_doc/j721s2/clocks.html
+> [3]: https://downloads.ti.com/tisci/esd/latest/5_soc_doc/j721s2/devices.html
+> [4]: https://www.ti.com/lit/zip/spruj28 (revision E)
+> 
+> Reviewed-by: Randolph Sapp <rs@ti.com>
+> Signed-off-by: Matt Coster <matt.coster@imgtec.com>
+> ---
+> Changes in v3:
+> - Use assigned-clocks to pre-load the frequency of the core clock
+> - Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-2-9f8c09233114@imgtec.com
+> Changes in v2:
+> - Add interrupt reference details
+> - Add Randolph's Rb
+> - Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-2-f7d3fa06625d@imgtec.com
+> 
+> This patch was previously sent as [DO NOT MERGE]:
+> https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-18-eda620c5865f@imgtec.com
+> ---
+>  arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
+> index 92bf48fdbeba45ecca8c854db5f72fd3666239c5..9e36cbbe0ea2fefceedcc95b78068ded7ef395f0 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
+> @@ -2048,4 +2048,18 @@ watchdog8: watchdog@23f0000 {
+>  		/* reserved for MAIN_R5F1_1 */
+>  		status = "reserved";
+>  	};
+> +
+> +	gpu: gpu@4e20000000 {
+> +		compatible = "ti,j721s2-gpu", "img,img-bxs-4-64", "img,img-rogue";
+> +		reg = <0x4e 0x20000000 0x00 0x80000>;
+> +		clocks = <&k3_clks 130 1>;
+> +		clock-names = "core";
+> +		assigned-clocks = <&k3_clks 130 1>;
+> +		assigned-clock-rates = <800000000>;
+> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> +		power-domains = <&k3_pds 130 TI_SCI_PD_EXCLUSIVE>,
+> +				<&k3_pds 373 TI_SCI_PD_EXCLUSIVE>;
+> +		power-domain-names = "a", "b";
+> +		dma-coherent;
+> +	};
+>  };
+> 
+> -- 
+> 2.49.0
+> 
 
-Signed-off-by: Da Xue <da@libre.computer>
----
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 2dc2fdaecf9f..aed8dbfbb64d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -214,7 +214,7 @@ mux {
- 				groups = "i2c_sck_ao",
- 				       "i2c_sda_ao";
- 				function = "i2c_ao";
--				bias-disable;
-+				bias-pull-up;
- 			};
- 		};
- 
-@@ -576,7 +576,7 @@ mux {
- 				groups = "i2c_sck_a",
- 				     "i2c_sda_a";
- 				function = "i2c_a";
--				bias-disable;
-+				bias-pull-up;
- 			};
- 		};
- 
-@@ -585,7 +585,7 @@ mux {
- 				groups = "i2c_sck_b",
- 				      "i2c_sda_b";
- 				function = "i2c_b";
--				bias-disable;
-+				bias-pull-up;
- 			};
- 		};
- 
-@@ -594,7 +594,7 @@ mux {
- 				groups = "i2c_sck_c",
- 				      "i2c_sda_c";
- 				function = "i2c_c";
--				bias-disable;
-+				bias-pull-up;
- 			};
- 		};
- 
-@@ -603,7 +603,7 @@ mux {
- 				groups = "i2c_sck_c_dv19",
- 				      "i2c_sda_c_dv18";
- 				function = "i2c_c";
--				bias-disable;
-+				bias-pull-up;
- 			};
- 		};
- 
 -- 
-2.39.5
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
