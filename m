@@ -1,116 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2487A258CCE;
-	Fri, 25 Apr 2025 14:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62821257AF4
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745591821; cv=none; b=ANcrKKGFEG+YHjh3VH1dILfHTJKY2T4gm/IQbAkfA1cpuBgFK8loAHbtvgTLXqqIkdQUk026GQmp6zCuhjFshujMvSLMvAhGF9Tg6cwKUjbO+re32HGAwraScmjGXiLEbdgSCR6CFYr4JcdTUssTLCB1dVTPhIQ6jSitHcaST3E=
+	t=1745591854; cv=none; b=k3V9bZARUFkpMZGHnbeYSFmeCleJKlA8iQ6dM73E4bjQchaB+yDzf5qN5dEHDCu0A6+bDItyjsj+pshY1og8Sxt3UOzVdLy1kE4FG+SLlXz8m8h9yZHV1cFKrl0a7uCo1A8UaCZq94VZVZIJWqKN+oTDfoYW2UmntFLAgBip2pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745591821; c=relaxed/simple;
-	bh=6EF+fqEQ+uLtLwj/rtjf1URMNGSAuq76i+qMQz+JEO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lApnjuni+w3bP9aOMnWHeFg76DdaoOOwEuo4bzXdRxCP+OfTXJLyyyNleI8Jd/V0FCjXsF85lYV/gnJ7FDmg28BNMrDXJTzoRVlSxsVyS0IV38RMK3MTDkZF0gYczegFSsw2Y8VVrkJ8EnjCA+S/2y3lUY0rfCo9hE+wJ9IRvHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSydTtpZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745591854; c=relaxed/simple;
+	bh=12ddBMZQ18J7y93eq2KLvViZaVM9zxPfD5eeT2ec/EU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W1YC9A9ahpZkt7kdr59uhNBitn2CdPx0mIqbn9okTq5u496Qn/HCypZGy4grkOMty4o7lS8/4S/9v9xqHoL2dphX5w3Bu8o1bh6W4Q8BQzX0pWcIEVyWS+k6047wVoqnSpgESNlM2cici89p6PEhUXHkixktZfl0emymDKWt3UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QoedJdCG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSydTtpZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401FBC4CEE4;
-	Fri, 25 Apr 2025 14:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745591820;
-	bh=6EF+fqEQ+uLtLwj/rtjf1URMNGSAuq76i+qMQz+JEO8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gSydTtpZwWZtLwtoMd6Y40ikJq/AagQZE1eAhTXsx6A06EX6ub6/e6Mn55Eq85Chy
-	 zwqPTuXeqmpHSUtUGLoI2bybPmW1XsOj1SUyziEl+ZINYR2g7YGdi3l+LaH/lCmTwp
-	 Bf8VY+qvKs0+L1ARW+mCe4qk1BB0C8Zzi7fW5m8+wr2I100on1wDEaKG6d98ddbOmf
-	 YiPQlshXYb4CU2kLr0lSLhzTLKkufhet9hJ6zOd4oYPJStqZAkjLqrrld8QXGeXKuv
-	 CwRTNQJ7jCosyehsrhlpKFm2Sf+59zSivSSktAD2/xtrlHrbFoP4y1MWjZziYSwFlR
-	 jknWZXn6Bp70w==
-Message-ID: <735d7c8e-a41b-4e00-97d8-9243fd52c3fe@kernel.org>
-Date: Fri, 25 Apr 2025 16:36:56 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QoedJdCG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745591850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ujk3/IGYnXx3Wxmgegzw/+bFfTW+UygvpTNGj7Kcyas=;
+	b=QoedJdCGNEROI4u2j8z1slQVY2mizt03HtB5NezB+Gjy5DTwFcZqDavcIbBBIWTcfcjUT2
+	1OTPG4ObhZH+qintw7qN3mraQLNThK5TwzAv3mTozYTMcT85zN4ZhkpL2h0HOHMYgk2/6U
+	i5PFeteSFNyyeoeauWMdFhxsvu7byJ0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-251-ZQUViIQkNX-gc9pqg15TIA-1; Fri, 25 Apr 2025 10:37:28 -0400
+X-MC-Unique: ZQUViIQkNX-gc9pqg15TIA-1
+X-Mimecast-MFC-AGG-ID: ZQUViIQkNX-gc9pqg15TIA_1745591848
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ee57e254aso1129874f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:37:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745591847; x=1746196647;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ujk3/IGYnXx3Wxmgegzw/+bFfTW+UygvpTNGj7Kcyas=;
+        b=YxhwSIRF+7Org7gkV4ecs1asG6hVQDlRAayN8mTYSvNkkEglbdVncO33LfE5zb0Z4q
+         +iRC7aFfUb3VyIkhg8eRYwMRJsaodflj4MpQO00l3RsKMWhIwqs4nPnrL3NuI7mUloqk
+         S/9MrjdQQLISigFqPnCFidHMUj3Pv4l0uix4NxIgb82aC3q1KJxrRiuJIblq8bEI0TAP
+         Mfe7k5FewornA+N3KCVilxmt3ZA1g8XHz0a/LMTM5l7Tq9hnY7sKfkm2BJGi8wJjSh3H
+         ZbI0geYeKPireIwR9LaOOg7ZB8I6r5741uctsapJFrNY4zN5beVnuDZYKKNYLodnDhui
+         fHCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUGIYuWoIdQXS0Vwvetxi/FzLbIMcm1cRhKAG5A0iqXobBG0jbzqVRs/ObvbX8vEO/NI9/cIjQufMXZyE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHKiSfVY4fzWcXQZyoiem7SA/cmdfeZcFeVk/TIcahuPEFHr0v
+	00c2sEbetqfre57iFr4tqtQC9ZbOqV+VySyEunPI3iSBWFF2HwVjfLLAC89RQmdQUbEd4eUcGmi
+	jyDGVQwwGNs1v3hQRQ5CsysCFa+zhfFYJN4k9hNkWMsdrkcEeRFainA/AsxxFMQ==
+X-Gm-Gg: ASbGncvbt9yYceqZOGSnNeb/OBvxLAoyzhTtcm/ybmMAHJmC5yRcWGth8OMrfRJGo2u
+	K6hl8mTUuIUesoN1jiWCGb1Au98svaVIRfY1+FyL9p29WrIKOibAsfA2QqIXMS2g4sZKnnV2DK1
+	IaMZuK+CfJNwKt7kaTsaVoA/QV7HL2vP8CPaad8OKqAZx2bHPPcSkTEJ23IYHFGTm85AjRg4wkd
+	cTjSSHuboimXeETRm9WYJj9CDKAUTgEQGAeNPH3ukeMUxHU9m3Tg3k3NMTk3IReKI+CYo86IpJA
+	cMzwoCPQJuNGpzDK4IuMiv7YRg==
+X-Received: by 2002:a5d:47ad:0:b0:39e:cbca:8a4b with SMTP id ffacd0b85a97d-3a074e0e1a8mr2130267f8f.6.1745591847604;
+        Fri, 25 Apr 2025 07:37:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHQ8vRI/X7PrO43k0DiFqkqa4Uk8XRAM7d2gJ9xafb1xfkOT7jJlK6mrbxxsPSXHf+XLM2Jg==
+X-Received: by 2002:a5d:47ad:0:b0:39e:cbca:8a4b with SMTP id ffacd0b85a97d-3a074e0e1a8mr2130242f8f.6.1745591847204;
+        Fri, 25 Apr 2025 07:37:27 -0700 (PDT)
+Received: from t14ultra (109-81-82-22.rct.o2.cz. [109.81.82.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a530a6e9sm26807935e9.16.2025.04.25.07.37.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 07:37:26 -0700 (PDT)
+Date: Fri, 25 Apr 2025 16:37:47 +0200
+From: Jan Stancek <jstancek@redhat.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+	linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>
+Subject: Re: [PATCH 08/19] vdso/gettimeofday: Prepare do_hres_timens() for
+ introduction of struct vdso_clock
+Message-ID: <aAueO89ng7GX2iyl@t14ultra>
+References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
+ <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de>
+ <aApGPAoctq_eoE2g@t14ultra>
+ <20250424173908-ffca1ea2-e292-4df3-9391-24bfdaab33e7@linutronix.de>
+ <CAASaF6xsMOWkhPrzKQWNz5SXaROSpxzFVBz+MOA-MNiEBty7gQ@mail.gmail.com>
+ <20250425104552-07539a73-8f56-44d2-97a2-e224c567a2fc@linutronix.de>
+ <CAASaF6yxThX3HTHgY_AGqNr7LJ-erdG09WV5-HyfN1fYN9pStQ@mail.gmail.com>
+ <20250425152733-0ff10421-b716-4a55-9b60-cb0a71769e56@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] soc: qcom: socinfo: add SM8750 SoC ID
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250425140346.1087527-1-mukesh.ojha@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250425140346.1087527-1-mukesh.ojha@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250425152733-0ff10421-b716-4a55-9b60-cb0a71769e56@linutronix.de>
 
-On 25/04/2025 16:03, Mukesh Ojha wrote:
-> Update soc_id table for the Qualcomm SM8750 SoC to represent
-> SM8750 machine.
-> 
-> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-> ---
->  drivers/soc/qcom/socinfo.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-> index 13cf73744bd9..71858de73a91 100644
-> --- a/drivers/soc/qcom/socinfo.c
-> +++ b/drivers/soc/qcom/socinfo.c
-> @@ -456,6 +456,7 @@ static const struct soc_id soc_id[] = {
->  	{ qcom_board_id(QCS8275) },
->  	{ qcom_board_id(QCS9075) },
->  	{ qcom_board_id(QCS615) },
-> +	{ qcom_board_id(SM8750) },
-Messed order.
+On Fri, Apr 25, 2025 at 03:40:55PM +0200, Thomas Weiﬂschuh wrote:
 
-Best regards,
-Krzysztof
+<snip>
+
+>
+>Some more information:
+>
+>The crash comes from the address arithmetic in "vc = &vc[CS_RAW]" going wrong.
+
+That appears to be because it's not doing any arithmetic, but using value
+from some linker-generated symbol (I'll refer to it as "7a8").
+
+The below is presumably the check that compares clk != CLOCK_MONOTONIC_RAW,
+CLOCK_MONOTONIC_RAW is 4. And it should choose between first and second vdso_clock
+in 2nd vvar page:
+
+# readelf -a /root/kernel-ark/arch/arm64/kernel/vdso/vdso.so.dbg | grep 7a8
+     25: 00000000000007a8     0 NOTYPE  LOCAL  DEFAULT    7 $d
+
+objdump -d -S:
+  658:   17ffffef        b       614 <__cvdso_clock_gettime_data.constprop.0+0x104>
+                 vc = &vc[CS_HRES_COARSE];
+  65c:   58000a62        ldr     x2, 7a8 <__cvdso_clock_gettime_data.constprop.0+0x298>
+  660:   7100101f        cmp     w0, #0x4
+  664:   10e7cce3        adr     x3, fffffffffffd0000 <vdso_u_data+0x10000>
+  668:   9a821063        csel    x3, x3, x2, ne  // ne = any
+         while (unlikely((seq = READ_ONCE(vc->seq)) & 1))
+  66c:   b9400065        ldr     w5, [x3]
+...
+  7a8:   fffd00e0        .word   0xfffd00e0
+  7ac:   ffffffff        .word   0xffffffff
+
+
+(gdb) r
+Thread 2.1 "a.out" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0xfffff7ff2dc0 (LWP 44638)]
+0x0000fffff7fa066c in ?? ()
+
+(gdb) disassemble 0x0000fffff7fa0658,0x0000fffff7fa067c
+--Type <RET> for more, q to quit, c to continue without paging--
+    0x0000fffff7fa0658:  b       0xfffff7fa0614
+    0x0000fffff7fa065c:  ldr     x2, 0xfffff7fa07a8
+    0x0000fffff7fa0660:  cmp     w0, #0x4
+    0x0000fffff7fa0664:  adr     x3, 0xfffff7f70000
+    0x0000fffff7fa0668:  csel    x3, x3, x2, ne  // ne = any
+=> 0x0000fffff7fa066c:  ldr     w5, [x3]
+
+$x3 here is using correct vvar runtime address, but $x2 uses
+a bogus one from "7a8". And when it tries to load from it, it crashes:
+
+(gdb) info proc map
+process 44638
+Mapped address spaces:
+
+Start Addr         End Addr           Size               Offset             Perms File
+0x0000000000400000 0x0000000000410000 0x10000            0x0                r-xp  /root/ltp/testcases/kernel/syscalls/clock_gettime/a.out
+0x0000000000410000 0x0000000000420000 0x10000            0x0                r--p  /root/ltp/testcases/kernel/syscalls/clock_gettime/a.out
+0x0000000000420000 0x0000000000430000 0x10000            0x10000            rw-p  /root/ltp/testcases/kernel/syscalls/clock_gettime/a.out
+0x0000fffff7d80000 0x0000fffff7f30000 0x1b0000           0x0                r-xp  /usr/lib64/libc.so.6
+0x0000fffff7f30000 0x0000fffff7f40000 0x10000            0x1a0000           r--p  /usr/lib64/libc.so.6
+0x0000fffff7f40000 0x0000fffff7f50000 0x10000            0x1b0000           rw-p  /usr/lib64/libc.so.6
+0x0000fffff7f60000 0x0000fffff7fa0000 0x40000            0x0                r--p  [vvar]
+0x0000fffff7fa0000 0x0000fffff7fb0000 0x10000            0x0                r-xp  [vdso]
+0x0000fffff7fb0000 0x0000fffff7fe0000 0x30000            0x0                r-xp  /usr/lib/ld-linux-aarch64.so.1
+0x0000fffff7fe0000 0x0000fffff7ff0000 0x10000            0x20000            r--p  /usr/lib/ld-linux-aarch64.so.1
+0x0000fffff7ff0000 0x0000fffff8000000 0x10000            0x30000            rw-p  /usr/lib/ld-linux-aarch64.so.1
+0x0000fffffffd0000 0x0001000000000000 0x30000            0x0                rw-p  [stack]
+
+$x3 was the beginning of 2nd vvar page (1st vdso_clock), and $x2 looks
+like it should have been 2nd vdso_clock, but the value that is used is not
+the address of vvar during runtime. 
+
+vdso_clock has size 224 == 0xe0 (according to pahole)
+
+(gdb) x/2x 0xfffff7fa07a8
+0xfffff7fa07a8: 0xfffd00e0      0xffffffff
+(gdb) p/x $x2
+$1 = 0xfffffffffffd00e0
+(gdb) x/1x $x2
+0xfffffffffffd00e0:     Cannot access memory at address 0xfffffffffffd00e0
+
+But it does match the symbol value from vdso.so:
+
+# readelf -a /root/kernel-ark/arch/arm64/kernel/vdso/vdso.so.dbg | grep vdso_u
+     37: fffffffffffc0000     0 NOTYPE  LOCAL  DEFAULT    1 vdso_u_data
+     39: fffffffffffc0000     0 NOTYPE  LOCAL  DEFAULT  ABS vdso_u_time_data
+     40: fffffffffffe0000     0 NOTYPE  LOCAL  DEFAULT  ABS vdso_u_rng_data
+
+>>> print(hex(0xfffffffffffc0000+65536+224))
+0xfffffffffffd00e0 -> and this is address where it crashes
+
+Regards,
+Jan
+
+>This should just do "vc = vc + 1", advancing the pointer by sizeof(*vc).
+>But I get these example values of "vc" before and after the arithmetic:
+>0x00ffffbc060000 -> 0xfffffffffffd00e8
+>Which is obviously wrong.
+>
+>The arithmetic can be fixed with any one of the following changes:
+>* OPTIMIZER_HIDE_VAR() as above
+>* Replacement of -mcmodel=tiny with -mcmode=small in arch/arm64/kernel/vdso/Makefile
+>  -mcmodel=tiny is supposed to cover 1MiB programs, the vDSO only needs 300KiB here
+>* Removal of the (clk != CLOCK_MONOTONIC_RAW) case
+>
+>Shuffling code around, even without any impact on semantics, sometimes fixes
+>the issue. Compiling the vDSO with UBSAN didn't show anything.
+>
+>
+>Thomas
+>
+>> > > > > [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/clock_gettime/clock_gettime03.c
+>> > > > > [2] https://koji.fedoraproject.org/koji/buildinfo?buildID=2704401
+>> > > >
+>> >
+>>
+>
+
