@@ -1,85 +1,79 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6072314A4DF
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C06C17C98;
+	Fri, 25 Apr 2025 01:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745546122; cv=none; b=togaIt3u1bS3gTwVKPmNFiGDogKQkkB7qNurJvQV2l6mcYvFWEw5NpPBtbTvMq31klvogHHpm/Gn3VAA8vIgU3aaXF+OTG42DiNvH/M7LApkDHDi7/Kx9/75i5e+sfTZecIFyVpi+87/CF6uQDuNFXEZrtwoOWxUtc6ogzIiOpM=
+	t=1745546150; cv=none; b=M19v8vqE0n3yPJ7DUhoH+phX2o+LHPz92uMnam0iO6v1n6L02aycFb4tCEpztYwM6M3t0wfaC0W++tbB8TsMa8O/t0I+OP0tHukXAhTJO+j+KfWrtXZ67PVKjQJy7XErXrhFmv7QWJehAsLytzXc0GxU4bgh9jcx6sRRI/nz+lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745546122; c=relaxed/simple;
-	bh=0xM4x/NdPxWOJEQq7qpLLhz9UL91FLMRr+fWHWDDJGQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=b3voGxRwhPv25EBJm7C5c0lV9RF0NM3TZehRPiJk3vg4tMLTS8ob972vREG43H9Xc5BmpMOUNH2VYpXrXC8VLouFr/kftCRBT7KW9V6TlTqk9tVsPygAkfjfs9OlYF8i88xav0JkWWLKaNz4u+MP5dGqZ8dZGNAnMZM3q6ehADA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b53875729so348999239f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745546120; x=1746150920;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h1FDfF2TC4r8vKPyGZxhCxiyLX0oc3egD/D2gIhDY/A=;
-        b=J23EJpSWVxDVIaMDRHs/yD0m2Noh5gIOeSMdVvNE+4m/4YWDfz+bs/Zb2mh41v2rz0
-         Q+j+PJSGTA0XijK3JoNg50Y6RuDOI7Vc/k8+gPRh4bZ7tyyAsUexIwZ2wfAR1nQQzQpp
-         O02ffLenNl/hE24k01elgpqXseNKpDQzmIPu64gzz+Xh+2mZYBNctL5Zv7kNnm73KRAG
-         gRAHWAQs93Sou95Ib9BtwhIhTy9rQmaskxuk8e6xJYapdY+pc+czvlhlqaU66gjLNY6s
-         QPaMoFkhkmKvcjlvPrxvvw2rNVlFTtha5mapiS91n8fEuIz0WSanC+kQbhyuUYahx+Ep
-         UCVw==
-X-Gm-Message-State: AOJu0Yzb4/UlWnQLtf2L+yMonhGXX4gzgTAbiFHkdAnudZjTXYsQ3xoK
-	9bIf8MCMouGGpWaydlnwB84VhPM9KxReJsrA/0fzHm6Q7W9ePJDtaOPnm4RAFoMpS1AN9bDaMHV
-	uFicbKSli5ewTqC3nHtOp2XXJvT722Jai+vcyHDr4sSgv48D4mHSJ9eM=
-X-Google-Smtp-Source: AGHT+IGBjhL3xEZPW8xPXHTLnBQ7Ob7IQU/NFI7w/xFeHeuPEkHEkqWboK+zUskF2/9uv0T3eU1GaV06gv2svXe3tUJjMuQ4bGl1
+	s=arc-20240116; t=1745546150; c=relaxed/simple;
+	bh=mxwpAhhP6PGemJvPsnX77aX3b1YCcQSc3Ls+GASAh98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p0rLQ92g21sWbe8sdsPR3ax0jD69jlS0FspD1x88M2rmBZRw1HK8lgI2ac+TEMUDQrcYqm6bEhuA2zD3ZdLHU+7h+EJJD5wxh74Kx9C+qsLXbuj/aQHEJfYMKQLVESCu62reC4bjdgbsY0+Ip3tbae3EAxxhSi64/S6Y7PCeKko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=XK7jsiJc; arc=none smtp.client-ip=220.197.32.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="XK7jsiJc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=Id22/7tm+Zaocd+//weofrSOLUTaguDbJHut8xcfyCY=;
+	b=XK7jsiJcvUalXjrajYdMc3nboZ3OB4yi1na1bZ64d+AI78qWdVfWuZoJYPl886
+	bGl2ZaxaQDVqJxNOXsDYxtdadTdJb0OtiIhzvaAIG5Na7AkXAyElEQsuhuZCJgyq
+	AZVGph5nnNaSuP91oopBWGh5nMK8tdHpI/z5hi8i/uwAA=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgAHBNNs6wpoRjTaAw--.27963S3;
+	Fri, 25 Apr 2025 09:54:54 +0800 (CST)
+Date: Fri, 25 Apr 2025 09:54:52 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@gmail.com>,
+	Vitor Soares <vitor.soares@toradex.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/2] Add support for Toradex SMARC i.MX8MP
+Message-ID: <aArrbFZxJKRJ1vCT@dragon>
+References: <20250414123827.428339-1-ivitro@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:13c3:b0:85d:f316:fabc with SMTP id
- ca18e2360f4ac-8645d1aff28mr64975839f.8.1745546120524; Thu, 24 Apr 2025
- 18:55:20 -0700 (PDT)
-Date: Thu, 24 Apr 2025 18:55:20 -0700
-In-Reply-To: <680a45db.050a0220.10d98e.000a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680aeb88.050a0220.317436.0053.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [block?] BUG: unable to handle kernel NULL
- pointer dereference in lo_rw_aio
-From: syzbot <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414123827.428339-1-ivitro@gmail.com>
+X-CM-TRANSID:Mc8vCgAHBNNs6wpoRjTaAw--.27963S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWruFyxJry5KryDJw1xur18Grg_yoW3Krc_Ka
+	n3GrykArZrJF47GanIk3WSvrZYkay2yF13t34kZr1SyrWkCF93JFykKw18Aw1fWFy5XF1r
+	A3sxAws5ZrW7CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0RWlDUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCws6ZWgKsODTPwAAsB
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+On Mon, Apr 14, 2025 at 01:38:25PM +0100, Vitor Soares wrote:
+> From: Vitor Soares <vitor.soares@toradex.com>
+> 
+> This series adds support for the new Toradex SMARC i.MX8MP
+> System-on-Module (SoM) and its Development carrier board.
+> 
+> More information on the SoM and carrier board can be found here:
+> https://www.toradex.com/computer-on-modules/smarc-arm-family/nxp-imx-8m-plus
+> https://www.toradex.com/products/carrier-board/smarc-development-board-kit
+> 
+> Changes in v2:
+>  - Move the Makefile rule to the proper place. (Daniel Baluta)
+>  - Remove the dsp_reserved node, it is already disabled in imx8mp.dtsi
+>  - Add Acked-by from Conor Dooley
+> 
+> Vitor Soares (2):
+>   dt-bindings: arm: fsl: add Toradex SMARC iMX8MP SoM and carrier
+>   arm64: dts: freescale: add Toradex SMARC iMX8MP
 
-***
+Applied both, thanks!
 
-Subject: Re: [syzbot] [block?] BUG: unable to handle kernel NULL pointer dereference in lo_rw_aio
-Author: lizhi.xu@windriver.com
-
-selinux policy not support read_iter
-
-#syz test
-
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index 47480eb2189b..2bf0d2b2f2ea 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -481,9 +481,15 @@ static int sel_mmap_policy(struct file *filp, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+static ssize_t sel_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
-+{
-+	return 0;
-+}
-+
- static const struct file_operations sel_policy_ops = {
- 	.open		= sel_open_policy,
- 	.read		= sel_read_policy,
-+	.read_iter	= sel_file_read_iter,
- 	.mmap		= sel_mmap_policy,
- 	.release	= sel_release_policy,
- 	.llseek		= generic_file_llseek,
