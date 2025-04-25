@@ -1,132 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817F017A314
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4376E207DFF
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570924; cv=none; b=lKE5fZQi3bHifFywQB6aX8vr75kRldlJm8+UcKjmdwtM+i08FHErkL+aTlRaoKG92QOKypqc0lt/uUFonp7Ws0T8OLwjSqeRdOIKAc4n4rsZUQvHJkF/2rd64HFm6TgXOYDr5Q03rHESkOeSbRPTzwrmF1mBcRT8wMGS7jnt/Pk=
+	t=1745571008; cv=none; b=tOiSg+uFog4CGTdE8dAMRK8Kt1DD+vADTwrT6T0jw7YDFyFRhdDT+HHisL8Z2ZkBux9hupf1dZzab59WO090X9ynNpfS/QXR8MOYwTfw/qvKEIUkV/ncYK+/CXlk8xRogHL55nQ9502ICLktZq6VUvpVOrWbu76OmjuuDyONvoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570924; c=relaxed/simple;
-	bh=Z6Vt1Z3I1guU2hYZHvh38GC960N/SVGBXhEuV6XKHd8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BF/xIwzh+lrChU5hybj0Fz5bPuIkdmQWKjSZewCxuobtdwfMLuV5R2CBAlr5UQFrezd92DmG1Mvd93nFUnRNEWzohqp7AXkpRJuJessd1JCVRNokPnk9zLtaJRu7yHgc3lGTiTweBkDpnbuBVLrivtPVDFSHUUhgrOOciYirwHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZenOmOZ; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZenOmOZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745570923; x=1777106923;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=Z6Vt1Z3I1guU2hYZHvh38GC960N/SVGBXhEuV6XKHd8=;
-  b=nZenOmOZ5ziDHHih9KPvtFfoAnqID04/w5z+3pCySzqnv7OYEguiKAuK
-   HAlBeZOna8gzveZtQigwiDWYN2pfE9FpaKruNsBOkCC8vGMu4aDKTg3vK
-   q87f4ptdqHpnOjcz5yM9o2kmmGCpRYz3NBAb9pgNV+ubefKDuQX28bniV
-   w7NQIXbNJKAoGf6j656/peFM8bVprazO5iokr+qSgn6sriMtdMvp787QR
-   XXCQgXhj95oxKWNN4olwgNcX//tvq1w651VViwIqxbjeOm3fIWT1CqDmY
-   zwWGnixdbMsfz7J/srxcNz91CaIT4ehhBwIPhx3Qbx/i0+4Y5NvD4kwad
-   g==;
-X-CSE-ConnectionGUID: xcww+ymaQKOYFpNGkNn+aQ==
-X-CSE-MsgGUID: aoGgRozWSD2QI5MxzEh93A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="51047831"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="51047831"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 01:48:42 -0700
-X-CSE-ConnectionGUID: vre/oGHZT5aTBp+dRxeO/Q==
-X-CSE-MsgGUID: ZPjFH3Z0Tne3nrt8JpseLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="132741259"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.83])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 01:48:35 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com, Andrew Morton <akpm@linux-foundation.org>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Mateusz Guzik <mjguzik@gmail.com>,
- Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, John
- Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 04/20] drm/i915: Avoid open-coded use of
- ratelimit_state structure's ->missed field
-In-Reply-To: <20250425002826.3431914-4-paulmck@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <20250425002826.3431914-4-paulmck@kernel.org>
-Date: Fri, 25 Apr 2025 11:48:31 +0300
-Message-ID: <87selwy6cg.fsf@intel.com>
+	s=arc-20240116; t=1745571008; c=relaxed/simple;
+	bh=JAMws/vtOTxHeLm3gccrM03foPW5z5Ne+1T0subrk1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eLmd0GRhI1DX3wXXgCKAyJRwL3fs4RAa2JAFKGdkLJf/wbX2+xFHa6ex7qA7+pYt9c79XlDRiNOPv67jQl9qSNgmovY7G/Bm57Qq/dtDzteHdJRjmkUscDzNKA1gnxDgsc6Oazx3dw71tG5qdzmDOOuIoRkOEHSErKV62q2BlGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u8Ekm-0004ed-2U; Fri, 25 Apr 2025 10:49:48 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u8Ekh-00218p-1o;
+	Fri, 25 Apr 2025 10:49:43 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u8Ekh-00144S-1W;
+	Fri, 25 Apr 2025 10:49:43 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	Simon Horman <horms@kernel.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH net-next v1 1/1] Documentation: networking: expand and clarify EEE_GET/EEE_SET documentation
+Date: Fri, 25 Apr 2025 10:49:41 +0200
+Message-Id: <20250425084941.253961-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, 24 Apr 2025, "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> The i915_oa_stream_destroy() function directly accesses the
-> ratelimit_state structure's ->missed field, which work, but which also
-> makes it more difficult to change this field.  Therefore, make use of
-> the ratelimit_state_get_miss() function instead of directly accessing
-> the ->missed field.
+Improve the documentation for ETHTOOL_MSG_EEE_GET and ETHTOOL_MSG_EEE_SET
+to provide accurate descriptions of all netlink attributes involved.
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ Documentation/networking/ethtool-netlink.rst | 103 ++++++++++++++++---
+ 1 file changed, 90 insertions(+), 13 deletions(-)
 
-For merging via whichever tree is convenient for you. Please let us know
-if you want us to pick it up via drm-intel.
-
->
-> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: <intel-gfx@lists.freedesktop.org>
-> Cc: <dri-devel@lists.freedesktop.org>
-> ---
->  drivers/gpu/drm/i915/i915_perf.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
-> index de0b413600a15..1658f1246c6fa 100644
-> --- a/drivers/gpu/drm/i915/i915_perf.c
-> +++ b/drivers/gpu/drm/i915/i915_perf.c
-> @@ -1666,6 +1666,7 @@ static void i915_oa_stream_destroy(struct i915_perf_stream *stream)
->  	struct i915_perf *perf = stream->perf;
->  	struct intel_gt *gt = stream->engine->gt;
->  	struct i915_perf_group *g = stream->engine->oa_group;
-> +	int m;
->  
->  	if (WARN_ON(stream != g->exclusive_stream))
->  		return;
-> @@ -1690,10 +1691,9 @@ static void i915_oa_stream_destroy(struct i915_perf_stream *stream)
->  	free_oa_configs(stream);
->  	free_noa_wait(stream);
->  
-> -	if (perf->spurious_report_rs.missed) {
-> -		gt_notice(gt, "%d spurious OA report notices suppressed due to ratelimiting\n",
-> -			  perf->spurious_report_rs.missed);
-> -	}
-> +	m = ratelimit_state_get_miss(&perf->spurious_report_rs);
-> +	if (m)
-> +		gt_notice(gt, "%d spurious OA report notices suppressed due to ratelimiting\n", m);
->  }
->  
->  static void gen7_init_oa_buffer(struct i915_perf_stream *stream)
-
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index b6e9af4d0f1b..dfbdd99a7228 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -1215,20 +1215,65 @@ Kernel response contents:
+ 
+   =====================================  ======  ==========================
+   ``ETHTOOL_A_EEE_HEADER``               nested  request header
+-  ``ETHTOOL_A_EEE_MODES_OURS``           bool    supported/advertised modes
+-  ``ETHTOOL_A_EEE_MODES_PEER``           bool    peer advertised link modes
++  ``ETHTOOL_A_EEE_MODES_OURS``           bitset  supported/advertised modes
++  ``ETHTOOL_A_EEE_MODES_PEER``           bitset  peer advertised link modes
+   ``ETHTOOL_A_EEE_ACTIVE``               bool    EEE is actively used
+   ``ETHTOOL_A_EEE_ENABLED``              bool    EEE is enabled
+   ``ETHTOOL_A_EEE_TX_LPI_ENABLED``       bool    Tx lpi enabled
+   ``ETHTOOL_A_EEE_TX_LPI_TIMER``         u32     Tx lpi timeout (in us)
+   =====================================  ======  ==========================
+ 
+-In ``ETHTOOL_A_EEE_MODES_OURS``, mask consists of link modes for which EEE is
+-enabled, value of link modes for which EEE is advertised. Link modes for which
+-peer advertises EEE are listed in ``ETHTOOL_A_EEE_MODES_PEER`` (no mask). The
+-netlink interface allows reporting EEE status for all link modes but only
+-first 32 are provided by the ``ethtool_ops`` callback.
++Detailed behavior:
+ 
++``ETHTOOL_A_EEE_MODES_OURS`` is a bitset consisting of:
++
++ - Value: link modes that the driver intends to advertise for EEE.
++ - Mask: subset of link modes supported for EEE by the interface.
++
++The `advertised` value is stored in software and remains even if EEE is
++disabled. It can be modified independently and is preserved across toggles of
++EEE enable/disable. If ``ETHTOOL_A_EEE_ENABLED`` is false, PHY does not
++advertise EEE, but the configured value is reported.
++
++``ETHTOOL_A_EEE_MODES_PEER`` shows the peer's EEE capabilities. It is a bitset
++consisting of:
++
++ - Value: link modes that the link partner advertises for EEE.
++ - Mask: empty
++
++This value is typically reported by the hardware and may represent only a
++subset of the actual capabilities supported and advertised by the link partner.
++The local hardware may not be able to detect or represent all EEE-capable modes
++of the peer. As a result, the true EEE support on the peer side may exceed what
++is reported.
++
++``ETHTOOL_A_EEE_ACTIVE`` indicates whether EEE is currently active on the link.
++This is determined by the kernel as a combination of the currently active link
++mode, locally advertised EEE modes, and peer-advertised EEE modes:
++
++    active = (current_link_mode & advertised & link_partner)
++
++In practice, the evaluation may also depend on whether the MAC supports EEE for
++the given mode. There is mostly no hardware status bit that directly indicates
++an active EEE state. Furthermore, even if ``ETHTOOL_A_EEE_ACTIVE`` is true,
++other settings such as ``ETHTOOL_A_EEE_TX_LPI_ENABLED`` or an excessively high
++``ETHTOOL_A_EEE_TX_LPI_TIMER`` may prevent the MAC from actually entering the
++LPI state. Thus, the "active" status should be interpreted as a potential
++capability, not as a guaranteed indication of LPI activity. The only strict
++rule is that if ``ETHTOOL_A_EEE_ENABLED`` is false, then
++``ETHTOOL_A_EEE_ACTIVE`` must also be false.
++
++``ETHTOOL_A_EEE_ENABLED`` is a software-only switch that controls if the
++advertisement is programmed into hardware.
++
++``ETHTOOL_A_EEE_TX_LPI_TIMER`` defines the delay in microseconds after the last
++transmitted frame before the MAC enters the Low Power Idle (LPI) state. This
++value applies globally to all link modes, though in practice, optimal values
++may differ between modes.
++
++The netlink interface can represent link modes up to
++``__ETHTOOL_LINK_MODE_MASK_NBITS``, but traditional ioctls only support the
++first 32.
+ 
+ EEE_SET
+ =======
+@@ -1239,18 +1284,50 @@ Request contents:
+ 
+   =====================================  ======  ==========================
+   ``ETHTOOL_A_EEE_HEADER``               nested  request header
+-  ``ETHTOOL_A_EEE_MODES_OURS``           bool    advertised modes
++  ``ETHTOOL_A_EEE_MODES_OURS``           bitset  advertised modes
+   ``ETHTOOL_A_EEE_ENABLED``              bool    EEE is enabled
+   ``ETHTOOL_A_EEE_TX_LPI_ENABLED``       bool    Tx lpi enabled
+   ``ETHTOOL_A_EEE_TX_LPI_TIMER``         u32     Tx lpi timeout (in us)
+   =====================================  ======  ==========================
+ 
+-``ETHTOOL_A_EEE_MODES_OURS`` is used to either list link modes to advertise
+-EEE for (if there is no mask) or specify changes to the list (if there is
+-a mask). The netlink interface allows reporting EEE status for all link modes
+-but only first 32 can be set at the moment as that is what the ``ethtool_ops``
+-callback supports.
++Detailed behavior:
++
++``ETHTOOL_A_EEE_MODES_OURS`` can specify the list of advertised link modes.
++
++``ETHTOOL_A_EEE_ENABLED`` is a software flag that tells the kernel to prepare
++EEE functionality. If autonegotiation is enabled, this means writing the EEE
++advertisement register so that the PHY includes the EEE-capable modes in the
++autonegotiation pages it transmits. The actual advertisement set is a subset
++derived from PHY-supported modes, MAC capabilities, and possible blacklists.
++This subset can be further restricted by ``ETHTOOL_A_EEE_MODES_OURS``. If
++autonegotiation is disabled, EEE advertisement is not transmitted and EEE will
++not be negotiated or used.
++
++``ETHTOOL_A_EEE_TX_LPI_ENABLED`` controls whether the system should enter the
++Low Power Idle (LPI) state. In this state, the MAC typically notifies the PHY,
++which then transitions the medium (e.g., twisted pair) side into LPI. The exact
++behavior depends on the active link mode:
++
++ - In **100BaseT/Full**, an asymmetric LPI configuration (local off, peer on)
++   leads to asymmetric behavior: the local TX line remains active, while the RX
++   line may enter LPI.
++ - In **1000BaseT/Full**, there are no separate TX/RX lines; the wire is silent
++   only if both sides enter the LPI state.
++
++- ``ETHTOOL_A_EEE_TX_LPI_TIMER`` configures the delay after the last
++  transmitted frame before the MAC enters the LPI state. This single timer
++  value applies to all link modes, although using the same value for all modes
++  may not be optimal in practice. A value that is too high may effectively
++  prevent entry into the LPI state.
++
++.. note::
++   For EEE advertisement to take effect, PHY autonegotiation must be enabled.
++
++Limitations:
+ 
++The netlink interface allows configuring all link modes up to
++``__ETHTOOL_LINK_MODE_MASK_NBITS``, but if drivers depend on legacy
++``ethtool_ops``, only the first 32 link modes are supported.
+ 
+ TSINFO_GET
+ ==========
 -- 
-Jani Nikula, Intel
+2.39.5
+
