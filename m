@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E242116E7
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F9F214217
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745602759; cv=none; b=Icl2ARmogwE79jRUDR+FPhjkQfX2flkFNHbcWulpohgFIAE003o07S1NDGwpWFv5b3ayUIbgpWeSTO6SKZ85qO5poiOlbScfOMqgCyQefNshkbkRdsuQ4TNdQYGpCX+UukfdFgHacl52CjBHMGny0SCEpSCHVdHOgj7DA8GcvW0=
+	t=1745602762; cv=none; b=TNOGx7Ew/2IKG18s1/r/UIyYf9U4WVAez9Bhre+jV0q/UQ521dkRk7gtgaDSBxIITpeQUvdb/9Mv53i21pYFo+vSazT8PLbPdxTrhU6kWOUUCgrC32n9cPt2Pl4AfJWvpp2kJML9l1fMJ7BW78EuQPAZwLOH7JTGxpcXZvk4pDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745602759; c=relaxed/simple;
-	bh=snRnbsspuN/0f1/j1+w1uX7mFkTc+qLASuMwxW/OD9A=;
+	s=arc-20240116; t=1745602762; c=relaxed/simple;
+	bh=WLfGjc4WhOGhwrOacT0q+cgRUX+Xyn1mhfgKF0aAvm4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MAdJaQQ/sALc2jqKPyoz8Ev6P3I2MQeYUD6TTCCKnETTeFdaPaEUXQsYY6M92Py3dIiYQoStQ1vDyveTyC99go4EVih8g5JIlvwI4bmIp9azb9KkVtGci7H6vrcgV8q5bNAensnnIkjFLCuxMaKgukq+bFPhG35Q/Xh8QwjaNM0=
+	 MIME-Version; b=OzItIFtQEV82/Ce/KG6ko0hlluyfj0JtYfqKh3wPogfr0WZHQ0bdnXgD/mw1I+z43gMEoyv3eePQxcJDdtT1FBLgdqFDj/u378kIe4V2hAiWAb442Z4HGCOYwF9inRBds0jWj7K+eMgohcXsD5l0091YHCPxz1aVsBgCCYKwsII=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC4551FC7;
-	Fri, 25 Apr 2025 10:39:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BD041FCD;
+	Fri, 25 Apr 2025 10:39:15 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86F6D3F59E;
-	Fri, 25 Apr 2025 10:39:11 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75FFA3F59E;
+	Fri, 25 Apr 2025 10:39:16 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -45,13 +45,10 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Dave Martin <dave.martin@arm.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v9 06/27] x86/resctrl: Move is_mba_sc() out of core.c
-Date: Fri, 25 Apr 2025 17:37:48 +0000
-Message-Id: <20250425173809.5529-7-james.morse@arm.com>
+	fenghuay@nvidia.com
+Subject: [PATCH v9 07/27] x86/resctrl: Add end-marker to the resctrl_event_id enum
+Date: Fri, 25 Apr 2025 17:37:49 +0000
+Message-Id: <20250425173809.5529-8-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250425173809.5529-1-james.morse@arm.com>
 References: <20250425173809.5529-1-james.morse@arm.com>
@@ -63,83 +60,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-is_mba_sc() is defined in core.c, but has no callers there. It does
-not access any architecture private structures.
+The resctrl_event_id enum gives names to the counter event numbers on x86.
+These are used directly by resctrl.
 
-Move this to rdtgroup.c where the majority of callers are. This makes
-the move of the filesystem code to /fs/ cleaner.
+To allow the MPAM driver to keep an array of these the size of the enum
+needs to be known.
+
+Add a 'num_events' enum entry which can be used to size an array.
+This is added to the enum to reduce conflicts with another series,
+which in turn requires get_arch_mbm_state() to have a default case.
 
 Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
-Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 ---
-Changes since v2:
- * This patch is new.
+Changes since v8:
+ * Move the last marker into the enum and add a default case.
 ---
- arch/x86/kernel/cpu/resctrl/core.c     | 15 ---------------
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 15 +++++++++++++++
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ arch/x86/kernel/cpu/resctrl/monitor.c | 9 ++++-----
+ include/linux/resctrl_types.h         | 3 +++
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 31538c65d9a2..58d7c6accdf2 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -164,21 +164,6 @@ static inline void cache_alloc_hsw_probe(void)
- 	rdt_alloc_capable = true;
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 73e3fe4f4c87..4962ae4bc596 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -260,12 +260,11 @@ static struct arch_mbm_state *get_arch_mbm_state(struct rdt_hw_mon_domain *hw_do
+ 		return &hw_dom->arch_mbm_total[rmid];
+ 	case QOS_L3_MBM_LOCAL_EVENT_ID:
+ 		return &hw_dom->arch_mbm_local[rmid];
++	default:
++		/* Never expect to get here */
++		WARN_ON_ONCE(1);
++		return NULL;
+ 	}
+-
+-	/* Never expect to get here */
+-	WARN_ON_ONCE(1);
+-
+-	return NULL;
  }
  
--bool is_mba_sc(struct rdt_resource *r)
--{
--	if (!r)
--		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
--
--	/*
--	 * The software controller support is only applicable to MBA resource.
--	 * Make sure to check for resource type.
--	 */
--	if (r->rid != RDT_RESOURCE_MBA)
--		return false;
--
--	return r->membw.mba_sc;
--}
--
- /*
-  * rdt_get_mb_table() - get a mapping of bandwidth(b/w) percentage values
-  * exposed to user interface and the h/w understandable delay values.
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 09fb04cf9855..eccdfcb1a6f5 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1535,6 +1535,21 @@ unsigned int rdtgroup_cbm_to_size(struct rdt_resource *r,
- 	return size;
- }
+ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+index f26450b3326b..69bf740130ac 100644
+--- a/include/linux/resctrl_types.h
++++ b/include/linux/resctrl_types.h
+@@ -49,6 +49,9 @@ enum resctrl_event_id {
+ 	QOS_L3_OCCUP_EVENT_ID		= 0x01,
+ 	QOS_L3_MBM_TOTAL_EVENT_ID	= 0x02,
+ 	QOS_L3_MBM_LOCAL_EVENT_ID	= 0x03,
++
++	/* Must be the last */
++	QOS_NUM_EVENTS,
+ };
  
-+bool is_mba_sc(struct rdt_resource *r)
-+{
-+	if (!r)
-+		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
-+
-+	/*
-+	 * The software controller support is only applicable to MBA resource.
-+	 * Make sure to check for resource type.
-+	 */
-+	if (r->rid != RDT_RESOURCE_MBA)
-+		return false;
-+
-+	return r->membw.mba_sc;
-+}
-+
- /*
-  * rdtgroup_size_show - Display size in bytes of allocated regions
-  *
+ #endif /* __LINUX_RESCTRL_TYPES_H */
 -- 
 2.39.5
 
