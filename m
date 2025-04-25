@@ -1,100 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66886323D;
-	Fri, 25 Apr 2025 01:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B09D24B34;
+	Fri, 25 Apr 2025 01:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745543670; cv=none; b=GPU/JLdjvcQcZR923uQYLNGFTz7/K6PpXt9yPwzB6vloMjGWWFQjIOTdQZzSV3st/Ggheo2IaxJPwfVsyS0Hk7w/oGF0S5lKI2/+MqrVnf+gM33yKRZ73l/YESJjS9uxvQ097uddFpksBikCUio40UWr9wO7rgsmMS4pvq0lD6E=
+	t=1745543708; cv=none; b=gstklvA0VQuKdEP67lVan1eRyqYpTJcns/1ke6UeuQGEeu0xhekq7TyktfctEPyHRvw519GyH+c2N/ZsrqG+OUVa8RbHsErg/UhzMJVWvJ/h/n/g8Qp+33iwctJPmhGFLHUMbkwAmUeXAq/pI0T7RQOyTCOBHwil232b2YSi3AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745543670; c=relaxed/simple;
-	bh=iA7ur5jr+Ij18pQxtEEBC4oOx9yaqy4XI8FUIfaR1+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y7LX+IU4AXV1Arw9ACYLuLaoUjXiWKRzRfh802MatmB1b63ekN5WOATTiF9rJZ28xY6YiFumN6iM7HbcOWox5RhO89tMRhLNjwJ18Gu76Nvj7vyajxAd9Eu3VNVpBFCiPtDhcE3THU4yIA56xihVv4Dcarm0dJdnicDPXESIuzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocKvN4OL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745543708; c=relaxed/simple;
+	bh=dibXvsCIlw/r5xer4uGGb3IzXFKI1fgh2NkaWgp2q4Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VrzUei7nqQv4lGYGkAfEmMNDOM8n0jB7AHtxBgIrsRe9YEmxK+UnzmfrtdPuFdonf+5T6MUINec+aFyy4OlBcV3dehlBHPBgPnNVBVC7pw7qIxAoMrIAURmYvbTFek4+M/igycx9+Qi7tX6Z/cmED5p8p0trFdtdGXX7v2CLn3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ksdYkpDW; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocKvN4OL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 312ABC4CEE3;
-	Fri, 25 Apr 2025 01:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745543669;
-	bh=iA7ur5jr+Ij18pQxtEEBC4oOx9yaqy4XI8FUIfaR1+w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ocKvN4OLqc83/LctCTGBz5x8TaqUdrosvtOn6I9GGhbYRIy1HS5fLjVkcIhO+6Uoy
-	 5cmZ6DK0yL9Bqx7YjsRM9cdDgWzWOadJf5AEumHtmO6RHrBmlAC+E0cfYnHrmk5IJ/
-	 IlT68jJNdB4LlCNFLx0mM/odJn0gLKFywryn9JXxYXyUtoUdHZaLwef2iZJvCYSTdr
-	 /3n5ZX/pkGdsKPKQ9wuyNaTQXJTJX6OOlswzMZ+FZwh0s9Z2ppWepY9CPgz+9NIFC5
-	 H2ryezmlZb5UDZvyZgy196/gO+E8JPYdBLMV+ADTB5SkHvoo/39DbVTe3nA0j+lX/i
-	 877C52zkJlxxA==
-Message-ID: <5f7a1675-1386-4ca5-8614-99b4847742ab@kernel.org>
-Date: Fri, 25 Apr 2025 10:14:28 +0900
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ksdYkpDW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1745543706; x=1777079706;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6plyhxgT9bnqn3jAySOCqKgFkQSEJPbSjpMDXSsRL/0=;
+  b=ksdYkpDWMpk7qsgJNOYwz3vaeE9lEiTLe0xpuKdv00SZigGRBwSYbYra
+   QZ56k+0mzXU/jwHZF1NmP4+MWPDYfZK+dv538s8Gnkw1tEFulMsAVnraq
+   1gacueHD2A3DXeoopMS/WAs5E1gJtiJx1psF9hkesBWaM8FoNTGvH3t4Y
+   o=;
+X-IronPort-AV: E=Sophos;i="6.15,237,1739836800"; 
+   d="scan'208";a="738575957"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 01:15:01 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:42637]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.42.20:2525] with esmtp (Farcaster)
+ id b487d46e-dabb-473b-a507-671f53cb5076; Fri, 25 Apr 2025 01:15:01 +0000 (UTC)
+X-Farcaster-Flow-ID: b487d46e-dabb-473b-a507-671f53cb5076
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 25 Apr 2025 01:15:00 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.8) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 25 Apr 2025 01:14:56 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <me@yhndnzj.com>, <netdev@vger.kernel.org>,
+	<oleg@redhat.com>, <pabeni@redhat.com>
+Subject: Re: [PATCH RFC 2/4] net, pidfs: prepare for handing out pidfds for reaped sk->sk_peer_pid
+Date: Thu, 24 Apr 2025 18:08:46 -0700
+Message-ID: <20250425011448.86924-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250424-chipsatz-verpennen-afa9e213e332@brauner>
+References: <20250424-chipsatz-verpennen-afa9e213e332@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard
- drives
-To: Mikko Juhani Korhonen <mjkorhon@gmail.com>
-Cc: Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <CAAZ0mTfQ+feHUeRjC3aH9z=sM92XmXASY+3ELzwXJLfk30h_6A@mail.gmail.com>
- <62cfcebc-3280-448c-9fe6-ef6df0b3fcb0@kernel.org>
- <CAAZ0mTdUkG5yp+XkBGE9Wc2V8np6r-DyNJSCa7Yo0k2bNzuq9w@mail.gmail.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <CAAZ0mTdUkG5yp+XkBGE9Wc2V8np6r-DyNJSCa7Yo0k2bNzuq9w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWC001.ant.amazon.com (10.13.139.218) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 4/25/25 05:43, Mikko Juhani Korhonen wrote:
-> Make WDC WD20EFAX-68FB5N0 hard drive work again
-> after regression in 6.9.0 when LPM was enabled,
-> so disable it for this model
+From: Christian Brauner <brauner@kernel.org>
+Date: Thu, 24 Apr 2025 17:19:28 +0200
+> > > @@ -643,6 +644,14 @@ static void unix_sock_destructor(struct sock *sk)
+> > >  		return;
+> > >  	}
+> > > 
+> > > +	if (sock_flag(sk, SOCK_RCU_FREE)) {
+> > > +		pr_info("Attempting to release RCU protected socket with sleeping 
+> > > locks: %p\n", sk);
+> > > +		return;
+> > > +	}
+> > 
+> > unix-sockets do not use `SOCK_RCU_FREE`,
+
+Right, and I think we won't flag SOCK_RCU_FREE in the future.
+
+
+> but even if they did, doesn't
+> > this flag imply that the destructor is delayed via `call_rcu`, and
+> > thus *IS* allowed to sleep? And then, sleeping in the destructor is
+> > always safe, isn't it? `SOCK_RCU_FREE` just guarantees that it is
+> > delayed for at least an RCU grace period, right? Not sure, what you
+> > are getting at here, but I might be missing something obvious as well.
 > 
-> Signed-off-by: Mikko Korhonen <mjkorhon@gmail.com>
-
-I still cannot apply this. I get the errors:
-
-error: corrupt patch at line 10
-error: could not build fake ancestor
-
-Your base-commit is Linus tag for Linux 6.14, which is not appropriate for new
-patches. Please rebase this on libata for-6.15-fixes branch or Linus latest tree.
-
-Also please properly format you commit message to use up to 72 characters per
-line. And terminate your sentence with a period please.
-
-> ---
-> drivers/ata/libata-core.c | 5 +++++
-> 1 file changed, 5 insertions(+)
+> Callbacks run from call_rcu() can be called from softirq context and in
+> general are not allowed to block. That's what queue_rcu_work() is for
+> which uses system_unbound_wq.
 > 
-> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-> index d956735e2a76..c429ba259548 100644
-> --- a/drivers/ata/libata-core.c
-> +++ b/drivers/ata/libata-core.c
-> @@ -4208,6 +4208,11 @@ static const struct ata_dev_quirks_entry
-> __ata_dev_quirks[] = {
->        { "WDC WD3000JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
->        { "WDC WD3200JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+> > 
+> > Regardless, wouldn't you want WARN_ON_ONCE() rather than pr_info?
 > 
-> +       /*
-> +        * This specific WD SATA-3 model has problems with LPM.
-> +        */
-> +       { "WDC WD20EFAX-68FB5N0",       NULL,   ATA_QUIRK_NOLPM },
-> +
->        /*
->         * This sata dom device goes on a walkabout when the ATA_LOG_DIRECTORY
->         * log page is accessed. Ensure we never ask for this log page with
-> 
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> --
-> 2.47.2
+> Sure.
 
+I prefer DEBUG_NET_WARN_ON_ONCE() or removing it as rcu_sleep_check()
+in __might_sleep() has better checks.
 
--- 
-Damien Le Moal
-Western Digital Research
+The netdev CI enables debug.config, which has CONFIG_DEBUG_ATOMIC_SLEEP
+and enables the checks, so adding a test case in
+tools/testing/selftests/net/af_unix/scm_pidfd.c will catch the future
+regression.
