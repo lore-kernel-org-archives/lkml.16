@@ -1,119 +1,125 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1A32472A6;
-	Fri, 25 Apr 2025 14:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2527E7A13A;
+	Fri, 25 Apr 2025 14:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592246; cv=none; b=ttmX7ZEFp1x/fkpR4LOqsdCSIz03yR9hcTHVCv0EhPeLzuoheibrU5zhescxZAqSgjWC26Rc4Lui/acg5L3Qh1ha59PZ45Q/uuWpdXwJdE5xyNChlFB23TidoBlhdUWZGWrG6/li4yTVFvO++ItWpX9MfMHarSFNTOdBOWOsFjM=
+	t=1745592288; cv=none; b=KV3lENWSzkzw7/GqHIqwGzv+M5qX145rHPcyvW31C+87oq5qCDwC/GKZhzf+xp2+ukdG1WMdScSyJY5TjVNvlLhVAfb/niQKhqnLu16XWnw5pNgmBNpwrhh73ORvzaR0mhSOg0qcWX/b/DYwoezwUQ2WyLJpvRSd5UovkdVJRiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592246; c=relaxed/simple;
-	bh=jVJBf/R/dc6ahgsECfA9a4xV6tsV8GYocrn8WOFAkRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ojK6qOwcB8r1G5iKV9+ZksKaI/iAOROnuCK6ZlD2D4Di7XemL5yeC/73MnQEZIvJ9bLkzUouDzHS6ObhGTBR+VsugrSVtCb78HgE/qovqoeAxhdZ3B4YNrxGGK0OUncT/ZijeselAIDc+1sc7AWJ9fvWtt4UfUS5Tj9oNUqqQZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=AYDw7rIy; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1745592288; c=relaxed/simple;
+	bh=5LLcQJbguAUXf7fhzBaS9EfxrD1vFe2/1D4vo2jOGDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cbBwgwOrzyXgZcK/vzrxGskU79CsTJXFzCGR4UjM7TQ5mZElLqg680+gQpJi+udexzNeAJJWtI4/SKODa/rs6yxTV2alEgm3D4zhFPm+nAzdHTLcbgGLFfPgeajQW6sI+SA/P/BHH6ucPR4tP3o2PNC2U/lqy8HV3YD1wWKthZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8vBpr6l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AYDw7rIy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1ssB4Rfy0T4ksx0Lnlz+elFfLJ0yGIeQrZznCe7Aq24=; b=AYDw7rIyOl/D9Wy4/pJKLOcuGO
-	mIcV+bNNNkyfM6ri86MKGLJeaBtwsJI94WTwBVzt8Gr0a5UFwNSErB6GS1x/T2KVv6UOktWihA9sE
-	cUsoq1/71O2tGVMMaZWQkBpcGzcNk+4tVB2p1GcLPy+NWuQEefWS7RwCOkikK/tSJMZKC7ITJDj7W
-	o1Tzip8br8GRK9FuQHs46K2PEkgZbxgWOazM7GJbGq3taU9GIP7l3tu747vWijHtTAw/hEQAOc3Vd
-	g6ZOJu0oWh81kbq3D4Wf9egAK3TqJlv6KAjExbCInofNxDb/icxvrlC+tJZe9t0VS5MwNcnUX374/
-	NuooLP3A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47354)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u8KHR-0000Xy-2w;
-	Fri, 25 Apr 2025 15:43:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u8KHP-0002Cr-0T;
-	Fri, 25 Apr 2025 15:43:51 +0100
-Date: Fri, 25 Apr 2025 15:43:50 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH net-next v2 1/1] net: dsa: microchip: Remove ineffective
- checks from ksz_set_mac_eee()
-Message-ID: <aAufpsLhs8GLMm_b@shell.armlinux.org.uk>
-References: <20250425110845.482652-1-o.rempel@pengutronix.de>
- <aAuRAadDStfwfS1U@shell.armlinux.org.uk>
- <aAubnUSDpwtfuCrm@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8vBpr6l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F382C4CEE4;
+	Fri, 25 Apr 2025 14:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745592287;
+	bh=5LLcQJbguAUXf7fhzBaS9EfxrD1vFe2/1D4vo2jOGDI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=h8vBpr6lYTmBEzdUa1l4Aub/YNwD2YVTsBjm8j/XHJPsUhJN11FZp8MTVKSVYXUcW
+	 hpUlzyOx03xOGxj3jOLeFClenps1W5ZWoWoJ1bPe4HfZMbVx7+4Al5AQZWTvjbc/31
+	 wuPcBq0aQsApZ2tfed/NM3jXQQ3NoAH0dw28lsZDbhaCh1AJ9PZ0dqjSP1C4wsTXlC
+	 Z/I0f57JIMS6VYww6rtzW0mkUlvnbhoxg3aE7JA6EADIi68arzFUbQQxH6yNSdCi4b
+	 CCQs+U31hCCHOril5snNlvRWxVqU9bFuWC06SveLX6e0/1oOsPx3T57+1lQGHe76m0
+	 W7WsYr1vHdQvg==
+Message-ID: <34087c68-442f-41ec-a6c0-dd063f6d44d1@kernel.org>
+Date: Fri, 25 Apr 2025 16:44:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAubnUSDpwtfuCrm@pengutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/10] dt-bindings: clock: Add RTC clock binding for
+ Maxim MAX77686
+To: Anand Moon <linux.amoon@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ "open list:MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BO..."
+ <linux-kernel@vger.kernel.org>,
+ "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-samsung-soc@vger.kernel.org>
+References: <20250425132727.5160-1-linux.amoon@gmail.com>
+ <20250425132727.5160-2-linux.amoon@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250425132727.5160-2-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 04:26:37PM +0200, Oleksij Rempel wrote:
-> On Fri, Apr 25, 2025 at 02:41:21PM +0100, Russell King (Oracle) wrote:
-> > On Fri, Apr 25, 2025 at 01:08:45PM +0200, Oleksij Rempel wrote:
-> > > KSZ switches handle EEE internally via PHY advertisement and do not
-> > > support MAC-level configuration. The ksz_set_mac_eee() handler previously
-> > > rejected Tx LPI disable and timer changes, but provided no real control.
-> > 
-> > Err what?
-> > 
-> > ksz does not set phylink_config->eee_enabled_default, so the default
-> > state in phylink is eee_enabled = false, tx_lpi_enabled = false. It
-> > doesn't set the default LPI timer, so tx_lpi_timer = 0.
-> > 
-> > As the driver does not implement the ability to change the LPI timer
-> > enable nor the timer value, this seemed reasonable as the values are
-> > not reported (being reported as zeros) and thus prevents modification
-> > thereof.
-> > 
-> > Why do you want to allow people to change parameters that have no
-> > effect?
-> 
-> The original ksz_get_mac_eee() used to report tx_lpi_enabled = true,
-> which correctly reflected the internal EEE/LPI activity of the hardware.
+On 25/04/2025 15:26, Anand Moon wrote:
+> +
+> +  The MAX77686 contains three 32.768khz crystal clock outputs that can
+> +  be controlled (gated/ungated) over I2C. Clocks are defined as
+> +  preprocessor macros in dt-bindings/clock/maxim,max77686.h.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - max77686-rtc
 
-Are you sure it did _actually_ did return that?
+So you claim RTC is a clock, right? Did not even think that RTC has a
+bit different meaning?
 
-Yes, ksz_get_mac_eee() set e->tx_lpi_enabled = true, but if you read the
-commit 0945a7b44220 message, you will see that DSA calls
-phylink_ethtool_get_eee() after this function, which then calls into
-phy_ethtool_get_eee(), and phy_ethtool_get_eee() overwrites *all*
-members of struct ethtool_keee.
+But regardless, this code make no sense and was never tested. It cannot
+work.
 
-Thus, userspace doesn't see tx_lpi_enabled set.
+It reminds me previous approaches with whatever patches you found in the
+downstream...
 
-Please wind back to before commit 0945a7b44220 to confirm this - I
-think you'll find that this bug was introduced in commit
-fe0d4fd9285e "net: phy: Keep track of EEE configuration".
-
-> After commit [0945a7b44220 ("net: dsa: ksz: remove setting of tx_lpi
-> parameters")], ksz_get_mac_eee() was removed, and now tx_lpi_enabled defaults
-> to false via the phylink fallback.
-
-As stated above, I think this driver has had a problem for over a year
-now, caused ultimately by the incomplete submission of Andrew's patch
-set. I think you'll find that if you try the comparing the ksz behaviour
-of commit fe0d4fd9285e^ with commit fe0d4fd9285e, you'll find that's
-where this behaviour changed.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Best regards,
+Krzysztof
