@@ -1,112 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D35923A9AD;
-	Fri, 25 Apr 2025 10:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2821D23BCE3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575679; cv=none; b=GH4OqlGODtV8Rnxz9TEbD3jT5oOwPz4OjeMLf7eupwqK91+qqb0yvqQfs6qBc4fSlG1sARVcOZngsjumaRxBFZmH/MAcxfq2mCT8oDjbcsEa2jeICXEJ5pkn/7nFCIJBxEbf8q43HFXmeBOViqw04tE/WDIymKMzBDvpdczlNXI=
+	t=1745575685; cv=none; b=ed6tx99iF9nzP38jCfXOGgLAM7ut6J2Schcbv+pf0A0/AXp+JgGKhliI69GaKjLCIG3ycxKZQcWwKF42Pvn0YhQhq8kfTUtgZfXjzyHMQPOR0WbiPQTfKU4JOxgL9b+U6nYQseqNVyYKL8MfuLYqiufLLpRYNy6d+VY2f9/0TP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575679; c=relaxed/simple;
-	bh=E1N3uydZYxb6NmwdYyU4qdeY7atKa7K2XsdZZPOcJhQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OXEpDx/VnEYXCdUKRd71EQhQgOJsj9IuFmh40C6MO5G1ijH0UIhcFJte4qS54kQD5HfClM4w5aabnSUUcv35x40P/mRZD74lW3GGRjCixitWTu34Esms8fYVszfkdeGvCccZ+zOPDUGwTuYcKZ+bVnsh1+1r5TkXz07j9GYNvOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XvTyGxfO; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745575685; c=relaxed/simple;
+	bh=RbOCfUpnNaUeMgS18nPHmR6Rsmt7FCEuf9nQm74xq3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gegpp7ydvwQSYQeqzgvAoFvCBSpF3gagY7mk4aYu5AzXLLS1+w2/s3i7eL5HRRZTRJNL0/VNwjA1r+CZJXHSgLnPL7duiy8VhLvCF2/1ZKrtvrsXq5D/8sHaz8cX+pYEC7PF88sWO7slFba132HNyEpCNLPp0t/h95gyeqrISwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KYcECwT9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XvTyGxfO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745575678; x=1777111678;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=E1N3uydZYxb6NmwdYyU4qdeY7atKa7K2XsdZZPOcJhQ=;
-  b=XvTyGxfOdimZvHm+0YEsCzrzxs0LfIvyz+3ZtI9bOQZsBrf6Hdofrw+V
-   /XInd+i5kPkAArSnT+hPZVhP7OI02BJCXAiIM5UoCtCjzsJRyGUoRjM9o
-   FEFsVBFZJPwqE0IdQmWiwHKWr2xCrJ7z37vFqmNSh7u/dhZtac57GFyny
-   R798WxMDZRLEixgB+lR3oDbE1u40mzsabXrQsDc2w7B303+mJfb0SDeZj
-   R86EbhHf2ek9D3+mszCNqWL1245bHOmZ7I6b4HA+pYm9/Ewxzt6+UJDMN
-   khe8uoQQBh1c633HfPAaxg0b4w5xXk9zMaUDWfGoQ/xr57yJcR893/G+W
-   w==;
-X-CSE-ConnectionGUID: FQpcc3fyRCWmi91mIsY7pQ==
-X-CSE-MsgGUID: H+LlXwyjRL2FAgn0a+khFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="46353296"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="46353296"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:07:58 -0700
-X-CSE-ConnectionGUID: UPSrGiqQQqq6bfvVG5wXBw==
-X-CSE-MsgGUID: RTR4pQxzTRCm3O2wU84C2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133848678"
-Received: from bjledic266.bj.intel.com ([172.16.127.175])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:07:54 -0700
-From: Dongcheng Yan <dongcheng.yan@intel.com>
-To: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	sakari.ailus@linux.intel.com,
-	hverkuil@xs4all.nl,
-	andriy.shevchenko@linux.intel.com,
-	hdegoede@redhat.com,
-	u.kleine-koenig@baylibre.com,
-	ricardo.ribalda@gmail.com,
-	bingbu.cao@linux.intel.com
-Cc: stable@vger.kernel.org,
-	dongcheng.yan@linux.intel.com,
-	hao.yao@intel.com
-Subject: [PATCH v2 2/2] media: i2c: change lt6911uxe irq_gpio name to "hpd"
-Date: Fri, 25 Apr 2025 18:07:39 +0800
-Message-Id: <20250425100739.3099535-2-dongcheng.yan@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250425100739.3099535-1-dongcheng.yan@intel.com>
-References: <20250425100739.3099535-1-dongcheng.yan@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KYcECwT9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745575683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wCWDXuJuaWOovXQdKzwU0ohDqLv9bgc+JZP0GesYdB4=;
+	b=KYcECwT9WGPudHzFwXegrZ7uCBn7wLm1LQ+EX5y3B+SsoKVLm7i6cYu0qIESL86iDDB/6g
+	asCeVru+q4p6FJo6Wfou4Dvz7ejWPyQAZf+NxHLOFG/3i3Bm/enxLfS2Ep0weLa/SdtN++
+	7DHbz6g5TSl71RRB2uDFZmgvI3jFG4M=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-381-YPOQJynNO4CzyAgpMYVfxw-1; Fri,
+ 25 Apr 2025 06:07:57 -0400
+X-MC-Unique: YPOQJynNO4CzyAgpMYVfxw-1
+X-Mimecast-MFC-AGG-ID: YPOQJynNO4CzyAgpMYVfxw_1745575675
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CE8C180087A;
+	Fri, 25 Apr 2025 10:07:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.93])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 79E5B1800352;
+	Fri, 25 Apr 2025 10:07:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 25 Apr 2025 12:07:16 +0200 (CEST)
+Date: Fri, 25 Apr 2025 12:07:07 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: linux-kernel@vger.kernel.org, mrpre@163.com, mkoutny@suse.com,
+	syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com,
+	syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com,
+	syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Bill O'Donnell <bodonnel@redhat.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v2] pid: annotate data-races around pid_ns->pid_allocated
+Message-ID: <20250425100707.GA8093@redhat.com>
+References: <20250425055824.6930-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425055824.6930-1-jiayuan.chen@linux.dev>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Lt6911uxe is used in IPU6 / x86 platform, worked with an out-of-tree
-int3472 patch and upstream intel/ipu6 before. It is only used on ACPI
-platforms till now and there are no devicetree bindings for this
-driver.
+On 04/25, Jiayuan Chen wrote:
+>
+> @@ -2584,7 +2584,7 @@ __latent_entropy struct task_struct *copy_process(
+>  	rseq_fork(p, clone_flags);
+>
+>  	/* Don't start children in a dying pid namespace */
+> -	if (unlikely(!(ns_of_pid(pid)->pid_allocated & PIDNS_ADDING))) {
+> +	if (unlikely(!(data_race(ns_of_pid(pid)->pid_allocated & PIDNS_ADDING)))) {
 
-The upstream int3472 driver uses "hpd" instead of "readystat" now.
-this patch updates the irq_gpio name to "hpd" accordingly, so that
-mere users can now use the upstream version directly without relying
-on out-of-tree int3472 pin support.
+Well. data_race() just hides the potential problem. READ_ONCE() makes more
+sense imo, even if I think there are no real problems with the current code.
 
-The new name "hpd" (Hotplug Detect) aligns with common naming
-conventions used in other drivers(like adv7604) and documentation.
+Either way,
 
-Fixes: e49563c3be09d4 ("media: i2c: add lt6911uxe hdmi bridge driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
----
- drivers/media/i2c/lt6911uxe.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> @@ -271,13 +271,13 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  	upid = pid->numbers + ns->level;
+>  	idr_preload(GFP_KERNEL);
+>  	spin_lock(&pidmap_lock);
+> -	if (!(ns->pid_allocated & PIDNS_ADDING))
+> +	if (!(data_race(ns->pid_allocated & PIDNS_ADDING)))
 
-diff --git a/drivers/media/i2c/lt6911uxe.c b/drivers/media/i2c/lt6911uxe.c
-index c5b40bb58a37..24857d683fcf 100644
---- a/drivers/media/i2c/lt6911uxe.c
-+++ b/drivers/media/i2c/lt6911uxe.c
-@@ -605,10 +605,10 @@ static int lt6911uxe_probe(struct i2c_client *client)
- 		return dev_err_probe(dev, PTR_ERR(lt6911uxe->reset_gpio),
- 				     "failed to get reset gpio\n");
- 
--	lt6911uxe->irq_gpio = devm_gpiod_get(dev, "readystat", GPIOD_IN);
-+	lt6911uxe->irq_gpio = devm_gpiod_get(dev, "hpd", GPIOD_IN);
- 	if (IS_ERR(lt6911uxe->irq_gpio))
- 		return dev_err_probe(dev, PTR_ERR(lt6911uxe->irq_gpio),
--				     "failed to get ready_stat gpio\n");
-+				     "failed to get hpd gpio\n");
- 
- 	ret = lt6911uxe_fwnode_parse(lt6911uxe, dev);
- 	if (ret)
--- 
-2.34.1
+again, you do not need data_race() or READ_ONCE() if you read the
+data protected by pidmap_lock. But you still need WRITE_ONCE() when
+->pid_allocated is modified.
+
+Oleg.
 
