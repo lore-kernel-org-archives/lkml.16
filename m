@@ -1,246 +1,190 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E0322F15E;
-	Fri, 25 Apr 2025 10:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575973; cv=fail; b=G007YBdlrkYed5s+9ztzlVoYyIzuswqtpRYgJqJqetVgO2aw8U2VEgzEUW5TKb70nRdBqIMAp3GQ+X5Hmk7Pk9s1Mqab0s1tCux6eMRXuvFZ97HEQqFz/fqB2kOq69F/Q7ufVwb4TLhmpaYqjJ473qQgxJU/XmJ+24khwj+rVz8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575973; c=relaxed/simple;
-	bh=P98RgXVeiO9PcvuBoy/mmlSe5SnjAVhjAt/+7DT9yRc=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YAHlfLs9Kb2Dg3mghgwTm8AHeq86hT1c2OV4aseIlM1X62ClSCzKGtrZE2Xafkdf4svtA6HA6niQ8YCBecZMlUMZi6g4Crny9okDO9C4+PbOyDBG3tVqShWPJATH1nKLjFm8ilgJrriiIdZ44LatkoBvdYSyUQhgFbGZq08a03g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hyKurFkm; arc=fail smtp.client-ip=40.107.244.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC1123236D;
+	Fri, 25 Apr 2025 10:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745575983; cv=none; b=htFQHbQ5aThto2HlMLaTDVnyFC096Unl3TjS7GvnfC3IUcEHjNy4diPKRmQ/LGZuh3d9m4ej36ODWAw0wjded8RawJCpXAERod3xFsyOnPMd/A/oc0pVLFGT+kAFSHIFqqn3LrPfpZZJhXWiO/F0A/xnUBTae17+VaYVnDICcQc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745575983; c=relaxed/simple;
+	bh=Oho9zISwXumIwyreGzhuOMH64zT4cJky5KKcy9RQz80=;
+	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:Cc:To; b=ohE+OVj6kqQMULrnm3e2d/aGbkd3t1kOtfYlVoKGUZhQKcCVh6olcCz+lozfAu0L9OdmIN0q7JNAFGbrkvF9DfSpkK0i/WH5yrbUmf6cukI7RTirY751bB60gNbhCpGwiSb2OFipBwnx5+cIqxAqBuWT82B4pDm/wDhj6wDLEj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nXpIaVTc; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hyKurFkm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rPkdtTqoWg2dt7fT/CVGN5iR9QzcP5ylo6WzLm6UYXspscM7K69YUDQSGCFbUH2o/EVMBciaWD+q1zWRb4R+7eklasRwCVaNwWhRxtgvfHpUT5twQnWJuDH1jEFJSg6WiMjQVeU/fuVjX9O+JStTQmYhrcCUcdlWS+S/QbyCzXDYhBhbx/LjchKN4fsgf050MB9zRNnASiOADhH0N8cl9YXmLv6tu+Py6DmT8hjXkWwTZ0tUHkJtI5uJEppuR8oO8xKTEyUWU3qNj1Bxd0TVzEf9JZYB4DxGWNk32twP33rFKuME95joOfSCvQAkKy3TcEehGnUgvRnsLvhLx4zrtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IGQd8Oqr5YLBEJYAQAcYnwVZ+AnehazK0PyV3mELkeg=;
- b=oHYqvdrnZtzdx+57IcJamQiLJ2YT0guOf3PFBmg1khAGlC3V8ZK4FplrWOR5eTg64E3aphlekZZ7CEcnOP3TOHa3MMf+UYapeXaIuCcTJXA0SxTfWvzaYO1ArJAiKPyhoQaSmaI0rHJN0KinBvwH7ddFmQGamHPNa2Ocz61LupErMe4pJojsXJwwKldVk6fNnQmOV8VQLEowBXyS3p4QbL8BlGOlV8DlcqM6r1KQ1MhE8YNZFRf+BxhCrTWku+QtNM6Su6hxcBXqqqfvhkvVXxtsDj4VMQ/6zCAG+qMG69ZSCP3tVTe+z9/LNoLDOSenn8vm+0JxsoP7BuzdEDGZVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IGQd8Oqr5YLBEJYAQAcYnwVZ+AnehazK0PyV3mELkeg=;
- b=hyKurFkmcLDru+bkwj+D2xL8AHNIbkSweZvbghUm5g2awS9Pgo/yIIq1A68KZznWlIY5FojsLtHcvYR3BcVW1GEd/icVTXbvYb9QZpzZBKgPShb+juM3Z8uRyl3ZmfKl0ygixPCUTIK29mUVN4x6yT320qHBHR6svvLsdgb93a4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SA1PR12MB6946.namprd12.prod.outlook.com (2603:10b6:806:24d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
- 2025 10:12:49 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
- 10:12:49 +0000
-Message-ID: <a04c37c6-8f83-45e9-a39f-1e1ba613f7f4@amd.com>
-Date: Fri, 25 Apr 2025 15:42:39 +0530
-User-Agent: Mozilla Thunderbird
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH] perf/x86: Fix open counting event error
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Luo Gengkun <luogengkun@huaweicloud.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "irogers@google.com" <irogers@google.com>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
- <f8c349c8-b074-4b27-b799-e484631b9b3e@amd.com>
- <1d1cb14f-5729-4200-af20-d66b4feebe94@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <1d1cb14f-5729-4200-af20-d66b4feebe94@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0092.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:27::7) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXpIaVTc"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5259327a937so843339e0c.0;
+        Fri, 25 Apr 2025 03:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745575980; x=1746180780; darn=vger.kernel.org;
+        h=to:cc:date:message-id:subject:mime-version:from
+         :content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=;
+        b=nXpIaVTcHQg+xejDXFraR+p5ixEdobw/MxyybnrFVAOKhqCHqrRuqUlU4ed329FoMK
+         +hRAuPOBToW2almIVxJYryAtY/lG4+QiiMJ5WnI102+7hxYtrXM2p2FSErZGKn31jXTN
+         Vmti4obgp8qCZ+15/5SNnAreP69I0yTKxZ8lOyiXNjKhDdXS50YbhtDuFMEGWmu3HSJ3
+         EG+Vs0QvQPF32tCaLucp/hyIV7W8tWtTme0tmAO+DHkTGm9yn1s20+srvrUtA6rr9z4F
+         wwJ+QWRZ6Kfl8K68WpP6aSU3Khr4v6+mudBi7MGlcD8C1PqslS3qT7koQuXIdUhYrNAU
+         Zh/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745575980; x=1746180780;
+        h=to:cc:date:message-id:subject:mime-version:from
+         :content-transfer-encoding:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=;
+        b=lL7oCEWy+i98pG7Ix5NEV4+iDdtST2N+LoEtJULkBeHTcFC77frcIARUvq4JHG8Fhj
+         0rIolRJu6HR6f5fPhiQvW4FZmyo9PF+AIfb2Eihfvzz+yZuCW9w8iYA+59WrOhCF+95H
+         5OMPIwoBa2Sm5rMsgTVqzPNundda1lhx/aRciuNwuh4yGmPCaVjkLx7mYgkGtX2he22X
+         Pw3ixqUs9tz0xyCPFEWrk2pQObkJMUp6czlGeywIu3uAOp/K2bfRs83JcrL2L0buoiZ9
+         4WVAi+xdR3+z8Vh0wbEfbYAWpP5wAtBRlul8GEm20wUvFrzBanv3qAYG0N+4dE9qqUfy
+         QnDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhnWlBpAlZ5OslfyDRapDpsrijc7/sr+zWwXRf/q20o6tUbFss0LQcMP4BFPbWz25wAc9WdTsphERX@vger.kernel.org, AJvYcCVAwbChTAYJBRcx3EMCbwuYqzDM4U4wPsLS3UItX5mEF44qfp5IoYXfwUwIRoY29hVxwaCToTarjkLcCcfPD106@vger.kernel.org, AJvYcCWXCpgy2qwOo2kvg3NiO0Mi6OdprPxfSNlh/W0qAMceJc7koYZEl+2OY3FjdYgNOLG256hslQBhk7EWnxkS@vger.kernel.org, AJvYcCWtbipKP92Gt5ZGIT2MRy4yh6BAD9OjaclANgm4PQW0j1pChioNp0fJ3lM1MAeSBUyQUcaIoZxHd5iv@vger.kernel.org, AJvYcCX9DNjKz3WKt7iQZaGb4sZRLjocSqj0J9c2dWXMvI01tIf+9NXnteWL635j3Pggz83x+/ZzpU/fs7RaaV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIIxXgNV5NFsvERszZyDQ+9+g1oSed4p8CUckitMnrZPNoYZpA
+	Fey9SJ+X/TosK97t3eA0eqjVu3yrenjjwwrN/yZUrNKmzo6BQUd9a4XNczKo
+X-Gm-Gg: ASbGnctpd7dfrrvFLo+WoKxiQb/uoIW9A0SYBm2XWmXgylNgYYiF2LAbIRtmWKM3BNi
+	nKzWLUWH0oHDQRn8DexbYZmHwH90Y6SDzMeM2RmaC7IBWZsVTtGhp8BKGlf/v33sAbiT3tkfEv+
+	OEkhfPLSUqCiJyEAJiBL0h69Xm2Aw7DZps2vwi8rAhDJIQsXjZPXZVgnPGufxCrUpCPCdChWuun
+	Ld9E1UdS6WZgWaX+CxCSAjSNsGfHUN/N0+CtRHvsnlBFk7qAukCkp2o908A7WmuksjCC6WHtthD
+	qIuL3a+tqDFOk+7/3YILk0aObT/iBmnOs0EF/wSIn3KEkZgUCArQf5rvV0RPsZpY5yuYRNb6/el
+	XXCPfLw9RAe6Y4oWs
+X-Google-Smtp-Source: AGHT+IGiA/Yn603iCEcUZTepPAJSDOP4M4TDfO1zGDg1GjK6jBe0wK+uDj0rtvLjSeP4gVl0jlYXxQ==
+X-Received: by 2002:a05:6122:da5:b0:50d:a31c:678c with SMTP id 71dfb90a1353d-52a89d3e399mr831693e0c.2.1745575980041;
+        Fri, 25 Apr 2025 03:13:00 -0700 (PDT)
+Received: from smtpclient.apple (216-131-82-239.nyc.as62651.net. [216.131.82.239])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a79f21b86sm605458e0c.9.2025.04.25.03.12.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 03:12:59 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Rich Persaud <persaur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SA1PR12MB6946:EE_
-X-MS-Office365-Filtering-Correlation-Id: 813dc591-be30-4997-c8d7-08dd83e1bb30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a2RMSkVUaHhRZ2o3RXloZExFdjlrRXZha0gvZ3BVMEdOa1VabzZiTFlCRjAy?=
- =?utf-8?B?SnRrbFV0cWtySm12b3ZGSjB6RnEzRHNQKzBkUUtYMCtvU3YxeCtCZDF1SG1J?=
- =?utf-8?B?TTlSU3RFUE5zUWRGOVJkbjRQUUY5Szg4a2JHS2VPbFQxaFgwK2pPaGpiZ2NZ?=
- =?utf-8?B?dGZyaUlOT0FHanFSU3dTTEw3ZEhwc3BpZTEwN3l5TmFuaDZoRFNMWEhVK3VO?=
- =?utf-8?B?QkdYdFVkNGJmVFZiNVVVK2gyU3p1VFVodlBJVk8rQVk4dFg5TXNHckJPZVYv?=
- =?utf-8?B?UElCNVJIMjVOcEU4eS9xK0U5UW56ZUx4U2pXSUhIV0NPY1ZtNm9IcnB1dWZE?=
- =?utf-8?B?bVhqRk1yRlNjWGs4dVF5ZVlZWkt5azQyc0NGRFYrNm1DRGZ0bEZSdlFRY2xt?=
- =?utf-8?B?SlJtQS9Rb2pma2pjQUdybTIwa2NsMUN0aU9vcGZlZTJzSitGVlMrVndhTzZ4?=
- =?utf-8?B?M1ZBWGNmVzk3QUlUR3J1cnNJZ1l6QXppVXowUlluVnR3NUxTZzJpT1VtUjRG?=
- =?utf-8?B?V3gxZEtUdVRTcnN5bnBFUkhORjcvYnZSRk9RYVhTd08vbEwvVGgxRklBSmxz?=
- =?utf-8?B?anh4YXRtQjNCL29OWjBlY2RuNXgyWnM2ekkvWnFwVHNuQjJiN1drMTE1T1RY?=
- =?utf-8?B?OUNtcStZNXdwVWdqSi9Ed1p0NlJGMXFlQ1hMYjJmUVBJYmZoaHlpdm5TUjBo?=
- =?utf-8?B?RlNKd09jdnFaemwvR3ozbzRadjEyTTFWSkJ0VzNDaVlsWUZqYWJZQ2NCTllw?=
- =?utf-8?B?U3h6UVhrMXJuSnV3TWdidG0vRlRHRU5mY2diQVlSU3k2cTBzV2ZRQ1VPQXhQ?=
- =?utf-8?B?VWR4R0JhVlhnYkV5cEY0ZmVWdEJyb2NZb29JS2dudWhHOVhSc1IzandWUWpz?=
- =?utf-8?B?Mlp3ZDdVVEMzd1pTWE9iY2V3RzVHbG5VRjU4aDRkZTVxVDkwTmJjZFdOWURB?=
- =?utf-8?B?Q0ZTUmNxc2RuSDB6RGI4cm5mLzNBNGdQOVZEUWc3Y0RvNFRsU0lwU05wNHFL?=
- =?utf-8?B?WkNhUlhadVc0OG4xYnZPL1VsaTVITlFXMjBZbXhtWm1QTjZRYlpZM21BQ2NZ?=
- =?utf-8?B?YXpPZHNmcXpKa3U5Zy9xN29Cc0hnWGVSUWFIYVM1S2VHOXFHTkd3TzFWNkRS?=
- =?utf-8?B?bmdEU2tQck9jN1VHREhRb3oyT0w5cmpydVIxMkU0NUNSN1ZJNkFEMzdEQS9x?=
- =?utf-8?B?TmZQejgveVZFU2luTmd1MVNqTEM2T29IcDB2OHlwQW1PTExRdjMyY1FEUHpW?=
- =?utf-8?B?VkMxeGVIdWE0c3luaGViWTAvTWN1c2pYT2lZQXFEUUx0V1ErQjkvVk9TOUNB?=
- =?utf-8?B?M3V2SVZiVHNpNlZNY3dETVFFa2doeWpHak9GSXNmMWF6YWtXdHFxb2dpOTlr?=
- =?utf-8?B?K1JjeCtzdmZ4M0NJSlRvWTN4VUQ3ellkNVNIKzFZZ2h6THhBSUExSHdOR3Fu?=
- =?utf-8?B?WHhwOHB0eVpURG1EYzNKZEFsajRUTW1yaVlJc0N0YVA5U29kVjk4OFp4REcy?=
- =?utf-8?B?akE5U3llV1BEZGRiWHlkT2ZLYXdxSmtYNkluVmg1czg4VkRFUStnRWI2NjlU?=
- =?utf-8?B?Rm5hdG8xam1aRjEyTXpxdHZSWXR2RjVPNStOZjRYbEhST0hSclVhNGpEWkNy?=
- =?utf-8?B?dlNmKzJrTjlSWndnRTVGR21Pc1FTbnJGNTEwRlhDSVRUYzlyY0lGbGNocm83?=
- =?utf-8?B?T2JqOCtYMTZUMW51bEVXQ3Yyek9sWlprVXdRcnQrSXJGejdQbGR1RWlvUkpj?=
- =?utf-8?B?ejVnamNDTm1pVjFBUENDLzVrK3NqUCtaMFRjYVBTOE5TQWRjd0txZVpBdWJ2?=
- =?utf-8?B?ZHVGNWV2USt3bTg3dzRoaUJIYVVka3ZxSEpXLy9DcktqaXRkSitza0ZqV0hH?=
- =?utf-8?B?QmlTTVlQS0dlY3QxN1JrRDhCSEtQVWVRMmN6VjVVNjVEUUE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aU9sb2pGSUE0Sk5zR2tYNGdGeXo3UzAzOEExdEFtNmVDTHVHL3pMdEk3MCt0?=
- =?utf-8?B?V0haV1FkT1RSZjJtVFlKQ3E2K00rTC8yMVZZS3Rhb1F2M0t4UEdUZmhSYW4r?=
- =?utf-8?B?ZkFnc0d2MWdSTDJGQ2ZpRnY2bHpVTlUxc3I1bHhVWnUwK2UwdzJsMXNwQkg3?=
- =?utf-8?B?OVpBV3Z6a1lDY2M2bElPQ21QL083MEpXN2QwRUF4UGx0MW5aYmU4NUh1Mk5K?=
- =?utf-8?B?OFNKOVVkN2JQWWVMa2NqYlVpUnBxaVR6MHA1dGFOUk1RU2FiZ0srdjF1QmF5?=
- =?utf-8?B?T0ZRa1Y5aVlTb1grbnc2YkJHVTh0MFJsSUxKQTB5a3NDc3V6MUlTRHZTQXBY?=
- =?utf-8?B?TitUZVdzNDZlTTRDc1hDSXc2b3NSZWFra09BdzJreFNFSUhzWWNrMEIvcDl5?=
- =?utf-8?B?aGFrejBjODd4djJXTWVVVUxYelRKVWRIZzRDYUZXNk1Ma2R1YVF4dlNhUm5W?=
- =?utf-8?B?a3lPdFdIS3pQT1h5SGNOYUhiMDZ6TGdoZ2trOEVJbXAxYWRQdDRZRGxvR3lS?=
- =?utf-8?B?U3ZKeWRtdkpXaWF4ZXZoQURONENUN3IxQU4venh5d2JlV3pkdkdwNjlUUlk0?=
- =?utf-8?B?T3hKMXVYU1JjcVVxRVpqcG84UEFIN2Y5aGJqL0xGOVNEc1dkMXNsMnUrVGNW?=
- =?utf-8?B?bWtRQjhsUEYvMXByWndOTFB2ZUZLK25qRVJ5VTlXQUNFM1c5WTZURjJ2N3p0?=
- =?utf-8?B?bDJ5WHpVUWMxd1ZzVFZET3cwRWhYNkNML0VRMFNVSFJjRDg2ajBVdG5uNHh6?=
- =?utf-8?B?UWJOcHo1L1IrUTgzS0tSY0wrVkRHd3BUYzVSYzNRTXhxdDdXWnJHa1RKbEJ2?=
- =?utf-8?B?QjlVUUNIekdzd2ZienJNb0IrWWhsRnpnOWF0TTNTbzU4Si9kTk5SVkg0dG05?=
- =?utf-8?B?Q3hzT1NpUE1vR2tnKzlZdFRFemh4L1lsRi85Q080cmZXSUxTdldDOXVVaFl6?=
- =?utf-8?B?eHhhc1FuWUQ5ek5reTN6YldUQUhzWmt2am8wUndCRkV0VG9LZ3RMQjdrVDJj?=
- =?utf-8?B?NnhWSi8vQVdwbGNKdlJqZTBHU2dkaDE1QVJJZlZpVWFLdHBhamt4eFY5aHoy?=
- =?utf-8?B?TlozN2Z3ekwvZVVoQnFFYldrWVc2bUxkUDRGT2xiZFJGVDRJanJWNzUrSStX?=
- =?utf-8?B?clJkclJFbDUvSlpsZ3FhNzl0S3JRUVpMaDFUQnJ2VWV3dVJ4eUp4REw3MG4x?=
- =?utf-8?B?WnlxMXBSd2JLT3pKY0EvY2FsTG9wN25HeWF2ZSt6RWkyYzB1YnppeHNIblhY?=
- =?utf-8?B?RkhJRmFHeTFramp6NjQvM2JDaTFjVTNJWVB4WnR3UkxpL1lKcmJVTldUQ0pT?=
- =?utf-8?B?VW5oZjhpc0hPUkZHQUdUUkVwWVpMZld3Y2M0N3AwQnNhbWVoWEZ1VDVlUHkz?=
- =?utf-8?B?T0F1MTBpOHFZUDQwUGhPMXk5VjVrSlpOSXo3ajNENXR6SVJyMEZTQWo3SXRk?=
- =?utf-8?B?Qkd3UkdtVFpuOFltc29NSG1wRGxsZlYrbjdZUUVXV2k4RUpXMkw0d0RRRGQ2?=
- =?utf-8?B?bHN2SzREQ2JZa01zOWxTcURCam1lNXh2RitLYklrTlV4eng0bm5xaFpZcWlP?=
- =?utf-8?B?RUJvbUVsaFAwdEhYV1pQSlhxZDJTUXVFcWFsem4vQjZocE9naXp2S3k1VWdY?=
- =?utf-8?B?Rm1nVFl2ZEtTSk1qL2tlT1pkTFVXSnlGc1FjQWFtamdoaFl3dW5uM0hkNGoz?=
- =?utf-8?B?dndGTEhuUVZvNFhCM1k2aWdSbUxqN1IyOHJHak10SGQxL0s4Ykd3KzkzV05k?=
- =?utf-8?B?K3V5ZmtnL083T1Y1UW5INS9qNWJNZmxLUE4xN1RaLytrV2xyU1AxTXJGeE5C?=
- =?utf-8?B?ZWZ0dTJTS0dTYlp6aVgzU1YwWGN6aWNSYXQ2aHpFemhqbkFaNURkc0hlVzhW?=
- =?utf-8?B?VXhVM21WdVlzNEtBaElnRVNDNWFNTFM5U2R4RUVjUjVqWiszbDlpVzBZb0hV?=
- =?utf-8?B?cWdSOEtuOEZUTDRYcUFrK0Y2ZFgxS0tmemFjMDVzbnRHc0c0SjJaSHBpMzBC?=
- =?utf-8?B?K2VoT2U2Skd3M3FReXFGdEZrdDRhS2h1ekVFQUtxK09MSW5ZbmxlWnk5amlp?=
- =?utf-8?B?UkhvYzdUbEhVclNXV3lCT1M0RC9GeUR0cFBqYVJSM1NEbVBuMnA5L0dXN3B4?=
- =?utf-8?Q?of8t5gHTyvtJust43Ll/u4HxM?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 813dc591-be30-4997-c8d7-08dd83e1bb30
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 10:12:49.1180
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IimcvzGr/gKzpI7QAP49ZSE/Ue2uBhw6Rz7DZpf2IretON6CqxTqT5mv+oJziE/ZKABhuzLcT0qkfY+iEmTCug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6946
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux kernel support
+Message-Id: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
+Date: Fri, 25 Apr 2025 06:12:46 -0400
+Cc: Ross Philipson <ross.philipson@oracle.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev,
+ dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com,
+ Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com
+To: Dave Hansen <dave.hansen@intel.com>
+X-Mailer: iPad Mail (22E252)
 
-Hi Kan,
+=EF=BB=BFOn Apr 24, 2025, at 2:45=E2=80=AFPM, Dave Hansen <dave.hansen@intel=
+.com> wrote:
+> =EF=BB=BFOn 4/21/25 09:26, Ross Philipson wrote:
+>> This patchset provides detailed documentation of DRTM, the approach used f=
+or
+>> adding the capbility, and relevant API/ABI documentation. In addition to t=
+he
+>> documentation the patch set introduces Intel TXT support as the first pla=
+tform
+>> for Linux Secure Launch.
+>=20
+> So, I know some of the story here thanks to Andy Cooper. But the
+> elephant in the room is:
+>=20
+>> INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT)
+>> M:      Ning Sun <ning.sun@intel.com>
+>> L:      tboot-devel@lists.sourceforge.net
+>> S:      Supported
+>> W:      http://tboot.sourceforge.net
+>> T:      hg http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot
+>> F:      Documentation/arch/x86/intel_txt.rst
+>> F:      arch/x86/kernel/tboot.c
+>> F:      include/linux/tboot.h
+>=20
+> Linux already supports TXT. Why do we need TrenchBoot?
 
->>> Perf doesn't work at perf stat for hardware events:
->>>
->>>  $perf stat -- sleep 1
->>>  Performance counter stats for 'sleep 1':
->>>              16.44 msec task-clock                       #    0.016 CPUs utilized
->>>                  2      context-switches                 #  121.691 /sec
->>>                  0      cpu-migrations                   #    0.000 /sec
->>>                 54      page-faults                      #    3.286 K/sec
->>>    <not supported>	cycles
->>>    <not supported>	instructions
->>>    <not supported>	branches
->>>    <not supported>	branch-misses
->>
->> Wondering if it is worth to add this in perf test. Something like
->> below?
->>
->> --- a/tools/perf/tests/shell/stat.sh
->> +++ b/tools/perf/tests/shell/stat.sh
->> @@ -16,6 +16,24 @@ test_default_stat() {
->>    echo "Basic stat command test [Success]"
->>  }
->>  
->> +test_stat_count() {
->> +  echo "stat count test"
->> +
->> +  if ! perf list | grep -q "cpu-cycles OR cycles"
->> +  then
->> +    echo "stat count test [Skipped cpu-cycles event missing]"
->> +    return
->> +  fi
->> +
->> +  if perf stat -e cycles true 2>&1 | grep -E -q "<not supported>"
->> +  then
->> +    echo "stat count test [Failed]"
->> +    err=1
->> +    return
->> +  fi
->> +  echo "stat count test [Success]"
->> +}
->> +
->>  test_stat_record_report() {
->>    echo "stat record and report test"
->>    if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
->> @@ -201,6 +219,7 @@ test_hybrid() {
->>  }
->>  
->>  test_default_stat
->> +test_stat_count
-> 
-> I think the perf stat default should always be supported, not just cycles.
-> Maybe we should add the check in test_default_stat?
+One reason is to generalize DRTM support to other platforms.
 
-Do you mean:
+RFC: Trenchboot Secure Launch DRTM for AMD SKINIT=20
+https://lore.kernel.org/lkml/cover.1734008878.git.sergii.dmytruk@3mdeb.com/
 
-  if perf stat true 2>&1 | grep -E -q "<not supported>"
-    err=1
+OpenXT.org measured launch usage of tboot originated in 2012, when I was the=
+ program manager for XenClient joint development [1][2] by Intel and Citrix.=
+ TrenchBoot was proposed in 2018 at Platform Security Summit and evolved [3]=
+ based on LKML and conference feedback. The tboot community was introduced [=
+4] to TrenchBoot in 2022.
 
-Isn't this ambiguous? Also, this fails on machines where HW pmu
-is not supported. For ex, on my qemu guest with `-cpu pmu=off`:
 
-  $ ./perf list | grep "cpu-cycles OR cycles"
-  <empty output>
+> I think I know the answer, but it also needs to be a part of the
+> documentation, changelogs and cover letter.
+>=20
+> Also, honestly, what do you think we should do with the Linux tboot
+> code? Is everyone going to be moving over to Trenchboot
 
-  $ ./perf stat true
-   Performance counter stats for 'true':
-                0.42 msec task-clock:u                     #    0.470 CPUs utilized
-                   0      context-switches:u               #    0.000 /sec
-                   0      cpu-migrations:u                 #    0.000 /sec
-                  48      page-faults:u                    #  113.874 K/sec
-     <not supported>      cycles:u
+OpenXT will migrate development of measured launch from tboot to TrenchBoot S=
+ecure Launch, after upstream Linux and Xen have support for both Intel and A=
+MD DRTM. Previously-deployed Intel devices using tboot, derived from OpenXT,=
+ will need support until users upgrade their hardware. Qubes is integrating [=
+5] TrenchBoot into AEM (Anti Evil Maid). Since Oracle has spent several year=
+s working on this TrenchBoot series, they might use it, hopefully they can c=
+omment.=20
 
-Thanks,
-Ravi
+
+> so that Linux support for TXT/tboot can just go away?
+
+[opinion]
+Which one will prevail? That may have less to do with tboot-trenchboot diffe=
+rences and more to do with AMD-Intel product marketing and OEM segmentation o=
+f DRTM features, some certified by Microsoft as "Secured Core" clients with S=
+MM attestation (Intel PPAM and AMD SMM Supervisor).
+
+Intel requires client vPro devices for TXT, but has slowly expanded the list=
+ of eligible SKUs via "vPro Essentials" segmentation. AMD SKINIT is present o=
+n most processors, but DRTM currently requires a dTPM instead of the "mobile=
+" fTPM implementation in AMD PSP firmware, with dTPMs mostly present in AMD O=
+EM "PRO" or Embedded SKUs.
+
+If AMD included the full TPM 2.0 reference code in their PSP fTPM,  or if MS=
+ Pluton implemented a full TPM 2.0 that was compatible with DRTM, then the n=
+umber of AMD DRTM-capable devices would be much higher than the number of In=
+tel vPro or AMD PRO devices, expanding the market for DRTM-capable software l=
+ike Linux (trenchboot) Secure Launch and Windows SystemGuard. That would inc=
+rease client adoption of trenchboot, as the only option for Linux DRTM on AM=
+D.
+
+On servers, both AMD and Intel hardware support DRTM with dTPM and other roo=
+ts of trust, but there are other launch considerations, including BMCs, SPDM=
+ device attestation & vendor hypervisors.
+[/opinion]
+
+In a perfect world, Intel-signed ACM (used in TXT DRTM) binary blobs would b=
+e accompanied by public read-only source code, with reproducible builds that=
+ generate those ACM blobs. In that perfect world, Intel ACM and tboot develo=
+pers would review the TrenchBoot Linux series, recommend improvements and gu=
+ide customers on migration from tboot to upstream-supported Linux DRTM. Neit=
+her has yet happened. Both would be welcome.
+
+Rich
+
+
+[1] https://www.intel.com/content/dam/www/public/us/en/documents/success-sto=
+ries/3rd-gen-core-vpro-citrix-vendor-spotlight.pdf
+
+[2] http://media12.connectedsocialmedia.com/intel/11/9510/Air_Force_Research=
+_Laboratory_Security_Collaboration_Government.pdf
+
+[3] https://trenchboot.org/events/
+
+[4] https://sourceforge.net/p/tboot/mailman/message/37631560/
+
+[5] https://blog.3mdeb.com/2023/2023-01-31-trenchboot-aem-for-qubesos/
+
