@@ -1,91 +1,87 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E0023535C;
-	Fri, 25 Apr 2025 08:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577031B4233
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569752; cv=none; b=HoetbsDE7tACyNTzON2onvV46XfMD004GKRQMzS5l3PHgtkgE1DNO3iw5S+TjaplgI15watksjiIkyEAgeB+oflU+J/U64q0Ikty1ZmCRBmEkFfgEuFV/DcrJ2iUhSzPkTfoWIDrtkjrizucqSXNUK1hfpzFjZpQs+6GiwVTYYQ=
+	t=1745569879; cv=none; b=tnDVOdmJYhHayO34rLXFmVkQMQdL/RrVWOPdfwupGzoLyqwW3mcBxuK35NzLrnBog4GQew9gamu9gi92Bxj/5rJxMSVBqEmIwyMBZ/3BMO4Mc9Pk8T2+3kCHR1RrURRNOKZ2JylWzyyqn0JhITdSgiTTETHpy2TIB3inEQ8Ttlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569752; c=relaxed/simple;
-	bh=2OZ3oMp4cEq/mYK1OeziCpM9vL9iHbwI9O5aD4tiH8k=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=lTN1euRbbVGst7rfMN6gbBdr7yiBfrg9O/RzexDcAQnYWNi4akeiTv7OFdTqU06N+S+xB7vGE1mbU+PmZwZh0qwBKRK/YtXpCsuf6HXk7o8IRnwAOiotm8mTJrVQhf7bbx7Pj/aGPttg3fBRolcr1bhWok2CRgccGWoyca4/mxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=huTZpKpX; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745569879; c=relaxed/simple;
+	bh=zf46uS1WEGGWzqLPEonBFYo5ypXpA+q9qubZ5avdeVg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bLel+7nDjU9Sawx0f8SYuNmbZpu19E40AaxiIIUGSVWVKYoXMWFUfV/Mwf6NAnsrcOJ4eA0Qei36PJnm1fN8qhb71aOPXe7nPxedafKQyUBuJ1NLkEyB1Vuu/QFe/YyW3AAaUyBilSlujbvufrMXucUG7Udc7dnqdFWc82/ImKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EPY8U5tE; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="huTZpKpX"
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8A911982;
-	Fri, 25 Apr 2025 10:29:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745569745;
-	bh=2OZ3oMp4cEq/mYK1OeziCpM9vL9iHbwI9O5aD4tiH8k=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=huTZpKpXmk3Skvu6kqgIALyLUAZ+xfR2+qsxVi3IJ63hdR6nn1nlueY1pz/UR+tOr
-	 O1FQr56eXDoZDVYJJja5+7Up9WvFoo0uMweyyG1UhrjBmSS2Qbr2/0eKxxaG/zHJdx
-	 peKF8LHRqtxM5LPaFuKdm/PqSA3iSryqmObM1ocs=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EPY8U5tE"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39129fc51f8so1525371f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745569875; x=1746174675; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zf46uS1WEGGWzqLPEonBFYo5ypXpA+q9qubZ5avdeVg=;
+        b=EPY8U5tEQtrp3EcSGeKWD4xmj8krUF6GQO42fEwa+KPHRL1o8oOH7NdMm/wh/RIw5K
+         Md1ZqUogx6YubRVE5BroxhNJaRPnBEk/GzvPBfq7L+oFxqcR1pOEWpZP5mohoXTpx23Q
+         pnKaPccY+iub7SI+BG+7RiQsaKIi5nIsNUZyQ/EpdS4fzQqSKqcF5b3PLnd5FmX9F4+u
+         P/gxIJ9w2Xf5BhhcmGwkd8T9nC6KZebCh34Y0di6nr1J0Gl7TuohcCLegln5r72iwcMU
+         l5+netCqGLMMOBcEUJ9gAAqaVnbjVmATQYBNFtnDmT4mqL7KPk3ljhHffZj1Rj1IcMv4
+         fj7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745569875; x=1746174675;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zf46uS1WEGGWzqLPEonBFYo5ypXpA+q9qubZ5avdeVg=;
+        b=s08xKra/gc7VxqSROlgfLDvZlE+mTmT6rFh+v2wUkdJo+fQhIfsMCPE916wCxxorjD
+         USDop7Z0qS8AOm9tDTDreO9huvv2r9Gi+9M9RIvh6vHhNF7OgOCDBkseVZrA8lM4Lu7b
+         AAt7jiI6Vc3RcyWuBJiOUPK9N1N+DpvkENOPpw/U6dX4baqSCYETwzD3yubZ0iYlu9Se
+         tc7SZj49vLLUzhzevWS4GH5f66wQQeYZrMeVPizGKAGSyAqbIKW/HeYGXNxkJQiEU3cm
+         D2/UX6Ifmylnr7A8sJSg1ydlSkvwD4ipYW0SMYtDpT0goXUAovOYXjpXIBTJAB0kWLDf
+         o7BA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVJrnKW4zyaOzgZ3sefVYWDNQ+pos/k5REWuhCKNDwoA+uuNvpgYAx3zfI88l8FJ38O4ND7H4Gk4v1z3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFMEqK13ehTl5sBBosYXMX++4z8t41XiSlQgvFAIIgIscJDMrz
+	JGffBgYLl8etYQ2Ez5BvzykW6Sgmh7rMZdOxSeAeDQjwut71pa8WiquLL29OaOA=
+X-Gm-Gg: ASbGncsNatOB5sKFY0k/UIqKqEgKpAMy0ws68X1eu6olRBMTctkj4L6FMB/6SC5bWj1
+	mOCQo7uDOtIR6cybAtMSh+y+DizmxzMi9x2pU1z40S12FVxakcIT0FirmaI78JsVuz9CQa73W10
+	D/FfFXibyYx7OE5ZRgBJlCCoL97ROkHBxomfFodsGI9IsZJFlbFGjJn3FZ8Q4Accwop6cEOMrqW
+	4eusaGbEQ7+sE3eTr8QurSg6bw9Li9tozdcOL8HVlL6TVsvOWS07W7kaNIp5ujSQN7CJEsio0eE
+	jFvBXoHeCCWJim3c81Mkh+3l+ZiSu/cBpTo8K/d9cXyp1i/dp8n/XLlTiUfswQvB
+X-Google-Smtp-Source: AGHT+IEGdodZj4yj6zqoEzlVTRVZPOKQ82CqHa0k8vGppZ4HJ5qkzSOxRm+naS8oNRD4cB6uvhxdGA==
+X-Received: by 2002:a05:6000:1a89:b0:391:43cb:43e3 with SMTP id ffacd0b85a97d-3a074f39839mr1164197f8f.46.1745569875556;
+        Fri, 25 Apr 2025 01:31:15 -0700 (PDT)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f89b2sm17104625e9.8.2025.04.25.01.31.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 01:31:15 -0700 (PDT)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: marco.crivellari@suse.com
+Cc: anna-maria@linutronix.de,
+	chenhuacai@kernel.org,
+	frederic@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	macro@orcam.me.uk,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	tsbogend@alpha.franken.de
+Subject: Re: [PATCH v7 1/2] MIPS: Fix idle VS timer enqueue
+Date: Fri, 25 Apr 2025 10:30:43 +0200
+Message-ID: <20250425083043.16671-1-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250403161143.361461-2-marco.crivellari@suse.com>
+References: <20250403161143.361461-2-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aAtAtp2epJCs0RaN@valkosipuli.retiisi.eu>
-References: <20250422122052.12601-1-kieran.bingham@ideasonboard.com> <aAtAtp2epJCs0RaN@valkosipuli.retiisi.eu>
-Subject: Re: [PATCH] media: imx335: Use correct register width for HNUM
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Umang Jain <umang.jain@ideasonboard.com>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Date: Fri, 25 Apr 2025 09:29:05 +0100
-Message-ID: <174556974502.1586992.17161446827676482147@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
 
-Quoting Sakari Ailus (2025-04-25 08:58:46)
-> Hi Kieran,
->=20
-> On Tue, Apr 22, 2025 at 01:20:52PM +0100, Kieran Bingham wrote:
-> > From: Umang Jain <umang.jain@ideasonboard.com>
-> >=20
-> > CCI_REG_HNUM should be using CCI_REG16_LE() instead of CCI_REG8()
-> > as HNUM spans from 0x302e[0:7] to 0x302f[0:3].
-> >=20
-> > Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-> > Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
->=20
-> Does this need Fixes:/Cc: stable tags?
-
-Aha, yes. I think we could/should add:
-
-Fixes: 8f0926dba799 ("media: imx335: Use V4L2 CCI for accessing sensor regi=
-sters")
-
-which is when the conversion happened.
+Gentle Ping.
 
 Thanks.
-
-> > ---
-> >  drivers/media/i2c/imx335.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-> > index db424b178e98..0418875e996c 100644
-> > --- a/drivers/media/i2c/imx335.c
-> > +++ b/drivers/media/i2c/imx335.c
-> > @@ -31,7 +31,7 @@
-> >  #define IMX335_REG_CPWAIT_TIME               CCI_REG8(0x300d)
-> >  #define IMX335_REG_WINMODE           CCI_REG8(0x3018)
-> >  #define IMX335_REG_HTRIMMING_START   CCI_REG16_LE(0x302c)
-> > -#define IMX335_REG_HNUM                      CCI_REG8(0x302e)
-> > +#define IMX335_REG_HNUM                      CCI_REG16_LE(0x302e)
-> > =20
-> >  /* Lines per frame */
-> >  #define IMX335_REG_VMAX                      CCI_REG24_LE(0x3030)
->=20
-> --=20
-> Regards,
->=20
-> Sakari Ailus
