@@ -1,56 +1,46 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E564F4C7C;
-	Fri, 25 Apr 2025 02:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714927483;
+	Fri, 25 Apr 2025 02:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745546516; cv=none; b=IN74NdB6qnN6Ys+7QtXL2DHAmbdEDjFQOSOy+EJNGB3T1tTnKl3r54S10/lZE4IZrhVZ9kowZONvLomzKoLTkBGREeyaVD35xqU8363gbKEADns/TufiY8PcYgQ5+5GhKdQhbEiABI16VZy+VwicXZ0JQEVNbZIulZ4udPl1I8Q=
+	t=1745546643; cv=none; b=PZFyygA1pNzm0kdv6y8uy6ehyjF7sxd+lmhMzr5imnl0epli06h+sqh0ujUIzO+LiZkI+G6kg2OQj46C8inGyuFYePGCDHrKrDXSvz26W99URd87J9rCxwokedNYvvfoiU4Fml3qcQP6a+Q1XZjnuumUyrMQG09iUT+8TKbvZuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745546516; c=relaxed/simple;
-	bh=pme5iQz5eKFu7fHxQXgGPqQvVq1us5JDlFMnADx3js0=;
+	s=arc-20240116; t=1745546643; c=relaxed/simple;
+	bh=JJ8rxowVDQuzei/jFejrAlW4KLdrj6AXuBhBx69i6hE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WQjlY/aGcNZoWCP6vduXa7u1uyMvMDVXm5YW2vyTkpNnfk9G+UuUXaIXeG+s8bp+0XhzD7dXksmo0BpLFgBFVPgrJy5/486dVAkdgkene9wHNX2B3GhyRyWt8NJy29Ud/bGY7jGYbT4bmT92n7zua8Wp+HwjbI2QD7yDNZwwKbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mrpwuK5B; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZc+cEfSocTl0s+GmUQ2x9cO2Z8fiFfy2qOv5IihJpQa/FRR3P5k48+46U+EYFOU5ZWaGZigxomOfS8Ve1VPyAp2R75yyxZ4k6YY/s+Uqy7sujtRBACKO/6/9bZPhHrFsjdL4UiCVIFI/1tEV6rPAPyK4dhS/7GTpL4gTvIhoqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=ozwY4w83; arc=none smtp.client-ip=1.95.21.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mrpwuK5B"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ICF52ZSrljFNaTIWgavSI5WbnW464jwCjST74huipR8=; b=mrpwuK5B/JJe+wE22m8iiXPB5s
-	KVemoUn5f883G+1qcgAZoJTkUhHQSmUNJP9siqokmXeAGKiU0+o2W3+efjBkzS/bKemfKa0rg7lIj
-	tciOhSvPBB1NSm4/KOaLSPYukDt3NswXnwJvpQlk3ditdHmGBPSjBlhvJS3Okb5HvaA8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u88Ne-00AWyd-Cl; Fri, 25 Apr 2025 04:01:30 +0200
-Date: Fri, 25 Apr 2025 04:01:30 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-	Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, clabbe.montjoie@gmail.com
-Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
- board
-Message-ID: <3681181a-0fbb-4979-9a7e-b8fe5c1b7c3c@lunn.ch>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
- <4ba3e7b8-e680-40fa-b159-5146a16a9415@lunn.ch>
- <20250424150037.0f09a867@donnerap.manchester.arm.com>
- <4643958.LvFx2qVVIh@jernej-laptop>
- <20250424235658.0c662e67@minigeek.lan>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="ozwY4w83"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=A4Rq8oM0lfxwGxHCxGHz5nvQEWnfy10Mn/MUqJBAsDI=;
+	b=ozwY4w83ev7WrpOBi/KKnBVlxt0eSYZGRLhNKOfKLpFjx4khFNj3Ruhu9OG77i
+	MtkWK2jRqHjfGE8pTmrBJo75KbcWLjzfQ7SL6Y2FKg/AOue7urCWkDHFsmtAAlMW
+	JebPiLShAF99fK3llREW7xanCG6IQYN1iS2j00WNFAb5Y=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgCHhtVe7QpoHU_aAw--.28202S3;
+	Fri, 25 Apr 2025 10:03:12 +0800 (CST)
+Date: Fri, 25 Apr 2025 10:03:10 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux@ew.tq-group.com
+Subject: Re: [PATCH 1/2] dt-bindings: arm: add MBa91xxCA Mainboard for
+ TQMa93xxCA/LA SOM
+Message-ID: <aArtXhus7Q+Qa+Wb@dragon>
+References: <20250415125947.429121-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,32 +49,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424235658.0c662e67@minigeek.lan>
+In-Reply-To: <20250415125947.429121-1-alexander.stein@ew.tq-group.com>
+X-CM-TRANSID:Mc8vCgCHhtVe7QpoHU_aAw--.28202S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU3YFADUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEgQ6ZWgKtVvRfgAAsq
 
-> Ah, right, I dimly remembered there was some hardware setting, but your
-> mentioning of those strap resistors now tickled my memory!
+On Tue, Apr 15, 2025 at 02:59:44PM +0200, Alexander Stein wrote:
+> From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
 > 
-> So according to the Radxa board schematic, RGMII0-RXD0/RXDLY is pulled
-> up to VCCIO via 4.7K, while RGMII0-RXD1/TXDLY is pulled to GND (also via
-> 4K7). According to the Motorcom YT8531 datasheet this means that RX
-> delay is enabled, but TX delay is not.
-> The Avaota board uses the same setup, albeit with an RTL8211F-CG PHY,
-> but its datasheet confirms it uses the same logic.
+> Add MBa91xxCA starterkit base board for TQMa93xxCA/LA SOM for
+> parallel display evaluation.
 > 
-> So does this mean we should say rgmii-rxid, so that the MAC adds the TX
-> delay? Does the stmmac driver actually support this? I couldn't find
-> this part by quickly checking the code.
+> Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-No. It is what the PCB provides which matters. A very small number of
-PCB have extra long clock lines to add the 2ns delay. Those boards
-should use 'rgmii'. All other boards should use rgmii-id, meaning the
-delays need to be provided somewhere else. Typically it is the PHY
-which adds the delays.
+Applied both, thanks!
 
-The strapping should not matter, the PHY driver will override that. So
-'rgmii-id' should result in the PHY doing the basis 2ns in both
-directions. The MAC DT properties then add additional delays, which i
-consider fine tuning. Most systems don't actually need fine tuning,
-but the YT8531 is funky, it often does need it for some reason.
-
-	Andrew
