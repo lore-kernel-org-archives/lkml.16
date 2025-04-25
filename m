@@ -1,131 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4471747;
-	Fri, 25 Apr 2025 13:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D83642069;
+	Fri, 25 Apr 2025 13:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745589072; cv=none; b=QZf7ZHWSrjWcNcYSevLMWVqYrUR5VrhKvh6K4uHnNbJsWhTF9iFZjQTvcuWVyf1btXGwMH5Anc2HoovfTIrr9iD9gLcfT/33NCTItSEKdY8vWc4NA0vfjpyB5fT+00GYRraifdc0+aYPWttIR3i7Iz16Gg4ZrMZHPRBiGoLMZLg=
+	t=1745589140; cv=none; b=YhJ0jCTCvHl3Efiaf7U1YAnxfnOCrQAE2dax9JzbmrVIDM0JMtz4ZbnM644/tgRNAW7QX/iN5NieM0OeHW634FkXKlhwPygeuJ6apGfikjk9HKwc1GfuKY5h8LrWb4IaEUO6w18w07JhCYnqo2wAr72x4MN3sn5uzXpaRJDRHcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745589072; c=relaxed/simple;
-	bh=OhZMVslTMFHk1PYXUziNNqXZhgpB08GxxfE5qfU9SMk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Y3uBEwUTz1y/AdR/MWlV+Z2dbkK/10ijvrcSykTek4CawjFz1m1L2ctc99MM2TdlIuQrtTYKJcz96JOf3/Az5Gx1iJHdSI8BB+6GdhcD0BvOo/TpVuKSB9dLWh/nOfFKYYkhAfocgk/esZxa+bBmEa2dHLCt6D2/yDXPthqCsm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAVPoJQL; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745589140; c=relaxed/simple;
+	bh=RtxtbztRYYXsq67qqqMHH+EvvE1eSf561O8SdGCaius=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WLDFYcYF+09B/EPQqPJU0LliM1Tc0SIjFWe1evnYha4Ykx3ipvBNKewAHxTnIMM/wuFoyznsZ3qX/aGzJ3nYtaQGBH4TceyLWelgdRcSQlGOZIzMGpGMXDHVWbmw5zlVseKdkatIM6FWyKui/Hu/PDKJmne48xRDJnuQ6zw7+OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=js+k4tjw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAVPoJQL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745589071; x=1777125071;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=OhZMVslTMFHk1PYXUziNNqXZhgpB08GxxfE5qfU9SMk=;
-  b=ZAVPoJQLRHhmJ2advrNRsFva3K7C9aGDvJBcxDwNlg+1oy7u8BxdV3iV
-   ybh5VxV0CLWl9/xtMTZtIqzd0ZSiFwtWOoVgDCyq5xceJaIg3YBY5gGBR
-   lQMvOWAL7iBjXty/8NYXaERN4JP/YuHePGMj9TNoV2U0KKJDa2saMP6FW
-   do4WbVV1WKdF3okTErJndahHzNSeUV0Zrze7hH/huN2MUsYLm+BxzDqyJ
-   xAXsFjMcsWfqW7Fg3MqjoD01ehx+7Y+W3czuE8Pivq2J0dcaygtF+LB5t
-   OnCBELDIre0ITrFmVAK197LB1DJudSVWlmiUKi+pPJOlU17YdL0kcs1Xc
-   w==;
-X-CSE-ConnectionGUID: 77xyvPGySFi2WBKZPmBQ9w==
-X-CSE-MsgGUID: aj6lyNgmT9ubvaAOL7uahA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="50917497"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="50917497"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:51:10 -0700
-X-CSE-ConnectionGUID: bD/JDR3LQ9yWdeM3F6uVBA==
-X-CSE-MsgGUID: VK6mzkL+SLKFFR+xFJka7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="137722441"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:51:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, 
- Antheas Kapenekakis <lkml@antheas.dev>
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
- Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
- Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
- Derek J Clark <derekjohn.clark@gmail.com>, 
- Kevin Greenberg <kdgreenberg234@protonmail.com>, 
- Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
- Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org, 
- sre@kernel.org, linux@weissschuh.net, hdegoede@redhat.com, 
- mario.limonciello@amd.com
-In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
-References: <20250425111821.88746-1-lkml@antheas.dev>
-Subject: Re: [PATCH v10 00/16] hwmon: (oxpsensors) Add devices, features,
- fix ABI and move to platform/x86
-Message-Id: <174558905993.2965.3080490340204327476.b4-ty@linux.intel.com>
-Date: Fri, 25 Apr 2025 16:50:59 +0300
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="js+k4tjw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B79C4CEE4;
+	Fri, 25 Apr 2025 13:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745589139;
+	bh=RtxtbztRYYXsq67qqqMHH+EvvE1eSf561O8SdGCaius=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=js+k4tjwLNlucIW7dK6hTOaiyPrJreERiOWKdVyGp0hCrm71Q3cmTy2MLnsrib4QX
+	 Xb7TFw97xjtY3WhnMKPgx128HXUV4p/LoVIKcl9bxyln8bnQyS5ufMwP4VR0zhYLF5
+	 OOLZcBnurByDmYneY7UAauNBhW5N/KDRu9nwkP5U=
+Date: Fri, 25 Apr 2025 15:52:16 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uaccess: rust: add strncpy_from_user
+Message-ID: <2025042509-french-washbowl-5cde@gregkh>
+References: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
+ <680a5f5d.050a0220.2035d2.545b@mx.google.com>
+ <aAtZQkre4KRU2kr1@google.com>
+ <aAuQjSzatuNoDDXL@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAuQjSzatuNoDDXL@Mac.home>
 
-On Fri, 25 Apr 2025 13:18:05 +0200, Antheas Kapenekakis wrote:
-
-> This four part series updates the oxpsensors module to bring it in line
-> with its Windows OneXPlayer counterpart. First, it adds support for all
-> 2024, 2025 OneXPlayer handhelds and their special variants. Then, it moves
-> the module to platform/x86 to allow for including more EC features.
+On Fri, Apr 25, 2025 at 06:39:25AM -0700, Boqun Feng wrote:
+> On Fri, Apr 25, 2025 at 09:43:30AM +0000, Alice Ryhl wrote:
+> > On Thu, Apr 24, 2025 at 08:57:13AM -0700, Boqun Feng wrote:
+> > > On Thu, Apr 24, 2025 at 03:17:48PM +0000, Alice Ryhl wrote:
+> > > > This is needed for ioctls that operate on a user-provided string.
+> > > > 
+> > > > It is somewhat unfortunate that strncpy_from_user does not nul-terminate
+> > > > the string when the end of `buf` is reached. This implies that we can't
+> > > > return a &CStr from the function, since the buffer may not always be
+> > > > nul-terminated.
+> > > > 
+> > > > That said, we could add more convenient helpers on top that add a NUL
+> > > > byte in that case.
+> > > > 
+> > > > This method isn't defined on UserSliceReader because it complicates the
+> > > > semantics. The UserSliceReader type also has its own maximum length, so
+> > > > we would have to limit the read by that length too.
+> > > > 
+> > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > > ---
+> > > >  rust/kernel/uaccess.rs | 27 +++++++++++++++++++++++++++
+> > > >  1 file changed, 27 insertions(+)
+> > > > 
+> > > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > > > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..1bd82045e81ea887008e30241bd6de27f096b639 100644
+> > > > --- a/rust/kernel/uaccess.rs
+> > > > +++ b/rust/kernel/uaccess.rs
+> > > > @@ -369,3 +369,30 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+> > > >          Ok(())
+> > > >      }
+> > > >  }
+> > > > +
+> > > > +/// Reads a nul-terminated string into `buf` and returns the length.
+> > > > +///
+> > > > +/// Fails with [`EFAULT`] if the read happens on a bad address. If the end of `buf` is reached,
+> > > > +/// then the buffer will not be nul-terminated.
+> > > > +#[inline]
+> > > > +pub fn strncpy_from_user(ptr: UserPtr, buf: &mut [u8]) -> Result<usize> {
+> > > 
+> > > Sorry maybe there is an email I'm missing, but could you provide more
+> > > context of the usage?
+> > > 
+> > > First the function name is a bit weird, because the 'n' in "strncpy"
+> > > means the parameters should have an 'n' (i.e. length) in it, but there
+> > > is none in the Rust version.
+> > 
+> > There is a length! It's the length of `buf`. It's pretty normal that C
+> > methods with a pointer and length become a Rust method with a slice.
+> > 
 > 
-> Then, it adds the new charge limiting and bypass features that were first
-> introduced in the X1 and retrofit to older OneXFly variants and for
-> controlling the turbo led found in the X1 models. For Bypass, it adds a new
-> charge_behaviour variant called inhibit-charge-s0.
+> That's exactly the point, no need to reuse a name from C if we have
+> something better.
+
+Up to point, us kernel developers are used to the C names, so keep it
+close if at all possible, ESPECIALLY for just links/wrappers of C
+functions like this one is.
+
+> > The distinction between strcpy and strncpy in my eyes is that strcpy
+> > reads until you find a NUL byte, whereas strncpy reads until you find a
+> > NUL byte *or* you read a user-specified number of bytes. This method is
+> > in the latter category.
+> > 
 > 
-> [...]
+> Then copy_from_user_until_nul()? Or cstrcpy_from_user()? We should have
+> a bit consistent naming on Rust side regardless how C names things IMO.
 
+You need to specify a max length, otherwise that's just going to confuse
+us all.  strncpy_from_user() is the function we are used to using for
+copying up to N number of bytes from userspace where a 0 termination
+stops the copy if N isn't reached.  So I vote highly for the original
+name here please.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+thanks,
 
-The list of commits applied:
-[01/16] hwmon: (oxp-sensors) Distinguish the X1 variants
-        commit: 217d55ca13d22ba6af7e96ac2d28c2ef6927fc54
-[02/16] hwmon: (oxp-sensors) Add all OneXFly variants
-        commit: 9f4c9ec158fa8fa4afcdbcbff9c9a9a900dc9c2f
-[03/16] platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
-        commit: fe812896e55d0d8e2a45bcf994cadc80fe912fb5
-[04/16] ABI: testing: sysfs-class-oxp: add missing documentation
-        commit: 05f8e5928bfd37416380e8e0994c5f4fd1b615c8
-[05/16] ABI: testing: sysfs-class-oxp: add tt_led attribute documentation
-        commit: 7ba14e4eec62985ae2021ef7e06d537b8e4c8712
-[06/16] platform/x86: oxpec: Rename ec group to tt_toggle
-        commit: 8e1963b9d84a3db10cdd2a807dc3fe401837d228
-[07/16] platform/x86: oxpec: Add turbo led support to X1 devices
-        commit: 5485a80150ff03b6784bfbb194858244ae5f991d
-[08/16] platform/x86: oxpec: Move pwm_enable read to its own function
-        commit: aa682cff3097dfa2370298ecebd33ff1fb64bab8
-[09/16] platform/x86: oxpec: Move pwm value read/write to separate functions
-        commit: 0ba0d67b0608c15b407491712af1c2a3d5140492
-[10/16] platform/x86: oxpec: Move fan speed read to separate function
-        commit: 653feeccdd2eb1dfe44923f4c0bbf50a948c7a07
-[11/16] platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
-        commit: 7dea472a8b2814013213f4fed290f5f86c6cc7cb
-[12/16] platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
-        commit: bb9854e9819ae5c29602d4985313cde2d07f6847
-[13/16] power: supply: add inhibit-charge-awake to charge_behaviour
-        commit: 468182a839f88fecab915792cbb98ad7328be266
-[14/16] platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
-        commit: 202593d1e86bf3ccb1c1091713760b6f44641718
-[15/16] platform/x86: oxpec: Rename rval to ret in tt_toggle
-        commit: 57c775a990a742f7cc2650a5cbfc103d6b4a015d
-[16/16] platform/x86: oxpec: Convert defines to using tabs
-        commit: f5612600314bcce86934318601501e2d8301176d
-
---
- i.
-
+greg k-h
