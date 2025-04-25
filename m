@@ -1,103 +1,155 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831B41B6D11;
-	Fri, 25 Apr 2025 08:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F4B17A2EE;
+	Fri, 25 Apr 2025 08:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569348; cv=none; b=fSTmmxD1lt8LnfbyKknOkHyBjGF7OwplzFsHjc2BToPVvDRHjXE1eRD5ROcQza+DClGcPXzrEVjxka15oO9Vqp6ndhnwCb6YDt7/A/O/ERp0nMFLf29+ARmOMJswWsBMXZeMdZVhXtOnWCIR9xQai7tsMWS8jMIHWem0Q2nHmAs=
+	t=1745569486; cv=none; b=pf4KvANT4fNgMsq1TmEQ/7/BjkmoiroGR55T0lnjZhhDaeMSPOwn9JOSWJNvS0Q9WxgkOZax1uDphtCeKjpBIJzqm8AqF4aiklwimQ8CabiGTOh26vQtbs/fZFtC5gP8eNLd0DGFyh3cKWqiCKGgZtJTmzp+P5sXQIdLiikuVaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569348; c=relaxed/simple;
-	bh=A4pLvUmgwj2WzHJ03YdX6y0M7SDSimc7uWYShQFhbs8=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GEIZF0yA0SbqftdW29qHeYcKVKQbRi1ADp45pIcFAvQw5Qt05tn2unasN2d9xE7PzZ0qDnGAu+7xS2fXsKY9Mk+kE0mRemA6rqY+jsJhsIu/KGwXkEQa07BCNPC0pWv3SBTz4qioPlA6AfiBh35henOfDb8u+c7ZBUgo7nrL8VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P3KGmbEV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0XkvZIKn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745569486; c=relaxed/simple;
+	bh=y3FIw1yf6CxTKgXqqzjUJyHjFCNWKaMz/A+rwrSBnOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OhCTMFZKIlH7GKkZ2v9UTPHp6v5aCuiLK56K7jVyEpFaqDx6jwWi2W5W5340phFHJG/NSuh85kfJPCuzbEKqBhlWEYAYMHUjkBEPHKGsjRMEnyzMRC9lOAQx0TD2FoP75w/6M/IVxbFq3CTzBJoVCrVEzS5KD7f/E0Z7XE9GgIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XjLh26n0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P3KGmbEV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0XkvZIKn"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745569344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SVLvtgy3kbHbIlgt4muvQvDSY3VtgJ61rhMKGo3z+bk=;
-	b=P3KGmbEVCsMFHByliTYfeF7pZ9UgaFbmvYf1DkdwJ/+BRX2yUgvCbJsXqJb+6UrvyVj9S0
-	xYDU+t9oxWCr7y1H1q/tvYUvFB4OB1PxqOW0hO9WeAqV2X6qm3BK9TxSB5RgCiU2solK60
-	3HL2ML5vGPDw4c8guPJ/i5lFMlErktEjPajZeHDZy2sibNhopHjXSAiUwhNSzEiVWvmIXm
-	XMLnfGHo3U3XdE0u+PkqHoZFqXFlOfUPpeCaz66DchCVfGUXncNW0g65EdVoc8zwb1L2FS
-	m6agj/766qVjF5rCJItP8uWKMzfsB04aJiB186j6Lf7CUj6IvQwt71kNJ6BmJQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745569344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SVLvtgy3kbHbIlgt4muvQvDSY3VtgJ61rhMKGo3z+bk=;
-	b=0XkvZIKnykGZg/U4tmfHmIxeb1CdHUFOJHmU4ew7tb2VGVe+JLfMo4S0LU6BoPbBncuEDK
-	jBG1RCN6kisusyAA==
-To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
- andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
- cuiyunhui@bytedance.com, gregkh@linuxfoundation.org,
- heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- jirislaby@kernel.org, jkeeping@inmusicbrands.com,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de,
- paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com,
- sunilvl@ventanamicro.com, tim.kryger@linaro.org
-Subject: Re: [PATCH v4 2/4] serial: 8250: introduce serial8250_discard_data()
-In-Reply-To: <20250425062425.68761-2-cuiyunhui@bytedance.com>
-References: <20250425062425.68761-1-cuiyunhui@bytedance.com>
- <20250425062425.68761-2-cuiyunhui@bytedance.com>
-Date: Fri, 25 Apr 2025 10:28:23 +0206
-Message-ID: <847c38irb4.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XjLh26n0"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P17bIW021884;
+	Fri, 25 Apr 2025 08:24:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3z2u93IMM61dt3LtP8YnjyiJqyMMoKMVOZ4AM0j4dbU=; b=XjLh26n0HV+KnGSN
+	ruz34bjeXpT18T6xOh5Zehv0gtm5WeF869WTfyykPU/CSXnbApozE3zuCdyn9T3P
+	GTQTBodsri3Pc6aLGnP/cvyFw7UKcrdSxIlAb3dvCqrnQmc5IsolKWm3qKJnzX8x
+	QbVOr4zgH2qHuH+tBekXIgRyv3YkZRkNMyXncYcVZUsm7rHosSjhEIp9SNSwqAkC
+	v6a6AkB99L6a/oTgtnWCCf2NWp5L6h4VVa47+oEK+1izt4eo0G/lst2h5rTvLkVa
+	T6dxS0HyL1V6XZMLtc59BeXMHibJ0Zms/7CeeDjIYxgRrR8PFPrclwxutw677ac1
+	i+WTzg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5g8py-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 08:24:32 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53P8OVnk011102
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 08:24:31 GMT
+Received: from [10.239.105.140] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
+ 2025 01:24:28 -0700
+Message-ID: <ea936063-2a24-406d-a7c6-f832a72d5da5@quicinc.com>
+Date: Fri, 25 Apr 2025 16:24:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 2/3] virtio-spi: Add virtio-spi.h
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>, <broonie@kernel.org>,
+        <virtio-dev@lists.oasis-open.org>, <viresh.kumar@linaro.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hdanton@sina.com>, <qiang4.zhang@linux.intel.com>,
+        <alex.bennee@linaro.org>
+CC: <quic_ztu@quicinc.com>
+References: <20250401033621.1614194-1-quic_haixcui@quicinc.com>
+ <20250401033621.1614194-3-quic_haixcui@quicinc.com>
+ <f6f087f9-83c9-452e-9a0f-f8743b8c71c2@quicinc.com>
+Content-Language: en-US
+From: Haixu Cui <quic_haixcui@quicinc.com>
+In-Reply-To: <f6f087f9-83c9-452e-9a0f-f8743b8c71c2@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2MCBTYWx0ZWRfX1Vzj0zbWraq/ DvR/rdrHLv8QkqMDhulZVV+KeLDbBaYYM+dM7Lf71cpJUZDtK9vtcCKKNmgzepRcPoI83h/kK+m UZvT38CdlGU/KJuWnI4gOd8EpjN8AkLHbvbuk7Dr5VlziIbyxy3F3Cx5ojkC6bqD7VzNphKwZfu
+ t0MIEjvQVxrJjRcTLeZClA9CV86BwR+LjtucAEx8Y5oJNZgmUZOJv5hMxNH1I5irCbf1ta0nSty fjPs8jY9MYlNTH8hhkt6whV83CaYcvJ7JjK+Qvlzfzklpoim8hf04Lwd1rkOKEiqMWnhv9fAcGz vwnLrQPJymO5iFTmqKtBl4XoYlNDfuaGKGq6ByEdBFSJoAczdXjh3A5eutq5bAHQ1elF9EEv6Dq
+ X7zP7iCrz4XryAhNY4pvp007GSZ75VpiPASsQttLds86g/hH5jOzAVIPkVkGlkkP7bm1BWnr
+X-Proofpoint-GUID: 9Kia3sZ35YcgA_zUhuVkaDoQj3SuIOb9
+X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680b46c0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=mMmorrnVjBH16NRd3KEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 9Kia3sZ35YcgA_zUhuVkaDoQj3SuIOb9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=849
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250060
 
-On 2025-04-25, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-> To prevent triggering PSLVERR, it is necessary to check whether the
-> UART_LSR_DR bit of UART_LSR is set before reading UART_RX.
-> Ensure atomicity of UART_LSR and UART_RX, put serial8250_discard_data()
-> under port->lock.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  drivers/tty/serial/8250/8250.h      | 15 +++++++++++
->  drivers/tty/serial/8250/8250_port.c | 42 ++++++++++++++---------------
->  2 files changed, 36 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index a913135d5217..802ac50357c0 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -2137,25 +2136,21 @@ static void wait_for_xmitr(struct uart_8250_port *up, int bits)
->  static int serial8250_get_poll_char(struct uart_port *port)
->  {
->  	struct uart_8250_port *up = up_to_u8250p(port);
-> -	int status;
-> +	int status = NO_POLL_CHAR;
->  	u16 lsr;
->  
->  	serial8250_rpm_get(up);
->  
-> +	uart_port_lock_irqsave(port, &flags);
->  	lsr = serial_port_in(port, UART_LSR);
+Hi Mukesh,
 
-The ->poll_get_char() callback is used for kdb/kgdb.
 
-Adding a spinlock here could lead to deadlock. However, I see that
-serial8250_rpm_get() is already in there, which goes down a rabbit hole
-of possible issues. So I guess we really don't care about possible
-kdb/kgdb deadlocks for now.
+>> + * @mode_func_supported: indicates the following features are 
+>> supported or not:
+> mode_func_supported[b'6-0] : something like this may help to know size 
+> of this variable.
 
-I can look into cleaning this up with my next 8250 nbcon console
-series. So for now, I am OK with you adding the spin_lock() in this
-callback.
+I noticed the suggestion to use [b'6-0] to indicate the actual size of 
+the mode_func_supported variable. However I haven't seen notation like
+[b'6-0] used in Linux kernel.
 
-John Ogness
+And I think the definition of its bitfield below could clearly indicates 
+that 7 bits of mode_func_supported are used. Could we keep the current 
+description as it is?
+
+>> + *   bit 0-1: CPHA feature
+>> + *     0b00: invalid, should support as least one CPHA setting
+>> + *     0b01: supports CPHA=0 only
+>> + *     0b10: supports CPHA=1 only
+>> + *     0b11: supports CPHA=0 and CPHA=1.
+>> + *   bit 2-3: CPOL feature
+>> + *     0b00: invalid, should support as least one CPOL setting
+>> + *     0b01: supports CPOL=0 only
+>> + *     0b10: supports CPOL=1 only
+>> + *     0b11: supports CPOL=0 and CPOL=1.
+>> + *   bit 4: chipselect active high feature, 0 for unsupported and 1 for
+>> + *     supported, chipselect active low should always be supported.
+> You mean to say "chipselect active low is default supported" ?
+> 
+> Just thinking instead of keeping always supported, can we mentione as 
+> default supported ?
+
+Yes, will update as "chipselect active low is supported by default".
+
+> 
+>> + *   bit 5: LSB first feature, 0 for unsupported and 1 for supported,
+>> + *     MSB first should always be supported.
+> MSB first is default supported ?
+
+Yes.
+
+>> + *   bit 6: loopback mode feature, 0 for unsupported and 1 for 
+>> supported,
+>> + *     normal mode should always be supported.
+> we can reverse the write up for all "always be supported"
+> 
+> bit 6: if not specified, normal mode is supported by default. if set 1, 
+> specifies loopback mode.
+
+Sure, your statement is indeed clearer and more accurate, I will update 
+in next patch.
+
+
+>> +#define VIRTIO_SPI_RX_TX_SUPPORT_DUAL (1 << 0)
+>> +#define VIRTIO_SPI_RX_TX_SUPPORT_QUAD (1 << 1)
+>> +#define VIRTIO_SPI_RX_TX_SUPPORT_OCTAL (1 << 2)
+> Can use BIT(x) ?
+Will update the code accordingly:
+#define VIRTIO_SPI_RX_TX_SUPPORT_DUAL    BIT(0)
+#define VIRTIO_SPI_RX_TX_SUPPORT_QUAD    BIT(1)
+
+
+Really Appreciate.
+
+Best Regards
+Haixu Cui
+
