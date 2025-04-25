@@ -1,186 +1,171 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E5921884A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5511421884A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745614940; cv=none; b=s61mG/sxxZ8V9qQU3O+TKR1wJJdm4ujEO/biCZmRc28MUanyuBzCQkTfe4kHUHIxJHdejaPHo8yFdKa5mi1tAPkK6ClKm8NDfu2vCDRvvjeHhMudHevs1EW6kObl0jRCy72qP9xdu0AwjOObP2bLeOgS/AIGb2Cu6ztBs4XKN8A=
+	t=1745614946; cv=none; b=eq6/xm/RAKKgDL3kg8v9go4o/KPQocZt3UXmLUbk0BCfrYzC/Z0d4JtAAsNOVbbPBEvSVm7WWWlSvtCZH8F37DR3hD+C0uAQs5w+CQN6uRyUVibo8hAuLCoo3xRVYXr2QVPNDa1wB2WYoIEmXwpw916tF5Fw/eClTGAeinYHclc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745614940; c=relaxed/simple;
-	bh=FoxC89tHfNSH1oVha4VRoLqPnSjX0y1D+aZDbZJvJ1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bxIIT62VrQ9vW+gHUfl7gWOb+wAMbGtsl9GtMdWDyn1mmcZQ7MvWFo+gike9YpnBTd8dY+XOYFg0kJahLq67ScgVv4jkYM29LAlpNB5RxQbolk8066hcumRAB2wuYjxbx5PV1lrI01tCeAqvnoiBNugmy+RbaEdsg9rCelIwbks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LMbg4l+U; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745614946; c=relaxed/simple;
+	bh=YjVgZ7YLACPGigcJE/0fO5Qbc8alP8X4CtE466WwsR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dgnbsNrPdfvtTPk19CF6BnZP8BfRyu/EcsQvU+iY0qLDOctFlF22AMUG32upN0aq2XZrF6/KvNLYvFrylyCqRLHpsLHzmDczsXvYtSqZWWQFkc8G1ymMAZNEvBzsF8ycUxzDlaDl5Su6/4ggSlNIulHdAAHAzMTQ6BmnMT0UiEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TvRglG5S; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LMbg4l+U"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJqfF031939
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:02:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FoxC89tHfNSH1oVha4VRoLqPnSjX0y1D+aZDbZJvJ1g=; b=LMbg4l+UfM1XN+1b
-	fnn3cciq8zI/v6YHyGoQJYanBK8fzNxWOsQFQogpx6hA5gac1kJ5EI9mwh949+YG
-	xkbNzzGbm4IFoCIrYeIbvVN9FUAem5kY88dAr51K6evolZpvB4wSYmNZ7xiwcjmd
-	xQ86Ie2lEOWL3uy6ptC+bNCEgAQIE0E5+rzpfbPsRisyNWh+gdXNrNUv4Yx1pu1c
-	cFGAo1cVmap9F0n/mttdFH9AQsx4V8g2GkWClEsEPZIBebrXqUXO4Fli+te2zZGF
-	DnP7qW6Mhh2P807dKDoxoRFUk3df3QXtByclxuNBjBFT4WV2g5bqG2NPbmuyxTHo
-	Jmr73w==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgya8wc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:02:16 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47983a580dbso6179691cf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:02:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TvRglG5S"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so35667226d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745614944; x=1746219744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5TblJnP0G9WT88M2TZcj3zg5YJeY+7C7HhDuNxDIznE=;
+        b=TvRglG5Sm1iJmBFXnRluZQk4+3U6E5voNcvALt14XMCp2WF2gMNrRxCvTsuK4MrEbm
+         9FM2Tnm8gI3+8/nfzZBtMDoTAulIXttQbhIsSpkcxApHCGI4cfcqemZAk0eznNNRsYUe
+         I/wqNQluGKCbafRX80eORnym/3uCoJhZuCZT0g06zRdk05eQVYiIAgDdznba/nqFzju8
+         vU4QOMix17enEim/aBdYk3LxIuB9kWUM63M2IOITvTEQmjub7imIpsez7Z9NPXcWZlPm
+         HzX5oXwpGnXePtzrpA35IwfvFgFbRD3Qc4GaC4PzuBotVwNmkJrJnLFdaGB5P5bO5bEq
+         yn8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745614935; x=1746219735;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FoxC89tHfNSH1oVha4VRoLqPnSjX0y1D+aZDbZJvJ1g=;
-        b=PpKYWyFRdhqjU2P3UzZntQXvbXfEqEmyzazr3WRHo/5eCfY/LpukhBhjftTIR1jYdc
-         ljZu344gy0ndNTUEQBlzmAovFhaYxAQ9f5rihUJdBz2d2Wzpp2QAArIp814IEKWRyXh0
-         Ed01svHaZZRG6RmakhQhcSNHgaAKUDux4lnDd4003utT6tAo+9vLQtztv8bTbmMYzL1K
-         +LCPsLpNdfeEBap9HAsB9Pa2pIALR6jnoWYfwNOx+Npas5Xsa2c2nDLkGF2cOq91caLH
-         i9I4fK0ZcjC1O3QZzM4sfsbLxIKEQ6SZua0XNaaXyh0vsdkH701nqMoh4K3kVQW3Y6af
-         X/WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnpLaAgDO1aZdhhrV5TKMgGvTh/zxS6T6QD+OzI3hP8Si5HL/GwBHmUZ0l88K6hkZKW1iVh5mZXUN+qos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIW/TO6UPpYkHi1eNgXZrAc8tf5iQhn7fzvyk75DBZjL73C3k6
-	dsOWZ9CACK+gcymBThGLnteTbWIwULH11TeSWHYMFtGPjfnshYQmiKwH2FsmzUJDcBNSz9y/xfF
-	2b5pTNlvwuDCz3j+nAwOEC6VQQ0O+a7FMMo3WHZbnsz5I6uvRiIzOomiKS4NBjpo=
-X-Gm-Gg: ASbGncu+OnZXHwIr5QhyupKq9Q71LZ3zOOOYgS80+PhSFhd3U2RC60HFVEGlqb1yeS0
-	DZZwrw0R+2/eUGRPFaw6aKImspXM2eNpZs5JOOcDBHynoO9JZ2TedAhxBcOF6G2by/c7RcMp1+4
-	eCL2QS5dfsByUkrNXFt1KgRF63+2gf33eJCm3ooze9KnaBZQOLcfK77O/knRMbu4pJkCbvqTPrM
-	FbJRuepoK5BSLItCYywCwoZBlE+uZ9ZirKpj84AYDZgNONgiFFD8LXWG6MnbTxZ+o14/3O7n9dt
-	HiSSvlcOuffcN/aRR4g79AscSfsMPCNvFrYOUEftVJf5gOhrgJxwpRkLOsLP1kF/rz0=
-X-Received: by 2002:a05:622a:1455:b0:472:1ee7:d2d with SMTP id d75a77b69052e-4801c2c16e9mr20346861cf.1.1745614935212;
-        Fri, 25 Apr 2025 14:02:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEg0tvFhoQ0KNEBhHGLhEi7O5sgae/+O/jdTQKiFWyNNG4fCuoMl6ZMxe0c4BHyGdyFSXXbhQ==
-X-Received: by 2002:a05:622a:1455:b0:472:1ee7:d2d with SMTP id d75a77b69052e-4801c2c16e9mr20346351cf.1.1745614934774;
-        Fri, 25 Apr 2025 14:02:14 -0700 (PDT)
-Received: from [192.168.65.156] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed49c2fsm187099666b.124.2025.04.25.14.02.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 14:02:14 -0700 (PDT)
-Message-ID: <656da4e9-b609-43f4-9afd-006698a2c7d6@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 23:02:10 +0200
+        d=1e100.net; s=20230601; t=1745614944; x=1746219744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5TblJnP0G9WT88M2TZcj3zg5YJeY+7C7HhDuNxDIznE=;
+        b=mW5c2CeFb97l0GgHwMkthY1IQ/hAQLKHZPDb0wKA7y9q0zAeldYVT+qAhH/w8mo5dW
+         C7xyuA8TYKirhlr29OiOv7+MkfPrW7qFCiaiMVtL6oIbv1f3tTI5vcdJzlYMnUjwS2rv
+         noYstgnC8+aS03a4yxTN4qkQUtl4ZcJBtB0Uu0v/7cW5mf8j5TM5PQBdYG09g3GUId1H
+         OLlpKSKyOs1hQY3F8doeoc6380v3urgXJKNnrYB0wdXj+RSdn2UxaiujZ4AyiS80Rii4
+         9YB9sp43dp4B8Iu0zS8P3l20ZUCklUozDjK7uPsYoEyLzGrzfs2usjuINf2oVgBiWb5W
+         KJ0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWrHOtJABhH3nTGKR6OW0oK3duOs+YeepB0i5DC5rFZctghZk/1BBe02wiyyDOmgnFgAW5J484pXWgmB3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3va/43+uvBim3JVeMDTAg64nW2VxWDjSvKm++oJdCsKw2dZTt
+	aISNzC2pnb95Q84PS9ulsmwendp3RGVtVEB5XCk4VG3mShkaoLTNJJY6Fd1pR9pLvOJdWBpwzfq
+	A1tgi5LZUinUYCXdfx9/ryoCwPoksT4NA2r4=
+X-Gm-Gg: ASbGncscIj7G1AXbrXOdynKaWIuzq71uNKVpGznnhEDKNMZBijHNzJBEheSOg0EmnJ3
+	XqP9vWtEz7mGxCLCSx/AntWZzvA6GvR5L4yHY9c+uGR2aLrRRs3fMbRhpN2QQs9FTzj4qdPw+o9
+	N3YegTcw==
+X-Google-Smtp-Source: AGHT+IHkfUlwUem4PfnopT+6TlRr3jMpAyAEE+AOQNIQWcfuRd3shIIoUe9Vc6WoUsRXgu3w115ogjdW1I4zauvHggE=
+X-Received: by 2002:ad4:5c6e:0:b0:6e4:4adb:8c29 with SMTP id
+ 6a1803df08f44-6f4c11cfccamr135354956d6.12.1745614941905; Fri, 25 Apr 2025
+ 14:02:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: Add initial support for MSM8937
-To: barnabas.czeman@mainlining.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Adam Skladowski
- <a_skl39@protonmail.com>,
-        Sireesh Kodali <sireeshkodali@protonmail.com>,
-        Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org,
-        Dang Huynh <danct12@riseup.net>
-References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
- <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
- <2e3d94a4-d9e1-429e-9f65-d004c80180e5@oss.qualcomm.com>
- <790a0b7537e0b82b70bc4b32612ecee6@mainlining.org>
- <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
- <5ccb39f9393b44761127717096a38a46@mainlining.org>
- <68e2c0ee-d5e2-40fd-9ca0-262ed3270628@oss.qualcomm.com>
- <31559417a92d1e1ff17d0f3add9a1ba0@mainlining.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <31559417a92d1e1ff17d0f3add9a1ba0@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE1MSBTYWx0ZWRfX0TAfPvcVor+n vNPB4OVZc7WmvEPHathXpj8ilzPm7ebodFXXQLh6OHWo9RkfMx0XWDKLLSxbAeWHjcpr9mtmN4Q BbeaQCqfGmdU7Id6+ORBD3pvpb/zRpqvaapOKqjFU0O67vCnwdWxi2BEgs7GXjYsh9Zv1Sm/BqG
- HxX/QpUNXTgl7OEWSeqh/z0MKDR+rxNIIYjCuq3C/FoymgAvn3rgTcG3RRg1xiMin0PhbR0qSDk BTs0asMxArlPOeIhFubV4daq7HJ7uHHO27a5r/WKWAwIsZJVuxeEVGoEFoX43v6OTUWARMqT5Sw 1NdLQHKM1wuO97fkvoL3JWzxBizDxE5R4SETC5Pp96cUpKjQhFLo8TZdQ3U+2ccn3EJv7TTI0A5
- ckz8Th+BQlILNVzLI69jku3E4npbL1FiOYf+aPoZxwOivWsMpgemIMOTTcIumB+x3Ua1oCny
-X-Proofpoint-GUID: aqVnrwX7KEVeBAjYB9q7AQrorDkXV4NJ
-X-Proofpoint-ORIG-GUID: aqVnrwX7KEVeBAjYB9q7AQrorDkXV4NJ
-X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=680bf858 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=NEAV23lmAAAA:8 a=qC_FGOx9AAAA:8 a=OuZLqq7tAAAA:8 a=bBqXziUQAAAA:8
- a=BjP4FqewG5DG9Cpw7CUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22 a=fsdK_YakeE02zTmptMdW:22 a=AKGiAy9iJ-JzxKVHQNES:22 a=BjKv_IHbNJvPKzgot4uq:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 malwarescore=0 impostorscore=0 clxscore=1015
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250151
+References: <20250408195922.770377-1-yabinc@google.com> <20250408195922.770377-3-yabinc@google.com>
+ <358f4a8c-29ad-4e5e-91b9-063f06e769ec@linaro.org> <CAJ9a7VigiBrcenP9w84KS21iE8gnB7bGC9Q6ZFF33ZHveu9SEg@mail.gmail.com>
+In-Reply-To: <CAJ9a7VigiBrcenP9w84KS21iE8gnB7bGC9Q6ZFF33ZHveu9SEg@mail.gmail.com>
+From: Yabin Cui <yabinc@google.com>
+Date: Fri, 25 Apr 2025 14:02:10 -0700
+X-Gm-Features: ATxdqUHAWEV7N_YSxfaedx7b1DR8Tf9gK0wjsx7y8UL4mHWQiNO2xurmvYk0Xu8
+Message-ID: <CALJ9ZPPdqrAJkV7CHJBLGKoqQm5hmR7s_4_qRJ=gWyTvxJtL-g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] coresight: core: Disable helpers for devices that
+ fail to enable
+To: Mike Leach <mike.leach@linaro.org>
+Cc: James Clark <james.clark@linaro.org>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@arm.com>, 
+	Jie Gan <quic_jiegan@quicinc.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/25/25 10:22 PM, barnabas.czeman@mainlining.org wrote:
-> On 2025-04-25 21:26, Konrad Dybcio wrote:
->> On 4/25/25 5:13 PM, barnabas.czeman@mainlining.org wrote:
->>> On 2025-04-25 11:57, Konrad Dybcio wrote:
->>>> On 4/23/25 4:46 PM, barnabas.czeman@mainlining.org wrote:
->>>>> On 2025-04-23 16:03, Konrad Dybcio wrote:
->>>>>> On 4/21/25 10:18 PM, Barnabás Czémán wrote:
->>>>>>> From: Dang Huynh <danct12@riseup.net>
->>>>>>>
->>>>>>> Add initial support for MSM8937 SoC.
->>>>>>>
->>>>>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
->>>>>>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>>>>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>>>>>> ---
->>>>
->>>> [...]
->>>>
->>>>>>> +            gpu_opp_table: opp-table {
->>>>>>> +                compatible = "operating-points-v2";
->>>>>>> +
->>>>>>> +                opp-19200000 {
->>>>>>> +                    opp-hz = /bits/ 64 <19200000>;
->>>>>>> +                    opp-supported-hw = <0xff>;
->>>>>>
->>>>>> The comment from the previous revision still stands
->>>>> If i remove opp-supported-hw i will got -22 EINVAL messages and the opp will be not fine.
->>>>
->>>> Right, I have a series pending to improve this situation a bit..
->>>>
->>>> In the meantime, you should be able to define the nvmem cell and
->>>> fill in meaningful values for this platform
->>> As I wrote in the previous revision there is no nvmem for GPU on msm8937 only on msm8940.
->>
->> This seems not to be the case
->>
->> https://github.com/penglezos/android_kernel_xiaomi_msm8953/blob/pie/arch/arm/boot/dts/qcom/msm8937.dtsi#L2046-L2191
->>
-> These are on msm-4.9 was moved to msm8940.dtsi
-> https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.10.6.2.c26-01500-89xx.0/arch/arm64/boot/dts/qcom/msm8937-gpu.dtsi#L162
-> https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.10.6.2.c26-01500-89xx.0/arch/arm64/boot/dts/qcom/msm8940.dtsi#L600
-> 475 MHz and 500 MHz is for msm8940 at least based on 4.9
+On Fri, Apr 25, 2025 at 8:25=E2=80=AFAM Mike Leach <mike.leach@linaro.org> =
+wrote:
+>
+> On Tue, 15 Apr 2025 at 14:51, James Clark <james.clark@linaro.org> wrote:
+> >
+> >
+> >
+> > On 08/04/2025 8:59 pm, Yabin Cui wrote:
+> > > When enabling a SINK or LINK type coresight device fails, the
+> > > associated helpers should be disabled.
+> > >
+> > > Signed-off-by: Yabin Cui <yabinc@google.com>
+> > > Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > ---
+> > >   drivers/hwtracing/coresight/coresight-core.c | 9 +++++++--
+> > >   1 file changed, 7 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/h=
+wtracing/coresight/coresight-core.c
+> > > index fb43ef6a3b1f..a56ba9087538 100644
+> > > --- a/drivers/hwtracing/coresight/coresight-core.c
+> > > +++ b/drivers/hwtracing/coresight/coresight-core.c
+> > > @@ -486,8 +486,10 @@ int coresight_enable_path(struct coresight_path =
+*path, enum cs_mode mode,
+> > >                        * that need disabling. Disabling the path here
+> > >                        * would mean we could disrupt an existing sess=
+ion.
+> > >                        */
+> > > -                     if (ret)
+> > > +                     if (ret) {
+> > > +                             coresight_disable_helpers(csdev);
+> >
+> > Hi Yabin,
+> >
+> > Unfortunately coresight_disable_helpers() takes a path pointer now so
+> > this needs to be updated.
+> >
+> > I tested with that change made and it works ok.
+> >
+> > >                               goto out;
+> > > +                     }
+> > >                       break;
+> > >               case CORESIGHT_DEV_TYPE_SOURCE:
+> > >                       /* sources are enabled from either sysFS or Per=
+f */
+> > > @@ -496,10 +498,13 @@ int coresight_enable_path(struct coresight_path=
+ *path, enum cs_mode mode,
+> > >                       parent =3D list_prev_entry(nd, link)->csdev;
+> > >                       child =3D list_next_entry(nd, link)->csdev;
+> > >                       ret =3D coresight_enable_link(csdev, parent, ch=
+ild, source);
+> > > -                     if (ret)
+> > > +                     if (ret) {
+> > > +                             coresight_disable_helpers(csdev);
+> > >                               goto err;
+> > > +                     }
+> > >                       break;
+> > >               default:
+> > > +                     coresight_disable_helpers(csdev);
+> >
+> > Minor nit, you could collapse these last two into "goto
+> > err_disable_helpers" and add another label before err: that disables
+> > helpers before falling through to err:.
+> >
+> > Other than that:
+> >
+> > Reviewed-by: James Clark <james.clark@linaro.org>
+> >
+> > >                       goto err;
+> > >               }
+> > >       }
+> >
+>
+> Subject to James' comments -
+>
+> Reviewed-by: Mike Leach <mike.leach@linaro.org>
+>
 
-I'll try to get a more conclusive answer internally
+Hi Mike, I have uploaded the v4 patch as suggested by James, in
+"[PATCH v4 2/2] coresight: core: Disable helpers for devices that fail
+to enable".
+Could you help review the v4 patch? In that patch, Leo suggested consolidat=
+ing
+error handling. But you expressed concern about it when reviewing the v2 pa=
+tch.
 
-Konrad
+
+>
+> --
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Manchester Design Centre. UK
