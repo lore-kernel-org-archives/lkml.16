@@ -1,46 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E21183CC3;
-	Fri, 25 Apr 2025 11:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01DB183CC3;
+	Fri, 25 Apr 2025 11:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579634; cv=none; b=P/xzN8flQ+1xwYUZxOvHfnRzrQyJKWMdpWo7ALqvWoDeL+XnJExRC9Q2vgxTW/kIoz0Dth3srfQMCgcAb346ocYBVYAaZH6K/AmW67lDPrq64AKGuZiRfVpzkPxOpifDtuHYnxcLkcxq2WvcQe8ZxzWYtQ7Z9qlh4+dos7ViqyU=
+	t=1745579639; cv=none; b=tpNv/C7XYvX0DJ13etKk7vMt9ui1yFRNY72a/cavXsEgfpEA3z3/rObHFPCfIzQ+gZHbxsIUn7Jwdbm946T0oUVF6QIP18muadrx8fAj29E8FFDkmnH/j8TVPfj+PlMo6BFkBvOYZZNE05X2c//X1++bMGSf+JwKn3XWj1p4Zng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579634; c=relaxed/simple;
-	bh=Ezqd4VS2tdUP8uwDrS78FIFfjyaT1c46Eo4Ie3SLLAw=;
+	s=arc-20240116; t=1745579639; c=relaxed/simple;
+	bh=xiebXfja5+K7qkMOYojBV9ntgYUiISSmkVxnSIre/+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmXDvssfrCBJ67GUorV7XR5WaVsWEz7S/TH462lxmwgR9OaRPfiU6QhnHBfCUuMw133nsiof9McIggVcw7tp5i2rgA5YKPQwWLCr/t8l4+jrLFjf7DSs5z6ihONZlxaGD1SUrupdsZQlMtoD5JqdjuIjWISq+PIbrEaDO5TB3Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzfPp44h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PH6td+dR+NqiifwdGyQRptCR7Wq2FN1ikDLvunfTi6rFeEcPvFZVCvNojWz3ES5RVxNmGhK2fcP4IkfWeu5Tqfd6kIn3Lhfvzf2oaTSR7hTm612p7H7Xfh8g5KZTv0y0DhUubZ2a1mB2nw6ue2D14ztsyi7sBADjWU15UCTfP9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PEewnWIQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzfPp44h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAF51C4CEE4;
-	Fri, 25 Apr 2025 11:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745579634;
-	bh=Ezqd4VS2tdUP8uwDrS78FIFfjyaT1c46Eo4Ie3SLLAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nzfPp44hY80vim38LVUi0AJaVzHubxBfSYQh9zqjDYTgTQ+pEa7LzF82G6mkiZ0Wk
-	 gHP6U4AFnQML6cW+mEhJ5YqqMn0Ql+q158Onv6pmYnXPJyufAHAnCMj+AQ4Iz7ZihQ
-	 7HJSN9CKwHety5cLGSX4G5gxDwFP4BKNoBjPziAJDnUS4gstYvpoNjsXt+duZYlSnD
-	 QUWk2MAcn5wdWKjkbA4o+a7mkCSAcc+ZokZs6XaWQmth9mMMSKmeD6CysTl2obgbEN
-	 hSVcFqsPomfniiuL5nctH2FuCDX/zr7L7rxp8I9zhrcWMRkt9EvCnCb2uiI5oeUeS9
-	 0jkh3Aoavf8Yw==
-Date: Fri, 25 Apr 2025 13:13:49 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: a0282524688@gmail.com
-Cc: lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v10 3/7] i2c: Add Nuvoton NCT6694 I2C support
-Message-ID: <qalofwnbulbpzl7542l7756radnx5ks7pt6wsbsblyqayxcycl@rl4ety27l27t>
-References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
- <20250423094058.1656204-4-tmyu0@nuvoton.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PEewnWIQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0Jd1PjnUqDX3f/DxkbkNrFg+6trySYhrjcgsIergWdw=; b=PEewnWIQCOgG8+ui0+F3RY/K6z
+	Ul+tv8obP8WQdaPc4W4+QWuCJkbY+70vWYzh564YAtTU+OfEgU5cb0+X2hQVK0Yv9+jRw3l3nS+7w
+	JHqZcrBlXgBzTgQYHbc3UR29mIH0yCA+eNolgbxV4wM42VgozxfEo/iqA2AwlgaVR7uG6qNqSC/8d
+	i0rR2AnBoB1LdG76C/7XgTX6IGAKkc3vEyUfa2Op5SDJNJhKGqkuRGW5B/eyDEUzFlwsTNEJIywq+
+	9lE2F2lTHDofcvVZcmbDTjLps3V8ubm1wpQMSDjLj6+k1W4UlfVm0GChCvdZxI0dHt2GxEzBIn5ba
+	OE0HVbaw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8H0C-0000000ENc1-2La2;
+	Fri, 25 Apr 2025 11:13:52 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3031C3003C4; Fri, 25 Apr 2025 13:13:52 +0200 (CEST)
+Date: Fri, 25 Apr 2025 13:13:52 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Shukla Manali <Manali.Shukla@amd.com>,
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Subject: Re: [PATCH v4 05/38] perf: Add generic exclude_guest support
+Message-ID: <20250425111352.GF1166@noisy.programming.kicks-ass.net>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-6-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,22 +68,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423094058.1656204-4-tmyu0@nuvoton.com>
+In-Reply-To: <20250324173121.1275209-6-mizhang@google.com>
 
-Hi,
+On Mon, Mar 24, 2025 at 05:30:45PM +0000, Mingwei Zhang wrote:
 
-On Wed, Apr 23, 2025 at 05:40:54PM +0800, a0282524688@gmail.com wrote:
-> From: Ming Yu <tmyu0@nuvoton.com>
-> 
-> This driver supports I2C adapter functionality for NCT6694 MFD
-> device based on USB interface.
-> 
-> Each I2C controller uses the default baudrate of 100kHz, which
-> can be overridden via module parameters.
-> 
-> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> @@ -6040,6 +6041,71 @@ void perf_put_mediated_pmu(void)
+>  }
+>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+>  
+> +static inline void perf_host_exit(struct perf_cpu_context *cpuctx)
+> +{
+> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> +	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
+> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> +	if (cpuctx->task_ctx) {
+> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> +		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> +	}
+> +}
+> +
+> +/* When entering a guest, schedule out all exclude_guest events. */
+> +void perf_guest_enter(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest)))
+> +		goto unlock;
+> +
+> +	perf_host_exit(cpuctx);
+> +
+> +	__this_cpu_write(perf_in_guest, true);
+> +
+> +unlock:
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_enter);
+> +
+> +static inline void perf_host_enter(struct perf_cpu_context *cpuctx)
+> +{
+> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> +
+> +	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
+> +
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> +}
+> +
+> +void perf_guest_exit(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
+> +		goto unlock;
+> +
+> +	perf_host_enter(cpuctx);
+> +
+> +	__this_cpu_write(perf_in_guest, false);
+> +unlock:
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_exit);
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
-
-Thanks,
-Andi
+This naming is confusing on purpose? Pick either guest/host and stick
+with it.
