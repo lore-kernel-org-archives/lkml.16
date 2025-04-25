@@ -1,216 +1,583 @@
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6003179A3;
-	Fri, 25 Apr 2025 02:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745547762; cv=fail; b=WwzcmG2fxcTfSef0+jTkKyz9/aS++SI3jSkuGSr7VFsiSmRTCSwkiBwQuaFK4zjXdqYlIK0kXmKHAJMTJVVwXaO2K5KRlEuchDkK3PKc10jutx2sx8YcuNyLqoqMVXnGa8WSmIfFIK/lOEB5sU1g2Yb2hvj2X+36EklVC1Ii1dU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745547762; c=relaxed/simple;
-	bh=+S+B85+auvtB2dRBRHPQTLW8nKiVwYoUWIYc/kCo1IE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=V+yNhfzHM0h21uTepIhEqRzLqhUH0nwILtlO3BTkLvf9SmDsEAlMIOJUeDbNoa9ne2ka6Ydbdk+IdEcP5MxC60svjM+mrYA5yHpaxnR9VF9BHG8FBOsDZHMm+exwsM648zXwP7PztjaaFAxKn948O+IBI5HYlN5P1k/m9eAtk5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=bFCLD3J+; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=Wil2aBVS; arc=fail smtp.client-ip=216.71.154.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C9E179A3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745547767; cv=none; b=M18B2kV2j5Z7ngrov0PX7cm1DeE6uYRf6NM1HU6APMsXo8VKv9FoTBFSVlK6Z6m3g8K/bhWR3Y2QKIpZN6R7/+Ske7phVJTZTjmxS/rBLe237HiVf2GO8BbfNm3HxgeKZDY8lLkS30nyRPVrBTs+bg9CwXlO8ZyTt7XlfUM2Dqs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745547767; c=relaxed/simple;
+	bh=vKPYmKQmNwWvYT3ghQV1KqbFRkNEdBINr9RM4fFdmdY=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aowraHui/jeB6IvOauwgGQ/kRA4lrK0A2yjZ8x9xU1b2pwCrM6C/n8xwmLXrT9vfTNGQaxDT6DA4jT6QdXk9Ux9pbKjXT2HWkdgoVi1sYFvgHeTGxAkXzuJJ+tWBMP+4f4fKHeBlGp2bvjcUqV4rfg7GAyneLQMb0mcQMp0Pylo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dn/SojpR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bFCLD3J+";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Wil2aBVS"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1745547760; x=1777083760;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+S+B85+auvtB2dRBRHPQTLW8nKiVwYoUWIYc/kCo1IE=;
-  b=bFCLD3J+p2WSRdzu04iwwVgAFBEXq5rplm3S/hu7MKws/8oWivNO3sU6
-   UjrM9SuJU4hboNj28LrDBzBx8Mtj1Q3W1GxGJGu+DvNlGh3v1CwUN1BAY
-   /HKmh+JdcB2moBoG5YrC8VygOoNDih7+CtKHhN2xJlgYa7Yce7NjxchQZ
-   mpDoK4uRTRAAY9LzI0w3gYS+1xku2cyjKWFphIavcUyrSU60II06NzJLk
-   QA2CgbRbbNKFWVtVgPswshSYSQDftwzEU2A75NDEPBiHowOor5sVRlg1V
-   wq6nSi47KRJf3gjOYDEWOcLeV29GkEu6pFmyhMn0OWxXZcn3KkVbIVF4k
-   Q==;
-X-CSE-ConnectionGUID: eivOsb4BTi6MHJUyMsrPZA==
-X-CSE-MsgGUID: uVeJukKYRkqpi9LnfP1s2g==
-X-IronPort-AV: E=Sophos;i="6.15,237,1739808000"; 
-   d="scan'208";a="82365963"
-Received: from mail-eastus2azlp17010021.outbound.protection.outlook.com (HELO BN1PR04CU002.outbound.protection.outlook.com) ([40.93.12.21])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2025 10:22:33 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iP+VI7ChcVKxetTiVAQqVbgOkDQ3tJO6sD7DFui/o/MYhCWJiZ/FjqedhSxlUOplkt8r8pQXRu45R5nfZjVlcfd/hqju3ipydkF+eACdc9LAEiqD2jqSC5VYt8sCcHzi0/xJnETlYlEVc9wDttn7HNS0Jv2XZ62t+dmgUehqK/7Mz9MnDUpDpPw5fqwVx5nSc+xoVdDXQSRjQ4mngCsCNfN+cBBnAxsd6NjD75Y22vSJV+pf7whXqDhVsAAv1yLqUJJjcYw3u2cWRczC1QWX2A1NWV04hRluciqIz3d0vumkov9Oj+utr3HJpPnOJCsW75oj64jgbkHvZJEySR7sdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+S+B85+auvtB2dRBRHPQTLW8nKiVwYoUWIYc/kCo1IE=;
- b=lJsxXb+wl7Tt5fZ3W2VHXVGOwTay6huRQRIzmexy/J2VsoyPjlBLqdOfaRDgdGiPL66JPGZN0DroEql7U06WdPv3VS2/Go7TuBAEAPaGJ/1wxJ9YDhRIkz1Ij+h52EFiEzsdEaMvZ+R7mIZdl90H61p2Dztw4UCxUHgbxnlBdFTf9LT689ISrZzSbqy5vjIRY96gdvtW3ld7Xywpx9ok4Y/1U3E1BWxX0PcjiaZJi+M7e/zWRThsLTtstusk4icSEp/ucc9+35GPLQM6slK/Q6k1qvAz9/JBEOxANG6u0yErdaLlnAOLC8Qb2yjKRni1ygVvGTfxlLvfUI/1AQOl8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+S+B85+auvtB2dRBRHPQTLW8nKiVwYoUWIYc/kCo1IE=;
- b=Wil2aBVS9UD5UGb486wtpaTtKRgFGjKclb6CGf3tvZfUvUCL6G7Merps3ZM30Xq6QwioENEWwy3axIyP3iNrV97YkArKET9OIstrxnmM7oTLR3/UW4x/LaNo0gdNzllyETduxLLY92XfPtNkNcPmbtGMpXPj2OBEbz92XFxln9Q=
-Received: from BY5PR04MB6849.namprd04.prod.outlook.com (2603:10b6:a03:228::17)
- by CH0PR04MB8113.namprd04.prod.outlook.com (2603:10b6:610:f5::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
- 2025 02:22:31 +0000
-Received: from BY5PR04MB6849.namprd04.prod.outlook.com
- ([fe80::b2a6:2bbf:ed0a:7320]) by BY5PR04MB6849.namprd04.prod.outlook.com
- ([fe80::b2a6:2bbf:ed0a:7320%6]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
- 02:22:31 +0000
-From: Kamaljit Singh <Kamaljit.Singh1@wdc.com>
-To: Waiman Long <llong@redhat.com>, "cgroups@vger.kernel.org"
-	<cgroups@vger.kernel.org>, "linux-nvme@lists.infradead.org"
-	<linux-nvme@lists.infradead.org>, hch <hch@lst.de>, "kbusch@kernel.org"
-	<kbusch@kernel.org>, "sagi@grimberg.me" <sagi@grimberg.me>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: cgroup null pointer dereference
-Thread-Topic: cgroup null pointer dereference
-Thread-Index: AQHbs867Ho4DUg/FyECYHcuhUwZmwbOxxQUAgAHKuW2AAAyjAIAABKmAgAAFwNk=
-Date: Fri, 25 Apr 2025 02:22:31 +0000
-Message-ID:
- <BY5PR04MB68493FB61BF28B5268815381BC842@BY5PR04MB6849.namprd04.prod.outlook.com>
-References:
- <BY5PR04MB68495E9E8A46CA9614D62669BCBB2@BY5PR04MB6849.namprd04.prod.outlook.com>
- <a5eac08e-bdb4-4aa2-bb46-aa89b6eb1871@redhat.com>
- <BY5PR04MB684951591DE83E6FD0CBD364BC842@BY5PR04MB6849.namprd04.prod.outlook.com>
- <623427dc-b555-4e38-a064-c20c26bb2a21@redhat.com>
- <642a7d6f-9d8b-4204-bc81-4d8e0179715d@redhat.com>
-In-Reply-To: <642a7d6f-9d8b-4204-bc81-4d8e0179715d@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR04MB6849:EE_|CH0PR04MB8113:EE_
-x-ms-office365-filtering-correlation-id: de70b73f-6fbc-4241-40b7-08dd83a0082b
-x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?O1xM9eZ0bZq4QTjcbp6qlaKHnm7+Tk6O6Mi/Wj9+FAi27R10nN9UrBQWg5?=
- =?iso-8859-1?Q?gUdfT5HHoiB9nr6U+uo07EYBE0zqNQsK3rmplpsVgeSMWYcvOIdRF0j/08?=
- =?iso-8859-1?Q?vLYaq9oVerKbFrL9KHhbcsTMRk0j05Cy6DARcWbkP2hWsvIi69raVCiyaF?=
- =?iso-8859-1?Q?YJ4GFQpzjUzA9wPj5EcLQ/Qb8SAe6e2L+Q/6VAQ4573fUJPLqyBlMi3c+G?=
- =?iso-8859-1?Q?1pWvOiQsv32PapDduQjW95j4cloYsLIheiAMp47iXs8oj4UxycIEuWLZmA?=
- =?iso-8859-1?Q?tH87FT9fgQ46MRRtfPsbF7hOigG/hjS8I4+2UHkEW4+dS9kLn1GQjim7fO?=
- =?iso-8859-1?Q?edv2uB0pciRVYsq439yDAqTUX/bY6hiPHXWFg07xUp1pNwiJJgJh6TdCbV?=
- =?iso-8859-1?Q?zvA97TH835IM1lK4vWKYDcBi03nGHgoFL/KHSfi7/N3oFmBOwGPcOAGR9+?=
- =?iso-8859-1?Q?cicLaAKr1Wvo0rRpXPfrw3AFegy2aO6k5JTJvL+r8tj7rQyz053Nch1W31?=
- =?iso-8859-1?Q?ZPkFbYoOxsadAiJu1aeIjN7+7IKzSDY92CEm671we+MpDBAp2w2hiy7xRO?=
- =?iso-8859-1?Q?jJIvwKg1lE8v1jrrqIybjG6NjYbmnT3pte4LukRepDaU3OeB6KAfEHvMOG?=
- =?iso-8859-1?Q?hu7ZBrYyRS5GlOUIvl5QlmoO2No2D1ijkEMxnLbTZJ5ehA8GUYzGIMLVrM?=
- =?iso-8859-1?Q?AIwp8uOygT4sIOg3DlGd+UN9aQ0FfLJtyMIzBFMzYUdfZz3t1udlVOlQKZ?=
- =?iso-8859-1?Q?Snfespj7vipa5PzDVnbBnprnRfYO/H9GsjFNR6p0pAaztOFHHuCqSimQ4u?=
- =?iso-8859-1?Q?qllF7Fq2OgqiG+XSj7nRIiaccmzBpvRQ1kHC56DCeIu/7ybp+rVJsfk/YV?=
- =?iso-8859-1?Q?TvA+pMf/o6i5vrWteqHtZrl2ikJCpB1McZjPB/97bEexwtWFzBgUMJTY1X?=
- =?iso-8859-1?Q?6NKhAMfx+1p2RHQYw1UUwFE2ClrcbPlvzL9p8mAAowcwnrmHddNM1Gz1nf?=
- =?iso-8859-1?Q?rN5hKRGfpEtH9VkxbcrGmnqB1oSw2Ob+zGWdfbBsnxGHtDUbZVA9ljY/tf?=
- =?iso-8859-1?Q?JBj2IyvE1SLYFXSnaujz29cL3DorvEgYfMZQ635Kthw7Cv+eF827voLw9C?=
- =?iso-8859-1?Q?QLlMOBmsozV8yOUVi+3xcmFqOdtB863dPMtJSnbMnplhKCDymgcMLO1azS?=
- =?iso-8859-1?Q?cGUkhfYXi4aHJrKZR0iH/AUiYEuYxeozUXy21hsWDymOD6C0pMsUbkws2Y?=
- =?iso-8859-1?Q?K/qtWzrnlY9X1bV41TxeGznEehxKXqFk3LDaVwnxabiqlt1irJneIO4k1G?=
- =?iso-8859-1?Q?Z5uzPfo6nzlIoUAkNPHOBWlin1Cov/s+vc/m+RrQ0BLO8ITvgKLCB06Scy?=
- =?iso-8859-1?Q?T57d2SraBr1zB7RotF1j5rC7Da21QkLFKURJex8MdGYAwVBXxeJKySuLzA?=
- =?iso-8859-1?Q?0dbyO98Qb1jtS71h2qMtCnyOMNG2PfBcxCOMX5vAhEFhL35UqfyliHA325?=
- =?iso-8859-1?Q?xzdmWvdkhhl59ooRhP+cJI5hJxV/PmdPmTg07I77yd3A=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6849.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?zBEQggyhPIghLdUq1c/Fv82q1IdeHZ6tCqsVxZsNGYesE5C4I5N97RftCG?=
- =?iso-8859-1?Q?3ey19HhyFQwwiBK/5Y3w1Rqf+6YrCpL6pnHZQuMNFJC1CFgFWv3rWwm7Qe?=
- =?iso-8859-1?Q?P6Djxb3bo8+c24bn8EPqhhOtX4ls1vwyRtEgtKn4McJDYCJWVIC4d6fUxY?=
- =?iso-8859-1?Q?vZ+Fiyw4vPKZaIagOoz6MpcVPuCdSakj+QDg4Sk6CFJb3qAEox8gwdw/FV?=
- =?iso-8859-1?Q?vH+k5QbXLaSEWE3JcRqcsI140+6lwr4q8wzKFGtYbvR/9cH92NWEfhxRVX?=
- =?iso-8859-1?Q?916GWkiztyRYDi6un8aWWto39o49ZX9D4s9Rbbq2houkgkmOkPGwX+K4xA?=
- =?iso-8859-1?Q?t62pwznSC70X5qiiE5lIbzPpl9LHBh6tElssmSPk+nMMIhfflEFEZKLqXU?=
- =?iso-8859-1?Q?sqCUPhQe6DXuDTZKrfqw9ZMMGNXWZFfGt2COdFvlP4jZ79O5vVL+JOQmqF?=
- =?iso-8859-1?Q?YL0dVHCmLqeOndSr4hVrcZGnpX5FrYorV1VIL+xPhYOzQbunG4NP6CTwPt?=
- =?iso-8859-1?Q?pvfmJLo6M/5f1BwbTFMEytPZAA4CbpQd5fKeI6kciNylZ2Xp0sNFr2/yV6?=
- =?iso-8859-1?Q?qJ5Li5eLTlGGH/Ky+SBDjBMSrT+Ds70UvfUXom433AuaT3vS5h/irUn4Hx?=
- =?iso-8859-1?Q?ONlkvpU4YglvrzXPZV6oOsJKxKwPHJwOZchQN/rrXHKztJf5DDtjreSV2W?=
- =?iso-8859-1?Q?PW0MHxTMm0+v5K0napVZI/61gj6I/oreVA3gfvy3flbLQ26fi/WH2/ubqp?=
- =?iso-8859-1?Q?BZ8UIPVl+3HPiHSdE9Y8GNumwFepbVWrQhkPtpNaTNz00sYbWQb+GJ0Qfm?=
- =?iso-8859-1?Q?43Ztaa+F//O7IwtlcvIMTgG+ZE7V6/BzMyndJcI9WJU67DoBR1EnzE95Ix?=
- =?iso-8859-1?Q?JIP7EFNhYDOPcbHtDVBKAFfbfsgZp+RbktXqV4/1xX44mw6RUkPB0q0teF?=
- =?iso-8859-1?Q?/nceQCjuJALP5D4377ruVK1YoPEC/4lKPbMMr1g0rh0MLu9GIHLlYJlu4V?=
- =?iso-8859-1?Q?NHd52AjbSWA+oTzpFm2KAaf8aJ7mf/Pp6LegfQZpBgTHPmfEUeO72BH7ai?=
- =?iso-8859-1?Q?He8ZjNvoeyI1n4tkMDVbecIHD4jgYXZ3yCjANJdzWovw3Xodj1yN7mwq39?=
- =?iso-8859-1?Q?AxtY5LI2EO1I0+bD7BHhCP9SQ7Sxlcw3COXjWKZsh5P2zp8F3TQce9NuoQ?=
- =?iso-8859-1?Q?kCw/mcZgQd5x3tGLR3x28/JRcaM2Vezolms3FNcQKjg2Ly6OR7E4cVdoC8?=
- =?iso-8859-1?Q?eEzGBUGDzcGQpRnQwvFhU4C6Gye6XCWawD3BnK13khbQfIqYmbVGAGpny+?=
- =?iso-8859-1?Q?OPAN1ZlE5r7j0lWeQFHqJeLa0cf9D9jgi0lnwkJTUIr7S5/vJ7D8uYezoG?=
- =?iso-8859-1?Q?w4fKnO1VE7FzRw78sqzm7oYLXkqM0ylzVDU/+UTy+Zo4zdMxGeZwtwngUb?=
- =?iso-8859-1?Q?92NYmuRLBwi62hkgleiljrsLqoIbGp+7lTmA81bhnsOe+S5/8Yn6AnYcQ6?=
- =?iso-8859-1?Q?TjuAz4uxgDjN3PBkPjZx2/82v0/pjfkWNFfnwFCBsvqx4qxDfaFIWS3AEJ?=
- =?iso-8859-1?Q?f0hth8FrsBPH8GEwTHmVtpRxux6oNr+iPGoMsnte/EaJdRCCq76gPLdKVx?=
- =?iso-8859-1?Q?pxrYYtqG+q1sOVdTMrL0+1f1ccR22F2q9V?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dn/SojpR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08205C4CEE3;
+	Fri, 25 Apr 2025 02:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745547767;
+	bh=vKPYmKQmNwWvYT3ghQV1KqbFRkNEdBINr9RM4fFdmdY=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=dn/SojpRhOkjOL8Y7FecfgOQi7zSeptlXt10cxWQkm5la1N8p1Xzsykc+Ifkv6YqA
+	 FZ+X6bgFK81Vtw8KPNGx74zPc8j5JCcZtOOKSEOX4oVh9xF56DlnPslu+eWo2qZOjm
+	 rF420pPDGkaOV+LLbIbS3B2gglT0eZvkaI3wA2jOlZhcIh43vOcCdBpJ+/4dc78o5s
+	 YN0OrSy61rtbanNY98KggkF+wPEm9LAksUUIBuKhGu1A2Jxr/K9FKvKMAxH79h62Ml
+	 Fp2WP/8k5OfZMpRh51/o2uftZ9S+BIQL4CS3fe7nS5MRXjbY2UBlOJg0T23CjTbFYO
+	 R1uebc1h48tOQ==
+Message-ID: <1cccb564-7156-40fb-9750-95c1aee22677@kernel.org>
+Date: Fri, 25 Apr 2025 10:22:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	gv4JGUTobPc5qwnjKwWGqACo7iLS2so9M96TQiL0MLQaknB0RPdgQY/w94RoT1c17BrTgd5dDCxg2W08N56OV6fmNBTZ+TRom4gpgYrUPCtqDbeBrZgB4+X5j2ZuOGNsBCJTGnoJY2kJ+CFASI6n6vFQaYBJZuC1mOsjSSjXmgA//6d91Zy32u8iz7eRvxoeFNREEmKfQm//461/AzzIBp6Cme0S9/q5nHSLIkS09rWKWradHqIjeEgw4omA0mR4m5Dqk6caeFXJ0axQsY+ORoRNlJOI8Yhlk5AP6Ry7KGOqSmr6hI67UwS7Vbx5CjXCUgJNT9JZYhHR45S16f1P8BObkwz8Aiom2LdFZy6NXXHYnXjVv6PCuP0ybv4jrTiOAq3jPOTKbsD8BSxz/5Uf3YC9eaf81vvni3V/PWsQH7afiiqMg6Xr9x9acBHMfxKCRhp9Hu3WP9GoGEpxhXrJt8mIL3e5VuHwXiR0Om65GcyyQsbk3HFAeGJOR2iQfpS5jt7vb3DTT4+8BFousA+YmsHdRCnT1VwcmTpxntjQZ9WjHv2BNGQ8ZkRrLOE99JrRhciPB3fk8UG1YnRFmeWGxsuDfrbkBlk3+6wX8MSCMhMKm2Q9DesK5LI06oWZHWzg
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6849.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de70b73f-6fbc-4241-40b7-08dd83a0082b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2025 02:22:31.1415
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JR6mAzK0yKMujgQyBfrS8QrfLjpO+FxD2Ti6/yMN9EB6//hJJgG1LSEne50vr/uE/DO/prCg7z9kOH9kckOVaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR04MB8113
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+ Daeho Jeong <daehojeong@google.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs-tools: introduce fault injection to fsck
+To: Daeho Jeong <daeho43@gmail.com>
+References: <20250418165601.3050393-1-daeho43@gmail.com>
+ <1f50d7cf-2c08-4dc5-8b64-2d30dc24f3bb@kernel.org>
+ <CACOAw_wO+uO4FmAYujo1uV5=SGRUmxqh_O_vAuofdyUuH=_m2Q@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CACOAw_wO+uO4FmAYujo1uV5=SGRUmxqh_O_vAuofdyUuH=_m2Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Waiman,=0A=
-=0A=
->>>>> In my test env I've added a null check to 'child' and re-running=0A=
->>>>> the long-term test.=0A=
->>>>> I'm wondering if this patch is sufficient to address any underlying=
-=0A=
->>>>> issue or is just a band-aid.=0A=
->>>>> Please share any known patches or suggestions.=0A=
->>>>>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 -=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 while (child !=3D parent) {=0A=
->>>>>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 +=A0=A0=A0=A0=A0=A0=A0=
-=A0 while (child && child !=3D parent) {=0A=
->>>> Child can become NULL only if the updated_next list isn't parent=0A=
->>>> terminated. This should not happen. A warning is needed if it really=
-=0A=
->>>> happens. I will take a further look to see if there is a bug somewhere=
-.=0A=
->>> My test re-ran for 36+ hours without any CPU lockups or NMI. This=0A=
->>> patch seems to have helped.=0A=
->>>=0A=
->> I now see what is wrong. The cgroup_rstat_push_children() function is=0A=
->> supposed to be called with cgroup_rstat_lock held, but commit=0A=
->> 093c8812de2d3 ("cgroup: rstat: Cleanup flushing functions and=0A=
->> locking") changes that. Hence racing can corrupt the list. I will work=
-=0A=
->> on a patch to fix that regression.=0A=
->=0A=
->It should also be in v6.15-rc1 branch but is missing in the nvme branch=0A=
->that you are using. So you need to use a more updated nvme, when=0A=
->available, to avoid this problem.=0A=
->=0A=
-Thank you for finding that commit. I'll look for it.=0A=
-=0A=
-Christoph, Sagi, Keith, Others,=0A=
-Can this commit be merged into the nvme-6.15 branch please?=0A=
-=0A=
-Thanks & Regards,=0A=
-Kamaljit=0A=
+On 4/25/25 00:22, Daeho Jeong wrote:
+> On Wed, Apr 23, 2025 at 7:01 PM Chao Yu <chao@kernel.org> wrote:
+>>
+>> On 4/19/25 00:56, Daeho Jeong wrote:
+>>> From: Daeho Jeong <daehojeong@google.com>
+>>>
+>>> Due to the difficulty of intentionally corrupting specific metadata on
+>>> some storage devices like zoned storage devices, it is challenging to
+>>> effectively verify fsck functionality. To facilitate this verification,
+>>> it is necessary to add a fault injection mode.
+>>
+>> Daeho,
+>>
+>> What do you think of adding some stats for how many time it was injected
+>> for each fault type? then we can check whether all faults we needed have
+>> been triggered and also we can get the triggered count.
+> 
+> Sounds good. Then, can we show the result at the end of the fsck run?
+
+Yeah, I think so. :)
+
+Thanks,
+
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>>> ---
+>>>  fsck/fsck.c       | 106 +++++++++++++++++++++++++++++++++-------------
+>>>  fsck/main.c       |  22 ++++++++++
+>>>  fsck/mkquota.c    |   3 ++
+>>>  include/f2fs_fs.h |  54 +++++++++++++++++++++++
+>>>  man/fsck.f2fs.8   |  36 ++++++++++++++++
+>>>  5 files changed, 192 insertions(+), 29 deletions(-)
+>>>
+>>> diff --git a/fsck/fsck.c b/fsck/fsck.c
+>>> index 8155cbd..e879d8c 100644
+>>> --- a/fsck/fsck.c
+>>> +++ b/fsck/fsck.c
+>>> @@ -16,6 +16,20 @@
+>>>  char *tree_mark;
+>>>  uint32_t tree_mark_size = 256;
+>>>
+>>> +const char *f2fs_fault_name[FAULT_MAX] = {
+>>> +     [FAULT_SEG_TYPE]        = "invalid segment type",
+>>> +     [FAULT_SUM_TYPE]        = "invalid summary type",
+>>> +     [FAULT_SUM_ENT]         = "invalid summary entry",
+>>> +     [FAULT_NAT]             = "invalid nat entry",
+>>> +     [FAULT_NODE]            = "invalid node block",
+>>> +     [FAULT_XATTR_ENT]       = "invalid xattr entry",
+>>> +     [FAULT_COMPR]           = "invalid compression type",
+>>> +     [FAULT_INODE]           = "invalid inode info",
+>>> +     [FAULT_DENTRY]          = "invalid dentry",
+>>> +     [FAULT_DATA]            = "invalid data block",
+>>> +     [FAULT_QUOTA]           = "invalid quota",
+>>> +};
+>>> +
+>>>  int f2fs_set_main_bitmap(struct f2fs_sb_info *sbi, u32 blk, int type)
+>>>  {
+>>>       struct f2fs_fsck *fsck = F2FS_FSCK(sbi);
+>>> @@ -23,9 +37,9 @@ int f2fs_set_main_bitmap(struct f2fs_sb_info *sbi, u32 blk, int type)
+>>>       int fix = 0;
+>>>
+>>>       se = get_seg_entry(sbi, GET_SEGNO(sbi, blk));
+>>> -     if (se->type >= NO_CHECK_TYPE)
+>>> -             fix = 1;
+>>> -     else if (IS_DATASEG(se->type) != IS_DATASEG(type))
+>>> +     if (time_to_inject(FAULT_SEG_TYPE) ||
+>>> +                     (se->type >= NO_CHECK_TYPE) ||
+>>> +                     (IS_DATASEG(se->type) != IS_DATASEG(type)))
+>>>               fix = 1;
+>>>
+>>>       /* just check data and node types */
+>>> @@ -168,7 +182,8 @@ static int is_valid_ssa_node_blk(struct f2fs_sb_info *sbi, u32 nid,
+>>>
+>>>       sum_blk = get_sum_block(sbi, segno, &type);
+>>>
+>>> -     if (type != SEG_TYPE_NODE && type != SEG_TYPE_CUR_NODE) {
+>>> +     if (time_to_inject(FAULT_SUM_TYPE) ||
+>>> +                     (type != SEG_TYPE_NODE && type != SEG_TYPE_CUR_NODE)) {
+>>>               /* can't fix current summary, then drop the block */
+>>>               if (!c.fix_on || type < 0) {
+>>>                       ASSERT_MSG("Summary footer is not for node segment");
+>>> @@ -189,7 +204,8 @@ static int is_valid_ssa_node_blk(struct f2fs_sb_info *sbi, u32 nid,
+>>>
+>>>       sum_entry = &(sum_blk->entries[offset]);
+>>>
+>>> -     if (le32_to_cpu(sum_entry->nid) != nid) {
+>>> +     if (time_to_inject(FAULT_SUM_ENT) ||
+>>> +                     (le32_to_cpu(sum_entry->nid) != nid)) {
+>>>               if (!c.fix_on || type < 0) {
+>>>                       DBG(0, "nid                       [0x%x]\n", nid);
+>>>                       DBG(0, "target blk_addr           [0x%x]\n", blk_addr);
+>>> @@ -282,7 +298,7 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
+>>>       struct f2fs_summary *sum_entry;
+>>>       struct seg_entry * se;
+>>>       u32 segno, offset;
+>>> -     int need_fix = 0, ret = 0;
+>>> +     int need_fix = 0, ret = 0, fault_sum_ent = 0;
+>>>       int type;
+>>>
+>>>       if (get_sb(feature) & F2FS_FEATURE_RO)
+>>> @@ -293,7 +309,8 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
+>>>
+>>>       sum_blk = get_sum_block(sbi, segno, &type);
+>>>
+>>> -     if (type != SEG_TYPE_DATA && type != SEG_TYPE_CUR_DATA) {
+>>> +     if (time_to_inject(FAULT_SUM_TYPE) ||
+>>> +                     (type != SEG_TYPE_DATA && type != SEG_TYPE_CUR_DATA)) {
+>>>               /* can't fix current summary, then drop the block */
+>>>               if (!c.fix_on || type < 0) {
+>>>                       ASSERT_MSG("Summary footer is not for data segment");
+>>> @@ -314,7 +331,10 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
+>>>
+>>>       sum_entry = &(sum_blk->entries[offset]);
+>>>
+>>> -     if (le32_to_cpu(sum_entry->nid) != parent_nid ||
+>>> +     if (time_to_inject(FAULT_SUM_ENT))
+>>> +             fault_sum_ent = 1;
+>>> +
+>>> +     if (fault_sum_ent || le32_to_cpu(sum_entry->nid) != parent_nid ||
+>>>                       sum_entry->version != version ||
+>>>                       le16_to_cpu(sum_entry->ofs_in_node) != idx_in_node) {
+>>>               if (!c.fix_on || type < 0) {
+>>> @@ -333,7 +353,8 @@ static int is_valid_ssa_data_blk(struct f2fs_sb_info *sbi, u32 blk_addr,
+>>>                       DBG(0, "Target data block addr    [0x%x]\n", blk_addr);
+>>>                       ASSERT_MSG("Invalid data seg summary\n");
+>>>                       ret = -EINVAL;
+>>> -             } else if (is_valid_summary(sbi, sum_entry, blk_addr)) {
+>>> +             } else if (!fault_sum_ent &&
+>>> +                             is_valid_summary(sbi, sum_entry, blk_addr)) {
+>>>                       /* delete wrong index */
+>>>                       ret = -EINVAL;
+>>>               } else {
+>>> @@ -397,6 +418,9 @@ err:
+>>>  static int sanity_check_nat(struct f2fs_sb_info *sbi, u32 nid,
+>>>                                               struct node_info *ni)
+>>>  {
+>>> +     if (time_to_inject(FAULT_NAT))
+>>> +             return -EINVAL;
+>>> +
+>>>       if (!IS_VALID_NID(sbi, nid)) {
+>>>               ASSERT_MSG("nid is not valid. [0x%x]", nid);
+>>>               return -EINVAL;
+>>> @@ -436,6 +460,9 @@ static int sanity_check_nid(struct f2fs_sb_info *sbi, u32 nid,
+>>>       struct f2fs_fsck *fsck = F2FS_FSCK(sbi);
+>>>       int ret;
+>>>
+>>> +     if (time_to_inject(FAULT_NODE))
+>>> +             return -EINVAL;
+>>> +
+>>>       ret = sanity_check_nat(sbi, nid, ni);
+>>>       if (ret)
+>>>               return ret;
+>>> @@ -865,7 +892,7 @@ int chk_extended_attributes(struct f2fs_sb_info *sbi, u32 nid,
+>>>                               "end of list", nid);
+>>>               need_fix = true;
+>>>       }
+>>> -     if (need_fix && c.fix_on) {
+>>> +     if ((time_to_inject(FAULT_XATTR_ENT) || need_fix) && c.fix_on) {
+>>>               memset(ent, 0, (u8 *)last_base_addr - (u8 *)ent);
+>>>               write_all_xattrs(sbi, inode, xattr_size, xattr);
+>>>               FIX_MSG("[0x%x] nullify wrong xattr entries", nid);
+>>> @@ -907,7 +934,8 @@ void fsck_chk_inode_blk(struct f2fs_sb_info *sbi, u32 nid,
+>>>       if (!compressed)
+>>>               goto check_next;
+>>>
+>>> -     if (!compr_supported || (node_blk->i.i_inline & F2FS_INLINE_DATA)) {
+>>> +     if (time_to_inject(FAULT_COMPR) || !compr_supported ||
+>>> +                     (node_blk->i.i_inline & F2FS_INLINE_DATA)) {
+>>>               /*
+>>>                * The 'compression' flag in i_flags affects the traverse of
+>>>                * the node tree.  Thus, it must be fixed unconditionally
+>>> @@ -943,12 +971,13 @@ check_next:
+>>>                       f2fs_set_main_bitmap(sbi, ni->blk_addr,
+>>>                                                       CURSEG_WARM_NODE);
+>>>
+>>> -                     if (i_links == 0 && (ftype == F2FS_FT_CHRDEV ||
+>>> +                     if (time_to_inject(FAULT_INODE) ||
+>>> +                             (i_links == 0 && (ftype == F2FS_FT_CHRDEV ||
+>>>                               ftype == F2FS_FT_BLKDEV ||
+>>>                               ftype == F2FS_FT_FIFO ||
+>>>                               ftype == F2FS_FT_SOCK ||
+>>>                               ftype == F2FS_FT_SYMLINK ||
+>>> -                             ftype == F2FS_FT_REG_FILE)) {
+>>> +                             ftype == F2FS_FT_REG_FILE))) {
+>>>                               ASSERT_MSG("ino: 0x%x ftype: %d has i_links: %u",
+>>>                                                       nid, ftype, i_links);
+>>>                               if (c.fix_on) {
+>>> @@ -1008,7 +1037,8 @@ check_next:
+>>>               if (c.feature & F2FS_FEATURE_EXTRA_ATTR) {
+>>>                       unsigned int isize =
+>>>                               le16_to_cpu(node_blk->i.i_extra_isize);
+>>> -                     if (isize > 4 * DEF_ADDRS_PER_INODE) {
+>>> +                     if (time_to_inject(FAULT_INODE) ||
+>>> +                                     (isize > 4 * DEF_ADDRS_PER_INODE)) {
+>>>                               ASSERT_MSG("[0x%x] wrong i_extra_isize=0x%x",
+>>>                                               nid, isize);
+>>>                               if (c.fix_on) {
+>>> @@ -1038,8 +1068,9 @@ check_next:
+>>>                       unsigned int inline_size =
+>>>                               le16_to_cpu(node_blk->i.i_inline_xattr_size);
+>>>
+>>> -                     if (!inline_size ||
+>>> -                                     inline_size > MAX_INLINE_XATTR_SIZE) {
+>>> +                     if (time_to_inject(FAULT_INODE) ||
+>>> +                                     (!inline_size ||
+>>> +                                     inline_size > MAX_INLINE_XATTR_SIZE)) {
+>>>                               ASSERT_MSG("[0x%x] wrong inline_xattr_size:%u",
+>>>                                               nid, inline_size);
+>>>                               if (c.fix_on) {
+>>> @@ -1056,9 +1087,10 @@ check_next:
+>>>       }
+>>>       ofs = get_extra_isize(node_blk);
+>>>
+>>> -     if ((node_blk->i.i_flags & cpu_to_le32(F2FS_CASEFOLD_FL)) &&
+>>> -         (!S_ISDIR(le16_to_cpu(node_blk->i.i_mode)) ||
+>>> -          !(c.feature & F2FS_FEATURE_CASEFOLD))) {
+>>> +     if (time_to_inject(FAULT_INODE) ||
+>>> +              ((node_blk->i.i_flags & cpu_to_le32(F2FS_CASEFOLD_FL)) &&
+>>> +               (!S_ISDIR(le16_to_cpu(node_blk->i.i_mode)) ||
+>>> +                !(c.feature & F2FS_FEATURE_CASEFOLD)))) {
+>>>               ASSERT_MSG("[0x%x] unexpected casefold flag", nid);
+>>>               if (c.fix_on) {
+>>>                       FIX_MSG("ino[0x%x] clear casefold flag", nid);
+>>> @@ -1077,7 +1109,8 @@ check_next:
+>>>                       qf_szchk_type[cur_qtype] = QF_SZCHK_INLINE;
+>>>               block_t blkaddr = le32_to_cpu(node_blk->i.i_addr[ofs]);
+>>>
+>>> -             if (blkaddr != NULL_ADDR) {
+>>> +             if (time_to_inject(FAULT_INODE) ||
+>>> +                             (blkaddr != NULL_ADDR)) {
+>>>                       ASSERT_MSG("[0x%x] wrong inline reserve blkaddr:%u",
+>>>                                       nid, blkaddr);
+>>>                       if (c.fix_on) {
+>>> @@ -1088,7 +1121,8 @@ check_next:
+>>>                               need_fix = 1;
+>>>                       }
+>>>               }
+>>> -             if (i_size > inline_size) {
+>>> +             if (time_to_inject(FAULT_INODE) ||
+>>> +                             (i_size > inline_size)) {
+>>>                       ASSERT_MSG("[0x%x] wrong inline size:%lu",
+>>>                                       nid, (unsigned long)i_size);
+>>>                       if (c.fix_on) {
+>>> @@ -1118,7 +1152,7 @@ check_next:
+>>>               block_t blkaddr = le32_to_cpu(node_blk->i.i_addr[ofs]);
+>>>
+>>>               DBG(3, "ino[0x%x] has inline dentry!\n", nid);
+>>> -             if (blkaddr != 0) {
+>>> +             if (time_to_inject(FAULT_INODE) || (blkaddr != 0)) {
+>>>                       ASSERT_MSG("[0x%x] wrong inline reserve blkaddr:%u",
+>>>                                                               nid, blkaddr);
+>>>                       if (c.fix_on) {
+>>> @@ -1728,6 +1762,9 @@ static int f2fs_check_hash_code(int encoding, int casefolded,
+>>>                       struct f2fs_dir_entry *dentry,
+>>>                       const unsigned char *name, u32 len, int enc_name)
+>>>  {
+>>> +     if (time_to_inject(FAULT_DENTRY))
+>>> +             return 1;
+>>> +
+>>>       /* Casefolded Encrypted names require a key to compute siphash */
+>>>       if (enc_name && casefolded)
+>>>               return 0;
+>>> @@ -1799,7 +1836,8 @@ static int __chk_dots_dentries(struct f2fs_sb_info *sbi,
+>>>       int fixed = 0;
+>>>
+>>>       if ((name[0] == '.' && len == 1)) {
+>>> -             if (le32_to_cpu(dentry->ino) != child->p_ino) {
+>>> +             if (time_to_inject(FAULT_DENTRY) ||
+>>> +                             (le32_to_cpu(dentry->ino) != child->p_ino)) {
+>>>                       ASSERT_MSG("Bad inode number[0x%x] for '.', parent_ino is [0x%x]\n",
+>>>                               le32_to_cpu(dentry->ino), child->p_ino);
+>>>                       dentry->ino = cpu_to_le32(child->p_ino);
+>>> @@ -1809,13 +1847,16 @@ static int __chk_dots_dentries(struct f2fs_sb_info *sbi,
+>>>
+>>>       if (name[0] == '.' && name[1] == '.' && len == 2) {
+>>>               if (child->p_ino == F2FS_ROOT_INO(sbi)) {
+>>> -                     if (le32_to_cpu(dentry->ino) != F2FS_ROOT_INO(sbi)) {
+>>> +                     if (time_to_inject(FAULT_DENTRY) ||
+>>> +                                     (le32_to_cpu(dentry->ino) !=
+>>> +                                      F2FS_ROOT_INO(sbi))) {
+>>>                               ASSERT_MSG("Bad inode number[0x%x] for '..'\n",
+>>>                                       le32_to_cpu(dentry->ino));
+>>>                               dentry->ino = cpu_to_le32(F2FS_ROOT_INO(sbi));
+>>>                               fixed = 1;
+>>>                       }
+>>> -             } else if (le32_to_cpu(dentry->ino) != child->pp_ino) {
+>>> +             } else if (time_to_inject(FAULT_DENTRY) ||
+>>> +                             (le32_to_cpu(dentry->ino) != child->pp_ino)) {
+>>>                       ASSERT_MSG("Bad inode number[0x%x] for '..', parent parent ino is [0x%x]\n",
+>>>                               le32_to_cpu(dentry->ino), child->pp_ino);
+>>>                       dentry->ino = cpu_to_le32(child->pp_ino);
+>>> @@ -1826,7 +1867,7 @@ static int __chk_dots_dentries(struct f2fs_sb_info *sbi,
+>>>       if (f2fs_check_hash_code(get_encoding(sbi), casefolded, dentry, name, len, enc_name))
+>>>               fixed = 1;
+>>>
+>>> -     if (name[len] != '\0') {
+>>> +     if (time_to_inject(FAULT_DENTRY) || (name[len] != '\0')) {
+>>>               ASSERT_MSG("'.' is not NULL terminated\n");
+>>>               name[len] = '\0';
+>>>               memcpy(*filename, name, len);
+>>> @@ -1889,7 +1930,8 @@ static int __chk_dentries(struct f2fs_sb_info *sbi, int casefolded,
+>>>                       i++;
+>>>                       continue;
+>>>               }
+>>> -             if (!IS_VALID_NID(sbi, le32_to_cpu(dentry[i].ino))) {
+>>> +             if (time_to_inject(FAULT_DENTRY) ||
+>>> +                             !IS_VALID_NID(sbi, le32_to_cpu(dentry[i].ino))) {
+>>>                       ASSERT_MSG("Bad dentry 0x%x with invalid NID/ino 0x%x",
+>>>                                   i, le32_to_cpu(dentry[i].ino));
+>>>                       if (c.fix_on) {
+>>> @@ -1903,7 +1945,9 @@ static int __chk_dentries(struct f2fs_sb_info *sbi, int casefolded,
+>>>               }
+>>>
+>>>               ftype = dentry[i].file_type;
+>>> -             if ((ftype <= F2FS_FT_UNKNOWN || ftype > F2FS_FT_LAST_FILE_TYPE)) {
+>>> +             if (time_to_inject(FAULT_DENTRY) ||
+>>> +                             (ftype <= F2FS_FT_UNKNOWN ||
+>>> +                              ftype > F2FS_FT_LAST_FILE_TYPE)) {
+>>>                       ASSERT_MSG("Bad dentry 0x%x with unexpected ftype 0x%x",
+>>>                                               le32_to_cpu(dentry[i].ino), ftype);
+>>>                       if (c.fix_on) {
+>>> @@ -1918,7 +1962,8 @@ static int __chk_dentries(struct f2fs_sb_info *sbi, int casefolded,
+>>>
+>>>               name_len = le16_to_cpu(dentry[i].name_len);
+>>>
+>>> -             if (name_len == 0 || name_len > F2FS_NAME_LEN) {
+>>> +             if (time_to_inject(FAULT_DENTRY) ||
+>>> +                             (name_len == 0 || name_len > F2FS_NAME_LEN)) {
+>>>                       ASSERT_MSG("Bad dentry 0x%x with invalid name_len", i);
+>>>                       if (c.fix_on) {
+>>>                               FIX_MSG("Clear bad dentry 0x%x", i);
+>>> @@ -2153,6 +2198,9 @@ int fsck_chk_data_blk(struct f2fs_sb_info *sbi, struct f2fs_inode *inode,
+>>>               return 0;
+>>>       }
+>>>
+>>> +     if (time_to_inject(FAULT_DATA))
+>>> +             return -EINVAL;
+>>> +
+>>>       if (!f2fs_is_valid_blkaddr(sbi, blk_addr, DATA_GENERIC)) {
+>>>               ASSERT_MSG("blkaddress is not valid. [0x%x]", blk_addr);
+>>>               return -EINVAL;
+>>> diff --git a/fsck/main.c b/fsck/main.c
+>>> index 47ba6c9..29792d8 100644
+>>> --- a/fsck/main.c
+>>> +++ b/fsck/main.c
+>>> @@ -91,6 +91,8 @@ void fsck_usage()
+>>>       MSG(0, "  --no-kernel-check skips detecting kernel change\n");
+>>>       MSG(0, "  --kernel-check checks kernel change\n");
+>>>       MSG(0, "  --debug-cache to debug cache when -c is used\n");
+>>> +     MSG(0, "  --fault_injection=%%d to enable fault injection with specified injection rate\n");
+>>> +     MSG(0, "  --fault_type=%%d to configure enabled fault injection type\n");
+>>>       exit(1);
+>>>  }
+>>>
+>>> @@ -263,6 +265,8 @@ void f2fs_parse_options(int argc, char *argv[])
+>>>                       {"no-kernel-check", no_argument, 0, 2},
+>>>                       {"kernel-check", no_argument, 0, 3},
+>>>                       {"debug-cache", no_argument, 0, 4},
+>>> +                     {"fault_injection", required_argument, 0, 5},
+>>> +                     {"fault_type", required_argument, 0, 6},
+>>>                       {0, 0, 0, 0}
+>>>               };
+>>>
+>>> @@ -287,6 +291,24 @@ void f2fs_parse_options(int argc, char *argv[])
+>>>                       case 4:
+>>>                               c.cache_config.dbg_en = true;
+>>>                               break;
+>>> +                     case 5:
+>>> +                             val = atoi(optarg);
+>>> +                             if ((unsigned int)val <= 1) {
+>>> +                                     MSG(0, "\tError: injection rate must be larger "
+>>> +                                                     "than 1: %d\n", val);
+>>> +                                     fsck_usage();
+>>> +                             }
+>>> +                             c.fault_info.inject_rate = val;
+>>> +                             c.fault_info.inject_type = F2FS_ALL_FAULT_TYPE;
+>>> +                             break;
+>>> +                     case 6:
+>>> +                             val = atoi(optarg);
+>>> +                             if (val >= (1UL << (FAULT_MAX))) {
+>>> +                                     MSG(0, "\tError: Invalid inject type: %x\n", val);
+>>> +                                     fsck_usage();
+>>> +                             }
+>>> +                             c.fault_info.inject_type = val;
+>>> +                             break;
+>>>                       case 'a':
+>>>                               c.auto_fix = 1;
+>>>                               MSG(0, "Info: Automatic fix mode enabled.\n");
+>>> diff --git a/fsck/mkquota.c b/fsck/mkquota.c
+>>> index 2451b58..eb63fc9 100644
+>>> --- a/fsck/mkquota.c
+>>> +++ b/fsck/mkquota.c
+>>> @@ -372,6 +372,9 @@ errcode_t quota_compare_and_update(struct f2fs_sb_info *sbi,
+>>>       dict_t *dict = qctx->quota_dict[qtype];
+>>>       errcode_t err = 0;
+>>>
+>>> +     if (time_to_inject(FAULT_QUOTA))
+>>> +             return -EINVAL;
+>>> +
+>>>       if (!dict)
+>>>               goto out;
+>>>
+>>> diff --git a/include/f2fs_fs.h b/include/f2fs_fs.h
+>>> index bb40adc..3e1056c 100644
+>>> --- a/include/f2fs_fs.h
+>>> +++ b/include/f2fs_fs.h
+>>> @@ -1476,6 +1476,33 @@ enum {
+>>>       F2FS_FEATURE_NAT_BITS = 0x0001,
+>>>  };
+>>>
+>>> +/* Fault inject control */
+>>> +enum {
+>>> +     FAULT_SEG_TYPE,
+>>> +     FAULT_SUM_TYPE,
+>>> +     FAULT_SUM_ENT,
+>>> +     FAULT_NAT,
+>>> +     FAULT_NODE,
+>>> +     FAULT_XATTR_ENT,
+>>> +     FAULT_COMPR,
+>>> +     FAULT_INODE,
+>>> +     FAULT_DENTRY,
+>>> +     FAULT_DATA,
+>>> +     FAULT_QUOTA,
+>>> +     FAULT_MAX
+>>> +};
+>>> +
+>>> +#define F2FS_ALL_FAULT_TYPE  ((1UL << (FAULT_MAX)) - 1)
+>>> +
+>>> +struct f2fs_fault_info {
+>>> +     int inject_ops;
+>>> +     int inject_rate;
+>>> +     unsigned int inject_type;
+>>> +};
+>>> +
+>>> +extern const char *f2fs_fault_name[FAULT_MAX];
+>>> +#define IS_FAULT_SET(fi, type) ((fi)->inject_type & (1UL << (type)))
+>>> +
+>>>  struct f2fs_configuration {
+>>>       uint32_t conf_reserved_sections;
+>>>       uint32_t reserved_segments;
+>>> @@ -1604,6 +1631,9 @@ struct f2fs_configuration {
+>>>               struct f2fs_journal nat_jnl;
+>>>               char nat_bytes[F2FS_MAX_BLKSIZE];
+>>>       };
+>>> +
+>>> +     /* Fault injection control */
+>>> +     struct f2fs_fault_info fault_info;
+>>>  };
+>>>
+>>>  extern int utf8_to_utf16(char *, const char *, size_t, size_t);
+>>> @@ -2131,4 +2161,28 @@ static inline void check_block_struct_sizes(void)
+>>>                       + NR_DENTRY_IN_BLOCK * F2FS_SLOT_LEN * sizeof(u8) == F2FS_BLKSIZE);
+>>>  }
+>>>
+>>> +/* Fault inject control */
+>>> +#define time_to_inject(type) __time_to_inject(type, __func__, \
+>>> +                                     __builtin_return_address(0))
+>>> +static inline bool __time_to_inject(int type, const char *func,
+>>> +             const char *parent_func)
+>>> +{
+>>> +     struct f2fs_fault_info *ffi = &c.fault_info;
+>>> +
+>>> +     if (!ffi->inject_rate)
+>>> +             return false;
+>>> +
+>>> +     if (!IS_FAULT_SET(ffi, type))
+>>> +             return false;
+>>> +
+>>> +     ffi->inject_ops++;
+>>> +     if (ffi->inject_ops >= ffi->inject_rate) {
+>>> +             ffi->inject_ops = 0;
+>>> +             MSG(0, "inject %s in %s of %p\n",
+>>> +                             f2fs_fault_name[type], func, parent_func);
+>>> +             return true;
+>>> +     }
+>>> +     return false;
+>>> +}
+>>> +
+>>>  #endif       /*__F2FS_FS_H */
+>>> diff --git a/man/fsck.f2fs.8 b/man/fsck.f2fs.8
+>>> index e39a846..3762e6d 100644
+>>> --- a/man/fsck.f2fs.8
+>>> +++ b/man/fsck.f2fs.8
+>>> @@ -67,6 +67,42 @@ Enable to show every directory entries in the partition.
+>>>  Specify the level of debugging options.
+>>>  The default number is 0, which shows basic debugging messages.
+>>>  .TP
+>>> +.BI \-\-fault_injection=%d " enable fault injection"
+>>> +Enable fault injection in all supported types with specified injection rate.
+>>> +.TP
+>>> +.BI \-\-fault_type=%d " configure fault injection type"
+>>> +Support configuring fault injection type, should be enabled with
+>>> +fault_injection option, fault type value is shown below, it supports
+>>> +single or combined type.
+>>> +.br
+>>> +===========================      ===========
+>>> +.br
+>>> +Type_Name                        Type_Value
+>>> +.br
+>>> +===========================      ===========
+>>> +.br
+>>> +FAULT_SEG_TYPE                   0x000000001
+>>> +.br
+>>> +FAULT_SUM_TYPE                   0x000000002
+>>> +.br
+>>> +FAULT_SUM_ENT                    0x000000004
+>>> +.br
+>>> +FAULT_NAT                        0x000000008
+>>> +.br
+>>> +FAULT_NODE                       0x000000010
+>>> +.br
+>>> +FAULT_XATTR_ENT                  0x000000020
+>>> +.br
+>>> +FAULT_COMPR                      0x000000040
+>>> +.br
+>>> +FAULT_INODE                      0x000000080
+>>> +.br
+>>> +FAULT_DENTRY                     0x000000100
+>>> +.br
+>>> +FAULT_DATA                       0x000000200
+>>> +.br
+>>> +FAULT_QUOTA                      0x000000400
+>>> +.TP
+>>>  .SH AUTHOR
+>>>  Initial checking code was written by Byoung Geun Kim <bgbg.kim@samsung.com>.
+>>>  Jaegeuk Kim <jaegeuk@kernel.org> reworked most parts of the codes to support
+>>
+
