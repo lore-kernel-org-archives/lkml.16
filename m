@@ -1,172 +1,198 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D6E169AE6;
-	Fri, 25 Apr 2025 16:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F36169AE6
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599134; cv=none; b=h95TlhYShSI3B5aDJyN5D+T9p9t07jEKMVn+o2uG+u6dA/s8GTxUqB/Y7PrUVBm7cI1R9kRiwYG4PX+FLyxsQ9ueyLoTRQzkV90vmDS2gsuko8Lz+zzFp0iusO5cZl+YtrhvehK3c+G4KFxs5Hrk7sGpco1Pesb6+iZu6mcNZ+4=
+	t=1745599164; cv=none; b=jAhQ+Q++BgkLBf937fdhpCvdVuj1Tthpu2AVDXD59onjds1Hkqp5FrZed5n5LTX+9c4/N+LnlTy2yHFMHWyWyF74lw2lzJHZ9z2F3ypQuPtoO/Ln0gs5c3OAv3eYEWjmfNZ66Zv/KtKa9qHbL14wFTOwDP1ZcTi6H9IwK/lu8iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599134; c=relaxed/simple;
-	bh=50iEDjqA2Jf8NqyUevMHPMcWNOhJKHJ7l0SSNos8C8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E7TuR+sa4nk6pdDDOySaVQPtzIm+AKzkoj8svU9BQqpOykMMFNigynUuSSpJSmN4VzVNuxUicetHa7fEGE4M5x0lHTfCyGwCUNeNnTAok2+s9WqKvT/3D6N24ZMMXVOUWtseYQlal0m/GczhVSGkPF1CGgMUPMw188JhKjRqkIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FqegsN0h; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745599164; c=relaxed/simple;
+	bh=qkCd8/HmV6AfmTU+1hru+x2meizjAEoGcJvos3klyC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6LA6XQ4mPTpBVpscGWwNU3XGRyCBqKd+l4M2fqaEjy5Iq0i6CAE8Mf98iLNt693kwhGT+90xJKiZqvlDkB7qF5CIqYxSUvlJZBn0VhXBLklQD6HuRgeDipcw0aV931DCSLuc7LasSYn3L2aHNs+6Qi0Ns2ECWT8klxJKn+BN3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=h5bB/9FH; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqegsN0h"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso2728676a91.3;
-        Fri, 25 Apr 2025 09:38:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="h5bB/9FH"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22438c356c8so30031165ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745599132; x=1746203932; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yXiNbQmDpj/6IlBES4itiaRMtSWy34oPDGVBOYZLx2s=;
-        b=FqegsN0hiGv9msrHjcwqkC5hucQSvu1jwT4Z1Mty1X6q8boQgna+t1bANU+neD4GGo
-         J41EXthi30HCWEt6sRIfKPWHDhwE8IJOkflNriFcwQqZwogNfyycSxUCCpeAMVfRtqUp
-         FbsXI9xsD+vtJXEqdSkc9RmaarcvdI9oZN1bxhavvrqCEdo5uO7uxJPbx46UiQEOn9Fz
-         Nrf4SRCSoDTbtCNLmFKmK5Wl3tkV15pkWafm6SxRl1VHjhoed94yuwBCbGyf5XJmKakb
-         /6JI4CHXlsQikWFeQPDO0d3LL68lMN09zHxvkqEc8qBhl1Ptm/0hGu264xyPaIUsIdYG
-         Jh7w==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745599162; x=1746203962; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uObhd6griCLVRMAdAUyHQB5JJqltVnuTe7FYQAThLL4=;
+        b=h5bB/9FH3uuFQB9MGVTFRuKmBfYMZdnWjj+zXWRTiOZToLNMdi+oX2MEW6t/ZPmpHl
+         GK73pGy/PVb8Si66FZz5Eggh9C//4G65TVGNbv3fntfkXlfc0s129oVt105q+Cu/CRpb
+         tFgk+8ge7Nb+LoWbSpKZ6lYgW4UZ7SkwTY4Fo0YkFowVFL4l2sYOvu+0dznaZqAwJx8R
+         bjcvRsADqsfd5g4IFp8kTTsUuYraRKKQxPOecO4EVAgr0w6lVTaVfvr1qPD6oA6FmfDY
+         gNmgDyjMTHFINntIJeebAXPqCkWqkdPr9JyZPeXeLQZ5pF5swa7F5BKEbsqj94LmDd0g
+         NngA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745599132; x=1746203932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yXiNbQmDpj/6IlBES4itiaRMtSWy34oPDGVBOYZLx2s=;
-        b=YxeqYVkCRfSDJohWw7ooPm3DN9jEXG4dq1jn/+WjFOzmCWxL5Yy9X8p6sEIXKnAnpP
-         YWixnObeT7tS7bH37FkZoUyMsCRRUqGVgiPZ3Z597iuy9wGPREQ6azyZf1/R2TJ99xEm
-         d/TEFEAc4otEE4HvwPpHYZxABnqNhO0mNRgCwlRAcqFd4bFmEyDt8DhZD88e5QxKFWgS
-         WaIMG20edrwxuumnacOyiFVDoQ0UMT1QRZ3SkNA0CQBwfM6iHkTnX/r4jr7yYM/A7D78
-         3n9YgXO/eYKf0P0E4fYJwvJSeuOI49ROiR0O95v8YVoc01OMS4pt+tCS8PmeFuDgzax1
-         4ihw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsPm1ZQ2YcPFedsoVdj0FEz+HRHBuuDo21e3AGtespSRxnJo/0O36Qg46qQ5sI8UXHHokwcZsnSXfVa8Ua@vger.kernel.org, AJvYcCVm+EySLWze4S6uNcgGuDc3nK4TEuG7m91lIDepY/wxyJD2iMNkZfCiEqZawC3Hc8iFWTTPUy5/@vger.kernel.org, AJvYcCWUqi7B8FIj5nTDDJC+ZqdhLktgTVWmUaJAa/Y7UPaLhXeCrpk1rS+EqUJsasvEeUU8ouY=@vger.kernel.org, AJvYcCXCcPPUQKOHP03LD0p1iuigNdU8Keqk2Pe9NFf0L0K0A6rFjHsrOj6X1oyrus7H7aYqZ3tl3wb/aH7rZ21bPqj5nHlT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUD+9kyX4JBQrwNR2736D7Pf4GoGTxoWixiqC0bqpQx7Ai6eGz
-	A4RrSCD+18AXFbJ9dib+lxAIv3UWlyE3eO6VjcS8YOZZ4AzKa31ghp8lmpU9+FMIjEkzoO8nx8W
-	569soFHqMedQHQiwVxg6+lX29A04=
-X-Gm-Gg: ASbGncvuaKitdrzWh0e3DFGT+cUqedigAdcPJ7W7xQR9D511Y0PzWJVmBZp0ymRbZ0D
-	8bpQbp6f8u7Qi49qASMD3gP/pUYpVu0B+C+I6d2ZStbrDSHYzVDnXahGIu4AZGs9fl5+0iiHhxe
-	Cm3WRpxRCjTzKD+IYTnt3pir5lG8Yp7ccwOP5RLA==
-X-Google-Smtp-Source: AGHT+IEP+m6u+dCth1Yb4tFOhfEb6+4KFu16P8LVmvq0VkEE125qZnM8xTasu/PoyRgs1S6Q86DiLygSBaKIGI/22K8=
-X-Received: by 2002:a17:90b:3941:b0:2ff:69d4:6fe2 with SMTP id
- 98e67ed59e1d1-309f7df2d4bmr5067247a91.16.1745599132498; Fri, 25 Apr 2025
- 09:38:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745599162; x=1746203962;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uObhd6griCLVRMAdAUyHQB5JJqltVnuTe7FYQAThLL4=;
+        b=LRvwUPQQh8dBePQvU6IExEp6DkH2+rFIDyCtFOwdw19vER02Tg94dE0srCJXilMwZz
+         ahGcelNd0aMwsyWf9zNmXzph1WhlJLZ/9jU4k/RIdMln1s5nuNAHssDQLEO7xgdLVeD2
+         ixzjTqB2Ip1hWJXJAmeKAM11fYbFULE7b3bXAgMuXW8m/oFiMeqkGtsjT1CMit+6WbEm
+         HQiBzy6jFIqZuARgHuELgZk/8iZh0MF0Ce6/ELixMwO74UfsdehzJcUIY6GzPIusRpPj
+         B6gxhhU17fM+9XSM/O3KsfU9nAuyZbsFNzsmtdMqXS1S59rlI0bRjz5IvuPGBH7jebZk
+         ydzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwmoqkz0SdAu0MJR7uYGk9l/62XkhjL+IJuKBiuT9fA73IKMcSA0Vt+5+IPoCKAi50TFiNw6xZLppBJ+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzal6i7mkxfk8/GHJsy7n8qy+9M+OIrtxzXYir5hFZJQtYcc0ln
+	59EWwKkxASXpXBeXoyZDZ09sa9PIBjE+V3eriEROhy72N0d/aG4CbhzzXbkU2Xk=
+X-Gm-Gg: ASbGncsMUG9pp/g9eDAX7Ut0QA3+uUdiwyXFCKC9OghNJk3u8YR3Tyl6Pf8hWpgT45X
+	+sQpxP3I4QZdjBzQUyzsicoNnMgEQ725EFXtf5H/BU12GF9yzZnD0ckrADad/TVE/KYkqW/x5Mr
+	+cTUzlPqh6wLdgRln7QfE4yJygnnXIK1Ndr9mXq8qex+cXhY7Osk0ucYWqVp7qXmvHUi9kdZ2LI
+	yqvysm9JYHi5yBu1hxy+jD/lALH0hPrcfi1yXRUGDHtT7PhNSmWf1L53aUjhHDE5a3Q+XJ1aMgd
+	zfWl/TAxtkSpMSlKV+9haz0Xht2XgLnGxIExhsNKyQo7i2CxMYQ=
+X-Google-Smtp-Source: AGHT+IFNazEr6ZYOzQGCXjgc58dYoHgOgILSppSPlOaxKyAejkPiwQZrkFFar4hARLXGCzwX+g5Izw==
+X-Received: by 2002:a17:903:40c9:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-22dbf4db64dmr47389315ad.5.1745599161894;
+        Fri, 25 Apr 2025 09:39:21 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51028basm34556395ad.196.2025.04.25.09.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 09:39:21 -0700 (PDT)
+Date: Fri, 25 Apr 2025 09:39:18 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com,
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
+ prctls
+Message-ID: <aAu6toR4VkcPMTlH@debug.ba.rivosinc.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
+ <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
+ <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
+ <D9EWR3RQK0FD.3GF55KNS53YSR@ventanamicro.com>
+ <aAp_87-Xr6gn_hD7@debug.ba.rivosinc.com>
+ <D9FOY8JACYTH.1FU7ZTEHFC5NI@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425080032.327477-1-yangfeng59949@163.com>
-In-Reply-To: <20250425080032.327477-1-yangfeng59949@163.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 25 Apr 2025 09:38:39 -0700
-X-Gm-Features: ATxdqUH7SLww-vplpJsBfazG-NmzHcolGXeASR1xgSA1r2Vn0e4MZ3c1yRb-HoU
-Message-ID: <CAEf4BzYYWkc0L+MLGoCpgVSvEKw3okb+Ta7WrpPOKMS1RZjM1g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Allow some trace helpers for all prog types
-To: Feng Yang <yangfeng59949@163.com>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, davem@davemloft.net, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9FOY8JACYTH.1FU7ZTEHFC5NI@ventanamicro.com>
 
-On Fri, Apr 25, 2025 at 1:02=E2=80=AFAM Feng Yang <yangfeng59949@163.com> w=
-rote:
+On Fri, Apr 25, 2025 at 01:42:44PM +0200, Radim Krčmář wrote:
+>2025-04-24T11:16:19-07:00, Deepak Gupta <debug@rivosinc.com>:
+>> On Thu, Apr 24, 2025 at 03:36:54PM +0200, Radim Krčmář wrote:
+>>>2025-04-23T21:44:09-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>> On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Krčmář wrote:
+>>>>>2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>>>> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
+>>>>>> @@ -14,7 +15,8 @@ struct kernel_clone_args;
+>>>>>>  struct cfi_status {
+>>>>>>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
+>>>>>> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
+>>>>>> +	unsigned long ubcfi_locked : 1;
+>>>>>> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
+>>>>>
+>>>>>The rsvd field shouldn't be necessary as the container for the bitfield
+>>>>>is 'unsigned long' sized.
+>>>>>
+>>>>>Why don't we use bools here, though?
+>>>>>It might produce a better binary and we're not hurting for struct size.
+>>>>
+>>>> If you remember one of the previous patch discussion, this goes into
+>>>> `thread_info` Don't want to bloat it. Even if we end shoving into task_struct,
+>>>> don't want to bloat that either. I can just convert it into bitmask if
+>>>> bitfields are an eyesore here.
+>>>
+>>>  "unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);"
+>>>
+>>>is an eyesore that defines exactly the same as the two lines alone
+>>>
+>>>  unsigned long ubcfi_en : 1;
+>>>  unsigned long ubcfi_locked : 1;
+>>>
+>>>That one should be removed.
+>>>
+>>>If we have only 4 bits in 4/8 bytes, then bitfields do generate worse
+>>>code than 4 bools and a 0/4 byte hole.  The struct size stays the same.
+>>>
+>>>I don't care much about the switch to bools, though, because this code
+>>>is not called often.
+>>
+>> I'll remove the bitfields, have single `unsigned long cfi_control_state`
+>> And do `#define RISCV_UBCFI_EN 1` and so on.
 >
-> From: Feng Yang <yangfeng@kylinos.cn>
+>I might have seemed too much against the bitfieds, sorry.  I am against
+>the rsvd fields, because it is a pointless cognitive overhead and even
+>this series already had a bug in them.
+
+Aah got it.
+
 >
-> if it works under NMI and doesn't use any context-dependent things,
-> should be fine for any program type. The detailed discussion is in [1].
+>#defines should generate the same code as bitfields (worse than bools),
+>so the source code is really a matter of personal preference.
+>(I do prefer bitfields.)
 >
-> [1] https://lore.kernel.org/all/CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-=
-GiS6oJixQg@mail.gmail.com/
+>>>>>> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
+>>>>>> +int arch_lock_shadow_stack_status(struct task_struct *task,
+>>>>>> +				  unsigned long arg)
+>>>>>> +{
+>>>>>> +	/* If shtstk not supported or not enabled on task, nothing to lock here */
+>>>>>> +	if (!cpu_supports_shadow_stack() ||
+>>>>>> +	    !is_shstk_enabled(task) || arg != 0)
+>>>>>> +		return -EINVAL;
+>>>>>
+>>>>>The task might want to prevent shadow stack from being enabled?
+>>>>
+>>>> But Why would it want to do that? Task can simply not issue the prctl. There
+>>>> are glibc tunables as well using which it can be disabled.
+>>>
+>>>The task might do it as some last resort to prevent a buggy code from
+>>>enabling shadow stacks that would just crash.  Or whatever complicated
+>>>reason userspace can think of.
+>>>
+>>>It's more the other way around.  I wonder why we're removing this option
+>>>when we don't really care what userspace does to itself.
+>>>I think it's complicating the kernel without an obvious gain.
+>>
+>> It just feels wierd. There isn't anything like this for other features lit-up
+>> via envcfg. Does hwprobe allow this on per-task basis? I'll look into it.
 >
-> Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> ---
->  kernel/bpf/cgroup.c      |  6 -----
->  kernel/bpf/helpers.c     | 50 +++++++++++++++++++++++++++++++++++++
->  kernel/trace/bpf_trace.c | 53 +++++-----------------------------------
->  net/core/filter.c        |  2 --
->  4 files changed, 56 insertions(+), 55 deletions(-)
+>I think PMM doesn't allow to lock and the rest don't seem configurable
+>from userspace.
 >
-
-Some tests in CI are failing, please check and fix. Also see below
-about compat probe_read APIs.
-
-
-> @@ -2037,6 +2052,16 @@ bpf_base_func_proto(enum bpf_func_id func_id, cons=
-t struct bpf_prog *prog)
->                 return &bpf_get_current_task_proto;
->         case BPF_FUNC_get_current_task_btf:
->                 return &bpf_get_current_task_btf_proto;
-> +       case BPF_FUNC_get_current_comm:
-> +               return &bpf_get_current_comm_proto;
-> +#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> +       case BPF_FUNC_probe_read:
-> +               return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0=
- ?
-> +                      NULL : &bpf_probe_read_compat_proto;
-> +       case BPF_FUNC_probe_read_str:
-> +               return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0=
- ?
-> +                      NULL : &bpf_probe_read_compat_str_proto;
-> +#endif
-
-No, let's not expose compat probe read APIs to more program types,
-these should eventually go away
-
-pw-bot: cr
-
->         case BPF_FUNC_probe_read_user:
->                 return &bpf_probe_read_user_proto;
->         case BPF_FUNC_probe_read_kernel:
-> @@ -2057,6 +2082,31 @@ bpf_base_func_proto(enum bpf_func_id func_id, cons=
-t struct bpf_prog *prog)
->                 return bpf_get_trace_vprintk_proto();
->         case BPF_FUNC_perf_event_read_value:
->                 return bpf_get_perf_event_read_value_proto();
-> +       case BPF_FUNC_perf_event_read:
-> +               return &bpf_perf_event_read_proto;
-> +       case BPF_FUNC_send_signal:
-> +               return &bpf_send_signal_proto;
-> +       case BPF_FUNC_send_signal_thread:
-> +               return &bpf_send_signal_thread_proto;
-> +       case BPF_FUNC_get_task_stack:
-> +               return prog->sleepable ? &bpf_get_task_stack_sleepable_pr=
-oto
-> +                                      : &bpf_get_task_stack_proto;
-> +       case BPF_FUNC_copy_from_user:
-> +               return prog->sleepable ? &bpf_copy_from_user_proto : NULL=
-;
-> +       case BPF_FUNC_copy_from_user_task:
-> +               return prog->sleepable ? &bpf_copy_from_user_task_proto :=
- NULL;
-
-I'd put these two next to probe_read APIs above
-
-> +       case BPF_FUNC_task_storage_get:
-> +               if (bpf_prog_check_recur(prog))
-> +                       return &bpf_task_storage_get_recur_proto;
-> +               return &bpf_task_storage_get_proto;
-> +       case BPF_FUNC_task_storage_delete:
-> +               if (bpf_prog_check_recur(prog))
-> +                       return &bpf_task_storage_delete_recur_proto;
-> +               return &bpf_task_storage_delete_proto;
-> +       case BPF_FUNC_get_branch_snapshot:
-> +               return &bpf_get_branch_snapshot_proto;
-> +       case BPF_FUNC_find_vma:
-> +               return &bpf_find_vma_proto;
->         default:
->                 return NULL;
->         }
-
-[...]
+>It's not that important and we hopefully won't be breaking any userspace
+>if we decided to allow it later, so I'm fine with this version.
