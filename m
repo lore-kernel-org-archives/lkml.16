@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C1D227E93;
-	Fri, 25 Apr 2025 05:33:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A74B219315
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:34:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745559205; cv=none; b=of5eg0Cb3Y+Wpsf1CU15f32v2RauwBCyADf8cO5rloMcUJEemeSyLzEaLj6ip6vkhXNKSaQ5P35wDLyCpLAdyI19aZ0c6kkvG/kyhbO6GsSNgDsxE5f6Lx3m4jcrytjpdO2qVVk+lpB9Y5hT7uVuSillRGM9GUMdDjawTpJ6MY8=
+	t=1745559292; cv=none; b=I/m2wtJeBXbj4FsDOObuLNcBVfrTcrOMZ9Yh868ptWQy2/WLNsOlgUnTspxUAYMao8lwLVl6h44ClpzkbnTg0kuDhNWzTuyHUCHOVgv4SQQaSbP7PQ5wBqIujLqTAS6vn6+cSSR2JfnByW6mRGL2ClqD9KJFBSoi1PQmBS6oiR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745559205; c=relaxed/simple;
-	bh=yaZ/xOw+yV7pDnZ4omfyKfpAGH6Pr1XtYBYLDUHsxpU=;
+	s=arc-20240116; t=1745559292; c=relaxed/simple;
+	bh=rMy64Y06o8/uQVeGFQxjA8rUvvlT0mF3F9cD012jz78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IglWlAi6kwD0pWxSBNLcit86t85mLsnMeiatVsFYKLpBrd8Ll/Kvk65n5m9rF74N1LyTOPW8nbB2zfhumRDweRvLwJS7uHP+89s51gsWIMD61L/dLJoNrY1x/1epsiWkjSCsJFAxxMVhkMELjdtuXhgIXGm6IbVc+pcDU8N3OpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRXDkC/e; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kPdcr8oYD0pOCbmywKtrLYAfdiskiYXPgJtQumm7b1Y2TOklZ9KHtBUs5KEd5eMvsFYt9bvmxXBFiaWFI7UOa+QtjViYUINi04WwzwNhWn6+4lz0MM7N5GwlmJFZqGIOFKoR8TpoOQWbWv0DNf21H7jiIHlAA6SxQ/ZcMHWLhHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InHNE5zb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRXDkC/e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B92ECC4CEE4;
-	Fri, 25 Apr 2025 05:33:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InHNE5zb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B64FFC4CEE4;
+	Fri, 25 Apr 2025 05:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745559204;
-	bh=yaZ/xOw+yV7pDnZ4omfyKfpAGH6Pr1XtYBYLDUHsxpU=;
+	s=k20201202; t=1745559291;
+	bh=rMy64Y06o8/uQVeGFQxjA8rUvvlT0mF3F9cD012jz78=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mRXDkC/eFQrFfTAR3fbh0KpZCOeTtnv4cACQ2xNdDBa+FqnFssheLF5Vkep1apZjz
-	 o0bKS8Ainq6orEc5feo5R1vAa0ATuGGdGTYCMqiB+8oiNNzL14LGzOr3RPFoG9nkrE
-	 M1jcPbckn/v2S4JoPiVJ/aAS3ySZDbG4A4rs0Cq6y+kwONplUlh2GG6QKvSUhkLIMQ
-	 9a3SJjaa6+uPBMQRXICVI7IkWntN3CWPXDQ6q//fU2/l7wCbm4LMn80A/p4Y+nEEWw
-	 q6CzbpMwslcBm2d1/iJgIXf+Ti9cxhB3jFI5rAOzTo3ux6XO4YFi1fjD5Gk43e5TQ1
-	 EGk1l72F4x/PQ==
-Message-ID: <0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
-Date: Fri, 25 Apr 2025 07:33:17 +0200
+	b=InHNE5zb5vEyzI9Nzs7Ocqml3hGWt/Wja5TxDmjPojXLCguR3C/CWsBSPhdknaoWQ
+	 e+H2zFhV32JwkjQytLW+suG5HBZnG2mXv6xzoAHifLgynEyV4xerKkf7E93IFjDkYo
+	 7G9ieeJm0Tk73QHRaL53HsmdbV110Qxv1bQM6QVX8gEdAk37P4RL/pVRuczJZeXZDa
+	 6369s0C3GiNETGYtGyk6YJG9ui0HZ27XNd0V/wtT+kv3N9qGCDEG4nbB+rTNbJ8CdO
+	 EMjs+3gnY/50eUmXDEyzSyN1ssWAOumowVZ0NuvCNlDKjKRlzNrYf6I44cTNm3sv8e
+	 wItmE0001b0sw==
+Message-ID: <f0966aa4-0945-425e-9d89-370eafe13ac1@kernel.org>
+Date: Fri, 25 Apr 2025 07:34:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v7 4/7] net: mtip: The L2 switch driver for imx287
-To: Jakub Kicinski <kuba@kernel.org>, Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>
-References: <20250423072911.3513073-1-lukma@denx.de>
- <20250423072911.3513073-5-lukma@denx.de> <20250424181110.2734cd0b@kernel.org>
+Subject: Re: [RFC PATCH] drm/bridge: ti-sn65dsi86: Enable HPD functionality
+To: Jayesh Choudhary <j-choudhary@ti.com>, dianders@chromium.org,
+ andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
+ tomi.valkeinen@ideasonboard.com
+Cc: jonas@kwiboo.se, jernej.skrabec@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, linux-kernel@vger.kernel.org
+References: <20250424105432.255309-1-j-choudhary@ti.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,34 +89,52 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250424181110.2734cd0b@kernel.org>
+In-Reply-To: <20250424105432.255309-1-j-choudhary@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/04/2025 03:11, Jakub Kicinski wrote:
-> On Wed, 23 Apr 2025 09:29:08 +0200 Lukasz Majewski wrote:
->> This patch series provides support for More Than IP L2 switch embedded
->> in the imx287 SoC.
->>
->> This is a two port switch (placed between uDMA[01] and MAC-NET[01]),
->> which can be used for offloading the network traffic.
->>
->> It can be used interchangeably with current FEC driver - to be more
->> specific: one can use either of it, depending on the requirements.
->>
->> The biggest difference is the usage of DMA - when FEC is used, separate
->> DMAs are available for each ENET-MAC block.
->> However, with switch enabled - only the DMA0 is used to send/receive data
->> to/form switch (and then switch sends them to respecitive ports).
+On 24/04/2025 12:54, Jayesh Choudhary wrote:
+> For TI SoC J784S4, the display pipeline looks like:
+> TIDSS -> CDNS-DSI -> SN65DSI86 -> DisplayConnector -> DisplaySink
+> This requires HPD to detect connection form the connector.
+> By default, the HPD is disabled for eDP. So enable it conditionally
+> based on a new flag 'keep-hpd' as mentioned in the comments in the
+> driver.
 > 
-> Lots of sparse warnings and build issues here, at least on x86.
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
 > 
-> Could you make sure it's clean with an allmodconfig config, 
-> something like:
+> Hello All,
 > 
-> make C=1 W=1 drivers/net/ethernet/freescale/mtipsw/ 
+> Sending this RFC patch to get some thoughts on hpd for sn65dsi86.
 
-... and W=1 with clang as well.
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
+
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
+
+(But if intention was not to get review, then of course it is fine)
 
 Best regards,
 Krzysztof
