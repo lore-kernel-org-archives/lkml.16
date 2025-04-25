@@ -1,44 +1,44 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B92165E4;
-	Fri, 25 Apr 2025 19:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9916321ABAA;
+	Fri, 25 Apr 2025 19:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609662; cv=none; b=RznTnh49gWk//jkZOp2bte2vo1GKUoU8tDGXXlYm3yFKIIWlwn7/T8n43tC+kXc9P+4Ulv0gyZ4Dp9bw6ovbnunWXRKC4SAx7aGIbwY4EgHhsvaVohjOvKafB82ozZor8Nur3LYFBIyRx5h2SEDJFX2nDkboEMHTn3RoroTiNqE=
+	t=1745609663; cv=none; b=ZIP3Q4y6smHlEhh1soRW2mpP4NQPtve+DlsFZolY4hU7VkrK7kvbctXYKuYBH8J4LdahLEFTaXVzb/Dk/ouzviUt+fFJF2npO6IOivWea1xXir/1iRHRcxGtpGe+hUohtjPNCzYpdnd8akMM+MFaRUmpzAyXoV7EhjkbaZu4nyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609662; c=relaxed/simple;
-	bh=U7w6gXzP3ZCafkn3yNXWi0Je+095AqzuERQUmPc6lzc=;
+	s=arc-20240116; t=1745609663; c=relaxed/simple;
+	bh=cI7GeKomdGvPYsn9OEfB9I5dh+S17dzPFLPqnuezrHI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D25hbfprmwlBhoiIYAri/GVGrxib4RF/9gnfgHMwrtsBU3OE4WAQVE0X33NeW/RyHTCUDUQZK9nbAeqAOeEZinjSYsx29eT0XhZOEYnXAcPrnZKzVrgA4ah41rH+otTzVvwuC359ItibvqQ0jqIeEjNeWl7BQnPNua4PS+ihoKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=OO2Kzodz; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=cwzaH2vePlFpTcU1VWzkLG9oKfUmTj2TV4Ev99YyGk2bUccaKYd5plHSSnHohLRh4DbAnuIhaYQQnZpjrmfIylmPbEtdsKI7w9sANMgtOWLcK/2AyvgbDfXzgaCoYu3sn0uWcDCyuQ7P9VKYFBWlg70w4CeTQURQu+Xwx1xvuAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=gWkXJ3qL; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="OO2Kzodz"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="gWkXJ3qL"
 Received: from kreacher.localnet (unknown [217.114.34.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id EF1B0663D9D;
-	Fri, 25 Apr 2025 21:34:12 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3D4E8663631;
+	Fri, 25 Apr 2025 21:34:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745609653;
-	bh=U7w6gXzP3ZCafkn3yNXWi0Je+095AqzuERQUmPc6lzc=;
+	s=dkim; t=1745609651;
+	bh=cI7GeKomdGvPYsn9OEfB9I5dh+S17dzPFLPqnuezrHI=;
 	h=From:Subject:Date;
-	b=OO2Kzodzyfrrio/OJB6BZ15YJUYEsCMQTeOm2EjdDfRFMWJeMu2zqX4wMdrrkTbsQ
-	 IZZDRJe/06vzjvcSNf19epKVTvo39coiY0nVKTVTkXdxAMFPqsjKrNgGrbyIANGO2M
-	 0Mezvs4AHM7mfBUGFynoL/iTrHw1YleMfyR8K2NsTX8xdTsm9Tmk3opkNEe89qpudd
-	 qpfrhNBxrQpWhlxEb2DL7Cvsg21RulqT+9bJVsIxPxFBmTNMinOqk/NWjjN/IXBJGb
-	 xBO+BpV9iMYgJDH1XSdOtPKjGB9b4AvvBQLmzxfLZxR9+Sp3VHREi++ohly7dR9NkP
-	 tDSE8IzojfaBg==
+	b=gWkXJ3qLpBt6MFDNCF8MJsdNpy8v4re96Oz1Myj9/iGGCJSbVfNfsMB5BZjpEklgO
+	 dVFeStGW8NrYckXTagpfp0dkrpKvOVoPFIf6C977D4Ie5NnddGk5G4y8yJasC3FULs
+	 aArtrNv6ZQGlmlXIO2yV4ZQkTQo1DXukSocHkMH0iXVIZrgDBRn75uqkyVcujnxvE5
+	 kY9osl/o0YeT9TsaBk3vFBLtVl7sCEjm7nCT7w15jhprNxAs3gzyuvxGCxuC31QqyQ
+	 qxfWXIlAdvAEciSYoQyEDRZsEvEto5+P1gkY1OpPd0yteZzNxpyM31n2/XhABlEKO3
+	 tmLLoM6Lj6Bzg==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
-Subject: [PATCH v1 16/19] ACPICA: Avoid sequence overread in call to strncmp()
-Date: Fri, 25 Apr 2025 21:30:27 +0200
-Message-ID: <2248233.Mh6RI2rZIc@rjwysocki.net>
+Subject: [PATCH v1 18/19] ACPICA: Replace strncpy() with memcpy()
+Date: Fri, 25 Apr 2025 21:32:12 +0200
+Message-ID: <1910878.atdPhlSkOF@rjwysocki.net>
 In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
 References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -52,54 +52,84 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 217.114.34.19
 X-CLIENT-HOSTNAME: 217.114.34.19
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepieefkefgffetfffgleduffffjeeuveegvdefkedtjeefjeffhfdtkeffjeeffeffnecuffhomhgrihhnpehuvghfihdrohhrghdpghhnuhdrohhrghdpghhithhhuhgsrdgtohhmnecukfhppedvudejrdduudegrdefgedrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddujedruddugedrfeegrdduledphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepgedprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgsvghrthdrmhhoohhrvgesihhnthgvlhdrtghomhdprhgtphhtthhopehsrghkvghtrdguuhhmsghrvgesihh
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
 From: Ahmed Salem <x0rw3ll@gmail.com>
 
-ACPICA commit 8b83a8d88dfec59ea147fad35fc6deea8859c58c
+ACPICA commit 83019b471e1902151e67c588014ba2d09fa099a3
 
-ap_get_table_length() checks if tables are valid by
-calling ap_is_valid_header(). The latter then calls
-ACPI_VALIDATE_RSDP_SIG(Table->Signature).
+strncpy() is deprecated for NUL-terminated destination buffers[1].
 
-ap_is_valid_header() accepts struct acpi_table_header as an argument, so
-the signature size is always fixed to 4 bytes.
+Use memcpy() for length-bounded destinations.
 
-The problem is when the string comparison is between ACPI-defined table
-signature and ACPI_SIG_RSDP. Common ACPI table header specifies the
-Signature field to be 4 bytes long[1], with the exception of the RSDP
-structure whose signature is 8 bytes long "RSD PTR " (including the
-trailing blank character)[2]. Calling strncmp(sig, rsdp_sig, 8) would
-then result in a sequence overread[3] as sig would be smaller (4 bytes)
-than the specified bound (8 bytes).
-
-As a workaround, pass the bound conditionally based on the size of the
-signature being passed.
-
-Link: https://uefi.org/specs/ACPI/6.5_A/05_ACPI_Software_Programming_Model.html#system-description-table-header [1]
-Link: https://uefi.org/specs/ACPI/6.5_A/05_ACPI_Software_Programming_Model.html#root-system-description-pointer-rsdp-structure [2]
-Link: https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wstringop-overread [3]
-Link: https://github.com/acpica/acpica/commit/8b83a8d8
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Link: https://github.com/acpica/acpica/commit/83019b47
 Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/acpi/actypes.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpica/exconvrt.c  | 4 ++--
+ drivers/acpi/acpica/tbfind.c    | 4 ++--
+ drivers/acpi/acpica/utnonansi.c | 2 +-
+ include/acpi/actypes.h          | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/acpi/acpica/exconvrt.c b/drivers/acpi/acpica/exconvrt.c
+index bb1be42daee1..399c005aa57b 100644
+--- a/drivers/acpi/acpica/exconvrt.c
++++ b/drivers/acpi/acpica/exconvrt.c
+@@ -226,8 +226,8 @@ acpi_ex_convert_to_buffer(union acpi_operand_object *obj_desc,
+ 		/* Copy the string to the buffer */
+ 
+ 		new_buf = return_desc->buffer.pointer;
+-		strncpy((char *)new_buf, (char *)obj_desc->string.pointer,
+-			obj_desc->string.length);
++		memcpy((char *)new_buf, (char *)obj_desc->string.pointer,
++		       obj_desc->string.length);
+ 		break;
+ 
+ 	default:
+diff --git a/drivers/acpi/acpica/tbfind.c b/drivers/acpi/acpica/tbfind.c
+index 1c1b2e284bd9..35f72dffc250 100644
+--- a/drivers/acpi/acpica/tbfind.c
++++ b/drivers/acpi/acpica/tbfind.c
+@@ -57,8 +57,8 @@ acpi_tb_find_table(char *signature,
+ 
+ 	memset(&header, 0, sizeof(struct acpi_table_header));
+ 	ACPI_COPY_NAMESEG(header.signature, signature);
+-	strncpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
+-	strncpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE);
++	memcpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
++	memcpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE);
+ 
+ 	/* Search for the table */
+ 
+diff --git a/drivers/acpi/acpica/utnonansi.c b/drivers/acpi/acpica/utnonansi.c
+index ff0802ace19b..803e3e893825 100644
+--- a/drivers/acpi/acpica/utnonansi.c
++++ b/drivers/acpi/acpica/utnonansi.c
+@@ -168,7 +168,7 @@ void acpi_ut_safe_strncpy(char *dest, char *source, acpi_size dest_size)
+ {
+ 	/* Always terminate destination string */
+ 
+-	strncpy(dest, source, dest_size);
++	memcpy(dest, source, dest_size);
+ 	dest[dest_size - 1] = 0;
+ }
+ 
 diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index f7b3c4a4b7e7..5b9f9a612548 100644
+index 5b9f9a612548..e90ca342d7de 100644
 --- a/include/acpi/actypes.h
 +++ b/include/acpi/actypes.h
-@@ -527,7 +527,7 @@ typedef u64 acpi_integer;
+@@ -522,7 +522,7 @@ typedef u64 acpi_integer;
+ #define ACPI_COPY_NAMESEG(dest,src)     (*ACPI_CAST_PTR (u32, (dest)) = *ACPI_CAST_PTR (u32, (src)))
+ #else
+ #define ACPI_COMPARE_NAMESEG(a,b)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_CAST_PTR (char, (b)), ACPI_NAMESEG_SIZE))
+-#define ACPI_COPY_NAMESEG(dest,src)     (strncpy (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAMESEG_SIZE))
++#define ACPI_COPY_NAMESEG(dest,src)     (memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAMESEG_SIZE))
+ #endif
  
  /* Support for the special RSDP signature (8 characters) */
- 
--#define ACPI_VALIDATE_RSDP_SIG(a)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, 8))
-+#define ACPI_VALIDATE_RSDP_SIG(a)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, (sizeof(a) < 8) ? ACPI_NAMESEG_SIZE : 8))
- #define ACPI_MAKE_RSDP_SIG(dest)        (memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
- 
- /* Support for OEMx signature (x can be any character) */
 -- 
 2.43.0
 
