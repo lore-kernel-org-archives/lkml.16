@@ -1,116 +1,125 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE94E23F294;
-	Fri, 25 Apr 2025 10:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A1E20C00D;
+	Fri, 25 Apr 2025 10:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745578436; cv=none; b=fx/VZarkn5kEiD1fH7j3FgJp1rf8U8K/WBGoQZ4861CgukTPTlEMajxTQEeawwFbXllyksZ2FFRVQBEl/Kyb8iUGR3RQUhAfVrLBeKwlvQbw+ih8SnbwAjNYwRqrgCfsOFu3woLpgsHZqzGhEYCWpBYr5ySMyylpzkWdAXcQZ6g=
+	t=1745578440; cv=none; b=otahyHSF2TTVQdibUxFXo390h/sYPWK3ny0Rg+qjq4FZSQKp+4ctEMt1VnAr+z5mLT0uBtyk+sl1GRGWL9erQeBXDXLJZXIRx77uI+r03oGEpMgNrYTwMzcR7zhpeIwlKZ2zbykZ1m9/s6jQDPBjWMkZnOlHv9HnsBlSyFgK4cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745578436; c=relaxed/simple;
-	bh=/why4+36fOBzV86P+8y59rtkY6eWvvw3yaTU795qQi8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mWFU0hCrDy06FEfH0xuZZ67thl46GGfjC6VaDfWi7RvfgSz1Q3UxBzzPQBzljSbOzDIFAHymGm71WXCC9gCH0BYa/MuOL3Fv+oAZm1zzc+JKkNm4c9tedKKTVgt7tkcJNnjttPizsQT+q5g+aESCW3D9JMsc4hb5wgdudMu4Q2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC1D3106F;
-	Fri, 25 Apr 2025 03:53:47 -0700 (PDT)
-Received: from [10.57.45.160] (unknown [10.57.45.160])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DAD963F59E;
-	Fri, 25 Apr 2025 03:53:49 -0700 (PDT)
-Message-ID: <202ff57d-f88c-4cd8-995a-c9bdec7f8b18@arm.com>
-Date: Fri, 25 Apr 2025 11:53:48 +0100
+	s=arc-20240116; t=1745578440; c=relaxed/simple;
+	bh=2AZkdIkyg21yJJX6xmtAvk29MUvdsF3Y1TBzUwl65p4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=cJ7p8zINljdOaKRfYob8UL2Fh3E0xD8BYkHNW4cBVOC75TRbBEtPLCJ8JBD6nBFcGaKS8oupei7Mu//2vvFXOEXKsfZ6QN6EDbRqL6GIaUt7r6fYE+kGogG9NhUTOWj9sFZwEJiGpCRWQH9bCxMnuakgkyutRO6lOwlVwpHoyD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bC/2qPEe; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bC/2qPEe"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 2654E2020957; Fri, 25 Apr 2025 03:53:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2654E2020957
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745578439;
+	bh=wjWgDPCnELNadsZ7+gw9v/eGHhdmMPk6cFIpWvfy7OE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bC/2qPEe6+Tm+Q0Qq71Tmak2ma2YmEeuJ2BoikloFa6HQfH7WF6rzmG3PJHjDx7KV
+	 IQZVFj0kBErTLevPX0lZF0VFHLh1m9Y8ykEnp5HY39FkS/Kp/FWVaXq09IivEhuV1M
+	 0MK/tciHh7AV5fuP6TOXGQjyUhUJfxveDDBe53yA=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>
+Cc: Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v2 1/3] PCI: Export pci_msix_prepare_desc() for dynamic MSI-X alloc
+Date: Fri, 25 Apr 2025 03:53:57 -0700
+Message-Id: <1745578437-14878-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/43] arm64: RME: Add wrappers for RMI calls
-Content-Language: en-GB
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-5-steven.price@arm.com>
- <d43d1813-5402-488c-aadc-6336dedeccbe@arm.com>
-In-Reply-To: <d43d1813-5402-488c-aadc-6336dedeccbe@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 25/04/2025 11:48, Suzuki K Poulose wrote:
-> Hi Steven
-> 
-> On 16/04/2025 14:41, Steven Price wrote:
->> The wrappers make the call sites easier to read and deal with the
->> boiler plate of handling the error codes from the RMM.
->>
->> Reviewed-by: Gavin Shan <gshan@redhat.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->> Changes from v7:
->>   * Minor renaming of parameters and updated comments
->> Changes from v5:
->>   * Further improve comments
->> Changes from v4:
->>   * Improve comments
->> Changes from v2:
->>   * Make output arguments optional.
->>   * Mask RIPAS value rmi_rtt_read_entry()
->>   * Drop unused rmi_rtt_get_phys()
->> ---
->>   arch/arm64/include/asm/rmi_cmds.h | 508 ++++++++++++++++++++++++++++++
->>   1 file changed, 508 insertions(+)
->>   create mode 100644 arch/arm64/include/asm/rmi_cmds.h
->>
->> diff --git a/arch/arm64/include/asm/rmi_cmds.h b/arch/arm64/include/ 
->> asm/rmi_cmds.h
->> new file mode 100644
->> index 000000000000..27cd2751f3bf
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/rmi_cmds.h
->> @@ -0,0 +1,508 @@
-> 
-> ...
-> 
->> +
->> +/**
->> + * rmi_rtt_destroy() - Destroy an RTT
->> + * @rd: PA of the RD
->> + * @ipa: Base of the IPA range described by the RTT
->> + * @level: Depth of the RTT within the tree
->> + * @out_rtt: Pointer to write the PA of the RTT which was destroyed
->> + * @out_top: Pointer to write the top IPA of non-live RTT entries
->> + *
->> + * Destroys an RTT. The RTT must be non-live, i.e. none of the 
->> entries in the
->> + * table are in ASSIGNED or TABLE state.
-> 
-> minor nit: It may be worth emphasising that you mean HIPAS here and not
-> RMI_ASSIGNED (as returned by RTT_READ_ENTRY). The key is, an unprotected
-> live leaf mapping  (i.e., HIPAS=ASSIGNED_NS) is considered non-live.
+For supporting dynamic MSI-X vector allocation by PCI controllers, enabling
+the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
+to prepare the desc is also needed.
 
-Ah, I went back to the spec and TABLE is not a HIPAS ( :facepalm ).
-They are indeed RmmRttEntryState type. So, the comment is fine as it is.
-Please ignore ^
+Export pci_msix_prepare_desc() to allow PCI controllers to support dynamic
+MSI-X vector allocation.
 
-> 
-> Either ways:
-> 
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+ drivers/pci/msi/irqdomain.c | 5 +++--
+ include/linux/msi.h         | 2 ++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index d7ba8795d60f..43129aa6d6c7 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
+ 	pci_msix_unmask(irq_data_get_msi_desc(data));
+ }
+ 
+-static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+-				  struct msi_desc *desc)
++void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
++			   struct msi_desc *desc)
+ {
+ 	/* Don't fiddle with preallocated MSI descriptors */
+ 	if (!desc->pci.mask_base)
+ 		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
+ }
++EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
+ 
+ static const struct msi_domain_template pci_msix_template = {
+ 	.chip = {
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 86e42742fd0f..d5864d5e75c2 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -691,6 +691,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 					     struct irq_domain *parent);
+ u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+ struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
++void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
++			   struct msi_desc *desc);
+ #else /* CONFIG_PCI_MSI */
+ static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
+ {
+-- 
+2.34.1
 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-Suzuki
