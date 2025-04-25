@@ -1,201 +1,146 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304BA221FDC;
-	Fri, 25 Apr 2025 20:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6737221FDC
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745613407; cv=none; b=LJSzx2jF5Vdip8TxGQBMFLSyW79JuKk0evKetSeY9/Elbd6640EGuzD5tcWkFBf3NRbvZ5e4WxLCJ8exQhhTURJbEIAslq5abZymGZzcJTmdOBvznbgMXGVEyUCQ5TbdxwTHHLfCtDjUCyWukko24S1k5suBdDMLhlW3wbesvSA=
+	t=1745613414; cv=none; b=JprNODKmMrClpsFiHd7wftnoOeCYZNXMq9SbglATmm4zcA/0GEly9jAV6oi9TgTd0sz/iO+pgJzQ+0UBH4eP+9AeFUKklcYZ/TFDhhHn7V5tAPyhOzsX0BuZN0TRifx/V2V0Kes9Ops0WL+jrETAqLQwRDfR8M8wvrwVj/uYUxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745613407; c=relaxed/simple;
-	bh=f+ccn5QNGrrXo9YwEFZGJqZDqV2lpeCBtKwi7/+vWgU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LMZCc9Z8OIBK213zvhEy9lZ/gv81zuKOfvqZrLlZLV6ZViik0hZ1ZDFDa0SsD5VEGOqPmmqrIi9c4SdXT/C9PTh0TqbAvz4LW/+S3cDlmtzE/SqHmx5Fq2HSg+h9wRpVrCtmus8qVbZ6HxAe6lQvvyYlXF8hOmtxsVrr1SIiXrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DjpCC8de; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1745613414; c=relaxed/simple;
+	bh=3nzVjEcE2xggqucP2MD09GZAul3TXmXVkI9pWmfEni4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=l3pEb8JXMQmXXcoOC8zXlKjpDDNJCWVx2x+MO0QY10uvOIwaRmON5SwhQXhO4Tu4AnyKHjtdAChqiGa2pnjEt27LiFBL5jUPzxBnC1Y23q+rxTvpj4KB30UyxecxrJ4pHne1PugFYT3yh//S3sCol3Vtun/9HtWDMd/4rvlAVJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ozmu3L3/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DjpCC8de"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1745613403; x=1777149403;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DmnP9FluU/HwvhyHftNofULVB0VcKcyWu1eae2RMNp0=;
-  b=DjpCC8deOGjebYm/SMO6+71ylOW9C++5A3zZM8D7EbdV3PokKo0OvLHE
-   qi2vTqL2z/aNNwVMAKcJ/uNnijVqnjyUWaz8+uEW/1pjrPP0dagXNjSWn
-   f7SUaTCe7xshmReS5Qc1nOBxioADVOsaEY0f1FJednpspnCyuqIyJE4d4
-   8=;
-X-IronPort-AV: E=Sophos;i="6.15,240,1739836800"; 
-   d="scan'208";a="738826264"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 20:36:38 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:23839]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.65:2525] with esmtp (Farcaster)
- id e867d48e-e564-4aae-919e-2b0639b7151f; Fri, 25 Apr 2025 20:36:36 +0000 (UTC)
-X-Farcaster-Flow-ID: e867d48e-e564-4aae-919e-2b0639b7151f
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 25 Apr 2025 20:36:36 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.142.164.216) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 25 Apr 2025 20:36:32 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <shiming.cheng@mediatek.com>
-CC: <angelogioacchino.delregno@collabora.com>, <davem@davemloft.net>,
-	<dsahern@kernel.org>, <edumazet@google.com>, <horms@kernel.org>,
-	<jibin.zhang@mediatek.com>, <kuba@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <kuniyu@amazon.com>
-Subject: Re: [PATCH v2] net: use inet_twsk_put() when sk_state is TCP_TIME_WAIT
-Date: Fri, 25 Apr 2025 13:34:08 -0700
-Message-ID: <20250425203624.43634-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425123354.29254-1-shiming.cheng@mediatek.com>
-References: <20250425123354.29254-1-shiming.cheng@mediatek.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ozmu3L3/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=X9M4+Ej+Gp96bqz6Glzq05lkUeeT+EqqEuZ4uSjjb/8=; b=Ozmu3L3/XX/1Rz5n0br39c98sd
+	+NM+y4+unDGM/MrvEKTK/35ZtI36W65bKg9otOaUTiH5nuTHHge9h2J3fIyexX87+eghKwQTqVLe1
+	DWAyvg7xQedASA+j9wiEu60qU2u+FLyZQzDSE8007fe9MJV/MTlbUlLAjqKx9LOQ08ZueOuXPhnsI
+	CD1//9V6AICKD4exT4AU26/bumSbWGpKnka9TBocsVVWog9HZ4HvZT1aPLdcmEToIZWOrveJOBV8S
+	XCOVqBBRc+hmycf3nRqByJtqnDF4TDeIC/x8/7h/05EKHTmN7Y5UcvkZUC1w4xrowGhC9m8qPxItJ
+	ckWGF3sg==;
+Received: from [2a00:23ee:1cc0:5c4b:b264:5a63:8637:c285] (helo=[IPv6:::1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u8Pma-0000000C9YR-2BZs;
+	Fri, 25 Apr 2025 20:36:27 +0000
+Date: Fri, 25 Apr 2025 21:36:21 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>
+CC: Andrew Morton <akpm@linux-foundation.org>,
+ "Sauerwein, David" <dssauerw@amazon.de>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Ruihan Li <lrh2000@pku.edu.cn>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_7/7=5D_mm/mm=5Finit=3A_Use_for=5Fea?=
+ =?US-ASCII?Q?ch=5Fvalid=5Fpfn=28=29_in_init=5Funavailable=5Frange=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <8fd728cf-bc54-433d-8701-234a67933a97@redhat.com>
+References: <20250423133821.789413-1-dwmw2@infradead.org> <20250423133821.789413-8-dwmw2@infradead.org> <cabc322e-d5ab-4371-a506-c7809717b38b@redhat.com> <91CA8854-2E86-4AF3-BAD0-8C47833F59D4@infradead.org> <8fd728cf-bc54-433d-8701-234a67933a97@redhat.com>
+Message-ID: <0D5ABF4F-B1F2-4EB2-BD3B-A8312629D55E@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D046UWB002.ant.amazon.com (10.13.139.181) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-> net: use inet_twsk_put() when sk_state is TCP_TIME_WAIT
-
-To be more specific:
-
-  [PATCH vX net] tcp: use sock_gen_put() when sk_state is TCP_TIME_WAIT in tcp[46]_check_fraglist_gro()
-
-
-From: Shiming Cheng <shiming.cheng@mediatek.com>
-Date: Fri, 25 Apr 2025 20:33:48 +0800
-> From: Jibin Zhang <jibin.zhang@mediatek.com>
-> 
-> It is possible for a pointer of type struct inet_timewait_sock to be
-> returned from the functions __inet_lookup_established() and
-> __inet6_lookup_established(). This can cause a crash when the
-> returned pointer is of type struct inet_timewait_sock and
-> sock_put() is called on it. The following is a crash call stack that
-> shows sk->sk_wmem_alloc being accessed in sk_free() during the call to
-> sock_put() on a struct inet_timewait_sock pointer. To avoid this issue,
-> use inet_twsk_put() instead of sock_put() when sk->sk_state
-> is TCP_TIME_WAIT.
-> 
-> mrdump.ko        ipanic() + 120
-> vmlinux          notifier_call_chain(nr_to_call=-1, nr_calls=0) + 132
-> vmlinux          atomic_notifier_call_chain(val=0) + 56
-> vmlinux          panic() + 344
-> vmlinux          add_taint() + 164
-> vmlinux          end_report() + 136
-> vmlinux          kasan_report(size=0) + 236
-> vmlinux          report_tag_fault() + 16
-> vmlinux          do_tag_recovery() + 16
-> vmlinux          __do_kernel_fault() + 88
-> vmlinux          do_bad_area() + 28
-> vmlinux          do_tag_check_fault() + 60
-> vmlinux          do_mem_abort() + 80
-> vmlinux          el1_abort() + 56
-> vmlinux          el1h_64_sync_handler() + 124
-> vmlinux        > 0xFFFFFFC080011294()
-> vmlinux          __lse_atomic_fetch_add_release(v=0xF2FFFF82A896087C)
-> vmlinux          __lse_atomic_fetch_sub_release(v=0xF2FFFF82A896087C)
-> vmlinux          arch_atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C)
-> + 8
-
-Please don't fold this type of logs.
-
-Do you have the original stack trace decoded by
-./scripts/decode_stacktrace.sh ?
-
-Then, it would be better than the log with binary offsets.
-
-
-> vmlinux          raw_atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C)
-> + 8
-> vmlinux          atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C) + 8
-> vmlinux          __refcount_sub_and_test(i=1, r=0xF2FFFF82A896087C,
-> oldp=0) + 8
-> vmlinux          __refcount_dec_and_test(r=0xF2FFFF82A896087C, oldp=0) + 8
-> vmlinux          refcount_dec_and_test(r=0xF2FFFF82A896087C) + 8
-> vmlinux          sk_free(sk=0xF2FFFF82A8960700) + 28
-> vmlinux          sock_put() + 48
-> vmlinux          tcp6_check_fraglist_gro() + 236
-> vmlinux          tcp6_gro_receive() + 624
-> vmlinux          ipv6_gro_receive() + 912
-> vmlinux          dev_gro_receive() + 1116
-> vmlinux          napi_gro_receive() + 196
-> ccmni.ko         ccmni_rx_callback() + 208
-> ccmni.ko         ccmni_queue_recv_skb() + 388
-> ccci_dpmaif.ko   dpmaif_rxq_push_thread() + 1088
-> vmlinux          kthread() + 268
-> vmlinux          0xFFFFFFC08001F30C()
+On 25 April 2025 21:12:49 BST, David Hildenbrand <david@redhat=2Ecom> wrote=
+:
+>On 25=2E04=2E25 21:08, David Woodhouse wrote:
+>> On 25 April 2025 17:17:25 BST, David Hildenbrand <david@redhat=2Ecom> w=
+rote:
+>>> On 23=2E04=2E25 15:33, David Woodhouse wrote:
+>>>> From: David Woodhouse <dwmw@amazon=2Eco=2Euk>
+>>>>=20
+>>>> Currently, memmap_init initializes pfn_hole with 0 instead of
+>>>> ARCH_PFN_OFFSET=2E Then init_unavailable_range will start iterating e=
+ach
+>>>> page from the page at address zero to the first available page, but i=
+t
+>>>> won't do anything for pages below ARCH_PFN_OFFSET because pfn_valid
+>>>> won't pass=2E
+>>>>=20
+>>>> If ARCH_PFN_OFFSET is very large (e=2Eg=2E, something like 2^64-2GiB =
+if the
+>>>> kernel is used as a library and loaded at a very high address), the
+>>>> pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+>>>> long time, and the kernel will look stuck at boot time=2E
+>>>>=20
+>>>> Use for_each_valid_pfn() to skip the pointless iterations=2E
+>>>>=20
+>>>> Reported-by: Ruihan Li <lrh2000@pku=2Eedu=2Ecn>
+>>>> Suggested-by: Mike Rapoport <rppt@kernel=2Eorg>
+>>>> Signed-off-by: David Woodhouse <dwmw@amazon=2Eco=2Euk>
+>>>> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel=2Eorg>
+>>>> Tested-by: Ruihan Li <lrh2000@pku=2Eedu=2Ecn>
+>>>> ---
+>>>>    mm/mm_init=2Ec | 6 +-----
+>>>>    1 file changed, 1 insertion(+), 5 deletions(-)
+>>>>=20
+>>>> diff --git a/mm/mm_init=2Ec b/mm/mm_init=2Ec
+>>>> index 41884f2155c4=2E=2E0d1a4546825c 100644
+>>>> --- a/mm/mm_init=2Ec
+>>>> +++ b/mm/mm_init=2Ec
+>>>> @@ -845,11 +845,7 @@ static void __init init_unavailable_range(unsign=
+ed long spfn,
+>>>>    	unsigned long pfn;
+>>>>    	u64 pgcnt =3D 0;
+>>>>    -	for (pfn =3D spfn; pfn < epfn; pfn++) {
+>>>> -		if (!pfn_valid(pageblock_start_pfn(pfn))) {
+>>>> -			pfn =3D pageblock_end_pfn(pfn) - 1;
+>>>> -			continue;
+>>>> -		}
+>>>=20
+>>> So, if the first pfn in a pageblock is not valid, we skip the whole pa=
+geblock =2E=2E=2E
+>>>=20
+>>>> +	for_each_valid_pfn(pfn, spfn, epfn) {
+>>>>    		__init_single_page(pfn_to_page(pfn), pfn, zone, node);
+>>>>    		__SetPageReserved(pfn_to_page(pfn));
+>>>>    		pgcnt++;
+>>>=20
+>>> but here, we would process further pfns inside such a pageblock?
+>>>=20
+>>=20
+>> Is it not the case that either *all*, or *none*, of the PFNs within a g=
+iven pageblock will be valid?
+>
+>Hmm, good point=2E I was thinking about sub-sections, but all early secti=
+ons are fully valid=2E
+>
+>(Also, at least on x86, the subsection size should match the pageblock si=
+ze; might not be the case on other architectures, like arm64 with 64K base =
+pages =2E=2E=2E)
+>
+>>=20
+>> I assumed that was *why* it had that skip, as an attempt at the kind of=
+ optimisation that for_each_valid_pfn() now gives us?
+>
+>But it's interesting in this code that we didn't optimize for "if the fir=
+st pfn is valid, all the remaining ones are valid"=2E We would still check =
+each PFN=2E
+>
+>In any case, trying to figure out why Lorenzo ran into an issue =2E=2E=2E=
+ if it's nit because of the pageblock, maybe something in for_each_valid_pf=
+n with sparsemem is still shaky=2E
 >
 
-Fixes tag is needed here.
+A previous round of the patch series had a less aggressively optimised ver=
+sion of the sparsemem implementation=2E=2E=2E?
 
-  Fixes: c9d1d23e5239 ("net: add heuristic for enabling TCP fraglist GRO")
-
-> Signed-off-by: Jibin Zhang <jibin.zhang@mediatek.com>
-
-I guess the sender's SOB tag is also needed here when the author
-is different ?
-
-
-> ---
->  net/ipv4/tcp_offload.c   | 8 ++++++--
->  net/ipv6/tcpv6_offload.c | 8 ++++++--
->  2 files changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
-> index 2308665b51c5..95d7cbf6a2b5 100644
-> --- a/net/ipv4/tcp_offload.c
-> +++ b/net/ipv4/tcp_offload.c
-> @@ -431,8 +431,12 @@ static void tcp4_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
->  				       iph->daddr, ntohs(th->dest),
->  				       iif, sdif);
->  	NAPI_GRO_CB(skb)->is_flist = !sk;
-> -	if (sk)
-> -		sock_put(sk);
-
-sock_gen_put() will be better.
-
-Thanks!
-
-
-> +	if (sk) {
-> +		if (sk->sk_state == TCP_TIME_WAIT)
-> +			inet_twsk_put(inet_twsk(sk));
-> +		else
-> +			sock_put(sk);
-> +	}
->  }
->  
->  INDIRECT_CALLABLE_SCOPE
-> diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
-> index a45bf17cb2a1..5fcfa45b6f46 100644
-> --- a/net/ipv6/tcpv6_offload.c
-> +++ b/net/ipv6/tcpv6_offload.c
-> @@ -41,8 +41,12 @@ static void tcp6_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
->  					&hdr->daddr, ntohs(th->dest),
->  					iif, sdif);
->  	NAPI_GRO_CB(skb)->is_flist = !sk;
-> -	if (sk)
-> -		sock_put(sk);
-> +	if (sk) {
-> +		if (sk->sk_state == TCP_TIME_WAIT)
-> +			inet_twsk_put(inet_twsk(sk));
-> +		else
-> +			sock_put(sk);
-> +	}
->  #endif /* IS_ENABLED(CONFIG_IPV6) */
->  }
->  
-> -- 
-> 2.45.2
+Will see if I can reproduce in the morning=2E A boot in QEMU worked here b=
+efore I sent it out=2E
