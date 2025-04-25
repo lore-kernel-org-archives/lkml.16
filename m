@@ -1,103 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7995E13633F;
-	Fri, 25 Apr 2025 15:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2CE13633F;
+	Fri, 25 Apr 2025 15:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595922; cv=none; b=siHRhaMtHt/ixY2wJmOnyysO3D7Hf5XnX4U4uLz9xWsmcwcEph9evpP86PoolP/TZcd0oaQXWf4OBRUtZF6OEzozaFRSq5qy+m24c5vLn/fN2pQF8D+Ay5PiexkRiae5/ISFqCGstpR+vNGLUSHCMGo8Kz0asgX0Xu+fj6GlQLo=
+	t=1745595937; cv=none; b=G7x8Ax74kaDgySNTz5Jlsoih9DAeesVDV66WKndj0XUSO+RllSNntMUVYDSLa5i68Tbb4T8uuyDJoHabqy8efQq5m4AeMzLe+mc3Dl+hLeb15HsD4Um3tI0O5/FlygD8jPpITqN8RsR+EUCtw3dVl0Oh16WLh9W21VH+Elda+Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595922; c=relaxed/simple;
-	bh=sRi/0qV3JSGKETAC4Fwxq3NckwzSxUNJJwotSy9MGQ4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y7TM3HkfDtb5kP4I1nc9/MMhgMugHfpPV/ifiddn55gfmAuv8PpL07y6jT04LwkwQ45ggevsFcUlMmXA5bRqyjqln3KDQ5j32NOciXRygo7nKx/cBwydZqSPMKgT/Wy93Ciko7ErFaQkim99Tpk4WzJpT5nrW9niOZySoyQeEtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twGtmhGW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745595937; c=relaxed/simple;
+	bh=NDEMzXyKMQaX/1P4v8LWPCUwLdyUYFm0Z5j9i1NuUNc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oURIrzB+ARE3FVQLxz8dnOYU14uCYJjSvVX3nqn4tRxl4sqIg0d9GcdrQHWP+8ijFC1LA/zQonMzi39gEDovU/vlRJprrAMSpCqMIjZbdqwKMDMh4/q7CcalYhhgFQ/04fC+JnOFHmm7ZJ6T/QR933JkOJ7LdY0XGkJrf978+fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dRNB0hzB; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twGtmhGW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 04D42C4CEE9;
-	Fri, 25 Apr 2025 15:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745595922;
-	bh=sRi/0qV3JSGKETAC4Fwxq3NckwzSxUNJJwotSy9MGQ4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=twGtmhGWY3mybCMLhxRq4h47cvBaMi+GCAHTuKhEMFrBgXm/m56vvm/OJkXAS3hns
-	 lKIBlZz2x7R3wBvUtwnqkillcN/3xjRPfcNPasX0+RzOYFQU9U8v4wAP+ATxpKofo1
-	 /rUF/QYBGa4P5/5bXpCMMNCY+5EtOMtS8VQe3KrEdY573ZiLrB6LHIZlOxutYPL0YG
-	 Tg7XAl7ZzfehYPfjAmuP74HvLyinG3IQeoZf/2yINtFJzZHf7CJkDhwm1d9mgfU8zL
-	 AyUOvzDRBxsSF3qkNoz3nuEpRfiZ6QnJhHAtD3oI66Qluut45UBpgm6pQ6lJN/X0NX
-	 KxX9+5VoqeIxg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8276C369D3;
-	Fri, 25 Apr 2025 15:45:21 +0000 (UTC)
-From: Kurt Borja via B4 Relay <devnull+kuurtb.gmail.com@kernel.org>
-Date: Fri, 25 Apr 2025 12:45:06 -0300
-Subject: [PATCH 1/2] platform/x86: alienware-wmi-wmax: Fix uninitialized
- bitmap in awcc_hwmon_fans_init()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dRNB0hzB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745595936; x=1777131936;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=NDEMzXyKMQaX/1P4v8LWPCUwLdyUYFm0Z5j9i1NuUNc=;
+  b=dRNB0hzB9VSEVZTN6uSQdKcHqikDg35+hrmD9RswM0sJg7VLq7vXflvN
+   L1reVIaspl2ar5jsCDPfpN7akAbFhLGghWw+pCn19pxVTEbDg12AsoN6N
+   O6iyX/zUQKQvZtktFX2jk7eJYafaN86bT+ROFbbafcHQha1t0OhXLKs5p
+   W4k/Hcovc41OunM9OT7Hr9Q1XDHwhBS6NIRM9c6ZZzzY4mdcLEvIudGeo
+   UYRwmAL+8O3spijxoiIPhcZNqx2AO5dl0pJegz89Q+YcbAn4diomQZ1Jc
+   hAlzIA8q1wKOcSE2RV7O6gnp0NSBmt5HQG7wN/HZr61mIeUmmbAlXpmwn
+   w==;
+X-CSE-ConnectionGUID: 7bCgJpPqRiefXyfn2jXtMQ==
+X-CSE-MsgGUID: bMKMOgZ8RAGO3vxuOpGwsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="50928849"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="50928849"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:45:35 -0700
+X-CSE-ConnectionGUID: zVyTiGS+Tp27oRIuRu3o/Q==
+X-CSE-MsgGUID: FTR+bshYRAKz5gvHmp9NIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="133870388"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:45:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 25 Apr 2025 18:45:18 +0300 (EEST)
+To: "Xin Li (Intel)" <xin@zytor.com>
+cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+    dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+    acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com, 
+    peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com, 
+    alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+    adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org, 
+    ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com, 
+    tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com, 
+    seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com, 
+    kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com, 
+    dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to
+ <asm/tsc.h>
+In-Reply-To: <20250425083442.2390017-2-xin@zytor.com>
+Message-ID: <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
+References: <20250425083442.2390017-1-xin@zytor.com> <20250425083442.2390017-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-temp-id-fix-v1-1-372d71f732bf@gmail.com>
-References: <20250425-temp-id-fix-v1-0-372d71f732bf@gmail.com>
-In-Reply-To: <20250425-temp-id-fix-v1-0-372d71f732bf@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1295; i=kuurtb@gmail.com;
- h=from:subject:message-id;
- bh=g/Dk2JpTbYSEVwfZMItolcD7wZ6KOPVE70YJFfQTbXY=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBnc6wR23FvxjPv7lsB6jq+tLVcs33P/PK+0l0comK3OK
- VIqv7+5o5SFQYyLQVZMkaU9YdG3R1F5b/0OhN6HmcPKBDKEgYtTACZy4B3Df5+gtodLub/pfVIR
- XM+w4Dd/sViQ7xIpHjmh6aeeflKfvofhv//ND522DctXJl+SWL9WZ93VDW3P3rnb6p5TD5XsNJ+
- fygEA
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
-X-Endpoint-Received: by B4 Relay for kuurtb@gmail.com/default with
- auth_id=387
-X-Original-From: Kurt Borja <kuurtb@gmail.com>
-Reply-To: kuurtb@gmail.com
+Content-Type: text/plain; charset=US-ASCII
 
-From: Kurt Borja <kuurtb@gmail.com>
+On Fri, 25 Apr 2025, Xin Li (Intel) wrote:
 
-Initialize fan_temps bitmap to zero before using it for the first time
-in each iteration.
+> For some reason, there are some TSC-related functions in the MSR
+> header even though there is a tsc.h header.
+> 
+> Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
+> subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
+> Consequently, <asm/msr.h> must be included in several source files
+> that previously did not require it.
+>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> ---
+> 
+> Change in v3:
+> * Add a problem statement to the changelog (Dave Hansen).
+> ---
 
-Fixes: d69990783495 ("platform/x86: alienware-wmi-wmax: Add HWMON support")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/intel/pmc/cnp.c          |  1 +
+>  .../intel/speed_select_if/isst_if_common.c    |  1 +
+>  drivers/platform/x86/intel/turbo_max_3.c      |  1 +
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index faeddfe3b79e0aa51e7c8c6b23aa4ac5c7218706..27e5b0b23c27356cd5d72dbc5d3b5b4bdb03e8af 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -1027,6 +1027,8 @@ static int awcc_hwmon_fans_init(struct wmi_device *wdev)
- 		if (ret)
- 			return ret;
- 
-+		bitmap_zero(fan_temps, AWCC_ID_BITMAP_SIZE);
-+
- 		for (j = 0; j < temp_count; j++) {
- 			ret = awcc_get_fan_sensors(wdev, AWCC_OP_GET_FAN_TEMP_ID,
- 						   id, j, &temp_id);
-@@ -1048,8 +1050,6 @@ static int awcc_hwmon_fans_init(struct wmi_device *wdev)
- 		bitmap_gather(gather, fan_temps, priv->temp_sensors, AWCC_ID_BITMAP_SIZE);
- 		bitmap_copy(&fan_data->auto_channels_temp, gather, BITS_PER_LONG);
- 		priv->fan_data[i] = fan_data;
--
--		bitmap_zero(fan_temps, AWCC_ID_BITMAP_SIZE);
- 	}
- 
- 	return 0;
+Hi,
+
+To me this looks really a random set of source files, maybe it helped some 
+build success but it's hard for me to review this because there are still 
+cases that depend on indirect include chains.
+
+Could you just look into solving all missing msr.h includes instead 
+as clearly some are still missing after 3 pre-existing ones and you adding 
+it into 3 files:
+
+$ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
+drivers/platform/x86/intel/ifs/core.c
+drivers/platform/x86/intel/ifs/load.c
+drivers/platform/x86/intel/ifs/runtest.c
+drivers/platform/x86/intel/pmc/cnp.c
+drivers/platform/x86/intel/pmc/core.c
+drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
+drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+drivers/platform/x86/intel/tpmi_power_domains.c
+drivers/platform/x86/intel/turbo_max_3.c
+drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+drivers/platform/x86/intel_ips.c
+
+$ git grep -e 'msr.h' -l drivers/platform/x86/
+drivers/platform/x86/intel/pmc/core.c
+drivers/platform/x86/intel/tpmi_power_domains.c
+drivers/platform/x86/intel_ips.c
+
+I'd also prefer the patch(es) adding missing includes be in a different 
+patch.
 
 -- 
-2.49.0
-
+ i.
 
