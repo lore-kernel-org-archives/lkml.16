@@ -1,110 +1,151 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B3C10FD
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B141E1DE7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566349; cv=none; b=UE83H3ue3CpS3jfPuX2A/hpbVsIt3z36DkXn0smo+SMAbSAF5AkJ+iTScCGaF/odizu6eekbFtxhK3pmX63/JBCnzhCNBsJkSlpqqjT71bO4rCpW0NAbFhekjYSPs0pJzkh65Jd8LEVV9YweZiY9Dn6+WeEMM3hzFUPRXHBmLzo=
+	t=1745566379; cv=none; b=u1QDMiDf2xhvb5H6s2IhzinT7XPAv1daRbXgYdsyY+3zljpTQkQKYaf85kMGusjKKaWIJO+x1lL+2FkLwnMMySCLS/Hvar+H1JMFqT6sLuA6y/KbaEbSA5gpXBx+lULLReHrgPwCIs/qoavQf2iCdc4BZGIwcLg/GNI02QSiT8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566349; c=relaxed/simple;
-	bh=qh3+deB5RfXkp3djJ1R95fy9ZiJQodi7eJFwTJQylFY=;
+	s=arc-20240116; t=1745566379; c=relaxed/simple;
+	bh=aA0ZrtbPTCPf+u7y5/pHP9XzFYTNwoufRKaVyQtLdHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUovvACHUpponIGR3W1CTY18axLo8Tw/Xfpb1rryww85ndLmv0pQM4IdYihwY2pqGwDW1gTmTaTx4Cxs0W/9DDLfWj4WOODwS6nW72eysx0P2bR0E4wAyl0uwBxFUuY9+XGIMadcjR6Hq3zJHNvnn8jlXdB8cBrjk9k0XkE+9H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CC7D8210F9;
-	Fri, 25 Apr 2025 07:32:25 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A597113A79;
-	Fri, 25 Apr 2025 07:32:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id i4FpKIk6C2iYbwAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 25 Apr 2025 07:32:25 +0000
-Date: Fri, 25 Apr 2025 09:32:16 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v6 6/9] isolation: introduce io_queue isolcpus type
-Message-ID: <dd4719dc-5ac4-44d9-bccb-e867d322864e@flourine.local>
-References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
- <20250424-isolcpus-io-queues-v6-6-9a53a870ca1f@kernel.org>
- <2db989db-4849-46a9-9bad-0b67d85d1650@suse.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SFlILqu4F99Kpd2Q+kVJAoedGMjPNolt23cuXWNKLPreN7eqx3/8Px++sakOFYOXcKAp5iHmV/+mvhUPyIb3PBJf2vkhdCsJHZm+daaZ5zWNOng2IpCgBzs1FJ5ZsNADblh43Rw0Kk1pxpOG6h8yx5RQe4L9w/iPgnUSx/ZWjaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jhg3DFdw; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jhg3DFdw"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22c3407a87aso30399645ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:32:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745566377; x=1746171177; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xJc0VC1OPnf8MGBGBVEvJ1rm1gHV5SYp4RtZ7UBjMoI=;
+        b=jhg3DFdwEqMEyeM3RCxINZyz6q6OOIM7TBH3nU8PKLA0BBroqLxM+iolUHfd3ArqLF
+         oZPZdeGRBatlvCDxRaAKvcqR8nKDpmpUW6sUVQXij0gVFsh9zdYY0qXnO5zjnPobw/no
+         VNKN+w6fhAyzwndKFGelgK3efiAjdNowAmvUZZ/4GLlyACdZ1xfB4iAVSnDbcs+aQXf4
+         SezvyP1mh99FBVNbBX8hG3BNjLqsGw1rTBQr/Kom1/MUCqeQ61qII/Yv6js7kU0q2Mab
+         XuBsA5nh8PIzz9Pg7+Z/SYNK7oDYU3HN3vuJ5AOcUN56qU7Jl4oIFktbvfp2Jl2Eyz7T
+         L5CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745566377; x=1746171177;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJc0VC1OPnf8MGBGBVEvJ1rm1gHV5SYp4RtZ7UBjMoI=;
+        b=OBzTvWuphK1/HGtNx9MaRAeXgMuJCHAk+zpkNhcaDDT/uzb0FrNNidMirt+tlW7QbI
+         cRC6E6NnEZa/4xHumxBT9Zp/U+mfZ97xTkXmWLhVxJZtwNibGUCprqGt0TqW4q3YGqQ+
+         NyZLdX94JBdpNtUAJMFbhMnwW7xd875xKuzsw6k/TVWvC99Py4tHwzQQgzZozWFsxaBk
+         mjH7+izTidciAvB7dmTScaDCeqPNZtTwGCC0yDsQEdJKgd6iv7FOVnlh382l6Q9p2zfT
+         V/ameAJc4XBzJyT2WAbki2uNFIUEeb5AfJ50IyfGXQymSpSXQG5A6URJ6xecAqCfwwU4
+         d1Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/9GiSnV1sHaGlTcocD/tRihSEahXvThMdHS9HrorkxMZvXEyrLISOFjWcAZ+r/vciLGZhVCIw756x5Ig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVQw7u6Qx2Y+UnizP1o25Yz7OtUi73njNeEHUVcco6J9ZfWyXV
+	6lYVNt78LpaU/Um9s2S3fonqIBna1E5F2Nud+xo2EGvQOuCqtPcc3VVsAUiOtA==
+X-Gm-Gg: ASbGncsRb+OvtRPfJz+yYFsiPNHdcITKKaTsZYYx9De7Dhvr1dAa0IqkDRoHIPp0Ya8
+	TEfJymI9elG8JcawwiPkdhWbLyMieN1/uAL7wDdWM9UuT4NQsplgVUSy7YGZuwVB3n2WhtSMSd/
+	spWEmU6NhciaeRLnWBi31zHUCSkplSWKZq7QNKkPsNtmIbiJB0E/LTYwsFpW1vpgjTcHIV30bpo
+	Nhdpdo/KJhlf0KDlN2640wMUQFzDgHbUd1f4qzAdcz4oYwFreXhWljwha596KrAl7qcdpGqu5eO
+	ERXEgpohyzXGa3jcBFCzyFMzRoCIIa1ryz1FA5f0sMiJxKgKDXE=
+X-Google-Smtp-Source: AGHT+IEaSjf7mjPyqkb9SLHl28S3KtutHrHtesFq5IWR5am6CHVSmDDpdOQGUAksLd+HiuHc9w/Ahw==
+X-Received: by 2002:a17:902:f541:b0:224:a96:e39 with SMTP id d9443c01a7336-22dbf5d89bfmr18972215ad.9.1745566377452;
+        Fri, 25 Apr 2025 00:32:57 -0700 (PDT)
+Received: from thinkpad ([120.60.77.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4db97b3sm25701435ad.55.2025.04.25.00.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 00:32:56 -0700 (PDT)
+Date: Fri, 25 Apr 2025 13:02:51 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, 
+	Jeff Johnson <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
+	Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>, 
+	Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kunwu Chan <chentao@kylinos.cn>, kernel@collabora.com, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
+Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+Message-ID: <cfb3sntvqhupyhm2m5tevpsl77r6mzl2aqzr3wtxvr22bezmp3@qjh7ftr2kdjy>
+References: <20250410145704.207969-1-usama.anjum@collabora.com>
+ <h2wv7drxntokziiwbzjw5xjzbctbomp6cfcba7ppfbih6o7so7@p6dazv32xfx4>
+ <1136c7cb-1c7b-410b-93d2-c74aec939196@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2db989db-4849-46a9-9bad-0b67d85d1650@suse.de>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: CC7D8210F9
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1136c7cb-1c7b-410b-93d2-c74aec939196@collabora.com>
 
-On Fri, Apr 25, 2025 at 08:26:22AM +0200, Hannes Reinecke wrote:
-> On 4/24/25 20:19, Daniel Wagner wrote:
-> > Multiqueue drivers spreading IO queues on all CPUs for optimal
-> > performance. The drivers are not aware of the CPU isolated requirement
-> > and will spread all queues ignoring the isolcpus configuration.
+On Fri, Apr 25, 2025 at 12:14:39PM +0500, Muhammad Usama Anjum wrote:
+> On 4/25/25 12:04 PM, Manivannan Sadhasivam wrote:
+> > On Thu, Apr 10, 2025 at 07:56:54PM +0500, Muhammad Usama Anjum wrote:
+> >> Fix dma_direct_alloc() failure at resume time during bhie_table
+> >> allocation. There is a crash report where at resume time, the memory
+> >> from the dma doesn't get allocated and MHI fails to re-initialize.
+> >> There may be fragmentation of some kind which fails the allocation
+> >> call.
+> >>
 > > 
-> > Introduce a new isolcpus mask which allows the user to define on which
-> > CPUs IO queues should be placed. This is similar to the managed_irq but
-> > for drivers which do not use the managed IRQ infrastructure.
+> > If dma_direct_alloc() fails, then it is a platform limitation/issue. We cannot
+> > workaround that in the device drivers. What is the guarantee that other drivers
+> > will also continue to work? Will you go ahead and patch all of them which
+> > release memory during suspend?
 > > 
-> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> > ---
-> >   include/linux/sched/isolation.h | 1 +
-> >   kernel/sched/isolation.c        | 7 +++++++
-> >   2 files changed, 8 insertions(+)
+> > Please investigate why the allocation fails. Even this is not a device issue, so
+> > we cannot add quirks :/
+> This isn't a platform specific quirk. We are only hitting it because
+> there is high memory pressure during suspend/resume. This dma allocation
+> failure can happen with memory pressure on any device.
+> 
+
+Yes.
+
+> The purpose of this patch is just to make driver more robust to memory
+> pressure during resume.
+> 
+> I'm not sure about MHI. But other drivers already have such patches as
+> dma_direct_alloc() is susceptible to failures when memory pressure is
+> high. This patch was motivated from ath12k [1] and ath11k [2].
+> 
+
+Even if we patch the MHI driver, the issue is going to trip some other driver.
+How does the DMA memory goes low during resume? So some other driver is
+consuming more than it did during probe()?
+
+> [1]
+> https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
+> [2]
+> https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
+> 
+> What do you think can be the way forward for this patch?
+> 
+
+Let's try first to analyze why the memory pressure happens during suspend. As I
+can see, even if we fix the MHI driver, you are likely to hit this issue
+somewhere else.
+
+- Mani
+
 > > 
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Just realized I forgot to also add some document on this new argument:
+[...]
 
-			io_queue
-			  Isolate from IO queue work caused by multiqueue
-			  device drivers. Restrict the placement of
-			  queues to housekeeping CPUs only, ensuring that
-			  all IO work is processed by a housekeeping CPU.
+> > Did you intend to leak this information? If not, please remove it from
+> > stacktrace.
+> The device isn't private. Its fine.
+> 
 
-			  Note: When an isolated CPU issues an IO, it is
-			  forwarded to a housekeeping CPU. This will
-			  trigger a software interrupt on the completion
-			  path.
+Okay.
 
-			  Note: It is not possible to offline housekeeping
-			  CPUs that serve isolated CPUs.
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
