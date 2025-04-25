@@ -1,63 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56E62165EA;
-	Fri, 25 Apr 2025 18:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F4F1A2545
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745604083; cv=none; b=N05sekKdhEuHrcE6cTrMPIIS1qOLhveHR77kEjAJO9bJCZ48AP48SglioJpQrJWD3lIJPmfOEoDyo/SPYy6oLCFu8DijwFdFE+jXHryma2pPXoZ13Za1yHmAQjuiP4E27oMzQgirzUe1YKoWKNnPKflqLM9y/gTgK3CZq5VbtUo=
+	t=1745604179; cv=none; b=OX0MVefxce48tm3ydT7SL0IFcap23EaVKaSAb8CXmF/OTezzgJ1PoZuq96V3/hn931QUMThoUs7vjqZUOkZGs2uQCV29079shjJ/q/t6OqqgR3Kc3if6wKybKkD4j0lbZXtsNr4zDxBxRaqsRieASX08/IV4W54o80zCm7s00OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745604083; c=relaxed/simple;
-	bh=s+nyFjXQgDn4BZDK4eLWpXsT627E5K2rVURqb/5KP3w=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SQHAMFn5h75XmSiq03DfG57N55P2LDw9Sra6o5v721oX9fwCuuVAGi1iKvgGZ4DHld1fO0AxyEkhKU2bJL1MvvN12y/LHQ8Xw1AJc5xfhemiDGoaf08qGBhTHK2Kl/W98z3VGkb5+IlUpP6/3wf5353Liu8tzPmcc1F6gJZJ8/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aPr1dgEo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745604179; c=relaxed/simple;
+	bh=GlHZ3nQIl/lKAjbzyAfvCDkSdKESLA3OEmyBcQjujck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ToLASMn8+w22/O9kwC+a3N4pwW5tmI+KLuR1oyqCCrRAVQppIClJH9RHselrzxKHqmxGLtgkWD6LNBf1KSQ3x8Mt+HvH5p+XUfrKeKwtpfC7FSVZOE+sFExwufzqNITztCDFtjGy0EJUUYXb8iC1uXt1RYMuJcrY9N8l1S6MIUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rgkfw+BQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aPr1dgEo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02EAC4CEE9;
-	Fri, 25 Apr 2025 18:01:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rgkfw+BQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EFD1C4CEE4;
+	Fri, 25 Apr 2025 18:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745604082;
-	bh=s+nyFjXQgDn4BZDK4eLWpXsT627E5K2rVURqb/5KP3w=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=aPr1dgEoU3PqpiyI2BEI7IxswfZM7z0aAqLdE62JUuSfpinha2RvDsgZ1Ei0rrKFt
-	 YRrUMielasak2Azuu6NB7yau6GH/qGE2xYQmfyU80azab0XrJ2hvC3z8k9MjLCu8Qd
-	 wu+Y6ZOkQoo6LDKAfJ1FeDUHM5YMUulrIY4X+AaGNcY2nhME0CpYpY0XOxbc4JDvv8
-	 JfSQK4m6nSYHIfXCUfxSCOMrjCAMLJOsHGkKSXhvpvQRyALaqOKxn9ehZQgUv5gF48
-	 eEhvkTULMxafihDoVg7w5ixu13wB9ZRvv+zzKhAxpvug6lFwzRsuszfL3EZxPv9jHy
-	 oyWLnn7CwyN/g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE312380CFD7;
-	Fri, 25 Apr 2025 18:02:02 +0000 (UTC)
-Subject: Re: [GIT PULL] USB driver fixes for 6.15-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aAuS1QXWLNwEf31j@kroah.com>
-References: <aAuS1QXWLNwEf31j@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aAuS1QXWLNwEf31j@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.15-rc4
-X-PR-Tracked-Commit-Id: 3dfc0445274252301dfcf3980d79acceea6409d1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2d5c7fe09739d49612e69ad61ced0a0f19651769
-Message-Id: <174560412130.3790119.7245415882561197111.pr-tracker-bot@kernel.org>
-Date: Fri, 25 Apr 2025 18:02:01 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+	s=k20201202; t=1745604178;
+	bh=GlHZ3nQIl/lKAjbzyAfvCDkSdKESLA3OEmyBcQjujck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rgkfw+BQTICZthivqCvV/L24rzpWQHbDcyxggr1y+m/v43rfeZ8mVc0gW9um7fv0b
+	 8UafxsdBy2OSnbMDS5NFMohqw/JUMNlm1lLeRM9bksCbnWhkpvG1sMaT+pD4u+ffRH
+	 8pIUlmyLfoSlvzGXqDwnfiebUuADE431RCYOd6tbrbLbvBjoynuBlQ5zFLUwzx+Bi4
+	 rGux6Foo2lHXO20hT1/pHPb+gHQz9MKCOsluoedgGVWhhJf8tGKuOY5k2+/cT7G2O3
+	 Lha8hXq2f86SbjO/kQE7iwnWqluHmT2utJrQpEDxaiqrLaVadzaMFYa480cXg0cBjW
+	 /ZIf/+bOW5TJw==
+Date: Fri, 25 Apr 2025 12:02:55 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] nvme/pci: make PRP list DMA pools per-NUMA-node
+Message-ID: <aAvOT8meWyuBpUpS@kbusch-mbp.dhcp.thefacebook.com>
+References: <20250422220952.2111584-1-csander@purestorage.com>
+ <20250422220952.2111584-4-csander@purestorage.com>
+ <20250424141249.GA18970@lst.de>
+ <aApbYhyeYcCifoYI@kbusch-mbp.dhcp.thefacebook.com>
+ <20250425132111.GA5797@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425132111.GA5797@lst.de>
 
-The pull request you sent on Fri, 25 Apr 2025 15:49:09 +0200:
+On Fri, Apr 25, 2025 at 03:21:11PM +0200, Christoph Hellwig wrote:
+> On Thu, Apr 24, 2025 at 09:40:18AM -0600, Keith Busch wrote:
+> > The dmapool allocates dma coherent memory, and it's mapped for the
+> > remainder of lifetime of the pool. Allocating slab memory and dma
+> > mapping per-io would be pretty costly in comparison, I think.
+> 
+> True.  Although we don't even need dma coherent memory, a single
+> cache writeback after writing the PRPs/SGLs would probably be more
+> efficient on not cache coherent platforms.  But no one really cares
+> about performance on those anyway..
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.15-rc4
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2d5c7fe09739d49612e69ad61ced0a0f19651769
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Sure, but it's not just about non-coherent platform performance
+concerns. Allocations out of the dma pool are iommu mapped if necessary
+too. We frequently allocate and free these lists, and the dmapool makes
+it quick and easy to reuse previously mapped memory.
