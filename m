@@ -1,77 +1,75 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CC522ACF7
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629F4235345
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574187; cv=none; b=UIA1uICH74vFv1pmBKfynYe7Ams0rOpje5+STpAGsh67Iabs18A732rFx/weDkAdz6IZzr7OsI1LTyim6rYvZvP6QR1a+XR4H/iR+4I2Kctt/eqDJz1Hd8r9pzy9lorBLnyKCl3fKFnbyEJ2s4wSsApWfzNhZkvmkvs+kbda1Sk=
+	t=1745574188; cv=none; b=cc7Lt6VXmpiyJWRfW39QGj/a+vdoiSwBpLRBXvc0XVnHP9a3cjiVF0u/mnInjHBzyQt8IxxKpFD43shaPt3GdCOrnrCl8KdFE3GcV5Twt2e9ETDtk9yWQyepXI8s/E9Hyhdh4QdoSINAJsBkUghBw1TThuzYyeoi499ZbcMDpWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574187; c=relaxed/simple;
-	bh=HR1ELbXjB62zE6Sff0xpFGFrP2hzDkcrivmHZuYivdI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PCt2UQISstbPQQ2VzQKJWdLPAHDhw8Gi2yYoNuf/8LB3OBjpNTSzf3APj6ChhcFCDRNwHwvSLk3AQOyq9IjfBJ4mjFRM1/UTxRGLctJL3e/ZTfDUark8hAHLPN6cv7nZwYYJUpIkcFpYIqUGLSjnTJ4kp6rJlK405xj0gCr6BO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WZ3w28sy; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1745574188; c=relaxed/simple;
+	bh=N+kCgI7u3QRQyEc36DEg7P9HhLeM6WQ1Qz/8t42K2fs=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=L05IGypB/J9GTWhHuX26J/lT7U0LU7zkrEQ06xmI/fg+a+QgnyIB0mRC2NRWBjcigP0Q9NZAQuBWRLnCPCgodFQCjV0B3gcMEO5F7JaPZcKek0fo5ecv9b6C2qpufItA7EWXVZ8cuE4Eh8I2HwzCdPEi2TfsCVtFE00hp6IJbtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pLwfznpJ; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZ3w28sy"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43eeb4e09b5so2198375e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:43:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLwfznpJ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cee550af2so1245085e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:43:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745574183; x=1746178983; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745574185; x=1746178985; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gDp105elx3apeSKKADmSSqdqJbinr0IUn9mnqQkF98s=;
-        b=WZ3w28sy5uDk84L0Jj5N7p1QwFcp9T2ivniA9tGfNHNj1ytyKngak+qP5I49bYxwt4
-         AC0C+BCXKIB5zp2fHs555x5RpbA6AWkBqu1DHFAHbjuptavuTtrHIsTmz0RhcQBidIhP
-         YGXdx+2MAdGkW8LmMKr3DUrfgqdWiIgPDX6D4KsMR8y469/03+VRSwv9mFjBC0H7v2vZ
-         am/7IJNfNlIQi0OxQRXYBIgRmOnrZmwg5+x+d4hl7y3mDOtsGBk2MIq5/AfFZfmtel7f
-         RlgLmdNR91I2GBrxe4zUWFSE9QZAnRr+eFaav4P8WIHai7TAlua12ie9xeYrPK+e2MQq
-         ZvqA==
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9JNZR4HYw3LEusKe1YuO93jYjF39HJIbe/sxTu0RO9o=;
+        b=pLwfznpJgeUBXPM7FYv/2FNpPNTyNSQ19k03y+JbaiooF29m9Il2yNht86vOJNVCfK
+         l/T29xuUZ4esGZoGOoYWEsskqSuHWikXZ9zvs0kqPno6C1t1TSOnTYVhnx40emGEBOVd
+         KvONf8a+cuTF8YVUbe4FpQ6VjIu2XbbALDVKr5ZgdnCGqKvONlM/sL/ZE2Vzq0my0oeA
+         z3RV8frmRA5qIfZNKeKqCGH3mb4oO6ftcL5VcVB8a75nWF5erFPDQLZ0Fe6Qvx1HUzdT
+         aB4bnHBQuTkIKp4JXAq9nEdR5GwkIC4DPMnqmj2SAQ/4zTzdQDy6GJqSd7VBV8Ucprmq
+         s0ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745574183; x=1746178983;
+        d=1e100.net; s=20230601; t=1745574185; x=1746178985;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gDp105elx3apeSKKADmSSqdqJbinr0IUn9mnqQkF98s=;
-        b=ixoWVPBQ2auXXUAm6Q5zYimYTT9HeGxheK4yJVUHqcLnO7RAggb+4/miLSJM+DihbQ
-         nrVAdPX2VujsmerpK04A62PHxmN25I0k8DkmT35rqaM/3KNA3UCpiA9m3a6/27lQngre
-         e7keQgIw/TAwzQRDF9Zn88ovIXhX5yTEs2MJv9j23/i8F/fBMquu/bUALLCC1TmF0Cfd
-         wi96f//NgXpsF6aMTFFXdGaEstLXNhM3Wp01CygBXpJJkE7w06bDlTz95Jj8qOwOJEwg
-         csW0BQVKM8S5nD/V9Bg/m8Cg0DAVAdRlE9IlX/imPEKuapDJRfVtsdoc+jNCcLGuQtcy
-         KZWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWeuzyB00klUUmszBmKimMcoA9/+u5+6EKNH7z7GUQzfLeWkji0vkWQ+1BUX++MdIlkZZs0N1UxYT5/Xcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywgj3pqzc9eeTs0nMIR1LdV8QUD6yv5hI1YnuMsKXQZbFIf/tjj
-	exC0e9PlcjuTy24a77mBQ3O/VoK/AQj74+AmC69f5H68EYw5pK9DYD+UQCfU2Ew=
-X-Gm-Gg: ASbGncvUfZwYqCtNzqhULPdHBPxCUciKmD6Gl9F/gRGXBvpWHTfRH/djoeV3/Atbrpg
-	6xTouPAdi/mOEhPY15Q7TZhiQI0dAEyWKBZvb4fxMP/o9deZYFogQGvb9NKHBW/YJv15fqMP8OH
-	oxwbm33pN0+86OmcP/k4tXE9ckiM7JeFNwgD/IribOb32OT4EPW/CzROrEaR7oDjTuQ0SlEBrUi
-	IuzQJjhYsoTcPbC/XqBJynceWVpLhCtcFuO9qn4NIOw3dcGFtmBfv43iHnFZh2K+OAom6KKZ8Ny
-	3P7Xy6+AbUuzPYBzImwYK20c3OeybNjrZrdwpOFYg1zMSBavMRfWu8J2cEw=
-X-Google-Smtp-Source: AGHT+IESpUAhFZOOS82e4GvGIHokl7WEd11AkZbPGij323CqMMkH0yOxQl4M55ja81NtzkvTeEUUHg==
-X-Received: by 2002:a05:600c:1d01:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-440a66c250dmr4935225e9.9.1745574183356;
-        Fri, 25 Apr 2025 02:43:03 -0700 (PDT)
+        bh=9JNZR4HYw3LEusKe1YuO93jYjF39HJIbe/sxTu0RO9o=;
+        b=Mme1ghMBiL+tZJUqbNIMd8KX68uk9f8+AnHKsbrP0Mm5uy6obSidaYblgXA4sDAUzI
+         czK7rvW1gGwytnuy5fVjRMxt4aZUfMOl86pTznzhPnZus8vjfFdjXNlxJcmYItdw8r9b
+         YbVgHDJCs/x6OPibFKUE98NQh1KVmVbWcWlKDOKrfaJGQCNXM0juucXT4TWTEXS3pvDe
+         U1B+8ax/aonqASKZz4BYvZnSN/fyag2L99iCxwGPIBXbKCoJZBbiPSafqfx4jPp92wp9
+         F3CmbuKDo+WiyNN0cZrOqMkQKpGDpODDy7ftPHWjaeFBXTcx25eABYFn46iMcu7Ii7st
+         8fSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqtXKpORMnpJoUb0ceujwBuznrtVyG7LjSdp96E6zMJUwumwdFOvNNCaZni4/iWJnBcBEq0QFbqgZac+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLhFm9NFgnlfhl9HD19HdjpKvr4Yf7sPQXcWeKHA0ixYhqL//M
+	cMUYqiuiAezEFwC4Ihw3Ik1/9KQRfxmqnDqxKQrIIIofHpzmc1UNv5CzvAutLm6DtWrdJyVa7gC
+	h
+X-Gm-Gg: ASbGncvkBTJjr6fY+5L90F5oylA9UljZ8kM3jp1El3tbeAf70gZ9J3rX1ThsVvXE9cK
+	2VUJrXOFtA4PcGEe/FZgt4+5llnNp5jrCcEYQBjTqETCkm+uN8TOw16bQPXxmr+QaXgV+xoXyG6
+	X1h+KF4/EJsuMS9079ZQAWoOYw/hvfmSzbnUxSzD3bdHVx3Z0NsOQUZr4s2YON+EYWgRtRaDzLr
+	HBP0cpcWHqoCkm/yb4GGYRwUv2LHIZBN0EpfmxY+Rvmo3cKtNR+xsEfw/zwWvyI6+rtGCZuKk/y
+	jhOUmGfJqTuOA455pbS4RtiYxEAWtKBheEbRe+p6GW5ApsofxWwi9bQf1mCMpZ0HSNcS1Q==
+X-Google-Smtp-Source: AGHT+IHwjCg2l2T8eQ2xx7s1I6SBtEwT1v0ZPwhP4gH8i9QmjjIyMGHi0pgA/ILdNqanVVT9KFG0TA==
+X-Received: by 2002:a05:600c:a016:b0:43d:77c5:9c0e with SMTP id 5b1f17b1804b1-440a65b9f31mr5514995e9.1.1745574184616;
+        Fri, 25 Apr 2025 02:43:04 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8909sm19441395e9.2.2025.04.25.02.43.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8909sm19441395e9.2.2025.04.25.02.43.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:43:02 -0700 (PDT)
+        Fri, 25 Apr 2025 02:43:04 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: kernel test robot <lkp@intel.com>
-In-Reply-To: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
-References: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] firmware: exynos-acpm: Correct kerneldoc and use
- typical np argument name
-Message-Id: <174557418225.69534.7174672611109460880.b4-ty@linaro.org>
-Date: Fri, 25 Apr 2025 11:43:02 +0200
+In-Reply-To: <20250424084655.105011-1-krzysztof.kozlowski@linaro.org>
+References: <20250424084655.105011-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] ARM: dts: samsung: sp5v210-aries: Align wifi node name
+ with bindings
+Message-Id: <174557418347.69534.14818406256257839510.b4-ty@linaro.org>
+Date: Fri, 25 Apr 2025 11:43:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,20 +81,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Thu, 24 Apr 2025 22:33:09 +0200, Krzysztof Kozlowski wrote:
-> Correct kerneldoc warnings after commit a8dc26a0ec43 ("firmware:
-> exynos-acpm: introduce devm_acpm_get_by_node()") changed the function
-> prototype:
+On Thu, 24 Apr 2025 10:46:55 +0200, Krzysztof Kozlowski wrote:
+> Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
+> wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
 > 
->   exynos-acpm.c:672: warning: Function parameter or struct member 'acpm_np' not described in 'acpm_get_by_node'
->   exynos-acpm.c:672: warning: expecting prototype for acpm_get_by_phandle(). Prototype was for acpm_get_by_node() instead
+>   s5pv210-fascinate4g.dtb: wlan@1: $nodename:0: 'wlan@1' does not match '^wifi(@.*)?$'
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/1] firmware: exynos-acpm: Correct kerneldoc and use typical np argument name
-      https://git.kernel.org/krzk/linux/c/2c2e5e908ea2b53aa0d21fbfe4d1dab527a7703e
+[1/1] ARM: dts: samsung: sp5v210-aries: Align wifi node name with bindings
+      https://git.kernel.org/krzk/linux/c/e0d7c81b15e8694ebf9f1976084435728b8936ab
 
 Best regards,
 -- 
