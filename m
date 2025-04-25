@@ -1,213 +1,109 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D25A79B;
-	Fri, 25 Apr 2025 07:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD6417A314;
+	Fri, 25 Apr 2025 07:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567357; cv=none; b=UJdI1gicxYojLMs5gM2A+/PV7mTKSPIE+cZwDriCJPza4JOKV6sF5s+Hf/lN8TedAP9Klaz/7NJY1+4Ycre46t1ZRa3Wwiz608rzkOVNH9GCzuloIq195eV9OrOfWkGKNRoqXEJK1KJL13G1SvAsowCWBDuxrNf/m9mX6gENrGA=
+	t=1745567516; cv=none; b=IcGQBs/zoN8WGvT1ySCGd7asgLGDS9AQV/PUlvMObfUPRS8nhNQwpwoKadCWh483eFLooLnGxDBWlOLKGFutAGpvE7CbX1xsI+/d++q1sj/b8yGPgdxYsRvP3H01MO5MLYGdM9OI+gu/On9+zLb9DJrTrC3Byq84T2jmdiB+7YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567357; c=relaxed/simple;
-	bh=FZiAbyedh3Hu4XRwOaYu0OJ85o9hgbMKwtwyNH+c43U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OroELYuNJV2BVc0NP3aO1PWSEt3Dgosn5HophvPk8AHK8yjTqM9xacqwhD6kB/gMvtfRtq1Dw+rIw/oSXF81EhpdyIg1t99/yN9y0NkNw5R1wIgikSpkSV/O95Od7/0g/uyScKak5F/xxLUa71QN/AXlpndtqr7wFrktlSDnrAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=W5mzngPW; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1745567516; c=relaxed/simple;
+	bh=qoHFf+yoko4A/+XUPmCuZNCG1ChQkHApaZjK13JSRtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SyXQQGjZUmDFEb+6w7iV4dbIKwfx8Gp0v0MWT6bz0njlM10HAe3PPfec67P8BM+37xQ4cuW2F5MCPH1BOBwrdyyPbHtuwBR1DeNMK1tzK6niAkzcF7LZy5coLKlpbIe8zPkWuXKDSkJAASLcTqkJ0JOM1cDm4IkcQ4diPILaxuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALvqB4Yn; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="W5mzngPW"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2F99710275AFE;
-	Fri, 25 Apr 2025 09:49:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745567352; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=/dXNASC/WIWqaw/KcaFHN25jpUIQ4813arUoFsnAA/w=;
-	b=W5mzngPWSoevp/RkCHlrm6bIeICmfBGApQFzJ0GYblGaR6HMtVLH2FxtRBPpnBDPDuTvMu
-	gGj/huEmIcEK+7lQIm6QDNgYvojSeuwBJC+IW/9AAz/26JOzVxaGchp3mN8rT0+4k+PHDg
-	JA5+9KOV1Yn5cRq20sNAN9dUYRhzx1o4oa0J7Qr4i8mKibnDACG2XvcftijG+JK6neBKuz
-	5nUduG0llbzLBYuz1oPnEez9otGn0mt2TSb1opiKqJGW/MPGR2gD+z71p0fsdAk902HIh7
-	NtbcYJyrJ8+CKVCJYWlKOEF9QrmO7GO5KDspKWxPSrnkHe1KT000/vGRU+eC/A==
-Date: Fri, 25 Apr 2025 09:49:07 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
- <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [net-next v7 4/7] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250425094907.27740d07@wsk>
-In-Reply-To: <a5f54d46-6829-4d60-b453-9ee92e6b568c@kernel.org>
-References: <20250423072911.3513073-1-lukma@denx.de>
-	<20250423072911.3513073-5-lukma@denx.de>
-	<20250424181110.2734cd0b@kernel.org>
-	<0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
-	<20250425080556.138922a8@wsk>
-	<a5f54d46-6829-4d60-b453-9ee92e6b568c@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALvqB4Yn"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5ebf57360b6so283072a12.3;
+        Fri, 25 Apr 2025 00:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745567513; x=1746172313; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EtlwdttWcrSq5WLrAii4yqH6SPDuiUx6pIip08AE1cY=;
+        b=ALvqB4YnNrEASGqcj5UasutBn3oGfcqBoA1CUP+SVaqBI3tA/rL+uyyypWSIyRFPTw
+         xV+SaR9SqRGbu9b8NmRO4vvuXSbl7Zo6h9JJTCieZyo6apBnfHe5wjv0YM+h5MqnYpBz
+         sl/dVXRCbJeTiVHqudM/gil8S2mJoC22RDWzUwNuBdjHTppI57jQRXRQ6HopIlD3SrBF
+         VGTAVoh/QK2sginE3tAbHWquzhMjUxlrwttctgS1fNKTVbtYTExn3pX7K14upzHrjaDm
+         WoCiJbclQaaa951jERhScEb3w9Xbk11YLMLpMRiY+6fzpbUJms0uwqF7/HZf7YsN5Gpn
+         vQEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745567513; x=1746172313;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EtlwdttWcrSq5WLrAii4yqH6SPDuiUx6pIip08AE1cY=;
+        b=OQaH4o76hGfenKGiZqe49g9hFgzdsfulwzR34GAfeBZH1zR1UaFcEfCFYqZuvvj1aP
+         OfutvHaf9hh69KzUV3KqCfxHbp31lfPs679DqUdW7+Vn8SUnqgkSnoh9EkMgQuYjr7JW
+         u4+sNgqD4ZxZmr87rh1kDf81XFcfiLnP7MEH7QHBG/k9Qf/E5HwHYse0nx43+jvzQYjf
+         sZOEiEHUvefxC7KO48H30hs1hIaQXaWeolSZyakJ4wv9I633fbdcrhuu6I1e9+d0CF58
+         Zg+JUQCLrFhVeMilNAlPXpu9xKdSVr12D9pfAFMXWbCbH/TQIg/DbmpQ3DiXfTKvaBSg
+         14yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVslP6DiqB/o1D6EmAS07CEpakLqjxO9ZKVhAlBK8/Jyl3PcxfDk+WIq7/IE+p8/61jMbr29vwB@vger.kernel.org, AJvYcCXJxPZHa4N6pFPoiMIDZNkOmxEZDxw6xyFmXt+dka2sThlpvkSMXibBJvC6w5PD3DKAVdQedVBtcu+bsrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxucfp+Kaxgaj1g320lnC8121KKSaDwGWMNx5tcl0n5NKV1wVTO
+	yNeXbuoVKLoZTDuy/M9NkOhXVNBW4Okc0PTfdz60Lozds2igm2k1
+X-Gm-Gg: ASbGncsU/+wiPgViU0hU9/NglP5EdGe92Xad/CB5jPwVTEvIQkGW2DOUKtcBtWB0rCA
+	+a5Ma8Gli9p4jBQM3T1RltmgTIi76B0HetYsblJT68GDcu+Pjz3cGZzClhHRVh6PTWEwjpKbjNt
+	YjkbvAyELIzEQHNJxRDhthm5aJoy7clURthrri+VqFxvClC98eQ1lIOErYhG+viXB9KCRcTY9u0
+	l0jFWjai93VCxm32BCIqFEZoW4YAuYgEnntWBGN9UjEjK4ibDLWh4ZtsbtK4f7zv5OeerlO5jCX
+	5R1TMbBnMkj7qgHXkbBb7U9Uklqp
+X-Google-Smtp-Source: AGHT+IGdpjO2l9Q4ZwWk0hvrRHSKx5oJXCfJGpUsINUsLgfhohWEplcz2aVOrR/qYMxGR0E4RONLHw==
+X-Received: by 2002:a17:906:4fca:b0:ac7:25c9:5142 with SMTP id a640c23a62f3a-ace7110713cmr36300866b.7.1745567512466;
+        Fri, 25 Apr 2025 00:51:52 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41c40bsm93774566b.20.2025.04.25.00.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 00:51:51 -0700 (PDT)
+Date: Fri, 25 Apr 2025 10:51:49 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: fix VLAN 0 filter imbalance when toggling
+ filtering
+Message-ID: <20250425075149.esoyz3upzxlnbygw@skbuf>
+References: <20250422184913.20155-1-jonas.gorski@gmail.com>
+ <cf0d5622-9b35-4a33-8680-2501d61f3cdf@redhat.com>
+ <CAOiHx=mkuvuJOBFjmDRMAeSFByW=AZ=RTTOG6poEu53XGkWHbw@mail.gmail.com>
+ <CAOiHx=m6Dqo4r9eaSSHDy5Zo8RxBY4DpE-qNeZXTjQRDAZMmaA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aD7bD6eqbseU9NHDSHb+3ZT";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOiHx=m6Dqo4r9eaSSHDy5Zo8RxBY4DpE-qNeZXTjQRDAZMmaA@mail.gmail.com>
 
---Sig_/aD7bD6eqbseU9NHDSHb+3ZT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Krzysztof, Jakub
-
-> On 25/04/2025 08:05, Lukasz Majewski wrote:
-> > Hi Krzysztof, Jakub,
-> >  =20
-> >> On 25/04/2025 03:11, Jakub Kicinski wrote: =20
-> >>> On Wed, 23 Apr 2025 09:29:08 +0200 Lukasz Majewski wrote:   =20
-> >>>> This patch series provides support for More Than IP L2 switch
-> >>>> embedded in the imx287 SoC.
-> >>>>
-> >>>> This is a two port switch (placed between uDMA[01] and
-> >>>> MAC-NET[01]), which can be used for offloading the network
-> >>>> traffic.
-> >>>>
-> >>>> It can be used interchangeably with current FEC driver - to be
-> >>>> more specific: one can use either of it, depending on the
-> >>>> requirements.
-> >>>>
-> >>>> The biggest difference is the usage of DMA - when FEC is used,
-> >>>> separate DMAs are available for each ENET-MAC block.
-> >>>> However, with switch enabled - only the DMA0 is used to
-> >>>> send/receive data to/form switch (and then switch sends them to
-> >>>> respecitive ports).   =20
-> >>>
-> >>> Lots of sparse warnings and build issues here, at least on x86.
-> >>>
-> >>> Could you make sure it's clean with an allmodconfig config,=20
-> >>> something like:
-> >>>
-> >>> make C=3D1 W=3D1 drivers/net/ethernet/freescale/mtipsw/    =20
-> >>
-> >> ... and W=3D1 with clang as well.
-> >> =20
-> >=20
-> > The sparse warnings are because of struct switch_t casting and
-> > register =20
->=20
-> clang W=3D1 fails on errors, so it is not only sparse:
->=20
-> error: cast to smaller integer type 'uint' (aka 'unsigned int') from
-> 'struct cbd_t *' [-Werror,-Wpointer-to-int-cast]
->=20
-> You probably wanted there kenel_ulong_t.
-
-This I did not catch earlier (probably because of my testing on
-imx287). Thanks for spotting it.
-
->=20
-> > access with this paradigm (as it is done with other drivers). =20
->=20
-> I don't understand. I see code like:
->=20
-> 	struct switch_t *fecp =3D fep->hwp;
->=20
-> But this is not a cast - the same types.
-
-For example:
-
-The warning:
-
-mtipl2sw.c:208:30: warning: incorrect type in argument 1 (different
-address spaces) mtipl2sw.c:208:30:    expected void const volatile
-[noderef] __iomem *addr mtipl2sw.c:208:30:    got unsigned int *
-
-corresponds to:
- info->maclo =3D readl(&fecp->ESW_LREC0);   [*]
-
-where:
-
-struct switch_t {
-        u32 ESW_REVISION;
-        u32 ESW_SCRATCH;
-	...
-        /*from 0x420-0x4FC*/
-        u32 esw_reserved9[57];
-        /*0xFC0DC500---0xFC0DC508*/
-        u32 ESW_LREC0;
-        u32 ESW_LREC1;
-        u32 ESW_LSR;
-};
-
-
-The 'u32' type seems to be valid here as this register is 32 bit wide.
-
-To fix the sparse warnings - I think that I will replace [*] with:
-
-info->maclo =3D readl((u32 __iomem *)&fecp->ESW_LREC0);
-
-as such solution is used in a wide way in the mainline kernel.
-
-Is this the acceptable solution?
-
-> >=20
-> > What is the advise here from the community?
-> >  =20
-> >> Best regards,
-> >> Krzysztof =20
-> >=20
-> >=20
-> >=20
-> >=20
-> > Best regards,
-> >=20
-> > Lukasz Majewski
-> >=20
-> > --
-> >=20
-> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
-> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
-> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
-> > lukma@denx.de =20
->=20
->=20
+On Fri, Apr 25, 2025 at 09:30:17AM +0200, Jonas Gorski wrote:
+> After looking into it a bit more, netdev_update_features() does not
+> relay any success or failure, so there is no way for DSA to know if it
+> succeded or not. And there are places where we temporarily want to
+> undo all configured vlans, which makes it hard to do via
+> netdev_update_features().
+> 
+> Not sure anymore if this is a good way forward, especially if it is
+> just meant to fix a corner case. @Vladimir, what do you think?
+> 
+> I'd probably rather go forward with the current fix (+ apply it as
+> well for the vlan core code), and do the conversion to
+> netdev_update_features() at later time, since I see potential for
+> unexpected breakage.
+> 
 > Best regards,
-> Krzysztof
+> Jonas
 
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/aD7bD6eqbseU9NHDSHb+3ZT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgLPnMACgkQAR8vZIA0
-zr2n/Af+LVw/038n6xkuDzEVw1Ws29jNVFmBbGwSS1Om+WVKtZVnR0MEJigZTpNh
-Xw3M68InMX0jlbko1jdRMbhfzovDicEY9KYmg3pKQCZcWiFS93x+PIGFNY+ekeov
-jXyoiQY1zaC1/FT3PWtOwK6Ls+yGL83vJm9O86c2dCa6/wnARvbWULW/uQPh0AlX
-yTDzLR3RuRQqow6k+M+Rv3ruF0lx7cis6RCVOb3YkCwwBMrjUFQ/T05K5ZilZMr5
-9N257fwmaKEtAqk9Sc7fXi/kGf2IvPtobVyWOxWpyIJVeyjjp3s6G4linPN8U46P
-s2b/DM39xFJsCGTqF8rG0CJFUNM1FA==
-=Id9L
------END PGP SIGNATURE-----
-
---Sig_/aD7bD6eqbseU9NHDSHb+3ZT--
+I see the inconsistency you're trying to fix, but I'm still wondering
+whether it is the fix that b53 requires, given the fact that it doesn't
+seem to otherwise depend on 8021q to set up or modify VID 0. I would say
+I don't yet have a fully developed opinion and I am waiting for you to
+provide the result of the modified bridge_vlan_aware selftest,
+specifically drop_untagged().
