@@ -1,108 +1,119 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D286A187346
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D392517A9
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745586295; cv=none; b=R32cuDzgxwkieIuiebCOgaCsyl/IiNkMOHtdZHy5R5KxB0EStWpjVG3/JLzHnBu64c/MuyShq7DI6EqfLtUlpHFeQks72ax7dsdxU+WkhF/OoawOrXDBnIvtbqnhC2l5RMje5cFMAOHj6I2goIPfNMAlTtpIxIOrfUlpQV0DBZo=
+	t=1745586298; cv=none; b=V0idiKHlZPkeU2yYFTmF93k/v2SALvx/arshKQAIuRTIz27XzP4SolfBS/tgZgDpLMHt9L3ImqzYSkV4E+zozKf9jh4+ImDuBwWmdqqdaq/Q7nGuRREaETsxiPgRqLPieCkd0JKcKHrfZi/ltl6fuSiK3CyR34OS215xakWy6wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745586295; c=relaxed/simple;
-	bh=Zj97Ex1RSi1g+9gUZ/Tcp04w18dKEFAHI9+Rpiyg+So=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rAii5LNcR6pEVjCX/i8nlzOxTXa3TxMLWbPbIkOQFlKHKBxeDsW2jltblzoh+kwrUzzCzpIQHXRS/FUMizCNq61ZXFxlKnZIp8oziYD8aBV8lscHGUhozQIkERR6BQhpMaeZnos+SYjEf9sQ2NVU1SYpEOfrVs/m4FQs67h/o7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ok96HLrN; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745586298; c=relaxed/simple;
+	bh=rPaDqGzlo8kKc7078BfnnKIU+GVWwOACSGFFD9+ZYOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NSICYmG8x9PRu4bdKD7AsVhK7JQu3j0M29uVHOQvvNKTUw5YDn0Xhtq7X/Zh/opOEhz5ChnwrcGd+pik2BwExpiQ2HdbiY8dCh0euJrd78+o+0KGU54ZRUvp7Sa2Re03JP/kXDpmHFhJaZb6Hi6ltTJoT94BqFhGbkOVXNzl8MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PwzqxmA4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ok96HLrN"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso1327125f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745586292; x=1746191092; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r3J3GqbcEJHK4SoFItL9fayn3ipBLH7O0WRijmWDcMA=;
-        b=Ok96HLrNCxIYbo8MHrqW9hIoOfMacx6NX8an+nX/bPIE5zCna84JnOdVS8976z1cRb
-         TcOyu5dAuG/eSu0uCIAhVD9fGuKs+MbjpFlDFKULdmFZsApXIjyVt0X1k4Who6hLtc0a
-         1wynf2X8i8pWfInNEUY22/Z8anep8YZc3Oiy4R9EjxDuFu7hgSm602Z7a9Rwm2j6iZLo
-         smXJG8IMWUHZ0oJ7OSG6OhjZPK9QqAdB3p+kUhtWVHmc0cHWJj6dNgQI+zMmiTp/eTy6
-         yrX1ultimLgU52BnmaT3409f5t1/dOtsuCR7H69lisnO/9bM1PoWJbGgZi4nh6QKGjpq
-         SLPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745586292; x=1746191092;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r3J3GqbcEJHK4SoFItL9fayn3ipBLH7O0WRijmWDcMA=;
-        b=lJzyL5w3fGaIDB/p4urkRUc8P6mi6832qPR0wPbshYvRiJdUYUARnd8WfNkGxNNJhs
-         7Iv/ITvL11KJ5VCTGnIuCjFdvzRscqwDAFwZEscQwbvzb12RlNhnNHRqwWGH4hg7HLVA
-         YSUarEvPKJkNKFRNVtThBj86GGEwsRLuNo34KmlyK7e/byflS/OgSYOq4Q/toLGXAN6b
-         oLogzi4Tjz3qwWw+sYQIkoVPO5HRN5a7b9U2nU27FSqe3UMHuQnqGDb4P4jXbsgNEgX2
-         gds+asbk0BhST1OMRkEjLHJ36SJAs8YEHmiNierYVBA9XDIzCKB3CXF++RsnwYcdxkKJ
-         xnFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUObGccyn3wyc1azl0MrvIoHQeiLmOzyXk4j6FvenuppAT5hVQn3qVWrcWEq0xr4mmRB/gE6RzSfXv+TUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7WJQwBevebjsDQrnke0WIw3aaEhmdzlx0f/nTAaAORV0GlicK
-	LruuHbUKLmtLyWPQht6dXPgXre7aebliU8VcFBlsryrUXA0YNbBcM8yK9XBVkvM=
-X-Gm-Gg: ASbGncvmD4ed1YNNaBzKbsHZwEtDbWR3D+KXr1DrCzAQvjv00kCnbyH092sRSdPE8mG
-	cBPIiSodkDboisP9XA3nolArrCp8rq+Tg+UGL93OXkv9MfkJFOH3SeD8wtSi7Y/00OJk1NbRSSD
-	TK5Xkq5Q3m7EDdlB0c/9MiS3/00uPrudXU+OvhJmbnigi12cTjFE+F4uOG12yQSQfgBuHePeH40
-	QW2fquT9VDJGCIInZbdvM458t2IgvfdZCuJavQmQiOGVwEpD7SqBeik0IOKVQhK18R00xRoGvb6
-	kOjwybffP9Z043GbNiN8CRg04bevZmqJEitjIq6SS6EpGw==
-X-Google-Smtp-Source: AGHT+IHxVgPrxzsyigbQs+XS+4aY9YzDl52Yt9wjdLrlTN9Cnijbn8pi0uqCi9dQ7/1RBszsnzma0A==
-X-Received: by 2002:a05:6000:400d:b0:391:29f:4f87 with SMTP id ffacd0b85a97d-3a074f47161mr1713472f8f.49.1745586292037;
-        Fri, 25 Apr 2025 06:04:52 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073ca56d5sm2350498f8f.32.2025.04.25.06.04.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:04:51 -0700 (PDT)
-Date: Fri, 25 Apr 2025 16:04:47 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Su Hui <suhui@nfschina.com>
-Cc: jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 3/3] alarmtimer: switch spin_{lock,unlock}_irqsave() to
- guard()
-Message-ID: <1ec38ba3-000f-4e26-b18f-95ffb3583836@stanley.mountain>
-References: <20250424144819.24884-1-suhui@nfschina.com>
- <20250424144819.24884-4-suhui@nfschina.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwzqxmA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745586296;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RRT3RKx4TZ+P54S/HXqOrC/ht/rfJMrgmNz4iAs0uEQ=;
+	b=PwzqxmA4cEzvFGpCD6NxwNA9Qo2KrDaphK23Hm6vuYX6i2KrU6LgFDMBbQx4fiTwGX+EgG
+	PQquMDRuq/kkSMI5fV1Sop2pP7SEfvu2ha5mTfBcYYwuE8/7XaqCY/lwFoED7kgYPwhspN
+	T1Yf6Uim5jIQZ7CbAAezAsPgsvf2XLE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-_3s_6pwmPWC8mVY-6ElxbQ-1; Fri,
+ 25 Apr 2025 09:04:51 -0400
+X-MC-Unique: _3s_6pwmPWC8mVY-6ElxbQ-1
+X-Mimecast-MFC-AGG-ID: _3s_6pwmPWC8mVY-6ElxbQ_1745586289
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1CFA1800264;
+	Fri, 25 Apr 2025 13:04:48 +0000 (UTC)
+Received: from [10.44.33.33] (unknown [10.44.33.33])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B090918002AD;
+	Fri, 25 Apr 2025 13:04:42 +0000 (UTC)
+Message-ID: <1ba66392-f41d-4ffa-9952-900b6856e861@redhat.com>
+Date: Fri, 25 Apr 2025 15:04:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424144819.24884-4-suhui@nfschina.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-6-ivecera@redhat.com>
+ <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
+ <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+ <8082254c-01a6-4aca-84de-76083fdcbb3b@lunn.ch>
+ <ea9cd028-3d74-4d46-b355-a74ad549269b@redhat.com>
+ <34f29b17-dc68-4005-b2da-95fde34117a0@lunn.ch>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <34f29b17-dc68-4005-b2da-95fde34117a0@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Apr 24, 2025 at 10:48:20PM +0800, Su Hui wrote:
-> @@ -230,15 +226,15 @@ static int alarmtimer_suspend(struct device *dev)
->  	ktime_t min, now, expires;
->  	int i, ret, type;
->  	struct rtc_device *rtc;
-> -	unsigned long flags;
->  	struct rtc_time tm;
->  
-> -	spin_lock_irqsave(&freezer_delta_lock, flags);
-> -	min = freezer_delta;
-> -	expires = freezer_expires;
-> -	type = freezer_alarmtype;
-> -	freezer_delta = 0;
-> -	spin_unlock_irqrestore(&freezer_delta_lock, flags);
-> +	scoped_guard(spinlock_irqsave, &freezer_delta_lock) {
-> +		min = freezer_delta;
-> +		expires = freezer_expires;
-> +		type = freezer_alarmtype;
-> +		freezer_delta = 0;
-> +	}
-> +
->  
 
-Don't add the extra blank line here.
 
->  	rtc = alarmtimer_get_rtcdev();
->  	/* If we have no rtcdev, just return */
+On 24. 04. 25 9:57 odp., Andrew Lunn wrote:
+> On Thu, Apr 24, 2025 at 09:53:39PM +0200, Ivan Vecera wrote:
+>>
+>>
+>> On 24. 04. 25 9:18 odp., Andrew Lunn wrote:
+>>>> During taking 613cbb91e9ce ("media: Add MIPI CCI register access helper
+>>>> functions") approach I found they are using for these functions u64
+>>>> regardless of register size... Just to accommodate the biggest
+>>>> possible value. I know about weakness of 'void *' usage but u64 is not
+>>>> also ideal as the caller is forced to pass always 8 bytes for reading
+>>>> and forced to reserve 8 bytes for each read value on stack.
+>>>
+>>> In this device, how are the u48s used? Are they actually u48s, or are
+>>> they just u8[6], for example a MAC address? The network stack has lots
+>>> of functions like:
+>>>
+>>> eth_hw_addr_set(struct net_device *dev, const u8 *addr)
+>>
+>> u48 registers always represent 48bit integer... they read from device using
+>> bulk read as big-endian 48bit int. The same is valid also for u16
+>> and u32.
+> 
+> Then a u64 makes sense, plus on write to hardware a check the upper
+> bits are 0. These u48s are going to be stored in a u64 anyway, since C
+> does not have a u48 type.
 
-regards,
-dan carpenter
+Just note that some of 48bit registers uses signed values so the check
+should be:
+
+x is in <S48_MIN, U48_MAX>
+
+this could be done using bit operations:
+
+(!(GENMASK_ULL(63, 49) & ((u64)(x) + BIT_ULL(47))))
+
+Ivan
+
