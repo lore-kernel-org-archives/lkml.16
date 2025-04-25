@@ -1,147 +1,110 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F191DDE9;
-	Fri, 25 Apr 2025 07:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B3C10FD
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566231; cv=none; b=f4h2aAEVGJJjrt1oL/5exBpHOlbDy7WkP68zSBPVJpXTImTg/OSNAXxfp2QfslazIzND8AnYmmgyKlxTfW4HcpfKv1boOqzihfMI72Uw49oLVvHo/A4AIDlQoxjXBz1IByekC4pdFkaK01LQnS/bstFfCadFEYp4Crm5CFWVrmE=
+	t=1745566349; cv=none; b=UE83H3ue3CpS3jfPuX2A/hpbVsIt3z36DkXn0smo+SMAbSAF5AkJ+iTScCGaF/odizu6eekbFtxhK3pmX63/JBCnzhCNBsJkSlpqqjT71bO4rCpW0NAbFhekjYSPs0pJzkh65Jd8LEVV9YweZiY9Dn6+WeEMM3hzFUPRXHBmLzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566231; c=relaxed/simple;
-	bh=OWvy44TnOoF2Xr9rCIjsqTfY38fVghdoAqz+8yWzeiE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WDKCxny42WlQ7dxnVveuFQKC+tDYEprcDvbiE+2+O4LVbAbXxzwMxCSl6+upXjYQ7xgW04IUiOdQnAFWnljn5GA7e6kSwZ06BwhPg0LinCoudRthAYqB0ZJq46I1JtY4l8njm93vTAum69/DQ5B/O9vE6PUuE1EtyzYn5rMMDzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkTD64xk; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkTD64xk"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e6deb3eb7dbso1614016276.0;
-        Fri, 25 Apr 2025 00:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745566228; x=1746171028; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OWvy44TnOoF2Xr9rCIjsqTfY38fVghdoAqz+8yWzeiE=;
-        b=lkTD64xkfmuPvga8IW34AGtw3lZn18u5ZnI+uo6zv/I4IOGRIf93z9JapXKcIgSquz
-         NrnMZCucTowXNzOj3/DWETgXrkiOfRXuHUk7Sfb4MzSKqDmDbCZznFhWMC/41mk4PMWo
-         mfJAJuD7tJg7w9sMnC/jEaPPVYvglAa5QlQng5dFJsdpQxYTu8SySjdC8+F3CTvbK0yu
-         +QCCsRTWFuN26pRpM5kOseQKClHdfn9NgjywO7/YfVM+rwbcLD1aT/2W3cClbTD8WyMm
-         8UtDr0AnD1FEjUyk87grl/dUVkcFDcGx6t1NuVpEfAWTjKaR+TvtWM9bBtXi4xMCSKgG
-         Zt4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745566228; x=1746171028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OWvy44TnOoF2Xr9rCIjsqTfY38fVghdoAqz+8yWzeiE=;
-        b=rOzNv5ciRJ0IqzywrisJHZUnCdGUzX9vRiJbyp3xsLfbug1Vd0dZzPiYHlpLiAnhl0
-         tNYQJnpL8MQ0+k3Qyt9gDENoSie21FdUMU++qOj2fHF3nroCpsULe+wHxrhsm2BiErWT
-         4bX7KhuEDmxT4A7vsGb1YnVGjvO+UkS+Ebwh79ymvVFR2RXWlxLSk2Py4NOrAkz9q9o6
-         hdrfQxewEmMEVysu3p7Pzo1+7RRKyVJSawaSlIQCfZJfVkkYJTlDA38x3ia4FSANOOGb
-         21VboyirtZGN4GFI5ts6VbcHvtgMdiAwYDknoeHOsLdi31A2pi0we2mjHS0+MZV2KI2J
-         SOUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFe0YRWO9+bGV6E4x+bV+4W6F7FPj9qYgf2evah6pX5nQghAhU9WsWtFu//l77OwgwBfd1IwmLsatjdt4=@vger.kernel.org, AJvYcCWrveSikYhsPauxXVC5beLK1gGao7iyu3SoGmLcZSSaHEpcRpstyPAuO8nnJEJFsY2SJ2N6it7E@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYCcO63snB+BqoLQvCrHZ8y6h0k1i3raXzRKQz/yk+F6vMAkR6
-	KamAZu4CzakwpZRaCgyBZToEJjXka1AR/nnQnDp1t/BaSeBDrA2zyuuHdKKJ/1DMYlLPxU5d49s
-	X+3qCW8XnVUF1G/HRnSxyUOIfL5Q=
-X-Gm-Gg: ASbGncvPqkS5q0W+cu5FmJVen1RbaqNkOM4u5xygn7OLzZfVXaW1kzR1F7Vss0P9g8M
-	JAso8z4xa65bUAcGu6Li6V4qMs8oii0SFf1m0dH5V/5SY9+e7HNNE5LF3l55hxOPw7epTDSiUfi
-	VwnxJf6TwRpLmzP7iPQJa98/0EB8g7Lg==
-X-Google-Smtp-Source: AGHT+IEWV18KS8MumgZb8OB0QJeoK1Zd+UkrJ95ng4qoBG03B/slgD3wqgI2ekZkNmF7B69VFTKtCzF6mDRYhdO/BTo=
-X-Received: by 2002:a05:6902:2387:b0:e73:930:cc31 with SMTP id
- 3f1490d57ef6-e73165c3e38mr1843193276.13.1745566228645; Fri, 25 Apr 2025
- 00:30:28 -0700 (PDT)
+	s=arc-20240116; t=1745566349; c=relaxed/simple;
+	bh=qh3+deB5RfXkp3djJ1R95fy9ZiJQodi7eJFwTJQylFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUovvACHUpponIGR3W1CTY18axLo8Tw/Xfpb1rryww85ndLmv0pQM4IdYihwY2pqGwDW1gTmTaTx4Cxs0W/9DDLfWj4WOODwS6nW72eysx0P2bR0E4wAyl0uwBxFUuY9+XGIMadcjR6Hq3zJHNvnn8jlXdB8cBrjk9k0XkE+9H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CC7D8210F9;
+	Fri, 25 Apr 2025 07:32:25 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A597113A79;
+	Fri, 25 Apr 2025 07:32:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id i4FpKIk6C2iYbwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Fri, 25 Apr 2025 07:32:25 +0000
+Date: Fri, 25 Apr 2025 09:32:16 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Mel Gorman <mgorman@suse.de>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+	storagedev@microchip.com, virtualization@lists.linux.dev, 
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v6 6/9] isolation: introduce io_queue isolcpus type
+Message-ID: <dd4719dc-5ac4-44d9-bccb-e867d322864e@flourine.local>
+References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
+ <20250424-isolcpus-io-queues-v6-6-9a53a870ca1f@kernel.org>
+ <2db989db-4849-46a9-9bad-0b67d85d1650@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422184913.20155-1-jonas.gorski@gmail.com>
- <cf0d5622-9b35-4a33-8680-2501d61f3cdf@redhat.com> <CAOiHx=mkuvuJOBFjmDRMAeSFByW=AZ=RTTOG6poEu53XGkWHbw@mail.gmail.com>
-In-Reply-To: <CAOiHx=mkuvuJOBFjmDRMAeSFByW=AZ=RTTOG6poEu53XGkWHbw@mail.gmail.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Fri, 25 Apr 2025 09:30:17 +0200
-X-Gm-Features: ATxdqUHGRxEKMxxN2LzsQ4XQH9Vmxm-WedPheRLmBBKrtF9mIxhxgkLohyWfgjw
-Message-ID: <CAOiHx=m6Dqo4r9eaSSHDy5Zo8RxBY4DpE-qNeZXTjQRDAZMmaA@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: fix VLAN 0 filter imbalance when toggling filtering
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2db989db-4849-46a9-9bad-0b67d85d1650@suse.de>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: CC7D8210F9
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-On Thu, Apr 24, 2025 at 11:50=E2=80=AFAM Jonas Gorski <jonas.gorski@gmail.c=
-om> wrote:
->
-> Hi,
->
-> On Thu, Apr 24, 2025 at 11:15=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> =
-wrote:
-> >
-> >
-> >
-> > On 4/22/25 8:49 PM, Jonas Gorski wrote:
-> > > When a net device has NETIF_F_HW_VLAN_CTAG_FILTER set, the 8021q code
-> > > will add VLAN 0 when enabling the device, and remove it on disabling =
-it
-> > > again.
-> > >
-> > > But since we are changing NETIF_F_HW_VLAN_CTAG_FILTER during runtime =
-in
-> > > dsa_user_manage_vlan_filtering(), user ports that are already enabled
-> > > may end up with no VLAN 0 configured, or VLAN 0 left configured.
-> >
-> > Why this is a problem specifically for dsa and not a generic one? other=
-s
-> > devices allow flipping the NETIF_F_HW_VLAN_CTAG_FILTER feature at runti=
-me.
-> >
-> > AFAICS dsa_user_manage_vlan_filtering() is currently missing a call to
-> > netdev_update_features(), why is that not sufficient nor necessary?
->
-> Good point, I missed that (looked for something like this, but
-> obviously didn't look hard enough). But checking the flow of it in the
-> kernel ...
->
-> netdev_update_features() for NETIF_F_HW_VLAN_CTAG_FILTER triggers a
-> NETDEV_CVLAN_FILTER_PUSH_INFO notification, which would then trigger
-> vlan_filter_push_vids(), which then calls vlan_add_rx_filter_info()
-> for all configured vlans.
->
-> This is more or less identical to what dsa does with its
-> vlan_for_each(user, dsa_user_restore_vlan, user); call.
->
-> And AFAICT it also has the same issue I am trying to fix here, that it
-> does not install a VLAN 0 filter for devices that are already up,
-> which it would have if the device had NETIF_F_HW_VLAN_CTAG_FILTER set
-> when was the device was enabled (and vice versa on on down/remove).
->
-> So I guess the course of action for a V2 is fixing this in the core
-> vlan code and make vlan_filter_push_vids() / vlan_filter_drop_vids()
-> take care of the VLAN 0 filter as well, and then make dsa use
-> netdev_update_features() to simplify the code as well.
->
-> Does that sound reasonable?
+On Fri, Apr 25, 2025 at 08:26:22AM +0200, Hannes Reinecke wrote:
+> On 4/24/25 20:19, Daniel Wagner wrote:
+> > Multiqueue drivers spreading IO queues on all CPUs for optimal
+> > performance. The drivers are not aware of the CPU isolated requirement
+> > and will spread all queues ignoring the isolcpus configuration.
+> > 
+> > Introduce a new isolcpus mask which allows the user to define on which
+> > CPUs IO queues should be placed. This is similar to the managed_irq but
+> > for drivers which do not use the managed IRQ infrastructure.
+> > 
+> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> > ---
+> >   include/linux/sched/isolation.h | 1 +
+> >   kernel/sched/isolation.c        | 7 +++++++
+> >   2 files changed, 8 insertions(+)
+> > 
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-After looking into it a bit more, netdev_update_features() does not
-relay any success or failure, so there is no way for DSA to know if it
-succeded or not. And there are places where we temporarily want to
-undo all configured vlans, which makes it hard to do via
-netdev_update_features().
+Just realized I forgot to also add some document on this new argument:
 
-Not sure anymore if this is a good way forward, especially if it is
-just meant to fix a corner case. @Vladimir, what do you think?
+			io_queue
+			  Isolate from IO queue work caused by multiqueue
+			  device drivers. Restrict the placement of
+			  queues to housekeeping CPUs only, ensuring that
+			  all IO work is processed by a housekeeping CPU.
 
-I'd probably rather go forward with the current fix (+ apply it as
-well for the vlan core code), and do the conversion to
-netdev_update_features() at later time, since I see potential for
-unexpected breakage.
+			  Note: When an isolated CPU issues an IO, it is
+			  forwarded to a housekeeping CPU. This will
+			  trigger a software interrupt on the completion
+			  path.
 
-Best regards,
-Jonas
+			  Note: It is not possible to offline housekeeping
+			  CPUs that serve isolated CPUs.
