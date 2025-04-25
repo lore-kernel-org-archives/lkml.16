@@ -1,127 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F634635;
-	Fri, 25 Apr 2025 23:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA79A232368
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745622552; cv=none; b=Ket0yqsFLXxTZBCaD/ZvA7bbWu9c9sZdXVddFjqB+EK/EjTn+tUIxgIPlu0WCMhe6XIzIk4rSP5qDoZlVwzalcpSVRPD3TgZXfKWbyeWIuDxNXTX4VJqYr/G8DDNKZUmYLdODes1eNNHVcP8IGLdxT3FJQ12TTIoBWQBqfy4r1w=
+	t=1745622736; cv=none; b=mmss9QGaYxgmikCvalz1uGczg0uF79rbW5Nx+S8DMGlLEam3mvIx26OAeUAC1z3P3Ks4ntYGRBQUMTxXknIjbJtOydt6sD2C8H+lsQ/Alglc3IZ71HYQiRDIOgY31qoZOuVHOl61ev2MMvOgCBVwbrxS5UqXgXjzPgVYL+Eq9sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745622552; c=relaxed/simple;
-	bh=Z8WeYorZeDjDZWfM4rFlcel7nAPZCgpzkVZIFGzpr9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBg0FZt6jmkibKM5IVPPdPts+BdvrxRtIAOO5KcAyc3qRX/i1/JSYdXyiYZm5OVoLZQduQbOYQJ+GxF1H9tW8asrTEUDiBO40ToSW66IycEGMufkA4VgRySQZkkTS2W7ovHp0Y7dOXsccD4dqfEf9gtg5I0sCPaQB6BliKQLlVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7W5bR60; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745622736; c=relaxed/simple;
+	bh=KKOE815L05yON6K5PU7GKf7a7Uf9E2zDGle9wQ9DKME=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Q1hqUrr8n0ewDbgqTCblHWo0B1SCvy4Jpw1DfocmbnV8QZHzspY9P57OkwSbzpH4j2FnlbHgoIO6YL/CQWF0r58xpgFtXGjU6zKmsF+hLBnewdnndYh52wp03nRSk3bA0FVOnKukOpGqufRDPykT5BFypIIDRv2xZQeiFXibnxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5hIu74y; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7W5bR60"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175CFC4CEE4;
-	Fri, 25 Apr 2025 23:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745622552;
-	bh=Z8WeYorZeDjDZWfM4rFlcel7nAPZCgpzkVZIFGzpr9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i7W5bR60HZ/wlLofVNshaQsLtdPMd2kNRArwI3YjlQG2/GjWTmHTy9Oqb82F38LPw
-	 LN8HWxdbRwPcrSaZ5KKtjpoQn7MKsPRjwyGASpJqObVMxLGDswnQlmb+a8irH2Tgh7
-	 0CuLvUfRE9Ho0G6vNYyZ1lQRwLW0RvGqpFtyer51he6xbxJz102/s3fGsPRBxvoqxk
-	 Rqp9dTVIoFsxMySu2tDpGSymU3emjg00eMgtXcymMP3QV8N3FhJHyjSPqmcNFbr+a9
-	 EUTS4+1ILs6TYsuaqjIjgls1Wsz5SVLJz2Qmn4QdlHHTZBp2ke9T0xKDkXtx90h0Cu
-	 2DOH+UwbEjnsg==
-Date: Fri, 25 Apr 2025 16:09:08 -0700
-From: Kees Cook <kees@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, bpf@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
-Subject: Re: [RFC][PATCH 2/2] treewide: Have the task->flags & PF_KTHREAD
- check use the helper functions
-Message-ID: <202504251558.AA50716@keescook>
-References: <20250425204120.639530125@goodmis.org>
- <20250425204313.784243618@goodmis.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5hIu74y"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227a8cdd272so23794145ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:12:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745622734; x=1746227534; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3r7P7UY8cYUR61rlcLCipPUdZOMuPUlw12jrZODPDcQ=;
+        b=G5hIu74yvYyEtmsIJq0bKkp+oH3rKGdiToYyzrQyqe4ccEamDvWtgcvjgOHqcwZ+6y
+         Nd1m6SqgLUz658ZO/ca46wQSwF1h7JrwHhCEER5jYvOCNyHLJoHuPfX7W8+6T/vYJwXs
+         PNKlRTaxVDn4oErwtVjhAdj9BhVHryrxEMtqJOoGYA1Yyy88qoaGUodvkVFcueetRL1P
+         4T67j3/E688WGg0/WY8qHffTzHVGYjhqY9v7fzol97CvHFhZYYOuyfLdU4Oo0Z37Rg1B
+         yq9K3GGPCOL9MPJSlRDTFU5BT/fbXh0KmFWvDJvtZnor6otrz/CbBeCRuqoQbgQf4cR/
+         ADuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745622734; x=1746227534;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3r7P7UY8cYUR61rlcLCipPUdZOMuPUlw12jrZODPDcQ=;
+        b=Sq/PFBgAv+PlONDbMRhdMIUJAlAkUnrcYzSS0YeyinkmG0gHzoSGaZM8A9lb41UQVj
+         kMorv+3OGkEBxabtZ5OCbqAJViAeK3yjKeHE2wE0Dgrc5w0Cc8BYwLO4y4gS+fjb9J64
+         OJEIH1BllljZGG9bfRKVCBa44lH0ox/xeLSQdkLOr0W4uHx4G8iqYwcZUhaVmUrhfHUM
+         oV3qRUVMlh7gvFznrmlAsqDHyc6Ujwb7wtbcDzc1Ks04KpU7k+7CMPa01DhMb6/i3Uam
+         H6F60AMJ5/ygXzwwYEeGetIOS8kJCBUsh4zy4GLTGCJn9lw7BonHYqb+Cpirg8kDTiuZ
+         JauQ==
+X-Gm-Message-State: AOJu0YzyADwxIjdeCYPfCNsxLShTKc0WcFhvSqbCeYap+7o7VzEorpqK
+	cIkczojzOvfGC6pHcw9DTU8jRBmQnsuu4zuf0WeAFcpCK7Vz/TViUnyR3k5FfWro6T5zKQynqGu
+	ggg==
+X-Google-Smtp-Source: AGHT+IHcUNoic9IbPgXUI4x5fMfwjOit8nwFdr8BU580JFK37mK8J56Q3Njm7OD0w5D9d+xa8tMXUJ8ix1U=
+X-Received: from pgam20.prod.google.com ([2002:a05:6a02:2b54:b0:b16:149:d369])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a68:b0:224:6ee:ad
+ with SMTP id d9443c01a7336-22dc6a89478mr20052065ad.44.1745622733974; Fri, 25
+ Apr 2025 16:12:13 -0700 (PDT)
+Date: Fri, 25 Apr 2025 16:11:00 -0700
+In-Reply-To: <20250401163447.846608-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425204313.784243618@goodmis.org>
+Mime-Version: 1.0
+References: <20250401163447.846608-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <174562143766.1001424.10208731170484769772.b4-ty@google.com>
+Subject: Re: [PATCH v2 0/8] x86/irq: KVM: Optimize KVM's PIR harvesting
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Apr 25, 2025 at 04:41:22PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 01 Apr 2025 09:34:39 -0700, Sean Christopherson wrote:
+> Optimizing KVM's PIR harvesting using the same techniques as posted MSIs,
+> most notably to use 8-byte accesses on 64-bit kernels (/facepalm).
 > 
-> Getting the check if a task is a kernel thread or a user thread can be
-> error prone as it's not easy to see the difference.
+> Fix a few warts along the way, and finish up by adding a helper to dedup
+> the PIR harvesting code between KVM and posted MSIs.
 > 
-> 	if (!(task->flags & PF_KTHREAD))
+> v2:
+>  - Collect a review. [tglx]
+>  - Use an "unsigned long" with a bitwise-OR to gather PIR. [tglx]
 > 
-> Is not immediately obvious that it's checking for a user thread.
-> 
-> 	if (is_user_thread(task))
-> 
-> Is much easier to review, as it is obvious that it is checking if the task
-> is a user thread.
-> 
-> Using a coccinelle script, convert these checks over to using either
-> is_user_thread() or is_kernel_thread().
-> 
->   $ cat kthread.cocci
->   @@
->   identifier task;
->   @@
->   -	!(task->flags & PF_KTHREAD)
->   +	is_user_thread(task)
->   @@
->   identifier task;
->   @@
->   -	(task->flags & PF_KTHREAD) == 0
->   +	is_user_thread(task)
->   @@
->   identifier task;
->   @@
->   -	(task->flags & PF_KTHREAD) != 0
->   +	is_kernel_thread(task)
->   @@
->   identifier task;
->   @@
->   -	task->flags & PF_KTHREAD
->   +	is_kernel_thread(task)
-> 
->   $ spatch --dir --include-headers kthread.cocci . > /tmp/t.patch
->   $ patch -p1 < /tmp/t.patch
-> 
-> Make sure to undo the conversion of the helper functions themselves!
-> 
->   $ git show include/linux/sched.h | patch -p1 -R
+> [...]
 
-FYI, the "file in" test can be helpful. I use it to exclude tools and
-samples regularly, and *I think* it would work for excluding individual
-files too:
+Applied to kvm-x86 pir.
 
-@name_of_rule depends !(file in "tools") && !(file in "samples")@
+Thomas and other x86 maintainers, please holler if you object to taking this
+through KVM (x86), or to any of the patches.  I want to start getting coverage
+in -next, and deliberately put this in its own topic branch so I can rewrite or
+drop things as needed.
 
-I've been collecting random notes like this here:
+[1/8] x86/irq: Ensure initial PIR loads are performed exactly once
+      https://github.com/kvm-x86/linux/commit/600e9606046a
+[2/8] x86/irq: Track if IRQ was found in PIR during initial loop (to load PIR vals)
+      https://github.com/kvm-x86/linux/commit/3cdb8261504c
+[3/8] KVM: VMX: Ensure vIRR isn't reloaded at odd times when sync'ing PIR
+      https://github.com/kvm-x86/linux/commit/6433fc01f9f1
+[4/8] x86/irq: KVM: Track PIR bitmap as an "unsigned long" array
+      https://github.com/kvm-x86/linux/commit/f1459315f4d2
+[5/8] KVM: VMX: Process PIR using 64-bit accesses on 64-bit kernels
+      https://github.com/kvm-x86/linux/commit/06b4d0ea226c
+[6/8] KVM: VMX: Isolate pure loads from atomic XCHG when processing PIR
+      https://github.com/kvm-x86/linux/commit/b41f8638b9d3
+[7/8] KVM: VMX: Use arch_xchg() when processing PIR to avoid instrumentation
+      https://github.com/kvm-x86/linux/commit/baf68a0e3bd6
+[8/8] x86/irq: KVM: Add helper for harvesting PIR to deduplicate KVM and posted MSIs
+      https://github.com/kvm-x86/linux/commit/edaf3eded386
 
-https://github.com/kees/kernel-tools/tree/trunk/coccinelle
-
->  tools/sched_ext/scx_central.bpf.c          |  2 +-
->  tools/sched_ext/scx_flatcg.bpf.c           |  2 +-
->  tools/sched_ext/scx_qmap.bpf.c             |  2 +-
-
-I think these are fine. The Makefile is pulling in standard kbuild
-Makefiles, so I think the correct include directories (outside of
-tools/) are being used.
-
-But yeah, easy mechanical change and a readability improvement. :)
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
--- 
-Kees Cook
+--
+https://github.com/kvm-x86/linux/tree/next
