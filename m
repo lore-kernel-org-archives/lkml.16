@@ -1,72 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E756122E3E3
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7702B22E3E3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573751; cv=none; b=bg4h20Jn9ZDK20iHmEG+pujJeKdwj7Rpcc07dQIQ2kNKBMmfjAYCfAx71XutZZtVr7DJWjj4Zn/vvmcs5Y7MviSUAalD9lh30qNAoPcDEPz19q+tvBtWjWbREmrOsw7pXe+eSFE5S/xXMr2ClbqEmxRnvMvQH3iRmX1E4UMCATg=
+	t=1745573793; cv=none; b=PzArH5K4h1GlMozYUCsYtv+U7Ypqd8QDoRbXMmCs/1JXSTRZeMXQP3TMoKPnOTwqQGLyOu+94QoCQ/h8yEtIf8CWlzI40GKo99oadthvNrZtsGnTkO5P4mOpwSBw9fVmtSdnvPwgc6EfTEpi2FEGAdGXbENSmO0ujWP4AQuliX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573751; c=relaxed/simple;
-	bh=sToWdQKy4Ilj8vtZl1fJZYV45WUmXfqIRGKxYDJBgAM=;
+	s=arc-20240116; t=1745573793; c=relaxed/simple;
+	bh=ioigkbjdcAhl3Sy/dq3GwJMrCQmcZVCmohh2bSLTNL8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D3tHn1RSRRZ28QitZXaF511fXQl3/TQpjtvrFAUdivNeh7NgiwLXIwEnGURXWpdkZPWfRLTMXjnsdEg9rOZB2ngLwhizYdrzAws1WweYveoeFq+x8UbpzunGPB8VWGZBm0+6M4Lvp0tqg6beksI0+cM5xiG9Ra20TrndVTo5vVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C5hl9uK4; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=iKBsQK3ssOKcL43xqKkhCkYCo8JGXpYGihX8VTsS/1ckIZtP473ZLgfwKWlEX6xWW2dsWp9QLj8bzrEokR97xG86V/amIn1RS+y6UP0Jds5YJYPAc//iAoxJ8v6xH++pg6I+9wUiqkTZZ88SaE8W1rr3hiUjCYrfihcjUjtY914=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NkLwhNKw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C5hl9uK4"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8T8aB015508
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AJDl4omv7ndvFsud7bHAzIbFbElPaQdLGmav6WIPsh4=; b=C5hl9uK4YRXvDPx6
-	U9Eaw4kphDAc62d/9ms3w+qqqJojv0NqT5rUazrhs4eo7M0bM4dLANit7ovWPzrG
-	QNcZpuciVA6kgtv9STJZwENx1b16lMINP5UQiVO6pGrIHF6xDo8sQczChxxLV3l2
-	ws/fZmbuq1ucBjV72OG0hrOnV3j4fqL7XjNkeJECTRudgZU0E5qjJ1iTMA9PyVgB
-	Jv2qRJSrPORvsStQHksdH6rs0QAn2CHAYTEtwztzaSH51QwJUP4kf9g4bbXnqqqs
-	uMr8tpHuIaTI8UCrAlVTHkqp88eM40HD1gRyTeL9VAPO2m/TYIMSuVEGMFOH0o8W
-	4fs6/Q==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3geg1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:49 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8f9c5af3dso3355746d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:35:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573748; x=1746178548;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AJDl4omv7ndvFsud7bHAzIbFbElPaQdLGmav6WIPsh4=;
-        b=d2XG1ce73tzb7rS1/V++E5WkXBE+RFiHW85qRMIOyiYyuCEYDrw23CZ8Brw6dN3sRD
-         BpsI40Q+u+joqtpSKHR7mUccK4YAjisHZDcwppFOqylO0AgIj+bBaKMLW5sZL4yhI3xi
-         9XolwSNMf2OtzTnxcLguHgE4pdofWYHYMlP20sTpC0oGf8+HTG90YOpW2Un0TCC8r0jP
-         Z/JN7t/hJSN5lVFsx2y1q97IfCsnSiFa7vHugkoHRfa1VItyNko1sjUlq10+ODl27b3j
-         UH2/BOTYchsZ2vcziIgj0D1k6R7XTQYypINi4a9rxcms0qR8sHySHRyejs7ScZKa8ssB
-         HKow==
-X-Forwarded-Encrypted: i=1; AJvYcCVKEUzAYpqQa5PBAVkZxaqVU0CAn/c+RVoudsQyPCQNCr/ECdV+9uM/tR/L7MzTUtyjTfn65OSWt+cabNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7xEiV+7EQZwEkOyKfdj7sw1Bb+ceGVIBiC0QZkOu8mB/Fxoff
-	5aVMuqAxlI9p74SaZDI2FTiyaZWp9c4NnuADhhNYr9z8+TKejnNCT/+9qFkHaNWSi5PhagCI0+U
-	7mo7Ffm8XxQ9X96REcmWXjB4mvO6nU25HEB00BbxlVJ2n23RY837hKwgEPZMlJhE=
-X-Gm-Gg: ASbGnctMKPfsDnZPZUOO1Roy5Ompvz8NO5JwOQLzbGzsEMOI9paNBRobxCvzwNhaBOh
-	jjApNJyn2NoYP336VTH5M22E1Cr7X2kDs/Z/B//DWXUXFB0kV5djsJpLBqjv8EDm7h81FrJnk6F
-	GymuEg4AxkYVLj6qdH/pGuFU66kw3Vsa6hGwjJGNqD9nF95td6usOon72ktUsJeQUavl7wI4Jm+
-	8MGpRL26FRO00uUTUFavbKA4RwuIyY+3mQF4x8YtV67uVnn8xXlZNK2uNvNa5r93Qi+HJcoJST/
-	+pu8n03xhn6QlkQeX7e/XAC2fY1lnN3OIX4VdwPA6xnRP3dMtd4pmqEGlV99OuoZ
-X-Received: by 2002:a05:6214:1c49:b0:6e8:fef8:8b06 with SMTP id 6a1803df08f44-6f4cb9a3465mr12149126d6.2.1745573747747;
-        Fri, 25 Apr 2025 02:35:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEoiv4MlBzWT6NZGwE45WPs9WN6M0wjAeYYYXs2TXJ84tsBTXEo8eVE4CzqSua4OQ5eBomYJA==
-X-Received: by 2002:a05:6214:1c49:b0:6e8:fef8:8b06 with SMTP id 6a1803df08f44-6f4cb9a3465mr12148856d6.2.1745573747358;
-        Fri, 25 Apr 2025 02:35:47 -0700 (PDT)
-Received: from [192.168.65.5] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7038340b7sm982484a12.79.2025.04.25.02.35.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 02:35:46 -0700 (PDT)
-Message-ID: <f74d8b50-35a1-4ce8-bfdd-4c90782b8db5@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 11:35:40 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NkLwhNKw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745573790;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0lD/LvDHoI9QqH/8Vxi3D6OYMYIKwTaooepYa8dn5Hs=;
+	b=NkLwhNKw/tvw4dq4PNdHdR0SkHEjk0U/zaQzwu1ijUF1kLu7GgrloodnAXr1H5jQm6uhZ8
+	Yna9/Gy0OpbzuM57AEu1WLsN4DSZ0fJ7fuoEU2/LHEAVeY7Cvdpv2bPnTYZOhjSsLTL7ml
+	xgolR98cAZzzfn/I19X0TwXnNiAeK5k=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-akjxUarnOKu0tpay3pBj0A-1; Fri,
+ 25 Apr 2025 05:36:27 -0400
+X-MC-Unique: akjxUarnOKu0tpay3pBj0A-1
+X-Mimecast-MFC-AGG-ID: akjxUarnOKu0tpay3pBj0A_1745573785
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971FD1956088;
+	Fri, 25 Apr 2025 09:36:24 +0000 (UTC)
+Received: from [10.44.33.33] (unknown [10.44.33.33])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A67B19560AB;
+	Fri, 25 Apr 2025 09:36:18 +0000 (UTC)
+Message-ID: <bc28ca3e-6ccd-4d43-8a51-eb4563a6ed06@redhat.com>
+Date: Fri, 25 Apr 2025 11:36:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,84 +51,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: clock: Add Qualcomm SC8180X Camera clock
- controller
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
- <H56Iba_grof22uzTtGCI-APhiDAGSejNod6jsSVIykm9ijaaj7PWqyszShCEGjIpM2wCLOn4a3Vfb8Hjziqklg==@protonmail.internalid>
- <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
- <621d8556-f95b-4cbe-809b-864417f0d48a@linaro.org>
- <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
+Subject: Re: [PATCH net-next v4 1/8] dt-bindings: dpll: Add DPLL device and
+ pin
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-2-ivecera@redhat.com>
+ <20250425-manul-of-undeniable-refinement-dc6cdc@kuoka>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: 9m8STDuANVtbL5B5CBasDa_v_hhh8zAv
-X-Proofpoint-GUID: 9m8STDuANVtbL5B5CBasDa_v_hhh8zAv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2OSBTYWx0ZWRfXzPwdtmDjEW0G Vw9SZWd6cWcifncrNWvyPzP5thDYLXht+/9piMJajvJXuJVDv58SKVxreQwWxQDEVlanQNkQ906 8qwxY9t9F7ri/8BOGiZunD4BgOSzqBPyO9HuLgWrsIa2lRdcbZwNksZ25CWqYUSlXdLdKxJLboE
- CNx1FcLZ2gW/EyU3cWHSf4DlHLpjoHF2AqtXQ2ilc8G4Gx1JMA5P0a4HUmrUAw4Jp59W00a21XR ykQFJzunDQtcHjR5G8oQnoS2vJgZ613eigWYXO2GWUA+mK+mF+4HtuUDeNcv1sLEDb8U5bgL/tQ TOgKXo3FEeI2NpVJ5p6Wt9t637A7c+UnTLvaGHkRA2qR6Q0HZ1Yfc4EVumragc3VbYcZ/gtid/q
- 4LnbKnOaHMieWHEgMlinurtCCombZfWmY+PX698VHr0fLwMDtZ8NLL18njf2jaKHtO2bOWHe
-X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=680b5775 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=4NoTk0SwpzZkwhluMIYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250069
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250425-manul-of-undeniable-refinement-dc6cdc@kuoka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 4/24/25 12:38 PM, Satya Priya Kakitapalli wrote:
+
+
+On 25. 04. 25 9:39 dop., Krzysztof Kozlowski wrote:
+> On Thu, Apr 24, 2025 at 05:47:15PM GMT, Ivan Vecera wrote:
+>> Add a common DT schema for DPLL device and its associated pins.
+>> The DPLL (device phase-locked loop) is a device used for precise clock
+>> synchronization in networking and telecom hardware.
+>>
+>> The device includes one or more DPLLs (channels) and one or more
+>> physical input/output pins.
+>>
+>> Each DPLL channel is used either to provide a pulse-per-clock signal or
+>> to drive an Ethernet equipment clock.
+>>
+>> The input and output pins have the following properties:
+>> * label: specifies board label
+>> * connection type: specifies its usage depending on wiring
+>> * list of supported or allowed frequencies: depending on how the pin
+>>    is connected and where)
+>> * embedded sync capability: indicates whether the pin supports this
+>>
+>> Check:
 > 
-> On 4/22/2025 5:11 PM, Bryan O'Donoghue wrote:
->> On 22/04/2025 06:42, Satya Priya Kakitapalli wrote:
->>> Add device tree bindings for the camera clock controller on
->>> Qualcomm SC8180X platform.
->>>
->>> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
->>> ---
-
-[...]
-
->>> +  required-opps:
->>> +    maxItems: 1
->>> +    description:
->>> +      A phandle to an OPP node describing required MMCX performance point.
->>> +
->>> +allOf:
->>> +  - $ref: qcom,gcc.yaml#
->>
->> A suspicious lack of clock depends here. No AHB clock ? No dependency on gcc ?
->>
->> You call out the gcc above.
->>
->> Could you please recheck your list of clock dependencies.
+> This does not belong to commit msg. You do not add compile commands of C
+> files, do you?
 > 
-> The dependent GCC clocks are marked always on from gcc probe, hence did not mention the dependency here.
+> Whatever you want to inform and is not relevant in the Git history
+> should be in changelog part.
 
-Let's do what was done on x1e80100 - describe the AHB clock in CAMCC
-bindings regardless of how we handle it.
+OK
 
-This way the DT represents the real hw dependency, but the OS takes steps
-to get them out of the way (and then ignores the GCC_CAMERA_AHB_CLK entry
-because the clock is never registered with GCC)
+>> $ make dt_binding_check DT_SCHEMA_FILES=/dpll/
+>>    SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>> /home/cera/devel/kernel/linux-2.6/Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
+>>    CHKDT   ./Documentation/devicetree/bindings
+>>    LINT    ./Documentation/devicetree/bindings
+>>    DTEX    Documentation/devicetree/bindings/dpll/dpll-pin.example.dts
+>>    DTC [C] Documentation/devicetree/bindings/dpll/dpll-pin.example.dtb
+>>    DTEX    Documentation/devicetree/bindings/dpll/dpll-device.example.dts
+>>    DTC [C] Documentation/devicetree/bindings/dpll/dpll-device.example.dtb
+>>
+>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>> ---
+>> v3->v4:
+>> * dropped $Ref from dpll-pin reg property
+>> * added maxItems to dpll-pin reg property
+>> * fixed paragraph in dpll-pin desc
+> 
+> ...
+> 
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^dpll(@.*)?$"
+>> +
+>> +  "#address-cells":
+>> +    const: 0
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +  dpll-types:
+>> +    description: List of DPLL channel types, one per DPLL instance.
+>> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+>> +    items:
+>> +      enum: [pps, eec]
+> 
+> Do channels have other properties as well in general?
 
-Konrad
+No, other characteristics should be deducible either from compatible or
+in runtime.
+
+>> +
+>> +  input-pins:
+>> +    type: object
+>> +    description: DPLL input pins
+>> +    unevaluatedProperties: false
+> 
+> Best regards,
+> Krzysztof
+> 
+
