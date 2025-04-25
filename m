@@ -1,134 +1,143 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B993025D20D;
-	Fri, 25 Apr 2025 15:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912E9268C66;
+	Fri, 25 Apr 2025 15:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593545; cv=none; b=gZgWKjrbB5PuAXgxhBhtrAfa2XxPTd9Me/TVvbaWyWjzR5ThdCMA1c01/01Tp/s2GZ78gJgwowfmASPLhJLTbOvbT3Xm9uiWnpjIYyBjrtYQczk6Rzu/DyewNu3h8Ua+e4xMNQQ+4hj91EZviEBxQ22fp4XLhJ6Ra4bKzzWEDXY=
+	t=1745593781; cv=none; b=r8nksgbR1GyeizG4zATNJDbHepeHHNILNIGaLYF4YVWE++oePkXQtAYBXplZLhX3yZ68LynTckHMR5pbXejGpxdAtr9UEoRcHleiearrH699MQjAKr0+hskDwGEUYs2hByloXBvaqBwsZvq8fKf+6ixqbnBx0X4AKJyK983b5dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593545; c=relaxed/simple;
-	bh=p0doezY0qRJoQyRKWjT90kO1zQ1vjFowzJ8Ke6uItuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eD6W8makHJGTca7fVuXhRUXALBX/r6Vc9Po84f+AAGs7nxk7RbiElVKwqeOBm0ktU8Scg3gckvRow6pvMue0EyyVdvgJo7jq4b6hlsCgd8FOxaw80MjKtBnUUNlK3J2/CWA52GogysHRUecyQRHCx9h6iwthCBtBKqGFOtSoJ9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9847D106F;
-	Fri, 25 Apr 2025 08:05:36 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1867B3F59E;
-	Fri, 25 Apr 2025 08:05:38 -0700 (PDT)
-Date: Fri, 25 Apr 2025 16:05:35 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Corentin Labbe <clabbe.montjoie@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet
- MAC
-Message-ID: <20250425160535.5a18adbb@donnerap.manchester.arm.com>
-In-Reply-To: <CAGb2v65QUrCjgHXWAb72Sdppqg1AUxXyD_ZcXShtkRSHCQBbOg@mail.gmail.com>
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
-	<20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org>
-	<CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
-	<20250425104128.14f953f3@donnerap.manchester.arm.com>
-	<CAGb2v65QUrCjgHXWAb72Sdppqg1AUxXyD_ZcXShtkRSHCQBbOg@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1745593781; c=relaxed/simple;
+	bh=oonh1NXc7x48MBVzed3dn7v4cSOnDgtdIXNyC9GMHOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYQ23ABJGt/Pj+jQf6tbwJypmTm5+GX2GpJcuSEqzv0NwR4ArhFqu2xGY2UkOCApZPYdH9dSkeaXgZXBb532YQysBBJQg0jlEPmS+pzV8KzEpjlPTG4tBydfDtvFZ07moebH0Bt8A1BAKtvxfmsxq4xaYEXFYBUrq7XoHM3lXzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wa4Wg8RQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wa4Wg8RQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EC2C4CEE4;
+	Fri, 25 Apr 2025 15:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745593781;
+	bh=oonh1NXc7x48MBVzed3dn7v4cSOnDgtdIXNyC9GMHOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wa4Wg8RQpYPnV5hT2loBRJRl3BXAdLpA1RE4byQdu01Si6tt5WpI9NrF6AiXOvD88
+	 Med8EoaaZuncHUH4oJbA232D1OOq5OFnHq6KbH2QeC5bM2t+I8hn3r7VXxPWQLgLlg
+	 flhMbhwnRuIYNDEMRHvp0Rt89bcZYL1IQCvxw8x/9KsdU+PCQy0rCsNjnnTKrrt1M1
+	 sIoqmTerHBkSWAnDDJOGoYiTy1RVx3JmtRFKJQE6RYjIM2ohVjco/krIEEH5UAC1Rc
+	 3OUdqU/Y69H0XMxhvUT2ac/1pcfpiHpziej9Ayjq1cOxmvwfsOqPXeEXK/6HFO/2yD
+	 Vy7Zd7yNQJqEg==
+Date: Fri, 25 Apr 2025 12:09:38 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Martin Liska <martin.liska@hey.com>,
+	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] perf build-id: Change sprintf functions to
+ snprintf
+Message-ID: <aAulsrAJuia49LR0@x1>
+References: <20250424195831.1767457-1-irogers@google.com>
+ <20250424195831.1767457-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424195831.1767457-6-irogers@google.com>
 
-On Fri, 25 Apr 2025 22:35:59 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
+On Thu, Apr 24, 2025 at 12:58:28PM -0700, Ian Rogers wrote:
+> Pass in a size argument rather than implying all build id strings must
+> be SBUILD_ID_SIZE.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-buildid-cache.c            | 12 +++----
+>  tools/perf/builtin-buildid-list.c             |  6 ++--
+>  tools/perf/util/build-id.c                    | 33 ++++++++-----------
+>  tools/perf/util/build-id.h                    |  6 ++--
+>  tools/perf/util/disasm.c                      |  2 +-
+>  tools/perf/util/dso.c                         |  4 +--
+>  tools/perf/util/dsos.c                        |  2 +-
+>  tools/perf/util/event.c                       |  2 +-
+>  tools/perf/util/header.c                      |  2 +-
+>  tools/perf/util/map.c                         |  2 +-
+>  tools/perf/util/probe-file.c                  |  4 +--
+>  .../scripting-engines/trace-event-python.c    |  7 ++--
+>  tools/perf/util/symbol.c                      |  2 +-
+>  13 files changed, 38 insertions(+), 46 deletions(-)
 
-adding LinusW for a more generic pinctrl question ...
+You missed these, that I added, please ack.
 
-> On Fri, Apr 25, 2025 at 5:41=E2=80=AFPM Andre Przywara <andre.przywara@ar=
-m.com> wrote:
-> >
-> > On Fri, 25 Apr 2025 13:26:25 +0800
-> > Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > Hi Chen-Yu,
-> > =20
-> > > On Thu, Apr 24, 2025 at 6:09=E2=80=AFPM Yixun Lan <dlan@gentoo.org> w=
-rote: =20
-> > > >
-> > > > Add EMAC0 ethernet MAC support which found on A523 variant SoCs,
-> > > > including the A527/T527 chips. MAC0 is compatible to the A64 chip w=
-hich
-> > > > requires an external PHY. This patch only add RGMII pins for now.
-> > > >
-> > > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 40 ++++++++++++++=
-++++++++++++
-> > > >  1 file changed, 40 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/=
-arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > > > index ee485899ba0af69f32727a53de20051a2e31be1d..c9a9b9dd479af05ba22=
-fe9d783e32f6d61a74ef7 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > > > @@ -126,6 +126,15 @@ pio: pinctrl@2000000 {
-> > > >                         interrupt-controller;
-> > > >                         #interrupt-cells =3D <3>;
-> > > >
-> > > > +                       rgmii0_pins: rgmii0-pins {
-> > > > +                               pins =3D "PH0", "PH1", "PH2", "PH3"=
-, "PH4",
-> > > > +                                      "PH5", "PH6", "PH7", "PH9", =
-"PH10",
-> > > > +                                      "PH14", "PH15", "PH16", "PH1=
-7", "PH18";
-> > > > +                               allwinner,pinmux =3D <5>;
-> > > > +                               function =3D "emac0";
-> > > > +                               drive-strength =3D <40>; =20
-> > >
-> > > We should probably add
-> > >
-> > >                                   bias-disable;
-> > >
-> > > to explicitly turn off pull-up and pull-down. =20
-> >
-> > Should we? I don't see this anywhere else for sunxi, probably because i=
-t is
-> > the (reset) default (0b00).
-> > I wonder if we have a hidden assumption about this? As in: if no bias is
-> > specified, we assume bias-disable? Then we should maybe enforce this is=
- in
-> > the driver? =20
->=20
-> There isn't any assumption, as in we were fine with either the reset
-> default or whatever the bootloader left it in. However in projects at
-> work I learned that it's better to have explicit settings despite
-> working defaults.
+- Arnaldo
 
-I totally agree, but my point was that this applies basically to every
-pinctrl user. I usually think of the bias settings as "do we need
-pull-ups or pull-downs", and if nothing is specified, I somewhat assume
-bias-disable.
-
-So I am fine with this being added here, but was wondering if we should
-look at a more generic solution.
-
-Linus: is bias-disable assumed to be the default, that pinctrl drivers
-should set in absence of explicit properties? Or is this "whatever is in
-the registers at boot" the default we have to live with?
-
-Cheers,
-Andre
+diff --git a/tools/perf/tests/sdt.c b/tools/perf/tests/sdt.c
+index 9197128992510218..663c8f700069d42b 100644
+--- a/tools/perf/tests/sdt.c
++++ b/tools/perf/tests/sdt.c
+@@ -37,7 +37,7 @@ static int build_id_cache__add_file(const char *filename)
+ 		return err;
+ 	}
+ 
+-	build_id__sprintf(&bid, sbuild_id);
++	build_id__snprintf(&bid, sbuild_id, sizeof(sbuild_id));
+ 	err = build_id_cache__add_s(sbuild_id, filename, NULL, false, false);
+ 	if (err < 0)
+ 		pr_debug("Failed to add build id cache of %s\n", filename);
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 307ad6242a4e92f6..c10549fc451b508b 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -502,7 +502,7 @@ static struct debuginfo *open_from_debuginfod(struct dso *dso, struct nsinfo *ns
+ 	if (!c)
+ 		return NULL;
+ 
+-	build_id__sprintf(dso__bid(dso), sbuild_id);
++	build_id__snprintf(dso__bid(dso), sbuild_id, sizeof(sbuild_id));
+ 	fd = debuginfod_find_debuginfo(c, (const unsigned char *)sbuild_id,
+ 					0, &path);
+ 	if (fd >= 0)
+@@ -1089,7 +1089,7 @@ static int __show_line_range(struct line_range *lr, const char *module,
+ 	}
+ 	if (dinfo->build_id) {
+ 		build_id__init(&bid, dinfo->build_id, BUILD_ID_SIZE);
+-		build_id__sprintf(&bid, sbuild_id);
++		build_id__snprintf(&bid, sbuild_id, sizeof(sbuild_id));
+ 	}
+ 	debuginfo__delete(dinfo);
+ 	if (ret == 0 || ret == -ENOENT) {
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 3cc7c40f50978a0f..b74f6fe24bb61af8 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -859,7 +859,7 @@ static int find_probe_point_lazy(Dwarf_Die *sp_die, struct probe_finder *pf)
+ 		comp_dir = cu_get_comp_dir(&pf->cu_die);
+ 		if (pf->dbg->build_id) {
+ 			build_id__init(&bid, pf->dbg->build_id, BUILD_ID_SIZE);
+-			build_id__sprintf(&bid, sbuild_id);
++			build_id__snprintf(&bid, sbuild_id, sizeof(sbuild_id));
+ 		}
+ 		ret = find_source_path(pf->fname, sbuild_id, comp_dir, &fpath);
+ 		if (ret < 0) {
