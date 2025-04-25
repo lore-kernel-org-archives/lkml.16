@@ -1,184 +1,220 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E3DF248166
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B823D2A1
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745577754; cv=none; b=u22/aninv9vJ0v1TOST7grJZrqTbq/lL1zuuc270QJ0bljp56xxGA/WBVPRAcJQtJ82arG0ygtY7iF+vr2smkGob3+CRG8ioBymR1BV10UchkpdFxdazrop+6Ag7tLmR8J4m+xQDTSt9j9ANDojcZUPW2/vMG6VG1hlqPsjP2do=
+	t=1745577755; cv=none; b=lVsEsNExr3YRHq9TaKBy7w6cYgF8643YpBa43ZHuh9DXGNnUBm5I4ffmumMPgSPHO/MHwcOwODRk1FnDPOYcwM0Vi872QeT26zy8ScW6sGYoDSguWxPLazL0YYMf2fSXWzVF05Pu0Zisi96iJOSLWZBI6YgEI4bXi00bdnXzMS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745577754; c=relaxed/simple;
-	bh=EFJpJwh3Ql539hFsTdluqiVeUgPiTCX5hfXM5sxUzfE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nk7+BDfVSloqcoRwJbFwgliAzzQnDFcLG4/P6uRXFPqqrbhywpKLyk/y2KKlO6B9XTYy9Ug/s1CJEgkRvKpSczTjZQPpaUU3+HcUb8NdgJoqyQbhcNFLrom5bBbPPjWnpFXxdBVYarmAeW1qEpWCPOcP9H7zHhOQEkOYcmkoYc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B603106F;
-	Fri, 25 Apr 2025 03:42:26 -0700 (PDT)
-Received: from [10.57.73.197] (unknown [10.57.73.197])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE90F3F66E;
-	Fri, 25 Apr 2025 03:42:29 -0700 (PDT)
-Message-ID: <0ec4d1f3-feaf-4c48-9e0d-ac3f872bcccc@arm.com>
-Date: Fri, 25 Apr 2025 11:42:24 +0100
+	s=arc-20240116; t=1745577755; c=relaxed/simple;
+	bh=01s7FYAwXYKUUmCA4M7YdS5f1Frdy10xeLcV1T4JnZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FBJgXY3ujiJt7VXYg/Ef1Ebc8StNprZChmPZA/Kc1Sq0Wy9IL6tFEpkGX+qzeuZdB1VvEtYso2HiKXsSneObUex72seAm6IYshX2XL/UvOUGDGuffSv9km31ZKVm/ysBTKFRzgVr8Zbxth0x6F8/fqLD6cDcP10mE++dLYD8Y2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cWiUqFTr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y0ZmVzGf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fqJV5IG0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R7k0UeX/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cWiUqFTr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y0ZmVzGf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fqJV5IG0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R7k0UeX/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D807921165;
+	Fri, 25 Apr 2025 10:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745577751; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
+	b=cWiUqFTr/2nFFeZmXzq3gKG3ltuuH1WlH/mxpn3GoNjeaeOC92SV5krw71BNTqemdV9SaN
+	qdcOtv8tEzzKC/J5/DJ9IFAtBLG8WmLzDrXv7pIQKtkh6grseMkEBTPLh0/HKrby0rznEy
+	OcW8LtWjdpYGs14ywBOqrwqJGRY1vzU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745577751;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
+	b=Y0ZmVzGf8B2yX5w9q1/sTgxqIZVPC5n99odt67I5nKJCgZ8QjY/kMNWcnuTG7gzzqp9VWU
+	rE2PK7jgJwiTn7Dw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fqJV5IG0;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="R7k0UeX/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745577750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
+	b=fqJV5IG0bhNfyGdivbLUgLIffWPuW/tU+2b0TxuTUeJpQV7idraaWU2HjbR6LdA9z//NAg
+	PLmNpOJ0oMH6TYjXVjeZEy9Whvd71iMeFZqMJDxyg8QGKQnAH4GXeWEQlIfIjr6mTJeseA
+	MzxOlbdUWs0sjCEGAlfk1d+rJuIV4do=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745577750;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
+	b=R7k0UeX/PFFmh2+kLYJ8KRGZnL6286IStOk86GZ/VGGOKDuj0ylYul0faVZPFtsSUeNOle
+	JT8iIsN3clH3BfDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 810B21398F;
+	Fri, 25 Apr 2025 10:42:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id e5LMGBVnC2jFJQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 25 Apr 2025 10:42:29 +0000
+Date: Fri, 25 Apr 2025 11:42:27 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, Vlad Buslov <vladbu@nvidia.com>, 
+	Yevgeny Kliteynik <kliteyn@nvidia.com>, Jan Kara <jack@suse.cz>, Byungchul Park <byungchul@sk.com>, 
+	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/7] Reviving the slab destructor to tackle the
+ percpu allocator scalability problem
+Message-ID: <vd3k2bljkzow6ozzan2hkeiyytcqe2g6gavroej23457erucza@fknlr6cmzvo7>
+References: <20250424080755.272925-1-harry.yoo@oracle.com>
+ <lr2nridih62djx5ccdijiyacdz2hrubsh52tj6bivr6yfgajsj@mgziscqwlmtp>
+ <aAtf8t4lNG2DhWMy@harry>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] swiotlb: Make IO_TLB_SEGSIZE Configurable
-To: "Li, Hua Qian" <HuaQian.Li@siemens.com>,
- "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
-Cc: "Kiszka, Jan" <jan.kiszka@siemens.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "Su, Bao Cheng" <baocheng.su@siemens.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CGME20250422063734eucas1p2561ad6f847f6824c9c79a842fa458e41@eucas1p2.samsung.com>
- <20250422063719.121636-1-huaqian.li@siemens.com>
- <fc2e30eb-2ec7-4795-a2a4-077b7fde7fd5@samsung.com>
- <dc6f299b18f7870c7bffecca25cee9e436a32c7b.camel@siemens.com>
- <841c417b-c61a-4c3a-a9ed-236634d78331@arm.com>
- <824c8fa6acda7c840f856430b5d898c7fcd4702e.camel@siemens.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <824c8fa6acda7c840f856430b5d898c7fcd4702e.camel@siemens.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAtf8t4lNG2DhWMy@harry>
+X-Rspamd-Queue-Id: D807921165
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[suse.cz,gentwo.org,google.com,linux-foundation.org,kernel.org,gmail.com,mojatatu.com,resnulli.us,nvidia.com,sk.com,kvack.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 2025-04-25 6:32 am, Li, Hua Qian wrote:
-> On Thu, 2025-04-24 at 13:58 +0100, Robin Murphy wrote:
->> On 24/04/2025 6:12 am, Li, Hua Qian wrote:
->>> On Tue, 2025-04-22 at 15:36 +0200, Marek Szyprowski wrote:
->>>> On 22.04.2025 08:37, huaqian.li@siemens.com wrote:
->>>>> From: Li Hua Qian <huaqian.li@siemens.com>
->>>>>
->>>>> This patchset introduces a change to make the IO_TLB_SEGSIZE
->>>>> parameter
->>>>> configurable via a new kernel configuration option
->>>>> (CONFIG_SWIOTLB_SEGSIZE).
->>>>>
->>>>> In certain applications, the default value of IO_TLB_SEGSIZE
->>>>> (128)
->>>>> may
->>>>> not be sufficient for memory allocation, leading to runtime
->>>>> errors.
->>>>> By
->>>>> making this parameter configurable, users can adjust the
->>>>> segment
->>>>> size to
->>>>> better suit their specific use cases, improving flexibility and
->>>>> system
->>>>> stability.
->>>>
->>>> Could You elaborate a bit more what are those certain
->>>> applications
->>>> that
->>>> require increasing IO_TLB_SEGSIZE? I'm not against it, but such
->>>> change
->>>> should be well justified and described, while the above cover-
->>>> letter
->>>> doesn't provide anything more than is written in the patch
->>>> description.
->>> Thank you for your feedback, Marek.
->>>
->>> To provide more context, one specific application that requires
->>> increasing IO_TLB_SEGSIZE is the Hailo 8 PCIe AI card. This card
->>> uses
->>> dma_alloc_coherent to allocate descriptor lists, as seen in the
->>> Hailo
->>> driver implementation here:
->>> https://github.com/hailo-ai/hailort-drivers/blob/7161f9ee5918029bd4497f590003c2f87ec32507/linux/vdma/memory.c#L322
->>> The maximum size (nslots) for these allocations can reach 160,
->>> which
->>> exceeds the current default value of IO_TLB_SEGSIZE (128).
->>>
->>> Since IO_TLB_SEGSIZE is defined as a constant in the kernel:
->>>
->>> `#define IO_TLB_SEGSIZE 128`
->>>
->>>
->>> this limitation causes swiotlb_search_pool_area,
->>> https://github.com/torvalds/linux/blame/v6.15-rc2/kernel/dma/swiotlb.c#L1085
->>> ,
->>> (or swiotlb_do_find_slots in older kernels) to fail when attempting
->>> to
->>> allocate contiguous physical memory (CMA). This results in runtime
->>> errors and prevents the Hailo 8 card from functioning correctly in
->>> certain configurations.
->>
->> Hmm, dma_alloc_coherent() should really not be trying to allocate
->> from
->> SWIOTLB in the first place - how is that happening?
->>
->> If you're using restricted DMA for a device which wants significant
->> coherent allocations, then it wants to have it's own shared-dma-pool
->> for
->> those *as well* as the restricted-dma-pool for bouncing streaming
->> DMA.
->>
->> Thanks,
->> Robin.
+On Fri, Apr 25, 2025 at 07:12:02PM +0900, Harry Yoo wrote:
+> On Thu, Apr 24, 2025 at 12:28:37PM +0100, Pedro Falcato wrote:
+> > On Thu, Apr 24, 2025 at 05:07:48PM +0900, Harry Yoo wrote:
+> > > Overview
+> > > ========
+> > > 
+> > > The slab destructor feature existed in early days of slab allocator(s).
+> > > It was removed by the commit c59def9f222d ("Slab allocators: Drop support
+> > > for destructors") in 2007 due to lack of serious use cases at that time.
+> > > 
+> > > Eighteen years later, Mateusz Guzik proposed [1] re-introducing a slab
+> > > constructor/destructor pair to mitigate the global serialization point
+> > > (pcpu_alloc_mutex) that occurs when each slab object allocates and frees
+> > > percpu memory during its lifetime.
+> > > 
+> > > Consider mm_struct: it allocates two percpu regions (mm_cid and rss_stat),
+> > > so each allocate–free cycle requires two expensive acquire/release on
+> > > that mutex.
+> > > 
+> > > We can mitigate this contention by retaining the percpu regions after
+> > > the object is freed and releasing them only when the backing slab pages
+> > > are freed.
+> > > 
+> > > How to do this with slab constructors and destructors: the constructor
+> > > allocates percpu memory, and the destructor frees it when the slab pages
+> > > are reclaimed; this slightly alters the constructor’s semantics,
+> > > as it can now fail.
+> > > 
+> > 
+> > I really really really really don't like this. We're opening a pandora's box
+> > of locking issues for slab deadlocks and other subtle issues. IMO the best
+> > solution there would be, what, failing dtors? which says a lot about the whole
+> > situation...
+> > 
+> > Case in point:
 > 
-> Hi Robin,
+> <...snip...>
 > 
-> Regarding the specific Hailo Card case, the issue arises due
-> to the capabilities of certain SoCs or CPUs. For example, many
-> K3 SoCs lack an IOMMU, which is typically used to isolate the
-> system against DMA-based attacks of external PCI devices.
+> > Then there are obviously other problems like: whatever you're calling must
+> > not ever require the slab allocator (directly or indirectly) and must not
+> > do direct reclaim (ever!), at the risk of a deadlock. The pcpu allocator
+> > is a no-go (AIUI!) already because of such issues.
 > 
-> Taking the TI AM65 as an example, it doesn't have an IOMMU, but
-> instead includes a Peripheral Virtualization Unit (PVU). The
-> PVU provides functionality similar to an IOMMU and is used to
-> isolate PCI devices from the Linux host, and the SWIOTLB is
-> used to manp all DMA buffers from a static memory carve-out.
+> Could you please elaborate more on this?
 
-And as I said, if you want to support general coherent allocations then 
-you should use part of that carveout for a regular coherent DMA pool. 
-The restricted pool is only intended for streaming DMA - swiotlb_alloc() 
-is only meant as a convenience fallback for the kind of devices which 
-mostly do streaming DMA but make one or two small coherent allocations 
-from a suitable context. It does not work for *all* valid usage of 
-dma_alloc_attrs(), and if you want to do this for arbitrary PCI devices 
-then you almost certainly *do* need to be able to support drivers which 
-make allocations in atomic context.
+Well, as discussed multiple-times both on-and-off-list, the pcpu allocator is
+not a problem here because the freeing path takes a spinlock, not a mutex. But
+obviously you can see the fun locking horror dependency chains we're creating
+with this patchset. ->ctor() needs to be super careful calling things, avoiding
+any sort of loop. ->dtor() needs to be super careful calling things, avoiding
+_any_ sort of direct reclaim possibilities. You also now need to pass a gfp_t
+to both ->ctor and ->dtor.
 
-Thanks,
-Robin.
+With regards to "leaf locks", I still don't really understand what you/Mateusz
+mean or how that's even enforceable from the get-go.
 
-> You can find more details and background information here:
-> https://lore.kernel.org/all/20250422061406.112539-1-huaqian.li@siemens.com/
-> 
->>
->>> By making IO_TLB_SEGSIZE configurable via a kernel configuration
->>> option
->>> (CONFIG_SWIOTLB_SEGSIZE), users can adjust the segment size to
->>> accommodate such use cases. This change improves flexibility and
->>> ensures that systems can be tailored to meet the requirements of
->>> specific hardware, such as the Hailo 8 PCIe AI card, without
->>> requiring
->>> kernel source modifications.
->>>
->>> I hope this example clarifies the need for this change. Please let
->>> me
->>> know if further details or additional examples are required.
->>>
->>> Best Regards,
->>> Li Hua Qian
->>>>
->>>>
->>>>> Li Hua Qian (1):
->>>>>      swiotlb: Make IO_TLB_SEGSIZE configurable
->>>>>
->>>>>     include/linux/swiotlb.h | 2 +-
->>>>>     kernel/dma/Kconfig      | 7 +++++++
->>>>>     2 files changed, 8 insertions(+), 1 deletion(-)
->>>>>
->>>> Best regards
->>>
-> 
-> --
-> Hua Qian Li
-> Siemens AG
-> http://www.siemens.com/
+So basically:
+- ->ctor takes more args, can fail, can do fancier things (multiple allocations,
+  lock holding, etc, can be hidden with a normal kmem_cache_alloc; certain
+  caches become GFP_ATOMIC-incompatible)
 
+- ->dtor *will* do fancy things like recursing back onto the slab allocator and
+  grabbing locks
+
+- a normal kmem_cache_free can suddenly attempt to grab !SLUB locks as it tries
+  to dispose of slabs. It can also uncontrollably do $whatever.
+
+- a normal kmem_cache_alloc can call vast swaths of code, uncontrollably, due to
+  ->ctor. It can also set off direct reclaim, and thus run into all sorts of kmem_
+  cache_free/slab disposal issues
+
+- a normal, possibly-unrelated GFP_KERNEL allocation can also run into all of these
+  issues by purely starting up shrinkers on direct reclaim as well.
+
+- the whole original "Slab object caching allocator" idea from 1992 is extremely
+  confusing and works super poorly with various debugging features (like, e.g,
+  KASAN). IMO it should really be reserved (in a limited capacity!) for stuff like
+  TYPESAFE_BY_RCU, that we *really* need.
+
+These are basically my issues with the whole idea. I highly disagree that we should
+open this pandora's box for problems in *other places*.
+
+-- 
+Pedro
