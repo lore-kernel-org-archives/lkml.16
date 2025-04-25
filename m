@@ -1,44 +1,44 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9916321ABAA;
-	Fri, 25 Apr 2025 19:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAB1218EBD;
+	Fri, 25 Apr 2025 19:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609663; cv=none; b=ZIP3Q4y6smHlEhh1soRW2mpP4NQPtve+DlsFZolY4hU7VkrK7kvbctXYKuYBH8J4LdahLEFTaXVzb/Dk/ouzviUt+fFJF2npO6IOivWea1xXir/1iRHRcxGtpGe+hUohtjPNCzYpdnd8akMM+MFaRUmpzAyXoV7EhjkbaZu4nyg=
+	t=1745609664; cv=none; b=gO3Z2615EFWNLBIrmAdvW/EnfShQdUCGekI97dHLN0Lzg7NeGZn++3ZidyMQnsFQV47WPjnHZJ1fqxRmniGV0W08e7Y5kIrHLCI9xiUeZAvjquwqlVbSYmriN8QKWrPuJ7Mz00DPpA623CPBO6PXRqZ+DLkYP7U0CGUPTZZN6+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609663; c=relaxed/simple;
-	bh=cI7GeKomdGvPYsn9OEfB9I5dh+S17dzPFLPqnuezrHI=;
+	s=arc-20240116; t=1745609664; c=relaxed/simple;
+	bh=S4iIUQi57lzah0776a4YX+dVuF+D72rkHNVDEtCHcxw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwzaH2vePlFpTcU1VWzkLG9oKfUmTj2TV4Ev99YyGk2bUccaKYd5plHSSnHohLRh4DbAnuIhaYQQnZpjrmfIylmPbEtdsKI7w9sANMgtOWLcK/2AyvgbDfXzgaCoYu3sn0uWcDCyuQ7P9VKYFBWlg70w4CeTQURQu+Xwx1xvuAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=gWkXJ3qL; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=NUwDtoCf4id1JIvYkXKTZKBmB2W9Dpi/uJlIDxZYmeLciz8fQpwd++GbV5S+dMPdrOleKGupIzBAkZPXn9Veq/Y+g9qwU8Tqda+n2fjqn3MRehvk5drys2RA/umlkA4RqS83/xqUFal0+r0vd0ms5zJEVR1f0ITwMxfXZ68wO1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=hzV3VUOQ; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="gWkXJ3qL"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="hzV3VUOQ"
 Received: from kreacher.localnet (unknown [217.114.34.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3D4E8663631;
-	Fri, 25 Apr 2025 21:34:11 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id DD6826643E6;
+	Fri, 25 Apr 2025 21:34:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745609651;
-	bh=cI7GeKomdGvPYsn9OEfB9I5dh+S17dzPFLPqnuezrHI=;
+	s=dkim; t=1745609654;
+	bh=S4iIUQi57lzah0776a4YX+dVuF+D72rkHNVDEtCHcxw=;
 	h=From:Subject:Date;
-	b=gWkXJ3qLpBt6MFDNCF8MJsdNpy8v4re96Oz1Myj9/iGGCJSbVfNfsMB5BZjpEklgO
-	 dVFeStGW8NrYckXTagpfp0dkrpKvOVoPFIf6C977D4Ie5NnddGk5G4y8yJasC3FULs
-	 aArtrNv6ZQGlmlXIO2yV4ZQkTQo1DXukSocHkMH0iXVIZrgDBRn75uqkyVcujnxvE5
-	 kY9osl/o0YeT9TsaBk3vFBLtVl7sCEjm7nCT7w15jhprNxAs3gzyuvxGCxuC31QqyQ
-	 qxfWXIlAdvAEciSYoQyEDRZsEvEto5+P1gkY1OpPd0yteZzNxpyM31n2/XhABlEKO3
-	 tmLLoM6Lj6Bzg==
+	b=hzV3VUOQ11bX/cIKSPN5sGlhjxHOfB0IaEi60kRGijDR4Kloyg21UGTi1fxUIVxAt
+	 c9t5zW3ltQKbK5fnxE8pLz+rrdABb/pBQkHjArfxEDxWlHDjhgsZqPsg4npjkGyW+p
+	 mgy1uiAE86iKcaFSW7nNuL90giIfJU+be2yEP2o7ICQjLBV9bqxrsjSoGzwKoq/oaU
+	 fiQfsMZ2sj9CRg7RZYxP+LS5F/VCP3na/R6hTCbZx7O7ebSpawhu6QTq54JPSgX2Dq
+	 xrofB9GzfXV8VjVQO/+dtd8v5MYUvKtYtB56ipavdVjpTDrUmN2Fx05pbB5iZdkb/q
+	 balPaoH3CpNTQ==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
-Subject: [PATCH v1 18/19] ACPICA: Replace strncpy() with memcpy()
-Date: Fri, 25 Apr 2025 21:32:12 +0200
-Message-ID: <1910878.atdPhlSkOF@rjwysocki.net>
+Subject: [PATCH v1 15/19] ACPICA: Adjust the position of code lines
+Date: Fri, 25 Apr 2025 21:29:48 +0200
+Message-ID: <2670567.Lt9SDvczpP@rjwysocki.net>
 In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
 References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -52,84 +52,40 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 217.114.34.19
 X-CLIENT-HOSTNAME: 217.114.34.19
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-From: Ahmed Salem <x0rw3ll@gmail.com>
+From: Zhe Qiao <qiaozhe@iscas.ac.cn>
 
-ACPICA commit 83019b471e1902151e67c588014ba2d09fa099a3
+ACPICA commit 5da6daf5691169d2bf2e5c9e55baf093757312ca
 
-strncpy() is deprecated for NUL-terminated destination buffers[1].
+In the acpica/utcache.c file, adjust the position of the
+"ACPI_MEM_TRACKING(cache->total_allocated++);" code line
+to ensure that the increment operation on total_allocated
+is included within the ACPI_DBG_TRACK_ALLOCATIONS configuration.
 
-Use memcpy() for length-bounded destinations.
-
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Link: https://github.com/acpica/acpica/commit/83019b47
-Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
+Link: https://github.com/acpica/acpica/commit/5da6daf5
+Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/acpica/exconvrt.c  | 4 ++--
- drivers/acpi/acpica/tbfind.c    | 4 ++--
- drivers/acpi/acpica/utnonansi.c | 2 +-
- include/acpi/actypes.h          | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/acpi/acpica/utcache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/exconvrt.c b/drivers/acpi/acpica/exconvrt.c
-index bb1be42daee1..399c005aa57b 100644
---- a/drivers/acpi/acpica/exconvrt.c
-+++ b/drivers/acpi/acpica/exconvrt.c
-@@ -226,8 +226,8 @@ acpi_ex_convert_to_buffer(union acpi_operand_object *obj_desc,
- 		/* Copy the string to the buffer */
+diff --git a/drivers/acpi/acpica/utcache.c b/drivers/acpi/acpica/utcache.c
+index 85a85f7cf750..046e6ba127d4 100644
+--- a/drivers/acpi/acpica/utcache.c
++++ b/drivers/acpi/acpica/utcache.c
+@@ -251,9 +251,9 @@ void *acpi_os_acquire_object(struct acpi_memory_list *cache)
+ 	} else {
+ 		/* The cache is empty, create a new object */
  
- 		new_buf = return_desc->buffer.pointer;
--		strncpy((char *)new_buf, (char *)obj_desc->string.pointer,
--			obj_desc->string.length);
-+		memcpy((char *)new_buf, (char *)obj_desc->string.pointer,
-+		       obj_desc->string.length);
- 		break;
++#ifdef ACPI_DBG_TRACK_ALLOCATIONS
+ 		ACPI_MEM_TRACKING(cache->total_allocated++);
  
- 	default:
-diff --git a/drivers/acpi/acpica/tbfind.c b/drivers/acpi/acpica/tbfind.c
-index 1c1b2e284bd9..35f72dffc250 100644
---- a/drivers/acpi/acpica/tbfind.c
-+++ b/drivers/acpi/acpica/tbfind.c
-@@ -57,8 +57,8 @@ acpi_tb_find_table(char *signature,
- 
- 	memset(&header, 0, sizeof(struct acpi_table_header));
- 	ACPI_COPY_NAMESEG(header.signature, signature);
--	strncpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
--	strncpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE);
-+	memcpy(header.oem_id, oem_id, ACPI_OEM_ID_SIZE);
-+	memcpy(header.oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE);
- 
- 	/* Search for the table */
- 
-diff --git a/drivers/acpi/acpica/utnonansi.c b/drivers/acpi/acpica/utnonansi.c
-index ff0802ace19b..803e3e893825 100644
---- a/drivers/acpi/acpica/utnonansi.c
-+++ b/drivers/acpi/acpica/utnonansi.c
-@@ -168,7 +168,7 @@ void acpi_ut_safe_strncpy(char *dest, char *source, acpi_size dest_size)
- {
- 	/* Always terminate destination string */
- 
--	strncpy(dest, source, dest_size);
-+	memcpy(dest, source, dest_size);
- 	dest[dest_size - 1] = 0;
- }
- 
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index 5b9f9a612548..e90ca342d7de 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -522,7 +522,7 @@ typedef u64 acpi_integer;
- #define ACPI_COPY_NAMESEG(dest,src)     (*ACPI_CAST_PTR (u32, (dest)) = *ACPI_CAST_PTR (u32, (src)))
- #else
- #define ACPI_COMPARE_NAMESEG(a,b)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_CAST_PTR (char, (b)), ACPI_NAMESEG_SIZE))
--#define ACPI_COPY_NAMESEG(dest,src)     (strncpy (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAMESEG_SIZE))
-+#define ACPI_COPY_NAMESEG(dest,src)     (memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_CAST_PTR (char, (src)), ACPI_NAMESEG_SIZE))
- #endif
- 
- /* Support for the special RSDP signature (8 characters) */
+-#ifdef ACPI_DBG_TRACK_ALLOCATIONS
+ 		if ((cache->total_allocated - cache->total_freed) >
+ 		    cache->max_occupied) {
+ 			cache->max_occupied =
 -- 
 2.43.0
 
