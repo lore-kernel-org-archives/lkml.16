@@ -1,87 +1,111 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C86C1DEFDA
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FDA1DEFDA;
+	Fri, 25 Apr 2025 17:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745601278; cv=none; b=gSTFo33gSpMLWNJ3RWNhD/eGGycg2rtncsMj1o0aw+amNErUaPVWv4t2RffLZ+GNrm2oV/nOF/E1ZWQ+L/J8IKReQCCL+uZ+HXjx5Uex8aBDcba8NHD/D1nSef0XAl93n6wEmOtm/j1nRDPIDoqQZ9JCYEztnaM+W0DpGLe1kFA=
+	t=1745601285; cv=none; b=X4LfT9Ia5bFCTRSZZVvXre+aaRRq4VMxkTTSjBp8O+d2ziz3gR/BK+s9nY22wkEGUht3hGmD9xEdFjVcOC3j1JV48q4vlwwNGfokCqPDls3gFD9MzKBt6ueg4vkVHdoC2QkyPa0irXIm7i+HaKcNJMw6luqnkaObc6FzmHFXUMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745601278; c=relaxed/simple;
-	bh=Lm2N0n4u1FlM9Vtf3w6Fx40mc0HytZ/KQT9CUeJY2p0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BDWaCSz71qy7q0maHGh8n3vHGh9rRupVzNZc0GTsAazCVqTjxtwvI0+4qxbvOcaXCZZt1qTD0AvRHJWHPPULTkaoO8hk3HtgdlQ3FuVhVSkUcKmlutnOPcAMLbbhzaxqQyFBZe35R5GdS0g5d65+OFrq9PMEKKVkiJj3p86dUwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xmmbQezi; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745601285; c=relaxed/simple;
+	bh=6DMIyv99NLNAyeXPbc0pWQ2kE0klBbb64BNimrX7gKw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PNZvukUutzKoZwNQwUPUCCDvxNBhZOnu3u04l/Lz9P2RYjQuY0KaJeoZ81RFyMFeAdIEIlpSIgrEW+QeCESjdu/BUbOk8joxEhNrkQHNBeoFM98OuWGbYVbLhgABmO7iL2OxxGzLdp3e4ZgzrKQ1Qb/g1O33A1N3U3zVyswmavo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fbIJ+x7N; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xmmbQezi"
-Message-ID: <dc069aec-8f34-4745-804b-936e0466559c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745601263;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fbIJ+x7N"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A5D3D439C2;
+	Fri, 25 Apr 2025 17:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745601274;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R5HHbZEVfAo5xHjVAfeinei8cc6O8D95xrShblmNxCw=;
-	b=xmmbQeziKHWdI391OleiVoTdZ0Ul+dSemlipkTYjGz6VcQh4o4OAvsCsiJ5Oau5gRqJCd+
-	XV8ASeYUA2sBQ0rXIL3o+BK8h5efUDaE+TVs5vxNJ3kAkyf8lQ+gQxKADk7L9OQD6bm7QU
-	hCFCHNLQMcDNNOSj5DNth/RVDa25peQ=
-Date: Fri, 25 Apr 2025 18:35:27 +0200
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sSGgYViN5hTjqbMQatIXtzugVvb8WaK6qBfz4uZBEB4=;
+	b=fbIJ+x7NwAzdGBRbPoOhn9DUZZ81nd1Z2jCIe2aAp55ZxfOtzr3KzcSbV+jivSLHF2Nx9J
+	5Fi4JFUcDO5FFdHJdeD+cMSrz+OrAu9itI22e+IYS53JAUmfMHj1dQ53Q9KGNhWtIk2aUk
+	aw+R6W1jCuPyqNoBY1RYrQQDlxOKm3dYVisJK2btd2axGBL1Jes5Goxk8bdNluC73tBLMO
+	9TMZikFXomxtmVOCjL/8TBNKEY1NynYj0FXoYQy/FsU/bANBmhJEacCygNuUDHZ/Evjm9O
+	bshtYQy2nsezexL/llbqRISfOgHanoXkH9ujfvacGwBNMBIoELOXGATSh9Icfg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next] netlink: specs: ethtool: Remove UAPI duplication of phy-upstream enum
+Date: Fri, 25 Apr 2025 19:14:18 +0200
+Message-Id: <20250425171419.947352-1-kory.maincent@bootlin.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] soundwire: bus: Add internal slave ID and use for
- IRQs
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: vkoul@kernel.org, yung-chuan.liao@linux.intel.com,
- sanyog.r.kale@intel.com, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-References: <20250422104245.958678-1-ckeepax@opensource.cirrus.com>
- <20250422104245.958678-3-ckeepax@opensource.cirrus.com>
- <b286bbf3-0da9-4e84-8d21-7720970833c3@linux.dev>
- <aAeHgqcQCtuFKW/A@opensource.cirrus.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <aAeHgqcQCtuFKW/A@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvleduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgedugedvkeelhfehfeeuieeigeetgeetuedugeetuddvveffieekgfejkefgudeknecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeefleefugemsgegieelmegtkegstgemrgejvgelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemfeelfegumegsgeeileemtgeksggtmegrjegvledphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtrddrpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrl
+ hhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 4/22/25 14:11, Charles Keepax wrote:
-> On Tue, Apr 22, 2025 at 01:50:13PM +0200, Pierre-Louis Bossart wrote:
->> On 4/22/25 12:42, Charles Keepax wrote:
->> I see the patch add a limit during probe, so now that
->> means the number of ACPI devices MUST be lower than 11. That
->> doesn't sound right to me and could cause some configurations
->> to fail. It's perfectly ok to have ghost devices and no limits
->> on how many our BIOS colleagues decide to list.
-> 
-> Yeah it will limit the ACPI to 11 devices. I can't say I am a
-> huge fan of the "ghost" devices, like its ACPI it is for
-> describing the hardware, so it should describe the hardware.
-> 
-> That said my thinking on this was I have not seen a system with
-> more than 4 real devices on a single bus, and not more than a
-> couple ghosts in the ACPI. So this didn't look like a big issue.
-> 
->> Using a dedicated IDA for IRQ mapping looks like a good
->> idea to me, but I don't think you can really use the same IDA
->> for dev_num
-> 
-> If you are really concerned about the ghost devices I could back
-> out the part that reuses the ID for the dev_num. However I do
-> need to know the maximum number of devices when the IRQ domain is
-> allocated. So I can't really see a way to avoid picking a maximum
-> number of devices for the bus. What number of real + ghosts would
-> you be comfortable with? Although I guess if not using it for the
-> dev_num it is then fairly easy to expand if needed so perhaps I
-> just back out the dev_num bit, but stick with 11 for now and we
-> can expand if necessary?
+The phy-upstream enum is already defined in the ethtool.h UAPI header
+and used by the ethtool userspace tool. However, the ethtool spec does
+not reference it, causing YNL to auto-generate a duplicate and redundant
+enum.
 
-A maximum of 16 devices total is probably ok. That's 10 more than the worst-case configuration we've seen so far, and I can't think of a case where more than 10 ghost devices would be listed.
+Fix this by updating the spec to reference the existing UAPI enum
+in ethtool.h.
+
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Not sure if it should be sent as a fix as there is no real issue here.
+---
+ Documentation/netlink/specs/ethtool.yaml       | 4 +++-
+ include/uapi/linux/ethtool_netlink_generated.h | 5 -----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+index 655d8d10fe24..c650cd3dcb80 100644
+--- a/Documentation/netlink/specs/ethtool.yaml
++++ b/Documentation/netlink/specs/ethtool.yaml
+@@ -89,8 +89,10 @@ definitions:
+           doc: Group of short_detected states
+   -
+     name: phy-upstream-type
+-    enum-name:
++    enum-name: phy-upstream
++    header: linux/ethtool.h
+     type: enum
++    name-prefix: phy-upstream
+     entries: [ mac, phy ]
+   -
+     name: tcp-data-split
+diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
+index fe24c3459ac0..30c8dad6214e 100644
+--- a/include/uapi/linux/ethtool_netlink_generated.h
++++ b/include/uapi/linux/ethtool_netlink_generated.h
+@@ -31,11 +31,6 @@ enum ethtool_header_flags {
+ 	ETHTOOL_FLAG_STATS = 4,
+ };
+ 
+-enum {
+-	ETHTOOL_PHY_UPSTREAM_TYPE_MAC,
+-	ETHTOOL_PHY_UPSTREAM_TYPE_PHY,
+-};
+-
+ enum ethtool_tcp_data_split {
+ 	ETHTOOL_TCP_DATA_SPLIT_UNKNOWN,
+ 	ETHTOOL_TCP_DATA_SPLIT_DISABLED,
+-- 
+2.34.1
 
