@@ -1,275 +1,134 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9CA24EABD
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1986724EAB7;
+	Fri, 25 Apr 2025 12:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585723; cv=none; b=ebRzZxuCx7OuW+8lelKC9sWWdXdMyZk9B4Gjde5kcETqJW7O2oUIBK/lZIxQvBK/j3eb6rg0VqC/+JcwkphV7Vdldf+BDyzGdn94ZFMXEWfIp1f2J3wtX18JAXOuLVXQTEsCvoqN/nIb2tdrPcVNjw0J5Gapu6fP6YIfLUFMeJU=
+	t=1745585738; cv=none; b=RtQR7nXxLuhc2EHYLQ9jaPQsi4jcsGhrfLz02ruU9/AKHnwR4C7UYxqjm158k2JVMrkyII9WdNN963NMfJSYnqr4xv1rlB3B2T47cKDBmxe9DOKNAnNNYRmsVd06lcBSjHVvicgdQD9/swAdcE7+5l9q28wQXzv9zu3E1JG0T94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745585723; c=relaxed/simple;
-	bh=V0vzS2SBMmSwtDfpTnUAKP1Fy9rXUK+2CtvLBI82r4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ft0Lkp9+TlnoXNJVZNGXY2tJCPfveDgW4mLk2TMWPxxRaC9Xl/7QiormbBA50RT/VLGq8bWPyXZJYB/chRAC0adJG4+7rW+YZWIy/Vw8v3IIly3zygeJzI2Lk83gStvE4SNp0VV9XQWHABh5ezRt79LCZahO7oyLJwPOQIWy3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DVbPO376; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745585738; c=relaxed/simple;
+	bh=VyVRX1HVLv5yTqUASg+tT29VXQ7lBcgGjSS/IHh5E/s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=dPp6+D8Yyc4CmBX/3fAmTwL4OMn2UKKXW6Vs38LOGiebn0vdxJSp57VFsOcauBD+/dHJ/Le9ISyWH0ILD30r6FGBHneRgp8emmfZS/V4lJkL8y11p/cn1B10Y6WgSQkI9KOhYhylSFM5h7u0eY8AVwJNtLohFM9275P86gaLl+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=HzHS+Rhb; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DVbPO376"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0EA3E82E;
-	Fri, 25 Apr 2025 14:55:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745585716;
-	bh=V0vzS2SBMmSwtDfpTnUAKP1Fy9rXUK+2CtvLBI82r4Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DVbPO376F5YxoK8yNsIZgZ0pvtugPze8+PlJBPY6F1/C60SvPFGge85a9lMg/1ztK
-	 B8fHRQQJ1wc3xOUk0mZuvhQ3I6b/40hvxZTifRSOv/gdTupPu84Zfm5QPFGjoSENCd
-	 mCK1bLdJqVBlEZj8qWd9BmOf1hf+n7sHDbNTGpSo=
-Message-ID: <9c8f2ab2-4492-47df-a27e-7c603436ce36@ideasonboard.com>
-Date: Fri, 25 Apr 2025 15:55:14 +0300
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="HzHS+Rhb"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PAxBTS019343;
+	Fri, 25 Apr 2025 08:55:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=3tbVt
+	N3yqWbEoBc5MNER1lXQSbvuE+z9mXtyhsHJPSA=; b=HzHS+Rhbyb29UfmORVOV8
+	t7FPRLmenaq9MU/93ahJqIlsmLYWK7vnCmv2W28DHwFG+KZnkcsF3kYZGAf/pCI+
+	+H7iM3nbbt5nyDq9HFCGuhWWH10sYa6u06fRNsk9J64Db/hl31fKUTe19+uh4bZX
+	bSAMjqThCDa9QdRoZ4cuWNpjz9UW+lHu8416FwbScX6PknqhCdbq7umQ9+ob5+ue
+	BaQ8akxM5HbBLFkG3e91zIO/Mrmaseq5ZXhF6jWEFEOunmvLenHXZRbnq6URrzuB
+	ozYpxHKVktqJVYvkCyG6j7Y3ymx5BEXbdkBO3929OjG/W/YC2f49zwVkPIYXbPuP
+	Q==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 466jjqybe6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 08:55:22 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53PCtL7C054018
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 08:55:21 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 25 Apr 2025 08:55:21 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 25 Apr 2025 08:55:21 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 25 Apr 2025 08:55:21 -0400
+Received: from LRADU-D01.ad.analog.com ([10.117.223.12])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53PCsuax019034;
+	Fri, 25 Apr 2025 08:55:13 -0400
+From: Kim Seer Paller <kimseer.paller@analog.com>
+Date: Fri, 25 Apr 2025 20:54:46 +0800
+Subject: [PATCH v6 1/3] iio: ABI: add new DAC powerdown mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 16/17] drm/bridge: cdns-dsi: Tune adjusted_mode->clock
- according to dsi needs
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Devarsh Thakkar <devarsht@ti.com>, Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jayesh Choudhary <j-choudhary@ti.com>
-References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
- <20250414-cdns-dsi-impro-v3-16-4e52551d4f07@ideasonboard.com>
- <7de0229a-192f-4d0f-8add-1a50c58f367b@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <7de0229a-192f-4d0f-8add-1a50c58f367b@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250425-togreg-v6-1-47b6f9878ae5@analog.com>
+References: <20250425-togreg-v6-0-47b6f9878ae5@analog.com>
+In-Reply-To: <20250425-togreg-v6-0-47b6f9878ae5@analog.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        David Lechner <dlechner@baylibre.com>,
+        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+        Andy Shevchenko
+	<andy@kernel.org>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Kim Seer Paller <kimseer.paller@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745585696; l=1179;
+ i=kimseer.paller@analog.com; s=20250213; h=from:subject:message-id;
+ bh=VyVRX1HVLv5yTqUASg+tT29VXQ7lBcgGjSS/IHh5E/s=;
+ b=6hGCjXkbRzHNfKlvbg3fNgIRNG24qbW6jh01UJ+QNogdfrLdCQmpvgmj040FoCnaPBjowla0a
+ Zz02EEhKwm2CpQJQI4AXdrGmfR7EVk9Ac9Jw/UO+9Bjn697EKvyblHZ
+X-Developer-Key: i=kimseer.paller@analog.com; a=ed25519;
+ pk=SPXIwGLg4GFKUNfuAavY+YhSDsx+Q+NwGLceiKwm8Ac=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: f-F95--d-RiX3XSI7s_d2yM_-oL9repg
+X-Authority-Analysis: v=2.4 cv=DoJW+H/+ c=1 sm=1 tr=0 ts=680b863a cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=IpJZQVW2AAAA:8 a=gAnH3GRIAAAA:8 a=3Hb1o_MSCnf1oSB8FUQA:9 a=QEXdDO2ut3YA:10
+ a=IawgGOuG5U0WyFbmm1f5:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA5MyBTYWx0ZWRfXz6nWPB4l78vB IOYVsNIw+tIF4leiVZuizMCv6dfz9SZkOWFRjGj9Q20qCsXqB+ztlYk517iLwjn+w+vqE+Vjnki BTsLjQ017cpce26YUz4ET262l6OjleK9xIQgcX2+gBbeuWx8OL+pFI2yns3YW44e7a8EBY9cozP
+ SDi9ovn5EchaQkq7SjM5BOV5ii98W8aZv0ccE3vStSYQOllfJSOg7PtN0J2b6KpheO8TVwttsII pUOXvLwRt4DXX9QIfJ1eawdYIC6XRAXEB6IUEYdVSYS7AvS1LN8ztR7C1QvYsaDTNO7zsIFcmlv KBkR/0Y7RckSs86jLmgV7hJMWR0YS2UQK8d5CE7MyD1VmkWFftelVshBn3yOF4XmuouRf6yvtP/
+ WB6k9THIXUrPtL1HpGZnMirQ6G8Lq8gHHT4gja4dQ42vw3aGRZSctzt45IBCpZo5vA7iNycm
+X-Proofpoint-GUID: f-F95--d-RiX3XSI7s_d2yM_-oL9repg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0 mlxlogscore=714
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250093
 
-Hi,
+Add a new powerdown mode for DACs with 7.7kohm and 32kohm resistor
+to GND.
 
-On 20/04/2025 21:01, Aradhya Bhatia wrote:
-> Hi Tomi,
-> 
-> On 14/04/25 16:41, Tomi Valkeinen wrote:
->> The driver currently expects the pixel clock and the HS clock to be
->> compatible, but the DPHY PLL doesn't give very finely grained rates.
->> This often leads to the situation where the pipeline just fails, as the
->> resulting HS clock is just too off.
->>
->> We could change the driver to do a better job on adjusting the DSI
->> blanking values, hopefully getting a working pipeline even if the pclk
->> and HS clocks are not exactly compatible. But that is a bigger work.
->>
->> What we can do easily is to see in .atomic_check() what HS clock rate we
->> can get, based on the pixel clock rate, and then convert the HS clock
->> rate back to pixel clock rate and ask that rate from the crtc. If the
->> crtc has a good PLL (which is the case for TI K3 SoCs), this will fix
->> any issues wrt. the clock rates.
->>
->> If the crtc cannot provide the requested clock, well, we're no worse off
->> with this patch than what we have at the moment.
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> ---
->>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 37 ++++++++++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->> index 63031379459e..165df5d595b8 100644
->> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->> @@ -908,6 +908,28 @@ static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
->>   	return input_fmts;
->>   }
->>   
->> +static long cdns_dsi_round_pclk(struct cdns_dsi *dsi, unsigned long pclk)
->> +{
->> +	struct cdns_dsi_output *output = &dsi->output;
->> +	unsigned int nlanes = output->dev->lanes;
->> +	union phy_configure_opts phy_opts = { 0 };
->> +	u32 bitspp;
->> +	int ret;
->> +
->> +	bitspp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
->> +
->> +	ret = phy_mipi_dphy_get_default_config(pclk, bitspp, nlanes,
->> +					       &phy_opts.mipi_dphy);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = phy_validate(dsi->dphy, PHY_MODE_MIPI_DPHY, 0, &phy_opts);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return div_u64((u64)phy_opts.mipi_dphy.hs_clk_rate * nlanes, bitspp);
->> +}
->> +
->>   static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
->>   					struct drm_bridge_state *bridge_state,
->>   					struct drm_crtc_state *crtc_state,
->> @@ -919,11 +941,26 @@ static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
->>   	struct drm_display_mode *adjusted_mode = &crtc_state->adjusted_mode;
->>   	struct cdns_dsi_cfg *dsi_cfg = &dsi_state->dsi_cfg;
->>   	struct videomode vm;
->> +	long pclk;
->>   
->>   	/* cdns-dsi requires negative syncs */
->>   	adjusted_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
->>   	adjusted_mode->flags |= DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC;
->>   
->> +	/*
->> +	 * The DPHY PLL has quite a coarsely grained clock rate options. See
->> +	 * what hsclk rate we can achieve based on the pixel clock, convert it
->> +	 * back to pixel clock, set that to the adjusted_mode->clock. This is
->> +	 * all in hopes that the CRTC will be able to provide us the requested
->> +	 * clock, as otherwise the DPI and DSI clocks will be out of sync.
->> +	 */
->> +
->> +	pclk = cdns_dsi_round_pclk(dsi, adjusted_mode->clock * 1000);
->> +	if (pclk < 0)
->> +		return (int)pclk;
->> +
->> +	adjusted_mode->clock = pclk / 1000;
->> +
->>   	drm_display_mode_to_videomode(adjusted_mode, &vm);
->>   
->>   	return cdns_dsi_check_conf(dsi, &vm, dsi_cfg);
-> 
-> I think at this point cdns_dsi_check_conf is really only creating a
-> dsi_cfg (from the video-mode) so that it can later be used, and then
-> running phy_mipi_dphy_get_default_config(), and phy_validate(), both of
-> which have nothing to do with the freshly made dsi_cfg.
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 2 ++
+ 1 file changed, 2 insertions(+)
 
-True. And cdns_dsi_mode2cfg() can't fail anymore, so it could be just a 
-void function.
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 33c09c4ac60a4feec82308461643134f5ba84b66..190bfcc1e836b69622692d7c056c0092e00f1a9b 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -741,7 +741,9 @@ Description:
+ 		1kohm_to_gnd: connected to ground via an 1kOhm resistor,
+ 		2.5kohm_to_gnd: connected to ground via a 2.5kOhm resistor,
+ 		6kohm_to_gnd: connected to ground via a 6kOhm resistor,
++		7.7kohm_to_gnd: connected to ground via a 7.7kOhm resistor,
+ 		20kohm_to_gnd: connected to ground via a 20kOhm resistor,
++		32kohm_to_gnd: connected to ground via a 32kOhm resistor,
+ 		42kohm_to_gnd: connected to ground via a 42kOhm resistor,
+ 		90kohm_to_gnd: connected to ground via a 90kOhm resistor,
+ 		100kohm_to_gnd: connected to ground via an 100kOhm resistor,
 
-> If there is no benefit in running both the latter functions again after
-> cdns_dsi_round_pclk() runs them, then perhaps we can just drop the
-> cdns_dsi_check_conf() altogether in favor of cdns_dsi_mode2cfg() being
-> called from .atomic_check()?
-
-cdns_dsi_round_pclk() doesn't store the phy_cfg anywhere, whereas 
-cdns_dsi_check_conf() does.
-
-I think I originally wanted to have this structure, because:
-
-cdns_dsi_round_pclk() is given adjusted_mode->clock * 1000, and it 
-returns an "optimal" pixel clock that matches the DSI clock what the DSI 
-PLL can provide us.
-
-This rate is then divided by 1000, and set to adjusted_mode->clock.
-
-We then call cdns_dsi_check_conf(), calling 
-phy_mipi_dphy_get_default_config() and phy_validate(), but this time 
-it's with the "optimal" pixel clock (although truncated to kHz). So the 
-calls are not identical to cdns_dsi_round_pclk().
-
-Then, I have a local patch that adds some code to cdns_dsi_check_conf(). 
-It will check if there is a difference between the requested hs-clk 
-(which we got from phy_mipi_dphy_get_default_config()) and the final one 
-(which we got from phy_validate()), and if so, adjusts the DSI HFP so 
-that the total DSI line time would be close to the one we would have 
-gotten with the requested hs-clk.
-
-While I think that code is valid, the adjustments were always so small 
-that they rounded to 0, so I did not post that patch. Nevertheless, it 
-kind of points out that calling the functions again is not totally 
-pointless =).
-
-To be honest, I'm a bit reluctant to start rehashing the series. It's 
-rather time consuming to test, and some errors are not immediately 
-visible, if they're only seen as occasional glitches on the screen.
-
-If the code has no issues as such, I would suggest to do further 
-cleanups on top so that we'd get the upstream fixed (as it's very badly 
-broken at the moment) asap.
-
-> Furthermore, I understand updating the adjusted_mode->clock might help
-> the CRTC to use a pixel clock that's more in-tune with the _actual_
-> hs_clk_rate that is going to be generated. But, I am worried that it'll
-> cause a delta from the intended fps from the CRTC's end because the
-> timings aren't adjusted in accordance with the pixel-clock.
-
-Yes, it does. Also, it's not "more in-tune", as in some cases the clocks 
-are not at all in-tune =). The DSI PLL here is quite coarse with the rates.
-
-> Perhaps, along with pixel-clock, we can update the dsi_htotal and
-> dpi_htotal both too, to
-> 
-> new_dsi_htotal = (hs_clk_rate * #lanes) / (dpi_votal * fps * 8)
-> new_dpi_htotal = (hs_clk_rate * #lanes) / (dpi_vtotal * fps * bitspp).
-> 
-> And then, the respective front-porches can too get updated accordingly.
-
-Perhaps. But if there's a bridge after the cdns-dsi, its atomic_check 
-has already been called, with the original timings. Did it already use 
-those timings for creating its config?
-
-And is it better to output with the timings that (at least try to) match 
-the requested ones, but with an adjusted pclk, resulting in fps that 
-slightly off, or with both adjusted timings and adjusted pclk, getting a 
-better fps match?
-
-In my experience devices usually allow variations in the pixel clock 
-quite easily, but some are very strict at getting exactly the timings 
-that it expects.
-
-  Tomi
+-- 
+2.34.1
 
