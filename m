@@ -1,97 +1,87 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C887317C21C;
-	Fri, 25 Apr 2025 19:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9910221A42C;
+	Fri, 25 Apr 2025 19:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609636; cv=none; b=JOMkz47iO6MsBpD5J8ekb9m+H9gUxf0UPuipZ/G2Zeo0Kagst7qJOJU0Stks4RieRuC15LrO1y1gj+Zz6mZvzO4NHDOsZ7eQ0s/+wY0B7vsUw22jft3YzWuego0f8oN9+Y0/q3ZmnrEuX4lOYOInHikeIk29AM/yl41Hjn+ya/U=
+	t=1745609661; cv=none; b=WNNoG2XtzJiZDyBX9pSzMI8Op1iE2XpwXzWzgKrS1+FjVbSTj3L5dYjWioEt9iOgH8qkkIjUcUpPS0/GcSqInW5bxGAGNPTPDllGql4t8GrfxhivXP+aLmFp9oQURKfL5r30Z3DN0LA9tu/IxUHJop5OXxxlyynKMfOSpP+DD1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609636; c=relaxed/simple;
-	bh=g9uoLweess0UFEoDVPSTAjUBbZbADxAufBW+76LC3CE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PuQZob1k/DGH2wyO+4K+NWvtmB4mq+mUUAGih3P+9oILsSAjSxhjFTn+HwpKm1T14ldXNzgdYkhmfp5C2kbVU2HZ39iprLM9H3Xh9r0PXNK6IY07Wjxh0Y9vHt9cqbpATaBUBjsBk7NCV5RE0bdtJShOI8BbtJlBOx/T7vtKBYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eum0Yd1v; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745609661; c=relaxed/simple;
+	bh=Tm3l4S1DDHagU95NZEjoai+DIU1+GA5Je8xHFvNGi5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RCHFkAOmY+Pt1FSI7lKmubFvAQcQW4x4CjoNspBigGfa5I0Xg4zfdYakzi4FcLottYGKy61909tqA4csXNjjzZRRqP/grUcAK/TFg2ObkJ109fuZ2+fQC9pmg9pC2el0z+AsU8WJgYq2MlTzU+ST3vtbwwn8NmPdRED1e+VLj2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=APOoN9Aw; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eum0Yd1v"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70814384238so25100967b3.0;
-        Fri, 25 Apr 2025 12:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745609634; x=1746214434; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kc/neZMRjay1nZyyrhx8oGxyv6pQLxfgMETmX5ZmEto=;
-        b=eum0Yd1v2890b2vinZv3Zw6njAACMvjmytykI+jCM8zgt7w6+76dapY649N4cvpY2l
-         auk/+0JLIwCFZcJGaNZwC1mFaZHLACVMSYb2dijNcHMOJgi+HHPuWKRHZeh9D4mYV+y/
-         z/4Tbjw/gnxtUJ9in0cDj028QA9o/A3EiWTqvDNoe7qaCfSF6204ZP6LD/pNe94Xk6in
-         NwCnb/xVqSWONtV9k0O4ZJpnBCfHOudlP76UHS2U3Est6Oi6HRWJaW/tNuryAWAKoFg1
-         JNXPYV+T6NZKcOETnn1DaSv/q0cJL/CtzxJ7kb+eNJH5hXilbnL3rdaoIVo08nn4edP1
-         CKEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745609634; x=1746214434;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kc/neZMRjay1nZyyrhx8oGxyv6pQLxfgMETmX5ZmEto=;
-        b=KIIzZ5GYvPAAQSnCBapezzsvrYepCd/xyQ0jh+5VW/aE/HhFx2FVbNWRMDapgnP5Ja
-         78phRn4kJbhIDsvTsMD4y/aLbsOHFIJ13whiyZjt/mNrDbxaKHLVCGXTrXT07DDcm95K
-         JNJHBloCkUM8aT6h9rhQYsj5ie0bE+18KZsxtq/+ROEMK7BJkcKT2vBUh3p7qAtQVaSB
-         QDyk8PgmWR+Cb13Ct0mm9OGuv6WGefR8nqCDHvv3sv8VEg8TIUhpXQraLt/oSq/ALwmN
-         svtdKVzx+axCSoQWHO7OG8b2aCXmi+VkgSV9rQHnNLbXravcq1WMkTPvdimFMYFCKmdR
-         kwxg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Tu66xjePUQU7PYrRTorjjtAxjaGlUL/NkHAAbdIsjetaA2u8twW5nl7o7eRtmTT5MhDq841G46Y=@vger.kernel.org, AJvYcCUPvhUzmWc2x9rHCyQ1yFcu5SWZe8nEH92kq9aijZsmoQV6RfIsXfRDURJvnPPWL7Q/l5w7fli5z1/1RBBd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx4YN2AlTGHyGpukdXI0EaQrNUDAuhA+pbGVEBq2oRvxyBYzlw
-	RMDF3PPxubVf3dQtYG4mpAvkWyvFaj94flzXbmsJ5JCbZGOFXdv5g/lZaHRur7CSrqU6y8WdWDx
-	BIVpXm25hiNcmHaMVfANiSD/m85SE5Q==
-X-Gm-Gg: ASbGncsBTU44Q82Fn3xe3BfxCUaL6BNfFTCCPuVXf1IJMkNTvWiLqYDbrpW1Z99oDOZ
-	+Tx/fD0/oPOii9YuKelvSYbqUqXLJopYTRTS6ddauz/7lKmD60R9NnHlYQVE4Ni+K3b3yF2G31W
-	QJK4sUQX96/+WYIMaFuR7S4Mo=
-X-Google-Smtp-Source: AGHT+IF4h/6M8r2AxTAJ5kvndU2HLttpz+95GrNi4OfE2k8/eGw7eKVI70YUgPiSRB5UzhfyKI+FlG5XtQjMLS7o6fU=
-X-Received: by 2002:a05:690c:640c:b0:6ff:1fac:c502 with SMTP id
- 00721157ae682-708540c7572mr54412357b3.6.1745609633676; Fri, 25 Apr 2025
- 12:33:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="APOoN9Aw"
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 69BA46632EA;
+	Fri, 25 Apr 2025 21:34:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1745609650;
+	bh=Tm3l4S1DDHagU95NZEjoai+DIU1+GA5Je8xHFvNGi5I=;
+	h=From:Subject:Date;
+	b=APOoN9AwhPvYh6GM1oOQqOUAQARrYY9qCw10VCNOQJoDDKHECbKlwK42Mj4agpSpc
+	 02+bG9QzY63IOYRxmLl1M3R+d/y8ri8iPFAqmXTQxd/pty36duzk/5Qg3xrf68djTJ
+	 2vePo8xOY2S4N8+d96X1qJWn8MSdgTrO2WJZMbftQhEt8AZQY4DfxpKjA69lGvF9qf
+	 WmSXrWAt0+EBTC+a18ndo0Ph4iJqhxE/9BVnFNv7JyU6vHXIbqAMstBvNhuMzU5BBU
+	 LVbvKOgyGNNLyGinHvF8vUKSqRb0So115QdOKmZKA4ENVtOQvEZk2LBxGyrskRm6kL
+	 0amogCBl9CZpQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux ACPI <linux-acpi@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
+ Saket Dumbre <saket.dumbre@intel.com>
+Subject: [PATCH v1 19/19] ACPICA: Logfile: Changes for version 20250404
+Date: Fri, 25 Apr 2025 21:33:58 +0200
+Message-ID: <2251077.Icojqenx9y@rjwysocki.net>
+In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
+References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Mikko Juhani Korhonen <mjkorhon@gmail.com>
-Date: Fri, 25 Apr 2025 22:33:17 +0300
-X-Gm-Features: ATxdqUHoo8h_wvWqc5HIIys87snkBzHx1zyXv4mfHFsFAh3hio4siqhe-Ttmuak
-Message-ID: <CAAZ0mTfSFZoL_CS9s1L0JhfaoyMGJ6Up5Z9_YvU-pX05MOZ99w@mail.gmail.com>
-Subject: [PATCH v3] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-Make WDC WD20EFAX-68FB5N0 hard drives work again after regression in
-6.9.0 when LPM was enabled, so disable it for this model.
+From: Saket Dumbre <saket.dumbre@intel.com>
 
-Signed-off-by: Mikko Korhonen <mjkorhon@gmail.com>
+ACPICA commit 52de9040740c562a35244de19d21c0313964c874
+
+Link: https://github.com/acpica/acpica/commit/52de9040
+Signed-off-by: Saket Dumbre <saket.dumbre@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-drivers/ata/libata-core.c | 5 +++++
-1 file changed, 5 insertions(+)
+ include/acpi/acpixf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 773799cfd443..5c2f26945d61 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4239,6 +4239,11 @@ static const struct ata_dev_quirks_entry
-__ata_dev_quirks[] = {
-       { "WDC WD3000JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
-       { "WDC WD3200JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
+index 70f1d1b4d307..b49396aa4058 100644
+--- a/include/acpi/acpixf.h
++++ b/include/acpi/acpixf.h
+@@ -12,7 +12,7 @@
+ 
+ /* Current ACPICA subsystem version in YYYYMMDD format */
+ 
+-#define ACPI_CA_VERSION                 0x20241212
++#define ACPI_CA_VERSION                 0x20250404
+ 
+ #include <acpi/acconfig.h>
+ #include <acpi/actypes.h>
+-- 
+2.43.0
 
-+       /*
-+        * This specific WD SATA-3 model has problems with LPM.
-+        */
-+       { "WDC WD20EFAX-68FB5N0",       NULL,   ATA_QUIRK_NOLPM },
-+
-       /*
-        * This sata dom device goes on a walkabout when the ATA_LOG_DIRECTORY
-        * log page is accessed. Ensure we never ask for this log page with
 
-base-commit: 14a3cc755825ef7b34c986aa2786ea815023e9c5
---
-2.47.2
+
+
