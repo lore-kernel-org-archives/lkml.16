@@ -1,111 +1,83 @@
-Received: from caffeine.csclub.uwaterloo.ca (caffeine.csclub.uwaterloo.ca [129.97.134.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85F514F9EB;
-	Fri, 25 Apr 2025 16:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.97.134.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A7E15B543
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598169; cv=none; b=DAd8YK4Zcan6x+psg9ByCOMa451Bvjs9ZiXhbAtv6o6GjbdKL3llSzrnLYH4QW+Mkf/e09e4Z/x2Z/Z2i+dZ78EGUwrbLD2P5B/KdHl6rk+y/PTTpAvCF1iAVuCmdHOf3a6Wzky7mpO5wbgMIUg+eB5Xadp88AXkGvOdur+nK30=
+	t=1745598217; cv=none; b=BXqdX2kkxs/9tXrhVc0x4FMvwgBR8Adb9ls4C7w+wpmBAL3wtXzXhxU1ScMRK2IpiOr9QrODKHWZli+ssy9TSOiZ8QLn0Husp9aL/wAJSU+JJI2QS9zZbKuvPTh+nnscj7RI+lcPtorZonh1O3t80L21bAi0hocfjraG4SgJVVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598169; c=relaxed/simple;
-	bh=IBGf9HERTYTA0SschADqKfc+VU/xdv9jMJ6ICrEjo1o=;
-	h=Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To:From; b=GhGjLu/k8P9tuILTylNGBl/hLOdkTGm4n6oQe7le/kHNoemuYJDxKPN4uGXEqrz14g+H6abLnh1uFOjsNFhlM/uOlPgC7Vgxgy2EolJpPS1O2DI8LD5tswmp6hEImsDyWoiuUFrG8ah+HRpvHq7Z0SNFDAHSoDLkP3AQ5cccE8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csclub.uwaterloo.ca; spf=pass smtp.mailfrom=csclub.uwaterloo.ca; arc=none smtp.client-ip=129.97.134.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csclub.uwaterloo.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csclub.uwaterloo.ca
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-	id 34A7C460021; Fri, 25 Apr 2025 12:22:38 -0400 (EDT)
-Date: Fri, 25 Apr 2025 12:22:38 -0400
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Netdev <netdev@vger.kernel.org>
-Subject: Re: Fix promiscous and multicast mode on iavf after reset
-Message-ID: <aAu2zoNIuRk-nwWt@csclub.uwaterloo.ca>
-References: <aAkflkxbvC8MB8PG@csclub.uwaterloo.ca>
- <8236bef5-d1e3-42ab-ba1f-b1d89f305d0a@intel.com>
+	s=arc-20240116; t=1745598217; c=relaxed/simple;
+	bh=H+fW7Wlpu8aJdTi4gApR4bCPJd9Lfy8PXNCMEMvnBh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ILdSdU11QvLI0os3okCgDf/+2Wsp7bnh3JucqNYFUqCzqSB8GG2Ona4j5KPyIcFDs5jUXHK5nWA83fUcND9Aot1DglD+lPHzdqCpNzjeZ/Gqlgg83oaOf2GumRJbaDCuZwl0GEEyXOG9zz6143y1hePHO557hdXcMC/9gNE5Dg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=djEJ3HED; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mk7sP/Sv; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="djEJ3HED";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mk7sP/Sv"
+Date: Fri, 25 Apr 2025 18:23:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745598213;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jAaSIMhxlsFVyasL4fNhdLj8S0Zxik+9V6e2ixNYehw=;
+	b=djEJ3HEDJRMRiGfx411Itey1aaOMWN2KekJ08l9mt561flfUhUVsE+AYrsYIMNmlS/tJ6X
+	PBcYjys6hC4CcV7KFD2HTvY0ABTgHLprCLM4T1bxBY0qSSYwjBCmBEb0kf9IR/DSb84byK
+	s4lFh2zz3klwQX4CyD5NlZjlIgUyHDzIXRQGsK3mER82gvHJ/Woi7xzBKy2WCsl03gzK6S
+	cFoMe/rDLpb0Vaw40FgqO6mT1mYyLyV5HOzequpg4lpKw/BzzhVlVGWTQdngmaXCOKGDa/
+	bRPi8r/EH+v4qbKxBQKJj3G1u8i56z4njC5ZXLBVec6SJeqf4OrddHYAkpah6w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745598213;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jAaSIMhxlsFVyasL4fNhdLj8S0Zxik+9V6e2ixNYehw=;
+	b=mk7sP/SvMwdYxg/KeT/YGVBt3XA+4NXrRJo4uu3EVWVMZWny8roE8rsz+EiYa34nNrtx5W
+	Q1Sy1hJ7iejTDlDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: npiggin@gmail.com, vaibhav@linux.ibm.com, maddy@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org, christophe.leroy@csgroup.eu,
+	gautam@linux.ibm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] powerpc: kvm: use generic transfer to guest mode work
+Message-ID: <20250425162331.qwpzuc-8@linutronix.de>
+References: <20250421102837.78515-1-sshegde@linux.ibm.com>
+ <20250421102837.78515-2-sshegde@linux.ibm.com>
+ <20250424144215._ooDjDz9@linutronix.de>
+ <365ba747-9311-45ab-b798-80ba4e578796@linux.ibm.com>
+ <20250424183811.7_MLThpt@linutronix.de>
+ <2891b989-6249-4e84-969e-f11af3f92b0b@linux.ibm.com>
+ <20250425133131.DTvWJE29@linutronix.de>
+ <5cc88718-13ff-4220-a8f6-c988a919aa65@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8236bef5-d1e3-42ab-ba1f-b1d89f305d0a@intel.com>
-From: Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+In-Reply-To: <5cc88718-13ff-4220-a8f6-c988a919aa65@linux.ibm.com>
 
-On Thu, Apr 24, 2025 at 02:59:38PM -0700, Jacob Keller wrote:
-> 
-> 
-> On 4/23/2025 10:12 AM, Lennart Sorensen wrote:
-> > I discovered that anything that causes a reset in iavf makes breaks
-> > promiscous mode and multicast.  This is because the host side ice
-> > driver clears the VF from filters when it is reset.  iavf then correctly
-> > calls iavf_configure, but since the current_netdev_promisc_flags already
-> > match the netdev promisc settings, nothing is done, so the promisc and
-> > multicast settings are not sent to the ice host driver after the reset.
-> > As a result the iavf side shows promisc enabled but it isn't working.
-> > Disabling and re-enabling promisc on the iavf side fixes it of course.
-> > Simple test case to show this is to enable promisc, check that packets
-> > are being seen, then change the mtu size (which does a reset) and check
-> > packets received again, and promisc is no longer active.  Disabling
-> > promisc and enabling it again restores receiving the packets.
+On 2025-04-25 19:54:56 [+0530], Shrikanth Hegde wrote:
+> > > But looking at the semantics of usage of xfer_to_guest_mode_work
+> > > I think using schedule is probably right over here.
+> > > Correct me if i got it all wrong.
 > > 
-> > The following seems to work for me, but I am not sure it is the correct
-> > place to clear the saved flags.
-> > 
-> > diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-> > index 6d7ba4d67a19..4018a08d63c1 100644
-> > --- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-> > +++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-> > @@ -3233,6 +3233,14 @@ static void iavf_reset_task(struct work_struct *work)
-> >  		iavf_shutdown_adminq(hw);
-> >  		iavf_init_adminq(hw);
-> >  		iavf_request_reset(adapter);
-> > +
-> > +		/* Clear remembered promisc and multicast flags since
-> > +		 * reset clears them on the host so they will get force
-> > +		 * applied again through iavf_configure() down below.
-> > +		 */
-> > +		spin_lock_bh(&adapter->current_netdev_promisc_flags_lock);
-> > +		adapter->current_netdev_promisc_flags &= ~(IFF_PROMISC | IFF_ALLMULTI);
-> > +		spin_unlock_bh(&adapter->current_netdev_promisc_flags_lock);
-> >  	}
-> >  	adapter->flags |= IAVF_FLAG_RESET_PENDING;
-> >  
+> > No, if you do xfer_to_guest_mode_work() then it will invoke schedule()
+> > when appropriate. It just the thing in kvmhv_run_single_vcpu() looks odd
+> > and might have been duct tape or an accident and could probably be
+> > removed.
 > > 
 > 
-> We probably need to do something similar in the flow where we get an
-> unexpected reset (such as if PF resets us by changing trusted flag or
-> other state).
-> 
-> I don't think there's a better solution. Arguably the PF shouldn't be
-> losing data, but I think its a bit late to go that route at this point..
-> Its pretty baked into the virtchnl API :(
+> I was wondering xfer_to_guest_mode_work could also call cond_resched
+> instead of schedule since for preempt=full/lazy is preemptible
+> as early as possible right?
 
-Yeah I can see arguments that calling reset should put everything in a
-known state so the VF driver can configure things as it wants, but since
-reset is also used when tx hang happens or mtu changes and various other
-things, it is definitely inconvinient.  Changing behaviour with an API
-version change seems ugly too and you would still have to support the
-old API anyhow.  I suppose having a reset fully to defaults and a soft
-reset to change settings but keep other values could have been nice,
-but a bit late now.  Some VF drivers may even be depending on the reset
-putting everything to defaults.
+No, I think it is okay. For preempt=full you shouldn't observe the 
+flag in xfer_to_guest_mode_work() so it does not matter.
 
-If someone that knows the driver better can make a complete fix that
-would be great.  So far this small change appears to be working but I
-could certainly have missed some cases.  It took quite a bit of debugging
-to discover why promiscous mode on the VF side was so unreliable and
-unpredicable.  Due to the somewhat asynchrounous message handling,
-sometimes the reset would not happen until after the promisc setting
-had been applied, and then it was silently lost, while other times it
-would do the reset quicker and then the promisc setting would work.
-Very confusing to debug.
-
--- 
-Len Sorensen
+Sebastian
