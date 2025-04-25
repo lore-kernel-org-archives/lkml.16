@@ -1,171 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984A1B0F11;
-	Fri, 25 Apr 2025 04:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5610015C158;
+	Fri, 25 Apr 2025 04:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745554777; cv=none; b=rqZpjtbE5eYGVRZ9V3qCYRb0hDlJU/7Nt872pD8EwMM1b9xOOwmmbs18AvEkVlfETrRwQcx3gGJBLC5w1JDN5ODmW2Pgw2ItfFvU7YWnPBA3V5fyIH57n2nBlWznnr5vBGfzpEWd+JztzDmlzte08L46Fv7NRjFFlSum6T/qLCc=
+	t=1745554797; cv=none; b=He9MwhTSLERb5Bx+IS+SO0l+dcsAeMLudXHwpRP58j6Lcu2MoA0OeT2P5y19GdGxppoYyWI2X3scX3f43Y//oeuoLhAr0ieKoZYnTPBwWN7ug20uj2hCPtd+wVinGie15rOA3mFLVIZx9q5YmT7xqG3TcwE7Rlw8vM20I0q6Cik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745554777; c=relaxed/simple;
-	bh=HvUQ2jlkbOcoo0ZLx18H2YZfkCaqCX2iH2Clv+lgH08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJCFSA1MfSpNRA5EAciC5d7K7RKxtBQ1jg4WC0UHvtH9QZ/9+vySyq+o2Q+CTTiReGDt3ye1+XNjpMt7VJqkECg+z+keKABvK1SF9gue+VTCFfBdyGWs8AVzgHvLEo37oHhnry1EQPmOwAOQ/Jcf0lrxzadw1OcySEYRIl3GXjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dj3xELOr; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dj3xELOr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745554776; x=1777090776;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HvUQ2jlkbOcoo0ZLx18H2YZfkCaqCX2iH2Clv+lgH08=;
-  b=dj3xELOraIB7aik0g0Oa+q8TG7lsShKJ9P5AsSAEqG8mdyTb6xBAmqmG
-   qVPH75qNAP6W9SRgO1wARjqk5L0O7m+IoneYf/wWGUoUVMcCK0E32Qtnl
-   9mcrog8MllCLsIa9gD9fjfefrjC32EyuafY1o3Et0k5Vn/s9xMBNLabFD
-   +l1sp+Brmmszt0wOYdKcvIKRbP3ugVEV1XqjXFdf9v/QCoNK8ejhZvpGF
-   P21RVEKAauvSTCehaqSJxIeWq5UMkEEj2F9MEbuhn1rvXU2O49Wn99+rc
-   uHd1Qs9XNtflbgkQdwZ5+qboy5QJOLl2hMJZCBzz8JhWPXr9mREVr9lv1
-   A==;
-X-CSE-ConnectionGUID: XwfJqSOqQxG0t2Pv5Q3jmw==
-X-CSE-MsgGUID: rkH/NgniRlmTsWsMvQ02nw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47225238"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="47225238"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 21:19:35 -0700
-X-CSE-ConnectionGUID: mud3aOYySRScxADNvob0ig==
-X-CSE-MsgGUID: Uh0zV26bTnKghmeikkJV/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="170016448"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 24 Apr 2025 21:19:31 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8AXB-0004pV-0L;
-	Fri, 25 Apr 2025 04:19:29 +0000
-Date: Fri, 25 Apr 2025 12:18:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	peter.chen@cixtech.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Manikandan K Pillai <mpillai@cadence.com>,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: Re: [PATCH v4 3/5] PCI: cadence: Add header support for PCIe HPA
- controller
-Message-ID: <202504251214.ngJwGxvn-lkp@intel.com>
-References: <20250424010445.2260090-4-hans.zhang@cixtech.com>
+	s=arc-20240116; t=1745554797; c=relaxed/simple;
+	bh=ioR4skgPOyOn8QsgJ+wTTSYELuK/OKgKf03OMzprBTU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ochDZXkoO8ukhiOM4fby87+nAf7RDD8fBPN0aBOI5EnXdhHyU07o2H2lnVj3zS8RX0A5CblRYJCpi0rDgeSLuV8T8GceFbgwmGLR1+lQUyUqScgcBeaRsDqt2ooNKtiRF0WZy5Niy5CGvsvEJqbEVTatcl4oG52tNRwtloWSK0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P4GuL0007467;
+	Thu, 24 Apr 2025 21:19:43 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 466jhd38wd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 24 Apr 2025 21:19:42 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Thu, 24 Apr 2025 21:19:42 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 24 Apr 2025 21:19:40 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <yanjun.zhu@linux.dev>
+CC: <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH] loop: Add sanity check for read/write_iter
+Date: Fri, 25 Apr 2025 12:19:39 +0800
+Message-ID: <20250425041939.3388803-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <8352c76d-ad30-4c2e-91bd-9676df21b293@linux.dev>
+References: <8352c76d-ad30-4c2e-91bd-9676df21b293@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424010445.2260090-4-hans.zhang@cixtech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=ZNDXmW7b c=1 sm=1 tr=0 ts=680b0d5f cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=x9mcN1thFNAw6uWNoUEA:9
+X-Proofpoint-ORIG-GUID: WGApeCznCFB7YWr6BMh3tTgl8PLkEL2z
+X-Proofpoint-GUID: WGApeCznCFB7YWr6BMh3tTgl8PLkEL2z
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDAyOSBTYWx0ZWRfX3Vl37cFQb80B 4C4TfTV6ePTYx4d3VyKxbJN5Fyzm6U9gXYCQXFopnIGi73oJX3DQ66MHXjfcgB+BzNTS+QysHWd AqmTudfWRE9rym1/hRSfarD5ynsQhU4cyWF+nMoD4zgMXAZ/B/xtd0bKxLu/YTBILPGb6jk0/o1
+ F28WBY4r4VQ86Xw5VodEpYscvDwQn/ktwD+3bzsWGk3FLUO6hzmp+qnekI2vfuMcnmWHgyweJK7 fAwAacWsPRWr02099PyIgNMZt47vB89PSmm2XAwjQhiH5tocTu7aQVTQh6PfJ2GIrguCK52lDsv yy5bBo2av2BLAdN3KBXBRW6Lc779C8vl9D2WtZLH577M8V0gy4QYZ2XOyzo5MZhHYHBJu+ilxna
+ nT9R5tXg+5lC2ELhN4EHu7lzEMvRc0jOrBS7fX5A26bi9QugmfGq+r9nFEmzQShzkuabdiJh
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 adultscore=0 spamscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=808 mlxscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2504250029
 
-Hi,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/dt-bindings-pci-cadence-Extend-compatible-for-new-RP-configuration/20250424-090651
-base:   fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-patch link:    https://lore.kernel.org/r/20250424010445.2260090-4-hans.zhang%40cixtech.com
-patch subject: [PATCH v4 3/5] PCI: cadence: Add header support for PCIe HPA controller
-config: i386-buildonly-randconfig-003-20250425 (https://download.01.org/0day-ci/archive/20250425/202504251214.ngJwGxvn-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250425/202504251214.ngJwGxvn-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504251214.ngJwGxvn-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/cadence/pcie-cadence.c:9:
->> drivers/pci/controller/cadence/pcie-cadence.h:851:8: error: expected ')'
-     851 |                                                  int where)
-         |                                                  ^
-   drivers/pci/controller/cadence/pcie-cadence.h:850:49: note: to match this '('
-     850 | static inline void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn
-         |                                                 ^
-   1 error generated.
-
-
-vim +851 drivers/pci/controller/cadence/pcie-cadence.h
-
-   811	
-   812	#ifdef CONFIG_PCIE_CADENCE_HOST
-   813	int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
-   814	int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
-   815	int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
-   816	void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-   817				       int where);
-   818	int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc);
-   819	int cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
-   820					 enum cdns_pcie_rp_bar bar,
-   821					 u64 cpu_addr, u64 size,
-   822					 unsigned long flags);
-   823	int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc);
-   824	void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn, int where);
-   825	int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc);
-   826	int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
-   827					     enum cdns_pcie_rp_bar bar,
-   828					     u64 cpu_addr, u64 size,
-   829					     unsigned long flags);
-   830	int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc);
-   831	int cdns_pcie_hpa_host_init(struct cdns_pcie_rc *rc);
-   832	#else
-   833	static inline int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
-   834	{
-   835		return 0;
-   836	}
-   837	static inline int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
-   838	{
-   839		return 0;
-   840	}
-   841	static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-   842	{
-   843		return 0;
-   844	}
-   845	static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-   846						     int where)
-   847	{
-   848		return NULL;
-   849	}
-   850	static inline void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn
- > 851							 int where)
-   852	{
-   853		return NULL;
-   854	}
-   855	static inline int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
-   856	{
-   857		return 0;
-   858	}
-   859	static inline int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
-   860							   enum cdns_pcie_rp_bar bar,
-   861							   u64 cpu_addr, u64 size,
-   862							   unsigned long flags)
-   863	{
-   864		return 0;
-   865	}
-   866	static inline int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc)
-   867	{
-   868		return 0;
-   869	}
-   870	#endif
-   871	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Fri, 25 Apr 2025 06:06:51 +0200, Zhu Yanjun wrote:
+> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > index 674527d770dc..4f968e3071ed 100644
+> > --- a/drivers/block/loop.c
+> > +++ b/drivers/block/loop.c
+> > @@ -449,10 +449,15 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+> >       cmd->iocb.ki_flags = IOCB_DIRECT;
+> >       cmd->iocb.ki_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
+> >
+> > -     if (rw == ITER_SOURCE)
+> > -             ret = file->f_op->write_iter(&cmd->iocb, &iter);
+> > -     else
+> > -             ret = file->f_op->read_iter(&cmd->iocb, &iter);
+> > +     ret = 0;
+> > +     if (rw == ITER_SOURCE) {
+> > +             if (likely(file->f_op->write_iter))
+> > +                     ret = file->f_op->write_iter(&cmd->iocb, &iter);
+> > +     }
+> > +     else {
+> > +             if (likely(file->f_op->read_iter))
+> 
+> "else if" is better?
+There is nothing wrong with writing it this way logically, but it will
+destroy the clarity of the original context regarding the read/write logical
+relationship.
