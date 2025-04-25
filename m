@@ -1,133 +1,92 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA78134CF;
-	Fri, 25 Apr 2025 04:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3B4134CF;
+	Fri, 25 Apr 2025 04:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745555554; cv=none; b=Z1w2cr4VppNmNgRXQyBmD47V1S9rL+AWYYbA/AfeufIaXOSJFgvoPZK2HIynkwLN0IpI9fCw7VfIHee0Th009mw75bExHBRbTq12AHNhHue0W1j/9lHueCDQGRa5b1ox2h/Q50amTw92MJYfUdtEVLOfZ/XK134oXdQ3Do6ZjsY=
+	t=1745555559; cv=none; b=mwL1l0330CnWy3QSI1XALrKRh44BPXFZIVvmXJJYEurtZIFY/bL5pKwzvPYcB60Gf6x+mQq7pZl/sMFrVKq+wIOMxyZkwayeIVGtCGAoJotgFBdjzXzg08l49725nOB3UbPMox2Y3cXg/CDE/9h8q1mnc0vCllZNrQvqfgkQAQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745555554; c=relaxed/simple;
-	bh=zjF9JaePE0iVCghtEj4B1rUwWxnrzjj6eVYVCPmvMNs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CM+q8YZxcqAUvGNzapLm8rrT4Yab42oYIT0QthXhJuqOSPgNyz99rZMvi34pbMAkW2L0Tp5ozwT2qQvlVYVAM2RkjRsX8anr1s08GLav4D+f8DZmkTl4oC1D73OqcskACXDjUUR8WlklOOJCixdZh3NiJOJGo2XPw4ka324WYQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=FO53vZrz; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1745555559; c=relaxed/simple;
+	bh=jwon6my1/h7fyJvMoj0jyEwXJg1ZkBYWbj5V0De48Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MV/C6Wdjg3l87GRUxFczOkPnD9EtfZSPtd1S0+k38nzSmgq4Bubt0/dgxfN7jbzoDnNzjObKWXnOlNp8wnBW6VpaFSUj6X0xaNKziyxgXB0OAF/y7LtlTTcIpC2TmksH/eOthO+lGV7hD4oZ45W9zKqpGkCvTNF/671prxEKeI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nC0h+B7S; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FO53vZrz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nC0h+B7S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1745555553; x=1777091553;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zjF9JaePE0iVCghtEj4B1rUwWxnrzjj6eVYVCPmvMNs=;
-  b=FO53vZrz0AydtgHmCxVqKXHJLtYZTJwvCSGHXKh1iZ546qXZ0ySApM0u
-   fWbnvZLuwQlCANK5JoyvYPxl47OQlelvocWAkKnLaNdWxzlOTHTG4nvQ0
-   a+8usQUO6f/O1jTLQtDRp6rlgWHsj6rUVCmNuDkAWrcXVRZKMHuCqQ3zz
-   CUJr+0bcSrVIwVuYuCkNi+K0ejfx/S6IWllXl5UbEEGT1VwlX/SjroLRh
-   xUJU0f1pE/QQi9rv6lIl69E48xIuMNM9Q0g3xcKU6Ja+BjycOkelm9G0u
-   FPzdEJOYzjOnI2UmRu2cKXASdo2rLqncYVWaAvS8cTS3hAgjxNTt6i92B
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745555558; x=1777091558;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jwon6my1/h7fyJvMoj0jyEwXJg1ZkBYWbj5V0De48Zo=;
+  b=nC0h+B7S1ZFaA4L04SNWVXkNRoQ3san/l86l9Y9WG8LOpvt7upb7X+lT
+   LOF83+sCN0BujkxiIBsr6CRBgp9yemO1EsoluLTG/5GQReXA3c44WmX9Q
+   fpZSdRvsZXzwrjvBnnWIme5nmBM0VpSUNYn1k6V/Vnr7RMgYlvRmjfWtI
+   6rjIrv/hfZskAgvH++WijTy6l2zPPwl/zBnt2mCswP/Gz3yxbImolf866
+   7CWbKd+f9bd8HPdKxeJ+VWxlLy+PVJ+QUsF8HpBczRdaaHGvKmpuN3R7J
+   Yf6JP6iujP5uI5A60GoFlrqoEmf4LbN+7edNcRo2FCZq2/ye4FnEn490h
    w==;
-X-CSE-ConnectionGUID: Q9SVwF29Twemz3224Z21Zw==
-X-CSE-MsgGUID: Z2WZZaR1RDiB+f+XT4/lZA==
-X-IronPort-AV: E=Sophos;i="6.15,238,1739862000"; 
-   d="scan'208";a="40884322"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2025 21:32:32 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 24 Apr 2025 21:32:11 -0700
-Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Thu, 24 Apr 2025 21:32:08 -0700
-From: Thangaraj Samynathan <thangaraj.s@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 net] net: lan743x: Fix memory leak when GSO enabled
-Date: Fri, 25 Apr 2025 09:58:53 +0530
-Message-ID: <20250425042853.21653-1-thangaraj.s@microchip.com>
-X-Mailer: git-send-email 2.25.1
+X-CSE-ConnectionGUID: OOfVveH7RpGBRwbCpOdEkw==
+X-CSE-MsgGUID: ULQEkWH4QIWQMPPKyUgvlw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="34830385"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="34830385"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 21:32:37 -0700
+X-CSE-ConnectionGUID: ajgVh2KbRfetbXQBXDRp3w==
+X-CSE-MsgGUID: fZVX4imIQrejq1t+17KEVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132689040"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Apr 2025 21:32:33 -0700
+Date: Fri, 25 Apr 2025 12:27:56 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marco.pagani@linux.dev>
+Cc: Arnd Bergmann <arnd@kernel.org>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>, Tom Rix <trix@redhat.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Russ Weight <russ.weight@linux.dev>, linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/10] fpga: tests: add module descriptions
+Message-ID: <aAsPTN4y2nf9q+ht@yilunxu-OptiPlex-7050>
+References: <20250324173242.1501003-1-arnd@kernel.org>
+ <20250324173242.1501003-4-arnd@kernel.org>
+ <6ab8b951-a2be-4434-8621-0b31d00608ad@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ab8b951-a2be-4434-8621-0b31d00608ad@linux.dev>
 
-The current implementation tracks the `skb` by linking it to the
-LS descriptor when the  number of fragments is greater than zero,
-and to the EXT descriptor when the number of fragments is zero
-with GSO enabled. However, when the `skb` is mapped to the EXT
-descriptor, it is not freed resulting in a memory leak. The
-implementation has been modified to always map the `skb` to the
-last descriptor and always be properly freed.
+On Tue, Mar 25, 2025 at 06:06:51PM +0100, Marco Pagani wrote:
+> 
+> On 2025-03-24 18:32, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > Modules without a description now cause a warning:
+> > 
+> > WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
+> > WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
+> > WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Reviewed-by: Marco Pagani <marco.pagani@linux.dev>
 
-Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
----
- drivers/net/ethernet/microchip/lan743x_main.c | 8 ++++++--
- drivers/net/ethernet/microchip/lan743x_main.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index 8b6b9b6efe18..73dfc85fa67e 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -1815,6 +1815,7 @@ static void lan743x_tx_frame_add_lso(struct lan743x_tx *tx,
- 	if (nr_frags <= 0) {
- 		tx->frame_data0 |= TX_DESC_DATA0_LS_;
- 		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+		tx->frame_last = tx->frame_first;
- 	}
- 	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
- 	tx_descriptor->data0 = cpu_to_le32(tx->frame_data0);
-@@ -1884,6 +1885,7 @@ static int lan743x_tx_frame_add_fragment(struct lan743x_tx *tx,
- 		tx->frame_first = 0;
- 		tx->frame_data0 = 0;
- 		tx->frame_tail = 0;
-+		tx->frame_last = 0;
- 		return -ENOMEM;
- 	}
- 
-@@ -1924,16 +1926,18 @@ static void lan743x_tx_frame_end(struct lan743x_tx *tx,
- 	    TX_DESC_DATA0_DTYPE_DATA_) {
- 		tx->frame_data0 |= TX_DESC_DATA0_LS_;
- 		tx->frame_data0 |= TX_DESC_DATA0_IOC_;
-+		tx->frame_last = tx->frame_tail;
- 	}
- 
--	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
--	buffer_info = &tx->buffer_info[tx->frame_tail];
-+	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_last];
-+	buffer_info = &tx->buffer_info[tx->frame_last];
- 	buffer_info->skb = skb;
- 	if (time_stamp)
- 		buffer_info->flags |= TX_BUFFER_INFO_FLAG_TIMESTAMP_REQUESTED;
- 	if (ignore_sync)
- 		buffer_info->flags |= TX_BUFFER_INFO_FLAG_IGNORE_SYNC;
- 
-+	tx_descriptor = &tx->ring_cpu_ptr[tx->frame_tail];
- 	tx_descriptor->data0 = cpu_to_le32(tx->frame_data0);
- 	tx->frame_tail = lan743x_tx_next_index(tx, tx->frame_tail);
- 	tx->last_tail = tx->frame_tail;
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index 7f73d66854be..db5fc73e41cc 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -980,6 +980,7 @@ struct lan743x_tx {
- 	u32		frame_first;
- 	u32		frame_data0;
- 	u32		frame_tail;
-+	u32		frame_last;
- 
- 	struct lan743x_tx_buffer_info *buffer_info;
- 
--- 
-2.25.1
-
+Applied to for-next.
