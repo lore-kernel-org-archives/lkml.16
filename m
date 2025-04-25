@@ -1,143 +1,105 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA79217F26
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 04:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0987211C;
+	Fri, 25 Apr 2025 04:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745554877; cv=none; b=r7EmNOJFOnBw/SCx/51Ouo+IKq2D5tJrjJHjBt2P4DytWxhqJ0GTjyMX0G6+GmmABQx61G+cFs8/jIfLvWA4ateEF3PqhnVrAET3yhwvLKwi4uePLGh/GO5X1YKO2if3pWlkRCjsH2ClP9puxoSXaNMSmh9t+h+L3s5AvTtAyO4=
+	t=1745554950; cv=none; b=RYe19D5D5hLUQgXc1fjDCZ+6BGAfapK8hfSJLgJKQIb2G8o9w+ZF48U7tniovA9JAmlXVWQ7VT7n9IYxinjV0Wx5IAq63SjEX+xg/m99ua8NzkaZOiZl9OgZEhSlKR85FiOXLpNoHZy9kSaEUp+OSTF1bzdIcoRV1d/HQHKBSEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745554877; c=relaxed/simple;
-	bh=2ek74mNNFIgWcZk7Q8YaK5RG06y977D4eT9YNwdT+O0=;
+	s=arc-20240116; t=1745554950; c=relaxed/simple;
+	bh=wVmtfJ0+IHdRZdURO4e3LV7ZYiRRjbMZL+41Y+TJQSk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FCc4DeuLxUi+3xOcVm3f7P9aTsn6tCKwYxv3wo46c8wZVBjbYEv9+LTL69+SV3BXFhd+KC1ZiHaLx/3hF/RDgErgbG5thIjEr/YYP8ALIBb606iMRq7+sZI4ymByQfca2kPNIxLC3ZJRP6+HF0mMsYbaD2WWO2gHVV02iRTdfco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=aUB3I9Fo; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=udFDduVDY3Jr1Czlk4DxLXKCEylYVYoCeGwNTXkL6d8wnui/nP0uCnHivfAm4RrHRkt5H5BnlZBjei3sb7nqaF9Zvrh8oPankAy5mk8fxb7YLCTbMerw/HBTq4gzSRZEGWO/WOgHbyDro3TZPLpwvV3+9f9JoCLkczxPxmTkTzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FOb0pbdE; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="aUB3I9Fo"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so917021a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:21:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOb0pbdE"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aca99fc253bso271539366b.0;
+        Thu, 24 Apr 2025 21:22:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745554872; x=1746159672; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745554947; x=1746159747; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6NAE0ezuMYS7J5WA+bsYijLDvptHGpv+uu1oCrM7N5E=;
-        b=aUB3I9FolXVtp055ajjCkQRz5aWwZ+wCO3GJiFavr7spI6Y/DZhxm7xQeo5oajUs/f
-         SEbFwLrzs5UFaurJP5tRtjfsSR5Q+fwktglworPune4ayiAsrqTgu676dOsv9RO1er7U
-         CH6XF7lKDlDSoAbKx/wgu90q4axYFD4fnk/78=
+        bh=xkt3Fb0i8BWUPG3FcNT5RaUD+ZjJauG0htje5UaVJ0Y=;
+        b=FOb0pbdEbPIqDRZWPQvme5DubIoNY0SjbQdEdq5FpHVxyR2yLBqVouIAWVlMrOzvtD
+         Yg0txQy/ayKm1zEETKfzz0EHn72qYS/2FuosKGiWmkhAuKndZwuYy1KPCyL9H3wvE4J/
+         SJOW1NEoTE/ZaAZUUi5q332oI6VmtFmw9dzwCa4JEeeHT8ccg5L7g1+P00SPHDsMyq8E
+         arPIFozMTVEP2AP3NaYmW91GVSSK2bkM1npGid5rSR6znw26e2v5t0g/5BX8kOL9QO6h
+         mZ01D6Km7rU3QdsF4fv5aYSuzwa40lN7QNXoviWPWxYjGvKCAVgZLoq0NqffsVfPH9kz
+         MH+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745554872; x=1746159672;
+        d=1e100.net; s=20230601; t=1745554947; x=1746159747;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6NAE0ezuMYS7J5WA+bsYijLDvptHGpv+uu1oCrM7N5E=;
-        b=WddzBCWtzOPTqAu1TkfbkqbiXZCiDCWiM1lRpmqatY2mrSmSK0aicPeLcJH3yOuX0h
-         tsQbJGDmgVZTdqfgRtucVO5UmoUFr8XIHIesA9zH4Jf6gyu13nV0jzUoNhWsRsKjeTv3
-         LQj53Tojk2cj3YZQ5YkWqMXHTc/5/ATEzK1bp0E1OhvM+88KLkfwWA8KDSkuN+ZwGC1W
-         Iwl5OfDXfkzD+qc65Axf8dG+ttrdCrn3ImwgDa8+IR5slkA4ho79gux3LSPFjctNWqR5
-         uVnfw0IqGPMjyKYvShRDWcx2kg/RFR8hdj2pK+kLvGtPD8gZ8VgMJ7HJaAGU92FEWQBQ
-         m4YA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcMTUV9Ai64oI/SfohNpbV+nEhJhp9Z4wSHlZkJMtWvOZ+y12nYXJTNzwHNHMHrrrfya51yzAXL/VTkPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK9QFtpuJQe1E56eZv7pLMhcfAo6f3Lozzhyxi7v+YagpFvp40
-	GwGeKv1oYoD8q/r1OTXFahcJ1Tw7Rk+ejbXm7t8p64KKAut0SW7q+VHh+olp3DXlBGiOm8cmHB8
-	VmE61Lw==
-X-Gm-Gg: ASbGnctRXP5Cu7usOtYoPtPcA2WWeEZ0GG3YH/39gEwspgj4A9ng1/aN3w1bUNyBHUC
-	8/7jS+kzt283q7b0D4j7g7tK9UYaALGEIFPH5dtScSJ03gmqtLbDuD7vojnl/VIlgGuHO4n0yMe
-	xSgCmkZTRlRu9N389NUadNNJ5YMe+6RrQPSyBY3CcJMEEtKOEf6LyylsuDPYZf4bG3AzB3Dd0Q5
-	zzu0OPaH43XXZKH6b3d/WOOIw6cjSJHuSY2Fd3OOnr/Vy3BoogeyOAZ4+maloWDeW9rmHMGb4Ck
-	dFtVjvyx5uX3U4m35GG0408fNZCW41VYSwxI/oQFSlGsmze08wdny7ZfuDB9RmIHFmGm+RP9M9b
-	/hb1Q3LpPpclqdsg=
-X-Google-Smtp-Source: AGHT+IF0R6StwMi+gqSqIZGDJoYaaEsiVSzkb5KlFhnwWsWNc31y9s9tF6ZXfa1/3zHUrGhLNZ0R1w==
-X-Received: by 2002:a17:907:94d2:b0:ac1:ecb0:ca98 with SMTP id a640c23a62f3a-ace5a48320dmr384456366b.26.1745554872417;
-        Thu, 24 Apr 2025 21:21:12 -0700 (PDT)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf893fsm65919966b.96.2025.04.24.21.21.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 21:21:11 -0700 (PDT)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acacb8743a7so302101966b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:21:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLIb91RORKKhlWa1J7HNBx3SWz8yn3OeAFoOfU5mCvnuOUoQ6LHZkE65TUglAZIuVjSOW6FtTE3yg0I2Q=@vger.kernel.org
-X-Received: by 2002:a17:907:94d2:b0:ac1:ecb0:ca98 with SMTP id
- a640c23a62f3a-ace5a48320dmr384453966b.26.1745554871324; Thu, 24 Apr 2025
- 21:21:11 -0700 (PDT)
+        bh=xkt3Fb0i8BWUPG3FcNT5RaUD+ZjJauG0htje5UaVJ0Y=;
+        b=ONRzqE9cuJnBgyfg/gmQZfwojDYJGL/ni8Rc3T0cVY5fGinxGg58qPNuncXjvL+cp5
+         ep24srmsU0b+NdvTlEOSyKeeJD9pRZy7mcFSyKG7CRTosttRtBOZrcIbrVaORnReiCOa
+         3MwJQ0b1XzfbIiRnHtL6ikIXWI5iJB/T3QbpWGRYad3njndQSFHNWfOg3pgvbKvVm4y8
+         AhbF+ELd7QgR220OodWYeCm7Gxl7PQP3cKCluBKA6hS2gE8t7xmcS6m7Vk+YWgMvjEwx
+         65wqoN0KuPVCT8dGRoXjFVdBW6KkIrrePDvvDHSdDkvuU0gPwNkzgPHn+NOS4wz4BMHU
+         ayDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr1d8L5ySwZr78F9S/LQDNrZ6OOQOw9Zb2jCRhbBSuGxGJUusce3eEw0NAIJjzHF8mDqxUct4wSxl/Fe0y@vger.kernel.org, AJvYcCW0OMjvS8zZA+JVI7rNn2+IPnuxeUgtCrqlQCQ/EG4hYn8QkdBwaU7pYrZO8mNC8/tQ5C68eKNZ@vger.kernel.org, AJvYcCWl/tTtX4ee560R7cP/EkpM0Kv0y1JO5rSeUPebwuQ8aCCesDQXthw5SCbh5E3TPk6o7WUH+w+3Oms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJbMQGH/+0MY0WLmmY1ShJRNLmyz4juLRNAwQLyJI40VAKoBVT
+	fq/C7WytIFBoOmj1cjx7KbFM48PmmkPWKm8LvVE4OCegetron4gmT3B3/k7F9aVYmWZ6hD6WCh5
+	pyOMMaVDRBGqA1vReNdIAX95ekEg=
+X-Gm-Gg: ASbGnctR2m5DBEs1TY7luJ1xZKRZu8Ci206694XTm4Zqf6VWbpSdUkUXMA4/RBOfOJq
+	VGNEFy/QPibcP4CGFddqwSTAbGWzf7aBiM0gCC4j1quZKWI/AftOUppNJ5GzjQmecJ2ZTm+v5Hg
+	42FqsRzT64pa/nnmY9hg8j1A==
+X-Google-Smtp-Source: AGHT+IH+BM2yM/rGFp1Z11i1ILsWonHhYb005z8Jxr+yHkNXJFdekCIfbD17qMnLRljz8On+cUmW6DtvbwQ/DNGNpng=
+X-Received: by 2002:a17:907:7d8a:b0:abf:7636:3cab with SMTP id
+ a640c23a62f3a-ace71158aa5mr70087066b.29.1745554946609; Thu, 24 Apr 2025
+ 21:22:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
-In-Reply-To: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 24 Apr 2025 21:20:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
-X-Gm-Features: ATxdqUGW6PrSoybEs-CBS2CL_qi9B6hsp2y203CCwxZ62Ilhm4qWIq-GEHNl9dI
-Message-ID: <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
-Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250424223210.91317-1-gshahrouzi@gmail.com> <20250424223210.91317-2-gshahrouzi@gmail.com>
+In-Reply-To: <20250424223210.91317-2-gshahrouzi@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 25 Apr 2025 07:21:50 +0300
+X-Gm-Features: ATxdqUF1UCKerji0yG_QpF0px61-9OXRWb5-42XDjrlc9ydh7FDnSk3X5-2_n5I
+Message-ID: <CAHp75VfbyGKximuP5QKuyB5UKOSPydf6Zh8+nXzk1hvZhDUbJw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] staging: iio: frequency: ad9832: Use SLEEP bit
+ instead of RESET to disable output
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: andy@kernel.org, dlechner@baylibre.com, gregkh@linuxfoundation.org, 
+	jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	Michael.Hennerich@analog.com, nuno.sa@analog.com, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 24 Apr 2025 at 19:46, Kent Overstreet <kent.overstreet@linux.dev> w=
-rote:
+On Fri, Apr 25, 2025 at 1:34=E2=80=AFAM Gabriel Shahrouzi <gshahrouzi@gmail=
+.com> wrote:
 >
-> There's a story behind the case insensitive directory fixes, and lessons
-> to be learned.
+> According to the AD9832 datasheet (Table 10, D12 description), setting
+> the RESET bit forces the phase accumulator to zero, which corresponds to
+> a full-scale DC output, rather than disabling the output signal.
+>
+> The correct way to disable the output and enter a low-power state is to
+> set the AD9832_SLEEP bit (Table 10, D13 description), which powers down
+> the internal DAC current sources and disables internal clocks.
 
-No.
+...
 
-The only lesson to be learned is that filesystem people never learn.
+>                 if (val)
+>                         st->ctrl_src &=3D ~(AD9832_RESET | AD9832_SLEEP |=
+ AD9832_CLR);
+>                 else
+> -                       st->ctrl_src |=3D FIELD_PREP(AD9832_RESET, 1);
+> +                       st->ctrl_src |=3D FIELD_PREP(AD9832_SLEEP, 1);
 
-Case-insensitive names are horribly wrong, and you shouldn't have done
-them at all. The problem wasn't the lack of testing, the problem was
-implementing it in the first place.
+From the code perspective this allows combinations of the bits to be
+set. So, what does the datasheet say about SLEEP+RESET, or RESET+CLR,
+or other combinations of these 3 bits?
 
-The problem is then compounded by "trying to do it right", and in the
-process doing it horrible wrong indeed, because "right" doesn't exist,
-but trying to will make random bytes have very magical meaning.
-
-And btw, the tests are all completely broken anyway. Last I saw, they
-didn't actually test for all the really interesting cases - the ones
-that cause security issues in user land.
-
-Security issues like "user space checked that the filename didn't
-match some security-sensitive pattern". And then the shit-for-brains
-filesystem ends up matching that pattern *anyway*, because the people
-who do case insensitivity *INVARIABLY* do things like ignore
-non-printing characters, so now "case insensitive" also means
-"insensitive to other things too".
-
-For examples of this, see commits
-
-  5c26d2f1d3f5 ("unicode: Don't special case ignorable code points")
-
-and
-
-  231825b2e1ff ("Revert "unicode: Don't special case ignorable code points"=
-")
-
-and cry.
-
-Hint: =E2=9D=A4 and =E2=9D=A4=EF=B8=8F are two unicode characters that diff=
-er only in
-ignorable code points. And guess what? The cray-cray incompetent
-people who want those two to compare the same will then also have
-other random - and perhaps security-sensitive - files compare the
-same, just because they have ignorable code points in them.
-
-So now every single user mode program that checks that they don't
-touch special paths is basically open to being fooled into doing
-things they explicitly checked they shouldn't be doing. And no, that
-isn't something unusual or odd. *Lots* of programs do exactly that.
-
-Dammit. Case sensitivity is a BUG. The fact that filesystem people
-*still* think it's a feature, I cannot understand. It's like they
-revere the old FAT filesystem _so_ much that they have to recreate it
-- badly.
-
-              Linus
+--=20
+With Best Regards,
+Andy Shevchenko
