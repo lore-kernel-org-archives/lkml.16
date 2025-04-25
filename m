@@ -1,123 +1,113 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF0C18CC1D
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E889618D649;
+	Fri, 25 Apr 2025 16:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745597290; cv=none; b=fUFj1BkGKHV1gjSFXHCgY2CfBidEb7kAJhBsTRvmO4V+eV3eL8ECmZ/4TGJ+wbG+BeCDaxVcK8g5080wdq0Z+nqVl99Ll7AFPqb4ZI10oGV1dDl5NTsN0sugOIezRAmKe++TcnYr9ktYz7uIZJI7ugwkmRiNok5L+Dhvi09LwJw=
+	t=1745597314; cv=none; b=DfiP/c6qewc6weVBil6pcVGj1kdgWtS3KoBw3zRLezg1CXlQT6b3QjQjvX2HZwv6gQRDCDF+CgUICkCz9UnqQM1scIKPoNTuIXRo1ez2+NukUDSY8IDM7r/czNIoTSF53ktoi6iizWCx0ozew5G+c8o8NNHCD1uputeOKQVCSG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745597290; c=relaxed/simple;
-	bh=pNXJ3/U0hKm/bEbC/CqrkzhF3ks8x7lnek+wO+2a7PI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aaaCZ/pGZFpT6UV0jcYUY3q1vSeE/4wd7WF9yolh5HrK34seJvjIxSgBlDGWLZCkpp1XgDJeO8saJ7hF69f3niRARsIgNkaJMSkAWsOpGggZ0hbEWK0jDeIjuwtVDtLXiH+1uSZr9DjJqUjycO8CEjlv4f8ENheCfFEl9rqHAPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F5xaDdXM; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745597314; c=relaxed/simple;
+	bh=L2GzxIA56nfM+cDgMgMMSOWe5dN+/yidKvdmYvhSKfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QU/DvNZJmGfkwMDG1mxQN753pNH0TWia6/ldFdgOwFoujIVf4eVZMKTpu0xbfB41mKACc89ZTPRQELdHUF0/ePIW8yYoQDdsyyMV4qDgP/Dk8oqVZwdJavVslLP9Yp42VNVdX3G7j7ryRJ8zd0QTI63YhH3oEmY8W6GB0paCPN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7fyJsID; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F5xaDdXM"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e6e1cd3f1c5so1970718276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:08:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7fyJsID"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22da3b26532so24062545ad.0;
+        Fri, 25 Apr 2025 09:08:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745597288; x=1746202088; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uhtHm5TJ7Sf0WfPuEXwkbJxFSOzkS7Oo48FDFS+N83o=;
-        b=F5xaDdXMkIHbF+yz6NXjr7Xj0QAgV0tj1qv7JJcIjzYBEYtWIoCbBMmDMelX5Ld4ub
-         hy52cjvDgTuj97k/6B/XcDzeG6ikVnhJmL8D9iPKcXEUGehyfjbbNhv7b10smAJ65z07
-         mF/mX2EpzzVTXgwkQz7ziXm6l4qN4gqYGXux9DTNMA6L04AHE8JmNPJf5ov/p+ywNHJi
-         ZR3hCToJQ2iED3jPQFSPGTxVgexSPgiEj87ra5Lns9s6UiKBdESmvJM5LH3YWbLaj5F6
-         DrVLxesG9Op2oWtU1wy4jXG8+9J9rKQq33ZqEqoqjCbktB1hHi3LQGjoTkKgmIoaEmZW
-         Vn3g==
+        d=gmail.com; s=20230601; t=1745597312; x=1746202112; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=i5pNyASVzOvo7de5opodmAAp0f24p09fWkyNMVBg/4c=;
+        b=R7fyJsIDs1QPKdRZvJ3njPzf5SV+F50V9xH8x1hWbOecp0acNV7sSvwr+XKRmIkG7R
+         w6OPApiBYiidHzBxUTIpl7EwZvO1hXD1BnRAVXjPwSdOLMbDJ08LhwyhthR7xhLn9l9i
+         hgQPPnrtNXCZ7na2W4dZG5Pes8TWyJNCiA4r405/dcdJqrXJBKSwfbH4HXEPOKDRKMbd
+         zr/DvRSUx9LvuLMCJNI7fEmnEF5e589I/v0QFPPvoc+tGIvPmnjbnNfsUrAdXwtQPWwK
+         kkHYyGT6H4a8Fg685ZC1gjlli2kiX+cMbTqkzguZJnlI3x/jxYOCsjxhdIZyov3/h2mT
+         IosQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745597288; x=1746202088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uhtHm5TJ7Sf0WfPuEXwkbJxFSOzkS7Oo48FDFS+N83o=;
-        b=R+PZmQVGlzq99miJYcMNeleR/Dbm3/tMa03YzMY54k3dYaTW+MV+Sz18X1++Bmglv5
-         Ms/mTV2pcfKmqoWXPMihlc3507EeLdgFGDr8mDWTr1AfFHWkg1xrmV+OHMYhcs6ORYnc
-         z5oJsOQehLKiyQzYBZ7tJfRobvMFeMaPjJnc3tOuxSVlx2B9mAdqrCyJQz7SWHkMBc3m
-         Y1aHaKoS4YmDomNrJIK5lmakp7CtP0f4kqyDf0PLJ0M+11pDziuJj5QjxQNb+56VRtS9
-         i+YO5lz438WfJ1pvKMSOoWMa/T4uyZa3PCX4XvR2XWfMKY5cnWLMSO2a0b631Q+1Ezt9
-         qEng==
-X-Forwarded-Encrypted: i=1; AJvYcCUm5jrTwWXvjeyPHX5/cELn84HHRG2GTNJHsAqb/5puidOP54Gsxb73ljdmMxV5+sGfdl1FX/9R3NPDRuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPA3FclYNco8nmkW5rM4KfFHwhmcpkceLLQJxWAkUJVTurW+Wi
-	c6QT0wnA80Ew45UW5UGCLgxTFFWLjgNyuVqHSBE+sDBNfMWQOLPGN/545nVhYbgjgE+IhGnc7vY
-	LpGSESHTvpuMb9F7yJXBZWqRnVnnSEtAjirq9
-X-Gm-Gg: ASbGncsRiD2tGjvK2Qe5o6Jy/JN8wE2upIPbB1EAEnEmhcRqCHQAvoQ3bJmnpZBgmb7
-	OY0U0bKVDGbYheelfjoIuCNc9jDPnZCfvJKiaWTgyeX5Nqu48y5vrLKwp107HYJdyJwA09GqWmD
-	XTb7aSNsmoMdaEZbhMiLmkCg58N5266mtd26XBnjycHGQbnp4Rmb44zUBY
-X-Google-Smtp-Source: AGHT+IEatrbWqjCHU8cjshAn8KWTbq6dL1hiJ3EiouEz0VgKtWX+noIp6HQyBBmsFL4VoX2ccj6KPu1mnwPRs4oW83I=
-X-Received: by 2002:a05:6902:2084:b0:e6d:f1b6:f696 with SMTP id
- 3f1490d57ef6-e73165bf781mr3624687276.11.1745597287592; Fri, 25 Apr 2025
- 09:08:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745597312; x=1746202112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i5pNyASVzOvo7de5opodmAAp0f24p09fWkyNMVBg/4c=;
+        b=sSMH1VaarqqpPec28ikcjewuw+zf/WtjzZUUyqizPGFbozHHi9l0Y+1nDFiEwoeDN1
+         yb9bFEqY0LGcG+VyQU+ELNN8yPfgSMq+lDIKO5Uk/cSiT+Runyt+Tk+tJRiJUxhzc2+7
+         WzqjUbsVnAG+EJbap1f/ROgIVECcJ9Ze1z9Qzw8JqYwStszoPHRt+bt6/EYJxN69YUHa
+         qJ64H4k57boZesMC3p449NSc7Zx1zPlBezeVajZKAumWQ7JcpvODdWaXIcdBmSwNaX2g
+         icft3kCURgF6GZdm1gW6hl1ozWYizwzoz7Hb0z9i0S6iyioxRpASiRZ6T8OWTZYtJJij
+         893Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV29vZEM49wiBFSXP55wwQVCBwzmYUTe6REp1gHJlZUG4Cw5KtCBzWEOpt3WLL3PWzGUFhg+RnE@vger.kernel.org, AJvYcCVn6Q+dkqaZSJXdGOEMvmOlNBvqCTDGHsCYEciGFgfYd9KcOqJjlzLHroMp52QiFGBdpfsVOOXFQ5CoDA0=@vger.kernel.org, AJvYcCWKeCyRZ/3PuwbI9QR8gsLjXO5qQuwkxWBT+sfJ8lOG0+DRmZ84CATJ3yF5M1hVuptQSPupLcLm@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu2ljge6V0PGL6au7Ok/BfVMbQf+/rZWUFPcL+pq+g7jBD3kYx
+	/dxIQ8or6GzwUi72R7xrIJcYO9CRPFtwTCt6DNrFq/EyvrFNzINA
+X-Gm-Gg: ASbGncujxH7nJ5H4wOqzu/AV007pX0JP/GMJcgi40YMZYA2jzvCJfvY9LjCkfem70rY
+	XL60uveyIWrOypgV2AUwl9IOXvp/tEqdMcYg95VwaCi+X8m5YrmOCTU5G5S2nJj3cw/yr0X3o6Y
+	pz7gOf00e44rfU/v1hHcTm3UNotbKcB8NCjXf+0dYtHjJm9zQCfdATdvk9g4tqivikJkxFL4hSe
+	h9J8eIOpGuY3goFs1dCKeXjZq+XVEi1ChlVI5DdF0vlWdZsP8yptEQjKMzCnCotsezYleyVbMVK
+	VjjFxusyvBrqjWqaBUGBEBaY0PhT+q8qmJAgVlJnBb2mmJ8=
+X-Google-Smtp-Source: AGHT+IEDnCojjqBFupUvzzEwiunkDr1ppd44q2OkPVWtrj2YUpLPC11441r/ohtaDxUPakVfJZSnow==
+X-Received: by 2002:a17:902:f683:b0:223:62f5:fd44 with SMTP id d9443c01a7336-22dbf62c38emr46955105ad.40.1745597311720;
+        Fri, 25 Apr 2025 09:08:31 -0700 (PDT)
+Received: from localhost ([2601:647:6881:9060:e00f:8820:97a7:c371])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7b08sm34009365ad.114.2025.04.25.09.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 09:08:30 -0700 (PDT)
+Date: Fri, 25 Apr 2025 09:08:29 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: "Alan J. Wylie" <alan@wylie.me.uk>
+Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <aAuzfQe08tFJclNJ@pop-os.localdomain>
+References: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+ <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+ <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+ <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+ <20250422214716.5e181523@frodo.int.wylie.me.uk>
+ <aAgO59L0ccXl6kUs@pop-os.localdomain>
+ <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
+ <aAlAakEUu4XSEdXF@pop-os.localdomain>
+ <20250424135331.02511131@frodo.int.wylie.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424215729.194656-1-peterx@redhat.com> <CADrL8HXuZkX0CP6apHLw0A0Ax4b4a+-=XEt0dH5mAKiN7hBv3w@mail.gmail.com>
- <dfc6db2d-0af2-44c2-8582-7e783b0292ab@redhat.com>
-In-Reply-To: <dfc6db2d-0af2-44c2-8582-7e783b0292ab@redhat.com>
-From: James Houghton <jthoughton@google.com>
-Date: Fri, 25 Apr 2025 12:07:31 -0400
-X-Gm-Features: ATxdqUHADNxLtMHz3cAEkG3rEGMR6V7j-etzi4jHK5PVzArCZtZsDkvCN62uy6E
-Message-ID: <CADrL8HW--e8GVe+6aW7ZvDEBBDHp3cBC9Tcs_6duOJ5H+ZWNpQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm/userfaultfd: Fix uninitialized output field for
- -EAGAIN race
-To: David Hildenbrand <david@redhat.com>
-Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250424135331.02511131@frodo.int.wylie.me.uk>
 
-On Fri, Apr 25, 2025 at 11:58=E2=80=AFAM David Hildenbrand <david@redhat.co=
-m> wrote:
->
-> On 25.04.25 17:45, James Houghton wrote:
-> > On Thu, Apr 24, 2025 at 5:57=E2=80=AFPM Peter Xu <peterx@redhat.com> wr=
-ote:
-> >>
-> >> When discussing some userfaultfd issues with Andrea, Andrea pointed ou=
-t an
-> >> ABI issue with userfaultfd that existed for years.  Luckily the issue
-> >> should only be a very corner case one, and the fix (even if changing t=
-he
-> >> kernel ABI) should only be in the good way, IOW there should have no r=
-isk
-> >> breaking any userapp but only fixing.
-> >
-> > FWIW, my userspace basically looks like this:
-> >
-> > struct uffdio_continue uffdio_continue;
-> > int64_t target_len =3D /* whatever */;
-> > int64_t bytes_mapped =3D 0;
-> > int ioctl_ret;
-> > do {
-> >    uffdio_continue.range =3D /* whatever */;
-> >    uffdio_continue.mapped =3D 0;
-> >    ioctl_ret =3D ioctl(uffd, UFFDIO_CONTINUE, &uffdio_continue);
-> >    if (uffdio_continue.mapped < 0) { break; }
-> >    bytes_mapped +=3D uffdio_continue.mapped;
-> > } while (bytes_mapped < target_len && errno =3D=3D EAGAIN);
-> >
-> > I think your patch would indeed break this. (Perhaps I shouldn't be
-> > reading from `mapped` without first checking that errno =3D=3D EAGAIN.)
-> >
-> > Well, that's what I would say, except in practice I never actually hit
-> > the mmap_changing case while invoking UFFDIO_CONTINUE. :)
->
-> Hm, but what if mfill_atomic_continue() would already return -EAGAIN
-> when checking mmap_changing etc?
->
-> Wouldn't code already run into an issue there?
+On Thu, Apr 24, 2025 at 01:53:31PM +0100, Alan J. Wylie wrote:
+> > On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffstätte wrote:
+> 
+> > Meanwhile, if you could provide a reliable (and ideally minimum)
+> > reproducer, it would help me a lot to debug.
+> 
+> I've found a reproducer. Below is a stripped down version of the shell script
+> that I posted in my initial report.
+> 
+> Running this in a 1 second loop is enough to cause the panic very quickly.
+> 
+> It seems a bit of network traffic is needed, too.
 
-Ah, thanks David. You're right, my code is already broken! :(
+Excellent! Now I can try it on my side instead of bothering you. :)
 
-So given that we already have a case where -EAGAIN is put in the
-output field, I change my mind, let's keep putting -EAGAIN in the
-output field, and I'll go fix my code.
+I will check if applying all patches here could make crash and warning
+go away. And of course, I need to really understand why the crash still
+happened even after the qlen check adding to htb_qlen_notify(), which is
+unexpected to me.
+
+Thanks a lot!
