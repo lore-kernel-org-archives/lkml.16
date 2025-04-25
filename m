@@ -1,173 +1,206 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48ECD23643F
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5A71DB127
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573228; cv=none; b=J3aIDRa8fJq/xPv3TKdaaNOeLb1pcwPVEwIadm9IyePFhD88aUbmzHNbvWuq7FHiIcTH4yRhu7B58VgTgNRZAzdXvRg//rBZgprRwcL9/sVwqOTaBfJKAQ48TKI2nXedr55ojfmB/kpFwJbZ1zyFmr/xs+IYvh00PN98E5KdVZ4=
+	t=1745573290; cv=none; b=A/0FMul14Xh0CJi5dByoBTPr32nmZHOfQEej4d1Lv5g7LWMcaNY7xT/L9YGoLwt47Si5yDNBJVf3c82kf5zHPHgTD/os13iKVcUE/za8RdBB67ZhKZtenaP9MIwLarP0m8mlOGuDWmieG2nhxzDcuaS3FbzOAvF437fOWceuVbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573228; c=relaxed/simple;
-	bh=wIdBjLUz4OSq7cgx0l4vpv2XD2JXu/WXR3GCO08HM4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qur1vRVz5OfzikvWLBEP/Sa5OSu5caCfaf1zaDdpoWpt4ySTsROcfmEszb1zeE+yviqzIoDv24U026nWedFxoNaWtAPNsKL811EMj6/FB/xkMwzlaWm04xz+f5WTqrpjnJUUYqGSOg87Gqw7t6h0sJQ1AIFEzDOSGlREVKKvXss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixa1bzlD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745573290; c=relaxed/simple;
+	bh=iQcxKLBtmBqHnu1nzKcXDSmV+Me+GwDK1oPblgbSRTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VGUUxEYUisX2p5V4NCCOuJCxfR2h5ryhHlAyu1CaoHdc5u0jcddcUxzjV0nxKe5/u4y9LOsjj2Ue9MF6LcSsRFlKDOXU5Vk8Emgv7AeqePfGo4MDhV6yCQbkLAmehI93EkA1Rz9v8tG5nLUFixrWsaT48f7rtpJJJ91TePGLxpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mQfJItrK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixa1bzlD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745573226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8eqLytJIQY/pnCK/wv0GRjy/uV2gVRfHwFR8LZ6llRk=;
-	b=ixa1bzlDd1fTdTou7/BwY/ENrO2AC8uCnCBHmceNbMR/ot7QPNXLu3w/FwxwktUGMAz0Hl
-	OHVlfyzutKg0/GdY+KNQPHO/UGRbx2UT4z1FM1f4jRGRk2eIO14Ub+U5BYX+4kSFYIuKZ7
-	BrPoS+ZcYGLeqxygpjzFaM+cPop8fLs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-258-iih2VyAAMhahPynSIGO5fQ-1; Fri, 25 Apr 2025 05:27:04 -0400
-X-MC-Unique: iih2VyAAMhahPynSIGO5fQ-1
-X-Mimecast-MFC-AGG-ID: iih2VyAAMhahPynSIGO5fQ_1745573223
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so12016295e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:27:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mQfJItrK"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8T92Z023852
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:28:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=xt2jjx4txmL59hNW/slqoBCJ
+	/oGYSTNA7mQ8pWiEl4c=; b=mQfJItrKW7QKh1CevTs4eVfDZpk+xBmfsJ8ePfyr
+	MgXxxMg3u2dgrr9RSzxFr9XbRswUPTH+hxBv7oQDcYv2Teli2ugzwXsX+l3hABqN
+	aoQfN66dTCS+BqsgAinm9a3y3KMtVtU5oMaFdOh2iBBJiQQmCYBnc+dMC7bVJLeo
+	I0g80pPZkllaFWAomLm5UI81/VsbNyJJvWCeALOkng4plnQj4JF6cVM17Spkd6jq
+	od8pEIWi0ifYu/hkQ90atrmCfFyZCBoNPD1dDmfjC8MBH2Z0FWYibU4UiX3JCcEO
+	DJEP1Ur5hWgMXAoy6BY0iH5ey4ypHT7Hk+VTBGaz7aFz8w==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1rg7p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:28:08 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2242ce15cc3so18790615ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:28:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573223; x=1746178023;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8eqLytJIQY/pnCK/wv0GRjy/uV2gVRfHwFR8LZ6llRk=;
-        b=qlcdiCgHxVQSf6Xv/6pAOGEAZg+6AJJ0enAY8ta/gez0xhsyQOtmAH6j8cPi9FYe+4
-         g353adcT2rYu+Be8Js/MmvQY7XkaKiFTE2GlESrY9YrMCE56EVYzYpMsnnuD+mIzx2JV
-         n/zsc/VwKACmlKoUNnhycb1XBC6fE8VMgNfqO4KhTLnX1CKJM+JIqTiPivizjXWapTSJ
-         xtJ4DCB9bONuUJF7463DhS7umqdX/Hj5v8EIqUOgUQIRsci5GjZwL6tnWgMiGljF1tZU
-         kY4EY8RmfbeUg/r0lvVWYHZKseCPSsWkbjH+sH6epb4u18FJ70nDnW2seWgl0YRMlahx
-         E7fg==
-X-Gm-Message-State: AOJu0YwAwkhlmvP5KkDih5KhamA9dowpFXO+KtEPXWCZ2M5eBW9lahPd
-	O11sReabTv2XSrccZvvy47vjHPGSKmgl5t9u/vbojon3jqj2y4tAHlQ5wCxUctGzlDB9EZtMcco
-	BxwwbmTgwO4DZJZ236sx9Dd6eM8B+yVUVU4zlXvbLqoch7gp/CE5MtERuQHqjrQ==
-X-Gm-Gg: ASbGncssJynEgOxbzi91mfEAuhZW+IcwjZp0U764WHTKbMSy9I1L+UwWXoj9727gt32
-	945axcHLjExFiqkrqM/gTHFWx62Isjg+umNKfl3gX/eT1u3ERLt507WT9F5HUjb1WMRzyrPZheM
-	X47ZkAEZOid0pm+flRzs+X6/5qibQ3g2xl6n+EyWMgCs5t89/tOG6vX1j+gaW0QOfnh0tEYRe5o
-	ATmw1UMlqQ492Mfbh7/BLRTJaEDC5E2as9do01EgdHyDJLf+sKNb1L3V5zJIEEMtZzxq1zNrlIr
-	OUcl7yXrgn8LFFpleUgf08NPw9ZGQaaBT4lAR+pdAA==
-X-Received: by 2002:a05:600c:1f82:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-440a6347ff9mr13026505e9.0.1745573222956;
-        Fri, 25 Apr 2025 02:27:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFY7LbS9YRQ5wCXB84Jy7eT6u2rOjZc7kKIwIhV5LjW+hBQBfoI1k6U1ecprzUpbxRl2y0xrg==
-X-Received: by 2002:a05:600c:1f82:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-440a6347ff9mr13026355e9.0.1745573222548;
-        Fri, 25 Apr 2025 02:27:02 -0700 (PDT)
-Received: from [192.168.3.141] (p4ff23df8.dip0.t-ipconnect.de. [79.242.61.248])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm18804175e9.7.2025.04.25.02.27.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 02:27:02 -0700 (PDT)
-Message-ID: <c69f782b-798d-459d-b7fb-c2d7c7e30372@redhat.com>
-Date: Fri, 25 Apr 2025 11:27:00 +0200
+        d=1e100.net; s=20230601; t=1745573287; x=1746178087;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xt2jjx4txmL59hNW/slqoBCJ/oGYSTNA7mQ8pWiEl4c=;
+        b=W8zalresdBnsdUNH9uuGk5u0c5z9Cl56uYFYkxfG01TfXNgoFp3/c5nT6f0ylrqeqZ
+         fOhxcCo5Xd/F4b9wVq6p1hIvZzzhX/PLtvRBeAIZ4rIV8S/MryqXJEGpiCMOStAK9gjx
+         gq9wjTWo7phhxvO/dpD6kEP6+bYwykhoJuHX2O1Lo2EcL50omT4pckqGUBqvkE13algB
+         HPnxix3l7htBQYkzhikJvDiOgrB/cY+lbIX9QKyM6QI1J4dbrS+rJUuwsp8aapP8MXp/
+         GULdf+eWYPkFPjur3lJ0Md2Nq5iyHGD58ctCWG41BVOFWLNC2iOaK73942wbfm9C02W2
+         rqIg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9B/S8INH0nE3k7iFAP2tAmJz5HeTK45p+jycT811Ud2bYn6EVZuu99ZwTnkj9YmsbAPD10tI+rRf1nLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQuODIEYMFcGLcL69Fu/+ZX7AtVh+bNVXSB2CiPepKyNJIR7tG
+	/uDb4VB9rp+eDIuzFRiO3nTCPoCId5Y0DDAiMQydewDKGzU9tPUS2ts1CBcuUMLTFkwewSdGIa4
+	QLne/vI5JNjOUIuzA9EldFdWfNCAQnsr9Vjo1VE9Qf8ETh25ASryh7pjw2UnTBkUYGoNiVkN4G7
+	3yqm7vShCrQSm7RLX1QgpR5/piFu3C0cEITTW8fg==
+X-Gm-Gg: ASbGnctRmFX+eqDcUtyz6NKDb38ufcL5RScaI1ikuyU9bicg5+pjgL5XkP/4sEM2yX7
+	79rYiVN5XIaWOFRtIQEzKxz/q6gUzrFPub2Dp/Pkspe14AuzCaznrlzZuB1ABKDxr+T4fjMoyry
+	5Z7We657g=
+X-Received: by 2002:a17:902:ecc2:b0:224:1ec0:8a16 with SMTP id d9443c01a7336-22dbf5ee6c8mr22878875ad.21.1745573286934;
+        Fri, 25 Apr 2025 02:28:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7sY9pNe21FkhpOVYLUJOVzPn9xf8OZzxysQbok+sCqT4QpEP41QTCap95a4a+qxhM7yJVJ2G9ynG4MaRKCCk=
+X-Received: by 2002:a17:902:ecc2:b0:224:1ec0:8a16 with SMTP id
+ d9443c01a7336-22dbf5ee6c8mr22878495ad.21.1745573286549; Fri, 25 Apr 2025
+ 02:28:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/11] mm: rewrite pfnmap tracking and remove VM_PAT
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-References: <20250425081715.1341199-1-david@redhat.com>
- <aAtNy6VjUvOrOC7r@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aAtNy6VjUvOrOC7r@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250227-fd-mdp4-lvds-v3-0-c983788987ae@linaro.org>
+ <20250227-fd-mdp4-lvds-v3-6-c983788987ae@linaro.org> <63e5ddf6-151a-42aa-b2cf-003d91b34a04@quicinc.com>
+ <s63lvzn35d7xcvw3kkmtasyinxbqa35juyxosdscfk6vhty4pw@hu3dotyklo3r> <402bbda7-33c6-49b2-89c7-37372cc07457@quicinc.com>
+In-Reply-To: <402bbda7-33c6-49b2-89c7-37372cc07457@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Fri, 25 Apr 2025 12:27:55 +0300
+X-Gm-Features: ATxdqUHcGBSXlw8hFJp5C9Ri6LceneKkEY0gyZGnRt8lLgLrZ0UNEEiCOxxayBo
+Message-ID: <CAO9ioeXhjrOyKz3N3oU6QxW+u6WUC4R5XXqWgb=7iF7Hk0Q_nQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] drm/msm/mdp4: switch LVDS to use drm_bridge/_connector
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-GUID: aZPY4c712aDJa0TiyRFJQIWIAvgOdVY4
+X-Proofpoint-ORIG-GUID: aZPY4c712aDJa0TiyRFJQIWIAvgOdVY4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2OCBTYWx0ZWRfX5n8ZKRvPPqxb hd2ej7H0jDE5mnIc0eFrPfx1R0UD98NFDLvOQ9pOhn6U5H1he17g2p0NGKWINPgvo7VxJueHASs zJXc48MbMQUvR4Xjj2fLeEb5H+QgpOPXrffZtfclIPk6jth1MwEha65aH+p9H1UsWDQU8pLER77
+ Q4DvlD/8Sf4aHdhG8B1+3gT9MQJKBYbpG9XMl8u72SGoZAkx9bZe/FWIaMr8txMFSkwPIjj1Y9F m2/AjbATQ9ttn6dL6i5ne3vzAk209NYY/w4r15plgVoxk6QYSKWdk5czBVn+MFZzcjekE0va0XH Kr/WyIf3KJfQDp4S1wevDQIU0W5EBd+Dz/ZYtYNkGgpaozrGy//MhY4LZ109o4Okrss/dUWaPEn
+ Nkj5CZyXeWF3+ZyI5JaG0J+qtq66HweRkR0CbCCIx0WgVv7kYRaiuphUNzktq6xjBV1jaciJ
+X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=680b55a8 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=ZLr3lU9xobrfYbAAIvMA:9 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250068
 
->> There will be some clash with [1], but nothing that cannot be sorted out
->> easily by moving the functions added to kernel/fork.c to wherever the vma
->> bits will live.
->>
->> Briefly tested with some basic /dev/mem test I crafted. I want to convert
->> them to selftests, but that might or might not require a bit of
->> more work (e.g., /dev/mem accessibility).
-> 
-> So for the x86 bits, once it passes review by the fine MM folks:
-> 
->    Acked-by: Ingo Molnar <mingo@kernel.org>
-> 
+On Fri, 25 Apr 2025 at 00:00, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>
+>
+>
+> On 4/24/2025 3:23 AM, Dmitry Baryshkov wrote:
+> > On Wed, Apr 23, 2025 at 07:04:16PM -0700, Abhinav Kumar wrote:
+> >>
+> >>
+> >> On 2/26/2025 6:25 PM, Dmitry Baryshkov wrote:
+> >>> LVDS support in MDP4 driver makes use of drm_connector directly. However
+> >>> LCDC encoder and LVDS connector are wrappers around drm_panel. Switch
+> >>> them to use drm_panel_bridge/drm_bridge_connector. This allows using
+> >>> standard interface for the drm_panel and also inserting additional
+> >>> bridges between encoder and panel.
+> >>>
+> >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> >>> ---
+> >>>    drivers/gpu/drm/msm/Makefile                       |   1 -
+> >>>    drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           |  34 +++++--
+> >>>    drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h           |   6 +-
+> >>>    drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c  |  20 +----
+> >>>    .../gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c    | 100 ---------------------
+> >>>    5 files changed, 28 insertions(+), 133 deletions(-)
+> >>>
+> >>> @@ -199,27 +201,43 @@ static int mdp4_modeset_init_intf(struct mdp4_kms *mdp4_kms,
+> >>>              * bail out early if there is no panel node (no need to
+> >>>              * initialize LCDC encoder and LVDS connector)
+> >>>              */
+> >>> -           panel_node = of_graph_get_remote_node(dev->dev->of_node, 0, 0);
+> >>> -           if (!panel_node)
+> >>> -                   return 0;
+> >>> +           next_bridge = devm_drm_of_get_bridge(dev->dev, dev->dev->of_node, 0, 0);
+> >>> +           if (IS_ERR(next_bridge)) {
+> >>> +                   ret = PTR_ERR(next_bridge);
+> >>> +                   if (ret == -ENODEV)
+> >>> +                           return 0;
+> >>> +                   return ret;
+> >>> +           }
+> >>> -           encoder = mdp4_lcdc_encoder_init(dev, panel_node);
+> >>> +           encoder = mdp4_lcdc_encoder_init(dev);
+> >>>             if (IS_ERR(encoder)) {
+> >>>                     DRM_DEV_ERROR(dev->dev, "failed to construct LCDC encoder\n");
+> >>> -                   of_node_put(panel_node);
+> >>>                     return PTR_ERR(encoder);
+> >>>             }
+> >>>             /* LCDC can be hooked to DMA_P (TODO: Add DMA_S later?) */
+> >>>             encoder->possible_crtcs = 1 << DMA_P;
+> >>> -           connector = mdp4_lvds_connector_init(dev, panel_node, encoder);
+> >>> +           ret = drm_bridge_attach(encoder, next_bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> >>> +           if (ret) {
+> >>> +                   DRM_DEV_ERROR(dev->dev, "failed to attach LVDS panel/bridge: %d\n", ret);
+> >>> +
+> >>> +                   return ret;
+> >>> +           }
+> >>
+> >> Can you pls point me to the lvds bridge used with this apq8064 board? I was
+> >> unable to find it. Just wanted to compare that against this while reviewing.
+> >
+> > It's the panel bridge, wrapping one of the LVDS panels.
+> >
+>
+> Yes but what I wanted to check was which LVDS panel was being used so
+> far. Looks like for arm32 the dts is missing? As I couldnt find the lvds
+> out endpoint. So can you pls point me to the lvds panel you verified
+> this with?
 
-Thanks!
+I used the AUO b101xtn01 panel connected to the LVDS connector on the
+IFC6410. I'm not posting DT bits since the panel is not a part of the
+kit.
 
-> And I suppose this rewrite will be carried in -mm?
+>
+>
+> >>> +
+> >>> +           connector = drm_bridge_connector_init(dev, encoder);
+> >>>             if (IS_ERR(connector)) {
+> >>>                     DRM_DEV_ERROR(dev->dev, "failed to initialize LVDS connector\n");
+> >>> -                   of_node_put(panel_node);
+> >>>                     return PTR_ERR(connector);
+> >>>             }
+> >>> +           ret = drm_connector_attach_encoder(connector, encoder);
+> >>> +           if (ret) {
+> >>> +                   DRM_DEV_ERROR(dev->dev, "failed to attach LVDS connector: %d\n", ret);
+> >>> +
+> >>> +                   return ret;
+> >>> +           }
+> >>> +
+> >>>             break;
+> >>>     case DRM_MODE_ENCODER_TMDS:
+> >>>             encoder = mdp4_dtv_encoder_init(dev);
+> >
+>
 
-Yes, will make conflicts with Lorenzo's work easier to resolve (in 
-whatever order this ends up going in). I suspect there are not many PAT 
-related things on the horizon.
 
 -- 
-Cheers,
-
-David / dhildenb
-
+With best wishes
+Dmitry
