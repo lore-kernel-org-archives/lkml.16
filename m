@@ -1,374 +1,171 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C41121D5BD
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB031D8DFB
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745571075; cv=none; b=kuBes4jyxPgqhdCXzpLNCV8ZlproZcO4sy1F9b3yjcvjAijnjREXqb4ZrnTPHj4BOSAA8Ajh89MWtwE6v03HnQLhaHYfHS0iB6IQTwBhz0877Z73nIzyvdO12kFCSyF6DpikYfxba/2SAFZfvOtyDK8oZaX4sAQil5ehtc5V7Q8=
+	t=1745571093; cv=none; b=GEvM1/mHxbpeXJ2It/6/OuxVz3IRLbm934rAVeZ41J03FrpRMsQmJ6y5gFHR8W2uM+lk/C+KfE2EYv9QiDTrPIDWlJaqwL8KWusrcqQ2pUODVSyD00sy+jc3vfzqm8GEqomsdyo8zm0lq1w9ksO691XvdaOoRilj2VYQmbqG9yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745571075; c=relaxed/simple;
-	bh=FZWopE76g0GdqxKuvbnNQTyrmos3s+r/hLBaM//0J34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lzsN8++V02xamkpVV9fqBxCsbeKuckPbEtSh02CnZzRO9iOTDVMa1iInr6GdIYvlDsaC96z34aYlEWwX/Qxvw7rgwUPF/swHIkl2SImYy12RI2pp6qiJAJ+W1Qr/JkoQvm2mc/GuG1IV48GmrlfL2iG3kj02lEHA2RnR1OeC6VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hVkobYMX; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745571093; c=relaxed/simple;
+	bh=s38RoT5kIRhdPftjwpsM6ip6juWHwscI6YCbY4HPsgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CIbG3llKca7oC0AJIwy7KFH97xoIJBb5FKsE4CmVSlNwxMXUxWo1eY+2PJ5r2VvsDHwCUYdH23Z0FotY1jJibwi8fNbxHMM6nvMeIdOi4REF4ADIxOnWgjnO6lK1L2mXjm9krmPmZ0bIEXU5tZn8dIqfvyXP3AXykJVT7DUlzmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=tHyY9G94; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVkobYMX"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e731a56e111so177160276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:51:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="tHyY9G94"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7370f389d07so249012b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745571072; x=1746175872; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9GQfk+3zeIIKzUeHjqMJCPYPGJndG19Wjdr7pJZStAA=;
-        b=hVkobYMXDPiGMDjrjO7scyTWDArd2qmoCtMyq2jqguhhyfh+TBehTlYtGX5nBdP9gZ
-         5tvSaZ2xv/pT1UjquWN3DYTemJeA18gxIJIDe8xe7w4u5rPF8eiVpLsysBSm9mkxWozI
-         YScMuxZul5uxgnY1aCDP/W9Wb6v6tL5fGAveneUsjxQrm8V0oF/Kui6K307JIi6zIw+S
-         wfOdn5t06jqvhqasacc866HygSRwE1XtPI7UbjwYMH56riZEbsu9XKO4q3HS3R7z9eAd
-         rV4zjFNcgX4w7rlr3OHLM2l4N1pEUa1xVhAzCZTJGwf7dvnDvo7sew44GXoi50Qbo/EX
-         LSmw==
+        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1745571091; x=1746175891; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lSXKZ9RZpx5GZehUzvuOx7MK/Lhjx1UgMS46U5FhreY=;
+        b=tHyY9G94LLFyw5eoYWrnqidILPdTXMt+VmKZ/hY8KveTmmQ3Epp07++2uE+GYfkBQ9
+         eOw89gYQQvjedKw4+ygk8X3jeMrSYNbN2PxCHKIq0G/PkogWaN4R3x8yaGvC9/d0fu+x
+         LSqQ/nCCA8HEtwCWbDMSfGYqW75qswLMscixwmqv1LHTiUQsWnGvW5kyeIH/uvBrtU4s
+         3kQTR6kbwku9EVIxL1i36TQ9FsYboJpGt8lU1hP6DODI3ra1/2p9R3cf9mq3oVKS78DM
+         N0gyphQ3kWXCjVjl3KNG1DElrtqlWq7m2XRJ9xlL+tIzB0riDAF+zkbVFocklO58vOUC
+         n3wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745571072; x=1746175872;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745571091; x=1746175891;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9GQfk+3zeIIKzUeHjqMJCPYPGJndG19Wjdr7pJZStAA=;
-        b=cS7EIPZoiPDWcOXxE0Tl+6Qzh2j5sCxrt3oy2bv424EnHnrNYwhdP2t6NrgZ0JJqsf
-         +UIqmBLD6tHv8p0ZjKwUNa+vnWEuf189NGFoxKHFpJ3NyOgWW2ZSQfpzjY0Z8a3BvU33
-         yKgZAVfPyjWClbFt+y+I9BxexIxi0Axfe6TW8+XrIVhk0QnFynlZbVA44Lc51w6x4hEl
-         JRpMPzFgS19/336FJY5MoC2DWxiXZdCERQGZ9RiEbsDsBWRu6/1YbtKh2f3sE0gznbQ3
-         NvjEDhYj+Y0r433cFruTwDrCfvQ3zBu5Bg/6VWPsCY8+6VcTHuPkO6pP83u4j3O8jk8C
-         j1Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXhy0guAzFIIT1usGWEVAyR9omp2Zt0vxTqZIDn1/KFQXWeS4T5BLIeldeQ+iiwwb0a1amrIcwi9uB7Xis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMaDE7oAoqaXU1X94sdef6jWf+b8eFp9cWFHAaHOV1uAJQeTJ3
-	EszBkJQcXAQ/25exx7FSSvSo0gH9dHP2QyOg1QtMnr1SszXt0TGBsUsbAsIin6H2p5DIL7oLePr
-	bCtJ7gV2dDXYdGl2rq1g/jkzbkkQ6vQMYjfScWeaUf8tO+o9FTFI=
-X-Gm-Gg: ASbGncuz423OGKQopcv4o/M09gEaT6uazcZrpPBPpsXsrOzh5OSRSSIxGjV9EhgyhY8
-	oMRmP93XsswoqpCn2paH31nCcgoxHTeAPz3CpI3K+aaaCk5S8XmGx3bKL4gF58aZWU3JkyMQGdM
-	EDECkcbWiK87Z5O+pGbaXUYRM=
-X-Google-Smtp-Source: AGHT+IE4B65BDpklwFJDxIOPbJ0Hzq8wAs89aXC+F3ZxVBmeN5cyfnzySlvgMFu/NcYkSePA20evRaUlepPFtsP+koI=
-X-Received: by 2002:a05:6902:2807:b0:e72:8658:5839 with SMTP id
- 3f1490d57ef6-e7316881e05mr2063821276.32.1745571072238; Fri, 25 Apr 2025
- 01:51:12 -0700 (PDT)
+        bh=lSXKZ9RZpx5GZehUzvuOx7MK/Lhjx1UgMS46U5FhreY=;
+        b=TJz/DNejckjfTDv97sN855DAvLdTXO/IvNYHf+gkqMPU4fh5naUIzkyyVrxdnxz81P
+         VxB/Iu9yrWPyaVPvjdIIjyIIusNdTr6m9KNBAnradvLcz065ElDAcqO3AekQn89ewrwI
+         P4Q3y5F0kMyUqxYaDirotJ7X5EBtud3GXV2qHoPAfruj3Cft3jM+ii9uSbG+0PCGyr1z
+         7i+AsKkqGVwprDzZ3oxhVPc94tAhBfqJJN2prq1j/tQFBD0zywSrBj6C6D/Wy0sib+RC
+         h21wVqaLqakGaLNW9qkjTU8mCw7HyDtJl338rDz/eMjezL3BS/mv1MdmuIR+Zyd7lltp
+         ng/A==
+X-Forwarded-Encrypted: i=1; AJvYcCU2onpqjMQhT45QmodlmzDCBa+v976E17TjD4ol5swHZZRpHMZAmQsLTLouEz0x0Fwsqol/klCVaYIqL7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLqUqDqRlAOdQsTXqp2buXzAAgE1+Xw8dZMkQRGnNI5SZC8mmY
+	ANEH1Wc2mcSu75ttGRWiDwfOq6aNRK47+TbhWb3fCb3uQie9HpPXycwKMEEjHAM=
+X-Gm-Gg: ASbGncuWrbz6KrTRTX9ezzSxOyBAtPI4MpXrvMhBE5LUyNUUO7YA6JARi9dLV5n9+rN
+	CrGmiP8deczU5lxPeTjP0H0pZviALG+8Fi1OZ3DR/ps7A2JcC+Uws3dxv4wIHbZkDm5Ngc+wTXf
+	IBtg3J6P+zouEvWortCE17IE2ACytaWBttH888Xem66ko41xWMxjjMmIklzKU+huthYRXKhHV0c
+	5xYs31eiC1CsBx/gLrIPQe+1Ni66+j6nIM9Kt+iKgUyg/BDklBnHPDXxr7Duh/RzF89mKkOzGEi
+	q7BETPEfrgj0Mx7rqZhQapCdsM4HPHAXuX9BmDptQNCDfNg=
+X-Google-Smtp-Source: AGHT+IHKmIM5F1Z6NOkjsaeIV8Ue2IAROxvDZM40DKONnIXgT8Tj7hpOFuhm5jSnOsy7xY/oVP+t8A==
+X-Received: by 2002:a05:6a00:414a:b0:737:6589:81e5 with SMTP id d2e1a72fcca58-73fd6af0883mr930890b3a.2.1745571091143;
+        Fri, 25 Apr 2025 01:51:31 -0700 (PDT)
+Received: from telecaster.tfbnw.net ([2620:10d:c090:400::5:daee])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9a923sm2650942b3a.123.2025.04.25.01.51.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 01:51:30 -0700 (PDT)
+From: Omar Sandoval <osandov@osandov.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org,
+	Rik van Riel <riel@surriel.com>,
+	Chris Mason <clm@meta.com>,
+	kernel-team@fb.com,
+	Pat Cody <pat@patcody.io>,
+	Breno Leitao <leitao@debian.org>
+Subject: [PATCH] sched/eevdf: Fix se->slice being set to U64_MAX and resulting crash
+Date: Fri, 25 Apr 2025 01:51:24 -0700
+Message-ID: <f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250414185316eucas1p2c2dbd33788d9141773546f7a479ac288@eucas1p2.samsung.com>
- <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com> <20250414-apr_14_for_sending-v2-3-70c5af2af96c@samsung.com>
-In-Reply-To: <20250414-apr_14_for_sending-v2-3-70c5af2af96c@samsung.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 25 Apr 2025 10:50:35 +0200
-X-Gm-Features: ATxdqUExFbuTIHs9dJyH7CbSVLWAZOfs6hMxjA5h2peJwwEgi8V0avo5M5kQ388
-Message-ID: <CAPDyKFqX5cjQe3-MX3W9wMoQW3gzwSvb0QMf-_sTJuq_TeGsCg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] pmdomain: thead: Add GPU-specific clock and reset
- handling for TH1520
-To: Michal Wilczynski <m.wilczynski@samsung.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
-	Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-+ Bartosz
+From: Omar Sandoval <osandov@fb.com>
 
-On Mon, 14 Apr 2025 at 20:53, Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
->
-> Extend the TH1520 power domain driver to manage GPU related clocks and
-> resets via generic PM domain start/stop callbacks.
->
-> The TH1520 GPU requires a special sequence to correctly initialize:
-> - Enable the GPU clocks
-> - Deassert the GPU clkgen reset
-> - Delay for a few cycles to satisfy hardware requirements
-> - Deassert the GPU core reset
->
-> This sequence is SoC-specific and must be abstracted away from the
-> Imagination GPU driver, which expects only a standard single reset
-> interface. Following discussions with kernel maintainers [1], this
-> logic is placed inside a PM domain, rather than polluting the clock or
-> reset frameworks, or the GPU driver itself.
+There is a code path in dequeue_entities() that can set the slice of a
+sched_entity to U64_MAX, which sometimes results in a crash.
 
-Speaking about special sequences for power-on/off devices like this
-one, that's a known common problem. We actually have a generic
-subsystem for this now, drivers/power/sequencing/*.
+The offending case is when dequeue_entities() is called to dequeue a
+delayed group entity, and then the entity's parent's dequeue is delayed.
+In that case:
 
-Perhaps it's worth having a look at that, it should allow us to
-abstract things, so the GPU driver can stay more portable.
+1. In the if (entity_is_task(se)) else block at the beginning of
+   dequeue_entities(), slice is set to
+   cfs_rq_min_slice(group_cfs_rq(se)). If the entity was delayed, then
+   it has no queued tasks, so cfs_rq_min_slice() returns U64_MAX.
+2. The first for_each_sched_entity() loop dequeues the entity.
+3. If the entity was its parent's only child, then the next iteration
+   tries to dequeue the parent.
+4. If the parent's dequeue needs to be delayed, then it breaks from the
+   first for_each_sched_entity() loop _without updating slice_.
+5. The second for_each_sched_entity() loop sets the parent's ->slice to
+   the saved slice, which is still U64_MAX.
 
-Kind regards
-Uffe
+This throws off subsequent calculations with potentially catastrophic
+results. A manifestation we saw in production was:
 
->
-> To support this, the TH1520 PM domain implements `attach_dev` and
-> `detach_dev` callbacks, allowing it to dynamically acquire clock and
-> reset resources from the GPU device tree node at runtime. This allows to
-> maintain the separation between generic drivers and SoC-specific
-> integration logic.
->
-> As a result, the PM domain not only handles power sequencing but also
-> effectively acts as the SoC specific "glue driver" for the GPU device,
-> encapsulating all TH1520-specific clock and reset management.
->
-> This approach improves maintainability and aligns with the broader
-> direction of treating PM domains as lightweight SoC-specific power
-> management drivers [2].
->
-> [1] - https://lore.kernel.org/all/CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com/
-> [2] - https://osseu2024.sched.com/event/1ej38/the-case-for-an-soc-power-management-driver-stephen-boyd-google
->
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  drivers/pmdomain/thead/th1520-pm-domains.c | 199 +++++++++++++++++++++++++++++
->  1 file changed, 199 insertions(+)
->
-> diff --git a/drivers/pmdomain/thead/th1520-pm-domains.c b/drivers/pmdomain/thead/th1520-pm-domains.c
-> index f702e20306f469aeb0ed15e54bd4f8309f28018c..75412efb195eb534c2e8ff10ced65ed4c4d2452c 100644
-> --- a/drivers/pmdomain/thead/th1520-pm-domains.c
-> +++ b/drivers/pmdomain/thead/th1520-pm-domains.c
-> @@ -5,10 +5,13 @@
->   * Author: Michal Wilczynski <m.wilczynski@samsung.com>
->   */
->
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
->  #include <linux/firmware/thead/thead,th1520-aon.h>
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
-> +#include <linux/reset.h>
->
->  #include <dt-bindings/power/thead,th1520-power.h>
->
-> @@ -16,6 +19,15 @@ struct th1520_power_domain {
->         struct th1520_aon_chan *aon_chan;
->         struct generic_pm_domain genpd;
->         u32 rsrc;
-> +
-> +       /* PM-owned reset */
-> +       struct reset_control *clkgen_reset;
-> +
-> +       /* Device-specific resources */
-> +       struct device *attached_dev;
-> +       struct clk_bulk_data *clks;
-> +       int num_clks;
-> +       struct reset_control *gpu_reset;
->  };
->
->  struct th1520_power_info {
-> @@ -61,6 +73,177 @@ static int th1520_pd_power_off(struct generic_pm_domain *domain)
->         return th1520_aon_power_update(pd->aon_chan, pd->rsrc, false);
->  }
->
-> +static int th1520_gpu_init_consumer_clocks(struct device *dev,
-> +                                          struct th1520_power_domain *pd)
-> +{
-> +       static const char *const clk_names[] = { "core", "sys" };
-> +       int i, ret;
-> +
-> +       pd->num_clks = ARRAY_SIZE(clk_names);
-> +       pd->clks = devm_kcalloc(dev, pd->num_clks, sizeof(*pd->clks), GFP_KERNEL);
-> +       if (!pd->clks)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0; i < pd->num_clks; i++)
-> +               pd->clks[i].id = clk_names[i];
-> +
-> +       ret = devm_clk_bulk_get(dev, pd->num_clks, pd->clks);
-> +       if (ret)
-> +               return dev_err_probe(dev, ret, "Failed to get GPU clocks\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static int th1520_gpu_init_consumer_reset(struct device *dev,
-> +                                         struct th1520_power_domain *pd)
-> +{
-> +       int ret;
-> +
-> +       pd->gpu_reset = reset_control_get_exclusive(dev, NULL);
-> +       if (IS_ERR(pd->gpu_reset)) {
-> +               ret = PTR_ERR(pd->gpu_reset);
-> +               pd->gpu_reset = NULL;
-> +               return dev_err_probe(dev, ret, "Failed to get GPU reset\n");
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int th1520_gpu_init_pm_reset(struct device *dev,
-> +                                   struct th1520_power_domain *pd)
-> +{
-> +       pd->clkgen_reset = devm_reset_control_get_exclusive(dev, "gpu-clkgen");
-> +       if (IS_ERR(pd->clkgen_reset))
-> +               return dev_err_probe(dev, PTR_ERR(pd->clkgen_reset),
-> +                                    "Failed to get GPU clkgen reset\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static int th1520_gpu_domain_attach_dev(struct generic_pm_domain *genpd,
-> +                                       struct device *dev)
-> +{
-> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
-> +       int ret;
-> +
-> +       /* Enforce 1:1 mapping - only one device can be attached. */
-> +       if (pd->attached_dev)
-> +               return -EBUSY;
-> +
-> +       /* Initialize clocks using the consumer device */
-> +       ret = th1520_gpu_init_consumer_clocks(dev, pd);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Initialize consumer reset using the consumer device */
-> +       ret = th1520_gpu_init_consumer_reset(dev, pd);
-> +       if (ret) {
-> +               if (pd->clks) {
-> +                       clk_bulk_put(pd->num_clks, pd->clks);
-> +                       kfree(pd->clks);
-> +                       pd->clks = NULL;
-> +                       pd->num_clks = 0;
-> +               }
-> +               return ret;
-> +       }
-> +
-> +       /* Mark device as platform PM driver managed */
-> +       device_platform_resources_set_pm_managed(dev, true);
-> +       pd->attached_dev = dev;
-> +
-> +       return 0;
-> +}
-> +
-> +static void th1520_gpu_domain_detach_dev(struct generic_pm_domain *genpd,
-> +                                        struct device *dev)
-> +{
-> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
-> +
-> +       /* Ensure this is the device we have attached */
-> +       if (pd->attached_dev != dev) {
-> +               dev_warn(dev,
-> +                        "tried to detach from GPU domain but not attached\n");
-> +               return;
-> +       }
-> +
-> +       /* Remove PM managed flag when detaching */
-> +       device_platform_resources_set_pm_managed(dev, false);
-> +
-> +       /* Clean up the consumer-owned resources */
-> +       if (pd->gpu_reset) {
-> +               reset_control_put(pd->gpu_reset);
-> +               pd->gpu_reset = NULL;
-> +       }
-> +
-> +       if (pd->clks) {
-> +               clk_bulk_put(pd->num_clks, pd->clks);
-> +               kfree(pd->clks);
-> +               pd->clks = NULL;
-> +               pd->num_clks = 0;
-> +       }
-> +
-> +       pd->attached_dev = NULL;
-> +}
-> +
-> +static int th1520_gpu_domain_start(struct device *dev)
-> +{
-> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
-> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
-> +       int ret;
-> +
-> +       /* Check if we have all required resources */
-> +       if (pd->attached_dev != dev || !pd->clks || !pd->gpu_reset ||
-> +           !pd->clkgen_reset)
-> +               return -ENODEV;
-> +
-> +       ret = clk_bulk_prepare_enable(pd->num_clks, pd->clks);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = reset_control_deassert(pd->clkgen_reset);
-> +       if (ret)
-> +               goto err_disable_clks;
-> +
-> +       /*
-> +        * According to the hardware manual, a delay of at least 32 clock
-> +        * cycles is required between de-asserting the clkgen reset and
-> +        * de-asserting the GPU reset. Assuming a worst-case scenario with
-> +        * a very high GPU clock frequency, a delay of 1 microsecond is
-> +        * sufficient to ensure this requirement is met across all
-> +        * feasible GPU clock speeds.
-> +        */
-> +       udelay(1);
-> +
-> +       ret = reset_control_deassert(pd->gpu_reset);
-> +       if (ret)
-> +               goto err_assert_clkgen;
-> +
-> +       return 0;
-> +
-> +err_assert_clkgen:
-> +       reset_control_assert(pd->clkgen_reset);
-> +err_disable_clks:
-> +       clk_bulk_disable_unprepare(pd->num_clks, pd->clks);
-> +       return ret;
-> +}
-> +
-> +static int th1520_gpu_domain_stop(struct device *dev)
-> +{
-> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
-> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
-> +
-> +       /* Check if we have all required resources and if this is the attached device */
-> +       if (pd->attached_dev != dev || !pd->clks || !pd->gpu_reset ||
-> +           !pd->clkgen_reset)
-> +               return -ENODEV;
-> +
-> +       reset_control_assert(pd->gpu_reset);
-> +       reset_control_assert(pd->clkgen_reset);
-> +       clk_bulk_disable_unprepare(pd->num_clks, pd->clks);
-> +
-> +       return 0;
-> +}
-> +
->  static struct generic_pm_domain *th1520_pd_xlate(const struct of_phandle_args *spec,
->                                                  void *data)
->  {
-> @@ -99,6 +282,22 @@ th1520_add_pm_domain(struct device *dev, const struct th1520_power_info *pi)
->         pd->genpd.power_off = th1520_pd_power_off;
->         pd->genpd.name = pi->name;
->
-> +       /* there are special callbacks for the GPU */
-> +       if (pi == &th1520_pd_ranges[TH1520_GPU_PD]) {
-> +               /* Initialize the PM-owned reset */
-> +               ret = th1520_gpu_init_pm_reset(dev, pd);
-> +               if (ret)
-> +                       return ERR_PTR(ret);
-> +
-> +               /* No device attached yet */
-> +               pd->attached_dev = NULL;
-> +
-> +               pd->genpd.dev_ops.start = th1520_gpu_domain_start;
-> +               pd->genpd.dev_ops.stop = th1520_gpu_domain_stop;
-> +               pd->genpd.attach_dev = th1520_gpu_domain_attach_dev;
-> +               pd->genpd.detach_dev = th1520_gpu_domain_detach_dev;
-> +       }
-> +
->         ret = pm_genpd_init(&pd->genpd, NULL, true);
->         if (ret)
->                 return ERR_PTR(ret);
->
-> --
-> 2.34.1
->
+6. In update_entity_lag(), se->slice is used to calculate limit, which
+   ends up as a huge negative number.
+7. limit is used in se->vlag = clamp(vlag, -limit, limit). Because limit
+   is negative, vlag > limit, so se->vlag is set to the same huge
+   negative number.
+8. In place_entity(), se->vlag is scaled, which overflows and results in
+   another huge (positive or negative) number.
+9. The adjusted lag is subtracted from se->vruntime, which increases or
+   decreases se->vruntime by a huge number.
+10. pick_eevdf() calls entity_eligible()/vruntime_eligible(), which
+    incorrectly returns false because the vruntime is so far from the
+    other vruntimes on the queue, causing the
+    (vruntime - cfs_rq->min_vruntime) * load calulation to overflow.
+11. Nothing appears to be eligible, so pick_eevdf() returns NULL.
+12. pick_next_entity() tries to dereference the return value of
+    pick_eevdf() and crashes.
+
+Dumping the cfs_rq states from the core dumps with drgn showed tell-tale
+huge vruntime ranges and bogus vlag values, and I also traced se->slice
+being set to U64_MAX on live systems (which was usually "benign" since
+the rest of the runqueue needed to be in a particular state to crash).
+
+Fix it in dequeue_entities() by always setting slice from the first
+non-empty cfs_rq.
+
+Fixes: aef6987d8954 ("sched/eevdf: Propagate min_slice up the cgroup hierarchy")
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+---
+Hi, Peter,
+
+I believe that this is the fix for the EEVDF crash that we have been
+discussing. Thanks again for all of your help, this was a doozy.
+
+Based on v6.15-rc3.
+
+Thanks,
+Omar
+
+ kernel/sched/fair.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a4e580..0fb9bf995a47 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7081,9 +7081,6 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+ 		h_nr_idle = task_has_idle_policy(p);
+ 		if (task_sleep || task_delayed || !se->sched_delayed)
+ 			h_nr_runnable = 1;
+-	} else {
+-		cfs_rq = group_cfs_rq(se);
+-		slice = cfs_rq_min_slice(cfs_rq);
+ 	}
+ 
+ 	for_each_sched_entity(se) {
+@@ -7093,6 +7090,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+ 			if (p && &p->se == se)
+ 				return -1;
+ 
++			slice = cfs_rq_min_slice(cfs_rq);
+ 			break;
+ 		}
+ 
+-- 
+2.49.0
+
