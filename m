@@ -1,54 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D428EC;
-	Fri, 25 Apr 2025 14:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9E384E1C;
+	Fri, 25 Apr 2025 14:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592516; cv=none; b=sILg/0P4FIUwJQ5Y0tMyL4cYd2n3we6VUNe93pHUqJVObsTpvKg3CtKXysuj8oF+MUUxG5YLU8YVRXQ5bkt4AOyOKMje+xIKEel0tYS3yVdt4UMKHZ88KS7tMfT6ZMtjoEl1XmHB6BAq1kUiz2Dh3D4rQt+kp6WmPN5R3Re8jrU=
+	t=1745592693; cv=none; b=CD8J8QbB1cT8R1rE/chfJwEsvz2ZeDUm6uwQRJ0e2lMhkqn/wjtnpOdPCLZxlameLAKL5UlqxrC5BwpaqlrKkkeaakch4aHgo89xpOX7lDbsidG/yruYLyaG8IpmlUnSWabThG+biQ5fBNAzIlrxOQf8vH70uVibgeSasK478vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592516; c=relaxed/simple;
-	bh=KDUox8GA2oucW2IHvoNGUjFxLfRIXY7o2PmS3rDE6Go=;
+	s=arc-20240116; t=1745592693; c=relaxed/simple;
+	bh=ORYV3pufFLavCcfuKAouL0/gfIikxzXt+cww9KaOuvA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6Bl1qGGuxSL/Rc97g7SXt38V7NTmTAp09+W5G+IVmOrddZGPOWqtDLUHeBCZxlLGLKWQTZgo2l/08/xTEPDgtacozLqgLQfzm+6mm+l9GmrNGyY5lO7ON7sHvueOzPNDMGDPVwaOJ3vXnDQdfHuka16zR2Sa6eYTR09ptc8ZRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKl8NZlw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bt5EX2tWTcFx/WYMNMUqmVHg07QISEgafypsO/4DDmBHgEC7XI2T51v9J/mn0UvSQaomnw1zHrsDyia1RRRRZuKOI8cqQ1B/n+MVacBHqUFG8zwnpQm1kmW4il3SMU4l83C2vJJJcnDV2ictLrT/GVdL+xNtjHCO1Uf6siatcFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQopFPBf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKl8NZlw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4DBC4CEE4;
-	Fri, 25 Apr 2025 14:48:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQopFPBf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1461C4CEE4;
+	Fri, 25 Apr 2025 14:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745592516;
-	bh=KDUox8GA2oucW2IHvoNGUjFxLfRIXY7o2PmS3rDE6Go=;
+	s=k20201202; t=1745592692;
+	bh=ORYV3pufFLavCcfuKAouL0/gfIikxzXt+cww9KaOuvA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bKl8NZlwLRlW4kpoxJ4k+RzyAk1LXABalhUzrvYuCoSB+Db10S8lovwARF9uHS4cB
-	 fsgaTbEHIP2DU0rgG95WyvS8Fr7c63gTz0JcfbfJn3dAYB5IOpo1FEFx4NfyM3CYUD
-	 XbmLF1HSr5KTYfwsdRgcpIAc7SYei6U0RikIzbVFFhUvlHJExJlqQZaDFbkKCubkmN
-	 If4zJcguSfsJcALucDPzyWzkbY+fW+3VMVugnNhqMJiLitiGQnpy6v7HsMXDBqW6Gx
-	 2daAJnJCJ4RScpg2f6+vV3cxHnhoFv8Ak+DJssf34e3ltPzY1Dgn6tOqIxYidP2dsl
-	 +HelGIKwFuFvQ==
-Date: Fri, 25 Apr 2025 15:48:31 +0100
+	b=aQopFPBfz4eaeHmTPdrBo20CUmVLaXX17oeKkMx5wNWr07sYNxRl95/penpfh4I0D
+	 S20g7mvMty4Rz1xhCU7Ou0NEfGuMKntJ4asSGf6jRm9v+lvo6mzIO3AtyZv9taNdgb
+	 c55scPrq8fogOVJ0Vmg7hF7OPoq4qNMqNaGFEh+F2sZaRNvABI29FAb3kAFimI0Uzh
+	 65E0LXc17gk1J39kjClZZqgYv/Xe3XusbWY9Ei883mHuM//cB3wN7Clp67qAurYBUk
+	 Hrq52ZmAGCoQP1oA3p4FKmyd7IMXLEg00L2NOPmp+fw3VpdZm2lPl2eB3Ztozl0VWs
+	 K5VYfGaqfl5Ww==
+Date: Fri, 25 Apr 2025 15:51:28 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "hans.zhang@cixtech.com" <hans.zhang@cixtech.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"peter.chen@cixtech.com" <peter.chen@cixtech.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
- new EP configurations
-Message-ID: <20250425-drained-flyover-4275720a1f5a@spud>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-3-hans.zhang@cixtech.com>
- <20250424-elm-magma-b791798477ab@spud>
- <20250424-proposal-decrease-ba384a37efa6@spud>
- <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: arm: vt8500: Add VIA APC Rock/Paper
+ boards
+Message-ID: <20250425-prewar-ranging-161ccd2b2468@spud>
+References: <20250425-apc_paper_binding-v4-0-0ec2d0febe21@gmail.com>
+ <20250425-apc_paper_binding-v4-1-0ec2d0febe21@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,51 +45,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YSHiTXw2ppnu3Qg2"
+	protocol="application/pgp-signature"; boundary="GjP52dV+jImYt1qm"
 Content-Disposition: inline
-In-Reply-To: <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <20250425-apc_paper_binding-v4-1-0ec2d0febe21@gmail.com>
 
 
---YSHiTXw2ppnu3Qg2
+--GjP52dV+jImYt1qm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wro=
-te:
-> >
-> >
-> >On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
-> >> On Thu, Apr 24, 2025 at 09:04:41AM +0800, hans.zhang@cixtech.com wrote:
-> >> > From: Manikandan K Pillai <mpillai@cadence.com>
-> >> >
-> >> > Document the compatible property for HPA (High Performance
-> >Architecture)
-> >> > PCIe controller EP configuration.
-> >>
-> >> Please explain what makes the new architecture sufficiently different
-> >> from the existing one such that a fallback compatible does not work.
-> >>
-> >> Same applies to the other binding patch.
-> >
-> >Additionally, since this IP is likely in use on your sky1 SoC, why is a
-> >soc-specific compatible for your integration not needed?
-> >
+On Fri, Apr 25, 2025 at 06:34:13PM +0400, Alexey Charkov wrote:
+> APC Rock is a development board based on WonderMedia WM8950 SoC
+> released around 2013. Paper is the same as Rock but lacking a
+> VGA port and shipped with a recycled cardboard case.
 >=20
-> The sky1 SoC support patches will be developed and submitted by the Sky1
-> team separately.
+> While at that, put myself as the maintainer, given that Tony is
+> unavailable as of lately.
+>=20
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/vt8500.yaml | 23 ++++++++++++++---=
+------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/vt8500.yaml b/Document=
+ation/devicetree/bindings/arm/vt8500.yaml
+> index 5d5ad5a60451f569e6ef30c924a1964d02e1aa82..f2164144a7af29ca77761bc58=
+fe7f4558e7d101c 100644
+> --- a/Documentation/devicetree/bindings/arm/vt8500.yaml
+> +++ b/Documentation/devicetree/bindings/arm/vt8500.yaml
+> @@ -7,19 +7,24 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  title: VIA/Wondermedia VT8500 Platforms
+> =20
+>  maintainers:
+> -  - Tony Prisk <linux@prisktech.co.nz>
+> -description: test
+> +  - Alexey Charkov <alchark@gmail.com>
+> =20
+>  properties:
+>    $nodename:
+>      const: '/'
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - via,vt8500
+> -          - wm,wm8505
+> -          - wm,wm8650
+> -          - wm,wm8750
+> -          - wm,wm8850
+> +    oneOf:
+> +      - items:
+> +          - enum:
 
-Why? Cixtech sent this patchset, they should send it with their user.
+This should just simplify from "items: - enum:" to "enum:".
+With that,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
---YSHiTXw2ppnu3Qg2
+> +              - via,vt8500
+> +              - wm,wm8505
+> +              - wm,wm8650
+> +              - wm,wm8750
+> +              - wm,wm8850
+> +
+> +      - description: VIA APC Rock and Paper boards
+> +        items:
+> +          - const: via,apc-rock
+> +          - const: wm,wm8950
+> =20
+>  additionalProperties: true
+>=20
+> --=20
+> 2.49.0
+>=20
+
+--GjP52dV+jImYt1qm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAugvwAKCRB4tDGHoIJi
-0gB5AQCACzFzQHuCqe72kGCjbhOhwAatlY537t14V31mwO9lzQD/frLiUHnUcp99
-02MWIHJn51Re+9M9sdIohy0Q4dXCsQ4=
-=dfKM
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAuhcAAKCRB4tDGHoIJi
+0r+sAP9JVeKQ/4V3BSOMKHnQtJFsApmrTtpl1BBIw/1jAgjY8QEAymv8fvG7Ih53
+kJEnD+pUrAVAeGtEOj3WVga4MaXX/QY=
+=0wOS
 -----END PGP SIGNATURE-----
 
---YSHiTXw2ppnu3Qg2--
+--GjP52dV+jImYt1qm--
