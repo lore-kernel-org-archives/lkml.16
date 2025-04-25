@@ -1,175 +1,344 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AB21DB127;
-	Fri, 25 Apr 2025 16:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056921B4140
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599764; cv=none; b=AlKFz+tGidT/vy+XqKW2VW+tSrPHdaxZAYmES60k4jq/AGe5P8jz7qp/XTpPyXvBBTLfJG3ioZ6aSmsOLa/b64ajUQQ8Z2i/IhcNycv5SC/2rTJfklNcsNstEAwJQcDtRFrtVl6iKJBkXYHYF58S00rRSv2AB7NI3wBjGKaqoV4=
+	t=1745599778; cv=none; b=qeK16lp+iS+sfvvtbziSZMzVCoIN9ip/8UXvIncM2fL1xC6cupg9kEhdnoi9hPZGJiOBFFMo4iNwnhVXHggjqYTvVWkWHhfHHgcRPpYCl/bFOZH52fcqILsqez8ccWTC2U4hjbZwbPQeLQXT90SLeX5zMIoO0j10AQ867GlM648=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599764; c=relaxed/simple;
-	bh=461+pUfno2hTIbCXCu9nP1x7M0HrZserREq+i6zkxp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hqh4Hvcu8R10qquQf/DMRMz7zq/9AOTgF5hdbCv4fhdgmwUYW8T6LgShCUGDLRjuVq6P99KzHSBD+rCfVgvzuzh4CYmsrXhntpzhCwkdXn96fEf0u3u740IXnyDcmXVrqvsiK7bpqU6rxgX+fh0l57aHCdoFkXs6eGfFAz4okPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Llnyj+X+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745599778; c=relaxed/simple;
+	bh=Lsf0S+vUVkTKSmrTusoRK1riqmlMVBxIhTwbVEI953E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bMdiH5eQQtAKRGeoInnfnR6Kkznx+ZVUdU2kDoEKFIlL+2+13IplXuK2pmKqFapP7g6bGuB7zrUjyiFF44pMNLrQZnBpAnD/tNEK539+U4jCQXrlGpy5wBMFPhw9y+NHzxmSv/pu+AsaLM125C5rjl//U1GFzQvBPFETW8G5sY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=conclusive.pl; spf=pass smtp.mailfrom=conclusive.pl; dkim=pass (2048-bit key) header.d=conclusive.pl header.i=@conclusive.pl header.b=SOq/Gh4v; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=conclusive.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=conclusive.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Llnyj+X+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6723C4CEE4;
-	Fri, 25 Apr 2025 16:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745599764;
-	bh=461+pUfno2hTIbCXCu9nP1x7M0HrZserREq+i6zkxp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Llnyj+X+6CK/sPAqAggsHaHa7jXYnwl6GrRnj7DKn1eo6DxL2rPpiNAw5W/JIsoXw
-	 K1oCVDwtv+O6b9bb5MfIsgFIfk1L9EeQJyKInb/mD9NseF+7wZehkCBUtK7BzmdwKF
-	 Q+m4q4eZwYBTxzvUkak7j2Dm7w9tySNB4yjGw1ugumu/OXOoZcmnUIlzt4bkoBDsOz
-	 T5E7KhY1fzSE7i5rE063TkQ/+dqYJtMNIA8AYj82TF3R5sI/z0CXtcEz7Ebk/eKfqH
-	 Mo5x9g84BoTaKtlXvhCxBRycD246nllcg5U+BeU9aqVZIFIJfdm/WjkllLjHzqpsHQ
-	 0n2BzQvHnhJFQ==
-Date: Fri, 25 Apr 2025 18:49:19 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Benjamin Drung <benjamin.drung@canonical.com>
-Cc: linux-fsdevel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>, 
-	Luca Boccassi <luca.boccassi@gmail.com>, Lennart Poettering <lennart@poettering.net>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
- helper
-Message-ID: <20250425-erbschaft-nummer-8ddbe420ae22@brauner>
-References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
- <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
- <ee1263a1bcb7510f2ec7a4c34e5c64b3a1d21d7a.camel@canonical.com>
- <20250425-eskapaden-regnen-4534af2aef11@brauner>
- <e1ee6aba07c367b9518fe3fab1dd71c418e3446a.camel@canonical.com>
+	dkim=pass (2048-bit key) header.d=conclusive.pl header.i=@conclusive.pl header.b="SOq/Gh4v"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so3203367a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=conclusive.pl; s=google; t=1745599773; x=1746204573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kbKgincIXwNS069akmSCof3QJASoEBvfuiSMsRimGso=;
+        b=SOq/Gh4v9+SBkMqNTQ3MZvLfzlCkarb8njY4USLEg+/yp/qswlLn5PrGfydLtIYcss
+         cuqgCc/AWZ6SnG6W7V65wrv5T0Udcu9xpUvST3AZJtuE1XdL5vdj6+jYtMIW71hqpBqL
+         c1PwqdRmW6uKaRQqckQJHaRkwrGrf83RcSbBCnT2D76Vv2jzzrk9C/U4ymYdhGegXSyn
+         eaFKH84mlh98TSG/ho95UKprZtjUElBEMtOvYz40Djis7l74934/BTia6j36/xytmV4c
+         BofYYpvqSlmVUfutcat92IX9QwNcGyAlE2inwwmbap3Ol4AE55JslPvNkaky7hsRcHEM
+         aMdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745599773; x=1746204573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kbKgincIXwNS069akmSCof3QJASoEBvfuiSMsRimGso=;
+        b=HLWd0VCVFdIr7XLr261W5xqdJuLScC0e34jgyQkfqTTcYHlEYDQU4sgICLNRdxmPZ6
+         Oafe92xktSgFJhTuWJIQoeLOwC5Afw7m9vNKahpriPKpvqw1oWOs6icSwJdspEnzHzi8
+         HzGdu+3gFnQ2aVyACAw6dArZO528KYBFjiuZ+zA91STuPiPiag51GNV1UYxIwwno9UaO
+         U61sdUfMnfSkq0M5cNceynKQCTtBVy8a4wWabOi1uGRdNIsxDe7pnKI8wirLYVW+VyAh
+         XR7UHfYYLWATlPs7nZ/JUN1SCCnQaCXSh41Mnp/Y0Mvpq4uL1bE8IMKN/6anine6guZ4
+         77ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUkYZHg0XYvfRyYdeB+8mSLbtLbCTG0n3IeJcNkVhVkMmpgzeT7ckfhZphSFkwc35/3SlQ6pRN3/YCktMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweGe8vvScsUju3ySV6zO102Sq/oXWiBhqBpuqDqFcYPuM72+iK
+	n5Noc27MIZDjqOS5Im58O6yjjyDTAKVirgBnMNEPzjkKLGWQJIylhA4ua+f6AGY6NsyNTZVtyfB
+	xWm74m0Ak/IVej2k/2EGxSLSv6BNDTPZJV1+v9A==
+X-Gm-Gg: ASbGnctdlCSCt0IQPcphXOWvllpiIeB48BW3xTvHph/QXnu9hCfji+UKZPIPO+xUlHT
+	JRKIdYPN95wvjzCMVQ0BnIpQhSWFcj0nT4KO3diW5rmDUyvQhUW+bQtEBvRkA3Z8bmvZ0x9vEke
+	r/jKnRPc8MkHbutC2+2R1DwCgRZVwAXMAoJA==
+X-Google-Smtp-Source: AGHT+IF+K/Y/hteHUL1Z1Houp7sxak6tVG3ZmtYLQ81YFGs/nLav2zw2Js385WaP/0YCdeVMq4A3IVLkIyFbhxRyO8U=
+X-Received: by 2002:a05:6402:254c:b0:5f6:59e5:5c6e with SMTP id
+ 4fb4d7f45d1cf-5f73982bd97mr62863a12.26.1745599773147; Fri, 25 Apr 2025
+ 09:49:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e1ee6aba07c367b9518fe3fab1dd71c418e3446a.camel@canonical.com>
+References: <20250422175918.585022-1-artur@conclusive.pl> <20250422175918.585022-3-artur@conclusive.pl>
+ <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
+In-Reply-To: <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
+From: Artur Rojek <artur@conclusive.pl>
+Date: Fri, 25 Apr 2025 18:49:22 +0200
+X-Gm-Features: ATxdqUGbZqRqLun2t5seqE0xBbyhBwhTsJOfC8_PKvG7-cB8xXWfuYtVPvY4uP0
+Message-ID: <CAGhaMFO_f_bvFB+39-z6xVF+y446ONwm1ROHQ=rXj=s4MnL54w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jakub Klama <jakub@conclusive.pl>, 
+	Wojciech Kloska <wojciech@conclusive.pl>, Ulf Axelsson <ulf.axelsson@nordicsemi.no>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 02:03:34PM +0200, Benjamin Drung wrote:
-> On Fri, 2025-04-25 at 13:57 +0200, Christian Brauner wrote:
-> > On Fri, Apr 25, 2025 at 01:31:56PM +0200, Benjamin Drung wrote:
-> > > Hi,
-> > > 
-> > > On Mon, 2025-04-14 at 15:55 +0200, Christian Brauner wrote:
-> > > > Give userspace a way to instruct the kernel to install a pidfd into the
-> > > > usermode helper process. This makes coredump handling a lot more
-> > > > reliable for userspace. In parallel with this commit we already have
-> > > > systemd adding support for this in [1].
-> > > > 
-> > > > We create a pidfs file for the coredumping process when we process the
-> > > > corename pattern. When the usermode helper process is forked we then
-> > > > install the pidfs file as file descriptor three into the usermode
-> > > > helpers file descriptor table so it's available to the exec'd program.
-> > > > 
-> > > > Since usermode helpers are either children of the system_unbound_wq
-> > > > workqueue or kthreadd we know that the file descriptor table is empty
-> > > > and can thus always use three as the file descriptor number.
-> > > > 
-> > > > Note, that we'll install a pidfd for the thread-group leader even if a
-> > > > subthread is calling do_coredump(). We know that task linkage hasn't
-> > > > been removed due to delay_group_leader() and even if this @current isn't
-> > > > the actual thread-group leader we know that the thread-group leader
-> > > > cannot be reaped until @current has exited.
-> > > > 
-> > > > Link: https://github.com/systemd/systemd/pull/37125 [1]
-> > > > Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
-> > > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > > > ---
-> > > >  fs/coredump.c            | 59 ++++++++++++++++++++++++++++++++++++++++++++----
-> > > >  include/linux/coredump.h |  1 +
-> > > >  2 files changed, 56 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/fs/coredump.c b/fs/coredump.c
-> > > > index 9da592aa8f16..403be0ff780e 100644
-> > > > --- a/fs/coredump.c
-> > > > +++ b/fs/coredump.c
-> > > > @@ -43,6 +43,9 @@
-> > > >  #include <linux/timekeeping.h>
-> > > >  #include <linux/sysctl.h>
-> > > >  #include <linux/elf.h>
-> > > > +#include <linux/pidfs.h>
-> > > > +#include <uapi/linux/pidfd.h>
-> > > > +#include <linux/vfsdebug.h>
-> > > >  
-> > > >  #include <linux/uaccess.h>
-> > > >  #include <asm/mmu_context.h>
-> > > > @@ -60,6 +63,12 @@ static void free_vma_snapshot(struct coredump_params *cprm);
-> > > >  #define CORE_FILE_NOTE_SIZE_DEFAULT (4*1024*1024)
-> > > >  /* Define a reasonable max cap */
-> > > >  #define CORE_FILE_NOTE_SIZE_MAX (16*1024*1024)
-> > > > +/*
-> > > > + * File descriptor number for the pidfd for the thread-group leader of
-> > > > + * the coredumping task installed into the usermode helper's file
-> > > > + * descriptor table.
-> > > > + */
-> > > > +#define COREDUMP_PIDFD_NUMBER 3
-> > > >  
-> > > >  static int core_uses_pid;
-> > > >  static unsigned int core_pipe_limit;
-> > > > @@ -339,6 +348,27 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-> > > >  			case 'C':
-> > > >  				err = cn_printf(cn, "%d", cprm->cpu);
-> > > >  				break;
-> > > > +			/* pidfd number */
-> > > > +			case 'F': {
-> > > > +				/*
-> > > > +				 * Installing a pidfd only makes sense if
-> > > > +				 * we actually spawn a usermode helper.
-> > > > +				 */
-> > > > +				if (!ispipe)
-> > > > +					break;
-> > > > +
-> > > > +				/*
-> > > > +				 * Note that we'll install a pidfd for the
-> > > > +				 * thread-group leader. We know that task
-> > > > +				 * linkage hasn't been removed yet and even if
-> > > > +				 * this @current isn't the actual thread-group
-> > > > +				 * leader we know that the thread-group leader
-> > > > +				 * cannot be reaped until @current has exited.
-> > > > +				 */
-> > > > +				cprm->pid = task_tgid(current);
-> > > > +				err = cn_printf(cn, "%d", COREDUMP_PIDFD_NUMBER);
-> > > > +				break;
-> > > > +			}
-> > > >  			default:
-> > > >  				break;
-> > > >  			}
-> > > > 
-> > > 
-> > > I tried this change with Apport: I took the Ubuntu mainline kernel build
-> > > https://kernel.ubuntu.com/mainline/daily/2025-04-24/ (that refers to
-> > > mainline commit e54f9b0410347c49b7ffdd495578811e70d7a407) and applied
-> > > these three patches on top. Then I modified Apport to take the
-> > > additional `-F%F` and tested that on Ubuntu 25.04 (plucky). The result
-> > > is the coredump failed as long as there was `-F%F` on
-> > 
-> > I have no clue what -F%F is and whether that leading -F is something
-> > specific to Apport but the specifier is %F not -F%F. For example:
-> > 
-> >         > cat /proc/sys/kernel/core_pattern
-> >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %F
-> > 
-> > And note that this requires the pipe logic to be used, aka "|" needs to
-> > be specified. Without it this doesn't make sense.
-> 
-> Apport takes short option parameters. They match the kernel template
-> specifiers. The failing pattern:
-> 
-> $ cat /proc/sys/kernel/core_pattern 
-> |/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -F%F -- %E
-> 
-> Once I drop %F Apport is called without issues:
-> 
-> $ cat /proc/sys/kernel/core_pattern 
-> |/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E
+Hi Johannes,
+thanks for the review thus far!
 
-Youm must have CONFIG_DEBUG_VFS=y enabled where we trample the pidfs
-file we just allocated. It's a debug only assert. I've removed it now
-and pushed it to vfs-6.16.coredump. Can you either try with that or
-simply unset CONFIG_DEBUG_VFS and retest.
+Replies inline.
+
+On Thu, Apr 24, 2025 at 5:07=E2=80=AFPM Johannes Berg <johannes@sipsolution=
+s.net> wrote:
+>
+> On Tue, 2025-04-22 at 19:59 +0200, Artur Rojek wrote:
+> > Introduce support for Nordic Semiconductor nRF70 series wireless
+> > companion IC.
+>
+> Seems simple enough ... but I notice you're not even adding a
+> MAINTAINERS file entry. Does that mean you're not going to stick around
+> to maintain it at all? I'm definitely _not_ going to. Please don't
+> expect the community to.
+>
+> Are you doing this for your customers? Or are you just doing this a
+> contract for someone who needs it? I don't really care all that much but
+> contracts have a tendency to go away and then we're left with nothing
+> upstream ...
+
+This is commercial work. I am employed by Conclusive Engineering, and
+was tasked with writing this driver. It was done for our internal needs
+(we sell hardware [1] with nRF70 on-board), however I was also asked to
+send the series upstream.
+Nordic showed interest in this work, hence why their representative is
+CCd to this conversation. They agreed to use our hardware as a reference
+board for nRF70 used in Linux context.
+
+I fully understand your concerns with maintenance (I am privately
+a kernel contributor as well), and discussed this topic internally with
+appropriate decision making people. They understand the responsibilities
+involved and agreed to allocate time for me to support this driver long
+term. As such, I will add myself to MAINTAINERS in v3.
+
+>
+> Also, related, what are your plans to help out with wireless in general,
+> particularly reviews? You're building on the shoulders of everyone who
+> did work before ... I'll do a _very_ cursory review, but if you want to
+> get this merged I would expect you to also become a part of the
+> community and help review other people's code:
+>
+> https://lore.kernel.org/linux-wireless/21896d2788b8bc6c7fcb534cd43e75671a=
+57f494.camel@sipsolutions.net/
+
+Bearing in mind above time constraints, I have no objections to helping
+out. That said, this is my first Wi-Fi driver, and as such I am not that
+familiar with the cfg80211 subsystem (hence why this series is RFC), so
+my expertise will be limited at best.
+What sort of help would you expect from me with the reviews?
+
+>
+> > +config NRF70
+> > +     tristate "Nordic Semiconductor nRF70 series wireless companion IC=
+"
+> > +     depends on CFG80211 && INET && SPI_MEM && CPU_LITTLE_ENDIAN
+>
+> That CPU_LITTLE_ENDIAN seems like a cop-out. Do we really want that?
+> Asking not specifically you I guess...
+
+I addressed this in the cover letter (Patch 0/2), but nRF70 communicates
+using little-endian, byte packed messages, where each message type has
+a unique set of fields. This makes it a challenge to prepare said
+messages on a big-endian system. I am aware of the packing API [2],
+however a cursory look at it indicates that I would need to provide
+custom code for each and every message (there's almost 150 of those in
+total, even if the driver doesn't support all of them at the moment -
+take a look at nrf70_cmds.h).
+So I decided that until someone actually needs to use nRF70 on
+a big-endian machine, implementation of big-endian support can be
+postponed.
+Unless the __packed attribute is guaranteed to align the bytes the same
+way regardless of the endianness, and so calling cpu_to_le* for every
+field of a message is good enough (these messages are byte packed, not
+bit packed)?
+
+>
+>
+> > +#define      NRF70_RADIOTAP_PRESENT_FIELDS                           \
+> > +     cpu_to_le32((1 << IEEE80211_RADIOTAP_RATE) |            \
+> > +                 (1 << IEEE80211_RADIOTAP_CHANNEL) |         \
+> > +                 (1 << IEEE80211_RADIOTAP_DBM_ANTSIGNAL))
+>
+> You did some work on making it little endian properly ..
+>
+>
+> > +
+> > +#define      NRF70_FW_FEATURE_RAW_MODE       BIT(3)
+> > +struct __packed nrf70_fw_header {
+> > +     u32 signature;
+> > +     u32 num_images;
+> > +     u32 version;
+> > +     u32 feature_flags;
+> > +     u32 length;
+> > +     u8 hash[NRF70_FW_HASH_LEN];
+> > +     u8 data[];
+> > +};
+> > +
+> > +struct __packed nrf70_fw_img {
+> > +     u32 type;
+> > +     u32 length;
+> > +     u8 data[];
+> > +};
+>
+> making the u32's here __le32's (and fixing sparse) would probably go a
+> long way of making it endian clean. The __packed is also placed oddly.
+
+When declaring structure members for the messages (in nrf70_cmds.h),
+I noticed that this attribute has to go before the braces:
+> struct __packed { ... } name;
+rather than after braces:
+> struct { ... } __packed name;
+
+I then went and applied the same style elsewhere in the driver. I guess
+I can restore the latter syntax where it makes sense.
+
+>
+> > +static int nrf70_verify_firmware(struct device *dev,
+> > +                              const struct nrf70_fw_header *fw)
+>
+>
+> What's the point in doing this? The hash is trivially adjusted if
+> someone wants to play with the file, if hw doesn't check anything, and
+> ... not sure we really need such a thing for "file is corrupt by
+> accident"? *shrug*
+
+No idea if the hw does any verification of the hash, but sure, I can
+drop this.
+
+>
+> > +     ret =3D request_firmware(&firmware, "nrf70.bin", dev);
+>
+>
+> You might want to make that async so that the driver can be built-in
+> without requiring the firmware to also be built-in.
+>
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "Failed to request firmware: %d\n", ret);
+> > +             return ret;
+> > +     }
+> > +
+> > +     header =3D (const struct nrf70_fw_header *)firmware->data;
+>
+> (const void *) cast would probably be sufficient
+>
+>
+> > +     return ret ? ret : (wait_for_completion_timeout(&priv->init_done,=
+ HZ) ?
+> > +                         0 : -ETIMEDOUT);
+>
+> that construct seems a bit questionable :)
+>
+>
+> > +static void nrf70_handle_rx_mgmt(struct spi_mem *mem,
+> > +                              struct nrf70_event_mlme *ev)
+> > +{
+> > +     struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
+> > +     struct nrf70_vif *vif =3D nrf70_get_vif(priv, ev->header.idx.wdev=
+_id);
+> > +
+> > +     if (IS_ERR(vif))
+> > +             return;
+> > +
+> > +     (void)cfg80211_rx_mgmt(&vif->wdev, ev->frequency, ev->rx_signal_d=
+bm,
+> > +                            ev->frame.data, ev->frame.len, ev->wifi_fl=
+ags);
+>
+>
+> shouldn't need the (void) cast?
+>
+>
+> > +static int nrf70_change_bss(struct wiphy *wiphy, struct net_device *nd=
+ev,
+> > +                         struct bss_parameters *params)
+>
+>
+> See also this discussion:
+> https://lore.kernel.org/linux-wireless/29fa5ea7f4cc177bed823ec3489d610e1d=
+69a08f.camel@sipsolutions.net/
+>
+> > +static int nrf70_dequeue_umac_event(struct spi_mem *mem, void *data)
+> > +{
+> > +     struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
+> > +     struct device *dev =3D &mem->spi->dev;
+> > +     struct nrf70_umac_header *header =3D data;
+> > +     struct nrf70_vif *vif =3D nrf70_get_vif(priv, header->idx.wdev_id=
+);
+> > +     struct cfg80211_scan_info scan_info =3D { .aborted =3D true };
+> > +
+> > +     if (IS_ERR(vif))
+> > +             return PTR_ERR(vif);
+> > +
+> > +     switch (header->id) {
+> > +     case NRF70_UMAC_EVENT_TRIGGER_SCAN_START:
+> > +             break;
+>
+>
+> This sounds like you pretty much built the firmware for cfg80211 ;-)
+
+That's because the firmware *is* cfg80211. Perhaps I am opening a can of
+worms here, but it has to be opened at some point during firmware
+upstream. From what I've seen, part of the nRF70 firmware (called UMAC)
+is derived from the cfg80211 project. Nordic makes the source code
+publicly available at this location [3]. I have also asked Nordic to
+provide a matching version of the source code for the fw blob they will
+be upstreaming to the linux-firmware project (I believe I will be
+assisting in that process as well). I hope everything there is dandy
+license-wise, as I am not a lawyer :)
+
+>
+>
+> > +#define      NRF70_MSG_SYSTEM                0
+> > +#define      NRF70_MSG_DATA                  2
+> > +#define      NRF70_MSG_UMAC                  3
+> > +
+> > +struct __packed nrf70_msg {
+> > +     u32 len;
+> > +     u32 resubmit;
+> > +     u32 type;
+> > +     u8 data[];
+>
+>
+> similar comments here throughout this entire file wrt __packed and
+> __le32, obviously
+
+Addressed above wrt __packed.
+
+>
+> > +/* Undocumented PHY configuration parameters. */
+> >
+>
+> haha :)
+
+Yep :)
+To be clear on the development process of this driver, no proprietary
+documentation has been used. I've written it entirely based on the
+publicly available Nordic's SDK [4], their Zephyr driver [5], the
+aforementioned UMAC source code, and a fair amount of guess work. This
+means there is some undocumented stuff available only as magic numbers.
+
+>
+>
+> Oh and before I forget, how about firmware availability?
+
+Nordic gave us permission to upstream it, see the cover letter.
+
+PS. I was oblivious to the specific patch submission rules for
+linux-wireless until after I've sent v2 series. Sorry for any
+inconvenience! The v3 will be formatted appropriately.
+
+Cheers,
+Artur
+
+[1] https://conclusive.tech/products/kstr-imx93-sbc/
+[2] https://www.kernel.org/doc/html/latest/core-api/packing.html
+[3] https://files.nordicsemi.com/ui/native/developerDoc/external/oss/nRF700=
+x/
+[4] https://github.com/nrfconnect/sdk-nrfxlib/tree/v2.7-branch/nrf_wifi
+[5] https://github.com/zephyrproject-rtos/zephyr/tree/main/drivers/wifi/nrf=
+_wifi
+
+>
+> johannes
