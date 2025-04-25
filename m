@@ -1,140 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE2D4437C;
-	Fri, 25 Apr 2025 18:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33011A2545;
+	Fri, 25 Apr 2025 18:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745604302; cv=none; b=NRW14L9jm7RvPmBUuDR2Ami8ZNBVwt7ibmnSrZR+7yfVbHwW2gyJPUUSklb4VKP4GT2b/5FrWt257dQY2Lnrr6GaIcwbYUNX47i/4dVeCXarDKGoycZ+jTEngBmszsTnq/dQB0p/VFovV2w/XQHqSSoa9vl+4Imb3iwMDJo5r5w=
+	t=1745604526; cv=none; b=F/t+l0EjVs/0kSjj5lABJejHDLmtxaY8CDx96LVyCdEhmBFTk0xneTgWhr2/WbGZpRFnX32gcCh9dtbu4Ia40NJ3qGtU99lhUWf9acwHE+IR81ysLtGYW+pE6I8P4QSk5DI0QKLUJWXmKXjlU4/j6v4HT7EP6DHSIqajDxXKHfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745604302; c=relaxed/simple;
-	bh=Bw4FYf1Ve1oqC7aTOq2sae1c3haMBreDWrr629hX/vA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gUri3/XJKQSpKIShdEtBKuTGEedHnA0gBmAZO7uvO4PIRGch8NFoJfwUSHgtbBOLvRn9s3JIssRzprNQI7J0YTjKgAZmWvm2dEh2KtORz1fXyPQv8nxVjJhm/vASvByhyvUs1tkHDNT7dmRDmVUjAwAhjMSbQ+PLg0Apfw+AnJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9nTqtfi; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745604526; c=relaxed/simple;
+	bh=mxIIRoUKUip7kdGYkldw/Ddl/8kVuZoZEj2BPQ5UWIs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FqnIUFnUmjAjSwYpI9u6TFSh7vqiuKNwuCJ7sVFsZuoZcY52FSqcC+tiYztPXf51tnprUTJdimQUmTjJg3yUuSpmBknSzwrhoSRrHh+JR+g4g59ZnlTeU0M42HmOSjkyEXnO5YXrEabelWodz+HWvRauOupN5kwj9kMy0JTXiHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MaAt62NS; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9nTqtfi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745604300; x=1777140300;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Bw4FYf1Ve1oqC7aTOq2sae1c3haMBreDWrr629hX/vA=;
-  b=m9nTqtfi9PwEkBWf8TzuluJEGqU4UXKFXwEvxOClYP9UWYFODn3KC4r2
-   Y2oqC9TseCrn7aDn41pySJmI/wjDiZ83re8VaiKKbXREOUBHgiI8oFJg9
-   HySDYeap/0I4HMMGIF7c7hfJnHju4pGQS+ispqbEz3xzRaxEodCsK1hBI
-   dWO4dwlZlo1XdM6VX/quDNKAgUjL17EN6KgRh757eKZcDia5eO1bhnZNo
-   wrh8rrlNRGenWd8zW65uofMlVDqnihwBCembSeKYnOU8YFVAGaPn5zDj2
-   KMInd1V5fk1E8ZWX3QWofIwibVK593gQeLc6ukeO+TvK8pRCYh1kAmYg3
-   Q==;
-X-CSE-ConnectionGUID: hqKqNdtGS8WVZt9HXjCdvw==
-X-CSE-MsgGUID: DYz9T3lhRnCPWj+k7+SFAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47363969"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="47363969"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 11:04:59 -0700
-X-CSE-ConnectionGUID: pHmo2QjvRJu4Mo68JdEEIQ==
-X-CSE-MsgGUID: SULpJ2zHScmrAwn52PZxdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="138063280"
-Received: from uaeoff-desk2.amr.corp.intel.com (HELO [10.124.222.49]) ([10.124.222.49])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 11:04:58 -0700
-Message-ID: <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
-Date: Fri, 25 Apr 2025 11:04:56 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaAt62NS"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f4b7211badso4240681a12.2;
+        Fri, 25 Apr 2025 11:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745604523; x=1746209323; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mxIIRoUKUip7kdGYkldw/Ddl/8kVuZoZEj2BPQ5UWIs=;
+        b=MaAt62NS53Jn1QNaiyskiDZYuCyj9bHrP/Tvuso0gVpWP9q5K9Yo6FaoY2e94cqFFw
+         +r6IOWxk3BDuPhJ1HYSTtIUaIYC3n3LXwRP6z8xBG2gkUO2TDEPB6fTvyeyReaBzSgO0
+         NdN2t3CCqjTW5Lm4xGDqHHtw7ceL978aEh8H/ok16hU0LRfokMdXo00pMco+P1VpuTRY
+         4l0CLNIXnlJ3um611x7bFv1mZtSfr8yi7XwO98JDe6Q8Hh4+YZu94ln8Flns+1BpU/v/
+         DEx7j8X0MLUXKDb5NVc6p8I1YflJCcXnLJ45gKpxSn4GhLisHSIFNm2jYNY+nmI8h49y
+         QfKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745604523; x=1746209323;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mxIIRoUKUip7kdGYkldw/Ddl/8kVuZoZEj2BPQ5UWIs=;
+        b=w2Q8oOUnOJu5ynG/F+FLPsJlraLzThlVOcotDAQbeqhF7IolU0CCozM4BlqzP5zL25
+         FSqOHSvqSNw6VuFI2H/MANmre0s9Rp2XhjqhdA4m3CBTHWXDjD1riu62a8jtfKhoxoUD
+         O7DE1VDCwi6Lfssb57rkomlQRvZwj/cGmJQCJwyiCSh1NURQZrGY2s/uEqCcJDutSEF0
+         XuzunqDWLVuxv9kJbLQZ7KvS1xG3tCWcxo69WrSiC5ojRzuM26FKNasIwJpQzTs+pXVt
+         nRv/4YOPK+P+su2drJ9mFrbhtBrmXb3YL1vGyCGkNryX8ydXUUYK0xCJNknJQ45Ga/hn
+         voNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsLfgr4Jru0MOy59/lt/xNlc4VsRKLaVbufa+mSWVifdSwlVvxQZuO4ejF1Oijk3M2icds1ZD6FEUe1HzJ@vger.kernel.org, AJvYcCVnBpXrqx2ejpXie0IRBpbNK7t8PxrZo6/6EbQnr50y12O3MSm8IgJRFPSIneJ5RZkFolnBcshHFwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPw2RAWo1Jtz92uweIMvCjOdFwQa7+NadF2OCh6u9Q+enETbUH
+	DUTNteKn/z3Rpy6ShTKMWY6BQcZ0UGhNhYKh9XfY3PielihVDymoMXkcJjnpz+pOCTZQC9sIKL5
+	YiNT+41A/fbQkfL+QMT/vKnAADDI=
+X-Gm-Gg: ASbGncukd7HGTvyvwA00PaZJHY8NNdK1/wJezLVZ55dotmFRvnhKQ6ZtdWP1gPXoOgJ
+	zt9pTZ4sdhGsGIpo7bVrk+J4tWvV0C1RIu49dCc0p2N+aYA5zKhMq0/Ypm5sEoNoULCETbMv3D9
+	5pG+3ncEt5mGkL3KjDFWox/blOs22g+8HWOLU=
+X-Google-Smtp-Source: AGHT+IG2/QrV9Q7UUJuXl3dcOxL6dx6R358d0ZswlMA6nN4DaR5wF2/FlYtAQbu/NWX427+xy/ZM5XQJj84uWvnFMoQ=
+X-Received: by 2002:a17:907:9493:b0:acb:5583:6fe4 with SMTP id
+ a640c23a62f3a-ace7104e803mr291216966b.6.1745604522766; Fri, 25 Apr 2025
+ 11:08:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-To: Sean Christopherson <seanjc@google.com>,
- Elena Reshetova <elena.reshetova@intel.com>
-Cc: "jarkko@kernel.org" <jarkko@kernel.org>, Kai Huang <kai.huang@intel.com>,
- "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
- Vincent Scarlata <vincent.r.scarlata@intel.com>,
- "x86@kernel.org" <x86@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
- Chong Cai <chongc@google.com>, Asit K Mallick <asit.k.mallick@intel.com>,
- Erdem Aktas <erdemaktas@google.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "bondarn@google.com" <bondarn@google.com>,
- "dionnaglaze@google.com" <dionnaglaze@google.com>,
- Scott Raynor <scott.raynor@intel.com>
-References: <20250415115213.291449-1-elena.reshetova@intel.com>
- <20250415115213.291449-3-elena.reshetova@intel.com>
- <aAJn8tgubjT5t7DB@google.com>
- <f5cb3c37589791b2004a100ca3ea3deb9e1ae708.camel@intel.com>
- <aAefmNVRFc3me6QQ@google.com>
- <DM8PR11MB5750B37305B3B1FAE4F42D3AE7852@DM8PR11MB5750.namprd11.prod.outlook.com>
- <aAo_2MPGOkOciNuM@google.com>
- <DM8PR11MB5750D373790399E324B98A18E7852@DM8PR11MB5750.namprd11.prod.outlook.com>
- <aApgOqHvsYNd-yht@google.com>
- <DM8PR11MB5750AB0E790096AFF9AFD3AFE7842@DM8PR11MB5750.namprd11.prod.outlook.com>
- <aAutUaQvgEliXPUs@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <aAutUaQvgEliXPUs@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
+ <CAHp75VfHkKC81EinO+oN1b0=NRkwmNBLPky=HkrvPJCmt4njDQ@mail.gmail.com> <a06a5b07-8b99-495d-8e84-200923b277c7@baylibre.com>
+In-Reply-To: <a06a5b07-8b99-495d-8e84-200923b277c7@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 25 Apr 2025 21:08:06 +0300
+X-Gm-Features: ATxdqUFeC_NFn9YdtNzOp_S3srDTg1hDYwJnG87Fwqul6I2W5I1tPh7_5OHzsX4
+Message-ID: <CAHp75Vc4L3NukGriXHUu3=XjU_d-V1qL6tQcFtgcyC7A8WKPSw@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: ad7173: fix compiling without gpiolib
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Guillaume Ranquet <granquet@baylibre.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/25/25 10:40, Sean Christopherson wrote:
-> So then why on earth is the kernel implementing automatic updates?
+On Fri, Apr 25, 2025 at 7:55=E2=80=AFPM David Lechner <dlechner@baylibre.co=
+m> wrote:
+> On 4/22/25 4:03 PM, Andy Shevchenko wrote:
+> > On Tue, Apr 22, 2025 at 11:12=E2=80=AFPM David Lechner <dlechner@baylib=
+re.com> wrote:
 
-Because it's literally the least amount of code and doesn't create any
-new ABI.
+> >> Fix compiling the ad7173 driver when CONFIG_GPIOLIB is not set by
+> >> selecting GPIOLIB to be always enabled and remove the #if.
+> >
+> > I'm not sure we need to select GPIOLIB. If you want it, depend on it.
+> > GPIOLIB is not a hidden symbol, so why "select"?
+> >
+> Since this parts of the driver unrelated to GPIO provider/consumer rely o=
+n this
+> being enabled to function, select seems more appropriate.
 
-> I read back through most of the cover letters, and IIUC, we went
-> straight from "destroy all enclaves and force an update" to "blindly
-> try to do EUPDATESVN every time the number of enclaves goes from
-> 0=>1".  Those are essentially the two most extreme options.
-I'm sure we can think of a bunch more extreme things. How about after
-every ENCLS? ;)
+Hmm... The current state of affairs is 177 for select vs. 231 for
+depends on. I dunno how many of them are historical, for now it seems
+like 40%/60%. So if you think so, go for it!
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
