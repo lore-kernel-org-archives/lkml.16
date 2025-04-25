@@ -1,205 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A0F22F751
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745565342; cv=none; b=mouFtPQXjSzEOdLg5l0ubxoYufKY0gP7/MTscvIMyrtkAfkLfuyOim9/T1gowSfZYEMhNc63Rb1JmV1GGnK4byZHq0z4MSitDQHrMRPrq5kqSw7lATrlE1M0ksLOQBlFCi2fgWoMw+DIssI4RBb3yidzecM0zRL9ykiEgy4IW04=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745565342; c=relaxed/simple;
-	bh=Z0yNmKrBiTY5ZX2EKRFyzFZhdWxcMonxd/cXfY84SHw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HAFtI6sa9eIRwYgr+gnErb7eT5fHL1jpT9LCyOVbmwdXqwhVPOPEtkkr4mRf7jCn/CyE0eyewAHvUiRD8Owlmhka8xEzjqAzWCWVe4ugX+fFy9QOTPciB4vspn7TeVBe6bG/BdVMUYYZdI+kj+Y7yPah40xTBKpL4wodZh/FAQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G/QM1s2O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D5222FDE8;
+	Fri, 25 Apr 2025 07:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745565353; cv=pass; b=tzJeGxWdAuK+3+dru3fe97YH+cP9GUbHAMbjNorBqwfq3n6pwwtTLB85+dIdyFNq+ztVBn1Vq/qtnU9fyRIBQjqMnKbQR0ky/66xShe1xSxbFfLYkT3ukhW/Kbx21UE1dvDUoSGBUL/xxpRqNxF4jC1CyAwsYuZ2+J8Yv8Wr6ug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745565353; c=relaxed/simple;
+	bh=K2Q+c+VgO0+tqhTzzQUsPio49hiqKF4+2x4VMP4HJ4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pbanQv0qJ5SI27DeMJqIdmgXHsJWL35C2oCd0ShIcbB04zknnlurREe/0sHmRTPABDuLk5JgRFS+j5nDNRchltKvw3WL3MtnwhQE2ZJ1Gi1HUGuCQ1mIlURcMW+4bA65TxYs3h1TedENvWtfUNLEOwD7BvJVRUCTfySPfcm/d7Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=b2lKQNy1; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G/QM1s2O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745565338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T7r2z4B/7Mbfi0IDabIkh3LojKAky8fE2btyGmdHAwA=;
-	b=G/QM1s2OSWO2YdV0eOVWVAq6F3FsCF78Dl1tpzDct99SujKEz0rrbWKt5xy5x6G9YlQCsP
-	JlhpQ2Sleh8oGUimPuxWXu0AWCQCtlxrO9ZppMnb2yLpqZFzx/aRR2DF+NcYgrE50B7kyF
-	iZiD3PKkZT2ctho+8yqNct307RMTWqA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-278-qNrgYy0uNluo6vSv2ispwg-1; Fri, 25 Apr 2025 03:15:33 -0400
-X-MC-Unique: qNrgYy0uNluo6vSv2ispwg-1
-X-Mimecast-MFC-AGG-ID: qNrgYy0uNluo6vSv2ispwg_1745565332
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso856671f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:15:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745565332; x=1746170132;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T7r2z4B/7Mbfi0IDabIkh3LojKAky8fE2btyGmdHAwA=;
-        b=tTkIGmW+GzIazc6GERSfM2HQUCE+PA5FFbBq7baYcm11qJMGy7+C1PaEAbAXRxdzSM
-         wj8Eje8/zecEXKaavxOqRCaVkO9gDyZbqMwRzCzjBUliENurSr/hqe89dMkPy5n0/19F
-         t0yooMjD4GPOFtiIiM/2s+yR0bCqRBpnh161rucwEEGt+dQXrdYxXoxlOPOeC3948p13
-         Yjf96gKaYIoTTWQdoEuYplPEke21wM1+EEGJ3o8AfDaAbdH5KaO1Swrzdwe7W3DE7xVt
-         QLORKuvyAwuyEmHS1s8K0a1zRDbqoPGv43zfPby+8g8mNb+iNJ9QJUflbxqdIMUVjx88
-         S7Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAW2m1J1d7sFaXA4s3lFrSAxX2u/UarLfyQLdMIksKLd7iG/RTsw7cbzU1JZAlvFSMWDjzVX7w0m9TBns=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyad3S1hMbAA9JTDQM1ZcfWMMQEIOMRYpA3ANu30aaTsRxfNPx6
-	19XsCWwIvCwPdXN2YhuwTpuALT0tL4rNOa05/U5z/xSLp+DB8aGftxGC8G8MDdUeF+E6ZE2BEG0
-	yfEYgnzHegKx7LLvvpk62FQyUd6EYWVEref7OjZ7zFQyhpyHITQCN0UQVxoS3Ag==
-X-Gm-Gg: ASbGncsEtbv9r9J/Arv6gIHl0Ken9hGP0QgRPdQ29NDe4pLYvIQi9Y1JjvDjifHYH70
-	+fc54Y7Dk2jSMTmcqXT1OZcHhPcYd9UpSYaIwzOHAYHHxTGxg6QsVs0CS2dMbBPd5U9V8LkRbnB
-	DQgSWUiiiGzrCGxGbZ72tUFbcQgRxbG6ANnSByipKa5mJF2wf5hYgdwd6xYyRRc9XViF3FjAGIO
-	p8nRpvMIdL85Zhk00EkM+UAH1Y0cmlCX8G0yIKagQbDWRP1dKu6zAUb4Sf+TI38VFnoB6CP5WUe
-	jazZan9tTlHD2Z3VPxlnXJDAy4kAl8OGN7OgcwYbRIngK38Adm/tksifpgbDFNTqJPZXaw==
-X-Received: by 2002:a05:6000:186c:b0:39f:fcb:3bf6 with SMTP id ffacd0b85a97d-3a074e0dfccmr653958f8f.2.1745565332264;
-        Fri, 25 Apr 2025 00:15:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKjltySyoEEsZUoyQAjvToSkGsH8mjTJtTxmkBO665sLQSkBEEV6kyM0pGb2qhN8WQSJn6fQ==
-X-Received: by 2002:a05:6000:186c:b0:39f:fcb:3bf6 with SMTP id ffacd0b85a97d-3a074e0dfccmr653934f8f.2.1745565331871;
-        Fri, 25 Apr 2025 00:15:31 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca543bsm1492506f8f.34.2025.04.25.00.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 00:15:31 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>, drawat.floss@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- jfalempe@redhat.com
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
- atomic helpers
-In-Reply-To: <20250425063234.757344-1-ryasuoka@redhat.com>
-References: <20250425063234.757344-1-ryasuoka@redhat.com>
-Date: Fri, 25 Apr 2025 09:15:29 +0200
-Message-ID: <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="b2lKQNy1"
+ARC-Seal: i=1; a=rsa-sha256; t=1745565290; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=YyQgNK8HmwLBQP4OOWsBKMVEzu6HZKCu7JIRNVf8SGC7gPtyCeDwKNoTvn5seWl78nwevm2wWKj4L3Ebo7INFHOOj3U2Iz1Zh1ZldL2eYALoqF6W0HotVexxfPEmNl9l+G1A1GTF3p16bo7FBmil3J5WlTm7ZTUHxfWUY6XSxIE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745565290; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=1A1UyE1ArDNBmuD9T7lBr0kbJd8hCw/QiuuSdI6FFkk=; 
+	b=ff5Ur5fQTTDGMgxynufXRjKyetG6JFTfAxwmh69Y1spCstClmqpTlqEwZ9udGRpqLUsbB4TbIVCYFcmlyMBfyHYCYZWvG/l5qgs5/OGjHrfGVXcgZBsb1VelN/IMgxPxgx2pOhDjctKftNqvQajyABNfCvoN7KHySdrurBO+j2I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745565290;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=1A1UyE1ArDNBmuD9T7lBr0kbJd8hCw/QiuuSdI6FFkk=;
+	b=b2lKQNy15zGClN03B/PSKhyixTKv1b7hPjazsoSqmucX4rOZ2kH87/M8/tknr1Ud
+	HaZ5xeiazUrtQ6EXSZquFQy9IMGac0g31oXuZqylSFI1WgMWNEsAqdQblZaBeNoRMh3
+	ZEj6TD5xI/6PcNtCGo15aA4YIOjtymcUnG6GqG2g=
+Received: by mx.zohomail.com with SMTPS id 1745565289014360.3511868676079;
+	Fri, 25 Apr 2025 00:14:49 -0700 (PDT)
+Message-ID: <1136c7cb-1c7b-410b-93d2-c74aec939196@collabora.com>
+Date: Fri, 25 Apr 2025 12:14:39 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+ Jeff Johnson <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>,
+ Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>,
+ Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kunwu Chan <chentao@kylinos.cn>, kernel@collabora.com, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
+References: <20250410145704.207969-1-usama.anjum@collabora.com>
+ <h2wv7drxntokziiwbzjw5xjzbctbomp6cfcba7ppfbih6o7so7@p6dazv32xfx4>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <h2wv7drxntokziiwbzjw5xjzbctbomp6cfcba7ppfbih6o7so7@p6dazv32xfx4>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
+On 4/25/25 12:04 PM, Manivannan Sadhasivam wrote:
+> On Thu, Apr 10, 2025 at 07:56:54PM +0500, Muhammad Usama Anjum wrote:
+>> Fix dma_direct_alloc() failure at resume time during bhie_table
+>> allocation. There is a crash report where at resume time, the memory
+>> from the dma doesn't get allocated and MHI fails to re-initialize.
+>> There may be fragmentation of some kind which fails the allocation
+>> call.
+>>
+> 
+> If dma_direct_alloc() fails, then it is a platform limitation/issue. We cannot
+> workaround that in the device drivers. What is the guarantee that other drivers
+> will also continue to work? Will you go ahead and patch all of them which
+> release memory during suspend?
+> 
+> Please investigate why the allocation fails. Even this is not a device issue, so
+> we cannot add quirks :/
+This isn't a platform specific quirk. We are only hitting it because
+there is high memory pressure during suspend/resume. This dma allocation
+failure can happen with memory pressure on any device.
 
-Hello Ryosuke,
+The purpose of this patch is just to make driver more robust to memory
+pressure during resume.
 
-> Drop simple-KMS in favor of regular atomic helpers to make the code more
-> modular. The simple-KMS helper mix up plane and CRTC state, so it is
-> obsolete and should go away [1]. Since it just split the simple-pipe
-> functions into per-plane and per-CRTC, no functional changes is
-> expected.
->
-> [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@suse.de/
->
-> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
->
+I'm not sure about MHI. But other drivers already have such patches as
+dma_direct_alloc() is susceptible to failures when memory pressure is
+high. This patch was motivated from ath12k [1] and ath11k [2].
 
+[1]
+https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
+[2]
+https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
 
+What do you think can be the way forward for this patch?
 
-> -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
-> -			       struct drm_crtc_state *crtc_state,
-> -			       struct drm_plane_state *plane_state)
-> +static const uint32_t hyperv_formats[] = {
-> +	DRM_FORMAT_XRGB8888,
-> +};
-> +
-> +static const uint64_t hyperv_modifiers[] = {
-> +	DRM_FORMAT_MOD_LINEAR,
-> +	DRM_FORMAT_MOD_INVALID
-> +};
-> +
+> 
+>> To fix it, don't free the memory at power down during suspend /
+>> hibernation. Instead, use the same allocated memory again after every
+>> resume / hibernation. This patch has been tested with resume and
+>> hibernation both.
+>>
+>> The rddm is of constant size for a given hardware. While the fbc_image
+>> size depends on the firmware. If the firmware changes, we'll free and
+>> allocate new memory for it.
+>>
+>> Here are the crash logs:
+>>
+>> [ 3029.338587] mhi mhi0: Requested to power ON
+>> [ 3029.338621] mhi mhi0: Power on setup success
+>> [ 3029.668654] kworker/u33:8: page allocation failure: order:7, mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
+>> [ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted 6.11.11-valve10-1-neptune-611-gb69e902b4338 #1ed779c892334112fb968aaa3facf9686b5ff0bd7
+>> [ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112 08/01/2024
+> 
+> Did you intend to leak this information? If not, please remove it from
+> stacktrace.
+The device isn't private. Its fine.
 
-I think the kernel u32 and u64 types are preferred ?
+> 
+> - Mani
+> 
 
-> +static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
-> +					     struct drm_atomic_state *state)
->  {
-> -	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
-> -	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-> +	struct hyperv_drm_device *hv = to_hv(crtc->dev);
-> +	struct drm_plane *plane = &hv->plane;
-> +	struct drm_plane_state *plane_state = plane->state;
-> +	struct drm_crtc_state *crtc_state = crtc->state;
->  
->  	hyperv_hide_hw_ptr(hv->hdev);
->  	hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
->  				crtc_state->mode.hdisplay,
->  				crtc_state->mode.vdisplay,
->  				plane_state->fb->pitches[0]);
-> -	hyperv_blit_to_vram_fullscreen(plane_state->fb, &shadow_plane_state->data[0]);
->  }
->  
-> -static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
-> -			     struct drm_plane_state *plane_state,
-> -			     struct drm_crtc_state *crtc_state)
-> +static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
-> +					      struct drm_atomic_state *state)
-> +{ }
-> +
-
-Why do you need an empty CRTC atomic disable callback? Can you just not
-set it instead?
-
->  
-> -static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
-> -			       struct drm_plane_state *old_state)
-> +static void hyperv_plane_atomic_update(struct drm_plane *plane,
-> +						      struct drm_atomic_state *old_state)
->  {
-> -	struct hyperv_drm_device *hv = to_hv(pipe->crtc.dev);
-> -	struct drm_plane_state *state = pipe->plane.state;
-> +	struct drm_plane_state *old_pstate = drm_atomic_get_old_plane_state(old_state, plane);
-> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
-> +	struct drm_plane_state *state = plane->state;
-
-You should never access the plane->state directly, instead the helper
-drm_atomic_get_new_plane_state() should be used. You can also rename
-the old_state paramete to just state, since it will be used to lookup
-both the old and new atomic states.
-
-More info is in the following email from Ville:
-
-https://lore.kernel.org/dri-devel/Yx9pij4LmFHrq81V@intel.com/
-
->  	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(state);
->  	struct drm_rect rect;
->  
-> -	if (drm_atomic_helper_damage_merged(old_state, state, &rect)) {
-> +	if (drm_atomic_helper_damage_merged(old_pstate, state, &rect)) {
-
-I know that most of the simple-KMS drivers do this but since this driver
-enables FB damage clips support, it is better to iterate over the damage 
-areas. For example:
-
-	struct drm_atomic_helper_damage_iter iter;
-        struct drm_rect dst_clip;
-	struct drm_rect damage;
-
-	drm_atomic_helper_damage_iter_init(&iter, old_pstate, state);
-	drm_atomic_for_each_plane_damage(&iter, &damage) {
-		dst_clip = state->dst;
-
-		if (!drm_rect_intersect(&dst_clip, &damage))
-			continue;
-
-                hyperv_blit_to_vram_rect(state->fb, &shadow_plane_state->data[0], &damage);
-                hyperv_update_dirt(hv->hdev, &damage);
-        }
-
-
-Other than these small comments, the patch looks good to me. So if you take
-into account my suggestions, feel free to add:
-
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
 
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+Regards,
+Usama
