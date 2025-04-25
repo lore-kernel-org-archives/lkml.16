@@ -1,70 +1,102 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.15])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967B62701AE;
-	Fri, 25 Apr 2025 03:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36BB4C6E;
+	Fri, 25 Apr 2025 03:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745550876; cv=none; b=lvVP+JYI3amio6phTEvviG9yIKBMrat8nC08WHry17jv4Ibj9vt6DCoBTShIu95gk6m0T+EvXcmMRKJ4x8ZLAaFWpkZWWXbGayyUKfnkwyupPHHLuuVix0rDnncoD4Df3eKKVs/8JiIkQqTKaCQMVg9I4DoATUBrKaYNCfbJqOg=
+	t=1745550930; cv=none; b=F2FoQ+g3YtIh2d0NQW3FPur6UTAlbErvvSghsrCs4IH96Ry6NP8GElSUYierZUaEMwEcnBWxfH66vD/rs2f4CLOKqrKaz3d8bYRqmRtc8a3+3wb6boyU+Ntc2axuEQt/VZc9WX+XW8qb0rgNwWEjUy3A9de7NmNHWt0NsbjmTnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745550876; c=relaxed/simple;
-	bh=9xzEWc7rbuzjVsxgwE/wIoKdmmySG3tWSDW4PCBvxPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UGyEeMlGhFgB3uMatylux0oXdvhWzg/Wke7tAYuAKfd/RmAU/HomtZAnEYscYd4mUBFP5fjinDuqCK6MehQht8sEYSI82rRWnuyIYhsR1vfCSy+a7WUvzspg8JIwtp2rOMMaLKlD8xeM6MgK8SNpEKv4xuFO4NGNODiGhFrgF5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=SKRlq7iI; arc=none smtp.client-ip=1.95.21.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1745550930; c=relaxed/simple;
+	bh=lf5tYFHlmIW306cV5CFtXC6/2U+4s88U3LbYKiT5a0k=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=RpIukp40V8DHu6+CGSsOEi5QPidWmi9AnaLIW2nwPZ1n2UIJVCpjpBYR1EHYdhh8qmMJj6ebJsakSvugJQXDEJzr/fhSbi0iBaWTTzUzhI9oS1cyojHGKqX+9AIpYoEFYxvo6NmIhWvfr6cN4K4gvJEeQ9OaG1ekSHuKLd/NAZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBo/6pkD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="SKRlq7iI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=Ns+L0aOm8q4XI8tdY0zbGpGXoWoyJjIZ1B6rDiXbX30=;
-	b=SKRlq7iImJSm8WSOqSFewc3xuRNOOHQvEfFqd5/qWhssemJdgOYpsRvR8vgppJ
-	Lcod9RJv/UYLydErZV9zePUAfDLqC37XxNuhpNq8mMC1IIQ4U5jLTplbf1PDkd2v
-	D0azbviE8xSXZxe75QPU3OA1y5Qsf4FrBWyaUSVbx8tvI=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD3zEXr_QpoCyPbAw--.5525S3;
-	Fri, 25 Apr 2025 11:13:48 +0800 (CST)
-Date: Fri, 25 Apr 2025 11:13:46 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, hongxing.zhu@nxp.com
-Subject: Re: [PATCH v2 0/8] arm64: dts: imx8: create common imx-pcie[0,1]-ep
- overlay file
-Message-ID: <aAr96tBdflbAyKSb@dragon>
-References: <20250423-imx8_pcie_ep_dts-v2-0-43c982d83a8f@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBo/6pkD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D949C4CEE3;
+	Fri, 25 Apr 2025 03:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745550930;
+	bh=lf5tYFHlmIW306cV5CFtXC6/2U+4s88U3LbYKiT5a0k=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=VBo/6pkDA2LAogTSBoBn3KFLL/xy9d+85Hj3iXb0gREbs6wSKM/zRz6ITogqG/66W
+	 WUwUUgSlFVxQzsF0Nj7ceWd0CpsxKHU7nG6yftMZEr72APlPEwKz+3kYOJkxFrFLhm
+	 k49uDAViNnQo1SkFaY8uWfSutlCK3pfvEUywSgsswO9PTaFP/zqzxe2F2vk603LVrX
+	 k5OGlsEy3cKpcAaoS0BrFnmjfBkeyL6QO+vPBrsAaukPOZldiqRelNPM08hQUPJiry
+	 MOmoyR1FWlUWjZOHPtx6q2Z4CMrQv+C/a3O+Hqt0bw+D8fM/9hZ3FrQIL7Ma3KzfX+
+	 E7P3ToTYd69sg==
+Date: Thu, 24 Apr 2025 20:15:26 -0700
+From: Kees Cook <kees@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+CC: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_2/4=5D_mm=3A_perform_VMA_all?=
+ =?US-ASCII?Q?ocation=2C_freeing=2C_duplication_in_mm?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <0f848d59f3eea3dd0c0cdc3920644222c40cffe6.1745528282.git.lorenzo.stoakes@oracle.com>
+References: <cover.1745528282.git.lorenzo.stoakes@oracle.com> <0f848d59f3eea3dd0c0cdc3920644222c40cffe6.1745528282.git.lorenzo.stoakes@oracle.com>
+Message-ID: <51903B43-2BFC-4BA6-9D74-63F79CF890B7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423-imx8_pcie_ep_dts-v2-0-43c982d83a8f@nxp.com>
-X-CM-TRANSID:Mc8vCgD3zEXr_QpoCyPbAw--.5525S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW5Kr4fuF1rXFy7Xry7try3twb_yoWxGFg_Cr
-	45Wa1kJ347Jw4fJ345A3ZxuFy2g345Z3y5Wry8Xwsa93WfZFWYvr4kJr1rW3WUCF13Xw4D
-	CFn8Xw1xXw4rGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU08cTPUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiARs6ZWgK0Y3JqQAAsb
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 08:41:22PM -0400, Frank Li wrote:
-> Frank Li (8):
->       arm64: dts: imx8: create unified pcie0 and pcie0_ep label for all chips
->       arm64: dts: imx8dxl-ss-hsio: correct irq number for imx8dxl
->       arm64: dts: imx8dxl-evk: Add pcie0-ep node and use unified pcie0 label
->       arm64: dts: imx8: use common imx-pcie0-ep.dtso to enable PCI ep function
->       arm64: dts: imx95: add pcie1 ep overlay file and create pcie-ep dtb files
->       arm64: dts: imx8mm-evk: add pcie0-ep node and apply pcie0-ep overlay file
->       arm64: dts: imx8mq: add pcie0-ep node
->       arm64: dts: imx8mq-evk: add pcie[0,1]-ep nodes
 
-Applied all, thanks!
 
+On April 24, 2025 2:15:27 PM PDT, Lorenzo Stoakes <lorenzo=2Estoakes@oracl=
+e=2Ecom> wrote:
+>+static void vm_area_init_from(const struct vm_area_struct *src,
+>+			      struct vm_area_struct *dest)
+>+{
+>+	dest->vm_mm =3D src->vm_mm;
+>+	dest->vm_ops =3D src->vm_ops;
+>+	dest->vm_start =3D src->vm_start;
+>+	dest->vm_end =3D src->vm_end;
+>+	dest->anon_vma =3D src->anon_vma;
+>+	dest->vm_pgoff =3D src->vm_pgoff;
+>+	dest->vm_file =3D src->vm_file;
+>+	dest->vm_private_data =3D src->vm_private_data;
+>+	vm_flags_init(dest, src->vm_flags);
+>+	memcpy(&dest->vm_page_prot, &src->vm_page_prot,
+>+	       sizeof(dest->vm_page_prot));
+>+	/*
+>+	 * src->shared=2Erb may be modified concurrently when called from
+>+	 * dup_mmap(), but the clone will reinitialize it=2E
+>+	 */
+>+	data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->shared)));
+>+	memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
+>+	       sizeof(dest->vm_userfaultfd_ctx));
+>+#ifdef CONFIG_ANON_VMA_NAME
+>+	dest->anon_name =3D src->anon_name;
+>+#endif
+>+#ifdef CONFIG_SWAP
+>+	memcpy(&dest->swap_readahead_info, &src->swap_readahead_info,
+>+	       sizeof(dest->swap_readahead_info));
+>+#endif
+>+#ifdef CONFIG_NUMA
+>+	dest->vm_policy =3D src->vm_policy;
+>+#endif
+>+}
+
+I know you're doing a big cut/paste here, but why in the world is this fun=
+ction written this way? Why not just:
+
+*dest =3D *src;
+
+And then do any one-off cleanups?
+
+
+--=20
+Kees Cook
