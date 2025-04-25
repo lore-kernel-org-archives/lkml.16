@@ -1,127 +1,89 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8111610957;
-	Fri, 25 Apr 2025 05:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745560345; cv=pass; b=tEQSHBvW4tbiDOqRrS8FLwa7+L4C9t3lDunmnYpRaYglvmm//+yV9isIk1Ws5K2BQiB3OPlRiQpNyKhc1x7z/pslpi7AnIsFFOtSdVhcEGYtRnj/AIDEWx0TFY16PWKgF59P5FhJw2d/MxDqtC1GW11Ul7Ly9bUIR4b7hJlwdfs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745560345; c=relaxed/simple;
-	bh=1fA7YbdY6rcv7I4WLuk8CtpvgX9dwi2WMaUu+WiyfpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rb2wMHyytIojs/u9PTVpwTJOUimdTitIFCv0BcyXQWok1DHTpGc35/gwQq7sH0seXQyEZII3ApuXglcd12QICBOf/cCEiNuVPAlk6pv3FgXeRQxxrce9bf8Q/Ml9LaUSa8HcY5J5fFSJ8g0r+HwJ4/UomScxArNjejqNbFag+7Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=h66zxItY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D7E22A4F3;
+	Fri, 25 Apr 2025 05:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745560385; cv=none; b=VlAjthhqzQi9joWmXJBk9vUZdE98uzCWO6fr5/xKWXwQROLagm9Oy/KOcGadV6SeJqnj0WHelkL0M+mXcvEjEMPZmES9pY8z62MSuouqJs2SYuaRWtJCWJLRR7/6pliZHABOMbxvyt1cbqEKH4VXJb68IcKRhSFfFVN3JFa0pxo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745560385; c=relaxed/simple;
+	bh=7ZvFXhNY8gnq82v3dNyEoFqX8xDYnTNWAxehS3YFPz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PNpss5LTO8y8Rffo8MX0WjoLpK2IZSU8B5ZF+JGuWY1roW5PMt3xIwSNlIL2E78brpa2XAILUk2btXK0pNuk2ccfonkKtZ1TPGz8cTJEP/f04Qnmzej4xQ30W2srv+qsDD7vwGCL3RmrigrW7DWWndzCfIOyG8AzQtOkzEvar64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=yuheSb8h; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="h66zxItY"
-ARC-Seal: i=1; a=rsa-sha256; t=1745560321; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=KTXucKr5RR5xKXlq5M9P1wpXubg0IMsyCKYkbc0rfeizZxRx7+ZM6YM1Y3rTFVVH61Pzs6TjAw8if4p5nnj6Idafu3Rej+A3DGMIFruYjKhjr4AIszaM4opYEhwZ5/9I4Ai3M6erPoYR6qDU56WfkwsrH8rc2bfnjzKPXVQ57DI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745560321; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=o3l6CrpNH86FpEPGZLgURyPz2oQxBJvhawZgSLwDJCc=; 
-	b=jf3V+CtLYmdqYnRaCNtQLVvtEBZnB7SWOLEELf/Xj4sZ/7foKnoCukMIQV4CP6if+a3u1K8Z0KN4khA7RqPO2XqsxOWGFCM/QmW73e89Lspq/rsLc1cHWc1xMCxDXcaQ8Y312DyJglhqZjJwf6TsSn5M8ozJXBQTdFFZqpX3YI4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745560321;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=o3l6CrpNH86FpEPGZLgURyPz2oQxBJvhawZgSLwDJCc=;
-	b=h66zxItYgoEDNK8fmWa7AAeR5XBFejpRlw6GzbnP4tO9vffO5W9p6Yu4slTvee4U
-	70JGTZYuQVOEfRJm6muNYraiz0CjCiIHMZmuDP+IrmLOxPKXJxIHegFpMPU8BEzE0+X
-	vJc1sSOPg96p5oKSyaxg1rnzKs743t8x6nNKrU0w=
-Received: by mx.zohomail.com with SMTPS id 1745560318274237.55482610129525;
-	Thu, 24 Apr 2025 22:51:58 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: quic_bqiang@quicinc.com,
-	jeff.johnson@oss.qualcomm.com,
-	Jeff Johnson <jjohnson@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] wifi: ath11k: Fix MHI target memory reuse logic
-Date: Fri, 25 Apr 2025 10:51:40 +0500
-Message-ID: <20250425055141.2041712-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="yuheSb8h"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 083881F944;
+	Fri, 25 Apr 2025 07:52:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1745560373;
+	bh=UyQprxTrTzeJEuddDXNiYr4ctzPhYLZ6Cp5WEsAgS9s=;
+	h=Received:From:To:Subject;
+	b=yuheSb8htIWbOcxaC4uxXuHyj0CX6UJYao3KmcRicGjt3irM9wHqvMVjc4T3ol8NN
+	 rK8IkJo+Hm6qk+L8FoHUQyue8CZ6yn/iWFiuJpYoulREypk49UYHf+O89rHlwEq5yg
+	 XRM1O0COTqgzcgB2kIwV76mGvhoZzqLZgcb8sZ5G7LnHokIOPXrIiyng+16M8qZlDr
+	 kiFJENmxo9Y2jfp9BZB9mbgU9j0XWjyNvpSENR+D9OfPCrw1tHKGAEcE89y/IPahTh
+	 Mgigt1E8PCarR6soLXSVo4hGNQh+DKfeUwv6Kszss1GDw6xhYpIOtsqVI4/CzGhpHG
+	 mxWZJ9MBSeyVw==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 9BD827F94C; Fri, 25 Apr 2025 07:52:52 +0200 (CEST)
+Date: Fri, 25 Apr 2025 07:52:52 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Philippe Schenker <philippe.schenker@impulsing.ch>,
+	Manuel Traut <manuel.traut@mt.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v4] arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to
+ usdhc2
+Message-ID: <aAsjNP_2jo-zDeEk@gaggiata.pivistrello.it>
+References: <20250424095916.1389731-1-Wojciech.Dubowik@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424095916.1389731-1-Wojciech.Dubowik@mt.com>
 
-Firmware requests 2 segments at first. The first segment is of 6799360
-whose allocation fails due to dma remapping not available. The success
-is returned to firmware. Then firmware asks for 22 smaller segments
-instead of 2 big ones. Those get allocated successfully. At suspend/
-hibernation time, these segments aren't freed as they will be reused
-by firmware after resuming.
+On Thu, Apr 24, 2025 at 11:59:14AM +0200, Wojciech Dubowik wrote:
+> Define vqmmc regulator-gpio for usdhc2 with vin-supply
+> coming from LDO5.
+> 
+> Without this definition LDO5 will be powered down, disabling
+> SD card after bootup. This has been introduced in commit
+> f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5").
+> 
+> Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support for verdin imx8m mini")
+> Tested-by: Manuel Traut <manuel.traut@mt.com>
+> Reviewed-by: Philippe Schenker <philippe.schenker@impulsing.ch>
+> Tested-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
 
-After resuming, the firmware asks for the 2 segments again with the
-first segment of 6799360 size. Since chunk->vaddr is not NULL, the
-type and size are compared with the previous type and size to know if
-it can be reused or not. Unfortunately, it is detected that it cannot
-be reused and this first smaller segment is freed. Then we continue to
-allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
-is called which frees the second smaller segment as well. Later success
-is returned to firmware which asks for 22 smaller segments again. But
-as we had freed 2 segments already, we'll allocate the first 2 new
-smaller segments again and reuse the remaining 20. Hence 20 small
-segments are being reused instead of 22.
+Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
 
-Add skip logic when vaddr is set, but size/type don't match. Use the
-same skip and success logic as used when dma_alloc_coherent() fails
-without freeing the memory area. The following error are being fixed at
-resume:
+FYI, you can have multiple fixes tag, and to be safe to not introduce regression
+on some stable backport because the 2 patches are not back-ported at the same
+time, better to have both the Fixes tags here.
 
-	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
-	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+No need to send a v5, the tag should be picked up from this email.
 
-Those failures aren't because of the bigger chunk allocation failure as
-they are skipped. Rather these failures are because of smaller chunk
-allocation failures. This patch fixes freeing and allocation of 2 smaller
-chunks.
+Francesco
 
-Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
-
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-Changes since v1:
-- Update description
-
-Changes since v2:
-- Update description
----
- drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index 47b9d4126d3a9..2782f4723e413 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
- 			    chunk->prev_size == chunk->size)
- 				continue;
- 
-+			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
-+				ath11k_dbg(ab, ATH11K_DBG_QMI,
-+					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
-+					    chunk->size, chunk->type,
-+					    chunk->prev_size, chunk->prev_type);
-+				ab->qmi.target_mem_delayed = true;
-+				return 0;
-+			}
-+
- 			/* cannot reuse the existing chunk */
- 			dma_free_coherent(ab->dev, chunk->prev_size,
- 					  chunk->vaddr, chunk->paddr);
--- 
-2.43.0
 
