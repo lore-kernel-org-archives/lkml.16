@@ -1,109 +1,117 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761A0231A3F;
-	Fri, 25 Apr 2025 07:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567933; cv=pass; b=jnw27msxU3LHO6NUuyonhbRKCZxHTuaoSucFxbVGrdA1k5E3isvenltmg6NaYeyxJRGPwaKolfbwDbxW7yt8FFORlIKtSDeYe/RefMve+6kIAl3BRRRMuB7nsuJwFvPjBMtB295yMvgYX5Gl2aL7AQWEx/grma7WwMrSGkpEclY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567933; c=relaxed/simple;
-	bh=0Cnj4L+9pVhrf9zcyDoffm6pbwyD3RJzA1qc15nIk20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ayg2QsDdKfCeaWLh/0RIfttYxvi3TFbjC/cRzqruyEIL017SPc+4QDewcQmCnEjaoQVcMihjfzZnOdcENWHo3qtE+eYXSNwQAJphWNuW4Bwr6wuD/lnPOoy94/+ycWSv+hZp99aMhtx8Sfm2qi2D6IiQMtahGmjzNHQiHFIggj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=yjr1AF/R; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE9B231A51
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745567963; cv=none; b=XrryYY5iOc3NkxSnpiiaeUg+rKVjgSCuRXWSFJuxGjsedkmJSpOya+GR06D2zFB5+/WvGSQ7sojGi44S5CeM/6jNQ9jlK1UdbkYccxsTZTYO2hry/BDvDxCTighCwSvxmcftntofe5Lo4wVqNxTbUSO0k+bSV4RrL2WslhJrdWA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745567963; c=relaxed/simple;
+	bh=h4iOBZ59fktIHjN9U/oodWigLneksyn9qeVhjdbT7/I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OQf7feViHIqCb/5OqJH05rzUE0joH3iqepsGKyhGtqgKTfe59KiDqzwe7jYBb7HGANlKnIvV4ed2A8SwrIU07kcj9DPd3I44dlYRF4+XezdYqHLv3i9OSCLaFsfID/rrjvDxXnscTwQZ6nwG0dBzXMSTw071ZI2K6hnwPSldUIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VkVkQwnt; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="yjr1AF/R"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4ZkQFz4rllzyQr;
-	Fri, 25 Apr 2025 10:58:47 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1745567927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X3zfamPv07taqr5tBlfn8zwIElkO9QWOZquD+Yd2yWc=;
-	b=yjr1AF/RK8n/tLhxeA0JG86y1rqJFtjG7sIkZl1Y2dbar7TJ2PsRl/h3kmEsZM1uxxBZC7
-	rAHnxr8Vvk2qHPziE1+0Hj3NGzd0hkOeshBf/sIUuetehaamHpDgv607WN1Ug3d76hIrQr
-	wgg4K3KN8etnucIe1kurfNinb//nS1U=
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1745567927; a=rsa-sha256; cv=none;
-	b=pW04VLfvaSDcMUKqzzAstVqSZwaYdMtZVrkSTfuIhYuzkG/rPuDnd01Cc/vImxUPuGEtNX
-	1+ossyzxBdkBDOaV8S2e37boDuYH1SLNsC5D65OUqhWNsd4MKS88mc6BaJj7TaOhpAZzS1
-	535Vln7/PqK3yuKxSJg+ky++h+7hQ9c=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1745567927;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X3zfamPv07taqr5tBlfn8zwIElkO9QWOZquD+Yd2yWc=;
-	b=vd7sAg+Q3tIvKPiY6ITUGXZDW0ElhZvoi4O4YFrk/r2LDAfx2uSXsXRliNLA+mjGWoL5/m
-	lXil9jdiewlkVDcIvB/QpvWfaRVMrBUOgaD8W4TqsyuVcSXlvLTVI1b4+wcYGzC+TIAPWj
-	1bfl7KtzJ7uTlKtbm1Dgyq4n6r99ZvI=
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 08BA9634C93;
-	Fri, 25 Apr 2025 10:58:47 +0300 (EEST)
-Date: Fri, 25 Apr 2025 07:58:46 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Umang Jain <umang.jain@ideasonboard.com>
-Subject: Re: [PATCH] media: imx335: Use correct register width for HNUM
-Message-ID: <aAtAtp2epJCs0RaN@valkosipuli.retiisi.eu>
-References: <20250422122052.12601-1-kieran.bingham@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VkVkQwnt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745567962; x=1777103962;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=h4iOBZ59fktIHjN9U/oodWigLneksyn9qeVhjdbT7/I=;
+  b=VkVkQwntTeWpoSJ4dzBSFGGoUG16N5ZPP1aVBZ+FvGVavU6FvTnn70Pc
+   fe/n6EpsPDNW2PX2m1KfMqabBJx6wfIgsR2BM6B//2GM6naMKnsZr9ya0
+   pAuqFHBpvmwmtLQQQq+bFk8YkyOb7cmJiOqSoa2YRLeEJ2cOkptROt59j
+   v91lYFvZRKO/AGRO4TfbYX92uCI5m/mk5f9hndYgxFSDHqF51CQPymMMk
+   eNaunbRb82ogPcD0MxTsTQGLLvjsJMGH4nx3rji2FIGInLv3K+jucGuA1
+   7YqD8nBivcfzx7Y/Y5gXP26Rv94Z91GjC63YOVnz2U+3QwmGSALbBcux1
+   w==;
+X-CSE-ConnectionGUID: +253/tEDSJiiTsUlRAsBwg==
+X-CSE-MsgGUID: rY+AgvusSNmQzdCOeQipZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="50889547"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="50889547"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:59:20 -0700
+X-CSE-ConnectionGUID: mLApreHQRv2F+ccffiznuA==
+X-CSE-MsgGUID: iogPStJpTTGNOTRU+QdKJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132724960"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.83])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:59:17 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Harry Austen <hpausten@protonmail.com>, intel-xe@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Harry
+ Austen <hpausten@protonmail.com>, Lucas De Marchi
+ <lucas.demarchi@intel.com>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+ <thomas.hellstrom@linux.intel.com>
+Subject: Re: [PATCH v2] drm/xe: Allow building as kernel built-in
+In-Reply-To: <20250425073534.101976-1-hpausten@protonmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250425073534.101976-1-hpausten@protonmail.com>
+Date: Fri, 25 Apr 2025 10:59:12 +0300
+Message-ID: <87y0voy8mn.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422122052.12601-1-kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kieran,
-
-On Tue, Apr 22, 2025 at 01:20:52PM +0100, Kieran Bingham wrote:
-> From: Umang Jain <umang.jain@ideasonboard.com>
-> 
-> CCI_REG_HNUM should be using CCI_REG16_LE() instead of CCI_REG8()
-> as HNUM spans from 0x302e[0:7] to 0x302f[0:3].
-> 
-> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-
-Does this need Fixes:/Cc: stable tags?
-
+On Fri, 25 Apr 2025, Harry Austen <hpausten@protonmail.com> wrote:
+> Fix Kconfig symbol dependency on KUNIT, which isn't actually required
+> for XE to be built-in. However, if KUNIT is enabled, it must be built-in
+> too.
+>
+> Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
+> isn't, since that results in duplicate symbol errors.
+>
+> Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=3Dm")
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Signed-off-by: Harry Austen <hpausten@protonmail.com>
 > ---
->  drivers/media/i2c/imx335.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-> index db424b178e98..0418875e996c 100644
-> --- a/drivers/media/i2c/imx335.c
-> +++ b/drivers/media/i2c/imx335.c
-> @@ -31,7 +31,7 @@
->  #define IMX335_REG_CPWAIT_TIME		CCI_REG8(0x300d)
->  #define IMX335_REG_WINMODE		CCI_REG8(0x3018)
->  #define IMX335_REG_HTRIMMING_START	CCI_REG16_LE(0x302c)
-> -#define IMX335_REG_HNUM			CCI_REG8(0x302e)
-> +#define IMX335_REG_HNUM			CCI_REG16_LE(0x302e)
->  
->  /* Lines per frame */
->  #define IMX335_REG_VMAX			CCI_REG24_LE(0x3030)
+> v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
+>
+>  drivers/gpu/drm/xe/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+> index 9bce047901b22..bc63c396d7fef 100644
+> --- a/drivers/gpu/drm/xe/Kconfig
+> +++ b/drivers/gpu/drm/xe/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_XE
+>  	tristate "Intel Xe Graphics"
+> -	depends on DRM && PCI && MMU && (m || (y && KUNIT=3Dy))
+> +	depends on DRM && PCI && MMU && (m || (y && KUNIT!=3Dm))
 
--- 
-Regards,
+I can't make heads or tails about that. I think expressing the kunit
+dependency on a separate line like this is both much more common and
+clear:
 
-Sakari Ailus
+	depends on KUNIT || KUNIT=3Dn
+
+>  	select INTERVAL_TREE
+>  	# we need shmfs for the swappable backing store, and in particular
+>  	# the shmem_readpage() which depends upon tmpfs
+> @@ -51,7 +51,7 @@ config DRM_XE
+>=20=20
+>  config DRM_XE_DISPLAY
+>  	bool "Enable display support"
+> -	depends on DRM_XE && DRM_XE=3Dm && HAS_IOPORT
+> +	depends on DRM_XE && (DRM_XE=3Dm || DRM_I915!=3Dy) && HAS_IOPORT
+>  	select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
+>  	select I2C
+>  	select I2C_ALGOBIT
+
+--=20
+Jani Nikula, Intel
