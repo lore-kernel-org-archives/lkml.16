@@ -1,74 +1,74 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC62221F1E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53157224B0D
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610561; cv=none; b=TkFmiJP1oxAq/5M4b8YjOY7iwNqhjHTvZzu8WPQJvDSmDETWOOOePzyBP1IYVgzuZCb2nRuc2V4dschQkuSPPKd0uBcasfh/2W3AxifJlH/NxyXCJiDU92DJoK/boRi/cOHBwkaxajjmbCh73BTM3pelTwy0yKpSOsecuGbAFro=
+	t=1745610561; cv=none; b=ImVSwBv6EK8NpUymFDvdP5Y7jaikRVH/T5i9FbmMwf7Tf9/9qLaTOtY483bjSQOD/d00Bv86zk4OtegPkPz+Rdp+9w4vnwYqNCgzVS0EtZP4c2f8vu/LNY2hxkLQG+tPwDBv33L9uMV+KaraQWX/8ICiV0XGiUzYbpHqc4xcg7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745610561; c=relaxed/simple;
-	bh=CUaIe3YjEScKzRmab1Pl5aHETuKQ1a9T+G7YnxZyaYY=;
+	bh=zi6XU+PXzgyyO7zfBxiQGFtMjk5GDx/6hmtJu1GnLRs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gYc2LWtxHNLHN3YllCyrI/ey0YJOp2dz0LarIHipWzRBgbLvyb49clIgv90XrBuV/mTKQgI5hGzGm56JDaY8kB1t5AKOA34P/EQ6ODRqSXHV2GJMVNRWKAsFn5E7qSxOpQfvVC0rhIDiK7uRUrPETFMCW9QHe4/2NpwRwzPKhXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=iNjV2Yg6; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=AqKtlwzglukNP17FvWqBLnkPP0FMGg43986r1lKgwyWVOshBNhiApgb/GJkNbmvyBeeX9kSyv83JQJo8uqGcinyI6JFscI5ePYE6pfj8r6mlViv4URsPXUZrfIHI6bKBUevahsL88VnluBvgyZd7WWXWb3G5iVZ56QeeP2/048g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=X/IzE1Vg; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="iNjV2Yg6"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJv4w024841
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:18 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="X/IzE1Vg"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJqdX003980
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yu1pJ4v7QyzpaLYH38MD+E0KLIvxpSKT0ukBB1qszW4=; b=iNjV2Yg65YPih9MY
-	NHbRpmoFU78rmRnk+K+o9vaum4aFohzqowSEbaZccjKfyzN+5H9DMFNux1W7W3M9
-	j6+/3dtIcSh1Ucm0CvVxIUjcphFnQpkmFiTL+iF4p9VXk8T/eEL5rAHMWdnWEdm9
-	CC1M/akHf+P34ayA3xpHoKdXYiHWC1zY8gH7iRSskYo87dXBJATif+I+aWij8uUJ
-	mENwPIBmB6jm7HisrVkBgb2Ot76KEoPLpCZ3HIZCO2fgvFyrBVwYk4a/plIVmCdy
-	JdmOCRdY8wkDh8vwFUFV5ZswXS5z7IK+uqYi+yuF3NdvmLmLlpF8ECr4Nnww6YSb
-	jsAimA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0t0x0-1
+	Op5Ucj3NsPaSHpQN3+W+ByQRkYYVKvbIsr+8S3UcS4U=; b=X/IzE1VgEx1CPVgX
+	KlsmlWkRPhKb+bF4Mqo2rzaHWy+4ZTzJzSpGGj9sm2F4ESNqNTXBwBOavOJd6m8I
+	qYlTdQIyvmBoYAyO9LM09CWzRN8k2MmhIXoyA5ukPSOdpRI90m0TaLDHk7RC/YVn
+	BKWJ/4Ndg+ufu2lXe5LgAOhxWlo79ZEUB5GfszECAlmAUl/r8yRaGJidfxFElXyv
+	Xs1tL+qGlnWd5lh+eGzMbFbZRKpMpHiSOOdo2l+mTIMvUjmjRLXowlVo95lNyVtL
+	ZDyJOC8M7D3VqmxceSAEq4nLguqP3OC7/KyJvm7KNKRCMEa/56ps5/ql/WmN5jVM
+	eKDRSg==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2a798-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:18 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e91d8a7165so46859386d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:49:18 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:49:17 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4768656f608so43926871cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:49:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610557; x=1746215357;
+        d=1e100.net; s=20230601; t=1745610556; x=1746215356;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yu1pJ4v7QyzpaLYH38MD+E0KLIvxpSKT0ukBB1qszW4=;
-        b=FhimzjPGJeB4gtjw+rit0wmuMtpAnONGy3iKGrDS/Lcqkrwy61SaDESq7CYIygAm9d
-         khoZTLxaCsdwB1ZSxXE4/Y23e5ysTUZHLG2d5hPFdL+VlYA2ntt5aNU47/t4uD6yZWo4
-         uvB2zDCVOq3EgRHnxZ7OjaryprLCU/x5SY9FU5KfRtB6uCNZD3fz+or314UTqd0W3nn+
-         8HdW0rfWcZYwRtFhkZFmJ2cDUpIByKkqtjqjTxNT6oJ8w0MzT9WxvaHML3xiw5AvnWUv
-         4ifn0RKxFVvw+nc7CmEKCAiSpAJlS00m3PVcsAW88Z+iZnYdgdvwLQ+4QI6t9P/VWNM8
-         VnBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGaGpjs2H+R/UWrR6+RQlXYHE75j8mFOXHCpVAHrRUQV7Wn6OoZEgLaoD9zq6gPvrGUxLtx65XkZ9XWBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa5Gcx+VdXJCY8d5EhFMRrYw1rbl0/A+FnchGhaS5l+S4Pmrqc
-	i2YHuLxBQwGlcoC6vOW6gF4at45p/JjffTgGqXZd0y1YglR2Ntc1Be0157oTodOdI/6pKnJsm6a
-	SVyOozWTO7U8FeOaUWixYDFhRrkN5mR7M+kYlPl0feMJKy5rJaMiAHpfUjE5SrzI=
-X-Gm-Gg: ASbGncuosV5JJqG8tqVIJ5dK02KWZVwdJzXAjZUqvx9WEeOoUGn3IHiX0eSamSyOj77
-	kF211Z98g8kHrvnEB2KEZKDqsIEzyEBhPrpkeGSqc2TcFBI4SlRTCuAT/d/ZctjCwZIneSjTv4a
-	WvSufpmBv3LeFSj2G2KZXZxAKQU4Lq3qDzYZEN9yNifQxBVV96wm8886dEpySQTWcrk+fawuKq/
-	WD4h/BHLKjD9Xa+1E4NJRdTTloSiT+33WQzh+K81F1qEexN+Fiu7L0CNtoJTiKiSSCtoDyxa4WX
-	34BsuRqucnWEe/xuYBcUnmZE+3RovN6PSo/zXqFK8aWDEh8wxWmkqKGwtZpDLv3LYuBfQXtGvpQ
-	BJITANU7iT69gAGHB+Pj9zZO3
-X-Received: by 2002:a05:6214:242b:b0:6f2:a886:7c6d with SMTP id 6a1803df08f44-6f4cb9b917dmr61105516d6.3.1745610557411;
-        Fri, 25 Apr 2025 12:49:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWxy8OZVy+1G4435jkDv7x9KFSTI/TlWQyS1nZQqm5LJzAOkiG4ti14J6fup+ZqQ6Lmqkrsg==
-X-Received: by 2002:a05:6214:242b:b0:6f2:a886:7c6d with SMTP id 6a1803df08f44-6f4cb9b917dmr61105196d6.3.1745610557116;
-        Fri, 25 Apr 2025 12:49:17 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb258b7sm725313e87.22.2025.04.25.12.49.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=Op5Ucj3NsPaSHpQN3+W+ByQRkYYVKvbIsr+8S3UcS4U=;
+        b=sjnXx8LKbPeIsw5MI92aX4fyb/w6n2eduCSe5xv2K3mUKRv8VaUthLnK+TBDq7Lutt
+         62W5qvrLpV1sbKUFHolCrbC7+KmrINYwiJ2JprOkopfOXggDxMV+qPwczt1nYaA79TGg
+         eKZZiu6HLDh7nt6OcL0mwEe5fugkJ+fhkghy0Ho09MNyhQsD0esh8Og6IDFB8/b+sHzL
+         TNEnoQLQ2RGXSMNXoIZXN+uuLoBG4DzJHv4/U5KinMYzMf43oYPxUE9W9tGIh4ibs6iz
+         jOtdu7L3AYwozr3agscSWJ5fPa47pV/ViyWZYf463jyn6t5xukWqgwX5SeDtRuGCCgbq
+         63NA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8c8pzQ/qPG5CUzbVFz+n2G6kyuINTrVHCepE24kpmvbYAYCsm1HYytbw5aOT/jJEqW3gHasFGKMy8G2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6aQGqDflPhck+EMs+CqDPMUDOVGZ0UbYW2V6J5V5CkueXCA5b
+	1E+vmxthKpNytgkbb1CjQ7mbsR+dRvunI6Kqnxl+5Klf1qHZ7bnvGIuFfR1hs+eOnNB8wxtSa9J
+	MsiWdwBbQpx9JehDIPRDBcSsXW4Qe/2vZYm499gcCP9SCkwCuEgQdgJDp/6arMGg=
+X-Gm-Gg: ASbGncvWU2DSm6TqQUoc0T6VIg2ypQbzPGad9vRb+e5v4jcGkxxLuRunlqIQdwYOG+F
+	drFllwOB3/dmASIDYifiQsSF+Z9TrEsetrnkoMqEk+1r6iR4iJAId7+9yMhWT9tc/ww1MKkFUPQ
+	0TryHK7UomrTpJYQZ/cZaTu5nXl65urTSy72kyWy4ql/5Moj6ifGc79z/sqv31EkZUy3M2yUjUh
+	m6AJmsHAxxoUmeptZKCkn7gdgtnmsi+yWhYC4hdx+wcSFGwmCQFQRMEFFqJugKyvSsLaz/XqPU7
+	XBIRRiDLyp9w6Fk/yzLFjSMYjzjpBU3IZ4kzySLfvN4/a0wdiIpHRvE1q1SHSE7ZjgS+Yd5sRVS
+	VF4++yjopO5A5nSZXIeWmkePH
+X-Received: by 2002:ac8:5f8c:0:b0:476:9483:feaf with SMTP id d75a77b69052e-4801ca7cd8bmr58651891cf.19.1745610556107;
         Fri, 25 Apr 2025 12:49:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvsYm+y4nGXf58l7owYH/EptT90yacYmOjG5Q/lvtKP+/y6qqRd2lf6/BRdOEXF6bTAvHKow==
+X-Received: by 2002:ac8:5f8c:0:b0:476:9483:feaf with SMTP id d75a77b69052e-4801ca7cd8bmr58651561cf.19.1745610555757;
+        Fri, 25 Apr 2025 12:49:15 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb258b7sm725313e87.22.2025.04.25.12.49.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 12:49:13 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 22:49:10 +0300
-Subject: [PATCH v2 3/5] drm/msm/dpu: enable SmartDMA on SC8280XP
+Date: Fri, 25 Apr 2025 22:49:09 +0300
+Subject: [PATCH v2 2/5] drm/msm/dpu: enable SmartDMA on SC8180X
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-dpu-rework-vig-masks-v2-3-c71900687d08@oss.qualcomm.com>
+Message-Id: <20250425-dpu-rework-vig-masks-v2-2-c71900687d08@oss.qualcomm.com>
 References: <20250425-dpu-rework-vig-masks-v2-0-c71900687d08@oss.qualcomm.com>
 In-Reply-To: <20250425-dpu-rework-vig-masks-v2-0-c71900687d08@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -86,115 +86,120 @@ To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
         David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
         Konrad Dybcio <konradybcio@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3144;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3199;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=CUaIe3YjEScKzRmab1Pl5aHETuKQ1a9T+G7YnxZyaYY=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoC+c2fBKFWyeuvlxVupBYlHsabn1JoqhaF56EP
- A1a5Yl2OECJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAvnNgAKCRCLPIo+Aiko
- 1VujB/0RH8hLC2/n5KPQjXGWQdbQPf/GoiGnrLDEdFtg/55BGzkZSIzNqJJMdmP+7vsHv9MPIcG
- YcyjarvTthBVQ2gwHC8m24VeVjCeGha5APWZv38Zq8g7jZZRW0IxctLvGgswDWh348JqBMuBmUi
- pHi0183XYOLlOK5LMrCk7RjngYk5XLViEtYyM8gy382OtyZ8/gn2L8/ThiJ1yJFI18mvBsqRT5P
- old7nzpGyj4oziK/5oe8fC+TM0PUDgvkrZ2M6wcRHK33oBvuIkwlAPIkvcJIoqL9qbP60RLvoSb
- 1yRl43nTtcbz9GZQhJghSKXMIh8csXpawBcumJtujOHTnnf4
+ bh=fFGUiM7rgjkUGAW2oQNNZ8SSmLtzgOiuFiVQLK6bnQQ=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoC+c2OF+dpZ5x23AvPYZzM2MBCF3aqqk+qzvls
+ wBX0P8XsxGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAvnNgAKCRCLPIo+Aiko
+ 1YxaB/wM8mKWJRIVva/SbIne6SnB6a09rDJUu2XRLkcr6IYyW0u5+lvBVXrZxK2q9+UhWyT+r/M
+ LfutguivISiLA9iHcQUS1g84PJVmPhYHUty+PaTu/c1P/glxccHD1jebQF02tRNUxSe/S/tiuvN
+ TKtVBCxBW6jyifRgIZ0XuIBbiUYyUV/QFYMOBK6LiJmbgTxnyMmvpjWN+OmyIyda+PPlvI5mVrh
+ SrVyMm7oM1aP7tbcYoda1Vkb+BcATg9UVthsb2atzf5/rQTQCQNUU1ktYFArBe/Gti4+9Xi/ZW/
+ d/YLQ29ohqgzdByB3l9CN6mYuvbgImjF6iDjfb3A2YpJl8/G
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: IlZexs6e5jVhFa_0VYp4R0Zvd1dDIwwA
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680be73e cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=fm35gGnZT3d3QFCnA_UA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-GUID: IlZexs6e5jVhFa_0VYp4R0Zvd1dDIwwA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0MSBTYWx0ZWRfX10i2d1O2EFOW 9QFIpocfv4iWc1LAHT4UjmbJaz6LCFQv7DxiZeXjkOVMFDc6K70cpfhGknIM8PKEu+7JIXE1bHo hMxrNfDOGZMbowCTVIWwW/Nt2+r7ER66o70p1Yhzpz8M71UKdmn5QoBWwrbMyJMLwiPCIW/s4KR
- FLpLs3C30o6bF3ktlroBphGYFo8whdMGeQn0CnjxjphEP17x+VE3elK69mJv1vyud+2RAbCEjzp kY9TQReKpAFrIumCTM7o8pUPAtWt8dnmGO4qeVDPWoLymtsW0Cv+/hnz/wXTYDYrBG9YWMpyS4Y ZzePHB+1ggmh1DriuhQtBAKC7N8ykm8HWPCoKDM2/MTcL1fcRXyZxcK1CPHGg0Mm1HnGX33mgyk
- u6+QKM0TwENAZUzx6jNhZniEreosxCdBnh0xvrft0z/6MkgUNB3vlzxCMqz/+Xf2+z9LQvcN
+X-Authority-Analysis: v=2.4 cv=EtLSrTcA c=1 sm=1 tr=0 ts=680be73d cx=c_pps a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=0qT3Y18QIILfcGn7-LoA:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: k2yG642U2VnI6euN1H8kmOaK8G1zEXtP
+X-Proofpoint-ORIG-GUID: k2yG642U2VnI6euN1H8kmOaK8G1zEXtP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0MSBTYWx0ZWRfX9U5mEN/1AzmK 3hHo3nUTnsijJ/I4ayAzX9nupB/QUuaUFAwNr9Zz9gSva8U4vE0JE4ONDbKdaJ1sEEccfzv+a8N K8qgWr3qdM6N+tCliVECQjUVbwPUDoRd5k6/eAWn06oEeLcwyL7+o2oPiUhP2HzfnY33q1kyj3U
+ YH3fWM5GdW1ruZ9tPEBghzSE0DsFCwXPHm37x4wnKmIzEY4eDzBYsQ3zDRMRIln/VDvnklXbCIc V+7ZkKjUUZ7B1agR81v0xeBuYFSGpP+ig3APK+I9VAop7qgZdVjNSm0Le5W9Vldpnf5dvDobnnw is0jkaWq2YAJTWYZ94Km/3nFVDExEN3dJ4yDoFL9rzAcSqHmfSqpAc2HnIGQT1J749louaTO7CB
+ 7a7gxWZXmgFJH6lRGBvXRZRe0xa1zRV4A4Gvs5qQZrfdi/sH5llgktklJmovbQWpMzebrL4g
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=741 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0 mlxlogscore=894
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504250141
 
-In order to support more versatile configuration of the display pipes on
-SC8280XP, enable SmartDMA for this platform.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Reworking of the catalog dropped the SmartDMA feature bit on the SC8180X
+platform. Renable SmartDMA support on this SoC.
+
+Fixes: 460c410f02e4 ("drm/msm/dpu: duplicate sdm845 catalog entries")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h | 16 ++++++++--------
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
-index fcee1c3665f88a9defca4fec38dd76d56c97297e..923afc202f5195fa15bcfc1e141fc44134c965e4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h
-@@ -74,7 +74,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+index d76b8992a6c18c21a54eb2a373c789720b876c8b..e736eb73a7e61544e0940f1ac683ac0e4c5c79d6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+@@ -75,7 +75,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	{
  		.name = "sspp_0", .id = SSPP_VIG0,
- 		.base = 0x4000, .len = 0x2ac,
+ 		.base = 0x4000, .len = 0x1f0,
 -		.features = VIG_SDM845_MASK,
 +		.features = VIG_SDM845_MASK_SDMA,
- 		.sblk = &dpu_vig_sblk_qseed3_3_0,
+ 		.sblk = &dpu_vig_sblk_qseed3_1_4,
  		.xin_id = 0,
  		.type = SSPP_TYPE_VIG,
-@@ -82,7 +82,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -83,7 +83,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_1", .id = SSPP_VIG1,
- 		.base = 0x6000, .len = 0x2ac,
+ 		.base = 0x6000, .len = 0x1f0,
 -		.features = VIG_SDM845_MASK,
 +		.features = VIG_SDM845_MASK_SDMA,
- 		.sblk = &dpu_vig_sblk_qseed3_3_0,
+ 		.sblk = &dpu_vig_sblk_qseed3_1_4,
  		.xin_id = 4,
  		.type = SSPP_TYPE_VIG,
-@@ -90,7 +90,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -91,7 +91,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_2", .id = SSPP_VIG2,
- 		.base = 0x8000, .len = 0x2ac,
+ 		.base = 0x8000, .len = 0x1f0,
 -		.features = VIG_SDM845_MASK,
 +		.features = VIG_SDM845_MASK_SDMA,
- 		.sblk = &dpu_vig_sblk_qseed3_3_0,
+ 		.sblk = &dpu_vig_sblk_qseed3_1_4,
  		.xin_id = 8,
  		.type = SSPP_TYPE_VIG,
-@@ -98,7 +98,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -99,7 +99,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_3", .id = SSPP_VIG3,
- 		.base = 0xa000, .len = 0x2ac,
+ 		.base = 0xa000, .len = 0x1f0,
 -		.features = VIG_SDM845_MASK,
 +		.features = VIG_SDM845_MASK_SDMA,
- 		.sblk = &dpu_vig_sblk_qseed3_3_0,
+ 		.sblk = &dpu_vig_sblk_qseed3_1_4,
  		.xin_id = 12,
  		.type = SSPP_TYPE_VIG,
-@@ -106,7 +106,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -107,7 +107,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_8", .id = SSPP_DMA0,
- 		.base = 0x24000, .len = 0x2ac,
+ 		.base = 0x24000, .len = 0x1f0,
 -		.features = DMA_SDM845_MASK,
 +		.features = DMA_SDM845_MASK_SDMA,
  		.sblk = &dpu_dma_sblk,
  		.xin_id = 1,
  		.type = SSPP_TYPE_DMA,
-@@ -114,7 +114,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -115,7 +115,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_9", .id = SSPP_DMA1,
- 		.base = 0x26000, .len = 0x2ac,
+ 		.base = 0x26000, .len = 0x1f0,
 -		.features = DMA_SDM845_MASK,
 +		.features = DMA_SDM845_MASK_SDMA,
  		.sblk = &dpu_dma_sblk,
  		.xin_id = 5,
  		.type = SSPP_TYPE_DMA,
-@@ -122,7 +122,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -123,7 +123,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_10", .id = SSPP_DMA2,
- 		.base = 0x28000, .len = 0x2ac,
+ 		.base = 0x28000, .len = 0x1f0,
 -		.features = DMA_CURSOR_SDM845_MASK,
 +		.features = DMA_CURSOR_SDM845_MASK_SDMA,
  		.sblk = &dpu_dma_sblk,
  		.xin_id = 9,
  		.type = SSPP_TYPE_DMA,
-@@ -130,7 +130,7 @@ static const struct dpu_sspp_cfg sc8280xp_sspp[] = {
+@@ -131,7 +131,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
  	}, {
  		.name = "sspp_11", .id = SSPP_DMA3,
- 		.base = 0x2a000, .len = 0x2ac,
+ 		.base = 0x2a000, .len = 0x1f0,
 -		.features = DMA_CURSOR_SDM845_MASK,
 +		.features = DMA_CURSOR_SDM845_MASK_SDMA,
  		.sblk = &dpu_dma_sblk,
