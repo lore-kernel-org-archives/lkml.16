@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D392517A9
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560124C07E;
+	Fri, 25 Apr 2025 13:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745586298; cv=none; b=V0idiKHlZPkeU2yYFTmF93k/v2SALvx/arshKQAIuRTIz27XzP4SolfBS/tgZgDpLMHt9L3ImqzYSkV4E+zozKf9jh4+ImDuBwWmdqqdaq/Q7nGuRREaETsxiPgRqLPieCkd0JKcKHrfZi/ltl6fuSiK3CyR34OS215xakWy6wk=
+	t=1745586317; cv=none; b=IzwLAvafO1u2UoGxAdEipBX2KZc9XXEI2tLdc9+s3+IoNOqFIFYi8h6qvnkMenndN2Dq7zUWwqX53ClPiY80W2QTEwZsMAb9xCrpZSbz/tihpPyEfC1nB/Thl0Au3M6peEEofVlayzdhBP1ACtVGSLsMm1k6Ugny5D4PIaP0tlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745586298; c=relaxed/simple;
-	bh=rPaDqGzlo8kKc7078BfnnKIU+GVWwOACSGFFD9+ZYOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NSICYmG8x9PRu4bdKD7AsVhK7JQu3j0M29uVHOQvvNKTUw5YDn0Xhtq7X/Zh/opOEhz5ChnwrcGd+pik2BwExpiQ2HdbiY8dCh0euJrd78+o+0KGU54ZRUvp7Sa2Re03JP/kXDpmHFhJaZb6Hi6ltTJoT94BqFhGbkOVXNzl8MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PwzqxmA4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745586317; c=relaxed/simple;
+	bh=4knc6zk55EjUi7YvMPgbHvB69e8SXVuYN6cNjQD8WVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QEFNHLPMYsm9LdL6R2ck+I7SbRC+/ZEZNskglp5aMu3FD8FE2eEjGkf6PP/tQQxlPpYguw3BvyGBvC/Pkq2CE7xvOfaVgYPAKltFttZoD1fJiY7Mdio6OLVhQ0gPHX5yhh1icHq7vLQ2dHeVXKut0b+zqCa1s9iSkqiax/dl0io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pzyOup1Q; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwzqxmA4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745586296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RRT3RKx4TZ+P54S/HXqOrC/ht/rfJMrgmNz4iAs0uEQ=;
-	b=PwzqxmA4cEzvFGpCD6NxwNA9Qo2KrDaphK23Hm6vuYX6i2KrU6LgFDMBbQx4fiTwGX+EgG
-	PQquMDRuq/kkSMI5fV1Sop2pP7SEfvu2ha5mTfBcYYwuE8/7XaqCY/lwFoED7kgYPwhspN
-	T1Yf6Uim5jIQZ7CbAAezAsPgsvf2XLE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-295-_3s_6pwmPWC8mVY-6ElxbQ-1; Fri,
- 25 Apr 2025 09:04:51 -0400
-X-MC-Unique: _3s_6pwmPWC8mVY-6ElxbQ-1
-X-Mimecast-MFC-AGG-ID: _3s_6pwmPWC8mVY-6ElxbQ_1745586289
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1CFA1800264;
-	Fri, 25 Apr 2025 13:04:48 +0000 (UTC)
-Received: from [10.44.33.33] (unknown [10.44.33.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B090918002AD;
-	Fri, 25 Apr 2025 13:04:42 +0000 (UTC)
-Message-ID: <1ba66392-f41d-4ffa-9952-900b6856e861@redhat.com>
-Date: Fri, 25 Apr 2025 15:04:41 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pzyOup1Q"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PD57E12176482
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 08:05:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745586307;
+	bh=NFP2W2jmPvIjX4SKsg8ordEsFDwm2ltfl5D0WhF7rH8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=pzyOup1QdVC49a8w2KlyxMfn+vrDnXsxZuqzZe98WNl+tSjvQ21J90l3ZpYDAl571
+	 +DiVrH0vDyLyfE/VmdJ45ePkh7oEmMP+S95EazUktqr0ejM4EdKlg5if0oiCXWrGFT
+	 RIdQiKOH91Du2txW5oQ4P/OuLX0Pdk++YSSh55Aw=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PD57Mb019281
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 08:05:07 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 08:05:07 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 08:05:06 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PD51Bn053981;
+	Fri, 25 Apr 2025 08:05:02 -0500
+Message-ID: <c63cac69-6cfc-48b9-81a3-42a88dcd74f9@ti.com>
+Date: Fri, 25 Apr 2025 18:35:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,69 +51,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-6-ivecera@redhat.com>
- <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
- <bd645425-b9cb-454d-8971-646501704697@redhat.com>
- <8082254c-01a6-4aca-84de-76083fdcbb3b@lunn.ch>
- <ea9cd028-3d74-4d46-b355-a74ad549269b@redhat.com>
- <34f29b17-dc68-4005-b2da-95fde34117a0@lunn.ch>
+Subject: Re: [PATCH] arm64: dts: ti: k3-j784s4-j742s2-main-common: fix length
+ of serdes_ln_ctrl
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+CC: <stable@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <u-kumar1@ti.com>
+References: <20250423151612.48848-1-s-vadapalli@ti.com>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <34f29b17-dc68-4005-b2da-95fde34117a0@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250423151612.48848-1-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hello Siddharth
+
+On 4/23/2025 8:46 PM, Siddharth Vadapalli wrote:
+> Commit under Fixes corrected the "mux-reg-masks" property but did not
+> update the "length" field of the "reg" property to account for the newly
+> added register offsets which extend the region. Fix this.
+>
+> Fixes: 38e7f9092efb ("arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix serdes_ln_ctrl reg-masks")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+>
+> Hello,
+>
+> This patch is based on commit
+> bc3372351d0c Merge tag 'for-6.15-rc3-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> of Mainline Linux.
+>
+> Regards,
+> Siddharth.
+>
+>   arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+> index 1944616ab357..1fc0a11c5ab4 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+> @@ -77,7 +77,7 @@ pcie1_ctrl: pcie1-ctrl@4074 {
+>   
+>   		serdes_ln_ctrl: mux-controller@4080 {
+>   			compatible = "reg-mux";
+> -			reg = <0x00004080 0x30>;
+> +			reg = <0x00004080 0x50>;
 
 
+Reviewed-by: Udit Kumar <u-kumar1@ti.com>
 
-On 24. 04. 25 9:57 odp., Andrew Lunn wrote:
-> On Thu, Apr 24, 2025 at 09:53:39PM +0200, Ivan Vecera wrote:
->>
->>
->> On 24. 04. 25 9:18 odp., Andrew Lunn wrote:
->>>> During taking 613cbb91e9ce ("media: Add MIPI CCI register access helper
->>>> functions") approach I found they are using for these functions u64
->>>> regardless of register size... Just to accommodate the biggest
->>>> possible value. I know about weakness of 'void *' usage but u64 is not
->>>> also ideal as the caller is forced to pass always 8 bytes for reading
->>>> and forced to reserve 8 bytes for each read value on stack.
->>>
->>> In this device, how are the u48s used? Are they actually u48s, or are
->>> they just u8[6], for example a MAC address? The network stack has lots
->>> of functions like:
->>>
->>> eth_hw_addr_set(struct net_device *dev, const u8 *addr)
->>
->> u48 registers always represent 48bit integer... they read from device using
->> bulk read as big-endian 48bit int. The same is valid also for u16
->> and u32.
-> 
-> Then a u64 makes sense, plus on write to hardware a check the upper
-> bits are 0. These u48s are going to be stored in a u64 anyway, since C
-> does not have a u48 type.
 
-Just note that some of 48bit registers uses signed values so the check
-should be:
-
-x is in <S48_MIN, U48_MAX>
-
-this could be done using bit operations:
-
-(!(GENMASK_ULL(63, 49) & ((u64)(x) + BIT_ULL(47))))
-
-Ivan
-
+>   			#mux-control-cells = <1>;
+>   			mux-reg-masks = <0x0 0x3>, <0x4 0x3>, /* SERDES0 lane0/1 select */
+>   					<0x8 0x3>, <0xc 0x3>, /* SERDES0 lane2/3 select */
