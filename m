@@ -1,30 +1,30 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2DF2571BC;
-	Fri, 25 Apr 2025 11:18:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6F0258CE7;
+	Fri, 25 Apr 2025 11:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579929; cv=none; b=MPL+p9ePv+1OURP7w/IMx50lRg0JxsQzy+HJTgdu7JgcxyjXV6MmSlw6Gfvk3sEwYd9s/kMWegwADLXNUOvKdGdpT99OwgBgZRmXTSbKvba+4wPrQzbQq/31dyteydO2IaCwwYUJDJJmbylopJ/hZEzgUKJGyW5sCXvSxxawPNc=
+	t=1745579931; cv=none; b=fFwkGZ94hPjnvMUqCCO0Lx967bOAwe5kw0OKfZPKKDcNGgM7S+7jVMG/xpdWr7vm4ZvINDQVGMZ2HCNsMRHF1YASFhZrSY9snV/cycH3m/d4Rs5RJE2tZVqA+UkAlTNTxFS8uY8XeG0u5GR4llZ5tZvRNjcWNK2hg+DCxFvqtJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579929; c=relaxed/simple;
-	bh=HWrtJGu36+Tjmp+jQPTHcW486BAmz4c8wtSG0n4UjfM=;
+	s=arc-20240116; t=1745579931; c=relaxed/simple;
+	bh=pkeS98euH30dOGfG1+dOVA0/1dKYBGZgUZN07dZ0H+4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WzZ6U9XrnUwpaiVgzKCi8A2+bX8K5u5ZBvORFj0hJomzkXzyybF56J9Sx1S3FloYrlD4zqKQdNzSHFLv9R+aGWJz7HFDzzZgwrY4u0bFrjMo4T2Bupxo5OS5mEjAtuMGlqjM6fDsHqNcbW+78p/1/KFOmX/D3QwHGpF9keblSJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=2TKnnLZA; arc=none smtp.client-ip=185.138.42.100
+	 MIME-Version; b=HTqPz2ODNOYuB0KJOpLyYCb61OF/ZWaaoGaJY29gH1av50Q8PyqdlX1Ot+ulXAPlIkkeGfPdMj/MS/aFmGm4qS5Au+tdd/XILXx6MoyP15R2w7Dl7C24U9auWfE7eKiwygDD126cgUaXOSfKWVE3kbnEWptYomkJe+eR8SdB1P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=YIE2x61x; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="2TKnnLZA"
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="YIE2x61x"
 Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8a3b:5a00:3490:6581:3910:8337])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2416A2E08DB1;
-	Fri, 25 Apr 2025 14:18:44 +0300 (EEST)
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id E95A12E08E62;
+	Fri, 25 Apr 2025 14:18:46 +0300 (EEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1745579925;
-	bh=LZE5oE2VvX68JSaIpTMQBjpgC+iEII7D1XoT+KTQkGQ=; h=From:To:Subject;
-	b=2TKnnLZABt24V+l9cdt3rvgkFnezCfT2J5TrEtYntKxB1roZbKdurnBb5VQWq6viB
-	 xqkVhE/xyT5Ji/8D7Auw8hLNLci6ZGsFs7mwLMuNGN3HVThHFxjPWKZhF3Fkc938Dn
-	 O4kqrPYDnnpbfC2UdbW+0jLCpUMo5Fq/jOe9R7fg=
+	s=default; t=1745579928;
+	bh=DWjWW+uNRKRGl5pgiRex0CDUsiqQn/RmxukuWZy+SwA=; h=From:To:Subject;
+	b=YIE2x61x0iYPVxSciPYml29JTIC4f8nxoD2Gd4HI+2UY9FNK+TZY83nXjFWxU1/5w
+	 8ONx1PP/grLkNNfrKZH+e06L44CJkL62g8x9SuroUV/RW5pV8cjwXpuu9uDyRb4jZf
+	 d3bxiR/HZuRaAZ4E2YJjrmXTqYB1Gw6aGDKTaAeU=
 Authentication-Results: linux1587.grserver.gr;
 	spf=pass (sender IP is 2a02:2149:8a3b:5a00:3490:6581:3910:8337) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
@@ -49,10 +49,10 @@ Cc: linux-hwmon@vger.kernel.org,
 	hdegoede@redhat.com,
 	mario.limonciello@amd.com,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v10 13/16] power: supply: add inhibit-charge-awake to
- charge_behaviour
-Date: Fri, 25 Apr 2025 13:18:18 +0200
-Message-ID: <20250425111821.88746-14-lkml@antheas.dev>
+Subject: [PATCH v10 15/16] platform/x86: oxpec: Rename rval to ret in
+ tt_toggle
+Date: Fri, 25 Apr 2025 13:18:20 +0200
+Message-ID: <20250425111821.88746-16-lkml@antheas.dev>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
 References: <20250425111821.88746-1-lkml@antheas.dev>
@@ -62,96 +62,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <174557992504.23105.7297001227554873076@linux1587.grserver.gr>
+ <174557992781.23293.12127681747810270918@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-OneXPlayer devices have a charge inhibit feature that allows the user
-to select between it being active always or only when the device is on.
+Rename the variable `rval` to `ret` in the function for consistency.
 
-Therefore, add attribute inhibit-charge-awake to charge_behaviour to
-allow the user to select that charge should be paused only when the
-device is awake.
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- Documentation/ABI/testing/sysfs-class-power | 11 ++++++-----
- drivers/power/supply/power_supply_sysfs.c   |  7 ++++---
- drivers/power/supply/test_power.c           |  1 +
- include/linux/power_supply.h                |  1 +
- 4 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/platform/x86/oxpec.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 2a5c1a09a28f9..78afb2422fc5a 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -508,11 +508,12 @@ Description:
- 		Access: Read, Write
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index d71ff189bafef..692a6d6d08316 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -406,19 +406,19 @@ static ssize_t tt_toggle_store(struct device *dev,
+ 			       size_t count)
+ {
+ 	bool value;
+-	int rval;
++	int ret;
  
- 		Valid values:
--			================ ====================================
--			auto:            Charge normally, respect thresholds
--			inhibit-charge:  Do not charge while AC is attached
--			force-discharge: Force discharge while AC is attached
--			================ ====================================
-+			===================== ========================================
-+			auto:                 Charge normally, respect thresholds
-+			inhibit-charge:       Do not charge while AC is attached
-+			inhibit-charge-awake: inhibit-charge only when device is awake
-+			force-discharge:      Force discharge while AC is attached
-+			===================== ========================================
+-	rval = kstrtobool(buf, &value);
+-	if (rval)
+-		return rval;
++	ret = kstrtobool(buf, &value);
++	if (ret)
++		return ret;
  
- What:		/sys/class/power_supply/<supply_name>/technology
- Date:		May 2007
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 439dd0bf8644e..ad4f8b944d204 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -138,9 +138,10 @@ static const char * const POWER_SUPPLY_SCOPE_TEXT[] = {
- };
+ 	if (value) {
+-		rval = tt_toggle_enable();
++		ret = tt_toggle_enable();
+ 	} else {
+-		rval = tt_toggle_disable();
++		ret = tt_toggle_disable();
+ 	}
+-	if (rval)
+-		return rval;
++	if (ret)
++		return ret;
  
- static const char * const POWER_SUPPLY_CHARGE_BEHAVIOUR_TEXT[] = {
--	[POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO]		= "auto",
--	[POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE]	= "inhibit-charge",
--	[POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE]	= "force-discharge",
-+	[POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO]			= "auto",
-+	[POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE]		= "inhibit-charge",
-+	[POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE]	= "inhibit-charge-awake",
-+	[POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE]		= "force-discharge",
- };
- 
- static struct power_supply_attr power_supply_attrs[] __ro_after_init = {
-diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test_power.c
-index 2a975a110f485..958e0c0cf2876 100644
---- a/drivers/power/supply/test_power.c
-+++ b/drivers/power/supply/test_power.c
-@@ -214,6 +214,7 @@ static const struct power_supply_desc test_power_desc[] = {
- 		.property_is_writeable = test_power_battery_property_is_writeable,
- 		.charge_behaviours = BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)
- 				   | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)
-+				   | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE)
- 				   | BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE),
- 	},
- 	[TEST_USB] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 888824592953d..cbec930430a79 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -212,6 +212,7 @@ enum power_supply_usb_type {
- enum power_supply_charge_behaviour {
- 	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO = 0,
- 	POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE,
-+	POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE,
- 	POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE,
- };
- 
+ 	return count;
+ }
 -- 
 2.49.0
 
