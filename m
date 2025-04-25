@@ -1,85 +1,82 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from e2i427.smtp2go.com (e2i427.smtp2go.com [103.2.141.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF63218AAB
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08EB21767A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745607006; cv=none; b=MtaZFC0wqw2jjSCDOsHYzdftWzxJaHaZ+yK4lvovr6AMdjDrccCQ3FZn45Yfjmx81X+IrMmu6LIoppdNdJcfmTc6DtHPaY6vNmr9JwGnxN/6BmE3IxQc7TXSCq/WZIhKkfhCyRPq++e+gClu0YN/rgM1gNlxwckjKRSuaSKuv0o=
+	t=1745606988; cv=none; b=JyAfbFYZNdnpieNkBbBHDCvcM8YpfxNdSJzTtEKOS2sR3Enea1u/fLIUhwaeNHB1f7TXIgJOhf9G6Mub9u1Pr9TclXYFGABu4kbySBG3V23kwXhtLQocN4kNBJjotxteSNzAkm9Gh9t5+We1iRnNJ+HrecvSyGnAE1pCVfnHQ24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745607006; c=relaxed/simple;
-	bh=XoX+wEa5HhC3hR5v5Q5gpL5U4kgU7elVA8+JOzu30iY=;
+	s=arc-20240116; t=1745606988; c=relaxed/simple;
+	bh=0ia0+nAnI/nsJasJHb5V2/gXM9qZLGD5ziz3qvpGdgU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=golYBNEkXil93539XYTM97d6zMJa+bfz2eGBfWzedrr2HDYWOd8wRZfyAm4e1PhHqAAVxXymLRdjlIW7/k2P3j/9cBR1WSkBw93AT0xBRkoN6efAJKd4Zud+EaBfUx2OkU58mTf/yLkK3bQX6oqb6QfV9/L9oRpcIwPKyvDE3mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ouUzIaty; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dn0Kh4P32SwuATsZmGatUlOJImEPt7OC4/rQpWhyfYmGcWGyW29v0/ZyOLKcqwFo3IryTKflGcafYfR0iFengPSyUre/PoXPmRWXAeG+YVBwzS2M1HE/lPriEt1pTFfIOei6XATKhLgTFz7UO8i3Ud7x7ndAopVnNGH1AcjmD34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=DtEiDlB+ reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=VPlwYm6m; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=OKMDd0Wr; arc=none smtp.client-ip=103.2.141.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ouUzIaty"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJqDD031953
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:50:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=5UZacNDBLmuE/Heewz5Xsv2C
-	HRXYOHYVhtQqphnjYro=; b=ouUzIatypmp0mRtlrGmCYrQ8qyI9f6n75zu2bnPr
-	khZraYBacLCAhE6QCJM0u74MEGkz0jO0Q7an2a0sbYb1DaP39NVU0ppg7FjUGx+J
-	m5yOxqlhja3PzeQkM1cS/00MdWVZBLFE3M8Y4mXLRSVQB36c1alTfeUvFrsw9IX9
-	Zv5+ndF7FNIyqJAcbzh6iH9iNFYDtB6a3BHlBeAHCneYUpGZp2i1yezrp61UlMFB
-	w/0G5XLcAGMd1wh08/951vOSYDOZfK1poXmnMD+e/XVd5bWLEQLklqgfg3UIRPwL
-	RVUmc2meY4NxYoHM9dnTf3vld6NBLKFljAqy60BIxEXwZQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgya0j9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:50:02 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2872e57so444426985a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:50:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745607002; x=1746211802;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5UZacNDBLmuE/Heewz5Xsv2CHRXYOHYVhtQqphnjYro=;
-        b=cb4hnHGIO5cgGfYhlny5yGoqeVg3JANmMIZntr2e82UerpCHVX2tL+d9E9rC8aMf+R
-         sI9sVqnUhjPhqeyZxqDETgQaWKyWFvz4uCcpGcSVL51eVsZgas/beH5ZQVBJt5e+rqdu
-         4Y1Acyjxw+e7E/vO5koRLZbsaDBYzfnEBk02bNNddqh1IVBh/WRKKWxX6MjagUFWsydJ
-         ll1L7dAD3OIF16Aa5nSLnL5neMbB2d7MA3cTkn+hLcHqCkr6wWPujzvXglUDqabr8liq
-         c6FR+ey9cX5F2QWC28s6TzMQdAjBJ3cJZ8xY79t1pm7n+2VBvsgejgXHb9+p/YXUdTju
-         a1OA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLMwmXjPjgh+qMn/a1BhWCMAvoku8vxsSlS/rnWvYbHf5Pd+1KNgOR9JFpliJD+oAKQgg1OV+P6TJYKVM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrZKDl7vHJFAlwpBStgp0syAmWx+QpkWrubfKft6opP5wpxx7R
-	zfYnpY7TKXOQ1ySxYJ4uO6QGOfPYkOwwasS58TCG2KrnE2Dbl7BI4TYkJjCDwD9WzuQQpcMEY10
-	J2471WdD/aJ6bYO8R+oU5zfKbJZynEekis/3stQfkNPiy7kd7JlUNZ5+2WX8pE4k=
-X-Gm-Gg: ASbGncslGv+HmD7vmHUvqvqj1wzYTxLiYJSW2hWd3qog/grZHmXt+PpoyCHKgspMGff
-	XSs7fB29qGLUuIahzJJHOhsFhv55Xj0mPPz7w4n/EVkRwS+VCa9X1XOh/5uTCBq+W/Mp85XbJ/m
-	UWwrIaXvB/jplIPjYeI6Xs0DNu7julQsX1Q5FOrY1B9FOhyXvYAUxJNfMxKrIYgBYiAOSJtQhGV
-	6Yf81SYdZ4C69l0ThQUjrh3czrHldJdEhO84rz00CG/LuK64sYDH3ycjzg93sJI5nnefu91LDEm
-	+lfdyQKp3nr1QVHw2X6L36Ywx1VhKfIgQz62iMebVPOkuMLkyNmXVk7gEfjIlPLTVcEDX/3l9J4
-	=
-X-Received: by 2002:a05:620a:1722:b0:7c5:a435:7867 with SMTP id af79cd13be357-7c96079406cmr478379485a.45.1745607002341;
-        Fri, 25 Apr 2025 11:50:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKGFKhgTNVIChoyaUoWx/RSIrv5FxjCevn0K+xqfxGKoAvvW3lf0EQM4tiPmcCVL9Ey+Vj2A==
-X-Received: by 2002:a05:620a:1722:b0:7c5:a435:7867 with SMTP id af79cd13be357-7c96079406cmr478376285a.45.1745607002037;
-        Fri, 25 Apr 2025 11:50:02 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d0019716sm8540161fa.48.2025.04.25.11.50.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 11:50:01 -0700 (PDT)
-Date: Fri, 25 Apr 2025 21:49:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/11] arm64: dts: qcom: sc7280: Use q6asm defines for reg
-Message-ID: <c6brmbdqfp4kr4unp2vici4klzocwnpawxdl2m6g3farzgdlvf@2w6kd43oa7sh>
-References: <20250425-q6asmdai-defines-v1-0-28308e2ce7d4@fairphone.com>
- <20250425-q6asmdai-defines-v1-7-28308e2ce7d4@fairphone.com>
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="DtEiDlB+";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="VPlwYm6m";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="OKMDd0Wr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1745607879; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=owWeXA2qFbSxDa+WbGesCQaKVfTlr2DxYaRhX4/qnBw=; b=DtEiDlB+BfN9iPY4Zll8gv5iwQ
+	kvLiy4SCBFTvVtAHylbLRQttuUOZwWblj3WAvgyjauJft/PqKkr0TO7z2HvfKXEk2wDh5i1aZ228E
+	CF7Om4mwJNzz/wfS40s/0Vbd+V3TLAiBqIJb/vBCUckfnI4T0Ajmu1i0sA6LfrywLuyqniPXwDKdj
+	DNBon+5dtPWcs9PUkDNSE61TrmmWpNcXSmsWBjlc8vz0jcsiicfkNdgGcRPam345HrueEiBXbZlDy
+	r4fDe2p87V6mn8UfvloawMkUXc1lS2Ss1elJHjZObaNISH59VEcnzhLq0osobs8meiZqJrKex+V4u
+	EFHQCJaQ==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1745606979; h=from : subject :
+ to : message-id : date;
+ bh=owWeXA2qFbSxDa+WbGesCQaKVfTlr2DxYaRhX4/qnBw=;
+ b=VPlwYm6mxv/SmkX2DI/ES3mjJIzTwVFIoZ6XS3C4iYMvBItLLQRyQ9vTxkfVgqbSuw1m3
+ Sh3BQ8EmFja/2+USJ8bC2frYzjldxDUSVrik7NRgEkHlTMGJXQ9YVLQOOvcl/fNJM+MeO7O
+ /sGqL19bcPPGjKnArjgJrpZKYcsGfEK4sgKN90zjbnRqHM41UwLV6ICRvgSQelbCTUfd4AV
+ tQgfthEfsKSF80tgHrkVcBgTklMSuxoFpxPkRtU8bfj8Iw3QDW/azHXdnAk+uXibzZL5No7
+ rWfmNlz6zs9DLMa8W/Y5cLFt4Gjt8YLDUHIM/7SM5TQW/sUdaIiKoP/k6VXg==
+Received: from [10.172.233.58] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1u8O4V-TRk3EO-H4; Fri, 25 Apr 2025 18:46:48 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1u8O4U-FnQW0hQ0D58-lO44; Fri, 25 Apr 2025 18:46:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1745606802; bh=0ia0+nAnI/nsJasJHb5V2/gXM9qZLGD5ziz3qvpGdgU=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=OKMDd0WrcBwM6g/L2ydRl++BzlqOyGND91Q+5n+Aa5UgL0vJpqZn49aozb/Xay0sA
+ w74dEmdiMz3xybwg2bqnIOrHyzhXUQAa5YwBI6q5j97tQgBe5Yecjp+F97ndaWrunp
+ BwHDDOTQ3EBRsd5R0TJ09Y3VzdNKZuJHQYZ6Hx18=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id 17F0A49A5F; Fri, 25 Apr 2025 20:46:41 +0200 (CEST)
+Date: Fri, 25 Apr 2025 20:46:41 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ David Airlie <airlied@gmail.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Masahiro Yamada <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andy Shevchenko <andriy.shevchenko@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 3/4] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <aAvYkchT7RISfxsX@fjasle.eu>
+References: <cover.1745453655.git.mchehab+huawei@kernel.org>
+ <158b962ed7cd104f7bbfe69f499ec1cc378864db.1745453655.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,36 +85,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425-q6asmdai-defines-v1-7-28308e2ce7d4@fairphone.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzMyBTYWx0ZWRfX28Mq7ZcwlLbt 0+pr0IS6V2UjZ+dgbyLhXz662MWcGUQWupFssVzWBhKWRDEEoTIyvh5aJVqdm8guq5oX5HdFu8Y /vHWnWF75GarlP9dcxIyz3Zg4m/GwbKbeBrWLyiDzhDVfZYW568lJLAlt+Yzt6fQH9f/lnxB+lU
- 6HcUPSLZ8pirb2qsi9KJaPoSGz66JJuZRfYgTs4yU7old/XDTXFNOEI8SnknyR3poxpsQe+1Cac 9C0tHcMMsOy9H8o7J6AOAsnGgfXZ4rLs/RzPc6uMhf/7wQlCjqlydAuVPo1Lj0T6tvif4bRWUZ3 ys6lXD5/woiyJZtd/aOyOlAlg6P+HGREIJNfZ1fVyTvrN5XwwjQkVnuW+utDWldL3KvyPZUn82i
- 5+WcHMVISgm6jJJNonw/AeqrRGuloxEooXgp+77kba96omIP4QQJGSIasD5fNAhMuTKHc42Q
-X-Proofpoint-GUID: 89HhGBR3zrAKTfaQgBcM9Uh0BuRTOEhh
-X-Proofpoint-ORIG-GUID: 89HhGBR3zrAKTfaQgBcM9Uh0BuRTOEhh
-X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=680bd95b cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8 a=0uHdMyS-I8ESt-gxu3MA:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_05,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=624 malwarescore=0 impostorscore=0 clxscore=1015
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250133
+In-Reply-To: <158b962ed7cd104f7bbfe69f499ec1cc378864db.1745453655.git.mchehab+huawei@kernel.org>
+X-Smtpcorp-Track: sEbsgQNiyBwJ.LOnxSXHovj8L.0duztQKtfUA
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286ss-2np7oAv
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-On Fri, Apr 25, 2025 at 01:53:46PM +0200, Luca Weiss wrote:
-> Use the MSM_FRONTEND_DAI_MULTIMEDIA* defines to make the code more
-> readable. No functional change intended.
+On Thu, Apr 24, 2025 at 08:16:23AM +0800 Mauro Carvalho Chehab wrote:
+> As reported by Andy, kernel-doc.py is creating a __pycache__
+> directory at build time.
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> Disable creation of __pycache__ for the libraries used by
+> kernel-doc.py, when excecuted via the build system or via
+> scripts/find-unused-docs.sh.
+> 
+> Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  arch/arm64/boot/dts/qcom/sc7280.dtsi | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  drivers/gpu/drm/Makefile      | 2 +-
+>  drivers/gpu/drm/i915/Makefile | 2 +-
+>  include/drm/Makefile          | 2 +-
+>  scripts/Makefile.build        | 2 +-
+>  scripts/find-unused-docs.sh   | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index ed54a546bbe2..d21d0cd2c752 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+>  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+>        cmd_hdrtest = \
+>  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Did someone check if we could add
 
--- 
-With best wishes
-Dmitry
+  sys.dont_write_bytecode = True
+
+to the script itself instead of cluttering PYTHONDONTWRITEBYTECODE
+everywhere [1]?
+
+Kind regards,
+Nicolas
+
+
+[1]: https://docs.python.org/3/library/sys.html#sys.dont_write_bytecode
