@@ -1,291 +1,157 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFA6242914
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FC31DB127
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745583460; cv=none; b=lISJFrYI1rL69JPMA6d9MQ4jX1caAmkIaq+o4we5vYT+GGuePUEFUjEst1qWaiT7ZP96ytHFlmSjeFL+qMOeMf5NWWzLvxhQhkug09Ehdwz+CF4HSKJN19svOK5YN+rJSxbeSubajL0Bi/B2x8hpMv2kl+YAuMTmI/AqIQZzfOA=
+	t=1745583627; cv=none; b=Ox92OXra9GeFtQhFuLNSMtRikxfFWfsyc4IXRGY2CnvdzLJ0ocJKjelM3XYXZiM1aFuIup4XnQvbkQ619GQLnkwmL6EfKSyLj+U82AdrA5kwR1IOm2pN8bTLnbTqRSTzd0M6GBZMMQZXF3K6p9JkuvKdeAzeasT5ExovXd3wnq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745583460; c=relaxed/simple;
-	bh=PrhApg1ld6f3w5PMm+xwxo8UUKj9Su2NGanHz9pKXwU=;
+	s=arc-20240116; t=1745583627; c=relaxed/simple;
+	bh=HKpDnWrrPHLZohjzXZtD1e5G+wD/gBkDjuf4cIKbpRA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O+IiwH4qpHsD65FtEIoDGStH9/w8O8X49FfBEhQ3y7CDt0fNUur5l9deAofaORg0kB3rz+lGnsgmSX1cuWoofEoe6Iemn5G8o7ug4rSTIHEB5Fr1msoImbJNzuk5pe1klfA4yGxrDJk9E+NBltoFtUVCTYahJtvP0q8/Z4eTDIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sRFvOrVP; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=jJzOsl5i0byJ1HfFBS5/ycAz+CVTr8RrsN65k+Bx0IQzGodAZScZwwBd7IKfTfCq+EnXKa/uJl8ZaXnsMUvGprenl9QtYwfUIj2ygFhgNqTKtrq28Y3wCNC8rbQTYCnxGN/Q4AKde79OMWbhmVmfC2jYc7oGhCyuwX6hx5Pxaao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K0WcN0kN; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sRFvOrVP"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7082b3d2960so20712857b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:17:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K0WcN0kN"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3fe83c8cbdbso714281b6e.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:20:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745583457; x=1746188257; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MzOovnCFz7a1pN3eCV+0adUMbLsCWU/yLERT/IqWY78=;
-        b=sRFvOrVPGGE3lTUyZhKmlhAzbFIcU/4hMe3cPghPWRenzNwR7ID90ly8oEQba5bIfi
-         KjZvWWmx8qmhrlrXrQqaqDS4CIxBKLxdtEEUotRZ9fPy8bNm6rupE+NjDdZQD6IsL0Yp
-         ifgHamDAAsYBWI+PN7VpWU3igiVFLiuBGcMdK5IX/duS4Vk8JC0/rhUTn0qRqmo0DIz5
-         IbFAhLfJ2cK7Ho0xvvWd5SzJA8snyObDg/kiQnRvB1YJfQEreHjzDij4KC/bT1UpyUiC
-         XaKRN8S/RCK0e7JkjVmiiR1vdJbtRHcU/IjqOQPfeIvkl6piJfyGz1C2+kCPLl6JMM9o
-         Hn9A==
+        d=google.com; s=20230601; t=1745583625; x=1746188425; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xvHaQjl2AmsbcSXhAqnsLyfE+EhtWkk491vzxpLqPyo=;
+        b=K0WcN0kNwLa+6q0hLX3uIfOkCYz98KzUKQy6qtUZTZ3vMCMqhVxCritcFTtxH40rNa
+         19xBEA7R3q/Ndc2M+gxTsQLj4pqres40YUE4HaC6h8qB8aoMEAs/C1PsCCYg2SakCPNj
+         TH7fJoRSFp+0seQznNFI3xtO5DB8rnw+2Amm8N4VAxzUlWqi7DecXvEdW6WiYfXVKG87
+         8g2pw2B7/hBdbB2otmBl2ic+qkRHqzpLrXr9wF6XoScw2GC1jwA+9nY0+etwcuDFDF8G
+         9nmOcwxtpfvZ7DxvxsOgz8yffwFjB2Bgl5lTL0syUwhsgWLzGv7YyOBxEG7aULYmehlL
+         ua6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745583457; x=1746188257;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MzOovnCFz7a1pN3eCV+0adUMbLsCWU/yLERT/IqWY78=;
-        b=tk1vR7jHCmAbIqJVZyg0Q7jAEmAq23UgOXg86i+qKVmkWe4b/sBvKImqsCizPlQH1V
-         DAXl2GfgdpDo3Ab4me2GitEDFa221TNLMgqUxT+JBuepz+bHdgRwQ0yT1lmqreJJw1Me
-         7/Kxiz63acq6M9bMt2ET64iyehL1AXAC9/PHJuPuUeZQpxkEJ37aTg+Tojb6/A4iK+QS
-         5WWwcao6W1/YjWPpbk3df+nBuPzkaSyEC7J4J+IxSAOU3MEdO7zRyODGg9DbyyXEV8qa
-         l/FrrTp00u49a5ao+aKit9osq09qqJyXW0StY09RkZvBu2p4QpgTwPRZMfr1e3K7r4NP
-         uZBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6wVuIVuJB6r8x2MBeLuQRzzQrJHd7ayOxw1VNcPjmTJK06BedUzP5ywqOv1M6pedF+06l1UFmvmwz/CM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3vTqEnPhM6dO+Bv63g7cCkSTUbM5wnPmI3NrTGws/BO93Mp/q
-	lXv4zOyjmyzNL8kpcvc1EyUmIvLdQGbSuimWZRjisjEfpH75ltySM5S+/oNOnjVG8QehNLXQH/S
-	22NP0mA8HCr7Zkba6ch1u2aTnnUVBprpvLn5UDg==
-X-Gm-Gg: ASbGncvLFlHAYrg0v9FdgIBh7+c02aKGqP5ss2tqqjCEt8Cv1Usao/xmrNrQzJfvDXq
-	ou+lpT9hXEM/v2L5LTMRm6gnhVbD4MN9OWYohC4tUWiLzQEafqPqj57s9bm2E4lUPmzKEIFJH3k
-	Us8KUuc9ioI9HC5a8Mof3cNOQ=
-X-Google-Smtp-Source: AGHT+IGhJmRc9wirk6fDwzA3gjt9BfQcDnkXr8+Xu6rh22RdL/tZq9C8iOaUX31C0gPRlQRgIZCpM52uZZvwSlBctd0=
-X-Received: by 2002:a05:690c:60c8:b0:6fb:5498:70fa with SMTP id
- 00721157ae682-7085412a5c0mr29991187b3.18.1745583457456; Fri, 25 Apr 2025
- 05:17:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745583625; x=1746188425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xvHaQjl2AmsbcSXhAqnsLyfE+EhtWkk491vzxpLqPyo=;
+        b=XcGmbv4Rts0FN7FH6CHtA0vLFqVKUyZeTPSBzKW7FywWimKXpx633cBJPNfa/8pCAL
+         X9iirF/Su5cxuBqto1K7mhSYYrAeJhmPBJOzlhIW34++fvt4odf6yO/kSR2sVKm6ROr/
+         dRhRjQ7Y2ww7gjrOiVhRuq6ZH0Q5mbYpssEgXw561SK6Br1i2THoxU8th5yQuXs3YTZ1
+         lHkl32eHlwVs06MDyfVLJ8+HeqcBKZqHdMGA90HZrCwIzApxd7/lXj++1JPmZPoZuQO5
+         SttKYTtldTXvqKgYQTYJz+qzVc82COuCzuLSvzmik0nv04Wp84XzpOCpoDETKI7Ji5PD
+         Ls0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUsnIE195RFr8V/M7gnmIMbIWuEF5K+eUAyKnI94pYm7+KmKy363c62RcVmBqP9WAkrPliEZk9LMZFoK7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl5BhiDqXgm4FrzegZYGxjBlcR6yUENIWlFx51NBY2WvCa0SpA
+	vbdmSOXag9XwPQwd6eNcPP+0Sma0N3nP49Hv7EkzqnH8ThRYCkVs873SAZlK/ytyxMi2TjXFINa
+	njT9V+Ylwo0fKAI8bh89h+rmLIrFYlpTIw0KU
+X-Gm-Gg: ASbGncvjxDWjCJ+wPJsQghFB0ekc++/gZggzN482BoX7Pd5JXi2VG+TfrT6qTPDx67C
+	zEP6DzVL6ru1FbwuGMU6exN0kFVgHIdX+bm0V3exlLmjn4UVAnjry/Tkz9mFNRrcAqcY+WXbmah
+	1JLkTjW09Ve1ELFLbqXrD+3ff4KXRZYiX77MI633VfxfP1IffLSVDo
+X-Google-Smtp-Source: AGHT+IEi6BmfS/Wv9+gWZ8a0daSwVh2N9J2AxPx02DCQBXiJbFqsO6cButw39+VyC2emehvj5uRU9hs8gFKoQsTgC1s=
+X-Received: by 2002:a05:6808:3a6:b0:400:fa6b:a104 with SMTP id
+ 5614622812f47-401f28dadbfmr867072b6e.33.1745583624852; Fri, 25 Apr 2025
+ 05:20:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417142513.312939-1-ulf.hansson@linaro.org> <8e748129-3348-4bf1-9fc8-fadc569fa48e@ideasonboard.com>
-In-Reply-To: <8e748129-3348-4bf1-9fc8-fadc569fa48e@ideasonboard.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 25 Apr 2025 14:17:01 +0200
-X-Gm-Features: ATxdqUHCfnRVoNINH1KaYmw86rw8GwFvpw8gSk9J6VyXy12y2iJ3WN0VKIVIR6M
-Message-ID: <CAPDyKFqEgJPn-e-FooG_3h=Eqfw511c9_b+ywPcrfao8_p=u+Q@mail.gmail.com>
-Subject: Re: [PATCH 00/11] pmdomain: Add generic ->sync_state() support to genpd
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, 
-	Peng Fan <peng.fan@oss.nxp.com>, Johan Hovold <johan@kernel.org>, 
-	Maulik Shah <maulik.shah@oss.qualcomm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, 
-	Devarsh Thakkar <devarsht@ti.com>
+References: <20250423134344.3888205-2-bqe@google.com> <20250423134344.3888205-6-bqe@google.com>
+ <aAkbw0jEp_IGzvgB@yury> <CACQBu=XaOohewMnLj9PvgR5rYBxzYSXf2OAjCzUY=GFTJ9L=+Q@mail.gmail.com>
+ <680a6b54.d40a0220.27afd9.5e84@mx.google.com> <680abbce.050a0220.144721.78ac@mx.google.com>
+In-Reply-To: <680abbce.050a0220.144721.78ac@mx.google.com>
+From: Burak Emir <bqe@google.com>
+Date: Fri, 25 Apr 2025 14:20:13 +0200
+X-Gm-Features: ATxdqUGYOK0NGfbNcrLA7OJdnBL4aoQc1LpEgeCSbMZBsGDktX9utu4m4m2z0d8
+Message-ID: <CACQBu=VEATxHmFvt0TKbb+Hx5jeEGO8SL733=0m8LNnX6S+ZKw@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rong Xu <xur@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 24 Apr 2025 at 12:59, Tomi Valkeinen
-<tomi.valkeinen@ideasonboard.com> wrote:
+On Fri, Apr 25, 2025 at 12:31=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> =
+wrote:
 >
-> Hi,
->
-> On 17/04/2025 17:24, Ulf Hansson wrote:
-> > If a PM domain (genpd) is powered-on during boot, there is probably a good
-> > reason for it. Therefore it's known to be a bad idea to allow such genpd to be
-> > powered-off before all of its consumer devices have been probed. This series
-> > intends to fix this problem.
+> On Thu, Apr 24, 2025 at 09:48:17AM -0700, Boqun Feng wrote:
+> > On Thu, Apr 24, 2025 at 06:45:33PM +0200, Burak Emir wrote:
+> > > On Wed, Apr 23, 2025 at 6:56=E2=80=AFPM Yury Norov <yury.norov@gmail.=
+com> wrote:
+> > > > So? Can you show your numbers?
+> > >
+> > > For now, I only have numbers that may not be very interesting:
+> > >
+> > > - for find_next_bit,  find_next_zero_bit and find_next_zero_bit (spar=
+se):
+> > >   22 ns/iteration in C, 32 ns/iteration in Rust.
+> > >
+> > > - for sparse find_next_bit (sparse):
+> > >   60 ns/iteration in C, 70 ns/iteration in Rust.
+> > >
+> > > This is a VM running nested in a VM. More importantly: the C helper
+> > > method is not inlined.
+> > > So we are likely measuring the overhead (plus the extra bounds checki=
+ng).
+> > >
+> > > I would like to get cross-language inlining to work with thinLTO to
+> > > have a more realistic comparison.
+> > > However, that is not something that works out of the box.
+> > > I am looking at Gary Guo's patch for this:
+> > > https://lore.kernel.org/all/20250319205141.3528424-1-gary@garyguo.net=
+/
+> > > Currently, I get duplicate symbol errors.
+> > >
 > >
-> > We have been discussing these issues at LKML and at various Linux-conferences
-> > in the past. I have therefore tried to include the people I can recall being
-> > involved, but I may have forgotten some (my apologies), feel free to loop them
-> > in.
+> > You will need to add __rust_helper attribute for the new rust helpers
+> > introduce in your patches. See Gary's patch #2 for example.
 > >
-> > A few notes:
-> > *)
-> > Even if this looks good, the last patch can't go in without some additional
-> > changes to a couple of existing genpd provider drivers. Typically genpd provider
-> > drivers that implements ->sync_state() need to call of_genpd_sync_state(), but I
-> > will fix this asap, if we think the series makes sense.
-> >
-> > *)
-> > Patch 1 -> 3 are just preparatory cleanups.
-> >
-> > *)
-> > I have tested this with QEMU with a bunch of local test-drivers and DT nodes.
-> > Let me know if you want me to share this code too.
-> >
-> >
-> > Please help review and test!
-> > Finally, a big thanks to Saravana for all the support!
 >
-> I had a quick test with this on TI's AM62 board. A few observations.
+> Here you go ;-)
 >
-> With this series, all the individual PDs seem to get a state_synced file:
+>         https://github.com/fbq/linux/tree/rust-inline-bitmap
 >
-> ...
-> /sys/devices/genpd_provider/pd:143/state_synced
-> /sys/devices/genpd_provider/pd:54/state_synced
-> /sys/devices/genpd_provider/pd:105/state_synced
-> /sys/devices/genpd_provider/pd:62/state_synced
-> /sys/devices/genpd_provider/pd:141/state_synced
-> ...
+> I rebased on the top of rust-next and applied your patches onto it. The
+> last one is the necessary bits that enables helper inlining for the new
+> APIs in your patch. There is also a "TMP" patch in-between, otherwise
+> INLINE_HELPERS won't work, we need to dig more of it. But anyway, it
+> works on my machine (TM):
 >
-> Is that on purpose? What do these files represent? They all seem to be "1".
+> (on x86, in your test function)
+>
+> 000000000028b090 <_RNvNtNtCs3KHxpmQFgFb_6kernel6bitmap5tests40kunit_rust_=
+wrapper_bitmap_set_clear_find>:
+>   ...
+>   28b0dd: 48 0f ba 2b 11                btsq    $0x11, (%rbx)
+>
+> ^ this is the "b.set_bit(17);" in bitmap_set_clear_find() test.
 
-It's on purpose, but in this case there are no fw_devlink tracking
-them, but instead that's done via..
+Thanks Boqun! I had the same state and got things to build now with
+CONFIG_LTO_NONE.
+Your work helped me narrow down the possibilities.
 
-/sys/devices/platform/bus@f0000/44043000.system-controller/44043000.system-controller:power-controller/state_synced
+Gary's helper-inlining patch in combination of CONFIG_CLANG_LTO_THIN
+and CONFIG_FIND_BIT_BENCHMARK_RUST=3Dy gives "duplicate symbol" build
+errors.
 
-..as you point out below.
+It does not eve matter here - because  _find_next_bit C functions are
+not helpers.
 
-Depending on the DT layout these nodes may be useful, but not in the
-TI PM domain case.
+For cross-language inlining, we would need to change the build system
+similar to Gary's helper-inlining series, but for *all* object files.
+That is what "-flto" does for clang, and "-Clinker-plugin-lto" would
+do for rustc.
+Instead of the hack of emitting a .bc file, we need all .o files to
+contain LLVM bitcode, regardless of whether they come from clang or
+rustc.
 
->
-> When I boot up, I see the sync_state pending:
->
-> [   22.541292] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> 2b10000.audio-contro
-> ller
-> [   22.554839] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> e0f0000.watchdog
-> [   22.566550] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> e030000.watchdog
-> [   22.577854] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> e020000.watchdog
-> [   22.589239] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> e010000.watchdog
-> [   22.600674] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> e000000.watchdog
-> [   22.611875] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> 30200000.dss
-> [   22.622813] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> fd00000.gpu
-> [   22.633565] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> b00000.temperature-s
-> ensor
-> [   22.645540] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> 2b300050.target-modu
-> le
-> [   22.657067] ti_sci_pm_domains
-> 44043000.system-controller:power-controller: sync_state() pending due to
-> chosen:framebuffer@0
->
-> The "real" state_synced file on this platform is:
->
-> /sys/devices/platform/bus@f0000/44043000.system-controller/44043000.system-controller:power-controller/state_synced
->
-> In strict mode, this shows 0, and if I echo 1 (interestingly "echo 1 >
-> /sys/..." doesn't work, I need "echo -n 1 > /sys/...), I see PDs getting
-> powered off (added a debug print there):
->
-> [   87.335487] ti_sci_pd_power_off 88
-> [   87.342896] ti_sci_pd_power_off 87
-> [   87.347404] ti_sci_pd_power_off 86
-> [   87.356464] ti_sci_pd_power_off 128
-> [   87.361296] ti_sci_pd_power_off 127
-> [   87.368714] ti_sci_pd_power_off 126
-> [   87.373349] ti_sci_pd_power_off 125
-> [   87.378077] ti_sci_pd_power_off 62
-> [   87.382587] ti_sci_pd_power_off 60
-> [   87.387194] ti_sci_pd_power_off 59
-> [   87.391759] ti_sci_pd_power_off 53
-> [   87.396648] ti_sci_pd_power_off 52
-> [   87.400801] ti_sci_pd_power_off 51
-> [   87.405131] ti_sci_pd_power_off 75
-> [   87.409238] ti_sci_pd_power_off 143
-> [   87.413328] ti_sci_pd_power_off 142
-> [   87.417403] ti_sci_pd_power_off 141
-> [   87.421494] ti_sci_pd_power_off 105
-> [   87.425632] ti_sci_pd_power_off 104
-> [   87.429815] ti_sci_pd_power_off 103
-> [   87.433941] ti_sci_pd_power_off 102
-> [   87.438054] ti_sci_pd_power_off 158
-> [   87.442151] ti_sci_pd_power_off 156
-> [   87.446324] ti_sci_pd_power_off 155
-> [   87.450463] ti_sci_pd_power_off 154
-> [   87.454549] ti_sci_pd_power_off 153
-> [   87.458671] ti_sci_pd_power_off 152
-> [   87.462571] ti_sci_pd_power_off 43
-> [   87.466425] ti_sci_pd_power_off 42
-> [   87.470254] ti_sci_pd_power_off 41
-> [   87.474032] ti_sci_pd_power_off 40
-> [   87.477825] ti_sci_pd_power_off 39
-> [   87.481609] ti_sci_pd_power_off 38
-> [   87.485432] ti_sci_pd_power_off 37
-> [   87.489256] ti_sci_pd_power_off 36
-> [   87.493077] ti_sci_pd_power_off 95
-> [   87.496845] ti_sci_pd_power_off 132
-> [   87.500780] ti_sci_pd_power_off 107
-> [   87.504583] ti_sci_pd_power_off 114
-> [   87.508429] ti_sci_pd_power_off 79
-> [   87.512050] ti_sci_pd_power_off 148
-> [   87.515859] ti_sci_pd_power_off 147
-> [   87.519644] ti_sci_pd_power_off 106
-> [   87.523414] ti_sci_pd_power_off 149
-> [   87.527203] ti_sci_pd_power_off 50
-> [   87.530971] ti_sci_pd_power_off 49
-> [   87.534708] ti_sci_pd_power_off 48
-> [   87.538401] ti_sci_pd_power_off 35
-> [   87.542040] ti_sci_pd_power_off 186
->
-> We do have a lot of "extra" PDs enabled by the bootloader...
->
-> With the timeout mode, I see the sync_state() getting called some
-> seconds after the boot has finished.
->
-> So... I think it all works as expected. You can take this as some kind
-> of Tested-by, but it'd be good if someone from TI who knows more about
-> PDs would test this too =).
-
-Thanks a lot for testing and sharing your information!
-
->
-> Interestingly, I see a difference in behavior to the old patches from
-> Abel: with the old patches, if I boot up with the DSS (display
-> subsystem) enabled by the bootloader, it looks the same as with these
-> patches. However, with the old patches, when I load the DSS driver, and
-> it probes successfully, the DSS PD will get managed correctly, i.e. if I
-> blank the screen, the DSS PD will go to off, even if the sync_state has
-> not been called.
->
-> With these patches the DSS PD will stay on, no matter if I load the DSS
-> driver or not, and will only go off after sync_state has been called.
->
-> I'm not quite sure here, but I think the behavior with the old patches
-> makes sense: when the driver for a particular PD loads, the PD no longer
-> needs to be kept on. Or... Is this about the case where a PD has
-> multiple consumers? The PD provider cannot know how many consumers there
-> are for a single PD, so it must keep all boot-time-enabled PDs on until
-> sync_state() (i.e. all the consumer drivers have probed)?
-
-You are correct!
-
-ti_sci_pm_domains are modelled in DT by using:
-#power-domain-cells = <1>;
-or
-#power-domain-cells = <2>;
-
-fw_devlink doesn't look at those additional specifiers in DT. For
-example, if a consumer has "power-domains = <&k2g_pds 5>;" the '5'
-will not be considered as a separate domain, but instead all consumers
-of &k2g_pds needs to be probed, before the ->sync_state() gets called.
-
-Theoretically, if we could treat the specifier ('5' in this case) as
-being a separate domain, that should would for most cases. The
-question is, how difficult it would be to extend fw_devlink to support
-this, so that when all consumers that has  "power-domains = <&k2g_pds
-5>" has probed, the ->sync_state() get's invoked for the corresponding
-genpd->dev.
-
-If Saravanna want to comment on this, that would be nice, otherwise I
-will chat with him offlist about this.
-
-That said, it seems like this is working fine for the TI platforms,
-which is great!
-
-Kind regards
-Uffe
+Thanks,
+Burak
