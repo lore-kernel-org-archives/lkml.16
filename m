@@ -1,231 +1,145 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE22222AE7B
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C5144304;
+	Fri, 25 Apr 2025 06:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745560889; cv=none; b=gy8F3FlvlTOse5kC8PonIe7lJoeK9RP6hI9uLSD3VvowcOrjZswyGkF/HEjFrx0nGqQJXnHVt+XjBePolBauK0X0OIzVO9k9Ajdc04CMk5VKui0oy2EiVwasUSkSL2FTsxtNv2oXijgJkPf15ltjqsV6pzbaIIou+4bUcK+ykKw=
+	t=1745560905; cv=none; b=FyPl1W01WEB4b7wD5neDGMMdZx62TURS3aMVz9XRiSmlU7xwtgLVBYYgb6hZJvWiAP+5bMug8q0JvpEN9HVtMYVT3nRE1EziQoND858wN8vGeph5wopHvFwtFbAM94vT3L4lUlYmF+tZU+lsnmMexFz4vaJDTfKErHldTVAMn50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745560889; c=relaxed/simple;
-	bh=sA9Q/znoXHcWQsR+79qS0YGoQq7U9GSlRw37bCGWW44=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LCBt2F8gbcoHUGQVr7lMbns9ropspXH7zqtjWL8T1BFCFvO/HSMnaOwPH6Q8q8BA/TTeZZsVQaCd6yByUQj9x+h2EZZrUjD5pky0brYoTvUd1PrUexfxnQLGlhixePut27FzyBIzxkByZQWmu2WHvDsh0SZmWjk73iNwVPyGF+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nKeKcv2d; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745560905; c=relaxed/simple;
+	bh=xU2b+Zi/jPAOs/dygu9xP99GyeH/dv9p6nxAqx+d9P0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MO/sfSC0inYwLvbFq5s9m0qs0r7DXRnGEDeNkc4FP8EKAdy+COnwA67ITWKOzEDfv4wDpLihJcVsgms+c2CogtujswLzDzrT+LQF/tb0SoA35S88LWZRCcYUecLJxMD3l1L1nYeEQLZQUXfBnH10/NiYxvrcf0N5667l+X7f+mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NoEZom0U; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nKeKcv2d"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745560884;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9zo0TboDVGXZ7xN4lEDDgR1Zc9tJYQZ0/Nurz8YEz4I=;
-	b=nKeKcv2dL+7575VQeXNV0t5ax/uxZjoQpTh1PFwTt2pPt0CUnlMv+HYw90zz/Ag2yggC+9
-	IvbcYm4yalF2vBr7PDMoUNyDvtFiP+GMaV9e0rbeA+KpECvh+UxKKAf45EvqYM9yhYiUpA
-	XYeUcXwnKvvm5iXWX2fZukpxpVHep8M=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v1 2/2] selftests/bpf: Add test to cover sockmap with ktls
-Date: Fri, 25 Apr 2025 13:59:58 +0800
-Message-ID: <20250425060015.6968-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20250425060015.6968-1-jiayuan.chen@linux.dev>
-References: <20250425060015.6968-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NoEZom0U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745560904; x=1777096904;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xU2b+Zi/jPAOs/dygu9xP99GyeH/dv9p6nxAqx+d9P0=;
+  b=NoEZom0UCVuE1xRMG/PCgQ+ZiwK6TIaLEXWt71mdolo9g73frEYmQkB5
+   AGpex7oZYtlM9zC7e0tCaBWZQdzwueey6Jbz14vamXPBr8P35H0p3zwDJ
+   c8BCFSIXTOXYOEwFFX8lZfWb91Jhw+uLWLxwZeClFvZtkaIbgYHAO1+aM
+   JA+1QYrtHQNZIs348x+ZWxMQSrtXQXC8pv40sLuRXx/PFElUrONi1adR1
+   NB3k+tiwGrwGPMTVpt78UXeZjw/8SneG1sMvTojI/54uQjozKr5TrTa+F
+   /MLxXjK51hAkndU8gcUYa35TnVGCfbDfGynOV2fsTJp2xRTts3q++MCe0
+   g==;
+X-CSE-ConnectionGUID: FQELhwl5QGCN8o3sq6CzzA==
+X-CSE-MsgGUID: D+JqdKCjR/W2JAkgXQ8hpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="69707059"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="69707059"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 23:01:43 -0700
+X-CSE-ConnectionGUID: b6S8IAIaR/+e7M6jn6Vibg==
+X-CSE-MsgGUID: 7oAiGe6PQ0idckOK5XqdLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132707322"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Apr 2025 23:01:39 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8C80-0004rV-0Y;
+	Fri, 25 Apr 2025 06:01:36 +0000
+Date: Fri, 25 Apr 2025 14:01:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	peter.chen@cixtech.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Manikandan K Pillai <mpillai@cadence.com>,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: Re: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and
+ EP controller
+Message-ID: <202504251312.YvKIAjMl-lkp@intel.com>
+References: <20250424010445.2260090-6-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424010445.2260090-6-hans.zhang@cixtech.com>
 
-The selftest can reproduce an issue where we miss the uncharge operation
-when freeing msg, which will cause the following warning. We fixed the
-issue and added this reproducer to selftest to ensure it will not happen
-again.
+Hi,
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 40 at net/ipv4/af_inet.c inet_sock_destruct+0x173/0x1d5
-Tainted: [W]=WARN
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.15.0-1 04/01/2014
-Workqueue: events sk_psock_destroy
-RIP: 0010:inet_sock_destruct+0x173/0x1d5
-RSP: 0018:ffff8880085cfc18 EFLAGS: 00010202
-RAX: 1ffff11003dbfc00 RBX: ffff88801edfe3e8 RCX: ffffffff822f5af4
-RDX: 0000000000000007 RSI: dffffc0000000000 RDI: ffff88801edfe16c
-RBP: ffff88801edfe184 R08: ffffed1003dbfc31 R09: 0000000000000000
-R10: ffffffff822f5ab7 R11: ffff88801edfe187 R12: ffff88801edfdec0
-R13: ffff888020376ac0 R14: ffff888020376ac0 R15: ffff888020376a60
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000556365155830 CR3: 000000001d6aa000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- __sk_destruct+0x46/0x222
- sk_psock_destroy+0x22f/0x242
- process_one_work+0x504/0x8a8
- ? process_one_work+0x39d/0x8a8
- ? __pfx_process_one_work+0x10/0x10
- ? worker_thread+0x44/0x2ae
- ? __list_add_valid_or_report+0x83/0xea
- ? srso_return_thunk+0x5/0x5f
- ? __list_add+0x45/0x52
- process_scheduled_works+0x73/0x82
- worker_thread+0x1ce/0x2ae
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- .../selftests/bpf/prog_tests/sockmap_ktls.c   | 76 +++++++++++++++++++
- .../selftests/bpf/progs/test_sockmap_ktls.c   | 10 +++
- 2 files changed, 86 insertions(+)
+[auto build test ERROR on fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2]
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-index 49b85c1c7552..8f07168c9de6 100644
---- a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-@@ -306,6 +306,80 @@ static void test_sockmap_ktls_tx_cork(int family, int sotype, bool push)
- 	test_sockmap_ktls__destroy(skel);
- }
- 
-+static void test_sockmap_ktls_tx_no_buf(int family, int sotype, bool push)
-+{
-+	int c = 0, p = 0, one = 1, two = 2;
-+	struct test_sockmap_ktls *skel;
-+	unsigned char *data = NULL;
-+	struct msghdr msg = {0};
-+	struct iovec iov[2];
-+	int prog_fd, map_fd;
-+	int txrx_buf = 1024;
-+	int iov_length = 8192;
-+	int err;
-+
-+	skel = test_sockmap_ktls__open_and_load();
-+	if (!ASSERT_TRUE(skel, "open ktls skel"))
-+		return;
-+
-+	err = create_pair(family, sotype, &c, &p);
-+	if (!ASSERT_OK(err, "create_pair()"))
-+		goto out;
-+
-+	err = setsockopt(c, SOL_SOCKET, SO_RCVBUFFORCE, &txrx_buf, sizeof(int));
-+	err |= setsockopt(p, SOL_SOCKET, SO_SNDBUFFORCE, &txrx_buf, sizeof(int));
-+	if (!ASSERT_OK(err, "set buf limit"))
-+		goto out;
-+
-+	prog_fd = bpf_program__fd(skel->progs.prog_sk_policy_redir);
-+	map_fd = bpf_map__fd(skel->maps.sock_map);
-+
-+	err = bpf_prog_attach(prog_fd, map_fd, BPF_SK_MSG_VERDICT, 0);
-+	if (!ASSERT_OK(err, "bpf_prog_attach sk msg"))
-+		goto out;
-+
-+	err = bpf_map_update_elem(map_fd, &one, &c, BPF_NOEXIST);
-+	if (!ASSERT_OK(err, "bpf_map_update_elem(c)"))
-+		goto out;
-+
-+	err = bpf_map_update_elem(map_fd, &two, &p, BPF_NOEXIST);
-+	if (!ASSERT_OK(err, "bpf_map_update_elem(p)"))
-+		goto out;
-+
-+	skel->bss->apply_bytes = 1024;
-+
-+	err = init_ktls_pairs(c, p);
-+	if (!ASSERT_OK(err, "init_ktls_pairs(c, p)"))
-+		goto out;
-+
-+	data = calloc(iov_length, sizeof(char));
-+	if (!data)
-+		goto out;
-+
-+	iov[0].iov_base = data;
-+	iov[0].iov_len = iov_length;
-+	iov[1].iov_base = data;
-+	iov[1].iov_len = iov_length;
-+	msg.msg_iov = iov;
-+	msg.msg_iovlen = 2;
-+
-+	for (;;) {
-+		err = sendmsg(c, &msg, MSG_DONTWAIT);
-+		if (err <= 0)
-+			break;
-+	}
-+
-+out:
-+	if (data)
-+		free(data);
-+	if (c)
-+		close(c);
-+	if (p)
-+		close(p);
-+
-+	test_sockmap_ktls__destroy(skel);
-+}
-+
- static void run_tests(int family, enum bpf_map_type map_type)
- {
- 	int map;
-@@ -330,6 +404,8 @@ static void run_ktls_test(int family, int sotype)
- 		test_sockmap_ktls_tx_cork(family, sotype, false);
- 	if (test__start_subtest("tls tx cork with push"))
- 		test_sockmap_ktls_tx_cork(family, sotype, true);
-+	if (test__start_subtest("tls tx egress with no buf"))
-+		test_sockmap_ktls_tx_no_buf(family, sotype, true);
- }
- 
- void test_sockmap_ktls(void)
-diff --git a/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c b/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c
-index e0f757929ef4..8bdb9987c0c7 100644
---- a/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c
-+++ b/tools/testing/selftests/bpf/progs/test_sockmap_ktls.c
-@@ -6,6 +6,7 @@
- int cork_byte;
- int push_start;
- int push_end;
-+int apply_bytes;
- 
- struct {
- 	__uint(type, BPF_MAP_TYPE_SOCKMAP);
-@@ -24,3 +25,12 @@ int prog_sk_policy(struct sk_msg_md *msg)
- 
- 	return SK_PASS;
- }
-+
-+SEC("sk_msg")
-+int prog_sk_policy_redir(struct sk_msg_md *msg)
-+{
-+	int two = 2;
-+
-+	bpf_msg_apply_bytes(msg, apply_bytes);
-+	return bpf_msg_redirect_map(msg, &sock_map, two, 0);
-+}
+url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/dt-bindings-pci-cadence-Extend-compatible-for-new-RP-configuration/20250424-090651
+base:   fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+patch link:    https://lore.kernel.org/r/20250424010445.2260090-6-hans.zhang%40cixtech.com
+patch subject: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and EP controller
+config: i386-buildonly-randconfig-003-20250425 (https://download.01.org/0day-ci/archive/20250425/202504251312.YvKIAjMl-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250425/202504251312.YvKIAjMl-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504251312.YvKIAjMl-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pci/controller/cadence/pcie-cadence-plat.c:13:
+   drivers/pci/controller/cadence/pcie-cadence.h:851:8: error: expected ')'
+     851 |                                                  int where)
+         |                                                  ^
+   drivers/pci/controller/cadence/pcie-cadence.h:850:49: note: to match this '('
+     850 | static inline void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn
+         |                                                 ^
+>> drivers/pci/controller/cadence/pcie-cadence-plat.c:35:25: error: use of undeclared identifier 'cdns_pcie_host_init_root_port'; did you mean 'cdns_pcie_hpa_host_init_root_port'?
+      35 |         .host_init_root_port = cdns_pcie_host_init_root_port,
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                cdns_pcie_hpa_host_init_root_port
+   drivers/pci/controller/cadence/pcie-cadence.h:855:19: note: 'cdns_pcie_hpa_host_init_root_port' declared here
+     855 | static inline int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
+         |                   ^
+>> drivers/pci/controller/cadence/pcie-cadence-plat.c:36:24: error: use of undeclared identifier 'cdns_pcie_host_bar_ib_config'; did you mean 'cdns_pcie_hpa_host_bar_ib_config'?
+      36 |         .host_bar_ib_config = cdns_pcie_host_bar_ib_config,
+         |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                               cdns_pcie_hpa_host_bar_ib_config
+   drivers/pci/controller/cadence/pcie-cadence.h:859:19: note: 'cdns_pcie_hpa_host_bar_ib_config' declared here
+     859 | static inline int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
+         |                   ^
+>> drivers/pci/controller/cadence/pcie-cadence-plat.c:37:35: error: use of undeclared identifier 'cdns_pcie_host_init_address_translation'; did you mean 'cdns_pcie_hpa_host_init_address_translation'?
+      37 |         .host_init_address_translation = cdns_pcie_host_init_address_translation,
+         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                          cdns_pcie_hpa_host_init_address_translation
+   drivers/pci/controller/cadence/pcie-cadence.h:866:19: note: 'cdns_pcie_hpa_host_init_address_translation' declared here
+     866 | static inline int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc)
+         |                   ^
+   4 errors generated.
+
+
+vim +35 drivers/pci/controller/cadence/pcie-cadence-plat.c
+
+    31	
+    32	static const struct cdns_pcie_ops cdns_plat_ops = {
+    33		.link_up = cdns_pcie_linkup,
+    34		.cpu_addr_fixup = cdns_plat_cpu_addr_fixup,
+  > 35		.host_init_root_port = cdns_pcie_host_init_root_port,
+  > 36		.host_bar_ib_config = cdns_pcie_host_bar_ib_config,
+  > 37		.host_init_address_translation = cdns_pcie_host_init_address_translation,
+    38		.detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
+    39		.set_outbound_region = cdns_pcie_set_outbound_region,
+    40		.set_outbound_region_for_normal_msg =
+    41						    cdns_pcie_set_outbound_region_for_normal_msg,
+    42		.reset_outbound_region = cdns_pcie_reset_outbound_region,
+    43	};
+    44	
+
 -- 
-2.47.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
