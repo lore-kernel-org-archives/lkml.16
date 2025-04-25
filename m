@@ -1,114 +1,108 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA868BEA;
-	Fri, 25 Apr 2025 08:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD38D1E1C1A;
+	Fri, 25 Apr 2025 08:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745568927; cv=none; b=kq6ihGUm6V+wXtwvjOUFEWY3bFpvuWb2H6VWzrQZtBIhc2VatD9+WyqfZTF3QqKN4NiRKpUGvJjS+ROefubh/4HXnjD2KYR+lcAi08x68djz+kx40gU2zYCYW/5RLFYVh0QOQR9FOWlb2/AQwNbKije258tTi1VQeb5RcCfp9GE=
+	t=1745569029; cv=none; b=Jrkkgh46qgfJKqKwge3dZKm4/1z66SUAjSEe6Fm0zWjhj/ow6+uz2AQSHSTpcPS9wMtj1AYW2dC1KL+5a6ViNgP8kaQxWWn4Y77EBSlL08qiJPSiYfoKIBzY468VjJFdnoKpy2jbwEGprFTUt/kWb9fJvOseZSVNutEaS4GPJ/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745568927; c=relaxed/simple;
-	bh=86b6Qygih6V8o2xUszx+iWOy8Fak2smPLa/wf8BPUEs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=rASbwvfiilkHjRvn4SuAaSlNTXU5skGi49YooJ12QJyHEP0Zo1Kz/o7h03grsT27X+m1KOVexzJLnp/n989nDJ03Bzu5qNpSzc5RuigI2DAdNzEPAhA5k7BG7XL7ia2cBVYOUmsT37PoEWStQaOtdMMPsH6z6TKqsS1eM0bsPOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=DJKVm7Um; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1745569029; c=relaxed/simple;
+	bh=l93aW+hnno0yviT9MaFsDASYUSa9NmcxK1YOv6d8EaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nk6DMMAnRubNxZluVdLiXKHIYjTDzRAAjotkV6Az/fvmorsFDYcSyPOt/V3nub2u70S5LW5NAfB15Y3IrGmanoPIxibSksSmOpHo2j5wTz+wUQmz8MEf+gguKmhDYSWQoY8B+m7mEwG6hJjk5KXSQS5OONqrHUVCj0U/qgIDY3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8byq8RA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="DJKVm7Um"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1745568912; x=1746173712; i=markus.elfring@web.de;
-	bh=86b6Qygih6V8o2xUszx+iWOy8Fak2smPLa/wf8BPUEs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=DJKVm7Um14QBrGI5YF5f6phDVq8hfM7NndJP+Iwp3pF/nqMLMhlYsFTNKYDMHM1b
-	 oNtEOPymIsCdWpK4SJeI2XH5hnKnJdyTDbihMRQNw8VDjl53yRL9my6cyC+r/Jrq9
-	 tVqnkb0/CttgR/nIH34cFM69nQadk6t5+TnoFWqu2R3uC8paO7s4aXCMjhTYPkEWf
-	 ycQVvZ82lf8Tqi4Pk/kS+9zsMMm444EF2RLd1G6A3B0wDOASYFeXVgHEc/o5njETK
-	 YOx1kuEYBp1kZ2jrWR+TPo6NYDV7Ou6xCrusPcS0CiG+0mjHiXXdNebVCC/4FfEUc
-	 +wPMN89LZozQMb/RoA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.30]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mo6Jz-1urni70HAB-00hWDX; Fri, 25
- Apr 2025 10:15:12 +0200
-Message-ID: <7426e045-d0af-4243-b147-98098dd9015d@web.de>
-Date: Fri, 25 Apr 2025 10:15:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8byq8RA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DADCC4CEE4;
+	Fri, 25 Apr 2025 08:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745569029;
+	bh=l93aW+hnno0yviT9MaFsDASYUSa9NmcxK1YOv6d8EaA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S8byq8RAhFEWJpSrQrKkEzCruFZuIOr8WVkXYfEEbPpsRunNEusHq4W2zsOjCqLgI
+	 eM+N2xzMFdprvQdPBxloCQ4fNTYciABbYycCi2EyRr5QyZKGiGo8d+dv26AkOXdG3H
+	 Z4Z7OQt4g9iSptvtxaExVKJWWSdgkos6NA9NnZGeP2FWFRUMygxjkuKZpuJg349ue7
+	 fs8x4JlkK6Zt5Ctq8AVcQDhmRmE3xrVuy+v4ueYISa4moCB3S/F71ICEV8w6NpN3dk
+	 4PSlVW7HSAPvFVUnSMeFD/6He+QsCs0LrqkeFzdqbjXTJtg9obDjblFdNE+XTJTXTN
+	 FEzfsByP8W39A==
+Date: Fri, 25 Apr 2025 09:16:59 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3 2/3] staging: iio: ad9832: Refactor powerdown control
+Message-ID: <20250425091659.71bf143f@jic23-huawei>
+In-Reply-To: <CAKUZ0zKXg4KLpHPLtpkywPLp8+xxwAMSpNAgUmP34pfVZDv7Aw@mail.gmail.com>
+References: <20250420175419.889544-1-gshahrouzi@gmail.com>
+	<20250420175419.889544-3-gshahrouzi@gmail.com>
+	<20250421123728.1564039d@jic23-huawei>
+	<CAKUZ0zKXg4KLpHPLtpkywPLp8+xxwAMSpNAgUmP34pfVZDv7Aw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Antonios Salios <antonios@mwa.re>, linux-can@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
- Jan Henrik Weinstock <jan@mwa.re>, Marc Kleine-Budde <mkl@pengutronix.de>,
- lukas@mwa.re, Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-References: <20250424125219.47345-2-antonios@mwa.re>
-Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250424125219.47345-2-antonios@mwa.re>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UQ/5Rtz6vO/hpJwJp9JNwQWdaF/N/xTJDqhoEq0FoRbPEALdAgW
- 9csabdgKf3aJJQEcB+d2BeHLoLnWxtrMtXPsQZrc4/+qqEGyd4EYpIfyMHDWqobTOFfFHBG
- +BZnu1yKA7oxe+OFT0c0UmrqPdgKOlQElgvkuEcCh9dmw9brEV6F3NO+OwpfqG2tIMAiICg
- IFQiPe14aVYOzmLYN7CRw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:H541I6rwjww=;7hiBvQ0crSkS/OyofSlnRvl+pGe
- 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
 
-=E2=80=A6
-> This patch fixes =E2=80=A6
+On Thu, 24 Apr 2025 18:25:51 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc3#n94
+> On Mon, Apr 21, 2025 at 7:37=E2=80=AFAM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> >
+> > On Sun, 20 Apr 2025 13:54:18 -0400
+> > Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+> > =20
+> > > Replace custom implementation with out_altvoltage_powerdown ABI. The
+> > > attribute's logic is inverted (1 now enables powerdown) to match the
+> > > standard. Modernize driver by using the standard IIO interface.
+> > >
+> > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > > ---
+> > >  drivers/staging/iio/frequency/ad9832.c | 44 ++++++++++++++++++------=
+--
+> > >  1 file changed, 30 insertions(+), 14 deletions(-)
+> > >
+> > > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging=
+/iio/frequency/ad9832.c
+> > > index 0872ff4ec4896..a8fc20379efed 100644
+> > > --- a/drivers/staging/iio/frequency/ad9832.c
+> > > +++ b/drivers/staging/iio/frequency/ad9832.c
+> > > @@ -167,6 +167,34 @@ static int ad9832_write_phase(struct ad9832_stat=
+e *st,
+> > >       return spi_sync(st->spi, &st->phase_msg);
+> > >  }
+> > >
+> > > +static ssize_t ad9832_write_powerdown(struct device *dev, struct dev=
+ice_attribute *attr,
+> > > +                                   const char *buf, size_t len)
+> > > +{
+> > > +     struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> > > +     struct ad9832_state *st =3D iio_priv(indio_dev);
+> > > +     int ret;
+> > > +     unsigned long val;
+> > > +
+> > > +     ret =3D kstrtoul(buf, 10, &val);
+> > > +     if (ret)
+> > > +             goto error_ret;
+> > > +
+> > > +     mutex_lock(&st->lock); =20
+> >
+> > Look at how guard(mutex)(&st->lock);
+> > can be used in this driver to simplify things considerably. =20
+> Noted, added into new version.
+> > May make sense to do that before introducing this new code. =20
+> Not sure whether to have made it its own patch or not. I grouped it
+> together with the new code since it also uses locking.
+For new code it is fine to do it at the same time.
 
-Regards,
-Markus
+If there are other places it makes sense in the driver, separate
+patch covering all those.
+
+Jonathan
