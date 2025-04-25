@@ -1,114 +1,90 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4938F6F;
-	Fri, 25 Apr 2025 01:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E564F4C7C;
+	Fri, 25 Apr 2025 02:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745546372; cv=none; b=fVdL+12fIUx+seWHSrG/abNTCItet3tPMy4OZy3zr+44ddKNiPw2si7FKeGlXR6ht+ZVElSuQ5HRd3JKk5m6I/A4ZGQzuXh3DntBZTS4FVv+zjn+l84GpqO7XqAOBUtsVS++6gxESxE/NB7U6gVb9abwq/BFSPhQY9Xm3EQsdUg=
+	t=1745546516; cv=none; b=IN74NdB6qnN6Ys+7QtXL2DHAmbdEDjFQOSOy+EJNGB3T1tTnKl3r54S10/lZE4IZrhVZ9kowZONvLomzKoLTkBGREeyaVD35xqU8363gbKEADns/TufiY8PcYgQ5+5GhKdQhbEiABI16VZy+VwicXZ0JQEVNbZIulZ4udPl1I8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745546372; c=relaxed/simple;
-	bh=1aJS5kl7xtX5V22+sHMIn3FQYVOQs0lFq8Rba+JOQOk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=FxVr9LCsll0q2cpZ61CvqKAibwhHRGB5VbknQF0pfeEQKFXJoYiVaw6reeKqlmd8gelH21F8vPEwcQEyTGSb9td2Ct10ayjAZXkJjOmbntjnObgp3a+TptM4one22TmERBM+b6+zPrB3VaU/PW8GbKDT+QpeU5S86HcxyxkElV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEuzw4/E; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745546516; c=relaxed/simple;
+	bh=pme5iQz5eKFu7fHxQXgGPqQvVq1us5JDlFMnADx3js0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQjlY/aGcNZoWCP6vduXa7u1uyMvMDVXm5YW2vyTkpNnfk9G+UuUXaIXeG+s8bp+0XhzD7dXksmo0BpLFgBFVPgrJy5/486dVAkdgkene9wHNX2B3GhyRyWt8NJy29Ud/bGY7jGYbT4bmT92n7zua8Wp+HwjbI2QD7yDNZwwKbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mrpwuK5B; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEuzw4/E"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af28bc68846so1658052a12.1;
-        Thu, 24 Apr 2025 18:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745546370; x=1746151170; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oi2E46jx11E6P8igzC1fG0bFDRSDTXcSRpMpk983nrY=;
-        b=EEuzw4/EFRSxytiz0r+lwu99ixUYYLMaOqxczKSSa1MPaANo8dPKBYguxbDdUvWEK/
-         kqOdtDB7QoI7+xzA7JvcVHb6l4fn8bPi9KtFN9X1J8vcsSK/ol/b8gCVGKJqWeGlfaZ4
-         W/TwozkoNaoWINVzyoNc5PRYKCtGP4qCN7IGUylJLyjzPdbsRb1Fy6rjHtuIHNdCeHR4
-         iP9cdEo0FdUtK5KhzXucLhvykS8LNj5n3SghKd7ItCCE78YIHDP+pkixOD1+R/ZyK+k/
-         wLvaGNNnNUyKDSGQy/JGWOfzl2OO0J7BBzEXG7k9SVPU9zFJQ7EW7r70bVHCHMGT8dTG
-         tH1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745546370; x=1746151170;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oi2E46jx11E6P8igzC1fG0bFDRSDTXcSRpMpk983nrY=;
-        b=QTSWu6FrDjLoKJr1rtASDXDJn1U188QsFP3uW6vJhiniCgOj8kZJyY8oKRFS4svYc9
-         4Am3FDtw5eTQH4jv0/LO72wejbmP/PJUcpuIVobfFjXTqGP/wXA2MEDiJdmWGdZr8ER2
-         ypOkNypyQwCRPjY9VrZYYk0LfFpzMbfZIQ7JuvZQIVjxHjSYHHrXOQtyUne+4uNnxN2m
-         91lGUaryxTlbEqLagvKymI0Wl26Nn48GjgeOI+3OpQS/b4EHxGJ9KcDDZBToX+o5n2vP
-         w+058gJ3fgUefkC1oHa7hz1XE8pvzA/tnexpwKeNo31EZcJvRd2V9LkpB5nsSPiDx84r
-         Asmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhKS1QDeY3QzF/4RIP4K3cKa9bqo0V/V38xfTkX4Z6Gs81QTNUxtCu6y3T/+1OIhQnsagKcIIk1QMu5ck=@vger.kernel.org, AJvYcCWhRKuwtucv4i/dJQwnk6sM9i9Fa3TScxq4Njc1GS5ipSs43azq8MkII9g9FI+/GSzVkroneJ0GH5pNCUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyuwj2POwEmNQe1aUQAG16A2jKcckokXh19eixJ7fOfr5O8Mk/Z
-	pr8Gl6pKBQbXB5gHFcmtdeAZUCR79EGg6pZV5CAacgca/6IF2UjV2wlm/p6lZ/Q2uZPEGETjBB1
-	Um0W4QJUjUJnQhd/yjZ5bjkQEAPrdpOFG
-X-Gm-Gg: ASbGncudJT872v7hQlxp0NS5+aw2ES8UoUpiiVnvD/V8RY/Msnhoido2XJGYcjSfrVY
-	mVVLYLklDOO4NSLQYhCgQv80zV0H+vuy/nzIiEv6Rcccy8i+ifqKPGTfZ1YL8Sl8eIawqGXqjCU
-	pX1Oi/OBa5VXrDzqWYHThVIPiHoV8NXxTm
-X-Google-Smtp-Source: AGHT+IE+zVM4WpEuyOpPXj2HuMzgLGXY1M8RKFwF+Rhj/9AiRqxl6HW9J6mp5sKp80FFW5u/q6NHC6lDdZMUIYvZGBg=
-X-Received: by 2002:a05:6a21:108f:b0:1f5:7e57:501c with SMTP id
- adf61e73a8af0-2045b9f2751mr579130637.39.1745546369927; Thu, 24 Apr 2025
- 18:59:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mrpwuK5B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ICF52ZSrljFNaTIWgavSI5WbnW464jwCjST74huipR8=; b=mrpwuK5B/JJe+wE22m8iiXPB5s
+	KVemoUn5f883G+1qcgAZoJTkUhHQSmUNJP9siqokmXeAGKiU0+o2W3+efjBkzS/bKemfKa0rg7lIj
+	tciOhSvPBB1NSm4/KOaLSPYukDt3NswXnwJvpQlk3ditdHmGBPSjBlhvJS3Okb5HvaA8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u88Ne-00AWyd-Cl; Fri, 25 Apr 2025 04:01:30 +0200
+Date: Fri, 25 Apr 2025 04:01:30 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+	Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, clabbe.montjoie@gmail.com
+Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
+ board
+Message-ID: <3681181a-0fbb-4979-9a7e-b8fe5c1b7c3c@lunn.ch>
+References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
+ <4ba3e7b8-e680-40fa-b159-5146a16a9415@lunn.ch>
+ <20250424150037.0f09a867@donnerap.manchester.arm.com>
+ <4643958.LvFx2qVVIh@jernej-laptop>
+ <20250424235658.0c662e67@minigeek.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Adam Ford <aford173@gmail.com>
-Date: Thu, 24 Apr 2025 20:59:18 -0500
-X-Gm-Features: ATxdqUH2ucRW9Ou2xib10t4cq9PF3I2OJH1I9z5HZpvuCEak-7VO3uZSElmYo3w
-Message-ID: <CAHCN7xKy7w0Kwf8Oyjd6dFLzAhiGiqdaYOj=qfA4kSRthD5Law@mail.gmail.com>
-Subject: i.MX8M Nano ISI Channel Question
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, linux-media <linux-media@vger.kernel.org>, imx@lists.linux.dev, 
-	arm-soc <linux-arm-kernel@lists.infradead.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424235658.0c662e67@minigeek.lan>
 
-NXP-
+> Ah, right, I dimly remembered there was some hardware setting, but your
+> mentioning of those strap resistors now tickled my memory!
+> 
+> So according to the Radxa board schematic, RGMII0-RXD0/RXDLY is pulled
+> up to VCCIO via 4.7K, while RGMII0-RXD1/TXDLY is pulled to GND (also via
+> 4K7). According to the Motorcom YT8531 datasheet this means that RX
+> delay is enabled, but TX delay is not.
+> The Avaota board uses the same setup, albeit with an RTL8211F-CG PHY,
+> but its datasheet confirms it uses the same logic.
+> 
+> So does this mean we should say rgmii-rxid, so that the MAC adds the TX
+> delay? Does the stmmac driver actually support this? I couldn't find
+> this part by quickly checking the code.
 
-I am trying use Libcamera to capture video on an i.MX8M Nano.
-(Hopefully, this makes Laurent smile)
+No. It is what the PCB provides which matters. A very small number of
+PCB have extra long clock lines to add the 2ns delay. Those boards
+should use 'rgmii'. All other boards should use rgmii-id, meaning the
+delays need to be provided somewhere else. Typically it is the PHY
+which adds the delays.
 
-I noticed that it has a maximum capture of 1080 lines when I query it
-with Libcamera, but the same camera on the Mini can capture at higher
-rates.  The multimedia overview states it can handle 1 unprocessed
-camera stream at 4kp30 without scaling.  The Nano's Ref manual later
-states that each processing channel has one line buffer, and each line
-buffer can store up to 2048 pixels.  It continues to describe when
-processing higher resolution images like 4k, the line buffer from
-other channels can be combined.
+The strapping should not matter, the PHY driver will override that. So
+'rgmii-id' should result in the PHY doing the basis 2ns in both
+directions. The MAC DT properties then add additional delays, which i
+consider fine tuning. Most systems don't actually need fine tuning,
+but the YT8531 is funky, it often does need it for some reason.
 
-Section 13.4.3.5 of the Nano's Ref manual (Rev 2, dated 07/2022)
-explicitly goes into detail on how to capture up to 4k image
-resolution by combining channel 'n' with channel 'n+1' which implies
-there are at least two channels.
-
-Section 13.4.5.1 states the registers are dedicated for each channel
-and spaced 64KB apart, but then the following table only shows the
-base address for one, and Table 2-6 shows the ISI size is 64KB.
-
-The driver is currently written to only support 1 channel.  When
-reading through the driver, it appears to require one IRQ per channel,
-so I looked through the Nano's IRQ table (7-1), and found there are
-three:
-ISI Camera Channel 0 Interrupt - 16
-ISI Camera Channel 1 Interrupt - 42
-ISI Camera Channel 2 Interrupt - 43
-
-I attempted to enable a second channel by modifying the .num_channels
-= 2 value in the driver, and I modified my device tree to assign a
-second IRQ (42), but when I query the pipeline with libcamera, it
-still doesn't show an available resolution ov 2592x1944 that is
-supported by the camera and work on the Mini without the ISI system.
-
-Can someone tell me how many channels are actually available, and
-whether or not  4Kp30 video is really available on the Nano?
-
-Thank you,
-
-adam
+	Andrew
