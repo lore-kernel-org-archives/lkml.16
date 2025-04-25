@@ -1,91 +1,91 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010B129117B
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4182949E6
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745620200; cv=none; b=OWySVZlkKjPFnnoLwZyiQXvt1dS74WmT1h2j96FnLQQBvGeaPmN4oKqhIDNRv97C4ODRHn1tqBKATAFPNTCXTl17tuNC2tnUribVxpaKbY/999R4JkZCqjkmb8o0VXyDbSXfh+4HpeOZ46assGfAn6JKfPtG0AEBPReOrglFFtQ=
+	t=1745620208; cv=none; b=Fxi1a3ceCSNjzw2cH9QsZELvFLUTEm8KOo8jsDgeJToVsb6TcgPljIVJtZN0h/QdGIsuQ0Sq5FI22q6MCi/jw4oRkptBu8C5F4a8CickDqFdmdoD1XMEoLE6iq5Wp5VGNIMMXS8HcWtHwfzED2ldY1PtSk1MzPByIFr3Z/QqzYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745620200; c=relaxed/simple;
-	bh=K79ARpalsPHqhRZuuyCYTexejOtmmc729FwDTg55yl0=;
+	s=arc-20240116; t=1745620208; c=relaxed/simple;
+	bh=No2WdcR85nQLhD9Rcq+fHij7hSPtf+sRVRTw6HaupAw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JimaL/O5PaRGOwUjYOMfL1LPOV6PdTNUqn7LJgWaqC1SSuWysje2pE7azrRVsd8z3EcZdC3ZRnmOWpIXJdrLnC3uDYyjQWfohFDShmeA1dYgEQ7BUIAXqXyo8rNJVETFo1k5idxB/kPF1DJ3pXQe7FxdNf4Bepbtz8uwid/p6l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qL3M7l0w; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=eUUVOdj/9PJakSyhKo1SgAnuNaDbcr47FlEW6f4/pWtDPgVgf7GY0z+/kV0l0CYTL6jmOy+7xdmKfFzdkILGActM4hTla9ql8OmcLvCVE0EyAV3LEB6MjXh2N1+JBMGorNdQ0bVTeWb39kKIJryq26Q0tj4SaitZR6nt3pGiOpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bmxKFfCR; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qL3M7l0w"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7391d68617cso3255003b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:29:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bmxKFfCR"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af5310c1ac1so1582278a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745620198; x=1746224998; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745620206; x=1746225006; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rq95FJhRe6YlRIqzlmqKzY8TpJsOGhmr8x+Q8dJX0yo=;
-        b=qL3M7l0w50iM5jGOPwUMsedH6uAqx9UVeHOmwwAjLrVvbp8fsx+H+U08+mvDafIIxn
-         p8M2Td7AAQPJs2+KWYONQeG9yJvgLyFopGspQJGj1I27WvZLJfQ26LCyxgmRbVuJMaP3
-         RoU7pn0RyB8olpvXdnG03XqELPI5QYKtBXnC+Mh/yqjRlv31UeyKbbgChyV9Z8pR8qBf
-         XlpJo9fFamfyGvF5s594cMKyCvkMdQwr1Sm85e7x8HTOEdfTt+OfLEqAeTs/YDzOEjW4
-         /SIT8hsHtDHV2zwN7elDqMswpeZUofmlFhuboZwLvb6H/5FBZxKLqXF+xRNpNp1l4PZn
-         e2ig==
+        bh=Y2vrxKS37XFkzYSXdYDYazU7IYtsM4nDy6zkgVBtQZ0=;
+        b=bmxKFfCRt/CTKpXMYCTfKyUR7H9F6DC9IWmJDeCrfWHVaVtsjQd5R8o7dMVpOgpWyA
+         cfilJVUEssrtOPNzIrXUzfB//ObYHqyXBvvo6/hfKZiMYxWvNp/zXpgz6sH4oU3GZPvg
+         cu1wVp+jQjNraQEWwhgD9V7ebhuuMWrmvpZdrkfRkPd+k/i+eHm5i1WYxbNe14Lg7BnT
+         QVy8vTVTfGNXXAwDlvxKHwcz4mkwzl6OWt0OQ9w5G+2+TRrZTwHjRhNk5tMSWCxvS2Iy
+         KgxF5DrqctP9sZEyleKaUehZfdM8IBFE/2pSwSKnthijNdtJZrZA811iAtodrcFrXdC6
+         783A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745620198; x=1746224998;
+        d=1e100.net; s=20230601; t=1745620206; x=1746225006;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rq95FJhRe6YlRIqzlmqKzY8TpJsOGhmr8x+Q8dJX0yo=;
-        b=a45EHdO7I4JXE0InPvZorOPb7BdcsLzzl7qLxfoTz2Dd5lWGI/OJ+s7haSFV/RDch2
-         oYXlZeq9GUA327JUkV9uaXFk3/W2dSmqpbvHNrIq+Z95GRqVIy1HwR9Obn6pWkDL/53Y
-         eNOCdWtAkOUEs4G4QVwWWlgqyW/G0aUiH8xpNoWGqP6F6HeEo0Sfsgfk2XdMQX68f3Ta
-         J29K5LHSsmUjRR6FicbSw3xkpkbJv83HOIo/h7Tw3aFybuJoUlvofjfeSW2xP3nke1X0
-         EYZHZIlrRa6Zillg6dd35p40TLSKmN8tr5Vwn9QyL/zNyuZBefhcbwQCqyXlN3+P09vm
-         vKyA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+KQYhu7x5LAQY8uz0KLeCWVwwzvmJ5kBb5fTbbBl/ugosvibJWOUHX1UCSswjc/9sKK2AmJkeVvz3DAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzhhKDu81LCXaU7S6lHTCTW0CFTDMU8qQBiu0vsUYTcv/cd2r/
-	91WDfw4veLOHVhEU18ihGZD2223dLHaqAIZBRZYLAFM0tiAFSzHN/1lZcuZVs8/e7gscJ//fz4B
-	gmA==
-X-Google-Smtp-Source: AGHT+IHgOxp9FtKgyinxgL94UTJQoiRIn8aPLx4A8eRkBdbGwDHAR8qov/9/vV1/fTmak70TzkvGbzDQecs=
-X-Received: from pfnv19.prod.google.com ([2002:aa7:8513:0:b0:73c:26eb:39b0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c68e:b0:1f3:31fe:c1da
- with SMTP id adf61e73a8af0-2045b4583camr5420265637.11.1745620198189; Fri, 25
- Apr 2025 15:29:58 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:09:08 -0700
-In-Reply-To: <20250401161804.842968-1-seanjc@google.com>
+        bh=Y2vrxKS37XFkzYSXdYDYazU7IYtsM4nDy6zkgVBtQZ0=;
+        b=X3fN+juy0KIFHU78sIMM0UZg+QVpYOL5fGQ6Q+FeTwm+4z5pXKdFQxqLWdcy2/4Cll
+         9CbHuutDwTtgOAsfvc6c3WBd59VYKceCrwxjef617GYCLlISMo1hMdg2+8rpx69PVzza
+         AiE9O3ab+CTnUFp/C9+qLYQswoA458TFSh862yL5ZQGRruVo2qzec5EK3kmbqSMXrzgX
+         Y6OhhNWgPzyGDPCPyS1VkbHS+OT4+WWalBNhAKjSxcVXnC4CF5WS7tKBsTKzZa9onmfH
+         YGI/VSTzyglZQc7Yz11DTC2Fq+tDjhG+oQbsnhzHW8SnlF/iiqTt8dUwyrGwQC68BHQm
+         imfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjnocA2W8Rq+wZSIMr48OtA7OD1ROi7wvmjW8y37E9YcZ9OOYfmNoIRglsy4fYWzwWMUMNfHIoKhG75/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi24uUq6ITv/R7clmRRdI8RnHCrKqSt+k1F70htcAENpjUQOBh
+	Yw0c96OAcOo61EiZXmrxWkI1krxz+cQVzykDAeHwnaifJzVJvhutuXXy4AoGdIfN+ixIdW118M/
+	KxQ==
+X-Google-Smtp-Source: AGHT+IFyEmW/h75Y0a4u5zU8k/xtyBAAGO36YOhCBdvDLlZHji33XZ6TelcG/U3Ix6o3kynmbJjWiJBqCfA=
+X-Received: from pgah14.prod.google.com ([2002:a05:6a02:4e8e:b0:b14:df7a:ff1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9203:b0:1f5:6a1a:329b
+ with SMTP id adf61e73a8af0-2045b99e11dmr6794527637.32.1745620206560; Fri, 25
+ Apr 2025 15:30:06 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:09:10 -0700
+In-Reply-To: <20250304013335.4155703-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250401161804.842968-1-seanjc@google.com>
+References: <20250304013335.4155703-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <174559668507.890985.4658135689153245169.b4-ty@google.com>
-Subject: Re: [PATCH v3 0/3] KVM: x86: Add a module param for device posted IRQs
+Message-ID: <174559673791.891425.18442555338696362642.b4-ty@google.com>
+Subject: Re: [PATCH v5 0/3] KVM: x86: Optimize "stale" EOI bitmap exiting
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Jim Mattson <jmattson@google.com>
+	Kai Huang <kai.huang@intel.com>, xuyun <xuyun_xy.xy@linux.alibaba.com>, 
+	weizijie <zijie.wei@linux.alibaba.com>
 Content-Type: text/plain; charset="utf-8"
 
-On Tue, 01 Apr 2025 09:18:01 -0700, Sean Christopherson wrote:
-> Add a module param, enable_device_posted_irqs, to control and enumerate
-> KVM support for device posted IRQs.
+On Mon, 03 Mar 2025 17:33:32 -0800, Sean Christopherson wrote:
+> Slightly modified version of the patch (now mini-series) to optimize EOI
+> bitmap exiting for "stale" routes, i.e. for the case where a vCPU has an
+> in-flight IRQ when the routing changes, and needs one final EOI exit to
+> deassert the IRQ.
 > 
-> v3:
->  - Put the module param in vendor code to avoid issue with reloading vendor
->    modules, and to match enable_apicv (and enable_ipiv in the future).
->  - Fix a shortlog typo. [Jim]
+> Kai, I dropped your Reviewed-by as the change was non-trivial.
 > 
 > [...]
 
-Applied 1 and 3 to kvm-x86 misc (2 was grabbed by Paolo).
+Applied to kvm-x86 misc, thanks!
 
-[1/3] KVM: VMX: Don't send UNBLOCK when starting device assignment without APICv
-      commit: c364baad3e4f114284581c35d4b9006d59d2629a
-[2/3] KVM: SVM: Don't update IRTEs if APICv/AVIC is disabled
-      (no commit info)
-[3/3] KVM: x86: Add module param to control and enumerate device posted IRQs
-      commit: 459074cff66f77af3f327e2c1f9256cdb146d798
+[1/3] KVM: x86: Isolate edge vs. level check in userspace I/O APIC route scanning
+      commit: b1f7723a5a5b018f4bc3fb8e234510be7c44ad00
+[2/3] KVM: x86: Add a helper to deduplicate I/O APIC EOI interception logic
+      commit: c2207bbc0c0f4b6ae8dbb73ec26e17aa0c45a3ca
+[3/3] KVM: x86: Rescan I/O APIC routes after EOI interception for old routing
+      commit: 87e4951e250bbccac47a8822f6f023a1de8b96ec
 
 --
 https://github.com/kvm-x86/linux/tree/next
