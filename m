@@ -1,220 +1,415 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B823D2A1
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9732475CE;
+	Fri, 25 Apr 2025 10:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745577755; cv=none; b=lVsEsNExr3YRHq9TaKBy7w6cYgF8643YpBa43ZHuh9DXGNnUBm5I4ffmumMPgSPHO/MHwcOwODRk1FnDPOYcwM0Vi872QeT26zy8ScW6sGYoDSguWxPLazL0YYMf2fSXWzVF05Pu0Zisi96iJOSLWZBI6YgEI4bXi00bdnXzMS4=
+	t=1745577756; cv=none; b=uG+y+PA0ii+cHiRTcS2BoW/IS5tl+eWfy6SYg0VCaINetwuJ8eYSfQomuYxugif3ZFa9UW4bbPb7ZlZQsCkMh09GkUAuBRjZAmUpCFP18sr+fofcib5WtCznmw6pmUn1vAqmmVoRI0Ss3Z0fqspgLDlmsGuqoy3puHGpM1vrmHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745577755; c=relaxed/simple;
-	bh=01s7FYAwXYKUUmCA4M7YdS5f1Frdy10xeLcV1T4JnZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBJgXY3ujiJt7VXYg/Ef1Ebc8StNprZChmPZA/Kc1Sq0Wy9IL6tFEpkGX+qzeuZdB1VvEtYso2HiKXsSneObUex72seAm6IYshX2XL/UvOUGDGuffSv9km31ZKVm/ysBTKFRzgVr8Zbxth0x6F8/fqLD6cDcP10mE++dLYD8Y2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cWiUqFTr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y0ZmVzGf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fqJV5IG0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R7k0UeX/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745577756; c=relaxed/simple;
+	bh=yoqsGrn2faAVywGMYNxbqIV0946a+4618XnTcAsUwaw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bWWoT/Bzj0/q+h8O7x+xLV+6NUtfvHYYWXs8OUtdBRFxEmEkGeXczQ5CLNK1+NK8NTsD34f6LkOX4yfY1AJZvc7zWb2wTHC7dFB22r8Wh52P3FIBi9yG36P342E/7yzD/CxvKo/GQaBXg3m1i142AkApx7wQodEDDynY/CBPLDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z1ySw9Zu; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cWiUqFTr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y0ZmVzGf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fqJV5IG0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R7k0UeX/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D807921165;
-	Fri, 25 Apr 2025 10:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745577751; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
-	b=cWiUqFTr/2nFFeZmXzq3gKG3ltuuH1WlH/mxpn3GoNjeaeOC92SV5krw71BNTqemdV9SaN
-	qdcOtv8tEzzKC/J5/DJ9IFAtBLG8WmLzDrXv7pIQKtkh6grseMkEBTPLh0/HKrby0rznEy
-	OcW8LtWjdpYGs14ywBOqrwqJGRY1vzU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745577751;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
-	b=Y0ZmVzGf8B2yX5w9q1/sTgxqIZVPC5n99odt67I5nKJCgZ8QjY/kMNWcnuTG7gzzqp9VWU
-	rE2PK7jgJwiTn7Dw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fqJV5IG0;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="R7k0UeX/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745577750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
-	b=fqJV5IG0bhNfyGdivbLUgLIffWPuW/tU+2b0TxuTUeJpQV7idraaWU2HjbR6LdA9z//NAg
-	PLmNpOJ0oMH6TYjXVjeZEy9Whvd71iMeFZqMJDxyg8QGKQnAH4GXeWEQlIfIjr6mTJeseA
-	MzxOlbdUWs0sjCEGAlfk1d+rJuIV4do=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745577750;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TkLOb7ep/XB+oGXue+ezpJrDGGh8x1ALKKM4drPkRMQ=;
-	b=R7k0UeX/PFFmh2+kLYJ8KRGZnL6286IStOk86GZ/VGGOKDuj0ylYul0faVZPFtsSUeNOle
-	JT8iIsN3clH3BfDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 810B21398F;
-	Fri, 25 Apr 2025 10:42:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id e5LMGBVnC2jFJQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 25 Apr 2025 10:42:29 +0000
-Date: Fri, 25 Apr 2025 11:42:27 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@gentwo.org>, 
-	David Rientjes <rientjes@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, Vlad Buslov <vladbu@nvidia.com>, 
-	Yevgeny Kliteynik <kliteyn@nvidia.com>, Jan Kara <jack@suse.cz>, Byungchul Park <byungchul@sk.com>, 
-	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/7] Reviving the slab destructor to tackle the
- percpu allocator scalability problem
-Message-ID: <vd3k2bljkzow6ozzan2hkeiyytcqe2g6gavroej23457erucza@fknlr6cmzvo7>
-References: <20250424080755.272925-1-harry.yoo@oracle.com>
- <lr2nridih62djx5ccdijiyacdz2hrubsh52tj6bivr6yfgajsj@mgziscqwlmtp>
- <aAtf8t4lNG2DhWMy@harry>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z1ySw9Zu"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PAgPfN2123083
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 05:42:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745577746;
+	bh=Vlx90qNC2WZFurqmFzdefi7Xvqdw5JUiFjZkCbg3tVY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Z1ySw9ZurddneTm0sZzIXM9DEM1/NNecSuInz4EI2T+0O3/za2LApLCZgcvcdTquI
+	 AqMdFNj9G4vHOKGyOgvqjGgqEL805SxLWZtjiy722jUwD+x4Kp1vtMrkvSfRnuoJCQ
+	 8+iwA7QDmF8iQei+QCzAzp0wIPsDpBSHEaqrfj+8=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PAgPGw129404
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 05:42:25 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 05:42:25 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 05:42:25 -0500
+Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PAfaZX038329;
+	Fri, 25 Apr 2025 05:42:22 -0500
+From: Beleswar Padhi <b-padhi@ti.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
+CC: <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>, <b-padhi@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 12/35] remoteproc: k3: Refactor mailbox rx_callback functions into common driver
+Date: Fri, 25 Apr 2025 16:11:12 +0530
+Message-ID: <20250425104135.830255-13-b-padhi@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250425104135.830255-1-b-padhi@ti.com>
+References: <20250425104135.830255-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAtf8t4lNG2DhWMy@harry>
-X-Rspamd-Queue-Id: D807921165
-X-Spam-Score: -2.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[suse.cz,gentwo.org,google.com,linux-foundation.org,kernel.org,gmail.com,mojatatu.com,resnulli.us,nvidia.com,sk.com,kvack.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 25, 2025 at 07:12:02PM +0900, Harry Yoo wrote:
-> On Thu, Apr 24, 2025 at 12:28:37PM +0100, Pedro Falcato wrote:
-> > On Thu, Apr 24, 2025 at 05:07:48PM +0900, Harry Yoo wrote:
-> > > Overview
-> > > ========
-> > > 
-> > > The slab destructor feature existed in early days of slab allocator(s).
-> > > It was removed by the commit c59def9f222d ("Slab allocators: Drop support
-> > > for destructors") in 2007 due to lack of serious use cases at that time.
-> > > 
-> > > Eighteen years later, Mateusz Guzik proposed [1] re-introducing a slab
-> > > constructor/destructor pair to mitigate the global serialization point
-> > > (pcpu_alloc_mutex) that occurs when each slab object allocates and frees
-> > > percpu memory during its lifetime.
-> > > 
-> > > Consider mm_struct: it allocates two percpu regions (mm_cid and rss_stat),
-> > > so each allocate–free cycle requires two expensive acquire/release on
-> > > that mutex.
-> > > 
-> > > We can mitigate this contention by retaining the percpu regions after
-> > > the object is freed and releasing them only when the backing slab pages
-> > > are freed.
-> > > 
-> > > How to do this with slab constructors and destructors: the constructor
-> > > allocates percpu memory, and the destructor frees it when the slab pages
-> > > are reclaimed; this slightly alters the constructor’s semantics,
-> > > as it can now fail.
-> > > 
-> > 
-> > I really really really really don't like this. We're opening a pandora's box
-> > of locking issues for slab deadlocks and other subtle issues. IMO the best
-> > solution there would be, what, failing dtors? which says a lot about the whole
-> > situation...
-> > 
-> > Case in point:
-> 
-> <...snip...>
-> 
-> > Then there are obviously other problems like: whatever you're calling must
-> > not ever require the slab allocator (directly or indirectly) and must not
-> > do direct reclaim (ever!), at the risk of a deadlock. The pcpu allocator
-> > is a no-go (AIUI!) already because of such issues.
-> 
-> Could you please elaborate more on this?
+The mailbox .rx_callback implementations in TI K3 R5, DSP and M4
+remoteproc drivers handle inbound mailbox messages in the same way.
+Introduce a common driver 'ti_k3_common.c' and refactor the
+implementations into a common function 'k3_rproc_mbox_callback'() in it.
 
-Well, as discussed multiple-times both on-and-off-list, the pcpu allocator is
-not a problem here because the freeing path takes a spinlock, not a mutex. But
-obviously you can see the fun locking horror dependency chains we're creating
-with this patchset. ->ctor() needs to be super careful calling things, avoiding
-any sort of loop. ->dtor() needs to be super careful calling things, avoiding
-_any_ sort of direct reclaim possibilities. You also now need to pass a gfp_t
-to both ->ctor and ->dtor.
+Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+Tested-by: Judith Mendez <jm@ti.com>
+---
+v11: Changelog:
+1. Carried T/B tag.
 
-With regards to "leaf locks", I still don't really understand what you/Mateusz
-mean or how that's even enforceable from the get-go.
+Link to v10:
+https://lore.kernel.org/all/20250417182001.3903905-13-b-padhi@ti.com/
 
-So basically:
-- ->ctor takes more args, can fail, can do fancier things (multiple allocations,
-  lock holding, etc, can be hidden with a normal kmem_cache_alloc; certain
-  caches become GFP_ATOMIC-incompatible)
+v10: Changelog:
+None
 
-- ->dtor *will* do fancy things like recursing back onto the slab allocator and
-  grabbing locks
+Link to v9:
+https://lore.kernel.org/all/20250317120622.1746415-11-b-padhi@ti.com/
 
-- a normal kmem_cache_free can suddenly attempt to grab !SLUB locks as it tries
-  to dispose of slabs. It can also uncontrollably do $whatever.
+ drivers/remoteproc/Makefile               |  4 +-
+ drivers/remoteproc/ti_k3_common.c         | 84 +++++++++++++++++++++++
+ drivers/remoteproc/ti_k3_common.h         |  1 +
+ drivers/remoteproc/ti_k3_dsp_remoteproc.c | 50 +-------------
+ drivers/remoteproc/ti_k3_m4_remoteproc.c  | 49 +------------
+ drivers/remoteproc/ti_k3_r5_remoteproc.c  | 50 +-------------
+ 6 files changed, 90 insertions(+), 148 deletions(-)
+ create mode 100644 drivers/remoteproc/ti_k3_common.c
 
-- a normal kmem_cache_alloc can call vast swaths of code, uncontrollably, due to
-  ->ctor. It can also set off direct reclaim, and thus run into all sorts of kmem_
-  cache_free/slab disposal issues
-
-- a normal, possibly-unrelated GFP_KERNEL allocation can also run into all of these
-  issues by purely starting up shrinkers on direct reclaim as well.
-
-- the whole original "Slab object caching allocator" idea from 1992 is extremely
-  confusing and works super poorly with various debugging features (like, e.g,
-  KASAN). IMO it should really be reserved (in a limited capacity!) for stuff like
-  TYPESAFE_BY_RCU, that we *really* need.
-
-These are basically my issues with the whole idea. I highly disagree that we should
-open this pandora's box for problems in *other places*.
-
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index 5ff4e2fee4abd..e30908ca4bfcd 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -36,7 +36,7 @@ obj-$(CONFIG_RCAR_REMOTEPROC)		+= rcar_rproc.o
+ obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+ obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+ obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
+-obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o
+-obj-$(CONFIG_TI_K3_M4_REMOTEPROC)	+= ti_k3_m4_remoteproc.o
++obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o ti_k3_common.o
++obj-$(CONFIG_TI_K3_M4_REMOTEPROC)	+= ti_k3_m4_remoteproc.o ti_k3_common.o
+ obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+= ti_k3_r5_remoteproc.o
+ obj-$(CONFIG_XLNX_R5_REMOTEPROC)	+= xlnx_r5_remoteproc.o
+diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
+new file mode 100644
+index 0000000000000..7b45e3b416186
+--- /dev/null
++++ b/drivers/remoteproc/ti_k3_common.c
+@@ -0,0 +1,84 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * TI K3 Remote Processor(s) driver common code
++ *
++ * Refactored out of ti_k3_r5_remoteproc.c, ti_k3_dsp_remoteproc.c and
++ * ti_k3_m4_remoteproc.c.
++ *
++ * ti_k3_dsp_remoteproc.c:
++ * Copyright (C) 2018-2022 Texas Instruments Incorporated - https://www.ti.com/
++ *	Suman Anna <s-anna@ti.com>
++ *
++ * ti_k3_m4_remoteproc.c:
++ * Copyright (C) 2021-2024 Texas Instruments Incorporated - https://www.ti.com/
++ *	Hari Nagalla <hnagalla@ti.com>
++ */
++
++#include <linux/io.h>
++#include <linux/mailbox_client.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/of_reserved_mem.h>
++#include <linux/omap-mailbox.h>
++#include <linux/platform_device.h>
++#include <linux/remoteproc.h>
++#include <linux/reset.h>
++#include <linux/slab.h>
++
++#include "omap_remoteproc.h"
++#include "remoteproc_internal.h"
++#include "ti_sci_proc.h"
++#include "ti_k3_common.h"
++
++/**
++ * k3_rproc_mbox_callback() - inbound mailbox message handler
++ * @client: mailbox client pointer used for requesting the mailbox channel
++ * @data: mailbox payload
++ *
++ * This handler is invoked by the K3 mailbox driver whenever a mailbox
++ * message is received. Usually, the mailbox payload simply contains
++ * the index of the virtqueue that is kicked by the remote processor,
++ * and we let remoteproc core handle it.
++ *
++ * In addition to virtqueue indices, we also have some out-of-band values
++ * that indicate different events. Those values are deliberately very
++ * large so they don't coincide with virtqueue indices.
++ */
++void k3_rproc_mbox_callback(struct mbox_client *client, void *data)
++{
++	struct k3_rproc *kproc = container_of(client, struct k3_rproc, client);
++	struct device *dev = kproc->rproc->dev.parent;
++	struct rproc *rproc = kproc->rproc;
++	u32 msg = (u32)(uintptr_t)(data);
++
++	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
++
++	switch (msg) {
++	case RP_MBOX_CRASH:
++		/*
++		 * remoteproc detected an exception, but error recovery is not
++		 * supported. So, just log this for now
++		 */
++		dev_err(dev, "K3 rproc %s crashed\n", rproc->name);
++		break;
++	case RP_MBOX_ECHO_REPLY:
++		dev_info(dev, "received echo reply from %s\n", rproc->name);
++		break;
++	default:
++		/* silently handle all other valid messages */
++		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
++			return;
++		if (msg > rproc->max_notifyid) {
++			dev_dbg(dev, "dropping unknown message 0x%x", msg);
++			return;
++		}
++		/* msg contains the index of the triggered vring */
++		if (rproc_vq_interrupt(rproc, msg) == IRQ_NONE)
++			dev_dbg(dev, "no message was found in vqid %d\n", msg);
++	}
++}
++EXPORT_SYMBOL_GPL(k3_rproc_mbox_callback);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("TI K3 common Remoteproc code");
+diff --git a/drivers/remoteproc/ti_k3_common.h b/drivers/remoteproc/ti_k3_common.h
+index 43aedab9f0aa3..785bb4b17d02f 100644
+--- a/drivers/remoteproc/ti_k3_common.h
++++ b/drivers/remoteproc/ti_k3_common.h
+@@ -88,4 +88,5 @@ struct k3_rproc {
+ 	void *priv;
+ };
+ 
++void k3_rproc_mbox_callback(struct mbox_client *client, void *data);
+ #endif /* REMOTEPROC_TI_K3_COMMON_H */
+diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+index e92fab831670c..7bd1d5a790cb2 100644
+--- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
++++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+@@ -24,54 +24,6 @@
+ 
+ #define KEYSTONE_RPROC_LOCAL_ADDRESS_MASK	(SZ_16M - 1)
+ 
+-/**
+- * k3_dsp_rproc_mbox_callback() - inbound mailbox message handler
+- * @client: mailbox client pointer used for requesting the mailbox channel
+- * @data: mailbox payload
+- *
+- * This handler is invoked by the OMAP mailbox driver whenever a mailbox
+- * message is received. Usually, the mailbox payload simply contains
+- * the index of the virtqueue that is kicked by the remote processor,
+- * and we let remoteproc core handle it.
+- *
+- * In addition to virtqueue indices, we also have some out-of-band values
+- * that indicate different events. Those values are deliberately very
+- * large so they don't coincide with virtqueue indices.
+- */
+-static void k3_dsp_rproc_mbox_callback(struct mbox_client *client, void *data)
+-{
+-	struct k3_rproc *kproc = container_of(client, struct k3_rproc, client);
+-	struct device *dev = kproc->rproc->dev.parent;
+-	const char *name = kproc->rproc->name;
+-	u32 msg = omap_mbox_message(data);
+-
+-	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+-
+-	switch (msg) {
+-	case RP_MBOX_CRASH:
+-		/*
+-		 * remoteproc detected an exception, but error recovery is not
+-		 * supported. So, just log this for now
+-		 */
+-		dev_err(dev, "K3 DSP rproc %s crashed\n", name);
+-		break;
+-	case RP_MBOX_ECHO_REPLY:
+-		dev_info(dev, "received echo reply from %s\n", name);
+-		break;
+-	default:
+-		/* silently handle all other valid messages */
+-		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+-			return;
+-		if (msg > kproc->rproc->max_notifyid) {
+-			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+-			return;
+-		}
+-		/* msg contains the index of the triggered vring */
+-		if (rproc_vq_interrupt(kproc->rproc, msg) == IRQ_NONE)
+-			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+-	}
+-}
+-
+ /*
+  * Kick the remote processor to notify about pending unprocessed messages.
+  * The vqid usage is not used and is inconsequential, as the kick is performed
+@@ -155,7 +107,7 @@ static int k3_dsp_rproc_request_mbox(struct rproc *rproc)
+ 
+ 	client->dev = dev;
+ 	client->tx_done = NULL;
+-	client->rx_callback = k3_dsp_rproc_mbox_callback;
++	client->rx_callback = k3_rproc_mbox_callback;
+ 	client->tx_block = false;
+ 	client->knows_txdone = false;
+ 
+diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+index 04095407a483d..a1bcc4b265dfe 100644
+--- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
++++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+@@ -21,53 +21,6 @@
+ #include "ti_sci_proc.h"
+ #include "ti_k3_common.h"
+ 
+-/**
+- * k3_m4_rproc_mbox_callback() - inbound mailbox message handler
+- * @client: mailbox client pointer used for requesting the mailbox channel
+- * @data: mailbox payload
+- *
+- * This handler is invoked by the K3 mailbox driver whenever a mailbox
+- * message is received. Usually, the mailbox payload simply contains
+- * the index of the virtqueue that is kicked by the remote processor,
+- * and we let remoteproc core handle it.
+- *
+- * In addition to virtqueue indices, we also have some out-of-band values
+- * that indicate different events. Those values are deliberately very
+- * large so they don't coincide with virtqueue indices.
+- */
+-static void k3_m4_rproc_mbox_callback(struct mbox_client *client, void *data)
+-{
+-	struct device *dev = client->dev;
+-	struct rproc *rproc = dev_get_drvdata(dev);
+-	u32 msg = (u32)(uintptr_t)(data);
+-
+-	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+-
+-	switch (msg) {
+-	case RP_MBOX_CRASH:
+-		/*
+-		 * remoteproc detected an exception, but error recovery is not
+-		 * supported. So, just log this for now
+-		 */
+-		dev_err(dev, "K3 rproc %s crashed\n", rproc->name);
+-		break;
+-	case RP_MBOX_ECHO_REPLY:
+-		dev_info(dev, "received echo reply from %s\n", rproc->name);
+-		break;
+-	default:
+-		/* silently handle all other valid messages */
+-		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+-			return;
+-		if (msg > rproc->max_notifyid) {
+-			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+-			return;
+-		}
+-		/* msg contains the index of the triggered vring */
+-		if (rproc_vq_interrupt(rproc, msg) == IRQ_NONE)
+-			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+-	}
+-}
+-
+ /*
+  * Kick the remote processor to notify about pending unprocessed messages.
+  * The vqid usage is not used and is inconsequential, as the kick is performed
+@@ -581,7 +534,7 @@ static int k3_m4_rproc_probe(struct platform_device *pdev)
+ 
+ 	kproc->client.dev = dev;
+ 	kproc->client.tx_done = NULL;
+-	kproc->client.rx_callback = k3_m4_rproc_mbox_callback;
++	kproc->client.rx_callback = k3_rproc_mbox_callback;
+ 	kproc->client.tx_block = false;
+ 	kproc->client.knows_txdone = false;
+ 	kproc->mbox = mbox_request_channel(&kproc->client, 0);
+diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+index a6799ce121327..a1dfbe383c13c 100644
+--- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
++++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
+@@ -129,54 +129,6 @@ struct k3_r5_core {
+ 	bool released_from_reset;
+ };
+ 
+-/**
+- * k3_r5_rproc_mbox_callback() - inbound mailbox message handler
+- * @client: mailbox client pointer used for requesting the mailbox channel
+- * @data: mailbox payload
+- *
+- * This handler is invoked by the OMAP mailbox driver whenever a mailbox
+- * message is received. Usually, the mailbox payload simply contains
+- * the index of the virtqueue that is kicked by the remote processor,
+- * and we let remoteproc core handle it.
+- *
+- * In addition to virtqueue indices, we also have some out-of-band values
+- * that indicate different events. Those values are deliberately very
+- * large so they don't coincide with virtqueue indices.
+- */
+-static void k3_r5_rproc_mbox_callback(struct mbox_client *client, void *data)
+-{
+-	struct k3_rproc *kproc = container_of(client, struct k3_rproc, client);
+-	struct device *dev = kproc->rproc->dev.parent;
+-	const char *name = kproc->rproc->name;
+-	u32 msg = omap_mbox_message(data);
+-
+-	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
+-
+-	switch (msg) {
+-	case RP_MBOX_CRASH:
+-		/*
+-		 * remoteproc detected an exception, but error recovery is not
+-		 * supported. So, just log this for now
+-		 */
+-		dev_err(dev, "K3 R5F rproc %s crashed\n", name);
+-		break;
+-	case RP_MBOX_ECHO_REPLY:
+-		dev_info(dev, "received echo reply from %s\n", name);
+-		break;
+-	default:
+-		/* silently handle all other valid messages */
+-		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
+-			return;
+-		if (msg > kproc->rproc->max_notifyid) {
+-			dev_dbg(dev, "dropping unknown message 0x%x", msg);
+-			return;
+-		}
+-		/* msg contains the index of the triggered vring */
+-		if (rproc_vq_interrupt(kproc->rproc, msg) == IRQ_NONE)
+-			dev_dbg(dev, "no message was found in vqid %d\n", msg);
+-	}
+-}
+-
+ /* kick a virtqueue */
+ static void k3_r5_rproc_kick(struct rproc *rproc, int vqid)
+ {
+@@ -356,7 +308,7 @@ static int k3_r5_rproc_request_mbox(struct rproc *rproc)
+ 
+ 	client->dev = dev;
+ 	client->tx_done = NULL;
+-	client->rx_callback = k3_r5_rproc_mbox_callback;
++	client->rx_callback = k3_rproc_mbox_callback;
+ 	client->tx_block = false;
+ 	client->knows_txdone = false;
+ 
 -- 
-Pedro
+2.34.1
+
