@@ -1,53 +1,40 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B3C2F32
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 04:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2DA2F2A;
+	Fri, 25 Apr 2025 04:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745556123; cv=none; b=u4b85eA0FGdlEXdgNfXYqELwDvxzuoQCIElQrCQg4NPB+H1U0lLwfTVX+XqCn/07407yZbsC9Uem8MThtprlbhMiG1xJVCGAns0+2ry7iDFobdVSDdSl7N95gbVfMYmq0HZrYUM8MHx92hTQv6HOULNTREObkljqrAPoLvZtu7c=
+	t=1745556474; cv=none; b=D7IgoVMBs+QIGpBJiQTcpAsvky7AuJVXi2/V2X21yM8/zokU3jI3y6zL4N6lAu1X0qQeeEW8ntrBenXnLdbkSzXbTNFkEr0jA/H85e4nElvXFrD8ruQW7egMBtTTfgL+j7l4IxPDMW2S7dOmEdCZmAL1kjLaTMfdPN9ZqB+iJ6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745556123; c=relaxed/simple;
-	bh=GHg/nZKaHUUoUcWdi+gZrUwaJ9LdrR9A845gLOkRuEc=;
+	s=arc-20240116; t=1745556474; c=relaxed/simple;
+	bh=H/o4DAJaxSxbmykQzcz3r28hpuKCsdPEhQqzPot3dxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YwNV3/XTaepT7EPoE59njQ1cKA54tz6inqCb25ZeFO8i+t4QP65Kv93HdP4x7CNK7Gu8lhGi3xpxW3a+GsR0YrGDa4neKmqXoXwd8FP8id0zog5qP1PrNHkBmaTa/FglRxVxP4KSz+cdlXkSDOlOg6N9Zz90nPQ9RsLX3dQoCK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u8Ask-0006qF-Id; Fri, 25 Apr 2025 06:41:46 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u8Asi-001zNt-1z;
-	Fri, 25 Apr 2025 06:41:44 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u8Asi-0037N4-1W;
-	Fri, 25 Apr 2025 06:41:44 +0200
-Date: Fri, 25 Apr 2025 06:41:44 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v1 4/4] net: phy: Always read EEE LPA in
- genphy_c45_ethtool_get_eee()
-Message-ID: <aAsSiB1yIKNZeyXs@pengutronix.de>
-References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
- <20250424130222.3959457-5-o.rempel@pengutronix.de>
- <aAo5keWOAVWxj9_o@shell.armlinux.org.uk>
- <8f0d5725-04b7-4e15-897d-1fd5e540dacb@lunn.ch>
- <aApO59e6I6uLaw2P@shell.armlinux.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oYjuognn66gPn1pSibxbxKXUQdlj3Ot+ZYe7eJmjW/Pfaw7r+FnVgajvJji4UaT6+WKh44+Wmnl6Xwut9Xiuye8GX0abfFacG5UdvKe33g0qCzDt2IijuCY3aMY9+CxmfXscykzUirQpxugbKLUoRxkvk1MFSk8Wo5/ioAI9AkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 21DF3340C76;
+	Fri, 25 Apr 2025 04:47:51 +0000 (UTC)
+Date: Fri, 25 Apr 2025 04:47:47 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Chukun Pan <amadeus@jmu.edu.cn>, andre.przywara@arm.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	jernej.skrabec@gmail.com, krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, robh@kernel.org, samuel@sholland.org
+Subject: Re: [PATCH 1/1] arm64: dts: allwinner: correct the model name for
+ Radxa Cubie A5E
+Message-ID: <20250425044747-GYA50408@gentoo>
+References: <20250425023527-GYA50272@gentoo>
+ <20250425030006.45169-1-amadeus@jmu.edu.cn>
+ <CAGb2v649ntfAEUdV5S1wM8nUGhvaOP-RBw07XcxwdbafbC2PYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,83 +43,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aApO59e6I6uLaw2P@shell.armlinux.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v649ntfAEUdV5S1wM8nUGhvaOP-RBw07XcxwdbafbC2PYQ@mail.gmail.com>
 
-On Thu, Apr 24, 2025 at 03:47:03PM +0100, Russell King (Oracle) wrote:
-> On Thu, Apr 24, 2025 at 04:34:27PM +0200, Andrew Lunn wrote:
-> > On Thu, Apr 24, 2025 at 02:16:01PM +0100, Russell King (Oracle) wrote:
-> > > However, I've no objection to reading the LPA EEE state and
-> > > reporting it.
-> > 
-> > What happens with normal link mode LPA when autoneg is disabled? I
-> > guess they are not reported because the PHY is not even listening for
-> > the autoneg pulses. We could be inconsistent between normal LPA and
-> > LPA EEE, but is that a good idea?
-> 
-> With autoneg state, that controls whether the various pages get
-> exchanged or not - which includes the EEE capabilties. This is the
-> big hammer for anything that is negotiated.
-> 
-> With EEE, as long as autoneg in the main config is true, the PHY will
-> exchange the EEE capability pages if it supports them. Our eee_enabled
-> is purely just a software switch, there's nothing that corresponds to it
-> in hardware, unlike autoneg which has a bit in BMCR.
-> 
-> We implement eee_enabled by clearing the advertisement in the hardware
-> but accepting (and remembering) the advertisement from userspace
-> unmodified.
-> 
-> The two things are entirely different in hardware.
-> 
-> Since:
-> 
->  ethtool --set-eee eee off
-> 
-> Will use ETHTOOL_GEEE, modify eee_enabled to be false (via
-> do_generic_set), and then use ETHTOOL_SEEE to write it back, the
-> old advertisement will be passed back to the kernel in this case.
-> 
-> If we don't preserve the advertisement, then:
-> 
->  ethtool --set-eee eee off
-> 
-> will clear the advertisement, and then:
-> 
->  ethtool --set-eee eee on
-> 
-> will set eee_enabled true but we'll have an empty advertisement. Not
-> ideal.
-> 
-> If we think about forcing it for an empty advertisement to e.g. fully
-> populated, then:
-> 
->  ethtool --set-eee eee on advertise 0
-> 
-> will surprisingly not end up with an empty advertisement.
-> 
-> So, I don't think it's realistic to come up with a way that --set-eee
-> behaves the same way as -s because of the way ethtool has been
-> implemented.
+Hi Chukun, Chen-Yu,
 
-Thank you for the detailed explanation. I completely forgot that
-"advertising_eee" is part of a read-modify-write cycle in the ethtool flow.
-That makes sense now. In this case, I agree - there's nothing much I can
-do code-wise. In this case, the only thing I can do is document this
-behavior on both the kernel and ethtool sides to avoid confusion for
-others.
+On 11:52 Fri 25 Apr     , Chen-Yu Tsai wrote:
+> On Fri, Apr 25, 2025 at 11:00 AM Chukun Pan <amadeus@jmu.edu.cn> wrote:
+> >
+> > Hi,
+> >
+> > > It seems I'm a little bit late for this, but while we are here,
+> > > Can we also append 'cubie' to dts file name?
+> > > e.g. - sun55i-a527-radxa-cubie-a5e.dts
+> >
+> > Usually we use the device name (without the vendor name),
+> > maybe sun55i-a527-cubie-a5e.dts would be better?
+> 
+> I agree with this one.
+> 
+I personally would prefer to keep vendor name, it's more explicit
+and easy for poeple to distinguish/find the board dts
 
-Best Regards,
-Oleksij
+but, this isn't something I really care, so I won't insist on this,
+please proceed either way, thanks
+
+> I can probably squash in a name change (since I'll be squashing in the
+> SD card slot fix anyway). Andre?
+> 
+I think it is better
+
+> 
+> In that case would you prefer to keep your current patch separate, or
+> squashed in so that everything is clean from the first commit?
+> 
+> It's up to you since you lose out on commit stats.
+> 
+> 
+> Thanks
+> ChenYu
+> 
+> > Thanks,
+> > Chukun
+> >
+> > --
+> > 2.25.1
+> >
+> >
+
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Yixun Lan (dlan)
