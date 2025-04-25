@@ -1,30 +1,48 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC803242D99;
-	Fri, 25 Apr 2025 14:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61754242D99;
+	Fri, 25 Apr 2025 14:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745590736; cv=none; b=jAvAQB6t2uSaLaIhODMWdakTEgpkynwPwSJWndnhvn25GZ3xIbEjOPjqiu3sHTVkaoRc2dLf6PqE7pYeWivxUm/SgkgKRi+TVer3a8ueDkDk0LOfux9Zw3l5s25TjtS6DYeP9VqSL6Niefvimn8qmSxOx+aWztwZmP3kWsbd3ao=
+	t=1745590749; cv=none; b=aTIHVSUfgJsExc7G0lnlBJXg17yTnx5adYhYp7pZzD1h/ytVzcutojYsdtIXcqsNHBDwfcvxh6DJ/s2L8mm7nk0W3cJ0YFfmWe6yDcoa2zb+Q5qnYrYqJrk7GYKzZXQBUIa0d3K87NwhVEKXYlRFE2ITVpHXThno8jakcC9CRkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745590736; c=relaxed/simple;
-	bh=zj8iEYBmgTZCdGRMrPhxZ4jZfaarUGk5o1ezZy1Rm9s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cn9l5KrHWqjm3vUyLzYKPbFW8oKlV6rjxjzahkspJatCzvVGlmQoHl7QKPE7T3x8BE3CD7DVstZox+YbJxV2Z2siSSjcQDEvu6ZDe015yIAehIT/zWJcEPRQpmzLD1SM/MGjssaEugz3R4FhBE1tTSASCtTrwlJRfmSDwXxS3F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GaGj7k2R; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745590749; c=relaxed/simple;
+	bh=AexMVO8fjC67c5unH1YsKkDaQ25ekn/4Lx4ExdJWDKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bI1GDvvxusQZG+8xJfg3+uIEUzC4RuPEcXQ+KROn4f6NnW0kD3JhrusozF9qtgPQOJNbTyR6/6//keOSb23mBuFBKcDfAyz46KpJVq6heEwlMRAP0Irzhd7qY67yDXXnzS+QFkzdqiht3FJU5H8OvN3T8Fxg5Gh+jpGZH7jrcLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LcpjD4Tb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GaGj7k2R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=T5dUauytFt6G0vhlS6nMmP45chnWZOXEMoc/tzxHhIM=;
-	b=GaGj7k2R/HA+At4zWfBYbU5M1Nqxcf4OPnU9y/mEnnsYleW6Td0tc+noxG7Ufo
-	sBnc+qihnveVY8CAK+jyZEZuemSJ2FBpEeg51ULwZeDMQCMeCAQNKmVpRNpu5Ykv
-	DNV/h0xkLAGJLhUGuCBbOQA9oX4vk6QkfTfGIlltPs9Ug=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnn7+UmQtocRMiCQ--.4501S2;
-	Fri, 25 Apr 2025 22:17:57 +0800 (CST)
-Message-ID: <1904ac4c-832a-4d2c-ab8b-15d3fdf515d0@163.com>
-Date: Fri, 25 Apr 2025 22:17:55 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LcpjD4Tb"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8TH3s012251;
+	Fri, 25 Apr 2025 14:19:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5yjDv821Wi3ckO1AszK+lyZiFVArgHwipVwVKRxNCQM=; b=LcpjD4Tbuc75xQ4H
+	ond5vkgMBqF6PScSa3cO2+Vv7x15uRj7UCQ5K+8dTMd5pMY//+0uTbuXMPqegR6G
+	2HMib9fIGFrHbnoqfqDAqbBzucmVEvviTRufCnG+9Ax3YoqjqRE3S+KnLt04QYYp
+	CzlDDgIGstDxeAM0dfmfqVI+tlFmKJB1Wus+ocTLYlc5uJjfmG9W9TRJyBW/thRS
+	M2iBwjLprdT5bGGyStsW9FCoosMwuN8QB8blGMJTLo72cSKSA4+OlxEvrk05HROY
+	cpd47CaGBg+EDD4YCaMaQ/UfwTxyc42HQ2xydkWzkxeqX0S2EHHPZidCoUWZvTUU
+	NUSsrQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1962r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 14:19:01 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PEJ09t013635
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 14:19:00 GMT
+Received: from [10.216.10.223] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
+ 2025 07:18:53 -0700
+Message-ID: <3ffe00fd-1fbe-41c6-b82d-030bcf6d76d8@quicinc.com>
+Date: Fri, 25 Apr 2025 19:48:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,248 +50,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] PCI: Configure root port MPS to hardware maximum
- during host probing
-To: Niklas Cassel <cassel@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, heiko@sntech.de,
- thomas.petazzoni@bootlin.com, yue.wang@amlogic.com, pali@kernel.org,
- neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250425095708.32662-1-18255117159@163.com>
- <20250425095708.32662-2-18255117159@163.com> <aAtikPOYlGeJCsiA@ryzen>
- <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com> <aAuSXhmRiKQabjLO@ryzen>
+Subject: Re: [PATCH v2 0/9] Enable QUPs and Serial on SA8255p Qualcomm
+ platforms
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon
+	<nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki"
+	<rafael@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+References: <20250418151235.27787-1-quic_ptalari@quicinc.com>
+ <6662b275-6b8e-40be-b62f-c17ae8e63dfa@oss.qualcomm.com>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aAuSXhmRiKQabjLO@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <6662b275-6b8e-40be-b62f-c17ae8e63dfa@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnn7+UmQtocRMiCQ--.4501S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuFWDCFy7Xry3ArW8Cw4xCrg_yoWxZF17pr
-	WaqF43trWkJFW5ta9rtF1UuFW7twsYvFW3tFsxGr1kta1fuFn3CwsFgry0qw47Cr9YvF1U
-	taykJ3y0qF98Ja7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jorWwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxg6o2gLk-CiFQAAst
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yWItsxx6KJ97y4tpKlsNdZwd4vDXscRq
+X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=680b99d5 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=NEAV23lmAAAA:8 a=oNOacO-TtzJHBqNP3j4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: yWItsxx6KJ97y4tpKlsNdZwd4vDXscRq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEwMSBTYWx0ZWRfX9iW1noMtBIcn 5r+Xkeo1BMGjJVomKnjfobQ1unPzUcWKyK4KS4TWbQpfwC9rTz0kh7C6mGCx6dSZGa6GyjuFq7C Tv6LQuWji4diV4onMhmzNFnsruR6Hp6hTBwSQ7OT1/EAHlDsO5SzyIE2jXk5I+xhodxEXrKQwKO
+ vS8EgWijMjOVWB0C/xbfPmuRtddMu9mT86ur3v6/xBBllX1A2NILPmE1lLnwH/GbETnZx3X1pFC ClxYfewKWTdfBQssF8E33TGpZWOfEC6kRQzA1GhVAZIUMu4idIaVyXm35NDNqlO2mJmZMcdS3H6 y/H9c3yZRA/l6XWWM4KsowKKxBZvHNY8y8k5FyNxcMB9xslWiPspzI8N+K0XK2/Rq4WsXtcG3PQ
+ gi8g/hpl7vA6f55EAKPF5sVuA1ECUw+GrpRg722fwYpNJLyvbUqF6VGVhqKBFmz8XZytZvJ5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250101
 
+Hi
 
-
-On 2025/4/25 21:47, Niklas Cassel wrote:
-> Hello Hans,
-> 
-> On Fri, Apr 25, 2025 at 06:56:53PM +0800, Hans Zhang wrote:
+On 4/23/2025 6:31 PM, Konrad Dybcio wrote:
+> On 4/18/25 5:12 PM, Praveen Talari wrote:
+>> The Qualcomm automotive SA8255p SoC relies on firmware to configure
+>> platform resources, including clocks, interconnects and TLMM. The device
+>> drivers request resources operations over SCMI using power and
+>> performance protocols.
 >>
->> But I discovered a problem:
+>> The SCMI power protocol enables or disables resources like clocks,
+>> interconnect paths, and TLMM (GPIOs) using runtime PM framework APIs,
+>> such as resume/suspend, to control power states(on/off).
 >>
->> 0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
->>           ......
->>           Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
->>                   DevCap: MaxPayload 512 bytes, PhantFunc 0
->>                           ExtTag- RBE+
->>                   DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->>                           RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
->>                           MaxPayload 512 bytes, MaxReadReq 1024 bytes
+>> The SCMI performance protocol manages UART baud rates, with each baud
+>> rate represented by a performance level. Drivers use the
+>> dev_pm_opp_set_level() API to request the desired baud rate by
+>> specifying the performance level.
 >>
->>
->>
->> 			Should the DevCtl MaxPayload be 256B?
->>
->> But I tested that the file reading and writing were normal. Is the display
->> of 512B here what we expected?
->>
->> Root Port 0003:30:00.0 has the same problem. May I ask what your opinion is?
->>
->>
->> 		......
->> 0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
->> NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
->>           ......
->>           Capabilities: [70] Express (v2) Endpoint, MSI 00
->>                   DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
->> unlimited, L1 unlimited
->>                           ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
->> SlotPowerLimit 0W
->>                   DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->>                           RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
->> FLReset-
->>                           MaxPayload 256 bytes, MaxReadReq 512 bytes
->> 		......
-> 
-> Here we see that the bridge has a higher DevCtl.MPS than the DevCap.MPS of
-> the endpoint.
-> 
-> Let me quote Bjorn from the previous mail thread:
-> 
-> """
->    - I don't think it's safe to set MPS higher in all cases.  If we set
->      the Root Port MPS=256, and an Endpoint only supports MPS=128, the
->      Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
->      that case the RP may respond with a 256-byte payload the Endpoint
->      can't handle.
-> """
-> 
-> 
-> 
-> I think the problem with this patch is that pcie_write_mps() call in
-> pci_host_probe() is done after the pci_scan_root_bus_bridge() call in
-> pci_host_probe().
-> 
-> So pci_configure_mps() (called by pci_configure_device()),
-> which does the limiting of the bus to what the endpoint supports,
-> is actually called before the pcie_write_mps() call added by this patch
-> (which increases DevCtl.MPS for the bridge).
-> 
-> 
-> So I think the code added in this patch needs to be executed before
-> pci_configure_device() is done for the EP.
-> 
-> It appears that pci_configure_device() is called for each device
-> during scan, first for the bridges and then for the EPs.
-> 
-> So I think something like this should work (totally untested):
-> 
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -45,6 +45,8 @@ struct pci_domain_busn_res {
->          int domain_nr;
->   };
->   
-> +static void pcie_write_mps(struct pci_dev *dev, int mps);
-> +
->   static struct resource *get_pci_domain_busn_res(int domain_nr)
->   {
->          struct pci_domain_busn_res *r;
-> @@ -2178,6 +2180,11 @@ static void pci_configure_mps(struct pci_dev *dev)
->                  return;
->          }
->   
-> +       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-> +           pcie_bus_config != PCIE_BUS_TUNE_OFF) {
-> +               pcie_write_mps(dev, 128 << dev->pcie_mpss);
-> +       }
-> +
->          if (!bridge || !pci_is_pcie(bridge))
->                  return;
-> 
-> 
-> 
-> But we would probably need to move some code to avoid the
-> forward declaration.
-> 
+>> The QUP drivers are SCMI clients, with clocks, interconnects, pinctrl
+>> and power-domains abstracted by a SCMI server.
+> So I recently started working on abstracting away power controls from
+> the SE protocol drivers into a single place, among other improvements
+>
+> A snapshot of this work is available here
+>
+> https://github.com/quic-kdybcio/linux/commits/topic/single_node_genise/
+>
+> (not yet 100% ready..)
+>
+> I think it'd make sense to get it done first, so that we can condense
+> most of your changes in the common driver, where we'd swap out the clock
+> handling for perf level setting instead
+Thank you for the update and for sharing the snapshot of your work. The 
+improvements you're working on sound promising, especially the 
+abstraction of power controls into a single place.
+While we appreciate the direction you're taking, our patch has already 
+been pushed upstream with V2.
+To maintain our momentum, we would prefer to continue with our current 
+cleanups rather than waiting for your post if it's planned for a few 
+weeks from now.
 
-Dear Niklas,
+It would be greatly appreciated if you could take this patch and build 
+your ongoing work on top of it, as it would be somewhat similar to 
+optimize it from SE's protocol driver to the common geni driver for 
+power management.
 
-Thank you very much for your reply and suggestions. The patch you 
-provided has been tested by me and is normal.
+That being said, could you please provide an estimated completion date 
+for your work?
 
 
+Thanks,
 
-Bjorn and Mani, thoughts?
+Praveen
 
-
-Please see the following log:
-
-lspci -vvv
-0000:c0:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag+ RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 512 bytes, MaxReadReq 1024 bytes
-         ......
-
-0000:c1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd 
-NVMe SSD Controller S4LV008[Pascal] (prog-if 02 [NVM Express])
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s 
-unlimited, L1 unlimited
-                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ 
-FLReset-
-                         MaxPayload 512 bytes, MaxReadReq 512 bytes
-         ......
-
-0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-         ......
-
-0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd 
-NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-unlimited, L1 unlimited
-                         ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ 
-FLReset-
-                         MaxPayload 256 bytes, MaxReadReq 512 bytes
-         ......
-
-0003:30:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-         ......
-
-0003:31:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. 
-RTL8125 2.5GbE Controller (rev 05)
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 01
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-<512ns, L1 <64us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-                         MaxPayload 256 bytes, MaxReadReq 4096 bytes
-         ......
-
-0004:00:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
-         ......
-         Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
-                 DevCap: MaxPayload 512 bytes, PhantFunc 0
-                         ExtTag- RBE+
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-                         MaxPayload 256 bytes, MaxReadReq 1024 bytes
-         ......
-
-0004:01:00.0 Network controller: Realtek Semiconductor Co., Ltd. 
-RTL8852BE PCIe 802.11ax Wireless Network Controller
-         ......
-         Capabilities: [70] Express (v2) Endpoint, MSI 00
-                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s 
-<4us, L1 <64us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop- 
-FLReset-
-                         MaxPayload 256 bytes, MaxReadReq 512 bytes
-         ......
-
-
-Best regards,
-Hans
-
-
+>
+> Konrad
