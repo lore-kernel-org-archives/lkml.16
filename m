@@ -1,111 +1,132 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944BE188733
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42FB6198E75;
+	Fri, 25 Apr 2025 18:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745605196; cv=none; b=LTNS6mig656TS1cpGb6PPgKz0KHvCHRcURKum77PjCA+mlJWJAdFOWeTfRUml4Sy1U/ojr1ACbmHiOEf/fGne4O4CucH2PcPWBE4lak19nUoGuLTjMQ7KskSDdob+meOggYelk7Usnk5Jt9D8Aj5VyVNCkNow/EpdrYWQdjzk/w=
+	t=1745605330; cv=none; b=Euy93h9zto296+95RmZ3yXtXmiCSroNSGjZqA3m+GSqqD/fFAV/QtRngUzRmDFeblGy+cGbrHlsfZeQOAYK6QztTVyY4J12dROdc7OqhAeCy21S0QXT3mpQmIQw8BsVfwzdw7EUp6mKFN/3HSZppJ1xPh314O7DSc0pSTbgOy1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745605196; c=relaxed/simple;
-	bh=IpSFoh4pYOY/HGqg1pleHeuH9QFifSvgR7QoQN+jals=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Mhk3SwsDWAUz00sOn9XuyouhDxBIU3n2fBZOT0kQtf7bwhE/Y2G413glIw3PRC3Z0ne31CX3rLlyYtshUNE5UJllLhLLE9ladMN6Ix3RMfqDoIOWRamC8sHcxRQhqUjCuS9K0j/SDkcXhop+ZK0T/PghO0MXsEcLpMkdzvM4Ja8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=L2zE90Bl; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1745605330; c=relaxed/simple;
+	bh=h/4Eajx1BB93vPcjQ+W2ynlD2GoC8tcFi87iz9uYlDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YjAfIMVWXBiqxB1UUfqt5uGNI4XvfU4pDwN+SZCMAq6I2kWREFuD40vkx3rEM7NDrMSp5R5EKpdV84USREGM+4+P0WBNisi0eLcIQmrqmTcajrZcj9X284jkSIq3VyjVBEZj21TK3Axh0Txy96o1NEeOnfW9dhIWShq+o+nDFqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NCQ0Mw5F; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="L2zE90Bl"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so18475625e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1745605193; x=1746209993; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IpSFoh4pYOY/HGqg1pleHeuH9QFifSvgR7QoQN+jals=;
-        b=L2zE90BlQkCwN8RxPhglh5+YQzR3YQ8NPSekKiGRb4u2Zs2dfJ/tItuWZaFHeDES1f
-         V5W+e3hYuUJdWUFXpzD7ozesoIyZ9euiDfsvy5aF6BGN67VAUFi9u1T/Xqlmtt+Fm/Bt
-         nHZXHjAjQo2Cs5df9yeqE4vu60ATz6pMTKTRV5vW0GNzbI7KPI0GHiCRj9gzGiIGCZCK
-         lPssUdlz3UXbcZ8ByT0YXjeDgGXVjsGq7iA5LoWzdHacW4tRqD74ODrKglFJLEoJ+wMB
-         FAut6WbA3gE5MJI45Oz4oTFNG/tBUup5rFhdDT9xhpxiWbqB1dmIF9CtoynWk1jJkd9X
-         Kpcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745605193; x=1746209993;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IpSFoh4pYOY/HGqg1pleHeuH9QFifSvgR7QoQN+jals=;
-        b=JaTQwCw70Ct8BdW8uuNlmoyTzT9Me5eATyTOcRhzJnM0Mpi8jHLysk+REqxGqEH+2a
-         4dIfYCIOwbdYmKGyAwg8P21HELQ1sLXD08gjiHv5YiVqmkURd2iGqMl+gr/ASFZb3qLA
-         B8oyCsRcQMiThtjA8hvdicUta/kZ/1JWLuvSS/6Mg7/kFXv1B+LLtha+UcyXeFbj8yo0
-         AgN1BS+37/K2jm1Ku1YaHx13mu7NXnLfwQHsWnHem/mQKmGhAB/wK4YNACvmlaGylkQ3
-         zVQYw/0fde4GUoNBZ1zWlrilZkRf/cJ7So/J7U0T/VrKsFfrgTtYkTwvvg8wPjHkOyan
-         0Wig==
-X-Forwarded-Encrypted: i=1; AJvYcCUTCsIZv3tg0r8iweME+wLikLxtco9qsb5zsT7TVH7SQ3qA3QZ0bakFdF4/qdwIUmg/JYAuqp2Vw8cZZtc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySfk9wDbWwf007Jj2QgyqrHe/+lfKlQuS0IPGHw1nX4WtHBE3H
-	ix8XT3szkRoPGJUDFHnghSTRndTbCFlEZZ8s22cnSss+TW2KhFHDZe2ecsy9Mnw=
-X-Gm-Gg: ASbGncv71YL4UJqpG5XKQoGa44dYIEYRQaqroZ8miiwn06M2gx2qpegnDocalO93Ek5
-	bl6z7UgBLZ4eygBugKXyBcQOkrMip2QVCilOHXO7dsQpjwxezUwqM9vxh/uKoINGI1ZlOTSS0o5
-	9HXD49n816T4W+ZQI4KlYL1G6AaPTz82p+LNf53NJ4+jYMMG0wNkpZMcfSOgFsSW0AA6pBRelSJ
-	XsmXUfEezD3hXjV03hrXi5IfFoH4WrSGOcy3N94y6+ciq5Ca1CLnqZi6TIzfPa98Lln1CuzNjDD
-	pYHryXkuP3nW4m5G4w/x31VN/PQ5oebh6/zgm8V3ey+vhARtIVtuBM9hyKyoUWb38b80xYlVD9L
-	/LqBXtuTvT+UB+8t8TIwmnJmslEqgrkKq0U2A/bWDMl7IYoTPFz+c
-X-Google-Smtp-Source: AGHT+IFJByfdmWek2xSwsLT86f5MrKiJHwIbsxI4YxA+BfoGu8K395c02Fr79u8UPzgvjnNg9CP1eQ==
-X-Received: by 2002:a05:600c:1e03:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-440a66b7b14mr25609255e9.28.1745605192764;
-        Fri, 25 Apr 2025 11:19:52 -0700 (PDT)
-Received: from localhost (2a02-8388-6584-6400-d322-7350-96d2-429d.cable.dynamic.v6.surfer.at. [2a02:8388:6584:6400:d322:7350:96d2:429d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a536a02csm32734525e9.27.2025.04.25.11.19.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 11:19:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NCQ0Mw5F"
+Received: from [10.16.80.157] (unknown [131.107.147.157])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 89D1120BCAD1;
+	Fri, 25 Apr 2025 11:22:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 89D1120BCAD1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745605328;
+	bh=GQxtF7jZT692Xg2kvpz9fFHAy7AjVV3zrXUfHqtyLPc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NCQ0Mw5FVpqSQI6GuSPdLS9Cl4TmaROvR7+mdZmykj1KFoZTIgITHgeZJ4zHMt8A4
+	 oF36azBo8C3/PbZaSz/tyqEH0Wu9Dsyk/ebsTARvufmGayBSwsDXgw7OSjfZrbBFgF
+	 4l721r760DtJtIeNBkyirOQQk3qW/xwV6jPAvfKk=
+Message-ID: <c57c6ce9-6ff8-431c-ab77-fa2c727fee09@linux.microsoft.com>
+Date: Fri, 25 Apr 2025 11:22:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 25 Apr 2025 20:19:39 +0200
-Message-Id: <D9FXE4TJ23QB.1CS3D6PU2FGMR@fairphone.com>
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Mark Brown" <broonie@kernel.org>
-Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Banajit Goswami"
- <bgoswami@quicinc.com>, "Liam Girdwood" <lgirdwood@gmail.com>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>,
- "Takashi Iwai" <tiwai@suse.com>, "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>,
- <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <alsa-devel@alsa-project.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Dmitry Baryshkov"
- <dmitry.baryshkov@oss.qualcomm.com>, "Neil Armstrong"
- <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 2/5] ASoC: qcom: sm8250: set card driver name from
- match data
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250425-fp5-dp-sound-v3-0-7cb45180091b@fairphone.com>
- <20250425-fp5-dp-sound-v3-2-7cb45180091b@fairphone.com>
- <36904d64-68e1-43b2-baed-50b5fddc2bcb@sirena.org.uk>
-In-Reply-To: <36904d64-68e1-43b2-baed-50b5fddc2bcb@sirena.org.uk>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP
+ ID confusion in hv_snp_boot_ap()
+To: Saurabh Singh Sengar <ssengar@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Cc: "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+ "mikelley@microsoft.com" <mikelley@microsoft.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ Tianyu Lan <Tianyu.Lan@microsoft.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, Allen Pais <apais@microsoft.com>,
+ Ben Hillis <Ben.Hillis@microsoft.com>,
+ Brian Perkins <Brian.Perkins@microsoft.com>,
+ Sunil Muthuswamy <sunilmut@microsoft.com>
+References: <20250424215746.467281-1-romank@linux.microsoft.com>
+ <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+ <KUZP153MB1444118E6199CBED8C78E6D4BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <8fa1045a-c3e9-48e0-86fe-ab554d7475c8@linux.microsoft.com>
+ <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Mark,
 
-On Fri Apr 25, 2025 at 2:12 PM CEST, Mark Brown wrote:
-> On Fri, Apr 25, 2025 at 10:07:26AM +0200, Luca Weiss wrote:
->> Sound machine drivers for Qualcomm SoCs can be reused across multiple
->> SoCs. But user space ALSA UCM files depend on the card driver name which
->> should be set per board/SoC.
->
-> This doesn't apply against current code, please check and resend.
 
-I've based this series on next-20250417 tag, so this is probably due to
-the changes from the USB sound offloading series that Greg has picked
-up.
+On 4/25/2025 10:18 AM, Saurabh Singh Sengar wrote:
+>   
+>> On 4/25/2025 2:14 AM, Saurabh Singh Sengar wrote:
+>>>>
+>>>> On Thu, Apr 24, 2025 at 02:57:46PM -0700, Roman Kisel wrote:
+>>>>> To start an application processor in SNP-isolated guest, a hypercall
+>>>>> is used that takes a virtual processor index. The hv_snp_boot_ap()
+>>>>> function uses that START_VP hypercall but passes as VP ID to it what
+>>>>> it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
+>>>>>
+>>>>> As those two aren't generally interchangeable, that may lead to hung
+>>>>> APs if VP IDs and APIC IDs don't match, e.g. APIC IDs might be
+>>>>> sparse whereas VP IDs never are.
+>>>>>
+>>>>> Update the parameter names to avoid confusion as to what the
+>>>>> parameter is. Use the APIC ID to VP ID conversion to provide correct
+>>>>> input to the hypercall.
+>>>>>
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP
+>>>>> guest")
+>>>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>>>>
+>>>> Applied to hyperv-fixes.
+>>>
+>>> This patch will break the builds.
+>>>
+>>> Roman,
+>>> Have you tested this patch on the latest linux-next ?
+>>
+>> Thanks for your help! Only on hyperv-next, looking how to repro and fix on
+>> linux-next. The kernel robot was happy, or I am missing some context about
+>> how the robot works...
+>>
+>> What was your kernel configuration, or just anything that enables Hyper-V?
+>>
+>> I thought the the linux-next tree would be a subset of hyper-next so should
+>> work, realizing that have to check, likely there might be changes from other
+>> trees.
+>>
+> 
+> 
+> hyperv-fixes is broken too, here's the log for your ref:
+> 
+> https://dashboard.kernelci.org/log-viewer?itemId=microsoft%3A20250425085833916790&o=microsoft&type=build&url=https%3A%2F%2Flisalogsb15850d3.blob.core.windows.net%2Flisa-logs%2Fdefault_default%2F20250425%2F20250425-085110-393%2Fkernel_installer%2Fbuild.log%3Fst%3D2025-04-25T09%253A09%253A35Z%26se%3D2025-05-02T09%253A09%253A35Z%26sp%3Dr%26sv%3D2024-11-04%26sr%3Db%26skoid%3D14b53b1d-f4fc-442e-a437-4989376b1754%26sktid%3D72f988bf-86f1-41af-91ab-2d7cd011db47%26skt%3D2025-04-25T09%253A09%253A35Z%26ske%3D2025-05-02T09%253A09%253A35Z%26sks%3Db%26skv%3D2024-11-04%26sig%3DZHfA7%2FC174KR6HT8zhchCb47NE1aceqw8h0APzKxsII%253D
+> 
+> The hv_snp_boot_ap() function in arch/x86/hyperv/ivm.c currently fails to compile.
+> It looks like the function's argument was changed from 'cpu' to 'apic_id', but internal
+> references to cpu were not updated accordingly.
+> 
+> This might have gone unnoticed during your testing if CONFIG_AMD_MEM_ENCRYPT
+> was disabled, in which case this function wouldn't have been compiled.
 
-So either Greg also picks up these changes when they're ready, or we
-wait until 6.17?
+Must be the case! I did run the command to merge the CVM specific config
+options but I didn't check the result.
 
-Regards
-Luca
+Yep, I see the issue. Will resend the patch.
+
+> 
+> Regards,
+> Saurabh
+
+-- 
+Thank you,
+Roman
+
