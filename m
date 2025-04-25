@@ -1,161 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E03C78F4B;
-	Fri, 25 Apr 2025 13:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E81288A5;
+	Fri, 25 Apr 2025 13:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588837; cv=none; b=iy77VImQMuM8zFHSOvbpeDKjUQa7nE4pvVwCzO5+yYXbv+atjO5hz3BvPyYj7fqxnXO0CxLi9FX26tZgfObdZhDFqC8Oy80CyyFXkM8mP/uw9rdYR3fhLqzvuBxZewlMVfWWsOIwqFNRCNKI2fPi4O+4edaE3exZaQ0XS6UPQK4=
+	t=1745588860; cv=none; b=YBpUf+TiS7q0qpOU9QD+XJcjECDoftt6lfGfThk/ioa9w06VB7psdHQGZk7MpS+52YIy+PnTaFRSy+llhasbcvkHPa9mHQX3Rlc3ILtVEp//JmEuI7Bb4Zl504RW91O3iIX4aGTYgnkaslZ8jQBmjIUA+NantQY76mi1CdfEg7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588837; c=relaxed/simple;
-	bh=qi5h6vjHGkHHkMx48KdWOPGfCyT72085egpIwqt06EU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AE3+Z6Ix4Lh8k6q+/TmfGVmOXPdjWCSseHfHpC9/Hvg/myHennu+RWiMEkYT58WRU3oXG0NEsonm4qhvsuEL6DWS4IJaEld7rBgDsAPywK6gHvnixq0jyKMD2QZJ+9aW5a2DWaP6/fBYN7xzg7OjDOHemyiAI6+e1y+sAYpfSz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVkHX+kq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745588860; c=relaxed/simple;
+	bh=A0BqI1OhWECGRoHXOwEM5A1fqp0J7utKdtX59nddDMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IrmaXLaHhqFfTQZeLDBQLow6LO8WRnmRs1F+fNv0jYFImf70SnkjrP1f19RnByFxyszRAspSfOj8lxyaICQPfpk89DkgDJm4yG2wmnGfh0ksR3wZG4uWJkxHGAxdUHci9SptahQlRLfz3wr70Xjvwb5LQvOdjovPCA6n8t/giCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXdIWQ78; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVkHX+kq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C85DC4CEE4;
-	Fri, 25 Apr 2025 13:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745588837;
-	bh=qi5h6vjHGkHHkMx48KdWOPGfCyT72085egpIwqt06EU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QVkHX+kql50+epGydmhjz+95MQSE8WEDlV87c70IY7HI4V1UG99qCiZRm1luxGYeO
-	 BVUaapBHvKfebXlGIwSGgPRO1pnmU00p2MUxCjvBFZEvNQ0Wke+4d9nmwMNwSkqjeK
-	 7DvdYe2JdWwvsenW+3ms5MsvBk4A7gUXIGS614Xh0d3FeRP9g+JidG4w5MUU5wef+B
-	 u7JuJ2bVjV1wS5LpFglBj3eelV/u0rhDOWAQqec5PEBdJELIg64PiO6k90NX4ZRriR
-	 drDucaxBTBnQHYnuTN84bbCm6mX7qLCkKbxUde4DshAfnex+OCWaQYmKoHHZgOyCvw
-	 eF4uPsyzoOzqA==
-Date: Fri, 25 Apr 2025 15:47:10 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, thomas.petazzoni@bootlin.com,
-	manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
-	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
-	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] PCI: Configure root port MPS to hardware maximum
- during host probing
-Message-ID: <aAuSXhmRiKQabjLO@ryzen>
-References: <20250425095708.32662-1-18255117159@163.com>
- <20250425095708.32662-2-18255117159@163.com>
- <aAtikPOYlGeJCsiA@ryzen>
- <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXdIWQ78"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so3601292a12.3;
+        Fri, 25 Apr 2025 06:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745588857; x=1746193657; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7b2k/0/MRDFBkYnkScGuwVZ9DXdXvkWRFpO84oyIems=;
+        b=EXdIWQ789nRnW0vE8NKmuUGjwMieBqTUJwcoxA5Bw9qmNPrdGbOLNfb6sGnlej8H9o
+         eU7H6b5PHx0gea7dmg1dvdOcvqmVUQFJq5xYwkM0IGq+pyRfxoY0VXbhZOUTO3Une+1c
+         m1vyDHBgZz5O3sJ3SlZc7lQ2K6fMql95UNqdXJeAI9NGg4Tz0wtNFx77vy1+ITGVhYD+
+         S8GM9wfUS5q3xy11m54hpIcJeCXBRkbA4XIb12Ah0m6SadTMPF2sa4k8lvHsja8GKihm
+         39/JwX9v8QgzKe7DXv4a6ZWseUGNqlcb1qGOFSa59MwOckMUI/4qyYDzQN6OYXdKU5mk
+         vF/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745588857; x=1746193657;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7b2k/0/MRDFBkYnkScGuwVZ9DXdXvkWRFpO84oyIems=;
+        b=L/S7FgnjHOACvJG3VvMD6ehBW3/1dZ3iwoZOWtmbTyxOJUhH26RzdqbLGgouXxaDct
+         pfBZ6LPSOJePVjcoviNEYQbGHeg06Zxe8ZhKRyYk/CfbzS/2w+1bEs99pGZbNEGPjsTO
+         AsKjcgBogSFpiK0I4Vi1U/AWOWAv6oAQi8mOuBtrO8oeZiURdMnytiXgb7X95nKJQ5c6
+         PGx/hJZ81XDmOOUi7O4yZF+PXK5asU3SvRKzwpemYtujRi/B+jyHrotRj/66TzVIFK5O
+         o1IVyn1/1/RMhKKoVVZpoGmDGzO7uKpGRBgeHchYvPRHaUq4Q5srK7/fUoj91wgdv/3/
+         eHYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6OEOU+hyfyAryLYcqLhN9qnKT08x6AoxeHArRSWpJDyhNNtx7iMGRRr4p0vyH3O5aDWUUzNPmfJnlW44Z@vger.kernel.org, AJvYcCV5rdlG8t6Tn0flBlHsTY3hr47bd+Gc/CGYlNmcGk9NmyZ1rFZllf6bHwGEEG8NPkI5+vWMJPedzIuPE6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi/BANE3+AUdis50RNDUGHSHyu4RCEvR02dDBiXd2J331pz4XS
+	deuwEs04osUASu0j55xCK/sYXBNreuK80YS7EkJAe2clnK7blZQH
+X-Gm-Gg: ASbGnctacnwNndKOOXCr/AW1Gt4mqj2T85Z20LVZrS+mjrjRfRXZoa0GVyyhwM8o0Ok
+	iDRYBY2I3KKG2AZvkm7apCVzzAfRm0P46sj47IohqaWR6R42LOYjOHVjupIRtG6umEhORHpxMyq
+	qcxl06iTBCm6KtCTmfGbXtN6VsF9gcypX1oYztwpkuBBnNOti8ObrcSoovcTzei8S3pis09PTSo
+	nObf6hVlhG4KQLWUS9TjAcRVYBh0qIVYntH3xSDi6QWsexc6p5bDgq5NkT//ecvE+CSBvqADvpa
+	VXcD2KNJjwN0PlSCXNpnZyfb8uBOKomKxdSMjlY3ptRgN60DSDpkZP6imkY+KDLuClzZEmuPssm
+	+Tzv4u5D/D5CnU5/koegAMJyHug0ZRTOP8qst
+X-Google-Smtp-Source: AGHT+IE3+U9lKdyIw2HglYpHlU5Ju6Jvd02RlixVwiVpib47lTMUqn1jZXSuE/LNf8JT5D2FHFI2jQ==
+X-Received: by 2002:a17:907:3f0b:b0:ac3:3e40:e182 with SMTP id a640c23a62f3a-ace7109ff27mr235634766b.19.1745588856499;
+        Fri, 25 Apr 2025 06:47:36 -0700 (PDT)
+Received: from ?IPV6:2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6? ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41cb2asm143227566b.10.2025.04.25.06.47.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 06:47:36 -0700 (PDT)
+Message-ID: <7653bf7c-03ac-4f94-a80c-2bfa3004d287@gmail.com>
+Date: Fri, 25 Apr 2025 16:47:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] crypto: sun8i-ce-cipher - use IS_ENABLED() checks for
+ debugfs stats
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
+ linux-crypto@vger.kernel.org, wens@csie.org, jernej.skrabec@gmail.com,
+ samuel@sholland.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250425124517.2225963-1-ovidiu.panait.oss@gmail.com>
+ <20250425124517.2225963-3-ovidiu.panait.oss@gmail.com> <aAuOdDhpnLE5bM_y@Red>
+Content-Language: en-US
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+In-Reply-To: <aAuOdDhpnLE5bM_y@Red>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Hans,
+Hi,
 
-On Fri, Apr 25, 2025 at 06:56:53PM +0800, Hans Zhang wrote:
+On 4/25/25 4:30 PM, Corentin Labbe wrote:
+> Le Fri, Apr 25, 2025 at 03:45:16PM +0300, Ovidiu Panait a écrit :
+>> Add IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG) checks before the
+>> fallback counter updates to make sure the code is not included when
+>> debugfs statistics support is not enabled.
+>>
+>> Also, drop the existing ifdef guards, since 'struct sun8i_ce_alg_template'
+>> is always defined, even with CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG disabled.
+>>
+>> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+>> ---
+>>  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 46 ++++++++++++-------
+>>  1 file changed, 30 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> index f03a8fa7bfa2..433cd18f0b5b 100644
+>> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> @@ -34,22 +34,30 @@ static int sun8i_ce_cipher_need_fallback(struct skcipher_request *areq)
+>>  
+...
+>> @@ -101,9 +117,7 @@ static int sun8i_ce_cipher_fallback(struct skcipher_request *areq)
+>>  		algt = container_of(alg, struct sun8i_ce_alg_template,
+>>  				    alg.skcipher.base);
+>>  
+>> -#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+>>  		algt->stat_fb++;
+>> -#endif
 > 
-> But I discovered a problem:
+> Hello
 > 
-> 0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
->          ......
->          Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
->                  DevCap: MaxPayload 512 bytes, PhantFunc 0
->                          ExtTag- RBE+
->                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->                          RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
->                          MaxPayload 512 bytes, MaxReadReq 1024 bytes
+> You put IS_ENABLED everywhere, but here you remove it, why ?
+> I think you forgot it.
 > 
+
+This is already part of an IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)
+block, so no need to add an extra IS_ENABLED() check here. Just the
+ifdef was dropped, as it was not really necessary.
+
+Original code:
+
+	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)) {
+		struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
+		struct sun8i_ce_alg_template *algt __maybe_unused;
+
+		algt = container_of(alg, struct sun8i_ce_alg_template,
+				    alg.skcipher.base);
+
+#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+		algt->stat_fb++;
+#endif
+	}
+
+Thanks,
+Ovidiu
+
+
+> Thanks
+> Regards
 > 
-> 
-> 			Should the DevCtl MaxPayload be 256B?
-> 
-> But I tested that the file reading and writing were normal. Is the display
-> of 512B here what we expected?
-> 
-> Root Port 0003:30:00.0 has the same problem. May I ask what your opinion is?
-> 
-> 
-> 		......
-> 0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
-> NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
->          ......
->          Capabilities: [70] Express (v2) Endpoint, MSI 00
->                  DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-> unlimited, L1 unlimited
->                          ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
-> SlotPowerLimit 0W
->                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
->                          RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-> FLReset-
->                          MaxPayload 256 bytes, MaxReadReq 512 bytes
-> 		......
 
-Here we see that the bridge has a higher DevCtl.MPS than the DevCap.MPS of
-the endpoint.
-
-Let me quote Bjorn from the previous mail thread:
-
-"""
-  - I don't think it's safe to set MPS higher in all cases.  If we set
-    the Root Port MPS=256, and an Endpoint only supports MPS=128, the
-    Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
-    that case the RP may respond with a 256-byte payload the Endpoint
-    can't handle.
-"""
-
-
-
-I think the problem with this patch is that pcie_write_mps() call in
-pci_host_probe() is done after the pci_scan_root_bus_bridge() call in
-pci_host_probe().
-
-So pci_configure_mps() (called by pci_configure_device()),
-which does the limiting of the bus to what the endpoint supports,
-is actually called before the pcie_write_mps() call added by this patch
-(which increases DevCtl.MPS for the bridge).
-
-
-So I think the code added in this patch needs to be executed before
-pci_configure_device() is done for the EP.
-
-It appears that pci_configure_device() is called for each device
-during scan, first for the bridges and then for the EPs.
-
-So I think something like this should work (totally untested):
-
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -45,6 +45,8 @@ struct pci_domain_busn_res {
-        int domain_nr;
- };
- 
-+static void pcie_write_mps(struct pci_dev *dev, int mps);
-+
- static struct resource *get_pci_domain_busn_res(int domain_nr)
- {
-        struct pci_domain_busn_res *r;
-@@ -2178,6 +2180,11 @@ static void pci_configure_mps(struct pci_dev *dev)
-                return;
-        }
- 
-+       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-+           pcie_bus_config != PCIE_BUS_TUNE_OFF) {
-+               pcie_write_mps(dev, 128 << dev->pcie_mpss);
-+       }
-+
-        if (!bridge || !pci_is_pcie(bridge))
-                return;
-
-
-
-But we would probably need to move some code to avoid the
-forward declaration.
-
-
-Kind regards,
-Niklas
