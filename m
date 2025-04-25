@@ -1,108 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6350B18027
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43C31D555;
+	Fri, 25 Apr 2025 00:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540908; cv=none; b=cfn/Salbuq+hD2KOUlX++YayvqZbEz8gXhJW2xEUEtdOL8aufLv1VREdgp3yPHLzvCIYmBixFOolXJ+V6rpk3U4SbNvwpLu31X8BTznLkBLEU0q6JSSbEI7De39EqxKOWINbeVJdAOieBljwdbQJJTMlIFshQDAWHwkRzD89rCo=
+	t=1745540948; cv=none; b=tlXc3yj0Y4lu9uxr4YzFgAGgJvLpfYI15klDWfkYZJvQ59dCWVHscc8A/5gY5GqM1Zq75N9AjEf+OHpZt0lLfx6C/ty+yC63Imjg0eNANxtwY08ebCnk9MQiJmO/BlCrgiB3NwU2zQ/sw7uyySnmsvz1P8G5lZ8miltz6eJ0m+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540908; c=relaxed/simple;
-	bh=CPkTM9i04f9X4QEWTixfTb/RCavIqHx07+QmRCayqpE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ukNi0DObKple1SgHAZlwt1IUJ/EqlG22xw3ek+1SNxkROLpfveXBAi+EEPIeEvBCc7j6Db8ArGG+oVJ3rozK0gMFZ+Hpaia9Oajx7DbD++DC+1bhXdA/RgSH4ih8AZtFpvPbm0VWy0OhIn8ghcUveRI/VOAAyZ+l7XtszdhXNUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJCUBx69; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745540948; c=relaxed/simple;
+	bh=ugYHviq2GMOQ1AcvdkeyhC+Q2tttWJ+KSq0ZZKyk5hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N9cksErsYXxIIAbKEh0SrGFNT32lvExi7LjA51TbZNS2TzQ5qPGKe8Rr0uv//AuZbWtQq2gzcDkXy03E6wqh6j12gfIQJ/h3oL9i/7G57syOI8HOyzlRC6+PnNRJBSHv6/Ch3RV3qlN4YJ2agnuitVTsV09f48wf5dbelxhhV2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvNLdt9F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJCUBx69"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35872C4CEF1;
-	Fri, 25 Apr 2025 00:28:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvNLdt9F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA6FC4CEE3;
+	Fri, 25 Apr 2025 00:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745540908;
-	bh=CPkTM9i04f9X4QEWTixfTb/RCavIqHx07+QmRCayqpE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gJCUBx6954vJcoYj0FlS5qQcBQfbOQ/Uh6+abHOcsCYGpX5exh8wySrGK8qTwJwuU
-	 xuXjXoLHOnB5wkQFTsIh3Prwdwje4VwR/L8FDCaEjXhOt8zNOsQOnW7gQFoCaoJW6T
-	 2mbeBa0IQup1SiD8VD8hDRAIDpmtS/K7rk9NCaXakNifREKISqfLc1TA9jtU4jQ2cZ
-	 MePS+gO+fpEESWTs1gropJGe71NhYmRB+TZ7EdICa2Kkku0wBkDOpYIUqUh2qPrDpZ
-	 J895m+VqWCqqUYao5eu1U4+VINrbv6/OEkLuat0Hrn4cQq7HkpIfgkL6QuX5Y0UalK
-	 WcHtfYCzlzyBw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 532F6CE1DCE; Thu, 24 Apr 2025 17:28:27 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v3 18/20] ratelimit: Use nolock_ret label to collapse lock-failure code
-Date: Thu, 24 Apr 2025 17:28:24 -0700
-Message-Id: <20250425002826.3431914-18-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
-References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
+	s=k20201202; t=1745540947;
+	bh=ugYHviq2GMOQ1AcvdkeyhC+Q2tttWJ+KSq0ZZKyk5hs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EvNLdt9FcbkwjBGBrOGYEbC/UDjCPMFoc6dEsDriUFcZy1TIcyRIO8mj4G513z5DU
+	 JVgztTDJtRJAC7PQ5Tu2mtz0cGeWFzLnoJ9/rHjT0NzpdTUdmEDvL/YJpYXPkQ0RGL
+	 5lt9js14mDKCN+7q26in1fMXVUwUf59dgFyjZuwfelKMXfMokKfW1jqaU+liL5M7Lv
+	 4h6t0A6LLNi0yTHgQRNhH+wor7VkkN5e65zA5rc/Gs/qxily3xvOXKVZLWB+ThHyEe
+	 rxfK27D/N5LWub0fZFAkmphfamx5PTnGnQQv5efXi6YlFemKDPGWEfSi0cY/EUYA75
+	 xYUiD1oWTeqzA==
+Date: Thu, 24 Apr 2025 17:29:05 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, "David S. Miller" <davem@davemloft.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maciej Fijalkowski
+ <maciej.fijalkowski@intel.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] xsk: respect the offsets when copying frags
+Message-ID: <20250424172905.181af8be@kernel.org>
+In-Reply-To: <20250423101047.31402-1-minhquangbui99@gmail.com>
+References: <20250423101047.31402-1-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Now that we have a nolock_ret label that handles ->missed correctly
-based on the value of ret, we can eliminate a local variable and collapse
-several "if" statements on the lock-acquisition-failure code path.
+On Wed, 23 Apr 2025 17:10:47 +0700 Bui Quang Minh wrote:
+> Add the missing offsets when copying frags in xdp_copy_frags_from_zc().
+> 
+> Fixes: 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb conversion")
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
 
-Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- lib/ratelimit.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+I think the fix is right but I dislike the use of netmem here :(
+Could we switch back to page_pool_dev_alloc() ?
+Allocating a netmem to immediately call __netmem_address() is strange.
+At least to me. Because netmem is supposed to be potentially unreadable.
+And using normal page allocation will avoid the confusion and bug we're
+dealing with now.
 
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index 7b075654e23ac..7bbc270b88e21 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -58,20 +58,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 	 * the current lock owner is just about to reset it.
- 	 */
- 	if (!raw_spin_trylock_irqsave(&rs->lock, flags)) {
--		unsigned int rs_flags = READ_ONCE(rs->flags);
--
--		if (rs_flags & RATELIMIT_INITIALIZED && burst) {
--			int n_left = atomic_read(&rs->rs_n_left);
--
--			if (n_left <= 0)
--				return 0;
--			n_left = atomic_dec_return(&rs->rs_n_left);
--			if (n_left >= 0)
--				return 1;
--		}
--
--		ratelimit_state_inc_miss(rs);
--		return 0;
-+		if (READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED && burst &&
-+		    atomic_read(&rs->rs_n_left) > 0 && atomic_dec_return(&rs->rs_n_left) >= 0)
-+			ret = 1;
-+		goto nolock_ret;
- 	}
- 
- 	if (!(rs->flags & RATELIMIT_INITIALIZED)) {
--- 
-2.40.1
-
+As Stanislav pointed out this function is not used anywhere today,
+so let's target the rewrite to net-next and explain in the commit 
+message where the bug comes from and why it doesn't need to be
+backported (and drop the Fixes tag)?
