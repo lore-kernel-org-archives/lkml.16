@@ -1,247 +1,204 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF9A2253B7
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68EA21CC49;
+	Fri, 25 Apr 2025 21:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617466; cv=none; b=MtDWhFExZ9S9lE6MKD7mHfzgswRhD0wqfgwYP2TCmhIm5SIMY8TvFESQusaC7URFK32qPpa24sh60ojP21YW54DwCIbGOjAAHnBYjhvKEs13J70R6pebMX9w4FtNBab4+26K2DthOSFguRDZz2FJ3jvoP0HIxUZmGeLbsyZYUX0=
+	t=1745617494; cv=none; b=k2ztJtthrrQ3Yi64HfONB9zPZI93wrf6STc5TQeFMsmLVFGVc3oaeMnD49dx+anpzYyJ9+BRrOsCfG3NYJOL7P7YyokhjhKOXomdbEuQpc6RGTVMyQMEC1G6tzGcw0KEO8j0+au+azMErLBleISUnP+SDuje9dQrMuNXb+O0MU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617466; c=relaxed/simple;
-	bh=0PGOU404WR3ZZT5UO5ZutPGEui+7NlIYTJrsKba4mAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kTVB574/J4irsTBLGrFER12N1fK9ZhH0DDYNGcciPAxvvHr/3B830QdX3L6yw9dChNCfD3etcdU8JBRnEXU39AzcsM4iO5N0RlfJDNPUSmwRsUHtQd1cU6ntSUSng+WafgGgeDMswM3kf7OJIsS+lT+TS2D7c+M8Gl490h6yj5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ecdIgtzW; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745617494; c=relaxed/simple;
+	bh=1vYY0G6paJDxqTAFql3Fe/ZoYlYAWMsKFG17ZpHlpB4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=usXlNaPpU+GGl3BJAqPCxJek93fQharcQEjuc5B6y8OY6sujyw4qgEffhQiS0vXtI4FqWJ0V9pQWMvmDK1R3A0eAWBtgRQ9pB5mYhQtSn8Ewp4izbXJ54NygdB0nayp1QJIapjLrccSyMIIF8wI4plnRx3jrrhx6aqEVsWqIt4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VVfli0Z9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ecdIgtzW"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-401c43671ecso1494375b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745617463; x=1746222263; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vetl9XpldH8JvL8GlwOYXmdLs3vxDNII55h0sSj3lYc=;
-        b=ecdIgtzWNSzsQn2U0k23mm0eBPvHL1C1TcUx5drufKdFJWPjIQ7GsvtCZNtt5PLkrQ
-         WnTYAnIngoJxMKPjvGQiafQHc11uLmi+6WacfOsAoF51wtpj5OD1KLHbuqOxW9MJ+gqu
-         5dnK7M15p2Ba7STyIzHw8yQ2C07rw8o15cRsmQMj8XCNaYuV4Xz4PUCW26zxhpCC1VG5
-         46kunNXqj5N6793pab6hLib2fv9d4od8dWNR/iV2yFkzw4n8YTPKs+UFmFcwE9gaYloe
-         CVGYnFNqsC2iAGruFEhIv3ZuPkZEJxVIArXn+geM9L4Mb+yzI1VWxaB1nUXsqcfJTKI3
-         kjVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745617463; x=1746222263;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vetl9XpldH8JvL8GlwOYXmdLs3vxDNII55h0sSj3lYc=;
-        b=T8U6NNIQ5eWTGoZ9Jp4IQvRxMHDY+7bXYAsNa8+cBbClELawxUydXIS1rsd3KpLBk4
-         VOtWB05e/0iunkm+hHzVY4OtlZ4cM9+6UbtcizVXxJCwpTryHpSEeKPhFU7c3FR3oNZK
-         tzRZ8WwPaqRhdV4mFkJqkOsFF7MUc7gZbBV9Bcy7wbgI8mPS9SMq7mm81USbm8UtF8iE
-         U83k/yyipYU4hohzFE5ax+8+s8ndUWNGUuxPrnkxAQjTBjjYBbkWvrsQutzzS6+3f0To
-         SSN1nxj2gY56Ejd9YD11BCc1yktHyaKdKSaPJ0Q0uN9OOzbGoJao2mEevtvdCY2xDJVH
-         kHwg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9yUutDy5ctKAo8NtaGdE0bgFGrZSp559jaoCCa6sTaMrZQCSbnLewHfO/RPz1FGYbqstbEx4CMeVho9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybnbMBV1asjLmgNhZeoHFaUt4DG8VU5zuCZVpgjRK36yoDZiLG
-	C+s0AsW4mrOVTxXSe+Pf+eYyQh/jwRvT2zjVEeQNbE+NC/2q/7adHn29YBX6Uyk=
-X-Gm-Gg: ASbGncsdEy4akJXX/tJTXvZ3MjLbsc0EkH4iofCJvbcjYXB2HLmjzgpokgxsYuedMvp
-	RMawqANF5cLRY2HYPo3yR9XafNWUBznw867QaQbfytFDhlq8SlwTR7mmM6j9KZr+f8Nvhg4kNZP
-	+K+BI6h8nh5X7SIc40onAmaZKgHWCAlgnYoy71Srg0HBG02+2PXAW/gVgvNR9fXlsMDsgMZLnfx
-	5/l3AjlSU2YSFUxRbU6YMPTSe/OCdzOPG6Ck7RDWviBpReuuMViEIrNE4rSGrS9+ttD3AOhmOL7
-	J1eSazmlehKnyE/+nOdz25YoYiRtq5rl17MJIdFG2zzgfeJtRPF3QqeL/qy1OK6KsBm8eWosxpk
-	wBfFwF9Z39HQx
-X-Google-Smtp-Source: AGHT+IGYSYK/NgbfRtntiLX0fyD882sY0Y9kI7JKZ0e9QJqEQnnrOLa7rFd/SxmE01a29TeJbZfoUg==
-X-Received: by 2002:a05:6808:178e:b0:400:fa6b:94bf with SMTP id 5614622812f47-401ec44c715mr4767354b6e.4.1745617462686;
-        Fri, 25 Apr 2025 14:44:22 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:96a3:e28:3f6:dbac? ([2600:8803:e7e4:1d00:96a3:e28:3f6:dbac])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401ec8afb1esm939069b6e.10.2025.04.25.14.44.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 14:44:21 -0700 (PDT)
-Message-ID: <9f5b0709-f795-44c5-aa64-aaed81a459bf@baylibre.com>
-Date: Fri, 25 Apr 2025 16:44:20 -0500
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VVfli0Z9"
+Received: from narnia (unknown [172.172.34.12])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0FD7420BCAD1;
+	Fri, 25 Apr 2025 14:44:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0FD7420BCAD1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745617492;
+	bh=RLcGrvY/Ji6RfwBGa0SDop5ZSdaFF8Vony2mUDrwhz8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=VVfli0Z9/uOSWmD2zYfgd/ELGgJQhQObtxaSQgX4AL7uZlqTSEwxa/QkcFRUrFG4L
+	 KJe067jmKGvAEhgwx3y2k+RRnXnuiRFkSXZNrkzp+VuQoskURv0DCiZeNXTaiElj12
+	 7XOVymm5fhm6nTTtITxxB973eE6OhvwrFoFeXnVA=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>, Alexei
+ Starovoitov <alexei.starovoitov@gmail.com>, KP Singh <kpsingh@google.com>,
+ Paul Moore <paul@paul-moore.com>, Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+ <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge
+ E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?=
+ Noack <gnoack@google.com>, Nick Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>, Jan Stancek <jstancek@redhat.com>, Neal Gompa
+ <neal@gompa.dev>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, keyrings@vger.kernel.org, Linux
+ Crypto Mailing List <linux-crypto@vger.kernel.org>, LSM List
+ <linux-security-module@vger.kernel.org>, Linux Kbuild mailing list
+ <linux-kbuild@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
+ <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+ clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, Matteo Croce
+ <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, Cong Wang
+ <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+In-Reply-To: <6e086e29d258839e42ef7a83b38571d1882eb77d.camel@HansenPartnership.com>
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
+ <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <87semdjxcp.fsf@microsoft.com>
+ <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
+ <87friajmd5.fsf@microsoft.com>
+ <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
+ <87a58hjune.fsf@microsoft.com>
+ <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
+ <87y0w0hv2x.fsf@microsoft.com>
+ <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
+ <2bd95ca78e836db0775da8237792e8448b8eec62.camel@HansenPartnership.com>
+ <CAADnVQJ6SRePz7yc5x3BAz7q-e8DVYq=vRdahxCZ4XzpWtnYpQ@mail.gmail.com>
+ <6e086e29d258839e42ef7a83b38571d1882eb77d.camel@HansenPartnership.com>
+Date: Fri, 25 Apr 2025 14:44:10 -0700
+Message-ID: <87bjsjlxw5.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] docs: iio: new docs for ad4052 driver
-To: Jorge Marques <jorge.marques@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-4-638af47e9eb3@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250422-iio-driver-ad4052-v2-4-638af47e9eb3@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 4/22/25 6:34 AM, Jorge Marques wrote:
-> This adds a new page to document how to use the ad4052 ADC driver.
-> 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> ---
->  Documentation/iio/ad4052.rst | 95 ++++++++++++++++++++++++++++++++++++++++++++
+James Bottomley <James.Bottomley@HansenPartnership.com> writes:
 
-Also need to update the table of contents in Documentation/iio/index.rst,
-otherwise this page won't be build (and will cause a build error).
+> On Thu, 2025-04-24 at 16:41 -0700, Alexei Starovoitov wrote:
+>> On Wed, Apr 23, 2025 at 7:12=E2=80=AFAM James Bottomley
+>> <James.Bottomley@hansenpartnership.com> wrote:
+>> > On Mon, 2025-04-21 at 13:12 -0700, Alexei Starovoitov wrote:
+>> > [...]
+>> > > Calling bpf_map_get() and
+>> > > map->ops->map_lookup_elem() from a module is not ok either.
+>> >=20
+>> > I don't understand this objection.
+>>=20
+>> Consider an LSM that hooks into security_bprm_*(bprm),
+>> parses something in linux_binprm, then
+>> struct file *file =3D
+>> fd_file(fdget(some_random_file_descriptor_in_current));
+>> file->f_op->read(..);
+>>=20
+>> Would VFS maintainers approve such usage ?
+>
+> This is a bit off topic from the request for clarification but:
+>
+> It's somewhat standard operating procedure for LSMs.  Some do make
+> decisions entirely within the data provided by the hook, but some need
+> to take external readings, like selinux or IMA consulting the policy in
+> the xattr or apparmor the one in the tree etc.
+>
+> Incidentally, none of them directly does a file->f_op->read(); they all
+> use the kernel_read_file() API which is exported from the vfs for that
+> purpose.
+>
+>> More so, your LSM does
+>> file =3D get_task_exe_file(current);
+>> kernel_read_file(file, ...);
+>>=20
+>> This is even worse.
+>> You've corrupted the ELF binary with extra garbage at the end.
+>> objdump/elfutils will choke on it and you're lucky that binfmt_elf
+>> still loads it.
+>> The whole approach is a non-starter.
+>
+> It's the same approach we use to create kernel modules: ELF with an
+> appended signature.  If you recall the kernel summit discussions about
+> it, the reason that was chosen for modules is because it's easy and the
+> ELF processor simply ignores any data in the file that's not described
+> by the header (which means the ELF tools you refer to above are fine
+> with this if you actually try them).
+>
+> But it you really want the signature to be part of the ELF,  then the
+> patch set can do what David Howells first suggested for modules: it can
+> simply put the appended signature into an unloaded ELF section.
+>
+>> > The program just got passed in to bpf_prog_load() as a set of
+>> > attributes which, for a light skeleton, directly contain the code
+>> > as a blob and have the various BTF relocations as a blob in a
+>> > single element array map.=C2=A0 I think everyone agrees that the
+>> > integrity of the program would be compromised by modifications to
+>> > the relocations, so the security_bpf_prog_load() hook can't make an
+>> > integrity determination without examining both.=C2=A0 If the hook can't
+>> > use the bpf_maps.. APIs directly is there some other API it should
+>> > be using to get the relocations, or are you saying that the
+>> > security_bpf_prog_load() hook isn't fit for purpose and it should
+>> > be called after the bpf core has loaded the relocations so they can
+>> > be provided to the hook as an argument?
+>>=20
+>> No. As I said twice already the only place to verify program
+>> signature is a bpf subsystem itself.
+>
+> The above argument is actually independent of signing.  However,
+> although we have plenty of subsystems that verify their own signatures,
+> it's perfectly valid for a LSM to do it as well: IMA is one of the
+> oldest LSMs and it's been verifying signatures over binaries and text
+> files since it was first created.
+>
+>> Hacking into bpf internals from LSM, BPF-LSM program,
+>> or any other kernel subsystem is a no go.
+>
+> All LSMs depend to some extent on the internals of the subsystem where
+> the hook is ... the very structures passed into them are often internal
+> to that subsystem.  The problem you didn't address was that some of the
+> information necessary to determine the integrity properties in the bpf
+> hook is in a map file descriptor.  Since the map merely wraps a single
+> blob of data, that could easily be passed in to the hook instead of
+> having the LSM extract it from the map.  How the hook gets the data is
+> an internal implementation detail of the kernel that can be updated
+> later.
+>
+>> > The above, by the way, is independent of signing, because it
+>> > applies to any determination that might be made in the
+>> > security_bpf_prog_load() hook regardless of purpose.
+>>=20
+>> security_bpf_prog_load() should not access bpf internals.
+>> That LSM hook sees the following:
+>> security_bpf_prog_load(struct bpf_prog *prog, union bpf_attr *attr,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct bpf_tok=
+en *token, bool kernel);
+>>=20
+>> LSM can look into uapi things there.
+>
+> Is that the misunderstanding? That's not how LSMs work: they are not
+> bound by only the UAPI, they are in kernel and have full access to the
+> kernel API so they can introspect stuff and make proper determinations.
+>
+>> Like prog->sleepable, prog->tag, prog->aux->name,
+>> but things like prog->aux->jit_data or prog->aux->used_maps
+>> are not ok to access.
+>> If in doubt, ask on the mailing list.
+>
+> I am aren't I? At least the bpf is one of the lists cc'd on this.
+>
+> Regards,
+>
+> James
 
-You can run `make htmldocs SPHINXDIRS=iio` to speed things up and only build
-the iio directory to make sure you have it right.
+I think we may be in the weeds here a bit and starting to get a little
+off-topic. Let's try to back up some and take a different tack. We are
+going to rework this effort into a set of patches that target the bpf
+subsystem and it's tooling directly, performing optional signature
+verification of the inputs to bpf_prog_load, using signature data
+passed in via bpf_attr, which should enough provide metadata so that it
+can be consumed by interested parties to enforce policy decisions around
+code signing and data integrity.
 
-More info: https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html
-
->  MAINTAINERS                  |  1 +
->  2 files changed, 96 insertions(+)
-> 
-> diff --git a/Documentation/iio/ad4052.rst b/Documentation/iio/ad4052.rst
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..410aaa437ed5fea6a2924d374fa5f816f5754e22
-> --- /dev/null
-> +++ b/Documentation/iio/ad4052.rst
-> @@ -0,0 +1,95 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +=============
-> +AD4052 driver
-> +=============
-> +
-> +ADC driver for Analog Devices Inc. AD4052 and similar devices.
-
-Please don't put newline after every period. Here and throughout the document.
-It makes it harder to read.
-
-> +The module name is ``ad4052``.
-> +
-> +Supported devices
-> +=================
-> +
-> +The following chips are supported by this driver:
-> +
-> +* `AD4050 <https://www.analog.com/AD4050>`_
-> +* `AD4052 <https://www.analog.com/AD4052>`_
-> +* `AD4056 <https://www.analog.com/AD4056>`_
-> +* `AD4058 <https://www.analog.com/AD4058>`_
-> +
-> +Wiring modes
-> +============
-> +
-> +The ADC uses SPI 4-wire mode, and contain two programmable GPIOs and
-> +a CNV pin.
-> +
-> +The CNV pin is exposed as the ``cnv-gpios`` and triggers a ADC conversion.
-> +GP1 is ADC conversion ready signal and GP0 Threshold event interrupt, both
-> +exposed as interrupts.
-> +
-> +Omit ``cnv-gpios`` and tie CNV and CS together to use the rising edge
-> +of the CS as the CNV signal.
-> +
-> +Device attributes
-> +=================
-> +
-> +The ADC contain only one channels, and the following attributes:
-> +
-> +.. list-table:: Driver attributes
-> +   :header-rows: 1
-> +
-> +   * - Attribute
-> +     - Description
-> +   * - ``in_voltage0_raw``
-> +     - Raw ADC voltage value
-
-No scale attribute? How do we convert raw to millivolts?
-
-> +   * - ``in_voltage0_oversampling_ratio``
-> +     - Enable the device's burst averaging mode to over sample using
-> +       the internal sample rate.
-> +   * - ``in_voltage0_oversampling_ratio_available``
-> +     - List of available oversampling values. Value 0 disable the burst
-> +       averaging mode.
-
-Typically 1 means no oversampling, not zero. (It is a ratio, divide by 1 is the
-same as doing nothing, but divide by 0 is undefined.)
-
-> +   * - ``conversion_frequency``
-
-Needs to be updated to ``oversampling_frequency``.
-
-> +     - Device internal sample rate used in the burst averaging mode.
-> +   * - ``conversion_frequency_available``
-> +     - List of available sample rates.
-> +
-> +Threshold events
-> +================
-> +
-> +The ADC supports a monitoring mode to raise threshold events.
-> +The driver supports a single interrupt for both rising and falling
-> +readings.
-> +
-> +The feature is enabled/disabled by setting ``thresh_either_en``.
-> +During monitor mode, the device continuously operates in autonomous mode until
-> +put back in configuration mode, due to this, the device returns busy until the
-> +feature is disabled.
-
-Probably worth mentioning the ``events/sampling_frequency`` and
-``sampling_frequency_available`` attributes since we've mentioned all of the
-other attributes.
-
-> +
-> +Low-power mode
-> +==============
-> +
-> +The device enters low-power mode on idle to save power.
-> +Enabling an event puts the device out of the low-power since the ADC
-> +autonomously samples to assert the event condition.
-> +
-> +SPI offload support
-> +===================
-> +
-> +To be able to achieve the maximum sample rate, the driver can be used with the
-> +`AXI SPI Engine`_ to provide SPI offload support.
-> +
-> +.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/index.html
-> +
-> +When SPI offload is being used, additional attributes are present:
-> +
-> +.. list-table:: Additional attributes
-> +   :header-rows: 1
-> +
-> +   * - Attribute
-> +     - Description
-> +   * - ``in_voltage0_sampling_frequency``
-> +     - Set the sampling frequency.
-> +   * - ``in_voltage0_sampling_frequency_available``
-> +     - Get the sampling frequency range.
-
-In the driver, this is currently info_mask_shared_by_type, so would be
-``in_voltage_sampling_frequency``. And there currently isn't 
-``in_voltage_sampling_frequency_available`` in the driver, so it needs to be
-added in the driver (or removed here).
-
-> +
-> +The scan type is different when the buffer with offload support is enabled.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 81fbe7176475c48eae03ab04115d4ef5b6299fac..04aa8db44bee418382a2e74cb6b1d03a810bd781 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1334,6 +1334,7 @@ M:	Jorge Marques <jorge.marques@analog.com>
->  S:	Supported
->  W:	https://ez.analog.com/linux-software-drivers
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
-> +F:	Documentation/iio/ad4052.rst
->  
->  ANALOG DEVICES INC AD4130 DRIVER
->  M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
-> 
-
+-blaise
