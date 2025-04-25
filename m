@@ -1,135 +1,124 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from outbound.pv.icloud.com (p-west1-cluster2-host10-snip4-2.eps.apple.com [57.103.64.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA4B12CD8B;
-	Fri, 25 Apr 2025 12:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D788C12CD8B
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585303; cv=none; b=J9hjAOT4Yg4NNCx18W1/tMC1ROlYPQ9cJl7AwmTDhqGXdJTApr9dyBv5Sg/IBkrvWeXU2LZ/0M6rY+tr6jbizZUWzE59IqxkRHvNkXL/dTsPE2h0Zs2Em7bS9nvj9K4WiqPzQxWaLRuln5iLy+W5KHBxnjfyY6C5WuRuRmDcyZ4=
+	t=1745585310; cv=none; b=QdRUd4+F9V1ZVlhJjCcUOiezq05VTsm/uwt2t1Zn6O51suaDdKpLkWL+c1RrtVR8JFl6icze0yPsrd0WYeIu2RzMdjHB0LcKz2E800rzE+Wyhv9OWND/ZgB6rKh4LAQCnKof9Z8S06Z5eauf7fQr1NZ6rnaeSM/8SHf7kczY9PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745585303; c=relaxed/simple;
-	bh=xzBjYAL+Cmoi5JamH+7OnbMsijJECpaV2Fpa2Q7B9rE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FvuNjWSTpv2YJvfCi5onETHwCgQFZhL28hHNvnIpUHj9dGVd1U49omYJH8uN2xzrz2S2gfDId9RN9XoeM0mOeTVQj1ISaipdt/I3Ir0Y5Q1TAZKzdARLSxq7S+4ZF5HQP67tXxxs+jx1pgCfA+sRO0bLmVNTEDP/lTV8oN4Uxak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xbgUOApZ; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745585310; c=relaxed/simple;
+	bh=ItpS2xzAPSqiTM6g+RYEGXCpDzJkoySyO6rgMQ7nBm4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TsIENo5d0aLglY40STtyChvRaxjH7koCqAcw4GDtk9Ujb69ZdT35UwZef70dQakLlDyrh9PjGWhYzCK5OfULfSqtixvTr5TXHkFNlPIkrbhP3sJu2PueKKymkg9fmQSJTMAu5U5MrT3IlZe2RmWiDacjVt7KYxaue9NNO9kE/E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=AYEPtaDk; arc=none smtp.client-ip=57.103.64.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xbgUOApZ"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PClq6t2936010
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 07:47:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745585272;
-	bh=j/Hj3c7jY39j+fuwEWeM6PzZhE4vdZHJduAlcVZNHWc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=xbgUOApZeNS+Twt91FD+Q0Si9gTyC2kHi3t3nUoIAz3B9AHn6CXcy420dXm3ShO7C
-	 7F5l6UkiZg+46msZ4y7J16BuqM1W/iYat2TId52JQ2OL8FsAlIhLa7U3sPLXN/bgSs
-	 1WFAse/xkjOgSKjHm+jXtDb1z5u/WpAJ6e+FHIMc=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PClqKx069718
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 07:47:52 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 07:47:52 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 07:47:52 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PClmD4042038;
-	Fri, 25 Apr 2025 07:47:49 -0500
-Message-ID: <865e0c92-296f-4fe4-971b-38ebfa90b8b5@ti.com>
-Date: Fri, 25 Apr 2025 18:17:48 +0530
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="AYEPtaDk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=W+hPrG8Sv+ny5hQpRcrUhB/yLitYHoz8WmN/Jhjb124=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=AYEPtaDkVr91tES583vF/Aokv2OvPGvIngv1rMPo6KBL8QQaQ8VLaJoXGn1QjRqNO
+	 mUvGJmEgGyBTWhJJDMDPo4JiFNKEVOY6zs8AH22yvNLwYy2eu4Ry8pytpLiBfFP+tU
+	 KhAxeyWEmU//QL37S2ELlbe3lF3xMQWC3go/LwTrFAy2RjWAmCbiXWpgkjbLxpPvYX
+	 ic5yJioMPilMMKTOfJwjHWGdL8jmoJqS/Xk1Wwbx8CnmEZNaRs/UuhgAammF0rsbRu
+	 Z8a5YjdWoVk5MMzDagNB/Wd+hlGZc/xCZf6BCK3dk77fDH+BIA//zngsi95kYHjbTT
+	 pmvYg6O9dqvLw==
+Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
+	by outbound.pv.icloud.com (Postfix) with ESMTPS id 0C19E1800872;
+	Fri, 25 Apr 2025 12:48:26 +0000 (UTC)
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 07AE21800869;
+	Fri, 25 Apr 2025 12:48:24 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Fri, 25 Apr 2025 20:48:10 +0800
+Subject: [PATCH v3] serdev: Refine several error or debug messages
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-common-proc-board-infotainment:
- Fix nodes for dtbs warnings
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>
-References: <20250424080328.57671-1-j-choudhary@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250424080328.57671-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Message-Id: <20250425-fix_serdev-v3-1-2e4ea8261640@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAImEC2gC/1WMQQ6CMBBFr0Jm7Zh2WkBdeQ9jTG2LzELQVhsN4
+ e4WEhNYvv/z3gDRB/YRDsUAwSeO3HcZ1KYA25ru5pFdZiBBpdBE2PDnkh3nE+6dmaa92MkrZOE
+ RfH7n2OmcueX46sN3bic5rf+MWmaSRIlUWaO0UI1T6vh8s+XObm1/hymUaCnrlUwo0Eiiyru61
+ qpcy+M4/gAjSGch4wAAAA==
+X-Change-ID: 20250422-fix_serdev-9da04229081b
+To: Rob Herring <robh@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-serial@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
 
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-On 4/24/2025 1:33 PM, Jayesh Choudhary wrote:
-> Fix hdmi-connector and tfp bridge node as per the bindings,
-> - remove 'digital' property which is required for DVI connector not HDMI
-> - Add 'ti,deskew' property which is a required property
-> - Fix ports property for tfp410 bridge
-> - Change node names appropriately
->
-> Redefine the ports for dss and for k3-j721e-common-proc-board.dts,
-> add reg property for the port (@0) to get rid of dtbs_warnings in
-> infotainment overlay when ports for dss are re-defined.
->
-> Fixes: 9c0fa304fa56 ("arm64: dts: ti: k3-j721e: Add overlay for J721E Infotainment Expansion Board")
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->   ...-j721e-common-proc-board-infotainment.dtso | 57 +++++++++++--------
->   .../dts/ti/k3-j721e-common-proc-board.dts     |  6 +-
->   2 files changed, 38 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-> index 65a7e54f0884..e4e5f941f20b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-> @@ -15,12 +15,11 @@
->   #include "k3-pinctrl.h"
->   
->   &{/} {
-> -	hdmi-connector {
-> +	connector-hdmi {
->   		compatible = "hdmi-connector";
->   		label = "hdmi";
->   		type = "a";
->   		ddc-i2c-bus = <&main_i2c1>;
-> -		digital;
->   		/* P12 - HDMI_HPD */
->   		hpd-gpios = <&exp6 10 GPIO_ACTIVE_HIGH>;
->   
-> @@ -31,28 +30,32 @@ hdmi_connector_in: endpoint {
->   		};
->   	};
->   
-> -	dvi-bridge {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> +	bridge-dvi {
->   		compatible = "ti,tfp410";
->   		/* P10 - HDMI_PDn */
->   		powerdown-gpios = <&exp6 8 GPIO_ACTIVE_LOW>;
-> +		ti,deskew = <0>;
->   
-> -		port@0 {
-> -			reg = <0>;
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
+Refine several dev_err() and dev_dbg() messages to solve:
 
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+// hardcoded device name
+dev_dbg(dev, "...dev_name_str...")
 
+// repeated device name since dev_dbg() also prints it as prefix
+dev_err(dev, "...%s...", dev_name(dev))
 
->   
-> -			tfp410_in: endpoint {
-> -				remote-endpoint = <&dpi_out0>;
-> -				pclk-sample = <1>;
-> [..]
+// not concise as dev_err(dev, "...%d...", err)
+dev_err(dev, "...%pe...", ERR_PTR(err))
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+For messages printed by dev_err() and dev_dbg(), this patch series is
+to remove hardcoded or repeated device name.
+---
+Changes in v3:
+- Squash both patches as Rob's comments
+- Simplify error code printing as Jiri's comments 
+- Link to v2: https://lore.kernel.org/r/20250424-fix_serdev-v2-0-a1226ed77435@quicinc.com
+
+Changes in v2:
+- Add one more patch to remove repeated device name pointed out by Greg
+- Link to v1: https://lore.kernel.org/r/20250423-fix_serdev-v1-1-26ca3403fd33@quicinc.com
+---
+ drivers/tty/serdev/core.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index eb2a2e58fe78fbbdb5839232936a994bda86d0b4..0213381fa35876f43f2f10f6c444160cde73a686 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -118,12 +118,11 @@ int serdev_device_add(struct serdev_device *serdev)
+ 
+ 	err = device_add(&serdev->dev);
+ 	if (err < 0) {
+-		dev_err(&serdev->dev, "Can't add %s, status %pe\n",
+-			dev_name(&serdev->dev), ERR_PTR(err));
++		dev_err(&serdev->dev, "Failed to add serdev: %d\n", err);
+ 		goto err_clear_serdev;
+ 	}
+ 
+-	dev_dbg(&serdev->dev, "device %s registered\n", dev_name(&serdev->dev));
++	dev_dbg(&serdev->dev, "serdev registered successfully\n");
+ 
+ 	return 0;
+ 
+@@ -783,8 +782,7 @@ int serdev_controller_add(struct serdev_controller *ctrl)
+ 		goto err_rpm_disable;
+ 	}
+ 
+-	dev_dbg(&ctrl->dev, "serdev%d registered: dev:%p\n",
+-		ctrl->nr, &ctrl->dev);
++	dev_dbg(&ctrl->dev, "serdev controller registered: dev:%p\n", &ctrl->dev);
+ 	return 0;
+ 
+ err_rpm_disable:
+
+---
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+change-id: 20250422-fix_serdev-9da04229081b
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
