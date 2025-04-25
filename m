@@ -1,155 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB94235C1E;
-	Fri, 25 Apr 2025 09:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2405221FC9
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572825; cv=none; b=lEGZirk6ULS3ahbrevliQ3fllVQ+fYwhwtcmqBr3HHsg0CHORtLF9CXuzj14tAZIQjlOUqX6Ia3s37KgLy/TeXCxhY/GtvBmM1PRDqwoe2Ev2VcMxaqFDf6jCRLk5W3RGc/vsAJM1Y6vnihN7yX8lp4Y3iTbWavXkinbWc37s5c=
+	t=1745572912; cv=none; b=mzlcWByAgJ6ZbbRbY1VqrzJmdrQ341JMRoLKPdBGRWG2FZ3g8Vr3O5Ni02laYUIushVdCfwAxjdDBbHzaIzjaWhkC8oM5FtgvTOKmaUuur9hYL0gZ8z61A49+jHvLjN2BpRsr1qYtcg4CWGsxH8XfOI3hXJl9AxNew8PTNwbkIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572825; c=relaxed/simple;
-	bh=H670AXytogW3BrNyI3zj2dCfgNBrgFaCF3Zvvd9T9Rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ML44JXnk9xI+rR0J+jLPtyK1NR+aErYLvYiDFh0QevYd6qHiVUPEqfZ3NWOgAxHmwg7ihJqxV2zv0xEK1z1AM9y53b11EyL+quJzUHLNjUPt6vMlhN5oXOYTHFQAmjMVlz6zd+wBi9e/udZVe27ORNeVHDyys7pU1o5KFoBjxV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gs9eIrkz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745572912; c=relaxed/simple;
+	bh=+Cc4XgcuRnFG3ImbtI2i0gsz68YEAnCa9wPNZnl32VQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XtOxx3JUbtnUUOLlwMY4LRUCETxSWjWcH0NsidDQvjqUwZ+GXPgrEv8JT280kqNAK2QdUMSlOIM91wrlJQnXUKK7EHmqlzstySE6KdOkJ/Nr45Xf2z2ssMnycWhwZBqwhm1t93A3nIFgluy7J9IZVOQz3WZZ5glNTGyId1LN5XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LaXMq+RT; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gs9eIrkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BD95C4CEEB;
-	Fri, 25 Apr 2025 09:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745572824;
-	bh=H670AXytogW3BrNyI3zj2dCfgNBrgFaCF3Zvvd9T9Rg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gs9eIrkz4k1iKTdXlkm8+x4io+XHkGrz39eiAB8zgKKW1IcN+/sEpBguKrN+pvYQS
-	 d6peSzBGxQP6nHQtrpzgzRIyIRbWPcGymtfMTHUyqob2mvPLTtHh9QUoemrHUYjUpD
-	 iD2B/AH4cSEcfcPCNvWOiHf+7FrTKNfArQI1QzfNk0v/aIW7st+PFsBFaKYwoT8fpv
-	 0uNOxuvMv632mVT77r25PlYvFsbkq2Vq0UzTRjn6MdlRfRhAv04PglUZoiWocs7IHF
-	 qLLMdgcmqFo+9jmIDHFHwPbY8/+Qx0fs384QESF6HANCf8XRLeCkWtqBjQj1RfThHF
-	 uAt0+XCj873oQ==
-Date: Fri, 25 Apr 2025 11:20:19 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: paul@paul-moore.com, omosnace@redhat.com, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list to always include
- security.* xattrs
-Message-ID: <20250425-einspannen-wertarbeit-3f0c939525dc@brauner>
-References: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LaXMq+RT"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so3118250a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745572909; x=1746177709; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ex7ttFFeolAsCiQiimZfezkN5TbzPUbUsFH3429aqKY=;
+        b=LaXMq+RTre51+C41fw0TjupVjQB99fe5H4CUP/5fwpXlMg+Nlq3UV+RxTk/k9f6mel
+         pkUnLL8MrBbE8CGlaHhIgApubipKUmIURhgEU/V2bfksoFgbud3E6FwZ4zk0Waq4TjzN
+         Jq4UqvBL0mWJYtadQR2ycny4ROgOUQTXzsaXEPbc5WPg52C02V2pmk5C6paqVLL5Z04O
+         eUsY1gKhiKGKrOB8NIUi5y4vhZ7/BeIk89STEKw9XGbg7hJPB2PPPrk0/+g+WGAa5FkM
+         q3ceHI6Wi17eJfqJ+9MT4RmPEJ4VpeOhLP4vG49bCHowIVAXZWWR9tOvSMt4NV1QYZrg
+         lTKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745572909; x=1746177709;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ex7ttFFeolAsCiQiimZfezkN5TbzPUbUsFH3429aqKY=;
+        b=W2rroY3gJ5iN16aXNqkoOB2S01XtpipoM7b4nZdoffTkVC9u4MRfcy5qCVRIrigz2Y
+         Xmv8pSMF00MIveJuFQ/AZzEa4uxKzFSbdq1wc65zumtQnKRe38KTIbbIh5GhpPmoELCk
+         79Ps1hcy96Sk2iHoa3fetF6ytfiXHSV4yqGZoQzLSn2fZUSdrNL6jC9qhdZMk0i1Lxhx
+         LGn4FEQBfY7Jq6cPHccNZr4XAsqksti/ctDTJQksPn+49acNv66u9YQXkuvAX/ScxSwT
+         rQFqS9g24sRIqXGKBqSpJXWdWSc2U3Hly5qy8ilPH7/GoEdwl8X2kopbtkMbtTP1srVk
+         7zcg==
+X-Forwarded-Encrypted: i=1; AJvYcCW24W9EufL/EvHlCGXY6olk0/o0rpo6NdfyLK3z1zFp07V/uDJVn9qWHysph3csCsfPcWHM6yNrpj1uMqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDb+OciBiyJfWKEIK1dRN5YhayaGYy/5Tz8Dq92OrHsQkzGkLD
+	mqG5jtTJChDtzPG2Aua+rmwyEuhbcAd7kwcDGocY+XwS5vgH0+AMx99XHQMX/80=
+X-Gm-Gg: ASbGncvgLJnERi8u0ESYpIUVeg21/fpJZwJYtaM8b6p+xsHmQMl2b3D4AcVsyIkNbK/
+	X7RuU1BwqmwWWZfzYkEcAzHM3KqjeqIc+NhmEAnh31JTDYmpuc8RI3heKIdxWntY2c0bBbfK6l+
+	AGwel/d8TOmnqL+kewri2uiQXg71ifvoP67M6pOPCb8CHtLXAkCC8ZJxFPglO0ppCBu7pvX3sjT
+	hYn6Gb3dOUr6SY7SgJO6f3801V+DgB7YuFQC1/gEFzVBnMkA5oIZor8IAA0J3kv7WCsfbFMNXbq
+	9X5rxF53n1x/81QwQjo5iMNqPfr6jb0CgS1j0K53yWm++rIKXA==
+X-Google-Smtp-Source: AGHT+IHN1tq8lZGPw+yObmv5OBFBiAlAdlprz4LzswEniu88fbB371A57pfYn5r7p7hN7qREYYhCSA==
+X-Received: by 2002:a17:907:9721:b0:aca:d5e9:9ce with SMTP id a640c23a62f3a-ace71047947mr108851466b.9.1745572908825;
+        Fri, 25 Apr 2025 02:21:48 -0700 (PDT)
+Received: from [192.168.0.14] ([82.76.212.167])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e726dsm105543966b.40.2025.04.25.02.21.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 02:21:48 -0700 (PDT)
+Message-ID: <8b222d93-927a-4685-a44c-bdd5d7b34c74@linaro.org>
+Date: Fri, 25 Apr 2025 10:21:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] firmware: exynos-acpm: Correct kerneldoc and use typical
+ np argument name
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
+ <alim.akhtar@samsung.com>, =?UTF-8?Q?Andr=C3=A9_Draszik?=
+ <andre.draszik@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: kernel test robot <lkp@intel.com>
+References: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 11:28:20AM -0400, Stephen Smalley wrote:
-> The vfs has long had a fallback to obtain the security.* xattrs from the
-> LSM when the filesystem does not implement its own listxattr, but
-> shmem/tmpfs and kernfs later gained their own xattr handlers to support
-> other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
 
-This change is from 2011. So no living soul has ever cared at all for
-at least 14 years. Surprising that this is an issue now.
 
-> filesystems like sysfs no longer return the synthetic security.* xattr
-> names via listxattr unless they are explicitly set by userspace or
-> initially set upon inode creation after policy load. coreutils has
-> recently switched from unconditionally invoking getxattr for security.*
-> for ls -Z via libselinux to only doing so if listxattr returns the xattr
-> name, breaking ls -Z of such inodes.
-
-So no xattrs have been set on a given inode and we lie to userspace by
-listing them anyway. Well ok then.
-
-> Before:
-> $ getfattr -m.* /run/initramfs
-> <no output>
-> $ getfattr -m.* /sys/kernel/fscaps
-> <no output>
-> $ setfattr -n user.foo /run/initramfs
-> $ getfattr -m.* /run/initramfs
-> user.foo
+On 4/24/25 9:33 PM, Krzysztof Kozlowski wrote:
+> Correct kerneldoc warnings after commit a8dc26a0ec43 ("firmware:
+> exynos-acpm: introduce devm_acpm_get_by_node()") changed the function
+> prototype:
 > 
-> After:
-> $ getfattr -m.* /run/initramfs
-> security.selinux
-> $ getfattr -m.* /sys/kernel/fscaps
-> security.selinux
-> $ setfattr -n user.foo /run/initramfs
-> $ getfattr -m.* /run/initramfs
-> security.selinux
-> user.foo
+>   exynos-acpm.c:672: warning: Function parameter or struct member 'acpm_np' not described in 'acpm_get_by_node'
+>   exynos-acpm.c:672: warning: expecting prototype for acpm_get_by_phandle(). Prototype was for acpm_get_by_node() instead
 > 
-> Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=iOawX4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
-> Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.smalley.work@gmail.com/
-> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> ---
->  fs/xattr.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> While touching the lines, change the name of device_node pointer to
+> 'np' to match convention.
 > 
-> diff --git a/fs/xattr.c b/fs/xattr.c
-> index 02bee149ad96..2fc314b27120 100644
-> --- a/fs/xattr.c
-> +++ b/fs/xattr.c
-> @@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
->  	return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_LEN);
->  }
->  
-> +static bool xattr_is_maclabel(const char *name)
-> +{
-> +	const char *suffix = name + XATTR_SECURITY_PREFIX_LEN;
-> +
-> +	return !strncmp(name, XATTR_SECURITY_PREFIX,
-> +			XATTR_SECURITY_PREFIX_LEN) &&
-> +		security_ismaclabel(suffix);
-> +}
-> +
->  /**
->   * simple_xattr_list - list all xattr objects
->   * @inode: inode from which to get the xattrs
-> @@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
->  	if (err)
->  		return err;
->  
-> +	err = security_inode_listsecurity(inode, buffer, remaining_size);
+> Fixes: a8dc26a0ec43 ("firmware: exynos-acpm: introduce devm_acpm_get_by_node()")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504222051.7TqaSQ48-lkp@intel.com/
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Is that supposed to work with multiple LSMs?
-Afaict, bpf is always active and has a hook for this.
-So the LSMs trample over each other filling the buffer?
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (buffer) {
-> +		if (remaining_size < err)
-> +			return -ERANGE;
-> +		buffer += err;
-> +	}
-> +	remaining_size -= err;
-
-Really unpleasant code duplication in here. We have xattr_list_one() for
-that. security_inode_listxattr() should probably receive a pointer to
-&remaining_size?
-
-> +
->  	read_lock(&xattrs->lock);
->  	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
->  		xattr = rb_entry(rbp, struct simple_xattr, rb_node);
-> @@ -1468,6 +1488,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
->  		if (!trusted && xattr_is_trusted(xattr->name))
->  			continue;
->  
-> +		/* skip MAC labels; these are provided by LSM above */
-> +		if (xattr_is_maclabel(xattr->name))
-> +			continue;
-> +
->  		err = xattr_list_one(&buffer, &remaining_size, xattr->name);
->  		if (err)
->  			break;
-> -- 
-> 2.49.0
-> 
+thanks!
