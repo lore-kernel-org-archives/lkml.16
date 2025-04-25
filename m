@@ -1,318 +1,242 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C21723237C
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3481EA7CA
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575416; cv=none; b=eP95hW5QZCdBraAbwe2C6lzemwCz4jiKrtSZXOI62ayNLvDcL/JOBRlDK6WeTfdwF65cQP6lBPybunoK2uCDgBrE2es6QZaFfD2NCOTabf/V/23DKnyg2ROgqCxgDVfCN8fCrbWR4oBd+MCq+cEgOafx6SGTQO69gyUZf31xqSk=
+	t=1745575438; cv=none; b=FaxkXy3DLFMBRUBlmFlj3CQqiYK9PuPZYfNgd1DESSr3Yuv8n/CrLF3c1FY4u6+QJPEvlVoeoupJwiGWqEMFD/+QR+iTUGSgn1n1fO9igoMbZ6+ICq6n6YsMXZ+I0gBwlNKMKYGUal0wCBKi1FYp5aYzKigFFrspXBtNvBI8WEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575416; c=relaxed/simple;
-	bh=o/nSLVWz806VTnHD8gtVGrUdwMUgypfm/pnz5QKNUMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HvVmrJZ0cGyHwf1Y41TfzuH3QmrP0ZPjlnBKgcpuug7+dwwR1FZJfPH0bnCdlUMgcUU6Mu2HYjf6WndEjrOXa/knuT9IwYKqIHqRMlTBR5n8ISZKxXHMp0rwqlhtpiQaLahwNfLTgigCsmv6LE/uQB5yjloieNSd/SQ3WW+jbEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f6SWq6TU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745575438; c=relaxed/simple;
+	bh=V85Lh/RAji9ar+Y+fOgWNG8zxLuq01/h9bKkCgnTLuU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=k3MGr14ZNjWXQ+8MaZ//Thslac0kqa4tZdv8HQEt8rud7PpcKU4O4nJIYiHYN8/bwr5XvXAteMdu1NrWCTWmANSO5TonzFXRTbxUKG3T7kwUnoLjXMqoyIvCixvkkxtg7j1wTNFlLxdT5Al8yl1Zy7paF4F1W6BFVo91wwY98Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bCeRm97x; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f6SWq6TU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745575413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/pdAv3L1vajERKgxSPxyO88qfXI0bDg1bbg1iV/Cff8=;
-	b=f6SWq6TUTFNmOXYuveRc3vCnju3ueCsU5cX8gqyJZTOrqP1x8YakEa1uS+XErb0mDjQ6V3
-	2uvP5hfjcF8lkE5G9VVVxYgdar/L2Jn3fdhM1yu+rB+pJ4JjzNapNz0IygWkMvhHS6EG9T
-	TOHL6Ay8TTCODr7OSxbxYV3JcV4hdrs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589--JGZrC7NNNGzd512hN0n7g-1; Fri, 25 Apr 2025 06:03:32 -0400
-X-MC-Unique: -JGZrC7NNNGzd512hN0n7g-1
-X-Mimecast-MFC-AGG-ID: -JGZrC7NNNGzd512hN0n7g_1745575411
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39d8e5ca9c2so1196297f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:03:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCeRm97x"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5e5c808e777so2397198a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745575434; x=1746180234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
+        b=bCeRm97x8y+5K1KxqWUHmnCm7DX70KPMbfupJ+3sp1DmMF9/NEGXWIIwMjt5ZoBDHB
+         Meb+n+ZYnDNPYA9fGmbfbsHPBizlqB5j0Y8Tu4MZLLVNm4NoAkTvxw7N0HAZM2kQe3Sn
+         vI+0fS3thHdEpjAom2BGpYcCo5Bl1RZM8QxItySsVy1f8YtZ/ubPkslj3/4hFlyRU4rQ
+         Zcl58T0UgnJ9EISXiD38znfk9olyAUHsh9rDrwkxo05AbyxzLCpxgk1Jkgo6HyPF8GR9
+         XicxHvcSDS3PultE5bfYsif5xSigoSx/WD9X/OyimQgboKxt8KK54aPXRyygtgtNCShZ
+         LUiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575411; x=1746180211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/pdAv3L1vajERKgxSPxyO88qfXI0bDg1bbg1iV/Cff8=;
-        b=TU8djbDa9dgnZsg1nM/pyQ4I/ype/5WO54DbN11p0YJ//QJJYzamVDatZE174v6uSp
-         hbAlHFe5IlXYn3tZ4FSDF+qeAxeCFpIgfuRgQJ545XpjLCU2Nho4t6PHrkT7KM9/tFwe
-         fUbl9xNlA2nl5BFykmLdxKrITOShn4h+gTskqLLQa8UzMGN+U7H6Euw+a5bEI0gipVlY
-         tRyHPGq9VL3Cdtu8m3Lh+mNNgb+aEpHaXiTjVa24xA/pyLX3x4wJrHhZAiJDGUZMJ7wE
-         ccLKHNWEi+FJUbFMUSed+kIP0zcijof8A9t2JryzrnXIPinIxOhOYTf1FBrSrdFDp5yI
-         eFEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9DD7kd+rXx47aoYszrzdkmrLPyIq3FsPbVDPsNgwucrBH80hJM2J0knffs7O0rwbCbCz3o3uH6Qn70lE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7WeDonIhRZd5VQ28o6UAOzxirawBvkbG8J9FcZc8BaTk+Fspd
-	pzVUfH7LmnGAIEoD3zQByj87CxE98sD7IsbYQ2kd+Zn8rpXKQnThR8K/X1zJe2K7O0gNxjK6pu8
-	Im6Q8t3KEor1ofmQfJ2Nca+FY5f3FRduUqZPQcGalvMHhAmJQ/9hZAY9eH87B3EYL4d+S8di70s
-	Oj5heQd2V5YVP4z0tLpWb7R8WzyF9Pw6BUV8rz
-X-Gm-Gg: ASbGnctHYKeY8Vxi9wxQ/H6E1ub2yIheqGyEit1mR3mEqR1d42W60rOhSb0Bcn+QPD7
-	FcL2EhwCNfLXdPoischKZg9e02T6jMopPruAN5dW/VI+Xp+3ndAefBIkgxu0eH8BJK5Q=
-X-Received: by 2002:a05:6000:40cd:b0:39c:1257:cd3f with SMTP id ffacd0b85a97d-3a074fafc33mr1187389f8f.57.1745575410956;
-        Fri, 25 Apr 2025 03:03:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhvPrUk8HaqVlny6U2TcGIeGC3vNg2/8Nd1SlrTxEwzCGtEum+5nJ8qw6AJbvzVU3WUz1E5bSUYJ0Yi6UnZY4=
-X-Received: by 2002:a05:6000:40cd:b0:39c:1257:cd3f with SMTP id
- ffacd0b85a97d-3a074fafc33mr1187332f8f.57.1745575410491; Fri, 25 Apr 2025
- 03:03:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745575434; x=1746180234;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
+        b=im6vswevTR3WZukrfJ/27XDsGWfLSWJq7S/Hq3AIor+jA5sZ2ErbhRJw9ou+LyjKAg
+         iANckCjitUpdllsBPl+bRVHh29ERbUheB3lor9/l53tIucbaUAasnXNtvg9frxw529vQ
+         u7LY7kgF5CjmOuo/aar6dtkkvP+uzpcm8FNOZBiruS12XUqEZImm42PS4eilCHrl9jBx
+         OA2bSXNvI1UbRqzQmaLcnZ0h6GkPM1smpNMjFcFyKjIMEshX/vNGxKZOvdy97b9ZaTNh
+         Cyd/pK+eFrt8SPhNn3eAzzhskx3adUhxOAL03n0a2P3dtU1tbPzq+XfXsH+oPazIL0mQ
+         0+Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXTViBcagJ5x0TgfcVPaeP3sZHhQHglE1xBfM+Fq3dJrK25UFIcXZhnvCIfuCXMrMh9r32flmBCRLRJI5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8DGQCUnsklNTHpLKgl1vp9I3kUpRyie4Pw0aWy0ltvA2n8xiD
+	i0M5O4iJXgQq9sMN8HP6QGVEnGbI8bHk6FSSMMJMNYx1+BGmwqN+AqdsTlXXF3/XJcUmdW/M8Uy
+	Cbw==
+X-Google-Smtp-Source: AGHT+IHG5TA+QmbLDKkJMCAyUg3PjwW2vK849Wb9XZvQnRm50YUN7ROfE0bAGC+b4L9PnTOmviRtp5MKGwk=
+X-Received: from edr2.prod.google.com ([2002:a05:6402:44c2:b0:5ec:a0fe:757a])
+ (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:27d3:b0:5f6:59e5:5c8a
+ with SMTP id 4fb4d7f45d1cf-5f722671d91mr1323489a12.5.1745575434691; Fri, 25
+ Apr 2025 03:03:54 -0700 (PDT)
+Date: Fri, 25 Apr 2025 10:03:52 +0000
+In-Reply-To: <20250421000854.work.572-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
- <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de> <aApGPAoctq_eoE2g@t14ultra>
- <20250424173908-ffca1ea2-e292-4df3-9391-24bfdaab33e7@linutronix.de>
- <CAASaF6xsMOWkhPrzKQWNz5SXaROSpxzFVBz+MOA-MNiEBty7gQ@mail.gmail.com> <20250425104552-07539a73-8f56-44d2-97a2-e224c567a2fc@linutronix.de>
-In-Reply-To: <20250425104552-07539a73-8f56-44d2-97a2-e224c567a2fc@linutronix.de>
-From: Jan Stancek <jstancek@redhat.com>
-Date: Fri, 25 Apr 2025 12:03:14 +0200
-X-Gm-Features: ATxdqUHUJyFDwXWlLrx8Ahqii0-Ktlj3kT6KX6YhOgPcoK-aAeGj4gOn-pX1-9g
-Message-ID: <CAASaF6yxThX3HTHgY_AGqNr7LJ-erdG09WV5-HyfN1fYN9pStQ@mail.gmail.com>
-Subject: Re: [PATCH 08/19] vdso/gettimeofday: Prepare do_hres_timens() for
- introduction of struct vdso_clock
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, 
-	Nam Cao <namcao@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250421000854.work.572-kees@kernel.org>
+Message-ID: <aAtd9UvrHWBy454j@google.com>
+Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
+ initializer support
+From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
+To: Kees Cook <kees@kernel.org>
+Cc: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>, "Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
+	WangYuli <wangyuli@uniontech.com>, Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 10:58=E2=80=AFAM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Thu, Apr 24, 2025 at 11:57:02PM +0200, Jan Stancek wrote:
-> > On Thu, Apr 24, 2025 at 5:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
-> > <thomas.weissschuh@linutronix.de> wrote:
-> > >
-> > > On Thu, Apr 24, 2025 at 04:10:04PM +0200, Jan Stancek wrote:
-> > > > On Mon, Mar 03, 2025 at 12:11:10PM +0100, Thomas Wei=C3=9Fschuh wro=
-te:
-> > > > > From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> > > > >
-> > > > > To support multiple PTP clocks, the VDSO data structure needs to =
-be
-> > > > > reworked. All clock specific data will end up in struct vdso_cloc=
-k and in
-> > > > > struct vdso_time_data there will be array of it. By now, vdso_clo=
-ck is
-> > > > > simply a define which maps vdso_clock to vdso_time_data.
-> > > > >
-> > > > > Prepare for the rework of these structures by adding struct vdso_=
-clock
-> > > > > pointer argument to do_hres_timens(), and replace the struct vdso=
-_time_data
-> > > > > pointer with the new pointer arugment whenever applicable.
-> > > > >
-> > > > > No functional change.
-> > > > >
-> > > > > Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> > > > > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > > > > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutroni=
-x.de>
-> > > > > ---
-> > > > > lib/vdso/gettimeofday.c | 35 ++++++++++++++++++-----------------
-> > > > > 1 file changed, 18 insertions(+), 17 deletions(-)
-> > > > >
-> > > >
-> > > > starting with this patch, I'm seeing user-space crashes when using =
-clock_gettime():
-> > > >   BAD  -> 83a2a6b8cfc5 vdso/gettimeofday: Prepare do_hres_timens() =
-for introduction of struct vdso_clock
-> > > >   GOOD -> 64c3613ce31a vdso/gettimeofday: Prepare do_hres() for int=
-roduction of struct vdso_clock
-> > > >
-> > > > It appears to be unique to aarch64 with 64k pages, and can be repro=
-duced with
-> > > > LTP clock_gettime03 [1]:
-> > > >   command: clock_gettime03   tst_kconfig.c:88: TINFO: Parsing kerne=
-l config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch=
-64+64k/build/.config'
-> > > >   tst_test.c:1903: TINFO: LTP version: 20250130-231-gd02c2aea3
-> > > >   tst_test.c:1907: TINFO: Tested kernel: 6.15.0-0.rc3.20250423gitbc=
-3372351d0c.30.eln147.aarch64+64k #1 SMP PREEMPT_DYNAMIC Wed Apr 23 23:23:54=
- UTC 2025 aarch64
-> > > >   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15=
-.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
-> > > >   tst_test.c:1720: TINFO: Overall timeout per run is 0h 05m 24s
-> > > >   clock_gettime03.c:121: TINFO: Testing variant: vDSO or syscall wi=
-th libc spec
-> > > >   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct =
-10000ms
-> > > >   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct =
-0ms
-> > > >   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct 1=
-0000ms
-> > > >   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0=
-ms
-> > > >   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct =
--10000ms
-> > > >   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct =
-0ms
-> > > >   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct -=
-10000ms
-> > > >   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0=
-ms
-> > > >   tst_test.c:438: TBROK: Child (233649) killed by signal SIGSEGV
-> > > >
-> > > > or with:
-> > > > --------------------- 8< ----------------------
-> > > > #define _GNU_SOURCE
-> > > > #include <sched.h>
-> > > > #include <time.h>
-> > > > #include <unistd.h>                                                =
-                                                                           =
-                                                                           =
-                    #include <sys/wait.h>
-> > > >
-> > > > int main(void)
-> > > > {
-> > > >         struct timespec tp;
-> > > >         pid_t child;
-> > > >         int status;
-> > > >
-> > > >         unshare(CLONE_NEWTIME);
-> > > >
-> > > >         child =3D fork();
-> > > >         if (child =3D=3D 0) {
-> > > >                 clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
-> > > >         }
-> > > >
-> > > >         wait(&status);
-> > > >         return status;
-> > > > }
-> > > >
-> > > > # ./a.out ; echo $?
-> > > > 139
-> > > > --------------------- >8 ----------------------
-> > > >
-> > > > RPMs and configs can be found at Fedora koji, latest build is at [2=
-] (look for kernel-64k).
-> > >
-> > > Hi Jan,
-> > >
-> > > Thanks for the great error report.
-> > >
-> > > Can you try the following change (on top of v6.15-rc1, should also wo=
-rk with current master)?
-> > >
-> > > diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-> > > index 93ef801a97ef..867ce53cca94 100644
-> > > --- a/lib/vdso/gettimeofday.c
-> > > +++ b/lib/vdso/gettimeofday.c
-> > > @@ -85,14 +85,18 @@ static __always_inline
-> > >  int do_hres_timens(const struct vdso_time_data *vdns, const struct v=
-dso_clock *vcns,
-> > >                    clockid_t clk, struct __kernel_timespec *ts)
-> > >  {
-> > > -       const struct vdso_time_data *vd =3D __arch_get_vdso_u_timens_=
-data(vdns);
-> > >         const struct timens_offset *offs =3D &vcns->offset[clk];
-> > > -       const struct vdso_clock *vc =3D vd->clock_data;
-> > > +       const struct vdso_time_data *vd;
-> > > +       const struct vdso_clock *vc;
-> > >         const struct vdso_timestamp *vdso_ts;
-> > >         u64 cycles, ns;
-> > >         u32 seq;
-> > >         s64 sec;
-> > >
-> > > +       vd =3D vdns - (clk =3D=3D CLOCK_MONOTONIC_RAW ? CS_RAW : CS_H=
-RES_COARSE);
-> > > +       vd =3D __arch_get_vdso_u_timens_data(vd);
-> > > +       vc =3D vd->clock_data;
-> > > +
-> > >         if (clk !=3D CLOCK_MONOTONIC_RAW)
-> > >                 vc =3D &vc[CS_HRES_COARSE];
-> > >         else
-> > >
-> > >
-> > > I'll do some proper testing tomorrow.
-> >
-> > That does seem to work for the 2 reproducers I have.
->
-> Thanks for testing.
->
-> > But why is this change needed?
->
-> So far the only thing that I can say is that this logic was there before =
-the
-> patch and was removed accidentally, so it should be restored.
-> Why the logic was there in the first place I'll have to investigate.
+Hello Kees!
 
-I think it paired with "vd advancing" based on "clock" in original code:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib=
-/vdso/gettimeofday.c?h=3Dv6.14#n264
-and to get back to "base", you needed to subtract same value:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib=
-/vdso/gettimeofday.c?h=3Dv6.14#n82
+On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
+> Unnamed static initializers aren't supported by the randstruct GCC
+> plugin. Quoting the plugin, "set up a bogus anonymous struct field
+> designed to error out on unnamed struct initializers as gcc provides
+> no other way to detect such code". That is exactly what happens
+> with the landlock code, so adjust the static initializers for structs
+> lsm_ioctlop_audit and landlock_request that contain a randomized structur=
+e
+> (struct path) to use named variables, which avoids the intentional
+> GCC crashes:
+>=20
+> security/landlock/fs.c: In function 'hook_file_ioctl_common':
+> security/landlock/fs.c:1745:61: internal compiler error: in count_type_el=
+ements, at expr.cc:7092
+>  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
+>       |                                                             ^
+>=20
+> security/landlock/fs.c: In function 'log_fs_change_topology_path':
+> security/landlock/fs.c:1379:65: internal compiler error: in count_type_el=
+ements, at expr.cc:7092
+>  1379 |         landlock_log_denial(subject, &(struct landlock_request) {
+>       |                                                                 ^
+>=20
+> We went 8 years before tripping over this! With this patch landed,
+> we can enable COMPILE_TEST builds with the randstruct GCC plugin again.
 
-After this series, "vd" isn't manipulated this way, so the removal of
-that subtraction seemed deliberate to me.
+I am still struggling to understand the boundaries of what the randstruct p=
+lugin
+supports and what it fails on.  Could you please clarify?  (Specific questi=
+ons
+below.)
 
->
-> > Isn't 'vdns' here equal to 'vdso_u_time_data'?
->
-> That is true, but in a time namespace the namespaced time structure is ma=
-pped
-> in place of the normal structure and vice-versa.
-> So __arch_get_vdso_u_timens_data() will get the "real" time datastructure=
- based
-> on a namespaced one.
->
-> I can't explain the special logic for CLOCK_MONOTONIC_RAW yet.
-> To me it looks wrong to calculate on a 'struct vdso_time_data *' in terms=
- of
-> CS_RAW/CS_HRES_COARSE.
->
->
-> Another change that "fixes" the crash for me is:
->
-> diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-> index 93ef801a97ef..cdc3988a0ace 100644
-> --- a/lib/vdso/gettimeofday.c
-> +++ b/lib/vdso/gettimeofday.c
-> @@ -93,6 +118,8 @@ int do_hres_timens(const struct vdso_time_data *vdns, =
-const struct vdso_clock *v
->         u32 seq;
->         s64 sec;
->
-> +       OPTIMIZER_HIDE_VAR(vc);
+
+> Reported-by: "Dr. David Alan Gilbert" <linux@treblig.org>
+> Closes: https://lore.kernel.org/lkml/Z_PRaKx7q70MKgCA@gallifrey/
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/lkml/20250407-kbuild-disable-gcc-plugins-=
+v1-1-5d46ae583f5e@kernel.org/
+> Reported-by: WangYuli <wangyuli@uniontech.com>
+> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-=
+93a4-7809355f1381@uniontech.com/
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: "Micka=C3=ABl Sala=C3=BCn" <mic@digikod.net>
+> Cc: "G=C3=BCnther Noack" <gnoack@google.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: <linux-security-module@vger.kernel.org>
+> ---
+>  security/landlock/fs.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+> index 6fee7c20f64d..b2818afb0503 100644
+> --- a/security/landlock/fs.c
+> +++ b/security/landlock/fs.c
+> @@ -1376,14 +1376,14 @@ static void
+>  log_fs_change_topology_path(const struct landlock_cred_security *const s=
+ubject,
+>  			    size_t handle_layer, const struct path *const path)
+>  {
+> -	landlock_log_denial(subject, &(struct landlock_request) {
+> +	struct landlock_request request =3D {
+>  		.type =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
+> -		.audit =3D {
+> -			.type =3D LSM_AUDIT_DATA_PATH,
+> -			.u.path =3D *path,
+> -		},
+> +		.audit.type =3D LSM_AUDIT_DATA_PATH,
+>  		.layer_plus_one =3D handle_layer + 1,
+> -	});
+> +	};
+> +	request.audit.u.path =3D *path;
 > +
->         if (clk !=3D CLOCK_MONOTONIC_RAW)
->                 vc =3D &vc[CS_HRES_COARSE];
->         else
->
->
-> This is obviously not an actual fix but indicates that something weird is=
- going on.
-> Could you run this second change also through LTP to see if it would pass=
-?
+> +	landlock_log_denial(subject, &request);
+>  }
 
-Agreed, this does "fixes" it for me as well.
+If I understood the commit message correctly, we are giving a name ("reques=
+t")
+to the struct landlock_request here, because the randstruct plugin needs th=
+at if
+the constructed struct (recursively?) contains a randstruct-enabled member,=
+ like
+.audit.u.path in this case?
 
->
->
-> Thomas
->
-> > > > [1] https://github.com/linux-test-project/ltp/blob/master/testcases=
-/kernel/syscalls/clock_gettime/clock_gettime03.c
-> > > > [2] https://koji.fedoraproject.org/koji/buildinfo?buildID=3D2704401
-> > >
->
+I am surprised that you pulled the assignment to "request.audit.u.path" out=
+ of
+the struct initialization expression though.  Was that also necessary for
+randstruct to work?
 
+Would it have worked to initialize it inline instead, like this?
+
+	struct landlock_request request =3D {
+		.type           =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
+		.audit.type     =3D LSM_AUDIT_DATA_PATH,
+    .audit.u.path   =3D *path,
+		.layer_plus_one =3D handle_layer + 1,
+	};
+
+
+> =20
+>  static void log_fs_change_topology_dentry(
+> @@ -1720,6 +1720,7 @@ static int hook_file_truncate(struct file *const fi=
+le)
+>  static int hook_file_ioctl_common(const struct file *const file,
+>  				  const unsigned int cmd, const bool is_compat)
+>  {
+> +	struct lsm_ioctlop_audit audit_log;
+>  	access_mask_t allowed_access =3D landlock_file(file)->allowed_access;
+> =20
+>  	/*
+> @@ -1738,14 +1739,13 @@ static int hook_file_ioctl_common(const struct fi=
+le *const file,
+>  				  is_masked_device_ioctl(cmd))
+>  		return 0;
+> =20
+> +	audit_log.path =3D file->f_path;
+> +	audit_log.cmd =3D cmd;
+
+Same question here, I guess. This could not have been written like this?
+
+  struct lsm_ioctlop_audit audit_log =3D {
+    .path =3D file->f_path,
+    .cmd  =3D cmd,
+  };
+
+
+>  	landlock_log_denial(landlock_cred(file->f_cred), &(struct landlock_requ=
+est) {
+>  		.type =3D LANDLOCK_REQUEST_FS_ACCESS,
+>  		.audit =3D {
+>  			.type =3D LSM_AUDIT_DATA_IOCTL_OP,
+> -			.u.op =3D &(struct lsm_ioctlop_audit) {
+> -				.path =3D file->f_path,
+> -				.cmd =3D cmd,
+> -			},
+> +			.u.op =3D &audit_log,
+>  		},
+>  		.all_existing_optional_access =3D _LANDLOCK_ACCESS_FS_OPTIONAL,
+>  		.access =3D LANDLOCK_ACCESS_FS_IOCTL_DEV,
+> --=20
+> 2.34.1
+>=20
+
+That being said, the code transformation in this patch is obviously correct=
+, and
+it's good to fix the build, so looks good:
+
+Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
+
+But as Micka=C3=ABl also said, it seems worrying that otherwise correct C c=
+ode does
+not compile with that plugin, especially when the conditions under which th=
+at
+happens are not clear.
+
+I would also like to understand this better, so that we can avoid tripping =
+over
+it in the future.
+
+Thanks!
+-G=C3=BCnther
