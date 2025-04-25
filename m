@@ -1,283 +1,73 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8658238C03
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D4D234973;
+	Fri, 25 Apr 2025 08:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569708; cv=none; b=GtsPhgA2iwmcbZPEjljbF3H4C4Q86OOoweqENcsoSptYBMpj56Q/wHJbwMdWdlmrPU+Zea5WCVSCe8jJO0MRg+VkdR0dyTigTIAt1D15zdUEvNO7bmsuR9oAJFj9ohUJPecvycHQ0AlrWHT3Pu0A+E6Q+SKUXNuth67MDohKyPM=
+	t=1745569741; cv=none; b=AGIfml8Cn1YowhmBkykFAkPxocsTumYMJjIYJdrnRxPMMY5LfT2zLAD1Y8mxVUd/W4K/AKG8AsvAy17aPwF9F8ayFbqYwMiyWpObT5jF/PrOYCOT/pVLpFLmnN2DPTnK9msHXnQAbwpT+YMk1jcOC3OuH/b57xQna8JoqjsFh9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569708; c=relaxed/simple;
-	bh=CFT5sLZplZPnoFKRoiZCQN61gOSCwNH0HyHcv6utaK4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SqrNnGxNReoRx7Qmj067qBZ9tt1JE/HdCHo905DqPeaBfFguA1B+MGO1y7TSyvFcPUxesPbEyEN7Buhn67UZRuYL3yhGEOVLKpqL4/KvCIAVHwkZs0sUzz7NHVuWa1gmg+nlrSl7oImqcs4A6hJwttwvvO4VTSUzDnB8UoXRrxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=J9in7zht; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3P9t9Ylj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=J9in7zht; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3P9t9Ylj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745569741; c=relaxed/simple;
+	bh=O4b1xWP/GfPjb1ZRf2z/mJJ+vtNfeAVj/F1pySGlzHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h/IGSN0eb66pb6Ro49FLgxIgfY9Js1PnxuvT2Jik7/Z2ZsSmaadCbqNds6aRJh9CF2tqXgy11GzXsrpJRuPuJWUP/LAW3g17ggw1ijLnQU5AFoGqgzEWKn8VPlW7hCJjsPWmRgSg8YW+uE1tohVh8B3WuH5TAm5NVDO5AxBzpTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kj6741zs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="J9in7zht";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3P9t9Ylj";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="J9in7zht";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3P9t9Ylj"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 31C772116A;
-	Fri, 25 Apr 2025 08:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745569673; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXIAVW5P7xnw20jvyagFOsbrexlNJWpF8IUNGguSNtM=;
-	b=J9in7zhtj8kdPXCsxYEPyUmiQUQ1u/xxsf9P8gZZo/PnRMNWSgDna9jVxDOX3194v9q+WL
-	2g3Xg399NZ+zsbpOcyiaYVKJvohSf93y2EAurergduUVSkDXKdn5Eg1WsSnuQhhYGqc3dD
-	GRQJXiRs3TgQmvLys/vR7fw2TuNPtgc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745569673;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXIAVW5P7xnw20jvyagFOsbrexlNJWpF8IUNGguSNtM=;
-	b=3P9t9Ylj/2PckfT0Pw1u6kTw21hmRLZi7KAFc68ct++rlqWruIyUUqefIOfaEIw5eXZYYm
-	j6hoNAI9p9w1F4Bw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745569673; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXIAVW5P7xnw20jvyagFOsbrexlNJWpF8IUNGguSNtM=;
-	b=J9in7zhtj8kdPXCsxYEPyUmiQUQ1u/xxsf9P8gZZo/PnRMNWSgDna9jVxDOX3194v9q+WL
-	2g3Xg399NZ+zsbpOcyiaYVKJvohSf93y2EAurergduUVSkDXKdn5Eg1WsSnuQhhYGqc3dD
-	GRQJXiRs3TgQmvLys/vR7fw2TuNPtgc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745569673;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXIAVW5P7xnw20jvyagFOsbrexlNJWpF8IUNGguSNtM=;
-	b=3P9t9Ylj/2PckfT0Pw1u6kTw21hmRLZi7KAFc68ct++rlqWruIyUUqefIOfaEIw5eXZYYm
-	j6hoNAI9p9w1F4Bw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 191FF13A80;
-	Fri, 25 Apr 2025 08:27:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0B/YBYlHC2htfwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 25 Apr 2025 08:27:53 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Fri, 25 Apr 2025 10:27:26 +0200
-Subject: [PATCH v4 6/9] tools: Add sheaves support to testing
- infrastructure
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kj6741zs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E42C0C4CEE4;
+	Fri, 25 Apr 2025 08:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745569740;
+	bh=O4b1xWP/GfPjb1ZRf2z/mJJ+vtNfeAVj/F1pySGlzHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kj6741zsVpQLYXe4Xga7ID/tDTwLRIkdP//qBZqvjE+0BCdOedX/iWC1bFrtWZP96
+	 lZECokd7idgVOyN7dMefQE8Q43SINOco4M60pl+u5/Fyd3vYZb9Ad9/Add3CJkatVW
+	 UaK/OYJTPbcuWUtXJbZ+q0GXDmPro+hDCx82lebI=
+Date: Fri, 25 Apr 2025 10:28:57 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Zongmin Zhou <min_halo@163.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>, i@zenithal.me,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	shuah@kernel.org, valentina.manea.m@gmail.com,
+	Zongmin Zhou <zhouzongmin@kylinos.cn>
+Subject: Re: [PATCH] usbip: set the dma mask to 64bit default for vhci-driver
+Message-ID: <2025042512-corsage-handpick-bf2a@gregkh>
+References: <3e1f8fab-0155-4ff9-800d-5fa9df88c48c@linuxfoundation.org>
+ <20250422063409.607859-1-min_halo@163.com>
+ <aAdEM0crDfSP9JYf@infradead.org>
+ <4c6660a6-29ce-4b97-b092-8fc15585e52a@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-slub-percpu-caches-v4-6-8a636982b4a4@suse.cz>
-References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
-In-Reply-To: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
-To: Suren Baghdasaryan <surenb@google.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, 
- Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, 
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
- maple-tree@lists.infradead.org, vbabka@suse.cz, 
- "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-X-Mailer: b4 0.14.2
-X-Spam-Score: -8.30
-X-Spamd-Result: default: False [-8.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.dev,oracle.com,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org,suse.cz,Oracle.com];
-	R_RATELIMIT(0.00)[to_ip_from(RLsunix6otu811wnbhxcn9byqb)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c6660a6-29ce-4b97-b092-8fc15585e52a@163.com>
 
-From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+On Fri, Apr 25, 2025 at 04:08:47PM +0800, Zongmin Zhou wrote:
+> Dear Greg and Christoph:
+> 
+> This patch is the simple solution for the issue described in below link:
+> https://lore.kernel.org/all/20250219092555.112631-1-min_halo@163.com/
+> 
+> This issue has been discussed at length with Shuah.
+> 
+> As Christoph said,vhci-hcd is a virtual hci,
+> but it serves as a bridge to connect virtual USB devices to the real USB
+> controller.
+> Since the commit d74ffae8b8dd is applied on kernel v5.3,
+> the virtual USB devices's max_sectors size is limited since v5.3.
+> 
+> Just because on vhci-hcd, the dma mask setting follows the platform device
+> default setting(32-bit).
 
-Allocate a sheaf and fill it to the count amount.  Does not fill to the
-sheaf limit to detect incorrect allocation requests.
+Wait, why is vhci-hcd a platform device at all?  It shouldn't be doing
+that, try removing that to start with, which will remove that "default"
+setting.  I recommend using the faux bus as a potential replacement.
 
-Signed-off-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
----
- tools/include/linux/slab.h   | 24 +++++++++++++
- tools/testing/shared/linux.c | 84 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
+thanks,
 
-diff --git a/tools/include/linux/slab.h b/tools/include/linux/slab.h
-index d1444e79f2685edb828adbce8b3fbb500c0f8844..1962d7f1abee154e1cda5dba28aef213088dd198 100644
---- a/tools/include/linux/slab.h
-+++ b/tools/include/linux/slab.h
-@@ -23,6 +23,13 @@ enum slab_state {
- 	FULL
- };
- 
-+struct slab_sheaf {
-+	struct kmem_cache *cache;
-+	unsigned int size;
-+	unsigned int capacity;
-+	void *objects[];
-+};
-+
- struct kmem_cache_args {
- 	unsigned int align;
- 	unsigned int sheaf_capacity;
-@@ -80,4 +87,21 @@ void kmem_cache_free_bulk(struct kmem_cache *cachep, size_t size, void **list);
- int kmem_cache_alloc_bulk(struct kmem_cache *cachep, gfp_t gfp, size_t size,
- 			  void **list);
- 
-+struct slab_sheaf *
-+kmem_cache_prefill_sheaf(struct kmem_cache *s, gfp_t gfp, unsigned int size);
-+
-+void *
-+kmem_cache_alloc_from_sheaf(struct kmem_cache *s, gfp_t gfp,
-+		struct slab_sheaf *sheaf);
-+
-+void kmem_cache_return_sheaf(struct kmem_cache *s, gfp_t gfp,
-+		struct slab_sheaf *sheaf);
-+int kmem_cache_refill_sheaf(struct kmem_cache *s, gfp_t gfp,
-+		struct slab_sheaf **sheafp, unsigned int size);
-+
-+static inline unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf)
-+{
-+	return sheaf->size;
-+}
-+
- #endif		/* _TOOLS_SLAB_H */
-diff --git a/tools/testing/shared/linux.c b/tools/testing/shared/linux.c
-index f998555a1b2af4a899a468a652b04622df459ed3..e0255f53159bd3a1325d49192283dd6790a5e3b8 100644
---- a/tools/testing/shared/linux.c
-+++ b/tools/testing/shared/linux.c
-@@ -181,6 +181,12 @@ int kmem_cache_alloc_bulk(struct kmem_cache *cachep, gfp_t gfp, size_t size,
- 	if (kmalloc_verbose)
- 		pr_debug("Bulk alloc %zu\n", size);
- 
-+	if (cachep->exec_callback) {
-+		if (cachep->callback)
-+			cachep->callback(cachep->private);
-+		cachep->exec_callback = false;
-+	}
-+
- 	pthread_mutex_lock(&cachep->lock);
- 	if (cachep->nr_objs >= size) {
- 		struct radix_tree_node *node;
-@@ -270,6 +276,84 @@ __kmem_cache_create_args(const char *name, unsigned int size,
- 	return ret;
- }
- 
-+struct slab_sheaf *
-+kmem_cache_prefill_sheaf(struct kmem_cache *s, gfp_t gfp, unsigned int size)
-+{
-+	struct slab_sheaf *sheaf;
-+	unsigned int capacity;
-+
-+	if (size > s->sheaf_capacity)
-+		capacity = size;
-+	else
-+		capacity = s->sheaf_capacity;
-+
-+	sheaf = malloc(sizeof(*sheaf) + sizeof(void *) * s->sheaf_capacity * capacity);
-+	if (!sheaf) {
-+		return NULL;
-+	}
-+
-+	memset(sheaf, 0, size);
-+	sheaf->cache = s;
-+	sheaf->capacity = capacity;
-+	sheaf->size = kmem_cache_alloc_bulk(s, gfp, size, sheaf->objects);
-+	if (!sheaf->size) {
-+		free(sheaf);
-+		return NULL;
-+	}
-+
-+	return sheaf;
-+}
-+
-+int kmem_cache_refill_sheaf(struct kmem_cache *s, gfp_t gfp,
-+		 struct slab_sheaf **sheafp, unsigned int size)
-+{
-+	struct slab_sheaf *sheaf = *sheafp;
-+	int refill;
-+
-+	if (sheaf->size >= size)
-+		return 0;
-+
-+	if (size > sheaf->capacity) {
-+		sheaf = kmem_cache_prefill_sheaf(s, gfp, size);
-+		if (!sheaf)
-+			return -ENOMEM;
-+
-+		kmem_cache_return_sheaf(s, gfp, *sheafp);
-+		*sheafp = sheaf;
-+		return 0;
-+	}
-+
-+	refill = kmem_cache_alloc_bulk(s, gfp, size - sheaf->size,
-+				       &sheaf->objects[sheaf->size]);
-+	if (!refill)
-+		return -ENOMEM;
-+
-+	sheaf->size += refill;
-+	return 0;
-+}
-+
-+void kmem_cache_return_sheaf(struct kmem_cache *s, gfp_t gfp,
-+		 struct slab_sheaf *sheaf)
-+{
-+	if (sheaf->size) {
-+		//s->non_kernel += sheaf->size;
-+		kmem_cache_free_bulk(s, sheaf->size, &sheaf->objects[0]);
-+	}
-+	free(sheaf);
-+}
-+
-+void *
-+kmem_cache_alloc_from_sheaf(struct kmem_cache *s, gfp_t gfp,
-+		struct slab_sheaf *sheaf)
-+{
-+	if (sheaf->size == 0) {
-+		printf("Nothing left in sheaf!\n");
-+		return NULL;
-+	}
-+
-+	return sheaf->objects[--sheaf->size];
-+}
-+
- /*
-  * Test the test infrastructure for kem_cache_alloc/free and bulk counterparts.
-  */
-
--- 
-2.49.0
-
+greg k-h
