@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B65B239591
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B59F239591
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570564; cv=none; b=Uo/N+TtzNjT52jiylDwZLR4RqhGMQpMY4JnjxlrrS58vjo90anC4V6OZps7YXzywaWAws5zLUMyrvCUT0ZjZT4pwvCD2i5lneO8YKNo+jtPQ0ZV6epLLnxq6dCiE1VYqoo+91ZLJQNOIC8c+1e9dTy9BdRK05Du3EkqiVKPm0TY=
+	t=1745570567; cv=none; b=oAa9Wk3OOsL8bN1qkfMhSb4PzsQFGdOpPuuzNDWJXgYcrZpLGwsscG7MHtwVfWgN/uoGqCvzwEVtVWAu7gMT9Qql3JPAbQ7qdn+26NJPjjq4p48wa86cu9RcTtgUzah2OPQpsTUFy47yzvD7xTSO+KXX4x4hCT5MFMdVFiW76kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570564; c=relaxed/simple;
-	bh=KNL/iSIey6awHew2sR7v6ErttybNRwGXLg/x5jvMP8Y=;
+	s=arc-20240116; t=1745570567; c=relaxed/simple;
+	bh=Ry/+FYgxtkycZtPaAopdFr9VMpbrDK/bptG6P08592s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NasNUw/S6q9RxK8fOscjOurNDxpxd/QgZswG6aba5GdtzS1RmiLMBGbpO+61/VYavOUlJ/CWdri9q//+GEJEQrKbm77h9ak7/mL8VZkIOkiDffUzddjBU8vWo2JtKpUNuYZAQjRBy+GgAijW81bC4qvnwjJqdbnNRipLVOQZkOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j45G1EBx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=shXaI5zhZHFdkAuHaHIrdn/ALMqdW+I5txiOg+bNbfsrymZq7+JCEN9nAnT46YJEaEvZNRB16+XNujgpgJjUR4gw9q0F6u7G1mxd1cP5ANDXIkEzIxRVJaqHKsMJmcmaV9L/fF18tUPxYIyVuoLBg6NJXTELRs6cRlxX9rvuMm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tA/hk6vq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j45G1EBx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62805C4CEEC;
-	Fri, 25 Apr 2025 08:42:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tA/hk6vq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A73C4CEEB;
+	Fri, 25 Apr 2025 08:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745570564;
-	bh=KNL/iSIey6awHew2sR7v6ErttybNRwGXLg/x5jvMP8Y=;
+	s=k20201202; t=1745570567;
+	bh=Ry/+FYgxtkycZtPaAopdFr9VMpbrDK/bptG6P08592s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j45G1EBxRs0+i+BevgqySIqvR1Bxl7OhaZCMERsB1xZ7wAL9oLjpvNX+rUpkMKOKK
-	 aqxEtKEKHg9lEaXXgsKNLM1VuM6GRZOKaV54BXfZQjdkvJr6poqCT8t0MtPjySLUr3
-	 7hHe/BjRRzacvrxphGohxUsYGGVXWifXObktwQoHV6gety0+Cuw2f4Q+tDjqpv1Pg+
-	 h0l2UEGmAXuDwzNlzM2/24YKFtXOWT7L9RP8U9CcJ4VmCQnnnn1s1KmpN2QyMu5Qhl
-	 KLZIhDMfWn5BjnO29TQIJMB1OxhFkXpTz4OTDXmqoyRL/VI3/dLsrxsYxD1V6Jtt/k
-	 cCwOJPxFec9uw==
+	b=tA/hk6vqCL+SDD1BElUVLR/NpBgQyRBiQ5VwkAoPJrIEZKJ5UIkklNXcAcbcw9ABq
+	 cM3+dkadOd2PtcHZe9U9Ex1dQHdlabNVNFHxUkStovcoMOtBELXAujoooWURcnLbpH
+	 HntwQTCs4pPoL0EgN9wpsr9USH1Gd+9fXQbHBfKGsugnuP25fJToP4Y8d0JM2hIBLe
+	 Re+Jr+bYv6V/FTXwIy5Lil0fPd/E2NYMScWjUE4Sno0vOb7DAj3fsjuzyau11BLY+R
+	 sTBnbo/XcpuSAybEnCMxqWQNEtEgK76RESDQ0NIUzUT1uPd9nH0Jb7DnB2aRiUU+KJ
+	 UdSu666R4St9A==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 04/15] x86/cpu: Remove TSC-less CONFIG_M586 support
-Date: Fri, 25 Apr 2025 10:42:01 +0200
-Message-ID: <20250425084216.3913608-5-mingo@kernel.org>
+Subject: [PATCH 05/15] x86/cpu, x86/platform, watchdog: Remove CONFIG_X86_RDC321X support
+Date: Fri, 25 Apr 2025 10:42:02 +0200
+Message-ID: <20250425084216.3913608-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250425084216.3913608-1-mingo@kernel.org>
 References: <20250425084216.3913608-1-mingo@kernel.org>
@@ -54,72 +54,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove support for TSC-less Pentium variants.
+This depends on the to-be-removed M486 CPU support.
 
-All TSC-capable Pentium variants, derivatives and
-clones should still work under the M586TSC or M586MMX
-options.
+Note that we still keep the RDC321X MFD, watchdog and GPIO
+drivers, because apparently there were 586/686 CPUs offered with the
+RDC321X, according to Arnd Bergmann:
+
+| "the [RDC321X] product line is still actively developed by RDC
+|  and DM&P, and I suspect that some of the drivers are still used
+|  on 586tsc-class (vortex86dx, vortex86mx) and 686-class
+|  (vortex86dx3, vortex86ex) SoCs that do run modern kernels and
+|  get updates."
+
+For this reason, update the watchdog driver and enable it on
+the broader 32-bit landscape:
+
+  -       depends on X86_RDC321X || COMPILE_TEST
+  +       depends on X86_32 || COMPILE_TEST
+
+The MFD and GPIO drivers were already independent of CONFIG_X86_RDC321X.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/Kconfig.cpu            | 10 +---------
- arch/x86/Makefile_32.cpu        |  1 -
- arch/x86/include/asm/vermagic.h |  2 --
- 3 files changed, 1 insertion(+), 12 deletions(-)
+ arch/x86/Kconfig         | 11 -----------
+ drivers/watchdog/Kconfig |  2 +-
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index df586ff2178f..e9499e58776c 100644
---- a/arch/x86/Kconfig.cpu
-+++ b/arch/x86/Kconfig.cpu
-@@ -43,14 +43,6 @@ choice
- 	  See each option's help text for additional details. If you don't know
- 	  what to do, choose "Pentium-Pro".
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 7f1a405efde0..62a9db3efa93 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -673,17 +673,6 @@ config X86_INTEL_QUARK
+ 	  Say Y here if you have a Quark based system such as the Arduino
+ 	  compatible Intel Galileo.
  
--config M586
--	bool "586/K5/5x86/6x86/6x86MX"
+-config X86_RDC321X
+-	bool "RDC R-321x SoC"
 -	depends on X86_32
+-	depends on X86_EXTENDED_PLATFORM
+-	select M486
+-	select X86_REBOOTFIXUPS
 -	help
--	  Select this for an 586 or 686 series processor such as the AMD K5,
--	  the Cyrix 5x86, 6x86 and 6x86MX.  This choice does not
--	  assume the RDTSC (Read Time Stamp Counter) instruction.
+-	  This option is needed for RDC R-321x system-on-chip, also known
+-	  as R-8610-(G).
+-	  If you don't have one of these chips, you should say N here.
 -
- config M586TSC
- 	bool "Pentium-Classic"
- 	depends on X86_32
-@@ -226,7 +218,7 @@ config X86_L1_CACHE_SHIFT
- 	default "7" if MPENTIUM4
- 	default "6" if MK7 || MPENTIUMM || MATOM || MVIAC7 || X86_GENERIC || X86_64
- 	default "4" if MGEODEGX1
--	default "5" if MCRUSOE || MEFFICEON || MCYRIXIII || MK6 || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || M586 || MVIAC3_2 || MGEODE_LX
-+	default "5" if MCRUSOE || MEFFICEON || MCYRIXIII || MK6 || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || MVIAC3_2 || MGEODE_LX
+ config X86_INTEL_LPSS
+ 	bool "Intel Low Power Subsystem Support"
+ 	depends on X86 && ACPI && PCI
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 0d8d37f712e8..fcf0853a64d8 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1516,7 +1516,7 @@ config NV_TCO
  
- config X86_F00F_BUG
- 	def_bool y
-diff --git a/arch/x86/Makefile_32.cpu b/arch/x86/Makefile_32.cpu
-index 2dda0a19b06a..43226c9fe795 100644
---- a/arch/x86/Makefile_32.cpu
-+++ b/arch/x86/Makefile_32.cpu
-@@ -10,7 +10,6 @@ else
- align		:= -falign-functions=0 -falign-jumps=0 -falign-loops=0
- endif
- 
--cflags-$(CONFIG_M586)		+= -march=i586
- cflags-$(CONFIG_M586TSC)	+= -march=i586
- cflags-$(CONFIG_M586MMX)	+= -march=pentium-mmx
- cflags-$(CONFIG_M686)		+= -march=i686
-diff --git a/arch/x86/include/asm/vermagic.h b/arch/x86/include/asm/vermagic.h
-index b3a8beb32dfd..e26061df0c9b 100644
---- a/arch/x86/include/asm/vermagic.h
-+++ b/arch/x86/include/asm/vermagic.h
-@@ -5,8 +5,6 @@
- 
- #ifdef CONFIG_X86_64
- /* X86_64 does not define MODULE_PROC_FAMILY */
--#elif defined CONFIG_M586
--#define MODULE_PROC_FAMILY "586 "
- #elif defined CONFIG_M586TSC
- #define MODULE_PROC_FAMILY "586TSC "
- #elif defined CONFIG_M586MMX
+ config RDC321X_WDT
+ 	tristate "RDC R-321x SoC watchdog"
+-	depends on X86_RDC321X || COMPILE_TEST
++	depends on X86_32 || COMPILE_TEST
+ 	depends on PCI
+ 	help
+ 	  This is the driver for the built in hardware watchdog
 -- 
 2.45.2
 
