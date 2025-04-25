@@ -1,941 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4DB0274FF2
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C128B51F;
+	Fri, 25 Apr 2025 17:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745602824; cv=none; b=XWhW6TJ9esC6hNXgVDbpcH1WxYU60nZ5spRnDlRmNXL2vPA9nWfUfRhxgxcHUNie5LWz6ZMnNo1RMpGDaMhQOAfvo+R721al3ln9WVi8XgJXdrPOyAStn0hB1R/6rCnbiBqK+ubjIpqeWu10lNc9ICRa9WdGeUF8fA2XlzWp+6o=
+	t=1745602827; cv=none; b=PPIhq3PLIR5+LIyJ1OQZ1s/FAymS9mg+iqGl/muSIvZgYmntGL6r5YfnuSXa7Z76h9gNG3t/ZgcqkbQ/Go+ZVU9wFwWy7003keWpGJLt27qvZmKazbzF7jvggR2sox32SFuOfYKEmLWjtUpbZ9icqlINrItx2IwGueT5zdbqmaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745602824; c=relaxed/simple;
-	bh=vIOylfGFeBlUPfE554oiS8f/uUxJOYtEUQF2mZOIqb8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ovrHfIduZFmoIOmrX0H1lwWsLrBzHBUfxtfZwj5oSZ4Uw54d8vnNhaVgcF+YHr+bsh09k1KB3nZLYBS4NZv3vG8lbT6oV2SQwEW/u1vbV8JqYMTId30VwaDaPGhiGehfkMSBX/WN7Rrkw9abQbBGPgFGNOeU1g8kMkK7YQ5f380=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 709DD22EE;
-	Fri, 25 Apr 2025 10:40:15 -0700 (PDT)
-Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 626DF3F59E;
-	Fri, 25 Apr 2025 10:40:16 -0700 (PDT)
-From: James Morse <james.morse@arm.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	James Morse <james.morse@arm.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	peternewman@google.com,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Dave Martin <dave.martin@arm.com>,
-	Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v9 21/27] x86/resctrl: Add python script to move resctrl code to /fs/resctrl
-Date: Fri, 25 Apr 2025 17:38:03 +0000
-Message-Id: <20250425173809.5529-22-james.morse@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250425173809.5529-1-james.morse@arm.com>
-References: <20250425173809.5529-1-james.morse@arm.com>
+	s=arc-20240116; t=1745602827; c=relaxed/simple;
+	bh=6ocjWhYSI8qotqytj7xpemjZ9TvHkYufmHU9wQ6o7PQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rD0orqJifCiJG1ZNHDWFeVkYUhuAjVyy9gJ1XDfZ9/haeOov0jSbc83t22R07WDcxjmqOkJaqU7bdGjoh9bt9T0GvUFtj2N/3N4mklxzK/uGNwHVr8Vist0N+Q5O+6M6i+vmP0w8T0YYgHaOxOnHT92TLV9wic/EwzOzE9pk/5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4GTHISz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4GTHISz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6E7C4CEE9;
+	Fri, 25 Apr 2025 17:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745602827;
+	bh=6ocjWhYSI8qotqytj7xpemjZ9TvHkYufmHU9wQ6o7PQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=A4GTHISzejxDwVKOH6fbq91E3XqWLQyoA/9kHeuIDqP51fHYLTEErd2TWcN4ObL8z
+	 t7N++svDsnUYfhFJazaG6x6e2IXo5go8b+7ki9HoV98yxAm0aNFGZydeOPDJpY/hcd
+	 ewRXEsoPMtuv6hFAZyfGODi8tbB3eB4KBKcXTLqcDa90jVgwJSr9l9h176by+nKfxh
+	 +MT3mE9DVGMM2taTLIZEfv7pUFhzZOSicNttNykMXCN6YzdkF9tZcFbWCA6V19gAiJ
+	 QOTFJ5hUfA7E/zVHnfQkd3UVz4C1JfkeyrAhSD6Zvx96PXrtqDqqRSaIyxMniYoOCM
+	 rlseESokSw6Cw==
+From: Mark Brown <broonie@kernel.org>
+To: alsa-devel@alsa-project.org, 
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com, 
+ Sunil-kumar.Dommati@amd.com, syed.sabakareem@amd.com, 
+ mario.limonciello@amd.com, Liam Girdwood <lgirdwood@gmail.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ Greg KH <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+ "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
+ open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
+References: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
+Subject: Re: [PATCH 1/3] ASoC: amd: acp: Fix NULL pointer deref on acp
+ resume path
+Message-Id: <174560282390.225473.13689303737740038724.b4-ty@kernel.org>
+Date: Fri, 25 Apr 2025 18:40:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-To support more than one architecture resctrl needs to move from arch/x86
-to live under fs. Moving all the code breaks any series on the mailing
-list, so needs scheduling carefully.
+On Fri, 25 Apr 2025 11:31:39 +0530, Venkata Prasad Potturu wrote:
+> update chip data using dev_get_drvdata(dev->parent) instead of
+> dev_get_platdata(dev).
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000010
+> Call Trace:
+>  <TASK>
+>  ? __pfx_platform_pm_resume+0x10/0x10
+>  platform_pm_resume+0x28/0x60
+>  dpm_run_callback+0x51/0x1a0
+>  device_resume+0x1a6/0x2b0
+>  dpm_resume+0x168/0x230
+> 
+> [...]
 
-Maintaining the patch that moves all this code has proved labour intensive.
-It's also near-impossible to review that no inadvertent changes have
-crept in.
+Applied to
 
-To solve these problems, temporarily add a hacky python program that
-lists all the functions that should move, and those that should stay.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-No attempt to parse C code is made, this thing tries to name 'blocks'
-based on heuristics about the kernel coding style. It's fragile, but
-good enough for its single use here.
+Thanks!
 
-This only exists to show I have nothing up my sleeve.
-I don't suggested this gets merged.
+[1/3] ASoC: amd: acp: Fix NULL pointer deref on acp resume path
+      commit: ba85883d160515129b58873f74376a89faf21c7c
+[2/3] ASoC: amd: acp: Fix NULL pointer deref in acp_i2s_set_tdm_slot
+      commit: 6d9b64156d849e358cb49b6b899fb0b7d262bda8
+[3/3] ASoC: amd: acp: Fix devm_snd_soc_register_card(acp-pdm-mach) failure
+      commit: 138e6da0392ed067d0db7b5b5b4582c3668cfcf9
 
-The patch this script generates has the following corner cases:
-* The original files are regenerated, which will add newlines that are
-  not present in the original file.
-* An trace-point header file the only contains boiler-plate is created
-  in the arch and filesystem code. The parser doesn't know how to remove
-  the includes for these - but its easy to 'keep' the file contents on
-  the correct side. A follow-up patch will remove these files and their
-  includes.
-* asm/cpu_device_id.h and a relative path for 'X86_CONFIG()' are kept
-  in the filesystem code to ensure x86 builds. A follow-up patch will
-  remove these.
-* This script doesn't know how to move the documentation, and update the
-  links in comments. A follow-up patch does this.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-Changes since v5:
- * Regex twiddling to match surprise tabs.
- * Added else case to avoid double output of #defines.
----
- resctrl_copy_pasta.py | 823 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 823 insertions(+)
- create mode 100644 resctrl_copy_pasta.py
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-diff --git a/resctrl_copy_pasta.py b/resctrl_copy_pasta.py
-new file mode 100644
-index 000000000000..f6acdff31264
---- /dev/null
-+++ b/resctrl_copy_pasta.py
-@@ -0,0 +1,823 @@
-+#!/usr/bin/python
-+import sys;
-+import os;
-+import re;
-+
-+############
-+
-+SRC_DIR = "arch/x86/kernel/cpu/resctrl";
-+DST_DIR = "fs/resctrl";
-+
-+resctrl_files = [
-+	"ctrlmondata.c",
-+	"internal.h",
-+	"monitor.c",
-+	"pseudo_lock.c",
-+	"rdtgroup.c",
-+	"pseudo_lock_trace.h",
-+	"monitor_trace.h",
-+];
-+
-+functions_to_keep = [
-+	# common
-+	"pr_fmt",
-+
-+	# core.c
-+	"domain_list_lock",
-+	"resctrl_arch_late_init",
-+	"resctrl_arch_exit",
-+	"resctrl_cpu_detect",
-+	"rdt_cpu_has",
-+	"resctrl_arch_is_evt_configurable",
-+	"get_mem_config",
-+	"get_slow_mem_config",
-+	"get_rdt_alloc_resources",
-+	"get_rdt_mon_resources",
-+	"__check_quirks_intel",
-+	"check_quirks",
-+	"get_rdt_resources",
-+	"rdt_init_res_defs_intel",
-+	"rdt_init_res_defs_amd",
-+	"rdt_init_res_defs",
-+	"resctrl_cpu_detect",
-+	"resctrl_arch_late_init",
-+	"resctrl_arch_exit",
-+	"setup_default_ctrlval",
-+	"domain_free",
-+	"domain_setup_ctrlval",
-+	"arch_domain_mbm_alloc",
-+	"domain_add_cpu",
-+	"domain_remove_cpu",
-+	"clear_closid_rmid",
-+	"resctrl_arch_online_cpu",
-+	"resctrl_arch_offline_cpu",
-+	"resctrl_arch_get_num_closid",
-+	"rdt_ctrl_update",
-+	"domain_init",
-+	"resctrl_arch_get_resource",
-+	"cache_alloc_hsw_probe",
-+	"rdt_get_mb_table",
-+	"__get_mem_config_intel",
-+	"__rdt_get_mem_config_amd",
-+	"rdt_get_cache_alloc_cfg",
-+	"rdt_get_cdp_config",
-+	"rdt_get_cdp_l3_config",
-+	"rdt_get_cdp_l2_config",
-+	"resctrl_arch_get_cdp_enabled",
-+	"set_rdt_options",
-+	"pqr_state",
-+	"rdt_resources_all",
-+	"delay_bw_map",
-+	"rdt_options",
-+	"cat_wrmsr",
-+	"mba_wrmsr_amd",
-+	"mba_wrmsr_intel",
-+	"anonymous-enum",
-+	"rdt_find_domain",
-+	"rdt_alloc_capable",
-+	"rdt_online",
-+	"RDT_OPT",
-+
-+	# ctrlmon.c
-+	"apply_config",
-+	"resctrl_arch_update_one",
-+	"resctrl_arch_update_domains",
-+	"resctrl_arch_get_config",
-+
-+	# internal.h
-+	"L3_QOS_CDP_ENABLE",
-+	"L2_QOS_CDP_ENABLE",
-+	"MBM_CNTR_WIDTH_BASE",
-+	"MBA_IS_LINEAR",
-+	"MBM_CNTR_WIDTH_OFFSET_AMD",
-+	"RMID_VAL_ERROR",
-+	"RMID_VAL_UNAVAIL",
-+	"MBM_CNTR_WIDTH_OFFSET_MAX",
-+	"arch_mbm_state",
-+	"rdt_hw_ctrl_domain",
-+	"rdt_hw_mon_domain",
-+	"resctrl_to_arch_ctrl_dom",
-+	"resctrl_to_arch_mon_dom",
-+	"msr_param",
-+	"rdt_hw_resource",
-+	"resctrl_to_arch_res",
-+	"rdt_resources_all",
-+	"resctrl_inc",
-+	"for_each_rdt_resource",
-+	"for_each_capable_rdt_resource",
-+	"for_each_alloc_capable_rdt_resource",
-+	"for_each_mon_capable_rdt_resource",
-+	"arch_mon_domain_online",
-+	"cpuid_0x10_1_eax",
-+	"cpuid_0x10_3_eax",
-+	"cpuid_0x10_x_ecx",
-+	"cpuid_0x10_x_edx",
-+	"rdt_ctrl_update",
-+	"rdt_get_mon_l3_config",
-+	"rdt_cpu_has",
-+	"intel_rdt_mbm_apply_quirk",
-+	"rdt_domain_reconfigure_cdp",
-+
-+	# monitor.c
-+	"rdt_mon_capable",
-+	"rdt_mon_features",
-+	"CF",
-+	"snc_nodes_per_l3_cache",
-+	"mbm_cf_table",
-+	"mbm_cf_rmidthreshold",
-+	"mbm_cf",
-+	"logical_rmid_to_physical_rmid",
-+	"__rmid_read_phys",
-+	"get_corrected_mbm_count",
-+	"__rmid_read",
-+	"get_arch_mbm_state",
-+	"resctrl_arch_reset_rmid",
-+	"resctrl_arch_reset_rmid_all",
-+	"mbm_overflow_count",
-+	"resctrl_arch_rmid_read",
-+	"snc_cpu_ids",
-+	"snc_get_config",
-+	"rdt_get_mon_l3_config",
-+	"intel_rdt_mbm_apply_quirk",
-+
-+	# pseudo_lock.c
-+	"prefetch_disable_bits",
-+	"resctrl_arch_get_prefetch_disable_bits",
-+	"resctrl_arch_pseudo_lock_fn",
-+	"resctrl_arch_measure_cycles_lat_fn",
-+	"perf_miss_attr",
-+	"perf_hit_attr",
-+	"residency_counts",
-+	"measure_residency_fn",
-+	"resctrl_arch_measure_l2_residency",
-+	"resctrl_arch_measure_l3_residency",
-+
-+	# rdtgroup.c
-+	"rdt_enable_key",
-+	"rdt_mon_enable_key",
-+	"rdt_alloc_enable_key",
-+	"resctrl_arch_sync_cpu_closid_rmid",
-+	"INVALID_CONFIG_INDEX",
-+	"mon_event_config_index_get",
-+	"resctrl_arch_mon_event_config_read",
-+	"resctrl_arch_mon_event_config_write",
-+	"l3_qos_cfg_update",
-+	"l2_qos_cfg_update",
-+	"set_cache_qos_cfg",
-+	"rdt_domain_reconfigure_cdp",
-+	"cdp_enable",
-+	"cdp_disable",
-+	"resctrl_arch_set_cdp_enabled",
-+	"resctrl_arch_reset_all_ctrls",
-+
-+	# pseudo_lock_trace.h
-+	"TRACE_SYSTEM",
-+	"pseudo_lock_mem_latency",
-+	"pseudo_lock_l2",
-+	"pseudo_lock_l3",
-+	"TRACE_INCLUDE_PATH",
-+	"TRACE_INCLUDE_FILE",
-+];
-+
-+functions_to_move = [
-+	# common
-+	"pr_fmt",
-+
-+	# ctrlmon.c
-+	"rdt_parse_data",
-+	"(ctrlval_parser_t)",
-+	"bw_validate",
-+	"parse_bw",
-+	"cbm_validate",
-+	"parse_cbm",
-+	"get_parser",
-+	"parse_line",
-+	"rdtgroup_parse_resource",
-+	"rdtgroup_schemata_write",
-+	"show_doms",
-+	"rdtgroup_schemata_show",
-+	"smp_mon_event_count",
-+	"rdtgroup_mba_mbps_event_write",
-+	"rdtgroup_mba_mbps_event_show",
-+	"resctrl_find_domain",
-+	"mon_event_read",
-+	"rdtgroup_mondata_show",
-+
-+	# internal.h
-+	"MBM_OVERFLOW_INTERVAL",
-+	"CQM_LIMBOCHECK_INTERVAL",
-+	"cpumask_any_housekeeping",
-+	"rdt_kn_name",
-+	"rdt_fs_context",
-+	"rdt_fc2context",
-+	"mon_evt",
-+	"mon_data",
-+	"rmid_read",
-+	"resctrl_schema_all",
-+	"resctrl_mounted",
-+	"rdt_group_type",
-+	"rdtgrp_mode",
-+	"mongroup",
-+	"rdtgroup",
-+	"RDT_DELETED",
-+	"RFTYPE_FLAGS_CPUS_LIST",
-+	"RFTYPE_INFO",
-+	"RFTYPE_BASE",
-+	"RFTYPE_CTRL",
-+	"RFTYPE_MON",
-+	"RFTYPE_TOP",
-+	"RFTYPE_RES_CACHE",
-+	"RFTYPE_RES_MB",
-+	"RFTYPE_DEBUG",
-+	"RFTYPE_CTRL_INFO",
-+	"RFTYPE_MON_INFO",
-+	"RFTYPE_TOP_INFO",
-+	"RFTYPE_CTRL_BASE",
-+	"RFTYPE_MON_BASE",
-+	"rdt_all_groups",
-+	"rftype",
-+	"mbm_state",
-+	"is_mba_sc",
-+
-+	# monitor.c
-+	"rmid_entry",
-+	"rmid_free_lru",
-+	"closid_num_dirty_rmid",
-+	"rmid_limbo_count",
-+	"rmid_ptrs",
-+	"resctrl_rmid_realloc_threshold",
-+	"resctrl_rmid_realloc_limit",
-+	"__rmid_entry",
-+	"limbo_release_entry",
-+	"__check_limbo",
-+	"has_busy_rmid",
-+	"resctrl_find_free_rmid",
-+	"resctrl_find_cleanest_closid",
-+	"alloc_rmid",
-+	"add_rmid_to_limbo",
-+	"free_rmid",
-+	"get_mbm_state",
-+	"__mon_event_count",
-+	"mbm_bw_count",
-+	"mon_event_count",
-+	"get_ctrl_domain_from_cpu",
-+	"update_mba_bw",
-+	"mbm_update_one_event",
-+	"mbm_update",
-+	"cqm_handle_limbo",
-+	"cqm_setup_limbo_handler",
-+	"mbm_handle_overflow",
-+	"mbm_setup_overflow_handler",
-+	"dom_data_init",
-+	"dom_data_exit",
-+	"llc_occupancy_event",
-+	"mbm_total_event",
-+	"mbm_local_event",
-+	"l3_mon_evt_init",
-+	"resctrl_mon_resource_init",
-+	"resctrl_mon_resource_exit",
-+
-+	# pseudo_lock.c
-+	"pseudo_lock_major",
-+	"pseudo_lock_minor_avail",
-+	"pseudo_lock_devnode",
-+	"pseudo_lock_class",
-+	"pseudo_lock_minor_get",
-+	"pseudo_lock_minor_release",
-+	"region_find_by_minor",
-+	"pseudo_lock_pm_req",
-+	"pseudo_lock_cstates_relax",
-+	"pseudo_lock_cstates_constrain",
-+	"pseudo_lock_region_clear",
-+	"pseudo_lock_region_init",
-+	"pseudo_lock_init",
-+	"pseudo_lock_region_alloc",
-+	"pseudo_lock_free",
-+	"rdtgroup_monitor_in_progress",
-+	"rdtgroup_locksetup_user_restrict",
-+	"rdtgroup_locksetup_user_restore",
-+	"rdtgroup_locksetup_enter",
-+	"rdtgroup_locksetup_exit",
-+	"rdtgroup_cbm_overlaps_pseudo_locked",
-+	"rdtgroup_pseudo_locked_in_hierarchy",
-+	"pseudo_lock_measure_cycles",
-+	"pseudo_lock_measure_trigger",
-+	"pseudo_measure_fops",
-+	"rdtgroup_pseudo_lock_create",
-+	"rdtgroup_pseudo_lock_remove",
-+	"pseudo_lock_dev_open",
-+	"pseudo_lock_dev_release",
-+	"pseudo_lock_dev_mremap",
-+	"pseudo_mmap_ops",
-+	"pseudo_lock_dev_mmap",
-+	"pseudo_lock_dev_fops",
-+	"rdt_pseudo_lock_init",
-+	"rdt_pseudo_lock_release",
-+
-+	# rdtgroup.c
-+	"rdtgroup_mutex",
-+	"rdt_root",
-+	"rdtgroup_default",
-+	"rdt_all_groups",
-+	"resctrl_schema_all",
-+    "mon_data_kn_priv_list",
-+	"resctrl_mounted",
-+	"kn_info",
-+	"kn_mongrp",
-+	"kn_mondata",
-+	"max_name_width",
-+	"last_cmd_status",
-+	"last_cmd_status_buf",
-+	"rdtgroup_setup_root",
-+	"rdtgroup_destroy_root",
-+	"debugfs_resctrl",
-+	"mba_mbps_default_event",
-+	"resctrl_debug",
-+	"rdt_last_cmd_clear",
-+	"rdt_last_cmd_puts",
-+	"rdt_last_cmd_printf",
-+	"rdt_staged_configs_clear",
-+	"resctrl_is_mbm_enabled",
-+	"resctrl_is_mbm_event",
-+	"closid_free_map",
-+	"closid_free_map_len",
-+	"closids_supported",
-+	"closid_init",
-+	"closid_exit",
-+	"closid_alloc",
-+	"closid_free",
-+	"closid_allocated",
-+	"rdtgroup_mode_by_closid",
-+	"rdt_mode_str",
-+	"rdtgroup_mode_str",
-+	"rdtgroup_kn_set_ugid",
-+	"rdtgroup_add_file",
-+	"rdtgroup_seqfile_show",
-+	"rdtgroup_file_write",
-+	"rdtgroup_kf_single_ops",
-+	"kf_mondata_ops",
-+	"is_cpu_list",
-+	"rdtgroup_cpus_show",
-+	"update_closid_rmid",
-+	"cpus_mon_write",
-+	"cpumask_rdtgrp_clear",
-+	"cpus_ctrl_write",
-+	"rdtgroup_cpus_write",
-+	"rdtgroup_remove",
-+	"_update_task_closid_rmid",
-+	"update_task_closid_rmid",
-+	"task_in_rdtgroup",
-+	"__rdtgroup_move_task",
-+	"is_closid_match",
-+	"is_rmid_match",
-+	"rdtgroup_tasks_assigned",
-+	"rdtgroup_task_write_permission",
-+	"rdtgroup_move_task",
-+	"rdtgroup_tasks_write",
-+	"show_rdt_tasks",
-+	"rdtgroup_tasks_show",
-+	"rdtgroup_closid_show",
-+	"rdtgroup_rmid_show",
-+	"proc_resctrl_show",
-+	"rdt_last_cmd_status_show",
-+	"rdt_kn_parent_priv",
-+	"rdt_num_closids_show",
-+	"rdt_default_ctrl_show",
-+	"rdt_min_cbm_bits_show",
-+	"rdt_shareable_bits_show",
-+	"rdt_bit_usage_show",
-+	"rdt_min_bw_show",
-+	"rdt_num_rmids_show",
-+	"rdt_mon_features_show",
-+	"rdt_bw_gran_show",
-+	"rdt_delay_linear_show",
-+	"max_threshold_occ_show",
-+	"rdt_thread_throttle_mode_show",
-+	"max_threshold_occ_write",
-+	"rdtgroup_mode_show",
-+	"resctrl_peer_type",
-+	"rdt_has_sparse_bitmasks_show",
-+	"__rdtgroup_cbm_overlaps",
-+	"rdtgroup_cbm_overlaps",
-+	"rdtgroup_mode_test_exclusive",
-+	"rdtgroup_mode_write",
-+	"rdtgroup_cbm_to_size",
-+	"rdtgroup_size_show",
-+	"mondata_config_read",
-+	"mbm_config_show",
-+	"mbm_total_bytes_config_show",
-+	"mbm_local_bytes_config_show",
-+	"mbm_config_write_domain",
-+	"mon_config_write",
-+	"mbm_total_bytes_config_write",
-+	"mbm_local_bytes_config_write",
-+	"res_common_files",
-+	"rdtgroup_add_files",
-+	"rdtgroup_get_rftype_by_name",
-+	"thread_throttle_mode_init",
-+	"resctrl_file_fflags_init",
-+	"rdtgroup_kn_mode_restrict",
-+	"rdtgroup_kn_mode_restore",
-+	"rdtgroup_mkdir_info_resdir",
-+	"fflags_from_resource",
-+	"rdtgroup_create_info_dir",
-+	"mongroup_create_dir",
-+	"is_mba_linear",
-+	"mba_sc_domain_allocate",
-+	"mba_sc_domain_destroy",
-+	"supports_mba_mbps",
-+	"set_mba_sc",
-+	"kernfs_to_rdtgroup",
-+	"rdtgroup_kn_get",
-+	"rdtgroup_kn_put",
-+	"rdtgroup_kn_lock_live",
-+	"rdtgroup_kn_unlock",
-+	"rdt_disable_ctx",
-+	"rdt_enable_ctx",
-+	"schemata_list_add",
-+	"schemata_list_create",
-+	"schemata_list_destroy",
-+	"rdt_get_tree",
-+	"rdt_param",
-+	"rdt_fs_parameters",
-+	"rdt_parse_param",
-+	"rdt_fs_context_free",
-+	"rdt_fs_context_ops",
-+	"rdt_init_fs_context",
-+	"rdt_move_group_tasks",
-+	"free_all_child_rdtgrp",
-+	"rmdir_all_sub",
-+	"resctrl_fs_teardown",
-+	"rdt_kill_sb",
-+	"rdt_fs_type",
-+	"mon_get_kn_priv",
-+	"mon_put_kn_priv",
-+	"mon_addfile",
-+	"mon_rmdir_one_subdir",
-+	"rmdir_mondata_subdir_allrdtgrp",
-+	"mon_add_all_files",
-+	"mkdir_mondata_subdir",
-+	"mkdir_mondata_subdir_allrdtgrp",
-+	"mkdir_mondata_subdir_alldom",
-+	"mkdir_mondata_all",
-+	"cbm_ensure_valid",
-+	"__init_one_rdt_domain",
-+	"rdtgroup_init_cat",
-+	"rdtgroup_init_mba",
-+	"rdtgroup_init_alloc",
-+	"mkdir_rdt_prepare_rmid_alloc",
-+	"mkdir_rdt_prepare_rmid_free",
-+	"mkdir_rdt_prepare",
-+	"mkdir_rdt_prepare_clean",
-+	"rdtgroup_mkdir_mon",
-+	"rdtgroup_mkdir_ctrl_mon",
-+	"is_mon_groups",
-+	"rdtgroup_mkdir",
-+	"rdtgroup_rmdir_mon",
-+	"rdtgroup_ctrl_remove",
-+	"rdtgroup_rmdir_ctrl",
-+	"rdt_kn_parent",
-+	"rdtgroup_rmdir",
-+	"mongrp_reparent",
-+	"rdtgroup_rename",
-+	"rdtgroup_show_options",
-+	"rdtgroup_kf_syscall_ops",
-+	"rdtgroup_setup_root",
-+	"rdtgroup_destroy_root",
-+	"rdtgroup_setup_default",
-+	"domain_destroy_mon_state",
-+	"resctrl_offline_ctrl_domain",
-+	"resctrl_offline_mon_domain",
-+	"domain_setup_mon_state",
-+	"resctrl_online_ctrl_domain",
-+	"resctrl_online_mon_domain",
-+	"resctrl_online_cpu",
-+	"clear_childcpus",
-+	"get_mon_domain_from_cpu",
-+	"resctrl_offline_cpu",
-+	"resctrl_init",
-+    "resctrl_online_domains_exist",
-+	"resctrl_exit",
-+
-+	# monitor_trace.h
-+	"TRACE_SYSTEM",
-+	"mon_llc_occupancy_limbo",
-+	"TRACE_INCLUDE_PATH",
-+	"TRACE_INCLUDE_FILE",
-+];
-+
-+############
-+
-+builtin_non_functions = ["__setup", "__exitcall", "__printf"];
-+builtin_one_arg_macros = ["LIST_HEAD", "DEFINE_MUTEX", "DEFINE_STATIC_KEY_FALSE"];
-+types = ["bool",  "char", "int", "u32", "long", "u64"];
-+
-+def get_array_name(line):
-+  tok = re.search(r'([^\s]+?)\[\]', line)
-+  if (tok is None):
-+    return None;
-+  return tok.group(1);
-+
-+
-+def get_struct_name(line):
-+  tok = re.search(r'struct ([^\s]+?) {', line)
-+  if (tok is None):
-+    return None;
-+  return tok.group(1);
-+
-+def get_enum_name(line):
-+  tok = re.search(r'enum ([^\s]+?) {', line)
-+  if (tok is None):
-+    return None;
-+  return tok.group(1);
-+
-+def get_union_name(line):
-+  tok = re.search(r'union ([^\s]+?) {', line)
-+  if (tok is None):
-+    return None;
-+  return tok.group(1);
-+
-+
-+def get_macro_name(line):
-+  # #define pr_fmt(fmt)     KBUILD_MODNAME ": " fmt
-+  tok = re.search(r'#define[\s]+([^\s]+?)\(', line)
-+  if (tok):
-+    return tok.group(1);
-+
-+  # #define RFTYPE_CTRL_INFO          (RFTYPE_INFO | RFTYPE_CTRL)
-+  tok = re.search(r'#define[\s]+([^\s]+?)[\s]+.+?\n', line)
-+  if (tok):
-+    return tok.group(1);
-+
-+  return None;
-+
-+
-+def get_macro_target(line):
-+  tok = re.search(r'[^\s]+?\(([^\s]+?)\);\n', line)
-+  if (tok):
-+    return tok.group(1);
-+
-+  return None;
-+
-+
-+# Things like 'bool my_bool;'
-+def get_object_name(line):
-+  # remove things that don't change the meaning of the name
-+  if line.startswith("static "):
-+    line = line[len("static "):];
-+  if line.startswith("extern "):
-+    line = line[len("extern "):];
-+  if line.startswith("unsigned "):
-+    line = line[len("unsigned "):];
-+
-+  # Note the trailing semicolon..
-+  tok = re.search(r'([^\s]+)\s[\*]*([^\s\[\],;]+)', line)
-+  if tok:
-+    if tok.group(1) in types:
-+      return tok.group(2);
-+
-+  tok = re.search(r'struct\s[^\s]+\s[\*]*([^\s;]+)', line)
-+  if tok:
-+    return tok.group(1);
-+
-+  tok = re.search(r'enum\s[^\s]+\s([^\s;]+)', line)
-+  if tok:
-+    return tok.group(1);
-+
-+  return None;
-+
-+
-+# Is there a name for this block of code?
-+#
-+# Function names are the token before '(' ... assuming there is only one '('.
-+# This also handles structs and arrays,
-+def get_block_name(line):
-+  # remove things that don't change the meaning of the name
-+  if (" __read_mostly" in line):
-+    line = line.replace(" __read_mostly", "");
-+  if (" __initconst" in line):
-+    line = line.replace(" __initconst", "");
-+
-+  if line == "enum {\n":
-+    return "anonymous-enum";
-+  if (line.startswith("#define")):
-+    return get_macro_name(line);
-+
-+  if ("=" in line):
-+    tok = re.search(r'[\*]*([^\s\[\]]+?)[\s\[\]]*=', line)
-+  else:
-+    tok = re.search(r'[\*]*([^\s]+?)\(.+?', line)
-+
-+  if (tok is None):
-+    if ("[]" in line):
-+      return get_array_name(line);
-+    if (line.startswith("struct") and line.endswith("{\n")):
-+      return get_struct_name(line);
-+    if (line.startswith("enum") and line.endswith("{\n")):
-+      return get_enum_name(line);
-+    if (line.startswith("union") and line.endswith("{\n")):
-+      return get_union_name(line);
-+    if (line.endswith(";\n") and '(' not in line):
-+      return get_object_name(line);
-+    if (line.endswith("= {\n") and '(' not in line):
-+      return get_object_name(line);
-+    return None;
-+
-+  func_name = tok.group(1);
-+  if (func_name in builtin_one_arg_macros):
-+    tok = re.search(r'[^\(]+\(([^\s]+?)\)', line)
-+    if (tok is None):
-+      return None;
-+    return tok.group(1);
-+  elif (func_name == "DEFINE_PER_CPU"):
-+    tok = re.search(r'DEFINE_PER_CPU\(.+?, ([^\s]+?)\)', line)
-+    if (tok is None):
-+      return None;
-+    return tok.group(1);
-+  elif (func_name == "TRACE_EVENT"):
-+    tok = re.search(r'TRACE_EVENT\((.+?),', line)
-+    if (tok is None):
-+      return None;
-+    return tok.group(1);
-+  elif (func_name == "late_initcall"):
-+    return get_macro_target(line);
-+  else:
-+    return func_name;
-+
-+def output_function_body(body, file):
-+  # Mandatory whitespace between blocks
-+  if os.lseek(file.fileno(), 0, os.SEEK_CUR) > 0:
-+    file.write("\n".encode());
-+
-+  for out_line in body:
-+    file.write(out_line.encode());
-+
-+# Where should we put this block of code?
-+def output_function(name, body, files):
-+  output = False;
-+  (new_src, new_dst) = files;
-+
-+  if (len(body)) == 0:
-+    return;
-+
-+  # Output to both files
-+  if (name is None):
-+    output_function_body(body, new_src);
-+    output_function_body(body, new_dst);
-+    output = True;
-+  if (name in functions_to_keep):
-+    output_function_body(body, new_src);
-+    output = True;
-+  if (name in functions_to_move):
-+    output_function_body(body, new_dst);
-+    output = True;
-+
-+  if not output:
-+    print("Missing function name: "+name);
-+    #print(body);
-+
-+def reset_parser():
-+  global function_name;
-+  global define_name;
-+  global function_body;
-+  global in_define;
-+
-+  function_name = None;
-+  define_name = None;
-+  function_body = [];
-+  in_define = False;
-+
-+############
-+
-+for file in resctrl_files:
-+  function_name = None;
-+  # function_names take priority over defines, this is only used when
-+  # no function_name was found
-+  define_name = None;
-+  function_body = [];
-+  # Nothing clever - this is just to detect newlines between functions
-+  in_function = False;
-+  in_define = False;
-+
-+  src_path = SRC_DIR + "/" + str(file);
-+  if (not os.path.isfile(src_path)):
-+    continue;
-+  dst_path = DST_DIR + "/" + str(file);
-+
-+  orig_file = open(src_path, "r");
-+  lines = orig_file.readlines();
-+
-+  # Now unlink the original file, so it can be re-created with new
-+  # contents.
-+  try:
-+    os.unlink(src_path);
-+  except Exception as err:
-+    print("Failed to unlink source file: {err}");
-+    sys.exit(1);
-+
-+  # non-buffering is so we can snoop the fd offset to avoid trailing newlines
-+  new_src = open(src_path, "wb", buffering=0);
-+  new_dst = open(dst_path, "wb", buffering=0);
-+
-+  for line in lines:
-+    # Empty lines outside a function - reset the function tracking
-+    if (line == "\n" and not in_function):
-+      if function_name is None and define_name is not None:
-+        function_name = define_name;
-+      output_function(function_name, function_body, (new_src, new_dst));
-+      reset_parser();
-+
-+    # Function prototypes are a funny C thing - reset the function tracking
-+    elif (line[0].isspace() and not in_function and line.endswith(");\n")):
-+      function_body += [line];
-+      output_function(function_name, function_body, (new_src, new_dst));
-+      reset_parser();
-+
-+    # Lines that begin with whitespace are part of the current function.
-+    elif (line[0].isspace()):
-+      function_body += [line];
-+
-+    # Next, try to find the kind of line that contains a function name
-+
-+    # Ignore lines with comment markers, braces
-+    elif (line.startswith("/*")):
-+      function_body += [line];
-+    elif (line.startswith("*/")):
-+      function_body += [line];
-+    elif (line.startswith("//")):
-+      function_body += [line];
-+    elif (line == "{\n"):
-+      function_body += [line];
-+      in_function = True;
-+    elif (line == "}\n"):
-+      function_body += [line];
-+      in_function = False;
-+    elif (line == "};\n"):
-+      function_body += [line];
-+      in_function = False;
-+
-+    elif (line.startswith("#include")):
-+      function_body += [line];
-+    elif (line.startswith("#if ")):
-+      function_body += [line];
-+    elif (line.startswith("#ifdef ")):
-+      function_body += [line];
-+    elif (line.startswith("#ifndef ")):
-+      function_body += [line];
-+    elif (line.startswith("#else")):
-+      function_body += [line];
-+    elif (line.startswith("#endif")):
-+      function_body += [line];
-+    elif (line.startswith("#undef ")):
-+      function_body += [line];
-+    elif (line.startswith("#define")):
-+      function_body += [line];
-+      define_name = get_block_name(line);
-+
-+      # Multi-line define?
-+      if line.endswith("\\\n"):
-+        in_define = True;
-+      else:
-+        output_function(define_name, function_body, (new_src, new_dst));
-+        reset_parser();
-+    elif in_define and line.endswith("\\\n"):
-+      function_body += [line];
-+
-+    # goto was always a crime
-+    elif (' ' not in line and line.endswith(":\n")):
-+      function_body += [line];
-+
-+    # Try and parse a function/array name
-+
-+    # Things like late_initcall() aren't function names, but belong to
-+    # the previous function.
-+    elif (get_block_name(line) in builtin_non_functions):
-+      function_body += [line];
-+
-+    # Start a new block if we can get a block name for this line
-+    elif (get_block_name(line) != None and function_name is None):
-+      _name = get_block_name(line);
-+
-+      if (line.endswith("{\n")):
-+        in_function = True;
-+
-+      # Is this a function prototype? Output it now
-+      if (line.endswith(";\n")):
-+        function_body += [line];
-+        output_function(_name, function_body, (new_src, new_dst));
-+        reset_parser();
-+      else:
-+        function_name = _name;
-+        function_body += [line];
-+
-+    # Failed to parse a function name ... did it get split up?
-+    elif (line.startswith("static")):
-+      function_body += [line];
-+
-+    else:
-+       print("Unknown: '" + line + "'");
-+
-+  # Output whatever is left in the buffer
-+  output_function(function_name, function_body, (new_src, new_dst));
-+
-+  orig_file.close();
--- 
-2.39.5
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
