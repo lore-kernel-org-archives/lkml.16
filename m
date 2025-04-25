@@ -1,130 +1,99 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A891E134A8
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E67134A8;
+	Fri, 25 Apr 2025 07:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745565871; cv=none; b=f/58dPZUBOa6NUey9jm5w8bwxCEMXXVq6tkD/4YWuTA9oJgpNbDyvbl99vT8v8NHkLHrQmHxs9k5cmgC3Io1V1jBACaTARCxq2O9fUCL9sK3cKX6m5PS03wvvIRNm/SrAxU5YIEnhNFlZVmsWBvgvrRzdMSaJ0XiIrOntTmwgkk=
+	t=1745565922; cv=none; b=AL+c19oBFW6LTbZidwdc3uCOiOrCGNnp8mS161767MAk/8O6ATBWTBHnIj0Avai8lY2MRb/ZHGLcB4bMxwKWMj5AZ0SZTbREEi/Wy97fYzQMkiaDWYv3noUJORym8UGPN5+MrVEWFElMeLwW2pTPVmnZa9LggqSL1UyDTyzc/F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745565871; c=relaxed/simple;
-	bh=jtMg5avLmNq08dx5MIn9AAqzj5O59LTOfT07aatcj5Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vn72gSWSjoqQHGJ+Ro5DdJKhm7D/XhB+SYWQp+wv3D+W8dUbU+2F8oypu8kUgTvUTMcUMnDYu+kBHH5a9srl06SkzK1j6B7PrD9HcCgL/8cVZx8ezuOPVTDiQ0lqM211V/Tcwzj+UhR1FtukD3zPRJLBRHioKqnY04uYv/tjoE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=cBPyKQbE; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=cBPyKQbE; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745565922; c=relaxed/simple;
+	bh=OSzvSNriURJD0afIhu4/ueRDsc2WgjRVHGzjYaUrp2o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dPGi/t5rQIl5/4PgzEjz5bYW61Jf2gd/6HlpLhTdAUlbZUw3e2DoiXcVUxzADxflaGZEjxPqCYXiFaosYPPQjlD6LzHagRoXRJ2VgPHpBRRXy7c2baAifBZkzzjyJ8SliTUuoiqw2n54LC+mUrVkmCc50nY+FkAiFI5MSt6Oz9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KNphlBOb; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="cBPyKQbE";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="cBPyKQbE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AA1571F38C;
-	Fri, 25 Apr 2025 07:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745565865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=HkKwnWomWBsjN0jjbqpwbwTR7RSwLivqmv0zAlY5UMk=;
-	b=cBPyKQbEQZfCTleWSNKT85c6UgHotWvRAaZf+uoclpxMfQ3w4ME2fH3crWtWqQrOPLXI6s
-	qb6r4kabAIH1j1VoeXBqDB9IOe895FUL84heYrJAYYT9q+IoTKlXjEPcogdK0oK2RJDgHC
-	m9N4RQikAUCDqUWk7IQw5ZohGtgHAbU=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=cBPyKQbE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745565865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=HkKwnWomWBsjN0jjbqpwbwTR7RSwLivqmv0zAlY5UMk=;
-	b=cBPyKQbEQZfCTleWSNKT85c6UgHotWvRAaZf+uoclpxMfQ3w4ME2fH3crWtWqQrOPLXI6s
-	qb6r4kabAIH1j1VoeXBqDB9IOe895FUL84heYrJAYYT9q+IoTKlXjEPcogdK0oK2RJDgHC
-	m9N4RQikAUCDqUWk7IQw5ZohGtgHAbU=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 93A2B13A79;
-	Fri, 25 Apr 2025 07:24:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bapPI6k4C2hqbQAAD6G6ig
-	(envelope-from <neelx@suse.com>); Fri, 25 Apr 2025 07:24:25 +0000
-From: Daniel Vacek <neelx@suse.com>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Daniel Vacek <neelx@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: get rid of goto in alloc_test_extent_buffer()
-Date: Fri, 25 Apr 2025 09:23:57 +0200
-Message-ID: <20250425072358.51788-1-neelx@suse.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KNphlBOb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745565921; x=1777101921;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OSzvSNriURJD0afIhu4/ueRDsc2WgjRVHGzjYaUrp2o=;
+  b=KNphlBObda0qxuQjqt5gSUiSMoHsFGsoZCxYhU2TNtr2a9y9jbWYSfoO
+   QnDqreoM0/avXlAh0PmWULZdpMBqdkKgm21BtHzP0OSwpMrncTOEymRiL
+   hEvB8DNXaqf+9hrta2bOLSC+JfXt8jpGtZBt8q4FmxoKMk+OoRGzyrIu6
+   BX0oAmxoDuF2YCZFK4xv9ZeC3i/TQ5/WjTnUAl45cqLZQ/zmAAkgIHwbz
+   lRPCp7cMaIcvqpwcO0I4vARBV1pSLveOT4pbR+3pOXEk9JUsPv1xs5GPL
+   EGIgCMrrIO7tCD4yJN2Yb48y6Y9X54KV4G0Vu+kVRGA/2B2X59/fCGVmR
+   A==;
+X-CSE-ConnectionGUID: uhnvy5wvQGOpjyT+ANiX1w==
+X-CSE-MsgGUID: 48NzfkMaTsKYjN4IUteThQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57420590"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="57420590"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:25:20 -0700
+X-CSE-ConnectionGUID: 4EgUmxgkTJusLEPeGPuzVQ==
+X-CSE-MsgGUID: bjkkdP/lQG6xE877BZKp1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132757664"
+Received: from yijiemei-mobl.ccr.corp.intel.com (HELO [10.238.2.108]) ([10.238.2.108])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 00:25:14 -0700
+Message-ID: <55990bb0-9fbe-4b38-95db-bd257914b157@linux.intel.com>
+Date: Fri, 25 Apr 2025 15:25:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AA1571F38C
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 03/21] x86/virt/tdx: Add SEAMCALL wrapper
+ tdh_mem_page_demote()
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
+ dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
+ ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
+ david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
+ thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
+ fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
+ isaku.yamahata@intel.com, xiaoyao.li@intel.com, chao.p.peng@intel.com
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030445.32704-1-yan.y.zhao@intel.com>
+ <8e15c41e-730f-493e-9628-99046af50c1e@linux.intel.com>
+ <aAs3I2GW8hBR0G5N@yzhao56-desk.sh.intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <aAs3I2GW8hBR0G5N@yzhao56-desk.sh.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The `free_eb` label is used only once. Simplify by moving the code inplace.
 
-Signed-off-by: Daniel Vacek <neelx@suse.com>
----
- fs/btrfs/extent_io.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index ea38c73d4bc5f..20cdddd924852 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3004,15 +3004,13 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
- 			goto again;
- 		}
- 		xa_unlock_irq(&fs_info->buffer_tree);
--		goto free_eb;
-+		btrfs_release_extent_buffer(eb);
-+		return exists;
- 	}
- 	xa_unlock_irq(&fs_info->buffer_tree);
- 	check_buffer_tree_ref(eb);
- 
- 	return eb;
--free_eb:
--	btrfs_release_extent_buffer(eb);
--	return exists;
- #else
- 	/* Stub to avoid linker error when compiled with optimizations turned off. */
- 	return NULL;
--- 
-2.47.2
+On 4/25/2025 3:17 PM, Yan Zhao wrote:
+> On Fri, Apr 25, 2025 at 03:12:32PM +0800, Binbin Wu wrote:
+>>
+>> On 4/24/2025 11:04 AM, Yan Zhao wrote:
+>>> From: Xiaoyao Li <xiaoyao.li@intel.com>
+>>>
+>>> Add a wrapper tdh_mem_page_demote() to invoke SEAMCALL TDH_MEM_PAGE_DEMOTE
+>>> to demote a huge leaf entry to a non-leaf entry in S-EPT. Currently, the
+>>> TDX module only supports demotion of a 2M huge leaf entry. After a
+>>> successful demotion, the old 2M huge leaf entry in S-EPT is replaced with a
+>>> non-leaf entry, linking to the newly-added page table page. The newly
+>>> linked page table page then contains 512 leaf entries, pointing to the 2M
+>> 2M or 4K?
+> The 512 leaf entries point to 2M guest private pages together,
+If this, it should be 2M range, since it's not a huge page after demotion.
+Also, the plural "pages" is confusing.
+
+>   each pointing to
+> 4K.
+>
+>>> guest private pages.
 
