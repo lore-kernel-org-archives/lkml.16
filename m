@@ -1,190 +1,139 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC1123236D;
-	Fri, 25 Apr 2025 10:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930D323F40F
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575983; cv=none; b=htFQHbQ5aThto2HlMLaTDVnyFC096Unl3TjS7GvnfC3IUcEHjNy4diPKRmQ/LGZuh3d9m4ej36ODWAw0wjded8RawJCpXAERod3xFsyOnPMd/A/oc0pVLFGT+kAFSHIFqqn3LrPfpZZJhXWiO/F0A/xnUBTae17+VaYVnDICcQc=
+	t=1745576001; cv=none; b=Y5GtyjChC3OvZZ9R332E6k1y0PQ4piWljm0yR6IR5yUOzoNhV8mUVzIw5pQFnKsDeIb+hgR1J+eOtdLkqfYRgneO38V9cOm/5bt1HJs5fEUjA1caqCepv+JVqmUZFdFQFNvJzmvT+tZjncMPLDqugrne8iaCbjZKgL9cw63puqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575983; c=relaxed/simple;
-	bh=Oho9zISwXumIwyreGzhuOMH64zT4cJky5KKcy9RQz80=;
-	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:Cc:To; b=ohE+OVj6kqQMULrnm3e2d/aGbkd3t1kOtfYlVoKGUZhQKcCVh6olcCz+lozfAu0L9OdmIN0q7JNAFGbrkvF9DfSpkK0i/WH5yrbUmf6cukI7RTirY751bB60gNbhCpGwiSb2OFipBwnx5+cIqxAqBuWT82B4pDm/wDhj6wDLEj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nXpIaVTc; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745576001; c=relaxed/simple;
+	bh=R9HHXp4+WPKRcDY98kPzN+e6xRzDIvxgQM+D3RFQeyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gN0XY6akSHL2NuhswEOOIkbPha8I4zo+zx53FODEq16I0aNnCSuVbBlPCD2OVbDeI3xma36gtV3CTHfMA87tdjoX8ms1UY9RFL1gVEPddKztPyY/QKjyL9XTHMDyW75DL0k/5HrNKaUEAbKKMxMO8CyQ5u4HmwT/qbvjXJca4gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SiQ4dqG3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXpIaVTc"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5259327a937so843339e0c.0;
-        Fri, 25 Apr 2025 03:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745575980; x=1746180780; darn=vger.kernel.org;
-        h=to:cc:date:message-id:subject:mime-version:from
-         :content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=;
-        b=nXpIaVTcHQg+xejDXFraR+p5ixEdobw/MxyybnrFVAOKhqCHqrRuqUlU4ed329FoMK
-         +hRAuPOBToW2almIVxJYryAtY/lG4+QiiMJ5WnI102+7hxYtrXM2p2FSErZGKn31jXTN
-         Vmti4obgp8qCZ+15/5SNnAreP69I0yTKxZ8lOyiXNjKhDdXS50YbhtDuFMEGWmu3HSJ3
-         EG+Vs0QvQPF32tCaLucp/hyIV7W8tWtTme0tmAO+DHkTGm9yn1s20+srvrUtA6rr9z4F
-         wwJ+QWRZ6Kfl8K68WpP6aSU3Khr4v6+mudBi7MGlcD8C1PqslS3qT7koQuXIdUhYrNAU
-         Zh/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575980; x=1746180780;
-        h=to:cc:date:message-id:subject:mime-version:from
-         :content-transfer-encoding:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NxUaPsRL3DayWO3frv2ULqEXQAoXMSOznD4LncXDA04=;
-        b=lL7oCEWy+i98pG7Ix5NEV4+iDdtST2N+LoEtJULkBeHTcFC77frcIARUvq4JHG8Fhj
-         0rIolRJu6HR6f5fPhiQvW4FZmyo9PF+AIfb2Eihfvzz+yZuCW9w8iYA+59WrOhCF+95H
-         5OMPIwoBa2Sm5rMsgTVqzPNundda1lhx/aRciuNwuh4yGmPCaVjkLx7mYgkGtX2he22X
-         Pw3ixqUs9tz0xyCPFEWrk2pQObkJMUp6czlGeywIu3uAOp/K2bfRs83JcrL2L0buoiZ9
-         4WVAi+xdR3+z8Vh0wbEfbYAWpP5wAtBRlul8GEm20wUvFrzBanv3qAYG0N+4dE9qqUfy
-         QnDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhnWlBpAlZ5OslfyDRapDpsrijc7/sr+zWwXRf/q20o6tUbFss0LQcMP4BFPbWz25wAc9WdTsphERX@vger.kernel.org, AJvYcCVAwbChTAYJBRcx3EMCbwuYqzDM4U4wPsLS3UItX5mEF44qfp5IoYXfwUwIRoY29hVxwaCToTarjkLcCcfPD106@vger.kernel.org, AJvYcCWXCpgy2qwOo2kvg3NiO0Mi6OdprPxfSNlh/W0qAMceJc7koYZEl+2OY3FjdYgNOLG256hslQBhk7EWnxkS@vger.kernel.org, AJvYcCWtbipKP92Gt5ZGIT2MRy4yh6BAD9OjaclANgm4PQW0j1pChioNp0fJ3lM1MAeSBUyQUcaIoZxHd5iv@vger.kernel.org, AJvYcCX9DNjKz3WKt7iQZaGb4sZRLjocSqj0J9c2dWXMvI01tIf+9NXnteWL635j3Pggz83x+/ZzpU/fs7RaaV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIIxXgNV5NFsvERszZyDQ+9+g1oSed4p8CUckitMnrZPNoYZpA
-	Fey9SJ+X/TosK97t3eA0eqjVu3yrenjjwwrN/yZUrNKmzo6BQUd9a4XNczKo
-X-Gm-Gg: ASbGnctpd7dfrrvFLo+WoKxiQb/uoIW9A0SYBm2XWmXgylNgYYiF2LAbIRtmWKM3BNi
-	nKzWLUWH0oHDQRn8DexbYZmHwH90Y6SDzMeM2RmaC7IBWZsVTtGhp8BKGlf/v33sAbiT3tkfEv+
-	OEkhfPLSUqCiJyEAJiBL0h69Xm2Aw7DZps2vwi8rAhDJIQsXjZPXZVgnPGufxCrUpCPCdChWuun
-	Ld9E1UdS6WZgWaX+CxCSAjSNsGfHUN/N0+CtRHvsnlBFk7qAukCkp2o908A7WmuksjCC6WHtthD
-	qIuL3a+tqDFOk+7/3YILk0aObT/iBmnOs0EF/wSIn3KEkZgUCArQf5rvV0RPsZpY5yuYRNb6/el
-	XXCPfLw9RAe6Y4oWs
-X-Google-Smtp-Source: AGHT+IGiA/Yn603iCEcUZTepPAJSDOP4M4TDfO1zGDg1GjK6jBe0wK+uDj0rtvLjSeP4gVl0jlYXxQ==
-X-Received: by 2002:a05:6122:da5:b0:50d:a31c:678c with SMTP id 71dfb90a1353d-52a89d3e399mr831693e0c.2.1745575980041;
-        Fri, 25 Apr 2025 03:13:00 -0700 (PDT)
-Received: from smtpclient.apple (216-131-82-239.nyc.as62651.net. [216.131.82.239])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a79f21b86sm605458e0c.9.2025.04.25.03.12.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 03:12:59 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Rich Persaud <persaur@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SiQ4dqG3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745575996;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pw9QCpCjs2zCbHjb9QyW1AL2e3Rd0H7rcNPzyrHOhpk=;
+	b=SiQ4dqG37qMaxQCEesgPw2rJVj6c8zT/3o/wlC8PbcZFqQ+ikCU2EDGXdO7PQzxAqwB8zI
+	0Ii1lqGJWnpdlioKVOpR63YC+ypdkJuKnDNk0ImINn0FUKLMpUbYejiKTrVqK0APgK9tvy
+	6IRDrDlJv0kgCKtaHBK5KjYO+BQLzXo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-371-rj20FwBbPbS_Gr9fXFYPqQ-1; Fri,
+ 25 Apr 2025 06:13:13 -0400
+X-MC-Unique: rj20FwBbPbS_Gr9fXFYPqQ-1
+X-Mimecast-MFC-AGG-ID: rj20FwBbPbS_Gr9fXFYPqQ_1745575991
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C49D1956088;
+	Fri, 25 Apr 2025 10:13:10 +0000 (UTC)
+Received: from [10.44.33.33] (unknown [10.44.33.33])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6B11A195608D;
+	Fri, 25 Apr 2025 10:13:05 +0000 (UTC)
+Message-ID: <98e471cc-ec66-4c89-af9a-57625c0c2873@redhat.com>
+Date: Fri, 25 Apr 2025 12:13:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux kernel support
-Message-Id: <18F9BD47-282D-4225-AB6B-FDA4AD52D7AE@gmail.com>
-Date: Fri, 25 Apr 2025 06:12:46 -0400
-Cc: Ross Philipson <ross.philipson@oracle.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev,
- dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com,
- Sergii Dmytruk <sergii.dmytruk@3mdeb.com>, openxt@googlegroups.com
-To: Dave Hansen <dave.hansen@intel.com>
-X-Mailer: iPad Mail (22E252)
-
-=EF=BB=BFOn Apr 24, 2025, at 2:45=E2=80=AFPM, Dave Hansen <dave.hansen@intel=
-.com> wrote:
-> =EF=BB=BFOn 4/21/25 09:26, Ross Philipson wrote:
->> This patchset provides detailed documentation of DRTM, the approach used f=
-or
->> adding the capbility, and relevant API/ABI documentation. In addition to t=
-he
->> documentation the patch set introduces Intel TXT support as the first pla=
-tform
->> for Linux Secure Launch.
->=20
-> So, I know some of the story here thanks to Andy Cooper. But the
-> elephant in the room is:
->=20
->> INTEL(R) TRUSTED EXECUTION TECHNOLOGY (TXT)
->> M:      Ning Sun <ning.sun@intel.com>
->> L:      tboot-devel@lists.sourceforge.net
->> S:      Supported
->> W:      http://tboot.sourceforge.net
->> T:      hg http://tboot.hg.sourceforge.net:8000/hgroot/tboot/tboot
->> F:      Documentation/arch/x86/intel_txt.rst
->> F:      arch/x86/kernel/tboot.c
->> F:      include/linux/tboot.h
->=20
-> Linux already supports TXT. Why do we need TrenchBoot?
-
-One reason is to generalize DRTM support to other platforms.
-
-RFC: Trenchboot Secure Launch DRTM for AMD SKINIT=20
-https://lore.kernel.org/lkml/cover.1734008878.git.sergii.dmytruk@3mdeb.com/
-
-OpenXT.org measured launch usage of tboot originated in 2012, when I was the=
- program manager for XenClient joint development [1][2] by Intel and Citrix.=
- TrenchBoot was proposed in 2018 at Platform Security Summit and evolved [3]=
- based on LKML and conference feedback. The tboot community was introduced [=
-4] to TrenchBoot in 2022.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Lee Jones <lee@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-6-ivecera@redhat.com>
+ <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
+ <bd645425-b9cb-454d-8971-646501704697@redhat.com>
+ <d36c34f8-f67a-40ac-a317-3b4e717724ce@lunn.ch>
+ <458254c7-da05-4b27-870d-08458eb89ba6@redhat.com>
+ <98ae9365-423c-4c7e-8b76-dcea3762ce79@lunn.ch>
+ <7d96b3a4-9098-4ffa-be51-4ce5dd64a112@redhat.com>
+ <20250425065558.GP8734@google.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250425065558.GP8734@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 
-> I think I know the answer, but it also needs to be a part of the
-> documentation, changelogs and cover letter.
->=20
-> Also, honestly, what do you think we should do with the Linux tboot
-> code? Is everyone going to be moving over to Trenchboot
 
-OpenXT will migrate development of measured launch from tboot to TrenchBoot S=
-ecure Launch, after upstream Linux and Xen have support for both Intel and A=
-MD DRTM. Previously-deployed Intel devices using tboot, derived from OpenXT,=
- will need support until users upgrade their hardware. Qubes is integrating [=
-5] TrenchBoot into AEM (Anti Evil Maid). Since Oracle has spent several year=
-s working on this TrenchBoot series, they might use it, hopefully they can c=
-omment.=20
+On 25. 04. 25 8:55 dop., Lee Jones wrote:
+> On Thu, 24 Apr 2025, Ivan Vecera wrote:
+> 
+>>
+>>
+>> On 24. 04. 25 9:29 odp., Andrew Lunn wrote:
+>>>> Yes, PHC (PTP) sub-driver is using mailboxes as well. Gpio as well for some
+>>>> initial configuration.
+>>>
+>>> O.K, so the mailbox code needs sharing. The question is, where do you
+>>> put it.
+>>
+>> This is crucial question... If I put the MB API into DPLL sub-driver
+>> then PTP sub-driver will depend on it. Potential GPIO sub-driver as
+>> well.
+>>
+>> There could be some special library module to provide this for
+>> sub-drivers but is this what we want? And if so where to put it?
+> 
+> MFD is designed to take potentially large, monolithic devices and split
+> them up into smaller, more organised chunks, then Linusify them.  This
+> way, area experts (subsystem maintainers) get to concern themselves only
+> with the remit to which they are most specialised / knowledgable.  MFD
+> will handle how each of these areas are divided up and create all of the
+> shared resources for them.  On the odd occasion it will also provide a
+> _small_ API that the children can use to talk to the parent device.
+> 
+> However .... some devices, like yours, demand an API which is too
+> complex to reside in the MFD subsystem itself.  This is not the first
+> time this has happened and I doubt it will be the last.  My first
+> recommendation is usually to place all of the comms in drivers/platform,
+> since, at least in my own mind, if a complex API is required, then the
+> device has become almost platform-like.  There are lots of examples of
+> H/W comm APIs in there already for you to peruse.
 
+OK, I will do it differently... Will drop MB API at all from MFD and
+just expose the additional mutex from MFD for multi-op access.
+Mailboxes will be handled directly by sub-devices.
 
-> so that Linux support for TXT/tboot can just go away?
+Short description:
+MFD exposes:
+zl3073x_{read,write}_u{8,16,32,48}() & zl3073x_poll_u8()
+- to read/write/poll registers
+- they checks that multiop_lock is taken when caller is accessing
+   registers from Page 10 and above
 
-[opinion]
-Which one will prevail? That may have less to do with tboot-trenchboot diffe=
-rences and more to do with AMD-Intel product marketing and OEM segmentation o=
-f DRTM features, some certified by Microsoft as "Secured Core" clients with S=
-MM attestation (Intel PPAM and AMD SMM Supervisor).
+zl3073x_multiop_{lock,unlock}()
+- to protect operation where multiple reads, writes and poll is required
+   to be done atomically
 
-Intel requires client vPro devices for TXT, but has slowly expanded the list=
- of eligible SKUs via "vPro Essentials" segmentation. AMD SKINIT is present o=
-n most processors, but DRTM currently requires a dTPM instead of the "mobile=
-" fTPM implementation in AMD PSP firmware, with dTPMs mostly present in AMD O=
-EM "PRO" or Embedded SKUs.
+Is this OK for you?
 
-If AMD included the full TPM 2.0 reference code in their PSP fTPM,  or if MS=
- Pluton implemented a full TPM 2.0 that was compatible with DRTM, then the n=
-umber of AMD DRTM-capable devices would be much higher than the number of In=
-tel vPro or AMD PRO devices, expanding the market for DRTM-capable software l=
-ike Linux (trenchboot) Secure Launch and Windows SystemGuard. That would inc=
-rease client adoption of trenchboot, as the only option for Linux DRTM on AM=
-D.
-
-On servers, both AMD and Intel hardware support DRTM with dTPM and other roo=
-ts of trust, but there are other launch considerations, including BMCs, SPDM=
- device attestation & vendor hypervisors.
-[/opinion]
-
-In a perfect world, Intel-signed ACM (used in TXT DRTM) binary blobs would b=
-e accompanied by public read-only source code, with reproducible builds that=
- generate those ACM blobs. In that perfect world, Intel ACM and tboot develo=
-pers would review the TrenchBoot Linux series, recommend improvements and gu=
-ide customers on migration from tboot to upstream-supported Linux DRTM. Neit=
-her has yet happened. Both would be welcome.
-
-Rich
-
-
-[1] https://www.intel.com/content/dam/www/public/us/en/documents/success-sto=
-ries/3rd-gen-core-vpro-citrix-vendor-spotlight.pdf
-
-[2] http://media12.connectedsocialmedia.com/intel/11/9510/Air_Force_Research=
-_Laboratory_Security_Collaboration_Government.pdf
-
-[3] https://trenchboot.org/events/
-
-[4] https://sourceforge.net/p/tboot/mailman/message/37631560/
-
-[5] https://blog.3mdeb.com/2023/2023-01-31-trenchboot-aem-for-qubesos/
+Thanks,
+Ivan
 
