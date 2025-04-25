@@ -1,101 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03D61FDD;
-	Fri, 25 Apr 2025 07:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566894; cv=none; b=kznXZXKxwI+dumyQmYoXFcZSpgQt1Uh8ZoC17AKha2dhVO9fKPCqItR4gldhg8oNyWQSZZgNzbAgSaPWUNtW0yDGT9zuxLQs7+yL0qJVWsLNBKxAWpAP0q79rKAAod91PrtFgUfKuUL+XYkerXQby2Vp+37FhOczVXo/CMxpDaQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566894; c=relaxed/simple;
-	bh=aHtu+q8+v/+vHM2z9zRmM6zCmE4vzWRuotmMIXEjo2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iarYge0Ky8qwWCu2Clkk971vpB7DMz2a0DcwZHZziAc2dnUgQ09GdExco2lLYs/OHHLc4PWmn9Jmi6jiacQnJ6b08m6RKbhNj/U+uO4eGNLTNsg5dpUiuqZ1oaYqgwRJkRY2Cy//ObDDJc5gpl49jL8yR8HztI9ZpoDbgJz+vhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCZRZp+A; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4A522F75E;
+	Fri, 25 Apr 2025 07:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745567005; cv=pass; b=msjXiQquaoNoskrBLVu6L3WrVNoLpqgt644xWZqsZWLAg23cl8x4WUqi0ohIM1NcUGCon5nuL2LzhK9OAkAp6q6P4eSbhK/oIC2U9uNeLOVaM9/GZ60sQJOLKuFrB59AEE+Ol8OnJf+WdDQ7YP89sHFV5sc7JBawaejshWTe22k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745567005; c=relaxed/simple;
+	bh=RQtI3gn+efvWLyMRJzYXV2oCjgTZh+NpE8aFcXT3ejw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IQMIJK5Irqg34pORn5Z6Ye+5yOS6vt+O9Js36wh6zcKGD5HjX5y/IHmlUYSmBDR9nAPCXv5o/4zQd2pt5KcIlRxaHYivIS+UQ7c0zCD0K8aIfN9ZK1cTJ948UKOXCsglYAOVemldrURjtE6LknoOjADtrCyjPVTfPJwb6IJXZkw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=Np4Ar/u5; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCZRZp+A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5F1C4CEE4;
-	Fri, 25 Apr 2025 07:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745566894;
-	bh=aHtu+q8+v/+vHM2z9zRmM6zCmE4vzWRuotmMIXEjo2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dCZRZp+A7DLJxpcSDgE2c5OY4mlXLvD7//yCsaBlqjAL/X2fLqpxgaUs1mFKxua2F
-	 iNHDbQ4bC+KhffqmppK+mlPCNGMCPWmIFf/q/nYc5yrMzxV31XaGoLO8lT9lYPNfUy
-	 jq2PhWtRfS8bnsEo8XVR/4u3Es1aeOSYFdBgzllWYHF8MZ1U+Uizr0DaculkXtycIk
-	 Xyj30tGA83kyWU644a9RFvWcsT5rDRlWYuqnefdycayCmv89gMjEr4D8NUWjWsdkB0
-	 PYApJhZlBQTMWJVSnNHKdx29XkTZ3F4Z3Ei2Z1NaWwqMESHc5pGaL1ehdZJBdorRkS
-	 T6SdePECjOPRA==
-Date: Fri, 25 Apr 2025 09:41:32 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v4 2/8] dt-bindings: dpll: Add support for
- Microchip Azurite chip family
-Message-ID: <20250425-hopeful-dexterous-ibex-b9adce@kuoka>
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-3-ivecera@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="Np4Ar/u5"
+ARC-Seal: i=1; a=rsa-sha256; t=1745566970; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JnQDKjYH3rYWCAwKmiyLBZ2hmlwp0/jemeMxGKdoBD3v02+NNczdU/EHbnloUIZvsYGwW+d1QSDGiD9/WzZk+LG9i1aMX3WwqqpnIXLvmr3sefkhoT48Lan5gNeh/RHVfQLWhRAhKkILOGLHQ41EPAqii3Uu5f2+TpqUeaOt4X8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745566970; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=T8tWFVeEPdpMtiUtY+e6f8fdZdq5OaJQE3ekwAwYymg=; 
+	b=nngvDYq6pk51V1sVhc3mTV2rbaOhDVdkJB4gt8OfGAmDBm2TFuwzQvM4CQX1hUt2hvbjOhAZFX0miga2pu1P4Pq0+wLLy0ACClwizXLCg0OYa07+MdOA8jEmAjC/USNXK+nmEF89uEd3oZJRtIubkEWTYVT26eI9nVh5NtbvYYg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745566970;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=T8tWFVeEPdpMtiUtY+e6f8fdZdq5OaJQE3ekwAwYymg=;
+	b=Np4Ar/u5k/y7WTdImrJp1bJPZ3yjxCjUIudP8B4CtZ9Esy3hZKSvpNu5ql/TZwOJ
+	khDO3sai5xoFSmT6JH1qrVZUuEyqzLP+yJSqtnyZGSUFAwADWYS1L+VcJ9opqhTVq/d
+	uxq6Jdwp+bq5GjMllXqRx6J/q4y6iVAbIRRN8qLU=
+Received: by mx.zohomail.com with SMTPS id 1745566967087809.0756023391033;
+	Fri, 25 Apr 2025 00:42:47 -0700 (PDT)
+Message-ID: <4d87ef88-3533-4255-adc6-6c268818fe25@collabora.com>
+Date: Fri, 25 Apr 2025 12:42:38 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250424154722.534284-3-ivecera@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+ Jeff Johnson <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>,
+ Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>,
+ Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kunwu Chan <chentao@kylinos.cn>, kernel@collabora.com, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
+References: <20250410145704.207969-1-usama.anjum@collabora.com>
+ <h2wv7drxntokziiwbzjw5xjzbctbomp6cfcba7ppfbih6o7so7@p6dazv32xfx4>
+ <1136c7cb-1c7b-410b-93d2-c74aec939196@collabora.com>
+ <cfb3sntvqhupyhm2m5tevpsl77r6mzl2aqzr3wtxvr22bezmp3@qjh7ftr2kdjy>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <cfb3sntvqhupyhm2m5tevpsl77r6mzl2aqzr3wtxvr22bezmp3@qjh7ftr2kdjy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Thu, Apr 24, 2025 at 05:47:16PM GMT, Ivan Vecera wrote:
-> Add DT bindings for Microchip Azurite DPLL chip family. These chips
-> provide up to 5 independent DPLL channels, 10 differential or
-> single-ended inputs and 10 differential or 20 single-ended outputs.
-> They can be connected via I2C or SPI busses.
+On 4/25/25 12:32 PM, Manivannan Sadhasivam wrote:
+> On Fri, Apr 25, 2025 at 12:14:39PM +0500, Muhammad Usama Anjum wrote:
+>> On 4/25/25 12:04 PM, Manivannan Sadhasivam wrote:
+>>> On Thu, Apr 10, 2025 at 07:56:54PM +0500, Muhammad Usama Anjum wrote:
+>>>> Fix dma_direct_alloc() failure at resume time during bhie_table
+>>>> allocation. There is a crash report where at resume time, the memory
+>>>> from the dma doesn't get allocated and MHI fails to re-initialize.
+>>>> There may be fragmentation of some kind which fails the allocation
+>>>> call.
+>>>>
+>>>
+>>> If dma_direct_alloc() fails, then it is a platform limitation/issue. We cannot
+>>> workaround that in the device drivers. What is the guarantee that other drivers
+>>> will also continue to work? Will you go ahead and patch all of them which
+>>> release memory during suspend?
+>>>
+>>> Please investigate why the allocation fails. Even this is not a device issue, so
+>>> we cannot add quirks :/
+>> This isn't a platform specific quirk. We are only hitting it because
+>> there is high memory pressure during suspend/resume. This dma allocation
+>> failure can happen with memory pressure on any device.
+>>
 > 
-> Check:
-> $ make dt_binding_check DT_SCHEMA_FILES=/dpll/
+> Yes.
+Thanks for understanding.
 
-None of these commands belong to the commit msg. Look at all other
-commits: do you see it anywhere?
+> 
+>> The purpose of this patch is just to make driver more robust to memory
+>> pressure during resume.
+>>
+>> I'm not sure about MHI. But other drivers already have such patches as
+>> dma_direct_alloc() is susceptible to failures when memory pressure is
+>> high. This patch was motivated from ath12k [1] and ath11k [2].
+>>
+> 
+> Even if we patch the MHI driver, the issue is going to trip some other driver.
+> How does the DMA memory goes low during resume? So some other driver is
+> consuming more than it did during probe()?
+Think it like this. The first probe happens just after boot. Most of the
+RAM was empty. Then let's say user launches applications which not only
+consume entire RAM but also the Swap. The DMA memory area is the first
+~4GB on x86_64 (if I'm not mistaken). Now at resume time when we want to
+allocate memory from dma, it may not be available entirely or because of
+fragmentation we cannot allocate that much contiguous memory.
 
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-> /home/cera/devel/kernel/linux-2.6/Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
->   CHKDT   ./Documentation/devicetree/bindings
->   LINT    ./Documentation/devicetree/bindings
->   DTC [C] Documentation/devicetree/bindings/dpll/dpll-pin.example.dtb
->   DTEX    Documentation/devicetree/bindings/dpll/microchip,zl30731.example.dts
->   DTC [C] Documentation/devicetree/bindings/dpll/microchip,zl30731.example.dtb
->   DTC [C] Documentation/devicetree/bindings/dpll/dpll-device.example.dtb
+In our testing and real world cases, right now only wifi driver is
+misbehaving. Wifi is also very important. So we are hoping to make wifi
+driver robust.
+
+> 
+>> [1]
+>> https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
+>> [2]
+>> https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
+>>
+>> What do you think can be the way forward for this patch?
+>>
+> 
+> Let's try first to analyze why the memory pressure happens during suspend. As I
+> can see, even if we fix the MHI driver, you are likely to hit this issue
+> somewhere else.>
+> - Mani
+> 
+>>>
+> 
+> [...]
+> 
+>>> Did you intend to leak this information? If not, please remove it from
+>>> stacktrace.
+>> The device isn't private. Its fine.
+>>
+> 
+> Okay.
+> 
+> - Mani
 > 
 
-With above fixed:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
----
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here. However, there's no
-need to repost patches *only* to add the tags. The upstream maintainer
-will do that for tags received on the version they apply.
-
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-Best regards,
-Krzysztof
-
+-- 
+Regards,
+Usama
