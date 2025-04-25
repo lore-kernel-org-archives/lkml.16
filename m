@@ -1,78 +1,80 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70DB86334;
-	Fri, 25 Apr 2025 04:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E564686334
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 04:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745556731; cv=none; b=OlvSTDHkrVvnF4tBJu0q3iv3n1wW84WJkQ42p7aZ5ZIxb88ECLzSm7DY3b8nUTa7ei3sgIMswdgWZKeW/cKSYVG8iYM2mk/MCtYGIoglUB9iEba0wk47/475QFKMH6t0A40fz9E7fbqo51/8fynDtn+QhL5UlDlwKu0CdhJ0RKQ=
+	t=1745556866; cv=none; b=ofEmZ7u12kTqACGlb2Z9AD32ddvr4CJX4Y9Z2c3zfUBAroryM6WjPM3DHVm7ynCnDRXGqLyAkGgjHbvbHpL8MndrO9f3oBpJRtgkZeLyr1T+oXjde9SGC4app1tJFWS9/QALhUQvaP9DDkkv6e+gkRouYMdWdDOExbD/jQnDPQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745556731; c=relaxed/simple;
-	bh=sYpbK9ht9/+EDXXnMErkvMAB/r9ylzJSuaM229Rnp3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YEqoFjQZXbnpAkcX9zRFC9Btwz7jQO2GW9ZaibvVA4jkWFygLmOhVzxt8IQZiGKgZ3BWcykRmKR+9qhh/6sVpXbqNMeLTDwhCcDwPqvbmLw6NmyfnJQtiUrYjJLGF7gP9GrH2fOnMMckC0PwM6PEJhHHVLhSHgZ5HqB0fCoJFjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LsPf+i4G; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LsPf+i4G"
-Date: Fri, 25 Apr 2025 00:51:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745556725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0q8NOUHEi971EMKXsRnOzg3dz3vI2tFwykmu0M0uoKA=;
-	b=LsPf+i4G8QvHupX136T612TWsf6jpIp+q54AOFN4oStCBrtj2DtcSl4T3urjMO0NE8omSi
-	SOlnLt6/7IcQKsdHCveq62v4D9ShBGR6JaDtA4ZqT95/bQSVwvv1upY1q4vRr6KZQsjOW4
-	eTiVqJJemlg2Pr6GdSd2KDx99x3UNgY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
-Message-ID: <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
-References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
- <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+	s=arc-20240116; t=1745556866; c=relaxed/simple;
+	bh=FXOXzT4qZhFzYZwTqlusME8d6s2prRPkxrCbQKlt1qQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=iKKZA6BuoqQw4BCQyfnJKkK/ioYZpxljyUtr//9IqMyfVsg9xQM4BS0pspkBiKbIhSjKeDpUoFCLwOTCL7KYgb5ucsIwh0ZeB4dBa0FlLdyAOtItBO1vMMsycKuEGmpPpSbVr63eOdu+nawYgXZg59WJlpku6VqyYCDw9jDx85Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so20322065ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:54:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745556864; x=1746161664;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DS3nbEou4P2iGpRExoVX6nUcTVBdkwNtenUz4/IXWQU=;
+        b=Ui+UowUcX28lYA78yHx0br79olxxIJUaIwECt3cFD/9wP1tRhS4671Sx5Bhc5Scq9v
+         KgiCMUtix3rtpFnkgXUjSSIQNbtFbrhN0L/qp4UFLnwZ3TEgjbKbKcbPx+grnOOXzcFg
+         /T497GjjAyI6ffTXJ/E17dZWEcVH+gwomaNMVuZHvpGFXyNkhGB7L1zFdT9nAqFqcOhQ
+         yEar8u7tWMSIxmei/UH9nx7vBXKaHwvmodALAWMzbU7sBrfphtUqyq/mC9SimIlbF0p4
+         wBbkz0zOiBHaLg9BzZnMxQJEizrEgZG8Mw11s9y+D5EQ4xkIpMXuu0KuG2/2CbBZZGME
+         gKuA==
+X-Gm-Message-State: AOJu0YyIqH+r22fRmfx/62ZTmVtt3qN/WhastGFaqxnmJ99qTdRD03Pi
+	fDuSdMm/LcciII+DkiSMeRD5hoYROQfoD7h+ftCbtdp22QLPzLoeWG4656CrkDTnYGNGPSZFQvw
+	2nTQxAr8K8use0XN6Tw6Eh2p572yfvYe31ukNGfhV48yypHfq43bbbWQ=
+X-Google-Smtp-Source: AGHT+IGN6CJZXhbEB9UpDoq+URaZ5XPGtJ364x3Y+Ubyh0XN8Fwr0eRMrDJAZzKNULNFMKA8r0txcQKHqNO+R8UuZx/JNcinXQzQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6e02:3e8e:b0:3d6:d162:be02 with SMTP id
+ e9e14a558f8ab-3d93b5eee0fmr9204115ab.21.1745556864024; Thu, 24 Apr 2025
+ 21:54:24 -0700 (PDT)
+Date: Thu, 24 Apr 2025 21:54:24 -0700
+In-Reply-To: <680a45db.050a0220.10d98e.000a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680b1580.050a0220.2c0118.0c73.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [block?] BUG: unable to handle kernel NULL
+ pointer dereference in lo_rw_aio
+From: syzbot <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 24, 2025 at 09:20:53PM -0700, Linus Torvalds wrote:
-> On Thu, 24 Apr 2025 at 19:46, Kent Overstreet <kent.overstreet@linux.dev> wrote:
-> >
-> > There's a story behind the case insensitive directory fixes, and lessons
-> > to be learned.
-> 
-> No.
-> 
-> The only lesson to be learned is that filesystem people never learn.
-> 
-> Case-insensitive names are horribly wrong, and you shouldn't have done
-> them at all. The problem wasn't the lack of testing, the problem was
-> implementing it in the first place.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-While I agree with you in _principle_, on this specific subject -
+***
 
-This is all irrelevant given that the purpose of the operating system
-and the filesystem is to support users and the applications they want to
-run.
+Subject: Re: [syzbot] [block?] BUG: unable to handle kernel NULL pointer dereference in lo_rw_aio
+Author: lizhi.xu@windriver.com
 
-And the hacks for doing this in userspace don't work.
+selinux policy not support read_iter
 
-And the attitude of "I hate this, so I'm going to partition this off as
-much as I can and spend as little time as I can on this" has all made
-this even worse - the dcache stuff is all half baked. Stroll through the
-ext4 and xfs code and find all the comments to the effect of "yeah, we
-should really do this better _eventually_"...
+#syz test
 
-And the security issues aren't even case insensitivy, it's just unicode.
-But that ship has sailed too...
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 4f968e3071ed..3572b50dbf0a 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1044,6 +1044,10 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+ 
+ 	if (!file)
+ 		return -EBADF;
++
++	if (unlikely(!file->f_op->read_iter))
++		return -EINVAL;
++
+ 	is_loop = is_loop_device(file);
+ 
+ 	/* This is safe, since we have a reference from open(). */
