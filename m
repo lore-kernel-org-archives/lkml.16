@@ -1,124 +1,135 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster2-host10-snip4-2.eps.apple.com [57.103.64.143])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D788C12CD8B
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC9B12CD8B;
+	Fri, 25 Apr 2025 12:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585310; cv=none; b=QdRUd4+F9V1ZVlhJjCcUOiezq05VTsm/uwt2t1Zn6O51suaDdKpLkWL+c1RrtVR8JFl6icze0yPsrd0WYeIu2RzMdjHB0LcKz2E800rzE+Wyhv9OWND/ZgB6rKh4LAQCnKof9Z8S06Z5eauf7fQr1NZ6rnaeSM/8SHf7kczY9PY=
+	t=1745585413; cv=none; b=Gp3+o6ILjC3V71gJQ6wRdifwyLqDRoc0wF0DK6xI56OUoiK83UTI0yh1629Y1tAQsj1ND3HUr7zZUBl037cIOoapdiSpZTJA103SO9nNcYyKie68m+aWUk22EOvcCaXR9Lz7S4vknXUo/mrxFqavyLYeZel0RIIB0+FBbpW5k9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745585310; c=relaxed/simple;
-	bh=ItpS2xzAPSqiTM6g+RYEGXCpDzJkoySyO6rgMQ7nBm4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TsIENo5d0aLglY40STtyChvRaxjH7koCqAcw4GDtk9Ujb69ZdT35UwZef70dQakLlDyrh9PjGWhYzCK5OfULfSqtixvTr5TXHkFNlPIkrbhP3sJu2PueKKymkg9fmQSJTMAu5U5MrT3IlZe2RmWiDacjVt7KYxaue9NNO9kE/E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=AYEPtaDk; arc=none smtp.client-ip=57.103.64.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1745585413; c=relaxed/simple;
+	bh=YifXUtvmAO58hJSG7VfzeKTiZSwfYGXQ3yY7dlFME7g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gGm9Z4K6v63lWwhamYimv3yxKVoBVr4Y6NvryQi+Wt2oCFVCpB/ZWSmma5Jjgk47mNN2ibjMAeGUUMKDT8wV4naqXT5ifcC9dvFqsB045oukTN1wXH5E7rBVAmYYID8a9kDr1tiIwAggSBfnMF61949ZX5EhAnvuyaKp0ux7iM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DsFgEjvj; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="AYEPtaDk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=W+hPrG8Sv+ny5hQpRcrUhB/yLitYHoz8WmN/Jhjb124=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=AYEPtaDkVr91tES583vF/Aokv2OvPGvIngv1rMPo6KBL8QQaQ8VLaJoXGn1QjRqNO
-	 mUvGJmEgGyBTWhJJDMDPo4JiFNKEVOY6zs8AH22yvNLwYy2eu4Ry8pytpLiBfFP+tU
-	 KhAxeyWEmU//QL37S2ELlbe3lF3xMQWC3go/LwTrFAy2RjWAmCbiXWpgkjbLxpPvYX
-	 ic5yJioMPilMMKTOfJwjHWGdL8jmoJqS/Xk1Wwbx8CnmEZNaRs/UuhgAammF0rsbRu
-	 Z8a5YjdWoVk5MMzDagNB/Wd+hlGZc/xCZf6BCK3dk77fDH+BIA//zngsi95kYHjbTT
-	 pmvYg6O9dqvLw==
-Received: from outbound.pv.icloud.com (localhost [127.0.0.1])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id 0C19E1800872;
-	Fri, 25 Apr 2025 12:48:26 +0000 (UTC)
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 07AE21800869;
-	Fri, 25 Apr 2025 12:48:24 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Fri, 25 Apr 2025 20:48:10 +0800
-Subject: [PATCH v3] serdev: Refine several error or debug messages
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DsFgEjvj"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P86wNj019049;
+	Fri, 25 Apr 2025 14:49:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=JSsdkFg45Ll2VJgZTBAf+T
+	nuU5fz9vAYn+9hEOgOa/I=; b=DsFgEjvjWBi4nX+dONp8msrJbrtUXS0NJVrB0k
+	Zs1HIVJ6dWVsElHxXTKh8rHaGmcK6zO+dHJaxxbi90Q0PESwJ7ZiSVt9KuNxBjji
+	LFhMxnwoOlpx183ZDf7X2dBof6+pfdt4KAQzAEmA1zE5VkmpnxeS+c4nXHNtR4m4
+	sPiam2vjAeqfq/RXqz2ix00HmZLG+xS10aAxcwlZx2l7L1GyXeE7+N/KoOICBmid
+	ZGtTmdgnopxUjDflDw7GHI1k6/p2rZ07VLdEM6SiEIzR1xt/kBFIx3XJlj6pPQ8r
+	zC2YGik/IxUk5pNyBaBmcACmnJzbAA+/fqOAoPqXv/JvF2Hw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjvm6st-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 14:49:46 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AA8D64004B;
+	Fri, 25 Apr 2025 14:48:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E20CFA09560;
+	Fri, 25 Apr 2025 14:48:04 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
+ 2025 14:48:04 +0200
+Received: from localhost (10.252.15.6) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
+ 2025 14:48:04 +0200
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <lee@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC: <ukleinek@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jic23@kernel.org>, <robh@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>, <wbg@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
+Subject: [PATCH v5 0/7] Add STM32MP25 LPTIM support: MFD, PWM, IIO, counter, clocksource
+Date: Fri, 25 Apr 2025 14:47:48 +0200
+Message-ID: <20250425124755.166193-1-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-fix_serdev-v3-1-2e4ea8261640@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAImEC2gC/1WMQQ6CMBBFr0Jm7Zh2WkBdeQ9jTG2LzELQVhsN4
- e4WEhNYvv/z3gDRB/YRDsUAwSeO3HcZ1KYA25ru5pFdZiBBpdBE2PDnkh3nE+6dmaa92MkrZOE
- RfH7n2OmcueX46sN3bic5rf+MWmaSRIlUWaO0UI1T6vh8s+XObm1/hymUaCnrlUwo0Eiiyru61
- qpcy+M4/gAjSGch4wAAAA==
-X-Change-ID: 20250422-fix_serdev-9da04229081b
-To: Rob Herring <robh@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-serial@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_03,2025-04-24_02,2025-02-21_01
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+This series adds support for STM32MP25 to MFD PWM, IIO, counter and
+clocksource low-power timer (LPTIM) drivers.
+This new variant is managed by using a new DT compatible string, hardware
+configuration and version registers.
+It comes with a slightly updated register set, some new features and new
+interconnect signals inside the SoC.
+Same feature list as on STM32MP1x is supported currently.
+The device tree files add all instances in stm32mp251 dtsi file.
 
-Refine several dev_err() and dev_dbg() messages to solve:
-
-// hardcoded device name
-dev_dbg(dev, "...dev_name_str...")
-
-// repeated device name since dev_dbg() also prints it as prefix
-dev_err(dev, "...%s...", dev_name(dev))
-
-// not concise as dev_err(dev, "...%d...", err)
-dev_err(dev, "...%pe...", ERR_PTR(err))
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Changes in V5
 ---
-For messages printed by dev_err() and dev_dbg(), this patch series is
-to remove hardcoded or repeated device name.
+- Add a necessary delay in clocksource driver, when enabling the timer.
+- Add collected Acks
+- Dropped IIO trigger patch as applied by Jonathan [1] (no dependency)
+  [1] https://lore.kernel.org/all/20250331110435.26157ebe@jic23-huawei/
+
+Changes in V4
 ---
-Changes in v3:
-- Squash both patches as Rob's comments
-- Simplify error code printing as Jiri's comments 
-- Link to v2: https://lore.kernel.org/r/20250424-fix_serdev-v2-0-a1226ed77435@quicinc.com
+- Simplify IIO trigger driver as per Jonathan's comments.
+- Rework clocksource driver: encapsulate mp25 changes in separate function
+  after Daniel's suggestion.
+- Add some definitions to MFD header.
 
-Changes in v2:
-- Add one more patch to remove repeated device name pointed out by Greg
-- Link to v1: https://lore.kernel.org/r/20250423-fix_serdev-v1-1-26ca3403fd33@quicinc.com
+Changes in V3
 ---
- drivers/tty/serdev/core.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+- Yaml indentation issue fixed, reported by Rob's bot
 
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index eb2a2e58fe78fbbdb5839232936a994bda86d0b4..0213381fa35876f43f2f10f6c444160cde73a686 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -118,12 +118,11 @@ int serdev_device_add(struct serdev_device *serdev)
- 
- 	err = device_add(&serdev->dev);
- 	if (err < 0) {
--		dev_err(&serdev->dev, "Can't add %s, status %pe\n",
--			dev_name(&serdev->dev), ERR_PTR(err));
-+		dev_err(&serdev->dev, "Failed to add serdev: %d\n", err);
- 		goto err_clear_serdev;
- 	}
- 
--	dev_dbg(&serdev->dev, "device %s registered\n", dev_name(&serdev->dev));
-+	dev_dbg(&serdev->dev, "serdev registered successfully\n");
- 
- 	return 0;
- 
-@@ -783,8 +782,7 @@ int serdev_controller_add(struct serdev_controller *ctrl)
- 		goto err_rpm_disable;
- 	}
- 
--	dev_dbg(&ctrl->dev, "serdev%d registered: dev:%p\n",
--		ctrl->nr, &ctrl->dev);
-+	dev_dbg(&ctrl->dev, "serdev controller registered: dev:%p\n", &ctrl->dev);
- 	return 0;
- 
- err_rpm_disable:
-
+Changes in V2
 ---
-base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
-change-id: 20250422-fix_serdev-9da04229081b
+- Review comments from Krzysztof
+  - Adopt compatible fallback in dt-bindings and driver
+  - drivers: drop "st,stm32mp25-..." compatibles when unused (e.g. no .data)
+  - counter driver: no update (patch dropped)
+  - defconfig: only enable the necessary config for upstream board
+  - add lptimer DT node in stm32mp257f-ev1 board
+- Add missing management of IER access for stm32mp25
 
-Best regards,
+Fabrice Gasnier (7):
+  dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
+  mfd: stm32-lptimer: add support for stm32mp25
+  clocksource: stm32-lptimer: add support for stm32mp25
+  pwm: stm32-lp: add support for stm32mp25
+  arm64: defconfig: enable STM32 LP timer clockevent driver
+  arm64: dts: st: add low-power timer nodes on stm32mp251
+  arm64: dts: st: use lptimer3 as tick broadcast source on
+    stm32mp257f-ev1
+
+ .../bindings/mfd/st,stm32-lptimer.yaml        |  40 +++-
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        | 177 ++++++++++++++
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |   8 +
+ arch/arm64/configs/defconfig                  |   2 +
+ drivers/clocksource/timer-stm32-lp.c          |  60 ++++-
+ drivers/mfd/stm32-lptimer.c                   |  33 ++-
+ drivers/pwm/pwm-stm32-lp.c                    | 219 +++++++++++++++---
+ include/linux/mfd/stm32-lptimer.h             |  37 ++-
+ 8 files changed, 536 insertions(+), 40 deletions(-)
+
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+2.25.1
 
