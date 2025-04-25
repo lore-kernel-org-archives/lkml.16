@@ -1,145 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2059.outbound.protection.outlook.com [40.107.236.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2C5144304;
-	Fri, 25 Apr 2025 06:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745560905; cv=none; b=FyPl1W01WEB4b7wD5neDGMMdZx62TURS3aMVz9XRiSmlU7xwtgLVBYYgb6hZJvWiAP+5bMug8q0JvpEN9HVtMYVT3nRE1EziQoND858wN8vGeph5wopHvFwtFbAM94vT3L4lUlYmF+tZU+lsnmMexFz4vaJDTfKErHldTVAMn50=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745560905; c=relaxed/simple;
-	bh=xU2b+Zi/jPAOs/dygu9xP99GyeH/dv9p6nxAqx+d9P0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MO/sfSC0inYwLvbFq5s9m0qs0r7DXRnGEDeNkc4FP8EKAdy+COnwA67ITWKOzEDfv4wDpLihJcVsgms+c2CogtujswLzDzrT+LQF/tb0SoA35S88LWZRCcYUecLJxMD3l1L1nYeEQLZQUXfBnH10/NiYxvrcf0N5667l+X7f+mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NoEZom0U; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01722144304;
+	Fri, 25 Apr 2025 06:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745560916; cv=fail; b=jDdXeajmpAdv2nu2gMjc+v2LuShFKLyFvTvQyQaNqZJyaxALwxv3gJSE9JINYxHvIffpEDz75MM/NJHkC9ztDM7NF83pRTAFQlSN+Ee6CmUMNqLbUX+Z0yBkeg0tFoFkdE5SH1JWuEHnCcniTZoKpwoIL+mJJyQKj85gJ8SMLzQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745560916; c=relaxed/simple;
+	bh=Ews3cQFlrtJvxHrfxxVtseCIQ3LMb6+xGVTvdemZa5Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lSQW8h4vdR/uG1siA5CaNzd4dbA5ULepIu1NDDAgb2HO+QoGe08tdKiAXi/73YBKmlMDl4Tz5k2k3FTOuIneyp1IDGyiRWsLuOdUVmCVB9OrwPDvGB6SI8HJpRTyy29bCSorJzYcAtqLjnUXtNdtD/dzx6IeDgVKkvwAheOiq5U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZmYCScX2; arc=fail smtp.client-ip=40.107.236.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NoEZom0U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745560904; x=1777096904;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xU2b+Zi/jPAOs/dygu9xP99GyeH/dv9p6nxAqx+d9P0=;
-  b=NoEZom0UCVuE1xRMG/PCgQ+ZiwK6TIaLEXWt71mdolo9g73frEYmQkB5
-   AGpex7oZYtlM9zC7e0tCaBWZQdzwueey6Jbz14vamXPBr8P35H0p3zwDJ
-   c8BCFSIXTOXYOEwFFX8lZfWb91Jhw+uLWLxwZeClFvZtkaIbgYHAO1+aM
-   JA+1QYrtHQNZIs348x+ZWxMQSrtXQXC8pv40sLuRXx/PFElUrONi1adR1
-   NB3k+tiwGrwGPMTVpt78UXeZjw/8SneG1sMvTojI/54uQjozKr5TrTa+F
-   /MLxXjK51hAkndU8gcUYa35TnVGCfbDfGynOV2fsTJp2xRTts3q++MCe0
-   g==;
-X-CSE-ConnectionGUID: FQELhwl5QGCN8o3sq6CzzA==
-X-CSE-MsgGUID: D+JqdKCjR/W2JAkgXQ8hpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="69707059"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="69707059"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 23:01:43 -0700
-X-CSE-ConnectionGUID: b6S8IAIaR/+e7M6jn6Vibg==
-X-CSE-MsgGUID: 7oAiGe6PQ0idckOK5XqdLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="132707322"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 24 Apr 2025 23:01:39 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8C80-0004rV-0Y;
-	Fri, 25 Apr 2025 06:01:36 +0000
-Date: Fri, 25 Apr 2025 14:01:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	peter.chen@cixtech.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Manikandan K Pillai <mpillai@cadence.com>,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: Re: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and
- EP controller
-Message-ID: <202504251312.YvKIAjMl-lkp@intel.com>
-References: <20250424010445.2260090-6-hans.zhang@cixtech.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZmYCScX2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qXOE13hAWRbcdQx8IuQu1c65+P7dftejQLWL5VBEw/r5Med+Nfh0m0fAoA8cv44iaFBcoRuYPoVxg1HddY2evkWwVdb//WoEXwVR2y8rM/lujw+V81Be5jbB7Y/T+9ZrYb0T+qii6sH/Ng3gTVSuAePKGOFyt5wE45vez+pa53uuIJ2JqFMid5Pl8GW+ciWkpDzBjOatysRvdQat6A1cv7XSIsGYXuz9NDi6oifsteLUPn/7NAI3FoFwF5W+XMQW6lMoAZIbmdcpzMqc/djdIDo2EXuBUADpVJ5HnpThp8OtXI7PVpfkjnVtRY/vVDkuj4dwIZuy/Uj0vQAjTUxiiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z4Tm9luy850jL8k6M6TwcPYBy6zJVmfWn2fVvo7Fiy4=;
+ b=iNL6Jv7/0nFtVIZAlU0gaYuLg32CdADDCRS+hixM8ntSrbWT7koaiul23hfWSo/Fk8M6CLovibB0YRosj2EOXPfNkYxI2L2T0zDdpOwl+nZRUA9g8gu5wwzE2Z1rqmBlGqWrY3bi802djlWvdU63ebD/Uht1NamXXIV7OBZFLLLekOjae7Awpz2/IVc7wSgpMGZK3uWafcnR/CDeI7y1xRmYHyVpOigTS1YStsZE6mPTWFRdYSiNkRhyBmclZRfpcM5uCwX2dAnC7AzHAoTgjYsqOSn9FwTxvIlCGuxT77eNkfsOdnp7LvIvpsqzZpfYFB7U6wp4NpjBOQajIPszNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z4Tm9luy850jL8k6M6TwcPYBy6zJVmfWn2fVvo7Fiy4=;
+ b=ZmYCScX2KzT95erjPdj8CmbAbumXMV133ZTDSw894v6cjyxFDAdCW/nEtakUJggWbKQiOaQAVLGODX6Qq2elO/D3X11KrvPuUujid0HM610QZVpN6EHKFTIiPzFLfCvQ7aXfQOZD+bl0rVLLoLk+DJT2G074Bggs9GHha3i7UHQ=
+Received: from CH0PR03CA0250.namprd03.prod.outlook.com (2603:10b6:610:e5::15)
+ by IA1PR12MB9029.namprd12.prod.outlook.com (2603:10b6:208:3f0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
+ 2025 06:01:51 +0000
+Received: from CH1PEPF0000A347.namprd04.prod.outlook.com
+ (2603:10b6:610:e5:cafe::c7) by CH0PR03CA0250.outlook.office365.com
+ (2603:10b6:610:e5::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Fri,
+ 25 Apr 2025 06:01:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000A347.mail.protection.outlook.com (10.167.244.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 06:01:50 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
+ 2025 01:01:49 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
+ 2025 01:01:49 -0500
+Received: from prasad-lnx-mach.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 25 Apr 2025 01:01:45 -0500
+From: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+To: <broonie@kernel.org>, <alsa-devel@alsa-project.org>
+CC: <Vijendar.Mukunda@amd.com>, <Basavaraj.Hiregoudar@amd.com>,
+	<Sunil-kumar.Dommati@amd.com>, <syed.sabakareem@amd.com>,
+	<mario.limonciello@amd.com>, Venkata Prasad Potturu
+	<venkataprasad.potturu@amd.com>, Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Greg KH
+	<gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>, "open
+ list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..."
+	<linux-sound@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/3] ASoC: amd: acp: Fix NULL pointer deref on acp resume path
+Date: Fri, 25 Apr 2025 11:31:39 +0530
+Message-ID: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424010445.2260090-6-hans.zhang@cixtech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: venkataprasad.potturu@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A347:EE_|IA1PR12MB9029:EE_
+X-MS-Office365-Filtering-Correlation-Id: d552958a-ed76-4d3d-8733-08dd83beab93
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hARX+oLmQzyTRKC7fGp3ipD/QvGNLQuN8fLf1ZoqmGkKu21HRHhMyg0UUfbF?=
+ =?us-ascii?Q?DQaSkm3BfSz6qO2OX2V31DwsbGVtWlElcpCtl9/wo7UOg7omRAFhl3Gpcrls?=
+ =?us-ascii?Q?5q8AHClVAeu96Yn066upgjIx1Jh5YIxKLBCZEY/+1qFkXTwRVDEy5SQIejIv?=
+ =?us-ascii?Q?RE5UTByLXuL087PcXhnITaoWpy6QXHmY3GDOQObcK6BWgJoggqeds1mJ1z1m?=
+ =?us-ascii?Q?DyRJSsRW9i+Zxmqoj/Hce2INricgNXmApaAAsx+E1lL0wNw4h5PSJpeEA/7w?=
+ =?us-ascii?Q?vaed+W9KWgW5KkWrEg41luM3YAFyeFXIICgTHSGDAG/8w5s2lcIVJ3Xmc5mB?=
+ =?us-ascii?Q?Zx8aMI/kF0UJvSYXjhv3xdnMiorLMfec1UCuH9Vb7VUwu+IEaG08jT0Y6DiN?=
+ =?us-ascii?Q?X+g0n9DYpz7fmlD95ItR5ZiJ+A9c0K6gJwLVACAZj2+dIHjYHoS5tb5Djr7C?=
+ =?us-ascii?Q?5SwiS6V/QqaLtp37wkiPWUV3eCeN8173mu7Q1bQoKEPGcDdSmaWoYjORhwXa?=
+ =?us-ascii?Q?j9Y73UNV+bg0f0h/QbmyhIIZHQQ5KWOOAqyNiH4QJztU13r8+DKmIjdtbDjt?=
+ =?us-ascii?Q?ODiRyqssF9HOr1tzRHx/MhlO63DH7xJ2zizkBge3ev2lGa1xCE++3XHZ0Gnc?=
+ =?us-ascii?Q?jNi9St6A+LC8HFAJXcycZx1zCMg2ixSy7A3WesdMCYiwlgcOj28AyIIyVJ5m?=
+ =?us-ascii?Q?HjxM2AuFuKM2LQuQKFgCSfFuZw15y/U9GlgiOnZFjHYJ3M/H2gGAd3Yr6wgY?=
+ =?us-ascii?Q?P3RQ/Yorl+Q1gHatpdW9HIJwYgHDEJ2q8DcVFuERlULtrHasj8OT600SzGiU?=
+ =?us-ascii?Q?YMG4FDFhxzoJ/by1JY7HBPOkeewBzpwd/VXo39pfNZokkIv9eZfhJIESd48R?=
+ =?us-ascii?Q?XwrAgXrPHH7DxUdv56qCNIT9h95Q0N1c0mf2BtyvKrKeqYAZXIWNsXlu4+fv?=
+ =?us-ascii?Q?qc2wHu/IyoweNp0YiRxqoUJIYTfTGmRDjUpD46ezyZhOIt+Iv9vE9ABI7W8n?=
+ =?us-ascii?Q?xe85pUU6ZsY6h7/vU3Ve677zaWIVROdgCY1l1+9GTgt1qni2VggFL86GDqVB?=
+ =?us-ascii?Q?6zu+SdCj/rvbNaIhm9whNb+Gog8q6HkOBIw0MJReMosecTtuFyPRfN6EGLMx?=
+ =?us-ascii?Q?T6OyOgiF8sNA6clpJXB5oIPdLLeVzi98RXYSTJQucJHJ2JnUWLya35i2/TfF?=
+ =?us-ascii?Q?mazGKtkdkJNGMxgwlJ4GVF6JQaPoiB8T5mwFqjxHFemyfPByYXVLbU0RxXn+?=
+ =?us-ascii?Q?9JlkRCjvIvw51wRcd+qLw7uV/dNe+joKQtSP92W8i4xidMz4sx5VfjczfAsb?=
+ =?us-ascii?Q?Vs5TwO/zsGQ45ZtHJw8+3UoN0NoOXCWXajqubhh1S+hqy1ZnqLYZhSpycgXI?=
+ =?us-ascii?Q?APer3mfAYtgGXihH7vi+51Hr/DdBZkfQfFYBC1rsHolwfN0BwJ8L0ZhK9O5f?=
+ =?us-ascii?Q?hYVuB4qecMAe+j8v3SSMVYmWqd/Q4XCII5gZSh9VqbvHek+PEQIyiG96aBXj?=
+ =?us-ascii?Q?4arLz1amQJnIpr24YsAcip3ucmZgLgRoVWs5?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 06:01:50.1450
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d552958a-ed76-4d3d-8733-08dd83beab93
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A347.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9029
 
-Hi,
+update chip data using dev_get_drvdata(dev->parent) instead of
+dev_get_platdata(dev).
 
-kernel test robot noticed the following build errors:
+BUG: kernel NULL pointer dereference, address: 0000000000000010
+Call Trace:
+ <TASK>
+ ? __pfx_platform_pm_resume+0x10/0x10
+ platform_pm_resume+0x28/0x60
+ dpm_run_callback+0x51/0x1a0
+ device_resume+0x1a6/0x2b0
+ dpm_resume+0x168/0x230
 
-[auto build test ERROR on fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2]
+Fixes: e3933683b25e ("ASoC: amd: acp: Remove redundant acp_dev_data structure")
 
-url:    https://github.com/intel-lab-lkp/linux/commits/hans-zhang-cixtech-com/dt-bindings-pci-cadence-Extend-compatible-for-new-RP-configuration/20250424-090651
-base:   fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-patch link:    https://lore.kernel.org/r/20250424010445.2260090-6-hans.zhang%40cixtech.com
-patch subject: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and EP controller
-config: i386-buildonly-randconfig-003-20250425 (https://download.01.org/0day-ci/archive/20250425/202504251312.YvKIAjMl-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250425/202504251312.YvKIAjMl-lkp@intel.com/reproduce)
+Signed-off-by: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+---
+ sound/soc/amd/acp/acp-rembrandt.c | 2 +-
+ sound/soc/amd/acp/acp-renoir.c    | 2 +-
+ sound/soc/amd/acp/acp63.c         | 2 +-
+ sound/soc/amd/acp/acp70.c         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504251312.YvKIAjMl-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/cadence/pcie-cadence-plat.c:13:
-   drivers/pci/controller/cadence/pcie-cadence.h:851:8: error: expected ')'
-     851 |                                                  int where)
-         |                                                  ^
-   drivers/pci/controller/cadence/pcie-cadence.h:850:49: note: to match this '('
-     850 | static inline void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn
-         |                                                 ^
->> drivers/pci/controller/cadence/pcie-cadence-plat.c:35:25: error: use of undeclared identifier 'cdns_pcie_host_init_root_port'; did you mean 'cdns_pcie_hpa_host_init_root_port'?
-      35 |         .host_init_root_port = cdns_pcie_host_init_root_port,
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                cdns_pcie_hpa_host_init_root_port
-   drivers/pci/controller/cadence/pcie-cadence.h:855:19: note: 'cdns_pcie_hpa_host_init_root_port' declared here
-     855 | static inline int cdns_pcie_hpa_host_init_root_port(struct cdns_pcie_rc *rc)
-         |                   ^
->> drivers/pci/controller/cadence/pcie-cadence-plat.c:36:24: error: use of undeclared identifier 'cdns_pcie_host_bar_ib_config'; did you mean 'cdns_pcie_hpa_host_bar_ib_config'?
-      36 |         .host_bar_ib_config = cdns_pcie_host_bar_ib_config,
-         |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                               cdns_pcie_hpa_host_bar_ib_config
-   drivers/pci/controller/cadence/pcie-cadence.h:859:19: note: 'cdns_pcie_hpa_host_bar_ib_config' declared here
-     859 | static inline int cdns_pcie_hpa_host_bar_ib_config(struct cdns_pcie_rc *rc,
-         |                   ^
->> drivers/pci/controller/cadence/pcie-cadence-plat.c:37:35: error: use of undeclared identifier 'cdns_pcie_host_init_address_translation'; did you mean 'cdns_pcie_hpa_host_init_address_translation'?
-      37 |         .host_init_address_translation = cdns_pcie_host_init_address_translation,
-         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                          cdns_pcie_hpa_host_init_address_translation
-   drivers/pci/controller/cadence/pcie-cadence.h:866:19: note: 'cdns_pcie_hpa_host_init_address_translation' declared here
-     866 | static inline int cdns_pcie_hpa_host_init_address_translation(struct cdns_pcie_rc *rc)
-         |                   ^
-   4 errors generated.
-
-
-vim +35 drivers/pci/controller/cadence/pcie-cadence-plat.c
-
-    31	
-    32	static const struct cdns_pcie_ops cdns_plat_ops = {
-    33		.link_up = cdns_pcie_linkup,
-    34		.cpu_addr_fixup = cdns_plat_cpu_addr_fixup,
-  > 35		.host_init_root_port = cdns_pcie_host_init_root_port,
-  > 36		.host_bar_ib_config = cdns_pcie_host_bar_ib_config,
-  > 37		.host_init_address_translation = cdns_pcie_host_init_address_translation,
-    38		.detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
-    39		.set_outbound_region = cdns_pcie_set_outbound_region,
-    40		.set_outbound_region_for_normal_msg =
-    41						    cdns_pcie_set_outbound_region_for_normal_msg,
-    42		.reset_outbound_region = cdns_pcie_reset_outbound_region,
-    43	};
-    44	
-
+diff --git a/sound/soc/amd/acp/acp-rembrandt.c b/sound/soc/amd/acp/acp-rembrandt.c
+index 746b6ed72029..cccdd10c345e 100644
+--- a/sound/soc/amd/acp/acp-rembrandt.c
++++ b/sound/soc/amd/acp/acp-rembrandt.c
+@@ -199,7 +199,7 @@ static void rembrandt_audio_remove(struct platform_device *pdev)
+ 
+ static int rmb_pcm_resume(struct device *dev)
+ {
+-	struct acp_chip_info *chip = dev_get_platdata(dev);
++	struct acp_chip_info *chip = dev_get_drvdata(dev->parent);
+ 	struct acp_stream *stream;
+ 	struct snd_pcm_substream *substream;
+ 	snd_pcm_uframes_t buf_in_frames;
+diff --git a/sound/soc/amd/acp/acp-renoir.c b/sound/soc/amd/acp/acp-renoir.c
+index ebf0106fc737..04f6d70b6a92 100644
+--- a/sound/soc/amd/acp/acp-renoir.c
++++ b/sound/soc/amd/acp/acp-renoir.c
+@@ -146,7 +146,7 @@ static void renoir_audio_remove(struct platform_device *pdev)
+ 
+ static int rn_pcm_resume(struct device *dev)
+ {
+-	struct acp_chip_info *chip = dev_get_platdata(dev);
++	struct acp_chip_info *chip = dev_get_drvdata(dev->parent);
+ 	struct acp_stream *stream;
+ 	struct snd_pcm_substream *substream;
+ 	snd_pcm_uframes_t buf_in_frames;
+diff --git a/sound/soc/amd/acp/acp63.c b/sound/soc/amd/acp/acp63.c
+index 52d895e624c7..1f15c96a9b94 100644
+--- a/sound/soc/amd/acp/acp63.c
++++ b/sound/soc/amd/acp/acp63.c
+@@ -250,7 +250,7 @@ static void acp63_audio_remove(struct platform_device *pdev)
+ 
+ static int acp63_pcm_resume(struct device *dev)
+ {
+-	struct acp_chip_info *chip = dev_get_platdata(dev);
++	struct acp_chip_info *chip = dev_get_drvdata(dev->parent);
+ 	struct acp_stream *stream;
+ 	struct snd_pcm_substream *substream;
+ 	snd_pcm_uframes_t buf_in_frames;
+diff --git a/sound/soc/amd/acp/acp70.c b/sound/soc/amd/acp/acp70.c
+index 6d5f5ade075c..217b717e9beb 100644
+--- a/sound/soc/amd/acp/acp70.c
++++ b/sound/soc/amd/acp/acp70.c
+@@ -182,7 +182,7 @@ static void acp_acp70_audio_remove(struct platform_device *pdev)
+ 
+ static int acp70_pcm_resume(struct device *dev)
+ {
+-	struct acp_chip_info *chip = dev_get_platdata(dev);
++	struct acp_chip_info *chip = dev_get_drvdata(dev->parent);
+ 	struct acp_stream *stream;
+ 	struct snd_pcm_substream *substream;
+ 	snd_pcm_uframes_t buf_in_frames;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
