@@ -1,80 +1,77 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4142C21C184;
-	Fri, 25 Apr 2025 23:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DA113B7A3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745624197; cv=none; b=R+pEQPBr9MMQave0rY5/RPAYfXe5uv3EWr6N8QZlqdtSOhesXsYXgJ7/hdv8PtmBETQc0mqCD2p81Ih7f9ktzYBmEhj/CgQmcbI9uDvXlvjCZ2lg8+lstCrVH8WD3EqkTjbA6QzEH4qBI/ZmznE00jdrpglc5dsvWPttaY3LK9M=
+	t=1745624295; cv=none; b=WSAl8RVwSogawyKfmcN6UykoqcXq08wnMbOzsAd+5qZemmab+CdFCiU0ut7h4wKpqjLRJKEeHYHQbSmPsIjqmspFcG1dZxIDDG7QNm46zGaZ63uc8EvdXDmhKDsoW/P3kiGUQKvPlcrOPRSXEP/7VmRS+vD9TJSm/MES4gV5QcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745624197; c=relaxed/simple;
-	bh=cqlwv2vPIA0AJYCC9J8uX3oIMqf20tDiQvD0X0XAzbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bt7+cqtS1Cv1gu1Dbnsad6tn7tQo7XixJp3Rbgi6hIFcdySVZyU6Gpq4KIOuXgvzLHdwyvZJgHlnXMxdKEfC2OC7zrEEDrIlDRlRIzKMuCYXPJre5gtt86WRc7G96aDzlW+Uzczydna6gKd9RvUcwKF8zWFF/feZ39+rCjvnMTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost.localdomain (unknown [116.232.18.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 4556C340BDE;
-	Fri, 25 Apr 2025 23:36:30 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Yixun Lan <dlan@gentoo.org>
-Cc: Alex Elder <elder@riscstar.com>,
-	Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	spacemit@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: (subset) [PATCH v9 0/3] riscv: spacemit: add gpio support for K1 SoC
-Date: Sat, 26 Apr 2025 07:35:40 +0800
-Message-ID: <174562390823.16593.8457766773146505593.b4-ty@gentoo.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250424-03-k1-gpio-v9-0-eaece8cc5a86@gentoo.org>
-References: <20250424-03-k1-gpio-v9-0-eaece8cc5a86@gentoo.org>
+	s=arc-20240116; t=1745624295; c=relaxed/simple;
+	bh=bBXE0S+pNXENLTt4NEY1ZrmeTvHC4VQlLdkgbGsAHQw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cL36ny0R9HkFJtkkPBzph87HqrOtD+9yTe9MmItbGihXWSAEH7+B57qp5l/uawoGzu2np5jjtrjfgv5iF1SRFiSIbte1nDQjkHO0TSrb1bGz09DMopiYPLiMyP0ISraZJ+XmRg4klK35KEh7UwYRIpII26hVnMAXiM0qy19n+oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=votz5VzM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="votz5VzM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1087C4CEE4;
+	Fri, 25 Apr 2025 23:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745624294;
+	bh=bBXE0S+pNXENLTt4NEY1ZrmeTvHC4VQlLdkgbGsAHQw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=votz5VzMXsI/gGUGcBTOD4PPK/SqxvOT6jZ1lIrQE51GryTcYvzs9KfudOJPDFYBj
+	 75zQs86G0NaBmP8Hj+6YL90BRsSHcM/ICGNXMs7v711+KwUIL31EcbIizsMkjU/Uql
+	 kK2RN9ofdQIhJAtwm6lV9ngyGFdOEhsvR7JqY2BQ=
+Date: Fri, 25 Apr 2025 16:38:13 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Mike Rapoport <rppt@kernel.org>,
+ "Sauerwein, David" <dssauerw@amazon.de>, Anshuman Khandual
+ <anshuman.khandual@arm.com>, Ard Biesheuvel <ardb@kernel.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, David Hildenbrand <david@redhat.com>,
+ Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike
+ Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Ruihan Li <lrh2000@pku.edu.cn>
+Subject: Re: [PATCH v4 7/7] mm/mm_init: Use for_each_valid_pfn() in
+ init_unavailable_range()
+Message-Id: <20250425163813.58b72a3aa2d3ebbd96d1929e@linux-foundation.org>
+In-Reply-To: <e772cf66-c661-422d-911a-bc13ba4d59fb@lucifer.local>
+References: <20250423133821.789413-1-dwmw2@infradead.org>
+	<20250423133821.789413-8-dwmw2@infradead.org>
+	<e772cf66-c661-422d-911a-bc13ba4d59fb@lucifer.local>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 25 Apr 2025 17:11:10 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-On Thu, 24 Apr 2025 17:40:48 +0800, Yixun Lan wrote:
-> The gpio controller of K1 support basic GPIO functions,
-> which capable of enabling as input, output. It can also be used
-> as GPIO interrupt which able to detect rising edge, falling edge,
-> or both. There are four GPIO ports, each consisting of 32 pins and
-> has indepedent register sets, while still sharing IRQ line and clocks.
-> The GPIO controller request the two clock sources from APBC block.
-> 
-> [...]
+> Andrew - can we drop this from mm-new? It's breaking it.
 
-Applied, thanks!
+I almost did, but David seems to have a fix.
 
-[2/3] riscv: dts: spacemit: add gpio support for K1 SoC
-      https://github.com/spacemit-com/linux/commit/39efc98da7c60cad066a18049a98d41b8542f44a
-[3/3] riscv: dts: spacemit: add gpio LED for system heartbeat
-      https://github.com/spacemit-com/linux/commit/cb9c3aeae509b36afbdf46942a7a0a0dfc856ce7
-
-Best regards,
--- 
-Yixun Lan
+--- a/include/linux/mmzone.h~mm-mm_init-use-for_each_valid_pfn-in-init_unavailable_range-fix
++++ a/include/linux/mmzone.h
+@@ -2190,10 +2190,10 @@ static inline unsigned long next_valid_p
+ 	/*
+ 	 * Either every PFN within the section (or subsection for VMEMMAP) is
+ 	 * valid, or none of them are. So there's no point repeating the check
+-	 * for every PFN; only call first_valid_pfn() the first time, and when
+-	 * crossing a (sub)section boundary (i.e. !(pfn & ~PFN_VALID_MASK)).
++	 * for every PFN; only call first_valid_pfn() again when crossing a
++	 * (sub)section boundary (i.e. !(pfn & ~PAGE_{SUB,}SECTION_MASK)).
+ 	 */
+-	if (pfn & (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
++	if (pfn & ~(IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
+ 		   PAGE_SUBSECTION_MASK : PAGE_SECTION_MASK))
+ 		return pfn;
+ 
+_
 
