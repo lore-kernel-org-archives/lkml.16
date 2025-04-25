@@ -1,264 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5421C8600;
-	Fri, 25 Apr 2025 10:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FD3220689
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745576284; cv=none; b=ffcJz0lf0+DJ9ZpyWmoORTljuE9vvVMP5EqxPXF3HboWjmmwgN+AOvQ7jYjY9Ri73SGvNEDhkL4QX1D3Amroac3uA+BarGfXlrCiI4QGn5HOIoV8Xk3vgZLRp3CR8iYgXbYJ5MrZL/MySDN249ouaxURvaJTy8uAEo8CLZXQA/8=
+	t=1745576324; cv=none; b=VC2+bVrN/BuCcbKukwmTPOgkqfPtdzhkq6IZuCv5LtDjAguUMtiYvFyEwYGW6yG+Hyzg/XJyjCOOeToahbqt98xUj3HQUtTrpFLAaKjikkx/qSEodh+pmaGIaXTDeWJc1xZvdNsmJGyIZNq6HoPmqGbRhJR3ggnUiHvgjFkavN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745576284; c=relaxed/simple;
-	bh=CAARS+8LNUjnSfZXJGSR8d4F58Pl4bjzLGrLrrFkSaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTI0ueIN5NhD59LvzSthIEHKW6fi3M8Slg8xsK8ZB0DKW474uYSTcEMVrX+2BP6lIFAAblY1x6br7vgu42OsKTWWJMZRssxI/EMHyQ1rSuZWIcIctZR4BvLsqvwKxlkbTh4uOSmI/fdDYF7UAhSRjtusHg3npKld+JHgAwOKdxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y/LWWgGS; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745576324; c=relaxed/simple;
+	bh=+WMDRHwIxjNdFWZib1N8x93fRIjfmI7anWK8oxtytUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sKgwk6OUbI7hg4c61yonjzK7N6EEioxrhk1orCtIHnqW0kFovkFUX1dEfpwZvRayQF3P3Lsiso+IdyTy5X6TX5eY4UfsyqeB4TJ+09dpRKaCuMz9fYPtxTHdRcUdgU2PNzb6GXphBfkXZuIRQVGOWasXwlFz/6C+C1zrBzx42k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fS8OBStg; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y/LWWgGS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745576283; x=1777112283;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CAARS+8LNUjnSfZXJGSR8d4F58Pl4bjzLGrLrrFkSaU=;
-  b=Y/LWWgGSSgS3uMbjJGzVw71o/+xTFZLFbcO698dErVkFRCySdp8jQHNx
-   bOl1dQct2hUH3Q/YPzJx6+YfAhvxDVB9YhQdanutdeuioKMLxaIzmu3wx
-   IGdw1ts7eMYwWAu2ApHWUHNHi3i6fEBRT1Dj38W6dTIwI/kzl2/8TBRe0
-   5P7Gvayea10R0xzgED8nkjnYo5KDuzj+wzHYdZqCysOgsVr0mhwNHZtuK
-   qjlP0Mr8+Uy1IaK6183RVi4oFCtVgsOPz3jiLA0pvJJlnHST6x0pKwPYj
-   8VXHnB2FNRkg69Dnm2L26hEuMV+Do6iD4iiOS7sl/Rl4dyfNtbDp81pRA
-   A==;
-X-CSE-ConnectionGUID: Et2EeD7XTha66UtjODWFUQ==
-X-CSE-MsgGUID: wlWlNCrsTY6BYUoGLeXvUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="72604917"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="72604917"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:18:02 -0700
-X-CSE-ConnectionGUID: Qx88MaN9Qha8IRwFQSi98w==
-X-CSE-MsgGUID: eCn3RALWQ3G5XTbYuQmzLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="133376590"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 25 Apr 2025 03:18:00 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8G85-00053Z-2H;
-	Fri, 25 Apr 2025 10:17:57 +0000
-Date: Fri, 25 Apr 2025 18:17:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Zhongqiu Han <quic_zhonhan@quicinc.com>, rafael@kernel.org,
-	pavel@kernel.org, len.brown@intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_zhonhan@quicinc.com
-Subject: Re: [PATCH] PM: QoS: Add support for CPU affinity mask-based CPUs
- latency QoS
-Message-ID: <202504251805.5dAJMVbD-lkp@intel.com>
-References: <20250424095228.1112558-1-quic_zhonhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fS8OBStg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745576318;
+	bh=+WMDRHwIxjNdFWZib1N8x93fRIjfmI7anWK8oxtytUg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fS8OBStgXmEHPXUtgkQM6i6oldyGjHhVXAffJrz40OrrJDixFwzubm2Jjg2v2cmUv
+	 LmnmNqmFur9E5HCtxdfibtsa36Vxyr+lqMpHBeDveVhs5fy0gzCs33TzLPPMof0iw4
+	 ylrUroQH9zIEk5hXM3LaumCgjzrFtrshAOKLj5zW5YghhblY17lEoGLTUcdSfVYaV0
+	 EXmuYNQYKhv0cRLgc+ntPLmiHduEjMltKTcEDNshKbQKBpkrggTkKwLq+n9vOLU3Ky
+	 C7Ad1vqexnj6rH7xkvQOSaU0XBCmXcaei5EN+/YyIst8AG3onO9rnByzIXpJuk8wc7
+	 VmN2qkPkqiYTQ==
+Received: from eldfell (unknown [194.136.85.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pq)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4D41617E0F66;
+	Fri, 25 Apr 2025 12:18:38 +0200 (CEST)
+Date: Fri, 25 Apr 2025 13:18:17 +0300
+From: Pekka Paalanen <pekka.paalanen@collabora.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Vishal Sagar <vishal.sagar@amd.com>, Anatoliy
+ Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Michal Simek <michal.simek@amd.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250425131817.01b7f7d9@eldfell>
+In-Reply-To: <c432aca1-cbab-476c-ba3a-e0d9cc940da7@ideasonboard.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+	<20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+	<CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+	<b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+	<20250327112009.6b4dc430@eldfell>
+	<b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+	<20250327175842.130c0386@eldfell>
+	<CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+	<20250331105446.098f0fbe@eldfell>
+	<20250331082135.GB13690@pendragon.ideasonboard.com>
+	<20250331135337.61934003@eldfell>
+	<20250401162732.731ef774@eldfell>
+	<73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
+	<20250417111315.62a749e5@eldfell>
+	<c432aca1-cbab-476c-ba3a-e0d9cc940da7@ideasonboard.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424095228.1112558-1-quic_zhonhan@quicinc.com>
+Content-Type: multipart/signed; boundary="Sig_/+HlgRhuvMGsiYHXtWjVBSQu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Zhongqiu,
+--Sig_/+HlgRhuvMGsiYHXtWjVBSQu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build warnings:
+On Fri, 25 Apr 2025 11:38:28 +0300
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge amd-pstate/linux-next amd-pstate/bleeding-edge linus/master v6.15-rc3 next-20250424]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> Hi Pekka,
+>=20
+> On 17/04/2025 11:13, Pekka Paalanen wrote:
+> >> My understanding is that the Y-only pixel formats behave in a well
+> >> defined way (or, as well defined as the YUV formats), and there's
+> >> nothing more to add here. Is that right? =20
+> >=20
+> > There are two things:
+> >=20
+> > - Y8 follows COLOR_RANGE property, just like all other YUV formats.
+> > - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values).
+> >=20
+> > I'd like these explicitly written down, so that they become obvious to
+> > everyone. I suspect either one might be easy to forget when writing
+> > code and taking shortcuts without thinking. =20
+>=20
+> I didn't find a suitable place in the docs for this, but would this, in=20
+> the drm_fourcc.h, be enough:
+>=20
+> /*
+>   * Y-only (greyscale) formats
+>   *
+>   * The Y-only formats are handled similarly to the YCbCr formats in the=
+=20
+> display
+>   * pipeline, with the Cb and Cr implicitly neutral (0.0 in nominal=20
+> values). This
+>   * also means that COLOR_RANGE property applies to the Y-only formats.
+>   *
+>   */
+>=20
+> #define DRM_FORMAT_Y8		fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
+> #define DRM_FORMAT_Y10_P32	fourcc_code('Y', 'P', 'A', '4')  /* [31:0]=20
+> x:Y2:Y1:Y0 2:10:10:10 little endian */
+>=20
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zhongqiu-Han/PM-QoS-Add-support-for-CPU-affinity-mask-based-CPUs-latency-QoS/20250424-175559
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20250424095228.1112558-1-quic_zhonhan%40quicinc.com
-patch subject: [PATCH] PM: QoS: Add support for CPU affinity mask-based CPUs latency QoS
-config: i386-buildonly-randconfig-001-20250425 (https://download.01.org/0day-ci/archive/20250425/202504251805.5dAJMVbD-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250425/202504251805.5dAJMVbD-lkp@intel.com/reproduce)
+Hi Tomi,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504251805.5dAJMVbD-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/power/qos.c:344: warning: Function parameter or struct member 'cpu' not described in 'wakeup_qos_affinity_idle_cpu'
->> kernel/power/qos.c:368: warning: Function parameter or struct member 'latency_value' not described in 'cpu_latency_qos_affinity_add'
->> kernel/power/qos.c:368: warning: Excess function parameter 'new_value' description in 'cpu_latency_qos_affinity_add'
->> kernel/power/qos.c:479: warning: Function parameter or struct member 'pm_reqs' not described in 'cpu_latency_qos_affinity_release'
->> kernel/power/qos.c:479: warning: Excess function parameter 'pm_req' description in 'cpu_latency_qos_affinity_release'
+I would be very happy with that.
 
 
-vim +344 kernel/power/qos.c
+Thanks,
+pq
 
-   339	
-   340	/**
-   341	 * wakeup_qos_affinity_idle_cpu - break one specific cpu out of idle.
-   342	 */
-   343	void wakeup_qos_affinity_idle_cpu(int cpu)
- > 344	{
-   345		preempt_disable();
-   346		if (cpu != smp_processor_id() && cpu_online(cpu))
-   347			wake_up_if_idle(cpu);
-   348		preempt_enable();
-   349	}
-   350	
-   351	/**
-   352	 * cpu_latency_qos_affinity_add - Add new CPU affinity latency QoS request.
-   353	 * @pm_req : Pointer to a preallocated handle.
-   354	 * @affinity_mask: Mask to determine which CPUs need latency QoS.
-   355	 * @new_value: New requested constraint value.
-   356	 *
-   357	 * Use @latency_value to initialize the request handle pointed to by @pm_req,
-   358	 * insert it as a new entry to the CPU latency QoS list and recompute the
-   359	 * effective QoS constraint for that list, @affinity_mask determine which CPUs
-   360	 * need the latency QoS.
-   361	 *
-   362	 * Callers need to save the handle for later use in updates and removal of the
-   363	 * QoS request represented by it.
-   364	 */
-   365	int cpu_latency_qos_affinity_add(struct cpu_affinity_qos_req *pm_req,
-   366					 const cpumask_t *affinity_mask,
-   367					 s32 latency_value)
- > 368	{
-   369		int cpu;
-   370		cpumask_t actual_mask;
-   371		struct cpu_affinity_qos_req *cpu_pm_req;
-   372		int ret = 0;
-   373	
-   374		if (!pm_req)
-   375			pr_err("%s: invalid PM Qos request\n", __func__);
-   376	
-   377		INIT_LIST_HEAD(&pm_req->list);
-   378	
-   379		if (!affinity_mask || cpumask_empty(affinity_mask) ||
-   380		    latency_value < 0) {
-   381			pr_err("%s: invalid PM Qos request value\n", __func__);
-   382			return -EINVAL;
-   383		}
-   384	
-   385		for_each_cpu(cpu, affinity_mask) {
-   386			cpu_pm_req = kzalloc(sizeof(struct cpu_affinity_qos_req),
-   387					     GFP_KERNEL);
-   388			if (!cpu_pm_req) {
-   389				ret = -ENOMEM;
-   390				goto out_err;
-   391			}
-   392			ret = dev_pm_qos_add_request(get_cpu_device(cpu),
-   393						     &cpu_pm_req->req,
-   394						     DEV_PM_QOS_RESUME_LATENCY,
-   395						     latency_value);
-   396			if (ret < 0) {
-   397				pr_err("failed to add latency req for cpu%d", cpu);
-   398				kfree(cpu_pm_req);
-   399				goto out_err;
-   400			} else if (ret > 0) {
-   401				wakeup_qos_affinity_idle_cpu(cpu);
-   402			}
-   403	
-   404			cpumask_set_cpu(cpu, &actual_mask);
-   405			list_add(&cpu_pm_req->list, &pm_req->list);
-   406		}
-   407	
-   408		pr_info("PM Qos latency: %d added on cpus %*pb\n", latency_value,
-   409			cpumask_pr_args(&actual_mask));
-   410	
-   411		return ret;
-   412	
-   413	out_err:
-   414		cpu_latency_qos_affinity_release(&pm_req->list);
-   415		pr_err("failed to add PM QoS latency req, removed all added requests\n");
-   416		return ret;
-   417	}
-   418	EXPORT_SYMBOL_GPL(cpu_latency_qos_affinity_add);
-   419	
-   420	/**
-   421	 * cpu_latency_qos_affinity_update - Modify existing CPU affinity latency QoS.
-   422	 * @pm_req : QoS request to update for CPUs with affinity masks.
-   423	 * @new_value: New requested constraint value.
-   424	 *
-   425	 * Use @new_value to update the QoS request represented by @pm_req in the CPU
-   426	 * latency QoS list along with updating the effective constraint value for that
-   427	 * list.
-   428	 */
-   429	int cpu_latency_qos_affinity_update(struct cpu_affinity_qos_req *pm_req,
-   430					    s32 new_value)
-   431	{
-   432		struct cpu_affinity_qos_req *cpu_pm_req, *next;
-   433		int ret = 0;
-   434	
-   435		if (!pm_req || new_value < 0 || list_empty(&pm_req->list)) {
-   436			pr_err("%s: invalid PM Qos request value\n", __func__);
-   437			return -EINVAL;
-   438		}
-   439	
-   440		list_for_each_entry_safe(cpu_pm_req, next, &pm_req->list, list) {
-   441			ret = dev_pm_qos_update_request(&cpu_pm_req->req, new_value);
-   442			if (ret < 0) {
-   443				pr_err("PM QoS qos update failed for %s\n",
-   444				       dev_name(cpu_pm_req->req.dev));
-   445			} else if (ret > 0) {
-   446				wakeup_qos_affinity_idle_cpu(cpu_pm_req->req.dev->id);
-   447			}
-   448		}
-   449	
-   450		return ret;
-   451	}
-   452	EXPORT_SYMBOL_GPL(cpu_latency_qos_affinity_update);
-   453	
-   454	/**
-   455	 * cpu_latency_qos_affinity_remove - Remove existing CPU affinity latency QoS.
-   456	 * @pm_req: QoS request to update for CPUs with affinity masks.
-   457	 *
-   458	 * Remove the CPU latency QoS request represented by @pm_req from the CPU latency
-   459	 * QoS list.
-   460	 */
-   461	int cpu_latency_qos_affinity_remove(struct cpu_affinity_qos_req *pm_req)
-   462	{
-   463		if (!pm_req || list_empty(&pm_req->list)) {
-   464			pr_err("%s: invalid PM Qos request value\n", __func__);
-   465			return -EINVAL;
-   466		}
-   467	
-   468		return cpu_latency_qos_affinity_release(&pm_req->list);
-   469	}
-   470	EXPORT_SYMBOL_GPL(cpu_latency_qos_affinity_remove);
-   471	
-   472	/**
-   473	 * cpu_latency_qos_affinity_release - Release pm_reqs latency QoS resource.
-   474	 * @pm_req: QoS request to remove.
-   475	 *
-   476	 * Release pm_reqs managed CPU affinity latency QoS resource.
-   477	 */
-   478	int cpu_latency_qos_affinity_release(struct list_head *pm_reqs)
- > 479	{
-   480		int ret = 0;
-   481		struct cpu_affinity_qos_req *cpu_pm_req, *next;
-   482	
-   483		list_for_each_entry_safe(cpu_pm_req, next, pm_reqs, list) {
-   484			ret = dev_pm_qos_remove_request(&cpu_pm_req->req);
-   485			if (ret < 0)
-   486				pr_err("failed to remove qos request for %s\n",
-   487				       dev_name(cpu_pm_req->req.dev));
-   488			list_del(&cpu_pm_req->list);
-   489			kfree(cpu_pm_req);
-   490		}
-   491	
-   492		return ret;
-   493	}
-   494	#endif /* CONFIG_PM */
-   495	
+--Sig_/+HlgRhuvMGsiYHXtWjVBSQu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmgLYWkACgkQI1/ltBGq
+qqeHUQ/+NfUcYS7wXohrzllZkrHLk6YwDQxQOoiRG6PixGDOwza/SPNNA28d2Qqm
+CunihOWPP6oCU5c7R51Yt2fZtQZdk533eaPltmaU5YuW7g9Jk8xBvG1KFvwShJgi
+O176UFzxV1TtkCwLyx04kj5Q29rDtJRbm21T84rBiEr+r6AEe007j4JGD58D84hm
+b9vgIXy7qZ/68jXEawGdAJIianBu/SN3T95jZ1vrYJgr/RSF9cC7SVgoan5K2WoV
+3MnXgBfTVqbyKMX3zMGW1NWARglgHqC+JEnd3TORbutORjS7PgRqGF7nY+vScvxt
+9JAF3XtZ+CwA5HOXLRAdLLnCqGQEQ3OmArYyM/PRznbIiUOJGbxS0dYS4SgLkfPH
+FGJCQIOq8yY9blh9pGnV5cwZJFwsVv1/LV6akaHKR2vzPFh4ii+Edy+oFMcoywwo
+Rzoqgp/eMbEtPwL/NFCyKF4CmcBBJExuQer8z8NR/ovRXZ6KObrMi6LyPaeLcsZT
+xq4ZSX2c62B+2bnUsCJeaYcYV0WyFUdQ0KBgf24At7Y3pYE4STRF3m7bUxz0Oql2
+LpQZ7caiz6GKX89Q0aw7yLSWJSY+Euu/RldMWy5EIcXNGEhuZKq3xxVWpLVmK/gv
+hpDZrDv8d23DBk5xM7VJSvWk6M7dBqbyl60f8RlvygNpPu/9rdQ=
+=tC03
+-----END PGP SIGNATURE-----
+
+--Sig_/+HlgRhuvMGsiYHXtWjVBSQu--
