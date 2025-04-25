@@ -1,103 +1,154 @@
-Received: from out.smtpout.orange.fr (out-14.smtpout.orange.fr [193.252.22.14])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3AC34CF5;
-	Fri, 25 Apr 2025 07:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E79D10FD;
+	Fri, 25 Apr 2025 07:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566046; cv=none; b=T3YT6wDITW1hPplql0ye8DBdy0N8x+WZWI8t7SEW0FKUOWlhSgqt07+xStSVIyXiwij0ObwV820arKK0mAAvTUSy7tfkunBezJsE4xPcx4xCDK9tb9gTgT3dfWSKGxCsdUeZYcmHsO0Mobc2A3y2xofgu/7NonU1JPbcVx58SFM=
+	t=1745566137; cv=none; b=OwnJi1haBNPB+KuQmdlGPux96dppWk4PQQAAgr1atdNfoYrPQbCi1LjSDvWFhqdjne8kBrO7RPe98t18RmBdImQthByJdT0DZo1oqrWWjy4thADSyUq8VYNWjtViyaYJCyVnecfzH1KYJJ1jKmR0etV0KGGRn7e0QYW1UGI/oDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566046; c=relaxed/simple;
-	bh=Se6m6y9sZN9J3EHuJl9Vxwvd6h6QBpXAImKVKhBleeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JoIQCMDMOzQc/KLf2Nlf8uA/nC9VW63Jp3D5Px3Oa8jkN8fELlTGIq9Vg68HdZzuhykLbyzCEUkJclFs5wcIlTYDy0v8qlierKzmbMZGLE3pv++u0bEBAFOKzyFFDyJFm0UnAm+7ex6Xnkmyq1/4HbkOHudx/OzZBrph2T1BjzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=f9nflK8v; arc=none smtp.client-ip=193.252.22.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1745566137; c=relaxed/simple;
+	bh=OffDbqTBVes6nVtKvc2+GvuunHqk86fjhIel2nXw05w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HNFGB/KAMedPuDGI5wjHrRHAmlWOPvGsnDRn6KA/eUQMfkteoNRKaGytmGgkYNgRSphw/0X4TySWsSP2Kb3MUTFpEE5dKgQxlR7vgx3gYyTLKL7zG0l1C05pACmImNb6ov6lSm44j3GZ7MY4Y3Zpxe/qn9Zli9OeGc/43GWgp0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=SevJ/7Vu; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="f9nflK8v"
-Received: from mail-ej1-f48.google.com ([209.85.218.48])
-	by smtp.orange.fr with ESMTPSA
-	id 8DKLuQzncXKsE8DKOuD0HC; Fri, 25 Apr 2025 09:18:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1745565509;
-	bh=9MXYhfLDZ8sZbT5kwKmQD0pmgRml2HdigMCY0fKRBow=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=f9nflK8vOGeLNHBUFgEJhoLnthzXyfcR8scN2J/LiE5oXLRQfHt9HzouptysiS9Di
-	 g2KrGk7KOX9GsAinJdfxH2ujQw+tqV4c6au/TKojKMsiHB/s/AOwO5mpfzUolMbNTV
-	 tRbbCBOjxqYbhYjKmfn7CWPWZI5eEqvtaGc2EI9O5iiAJs95lRSg7+/mC3WZCJFu0f
-	 dYN2C3J/1OMIOhi6mBW9ojH6vVyth7iNBglWOkb7U/BGxe731uq+rp7PJaG80R6Rsv
-	 Ij9v12Yr66GJpsXFrLJYErm/3fs0ugUJxmBKVgSgl3mYJEzT8DaLNovc2JF4vvngqP
-	 HKWx4GZJioXgA==
-X-ME-Helo: mail-ej1-f48.google.com
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 25 Apr 2025 09:18:29 +0200
-X-ME-IP: 209.85.218.48
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso351057066b.0;
-        Fri, 25 Apr 2025 00:18:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVObnGUjIlQmPkRgRof0bSmwIiUFdL/JAmKL9Tyuinc4j/90MFH/g0jS//yaqZ3lYzkbisBWOLb7Hk=@vger.kernel.org, AJvYcCWnwFKPqz3DoRtT3ixgMshKJEtvSVlOSh7Fj3X6jq8eS1bICyUYRcEc2E81uS2ATa2IlfpnEkN6hNmS1QJu@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuYfw/kITE/imp+QgScvOlKgC9sFq5RsozXo4NZG2LFIZDTeMt
-	SIjlRTUPFX9POuU91zlTsaJA9LINIEUCRdNR3dRBjgBEU7+Xyxdfh8Shrp8AoNgpzKuU/ez3mvS
-	nYV2MYI+wY/epCM7PXdZ8ybZ/kTc=
-X-Google-Smtp-Source: AGHT+IGrec0S8ejf3QeHROL33sZQ5R1s3Y99LeRod6Z2yTrMqhM0sZC+BJ1CYHCgmoPuDFbs5EHVnuxhZnpbrA+1h4U=
-X-Received: by 2002:a17:907:1c92:b0:ac2:dc00:b34d with SMTP id
- a640c23a62f3a-ace73b469f0mr84570466b.53.1745565505472; Fri, 25 Apr 2025
- 00:18:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SevJ/7Vu"
+X-UUID: e8cba82021a611f09b6713c7f6bde12e-20250425
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=JYqespCzipBArbkbxwYqmmhBdhSBu5Sof0tluCzWjzo=;
+	b=SevJ/7VuOaCdLQhWKJDTlAsQ25Lq34Kp9PokzmhNpcW7MFfLs96ybN+UhzvvZLWCXcShBNh6gXu0wIn+EH/Do9/f250FIdRkJGuQ7XTURxFIzxfdDxndy/MtdXy01W7od7p7d4sFFtuFRijypwYln9g9lRX4LIZJjjkfqHYH7Tg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:bd336e9d-80d5-4a59-a328-206cda895afe,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:0ef645f,CLOUDID:502c0907-829c-41bc-b3dd-83387f72f90e,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e8cba82021a611f09b6713c7f6bde12e-20250425
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+	(envelope-from <shiming.cheng@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1674504371; Fri, 25 Apr 2025 15:28:40 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 25 Apr 2025 15:28:39 +0800
+Received: from mbjsdccf07.gcn.mediatek.inc (10.15.20.246) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 25 Apr 2025 15:28:38 +0800
+From: Shiming Cheng <shiming.cheng@mediatek.com>
+To: <edumazet@google.com>, <davem@davemloft.net>, <dsahern@kernel.org>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+CC: Jibin Zhang <jibin.zhang@mediatek.com>
+Subject: [PATCH] net: call inet_twsk_put() on TIMEWAIT sockets It is possible for a pointer of type struct inet_timewait_sock to be returned from the functions __inet_lookup_established() and __inet6_lookup_established(). This can cause a crash when the returned pointer is of type struct inet_timewait_sock and sock_put() is called on it. The following is a crash call stack that shows sk->sk_wmem_alloc being accessed in sk_free() during the call to sock_put() on a struct inet_timewait_sock pointer. To avoid this issue, use inet_twsk_put() instead of sock_put() when sk->sk_state is TCP_TIME_WAIT.
+Date: Fri, 25 Apr 2025 15:31:13 +0800
+Message-ID: <20250425073120.28195-1-shiming.cheng@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424125219.47345-2-antonios@mwa.re> <20250424-industrious-rottweiler-of-attack-e7ef77-mkl@pengutronix.de>
- <a5684bfe-981e-4ba3-bbea-d713b5b83160@wanadoo.fr> <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
-In-Reply-To: <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Date: Fri, 25 Apr 2025 16:18:14 +0900
-X-Gmail-Original-Message-ID: <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
-X-Gm-Features: ATxdqUEIr0eIXQ8_SCkkchVgXe4gjbCfeg1hy5EZFXU1ZytGNyoezpTiOmcsor4
-Message-ID: <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
-Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
-To: Antonios Salios <antonios@mwa.re>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, rcsekar@samsung.com, linux-can@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@mwa.re, jan@mwa.re, 
-	Markus Schneider-Pargmann <msp@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Fry. 25 Apr. 2025 at 15:34, Antonios Salios <antonios@mwa.re> wrote:
-> On Fri, 2025-04-25 at 00:23 +0900, Vincent Mailhol wrote:
-> > Maybe you can briefly describe what kind of bug (NULL pointer
-> > dereference).
->
-> It's a spinlock bad magic bug that occurs when one tries to send a CAN
-> frame using cansend. The frame gets transferred nonetheless.
-> I'm testing the driver in an virtual RISC-V 64-bit environment with a
-> recent mainline kernel. The M_CAN controller is io-mapped to the
-> system.
+From: Jibin Zhang <jibin.zhang@mediatek.com>
 
-I guess this is because your kernel has CONFIG_DEBUG_SPINLOCK:
+mrdump.ko        ipanic() + 120
+vmlinux          notifier_call_chain(nr_to_call=-1, nr_calls=0) + 132
+vmlinux          atomic_notifier_call_chain(val=0) + 56
+vmlinux          panic() + 344
+vmlinux          add_taint() + 164
+vmlinux          end_report() + 136
+vmlinux          kasan_report(size=0) + 236
+vmlinux          report_tag_fault() + 16
+vmlinux          do_tag_recovery() + 16
+vmlinux          __do_kernel_fault() + 88
+vmlinux          do_bad_area() + 28
+vmlinux          do_tag_check_fault() + 60
+vmlinux          do_mem_abort() + 80
+vmlinux          el1_abort() + 56
+vmlinux          el1h_64_sync_handler() + 124
+vmlinux        > 0xFFFFFFC080011294()
+vmlinux          __lse_atomic_fetch_add_release(v=0xF2FFFF82A896087C)
+vmlinux          __lse_atomic_fetch_sub_release(v=0xF2FFFF82A896087C)
+vmlinux          arch_atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C)
++ 8
+vmlinux          raw_atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C)
++ 8
+vmlinux          atomic_fetch_sub_release(i=1, v=0xF2FFFF82A896087C) + 8
+vmlinux          __refcount_sub_and_test(i=1, r=0xF2FFFF82A896087C,
+oldp=0) + 8
+vmlinux          __refcount_dec_and_test(r=0xF2FFFF82A896087C, oldp=0) + 8
+vmlinux          refcount_dec_and_test(r=0xF2FFFF82A896087C) + 8
+vmlinux          sk_free(sk=0xF2FFFF82A8960700) + 28
+vmlinux          sock_put() + 48
+vmlinux          tcp6_check_fraglist_gro() + 236
+vmlinux          tcp6_gro_receive() + 624
+vmlinux          ipv6_gro_receive() + 912
+vmlinux          dev_gro_receive() + 1116
+vmlinux          napi_gro_receive() + 196
+ccmni.ko         ccmni_rx_callback() + 208
+ccmni.ko         ccmni_queue_recv_skb() + 388
+ccci_dpmaif.ko   dpmaif_rxq_push_thread() + 1088
+vmlinux          kthread() + 268
+vmlinux          0xFFFFFFC08001F30C()
 
-  https://elixir.bootlin.com/linux/v6.14.3/source/lib/Kconfig.debug#L1437
+Signed-off-by: Jibin Zhang <jibin.zhang@mediatek.com>
+---
+ net/ipv4/tcp_offload.c   | 8 ++++++--
+ net/ipv6/tcpv6_offload.c | 8 ++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-Without it, this would have been a more severe NULL pointer dereference.
+diff --git a/net/ipv4/tcp_offload.c b/net/ipv4/tcp_offload.c
+index 2308665b51c5..95d7cbf6a2b5 100644
+--- a/net/ipv4/tcp_offload.c
++++ b/net/ipv4/tcp_offload.c
+@@ -431,8 +431,12 @@ static void tcp4_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
+ 				       iph->daddr, ntohs(th->dest),
+ 				       iif, sdif);
+ 	NAPI_GRO_CB(skb)->is_flist = !sk;
+-	if (sk)
+-		sock_put(sk);
++	if (sk) {
++		if (sk->sk_state == TCP_TIME_WAIT)
++			inet_twsk_put(inet_twsk(sk));
++		else
++			sock_put(sk);
++	}
+ }
+ 
+ INDIRECT_CALLABLE_SCOPE
+diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
+index a45bf17cb2a1..5fcfa45b6f46 100644
+--- a/net/ipv6/tcpv6_offload.c
++++ b/net/ipv6/tcpv6_offload.c
+@@ -41,8 +41,12 @@ static void tcp6_check_fraglist_gro(struct list_head *head, struct sk_buff *skb,
+ 					&hdr->daddr, ntohs(th->dest),
+ 					iif, sdif);
+ 	NAPI_GRO_CB(skb)->is_flist = !sk;
+-	if (sk)
+-		sock_put(sk);
++	if (sk) {
++		if (sk->sk_state == TCP_TIME_WAIT)
++			inet_twsk_put(inet_twsk(sk));
++		else
++			sock_put(sk);
++	}
+ #endif /* IS_ENABLED(CONFIG_IPV6) */
+ }
+ 
+-- 
+2.46.0
 
-> > Also, if you have the dmesg log of the error, this is something you
-> > can add at
-> > the end of the patch description.
->
-> Will do, I'm just waiting for more feedback on the patch before sending
-> a v3. In the meantime, the dmesg log looks like this:
-
-Great!
-
-My comments on the patch description are just nitpicks anyway. You can add my:
-
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-
-to the v3.
-
-Thanks a lot!
-
-
-Yours sincerely,
-Vincent Mailhol
