@@ -1,112 +1,175 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F67208997
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6CD208997;
+	Fri, 25 Apr 2025 21:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618016; cv=none; b=HW7OXVNOPDJJSqgVlOJPIJ1j1XS5jDhFAFWwzFAZpkQ+nGY2keXl3j5lvZbT2lH31jVx2cfjC30c++7HPY9kOK/bx+GI9S6SzcSyYYxx1Vie79QgTm2g+W+JNSnjwLFSikEJOeL/Zu98elyr88ic9KWZGCt6gepS8d4/LN7G7CE=
+	t=1745618062; cv=none; b=MRVRpjLNl+TNdEvHX12CxxEuAvuBwYOK28yhWIL6wyup8wKIKBaOS6km15kWt4gSeg9oAqxiTSUShmCdxgOMlCWeDzxfyH2TrXySSTgX3euVx3d3Go2LWdMG8aXVGcyN1vwZTvLTYSjQP0e1uoeqO6dV0ZoI5dcZCszmcykCZok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618016; c=relaxed/simple;
-	bh=C6aXmLydQyAM+rD4/MTvQ7pXQmlAMgEPsvg7ad7XjpI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gn06DBh6sz8e1BGO0Nh5shq48orZzQtaz0H57zKL66xbWyVzEl8hxcIcu8OtFTlTe4Rvw6d169SfcSTPzvGmd037BUVEfUEjPTAPrtbRJfJjGGqVCZs4EyO1xtRA3EaZh6lX/MlTnnr7Tm+MPjXq9GvGW/SCK9acceT7c4iLo3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+	s=arc-20240116; t=1745618062; c=relaxed/simple;
+	bh=/Qg+jrzz7ohQYOyGyC0DRfDJYxTT87vaFSUzkC7isnY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=udeblBQq04/R2OUo3MaSiBKqGc2Df/ik0eLBHocGPdpZDPUJ2oXgkscXpUDcPCZcGdJSXPeUkqXYWvzwWg2mu4ikX222G11UXltwJ/l5CXnjwHOZ5ARqLlQpDqGxytVFiznDpAyX0/p5f52yVJ0lu7Etbjip9RIocIPPsircJEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d2g/Q1T7; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso31374765e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:53:33 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2g/Q1T7"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22423adf751so31535825ad.2;
+        Fri, 25 Apr 2025 14:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745618059; x=1746222859; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XCobKniwenRsZRQXHN93hhOkNZYsytudx8yyvFZoPso=;
+        b=d2g/Q1T79dgYBiYRTA04dDbvWn9pCspC9OGzX06qmOjCDFRXb5xBodSBXbt3SOH1eC
+         paro7FkDpSs/oWMRN/VsMtxiEaiXAx5fVhlefpnpSNf6szA2HM18rpHXgsGuclFEJVnP
+         ivSvc84YrHz4/Qv0NNVehRmSDcDGZSs6++/wpRTjx+31JGq5DU6qvmMNdVHhIu1N25ai
+         VYAWCChKFTWJBifB5DxNWJcz3sTfhh/O4ynrhSiU547inNwVN9AtzJEa8x53SWZfkRCQ
+         OVrZXaXCWFhziYa3pA/GWvNMXoz5WdqWtONNK/2QJO+LIUG9vQP6QRuE+4+tRKtwIdie
+         FC+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745618012; x=1746222812;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MVVbo4ROS446ViNmU/AD2hQGyqQ0dbBdWmkbwu91I+0=;
-        b=rvicNE2KXXPkOHWtZQrUzHTGrn8MTpmBY6bxLJ/sbJ5gKKKG0smCJ3iUaL8B61EdPc
-         srlol2bMymE80gVnxpD4Jr/bGLWPrs+7CuWxn06ltdCF1XgO0wDyT+DkumPFCt9JBvmv
-         h8U0lXZvfl1anEMP4nnEcShU/k+8IfYb2bEZEAXOCgObFkiLZodQ7gA0hWXdQAw4mU9L
-         AlO64RAMqw9AiT+dgDqmooyd/9Od/wkZBtAQQwhIkZOSIqauOErMqdN98yFUNGvAv5uE
-         ehH6G5Gx+Ej/nQGJwPZIkaQP6dqTbzwDW2uCs0yYQHK0MmqmDZiMt/AtIpHFu2nHEum6
-         PCBw==
-X-Forwarded-Encrypted: i=1; AJvYcCXphMPd6L9WD75nxm9SS45UulYDxRPfPgpPee6W/5cnAu0CEeTBsXICzWq1y5PBLh1EU9m3/77Z7e44SKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxnhSVAK+IQ9+c5IkZyN53qAourEs5TEG4Z4JijPLR8H/9MQsC
-	R9evTIrNJpeCWhbDt63jOdHh5ZL28tHlmQI9Ecx2stVKRjeydjdd
-X-Gm-Gg: ASbGncuPKXqO+DhCFHyHaFeb2WXrf1+J/rTCJQkBFG+B395mfLksd8HmJ22wXxh82BX
-	efOIMdgQHUrzhDwFSDWsgtJn7WjGLtwXen5UnGTbag+rTrbhYjbO5V2iTQM2wus0myOquBEK9Ix
-	43qkuE27enXbBvNIOcgNc2v/Qn+BjSqHT4aiEYiECkkmKT8VCPJ3IQ9CvFEfEhdVk4WvzX7ekro
-	tjdjuxvEhZjYNI08rtkxcXf/Fh6ZkVQYdIYbCbKIxGG/xYS1jAkScKasUlBFUR7TLAJxQsHP9cm
-	PStzwogsmQIGawCFztIrcxCzIq9rr/B5hwjGYfwU
-X-Google-Smtp-Source: AGHT+IGSD+ivcGxPzjE4UnDxqHkDSfK+l5KI6zUPiQ4sOkdq5u51vTEljeieRQYpKNmD6n+VeRTiMQ==
-X-Received: by 2002:a05:600c:1e1c:b0:440:6a1a:d89f with SMTP id 5b1f17b1804b1-440a64c14bdmr35479365e9.4.1745618012216;
-        Fri, 25 Apr 2025 14:53:32 -0700 (PDT)
-Received: from [10.100.102.74] ([95.35.174.203])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ad112sm69015145e9.24.2025.04.25.14.53.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 14:53:31 -0700 (PDT)
-Message-ID: <a306a2b0-bd7c-4376-8c26-738b5c7c9807@grimberg.me>
-Date: Sat, 26 Apr 2025 00:53:30 +0300
+        d=1e100.net; s=20230601; t=1745618059; x=1746222859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XCobKniwenRsZRQXHN93hhOkNZYsytudx8yyvFZoPso=;
+        b=p46CZIvrDFTnxWY/F8sc6JaNSz4ysPtIKaeB298eQF5mUIlMyBDdL4d4qi3Xzh/Jqr
+         lQ6HKMMuemlVnmFSfECHPNlLMy2lnw7czPPISRgOr9MkGevXS59dBaF1YyQgIkSLR+Sv
+         HxqUAur27moHMEzPhshiRWI9j1RGN/alr1CPYXJyFAZ4cV1tpedfjFbxDZhIrAJNUgCu
+         4Uuz6ciy14I+tu/P7C3f2qCfzpvZ7MWLRoFi6lskYFeyDZj7Zh3U6ZJR3zYf40PcvibA
+         3Tzy92Or4ZPsxoDMmCerb2m40R+QqvUwO7yoiSBilhxQKE/aJ36EOgDmqIh3M/OHg/mk
+         gFyg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2PS6xK9akhyUEjTUUGTkPvMPrc0qe7CG1QVXTotbVqpcs5elYW5nsdVLbs2bkg9T4n+s4w/B6vL+N@vger.kernel.org, AJvYcCUklnHfbY3V5tIg1CyOb67e8rxXegKbbvplf0c1E27kdfW6LE/z21P78rp+CcDeZgqj3A/9wY5UUbnWcvr9@vger.kernel.org, AJvYcCWwKVgYs1RzZJNBSloqM3JBkg66pLyLULiSzX8y0yNFA24JiG8a69aW5KfGm/kKD9AblnrXZI32zahl@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywmz6ZNM1CxQGUXhVi1BKPxBnsf1Dc83scWoYn6bXYlddvpEKp0
+	P8uzabcs3cYUe3okcR66W8pbDK/gCkXOGN80QIK2v1KhfKXHPUE9EQIXESiQnck=
+X-Gm-Gg: ASbGnctS+KK48BsuT8SQfWS32jbAToOzFnce04gdgLP0+WcwyaF116x2seWH0NUgWkT
+	+F4XCm/LkB4PFKQj2K7EXNkjOw/ZBPO5IShu7TDxtOv4W0K/1UZqtgTJ4+DqPibuYjsgnASF0d9
+	Wk+bF6ruu20sAqLAJWXFLkLfcrNPZQIkPg2QyZCQmVflDKGxRv5dRdJdpAFv4jDBW0mTKV1D8uf
+	oQQMnd18dlj+me5nmHHslsOWM+I5vkDot+ZfoyobZiv3+i0uySPiyUVuBlhTVSCT+IEtc8fNTwF
+	FB6plhUPQtgc4xKxVj8fzOogxZ2acFVbK/nHroTqBXw/scG6cf4sP9EPKKYBWfQ=
+X-Google-Smtp-Source: AGHT+IEhyiPUvx6/TQLgHrek4gH35yub8pGeGVD8zCIOvwyadYampCv51ThIk0Qc/PvSpWTxrFLFWA==
+X-Received: by 2002:a17:902:d4ca:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22dbf5fb486mr54033065ad.23.1745618058561;
+        Fri, 25 Apr 2025 14:54:18 -0700 (PDT)
+Received: from localhost ([2409:40c0:2025:2c31:c6a3:5653:2e03:8d7a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f7749938sm2211580a91.11.2025.04.25.14.54.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 14:54:18 -0700 (PDT)
+From: surajsonawane0215@gmail.com
+To: jic23@kernel.org
+Cc: surajsonawane0215@gmail.com,
+	lars@metafoo.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: iio: chemical: Add sharp,gp2y1010au0f
+Date: Sat, 26 Apr 2025 03:21:49 +0530
+Message-Id: <20250425215149.49068-1-surajsonawane0215@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] nvme-tcp: wait socket wmem to drain in queue stop
-To: Michael Liang <mliang@purestorage.com>, Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
-Cc: Mohamed Khalfella <mkhalfella@purestorage.com>,
- Randy Jennings <randyj@purestorage.com>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250424161750.jwbdohybrqftuioe@purestorage.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250424161750.jwbdohybrqftuioe@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
 
-Given that this is a fix - lets rename the patch title to say that.
+From: Suraj Sonawane <surajsonawane0215@gmail.com>
 
-nvme-tcp: fix possible data corruption caused by premature queue removal 
-and I/O failover
+Add Device Tree bindings for Sharp GP2Y1010AU0F optical dust sensor.
+The sensor measures particulate matter concentration via infrared
+scattering and requires:
 
+1. GPIO for LED pulse control (280μs pulses with 40μs delay)
+2. ADC channel for analog output measurement
+3. Power regulator (vdd-supply)
 
-On 24/04/2025 19:17, Michael Liang wrote:
-> This patch addresses a data corruption issue observed in nvme-tcp during
-> testing.
->
-> Issue description:
-> In an NVMe native multipath setup, when an I/O timeout occurs, all inflight
-> I/Os are canceled almost immediately after the kernel socket is shut down.
-> These canceled I/Os are reported as host path errors, triggering a failover
-> that succeeds on a different path.
->
-> However, at this point, the original I/O may still be outstanding in the
-> host's network transmission path (e.g., the NIC’s TX queue). From the
-> user-space app's perspective, the buffer associated with the I/O is considered
-> completed since they're acked on the different path and may be reused for new
-> I/O requests.
->
-> Because nvme-tcp enables zero-copy by default in the transmission path,
-> this can lead to corrupted data being sent to the original target, ultimately
-> causing data corruption.
->
-> We can reproduce this data corruption by injecting delay on one path and
-> triggering i/o timeout.
->
-> To prevent this issue, this change ensures that all inflight transmissions are
-> fully completed from host's perspective before returning from queue
-> stop. To handle concurrent I/O timeout from multiple namespaces under
-> the same controller, always wait in queue stop regardless of queue's state.
->
-> This aligns with the behavior of queue stopping in other NVMe fabric transports.
+Datasheet:
+https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
 
-We need a "Fixes: " tag, even if it goes all the way to day-0...
+Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
+---
+ .../iio/chemical/sharp,gp2y1010au0f.yaml      | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
 
->
-> Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
-> Reviewed-by: Randy Jennings <randyj@purestorage.com>
-> Signed-off-by: Michael Liang <mliang@purestorage.com>
+diff --git a/Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml b/Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
+new file mode 100644
+index 000000000..358c2b2f7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/chemical/sharp,gp2y1010au0f.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sharp GP2Y1010AU0F Optical Dust Sensor
++
++maintainers:
++  - Suraj Sonawane <surajsonawane0215@gmail.com>
++
++description: |
++  Optical dust sensor measuring particulate matter concentration via infrared scattering.
++  Requires ADC for analog output and GPIO for pulsed LED control with strict timing.
++  Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
++
++properties:
++  compatible:
++    const: sharp,gp2y1010au0f
++
++  vdd-supply:
++    description: Phandle to the regulator that provides power to the sensor
++
++  led-gpios:
++    description: GPIO connected to the sensor's LED control pin (V-LED)
++    maxItems: 1
++
++  io-channels:
++    description: ADC channel connected to the sensor's analog output (Vo)
++    maxItems: 1
++
++  io-channel-names:
++    const: dust
++
++  sharp,led-on-delay-us:
++    description: Time in microseconds to wait after turning LED on before ADC read
++    default: 40
++    minimum: 0
++    maximum: 100
++
++  sharp,measurement-window-us:
++    description: Measurement window in microseconds after LED turn-on
++    default: 200
++    minimum: 0
++    maximum: 280
++
++required:
++  - compatible
++  - led-gpios
++  - io-channels
++  - io-channel-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dust_sensor {
++        compatible = "sharp,gp2y1010au0f";
++        vdd-supply = <&vcc>;
++        led-gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
++        io-channels = <&adc 0>;
++        io-channel-names = "dust";
++        sharp,led-on-delay-us = <40>;
++        sharp,measurement-window-us = <200>;
++    };
+-- 
+2.34.1
 
-Please resend, but you can add to your v4
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
