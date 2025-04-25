@@ -1,203 +1,505 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327BF1FC0FE;
-	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191E32192F3;
+	Fri, 25 Apr 2025 21:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617895; cv=none; b=WTudG5MfXPWxlU7BMearAWCuzvCnDCorq1UH4u3+zpzEqF1Y/p/BfyWofCtlZxmQRwAaqERe9rKrev6sfXwrDh1CtILiN3nF15ybAYTSrXEh3+kUtcpWpzPNsja5gtmOACczYpzsFLLWkipqC2yzW2wEaIuZhUaypvDy/w2DaY0=
+	t=1745617904; cv=none; b=t4fAJT/II0ydeoxsOBuoTqQpXdtle746qfgXLPIMbmupZ0zqVr7Xp0Wup8C1NEzhkWS9o5bRM5mTTyZJMWpcp/ggHpFwYsZG67cocpOCsLrW2nj4+8dLQtEwdIoNRHq+Hwg0xN0CIp5ZJM4S6V8GQDT8LYP3OiiQfGOvzfB257k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617895; c=relaxed/simple;
-	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bclAru4UwCn7m7fboBCpUxIIkwxD22+86eMlhTU7rGw59ucZ5vYWyupIl/fJq827hM7CwW5UAg0sW/GXAKMI83qsI591Aw14hd3sPLZWOWpEoe4N5Zt/4MGqkKfUW+2yxq0wvlDpR//T6WxDBsJfP6kdXK5NqrAhEkYgX2SHmZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXVu+k+l; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXVu+k+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D4C4CEE4;
-	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745617893;
-	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cXVu+k+la7gq52onV+AVCt/AUgAofpFfu4riRWLuEAqy7dlYRVsMixSF3nuFrFLO1
-	 cgkHhux3Jt3RRShIOySpWH9teWmMV/x2BO5PwfL4MVTWe6hZlhzX5XwtDTpHHuFtYd
-	 0MyTnsJo5qNagQmi6guwSidwRKH27NPBgEEheaYPqCuc7g46F5I/M+fgahVOjw+LEF
-	 l2/clbpIjNwvW6o3nevfgYuRLarcYLETJtyvGr34F9rI8I3PXry3wEdLT4rLYBCLzv
-	 uM4AlfusDhMZTSE/svCo66iN1s1ej/tlEY6xy5F6zq6E/smYM506DtiuTBt4DDi2RT
-	 gRcF1NHQu8GbA==
-Date: Fri, 25 Apr 2025 14:51:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
-Message-ID: <aAwD4idaGnTiQ-ld@google.com>
-References: <20250326044001.3503432-1-namhyung@kernel.org>
- <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
- <aAkUyFjRFLkS170u@x1>
- <aAkmY0hLXarmCSIA@google.com>
- <aAlSqGN9Sx4x6_sI@x1>
- <aAq16LWBIVr08iSe@x1>
+	s=arc-20240116; t=1745617904; c=relaxed/simple;
+	bh=UvWW5xM0ftXUKHpGxT90Ph/nnmgSYUp1c3rUqexg/eA=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WS52CvaEbU1Vbj8nS0AtK0UsXe8IHGracW5xav4po8qKfnhqRRgBORSpz0GkgbFYiBhyOwYrVN7nyeXE0fIKR5FcJYA3BaqsUurTBAGv0QhlYDu+VIyEewXE+xCQi6XhIJqA1390yamOXvY7nzDnCvd8b1h89afRHzEfAwU2NI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u8QrR-0000000062h-39Vc;
+	Fri, 25 Apr 2025 21:51:25 +0000
+Date: Fri, 25 Apr 2025 22:51:18 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>,
+	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
+	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
+	Sky Huang <skylake.huang@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net-next] net: ethernet: mtk_eth_soc: add support for MT7988
+ internal 2.5G PHY
+Message-ID: <ab77dc679ed7d9669e82d8efeab41df23b524b1f.1745617638.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAq16LWBIVr08iSe@x1>
 
-Hi Arnaldo,
+The MediaTek MT7988 SoC comes with an single built-in Ethernet PHY
+supporting 2500Base-T/1000Base-T/100Base-TX/10Base-T link partners in
+addition to the built-in MT7531-like 1GE switch. The built-in PHY only
+supports full duplex.
 
-On Thu, Apr 24, 2025 at 07:06:32PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 23, 2025 at 05:50:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
-> > > On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
-> > > > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > >      syscall            calls  errors  total       min       avg       max       stddev
-> 
-> > > > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
-> > > > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
-> > > > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
-> > > > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
-> > > > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
-> > > > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
-> > > > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
-> > > > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
-> > > > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
-> > > > > >      ...
-> 
-> > > > I added the following to align sched_[gs]etaffinity,
-> 
-> > > Thanks for processing the patch and updating this.  But I'm afraid there
-> > > are more syscalls with longer names and this is not the only place to
-> > > print the syscall names.  Also I think we need to update length of the
-> > > time fields.  So I prefer handling them in a separate patch later.
->  
-> > Fair enough, I'm leaving the patch as-is.
-> 
-> But, still have to look at this:
-> 
-> toolsbuilder@five:~$ time dm
->    1   114.52 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-26) , clang version 18.1.8 (Red Hat 18.1.8-1.module_el8.10.0+3903+ca21d481) flex 2.6.1
->    2   111.09 almalinux:9                   : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 18.1.8 (AlmaLinux OS Foundation 18.1.8-3.el9) flex 2.6.4
->    3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
-> WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
->    132.71 almalinux:9-i386              : Ok   gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3) , clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9) flex 2.6.4
->    4    21.54 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
->     bpf-trace-summary.c:(.text+0xf0760): undefined reference to `syscalltbl__name'
->     collect2: error: ld returned 1 exit status
->    5    16.50 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
->     bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
->     collect2: error: ld returned 1 exit status
-> 
-> More info:
-> 
-> perf-6.15.0-rc2/HEAD
-> perf-6.15.0-rc2/PERF-VERSION-FILE
-> BUILD_TARBALL_HEAD=24c0c35d4640052c61ed539a777bd3bd60d62bbf
-> Using built-in specs.
-> COLLECT_GCC=gcc
-> COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-alpine-linux-musl/12.2.1/lto-wrapper
-> Target: x86_64-alpine-linux-musl
-> Configured with: /home/buildozer/aports/main/gcc/src/gcc-12-20220924/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --target=x86_64-alpine-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-default-ssp --enable-languages=c,c++,d,objc,go,fortran,ada --disable-libssp --disable-libsanitizer --enable-shared --enable-threads --enable-tls --with-bugurl=https://gitlab.alpinelinux.org/alpine/aports/-/issues --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpine 12.2.1_git20220924-r4'
-> Thread model: posix
-> Supported LTO compression algorithms: zlib
-> gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
-> + make 'NO_LIBTRACEEVENT=1' 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf'
-> make: Entering directory '/git/perf-6.15.0-rc2/tools/perf'
->   BUILD:   Doing 'make -j28' parallel build
-> Warning: Skipped check-headers due to missing ../../include
-> Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install libdebuginfod-dev/elfutils-debuginfod-client-devel or equivalent
-> Makefile.config:605: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
-> Makefile.config:1085: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-> Makefile.config:1128: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-> Makefile.config:1159: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
-> 
-> Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ OFF ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                                 libperl: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                               libcrypto: [ on  ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                               get_cpuid: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
-> 
->   PERF_VERSION = 6.15.rc2.g24c0c35d4640
->   GEN     /tmp/build/perf/common-cmds.h
->   GEN     /tmp/build/perf/arch/arm64/include/generated/asm/sysreg-defs.h
->   GEN     perf-archive
->   GEN     perf-iostat
-> <SNIP>
->   CC      /tmp/build/perf/util/bpf-filter-flex.o
->   LD      /tmp/build/perf/util/perf-util-in.o
->   LD      /tmp/build/perf/perf-util-in.o
->   AR      /tmp/build/perf/libperf-util.a
->   CC      /tmp/build/perf/pmu-events/pmu-events.o
->   LD      /tmp/build/perf/pmu-events/pmu-events-in.o
->   AR      /tmp/build/perf/libpmu-events.a
->   LINK    /tmp/build/perf/perf
->   GEN     /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so
-> /usr/lib/gcc/x86_64-alpine-linux-musl/12.2.1/../../../../x86_64-alpine-linux-musl/bin/ld: /tmp/build/perf/libperf-util.a(perf-util-in.o): in function `print_common_stats':
-> bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
-> collect2: error: ld returned 1 exit status
-> make[2]: *** [Makefile.perf:804: /tmp/build/perf/perf] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [Makefile.perf:290: sub-make] Error 2
-> make: *** [Makefile:76: all] Error 2
-> make: Leaving directory '/git/perf-6.15.0-rc2/tools/perf'
-> + exit 1
-> toolsbuilder@five:~$ 
-> 
-> I'll take a look tomorrow.
+Add muxes allowing to select GMAC2->2.5G PHY path and add basic support
+for XGMAC as the built-in 2.5G PHY is internally connected via XGMII.
+The XGMAC features will also be used by 5GBase-R, 10GBase-R and USXGMII
+SerDes modes which are going to be added once support for standalone PCS
+drivers is in place.
 
-Thanks for the report.  I think it's because syscalltbl.c depends on
-CONFIG_TRACE but bpf-trace-summary depends on CONFIG_PERF_BPF_SKEL.
+In order to make use of the built-in 2.5G PHY the appropriate PHY driver
+as well as (proprietary) PHY firmware has to be present as well.
 
-In the future, I'd like to get rid of dependency to libtraceevent in
-perf trace and make it possible to use BPF/BTF only.
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+PHY driver: https://patchwork.kernel.org/project/netdevbpf/list/?series=935473&state=*
+PHY firmware: https://gitlab.com/kernel-firmware/linux-firmware/-/commit/dcc4a0690ce0e3bcccd3625f79949e7b12c9db01
 
-How about this?
+ drivers/net/ethernet/mediatek/mtk_eth_path.c |  41 +++++++
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c  | 114 ++++++++++++++++---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h  |  57 +++++++++-
+ 3 files changed, 196 insertions(+), 16 deletions(-)
 
-Thanks,
-Namhyung
-
-
----8<---
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 4f00cde8c3ea63eb..7ae5b4b9330af0ce 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -173,9 +173,12 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
--perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_path.c b/drivers/net/ethernet/mediatek/mtk_eth_path.c
+index 6fbfb16438a5..e4636a0051e8 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_path.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_path.c
+@@ -31,6 +31,8 @@ static const char *mtk_eth_path_name(u64 path)
+ 		return "gmac2_rgmii";
+ 	case MTK_ETH_PATH_GMAC2_SGMII:
+ 		return "gmac2_sgmii";
++	case MTK_ETH_PATH_GMAC2_2P5GPHY:
++		return "gmac2_2p5gphy";
+ 	case MTK_ETH_PATH_GMAC2_GEPHY:
+ 		return "gmac2_gephy";
+ 	case MTK_ETH_PATH_GDM1_ESW:
+@@ -127,6 +129,27 @@ static int set_mux_u3_gmac2_to_qphy(struct mtk_eth *eth, u64 path)
+ 	return 0;
+ }
  
-+ifeq ($(CONFIG_TRACE),y)
-+  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
-+endif
++static int set_mux_gmac2_to_2p5gphy(struct mtk_eth *eth, u64 path)
++{
++	int ret;
 +
- ifeq ($(CONFIG_LIBTRACEEVENT),y)
-   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
- endif
++	if (path == MTK_ETH_PATH_GMAC2_2P5GPHY) {
++		ret = regmap_clear_bits(eth->ethsys, ETHSYS_SYSCFG0, SYSCFG0_SGMII_GMAC2_V2);
++		if (ret)
++			return ret;
++
++		/* Setup mux to 2p5g PHY */
++		ret = regmap_clear_bits(eth->infra, TOP_MISC_NETSYS_PCS_MUX, MUX_G2_USXGMII_SEL);
++		if (ret)
++			return ret;
++
++		dev_dbg(eth->dev, "path %s in %s updated\n",
++			mtk_eth_path_name(path), __func__);
++	}
++
++	return 0;
++}
++
+ static int set_mux_gmac1_gmac2_to_sgmii_rgmii(struct mtk_eth *eth, u64 path)
+ {
+ 	unsigned int val = 0;
+@@ -209,6 +232,10 @@ static const struct mtk_eth_muxc mtk_eth_muxc[] = {
+ 		.name = "mux_u3_gmac2_to_qphy",
+ 		.cap_bit = MTK_ETH_MUX_U3_GMAC2_TO_QPHY,
+ 		.set_path = set_mux_u3_gmac2_to_qphy,
++	}, {
++		.name = "mux_gmac2_to_2p5gphy",
++		.cap_bit = MTK_ETH_MUX_GMAC2_TO_2P5GPHY,
++		.set_path = set_mux_gmac2_to_2p5gphy,
+ 	}, {
+ 		.name = "mux_gmac1_gmac2_to_sgmii_rgmii",
+ 		.cap_bit = MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII,
+@@ -260,6 +287,20 @@ int mtk_gmac_sgmii_path_setup(struct mtk_eth *eth, int mac_id)
+ 	return mtk_eth_mux_setup(eth, path);
+ }
+ 
++int mtk_gmac_2p5gphy_path_setup(struct mtk_eth *eth, int mac_id)
++{
++	u64 path = 0;
++
++	if (mac_id == MTK_GMAC2_ID)
++		path = MTK_ETH_PATH_GMAC2_2P5GPHY;
++
++	if (!path)
++		return -EINVAL;
++
++	/* Setup proper MUXes along the path */
++	return mtk_eth_mux_setup(eth, path);
++}
++
+ int mtk_gmac_gephy_path_setup(struct mtk_eth *eth, int mac_id)
+ {
+ 	u64 path = 0;
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 83068925c589..2c47c09a4fb3 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -503,7 +503,7 @@ static void mtk_gmac0_rgmii_adjust(struct mtk_eth *eth,
+ static void mtk_setup_bridge_switch(struct mtk_eth *eth)
+ {
+ 	/* Force Port1 XGMAC Link Up */
+-	mtk_m32(eth, 0, MTK_XGMAC_FORCE_LINK(MTK_GMAC1_ID),
++	mtk_m32(eth, 0, MTK_XGMAC_FORCE_MODE(MTK_GMAC1_ID),
+ 		MTK_XGMAC_STS(MTK_GMAC1_ID));
+ 
+ 	/* Adjust GSW bridge IPG to 11 */
+@@ -532,6 +532,25 @@ static struct phylink_pcs *mtk_mac_select_pcs(struct phylink_config *config,
+ 	return NULL;
+ }
+ 
++static int mtk_mac_prepare(struct phylink_config *config, unsigned int mode,
++			   phy_interface_t iface)
++{
++	struct mtk_mac *mac = container_of(config, struct mtk_mac,
++					   phylink_config);
++	struct mtk_eth *eth = mac->hw;
++
++	if (mtk_interface_mode_is_xgmii(eth, iface) && mac->id != MTK_GMAC1_ID) {
++		mtk_m32(mac->hw, XMAC_MCR_TRX_DISABLE,
++			XMAC_MCR_TRX_DISABLE, MTK_XMAC_MCR(mac->id));
++
++		mtk_m32(mac->hw, MTK_XGMAC_FORCE_MODE(mac->id) |
++				 MTK_XGMAC_FORCE_LINK(mac->id),
++			MTK_XGMAC_FORCE_MODE(mac->id), MTK_XGMAC_STS(mac->id));
++	}
++
++	return 0;
++}
++
+ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
+ 			   const struct phylink_link_state *state)
+ {
+@@ -573,6 +592,12 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
+ 			}
+ 			break;
+ 		case PHY_INTERFACE_MODE_INTERNAL:
++			if (mac->id == MTK_GMAC2_ID &&
++			    MTK_HAS_CAPS(eth->soc->caps, MTK_2P5GPHY)) {
++				err = mtk_gmac_2p5gphy_path_setup(eth, mac->id);
++				if (err)
++					goto init_err;
++			}
+ 			break;
+ 		default:
+ 			goto err_phy;
+@@ -644,12 +669,12 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
+ 	}
+ 
+ 	/* Setup gmac */
+-	if (mtk_is_netsys_v3_or_greater(eth) &&
+-	    mac->interface == PHY_INTERFACE_MODE_INTERNAL) {
++	if (mtk_interface_mode_is_xgmii(eth, state->interface)) {
+ 		mtk_w32(mac->hw, MTK_GDMA_XGDM_SEL, MTK_GDMA_EG_CTRL(mac->id));
+ 		mtk_w32(mac->hw, MAC_MCR_FORCE_LINK_DOWN, MTK_MAC_MCR(mac->id));
+ 
+-		mtk_setup_bridge_switch(eth);
++		if (mac->id == MTK_GMAC1_ID)
++			mtk_setup_bridge_switch(eth);
+ 	}
+ 
+ 	return;
+@@ -696,10 +721,19 @@ static void mtk_mac_link_down(struct phylink_config *config, unsigned int mode,
+ {
+ 	struct mtk_mac *mac = container_of(config, struct mtk_mac,
+ 					   phylink_config);
+-	u32 mcr = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
+ 
+-	mcr &= ~(MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK);
+-	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
++	if (!mtk_interface_mode_is_xgmii(mac->hw, interface)) {
++		/* GMAC modes */
++		mtk_m32(mac->hw,
++			MAC_MCR_TX_EN | MAC_MCR_RX_EN | MAC_MCR_FORCE_LINK, 0,
++			MTK_MAC_MCR(mac->id));
++	} else if (mac->id != MTK_GMAC1_ID) {
++		/* XGMAC except for built-in switch */
++		mtk_m32(mac->hw, XMAC_MCR_TRX_DISABLE, XMAC_MCR_TRX_DISABLE,
++			MTK_XMAC_MCR(mac->id));
++		mtk_m32(mac->hw, MTK_XGMAC_FORCE_LINK(mac->id), 0,
++			MTK_XGMAC_STS(mac->id));
++	}
+ }
+ 
+ static void mtk_set_queue_speed(struct mtk_eth *eth, unsigned int idx,
+@@ -771,13 +805,11 @@ static void mtk_set_queue_speed(struct mtk_eth *eth, unsigned int idx,
+ 	mtk_w32(eth, val, soc->reg_map->qdma.qtx_sch + ofs);
+ }
+ 
+-static void mtk_mac_link_up(struct phylink_config *config,
+-			    struct phy_device *phy,
+-			    unsigned int mode, phy_interface_t interface,
+-			    int speed, int duplex, bool tx_pause, bool rx_pause)
++static void mtk_gdm_mac_link_up(struct mtk_mac *mac,
++				struct phy_device *phy,
++				unsigned int mode, phy_interface_t interface,
++				int speed, int duplex, bool tx_pause, bool rx_pause)
+ {
+-	struct mtk_mac *mac = container_of(config, struct mtk_mac,
+-					   phylink_config);
+ 	u32 mcr;
+ 
+ 	mcr = mtk_r32(mac->hw, MTK_MAC_MCR(mac->id));
+@@ -811,6 +843,53 @@ static void mtk_mac_link_up(struct phylink_config *config,
+ 	mtk_w32(mac->hw, mcr, MTK_MAC_MCR(mac->id));
+ }
+ 
++static void mtk_xgdm_mac_link_up(struct mtk_mac *mac,
++				 struct phy_device *phy,
++				 unsigned int mode, phy_interface_t interface,
++				 int speed, int duplex, bool tx_pause, bool rx_pause)
++{
++	u32 mcr;
++
++	if (mac->id == MTK_GMAC1_ID)
++		return;
++
++	/* Eliminate the interference(before link-up) caused by PHY noise */
++	mtk_m32(mac->hw, XMAC_LOGIC_RST, 0, MTK_XMAC_LOGIC_RST(mac->id));
++	mdelay(20);
++	mtk_m32(mac->hw, XMAC_GLB_CNTCLR, XMAC_GLB_CNTCLR, MTK_XMAC_CNT_CTRL(mac->id));
++
++	mtk_m32(mac->hw, MTK_XGMAC_FORCE_LINK(mac->id), MTK_XGMAC_FORCE_LINK(mac->id),
++		MTK_XGMAC_STS(mac->id));
++
++	mcr = mtk_r32(mac->hw, MTK_XMAC_MCR(mac->id));
++	mcr &= ~(XMAC_MCR_FORCE_TX_FC | XMAC_MCR_FORCE_RX_FC | XMAC_MCR_TRX_DISABLE);
++	/* Configure pause modes -
++	 * phylink will avoid these for half duplex
++	 */
++	if (tx_pause)
++		mcr |= XMAC_MCR_FORCE_TX_FC;
++	if (rx_pause)
++		mcr |= XMAC_MCR_FORCE_RX_FC;
++
++	mtk_w32(mac->hw, mcr, MTK_XMAC_MCR(mac->id));
++}
++
++static void mtk_mac_link_up(struct phylink_config *config,
++			    struct phy_device *phy,
++			    unsigned int mode, phy_interface_t interface,
++			    int speed, int duplex, bool tx_pause, bool rx_pause)
++{
++	struct mtk_mac *mac = container_of(config, struct mtk_mac,
++					   phylink_config);
++
++	if (mtk_interface_mode_is_xgmii(mac->hw, interface))
++		mtk_xgdm_mac_link_up(mac, phy, mode, interface, speed, duplex,
++				     tx_pause, rx_pause);
++	else
++		mtk_gdm_mac_link_up(mac, phy, mode, interface, speed, duplex,
++				    tx_pause, rx_pause);
++}
++
+ static void mtk_mac_disable_tx_lpi(struct phylink_config *config)
+ {
+ 	struct mtk_mac *mac = container_of(config, struct mtk_mac,
+@@ -828,6 +907,9 @@ static int mtk_mac_enable_tx_lpi(struct phylink_config *config, u32 timer,
+ 	struct mtk_eth *eth = mac->hw;
+ 	u32 val;
+ 
++	if (mtk_interface_mode_is_xgmii(eth, mac->interface))
++		return -EOPNOTSUPP;
++
+ 	/* Tx idle timer in ms */
+ 	timer = DIV_ROUND_UP(timer, 1000);
+ 
+@@ -858,6 +940,7 @@ static int mtk_mac_enable_tx_lpi(struct phylink_config *config, u32 timer,
+ }
+ 
+ static const struct phylink_mac_ops mtk_phylink_ops = {
++	.mac_prepare = mtk_mac_prepare,
+ 	.mac_select_pcs = mtk_mac_select_pcs,
+ 	.mac_config = mtk_mac_config,
+ 	.mac_finish = mtk_mac_finish,
+@@ -4759,6 +4842,11 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
+ 
+ 	mac->phylink = phylink;
+ 
++	if (MTK_HAS_CAPS(mac->hw->soc->caps, MTK_2P5GPHY) &&
++	    id == MTK_GMAC2_ID)
++		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
++			  mac->phylink_config.supported_interfaces);
++
+ 	SET_NETDEV_DEV(eth->netdev[id], eth->dev);
+ 	eth->netdev[id]->watchdog_timeo = 5 * HZ;
+ 	eth->netdev[id]->netdev_ops = &mtk_netdev_ops;
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 88ef2e9c50fc..e3a8b24dd3d3 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -431,7 +431,8 @@
+ 
+ /* XMAC status registers */
+ #define MTK_XGMAC_STS(x)	(((x) == MTK_GMAC3_ID) ? 0x1001C : 0x1000C)
+-#define MTK_XGMAC_FORCE_LINK(x)	(((x) == MTK_GMAC2_ID) ? BIT(31) : BIT(15))
++#define MTK_XGMAC_FORCE_MODE(x)	(((x) == MTK_GMAC2_ID) ? BIT(31) : BIT(15))
++#define MTK_XGMAC_FORCE_LINK(x)	(((x) == MTK_GMAC2_ID) ? BIT(27) : BIT(11))
+ #define MTK_USXGMII_PCS_LINK	BIT(8)
+ #define MTK_XGMAC_RX_FC		BIT(5)
+ #define MTK_XGMAC_TX_FC		BIT(4)
+@@ -524,6 +525,21 @@
+ #define INTF_MODE_RGMII_1000    (TRGMII_MODE | TRGMII_CENTRAL_ALIGNED)
+ #define INTF_MODE_RGMII_10_100  0
+ 
++/* XFI Mac control registers */
++#define MTK_XMAC_BASE(x)	(0x12000 + (((x) - 1) * 0x1000))
++#define MTK_XMAC_MCR(x)		(MTK_XMAC_BASE(x))
++#define XMAC_MCR_TRX_DISABLE	0xf
++#define XMAC_MCR_FORCE_TX_FC	BIT(5)
++#define XMAC_MCR_FORCE_RX_FC	BIT(4)
++
++/* XFI Mac logic reset registers */
++#define MTK_XMAC_LOGIC_RST(x)	(MTK_XMAC_BASE(x) + 0x10)
++#define XMAC_LOGIC_RST		BIT(0)
++
++/* XFI Mac count global control */
++#define MTK_XMAC_CNT_CTRL(x)	(MTK_XMAC_BASE(x) + 0x100)
++#define XMAC_GLB_CNTCLR		BIT(0)
++
+ /* GPIO port control registers for GMAC 2*/
+ #define GPIO_OD33_CTRL8		0x4c0
+ #define GPIO_BIAS_CTRL		0xed0
+@@ -587,6 +603,10 @@
+ #define GEPHY_MAC_SEL          BIT(1)
+ 
+ /* Top misc registers */
++#define TOP_MISC_NETSYS_PCS_MUX	0x84
++#define NETSYS_PCS_MUX_MASK	GENMASK(1, 0)
++#define MUX_G2_USXGMII_SEL	BIT(1)
++
+ #define USB_PHY_SWITCH_REG	0x218
+ #define QPHY_SEL_MASK		GENMASK(1, 0)
+ #define SGMII_QPHY_SEL		0x2
+@@ -951,6 +971,7 @@ enum mkt_eth_capabilities {
+ 	MTK_RGMII_BIT = 0,
+ 	MTK_TRGMII_BIT,
+ 	MTK_SGMII_BIT,
++	MTK_2P5GPHY_BIT,
+ 	MTK_ESW_BIT,
+ 	MTK_GEPHY_BIT,
+ 	MTK_MUX_BIT,
+@@ -971,8 +992,10 @@ enum mkt_eth_capabilities {
+ 	MTK_ETH_MUX_GDM1_TO_GMAC1_ESW_BIT,
+ 	MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY_BIT,
+ 	MTK_ETH_MUX_U3_GMAC2_TO_QPHY_BIT,
++	MTK_ETH_MUX_GMAC2_TO_2P5GPHY_BIT,
+ 	MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII_BIT,
+ 	MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII_BIT,
++	MTK_ETH_MUX_GMAC123_TO_GEPHY_SGMII_BIT,
+ 
+ 	/* PATH BITS */
+ 	MTK_ETH_PATH_GMAC1_RGMII_BIT,
+@@ -980,6 +1003,7 @@ enum mkt_eth_capabilities {
+ 	MTK_ETH_PATH_GMAC1_SGMII_BIT,
+ 	MTK_ETH_PATH_GMAC2_RGMII_BIT,
+ 	MTK_ETH_PATH_GMAC2_SGMII_BIT,
++	MTK_ETH_PATH_GMAC2_2P5GPHY_BIT,
+ 	MTK_ETH_PATH_GMAC2_GEPHY_BIT,
+ 	MTK_ETH_PATH_GDM1_ESW_BIT,
+ };
+@@ -988,6 +1012,7 @@ enum mkt_eth_capabilities {
+ #define MTK_RGMII		BIT_ULL(MTK_RGMII_BIT)
+ #define MTK_TRGMII		BIT_ULL(MTK_TRGMII_BIT)
+ #define MTK_SGMII		BIT_ULL(MTK_SGMII_BIT)
++#define MTK_2P5GPHY		BIT_ULL(MTK_2P5GPHY_BIT)
+ #define MTK_ESW			BIT_ULL(MTK_ESW_BIT)
+ #define MTK_GEPHY		BIT_ULL(MTK_GEPHY_BIT)
+ #define MTK_MUX			BIT_ULL(MTK_MUX_BIT)
+@@ -1010,6 +1035,8 @@ enum mkt_eth_capabilities {
+ 	BIT_ULL(MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY_BIT)
+ #define MTK_ETH_MUX_U3_GMAC2_TO_QPHY		\
+ 	BIT_ULL(MTK_ETH_MUX_U3_GMAC2_TO_QPHY_BIT)
++#define MTK_ETH_MUX_GMAC2_TO_2P5GPHY		\
++	BIT_ULL(MTK_ETH_MUX_GMAC2_TO_2P5GPHY_BIT)
+ #define MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII	\
+ 	BIT_ULL(MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII_BIT)
+ #define MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII	\
+@@ -1021,6 +1048,7 @@ enum mkt_eth_capabilities {
+ #define MTK_ETH_PATH_GMAC1_SGMII	BIT_ULL(MTK_ETH_PATH_GMAC1_SGMII_BIT)
+ #define MTK_ETH_PATH_GMAC2_RGMII	BIT_ULL(MTK_ETH_PATH_GMAC2_RGMII_BIT)
+ #define MTK_ETH_PATH_GMAC2_SGMII	BIT_ULL(MTK_ETH_PATH_GMAC2_SGMII_BIT)
++#define MTK_ETH_PATH_GMAC2_2P5GPHY	BIT_ULL(MTK_ETH_PATH_GMAC2_2P5GPHY_BIT)
+ #define MTK_ETH_PATH_GMAC2_GEPHY	BIT_ULL(MTK_ETH_PATH_GMAC2_GEPHY_BIT)
+ #define MTK_ETH_PATH_GDM1_ESW		BIT_ULL(MTK_ETH_PATH_GDM1_ESW_BIT)
+ 
+@@ -1030,6 +1058,7 @@ enum mkt_eth_capabilities {
+ #define MTK_GMAC2_RGMII		(MTK_ETH_PATH_GMAC2_RGMII | MTK_RGMII)
+ #define MTK_GMAC2_SGMII		(MTK_ETH_PATH_GMAC2_SGMII | MTK_SGMII)
+ #define MTK_GMAC2_GEPHY		(MTK_ETH_PATH_GMAC2_GEPHY | MTK_GEPHY)
++#define MTK_GMAC2_2P5GPHY	(MTK_ETH_PATH_GMAC2_2P5GPHY | MTK_2P5GPHY)
+ #define MTK_GDM1_ESW		(MTK_ETH_PATH_GDM1_ESW | MTK_ESW)
+ 
+ /* MUXes present on SoCs */
+@@ -1049,6 +1078,10 @@ enum mkt_eth_capabilities {
+ 	(MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII | MTK_MUX | \
+ 	MTK_SHARED_SGMII)
+ 
++/* 2: GMAC2 -> 2P5GPHY */
++#define MTK_MUX_GMAC2_TO_2P5GPHY      \
++	(MTK_ETH_MUX_GMAC2_TO_2P5GPHY | MTK_MUX | MTK_INFRA)
++
+ /* 0: GMACx -> GEPHY, 1: GMACx -> SGMII where x is 1 or 2 */
+ #define MTK_MUX_GMAC12_TO_GEPHY_SGMII   \
+ 	(MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII | MTK_MUX)
+@@ -1084,8 +1117,9 @@ enum mkt_eth_capabilities {
+ 		      MTK_MUX_GMAC12_TO_GEPHY_SGMII | MTK_QDMA | \
+ 		      MTK_RSTCTRL_PPE1 | MTK_SRAM)
+ 
+-#define MT7988_CAPS  (MTK_36BIT_DMA | MTK_GDM1_ESW | MTK_QDMA | \
+-		      MTK_RSTCTRL_PPE1 | MTK_RSTCTRL_PPE2 | MTK_SRAM)
++#define MT7988_CAPS  (MTK_36BIT_DMA | MTK_GDM1_ESW | MTK_GMAC2_2P5GPHY | \
++		      MTK_MUX_GMAC2_TO_2P5GPHY | MTK_QDMA | MTK_RSTCTRL_PPE1 | \
++		      MTK_RSTCTRL_PPE2 | MTK_SRAM)
+ 
+ struct mtk_tx_dma_desc_info {
+ 	dma_addr_t	addr;
+@@ -1437,6 +1471,22 @@ static inline u32 mtk_get_ib2_multicast_mask(struct mtk_eth *eth)
+ 	return MTK_FOE_IB2_MULTICAST;
+ }
+ 
++static inline bool mtk_interface_mode_is_xgmii(struct mtk_eth *eth, phy_interface_t interface)
++{
++	if (!mtk_is_netsys_v3_or_greater(eth))
++		return false;
++
++	switch (interface) {
++	case PHY_INTERFACE_MODE_INTERNAL:
++	case PHY_INTERFACE_MODE_USXGMII:
++	case PHY_INTERFACE_MODE_10GBASER:
++	case PHY_INTERFACE_MODE_5GBASER:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ /* read the hardware status register */
+ void mtk_stats_update_mac(struct mtk_mac *mac);
+ 
+@@ -1445,6 +1495,7 @@ u32 mtk_r32(struct mtk_eth *eth, unsigned reg);
+ u32 mtk_m32(struct mtk_eth *eth, u32 mask, u32 set, unsigned int reg);
+ 
+ int mtk_gmac_sgmii_path_setup(struct mtk_eth *eth, int mac_id);
++int mtk_gmac_2p5gphy_path_setup(struct mtk_eth *eth, int mac_id);
+ int mtk_gmac_gephy_path_setup(struct mtk_eth *eth, int mac_id);
+ int mtk_gmac_rgmii_path_setup(struct mtk_eth *eth, int mac_id);
+ 
+-- 
+2.49.0
 
