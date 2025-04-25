@@ -1,46 +1,46 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907ED221567;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DF221714;
 	Fri, 25 Apr 2025 19:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609666; cv=none; b=JXtP7dahvVAoO2NARydL2kMVmZgyl6pppAXHiZP3NQ0HPuRbI1TXX5k/tBTWt/4e9ow6L2fnqEbWtD8nOmrbMuV/m5yJdeKHMMblD1b/EQi2R8kjnNqI5rdiYe+CKyKdQRvI46DKxbqAIiWWcOlBvpc5XqiOVSxyDSdCUbDCHz4=
+	t=1745609666; cv=none; b=ehwSe3l/srySoBOaWrfl4XPjBz5D5bBon8662O37kLt1fW9+5QlT06WfGTk+px3P37xiluIO4Dig5fnzhoYrXSrPeFScPVoXMCAb1VmiIB5uaSkCUIS/67rPuWdlMe53HPQLruazcAjKjt06LMufjYYOFMiZIbhh+xjXUkVVVmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745609666; c=relaxed/simple;
-	bh=ttESHxoGQS0X2vMOzL67rlzoGp6Qjw1IZDEeuKq7kjs=;
+	bh=nVy5aWKIgku0ASs8zTDYZiXGEtNCnxnzwhpSxvmTSYs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gFDy5ICjh/H+6jyqjc+jTDhDta4zohx4JX7VLtbWoYZOLBUzeXULBRbwshoDOZJ8vdWbXyyAbA25c2M6mOlTuEkQsrIFaijwHtj7winztgDGXK3Q8pBQ2nHtF8t5JfXMOlowGzU1CWXRFZmJz7FvTCUfT9k70NfYyr+hTKkFxek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=yHukXgLJ; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=oLS3PlE62Dld4S3DCsR2JWojQ69Om3rRG4X01akiSdL1KoBfSSVojVGnfYEcf6kRjU4vjaoA0ZXZYJ9vyw9PPLhe2fTiYimVDnlyhv0C3uVmGHSuxV2EQ+ixAa1B4QMcBWl+BOHN6tbvWHE/lBcCwdDjRBHF+gcjyxdplVsQ3ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=M/Vu+IXU; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="yHukXgLJ"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="M/Vu+IXU"
 Received: from kreacher.localnet (unknown [217.114.34.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id CC874664706;
-	Fri, 25 Apr 2025 21:34:18 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id EC3D5664A4B;
+	Fri, 25 Apr 2025 21:34:19 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745609659;
-	bh=ttESHxoGQS0X2vMOzL67rlzoGp6Qjw1IZDEeuKq7kjs=;
+	s=dkim; t=1745609660;
+	bh=nVy5aWKIgku0ASs8zTDYZiXGEtNCnxnzwhpSxvmTSYs=;
 	h=From:Subject:Date;
-	b=yHukXgLJ/i9xuHSWC3Yp1LmbTRuuanzy9LXMoFD4x7SPQePsI7YVSLD0UqeQ+k/Jl
-	 Y5/9H/Gnp6429frwOt3BLlaT4E1MvEQLeNOT8UsEhky82nRqIw9IcRJU4e4tV2eS16
-	 495mOM6d8ddzkA98RPlVRMojUPUrrJUkxsCokeMPOLH74jlvh3trnRkFfG1EpXWCJB
-	 tH0B7otG7vXKHcSuXHuRvXFbmzuXO7nnGuzLIwBG/uNEQNcSJtQpWoeODS/FfUrTrE
-	 gL3a53RIf7V+MDm+oIHsoD/MecsZHBq1b/diQ0ea2gqL+oaJWgB4Evqchcfej9n+vL
-	 bLfKuQlPwVV+g==
+	b=M/Vu+IXUXpbX8iEUoY2TIj2ulH6EIaALgLo9NB2SngF9v1MQlJIOy0xvTkFeDXS0O
+	 miaaw9cZxHYn4/jYjM7+fG0w7HDcjfxSL+TTOqCyXiVzWdMbIY16iVZBhJYgQIs2jh
+	 1Hmo+CDWgcfZw2Xyi7OgWPvJHaJOBjwRulwkR2fQk3beB+CtngfL2ADO5KorZ08dS2
+	 RM0UwEZGCn+8fzlBpTHCRlJ7/HFPTSd3Eh1eovJQaQmR1tvnIaHAGtkIwrOVfYCvfX
+	 7pcAflp6mas8X1pwGbflD/whXGLGyPtA7WhQ9BANvyjSpsgEB51VKPx9eIKvb7fMu5
+	 3wpJI2tqxcqMw==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
 Subject:
- [PATCH v1 10/19] ACPICA: infrastructure: Add new DMT_BUF types and  shorten a
- long name
-Date: Fri, 25 Apr 2025 21:26:44 +0200
-Message-ID: <3643286.iIbC2pHGDl@rjwysocki.net>
+ [PATCH v1 09/19] ACPICA: Utilities: Fix spelling mistake "Incremement"  ->
+ "Increment"
+Date: Fri, 25 Apr 2025 21:26:03 +0200
+Message-ID: <7814589.EvYhyI6sBW@rjwysocki.net>
 In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
 References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -54,54 +54,37 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 217.114.34.19
 X-CLIENT-HOSTNAME: 217.114.34.19
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-From: Tony Luck <tony.luck@intel.com>
+From: Colin Ian King <colin.i.king@gmail.com>
 
-ACPICA commit b8713f71b4023a0396fe61503bbbf5226e5eed1b
+ACPICA commit 0faa6e20cfe56fdaefc37a38f8fd04e3137fcdad
 
-Some ERDT subtables have 11 and 24 byte reserved fields.
+There is a spelling mistake in a literal string. Fix it.
 
-Add the ACPI_DMT_BUF11 and ACPI_DMT_BUF24 types to describe these reserved
-fields in struct acpi_dmtable_info structures.
+Fixes: a171306ed1a1 ("Reference count: add additional debugging details)
 
-Shorten the ACPI_SUBTABLE_HEADER_16 name to ACPI_SUBTBL_HDR
-
-Link: https://github.com/acpica/acpica/commit/b8713f71
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://github.com/acpica/acpica/commit/0faa6e20
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/acpi/actbl1.h | 2 +-
- include/acpi/actbl2.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/acpica/utdelete.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-index b403b0b60bf6..6d2cc181e3a4 100644
---- a/include/acpi/actbl1.h
-+++ b/include/acpi/actbl1.h
-@@ -157,7 +157,7 @@ struct acpi_aspt_acpi_mbox_regs {
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index c85bfa13ac1e..e8180099d01f 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -404,7 +404,7 @@ acpi_ut_update_ref_count(union acpi_operand_object *object, u32 action)
+ 				  object, object->common.type,
+ 				  acpi_ut_get_object_type_name(object),
+ 				  new_count));
+-		message = "Incremement";
++		message = "Increment";
+ 		break;
  
- /* Larger subtable header (when Length can exceed 255) */
- 
--struct acpi_subtable_header_16 {
-+struct acpi_subtbl_hdr_16 {
- 	u16 type;
- 	u16 length;
- };
-diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-index 274b3b85b6d7..2c07b097ef9f 100644
---- a/include/acpi/actbl2.h
-+++ b/include/acpi/actbl2.h
-@@ -1764,7 +1764,7 @@ struct acpi_table_mrrm {
- 	******************************************************************************/
- 
- struct acpi_mrrm_mem_range_entry {
--	struct acpi_subtable_header_16 header;
-+	struct acpi_subtbl_hdr_16 header;
- 	u32 reserved0;		/* Reserved */
- 	u64 addr_base;		/* Base addr of the mem range */
- 	u64 addr_len;		/* Length of the mem range */
+ 	case REF_DECREMENT:
 -- 
 2.43.0
 
