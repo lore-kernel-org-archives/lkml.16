@@ -1,30 +1,72 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DFE23536E;
-	Fri, 25 Apr 2025 09:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F3F1AAC4
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573019; cv=none; b=mq754SfzJWyRfp25xjnJqEmXsKvMHPZgSVxYlKSGjs/gJF3q0RlSg4JSVkzgdx07ycyyONXAym1LK4BbXiyGSBarHOwJbW2+XJCFhiayqWZnP0nrM9eTyD9vAup249WWUiFI0CyYtNDE3Q6t5lA2xvg0Y+SLpIKdUqDjaso+/0g=
+	t=1745573093; cv=none; b=ccY0GvhNhwJT/BsThlkjgrTrBxQypMRNPiE7p0TH8wmZ9CA60egbv0PsFyYAE0wrevRFcwloAVIzwzCd0yb0+8hsSt12SduLwbsPUsV2wn1LlMKWnSUAnn43cSuFNZPn7XZSQquulP+XFxaMFXRg1ZTS0xlMO58j4rx36rXSPqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573019; c=relaxed/simple;
-	bh=4QFKN2RwaxOmLvvE85MgQNg6/UMRv3I7Se3dUA5myy4=;
+	s=arc-20240116; t=1745573093; c=relaxed/simple;
+	bh=Yc4BwXcDlBm1F9/eAPkhhmBz3Iwfa2QIOUzglIaGc98=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b6hVfFyC6Er/D9cmbLw/MlYR05B8aJj/+BmSTOW6YEcYfbzVBbycRLJDR0zS00xRP9B5QnY2a6n64rHj9wPx/hep2aAnHvLtXAUrs7L81UXElHje7JDbsHSfazHW23PKA9kmgaF/2Rwct/bvkmBaJT63BXQ/5FF2PehsF5l2B1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZkS7F5sqwz4f3lWF;
-	Fri, 25 Apr 2025 17:23:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 572381A07BD;
-	Fri, 25 Apr 2025 17:23:31 +0800 (CST)
-Received: from [10.67.111.192] (unknown [10.67.111.192])
-	by APP1 (Coremail) with SMTP id cCh0CgAHanqRVAtoENpoKQ--.39960S2;
-	Fri, 25 Apr 2025 17:23:30 +0800 (CST)
-Message-ID: <2f13f928-9148-44e0-a44c-872a3779b0ef@huaweicloud.com>
-Date: Fri, 25 Apr 2025 17:23:29 +0800
+	 In-Reply-To:Content-Type; b=Q+vtpf4cvDlf832x4wAcT8EyPnaX0CysoSK1DcY/VaP4T+d0mwIVpmd27lm9Bc1iiWn8CdCf+LkogMruwBX/sq/2Thex2Aet/aamMni7yzWh1ZxXMDPqTUphQXHlEcJBoVztUHwzJBOmLB+1SGZ5az0rFhUX5aUDE+3MiMLIl+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fb0THmZo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fb0THmZo"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8TCsM008732
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:24:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6TOVSLiHysmlmuAA0RHIHbn82IoarWugi9dE7AH6+e8=; b=fb0THmZotVS5nHV8
+	0N130J808EBa/0W5Gm8f/hAMIKSxI3bAFiZRZf1zTqz4bmTqelFz8wJU6IfKsbhY
+	o9W68ieDv/RsIWpNZ3rbMbjrPlpx87bUbKFMgicGJ4qWnO/9c0EwtyrLJZ8mM7uQ
+	7czMfxp8TYtvAS346utC/03lQkvESDO7ytrbF9Qcp5VmBAsWawLAIhb1SpQDmpDt
+	WMOae9a6xYXqjWHVMGCZsrloG5kbhOAcMfMQGzjGJaqPQ5CyqbEeih9qObRyiPYK
+	DNUfDtC2VAkSuNq/t+LCIT2moIv37QCB/2yvR7xd7JAWlDe5ytyPedxsp0a/M+Z1
+	7TfnZg==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgy8eby-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:24:49 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47ae9ed8511so3637321cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:24:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745573088; x=1746177888;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6TOVSLiHysmlmuAA0RHIHbn82IoarWugi9dE7AH6+e8=;
+        b=BpC9vGngjgtZBHcBFAwyd2/W8JSEKZd+mjQKccp+H4t82weSIH3k+8im37rt5VgeQ0
+         Lx3ogA6RokmrB3OYRH6Jcd8JyZYtYSzcW/8o7SYxNkktq6AE/lHJW1tKC91mcMZ7GkjL
+         y3y+MI1p9lchg9+zyjOeGm3L6RdoBjMwAdkqpFLNADoRE1lyaklg3PTJ1K7jw53i1MgI
+         X3VSFAbcYaEUwoK+Xz3QxNKsFw4Pl7CeERGETzIc6/iCA9YEy7FrhSttjEoudKA4d8Zm
+         ZchETbLIKfUV7uKlliaNjB1M3cNUVifsV5syTB0XLK6U9HR5k8P/OS+xht5s8Kc/jQp8
+         FRYg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8G3105KGAKhefc74Kg6KUheRajem7VOjSCtK3Uw3I0pZXejK5L7Y0SlNdMSU2kl0EipabTAYBFArumHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywcMc6leiUu8ictfWLOh5LGQCQWKVyWKENiZRBjbg70EbVO0rn
+	6lVDZ7OqlOP6gppOp4T5XofcSddvdJNppfLr0vDbXuvZTHmR6fT9te2fk1NZMVWBkGU3nh7mY2p
+	7VHJSWJaLocwEPt0eg5J2q+0f2xHPbqts9yxLX6h9tn/iR5cDzeTUENGCSf0nQ2Q=
+X-Gm-Gg: ASbGncswmdOyKvy3uzw8J/oFSzDn7r+1BdU+RClaSqQ5EAdNnBwNKAF/aTyuOQQCRkw
+	Sr5bRuP2NXrVvEBEhE0gfuTbnsidTVF7gUuazJbyPfPX5eng0Tfu87uR1MPj4CBukkKakntFfcV
+	8L8AVYoWcWr5KC/+P0ZEbUQXi/3s61s78Jjw+SHWnKG2x4kLJSHUdei4IEJrtfuBtgjfg/srBbe
+	P0AYcGe6AwzklZoek35+mS7i5beK8FI0LWYTrGeUiJGGmNuAcH6QADUOI6QUPCqLppLxcSXVsHX
+	BpzpSvvT8U5lCfL1wIhlBMjiDXk=
+X-Received: by 2002:a05:622a:1a28:b0:472:1de1:bc59 with SMTP id d75a77b69052e-4801c796973mr7967931cf.6.1745573088536;
+        Fri, 25 Apr 2025 02:24:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECDV4NjfiCTRpDdBppQk7mkiFY9COAykAendzS1IIWlk9k/YXc3xDR978i701ANPjxYOXj4Q==
+X-Received: by 2002:a05:622a:1a28:b0:472:1de1:bc59 with SMTP id d75a77b69052e-4801c796973mr7967881cf.6.1745573088207;
+        Fri, 25 Apr 2025 02:24:48 -0700 (PDT)
+Received: from [192.168.65.5] ([78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb0becsm102529766b.167.2025.04.25.02.24.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 02:24:47 -0700 (PDT)
+Message-ID: <e83b58ea-0124-4619-82a5-35134dc0a935@oss.qualcomm.com>
+Date: Fri, 25 Apr 2025 11:24:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,143 +74,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sm8750: Add Soundwire nodes
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
+ <20250424-sm8750-audio-part-2-v1-1-50133a0ec35f@linaro.org>
 Content-Language: en-US
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Puranjay Mohan <puranjay@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Florent Revest <revest@chromium.org>,
- Bastien Curutchet <bastien.curutchet@bootlin.com>, ebpf@linuxfoundation.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
- <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
- <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
- <6b6472c3-0718-4e60-9972-c166d51962a3@huaweicloud.com>
- <D9EWSDXHDGFJ.FIDSHIR1OP80@bootlin.com>
-From: Xu Kuohai <xukuohai@huaweicloud.com>
-In-Reply-To: <D9EWSDXHDGFJ.FIDSHIR1OP80@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAHanqRVAtoENpoKQ--.39960S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw4DtFW8Gry3urWkury7trb_yoW5Ar48pF
-	WftFyktrs7GF1xZF1qqw4IvFWDtwsxKr18W3yDtr18Aws0q3saqr1jkF1Y9FWxKw1kWw47
-	XayY9ayxCFy5ZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	4xRDUUUUU==
-X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250424-sm8750-audio-part-2-v1-1-50133a0ec35f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2OCBTYWx0ZWRfX1q6zsbWDgOf1 qcPbnm+vHhMSTL0CJV85QC9tgJkD+ekU7neDv8U5XzgbljweN9PS1KRXm0Cb4wYWvQfMCL5QC1e IQCbsx50y/e/nQBLGRFffQ/xUW/a7mqpf8bgiijZoeDE4M8ybiRG7+e/jxKfcdKsWRj7W1Ir4HU
+ FWg81ppiCXRtMBNSOarxD46iK9DiLxxhDgXVS0eBotSzfOGZSR3o2DoUMdMjS7vZIJnveiUu8LM whBnyi5W+Or1Be2AfRpcvwGJmwikAZ8HmPZvXMW9UG7S9zsd2TcydiUv/b1YVEz7xoHbg0dAhoi eMSmbtRS0TGerr6GWVnoxvoZa8ZYjJoTasbVXSli/es/sckTbnMXA4vhUj27GLtfNUiUUykFzYh
+ IOTK3f+bNcI2HAtoY6YPcQ7XTBwiRHSPKGF+Mw7+ghLmSHnZfZg5zpuraHhTGl3ypu/6XOnK
+X-Proofpoint-GUID: h0mKcoHQ2hNBTSKvX3mzkcnclGJ-2I-y
+X-Proofpoint-ORIG-GUID: h0mKcoHQ2hNBTSKvX3mzkcnclGJ-2I-y
+X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=680b54e1 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=qkmjNN0peoRQDp3El6UA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=788 malwarescore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250068
 
-On 4/24/2025 9:38 PM, Alexis Lothoré wrote:
-> Hi Xu,
+On 4/24/25 11:40 AM, Krzysztof Kozlowski wrote:
+> Add Soundwire controllers on SM8750, fully compatible with earlier
+> SM8650 generation.
 > 
-> On Thu Apr 24, 2025 at 2:00 PM CEST, Xu Kuohai wrote:
->> On 4/24/2025 3:24 AM, Alexis Lothoré wrote:
->>> Hi Andrii,
->>>
->>> On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
->>>> On Thu, Apr 17, 2025 at 12:14 AM Alexis Lothoré
->>>> <alexis.lothore@bootlin.com> wrote:
->>>>>
->>>>> Hi Andrii,
->>>>>
->>>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
->>>>>> On Fri, Apr 11, 2025 at 1:32 PM Alexis Lothoré (eBPF Foundation)
->>>>>> <alexis.lothore@bootlin.com> wrote:
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 122 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 122 insertions(+)
 > 
-> [...]
-> 
->>> Thanks for the pointer, I'll take a look at it. The more we discuss this
->>> series, the less member size sounds relevant for what I'm trying to achieve
->>> here.
->>>
->>> Following Xu's comments, I have been thinking about how I could detect the
->>> custom alignments and packing on structures, and I was wondering if I could
->>> somehow benefit from __attribute__ encoding in BTF info ([1]). But
->>> following your hint, I also see some btf_is_struct_packed() in
->>> tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see if
->>> I can manage to make something work with all of this.
->>>
->>
->> With DWARF info, we might not need to detect the structure alignment anymore,
->> since the DW_AT_location attribute tells us where the structure parameter is
->> located on the stack, and DW_AT_byte_size gives us the size of the structure.
-> 
-> I am not sure to follow you here, because DWARF info is not accessible
-> from kernel at runtime, right ? Or are you meaning that we could, at build
-> time, enrich the BTF info embedded in the kernel thanks to DWARF info ?
->
+> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> index 149d2ed17641a085d510f3a8eab5a96304787f0c..1e7aa25c675e76ce6aa571e04d7117b8c2ab25f8 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> @@ -2257,6 +2257,36 @@ lpass_wsa2macro: codec@6aa0000 {
+>  			#sound-dai-cells = <1>;
+>  		};
+>  
+> +		swr3: soundwire@6ab0000 {
+> +			compatible = "qcom,soundwire-v2.0.0";
 
-Sorry for the confusion.
+They're v2.1.0, same on 8650, there's a number of new registers
 
-What I meant is that there are two DWARF attributes, DW_AT_location and
-DW_AT_byte_size, which tell us the position and size of function parameters.
+[...]
 
-For the example earlier:
 
-struct s2 {
-       __int128 x;
-} __attribute__((aligned(64)));
+> +		swr2: soundwire@7630000 {
+> +			compatible = "qcom,soundwire-v2.0.0";
+> +			reg = <0 0x07630000 0 0x10000>;
+> +			interrupts = <GIC_SPI 761 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 785 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "core", "wakeup";
+> +			clocks = <&lpass_txmacro>;
+> +			clock-names = "iface";
+> +			label = "TX";
+> +
+> +			pinctrl-0 = <&tx_swr_active>;
+> +			pinctrl-names = "default";
+> +
+> +			qcom,din-ports = <4>;
+> +			qcom,dout-ports = <0>;
 
-int f2(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s2 g)
-{
-     return 0;
-}
+There's 1 OUT port on this instance
 
-On my build host, the DW_AT_location attributes for "e", "f", and "g" are:
+otherwise (modulo the settings I don't have a reference for)
 
-<2><ee>: Abbrev Number: 2 (DW_TAG_formal_parameter)
-     <ef>   DW_AT_name        : e
-     ...
-     <f6>   DW_AT_location    : 2 byte block: 91 0       (DW_OP_fbreg: 0)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-<2><f9>: Abbrev Number: 2 (DW_TAG_formal_parameter)
-     <fa>   DW_AT_name        : f
-      ...
-     <101>   DW_AT_location    : 2 byte block: 91 10     (DW_OP_fbreg: 16)
-
-<2><104>: Abbrev Number: 2 (DW_TAG_formal_parameter)
-     <105>   DW_AT_name        : g
-      ...
-     <10c>   DW_AT_location    : 2 byte block: 83 0      (DW_OP_breg19 (x19): 0)
-
-We can see "e" and "f" are at fp+0 and fp+16, but "g" is in x19+0. Disassembly shows x19
-holds a 64-byte aligned stack address.
-
-For the two questions you mentioned, I’m not sure if we can access DWARF attributes
-at runtime. As for adding parameter locations to BTF at building time, I think it
-means we would need to record CPU-related register info in BTF, which I don’t think
-is a good idea.
-
-> Thanks,
-> 
-> Alexis
-> 
-
+Konrad
