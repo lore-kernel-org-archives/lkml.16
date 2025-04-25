@@ -1,107 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5EE248878
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A10D24BC1D;
+	Fri, 25 Apr 2025 12:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745584897; cv=none; b=rqw0c8Y0xV7h09I17+7xd22qP8rhgpj6hAj75rbdtSFhsnZ/ZXxJd1eV3aUfCOhxr48sUlbfx0ZaSg9Wdtlq/RY8coU2zviE65C8uIaAdkKnNr6JljQVYTyzr5aXW7sog/gYkp/3nKz/ET+KXgDn0ShQWDM/KAxbfifIVio/ZZE=
+	t=1745585150; cv=none; b=ibvG0cGoHLQbeTcIhSgJ1EWRHEK1z7ouGXi33aAMs5RXtARxRA8bO8KORPgdf4dPtflOjKa5Ev6CVLu7JIrvXuDFRqpPwZmgnr+m4BQMOamfTZU06repzH9dNgtO+yOKVF+aB4w1Q7Q4LLOYM0raL/OY4meEH7AYEmgEsGppf8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745584897; c=relaxed/simple;
-	bh=JtEtGcIkNYUr42wjER4Vj2deQTHfGnAnffM9GvZG4CA=;
-	h=Message-ID:Date:MIME-Version:From:Cc:To:Subject:Content-Type; b=goK2tebyVGvomKPrpPN/R6ALHmr9vPoJB1MRWPWx0r+8hdglPLVQOVQNh2wN4fYIFDF1AEMuXKOPHjfvT8meYfsfq19ZbFN4ccjRvXwToUOdpW++iWKTzL9Xepdomrw0U5xNP7u88xUnUuN/pu7ytbkbH4SGxJDWKv5k7jRwsLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7016106F;
-	Fri, 25 Apr 2025 05:41:28 -0700 (PDT)
-Received: from [10.57.90.155] (unknown [10.57.90.155])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40D123F66E;
-	Fri, 25 Apr 2025 05:41:33 -0700 (PDT)
-Message-ID: <f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com>
-Date: Fri, 25 Apr 2025 13:41:31 +0100
+	s=arc-20240116; t=1745585150; c=relaxed/simple;
+	bh=N1JqJa/Thtcgbai7AXn0UM396DEB6usJBO8fHeX8CeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TbU2Cyqvf6egm+YUVzXDJ7GlUYeoIXOK7vUMDkIA0uoxi/ikH+A9ENATeHtzAcZFdY8dQ6BhC1dxgh88tGeWBW4cp+AeA7jBUH11SYE1HqFO+M4Ll5dNFhxogDcGhwPZHovjIJAXeRiXFrl2eYmxbc5aWFrbLSvIAmD9NE+Kk0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rng4Q1ek; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rng4Q1ek"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so336511366b.0;
+        Fri, 25 Apr 2025 05:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745585146; x=1746189946; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l3BCALyVfXKt+WZYBHxbyWx+XxVRkGCfaI97XHpd+pY=;
+        b=Rng4Q1ekEgj4eHEgEGAHrrYJb35kVZmqmz2o0o51RVO9Zxd3Bse2ALlohNR6Vdwe0w
+         iIZ9iVJiL05MmOiukVkWbmAPrgFlD2U4TlXQjxPOBYGmhOAVN/hsQcLG+/PSZkRrnHs7
+         3mVu3jmo7k9MmrFYVUWyLo9SpIOiO/3sNm97xKPSzAwqhkp7bMWweqfunUn1vEEOIJ3w
+         AxROhPBeVAoUkbANVTE2Pk9tfPFRuugqRpa9epK0VqnjscVNb/BB8bu+bTKgJc5g683j
+         z0KVOzbldWuzd5B+PkyPsiokdsGRNuOzOvzmdA5qS1GcNaDqp6Vdiq+GU1Y8ACXzJjih
+         IvjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745585146; x=1746189946;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l3BCALyVfXKt+WZYBHxbyWx+XxVRkGCfaI97XHpd+pY=;
+        b=LNE0CyByBEhkNyErrxT++sk2M/A7lttQZMfB8RlGxP7Jbq8mAt7xgoxDEm/xZ1pq49
+         iGtm6LccScJPdUupOOeTNGDcfpjGzNnZg5RjovglLshrJzAJUiYKzryUFrTllihG0Ab4
+         5Y/BtR9VIUhEZHpz2GFIw+73bPPDBCb6xg4C+TAau8LPwwGos6VNcVHnUq4U/R7CYZEN
+         msyeVfNqpneUOC5O/amNrqXgmCcRXvvd43gjEq0yyrBLqtHCIK4TMaRkRbFHjKD8WhkX
+         ONJL5NNeKNXkQXzaNJWmsxjzCjtx9RcFM75+T3y+I0yPsMr2zjZMulejsx6UaQZ2rQU9
+         Fn5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVNGi+rsXSnGybXk6yjZwHrizukJhALv/JzsJZmqrHFIIB2qKn+/deoWK3/OCj8ni7xwJihq7XkJraZ1e8=@vger.kernel.org, AJvYcCXU6qenmHErF4tyuhMwvySmbP/J3IqEDjYFJTywoq7wrjGl1xOkPt22nP0gecJ7EyNASoXPYoL+eZEwpSYy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUnIuEq2lTc/uidojylZM87Z8b3q+0fw1A779axTcd2kV4LMy0
+	L9ZAOIjjqJeluJm/Qhw45tydhMJnbf6N16U3Fuh1pZpQr6SnIjQQ
+X-Gm-Gg: ASbGncsPNttTSSzJv3s0/e4hZvSdoeYLHWuPem95EvbY/16YFH3yCp0pbN93mWYd2w+
+	sNDXxoLdeKsBAFF5Pm2DZddsvGEGFeo6aVUdUlVx5gf0SFxR8wEsV6ofTFpJjwMdecfOSeY1j08
+	5X7UeE5xgD2OvBHD8VPusdYCAHYLdZpHhti4EypFm1LqNedB1PSBSlI2X6H1irm0vGPrVRDo9QY
+	iG/mYFfN20fUCzkNxZPIzQweeG7lhXfnST1xOfqkpmeDUGHXXKBBueBN+SUet8EeumPjhs2MhS5
+	GS7WjCzWI5mtiIPc7L5vmcoEbBjFJrqlPAO3Z44VFnlkmW3gdQSyDkzBHC4yr8fLY/PyQzEJFdE
+	0q+I=
+X-Google-Smtp-Source: AGHT+IF6lACxg5XQV9zx3XY5JZvnZc0emetlxi1pM+qXxla8Kdp3t0Y/dF93JbbLv9LE6OFyvzm8+A==
+X-Received: by 2002:a17:907:1c29:b0:aca:95e7:9977 with SMTP id a640c23a62f3a-ace7113336fmr191137166b.28.1745585146266;
+        Fri, 25 Apr 2025 05:45:46 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e7094sm134641766b.56.2025.04.25.05.45.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 05:45:45 -0700 (PDT)
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+To: clabbe.montjoie@gmail.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org
+Cc: wens@csie.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Subject: [PATCH 1/4] crypto: sun8i-ce-cipher - fix error handling in sun8i_ce_cipher_prepare()
+Date: Fri, 25 Apr 2025 15:45:14 +0300
+Message-ID: <20250425124517.2225963-1-ovidiu.panait.oss@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux-MM <linux-mm@kvack.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-To: Kees Cook <kees@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Catalin Marinas <Catalin.Marinas@arm.com>
-Subject: BUG: vdso changes expose elf mapping issue
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Fix two DMA cleanup issues on the error path in sun8i_ce_cipher_prepare():
 
-I'm hitting a nasty bug which is preventing VSCode from connecting to my arm64 
-VM running v6.15-rc3. Bisection fingers Commit 0b3bc3354eb9 ("arm64: vdso: 
-Switch to generic storage implementation") as the point where this started 
-failing.
+1] If dma_map_sg() fails for areq->dst, the device driver would try to free
+   DMA memory it has not allocated in the first place. To fix this, on the
+   "theend_sgs" error path, call dma unmap only if the corresponding dma
+   map was successful.
 
-Debugging this, the root cause is due to ldconfig crashing with a segmentation 
-fault (I have no idea why VSCode thinks it needs to run this...). The segfault 
-happens because ldconfig's attempt to expand the program break fails because 
-vvar/vdso are in the way. The above change expands vvar by 2 pages and this 
-causes the problem.
+2] If the dma_map_single() call for the IV fails, the device driver would
+   try to free an invalid DMA memory address on the "theend_iv" path:
+   ------------[ cut here ]------------
+   DMA-API: sun8i-ce 1904000.crypto: device driver tries to free an invalid DMA memory address
+   WARNING: CPU: 2 PID: 69 at kernel/dma/debug.c:968 check_unmap+0x123c/0x1b90
+   Modules linked in: skcipher_example(O+)
+   CPU: 2 UID: 0 PID: 69 Comm: 1904000.crypto- Tainted: G           O        6.15.0-rc3+ #24 PREEMPT
+   Tainted: [O]=OOT_MODULE
+   Hardware name: OrangePi Zero2 (DT)
+   pc : check_unmap+0x123c/0x1b90
+   lr : check_unmap+0x123c/0x1b90
+   ...
+   Call trace:
+    check_unmap+0x123c/0x1b90 (P)
+    debug_dma_unmap_page+0xac/0xc0
+    dma_unmap_page_attrs+0x1f4/0x5fc
+    sun8i_ce_cipher_do_one+0x1bd4/0x1f40
+    crypto_pump_work+0x334/0x6e0
+    kthread_worker_fn+0x21c/0x438
+    kthread+0x374/0x664
+    ret_from_fork+0x10/0x20
+   ---[ end trace 0000000000000000 ]---
 
-But I don't think we can really blame this commit...
+To fix this, check for !dma_mapping_error() before calling
+dma_unmap_single() on the "theend_iv" path.
 
-ldconfig is a statically linked, PIE executable. The kernel treats this as an 
-interpreter and therefore does not map it into low memory but instead maps it 
-into high memory using mmap() (mmap is top-down on arm64). Once it's mapped, 
-vvar/vdso gets mapped and fills the hole right at the top that is left due to 
-ldconfig's alignment requirements. Before the above change, there were 2 pages 
-free between the end of the data segment and vvar; this was enough for ldconfig 
-to get it's required memory with brk(). But after the change there is no space:
+Fixes: 06f751b61329 ("crypto: allwinner - Add sun8i-ce Crypto Engine")
+Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Before:
-fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
-fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
-fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
-fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
-
-After:
-fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
-fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
-fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
-fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
-
-Note that this issue only occurs with ASLR disabled. When ASLR is enabled, the 
-brk region is setup in the low memory region that would normally be used by 
-primary executable.
-
-So the issue is that when ASLR is disabled, these statically linked, PIE 
-programs are mapped with insufficient space to expand the break.
-
-I think in an ideal world, the kernel would notice that this is not an 
-interpreter and map it to low memory. But I guess we can't know that for the 
-case where the interpreter is invoked directly (as apposed to being referenced 
-in the .interp section of the invoked binary)?
-
-Another option would be to always relocate the break to low memory (but without 
-the random offset for the ASLR=off case). But it looks like there could be some 
-compat issues there? I see CONFIG_COMPAT_BRK...
-
-Or we could just ensure we enforce some dead space after the end of the program 
-that nothing else is (initially) mapped into. I think this could be done by 
-overallocating the initial MAP_FIXED_NOREPLACE mmap, then munmapping the hole 
-after ARCH_SETUP_ADDITIONAL_PAGES(). But it's not really clear what the correct 
-reservation size would be, and any mmaps the program does will start to fill 
-that space.
-
-I'm hoping someone has some suggestions...
-
-Thanks,
-Ryan
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index 19b7fb4a93e8..05f67661553c 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -275,13 +275,16 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+ 	} else {
+ 		if (nr_sgs > 0)
+ 			dma_unmap_sg(ce->dev, areq->src, ns, DMA_TO_DEVICE);
+-		dma_unmap_sg(ce->dev, areq->dst, nd, DMA_FROM_DEVICE);
++
++		if (nr_sgd > 0)
++			dma_unmap_sg(ce->dev, areq->dst, nd, DMA_FROM_DEVICE);
+ 	}
+ 
+ theend_iv:
+ 	if (areq->iv && ivsize > 0) {
+-		if (rctx->addr_iv)
++		if (!dma_mapping_error(ce->dev, rctx->addr_iv))
+ 			dma_unmap_single(ce->dev, rctx->addr_iv, rctx->ivlen, DMA_TO_DEVICE);
++
+ 		offset = areq->cryptlen - ivsize;
+ 		if (rctx->op_dir & CE_DECRYPTION) {
+ 			memcpy(areq->iv, chan->backup_iv, ivsize);
+-- 
+2.48.1
 
