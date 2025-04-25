@@ -1,160 +1,140 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800681DF759
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2982621B910
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610893; cv=none; b=jmVIZG9KoM/P9gBY3xE9fvkqF07esHsExhx9P7Ahq909BpxDDe4CK/6JUUNeglYo5/bTdjHnm5naagK71q8RdG43QvYRtLgeJ9b2vmiotONbGi+XVtv/5h18BoQ90pBsVN96fsDCMv8YXb9EOY20coUoaTpedQNGeRGPgE9fKV0=
+	t=1745610930; cv=none; b=pm5w7YTKvOIuy0FOvhJVou8A/nKi3aEJVT/jQkp33gTUvbBmhsqR0XETv1fKRd/WQndt7ZhZeopyq29qE+OYeP87AdKKAgvkv4o29tNJjymm/oGl+kW6yOXInB+hWxBEQBYmRVVI2CCdwtu4uItc/8zIbwikOoqDxFWavb+reSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610893; c=relaxed/simple;
-	bh=UQBhajw/JeL4r5v3Rs1yPTsRAOgc9Sros05Xpe1hjEY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UB2fN+/J2rt3/Psjfomby2w4CgQrnpcRaqbjTWGTB2o/niGEV7VccTY6w65yboleFhgKvE5P1ebmAlBWA5seQkiUkyvXOLwi6EBSgApwEovJ//yoa/9dBykZXkZb8OPIS+kFwCf3RlWtGtm9EyNfQ/VjPcwIJHyPwki76EHn5gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X9ntPESG; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745610930; c=relaxed/simple;
+	bh=YkYI2UerAJ9rFXqXK9R7az+VrbS7ruw5DYqt9hl2Nyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tQXpaI3HKml61XvPe8/nkP6bbZ4CZvGLYCrMkl/8HQssenlpr6seVQJRd/x7TWP7LoK/xGNBSCKH9+1E0WCMjrE0rHdLGDus3pfeKdUWNwW004XhxvlMhSxw+GqvvToAcrM7hTjwSxxVONnRTrBArtb4IESG/bRIg+A+kE3S9GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cHLw/zz1; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9ntPESG"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ceeb85ab2so1766005e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:54:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHLw/zz1"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso2402934276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745610890; x=1746215690; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=iZKFrHcJZYCujaNEaq92E0EBbUbzkFvCWqG/Nj+BFbY=;
-        b=X9ntPESGh9ca3poctWd5OfWOAmXK2+EYTwtlxYwMbF0GIP627+07AEBw2dOUf1bqI8
-         jkGf+FF7KHq7h1Qp5dmkMg228cbxzr3xEHQCoG5R8vDdUPOvkNIRTrgVPb3DvKA77Y4D
-         mnncaurRatZs6kpJKf9WeWO/E7T77lE5eUUdu78gBBmF6FP/nEpoahUCjb+91C/JQCfX
-         u3OMmussNEyhz6Me/J6kugQNfQebiLfGxfwOvkkQ524RXwBPpOP9fv/6/cVESwab1ncJ
-         clcv0GwWPD9d1e8/fqLBLA/xrPjW44vCxUVlvY4ycMzDuxefxwMkXx8E9T+XqCtvzLlc
-         OmHA==
+        d=gmail.com; s=20230601; t=1745610927; x=1746215727; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UrXciBeDVNhReMYqMBDNjD45OpghW+ifP5F4S57KbJA=;
+        b=cHLw/zz1tQy8AvHgIyYTJWOsujWWq7uXojK7ybgiZ2/djOmow6ktHC4ZPfjXmX9ZkC
+         IGePT+cA75K/mCKRQcpWLokj+ghiWT8bQ5kIHe9xx+pWWrOuiG/bgNz3+uRseHYYrXod
+         u/ScO7gSKkqO+cm1EepGxfODkqV09UCulX9I3DdTbNS3nRwl+mKxNMXRW43hp5R5p3lb
+         4oLJXgoVogijAShWQHLONo3SvlkT1cSHYC1+BKcdegiLBOPO/qlz6qxD56O+pp5AhzVJ
+         FXL0xLuQxfVQV79zsVrhmD2QJQpKvZr37hu4vN6ptezfUOM16GftKvotiy2z1Df1ybWp
+         TlYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610890; x=1746215690;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iZKFrHcJZYCujaNEaq92E0EBbUbzkFvCWqG/Nj+BFbY=;
-        b=h5NE+8q2OEp/yoRC98xSgCipNJQlNEU3o3NGgSAJOBp7MdlLhcdx0ejUl9CD/PeIRj
-         OSA4UWW1Hp66xi/RjLQ+9SsGIZDwWJDnzKitYJBmL5CdhgM2G+Ly3e6f5dk4YTuZ1Q4F
-         ibx96tUgOAH9LbLz/Y/8sPTjAbEHO/j9OZpFWaIC8i+Pot0kd5/F2R9tlesNa8paN7II
-         hh6vJj1Qy0/OIdhbZrmKPj99W8zjhES1K+Vy8Fg0HVCf+P9WJetrcaqBGurcu8FnTpU9
-         iJ854uXXcWaox3VsVdPEZpQPnU4skYd6iBQXU/IwuOtRCA8n0MnPFFo+750PSlzJ10Ms
-         gwMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgWYUvWoowJhIp4MqusCJV7Qdn+CuAXJGvt2v2biVNYWl12sOe8+9FjSQ4PXrce4S5dDPjvAUczR2wGdE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHuRLROPYpv7/blVsRgRHU5v+CHdhdOJa3FdemIB9Upf/FiXlG
-	38XJsb04yzq2SbYeAIgjSLXtBm8ka5ANTwEnfp+RtK6Z4NHs1zVpW6auhHFg0+k=
-X-Gm-Gg: ASbGncun9ZkvH0MXpb6pgE17au/gFeQFYQgnvZRPqCBjCQeB7m8ahjMEgWDIr0MBCUL
-	DKPO3E8sk9yP1bilov2fMGqsyCpQlyFauKQUO9duSLST95SbQwTM6MBYl7nOjXr6MN8s2AZ+T3/
-	oS21nB2S/hx/IN4v7dQH5mYsZRQ1Ufo8fcQz1cwIlne+SdzxfdqMroFMnALffXY8usva4Oh+7aW
-	mX42aco4fzTe2N58VLK99QsRR5iLZvLeduhizbzsligfu5wchTQP8KTIWa88NjlUqqKSzC6shu4
-	1qCpCRSZ6PEe90zs4Myd0W80k+10ht81M/e/hhq6tR1mz8slBSkwLSsGM5U=
-X-Google-Smtp-Source: AGHT+IHwTzyAUXv62+tiLEY59G5UWbHcmL+HqGpSUG6e3gApg3OCpfZYoz7ZdQxCg5phwwl3AXVPtw==
-X-Received: by 2002:a05:600c:4ecc:b0:43b:c825:6cde with SMTP id 5b1f17b1804b1-440a65dededmr12565205e9.3.1745610889764;
-        Fri, 25 Apr 2025 12:54:49 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e06d8sm68733805e9.39.2025.04.25.12.54.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 12:54:49 -0700 (PDT)
-Message-ID: <921afe20-42b1-4999-b5c4-035669dc831e@linaro.org>
-Date: Fri, 25 Apr 2025 21:54:47 +0200
+        d=1e100.net; s=20230601; t=1745610927; x=1746215727;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UrXciBeDVNhReMYqMBDNjD45OpghW+ifP5F4S57KbJA=;
+        b=Wr5ZpWK1aWhF3OMrRPEmGnOZRqV7B4WkB9Tqhxn7MQv+vecy9ygIOcJdtyZ11nY+bn
+         eXnzJwd/Maqj2svHRWebQkslfKUfblnm/p5Glj2OobAFJd7tZZEunjWQM6SEDBT5WX/j
+         0TOpFs+SGFcCtmd6isFf0IcPQuW14U8U0yW4f0UH834ykOs2vn/I+vwa82uMW4RH/Hqx
+         JnjELHCSqMLt4+WT3+C0OSEJBfacXwoOhOByqHBHn2r9ZJq4W1GvZaoD0R22dNaYuoLH
+         oU19GbW51Tq3atE/Q94Qgi1nfNV9wW366ImOCR6JScc7c5ZmOoWMp388yOat9yHuM98e
+         t3yA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAHo050gtX6qudhuEwbR56Ll/9fNjbe3evz8hbCLe9hfuMxawoIiZf8NXiRbxTk+AC1idMCnphY1C12Dg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6KphG+a7Ace0oZ7yaT9r2UB3719asZxwzMn49JbdS+JdPpJ9h
+	v20OPli9TU6Hc1n2W55Htx7lssd97gRPan3yL5rGaLgCUtTJWKQN7AB2LlL4gY0RVeyPPOg88oR
+	W4fi3UjChlAve3ZrSNwx34JOOBW8=
+X-Gm-Gg: ASbGncuRc+Jso3iPBjkPBW5RCFlf3psAfqPf4ysTqg0IWkYzmEj5Z8GlYLh3hWwHQ6L
+	Nf1+fcBjlMtEw+MMuVq4kYDjuUPC6xdUsMv9Ouznpk4vI385CummUSTOA/oliKvCCSAndxobLm1
+	9gSS02t1TM87pwjEiylM+4BzFrKRsgIsGM6kPEQ54CenvRBr7qtIT5/g==
+X-Google-Smtp-Source: AGHT+IHNcF93ygVUYkEcl83GWVs9xFZbaBu5te9iW6WLRa0MYyvtqFpnHtbyBCDfa6wYRJqN/zvwLPhjchwjSfuI2lk=
+X-Received: by 2002:a05:6902:461a:b0:e6d:fb0f:fcbf with SMTP id
+ 3f1490d57ef6-e732344d533mr1397107276.39.1745610926871; Fri, 25 Apr 2025
+ 12:55:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC/WIP 0/4] arm64: dts: qcom: sm8750: Enable display
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jessica Zhang <jesszhan@quicinc.com>,
- Abhinav Kumar <abhinavk@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250424-sm8750-display-dts-v1-0-6fb22ca95f38@linaro.org>
- <w6f3s56gx7psqgweuntqvkzrot7elhc5pdrxhvenukzwyt5eys@fndmaszfbo5k>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <w6f3s56gx7psqgweuntqvkzrot7elhc5pdrxhvenukzwyt5eys@fndmaszfbo5k>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CGME20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2@epcas5p4.samsung.com>
+ <20250415181419.16305-1-nj.shetty@samsung.com> <20250416165512.990257538f61be5857e513ab@linux-foundation.org>
+In-Reply-To: <20250416165512.990257538f61be5857e513ab@linux-foundation.org>
+From: Nitesh Shetty <nitheshshetty@gmail.com>
+Date: Sat, 26 Apr 2025 01:25:14 +0530
+X-Gm-Features: ATxdqUFOkipdMkS2-gVFcM-_1VGrDaphqj0-qJRV5szUIJ6G5imOlaR5M-dDf2w
+Message-ID: <CAOSviJ1d3=NzwGb6kKfD5zucdbrOQfyO0my_b0wr-NXuQzFGKg@mail.gmail.com>
+Subject: Re: [PATCH] iov_iter: Use iov_offset for length calculation in iov_iter_aligned_bvec
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Nitesh Shetty <nj.shetty@samsung.com>, Alexander Viro <viro@zeniv.linux.org.uk>, axboe@kernel.dk, 
+	gost.dev@samsung.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/04/2025 21:34, Dmitry Baryshkov wrote:
-> On Thu, Apr 24, 2025 at 03:04:24PM +0200, Krzysztof Kozlowski wrote:
->> DTS is ready and I consider it ready for review, but still RFC because:
->> 1. Display has unresolved issues which might result in change in
->>    bindings (clock parents),
->> 2. I did not test it since some time on my board...
->> 3. Just want to share it fast to unblock any dependent work.
->>
->> DTS build dependencies - as in b4 deps, so:
->> https://lore.kernel.org/r/20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com/
->> https://lore.kernel.org/r/20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org/
->> https://lore.kernel.org/r/20250113-sm8750_gpmic_master-v1-2-ef45cf206979@quicinc.com/
->>
->> Bindings:
->> 1. Panel: https://github.com/krzk/linux/tree/b4/sm8750-display-panel
->> 2. MDSS: https://lore.kernel.org/r/20250311-b4-sm8750-display-v4-0-da6b3e959c76@linaro.org/
->>
->> Patchset based on next-20250424.
-> 
-> If the DisplayPort works on this platform, I'd kindly ask to send
-> separate DP+DPU only series (both driver and arm64/dts). It would make
-> it much easier (at least for me) to land the series, while you and
-> Qualcomm engineers are working on the DSI issues.
-DP has also issues - link training failures, although it feels as
-different one, because DSI issue Jessica narrowed to DSI PHY PLL VCO
-rate and I have a working display (just don't know how to actually solve
-this).
+On Thu, Apr 17, 2025 at 5:25=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Tue, 15 Apr 2025 23:44:19 +0530 Nitesh Shetty <nj.shetty@samsung.com> =
+wrote:
+>
+> > If iov_offset is non-zero, then we need to consider iov_offset in lengt=
+h
+> > calculation, otherwise we might pass smaller IOs such as 512 bytes
+> > with 256 bytes offset.
+> >
+>
+> Please describe the userspace-visible effects of this flaw, if any?
+>
+a.
+At present we see different behaviour based on whether the device is
+512 byte LBA formatted or 4K byte LBA formatted.
 
-Best regards,
-Krzysztof
+Here is the scenario, where this case is possible, when using io-uring
+fixed buffer IO with 512 LBA device we can get,
+i->count =3D 512, i->iov_offset =3D 3584, bvec->bv_offset =3D 256,
+bvec->bv_len =3D 3840, len_mask =3D 511
+
+In this effectively, the first 256 bytes are in the current page,
+next 256 bytes are in the second page.
+This should fail the IO, but here we pass.
+(For a similar setting with i->count=3D4096, this check fails).
+
+To reproduce the test from user space, we can use a liburing application [1=
+]
+with patch[2], on a 512 LBA format block device.
+
+b.
+I went through file history and looks like this is a regression,
+previously the fix was present, but commit
+2263639f96f24a121ec9f037981b81daf5a8d60a introduced this issue it seems.
+
+Thanks,
+Nitesh Shetty
+
+[1] https://github.com/axboe/liburing/blob/master/test/fixed-seg.c
+[2]
+diff --git a/test/fixed-seg.c b/test/fixed-seg.c
+index 4154abb..e7c461a 100644
+--- a/test/fixed-seg.c
++++ b/test/fixed-seg.c
+@@ -64,7 +64,7 @@ static int test(struct io_uring *ring, int fd, int vec_of=
+f)
+                return T_EXIT_FAIL;
+        }
+
+-       ret =3D read_it(ring, fd, 4096, vec_off);
++       ret =3D read_it(ring, fd, 512, vec_off + 512*7);
+        if (ret) {
+                fprintf(stderr, "4096 0 failed\n");
+                return T_EXIT_FAIL;
+@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
+                goto err;
+        }
+
+-       ret =3D test(&ring, fd, 0);
++       ret =3D test(&ring, fd, 256);
+        if (ret) {
+                fprintf(stderr, "test 0 failed\n");
+                goto err;
