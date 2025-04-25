@@ -1,589 +1,437 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AA321FF28;
-	Fri, 25 Apr 2025 19:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2DA223DFA
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610792; cv=none; b=YWFhLb021RaXoR1V+3c9IAwnsdyXBRjdimJWRp1J7GKzO9mu8/QJe+MToWCNOX9sQ66IBtUsH3XOtgOgTKcBeSuj+KkAlFGMMods/kLmh/p38BPiZTn0MDS56YXsYOHZTnP5tdR+R0X6zCR7qll2lbS+ZhGbOkJzo/DNgHZhKyA=
+	t=1745610793; cv=none; b=b16idiJtFJMtk6OLrGzE9BIcOKk56OdKdGVOEFKqu1cyDv/eYEoWStyliu+gyEtM4Bdrwv115U4SGDwp2+1jGgaK0A8IykGNNwwyO8tYjRRtV9P5mVycLouV80kzh/te91ZHAiwwQg5iv0vfd9WUc3l+q8Xoovc5Xr7KfBJia5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610792; c=relaxed/simple;
-	bh=5z/M712io4I4zNAWLdATqeufL8j2STDTygkmWbNCUgA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aCqZ6JRc0H+l0ssKYOEy3KBRDyuef7fWTrbCI28AyDAIqgCJul0syEg/mEsH+waLHETRFrRfRcIwIIkxYmNu/dwmRGK28TIjaIzv+HjLBWPwfqF0jzYZOLQ+rNJyQfOU4eHrspIsKuUIJQ5MjG2gEuEPQ0xzQYZeje7az4IaINk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QbF+FOFh; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745610793; c=relaxed/simple;
+	bh=Y5C7KPF31bWMAP9UhNg3114GEq0WggQvTKtqWabySFA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Sy7Oy9YGlNpdOCL+T9OX8biFh3NXoX3/rFflvHjTolvAaIf+ZjF+Fu+YjOkRCApozWvNyMl2KAeRiVyF9t/ymFQT4nbwzL+LjbMOX/EHz9Xqk1h0z+zCg1eEtbsQbFYPr9574R0ZmpdbNGFXErelpzppWWYTLlcnfBkCIll9hKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=0rm/lqgP; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QbF+FOFh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745610789; x=1777146789;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=5z/M712io4I4zNAWLdATqeufL8j2STDTygkmWbNCUgA=;
-  b=QbF+FOFhbgS+RbZjj/ZE97tCmGSKsPRp7EcoIdL8YKmPcg7HkR/ma18Y
-   wBWdVRG823VKiBkxH1JT1sLoqQbLvaKy6MxLVGrdh+DcfgcoaI9xoAX75
-   VGmDXgkA566VYWgrf8b9umqI7DV0RC6s37eatnpABb3PWQ/WamBtBO0mt
-   VR4G4mct+vrpSO3L4Y8AW+zgPKcGOMPIokar9lRIp8J1T46cdHYgMOaXJ
-   BHxWbWpr1FENu9pv2p2xkRUCN8oytoHCxlqqDH+NeXVCvxk9lm/TGYaT7
-   mJKE2qn+Eygk+qjoRiFwGiM2vtxdOWZlVl4ambFQyZONiDfuk0snWFfF9
-   w==;
-X-CSE-ConnectionGUID: Th200l30QMGRnqu3wzBiTA==
-X-CSE-MsgGUID: AvKJtDH0QyeSAa5+OPc5/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="69776220"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="69776220"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 12:52:41 -0700
-X-CSE-ConnectionGUID: uACOCSKqSCC+dO0tHIgvpw==
-X-CSE-MsgGUID: 7NYdTXxhTx6Hvl1c6ov4Mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="132897645"
-Received: from mgoodin-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.222.107])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 12:52:40 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v5 2/5] platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
-Date: Fri, 25 Apr 2025 12:52:30 -0700
-Message-ID: <20250425195237.493129-3-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250425195237.493129-1-xi.pardee@linux.intel.com>
-References: <20250425195237.493129-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="0rm/lqgP"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-476ac73c76fso31683111cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745610788; x=1746215588; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Wt8B9nTCn0eAZgxc9op2qQJ6BYjG71UbDMrD5GbI4Jg=;
+        b=0rm/lqgP+boTNXHEgxuWZ9Lpip1NHa8MxljCPDjVEreg90ktNm7XssIcWBm2caG0Q8
+         acA5fDTzp+w44cPnnoghp30SNAe/a8oXDX276O2ZGznT/Vk8PY0NXM5jBUlse/xEjKiP
+         Y2qnop5ktmbaVK3sdy2dQ04AdAhmMCGPPbqwDxdw6rUYC/+9pUajZNPH3LZ8XfaOSzZY
+         ES4eXmovHB4spDnfOiAJoCe9aSxg8oTBOXXdUMiKMVFN9BE3km40/ONwCdWhf8ON2pwP
+         Ygri2lIeCdz8Wp6y9gOTIfgeHRj5zY86BwPVD4l0oRmJsFlXza7Ft4zMY77I0DdvbXY1
+         Kwkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745610788; x=1746215588;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wt8B9nTCn0eAZgxc9op2qQJ6BYjG71UbDMrD5GbI4Jg=;
+        b=lGXfMWV5pByAchg/rtmGXJIHBpby6I5Pwyl2yOjtOHJBonhpbUtm5/w06zOr0txhAA
+         sJ6spPHH2yKYhLnVc/fsjUy4a/r1RT5i37e0QhRSJY7fOkjSn6+yTTx9SnfDM6G4TPXm
+         x3v4mZbaUOOEFk2osktRZKOrbiZpTkR+IsBM+bzkp0il+3C3cNN30rabVoeDdq6RfAI0
+         posXQf1GJqk+XgpPK/rATneSyflOp5dXsHXkpUXfIT0VwddJHuFEhmqxZKfvEplIAHTf
+         +0yuCMq47y5fACxiyR3S3KrGVWzm27OONBllHvqkiGrKlUoFr8sBnO86ZP2Tn1gv9B6E
+         x6pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUv+OB27dVrTCaHWoulorY3Q3oJRlXyDZrMwuP/upxZeGGC7pi73quuIW1vd/ahXDN6bGopSKGUp4xMDyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk+3B32h3T7CG5RtaHMYEDpbykWnjZn6hhbGe3jlmjOapIHjW6
+	5kEYVnc3iCivSsyqAEneztkUFAAIy2YF+v7ZaeizPg+5tP0T31MR5x7LFIY/ZCc=
+X-Gm-Gg: ASbGnctl9u2oDZojNH/A64XgQ5NSZFIQEK7EfTqCnHhBp85p0SYuO8geYvdV+Jxc9An
+	JugMeFmBJlzfux+G53XKWyoozq0BhroNgeTnuK0Ni/uI5yYL5+uRmOqu8YatXJ46pDuei97HQE1
+	Kkfx+ebXLFetZJm5/5t8HTx+1kxYAU0nV3AMqaJ9RinPqyYfU+7fHw7+oIvTqYvs3cy15UNa485
+	psALTnHdy7T+2gFWt9SILF/24CLmBB65MjjtWbzLIFtA0lyN1GY/VBx+x8bA7K7j5UNbGLyCZ1m
+	DUf50EI7OVfg5PgxSqjgaGdRHCueIzGLSsJEtG76XF/vQw==
+X-Google-Smtp-Source: AGHT+IFMLFuWYiXmXdeMfcqXK9z4q0il2a/+Hb0D4aJrdvIX38onY7UScAxm1896adYcr/O8aKhgHQ==
+X-Received: by 2002:ac8:5d8e:0:b0:478:f747:1b7d with SMTP id d75a77b69052e-4801c2c33a9mr49742981cf.6.1745610788509;
+        Fri, 25 Apr 2025 12:53:08 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::c41? ([2606:6d00:15:9913::c41])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ea16932a8sm29078491cf.58.2025.04.25.12.53.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 12:53:08 -0700 (PDT)
+Message-ID: <caaa10071d063069a4f479862b38f304c89da21e.camel@ndufresne.ca>
+Subject: Re: [PATCH v2] media: amphion: Add H264 and HEVC profile and level
+ control
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>, mchehab@kernel.org, 
+	hverkuil-cisco@xs4all.nl
+Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ xiahong.bao@nxp.com, 	eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
+ imx@lists.linux.dev, 	linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org
+Date: Fri, 25 Apr 2025 15:53:07 -0400
+In-Reply-To: <a60b84d8-a179-4c33-aed0-1f2ad1857f7b@oss.nxp.com>
+References: <20241210093337.3779686-1-ming.qian@oss.nxp.com>
+	 <74eb0589ae54855db1d2024591d501989e30027a.camel@ndufresne.ca>
+	 <a60b84d8-a179-4c33-aed0-1f2ad1857f7b@oss.nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Convert ssram device related functionalities to a new driver named Intel
-PMC SSRAM Telemetry driver. Modify PMC Core driver to use API exported by
-the driver to discover and achieve devid and PWRMBASE address information
-for each available PMC. PMC Core driver needs to get PCI device when
-reading from telemetry regions.
+Le vendredi 25 avril 2025 =C3=A0 10:33 +0800, Ming Qian(OSS) a =C3=A9crit=
+=C2=A0:
+>=20
+> Hi Nicolas,
+>=20
+> On 2025/4/23 4:15, Nicolas Dufresne wrote:
+> > Hi Ming,
+> >=20
+> > Le mardi 10 d=C3=A9cembre 2024 =C3=A0 18:33 +0900, Ming Qian a =C3=A9cr=
+it :
+> > > From: Ming Qian <ming.qian@nxp.com>
+> > >=20
+> > > For format H264 and HEVC, the firmware can report the parsed profile =
+idc
+> > > and level idc to driver, the information may be useful.
+> > > Implement the H264 and HEVC profile and level control to report them.
+> > >=20
+> > > Signed-off-by: Ming Qian <ming.qian@nxp.com>
+> > > ---
+> > > v2
+> > > -- add support for V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE
+> > >=20
+> > > =C2=A0 drivers/media/platform/amphion/vdec.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 61 +++++++++++++
+> > > =C2=A0 drivers/media/platform/amphion/vpu_defs.h=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 1 +
+> > > =C2=A0 drivers/media/platform/amphion/vpu_helpers.c | 93 ++++++++++++=
+++++++++
+> > > =C2=A0 drivers/media/platform/amphion/vpu_helpers.h |=C2=A0 5 ++
+> > > =C2=A0 drivers/media/platform/amphion/vpu_malone.c=C2=A0 |=C2=A0 3 +-
+> > > =C2=A0 5 files changed, 162 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/media/platform/amphion/vdec.c b/drivers/media/pl=
+atform/amphion/vdec.c
+> > > index ca8f7319503a..61d5598ee6a1 100644
+> > > --- a/drivers/media/platform/amphion/vdec.c
+> > > +++ b/drivers/media/platform/amphion/vdec.c
+> > > @@ -232,6 +232,37 @@ static int vdec_ctrl_init(struct vpu_inst *inst)
+> > > =C2=A0=C2=A0			=C2=A0 V4L2_CID_MPEG_VIDEO_DEC_DISPLAY_DELAY_ENABLE,
+> > > =C2=A0=C2=A0			=C2=A0 0, 1, 1, 0);
+> > > =C2=A0=20
+> > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_H264_PRO=
+FILE,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE=
+_MULTIVIEW_HIGH,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~((1 << V4L2_MPEG_VIDEO_H264=
+_PROFILE_BASELINE) |
+> > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE) |
+> >=20
+> > You've added it here, but you will never report it, see my comment
+> > below.
+> Yes, you're right,
+> firmware can't report the sps_constraint_set1_flag yet,
+> so we need to request a firmware interface change to report the
+> sps_constraint_set1_flag.
+>=20
+> If we remove PROFILE_CONSTRAINED_BASELINE here, then these streams will
+> failed to play with gstreamer.
+> If we keep it here, then these stremas can be played, but driver will
+> report wrong profile.
+>=20
+> Maybe we need to change the firmware interface firstly.
 
-The new SSRAM driver binds to the SSRAM device and provides the following
-functionalities:
-1. Look for and register telemetry regions available in SSRAM device.
-2. Provide devid and PWRMBASE address information for the corresponding
-   PMCs.
+Well, all software have bugs, even the firm ones. Just comment about
+it.
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/Kconfig        |   4 +
- drivers/platform/x86/intel/pmc/Makefile       |   8 +-
- drivers/platform/x86/intel/pmc/core.c         |  73 ++++++---
- drivers/platform/x86/intel/pmc/core.h         |   7 -
- .../platform/x86/intel/pmc/ssram_telemetry.c  | 147 ++++++++++++------
- .../platform/x86/intel/pmc/ssram_telemetry.h  |  24 +++
- 6 files changed, 185 insertions(+), 78 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
+Perhaps you already said, but does Amphion really support ASO/FMO ?
+Since if you don't really support it, you may just drop BASELINE and
+always report CONSTRAINED_BASELINE. Accuracy will come with a firmware
+update.
 
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-index d2f651fbec2c..c6ef0bcf76af 100644
---- a/drivers/platform/x86/intel/pmc/Kconfig
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -8,6 +8,7 @@ config INTEL_PMC_CORE
- 	depends on PCI
- 	depends on ACPI
- 	depends on INTEL_PMT_TELEMETRY
-+	select INTEL_PMC_SSRAM_TELEMETRY
- 	help
- 	  The Intel Platform Controller Hub for Intel Core SoCs provides access
- 	  to Power Management Controller registers via various interfaces. This
-@@ -24,3 +25,6 @@ config INTEL_PMC_CORE
- 		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
- 		- Low Power Mode registers (Tigerlake and beyond)
- 		- PMC quirks as needed to enable SLPS0/S0ix
-+
-+config INTEL_PMC_SSRAM_TELEMETRY
-+	tristate
-diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
-index e842647d3ced..5f68c8503a56 100644
---- a/drivers/platform/x86/intel/pmc/Makefile
-+++ b/drivers/platform/x86/intel/pmc/Makefile
-@@ -3,8 +3,12 @@
- # Intel x86 Platform-Specific Drivers
- #
- 
--intel_pmc_core-y			:= core.o ssram_telemetry.o spt.o cnp.o \
--					   icl.o tgl.o adl.o mtl.o arl.o lnl.o ptl.o
-+intel_pmc_core-y			:= core.o spt.o cnp.o icl.o \
-+					   tgl.o adl.o mtl.o arl.o lnl.o ptl.o
- obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o
- intel_pmc_core_pltdrv-y			:= pltdrv.o
- obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o
-+
-+# Intel PMC SSRAM driver
-+intel_pmc_ssram_telemetry-y		+= ssram_telemetry.o
-+obj-$(CONFIG_INTEL_PMC_SSRAM_TELEMETRY)	+= intel_pmc_ssram_telemetry.o
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index a53a7677122c..2028a769cddb 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -29,6 +29,7 @@
- #include <asm/tsc.h>
- 
- #include "core.h"
-+#include "ssram_telemetry.h"
- #include "../pmt/telemetry.h"
- 
- /* Maximum number of modes supported by platfoms that has low power mode capability */
-@@ -1354,7 +1355,7 @@ static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *m
- 	return 0;
- }
- 
--static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
-+static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc, struct pci_dev *pcidev)
- {
- 	struct telem_endpoint *ep;
- 	const u8 *lpm_indices;
-@@ -1371,7 +1372,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
- 	if (!guid)
- 		return -ENXIO;
- 
--	ep = pmt_telem_find_and_register_endpoint(pmcdev->ssram_pcidev, guid, 0);
-+	ep = pmt_telem_find_and_register_endpoint(pcidev, guid, 0);
- 	if (IS_ERR(ep)) {
- 		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
- 			PTR_ERR(ep));
-@@ -1455,19 +1456,21 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
- 	return ret;
- }
- 
--static int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
-+static int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev, int func)
- {
-+	struct pci_dev *pcidev __free(pci_dev_put) = NULL;
- 	unsigned int i;
- 	int ret;
- 
--	if (!pmcdev->ssram_pcidev)
-+	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, func));
-+	if (!pcidev)
- 		return -ENODEV;
- 
- 	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
- 		if (!pmcdev->pmcs[i])
- 			continue;
- 
--		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i]);
-+		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i], pcidev);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1475,7 +1478,7 @@ static int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
- 	return 0;
- }
- 
--const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
-+static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
- {
- 	for (; list->map; ++list)
- 		if (devid == list->devid)
-@@ -1484,23 +1487,32 @@ const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
- 	return NULL;
- }
- 
--int pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
--		     const struct pmc_reg_map *reg_map, unsigned int pmc_index)
-+static int pmc_core_pmc_add(struct pmc_dev *pmcdev, unsigned int pmc_index)
-+
- {
--	struct pmc *pmc = pmcdev->pmcs[pmc_index];
-+	struct pmc_ssram_telemetry pmc_ssram_telemetry;
-+	const struct pmc_reg_map *map;
-+	struct pmc *pmc;
-+	int ret;
-+
-+	ret = pmc_ssram_telemetry_get_pmc_info(pmc_index, &pmc_ssram_telemetry);
-+	if (ret)
-+		return ret;
- 
--	if (!pwrm_base)
-+	map = pmc_core_find_regmap(pmcdev->regmap_list, pmc_ssram_telemetry.devid);
-+	if (!map)
- 		return -ENODEV;
- 
--	/* Memory for primary PMC has been allocated in core.c */
-+	pmc = pmcdev->pmcs[pmc_index];
-+	/* Memory for primary PMC has been allocated */
- 	if (!pmc) {
- 		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
- 		if (!pmc)
- 			return -ENOMEM;
- 	}
- 
--	pmc->map = reg_map;
--	pmc->base_addr = pwrm_base;
-+	pmc->map = map;
-+	pmc->base_addr = pmc_ssram_telemetry.base_addr;
- 	pmc->regbase = ioremap(pmc->base_addr, pmc->map->regmap_length);
- 
- 	if (!pmc->regbase) {
-@@ -1513,6 +1525,20 @@ int pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
- 	return 0;
- }
- 
-+static int pmc_core_ssram_get_reg_base(struct pmc_dev *pmcdev)
-+{
-+	int ret;
-+
-+	ret = pmc_core_pmc_add(pmcdev, PMC_IDX_MAIN);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_pmc_add(pmcdev, PMC_IDX_IOE);
-+	pmc_core_pmc_add(pmcdev, PMC_IDX_PCH);
-+
-+	return 0;
-+}
-+
- /*
-  * When supported, ssram init is used to achieve all available PMCs.
-  * If ssram init fails, this function uses legacy method to at least get the
-@@ -1530,10 +1556,18 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
- 	ssram = pmc_dev_info->regmap_list != NULL;
- 	if (ssram) {
- 		pmcdev->regmap_list = pmc_dev_info->regmap_list;
--		ret = pmc_core_ssram_init(pmcdev, pmc_dev_info->pci_func);
-+		ret = pmc_core_ssram_get_reg_base(pmcdev);
-+		/*
-+		 * EAGAIN error code indicates Intel PMC SSRAM Telemetry driver
-+		 * has not finished probe and PMC info is not available yet. Try
-+		 * again later.
-+		 */
-+		if (ret == -EAGAIN)
-+			return -EPROBE_DEFER;
-+
- 		if (ret) {
- 			dev_warn(&pmcdev->pdev->dev,
--				 "ssram init failed, %d, using legacy init\n", ret);
-+				 "Failed to get PMC info from SSRAM, %d, using legacy init\n", ret);
- 			ssram = false;
- 		}
- 	}
-@@ -1550,7 +1584,7 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
- 		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
- 
- 	if (ssram)
--		return pmc_core_ssram_get_lpm_reqs(pmcdev);
-+		return pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func);
- 
- 	return 0;
- }
-@@ -1639,15 +1673,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
- 	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
- 		struct pmc *pmc = pmcdev->pmcs[i];
- 
--		if (pmc)
-+		if (pmc && pmc->regbase)
- 			iounmap(pmc->regbase);
- 	}
- 
--	if (pmcdev->ssram_pcidev) {
--		pci_dev_put(pmcdev->ssram_pcidev);
--		pci_disable_device(pmcdev->ssram_pcidev);
--	}
--
- 	if (pmcdev->punit_ep)
- 		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index c3b07075d017..e136d18b1d38 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -413,7 +413,6 @@ struct pmc {
-  * struct pmc_dev - pmc device structure
-  * @devs:		pointer to an array of pmc pointers
-  * @pdev:		pointer to platform_device struct
-- * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
-  * @crystal_freq:	crystal frequency from cpuid
-  * @dbgfs_dir:		path to debugfs interface
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-@@ -433,7 +432,6 @@ struct pmc_dev {
- 	struct pmc *pmcs[MAX_NUM_PMC];
- 	struct dentry *dbgfs_dir;
- 	struct platform_device *pdev;
--	struct pci_dev *ssram_pcidev;
- 	unsigned int crystal_freq;
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
-@@ -510,12 +508,7 @@ void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
- void pmc_core_punit_pmt_init(struct pmc_dev *pmcdev, u32 guid);
- void pmc_core_set_device_d3(unsigned int device);
- 
--int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func);
--
- int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
--const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid);
--int pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
--		     const struct pmc_reg_map *reg_map, unsigned int pmc_index);
- 
- extern struct pmc_dev_info spt_pmc_dev;
- extern struct pmc_dev_info cnp_pmc_dev;
-diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-index 7b8443092b20..cc2c195f2b74 100644
---- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-+++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-@@ -1,19 +1,18 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * This file contains functions to handle discovery of PMC metrics located
-- * in the PMC SSRAM PCI device.
-+ * Intel PMC SSRAM TELEMETRY PCI Driver
-  *
-  * Copyright (c) 2023, Intel Corporation.
-- * All Rights Reserved.
-- *
-  */
- 
- #include <linux/cleanup.h>
- #include <linux/intel_vsec.h>
- #include <linux/pci.h>
-+#include <linux/types.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- 
- #include "core.h"
-+#include "ssram_telemetry.h"
- 
- #define SSRAM_HDR_SIZE		0x100
- #define SSRAM_PWRM_OFFSET	0x14
-@@ -23,12 +22,14 @@
- #define SSRAM_IOE_OFFSET	0x68
- #define SSRAM_DEVID_OFFSET	0x70
- 
--DEFINE_FREE(pmc_core_iounmap, void __iomem *, if (_T) iounmap(_T))
-+DEFINE_FREE(pmc_ssram_telemetry_iounmap, void __iomem *, if (_T) iounmap(_T))
-+
-+static struct pmc_ssram_telemetry *pmc_ssram_telems;
-+static bool device_probed;
- 
--static void
--pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
-+static int
-+pmc_ssram_telemetry_add_pmt(struct pci_dev *pcidev, u64 ssram_base, void __iomem *ssram)
- {
--	struct pci_dev *pcidev = pmcdev->ssram_pcidev;
- 	struct intel_vsec_platform_info info = {};
- 	struct intel_vsec_header *headers[2] = {};
- 	struct intel_vsec_header header;
-@@ -39,7 +40,7 @@ pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
- 	dvsec_offset = readl(ssram + SSRAM_DVSEC_OFFSET);
- 	dvsec = ioremap(ssram_base + dvsec_offset, SSRAM_DVSEC_SIZE);
- 	if (!dvsec)
--		return;
-+		return -ENOMEM;
- 
- 	hdr = readl(dvsec + PCI_DVSEC_HEADER1);
- 	header.id = readw(dvsec + PCI_DVSEC_HEADER2);
-@@ -57,9 +58,9 @@ pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
- 	info.caps = VSEC_CAP_TELEMETRY;
- 	info.headers = headers;
- 	info.base_addr = ssram_base;
--	info.parent = &pmcdev->pdev->dev;
-+	info.parent = &pcidev->dev;
- 
--	intel_vsec_register(pcidev, &info);
-+	return intel_vsec_register(pcidev, &info);
- }
- 
- static inline u64 get_base(void __iomem *addr, u32 offset)
-@@ -68,19 +69,14 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
- }
- 
- static int
--pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, unsigned int pmc_idx, u32 offset)
-+pmc_ssram_telemetry_get_pmc(struct pci_dev *pcidev, unsigned int pmc_idx, u32 offset)
- {
--	struct pci_dev *ssram_pcidev = pmcdev->ssram_pcidev;
--	void __iomem __free(pmc_core_iounmap) *tmp_ssram = NULL;
--	void __iomem __free(pmc_core_iounmap) *ssram = NULL;
--	const struct pmc_reg_map *map;
-+	void __iomem __free(pmc_ssram_telemetry_iounmap) * tmp_ssram = NULL;
-+	void __iomem __free(pmc_ssram_telemetry_iounmap) * ssram = NULL;
- 	u64 ssram_base, pwrm_base;
- 	u16 devid;
- 
--	if (!pmcdev->regmap_list)
--		return -ENOENT;
--
--	ssram_base = ssram_pcidev->resource[0].start;
-+	ssram_base = pci_resource_start(pcidev, 0);
- 	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
- 	if (!tmp_ssram)
- 		return -ENOMEM;
-@@ -106,46 +102,103 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, unsigned int pmc_idx, u32 offset)
- 	pwrm_base = get_base(ssram, SSRAM_PWRM_OFFSET);
- 	devid = readw(ssram + SSRAM_DEVID_OFFSET);
- 
-+	pmc_ssram_telems[pmc_idx].devid = devid;
-+	pmc_ssram_telems[pmc_idx].base_addr = pwrm_base;
-+
- 	/* Find and register and PMC telemetry entries */
--	pmc_add_pmt(pmcdev, ssram_base, ssram);
-+	return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
-+}
- 
--	map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
--	if (!map)
-+/**
-+ * pmc_ssram_telemetry_get_pmc_info() - Get a PMC devid and base_addr information
-+ * @pmc_idx:               Index of the PMC
-+ * @pmc_ssram_telemetry:   pmc_ssram_telemetry structure to store the PMC information
-+ *
-+ * Return:
-+ * * 0           - Success
-+ * * -EAGAIN     - Probe function has not finished yet. Try again.
-+ * * -EINVAL     - Invalid pmc_idx
-+ * * -ENODEV     - PMC device is not available
-+ */
-+int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_idx,
-+				     struct pmc_ssram_telemetry *pmc_ssram_telemetry)
-+{
-+	/*
-+	 * PMCs are discovered in probe function. If this function is called before
-+	 * probe function complete, the result would be invalid. Use device_probed
-+	 * variable to avoid this case. Return -EAGAIN to inform the consumer to call
-+	 * again later.
-+	 */
-+	if (!device_probed)
-+		return -EAGAIN;
-+
-+	/*
-+	 * Memory barrier is used to ensure the correct read order between
-+	 * device_probed variable and PMC info.
-+	 */
-+	smp_rmb();
-+	if (pmc_idx >= MAX_NUM_PMC)
-+		return -EINVAL;
-+
-+	if (!pmc_ssram_telems || !pmc_ssram_telems[pmc_idx].devid)
- 		return -ENODEV;
- 
--	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmc_idx);
-+	pmc_ssram_telemetry->devid = pmc_ssram_telems[pmc_idx].devid;
-+	pmc_ssram_telemetry->base_addr = pmc_ssram_telems[pmc_idx].base_addr;
-+	return 0;
- }
-+EXPORT_SYMBOL_GPL(pmc_ssram_telemetry_get_pmc_info);
- 
--int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func)
-+static int intel_pmc_ssram_telemetry_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
- {
--	struct pci_dev *pcidev;
- 	int ret;
- 
--	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, func));
--	if (!pcidev)
--		return -ENODEV;
-+	pmc_ssram_telems = devm_kzalloc(&pcidev->dev, sizeof(*pmc_ssram_telems) * MAX_NUM_PMC,
-+					GFP_KERNEL);
-+	if (!pmc_ssram_telems) {
-+		ret = -ENOMEM;
-+		goto probe_finish;
-+	}
- 
- 	ret = pcim_enable_device(pcidev);
--	if (ret)
--		goto release_dev;
--
--	pmcdev->ssram_pcidev = pcidev;
-+	if (ret) {
-+		dev_dbg(&pcidev->dev, "failed to enable PMC SSRAM device\n");
-+		goto probe_finish;
-+	}
- 
--	ret = pmc_core_ssram_get_pmc(pmcdev, PMC_IDX_MAIN, 0);
-+	ret = pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_MAIN, 0);
- 	if (ret)
--		goto disable_dev;
--
--	pmc_core_ssram_get_pmc(pmcdev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
--	pmc_core_ssram_get_pmc(pmcdev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
--
--	return 0;
--
--disable_dev:
--	pmcdev->ssram_pcidev = NULL;
--	pci_disable_device(pcidev);
--release_dev:
--	pci_dev_put(pcidev);
--
-+		goto probe_finish;
-+
-+	pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
-+	pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
-+
-+probe_finish:
-+	/*
-+	 * Memory barrier is used to ensure the correct write order between PMC info
-+	 * and device_probed variable.
-+	 */
-+	smp_wmb();
-+	device_probed = true;
- 	return ret;
- }
-+
-+static const struct pci_device_id intel_pmc_ssram_telemetry_pci_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_MTL_SOCM) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCM) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(pci, intel_pmc_ssram_telemetry_pci_ids);
-+
-+static struct pci_driver intel_pmc_ssram_telemetry_driver = {
-+	.name = "intel_pmc_ssram_telemetry",
-+	.id_table = intel_pmc_ssram_telemetry_pci_ids,
-+	.probe = intel_pmc_ssram_telemetry_probe,
-+};
-+module_pci_driver(intel_pmc_ssram_telemetry_driver);
-+
- MODULE_IMPORT_NS("INTEL_VSEC");
-+MODULE_AUTHOR("Xi Pardee <xi.pardee@intel.com>");
-+MODULE_DESCRIPTION("Intel PMC SSRAM Telemetry driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.h b/drivers/platform/x86/intel/pmc/ssram_telemetry.h
-new file mode 100644
-index 000000000000..daf8aeeb2275
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel PMC SSRAM Telemetry PCI Driver Header File
-+ *
-+ * Copyright (c) 2024, Intel Corporation.
-+ */
-+
-+#ifndef PMC_SSRAM_H
-+#define PMC_SSRAM_H
-+
-+/**
-+ * struct pmc_ssram_telemetry - Structure to keep pmc info in ssram device
-+ * @devid:		device id of the pmc device
-+ * @base_addr:		contains PWRM base address
-+ */
-+struct pmc_ssram_telemetry {
-+	u16 devid;
-+	u64 base_addr;
-+};
-+
-+int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_idx,
-+				     struct pmc_ssram_telemetry *pmc_ssram_telemetry);
-+
-+#endif /* PMC_SSRAM_H */
--- 
-2.43.0
+>=20
+> >=20
+> > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_MAIN) |
+> > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
+> > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_HIGH) |
+> > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH) |
+> > > +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH)),
+> >=20
+> > Shall we advertise multiview and stereo ? My impression is that we lack
+> > a mechanism to actually signal the stereo layout, or which view each
+> > buffers came from. I'm thinking, you can can't test it, we should just
+> > fail on these ?
+> >=20
+>=20
+> You're right, they're not tested, I will remove them.
+>=20
+>=20
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE=
+_BASELINE);
+> > > +
+> > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_H264_LEV=
+EL,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6=
+_2,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4=
+_0);
+> > > +
+> > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_HEVC_PRO=
+FILE,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE=
+_MAIN_10,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~((1 << V4L2_MPEG_VIDEO_HEVC=
+_PROFILE_MAIN) |
+> > > +				 (1 << V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_10)),
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE=
+_MAIN);
+> > > +
+> > > +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_HEVC_LEV=
+EL,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_6=
+_2,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0,
+> > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_4=
+);
+> > > +
+> > > =C2=A0=C2=A0	ctrl =3D v4l2_ctrl_new_std(&inst->ctrl_handler, &vdec_ct=
+rl_ops,
+> > > =C2=A0=C2=A0				 V4L2_CID_MIN_BUFFERS_FOR_CAPTURE, 1, 32, 1, 2);
+> > > =C2=A0=C2=A0	if (ctrl)
+> > > @@ -1166,6 +1197,35 @@ static void vdec_clear_slots(struct vpu_inst *=
+inst)
+> > > =C2=A0=C2=A0	}
+> > > =C2=A0 }
+> > > =C2=A0=20
+> > > +static void vdec_update_v4l2_ctrl(struct vpu_inst *inst, u32 id, u32=
+ val)
+> > > +{
+> > > +	struct v4l2_ctrl *ctrl =3D v4l2_ctrl_find(&inst->ctrl_handler, id);
+> > > +
+> > > +	if (ctrl)
+> > > +		v4l2_ctrl_s_ctrl(ctrl, val);
+> > > +}
+> > > +
+> > > +static void vdec_update_v4l2_profile_level(struct vpu_inst *inst, st=
+ruct vpu_dec_codec_info *hdr)
+> > > +{
+> > > +	switch (inst->out_format.pixfmt) {
+> > > +	case V4L2_PIX_FMT_H264:
+> > > +	case V4L2_PIX_FMT_H264_MVC:
+> > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+> > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_h264_v4l2_profile(hdr->pr=
+ofile_idc));
+> > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_H264_LEVEL,
+> > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_h264_v4l2_level(hdr->leve=
+l_idc));
+> > > +		break;
+> > > +	case V4L2_PIX_FMT_HEVC:
+> > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_HEVC_PROFILE,
+> > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_hevc_v4l2_profile(hdr->pr=
+ofile_idc));
+> > > +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_HEVC_LEVEL,
+> > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_hevc_v4l2_level(hdr->leve=
+l_idc));
+> > > +		break;
+> > > +	default:
+> > > +		return;
+> > > +	}
+> > > +}
+> > > +
+> > > =C2=A0 static void vdec_event_seq_hdr(struct vpu_inst *inst, struct v=
+pu_dec_codec_info *hdr)
+> > > =C2=A0 {
+> > > =C2=A0=C2=A0	struct vdec_t *vdec =3D inst->priv;
+> > > @@ -1189,6 +1249,7 @@ static void vdec_event_seq_hdr(struct vpu_inst =
+*inst, struct vpu_dec_codec_info
+> > > =C2=A0=C2=A0	vdec_init_crop(inst);
+> > > =C2=A0=C2=A0	vdec_init_mbi(inst);
+> > > =C2=A0=C2=A0	vdec_init_dcp(inst);
+> > > +	vdec_update_v4l2_profile_level(inst, hdr);
+> > > =C2=A0=C2=A0	if (!vdec->seq_hdr_found) {
+> > > =C2=A0=C2=A0		vdec->seq_tag =3D vdec->codec_info.tag;
+> > > =C2=A0=C2=A0		if (vdec->is_source_changed) {
+> > > diff --git a/drivers/media/platform/amphion/vpu_defs.h b/drivers/medi=
+a/platform/amphion/vpu_defs.h
+> > > index 428d988cf2f7..606f9d61a265 100644
+> > > --- a/drivers/media/platform/amphion/vpu_defs.h
+> > > +++ b/drivers/media/platform/amphion/vpu_defs.h
+> > > @@ -134,6 +134,7 @@ struct vpu_dec_codec_info {
+> > > =C2=A0=C2=A0	u32 decoded_height;
+> > > =C2=A0=C2=A0	struct v4l2_fract frame_rate;
+> > > =C2=A0=C2=A0	u32 dsp_asp_ratio;
+> > > +	u32 profile_idc;
+> > > =C2=A0=C2=A0	u32 level_idc;
+> > > =C2=A0=C2=A0	u32 bit_depth_luma;
+> > > =C2=A0=C2=A0	u32 bit_depth_chroma;
+> > > diff --git a/drivers/media/platform/amphion/vpu_helpers.c b/drivers/m=
+edia/platform/amphion/vpu_helpers.c
+> > > index d12310af9ebc..108b75ceb4ae 100644
+> > > --- a/drivers/media/platform/amphion/vpu_helpers.c
+> > > +++ b/drivers/media/platform/amphion/vpu_helpers.c
+> > > @@ -509,3 +509,96 @@ const char *vpu_codec_state_name(enum vpu_codec_=
+state state)
+> > > =C2=A0=C2=A0	}
+> > > =C2=A0=C2=A0	return "<unknown>";
+> > > =C2=A0 }
+> > > +
+> > > +struct codec_id_mapping {
+> > > +	u32 id;
+> > > +	u32 v4l2_id;
+> > > +};
+> > > +
+> > > +static struct codec_id_mapping h264_profiles[] =3D {
+> > > +	{66,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE},
+> > > +	{77,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_MAIN},
+> > > +	{88,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED},
+> > > +	{100, V4L2_MPEG_VIDEO_H264_PROFILE_HIGH},
+> > > +	{118, V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH},
+> > > +	{128, V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH}
+> > > +};
+> > > +
+> > > +static struct codec_id_mapping h264_levels[] =3D {
+> > > +	{10,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_0},
+> > > +	{9,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1B},
+> > > +	{11,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_1},
+> > > +	{12,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_2},
+> > > +	{13,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_3},
+> > > +	{20,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_0},
+> > > +	{21,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_1},
+> > > +	{22,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_2},
+> > > +	{30,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_0},
+> > > +	{31,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_1},
+> > > +	{32,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_2},
+> > > +	{40,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_0},
+> > > +	{41,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_1},
+> > > +	{42,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_2},
+> > > +	{50,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_0},
+> > > +	{51,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_1},
+> > > +	{52,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_2},
+> > > +	{60,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_0},
+> > > +	{61,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_1},
+> > > +	{62,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_2}
+> > > +};
+> > > +
+> > > +static struct codec_id_mapping hevc_profiles[] =3D {
+> > > +	{1,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN},
+> > > +	{2,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_10}
+> > > +};
+> > > +
+> > > +static struct codec_id_mapping hevc_levels[] =3D {
+> > > +	{30,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_1},
+> > > +	{60,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_2},
+> > > +	{63,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_2_1},
+> > > +	{90,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_3},
+> > > +	{93,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_3_1},
+> > > +	{120, V4L2_MPEG_VIDEO_HEVC_LEVEL_4},
+> > > +	{123, V4L2_MPEG_VIDEO_HEVC_LEVEL_4_1},
+> > > +	{150, V4L2_MPEG_VIDEO_HEVC_LEVEL_5},
+> > > +	{153, V4L2_MPEG_VIDEO_HEVC_LEVEL_5_1},
+> > > +	{156, V4L2_MPEG_VIDEO_HEVC_LEVEL_5_2},
+> > > +	{180, V4L2_MPEG_VIDEO_HEVC_LEVEL_6},
+> > > +	{183, V4L2_MPEG_VIDEO_HEVC_LEVEL_6_1},
+> > > +	{186, V4L2_MPEG_VIDEO_HEVC_LEVEL_6_2}
+> > > +};
+> > > +
+> > > +static u32 vpu_find_v4l2_id(u32 id, struct codec_id_mapping *array, =
+u32 array_sz)
+> > > +{
+> > > +	u32 i;
+> > > +
+> > > +	if (!array || !array_sz)
+> > > +		return 0;
+> > > +
+> > > +	for (i =3D 0; i < array_sz; i++) {
+> > > +		if (id =3D=3D array[i].id)
+> > > +			return array[i].v4l2_id;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +u32 vpu_get_h264_v4l2_profile(u32 idc)
+> > > +{
+> > > +	return vpu_find_v4l2_id(idc, h264_profiles, ARRAY_SIZE(h264_profile=
+s));
+> > > +}
+> > > +
+> > > +u32 vpu_get_h264_v4l2_level(u32 idc)
+> > > +{
+> > > +	return vpu_find_v4l2_id(idc, h264_levels, ARRAY_SIZE(h264_levels));
+> > > +}
+> > > +
+> > > +u32 vpu_get_hevc_v4l2_profile(u32 idc)
+> > > +{
+> > > +	return vpu_find_v4l2_id(idc, hevc_profiles, ARRAY_SIZE(hevc_profile=
+s));
+> > > +}
+> > > +
+> > > +u32 vpu_get_hevc_v4l2_level(u32 idc)
+> > > +{
+> > > +	return vpu_find_v4l2_id(idc, hevc_levels, ARRAY_SIZE(hevc_levels));
+> > > +}
+> > > diff --git a/drivers/media/platform/amphion/vpu_helpers.h b/drivers/m=
+edia/platform/amphion/vpu_helpers.h
+> > > index 0eaddb07190d..dc5fb1ca2d33 100644
+> > > --- a/drivers/media/platform/amphion/vpu_helpers.h
+> > > +++ b/drivers/media/platform/amphion/vpu_helpers.h
+> > > @@ -70,4 +70,9 @@ int vpu_color_get_default(u32 primaries, u32 *ptran=
+sfers, u32 *pmatrix, u32 *pfu
+> > > =C2=A0=20
+> > > =C2=A0 int vpu_find_dst_by_src(struct vpu_pair *pairs, u32 cnt, u32 s=
+rc);
+> > > =C2=A0 int vpu_find_src_by_dst(struct vpu_pair *pairs, u32 cnt, u32 d=
+st);
+> > > +
+> > > +u32 vpu_get_h264_v4l2_profile(u32 idc);
+> > > +u32 vpu_get_h264_v4l2_level(u32 idc);
+> > > +u32 vpu_get_hevc_v4l2_profile(u32 idc);
+> > > +u32 vpu_get_hevc_v4l2_level(u32 idc);
+> > > =C2=A0 #endif
+> > > diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/me=
+dia/platform/amphion/vpu_malone.c
+> > > index 4769c053c6c2..5c6b2a841b6f 100644
+> > > --- a/drivers/media/platform/amphion/vpu_malone.c
+> > > +++ b/drivers/media/platform/amphion/vpu_malone.c
+> > > @@ -889,7 +889,8 @@ static void vpu_malone_unpack_seq_hdr(struct vpu_=
+rpc_event *pkt,
+> > > =C2=A0=C2=A0	info->frame_rate.numerator =3D 1000;
+> > > =C2=A0=C2=A0	info->frame_rate.denominator =3D pkt->data[8];
+> > > =C2=A0=C2=A0	info->dsp_asp_ratio =3D pkt->data[9];
+> > > -	info->level_idc =3D pkt->data[10];
+> > > +	info->profile_idc =3D (pkt->data[10] >> 8) & 0xff;
+> >=20
+> > The data should normally also include the sps_constraint_set1_flag,
+> > which differentiate baseline from constrained-baseline. I would also be
+> > very surprised if the decoders supports ASO/FMO.
+> >=20
+> > Nicolas
+> >=20
+>=20
+> As mentioned above, I'll try to request a firmware change to report
+> sps_constraint_set1_flag, then driver can report
+> PROFILE_CONSTRAINED_BASELINE correctly.
 
+Ack.
+
+regards,
+Nicolas
+
+>=20
+> Regards,
+> Ming
+>=20
+> > > +	info->level_idc =3D pkt->data[10] & 0xff;
+> > > =C2=A0=C2=A0	info->bit_depth_luma =3D pkt->data[13];
+> > > =C2=A0=C2=A0	info->bit_depth_chroma =3D pkt->data[14];
+> > > =C2=A0=C2=A0	info->chroma_fmt =3D pkt->data[15];
