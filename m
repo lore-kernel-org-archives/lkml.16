@@ -1,152 +1,124 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5B242A96
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FD4207DFF
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572441; cv=none; b=fNrPkGY4NNIwdp0H+eX3g4dAKbPhZW8XXwJt9m5cZtSQAnSpCRfeDDU/qAe5A/F/LoxYlg8MuYJfjTmOUdrveLTw070UUuOlfAvdf0EuOrq8yMk66L1VHUUmcERFmT0u04RHWbjMBWu2is2Gzg1D6esmTWs+I2mBp2zG9nUxzGA=
+	t=1745572466; cv=none; b=XJ+DfhT2LngvsP4Oqu136EyJtRY/YplLwNaFMZIWS4SWarV0QGb+Miq7bxABSgO8xKjYiyIkTvblZQIHoLCbZyWmPalqtG7B7Rr4kCzqZ0+bvCqikPhENbsh7Ozf8TkMagOtlyRo5JBEUXnogygOC5L43puOYJxCFFghqoyaK4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572441; c=relaxed/simple;
-	bh=+d5xi9g6vW5km+N3rMkR1JMirfPLvZmpAundHvmz3iI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ISPBYPjbmqbiEPFlYvbDVfhzaY03rtjJuphBl3EzqOfOAA0wlAjVvHoSHFhzhObBS2hcjdqYxJyxQA5q/JlyRbmriVm6EzHLPSS4qlHzbrMXb43o+2BqLnsOlnLHj4ZMKYG7vg+E3s0fJ0GYfEsX/fF9V64FxJl0GIonhPo1gG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XMDUGTsI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745572466; c=relaxed/simple;
+	bh=7EgrSjYq/q+AEXrtHLG+GPhFy7CyRECDNOQR3ymqGno=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=loNCArRzlGxB37dGUyjBRaSl/N7LxY2LAFK/+SZ4zwQZEUCQ99srfwu5Ve5025DoR8JqvWlaGnIZLNZ0LbEOsD/JfmOjZD46nMAtPDUdC3X4aHeMM8ttxTdzf/hRPK2YKydDNVbsGTjLnnyo7mfV+STZhJ8ka4yTvAc5kW3NoGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SK/c6+b6; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XMDUGTsI"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ONkUMG025716;
-	Fri, 25 Apr 2025 09:13:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=40PrTU9Pl6DG0oznrHmQPME36hN6eFppb2K1WSBFMa4=; b=XMDUGTsIZsDt
-	Jrw2G/gPBxCn/xFqdTccdL6wuhiAow13C8DKXrUjNKRDyZNaac+xdwkL6HhYi2zS
-	wppz6SnkSOltCRkNAvgQa8HDdOPV668fOfFHBHE9rUpPIlibLIe02m5jds5St15r
-	gEk7Kug5LoT/dh0RgPRWPffL38JnKjDna3SxkRBCtrnLi0WvIlNHOYRPJ1hw3Bet
-	/Cs306aBuA2zATYxIrRXuA4vSNVF+DEnrRL236ZjvaOM2CIsfnLlKDUvYidNmR2p
-	qF3/bdzoVXf1KYxZlJxfI11xRuUfErE4ZBgYlNssnlW85BkZ+Q03YM4L4tUk3cDP
-	4eazdM/p2A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467y90sxkj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 09:13:29 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53P9CKph014843;
-	Fri, 25 Apr 2025 09:13:29 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467y90sxkd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 09:13:29 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8WDxv008557;
-	Fri, 25 Apr 2025 09:13:28 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxvh2s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 09:13:28 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53P9DR5r18744056
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 09:13:27 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2286D58060;
-	Fri, 25 Apr 2025 09:13:27 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A654F5803F;
-	Fri, 25 Apr 2025 09:13:19 +0000 (GMT)
-Received: from [9.43.9.122] (unknown [9.43.9.122])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 25 Apr 2025 09:13:19 +0000 (GMT)
-Message-ID: <f02e2c1a-e65f-4078-a138-ccf734f84643@linux.ibm.com>
-Date: Fri, 25 Apr 2025 14:43:18 +0530
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SK/c6+b6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=LjSE
+	ovQMAg8Bps9xT8LjGwQNRn9cWiTYIsHJmA9mGoU=; b=SK/c6+b6qV6JZoekod7b
+	Pwe+6nFydr4XfPcE36tXXcJmWS3a8G9W8fb6nnSSRxl3SZuDFJf162XdrDyBYQ4S
+	gDPsbg1I+6SnWxcGBFxMwsWf1HyRlmkA4yFlpiVJ94mc7E5ZdSgBZkAFCfV7/T9p
+	enOF2s9guMTzHB4HhcXwfs7ceALhIZuylR7uH4h02v83ACTRiNTcVitjzxTQuvj1
+	nEK171CGo04ECIBsKJPJha3S/pRodjcIlR/YP4Qfn+5jG/jn5aU8NrV4B/dS0uu6
+	PgoorTb1tHwALstZy8mqh64ciP7X5eOudBIlJ4ui0NjC2Pyroma5QQgOxZe1HmyE
+	oQ==
+Received: (qmail 3763468 invoked from network); 25 Apr 2025 11:14:19 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Apr 2025 11:14:19 +0200
+X-UD-Smtp-Session: l3s3148p1@HolgwpYz1KQgAwDPXx6JAAunYj8Nf7DC
+Date: Fri, 25 Apr 2025 11:14:19 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v8] i2c: riic: Implement bus recovery
+Message-ID: <aAtSayFrtSh9LC-J@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Andy Shevchenko <andy@kernel.org>
+References: <20250407121859.131156-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <aAC8f0dAMERD8GjW@shikoro>
+ <CA+V-a8sM2mFS--zLSZt28mOUDuO2FpW0TsaV50A_VxFZ-juP4Q@mail.gmail.com>
+ <aAFgwEB4SdgH-1fQ@shikoro>
+ <CA+V-a8tmTqFi4iqGhR3cfUgKw7mxJrm6ixGAHq747ptrL3t2jA@mail.gmail.com>
+ <aAITBfrOI0GAhGRA@shikoro>
+ <aAikKreK-BCP-zLp@shikoro>
+ <CA+V-a8uHxfmJLOO25acfK2=EZt41f_G6LShNpeL9RVy-X=Q3Cw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] sched: Inhibit cache aware scheduling if the
- preferred LLC is over aggregated
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Vincent Guittot
- <vincent.guittot@linaro.org>,
-        Libo Chen <libo.chen@oracle.com>, Abel Wu <wuyun.abel@bytedance.com>,
-        Hillf Danton <hdanton@sina.com>, linux-kernel@vger.kernel.org,
-        Len Brown <len.brown@intel.com>, Chen Yu <yu.chen.surf@foxmail.com>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <cover.1745199017.git.yu.c.chen@intel.com>
- <2c45f6db1efef84c6c1ed514a8d24a9bc4a2ca4b.1745199017.git.yu.c.chen@intel.com>
- <cd6065dc-837f-474a-a4f5-0faa607da73a@linux.ibm.com>
- <d221a260-51d5-4dec-8c08-37d27dd80145@intel.com>
- <e45141a1a64d7dcfca2683f56735ba4da60ba19e.camel@linux.intel.com>
-Content-Language: en-US
-Reply-To: e45141a1a64d7dcfca2683f56735ba4da60ba19e.camel@linux.intel.com
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <e45141a1a64d7dcfca2683f56735ba4da60ba19e.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=aZRhnQot c=1 sm=1 tr=0 ts=680b5239 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pcUInrTLMDQ4R4IrCpkA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: fRezSggGYyjgGpAv2xEIpbOWQ21f76lZ
-X-Proofpoint-ORIG-GUID: Hs114uIbUKacBXLLh0pIE6463OJHjqcn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2NiBTYWx0ZWRfX/eriBh2zjgyJ Mmxeg7WW1AuBqqhzq2AOiEVyI9OgBN/0k5iAIQURHXLfM73nkjPAl/VTfCaNJCXvz7ymfl7lLgw VC3jefc406Xz4E9ySV1o0NobMkGhs2f2rXMZpDo2bdJv1K8MlapvECGsEUy6+Tl7diWquP1IN82
- I4LhKsYCKA4MJgJdwtZqBivDTbff7tv+02WDZ3WgQZBztzvstTf83vKJouPiMZAqkPJIer0obsD o66IKwyVpXZuEUsMrTILpJpLEuQ5cttBMd667eynYxFL2hz4SZOSw7EtjCss0cgBXHC+DHx8VQK zwjGLNPj/g2W96zLFBM5vo6H7yTL57IVB0YgR8U+dXlxa6v1OVkjco738fGAfXMXewtPuRo40Vd
- Qz0AP6IWK0+8QIiFyw7fxO34fl7WkwP7m/u9BP50w4tGo18LfBs4x0ItCcs4N5KwZzXGB1Lv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- clxscore=1015 mlxlogscore=673 impostorscore=0 mlxscore=0 malwarescore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250066
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/0jAnBZn5C350odU"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8uHxfmJLOO25acfK2=EZt41f_G6LShNpeL9RVy-X=Q3Cw@mail.gmail.com>
 
-Hi Tim,
 
-On 24/04/25 21:21, Tim Chen wrote:
-> On Thu, 2025-04-24 at 22:11 +0800, Chen, Yu C wrote:
->>
->>> It spawns lot of threads and is CPU intensive. So, I think it's not impacted
->>> due to the below conditions.
->>>
->>> Also, in schbench numbers provided by you, there is a degradation in saturated
->>> case. Is it due to the overhead in computing the preferred llc which is not
->>> being used due to below conditions?
->>
->> Yes, the overhead of preferred LLC calculation could be one part, and we 
->> also suspect that the degradation might be tied to the task migrations. 
->> We still observed more task migrations than the baseline, even when the 
->> system was saturated (in theory, after 25% is exceeded, we should 
->> fallback to the generic task wakeup path). We haven't dug into that yet, 
->> and we can conduct an investigation in the following days.
-> 
-> In the saturation case it is mostly the tail latency that has regression.
-> The preferred LLC has a tendency to have higher load than the
-> other LLCs. Load balancer will try to move tasks out and wake balance will
-> try to move it back to the preferred LLC. This increases the task migrations
-> and affect tail latency.
+--/0jAnBZn5C350odU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Why would the task be moved back to the preferred LLC in wakeup path for the
-saturated case? The checks shouldn't allow it right?
+Hi Prabhakar,
 
-Thanks,
-Madadi Vineeth Reddy
+> I prepared a setup on SMARC2 RZ/G3S and I can confirm it is working
 
-> 
-> Tim
+This is good news!
 
+> (but this is failing on SMARC RZ/G2L I'll look further into this)
+
+This not so much. Hmmm, are you verifying against the same I2C device
+on the carrier board? If you compare against different I2C devices on
+the module board, the culprit might be the I2C device.
+
+> For the SMARC2 RZ/G3S to make sure the I2C GPIO pins behave as
+> opendrain I have the below patch for pinctrl
+
+Do you really need this patch? The GPIO lines are wired to SCL/SDA which
+are already pulled up. Search for R118 in the module schematics.
+
+All the best,
+
+   Wolfram
+
+
+--/0jAnBZn5C350odU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgLUmcACgkQFA3kzBSg
+KbaDQw//WZEzf3cMdP/Ssa5HfstoUHnRnWb1KR2nSv+u9ua4vMZZLNWEa12wjIXi
+XM/MYCQP5IVo30aFEZVCURV4pszjP0ZveILER71JIqUNI3uze9wR9rGbPnJ6Lf05
+YNGpyOmBErZIVT++Z6VL1P1MYU5ulpdcIEwaG5A6fHkyasG6Z+65ns9wWnNAEbt8
+9Z9F1tRcxr66e+t5c19einq4ezbewdKnZfImrizalwd72Hag3+eer4WkauPkuzJC
+iA1jnV5I21RjPQHqK6duXvsuglgMihC+nQ+kZRA2vPXCZAkCKvBc6wR+CDuI82qK
+zWvTzdCYHXb0V2cjp3kBFE/fHPS+0zUefMUg3DUhaobhurBauNMqm7Ox0McKn6Mt
+Dy8TnHRYh75iW3I4g1x8FCn1YAiysMIPDc7Rt33M/hRyymfA4jsYIWDd7j1JL3iR
+wQCspAVbOBiwHxVfAcRimx7Lb8mdVBv11k8qk20kWgDqeJaBZT06N+5cchu+rKn9
+qCLTRTx9EYf736ZzguwC3mgdmejiaui7x+VYgiCt6Jl4V1UG3AxEGV/r3AV/TogG
+4gJVD2SDZrfZtSfLClj7hdC795HHlbPqKiZ9jdqSyBGcd3KerGOPYiFbTSNlJ2xd
+FIMMKGqxa4FSP0grQw6H1sAcrrqbL4qXtK7p8DjFhHPOZdUl+FM=
+=sBlp
+-----END PGP SIGNATURE-----
+
+--/0jAnBZn5C350odU--
