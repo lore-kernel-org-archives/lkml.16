@@ -1,61 +1,65 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305801B414B;
-	Fri, 25 Apr 2025 21:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68546217723
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745615357; cv=none; b=A0oBr0uxOdBWwNvScz3L7CsyW8iTL7CYKP6KTIZK3UEEFVfpE7zLAJxUFGjdmMQoh5lGQqrBkbHGRSs57pZPNsX8jO9hWnCzMayydteOVf33J+qaA1Y1eYE51nrbvbX7gktCESgI5MZGBGwf5fn8Bk/xNmAkEJ3bMAugrElTULI=
+	t=1745615381; cv=none; b=FD7MCYh/+qkO+pGfY41VnLoYO3tH6j++Oqw5GbiZvdHGGRJb9VAT/Ba1GWwrsPTDDwisah5NK1RAbU0ZOPXGubaM5OV9ePKyj2pISANoDqN0l/77pcdVE6Zxr7Y4CXopwghSfaoBSwWh+RGyKnthWyI4iR6LX3dx1Hv/GqKnnBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745615357; c=relaxed/simple;
-	bh=/VyuKX/2Z7ayvme7V4TSX20vu+YsytWY6qoWRTej6nw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bTtYBfJXA+2+JVE8IlqtAe8+MwT5aQ+mdVUVAJAqwvTuN6Tf569C8cTtbGQ2dr8z4TuY1ocyOMjzgOmGyODDO3VcOpon72UU5uvw1lauoTyJv51kQT7zWKIF1vOXtY4ee+wzl6rxpFpbR54AfYhc3SBRwf+MG4A+B7M7NOV957A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ebT9O2Oa; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745615381; c=relaxed/simple;
+	bh=o7BcIIIYtQBUHMADOGXaeTJA+HEbSY/NkKPNVQoDqrs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aPkWcGTohx284yyeais/wIEfrRANYk1GjRmIZBOCkuf8MVOhPthUbPU+SZPL86twr1w3awVxSxt9TmoQ+UPtxr8HLBxnqtM7xDy2fK1Cypy7LpD8fKZxk5JcNkO+iQxwNTTwv+0ovwghY3j3WWtBCk1uxup7D6Ja3E9QKedl5IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RZD7uDaE; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ebT9O2Oa"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL96Qu3026950
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 16:09:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745615346;
-	bh=eru1uAB6XxcdGB6ETHFsUgF8NYEghEFeFKagaGASKFg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ebT9O2OaydUolYzIqIHMWRYDr7i7ZqMtelypk66uLG4HCw45+NbwXZrTjK8Xj0+gM
-	 lqLJKK/cgADx8Phr6K8tHWarZHR2F3KD+Uf+FiLZmXP2TQh2XfHniwPhew8gSpy/Jr
-	 F6FYAiQ/T/yTv1muWidAen7Ts+l5EuYSxDVX6hB0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL96c5122444
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 16:09:06 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 16:09:05 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 16:09:05 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PL95iw092863;
-	Fri, 25 Apr 2025 16:09:05 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>, Andrew
- Davis <afd@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Fix remaining TI K3 CHECK_DTBS warnings
-Date: Fri, 25 Apr 2025 16:09:04 -0500
-Message-ID: <174561533074.210099.18320816568415769793.b4-ty@ti.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250421214620.3770172-1-afd@ti.com>
-References: <20250421214620.3770172-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RZD7uDaE"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-606330df903so765085eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745615377; x=1746220177; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VpoMnDgu+7UC7RtrUCDJGErjf4myIlSL18Se8Lkjx+0=;
+        b=RZD7uDaEEDsgUPOKcaEh8DhITSnuNMG786mPtCcrg0bmzefcJYMSAm/uDxIAVonIHV
+         XpgVfGI9bIUpEVEfMsCplM1f0b5aNeybzmo+Vm1WfG0r/NpoF6VWNntdUd0KDrXmSaDj
+         hDS/t/f4kskzX026XaC9QFD5D1m7NSTE+CyzvWV/39LmlFG5n3l05ZT2cRkEkxfbhpvS
+         kf/8xVtYi1GyZGZe7QHfxGqR8gMuIf9FPPtsUR3Sh5tZldNq0tsYBhmugSwqrC6AU+rE
+         MId8nOIYLFxWCN541NdnMWRqmDmogIZClNhoiLmVoM6GSX7qBgU+gMnEu/ikowIPVJZs
+         ZDDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745615377; x=1746220177;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VpoMnDgu+7UC7RtrUCDJGErjf4myIlSL18Se8Lkjx+0=;
+        b=nwsQEBqNm/DrxVdZuFAPuKQ7yOJkpVglxfLnOSUjGRWfViTqfHAYhssy4JhJLN7DJ6
+         8B/jaDVcWSwgDJoIrSYBWNPau7LJZOZQ+XgUl4cJTscVVWszcm7tqViCT0Owsjffkh6J
+         mIeNBlRQr4i0BDSn8dCUBG6vpNNFZuZny/nlGum5nFJWmdvbNhINgs38lF0Xbc94f61a
+         ZldM5H0SOm4/Sn7U/1Ip84gSu6MS3ubwt9+Bzp6eyAHOq6Nxs/bei/Xns2RqKaAKO/Eu
+         H1JmkauN1E7xPcjhwLnDOIgWgjcGxW6aBjauREwEzFttKm/YSwQ+PUWIOYxvi4/YchMU
+         tNYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVa6qy+K4WgcVGDZ1OwudkuTpaKNBu1Zm0x2QKTsF0hCCZHujvmDV+J6Rrr/TTVOqtq4/CiiPZH8G5JauQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4ojCtNOD8sF33OV9rT0dxQBgZSTQlNHZ87uz1Soysxj9zmJnJ
+	xH/8XW5cIvQaxcOjW+E9bXHcdQKqa6pcAMY3prXid7zV3tUuNODnTAuRA/SbBt3yAmXbFtL0EmW
+	Q
+X-Gm-Gg: ASbGncvU/T4d0lgF956rLasW86TeR5NvFQ6r3cXN7QJL4ZuyhI3UveGO9bfktNrI//M
+	ZDpMrnNqotUudlSB0xhMnkMZK8dGeWNYLXYYM1MVvp5TQAvpOHZgoCkbadZflW2uAF6gNn1HjvY
+	X6RS3mWxV07d8M+p2Ti0nqQ8G8g//KVG/akSxcnRW10HS/U8rCXCXBOecw4+oD8nZ0urcorH54e
+	sfk0MjNFxmfXNjWWZ9dakLERuvlZ6OngK8vB/0e5CqUfZtVdDaa6Z+tt+IQRpIdQg/LjlemUQv5
+	Wov4LrN9dDfbL39nrgZihBa6td5LfEp6GC+UBXX8PPyR
+X-Google-Smtp-Source: AGHT+IHyxrjoVl0KXbSfTLDYg+CfefqZM8U73y5ZfAGM3b42y6FXuX1DXtEWNsTF1iIIW4wUhTqhCA==
+X-Received: by 2002:a05:6870:4595:b0:2c1:62ba:cd7c with SMTP id 586e51a60fabf-2d9be58e9a7mr562692fac.15.1745615377396;
+        Fri, 25 Apr 2025 14:09:37 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:96a3:e28:3f6:dbac])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7304f188052sm847673a34.8.2025.04.25.14.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 14:09:37 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v3 0/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+Date: Fri, 25 Apr 2025 16:08:42 -0500
+Message-Id: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,53 +67,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANr5C2gC/52NsQ6CMBQAf4V0tqa0QImT/2EMKe2rvASpaQtKC
+ P9uYTJuOt4NdwsJ4BECOWUL8TBhQDckEIeM6E4NN6BoEhPOeMmKvKaIjuIQvTOjho0aA7pXHpp
+ 2tBZ888TYNTFQbmsphZVGmYqk3MODxde+ulwTdxii8/N+nvLN/jGZcsooANMVV0IoZs+tmntsP
+ Ry1u5PtM/GPNuc/tHlqC2tEVchSS1Z9tdd1fQNOGb/UPwEAAA==
+X-Change-ID: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Eugen Hristev <eugen.hristev@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2871; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=o7BcIIIYtQBUHMADOGXaeTJA+HEbSY/NkKPNVQoDqrs=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoC/nfUdqmW0DVoD+FZo9SUw5csNWXEkaFoqBui
+ bDyBU03m8OJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAv53wAKCRDCzCAB/wGP
+ wLHkB/4wQyGYDFJQjZBiYUgnhQdUEp7hWNlwqnEMYH7bFvPguWYt69E7pqXyv/o8AcRNpyFNwz7
+ u+Nipjjojviqe1z+4YYo2BZksKHhnD+lVzRMc3bXv6KePvl+P2mYERNI+/Tf11auIDjhSuL7rH8
+ KPBmB3NxXecOJdOBdP5QUUYXQPHCraoXxDz59qmN2nxo3WrGKrc24+lYx5Dl2AjX+2h1lS0vLOU
+ bW1wWQVh+tNBUPdS0Gw6eM8I6mvVSSIGSyJkPBJdJfx/5YXub2e9puPgxGWGWugNQjiRkDsCNQx
+ v8dZdYryvHvoLQcKJ4YsKxnSMdkJxVZpvCJGqoyCyfNk+jSC
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Hi Andrew Davis,
+Creating a buffer of the proper size and correct alignment for use with
+iio_push_to_buffers_with_ts() is commonly used and not easy to get
+right (as seen by a number of recent fixes on the mailing list).
 
-On Mon, 21 Apr 2025 16:46:17 -0500, Andrew Davis wrote:
-> Until we resolve this thread[0] we do not have a set direction for
-> modeling our device's controller devices. For now as the AM654 MAIN
-> domain controller region is already one of the messy combination
-> syscon + child device containing nodes, no harm in silencing this last
-> DT check warning in the meantime.
-> 
-> Depending on the outcome of [0], this series can be safely unwound in
-> a couple ways without any backwards nor forwards compatibility breaks.
-> So no need to wait on the outcome there to take this series.
-> 
-> [...]
+In general, we prefer to use this pattern for creating such buffers:
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+struct {
+    u16 data[2];
+    aligned_s64 timestamp;
+} buffer;
 
-[1/3] dt-bindings: mfd: ti,j721e-system-controller: Add compatible string for AM654
-      commit: 5959618631fec502ec0963f4082d565f7fbfff04
-[2/3] arm64: dts: ti: k3-am65-main: add system controller compatible
-      commit: 4765253055cc8ab3fdc5f9eb5b121d867e209fb1
-[3/3] arm64: dts: ti: am65x: Add missing power-supply for Rocktech-rk101 panel
-      commit: ae3ac9ffd59acf46b8934f4e7a5fa7a6803ac959
+However, there are many cases where a driver may have a large number of
+channels that can be optionally enabled or disabled in a scan or the
+driver might support a range of chips that have different numbers of
+channels or different storage sizes for the data. In these cases, the
+timestamp may not always be at the same place relative to the data. To
+handle these, we allocate a buffer large enough for the largest possible
+case and don't care exactly where the timestamp ends up in the buffer.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+For these cases, we propose to introduce new macros to make it easier
+it easier for both the authors to get it right and for readers of the
+code to not have to do all of the math to verify that it is correct.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+I have just included a few examples of drivers that can make use of this
+new macro, but there are dozens more.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+---
+Changes in v3:
+- Fixed a few mistakes, style issues and incorporate other feedback (see
+  individual commit message changelogs for details).
+- Link to v2: https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Changes in v2:
+- Add 2nd macro for case where we need DMA alignment.
+- Add new patch for ad4695 to convert buffer from u8 to u16 before
+  making use of the new macro.
+- Drop the bmp280 patch since it was determined to have a better
+  alternative not using these macros.
+- Add a few more examples to show the non-DMA case, both in a struct and
+  stack allocated.
+- Link to v1: https://lore.kernel.org/r/20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+---
+David Lechner (6):
+      iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+      iio: adc: ad4695: use u16 for buffer elements
+      iio: adc: ad4695: use IIO_DECLARE_DMA_BUFFER_WITH_TS
+      iio: adc: ad7380: use IIO_DECLARE_DMA_BUFFER_WITH_TS
+      iio: accel: sca3300: use IIO_DECLARE_BUFFER_WITH_TS
+      iio: adc: at91-sama5d2: use IIO_DECLARE_BUFFER_WITH_TS
+
+ drivers/iio/accel/sca3300.c        | 18 ++----------------
+ drivers/iio/adc/ad4695.c           |  8 ++------
+ drivers/iio/adc/ad7380.c           |  3 +--
+ drivers/iio/adc/at91-sama5d2_adc.c | 13 ++-----------
+ include/linux/iio/iio.h            | 38 ++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 45 insertions(+), 35 deletions(-)
+---
+base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
+change-id: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
+
+Best regards,
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+David Lechner <dlechner@baylibre.com>
 
