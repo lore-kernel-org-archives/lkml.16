@@ -1,372 +1,237 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB78139E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96818224B0B
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618717; cv=none; b=q6xnJ88uOTvq8i48qo3exmRQzbC0ihbjFsaCdtmHvMhY+QUd/QfhpY44z8vETt+MbEl8Qy/JehE9GWnKBJkOw27VxTlgRWokdNAUcz2IDsVBLeIFLV4swpUBjxkPOpj3FKEsBIAfJsZafBcYHnb4LY0gP14+OYuLPHvD4qiC5T8=
+	t=1745618744; cv=none; b=KmatpV0NbYn6xIDE5rkqJYLC6IBl2/sVWA/FpCGa4NgShDMYeanJMjVsK47xUtr0pRgHNcxJFiK2lb+ogSk/9I3GGPeTJ06TG/7mNkc2yQQupFxr4iYoRL7IHoKqxmqm1NALmTq3pKKEFpLIDZ4GmhvTsBTAc6cPvel9SL0SEbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618717; c=relaxed/simple;
-	bh=wpy8ICWTA4V750P4IJKzarxHqFc4K0UbZ5O1LR4NHEQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OXsAZ/YENm1Un5vf6WUF/WlDcROl9hAHHlH4bppC62WGLYmcJkrsMFWQP7gif/8DLlp3oL3wEWtVzfIfD0gzvc3WehI8gHRZHqM2YzW8eYRwcgc29BruPRrJgk7iETr9FWNN8k+MX/xMBkU+EgqoZKl6XgzydTR/ofGq1kaz+dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wT2oeKNv; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745618744; c=relaxed/simple;
+	bh=dMg1Rw0gfe+cDvJBKwcnpFBNWrLQZWWVAp6xpIbbju4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HkhM2pyZpyLohKj2CW7GsqpS2EU8f5xCGrgmdFv24g73ADM0Rsl7JrHtE4Ha8fLCm5NHz9IV/giFmNEPwKMlyMpk+TEGpFqxNCpjX+fx0L8t+Zk4D0kmPSEE3DfA8AFfRFQFC+i47/y/Aa2E6e3nj/0WuTGtcuUOm2PFE6JJNxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MLdIKN2E; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wT2oeKNv"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8fce04655so28651556d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745618713; x=1746223513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eQEaOfuvvVeuvSrF1uTd3hXLlI06wb8Sqqmzq7nvY+c=;
-        b=wT2oeKNvXNS7T3us6WGNEofralboZjlOVSiIaozldYpZRNSVCGT/GXfhysZ8XZra0d
-         ZqMI4a4DKE3iyMQEoo+R5gmzhFTHiYUZIw53YeBIA67UsgWxMo2xPZEdKXWnWSOl7+4j
-         8RoTKlt3JqNNaNyR5jSNvdCQOEk4bcPn0Lura8xK/IROkcghpxsaR6nybP1vJmoG3zlt
-         7vSrYA3fHB1lUIWwhFDNdTKPfDvk0G9HlHdK4ApZsh/vhQaaABsR5jXua5JLE6/oYllB
-         GAfFptie3bTLRXQQxp0mZ7T6B5E12/cQoaQu4u3/mtowuQ56M+be5taOAmBgdmgInQ7k
-         dEnw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MLdIKN2E"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJu0T024719
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:05:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=gA4yp+/b90fSn6clFQZZzifa
+	lY2iHyX9v6vgtAPGerI=; b=MLdIKN2EXvsOizn/XCkfURZkl9QDLDeoiSS2c9Wa
+	p8x+X/W6c8gyUcZQwL4T69yD3jIrHIwB61h+dMjMqQM/1g1oJm67bGzhGogiQHAl
+	+1JpkT+1TI9EilEG6o+WDBcFNEJlRN8I+03yW+AqXyK5m7DwxQsTBKaO/1BZBF5J
+	SZeLHDoTtOD3IZZ5aXz3LZMUPtzveFbx51z1S9RkLryZ9jIFmahp8Fwbh/uad5j/
+	ek02fMFL6rcLOLHDgWMKZF0fxIkmqhcg6EseaA6oLALSrigLmD4eWc/9WE38E6xJ
+	gGsIq0ZQ98A4F/1rPt2uA16ibEG7s7lMXKuhEouakcGQIA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0t8v7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:05:40 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c77aff55so702613385a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:05:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745618713; x=1746223513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eQEaOfuvvVeuvSrF1uTd3hXLlI06wb8Sqqmzq7nvY+c=;
-        b=fOjqiruMEhGT47kafyRi7e0fJrknmtmhkF4Ye6C4GPbYvFAcBbPTGaMFDQ4EQdhygj
-         SYwMBNraHnNNIloOQ3lE88T8Am1I1z1rn4Alc3f95ihnAy6iKhhPfOpv0EjKQMDVnU7e
-         cFop650Wpa/ysofvMa1ob/QdNl5acCBBoxa6vtxCWey98zvRKN9lRXyk903rSkUyhb1J
-         i1Q5G5ucRHIjam3NS4+Eg4vwE5G8hw75nQHlWf0pdg2YsOQDqrL3vHimEVdNqUSJcem2
-         723z87/Cuucgh/jRZs8eEKEyFVz79HiE05inyMlEsTGRjrrDDRODKa7VaOPq6iMJGPAP
-         l9rA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuLSXUF1fEYpwrpbjEbgyVXllC8BQgPQ+WSrkIyj55oY6HCyRwgPKF8aHhO1geOmsvIjjwfgZZc0eDggw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaszpjowNVBPAqGKh7H4iqMv7AYePex4WxhtwJ44pmDY4aoHqA
-	W+rwchmCB8s+XK8CRrpuieC/ewv3LWKJfhsZ/typi6EophjUI0zF89HaWz4OfUaIo+7R9rtbOiM
-	DR7ZtKFrkp2uccp8pjB5AynARrFSYVa/Ge8k=
-X-Gm-Gg: ASbGncsMgWvVkd3gFrF1BxIi+M/5QVP2nyMaSFoPAfCrm30FCuAPQ6H+G+DZfSr7soB
-	HDf+UoLy6fT0QZmSE5pP3V4JK1fw2iRyFgbxwm1R5tZ2b8I5uhVDfx8FAzi/kjxurCub94GD5vd
-	tKajF7VVHBosJajxSsk3c02xARrhgHaCwFCzR4vsQccWa5NIxcO7w=
-X-Google-Smtp-Source: AGHT+IHYoKpdXfXgFXrJBFZpzCn/mfe9TNWUjRlQbefBw50/jJUuWZ6Fd+u+VMhaEICt4nTBFSQrCy1qeuWBU1l52v0=
-X-Received: by 2002:a05:6214:2504:b0:6f0:e2d4:51fe with SMTP id
- 6a1803df08f44-6f4cb9edb99mr65920026d6.26.1745618712759; Fri, 25 Apr 2025
- 15:05:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745618739; x=1746223539;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gA4yp+/b90fSn6clFQZZzifalY2iHyX9v6vgtAPGerI=;
+        b=h4x2hNGvZLHx8WW2fjm3qaNYjNtDAOGmEa0vAux1cFG7bFlLZ8UPQNz2ZLnuoZ4T+r
+         hz5b/ZIESLJz9oxNHXxRXiDnIOyU38Nj6tBAp6S57iPj45XjVJ7KL2W8kaPo5POtAFql
+         i8p70qAWFk2OoHfRqVxw7C7ktz3EUSBHeUyEhNNGOONao7SjJOFOqrf82RvgIc1WTcut
+         HFdIJd096bZTSDtRzJFkocoReuPPnq34BS8IC3r2Vm9Mb39d9OoSB6/oatyw83qJh2hi
+         UGRc5YE3muOK3c4hSGMnuTe+updlGZuqb9jWQ6/gLApbbyNIgE2L9252abZqR/Vs6Swg
+         CB9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVE/YGjHYgCKS0OvB9od6VIqYBvONWa06hBanEowRb8HCqDDcC+AqrIWwfPKRpctI8Wb/8RiBCvIvd1ilA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx4qfwx81uzQ5Xgxyv8VEWtnLMJbm+byLgQ4YkURLAEsQwXbYb
+	XihvVdCkHyTfpI+9NyyIwuabdU3H/XGGohxettTnopqRqUMytGoFHWqiI6UfvcXhm1M9713vM3L
+	afWrBT+dGsH2PDBwbB3fGUG+VR51wRZbt+JEIRRrehP3g2/GuuE1PrmQ/ZBkzm2DaJLNdMGY=
+X-Gm-Gg: ASbGncvWrzPwWotjgLr0kPz2PdYHJNWvHchEeqEpIrj8tnSH2lrZYQ/19WXtM+0D1jT
+	1ZroKoV1pCMYdZ3efWTZYSZmfQUvfmuXRyxbbB/hHwjUeSklK2lNCkEZy4uL8XAGuMRKWW4BKXb
+	ab8mULYlBDpvvg2WDk8RSuzvBz+JWbp6A15iNtrB7tNsrn39RRQscvxHGRtAE0p5zlePB9Xs1jJ
+	/px+fqKIYCuOYOYa2ByST6m+3be4kVD/qdvLSVdpjgO9S4i9pj8ukMJqkaHoddq30f+eKp1h4u5
+	lrNIF3G+aXHDTK/WNshtGp3FJorj9t+QaBknCChCWTaVrDNeBNkZlO8tlEFSewNtJtJcYiI976I
+	=
+X-Received: by 2002:a05:620a:439b:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7c9668711bdmr231390285a.24.1745618738731;
+        Fri, 25 Apr 2025 15:05:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdgrN7WJlVehxgxhc3ZH7Rkg3DTR6wldgq1l7nBjGdY6u4B1QzquINtludebsBQfjLm/Hh9w==
+X-Received: by 2002:a05:620a:439b:b0:7c7:b60f:ebd8 with SMTP id af79cd13be357-7c9668711bdmr231384585a.24.1745618738270;
+        Fri, 25 Apr 2025 15:05:38 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e816ed359sm590061e87.146.2025.04.25.15.05.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 15:05:37 -0700 (PDT)
+Date: Sat, 26 Apr 2025 01:05:34 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] drm/msm/mdp4: switch LVDS to use
+ drm_bridge/_connector
+Message-ID: <sze7kbefltaduma5x2ch2zmz7lvrcsddjdbehjjh66y2xoodem@cky22gnkqvxe>
+References: <20250227-fd-mdp4-lvds-v3-0-c983788987ae@linaro.org>
+ <20250227-fd-mdp4-lvds-v3-6-c983788987ae@linaro.org>
+ <63e5ddf6-151a-42aa-b2cf-003d91b34a04@quicinc.com>
+ <s63lvzn35d7xcvw3kkmtasyinxbqa35juyxosdscfk6vhty4pw@hu3dotyklo3r>
+ <402bbda7-33c6-49b2-89c7-37372cc07457@quicinc.com>
+ <CAO9ioeXhjrOyKz3N3oU6QxW+u6WUC4R5XXqWgb=7iF7Hk0Q_nQ@mail.gmail.com>
+ <99e0d2b9-d866-4b52-bde8-a6d89f35aadd@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423230046.1134389-1-yabinc@google.com> <731dbb1d-e804-4678-9b8c-40f6395e94a7@arm.com>
-In-Reply-To: <731dbb1d-e804-4678-9b8c-40f6395e94a7@arm.com>
-From: Yabin Cui <yabinc@google.com>
-Date: Fri, 25 Apr 2025 15:05:01 -0700
-X-Gm-Features: ATxdqUFPXkJDUxeyY_qhK-zlhKmqHCzSSlGClv2AG8Hfm8lv-9ZFAk_CP4I8Iok
-Message-ID: <CALJ9ZPNExud7ZQ-ZgpVtPJHUsAyJv_O-CH8mCa6gUyu1E1T8zg@mail.gmail.com>
-Subject: Re: [PATCH] coresight: trbe: Save/restore state across CPU low power state
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Jie Gan <quic_jiegan@quicinc.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99e0d2b9-d866-4b52-bde8-a6d89f35aadd@quicinc.com>
+X-Proofpoint-ORIG-GUID: nCUMVwp2wm5ywIv3JUtpxLu7lLrJc8dy
+X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680c0734 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EXU9CONyTfQLJbyJyrsA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: nCUMVwp2wm5ywIv3JUtpxLu7lLrJc8dy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE1NyBTYWx0ZWRfXxt9xiSbmrczK sITQipf9D2/xaz9qJoH0zHOdxqB6oSTOP9iqx2rEac/btYqG6tas/rPktdBsyei/8ZTrYUfODya iS97lOz5fBsVrEcMLgP8ejX4M1cIRGigEKdnghH2AUWbzakiFqwq2CHn2THCHzLA9s0bVZ/bgw8
+ NCLTuLn16zUoTe6hcpFMfziKf8UwY2VQW5HPVmvDMd0daskdkn7NmcMyENNC2X4Bcl4YWKt7Nrp ffDJsCd+XurSyaZ8yO0oRAgCEkvNwelYn+IVxSC0kgtuUr7DpA2jJ0lJnXLejBkFs98l/Mx4TnW 1eGqH3P0Wh6DF3ttS6JU16KVOfNwJjWHojAWfr0pr46BifWiME/g45SouPd5XDAdJr97lMznOH4
+ Q0wV4NK1ROtBmDV3HMfF0udPYQfpsY727XjP3Vba0t0DHzRX+Td3K2g3RfA/iQJOq6QrPEqW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_07,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250157
 
-On Thu, Apr 24, 2025 at 9:16=E2=80=AFPM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> On 4/24/25 04:30, Yabin Cui wrote:
-> > Similar to ETE, TRBE may lose its context when a CPU enters low
-> > power state. To make things worse, if ETE state is restored without
-> > restoring TRBE state, it can lead to a stuck CPU due to an enabled
-> > source device with no enabled sink devices.
->
-> Could you please provide some more details about when the cpu gets
-> stuck e.g dmesg, traces etc. Also consider adding those details in
-> the commit message as well to establish the problem, this patch is
-> trying to address.
+On Fri, Apr 25, 2025 at 01:01:10PM -0700, Abhinav Kumar wrote:
+> 
+> 
+> On 4/25/2025 2:27 AM, Dmitry Baryshkov wrote:
+> > On Fri, 25 Apr 2025 at 00:00, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+> > > 
+> > > 
+> > > 
+> > > On 4/24/2025 3:23 AM, Dmitry Baryshkov wrote:
+> > > > On Wed, Apr 23, 2025 at 07:04:16PM -0700, Abhinav Kumar wrote:
+> > > > > 
+> > > > > 
+> > > > > On 2/26/2025 6:25 PM, Dmitry Baryshkov wrote:
+> > > > > > LVDS support in MDP4 driver makes use of drm_connector directly. However
+> > > > > > LCDC encoder and LVDS connector are wrappers around drm_panel. Switch
+> > > > > > them to use drm_panel_bridge/drm_bridge_connector. This allows using
+> > > > > > standard interface for the drm_panel and also inserting additional
+> > > > > > bridges between encoder and panel.
+> > > > > > 
+> > > > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > > ---
+> > > > > >     drivers/gpu/drm/msm/Makefile                       |   1 -
+> > > > > >     drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           |  34 +++++--
+> > > > > >     drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h           |   6 +-
+> > > > > >     drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c  |  20 +----
+> > > > > >     .../gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c    | 100 ---------------------
+> > > > > >     5 files changed, 28 insertions(+), 133 deletions(-)
+> > > > > > 
+> > > > > > @@ -199,27 +201,43 @@ static int mdp4_modeset_init_intf(struct mdp4_kms *mdp4_kms,
+> > > > > >               * bail out early if there is no panel node (no need to
+> > > > > >               * initialize LCDC encoder and LVDS connector)
+> > > > > >               */
+> > > > > > -           panel_node = of_graph_get_remote_node(dev->dev->of_node, 0, 0);
+> > > > > > -           if (!panel_node)
+> > > > > > -                   return 0;
+> > > > > > +           next_bridge = devm_drm_of_get_bridge(dev->dev, dev->dev->of_node, 0, 0);
+> > > > > > +           if (IS_ERR(next_bridge)) {
+> > > > > > +                   ret = PTR_ERR(next_bridge);
+> > > > > > +                   if (ret == -ENODEV)
+> > > > > > +                           return 0;
+> > > > > > +                   return ret;
+> > > > > > +           }
+> > > > > > -           encoder = mdp4_lcdc_encoder_init(dev, panel_node);
+> > > > > > +           encoder = mdp4_lcdc_encoder_init(dev);
+> > > > > >              if (IS_ERR(encoder)) {
+> > > > > >                      DRM_DEV_ERROR(dev->dev, "failed to construct LCDC encoder\n");
+> > > > > > -                   of_node_put(panel_node);
+> > > > > >                      return PTR_ERR(encoder);
+> > > > > >              }
+> > > > > >              /* LCDC can be hooked to DMA_P (TODO: Add DMA_S later?) */
+> > > > > >              encoder->possible_crtcs = 1 << DMA_P;
+> > > > > > -           connector = mdp4_lvds_connector_init(dev, panel_node, encoder);
+> > > > > > +           ret = drm_bridge_attach(encoder, next_bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> > > > > > +           if (ret) {
+> > > > > > +                   DRM_DEV_ERROR(dev->dev, "failed to attach LVDS panel/bridge: %d\n", ret);
+> > > > > > +
+> > > > > > +                   return ret;
+> > > > > > +           }
+> > > > > 
+> > > > > Can you pls point me to the lvds bridge used with this apq8064 board? I was
+> > > > > unable to find it. Just wanted to compare that against this while reviewing.
+> > > > 
+> > > > It's the panel bridge, wrapping one of the LVDS panels.
+> > > > 
+> > > 
+> > > Yes but what I wanted to check was which LVDS panel was being used so
+> > > far. Looks like for arm32 the dts is missing? As I couldnt find the lvds
+> > > out endpoint. So can you pls point me to the lvds panel you verified
+> > > this with?
+> > 
+> > I used the AUO b101xtn01 panel connected to the LVDS connector on the
+> > IFC6410. I'm not posting DT bits since the panel is not a part of the
+> > kit.
+> > 
+> 
+> Ok, so at this point of time, this is just the driver piece which does not
+> have a real HW in the tree to be verified with.
 
-This is already the best I know. When experimenting TRBE locally
-(on Pixel 9), if I don't save TRBE state across low power state, when
-recording system wide ETM data using TRBE on a CPU core. In a
-few seconds, the CPU state becomes unknown (no message in dmesg).
-Since the core may hold locks needed by other cores, it soon locks
-other cores and causes a watchdog reset. I found the coresight driver
-always carefully enables sink before source, and disables sink after
-source. I guess there is some risk in not doing so, like the CPU hang
-here. Maybe you know why?
+More or less so. Srini tried to push the panel in 2015 ([1]). PR was
+rejected and then nobody ever implemented EDID-based selection for LVDS
+panels. I simply soldered the LVDS cable and used more or less the same
+patch (I can post it separately if necessary). To verify the pipeline
+you can use any LVDS panel defined in the DT, it should be enough to
+verify it.
 
+[1] https://lore.kernel.org/linux-arm-msm/1438088076-17606-1-git-send-email-srinivas.kandagatla@linaro.org/
 
->
-> >
-> > This patch introduces support for "arm,coresight-loses-context-with-cpu=
-"
-> > in the TRBE driver. When present, TRBE registers are saved before
-> > and restored after CPU low power state. To prevent CPU hangs, TRBE
-> > state is always saved after ETE state and restored after ETE state.
->
-> The save and restore order here is
->
-> 1. Save ETE
-> 2. Save TRBE
-> 3. Restore ETE
-> 4. Restore TRBE
->
-> >
-> > Signed-off-by: Yabin Cui <yabinc@google.com>
-> > ---
-> >  .../coresight/coresight-etm4x-core.c          | 13 ++++-
-> >  drivers/hwtracing/coresight/coresight-trbe.c  | 53 +++++++++++++++++++
-> >  include/linux/coresight.h                     |  6 +++
-> >  3 files changed, 71 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drive=
-rs/hwtracing/coresight/coresight-etm4x-core.c
-> > index e5972f16abff..1bbaa1249206 100644
-> > --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> > @@ -1863,6 +1863,7 @@ static int __etm4_cpu_save(struct etmv4_drvdata *=
-drvdata)
-> >  static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
-> >  {
-> >       int ret =3D 0;
-> > +     struct coresight_device *sink;
-> >
-> >       /* Save the TRFCR irrespective of whether the ETM is ON */
-> >       if (drvdata->trfcr)
-> > @@ -1871,8 +1872,14 @@ static int etm4_cpu_save(struct etmv4_drvdata *d=
-rvdata)
-> >        * Save and restore the ETM Trace registers only if
-> >        * the ETM is active.
-> >        */
-> > -     if (coresight_get_mode(drvdata->csdev) && drvdata->save_state)
-> > +     if (coresight_get_mode(drvdata->csdev) && drvdata->save_state) {
-> >               ret =3D __etm4_cpu_save(drvdata);
-> > +             if (ret =3D=3D 0) {
-> > +                     sink =3D coresight_get_percpu_sink(drvdata->cpu);
-> > +                     if (sink && sink_ops(sink)->percpu_save)
-> > +                             sink_ops(sink)->percpu_save(sink);
-> > +             }
-> > +     }
-> >       return ret;
-> >  }
-> >
-> > @@ -1977,6 +1984,10 @@ static void __etm4_cpu_restore(struct etmv4_drvd=
-ata *drvdata)
-> >
-> >  static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
-> >  {
-> > +     struct coresight_device *sink =3D coresight_get_percpu_sink(drvda=
-ta->cpu);
-> > +
-> > +     if (sink && sink_ops(sink)->percpu_restore)
-> > +             sink_ops(sink)->percpu_restore(sink);
->
-> TRBE gets restored first which contradicts the order mentioned
-> earlier in the commit message ?
->
-An error in the commit message, should be:
-To prevent CPU hangs, TRBE state is always saved after ETE state and
-restored before ETE state.
+> 
+> 
+> > > 
+> > > 
+> > > > > > +
+> > > > > > +           connector = drm_bridge_connector_init(dev, encoder);
+> > > > > >              if (IS_ERR(connector)) {
+> > > > > >                      DRM_DEV_ERROR(dev->dev, "failed to initialize LVDS connector\n");
+> > > > > > -                   of_node_put(panel_node);
+> > > > > >                      return PTR_ERR(connector);
+> > > > > >              }
+> > > > > > +           ret = drm_connector_attach_encoder(connector, encoder);
+> > > > > > +           if (ret) {
+> > > > > > +                   DRM_DEV_ERROR(dev->dev, "failed to attach LVDS connector: %d\n", ret);
+> > > > > > +
+> > > > > > +                   return ret;
+> > > > > > +           }
+> > > > > > +
+> > > > > >              break;
+> > > > > >      case DRM_MODE_ENCODER_TMDS:
+> > > > > >              encoder = mdp4_dtv_encoder_init(dev);
+> > > > 
+> > > 
+> > 
+> > 
+> 
 
->
-> >       if (drvdata->trfcr)
-> >               write_trfcr(drvdata->save_trfcr);
-> >       if (drvdata->state_needs_restore)
-> > diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwt=
-racing/coresight/coresight-trbe.c
-> > index fff67aac8418..38bf46951a82 100644
-> > --- a/drivers/hwtracing/coresight/coresight-trbe.c
-> > +++ b/drivers/hwtracing/coresight/coresight-trbe.c
-> > @@ -115,6 +115,13 @@ static int trbe_errata_cpucaps[] =3D {
-> >   */
-> >  #define TRBE_WORKAROUND_OVERWRITE_FILL_MODE_SKIP_BYTES       256
-> >
-> > +struct trbe_save_state {
-> > +     u64 trblimitr;
-> > +     u64 trbbaser;
-> > +     u64 trbptr;
-> > +     u64 trbsr;
-> > +};
->
-> This seems to accommodate all required TRBE registers. Although this is
-> very intuitive could you please also add a comment above this structure
-> explaining the elements like other existing structures in the file ?
-
-Will do in the v2 patch.
->
-> > +
-> >  /*
-> >   * struct trbe_cpudata: TRBE instance specific data
-> >   * @trbe_flag                - TRBE dirty/access flag support
-> > @@ -123,6 +130,9 @@ static int trbe_errata_cpucaps[] =3D {
-> >   * @cpu                      - CPU this TRBE belongs to.
-> >   * @mode             - Mode of current operation. (perf/disabled)
-> >   * @drvdata          - TRBE specific drvdata
-> > + * @state_needs_save - Need to save trace registers when entering cpu =
-idle
-> > + * @state_needs_restore      - Need to restore trace registers when ex=
-iting cpu idle
-> > + * @save_state               - Saved trace registers
-> >   * @errata           - Bit map for the errata on this TRBE.
-> >   */
-> >  struct trbe_cpudata {
-> > @@ -133,6 +143,9 @@ struct trbe_cpudata {
-> >       enum cs_mode mode;
-> >       struct trbe_buf *buf;
-> >       struct trbe_drvdata *drvdata;
-> > +     bool state_needs_save;
->
-> This tracks whether coresight_loses_context_with_cpu() is supported
-> on the CPU or not.
->
-> > +     bool state_needs_restore;
->
-> This tracks whether the state has been saved earlier and hence can
-> be restored later on when required.
-
-Will update the comment in the v2 patch.
-
->
-> > +     struct trbe_save_state save_state;
-> >       DECLARE_BITMAP(errata, TRBE_ERRATA_MAX);
-> >  };
-> >
-> > @@ -1187,12 +1200,49 @@ static irqreturn_t arm_trbe_irq_handler(int irq=
-, void *dev)
-> >       return IRQ_HANDLED;
-> >  }
-> >
-> > +static void arm_trbe_cpu_save(struct coresight_device *csdev)
-> > +{
-> > +     struct trbe_cpudata *cpudata =3D dev_get_drvdata(&csdev->dev);
-> > +     struct trbe_save_state *state =3D &cpudata->save_state;
->
-> Please move the above statement after the following conditional
-> block. Because struct trbe_save_state is not going to be required
-> if arm_trbe_cpu_save() returns prematurely from here.
->
-Will do in the v2 patch.
-> > +
-> > +     if (cpudata->mode =3D=3D CS_MODE_DISABLED || !cpudata->state_need=
-s_save)
-> > +             return;> +
-> > +     state->trbbaser =3D read_sysreg_s(SYS_TRBBASER_EL1);
-> > +     state->trbptr =3D read_sysreg_s(SYS_TRBPTR_EL1);
-> > +     state->trblimitr =3D read_sysreg_s(SYS_TRBLIMITR_EL1);
-> > +     state->trbsr =3D read_sysreg_s(SYS_TRBSR_EL1);
-> > +     cpudata->state_needs_restore =3D true;
->
-> This looks right.
->
-> > +}
-> > +
-> > +static void arm_trbe_cpu_restore(struct coresight_device *csdev)
-> > +{
-> > +     struct trbe_cpudata *cpudata =3D dev_get_drvdata(&csdev->dev);
-> > +     struct trbe_save_state *state =3D &cpudata->save_state;
-> Please move this assignment inside the block where these registers
-> actually get restored after all checks are done.
->
-Will do in the v2 patch.
-> > +
-> > +     if (cpudata->state_needs_restore) {
-> > +             /*
-> > +              * To avoid disruption of normal tracing, restore trace
-> > +              * registers only when TRBE lost power (TRBLIMITR =3D=3D =
-0).
-> > +              */
->
-> Although this sounds like a reasonable condition, but what happens
-> when TRBE restoration is skipped ?
->
-There are cases when a CPU fails to enter a low power state or only enters
-a shallow low power state. So TRBE state may not be lost when calling
-arm_trbe_cpu_restore(). In this case, if we write the TRBE registers, proba=
-bly
-we lose ETM data written between save and restore. This may not matter,
-but could there be a race condition between this restore function and TRBE
-interrupt handler (which could also write TRBE registers)? I can't think
-this up very well. So I only restore registers when state is lost. If
-the state isn't
-lost, TRBE should stay in enabled mode, and continue receiving data from ET=
-E.
-
-> > +             if (read_sysreg_s(SYS_TRBLIMITR_EL1) =3D=3D 0) {
->
->                         state =3D &cpudata->save_state
->
-> > +                     write_sysreg_s(state->trbbaser, SYS_TRBBASER_EL1)=
-;
-> > +                     write_sysreg_s(state->trbptr, SYS_TRBPTR_EL1);
-> > +                     write_sysreg_s(state->trbsr, SYS_TRBSR_EL1);
-> > +                     set_trbe_enabled(cpudata, state->trblimitr);
-> > +             }
-> > +             cpudata->state_needs_restore =3D false;
->
-> That means earlier captured state is dropped without a restoration.
->
-> > +     }
-> > +}
-> > +
-> >  static const struct coresight_ops_sink arm_trbe_sink_ops =3D {
-> >       .enable         =3D arm_trbe_enable,
-> >       .disable        =3D arm_trbe_disable,
-> >       .alloc_buffer   =3D arm_trbe_alloc_buffer,
-> >       .free_buffer    =3D arm_trbe_free_buffer,
-> >       .update_buffer  =3D arm_trbe_update_buffer,
-> > +     .percpu_save    =3D arm_trbe_cpu_save,
-> > +     .percpu_restore =3D arm_trbe_cpu_restore,
->
-> Why this percpu_* prefix ?
->
-Added percpu_ prefix because it's only for percpu_sink
-(coresight_get_percpu_sink).
-Please let me know if you have a better name.
-> >  };
-> >
-> >  static const struct coresight_ops arm_trbe_cs_ops =3D {
-> > @@ -1358,6 +1408,9 @@ static void arm_trbe_probe_cpu(void *info)
-> >       cpudata->trbe_flag =3D get_trbe_flag_update(trbidr);
-> >       cpudata->cpu =3D cpu;
-> >       cpudata->drvdata =3D drvdata;
-> > +     cpudata->state_needs_save =3D coresight_loses_context_with_cpu(
-> > +             &drvdata->pdev->dev);
-> > +     cpudata->state_needs_restore =3D false;
->
-> The init here looks good.
->
-> >       return;
-> >  cpu_clear:
-> >       cpumask_clear_cpu(cpu, &drvdata->supported_cpus);
-> > diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> > index d79a242b271d..fec375d02535 100644
-> > --- a/include/linux/coresight.h
-> > +++ b/include/linux/coresight.h
-> > @@ -362,6 +362,10 @@ enum cs_mode {
-> >   * @alloc_buffer:    initialises perf's ring buffer for trace collecti=
-on.
-> >   * @free_buffer:     release memory allocated in @get_config.
-> >   * @update_buffer:   update buffer pointers after a trace session.
-> > + * @percpu_save:     saves state when CPU enters idle state.
-> > + *                   Only set for percpu sink.
-> > + * @percpu_restore:  restores state when CPU exits idle state.
-> > + *                   only set for percpu sink.
-> >   */
-> >  struct coresight_ops_sink {
-> >       int (*enable)(struct coresight_device *csdev, enum cs_mode mode,
-> > @@ -374,6 +378,8 @@ struct coresight_ops_sink {
-> >       unsigned long (*update_buffer)(struct coresight_device *csdev,
-> >                             struct perf_output_handle *handle,
-> >                             void *sink_config);
-> > +     void (*percpu_save)(struct coresight_device *csdev);
-> > +     void (*percpu_restore)(struct coresight_device *csdev);
->
-> Again - why this percpu_* prefix ?
->
-> >  };
-> >
-> >  /**
+-- 
+With best wishes
+Dmitry
