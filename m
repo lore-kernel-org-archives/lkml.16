@@ -1,241 +1,157 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698FD22E3E3
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E756122E3E3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573738; cv=none; b=TIKLLXDk/cYeWp2cuT0bOpvAne1dQBRUQCAXafeDUrcpTQezz1chkZ2MGTp8EPeLNsSEA6XoMUwxAXpuEipFxIWk6tpFd7K8VyM2q5z3lP7GCcJZiXnpg/8dBIhMozs6jZigzzC2ZGg28yD3wtsFwkHH7q1D+P7eDWU+SiIUktQ=
+	t=1745573751; cv=none; b=bg4h20Jn9ZDK20iHmEG+pujJeKdwj7Rpcc07dQIQ2kNKBMmfjAYCfAx71XutZZtVr7DJWjj4Zn/vvmcs5Y7MviSUAalD9lh30qNAoPcDEPz19q+tvBtWjWbREmrOsw7pXe+eSFE5S/xXMr2ClbqEmxRnvMvQH3iRmX1E4UMCATg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573738; c=relaxed/simple;
-	bh=iuJj6daWqOexNpQYyOtWPS919zzdCqSf5D7wsS+hUNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LdGPAEhQ7GUHLvkUgyeHOnQwi8sa+q2eUkpFC+rvygwMgJ9SARLgp46Zh400VhVThnSowePWgrZkXRE6J1Pijj71R9z4jjcHrMvujCTdcNaGc5neXIbdzo5nrgWLxv+aa5gHLEwqKTSJgCA0+4jgHxOnPPpPVPKD9T0WzS1KdWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=U4JsJ+o2; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745573751; c=relaxed/simple;
+	bh=sToWdQKy4Ilj8vtZl1fJZYV45WUmXfqIRGKxYDJBgAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D3tHn1RSRRZ28QitZXaF511fXQl3/TQpjtvrFAUdivNeh7NgiwLXIwEnGURXWpdkZPWfRLTMXjnsdEg9rOZB2ngLwhizYdrzAws1WweYveoeFq+x8UbpzunGPB8VWGZBm0+6M4Lvp0tqg6beksI0+cM5xiG9Ra20TrndVTo5vVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C5hl9uK4; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="U4JsJ+o2"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso1282032f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745573735; x=1746178535; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iqogTqVfqp0fhah+UPvQWOhdV+0RH4Tc+Kwby4w7cYk=;
-        b=U4JsJ+o2h+xE//ctjks1clL8sO4k0hdOeqfewSIGEpgmxJu6km4AsSHU33CiBJ4bAG
-         erE4hsbx6o86GY5zWzA7gSmFlLv0+0KBBX/9QYA84Vr6Z8piUpa5iU3B3HdkoP5dqtsv
-         XBDtDN99J0qOSOU9Vbc2PIjV1p8i/Dh9X/C8nj+LM78wxuwQ3iPo5uvIKhDkbmCF5Yhz
-         FACv6x1BtMadbCg9qoRiQ/BXLfoyKd0t3w5w8k6nfypJ4nhTWXpjNXpizZpSLgzKlVS5
-         POp9l4IW7oXIqXhCE1JQpWiB3BlFc2feObRWjhCHEv2s/B202FPb3GYDDcOGuNqlB8t1
-         TVmw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C5hl9uK4"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8T8aB015508
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	AJDl4omv7ndvFsud7bHAzIbFbElPaQdLGmav6WIPsh4=; b=C5hl9uK4YRXvDPx6
+	U9Eaw4kphDAc62d/9ms3w+qqqJojv0NqT5rUazrhs4eo7M0bM4dLANit7ovWPzrG
+	QNcZpuciVA6kgtv9STJZwENx1b16lMINP5UQiVO6pGrIHF6xDo8sQczChxxLV3l2
+	ws/fZmbuq1ucBjV72OG0hrOnV3j4fqL7XjNkeJECTRudgZU0E5qjJ1iTMA9PyVgB
+	Jv2qRJSrPORvsStQHksdH6rs0QAn2CHAYTEtwztzaSH51QwJUP4kf9g4bbXnqqqs
+	uMr8tpHuIaTI8UCrAlVTHkqp88eM40HD1gRyTeL9VAPO2m/TYIMSuVEGMFOH0o8W
+	4fs6/Q==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3geg1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:35:49 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8f9c5af3dso3355746d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:35:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573735; x=1746178535;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iqogTqVfqp0fhah+UPvQWOhdV+0RH4Tc+Kwby4w7cYk=;
-        b=RcTjCNK7O3hYDiFQqS+3qk9+o90jGp1c3fHKgbpo/5k98u1IKIILQov1NYgywTX1tt
-         MR5MHX6VfADoibLYgjflHf3yZ0QfxOAi/0oC6tK6JPEDpY/BfrQ1mpgWqUQnTgFDvGwu
-         0B3kd9BPvPaAW5g2zFP3toiGB0mTOUJFDKOCEIHFaiH4GIFPas6iV7f2YqshCTiwgvV4
-         1Hn1IZ2zequu/dphuc0WmVJdVTPbChN4ZpalcP5RRBP1DytTbYnwyLeJ7N8yExw5GRah
-         OJaSJY2gyQQFQjW0VaAMHhObpkmwpNfe26T+DAz7vhk2WAngfuZuEbN5emjMLhHAIpVh
-         odtg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJmjc6QawqSPoaYtwoKENUJYjSS4yEAk90WZzY0b1b46zsDX/uTScNnFmG+X63EEV5W/Yp0fHuO/Z1sdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjWN0cmeN5c0NUGznk+S9FFuS2zs75j96w6KdwO+Tk1FCtJZ8F
-	W4zlAUPTY4KeXfwapupU6nRjVal8dnJtJjjHVrn59Jwtop0Rd9fqNIJLnxfg7yE=
-X-Gm-Gg: ASbGncvU8n7aIA5YHLbJwtRu7PyJ6E0JRScOCzY3XJXasd+Ww9nGl5HJXkR/E9rBgtZ
-	LVi7cnV7hJhUrzJnUA771MqqFgpJ/kC3ZJfupzh6gIiEilkkckIZIRwguGzrPevdnYC3CrIJzdS
-	KPLGm3G2Di0Zh2qf3HJ3Wsk79eNff2PHBxmxvAOBcbaM6GH3TPCxYZ65cGA/pPFkaGqcIa8b/aP
-	QucvGzQIbbSdiqLJg3v+7jkZzctfGruGngTXUMnRAf5loLqvAb19Wqhxys3cLO1+Jb1GVO3Zx3s
-	bs1EI6zq5von+K6Of9M9AdiLg7IxsW5XEJx2DBwRUXw=
-X-Google-Smtp-Source: AGHT+IGbQx7AyTaVhAC380hOEJ9CK/SWGolUIaOQpnXE6nZ+VljvXhcvLKSQllZ85cQ46B2ep2oKpQ==
-X-Received: by 2002:a5d:47ad:0:b0:390:f9d0:5e4 with SMTP id ffacd0b85a97d-3a074e1f808mr1256764f8f.21.1745573734549;
-        Fri, 25 Apr 2025 02:35:34 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca42cdsm1790151f8f.22.2025.04.25.02.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:35:34 -0700 (PDT)
-Date: Fri, 25 Apr 2025 11:35:32 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	"Aithal, Srikanth" <sraithal@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-Message-ID: <aAtXZPgcIlvdQKEq@pathway.suse.cz>
-References: <20250423115409.3425-1-spasswolf@web.de>
- <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
- <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
- <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
- <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
- <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
- <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
- <aAnp9rdPhRY52F7N@pathway.suse.cz>
- <f54c213e-b8e2-418f-b7f4-a2fa72f098b1@paulmck-laptop>
+        d=1e100.net; s=20230601; t=1745573748; x=1746178548;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AJDl4omv7ndvFsud7bHAzIbFbElPaQdLGmav6WIPsh4=;
+        b=d2XG1ce73tzb7rS1/V++E5WkXBE+RFiHW85qRMIOyiYyuCEYDrw23CZ8Brw6dN3sRD
+         BpsI40Q+u+joqtpSKHR7mUccK4YAjisHZDcwppFOqylO0AgIj+bBaKMLW5sZL4yhI3xi
+         9XolwSNMf2OtzTnxcLguHgE4pdofWYHYMlP20sTpC0oGf8+HTG90YOpW2Un0TCC8r0jP
+         Z/JN7t/hJSN5lVFsx2y1q97IfCsnSiFa7vHugkoHRfa1VItyNko1sjUlq10+ODl27b3j
+         UH2/BOTYchsZ2vcziIgj0D1k6R7XTQYypINi4a9rxcms0qR8sHySHRyejs7ScZKa8ssB
+         HKow==
+X-Forwarded-Encrypted: i=1; AJvYcCVKEUzAYpqQa5PBAVkZxaqVU0CAn/c+RVoudsQyPCQNCr/ECdV+9uM/tR/L7MzTUtyjTfn65OSWt+cabNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7xEiV+7EQZwEkOyKfdj7sw1Bb+ceGVIBiC0QZkOu8mB/Fxoff
+	5aVMuqAxlI9p74SaZDI2FTiyaZWp9c4NnuADhhNYr9z8+TKejnNCT/+9qFkHaNWSi5PhagCI0+U
+	7mo7Ffm8XxQ9X96REcmWXjB4mvO6nU25HEB00BbxlVJ2n23RY837hKwgEPZMlJhE=
+X-Gm-Gg: ASbGnctMKPfsDnZPZUOO1Roy5Ompvz8NO5JwOQLzbGzsEMOI9paNBRobxCvzwNhaBOh
+	jjApNJyn2NoYP336VTH5M22E1Cr7X2kDs/Z/B//DWXUXFB0kV5djsJpLBqjv8EDm7h81FrJnk6F
+	GymuEg4AxkYVLj6qdH/pGuFU66kw3Vsa6hGwjJGNqD9nF95td6usOon72ktUsJeQUavl7wI4Jm+
+	8MGpRL26FRO00uUTUFavbKA4RwuIyY+3mQF4x8YtV67uVnn8xXlZNK2uNvNa5r93Qi+HJcoJST/
+	+pu8n03xhn6QlkQeX7e/XAC2fY1lnN3OIX4VdwPA6xnRP3dMtd4pmqEGlV99OuoZ
+X-Received: by 2002:a05:6214:1c49:b0:6e8:fef8:8b06 with SMTP id 6a1803df08f44-6f4cb9a3465mr12149126d6.2.1745573747747;
+        Fri, 25 Apr 2025 02:35:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEoiv4MlBzWT6NZGwE45WPs9WN6M0wjAeYYYXs2TXJ84tsBTXEo8eVE4CzqSua4OQ5eBomYJA==
+X-Received: by 2002:a05:6214:1c49:b0:6e8:fef8:8b06 with SMTP id 6a1803df08f44-6f4cb9a3465mr12148856d6.2.1745573747358;
+        Fri, 25 Apr 2025 02:35:47 -0700 (PDT)
+Received: from [192.168.65.5] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7038340b7sm982484a12.79.2025.04.25.02.35.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 02:35:46 -0700 (PDT)
+Message-ID: <f74d8b50-35a1-4ce8-bfdd-4c90782b8db5@oss.qualcomm.com>
+Date: Fri, 25 Apr 2025 11:35:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f54c213e-b8e2-418f-b7f4-a2fa72f098b1@paulmck-laptop>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Add Qualcomm SC8180X Camera clock
+ controller
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
+ <H56Iba_grof22uzTtGCI-APhiDAGSejNod6jsSVIykm9ijaaj7PWqyszShCEGjIpM2wCLOn4a3Vfb8Hjziqklg==@protonmail.internalid>
+ <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
+ <621d8556-f95b-4cbe-809b-864417f0d48a@linaro.org>
+ <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 9m8STDuANVtbL5B5CBasDa_v_hhh8zAv
+X-Proofpoint-GUID: 9m8STDuANVtbL5B5CBasDa_v_hhh8zAv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2OSBTYWx0ZWRfXzPwdtmDjEW0G Vw9SZWd6cWcifncrNWvyPzP5thDYLXht+/9piMJajvJXuJVDv58SKVxreQwWxQDEVlanQNkQ906 8qwxY9t9F7ri/8BOGiZunD4BgOSzqBPyO9HuLgWrsIa2lRdcbZwNksZ25CWqYUSlXdLdKxJLboE
+ CNx1FcLZ2gW/EyU3cWHSf4DlHLpjoHF2AqtXQ2ilc8G4Gx1JMA5P0a4HUmrUAw4Jp59W00a21XR ykQFJzunDQtcHjR5G8oQnoS2vJgZ613eigWYXO2GWUA+mK+mF+4HtuUDeNcv1sLEDb8U5bgL/tQ TOgKXo3FEeI2NpVJ5p6Wt9t637A7c+UnTLvaGHkRA2qR6Q0HZ1Yfc4EVumragc3VbYcZ/gtid/q
+ 4LnbKnOaHMieWHEgMlinurtCCombZfWmY+PX698VHr0fLwMDtZ8NLL18njf2jaKHtO2bOWHe
+X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=680b5775 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=4NoTk0SwpzZkwhluMIYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250069
 
-On Thu 2025-04-24 07:43:38, Paul E. McKenney wrote:
-> On Thu, Apr 24, 2025 at 09:36:22AM +0200, Petr Mladek wrote:
-> > On Wed 2025-04-23 12:56:53, Paul E. McKenney wrote:
-> > > On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
-> > > > Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
-> > > > > On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
-> > > > > > On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
-> > > > > > > On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
-> > > > > > > > On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
-> > > > > > > > > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
-> > > > > > > > > debian sid. When booting kernel message appear on screen but no messages from
-> > > > > > > > > init (systemd). There are also no logs written even thought emergency sync
-> > > > > > > > > via magic sysrq works (a message is printed on screen), presumably because
-> > > > > > > > > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
-> > > > > > > > > commit dd4cf8c9e1f4 as the first bad commit.
-> > > > > > > > > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > > > Hello,
-> > > > > > > > 
-> > > > > > > > On AMD platform as well boot failed starting next-20250422, bisecting the
-> > > > > > > > issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
-> > > > > > > > logs.
-> > > > > > > 
-> > > > 
-> > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > > index b5c727e976d2..fc28f6cf8269 100644
-> > > > --- a/lib/ratelimit.c
-> > > > +++ b/lib/ratelimit.c
-> > > > @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > > >          * interval says never limit.
-> > > >          */
-> > > >         if (interval <= 0 || burst <= 0) {
-> > > > -               ret = burst > 0;
-> > > > +               ret = 1;
-> > > >                 if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
-> > > >                     !raw_spin_trylock_irqsave(&rs->lock, flags))
-> > > >                         return ret;
-> > > 
-> > > You are quite right, your patch does fix the issue that you three say.
-> > 
-> > Honestly, I do not understand what a ratelimit user could cause this
-> > issue. And I am not able to reproduce it on my test system (x86_64,
-> > kvm). I mean that my system boots and I see the systemd meesages.
+On 4/24/25 12:38 PM, Satya Priya Kakitapalli wrote:
 > 
-> My bug was that interval==0 suppressed all ratelimited output, when
-> it is instead supposed to never suppress it, as illustrated by the
-> RATELIMIT_STATE_INIT_DISABLED() macro that I somehow managed to ignore.
-> (Yes, I need more tests!  And I will do so.)
+> On 4/22/2025 5:11 PM, Bryan O'Donoghue wrote:
+>> On 22/04/2025 06:42, Satya Priya Kakitapalli wrote:
+>>> Add device tree bindings for the camera clock controller on
+>>> Qualcomm SC8180X platform.
+>>>
+>>> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+>>> ---
 
-Your code actually supported RATELIMIT_STATE_INIT_DISABLED().
-___ratelimit() returned 1 because the burst was 10 > 0 ;-)
+[...]
 
-> > > Unfortunately, it prevents someone from completely suppressing output
-> > > by setting burst to zero.  Could you please try the patch below?
-> > 
-> > I wondered whether some code used a non-initialized struct ratelimit_state.
-> > I tried the following patch:
-> > 
-> > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > index b5c727e976d2..f949a18e9c2b 100644
-> > --- a/lib/ratelimit.c
-> > +++ b/lib/ratelimit.c
-> > @@ -35,6 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> >  	unsigned long flags;
-> >  	int ret;
-> >  
-> > +	WARN_ONCE(interval <= 0 || burst <= 0,
-> > +		  "Possibly using a non-initilized ratelimit struct with interval:%d, burst:%d\n",
-> > +		  interval, burst);
-> > +
-> >  	/*
-> >  	 * Non-positive burst says always limit, otherwise, non-positive
-> >  	 * interval says never limit.
-> > 
-> > 
-> > And it triggered:
-> > 
-> > [    2.874504] ------------[ cut here ]------------
-> > [    2.875552] Possibly using a non-initilized ratelimit struct with interval:0, burst:0
-> > [    2.876990] WARNING: CPU: 2 PID: 1 at lib/ratelimit.c:38 ___ratelimit+0x1e8/0x200
-> > [    2.878435] Modules linked in:
-> > [    2.879045] CPU: 2 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.15.0-rc3-next-20250422-default+ #22 PREEMPT(full)  f5d77f8de4aec34e420e26410c34bcb56f692aae
-> > [    2.881287] Tainted: [W]=WARN
-> > [    2.882010] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
-> > [    2.886452] RIP: 0010:___ratelimit+0x1e8/0x200
-> > [    2.888405] Code: 00 00 e9 b5 fe ff ff 41 bc 01 00 00 00 e9 f2 fe ff ff 89 ea 44 89 e6 48 c7 c7 f8 40 eb 92 c6 05 b5 4d 0f 01 01 e8 28 a0 de fe <0f> 0b e9 71 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 80 00 00
-> > [    2.891223] RSP: 0000:ffffcf1340013bd8 EFLAGS: 00010282
-> > [    2.892033] RAX: 0000000000000000 RBX: ffff8a8cc2bfbaf0 RCX: 0000000000000000
-> > [    2.893091] RDX: 0000000000000002 RSI: 00000000ffff7fff RDI: 00000000ffffffff
-> > [    2.894158] RBP: 0000000000000000 R08: 00000000ffff7fff R09: ffff8a8d3fe3ffa8
-> > [    2.895168] R10: 00000000ffff8000 R11: 0000000000000001 R12: 0000000000000000
-> > [    2.896150] R13: ffffffff92e08d38 R14: ffff8a8cc369e400 R15: ffff8a8cc2e39f00
-> > [    2.897138] FS:  0000000000000000(0000) GS:ffff8a8da6f3c000(0000) knlGS:0000000000000000
-> > [    2.898224] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    2.899181] CR2: 0000000000000000 CR3: 0000000153256001 CR4: 0000000000370ef0
-> > [    2.901865] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > [    2.903516] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > [    2.906593] Call Trace:
-> > [    2.907143]  <TASK>
-> > [    2.907582]  __ext4_msg+0x6e/0xa0
+>>> +  required-opps:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      A phandle to an OPP node describing required MMCX performance point.
+>>> +
+>>> +allOf:
+>>> +  - $ref: qcom,gcc.yaml#
+>>
+>> A suspicious lack of clock depends here. No AHB clock ? No dependency on gcc ?
+>>
+>> You call out the gcc above.
+>>
+>> Could you please recheck your list of clock dependencies.
 > 
-> Ths is the ->s_msg_ratelimit_state field of the ext4_sb_info structure,
-> which is allocated via kzalloc().  It looks like these two statements:
-> 
-> EXT4_RW_ATTR_SBI_PI(msg_ratelimit_interval_ms, s_msg_ratelimit_state.interval);
-> EXT4_RW_ATTR_SBI_PI(msg_ratelimit_burst, s_msg_ratelimit_state.burst);
-> 
-> Allow the sysadm to specify rate-limiting if desired, with the default of
-> no rate limiting.  And zero-initialization seems like a reasonable thing
-> to allow for a default-never-ratelimited ratelimit_state structure, not?
+> The dependent GCC clocks are marked always on from gcc probe, hence did not mention the dependency here.
 
-Exactly. I belive that ___ratelimit() should return 1 (always pass) when
-the structure is zero-initialized. I was not clear enough.
+Let's do what was done on x1e80100 - describe the AHB clock in CAMCC
+bindings regardless of how we handle it.
 
-It is not ideal from the semantic POV. It would make sense to use
-"zero" burst for always limiting the output. But this does
-not work in the zero-initialized case.
+This way the DT represents the real hw dependency, but the OS takes steps
+to get them out of the way (and then ignores the GCC_CAMERA_AHB_CLK entry
+because the clock is never registered with GCC)
 
-A solution would be to handle the corner cases (always pass, never
-pass) using some flag, for example:
-
-#define RATELIMIT_ALWAYS_PASS		BIT(2)
-#define RATELIMIT_NEVER_PASS		BIT(3)
-
-instead of some combinations of interval and burst values.
-
-But I think that it is not worth it. I guess that most users
-want to use ___ratelimit() for a real rate limiting. And
-the only problem is the not-yet-initialized structure which
-should just "pass".
-
-> So given Bert's survey of the users, would it make sense to have your
-> WARN_ONCE(), but only if either burst or interval is negative?
-
-It might make sense. It would help to catch a use of not-yet-initialized
-and not-even-zeroed struct ratelimit_state which might produce random
-results.
-
-> Unless you tell me otherwise, I will add that with your Signed-off-by,
-> and noting Bert's good work.
-
-Feel free to use my SOB.
-
-Best Regards,
-Petr
-
-PS: I see that you have already sent v3 of the series. I am going to
-    look at it. I am not sure if I manage it today though.
+Konrad
