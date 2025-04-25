@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5405C242D96;
-	Fri, 25 Apr 2025 08:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713B21B6D11;
+	Fri, 25 Apr 2025 08:35:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570146; cv=none; b=eCXbpZ7M6PjjvvsW8d8Q5/KLjYOsyR0wuhRbpNiy/HpQ5jNHsEEq9EGy+0kbaJAXaBTGQVNxsbZfmNQ3H3c1CDCSUz5Sz9kSQonK3eHkTQhA9792jfGwNwXZFBHI3gg3YdaxGGrrzp4mKt3+yVSJNLO/78SpE1/pJZfStfk2yc8=
+	t=1745570142; cv=none; b=kPkimr4acoyUI4aFZuc5Ep0NMlQKAUw1o6EThZApnL3y0d5OgYstnJAGHkOPxZ6tQtwnNIz/wYLhmoa3gedL+kEX2yEU132HGhV//bP/VMvDzfKAOCJVjrmNxyHQYGF8tTuv1g551g4woLbImuyG1Mep7U9MemblYE9bCkIXPz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570146; c=relaxed/simple;
-	bh=SiOV9OU2ZiTtYrlYYG4cHgkd9SLlzmsSSP6jEpWOEuw=;
+	s=arc-20240116; t=1745570142; c=relaxed/simple;
+	bh=revNcdhZHbnMJG0fNqbbU9l/IB0mYOTwCTjBO65BMac=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S/g5xgV0zgXWJ7ffSZuRMZBR8A8k8OE6LmQG8AyI/1o5HR9S/QMJovuMVzN4MF24nk3gwbBDJwnu1fYPbGEMZc0EqO2qEhwcxaxq4bERQGmsrXtJEVKZdeDyiNAaB83tqpKxFJhMACsPomrVquBg4wET6+QZz53B9wkogVjk1w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HPho89N0; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=GFQjfez8MzMV5R8q/NwrLjc5+vygRiLwDEiDm6YyUYjCTLEEcFZGGRrGbk6TN7cX7AApV7RzJukIzi3Lh9AIuuafmOH4qw9+YBA/3BVqa0HohgiHfWtn/XoDl/GJ0PPZM9SpWrz9xZ06dMVDBKCGDYCkG86s9Dkl5e1Yk7PwD/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=DkDA8ycj; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HPho89N0"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DkDA8ycj"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5Y2390085
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5P2390085
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 25 Apr 2025 01:35:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5Y2390085
+	Fri, 25 Apr 2025 01:34:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5P2390085
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745570110;
-	bh=hZcF32qWuESh4ggtUZngdaMFRMTAW60ISVLqNJ/G40g=;
+	s=2025042001; t=1745570091;
+	bh=647AnGgLXs34NjSWqun8T/TryywSzrBvCGHXdii61Zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HPho89N0GdJN3e3pjBsIA0ar8wp8OZKDdCb66UoC3mGT8GRM8ymWe0/7RRhoe1RGp
-	 hi5oxD95MX+TAVMTmotvLVmRFlKMhlHBUZvxcrA3ibHc/S5Uptxz4WHL4WsbgQIJOF
-	 eO+lFs8yVNoW+g5v3WExIjfj2qB66a4rYIxtSOq+BOn9czM9SpZJljr3uMsySsN52t
-	 gnmi11rTDeSnKTc6rQtY9lpFo8shGTn0Dz3eMJHrLOzLw+xKsLlQV8fM6B8xPxM/j0
-	 2HVHK3VkcGWFHWjWN6mE35i2sVAys6OTWDWh46qlOCEAMeQPlRv5TfTgefoh8L4zf7
-	 tlW8jQbXAKYVw==
+	b=DkDA8ycjphciWWaVFq4Ul+HxFYAk++kpSrDb0GUR0+2NW9udjWpkcu+di893xjMRD
+	 9uim80f09InfvNePjMl1wKwRMq7GsEmfWJiHXG/PjgSZEQeu9o/vRLtpHeEZv3FEWt
+	 xF+PGcJtnbJxrEbQVi6Kusy8GslmLYh0muh4hbUuAzkQPt9ob2zYoL8//RuufchGLu
+	 JmIaj+7Rnf9eTe9UJcaAJ0xbt8AqC53B67DeK1VUibNOh+7mw/oehutgxmPU4wObgA
+	 RaOo4zVtWws27D9rCnoPAljeM3d1TsZHQsDnnC9SL8BFlfaW0cAz8RQN4Bsq85pDKc
+	 /0jy4nOMAQJgA==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com,
         dapeng1.mi@linux.intel.com
-Subject: [PATCH v3 10/14] x86/xen/msr: Remove pmu_msr_{read,write}()
-Date: Fri, 25 Apr 2025 01:34:33 -0700
-Message-ID: <20250425083442.2390017-11-xin@zytor.com>
+Subject: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+Date: Fri, 25 Apr 2025 01:34:24 -0700
+Message-ID: <20250425083442.2390017-2-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250425083442.2390017-1-xin@zytor.com>
 References: <20250425083442.2390017-1-xin@zytor.com>
@@ -65,145 +65,554 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As pmu_msr_{read,write}() are now wrappers of pmu_msr_chk_emulated(),
-remove them and use pmu_msr_chk_emulated() directly.
+For some reason, there are some TSC-related functions in the MSR
+header even though there is a tsc.h header.
 
-As pmu_msr_chk_emulated() could easily return false in the cases where
-it would set *emul to false, remove the "emul" argument and use the
-return value instead.
+Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>, and
+subsequently remove the inclusion of <asm/msr.h> in <asm/tsc.h>.
+Consequently, <asm/msr.h> must be included in several source files
+that previously did not require it.
 
-While at it, convert the data type of MSR index to u32 in functions
-called in pmu_msr_chk_emulated().
-
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Suggested-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 ---
 
 Change in v3:
-*) Remove the "emul" argument of pmu_msr_chk_emulated() (Juergen Gross).
+* Add a problem statement to the changelog (Dave Hansen).
 ---
- arch/x86/xen/enlighten_pv.c | 15 ++++++++-------
- arch/x86/xen/pmu.c          | 30 ++++++------------------------
- arch/x86/xen/xen-ops.h      |  3 +--
- 3 files changed, 15 insertions(+), 33 deletions(-)
+ arch/x86/events/msr.c                         |  3 +
+ arch/x86/events/perf_event.h                  |  1 +
+ arch/x86/events/probe.c                       |  2 +
+ arch/x86/hyperv/ivm.c                         |  1 +
+ arch/x86/include/asm/fred.h                   |  1 +
+ arch/x86/include/asm/microcode.h              |  2 +
+ arch/x86/include/asm/mshyperv.h               |  1 +
+ arch/x86/include/asm/msr.h                    | 55 +-------------
+ arch/x86/include/asm/suspend_32.h             |  1 +
+ arch/x86/include/asm/suspend_64.h             |  1 +
+ arch/x86/include/asm/switch_to.h              |  2 +
+ arch/x86/include/asm/tsc.h                    | 76 ++++++++++++++++++-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  1 +
+ arch/x86/kernel/fpu/xstate.h                  |  1 +
+ arch/x86/kernel/hpet.c                        |  1 +
+ arch/x86/kernel/process_64.c                  |  1 +
+ arch/x86/kernel/trace_clock.c                 |  2 +-
+ arch/x86/kernel/tsc_sync.c                    |  1 +
+ arch/x86/lib/kaslr.c                          |  2 +-
+ arch/x86/mm/mem_encrypt_identity.c            |  1 +
+ arch/x86/realmode/init.c                      |  1 +
+ drivers/acpi/processor_perflib.c              |  1 +
+ drivers/acpi/processor_throttling.c           |  3 +-
+ drivers/cpufreq/amd-pstate-ut.c               |  2 +
+ drivers/hwmon/hwmon-vid.c                     |  4 +
+ drivers/net/vmxnet3/vmxnet3_drv.c             |  4 +
+ drivers/platform/x86/intel/pmc/cnp.c          |  1 +
+ .../intel/speed_select_if/isst_if_common.c    |  1 +
+ drivers/platform/x86/intel/turbo_max_3.c      |  1 +
+ 29 files changed, 116 insertions(+), 58 deletions(-)
 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 61e51a970f3c..528a2f4df050 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1090,7 +1090,7 @@ static u64 xen_do_read_msr(unsigned int msr, int *err)
- {
- 	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
- 
--	if (pmu_msr_read_emulated(msr, &val))
-+	if (pmu_msr_chk_emulated(msr, &val, true))
- 		return val;
- 
- 	if (err)
-@@ -1162,12 +1162,13 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
- 	default:
- 		val = (u64)high << 32 | low;
- 
--		if (!pmu_msr_write_emulated(msr, val)) {
--			if (err)
--				*err = native_write_msr_safe(msr, low, high);
--			else
--				native_write_msr(msr, low, high);
--		}
-+		if (pmu_msr_chk_emulated(msr, &val, false))
-+			return;
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 8970ecef87c5..c39e49cecace 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -3,6 +3,9 @@
+ #include <linux/sysfs.h>
+ #include <linux/nospec.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/msr.h>
++#include <asm/tsc.h>
 +
-+		if (err)
-+			*err = native_write_msr_safe(msr, low, high);
-+		else
-+			native_write_msr(msr, low, high);
- 	}
- }
+ #include "probe.h"
  
-diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
-index b6557f2d1a2e..6bee83018694 100644
---- a/arch/x86/xen/pmu.c
-+++ b/arch/x86/xen/pmu.c
-@@ -128,7 +128,7 @@ static inline uint32_t get_fam15h_addr(u32 addr)
- 	return addr;
- }
+ enum perf_msr_id {
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index a5166fa9339b..a8d4e82e3589 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -17,6 +17,7 @@
+ #include <asm/fpu/xstate.h>
+ #include <asm/intel_ds.h>
+ #include <asm/cpu.h>
++#include <asm/msr.h>
  
--static inline bool is_amd_pmu_msr(unsigned int msr)
-+static bool is_amd_pmu_msr(u32 msr)
- {
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
- 	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-@@ -194,8 +194,7 @@ static bool is_intel_pmu_msr(u32 msr_index, int *type, int *index)
- 	}
- }
+ /* To enable MSR tracing please use the generic trace points. */
  
--static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
--				  int index, bool is_read)
-+static bool xen_intel_pmu_emulate(u32 msr, u64 *val, int type, int index, bool is_read)
- {
- 	uint64_t *reg = NULL;
- 	struct xen_pmu_intel_ctxt *ctxt;
-@@ -257,7 +256,7 @@ static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
- 	return false;
- }
+diff --git a/arch/x86/events/probe.c b/arch/x86/events/probe.c
+index fda35cf25528..bb719d0d3f0b 100644
+--- a/arch/x86/events/probe.c
++++ b/arch/x86/events/probe.c
+@@ -2,6 +2,8 @@
+ #include <linux/export.h>
+ #include <linux/types.h>
+ #include <linux/bits.h>
++
++#include <asm/msr.h>
+ #include "probe.h"
  
--static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
-+static bool xen_amd_pmu_emulate(u32 msr, u64 *val, bool is_read)
- {
- 	uint64_t *reg = NULL;
- 	int i, off = 0;
-@@ -298,33 +297,16 @@ static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
- 	return false;
- }
+ static umode_t
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 1b8a2415183b..8209de792388 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -22,6 +22,7 @@
+ #include <asm/realmode.h>
+ #include <asm/e820/api.h>
+ #include <asm/desc.h>
++#include <asm/msr.h>
+ #include <uapi/asm/vmx.h>
  
--static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
--				 bool *emul)
-+bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read)
- {
- 	int type, index = 0;
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
+index 2a29e5216881..12b34d5b2953 100644
+--- a/arch/x86/include/asm/fred.h
++++ b/arch/x86/include/asm/fred.h
+@@ -9,6 +9,7 @@
+ #include <linux/const.h>
  
- 	if (is_amd_pmu_msr(msr))
--		*emul = xen_amd_pmu_emulate(msr, val, is_read);
-+		return xen_amd_pmu_emulate(msr, val, is_read);
- 	else if (is_intel_pmu_msr(msr, &type, &index))
--		*emul = xen_intel_pmu_emulate(msr, val, type, index, is_read);
-+		return xen_intel_pmu_emulate(msr, val, type, index, is_read);
- 	else
- 		return false;
+ #include <asm/asm.h>
++#include <asm/msr.h>
+ #include <asm/trapnr.h>
+ 
+ /*
+diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
+index 263ea3dd0001..107a1aaa211b 100644
+--- a/arch/x86/include/asm/microcode.h
++++ b/arch/x86/include/asm/microcode.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_MICROCODE_H
+ #define _ASM_X86_MICROCODE_H
+ 
++#include <asm/msr.h>
++
+ struct cpu_signature {
+ 	unsigned int sig;
+ 	unsigned int pf;
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index bab5ccfc60a7..15d00dace70f 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -8,6 +8,7 @@
+ #include <linux/io.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/paravirt.h>
++#include <asm/msr.h>
+ #include <hyperv/hvhdk.h>
+ 
+ /*
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index 2ccc78ebc3d7..2caa13830e11 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -12,6 +12,7 @@
+ #include <uapi/asm/msr.h>
+ #include <asm/shared/msr.h>
+ 
++#include <linux/types.h>
+ #include <linux/percpu.h>
+ 
+ struct msr_info {
+@@ -169,60 +170,6 @@ native_write_msr_safe(u32 msr, u32 low, u32 high)
+ extern int rdmsr_safe_regs(u32 regs[8]);
+ extern int wrmsr_safe_regs(u32 regs[8]);
+ 
+-/**
+- * rdtsc() - returns the current TSC without ordering constraints
+- *
+- * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
+- * only ordering constraint it supplies is the ordering implied by
+- * "asm volatile": it will put the RDTSC in the place you expect.  The
+- * CPU can and will speculatively execute that RDTSC, though, so the
+- * results can be non-monotonic if compared on different CPUs.
+- */
+-static __always_inline u64 rdtsc(void)
+-{
+-	DECLARE_ARGS(val, low, high);
 -
--	return true;
+-	asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
+-
+-	return EAX_EDX_VAL(val, low, high);
 -}
 -
--bool pmu_msr_read_emulated(u32 msr, u64 *val)
+-/**
+- * rdtsc_ordered() - read the current TSC in program order
+- *
+- * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
+- * It is ordered like a load to a global in-memory counter.  It should
+- * be impossible to observe non-monotonic rdtsc_unordered() behavior
+- * across multiple CPUs as long as the TSC is synced.
+- */
+-static __always_inline u64 rdtsc_ordered(void)
 -{
--	bool emulated;
+-	DECLARE_ARGS(val, low, high);
 -
--	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
+-	/*
+-	 * The RDTSC instruction is not ordered relative to memory
+-	 * access.  The Intel SDM and the AMD APM are both vague on this
+-	 * point, but empirically an RDTSC instruction can be
+-	 * speculatively executed before prior loads.  An RDTSC
+-	 * immediately after an appropriate barrier appears to be
+-	 * ordered as a normal load, that is, it provides the same
+-	 * ordering guarantees as reading from a global memory location
+-	 * that some other imaginary CPU is updating continuously with a
+-	 * time stamp.
+-	 *
+-	 * Thus, use the preferred barrier on the respective CPU, aiming for
+-	 * RDTSCP as the default.
+-	 */
+-	asm volatile(ALTERNATIVE_2("rdtsc",
+-				   "lfence; rdtsc", X86_FEATURE_LFENCE_RDTSC,
+-				   "rdtscp", X86_FEATURE_RDTSCP)
+-			: EAX_EDX_RET(val, low, high)
+-			/* RDTSCP clobbers ECX with MSR_TSC_AUX. */
+-			:: "ecx");
+-
+-	return EAX_EDX_VAL(val, low, high);
 -}
 -
--bool pmu_msr_write_emulated(u32 msr, u64 val)
--{
--	bool emulated;
--
--	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
- }
+ static inline u64 native_read_pmc(int counter)
+ {
+ 	DECLARE_ARGS(val, low, high);
+diff --git a/arch/x86/include/asm/suspend_32.h b/arch/x86/include/asm/suspend_32.h
+index d8416b3bf832..e8e5aab06255 100644
+--- a/arch/x86/include/asm/suspend_32.h
++++ b/arch/x86/include/asm/suspend_32.h
+@@ -9,6 +9,7 @@
  
- static u64 xen_amd_read_pmc(int counter)
-diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
-index 163e03e33089..fd7f845b83a3 100644
---- a/arch/x86/xen/xen-ops.h
-+++ b/arch/x86/xen/xen-ops.h
-@@ -274,8 +274,7 @@ void xen_pmu_finish(int cpu);
- static inline void xen_pmu_init(int cpu) {}
- static inline void xen_pmu_finish(int cpu) {}
+ #include <asm/desc.h>
+ #include <asm/fpu/api.h>
++#include <asm/msr.h>
+ 
+ /* image of the saved processor state */
+ struct saved_context {
+diff --git a/arch/x86/include/asm/suspend_64.h b/arch/x86/include/asm/suspend_64.h
+index 54df06687d83..b512f9665f78 100644
+--- a/arch/x86/include/asm/suspend_64.h
++++ b/arch/x86/include/asm/suspend_64.h
+@@ -9,6 +9,7 @@
+ 
+ #include <asm/desc.h>
+ #include <asm/fpu/api.h>
++#include <asm/msr.h>
+ 
+ /*
+  * Image of the saved processor state, used by the low level ACPI suspend to
+diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
+index 75248546403d..4f21df7af715 100644
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -52,6 +52,8 @@ do {									\
+ } while (0)
+ 
+ #ifdef CONFIG_X86_32
++#include <asm/msr.h>
++
+ static inline void refresh_sysenter_cs(struct thread_struct *thread)
+ {
+ 	/* Only happens when SEP is enabled, no need to test "SEP"arately: */
+diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
+index 94408a784c8e..13335a130edf 100644
+--- a/arch/x86/include/asm/tsc.h
++++ b/arch/x86/include/asm/tsc.h
+@@ -7,7 +7,81 @@
+ 
+ #include <asm/cpufeature.h>
+ #include <asm/processor.h>
+-#include <asm/msr.h>
++
++/*
++ * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
++ * constraint has different meanings. For i386, "A" means exactly
++ * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
++ * it means rax *or* rdx.
++ */
++#ifdef CONFIG_X86_64
++/* Using 64-bit values saves one instruction clearing the high half of low */
++#define DECLARE_ARGS(val, low, high)	unsigned long low, high
++#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
++#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
++#else
++#define DECLARE_ARGS(val, low, high)	u64 val
++#define EAX_EDX_VAL(val, low, high)	(val)
++#define EAX_EDX_RET(val, low, high)	"=A" (val)
++#endif
++
++/**
++ * rdtsc() - returns the current TSC without ordering constraints
++ *
++ * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
++ * only ordering constraint it supplies is the ordering implied by
++ * "asm volatile": it will put the RDTSC in the place you expect.  The
++ * CPU can and will speculatively execute that RDTSC, though, so the
++ * results can be non-monotonic if compared on different CPUs.
++ */
++static __always_inline u64 rdtsc(void)
++{
++	DECLARE_ARGS(val, low, high);
++
++	asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
++
++	return EAX_EDX_VAL(val, low, high);
++}
++
++/**
++ * rdtsc_ordered() - read the current TSC in program order
++ *
++ * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
++ * It is ordered like a load to a global in-memory counter.  It should
++ * be impossible to observe non-monotonic rdtsc_unordered() behavior
++ * across multiple CPUs as long as the TSC is synced.
++ */
++static __always_inline u64 rdtsc_ordered(void)
++{
++	DECLARE_ARGS(val, low, high);
++
++	/*
++	 * The RDTSC instruction is not ordered relative to memory
++	 * access.  The Intel SDM and the AMD APM are both vague on this
++	 * point, but empirically an RDTSC instruction can be
++	 * speculatively executed before prior loads.  An RDTSC
++	 * immediately after an appropriate barrier appears to be
++	 * ordered as a normal load, that is, it provides the same
++	 * ordering guarantees as reading from a global memory location
++	 * that some other imaginary CPU is updating continuously with a
++	 * time stamp.
++	 *
++	 * Thus, use the preferred barrier on the respective CPU, aiming for
++	 * RDTSCP as the default.
++	 */
++	asm volatile(ALTERNATIVE_2("rdtsc",
++				   "lfence; rdtsc", X86_FEATURE_LFENCE_RDTSC,
++				   "rdtscp", X86_FEATURE_RDTSCP)
++			: EAX_EDX_RET(val, low, high)
++			/* RDTSCP clobbers ECX with MSR_TSC_AUX. */
++			:: "ecx");
++
++	return EAX_EDX_VAL(val, low, high);
++}
++
++#undef DECLARE_ARGS
++#undef EAX_EDX_VAL
++#undef EAX_EDX_RET
+ 
+ /*
+  * Standard way to access the cycle counter.
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 2a82eb6a0376..26c354bdea07 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -25,6 +25,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/resctrl.h>
+ #include <asm/perf_event.h>
++#include <asm/msr.h>
+ 
+ #include "../../events/perf_event.h" /* For X86_CONFIG() */
+ #include "internal.h"
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index 5e5d35027f13..f705bd355ea2 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -5,6 +5,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/fpu/xcr.h>
++#include <asm/msr.h>
+ 
+ #ifdef CONFIG_X86_64
+ DECLARE_PER_CPU(u64, xfd_state);
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index cc5d12232216..c9982a7c9536 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -12,6 +12,7 @@
+ #include <asm/hpet.h>
+ #include <asm/time.h>
+ #include <asm/mwait.h>
++#include <asm/msr.h>
+ 
+ #undef  pr_fmt
+ #define pr_fmt(fmt) "hpet: " fmt
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 24e1ccf22912..cfa9c031de91 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -57,6 +57,7 @@
+ #include <asm/unistd.h>
+ #include <asm/fsgsbase.h>
+ #include <asm/fred.h>
++#include <asm/msr.h>
+ #ifdef CONFIG_IA32_EMULATION
+ /* Not included via unistd.h */
+ #include <asm/unistd_32_ia32.h>
+diff --git a/arch/x86/kernel/trace_clock.c b/arch/x86/kernel/trace_clock.c
+index b8e7abe00b06..708d61743d15 100644
+--- a/arch/x86/kernel/trace_clock.c
++++ b/arch/x86/kernel/trace_clock.c
+@@ -4,7 +4,7 @@
+  */
+ #include <asm/trace_clock.h>
+ #include <asm/barrier.h>
+-#include <asm/msr.h>
++#include <asm/tsc.h>
+ 
+ /*
+  * trace_clock_x86_tsc(): A clock that is just the cycle counter.
+diff --git a/arch/x86/kernel/tsc_sync.c b/arch/x86/kernel/tsc_sync.c
+index f1c7a86dbf49..ec3aa340d351 100644
+--- a/arch/x86/kernel/tsc_sync.c
++++ b/arch/x86/kernel/tsc_sync.c
+@@ -21,6 +21,7 @@
+ #include <linux/kernel.h>
+ #include <linux/smp.h>
+ #include <linux/nmi.h>
++#include <asm/msr.h>
+ #include <asm/tsc.h>
+ 
+ struct tsc_adjust {
+diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
+index a58f451a7dd3..b5893928d55c 100644
+--- a/arch/x86/lib/kaslr.c
++++ b/arch/x86/lib/kaslr.c
+@@ -8,7 +8,7 @@
+  */
+ #include <asm/asm.h>
+ #include <asm/kaslr.h>
+-#include <asm/msr.h>
++#include <asm/tsc.h>
+ #include <asm/archrandom.h>
+ #include <asm/e820/api.h>
+ #include <asm/shared/io.h>
+diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+index 5eecdd92da10..afda349db35b 100644
+--- a/arch/x86/mm/mem_encrypt_identity.c
++++ b/arch/x86/mm/mem_encrypt_identity.c
+@@ -44,6 +44,7 @@
+ #include <asm/sections.h>
+ #include <asm/coco.h>
+ #include <asm/sev.h>
++#include <asm/msr.h>
+ 
+ #include "mm_internal.h"
+ 
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 263787b4800c..ed5c63c0b4e5 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -9,6 +9,7 @@
+ #include <asm/realmode.h>
+ #include <asm/tlbflush.h>
+ #include <asm/crash.h>
++#include <asm/msr.h>
+ #include <asm/sev.h>
+ 
+ struct real_mode_header *real_mode_header;
+diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
+index 53996f1a2d80..64b8d1e19594 100644
+--- a/drivers/acpi/processor_perflib.c
++++ b/drivers/acpi/processor_perflib.c
+@@ -20,6 +20,7 @@
+ #include <acpi/processor.h>
+ #ifdef CONFIG_X86
+ #include <asm/cpufeature.h>
++#include <asm/msr.h>
  #endif
--bool pmu_msr_read_emulated(u32 msr, u64 *val);
--bool pmu_msr_write_emulated(u32 msr, u64 val);
-+bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read);
- int pmu_apic_update(uint32_t reg);
- u64 xen_read_pmc(int counter);
  
+ #define ACPI_PROCESSOR_FILE_PERFORMANCE	"performance"
+diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor_throttling.c
+index 00d045e5f524..8482e9a8a7aa 100644
+--- a/drivers/acpi/processor_throttling.c
++++ b/drivers/acpi/processor_throttling.c
+@@ -18,9 +18,10 @@
+ #include <linux/sched.h>
+ #include <linux/cpufreq.h>
+ #include <linux/acpi.h>
++#include <linux/uaccess.h>
+ #include <acpi/processor.h>
+ #include <asm/io.h>
+-#include <linux/uaccess.h>
++#include <asm/asm.h>
+ 
+ /* ignore_tpc:
+  *  0 -> acpi processor driver doesn't ignore _TPC values
+diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
+index 707fa81c749f..c8d031b297d2 100644
+--- a/drivers/cpufreq/amd-pstate-ut.c
++++ b/drivers/cpufreq/amd-pstate-ut.c
+@@ -31,6 +31,8 @@
+ 
+ #include <acpi/cppc_acpi.h>
+ 
++#include <asm/msr.h>
++
+ #include "amd-pstate.h"
+ 
+ 
+diff --git a/drivers/hwmon/hwmon-vid.c b/drivers/hwmon/hwmon-vid.c
+index 6d1175a51832..2df4956296ed 100644
+--- a/drivers/hwmon/hwmon-vid.c
++++ b/drivers/hwmon/hwmon-vid.c
+@@ -15,6 +15,10 @@
+ #include <linux/kernel.h>
+ #include <linux/hwmon-vid.h>
+ 
++#ifdef CONFIG_X86
++#include <asm/msr.h>
++#endif
++
+ /*
+  * Common code for decoding VID pins.
+  *
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 3df6aabc7e33..7edd0b5e0e77 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -27,6 +27,10 @@
+ #include <linux/module.h>
+ #include <net/ip6_checksum.h>
+ 
++#ifdef CONFIG_X86
++#include <asm/msr.h>
++#endif
++
+ #include "vmxnet3_int.h"
+ #include "vmxnet3_xdp.h"
+ 
+diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+index 547bdf1ab02d..efea4e1ba52b 100644
+--- a/drivers/platform/x86/intel/pmc/cnp.c
++++ b/drivers/platform/x86/intel/pmc/cnp.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/smp.h>
+ #include <linux/suspend.h>
++#include <asm/msr.h>
+ #include "core.h"
+ 
+ /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 44dcd165b4c0..8a5713593811 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -21,6 +21,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #include "isst_if_common.h"
+ 
+diff --git a/drivers/platform/x86/intel/turbo_max_3.c b/drivers/platform/x86/intel/turbo_max_3.c
+index 7e538bbd5b50..b5af3e91ba04 100644
+--- a/drivers/platform/x86/intel/turbo_max_3.c
++++ b/drivers/platform/x86/intel/turbo_max_3.c
+@@ -17,6 +17,7 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+ #define MSR_OC_MAILBOX			0x150
+ #define MSR_OC_MAILBOX_CMD_OFFSET	32
 -- 
 2.49.0
 
