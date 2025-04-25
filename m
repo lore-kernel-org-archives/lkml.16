@@ -1,170 +1,117 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089472472AD
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B2A248879
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745583192; cv=none; b=MCzwnfZdbLmpOwb+JRKVKsTPr8ZqmvTKerV34I/5xhQSdm1Xx2CyqaXHVW97sA3MPmCBz+olSRRFJXSpVXNQvzc2qK2XxXhnMWlkIOYRJnh5K/h6OXLn+U9EwUZxCPknCnZ6h0Qjk3wWxbQy1HiJNM+Y/9a8Ch/XwT5yjqjx6xI=
+	t=1745583194; cv=none; b=rfyATrh4ElPlzloibCHbDks12kt8cCv7oN0UjLF3DnGn3eMCrFYjyemO0fP3zLehehSgnmo7b6RYoGtwYD2+bJownyUuMiNRBE/E3c19SIPGVd6OhMQ9wwVZZSbJlMS1MpDBA6tuPDiaooF4/K81N4x22jqd0BRH+AWwf2bx+zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745583192; c=relaxed/simple;
-	bh=TO4TWtY8D7glL8YObqyd/2VnZ5O36lHwKMRTnZkD/yM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qW588ADnUc4VkLLwBlnJUJBJnbuXcJ49iC/9g7IRNlTBRsVvSAq6UauKu1wWCJoh07E2rbVkvH0nx3qYjvO6sd96YsCJ4Lw5uEEiCvcTnpF6SBpgDRysFn0lR9QE9LNKDitvl9pCzmqKDeodSHbLjkAmGPABtMrmv3isD0GeOBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=GR5yQyIm; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1745583194; c=relaxed/simple;
+	bh=5Sgz96HXWiPE521VgZZk6wufk7wy1Sa4KmD8mFjEnEA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KEobv8Rn3PaN/uztOoVcws7Bnd16SyadUrpvy47ZcOfiRuu28NQkEAryqzDnElr4r2rAEv/nRWOdVEP2FIvVF8hGnc5m4riJXuY4V2r5UZJq50VR85CyWOBk8ap+Y0N2pN6PusLFdZu4fDRuJ9VnL0HmsxWcvnVRvabByF2cqUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=pBDWhVdw; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="GR5yQyIm"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-85db3475637so98839339f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:13:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="pBDWhVdw"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso1613314f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:13:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1745583190; x=1746187990; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7LVCfKKGZ+VAx31B/QvtWLC+cXlvT+nFAC3b1QAmkzg=;
-        b=GR5yQyImlSNO8298jxLOwIgXn2myejKfXevKo3HM1M6hG0cciuw6ZWHyFQFcoL5wu/
-         kWVXjMAKe2ZcQh6PZCYdFz/3cquw2kwkPWiWGZaQ9xP42dyRlDarsW3+SacUQ0wPqGxl
-         b3TkxeQ1TrR++6mIEQbTJ7DPCKG+/G5Jd0mh4mhge7RxN9H0bzg8jKr4frCsshm2wdys
-         V09mXtUuEvGGrHfXc0vCxjg9gfYZ+hUzNsRervMTm/RLafY8xEFW6ge7KTkIbyY9Gh5u
-         KZzoomAz21PpMHhIZWR5Y3IM8vy1zOwPmnvZx0IWfLrr/D8Z/2+fvhJphx80yaOIjH5c
-         fgNA==
+        d=fairphone.com; s=fair; t=1745583190; x=1746187990; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tkenvBJAYSjNxPpsRyZb25skaBdyNzOYdvt1oK1G68U=;
+        b=pBDWhVdwVLVcgqYCU09ddrTmOFlTcPKxUthqleICAMn2Oc98gay3r1kWT0tqMRxOBb
+         e1v9txkoGLVnWzuZqTvHF9CUSiSafi4TJJ87aBn0j8sLwxx3eeHyRDAEyqLgpJ6B9Uw5
+         e7y1O5Uw0/g903cXREhAxEsN+RVaOpOeUTA1qKM+Nc429ZpEvDr45140EastVxZycIDS
+         cDIhFyuLXyouo9Dp/R93zpdHnN3vvx6zHKbGLvE+noOCLahuYTl7hl7Qs45NPJK7KlNZ
+         EW4+4NofVThpiVASh0X32G+t/hk/nsEsixvRNJcoGA4x5cOIZ5H+RMBZNNi39u8Cp+jy
+         ENPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1745583190; x=1746187990;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7LVCfKKGZ+VAx31B/QvtWLC+cXlvT+nFAC3b1QAmkzg=;
-        b=IMqOZwWNUCfMCXlnWAdCMpOmfT9nzgr5f1+tl13xdSsLxwblmvaoPt3KoelZpx+65U
-         60tgbnraXEKdfNRq95OuCB2VbgKpNxbDK0AQBK/4CbjA6fZu7aCquMC19qfh8gwxJGVJ
-         MI4ASzi37IX4s3Jkxwsl3MvEjHTXZQ8MeEzSBrZyNRRwfAPuHvh2RxbsvJOI1JLZ+9dk
-         +EnAklVkYjKfW5JeqUCpv1uipAmylZE8JMF1qR/lxAzUq9grv6fqovHwXHF2ROIQpIT/
-         1AVTKdXaFGeFZ4rMg47Y5Z8xOCHdD77JcDosyX6jMwHyx1ITNTDXawNzV8xYm8cYTOxS
-         W4cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXyqcBGxK0sfuVhyZNabzfcTM9/bKplfrhlkc1lCjxNzw/lH+SWwKNWy67NOVkF69IXkEIV3Q0t5yR7nWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+Z4/mjPi7n2Ntb/vEDGa1CUZwLfnFYe3GPBWRB1H9urZ7pciM
-	TsEbcL8noOXgaO3R904ncgjOAnWoP1S4T/+aVJQ7l8Zcg7W3nsh/7woOyDP/6E0vYKVMVIcitMv
-	orbaIxB9uBbbUtuUBms28bR6nilKqJjNVrImSbQ==
-X-Gm-Gg: ASbGncsKzII7tBg+nQ/FEXzFilp7eD+v8iYqZuz709VhsoCM4FW/1dZA4ydcYqkHRKe
-	fvpgD0y8cocH24TbSAjRQWbHPGANPW/UfobrC3LYbe2XQJnRZZ95v8zXyA0pkMYca+QLSrZd7e0
-	XqcBB8jmoC/6lGAUnG5IRL9ds=
-X-Google-Smtp-Source: AGHT+IEc4wQDIyAonXTkWsqY11L7QFIJfNSBIAH3ZY0qz8y4ByrVUK33TWmLeL/12iYhQYPbulWRTGy5kuvd1J/u8sE=
-X-Received: by 2002:a05:6e02:2487:b0:3d9:2bfc:5767 with SMTP id
- e9e14a558f8ab-3d93b6cae6amr18674675ab.0.1745583189986; Fri, 25 Apr 2025
- 05:13:09 -0700 (PDT)
+        bh=tkenvBJAYSjNxPpsRyZb25skaBdyNzOYdvt1oK1G68U=;
+        b=qG3niBbeWJEtYZTYJZtMt3Xuk+dIgctYnMd7GbH8CUPYF07H1iq+7jTEaLGVygorRo
+         WC8pkyzDE+uB1OLSY9/FwH5E9+dd0s7GNxAHJ6ZG5s39eQJNaeGSL6kvBRSQG+j0FoBx
+         JXWMDGoyP+/ykJZ088VUz7mM08RGCK2XslemqxkLKsggaaWjM736kKGlJ0BX3G7/2rfh
+         XqWuLozGtZf1mpqERl+FhyXKdUvhwy2seccAHxx5e9b1xHcXPE7HXK5Uc0c6NeIhyZgE
+         RRjjGvSNrVmBFRAq7QabnZxZpPVdWXYcS2pDOr1tz6uAkqHj+riiHksKBEKh5+KyPA2o
+         ge4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUd9COhFbJF7opANO0EkCwkMAdSc11mNt7uU+1NpKrW6WECXK9WA5d3K6ENzt1oNHTX8PeSfxPjlIhUUt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxbusdz1ar42rmi1NsHl+s5rhSHE95N7bU/vwZ9yAzVEYOyMVyK
+	fj3v8tioSknFPHu4l7xWbO1SIqtsD/SkIVtWf6Ik5iK47vIayXdrZ82U2KKpMto=
+X-Gm-Gg: ASbGncse6im7AB16vYlaaalPbhlv8JTyIxXivi7VyLjvCGNi/w99JMhy1pg3FFEjDaO
+	nmQy06Vp8KJwIvtThqFEI2ULdyLf5+CDDb5NBbmFCOH6Y2OpaL1oyJ3slr5nbdqmU9Q68jpkBf5
+	Wvwcnl/GuIyFxGuesX8z32tQDFQQsqZ8PYOjPW/Hfk5cNAJH+YKz7dLsMW9gJROSwJu38OuudnJ
+	BzxqVhmpkR+fGdQKfQNN65DoRWnocKzOOWWO3o/ekMgZhy+NMrVGpDA4ACNXpQz0fPQ1FgUF9ZL
+	CIoE6FmrEaKkfbD0PWmOQQfWA7hOiHMYxQxvvXw6P+0QYc2YnPP7ymdllFFmWAXg8PEzlPF2RUd
+	6npdNPwUgLOZ3PdGF1gClyhniKuILSz6V6IZ6t+IaWz5sEZeigT879Ecm1TMRR0++E48=
+X-Google-Smtp-Source: AGHT+IE1MUEZ+wY7kq2dy7WUq8KFQHakKlZlBrL11IN8KwUQF/X9OnZvlk7i/MahfxdsbRyMwkcNsg==
+X-Received: by 2002:a05:6000:1848:b0:39f:e37:1733 with SMTP id ffacd0b85a97d-3a074e10474mr1586199f8f.2.1745583189752;
+        Fri, 25 Apr 2025 05:13:09 -0700 (PDT)
+Received: from [100.64.0.4] (2a02-8388-6584-6400-d322-7350-96d2-429d.cable.dynamic.v6.surfer.at. [2a02:8388:6584:6400:d322:7350:96d2:429d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46501sm2147310f8f.73.2025.04.25.05.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 05:13:09 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Fri, 25 Apr 2025 14:12:56 +0200
+Subject: [PATCH 2/4] clk: qcom: dispcc-sm6350: Add *_wait_val values for
+ GDSCs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324-kvm_selftest_improve-v1-0-583620219d4f@rivosinc.com> <20250324-kvm_selftest_improve-v1-2-583620219d4f@rivosinc.com>
-In-Reply-To: <20250324-kvm_selftest_improve-v1-2-583620219d4f@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 25 Apr 2025 17:42:58 +0530
-X-Gm-Features: ATxdqUF3lkgMIhQKkdyVfB74UNuy_-e8DUJtUETJoF6k8Xhu-0BFfCT8lsZQsJA
-Message-ID: <CAAhSdy0=c_dq7EpztQ9t83qbXBqD6E92xUadYvyv_kFj-Epw6Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] KVM: riscv: selftests: Decode stval to identify exact
- exception type
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Atish Patra <atishp@atishpatra.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250425-sm6350-gdsc-val-v1-2-1f252d9c5e4e@fairphone.com>
+References: <20250425-sm6350-gdsc-val-v1-0-1f252d9c5e4e@fairphone.com>
+In-Reply-To: <20250425-sm6350-gdsc-val-v1-0-1f252d9c5e4e@fairphone.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
 
-On Tue, Mar 25, 2025 at 6:10=E2=80=AFAM Atish Patra <atishp@rivosinc.com> w=
-rote:
->
-> Currently, the sbi_pmu_test continues if the exception type is illegal
-> instruction because access to hpmcounter will generate that. However, we
-> may get illegal for other reasons as well which should result in test
-> assertion.
+Compared to the msm-4.19 driver the mainline GDSC driver always sets the
+bits for en_rest, en_few & clk_dis, and if those values are not set
+per-GDSC in the respective driver then the default value from the GDSC
+driver is used. The downstream driver only conditionally sets
+clk_dis_wait_val if qcom,clk-dis-wait-val is given in devicetree.
 
-"... However, illegal instruction exceptions may occur due to other
-reasons which should result in test assertion."
+Correct this situation by explicitly setting those values. For all GDSCs
+the reset value of those bits are used.
 
->
-> Use the stval to decode the exact type of instructions and which csrs are
-> being accessed if it is csr access instructions. Assert in all cases
-> except if it is a csr access instructions that access valid PMU related
-> registers.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+Fixes: 837519775f1d ("clk: qcom: Add display clock controller driver for SM6350")
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ drivers/clk/qcom/dispcc-sm6350.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Otherwise, LGTM.
+diff --git a/drivers/clk/qcom/dispcc-sm6350.c b/drivers/clk/qcom/dispcc-sm6350.c
+index e703ecf00e440473156f707498f23cde53fb7e22..b0bd163a449ccd2b27751e32eb17a982facf07d8 100644
+--- a/drivers/clk/qcom/dispcc-sm6350.c
++++ b/drivers/clk/qcom/dispcc-sm6350.c
+@@ -681,6 +681,9 @@ static struct clk_branch disp_cc_xo_clk = {
+ 
+ static struct gdsc mdss_gdsc = {
+ 	.gdscr = 0x1004,
++	.en_rest_wait_val = 0x2,
++	.en_few_wait_val = 0x2,
++	.clk_dis_wait_val = 0xf,
+ 	.pd = {
+ 		.name = "mdss_gdsc",
+ 	},
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+-- 
+2.49.0
 
-Regards,
-Anup
-
-> ---
->  tools/testing/selftests/kvm/riscv/sbi_pmu_test.c | 32 ++++++++++++++++++=
-++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c b/tools/tes=
-ting/selftests/kvm/riscv/sbi_pmu_test.c
-> index 03406de4989d..11bde69b5238 100644
-> --- a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-> +++ b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-> @@ -128,11 +128,43 @@ static void stop_counter(unsigned long counter, uns=
-igned long stop_flags)
->                        "Unable to stop counter %ld error %ld\n", counter,=
- ret.error);
->  }
->
-> +#define INSN_OPCODE_MASK       0x007c
-> +#define INSN_OPCODE_SHIFT      2
-> +#define INSN_OPCODE_SYSTEM     28
-> +
-> +#define INSN_MASK_FUNCT3       0x7000
-> +#define INSN_SHIFT_FUNCT3      12
-> +
-> +#define INSN_CSR_MASK          0xfff00000
-> +#define INSN_CSR_SHIFT         20
-> +
-> +#define GET_RM(insn)            (((insn) & INSN_MASK_FUNCT3) >> INSN_SHI=
-FT_FUNCT3)
-> +#define GET_CSR_NUM(insn)       (((insn) & INSN_CSR_MASK) >> INSN_CSR_SH=
-IFT)
-> +
->  static void guest_illegal_exception_handler(struct ex_regs *regs)
->  {
-> +       unsigned long insn;
-> +       int opcode, csr_num, funct3;
-> +
->         __GUEST_ASSERT(regs->cause =3D=3D EXC_INST_ILLEGAL,
->                        "Unexpected exception handler %lx\n", regs->cause)=
-;
->
-> +       insn =3D regs->stval;
-> +       opcode =3D (insn & INSN_OPCODE_MASK) >> INSN_OPCODE_SHIFT;
-> +       __GUEST_ASSERT(opcode =3D=3D INSN_OPCODE_SYSTEM,
-> +                      "Unexpected instruction with opcode 0x%x insn 0x%l=
-x\n", opcode, insn);
-> +
-> +       csr_num =3D GET_CSR_NUM(insn);
-> +       funct3 =3D GET_RM(insn);
-> +       /* Validate if it is a CSR read/write operation */
-> +       __GUEST_ASSERT(funct3 <=3D 7 && (funct3 !=3D 0 || funct3 !=3D 4),
-> +                      "Unexpected system opcode with funct3 0x%x csr_num=
- 0x%x\n",
-> +                      funct3, csr_num);
-> +
-> +       /* Validate if it is a HPMCOUNTER CSR operation */
-> +       __GUEST_ASSERT(csr_num =3D=3D CSR_CYCLE || csr_num <=3D CSR_HPMCO=
-UNTER31,
-> +                      "Unexpected csr_num 0x%x\n", csr_num);
-> +
->         illegal_handler_invoked =3D true;
->         /* skip the trapping instruction */
->         regs->epc +=3D 4;
->
-> --
-> 2.43.0
->
