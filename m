@@ -1,114 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42BC2741B0
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B464274642;
+	Fri, 25 Apr 2025 15:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593867; cv=none; b=PkDt5oDvXmcagQawas/B6V6UGs6F+eNxqb5dgwARxKq/RtUqyYI4bxXGFEj8GOhb48UuruJyRv08q/SXHnCtLmCFCnpOzZ4fkzSXMrHKMHWYktrZfyrQXWkO1PQjsP/AXgzhvKKYThkVjn2JGaFCkEuX4Yqe8rSyEKCX9Vvbwvw=
+	t=1745593908; cv=none; b=ECm43G8yV8NSLU/MQYQnybtD6LMzEba81kPbH5q0gNpvl5BxHniP/lW2onKECMCtTgjirRSBNIl1FeCprR4Ivffz9dKSQjVx+xAmz8/L5dJ0qM+fFW8YBD31qDWnkdDAw3O9vcS0jOEFRUuegp/9BMhZadw6zVoGOn+Qfbb67SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593867; c=relaxed/simple;
-	bh=5aYTKnW1uf91zxpbLRkRmehpF7E6EkPj5cYjxOKlKlk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=khx3AL3A8BPLJKDGkXDn1rGv3yj/1IdRrQAnYqrvHywvhnmIJfscXqKHBTJJgbDuJWL5Tyl9MvXJdNnugFCgUXIBzxUQjg7i/BK+FulUz4zh0WXTdCMByWyJrQeeWLR25Trsz5CuH3JbJOmbrAZ+gGcICgeDDH67sVqV++PHmoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3wQZAFA; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3wQZAFA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745593865; x=1777129865;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5aYTKnW1uf91zxpbLRkRmehpF7E6EkPj5cYjxOKlKlk=;
-  b=B3wQZAFAWjQe1TgLaGpitSdsRHNNDB67wS1VuwErgvC74bfhhobBxD8u
-   PcQMm/k65P2E90BJDfn+d3PVlOaTc3GvaAuWOWShMBxefQkU+6ZAjxJVr
-   EENVtkl2HbWwjTmkTy9MlXzRiFCjX97quCXzejtG1B7VcZ1ewCWOvLZzv
-   OEF+Qkpnl+PB7gWXxlZLnlCmfo+L24nTdhG85jNQ6SX5IcR45OF1cSPGh
-   hXFOKSJJeOaAdqSksVXQh/uC+owMpfLe/88WUxTWQoDh6xUErbHnLLmjB
-   +OcQBbVRX+TEbaxRYRw3ZpvptTp69Kn8/oC3GW4AYsS7EyeTNhsajMvUU
-   g==;
-X-CSE-ConnectionGUID: HD9H2G/lRh2a9ZDrlG0new==
-X-CSE-MsgGUID: 7ORWdDd+Rp2ymYl6eLCs6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47133753"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="47133753"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:11:04 -0700
-X-CSE-ConnectionGUID: XWU8z64fTNawiwnxY2teIg==
-X-CSE-MsgGUID: /VdhN3htTS6WdDeoB86ywg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="137916047"
-Received: from junxiaochang.bj.intel.com ([10.238.157.86])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 08:10:59 -0700
-From: Junxiao Chang <junxiao.chang@intel.com>
-To: tomas.winkler@intel.com,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
-	Vitaly Lubart <vitaly.lubart@intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: junxiao.chang@intel.com,
-	furong.zhou@intel.com
-Subject: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq disabled context
-Date: Fri, 25 Apr 2025 23:11:07 +0800
-Message-Id: <20250425151108.643649-1-junxiao.chang@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250424065609.624457-1-junxiao.chang@intel.com>
-References: <20250424065609.624457-1-junxiao.chang@intel.com>
+	s=arc-20240116; t=1745593908; c=relaxed/simple;
+	bh=CA2lm5FtIXF+iTHuSgWS+yEwpbKDGYCiZzV0Gc/vSAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2NZU42n4/gnAWQTDGnCuCN42abcKfb6bN44SmoVTSQWuDmUQj+nxxQ9jSPX39yHVZEXlehEJPONzgTnl2zQpng4kcArA7bMJd9iWfiTv27pO/Mp/+rfhvWqnEewHOK0x7GDsMUPIb8CFPQzjB1jSgS5tV734DIGZLW2oMxrTK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id D3DDB68BEB; Fri, 25 Apr 2025 17:11:40 +0200 (CEST)
+Date: Fri, 25 Apr 2025 17:11:40 +0200
+From: hch <hch@lst.de>
+To: Waiman Long <llong@redhat.com>
+Cc: hch <hch@lst.de>, Kamaljit Singh <Kamaljit.Singh1@wdc.com>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"kbusch@kernel.org" <kbusch@kernel.org>,
+	"sagi@grimberg.me" <sagi@grimberg.me>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: cgroup null pointer dereference
+Message-ID: <20250425151140.GA14859@lst.de>
+References: <BY5PR04MB68495E9E8A46CA9614D62669BCBB2@BY5PR04MB6849.namprd04.prod.outlook.com> <a5eac08e-bdb4-4aa2-bb46-aa89b6eb1871@redhat.com> <BY5PR04MB684951591DE83E6FD0CBD364BC842@BY5PR04MB6849.namprd04.prod.outlook.com> <623427dc-b555-4e38-a064-c20c26bb2a21@redhat.com> <642a7d6f-9d8b-4204-bc81-4d8e0179715d@redhat.com> <BY5PR04MB68493FB61BF28B5268815381BC842@BY5PR04MB6849.namprd04.prod.outlook.com> <20250425145450.GA12664@lst.de> <3fef1073-3a7e-45ab-8448-a144d5fb6a73@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3fef1073-3a7e-45ab-8448-a144d5fb6a73@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-MEI GSC interrupt comes from i915. It has top half and bottom half.
-Top half is called from i915 interrupt handler. It should be in
-irq disabled context.
+On Fri, Apr 25, 2025 at 11:04:58AM -0400, Waiman Long wrote:
+>
+> On 4/25/25 10:54 AM, hch wrote:
+>> On Fri, Apr 25, 2025 at 02:22:31AM +0000, Kamaljit Singh wrote:
+>>>> It should also be in v6.15-rc1 branch but is missing in the nvme branch
+>>>> that you are using. So you need to use a more updated nvme, when
+>>>> available, to avoid this problem.
+>>>>
+>>> Thank you for finding that commit. I'll look for it.
+>>>
+>>> Christoph, Sagi, Keith, Others,
+>>> Can this commit be merged into the nvme-6.15 branch please?
+>> What commit?
+>>
+> commit 7d6c63c31914 ("cgroup: rstat: call cgroup_rstat_updated_list with 
+> cgroup_rstat_lock")
 
-With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
-top half might be in threaded IRQ context. generic_handle_irq_safe API
-could be called from either IRQ or process context, it disables local
-IRQ then calls MEI GSC interrupt top half.
-
-This change fixes A380/A770 GPU boot hang issue with RT kernel.
-
-Fixes: 1e3dc1d8622b ("drm/i915/gsc: add gsc as a mei auxiliary device")
-Tested-by: Furong Zhou <furong.zhou@intel.com>
-Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
----
- drivers/gpu/drm/i915/gt/intel_gsc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
-index 1e925c75fb080..c43febc862dc3 100644
---- a/drivers/gpu/drm/i915/gt/intel_gsc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
-@@ -284,7 +284,7 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
- 	if (gt->gsc.intf[intf_id].irq < 0)
- 		return;
- 
--	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
-+	ret = generic_handle_irq_safe(gt->gsc.intf[intf_id].irq);
- 	if (ret)
- 		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
- }
--- 
-2.34.1
+I don't see how that is relevant for the nvme tree?
 
