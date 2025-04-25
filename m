@@ -1,72 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500523644D;
-	Fri, 25 Apr 2025 11:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148223D2BA;
+	Fri, 25 Apr 2025 11:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579905; cv=none; b=R71J4M3K+p/XpPvdMsJVzZbe7ad5kqToNbFQpPWwaUtgwWinCuwJ6flpDVj91lC/B5vMhXWiBm5qmOS1JeItT6ea1tcKrQg+x/LcoSuVVIxxUJ8G8wJaEb6p2Se8YNEcyzYVEuNcnp79D58lqcKYxCuZfHSB1U5n2+RtBRpn4DM=
+	t=1745579912; cv=none; b=mjXWCEd7CNev92Sccb642HP5QtzEflAeDgAOVTUcZu97QDdVhq89vAfDaYAaiPwQXaiKKd4o3xGod4y7ckXuPZ7mIrqYMMpVpZIlXF/0pVatY0yk8oDPvM8XtBg54cYl25Emd+Nb3VtWljNUUoMhpdXne8GCbVwZaWCAPHZOVsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579905; c=relaxed/simple;
-	bh=Skktz0pyFpb+cPGjSKmPDKvIXMPRNAL8a111YD665lo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M24SNQk+rssXVg/jrwUX/bTOGziiK6ws8OTrqkQbthZrHTFOcTn3dEcN2ns+tQscY9EmHn1HtN28zITfybFEsI5WUTjqYekbE07EoibQUq02KV8/ZUmzanDlS8NlR7VXinru7JljSHprJ31K7dAFzznBcRpqR94Fy8oDIVHjSao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rh1xpy8p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745579912; c=relaxed/simple;
+	bh=azP9R//yUd3y5xSiHZSqZVFVUGg1StaFMpCzpZ10L/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tCXx7rO6W6pE+rN8sdox0ucdXrDc194AWtzx8qzN46XDRkGsHRzbNr2rhSJgmMDEOjKWvxGZH3e+MYNWqcJwBKorfH8eCYgrTYWfy2mS1dqvfdJ+FZpJWjzUBYblMyJutGkEZGTDnkoxm47BIAqdau7dC5wONWrluko5O9WoTQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=stSaLV1H; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rh1xpy8p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DAFC4CEE4;
-	Fri, 25 Apr 2025 11:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745579904;
-	bh=Skktz0pyFpb+cPGjSKmPDKvIXMPRNAL8a111YD665lo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rh1xpy8pu8DOTA8VkiHV5d0k05cWh7NwBgA5Fvkf6Scg6pEhy7boAMZwTjPioFXm2
-	 W+CLAPli9G9KK4XOV6MlQlqFk0YW9+FR/8p6QQG6S1vXSiF4kcpW3XtcdkczD1+Xbn
-	 mvz8w45CYX8hudbcwA+f+TSTgsGw5Ia09299ZfA2uIJBBHL2pl3M10ngd72azwepkt
-	 C4CVpuMCawnpMF7ooUC8Gg7EVqOpPkc4EWnquGRCEhw1tkKLMbRk/TCB5/DaAbG8NB
-	 gmywWi1IOylKin3S6MveDLGIbnITHDa7MVAX3cL3MMVdrCA3L99GzQ2OFoZqFxmnDJ
-	 OS1gI3GFVqmQQ==
-Date: Fri, 25 Apr 2025 13:18:19 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-Message-ID: <qqrff4zx6eyoyppx3bmsujl4vzhmlwi2dldhoxxikkspmlbiiz@sabqjmjekv7w>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-3-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="stSaLV1H"
+Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8a3b:5a00:3490:6581:3910:8337])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 0B0002E08D31;
+	Fri, 25 Apr 2025 14:18:26 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1745579907;
+	bh=B46fOP7F4O5Q9kYipJf9WysyVm2OwQxbttBN2mgY+e8=; h=From:To:Subject;
+	b=stSaLV1HhfYIPrA9/wOqsz56q9wTUVnysMnalaRb2fiGrGRnxWo+UCUEZkXxKsZM9
+	 1QhqD1fkr9XMBNCtzzrsKvkZgevXyDdI3d35ejOiYprOI2CEHrviajcpRafAyv+qqh
+	 1F/LQeqhJn5d7NS7rTA7HiI/li48YYkUAbBOhzf4=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a02:2149:8a3b:5a00:3490:6581:3910:8337) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+	Derek J Clark <derekjohn.clark@gmail.com>,
+	Kevin Greenberg <kdgreenberg234@protonmail.com>,
+	Joshua Tam <csinaction@pm.me>,
+	Parth Menon <parthasarathymenon@gmail.com>,
+	Eileen <eileen@one-netbook.com>,
+	linux-kernel@vger.kernel.org,
+	sre@kernel.org,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	mario.limonciello@amd.com,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v10 01/16] hwmon: (oxp-sensors) Distinguish the X1 variants
+Date: Fri, 25 Apr 2025 13:18:06 +0200
+Message-ID: <20250425111821.88746-2-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
+References: <20250425111821.88746-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422234830.2840784-3-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174557990684.22197.4530897932196290193@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Hi,
+Currently, the oxp-sensors driver fuzzy matches the X1 variants. Luckily,
+X1 and X1 mini share most hardware features so this works. However, they
+are completely different product lines, and there is an expectation that
+OneXPlayer will release more devices in the X1 line that may have
+differences.
 
-On Tue, Apr 22, 2025 at 06:48:27PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> PIIX4 and compatible controllers are only for X86. As some headers are
-> being moved into x86 specific headers PIIX4 won't compile on non-x86.
-> 
-> Suggested-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Therefore, distinguish the 3 devices that currently exist in the market.
+These are the OneXPlayer X1 AMD and Intel variants, and the X1 mini which
+only has an AMD variant. As far as registers go, all three support the
+current driver functionality.
 
-OK, so these are going through x86, at the end.
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/hwmon/oxp-sensors.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
+diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
+index 83730d9318240..5a4230ad3757e 100644
+--- a/drivers/hwmon/oxp-sensors.c
++++ b/drivers/hwmon/oxp-sensors.c
+@@ -205,7 +205,28 @@ static const struct dmi_system_id dmi_table[] = {
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+-			DMI_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 A"),
++		},
++		.driver_data = (void *)oxp_x1,
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 i"),
++		},
++		.driver_data = (void *)oxp_x1,
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1 mini"),
++		},
++		.driver_data = (void *)oxp_x1,
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER X1Pro"),
+ 		},
+ 		.driver_data = (void *)oxp_x1,
+ 	},
+-- 
+2.49.0
 
-Thanks,
-Andi
