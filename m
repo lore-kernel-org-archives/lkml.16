@@ -1,59 +1,64 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076BF2586F6;
-	Fri, 25 Apr 2025 10:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E8D258CD0;
+	Fri, 25 Apr 2025 10:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745577820; cv=none; b=sd/S55jPJuVF6dSZnWKTokXR4A1tAhohwVGFLqYlFUoqQuKeeba0oHuhxyd/XcmsnhTPeh6u2OBOYqw7wVgVg5zXf6R1q4tAQzOkHYA6i6FgejE+W36WDvatveIlo/yGsKPJNou2orbrqcTapSkwbiQJiDwhWnExOA114YwzX4g=
+	t=1745577825; cv=none; b=dQCUdklkc8i7FXREC3xvIsA0rsh1EsvwPGhSTn9K8c6t2bjEHwEf68ssT0kjInYBqqZ1tW3REoNmB3L1iXTFRpIHMgN+RN4Rt5gd42Xx7axt9H59OyoSchli/KSzKV3xK8l1Pd+HaCUsYrOPsN1NJQdVK/R+yyS1LDFyygPyVfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745577820; c=relaxed/simple;
-	bh=RxvUKrPDz0RLmDkX/SKsqrMsyV/maOMPLQvVtpf1UH0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F12ToPzc0Xd07SbxzijoSTTl9d++2kBOF1CbRFnVwuhXqPMYiet2oYDQnf4420k+1inLiYEeZqOWE9gtF/3Li425rdhjpkl/Y/lfHrHGeCsbUNXfxJDW1OwqL90nu7rzgemIU7aNZUpRuflBZ3YkZUprak8xcnstUo1CZzR15lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=r9gtx7OZ; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745577825; c=relaxed/simple;
+	bh=9j/wZiHV5GzB0EfuonP75IoTOMcnn5LfyjX7W37NjdI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NuCPAS/5DqIHUXiX/qfAjhiz0yV7NnzL0a4PjOO1GrtrEOZKezc/u/8AysrMCRcPwvVUrGRnFV+fzWFnf1YDnupT5yk8u5OYkoZiVLlr1CIgD91Q3+TZ1ix3k1b5us8K4h9/pTHZu4jRCduLA/mrlsbedORRJzthGLsgK+74qM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XAnqGwdz; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r9gtx7OZ"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PAhUpb2768222
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 05:43:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745577810;
-	bh=4MXV3QzGmv/FXm36luz5x2/SyttjowdUT7dFxjiMHz0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=r9gtx7OZ34JPUD9B1cczmZIBaGjqP8+5Bx2UxxrNdxkwOoSfgkxjZJNeuXR3Y/gFR
-	 fv1eCFcpDqKHtNBJmrL6L4hIt7mkJRhauY4/x62R6NTlJo4MpI7RAczbguKTWtEfHP
-	 3cFGywME2LOw6mt/HmKs35Tb1nBvXgyZBgSf0hzY=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PAhURb129808
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 05:43:30 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 05:43:30 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 05:43:30 -0500
-Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [172.24.227.151])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PAfaZo038329;
-	Fri, 25 Apr 2025 05:43:26 -0500
-From: Beleswar Padhi <b-padhi@ti.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
-CC: <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>, <b-padhi@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v11 29/35] remoteproc: k3: Refactor .detach rproc ops into common driver
-Date: Fri, 25 Apr 2025 16:11:29 +0530
-Message-ID: <20250425104135.830255-30-b-padhi@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XAnqGwdz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745577823; x=1777113823;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9j/wZiHV5GzB0EfuonP75IoTOMcnn5LfyjX7W37NjdI=;
+  b=XAnqGwdzQU0RnPw/1DN90a5SxA+6zDLPUCC9+FK0yAOB/kk/2+PshS/+
+   HnhAyJQtYtNBEDjcPG7OBmxxCwrMv/7/DmAxoLFI5lrXDYuaPEs9yYlQ8
+   CBpdFHpMGwYZCE/wJZSN1yTma1XI/IG60muhigH4WXLBjVg0/MF4RpvG4
+   chBo6iYLdG6tI/LO2VsMBbNPLUOkCPOd5G1jWKErMj0RBk5Wd/2aAyL6C
+   JNOfTM+8x3M9LDF6RCcSaOEXUND9PanYvuqSQzC3Sjeg0TxlnOpDq9bOn
+   GXMyGaib0oZj+avzL8uktd318Y2wDsv5th2NdpBXF4j8FIHEGoye1l1TB
+   Q==;
+X-CSE-ConnectionGUID: HLPZdsUzR8KSomo4xBZtJw==
+X-CSE-MsgGUID: m5n3ygvUR0G8Bz6dIhkwgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47147111"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47147111"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:43:43 -0700
+X-CSE-ConnectionGUID: UvTASx3WQpmTJjbrrS9Jdg==
+X-CSE-MsgGUID: a4PZVrw0SYaZakpCKUX1DA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132617973"
+Received: from bjledic266.bj.intel.com ([172.16.127.175])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 03:43:40 -0700
+From: Dongcheng Yan <dongcheng.yan@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	sakari.ailus@linux.intel.com,
+	hverkuil@xs4all.nl,
+	andriy.shevchenko@linux.intel.com,
+	hdegoede@redhat.com,
+	u.kleine-koenig@baylibre.com,
+	ricardo.ribalda@gmail.com,
+	bingbu.cao@linux.intel.com
+Cc: stable@vger.kernel.org,
+	dongcheng.yan@linux.intel.com,
+	hao.yao@intel.com
+Subject: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
+Date: Fri, 25 Apr 2025 18:43:30 +0800
+Message-Id: <20250425104331.3165876-1-dongcheng.yan@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250425104135.830255-1-b-padhi@ti.com>
-References: <20250425104135.830255-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,155 +66,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The .detach rproc ops implementations in TI K3 R5, DSP and M4
-remoteproc drivers are NOPs. Refactor the implementations into
-ti_k3_common.c driver as k3_rproc_detach() and register this common
-function as .detach ops in R5, DSP and M4 drivers.
+Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
+being received. On the host side this is wired to a GPIO for polling or
+interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
+lt6911uxe and lt6911uxc.
 
-Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
-Tested-by: Judith Mendez <jm@ti.com>
+The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
+here as well.
+
+Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
 ---
-v11: Changelog:
-1. Carried T/B tag.
+ drivers/platform/x86/intel/int3472/common.h   | 1 +
+ drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
+ 2 files changed, 7 insertions(+)
 
-Link to v10:
-https://lore.kernel.org/all/20250417182001.3903905-28-b-padhi@ti.com/
-
-v10: Changelog:
-1. Don't remove dsp func override. Already done by [v10 20/33] patch.
-
-Link to v9:
-https://lore.kernel.org/all/20250317120622.1746415-21-b-padhi@ti.com/
-
- drivers/remoteproc/ti_k3_common.c         | 10 ++++++++++
- drivers/remoteproc/ti_k3_common.h         |  1 +
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 11 +----------
- drivers/remoteproc/ti_k3_m4_remoteproc.c  | 14 +-------------
- drivers/remoteproc/ti_k3_r5_remoteproc.c  | 11 +----------
- 5 files changed, 14 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
-index 7ea71603ec37d..5c5185a4581c2 100644
---- a/drivers/remoteproc/ti_k3_common.c
-+++ b/drivers/remoteproc/ti_k3_common.c
-@@ -304,5 +304,15 @@ EXPORT_SYMBOL_GPL(k3_rproc_stop);
- int k3_rproc_attach(struct rproc *rproc) { return 0; }
- EXPORT_SYMBOL_GPL(k3_rproc_attach);
+diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+index 51b818e62a25..4593d567caf4 100644
+--- a/drivers/platform/x86/intel/int3472/common.h
++++ b/drivers/platform/x86/intel/int3472/common.h
+@@ -23,6 +23,7 @@
+ #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+ #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
+ #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
++#define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
  
-+/*
-+ * Detach from a running remote processor (IPC-only mode)
-+ *
-+ * The rproc detach callback is a NOP. The remote processor is not stopped and
-+ * will be left in booted state in IPC-only mode. This callback is invoked only
-+ * in IPC-only mode and exists for sanity sake
-+ */
-+int k3_rproc_detach(struct rproc *rproc) { return 0; }
-+EXPORT_SYMBOL_GPL(k3_rproc_detach);
-+
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("TI K3 common Remoteproc code");
-diff --git a/drivers/remoteproc/ti_k3_common.h b/drivers/remoteproc/ti_k3_common.h
-index 93f41ee415058..97345349b818a 100644
---- a/drivers/remoteproc/ti_k3_common.h
-+++ b/drivers/remoteproc/ti_k3_common.h
-@@ -98,4 +98,5 @@ int k3_rproc_unprepare(struct rproc *rproc);
- int k3_rproc_start(struct rproc *rproc);
- int k3_rproc_stop(struct rproc *rproc);
- int k3_rproc_attach(struct rproc *rproc);
-+int k3_rproc_detach(struct rproc *rproc);
- #endif /* REMOTEPROC_TI_K3_COMMON_H */
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 12858c7f1958d..a62a69d9f80ed 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -58,15 +58,6 @@ static int k3_dsp_rproc_start(struct rproc *rproc)
- 	return 0;
- }
- 
--/*
-- * Detach from a running DSP remote processor (IPC-only mode)
-- *
-- * This rproc detach callback is a NOP. The DSP core is not stopped and will be
-- * left to continue to run its booted firmware. This callback is invoked only in
-- * IPC-only mode and exists for sanity sake.
-- */
--static int k3_dsp_rproc_detach(struct rproc *rproc) { return 0; }
--
- /*
-  * This function implements the .get_loaded_rsc_table() callback and is used
-  * to provide the resource table for a booted DSP in IPC-only mode. The K3 DSP
-@@ -162,7 +153,7 @@ static const struct rproc_ops k3_dsp_rproc_ops = {
- 	.start			= k3_dsp_rproc_start,
- 	.stop			= k3_rproc_stop,
- 	.attach			= k3_rproc_attach,
--	.detach			= k3_dsp_rproc_detach,
-+	.detach			= k3_rproc_detach,
- 	.kick			= k3_rproc_kick,
- 	.da_to_va		= k3_dsp_rproc_da_to_va,
- 	.get_loaded_rsc_table	= k3_dsp_get_loaded_rsc_table,
-diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-index b52a1014c9347..accf8b9aea6ed 100644
---- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-@@ -244,25 +244,13 @@ static void k3_m4_release_tsp(void *data)
- 	ti_sci_proc_release(tsp);
- }
- 
--/*
-- * Detach from a running M4 remote processor (IPC-only mode)
-- *
-- * This rproc detach callback performs the opposite operation to attach
-- * callback, the M4 core is not stopped and will be left to continue to
-- * run its booted firmware. This callback is invoked only in IPC-only mode.
-- */
--static int k3_m4_rproc_detach(struct rproc *rproc)
--{
--	return 0;
--}
--
- static const struct rproc_ops k3_m4_rproc_ops = {
- 	.prepare = k3_rproc_prepare,
- 	.unprepare = k3_rproc_unprepare,
- 	.start = k3_rproc_start,
- 	.stop = k3_rproc_stop,
- 	.attach = k3_rproc_attach,
--	.detach = k3_m4_rproc_detach,
-+	.detach = k3_rproc_detach,
- 	.kick = k3_rproc_kick,
- 	.da_to_va = k3_m4_rproc_da_to_va,
- 	.get_loaded_rsc_table = k3_m4_get_loaded_rsc_table,
-diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-index 13bccd7296f68..49b576872103e 100644
---- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
-@@ -559,15 +559,6 @@ static int k3_r5_rproc_stop(struct rproc *rproc)
- 	return ret;
- }
- 
--/*
-- * Detach from a running R5F remote processor (IPC-only mode)
-- *
-- * The R5F detach callback is a NOP. The R5F cores are not stopped and will be
-- * left in booted state in IPC-only mode. This callback is invoked only in
-- * IPC-only mode and exists for sanity sake.
-- */
--static int k3_r5_rproc_detach(struct rproc *rproc) { return 0; }
--
- /*
-  * This function implements the .get_loaded_rsc_table() callback and is used
-  * to provide the resource table for the booted R5F in IPC-only mode. The K3 R5F
-@@ -1049,7 +1040,7 @@ static int k3_r5_rproc_configure_mode(struct k3_rproc *kproc)
- 		kproc->rproc->ops->start = NULL;
- 		kproc->rproc->ops->stop = NULL;
- 		kproc->rproc->ops->attach = k3_rproc_attach;
--		kproc->rproc->ops->detach = k3_r5_rproc_detach;
-+		kproc->rproc->ops->detach = k3_rproc_detach;
- 		kproc->rproc->ops->get_loaded_rsc_table =
- 						k3_r5_get_loaded_rsc_table;
- 	} else if (!c_state) {
+ #define INT3472_PDEV_MAX_NAME_LEN				23
+ #define INT3472_MAX_SENSOR_GPIOS				3
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 394975f55d64..efa3bc7af193 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -191,6 +191,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*con_id = "privacy-led";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
++	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
++		*con_id = "hpd";
++		*gpio_flags = GPIO_ACTIVE_HIGH;
++		break;
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 		*con_id = "avdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+@@ -221,6 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+  * 0x0b Power enable
+  * 0x0c Clock enable
+  * 0x0d Privacy LED
++ * 0x13 Hotplug detect
+  *
+  * There are some known platform specific quirks where that does not quite
+  * hold up; for example where a pin with type 0x01 (Power down) is mapped to
+@@ -290,6 +295,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 	switch (type) {
+ 	case INT3472_GPIO_TYPE_RESET:
+ 	case INT3472_GPIO_TYPE_POWERDOWN:
++	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+ 		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
+ 		if (ret)
+ 			err_msg = "Failed to map GPIO pin to sensor\n";
+
+base-commit: 4d1e8c8f11c611db5828e4bae7292bc295eea8ef
 -- 
 2.34.1
 
