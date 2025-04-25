@@ -1,90 +1,70 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96562701B6;
-	Fri, 25 Apr 2025 07:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7651B5A79B;
+	Fri, 25 Apr 2025 07:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567157; cv=none; b=T11wKzCbmrzsfiwigGfDMG3xXJ+UGtLFzRYSqn/K3NfypaSSt+xNZof3GP5DRVyDugpI48m4RKSK2zSm4G7tIi3p0OmKqiCdrnDnf/q26/xC6G2iJUAUfhviSK1Ggy6YGEWaT7zAGaoC71MbTC8tqZZxdocXRWWnihmoCyEUe7g=
+	t=1745567188; cv=none; b=mhVMH65DCXSbdh7W9kUy/vS/a68QRYP9vELM2p0Re1+yKPy76xbEwjOZ2vYFApJnncRUFWRBHbLSzG7tYisffwVCZCbEZbtvcDm9Ej34CEwwdUSla6ldjfWJ8cR8pUd6B9O42uuNRrmXhax7KCdgciQf2lKRLVLGfcrXhojKL5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567157; c=relaxed/simple;
-	bh=bpjbiBbYd2xlA2obJvJ3jRRn/TOOWWqT+YFzwj2cKqM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UpXPm35okKKE+BI1QPt+aMYye2Kz22TZTRfTJ7wQ2in9B2VaFxQXiLaIA8a7zWGB12j9AWNGPFIRQR2CCOobGBjy/NV+V81qdekEW8BBWUQlc27EUo2N97HGqYCsvZzVyOi/aBErt5jinPWjgJZBMnkp+wPiaA4GJ/0D4ar+LNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OHQmEMtZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sTI7viOe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OHQmEMtZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sTI7viOe"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745567148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cecrIr4xEjdih6jLdwsZgmRawZN6QblC3AkqgY9IU1M=;
-	b=OHQmEMtZE/yVtqIJon44aQEVzFQuekD2KX0zZb3ydp5UHYkjhr5H2O8Czb807FBmK4WNJ0
-	GdbTLDIlfN9lQkSXRUCHqoK2mVgxkntCTk4Wv5FXQwqzWT1EW8jxaOr8HBRF3hxznxDCUw
-	tVcaG6yuYKC3GebNWvREVDQ0ynGNFQtWAschA47XR/OZXCEfa0TFJoAjXdJwAuvlHien7t
-	l6Za+QIlPhWiFibcG+CPPxh4Us+0vqD6vpm3izFddRJz/A1dvd+JD3R3Ll3uNAjrKJpS8g
-	AG6DZ9IBfg1Ye5eNWbXps/PegMx8RHPPHYBqc6Q0eT+Gcrn4esMzuM+RSOpZOg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745567148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cecrIr4xEjdih6jLdwsZgmRawZN6QblC3AkqgY9IU1M=;
-	b=sTI7viOeurL2zoHc/Pg0+S6q6rbBWdf0p6Sk5BXpqT4GetC+cU5Pml2IBtng9JXtD3IaQb
-	HfdVvNBz4TuClCCg==
-To: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
-In-Reply-To: <20250425063456.NBE35YHR@linutronix.de>
-References: <cover.1745390829.git.namcao@linutronix.de>
- <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
- <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
- <20250425063456.NBE35YHR@linutronix.de>
-Date: Fri, 25 Apr 2025 09:51:47 +0206
-Message-ID: <84ecxgit04.fsf@jogness.linutronix.de>
+	s=arc-20240116; t=1745567188; c=relaxed/simple;
+	bh=DKcS6revqYQuBrgnWEdHy5BJ2gFLK5tD8d5+E6CyPs8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TUBW/mk3W5HxdGcnac5tgnBsYkC7EoB7E6GKzkUVwjAEQ5CqfWxSqoF4ShBHo51Rcjn55Q7YDuj+eSP60wjcxz4SKVPeKZXvEMDxANAp1GUeq5uR7XK1m2PEERKe6xXiR+uKR4ErKet/w89r29cXqAJWYfB2t6fYdOISjRq8cd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 581A6341540;
+	Fri, 25 Apr 2025 07:46:25 +0000 (UTC)
+Date: Fri, 25 Apr 2025 07:46:21 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: andre.przywara@arm.com, andrew+netdev@lunn.ch, conor+dt@kernel.org,
+	davem@davemloft.net, devicetree@vger.kernel.org,
+	edumazet@google.com, jernej.skrabec@gmail.com, krzk+dt@kernel.org,
+	kuba@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	mripard@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
+	robh@kernel.org, samuel@sholland.org, wens@csie.org
+Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
+ board
+Message-ID: <20250425074621-GYC50408@gentoo>
+References: <20250423-01-sun55i-emac0-v1-4-46ee4c855e0a@gentoo.org>
+ <20250425033001.50236-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425033001.50236-1-amadeus@jmu.edu.cn>
 
-On 2025-04-25, Nam Cao <namcao@linutronix.de> wrote:
-> On Thu, Apr 24, 2025 at 03:55:34PM +0200, Gabriele Monaco wrote:
->> I've been playing with these monitors, code-wise they look good.
->> I tested a bit and they seem to work without many surprises by doing
->> something as simple as:
->> 
->> perf stat -e rv:error_sleep stress-ng --cpu-sched 1 -t 10s
->>   -- shows several errors --
->
-> This one is a monitor's bug.
->
-> The monitor mistakenly sees the task getting woken up, *then* sees it going
-> to sleep.
->
-> This is due to trace_sched_switch() being called with a stale 'prev_state'.
-> 'prev_state' is read at the beginning of __schedule(), but
-> trace_sched_switch() is invoked a bit later. Therefore if task->__state is
-> changed inbetween, 'prev_state' is not the value of task->__state.
->
-> The monitor checks (prev_state & TASK_INTERRUPTIBLE) to determine if the
-> task is going to sleep. This can be incorrect due to the race above. The
-> monitor sees the task going to sleep, but actually it is just preempted.
+Hi Chukun,
 
-If I understand this correctly, trace_sched_switch() is reporting
-accurate state transition information, but by the time it is reported
-that state may have already changed (in which case another
-trace_sched_switch() occurs later).
+On 11:30 Fri 25 Apr     , Chukun Pan wrote:
+> Hi,
+> 
+> > On Radxa A5E board, the EMAC0 connect to an external YT8531C PHY,
+> > which features a 25MHz crystal, and using PH8 pin as PHY reset.
+> > 
+> > Tested on A5E board with schematic V1.20.
+> 
+> Although the schematic says it is YT8531C, the PHY on the V1.20 board
+> is Maxio MAE0621A. The article of cnx-software also mentioned this:
+> https://www.cnx-software.com/2025/01/04/radxa-cubie-a5e-allwinner-a527-t527-sbc-with-hdmi-2-0-dual-gbe-wifi-6-bluetooth-5-4/
+> 
+IMO, then the schematic should be updated, I could definitely adjust
+the commit message to reflect this change, but don't know if further
+action need to take, like writing a new phy driver, I guess a fallback
+to generic phy just works?
+(google says, the MAE0621A is a pin-to-pin chip to RTL8211F..)
 
-So in this example, the task did go to sleep. Why do you think it was
-preempted instead?
-
-John Ogness
+-- 
+Yixun Lan (dlan)
