@@ -1,192 +1,133 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEC82459D4
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929EC231A2D
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745581370; cv=none; b=EpO8l/Fh3+yGYHJRIuw2eSszaeYRGlCip4XLQMegvh50SYnUv8AVnq5zLY7HWLCZaKwHBfARCsiYiQyVF7/Ord+YJG5ds2CmC8mQ0amUkTIpf+hx9mUxGcIOWG+9+XetZBoeDqUzcwwAzNVOnqDyLXDfaO9atM+IjxT+9DOfiQ8=
+	t=1745581392; cv=none; b=fWlvdgzml6P8YqG2XaIUiF3+nTjbcSEiQ87XdmSO7jXISfZvCE11i9vPBrKMhv1+NpSn9yWCRROR1Jqp6DlkubiPfUKG3BWBTFNWN+TBhYVxIWgoqS40xbx7w4l1RJkjhNjroZjOwIRhvuhnp8btjJUbxdqE9U3PoEIoo5uuL9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745581370; c=relaxed/simple;
-	bh=3Ji49cbT2gfSvIq8CYcUaaNLPtr+CzcaLLKg5QrQiT8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=Bw15Ga/fGkJbqTI01naFUxA7mAypCWbOcFMCtyGURgRTHKVdncpo3Ur1yOKDk3OGgdLUy0ucNaEo2qhxIzbjVyag09yH4fgFyw7+YUgm6W/WG+sRPh3kU032DT1uFz3bh+zznlKNWccEZCTlG1JKCLApgQlS0+bLpuxgsqZNfBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=nH89DDly; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745581392; c=relaxed/simple;
+	bh=wqizDTUrsA+NlwyoQ1/mjRDKFv7MIwA1OM86FAyyofo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uMdiGGwcf4GKlHVUWmNTC4Woz8tPDR1VN5chdC7r1Ok8zcRhSQo7Hi6+NaYYrXS+sYhTknf1RKdPYTgcN2/Amw5zcBXZDag0Rxhe9ZoflnxapVV0Mskv+bs5dokpjlvtnGRrag6uJ9IG6gq8zHrV+jJd67ztZMOQc5fKpBgt4/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=a9kNzEvU; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="nH89DDly"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43eeb4e09b5so2340475e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 04:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745581366; x=1746186166; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RyVQraiD8choursJseiRmBXZoIZWNTeRkqd4Ai9q43w=;
-        b=nH89DDlyI9q4NUmPG6uPGSIMY5PE3mHWQaGnwuDjzhIpFtGqZltNEeVSOMeVa3SRM2
-         g7xOdBFxjtVrckTTvBVgyYJXhwJ7XkUHp0bliIaSFY0SEbKl33L40+Gx5gZyqll0Uj1k
-         W8reo0a4FE8SuyO746giZhk3U2tI6Ay2Pxo4hiF9gI0DFyu0jpwx8keDmtDboBcsNqxr
-         lGAbfEV/ym6CSFmy1ogXzThNGMSAbhCnMVcFU9918rAMWsxa5xB6pSR52vYxT7BrmXAv
-         yiguZdBGYAB3ll3wElZKKLKXP+sx59peEi1bnf1Nu0WTq43Q0tJl0R+s2n9MAM4rhMBZ
-         +UwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745581366; x=1746186166;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RyVQraiD8choursJseiRmBXZoIZWNTeRkqd4Ai9q43w=;
-        b=RGQy9pjNI+fg00N1ZbuJ4tt5tgkeuSAP3ag6eRL5IEBhrjOEME35aHe3JOiKfywHSW
-         x0ATLJKva73oWOc2159gAICsewZunFMNtI669huku3cdi5qp+ehJY6TGqRLvFuyHlXOs
-         2PPip4oTOpafbajMHZpb4x68PjLnrvR4ojhH3gjt7wvjUatnzAee+Sqo1D2OB/EIOrXT
-         KXiDhGXNwfalYjoEGLJOgoQ4MDdce2H70E973crwWj8av05RMJ4gGgMlQaz/DUtkkBbQ
-         tfJ5IMMODn8vH4Au3qpsZkmsTwv7xiTwQwzM+WwcC1WCIB1yLKSkh/g96nHKn2qy22hr
-         yxcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXENqynFxFlnDocgqOGVMTFD/9j0vz0HIypdLcRCXI5vYd9d7AHG1nj4O5nL1GGD+nYiL+tbhGNIllB4/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl2IB/qq2jDAVnTS7FHNYYkxZvp/jMvlXa6zAGRybHEzTHVyjt
-	K6HrUAlD2xI/nSoTF0vgj+BlSg/75ger8bggc1zWl68VzVNGs20rtaKzeFV+vLc=
-X-Gm-Gg: ASbGnctX4i/zTveb6Qrv9yK+HARXU4KA4Ud2cX3wjvuN8OfcOygsDi5gNEEQw7Cy0VL
-	Js8sQy3LWgm2S0zkVRVmERTc/Hf1iire67Dax4sb6WTav46KJDedgteiW3gJKneJR3RhsEjGlso
-	QQPkONZ9Vun4TZXCYd/5+RHx205rn2Ty+u5/GOwjadogE7hAbOqWCcVGetRSzWh5INPFZ4bWQkE
-	oIGdcQlYshGWCMDri/3UmPESgM9U/6KN7f2SyPYJwJBwAYHPDVeKBXyhfNDNCmrGRjYWJYdnBtL
-	g+KsOoPcke0xlrGXfGn4f4etKqLkW7Gsb6GGVUvxPvz3MzBz
-X-Google-Smtp-Source: AGHT+IHSwXKm2b0KR1kACN9BXrADFLHJi8d2f8OL0xZ1T0iAnfUkAWtBlFVbUnZ2xOUkCinbSJhTAg==
-X-Received: by 2002:a05:600c:1d01:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-440a66c250dmr6293955e9.9.1745581365815;
-        Fri, 25 Apr 2025 04:42:45 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:84a3:2b0a:bdb8:ce08])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e4698csm2104230f8f.62.2025.04.25.04.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 04:42:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a9kNzEvU"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PBgpx42161029
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 06:42:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745581371;
+	bh=Xg1TDbnGBT45TsQLveYgPvI8nkU7nz8IjV2kP3QKEos=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=a9kNzEvUu0HqH5D7EoHl2vFxXU5EhMC5C2szo5LXz+UCXzJO8eoqDBVSH/nm/79qJ
+	 xzq34CsP/P8W9MCJ7oVNGEfCSllCUVrqfw1hZ7CRz33oYIUc26OGW0aeppYFPuf8/1
+	 Smy3higbS07sGEATmRjOCWatsVF/cwyleLaqMTYs=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PBgpLh032816
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 06:42:51 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 06:42:49 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 06:42:50 -0500
+Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PBgjXu100581;
+	Fri, 25 Apr 2025 06:42:46 -0500
+Message-ID: <31c5956f-eda9-4084-b080-1192ce1a8192@ti.com>
+Date: Fri, 25 Apr 2025 17:12:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 25 Apr 2025 13:42:44 +0200
-Message-Id: <D9FOY8JACYTH.1FU7ZTEHFC5NI@ventanamicro.com>
-Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
- prctls
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar"
- <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
- "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
- "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
- Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "linux-riscv"
- <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
- <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
- <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
- <D9EWR3RQK0FD.3GF55KNS53YSR@ventanamicro.com>
- <aAp_87-Xr6gn_hD7@debug.ba.rivosinc.com>
-In-Reply-To: <aAp_87-Xr6gn_hD7@debug.ba.rivosinc.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] drm/bridge: ti-sn65dsi86: Enable HPD functionality
+To: Krzysztof Kozlowski <krzk@kernel.org>, <dianders@chromium.org>,
+        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
+        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ideasonboard.com>
+CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>
+References: <20250424105432.255309-1-j-choudhary@ti.com>
+ <f0966aa4-0945-425e-9d89-370eafe13ac1@kernel.org>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <f0966aa4-0945-425e-9d89-370eafe13ac1@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-2025-04-24T11:16:19-07:00, Deepak Gupta <debug@rivosinc.com>:
-> On Thu, Apr 24, 2025 at 03:36:54PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
-te:
->>2025-04-23T21:44:09-07:00, Deepak Gupta <debug@rivosinc.com>:
->>> On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 w=
-rote:
->>>>2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
->>>>> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/as=
-m/usercfi.h
->>>>> @@ -14,7 +15,8 @@ struct kernel_clone_args;
->>>>>  struct cfi_status {
->>>>>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
->>>>> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
->>>>> +	unsigned long ubcfi_locked : 1;
->>>>> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
->>>>
->>>>The rsvd field shouldn't be necessary as the container for the bitfield
->>>>is 'unsigned long' sized.
->>>>
->>>>Why don't we use bools here, though?
->>>>It might produce a better binary and we're not hurting for struct size.
->>>
->>> If you remember one of the previous patch discussion, this goes into
->>> `thread_info` Don't want to bloat it. Even if we end shoving into task_=
-struct,
->>> don't want to bloat that either. I can just convert it into bitmask if
->>> bitfields are an eyesore here.
->>
->>  "unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);"
->>
->>is an eyesore that defines exactly the same as the two lines alone
->>
->>  unsigned long ubcfi_en : 1;
->>  unsigned long ubcfi_locked : 1;
->>
->>That one should be removed.
->>
->>If we have only 4 bits in 4/8 bytes, then bitfields do generate worse
->>code than 4 bools and a 0/4 byte hole.  The struct size stays the same.
->>
->>I don't care much about the switch to bools, though, because this code
->>is not called often.
->
-> I'll remove the bitfields, have single `unsigned long cfi_control_state`
-> And do `#define RISCV_UBCFI_EN 1` and so on.
+Hello Krzysztof,
 
-I might have seemed too much against the bitfieds, sorry.  I am against
-the rsvd fields, because it is a pointless cognitive overhead and even
-this series already had a bug in them.
-
-#defines should generate the same code as bitfields (worse than bools),
-so the source code is really a matter of personal preference.
-(I do prefer bitfields.)
-
->>>>> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
->>>>> +int arch_lock_shadow_stack_status(struct task_struct *task,
->>>>> +				  unsigned long arg)
->>>>> +{
->>>>> +	/* If shtstk not supported or not enabled on task, nothing to lock =
-here */
->>>>> +	if (!cpu_supports_shadow_stack() ||
->>>>> +	    !is_shstk_enabled(task) || arg !=3D 0)
->>>>> +		return -EINVAL;
->>>>
->>>>The task might want to prevent shadow stack from being enabled?
->>>
->>> But Why would it want to do that? Task can simply not issue the prctl. =
-There
->>> are glibc tunables as well using which it can be disabled.
+On 25/04/25 11:04, Krzysztof Kozlowski wrote:
+> On 24/04/2025 12:54, Jayesh Choudhary wrote:
+>> For TI SoC J784S4, the display pipeline looks like:
+>> TIDSS -> CDNS-DSI -> SN65DSI86 -> DisplayConnector -> DisplaySink
+>> This requires HPD to detect connection form the connector.
+>> By default, the HPD is disabled for eDP. So enable it conditionally
+>> based on a new flag 'keep-hpd' as mentioned in the comments in the
+>> driver.
 >>
->>The task might do it as some last resort to prevent a buggy code from
->>enabling shadow stacks that would just crash.  Or whatever complicated
->>reason userspace can think of.
+>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+>> ---
 >>
->>It's more the other way around.  I wonder why we're removing this option
->>when we don't really care what userspace does to itself.
->>I think it's complicating the kernel without an obvious gain.
->
-> It just feels wierd. There isn't anything like this for other features li=
-t-up
-> via envcfg. Does hwprobe allow this on per-task basis? I'll look into it.
+>> Hello All,
+>>
+>> Sending this RFC patch to get some thoughts on hpd for sn65dsi86.
+> 
+> Please run scripts/checkpatch.pl on the patches and fix reported
+> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+> patches and (probably) fix more warnings. Some warnings can be ignored,
+> especially from --strict run, but the code here looks like it needs a
+> fix. Feel free to get in touch if the warning is not clear.
+> 
+> <form letter>
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC. It might happen, that command when run on an older
+> kernel, gives you outdated entries. Therefore please be sure you base
+> your patches on recent Linux kernel.
+> 
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline) or work on fork of kernel
+> (don't, instead use mainline). Just use b4 and everything should be
+> fine, although remember about `b4 prep --auto-to-cc` if you added new
+> patches to the patchset.
+> 
+> You missed at least devicetree list (maybe more), so this won't be
+> tested by automated tooling. Performing review on untested code might be
+> a waste of time.
+> 
+> Please kindly resend and include all necessary To/Cc entries.
+> </form letter>
+> 
+> (But if intention was not to get review, then of course it is fine)
+> 
 
-I think PMM doesn't allow to lock and the rest don't seem configurable
-from userspace.
 
-It's not that important and we hopefully won't be breaking any userspace
-if we decided to allow it later, so I'm fine with this version.
+I might have have taken unwarranted liberty while sending this patch
+thinking that it was an RFC PATCH.
+I was looking for comments from bridge driver maintainers to see
+if this was correct approach or not. It was not ready for bindings
+review yet.
+This was misjudgement from my end.
+(DO-NOT-MERGE tag should have been there I guess..)
+
+I will adhere to proper flow for RFCs as well from here on.
+
+Will resend this properly.
+
+Thanks.
+-Jayesh
