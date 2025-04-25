@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A588A4C6D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FBB81E
 	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540907; cv=none; b=d/U4VhcidxyjuEPgtFWE1Hv/ebNpznjMg8kiZyA+3X+PyBgBd7jYElTG+57nKoqjY9Ri8yRN5xVHtXSZx78wtqOa/cQQeAgrdwKzC6DX1msGXgODldP7aYpcBFgZXo+T5I661u9eir94JRRZRzJxrJnBb7IhjW6IZ/b/+x3xe2A=
+	t=1745540908; cv=none; b=E9/r2HQAcrY7Lj0VEjTL+kYo7V62duFvl6W6G16g48Y/erogbygou3O0+ij2mKC5LLUAQw7hmarXg8/z4ykIGYTlaWJnHzIPaWaXm/d1uBTwNw2C9JDMTLsz8gytml9pOqN5zKjy/D4WkzSgE/Gp84UA8Q0Sz2PvJdpvDzRKw6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540907; c=relaxed/simple;
-	bh=5Ba8mLvGksbAP43pJeO98GbdrAwpxttSISuXSBWKagg=;
+	s=arc-20240116; t=1745540908; c=relaxed/simple;
+	bh=nTlm/ut5HpY3tz0oRqH5ZlR6CJKJ6zxtXjccQrIjy+g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Sj+ZTWu1YeVQM9uV3yzAVk317EG42gMkZsqBRZQJSpMrOgt3Pp1dJiI2L1hP/AlAEIjj3egv/hQdSfVoVLj1M3qKmsO2AoVwGyyeMA19petJxe2UYjt0DEO54FTabxuhLjNlkIBOXwOgujTdww04lvpdCws0QGFrb1p1uanPsBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEHV1p9W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dK1MrTkIzm2VvAtywo2HGyZ/S7ZsduWXHF8tzoQ3vqq4KiRUbMTlWKsnfcM0X2RXwgit/KQOte7JsjVki8CUXRt4PxdxT2Gh0gkjzv6mctIfNBEdj6hy1WZjuzK7R/7PB1zZwdXLdGZYszaN2nyVsnZgTIyKfdIHW5/VtU+ulTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFIldu+W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEHV1p9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E594C4CEE8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFIldu+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 879FCC4CEEB;
 	Fri, 25 Apr 2025 00:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745540907;
-	bh=5Ba8mLvGksbAP43pJeO98GbdrAwpxttSISuXSBWKagg=;
+	bh=nTlm/ut5HpY3tz0oRqH5ZlR6CJKJ6zxtXjccQrIjy+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AEHV1p9WuhjTNiBJgM2nIm8hOM4xOl2zlsRzHFo+cOKHxWWk8+dyp7AAGhfpMOenN
-	 9gyl6qtvWvGU/FBPmB+TOuLsdiu61kKPEfKtKH3+/9juR9ZSu+ZnZkyIQe4zOWXbgc
-	 Etu30kO7ulC+310SjaJW4ROCiRJuBumKH+YpWs2qYuW2sROXhjPAd0grW6Ko7qGCWf
-	 t5wnKsXE4ZOZW2IXgjmjVzQklD+xZjLFuK1gCIGIsyNBF97dcW5eoHMaipI8U98VoH
-	 7xK1Xbhynl3IDaLAoRt+Fg/aLL2uaydeJ0bJKJGTFZqJ643PARkcUcNn7z5dEvcawo
-	 L7T3TWaKem/lg==
+	b=qFIldu+W5gnHVy7pPGVHMkeVF68AXZ5WWdnapOHsAf321v4Zfe9hV+CkYGb32V4KF
+	 Ua3oJojWDtp5ocxC+kfV/ggKDRUIeVkremn2SrBACmV6wegLg0u/atu7Q6XQLUGMPY
+	 9tPzpd8iHXVCAqX2jfy2AIAnLinGe1D2BCCbF2L/AKnV4C/+tloH2PXV0qv5VF9Yri
+	 A+thWpjrqw9QY8Qf21Ylp4pt5zvmJOrwXZ2FGspK9/U28qmi5Si0M1xMM/FloWN2su
+	 1GfS3lzqWvpjjG/LzwyASYtY2c6qF+YTsdRYBFC8JsK5lvXBDpLxQK+Ex84iB8SW4q
+	 jhXZfCsiJ23pA==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 2737ECE193C; Thu, 24 Apr 2025 17:28:27 -0700 (PDT)
+	id 29A14CE197A; Thu, 24 Apr 2025 17:28:27 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: kernel-team@meta.com,
@@ -41,10 +41,11 @@ Cc: kernel-team@meta.com,
 	Jon Pan-Doh <pandoh@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v3 02/20] ratelimit: Create functions to handle ratelimit_state internals
-Date: Thu, 24 Apr 2025 17:28:08 -0700
-Message-Id: <20250425002826.3431914-2-paulmck@kernel.org>
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	"Theodore Ts'o" <tytso@mit.edu>
+Subject: [PATCH v3 03/20] random: Avoid open-coded use of ratelimit_state structure's ->missed field
+Date: Thu, 24 Apr 2025 17:28:09 -0700
+Message-Id: <20250425002826.3431914-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
 References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
@@ -56,114 +57,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A number of ratelimit uses do open-coded access to the ratelimit_state
-structure's ->missed field.  This works, but is a bit messy and makes
-it more annoying to make changes to this field.
-
-Therefore, provide a ratelimit_state_inc_miss() function that increments
-out the ->missed field ratelimit_state_get_miss() function that reads
-out the ->missed field of the specified ratelimit_state structure,
-and a ratelimit_state_reset_miss() function that reads out that field,
-but that also resets its value to zero.  These functions will replace
-client-code open-coded uses of ->miss.
-
-In addition, a new ratelimit_state_reset_interval() encapsulates what
-was previously open-coded lock acquisition and resetting.
-
-[ paulmck: Apply kernel test robot feedback. ]
+The _credit_init_bits() function directly accesses the ratelimit_state
+structure's ->missed field, which work, but which also makes it
+more difficult to change this field.  Therefore, make use of the
+ratelimit_state_get_miss() and ratelimit_state_inc_miss() functions
+instead of directly accessing the ->missed field.
 
 Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
 Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: "Theodore Ts'o" <tytso@mit.edu>
+"Jason A. Donenfeld" <Jason@zx2c4.com>
 ---
- include/linux/ratelimit.h | 40 ++++++++++++++++++++++++++++++++++-----
- lib/ratelimit.c           |  8 ++++----
- 2 files changed, 39 insertions(+), 9 deletions(-)
+ drivers/char/random.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index b17e0cd0a30cf..8400c5356c187 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -22,16 +22,46 @@ static inline void ratelimit_default_init(struct ratelimit_state *rs)
- 					DEFAULT_RATELIMIT_BURST);
- }
- 
-+static inline void ratelimit_state_inc_miss(struct ratelimit_state *rs)
-+{
-+	rs->missed++;
-+}
-+
-+static inline int ratelimit_state_get_miss(struct ratelimit_state *rs)
-+{
-+	return rs->missed;
-+}
-+
-+static inline int ratelimit_state_reset_miss(struct ratelimit_state *rs)
-+{
-+	int ret = rs->missed;
-+
-+	rs->missed = 0;
-+	return ret;
-+}
-+
-+static inline void ratelimit_state_reset_interval(struct ratelimit_state *rs, int interval_init)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&rs->lock, flags);
-+	rs->interval = interval_init;
-+	rs->begin = 0;
-+	rs->printed = 0;
-+	ratelimit_state_reset_miss(rs);
-+	raw_spin_unlock_irqrestore(&rs->lock, flags);
-+}
-+
- static inline void ratelimit_state_exit(struct ratelimit_state *rs)
- {
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 38f2fab29c569..416dac0ab565d 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -726,6 +726,7 @@ static void __cold _credit_init_bits(size_t bits)
+ 	static DECLARE_WORK(set_ready, crng_set_ready);
+ 	unsigned int new, orig, add;
+ 	unsigned long flags;
 +	int m;
-+
- 	if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE))
+ 
+ 	if (!bits)
  		return;
+@@ -748,9 +749,9 @@ static void __cold _credit_init_bits(size_t bits)
+ 		wake_up_interruptible(&crng_init_wait);
+ 		kill_fasync(&fasync, SIGIO, POLL_IN);
+ 		pr_notice("crng init done\n");
+-		if (urandom_warning.missed)
+-			pr_notice("%d urandom warning(s) missed due to ratelimiting\n",
+-				  urandom_warning.missed);
++		m = ratelimit_state_get_miss(&urandom_warning);
++		if (m)
++			pr_notice("%d urandom warning(s) missed due to ratelimiting\n", m);
+ 	} else if (orig < POOL_EARLY_BITS && new >= POOL_EARLY_BITS) {
+ 		spin_lock_irqsave(&base_crng.lock, flags);
+ 		/* Check if crng_init is CRNG_EMPTY, to avoid race with crng_reseed(). */
+@@ -1466,7 +1467,7 @@ static ssize_t urandom_read_iter(struct kiocb *kiocb, struct iov_iter *iter)
  
--	if (rs->missed) {
--		pr_warn("%s: %d output lines suppressed due to ratelimiting\n",
--			current->comm, rs->missed);
--		rs->missed = 0;
--	}
-+	m = ratelimit_state_reset_miss(rs);
-+	if (m)
-+		pr_warn("%s: %d output lines suppressed due to ratelimiting\n", current->comm, m);
- }
- 
- static inline void
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index ce945c17980b9..85e22f00180c5 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -51,12 +51,12 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 		rs->begin = jiffies;
- 
- 	if (time_is_before_jiffies(rs->begin + interval)) {
--		if (rs->missed) {
-+		int m = ratelimit_state_reset_miss(rs);
-+
-+		if (m) {
- 			if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE)) {
- 				printk_deferred(KERN_WARNING
--						"%s: %d callbacks suppressed\n",
--						func, rs->missed);
--				rs->missed = 0;
-+						"%s: %d callbacks suppressed\n", func, m);
- 			}
- 		}
- 		rs->begin   = jiffies;
+ 	if (!crng_ready()) {
+ 		if (!ratelimit_disable && maxwarn <= 0)
+-			++urandom_warning.missed;
++			ratelimit_state_inc_miss(&urandom_warning);
+ 		else if (ratelimit_disable || __ratelimit(&urandom_warning)) {
+ 			--maxwarn;
+ 			pr_notice("%s: uninitialized urandom read (%zu bytes read)\n",
 -- 
 2.40.1
 
