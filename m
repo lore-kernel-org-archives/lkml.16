@@ -1,105 +1,147 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mx06lb.world4you.com (mx06lb.world4you.com [81.19.149.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AF12248AC;
-	Fri, 25 Apr 2025 21:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28D5224AE6;
+	Fri, 25 Apr 2025 21:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745615405; cv=none; b=gwpjdVyNj/M/v+u3OfavQvlZL1D736XNvBFN9EheYUAMGoxExhZEy/H3sfrtU35kxCgNvpk9yjjJWDatFUGBxfS3PYbvdXZoh151ixMZW16St4hNOym44Nl3YWZuBGdHyATvs5L46drT/D6I8E59fhY31AoNR9yBock1eCFSIWE=
+	t=1745615405; cv=none; b=BNyHMBQcN5wQWspbP05WEU371LZwzy3waP5IayAJ3iAeYpD95wlB2u3KPqzB2Ag+qST8DJxgrcR78OM3c/JhFQxCGnxziGuuDBlxpIsiAQonxZuMbmqly0+Fne9RDdXb15I4Jv3Ussti1uBah0ZLm/tpSYZmw0KA0NXrS4CR3J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745615405; c=relaxed/simple;
-	bh=MOO/CzWZ0YIgmolaHheEdxVd28uNvBFXtKwYoeaf2Ss=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iH34K1TRRsItY3vPc/eYp16RsXpWTOH1hfv/tgvmgswo6RgLqhKtMJQerw16aw5SJkv700BHlqhsXofmjdxBgB55eRxl9/qwqCOnqaUtA29y/KCafH+rE+1Z+pUWB1WzCNKdtvCLNhG6+VFBjLpAJsIlOA4pCdtE97ng0WVWKJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DUtOiIFy; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=i7IbPiakB7vpTLjK9gupk8hrsHLDntK7oG/06/Usdak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ylj2Zho7EK4CkKNzUYBoIcRKi/a/FOHSVQ6rWbdgrTF74cF0tToK1g09Iwq+/QGTsQ+rMUq8t3sm6rxUyQNjIGcsZzQ/sDvipfIEvuWZ8fevmWHMAF+sqi1nrcE1a9oFMrB6leVWSa1gcaciEAJ/vPNsSb3pavH4pODM0EHOg7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=EIqyTlxX; arc=none smtp.client-ip=81.19.149.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DUtOiIFy"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL9wjg3026995
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 16:09:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745615398;
-	bh=MGjIDaoDelEvuWIMDJx6V82b37fg2WOb7gjvoptL2H8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=DUtOiIFyvXc6ibkd4jJuM34QBlefujhLmFU7NW0JoehrfrBFdnG2Dzyw7gZ2yMUuK
-	 DfLhgnTX4L8l0Gz97ctURjQO0kwEudFZanfburcc3n7rxMRdzC/5nixiW4kZffcdAy
-	 WodjIyxfS6eaL8J7LjRhURVDgCY+7E3H/WA5ainw=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL9wUe078487
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 16:09:58 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 16:09:57 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 16:09:57 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PL9vdF093546;
-	Fri, 25 Apr 2025 16:09:57 -0500
-From: Nishanth Menon <nm@ti.com>
-To: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <stable@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-j784s4-j742s2-main-common: fix length of serdes_ln_ctrl
-Date: Fri, 25 Apr 2025 16:09:56 -0500
-Message-ID: <174561535469.210207.12728695761860472816.b4-ty@ti.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250423151612.48848-1-s-vadapalli@ti.com>
-References: <20250423151612.48848-1-s-vadapalli@ti.com>
+	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="EIqyTlxX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=U2PlbSYJoDqGmlBnxEFPhzu2SoY19RbUjb4TC95q0os=; b=EIqyTlxX3Nc8I3nDrfhAQrxBF1
+	iFoESpbBgtB7fFarOuSBVC4vSpLvEjSUfpTT0/pBGvYSUqp+t/dIOHxHjcaPOuDDLBCz/qqyAc5a7
+	/UupZVwcTgYGbu8Dd6WRyA9kXC/JAaJWqa/hh864eVu3hPa56NRo0Tq60+5umqBr2cE8=;
+Received: from [188.22.4.210] (helo=[10.0.0.160])
+	by mx06lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1u8PSV-000000006I9-2m9q;
+	Fri, 25 Apr 2025 22:15:39 +0200
+Message-ID: <31a7c481-0b0c-4a46-9eb9-983f88ca137e@engleder-embedded.com>
+Date: Fri, 25 Apr 2025 22:15:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC net-next 1/2] net: selftest: add net_selftest_custom()
+ interface
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: shenjian15@huawei.com, wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+ chenhao418@huawei.com, jonathan.cameron@huawei.com,
+ shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ andrew+netdev@lunn.ch, horms@kernel.org
+References: <20250421134358.1241851-1-shaojijie@huawei.com>
+ <20250421134358.1241851-2-shaojijie@huawei.com>
+Content-Language: en-US
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <20250421134358.1241851-2-shaojijie@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-Hi Siddharth Vadapalli,
-
-On Wed, 23 Apr 2025 20:46:12 +0530, Siddharth Vadapalli wrote:
-> Commit under Fixes corrected the "mux-reg-masks" property but did not
-> update the "length" field of the "reg" property to account for the newly
-> added register offsets which extend the region. Fix this.
+On 21.04.25 15:43, Jijie Shao wrote:
+> In net/core/selftests.c,
+> net_selftest() supports loopback tests.
+> However, the loopback content of this interface is a fixed common test
+> and cannot be expanded to add the driver's own test.
 > 
+> In this patch, the net_selftest_custom() interface is added
+> to support driver customized loopback tests and
+> extra common loopback tests.
 > 
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> ---
+>   include/net/selftests.h |  61 +++++++++++++
+>   net/core/selftests.c    | 188 +++++++++++++++++++++++++++++++++++++++-
+>   2 files changed, 245 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/net/selftests.h b/include/net/selftests.h
+> index e65e8d230d33..a36e6ee0a41f 100644
+> --- a/include/net/selftests.h
+> +++ b/include/net/selftests.h
+> @@ -4,6 +4,48 @@
+>   
+>   #include <linux/ethtool.h>
+>   
+> +#define NET_TEST_NETIF_CARRIER		BIT(0)
+> +#define NET_TEST_FULL_DUPLEX		BIT(1)
+> +#define NET_TEST_TCP			BIT(2)
+> +#define NET_TEST_UDP			BIT(3)
+> +#define NET_TEST_UDP_MAX_MTU		BIT(4)
+> +
+> +#define NET_EXTRA_CARRIER_TEST		BIT(0)
+> +#define NET_EXTRA_FULL_DUPLEX_TEST	BIT(1)
+> +#define NET_EXTRA_PHY_TEST		BIT(2)
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+What is the difference between NET_TEST_NETIF_CARRIER and
+NET_EXTRA_CARRIER_TEST? Aren't these the same tests?
 
-[1/1] arm64: dts: ti: k3-j784s4-j742s2-main-common: fix length of serdes_ln_ctrl
-      commit: 3b62bd1fde50d54cc59015e14869e6cc3d6899e0
+> +struct net_test_entry {
+> +	char name[ETH_GSTRING_LEN];
+> +
+> +	/* can set to NULL */
+> +	int (*enable)(struct net_device *ndev, bool enable);
+> +
+> +	/* can set to NULL */
+> +	int (*fn)(struct net_device *ndev);
+> +
+> +	/* if flag is set, fn() will be ignored,
+> +	 * and will do test according to the flag,
+> +	 * such as NET_TEST_UDP...
+> +	 */
+> +	unsigned long flags;
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Looks limited, this interface does not scale as the bits in flags are
+limited.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> +};
+> +
+> +#define NET_TEST_E(_name, _enable, _flags) { \
+> +	.name = _name, \
+> +	.enable = _enable, \
+> +	.fn = NULL, \
+> +	.flags = _flags }
+> +
+> +#define NET_TEST_ENTRY_MAX_COUNT	10
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I expect that you have to eliminate this limitation too.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> +struct net_test {
+> +	/* extra tests will be added based on this flag */
+> +	unsigned long extra_flags;
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Why this extra_flags to trigger tests? AFAIU the same tests can be
+triggered with entries.
 
+> +
+> +	struct net_test_entry entries[NET_TEST_ENTRY_MAX_COUNT];
+> +	/* the count of entries, must <= NET_TEST_ENTRY_MAX_COUNT */
+> +	u32 count;
+> +};
+
+You try to make net selftests more usable for drivers. I also tried
+that, but Andrew Lunn argumented for controlling the selftests some
+user space interface is expected. IMO the situation has not changed.
+
+https://lore.kernel.org/netdev/20250227203138.60420-3-gerhard@engleder-embedded.com/T/#md5e4ac1ca41adbdb43755d3c189aa8b8228bf8c9
+
+Gerhard
