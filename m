@@ -1,67 +1,64 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA404414;
-	Fri, 25 Apr 2025 06:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B65F22D781
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745564365; cv=none; b=EllsvdodCTEBOSn84EGqMpwtdEjFIST6B5qRzsbGeoHVs3uNj1XVlIdxZuUb6dz2pN1MI/s+37pFz5QRzpOnbJr/lys/30xwFtBLpaadBRp3+t48Z8B9BHZoUYkNLLCJ+X+KRNxf5RNc0q5WoV6XbL8Wo4gy+gQWYldGlIcMaNs=
+	t=1745564366; cv=none; b=WPEFqa7mmHlMCZ/nwGKIxMUy5bP/LV/nxO1O4+Ik70BiVdW+ktnq5mDNtQcDf5Ui5z315dUHVVZ1n64f0UaV+D5ygpgn4WbszvvvsEOd/ljojyq130UfrtHvo7kO+50oxez57ScYTUFMt3B/13LIUfqvbqpPNZrBbW/ggBxhhXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745564365; c=relaxed/simple;
-	bh=A7zkNKvQB6u5H1frJaZ3QunxIoyKnq8PvZ/di23pP8E=;
+	s=arc-20240116; t=1745564366; c=relaxed/simple;
+	bh=diM9mxWPyUi2e84b6pNVTR0emiSecPEbQX2ZPSe+dFM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qc1xcZFxLlYnPhHDenUbgZBgE4KQRNYdti5igd6NTORqR+I2JmT5OaLdMgPx3ZeTev0i4mjT62zRFZ4XWztCQpRK1/zofrtGlC2DVSxDmBsKZs4vTH0LmzTp0XlCjt9iQ6lpoy9A4PA0wn1WxHjm0uIKV2XmLjaHoJdgpuzolm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=m8q9qI7R; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=l67rQLrn1lgHtHcPtdxjJh9udi4rcCfYIj7AiJpl7Rn8d0jbOUfECiuuqTxUsNB6Z57XgkrxjhBfQKO7pTdrPfaA/vZzZR37A8DpFk0pZJS+tWCz70MVfswyPTkyPgWhPkhWlHy2fwysxV14cuK3xkofPMMgCefffmuvJv8Mc1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IwwK992X; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="m8q9qI7R"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OL4NtM002532;
-	Fri, 25 Apr 2025 06:58:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=TRhqbD
-	67z9XvmRFQN2yKg1Ib2zMzYiTPqDsaG9k6XLg=; b=m8q9qI7RmWtdn6jhYibpFj
-	rUqVlJ0akLjbuVqVQQCFJaSCBYWgei6uEWPm8AN9tCpiaW+swqD0Ef3HEHFsJd62
-	76rNHc4QQF2oQeUNPA2JWeRRNB3Mhrc39YeqDxa3zO967gD3kSQLlh8V07Qku7i7
-	l2zD+W/AhZe0xjeFogaIlpfdO83MD8/pzFcKSD0HGJbg5U66xDnIcKNKGix1cce3
-	kwRRrmMytYLnCeByaP3W7MGf4WTKFmWn/vFBupV5prXop6YK+B9BPMYvfSJKTV57
-	J1SiOyNlRhvN6eGSB7+ghfIwAj+7mD7bxW8Q+Q1g4PQylxCRirilfJyvMJaBN87Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467vvkswkg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 06:58:56 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53P6wtse022579;
-	Fri, 25 Apr 2025 06:58:55 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467vvkswka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 06:58:55 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53P3xI5a028447;
-	Fri, 25 Apr 2025 06:58:54 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvv01d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 06:58:54 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53P6wpje30868164
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 06:58:52 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9C7758055;
-	Fri, 25 Apr 2025 06:58:51 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6696F5804B;
-	Fri, 25 Apr 2025 06:58:45 +0000 (GMT)
-Received: from [9.61.252.26] (unknown [9.61.252.26])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 25 Apr 2025 06:58:45 +0000 (GMT)
-Message-ID: <d11b2740-d484-4fcf-8296-80e93ef534f2@linux.ibm.com>
-Date: Fri, 25 Apr 2025 12:28:43 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IwwK992X"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912b75c0f2so165590f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745564362; x=1746169162; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=gLRtWE6F0uREZFWiClNOBZdBALxZl8DyI6JGwpwt6Jw=;
+        b=IwwK992XQPIW+h7BNk4211+om/n2ic501eicBHEnT3y5GRa1/VOXiLNZNq806Ebh03
+         YD8DIProzSjX6ussVDALTdMa8TMq13+qOdI9ExtXlmJ2tCR/JnzNmOOIokAugHpH+Rk4
+         h3HfqLbGo/s+tEN5pZYYo/g9glqO7CwYyxWf9wPRvFcQgHzEi8gNCawUsQRl6amXv9Sc
+         4zrRbqQn0DIeQE6Z5IkVho4/Tv26vEBLa5cuvJpzwEs686jBQZw4KDUV4aVipJDNMTSi
+         jl0JF6Dsjq4FcGOZ7cUCMluLz7I934VNeY96Ct2BSiXbzCY8ohWStjcCZAF/FG3vqlDp
+         ezsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745564362; x=1746169162;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gLRtWE6F0uREZFWiClNOBZdBALxZl8DyI6JGwpwt6Jw=;
+        b=QePSKpPBYzsa8JAwAbAMcVs0G+w9pZ4XpZVC8KYmsd1zItRzcPFtDgsSMqd8dAcTGW
+         tH9jcVcmLd7aBbgwT+ZOqdeRpsFb2E8d1nxeQyKnYjS+e2ZXwnUgclF8dsfcEI04BaJJ
+         5zv8wVIeWFrWGQ9ZIAv6HUeVBd+po80oJxbsJm4JByw06A/5qwPzr3mQKJZUZYBU5hg3
+         pd/g+DtbaIpR5k2j7e3n7/iWHQLrGUnklUM83ZpDCxLaGNWOIb5uX7sd6Yu1CMgiyeD+
+         mf+QQ0d/FUu9R4Mc3PMp7zx3OGdVk3Ap5inw1XT0R1xUfXgwmrkIfw0ZdBZReeIoHLGP
+         4XEg==
+X-Gm-Message-State: AOJu0YzA2QbT+KczbktZGqg2A/P9dtTW+SzIh1MIc4cchjALCmJJsmA/
+	0tkXiRRDfH0f9LOMmaS+oX88Y3H1i8SwWK9W4oKZ4J4qKGB77kKw1jK4j4j7axc=
+X-Gm-Gg: ASbGncst2u6H1AYpG4SDOXHRvRBMUgbvaOssCP7yeiHcn0hgw+VgMzA0ZCQvAZ/xLMY
+	p6yUEcp/N9vdkTw/M9PsgnV51q1Nr+6fJUj76fPLLJFWyfWxx8ryvotFb+Mxb46mJPr8tioap0V
+	Tdh8rnPU2wQ5NV6bwKdz5enW4S89EvbnP6pR5bOwgpJvzWSw4wxbWEViQNA55JBkT0lYvjbKCxm
+	p/7o0b7tZRKozHjDk+axKbDRO7XfdZxuMz+/PdNInpW5NkPaizoEGWr/kpd1fBzy0m45AZ6yWod
+	wCTljFhSAdaCvFIzeDVRxRuDgIiLup3RjamFmsCTMoSps1TMRKQgiPx5P3o=
+X-Google-Smtp-Source: AGHT+IFFW5fUIr7p66KqjzTq4DoPPUodkeDh7OGnTWIbb6bifhPq2PDmJ/dqClsCE6nl/Z2bZXrXiw==
+X-Received: by 2002:a05:600c:1387:b0:439:a1ce:5669 with SMTP id 5b1f17b1804b1-440a66ab6famr2267785e9.5.1745564362666;
+        Thu, 24 Apr 2025 23:59:22 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e00d8sm45677815e9.35.2025.04.24.23.59.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 23:59:22 -0700 (PDT)
+Message-ID: <c7b61835-e139-43f9-b402-ca49c2a95dce@linaro.org>
+Date: Fri, 25 Apr 2025 08:59:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,245 +66,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf build: Add tools/arch/x86/include/asm/amd/ibs.h to
- sync the headers
-Content-Language: en-GB
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Athira Rajeev <atrajeev@linux.ibm.com>, jolsa@kernel.org,
-        adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com,
-        jiang.peng9@zte.com.cn, Tejas.Manhas1@ibm.com, sshegde@linux.ibm.com,
-        sfr@canb.auug.org.au, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        ravi.bangoria@amd.com, bp@alien8.de
-References: <20250424163033.6601-1-atrajeev@linux.ibm.com>
- <16bee348-2b41-4337-85c8-8a6d2719e99b@linux.ibm.com> <aAqB6kI5mDp4bxY9@x1>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-In-Reply-To: <aAqB6kI5mDp4bxY9@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA0NyBTYWx0ZWRfXxKioVV0C0UhC TAqyHKuAWOuw71w+ovLckblGdA69anb68RWrig9PQWCdkma9B/+As6dR82LavF3T8lphzn8+LR8 7CHb+6syPkyaix10Ka/CsErmPd8h6JaIOAND9kO0WNch9/fplReqeKd39t8w3ZCwsC8P0FhmV0v
- btu8qjiFTMzDkMAJrnJ90LqhuVzra/XeX2Lf2MsD2RBrK78Rj4tzSbOtak55iUWcgyxUkuarEzl OENk5jkjffZi44kjSejFE1EgUA8fsYZSKtDXlVwj9DSEJvl/l/bHF9CTOh6sBMbmHDRYA0TmO0+ /ruVaNxaSLJL2+ggFWVrW/lz5VWPsYMnsNdOFXRFxZ4NZl3IdE+3M/RpOer4JE5in6RncVY8hZ2
- vVzYw/HJkOAK9pmBaDrTqRv+IiYCK3ErhEjSbHrYdRNE7uxMsQ1ivhUDJAlziwFhc8NbQ7f4
-X-Proofpoint-ORIG-GUID: bA5O8ybd1YYa84ySleW6v5WOi1z1V4vV
-X-Proofpoint-GUID: pmgqd089mNEFfh4hnCCxUkWvw90Bwq1-
-X-Authority-Analysis: v=2.4 cv=HoF2G1TS c=1 sm=1 tr=0 ts=680b32b0 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=Oh2cFVv5AAAA:8 a=VnNF1IyMAAAA:8 a=LpQ4EuG3LMeFR_QAhVYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=7KeoIwV6GZqOttXkcoxL:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250047
+Subject: Re: [PATCH 4/5] cdx: controller: Do not open-code
+ module_platform_driver()
+To: Nipun Gupta <nipun.gupta@amd.com>, Nikhil Agarwal
+ <nikhil.agarwal@amd.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20250425-cdx-clean-v1-0-ea2002dd400d@linaro.org>
+ <20250425-cdx-clean-v1-4-ea2002dd400d@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20250425-cdx-clean-v1-4-ea2002dd400d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 25/04/2025 08:54, Krzysztof Kozlowski wrote:
+> Replace standard platform_driver_register() boilerplate with
+> module_platform_driver() to make code smaller.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/cdx/controller/cdx_controller.c | 20 +-------------------
+>  1 file changed, 1 insertion(+), 19 deletions(-)
+> 
+> diff --git a/drivers/cdx/controller/cdx_controller.c b/drivers/cdx/controller/cdx_controller.c
+> index fce90926d3378ae60166426cbf8e4a4fe014af86..fca83141e3e66e68e6916077833db2b7d816395f 100644
+> --- a/drivers/cdx/controller/cdx_controller.c
+> +++ b/drivers/cdx/controller/cdx_controller.c
+> @@ -243,31 +243,13 @@ MODULE_DEVICE_TABLE(of, cdx_match_table);
+>  static struct platform_driver cdx_pdriver = {
+>  	.driver = {
+>  		   .name = "cdx-controller",
+> -		   .pm = NULL,
 
 
-On 24/04/25 11:54 pm, Arnaldo Carvalho de Melo wrote:
-> On Thu, Apr 24, 2025 at 10:39:56PM +0530, Venkat Rao Bagalkote wrote:
->> On 24/04/25 10:00 pm, Athira Rajeev wrote:
->> Tested this patch by applying on tip HEAD:
->> 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d and it fixes the reported issue.
-> This is just a long list of characters, can you please next time provide
-> something like, humm, tip/head, not really:
->
-> ⬢ [acme@toolbx perf-tools-next]$ git remote -v | grep tip
-> tip	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (fetch)
-> tip	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git (push)
-> ⬢ [acme@toolbx perf-tools-next]$ git remote update tip
-> Fetching tip
-> ⬢ [acme@toolbx perf-tools-next]$ git show 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
-> fatal: bad object 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
-> ⬢ [acme@toolbx perf-tools-next]$
->
-> So please add the summary, that way we can try to figure out if this is
-> a rebase and they look for the description instead of this sha1 that I'm
-> not finding even after doing a 'git remore update tip'.
+Too big chunk in `git add -p`. This should be separate patch.
 
-Apolozies for the confusion.
-
-The commit ID I shared was from the repo: 
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/tip/tip.
-
-# git log
-commit 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d (HEAD -> master)
-Merge: 1e4babe52c11 e396dd85172c
-Author: Ingo Molnar <mingo@kernel.org>
-Date:   Tue Apr 22 14:42:13 2025 +0200
-
-     Merge branch into tip/master: 'x86/sev'
-
-      # New commits in x86/sev:
-         e396dd85172c ("x86/sev: Register tpm-svsm platform device")
-         93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
-         b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
-         770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command 
-functions")
-
-     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+I will wait a day for more reviews and then send v2.
 
 
-I have freshly cloned the repo from 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/ and issue 
-is seen here also. I have applied the patch on top of this, and issue is 
-resolved.
-
-
-Additional info regarding the environment:
-
-
-git log
-
-commit 0c6ae66ef164c408daeab6a61aace4b86010369a (HEAD -> master, 
-origin/master, origin/HEAD)
-Merge: b6e62c063f84 e396dd85172c
-Author: Ingo Molnar <mingo@kernel.org>
-Date:   Thu Apr 24 20:20:18 2025 +0200
-
-     Merge branch into tip/master: 'x86/sev'
-
-      # New commits in x86/sev:
-         e396dd85172c ("x86/sev: Register tpm-svsm platform device")
-         93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
-         b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
-         770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command 
-functions")
-
-     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-
-
-git branch
-* master
-
-
-git remote show origin
-* remote origin
-   Fetch URL: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
-   Push  URL: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
-   HEAD branch: master
-   Remote branches:
-     auto-latest           tracked
-     core/build            tracked
-     core/core             tracked
-     core/debugobjects     tracked
-     core/documentation    tracked
-     core/entry            tracked
-     core/headers          tracked
-     core/kprobes          tracked
-     core/merge            tracked
-     core/mm               tracked
-     core/rcu              tracked
-     core/static_call      tracked
-     core/urgent           tracked
-     efi/core              tracked
-     efi/urgent            tracked
-     irq/core              tracked
-     irq/drivers           tracked
-     irq/msi               tracked
-     irq/urgent            tracked
-     locking/core          tracked
-     locking/debug         tracked
-     locking/futex         tracked
-     locking/header        tracked
-     locking/kcsan         tracked
-     locking/nmi           tracked
-     locking/rcuref        tracked
-     locking/rwsem         tracked
-     locking/urgent        tracked
-     locking/wwmutex       tracked
-     master                tracked
-     objtool/core          tracked
-     objtool/urgent        tracked
-     perf/core             tracked
-     perf/kprobes          tracked
-     perf/merge            tracked
-     perf/urgent           tracked
-     perf/vlbr             tracked
-     ras/core              tracked
-     ras/merge             tracked
-     ras/urgent            tracked
-     rcu/urgent            tracked
-     sched/arm64           tracked
-     sched/core            tracked
-     sched/eevdf           tracked
-     sched/fifo            tracked
-     sched/migrate-disable tracked
-     sched/psi             tracked
-     sched/rt              tracked
-     sched/smp             tracked
-     sched/urgent          tracked
-     smp/core              tracked
-     smp/urgent            tracked
-     timers/cleanups       tracked
-     timers/clocksource    tracked
-     timers/core           tracked
-     timers/merge          tracked
-     timers/nohz           tracked
-     timers/ptp            tracked
-     timers/urgent         tracked
-     timers/vdso           tracked
-     tip/tip               tracked
-     tip/urgent            tracked
-     x86/acpi              tracked
-     x86/alternatives      tracked
-     x86/apic              tracked
-     x86/asm               tracked
-     x86/boot              tracked
-     x86/bugs              tracked
-     x86/build             tracked
-     x86/cache             tracked
-     x86/cc                tracked
-     x86/cleanups          tracked
-     x86/core              tracked
-     x86/cpu               tracked
-     x86/entry             tracked
-     x86/fpu               tracked
-     x86/fred              tracked
-     x86/fsgsbase          tracked
-     x86/headers           tracked
-     x86/hyperv            tracked
-     x86/irq               tracked
-     x86/kaslr             tracked
-     x86/kconfig           tracked
-     x86/kdump             tracked
-     x86/merge             tracked
-     x86/microcode         tracked
-     x86/misc              tracked
-     x86/mm                tracked
-     x86/msr               tracked
-     x86/mtrr              tracked
-     x86/nmi               tracked
-     x86/paravirt          tracked
-     x86/pasid             tracked
-     x86/percpu            tracked
-     x86/platform          tracked
-     x86/sev               tracked
-     x86/seves             tracked
-     x86/sgx               tracked
-     x86/shstk             tracked
-     x86/splitlock         tracked
-     x86/tdx               tracked
-     x86/timers            tracked
-     x86/urgent            tracked
-     x86/vdso              tracked
-     x86/vmware            tracked
-   Local branch configured for 'git pull':
-     master merges with remote master
-   Local ref configured for 'git push':
-
-     master pushes to master (fast-forwardable)
-
-
-Regards,
-
-Venkat.
-
->   
->> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->
-> Thanks,
->
-> - Arnaldo
+Best regards,
+Krzysztof
