@@ -1,219 +1,161 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D13D3D3B3;
-	Fri, 25 Apr 2025 13:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E03C78F4B;
+	Fri, 25 Apr 2025 13:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588741; cv=none; b=PD1VEVBAAppOpFa+zHA6PaSZbqfC2DAr4JdIV2pygl6wbMKb1QYHQ1wsCj90vLijVUSH3fVk0xnYjV2BqAls9A42adEqRGfDffE1AxO/7LapiV2ymx5qCmRlADd1UL/YKVDp0HAyNk7XHWDURNBShGAqBM+AnSzJmfKy6BdXjqA=
+	t=1745588837; cv=none; b=iy77VImQMuM8zFHSOvbpeDKjUQa7nE4pvVwCzO5+yYXbv+atjO5hz3BvPyYj7fqxnXO0CxLi9FX26tZgfObdZhDFqC8Oy80CyyFXkM8mP/uw9rdYR3fhLqzvuBxZewlMVfWWsOIwqFNRCNKI2fPi4O+4edaE3exZaQ0XS6UPQK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588741; c=relaxed/simple;
-	bh=Xc9fSgC/x63luwJw9PkD7G8J0O769hdT2MY51GbN7+Q=;
+	s=arc-20240116; t=1745588837; c=relaxed/simple;
+	bh=qi5h6vjHGkHHkMx48KdWOPGfCyT72085egpIwqt06EU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHtFlARcQifqqLjZ6ouBQZC+xlWey83y0ckMSil+xi0x8D3JNo2bJUY9UTprSCOjPcrRxcq1Gvrec0VQa09EJzGOyfzt/QDwdyIvd5aG6Hjtl4yMWvcOkDIFSMXZRhIO4useodDATpj8rMIKXdBmbZRCxn78Ylg2cN38WiEctFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kkKLkh5D; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AE3+Z6Ix4Lh8k6q+/TmfGVmOXPdjWCSseHfHpC9/Hvg/myHennu+RWiMEkYT58WRU3oXG0NEsonm4qhvsuEL6DWS4IJaEld7rBgDsAPywK6gHvnixq0jyKMD2QZJ+9aW5a2DWaP6/fBYN7xzg7OjDOHemyiAI6+e1y+sAYpfSz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVkHX+kq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkKLkh5D"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so29186816d6.1;
-        Fri, 25 Apr 2025 06:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745588738; x=1746193538; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5G44hVuiM6JlHEQ/mK9/lttnkQLILl+1HFvgq32kWg=;
-        b=kkKLkh5DZcRX7vT62JSV0LvrQHLHuvmaVWgvrAWFH5DqZbKlx2GYKZriFo3EFo8C/f
-         3HFfg9wbp96s3+22kTULbprnlvZdy2FhPXm5V4eJx/J1yHDSMlC+r2Tp+3r1iRWN797o
-         URgx5XcXbgxH5NjA0D1ewvFpYaxNdwGmQEneCswxvX0Tn5oC24K+/dNtaZSDISrpF1Lv
-         rtQC4nwWGfDIhw+79smszV5mUHa/Uk+V8a88sT04Xy1MN6kYSv3JALZ+zo/GeIgzYhAa
-         VXY2qtjKL3Z+MiQRHEE0cxcTPaOy0cpUwh4zFG4yu/iTLqfy7yUd2ljsnUgsqPcUfuFJ
-         6UIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745588738; x=1746193538;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l5G44hVuiM6JlHEQ/mK9/lttnkQLILl+1HFvgq32kWg=;
-        b=dNpMi26Vj1lpEJlD27l0JVoANXbqrQZ6/0KDPNu2bvgO06nrt0k5VeYfYgUAvjd9m3
-         yQrrwDWCB5VTBIKYzon3aqWDVToU3BhYSwZHz9nRmPu0LA2n2afgZCzSs1T3A6G5d8kA
-         Jajb/1Pn2JTdQckDVm9fTHGcbnR66FnirshOIlH2+dErCQdDJYJP0T9M/M95ltsXqJiW
-         hki0qZ82Mj688R9Ma8dipKjMjtTG1jwD3oHb7YbhcCVyvcd8rhVWZnehbgWErIKqPvOu
-         Q1UT+nf82laUrlO+ftLp491LAkRb6xv1QhrzXZDldu/0duLqUa8q9uTXR75o7L4aT+f3
-         Ctxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpmJXgSgrQ9ucVXzC32qAfewkxY/FEyUX3u1q0EFUeUDaHPAT3p94xlGd8Kdv3wcLwoMyePgMzd5KLk1I=@vger.kernel.org, AJvYcCWZuctfhFK4U6v2q15ih8N9ydR9GC6Sw9z9qs1JBjoI9EbUTd6vwsm0LZy2Pu5NAGMfpgmwnTg75noiBZGnZlA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcDdZREUrP4/fP1Dt9a7Lkwsj5tW26tqNku2ZC5utJ+V+9ETjI
-	ynMrqtFbEbHbTYesjmuvsyHflvlsPfyQzb9+CJHmDu/9LreKlsQ/
-X-Gm-Gg: ASbGncvUbV5E2EjLPwULTjlnz0TexzCr/GGulXVjy1qOX/Bi83NoQHryfbGFxlsu8LF
-	uc8IFWQb/FkUOTDd8Ra/Fyj8OOdFweXZOSSrru7qJJQu5oHmFwQr4lMVMrhopvAO4aeJhLmzepU
-	1rLHb4nG5J/3b9K6Hxo+0Z3JFBFE+83NYyh6VVjROfoFffKALpWzbaqqmx+5lEAF8qH097yGR/b
-	7xC+/rChl4iUHPPSLK006wb3uLv21nm2SNALe0TGf3ennvnphf23sO3z5lKuGFMAD0mfRwe34PB
-	4mRkb9vA2L5LTVt+t3zEkTMLuMNExYzSE48mBzPcvgnWX6ucn5Hzlu0qEOr6KIFnQnWl2CcvkUh
-	kcyDKqU8zWJI7G+cTP7HVJHBhqYTlZRs=
-X-Google-Smtp-Source: AGHT+IHI90SpqY067YOP5MW1hIugdpRbv0RADVHf7V4ZPh9td3Ak7LLNbD1ABY0OqAXwuAk0zltSZg==
-X-Received: by 2002:a05:6214:ca2:b0:6f4:c939:a3f5 with SMTP id 6a1803df08f44-6f4cc38cae8mr31950566d6.17.1745588738400;
-        Fri, 25 Apr 2025 06:45:38 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c08eeeeesm22201636d6.4.2025.04.25.06.45.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:45:38 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 7F0F91200069;
-	Fri, 25 Apr 2025 09:45:37 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Fri, 25 Apr 2025 09:45:37 -0400
-X-ME-Sender: <xms:AZILaKltm_ZARbXTkfO0TZCXqFwcWuu6andkQ8h4WJXHDQyV7hkPBg>
-    <xme:AZILaB2jdZKaazdBAOhc_4jA6ZyOuKqUppjYWi_I7WcLXRnhVsLgqYwX1muIsf8ju
-    uyPUIRjEM7OOp9PEA>
-X-ME-Received: <xmr:AZILaIrZvoi65P-KJHQwsxAtokfrO3aZiRLm_8JRs1E9PX01VhZoeaZj>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvgeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepueduvdfgheekkeeitdetgfffjeduhefh
-    gefgfeehheeijeektedtgfekheektddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    dpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
-    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
-    lhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtohepsghqvgesghhoohhglhgvrdgtohhmpdhrtghpthht
-    ohephihurhihrdhnohhrohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugi
-    esrhgrshhmuhhsvhhilhhlvghmohgvshdrughkpdhrtghpthhtohepvhhirhgvshhhrdhk
-    uhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhr
-    tghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnh
-    efpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhnohdrlhho
-    shhsihhnsehprhhothhonhdrmhgv
-X-ME-Proxy: <xmx:AZILaOkH0CzJuf_pGL6JitIeMHjpihd5uWjg7eaHJh_29YTyMU16Ig>
-    <xmx:AZILaI14vpD-v3cloqpD47YaN_RxZg2QKNo5SHH5CvUXZqMr09QeoQ>
-    <xmx:AZILaFueSqrvP-iz9o7NsVn0xi3kQRYMZVQewFAliOTMGK9SxJM9VQ>
-    <xmx:AZILaEXAjOQEDt68h-tiJuybN4YvPSUzqCfL3zQSRqTuJ3yIGrA7FA>
-    <xmx:AZILaD2o-OKk48ZvqTIaxNW11bV1C5G90qJUqiKfm24LmTKKsFVtXJRa>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 25 Apr 2025 09:45:35 -0400 (EDT)
-Date: Fri, 25 Apr 2025 06:45:35 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Burak Emir <bqe@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Rong Xu <xur@google.com>
-Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
-Message-ID: <aAuR_0om4FI5Pb_F@Mac.home>
-References: <20250423134344.3888205-2-bqe@google.com>
- <20250423134344.3888205-6-bqe@google.com>
- <aAkbw0jEp_IGzvgB@yury>
- <CACQBu=XaOohewMnLj9PvgR5rYBxzYSXf2OAjCzUY=GFTJ9L=+Q@mail.gmail.com>
- <680a6b54.d40a0220.27afd9.5e84@mx.google.com>
- <680abbce.050a0220.144721.78ac@mx.google.com>
- <CACQBu=VEATxHmFvt0TKbb+Hx5jeEGO8SL733=0m8LNnX6S+ZKw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVkHX+kq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C85DC4CEE4;
+	Fri, 25 Apr 2025 13:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745588837;
+	bh=qi5h6vjHGkHHkMx48KdWOPGfCyT72085egpIwqt06EU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QVkHX+kql50+epGydmhjz+95MQSE8WEDlV87c70IY7HI4V1UG99qCiZRm1luxGYeO
+	 BVUaapBHvKfebXlGIwSGgPRO1pnmU00p2MUxCjvBFZEvNQ0Wke+4d9nmwMNwSkqjeK
+	 7DvdYe2JdWwvsenW+3ms5MsvBk4A7gUXIGS614Xh0d3FeRP9g+JidG4w5MUU5wef+B
+	 u7JuJ2bVjV1wS5LpFglBj3eelV/u0rhDOWAQqec5PEBdJELIg64PiO6k90NX4ZRriR
+	 drDucaxBTBnQHYnuTN84bbCm6mX7qLCkKbxUde4DshAfnex+OCWaQYmKoHHZgOyCvw
+	 eF4uPsyzoOzqA==
+Date: Fri, 25 Apr 2025 15:47:10 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, thomas.petazzoni@bootlin.com,
+	manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
+	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] PCI: Configure root port MPS to hardware maximum
+ during host probing
+Message-ID: <aAuSXhmRiKQabjLO@ryzen>
+References: <20250425095708.32662-1-18255117159@163.com>
+ <20250425095708.32662-2-18255117159@163.com>
+ <aAtikPOYlGeJCsiA@ryzen>
+ <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACQBu=VEATxHmFvt0TKbb+Hx5jeEGO8SL733=0m8LNnX6S+ZKw@mail.gmail.com>
+In-Reply-To: <a4963173-dd9a-4341-b7f9-5fdb9485233a@163.com>
 
-On Fri, Apr 25, 2025 at 02:20:13PM +0200, Burak Emir wrote:
-> On Fri, Apr 25, 2025 at 12:31 AM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > On Thu, Apr 24, 2025 at 09:48:17AM -0700, Boqun Feng wrote:
-> > > On Thu, Apr 24, 2025 at 06:45:33PM +0200, Burak Emir wrote:
-> > > > On Wed, Apr 23, 2025 at 6:56 PM Yury Norov <yury.norov@gmail.com> wrote:
-> > > > > So? Can you show your numbers?
-> > > >
-> > > > For now, I only have numbers that may not be very interesting:
-> > > >
-> > > > - for find_next_bit,  find_next_zero_bit and find_next_zero_bit (sparse):
-> > > >   22 ns/iteration in C, 32 ns/iteration in Rust.
-> > > >
-> > > > - for sparse find_next_bit (sparse):
-> > > >   60 ns/iteration in C, 70 ns/iteration in Rust.
-> > > >
-> > > > This is a VM running nested in a VM. More importantly: the C helper
-> > > > method is not inlined.
-> > > > So we are likely measuring the overhead (plus the extra bounds checking).
-> > > >
-> > > > I would like to get cross-language inlining to work with thinLTO to
-> > > > have a more realistic comparison.
-> > > > However, that is not something that works out of the box.
-> > > > I am looking at Gary Guo's patch for this:
-> > > > https://lore.kernel.org/all/20250319205141.3528424-1-gary@garyguo.net/
-> > > > Currently, I get duplicate symbol errors.
-> > > >
-> > >
-> > > You will need to add __rust_helper attribute for the new rust helpers
-> > > introduce in your patches. See Gary's patch #2 for example.
-> > >
-> >
-> > Here you go ;-)
-> >
-> >         https://github.com/fbq/linux/tree/rust-inline-bitmap
-> >
-> > I rebased on the top of rust-next and applied your patches onto it. The
-> > last one is the necessary bits that enables helper inlining for the new
-> > APIs in your patch. There is also a "TMP" patch in-between, otherwise
-> > INLINE_HELPERS won't work, we need to dig more of it. But anyway, it
-> > works on my machine (TM):
-> >
-> > (on x86, in your test function)
-> >
-> > 000000000028b090 <_RNvNtNtCs3KHxpmQFgFb_6kernel6bitmap5tests40kunit_rust_wrapper_bitmap_set_clear_find>:
-> >   ...
-> >   28b0dd: 48 0f ba 2b 11                btsq    $0x11, (%rbx)
-> >
-> > ^ this is the "b.set_bit(17);" in bitmap_set_clear_find() test.
+Hello Hans,
+
+On Fri, Apr 25, 2025 at 06:56:53PM +0800, Hans Zhang wrote:
 > 
-> Thanks Boqun! I had the same state and got things to build now with
-> CONFIG_LTO_NONE.
-> Your work helped me narrow down the possibilities.
+> But I discovered a problem:
 > 
-
-Great! Is performance number any different?
-
-> Gary's helper-inlining patch in combination of CONFIG_CLANG_LTO_THIN
-> and CONFIG_FIND_BIT_BENCHMARK_RUST=y gives "duplicate symbol" build
-> errors.
+> 0001:90:00.0 PCI bridge: Device 1f6c:0001 (prog-if 00 [Normal decode])
+>          ......
+>          Capabilities: [c0] Express (v2) Root Port (Slot-), MSI 00
+>                  DevCap: MaxPayload 512 bytes, PhantFunc 0
+>                          ExtTag- RBE+
+>                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+>                          RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+>                          MaxPayload 512 bytes, MaxReadReq 1024 bytes
 > 
-> It does not eve matter here - because  _find_next_bit C functions are
-> not helpers.
 > 
-
-Yes, I noticed that, but in theory we should have the same performance
-as C because C also make the call-jump to _find_next_bit() instead of
-inlining it.
-
-> For cross-language inlining, we would need to change the build system
-> similar to Gary's helper-inlining series, but for *all* object files.
-> That is what "-flto" does for clang, and "-Clinker-plugin-lto" would
-> do for rustc.
-> Instead of the hack of emitting a .bc file, we need all .o files to
-> contain LLVM bitcode, regardless of whether they come from clang or
-> rustc.
 > 
+> 			Should the DevCtl MaxPayload be 256B?
+> 
+> But I tested that the file reading and writing were normal. Is the display
+> of 512B here what we expected?
+> 
+> Root Port 0003:30:00.0 has the same problem. May I ask what your opinion is?
+> 
+> 
+> 		......
+> 0001:91:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd
+> NVMe SSD Controller PM9A1/PM9A3/980PRO (prog-if 02 [NVM Express])
+>          ......
+>          Capabilities: [70] Express (v2) Endpoint, MSI 00
+>                  DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
+> unlimited, L1 unlimited
+>                          ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+
+> SlotPowerLimit 0W
+>                  DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+>                          RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+> FLReset-
+>                          MaxPayload 256 bytes, MaxReadReq 512 bytes
+> 		......
 
-There are cases where we don't want a full LTO, and so having an option
-to get rid of unnecessary calls to the helpers instead of a full LTO is
-reasonable IMO. But of course, no reason not to make cross-language
-inlining work under LTO.
+Here we see that the bridge has a higher DevCtl.MPS than the DevCap.MPS of
+the endpoint.
 
-Regards,
-Boqun
+Let me quote Bjorn from the previous mail thread:
 
-> Thanks,
-> Burak
+"""
+  - I don't think it's safe to set MPS higher in all cases.  If we set
+    the Root Port MPS=256, and an Endpoint only supports MPS=128, the
+    Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
+    that case the RP may respond with a 256-byte payload the Endpoint
+    can't handle.
+"""
+
+
+
+I think the problem with this patch is that pcie_write_mps() call in
+pci_host_probe() is done after the pci_scan_root_bus_bridge() call in
+pci_host_probe().
+
+So pci_configure_mps() (called by pci_configure_device()),
+which does the limiting of the bus to what the endpoint supports,
+is actually called before the pcie_write_mps() call added by this patch
+(which increases DevCtl.MPS for the bridge).
+
+
+So I think the code added in this patch needs to be executed before
+pci_configure_device() is done for the EP.
+
+It appears that pci_configure_device() is called for each device
+during scan, first for the bridges and then for the EPs.
+
+So I think something like this should work (totally untested):
+
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -45,6 +45,8 @@ struct pci_domain_busn_res {
+        int domain_nr;
+ };
+ 
++static void pcie_write_mps(struct pci_dev *dev, int mps);
++
+ static struct resource *get_pci_domain_busn_res(int domain_nr)
+ {
+        struct pci_domain_busn_res *r;
+@@ -2178,6 +2180,11 @@ static void pci_configure_mps(struct pci_dev *dev)
+                return;
+        }
+ 
++       if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
++           pcie_bus_config != PCIE_BUS_TUNE_OFF) {
++               pcie_write_mps(dev, 128 << dev->pcie_mpss);
++       }
++
+        if (!bridge || !pci_is_pcie(bridge))
+                return;
+
+
+
+But we would probably need to move some code to avoid the
+forward declaration.
+
+
+Kind regards,
+Niklas
