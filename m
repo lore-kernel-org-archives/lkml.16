@@ -1,111 +1,231 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C4326FDBB;
-	Fri, 25 Apr 2025 15:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C933274662;
+	Fri, 25 Apr 2025 15:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745594035; cv=none; b=QC7bwwLl9wH4OJFjNXHuMhFr7XulQbuEP3f4GSXcR4I69pwKCEnu0qkTPKQT9vhiYNCFO5Qq0FmhnLzTulf6bdHmZXspwUoALKmOlgAf9silU+68cK+pIUKDhBX+FWyBh4pTa3kDNRCxBwwhG/srqLMJTVkeE7Ymhzam1r+uZVw=
+	t=1745594100; cv=none; b=PCpQjCb/PR5ME8bh8rNRAa2USgRrTN6SlCVT4hZNCk/EXMi6sNAPK381rTwDcE4ec2PvDAVv/nDT38ZBqttjCDf3caxLNSQUnI9Xl0m+fh55wLsfRw3wH9j4cY84zHqGzjc8+eELppbzc3DX1yglzmvrH5hIwqy8jqkQSU/Iwxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745594035; c=relaxed/simple;
-	bh=2Fr79h5WpW0sk+9jfuwv/EfIloErPvJaRV1TKBMbIms=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=utsOTm86+lxhmQ0E5dryYvTPeBQ343VJdA2z2ZRGlIgqzxyMCXQ7SAvUkzWJm3PSE3tn0j5dfpfz47BFlsrW89AGYIH5W+YJAwdUGFlsoPyl5nzrbm/fjF5RZlA88FR6sETabFqxuUJLg/Dq5189p4xQYecFzt+6MHgnWkV/ffs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=MiecbeKS; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1745594100; c=relaxed/simple;
+	bh=y23ZVPGVcTitl6yU4MxdmIYNLFF7uoP5dxp4sp9DaKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mPU7BLmgcm84NYToAJ3r2ie9wGB9SB21Kdz9Wz67revl+DeIY7w+rH3MJ99BfSZ6/0AkE7RvRv2tdgQaoSplqan9tLOugbr91IyCwx1Cea+UvmnAdFUr/jQjbwYdZ8jv6rVhPTk2+7vZJUjbjOaIYBbpamUwoKtF8RvH8WH6aGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XU2B+BtB; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="MiecbeKS"
-Received: from localhost (web.docker-mailserver_default [172.18.0.2])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 4E4B2BBAC4;
-	Fri, 25 Apr 2025 15:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1745594025;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ECsaLysjp6B31lix5ePZqbR776k53fktpSr8Jb8kvHE=;
-	b=MiecbeKSC9qPTxgyzouBu54qd4VjFtmkfHV/2qTsOefPU2eAaK5cBCTcImhw+T75qlqO2+
-	xsNGxQQjX0OdP68jb2HZKFeV8do4HMOWxaZhIfySqXsdEKz5Op//pZWwxEqwnctK8A8rVg
-	P2WjEybiUv3PnKk+10v9R9AGnDIaowzlxTfxSncUT2oXgzv8YLcXGPbJ5rn9brvr+KfYzt
-	y9ZSgyOeTe1KRw4YfSE60ZQrWAbmyN8y261B96MCfrdyWbqrTrbHB4hEewS6ZzpxeAxnO5
-	sW1MJRWbpDrguja+qwxdVjlEkU+50iOBR8LfCx5VBQuphi1fOseWw4tM2FcHfg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XU2B+BtB"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227914acd20so30503145ad.1;
+        Fri, 25 Apr 2025 08:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745594098; x=1746198898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8MbIsWkT2PPGddqwQtyenmGVRw/Qqkpli16lpvi3GR0=;
+        b=XU2B+BtBTkayA10RMpw7vfhFmTebHAnZiZG14THxsjEl2z4u4TpHsHNiQIwPljpZ3b
+         BeXo4nFs23p+oJJs8FIlMxUWTRRkz7eFxhEs2PfKUkTEqqCXrnxHclDGr8/gBEsHfHHe
+         dJQmtThY4C9yTy0KrVdG97jhCv+gapsBypYEc/mRwtCZS5yThffi/GUZQ6Ls85/4ZODO
+         6gqUDOS0aqnO6rDuxA5FcwazHbo7Lp54cXgcUSxLMQgPfgw60Pgk4PSbvd1evAzk2ux4
+         Ri3tSK2r1VQ0tQ4gxoTwfPRUDffKPLyWyMO8LWT2yivOVSbOlpfn/XDHY5DF0OCWF3q5
+         FuIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745594098; x=1746198898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8MbIsWkT2PPGddqwQtyenmGVRw/Qqkpli16lpvi3GR0=;
+        b=EjxO4xRU0tl8bt2NsGHim0/wbbSrkDBfHZzavBHSwiljadt46GIvaHnKUln/P3boD0
+         nQ1bFG24XVRzunSzP3z14p9H7tVlD9M/BTtXS65Sd7mzgppPbdqc7SjOFMuWJ2X7Gu0g
+         p0HAABpmx4iiod6XhappyEtBnOY4E5S07xXb60arCcKgWAHZnZLWnKLjST151HQlebDI
+         J6/eTykWzVL3f+BN2OnUc9x7IyIq8jSH6lkapuwZrCigIw2jWf2a6G7Wug1pL65G+9Ko
+         roFwbK1MZBYqRqqhnvT3UiWnSW+T2YFnK87MsTFfZvjn5NEV/jCNtflZmalUz2ZBFk0O
+         wjEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgsAqv203nvjQkQfFXiqy5fIId1Q2F1qfyVZRaa5lLEYZ2ydtdzGduoWBLX12BE+eIk/htCj8BBiE2ZATLYvqgF5o5f3sx@vger.kernel.org, AJvYcCUsN+Qh6Vaf5dV5NM2IL6yP7lfbMDDi3qDgBKhMc0Y9g/toGX+pNxE2ElX/T8iGv8MnkvI3qakDLG0XTfMA@vger.kernel.org, AJvYcCVCaoz+mFISAsIZWwKUMGcbVVPmgv2hoeGjW9bBqx/DZG+TadlvYiwNalcoD79CmJDffwurJlpROw==@vger.kernel.org, AJvYcCXxP3PRLJC4p6y0daqvT95ZwKj9Rm6ehPIeSpTcDTd0ifxtkLm+oSx9rUqjWB30Nmyv4N9fAGh5+OyURbze@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj6vu+b4b8VMCX34X6EuaCJJH01GF9grcqrxTGoHB1sNpgpnX7
+	m9yDWBZ4psXPsR+8yrpPOsSxFywenWpzy6YGXW7teTrgYGrCCpW5ksfm/f/wYPpxl+W4UW3+kuj
+	MlShPfHLgN9LHwILTE0CYmiSYo7k=
+X-Gm-Gg: ASbGncsNK1/dg6kPBRErFMa1UKiEfYjD2/r/oa5yhg7NkyoOC3WZjPajvFbNNGA/sZZ
+	w/iLEd7rVJ90h1PzY2E6Iw6cW+wvNNVwYu9QQC/pzX/06sXkH5mf/eAhNaE4aeuKHyaOGNVoN5I
+	kLqw7T71gz6lA4EkmpEeKKKw==
+X-Google-Smtp-Source: AGHT+IEtVX13MpKP47aS7whL3XKhn2KCCn5rHkVnZWX4At2Rfu+6bJEe3mUbY8+ozgrDXBiXZkRhZVpx0PZDZoPflLM=
+X-Received: by 2002:a17:902:e5d1:b0:21f:6f33:f96 with SMTP id
+ d9443c01a7336-22db47c9cefmr78622445ad.6.1745594097600; Fri, 25 Apr 2025
+ 08:14:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 25 Apr 2025 17:13:45 +0200
-From: barnabas.czeman@mainlining.org
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
- =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
- <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Joerg Roedel
- <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, Rob Clark
- <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Dmitry
- Baryshkov <lumag@kernel.org>, Adam Skladowski <a_skl39@protonmail.com>,
- Sireesh Kodali <sireeshkodali@protonmail.com>, Srinivas Kandagatla
- <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
- <danct12@riseup.net>
-Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: Add initial support for MSM8937
-In-Reply-To: <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
-References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
- <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
- <2e3d94a4-d9e1-429e-9f65-d004c80180e5@oss.qualcomm.com>
- <790a0b7537e0b82b70bc4b32612ecee6@mainlining.org>
- <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
-Message-ID: <5ccb39f9393b44761127717096a38a46@mainlining.org>
-X-Sender: barnabas.czeman@mainlining.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250424152822.2719-1-stephen.smalley.work@gmail.com> <20250425-einspannen-wertarbeit-3f0c939525dc@brauner>
+In-Reply-To: <20250425-einspannen-wertarbeit-3f0c939525dc@brauner>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Fri, 25 Apr 2025 11:14:46 -0400
+X-Gm-Features: ATxdqUFoaGk9OHJ0N5v_7u7M2tLmdB4Wyi7K0hWeHlvABdGu57_MpkHYXb2Skyc
+Message-ID: <CAEjxPJ4vntQ5cCo_=KN0d+5FDPRwStjXUimE4iHXJkz9oeuVCw@mail.gmail.com>
+Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list to always include
+ security.* xattrs
+To: Christian Brauner <brauner@kernel.org>
+Cc: paul@paul-moore.com, omosnace@redhat.com, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-25 11:57, Konrad Dybcio wrote:
-> On 4/23/25 4:46 PM, barnabas.czeman@mainlining.org wrote:
->> On 2025-04-23 16:03, Konrad Dybcio wrote:
->>> On 4/21/25 10:18 PM, Barnabás Czémán wrote:
->>>> From: Dang Huynh <danct12@riseup.net>
->>>> 
->>>> Add initial support for MSM8937 SoC.
->>>> 
->>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
->>>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>>> ---
-> 
-> [...]
-> 
->>>> +            gpu_opp_table: opp-table {
->>>> +                compatible = "operating-points-v2";
->>>> +
->>>> +                opp-19200000 {
->>>> +                    opp-hz = /bits/ 64 <19200000>;
->>>> +                    opp-supported-hw = <0xff>;
->>> 
->>> The comment from the previous revision still stands
->> If i remove opp-supported-hw i will got -22 EINVAL messages and the 
->> opp will be not fine.
-> 
-> Right, I have a series pending to improve this situation a bit..
-> 
-> In the meantime, you should be able to define the nvmem cell and
-> fill in meaningful values for this platform
-As I wrote in the previous revision there is no nvmem for GPU on msm8937 
-only on msm8940.
-> 
-> Konrad
+On Fri, Apr 25, 2025 at 5:20=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+>
+> On Thu, Apr 24, 2025 at 11:28:20AM -0400, Stephen Smalley wrote:
+> > The vfs has long had a fallback to obtain the security.* xattrs from th=
+e
+> > LSM when the filesystem does not implement its own listxattr, but
+> > shmem/tmpfs and kernfs later gained their own xattr handlers to support
+> > other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
+>
+> This change is from 2011. So no living soul has ever cared at all for
+> at least 14 years. Surprising that this is an issue now.
+
+Prior to the coreutils change noted in [1], no one would have had
+reason to notice. I might also be wrong about the point where it was
+first introduced - I didn't verify via testing the old commit, just
+looked for when tmpfs gained its own xattr handlers that didn't call
+security_inode_listsecurity().
+
+[1] https://lore.kernel.org/selinux/CAEjxPJ6ocwsAAdT8cHGLQ77Z=3D+HOXg2KkaKN=
+P8w9CruFj2ChoA@mail.gmail.com/T/#t
+
+>
+> > filesystems like sysfs no longer return the synthetic security.* xattr
+> > names via listxattr unless they are explicitly set by userspace or
+> > initially set upon inode creation after policy load. coreutils has
+> > recently switched from unconditionally invoking getxattr for security.*
+> > for ls -Z via libselinux to only doing so if listxattr returns the xatt=
+r
+> > name, breaking ls -Z of such inodes.
+>
+> So no xattrs have been set on a given inode and we lie to userspace by
+> listing them anyway. Well ok then.
+
+SELinux has always returned a result for getxattr(...,
+"security.selinux", ...) regardless of whether one has been set by
+userspace or fetched from backing store because it assigns a label to
+all inodes for use in permission checks, regardless.
+And likewise returned "security.selinux" in listxattr() for all inodes
+using either the vfs fallback or in the per-filesystem handlers prior
+to the introduction of xattr handlers for tmpfs and later
+sysfs/kernfs. SELinux labels were always a bit different than regular
+xattrs; the original implementation didn't use xattrs but we were
+directed to use them instead of our own MAC labeling scheme.
+
+>
+> > Before:
+> > $ getfattr -m.* /run/initramfs
+> > <no output>
+> > $ getfattr -m.* /sys/kernel/fscaps
+> > <no output>
+> > $ setfattr -n user.foo /run/initramfs
+> > $ getfattr -m.* /run/initramfs
+> > user.foo
+> >
+> > After:
+> > $ getfattr -m.* /run/initramfs
+> > security.selinux
+> > $ getfattr -m.* /sys/kernel/fscaps
+> > security.selinux
+> > $ setfattr -n user.foo /run/initramfs
+> > $ getfattr -m.* /run/initramfs
+> > security.selinux
+> > user.foo
+> >
+> > Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=3DiOawX4y77=
+ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
+> > Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.sma=
+lley.work@gmail.com/
+> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > ---
+> >  fs/xattr.c | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> > index 02bee149ad96..2fc314b27120 100644
+> > --- a/fs/xattr.c
+> > +++ b/fs/xattr.c
+> > @@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
+> >       return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_=
+LEN);
+> >  }
+> >
+> > +static bool xattr_is_maclabel(const char *name)
+> > +{
+> > +     const char *suffix =3D name + XATTR_SECURITY_PREFIX_LEN;
+> > +
+> > +     return !strncmp(name, XATTR_SECURITY_PREFIX,
+> > +                     XATTR_SECURITY_PREFIX_LEN) &&
+> > +             security_ismaclabel(suffix);
+> > +}
+> > +
+> >  /**
+> >   * simple_xattr_list - list all xattr objects
+> >   * @inode: inode from which to get the xattrs
+> > @@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, s=
+truct simple_xattrs *xattrs,
+> >       if (err)
+> >               return err;
+> >
+> > +     err =3D security_inode_listsecurity(inode, buffer, remaining_size=
+);
+>
+> Is that supposed to work with multiple LSMs?
+> Afaict, bpf is always active and has a hook for this.
+> So the LSMs trample over each other filling the buffer?
+
+There are a number of residual challenges to supporting full stacking
+of arbitrary LSMs; this is just one instance. Why one would stack
+SELinux with Smack though I can't imagine, and that's the only
+combination that would break (and already doesn't work, so no change
+here).
+
+>
+> > +     if (err < 0)
+> > +             return err;
+> > +
+> > +     if (buffer) {
+> > +             if (remaining_size < err)
+> > +                     return -ERANGE;
+> > +             buffer +=3D err;
+> > +     }
+> > +     remaining_size -=3D err;
+>
+> Really unpleasant code duplication in here. We have xattr_list_one() for
+> that. security_inode_listxattr() should probably receive a pointer to
+> &remaining_size?
+
+Not sure how to avoid the duplication, but willing to take it inside
+of security_inode_listsecurity() and change its hook interface if
+desired.
+
+>
+> > +
+> >       read_lock(&xattrs->lock);
+> >       for (rbp =3D rb_first(&xattrs->rb_root); rbp; rbp =3D rb_next(rbp=
+)) {
+> >               xattr =3D rb_entry(rbp, struct simple_xattr, rb_node);
+> > @@ -1468,6 +1488,10 @@ ssize_t simple_xattr_list(struct inode *inode, s=
+truct simple_xattrs *xattrs,
+> >               if (!trusted && xattr_is_trusted(xattr->name))
+> >                       continue;
+> >
+> > +             /* skip MAC labels; these are provided by LSM above */
+> > +             if (xattr_is_maclabel(xattr->name))
+> > +                     continue;
+> > +
+> >               err =3D xattr_list_one(&buffer, &remaining_size, xattr->n=
+ame);
+> >               if (err)
+> >                       break;
+> > --
+> > 2.49.0
+> >
