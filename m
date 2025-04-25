@@ -1,124 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B252356A6;
-	Fri, 25 Apr 2025 08:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFB322F16C;
+	Fri, 25 Apr 2025 08:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569092; cv=none; b=mSlfMQWe60+ZeaWF0mTXiCxwTB/F8JKoFfb6F6u3V8GJDU5+Rv/m1m+zf/09M3udsh17XIfpVKl1nQ5z8IV4GLWx+GPaHsfhca23Cup3qLIoircdCeZa+hLw/HBBE4NAa0v41nRH05srVe3qWeJTl5LDYeF2dGERLz2ewOBrtio=
+	t=1745569159; cv=none; b=eZFHIx9roJqLINqdZNgfmzOiCY2JOTZMLTKOTSWFh7/NCo8alatu81o8HdD7gOIkSWEOw9SwuJZHxVd1f0zC4ktzd48s+L9bsLJ1M+Xna9lVWc27id3Vhhs9kSfDolIbprtSAkhKKJFnp0uJz0zOZJYHP8tMuJYKp53SluiMrRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569092; c=relaxed/simple;
-	bh=vBvwTngtF1y3gEmzsBG3Ole+k2+llV0wO5j1OWtz3cU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Av4jdjC03x1ReIOKARbBt3loTBM4SiFEZi3gKu4Hw145bLGA1z+M0hQ12Y1ETP6Ezjlv7M9YOo1wPJo6riz0fL6FVUSW4P1G9Rmbv8ZkuO29WBTy+9aJvv4EW+paynFfMQ925BcMPXQHRMTPF15UB8KQbQcYsqoUat3esojJ+eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2dqp/1Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745569159; c=relaxed/simple;
+	bh=OrwBz+EwRHtxPq45tTkIGnSGl2Ieqh3Kx4b1WiQTSnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jxuCD6KRL5w4NYI81ply7iNUpT35+fEVlah/meQ2BKH4OdSMTy7+rGbFoXVfcStAfD6qU2nFsyBQHp2nqRBYfxrUYDfAJdrHDXg7rTUzkqrjRLDzzoyN0qE8s26wnCUr5W1qFiRxS7pHvHquGORcrapvddMAVEx0UIBiYFMuSfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsrU7/G1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2dqp/1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB43CC4CEE4;
-	Fri, 25 Apr 2025 08:18:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsrU7/G1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922A0C4CEE4;
+	Fri, 25 Apr 2025 08:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745569092;
-	bh=vBvwTngtF1y3gEmzsBG3Ole+k2+llV0wO5j1OWtz3cU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s2dqp/1ZtDMF0/3m2Sgj/JqnJpL1j3Fa5gTBKgtpqy4pAYukdZiVnJcPm95z067J/
-	 gVTGpWxG6Om5uwtxnptI1fV5MXhajBk3q1WvLCU6oZXyLidfIp9BDLKhn3St0IuxVM
-	 gNvRHn3xhRsNLqx/M6/WxEhN1IWtXWjldZq8fqf9y/NVL7XFcISVYh0ceu0rGLxcIs
-	 RoVsiYBS1bGEP3VdHJ9Rg5h4b+qw4VvVkzVZ4arssf7HxFflWioLqg+mipGTW35drH
-	 ZIu7ntFfgIDynQHBgsD6dsDKj76aLkrCa1kiRpVvXXznTtQjpvHGr9SBZ5WnqksS49
-	 v7cF3FaDRbbXg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Cezary Rojewski <cezary.rojewski@intel.com>,
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sound-open-firmware@alsa-project.org
-Subject: [PATCH v3 4/4] AsoC: intel: atom: Return -ENOMEM if pcim_iomap() fails
-Date: Fri, 25 Apr 2025 10:17:43 +0200
-Message-ID: <20250425081742.61623-6-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250425081742.61623-2-phasta@kernel.org>
-References: <20250425081742.61623-2-phasta@kernel.org>
+	s=k20201202; t=1745569158;
+	bh=OrwBz+EwRHtxPq45tTkIGnSGl2Ieqh3Kx4b1WiQTSnE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BsrU7/G1tEVDfu/Bxo/TouQqim+5s9/2Z/QB/85HcSw1rAk/+Epepgn2lRAEoyDwD
+	 dq1HRL5BGOYFyGH/26VNSMK5fpSXI6vlZ2fZgn1WChC6uFE7kWi2BLZhLBo5qb1I8X
+	 B1wbZRkIAwOef5Yhdv9AsKrbBCXrHmtJ56PwxHe6rrapD8fS5qDdBgjI+GMNPm3Xsq
+	 nGpkx/aCkJm3qcIkPI8FwimjEFIgFPXvu/npVYaUpLAjLS3Vl0VzGXrnT7IH6qxgI+
+	 NeR7uziCDCfdt1kqI0A5xL89GaEWIw8AoYhIzN68ZV+Wl+48T17u70+VMguZiW8aRq
+	 cdCo1D53uFMcA==
+Date: Fri, 25 Apr 2025 09:19:10 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3 3/3] staging: iio: ad9832: Add minor improvements to
+ ad9832_write_powerdown
+Message-ID: <20250425091910.545bdce7@jic23-huawei>
+In-Reply-To: <CAKUZ0zLgH9Ec5FMEjXa59-bBEVooEQUOeGuZ9OJw=A3P3OWp5A@mail.gmail.com>
+References: <20250420175419.889544-1-gshahrouzi@gmail.com>
+	<20250420175419.889544-4-gshahrouzi@gmail.com>
+	<20250421124044.400628f1@jic23-huawei>
+	<CAKUZ0zLgH9Ec5FMEjXa59-bBEVooEQUOeGuZ9OJw=A3P3OWp5A@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The error checks for pcim_iomap() have the function return -EINVAL.
--ENOMEM is a more appropriate error code.
+On Thu, 24 Apr 2025 18:29:57 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-Replace -EINVAL with -ENOMEM.
+> On Mon, Apr 21, 2025 at 7:40=E2=80=AFAM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> >
+> > On Sun, 20 Apr 2025 13:54:19 -0400
+> > Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+> > =20
+> > > Minimize size of type that needs to be used by replacing unsigned long
+> > > with bool. Avoid redundancy by checking if cached power state is the
+> > > same as the one requested.
+> > >
+Hi Garbiel,
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
----
- sound/soc/intel/atom/sst/sst_pci.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Quick process comment given you are sending quite a few emails (which is gr=
+eat!)
 
-diff --git a/sound/soc/intel/atom/sst/sst_pci.c b/sound/soc/intel/atom/sst/sst_pci.c
-index bf2330e6f5a4..22ae2d22f121 100644
---- a/sound/soc/intel/atom/sst/sst_pci.c
-+++ b/sound/soc/intel/atom/sst/sst_pci.c
-@@ -49,7 +49,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
- 
- 		ctx->ddr = pcim_iomap(pci, 0, 0);
- 		if (!ctx->ddr)
--			return -EINVAL;
-+			return -ENOMEM;
- 
- 		dev_dbg(ctx->dev, "sst: DDR Ptr %p\n", ctx->ddr);
- 	} else {
-@@ -59,7 +59,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
- 	ctx->shim_phy_add = pci_resource_start(pci, 1);
- 	ctx->shim = pcim_iomap(pci, 1, 0);
- 	if (!ctx->shim)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	dev_dbg(ctx->dev, "SST Shim Ptr %p\n", ctx->shim);
- 
-@@ -67,7 +67,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
- 	ctx->mailbox_add = pci_resource_start(pci, 2);
- 	ctx->mailbox = pcim_iomap(pci, 2, 0);
- 	if (!ctx->mailbox)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	dev_dbg(ctx->dev, "SRAM Ptr %p\n", ctx->mailbox);
- 
-@@ -76,7 +76,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
- 	ctx->iram_base = pci_resource_start(pci, 3);
- 	ctx->iram = pcim_iomap(pci, 3, 0);
- 	if (!ctx->iram)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	dev_dbg(ctx->dev, "IRAM Ptr %p\n", ctx->iram);
- 
-@@ -85,7 +85,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
- 	ctx->dram_base = pci_resource_start(pci, 4);
- 	ctx->dram = pcim_iomap(pci, 4, 0);
- 	if (!ctx->dram)
--		return -EINVAL;
-+		return -ENOMEM;
- 
- 	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
- 	return 0;
--- 
-2.48.1
+Please don't bother replying to say you are doing something suggested.
+Focus any reply (including cropping irrelevant context) on what you want to
+discuss.  If there is nothing to discuss your reply is effectively the chan=
+ge
+log of the next version of the series.
 
+Even a simple email like this one takes a little time for reviewers to look
+at and they gain no extra information from doing so.
+
+Thanks,
+
+Jonathan
