@@ -1,102 +1,90 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7C022AE71;
-	Fri, 25 Apr 2025 07:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8D122AE71
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745566581; cv=none; b=Tf3dpD3szKIa8QygtXAzyAV9f3ne3AqeHehgHQHtypJJkOj1lKJX2ox6kowmE1BbRfGh3q1R46/z9HtjqzZ8Hmi7AAa/s+trEYRqSj/OLStxXrIHnfXYNbKvDX2enpsCpgvtgeJtQlFnMiPBk5Sx1I1xXRz+fZjTjEUyJDZ+MOE=
+	t=1745566595; cv=none; b=cZhT+JbB0cM4OPp8VM/aMrJ8i8b5jY6vVwCXAuAz9tGOgcqDVcHrbxzYsDY+mI2E+M3sBteC04C1g2Y/tVshBg3OiGGcSTxNVTjuuW3adfrzR3K5uNTfHALHOKNrz2czp2KUPEBXS3LxlvVZ07yGV3z5j11u6yT5Rg1jODP8kC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745566581; c=relaxed/simple;
-	bh=rCNEArio8e3RBD+N9jHCQd83TgIxf+sAlEPyMwlfipQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pixQmauXPrH9FKgdhqkteMfGokHvg2bMlXFuG6LKXfa7Zdrtq5Thv+A+XfVkytnh4FBoypR6UisEaCTd2sezAVAjCoappKHe1Gjc1Gq72bWG7rmGKBW2aJiWGy606O/iI2afKfO+29AhABWhe/Un5syI8vkfg6J5tyveJm+bq5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6DEdwwN; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745566595; c=relaxed/simple;
+	bh=pzB+ULPjZJoXWNCIbG47lG7lxSlV7q022ronMCkd2Co=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IXa5OTeso5pBG67oBjJwqwPp3wbUK274Mo/PMtmp/4fPAlIePRI8N98zbuRSyHE3woOJO+lAhTleCCXuLSnZRbC621eLJb8S/kv9Cz4Oy3ho6wNKSl8auNZabB1vppiXbM5X76fmJDapjdWqfO6FSsfTmUp720zf6TLbJNq4h84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=HG0avtgt; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6DEdwwN"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac29fd22163so277128166b.3;
-        Fri, 25 Apr 2025 00:36:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745566578; x=1746171378; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=f/aoAOajG2LJH/fap10d3juwU0GRv8oLLbcqOZ94sZ4=;
-        b=c6DEdwwNlJC6MgZwgu0z4PnQmlDxpTopy5bLgYhZcXhTf+rrviKuQrZfdJ/oxiNRcl
-         Fhbxy5omN+ft7In9AyZL8vQ9K9sucH5krE2Hb2/vuITVDr/fV8cfu9H1nyaC+FAaZ6W0
-         BmFsxD6JOpI9OwuDqXYmEbzJ4tkPg+ExR6i1PvBXdUa7KK0mSopdKYE4PthBjHHfh+Iq
-         7WED4tYqcHpWvG435J0JNbY6RSw4Prh6ELqkUGisELFl07QEG8GSxvfAbwoz1HktWQT3
-         g+b7aT4pmIiXuCPmjT7HvzUYQn3hIBBhD5q4JBKgg8td9KNpIhr34TiNf0hrI5pHhe7L
-         SV1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745566578; x=1746171378;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/aoAOajG2LJH/fap10d3juwU0GRv8oLLbcqOZ94sZ4=;
-        b=JlGOUO6Gl1JE19NWtxyEJ5zmzUBRHWwvuRHqz13Pzu/Om6pOLjriZ1yaSyQQrTsw4A
-         SHToEAkSosZsRwaNxfzZSS4uxbVWT4hkTEddKepdx50R8yWmOKQ2J3LxCOwYpEyPHMYw
-         x3yDG8MKrVs3RypbPbKOcrK9tw9YSVC6VKE5i7emZ0eU9VLjgO5bgDrO1d4j/3eZuTkX
-         iLQwCw0r1z4einL9e/8hFJ9wNtnvGjRM4uLG62UMPdDfrWM2E7ZuNSO47HQlT0fd8i6Y
-         xjc2+PXr2X9a6y8J2KIS+iHnsyxRV8OB+GqxsLzZtrZ9cVLpxYXoJ59PbeTJDdB4ApLu
-         +upA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/KaVTjyBpuvhIZXowu31Xd3aLxebrzBpQZWtsh+DlQBb+zHxWLSxCPZxCLN8arRiL+MKvZhtt+gw0lfeu@vger.kernel.org, AJvYcCXYtPxqrv0433+oWPUizZGbYu+3CuHJxZbkRWJt/bT9ovrn+e47PQIzeFaxjcapyaEFiRCuxWnXzjM1pnVO@vger.kernel.org, AJvYcCXzAzY5uONtfexFhGFQhU7LU9UrkUgfOPu28uYNwT5CUzgGrNGmZw81z7VZui4u004RWJ6p0fcgmAGE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0pOq+w0MT9GpqyyaBrfCgUQf1+g+ZwD2dZysYygNV5fyQdsEQ
-	LQ0fUZqWDENcca1y6UnE6pkp9hi5/zS+cXHihbiVBEkjL8IgmQ3t
-X-Gm-Gg: ASbGncs+711fMJ6XYG2b4NhEzakPy9uHVzow585E7IRhSsdOl5nMdb0lNKw2nGk2bDI
-	duv+eH3spC+xetyhahyWP+M3HVOBmZltEu+qr2oupxlzm8u/jxmq6bPo+J3dsIsebro4tqZIA+/
-	yyZJhYJVFLZPfk8O9gKcajtwpTTtEgSfYisBP61PyqJY4EZA8Utdnc9QCU8Xr1Xvfqt7h8T1kKP
-	JMecSpfdWSAOte89a/pg8VMJuS2/5zqGA3RdNDbOehIe6eb2gPt5DsV02xT0/N53dq6uzP3jFBf
-	0H5E+XdktGTiDpmPQKF6OsmkGPKEvVkpsbUKpfyK7ku5DNnWPJHbpWMKv5n2z8MeTLSaCu4AClV
-	fGcovpw==
-X-Google-Smtp-Source: AGHT+IEFRDNwT/tszm82KKO50dkALibFBs/YMWdHV7MAruEyimBlWP+qHuPyZVHwmxBzxuAdsnf6Bw==
-X-Received: by 2002:a17:907:1b1f:b0:abf:6d24:10bb with SMTP id a640c23a62f3a-ace7136c44bmr114322666b.44.1745566577785;
-        Fri, 25 Apr 2025 00:36:17 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8cb3sm89574966b.93.2025.04.25.00.36.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 00:36:17 -0700 (PDT)
-Message-ID: <3850e8df-9744-420d-a5e0-46cb85b76fcd@gmail.com>
-Date: Fri, 25 Apr 2025 09:36:16 +0200
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="HG0avtgt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1745566590; x=1745825790;
+	bh=pzB+ULPjZJoXWNCIbG47lG7lxSlV7q022ronMCkd2Co=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=HG0avtgtjX1JJplmZ2W+xPmQcxNkKBLhOg5j0EHiybAfRtWMWBmgyWc7J+sACxz0L
+	 R9lHs89Py8lV2OveRBpvGfGmn1ttoBTbngs99N0ue/vD1CIvGJkuRZiIzoijQWelRa
+	 rDwXt1bv3YIzoUcegnBYrd/pYq9y9p2t1yyo4bGMPp1yp3QT/W4uUwdprHofNPAHpk
+	 LWRtYy2cZfFCmffg2nHgSL4+ihoF4XeEBpPij3zWLHNSlH4hw8CNjpkff1U8P8oFQG
+	 Moewtq6Rp9sB6j63t+9HQU0VZr8Q101D7BO0QEPsDJ++uSbQtdCkMhuBIzow/xHe13
+	 UBPlHVw22Vu3w==
+Date: Fri, 25 Apr 2025 07:36:23 +0000
+To: intel-xe@lists.freedesktop.org
+From: Harry Austen <hpausten@protonmail.com>
+Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Harry Austen <hpausten@protonmail.com>, Lucas De Marchi <lucas.demarchi@intel.com>, =?utf-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Jani Nikula <jani.nikula@linux.intel.com>
+Subject: [PATCH v2] drm/xe: Allow building as kernel built-in
+Message-ID: <20250425073534.101976-1-hpausten@protonmail.com>
+Feedback-ID: 53116287:user:proton
+X-Pm-Message-ID: d1dccf1a1237e941559f5aa11cd9a2ed1b6e14c6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] mtd: rawnand: qcom: Pass 18 bit offset from NANDc
- base to BAM base
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, miquel.raynal@bootlin.com,
- richard@nod.at, vigneshr@ti.com, manivannan.sadhasivam@linaro.org,
- broonie@kernel.org, absahu@codeaurora.org, bbrezillon@kernel.org,
- architt@codeaurora.org, quic_srichara@quicinc.com,
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20250410100019.2872271-1-quic_mdalam@quicinc.com>
- <20250410100019.2872271-2-quic_mdalam@quicinc.com>
-Content-Language: hu
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <20250410100019.2872271-2-quic_mdalam@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-2025. 04. 10. 12:00 keltezéssel, Md Sadre Alam írta:
-> The BAM command descriptor provides only 18 bits to specify the NAND
-> register offset. Additionally, in the BAM command descriptor, the NAND
-> register offset is supposed to be specified as "(NANDc base - BAM base)
-> + reg_off". Since, the BAM controller expecting the value in the form of
-> "NANDc base - BAM base", so that added a new field 'bam_offset' in the NAND
-> properties structure and use it while preparing the command descriptor.
-> 
-> Previously, the driver was specifying the NANDc base address in the BAM
-> command descriptor.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 8d6b6d7e135e ("mtd: nand: qcom: support for command descriptor formation")
-> Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+Fix Kconfig symbol dependency on KUNIT, which isn't actually required
+for XE to be built-in. However, if KUNIT is enabled, it must be built-in
+too.
 
-Tested-by: Gabor Juhos <j4g8y7@gmail.com> # on IPQ9574
+Also, allow DRM_XE_DISPLAY to be built-in. But only as long as DRM_I915
+isn't, since that results in duplicate symbol errors.
+
+Fixes: 08987a8b6820 ("drm/xe: Fix build with KUNIT=3Dm")
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Signed-off-by: Harry Austen <hpausten@protonmail.com>
+---
+v2: Ensure DRM_XE_DISPLAY and DRM_I915 can't both be built-in
+
+ drivers/gpu/drm/xe/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+index 9bce047901b22..bc63c396d7fef 100644
+--- a/drivers/gpu/drm/xe/Kconfig
++++ b/drivers/gpu/drm/xe/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config DRM_XE
+ =09tristate "Intel Xe Graphics"
+-=09depends on DRM && PCI && MMU && (m || (y && KUNIT=3Dy))
++=09depends on DRM && PCI && MMU && (m || (y && KUNIT!=3Dm))
+ =09select INTERVAL_TREE
+ =09# we need shmfs for the swappable backing store, and in particular
+ =09# the shmem_readpage() which depends upon tmpfs
+@@ -51,7 +51,7 @@ config DRM_XE
+=20
+ config DRM_XE_DISPLAY
+ =09bool "Enable display support"
+-=09depends on DRM_XE && DRM_XE=3Dm && HAS_IOPORT
++=09depends on DRM_XE && (DRM_XE=3Dm || DRM_I915!=3Dy) && HAS_IOPORT
+ =09select FB_IOMEM_HELPERS if DRM_FBDEV_EMULATION
+ =09select I2C
+ =09select I2C_ALGOBIT
+--=20
+2.49.0
+
+
