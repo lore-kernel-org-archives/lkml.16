@@ -1,36 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C842B1F4CBE;
-	Fri, 25 Apr 2025 08:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B722223A9AD;
+	Fri, 25 Apr 2025 08:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570140; cv=none; b=aX+JuNQ6QEb3v8JXMmxBrPsHO1c/giOWZpPYZmu6y1CCc8dX9u1tgbH8kHETqHgwAhN9T0oEY/xM/f9oLO3GbOQjcDbQa9P7DdgR25te5PiGvMS/3SVOxu0Xt6iXnA3bkikD+fPiIPKd+QgbZYFuGkD/X3Jtr3e2c8hQl9THXxY=
+	t=1745570143; cv=none; b=P0YMUlAWMLhn2n84wUEu3voHvWRXkmkPuF1O8of9b3MevSK+zX0rTAFxnTnn58TMVarS0rhiEmSePeVCLBxF4xbLRaDJ492DofaaJDZoMTEZ8dC3BULYn6biuh5hHz2EvGtMZkqLQWJlAIa96cDnqrBq0Ee/Rgd/gcPOJpcSf7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570140; c=relaxed/simple;
-	bh=liDUQDCfZ7sS2+A9Y4oQMwKEWewLI+4MU2cKShAXLtw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HABkjjfTsWA5Fzwvhvk15wc4eAfc8lfgwLsMIhAOuuNlqM2yFBCK2L8F2Tr9onDH8mtSqXLZwDdUBBZ9Hywg16L1c865VihFaWynfnVn8xi9ZIbzp8dC5BkaTnI11Qf3tSSgj7FJymaRvcJaQcNx8pbw3zQgRdH+NvSRDFuGkBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OejYNbDT; arc=none smtp.client-ip=198.137.202.136
+	s=arc-20240116; t=1745570143; c=relaxed/simple;
+	bh=oUZixw0WU+W+4ipWHGADwNw4ZRT3BPNM847Bpj4kjkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t6S1AIYzn8z2FzJxchdDRRN3Tc/q7nkYfpIyqzwzZ7RAN/HE9xguUXaWO8J8kFKGAYu7bYei/0VTLd8IVppAxEMaSEgXlT+y1C/6YObjYan59mPaUKPavvEM2pnCjUrYfgTid6jmGTPfNBnLvxBwZnv7Er97J/eReM45APT5PMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=F6vSQMi7; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OejYNbDT"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="F6vSQMi7"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5O2390085
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5T2390085
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 25 Apr 2025 01:34:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5O2390085
+	Fri, 25 Apr 2025 01:34:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5T2390085
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745570089;
-	bh=A3b4ITZaTfXzMfE8P3NClf2sv8WJ6sa7JySmuA7pbdY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OejYNbDTNY7z9B258k3ak9TmvMyUbUpawFr8lLCTkwYMVfGb8YqhUrp3Z4KHs5fPj
-	 my80ixwryjSADjgtbLLeYGt0L3yHPJEv3Wau8PPmxGKQDdPwP1Xvbht7Gu2n9NaQOW
-	 r9knRf/PcJ8xVurhtr9sRPFMNKKB8w/PmJDV/lYlJLHUotF+ugc+6Wg/XheAMKDeDu
-	 coOtH3LvRC/W3UtUcStNjIBjhI6NBGI5cYFWcYvObfXwETuZisb5epS8DGpWpQdwKV
-	 ZzSnCgUoos8Ps6ZQ2mJ4kAjz3ZUWe34m74SdH0VpP2V6mtcW/fmnQms4X8fzOFGbzo
-	 5n2xdLpTmFqxA==
+	s=2025042001; t=1745570099;
+	bh=+1cZPrjxoO8JP1SvNOjxHMJreVADygXIL9efLTE+5Mg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=F6vSQMi7TaxXX6g86RzyahMtuAdPxIGazxNkvqFJ36qXhTfTGwfcl14Zcq4s2POXC
+	 niLC7I1Gu8ZZjcErcpBuICA0rJTJ7RhKIyS/ycFiSmRCGgiP0WVqu7dSGr3Y2NlM6F
+	 Gdwe5BFHGT42f3rKWb5hyMMHiMi7bRwiIPRuXfjquaHkaG+LwoX8Coerw5DbsntywQ
+	 pMk/mNcD8hAC5bvXpfRFX8QIoGqXkBfBHz15uz6PkVCVMIaV+U4UTCYcvWYDf1OsFi
+	 5cX2scfJbAmJ+8gKqJjqhm9VHLxC4geKP0aazl31NuDnYDFxgVoRVDHtmTqL7EeBTD
+	 89o4WbRGeVNXg==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -50,113 +51,77 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com,
         dapeng1.mi@linux.intel.com
-Subject: [PATCH v3 00/14] MSR code cleanup part one
-Date: Fri, 25 Apr 2025 01:34:23 -0700
-Message-ID: <20250425083442.2390017-1-xin@zytor.com>
+Subject: [PATCH v3 05/14] x86/msr: Return u64 consistently in Xen PMC read functions
+Date: Fri, 25 Apr 2025 01:34:28 -0700
+Message-ID: <20250425083442.2390017-6-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425083442.2390017-1-xin@zytor.com>
+References: <20250425083442.2390017-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch set is the first part of the patch set:
+The pv_ops PMC read API is defined as:
+        u64 (*read_pmc)(int counter);
 
-  MSR refactor with new MSR instructions support
+But Xen PMC read functions return unsigned long long, make them
+return u64 consistently.
 
-@ https://lore.kernel.org/lkml/20250422082216.1954310-1-xin@zytor.com/T/#m5a34be7d4ed55f0baca965cb65452a08e9ad7c8a
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+---
+ arch/x86/xen/pmu.c     | 6 +++---
+ arch/x86/xen/xen-ops.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-
-It's getting *WAY* too big, and whether to zap the pv_ops MSR APIs is
-still under argument.  Dave Hansen suggested to focus on rename stuff
-first, most of which he acked.
-
-Jürgen Groß also gave his RBs to most of the Xen MSR cleanup patches.
-
-So here comes the first MSR cleanup patch set with version 3.
-
-
-This patch series is based on:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/msr
-
-
-Xin Li (Intel) (14):
-  x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
-  x86/msr: Remove rdpmc()
-  x86/msr: Rename rdpmcl() to rdpmc()
-  x86/msr: Convert the rdpmc() macro into an always inline function
-  x86/msr: Return u64 consistently in Xen PMC read functions
-  x86/msr: Convert __wrmsr() uses to native_wrmsr{,q}() uses
-  x86/msr: Add the native_rdmsrq() helper
-  x86/msr: Convert __rdmsr() uses to native_rdmsrq() uses
-  x86/xen/msr: Remove calling native_{read,write}_msr{,_safe}() in
-    pmu_msr_{read,write}()
-  x86/xen/msr: Remove pmu_msr_{read,write}()
-  x86/xen/msr: Remove the error pointer argument from set_seg()
-  x86/pvops/msr: refactor pv_cpu_ops.write_msr{,_safe}()
-  x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
-  x86/msr: Change the function type of native_read_msr_safe()
-
- arch/x86/coco/sev/core.c                      |   2 +-
- arch/x86/events/amd/brs.c                     |   4 +-
- arch/x86/events/amd/uncore.c                  |   2 +-
- arch/x86/events/core.c                        |   2 +-
- arch/x86/events/intel/core.c                  |   4 +-
- arch/x86/events/intel/ds.c                    |   2 +-
- arch/x86/events/msr.c                         |   3 +
- arch/x86/events/perf_event.h                  |   1 +
- arch/x86/events/probe.c                       |   2 +
- arch/x86/hyperv/hv_apic.c                     |   6 +-
- arch/x86/hyperv/hv_vtl.c                      |   4 +-
- arch/x86/hyperv/ivm.c                         |   3 +-
- arch/x86/include/asm/apic.h                   |   4 +-
- arch/x86/include/asm/fred.h                   |   1 +
- arch/x86/include/asm/microcode.h              |   2 +
- arch/x86/include/asm/mshyperv.h               |   3 +-
- arch/x86/include/asm/msr.h                    | 130 +++++-------------
- arch/x86/include/asm/paravirt.h               |  57 ++++----
- arch/x86/include/asm/paravirt_types.h         |  10 +-
- arch/x86/include/asm/suspend_32.h             |   1 +
- arch/x86/include/asm/suspend_64.h             |   1 +
- arch/x86/include/asm/switch_to.h              |   4 +-
- arch/x86/include/asm/tsc.h                    |  76 +++++++++-
- arch/x86/kernel/cpu/amd.c                     |   2 +-
- arch/x86/kernel/cpu/common.c                  |  10 +-
- arch/x86/kernel/cpu/mce/core.c                |   6 +-
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  25 ++--
- arch/x86/kernel/cpu/resctrl/rdtgroup.c        |   2 +-
- arch/x86/kernel/cpu/umwait.c                  |   4 +-
- arch/x86/kernel/fpu/xstate.h                  |   1 +
- arch/x86/kernel/hpet.c                        |   1 +
- arch/x86/kernel/kvm.c                         |   2 +-
- arch/x86/kernel/kvmclock.c                    |   2 +-
- arch/x86/kernel/process_64.c                  |   1 +
- arch/x86/kernel/trace_clock.c                 |   2 +-
- arch/x86/kernel/tsc_sync.c                    |   1 +
- arch/x86/kvm/svm/svm.c                        |  34 ++---
- arch/x86/kvm/vmx/vmx.c                        |   4 +-
- arch/x86/lib/kaslr.c                          |   2 +-
- arch/x86/mm/mem_encrypt_identity.c            |   5 +-
- arch/x86/realmode/init.c                      |   1 +
- arch/x86/xen/enlighten_pv.c                   |  58 ++++----
- arch/x86/xen/pmu.c                            |  69 +++-------
- arch/x86/xen/xen-ops.h                        |   5 +-
- drivers/acpi/processor_perflib.c              |   1 +
- drivers/acpi/processor_throttling.c           |   3 +-
- drivers/cpufreq/amd-pstate-ut.c               |   2 +
- drivers/hwmon/hwmon-vid.c                     |   4 +
- drivers/net/vmxnet3/vmxnet3_drv.c             |   4 +
- drivers/platform/x86/intel/pmc/cnp.c          |   1 +
- .../intel/speed_select_if/isst_if_common.c    |   1 +
- drivers/platform/x86/intel/turbo_max_3.c      |   1 +
- 52 files changed, 284 insertions(+), 294 deletions(-)
-
-
-base-commit: a5447e92e169dafaf02fd653500105c7186d7128
+diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+index f06987b0efc3..9c1682af620a 100644
+--- a/arch/x86/xen/pmu.c
++++ b/arch/x86/xen/pmu.c
+@@ -346,7 +346,7 @@ bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err)
+ 	return true;
+ }
+ 
+-static unsigned long long xen_amd_read_pmc(int counter)
++static u64 xen_amd_read_pmc(int counter)
+ {
+ 	struct xen_pmu_amd_ctxt *ctxt;
+ 	uint64_t *counter_regs;
+@@ -366,7 +366,7 @@ static unsigned long long xen_amd_read_pmc(int counter)
+ 	return counter_regs[counter];
+ }
+ 
+-static unsigned long long xen_intel_read_pmc(int counter)
++static u64 xen_intel_read_pmc(int counter)
+ {
+ 	struct xen_pmu_intel_ctxt *ctxt;
+ 	uint64_t *fixed_counters;
+@@ -396,7 +396,7 @@ static unsigned long long xen_intel_read_pmc(int counter)
+ 	return arch_cntr_pair[counter].counter;
+ }
+ 
+-unsigned long long xen_read_pmc(int counter)
++u64 xen_read_pmc(int counter)
+ {
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+ 		return xen_amd_read_pmc(counter);
+diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+index 63c13a2ccf55..735f58780704 100644
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -277,7 +277,7 @@ static inline void xen_pmu_finish(int cpu) {}
+ bool pmu_msr_read(unsigned int msr, uint64_t *val, int *err);
+ bool pmu_msr_write(unsigned int msr, uint32_t low, uint32_t high, int *err);
+ int pmu_apic_update(uint32_t reg);
+-unsigned long long xen_read_pmc(int counter);
++u64 xen_read_pmc(int counter);
+ 
+ #ifdef CONFIG_SMP
+ 
 -- 
 2.49.0
 
