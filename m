@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5A51DF971
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CFD2135A4
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745602789; cv=none; b=uVXjfU/TJfVrNfyNpHoepwvw7n2NLs9ZAyCKkX77CmmY7nM3hWlRiO8mvGDBmz9WenyYXxvZYUoRYZ9FT2IM4PxeZX6sCCc4g/TYV6DpdrWrQBsOiTyUlgkKpOTvYfSgnXn+fW/CAX4LmEymNVeBc0JgBs9vuTo669zVtjsK8BA=
+	t=1745602794; cv=none; b=r+VpAb1WR5X/3bZkZRJf+la46jA76PZzDa+VXoGsxDjM4BPJmDCXWKmHuP6olSNMFOD5u/8esli/7UoSlK6Y4USk4tJAKOJQzFVOqxgpH4bh2KcSm+Qn6YfmCOgCyH8jkrvIOSRNTOoGGNbgELWWHZ5s+MLaubjTn9+gnZYL97M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745602789; c=relaxed/simple;
-	bh=5mkjlr2dxrsiu25ytFzdw2rU1ujIUFJPC1Pf36zHd8A=;
+	s=arc-20240116; t=1745602794; c=relaxed/simple;
+	bh=ZfVyjpmkCIam1U4U2j9Dz1gtbLPNa5b9lbt9x9IT5iI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U9tkCit1y60maQWK6tcDmlYm1dqmBC9FvCweV+z7ku/Brf330rPN3adb4pyy6q4fryg9GrXaOcEfVx9bCrHnBqOhnMwbg+krzuqhUX6QN2fEBqk6iCSdEk9nOUH4CeAsu/TryAz+QvFrtawU8wiGRw6ViscOC7d+PLUQ5KUlH9w=
+	 MIME-Version; b=fD0rm4+tKPqGZvbdjjYxR3oMkdKiI4gxhDsF05ORgse2I3kPdA9S+GiLRPenbYiw1vC38uhHbL8ez3nsBgwfu/HjdTYlWUpkPFQEyPV5UKL7vtajw8ClGcd8eipZaTtU+iS2puT1gh+ELls5oDcDLlZP4jKeFe8VbCAOzQ8Polc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B6372103;
-	Fri, 25 Apr 2025 10:39:42 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94CA62247;
+	Fri, 25 Apr 2025 10:39:46 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6C513F59E;
-	Fri, 25 Apr 2025 10:39:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA43E3F59E;
+	Fri, 25 Apr 2025 10:39:47 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -46,9 +46,9 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	fenghuay@nvidia.com
-Subject: [PATCH v9 14/27] x86/resctrl: Fix types in resctrl_arch_mon_ctx_alloc() and free stubs
-Date: Fri, 25 Apr 2025 17:37:56 +0000
-Message-Id: <20250425173809.5529-15-james.morse@arm.com>
+Subject: [PATCH v9 15/27] x86/resctrl: Move pseudo lock prototypes to include/linux/resctrl.h
+Date: Fri, 25 Apr 2025 17:37:57 +0000
+Message-Id: <20250425173809.5529-16-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250425173809.5529-1-james.morse@arm.com>
 References: <20250425173809.5529-1-james.morse@arm.com>
@@ -60,42 +60,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-resctrl_arch_mon_ctx_alloc() and resctrl_arch_mon_ctx_free() take an enum
-resctrl_event_id. This in turn requires the enum to be defined in
-resctrl_types.h so that it is accessible to asm/resctrl.h.
+The resctrl pseudo-lock feature allows an architecture to allocate data
+into particular cache portions, which are then treated as reserved to
+avoid that data ever being evicted. Setting this up is deeply architecture
+specific as it involves disabling prefetchers etc. It is not possible
+to support this kind of feature on arm64. Risc-V is assumed to be the
+same.
 
-The x86 stubs take an int. Fix that.
+The prototypes for the architecture code were added to x86's asm/resctrl.h,
+with other architectures able to provide subs for their architecture. This
+forces other architectures to provide identical stubs.
+
+Move the prototypes and stubs to linux/resctrl.h, and switch between them
+using the existing Kconfig symbol.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 ---
-Changes since v8:
+I'm assuming risc-v's hardware prefetcher controls are restricted to the
+higehst privilege level, and that this isn't where linux runs.
+
+Changse since v8:
  * This patch is new.
 ---
- arch/x86/include/asm/resctrl.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/resctrl.h |  5 -----
+ include/linux/resctrl.h        | 13 +++++++++++++
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
-index 7a39728b0743..bd149c37551c 100644
+index bd149c37551c..189f885dcf3e 100644
 --- a/arch/x86/include/asm/resctrl.h
 +++ b/arch/x86/include/asm/resctrl.h
-@@ -194,13 +194,15 @@ static inline u32 resctrl_arch_rmid_idx_encode(u32 ignored, u32 rmid)
- 
- /* x86 can always read an rmid, nothing needs allocating */
- struct rdt_resource;
--static inline void *resctrl_arch_mon_ctx_alloc(struct rdt_resource *r, int evtid)
-+static inline void *resctrl_arch_mon_ctx_alloc(struct rdt_resource *r,
-+					       enum resctrl_event_id evtid)
- {
- 	might_sleep();
- 	return NULL;
- };
- 
--static inline void resctrl_arch_mon_ctx_free(struct rdt_resource *r, int evtid,
-+static inline void resctrl_arch_mon_ctx_free(struct rdt_resource *r,
-+					     enum resctrl_event_id evtid,
+@@ -205,11 +205,6 @@ static inline void resctrl_arch_mon_ctx_free(struct rdt_resource *r,
+ 					     enum resctrl_event_id evtid,
  					     void *ctx) { };
  
- u64 resctrl_arch_get_prefetch_disable_bits(void);
+-u64 resctrl_arch_get_prefetch_disable_bits(void);
+-int resctrl_arch_pseudo_lock_fn(void *_plr);
+-int resctrl_arch_measure_cycles_lat_fn(void *_plr);
+-int resctrl_arch_measure_l2_residency(void *_plr);
+-int resctrl_arch_measure_l3_residency(void *_plr);
+ void resctrl_cpu_detect(struct cpuinfo_x86 *c);
+ 
+ #else
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 5ef972cbf56b..9ba771f2ddea 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -534,4 +534,17 @@ extern unsigned int resctrl_rmid_realloc_limit;
+ int resctrl_init(void);
+ void resctrl_exit(void);
+ 
++#ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
++u64 resctrl_arch_get_prefetch_disable_bits(void);
++int resctrl_arch_pseudo_lock_fn(void *_plr);
++int resctrl_arch_measure_cycles_lat_fn(void *_plr);
++int resctrl_arch_measure_l2_residency(void *_plr);
++int resctrl_arch_measure_l3_residency(void *_plr);
++#else
++static inline u64 resctrl_arch_get_prefetch_disable_bits(void) { return 0; }
++static inline int resctrl_arch_pseudo_lock_fn(void *_plr) { return 0; }
++static inline int resctrl_arch_measure_cycles_lat_fn(void *_plr) { return 0; }
++static inline int resctrl_arch_measure_l2_residency(void *_plr) { return 0; }
++static inline int resctrl_arch_measure_l3_residency(void *_plr) { return 0; }
++#endif /* CONFIG_RESCTRL_FS_PSEUDO_LOCK */
+ #endif /* _RESCTRL_H */
 -- 
 2.39.5
 
