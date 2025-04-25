@@ -1,137 +1,164 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D22C2FA
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B95F81E;
+	Fri, 25 Apr 2025 00:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540432; cv=none; b=cX/YSwxl0jfRX6Hoq/eetX5Hs0il8rnYJ2oTzzD6Gihu+IWYN4EXDRIGnP5F+1q+//C0IIhgoSS2edGk7dm0wNMw41NI5lDelQHvQ+5HtXQOAWx1is+9CfvFetZk5F7G9sjy8WoQKyPk2obNZghSNpdtP04FWpMlnNnXQAmDiXQ=
+	t=1745540613; cv=none; b=Cyf96yxtNAo8S5/tn1vyoZCzHDLsQfP+IlOtqg4axfBVCCGWRIR2udiYyfccHhBGXaf7mq8M6UqQw9wtPJbv8PmIxyPozm3XqdmGWCmNAGrn1kWtO2lNENPwH83BXObDktn70P2HIv3O7pYnH/17h/+9yRRlGzpuSyiu3CakF9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540432; c=relaxed/simple;
-	bh=IhV9V8da/hlbvjJ5ejoAVOB9Vwae0EAfLQHtuNKEBDk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=oGxIHFB2CH6oS0T5V8jw1NZcSUQbmMQXBeL7ihyqnSdRH5iIuNukn6AhCXZdG3pC1V7gn2BD8GMbQwNF3Y3DCQhQRpcnRtaDnxvp3LXwcONbO/L3ikJog9dH97yMpR2auM2ebDL6nVFBt1guyzuEro13ntdLwq5TNCDuDLIujBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so19696245ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:20:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745540430; x=1746145230;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CNWk4FjJIk4/cX31UhQJ9RDIJysRwZEcY6Dr8H2oWjM=;
-        b=hEM5ShSDjB4VX3PGa+ek7F42dQSJkwrQpvTUDSStVZYh7OmOjKHu7if5OoiTy9CwA0
-         4AGFpJr+lOkf2zne2Vxi+0zC8TntG7KjnMJTNjExOOJc7d+a3GqriusIDgGZ3piH3Pe8
-         zOpHULvsWa/B3FZ8iQS8adM+kwT2cdEYJ/gbx2U60LOiuyR7YNz+TjTjkNZWOMTCVFHq
-         TNxPplpSNpZFDWPS66s1f08QO6LSaBPDhd+VfVX8lg1o1vplOgv4NOZadv2ka3ML82Eo
-         PoeM5cUZ3SbiPCDnRxkI2PeYk9yJyKqFcEP6ZbpKFAO2Ee4mpmlFkY03gqcIIF8Oya9v
-         qnOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHM08qCQ3cZYQkMjj7yrdAhLH8hgQKv809K5iECXwXYQVKTTZEUbrP4nt5CCysJ8+Ngf1j86s4sl+e4gM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn3bTatLpq6EdBts8j4ulQY9iqHW0AkJu1EjSchc24UOHKemkM
-	U4gPIKfMufYFXT7wBwuss4Vf9yvod40A59hj/7AkqzUl2XayHfAThiMxYv3rUFHqIikH5ay1KuX
-	Lxk9RPugemmMUPpyoFAykE+QA3lwfXaW5mt7HS15cArfaBmtPmV7Yn5o=
-X-Google-Smtp-Source: AGHT+IHZPc7+Q2a+lj9DKKziStr4VAFNkn7eUO3PdAucmKBvZs5EfblexTW4EDLD64ZFXj4DOdOeWwtBOoIPI00UlMTy6dBcfYbS
+	s=arc-20240116; t=1745540613; c=relaxed/simple;
+	bh=UEkSo+BagKkIVRMMe9pgkrGMxtdYLmVfK4/QgaOoRvc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ex84vSnwWi0eXVM1WNg35JPUhIuCTWuU60oK1zPvYhEu0cALN9+d3Jd5a0fEBkGD9mvJHZ5JO+4giHIuNB/X34HJ9i3A9ePn0A7KGbyj+90lIItFZ7LN7+LH08/EfFqX3DHMN48FDj4Rx2IhTX42YX+DXXWSGzDv5HQk41w8R/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUarwgPx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUarwgPx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC6CC4CEE3;
+	Fri, 25 Apr 2025 00:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745540612;
+	bh=UEkSo+BagKkIVRMMe9pgkrGMxtdYLmVfK4/QgaOoRvc=;
+	h=From:Date:Subject:To:Cc:From;
+	b=pUarwgPxg10MK0UdQ+n5BCmMishwDRNdqKKtmZeSwy6yosN15zyV66BLSRDZi5A3c
+	 yVKMHZZzjcPoaTAJlS3aJBbN3RbJtDAlMxvqvthKXy3RD4ayvHKrha1/fo9OcfQHxq
+	 y7p3Ui7hk/Mm4qo9Aui0h5LGGGoYcAD3AX1BjZjgVC+bWmpXfVuc+PIbBPy645vLsk
+	 +KV3W7aTXxXHLe9iZPp+6GvbYbRheGZDd2kiLKlCP9S8dqK9184eXrNyta7wElhwM4
+	 FTPshbqWhVU5pc0It3lqahAGYR/TDUNf7wxEMMQkU0TwwNjZvcrEDK4Pblvz2ty7Yo
+	 WclNOcBljsHiQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Thu, 24 Apr 2025 17:23:22 -0700
+Subject: [PATCH] riscv: crypto - Use SYM_FUNC_START for functions only
+ called directly
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:250c:b0:3d8:2178:5c63 with SMTP id
- e9e14a558f8ab-3d93b39950bmr2963895ab.4.1745540429964; Thu, 24 Apr 2025
- 17:20:29 -0700 (PDT)
-Date: Thu, 24 Apr 2025 17:20:29 -0700
-In-Reply-To: <680001d8.050a0220.5cdb3.0008.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680ad54d.050a0220.2c0118.0c70.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_inode_update_after_write (2)
-From: syzbot <syzbot+af878a66b6ed801e9515@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-riscv-crypto-fix-cfi-build-v1-1-2d7516737379@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAPnVCmgC/x3M0QpAQBBA0V/RPJtai8SvyIMds0wJzSKSf7d5P
+ HW7DwRW4QBN8oDyKUHWJSJLE6CpX0ZGGaLBGluawhaoEuhE0nvbV/RyIXlBd8g8YF1WlSfnXW5
+ 6iINNOQb/vO3e9wM6U9lmbAAAAA==
+X-Change-ID: 20250424-riscv-crypto-fix-cfi-build-9577fcbfb30a
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4387; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=UEkSo+BagKkIVRMMe9pgkrGMxtdYLmVfK4/QgaOoRvc=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBlc15gdXliefvD94bbcI7N/HPy2dd+jWCa5aMaq2Ts9a
+ s1lVgb/7ChlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATsT3MyPCbPehTSr3+2ZsP
+ Dqa6ymWJap1UdSs98Nj92LItsl/2GDsy/JXjmSl+buulJcuLYzcv6JwlNPsIf8TCyuOJttM9u2w
+ 2GjECAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-syzbot has found a reproducer for the following issue on:
+After some recent changes to the RISC-V crypto code that turned some
+indirect function calls into direct ones, builds with CONFIG_CFI_CLANG
+fail with:
 
-HEAD commit:    e72e9e693307 Merge tag 'net-6.15-rc4' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12d62574580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4f9c44a22d09fd53
-dashboard link: https://syzkaller.appspot.com/bug?extid=af878a66b6ed801e9515
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13de9574580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=100fbfcf980000
+  ld.lld: error: undefined symbol: __kcfi_typeid_sm3_transform_zvksh_zvkb
+  >>> referenced by arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.o:(.text+0x2) in archive vmlinux.a
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-e72e9e69.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2bee8b8591c3/vmlinux-e72e9e69.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/97a6564905c3/bzImage-e72e9e69.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/f6755d6568aa/mount_0.gz
+  ld.lld: error: undefined symbol: __kcfi_typeid_sha512_transform_zvknhb_zvkb
+  >>> referenced by arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.o:(.text+0x2) in archive vmlinux.a
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+af878a66b6ed801e9515@syzkaller.appspotmail.com
+  ld.lld: error: undefined symbol: __kcfi_typeid_sha256_transform_zvknha_or_zvknhb_zvkb
+  >>> referenced by arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.o:(.text+0x2) in archive vmlinux.a
 
-bcachefs (loop0): dirent to missing inode:
-  u64s 7 type dirent 4096:189491840996961599:U32_MAX len 0 ver 0: file0 -> 4098 type dir
-  
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/fs.c:61!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5307 Comm: syz-executor242 Not tainted 6.15.0-rc3-syzkaller-00076-ge72e9e693307 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:bch2_inode_update_after_write+0xac0/0xad0 fs/bcachefs/fs.c:61
-Code: 48 89 df 49 89 df 48 89 d3 49 89 c6 e8 a9 83 f0 fd 4c 89 f0 4c 8b 74 24 18 48 89 da 4c 89 fb e9 7a fc ff ff e8 71 8e 8e fd 90 <0f> 0b 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
-RSP: 0018:ffffc9000d4bf940 EFLAGS: 00010293
-RAX: ffffffff84313f0f RBX: 1ffff92001a97f34 RCX: ffff888000b68000
-RDX: 0000000000000000 RSI: 0000000000001005 RDI: 0000000000001002
-RBP: ffffc9000d4bfa70 R08: 0000000000001000 R09: 00000000ffffffff
-R10: 0000000000001000 R11: 00000000ffffffff R12: dffffc0000000000
-R13: ffff8880119e0000 R14: 0000000000001005 R15: 0000000000001002
-FS:  000055558e7f7380(0000) GS:ffff88808d2a3000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007feb125c0100 CR3: 00000000441b8000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __bch2_unlink+0x428/0x4c0 fs/bcachefs/fs.c:818
- bch2_unlink+0xb1/0xf0 fs/bcachefs/fs.c:841
- vfs_unlink+0x391/0x650 fs/namei.c:4579
- do_unlinkat+0x350/0x560 fs/namei.c:4643
- __do_sys_unlink fs/namei.c:4689 [inline]
- __se_sys_unlink fs/namei.c:4687 [inline]
- __x64_sys_unlink+0x47/0x50 fs/namei.c:4687
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7feb12543c99
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffcf96100b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007feb12543c99
-RDX: 00007feb12543c99 RSI: 0000000000000000 RDI: 0000200000000500
-RBP: 0030656c69662f2e R08: 000055558e7f84c0 R09: 000055558e7f84c0
-R10: 000055558e7f84c0 R11: 0000000000000246 R12: 00007ffcf96100e0
-R13: 00007ffcf9610308 R14: 431bde82d7b634db R15: 00007feb1258c03b
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_inode_update_after_write+0xac0/0xad0 fs/bcachefs/fs.c:61
-Code: 48 89 df 49 89 df 48 89 d3 49 89 c6 e8 a9 83 f0 fd 4c 89 f0 4c 8b 74 24 18 48 89 da 4c 89 fb e9 7a fc ff ff e8 71 8e 8e fd 90 <0f> 0b 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
-RSP: 0018:ffffc9000d4bf940 EFLAGS: 00010293
-RAX: ffffffff84313f0f RBX: 1ffff92001a97f34 RCX: ffff888000b68000
-RDX: 0000000000000000 RSI: 0000000000001005 RDI: 0000000000001002
-RBP: ffffc9000d4bfa70 R08: 0000000000001000 R09: 00000000ffffffff
-R10: 0000000000001000 R11: 00000000ffffffff R12: dffffc0000000000
-R13: ffff8880119e0000 R14: 0000000000001005 R15: 0000000000001002
-FS:  000055558e7f7380(0000) GS:ffff88808d2a3000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007feb125c0100 CR3: 00000000441b8000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+As these functions are no longer indirectly called (i.e., have their
+address taken), the compiler will not emit __kcfi_typeid symbols for
+them but SYM_TYPED_FUNC_START expects these to exist at link time.
 
+Switch the definitions of these functions to use SYM_FUNC_START, as they
+no longer need kCFI type information since they are only called
+directly.
+
+Fixes: 1523eaed0ac5 ("crypto: riscv/sm3 - Use API partial block handling")
+Fixes: 561aab1104d8 ("crypto: riscv/sha512 - Use API partial block handling")
+Fixes: e6c5597badf2 ("crypto: riscv/sha256 - Use API partial block handling")
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S | 4 ++--
+ arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S           | 4 ++--
+ arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S               | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S b/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
+index 8ebcc17de4dc..f1f5779e4732 100644
+--- a/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
++++ b/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
+@@ -43,7 +43,7 @@
+ // - RISC-V Vector SHA-2 Secure Hash extension ('Zvknha' or 'Zvknhb')
+ // - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
+ 
+-#include <linux/cfi_types.h>
++#include <linux/linkage.h>
+ 
+ .text
+ .option arch, +zvknha, +zvkb
+@@ -108,7 +108,7 @@
+ 
+ // void sha256_transform_zvknha_or_zvknhb_zvkb(u32 state[8], const u8 *data,
+ //					       int num_blocks);
+-SYM_TYPED_FUNC_START(sha256_transform_zvknha_or_zvknhb_zvkb)
++SYM_FUNC_START(sha256_transform_zvknha_or_zvknhb_zvkb)
+ 
+ 	// Load the round constants into K0-K15.
+ 	vsetivli	zero, 4, e32, m1, ta, ma
+diff --git a/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S b/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
+index 3a9ae210f915..89f4a10d12dd 100644
+--- a/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
++++ b/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
+@@ -43,7 +43,7 @@
+ // - RISC-V Vector SHA-2 Secure Hash extension ('Zvknhb')
+ // - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
+ 
+-#include <linux/cfi_types.h>
++#include <linux/linkage.h>
+ 
+ .text
+ .option arch, +zvknhb, +zvkb
+@@ -95,7 +95,7 @@
+ 
+ // void sha512_transform_zvknhb_zvkb(u64 state[8], const u8 *data,
+ //				     int num_blocks);
+-SYM_TYPED_FUNC_START(sha512_transform_zvknhb_zvkb)
++SYM_FUNC_START(sha512_transform_zvknhb_zvkb)
+ 
+ 	// Setup mask for the vmerge to replace the first word (idx==0) in
+ 	// message scheduling.  There are 4 words, so an 8-bit mask suffices.
+diff --git a/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S b/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
+index a2b65d961c04..4fe754846f65 100644
+--- a/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
++++ b/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
+@@ -43,7 +43,7 @@
+ // - RISC-V Vector SM3 Secure Hash extension ('Zvksh')
+ // - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
+ 
+-#include <linux/cfi_types.h>
++#include <linux/linkage.h>
+ 
+ .text
+ .option arch, +zvksh, +zvkb
+@@ -81,7 +81,7 @@
+ .endm
+ 
+ // void sm3_transform_zvksh_zvkb(u32 state[8], const u8 *data, int num_blocks);
+-SYM_TYPED_FUNC_START(sm3_transform_zvksh_zvkb)
++SYM_FUNC_START(sm3_transform_zvksh_zvkb)
+ 
+ 	// Load the state and endian-swap each 32-bit word.
+ 	vsetivli	zero, 8, e32, m2, ta, ma
 
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+base-commit: 63dc06cd12f980e304158888485a26ae2be7f371
+change-id: 20250424-riscv-crypto-fix-cfi-build-9577fcbfb30a
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
