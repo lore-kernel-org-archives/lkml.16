@@ -1,62 +1,50 @@
-Received: from sonic313-15.consmr.mail.ne1.yahoo.com (sonic313-15.consmr.mail.ne1.yahoo.com [66.163.185.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C8E2253A7
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.185.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD1922A4CD;
+	Fri, 25 Apr 2025 22:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618806; cv=none; b=a4WZvFCBMDyErS+By5ML+MCIN1T7Aed1/Aduc0N0NcJ8N45I46MbPrjxi8/ZnvNTmCsQNW4d31ymcjq6RiTyn0T/tq3fkc5CWPi2oHY0Z2Pn6QDcLxtc+HXhFn2x3CCAob3nc5uFhREAILefzx9X4isLM0TxBCjGYU9hxkkVJS4=
+	t=1745618825; cv=none; b=unAGUVEjhDz09d9tjRmn3VSyEUZmIahmj+mTQbrkoRFZrANHaSstPTFZtl2Kw/WY2fIcm80/K3inmXz9rLdfZfXbba97x7tGkoSBfWRacdvq3t8nmueG7FUdymTpnzFlIT9hB//PUyiovn16ecHa/N81gr3tOTcpNXoKS+knbbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618806; c=relaxed/simple;
-	bh=FD9UoTPNTxeWCWvRyNfuGa6M5OjdSFZB/fg3a7X1Qyg=;
+	s=arc-20240116; t=1745618825; c=relaxed/simple;
+	bh=IRNryOau6mozjdCIDY9S41wl6xXJPgmFwujTP95gBeM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AutM0Xs55+A+MVEdpWuw74DXQCbB8NuGEatNgLNIAbQ86Wk9UQvM70Wc7BqWJAoh7DzkdCQ3p55gYIgzZGWiQ1nFNwLnk+UmgJ52QLHUN48PwWJmjCCi7Mj7w0gNDf/HHIpOzEZApSCMTvILO9MZ/GgDqnMwhhGIRhqKLjIk9EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Qa/sCaQe; arc=none smtp.client-ip=66.163.185.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	 In-Reply-To:Content-Type; b=aPLKMNCqPeXz4xIzlLboggi91oo8O1Wzwn0buXtIggwhbVd1GxV3Qou65vd/UYF821VDL9WBLSYdSW0MUrOakfAiRT7gcUCeZs5/5K+UYl8CN8Pyh55BKqoprCDZ/+W3WCce+qgoMg1ga0IQYt0YPFzJscXC1Pn8QJmPe5ax7JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTuGjEgx; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Qa/sCaQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745618802; bh=8rGCB975TyQpK1p5+Dcc4mGhyRUGsaDR3PeF2jwJfWg=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=Qa/sCaQeaAAqOOtgWTgubpxi0oWEqPpWR3eae9Ix+yDHZi/DL7/wwN3nUrCi/4Dzi7vUUxHupOyBO/e84pR/L5aOD/7nxnIOBf69OHiVbSs7oYFvMfntiu522yW+DGdWSlLdyiqqd7dZAVQxiSRVB8N+gKmh28bpKgKtylym7Uhxn66diBIxFhaoU51pTDMwWtlNaUXqAVEnNy9onKzgR5OIaSGPDSnBsm76vVIjoob3hPEjAX9iBfNZCLkESMdjsEKIOXa8ZEN9AZ6xMXd1klZ5BtZoeds7XDeDuIDhqk/ITwfyGY0zM63QEwpJHe2G/Z+cRyoUei3m5zzf/tKwBQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745618802; bh=YRLSaA1LsZ8S54E6tjqJfczLuN6gwYDmeLaRCagCb4X=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=ic+wWZhoa+9D4jMszl+WKJA8ILMXw62C4rUN2b2PY/B9/uOvFJKWdk+wX1kB3+dpADGU6MA5iHhhCV8GyLY/4w2BNEmp4Wt9BgY1pWKpTHFbD2DvkbvvhFsAawdg0/+ueze1tbmRhz+SHp+KD8q9ICyM0i4C5QfcK+hONo9M0KwC57VPkzio8LNZbQrAVNthbJDwU5i/z5HlZjtVXFsc3rB1JZA8IVTxSxolsYzNdVXgPDMA2dMySYl2s5uPy/OAXU6ZCkf+56TCW3tXFoyk7gsbSAV15R1Ns60RR6rGsGozZmYrMd9r+BckYp1S3mJMtgAztbxWvI74HS9jk2qxvQ==
-X-YMail-OSG: adXwKNQVM1nB_H3l9KGnpQ4jxN_kHEWZXuFWCLcgBDVDHwr4AIi_4JGfEigNmkX
- I8JArQezKlq35HzlOJezs7hqYDqcLgqrUO0Y033NBVkfMD1V_cage5dt5t0aZwB5qL4McVz3c_mo
- FwYwF0QRYc4Ctr4RTKjA9wp3I5bP4d2wzeuRVtkitbhRWZhQU2TwekYQaXnngLJEYInSjYDXzjZR
- P57SXNy8275uAvwhZWZqjYl0XKtj6S6.Si6ocPI9hRS0MFcDmB5BsSV9b5wwv9XPofQKTPC8sPM7
- I2GK_IpYqQYBIXdd37voHSsYRO5prGZJwETK.eIyiE9LdV._WuSN.U_wr8cDBwsRXfuEI3xgQ06o
- DlMhFWsMGWGz3iVkOoUxhAO9JgH_j4Dw6SFSQsuyYwYlryQAaVV_ccmGd0fewTqleKJuaUGDcYJr
- aZeEUIiuZexs1AUY45Ch3lOU9fOztors3KBQi5_x_GubxPRao5nkA3Eef8OGChZVq1Xpjn0sBPaP
- pbtxLex2y1hZz3mM.FWXWoUdnHDoLDtBtpHCn_3kjkCOHeEDlj9AtGjAKO84AhJOfsZupi_6mOSg
- 1hwSb0QfsxbSl6wARYGHlpzYEnrjjbQz36EcdMtQL6jl62W1BSiAcAmmwzBBeyDFPrkl7sySFxc.
- aHaNEC3pwR2hu.4vLbZXkzpyghAPeFJJDdJ0A7yRfux9zoEpdnO1Mzd9x7UV37xwdAi6ILTv9rUd
- LD6nuiLZg3AZCDyITZHql7WbGYTJCIoj1ZoevNQ.rZXFg6qzVio7SsI4CaiSfCSHG8wzWaPJxaoR
- TbnkUBz87KtW6pXwAPbR5DMNWLjZYI44fDUhx0jg5UlZA74J4YCgSU3D8hz_5xxkZQ_LhmtbRI2O
- DPie.sdmN.MHqlADLcZIg.FmQUG_AfLgNZGl2V9VUbliOeKKg1f9mFRTHCmKTYhnB9LruBtVwAPP
- EewpEcqD5ISgbeNkQlVKMtGx3ppVPEFKQ4hrrRH5L.znIpbYVZCw2hPbsJ_xc132eJvy1LfIwVVN
- mr8ZKZ3a8fYpg_k3V9WND7CunkSXbQBZ9FEvMuf06BPWWXgQqA8NZzvNIjAjNf_gewrsqJyfFxLX
- mWsSA.LVP1fAKP0F.UOEAyn8gJkS5VLgd78B2qSxxSK2G5x5hxAEkN9PMV.zLd8qdALlpjJHPXmU
- 5bTwn3ILFWUqfnw126qtFQUFpg5xBaOzcEjHpm3OONaypW1Yy0D2G42EQ78OIBBozRgyHc8kTe1e
- jfA.yo6J2KeGNKifKfccwr6F9ylSswcZNmm0ATp_W86CkWWgTmkDriKIn49j4D9Z42fpDvVxRdgB
- 7X2v8IFo6vo_gMjMGjvhoNCnaKXygzaKc5CRJx62bgWGtwOmd0nyAVjyM5nyDfZLYpdRYOrNnovE
- 1Afyo6pNCog4w66itaLRX05Knwifg2QAhg31B3eQ9_YGqRpAtMg1I7P6xmxqFK0tKMzuoLhm77Rc
- EVvIBYH2rbZayZBbqAVsV7lFlLsQD6ih3pAmnoPx5QPuCxW71csEmpDiFIU_NtBkMbKHOukw5XBM
- C_7j_mtX4fNUYfFjpOnzeeWCA1OIDcKDGligPaOkT6fgeGDTlRsw5HfEgdLhUsjuXyoIz4LU8bJx
- uIdXToF3AJGwMrHZL2XZDRNtREq5RdwRo32ABU6vC3M4gcufWbTwzdspCQZqY29jbDS5OQVxUqIL
- lfXG.0RQar3Q7o33.nA_PjgF2EsZED4ifhfaILwhwgGV8vgnu4SPj8BzSjujcpW8jNjo.G.BYEWd
- ODueo3IvrtQc6FhTU7SY0jZ0zs0SA1gRGia92x8DBJHZX70R6HCDB3xnbnhXeKkt9vwAcWjyLOOO
- SA5MeiQHVaMjuGYuPiaET9YH_rTGV3VBiK7ETxQLSDD6e8JLYuiknZsyzv_khLMEyDtRXIvdtmmM
- c.D1jrb7sAXcEqMYvL3mmsoe6kPVMY8dSOxHnK_R_1WmHqzxM.KRHsOHsyhYtb9siy7qwDROKm51
- ZklOZPEEEktWsRmLFnoagA6lItcKyxxU4FQ6h9sKyU8QDB6nfrDF7AT06HduSJrVnJR46POdXvI5
- mZ.tldn04zyQ1GWDS5TQjgnVqKN8ApkHhfKZ295bECGP7gY8Nnr.K6x34QtVJRiRj_S0MhBxWbSG
- O9_Wa6nQhWxv55lORMdzqK1vTHUWK6uu17sI6I0.o5V.3pfZ9dDU3Wp6UxhmkcKjvGUrH1mKVd0d
- yhbL0yW1DPeOB2cM4A59P.3aG5VTHBj8ccxwK2eCU6J3BDmpODRJzC4dv_I8uLVx98UNBgxYCaFf
- vP9aLX6vkPrtm_8I0PiaNFx8Wyy.cBQ--
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 502d9744-4a62-448b-9fe5-daad2ed73d2e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Fri, 25 Apr 2025 22:06:42 +0000
-Received: by hermes--production-gq1-74d64bb7d7-45lk9 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 817f7de0afdf3a62eaa48c0c7512c01b;
-          Fri, 25 Apr 2025 22:06:39 +0000 (UTC)
-Message-ID: <5313c22e-b69e-4e6d-b938-5780774c51eb@schaufler-ca.com>
-Date: Fri, 25 Apr 2025 15:06:38 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTuGjEgx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745618823; x=1777154823;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IRNryOau6mozjdCIDY9S41wl6xXJPgmFwujTP95gBeM=;
+  b=OTuGjEgxfg1SwSakOXGFnFvu5NPuiXu0ypvJENNvM1hpNeo+yAcjqsG2
+   4nJjOoHnvrUG9W/JFbodvCmn96hvbpCxVisaI5Fh+cCgRZV8S03BUFndG
+   CaqfY/bxUZW/Rt6bWpIJsJFc0ZNQXcCHfxsDPPfBjI5fyddqu6qRxouTU
+   tNbodr2YgMSG7ep57jmLyML0roXNrkJVfZAKjQLfQs98w9CduOmZ/IDZy
+   iBJGheZ6LgR0qXNdYSVRFqQwOV3lqQZON7mFSfcGLgMdNmRsKnL45gemb
+   /jBGFz/G/drAo3/78rGE83h9rfFHuCtoHY0v0lCR2FWsbfa45hNt0FM8R
+   w==;
+X-CSE-ConnectionGUID: nrJCbXX4QFOenUOjNX8E6g==
+X-CSE-MsgGUID: +XjR805IS8GYz+B5dW5gzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="64819125"
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="64819125"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:07:02 -0700
+X-CSE-ConnectionGUID: nLXX5gdUTGKCxvrgnbBHOA==
+X-CSE-MsgGUID: cZrf9MoISYGORnIlKvEWJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="133946281"
+Received: from uaeoff-desk2.amr.corp.intel.com (HELO [10.124.222.49]) ([10.124.222.49])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:07:02 -0700
+Message-ID: <4b4ecaa1-2ace-43bf-b71b-0de78bcf113c@intel.com>
+Date: Fri, 25 Apr 2025 15:07:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,149 +52,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list to always include
- security.* xattrs
-To: Stephen Smalley <stephen.smalley.work@gmail.com>,
- Christian Brauner <brauner@kernel.org>
-Cc: paul@paul-moore.com, omosnace@redhat.com, selinux@vger.kernel.org,
- linux-security-module@vger.kernel.org,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
- <20250425-einspannen-wertarbeit-3f0c939525dc@brauner>
- <CAEjxPJ4vntQ5cCo_=KN0d+5FDPRwStjXUimE4iHXJkz9oeuVCw@mail.gmail.com>
- <184c3ed7-5581-4bdf-99ea-083e28e530a8@schaufler-ca.com>
+Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+To: Sean Christopherson <seanjc@google.com>
+Cc: Elena Reshetova <elena.reshetova@intel.com>,
+ "jarkko@kernel.org" <jarkko@kernel.org>, Kai Huang <kai.huang@intel.com>,
+ "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+ Vincent Scarlata <vincent.r.scarlata@intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, Vishal Annapurve <vannapurve@google.com>,
+ Chong Cai <chongc@google.com>, Asit K Mallick <asit.k.mallick@intel.com>,
+ Erdem Aktas <erdemaktas@google.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "bondarn@google.com" <bondarn@google.com>,
+ "dionnaglaze@google.com" <dionnaglaze@google.com>,
+ Scott Raynor <scott.raynor@intel.com>
+References: <aAo_2MPGOkOciNuM@google.com>
+ <DM8PR11MB5750D373790399E324B98A18E7852@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aApgOqHvsYNd-yht@google.com>
+ <DM8PR11MB5750AB0E790096AFF9AFD3AFE7842@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aAutUaQvgEliXPUs@google.com>
+ <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
+ <aAviqeAdGn-w1GpK@google.com>
+ <fbd2acdb-35dc-4e8c-9bd9-e84264f88648@intel.com>
+ <aAv445Sr71NUJP1X@google.com>
+ <db1fd062-5a66-4942-82e2-c889dd645a7b@intel.com>
+ <aAwFhaqQDLXoqbmv@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <184c3ed7-5581-4bdf-99ea-083e28e530a8@schaufler-ca.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aAwFhaqQDLXoqbmv@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.23737 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Transfer-Encoding: 7bit
 
-On 4/25/2025 10:21 AM, Casey Schaufler wrote:
-> On 4/25/2025 8:14 AM, Stephen Smalley wrote:
->> On Fri, Apr 25, 2025 at 5:20 AM Christian Brauner <brauner@kernel.org> wrote:
->>> On Thu, Apr 24, 2025 at 11:28:20AM -0400, Stephen Smalley wrote:
->>>> The vfs has long had a fallback to obtain the security.* xattrs from the
->>>> LSM when the filesystem does not implement its own listxattr, but
->>>> shmem/tmpfs and kernfs later gained their own xattr handlers to support
->>>> other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
->>> This change is from 2011. So no living soul has ever cared at all for
->>> at least 14 years. Surprising that this is an issue now.
->> Prior to the coreutils change noted in [1], no one would have had
->> reason to notice. I might also be wrong about the point where it was
->> first introduced - I didn't verify via testing the old commit, just
->> looked for when tmpfs gained its own xattr handlers that didn't call
->> security_inode_listsecurity().
->>
->> [1] https://lore.kernel.org/selinux/CAEjxPJ6ocwsAAdT8cHGLQ77Z=+HOXg2KkaKNP8w9CruFj2ChoA@mail.gmail.com/T/#t
->>
->>>> filesystems like sysfs no longer return the synthetic security.* xattr
->>>> names via listxattr unless they are explicitly set by userspace or
->>>> initially set upon inode creation after policy load. coreutils has
->>>> recently switched from unconditionally invoking getxattr for security.*
->>>> for ls -Z via libselinux to only doing so if listxattr returns the xattr
->>>> name, breaking ls -Z of such inodes.
->>> So no xattrs have been set on a given inode and we lie to userspace by
->>> listing them anyway. Well ok then.
->> SELinux has always returned a result for getxattr(...,
->> "security.selinux", ...) regardless of whether one has been set by
->> userspace or fetched from backing store because it assigns a label to
->> all inodes for use in permission checks, regardless.
-> Smack has the same behavior. Any strict subject+object+access scheme
-> can be expected to do this.
->
->> And likewise returned "security.selinux" in listxattr() for all inodes
->> using either the vfs fallback or in the per-filesystem handlers prior
->> to the introduction of xattr handlers for tmpfs and later
->> sysfs/kernfs. SELinux labels were always a bit different than regular
->> xattrs; the original implementation didn't use xattrs but we were
->> directed to use them instead of our own MAC labeling scheme.
-> There aren't a complete set of "rules" for filesystems supporting
-> xattrs. As a result, LSMs have to be creative when a filesystem does
-> not cooperate, or does so in a peculiar manner.
->
->
->>>> Before:
->>>> $ getfattr -m.* /run/initramfs
->>>> <no output>
->>>> $ getfattr -m.* /sys/kernel/fscaps
->>>> <no output>
->>>> $ setfattr -n user.foo /run/initramfs
->>>> $ getfattr -m.* /run/initramfs
->>>> user.foo
->>>>
->>>> After:
->>>> $ getfattr -m.* /run/initramfs
->>>> security.selinux
->>>> $ getfattr -m.* /sys/kernel/fscaps
->>>> security.selinux
->>>> $ setfattr -n user.foo /run/initramfs
->>>> $ getfattr -m.* /run/initramfs
->>>> security.selinux
->>>> user.foo
->>>>
->>>> Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=iOawX4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
->>>> Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.smalley.work@gmail.com/
->>>> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
->>>> ---
->>>>  fs/xattr.c | 24 ++++++++++++++++++++++++
->>>>  1 file changed, 24 insertions(+)
->>>>
->>>> diff --git a/fs/xattr.c b/fs/xattr.c
->>>> index 02bee149ad96..2fc314b27120 100644
->>>> --- a/fs/xattr.c
->>>> +++ b/fs/xattr.c
->>>> @@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
->>>>       return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_LEN);
->>>>  }
->>>>
->>>> +static bool xattr_is_maclabel(const char *name)
->>>> +{
->>>> +     const char *suffix = name + XATTR_SECURITY_PREFIX_LEN;
->>>> +
->>>> +     return !strncmp(name, XATTR_SECURITY_PREFIX,
->>>> +                     XATTR_SECURITY_PREFIX_LEN) &&
->>>> +             security_ismaclabel(suffix);
->>>> +}
->>>> +
->>>>  /**
->>>>   * simple_xattr_list - list all xattr objects
->>>>   * @inode: inode from which to get the xattrs
->>>> @@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
->>>>       if (err)
->>>>               return err;
->>>>
->>>> +     err = security_inode_listsecurity(inode, buffer, remaining_size);
->>> Is that supposed to work with multiple LSMs?
-> Nope.
+On 4/25/25 14:58, Sean Christopherson wrote:
+> On Fri, Apr 25, 2025, Dave Hansen wrote:
+>> On 4/25/25 14:04, Sean Christopherson wrote:
+>>> Userspace is going to be waiting on ->release() no matter what.
+>> Unless it isn't even involved and it happens automatically.
+> With my Google hat on: no thanks.
 
-Oops. I'm wrong. More below ..
+I'm completely open to the idea of adding transparency so that folks can
+tell when the SVN increments. I'm mostly open to having a new ABI to do
+it explicitly in addition to doing it implicitly.]
 
-
->>> Afaict, bpf is always active and has a hook for this.
->>> So the LSMs trample over each other filling the buffer?
-> The bpf hook exists, but had better be a NOP if either SELinux
-> or Smack is active. There are multiple cases where bpf, with its
-> "all hooks defined" strategy can disrupt system behavior. The bpf
-> LSM was known to be unsafe in this regard when it was accepted.
->
->> There are a number of residual challenges to supporting full stacking
->> of arbitrary LSMs; this is just one instance. Why one would stack
->> SELinux with Smack though I can't imagine, and that's the only
->> combination that would break (and already doesn't work, so no change
->> here).
-> There's an amusing scenario where one can use Smack to separate SELinux
-> containers, but it requires patches that I've been pushing slowly up the
-> mountain for quite some time. The change to inode_listsecurity hooks
-> won't be too bad, although I admit I've missed it so far. The change to
-> security_inode_listsecurity() is going to be a bit awkward, but no more
-> (or less) so than what needs done for security_secid_to_secctx().
-
-Turns out I spoke too soon. The existing implementation of
-security_inode_listsecurity() works correctly today, even in the
-face of multiple LSMs (e.g. SELinux and Smack) being active. As
-for security_inode_getsecurity(), there's no issue as the attribute
-name desired is passed.
-
+> Coupled with adding latency to launching the 0=>1 enclave, just to
+> handle something that happens a few times per year, and I don't see
+> any value in automatic updates. Maybe it sounds nice on paper, but
+> from my perspective, I see nothing but pain.
+I'm not worried about the latency until I see numbers. If the number
+show it's horrible, then we either change course or go yell at the folks
+who wrote the xucode.
