@@ -1,217 +1,155 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE7C1DFDAB
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DA91DFDAB
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745582282; cv=none; b=YixdOpqL0LonUghcvx7WXzKRzBhSECrjihmJuhfiy+YPg57ELL176tyaZZQZGpL1iKAYPgl8lgfQ0KtehHXQh66+Cy7Avgcbm2u472CL/oKmgony6sisfkJ/x+iWUdutsyx9RuEofhThfq3Wstqbm8YMb2uha4jFudaf+1k4nbI=
+	t=1745582371; cv=none; b=lfAYwnxC3px+jb+VdVtcJnGZ8NSgGDY61VHASw/DP9stMTrLR/PYuzxK0Nd89mbc1upqptcFV/rxig/fIDQTzRUU7rvfUBw60LxNOV1YU6bDuXVaoC8ke1u2AQPoSRfBbDiVP8JusKqXzyRMIH8cG9JBuKRtj+sdM4fczJZZTeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745582282; c=relaxed/simple;
-	bh=1PNw6p2B16PEo0GVueQIVoNx6GFKG2AUKgcYHI36HIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YkEKVL0G9Lgupx0gPA68OHvnEyWFV/kPLlINM7AijkF/elq/xO+FYI88giLzB8MUr8TPcKiaH6zaXp3fTBD1Z9U05QskctDuMhcv70JzLJmyZJI/nAPXxH8NytEfPaEHpkm3k/yOuLuZ3rvgGGJOylOwhuveOca6LWNjrKEBVUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=HL4OQz1q; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745582371; c=relaxed/simple;
+	bh=OrK+DvF689UqfSSIY1P2lSSI9ygH9bOfuWGn9CE8Fbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uo5g6deDaQHQ7gDwIXGwsWW+ABmX/y7YRHAwq+IWfRMt0JD2FXzxU5sdx2WTQbucalT3RuarzQSBOz3C8yv2BEDGALd7aRY+XLGrMNUkNvEyHV0vDX/XlzrRibfGfR1aj8dGampFeZkf4Y3bGPAO/kKtTWkE6hyOLiSyGEBSh/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RETbntMZ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HL4OQz1q"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9370FD77;
-	Fri, 25 Apr 2025 13:57:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745582275;
-	bh=1PNw6p2B16PEo0GVueQIVoNx6GFKG2AUKgcYHI36HIw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HL4OQz1qBlPSBDZiwbFF863X7K8HQrPYZ9FqsW52AvtAbzkkLHooCgdJ0YnJpK5Nk
-	 yl29q1IMja83OosIa2+lvlFQxn4LacQ4lnZ7IbDzaKsJqozVorhQ4iBKUinYAA7UJl
-	 bEmwwdSz5u+OCcpTorvSxJmSzhqKSdx29vMo9Vhc=
-Message-ID: <6d053590-7390-4d4c-98b7-32a02b5bf561@ideasonboard.com>
-Date: Fri, 25 Apr 2025 14:57:54 +0300
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RETbntMZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745582367;
+	bh=OrK+DvF689UqfSSIY1P2lSSI9ygH9bOfuWGn9CE8Fbo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RETbntMZsItntHquRM2Uky6C0lFfkp6DCJMJ/sardBOp9RXSNK0n942QAliT3rheB
+	 XaVCOPa0uEYSKjQPBcE2ILU15LbCnY+vnVSMZxJI13Ajg2jjUJeKOk4U0O3r3CIR/w
+	 2FFmRMdR4RWbQkODbzBOjwJMc7DKGBUv/PDm7urQdkHgiB97y7gf5pQ1z4llwUAc4b
+	 j2qTI/h8UkfglAvz0GUexSDY0PYYcc9dRrUqMCYfYBIr8Kmv0uLmGRi17BfQRyuEks
+	 dH3GPfh33UgC3Hhr/RIjYvn4/P/OUwXiTSPS4c+ur3npErGQGFHRv9Yd8yaplogVRY
+	 jcm32cW2AsFDA==
+Received: from eldfell (unknown [194.136.85.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pq)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 448AB17E0F66;
+	Fri, 25 Apr 2025 13:59:27 +0200 (CEST)
+Date: Fri, 25 Apr 2025 14:59:15 +0300
+From: Pekka Paalanen <pekka.paalanen@collabora.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Vishal Sagar <vishal.sagar@amd.com>, Anatoliy Klymenko
+ <anatoliy.klymenko@amd.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250425145915.40c8c1ac@eldfell>
+In-Reply-To: <20250425-xilinx-formats-v5-3-c74263231630@ideasonboard.com>
+References: <20250425-xilinx-formats-v5-0-c74263231630@ideasonboard.com>
+	<20250425-xilinx-formats-v5-3-c74263231630@ideasonboard.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 14/17] drm/bridge: cdns-dsi: Use video mode and clean
- up cdns_dsi_mode2cfg()
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Devarsh Thakkar <devarsht@ti.com>, Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jayesh Choudhary <j-choudhary@ti.com>
-References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
- <20250414-cdns-dsi-impro-v3-14-4e52551d4f07@ideasonboard.com>
- <0072bb93-5456-40c4-96bc-a7afb3523238@linux.dev>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <0072bb93-5456-40c4-96bc-a7afb3523238@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/JSQZW.oAKGXjXlVbB.Z8zQ3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi,
+--Sig_/JSQZW.oAKGXjXlVbB.Z8zQ3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 20/04/2025 21:10, Aradhya Bhatia wrote:
-> Hi,
-> 
-> On 14/04/25 16:41, Tomi Valkeinen wrote:
->> The driver does all the calculations and programming with video timings
->> (hftp, hbp, etc.) instead of the modeline values (hsync_start, ...).
->> Thus it makes sense to use struct videomode instead of struct
->> drm_display_mode internally.
->>
->> Switch to videomode and do some cleanups in cdns_dsi_mode2cfg() along
->> the way.
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> ---
->>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 45 ++++++++++++++------------
->>   1 file changed, 24 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->> index fb0623d3f854..a55f851711f0 100644
->> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->> @@ -9,6 +9,7 @@
->>   #include <drm/drm_drv.h>
->>   #include <drm/drm_probe_helper.h>
->>   #include <video/mipi_display.h>
->> +#include <video/videomode.h>
->>   
->>   #include <linux/clk.h>
->>   #include <linux/interrupt.h>
->> @@ -467,36 +468,35 @@ static unsigned int dpi_to_dsi_timing(unsigned int dpi_timing,
->>   }
->>   
->>   static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
->> -			     const struct drm_display_mode *mode,
->> +			     const struct videomode *vm,
->>   			     struct cdns_dsi_cfg *dsi_cfg)
->>   {
->>   	struct cdns_dsi_output *output = &dsi->output;
->> -	unsigned int tmp;
->> -	bool sync_pulse = false;
->> +	u32 dpi_hsa, dpi_hbp, dpi_hfp, dpi_hact;
->> +	bool sync_pulse;
->>   	int bpp;
->>   
->> +	dpi_hsa = vm->hsync_len;
->> +	dpi_hbp = vm->hback_porch;
->> +	dpi_hfp = vm->hfront_porch;
->> +	dpi_hact = vm->hactive;
->> +
->>   	memset(dsi_cfg, 0, sizeof(*dsi_cfg));
->>   
->> -	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
->> -		sync_pulse = true;
->> +	sync_pulse = output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
->>   
->>   	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
->>   
->> -	tmp = mode->htotal -
->> -		(sync_pulse ? mode->hsync_end : mode->hsync_start);
->> +	dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + (sync_pulse ? 0 : dpi_hsa),
->> +					 bpp, DSI_HBP_FRAME_OVERHEAD);
->>   
->> -	dsi_cfg->hbp = dpi_to_dsi_timing(tmp, bpp, DSI_HBP_FRAME_OVERHEAD);
->> +	if (sync_pulse)
->> +		dsi_cfg->hsa =
->> +			dpi_to_dsi_timing(dpi_hsa, bpp, DSI_HSA_FRAME_OVERHEAD);
->>   
->> -	if (sync_pulse) {
->> -		tmp = mode->hsync_end - mode->hsync_start;
->> +	dsi_cfg->hact = dpi_to_dsi_timing(dpi_hact, bpp, 0);
->>   
->> -		dsi_cfg->hsa = dpi_to_dsi_timing(tmp, bpp,
->> -						 DSI_HSA_FRAME_OVERHEAD);
->> -	}
->> -
->> -	dsi_cfg->hact = dpi_to_dsi_timing(mode->hdisplay, bpp, 0);
->> -	dsi_cfg->hfp = dpi_to_dsi_timing(mode->hsync_start - mode->hdisplay,
->> -					 bpp, DSI_HFP_FRAME_OVERHEAD);
->> +	dsi_cfg->hfp = dpi_to_dsi_timing(dpi_hfp, bpp, DSI_HFP_FRAME_OVERHEAD);
->>   
->>   	dsi_cfg->htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
->>   	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> 
-> I think at this stage, the dsi_cfg->htotal will always come out to be
-> 
-> ((dpi_htotal * bitspp) / 8),
-> 
-> no matter whether the sync_pulse or the event_mode is set or not.
-> 
-> Whatever the overheads are there, they get cancelled out. So, it doesn't
-> need to be individually tracked.
+On Fri, 25 Apr 2025 14:01:23 +0300
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
 
-dpi_to_dsi_timing() doesn't return the DPI timing converted _exactly_ to 
-DSI. It uses DIV_ROUND_UP() and handles the case where the DPI timing is 
-too small for DSI with the overhead.
+> Add greyscale Y8 format.
+>=20
+> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/drm_fourcc.c  |  1 +
+>  include/uapi/drm/drm_fourcc.h | 10 ++++++++++
+>  2 files changed, 11 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+> index e101d1b99aeb..355aaf7b5e9e 100644
+> --- a/drivers/gpu/drm/drm_fourcc.c
+> +++ b/drivers/gpu/drm/drm_fourcc.c
+> @@ -267,6 +267,7 @@ const struct drm_format_info *__drm_format_info(u32 f=
+ormat)
+>  		{ .format =3D DRM_FORMAT_YVU422,		.depth =3D 0,  .num_planes =3D 3, .c=
+pp =3D { 1, 1, 1 }, .hsub =3D 2, .vsub =3D 1, .is_yuv =3D true },
+>  		{ .format =3D DRM_FORMAT_YUV444,		.depth =3D 0,  .num_planes =3D 3, .c=
+pp =3D { 1, 1, 1 }, .hsub =3D 1, .vsub =3D 1, .is_yuv =3D true },
+>  		{ .format =3D DRM_FORMAT_YVU444,		.depth =3D 0,  .num_planes =3D 3, .c=
+pp =3D { 1, 1, 1 }, .hsub =3D 1, .vsub =3D 1, .is_yuv =3D true },
+> +		{ .format =3D DRM_FORMAT_Y8,		.depth =3D 8,  .num_planes =3D 1, .cpp =
+=3D { 1, 0, 0 }, .hsub =3D 1, .vsub =3D 1, .is_yuv =3D true },
+>  		{ .format =3D DRM_FORMAT_NV12,		.depth =3D 0,  .num_planes =3D 2, .cpp=
+ =3D { 1, 2, 0 }, .hsub =3D 2, .vsub =3D 2, .is_yuv =3D true },
+>  		{ .format =3D DRM_FORMAT_NV21,		.depth =3D 0,  .num_planes =3D 2, .cpp=
+ =3D { 1, 2, 0 }, .hsub =3D 2, .vsub =3D 2, .is_yuv =3D true },
+>  		{ .format =3D DRM_FORMAT_NV16,		.depth =3D 0,  .num_planes =3D 2, .cpp=
+ =3D { 1, 2, 0 }, .hsub =3D 2, .vsub =3D 1, .is_yuv =3D true },
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 1247b814bd66..5af64a683dd7 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -405,6 +405,16 @@ extern "C" {
+>  #define DRM_FORMAT_YUV444	fourcc_code('Y', 'U', '2', '4') /* non-subsamp=
+led Cb (1) and Cr (2) planes */
+>  #define DRM_FORMAT_YVU444	fourcc_code('Y', 'V', '2', '4') /* non-subsamp=
+led Cr (1) and Cb (2) planes */
+> =20
+> +/*
+> + * Y-only (greyscale) formats
+> + *
+> + * The Y-only formats are handled similarly to the YCbCr formats in the =
+display
+> + * pipeline, with the Cb and Cr implicitly neutral (0.0 in nominal value=
+s). This
+> + * also means that COLOR_RANGE property applies to the Y-only formats.
+> + *
+> + */
+> +
+> +#define DRM_FORMAT_Y8		fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only =
+*/
+> =20
+>  /*
+>   * Format Modifiers:
+>=20
 
-And I'd rather separate DPI and DSI timings as much as possible, even if 
-it is a bit more verbose. Here we want to calculate DSI htotal (i.e. the 
-total of DSI horizontal ticks), so I'd rather construct it from the DSI 
-timings, instead of making shortcuts and trusting that the DPI timings 
-match exactly (even if they would). Calculating these is rather error 
-prone already.
+Reviewed-by: Pekka Paalanen <pekka.paalanen@collabora.com>
 
-At some point we want to adjust the DSI timings (at least if/when 
-implementing burst mode). While even then we'll aim to match the exact 
-DPI time, I think it's better to calculate the DSI htotal from the 
-adjusted DSI timings. If the DSI timings are not right, then the htotal 
-will also match that "wrongness", instead of just showing the DPI htotal.
 
-  Tomi
+Thanks,
+pq
 
+--Sig_/JSQZW.oAKGXjXlVbB.Z8zQ3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmgLeRMACgkQI1/ltBGq
+qqdEDQ//dymbV1AaVc1uZviLxZPiwEKEaX3Yn350tWej+EKakdNVsWnpBIKuoaET
+BGW+KzCbP+Za7hPbDC2wIUNhthPeGnpysrxH4EQ+Zp+GXOXLZoB8/cudpKsf4cmc
+HZnkEQiPw67xNzi8ylHdvEtRMpyRI5bPxXR5oNeFviwVDo+ob9Qo2YcE+M38yDD1
+IxyjhxVYpZP4vfF1zzq3dOmo+RmoOwFy2nLz2v6syL2bCwRuKgIO4KjRYP5rUbOs
+mag51hyJL1G2lWuBvupIwwaka6ch0rVb5LwlcJTXynWHcVyGJf7FkHzm7zh8LMtB
+A/nT+dxkEwIElg94c1Tl1DWP3ZRD+hWTdrPKen8p890qGdEvxsPtkzAU2jb5Ym7q
+RyxBRojyZTA56zRUBaL5+fs1JGVv9qsR2wSVkjNdGaqiKAu0xFjscRuNZKUwkEWH
+fpJcJbcMpfnVxLcWvDsHTR3ERHSU/BTNWQlLU37cGbn9iDrEWTBnffQ/3KHjd/As
+aE6z+tQt3JEqopNFsc5U85DMr7rhFpZnHUHkhood/tT6O3YI/EgIwIzlcIbRDko0
+iM883QsDu4Z5cud3fSA/Y9ysdvgubJ2IAXmMLs7vjZ0ZeA5K1u7Zma45J1qVhYWc
+DEQUSmoJ10NInI3VMbKOQwGvv5pE6Lm4IGYvk3rznLw1QXNcmdk=
+=riT8
+-----END PGP SIGNATURE-----
+
+--Sig_/JSQZW.oAKGXjXlVbB.Z8zQ3--
