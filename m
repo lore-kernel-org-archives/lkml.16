@@ -1,126 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507A522156E;
-	Fri, 25 Apr 2025 10:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701F926AC3;
+	Fri, 25 Apr 2025 10:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745576248; cv=none; b=EBWTBSGNvt5sqZTGz82TuMjPNNyfR3r9XXItBxHqNM645vuT12zdd1qgaV/oOEEt2+6R//tQzt4CHvGo5bRDjrWF82hTC9HUMJmfp9McB9ufV/+T6wxjkpL5gTW+HLoi4yBQYZvIKwRD+dQ4IiYJkpCSykQMY7ImeNNbYKuTHpA=
+	t=1745576270; cv=none; b=hPOry2OlLHG2P9gez92D2FeByByVhLDxFzoL9BcLf+LLSVVx6R+/URIRHyM+bw3a/OYxNGkinctPqGcoBXZ23uDC5LMzpW7Aw6sld8H/tEWS7KdbrMryF2zCdXjqWXXbLoqxzzBbUb9yDSfJA3lJDve+TNHjLkEsQUSn41gzs+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745576248; c=relaxed/simple;
-	bh=yxEWwgS6mqTatarLhuSCwRAm7Heme/ytzkkDRHWbBsU=;
+	s=arc-20240116; t=1745576270; c=relaxed/simple;
+	bh=jHetIDcoEMJE5Pmx9hfvbqtA0k/bgENuEA9snYJ/JQs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0z6ymR+g//HyrprsGzbODkQYSzs3VgMTNl+eFX0X+KJh0ZBxeIXPEpwBp0xwtrWjdh8q5ZOWQ8H5OPlH7fmMef2XKgje2jp7Y2Yx01lPrSbiWJPzJbPPG1Ec60J6kf48nAjXSPvc46Bd5Lcg0aR+UDziwzj+OOHhlIZ7MJVUek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMNqFTbn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYCCRD5sXfb/DTWUTlcTARBpnJCguv0OGVA66JfB/FZ3LyeCLPyfqS3rEHO/s5R7G8kH2J8rM4Gg6bd4UB+4VTKJdAqJnDxIg2/v9A8iahRs01XThS/sTdwHC0V9dqXrUeuqK9KEezOVd5Fk7VCHhPcEZLJAIIUHxvOQj4mAViA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVJ5ldkx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMNqFTbn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99FF8C4CEEB;
-	Fri, 25 Apr 2025 10:17:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVJ5ldkx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE911C4CEE4;
+	Fri, 25 Apr 2025 10:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745576247;
-	bh=yxEWwgS6mqTatarLhuSCwRAm7Heme/ytzkkDRHWbBsU=;
+	s=k20201202; t=1745576269;
+	bh=jHetIDcoEMJE5Pmx9hfvbqtA0k/bgENuEA9snYJ/JQs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bMNqFTbn0pcwzwTpG//tMyarxkDSrafqDkGHNAFK41OMKRv35a0g2j3f4dJSkzxsz
-	 Zgg+BQzy0JSvKrRZQL+DEoPFGbdxROvAQlk6r/4SmYigjqQczzTj+k62kSJBc+cNtm
-	 85av9+415uloWQTSw9ElNLlXot1pxaEukH7OX3tsTg/ynDIQhhwSQY5VvQOrsc/IMh
-	 7IxgTT0ac4ypeYwpGPrsb3Ou6agvJK++zLes+iFEWSy/si2uSwOHVcAqFj30C8r0Xw
-	 wUpkLD3+7c2R/mHnDkAb8KJTRFizuSuTZ0/4Y02uJZx+8s7X90TTkFlNCHrcCI0T3l
-	 syCyxX2QiweXg==
-Date: Fri, 25 Apr 2025 11:17:21 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with
- register mailboxes
-Message-ID: <20250425101721.GC1567507@google.com>
-References: <20250424154722.534284-1-ivecera@redhat.com>
- <20250424154722.534284-6-ivecera@redhat.com>
- <5094e051-5504-48a5-b411-ed1a0d949eeb@lunn.ch>
- <bd645425-b9cb-454d-8971-646501704697@redhat.com>
- <d36c34f8-f67a-40ac-a317-3b4e717724ce@lunn.ch>
- <458254c7-da05-4b27-870d-08458eb89ba6@redhat.com>
- <98ae9365-423c-4c7e-8b76-dcea3762ce79@lunn.ch>
- <7d96b3a4-9098-4ffa-be51-4ce5dd64a112@redhat.com>
- <20250425065558.GP8734@google.com>
- <98e471cc-ec66-4c89-af9a-57625c0c2873@redhat.com>
+	b=JVJ5ldkx0bzzY1siTZptS8iOsMb0rh/16B4dalCRuYsdMQMrTWOtVWXpNGJYSu4bI
+	 Pki4Y99cTUBsZ0ykhSfWQKuC6WO5chHnfGNNxAKOlsCCX9Tcc16vOAzY2v8YJpV3sT
+	 TJAcd3su86PT9qJWA6lqkKuaZrmTuoXJVRrIE6yWwINzDi0VTnLgJv8/XAvSuBBzE3
+	 uV9bkJn+JAwuW5M+NTSyH1EedQSY66k7kTs4+G5c4/EJ2THhDU8zE2LC51SXHAOqJV
+	 AdVDZeBeyvk542mjAKuzcXrQWY4sSlDC94JM3lZYoL2xbnK1BS5US0haYNRtQOiHAh
+	 DRR5WztJ7O4VA==
+Date: Fri, 25 Apr 2025 12:17:43 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, thomas.petazzoni@bootlin.com,
+	manivannan.sadhasivam@linaro.org, yue.wang@amlogic.com,
+	pali@kernel.org, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] PCI: Remove redundant MPS configuration
+Message-ID: <aAthR8ZXSqfe6fzV@ryzen>
+References: <20250425095708.32662-1-18255117159@163.com>
+ <20250425095708.32662-3-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98e471cc-ec66-4c89-af9a-57625c0c2873@redhat.com>
+In-Reply-To: <20250425095708.32662-3-18255117159@163.com>
 
-On Fri, 25 Apr 2025, Ivan Vecera wrote:
+On Fri, Apr 25, 2025 at 05:57:08PM +0800, Hans Zhang wrote:
+> With the PCI core now centrally configuring root port MPS to
+> hardware-supported maximums (via 128 << pcie_mpss) during host probing,
+> platform-specific MPS adjustments are redundant. This patch removes the
+> custom the configuration of the max payload logic to align with the
+> standardized initialization flow.
+> 
+> By eliminating redundant code, this change prevents conflicts with global
+> PCIe hierarchy tuning policies and reduces maintenance overhead. The Meson
+> driver now fully relies on the core PCI framework for MPS configuration,
+> ensuring consistency across the PCIe topology while preserving
+> hardware-specific MRRS handling.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
+>  drivers/pci/controller/pci-aardvark.c  |  2 --
 
-> 
-> 
-> On 25. 04. 25 8:55 dop., Lee Jones wrote:
-> > On Thu, 24 Apr 2025, Ivan Vecera wrote:
-> > 
-> > > 
-> > > 
-> > > On 24. 04. 25 9:29 odp., Andrew Lunn wrote:
-> > > > > Yes, PHC (PTP) sub-driver is using mailboxes as well. Gpio as well for some
-> > > > > initial configuration.
-> > > > 
-> > > > O.K, so the mailbox code needs sharing. The question is, where do you
-> > > > put it.
-> > > 
-> > > This is crucial question... If I put the MB API into DPLL sub-driver
-> > > then PTP sub-driver will depend on it. Potential GPIO sub-driver as
-> > > well.
-> > > 
-> > > There could be some special library module to provide this for
-> > > sub-drivers but is this what we want? And if so where to put it?
-> > 
-> > MFD is designed to take potentially large, monolithic devices and split
-> > them up into smaller, more organised chunks, then Linusify them.  This
-> > way, area experts (subsystem maintainers) get to concern themselves only
-> > with the remit to which they are most specialised / knowledgable.  MFD
-> > will handle how each of these areas are divided up and create all of the
-> > shared resources for them.  On the odd occasion it will also provide a
-> > _small_ API that the children can use to talk to the parent device.
-> > 
-> > However .... some devices, like yours, demand an API which is too
-> > complex to reside in the MFD subsystem itself.  This is not the first
-> > time this has happened and I doubt it will be the last.  My first
-> > recommendation is usually to place all of the comms in drivers/platform,
-> > since, at least in my own mind, if a complex API is required, then the
-> > device has become almost platform-like.  There are lots of examples of
-> > H/W comm APIs in there already for you to peruse.
-> 
-> OK, I will do it differently... Will drop MB API at all from MFD and
-> just expose the additional mutex from MFD for multi-op access.
-> Mailboxes will be handled directly by sub-devices.
-> 
-> Short description:
-> MFD exposes:
-> zl3073x_{read,write}_u{8,16,32,48}() & zl3073x_poll_u8()
-> - to read/write/poll registers
-> - they checks that multiop_lock is taken when caller is accessing
->   registers from Page 10 and above
-> 
-> zl3073x_multiop_{lock,unlock}()
-> - to protect operation where multiple reads, writes and poll is required
->   to be done atomically
+Since you are touching two drivers (and the changes are not exactly identical),
+I suggest that you do one patch per driver.
 
-Looks sensible.  If this is aligned with the discussions that have been
-taking place between you and Andrew.  Let's see the code before we make
-any binding agreements.  =:)
 
--- 
-Lee Jones [李琼斯]
+Kind regards,
+Niklas
