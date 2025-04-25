@@ -1,295 +1,213 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7867A635;
-	Fri, 25 Apr 2025 07:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D25A79B;
+	Fri, 25 Apr 2025 07:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567311; cv=none; b=jGOHHi16n07Bsx1Gipe7fJ3rxmTSRwvKmKQ+/GjWP4rIYWvKqfKRgEJpWR+MS2WoUOl+EMH8xxiDRE+hP7a0Ia3neRqfBiwwN5255HVJoqzGbu3RLy174DwyCY+T8vHHEsxJRmMkS5kfLzHZPHBI9cGZHbHLQ2FIQKlQXSoX3lI=
+	t=1745567357; cv=none; b=UJdI1gicxYojLMs5gM2A+/PV7mTKSPIE+cZwDriCJPza4JOKV6sF5s+Hf/lN8TedAP9Klaz/7NJY1+4Ycre46t1ZRa3Wwiz608rzkOVNH9GCzuloIq195eV9OrOfWkGKNRoqXEJK1KJL13G1SvAsowCWBDuxrNf/m9mX6gENrGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567311; c=relaxed/simple;
-	bh=zvROqqW/hGYLAda6coa5l3csmnOKz0oBQDkt3WNw2KE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=irq1wdnkA7dg8deJOgJg57kDKocciVGSOToqqvONbNSp6jeK3KGmxXv7AFGwHFb/8cT8c312X9sfOQab0qTknBbnzoamfVFnqzsGrFAwaTaeDW8kpaauiHOZK49VFbmowo+qe7dUACPk/YhmRkw/s/bU6sze3OgS8mMZJyfZP24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGpvHpBz; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745567357; c=relaxed/simple;
+	bh=FZiAbyedh3Hu4XRwOaYu0OJ85o9hgbMKwtwyNH+c43U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OroELYuNJV2BVc0NP3aO1PWSEt3Dgosn5HophvPk8AHK8yjTqM9xacqwhD6kB/gMvtfRtq1Dw+rIw/oSXF81EhpdyIg1t99/yN9y0NkNw5R1wIgikSpkSV/O95Od7/0g/uyScKak5F/xxLUa71QN/AXlpndtqr7wFrktlSDnrAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=W5mzngPW; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGpvHpBz"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224341bbc1dso24319855ad.3;
-        Fri, 25 Apr 2025 00:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745567309; x=1746172109; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvROqqW/hGYLAda6coa5l3csmnOKz0oBQDkt3WNw2KE=;
-        b=NGpvHpBzOBvzis++HGhFecFH/YMieJlvlnkrscN6gFC5YrseabsD6mEgOFJO1z6mJ/
-         dmhZOecDC7OISNEq7nAOXeynxWErawc36lC8IuZZOA9LLolo9vCoSlpwLu/3eNFwnVds
-         Z5KWsi2u/8tOIqpdIRDovqkOoqXLMVIQWxvcnwGHzqxjRYqTrTrAAxzv3TQWCz3oHPIZ
-         eI++Paq540CbNFxxHj2r8J5mivDI9cNfUVn9CaT8bPRUxiCAR0D/PV6vhce6Q+3Yd6Bg
-         o537LzmKCRVJSwRvY1BNVBAcgy8wxlQXPOzZmD1V3vVOYoJVW8x4oaGQCmoTRofH3jx5
-         BL5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745567309; x=1746172109;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zvROqqW/hGYLAda6coa5l3csmnOKz0oBQDkt3WNw2KE=;
-        b=Q7cKPhGOPOhX76gfA8KdVVr0LdYCnP08szQ1P7x9Ymu+s1GJ5OPLzTKnUWNkZMtzOp
-         tAP+L1lLrz1/thFcU+UkaPHy8+AEFi5V+WHDih7Ybxs9wimLIxLcciY4etGSMbi/+135
-         vcbcW3msl2uML5Z7ag1FfFooacE6s6mfGOyfOThjNAveCp6BejL6fl0E02mItebHje9z
-         /ArIgcJGY4mtR5d2No9hXTnxA06/5hZ6RHEdd52StPdFUHJD6P3rw0AE8U1rFcMz1dqw
-         hu2Rjymjwjoekj+mlC4W3YvxREPccET98vvYOn3o6X3F6SPOLUgU4+IFoRqBSCEuu8Y1
-         j/Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCUmw5F5jnAV9Snpubmi5Lu7A8kdP3wdh93BwMqxHU9Oh98/WBeNXOKnXWto/jwvODCyo/2XTbfZ3MQLmMk=@vger.kernel.org, AJvYcCWa6dk+l9NH5EEtxfo3swhDLgCaJXrI2aQHTaTuiwN/vYDJCbZynqqaEeasmDx8POPgvb92C1GA5K49kGG3LhfW4tQ7yQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbaj6C7H8/znwaFNJfyKP3cZyDggTRAgzZb7r3SzqgMY0d1lHZ
-	452pF/FJcuW0rUiZC1ovgoZI1dahVf4TNYq5w4jtF41hNMgm01Co
-X-Gm-Gg: ASbGncsaoouROdTigEm2UWreM1DJZ2Q+i5sqgOlqRNkPfjvGuifHcRojIv2NKZhEMly
-	eGgG3c+KvjdP6VKxefOnqhGjoaUy24zxlVD63cbrTiQr6G0+bd9yKQ6lL8bqCby1R0qNVxjjzfo
-	PlGR/Z7uU9MrvGU4/sBJsfPTemFgzXnH+fm+rP+tic/HQEpXhkY65hyKzNsE+BWHvFTSj/8/UXk
-	T1JtAqrKs/dj6NZuqXmVwtNa1rlI+tdGQ8JTi3nitzYG/UpJvmePKncuVoQyeObUqf2jG3FGPZu
-	Nb7+tJInRGThbW5ms72uYujkBvcD+0g0+5dJvqH4L3qN
-X-Google-Smtp-Source: AGHT+IFPWyzkWOkXov2+l5hWl040baQNquu+YJe/G0PAa4ShENTmQJnUixcisPZ5NKOYdXWV/6OsJg==
-X-Received: by 2002:a17:903:1b04:b0:224:1943:c65 with SMTP id d9443c01a7336-22dbf5ea798mr21441685ad.14.1745567308632;
-        Fri, 25 Apr 2025 00:48:28 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221c8dsm25818965ad.259.2025.04.25.00.48.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 00:48:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="W5mzngPW"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2F99710275AFE;
+	Fri, 25 Apr 2025 09:49:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1745567352; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=/dXNASC/WIWqaw/KcaFHN25jpUIQ4813arUoFsnAA/w=;
+	b=W5mzngPWSoevp/RkCHlrm6bIeICmfBGApQFzJ0GYblGaR6HMtVLH2FxtRBPpnBDPDuTvMu
+	gGj/huEmIcEK+7lQIm6QDNgYvojSeuwBJC+IW/9AAz/26JOzVxaGchp3mN8rT0+4k+PHDg
+	JA5+9KOV1Yn5cRq20sNAN9dUYRhzx1o4oa0J7Qr4i8mKibnDACG2XvcftijG+JK6neBKuz
+	5nUduG0llbzLBYuz1oPnEez9otGn0mt2TSb1opiKqJGW/MPGR2gD+z71p0fsdAk902HIh7
+	NtbcYJyrJ8+CKVCJYWlKOEF9QrmO7GO5KDspKWxPSrnkHe1KT000/vGRU+eC/A==
+Date: Fri, 25 Apr 2025 09:49:07 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>
+Subject: Re: [net-next v7 4/7] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250425094907.27740d07@wsk>
+In-Reply-To: <a5f54d46-6829-4d60-b453-9ee92e6b568c@kernel.org>
+References: <20250423072911.3513073-1-lukma@denx.de>
+	<20250423072911.3513073-5-lukma@denx.de>
+	<20250424181110.2734cd0b@kernel.org>
+	<0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
+	<20250425080556.138922a8@wsk>
+	<a5f54d46-6829-4d60-b453-9ee92e6b568c@kernel.org>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=f8e0df50e0ac3106afbb77cd0b2f1ff19fa0e94c42b5b04d376b20835a2c;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 25 Apr 2025 04:48:13 -0300
-Message-Id: <D9FJYO87PWNU.1296TXH1IPP66@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Hans de
- Goede" <hdegoede@redhat.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Lyndon Sanche"
- <lsanche@lyndeno.ca>, "Mario Limonciello" <mario.limonciello@amd.com>,
- <platform-driver-x86@vger.kernel.org>, "LKML"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
- <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
- <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
- <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
- <D9E5H5B9X448.12FJT48775C50@gmail.com>
- <3ae149b5-a936-45b4-8887-eb7cde1ee4b0@redhat.com>
- <310fae71-d3b7-51b8-6012-c73b2ba7e282@linux.intel.com>
-In-Reply-To: <310fae71-d3b7-51b8-6012-c73b2ba7e282@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/aD7bD6eqbseU9NHDSHb+3ZT";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
---f8e0df50e0ac3106afbb77cd0b2f1ff19fa0e94c42b5b04d376b20835a2c
-Content-Type: multipart/mixed;
- boundary=b693a78c1fa53d64a99935a3c67a40a2d8abb52fbfad6c290c4c0585accc
-
---b693a78c1fa53d64a99935a3c67a40a2d8abb52fbfad6c290c4c0585accc
-Content-Type: multipart/alternative;
- boundary=c10b4997458f6d5d162bf459403a94c132b447d5e855eaebcffdd9803841
-
---c10b4997458f6d5d162bf459403a94c132b447d5e855eaebcffdd9803841
+--Sig_/aD7bD6eqbseU9NHDSHb+3ZT
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-Content-Type: text/plain; charset=UTF-8
 
-On Thu Apr 24, 2025 at 8:57 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 23 Apr 2025, Hans de Goede wrote:
->> On 23-Apr-25 6:14 PM, Kurt Borja wrote:
->> > On Wed Apr 23, 2025 at 10:44 AM -03, Hans de Goede wrote:
->> >> On 23-Apr-25 3:27 PM, Ilpo J=C3=A4rvinen wrote:
->> >>> On Fri, 11 Apr 2025, Kurt Borja wrote:
->> >>>
->> >>>> Use a faux device parent for registering the platform_profile inste=
-ad of
->> >>>> a "fake" platform device.
->> >>>>
->> >>>> The faux bus is a minimalistic, single driver bus designed for this
->> >>>> purpose.
->> >>>
->> >>> Hi Kurt, Hans & Greg,
->> >>>
->> >>> I'm not sure about this change. So dell-pc not a platform device but
->> >>> a "fake".
->> >>
->> >> Arguably the dell-pc driver does not need a struct device at all,
->> >> since it just exports /sys/firmware/acpi/platform_profile sysfs
->> >> interface by using the relevant Dell SMBIOS interfaces for this.
->> >>
->> >> As such maybe we should just completely get rid of the whole
->> >> struct device here?
->> >>
->> >> If we do decide to keep the struct device, then since the struct devi=
-ce
->> >> seems to just be there to tie the lifetime of the platform_profile
->> >> handler to, I guess that calling it a faux device is fair.
->> >=20
->> > I think it's important to mention that a parent device is required to
->> > register a platform profile, see [1].
->>=20
->> Ah ok, that is new, I guess that was changed with the new support
->> for registering multiple platform-profile handlers.
->>=20
->> > I guess we could get away with removing the device altogether from her=
-e,
->> > but that would require to find another suitable parent device. The
->> > obvious choice would be the `dell-smbios` device, however that would
->> > require exporting it in the first place.
->> >=20
->> > For some reason, exporting devices doesn't seem right to me, so IMO a
->> > faux device is a good choice here.
->>=20
->> Agreed.
->>=20
->> > Another solution that would make more sense, lifetime wise, is to turn
->> > this into an aux driver and let `dell-smbios` create the matching aux
->> > device.
->
-> Well, that was what caused part of my confusion / uncertainty here as
-> I could see that aux bus between these two drivers. Obviously, it's not=
-=20
-> there currently but conceptually this relationship looks what full-blown=
-=20
-> aux bus was supposed to solve.
->
-> The other part was that as per Greg's simple classification, certainly=20
-> this driver needs to access platform resources. BUT, that access is route=
-d=20
-> through another driver which is a case his answer/classification did not=
-=20
-> cover.
+Hi Krzysztof, Jakub
 
-Perhaps it didn't cover it because, as you mentioned, this falls under
-the aux bus use cases.
+> On 25/04/2025 08:05, Lukasz Majewski wrote:
+> > Hi Krzysztof, Jakub,
+> >  =20
+> >> On 25/04/2025 03:11, Jakub Kicinski wrote: =20
+> >>> On Wed, 23 Apr 2025 09:29:08 +0200 Lukasz Majewski wrote:   =20
+> >>>> This patch series provides support for More Than IP L2 switch
+> >>>> embedded in the imx287 SoC.
+> >>>>
+> >>>> This is a two port switch (placed between uDMA[01] and
+> >>>> MAC-NET[01]), which can be used for offloading the network
+> >>>> traffic.
+> >>>>
+> >>>> It can be used interchangeably with current FEC driver - to be
+> >>>> more specific: one can use either of it, depending on the
+> >>>> requirements.
+> >>>>
+> >>>> The biggest difference is the usage of DMA - when FEC is used,
+> >>>> separate DMAs are available for each ENET-MAC block.
+> >>>> However, with switch enabled - only the DMA0 is used to
+> >>>> send/receive data to/form switch (and then switch sends them to
+> >>>> respecitive ports).   =20
+> >>>
+> >>> Lots of sparse warnings and build issues here, at least on x86.
+> >>>
+> >>> Could you make sure it's clean with an allmodconfig config,=20
+> >>> something like:
+> >>>
+> >>> make C=3D1 W=3D1 drivers/net/ethernet/freescale/mtipsw/    =20
+> >>
+> >> ... and W=3D1 with clang as well.
+> >> =20
+> >=20
+> > The sparse warnings are because of struct switch_t casting and
+> > register =20
+>=20
+> clang W=3D1 fails on errors, so it is not only sparse:
+>=20
+> error: cast to smaller integer type 'uint' (aka 'unsigned int') from
+> 'struct cbd_t *' [-Werror,-Wpointer-to-int-cast]
+>=20
+> You probably wanted there kenel_ulong_t.
 
->
->> > I could do this, but I think it's overly complicated.
->>
->> Yes that does seem overly complicated, lets just go with the faux
->> device.
->
-> Okay. In part, this was also to check whether replacing full-blown aux bu=
-s=20
-> with faux should be considered another kind of "abuse". I've no problem=
-=20
-> with accepting faux for cases like this as I see these as policy /=20
-> convention decision more than one being right and another wrong. :-)
+This I did not catch earlier (probably because of my testing on
+imx287). Thanks for spotting it.
 
-Now that you put it that way, I guess this still is kind of "abusive",
-but is still an improvement over creating a full platform device.
+>=20
+> > access with this paradigm (as it is done with other drivers). =20
+>=20
+> I don't understand. I see code like:
+>=20
+> 	struct switch_t *fecp =3D fep->hwp;
+>=20
+> But this is not a cast - the same types.
 
-Nevertheless, although this driver do access platform resources, it does
-it completely detached from the "dell-smbios" device. The only use of
-the platform device here was `&pdev->dev` :p
+For example:
 
->
-> Thanks to all who answered.
+The warning:
 
-Thanks for your review!
+mtipl2sw.c:208:30: warning: incorrect type in argument 1 (different
+address spaces) mtipl2sw.c:208:30:    expected void const volatile
+[noderef] __iomem *addr mtipl2sw.c:208:30:    got unsigned int *
 
---=20
- ~ Kurt
+corresponds to:
+ info->maclo =3D readl(&fecp->ESW_LREC0);   [*]
 
---c10b4997458f6d5d162bf459403a94c132b447d5e855eaebcffdd9803841--
+where:
 
---b693a78c1fa53d64a99935a3c67a40a2d8abb52fbfad6c290c4c0585accc
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=57E3B6585920A69A.asc
-Content-Type: application/pgp-keys; charset=UTF-8
+struct switch_t {
+        u32 ESW_REVISION;
+        u32 ESW_SCRATCH;
+	...
+        /*from 0x420-0x4FC*/
+        u32 esw_reserved9[57];
+        /*0xFC0DC500---0xFC0DC508*/
+        u32 ESW_LREC0;
+        u32 ESW_LREC1;
+        u32 ESW_LSR;
+};
 
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUlOQkdnS2Vtc0JFQURsQmEz
-YWJqc29Fb2Y3WUFwaFJheWkzWXJCZ0lwMDZVaW5Ta2hDa3Y3ZzRkYU5VVXZ6CkQ4Y2xyTkhaNkdD
-dDREWEVqYmJBcFFaYVpTd24rL2UwR3Q3RkFLOEhZZnRWaXIxNTh0ZnRXazhKUHFOM2NaYUgKYTE1
-Qiswc3ZZYzliQnNtU1p5TU5zbGxJQk9FM2g0b1NxSVZyUHVFV0VxSys2Y0NhY2NqOTV6d1lqc0ov
-VDRYUgpBbFJlQzEzcjF0UTR6T09paTlMZ1VMZnFYSG1Va3J4eHZ6TExCN1pBZ3N4RUlUMW5OK3pK
-dlB4Q2VOR2pxWTFCCklEMGw1QVd5cnRwM2JRRnJjWk4vUkRscER3UzBrb3B2WmFZeENMN1p4T29a
-dHd2OVR6NmdQMzBXcmN4NUpHUXEKenZScG1VKytUWWtOQlRpL2dYd1VUYmliVFQ5QVJGNS9JRVJu
-T3JEZTczWWx6NzcweVA0ZlM0VnA5ZXBNcGhqTgpKNTlGZGswVGFrc0w2dEFja1ozUlZjTGtqQklq
-N2FzWGY5dHFNNkdQNHVYNGxadmM5QVd0Q2JGRUZqd1lBVHJ1CmgxZmN6SGJxN3grRXNjZ2MzYmFv
-YjVXcEF2RFJWMlU2YUZlWUp3OFQyU3FIRXI5TzdNUEhWOUdkdk9LYXJrczEKUHpqeFArMjl2WDAr
-eVNSN2tQY2wzZHV1SmN4UHV0QksvNHR5WWdpbUVBQll1S3ZaZ2ZLWlZCdEVEUFh5M1N4LwptZVd4
-Q2I0YWloU0NGdm9lTVpRSmlqTnJNYS9WSEpQanp4S3pqRER0Q0xtWnNTZURqWEdqT0V6RWFsTzRI
-dEhwCm5TeW1nOHVyZnJyUnRIWks1eVErK2gyYThYY3RuUGtyVTdyMEwxQm9BNUU1NHVxUEdqZ29Z
-bzRuOVFBUkFRQUIKdEIxTGRYSjBJRUp2Y21waElEeHJkWFZ5ZEdKQVoyMWhhV3d1WTI5dFBva0NW
-d1FUQVFnQVFRSWJBUVVMQ1FnSApBZ0lpQWdZVkNna0lDd0lFRmdJREFRSWVCd0lYZ0JZaEJGVFR2
-aGNLNzNkNWc4UEdPMWZqdGxoWklLYWFCUUpvCkNueHhCUWtFNkdlR0FBb0pFRmZqdGxoWklLYWEv
-R1VQL1Izd2Z6RlJLK1NuVG81dGJKQVJCRzllRXpMY0ljTGsKK2FDODQwZ3oxM29MV0QwSFdzOTBE
-anFOT3o0UGZQWVd5RWxqZWRnMzNlY2dRaTVBMFQ0dUUzUExvY3pCMWNHbQpVS2JOd0VVM1VSbnp4
-UkdtOGUyUzFDeWF5VVFCRmxOYUpsU2Nva0xZb0pieHBlRk5DYlVUTVh1YXlvbm82dmx6Cm1PR0Zm
-bGllOTl1NlJzZmFURytRb0MydVJQdldjcGFwVVBGUHN3Yk9jb1lLcytqb0RsZXZBQ2hMdi9EenFW
-VG4KY29MZ1RRVFVJNXREa0ZQUDFEOFFUb3hmUjRqQkN2QnNsRnJQK3ZlS1pFeVVydkhLZ2dOUUVI
-Qlh6ZkNOWVdmegptNU80ellRYlRLNDVJVHlFZmNGd2VKSGpYRGZ3MVBWcHBmemdUNUJ4ME9wQ055
-bGo3TkU1d2hUcFJuS1RpcG4rCi9Xbk5yeURDblJmVHZBUS9zc0FwMFVzQzRlR2ZHZ0g5SE8ram1U
-QjJyS0ZzU2p0WkNtL3dpVFRKK3E4Z1dSekcKeThXWEJhdTFObnRBUTl6STVTWnMrc2JKbVNNcXJ0
-N1NCL05HYjY3dk50M2plbldjMlhpSWVaNFhZelNMcXBUUAo4VUlhOTU5akRqK0RKQlJZQkpBUEhD
-YW4xLzBxRTBkeDljRGdEeE9VcVFNMGR6anc0ZS9QWDJQeDRVZFcvU243CmhEYkRwQUYxeGkrdDUx
-SzRmYzFld0FUTGxuVVJkZG1JVG9aZmJmcVNuQjEyQUk5bGpvWU5OemhOUGNZYnZpUVYKSFM3Y1U4
-Vnl1eGFvMW95M25qeERXTXJrUkY4cDEwNW82eXZlQXFJTHFyaiswaFFLeWNjaHczcXFkdnhRK3dW
-SgpKYUtrNHdwUjFKbTZ1RGdFYUFwN2tCSUtLd1lCQkFHWFZRRUZBUUVIUU93a2xwQnBqY3IyR0Zs
-WmhiR2FXWkxzCmIwNHlOcWkrMFBRR2dKUTF4SDFyQXdFSUI0a0NOZ1FZQVFnQUlCWWhCRlRUdmhj
-SzczZDVnOFBHTzFmanRsaFoKSUthYUJRSm9DbnVRQWhzTUFBb0pFRmZqdGxoWklLYWFYSFFQLzJN
-MnlhT0xVdm05eWN6OTA5a2dTTG93LzlRaAp6dGZmeHlPMkdERGVYelVCOWcxaUNZNXNzZGdTaVI1
-eWd4cnp3cWpad3VBR2sydm9FNkQ5elJ2d2xDalVlL1ljCi9JVTZiU3d3TEVvYTVPNzcyRW5iSXpK
-dlZFYUxZM2JZdHZpTk5KaXhrQWtSQjBLWDhWL2ZrZ3kyTUVLVGwxY08KcnRvajNVS1gxWFRkZ2Vo
-MjZYLzJxUzkzaUFLc1V1cjIyNjhVNUVRc1NmMkE4VUIzOFhZdTQ4RkdHUWtXNmFBUwo0cE9OSlY1
-MFdzaUZHZlpwaVFiU2E3WENqNXB6NWJhK3ZHU0MvT0h5bUNNQWIrZ1JQM2pkRDBoMzVIWEVrelFD
-ClJUWXp4V2RmbldjQkhnQ2w0U1FOM3BBblpwODk4L2F5NCszckFnL1Q3ZUFjVzNSVGdVL0hVRUcy
-NEd6cU5ISmYKTGI1eHREOURCcGpraHVqbElvMUdnemw1QVBJdGNDUnhETTNQMGxDdzhWK2drSzVj
-S1NmTC9raDczcW1iNEtYcQo0RW05STJtMnhnMkU2ZFF3N3A0Y2tzV1VEYmtvS2JHTUk1MlMvcTZQ
-UUxONGk1SU0yRkJCSXBaekZKRm03SGxxCjQwdkhHd1F5YzYxTTRrTlJoTVg1ZTZjdGRWRTZRN1Bi
-RjY0TVEzb1krc1NUTWMyc2c2ZzEvY1lkS3NlVHpBSzMKQTE0c3c2MUNiRGNuYXJVL3YvZlhEbjVH
-c25oTUJ5eEh5R2NUcHhLYXIrT1p4YXBISTBoSnNKUElqMDFZbHFxNwpQRXU0TnFobXRtejV1YkhG
-K2FTUitQeGFSaTJ1VVVnelpuWmZxbVpsZTRHblEwRDh2eUU3ek04bUk3OEkvTkd3CkJMRWx3Y1hQ
-c1FCZjNHNWF1RE1FYUFwN3R4WUpLd1lCQkFIYVJ3OEJBUWRBeTd2MUFBbzl1dkRZR0F4Q2ZucncK
-blhLVzNRSFBmUXA5cmVGWFNsRHh0RE9KQXEwRUdBRUlBQ0FXSVFSVTA3NFhDdTkzZVlQRHhqdFg0
-N1pZV1NDbQptZ1VDYUFwN3R3SWJBZ0NCQ1JCWDQ3WllXU0NtbW5ZZ0JCa1dDZ0FkRmlFRWgyQ2k5
-dUphYnUxT3dGWGZGbUJECk9QU2YxR1lGQW1nS2U3Y0FDZ2tRRm1CRE9QU2YxR2F6bkFFQXpEQzRO
-U2JzaVBjazRqNEsrdkJoNFZqVVczSmQKTTA1VkM1S3FvRXM0S2JnQkFJNFhyY3FrRGhqRG9WbnVk
-TDJDTVJDbGtMQlpkQ0lhY201a1ZlS1pRZ1VNNDVFUQpBS1Fid1AzUDdrWnQ1Mm9vNXhaVjF5cmFw
-N1ZmdkJuanBJd05zalQvNHAxVzVXd3pyaWV0NXhpbWttNnRmL3ViCkZXbEUyMldXanRCbWVkOWZH
-UjVOWm9Hb3dQQWp0L3JGTjJ6T3NGUVdkT0FwZVVsenptVk1MTlpqcDAzMGgzWGcKb05QUlAzVzdD
-YjFGb2NHSWdKZ2NKNVVzS0tvVFRDYTBqZWJqbk1zaGVuK25scjRKSTZkSU5lQ1JZdzFuaCs5Ygp5
-cjFVb2F0UzM1dkhKTEJhVWtMdUJ2OFhVUFJtS0s3cmtoaHZ5VnYvTktmSWNpYStNcjZoNUJWT2xz
-N1QzbUQwCjdPRmJwcWJkT0h2YS94dkwvNjZEVXA1cmlKM0N6dk9MYVFYTWlDSHN4dnltd0o2SWFq
-eHZsMjZZbVo3VHlhdnQKditrb293bG9FeHVWb0dSdGRNditvUDFtblRlaWRJeDFRbitpMGE5SDNR
-V1NmbmJQRDhwRW9Eb0RWckZ1YnhkTQpGSXdFWjRrYzlyVVhYdnU4c1ZoQ005Ti9ZU2FtN3pFQU9V
-aFFKTlVHYk5wSzhIZ0wzMmthVEtKeGtVUUI1NzFQCkY4Q2dHUEU2Uk5vRW5BLzlJUUlLQ0VMMngw
-M04wZXZuR2t0aVhncEZzS3pzWlVyTUhseVJwbGgza2tQSHl0QUcKUGNZNktSNVA0cmgyVFlhTyta
-QWtsQ3lMRjBtYm5vOEJTVnEvbGl1emZDNHlDa2gvdFloOHVYRytlek5sbGFCegpnM1JTcDdiME1l
-aWlETkdPZEhsZ291aGNwUklTNFIvUkZhcmtPNFoyNlRYK05WSXYxSDhwTGppMy9nY2FYV0RiCk5T
-c2ZKVUxiTCtJRS9ZZnI4Tmo4UnQ1WUpad2hIbXhNSVZ3dWhDaTlKSCtJdURNRWFBcDd4eFlKS3dZ
-QkJBSGEKUnc4QkFRZEFLa3hLaFFVUjM5K1Z3THZ5ZXYxQVIxbDFhcmRibitxdGoyUGljeVkwQ1JH
-SkFqWUVHQUVJQUNBVwpJUVJVMDc0WEN1OTNlWVBEeGp0WDQ3WllXU0NtbWdVQ2FBcDd4d0liSUFB
-S0NSQlg0N1pZV1NDbW1nbGxELzRoCmYrTUQzbEhOL3o0a0k4empLSjRzaCs2d3E3OU1iMWxHWnlG
-Z05tNFpXOFRZSlZONkcvQ0pOL1kvQUZ3WDBpemoKUWFtenM2QTVGWmY2RUZSNGxrYkZMRkZVOFF0
-QzNOZWRkbEM4UnE5QzQwOXdyYlIrRy9RcDc4S1d5dnlWTWVFSQpVMFFrNG10bUdtcm5rS3BpaTEx
-Nk81dW9mM1cyZVZ6WXJ5OUFsV05rMHFQMkRaL0J4WUw4WEJIK21rTFB5TEthCk82MGZYZmxSTCs2
-MTZrZDVJQWZmd1pxOTdtV1U5R1NrbWVZOTg0RCtjcVhycVdDWHgxVWxIeitxenN6ekFrekgKbXV6
-Mk5SV2xvaWNaME1yY0h3NWZ0RHZJelkxaElSZFJjSGRrM3RMRHBYeGtabGRERFM0M2FwR0xHZURm
-M3JIegpRSGdEdENTeDFmVDNPTDJQVDhuWlBraTNtbldKL0t3WDZ1MnJyRXJQOTJPWVBYMUFDY3dR
-M3VLTmx2ZXZaa1hVCmFtYVJvSXJaRDY1RURvYmdva0N3d2ZvSzBHYSs4STBvZnRGS0JWNUNaRml4
-bDloZjhYempXSzZlaWY4UVVrMzgKZmhoZU8zUHBJQXhoOCtwSHpwZElqRUFKSTN5Y2JkWWhGUlhw
-ck42MTBLMzdjWG13bGpyRC9ZaGl5VUhMQUlIZgo5UmVweUgzMFVKTGl3Vk5NSE9abFJucDRHYUtF
-a3BHUDB0U0UyWm9TR1d1Q3c3QnpPUW1qVG5Scm93NDFTbVdOCkNHMTNoaUdTRzNodlR3a2dPWXI3
-ZkpReWRGcVFkK05PbnAzYURjOHIrMmpvc1JXcDlNaXdsSzJldVJrVHlnc3kKd09CVXZ6azczbWpV
-K082aVlPdzdoaERiWEtjWjNIUS81bWg1YjhGQ3pBPT0KPUdSdlYKLS0tLS1FTkQgUEdQIFBVQkxJ
-QyBLRVkgQkxPQ0stLS0tLQo=
---b693a78c1fa53d64a99935a3c67a40a2d8abb52fbfad6c290c4c0585accc--
 
---f8e0df50e0ac3106afbb77cd0b2f1ff19fa0e94c42b5b04d376b20835a2c
-Content-Type: application/pgp-signature; name="signature.asc"
+The 'u32' type seems to be valid here as this register is 32 bit wide.
+
+To fix the sparse warnings - I think that I will replace [*] with:
+
+info->maclo =3D readl((u32 __iomem *)&fecp->ESW_LREC0);
+
+as such solution is used in a wide way in the mainline kernel.
+
+Is this the acceptable solution?
+
+> >=20
+> > What is the advise here from the community?
+> >  =20
+> >> Best regards,
+> >> Krzysztof =20
+> >=20
+> >=20
+> >=20
+> >=20
+> > Best regards,
+> >=20
+> > Lukasz Majewski
+> >=20
+> > --
+> >=20
+> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
+> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
+> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
+> > lukma@denx.de =20
+>=20
+>=20
+> Best regards,
+> Krzysztof
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/aD7bD6eqbseU9NHDSHb+3ZT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaAs+QAAKCRAWYEM49J/U
-ZuF3AP9ovSm3jFvrbA6gCLpJI+dBK/yPkVGCzkIk0NKuaPrTnwEAg907TIJ1AhLq
-fCWk6PVg+wapMJHMcS+9hXQ43rta4gs=
-=aJ3+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgLPnMACgkQAR8vZIA0
+zr2n/Af+LVw/038n6xkuDzEVw1Ws29jNVFmBbGwSS1Om+WVKtZVnR0MEJigZTpNh
+Xw3M68InMX0jlbko1jdRMbhfzovDicEY9KYmg3pKQCZcWiFS93x+PIGFNY+ekeov
+jXyoiQY1zaC1/FT3PWtOwK6Ls+yGL83vJm9O86c2dCa6/wnARvbWULW/uQPh0AlX
+yTDzLR3RuRQqow6k+M+Rv3ruF0lx7cis6RCVOb3YkCwwBMrjUFQ/T05K5ZilZMr5
+9N257fwmaKEtAqk9Sc7fXi/kGf2IvPtobVyWOxWpyIJVeyjjp3s6G4linPN8U46P
+s2b/DM39xFJsCGTqF8rG0CJFUNM1FA==
+=Id9L
 -----END PGP SIGNATURE-----
 
---f8e0df50e0ac3106afbb77cd0b2f1ff19fa0e94c42b5b04d376b20835a2c--
+--Sig_/aD7bD6eqbseU9NHDSHb+3ZT--
