@@ -1,140 +1,175 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2982621B910
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CB41F6694
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610930; cv=none; b=pm5w7YTKvOIuy0FOvhJVou8A/nKi3aEJVT/jQkp33gTUvbBmhsqR0XETv1fKRd/WQndt7ZhZeopyq29qE+OYeP87AdKKAgvkv4o29tNJjymm/oGl+kW6yOXInB+hWxBEQBYmRVVI2CCdwtu4uItc/8zIbwikOoqDxFWavb+reSg=
+	t=1745610985; cv=none; b=SJeaO1RYhQ91TbieFo34x39jqWuUajNsrlc3OfyRvANdKxmTshrSvLptPYDRORNnq4VbHgTIpNCBHKliVipZreEV6sPx9jCuTV041LARpdgVYuDfeEEtjS8TaDTQQtD9RrgOlCScflUSwcaIsrRgBK/5w1DjRG/a6EJAUDumS6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610930; c=relaxed/simple;
-	bh=YkYI2UerAJ9rFXqXK9R7az+VrbS7ruw5DYqt9hl2Nyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tQXpaI3HKml61XvPe8/nkP6bbZ4CZvGLYCrMkl/8HQssenlpr6seVQJRd/x7TWP7LoK/xGNBSCKH9+1E0WCMjrE0rHdLGDus3pfeKdUWNwW004XhxvlMhSxw+GqvvToAcrM7hTjwSxxVONnRTrBArtb4IESG/bRIg+A+kE3S9GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cHLw/zz1; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745610985; c=relaxed/simple;
+	bh=3BFpzPNhGoEvlgWJA66CMPCNVCIyPcxU5w0nVetTTVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=erAjwSTPCpaCTrdthZ+S0VphCXs/jjigvH3cqp5BGXcXY8SfmSB0r4VmKcZbB6RCfWy7qdQZKFmSg5afpUozvmcp8E/BZUVNJ3KSN0G3k4GQyZD0cD8b7H1NExsWsVTrnir5kEdeox453VEkt03ynBIVrr51KbfR/mB6bNLm50U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRS2/ztl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHLw/zz1"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e5372a2fbddso2402934276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745610927; x=1746215727; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UrXciBeDVNhReMYqMBDNjD45OpghW+ifP5F4S57KbJA=;
-        b=cHLw/zz1tQy8AvHgIyYTJWOsujWWq7uXojK7ybgiZ2/djOmow6ktHC4ZPfjXmX9ZkC
-         IGePT+cA75K/mCKRQcpWLokj+ghiWT8bQ5kIHe9xx+pWWrOuiG/bgNz3+uRseHYYrXod
-         u/ScO7gSKkqO+cm1EepGxfODkqV09UCulX9I3DdTbNS3nRwl+mKxNMXRW43hp5R5p3lb
-         4oLJXgoVogijAShWQHLONo3SvlkT1cSHYC1+BKcdegiLBOPO/qlz6qxD56O+pp5AhzVJ
-         FXL0xLuQxfVQV79zsVrhmD2QJQpKvZr37hu4vN6ptezfUOM16GftKvotiy2z1Df1ybWp
-         TlYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610927; x=1746215727;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UrXciBeDVNhReMYqMBDNjD45OpghW+ifP5F4S57KbJA=;
-        b=Wr5ZpWK1aWhF3OMrRPEmGnOZRqV7B4WkB9Tqhxn7MQv+vecy9ygIOcJdtyZ11nY+bn
-         eXnzJwd/Maqj2svHRWebQkslfKUfblnm/p5Glj2OobAFJd7tZZEunjWQM6SEDBT5WX/j
-         0TOpFs+SGFcCtmd6isFf0IcPQuW14U8U0yW4f0UH834ykOs2vn/I+vwa82uMW4RH/Hqx
-         JnjELHCSqMLt4+WT3+C0OSEJBfacXwoOhOByqHBHn2r9ZJq4W1GvZaoD0R22dNaYuoLH
-         oU19GbW51Tq3atE/Q94Qgi1nfNV9wW366ImOCR6JScc7c5ZmOoWMp388yOat9yHuM98e
-         t3yA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAHo050gtX6qudhuEwbR56Ll/9fNjbe3evz8hbCLe9hfuMxawoIiZf8NXiRbxTk+AC1idMCnphY1C12Dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6KphG+a7Ace0oZ7yaT9r2UB3719asZxwzMn49JbdS+JdPpJ9h
-	v20OPli9TU6Hc1n2W55Htx7lssd97gRPan3yL5rGaLgCUtTJWKQN7AB2LlL4gY0RVeyPPOg88oR
-	W4fi3UjChlAve3ZrSNwx34JOOBW8=
-X-Gm-Gg: ASbGncuRc+Jso3iPBjkPBW5RCFlf3psAfqPf4ysTqg0IWkYzmEj5Z8GlYLh3hWwHQ6L
-	Nf1+fcBjlMtEw+MMuVq4kYDjuUPC6xdUsMv9Ouznpk4vI385CummUSTOA/oliKvCCSAndxobLm1
-	9gSS02t1TM87pwjEiylM+4BzFrKRsgIsGM6kPEQ54CenvRBr7qtIT5/g==
-X-Google-Smtp-Source: AGHT+IHNcF93ygVUYkEcl83GWVs9xFZbaBu5te9iW6WLRa0MYyvtqFpnHtbyBCDfa6wYRJqN/zvwLPhjchwjSfuI2lk=
-X-Received: by 2002:a05:6902:461a:b0:e6d:fb0f:fcbf with SMTP id
- 3f1490d57ef6-e732344d533mr1397107276.39.1745610926871; Fri, 25 Apr 2025
- 12:55:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRS2/ztl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4821BC4CEE9;
+	Fri, 25 Apr 2025 19:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745610984;
+	bh=3BFpzPNhGoEvlgWJA66CMPCNVCIyPcxU5w0nVetTTVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eRS2/ztlUG0AIAC3y4OPWTTjG1HrkNkqEFroTJSVrgpw6FOWNjoTWr2niFagTwrIA
+	 Bg5a4Po8oPmkMpKJLrUTJ3mh8giuvpQgLeIx4a79TyiDPUdlrXzPXcjXPS082UiXgD
+	 SokBmtDgYkmcmjB3NZ8tiYb7v6HxqVti0fqViOAPKjMjt3KtE3fm5TqpQ8VN4XlQUp
+	 jY1VLPu27QHpLdMpcfPSKacUu6TlHQzzGLDy6r+KPwRDC7NGmrJDI+Tzd6ojVkilyz
+	 0PApMN5h2jRlwiDZAdeE7iVkymsJcThsPRNFBcionN9Ne06KpZgHtKCoFnetmsxMnq
+	 3kaYGOa25YCsw==
+Date: Fri, 25 Apr 2025 12:56:21 -0700
+From: Kees Cook <kees@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: BUG: vdso changes expose elf mapping issue
+Message-ID: <202504251158.D3D342410@keescook>
+References: <f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com>
+ <aAvWchSUlnAfg42x@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2@epcas5p4.samsung.com>
- <20250415181419.16305-1-nj.shetty@samsung.com> <20250416165512.990257538f61be5857e513ab@linux-foundation.org>
-In-Reply-To: <20250416165512.990257538f61be5857e513ab@linux-foundation.org>
-From: Nitesh Shetty <nitheshshetty@gmail.com>
-Date: Sat, 26 Apr 2025 01:25:14 +0530
-X-Gm-Features: ATxdqUFOkipdMkS2-gVFcM-_1VGrDaphqj0-qJRV5szUIJ6G5imOlaR5M-dDf2w
-Message-ID: <CAOSviJ1d3=NzwGb6kKfD5zucdbrOQfyO0my_b0wr-NXuQzFGKg@mail.gmail.com>
-Subject: Re: [PATCH] iov_iter: Use iov_offset for length calculation in iov_iter_aligned_bvec
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Nitesh Shetty <nj.shetty@samsung.com>, Alexander Viro <viro@zeniv.linux.org.uk>, axboe@kernel.dk, 
-	gost.dev@samsung.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAvWchSUlnAfg42x@arm.com>
 
-On Thu, Apr 17, 2025 at 5:25=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Tue, 15 Apr 2025 23:44:19 +0530 Nitesh Shetty <nj.shetty@samsung.com> =
-wrote:
->
-> > If iov_offset is non-zero, then we need to consider iov_offset in lengt=
-h
-> > calculation, otherwise we might pass smaller IOs such as 512 bytes
-> > with 256 bytes offset.
-> >
->
-> Please describe the userspace-visible effects of this flaw, if any?
->
-a.
-At present we see different behaviour based on whether the device is
-512 byte LBA formatted or 4K byte LBA formatted.
+On Fri, Apr 25, 2025 at 07:37:38PM +0100, Catalin Marinas wrote:
+> On Fri, Apr 25, 2025 at 01:41:31PM +0100, Ryan Roberts wrote:
+> > ldconfig is a statically linked, PIE executable. The kernel treats this as an 
+> > interpreter and therefore does not map it into low memory but instead maps it 
+> > into high memory using mmap() (mmap is top-down on arm64). Once it's mapped, 
+> > vvar/vdso gets mapped and fills the hole right at the top that is left due to 
+> > ldconfig's alignment requirements. Before the above change, there were 2 pages 
+> > free between the end of the data segment and vvar; this was enough for ldconfig 
+> > to get it's required memory with brk(). But after the change there is no space:
+> > 
+> > Before:
+> > fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
+> > fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
+> > fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
+> > fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
+> > fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
+> > fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
+> > 
+> > After:
+> > fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
+> > fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
+> > fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
+> > fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
+> > fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
+> > fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
+> 
+> It does look like we've just been lucky so far. An ELF file requiring a
+> slightly larger brk (by two pages), it could fail. FWIW, briefly after
+> commit 9630f0d60fec ("fs/binfmt_elf: use PT_LOAD p_align values for
+> static PIE"), we got:
+> 
+>           Start Addr           End Addr       Size     Offset  Perms  objfile
+>       0xaaaaaaaa0000     0xaaaaaab5d000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
+>       0xaaaaaab6b000     0xaaaaaab73000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
+>       0xaaaaaab73000     0xaaaaaab78000     0x5000        0x0  rw-p   [heap]
+>       0xfffff7ffd000     0xfffff7fff000     0x2000        0x0  r--p   [vvar]
+>       0xfffff7fff000     0xfffff8000000     0x1000        0x0  r-xp   [vdso]
+>       0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
+> 
+> This looks like a better layout to me when you load an ET_DYN file
+> without !PT_INTERP.
 
-Here is the scenario, where this case is possible, when using io-uring
-fixed buffer IO with 512 LBA device we can get,
-i->count =3D 512, i->iov_offset =3D 3584, bvec->bv_offset =3D 256,
-bvec->bv_len =3D 3840, len_mask =3D 511
+The trouble is that !PT_INTERP must be loaded out of the way of the
+binary it may load, so it cannot be loaded low.
 
-In this effectively, the first 256 bytes are in the current page,
-next 256 bytes are in the second page.
-This should fail the IO, but here we pass.
-(For a similar setting with i->count=3D4096, this check fails).
+> When the commit was reverted by aeb7923733d1 ("revert "fs/binfmt_elf:
+> use PT_LOAD p_align values for static PIE""), we went back to:
+> 
+>           Start Addr           End Addr       Size     Offset  Perms  objfile
+>       0xfffff7f28000     0xfffff7fe5000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
+>       0xfffff7ff0000     0xfffff7ff2000     0x2000        0x0  r--p   [vvar]
+>       0xfffff7ff2000     0xfffff7ff3000     0x1000        0x0  r-xp   [vdso]
+>       0xfffff7ff3000     0xfffff7ffb000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
+>       0xfffff7ffb000     0xfffff8000000     0x5000        0x0  rw-p   [heap]
+>       0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
 
-To reproduce the test from user space, we can use a liburing application [1=
-]
-with patch[2], on a 512 LBA format block device.
+The revert was because, among various additional problems, that this low
+load would collide with things. The static PIE alignment was finally
+fixed with commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
+for static PIE")
 
-b.
-I went through file history and looks like this is a regression,
-previously the fix was present, but commit
-2263639f96f24a121ec9f037981b81daf5a8d60a introduced this issue it seems.
+The ultimate brk location is determined near the end of load_elf_binary()
+(see the code surrounding the comment "Otherwise leave a gap").
 
-Thanks,
-Nitesh Shetty
+> With 6.15-rc3 my layout looks like Ryan's but in 5.18 above, the vdso is
+> small enough and it's squeezed between the two ldconfig sections.
 
-[1] https://github.com/axboe/liburing/blob/master/test/fixed-seg.c
-[2]
-diff --git a/test/fixed-seg.c b/test/fixed-seg.c
-index 4154abb..e7c461a 100644
---- a/test/fixed-seg.c
-+++ b/test/fixed-seg.c
-@@ -64,7 +64,7 @@ static int test(struct io_uring *ring, int fd, int vec_of=
-f)
-                return T_EXIT_FAIL;
-        }
+I think there are two surprises:
 
--       ret =3D read_it(ring, fd, 4096, vec_off);
-+       ret =3D read_it(ring, fd, 512, vec_off + 512*7);
-        if (ret) {
-                fprintf(stderr, "4096 0 failed\n");
-                return T_EXIT_FAIL;
-@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
-                goto err;
-        }
+- For loaders (ET_DYN without PT_INTERP, which is also "static PIE") the
+  brk location is being moved to ELF_ET_DYN_BASE ... *but only when ASLR
+  is enabled*. I think exclusion is the primary bug, with its origin
+  in commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
+  direct loader exec"). I failed to explain my rationale at the time
+  to have it only happen under ASLR, but I think I was trying to be
+  conservative and not change things too much.
 
--       ret =3D test(&ring, fd, 0);
-+       ret =3D test(&ring, fd, 256);
-        if (ret) {
-                fprintf(stderr, "test 0 failed\n");
-                goto err;
+- vdso can get loaded into _gaps_ in the ELF. I think this is asking for
+  trouble, but technically should be okay since neither can grow. But I
+  never like seeing immediately adjacent unrelated mappings, since we
+  always end up with bugs (see things like commit 2a5eb9995528
+  ("binfmt_elf: Leave a gap between .bss and brk").
+
+For fixing the former, the below change might work (totally untested yet,
+I just wanted to reply with my thoughts as I start testing this). Pardon
+the goofy code style, I wanted a minimal diff here:
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 7e2afe3220f7..9290a29ede28 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1284,7 +1284,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	mm->end_data = end_data;
+ 	mm->start_stack = bprm->p;
+ 
+-	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
++	{
+ 		/*
+ 		 * For architectures with ELF randomization, when executing
+ 		 * a loader directly (i.e. no interpreter listed in ELF
+@@ -1299,7 +1299,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			/* Otherwise leave a gap between .bss and brk. */
+ 			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
+ 		}
++	}
+ 
++	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
+ 		mm->brk = mm->start_brk = arch_randomize_brk(mm);
+ #ifdef compat_brk_randomized
+ 		current->brk_randomized = 1;
+
+> > Note that this issue only occurs with ASLR disabled. When ASLR is enabled, the 
+> > brk region is setup in the low memory region that would normally be used by 
+> > primary executable.
+
+Out of curiosity, why are you running without ASLR?
+
+Thanks for the report! I'll continue testing the above fix. Just for
+making sure I am able to exactly reproduce your issue, this is on
+a regular arm64 install of Ubuntu 22.04?
+
+-Kees
+
+-- 
+Kees Cook
