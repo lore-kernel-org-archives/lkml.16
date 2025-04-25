@@ -1,77 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E852417AE1D;
-	Fri, 25 Apr 2025 10:20:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34C32367A1;
+	Fri, 25 Apr 2025 10:21:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745576455; cv=none; b=KNNosAq0hAe+4lzSzmH52bTuHmnUieXrYs9MOyay+dbw0tI4nfZltEnnFBSJmPDWoGM4WnJVXG8CIsVOiXJ8gFBquZ+836nwxLyVVAFYENNREgv5O31as+cOda9sdHEQFs+lR4QUE+nFwxeEwApmmmvg5DVgztrAwksF2OWT4xg=
+	t=1745576463; cv=none; b=oVC80LsYjK5YCttGBpqAKRU72ZRjzs7JKIjTkymtQbA8gLFXkxJGxkC3MBrRqGyIRvUTNvbWFHftp6WSPiNcFjRhIcvCveydvtuWi2JjZHFelDatkzSN7tiLvK3p2UMXyxe75b7LRFCaiiEKRvFJshyLVlXzkci2sCfV7DUPX54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745576455; c=relaxed/simple;
-	bh=jcAtdlYTfa1RC2cu9dSkGODwfuS/DqnkQIJyB/0DwRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsUpWkT1KyAKUEHZpvDCnELfILnTVVTPQr35Ii5i2WPSbZ0AtKoAMAcwPH6tpS/JZ0NCT3gZyzu2aX8WyYMoT3etSkpfLLXVZAzNQIYN4WvDMB4sTSh6dOJTy48n7lTFIphB+z/PVn4BPJnBzhRk7V7aym1DnSJg74RwmX6EIns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NdlX7sD0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745576463; c=relaxed/simple;
+	bh=Mdpk2ZsvpBn5ks3syBMCHsZS+/pOlHM9FFEXGwjhKiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f+smRBcojO8a2RyB/2cNj9iIQb88+EzzZNEevPHwGL6YWbKEGKFnXSvwtX6N1+Cy4UDMgIxu/wiJVlKCPXRLmFC/ZOQZnDcn0vJvmYih+mD4vnicadqe4F3GW9JtrSAUJWRVyo/UMt6KNu8aFeJkrgN/Q3FxoM5ORWkEEVpSf7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOjlYB7+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NdlX7sD0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8471C4CEEB;
-	Fri, 25 Apr 2025 10:20:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOjlYB7+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E59C4CEE4;
+	Fri, 25 Apr 2025 10:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745576454;
-	bh=jcAtdlYTfa1RC2cu9dSkGODwfuS/DqnkQIJyB/0DwRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NdlX7sD02k7fzLbQiCInydO04W7vNrrsSFK46wdHTBwTPZqMbEB24s9kLeSGsLHmI
-	 m2ALbZgzluFz8vkpMwt1JsUjPJCkkDzWfFnmE3QoazXWQALiM8lMu8iPbnmPR2bte0
-	 0hilI4WmcaAphIiYWf4Ilnj32DR9ln6y53qULzVIz3J4rCkimtfGXhZfb3NMnxy2HI
-	 cqDbc7MJKHXc7jIPAQ1k8eK7ImF7jevVYdOYqnCMJdIxsV/HXWDR5MAGtUR8c6TDPS
-	 7agCVTMwigx5V92d4pFvMyu8mfk9IXs6PCqLKQjeUcLz7g6DO2kfL4kQ7QKF+deZ1J
-	 xKQ6HeRgQxMpQ==
-Date: Fri, 25 Apr 2025 11:20:50 +0100
-From: Simon Horman <horms@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [PATCH net-next] net: ethernet: mtk_wed: annotate RCU release in
- attach()
-Message-ID: <20250425102050.GO3042781@horms.kernel.org>
-References: <20250423150811.456205-2-johannes@sipsolutions.net>
+	s=k20201202; t=1745576463;
+	bh=Mdpk2ZsvpBn5ks3syBMCHsZS+/pOlHM9FFEXGwjhKiY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XOjlYB7+i08z+GoERDeUNeRnW0A9Bvm08AqKS36Q2N6vuB7y1GvX2opDGHquz/pOK
+	 Dc5FfrjUnbbW12hfBw6BGW1FVlIjBNOGQ6/qIvfPkhf3g9mTeTxU/lmxi2ZPZmMoPc
+	 rSHxh+arrbfFu1t6EXDrrg464dJuBWDcqUD6Vl/auZc97KILBf04NHknHFG+3JOmf1
+	 BGyn0SlTu4qVzQlHULHbFQSGMQq9caCrao9cxea/gRO+WL4cEiouX81O1fb//WPI4O
+	 +lfByFXD8CFNeuvhurZby9acl8kw3ENTWmyBlH3wa8CEgeV2XSvNq7kKP3pJw/8pRQ
+	 C/rQxIjFnNtXw==
+Message-ID: <b32ac98d-6db7-493e-a780-5c4943111184@kernel.org>
+Date: Fri, 25 Apr 2025 12:20:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423150811.456205-2-johannes@sipsolutions.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: soc: Add VIA/WonderMedia SoC
+ identification
+To: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250423-wmt-soc-driver-v1-0-bd8bf32521c2@gmail.com>
+ <20250423-wmt-soc-driver-v1-1-bd8bf32521c2@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250423-wmt-soc-driver-v1-1-bd8bf32521c2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 05:08:08PM +0200, Johannes Berg wrote:
-> From: Johannes Berg <johannes.berg@intel.com>
+On 23/04/2025 21:18, Alexey Charkov wrote:
+> VIA/WonderMedia SoC's have a chip ID register inside their system
+> configuration controller space, which can be used to identify
+> appropriate hardware quirks at runtime. Add binding for it.
 > 
-> There are some sparse warnings in wifi, and it seems that
-> it's actually possible to annotate a function pointer with
-> __releases(), making the sparse warnings go away. In a way
-> that also serves as documentation that rcu_read_unlock()
-> must be called in the attach method, so add that annotation.
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  .../devicetree/bindings/soc/vt8500/via,scc-id.yaml | 37 ++++++++++++++++++++++
+
+chipid should probably go to hwinfo directory in bindings.
+
+>  1 file changed, 37 insertions(+)
 > 
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> diff --git a/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml b/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..eac72bd66fd6331c8d9316288bc1acc3e337efaa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/vt8500/via,scc-id.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: VIA/WonderMedia SoC system configuration information
+> +
+> +maintainers:
+> +  - Alexey Charkov <alchark@gmail.com>
+> +
+> +description:
+> +  The system configuration controller on VIA/WonderMedia SoC's contains a chip
+> +  identifier and revision used to differentiate between different hardware
+> +  versions of on-chip IP blocks having their own peculiarities which may or
+> +  may not be captured by their respective DT compatible strings
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: via,scc-id
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Compatible based on SoC (and then also keep filename matching it).
 
-Thinking out loud:
-
-* Without this patch I see the following, but with this patch I do not.
-
-  .../mt7915/mmio.c:636:5: warning: context imbalance in 'mt7915_mmio_wed_init' - wrong count at exit
-  .../mt7996/mmio.c:302:5: warning: context imbalance in 'mt7996_mmio_wed_init' - wrong count at exit
-
-* The only implementation of this callback I found is mtk_wed_attach
-  which is already annotated as __releases(RCU);
-
-* The only caller of this callback I could find is mtk_wed_device_attach()
-  which takes rcu_read_unlock(). And the the callback needs to release it
-  to avoid imbalance.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+Best regards,
+Krzysztof
