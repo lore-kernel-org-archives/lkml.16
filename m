@@ -1,161 +1,151 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0568024C095
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761261B6D11
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745571676; cv=none; b=C3XTxbDGgB3A2VA0e6pXHVW2woT+pdubXsbXhfgwK+Kzg7nPdkuB3Iu7hrI4JqcaqSPig81rRLwq7gwkxrRP71HNAFvwltWRy++TRPmC9Nhyq10Qg8zIzvZZfK+yiShVJgwJytghfClflcayN+N9CgJ1N2Lm+TnHMpUwacXPqo0=
+	t=1745571740; cv=none; b=oqjvKFF71XpdJvQliIE5ClQCNjvFVZXN7p1a0ra2Ocv9/UrMhSyRZbl6620ehJWvIRYfVb9nQbTWzj/drLRCFTr/VO2mId+vv411B+q2IdpgOGGQieALTT9IEz1FHigbdSy3RspnIE7g2AHmrDuR6afNFmvd6FrI/3xL1XP0WYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745571676; c=relaxed/simple;
-	bh=jbtD4lxoo1Rym8zGIQhQtZtmYwoyyWZdSONqwD+LmXY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=txLc/x8mL3GXmgFm4ryihedC8DKHM8KPCgT3oGVxv4RF/w74a79Cd3TMz3SxA+ZcV7xFrRij5JPQ0k587pXG52ChQvbDqkTBn76IjDCCLD/CvmhVp4fmOMQW3PKxC0tASgLZTgFE/hp5m6ocOdvExY+b6TAI9EAWRoe+3p+YFaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=H0lBOLMg; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745571740; c=relaxed/simple;
+	bh=cigjLGVrA/i3iKo0ZUO3ckDz+7QoGQ7Izg/Jz2mNid8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ln+r/GB6at/c9AqlvmhC2xP91i9t3F7s9qlJ6bdMewRodG1EgmdORIn0kXQXLZAAVweWFJ1naGmnmlKSF5VfSg+S6hoKGGenl+NjHsvXJ5HaDqnM6/fY89fbLbGc0ZJCukc642ase31Pxl195hVAukqJVFqZxeD/+yI0rejagsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PJDrg37I; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H0lBOLMg"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso1286267f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:01:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PJDrg37I"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso1112242f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:02:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745571672; x=1746176472; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bSvrLQBfLq+B4ut1ceVEmi9/bo2rmWrizkJ6hXk1M/s=;
-        b=H0lBOLMgy6mEpMCFeYJOt4AYsHm0+x5PW3AxnlmDOHAoEtnxziU02zBEN8dLJmFdy0
-         1z9E/BcVUqKsVmQOcaSTPkGdKhtnv7QMdPurpIAZ+OWnzZCRHaNmYuMWr5KjGZc+IAVR
-         jyKqQO+AG39VmHx269jdEtCyIZbIhxCxrT35guldMi0/8nTyb7KOJFutI1ZikvZ1JfjR
-         i4ynuU3F02m62MBmZeRuoL2nuqVtfPsjBZI21qzQbwxqgbXkOHIrE11lQAcLQgjTFGS7
-         FnTH1Y939hW03Cyx1PFL4oyMikGDtsLKGFo28lhB5hcPc4baVLkCP4FP5S8W9iV/B0CC
-         9/1Q==
+        d=suse.com; s=google; t=1745571734; x=1746176534; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CUtCax9Xz79pqocOKSO+PWNehk8nJoFSaWWNyZR+sqk=;
+        b=PJDrg37ILkoHM0ANI0DtAkyi22HhLrHmRsQ1VyWmcUofSoVWr0ITZheUjp1G3rpFS2
+         Cl8ieJIdiRaTgQCbkVDYym7kB9xoc+LOeJFK38uYr4j5tDWKNLcgK185TSV17ujU73rU
+         z9Zv1UaE754RO2I9g33UsVZZ3WIk6rDGclbz7jt86Sruxq7uWj4H+qWPgv0XEG92frNz
+         JvfIxmeglBUBchdhZ++45OSeL/iqdatSdIzjZBW/AxPSaANrbzRkJnPS9A2RUqReBMYg
+         BCBMrm2PZw8en8NpXKlQM2eg8nBA57AWtdBGkOQ3Pk0j6qm/BKyrAW17bvn+9NUgxdfL
+         KY9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745571672; x=1746176472;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bSvrLQBfLq+B4ut1ceVEmi9/bo2rmWrizkJ6hXk1M/s=;
-        b=GrwUFrKNZ8ujPBnc4qDBMBR9IZAu/9rhBTzwFDBTPTfXvCwYCBjGF7uIuVqFcSL0r4
-         V8XjasuhS8+R8uVQ97ZpH8l9DGwDQOv2Blif2mBDhC3TGRbwSE0lRQmK53MEMv/v1kZ7
-         rrgv558xtGJDwMWBYYSm21+cIABawC1jv07d1ACGIay9u9YwTX9ZFWvT6fgrus+IfVnq
-         LiOAlNge9BlBl/+a6/JL2yGKIbKoyjrzS8cUuyM+ImuCsl5J1bABvD2n3wd/xAA7sG8j
-         ingNQo2L0/WQxX93UI6UM6z8GIFzgolBejsZam2SJeuKSKwFq7P0TphylfiTASGJY0my
-         BSPg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0tDkmkXc/YcnJ3Wu7TonvHYJzxjVvZhirKta2q7JiJq8VlMuA79fogg+Y/9LMRrHwH1SrbL35ZOHkZVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8P3B+q/h/5sXflYGiPxtJsflcbW85vK28BRXNL9YAGZr1JhmA
-	6gCLZ3VRc9EubcXj9CSIHRUFJZk8fLACiTW9UcOjscwFmlyyo7ws7TPHwcJXuiE=
-X-Gm-Gg: ASbGncslJsjuNkBciXY9JH4E59xxUPf1FIkGn5TDxgdHJri5BoCZd6afG4p4gYAmvZk
-	L/jcbu7sjpAc+mxX5oIwiZdo027nkMoK2iOUEXfd8nakVoRRDccG7BOnccar+5poFRf1SJWaxP9
-	8ssGS0c7jlJegRBgfOgzR29/EIrIbwLQ7W3wg7yewy+qk82y4KanMhxtE220vfSLnjoVZ6BpiK8
-	oOfx2YuK0EiZ1jcsTNbJRjcOiqsAziG8TPNIGZADRoiCUgyV75kFY6AjCgHckoF/qtdLGOsH1cd
-	j16/pNNIOFn7HQuTamrdvqwgnj1QiM1avw==
-X-Google-Smtp-Source: AGHT+IESAKBg/vUZr7+HdyTu7Zt6c8/2gvrqKe9AqCVjAbPvKvH7CRuaevUBHKKYT49ezlwSd/p7oQ==
-X-Received: by 2002:a05:6000:290b:b0:39e:cbd2:9211 with SMTP id ffacd0b85a97d-3a074faf2f4mr1109587f8f.55.1745571672261;
-        Fri, 25 Apr 2025 02:01:12 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3f35:2b31:c543:726d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073c8c95dsm1696571f8f.3.2025.04.25.02.01.10
+        d=1e100.net; s=20230601; t=1745571734; x=1746176534;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CUtCax9Xz79pqocOKSO+PWNehk8nJoFSaWWNyZR+sqk=;
+        b=cjvzqDulFu8uhRrCyhLnVAASysp9WRaoPc9CzdknAU5TGDUCqv946lvMr5lFsKN2nf
+         g/G31aaLPQ52KlzxxQ6q2NZo0GG8P5l2vdmdWpGDG78G03o6BdYhiH/X3EFWXfNUVS6e
+         oMF3XhrNEvU4IujPlsqHnGF920lQFbeFWPDWzOms/SoWyD6ytNXBQwJhF7In7n5nVZgO
+         Ouc9eZ3Y8/qPB4P5A/r2wWeHGjfbrOnBl+Xr9Dmk+kRIwV5O1Q45ToOrUDkhFSWPH4X5
+         aA+E0ysasWQSevdii/5WFjX7NsBXR2QweY0m5mSUhBsHyGfilD6/MusIE6g2cqgTW0Ce
+         hQKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1iJ/3uHeW6w5ZhQEnFCR2tNUakvhOf8S74t4YynM5oD/IcwnYjbA/GFk40C7Cxl8NXVjTeiTi8sTyi7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Y775YbA6/jInjNAe8xe1k6gIwlkMC5ptVHQn+h0jZZlEdjpz
+	IQ/YQcAqcAuZfVP6oB26Kr5ijqlwj9V64E8yezgb9KvavuL7xyCiqPqKCF0rLjU=
+X-Gm-Gg: ASbGncserNsJirO6n7H8/Q8XE0Gwnc4xImlsoIxYQPGlpO1WsijcD83TAOcmpodaJda
+	vSGVCt4UsScwLTivEeLsETHTI8DPfbNO922DfK7qTQYFFUkjI0rWc2Qe64ES0+2N/zy4t6ruKOu
+	aFTohphCIOPYBAYgp9QD7GhbUWQAJWK5owWSI9Bfj1WZwOd5oi5hCClu8vD6TktiKDbtvFWwYbf
+	zlT8a4o/PzLIizxKQ3fEJ2mOxhCiiPcIbaz8bPu05uvc19e9/1WeIqO7uR1B8BrInoM5xA3xaCF
+	LezWUDOTC9iIvlANn080N9Zksbgkb0IzRxHLapf8C4M=
+X-Google-Smtp-Source: AGHT+IHcaRb5pcjKTG+Y5h3Ih/yrwWqsjNfb1VbBSCFlmYmzhEmDkPcseYoWUd0DAhovc+dqSuA5vA==
+X-Received: by 2002:a05:6000:2505:b0:391:412b:e23f with SMTP id ffacd0b85a97d-3a074e1a1bfmr1145277f8f.15.1745571733688;
+        Fri, 25 Apr 2025 02:02:13 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca4f88sm1689934f8f.29.2025.04.25.02.02.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:01:11 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 25 Apr 2025 11:01:01 +0200
-Subject: [PATCH 5/5] pinctrl: mediatek: common: use new GPIO line value
- setter callbacks
+        Fri, 25 Apr 2025 02:02:13 -0700 (PDT)
+Date: Fri, 25 Apr 2025 11:02:11 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Ryo Takakura <ryotkkr98@gmail.com>,
+	alex@ghiti.fr, aou@eecs.berkeley.edu, bigeasy@linutronix.de,
+	conor.dooley@microchip.com, jirislaby@kernel.org,
+	john.ogness@linutronix.de, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] serial: sifive: lock port in startup()/shutdown()
+ callbacks
+Message-ID: <aAtPk6vxmIBdp1NT@pathway.suse.cz>
+References: <20250405043833.397020-1-ryotkkr98@gmail.com>
+ <20250405044338.397237-1-ryotkkr98@gmail.com>
+ <2025040553-video-declared-7d54@gregkh>
+ <397723b7-9f04-4cb1-b718-2396ea9d1b91@suse.cz>
+ <2025042202-compare-entrap-0089@gregkh>
+ <a7cf9864-6810-43d8-a7f6-f71cc1ee081c@suse.cz>
+ <2025042252-geology-causation-a455@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-5-93e6a01855e7@linaro.org>
-References: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-0-93e6a01855e7@linaro.org>
-In-Reply-To: <20250425-gpiochip-set-rv-pinctrl-mediatek-v1-0-93e6a01855e7@linaro.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1986;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=DhR5Cx+h0tuPThTQMfkVBP7GDMglNgqo3TCYghOZtTc=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoC09Q1qfvXLmie8Ad0KxRLSMtwSzORIC9DHLME
- ux5GcRSG1uJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAtPUAAKCRARpy6gFHHX
- cin/D/wN4TReNcVZdJpBQ3ij4ORtqXCjpIzT8TejLJmPbAW7VRLBI73Sot2lYEh6ivMjaPGV+Ez
- ff8t2p6qHWL0XyeySWLjPm6Sa+nVqRjbyFGUOty8iQicWy3VgU0h6OZYaOlbXE3HSchUFE7AuvP
- l/20EdnceslbHDVHXe3uDbsWvxyZn5zCj0Kq78XggHgGsprpI2qVyAFDUBbwaWh+1+myh7YJx/X
- yJvdjTBEdvqoMiqeuJaYhx/t/paIekWXTGSEKqVdHPp1hzb6KRCrycp6u6jzsZvnNsrMKcXHxb8
- 9/3Gc6GRcWE7CxSmBqB9B0mJTdhSHRZa3YIRQTpeMxWjxGa30VQ7vMJvHygVdwcFOueRtPlcXZz
- gU7YuuI7Ug885r7Xoodq798CBFf2KN6mjY699nAmfRjbxVv+FxH1WyP0WBmENEtDQ8VHxfPJbgP
- WWvfpj0aKZTuEMTvbguqYDv8tC6fjQApPkWtivimKfsAvwjsxNqFKKgcWTlaNMCai5ye1+WNLlF
- o2XVBinR1y8178arKTT0Sa1lWO97DQwu63sYqqlePtrT+KmXA6ixprYXzYR5iBLI0RZGMNF10bP
- T1xXXdlDIe8hx3XfKDVXoo/cUL60hAqfNjdG3/Z8zF7bbaR3dzsYYEOsDCOqiO/bRA3AGSM9R8D
- Y/dstQRT5IQGDZA==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025042252-geology-causation-a455@gregkh>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue 2025-04-22 15:16:21, Greg KH wrote:
+> On Tue, Apr 22, 2025 at 03:07:54PM +0200, Vlastimil Babka wrote:
+> > On 4/22/25 12:50, Greg KH wrote:
+> > > On Tue, Apr 22, 2025 at 12:20:42PM +0200, Vlastimil Babka wrote:
+> > >> 
+> > >> I admit it's surprising to see such a request as AFAIK it's normally done to
+> > >> mix stable fixes and new features in the same series (especially when the
+> > >> patches depend on each other), and ordering the fixes first and marking only
+> > >> them as stable should be sufficient. We do that all the time in -mm. I
+> > >> thought that stable works with stable marked commits primarily, not series?
+> > > 
+> > > Yes, but when picking which "branch" to apply a series to, what would
+> > > you do if you have some "fix some bugs, then add some new features" in a
+> > > single patch series?  The one to go to -final or the one for the next
+> > > -rc1?
+> > 
+> > As a maintainer I could split it myself.
+> 
+> You must not have that many patches to review, remember, some of us get
+> a few more than others ;)
+> 
+> > > I see a lot of bugfixes delayed until -rc1 because of this issue, and
+> > > it's really not a good idea at all.
+> > 
+> > In my experience, most of the time these fixes are created because a dev:
+> > 
+> > - works on the code to implement the feature part
+> > - while working at the code, spots an existing bug
+> > - the bug can be old (Fixes: commit a number of releases ago)
+> > - wants to be helpful so isolates the fix separately as an early patch of
+> > the series and marks stable because the bug can be serious enough in theory
+> > - at the same time there are no known reports of the bug being hit in the wild
+> > 
+> > In that case I don't see the urgency to fix it ASAP (unless it's e.g.
+> > something obviously dangerously exploitable) so it might not be such a bad
+> > idea just to put everything towards next rc1.
+> 
+> Yes, but then look at the huge number of "bugfixes" that land in -rc1.
+> Is that ok or not?  I don't know...
+>
+> > This very thread seems to be a good example of the above. I see the later
+> > version added a
+> > Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+> > which is a v5.2 commit.
+> 
+> Agreed, but delaying a known-fix for weeks/months feels bad to me.
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+I personally push rc1 regression fixes ASAP. But it has a cost.
+I do extra careful review, testing, and still I am nervous of causing
+a regression which might leak to a stable release.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+IMHO, it is perfectly fine to delay fixes for bugs which
+were there for months or years. For example, this patch fixes
+a bug which has been in the driver since the beginning (2019).
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 8596f3541265..de7bebb9a6cd 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -86,7 +86,7 @@ static int mtk_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
--static void mtk_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+static int mtk_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	unsigned int reg_addr;
- 	unsigned int bit;
-@@ -100,7 +100,7 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 	else
- 		reg_addr = CLR_ADDR(reg_addr, pctl);
- 
--	regmap_write(mtk_get_regmap(pctl, offset), reg_addr, bit);
-+	return regmap_write(mtk_get_regmap(pctl, offset), reg_addr, bit);
- }
- 
- static int mtk_pconf_set_ies_smt(struct mtk_pinctrl *pctl, unsigned pin,
-@@ -809,7 +809,12 @@ static const struct pinmux_ops mtk_pmx_ops = {
- static int mtk_gpio_direction_output(struct gpio_chip *chip,
- 					unsigned offset, int value)
- {
--	mtk_gpio_set(chip, offset, value);
-+	int ret;
-+
-+	ret = mtk_gpio_set(chip, offset, value);
-+	if (ret)
-+		return ret;
-+
- 	return pinctrl_gpio_direction_output(chip, offset);
- }
- 
-@@ -893,7 +898,7 @@ static const struct gpio_chip mtk_gpio_chip = {
- 	.direction_input	= pinctrl_gpio_direction_input,
- 	.direction_output	= mtk_gpio_direction_output,
- 	.get			= mtk_gpio_get,
--	.set			= mtk_gpio_set,
-+	.set_rv			= mtk_gpio_set,
- 	.to_irq			= mtk_gpio_to_irq,
- 	.set_config		= mtk_gpio_set_config,
- };
+I think that the root of the problem is in the view of the stable release
+process. I am pretty conservative. My experience is that some problems
+are caught only in the -rc phase when the kernel gets more testing.
+I am not sure if stable -rc kernels get the same amount of testing.
 
--- 
-2.45.2
-
+Best Regards,
+Petr
