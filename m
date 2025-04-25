@@ -1,176 +1,89 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C0B2522B8;
-	Fri, 25 Apr 2025 13:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7832561AC;
+	Fri, 25 Apr 2025 13:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587719; cv=none; b=rq91cVFJ7QnliqNljRpABLo4mLEKesl5m42iMJiTQ/qchtHiJ2RC2h3QknGCYmEyj5r0UoUi7E4rmr54IWtkDKUe0vFWp4P25FcxEHofeaYXJxPLCKVhhW/0MEtV7qDKD0hp88oB65iDrSgG0GEZXcS/ZIgTQORj/gGioE1boMQ=
+	t=1745587725; cv=none; b=YEmAYAN5VwY7zjuoAmVaFcNcJVMMHVgkhVXmtlsQeM2MTdcV/KAxoOmKjHfhPKsyUUUE8Q3D7HiBL4wOm65o6YxxTK1qakSe5/czzQflcYgH5QGnsW33AfbrSGyxcyW0C/0oSyBzGI6fU550RF73AcLX3YjQaVLLYQJIalqXTsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587719; c=relaxed/simple;
-	bh=c8GlAax2t1WRUHlIvrL0lNNzECalFd5Qcvrpl6HUwQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RnecLlnFWzBTW/FaAd8MpwSqpjFRkT/XpSJoBHUlJ7LXwd+IGn/9BxenxDAfi+RMGhwzBo/+sLsLUrbVWmOjw9gk3Iz2IVrPq89F5c8PJm1yzo8dyLcxDu4ot6tw135SsAKFgnXgP2OcnBFd36cK9XxzRjoIgQZUiwUF70jq/UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkV5/CTL; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745587725; c=relaxed/simple;
+	bh=t7qSU/IIIuYq1lxN3qMcq4LPGAf2mcJQYiI6P44d0FA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCCfb5fD8URfBffrzs32OhOvgYZ8r4EUypDlmXLwgqgYGNyF3R0rtLBQHXAGPdM+9lD/eVJDT3DW1SEdraJfG5ySbxjw0u7wL14leLJZn/HWawyYXXFJ7QF6a8ipD4IsithWq5WwzQXIOyIOTnzj0BEKqbrGDEC9mfzaFxIcags=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ovfAxpgz; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkV5/CTL"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30863b48553so3061803a91.0;
-        Fri, 25 Apr 2025 06:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745587717; x=1746192517; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lFjEH3qP0dLTK5ihHzovZcinv2fwnPAf5xRz9u95KUM=;
-        b=fkV5/CTLXQQ10hyvk9A5EEMLZ9mv7CP9qBkQlK+hAgpileWQq1R3bposICzYM+sqJv
-         4CyjJXV3UuzWTH2F6ZzUacBMiuXLzhKAc7TIJ9SAYaa8SIF6J0YnSyPNzia8z9GVYLWn
-         tNQNXIAsNPOHMJ3ELMDLfL7fHBhXYrnDBFwwa1DZkEHxNmIxBv/HVnijVoFBTk6SdZT3
-         7N/U47yGOXsbhGNrOjYDOPXAnd7M579ZvA9t5LdzLU8erEMJ3vm5Rh9SdibMM6g0ZU6B
-         J631VTcjYsFkXIwkXiKoSjJEPbGDqcg2+Wt0+Zk9s8H2WadYEVnennfKpo8VdZRDoIUq
-         PY0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745587717; x=1746192517;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lFjEH3qP0dLTK5ihHzovZcinv2fwnPAf5xRz9u95KUM=;
-        b=E3s07Kr7dSPsgrUX6os9v00BgQXhsdDzxlvJOAlxjO068cVkZqKldTyLFBC7EbcWoY
-         bcFkD572NPPR+tgdKLeLlJ9Xp1uell3rs0dB4LGjpTWzW52KLkw7qGmBE8W3UX3lv0Ju
-         U+u2iisIflLLF2qW2SHPSTVLMtQmsuTC7+qOD4mMv/x6DNc8z5oNxqFwVWEurV12x65V
-         R2ByYI1iyzf5WOUcUjXE+S+jXaByqx2qX06xAAuUsYLs9w8KMkj001GkIPHUNCMR2/5Q
-         kqLVEBdiy/nWbc2o1S2gEbWayzsgRXtfGlSDSpCr9tIpL4RwndSjN4pMx4kgdwXJr178
-         Aerg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8PAXXB0PHwEZXcZizaOGRO+XsHehBHltkvlruYNnApls4Ut6LTnGN69KvbmFecLDatUU5k9geRlX4bqSA@vger.kernel.org, AJvYcCWKMam7J/+PmAnhZHA4fs0zFTYbVU7lmEkL1yh72rbR4gtTg8EtHJx1uK1B7mhgkOwZ1gXvLXmAIYUul1eSvHAzKKA=@vger.kernel.org, AJvYcCX3SyvsMm57Os4NWo+fpCdOBz4yX3qa8Kn+Rj1BYQdE6qsHIJswJ9uqH9Wci7xnd+ZUrkVWTvsakEIA@vger.kernel.org, AJvYcCXYxJ0XUSiFwBS9rd/mF2a6zSOXe2VHud0GD7UHg6G5Xm82S8N8sPzxFLrzpI+pUu1N15SOgBokecAF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt3YDhLAULvA7YMJaQbOqbhIxy9MpXoBDbbvVtSi3zkD5biRnH
-	mYtwTAzsVdVZMRYNdHBK62hvIMQPUL6mdbHXlLQScyRLuD4N8bqe
-X-Gm-Gg: ASbGncungjSS78JBym6zxfmOajCdQxbw9206i/8tu5jhR+is54ueRAkmcjs0z9yRult
-	cykOk7Efwl63NB4GHl9/BGVUuy5C9F5bqsy51SAwKZygx4BOBgPpjuMOQ+7iMC6Mdw436Ufd5jO
-	j5YOhCf+RPZwHTP7Mn7+vlwOcjVG3T8RkXrrr8GuMEQl6GsCQMQ5H8Cj7TMWtB0DJd/QXOi2hPY
-	IwyAmiTiDHAcK+hzZl8eXR/Hs3UmRXS213AEBDjnNRO26XDOvAeeGG0QxwQ4riCxuQu2Yh/jrdt
-	QHBGuLNdHFQskxASYJXATV1UoHL5OWwdtG6kPFWLZ8MZc8RK5JW4cg==
-X-Google-Smtp-Source: AGHT+IGj9lR9tmU8eyR40XzFeimkdT87ngl3tdqW47D7njs1AnBF+aef9o+xkSHHj9j97MED9tFceA==
-X-Received: by 2002:a17:90b:1809:b0:2ee:9661:eafb with SMTP id 98e67ed59e1d1-309f8a07690mr3104746a91.12.1745587716944;
-        Fri, 25 Apr 2025 06:28:36 -0700 (PDT)
-Received: from localhost.localdomain ([110.44.101.8])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f7752a03sm1564313a91.18.2025.04.25.06.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:28:36 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Chanwoo Choi <cw00.choi@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	linux-kernel@vger.kernel.org (open list:MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BO...),
-	linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
-	linux-samsung-soc@vger.kernel.org (open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v1 06/10] ARM: dts: exynos: Update proper regulator states for suspend-to-mem for Exynos4412 p4node
-Date: Fri, 25 Apr 2025 18:56:26 +0530
-Message-ID: <20250425132727.5160-7-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425132727.5160-1-linux.amoon@gmail.com>
-References: <20250425132727.5160-1-linux.amoon@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ovfAxpgz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vlE74K0LimainSdnoFlqcyVYaVSQnmACb6u5i0CwKyc=; b=ovfAxpgz9/2ZldfFISlzn37R2N
+	N8EFk71S4CItvdyyRRcm3DUc7bnLrjz7kCxW9NJ4Wc/jKXXd6vBuAfWML+ZPsLlXQgtkxDfB9cWJK
+	ILm1XH9FdY32lrHLu5jWLz672KLYDgMmZYahFT4U+9oiHocTrGnn2SmOMkpgZpv0S7j9ajGqj1XlT
+	d80P5yDGGBqnDIpozdUD+kwzp915To2IuE9HTw0uuMc7sq7U6ZnH2MAeYfdV2OaP5ajPOQwcEyMQp
+	6W9djK5G4vVydr0L8ZDt+Qz1PGNc2wgYrkUe9LeYkhj6mVEX8gzLEdhZzSd0NPdBjSH2/H/jYXIRH
+	PvUfCDMQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8J6h-0000000HHN9-3OF8;
+	Fri, 25 Apr 2025 13:28:43 +0000
+Date: Fri, 25 Apr 2025 06:28:43 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: ming.lei@redhat.com, axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH V2] loop: Add sanity check for read/write_iter
+Message-ID: <aAuOC8djgRrq-Gdj@infradead.org>
+References: <CAFj5m9LVuekp_n6pEfs17n6QB3Q0yu-qRP67NOJb9ZXRNyhP3Q@mail.gmail.com>
+ <20250425053803.3614260-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425053803.3614260-1-lizhi.xu@windriver.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The MAX77686 PMCI is able to power down and up key core supplies and other
-voltage rails via PWRREQ signal to enter / exit (deep) sleep mode.
-PWRREQ status is ignored during initial power up and down processes.
-All programming must be done before the AP enterns the sleep mode by
-pulling PWRREQ low since the AP does not have programming capability
-in (deep) sleep mode.
+On Fri, Apr 25, 2025 at 01:38:03PM +0800, Lizhi Xu wrote:
+> Some file systems do not support read_iter or write_iter, such as selinuxfs
+> in this issue.
+> So before calling them, first confirm that the interface is supported and
+> then call it.
 
-Update few regulator node with support suspend-to-mem node to regulator.
-dropped suspend-to-mem as MAX77686 do not support these.
+Nit: commit messages should not have lines longer than 73 characters.
 
-Regulators which can be turned off during system suspend:
-     -LDOn   :       2, 6-8, 10-12, 14-16,
-     -BUCKn  :       1-4.
-Use standard regulator bindings for it ('regulator-off-in-suspend').
+Please also add a:
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- .../boot/dts/samsung/exynos4412-p4note.dtsi   | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Fixes: f2fed441c69b ("loop: stop using vfs_iter__{read,write} for buffered I/O")
 
-diff --git a/arch/arm/boot/dts/samsung/exynos4412-p4note.dtsi b/arch/arm/boot/dts/samsung/exynos4412-p4note.dtsi
-index ad0abe8d9e30..d0ecb1c6a922 100644
---- a/arch/arm/boot/dts/samsung/exynos4412-p4note.dtsi
-+++ b/arch/arm/boot/dts/samsung/exynos4412-p4note.dtsi
-@@ -448,6 +448,10 @@ ldo1_reg: LDO1 {
- 			ldo2_reg: LDO2 {
- 				regulator-name = "ldo2";
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			/* WM8994 audio */
-@@ -457,10 +461,6 @@ ldo3_reg: LDO3 {
- 				regulator-max-microvolt = <1800000>;
- 				regulator-always-on;
- 				regulator-boot-on;
--
--				regulator-state-mem {
--					regulator-on-in-suspend;
--				};
- 			};
- 
- 			ldo4_reg: LDO4 {
-@@ -472,20 +472,24 @@ ldo5_reg: LDO5 {
- 				regulator-name = "VCC_1.8V_IO";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
--
--				regulator-state-mem {
--					regulator-off-in-suspend;
--				};
- 			};
- 
- 			ldo6_reg: LDO6 {
- 				regulator-name = "ldo6";
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			ldo7_reg: LDO7 {
- 				regulator-name = "ldo7";
- 				regulator-always-on;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
- 
- 			/* CSI IP block */
-@@ -506,10 +510,6 @@ ldo9_reg: LDO9 {
- 				regulator-name = "VLED_IC_1.9V";
- 				regulator-min-microvolt = <1950000>;
- 				regulator-max-microvolt = <1950000>;
--
--				regulator-state-mem {
--					regulator-off-in-suspend;
--				};
- 			};
- 
- 			/* CSI IP block */
--- 
-2.49.0
+and maybe add a blurb that vfs_iter_read/write had this check.
 
+Now the other interesting bit is why we did not hit this earlier with
+direct I/O?  I guess it's because we basically have no instances
+supporting direct I/O and not using the iter ops.
+
+> @@ -603,6 +603,12 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+>  	if (!file)
+>  		return -EBADF;
+>  
+> +	if (unlikely(!file->f_op->read_iter))
+> +		return -EINVAL;
+> +
+> +	if (file->f_mode & FMODE_WRITE && unlikely(!file->f_op->write_iter))
+> +		return -EINVAL;
+
+Can we have a common helper for change_fd and configure, please?
+
+Please also drop the unlikelys - this is not a fast path and we don't
+need to micro-optimize.
+
+A bit unrelated, but loop-configure actually checks for write_iter
+and forces read-only for that.  Do we need the same kind of check in
+change_fd?
