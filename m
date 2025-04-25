@@ -1,129 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D83642069;
-	Fri, 25 Apr 2025 13:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B98288A5;
+	Fri, 25 Apr 2025 13:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745589140; cv=none; b=YhJ0jCTCvHl3Efiaf7U1YAnxfnOCrQAE2dax9JzbmrVIDM0JMtz4ZbnM644/tgRNAW7QX/iN5NieM0OeHW634FkXKlhwPygeuJ6apGfikjk9HKwc1GfuKY5h8LrWb4IaEUO6w18w07JhCYnqo2wAr72x4MN3sn5uzXpaRJDRHcM=
+	t=1745589225; cv=none; b=fHxz2TlvsySmi/aQBPlpVAum6bSzoMo7EJUFrK5AUxJer3fHm+J6ufzNtlDsQcHskJyxYIk32hJzmbcJzt8ME+JkAg+3qfCntP7SuxeVqZU6O/CFXI63cPnWh1oiQ4ws+zL0W2zpX4ZS49/FGGjuEdgysIXdUWsAuiJAMYgYv/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745589140; c=relaxed/simple;
-	bh=RtxtbztRYYXsq67qqqMHH+EvvE1eSf561O8SdGCaius=;
+	s=arc-20240116; t=1745589225; c=relaxed/simple;
+	bh=Tgdzoq0uRKVDCSs++A8sHBpH8+Vxgrwn5HHj2Ya/53I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WLDFYcYF+09B/EPQqPJU0LliM1Tc0SIjFWe1evnYha4Ykx3ipvBNKewAHxTnIMM/wuFoyznsZ3qX/aGzJ3nYtaQGBH4TceyLWelgdRcSQlGOZIzMGpGMXDHVWbmw5zlVseKdkatIM6FWyKui/Hu/PDKJmne48xRDJnuQ6zw7+OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=js+k4tjw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=G2zrJSKRgRiw9Cs35Auifa/b0O/AR7LAFGCGD7bMyCILyRFZ0KFlpltNgq1pGF/ccpa8maBBIQSdz16AifuaqdkfjgL5E9UpsnLZKhEfL4rRC2uzXhi+tkSwgjScmoo3iEbHzBzoTXay+FCnYyoxT047Hvz6erKlHJezL57JXFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzJznMju; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="js+k4tjw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B79C4CEE4;
-	Fri, 25 Apr 2025 13:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745589139;
-	bh=RtxtbztRYYXsq67qqqMHH+EvvE1eSf561O8SdGCaius=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=js+k4tjwLNlucIW7dK6hTOaiyPrJreERiOWKdVyGp0hCrm71Q3cmTy2MLnsrib4QX
-	 Xb7TFw97xjtY3WhnMKPgx128HXUV4p/LoVIKcl9bxyln8bnQyS5ufMwP4VR0zhYLF5
-	 OOLZcBnurByDmYneY7UAauNBhW5N/KDRu9nwkP5U=
-Date: Fri, 25 Apr 2025 15:52:16 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzJznMju"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1477713f8f.0;
+        Fri, 25 Apr 2025 06:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745589222; x=1746194022; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zC5qCt8mPMFjOd0IN3TufN+hresnNEqhnO+6fQbRG2I=;
+        b=KzJznMjuiDpy8JDbqzlzYUC6p1sNwMTtE++JTReH4YTZH6DFOe93+pBaxa6tMJFU74
+         6RcWw+PPeUfXLcG85hoGxdGXZY4YoHuITX6AGIpHi08n8dX9W0C9u2CytZtTR9kHLbTI
+         VrSFmoNtohjE8cV6uAH8iwyEZX/xeDBGaLJub+qRzVR8JIhEDHqNWWdMhYOUONTsZkxV
+         lun2pwrGjA7DBBB2KYq8/8V6Hh1L5HhmB3nDf7p+IJ/vlHmymHzM6RPQCk1c4q7c8hVZ
+         nfygAOX17rdS8TKD2STZ4LSsQg+HUiunESeUzlhuC+n5BIOFSYRun3Z7y2E6SU9Rlrt0
+         0+uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745589222; x=1746194022;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zC5qCt8mPMFjOd0IN3TufN+hresnNEqhnO+6fQbRG2I=;
+        b=VCeLnzshq/CKprPxuSulTzZ9vDoJg3NHlK5GPzr1Bp6kRIUOIHlht/UZpWIa0TbQZY
+         sgmqEueh5XiCh16/udfqK1N1mG0A08fHIfcpJljz1tKaAJuFdh6tnkb8KiTMXqczBMhF
+         1v/cj2YomMeiw5wSyiZi8oEazh6lRwuNsv9EgFY+rbz1SniOh7e0tZWNyKXLZPX87lcA
+         ls16F3th0A/EmpFjqSmMnHmZ1xFFHa3u/psa3OaANRczSn7rvj4GS1EH2w2BEGwA749W
+         VvHfyHMk9nXH1yaqROCnNmhfXkBSq5eOOMAQHCPSjjFs/89ObLxmA6Emvo52a5nne3U3
+         hm7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW3OThrRXUfa9rk88OX4vbCQwTQchek0NilLZ/0P0u+0/1PDNeHp2xbKdH96NenAikrO9Rwqn9QNtH67kjy@vger.kernel.org, AJvYcCWl9MZ2c70aEZEvQ+1snpT5BUG8KuQLnXoza4dUlp4iSiAscpeKT79Vk68TvmqPBnsnR6hhcuc+w7EGONg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaHaDbSBkWW6WqUjPraMSpAQRXeXfP7KkpawCaF6zlntO/r2lZ
+	RwcMniN4m1kKVVEKnfi/ffz1nyj5NKg4+KGFGHf8tDeGsGR/guCk
+X-Gm-Gg: ASbGnctaq4P1b6BbY9urDbWyX+6ukbWjp4tqQCIPrQ+AMPWb8JKKeXWLEMFbwaY/Dbf
+	N3TJ7FxdJwaXNNQ+lLMv0c11iRfur+Tkzwh+N0DIH/Q4olBdoE9UhS3mlH/h1KhKqE45JliUxOK
+	O0HjmF90gcY3OmiPngotxsASzmGnnAF673Gtz1FttY2ZoRA4S7KhTVqrRZ1VBNYco08INErC/ax
+	HsIY4v8ecruPPVWTWh+2s9pBTJmqtIsNrK1sxxcaQ3IuEv9FkgYHSUhrYd1HFBbRTE3z/QixHin
+	DsNninCHvaPYycpSdRdc+WrjToJ5LSl5B6UmvmxB
+X-Google-Smtp-Source: AGHT+IGIeg9vP39s+96LGPXe7HvCLrwPRTVeAxK0tbQco/f365rtXoIkERRGnWA87K7ViQhH9sGePw==
+X-Received: by 2002:a05:6000:1849:b0:39a:cd84:a77a with SMTP id ffacd0b85a97d-3a074f398f1mr1823393f8f.37.1745589221600;
+        Fri, 25 Apr 2025 06:53:41 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073e46a54sm2462098f8f.67.2025.04.25.06.53.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 06:53:41 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:53:39 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, wens@csie.org,
+	jernej.skrabec@gmail.com, samuel@sholland.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uaccess: rust: add strncpy_from_user
-Message-ID: <2025042509-french-washbowl-5cde@gregkh>
-References: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
- <680a5f5d.050a0220.2035d2.545b@mx.google.com>
- <aAtZQkre4KRU2kr1@google.com>
- <aAuQjSzatuNoDDXL@Mac.home>
+Subject: Re: [PATCH 3/4] crypto: sun8i-ce-cipher - use IS_ENABLED() checks
+ for debugfs stats
+Message-ID: <aAuT4z3XC2mayIf4@Red>
+References: <20250425124517.2225963-1-ovidiu.panait.oss@gmail.com>
+ <20250425124517.2225963-3-ovidiu.panait.oss@gmail.com>
+ <aAuOdDhpnLE5bM_y@Red>
+ <7653bf7c-03ac-4f94-a80c-2bfa3004d287@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aAuQjSzatuNoDDXL@Mac.home>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7653bf7c-03ac-4f94-a80c-2bfa3004d287@gmail.com>
 
-On Fri, Apr 25, 2025 at 06:39:25AM -0700, Boqun Feng wrote:
-> On Fri, Apr 25, 2025 at 09:43:30AM +0000, Alice Ryhl wrote:
-> > On Thu, Apr 24, 2025 at 08:57:13AM -0700, Boqun Feng wrote:
-> > > On Thu, Apr 24, 2025 at 03:17:48PM +0000, Alice Ryhl wrote:
-> > > > This is needed for ioctls that operate on a user-provided string.
-> > > > 
-> > > > It is somewhat unfortunate that strncpy_from_user does not nul-terminate
-> > > > the string when the end of `buf` is reached. This implies that we can't
-> > > > return a &CStr from the function, since the buffer may not always be
-> > > > nul-terminated.
-> > > > 
-> > > > That said, we could add more convenient helpers on top that add a NUL
-> > > > byte in that case.
-> > > > 
-> > > > This method isn't defined on UserSliceReader because it complicates the
-> > > > semantics. The UserSliceReader type also has its own maximum length, so
-> > > > we would have to limit the read by that length too.
-> > > > 
-> > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > > > ---
-> > > >  rust/kernel/uaccess.rs | 27 +++++++++++++++++++++++++++
-> > > >  1 file changed, 27 insertions(+)
-> > > > 
-> > > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> > > > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..1bd82045e81ea887008e30241bd6de27f096b639 100644
-> > > > --- a/rust/kernel/uaccess.rs
-> > > > +++ b/rust/kernel/uaccess.rs
-> > > > @@ -369,3 +369,30 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-> > > >          Ok(())
-> > > >      }
-> > > >  }
-> > > > +
-> > > > +/// Reads a nul-terminated string into `buf` and returns the length.
-> > > > +///
-> > > > +/// Fails with [`EFAULT`] if the read happens on a bad address. If the end of `buf` is reached,
-> > > > +/// then the buffer will not be nul-terminated.
-> > > > +#[inline]
-> > > > +pub fn strncpy_from_user(ptr: UserPtr, buf: &mut [u8]) -> Result<usize> {
-> > > 
-> > > Sorry maybe there is an email I'm missing, but could you provide more
-> > > context of the usage?
-> > > 
-> > > First the function name is a bit weird, because the 'n' in "strncpy"
-> > > means the parameters should have an 'n' (i.e. length) in it, but there
-> > > is none in the Rust version.
+Le Fri, Apr 25, 2025 at 04:47:35PM +0300, Ovidiu Panait a écrit :
+> Hi,
+> 
+> On 4/25/25 4:30 PM, Corentin Labbe wrote:
+> > Le Fri, Apr 25, 2025 at 03:45:16PM +0300, Ovidiu Panait a écrit :
+> >> Add IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG) checks before the
+> >> fallback counter updates to make sure the code is not included when
+> >> debugfs statistics support is not enabled.
+> >>
+> >> Also, drop the existing ifdef guards, since 'struct sun8i_ce_alg_template'
+> >> is always defined, even with CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG disabled.
+> >>
+> >> Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+> >> ---
+> >>  .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 46 ++++++++++++-------
+> >>  1 file changed, 30 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> >> index f03a8fa7bfa2..433cd18f0b5b 100644
+> >> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> >> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> >> @@ -34,22 +34,30 @@ static int sun8i_ce_cipher_need_fallback(struct skcipher_request *areq)
+> >>  
+> ...
+> >> @@ -101,9 +117,7 @@ static int sun8i_ce_cipher_fallback(struct skcipher_request *areq)
+> >>  		algt = container_of(alg, struct sun8i_ce_alg_template,
+> >>  				    alg.skcipher.base);
+> >>  
+> >> -#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+> >>  		algt->stat_fb++;
+> >> -#endif
 > > 
-> > There is a length! It's the length of `buf`. It's pretty normal that C
-> > methods with a pointer and length become a Rust method with a slice.
+> > Hello
+> > 
+> > You put IS_ENABLED everywhere, but here you remove it, why ?
+> > I think you forgot it.
 > > 
 > 
-> That's exactly the point, no need to reuse a name from C if we have
-> something better.
-
-Up to point, us kernel developers are used to the C names, so keep it
-close if at all possible, ESPECIALLY for just links/wrappers of C
-functions like this one is.
-
-> > The distinction between strcpy and strncpy in my eyes is that strcpy
-> > reads until you find a NUL byte, whereas strncpy reads until you find a
-> > NUL byte *or* you read a user-specified number of bytes. This method is
-> > in the latter category.
-> > 
+> This is already part of an IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)
+> block, so no need to add an extra IS_ENABLED() check here. Just the
+> ifdef was dropped, as it was not really necessary.
 > 
-> Then copy_from_user_until_nul()? Or cstrcpy_from_user()? We should have
-> a bit consistent naming on Rust side regardless how C names things IMO.
+> Original code:
+> 
+> 	if (IS_ENABLED(CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG)) {
+> 		struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
+> 		struct sun8i_ce_alg_template *algt __maybe_unused;
+> 
+> 		algt = container_of(alg, struct sun8i_ce_alg_template,
+> 				    alg.skcipher.base);
+> 
+> #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+> 		algt->stat_fb++;
+> #endif
+> 	}
+> 
 
-You need to specify a max length, otherwise that's just going to confuse
-us all.  strncpy_from_user() is the function we are used to using for
-copying up to N number of bytes from userspace where a 0 termination
-stops the copy if N isn't reached.  So I vote highly for the original
-name here please.
+Oups sorry didnt check with enough diff context.
 
-thanks,
+So:
+Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+Acked-by: Corentin LABBE <clabbe.montjoie@gmail.com>
 
-greg k-h
+Thanks
+Regards
