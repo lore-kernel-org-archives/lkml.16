@@ -1,180 +1,173 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022113.outbound.protection.outlook.com [40.107.75.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DAB2749DC
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595183; cv=none; b=oFUKEbHZljtt0O3Hdmxm9fkMmQkt9mCw8QuHcTSBBEPTkax5ar54VPPp6VH/KxDfNCb1E2wgaVkz7H0Cx7fTDb1Zxkm8AhuhrM3Z28IrdH5cGvJPLPC5wC1ov5i8z07VEF2yV+aWtVp1sWSaAMXJ72OnfhJQekz5ZiGgZuqnA7g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595183; c=relaxed/simple;
-	bh=azphG0LvZMLBQfUOp84PmDRab8XVCOT21CuIpXdnZ78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=OHRybuJIctMhVrn/HwxFi+zssLhGwtAk8Fr2eDX4AfSDkVOFZyvhU+4xP6v2nY9f7PDV6ctXuTIkcywYMJEb111Y9Qji6zxz4n2v62Qtmc0oiT5FuHsy81amd7ybzoi9Ab6//qIjkx6aPph7BlzkXLxfJpLoip9hjPLT4MIT8fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cXcYVjQt; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cXcYVjQt"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47e9fea29easo338211cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745595180; x=1746199980; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pP6z3CE+fLIrfWHZmKWlxUhDiYFfaprQFcGgrLTshIA=;
-        b=cXcYVjQtEow59hw4yD0zdZKh+ZNeG3XDmG0f5GkSLfkG0FIvOPMt9l4GBPyg/SDHMr
-         tDgSPHoYb0CTNfXFYp8qfPH+a/c+lIg5orRvT0tPydZZWdVs1HmAgksZlrn2IGH87A3a
-         sJGxYisr95SC0c2U135zuZtwXNzR6/L7OIuUWT1MZKg8+wXHkXkuzX8aqASKwkQwzK6Z
-         AWOWSsRD0Q/1vh0sRR5RiUbzUKUQpjcCevo2Ohb05a+4cN13t+glaKU06lKo7Cfv7t/z
-         zL2ZdpKwhgDnc6xCu0pqBqghY2DHpBZMO7EIDgYdrFKEShB3SxljOeyoOZOPg3fIuvhX
-         9ARA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745595180; x=1746199980;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pP6z3CE+fLIrfWHZmKWlxUhDiYFfaprQFcGgrLTshIA=;
-        b=VWxa3gUIhU9mXU+jCS9PvoHT5T3up7yfOgpI+h6D6TWNLdaPGg+NgqnxBGfbtvugOg
-         7YnOP8C6M7KnWvKLNl/bsEbDG86ES7harrelt2rlNGp1xaVYRD1RN+Cpb48iIssPhYgQ
-         qDmsbGow+kv7IZKda+dD6/y+jESh/YGB9JkdRFnLNSn/burPmv525rLyRx26TNU4Yb5E
-         KgLokVwIbNeZPtncm322pseHfGsI1JzMgotc9VPCuhDwuDZtLOUxNODBlDWja8BNL8Kt
-         F5GUceymm8fN3AyvkoKDUdQVbgJNY01Smuya3J8cAvF8UlUvtyvzrFfDvX7dDenO5+jI
-         0SnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjQWZXI8tteYG5ybpxEJUls+n+DMShs151R6zwRfSxobrOXlDVcFd+OkkGr8GRiTfEFwzqgYciRT0w+8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTbPr8atNGqQSQaiZBsboHy4xNfxQxzgteSPpYjafeYeWKi2BA
-	CDOzyUYEEk8M0DCXH+4p176fjcqHCkpRgKQ/a4AjiG1b92Q+85yMs0AWXi9+pHG2Ax87M/nzaHI
-	GRl9ozb9itWH6SKTqybwZwfd1IoFQB7/eVTOx
-X-Gm-Gg: ASbGncsarKPf5Q2uKhS18WUbgAjAHqSYDo5WVp2Wp96zwT5gWECUTeGbnXrsh3nNdwu
-	d0UDz/9WLs1Z4bVIeFEUtR1/Fq7hfSsQrFL1SZ1PXzXzAmU/xrRrPmwrkvBoyCbsw32pMZxJCgD
-	J83H5dJC9fO1B9aCoq4EpJ
-X-Google-Smtp-Source: AGHT+IGI+8KofZYr/rnLzwwlH5lcjuihGFz+/pVqSeDJMF8TV6u79oDolvsETvevEUoiykM1utbOMi84hjY6taQXhiM=
-X-Received: by 2002:a05:622a:2517:b0:477:c4f:ee58 with SMTP id
- d75a77b69052e-47fe1ed5f87mr4183671cf.24.1745595179801; Fri, 25 Apr 2025
- 08:32:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB9F25DD17;
+	Fri, 25 Apr 2025 15:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.113
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745595198; cv=fail; b=lAXWg7o674ZNm54sDvfd/tc61SAN5D5Ym9UlLT/uWF9MTdIB7WWNvylUqg1aJ9N3f7RUO5Aa0ftU6+DVShi764Hx//RUU0inC7BCBbCnlG+jPiEM1x1trASKgnnVRkr722yjGmcrEnrk5z1TTtVK/7yps4auNhu+BpD2H60GPZ4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745595198; c=relaxed/simple;
+	bh=QGYbkcGqsKONHSy9/yVc5p1c/uc6S/EqyW5RdGOO/8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DWXG+WJZKWutoulxVMfdIeOh0ALzLEsmy6e/F5cIjUU2RSQvjES4Y3yUXrtqlK6obLiqZGFnNZ2ZRCX8vlrUBoWRSyDVCYSampRduv0512aeeQ21s9mAswCXwixNXnjuTLLkb+p8+u6vSPqPL9mba98o/qgOyGWdIaJ+rgjrLnY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CPhOGipnQoFWxiKr+dJtqeXwsM3Oqj6kP0OeGSO2sksXGXdMR3bz0YM6KwzZJiiDcH5wS7gZwTXTPrrkIdq+Wbk38QMtsy0AcGOpGPo4vRacnKnDXWTh2XTkWaThGAOFMr2f0RaNP6gz97sweODAgUqhpvjb0jqUnz4AaCiHoTucWn1CnT7B0+/slJGvvY9+Ku0/P0W5qIF6cqkinL/N3yV41wIOR+Q4lwUGlrZMQW43vpK4auzNb2DXc+iZWzpixE/vGIBmimRKlu4jZ86V4FZ92yfF0osAcfdJOg/F4l/l6FbKRsMIYrHv38Dc06GyVm1ya1yQBuLjmprUnZL4Lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nJNrcF0FIHXEYZsntD5pbLhkeUZCY2pTGoUPqBRsYCs=;
+ b=u9tF0SobfPSoNcULH2DZWKksiIzFTiTU14pdeVmLphv4QtzR+SlKLvjdC3W1tuDEt2NEcx5lShXuNJ/r3Y/5EU2izFEZK1lmMJCi9vMtGWH4T4ejkTQ5NtD0PuPKyk80MM5J9HGJkjayFS21vqeIZuViXDn2/P6e3XYx1k1TFszMlDkoJJHZNcQRKKjk1NEEDLl3tFTSnPbv4CqGS5nZ2Fg08qq2w0mHm+HP323YsWrIkX+ykNLvcX2HsTaXun6C+a2ZP4EaOyNhiYS8C5ZGh4xg7NXQkyjkWNmbs3NgcI9New5YgftnA/HkFoeQG9Af5912n4H9BycgSjlnJSsW3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCP286CA0056.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2b5::17)
+ by TY1PPFDEC2C26D0.apcprd06.prod.outlook.com (2603:1096:408::92c) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.25; Fri, 25 Apr
+ 2025 15:33:08 +0000
+Received: from TY2PEPF0000AB87.apcprd03.prod.outlook.com
+ (2603:1096:400:2b5:cafe::78) by TYCP286CA0056.outlook.office365.com
+ (2603:1096:400:2b5::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.39 via Frontend Transport; Fri,
+ 25 Apr 2025 15:33:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB87.mail.protection.outlook.com (10.167.253.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 15:33:07 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id E645441604E7;
+	Fri, 25 Apr 2025 23:33:05 +0800 (CST)
+Message-ID: <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
+Date: Fri, 25 Apr 2025 23:33:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745528282.git.lorenzo.stoakes@oracle.com>
- <0f848d59f3eea3dd0c0cdc3920644222c40cffe6.1745528282.git.lorenzo.stoakes@oracle.com>
- <51903B43-2BFC-4BA6-9D74-63F79CF890B7@kernel.org> <7212f5f4-f12b-4b94-834f-b392601360a3@lucifer.local>
- <n6lrbjs4o6luzl3fydpo4frj35q6kvoz74mhlyae5gp7t5loyy@ubmfmzwfhnwq>
-In-Reply-To: <n6lrbjs4o6luzl3fydpo4frj35q6kvoz74mhlyae5gp7t5loyy@ubmfmzwfhnwq>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 25 Apr 2025 08:32:48 -0700
-X-Gm-Features: ATxdqUH-7fcjY1Nm52E2GQYuVXFxGwTyQxbInQgwFOhzX15Q8W5Vpu5wImOKUvg
-Message-ID: <CAJuCfpErtLvktCsbFSGmrT_zir9z0g+uuVvhr=QEitA7ARkdkw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] mm: perform VMA allocation, freeing, duplication in mm
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	David Hildenbrand <david@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
+ new EP configurations
+To: Conor Dooley <conor@kernel.org>,
+ Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-3-hans.zhang@cixtech.com>
+ <20250424-elm-magma-b791798477ab@spud>
+ <20250424-proposal-decrease-ba384a37efa6@spud>
+ <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250425-drained-flyover-4275720a1f5a@spud>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <20250425-drained-flyover-4275720a1f5a@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB87:EE_|TY1PPFDEC2C26D0:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6ece377-799c-41e3-88d7-08dd840e7a69
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QkRETHhkdUlneFQyQ0NFWEtlVXEwckNheEFnWEpiZFlpbVlBS2VWYm5oSW9w?=
+ =?utf-8?B?TUVRQm8vT0FQMS8yNWpFZi9HWHFOd055b284ek44SmJsZlN1dVpLVVhDVXhp?=
+ =?utf-8?B?M3ZsVVQzVEdjNkhVU0MvOFFiSy9tWmpSSHM4b2dmc0JuVXg5TFJYRldPb3Na?=
+ =?utf-8?B?SmJxT3drb3JoY25zdU1ZNDZwTDduZUtEcG16blBsT1NKb2VqczZOMUNwSm9F?=
+ =?utf-8?B?MHJ3ZGk4cFhxcEwvRjQ4UC9PU003NEpsYTB1bEpET3h6Y25ZaFRKNnUxTUpl?=
+ =?utf-8?B?QW9DUGVLRitRZHZRbVB6aXcwYU1tclp6MXVhRHNMK09mNm13SFJRcmJoOHRI?=
+ =?utf-8?B?WlRXVm1VNVZQU0V6NUQwNFRMWFJBTndiTHhQSFVOQ0dxaHhjTHZyR3U5Q2Ji?=
+ =?utf-8?B?c29qamk4S2tWSXNPRjlabXZUanU0ZnBsMVBHbEFFbGd6b0hWK21vU1NSb1hN?=
+ =?utf-8?B?RGxSbEsrMkZnbWM1elVGWVR4cFZkcVg2aXdEa2JObElxVEUrcnFpbE5BemUz?=
+ =?utf-8?B?L1JSZXRMWnBibm03OXFtVEpSTXM5elVLSEljY0hiQ0tzQVdvRnV0U3NyK0dH?=
+ =?utf-8?B?UEswWFZGM3hjQzNOOXJYcXN3Z1JHSzBuSk40Q1RpdW15OWFHN3Q0MmtjNWxQ?=
+ =?utf-8?B?ekV3ZGVMTXNrckFvQlJ4NkRTZ2NRNVg4emdPRE8vSlM0WmpQZmpmanRNYm9Y?=
+ =?utf-8?B?N0IxeU1kdnVwZUlPaGlsR0Z6YzdScUpYNWZPSjhEZjFZN0lCYXZBOVFaZDBp?=
+ =?utf-8?B?aGI2WDRwTmRVcmhRUzc5ZTlrcjMvY3pYV2U3eWFXRSs4aVdWMUFQK3R5TkQy?=
+ =?utf-8?B?aWlxUWt2bzRLRmtwYXFIcWRNa1VTT1FLeUtqSUFpWmNIUGZ1Q3Q5VWNrQzZL?=
+ =?utf-8?B?eG5FSmFqM2x6UXZucUhLRTJtZWpCeWprQmVIcmQyQjU0NTByZXRqcVFGSytE?=
+ =?utf-8?B?aVM1b0h6YmNyR2svOWc0QnJFa1B0RUlEUmNsZ0dDc3JoYmJiWXMwREpMWjA4?=
+ =?utf-8?B?OHpVVFdjZVF3VzVDeXJyTVVFOG1pSld0aVcweFNwYjU2WUVJSlpDTFAxQnBB?=
+ =?utf-8?B?cnVSaE0xZk9BOXJYZEMvSEMybncveXJvS2JINVhRSTV4eld4U1hvV2VZTDJ5?=
+ =?utf-8?B?enQ0cDUzczQ0dHVEelMrSlhXT0FpL3gwRWZCQWFTbDdJSHAwNjRkOXB6ZGRr?=
+ =?utf-8?B?THV5aVlnNWxsKzhkck9FcmlPMnRJWFM2dGM5dUd3VGZsNzdsNHdNc0w0bThC?=
+ =?utf-8?B?SXN6MVVWdkcxNmxrVGZwYnNZU2lOblFLUGZUNnRLaktSUWVhRlFGa011am1r?=
+ =?utf-8?B?UmwybTdncXJVQjVMUHdNeXk2QVg1ZHhvMU05ckI1cHY4T3dGZ2dheVMzSlBi?=
+ =?utf-8?B?ZHE0T3pmR3QwOWdwOTVqeHJDYmt5dVBpQ1VaK1VmczBiSVh2MkZCYWhqaW1M?=
+ =?utf-8?B?bzFaZXZBeEVuN21aUGxiVjF5QmhjeHJhZzEzOUFFMkFuRm1rdWgrZkhpMlBL?=
+ =?utf-8?B?M3RybnJIYW1aZHAySTN4ajJJem44djNscW52aE5kWTJ2bFI0VDRwYnp1RWxH?=
+ =?utf-8?B?QTlKR3ExN0FJc2ZVRUJuWG4wSlZyUURiZEpmWld6dDV6NlhuZ29mL2xFNFlC?=
+ =?utf-8?B?NFpLOHJNRENoZ0VPOUF1bWU2MTloZ1FqRVp0Z2Z4SGpzcWErcVVkNDFTVldt?=
+ =?utf-8?B?L0FrMHBPL3NjcldOc3k5b0NsUHFpOGoxUUZocG8xOXBjbzlhRVltNTM5ZEFh?=
+ =?utf-8?B?by91VnVtWjBrRTYrL2hBMXRZZWRpcExhRFVpN2d6Y25oNmFCMU5VaUl2T0lS?=
+ =?utf-8?B?M1IwOENCbDJ4OTJXVmZFQ0svR3hSWklUTFV2WTVPUGJBajlRQU1NdnllaWlo?=
+ =?utf-8?B?Ym4wMExoTytPSFdpdEhPdjVCQVRtRk5tZ1k4Sml2WVZlN3lVelo0cXJrQnRH?=
+ =?utf-8?B?UDQ0R0Qwdko3ZE9MR3VYYTJXbGpyLzFybFlFVEUxRFJlSzZOMEZGaXRKZU1H?=
+ =?utf-8?B?b2QyMkNOcFdIT2JVVVo3Skt5KzE5TWM3TC9DNGplOUtpR1NKYjlqa1pPRGpP?=
+ =?utf-8?B?cUFDWXpMdGdtTTZQZTgrZjZTcjkrUlQ2bVpkdz09?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 15:33:07.0715
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6ece377-799c-41e3-88d7-08dd840e7a69
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB87.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PPFDEC2C26D0
 
-On Fri, Apr 25, 2025 at 6:55=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250425 06:40]:
-> > On Thu, Apr 24, 2025 at 08:15:26PM -0700, Kees Cook wrote:
-> > >
-> > >
-> > > On April 24, 2025 2:15:27 PM PDT, Lorenzo Stoakes <lorenzo.stoakes@or=
-acle.com> wrote:
-> > > >+static void vm_area_init_from(const struct vm_area_struct *src,
-> > > >+                        struct vm_area_struct *dest)
-> > > >+{
-> > > >+  dest->vm_mm =3D src->vm_mm;
-> > > >+  dest->vm_ops =3D src->vm_ops;
-> > > >+  dest->vm_start =3D src->vm_start;
-> > > >+  dest->vm_end =3D src->vm_end;
-> > > >+  dest->anon_vma =3D src->anon_vma;
-> > > >+  dest->vm_pgoff =3D src->vm_pgoff;
-> > > >+  dest->vm_file =3D src->vm_file;
-> > > >+  dest->vm_private_data =3D src->vm_private_data;
-> > > >+  vm_flags_init(dest, src->vm_flags);
-> > > >+  memcpy(&dest->vm_page_prot, &src->vm_page_prot,
-> > > >+         sizeof(dest->vm_page_prot));
-> > > >+  /*
-> > > >+   * src->shared.rb may be modified concurrently when called from
-> > > >+   * dup_mmap(), but the clone will reinitialize it.
-> > > >+   */
-> > > >+  data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->shared=
-)));
-> > > >+  memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
-> > > >+         sizeof(dest->vm_userfaultfd_ctx));
-> > > >+#ifdef CONFIG_ANON_VMA_NAME
-> > > >+  dest->anon_name =3D src->anon_name;
-> > > >+#endif
-> > > >+#ifdef CONFIG_SWAP
-> > > >+  memcpy(&dest->swap_readahead_info, &src->swap_readahead_info,
-> > > >+         sizeof(dest->swap_readahead_info));
-> > > >+#endif
-> > > >+#ifdef CONFIG_NUMA
-> > > >+  dest->vm_policy =3D src->vm_policy;
-> > > >+#endif
-> > > >+}
-> > >
-> > > I know you're doing a big cut/paste here, but why in the world is thi=
-s function written this way? Why not just:
-> > >
-> > > *dest =3D *src;
-> > >
-> > > And then do any one-off cleanups?
-> >
-> > Yup I find it odd, and error prone to be honest. We'll end up with unin=
-itialised
-> > state for some fields if we miss them here, seems unwise...
-> >
-> > Presumably for performance?
-> >
-> > This is, as you say, me simply propagating what exists, but I do wonder=
-.
->
-> Two things come to mind:
->
-> 1. How ctors are done.  (v3 of Suren's RCU safe patch series, willy made
-> a comment.. I think)
->
-> 2. Some race that Vlastimil came up with the copy and the RCU safeness.
-> IIRC it had to do with the ordering of the setting of things?
->
-> Also, looking at it again...
->
-> How is it safe to do dest->anon_name =3D src->anon_name?  Isn't that ref
-> counted?
 
-dest->anon_name =3D src->anon_name is fine here because right after
-vm_area_init_from() we call dup_anon_vma_name() which will bump up the
-refcount. I don't recall why this is done this way but now looking at
-it I wonder if I could call dup_anon_vma_name() directly instead of
-this assignment. Might be just an overlooked legacy from the time we
-memcpy'd the entire structure. I'll need to double-check.
 
->
-> Pretty sure it's okay, but Suren would know for sure on all of this.
->
-> Suren, maybe you could send a patch with comments on this stuff?
+On 2025/4/25 22:48, Conor Dooley wrote:
+> On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wrote:
+>>>
+>>> On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
+>>>> On Thu, Apr 24, 2025 at 09:04:41AM +0800,hans.zhang@cixtech.com  wrote:
+>>>>> From: Manikandan K Pillai<mpillai@cadence.com>
+>>>>>
+>>>>> Document the compatible property for HPA (High Performance
+>>> Architecture)
+>>>>> PCIe controller EP configuration.
+>>>> Please explain what makes the new architecture sufficiently different
+>>>> from the existing one such that a fallback compatible does not work.
+>>>>
+>>>> Same applies to the other binding patch.
+>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
+>>> soc-specific compatible for your integration not needed?
+>>>
+>> The sky1 SoC support patches will be developed and submitted by the Sky1
+>> team separately.
+> Why? Cixtech sent this patchset, they should send it with their user.
 
-Yeah, I think I need to add some comments in this code for
-clarification. We do not copy the entire vm_area_struct because we
-have to preserve vma->vm_refcnt field of the dest vma. Since these
-structures are allocated from a cache with SLAB_TYPESAFE_BY_RCU,
-another thread might be concurrently checking the state of the dest
-object by reading dest->vm_refcnt. Therefore it's important here not
-to override the vm_refcnt. Changelog in
-https://lore.kernel.org/all/20250213224655.1680278-18-surenb@google.com/
-touches on it but a comment in the code would be indeed helpful. Will
-add it but will wait for Lorenzo's refactoring to land into linux-mm
-first to avoid adding merge conflicts.
+Hi Conor,
 
->
-> Thanks,
-> Liam
+Please look at the communication history of this website.
+
+https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+
+
+Best regards,
+Hans
