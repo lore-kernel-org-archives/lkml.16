@@ -1,103 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 134F6221540;
-	Fri, 25 Apr 2025 09:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CC522ACF7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574099; cv=none; b=nU0O0cPJxkQ+tj8+Bwq+LwhcS93FSgAsetL0ydX2bxO8w+lYoVNDewxOgaoNVsiv0ir36V7Gkz0sSD+GK42HgVNnpWsxWxaH4BatcF+ALQlwZd32Q9d4u/hc3XtEVUEQiJfQ0Sw+p6KAguvW+kqqgbiyNYFswmUtlLJQ9cfDS/w=
+	t=1745574187; cv=none; b=UIA1uICH74vFv1pmBKfynYe7Ams0rOpje5+STpAGsh67Iabs18A732rFx/weDkAdz6IZzr7OsI1LTyim6rYvZvP6QR1a+XR4H/iR+4I2Kctt/eqDJz1Hd8r9pzy9lorBLnyKCl3fKFnbyEJ2s4wSsApWfzNhZkvmkvs+kbda1Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574099; c=relaxed/simple;
-	bh=nmlAACPdyi1o/ejLELZQWZEK1WfkrRpmg/mY+BUQcfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AF3fPpulRF39of7lEaDDbcJ9Ek7U3QegvMmRPbGz4QtC+ITpNvqquwwoeloBNoxd7/lk5jBAKgO6aHWdn5gHp+UoJuQ4O7hJnWGT2PzXR59KTcMT4SeaXERddK8bfKF2Z3tpS0bR34JRyypH+ZYKUcouYW8U1NlC7+BPIe1lDvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4A941BCA;
-	Fri, 25 Apr 2025 02:41:29 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4511E3F59E;
-	Fri, 25 Apr 2025 02:41:32 -0700 (PDT)
-Date: Fri, 25 Apr 2025 10:41:28 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Corentin Labbe <clabbe.montjoie@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet
- MAC
-Message-ID: <20250425104128.14f953f3@donnerap.manchester.arm.com>
-In-Reply-To: <CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
-	<20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org>
-	<CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1745574187; c=relaxed/simple;
+	bh=HR1ELbXjB62zE6Sff0xpFGFrP2hzDkcrivmHZuYivdI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PCt2UQISstbPQQ2VzQKJWdLPAHDhw8Gi2yYoNuf/8LB3OBjpNTSzf3APj6ChhcFCDRNwHwvSLk3AQOyq9IjfBJ4mjFRM1/UTxRGLctJL3e/ZTfDUark8hAHLPN6cv7nZwYYJUpIkcFpYIqUGLSjnTJ4kp6rJlK405xj0gCr6BO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WZ3w28sy; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZ3w28sy"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43eeb4e09b5so2198375e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745574183; x=1746178983; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gDp105elx3apeSKKADmSSqdqJbinr0IUn9mnqQkF98s=;
+        b=WZ3w28sy5uDk84L0Jj5N7p1QwFcp9T2ivniA9tGfNHNj1ytyKngak+qP5I49bYxwt4
+         AC0C+BCXKIB5zp2fHs555x5RpbA6AWkBqu1DHFAHbjuptavuTtrHIsTmz0RhcQBidIhP
+         YGXdx+2MAdGkW8LmMKr3DUrfgqdWiIgPDX6D4KsMR8y469/03+VRSwv9mFjBC0H7v2vZ
+         am/7IJNfNlIQi0OxQRXYBIgRmOnrZmwg5+x+d4hl7y3mDOtsGBk2MIq5/AfFZfmtel7f
+         RlgLmdNR91I2GBrxe4zUWFSE9QZAnRr+eFaav4P8WIHai7TAlua12ie9xeYrPK+e2MQq
+         ZvqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745574183; x=1746178983;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gDp105elx3apeSKKADmSSqdqJbinr0IUn9mnqQkF98s=;
+        b=ixoWVPBQ2auXXUAm6Q5zYimYTT9HeGxheK4yJVUHqcLnO7RAggb+4/miLSJM+DihbQ
+         nrVAdPX2VujsmerpK04A62PHxmN25I0k8DkmT35rqaM/3KNA3UCpiA9m3a6/27lQngre
+         e7keQgIw/TAwzQRDF9Zn88ovIXhX5yTEs2MJv9j23/i8F/fBMquu/bUALLCC1TmF0Cfd
+         wi96f//NgXpsF6aMTFFXdGaEstLXNhM3Wp01CygBXpJJkE7w06bDlTz95Jj8qOwOJEwg
+         csW0BQVKM8S5nD/V9Bg/m8Cg0DAVAdRlE9IlX/imPEKuapDJRfVtsdoc+jNCcLGuQtcy
+         KZWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeuzyB00klUUmszBmKimMcoA9/+u5+6EKNH7z7GUQzfLeWkji0vkWQ+1BUX++MdIlkZZs0N1UxYT5/Xcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywgj3pqzc9eeTs0nMIR1LdV8QUD6yv5hI1YnuMsKXQZbFIf/tjj
+	exC0e9PlcjuTy24a77mBQ3O/VoK/AQj74+AmC69f5H68EYw5pK9DYD+UQCfU2Ew=
+X-Gm-Gg: ASbGncvUfZwYqCtNzqhULPdHBPxCUciKmD6Gl9F/gRGXBvpWHTfRH/djoeV3/Atbrpg
+	6xTouPAdi/mOEhPY15Q7TZhiQI0dAEyWKBZvb4fxMP/o9deZYFogQGvb9NKHBW/YJv15fqMP8OH
+	oxwbm33pN0+86OmcP/k4tXE9ckiM7JeFNwgD/IribOb32OT4EPW/CzROrEaR7oDjTuQ0SlEBrUi
+	IuzQJjhYsoTcPbC/XqBJynceWVpLhCtcFuO9qn4NIOw3dcGFtmBfv43iHnFZh2K+OAom6KKZ8Ny
+	3P7Xy6+AbUuzPYBzImwYK20c3OeybNjrZrdwpOFYg1zMSBavMRfWu8J2cEw=
+X-Google-Smtp-Source: AGHT+IESpUAhFZOOS82e4GvGIHokl7WEd11AkZbPGij323CqMMkH0yOxQl4M55ja81NtzkvTeEUUHg==
+X-Received: by 2002:a05:600c:1d01:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-440a66c250dmr4935225e9.9.1745574183356;
+        Fri, 25 Apr 2025 02:43:03 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8909sm19441395e9.2.2025.04.25.02.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 02:43:02 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: kernel test robot <lkp@intel.com>
+In-Reply-To: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
+References: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] firmware: exynos-acpm: Correct kerneldoc and use
+ typical np argument name
+Message-Id: <174557418225.69534.7174672611109460880.b4-ty@linaro.org>
+Date: Fri, 25 Apr 2025 11:43:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Fri, 25 Apr 2025 13:26:25 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
 
-Hi Chen-Yu,
+On Thu, 24 Apr 2025 22:33:09 +0200, Krzysztof Kozlowski wrote:
+> Correct kerneldoc warnings after commit a8dc26a0ec43 ("firmware:
+> exynos-acpm: introduce devm_acpm_get_by_node()") changed the function
+> prototype:
+> 
+>   exynos-acpm.c:672: warning: Function parameter or struct member 'acpm_np' not described in 'acpm_get_by_node'
+>   exynos-acpm.c:672: warning: expecting prototype for acpm_get_by_phandle(). Prototype was for acpm_get_by_node() instead
+> 
+> [...]
 
-> On Thu, Apr 24, 2025 at 6:09=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
-> >
-> > Add EMAC0 ethernet MAC support which found on A523 variant SoCs,
-> > including the A527/T527 chips. MAC0 is compatible to the A64 chip which
-> > requires an external PHY. This patch only add RGMII pins for now.
-> >
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 40 ++++++++++++++++++=
-++++++++
-> >  1 file changed, 40 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm6=
-4/boot/dts/allwinner/sun55i-a523.dtsi
-> > index ee485899ba0af69f32727a53de20051a2e31be1d..c9a9b9dd479af05ba22fe9d=
-783e32f6d61a74ef7 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > @@ -126,6 +126,15 @@ pio: pinctrl@2000000 {
-> >                         interrupt-controller;
-> >                         #interrupt-cells =3D <3>;
-> >
-> > +                       rgmii0_pins: rgmii0-pins {
-> > +                               pins =3D "PH0", "PH1", "PH2", "PH3", "P=
-H4",
-> > +                                      "PH5", "PH6", "PH7", "PH9", "PH1=
-0",
-> > +                                      "PH14", "PH15", "PH16", "PH17", =
-"PH18";
-> > +                               allwinner,pinmux =3D <5>;
-> > +                               function =3D "emac0";
-> > +                               drive-strength =3D <40>; =20
->=20
-> We should probably add
->=20
->                                   bias-disable;
->=20
-> to explicitly turn off pull-up and pull-down.
+Applied, thanks!
 
-Should we? I don't see this anywhere else for sunxi, probably because it is
-the (reset) default (0b00).
-I wonder if we have a hidden assumption about this? As in: if no bias is
-specified, we assume bias-disable? Then we should maybe enforce this is in
-the driver?
+[1/1] firmware: exynos-acpm: Correct kerneldoc and use typical np argument name
+      https://git.kernel.org/krzk/linux/c/2c2e5e908ea2b53aa0d21fbfe4d1dab527a7703e
 
-Cheers,
-Andre
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
