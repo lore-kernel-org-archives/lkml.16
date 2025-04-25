@@ -1,163 +1,70 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E150253F1E;
-	Fri, 25 Apr 2025 11:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC372571B0;
+	Fri, 25 Apr 2025 11:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579925; cv=none; b=kSVcXuk/k+EaBbKs4E+qiPFQZ4SDfwVxdeuwoDSOxBKz3ZO7zrBI835WuyVL4lc2V6lnSL9ZaZFKQrq7A7eBGQLwAKopbpj0WSfJOpHDrOr1pTG3x1B6hanQbriwqajYf2yFm+pGZZoO/v0LnTteCuCA3dUcvhafMAe7DNsyWj4=
+	t=1745579927; cv=none; b=HwX9dCZzDveItjd9xtxuoKHNhA2DTKGpCVNxtRzaNYNzQSuMcmhBLGYDmDOvJV+uJBb/l8NDzBbpmJvTWcv3HE2HBXqxrXwMrettf0r8RyQ55NlfkJVOmggo3QKzQ4/zRlBL/QjN9MMgm8zgbqwI2Ra+DEnwpIZvI6A3wr3jI+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579925; c=relaxed/simple;
-	bh=miUObJDyJhocrK069DSWw9HgrhX/3Yys15Nv1kXF/d0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=koi59FTVNDq6hDd3Org9FkO2QZlrPVaN+rsVu6Fv8sMaoCBaJrYilmjsRkyWvSD+58EXWSogv/rIjOh4mQOsCH8920nXc2EwLNtK20zkLkQWPnor/hnrbeTcjxHVFPVkOdnchjG3YZqokKO+59W/yBabAGr/i/KhTYM13khoVGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=QCdlu9/y; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1745579927; c=relaxed/simple;
+	bh=NqgGdkd8g5cQ3OKGc4RKIxtEOuoRmO3gUTre8U3aPfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGeC12N3u972t7Q9qvmL5QVuVIVqyNWox1cWLZ0ACUqwqCGv5lDw72dGjzC9wZ6BMJSBL9mduPYkR/YRcmAsFDTuM32O7DOn59AJhdMEMXuoI/J39Bvky4oW/VEPo4PB5+Uq4y5V9wO2gll5Jfcnl4ND+GHUXNyc4Wr5ZWOTq4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U70uki6V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="QCdlu9/y"
-Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8a3b:5a00:3490:6581:3910:8337])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 22D872E08E4A;
-	Fri, 25 Apr 2025 14:18:40 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1745579921;
-	bh=Sl7br+SAU7xPTSVWbVcHApKipE2FAs8bFVtAUIQuXBc=; h=From:To:Subject;
-	b=QCdlu9/y8c5xlKZ1MlMiXWbvR7rUtRh+wCukrUxRlRZs0xCinZEbVBq8tuvtKWggI
-	 FQ+iVo5pPbaHTD58KIpIQa9uuOasJAVTdQCEqaZ2FBzsgMNZB5uZBMq08rLIChIbY+
-	 qUKNAJ8Rx4TJQsCbakymmyisSPn4+hiaqv5jCpZA=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a02:2149:8a3b:5a00:3490:6581:3910:8337) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
-	Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org,
-	sre@kernel.org,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	mario.limonciello@amd.com,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v10 11/16] platform/x86: oxpec: Adhere to sysfs-class-hwmon
- and enable pwm on 2
-Date: Fri, 25 Apr 2025 13:18:16 +0200
-Message-ID: <20250425111821.88746-12-lkml@antheas.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
-References: <20250425111821.88746-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U70uki6V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04964C4CEE9;
+	Fri, 25 Apr 2025 11:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745579925;
+	bh=NqgGdkd8g5cQ3OKGc4RKIxtEOuoRmO3gUTre8U3aPfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U70uki6V7H3WduGjz/GRRmi5rOak9aAX2Q6yKONn7YHn3T1PVH3Gitavn4j97BhEg
+	 sRAcrTy3Zot/eYQao2xeNQVA8zvzWzP6tjAxlbZaSPz8G7vfSFIwzCBBJI206avGgT
+	 U5v1qHodWaPdRiLfndj0KJYmmVF/GXuOk/0XhKLQbnQYuA1LzUeKynbUbqXW7t4pnk
+	 HdECg/sk8b0FMS1ecwnh3s6pVaEHor9ewIu8gxStZ/sBsyaFiPeqwBpXjeGRNCOwD7
+	 Zh9uL2CVzBUG+A4o4xEkVnF1cZqZhu2W4xh2BRzDN+na1zqpAT69q/3FRD/DjP40ps
+	 eqGV8N/FOVTmg==
+Date: Fri, 25 Apr 2025 13:18:40 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v5 3/5] i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR
+ definition to amd/fch.h
+Message-ID: <iuq72okvc4nhy2ddgkkyb43mhm55ujxru3duqi3whnmgt4zrp3@i5nxnsl2nyc5>
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <20250422234830.2840784-4-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174557992101.22935.2100658857750823117@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422234830.2840784-4-superm1@kernel.org>
 
-Currently, the driver does not adhere to the sysfs-class-hwmon
-specification: 0 is used for auto fan control and 1 is used for manual
-control. However, it is expected that 0 sets the fan to full speed,
-1 sets the fan to manual, and then 2 is used for automatic control.
+Hi,
 
-Therefore, change the sysfs API to reflect this and enable pwm on 2.
+On Tue, Apr 22, 2025 at 06:48:28PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> SB800_PIIX4_FCH_PM_ADDR is used to indicate the base address for the
+> FCH PM registers.  Multiple drivers may need this base address, so
+> move it to a common header location and rename accordingly.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-As we are breaking the ABI for this driver, rename oxpec to oxp_ec,
-reflecting the naming convention used by other drivers, to allow for
-a smooth migration in current userspace programs.
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
-Closes: https://lore.kernel.org/linux-hwmon/20241027174836.8588-1-derekjohn.clark@gmail.com/
-Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/oxpec.c | 37 ++++++++++++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 918a553bd8969..45dfe0a7578b7 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -732,7 +732,27 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
- 		case hwmon_pwm_input:
- 			return oxp_pwm_input_read(val);
- 		case hwmon_pwm_enable:
--			return oxp_pwm_read(val);
-+			ret = oxp_pwm_read(val);
-+			if (ret)
-+				return ret;
-+
-+			/* Check for auto and return 2 */
-+			if (!*val) {
-+				*val = 2;
-+				return 0;
-+			}
-+
-+			/* Return 0 if at full fan speed, 1 otherwise */
-+			ret = oxp_pwm_fan_speed(val);
-+			if (ret)
-+				return ret;
-+
-+			if (*val == 255)
-+				*val = 0;
-+			else
-+				*val = 1;
-+
-+			return 0;
- 		default:
- 			break;
- 		}
-@@ -746,15 +766,24 @@ static int oxp_platform_read(struct device *dev, enum hwmon_sensor_types type,
- static int oxp_platform_write(struct device *dev, enum hwmon_sensor_types type,
- 			      u32 attr, int channel, long val)
- {
-+	int ret;
-+
- 	switch (type) {
- 	case hwmon_pwm:
- 		switch (attr) {
- 		case hwmon_pwm_enable:
- 			if (val == 1)
- 				return oxp_pwm_enable();
--			else if (val == 0)
-+			else if (val == 2)
- 				return oxp_pwm_disable();
--			return -EINVAL;
-+			else if (val != 0)
-+				return -EINVAL;
-+
-+			/* Enable PWM and set to max speed */
-+			ret = oxp_pwm_enable();
-+			if (ret)
-+				return ret;
-+			return oxp_pwm_input_write(255);
- 		case hwmon_pwm_input:
- 			return oxp_pwm_input_write(val);
- 		default:
-@@ -819,7 +848,7 @@ static int oxp_platform_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device *hwdev;
- 
--	hwdev = devm_hwmon_device_register_with_info(dev, "oxpec", NULL,
-+	hwdev = devm_hwmon_device_register_with_info(dev, "oxp_ec", NULL,
- 						     &oxp_ec_chip_info, NULL);
- 
- 	return PTR_ERR_OR_ZERO(hwdev);
--- 
-2.49.0
-
+Thanks,
+Andi
