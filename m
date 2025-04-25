@@ -1,105 +1,101 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7970222599
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2156D189B80;
+	Fri, 25 Apr 2025 20:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745614471; cv=none; b=EUTZU1Exuea9Ei3ba3ZgeqAaT0vLV9HdBvkenjFibG0xO990Zp+X2FwVRNiKht1GBuXcKlTsceJt56KsuI/RRxGj0k7zC+KX6FStkXMK6TYkqwF2LYVHi3gN5aonCC69z+we1lC29kiZ3hbLgiJwXF3Jn7Hze/zcSDk9LLn87VA=
+	t=1745614580; cv=none; b=FCUyz2eBJIDO0XTD+HrtG5d4f8qlDjmM9fnlTz+9kJFN52NEoyTzwgd2+33HC0VXJ6adwjaI90QF/IOrcy19rQ1kgJud8VKz/qbQ/6CqHQwoEqu+KPPQuCGSjnKI2m2EZt2+9QIULa0xe8kKBN31N9i9JyzvG4XF8lUEdPzYRUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745614471; c=relaxed/simple;
-	bh=y3QBxpLU4EegLlWms8FmmishWO2g4sGgxJbSZbHeDM4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PjJynFq//MTIwv9HIOYNOXFSvL0wBmp4CmtCCVi993w12uHVb710BTkWAhw5cAELYqL4wogJdbEswIdCalG6Fy8EVxU5DcDVgVLIzHfmFC10zhdhVD2f8COXItUzkSeW92T09wIdeJEojgCHEXnDAtziw9BIqv+vbKgA23/WhgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M2amKR2/; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745614580; c=relaxed/simple;
+	bh=T8fYF24SwYfu9rErGNxqBq2jkVKo0vdh4XoZjEwljK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cTLiWX79Kf8OcynbjrCunvRth2AlrUN898wYwiP68zHmekv4fGed7z+DFBCbzhc3qqF5Tq1zR6iNpFhnhCQwF0Z6xLBlXUhsNMv4m5kxvJpN2QIwTf1BHDSOCzDBJEgcyHT/BQizjfDKR+FdBwaHz+SgY2eK9VmPH+Ti1XrMqeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfSm/T6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M2amKR2/"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so25791955e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745614468; x=1746219268; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+TU5UixLb/Lcz1sIttj/596FCniYJ8zob+CBmECF494=;
-        b=M2amKR2/F6tGJtpCFjAacP/xaUCa+t2COOY1AgwNL/nGUd58vxX+eRU6lCLGakqssF
-         9szup/CHN7Fj4vCh2V4dZeg5iiJLs3SxzDTrrxIS+GRYIAjsK3UCydRkvSEXNeIWEBeR
-         4tTmw1JVm9NC45hg6vqbgbZNBAL2h3HhWmN+WgTQSy/a85hU7i0V/HPnwYJEPBjZYO9O
-         qM+oWpVslVJiMugLazGgBL9x0qRgXvJVR6ewPWSGj8eWXafk+F89U3PKOznmHZWklM+3
-         +zRuwDRYGS3YNeFz/o4ndd25WePCKNoUIaV7KwEie5ICrLHcy6XmyLBHXfbg6LlYLmtx
-         yrbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745614468; x=1746219268;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+TU5UixLb/Lcz1sIttj/596FCniYJ8zob+CBmECF494=;
-        b=BYZRVzNcaFAZZSyghvDd7N70O/j0QT0SfEs8nKoSU8aUwJZUQa1j7RpM+w3U+0JJpi
-         jqjU/lxIhOGXS81VoABu/E/FjU8UgXDv2BCSI4EPDHc8MfUPlgsSM4zq78wlPXHEQSGU
-         oLK540G0l+1M7a3Yvwecqpgy9O4+MKr2lVEQx6mgI+qwaRUROrmo5cSakirVYxuNH/XD
-         pqtgwrnIx2pzqHwlAdnwDHaPCxdm3ZnxdClkRMYl5RP+zaacBUJE1ftfmRTWLRo0Mo8z
-         XpCeqG2Ydr2pGinY5t9iweKBt+Ilexgefz359oOb5/9rqHBWHRQz3Vcos4MahMaE5rMC
-         l5Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCV0+I1iMRwORvDeWbjOqGqUJI8XsuPpwehSl5o5DsgFeTfU3gLkWTVGa+yo5NHJ9f+hNkqSx+q1mLk3YYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgIR4a5b96PcI1PCA17/9REkZ2wBKSBdu2h+z9dosazcrls95C
-	WFYSsOxceok6nJujyZb2m47cRw3DRuidwUNduxWhz58nfbAjytb/0ATW3YwwAVo=
-X-Gm-Gg: ASbGncsIKKp9/YQJd+MWwo/sUNRabOyOPlBBEsODbN2rG/JDQ3Xtdz2hi3kT2r46+W3
-	pTYl+PFcuepIaKks4bMR1V3kcuCP7ArXRiXhLAFu146Uxi35WGYYpAHnj7ZVhu6TCIajuIYly2+
-	oiJ90k6+oEbE4wqSYsQTW81wrfQ5hz9SmU4Y4oWnS4Tv8CjUA+fvoRvs2DdbWeDkUNM4Wm2YEZz
-	Yz/aJ55EspaMfxaZ7hyINlWJqHgJ5xDhrtFdPQHM/gt1ioJRh76voBwgMDDnuJqK5Yr7cQ36Nh7
-	vsTVEfn/dYVIObkIE8blo0i5SdgR2D80PcneQbH2PoNFa9Bx/W7klKtRWk+TuRzz38uPZhJ53U6
-	rJFWDAhVIv+GTQBAV
-X-Google-Smtp-Source: AGHT+IFu4YvGwElh13buW6VpxKA/vVcb7uSB1tVZ6DbnzGwHpLhmj5iIZ9UFBDGGBhtShow69ZiPXA==
-X-Received: by 2002:a05:6000:18a2:b0:39e:f51d:9cf9 with SMTP id ffacd0b85a97d-3a07ab89b29mr499207f8f.48.1745614468026;
-        Fri, 25 Apr 2025 13:54:28 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d86f7sm67390805e9.32.2025.04.25.13.54.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 13:54:27 -0700 (PDT)
-Message-ID: <a3c4c98a-45f6-4900-972d-379096e8244f@linaro.org>
-Date: Fri, 25 Apr 2025 21:54:26 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfSm/T6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D301AC4CEE4;
+	Fri, 25 Apr 2025 20:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745614575;
+	bh=T8fYF24SwYfu9rErGNxqBq2jkVKo0vdh4XoZjEwljK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CfSm/T6/esF2jtxHiPEPXjIBobhYAsv2+tXl2IfgpjaJeNefSSfFxqxL9kD6QDGvP
+	 a5mzsBVqtplL/E/7NA3HkVG339eQtwtoRR+5zqA2hwKQmD1V/q54gRzs+ov39XXD1k
+	 lgu4rufRPt63LBbtS1lvSnfBQ96rivGatMUpzqUqaJXABX4BN8sqw2h/jyCkqfcOE/
+	 6f6MGiZZRSTuzZdv3WIVU5ZuWPZRdpfMI/2ijchgFiE4JoAu1Snp9tW83o0GaCR5LB
+	 leswjaZW8hEeRkGWR3QSqlBajZhjshUSTM4lLXbgdT03jr8+rXtyhFIyBCRihUvWpr
+	 18EodjpUiCVFQ==
+Date: Fri, 25 Apr 2025 21:56:09 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Srinivas Kandagatla <srini@kernel.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3 2/5] ASoC: qcom: sm8250: set card driver name from
+ match data
+Message-ID: <d65b5d50-d0f5-43b9-b657-3fcb455efbbe@sirena.org.uk>
+References: <20250425-fp5-dp-sound-v3-0-7cb45180091b@fairphone.com>
+ <20250425-fp5-dp-sound-v3-2-7cb45180091b@fairphone.com>
+ <36904d64-68e1-43b2-baed-50b5fddc2bcb@sirena.org.uk>
+ <D9FXE4TJ23QB.1CS3D6PU2FGMR@fairphone.com>
+ <ccca5e19-5a4e-423b-923e-ea0de6682752@sirena.org.uk>
+ <D9G0JHKZ0RXB.3LI5UGS7QTVQN@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] media: qcom: camss: x1e80100: Fixup x1e csiphy
- supply names
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, loic.poulain@oss.qualcomm.com,
- vladimir.zapolskiy@linaro.org, krzk@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250425-b4-media-committers-25-04-25-camss-supplies-v2-0-8c12450b2934@linaro.org>
- <20250425-b4-media-committers-25-04-25-camss-supplies-v2-2-8c12450b2934@linaro.org>
- <ukwt7mxabaq2om6is6smvwedo4nweugbauapeuzhbzj6jsbwk4@5eiksknb2bf4>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <ukwt7mxabaq2om6is6smvwedo4nweugbauapeuzhbzj6jsbwk4@5eiksknb2bf4>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uwgD5b/ZvDIIBNta"
+Content-Disposition: inline
+In-Reply-To: <D9G0JHKZ0RXB.3LI5UGS7QTVQN@fairphone.com>
+X-Cookie: Debug is human, de-fix divine.
 
-On 25/04/2025 18:27, Dmitry Baryshkov wrote:
->>   static const struct camss_subdev_resources csiphy_res_x1e80100[] = {
->>   	/* CSIPHY0 */
->>   	{
->> -		.regulators = { "vdd-csiphy-0p8-supply",
->> -				"vdd-csiphy-1p2-supply" },
->> +		.regulators = { "vdd-csiphy0-0p8",
->> +				"vdd-csiphy0-1p2" },
-> This is an ABI break. Please mention in the cover message why we are
-> allowing it.
 
-Not an ABI break as we have no upstream consumer of this just yet.
+--uwgD5b/ZvDIIBNta
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'll V3 this to make clear though.
+On Fri, Apr 25, 2025 at 10:47:42PM +0200, Luca Weiss wrote:
+> On Fri Apr 25, 2025 at 9:03 PM CEST, Mark Brown wrote:
 
----
-bod
+> > Or base it on my tree and let things get sorted in the merge, I don't
+> > know what the conflicts might be?
+
+> For this patch here it might be okay but patch 3/5 from this series very
+> much depends on the patch in Greg's tree, given it refactors/expands on
+> the USB_RX if there. Resolving this through merge wouldn't be very
+> pretty.
+
+Well, unfortunately Greg didn't put things on a branch so yeah waiting
+for next release might be easiest.
+
+--uwgD5b/ZvDIIBNta
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgL9ugACgkQJNaLcl1U
+h9DXQAf+JaH2w6iyAMP0Bjh76NxowG+Y8EcaCQPReo9JeAOyppcpfB4NnjGm1uNL
+upySVWVCRrkZWXbmUTIINtq21b5f23HllaDiB6tV7hig27nhWVixom/DydlPRdvg
+1Itqw6ge9SDFd2AJ5Pao9mKwC62RaeRKqBFX3CwPnIEgokaoPZJwTVwWCO6UzAAg
+duA2KDdSy0R2aLXN8hMlrv1YIGxKmuX2Si5a1rk1zqfKC7Hja+Eu/9GENzUdsI2t
+agMzo/YxmoeZBFKhaUUAcsNSUE4OYrebbAw8NkzNwwPJp1W32xOIhE43MfdEhYpq
+qYkie4IDHDQ3G1+BngZVG7woqsxCzQ==
+=Hj7X
+-----END PGP SIGNATURE-----
+
+--uwgD5b/ZvDIIBNta--
