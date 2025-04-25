@@ -1,144 +1,137 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D89224AF9;
-	Fri, 25 Apr 2025 21:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92042225779;
+	Fri, 25 Apr 2025 21:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617198; cv=none; b=cZztBIJSX/ai3wkWaAJlYHmbwy4ey2Hgdnm4JNz5OKc2nIzlyHW7omoULzKWawTobaTZX28laiNuLxVq7ix7BqgPNEwWOFn8i3MZK3ki8RDZMsEgRDdlUwBS1ozbIob+c91/wpysolHpCK7DIqXX7Kym3Am0MEd2nuZ8aOsgVmo=
+	t=1745617201; cv=none; b=TQhlT4KAHV3EOCP5qYP0smmVcBOaPJL52NCR+qQo0GPcD7gNUiOzsQNxp6bRx1otPgYwuzXA403CQKSVVbfRqXZUu/SmaIyuHJJ8EPcEM2woDJqVGIvDHLg/cyzG7I+Kz9ksrjKb94DXtNS/7RpAlp9SmcqvFSr+O176Mu6RMxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617198; c=relaxed/simple;
-	bh=K2+ZLXt+NUXHfrLO5kMO+0fyQsf5+a9+qiQ7z4zUz6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CG4FL/Ly8e0y89yEaXl6KIhH8I4aqFmTLVtSESWdk1452SZwOrMmHjcf5d4kAovPyBCsI0p++b9uygsQxj7B1y55bWjS7AIQoZ+EB6u61rF90+E1XeUBkdPMFXr+8X4ISebXlUH2xOvjeSUmt3nqBp8fOMctbJ58i8nnDftkDmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T5AfWPwj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745617201; c=relaxed/simple;
+	bh=gpEjCaRQAeZ4xN2QXu04ciaWVtO8D/BOtpyF745Ope0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GPmFsdvcrtLBJ0SAhq+9lZs4k60Uv3dlO44iVOce5JWK4XCYxbFYXro4Ikz/CxxmsUAi5OEkhE6ZL3/xBG0AjexuAUnK8C+bKKaa0ShuDHB0DZEAAWZmBXR8MjtAgR+VMWUErhUN6nbhlH6YZhcgRApbz3esfDq6qYNWs5ZW+zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rv7JzYDM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T5AfWPwj"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJqtY003979;
-	Fri, 25 Apr 2025 21:39:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	l7HoHHwRm7qx6newPoYAeZn2J8TxwbXKaGF2NpVjD1Q=; b=T5AfWPwjbBpZKTT0
-	AzxQ9x2dmrOEutnvOFEskBbn5t9B9d+DcrRF4u0cBdY9eq+2Cx2sMcam446Pq/zz
-	7j0x++wrTs152r110D6OyPaqtQ1d7OxASDA1+zhKWDNGX3JbSbJhQ9j6fsu6e3bv
-	7mXzp4pNLarIMnVP8zgGnEWjL68BE7E5cRrURVyQbE35PGxh+MhLodVrhdE63hwr
-	PMFRaIb3x8SaNeToGIukZCWTElO8/f02H4cEUOLnBhenhzpga4FsdgvPSuty/RjT
-	XTKkyxDBc+blgrngeb4IpOlXUf1RVXvOzA/+AN/VWSwxZ7rrIbHan6HwDxQ3CFHP
-	N+osOA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2ae4f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 21:39:39 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PLddv2005220
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 21:39:39 GMT
-Received: from [10.110.41.60] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
- 2025 14:39:38 -0700
-Message-ID: <bcca2d97-2092-42f0-951d-f09f144e515d@quicinc.com>
-Date: Fri, 25 Apr 2025 14:39:31 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rv7JzYDM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71009C4CEEE;
+	Fri, 25 Apr 2025 21:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745617201;
+	bh=gpEjCaRQAeZ4xN2QXu04ciaWVtO8D/BOtpyF745Ope0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rv7JzYDMADbddJKQpQPNdj/yCvWSTJJ4CV3A/h0Lh77pJm3MiYRY/rE53GjO5QM27
+	 hr0HHCiUDrO3NNOs0aRWuQoBnv4FYiTinIAHGJvR4CsbCmY/xlraXldx7sRtmBDSSj
+	 DCf1X5DFE4/koSPmuEnXsk9ApgHIJxHienuM7w0FJOXEg8p384hJMw7q4T4fcsEkkE
+	 73wepkAfUYVc+FNAfQ2MIZkEugoiHsc8rVYplO0xXcLBU7kVDF/sMdqtk4sMT/Y5tr
+	 i6lU8g4TAMFx/HcKt4w0H4dA+jj6iF28LgH/m9dVPEpzM/65QM3M8saKRD78XqLlC6
+	 F8HHgkQyvqbnA==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3fa6c54cc1aso2063504b6e.1;
+        Fri, 25 Apr 2025 14:40:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXA9hqGEVXjPRhx1OR9QBz2Ez0GijJ8DEHdAs5n7jk/o6hn6PifYEcy65g9VVRQbNaJ7tBTzqJKdYqIw7k=@vger.kernel.org, AJvYcCXw9o6Q1uaWR2ULKi/0jA/QwutOx/LjcU9KeJKPEKUg1GZnnb7iUbxChk4mLZhHb1Q7vcs8lceu8Eo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/ACdIOzwqA5HIRRO2sZi2ZOul4smPwq4RUGev3R9rfrcQcbq1
+	6oqmUwk3DKnP/g25s4FOc1nbPy34bi2bozvMNIId4Inkf/gKgh8KXpNVmDbB5clz4p/bpKgENfA
+	ZT/8UFdCDitY4NTNW+AyiLKL+fqk=
+X-Google-Smtp-Source: AGHT+IEsffxvzq9Yr0/TB+vgHWzntwUD/rbIhUb17/qPQ3R6onl2Y6tmBGAUOYjZgUCXM6MsgXDHEc83j3KOHFY9CAk=
+X-Received: by 2002:a05:6808:2512:b0:3fa:d6d4:8160 with SMTP id
+ 5614622812f47-401f289418cmr2583961b6e.10.1745617200762; Fri, 25 Apr 2025
+ 14:40:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: usb: dwc3: Document usb-soc-be property
-To: Luca Weiss <luca.weiss@fairphone.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Felipe
- Balbi <balbi@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav
- Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Stephan
- Gerhold <stephan.gerhold@linaro.org>
-CC: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-sound@vger.kernel.org>
-References: <20250425-fp4-usb-audio-offload-v1-0-f90f571636e4@fairphone.com>
- <20250425-fp4-usb-audio-offload-v1-1-f90f571636e4@fairphone.com>
-Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <20250425-fp4-usb-audio-offload-v1-1-f90f571636e4@fairphone.com>
+References: <3344336.aeNJFYEL58@rjwysocki.net> <47159248.fMDQidcC6G@rjwysocki.net>
+ <1c6b70d1-279c-4d9d-ae31-2751daed04f6@arm.com>
+In-Reply-To: <1c6b70d1-279c-4d9d-ae31-2751daed04f6@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 25 Apr 2025 23:39:48 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iFD3FddYTiOwSJ3uAz8mduh134WE2U8spfJtBs4At6Pw@mail.gmail.com>
+X-Gm-Features: ATxdqUF9mvv7igZMHI0jECB6e_wqgQfhBYsX95BGLNNQhV1xaEQdyY_JC5sdlMI
+Message-ID: <CAJZ5v0iFD3FddYTiOwSJ3uAz8mduh134WE2U8spfJtBs4At6Pw@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1 8/8] cpufreq: intel_pstate: EAS: Increase cost for
+ CPUs using L3 cache
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, 
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+	Pierre Gondois <pierre.gondois@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EtLSrTcA c=1 sm=1 tr=0 ts=680c011b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=6H0WHjuAAAAA:8 a=xMRfEcGXebkPZtLSRzYA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-GUID: rnmO_5Z7f4dqOqmQ0-ctg3OmqaWcXIcm
-X-Proofpoint-ORIG-GUID: rnmO_5Z7f4dqOqmQ0-ctg3OmqaWcXIcm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE1NiBTYWx0ZWRfX/BQM2Nf4UBlF jitJCnS6Qy7Ze70LDRTBK550dv/xbxVRZnrDpeLJkGuE6ZWiQw9EhaJFLlSeYVvzHArPDLUH96g GUcx5SnAUUhoULle4UjRdQSRJyGhN0JH/I0mMDtFRgvQ7IywoHZ2lxBatdIas/kWOsFdumB38Iq
- Uss6BoYR/kkIcDjyX/jJEtBmuX7oTxnCqOd16QWaKLQe+273a8zf0QiPwl1qsH456Iw3/ZdgiB5 yjYC+KSuAiE0O9x4OyVqhXt/41lC0oI5rGDqfcun639PZ37TwcKd2f7q3rHTxzQ7q6Fj7Kv1L3/ fEz5Eu5GR0LT6A3LafWl/Elcs9zCroLXzwlrbsWvZUG03Xl43xgtm0rCFmu7CnI2vJrTJ3+M12t
- BwhJ72XmGDVYHa184aX0u2+tv5RGexTgvhqKb5tXsCTArhCFNMgT+YSldrwXYq48MafWWiwM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_07,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 mlxscore=0 clxscore=1011 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250156
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Apr 25, 2025 at 11:32=E2=80=AFPM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> On 4/16/25 19:12, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > On some hybrid platforms some efficient CPUs (E-cores) are not connecte=
+d
+> > to the L3 cache, but there are no other differences between them and th=
+e
+> > other E-cores that use L3.  In that case, it is generally more efficien=
+t
+> > to run "light" workloads on the E-cores that do not use L3 and allow al=
+l
+> > of the cores using L3, including P-cores, to go into idle states.
+> >
+> > For this reason, slightly increase the cost for all CPUs sharing the L3
+> > cache to make EAS prefer CPUs that do not use it to the other CPUs with
+> > the same perf-to-frequency scaling factor (if any).
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/cpufreq/intel_pstate.c |    8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > --- a/drivers/cpufreq/intel_pstate.c
+> > +++ b/drivers/cpufreq/intel_pstate.c
+> > @@ -979,6 +979,7 @@
+> >                          unsigned long *cost)
+> >  {
+> >       struct pstate_data *pstate =3D &all_cpu_data[dev->id]->pstate;
+> > +     struct cpu_cacheinfo *cacheinfo =3D get_cpu_cacheinfo(dev->id);
+> >
+> >       /*
+> >        * The smaller the perf-to-frequency scaling factor, the larger t=
+he IPC
+> > @@ -991,6 +992,13 @@
+> >        * of the same type in different "utilization bins" is different.
+> >        */
+> >       *cost =3D div_u64(100ULL * INTEL_PSTATE_CORE_SCALING, pstate->sca=
+ling) + freq;
+> > +     /*
+> > +      * Inrease the cost slightly for CPUs able to access L3 to avoid =
+litting
+>
+> s/Inrease/Increase
+> and I guess s/litting/littering
+>
+> > +      * it up too eagerly in case some other CPUs of the same type can=
+not
+> > +      * access it.
+> > +      */
+> > +     if (cacheinfo->num_levels >=3D 3)
 
+This check actually doesn't work on Intel processors, I have a
+replacement patch for this one.
 
-On 4/25/2025 3:44 AM, Luca Weiss wrote:
-> The property usb-soc-be is used by the new SoC USB layer which is used
-> for USB audio offloading on Qualcomm SoCs.
+> > +             (*cost)++;
+>
+> This makes cost(OPP1) of the SoC Tile e-core as expensive as cost(OPP0) o=
+f a
+> normal e-core.
 
-Hi Luca,
+If "a normal Ecore" is one using L3, then yes.
 
-This property can be dropped now, as in the latest revision I added
-utilizing the auxiliary device/bus now between the Q6USB backend DAI and
-the vendor USB offload driver.  Reduces the need to add more properties.
+> Is that the intended behaviour?
 
-Thanks
-Wesley Cheng
+Yes, it is.  I wanted the Ecores on L3 to appear somewhat more
+expensive, but not too much.
 
-> 
-> Cc: Wesley Cheng <quic_wcheng@quicinc.com>
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
->  Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> index 6c0b8b6538246adf746fe7ccd6df936131c61444..07549dec0f74234465fa9b6ab21871762a2f5127 100644
-> --- a/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3-common.yaml
-> @@ -38,6 +38,10 @@ properties:
->        - description: USB2/HS PHY
->        - description: USB3/SS PHY
->  
-> +  usb-soc-be:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Link to the USB SoC sound backend
-> +
->    phys:
->      minItems: 1
->      maxItems: 19
-> 
-
+It looks like *cost +=3D 2 would work better, though.
