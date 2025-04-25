@@ -1,248 +1,183 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327358F5E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D438248166
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587573; cv=none; b=K029FmyFUyoiAEAS19ZXrL5TacMmneJDuIRSeKcvT9V6IKcKVjjvJFooPRFA7PPik9k0jz0WHp+y0XthORgcp3hyCEqfUK02bKJkm62uNPGL7aIwGNXbXcMUsU1MoinwHHtHdXJEuDsq12XWWDvpUA3dwL6vZEdX67DRduIiDmo=
+	t=1745587582; cv=none; b=fwSB9JC1RqUwbxiPLGXjUFdo1xVzFXxgca945Rxrond14LtEg0Tvf0hdimq/SOLK5+4CLcvyslxb/qhd7ZBi+207WgZER13ItK83sRcBokrSxirxU7S3QFsTqDapj4cF2igM2bz1VVwvWSII1jynPqsZOQD0HHDRDFBmVHq52+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587573; c=relaxed/simple;
-	bh=j7KaWQjb0PncCTrObU98DGteOGAKCmk9pRp7BnXKXsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RvhE+TB+p0BoDg9HdAOVrWGaZm4AWQjLMILdukIkkJPEomJ533utahUjXaR9HFQBIh8OsU5fuXDLibsd6/m54mtrhTn0iknZ0RtybxYabf0/sUYLBvk7v6ZFkF32xkf9i5LY4mBcXpQ62nH5JjhfaDOlezDv5SUMWXGF9d8N7lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=M3O/0FPm; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745587582; c=relaxed/simple;
+	bh=cnY0Zcu290oipj5/M38Td+kKyB12qLcJNQao9+u/UTw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=YBSVAHeytJd2Wr3lweql8mU2N0qMav6CaE2jg6bQe4ZWsDw5UD9MEjHrSYIW5EA1nAvXRbiYWPaWiJiTaEjpg8E/rbP9FNUmDNImjycRSRy6oDqhY6wXr2LDELM15HEQpVXo/N5k3x4LX+NlkYDxclBJ/MiR/Vg10fqVKJ4uwG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g31EZzB1; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="M3O/0FPm"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39149bccb69so1999777f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745587569; x=1746192369; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TvlFep0NPTyeHOqXKhU3kd0cu/zjg3rVdkJdrD1m0V0=;
-        b=M3O/0FPmKufPGBttCeDM9qAKBjfCMh8j2t51JyKw5Ec6Yvse7VWKZP4OcPSANMMMr6
-         dqaPa1XiVkIKIcMbZ//mm1M5jCeMZ0lr1RGuxmG8BikHEg23+eE3JWhkhnk/QX+jGd3V
-         67OVElPxAquNyQAHVfrqIYhu32aoNjmkBQ2Sa9uDzIdy+Ob6by94M6EK7F1Bmvzu5fK8
-         RuQgbyPWXxKTtrCZoNfvV6b+uvEsjl2EeDXPvIit4am8DIfMfuL4Iq3iPWNUR8saH2k8
-         0tKiuKkH6fX4gtGaJlhlRZO/14ykP3fCmo9HdhcYmwLSiTwPONwYTX012qRAjm/rLJvP
-         VxUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745587569; x=1746192369;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TvlFep0NPTyeHOqXKhU3kd0cu/zjg3rVdkJdrD1m0V0=;
-        b=k8xb4ZEQEcUe9w1SRFgmaZZSaneR+kghtX9d+qBw7pOLD2EJOggxuFxPZpCFoxem60
-         dRjQXFWCpjj6mc4oaRM9jltrE6aAnZm2km4QAY4/uQhONvp5uiVWjTDKvlLrfBlF5NLS
-         1qqu/43FFkq2xCEvA+L/iKUUhMDOcclSvFyuPu4j7Gtv/Om+6L7cu3LuoCooFbbGBpjH
-         2NT1zKjC3hxCVgT1HU79iU2RwnFddeEnp2L6ypmGXDnJr3w3ODt0PL14ji0WvzhTU0yk
-         BH0qb6D8g2nJQf1uspTShCFBDilCAhKsZO+HXFzGmjLQEbLjHJ5x9dDrgMaAeXJTVErB
-         qOZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXohDE1itHDR+usH2b04+b2FWddFrTF/0IebcRQRmx0NUBOr4BVLFnw4XNJHblaOqvoxe2ZOoOz0o1Tnlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1hS4GHdiAIqN6mFhiEECVByRd2tWTzps12xcWFbtigL+IYke9
-	Nn02NETdJFEE1crF5Sc9nZtsPYxGfLdqj3VLqhKse8JCGpxoN6OFeS/YeVleLuw=
-X-Gm-Gg: ASbGnct+HD3wXFtxYxV2rSZwxvkopLMd3B+dUQOv/D3fvCbw/qYPDl9PvOhwstp6h/x
-	LHI5mUP0qNxi4+Z2fUGCYgHE88J+TRIX74Os5cWr/MmBNzZLuN0K+yarm+2HYLRTccNxH+kk3UI
-	j0yOFW3Fa4x3J+fIjOa99JDV+aNRIldLkJFFGt4HqJXkfYB2WoE5lmy/1R1b19aZqw4hNDkVGyR
-	3FX878vPmUeiH9IIO5rlXMFu3jyntXJfIZUoIk+X/3nnJ3BKBrCrZgXXQqbLTofGTl4xhayuMpq
-	d2xj8aq5NmSjBHRJUdsnO7kiTyOj
-X-Google-Smtp-Source: AGHT+IHAbwTDTK6qggDHRlhV93l9pLMtShZ8GEckKUdC0DHFBCYPix0OUA97YQ1vX0PSGamSi/CZFQ==
-X-Received: by 2002:a05:6000:2505:b0:38f:6287:6474 with SMTP id ffacd0b85a97d-3a074e1d88amr1847317f8f.15.1745587569386;
-        Fri, 25 Apr 2025 06:26:09 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::f716])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46976sm2369788f8f.63.2025.04.25.06.26.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 06:26:08 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:26:08 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Mayuresh Chitale <mchitale@ventanamicro.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming runnable
-Message-ID: <20250425-2bc11e21ecef7269702c424e@orel>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g31EZzB1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745587580; x=1777123580;
+  h=date:from:to:cc:subject:message-id;
+  bh=cnY0Zcu290oipj5/M38Td+kKyB12qLcJNQao9+u/UTw=;
+  b=g31EZzB12wCouubfd7WTjPeglNwmKyKCkp2Hp+Baokk/Z/ZSKjem4C7j
+   v+5TNkbXpr9h1JpfQlHhqxQISJmW26zRIU3JQrZnsUvVIg7A5Xw3JUpcD
+   8Fnzd7WfWbP9+kkTugufI0OZOxALeEn8DZTpyR17mqA87AG9dpZos5F1c
+   7glGPUZHa8vP6BI1G3LBb+3OtxW+JT8EGi8luyXrQj6VgH1OmdbAajq24
+   In5WAxTOP4KtYOtlkMYj9z5tnABky3XxQgv0pZR0Z/VKMlep8nvZI1zzu
+   bvv/AxbtcCbnGY1DNleY+qSveNxpUMmrcf0mHAWyGL9yN7JsRafaTsF5+
+   w==;
+X-CSE-ConnectionGUID: r2ImA1GvTDa3uJDRwlo2AQ==
+X-CSE-MsgGUID: AhbJofzVSGqLs7cJofx0Cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47422136"
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="47422136"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 06:26:20 -0700
+X-CSE-ConnectionGUID: IqiXzulvRWKY2MULcvWKaQ==
+X-CSE-MsgGUID: m+DmakYXS5eGgkaD2duYwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
+   d="scan'208";a="132824172"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 25 Apr 2025 06:26:19 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8J4K-0005E7-1S;
+	Fri, 25 Apr 2025 13:26:16 +0000
+Date: Fri, 25 Apr 2025 21:25:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ 637cf959dac97d5b7b5ce5e6cd91dd3a2c2fc324
+Message-ID: <202504252122.gV4qzck3-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
 
-On Thu, Apr 03, 2025 at 01:25:23PM +0200, Radim Krčmář wrote:
-> Beware, this patch is "breaking" the userspace interface, because it
-> fixes a KVM/QEMU bug where the boot VCPU is not being reset by KVM.
-> 
-> The VCPU reset paths are inconsistent right now.  KVM resets VCPUs that
-> are brought up by KVM-accelerated SBI calls, but does nothing for VCPUs
-> brought up through ioctls.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
+branch HEAD: 637cf959dac97d5b7b5ce5e6cd91dd3a2c2fc324  irqchip/gic-v2m: Prevent use after free of gicv2m_get_fwnode()
 
-I guess we currently expect userspace to make a series of set-one-reg
-ioctls in order to prepare ("reset") newly created vcpus, and I guess
-the problem is that KVM isn't capturing the resulting configuration
-in order to replay it when SBI HSM reset is invoked by the guest. But,
-instead of capture-replay we could just exit to userspace on an SBI
-HSM reset call and let userspace repeat what it did at vcpu-create
-time.
+elapsed time: 1455m
 
-> 
-> We need to perform a KVM reset even when the VCPU is started through an
-> ioctl.  This patch is one of the ways we can achieve it.
-> 
-> Assume that userspace has no business setting the post-reset state.
-> KVM is de-facto the SBI implementation, as the SBI HSM acceleration
-> cannot be disabled and userspace cannot control the reset state, so KVM
-> should be in full control of the post-reset state.
-> 
-> Do not reset the pc and a1 registers, because SBI reset is expected to
-> provide them and KVM has no idea what these registers should be -- only
-> the userspace knows where it put the data.
+configs tested: 106
+configs skipped: 4
 
-s/userspace/guest/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> An important consideration is resume.  Userspace might want to start
-> with non-reset state.  Check ran_atleast_once to allow this, because
-> KVM-SBI HSM creates some VCPUs as STOPPED.
-> 
-> The drawback is that userspace can still start the boot VCPU with an
-> incorrect reset state, because there is no way to distinguish a freshly
-> reset new VCPU on the KVM side (userspace might set some values by
-> mistake) from a restored VCPU (userspace must set all values).
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250424    gcc-8.5.0
+arc                   randconfig-002-20250424    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                          gemini_defconfig    clang-20
+arm                   randconfig-001-20250424    gcc-7.5.0
+arm                   randconfig-002-20250424    gcc-7.5.0
+arm                   randconfig-003-20250424    clang-21
+arm                   randconfig-004-20250424    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250424    clang-21
+arm64                 randconfig-002-20250424    gcc-8.5.0
+arm64                 randconfig-003-20250424    clang-21
+arm64                 randconfig-004-20250424    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250424    gcc-12.4.0
+csky                  randconfig-002-20250424    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250424    clang-21
+hexagon               randconfig-002-20250424    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250424    gcc-12
+i386        buildonly-randconfig-002-20250424    clang-20
+i386        buildonly-randconfig-003-20250424    clang-20
+i386        buildonly-randconfig-004-20250424    clang-20
+i386        buildonly-randconfig-005-20250424    gcc-12
+i386        buildonly-randconfig-006-20250424    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250424    gcc-14.2.0
+loongarch             randconfig-002-20250424    gcc-12.4.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm63xx_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250424    gcc-10.5.0
+nios2                 randconfig-002-20250424    gcc-10.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250424    gcc-9.3.0
+parisc                randconfig-002-20250424    gcc-7.5.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                 mpc8315_rdb_defconfig    clang-21
+powerpc                  mpc866_ads_defconfig    clang-21
+powerpc               randconfig-001-20250424    clang-21
+powerpc               randconfig-002-20250424    clang-17
+powerpc               randconfig-003-20250424    clang-21
+powerpc64             randconfig-001-20250424    clang-21
+powerpc64             randconfig-002-20250424    clang-21
+powerpc64             randconfig-003-20250424    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250424    clang-21
+riscv                 randconfig-002-20250424    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250424    gcc-9.3.0
+s390                  randconfig-002-20250424    gcc-9.3.0
+sh                               alldefconfig    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250424    gcc-12.4.0
+sh                    randconfig-002-20250424    gcc-6.5.0
+sh                           se7206_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250424    gcc-10.3.0
+sparc                 randconfig-002-20250424    gcc-11.5.0
+sparc64               randconfig-001-20250424    gcc-9.3.0
+sparc64               randconfig-002-20250424    gcc-7.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250424    clang-21
+um                    randconfig-002-20250424    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250424    gcc-12
+x86_64      buildonly-randconfig-002-20250424    clang-20
+x86_64      buildonly-randconfig-003-20250424    gcc-12
+x86_64      buildonly-randconfig-004-20250424    clang-20
+x86_64      buildonly-randconfig-005-20250424    clang-20
+x86_64      buildonly-randconfig-006-20250424    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250424    gcc-14.2.0
+xtensa                randconfig-002-20250424    gcc-14.2.0
 
-If there's a correct vs. incorrect reset state that KVM needs to enforce,
-then we'll need a different API than just a bunch of set-one-reg calls,
-or set/get-one-reg should be WARL for userpace.
-
-> 
-> The advantage of this solution is that it fixes current QEMU and makes
-> some sense with the assumption that KVM implements SBI HSM.
-> I do not like it too much, so I'd be in favor of a different solution if
-> we can still afford to drop support for current userspaces.
-> 
-> For a cleaner solution, we should add interfaces to perform the KVM-SBI
-> reset request on userspace demand.
-
-That's what the change to kvm_arch_vcpu_ioctl_set_mpstate() in this
-patch is providing, right?
-
-> I think it would also be much better
-> if userspace was in control of the post-reset state.
-
-Agreed. Can we just exit to userspace on SBI HSM reset?
-
-Thanks,
-drew
-
-> 
-> Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
-> ---
->  arch/riscv/include/asm/kvm_host.h     |  1 +
->  arch/riscv/include/asm/kvm_vcpu_sbi.h |  3 +++
->  arch/riscv/kvm/vcpu.c                 |  9 +++++++++
->  arch/riscv/kvm/vcpu_sbi.c             | 21 +++++++++++++++++++--
->  4 files changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index 0c8c9c05af91..9bbf8c4a286b 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -195,6 +195,7 @@ struct kvm_vcpu_smstateen_csr {
->  
->  struct kvm_vcpu_reset_state {
->  	spinlock_t lock;
-> +	bool active;
->  	unsigned long pc;
->  	unsigned long a1;
->  };
-> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> index aaaa81355276..2c334a87e02a 100644
-> --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> @@ -57,6 +57,9 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
->  				     u32 type, u64 flags);
->  void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
->                                        unsigned long pc, unsigned long a1);
-> +void __kvm_riscv_vcpu_set_reset_state(struct kvm_vcpu *vcpu,
-> +                                      unsigned long pc, unsigned long a1);
-> +void kvm_riscv_vcpu_sbi_request_reset_from_userspace(struct kvm_vcpu *vcpu);
->  int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
->  int kvm_riscv_vcpu_set_reg_sbi_ext(struct kvm_vcpu *vcpu,
->  				   const struct kvm_one_reg *reg);
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index b8485c1c1ce4..4578863a39e3 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -58,6 +58,11 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
->  	struct kvm_vcpu_reset_state *reset_state = &vcpu->arch.reset_state;
->  	void *vector_datap = cntx->vector.datap;
->  
-> +	spin_lock(&reset_state->lock);
-> +	if (!reset_state->active)
-> +		__kvm_riscv_vcpu_set_reset_state(vcpu, cntx->sepc, cntx->a1);
-> +	spin_unlock(&reset_state->lock);
-> +
->  	memset(cntx, 0, sizeof(*cntx));
->  	memset(csr, 0, sizeof(*csr));
->  
-> @@ -520,6 +525,10 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
->  
->  	switch (mp_state->mp_state) {
->  	case KVM_MP_STATE_RUNNABLE:
-> +		if (riscv_vcpu_supports_sbi_ext(vcpu, KVM_RISCV_SBI_EXT_HSM) &&
-> +				vcpu->arch.ran_atleast_once &&
-> +				kvm_riscv_vcpu_stopped(vcpu))
-> +			kvm_riscv_vcpu_sbi_request_reset_from_userspace(vcpu);
->  		WRITE_ONCE(vcpu->arch.mp_state, *mp_state);
->  		break;
->  	case KVM_MP_STATE_STOPPED:
-> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> index 3d7955e05cc3..77f9f0bd3842 100644
-> --- a/arch/riscv/kvm/vcpu_sbi.c
-> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> @@ -156,12 +156,29 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
->  	run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
->  }
->  
-> +/* must be called with held vcpu->arch.reset_state.lock */
-> +void __kvm_riscv_vcpu_set_reset_state(struct kvm_vcpu *vcpu,
-> +                                      unsigned long pc, unsigned long a1)
-> +{
-> +	vcpu->arch.reset_state.active = true;
-> +	vcpu->arch.reset_state.pc = pc;
-> +	vcpu->arch.reset_state.a1 = a1;
-> +}
-> +
->  void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
->                                        unsigned long pc, unsigned long a1)
->  {
->  	spin_lock(&vcpu->arch.reset_state.lock);
-> -	vcpu->arch.reset_state.pc = pc;
-> -	vcpu->arch.reset_state.a1 = a1;
-> +	__kvm_riscv_vcpu_set_reset_state(vcpu, pc, a1);
-> +	spin_unlock(&vcpu->arch.reset_state.lock);
-> +
-> +	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
-> +}
-> +
-> +void kvm_riscv_vcpu_sbi_request_reset_from_userspace(struct kvm_vcpu *vcpu)
-> +{
-> +	spin_lock(&vcpu->arch.reset_state.lock);
-> +	vcpu->arch.reset_state.active = false;
->  	spin_unlock(&vcpu->arch.reset_state.lock);
->  
->  	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
-> -- 
-> 2.48.1
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
