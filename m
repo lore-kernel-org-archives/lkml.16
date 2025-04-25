@@ -1,75 +1,39 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305302701AE;
-	Fri, 25 Apr 2025 03:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB4F2701AE;
+	Fri, 25 Apr 2025 03:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745550477; cv=none; b=frzcE/2yEd5yuYmznL2RG6bmcsIMUi19ecvexnu8T1H+GZhhijeBFTg4XXPD7RcySDV92GCau3xG6mVRXScTPzcTs6zNOvYcI8u3VDNTUXM0qBEkuO+olrl6auoP1J3iW5MYb+AC1hYyz1bzTYr9zjLmWPvkItQ8K2C+WtinCHQ=
+	t=1745550607; cv=none; b=K+Em7ymYSsXfZ+19iqQZNlUb2dvc6EWP9KPH2feT1j8xp6N99vhthUhxyVIlK0fZTy2KYqizghYSxE7XQ2sn4I3CveJNbI6TokNJLhecX4U7yeska3eu3Q76j+MG2ZLgIVLEpjBwtRzgfoI9Wz+PyCDFyPmBqGSEWxz6DEw3fGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745550477; c=relaxed/simple;
-	bh=osAwogrtr06X60DTlApbAWL7QentYdhlQifM5SVV7xg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NYx6EmYjqXE7RbjMer7HpcmIspCf2T+uoq8VugcqBJMNlIBzLI4RuBePyFxhonN/951VTdY4z+SuVqv2AwmLfXtO11OlXiq65Arq7uzUKNlRYr9SEViC9N+mShTORFtX98inxpouViM9mAuEsXh220wRNQ3iNXoK5mWivyPDLSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VUj+kWlM; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745550607; c=relaxed/simple;
+	bh=DYkR0BRzTZgqgT2AoNDoUCSHnqk+V3ro/oiA4Y5jtOk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ur4BCXer1G1/NBrZ7ffoga5AsVPdyQ/vOQm/L8dYBOggKr8BGiNtC52e8yHhh8eZkx3gisKL/fTHcrrbIiDHVBjm5rP7AvjaY0SNz7y7Z7tBcHy/UnIcP04yfMpb3Qp8iE9rXLpftUFLjtPTGU8wgvXaaOfYzak2lBwbNGYDVCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=d/i6IDyu; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUj+kWlM"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-301cda78d48so2129982a91.0;
-        Thu, 24 Apr 2025 20:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745550474; x=1746155274; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ta4nCPpvWFM1ePJJeTQkgOJ6CbAh0GB+fI2VCmWT/+Q=;
-        b=VUj+kWlMJijoWgO9pxKOyxkIZtVJ8y0KgW3O+bjdWmgqbnnSVsXeoEfAZeyGhAhfEG
-         +P8qOwEnxKu7OHQBjKaEehjLaVadBYe0mKbxvfl/zLVMrJnWCTa3DvxbHMxa4ejZMr9s
-         4NHHa8rg+/c+3dj7HxWYziYc23h4SjklbJhIiU4B9JpZGtGSK+msHu/z39cDX4cK/1k6
-         66Gl4OhknpU4GH+Z1e/C/Oqpz3QKhi2q2mFO0FvYVszIv1LS38fA3xB//emV3rITTWbR
-         7JmsemMhJTEWyTwP82FpIB7nYS5td29nXjhC05daDXzzc2YMQGDFMnvrvqmk6Dnzln/t
-         xx/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745550474; x=1746155274;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ta4nCPpvWFM1ePJJeTQkgOJ6CbAh0GB+fI2VCmWT/+Q=;
-        b=fhuHTHil/F/kGMfUmupcuP1XBGpaiBqNmh65A/FjUbJidyQWrJMANYbwlDu0UOPxLm
-         +hdPysRWPOVPnI+nr5keHBZ8agVYRVO67rZUJc40rA+RV9mUUziJwaf7Pk7zDC5oTVwZ
-         Du++1u08bgqMZsLVCncJYL5GGNcnPUbI3CnOtTE0HwEnUq4u1Zs9UnItNhTdobS6WBvR
-         ud0AZ2+9wZYd879oI/lyaTwmfOhaSedL/NOdWNoTCQ3XsStknS/BJ6omJZWFFit6kZ6h
-         1bWf75iS2RLl3j44nWtefj9ug7mKcgtpdKQE2IGuY//FtubPWjDB88Ywbp0cKJaxVyKJ
-         h7uw==
-X-Forwarded-Encrypted: i=1; AJvYcCX4vsAPBus8DxCGxq5837Mf2dD3+L8WD6iSvT0QnZitLBzlJ52PtzVkGv4sPcxlcpD7NMrC4r2DHLIFnVo=@vger.kernel.org, AJvYcCXXRlUb6PmHZ8tuTkGXPqymKOJuwvaDfQOkbYnwfiLYu7WQHthP+1pTW3IYH9t3kxktKnwNhtmEUl0Nh2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi0JSnrxz4sa3L49EvrHAFDpcEw1tINYuj5W+720DwhRUFJ8is
-	rJQBh71CAR5cgfQNbstU3XbALr6PjdwAKNUpdmiJ9+HxWioKGXyG
-X-Gm-Gg: ASbGncsAC+KaiGPcurGsZaN9VajyUkv96/Bgz8bWnJP37F9RPfs+2qp8+b9rZUS3hbO
-	qmaueyyfqvpGpt3nJ8Kk/LnzCeM4mxOPlUpyPBzPoAuccnlf52BBFSCoko3ty5AHU11ndwrAb4c
-	60dw1Dtx8Fmyn6YyHIWlWNLtLR/dk/Oczp6Nr2IBHd9L9vRad6KV9MUZ5U2YNRSsczak6Hb+JgB
-	ltyeoZfYPqYoi1x+ktS2OANl1qajSqnpnohophZKfk2Uk5RUo6XhzFkllTxhfkj+jMehMLaWQu4
-	1eNMvxjVaKXzfyOHSGCesEy/8cHoQ+Ql5/bcQbsIEKsvYEz12lx9s3Jx1Sb2UI/JFJ5W8AhzIA=
-	=
-X-Google-Smtp-Source: AGHT+IEifdjAiAzfngzEiV7YyS9Y7MiK3e5I+cEbEH1gO1XVnoigbM2rorDzv6SajhWMcmhTeOscOg==
-X-Received: by 2002:a17:90b:2e4f:b0:2f2:a664:df1a with SMTP id 98e67ed59e1d1-309f7d99265mr1496670a91.2.1745550474140;
-        Thu, 24 Apr 2025 20:07:54 -0700 (PDT)
-Received: from tech-Alienware-m15-R6.. ([223.185.130.1])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef063c4csm2258790a91.20.2025.04.24.20.07.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 20:07:53 -0700 (PDT)
-From: Sunny Patel <nueralspacetech@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="d/i6IDyu"
+Received: from localhost.localdomain (unknown [202.119.23.198])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1311754bb;
+	Fri, 25 Apr 2025 11:09:52 +0800 (GMT+08:00)
+From: Zilin Guan <zilin@seu.edu.cn>
+To: zilin@seu.edu.cn
+Cc: jianhao.xu@seu.edu.cn,
+	jmorris@namei.org,
+	john.johansen@canonical.com,
 	linux-kernel@vger.kernel.org,
-	Sunny Patel <nueralspacetech@gmail.com>
-Subject: [PATCH] media: i2c: ov13858: Enable clock frequency macro
-Date: Fri, 25 Apr 2025 08:37:10 +0530
-Message-ID: <20250425030747.6368-1-nueralspacetech@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z_5K9Kz2i8TouhC4@kekkonen.localdomain>
-References: <Z_5K9Kz2i8TouhC4@kekkonen.localdomain>
+	linux-security-module@vger.kernel.org,
+	paul@paul-moore.com,
+	serge@hallyn.com
+Subject: Re: [RFC PATCH] security/apparmor: use kfree_sensitive() in unpack_secmark()
+Date: Fri, 25 Apr 2025 03:09:51 +0000
+Message-Id: <20250425030951.2504900-1-zilin@seu.edu.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250418045250.1262935-1-zilin@seu.edu.cn>
+References: <20250418045250.1262935-1-zilin@seu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,38 +41,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaThhCVk5JShlOSx0YT0sZS1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktISk9ITFVKS0tVSk
+	JLS1kG
+X-HM-Tid: 0a966aec496d03a1kunm1311754bb
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NSI6Tio5UTJODT82KC9WTAkh
+	LClPCilVSlVKTE9OTk5LTkJITkNNVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
+	SkpCVUlIVUpCQ1lXWQgBWUFKT0lINwY+
+DKIM-Signature:a=rsa-sha256;
+	b=d/i6IDyuFnDxeMHXIbkS/Q3PTEWGYg0P8V88fug1bevYfvd3JYIJMbTTxD8PTu4XSgDViuqZmikOD6ba9phnypu4HQ5syCAk18eu8qwggoALgqBXMqKnjSsWNIB1X+uN2v7ncrVEwUXA24ZI2/LbSaJFT6dyvqbvRHrgHOuB5+E=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
+	bh=6BR8cXu8hwNR5rnYgCOTDWahbVAq41fdERazexhWcSQ=;
+	h=date:mime-version:subject:message-id:from;
 
-Define a macro `OV13858_EXTCLK` for the clock frequency (19.2 MHz)
-and use it instead of the hardcoded value in the probe function.
+On Fri, Apr 18, 2025 at 04:52:50AM+0000, Zilin Guan wrote:
+> To mitigate this, replace kfree() with kfree_sensitive() for freeing
+> secmark structures and their labels, aligning with the approach used
+> in free_ruleset().
 
-Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
+To clarify, we propose using kfree_sensitive() for secmark structures and 
+their labels because they are already freed with kfree_sensitive() in 
+another error path, specifically in aa_free_profile() -> free_ruleset().
 
----
- drivers/media/i2c/ov13858.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This change aligns both cleanup pathways, whether aborting early in 
+unpack_secmark() or cleaning up later via aa_free_profile() -> 
+free_ruleset(). It ensures that all secmark-related allocations are 
+scrubbed before deallocation, mitigating any potential security risks.
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 7a3fc1d28514..a1242a90cdc9 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -21,6 +21,8 @@
- #define OV13858_REG_SOFTWARE_RST	0x0103
- #define OV13858_SOFTWARE_RST		0x01
- 
-+#define OV13858_MCLK				19200000
-+
- /* PLL1 generates PCLK and MIPI_PHY_CLK */
- #define OV13858_REG_PLL1_CTRL_0		0x0300
- #define OV13858_REG_PLL1_CTRL_1		0x0301
-@@ -1664,7 +1666,7 @@ static int ov13858_probe(struct i2c_client *client)
- 	u32 val = 0;
- 
- 	device_property_read_u32(&client->dev, "clock-frequency", &val);
--	if (val != 19200000)
-+	if (val != OV13858_MCLK)
- 		return -EINVAL;
- 
- 	ov13858 = devm_kzalloc(&client->dev, sizeof(*ov13858), GFP_KERNEL);
--- 
-2.43.0
-
+Best Regards,
+Zilin Guan
