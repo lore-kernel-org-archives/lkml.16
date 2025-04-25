@@ -1,221 +1,198 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2064.outbound.protection.outlook.com [40.107.22.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B35256C71;
-	Fri, 25 Apr 2025 13:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588346; cv=fail; b=W17/x2/bqlFdrEfUGbg/AG/KpRZG4U9pWLFIBfZpPV8V3h9ZQs4mb4QU89qaRMw/LjPh1bDVUgIvblSdZGe7Hhlbuu4dbCno2PIPuW8X1banoua+DAqa7GZfyvju5kzvNtMkWIP6yOnnw59UxEjY4Uz/0Q7lwOMhvpySwqU5mRY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588346; c=relaxed/simple;
-	bh=C+/byolstUK3qbG2fKo1MZ04D0IETXzzliSh+5Ny0lw=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=eIF+X2uqGRBhVOjxRVlTdRk34BNlr+8hT6zCKaTbTAOJFs3HfKOWreZTGLSY+GgjUGDIiAq3QGrqjd3ftvEW9lKCRhBya/4w5o/oWJl6JuXw2FCiONbEGyRwdZaEuwv9sOU5f9UBfmA5eJlDALhrJKCPEly2eJMLduUep4WFCVI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TCtBYX9E; arc=fail smtp.client-ip=40.107.22.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB9018027;
+	Fri, 25 Apr 2025 13:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745588371; cv=none; b=NAZQsaO9Wn9wA78PjzQfXgu2crh3ZchluVmHkkAzXIZxo+pB8YGXkxJwY//+9D3iH7esEk8TEI5A8OQtNciDgPjAL+9Z2wbieqdaX54pTrQuL+IGTiNF8HQRXZr+LLxHGgW+zL4cOxzJ99Y4CIsDpc3tf9zmBqzzUxY9d25pLx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745588371; c=relaxed/simple;
+	bh=HaSmAciiEXr4q8Tae8RyQBqhmMqC0WzjT7rk49DR9C8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nVUFh3VBlvZcEXYG8Bc93cnwE1kT6SIcVDheUoHP0j+7sqWrM0V3NJDxdlFpaKnJ1YzzBbncEznwNp1MuRH/nzWenI05R9DmdnDW9Gu9eXWJdpxgxtMppHfQ1qix1BzLuN8Gwz+F5wYZGzNbJcomTUR2t7RmO9iY5q1iQyh6FSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QMKFi9NT; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TCtBYX9E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Shlf9DWnvZct8Yq/8JaqPFJIafIw3b/Br4+m6vgUzXlBEJnhgibYOXbDA45AvwitRHjxU9m8FiZyjo7b0GzKHNMjO9oUqAnl0a9T2mvHEmRglDAtFIpkkNmq3uF4mlzhEJcnj+m6GHDOzCt5k5PtFTe5myjBpiF44+cei30m+O3vILHa5V6epXIbpCVvHI5L3H1TipoLRa5czLicJca3zJG/741S0jI+Ba3mE79Mznewfe+uDCdtKHnRQjEsUG+YURzLtEfpEf7sKyoAJc66RLG/o8YzcggsR/yHs2pqkrUsf2sv5ej8swcd2rSPQ40ELWrLotecw69pZzNmz0Tj0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=twxCJtmU2KZ98rqCXb/Uh81mNSAdCjdLoHTNJdLz9Gg=;
- b=QzdpB6p0+UNZFI3oYtaEPJtx+mY+L6iq2yd/Ci8m1Jy5o1/TWLtL9niBXWVnH4apzGMf5Ofsm0q0KBgb4FyWk7hvD4ozuYTb2x7DgTKNnMYzb5Y8kqarhkqQqK/8rHol/iK7ulvz83qGneQQN9ygoqK9lJKBgFjTXSx0gtLh4O1CFQr3i9NmC7ezL6z3nIJWWL6L2FN1gwRMNNzaak/LqC/G3X0eWX9oBYHsv28Mc2YW1vlyAFqTP6fDqkSwk4hVkOmQiQJta4T6lrIfDddOgeRkYAv2dccxyCNfoKuLYoV2cszoK8jIqNrhQLLc5KrbRac3Ym0ng1e2cDFBBhJe6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=twxCJtmU2KZ98rqCXb/Uh81mNSAdCjdLoHTNJdLz9Gg=;
- b=TCtBYX9EuJaYBU2pqS6kdq3+MnKVGhIGi3g5pJFmynneDzTCr9QtPXvtW6kYbRYV8cZRy/L6sETF35uciBWywTb86kIyd12rUrBJFZjKdhkj4kkR5TPqR6BmjmJcqHJ8uGQE1HBnxiQ0e/DTuj/qeyurp4gGhRhmWv7R/qJY3NhMTAUudkV0diUkNk7LEOJLv1RYvKP9jPzfWgMjtJ3bGxkIcYq4KLe29znwZ7F0QJu2MBW7tyUDJqaemRAFH8eOoRpCBFCjhLtdp+GjOnO1YYUk4C39nN/4u4zpKYxAAmaR4ErYB/u5Xfdo9NOhB2SadlgT4KCuoNrU0xCp/lnm9Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
- by DBAPR04MB7253.eurprd04.prod.outlook.com (2603:10a6:10:1a2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
- 2025 13:39:02 +0000
-Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
- ([fe80::e751:223e:aa3d:5827]) by AM9PR04MB8604.eurprd04.prod.outlook.com
- ([fe80::e751:223e:aa3d:5827%7]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
- 13:39:02 +0000
-From: Pankaj Gupta <pankaj.gupta@nxp.com>
-Date: Sat, 26 Apr 2025 00:31:38 +0530
-Subject: [PATCH v17 7/7] arm64: dts: imx8ulp-evk: add reserved memory
- property
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250426-imx-se-if-v17-7-0c85155a50d1@nxp.com>
-References: <20250426-imx-se-if-v17-0-0c85155a50d1@nxp.com>
-In-Reply-To: <20250426-imx-se-if-v17-0-0c85155a50d1@nxp.com>
-To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745607704; l=1279;
- i=pankaj.gupta@nxp.com; s=20240523; h=from:subject:message-id;
- bh=C+/byolstUK3qbG2fKo1MZ04D0IETXzzliSh+5Ny0lw=;
- b=euYkG3TPj6trXO8CllL0jzbNjGjY+FsmpyAVFB6UKse8Wpn+NzwkTNu6Pz8khQ2gPlFJfuYk5
- tOuvDf9Z4ZYCS5S6pRVDfyLHfiZucaPEYHL/QyOpeRCSEdc4a02/zma
-X-Developer-Key: i=pankaj.gupta@nxp.com; a=ed25519;
- pk=OA0pBQoupy5lV0XfKzD8B0OOBVB6tpAoIf+0x1bYGRg=
-X-ClientProxiedBy: SGXP274CA0011.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::23)
- To AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMKFi9NT"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e8fd49b85eso40390036d6.0;
+        Fri, 25 Apr 2025 06:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745588368; x=1746193168; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pddyjvz3pULDfi3ouvZGplvqQJKnM1YeL95IMp9tld8=;
+        b=QMKFi9NT63f4gik9FALKUkRhaAHR8FkuWI+iGB4rdxhbEAzsw02hLzQ/RWuBM1o0p+
+         gYkW12t7tgJ96kRwcVlySla3wE+o1tn1erRSiDsCi0ENV5/Od9v2TQmiPRg1IS3qpf5f
+         p7c9PdpHC/pnDD4N1WELyQoqTRAs/Eo+LwXmmE0HENK2LoZKqauuq8RLB8tQqhRAAiIN
+         wMUjcsNt38XTp6l40mRtYoPIv7mOXb7XhRqzMSS2U69QTuMvJrquHWwnJigjRdAjT+/+
+         iCLxOvPL/3l9eqL8zd5qQdunkv6Wd5oe3QjNjYc68DEXtKS0bzOp5PzGkKaD5i6ZZ6wF
+         VyJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745588368; x=1746193168;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pddyjvz3pULDfi3ouvZGplvqQJKnM1YeL95IMp9tld8=;
+        b=NIrFu1IsI2R56RJ73E2krnRxPSajJLR6cLQfzxaxQluz/MpoC+diLDGDECW7Edv5EA
+         ITFp0EMTs6gleOvr04U+dDrAEmWqgcY93hapOv2ttWsFSO7jkIUSmRa+hmQ/nn7EVN0H
+         /oarO0bZD5RrijPr1JsqF6/P8oI/NjMNmzt8zzcsvvGtU75Z9jOt+dzEkTCG8q+m75OK
+         moi0Iy6XDAjGR7/UiSvkLjF7hizTYmMYS1Uh47cwdkXQMF10f/FfjEUD9xpcLfVmfu1Z
+         cZUO/fbUpQ2+x0+cgz/rYa9W7qa0vPL8mOZ+jK+qvv/xohNnqY3yDMTNNmhdHW5DGZbD
+         gVhg==
+X-Forwarded-Encrypted: i=1; AJvYcCU48KTQKCAO6t7/Slxq0uq86TVx7picmexdTCEFNyGXioHBySujw2TBVIH0yj8o0ewmr8N4xPJ89iQbV+HgplI=@vger.kernel.org, AJvYcCXO85A0zF5XodxJlF1jm7SwkzVQbEwW2n+iD0yUFohWQz6muDuWw162mefOmd3E6j+TKtJue0TGpeOeJX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhMu800wPn+rnt6R1QrdLP8IBVeQttkM3KTbG9k7BOCVgVRHYo
+	fWzsg1i7VWvIAOdIAW3BmxdGNVeumRy74yTQMAri1Cv1LK9beivV
+X-Gm-Gg: ASbGnctokv4JDTvmyTTga6yfGZqM7OuEbxDjc16GaRuNwoQw8M5C1j6vtGOLXIEPl3/
+	6piPR7ODUyBx8ochmX2sv4k7MAysrH2U/adAqb+obz7MimA9RbUf+8CzCNhr3UTYue+HMkGjGuE
+	nlzg9M83EtXKISkWBujeJlQnk/Tp/M/zeIH+biCutIheYKt8QSD3yEGEcpoLgm6NUrcFEHECwN3
+	kzqd1RnYZTGW/8Kf94fu4Pe0WIbU1oLIpDSal9tGMabSkoGXb1EK2wbind1AjYuHySc7HtJdxQU
+	FPCsRaFqxY5RV5n3Gm/LyagGwTsFum2OtO+aqU/hLOIalemn1MMemSrZq1t5fXecULA2vQrySTL
+	9JEBh63Kw1c9L6cjKa9PcN75B86aWMyM=
+X-Google-Smtp-Source: AGHT+IEAcAGlywoD4vbgKap1QNe8i8NdSfCJBi9ag6ml/TytN1c3P5xRu3f1gBOvvpbAjlXm5fbBRQ==
+X-Received: by 2002:ad4:5c6e:0:b0:6e8:f99c:7939 with SMTP id 6a1803df08f44-6f4cba62902mr39770506d6.44.1745588368146;
+        Fri, 25 Apr 2025 06:39:28 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c08ef2fdsm22269916d6.17.2025.04.25.06.39.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 06:39:27 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 5509B1200068;
+	Fri, 25 Apr 2025 09:39:27 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 25 Apr 2025 09:39:27 -0400
+X-ME-Sender: <xms:j5ALaMjNTLrReuyDYkUNpKQaCjsVuMzryt5VWXIccoZKJvw7hFeVfA>
+    <xme:j5ALaFBq679trNCasoXqXOJ6rgu_BGFMZ20Te5XG2sP7SN8KxUqoDTlEyLBbc-80K
+    0yBIfOeM6HcFclRNQ>
+X-ME-Received: <xmr:j5ALaEF84JFtyGXk8tH8VWF-BIyNYGK9Dr3bhBstAwxdeabVgMAtXOiN>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvgeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtrodttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeeitdefvefhteeklefgtefhgeelkeefffel
+    vdevhfehueektdevhfettddvteevvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudegpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvg
+    drtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepvh
+    hirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehgrhgvghhk
+    hheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehgrghrhiesgh
+    grrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhm
+    rghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrd
+    hmvgdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:j5ALaNS5BvsyDE2sDyizCLRVMxCFBn50Vwzt27M6V40-L_lBC9jfCA>
+    <xmx:j5ALaJxbhVB-PGT8ppFGyyDiALRGPcUwqfYdOjyxNMSnkOIi3dMgVQ>
+    <xmx:j5ALaL7FzFUB34FmsFaIsSI30lJVbaQIu5dQKGYjV1uQOqPTbhzd0g>
+    <xmx:j5ALaGx3ngNlVAnU7Su3Ow7f_x6ZWW2YA6U0zpO142t-oo6VBlIdlQ>
+    <xmx:j5ALaNitBLIednKn25waJn12qH4SaDbno3w7VcRKrIWcS2pS9GuAFtf9>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 25 Apr 2025 09:39:26 -0400 (EDT)
+Date: Fri, 25 Apr 2025 06:39:25 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uaccess: rust: add strncpy_from_user
+Message-ID: <aAuQjSzatuNoDDXL@Mac.home>
+References: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
+ <680a5f5d.050a0220.2035d2.545b@mx.google.com>
+ <aAtZQkre4KRU2kr1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8604:EE_|DBAPR04MB7253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62ee853d-884f-442b-7197-08dd83fe8a3a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OWNZRlRDb0NTMUx6QWVYN1ZMT0VUU3ZGOUEremZ3bTN1LzhZOHpRNHRUU005?=
- =?utf-8?B?SmZHZjJodmxIWXFBZkl4eTNlNHJyM0NlRWxjazlLamd3SDBzZ211V2VQUndv?=
- =?utf-8?B?NXdKMjhIQ1NMSnpEL0VTYUREcTgzQ2xIQzNjNDFQTDB5eENxanNwUW5uTU1P?=
- =?utf-8?B?eVMwQS8wQTh4cGVtY21rRzIxRG1XbGN3RHVJbDZpSWhWRkhyS2hCRkJtVWlI?=
- =?utf-8?B?QllIK01sVy9qOEZ1YWlORnhyWXJFR3BVMjNJdy83VDRQOWlLTVBKTmI0R3Y3?=
- =?utf-8?B?bXdRUTVpMlJiUmZaMEMzYnJ6eVBXaUtOZzR3THAyd09xNU1oWG1KaG1iK3B0?=
- =?utf-8?B?REtVNWFPSEkvdHozWmNjK1JoYVdqdmxrc21OaGtOM0k0YmtZa2hkN0FzTFNs?=
- =?utf-8?B?UnZ0aWt6SDIxYk5oVmJtaCs3V0dpVkNYcEI2YUlwSzd1alFRRlNRd1RWcUo3?=
- =?utf-8?B?UGw3MXdlb25yOGh0eHN4bGhVRWh1NkM5Nk9aS1pQUHNZUy9MWnVzVmM1SGhT?=
- =?utf-8?B?bnZ0NmswbFZVY3Z6U0k2YlVGaVc2TVVST25WRVhXZDkvQVZ6eUhaQU9YQWVH?=
- =?utf-8?B?cnJiaEZTaVcrTzVKanlITTlvazlXUlVTdjNVYzgwZC9OWmJBTm44bExTMlZH?=
- =?utf-8?B?emdmNitzV2RtZ0s3RlBhcXJyZFBlZkZNZEVTZnhGNXI5VkJydVkvRkhWbVlk?=
- =?utf-8?B?TTYxaU5JUWtmUFBlZWk5T2ZheTlxN0JSeEFWNldDT3BNa3YzVzdVM3ZoTk1Z?=
- =?utf-8?B?Q3BHaFpRWmZtUVEzYjd4SVF5bExnZWJOeDM4RmIyZmRNUHRLQjMyeTA1UHNL?=
- =?utf-8?B?aTVHZ21iZkZFeW52SXIxNTNMaHlNazRyREQrQmZmeFNpSmlEeUpYdTdKR2RW?=
- =?utf-8?B?eGdnbHhmNWRhY2VOeUVBczY2QzBpQWxRblo2dUo1cWZaeXE4MiswOTJnbEx2?=
- =?utf-8?B?U0srdkh1bHkwUitXdzFjVXJPeTNCZm82Ry8zSjUyOTJCeGphZXBlcGliY0RV?=
- =?utf-8?B?N3Q5U2czajJJa0EydlpNZmVwN0tQU0Jqd3piQnZmMk5sSHo1T3pEWllPMjUv?=
- =?utf-8?B?a2ZsakRkdEJKWUVwcFcrTzhHa3JmMnU1Z0x2Z2cyRGZmc294YWR2SG1UOXZx?=
- =?utf-8?B?NDlyMW0yQ3BMYUh1MlRxV0QzS3ZldER2R1Yzc1FseitBNnhiSkthRGllN3ND?=
- =?utf-8?B?UmhuWURrL2tMMUZhTGsyN21VSXgwcFVDbFNnUWhueXZ2Q0lnNHhWenBOMHpF?=
- =?utf-8?B?MVIzYm5iY1lOSUY1eTE3SWMwVmJQRkhMd2g3MGlwalkzSTdjQ3NlWjRnSnNV?=
- =?utf-8?B?VUxXU0NLamVrRGhJNDJualNvSERxaEM3NGNIdmxjK1NXRjJ1ZEtKQjB0cVh0?=
- =?utf-8?B?a1I0ZTR0ckhXbURGL05Eb2RNY2pMQ0F2MEdpaG9DM2Y2eEhhZXh4VENuT2tv?=
- =?utf-8?B?QUlXVjNqWlZsNnFGNUI0RGx5NnYxbmhzR1Y1SzRzb2M4Z0ZPUCtrUjdGR2hW?=
- =?utf-8?B?SHRSLzhDRU1rSnpubkJFb3hxdVlLSCsvSmVtaldPNjM0N3J6U05CYjhwQnlu?=
- =?utf-8?B?VXNtL1ExVHlsZWVUTUtXR2R6c3l3dEo1NVhJOGVUQ0J5TEVRNEEzMVdKcGl4?=
- =?utf-8?B?dDRzTWFCOUtuWS8zOG84eWtreGxFbkNWcXJtTFV5a292aWdqMktTbU1mMnY5?=
- =?utf-8?B?aHdUdTVtWGZhM1J0NUpvWU00RlgrYjhyZllQK1lWRENCZkVXSVFRSXNjaDA4?=
- =?utf-8?B?TG00NDc5OUlPM0VTWjZuZm5BMVU4ZEdKNWJMRS9tcVBUbGxzajE3L0paTFJG?=
- =?utf-8?B?U1VIRVNGWUVvai8wbHB1bGs0RHpiRk5OUFovODNJa3g4QzZtN2JKRXJhYi81?=
- =?utf-8?B?VU5oWDBvcWt6a0tZVWJmRExLWE9LNjZRWU5PN0I4TXpoczhzYzFBcHUrdTJV?=
- =?utf-8?B?eE5uMlRTVE0wZEhnOEx5YkZlSm4wZEVtZ0gvYUZjTWwwaEJGbGV4MjJHSEo2?=
- =?utf-8?B?Si9CR0NQd2t3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bi9XS2FQd0FWMTJyR005ZnlsbUNIVEVVR1MyQk4wVEtUOUFQZVpiL1ByS3BG?=
- =?utf-8?B?WkdUTGNQa09XT2pmVzExc1pUSmJhTUpJYnp0cUV6SEZ0Vk44NGRTU2FJUU5M?=
- =?utf-8?B?bGRibXRvMVBoektuamhyRDNzelJaWWlqYzBOWEhoVFhocHk1R2UvSHNzMm5i?=
- =?utf-8?B?VkR2OWlSODJYK1h3Sm5TVDBWTm15MVk0ZUlSeWx1Mjc5RmdQR3dSYXRMdzFQ?=
- =?utf-8?B?Und2alI2N29WemtNVFdvS3ZsUHFENkJlbDBnMkVqbGNYcGYwUGZWQXFjcjlU?=
- =?utf-8?B?NDN5VFRnNlp0Wk5ycDQ2SHRkN1U1c1dmN0xPZGVDb01KLzFydzFlUlJiSWJr?=
- =?utf-8?B?YlFDNS96eG9QMnlsdlFyWEJ6WmE4QStyL0RNY2hIbGN0eUlhQXZoM3h1ZHpF?=
- =?utf-8?B?T3FmWmM5bzZVWmhCbjFWVEJtc3AvaDFwNzBKM01hOWlMOGg1aTNuZWg1MEZT?=
- =?utf-8?B?eGJZWm5kbU9kUGVjZkFZV2o0MnRBcW9JVjFJcTN1T0V1SE80ZGoyazhneHN1?=
- =?utf-8?B?anBVbHFEL09IUlJTRnYwdWZNZGwzRWpMM2RuWjFtdUxOaHFBc2RJY3ZVem02?=
- =?utf-8?B?TVI0VjgwbVZab2FLTUVaYmZNMlFoNEFMRHNiTmY0S2JtV05MY08rSGRJVnRT?=
- =?utf-8?B?ZnZtZ0N1aEczNjBWNlpMVC8xU3Q0alhHSWJlS3Jpb1E5M3FuZk5WcWZtV21Z?=
- =?utf-8?B?VHVPaHpaMHYxcjJxVzZ4Q0xiNElWSXNqaW1sRlV3V04rNnY4K3dSSHdJWndP?=
- =?utf-8?B?TEF5SFNDa0RhVFdiZ1FScUVwc3E1eVNST0ExY2pqbTB4b3NpZUVxNHRSQWly?=
- =?utf-8?B?MzRFQ2dlWS9WQ041U2pyR01teUl5UW94TElrbDlOTmZMRDdocmNSY0lrK2FO?=
- =?utf-8?B?RXpnS2ZSOC9IUmlQcmEyK0J5WTRLaDAydC8xUmx1UVNJcGh2ZEduNXBIUCtS?=
- =?utf-8?B?bllEK0xqUG1QN2xWeXM5cjA3dTdIVThoZ2xSdmU2ejFPbmJKSWFlWmJnM1Fm?=
- =?utf-8?B?cjQwT05FeHpibjdrMkdQajJiS2tqU3dyVDRXcnl4OTV6Sm1McFN3dUl6ejdz?=
- =?utf-8?B?bVEydkN4N0NrZDgwQnVMUWhkMDBUdXN4RlVQVXBFNjVGcEMzVnlYems4VVFL?=
- =?utf-8?B?MGRNdjA3WHJHeXJwaCthaWRTODlSVHVoMy9qNXdxSHVDU0FmMHBQaUFhVkFp?=
- =?utf-8?B?a3ZSZDE1K0hWaVo2QURvOFFuZXlhQUZyRE9HdzJqb2J5OVdyWHZmalNHb1VB?=
- =?utf-8?B?YllhSnhwNmwvK3ltUUtzRFZlbHU5SWFwZUpJa0J4UUIxbWFFK3lxWGJSRDgy?=
- =?utf-8?B?ZkxNeVJ4SGh0Y2xFQVF6cm1tRTh5cWVWSlBaSE0zeW1Pc1UzWktCaE5BY3FM?=
- =?utf-8?B?cUh2OW5VZWxxM3U3M1B0c0l6eUlsV1JKUnZ2Q2hVL010L0JOQXh5Y2RCQ0xp?=
- =?utf-8?B?OU1wcVpZWVlkZ3BlekFpWkhEbkxYUGE3VG9sbXA1c2xZWGFJbWhsdzM1dVdx?=
- =?utf-8?B?S2M2dFNscXEwdTg5QXFlK0xKNExnbkRDV25LOFR3L1dBUGtUcWM4czRqN3I4?=
- =?utf-8?B?V1I4czJ5eVBPZ1pnMU1QV3dsY3J0UUdRNVl5d1cvaHo4UUxoMkt4RUpNdjE4?=
- =?utf-8?B?eVE0cm9lREpPSWhUc2pUOHdYMGZ1TVg2a2RtT1Nud0NLYjFZR2VINy82QWFk?=
- =?utf-8?B?UmFUdXIxNjBiak5jQWNlZUhkQmxBTjVMT3ZDbWE4aDV1K2R4SXg3LzFMYTRE?=
- =?utf-8?B?ZndyQ1I3RHN4U2g1eXVZZDFLYUpCazJTVCtuSmtoVUxHZWdpNi9DeW9wWjhG?=
- =?utf-8?B?TVNLTVBqVDQycndoeWxNNjRLZy8xMlcrekVLL2t4dGwxTjJzbE16MDA2YlZZ?=
- =?utf-8?B?VmRWUkNFb2pEdm9jdVA4WllJUXpXL3BtZ3Joa2dGK2hxQ1NiMnhub25jTk94?=
- =?utf-8?B?S29vT3dLRUpkalZiMFdLS2YxV2pISGNwLzNpWnJWVitpb3RQTWtKQTRzZGR2?=
- =?utf-8?B?UGluUjdVNFJ1NUtBa0xsZnFldU9zUjRwT0pmMXNrSE51M1BiSkpxUTg5TzFq?=
- =?utf-8?B?bDVmQWxVL3phaHNISmU0c1VUQldMYU8wSlBaSU1GWW0xUjdZMGUyU1VtWkl2?=
- =?utf-8?Q?u3yysvTPCEN5vk3gBMuTikw7R?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62ee853d-884f-442b-7197-08dd83fe8a3a
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 13:39:02.2558
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4YDCsW3ukNjARmSuKgHLZ5Ck5eEoJ4mgNbV2fTJUkBg6QYDoWSDO7VsvVS1OzAFAPzigEuCY+ohSIOwoSgn8uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7253
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAtZQkre4KRU2kr1@google.com>
 
-Reserve 1MB of DDR memory region due to EdgeLock Enclave's hardware
-limitation restricting access to DDR addresses from 0x80000000
-to 0xafffffff.
+On Fri, Apr 25, 2025 at 09:43:30AM +0000, Alice Ryhl wrote:
+> On Thu, Apr 24, 2025 at 08:57:13AM -0700, Boqun Feng wrote:
+> > On Thu, Apr 24, 2025 at 03:17:48PM +0000, Alice Ryhl wrote:
+> > > This is needed for ioctls that operate on a user-provided string.
+> > > 
+> > > It is somewhat unfortunate that strncpy_from_user does not nul-terminate
+> > > the string when the end of `buf` is reached. This implies that we can't
+> > > return a &CStr from the function, since the buffer may not always be
+> > > nul-terminated.
+> > > 
+> > > That said, we could add more convenient helpers on top that add a NUL
+> > > byte in that case.
+> > > 
+> > > This method isn't defined on UserSliceReader because it complicates the
+> > > semantics. The UserSliceReader type also has its own maximum length, so
+> > > we would have to limit the read by that length too.
+> > > 
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > ---
+> > >  rust/kernel/uaccess.rs | 27 +++++++++++++++++++++++++++
+> > >  1 file changed, 27 insertions(+)
+> > > 
+> > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..1bd82045e81ea887008e30241bd6de27f096b639 100644
+> > > --- a/rust/kernel/uaccess.rs
+> > > +++ b/rust/kernel/uaccess.rs
+> > > @@ -369,3 +369,30 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+> > >          Ok(())
+> > >      }
+> > >  }
+> > > +
+> > > +/// Reads a nul-terminated string into `buf` and returns the length.
+> > > +///
+> > > +/// Fails with [`EFAULT`] if the read happens on a bad address. If the end of `buf` is reached,
+> > > +/// then the buffer will not be nul-terminated.
+> > > +#[inline]
+> > > +pub fn strncpy_from_user(ptr: UserPtr, buf: &mut [u8]) -> Result<usize> {
+> > 
+> > Sorry maybe there is an email I'm missing, but could you provide more
+> > context of the usage?
+> > 
+> > First the function name is a bit weird, because the 'n' in "strncpy"
+> > means the parameters should have an 'n' (i.e. length) in it, but there
+> > is none in the Rust version.
+> 
+> There is a length! It's the length of `buf`. It's pretty normal that C
+> methods with a pointer and length become a Rust method with a slice.
+> 
 
-Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8ulp-evk.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+That's exactly the point, no need to reuse a name from C if we have
+something better.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8ulp-evk.dts b/arch/arm64/boot/dts/freescale/imx8ulp-evk.dts
-index 290a49bea2f7..10aaf02f8ea7 100644
---- a/arch/arm64/boot/dts/freescale/imx8ulp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8ulp-evk.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-- * Copyright 2021 NXP
-+ * Copyright 2021, 2025 NXP
-  */
- 
- /dts-v1/;
-@@ -37,6 +37,12 @@ linux,cma {
- 			linux,cma-default;
- 		};
- 
-+		ele_reserved: memory@90000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x90000000 0 0x100000>;
-+			no-map;
-+		};
-+
- 		m33_reserved: noncacheable-section@a8600000 {
- 			reg = <0 0xa8600000 0 0x1000000>;
- 			no-map;
-@@ -259,6 +265,10 @@ &usdhc0 {
- 	status = "okay";
- };
- 
-+&hsm0 {
-+	memory-region = <&ele_reserved>;
-+};
-+
- &fec {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&pinctrl_enet>;
+> The distinction between strcpy and strncpy in my eyes is that strcpy
+> reads until you find a NUL byte, whereas strncpy reads until you find a
+> NUL byte *or* you read a user-specified number of bytes. This method is
+> in the latter category.
+> 
 
--- 
-2.43.0
+Then copy_from_user_until_nul()? Or cstrcpy_from_user()? We should have
+a bit consistent naming on Rust side regardless how C names things IMO.
 
+Regards,
+Boqun
+
+> > Also, we don't need to replicate the
+> > semantics of C here, we could just do a strncpy_from_user(..., ..., len
+> > - 1), where `len` is the len of the `buf`, and then we would always have
+> > a nul-terminated string. But maybe I'm missing something from the usage
+> > side, so this is not doable?
+> 
+> Well, I guess that probably does make sense. I'll update this to always
+> add a nul-terminator.
+> 
+> Alice
