@@ -1,75 +1,51 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5782414830A;
-	Fri, 25 Apr 2025 09:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A55514830A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573154; cv=none; b=WFFSaxmFZRo/xYadpheWC0NR53X4mZjvpvvrT08+fmLvlVoHnGG4QGJT4dmzZc0oG8XNU1GIuAWLNFg3ZjrLCYKyCnt48bd8t0unvoFgMTkcNNiEnOAKq5/0vipPRx8X/fBlXl9JeohhwS9R+1DO726vYsdhbvWsx8Hb3m6XYcY=
+	t=1745573191; cv=none; b=KRxMmz9P/7IXlMjfEFtLuW5JRpicOmz0WiNt2GRYDQPqZ/g0P9V4iTFZplRee9CSVp9Tl0uAD5dowvPIbbVVuqwPkqyXTOvEdEedfQc7Woh6MZYM2xIlbPg8WpiPEXHf3mngkFeSWwmimk2Yo40OoNsT3vKrZlJR1oFrb+JA0UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573154; c=relaxed/simple;
-	bh=QE7mOW26kkySrrmlaEPi+392lADObE2IkVgHPBXseSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hbMc8s2JJeEK9G1isW62DmBEwxk7viqvikn4dceVzt3cO13JomSNKUyctOiNKbOtYBxkmsVJ3nyeCxQhHz9OHDwMsSTufD1rX40/S4beyeXE5KxdOTllMAoZMzOOL/dVF1/GaUax59Mh/SLYFfCD/nObxUPUiemc5fJ8ScPR5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KAQN0fMd; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745573191; c=relaxed/simple;
+	bh=NKsOygsDFjk/xYVp4zbBgAEBu/WNssPzm1S5Aq8AM8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KD8Xudu/3vXJS1CFdAFFawsTUxgjhfC4MzWDQCxMvq6r63AUCZWNLadImWvHofX3hXiD6xpB4h9RbclSaa/oZDCqLHtQWXTMh5H+o8yZVFVG/MxUlAsi4N8ZDasXxHJLc6HVU6/0z5UXzOYwVYysilki6AUpLmHDAzBddyaKqxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=oWIYJ4sP; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAQN0fMd"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-227d6b530d8so21977745ad.3;
-        Fri, 25 Apr 2025 02:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745573152; x=1746177952; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zpw3Rz6u1oBMxe9Q9lkMBXu8OJBxqRuaiGqqfq4qDbw=;
-        b=KAQN0fMdKP2Rod8f54bGhh3EzU6GLijWWgs6tLp4zihn+KUxe9rDA8W73KlVWQOiki
-         rmYKjQ18hoTtx1CfbDS+fR7FglEV+eOU17ydUXb2Cdu0UK4aLVVxoa5JcYD3G9ZRvuyd
-         tkIymLpV46pa6ka6u14U0CCe7+QOQk5BKydw1kQvgQH8GAsr5hH02xoFZX5CTFfAEHQS
-         /Z6S0AIgwGCrximDQIOag0wldktYKQtG13KuzBcfF/nBDAkZgY84+s84UeUOwppXx+mr
-         qdygVKb+k0jDsF8TUyRchDnfNWWTH3oVqnccrTt9PCCfw4cCXQD7Knii4WqhRekFjQjp
-         Gp4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573152; x=1746177952;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Zpw3Rz6u1oBMxe9Q9lkMBXu8OJBxqRuaiGqqfq4qDbw=;
-        b=sGFgdhjvwFMFNIl9OA3uOOFgxfL6XyH+3WZW4hfeDeICOLEgnJzm/lcbxSYMPaX67I
-         8DisOqzjKccXIyDS9FK/u9sOOhoUSib1p/FaeYLwuaYjY24qXQv3l8I116RqFWwjPliU
-         8I4xpn8Im6gVjOG4V2vX1eHvIK+TwMw1cWPDlrawQdg9xHGl4PpTZ9T7RqhQOIwIi4GK
-         fgGkQMuxksYL0wITxHBaMNQe+EnoUO/3ndzHnxXHhFpGSnpsgpRCPz8lpjHoC8RxYRiW
-         R6Xzs1/rqWn4m1J9D8ijKtXPiNdmikKy7klksdvc3+UA8RBizg4Vgk7QEFejeqvJHJa6
-         RufA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzaSR+tPsbV7E2T6Pb4qJtxSVvl/RzwlBdTUVWJmOcY0jVviRlABfrN/G6w7STPvt2u1NM37Nu@vger.kernel.org, AJvYcCWgjmHHChS3ceLLDQUSrcul9TZreYG8ss+mpK77FR2lasrk96UEqGsvIZmGMOJW9gieSFAfcwmMEj2FJLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVV/ICh6SKpcqYqt9VZXCP1KdaEirgxced0Pl029PJAAfzacb4
-	juHad8iZtve7ixKNc2AEhp0fgTvMKPPkExphK03xF5DQ7v0QsznAb5B98A==
-X-Gm-Gg: ASbGncsV2tmjXTJGyRR/ZukSatlVtD7SL0eIF3Shuu0kLXsWEOmZvEtGS7MfPJwTVDn
-	g8D6jkY0ZZTkDdmJR4Q9SireaVacGtNYrLt87bV7kEP5kcJ7exVCL8T69Jp33yd+ugHpqTtE5Gs
-	W7HZlhzfgRNm9jYsr6i8dwudke7gteivfAPcnjtv57JlBv9aLn6uN7UVdx0EXXGYT3qocBtZzjX
-	/qjbKrEMY6X42WTFSJ2at5aFbdfqlgGEA8f5wo0bVJpmH0HgzyWZ4Vaju3Iw+ZCte5/abiSyMRA
-	PlnHdOA3iZuydDvLobxo5miCFcrvOdGGH3Imk2GKN08gE08p/1U=
-X-Google-Smtp-Source: AGHT+IFmqEXNwrDl0Wtkrw1o5U6LcpJDp8+kKb/QGZFXVOu33uoj1+y9CATWTiyXdUUEALy82oDCtQ==
-X-Received: by 2002:a17:903:252:b0:221:7b4a:476c with SMTP id d9443c01a7336-22dbf5f0015mr23441835ad.18.1745573152449;
-        Fri, 25 Apr 2025 02:25:52 -0700 (PDT)
-Received: from VM-16-38-fedora.. ([43.135.149.86])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f7ec0c08sm2494533a12.19.2025.04.25.02.25.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:25:51 -0700 (PDT)
-From: alexjlzheng@gmail.com
-X-Google-Original-From: alexjlzheng@tencent.com
-To: paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	greg@kroah.com,
-	chrisw@osdl.org
-Cc: linux-security-module@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="oWIYJ4sP"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1745573181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qtgU1WOXpOKgLGgZrNJLTIThCMPkblkediAeOcnKwxc=;
+	b=oWIYJ4sP2DQejiriCy+X853nBC07WvAU2/mW0mAkccyyiFTMK0Ndk3bYoDowxudxe+82kJ
+	uHu9QtMrjKt6Pg97/+BA4FIpd6XL2T2nJRr0J3jCUBuSzKUMhBj9vHKwkFoZ/ubpXSTJ9/
+	/20qn/eHopqpOOZdXID7eaWapvAEfjdX8qNu67Vh5likLF3e2ITcz/7CKqe3eKi775kIbX
+	TiNgnVHZB5fHfs4KY/VM6Juk1lF6jLIZG9anh3imLgQNbG8FIWUWXZuBizvvXDgYjiTSxB
+	UZtPPuMDNUr1TWP4SoiTtRhd+KdwiioNP62GrRkBp6b2nv6zyOCKOfFZO2EBLg==
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Dragan Simic <dsimic@manjaro.org>,
+	Dang Huynh <danct12@riseup.net>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Jinliang Zheng <alexjlzheng@tencent.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] securityfs: fix missing of d_delete() in securityfs_remove()
-Date: Fri, 25 Apr 2025 17:25:48 +0800
-Message-ID: <20250425092548.6828-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.49.0
+	Diederik de Haas <didi.debian@cknow.org>
+Subject: [PATCH 0/4] Add vcc-supply to SPI flash on Pine64 devices + Rock 5B
+Date: Fri, 25 Apr 2025 10:44:40 +0200
+Message-ID: <20250425092601.56549-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,55 +53,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Jinliang Zheng <alexjlzheng@tencent.com>
+The vcc-supply property was added to "jedec,spi-nor" binding in commit:
+e7f4e924f46d ("dt-bindings: mtd: jedec,spi-nor: add optional vcc-supply")
 
-Consider the following module code:
+which resulted in the following warning:
+  spi-nor spiN.0: supply vcc not found, using dummy regulator
 
-  static struct dentry *dentry;
+Fix that by specifying the vcc-supply property.
 
-  static int __init securityfs_test_init(void)
-  {
-          dentry = securityfs_create_dir("standon", NULL);
-          return PTR_ERR(dentry);
-  }
+Diederik de Haas (4):
+  arm64: dts: rockchip: Add vcc-supply to SPI flash on rk3328-rock64
+  arm64: dts: rockchip: Add vcc-supply to SPI flash on rk3399-rockpro64
+  arm64: dts: rockchip: Add vcc-supply to SPI flash on rk3566-pinetab2
+  arm64: dts: rockchip: Add vcc-supply to SPI flash on rk3588-rock-5b
 
-  static void __exit securityfs_test_exit(void)
-  {
-          securityfs_remove(dentry);
-  }
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts     | 1 +
+ arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi | 1 +
+ arch/arm64/boot/dts/rockchip/rk3566-pinetab2.dtsi  | 1 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    | 1 +
+ 4 files changed, 4 insertions(+)
 
-  module_init(securityfs_test_init);
-  module_exit(securityfs_test_exit);
-
-and then:
-
-  insmod /path/to/thismodule
-  cd /sys/kernel/security/standon     <- we hold 'standon'
-  rmmod thismodule                    <- 'standon' don't go away
-  insmod /path/to/thismodule          <- Failed: File exists!
-
-Fix this by adding d_delete() in securityfs_remove().
-
-Fixes: b67dbf9d4c198 ("[PATCH] add securityfs for all LSMs to use")
-Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-Cc: <stable@vger.kernel.org>
----
- security/inode.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/security/inode.c b/security/inode.c
-index da3ab44c8e57..d99baf26350a 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -306,6 +306,7 @@ void securityfs_remove(struct dentry *dentry)
- 			simple_rmdir(dir, dentry);
- 		else
- 			simple_unlink(dir, dentry);
-+		d_delete(dentry);
- 		dput(dentry);
- 	}
- 	inode_unlock(dir);
 -- 
 2.49.0
 
