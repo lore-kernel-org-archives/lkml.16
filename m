@@ -1,218 +1,203 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CBE21ABA7
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327BF1FC0FE;
+	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617762; cv=none; b=HmrS9WIQ+qiv+VErr1U7skj6k3GeZtod+kvPGcIeiXhz/Np7LBPXs6zooNTQMkmSVLEvgqBG9kE7ucAtohB0exSK7xM5xlx5IHp8bOmfX/eXL9SXB2tfW36gNhewog9mXJkROGBuSKGXLxm2K+MNYh0MyFmGCyQyjeBv/SPK9Pc=
+	t=1745617895; cv=none; b=WTudG5MfXPWxlU7BMearAWCuzvCnDCorq1UH4u3+zpzEqF1Y/p/BfyWofCtlZxmQRwAaqERe9rKrev6sfXwrDh1CtILiN3nF15ybAYTSrXEh3+kUtcpWpzPNsja5gtmOACczYpzsFLLWkipqC2yzW2wEaIuZhUaypvDy/w2DaY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617762; c=relaxed/simple;
-	bh=jozrC8ALKXE/Sx+4V/NhfP3zJRrKkx5q5cBTgMlYmb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r6keAAPPpkgKKC/z8JGwM3GleP+Th61Ank2xBWXMtNJ17IgxRleh/f3boLMGDmYtRbpde6irnLnpMPWi9kR/gPynzz++98UVGHbtQqGEisvpVeClBlkE5gKRA7kXE/M5NfEnL4BJPYhzFqyFz9GpJSqoCdmVLOjEWtaJsN8hpcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R3KCzmNr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745617895; c=relaxed/simple;
+	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bclAru4UwCn7m7fboBCpUxIIkwxD22+86eMlhTU7rGw59ucZ5vYWyupIl/fJq827hM7CwW5UAg0sW/GXAKMI83qsI591Aw14hd3sPLZWOWpEoe4N5Zt/4MGqkKfUW+2yxq0wvlDpR//T6WxDBsJfP6kdXK5NqrAhEkYgX2SHmZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXVu+k+l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R3KCzmNr"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJtIs007904
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:49:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pqttNioS7MEhlEyeR5tyyWNtOjjWlwl8TrfEkoHr4Ds=; b=R3KCzmNrXjv4yB1Z
-	NAY+Pru2HGVjfLGDRtTjnQZYCg+hBPXnfDnlT7JhozGnoNvo/siglLBK8wnt+aF/
-	0KmPZVYhmVga2eHmC7olyotc9QHU3t/ODGRBFguIk+fePalCNdFnuws2otaalWiX
-	qv9R3a5FFaPLGLBLXEGwLNTVjjyjPb76Dv2QhiozWND0xQz9voJaI25vLAwHPKRC
-	Huj2IKWwMl2oGjF88APbuBlHS/QJc2joLAnUDeXbPvmGWvUhtL2jA+cUJIjLFewO
-	lm2/Zt648e2HZbFbs0T6z+jEW+m70vWOt3zP2fCi07a8BTKYBQU2hsEmIlY3tw6p
-	7dPNng==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2jeac-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:49:18 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-476a4a83106so2167061cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:49:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745617757; x=1746222557;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pqttNioS7MEhlEyeR5tyyWNtOjjWlwl8TrfEkoHr4Ds=;
-        b=gUiWUF4wzxHymBtlOm072vD902g68cYPwP+vQwze6BND21DF6W38naddfmWmuEsp3k
-         n61Y94LOZibYFAT36YOR4O15RpYTvBwvkCesDTYnfVYx22evgE6jIkwueO0d/9bsa5ac
-         FqlPViQeQHavdpPKR9yYSEWY8C5xRL7dqPlq2JblwIEXxL6kSuTlK+Mhu0xrl97zicLL
-         IiUeY+GDewNfgSR3tPS9HpvXv1ufOVBinvaL7b4F/VvN8exhVPvKznpJdrKbHun4WIpA
-         ZyT+7AMlnVBi1t4ukEQGiuAQ6tU4K9bVRaLCKObAUXR7AwE5sRXG4oErpgJIBlqroez7
-         WYZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLg3XZ+mRhKfuKheDQafgNKvww0cVe7/Ewic2XAk+ZhyAQaFtVqrJ7cK3zCWlel6fEQeu1RO9Cd6PWLwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBFzU15q/AngGSd8UEJWqKzY/4h/jX4jBhSWlsUXvH1kbEc+nE
-	1Xs9Ra3GqqoLgBctw22Loj3OMemlEUJcIKxDKgWsEX0zmhSk2wh5xfR3d/8fA9TU5IYeD3/yZmp
-	3dGM1lJd+yepKAAeMZ6s258TDsQTbsgF+k7C40xxIuayS1xdYv8l3U35Sg0x1DvM=
-X-Gm-Gg: ASbGncs5TBvkLZ7W/fBYRinPQy7+ZroZpLd869MSDLV/iuLlugjFe/8k5EmgOAqz9Z3
-	/WHx8y58iCHtkAayy/De8QW9UHDAak80CGZjH9nEe9fxMHnOdz3/E1IBTfbIqm7SpjBwha73MV9
-	Gb6zbdJNrpqnWktFtyKxe4a2DI9YTR9SVbm37syuLOCb5MhXhYuq6f4WmIf3dBqUw7driaOuVo8
-	S8/4V+KltX9N2bONL47IqoEGcUbQ7MQq8+G/TkhjKrSBzTL8Eu95bjy9ZzdKVQEzjpHYaShHGSX
-	N867o/23EgNCukecrmkB7RM2XKS2Bx1fj6kVJO4Jq78/8ueQZJWWcFX8sZUgmxVDqiY=
-X-Received: by 2002:ac8:5f8c:0:b0:474:f601:c21e with SMTP id d75a77b69052e-4801c9843damr22042681cf.5.1745617757158;
-        Fri, 25 Apr 2025 14:49:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJCIrI78Ob/2klFmqnEr49+IpnLEJ2W1gl5FH3vfPAl6chnS3piYqnr6Wnwi9TWiuuQ4mecg==
-X-Received: by 2002:ac8:5f8c:0:b0:474:f601:c21e with SMTP id d75a77b69052e-4801c9843damr22042591cf.5.1745617756834;
-        Fri, 25 Apr 2025 14:49:16 -0700 (PDT)
-Received: from [192.168.65.156] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e5963fesm194044266b.81.2025.04.25.14.49.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 14:49:16 -0700 (PDT)
-Message-ID: <3498cfda-a738-449d-9d9f-754bbc8125c2@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 23:49:14 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXVu+k+l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9D4C4CEE4;
+	Fri, 25 Apr 2025 21:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745617893;
+	bh=xh1HvSuuUw/U72US+gvLZ4Kex52fTf141EDnd1VUDD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cXVu+k+la7gq52onV+AVCt/AUgAofpFfu4riRWLuEAqy7dlYRVsMixSF3nuFrFLO1
+	 cgkHhux3Jt3RRShIOySpWH9teWmMV/x2BO5PwfL4MVTWe6hZlhzX5XwtDTpHHuFtYd
+	 0MyTnsJo5qNagQmi6guwSidwRKH27NPBgEEheaYPqCuc7g46F5I/M+fgahVOjw+LEF
+	 l2/clbpIjNwvW6o3nevfgYuRLarcYLETJtyvGr34F9rI8I3PXry3wEdLT4rLYBCLzv
+	 uM4AlfusDhMZTSE/svCo66iN1s1ej/tlEY6xy5F6zq6E/smYM506DtiuTBt4DDi2RT
+	 gRcF1NHQu8GbA==
+Date: Fri, 25 Apr 2025 14:51:30 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
+Message-ID: <aAwD4idaGnTiQ-ld@google.com>
+References: <20250326044001.3503432-1-namhyung@kernel.org>
+ <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
+ <aAkUyFjRFLkS170u@x1>
+ <aAkmY0hLXarmCSIA@google.com>
+ <aAlSqGN9Sx4x6_sI@x1>
+ <aAq16LWBIVr08iSe@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: qcom: sm8650: add iris DT node
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250424-topic-sm8x50-upstream-iris-8650-dt-v2-1-dd9108bf587f@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250424-topic-sm8x50-upstream-iris-8650-dt-v2-1-dd9108bf587f@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: fVctxWJ8QL4B_aG24tTRGkT9TAc469xF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE1NiBTYWx0ZWRfXxBIm4HecwlA2 mzAv9SNKekaRI+LglOW4GqvLr8geQly+cOx86wzqWoKlur2YNH1B0W33hZ1xGs4xQfE4SQZAHXG +2lSkY+ok2l4aVOCX9dQrXzI/ORuDBxwVuMCNIGi2h7G8UO4ahbAYaMNpYXVSEtms3REYnEJfEH
- /IoOSOanrZvFh5ZowPv5+9p+U6i6NKsJ8A3eJOS26P+kD3WOtqJxFQN6kSwxmijfE5+UyZpwL4N si6JloI6wwl0SJnSWJxiYJt/2bllN7Ujq/zVsLuSUV5F34yY607W7Cxki7qGAwLmy4lTRGVZc0f xoV1xpJEQBM0gWia7/Blz1YudvV9kQrYO+RWkqhbPJgHOtsA4JcUYZvH5WEVRpbJh/RsXYi7KKq
- THucpfOjWLvZT6QXGVejtA/BocJDb6Hip0dXOSPtHbVHqFMHqukoEIMoiOrBXzenlWI5FOii
-X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=680c035e cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=MuPQQqiwDrxPnYpOdO4A:9 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: fVctxWJ8QL4B_aG24tTRGkT9TAc469xF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_07,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250156
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAq16LWBIVr08iSe@x1>
 
-On 4/24/25 6:32 PM, Neil Armstrong wrote:
-> Add DT entries for the sm8650 iris decoder.
+Hi Arnaldo,
+
+On Thu, Apr 24, 2025 at 07:06:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Apr 23, 2025 at 05:50:51PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
+> > > On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
+> > > > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > >      syscall            calls  errors  total       min       avg       max       stddev
 > 
-> Since the firmware is required to be signed, only enable
-> on Qualcomm development boards where the firmware is
-> available.
+> > > > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
+> > > > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
+> > > > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
+> > > > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
+> > > > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
+> > > > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
+> > > > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
+> > > > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
+> > > > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
+> > > > > >      ...
 > 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-> Changes in v2:
-> - removed useless firmware-name
-> - Link to v1: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org
-> ---
+> > > > I added the following to align sched_[gs]etaffinity,
+> 
+> > > Thanks for processing the patch and updating this.  But I'm afraid there
+> > > are more syscalls with longer names and this is not the only place to
+> > > print the syscall names.  Also I think we need to update length of the
+> > > time fields.  So I prefer handling them in a separate patch later.
+>  
+> > Fair enough, I'm leaving the patch as-is.
+> 
+> But, still have to look at this:
+> 
+> toolsbuilder@five:~$ time dm
+>    1   114.52 almalinux:8                   : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-26) , clang version 18.1.8 (Red Hat 18.1.8-1.module_el8.10.0+3903+ca21d481) flex 2.6.1
+>    2   111.09 almalinux:9                   : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 18.1.8 (AlmaLinux OS Foundation 18.1.8-3.el9) flex 2.6.4
+>    3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
+> WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
+>    132.71 almalinux:9-i386              : Ok   gcc (GCC) 11.4.1 20231218 (Red Hat 11.4.1-3) , clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9) flex 2.6.4
+>    4    21.54 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
+>     bpf-trace-summary.c:(.text+0xf0760): undefined reference to `syscalltbl__name'
+>     collect2: error: ld returned 1 exit status
+>    5    16.50 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
+>     bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
+>     collect2: error: ld returned 1 exit status
+> 
+> More info:
+> 
+> perf-6.15.0-rc2/HEAD
+> perf-6.15.0-rc2/PERF-VERSION-FILE
+> BUILD_TARBALL_HEAD=24c0c35d4640052c61ed539a777bd3bd60d62bbf
+> Using built-in specs.
+> COLLECT_GCC=gcc
+> COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-alpine-linux-musl/12.2.1/lto-wrapper
+> Target: x86_64-alpine-linux-musl
+> Configured with: /home/buildozer/aports/main/gcc/src/gcc-12-20220924/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --target=x86_64-alpine-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-default-ssp --enable-languages=c,c++,d,objc,go,fortran,ada --disable-libssp --disable-libsanitizer --enable-shared --enable-threads --enable-tls --with-bugurl=https://gitlab.alpinelinux.org/alpine/aports/-/issues --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpine 12.2.1_git20220924-r4'
+> Thread model: posix
+> Supported LTO compression algorithms: zlib
+> gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
+> + make 'NO_LIBTRACEEVENT=1' 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf'
+> make: Entering directory '/git/perf-6.15.0-rc2/tools/perf'
+>   BUILD:   Doing 'make -j28' parallel build
+> Warning: Skipped check-headers due to missing ../../include
+> Makefile.config:563: No elfutils/debuginfod.h found, no debuginfo server support, please install libdebuginfod-dev/elfutils-debuginfod-client-devel or equivalent
+> Makefile.config:605: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
+> Makefile.config:1085: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+> Makefile.config:1128: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
+> Makefile.config:1159: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+> 
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ OFF ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+> 
+>   PERF_VERSION = 6.15.rc2.g24c0c35d4640
+>   GEN     /tmp/build/perf/common-cmds.h
+>   GEN     /tmp/build/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+>   GEN     perf-archive
+>   GEN     perf-iostat
+> <SNIP>
+>   CC      /tmp/build/perf/util/bpf-filter-flex.o
+>   LD      /tmp/build/perf/util/perf-util-in.o
+>   LD      /tmp/build/perf/perf-util-in.o
+>   AR      /tmp/build/perf/libperf-util.a
+>   CC      /tmp/build/perf/pmu-events/pmu-events.o
+>   LD      /tmp/build/perf/pmu-events/pmu-events-in.o
+>   AR      /tmp/build/perf/libpmu-events.a
+>   LINK    /tmp/build/perf/perf
+>   GEN     /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so
+> /usr/lib/gcc/x86_64-alpine-linux-musl/12.2.1/../../../../x86_64-alpine-linux-musl/bin/ld: /tmp/build/perf/libperf-util.a(perf-util-in.o): in function `print_common_stats':
+> bpf-trace-summary.c:(.text+0xf2020): undefined reference to `syscalltbl__name'
+> collect2: error: ld returned 1 exit status
+> make[2]: *** [Makefile.perf:804: /tmp/build/perf/perf] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> make: *** [Makefile:76: all] Error 2
+> make: Leaving directory '/git/perf-6.15.0-rc2/tools/perf'
+> + exit 1
+> toolsbuilder@five:~$ 
+> 
+> I'll take a look tomorrow.
 
-[...]
+Thanks for the report.  I think it's because syscalltbl.c depends on
+CONFIG_TRACE but bpf-trace-summary depends on CONFIG_PERF_BPF_SKEL.
 
-> +		iris: video-codec@aa00000 {
-> +			compatible = "qcom,sm8650-iris";
-> +			reg = <0 0x0aa00000 0 0xf0000>;
-> +
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
-> +
-> +			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-> +					<&videocc VIDEO_CC_MVS0_GDSC>,
-> +					<&rpmhpd RPMHPD_MXC>,
-> +					<&rpmhpd RPMHPD_MMCX>;
-> +			power-domain-names = "venus",
-> +					     "vcodec0",
-> +					     "mxc",
-> +					     "mmcx";
-> +
-> +			operating-points-v2 = <&iris_opp_table>;
-> +
-> +			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-> +				 <&videocc VIDEO_CC_MVS0C_CLK>,
-> +				 <&videocc VIDEO_CC_MVS0_CLK>;
-> +			clock-names = "iface",
-> +				      "core",
-> +				      "vcodec0_core";
-> +
-> +			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-> +					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-> +					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "cpu-cfg",
-> +					     "video-mem";
-> +
-> +			/* FW load region */
+In the future, I'd like to get rid of dependency to libtraceevent in
+perf trace and make it possible to use BPF/BTF only.
 
-I don't think this comment brings value
+How about this?
 
-> +			memory-region = <&video_mem>;
-> +
-> +			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>,
-> +				 <&videocc VIDEO_CC_XO_CLK_ARES>,
-> +				 <&videocc VIDEO_CC_MVS0C_CLK_ARES>;
-> +			reset-names = "bus",
-> +				      "xo",
-> +				      "core";
-> +
-> +			iommus = <&apps_smmu 0x1940 0>,
-> +				 <&apps_smmu 0x1947 0>;
+Thanks,
+Namhyung
 
-I think you may also need 0x1942 0x0 (please also make the second value / SMR
-mask hex)> +
-> +			dma-coherent;
-> +
-> +			/*
-> +			 * IRIS firmware is signed by vendors, only
-> +			 * enable in boards where the proper signed firmware
-> +			 * is available.
-> +			 */
 
-Here's to another angry media article :(
+---8<---
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 4f00cde8c3ea63eb..7ae5b4b9330af0ce 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -173,9 +173,12 @@ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_off_cpu.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-flex.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-filter-bison.o
+-perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += btf.o
+ 
++ifeq ($(CONFIG_TRACE),y)
++  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf-trace-summary.o
++endif
++
+ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+   perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
+ endif
 
-Please keep Iris enabled.. Vikash reassured me this is not an
-issue until the user attempts to use the decoder [1], and reading
-the code myself I come to the same conclusion (though I haven't given
-it a smoke test - please do that yourself, as you seem to have a better
-set up with these platforms).
-
-If the userland is sane, it should throw an error and defer to CPU
-decoding.
-
-This is >>unlike venus<< which if lacking firmware at probe (i.e. boot)
-would prevent .sync_state
-
-[1] https://lore.kernel.org/linux-arm-msm/98a35a51-6351-5ebb-4207-0004e89682eb@quicinc.com/
-
-[...]
-
-> +
-> +				opp-480000000 {
-> +					opp-hz = /bits/ 64 <480000000>;
-> +					required-opps = <&rpmhpd_opp_turbo>,
-> +							<&rpmhpd_opp_turbo>;
-
-nom (nom nom nom nom nom)
-
-> +				};
-> +
-> +				opp-533333334 {
-> +					opp-hz = /bits/ 64 <533333334>;
-> +					required-opps = <&rpmhpd_opp_turbo_l1>,
-> +							<&rpmhpd_opp_turbo_l1>;
-
-turbo
-
-Konrad
