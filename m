@@ -1,88 +1,116 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4ED38FA6
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD901A08AF
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745584727; cv=none; b=UVTigNqg77kKALgxHUREw7w6NAp/a6kApa66f6mZINyooD90rLVKb8gxLQLrMt0q6VJcA60e68tu0S+Uen7QCMY5GFD8+lmkB1siepqEz9p/JeijK+esnKUGJIK7LoUhrmXd7crISBcjls1/X+MgwiEvBQg01wMyRTGbfGvfqgs=
+	t=1745584728; cv=none; b=r2tcEOZ6ob43Nxso8uPijM2Qer+wsyWTfhBws950auULVki/E+KxvzWo75gdCd+g+GL00KaWS4o2iD5p1vAUkSSIDyr8Seff2JD1qbFmmSRF5bvJuv5rgKNrNp1RySf4UPqH9kyr+JbbpIaihtdgA0tu/K6W42MJyNCpegpOr/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745584727; c=relaxed/simple;
-	bh=UaEHjkrav58QzWEQYJ3psAW3X/7Q8vaktivABWGQcAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VQ3CcZJeX10gg7kF/ekJ9+n0GDH2wl/3HoQe6fwkLPlcK49IR4IevRvZxHMqJp6cNHoGMK2Ua01U9cVYuwgqEd7QQbrmv6bvV31s2D38axfTmqs9TJUPJDGRp3AYeqABWAV/FBBJqHIHU5rzDRyKkdj/SslcCIm0hnLK9mOhtE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1CZVFk+W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uvV9jF02; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745584728; c=relaxed/simple;
+	bh=jG0Woov0KZX/71eFaFKuHJOjEOdv2sAsWPlyXv4qKmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=anRSINy2eG0ScB+pwluAbdIpDKEKLCQauCZbaUbRX2+4ZyO3FIt7P9pMvBg70TkxmGSOIVERVnKDRemqSQaXSVKEIdvDHRd//j8VlrRJ9Ps+o0h5QG1t7BuAAbivFRnemrKfS0IMFb20QUAAHVN34uQRlZK/plMuK4vLJJxzVyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=V2z2jc7o; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1CZVFk+W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uvV9jF02"
-Date: Fri, 25 Apr 2025 14:38:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745584723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BZPyv4uLm5m3lXM60eeBAr4Pa+FEkY9VUO/+vDhA2yc=;
-	b=1CZVFk+WgcPK0XTsQZeAunbgSImetLhsoemPz2Kb8gWyMQb1tVcgvWiAIchz8/KaReQz7r
-	t16SJI16RlN6LrUnoKM3imcJK5xtMg0CyKw/sPX27aXpUXy5Fd6wuZQVUQX/ZbTbx3thuf
-	MfLGnOE/BufmUbHRy4Tl2GeQ/hHSltNzzasyWv7QIejULq9teCtGay81sXdQlRV1CbaGUm
-	gIMHRm7NQS4XQ8tMyZHwz5ROGG6Vl1NqvHBxR/K8ZUcHLchMPzO0shx1JtKsegIvIhMd1m
-	pLBBEEnqq86k4Xb4WqD5db/pezRAQFyPQcuiYbzW4qXZkw15fSy11WnL65C7Eg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745584723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BZPyv4uLm5m3lXM60eeBAr4Pa+FEkY9VUO/+vDhA2yc=;
-	b=uvV9jF02bncF/kDggrxemt3avEtt6IamggWWaLp328TjyEhiNVI8+r40LaZNc5N2HFORQq
-	PtaQyTaD8O9eK9AA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Junxiao Chang <junxiao.chang@intel.com>
-Cc: tomas.winkler@intel.com, Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>,
-	Vitaly Lubart <vitaly.lubart@intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	furong.zhou@intel.com
-Subject: Re: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq
- disabled context
-Message-ID: <20250425123842.pXx0RJJU@linutronix.de>
-References: <20250424065609.624457-1-junxiao.chang@intel.com>
- <20250425120444.642779-1-junxiao.chang@intel.com>
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="V2z2jc7o"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85b5e49615aso221076239f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1745584726; x=1746189526; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y49ecCcPZ27vKY56UjG6VNDfh5EOeWUeZzzvy6PanTw=;
+        b=V2z2jc7o7Fig3LRgt42oIGvxeQ1Zja4vsoXpFl5OgLS/iyIqu9ZMMp2hFrZvdeq/Eu
+         MNZmzEwLnPt1inkFQJDrbGYa/N2zXWBNCSCBGpoCCy8m0DMg3CdViUKwOnAILvtEMKc4
+         3hZlJmoG7pY6pdbfy0ipkOdwymegrPQIKEL38+Tbg9m0CsOGqnrSUZHbIi82DJx8AuQc
+         l45MJPWwG645SsOTDNlRX/rUeLLNaIa5VWAOGqq0lnP8pUF7pEwkKoUbb51TRbFc1DTV
+         4lnhwMsuj8GKQCP2H0pJZpWTG+HROo5CxkTUD1LvHk9K/Xc09Tshb1mIUtDXDIflyqAj
+         BXSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745584726; x=1746189526;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y49ecCcPZ27vKY56UjG6VNDfh5EOeWUeZzzvy6PanTw=;
+        b=fx4oXTYYWvtKx+JJiMVCIq8PjfX0nI4UKerWY39WcpZBMbPpSoCzYgCeSsZTPRQkd/
+         vqGlRN5Tb4M1lTJFqmvml5AT4C4mh+yGc2PI0f3teKKqShPnrVq7Faa+jqbRb7cb6DQF
+         JmnYlGX6o8T6zOHPQuVm8pZDpZw/28ygDavZpZxTyXQweab0waKALJ+kVbSpSMuJNopW
+         dA/Vzrlavoa3SUs3EgNYRdsTgjYE8l+qqDbEPPt8737Hj/YtKLw9XQz5IB5bNk8k/K96
+         S7vHshmYVqVx8h36Fr+zSfdgLA1OfeFMAwuhmQMFvNEPfdfEHCeO3yM2lkN52pxw2im+
+         cjKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVu/qzhBjiL4lTo0IHQy/hYEBNSDU8IU0uMIPNnSDt478zhsGNn4vI9+8STc8eg3NiWowOQmrOs3o2qv4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz9N15DrYVltSYDbBJd3THQdbNnJ9ZjlBVBWOrwIa7bX0qpAyu
+	Q4aly3ZL9dyM/o+rwLEIQE6EL0lmiyEVc1susznGdi3DCCbtUhqDfoNDKeF6tkXY0De493hu9y6
+	6Vghgq9UmE0L1zuDk5UXZ0McvBdFV6u8Op8LYtw==
+X-Gm-Gg: ASbGncsYmSKWtnRPtEkWfxzvCJF+NrCNh1qUxRE04Dg98UcXFgEQfHlRovDOz2g3wqK
+	HB87xH1wufK4F6D2iw0T773VrMqKtlyWDKJS/x+7jVol1CBqhx+mBF2gecGJdEoNiXPkZZIgAgV
+	MJ1hNzm/pHNjEpmV8rC3V2cbx4QwO8Nw6SHg==
+X-Google-Smtp-Source: AGHT+IHCBpc2B5Wy9lcw08NfHNFF6DJA1zf4wJ9kwK39XfuRau2F7l0ThkxP7bLnPHEwO5HGzNURDb7ye8N+KXdSdhA=
+X-Received: by 2002:a05:6e02:160c:b0:3a7:88f2:cfa9 with SMTP id
+ e9e14a558f8ab-3d93b46c840mr18166585ab.11.1745584725718; Fri, 25 Apr 2025
+ 05:38:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250425120444.642779-1-junxiao.chang@intel.com>
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com> <20250403112522.1566629-8-rkrcmar@ventanamicro.com>
+In-Reply-To: <20250403112522.1566629-8-rkrcmar@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 25 Apr 2025 18:08:32 +0530
+X-Gm-Features: ATxdqUGBDZlnKKA6uFKMGKbX7_uvZC9RQt2w-oNtOWxKHL92YM2ym7Hd58gV9nQ
+Message-ID: <CAAhSdy0+C34zZbYR3_B9x6xHihwfLxeTBOfrdRfLRjFUN=78gA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] KVM: RISC-V: reset smstateen CSRs
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
+	Mayuresh Chitale <mchitale@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-25 20:04:43 [+0800], Junxiao Chang wrote:
-> --- a/drivers/gpu/drm/i915/gt/intel_gsc.c
-> +++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
-> @@ -284,7 +284,8 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
->  	if (gt->gsc.intf[intf_id].irq < 0)
->  		return;
->  
-> -	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
-> +	ret = generic_handle_irq_safe(gt->gsc.intf[intf_id].irq);
-> +
+On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar=
+@ventanamicro.com> wrote:
+>
+> Not resetting smstateen is a potential security hole, because VU might
+> be able to access state that VS does not properly context-switch.
+>
+> Fixes: 81f0f314fec9 ("RISCV: KVM: Add sstateen0 context save/restore")
+> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
 
-that extra line looks odd, other than that
-Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+This should be the first patch of the series which can
+be applied independently.
 
->  	if (ret)
->  		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
->  }
+I have rebased and queued it as a fix for Linux-6.15.
 
-Sebastian
+Regards,
+Anup
+
+> ---
+>  arch/riscv/kvm/vcpu.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index 4578863a39e3..ac0fa50bc489 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -65,6 +65,7 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcp=
+u *vcpu)
+>
+>         memset(cntx, 0, sizeof(*cntx));
+>         memset(csr, 0, sizeof(*csr));
+> +       memset(&vcpu->arch.smstateen_csr, 0, sizeof(vcpu->arch.smstateen_=
+csr));
+>
+>         /* Restore datap as it's not a part of the guest context. */
+>         cntx->vector.datap =3D vector_datap;
+> --
+> 2.48.1
+>
