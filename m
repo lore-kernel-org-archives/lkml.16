@@ -1,41 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8584C6E;
-	Fri, 25 Apr 2025 14:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CE54C6E;
+	Fri, 25 Apr 2025 14:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592867; cv=none; b=bt1zmWDFfUlUpCo/l0e7A9vNonW3AU9pbbW4VqHxUY1jwbdgq5jxLj+VvfCGHRMse7+crxOHrjMg9SaSY439cFn3qXV0yQQJt1lucAbllf5YP7LtA2vmzo+7Qget7yZzrWaKmu43J4+wJfxD5FOa4Sc6oDvAf7BkRiRPGzDZXb4=
+	t=1745592884; cv=none; b=svHp1T8XezSyqIjDKP5B4NOmw2XgBtBrXJqEenhtxKaiYooyMotEf/apdHiF7AFoymvEpVsn0dRNbZY/fylPZOe8X7SSEJ5dzkH9mjfpZRhI92FzNVGTRYRRiiVN3VUJ7zJaRMIyNND3zvUT5SyyxD4/GdOExzOWZ2neLM934NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592867; c=relaxed/simple;
-	bh=fsjtFMIR/hiClwpGcJKvd9UaGF67MFSWOjljj3tLchs=;
+	s=arc-20240116; t=1745592884; c=relaxed/simple;
+	bh=RvPz9P/xWFbjN4R/44F2CD5ntYfESh0QayO1nYK55/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+0HbnklHN6QGFt6FxSr618lY5yBqRFqEi/yasw4G1Nszl7G2+ktVTS2PjrwmD2705PTpW7NrKLYeLnLw27eZTQSVn8XYYAI0z+4xNO2BoKi72puF6dPYxKgvPiaMtHsBJAyuLrbeDu0pmucHHAH66m0+6f5lbx0928iTVGgaVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlZWXdtX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=chFBPZe3uiM2mbmaOMWx6sx8Th4nKyZ8Zz8E+5h7Wx+LAKd07VeKjdELoUM8VRp7kvvUjqJv+oaw3XwO5loFn+g33Fbl1Q7BdIiRk5Eqr2Sgde48KluVDxUEHNqz3gjbEZKqjNeyzhbg025D1rX51UpNT/qJbwnC5yGx0h77uAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oqloO3x5; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlZWXdtX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ADD0C4CEE4;
-	Fri, 25 Apr 2025 14:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745592866;
-	bh=fsjtFMIR/hiClwpGcJKvd9UaGF67MFSWOjljj3tLchs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mlZWXdtX9Kh+wZPRVeqyCme36yWI5Xbm1vyzOqltGE8XjumbacDir8FCssNtqrF0J
-	 F1uabKh2Z+CI7CCYDskUTBoNiwOH1RBLfDbooG1aVRiLxYk1l7pKavEBsAKm5WT3p3
-	 JnwBg/TRRBEix3ZKhE596GxmQG8fkF9w1rtCRzQ7Il/6nyA05dn+bAyRnTco9q4gEE
-	 few4CBSY1alIUa81458S/uHyipHuUcXwqxhBXonb6dz5MRTegmARmHZ3ykegVr85zX
-	 U5igBW1qntFGye9z0IlyZG1VmljezZJgRu4Ss5ykF/zhuSQcqS78D8sSi7FajbVbfE
-	 iuVrZBMeAk9OA==
-Date: Fri, 25 Apr 2025 07:54:26 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: Carlos Maiolino <cem@kernel.org>, Dave Chinner <david@fromorbit.com>,
-	hch <hch@lst.de>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: allow ro mounts if rtdev or logdev are read-only
-Message-ID: <20250425145426.GL25675@frogsfrogsfrogs>
-References: <20250425085217.9189-1-hans.holmberg@wdc.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oqloO3x5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xDAcHLmzqgw7fTCKYdHAySGHJ9PTRatNCyZPLqDB0bs=; b=oqloO3x5xqYlVPjq9Bc6WJVcHB
+	R9ahThx0dVeOJ0LbbhE9RD9HmaT5DEZGBPK0A9sgEk+pc1D5SjFVQqupR6u2gd9/DxqIOzOJBxCLT
+	smSj8DsTGTIYhPdBdulHAyMMjRxb1ci7/bjhObh/JqyAwYkbVNNeWfnyBDDxoaajzl4xhJuvSV8G6
+	Wq08yCEtmw1Tq+acnTe+hv/Y3QbcbfNZ2ge9VkviiOANeDLGJZxWAAF/AErWT9BKi+/+oiV5CKnRg
+	sn3CdSbFwIPaOXztK2OI8AxUuZs2qWRbLSwDjnk1cd2HS3rmPEvJ9+rYxI1dHAhReAU/ba2ZNUkm4
+	JvKqFeyA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8KRu-0000000HUvj-13BS;
+	Fri, 25 Apr 2025 14:54:42 +0000
+Date: Fri, 25 Apr 2025 07:54:42 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Alejandro Colomar <alx@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org, linux-man@vger.kernel.org
+Subject: Re: newlines in filenames; POSIX.1-2024
+Message-ID: <aAuiMqkjVbW3c8nx@infradead.org>
+References: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
+ <20250422222131.GE569616@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,69 +46,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425085217.9189-1-hans.holmberg@wdc.com>
+In-Reply-To: <20250422222131.GE569616@mit.edu>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Apr 25, 2025 at 08:52:53AM +0000, Hans Holmberg wrote:
-> Allow read-only mounts on rtdevs and logdevs that are marked as
-> read-only and make sure those mounts can't be remounted read-write.
+On Tue, Apr 22, 2025 at 05:21:31PM -0500, Theodore Ts'o wrote:
+> Do we have any information of which implementations (if any) might
+> decide to disallow new-line characters?
 
-If the log device is readonly, does that mean the filesystem gets
-mounted norecovery too?  Your test might want to check that a dirty log
-is not recovered even if the filesystem mounts.
+AFAIK: none.  At least none that matters.
 
---D
+> Personally, I'm not convinced a newline is any different from any
+> number of weird-sh*t characters, such as zero-width space Unicode
+> characters, ASCII ETX or EOF characters, etc.
 
-> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
-> ---
+It isn't any different in a substantial way.
+
+> I suppose we could add a new mount option which disallows the
+> weird-sh*t characters, but I bet it will break some userspace
+> programs, and it also begs the question of *which* weird-sh*t
+> characters should be disallowed by the kernel.
+
+Don't go there.  The only limitations that does make some limited
+sense in some limited environment is limiting to valid utf8.  We've
+already done that for CI, and that's causing enough problems despite
+having a use case.  Adding random mount options to limit random
+characters has a lot of downside but absolutely no actual upside.
+
 > 
-> I will post a couple of xfstests to add coverage for these cases.
+> > I guess there's no intention to change that behavior.  But I should
+> > ask.  I thought of adding this paragraph to all pages that create
+> > file names:
+> > 
+> > 	+.SH CAVEATS
+> > 	+POSIX.1-2024 encourages implementations to
+> > 	+disallow creation of filenames containing new-line characters.
+> > 	+Linux doesn't follow this,
+> > 	+and allows using new-line characters.
+> > 
+> > Are there any comments?
 > 
->  fs/xfs/xfs_super.c | 24 +++++++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index b2dd0c0bf509..d7ac1654bc80 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -380,10 +380,14 @@ xfs_blkdev_get(
->  	struct file		**bdev_filep)
->  {
->  	int			error = 0;
-> +	blk_mode_t		mode;
->  
-> -	*bdev_filep = bdev_file_open_by_path(name,
-> -		BLK_OPEN_READ | BLK_OPEN_WRITE | BLK_OPEN_RESTRICT_WRITES,
-> -		mp->m_super, &fs_holder_ops);
-> +	mode = BLK_OPEN_READ | BLK_OPEN_RESTRICT_WRITES;
-> +	if (!xfs_is_readonly(mp))
-> +		mode |= BLK_OPEN_WRITE;
-> +
-> +	*bdev_filep = bdev_file_open_by_path(name, mode,
-> +			mp->m_super, &fs_holder_ops);
->  	if (IS_ERR(*bdev_filep)) {
->  		error = PTR_ERR(*bdev_filep);
->  		*bdev_filep = NULL;
-> @@ -1969,6 +1973,20 @@ xfs_remount_rw(
->  	struct xfs_sb		*sbp = &mp->m_sb;
->  	int error;
->  
-> +	if (mp->m_logdev_targp && mp->m_logdev_targp != mp->m_ddev_targp &&
-> +	    bdev_read_only(mp->m_logdev_targp->bt_bdev)) {
-> +		xfs_warn(mp,
-> +			"ro->rw transition prohibited by read-only logdev");
-> +		return -EACCES;
-> +	}
-> +
-> +	if (mp->m_rtdev_targp &&
-> +	    bdev_read_only(mp->m_rtdev_targp->bt_bdev)) {
-> +		xfs_warn(mp,
-> +			"ro->rw transition prohibited by read-only rtdev");
-> +		return -EACCES;
-> +	}
-> +
->  	if (xfs_has_norecovery(mp)) {
->  		xfs_warn(mp,
->  			"ro->rw transition prohibited on norecovery mount");
-> -- 
-> 2.34.1
-> 
+> I think this is giving the Austin Group way more attention/respect
+> than they deserve, especially when it's an optional "encourage", but
+> whatever...
+
+Yeah.  Don't even mention these idiotic recommendations, any attention
+spent on this is too much.
+
