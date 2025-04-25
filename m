@@ -1,129 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE616DEB1;
-	Fri, 25 Apr 2025 14:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D428EC;
+	Fri, 25 Apr 2025 14:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592489; cv=none; b=KY+kDWUsZtj0c0unEJEskcf+wiaPzih95HW+t1ThCLPUwG8b4c1mazNK97iK8K2hMA5dNt/KnBzAWD3kscbeUBTIzydAyRV/m5tkslWAscC76M8WrlKgJrWzmRg2Y0lNfW5Qmt7mBsDDAwe39E78bCp7QkXQ9evkQV9NhsVLhrA=
+	t=1745592516; cv=none; b=sILg/0P4FIUwJQ5Y0tMyL4cYd2n3we6VUNe93pHUqJVObsTpvKg3CtKXysuj8oF+MUUxG5YLU8YVRXQ5bkt4AOyOKMje+xIKEel0tYS3yVdt4UMKHZ88KS7tMfT6ZMtjoEl1XmHB6BAq1kUiz2Dh3D4rQt+kp6WmPN5R3Re8jrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592489; c=relaxed/simple;
-	bh=cTn3gTkFSXujq0nxsFZya3joPkMK0fBUAanT6MYYcY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pw4kQzdMgeYlnbduBKl+vzdLO2lW8vEiNTXkh1l3Y2qnyRIncyXFxXODQx4OYci6zVtxYIJAvAnVfd+Ej/Ne3dYaa20zkaYDcOQCtKts4tEVMG7FW1gIuUuv7NcilWlJ+iIBA1f0PO58XoPQQFwLiyENqy4EktRFUcDxAVXpG6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTdFEbSt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745592516; c=relaxed/simple;
+	bh=KDUox8GA2oucW2IHvoNGUjFxLfRIXY7o2PmS3rDE6Go=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N6Bl1qGGuxSL/Rc97g7SXt38V7NTmTAp09+W5G+IVmOrddZGPOWqtDLUHeBCZxlLGLKWQTZgo2l/08/xTEPDgtacozLqgLQfzm+6mm+l9GmrNGyY5lO7ON7sHvueOzPNDMGDPVwaOJ3vXnDQdfHuka16zR2Sa6eYTR09ptc8ZRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKl8NZlw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTdFEbSt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7840EC4CEE4;
-	Fri, 25 Apr 2025 14:48:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKl8NZlw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4DBC4CEE4;
+	Fri, 25 Apr 2025 14:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745592488;
-	bh=cTn3gTkFSXujq0nxsFZya3joPkMK0fBUAanT6MYYcY8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=bTdFEbStM/ldlHxkNKYpIVly2hILH0HPSpiqal1l5+PcGenMgOjwU/TjQ7K/Jgq0R
-	 xWVpXA1NbP2+8/VBDrDfFjgcQaDPB7XLUhT63wlXAwF3ez+rPjjAe4wXd/QjNmvheh
-	 ek1+vmW0mQLD3UsyhMhUWxJ0guiAPyGWySgo7vfKWXZ5gEtLRHT7/4DfG7Wjb8EuDz
-	 JVL7yBEiqlXODCV2l2WewaTqInxAdOlcP0Mfg+3lEbknws45wvPr5hy7pZxQ/UWSGK
-	 OIlKDbwsTfNih+nwXSA6YLaF358sP8UTpGihtxrEGWn3ouqxF7JSK7xuwNjOYEp9yv
-	 itinzPCUe6muQ==
-Message-ID: <7a1e2432-46e2-40f6-84af-bff45ab79899@kernel.org>
-Date: Fri, 25 Apr 2025 16:48:03 +0200
+	s=k20201202; t=1745592516;
+	bh=KDUox8GA2oucW2IHvoNGUjFxLfRIXY7o2PmS3rDE6Go=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bKl8NZlwLRlW4kpoxJ4k+RzyAk1LXABalhUzrvYuCoSB+Db10S8lovwARF9uHS4cB
+	 fsgaTbEHIP2DU0rgG95WyvS8Fr7c63gTz0JcfbfJn3dAYB5IOpo1FEFx4NfyM3CYUD
+	 XbmLF1HSr5KTYfwsdRgcpIAc7SYei6U0RikIzbVFFhUvlHJExJlqQZaDFbkKCubkmN
+	 If4zJcguSfsJcALucDPzyWzkbY+fW+3VMVugnNhqMJiLitiGQnpy6v7HsMXDBqW6Gx
+	 2daAJnJCJ4RScpg2f6+vV3cxHnhoFv8Ak+DJssf34e3ltPzY1Dgn6tOqIxYidP2dsl
+	 +HelGIKwFuFvQ==
+Date: Fri, 25 Apr 2025 15:48:31 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "hans.zhang@cixtech.com" <hans.zhang@cixtech.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"peter.chen@cixtech.com" <peter.chen@cixtech.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
+ new EP configurations
+Message-ID: <20250425-drained-flyover-4275720a1f5a@spud>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-3-hans.zhang@cixtech.com>
+ <20250424-elm-magma-b791798477ab@spud>
+ <20250424-proposal-decrease-ba384a37efa6@spud>
+ <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 08/10] ARM: dts: exynos: Add proper regulator states
- for suspend-to-mem for Exyno5250 smdk5250
-To: Anand Moon <linux.amoon@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- "open list:MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BO..."
- <linux-kernel@vger.kernel.org>,
- "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
- <linux-samsung-soc@vger.kernel.org>
-References: <20250425132727.5160-1-linux.amoon@gmail.com>
- <20250425132727.5160-9-linux.amoon@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250425132727.5160-9-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="YSHiTXw2ppnu3Qg2"
+Content-Disposition: inline
+In-Reply-To: <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-On 25/04/2025 15:26, Anand Moon wrote:
-> The MAX77686 PMCI is able to power down and up key core supplies and other
-> voltage rails via PWRREQ signal to enter / exit (deep) sleep mode.
-> PWRREQ status is ignored during initial power up and down processes.
-> All programming must be done before the AP enterns the sleep mode by
-> pulling PWRREQ low since the AP does not have programming capability
-> in (deep) sleep mode.
-> 
-> Add suspend-to-mem node to regulator core to be enabled or disabled
-> during system suspend and also support changing the regulator operating
-> mode during runtime and when the system enter sleep mode (stand by mode).
-> 
-> Regulators which can be turned off during system suspend:
-> 	-LDOn   :       2, 6-8, 10-12, 14-16,
->         -BUCKn  :       1-4.
-> Use standard regulator bindings for it ('regulator-off-in-suspend').
 
-I do not believe you tested this but instead send whatever you found
-somewhere without actually understanding the code. In the past you were
-sending such patches - without knowing what they do and without actually
-testing.
+--YSHiTXw2ppnu3Qg2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-NAK
+On Fri, Apr 25, 2025 at 02:19:11AM +0000, Manikandan Karunakaran Pillai wro=
+te:
+> >
+> >
+> >On Thu, Apr 24, 2025 at 04:29:35PM +0100, Conor Dooley wrote:
+> >> On Thu, Apr 24, 2025 at 09:04:41AM +0800, hans.zhang@cixtech.com wrote:
+> >> > From: Manikandan K Pillai <mpillai@cadence.com>
+> >> >
+> >> > Document the compatible property for HPA (High Performance
+> >Architecture)
+> >> > PCIe controller EP configuration.
+> >>
+> >> Please explain what makes the new architecture sufficiently different
+> >> from the existing one such that a fallback compatible does not work.
+> >>
+> >> Same applies to the other binding patch.
+> >
+> >Additionally, since this IP is likely in use on your sky1 SoC, why is a
+> >soc-specific compatible for your integration not needed?
+> >
+>=20
+> The sky1 SoC support patches will be developed and submitted by the Sky1
+> team separately.
 
-Best regards,
-Krzysztof
+Why? Cixtech sent this patchset, they should send it with their user.
+
+--YSHiTXw2ppnu3Qg2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAugvwAKCRB4tDGHoIJi
+0gB5AQCACzFzQHuCqe72kGCjbhOhwAatlY537t14V31mwO9lzQD/frLiUHnUcp99
+02MWIHJn51Re+9M9sdIohy0Q4dXCsQ4=
+=dfKM
+-----END PGP SIGNATURE-----
+
+--YSHiTXw2ppnu3Qg2--
