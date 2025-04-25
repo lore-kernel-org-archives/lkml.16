@@ -1,100 +1,180 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F214E28A1C4
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DAB2749DC
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595159; cv=none; b=ppwOQ3EklPZRo/p/GuSJYtyHqF8W5v1BFlqe+WxZyMW3SYE5yGhZTyqDworIBvnVTIjhpb07jyLO7yciW5P64wgTkompmvihS0yZM6co287yPTqG5huBh5DinUFT/X9zx7giezLs1s6tGkmuYPWKh6lYWPTBdEnUtcuOdkBwjrE=
+	t=1745595183; cv=none; b=oFUKEbHZljtt0O3Hdmxm9fkMmQkt9mCw8QuHcTSBBEPTkax5ar54VPPp6VH/KxDfNCb1E2wgaVkz7H0Cx7fTDb1Zxkm8AhuhrM3Z28IrdH5cGvJPLPC5wC1ov5i8z07VEF2yV+aWtVp1sWSaAMXJ72OnfhJQekz5ZiGgZuqnA7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595159; c=relaxed/simple;
-	bh=3oR3DInuCHzHMyhCIN0ryjMS6xvCykvTUTuISe8kVOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kYI6yhwIgp9mMDez/ECkvC9gGHyMPuOrFbDHjh1q1Ks76LdNhElTWkEtXo/L1V6piZyKQI6WtIMi04HMUss1EOEDCnrg405gRPm3gxx6b9p5t1MQKSiDFhd6hGTEoPg9/IUF9hhBvUFREcFcV9xF48JgMa/M74KXxgE5QEATf2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=WkCSY7Y2; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1745595183; c=relaxed/simple;
+	bh=azphG0LvZMLBQfUOp84PmDRab8XVCOT21CuIpXdnZ78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=OHRybuJIctMhVrn/HwxFi+zssLhGwtAk8Fr2eDX4AfSDkVOFZyvhU+4xP6v2nY9f7PDV6ctXuTIkcywYMJEb111Y9Qji6zxz4n2v62Qtmc0oiT5FuHsy81amd7ybzoi9Ab6//qIjkx6aPph7BlzkXLxfJpLoip9hjPLT4MIT8fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cXcYVjQt; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="WkCSY7Y2"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c5a88b34a6so247014485a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:32:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cXcYVjQt"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47e9fea29easo338211cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:33:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745595154; x=1746199954; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2asthD55KNrhLhfjveoWXz7Lfde6+xbDsGUdy2WM9SM=;
-        b=WkCSY7Y2L/Ptk9cOUMvV1qFb9glCkUFPxbLWUZFSFfPYP2izxMJCpvkjyMR3hiXUlH
-         ccoMJjpTBjpwJavdDqNJvbIIDWVAMocJIEEZUjonf3Gz7X0qSOu1cPyFFHsgY6ZrltYH
-         5rSvnZCYxErgqIY9y6MBGrnDQS8CTdCObgD/8V2gV0npwTHlXdUjwSsuIRuC1lW23x3J
-         +eEhmK4W56BoInT08mKWSkXhrIS5xmbLfbMPHNVU1wRqT32uim2c5acTqoPkmymrhSav
-         XgaibHv9S3J0pGi/htCTZTgWdqXbbkzH7WeBohlGX9802sTbTsrm1Bgt8DW3BxXbv04I
-         tlCA==
+        d=google.com; s=20230601; t=1745595180; x=1746199980; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pP6z3CE+fLIrfWHZmKWlxUhDiYFfaprQFcGgrLTshIA=;
+        b=cXcYVjQtEow59hw4yD0zdZKh+ZNeG3XDmG0f5GkSLfkG0FIvOPMt9l4GBPyg/SDHMr
+         tDgSPHoYb0CTNfXFYp8qfPH+a/c+lIg5orRvT0tPydZZWdVs1HmAgksZlrn2IGH87A3a
+         sJGxYisr95SC0c2U135zuZtwXNzR6/L7OIuUWT1MZKg8+wXHkXkuzX8aqASKwkQwzK6Z
+         AWOWSsRD0Q/1vh0sRR5RiUbzUKUQpjcCevo2Ohb05a+4cN13t+glaKU06lKo7Cfv7t/z
+         zL2ZdpKwhgDnc6xCu0pqBqghY2DHpBZMO7EIDgYdrFKEShB3SxljOeyoOZOPg3fIuvhX
+         9ARA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745595154; x=1746199954;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2asthD55KNrhLhfjveoWXz7Lfde6+xbDsGUdy2WM9SM=;
-        b=YW1EP7KQYVRyGkqN0OAibuHPEF1SIRVbNh/hZYXxcS4kzm2vWL1JFl9MmtZcc04Nen
-         yPmXoEHWRyJqGJ3OJ23/+sUm++Xy7f6P+kW25aq/0jgOtuaZ3qf8sXL5BdXAPAEvio4P
-         /TEYm38lnHIH4Zv7XvUnRc1A/RbvKUX5UCxifl9tjBtpE92/fOJVygQy5e7vTTkk3J1X
-         0RZUI40J1MNQ+A56GpSoYp6K68gejk3X32bQNTPhrLXtxGswtUCwv44X10NN+1gDsPOi
-         M6gu7ADO14lZia89Fy2QvRoz4v9ivYdnsqMJLcwoaQvuaa4YhCKdm6MP5WjIKwcMd6Sd
-         +vWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLmOT7w709VJCS/A5q3oqL3nZ/LgpctIdts2J+2tIU0Q/3tdeQG7nL+n/K9/V4dA2g4liE8IRVwgAnglo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxOfoY+BEj8q+va+ruDev1qIz4QkvhkZ0NxkVk7yaFcNsmxtgc
-	VsEJTfrLtCH8waWJeH1KqEEj4/BU6yoX/CCxwnyKBZmRLCA/BpQXe3enki1ELPb0i1uqL6pbZZ6
-	1ISA=
-X-Gm-Gg: ASbGncvGrKJBUJBNlJpOTI9cH0jQwcqfwJWe1mFuyRPHcz0+siYYWh/WEmBLNbZiEwx
-	sMbEI23uDN4rvDT2FwsJHMOOkuUV8I4hlO0FJlO1hVMEdiApAZkZAc+dfp7tTAH+ofJ27Dq27jV
-	1RMrsGmt+IEKQw60Y49V0agv4mWS7iCVt/mOB9WAKeZgLKn8MnL/M8GbynEIBN1Dmdt7cACp+t4
-	a6ztlOJ2E6yDC8kgp+JUrEa0RtPf1W6wz8AUJmJiusWtG+k9unklPKuoEmvsaZZyR5xMRM1GJ0c
-	78MvozD2RRjUlkSFpgqMF+NlWEg0NDYPZUiTaaZA6L/XTHE6BA==
-X-Google-Smtp-Source: AGHT+IGGNDFMq3A/3qPkkk3vuTcBJDIniA6Zbds6BvL0JT/ppafg1A4GyBmW2YxTKwrlYEuzUJHlXA==
-X-Received: by 2002:a05:620a:2a0c:b0:7c5:59a6:bae2 with SMTP id af79cd13be357-7c966863bf5mr6043885a.4.1745595154670;
-        Fri, 25 Apr 2025 08:32:34 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c958e7bdfesm231289485a.75.2025.04.25.08.32.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 08:32:33 -0700 (PDT)
-Date: Fri, 25 Apr 2025 11:32:32 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Wenchao Hao <haowenchao22@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/compaction: do not break pages whose order is larger
- than target order
-Message-ID: <20250425153232.GA108388@cmpxchg.org>
-References: <20250424153815.4003-1-haowenchao22@gmail.com>
- <20250424194200.GD840@cmpxchg.org>
- <CAOptpSPoc76ZSzbKJSnnfxtcDubJHC8a1zU7b=C=wdF6_wC3ww@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745595180; x=1746199980;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pP6z3CE+fLIrfWHZmKWlxUhDiYFfaprQFcGgrLTshIA=;
+        b=VWxa3gUIhU9mXU+jCS9PvoHT5T3up7yfOgpI+h6D6TWNLdaPGg+NgqnxBGfbtvugOg
+         7YnOP8C6M7KnWvKLNl/bsEbDG86ES7harrelt2rlNGp1xaVYRD1RN+Cpb48iIssPhYgQ
+         qDmsbGow+kv7IZKda+dD6/y+jESh/YGB9JkdRFnLNSn/burPmv525rLyRx26TNU4Yb5E
+         KgLokVwIbNeZPtncm322pseHfGsI1JzMgotc9VPCuhDwuDZtLOUxNODBlDWja8BNL8Kt
+         F5GUceymm8fN3AyvkoKDUdQVbgJNY01Smuya3J8cAvF8UlUvtyvzrFfDvX7dDenO5+jI
+         0SnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjQWZXI8tteYG5ybpxEJUls+n+DMShs151R6zwRfSxobrOXlDVcFd+OkkGr8GRiTfEFwzqgYciRT0w+8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTbPr8atNGqQSQaiZBsboHy4xNfxQxzgteSPpYjafeYeWKi2BA
+	CDOzyUYEEk8M0DCXH+4p176fjcqHCkpRgKQ/a4AjiG1b92Q+85yMs0AWXi9+pHG2Ax87M/nzaHI
+	GRl9ozb9itWH6SKTqybwZwfd1IoFQB7/eVTOx
+X-Gm-Gg: ASbGncsarKPf5Q2uKhS18WUbgAjAHqSYDo5WVp2Wp96zwT5gWECUTeGbnXrsh3nNdwu
+	d0UDz/9WLs1Z4bVIeFEUtR1/Fq7hfSsQrFL1SZ1PXzXzAmU/xrRrPmwrkvBoyCbsw32pMZxJCgD
+	J83H5dJC9fO1B9aCoq4EpJ
+X-Google-Smtp-Source: AGHT+IGI+8KofZYr/rnLzwwlH5lcjuihGFz+/pVqSeDJMF8TV6u79oDolvsETvevEUoiykM1utbOMi84hjY6taQXhiM=
+X-Received: by 2002:a05:622a:2517:b0:477:c4f:ee58 with SMTP id
+ d75a77b69052e-47fe1ed5f87mr4183671cf.24.1745595179801; Fri, 25 Apr 2025
+ 08:32:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOptpSPoc76ZSzbKJSnnfxtcDubJHC8a1zU7b=C=wdF6_wC3ww@mail.gmail.com>
+References: <cover.1745528282.git.lorenzo.stoakes@oracle.com>
+ <0f848d59f3eea3dd0c0cdc3920644222c40cffe6.1745528282.git.lorenzo.stoakes@oracle.com>
+ <51903B43-2BFC-4BA6-9D74-63F79CF890B7@kernel.org> <7212f5f4-f12b-4b94-834f-b392601360a3@lucifer.local>
+ <n6lrbjs4o6luzl3fydpo4frj35q6kvoz74mhlyae5gp7t5loyy@ubmfmzwfhnwq>
+In-Reply-To: <n6lrbjs4o6luzl3fydpo4frj35q6kvoz74mhlyae5gp7t5loyy@ubmfmzwfhnwq>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 25 Apr 2025 08:32:48 -0700
+X-Gm-Features: ATxdqUH-7fcjY1Nm52E2GQYuVXFxGwTyQxbInQgwFOhzX15Q8W5Vpu5wImOKUvg
+Message-ID: <CAJuCfpErtLvktCsbFSGmrT_zir9z0g+uuVvhr=QEitA7ARkdkw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] mm: perform VMA allocation, freeing, duplication in mm
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	David Hildenbrand <david@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 10:28:42PM +0800, Wenchao Hao wrote:
-> On Fri, Apr 25, 2025 at 3:42 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+On Fri, Apr 25, 2025 at 6:55=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250425 06:40]:
+> > On Thu, Apr 24, 2025 at 08:15:26PM -0700, Kees Cook wrote:
+> > >
+> > >
+> > > On April 24, 2025 2:15:27 PM PDT, Lorenzo Stoakes <lorenzo.stoakes@or=
+acle.com> wrote:
+> > > >+static void vm_area_init_from(const struct vm_area_struct *src,
+> > > >+                        struct vm_area_struct *dest)
+> > > >+{
+> > > >+  dest->vm_mm =3D src->vm_mm;
+> > > >+  dest->vm_ops =3D src->vm_ops;
+> > > >+  dest->vm_start =3D src->vm_start;
+> > > >+  dest->vm_end =3D src->vm_end;
+> > > >+  dest->anon_vma =3D src->anon_vma;
+> > > >+  dest->vm_pgoff =3D src->vm_pgoff;
+> > > >+  dest->vm_file =3D src->vm_file;
+> > > >+  dest->vm_private_data =3D src->vm_private_data;
+> > > >+  vm_flags_init(dest, src->vm_flags);
+> > > >+  memcpy(&dest->vm_page_prot, &src->vm_page_prot,
+> > > >+         sizeof(dest->vm_page_prot));
+> > > >+  /*
+> > > >+   * src->shared.rb may be modified concurrently when called from
+> > > >+   * dup_mmap(), but the clone will reinitialize it.
+> > > >+   */
+> > > >+  data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->shared=
+)));
+> > > >+  memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
+> > > >+         sizeof(dest->vm_userfaultfd_ctx));
+> > > >+#ifdef CONFIG_ANON_VMA_NAME
+> > > >+  dest->anon_name =3D src->anon_name;
+> > > >+#endif
+> > > >+#ifdef CONFIG_SWAP
+> > > >+  memcpy(&dest->swap_readahead_info, &src->swap_readahead_info,
+> > > >+         sizeof(dest->swap_readahead_info));
+> > > >+#endif
+> > > >+#ifdef CONFIG_NUMA
+> > > >+  dest->vm_policy =3D src->vm_policy;
+> > > >+#endif
+> > > >+}
+> > >
+> > > I know you're doing a big cut/paste here, but why in the world is thi=
+s function written this way? Why not just:
+> > >
+> > > *dest =3D *src;
+> > >
+> > > And then do any one-off cleanups?
 > >
-> > On Thu, Apr 24, 2025 at 11:38:15PM +0800, Wenchao Hao wrote:
-> > > When scanning free pages for memory compaction, if the compaction target
-> > > order is explicitly specified, do not split pages in buddy whose order
-> > > are larger than compaction target order.
+> > Yup I find it odd, and error prone to be honest. We'll end up with unin=
+itialised
+> > state for some fields if we miss them here, seems unwise...
 > >
-> > Have you observed this to be an issue in practice?
+> > Presumably for performance?
 > >
-> > compact_finished() would have bailed if such a page had existed.
-> >
-> 
-> Yes, when proactive memory compaction is enabled, there may be situations
-> where the order of isolated free pages is greater than the compaction
-> requested order, and compact_finished() will return continue.
+> > This is, as you say, me simply propagating what exists, but I do wonder=
+.
+>
+> Two things come to mind:
+>
+> 1. How ctors are done.  (v3 of Suren's RCU safe patch series, willy made
+> a comment.. I think)
+>
+> 2. Some race that Vlastimil came up with the copy and the RCU safeness.
+> IIRC it had to do with the ordering of the setting of things?
+>
+> Also, looking at it again...
+>
+> How is it safe to do dest->anon_name =3D src->anon_name?  Isn't that ref
+> counted?
 
-proactive compaction has an order of -1?
+dest->anon_name =3D src->anon_name is fine here because right after
+vm_area_init_from() we call dup_anon_vma_name() which will bump up the
+refcount. I don't recall why this is done this way but now looking at
+it I wonder if I could call dup_anon_vma_name() directly instead of
+this assignment. Might be just an overlooked legacy from the time we
+memcpy'd the entire structure. I'll need to double-check.
+
+>
+> Pretty sure it's okay, but Suren would know for sure on all of this.
+>
+> Suren, maybe you could send a patch with comments on this stuff?
+
+Yeah, I think I need to add some comments in this code for
+clarification. We do not copy the entire vm_area_struct because we
+have to preserve vma->vm_refcnt field of the dest vma. Since these
+structures are allocated from a cache with SLAB_TYPESAFE_BY_RCU,
+another thread might be concurrently checking the state of the dest
+object by reading dest->vm_refcnt. Therefore it's important here not
+to override the vm_refcnt. Changelog in
+https://lore.kernel.org/all/20250213224655.1680278-18-surenb@google.com/
+touches on it but a comment in the code would be indeed helpful. Will
+add it but will wait for Lorenzo's refactoring to land into linux-mm
+first to avoid adding merge conflicts.
+
+>
+> Thanks,
+> Liam
