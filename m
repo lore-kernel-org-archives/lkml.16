@@ -1,175 +1,121 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6CD208997;
-	Fri, 25 Apr 2025 21:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244D12192F3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618062; cv=none; b=MRVRpjLNl+TNdEvHX12CxxEuAvuBwYOK28yhWIL6wyup8wKIKBaOS6km15kWt4gSeg9oAqxiTSUShmCdxgOMlCWeDzxfyH2TrXySSTgX3euVx3d3Go2LWdMG8aXVGcyN1vwZTvLTYSjQP0e1uoeqO6dV0ZoI5dcZCszmcykCZok=
+	t=1745618088; cv=none; b=Sp8JJ5gaDqYKn+Nl9qw6kcuG74ZmOSkjV3pTGQZLWzJnQN/PCNL6j27yqChy91C25yT376WjJ11REC1XCEaHwZrV/K4Juuv2bDTOSjGAYlzEK71n86yoWXiTCmsFFSTAmabr/USyw1O7ZK2S6DhcRZJG98MlYYDeQr4zv/RJIK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618062; c=relaxed/simple;
-	bh=/Qg+jrzz7ohQYOyGyC0DRfDJYxTT87vaFSUzkC7isnY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=udeblBQq04/R2OUo3MaSiBKqGc2Df/ik0eLBHocGPdpZDPUJ2oXgkscXpUDcPCZcGdJSXPeUkqXYWvzwWg2mu4ikX222G11UXltwJ/l5CXnjwHOZ5ARqLlQpDqGxytVFiznDpAyX0/p5f52yVJ0lu7Etbjip9RIocIPPsircJEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d2g/Q1T7; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745618088; c=relaxed/simple;
+	bh=Mc9klkHjsEtUdhzu7kWt63vU8h5AjTn8SprVVJFiBOc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=kjOHEQwMzqG1z/D8bJo8k269H2YU0wN5Y4r+IsONRA0o5hZXCVrPJhSatMFs12DDBpRuetsNAWBYaCdAqLXx4Dn8e2yJDZNZTC0rjUPA2PzWW0kvX5MDnRMTDFWAACYdyEHN7UvqmT2AZKtIvRxL7iXO9122n6U67ZKOfiTyrxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fu+J0XSq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2g/Q1T7"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22423adf751so31535825ad.2;
-        Fri, 25 Apr 2025 14:54:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745618059; x=1746222859; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCobKniwenRsZRQXHN93hhOkNZYsytudx8yyvFZoPso=;
-        b=d2g/Q1T79dgYBiYRTA04dDbvWn9pCspC9OGzX06qmOjCDFRXb5xBodSBXbt3SOH1eC
-         paro7FkDpSs/oWMRN/VsMtxiEaiXAx5fVhlefpnpSNf6szA2HM18rpHXgsGuclFEJVnP
-         ivSvc84YrHz4/Qv0NNVehRmSDcDGZSs6++/wpRTjx+31JGq5DU6qvmMNdVHhIu1N25ai
-         VYAWCChKFTWJBifB5DxNWJcz3sTfhh/O4ynrhSiU547inNwVN9AtzJEa8x53SWZfkRCQ
-         OVrZXaXCWFhziYa3pA/GWvNMXoz5WdqWtONNK/2QJO+LIUG9vQP6QRuE+4+tRKtwIdie
-         FC+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745618059; x=1746222859;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XCobKniwenRsZRQXHN93hhOkNZYsytudx8yyvFZoPso=;
-        b=p46CZIvrDFTnxWY/F8sc6JaNSz4ysPtIKaeB298eQF5mUIlMyBDdL4d4qi3Xzh/Jqr
-         lQ6HKMMuemlVnmFSfECHPNlLMy2lnw7czPPISRgOr9MkGevXS59dBaF1YyQgIkSLR+Sv
-         HxqUAur27moHMEzPhshiRWI9j1RGN/alr1CPYXJyFAZ4cV1tpedfjFbxDZhIrAJNUgCu
-         4Uuz6ciy14I+tu/P7C3f2qCfzpvZ7MWLRoFi6lskYFeyDZj7Zh3U6ZJR3zYf40PcvibA
-         3Tzy92Or4ZPsxoDMmCerb2m40R+QqvUwO7yoiSBilhxQKE/aJ36EOgDmqIh3M/OHg/mk
-         gFyg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2PS6xK9akhyUEjTUUGTkPvMPrc0qe7CG1QVXTotbVqpcs5elYW5nsdVLbs2bkg9T4n+s4w/B6vL+N@vger.kernel.org, AJvYcCUklnHfbY3V5tIg1CyOb67e8rxXegKbbvplf0c1E27kdfW6LE/z21P78rp+CcDeZgqj3A/9wY5UUbnWcvr9@vger.kernel.org, AJvYcCWwKVgYs1RzZJNBSloqM3JBkg66pLyLULiSzX8y0yNFA24JiG8a69aW5KfGm/kKD9AblnrXZI32zahl@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmz6ZNM1CxQGUXhVi1BKPxBnsf1Dc83scWoYn6bXYlddvpEKp0
-	P8uzabcs3cYUe3okcR66W8pbDK/gCkXOGN80QIK2v1KhfKXHPUE9EQIXESiQnck=
-X-Gm-Gg: ASbGnctS+KK48BsuT8SQfWS32jbAToOzFnce04gdgLP0+WcwyaF116x2seWH0NUgWkT
-	+F4XCm/LkB4PFKQj2K7EXNkjOw/ZBPO5IShu7TDxtOv4W0K/1UZqtgTJ4+DqPibuYjsgnASF0d9
-	Wk+bF6ruu20sAqLAJWXFLkLfcrNPZQIkPg2QyZCQmVflDKGxRv5dRdJdpAFv4jDBW0mTKV1D8uf
-	oQQMnd18dlj+me5nmHHslsOWM+I5vkDot+ZfoyobZiv3+i0uySPiyUVuBlhTVSCT+IEtc8fNTwF
-	FB6plhUPQtgc4xKxVj8fzOogxZ2acFVbK/nHroTqBXw/scG6cf4sP9EPKKYBWfQ=
-X-Google-Smtp-Source: AGHT+IEhyiPUvx6/TQLgHrek4gH35yub8pGeGVD8zCIOvwyadYampCv51ThIk0Qc/PvSpWTxrFLFWA==
-X-Received: by 2002:a17:902:d4ca:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22dbf5fb486mr54033065ad.23.1745618058561;
-        Fri, 25 Apr 2025 14:54:18 -0700 (PDT)
-Received: from localhost ([2409:40c0:2025:2c31:c6a3:5653:2e03:8d7a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f7749938sm2211580a91.11.2025.04.25.14.54.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 14:54:18 -0700 (PDT)
-From: surajsonawane0215@gmail.com
-To: jic23@kernel.org
-Cc: surajsonawane0215@gmail.com,
-	lars@metafoo.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: iio: chemical: Add sharp,gp2y1010au0f
-Date: Sat, 26 Apr 2025 03:21:49 +0530
-Message-Id: <20250425215149.49068-1-surajsonawane0215@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fu+J0XSq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2B6C4CEE4;
+	Fri, 25 Apr 2025 21:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745618087;
+	bh=Mc9klkHjsEtUdhzu7kWt63vU8h5AjTn8SprVVJFiBOc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Fu+J0XSqt1iBO2Ad6I/EoIr58mfhd6uN9LKiekUC0IBF90uEftYZ58iGp3nXIsohr
+	 atuB09rvZp5p3QqmV7+CzHBdZeL5gHII6DUffkviHMDEmEjkvNDCB6OGR2ar8RWL5R
+	 vlYgOF0zlOABni1HA5wdJWp2b5A2YpmvXhdT4/GaAYx9HDlsJdYyLb2FwIrEAbrrcU
+	 7K4V6gCi2r/nKe3y0SxH9aD3xGxZXGzH5xbyKiUw0QPHfBpkYiCdDb+ex0xg6TdZ+J
+	 UW50Kgw+cTirKIkmGrmYH4dm6+YlnNO4ga/3hztj2gPu9/opZDyhRpKIqYvMbEBKTE
+	 9NpZmdACIw5Ow==
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 03D221200068;
+	Fri, 25 Apr 2025 17:54:45 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Fri, 25 Apr 2025 17:54:46 -0400
+X-ME-Sender: <xms:pQQMaLcCtE2TgaFoItHnqeXO8xjTyc9iEtzbcX8C9wkYJ-UsGyDreg>
+    <xme:pQQMaBOuv0qtIy98O7TkysWaIMQbtozpGqws-3EvlPm5hz1l41NvwLkQF9r7kY3d5
+    tFxP7_9Mn6FU-WE_gU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefgeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnh
+    gvlhdrohhrgheqnecuggftrfgrthhtvghrnhepudffteefvdeljeehgfffgfejheeigfej
+    ieevieffteejffefiedtueelgeeigfdunecuffhomhgrihhnpehgnhhurdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguodhm
+    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdegqddvkeejtd
+    dtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvgdpnhgspghr
+    tghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlih
+    gvnhekrdguvgdprhgtphhtthhopegrnhgurhgvfidrtghoohhpvghrfeestghithhrihig
+    rdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtg
+    hpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhnghhosehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopegurghrfihisehlihhnuhhtrhhonhhigidrug
+    gvpdhrtghpthhtohepjhhohhhnrdhoghhnvghssheslhhinhhuthhrohhnihigrdguvgdp
+    rhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehtoh
+    hrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
+X-ME-Proxy: <xmx:pQQMaEiI5vTsz4uLfN69IMwDsbmqtYYJiTBhNjrRrJhj2CBrsbdmIw>
+    <xmx:pQQMaM8i3Ls1_0Y2Vtus8MoxZBeel7tYGGV_831P9rG1OIIknHA_TA>
+    <xmx:pQQMaHuQGJmNHsz86kSzCdQJ4xqs9-jFBamm1DMy74H0ec3bTgQ6pA>
+    <xmx:pQQMaLGijp3aSjK1dI8R2vg1ovTdMpWGUNTiCrZc4J6ElRaUfp-4qQ>
+    <xmx:pQQMaOPcrye1XaqS2hJwJi8W__DWRRnkv5eTXx5qWba_M4iijOoOVqgK>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C6F522220073; Fri, 25 Apr 2025 17:54:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Td35c5eaba32a0728
+Date: Fri, 25 Apr 2025 23:54:15 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "H. Peter Anvin" <hpa@zytor.com>, "Ingo Molnar" <mingo@kernel.org>,
+ linux-kernel@vger.kernel.org
+Cc: "Ahmed S . Darwish" <darwi@linutronix.de>,
+ "Andrew Cooper" <andrew.cooper3@citrix.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "John Ogness" <john.ogness@linutronix.de>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>
+Message-Id: <1d4ddcab-cf46-4d7e-9e33-de12b6bd350c@app.fastmail.com>
+In-Reply-To: <8D770F85-5417-4A9E-80DE-1B6A890DECEF@zytor.com>
+References: <20250425084216.3913608-1-mingo@kernel.org>
+ <20250425084216.3913608-14-mingo@kernel.org>
+ <956412a3-43c2-4d6e-bea2-2573c98233ae@app.fastmail.com>
+ <8D770F85-5417-4A9E-80DE-1B6A890DECEF@zytor.com>
+Subject: Re: [PATCH 13/15] x86/cpu: Make CONFIG_X86_CX8 unconditional
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Suraj Sonawane <surajsonawane0215@gmail.com>
+On Fri, Apr 25, 2025, at 17:15, H. Peter Anvin wrote:
+> On April 25, 2025 5:10:27 AM PDT, Arnd Bergmann <arnd@kernel.org> wrote:
+>>
+>>I just noticed this one: the final 'default "4"' is no longer possible
+>>here and can be removed. All the remaining CPUs report family "5" or
+>>higher.
+>>
+>>There is an old issue for some rare CPUs (Geode LX and Crusoe) that
+>>support CMOV but report family=6. These to boot a kernel with X86_MINIMUM_CPU_FAMILY=6 because it triggers the boot time check.
+>>
+>
+> They report family=5 because family=6 implies fcomi and nopl support 
+> (in the case of Crusoe, they have fcomi but didn't support movl.)
 
-Add Device Tree bindings for Sharp GP2Y1010AU0F optical dust sensor.
-The sensor measures particulate matter concentration via infrared
-scattering and requires:
+Ah right, I see now. I had only checked that the kernel itself
+no longer uses nopl after your ba0593bf553c ("x86: completely
+disable NOPL on 32 bits"), and I had seen that Debian intentionally
+builds 32-bit i686 kernels with CONFIG_MGEODEGX1.
 
-1. GPIO for LED pulse control (280μs pulses with 40μs delay)
-2. ADC channel for analog output measurement
-3. Power regulator (vdd-supply)
+I now found that both Debian 12 and gcc 11 changed their definition
+if 686 to actually require nopl for Indirect branch tracking 
+(-fcf-protection) in user space, as discussed in
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104713
 
-Datasheet:
-https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
+So even if it makes sense for GeodeLX specific kernel to use CMOV,
+any general-purpose i686 distro would still want to enable IBT
+in userspace to gain IBT on Tiger Lake and newer 64-bit CPUs.
 
-Signed-off-by: Suraj Sonawane <surajsonawane0215@gmail.com>
----
- .../iio/chemical/sharp,gp2y1010au0f.yaml      | 67 +++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml b/Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
-new file mode 100644
-index 000000000..358c2b2f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/chemical/sharp,gp2y1010au0f.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/chemical/sharp,gp2y1010au0f.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sharp GP2Y1010AU0F Optical Dust Sensor
-+
-+maintainers:
-+  - Suraj Sonawane <surajsonawane0215@gmail.com>
-+
-+description: |
-+  Optical dust sensor measuring particulate matter concentration via infrared scattering.
-+  Requires ADC for analog output and GPIO for pulsed LED control with strict timing.
-+  Datasheet: https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y1010au_appl_e.pdf
-+
-+properties:
-+  compatible:
-+    const: sharp,gp2y1010au0f
-+
-+  vdd-supply:
-+    description: Phandle to the regulator that provides power to the sensor
-+
-+  led-gpios:
-+    description: GPIO connected to the sensor's LED control pin (V-LED)
-+    maxItems: 1
-+
-+  io-channels:
-+    description: ADC channel connected to the sensor's analog output (Vo)
-+    maxItems: 1
-+
-+  io-channel-names:
-+    const: dust
-+
-+  sharp,led-on-delay-us:
-+    description: Time in microseconds to wait after turning LED on before ADC read
-+    default: 40
-+    minimum: 0
-+    maximum: 100
-+
-+  sharp,measurement-window-us:
-+    description: Measurement window in microseconds after LED turn-on
-+    default: 200
-+    minimum: 0
-+    maximum: 280
-+
-+required:
-+  - compatible
-+  - led-gpios
-+  - io-channels
-+  - io-channel-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dust_sensor {
-+        compatible = "sharp,gp2y1010au0f";
-+        vdd-supply = <&vcc>;
-+        led-gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
-+        io-channels = <&adc 0>;
-+        io-channel-names = "dust";
-+        sharp,led-on-delay-us = <40>;
-+        sharp,measurement-window-us = <200>;
-+    };
--- 
-2.34.1
-
+     Arnd
