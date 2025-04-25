@@ -1,57 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2E917BA5;
-	Fri, 25 Apr 2025 00:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A041981E;
+	Fri, 25 Apr 2025 00:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540280; cv=none; b=rUWHSlS1YCCzQfW7YXhsNxGWTUZ2jLHohdfeFjZ76tTiQYyYUJMTwq2EDUgqjGgtvZu172vtQ9+FLyuzuzN8haEvSRT7JJjk5q0LeRQ+sdS8P/ZC5HGg6fdFdkv/ls2xqcVcvRLNw4mgKFzx3csbcZA5Q6Ngpbunp4TnKQ61OPw=
+	t=1745540391; cv=none; b=AcvuFu5qV8SuYzLrOevvXq2lqN11nDjkd5TY1njvMVN/XLbYHS/yf9YlrJ3cX1fTnB2rHV00MhQJMMfPRy7pYqEaW3tntIox7Tj853LIdSz7mn4aqn8PyB5b2hbfs3xsZvVWcBY0PvjqhaFyB04bnqvd2SurzaZgX0qIhufVv2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540280; c=relaxed/simple;
-	bh=w04ui9n+b5eQWZUkMB3F52O0GSLxqgBLN8BKbm/YuzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gwcNWysqXvhGSjWlb6QF1AdBaXKPx1iMmL7EUc4VQnnf49Hq23Xw7OFcezo/RqdQoJF64+L4S4+TfOHJJNsOS26gw9VhFuARDkkBF7bisnIOQX7+LixD6JG8WNuw2h8lRB/fjVZihilOz0uugWmX6LxCWFU8qVBflpqkAGQeTWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Stn/nQPr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745540391; c=relaxed/simple;
+	bh=aKhiMsG/T/rd79GeOlANyesH2TRaoF5Ms+z9wo9rTA8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=it+qyFXoQt5EaXOEWOvAyyh7KDvbfzN/HutnorsVkGYPNYj8eSmYFL11SJnqemEOORjyKgh9VQ8ll5vj6xDx66tUe4gMObfyhfE0fKOJlAPD3HhD4jph3n2ECRh+xNY1dqwkCpflm37fCsWCQ9QS8uzsKJMP2d20dWqTZxqiwJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4T5+cbQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Stn/nQPr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F15C4CEE3;
-	Fri, 25 Apr 2025 00:17:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4T5+cbQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16900C4CEE3;
+	Fri, 25 Apr 2025 00:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745540280;
-	bh=w04ui9n+b5eQWZUkMB3F52O0GSLxqgBLN8BKbm/YuzA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Stn/nQPrPQNLomuUHnmOmKHpxf2rD4m8Vc7Sb11zDFPg4RxiKXcLG5yrC5RafUcf3
-	 8SJw642ZxhCuLB2/9NRwmJyH9MWzn+AEipdJmRfnOJPkPqyoDk7BaR7BkK1XbdstSS
-	 zSjJmgldYjvahltpKwV84s2RU1SBc/RjkAnk1+yijh0JzrcCG2V+LQaNIdD7i+qsfb
-	 o0NNJ2CJA8eQNTIiJ272oYSI7+qnXRQc67ugGBrblamzxr/sPwDkUcW8WhnYOsWbri
-	 dHQWdPDdBfYmH10Xf4tThRYkbK5u10piIVNSjLoY4CkKyNIuWS0MohI1cO48ipcp4k
-	 el5aWi87l6kqg==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.1 000/291] 6.1.135-rc1 review
-Date: Fri, 25 Apr 2025 02:17:47 +0200
-Message-ID: <20250425001747.62746-1-ojeda@kernel.org>
-In-Reply-To: <20250423142624.409452181@linuxfoundation.org>
-References: <20250423142624.409452181@linuxfoundation.org>
+	s=k20201202; t=1745540391;
+	bh=aKhiMsG/T/rd79GeOlANyesH2TRaoF5Ms+z9wo9rTA8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=N4T5+cbQHAfwiBwuLYnzAYnys+qIOrKSb30ica+PoEnC0jLjc2/SXZ2T8WxSL3Lry
+	 vo49BIxDTNQWx9vRge8s/3/3FA6pqiG7mQik5TCie9JfZBXXywG+WxVNP3NUIaX0VS
+	 QlzKpjKJpzfoa7C6zFIsQVMSys7naSp7wEW44TyRID4ghVXymprjELaxb0Y3c1IGWS
+	 k1UlMLlWsyvrXfgtMC5TTOXpDNEgqfjO+Mfp3uDZsgbvbCV0W3PZJSaIhRdgWx2roO
+	 zGGSORIfTJWkWZDnq/g1LH0+5vdmvl7WBvmkVhnveKZ/UwRVxEkuw0Okuf7K2jxSt9
+	 K68QncOZ+Qofg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFA3380CFD9;
+	Fri, 25 Apr 2025 00:20:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,22 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 bpf] xsk: Fix race condition in AF_XDP generic RX path
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174554042976.3528880.6984313799746363403.git-patchwork-notify@kernel.org>
+Date: Fri, 25 Apr 2025 00:20:29 +0000
+References: <20250416101908.10919-1-e.kubanski@partner.samsung.com>
+In-Reply-To: <20250416101908.10919-1-e.kubanski@partner.samsung.com>
+To: e.kubanski <e.kubanski@partner.samsung.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bjorn@kernel.org,
+ magnus.karlsson@intel.com, maciej.fijalkowski@intel.com,
+ jonathan.lemon@gmail.com
 
-On Wed, 23 Apr 2025 16:39:49 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.1.135 release.
-> There are 291 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
+Hello:
 
-Boot-tested under QEMU for Rust x86_64:
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+On Wed, 16 Apr 2025 12:19:08 +0200 you wrote:
+> Move rx_lock from xsk_socket to xsk_buff_pool.
+> Fix synchronization for shared umem mode in
+> generic RX path where multiple sockets share
+> single xsk_buff_pool.
+> 
+> RX queue is exclusive to xsk_socket, while FILL
+> queue can be shared between multiple sockets.
+> This could result in race condition where two
+> CPU cores access RX path of two different sockets
+> sharing the same umem.
+> 
+> [...]
 
-Thanks!
+Here is the summary with links:
+  - [v2,bpf] xsk: Fix race condition in AF_XDP generic RX path
+    https://git.kernel.org/netdev/net/c/a1356ac7749c
 
-Cheers,
-Miguel
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
