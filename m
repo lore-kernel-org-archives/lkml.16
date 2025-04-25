@@ -1,486 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBA623C8D5
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4367F2594B4;
+	Fri, 25 Apr 2025 14:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745590882; cv=none; b=QCf9t+ZxGr7DgqNxASDw1x2lQCPVOcsDLHN6U3LX4XXqutf4mEvhbCbndnEaQaRraJX1EaKm101wJ8AJUdWR3skJRIedUamaO+auYdl1qVvE9x3lvB0EcFtPku8lM3U7Ty1eteIuyJKShNTTZ5heu7tDT97ktu01TByp4TFAWTE=
+	t=1745590889; cv=none; b=j2uheEFXeHAvUofDymy+/mbPpt8ifMeKIHkcxlt0MbnTXyA2EQbMLztCkT7zw+o7fbQSHwL3mMmnS0vs2LEruN7JHruLBqNyjVdCYyf6dsXGHxSUweYvKzI1TQA0c330lpGFs+u6hHLwYahSDiR/F2SmTCn4tJbw61OtWP/jMAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745590882; c=relaxed/simple;
-	bh=nmDRxC+knYKh7h47UaJi1RUPn/QPP+Qvi9F5Frj7RDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wmc3aNwCIXTQlh36xU+pLDuiPULkp4oVuPwCXrUlOEi+FF39S6Vvc2VzaplzlMB7/rEsOp7LNDivp6KXZCcn9qEli/e4iHChJ0DMrR7+Yr8tTxmfA4yWgrGCoqpCzS4YhFtFL05pTwQl5GGvMHYdSOIH+b3CR7NxY3VgeBXpjP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTyJrdtw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745590889; c=relaxed/simple;
+	bh=GQvWhApWb5wkib+UB0jlhNRWJNmTNt/ktUBASFkbyUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sLhdgHlWIGr2rKZDq7sl2cwCEWMoIe6qKrNDxo41YUFsE4GZmXiJSR+mMuMMG8jf8iD7cHA82MZs0p+oALsxgRVJ0tZTiOT3k3pUMF+q/auvRtW/E7luj1cIts8IRz5IYFxkXf7IwnoWuRfMtMAh7/MXAumPRrhgmaP/XyJFYTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=KzhEE2qm; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTyJrdtw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67FA6C4CEE4;
-	Fri, 25 Apr 2025 14:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745590881;
-	bh=nmDRxC+knYKh7h47UaJi1RUPn/QPP+Qvi9F5Frj7RDg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hTyJrdtwYF87YDIvFLMOFAu2aLHUWkYJOG0CNgwL4gYDxHge1ooHycrGEpDnIYPcl
-	 6FnKXxnpeEuu+wghoNCmQuIVIf4HcAZoDbegk+S8xIfZyAWBYY0XqIKFMcvmXeZaII
-	 NKkLguLpJstx7yYUrDOgvcpoQO4tKyjNiitZCHTCzH1iUeOT6Q95nFAjM7T2ULK9ST
-	 k4rsebaktlzkdpQcX1ZhfgTL9L2GgzBOKPBwb+i2BhHGQ3VKU+sjtWL4LpOxSZL34E
-	 R/7vhdj8pztfVag1EXZT9VmI1AzezqZozsoB0ufdP2GiiuJRP6NhUb4WxoRyS6lgGo
-	 B8KJzIiKoazMA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH] [RFC] x86/cpu: rework instruction set selection
-Date: Fri, 25 Apr 2025 16:15:15 +0200
-Message-Id: <20250425141740.734030-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="KzhEE2qm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=XQYBdxu34VR0VSrWEORHz7bVPlHkrPo4i9PmBo0cNQk=;
+	b=KzhEE2qm1q8ynq7e9nb+3UmJpHkBwLvvsVuNDVfC9TNpQr811xVeXyqrM3y6Xc
+	YkpjliF9RF3VLsHI0ZKmn5iULR6+VIOGHXlKIeRZ94WGqpI5dzZg3GR8n1T62qD8
+	3zhebkc3/wl2bWEkSCnn7tYDCiYQPeFPU7HTs33oCDcMk=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wA3mC0vmgto4FqxCQ--.32274S2;
+	Fri, 25 Apr 2025 22:20:32 +0800 (CST)
+Message-ID: <a6e097e4-6d57-4db2-a541-ebd9e4a9856b@163.com>
+Date: Fri, 25 Apr 2025 22:20:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: Remove redundant MPS configuration
+To: neil.armstrong@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+ bhelgaas@google.com, heiko@sntech.de, thomas.petazzoni@bootlin.com,
+ manivannan.sadhasivam@linaro.org, yue.wang@Amlogic.com
+Cc: pali@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250425095708.32662-1-18255117159@163.com>
+ <20250425095708.32662-3-18255117159@163.com>
+ <e6752451-4492-4ae2-9bad-3865c4945dbe@linaro.org>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <e6752451-4492-4ae2-9bad-3865c4945dbe@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wA3mC0vmgto4FqxCQ--.32274S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr4kXF4UKrW7KrW3CryfWFg_yoW5XrWUpF
+	W3uF4SyF48Jr4rWFsFyan5CFWftasIkr9rJr9xGr1xuF9FyFsrJFyayFWF9a4xZr42gFnY
+	yr1Fg347C3Z8tF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UGoGdUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxI6o2gLk-CiIQABsS
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-With cx8 and tsc being mandatory features, the only important
-architectural features are now cmov and pae.
 
-Change the large list of target CPUs to no longer pick the instruction set
-itself but only the mtune= optimization level and in-kernel optimizations
-that remain compatible with all cores.
+On 2025/4/25 19:59, neil.armstrong@linaro.org wrote:
+> On 25/04/2025 11:57, Hans Zhang wrote:
+>> With the PCI core now centrally configuring root port MPS to
+>> hardware-supported maximums (via 128 << pcie_mpss) during host probing,
+>> platform-specific MPS adjustments are redundant. This patch removes the
+>> custom the configuration of the max payload logic to align with the
+>> standardized initialization flow.
+>>
+>> By eliminating redundant code, this change prevents conflicts with global
+>> PCIe hierarchy tuning policies and reduces maintenance overhead. The 
+>> Meson
+>> driver now fully relies on the core PCI framework for MPS configuration,
+>> ensuring consistency across the PCIe topology while preserving
+>> hardware-specific MRRS handling.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pci-meson.c | 17 -----------------
+>>   drivers/pci/controller/pci-aardvark.c  |  2 --
+>>   2 files changed, 19 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-meson.c 
+>> b/drivers/pci/controller/dwc/pci-meson.c
+>> index db9482a113e9..126f38ed453d 100644
+>> --- a/drivers/pci/controller/dwc/pci-meson.c
+>> +++ b/drivers/pci/controller/dwc/pci-meson.c
+>> @@ -261,22 +261,6 @@ static int meson_size_to_payload(struct 
+>> meson_pcie *mp, int size)
+>>       return fls(size) - 8;
+>>   }
+>> -static void meson_set_max_payload(struct meson_pcie *mp, int size)
+>> -{
+>> -    struct dw_pcie *pci = &mp->pci;
+>> -    u32 val;
+>> -    u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>> -    int max_payload_size = meson_size_to_payload(mp, size);
+>> -
+>> -    val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+>> -    val &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>> -    dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
+>> -
+>> -    val = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
+>> -    val |= PCIE_CAP_MAX_PAYLOAD_SIZE(max_payload_size);
+>> -    dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, val);
+>> -}
+>> -
+>>   static void meson_set_max_rd_req_size(struct meson_pcie *mp, int size)
+>>   {
+>>       struct dw_pcie *pci = &mp->pci;
+>> @@ -381,7 +365,6 @@ static int meson_pcie_host_init(struct dw_pcie_rp 
+>> *pp)
+>>       pp->bridge->ops = &meson_pci_ops;
+>> -    meson_set_max_payload(mp, MAX_PAYLOAD_SIZE);
+>>       meson_set_max_rd_req_size(mp, MAX_READ_REQ_SIZE);
+> 
+> Seems you can also remove meson_set_max_rd_req_size() since it's
+> done by pcie_write_mrrs()
 
-The CONFIG_X86_CMOV instead becomes user-selectable and is now how
-Kconfig picks between 586-class (Pentium, Pentium MMX, K6, C3, GeodeGX)
-and 686-class (everything else) targets.
 
-In order to allow running on late 32-bit cores (Athlon, Pentium-M,
-Pentium 4, ...), the X86_L1_CACHE_SHIFT can no longer be set to anything
-lower than 6 (i.e. 64 byte cache lines).
+Dear neil,
 
-The optimization options now depend on X86_CMOV and X86_PAE instead
-of the other way round, while other compile-time conditionals that
-checked for MATOM/MGEODEGX1 instead now check for CPU_SUP_* options
-that enable support for a particular CPU family.
+Thank you very much for your reply and reminder.
 
-Link: https://lore.kernel.org/lkml/dd29df0c-0b4f-44e6-b71b-2a358ea76fb4@app.fastmail.com/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-This is what I had in mind as mentioned in the earlier thread on
-cx8/tsc removal. I based this on top of the Ingo's [RFC 15/15]
-patch.
----
- arch/x86/Kconfig                |   2 +-
- arch/x86/Kconfig.cpu            | 100 ++++++++++++++------------------
- arch/x86/Makefile_32.cpu        |  48 +++++++--------
- arch/x86/include/asm/vermagic.h |  36 +-----------
- arch/x86/kernel/tsc.c           |   2 +-
- arch/x86/xen/Kconfig            |   1 -
- drivers/misc/mei/Kconfig        |   2 +-
- 7 files changed, 74 insertions(+), 117 deletions(-)
+I want to wait for the result of the first patch discussion, and then 
+see if we need to remove meson_set_max_rd_req_size().
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a9d717558972..1e33f88c9b97 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1438,7 +1438,7 @@ config HIGHMEM
- 
- config X86_PAE
- 	bool "PAE (Physical Address Extension) Support"
--	depends on X86_32 && X86_HAVE_PAE
-+	depends on X86_32 && X86_CMOV
- 	select PHYS_ADDR_T_64BIT
- 	help
- 	  PAE is required for NX support, and furthermore enables
-diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index 6f1e8cc8fe58..0619566de93f 100644
---- a/arch/x86/Kconfig.cpu
-+++ b/arch/x86/Kconfig.cpu
-@@ -1,23 +1,32 @@
- # SPDX-License-Identifier: GPL-2.0
- # Put here option for CPU selection and depending optimization
--choice
--	prompt "x86-32 Processor family"
--	depends on X86_32
--	default M686
-+
-+config X86_CMOV
-+	bool "Require 686-class CMOV instructions" if X86_32
-+	default y
- 	help
--	  This is the processor type of your CPU. This information is
--	  used for optimizing purposes. In order to compile a kernel
--	  that can run on all supported x86 CPU types (albeit not
--	  optimally fast), you can specify "586" here.
-+	  Most x86-32 processor implementations are compatible with
-+	  the the CMOV instruction originally added in the Pentium Pro,
-+	  and they perform much better when using it.
-+
-+	  Disable this option to build for 586-class CPUs without this
-+	  instruction. This is only required for the original Intel
-+	  Pentium (P5, P54, P55), AMD K6/K6-II/K6-3D, Geode GX1 and Via
-+	  CyrixIII/C3 CPUs.
- 
- 	  Note that the 386 and 486 is no longer supported, this includes
- 	  AMD/Cyrix/Intel 386DX/DXL/SL/SLC/SX, Cyrix/TI 486DLC/DLC2,
- 	  UMC 486SX-S and the NexGen Nx586, AMD ELAN and all 486 based
- 	  CPUs.
- 
--	  The kernel will not necessarily run on earlier architectures than
--	  the one you have chosen, e.g. a Pentium optimized kernel will run on
--	  a PPro, but not necessarily on a i486.
-+choice
-+	prompt "x86-32 Processor optimization"
-+	depends on X86_32
-+	default X86_GENERIC
-+	help
-+	  This is the processor type of your CPU. This information is
-+	  used for optimizing purposes, but does not change compatibility
-+	  with other CPU types.
- 
- 	  Here are the settings recommended for greatest speed:
- 	  - "586" for generic Pentium CPUs lacking the TSC
-@@ -45,14 +54,13 @@ choice
- 
- config M586TSC
- 	bool "Pentium-Classic"
--	depends on X86_32
-+	depends on X86_32 && !X86_CMOV
- 	help
--	  Select this for a Pentium Classic processor with the RDTSC (Read
--	  Time Stamp Counter) instruction for benchmarking.
-+	  Select this for a Pentium Classic processor.
- 
- config M586MMX
- 	bool "Pentium-MMX"
--	depends on X86_32
-+	depends on X86_32 && !X86_CMOV
- 	help
- 	  Select this for a Pentium with the MMX graphics/multimedia
- 	  extended instructions.
-@@ -117,7 +125,7 @@ config MPENTIUM4
- 
- config MK6
- 	bool "K6/K6-II/K6-III"
--	depends on X86_32
-+	depends on X86_32 && !X86_CMOV
- 	help
- 	  Select this for an AMD K6-family processor.  Enables use of
- 	  some extended instructions, and passes appropriate optimization
-@@ -125,7 +133,7 @@ config MK6
- 
- config MK7
- 	bool "Athlon/Duron/K7"
--	depends on X86_32
-+	depends on X86_32 && !X86_PAE
- 	help
- 	  Select this for an AMD Athlon K7-family processor.  Enables use of
- 	  some extended instructions, and passes appropriate optimization
-@@ -147,42 +155,37 @@ config MEFFICEON
- 
- config MGEODEGX1
- 	bool "GeodeGX1"
--	depends on X86_32
-+	depends on X86_32 && !X86_CMOV
- 	help
- 	  Select this for a Geode GX1 (Cyrix MediaGX) chip.
- 
- config MGEODE_LX
- 	bool "Geode GX/LX"
--	depends on X86_32
-+	depends on X86_32 && !X86_PAE
- 	help
- 	  Select this for AMD Geode GX and LX processors.
- 
- config MCYRIXIII
- 	bool "CyrixIII/VIA-C3"
--	depends on X86_32
-+	depends on X86_32 && !X86_CMOV
- 	help
- 	  Select this for a Cyrix III or C3 chip.  Presently Linux and GCC
- 	  treat this chip as a generic 586. Whilst the CPU is 686 class,
- 	  it lacks the cmov extension which gcc assumes is present when
- 	  generating 686 code.
--	  Note that Nehemiah (Model 9) and above will not boot with this
--	  kernel due to them lacking the 3DNow! instructions used in earlier
--	  incarnations of the CPU.
- 
- config MVIAC3_2
- 	bool "VIA C3-2 (Nehemiah)"
--	depends on X86_32
-+	depends on X86_32 && !X86_PAE
- 	help
- 	  Select this for a VIA C3 "Nehemiah". Selecting this enables usage
- 	  of SSE and tells gcc to treat the CPU as a 686.
--	  Note, this kernel will not boot on older (pre model 9) C3s.
- 
- config MVIAC7
- 	bool "VIA C7"
--	depends on X86_32
-+	depends on X86_32 && !X86_PAE
- 	help
--	  Select this for a VIA C7.  Selecting this uses the correct cache
--	  shift and tells gcc to treat the CPU as a 686.
-+	  Select this for a VIA C7.
- 
- config MATOM
- 	bool "Intel Atom"
-@@ -192,20 +195,19 @@ config MATOM
- 	  accordingly optimized code. Use a recent GCC with specific Atom
- 	  support in order to fully benefit from selecting this option.
- 
--endchoice
--
- config X86_GENERIC
--	bool "Generic x86 support"
--	depends on X86_32
-+	bool "Generic x86"
- 	help
--	  Instead of just including optimizations for the selected
-+	  Instead of just including optimizations for a particular
- 	  x86 variant (e.g. PII, Crusoe or Athlon), include some more
- 	  generic optimizations as well. This will make the kernel
--	  perform better on x86 CPUs other than that selected.
-+	  perform better on a variety of CPUs.
- 
- 	  This is really intended for distributors who need more
- 	  generic optimizations.
- 
-+endchoice
-+
- #
- # Define implied options from the CPU selection here
- config X86_INTERNODE_CACHE_SHIFT
-@@ -216,17 +218,14 @@ config X86_INTERNODE_CACHE_SHIFT
- config X86_L1_CACHE_SHIFT
- 	int
- 	default "7" if MPENTIUM4
--	default "6" if MK7 || MPENTIUMM || MATOM || MVIAC7 || X86_GENERIC || X86_64
--	default "4" if MGEODEGX1
--	default "5" if MCRUSOE || MEFFICEON || MCYRIXIII || MK6 || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || MVIAC3_2 || MGEODE_LX
-+	default "6"
- 
- config X86_F00F_BUG
--	def_bool y
--	depends on M586MMX || M586TSC || M586
-+	def_bool !X86_CMOV
- 
- config X86_ALIGNMENT_16
- 	def_bool y
--	depends on MCYRIXIII || MK6 || M586MMX || M586TSC || M586 || MVIAC3_2 || MGEODEGX1
-+	depends on MCYRIXIII || MK6 || M586MMX || M586TSC || M586 || MVIAC3_2 || MGEODEGX1 || (!X86_CMOV && X86_GENERIC)
- 
- config X86_INTEL_USERCOPY
- 	def_bool y
-@@ -234,34 +233,23 @@ config X86_INTEL_USERCOPY
- 
- config X86_USE_PPRO_CHECKSUM
- 	def_bool y
--	depends on MCYRIXIII || MK7 || MK6 || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MGEODE_LX || MATOM
-+	depends on MCYRIXIII || MK7 || MK6 || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MGEODE_LX || MATOM || (X86_CMOV && X86_GENERIC)
- 
- config X86_TSC
- 	def_bool y
- 
--config X86_HAVE_PAE
--	def_bool y
--	depends on MCRUSOE || MEFFICEON || MCYRIXIII || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC7 || MATOM || X86_64
--
- config X86_CX8
- 	def_bool y
- 
--# this should be set for all -march=.. options where the compiler
--# generates cmov.
--config X86_CMOV
--	def_bool y
--	depends on (MK7 || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MCRUSOE || MEFFICEON || MATOM || MGEODE_LX || X86_64)
--
- config X86_MINIMUM_CPU_FAMILY
- 	int
- 	default "64" if X86_64
--	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
--	default "5" if X86_32
--	default "4"
-+	default "6" if X86_32 && X86_CMOV
-+	default "5"
- 
- config X86_DEBUGCTLMSR
- 	def_bool y
--	depends on !(MK6 || MCYRIXIII || M586MMX || M586TSC || M586) && !UML
-+	depends on X86_CMOV && !UML
- 
- config IA32_FEAT_CTL
- 	def_bool y
-@@ -297,7 +285,7 @@ config CPU_SUP_INTEL
- config CPU_SUP_CYRIX_32
- 	default y
- 	bool "Support Cyrix processors" if PROCESSOR_SELECT
--	depends on M586 || M586TSC || M586MMX || (EXPERT && !64BIT)
-+	depends on !64BIT
- 	help
- 	  This enables detection, tunings and quirks for Cyrix processors
- 
-diff --git a/arch/x86/Makefile_32.cpu b/arch/x86/Makefile_32.cpu
-index f5e933077bf4..ebd7ec6eaf34 100644
---- a/arch/x86/Makefile_32.cpu
-+++ b/arch/x86/Makefile_32.cpu
-@@ -10,30 +10,32 @@ else
- align		:= -falign-functions=0 -falign-jumps=0 -falign-loops=0
- endif
- 
--cflags-$(CONFIG_M586TSC)	+= -march=i586
--cflags-$(CONFIG_M586MMX)	+= -march=pentium-mmx
--cflags-$(CONFIG_M686)		+= -march=i686
--cflags-$(CONFIG_MPENTIUMII)	+= -march=i686 $(call tune,pentium2)
--cflags-$(CONFIG_MPENTIUMIII)	+= -march=i686 $(call tune,pentium3)
--cflags-$(CONFIG_MPENTIUMM)	+= -march=i686 $(call tune,pentium3)
--cflags-$(CONFIG_MPENTIUM4)	+= -march=i686 $(call tune,pentium4)
--cflags-$(CONFIG_MK6)		+= -march=k6
--# Please note, that patches that add -march=athlon-xp and friends are pointless.
--# They make zero difference whatsosever to performance at this time.
--cflags-$(CONFIG_MK7)		+= -march=athlon
--cflags-$(CONFIG_MCRUSOE)	+= -march=i686 $(align)
--cflags-$(CONFIG_MEFFICEON)	+= -march=i686 $(call tune,pentium3) $(align)
--cflags-$(CONFIG_MCYRIXIII)	+= $(call cc-option,-march=c3,-march=i486) $(align)
--cflags-$(CONFIG_MVIAC3_2)	+= $(call cc-option,-march=c3-2,-march=i686)
--cflags-$(CONFIG_MVIAC7)		+= -march=i686
--cflags-$(CONFIG_MATOM)		+= -march=atom
-+ifdef CONFIG_X86_CMOV
-+cflags-y			+= -march=i686
-+else
-+cflags-y			+= -march=i586
-+endif
- 
--# Geode GX1 support
--cflags-$(CONFIG_MGEODEGX1)	+= -march=pentium-mmx
--cflags-$(CONFIG_MGEODE_LX)	+= $(call cc-option,-march=geode,-march=pentium-mmx)
--# add at the end to overwrite eventual tuning options from earlier
--# cpu entries
--cflags-$(CONFIG_X86_GENERIC) 	+= $(call tune,generic,$(call tune,i686))
-+cflags-$(CONFIG_M586TSC)	+= -mtune=i586
-+cflags-$(CONFIG_M586MMX)	+= -mtune=pentium-mmx
-+cflags-$(CONFIG_M686)		+= -mtune=i686
-+cflags-$(CONFIG_MPENTIUMII)	+= -mtune=pentium2
-+cflags-$(CONFIG_MPENTIUMIII)	+= -mtune=pentium3
-+cflags-$(CONFIG_MPENTIUMM)	+= -mtune=pentium3
-+cflags-$(CONFIG_MPENTIUM4)	+= -mtune=pentium4
-+cflags-$(CONFIG_MK6)		+= -mtune=k6
-+# Please note, that patches that add -mtune=athlon-xp and friends are pointless.
-+# They make zero difference whatsosever to performance at this time.
-+cflags-$(CONFIG_MK7)		+= -mtune=athlon
-+cflags-$(CONFIG_MCRUSOE)	+= -mtune=i686 $(align)
-+cflags-$(CONFIG_MEFFICEON)	+= -mtune=pentium3 $(align)
-+cflags-$(CONFIG_MCYRIXIII)	+= -mtune=c3 $(align)
-+cflags-$(CONFIG_MVIAC3_2)	+= -mtune=c3-2
-+cflags-$(CONFIG_MVIAC7)		+= -mtune=i686
-+cflags-$(CONFIG_MATOM)		+= -mtune=atom
-+cflags-$(CONFIG_MGEODEGX1)	+= -mtune=pentium-mmx
-+cflags-$(CONFIG_MGEODE_LX)	+= -mtune=geode
-+cflags-$(CONFIG_X86_GENERIC) 	+= -mtune=generic
- 
- # Bug fix for binutils: this option is required in order to keep
- # binutils from generating NOPL instructions against our will.
-diff --git a/arch/x86/include/asm/vermagic.h b/arch/x86/include/asm/vermagic.h
-index e26061df0c9b..6554dbdfd719 100644
---- a/arch/x86/include/asm/vermagic.h
-+++ b/arch/x86/include/asm/vermagic.h
-@@ -5,42 +5,10 @@
- 
- #ifdef CONFIG_X86_64
- /* X86_64 does not define MODULE_PROC_FAMILY */
--#elif defined CONFIG_M586TSC
--#define MODULE_PROC_FAMILY "586TSC "
--#elif defined CONFIG_M586MMX
--#define MODULE_PROC_FAMILY "586MMX "
--#elif defined CONFIG_MATOM
--#define MODULE_PROC_FAMILY "ATOM "
--#elif defined CONFIG_M686
-+#elif defined CONFIG_X86_CMOV
- #define MODULE_PROC_FAMILY "686 "
--#elif defined CONFIG_MPENTIUMII
--#define MODULE_PROC_FAMILY "PENTIUMII "
--#elif defined CONFIG_MPENTIUMIII
--#define MODULE_PROC_FAMILY "PENTIUMIII "
--#elif defined CONFIG_MPENTIUMM
--#define MODULE_PROC_FAMILY "PENTIUMM "
--#elif defined CONFIG_MPENTIUM4
--#define MODULE_PROC_FAMILY "PENTIUM4 "
--#elif defined CONFIG_MK6
--#define MODULE_PROC_FAMILY "K6 "
--#elif defined CONFIG_MK7
--#define MODULE_PROC_FAMILY "K7 "
--#elif defined CONFIG_MCRUSOE
--#define MODULE_PROC_FAMILY "CRUSOE "
--#elif defined CONFIG_MEFFICEON
--#define MODULE_PROC_FAMILY "EFFICEON "
--#elif defined CONFIG_MCYRIXIII
--#define MODULE_PROC_FAMILY "CYRIXIII "
--#elif defined CONFIG_MVIAC3_2
--#define MODULE_PROC_FAMILY "VIAC3-2 "
--#elif defined CONFIG_MVIAC7
--#define MODULE_PROC_FAMILY "VIAC7 "
--#elif defined CONFIG_MGEODEGX1
--#define MODULE_PROC_FAMILY "GEODEGX1 "
--#elif defined CONFIG_MGEODE_LX
--#define MODULE_PROC_FAMILY "GEODE "
- #else
--#error unknown processor family
-+#define MODULE_PROC_FAMILY "586 "
- #endif
- 
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 489c779ef3ef..76b15ef8c85f 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1221,7 +1221,7 @@ bool tsc_clocksource_watchdog_disabled(void)
- 
- static void __init check_system_tsc_reliable(void)
- {
--#if defined(CONFIG_MGEODEGX1) || defined(CONFIG_MGEODE_LX) || defined(CONFIG_X86_GENERIC)
-+#if defined(CONFIG_CPU_SUP_CYRIX)
- 	if (is_geode_lx()) {
- 		/* RTSC counts during suspend */
- #define RTSC_SUSP 0x100
-diff --git a/arch/x86/xen/Kconfig b/arch/x86/xen/Kconfig
-index 222b6fdad313..2648459b8e8f 100644
---- a/arch/x86/xen/Kconfig
-+++ b/arch/x86/xen/Kconfig
-@@ -9,7 +9,6 @@ config XEN
- 	select PARAVIRT_CLOCK
- 	select X86_HV_CALLBACK_VECTOR
- 	depends on X86_64 || (X86_32 && X86_PAE)
--	depends on X86_64 || (X86_GENERIC || MPENTIUM4 || MATOM)
- 	depends on X86_LOCAL_APIC
- 	help
- 	  This is the Linux Xen port.  Enabling this will allow the
-diff --git a/drivers/misc/mei/Kconfig b/drivers/misc/mei/Kconfig
-index 7575fee96cc6..4deb17ed0a62 100644
---- a/drivers/misc/mei/Kconfig
-+++ b/drivers/misc/mei/Kconfig
-@@ -3,7 +3,7 @@
- config INTEL_MEI
- 	tristate "Intel Management Engine Interface"
- 	depends on X86 && PCI
--	default X86_64 || MATOM
-+	default X86_64 || CPU_SUP_INTEL
- 	help
- 	  The Intel Management Engine (Intel ME) provides Manageability,
- 	  Security and Media services for system containing Intel chipsets.
--- 
-2.39.5
+Best regards,
+Hans
 
