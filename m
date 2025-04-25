@@ -1,137 +1,216 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCD2194A44;
-	Fri, 25 Apr 2025 16:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D801C5D5A;
+	Fri, 25 Apr 2025 16:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599970; cv=none; b=N0GPDZK5S0B69WRJdK6KwglzhW9XUDK5pMpKovhCDutB18koaJyCV13BWlr/FAbGY+xi0+DksZdktne88eXU5WquBnmmkz8h7RSx/OlURcIAoIoUzs6KwrnblCJuZxdDWLdRolhWYvRXTbMPTDviGMcQLw6lO2htR7ieUXYjUT0=
+	t=1745599970; cv=none; b=Vo/aMLZ+jMRRqwy09Esq8PK6oI6A+DJ8EzqDc+UlBXvKqFLg5aGtL146UAvKbN6GnlPnZmcfeLdmjEq8J85tfB7UMADmjW/KNsJ8rWyLrzYJLEOiJ/MIA/JFRjL7ObgQwOXhtJgF/Vw7WO52eUIAY4G/XnMgo34uNc1OpzYUVyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745599970; c=relaxed/simple;
-	bh=E/6K11Nu1doilIwKesstDitPx1319vRFjJrnwsJWGlQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iAw6O8FNNNtrkb6kRgxPtPLqqGRPCT0KJI8Gh8RYEYle61wbNsuDHOG1fWfdDLy4fsTTzlsOgBAYutEsZn+6kNgy31k1iUB3pwWk2tndiiLv01Iou1HvZEUWQyl3qGsZvAmnPDS2hzhPktU036m0ocSSQCmFNIbNAfbxzncyQnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKdOKpO5; arc=none smtp.client-ip=209.85.210.180
+	bh=b7xROfOzVGEJ+F8+IU2YtVbSzBcJ5YtgexLbCieurdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P417MBdth86NNc7rJ3b7YOcnx2aQEeC8VTyyBDjzPWflKLCmZt/y9Ko3B+ptSLJNM8U8xrqp+GCzLack92J4OJbstzt+/7DONiVMMaIfVSDQ5obsLvEqqAZD7knNkF52Fn4CTWeKJdvqTwYP6iuxRk2eGVS92qgnDpHetNos8vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gIz6x0Bh; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKdOKpO5"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7376dd56eccso2683192b3a.0;
-        Fri, 25 Apr 2025 09:52:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIz6x0Bh"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af6a315b491so2431636a12.1;
+        Fri, 25 Apr 2025 09:52:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745599967; x=1746204767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KPE0jw/cbWW6nhWNEm39me5DCK6XBagvczncyZzTTCk=;
-        b=iKdOKpO5opOJBurICCYdUqe3owB2hmEQs7C5u+Z8vmwngCWhmhbfcAGi/8S13FDzxK
-         vkTVWoC7MB4PAZrqV/SXxVQ9BpJ5zOH1JddgmZcsHsMA7EqLcnwuOmRVVyN2go/0wjCa
-         PMj4RFlunZj0I21M30UJr4QfD/BQxrCt8zdklgZB5TZlMy5qqvaR3bBEv8ZROn6q8oQH
-         QfAY+5S2YzukBaJ6cP6F2oXhEiBKh5eN0Tr41Re9KW4PCXmsKVItLsWlet9FilsD3W4K
-         poJRXXIMjZHCTldh+OHRc8Q9KyoQqf0Nlsz10hQ7x3NgURcAAGnPCgpJjjY/8U/DAjuI
-         hE3Q==
+        d=gmail.com; s=20230601; t=1745599968; x=1746204768; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xUo8ldcQnt9oMg4WgBNcdcluURoGZZ9nuZ9OpdGRZpI=;
+        b=gIz6x0BhI4EX2pwLdijptx94vt96kgMUzvnMhUBr7TGNyYlGC25IcBjVLhNo18PiAj
+         cngpA8C41GVpXyCWQJzMQMvR6WjScCb6xyalHtaIBL0JLoSMkV9IjMLPs4z+uVvk6nMf
+         yzHmTf8qco18mJKnOWr6EM32cn0jre3CBy5z91erUqMIXGTBEE3ZWDt6Ur9SL8XUUKbp
+         xFS/Ow1A02h7W9ZfMMqFMB2umjOn/PnoVK9s5xcnZnWRq2HkN//OF+mx0iqsgqkT1roS
+         ufBRABWLYScCyU32vw/k7rZ5tLGm2uycnCvAmREpYf/TKB+XBz/Ef49ErnEQPFCPPRPF
+         jDig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745599967; x=1746204767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KPE0jw/cbWW6nhWNEm39me5DCK6XBagvczncyZzTTCk=;
-        b=nh4yAx3cTViVnmZL3IkujHRHzfFYs3tJs7647pj0uR3IPJfJl/5V1FIZ+ELcc6ZpIK
-         +SxP0daFGMjczkkHqgwffNYagZwLY1P6lu52ADYL6eCDYt1OIQ0GjCvI7qqa2LBR7EKI
-         VN6I7SaGkzTaCUVR3R4LH4HIaEkJdPgNJ6cg/GCMOS+S2yP8s3BCXCzvLcaRvg0QHWRd
-         uR3fgb/hs9J61B2wNk8PZHXg2zcQalDlYQWAHQ9CBBZHW1x4IHedqQ9bUCekNKP5oUfi
-         dGnQGmn4GYevRyRVyFTjmB7gokznh0UTz6uUjl28RkOwVADcton94Z5xNPvIr/kwdvPi
-         hsug==
-X-Forwarded-Encrypted: i=1; AJvYcCXCxkSsTIlRyTgQSo622+QUTMteh5sSmMJ55GZzry7J/ctSmYd/nWZvsxej+L0s4vDuYo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6dJJX1bLuwEzuxph/vFLsUJLmxjXcjafKuwyvS/urHAifPiZH
-	aa7r++6a6s2B4aEGJQ37ZFCEaDgFta7bzMfObm8svmg+Y+XXNSBXq57XPTy9JPSe5Bg824vbsYl
-	CJT2md12xnZSr7lhgdaqxUjR3ebM=
-X-Gm-Gg: ASbGncvhx0wtVGAMI/FqKYbi330W1q6RMeruKQanISbCXXMfaKqSdA56z2u2FjDuLmB
-	PLyYDkJ+u6gcfZlo2uwtv6HO9kgm+n6Jf1A5qq7TjD5VcYOG8WVoGlbnQ1Pb4HMO0Ir6cBUS03G
-	qdNAxHq0sy/jbq8tVHQlDk22uFj4oEO4/yNDWH8gl+89vJLiBD
-X-Google-Smtp-Source: AGHT+IHsE4tpFV00HDt6z5NOiZdy4xqMC2tQ7aGg3Q1NBqpL8kEB1l+fIJtawgH16A553JEcLhActfPM/+fohqK2riQ=
-X-Received: by 2002:a05:6a21:4002:b0:1f5:931d:ca6d with SMTP id
- adf61e73a8af0-2045b6ae067mr4051413637.1.1745599967202; Fri, 25 Apr 2025
- 09:52:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745599968; x=1746204768;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xUo8ldcQnt9oMg4WgBNcdcluURoGZZ9nuZ9OpdGRZpI=;
+        b=t4E2PxjlbAx1dQmrpyNmNuePOV+PRT9EB9mPLQS9PfvVIW3fRUsXMQhWaVyzL4BI++
+         HoSSP23p7meKOj2GjllV5ZMTBYLnMoncSt7ZUft+RQtOISbPO3gJVl6EHiH7dFKjBqew
+         UXCwe6/GAgoQGp2+8wgz7fZfsiZtqIEQdOz+hPkw8pIyxnIOQcfP2s2MWNm9hnFsjV+9
+         UGaTXXLKwy4qwJfmQWll3WZm/r58DdrlEHQNbDp9URz2MDVOINJk4VHic7WofRDMC8Vc
+         faAWvuyQfdafvZPUUOy2DnXyl4WDI2Fcj0y2eRFdVIWwkG8P2GU/EIgVlRdAXvbRQBmD
+         CsNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPGHyJtv8zoZkoqDJvxnAWprd2GZoNTeXJ+h8iOP5iDHIHOjc6BrgUartMOceV5ZTEArQ5OPukL5TNlxFX@vger.kernel.org, AJvYcCXWqHvqZf5N0+73JCHV7F/1qBD0RwlsmLtbkF9W/1OPY/hJJ3FLvaihf8Bz0FedTAjeiRj4VwP3xa0Tfr+a@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRpMBj00FEismFKcHYtrfWQaQCq5Gbmmrhxvj6gUESIwlp3Irs
+	ZWDnt1tfeSgpDbjOGcx0TiID+nWCDRrzfLdWnD/eBLWDCTXHAayB
+X-Gm-Gg: ASbGncv6axsU0qj8IyB+29vgbw3whcX2ZA1tTuxOP+uBMrLGZwlRocYbUPdvKvQs5gu
+	9AJteImqOaTdA3zaZ8wYokEsG2uR2//Ke/9MNVcgmKClYj/nBfwrkr3nW7MN4enMh6+FJfraZ12
+	S8uFnNkrTtFPTfIC6sGNOPWyZ+cyrdUbvUtWDnWeXUPfZ2b0lKLTana9tm+7HdbMXtIdNC1I7Lr
+	hvgwmmT9fjUR1/Kr2WMCVxn5/qx04/Aj7E7K8ikfMvCViQtsujuqP+USxz8KEktWH78R4/c9GH8
+	929Dtngemc1ZpW6NGoWhxhbowNFazGq4TjyStVu0mpkComC4sT05KANFpjBvgs+yZAbG
+X-Google-Smtp-Source: AGHT+IFojj7f+se3pSr/WR6LUWCeOvjNpR7dRU6l5UkaIDRsEoeOc1uUIphwPcBM8pHGM0feoLQTuw==
+X-Received: by 2002:a05:6a20:6f0a:b0:1fe:90c5:7cee with SMTP id adf61e73a8af0-2045b98fd7emr4718790637.28.1745599968077;
+        Fri, 25 Apr 2025 09:52:48 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:f97d:cfa2:241e:84aa])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a30csm3387276b3a.88.2025.04.25.09.52.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 09:52:47 -0700 (PDT)
+Date: Sat, 26 Apr 2025 00:52:42 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Jan Kara <jack@suse.cz>
+Cc: syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com,
+	viro@zeniv.linux.org.uk, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jfs-discussion@lists.sourceforge.net, shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [RFC PATCH] fs/buffer: Handle non folio buffer case for
+ drop_buffer()
+Message-ID: <aAu92k-iPbnWBKGz@vaxr-BM6660-BM6360>
+References: <66fcb7f9.050a0220.f28ec.04e8.GAE@google.com>
+ <20250423023703.632613-1-richard120310@gmail.com>
+ <nfnwvcefhvm5sfrvlqqf4zcdq2iyzk4f2n366ux3bjatj7o4vl@5hq5evovwsxp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425095042.838824-1-jianghaoran@kylinos.cn>
-In-Reply-To: <20250425095042.838824-1-jianghaoran@kylinos.cn>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 25 Apr 2025 09:52:34 -0700
-X-Gm-Features: ATxdqUEVCDIzlgDehq91RGcWZVxbp-q_nLVPhO7lnNt562E0ZXlBsA1KFWVfwvI
-Message-ID: <CAEf4Bzabjf68a-bP1RuHUEAdiz0MuWuyS5w+nZagEOHesDQgpQ@mail.gmail.com>
-Subject: Re: [PATCH] samples/bpf: Fix compilation failure for samples/bpf on
- LoongArch Fedora
-To: Haoran Jiang <jianghaoran@kylinos.cn>
-Cc: linux-kernel@vger.kernel.org, daniel@iogearbox.net, ast@kernel.org, 
-	andrii@kernel.org, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@google.com, haoluo@google.com, jolsa@kernel.org, nathan@kernel.org, 
-	ndesaulniers@google.com, trix@redhat.com, bpf@vger.kernel.org, 
-	llvm@lists.linux.dev, chenhuacai@kernel.org, yangtiezhu@loongson.cn, 
-	zhangxi <zhangxi@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nfnwvcefhvm5sfrvlqqf4zcdq2iyzk4f2n366ux3bjatj7o4vl@5hq5evovwsxp>
 
-On Fri, Apr 25, 2025 at 2:51=E2=80=AFAM Haoran Jiang <jianghaoran@kylinos.c=
-n> wrote:
->
-> When building the latest samples/bpf on LoongArch Fedora
->
->      make M=3Dsamples/bpf
->
-> There are compilation errors as follows:
->
-> In file included from ./linux/samples/bpf/sockex2_kern.c:2:
-> In file included from ./include/uapi/linux/in.h:25:
-> In file included from ./include/linux/socket.h:8:
-> In file included from ./include/linux/uio.h:9:
-> In file included from ./include/linux/thread_info.h:60:
-> In file included from ./arch/loongarch/include/asm/thread_info.h:15:
-> In file included from ./arch/loongarch/include/asm/processor.h:13:
-> In file included from ./arch/loongarch/include/asm/cpu-info.h:11:
-> ./arch/loongarch/include/asm/loongarch.h:13:10: fatal error: 'larchintrin=
-.h' file not found
->          ^~~~~~~~~~~~~~~
-> 1 error generated.
->
-> larchintrin.h is included in /usr/lib64/clang/14.0.6/include,
-> and the header file location is specified at compile time.
->
-> Test on LoongArch Fedora:
-> https://github.com/fedora-remix-loongarch/releases-info
->
-> Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> Signed-off-by: zhangxi <zhangxi@kylinos.cn>
-> Change-Id: I5fca6f0cee21e429982c5a3865efc5afeb3fa757
-> ---
->  samples/bpf/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Apr 23, 2025 at 12:13:29PM +0200, Jan Kara wrote:
+> On Wed 23-04-25 10:37:03, I Hsin Cheng wrote:
+> > When the folio doesn't have any buffers, "folio_buffers(folio)" will
+> > return NULL, causing "buffer_busy(bh)" to dereference a null pointer.
+> > Handle the case and jump to detach the folio if there's no buffer within
+> > it.
+> > 
+> > Reported-by: syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=de1498ff3a934ac5e8b4
+> > Fixes: 6439476311a64 ("fs: Convert drop_buffers() to use a folio")
+> > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> > ---
+> > syzbot reported a null pointer dereference issue. [1]
+> > 
+> > If the folio be sent into "drop_buffer()" doesn't have any buffers,
+> > assigning "bh = head" will make "bh" to NULL, and the following
+> > operation of cleaning the buffer will encounter null pointer
+> > dereference.
+> > 
+> > I checked other use cases of "folio_buffers()", e.g. the one used in
+> > "buffer_check_dirty_writeback()" [2]. They generally use the same
+> > approach to check whether a folio_buffers() return NULL.
+> > 
+> > I'm not sure whether it's normal for a non-buffer folio to reach inside
+> > "drop_buffers()", if it's not maybe we have to dig more into the problem
+> > and find out where did the buffers of folio get freed or corrupted, let
+> > me know if that's needed and what can I test to help. I'm new to fs
+> > correct me if I'm wrong I'll be happy to learn, and know more about
+> > what's the expected behavior or correct behavior for a folio, thanks !
+> 
+> Thanks for the patch but try_to_free_buffers() is not expected to be called
+> when there are no buffers. Seeing the stacktrace below, it is unexpected it
+> got called because filemap_release_folio() calls folio_needs_release()
+> which should make sure there are indeed buffers attached.
 >
 
-applied to bpf tree, thanks
+I see, it doesn't make sense to have no buffers inside
+try_to_free_buffers() then, I'll dig into it more and send v2.
 
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 3fa16412db15..927d72659173 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -392,7 +392,7 @@ $(obj)/%.o: $(src)/%.c
->         @echo "  CLANG-bpf " $@
->         $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(BPF_EXTRA_CFLAGS=
-) \
->                 -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
-> -               -I$(LIBBPF_INCLUDE) \
-> +               -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES) \
->                 -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-poi=
-nter-sign \
->                 -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-=
-types \
->                 -Wno-gnu-variable-sized-type-not-at-end \
-> --
-> 2.25.1
->
+> Can you print more about the folio where this happened? In particular it
+> would be interesting what's in folio->flags, folio->mapping->flags and
+> folio->mapping->aops (resolved to a symbol). Because either the mapping has
+> AS_RELEASE_ALWAYS set but then we should have ->releasepage handler, or
+> have PG_Private bit set without buffers attached to a page but then again
+> either ->releasepage should be set or there's some bug in fs/buffer.c which
+> can set PG_Private without attaching buffers (I don't see where that could
+> be).
+> 
+
+Hmm so I suppose when there're buffers attached, the PG_Private bit
+should always be set in folio->flags or folio->mapping->flags or
+folio->mapping->aops ?
+
+Thanks for your patience and detailed reviewed again, I'll refer back to
+you ASAP.
+
+Best regards,
+I Hsin Cheng
+
+> 								Honza
+> 
+> > 
+> > [1]:
+> > BUG: KASAN: null-ptr-deref in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+> > BUG: KASAN: null-ptr-deref in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+> > BUG: KASAN: null-ptr-deref in buffer_busy fs/buffer.c:2881 [inline]
+> > BUG: KASAN: null-ptr-deref in drop_buffers+0x6f/0x710 fs/buffer.c:2893
+> > Read of size 4 at addr 0000000000000060 by task kswapd0/74
+> > 
+> > CPU: 0 UID: 0 PID: 74 Comm: kswapd0 Not tainted 6.12.0-rc1-syzkaller-00031-ge32cde8d2bd7 #0
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> > Call Trace:
+> >  <TASK>
+> >  __dump_stack lib/dump_stack.c:94 [inline]
+> >  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+> >  print_report+0xe8/0x550 mm/kasan/report.c:491
+> >  kasan_report+0x143/0x180 mm/kasan/report.c:601
+> >  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+> >  instrument_atomic_read include/linux/instrumented.h:68 [inline]
+> >  atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+> >  buffer_busy fs/buffer.c:2881 [inline]
+> >  drop_buffers+0x6f/0x710 fs/buffer.c:2893
+> >  try_to_free_buffers+0x295/0x5f0 fs/buffer.c:2947
+> >  shrink_folio_list+0x240c/0x8cc0 mm/vmscan.c:1432
+> >  evict_folios+0x549b/0x7b50 mm/vmscan.c:4583
+> >  try_to_shrink_lruvec+0x9ab/0xbb0 mm/vmscan.c:4778
+> >  shrink_one+0x3b9/0x850 mm/vmscan.c:4816
+> >  shrink_many mm/vmscan.c:4879 [inline]
+> >  lru_gen_shrink_node mm/vmscan.c:4957 [inline]
+> >  shrink_node+0x3799/0x3de0 mm/vmscan.c:5937
+> >  kswapd_shrink_node mm/vmscan.c:6765 [inline]
+> >  balance_pgdat mm/vmscan.c:6957 [inline]
+> >  kswapd+0x1ca3/0x3700 mm/vmscan.c:7226
+> >  kthread+0x2f0/0x390 kernel/kthread.c:389
+> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> >  </TASK>
+> > 
+> > [2]:https://elixir.bootlin.com/linux/v6.14.3/source/fs/buffer.c#L97
+> > 
+> > Best regards,
+> > I Hsin Cheng
+> > ---
+> >  fs/buffer.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/fs/buffer.c b/fs/buffer.c
+> > index cc8452f60251..29fd17f78265 100644
+> > --- a/fs/buffer.c
+> > +++ b/fs/buffer.c
+> > @@ -2883,6 +2883,8 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
+> >  	struct buffer_head *head = folio_buffers(folio);
+> >  	struct buffer_head *bh;
+> >  
+> > +	if (!head)
+> > +		goto detach_folio;
+> >  	bh = head;
+> >  	do {
+> >  		if (buffer_busy(bh))
+> > @@ -2897,6 +2899,7 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
+> >  			__remove_assoc_queue(bh);
+> >  		bh = next;
+> >  	} while (bh != head);
+> > +detach_folio:
+> >  	*buffers_to_free = head;
+> >  	folio_detach_private(folio);
+> >  	return true;
+> > -- 
+> > 2.43.0
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
