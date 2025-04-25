@@ -1,105 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD502147E0
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B07211A3D;
+	Fri, 25 Apr 2025 17:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745602818; cv=none; b=Zk8pRHSPKR+9Lb8zcv8ddYfiwNMXXTbdaiGdCxL1S3/Pu8mRPoXi1tH6IXlYrXX9Q5aIToJwZ9mm1RNUumf91TOdPegC9h9vYenBRsqYlMXDN2b8UO7GRBimz0IV6uWD+fuQ8ux/QQadkLemxEy2JG+zCvUCactsxZnOyVWG6U4=
+	t=1745602824; cv=none; b=HBiRt810InRTVrTYKK7Z+zrSFf5cHyaZe/CbP69zYB89E1T7TshuXO2mgjNoYTluQCy6SM8rebEaVI46J9bUBLCEVR5cGdgrBTTefvKjbSXFxOQpE8G0Ig0k/TBSL+klaft6QWDRHXAcLl1S7K7bv2EVpjcKnt5iIByH4ZJ+R0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745602818; c=relaxed/simple;
-	bh=mPOkh/V13f+9kVTIqdTZrY7smCfmtConWHNf8TMl+vI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EucasXP/glx+gqEZVhiNZHnJJ6lQI5+nu6A2PISdoIufhJF9oZxaJHyKtiaAPHomgQ1W5BJcjowMsPKvhh7dd6P/lyKHru3sf8QWolWj5CAJ+ZA9xl1DOyaESy2625S/0vaeM0jrZJyoe40mGwhwIK2oddeEiUSuw25HdB+VwlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98A4A22EA;
-	Fri, 25 Apr 2025 10:40:10 -0700 (PDT)
-Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E7673F59E;
-	Fri, 25 Apr 2025 10:40:11 -0700 (PDT)
-From: James Morse <james.morse@arm.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	James Morse <james.morse@arm.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	peternewman@google.com,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Dave Martin <dave.martin@arm.com>,
-	Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v9 20/27] x86/resctrl: Remove a newline to avoid confusing the code move script
-Date: Fri, 25 Apr 2025 17:38:02 +0000
-Message-Id: <20250425173809.5529-21-james.morse@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250425173809.5529-1-james.morse@arm.com>
-References: <20250425173809.5529-1-james.morse@arm.com>
+	s=arc-20240116; t=1745602824; c=relaxed/simple;
+	bh=dD07SS44wuizxAu68++AhwtRyN/8n2xaSdbZAAQzMHs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MI6cgCw/tDjukPkYTi9FLDPNUjhXYolIq0Fd75aynSGtKT5wDvn6tGSDPZevRE8KiJW3RGj3omEoFd+5xdov/GKloNjYqdzbIhThRtIkyFDJxxDuIuUR6ot4kWtFxwn6ZQG8aOV3fzf3cPcUiE5eb9quStriZ138W1yJpf6tSrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3MlYAir; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3MlYAir"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45786C4CEE4;
+	Fri, 25 Apr 2025 17:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745602823;
+	bh=dD07SS44wuizxAu68++AhwtRyN/8n2xaSdbZAAQzMHs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=S3MlYAirmw8B+RJKBrrLSjIeAhYy/ps8kGvVKpn8bXTO8Q5OlURjy+96mQeDzbwN7
+	 xUlb7BLn++DemBOnwTN2cRgYOb5+m3OW2wbXcWKkAEz7Z2+2wNZ8n7k9XlenWXH5xR
+	 zbzDOwfDgy6JQxuEn1ChHufj+WN4Tk657pSRj5vO9fcjL4KXl0/gyGk/hLHB77S8Gk
+	 eYanJYswu3RlMXPN7KW2P/zUDkbelMbZx7cy3GfuszFL44O8hXXU8ojlW7TpOAtEdi
+	 F1kYGAvJuJSoPR1dxJQZpYd6fldSqjYmP2vEkNSdv6JgI5vyBfv8+SoJ6Ut4aD5xhw
+	 VoDHHQww4svig==
+From: Mark Brown <broonie@kernel.org>
+To: Walker Chen <walker.chen@starfivetech.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Thorsten Blum <thorsten.blum@linux.dev>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250424133648.86459-2-thorsten.blum@linux.dev>
+References: <20250424133648.86459-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] ASoC: starfive: Use max() to simplify code in
+ jh7110_tdm_syncdiv()
+Message-Id: <174560282200.225473.340728717437668088.b4-ty@kernel.org>
+Date: Fri, 25 Apr 2025 18:40:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-The resctrl filesystem code will shortly be moved to /fs/. This involves
-splitting all the existing files, with some functions remaining under
-arch/x86, and others moving to fs/resctrl.
+On Thu, 24 Apr 2025 15:36:49 +0200, Thorsten Blum wrote:
+> Use max() to simplify jh7110_tdm_syncdiv() and improve its readability.
+> 
+> 
 
-To make this reproducible, a python script does the heavy lif^W
-copy-and-paste. This involves some clunky parsing of C code.
+Applied to
 
-The parser gets confused by the newline after this #ifdef.
-Just remove it.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Tested-by: Peter Newman <peternewman@google.com>
-Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
-Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks!
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index e42bdb52378f..f17e5d2ac3ad 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -903,7 +903,6 @@ static int rdtgroup_rmid_show(struct kernfs_open_file *of,
- }
- 
- #ifdef CONFIG_PROC_CPU_RESCTRL
--
- /*
-  * A task can only be part of one resctrl control group and of one monitor
-  * group which is associated to that control group.
--- 
-2.39.5
+[1/1] ASoC: starfive: Use max() to simplify code in jh7110_tdm_syncdiv()
+      commit: 0787a08ae785366b9473905fc8bf23f165a08b8d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
