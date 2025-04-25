@@ -1,199 +1,125 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B7D71747;
-	Fri, 25 Apr 2025 14:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8CA24DFF4
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745589849; cv=none; b=XEA0nft/NhvJe5VBO9RfY9IYRzPsVAcfCsE68J2dt2pdraEbTFzOnQjgkEDlA9rwUyFQwMlQo75YHKncTWo23zWnCwjpS1hlFnmSaP9KdUaolkWsJFNtzmligbgPAz86PTyhMMWWcMejU8BY33TtyZVpNDwfsBCjno3Qa0fYHeI=
+	t=1745589851; cv=none; b=MfL7mQ2QKQCrVumF37Rhr2prGBp5Qskk8fysC4YNflZlnBPs8GildCmYBpDUxxZGM4/8iUW/DgxegDMApigLTdXKCFrnNlhmBV8P8xgtVTuWRjmXEI2ArqJ8I5QKO9XcHpPO8xR/AIRjQWKZyyeeXjNYVY+bVCXXpqZJP5EKMNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745589849; c=relaxed/simple;
-	bh=SFupk4v6QJ6TlAyt+7q2iFUfESVzQt4Wl/LCynUO2To=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KUeSrOgG1eOvtuj8DiRn9L8d9JJxWvMG/nUr10emHIVdN4VDYzcZvYxdw4Dwgc3yRNFqRC7HU431hZR3I7lVhnkeZ2dadVhaq6HZZyM4bLnPAEJJBIQ5uxMzc8Bm48u0b8bpSPOvWy7pVLXJU2szozLvyScegyQbitRmG7gxJAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cdLCh9im; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745589851; c=relaxed/simple;
+	bh=jOWcnqRbtDDv5Zy44Vn8KCOZ6bpsZZlhkcXNS4OzuwY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ty+U9PoAbX+XykIdsUUTrGyL+guGbRDl5FzcYHxU9kycAdCK7sIjOd7F0be4ipU5h8ylH4KByNu0QtwZ/npNYIlweRGIMW5JlICZ+qpNB5FLYGLNlYXoOLEYotK8DqYGn5lCtIfwQx99zV4tJYj3ikIenDZOYu0JQYwwPSlPQSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QTO4HLnT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cdLCh9im"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6GJUp83AnQU0MiirmcllULgGL0i2UtZufh6Ag9k8WPQ=; b=cdLCh9imvdPDJn9XZSscVYkaOh
-	wuLPxe9kSpgU+AwLB3ch8ed3Y4ttOyfmGV2Quf27dKavUqnkZO7IjGeZMHbxImCcjIUNev3buCChm
-	/o/QWG+M9l1oTfkrTQvXyHq+0lRT+vofp5q92mqHLvS3st0JvaRUyLRziwX8SoFT4iDsbm5ULuZjR
-	QV86LOtz7zRFoEdBpMR0459Z5V6IEDEfabipL6tncIwUgN5V1vmiHUlZaUDXqPbIRWiadblUhXm8z
-	H92GbaRMH1yJZRW5ircTv9Ja2MxhyiJsykVcogeFzm8XdlqMBV9ACHbfa/FXlWKhVjtFi4M4gGqxN
-	Jn+L1Zkw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u8Jem-0000000C3la-0QqR;
-	Fri, 25 Apr 2025 14:03:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A91333003C4; Fri, 25 Apr 2025 16:03:55 +0200 (CEST)
-Date: Fri, 25 Apr 2025 16:03:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "x86@kernel.org" <x86@kernel.org>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"kees@kernel.org" <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-	"samitolvanen@google.com" <samitolvanen@google.com>,
-	"ojeda@kernel.org" <ojeda@kernel.org>
-Subject: Re: [PATCH 5/6] x86_64,hyperv: Use direct call to hypercall-page
-Message-ID: <20250425140355.GC35881@noisy.programming.kicks-ass.net>
-References: <20250414111140.586315004@infradead.org>
- <20250414113754.435282530@infradead.org>
- <SN6PR02MB41575B92CD3027FE0FBFB9F3D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QTO4HLnT"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8TIsU023942
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:04:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=d+RRvapxVfl
+	VlK0w1oRaT6pBilQocJNCPlf8xNZWb34=; b=QTO4HLnTpoDC7GIS8P/vsJGlrpe
+	HTLXgbUE6t8AY8jQgrzUW4bEtNxZYCxssy4EQkVqnkaTb5vBana4wZOfYW4Zq+/J
+	YjffuJN8Eui3FSuVBRdSWxbotpDiyah8bAATCCgDX+75X87bQhgbNYF8xg7ufA5f
+	siailzcd6JpAMNe17k+7sHKNtTCMBlhkNCV1dgrAgJk2ATD8SD2zP3UMHXnMql7D
+	6jAXNWKsSxpWHAW/G5NfA5qL6lwqvDZrOk8xk5WMqCrqi/hY0vNsFVk+uXx/xjGZ
+	mJRnh+dYZsY74Ygek31yt/J3h05lrUrZwgtb/WWJyy4B45xDj5Wj5sLFJsA==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1s8kh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:04:08 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso2719784a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:04:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745589848; x=1746194648;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d+RRvapxVflVlK0w1oRaT6pBilQocJNCPlf8xNZWb34=;
+        b=QHGWDbda0abqvnXyTiAHVHmTWO/a9iI4qACvu1tOlKaV8NGlg3CTxeK/O1GjnXeywj
+         BIO4iW6bnPO+ghIRE+1x+xxoJd3dh/vHswyaxOtDcLzdaD+xc8zVcR60j/MgDi6tLU3Z
+         xTwE9cWsrmIl+leumMTE63Tw2KxGkxZvOGuzYn9zXYKFCgJi9NjKzUJ36e3OsI7yl4Ss
+         g8Nh8S/F4/PR7TKWHBBmdovKxKic0RS7L1N7z+M9vaDhWU80yAYoiKfU0RzX/DpkuxkT
+         uEIphvkEcjkABYJSvz6POLdhsFCepDuHmroNrXeC8QVjYENt1p/dtWzVgRcKU+zsTSTP
+         WCBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcJEvsTG61xO+m+7EkL7QTPiTBVTX9amy3yRLysX0qhoQowj0GvDYlOOCh5mXVHlkZYntr/G7EWZBDoG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTvYPE72RsK9PC3hyZcKWu7jJtha51Od3WyE7STgfpLcWG5+lm
+	StYDVldoohRHm9qbzMUZS7Cs6eLCEhHATtVJ6lhfrg8V5NkE8DPYbkurWZJ9/uqoM8vrhGHyFRV
+	uucHTitQgPEuErcRnt60vuwuY4PZ0kPxiiIzbjaBMmyysgQuXydAOL7ur7WNr9LM=
+X-Gm-Gg: ASbGncvLFigOLBCy+eqlM7DF/XSWAeRRzr7foup1XrzIanzsPp71l2Jnv/NSPC6ne0T
+	M5iTw/9e0W0kfyyo5SfhWeJ0LXltupTJqe003/M2Yr4FvKXH4a4RfruNLkf6loTcyRCn/Pb8vCF
+	h3KaEOqu/HqcO7J7kbuGKqOrD+wL83gOth+Fq7sg7EwJ5vrcnUr6zVqaG5i33kzxB1gCWzzoNcx
+	BT+Kn5Yu/0Z71ZmPdOOmH9oISomFwnQijSEcjwmVSYb/6BFJ0azsRGqCZKJq9EV/a0eqi5TYjgy
+	LA2jyM9L1qSmbfEeZGYXot5yuJyWq1qbORCmbWs=
+X-Received: by 2002:a17:90a:b391:b0:2ff:52b8:2767 with SMTP id 98e67ed59e1d1-309f7df2fdamr2554344a91.19.1745589847823;
+        Fri, 25 Apr 2025 07:04:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFX98i4SeNY1skrO7AIkeCTN7IMzgQCtRBV/tXFR4LeFTDxbSib55nvLowGQ9F0VUkCMg6Oww==
+X-Received: by 2002:a17:90a:b391:b0:2ff:52b8:2767 with SMTP id 98e67ed59e1d1-309f7df2fdamr2554328a91.19.1745589847495;
+        Fri, 25 Apr 2025 07:04:07 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef061c43sm3468697a91.19.2025.04.25.07.04.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 07:04:07 -0700 (PDT)
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Subject: [PATCH 2/2] dt-bindings: arm: qcom,ids: add SoC ID for SM8750
+Date: Fri, 25 Apr 2025 19:33:46 +0530
+Message-Id: <20250425140346.1087527-2-mukesh.ojha@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250425140346.1087527-1-mukesh.ojha@oss.qualcomm.com>
+References: <20250425140346.1087527-1-mukesh.ojha@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41575B92CD3027FE0FBFB9F3D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: kSD9_Fssd5XdOBPUlGvkT4fef2I4fR9R
+X-Proofpoint-ORIG-GUID: kSD9_Fssd5XdOBPUlGvkT4fef2I4fR9R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEwMCBTYWx0ZWRfX7IYf5jNRRQst z4Uo7TbGavy4pJiwQGRZCJ64lhlRGWjFqALYbRE4MCkoNTqt+nbhKIGeq12qH0wby9cQAgygy7R bOwjdA3WWg7U29evfXr/kSTR/SQ1vl9mdlS0arsSd4wA5poH1bWg0ahQglgKf7oIqykNHdMFjmn
+ /p5XYcMZ8wGzkweGbOJ+nqHTuu7yvXtZZsUI4rMHMeGBsQoGPy5jB7bQ7PY/FffjLQ+gJ8lYeT2 +HTTGEyUZChSn80OIhDHsCfRhww/kWlvqxUrPurWGYkO9//twcAHhDTgZs9yWLaTmB2HUzgHOBy bpvmaJGTiZ3X5f76dtchn7Ltby0WgD2qBhR6BEoy1t2IHI0nVTPx6kSrxeIoMuCf2XheXhM8XpJ
+ dmbkwZIdtlxWBD9oQIq5ZEZ5mv5wdvBtrY9QyoT/C4FRAjEhfVFxyNC6siv+NWq8+VLNfDhJ
+X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=680b9658 cx=c_pps a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=jdBGG2SsLo4Iwi_asnEA:9 a=uKXjsCUrEbL0IQVhDsJ9:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 mlxlogscore=945 spamscore=0 impostorscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250100
 
-On Mon, Apr 21, 2025 at 06:28:42PM +0000, Michael Kelley wrote:
+Add the unique ID for Qualcomm SM8750 SoC.
+This value is used to differentiate the SoC across qcom targets.
 
-> >  #ifdef CONFIG_X86_64
-> > +static u64 __hv_hyperfail(u64 control, u64 param1, u64 param2)
-> > +{
-> > +	return U64_MAX;
-> > +}
-> > +
-> > +DEFINE_STATIC_CALL(__hv_hypercall, __hv_hyperfail);
-> > +
-> >  u64 hv_pg_hypercall(u64 control, u64 param1, u64 param2)
-> >  {
-> >  	u64 hv_status;
-> > 
-> > +	asm volatile ("call " STATIC_CALL_TRAMP_STR(__hv_hypercall)
-> >  		      : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> >  		        "+c" (control), "+d" (param1)
-> > +		      : "r" (__r8)
-> >  		      : "cc", "memory", "r9", "r10", "r11");
-> > 
-> >  	return hv_status;
-> >  }
-> > +
-> > +typedef u64 (*hv_hypercall_f)(u64 control, u64 param1, u64 param2);
-> > +
-> > +static inline void hv_set_hypercall_pg(void *ptr)
-> > +{
-> > +	hv_hypercall_pg = ptr;
-> > +
-> > +	if (!ptr)
-> > +		ptr = &__hv_hyperfail;
-> > +	static_call_update(__hv_hypercall, (hv_hypercall_f)ptr);
-> > +}
+Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+---
+ include/dt-bindings/arm/qcom,ids.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-^ kept for reference, as I try and explain how static_call() works
-below.
+diff --git a/include/dt-bindings/arm/qcom,ids.h b/include/dt-bindings/arm/qcom,ids.h
+index 1b3e0176dcb7..11db67b2e08b 100644
+--- a/include/dt-bindings/arm/qcom,ids.h
++++ b/include/dt-bindings/arm/qcom,ids.h
+@@ -277,6 +277,7 @@
+ #define QCOM_ID_IPQ5302			595
+ #define QCOM_ID_QCS8550			603
+ #define QCOM_ID_QCM8550			604
++#define QCOM_ID_SM8750 			618
+ #define QCOM_ID_IPQ5300			624
+ #define QCOM_ID_IPQ5321			650
+ #define QCOM_ID_IPQ5424			651
+-- 
+2.34.1
 
-> > -skip_hypercall_pg_init:
-> > -	/*
-> > -	 * Some versions of Hyper-V that provide IBT in guest VMs have a bug
-> > -	 * in that there's no ENDBR64 instruction at the entry to the
-> > -	 * hypercall page. Because hypercalls are invoked via an indirect call
-> > -	 * to the hypercall page, all hypercall attempts fail when IBT is
-> > -	 * enabled, and Linux panics. For such buggy versions, disable IBT.
-> > -	 *
-> > -	 * Fixed versions of Hyper-V always provide ENDBR64 on the hypercall
-> > -	 * page, so if future Linux kernel versions enable IBT for 32-bit
-> > -	 * builds, additional hypercall page hackery will be required here
-> > -	 * to provide an ENDBR32.
-> > -	 */
-> > -#ifdef CONFIG_X86_KERNEL_IBT
-> > -	if (cpu_feature_enabled(X86_FEATURE_IBT) &&
-> > -	    *(u32 *)hv_hypercall_pg != gen_endbr()) {
-> > -		setup_clear_cpu_cap(X86_FEATURE_IBT);
-> > -		pr_warn("Disabling IBT because of Hyper-V bug\n");
-> > -	}
-> > -#endif
-> 
-> With this patch set, it's nice to see IBT working in a Hyper-V guest!
-> I had previously tested IBT with some hackery to the hypercall page
-> to add the missing ENDBR64, and didn't see any problems. Same
-> after these changes -- no complaints from IBT.
-
-No indirect calls left, no IBT complaints ;-)
-
-> > +	hv_set_hypercall_pg(hv_hypercall_pg);
-> > 
-> > +skip_hypercall_pg_init:
-> >  	/*
-> >  	 * hyperv_init() is called before LAPIC is initialized: see
-> >  	 * apic_intr_mode_init() -> x86_platform.apic_post_init() and
-> > @@ -658,7 +658,7 @@ void hyperv_cleanup(void)
-> >  	 * let hypercall operations fail safely rather than
-> >  	 * panic the kernel for using invalid hypercall page
-> >  	 */
-> > -	hv_hypercall_pg = NULL;
-> > +	hv_set_hypercall_pg(NULL);
-> 
-> This causes a hang getting into the kdump kernel after a panic.
-> hyperv_cleanup() is called after native_machine_crash_shutdown()
-> has done crash_smp_send_stop() on all the other CPUs. I don't know
-> the details of how static_call_update() works, 
-
-Right, so let me try and explain this :-)
-
-So we get the compiler to emit direct calls (CALL/JMP) to symbols
-prefixed with "__SCT__", in this case from asm, but more usually by
-means of the static_call() macro mess.
-
-Meanwhile DEFINE_STATIC_CALL() ensures such a symbol actually exists.
-This symbol is a little trampoline that redirects to the actual
-target function given to DEFINE_STATIC_CALL() -- __hv_hyperfail() in the
-above case.
-
-Then objtool runs through the resulting object file and stores the
-location of every call to these __STC__ prefixed symbols in a custom
-section.
-
-This enables static_call init (boot time) to go through the section and
-rewrite all the trampoline calls to direct calls to the target.
-Subsequent static_call_update() calls will again rewrite the direct call
-to point elsewhere.
-
-So very much how static_branch() does a NOP/JMP rewrite to toggle
-branches, static_call() rewrites (direct) call targets.
-
-> but it's easy to imagine that
-> it wouldn't work when the kernel is in such a state.
-> 
-> The original code setting hv_hypercall_pg to NULL is just tidiness.
-> Other CPUs are stopped and can't be making hypercalls, and this CPU
-> shouldn't be making hypercalls either, so setting it to NULL more
-> cleanly catches some erroneous hypercall (vs. accessing the hypercall
-> page after Hyper-V has been told to reset it).
-
-So if you look at (retained above) hv_set_hypercall_pg(), when given
-NULL, the call target is set to __hv_hyperfail(), which does an
-unconditional U64_MAX return.
-
-Combined with the fact that the thing *should* not be doing hypercalls
-anymore at this point, something is iffy.
-
-I can easily remove it, but it *should* be equivalent to before, where
-it dynamicall checked for hv_hypercall_pg being NULL.
