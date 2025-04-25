@@ -1,99 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA4D28F50E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1F4290088
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745619426; cv=none; b=ITnb9b8WkKwur7QOSwhluWF395YcvPVehkHKitz+bdi8UkSFb+LGYH9QFTjl8315cOURTlaa9w0IWRtf8CTP/tEWhXMlpSxy+qvDe360DKN1mPTOlcy4W4KVZJ7diqSgq4RgvHPoRges00gvneFD7gG4UDovQMtCfvOx8aokV8I=
+	t=1745619527; cv=none; b=Atf3Mi8XxW0bJVD3wv7Z26f8AJKIq7Eff6aK2fmc09yk231cvPZvWmIrQcsiuz0rgvfDmgoTSXpTMqGoEVbbDUdbINzDlNMj9toINcKnyEH8SXNDrDCzaDujHnE3gxrzXyVnnq7Xa/W53ScXtDRnlPNNlSfMfU9cYxezwIWMEPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745619426; c=relaxed/simple;
-	bh=NZS0pLxphm++YoQ+lY/XIRS6f24N+LZCWzNnPoFPAh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ASl3m8Pq1lVeqoh9Fhb+0Vwqcdk8j3MOM4jvOOPaz1a2H33Po6glJYBg0o8L7g3hsPA/oEQSag9tBb1kvpr1YCc/eCGhnaMWYFZ3pnLiKZGLr28Fdc8H+tQKQipzNYwNHwxesSFWP55ZR/Oe/P4sVpusFLpzyDvpPSAw1id+lbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lZ8UFzzn; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745619527; c=relaxed/simple;
+	bh=79khmCilj28Bw9iPJB9I+5VFOyP4giXQADVnconMfmI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=guF/kN0S8L0E4ZGg9Wj8s4oHAn4/ZDTLMriovmoqWjR0DWkUzPhDK5O5H9CCBcsRe12S1435tPG3l7NMKxjbI4HvuJqfrm5EH4GU6Clg/HnaM/sGMEieRpWqwAuG7BOad6yPi2P0p2qjWjEGJL+/JRkMNXxhPk0H4y4wQDSUmF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3TtrpGE; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZ8UFzzn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745619424; x=1777155424;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=NZS0pLxphm++YoQ+lY/XIRS6f24N+LZCWzNnPoFPAh8=;
-  b=lZ8UFzznveEc6aYO8FE3+CgXxRWv2yvSdxxBKNykkApKLFo7vNoZARhB
-   +GXL7Bdsj70kmOky3XOKXcIvXqa6PR5tdC3xxamWZA4KuFf5IzHXHrdiB
-   xNNur5SKAqxYEYtlzb4IfpiEwnuMb07CJ7++FQUJ3LJ3bOIXPIVlfqwDL
-   d8CgNkae61bVhxnZuNsNf8AyMR47xoOy5mcF7Wd6/u5zTemMwz8NuA1PI
-   5UnFprfjeB4b0oqVsUXCN8MNseqI7zoCF9EjwN/ciCeWc67UY2wAY7fu/
-   XjLXVbx3USSB0fjZx1v58PPpuzIaYPNCwRgBGzt46Peq3pEYx3nWYQfZL
-   g==;
-X-CSE-ConnectionGUID: QtOLzFUdSlGbzyEoE9F9BA==
-X-CSE-MsgGUID: qYjcIhF1SHquRPaFzs2ajg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="57486697"
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="57486697"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 15:17:04 -0700
-X-CSE-ConnectionGUID: /7eZaxymSH+ozLcp7jYBNQ==
-X-CSE-MsgGUID: PVY2jz9iQoODAgupB5unCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="138110039"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 25 Apr 2025 15:17:02 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8RLv-0005YL-2A;
-	Fri, 25 Apr 2025 22:16:59 +0000
-Date: Sat, 26 Apr 2025 06:16:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Subject: ERROR: modpost: "__ubsan_handle_add_overflow" [fs/fuse/virtiofs.ko]
- undefined!
-Message-ID: <202504260602.AgMbjS8a-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3TtrpGE"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so3886922a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745619525; x=1746224325; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c79mghSvLDh48/eN+ylfXjUf7C+oTHXfrsGjYdtgeRg=;
+        b=y3TtrpGE5Fu2Ntuptv0hBl+1HDwM2Ia59LIxELTzVIQVFTRS8ZwKIU6R02NepFzmMY
+         jc7ghGzAekTgUNeeL4GjzlpvHMEiteQvnZ64YXF3jVbJlvXW8NNpOiF5cGEu64zQ6XEA
+         UuwvRfbtgKGGrztkxzxxR6bFAUBDpEKq58dKvTnjOefV5JqYaWja7UrfNPRHg+375wiQ
+         UktINWZdaNib6LSNs2u3TMdhFIXfqXu8izhBUJp8BDhnia4v8Qa/fhi2yx5wZIXF1oaU
+         XdDPz/GYjSUV/8uvkz++vEp213T7sWyRDYiQT8IoxJWEG/1JZPqfLgqoxAMrxHLXD3Da
+         qw1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745619525; x=1746224325;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c79mghSvLDh48/eN+ylfXjUf7C+oTHXfrsGjYdtgeRg=;
+        b=E+HM1KvNvnHR2vbEzD2klFzQvgoKiMYEWuIW+znA8LU6SU8pr0Dz3eqCy2KKWvfVVq
+         jZKEjS2iHcX1XtWx3ex5SdGz14G4LBVX6uyau8/94TLDJjX2G2H97JiGemXfOk+YV6YG
+         SKOaTcnC480GF6FdzBSop8+7W5XXfTGuw+vfJH4CNY1nlz7stryk1FLOwxQyP7xnTpIA
+         lx/3JuB8FvexzyQF4xocZfC798sfoeg1ZH39pEkOA+fq9I0GeIV1q3OUDLdr8t5ovCjf
+         vusV0dUzBdPQl0PaWPM1Yy9OlWhliuEB74bEI/CwroowSDmuV+570A2PjheWkDjlRtJp
+         xkCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNfEwywwqJ1RA2jwxFM26qA1H6eOeEXhsZSc37DJ+c8MNKWxwU1xSRdPK2Euo34AgJ2+7tLAbzh5vlG/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg+PNk7ZzPVFHU0qCzf4k4tPEZ4mjyCBBX6UGa9Pm8A5TvOoq8
+	LwKdM1xdpm3OQxH8oZtglSnl9kWzuV5oBQgm03nY17zJIY+KEgu8ug4/bHe6CBrSxczulftHiRn
+	njQ==
+X-Google-Smtp-Source: AGHT+IFAchsJLO7/uMp7rAAyJLviGsYQWW/6iJZ/bglJ7sMum2UgV5vjC+rx1FqdI0bNNfPq3hywGuT2vOo=
+X-Received: from pjbee16.prod.google.com ([2002:a17:90a:fc50:b0:301:1ea9:63b0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2705:b0:2f9:cf97:56a6
+ with SMTP id 98e67ed59e1d1-30a01329418mr1651850a91.14.1745619525691; Fri, 25
+ Apr 2025 15:18:45 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:09:04 -0700
+In-Reply-To: <7604cbbf-15e6-45a8-afec-cf5be46c2924@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <7604cbbf-15e6-45a8-afec-cf5be46c2924@stanley.mountain>
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <174559676107.891772.3803946137571196074.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: x86: clean up a return
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hi Kees,
+On Mon, 24 Mar 2025 13:53:39 +0300, Dan Carpenter wrote:
+> Returning a literal X86EMUL_CONTINUE is slightly clearer than returning
+> rc.
 
-First bad commit (maybe != root cause):
+Applied to kvm-x86 misc, thanks!
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   02ddfb981de88a2c15621115dd7be2431252c568
-commit: 47f4af43e7c0cf702d6a6321542f0c0d9c4216e3 ubsan/overflow: Enable ignorelist parsing and add type filter
-date:   7 weeks ago
-config: s390-randconfig-002-20250426 (https://download.01.org/0day-ci/archive/20250426/202504260602.AgMbjS8a-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504260602.AgMbjS8a-lkp@intel.com/reproduce)
+[1/1] KVM: x86: clean up a return
+      commit: f804dc6aa20f2ce504456ffbaafc95db646c211b
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504260602.AgMbjS8a-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
->> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/fuse/virtiofs.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/fuse/virtiofs.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/ecryptfs/ecryptfs.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_mul_overflow" [fs/ecryptfs/ecryptfs.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/ecryptfs/ecryptfs.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/jffs2/jffs2.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/jffs2/jffs2.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_add_overflow" [fs/overlayfs/overlay.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_mul_overflow" [fs/overlayfs/overlay.ko] undefined!
->> ERROR: modpost: "__ubsan_handle_sub_overflow" [fs/overlayfs/overlay.ko] undefined!
-WARNING: modpost: suppressed 52 unresolved symbol warnings because there were too many)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--
+https://github.com/kvm-x86/linux/tree/next
