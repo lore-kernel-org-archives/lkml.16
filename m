@@ -1,88 +1,90 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E641028FFF9
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E2528FFF9;
+	Fri, 25 Apr 2025 22:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745619548; cv=none; b=jSBg0dtnkP7Y+dx/5NUPp4gx/1WAPPXip4on0xiX3FLza0ZA/FOq5kGi+4PRte3MWNWPI/rdObyz6PJk5fS2VgbjmV+9+2hZ5DxOipqdJG3eiIGsuLA6Jw+OA70F9xdG7BxlEQyiLCHp68g0KqIBg04vHSygJGFzbfVIYPr29NQ=
+	t=1745619581; cv=none; b=lvv1w4BBphWJ/Db7KeANcxkBqhSXfaifsuKqRb21D+IK5WqeYLoQ4S/3btas4XeYEwizUkaE1qezUHJDUGPb4c8z4DGi+XGoXX5fwwgWXb5a2hVY/M0+RsJnKbxoLLAdc8pa06qDozzeePj0BVCV8xvieyD/N03YD/DjRUXsNF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745619548; c=relaxed/simple;
-	bh=0gPwRJoETyKpWWZRYXz++1oSJIwiR7UbDHh4Yy958H0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=blkizht5HWGf4WU91ESkt0eNPjdsAVEcu4VSDJCIgKxdDSaZcDciMKJ4YtCl4P3khesRCyD8KzfTVBX6gAEhoHltqphZ0zFLkNyMIqzIBkSZpJpWyhMET7a0KSXNUf/DKes117PxFafcHnzPEf8M/zPyF0ObJ0Rbm+mje4qaP5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3GYbmYdI; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745619581; c=relaxed/simple;
+	bh=1pwExWgzQErCNQpG3IK9AR9oyY6nKXm+lJRSU+lGktw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=koapWcVnolS9oIZe3XyQoRIiFna9EIQ4Fl4gsdBYhVVZ6sbNA/F3bdYefy2iXAbgetQpsrYOL84uG+y6LAAxexh1C+UPLGSje/C3+TDws24OWDMjUnyTUhn+hEt5/T0kN51NeYCYJV3mv53OZUwcOOirfrqzsOrSeJEtanTYGP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQWurkxS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3GYbmYdI"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af5310c1ac1so1579203a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745619546; x=1746224346; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZVIkhW8fkFuUniqBPXDyVR4LXTr/9REpR/pQzgTViRw=;
-        b=3GYbmYdI0whtxeR22Prro+Q9U0CFpdDiYZv4CsAeoeWSWr1Dfn0/G9HcsGKTsJpCtN
-         XwppHEJ5t0D0uLYKM6nu4VQFzs2FBALTvucUKNNUJwfuvafq1NVcOz96CsBofLlHgbAV
-         HEFl24bh7L/mMuWdYeBvCfJ7U5ycl2YLgv8UpsX80vcVBGF852jSrdCGl1m2HMFwqRD6
-         ufuccP/P/b3dIsJnpmWxosw6JMbcPKWZ8wdR877ZHXD1N99Q4fpPTOLMFqvps9B6ipJw
-         S8AvdhJ50KPXxpNB8yM2Z1e35klJ6VHTpUhsCOykqJVBe2DdhyyoOoYTl+G8UT4xjUNz
-         WlIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745619546; x=1746224346;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZVIkhW8fkFuUniqBPXDyVR4LXTr/9REpR/pQzgTViRw=;
-        b=p7N4xPr5yHsghaVMnk8Q6y3pOH2ShGIQLFZZJGUwo/OcE16eySZ1ySh6AhbxD9my8Z
-         wF7za6SPYUUkwD2jQVS3S1B83reAE3T0wB/lKj3TsDyC3IoIOls/+s9J96m0C547tZuK
-         jYgdKoN6qce2Xm+m+bdIG9o1d637i3/Px8Tv6bWNjyizg5w8hvGQzNawr/NseKXeQrk2
-         zIcpHHuo9oz+3Elb3Bzy1S7Fu/ZkwJEs32Xpby6k2lir0KL531dReuIolH2ubcqYBjGO
-         fsqEQ0JTYVb42PuW8GsbyBMuYxZB+7DEqxNTnqn4OcUDODAjfpdmEUnFeeU/uKKJ+xH3
-         QjWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOum1MlcP23qXX2V+5//yS20i9MRzuCGfj3PdC8bOHGGxtJoJWKMOv0cukeE/VUs/P/I1JUmJ6QEwXkJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYpHBS0bV6xo6FqbHqQpdKwqNo8btzzH4QCPNj7IyqI+rMcXOu
-	b8fBHMK9+v74g7ZYUhJLoTRpKSwZuHfl+RGnYqgMBe+cdwhL/6VJxxql5pxYMucaR+DBJTi3xoo
-	xMg==
-X-Google-Smtp-Source: AGHT+IHJf4yQqQzqWM7THJ68j5gILk91+zedv5dhDdPsRPkP5XfTqKbEGooI+9DnFLMMiyrID7rTafsT6dg=
-X-Received: from pjbsn3.prod.google.com ([2002:a17:90b:2e83:b0:2fc:2f33:e07d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e74b:b0:21f:136a:a374
- with SMTP id d9443c01a7336-22dbf742daamr64519875ad.43.1745619546165; Fri, 25
- Apr 2025 15:19:06 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:09:06 -0700
-In-Reply-To: <20250227010111.3222742-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQWurkxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52299C4CEE4;
+	Fri, 25 Apr 2025 22:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745619580;
+	bh=1pwExWgzQErCNQpG3IK9AR9oyY6nKXm+lJRSU+lGktw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=nQWurkxS05sNgzdnf0RW8zEdnoFaCTBD985ecBJa0eiqtG5dNbVg+dzxthbK0RVet
+	 znj3yKgZzJFZDllRGUljS/xgCVF5/YhcM/xZF7TsZ+Q0ZBoyGJPV4LUl3RP6BfQ7/W
+	 K9igGWa8EyJuLIv4v8L4a5FpktEtG6fGsVjDaA/lym8ORbnYunNGPijZEbVOdhxAQW
+	 dCLMrUsv7Dix0kxsVqoeBswgwZGYCrlmuKi7ZZAxjtLuliAvD+YDZSqj8qCl+BjHpz
+	 Cd+2A9yzinIot4ReDIkWv0ALzqP18Q99q7oqfGAZvJyb4PT4uXiITlt/CbtCgQ7jtb
+	 sCHunmNDmQ/eg==
+From: Mark Brown <broonie@kernel.org>
+Date: Fri, 25 Apr 2025 23:19:01 +0100
+Subject: [PATCH] kunit: configs: Enable coverage of the bitfield packing
+ library
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227010111.3222742-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <174559680533.892279.18189232483657101534.b4-ty@google.com>
-Subject: Re: [PATCH 0/2] KVM: x86: Advertise support for WRMSRNS
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250425-kunit-enable-missing-tests-v1-1-263391818e76@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFUKDGgC/x3MQQqDMBAF0KvIrDsQUwXjVUoXqf7qYDuWTFoE8
+ e6GLt/m7WRIAqO+2inhJyarFtSXioY56gSWsZi8861rvOflq5IZGh8v8FvMRCfOsGwc6i4A4eq
+ GCCrBJ+Ep2z+/3Y/jBJ98XyFsAAAA
+X-Change-ID: 20250422-kunit-enable-missing-tests-9189ee930cae
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=972; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=1pwExWgzQErCNQpG3IK9AR9oyY6nKXm+lJRSU+lGktw=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoDAp6+lP6/ndCW8ZI2tXyIFYRXjlEQ0Zu2sJoStoo
+ C2ggJbCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaAwKegAKCRAk1otyXVSH0Ij0B/
+ 49P0xPGDljkPpfc1s5fxxrfeU0z8QYeyQ7oIIm6/v/z1wfYh5oKrF8lOeL3D17+XAkE6ysVpo/lCjc
+ 3sk8cncoI+WjN9mIZpm5MGenYjfqD5TjBIGuuV/r6eNIkuiR6Xq95qp9VPqYMJf6gT/alvX4TQJjiJ
+ IsnuB5riA0O5cqa2izqbenxxr0/nmSCbXICDKb79NX6WvFSNDQFfbe3xkSiM7VVNCnzDiOv4nvhhoU
+ jKr0ksI90E1FSAA1q2/0cwFpuGNynIO1wycrV9/bhzIq+XkYxgeJmKl1pHolOX77dtUNm7BlwF40uv
+ PoUCiaZiKumDOezHIWXIfxsZlMLv1B
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Wed, 26 Feb 2025 17:01:09 -0800, Sean Christopherson wrote:
-> Advertise support for WRMSRNS, which should be trivial, but is mildly
-> annoying due to a token pasting collision between the instruction macro
-> and KVM's CPUID feature bit shenanigans.
-> 
-> Sean Christopherson (2):
->   x86/msr: Rename the WRMSRNS opcode macro to ASM_WRMSRNS (for KVM)
->   KVM: x86: Advertise support for WRMSRNS
-> 
-> [...]
+There are KUnit tests for the bitfield packing library but these depend
+on CONFIG_PACKING which is not enabled by anything in either the
+existing KUnit all_tests.config or the base UML config it runs on as
+standard.  Enable that in all_tests.config to improve coverage.
 
-Applied to kvm-x86 misc, thanks!
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/kunit/configs/all_tests.config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-[1/2] x86/msr: Rename the WRMSRNS opcode macro to ASM_WRMSRNS (for KVM)
-      commit: 3fa0fc95db6df904dc812fa806a55ea6bafa65c1
-[2/2] KVM: x86: Advertise support for WRMSRNS
-      commit: ead4dac16de22081956f7af1c795bfbebd2d5866
+diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
+index cdd9782f9646..b0223b7aebde 100644
+--- a/tools/testing/kunit/configs/all_tests.config
++++ b/tools/testing/kunit/configs/all_tests.config
+@@ -51,3 +51,5 @@ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_SOC=y
+ CONFIG_SND_SOC_TOPOLOGY_BUILD=y
++
++CONFIG_PACKING=y
 
---
-https://github.com/kvm-x86/linux/tree/next
+---
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+change-id: 20250422-kunit-enable-missing-tests-9189ee930cae
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
