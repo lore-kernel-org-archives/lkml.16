@@ -1,134 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1161F236C
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022181A5BA0;
+	Fri, 25 Apr 2025 17:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745601034; cv=none; b=Wwl7iqFDVSlRWFJgNbO+D4Xp5JnZBaMVMYZm7ieKHCWawe1cO+PBmH7lckOwm6Qv53lsIxLh1sls/mCNGGKiXSaFC0kWo/1qMjQZ1f5A+ShCfQU+1jFZVp7ntqIsbW/gkQUaJbX1xTo2tUmAk6GsewLCDsrxhIfVAb+aMj9nOBY=
+	t=1745601138; cv=none; b=rN+eSwwNS4xNanNRC2lHFIW8XMnSsrqJtjXH59n0etttvKeD44WXSE42daowEaH6Rc6tkEsgdtPRtQkNNVXgxP/vmRF09GqQEZxmMEmyaUT6UbD2dMNbetNYk9GCDBQu4fLvn4Lutzd9w9OKIy02C8D7M+25BfcWCA1BMgI8FiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745601034; c=relaxed/simple;
-	bh=FbyloRG52sZ0U76WwGC8yGVG3hkmBvPUf49uGXd3KDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HucOu2cu5KiZqHgHGsjDidf0+2AZ2glp5+rc8DBg8cE+zxrAMPmPbn07Ou4vsBdCTcXWes5UnYZz2ynHXuOSCmcoMwogduuyhe40VnRy7bUUDsC3DyB6e0sXWeVhVJv5iVjmroANQM9ilzws+kPOseWIP4D5VWjVf74k8cGDr9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cOSPvxRN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745601138; c=relaxed/simple;
+	bh=3U78nk8+OCaeXgDy4P6JXWxliABBj1zQnA3H/RaZDHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S8UFL9EkNTF4ffmc3o1jCrUv56tUov+jtGw1ylLE8xtDtroorgWbbmeuGrkJovGownoyb0vN8l+JbpjBELzax24SrVeUfou81C6On0mt/7jowTjI7vHc/ztN2sIRS8WukO2e/ygYcQ7RnY0Pkn6SVkyUqQLuw51YqBQb2i0AX3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meH8PVrv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cOSPvxRN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745601031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E++EP/qyhBhnU78F8YJ3hqy4YXPQ7IU7/6PY2ABXPtw=;
-	b=cOSPvxRNLD/TQqW8w5FRMmvEgo9ufPgkvx7Hes7a+01YQ3hAhIzqjLH2P44xX5I1RHlH4g
-	j5sSiddNsCykG4U8Uv/qnG89Cgq5HZTdjKSeT/Mu8PYjkwPzIJIRYNen2beyg+OEgMXjCT
-	dNi6aweUyVmiqMRjyfINVTGLsjQZ6g4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-114-m4D3ng92OneawdUQoySZzQ-1; Fri,
- 25 Apr 2025 13:10:26 -0400
-X-MC-Unique: m4D3ng92OneawdUQoySZzQ-1
-X-Mimecast-MFC-AGG-ID: m4D3ng92OneawdUQoySZzQ_1745601024
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 325511800876;
-	Fri, 25 Apr 2025 17:10:24 +0000 (UTC)
-Received: from p16v.redhat.com (unknown [10.44.33.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7E8CB1800D9D;
-	Fri, 25 Apr 2025 17:10:19 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meH8PVrv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE266C4CEE4;
+	Fri, 25 Apr 2025 17:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745601137;
+	bh=3U78nk8+OCaeXgDy4P6JXWxliABBj1zQnA3H/RaZDHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=meH8PVrvMt3xXKv0+RutK/uTNkhuORnaRPsqFBrurq9b2X7jON8JVhUqynwBfTAb5
+	 BUfHGI11ypsuqUdKEKoq0y0oiRNFZBXK6U9Ba8RopuRE6hco2lCUOge7XxWBiAJW3h
+	 Hxo6gpBSBm0tI00doKzBV66QdrnRME3QE+bbhB4F6iytJdf3MSRPRI2/HUrWaBRA1m
+	 JCcgQY0qdX1r6/M4p1NyvzLlFg/s+oS9oM4vWfEftg51+HfFIBV8P4ccO7Kvf1izPi
+	 DCKR6urteIZU/xLjvpfkl9nXB1B1jmkZ0a86G1z9vsytA/JyT4qbjwoZ8qW1dy6yKY
+	 ozJXJgq8V19eQ==
+Date: Fri, 25 Apr 2025 10:12:14 -0700
+From: Kees Cook <kees@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next v5 8/8] mfd: zl3073x: Register DPLL sub-device during init
-Date: Fri, 25 Apr 2025 19:09:35 +0200
-Message-ID: <20250425170935.740102-9-ivecera@redhat.com>
-In-Reply-To: <20250425170935.740102-1-ivecera@redhat.com>
-References: <20250425170935.740102-1-ivecera@redhat.com>
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Hildenbrand <david@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mm: perform VMA allocation, freeing, duplication in
+ mm
+Message-ID: <202504251010.C5CCE66@keescook>
+References: <cover.1745528282.git.lorenzo.stoakes@oracle.com>
+ <0f848d59f3eea3dd0c0cdc3920644222c40cffe6.1745528282.git.lorenzo.stoakes@oracle.com>
+ <51903B43-2BFC-4BA6-9D74-63F79CF890B7@kernel.org>
+ <7212f5f4-f12b-4b94-834f-b392601360a3@lucifer.local>
+ <n6lrbjs4o6luzl3fydpo4frj35q6kvoz74mhlyae5gp7t5loyy@ubmfmzwfhnwq>
+ <CAJuCfpErtLvktCsbFSGmrT_zir9z0g+uuVvhr=QEitA7ARkdkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <CAJuCfpErtLvktCsbFSGmrT_zir9z0g+uuVvhr=QEitA7ARkdkw@mail.gmail.com>
 
-Register DPLL sub-devices to expose the functionality provided
-by ZL3073x chip family. Each sub-device represents one of
-the available DPLL channels.
+On Fri, Apr 25, 2025 at 08:32:48AM -0700, Suren Baghdasaryan wrote:
+> On Fri, Apr 25, 2025 at 6:55 AM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
+> >
+> > * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250425 06:40]:
+> > > On Thu, Apr 24, 2025 at 08:15:26PM -0700, Kees Cook wrote:
+> > > >
+> > > >
+> > > > On April 24, 2025 2:15:27 PM PDT, Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+> > > > >+static void vm_area_init_from(const struct vm_area_struct *src,
+> > > > >+                        struct vm_area_struct *dest)
+> > > > >+{
+> > > > >+  dest->vm_mm = src->vm_mm;
+> > > > >+  dest->vm_ops = src->vm_ops;
+> > > > >+  dest->vm_start = src->vm_start;
+> > > > >+  dest->vm_end = src->vm_end;
+> > > > >+  dest->anon_vma = src->anon_vma;
+> > > > >+  dest->vm_pgoff = src->vm_pgoff;
+> > > > >+  dest->vm_file = src->vm_file;
+> > > > >+  dest->vm_private_data = src->vm_private_data;
+> > > > >+  vm_flags_init(dest, src->vm_flags);
+> > > > >+  memcpy(&dest->vm_page_prot, &src->vm_page_prot,
+> > > > >+         sizeof(dest->vm_page_prot));
+> > > > >+  /*
+> > > > >+   * src->shared.rb may be modified concurrently when called from
+> > > > >+   * dup_mmap(), but the clone will reinitialize it.
+> > > > >+   */
+> > > > >+  data_race(memcpy(&dest->shared, &src->shared, sizeof(dest->shared)));
+> > > > >+  memcpy(&dest->vm_userfaultfd_ctx, &src->vm_userfaultfd_ctx,
+> > > > >+         sizeof(dest->vm_userfaultfd_ctx));
+> > > > >+#ifdef CONFIG_ANON_VMA_NAME
+> > > > >+  dest->anon_name = src->anon_name;
+> > > > >+#endif
+> > > > >+#ifdef CONFIG_SWAP
+> > > > >+  memcpy(&dest->swap_readahead_info, &src->swap_readahead_info,
+> > > > >+         sizeof(dest->swap_readahead_info));
+> > > > >+#endif
+> > > > >+#ifdef CONFIG_NUMA
+> > > > >+  dest->vm_policy = src->vm_policy;
+> > > > >+#endif
+> > > > >+}
+> > > >
+> > > > I know you're doing a big cut/paste here, but why in the world is this function written this way? Why not just:
+> > > >
+> > > > *dest = *src;
+> > > >
+> > > > And then do any one-off cleanups?
+> > >
+> > > Yup I find it odd, and error prone to be honest. We'll end up with uninitialised
+> > > state for some fields if we miss them here, seems unwise...
+> > >
+> > > Presumably for performance?
+> > >
+> > > This is, as you say, me simply propagating what exists, but I do wonder.
+> >
+> > Two things come to mind:
+> >
+> > 1. How ctors are done.  (v3 of Suren's RCU safe patch series, willy made
+> > a comment.. I think)
+> >
+> > 2. Some race that Vlastimil came up with the copy and the RCU safeness.
+> > IIRC it had to do with the ordering of the setting of things?
+> >
+> > Also, looking at it again...
+> >
+> > How is it safe to do dest->anon_name = src->anon_name?  Isn't that ref
+> > counted?
+> 
+> dest->anon_name = src->anon_name is fine here because right after
+> vm_area_init_from() we call dup_anon_vma_name() which will bump up the
+> refcount. I don't recall why this is done this way but now looking at
+> it I wonder if I could call dup_anon_vma_name() directly instead of
+> this assignment. Might be just an overlooked legacy from the time we
+> memcpy'd the entire structure. I'll need to double-check.
 
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
-v3->v4:
-* use static mfd cells
----
- drivers/mfd/zl3073x-core.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Oh, is "dest" accessible to other CPU threads? I hadn't looked and was
+assuming this was like process creation where everything gets built in
+isolation and then attached to the main process tree. I was thinking
+this was similar.
 
-diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-index 41a874480758a..54b614d542d11 100644
---- a/drivers/mfd/zl3073x-core.c
-+++ b/drivers/mfd/zl3073x-core.c
-@@ -7,6 +7,7 @@
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/math64.h>
-+#include <linux/mfd/core.h>
- #include <linux/mfd/zl3073x.h>
- #include <linux/module.h>
- #include <linux/netlink.h>
-@@ -752,6 +753,14 @@ static void zl3073x_devlink_unregister(void *ptr)
- 	devlink_unregister(ptr);
- }
- 
-+static const struct mfd_cell zl3073x_dpll_cells[] = {
-+	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 0),
-+	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
-+	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
-+	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
-+	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
-+};
-+
- /**
-  * zl3073x_dev_probe - initialize zl3073x device
-  * @zldev: pointer to zl3073x device
-@@ -823,6 +832,16 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
- 	if (rc)
- 		return rc;
- 
-+	/* Add DPLL sub-device cell for each DPLL channel */
-+	rc = devm_mfd_add_devices(zldev->dev, PLATFORM_DEVID_AUTO,
-+				  zl3073x_dpll_cells, chip_info->num_channels,
-+				  NULL, 0, NULL);
-+	if (rc) {
-+		dev_err_probe(zldev->dev, rc,
-+			      "Failed to add DPLL sub-device\n");
-+		return rc;
-+	}
-+
- 	/* Register the device as devlink device */
- 	devlink = priv_to_devlink(zldev);
- 	devlink_register(devlink);
 -- 
-2.49.0
-
+Kees Cook
