@@ -1,34 +1,34 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18F821480D
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7A72417EF
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745578915; cv=none; b=Ku0r8bW/LP/iw9QJgAq8OjTjYf4PXs1Qs8aRXppcw3YUd/wkG4JrD2R8bFj2X1LRBzfFKPPSAfBdAjm86+r6WQ22kNkPunsn48d+qmAf1gq/lhuAAB7BvA5OUb65VT1I7TExpsyCRmS9lcSZbroKudBHjTfYFCjAxVZC1JAfoqo=
+	t=1745578918; cv=none; b=PHGNKyNX9quSugwzliVb0GD9amQQRDBfg3X0xG3dodcN9XMDe9rEnhSJhBaHhcU5+OOyJXzeCSRHnmLmmJjp35PEPweNWLRdQE89oEDHHnvptzRqbr+yYYSq5W0bQKGOJgomeFsOm+eL053t1XcdzgvFWz8kmnMLiiZNnREZpyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745578915; c=relaxed/simple;
-	bh=nqJMvcO51ziKQ3M0gQlpcJDtsciBV888CuxSXQPMuTs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=s4JoBVm6oMAvplbUr7dNnnCSfVvqn4BoXO5QIWBeBvkbJgbrklV1HPao6YwCe+mIs0ZyXjkAefhXcMIgtKj4ytfDboi+YX8wqa/CkIptAZ7eI4gg5iappDs/Oa6hFfhFUmJhfEOJi2/T6RMCO7yQhlcvoMlkp58SjHFFlimqYdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=QNCinfPf; arc=none smtp.client-ip=213.167.242.64
+	s=arc-20240116; t=1745578918; c=relaxed/simple;
+	bh=oWB+k3YdN2oGtIP+eNrRjj58cvMvE9xAoBG8JrtVz78=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nneXatK4gancay+C8o+B2p1P3vGfTPEiYDc3D3ugFWP/MCnH2LPWhI2oRq7Zfb9JJteC9DGbpSqHnzWZwxBSQfL5/1misYpF0Bq1zI/2Sc6I0DZeeU4RGdV9EaY4qlx70uTCAKiw4RCionZaInjvypugiL//0g0QPJRZyqQG1YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hu1v1AAF; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QNCinfPf"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hu1v1AAF"
 Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A317682E;
-	Fri, 25 Apr 2025 13:01:47 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 88CD3EE4;
+	Fri, 25 Apr 2025 13:01:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745578908;
-	bh=nqJMvcO51ziKQ3M0gQlpcJDtsciBV888CuxSXQPMuTs=;
-	h=From:Subject:Date:To:Cc:From;
-	b=QNCinfPfgRh8Ksc8lW0XEfZ0J8V0SZJnEGBYnBOsnf1GoAXmd7fhyHxKCT5b/5jVE
-	 wpJvVx4NVFnngduhyLScL8VwML84WtiVjror+N2jCg88VGRZP1wYcWOULXrAjneaQf
-	 gpOTpn4lf18TF6M0kVt9Cg+3/s4hh4ZR+rnTaMQY=
+	s=mail; t=1745578910;
+	bh=oWB+k3YdN2oGtIP+eNrRjj58cvMvE9xAoBG8JrtVz78=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=hu1v1AAFBQMoIzLemdfDc3aRjzIZbO9lK/UIuuflMtpMnhHIUzrqaleFxg3oA0Y8W
+	 +3fTzADH5mVjLVsHuTLZW/ZSR8q8esUjt99YCTBiQdSLUXC98qRO65g/8Ao0zmOOXp
+	 A874qRwEX47rRlDa+ipm6oIN4sIfvSjYeUysS1LQ=
 From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: [PATCH v5 00/11] drm: Add new pixel formats for Xilinx Zynqmp
-Date: Fri, 25 Apr 2025 14:01:20 +0300
-Message-Id: <20250425-xilinx-formats-v5-0-c74263231630@ideasonboard.com>
+Date: Fri, 25 Apr 2025 14:01:22 +0300
+Subject: [PATCH v5 02/11] drm/fourcc: Add DRM_FORMAT_XV15/XV20
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,12 +37,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIFrC2gC/3XMy2rDMBCF4VcJWldhZnRx3VXfo2Qh69IMNFaRg
- nEIfvcqKSEQJ8v/wPnOosbCsYqPzVmUOHHlPLYwbxvh9278jpJDa0FAGpFAzvzD4yxTLgd3rDJ
- 12ANawnelRDv9lph4voJfu9Z7rsdcTld/wsv6TxHoR2pCCRKGRN6g7sKAnxyiq3kcsith6/NBX
- MSJbooBRLNSqCloQVHnnTXkXijqrhDSSlFN6SFAigi2780LRd8VRXal6KYoIqcAvA0dPVGWZfk
- DpitQ/IUBAAA=
-X-Change-ID: 20241120-xilinx-formats-f71901621833
+Message-Id: <20250425-xilinx-formats-v5-2-c74263231630@ideasonboard.com>
+References: <20250425-xilinx-formats-v5-0-c74263231630@ideasonboard.com>
+In-Reply-To: <20250425-xilinx-formats-v5-0-c74263231630@ideasonboard.com>
 To: Vishal Sagar <vishal.sagar@amd.com>, 
  Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -58,193 +55,76 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
  Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7004;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2201;
  i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=nqJMvcO51ziKQ3M0gQlpcJDtsciBV888CuxSXQPMuTs=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoC2uW08B8vtftkmRupN9ZYmSAM6PMDDsOSBZGG
- be5SFvlDCqJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaAtrlgAKCRD6PaqMvJYe
- 9XRtD/0Vlt0RZF3SZ4a0IoiOVh5MGJUjMfa6J5J0CtZfMjycoPZDgIMpXY2IjOL3O0mtJAxkqyr
- LGK2gpQDaygcz1YGJ1LLlkWewKckS/6MlI+BRK+9wvNko4ajEUx5udJWWFP72CjNw9yT9xacU7p
- pM+bBMqkAV6AHfZfxH8MzWkopo2KCQ4EgdsSuiK+S5nDPwiFfHcwUgwAAlIc7AT3zVoGFyv6fiv
- heipb0UH+t2z1IJOGES+kVxtP1vg3ADvS/Cs8jwdxwR1a9nziMKHPXghdTUtp++fwDVMv1gWu13
- SZFgcaEhMSZ6w831iHIxg1PXOujP7asP/98b50uVrujvV1ZaoPh6yGTsnFwk1XeOh4ZS814/5xE
- 74GkFe0suv0b34IDeppqL6VpDvoypAgrQJ7xaR2Tqb9gFWuI2/g+xmyIpO6tG9B8vLQ2Su6gWRG
- W3qMkJKhrVTSxxM0IZ8fBef1O498qiFlu2D18jALs2cC3tVAip6pIJ9fdbF6K8hM5QvTYZfspsW
- uZPZvLoq2xxe76qHG8SX2HgzDd/HFTKDGBdODdR5Zl5RG+neP2SP/Dz1LzU/L5TXZDJaGnN0Uca
- O/A6/DQqxW0S3kzifyrzFLQ8Ap07Y8OG1/CKH3VvlLcc9JU7eDvPyYtxY93SiHUSW2SeHXgSKKI
- slCQ0lGEvucGxOg==
+ bh=oWB+k3YdN2oGtIP+eNrRjj58cvMvE9xAoBG8JrtVz78=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoC2uanCWWVL7wd5T9RWP070XzWhAE4usJENsQW
+ yGHlDEqRdqJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaAtrmgAKCRD6PaqMvJYe
+ 9bxhEACeXgFP/xyYSgrm+03Z3utF9MuJsIZkv5seiN0mA7+VeYSDx1Cs+6hFFjnKTYpvr1M4eIA
+ LNLCMijWiBsKuN+/KGGcu0Kxt70dSnoqmDEVar+PmkfAOagwfmRMjj/fFbH4Fb/1zhptCFXm0r1
+ Bo+HA/adtkJhJmO1KuxZM3WQ3/YYWtHq6rM4V6iHt06O9KfSHG3lyHkgHsAFHUZoTyJiO60UKpF
+ 9H3ClbNZlEGVQvMvkWzWgZPSHdV+dIPRuJlu++uls2MKUXX7W5KW7tekqrKjL5H49/xaQtnCeYM
+ P2zZyeF5iIYr3H2bB4qI5VLdb1JZR0h9cL0vdGDckJlOmiB3AvN8NwJ4YxXFyNtmMWFILmEHI+R
+ USMocSWmA7E2zbqIj+JDFkVWmlwu/nFBEvv3djXMdJ9y8dT/WVCrEqXdKSPJdyqLlt6gx9R7/IO
+ GIZg4mwKWORW76xi5UNHpShgE1/eIVLrjC5mUWEv4XzQeT6a3tejdmT4ELEHhDFu68rHnhkAIQt
+ sO9z5JA20HSLBsjRG6tstSCbFzlGCm3aiaHq9ITpajH2+nPqe3VHcnIEkGvoLvjk6uOrAm4AREp
+ kQTkjoc+9LGayDdmpcpnflOQgDWXDIJHKfzqlGUyjpmkQO5OkmGXJIZMwBJLE+cz9JfFd998OLN
+ SDm2FMORZnn6tug==
 X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
  fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Add new DRM pixel formats and add support for those in the Xilinx zynqmp
-display driver.
+Add two new pixel formats:
 
-All other formats except XVUY2101010 are already supported in upstream
-gstreamer, but gstreamer's kmssink does not have the support yet, as it
-obviously cannot support the formats without kernel having the formats.
+DRM_FORMAT_XV15 ("XV15")
+DRM_FORMAT_XV20 ("XV20")
 
-Xilinx has support for these formats in their BSP kernel, and Xilinx has
-a branch here, adding the support to gstreamer kmssink:
+The formats are 2 plane 10 bit per component YCbCr, with the XV15 2x2
+subsampled whereas XV20 is 2x1 subsampled.
 
-https://github.com/Xilinx/gst-plugins-bad.git xlnx-rebase-v1.18.5
-
-New formats added:
-
-DRM_FORMAT_Y8
-- 8-bit Y-only
-- fourcc: "GREY"
-- gstreamer: GRAY8
-
-DRM_FORMAT_Y10_P32
-- 10-bit Y-only, three pixels packed into 32-bits
-- fourcc: "YPA4"
-- gstreamer: GRAY10_LE32
-
-DRM_FORMAT_XV15
-- Like NV12, but with 10-bit components
-- fourcc: "XV15"
-- gstreamer: NV12_10LE32
-
-DRM_FORMAT_XV20
-- Like NV16, but with 10-bit components
-- fourcc: "XV20"
-- gstreamer: NV16_10LE32
-
-DRM_FORMAT_X403
-- 10-bit planar 4:4:4, with three samples packed into 32-bits
-- fourcc: "X403"
-- gstreamer: Y444_10LE32
-
-XVUY2101010
-- 10-bit 4:4:4, one pixel in 32 bits
-- fourcc: "XY30"
-
-Some notes:
-
-I know the 8-bit greyscale format has been discussed before, and the
-guidance was to use DRM_FORMAT_R8. While I'm not totally against that, I
-would argue that adding DRM_FORMAT_Y8 makes sense, as:
-
-1) We can mark it as 'is_yuv' in the drm_format_info, and this can help
-   the drivers handle e.g. full/limited range. Probably some hardware
-   handles grayscale as a value used for all RGB components, in which case
-   R8 makes sense, but when the hardware handles the Y-only pixels as YCbCr,
-   where Cb and Cr are "neutral", it makes more sense to consider the
-   format as an YUV format rather than RGB.
-
-2) We can have the same fourcc as in v4l2. While not strictly necessary,
-   it's a constant source of confusion when the fourccs differ.
-
-3) It (possibly) makes more sense for the user to use Y8/GREY format
-   instead of R8, as, in my experience, the documentation usually refers
-   to gray(scale) format or Y-only format.
-
-As we add new Y-only formats, it makes sense to have similar terms, so
-we need to adjust the Y10_P32 format name accordingly.
-
-I have made some adjustments to the formats compared to the Xilinx's
-branch. E.g. The DRM_FORMAT_Y10_P32 format in Xilinx's kmssink uses
-fourcc "Y10 ", and DRM_FORMAT_Y10. I didn't like those, as the format is
-a packed format, three 10-bit pixels in a 32-bit container, and I think
-Y10 means a 10-bit pixel in a 16-bit container.
-
-Generally speaking, if someone has good ideas for the format define
-names or fourccs, speak up, as it's not easy to invent good names =).
-That said, keeping them the same as in the Xilinx trees will, of course,
-be slightly easier for the users of Xilinx platforms.
-
-I made WIP additions to modetest to support most of these formats,
-partially based on Xilinx's code:
-
-https://github.com/tomba/libdrm.git xilinx
-
-A few thoughts about that:
-
-modetest uses bo_create_dumb(), and as highlighted in recent discussions
-in the kernel list [1], dumb buffers are only for RGB formats. They may
-work for non-RGB formats, but that's platform specific. None of the
-formats I add here are RGB formats. Do we want to go this way with
-modetest?
-
-I also feel that the current structure of modetest is not well suited to
-more complicated formats. Both the buffer allocation is a bit more
-difficult (see "Add virtual_width and pixels_per_container"), and the
-drawing is complicated (see, e.g., "Add support for DRM_FORMAT_XV15 &
-DRM_FORMAT_XV20").
-
-I have recently added support for these Xilinx formats to both kms++ [2] and
-pykms/pixutils [3][4] (WIP), and it's not been easy... But I have to say I
-think I like the template based version in kms++. That won't work in
-modetest, of course, but a non-templated version might be implementable,
-but probably much slower.
-
-In any case, I slighly feel it's not worth merging the modetest patches
-I have for these formats: they complicate the code quite a bit, break
-the RGB-only rule, and I'm not sure if there really are (m)any users. If
-we want to add support to modetest, I think a bigger rewrite of the test
-pattern code might be in order.
-
-[1] https://lore.kernel.org/all/20250109150310.219442-26-tzimmermann%40suse.de/
-[2] git@github.com:tomba/kmsxx.git xilinx
-[3] git@github.com:tomba/pykms.git xilinx
-[4] git@github.com:tomba/pixutils.git xilinx
-
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
-Changes in v5:
-- Add comment about Y-only formats, clarifying how the display pipeline
-  handles them (they're handled as YCbCr, with Cb and Cr as "neutral")
-- Clarify X403 format in the patch description
-- Set unused Y-only CSC offsets to 0 (instead of 0x1800).
-- Add R-bs
-- Link to v4: https://lore.kernel.org/r/20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com
+ drivers/gpu/drm/drm_fourcc.c  | 6 ++++++
+ include/uapi/drm/drm_fourcc.h | 8 ++++++++
+ 2 files changed, 14 insertions(+)
 
-Changes in v4:
-- Reformat the drm_format_info entries a bit
-- Calculate block size only once in drm_format_info_bpp()
-- Declare local variables in separate lines
-- Add review tags
-- Fix commit message referring to Y10_LE32 (should be Y10_P32)
-- Link to v3: https://lore.kernel.org/r/20250212-xilinx-formats-v3-0-90d0fe106995@ideasonboard.com
+diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+index 2f5781f5dcda..e101d1b99aeb 100644
+--- a/drivers/gpu/drm/drm_fourcc.c
++++ b/drivers/gpu/drm/drm_fourcc.c
+@@ -346,6 +346,12 @@ const struct drm_format_info *__drm_format_info(u32 format)
+ 		{ .format = DRM_FORMAT_P030,            .depth = 0,  .num_planes = 2,
+ 		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+ 		  .hsub = 2, .vsub = 2, .is_yuv = true},
++		{ .format = DRM_FORMAT_XV15,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
++		  .hsub = 2, .vsub = 2, .is_yuv = true },
++		{ .format = DRM_FORMAT_XV20,		.depth = 0,  .num_planes = 2,
++		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
++		  .hsub = 2, .vsub = 1, .is_yuv = true },
+ 	};
+ 
+ 	unsigned int i;
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index 81202a50dc9e..1247b814bd66 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -304,6 +304,14 @@ extern "C" {
+ #define DRM_FORMAT_RGB565_A8	fourcc_code('R', '5', 'A', '8')
+ #define DRM_FORMAT_BGR565_A8	fourcc_code('B', '5', 'A', '8')
+ 
++/*
++ * 2 plane 10 bit per component YCrCb
++ * index 0 = Y plane, [31:0] x:Y2:Y1:Y0 2:10:10:10 little endian
++ * index 1 = Cb:Cr plane, [63:0] x:Cr2:Cb2:Cr1:x:Cb1:Cr0:Cb0 2:10:10:10:2:10:10:10 little endian
++ */
++#define DRM_FORMAT_XV15		fourcc_code('X', 'V', '1', '5') /* 2x2 subsampled Cr:Cb plane 2:10:10:10 */
++#define DRM_FORMAT_XV20		fourcc_code('X', 'V', '2', '0') /* 2x1 subsampled Cr:Cb plane 2:10:10:10 */
++
+ /*
+  * 2 plane YCbCr
+  * index 0 = Y plane, [7:0] Y
 
-Changes in v3:
-- Drop "drm: xlnx: zynqmp: Fix max dma segment size". It is already
-  pushed.
-- Add XVUY2101010 format.
-- Rename DRM_FORMAT_Y10_LE32 to DRM_FORMAT_Y10_P32.
-- Link to v2: https://lore.kernel.org/r/20250115-xilinx-formats-v2-0-160327ca652a@ideasonboard.com
-
-Changes in v2:
-- I noticed V4L2 already has fourcc Y10P, referring to MIPI-style packed
-  Y10 format. So I changed Y10_LE32 fourcc to YPA4. If logic has any
-  relevance here, P means packed, A means 10, 4 means "in 4 bytes".
-- Added tags to "Fix max dma segment size" patch
-- Updated description for "Add warning for bad bpp"
-- Link to v1: https://lore.kernel.org/r/20241204-xilinx-formats-v1-0-0bf2c5147db1@ideasonboard.com
-
----
-Tomi Valkeinen (11):
-      drm/fourcc: Add warning for bad bpp
-      drm/fourcc: Add DRM_FORMAT_XV15/XV20
-      drm/fourcc: Add DRM_FORMAT_Y8
-      drm/fourcc: Add DRM_FORMAT_Y10_P32
-      drm/fourcc: Add DRM_FORMAT_X403
-      drm/fourcc: Add DRM_FORMAT_XVUY2101010
-      drm: xlnx: zynqmp: Use drm helpers when calculating buffer sizes
-      drm: xlnx: zynqmp: Add support for XV15 & XV20
-      drm: xlnx: zynqmp: Add support for Y8 and Y10_P32
-      drm: xlnx: zynqmp: Add support for X403
-      drm: xlnx: zynqmp: Add support for XVUY2101010
-
- drivers/gpu/drm/drm_fourcc.c       | 28 ++++++++++++++++---
- drivers/gpu/drm/xlnx/zynqmp_disp.c | 55 +++++++++++++++++++++++++++++++++++---
- include/uapi/drm/drm_fourcc.h      | 29 ++++++++++++++++++++
- 3 files changed, 105 insertions(+), 7 deletions(-)
----
-base-commit: ef6517ac5cf971cfeaccea4238d9da7e2425b8b1
-change-id: 20241120-xilinx-formats-f71901621833
-
-Best regards,
 -- 
-Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+2.43.0
 
