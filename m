@@ -1,115 +1,94 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5B712CD8B;
-	Fri, 25 Apr 2025 12:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895385695;
+	Fri, 25 Apr 2025 12:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745584410; cv=none; b=KDuUWVafjitUa4Y/UJJ1zJiCcxCd/PqDHll+eJYK1s2coJTqJBMnZu0mLh9+Nu2gbUw9l15Woc750oI61mrNqp9v3pH+L0doAjPNRid1HcTYy7tkvwUefvAePNSPbQ8S0m0my1OTTyhUKwG0q8t4xB/ybo7j4drg3RoeIyskebw=
+	t=1745584495; cv=none; b=JoXf1O0I6EwGmue5e+9Pp4tgWj9LAQtbr0rPHtRYqidLb39tPORnRVnDtdre/1/Iu8Qkals594W//NEGMAQ8pGLk3PXau0vzrBw8fA02xUeIsVFMBGlv80x4A9HWB94uUT64cGauXcSAjA55erf9+Z1a9pUJOO3G5BKIFUtK3WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745584410; c=relaxed/simple;
-	bh=z0kssRXr0Jmr2iLuPqygq8fHDe3P+7Q6+7xMZ7CRFpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iX53u3wdIfTBtEkqns/iG4Lwz2tVMr4O/O21tpOKpAYFU2ekZ3cdc88hoL8MQ4IbqvRnCbdC6ot+uXqi/4DpNwsaHfPjYeOeZEWcR4IWY7DqtxDxio96djbklEjs/6OR91X1ABUC5ewlWBB0+fE0d8dH9CN+H6T5h+E37NJmYCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n62i0DvK; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745584495; c=relaxed/simple;
+	bh=0jC+f8mlnZwJBUtQlx0T8zUGzXV8KJCXfOyP3vLVigw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=juV0TerbDrKk5Udh53+Dh9UPAdMtR/nQRTRPJ0CKyTC0vJZp/KCRNeWown2Y+DWpQwwXNbv1o5DF9/F5zVmEt5k6lF10MltusMT7JqEJnf5nLxFcO0q8iAcswZgv1XwbQcgX8NbPE0SyDVwx/UvjxTSeVhNwip0sttVKZ5H3twA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgMdU2He; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n62i0DvK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z0kssRXr0Jmr2iLuPqygq8fHDe3P+7Q6+7xMZ7CRFpA=; b=n62i0DvKUkkS19M6Grw/IA6BJM
-	6eax7WEzMDhdsLLdBaVpyql0sL3uwAA/S4ABBYyHfp8Tx/iU0ee0EuTw7NJfGf9EI8UsjXrlSl0sS
-	02tBYqSgzmjI/Kny3gI739/JKlgl+9wGdEidVTiMFctgk47RLsTlqNTkCUR+iW8cVDyF62mXAMwh5
-	XkywTMBNuRYpIwM9+ushQW73ekmtzH4pzyRk9psYN+bzsnJD1auXiTevc+ivI+Y1ZKlYKr7ewsVRG
-	jovxOw3NEqLfi+p+LosTspxc/ZhCArckwjJxCRVQhZyFjxgfcqmpAHeIJnZG6UgRJMQ7uJJh6ZqZe
-	G7VOYhcg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u8IF4-0000000C2S5-1fLP;
-	Fri, 25 Apr 2025 12:33:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DA9983003C4; Fri, 25 Apr 2025 14:33:17 +0200 (CEST)
-Date: Fri, 25 Apr 2025 14:33:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, acme@kernel.org,
-	andrew.cooper3@citrix.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-Message-ID: <20250425123317.GB22125@noisy.programming.kicks-ass.net>
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
- <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
- <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgMdU2He"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21467C4CEE4;
+	Fri, 25 Apr 2025 12:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745584495;
+	bh=0jC+f8mlnZwJBUtQlx0T8zUGzXV8KJCXfOyP3vLVigw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=AgMdU2HeBbp1QKCYJ6Icni1zXm+0+lmyILLqSAoeke1HIyTBc46589nPsGLSehqxP
+	 d6T5xMQyIHGttiTPk2R5S8CFQE/AcqM8AZTCdvLhb5p7enckwSarO2UpS5tw35FwkH
+	 tOysSlwX3Q0VOWetFR74l52IdzFZBgdKKLfTKKaZ9DppPv7q7xDblmajuSasaTMV6B
+	 Rrpb+iYJrtwOAkZQE4aplwJZj+1C6k8ytPF3wLioiYsd64vjfQZgMnOWbxx4PcYnXg
+	 0jJg5JVnVAexE6ydahaBcWKgTkFcxx//FAScpwOxIN8uEXCt7CvDfcutDg4D0jVKNS
+	 BAIcWyoa8jZlA==
+From: Mark Brown <broonie@kernel.org>
+To: biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+ lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linux-sound@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
+In-Reply-To: <20250410141525.4126502-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20250410141525.4126502-1-claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH] ASoC: renesas: rz-ssi: Use NOIRQ_SYSTEM_SLEEP_PM_OPS()
+Message-Id: <174558449287.45647.11999550141673145450.b4-ty@kernel.org>
+Date: Fri, 25 Apr 2025 13:34:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/MHZas7e8A04P/yf"
-Content-Disposition: inline
-In-Reply-To: <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
+On Thu, 10 Apr 2025 17:15:25 +0300, Claudiu wrote:
+> In the latest kernel versions system crashes were noticed occasionally
+> during suspend/resume. This occurs because the RZ SSI suspend trigger
+> (called from snd_soc_suspend()) is executed after rz_ssi_pm_ops->suspend()
+> and it accesses IP registers. After the rz_ssi_pm_ops->suspend() is
+> executed the IP clocks are disabled and its reset line is asserted.
+> 
+> Since snd_soc_suspend() is invoked through snd_soc_pm_ops->suspend(),
+> snd_soc_pm_ops is associated with soc_driver (defined in
+> sound/soc/soc-core.c), and there is no parent-child relationship between
+> soc_driver and rz_ssi_driver the power management subsystem does not
+> enforce a specific suspend/resume order between the RZ SSI platform driver
+> and soc_driver.
+> 
+> [...]
 
---/MHZas7e8A04P/yf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Wed, Apr 23, 2025 at 06:05:19PM +0200, J=FCrgen Gro=DF wrote:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-> > It's not a major change, but when it is patched to use the immediate
-> > form MSR write instruction, it's straightforwardly streamlined.
->=20
-> It should be rather easy to switch the current wrmsr/rdmsr paravirt patch=
-ing
-> locations to use the rdmsr/wrmsr instructions instead of doing a call to
-> native_*msr().
+Thanks!
 
-Right, just make the Xen functions asm stubs that expect the instruction
-registers instead of C-abi and ALT_NOT_XEN the thing.
+[1/1] ASoC: renesas: rz-ssi: Use NOIRQ_SYSTEM_SLEEP_PM_OPS()
+      commit: c1b0f5183a4488b6b7790f834ce3a786725b3583
 
-Shouldn't be hard at all.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
---/MHZas7e8A04P/yf
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQIzBAABCgAdFiEEv3OU3/byMaA0LqWJdkfhpEvA5LoFAmgLgQUACgkQdkfhpEvA
-5LqJKRAAkGelIfMDPEkg613aLM0RL5GIPigFIL9+IaLhypRMpJMp1rKIwy8kLaRd
-NwdJ0yX6iqAzFF/AHn3KvVp7MxNCeDWNTXTcCpxuCSB8NoKfph2JduGzhUylWdg3
-AhemoMrgzBgwkVVk2mDD2kvewJ0Axr2isfs+ugJLAo+GvKhnV+qJRvSE/FB0V7XV
-LC+r1B6ZXIcUBjvYOW2JbRYPW/UDT/LS9CZDWr2pu+A3jJ8vmlOwAb0Yeh3/2yKB
-/LdGM2PIII/0x66JaVvZawFSLjeUT18HxLAAh8MDDLgWCiwp+Uk3RzgrnaSj9oC0
-6uV/J7czytoK4haaV70zPcWqzZPIurtpgcG9AynaG05VjJ5ARgEG6EFJd91NnbM+
-7dZWXM6y1PI6IFuh1ldUJUD3YnEd3VuXAWaYE4aBr63rXaUYuVpAKRUY0NFZmxHw
-KGaVmss4AtUGeDBTPMvYyx+d1BTxPiYVeVbLzodtjl/mQPfpne5vlQomBolxd/0a
-fkeL0zUZoVgLfndRNVN+dIa2cPWo+BHNNM8tI92aFQ0YrxaTpdSjrOJ0bobnBUch
-deYEsdgKUEpUcFZqcp/ox1cc73kPeJ9365RwavrAN8sZIUSs+vvtu36/WIVI12eK
-qw6upySrPM0KLVTItTbNxKmS5uvFrc2fDPMAoru3P2Y5VkKPa2Q=
-=6Oyb
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---/MHZas7e8A04P/yf--
+Thanks,
+Mark
+
