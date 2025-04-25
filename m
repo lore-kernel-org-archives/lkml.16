@@ -1,173 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD8119D8A7;
-	Fri, 25 Apr 2025 10:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E0019D8A7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745577513; cv=none; b=M3KlUz1Drd31tEtr1GulRhrHE7A8zItrg17ylzoSYDouV4xcBJ0GjObWV2vmnra7zm9iWj+anrKaXpMt4CWHavcNfMSqJIc7/0uCC46CgUyh3ZvV1GSZp+fhqMZmM6gMNfEkk7AOrifMVx2yp+Lf4aa/7LvERFm9TBGr3q/7UzM=
+	t=1745577597; cv=none; b=Ec98ZC+sgjoP57K4M5iz1ZXdVe6Ntfmlr5UBhrkQ+qmDxkFTLzy6U825XDUZDrp5l6H3tuys3GXB6CLzbSmFq2dWfFgY1M052DloMVyn+7V6DG2mMsRNd8TXaV0qXJ/OYsAUwLv3swn+VT6iW9mYmEQ72Krr3/oL1rAcFpCA8AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745577513; c=relaxed/simple;
-	bh=5BmKuaaK+bDkUvD9xGKp7macz+ok6g4gCHws+01z3U0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jH4vhEZgVsDDzZruTkq9pYdivtJaxFvrexIyqDXz2vXFSZgZr4BSmgNYo5ulBlERIqYvXjJLNtsB+ULACPoGi/vLWQj1kbPi3DSkosi+HJqbC2A2grux+sGJ8Erwm4iCbxS6yWZ1NryDhY2RXGV3DY3qU6T7yJGQQuOn5uMcmPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+rJyAKJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745577597; c=relaxed/simple;
+	bh=Wn2IFrbXdFPmEpzGY18CoT4rKXVhilgdLjMaQcdkPAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HNbDVPlllkHzFEHmvpO0VY5GAo/qsyl1tlkNgAkJh1ezLJ9OLXkWNN5ALcX/oSvZWDsrJnthHHS0V1e/5PTraemNbFgvra4SE1d7PZBXzjVOhGkaCDtyLMjhZv/o3DXDk4atQOEF0VO/xKEiKmZIX4trHrR21l4ikcQCoef6ko0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=TDU2QVKi; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+rJyAKJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D17E2C4CEE4;
-	Fri, 25 Apr 2025 10:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745577512;
-	bh=5BmKuaaK+bDkUvD9xGKp7macz+ok6g4gCHws+01z3U0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o+rJyAKJXkOpPpNhZ+W3PYmkDKmOW9bevakn75pjPnLLTV6jvq0U1j2yZJ5VZ7hb7
-	 tlZFTGNFv9q9esE7jEvWCvkxSIiRlkPM4BRdRBWxva7yjlaIFm+6CsS9n/n9kIR5ER
-	 UDHJxMsfMAErm6sGOyXf8pcBRJkscwmTXcNPKcWYOOjbnfIWQWFAvoeO+Ds1IUP5UX
-	 LVXFR2ViZxtU9wl7OMkVlA30CvYggAuL6fQAZlbnYHv8ziDrbcbv4hTfCYBHwH/FsF
-	 H/I6CFG0j4fWjY/MuUQjCVb2AvB8aoBgiw0uv36Jo2L5Cwh/alrlsZG2KYZC5f1qSX
-	 iY4OpuhTn4U/Q==
-Date: Fri, 25 Apr 2025 12:38:29 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Artur Rojek <artur@conclusive.pl>
-Cc: Johannes Berg <johannes@sipsolutions.net>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jakub Klama <jakub@conclusive.pl>, Wojciech Kloska <wojciech@conclusive.pl>, 
-	Ulf Axelsson <ulf.axelsson@nordicsemi.no>
-Subject: Re: [RFC PATCH v2 1/2] dt-bindings: wifi: Add support for Nordic
- nRF70
-Message-ID: <20250425-capable-tapir-of-energy-a9e03f@kuoka>
-References: <20250422175918.585022-1-artur@conclusive.pl>
- <20250422175918.585022-2-artur@conclusive.pl>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="TDU2QVKi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=wFgyGoe57F6uPaGc/OoKHjDR32N+rhdNNm/Oo8lcYDQ=; b=TDU2QVKiwb3RRppyElAZvCLneG
+	OEl+y7zYuafHRmIBYHsH8H+V42VKiRuW7Htl/3O9lRFR2ep18foEWvZwNl+d/sjWsFlt8JLeW/Uzw
+	P2RrlaQ5XMg/+BDiEec5Vn2mXU7v3Kc430pamBO1gtyYGDl6qzHMuiMNB2Lj5kcNxhUf8z/UISTyr
+	PwSDEqRpZcFlm+uZeMRZXd5IAQh0nea/AjeMLthAgxX5CryKDmv/71mv6cKGjcT+2NXvluk4Bnxpx
+	jDiO12Fn+mvdqeCGJuFmduvSHuryPOJqos663GSBQ9syxqpESHKUbQK7U89DVigHExEIpSjBGEdRM
+	mk7TLJzw==;
+Received: from 114-44-196-209.dynamic-ip.hinet.net ([114.44.196.209] helo=gavin-HP-Z840-Workstation..)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1u8GSx-008HIu-Oe; Fri, 25 Apr 2025 12:39:32 +0200
+From: Gavin Guo <gavinguo@igalia.com>
+To: linux-mm@kvack.org,
+	akpm@linux-foundation.org
+Cc: gshan@redhat.com,
+	david@redhat.com,
+	willy@infradead.org,
+	ziy@nvidia.com,
+	linmiaohe@huawei.com,
+	hughd@google.com,
+	revest@google.com,
+	kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Clean up split_huge_pmd_locked() and remove unnecessary folio pointers
+Date: Fri, 25 Apr 2025 18:38:57 +0800
+Message-ID: <20250425103859.825879-1-gavinguo@igalia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250422175918.585022-2-artur@conclusive.pl>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 07:59:17PM GMT, Artur Rojek wrote:
-> Add a documentation file to describe the Device Tree bindings for the
-> Nordic Semiconductor nRF70 series wireless companion IC.
-> 
-> Signed-off-by: Artur Rojek <artur@conclusive.pl>
-> ---
-> 
-> v2: - rename the patch subject to comply with DT submission rules 
->     - fix a typo in reg property name and correct its indentation
->     - replace all gpio based properties as follows:
->       - irq-gpios with interrupts/interrupt-names
->       - bucken-gpios/iovdd-gpios with vpwr-supply/vio-supply
->     - clarify usage of said properties in their descriptions
->     - add a reference to spi-peripheral-props.yaml#
->     - specify unevaluatedProperties
->     - drop unused voltage-ranges property
->     - update bindings example accordingly w/ above changes
-> 
->  .../bindings/net/wireless/nordic,nrf70.yaml   | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/nordic,nrf70.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/nordic,nrf70.yaml b/Documentation/devicetree/bindings/net/wireless/nordic,nrf70.yaml
-> new file mode 100644
-> index 000000000000..c9a41b61c624
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/nordic,nrf70.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/wireless/nordic,nrf70.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nordic Semiconductor nRF70 series wireless companion IC
+The patch series enhance the folio verification by leveraging the
+existing page_vma_mapped_walk() mechanism and removing redundant
+folio pointers passing.
 
-What is a wireless companion? You miss description - see example-schema.
+Link: https://lore.kernel.org/all/98d1d195-7821-4627-b518-83103ade56c0@redhat.com/
+Link: https://lore.kernel.org/all/91599a3c-e69e-4d79-bac5-5013c96203d7@redhat.com/
 
-> +
-> +maintainers:
-> +  - Artur Rojek <artur@conclusive.tech>
-> +
-> +properties:
-> +  compatible:
-> +    const: nordic,nrf70
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: HOST_IRQ line, used for host processor interrupt requests.
+Gavin Guo (2):
+  mm/huge_memory: Adjust try_to_migrate_one() and
+    split_huge_pmd_locked()
+  mm/huge_memory: Remove useless folio pointers passing
 
-Drop description, obvious.
+ include/linux/huge_mm.h | 15 +++++++--------
+ mm/huge_memory.c        | 37 ++++++++++---------------------------
+ mm/memory.c             |  4 ++--
+ mm/mprotect.c           |  2 +-
+ mm/rmap.c               | 20 ++++++++++----------
+ 5 files changed, 30 insertions(+), 48 deletions(-)
 
-> +
-> +  interrupt-names:
-> +    description: Name for the HOST_IRQ line. This must be set to "host-irq".
-> +    const: host-irq
+V1 -> V2:
+  1). Separate the logic into
+    - Adjust try_to_migrate_one() and split_huge_pmd_locked
+    - Remove useless folio pointers passing
 
-Drop interrupt-names, not really useful for one entry.
+  2). Remove the unnecessary comments and brances around if condition. 
 
-> +
-> +  vpwr-supply:
-> +    description: BUCKEN line, used for PWR IP state control.
-> +
-> +  vio-supply:
-> +    description: IOVDD line, used for I/O pins voltage control. Optional.
-
-Drop "Optional". Don't repeat constraints in free form text.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +  - vpwr-supply
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-
-Missing ref to ieee802/wireless devices schema (wireless recently
-merged), assuming this is WiFi.
-
-Neither commit msg nor description explains me what this is. Both
-or at least one should.
-
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    reg_nrf70_buck: regulator-nrf70-buck {
-
-Drop this node, not relevant.
-
-> +        compatible = "regulator-fixed";
-> +        regulator-name = "nrf70_buck";
-> +        gpio = <&gpio2 24 GPIO_ACTIVE_HIGH>;
-> +        enable-active-high;
-> +    };
-> +
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        nrf7002@0 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-WiFi is usually "wifi".
-
-Best regards,
-Krzysztof
+base-commit: 02ddfb981de88a2c15621115dd7be2431252c568
+prerequisite-patch-id: 9c9c975b11ad0f73acd863049b4f1732caa04e53
+-- 
+2.43.0
 
