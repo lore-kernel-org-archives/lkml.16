@@ -1,272 +1,175 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B742919CC02;
-	Fri, 25 Apr 2025 16:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AB21DB127;
+	Fri, 25 Apr 2025 16:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745599756; cv=none; b=clpQVyQrRKe5dzLsrMBRsrlI/vWOE4oAJyN3RpDyTl/t8DSOHMtLT7m4j34QVxnKUtZzzCUt8uC7ev8cngvt4gfEXEqXN9sWHpcfeVy6P5hsRPo3gq3VWBitAYOBtzpOWCQ46MIgaW617rcNdCoYehyH+RZIoEMNfLfkQIpMuQU=
+	t=1745599764; cv=none; b=AlKFz+tGidT/vy+XqKW2VW+tSrPHdaxZAYmES60k4jq/AGe5P8jz7qp/XTpPyXvBBTLfJG3ioZ6aSmsOLa/b64ajUQQ8Z2i/IhcNycv5SC/2rTJfklNcsNstEAwJQcDtRFrtVl6iKJBkXYHYF58S00rRSv2AB7NI3wBjGKaqoV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745599756; c=relaxed/simple;
-	bh=wQE9WdJzXZBOo/GroJnHU/0E12e9y0x2yxl6f7fVlvQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ctg53EM+LmxuFEqRECK/oeRjvKtkF3cQRBfSaErbh0z8H2zGf0yYMJJG+a/1ep+UbSCawaYPWup6iMQlxRSURI4WkTl04bXA2kAQfkoaBqZZj6vLjSTPQpXhK6VTXg5NBMdDrzl+kMzD13DsphYNcNpVgcI2jZ9r7LUjiKD1d1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=piAoeaTg; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745599764; c=relaxed/simple;
+	bh=461+pUfno2hTIbCXCu9nP1x7M0HrZserREq+i6zkxp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hqh4Hvcu8R10qquQf/DMRMz7zq/9AOTgF5hdbCv4fhdgmwUYW8T6LgShCUGDLRjuVq6P99KzHSBD+rCfVgvzuzh4CYmsrXhntpzhCwkdXn96fEf0u3u740IXnyDcmXVrqvsiK7bpqU6rxgX+fh0l57aHCdoFkXs6eGfFAz4okPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Llnyj+X+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="piAoeaTg"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PGn0I22208205
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 11:49:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745599740;
-	bh=CcJG284w2m3gCfLTb2MZORhpn/XGXidDI0i7Eg4Ksyg=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=piAoeaTgI7HOnONAxBmoi5OVBpkp/Oiavxt1KG6XljgCojsxHxBygpCgvqpxu7tN2
-	 Eq2IiPunm6t4JwXoxgc/0kYDYhKdVh1ao/vwXW1NX6XhwzRTZSObgoDickFAksvNjp
-	 0FxAIYzxnl9kZa3uiiMmglzbg45qGhqyv8FvtiSI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PGn0bY047956
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 11:49:00 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 11:48:59 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 11:48:59 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PGmw2G069879;
-	Fri, 25 Apr 2025 11:48:59 -0500
-Date: Fri, 25 Apr 2025 22:18:58 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <huaqian.li@siemens.com>
-CC: <helgaas@kernel.org>, <baocheng.su@siemens.com>, <bhelgaas@google.com>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <diogo.ivo@siemens.com>, <jan.kiszka@siemens.com>, <kristo@kernel.org>,
-        <krzk+dt@kernel.org>, <kw@linux.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <lpieralisi@kernel.org>, <nm@ti.com>,
-        <robh@kernel.org>, <s-vadapalli@ti.com>, <ssantosh@kernel.org>,
-        <vigneshr@ti.com>
-Subject: Re: [PATCH v8 4/7] PCI: keystone: Add support for PVU-based DMA
- isolation on AM654
-Message-ID: <7c8c29ee-2600-4eea-866f-8fe2d533418e@ti.com>
-References: <aa3c8d033480801250b3fb0be29adda4a2c31f9e.camel@siemens.com>
- <20250422061406.112539-1-huaqian.li@siemens.com>
- <20250422061406.112539-5-huaqian.li@siemens.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Llnyj+X+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6723C4CEE4;
+	Fri, 25 Apr 2025 16:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745599764;
+	bh=461+pUfno2hTIbCXCu9nP1x7M0HrZserREq+i6zkxp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Llnyj+X+6CK/sPAqAggsHaHa7jXYnwl6GrRnj7DKn1eo6DxL2rPpiNAw5W/JIsoXw
+	 K1oCVDwtv+O6b9bb5MfIsgFIfk1L9EeQJyKInb/mD9NseF+7wZehkCBUtK7BzmdwKF
+	 Q+m4q4eZwYBTxzvUkak7j2Dm7w9tySNB4yjGw1ugumu/OXOoZcmnUIlzt4bkoBDsOz
+	 T5E7KhY1fzSE7i5rE063TkQ/+dqYJtMNIA8AYj82TF3R5sI/z0CXtcEz7Ebk/eKfqH
+	 Mo5x9g84BoTaKtlXvhCxBRycD246nllcg5U+BeU9aqVZIFIJfdm/WjkllLjHzqpsHQ
+	 0n2BzQvHnhJFQ==
+Date: Fri, 25 Apr 2025 18:49:19 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Benjamin Drung <benjamin.drung@canonical.com>
+Cc: linux-fsdevel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>, 
+	Luca Boccassi <luca.boccassi@gmail.com>, Lennart Poettering <lennart@poettering.net>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, Mike Yuan <me@yhndnzj.com>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
+ helper
+Message-ID: <20250425-erbschaft-nummer-8ddbe420ae22@brauner>
+References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
+ <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
+ <ee1263a1bcb7510f2ec7a4c34e5c64b3a1d21d7a.camel@canonical.com>
+ <20250425-eskapaden-regnen-4534af2aef11@brauner>
+ <e1ee6aba07c367b9518fe3fab1dd71c418e3446a.camel@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250422061406.112539-5-huaqian.li@siemens.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <e1ee6aba07c367b9518fe3fab1dd71c418e3446a.camel@canonical.com>
 
-On Tue, Apr 22, 2025 at 02:14:03PM +0800, huaqian.li@siemens.com wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
+On Fri, Apr 25, 2025 at 02:03:34PM +0200, Benjamin Drung wrote:
+> On Fri, 2025-04-25 at 13:57 +0200, Christian Brauner wrote:
+> > On Fri, Apr 25, 2025 at 01:31:56PM +0200, Benjamin Drung wrote:
+> > > Hi,
+> > > 
+> > > On Mon, 2025-04-14 at 15:55 +0200, Christian Brauner wrote:
+> > > > Give userspace a way to instruct the kernel to install a pidfd into the
+> > > > usermode helper process. This makes coredump handling a lot more
+> > > > reliable for userspace. In parallel with this commit we already have
+> > > > systemd adding support for this in [1].
+> > > > 
+> > > > We create a pidfs file for the coredumping process when we process the
+> > > > corename pattern. When the usermode helper process is forked we then
+> > > > install the pidfs file as file descriptor three into the usermode
+> > > > helpers file descriptor table so it's available to the exec'd program.
+> > > > 
+> > > > Since usermode helpers are either children of the system_unbound_wq
+> > > > workqueue or kthreadd we know that the file descriptor table is empty
+> > > > and can thus always use three as the file descriptor number.
+> > > > 
+> > > > Note, that we'll install a pidfd for the thread-group leader even if a
+> > > > subthread is calling do_coredump(). We know that task linkage hasn't
+> > > > been removed due to delay_group_leader() and even if this @current isn't
+> > > > the actual thread-group leader we know that the thread-group leader
+> > > > cannot be reaped until @current has exited.
+> > > > 
+> > > > Link: https://github.com/systemd/systemd/pull/37125 [1]
+> > > > Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
+> > > > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> > > > ---
+> > > >  fs/coredump.c            | 59 ++++++++++++++++++++++++++++++++++++++++++++----
+> > > >  include/linux/coredump.h |  1 +
+> > > >  2 files changed, 56 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/fs/coredump.c b/fs/coredump.c
+> > > > index 9da592aa8f16..403be0ff780e 100644
+> > > > --- a/fs/coredump.c
+> > > > +++ b/fs/coredump.c
+> > > > @@ -43,6 +43,9 @@
+> > > >  #include <linux/timekeeping.h>
+> > > >  #include <linux/sysctl.h>
+> > > >  #include <linux/elf.h>
+> > > > +#include <linux/pidfs.h>
+> > > > +#include <uapi/linux/pidfd.h>
+> > > > +#include <linux/vfsdebug.h>
+> > > >  
+> > > >  #include <linux/uaccess.h>
+> > > >  #include <asm/mmu_context.h>
+> > > > @@ -60,6 +63,12 @@ static void free_vma_snapshot(struct coredump_params *cprm);
+> > > >  #define CORE_FILE_NOTE_SIZE_DEFAULT (4*1024*1024)
+> > > >  /* Define a reasonable max cap */
+> > > >  #define CORE_FILE_NOTE_SIZE_MAX (16*1024*1024)
+> > > > +/*
+> > > > + * File descriptor number for the pidfd for the thread-group leader of
+> > > > + * the coredumping task installed into the usermode helper's file
+> > > > + * descriptor table.
+> > > > + */
+> > > > +#define COREDUMP_PIDFD_NUMBER 3
+> > > >  
+> > > >  static int core_uses_pid;
+> > > >  static unsigned int core_pipe_limit;
+> > > > @@ -339,6 +348,27 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+> > > >  			case 'C':
+> > > >  				err = cn_printf(cn, "%d", cprm->cpu);
+> > > >  				break;
+> > > > +			/* pidfd number */
+> > > > +			case 'F': {
+> > > > +				/*
+> > > > +				 * Installing a pidfd only makes sense if
+> > > > +				 * we actually spawn a usermode helper.
+> > > > +				 */
+> > > > +				if (!ispipe)
+> > > > +					break;
+> > > > +
+> > > > +				/*
+> > > > +				 * Note that we'll install a pidfd for the
+> > > > +				 * thread-group leader. We know that task
+> > > > +				 * linkage hasn't been removed yet and even if
+> > > > +				 * this @current isn't the actual thread-group
+> > > > +				 * leader we know that the thread-group leader
+> > > > +				 * cannot be reaped until @current has exited.
+> > > > +				 */
+> > > > +				cprm->pid = task_tgid(current);
+> > > > +				err = cn_printf(cn, "%d", COREDUMP_PIDFD_NUMBER);
+> > > > +				break;
+> > > > +			}
+> > > >  			default:
+> > > >  				break;
+> > > >  			}
+> > > > 
+> > > 
+> > > I tried this change with Apport: I took the Ubuntu mainline kernel build
+> > > https://kernel.ubuntu.com/mainline/daily/2025-04-24/ (that refers to
+> > > mainline commit e54f9b0410347c49b7ffdd495578811e70d7a407) and applied
+> > > these three patches on top. Then I modified Apport to take the
+> > > additional `-F%F` and tested that on Ubuntu 25.04 (plucky). The result
+> > > is the coredump failed as long as there was `-F%F` on
+> > 
+> > I have no clue what -F%F is and whether that leading -F is something
+> > specific to Apport but the specifier is %F not -F%F. For example:
+> > 
+> >         > cat /proc/sys/kernel/core_pattern
+> >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %F
+> > 
+> > And note that this requires the pipe logic to be used, aka "|" needs to
+> > be specified. Without it this doesn't make sense.
 > 
-> The AM654 lacks an IOMMU, thus does not support isolating DMA requests
-> from untrusted PCI devices to selected memory regions this way. Use
-> static PVU-based protection instead. The PVU, when enabled, will only
-> accept DMA requests that address previously configured regions.
+> Apport takes short option parameters. They match the kernel template
+> specifiers. The failing pattern:
 > 
-> Use the availability of a restricted-dma-pool memory region as trigger
-> and register it as valid DMA target with the PVU. In addition, enable
-> the mapping of requester IDs to VirtIDs in the PCI RC. Use only a single
-> VirtID so far, catching all devices. This may be extended later on.
+> $ cat /proc/sys/kernel/core_pattern 
+> |/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -F%F -- %E
 > 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
-> ---
->  drivers/pci/controller/dwc/pci-keystone.c | 106 ++++++++++++++++++++++
->  1 file changed, 106 insertions(+)
+> Once I drop %F Apport is called without issues:
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-> index 76a37368ae4f..ea2d8768e333 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -19,6 +19,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/msi.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_pci.h>
->  #include <linux/phy/phy.h>
-> @@ -26,6 +27,7 @@
->  #include <linux/regmap.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
-> +#include <linux/ti-pvu.h>
->  
->  #include "../../pci.h"
->  #include "pcie-designware.h"
-> @@ -111,6 +113,16 @@
->  
->  #define PCI_DEVICE_ID_TI_AM654X		0xb00c
->  
-> +#define KS_PCI_VIRTID			0
-> +
-> +#define PCIE_VMAP_xP_CTRL		0x0
-> +#define PCIE_VMAP_xP_REQID		0x4
-> +#define PCIE_VMAP_xP_VIRTID		0x8
-> +
-> +#define PCIE_VMAP_xP_CTRL_EN		BIT(0)
-> +
-> +#define PCIE_VMAP_xP_VIRTID_VID_MASK	0xfff
-> +
->  struct ks_pcie_of_data {
->  	enum dw_pcie_device_mode mode;
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1137,6 +1149,94 @@ static const struct of_device_id ks_pcie_of_match[] = {
->  	{ },
->  };
->  
-> +static int ks_init_vmap(struct platform_device *pdev, const char *vmap_name)
-> +{
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	u32 val;
-> +
-> +	if (!IS_ENABLED(CONFIG_TI_PVU))
-> +		return 0;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, vmap_name);
-> +	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	writel(0, base + PCIE_VMAP_xP_REQID);
-> +
-> +	val = readl(base + PCIE_VMAP_xP_VIRTID);
-> +	val &= ~PCIE_VMAP_xP_VIRTID_VID_MASK;
-> +	val |= KS_PCI_VIRTID;
+> $ cat /proc/sys/kernel/core_pattern 
+> |/usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E
 
-While it has been stated that we are going to start off with a single
-VirtID for now and extend it later on, is there an example for how it may
-be extended? The only option I see is that of associating one VirtID for
-Low-Priority (LP) traffic and another for High-Priority (HP) traffic, in
-which case, it might be better to define them upfront and use them like:
-#define KS_PCI_LP_VIRTID	0
-#define KS_PCI_HP_VIRTID	1
-
-> +	writel(val, base + PCIE_VMAP_xP_VIRTID);
-> +
-> +	val = readl(base + PCIE_VMAP_xP_CTRL);
-> +	val |= PCIE_VMAP_xP_CTRL_EN;
-> +	writel(val, base + PCIE_VMAP_xP_CTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ks_init_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct of_phandle_iterator it;
-> +	struct resource phys;
-> +	int err;
-> +
-> +	if (!IS_ENABLED(CONFIG_TI_PVU))
-> +		return 0;
-> +
-> +	/* Only process the first restricted DMA pool, more are not allowed */
-> +	of_for_each_phandle(&it, err, dev->of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (of_device_is_compatible(it.node, "restricted-dma-pool"))
-> +			break;
-> +	}
-> +	if (err)
-> +		return err == -ENOENT ? 0 : err;
-> +
-> +	err = of_address_to_resource(it.node, 0, &phys);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to parse memory region %pOF: %d\n",
-> +			it.node, err);
-> +		return 0;
-> +	}
-> +
-> +	/* Map all incoming requests on low and high prio port to virtID 0 */
-
-The question I asked above applies here too. How is it planned to extend
-support for multiple VirtIDs, if not on the basis of assigining one
-VirtID to LP traffic and another to HP traffic? Since we have an option
-of using different VirtIDs for LP and HP traffic, why not use it? Is
-there going to be an issue with using VirtID 0 for LP traffic and VirtID 1
-for HP traffic?
-
-> +	err = ks_init_vmap(pdev, "vmap_lp");
-> +	if (err)
-> +		return err;
-> +	err = ks_init_vmap(pdev, "vmap_hp");
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Enforce DMA pool usage with the help of the PVU.
-> +	 * Any request outside will be dropped and raise an error at the PVU.
-> +	 */
-> +	return ti_pvu_create_region(KS_PCI_VIRTID, &phys);
-
-Same as above, we are passing a single VIRTID and not an array, so it
-isn't clear to me as to how it will be extended in the future.
-
-> +}
-> +
-> +static void ks_release_restricted_dma(struct platform_device *pdev)
-> +{
-> +	struct of_phandle_iterator it;
-> +	struct resource phys;
-> +	int err;
-> +
-> +	if (!IS_ENABLED(CONFIG_TI_PVU))
-> +		return;
-> +
-> +	of_for_each_phandle(&it, err, pdev->dev.of_node, "memory-region",
-> +			    NULL, 0) {
-> +		if (of_device_is_compatible(it.node, "restricted-dma-pool") &&
-> +		    of_address_to_resource(it.node, 0, &phys) == 0) {
-> +			ti_pvu_remove_region(KS_PCI_VIRTID, &phys);
-> +			break;
-> +		}
-> +	}
-> +}
-> +
->  static int ks_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct dw_pcie_host_ops *host_ops;
-> @@ -1285,6 +1385,10 @@ static int ks_pcie_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		goto err_get_sync;
->  
-> +	ret = ks_init_restricted_dma(pdev);
-> +	if (ret < 0)
-> +		goto err_get_sync;
-> +
-
-Shouldn't the above be moved into the case for "DW_PCIE_RC_TYPE" below? Or
-is this valid even when the SoC is configured to act as an Endpoint?
-
->  	switch (mode) {
->  	case DW_PCIE_RC_TYPE:
->  		if (!IS_ENABLED(CONFIG_PCI_KEYSTONE_HOST)) {
-> @@ -1366,6 +1470,8 @@ static void ks_pcie_remove(struct platform_device *pdev)
->  	int num_lanes = ks_pcie->num_lanes;
->  	struct device *dev = &pdev->dev;
->  
-> +	ks_release_restricted_dma(pdev);
-> +
->  	pm_runtime_put(dev);
->  	pm_runtime_disable(dev);
->  	ks_pcie_disable_phy(ks_pcie);
-
-Regards,
-Siddharth.
+Youm must have CONFIG_DEBUG_VFS=y enabled where we trample the pidfs
+file we just allocated. It's a debug only assert. I've removed it now
+and pushed it to vfs-6.16.coredump. Can you either try with that or
+simply unset CONFIG_DEBUG_VFS and retest.
