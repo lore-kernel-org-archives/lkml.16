@@ -1,175 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CB41F6694
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF361F6694
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610985; cv=none; b=SJeaO1RYhQ91TbieFo34x39jqWuUajNsrlc3OfyRvANdKxmTshrSvLptPYDRORNnq4VbHgTIpNCBHKliVipZreEV6sPx9jCuTV041LARpdgVYuDfeEEtjS8TaDTQQtD9RrgOlCScflUSwcaIsrRgBK/5w1DjRG/a6EJAUDumS6Q=
+	t=1745611001; cv=none; b=JX1qKKp4OaMHgwFBBYpHdJhmgECbxgj8U2la8mJAHwNlbAeemz+i9mxMTuFWwwnAmyHuAsWdhO+CLNVm1tzAvhzfZjTFTVb1WiwwehDpraGHZ77GER3GdmQN6koLR/l2hFQxAmuEVN4Ks6eL8+t1j+c89HsUzImUTQONKYI6b0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610985; c=relaxed/simple;
-	bh=3BFpzPNhGoEvlgWJA66CMPCNVCIyPcxU5w0nVetTTVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=erAjwSTPCpaCTrdthZ+S0VphCXs/jjigvH3cqp5BGXcXY8SfmSB0r4VmKcZbB6RCfWy7qdQZKFmSg5afpUozvmcp8E/BZUVNJ3KSN0G3k4GQyZD0cD8b7H1NExsWsVTrnir5kEdeox453VEkt03ynBIVrr51KbfR/mB6bNLm50U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRS2/ztl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745611001; c=relaxed/simple;
+	bh=jqhNbWJZJQKm3jDFrgR1Oy94a2yWCHf95UZOSaEQwxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C/Xl9Lh/dsEMe8Hw2j5Tl9Y7dgSzDGmD27DiI27IU43YHWKISlgmf3r2MHcN8LtymXefQaJt+TAFIwvFFDXcXbFNJmDgkMtcquCLxsDS8V0J3waWUZY8P+UMSEFLT5969AYU91O0U17TVy97evV0YVQXLqDB2naz8Z/u/EDFED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UAULLfte; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRS2/ztl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4821BC4CEE9;
-	Fri, 25 Apr 2025 19:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745610984;
-	bh=3BFpzPNhGoEvlgWJA66CMPCNVCIyPcxU5w0nVetTTVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRS2/ztlUG0AIAC3y4OPWTTjG1HrkNkqEFroTJSVrgpw6FOWNjoTWr2niFagTwrIA
-	 Bg5a4Po8oPmkMpKJLrUTJ3mh8giuvpQgLeIx4a79TyiDPUdlrXzPXcjXPS082UiXgD
-	 SokBmtDgYkmcmjB3NZ8tiYb7v6HxqVti0fqViOAPKjMjt3KtE3fm5TqpQ8VN4XlQUp
-	 jY1VLPu27QHpLdMpcfPSKacUu6TlHQzzGLDy6r+KPwRDC7NGmrJDI+Tzd6ojVkilyz
-	 0PApMN5h2jRlwiDZAdeE7iVkymsJcThsPRNFBcionN9Ne06KpZgHtKCoFnetmsxMnq
-	 3kaYGOa25YCsw==
-Date: Fri, 25 Apr 2025 12:56:21 -0700
-From: Kees Cook <kees@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux-MM <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: BUG: vdso changes expose elf mapping issue
-Message-ID: <202504251158.D3D342410@keescook>
-References: <f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com>
- <aAvWchSUlnAfg42x@arm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UAULLfte"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745610998;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bE2Dp5Yo0pObZA0Gc62tH8dA81bjnFJ9ScY4Xen6Glg=;
+	b=UAULLfteh0HWaVIQ9RhjgnIveRioHIiJVDk5zWR80Wr72A4b1nnJFLG9y9npYNJM4QYFiO
+	dAbdwUrVmhAoGlxIYau1sLTWQe0i/8evUuGiEZ+mznmEWD3fiMWZxSuyOodo4nPcKlt3wO
+	wBpmHD/WTvMLp0E0jfMCOnzVS9bSXUc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-643-L7kgQX-BO5un0V4w8G5RXA-1; Fri, 25 Apr 2025 15:56:37 -0400
+X-MC-Unique: L7kgQX-BO5un0V4w8G5RXA-1
+X-Mimecast-MFC-AGG-ID: L7kgQX-BO5un0V4w8G5RXA_1745610996
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so12881025e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:56:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745610996; x=1746215796;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bE2Dp5Yo0pObZA0Gc62tH8dA81bjnFJ9ScY4Xen6Glg=;
+        b=v4i7w6t9EqubsudwtD50cnaKTT0g4fUczqGKkHxZayhnhwTGVI6i6QdS9LIT+tjuvB
+         QieyLem3ykmEnQnYjzA3qWdN64ybuVvzSG2kTRnb+zMiGzzeFy18e5HvZSHJKro06lVV
+         JMNCjF2kS93kGdBN+6P7AKPQk3zBA1iJiURnCIuG+hsQIGM96Mr9KfxLrDLsNQh4qSxb
+         97yAImyJAukb2sh1DYoTyN+erl1Rge2wGwUTxiLX3vNx41oL6oxq+lkpd22yTYMvZQQB
+         DAoKmkM35b2LTVTRZa2wigKEzFULkJCPvUVZsfBek8t4vkZ9p+rvhmm9WgmjL1qfRnOO
+         D94Q==
+X-Gm-Message-State: AOJu0YwSZ3iu3Sv4oDSCGCKehhS7Gc+QWdDlt0bkZi0UphjRFF/RaAhk
+	TfCcpkV+7cpr9xUWwbg46n7HKgTKoqICEYyr9ik+8k7WMkGtPpMPHUZ4VY+x/K5BcyBjFmWv6ES
+	qQI/67LaDKhlbC5Ad2AyQvlKX9ct5z4pl8boWexC9ggGbPVDCy12+YK0bVYeYVQ==
+X-Gm-Gg: ASbGncvjF5l9OTNjyHVKJh9Q78X5ngllmSNfqQwRfbBWY0OdgjH9pDjbCvbb7s5ND9B
+	eL3WpS2N0QfeqQ4xnEAZyzTbdE5A5qQSjcigNyfUmvSUUhdsOPx3XH2g9EY5UUZoTZbqGF2NLKl
+	lB8+Gx7OmMI8Leluv2yJ3CwTnZfrvhJf0PUH9bQ8t+8mYmub871dt+kJxxYd/wQVWucqXPl7gwh
+	bgQsqGriE+GnzO4b3TTz4yDVxP68Iiitp8Q8n4VA94UOAFZk0Aiqcq/uQkt+Ib1S/DQqkoqUKyT
+	Z10efcKToxAa1WPoKCQZy9DHN5sh4jYB/BD/7kLOIS8Mc7AmQZlT2pYoaqdVKR4+ghXlDLpBXWS
+	r5pfxPSwJMKnO+MI+SKmBxPOS8Y0GLOMciDwH
+X-Received: by 2002:a05:600c:a4d:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-440a669b52cmr29619585e9.20.1745610996268;
+        Fri, 25 Apr 2025 12:56:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDTvNhYItxE+4Y0RI+qao1NGVdbXY23J5yiDp5FychjNVZxG0vly/CBGVBOu3qdA9XOIO6hw==
+X-Received: by 2002:a05:600c:a4d:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-440a669b52cmr29619355e9.20.1745610995912;
+        Fri, 25 Apr 2025 12:56:35 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70f:6900:6c56:80f8:c14:6d2a? (p200300cbc70f69006c5680f80c146d2a.dip0.t-ipconnect.de. [2003:cb:c70f:6900:6c56:80f8:c14:6d2a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d86f7sm66114125e9.32.2025.04.25.12.56.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 12:56:34 -0700 (PDT)
+Message-ID: <519e3bbf-b198-4e55-81e8-0a77d8ab03d3@redhat.com>
+Date: Fri, 25 Apr 2025 21:56:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAvWchSUlnAfg42x@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
+ pfnmap_sanitize_pgprot()
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-3-david@redhat.com> <aAvjJOmvm5GsZ-JN@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aAvjJOmvm5GsZ-JN@x1.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 07:37:38PM +0100, Catalin Marinas wrote:
-> On Fri, Apr 25, 2025 at 01:41:31PM +0100, Ryan Roberts wrote:
-> > ldconfig is a statically linked, PIE executable. The kernel treats this as an 
-> > interpreter and therefore does not map it into low memory but instead maps it 
-> > into high memory using mmap() (mmap is top-down on arm64). Once it's mapped, 
-> > vvar/vdso gets mapped and fills the hole right at the top that is left due to 
-> > ldconfig's alignment requirements. Before the above change, there were 2 pages 
-> > free between the end of the data segment and vvar; this was enough for ldconfig 
-> > to get it's required memory with brk(). But after the change there is no space:
-> > 
-> > Before:
-> > fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
-> > fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
-> > fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
-> > fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
-> > 
-> > After:
-> > fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
-> > fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
-> > fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
-> > fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
+>>   
+>> -	track_pfn_insert(vma, &pgprot, pfn);
+>> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
+>> +		return VM_FAULT_FALLBACK;
 > 
-> It does look like we've just been lucky so far. An ELF file requiring a
-> slightly larger brk (by two pages), it could fail. FWIW, briefly after
-> commit 9630f0d60fec ("fs/binfmt_elf: use PT_LOAD p_align values for
-> static PIE"), we got:
-> 
->           Start Addr           End Addr       Size     Offset  Perms  objfile
->       0xaaaaaaaa0000     0xaaaaaab5d000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
->       0xaaaaaab6b000     0xaaaaaab73000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
->       0xaaaaaab73000     0xaaaaaab78000     0x5000        0x0  rw-p   [heap]
->       0xfffff7ffd000     0xfffff7fff000     0x2000        0x0  r--p   [vvar]
->       0xfffff7fff000     0xfffff8000000     0x1000        0x0  r-xp   [vdso]
->       0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
-> 
-> This looks like a better layout to me when you load an ET_DYN file
-> without !PT_INTERP.
+> Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
+> trigger, though.
 
-The trouble is that !PT_INTERP must be loaded out of the way of the
-binary it may load, so it cannot be loaded low.
-
-> When the commit was reverted by aeb7923733d1 ("revert "fs/binfmt_elf:
-> use PT_LOAD p_align values for static PIE""), we went back to:
-> 
->           Start Addr           End Addr       Size     Offset  Perms  objfile
->       0xfffff7f28000     0xfffff7fe5000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
->       0xfffff7ff0000     0xfffff7ff2000     0x2000        0x0  r--p   [vvar]
->       0xfffff7ff2000     0xfffff7ff3000     0x1000        0x0  r-xp   [vdso]
->       0xfffff7ff3000     0xfffff7ffb000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
->       0xfffff7ffb000     0xfffff8000000     0x5000        0x0  rw-p   [heap]
->       0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
-
-The revert was because, among various additional problems, that this low
-load would collide with things. The static PIE alignment was finally
-fixed with commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
-for static PIE")
-
-The ultimate brk location is determined near the end of load_elf_binary()
-(see the code surrounding the comment "Otherwise leave a gap").
-
-> With 6.15-rc3 my layout looks like Ryan's but in 5.18 above, the vdso is
-> small enough and it's squeezed between the two ldconfig sections.
-
-I think there are two surprises:
-
-- For loaders (ET_DYN without PT_INTERP, which is also "static PIE") the
-  brk location is being moved to ELF_ET_DYN_BASE ... *but only when ASLR
-  is enabled*. I think exclusion is the primary bug, with its origin
-  in commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
-  direct loader exec"). I failed to explain my rationale at the time
-  to have it only happen under ASLR, but I think I was trying to be
-  conservative and not change things too much.
-
-- vdso can get loaded into _gaps_ in the ELF. I think this is asking for
-  trouble, but technically should be okay since neither can grow. But I
-  never like seeing immediately adjacent unrelated mappings, since we
-  always end up with bugs (see things like commit 2a5eb9995528
-  ("binfmt_elf: Leave a gap between .bss and brk").
-
-For fixing the former, the below change might work (totally untested yet,
-I just wanted to reply with my thoughts as I start testing this). Pardon
-the goofy code style, I wanted a minimal diff here:
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 7e2afe3220f7..9290a29ede28 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1284,7 +1284,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	mm->end_data = end_data;
- 	mm->start_stack = bprm->p;
- 
--	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
-+	{
- 		/*
- 		 * For architectures with ELF randomization, when executing
- 		 * a loader directly (i.e. no interpreter listed in ELF
-@@ -1299,7 +1299,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			/* Otherwise leave a gap between .bss and brk. */
- 			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
- 		}
-+	}
- 
-+	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
- 		mm->brk = mm->start_brk = arch_randomize_brk(mm);
- #ifdef compat_brk_randomized
- 		current->brk_randomized = 1;
-
-> > Note that this issue only occurs with ASLR disabled. When ASLR is enabled, the 
-> > brk region is setup in the low memory region that would normally be used by 
-> > primary executable.
-
-Out of curiosity, why are you running without ASLR?
-
-Thanks for the report! I'll continue testing the above fix. Just for
-making sure I am able to exactly reproduce your issue, this is on
-a regular arm64 install of Ubuntu 22.04?
-
--Kees
+Missed that comment. I can document that pgprot will only be touched if 
+the function succeeds.
 
 -- 
-Kees Cook
+Cheers,
+
+David / dhildenb
+
