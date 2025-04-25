@@ -1,86 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5902382;
-	Fri, 25 Apr 2025 00:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2E917BA5;
+	Fri, 25 Apr 2025 00:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540264; cv=none; b=Ue3zQ+AUAStcHEN2Jz9KxC6nO+8tuXc/t/3OP5Zwgxe1ES7tr8bM3oun+5GphKY1G5btFeASClihl/ezEp7vHJhKs7PRJIEysSw1QoBqfi/f92LL4RTbK0uQZQgIhMIro8JvIhS8phlJHkzoO7f9iSAqAy67gyi9ctt2tuP8RlA=
+	t=1745540280; cv=none; b=rUWHSlS1YCCzQfW7YXhsNxGWTUZ2jLHohdfeFjZ76tTiQYyYUJMTwq2EDUgqjGgtvZu172vtQ9+FLyuzuzN8haEvSRT7JJjk5q0LeRQ+sdS8P/ZC5HGg6fdFdkv/ls2xqcVcvRLNw4mgKFzx3csbcZA5Q6Ngpbunp4TnKQ61OPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540264; c=relaxed/simple;
-	bh=hBejx/ayd+GyQ+0SkZMatW7XvWQxt2+ga5tDFrKq55Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nWxeJIN6FQgG2b2wrnTMBfp/IU/xGiKo/lADDGOm324jEkIOMnIWWna8lw+LkdfOlEEfO9F0cmKjOq+0yqdMaGSf5e2ePjKUqCwHJK1jG8znImCnmpv8BSRG1Kl/Qlble+OoVWnLG4NuFmmmKG0RWNNzk2qA0IBCgEiHl4IyGDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAwHIjtn; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745540280; c=relaxed/simple;
+	bh=w04ui9n+b5eQWZUkMB3F52O0GSLxqgBLN8BKbm/YuzA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gwcNWysqXvhGSjWlb6QF1AdBaXKPx1iMmL7EUc4VQnnf49Hq23Xw7OFcezo/RqdQoJF64+L4S4+TfOHJJNsOS26gw9VhFuARDkkBF7bisnIOQX7+LixD6JG8WNuw2h8lRB/fjVZihilOz0uugWmX6LxCWFU8qVBflpqkAGQeTWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Stn/nQPr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAwHIjtn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745540263; x=1777076263;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hBejx/ayd+GyQ+0SkZMatW7XvWQxt2+ga5tDFrKq55Q=;
-  b=HAwHIjtnoEEeyygPoH0U0vRrxpIYdr0PVVLMu3BiSUl5pTYfwi9Fm3gY
-   5Ri2hC8lPkb9ta8jCrZuSbrQRfMWO4geG89NDqAHSEDVznn+tmRapAopm
-   UggXO1XFbD6MbWhycsEIskZyXV37fAn5s4pWwZ1dpokcof8CjSZWTlUe+
-   JA5Z8HfB4BWdhe33kjsekJ6EbmWWw0YkZEq5HlNvasgSHZxm0SqlD0MFO
-   76VXX+az7iQvSBH7CMAY4A+29J8K/OQhyR8qHT5FysRBOWTOffHeoEwph
-   7o5WyzK/sTrcxtfKyP/wHMblclhYwfHetjd/2x7AXhmrkfX21DYmFng6i
-   g==;
-X-CSE-ConnectionGUID: +iYAUrizRo+tboUd3xdLNA==
-X-CSE-MsgGUID: 6McV+jX2QRGI8mPVZTyzFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="64612561"
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="64612561"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 17:17:41 -0700
-X-CSE-ConnectionGUID: PJfJ+tfnQl+P6lFjPBpldQ==
-X-CSE-MsgGUID: 26kbLsDHTNGSalFA9BBFUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="163815423"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 17:17:38 -0700
-Message-ID: <1fd8dd31-faf4-4657-ab06-ccba3e790d01@linux.intel.com>
-Date: Fri, 25 Apr 2025 08:17:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Stn/nQPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F15C4CEE3;
+	Fri, 25 Apr 2025 00:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745540280;
+	bh=w04ui9n+b5eQWZUkMB3F52O0GSLxqgBLN8BKbm/YuzA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Stn/nQPrPQNLomuUHnmOmKHpxf2rD4m8Vc7Sb11zDFPg4RxiKXcLG5yrC5RafUcf3
+	 8SJw642ZxhCuLB2/9NRwmJyH9MWzn+AEipdJmRfnOJPkPqyoDk7BaR7BkK1XbdstSS
+	 zSjJmgldYjvahltpKwV84s2RU1SBc/RjkAnk1+yijh0JzrcCG2V+LQaNIdD7i+qsfb
+	 o0NNJ2CJA8eQNTIiJ272oYSI7+qnXRQc67ugGBrblamzxr/sPwDkUcW8WhnYOsWbri
+	 dHQWdPDdBfYmH10Xf4tThRYkbK5u10piIVNSjLoY4CkKyNIuWS0MohI1cO48ipcp4k
+	 el5aWi87l6kqg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.1 000/291] 6.1.135-rc1 review
+Date: Fri, 25 Apr 2025 02:17:47 +0200
+Message-ID: <20250425001747.62746-1-ojeda@kernel.org>
+In-Reply-To: <20250423142624.409452181@linuxfoundation.org>
+References: <20250423142624.409452181@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: kvm guests crash when running "perf kvm top"
-To: Sean Christopherson <seanjc@google.com>
-Cc: Seth Forshee <sforshee@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
- linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Z_VUswFkWiTYI0eD@do-x1carbon>
- <27175b8e-144d-42cb-b149-04031e9aa698@linux.intel.com>
- <aAo445Nzi5DuAQAR@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aAo445Nzi5DuAQAR@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-On 4/24/2025 9:13 PM, Sean Christopherson wrote:
-> On Thu, Apr 24, 2025, Dapeng Mi wrote:
->> Is the command "perf kvm top" executed in host or guest when you see guest
->> crash? Is it easy to be reproduced? Could you please provide the detailed
->> steps to reproduce the issue with 6.15-rc1 kernel?
-> Host.  I already have a fix, I'll get it posted today.
+On Wed, 23 Apr 2025 16:39:49 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 >
-> https://lore.kernel.org/all/Z_aovIbwdKIIBMuq@google.com
+> This is the start of the stable review cycle for the 6.1.135 release.
+> There are 291 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
+> Anything received after that time might be too late.
 
-Thumbs up! Glad to see it has been root caused. Thanks.
+Boot-tested under QEMU for Rust x86_64:
 
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
+Thanks!
+
+Cheers,
+Miguel
