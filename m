@@ -1,164 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B95F81E;
-	Fri, 25 Apr 2025 00:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7304281E;
+	Fri, 25 Apr 2025 00:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745540613; cv=none; b=Cyf96yxtNAo8S5/tn1vyoZCzHDLsQfP+IlOtqg4axfBVCCGWRIR2udiYyfccHhBGXaf7mq8M6UqQw9wtPJbv8PmIxyPozm3XqdmGWCmNAGrn1kWtO2lNENPwH83BXObDktn70P2HIv3O7pYnH/17h/+9yRRlGzpuSyiu3CakF9w=
+	t=1745540688; cv=none; b=P5PMaVAqR4PEXCpWe5/tuxeEAcN0Ly8I+10QiZT9Z6VCWa0fFQrEUa6tOMYhqtpUmlKbmYjC7gw3DxwR6KVJ0+u5w32SvT56g/V3KnzJmaWiVyf1+GsIDlT7W1puUvVkdQE4Mrd2JzsQpvvSKH6pZof479YDBS5f3QAXzrvRwms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745540613; c=relaxed/simple;
-	bh=UEkSo+BagKkIVRMMe9pgkrGMxtdYLmVfK4/QgaOoRvc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ex84vSnwWi0eXVM1WNg35JPUhIuCTWuU60oK1zPvYhEu0cALN9+d3Jd5a0fEBkGD9mvJHZ5JO+4giHIuNB/X34HJ9i3A9ePn0A7KGbyj+90lIItFZ7LN7+LH08/EfFqX3DHMN48FDj4Rx2IhTX42YX+DXXWSGzDv5HQk41w8R/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUarwgPx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745540688; c=relaxed/simple;
+	bh=SxWFahHw+Vbx44SM7gqevX+c0LZFs/cA/XXQd0SyOvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HDC78Ki15+43EAxZdpBuliu8Llwi1dQPWPdbsDGdlDdfm/pUHo/us+KZFCRdfw4daXnQPoL45Vqf0quv9wGw/CDpC8CI2HUPPIY/03utO3494ZWBRc1tnNxKYaZho+LbDrtq5EQdcgLbQvb6lbazjsNnaedkgJwA8+7bSM0g0sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZ+j9dTj; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUarwgPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC6CC4CEE3;
-	Fri, 25 Apr 2025 00:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745540612;
-	bh=UEkSo+BagKkIVRMMe9pgkrGMxtdYLmVfK4/QgaOoRvc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=pUarwgPxg10MK0UdQ+n5BCmMishwDRNdqKKtmZeSwy6yosN15zyV66BLSRDZi5A3c
-	 yVKMHZZzjcPoaTAJlS3aJBbN3RbJtDAlMxvqvthKXy3RD4ayvHKrha1/fo9OcfQHxq
-	 y7p3Ui7hk/Mm4qo9Aui0h5LGGGoYcAD3AX1BjZjgVC+bWmpXfVuc+PIbBPy645vLsk
-	 +KV3W7aTXxXHLe9iZPp+6GvbYbRheGZDd2kiLKlCP9S8dqK9184eXrNyta7wElhwM4
-	 FTPshbqWhVU5pc0It3lqahAGYR/TDUNf7wxEMMQkU0TwwNjZvcrEDK4Pblvz2ty7Yo
-	 WclNOcBljsHiQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Thu, 24 Apr 2025 17:23:22 -0700
-Subject: [PATCH] riscv: crypto - Use SYM_FUNC_START for functions only
- called directly
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ+j9dTj"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224191d92e4so18493615ad.3;
+        Thu, 24 Apr 2025 17:24:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745540687; x=1746145487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdDgie04YT94hofK4Se8gOgrrxDraTQTaQsWIulcSTc=;
+        b=YZ+j9dTjaJLLSTSDskeW+L8FccnKGqXsT7HW3H+MZjmcMEYVVm1NA18h09DyFRENfX
+         YqA8UBPR4g6YhJe8qCH4l+larRn1YAxSNpI616yG6N+ZRyoGN6xOUqdYQ9pqbuL73gm3
+         EzgTbDuIcaw2epNWBJjtlbtNfL96yCRzTIFHUeVVMQovjjvOtONypuM95cOFM6yzzqav
+         8tLE3ElUOD/zYRvzrTmQ+x6St7kRjbTm7ldCJNgXJyzwaHS7NETTE3n8k+x3xrV71Ueh
+         JV8oKNxjfyxVMWL2Wndqme/4ChmurbfJuZ1s91TiUYkVF6KUXfdTX8yz0+prNEDZEu6b
+         gLEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745540687; x=1746145487;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zdDgie04YT94hofK4Se8gOgrrxDraTQTaQsWIulcSTc=;
+        b=WiI0gwbCgcqDuMdrc3j11w8V+DF63YUtcjMX1dvhnyP3aow3f9OB8NYjyAMrQOz1lA
+         YPMnn4g5VJwMJjr6NgDzh66ivf3ImlfrIJBitpPId5SBrJxC+rH6advZ2tgYFQv2sMYg
+         +u5gM8q49juAJnqqPtD5eWNDTIWfdVdb8J9rETwKhmXhcckAldjCvJ9G7TbXY6TYDjNu
+         W/yw7W8gdIDxzf9n7FVH3wIis3z4QIxidiB8sfSLz5GV3pMCN4vbQm4d36nZVeqPQkX9
+         MUQ5TbMdTIEZ1BesfptvXE3MvYfjZp7D3C07gVVFLf1qHiVdtRbScGDQwG6iF5oZbafw
+         WfFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVObr38kHWFL8/iuqs/l8nIxJlJB+iH45YaspGlb4h3+fIzxk3JeH4P2nsk2vN4LS+ZLVQnp9zr2bZKqi7sjLnDY3m+@vger.kernel.org, AJvYcCXDdERTty6KBqgyaSMfXfEL7fKNj6Wb+771D6dC82DXtHj9TkX3XebqKue4/Wi+VdWA4ia+/DA/CAJ3COQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw50QFVoNVxYdGJoqPccO+3v3aUD1XENakud6ttRbstSvDNPW+O
+	0KgotxyBuL9ZQLESg0yg215t/8ZkLZ29eo+h/UDkBqmeuQzOPJOR
+X-Gm-Gg: ASbGncvUcJYwSalPJqvbH67H6m2kjL+HNAknsMyRP+Ou1Ya1x/cK5C2qXK7wrW7Rbbw
+	ksDU7kmRrX3SFqOlKij3KWtIeLCyQeB09ELRAJa8bTGAYNTl4F2gAvh259P0zV2A29fiw0WlDAc
+	BDf5K/XZ4uK2JxXQp5L6qGadfj32OcJYaMClLFiK3kdtmU3cyenBMhTxtElcBoFYbVrYCFuvPee
+	ona/uoGoub4KYY2EedP+Su2c6hzfB+A4tgmkgv7P6/A6reEYGd0NuvI6N2T/M4NmoV+vd/h4wFD
+	FYRDLMGyjvMWbklfrI+/sQnoWC1vRdTZDTP6T6J/zXlwYZJ3CG9bIaiktA==
+X-Google-Smtp-Source: AGHT+IEJkK+Pw3d14MEGnhCGVT09btAOCFjpnGjogjrrHSUjdVqw+z2nGhNMyX4vmlQgZ4kb+bl9Qw==
+X-Received: by 2002:a17:902:e542:b0:21f:2a2:3c8b with SMTP id d9443c01a7336-22dbf4d1a47mr4718935ad.11.1745540686617;
+        Thu, 24 Apr 2025 17:24:46 -0700 (PDT)
+Received: from localhost.localdomain ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51022f8sm19956165ad.174.2025.04.24.17.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 17:24:46 -0700 (PDT)
+From: nifan.cxl@gmail.com
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	willy@infradead.org
+Cc: akpm@linux-foundation.org,
+	david@redhat.com,
+	fan.ni@samsung.com,
+	yang@os.amperecomputing.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	npache@redhat.com,
+	mcgrof@kernel.org,
+	a.manzanares@samsung.com,
+	dave@stgolabs.net,
+	nifan.cxl@gmail.com,
+	Baolin Wang <baolin.wang@linux.alibaba.com>
+Subject: [PATCH v3] khugepaged: Pass folio instead of head page to trace events
+Date: Thu, 24 Apr 2025 17:16:51 -0700
+Message-ID: <20250425002425.533698-1-nifan.cxl@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-riscv-crypto-fix-cfi-build-v1-1-2d7516737379@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAPnVCmgC/x3M0QpAQBBA0V/RPJtai8SvyIMds0wJzSKSf7d5P
- HW7DwRW4QBN8oDyKUHWJSJLE6CpX0ZGGaLBGluawhaoEuhE0nvbV/RyIXlBd8g8YF1WlSfnXW5
- 6iINNOQb/vO3e9wM6U9lmbAAAAA==
-X-Change-ID: 20250424-riscv-crypto-fix-cfi-build-9577fcbfb30a
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4387; i=nathan@kernel.org;
- h=from:subject:message-id; bh=UEkSo+BagKkIVRMMe9pgkrGMxtdYLmVfK4/QgaOoRvc=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBlc15gdXliefvD94bbcI7N/HPy2dd+jWCa5aMaq2Ts9a
- s1lVgb/7ChlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATsT3MyPCbPehTSr3+2ZsP
- Dqa6ymWJap1UdSs98Nj92LItsl/2GDsy/JXjmSl+buulJcuLYzcv6JwlNPsIf8TCyuOJttM9u2w
- 2GjECAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: 8bit
 
-After some recent changes to the RISC-V crypto code that turned some
-indirect function calls into direct ones, builds with CONFIG_CFI_CLANG
-fail with:
+From: Fan Ni <fan.ni@samsung.com>
 
-  ld.lld: error: undefined symbol: __kcfi_typeid_sm3_transform_zvksh_zvkb
-  >>> referenced by arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.o:(.text+0x2) in archive vmlinux.a
+The trace functions trace_mm_collapse_huge_page_isolate() and
+trace_mm_khugepaged_scan_pmd() each have a single user, which
+always passes in the head page of a folio.
+Refactor both functions to take a folio directly.
 
-  ld.lld: error: undefined symbol: __kcfi_typeid_sha512_transform_zvknhb_zvkb
-  >>> referenced by arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.o:(.text+0x2) in archive vmlinux.a
-
-  ld.lld: error: undefined symbol: __kcfi_typeid_sha256_transform_zvknha_or_zvknhb_zvkb
-  >>> referenced by arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.o:(.text+0x2) in archive vmlinux.a
-
-As these functions are no longer indirectly called (i.e., have their
-address taken), the compiler will not emit __kcfi_typeid symbols for
-them but SYM_TYPED_FUNC_START expects these to exist at link time.
-
-Switch the definitions of these functions to use SYM_FUNC_START, as they
-no longer need kCFI type information since they are only called
-directly.
-
-Fixes: 1523eaed0ac5 ("crypto: riscv/sm3 - Use API partial block handling")
-Fixes: 561aab1104d8 ("crypto: riscv/sha512 - Use API partial block handling")
-Fixes: e6c5597badf2 ("crypto: riscv/sha256 - Use API partial block handling")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Reviewed-by: Nico Pache <npache@redhat.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 ---
- arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S | 4 ++--
- arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S           | 4 ++--
- arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S               | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+v3:
+1) No functional change compared to v2;
+2) Picked up tags;
+3) Squashed the two patches in v2 into one based on Yang Shi and
+David Hildenbrand's feedback;
+4) Reword the commit log to reflect the squash.
 
-diff --git a/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S b/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-index 8ebcc17de4dc..f1f5779e4732 100644
---- a/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-+++ b/arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
-@@ -43,7 +43,7 @@
- // - RISC-V Vector SHA-2 Secure Hash extension ('Zvknha' or 'Zvknhb')
- // - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
- 
--#include <linux/cfi_types.h>
-+#include <linux/linkage.h>
- 
- .text
- .option arch, +zvknha, +zvkb
-@@ -108,7 +108,7 @@
- 
- // void sha256_transform_zvknha_or_zvknhb_zvkb(u32 state[8], const u8 *data,
- //					       int num_blocks);
--SYM_TYPED_FUNC_START(sha256_transform_zvknha_or_zvknhb_zvkb)
-+SYM_FUNC_START(sha256_transform_zvknha_or_zvknhb_zvkb)
- 
- 	// Load the round constants into K0-K15.
- 	vsetivli	zero, 4, e32, m1, ta, ma
-diff --git a/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S b/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
-index 3a9ae210f915..89f4a10d12dd 100644
---- a/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
-+++ b/arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
-@@ -43,7 +43,7 @@
- // - RISC-V Vector SHA-2 Secure Hash extension ('Zvknhb')
- // - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
- 
--#include <linux/cfi_types.h>
-+#include <linux/linkage.h>
- 
- .text
- .option arch, +zvknhb, +zvkb
-@@ -95,7 +95,7 @@
- 
- // void sha512_transform_zvknhb_zvkb(u64 state[8], const u8 *data,
- //				     int num_blocks);
--SYM_TYPED_FUNC_START(sha512_transform_zvknhb_zvkb)
-+SYM_FUNC_START(sha512_transform_zvknhb_zvkb)
- 
- 	// Setup mask for the vmerge to replace the first word (idx==0) in
- 	// message scheduling.  There are 4 words, so an 8-bit mask suffices.
-diff --git a/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S b/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
-index a2b65d961c04..4fe754846f65 100644
---- a/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
-+++ b/arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
-@@ -43,7 +43,7 @@
- // - RISC-V Vector SM3 Secure Hash extension ('Zvksh')
- // - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
- 
--#include <linux/cfi_types.h>
-+#include <linux/linkage.h>
- 
- .text
- .option arch, +zvksh, +zvkb
-@@ -81,7 +81,7 @@
- .endm
- 
- // void sm3_transform_zvksh_zvkb(u32 state[8], const u8 *data, int num_blocks);
--SYM_TYPED_FUNC_START(sm3_transform_zvksh_zvkb)
-+SYM_FUNC_START(sm3_transform_zvksh_zvkb)
- 
- 	// Load the state and endian-swap each 32-bit word.
- 	vsetivli	zero, 8, e32, m2, ta, ma
-
+v2:
+https://lore.kernel.org/linux-mm/20250418183920.273154-1-nifan.cxl@gmail.com/
 ---
-base-commit: 63dc06cd12f980e304158888485a26ae2be7f371
-change-id: 20250424-riscv-crypto-fix-cfi-build-9577fcbfb30a
+ include/trace/events/huge_memory.h | 12 ++++++------
+ mm/khugepaged.c                    |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-Best regards,
+diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+index 9d5c00b0285c..2305df6cb485 100644
+--- a/include/trace/events/huge_memory.h
++++ b/include/trace/events/huge_memory.h
+@@ -55,10 +55,10 @@ SCAN_STATUS
+ 
+ TRACE_EVENT(mm_khugepaged_scan_pmd,
+ 
+-	TP_PROTO(struct mm_struct *mm, struct page *page, bool writable,
++	TP_PROTO(struct mm_struct *mm, struct folio *folio, bool writable,
+ 		 int referenced, int none_or_zero, int status, int unmapped),
+ 
+-	TP_ARGS(mm, page, writable, referenced, none_or_zero, status, unmapped),
++	TP_ARGS(mm, folio, writable, referenced, none_or_zero, status, unmapped),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(struct mm_struct *, mm)
+@@ -72,7 +72,7 @@ TRACE_EVENT(mm_khugepaged_scan_pmd,
+ 
+ 	TP_fast_assign(
+ 		__entry->mm = mm;
+-		__entry->pfn = page ? page_to_pfn(page) : -1;
++		__entry->pfn = folio ? folio_pfn(folio) : -1;
+ 		__entry->writable = writable;
+ 		__entry->referenced = referenced;
+ 		__entry->none_or_zero = none_or_zero;
+@@ -116,10 +116,10 @@ TRACE_EVENT(mm_collapse_huge_page,
+ 
+ TRACE_EVENT(mm_collapse_huge_page_isolate,
+ 
+-	TP_PROTO(struct page *page, int none_or_zero,
++	TP_PROTO(struct folio *folio, int none_or_zero,
+ 		 int referenced, bool  writable, int status),
+ 
+-	TP_ARGS(page, none_or_zero, referenced, writable, status),
++	TP_ARGS(folio, none_or_zero, referenced, writable, status),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(unsigned long, pfn)
+@@ -130,7 +130,7 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->pfn = page ? page_to_pfn(page) : -1;
++		__entry->pfn = folio ? folio_pfn(folio) : -1;
+ 		__entry->none_or_zero = none_or_zero;
+ 		__entry->referenced = referenced;
+ 		__entry->writable = writable;
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 5cf204ab6af0..b04b6a770afe 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -696,13 +696,13 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 		result = SCAN_LACK_REFERENCED_PAGE;
+ 	} else {
+ 		result = SCAN_SUCCEED;
+-		trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
++		trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+ 						    referenced, writable, result);
+ 		return result;
+ 	}
+ out:
+ 	release_pte_pages(pte, _pte, compound_pagelist);
+-	trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
++	trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+ 					    referenced, writable, result);
+ 	return result;
+ }
+@@ -1435,7 +1435,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 		*mmap_locked = false;
+ 	}
+ out:
+-	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
++	trace_mm_khugepaged_scan_pmd(mm, folio, writable, referenced,
+ 				     none_or_zero, result, unmapped);
+ 	return result;
+ }
 -- 
-Nathan Chancellor <nathan@kernel.org>
+2.47.2
 
