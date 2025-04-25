@@ -1,292 +1,184 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF282356B2
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E1722D78E
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569566; cv=none; b=T9p8/KL5FLXlN44wbcKwk8Nw6nb2KypsVG0ZzHzo0F4ydVsy2YgVF3rwNSjVs/HbJskrA/xJyiY1hGJ2tpIHIjew/jKVLfZLNigh5Nym0A2LA3duTyyt/2O7wPpaUvPLv9V+qS5kr/2M0egFrviS4mQ6/QOMUwkJpEwkiBKs58o=
+	t=1745569589; cv=none; b=FUFN7296vQdPE7hp8wpz9w7IV3Z5g6BfijElxiA9osxfF41ftlRfc3CePakIiLoyUn2E8XUYc7Tah87kows/hGj0gfW2qqE+KDbnk++dOHdF+pBEWTz3jrg8FByloxC2xvsELYPhDwbv/Sb6HQgWChoS5PMesQVrlu8WRDzk1YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569566; c=relaxed/simple;
-	bh=sd9Zy3RykMw81bElq6sMYsARq4HQCJuVXQCjD6fXNKE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DrTf4xvmfPIbx3OVrkH2V2fUacmgmDNtT1SJ9YsdtONx+J47fvFCqG5F1t8hBjoUkYosxrrPNfVQV5Zn6D7AJ+4b0aXRh/ZzinkuREQm+Za+Y7o4sOQ2t2J2whulWgs4MIhyxyxCaV/vrNQEaQV6+J6GjnicdPUo548ombGet3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LPALg9Zy; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745569589; c=relaxed/simple;
+	bh=aBVvT3LdMnSNKKS95nXyx/2Wgt4vHzSWboqRRCTYYzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eM7Kvexn4Mg1SInh0SIsfjUt0rJ1YszHYRxIBJAr/BByrd5/1DGdcfBW9m+LCrXOectbMNpK2c1b1X6ZiL3kcujVGcO9gzNUZaJrUuTL2C9V/8boCVhCp4TWJPD/L6Ry470t5Um+JB70yAAo5NITWaG7p0b452GTukC9YijNGVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Out+PDcz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LPALg9Zy"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-303a66af07eso1509298a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745569564; x=1746174364; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UIoPxPd/4SKxFzQ2sbT9yyaISz0ZfnDIApKeqMxKAVM=;
-        b=LPALg9ZyJfzZr0rOhmaGx91kJTExQbfQYKmej7aoK4YwQ+4p8gDbRqBqmrCJ+0KYdY
-         fEhauZdgUQecwXzOtVUb+Ikz8Tw+H48x1nTsiRwcamScPKufEQaWw31b7XwuUf8u6Bq8
-         rnCJWtaGJ2DzxyKC0sa5lQyRtWOSA7qh+xesE=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Out+PDcz"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P17HKb016993
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:26:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=5GhjiZ6SmVr+1yf43/s7AZnE
+	KUCWcw2NJ8cW+4voUf4=; b=Out+PDczEhZ3wrjv/Zw4MEVJkoxvqWm3J7dXqNuC
+	r9KRGaFwPTKcKtShryF7CJ9Ijz4nDBx/LwLH/YSU3kRNJFARzbUeHcxdZ3OOyeJh
+	ceHgS5MO8TcUWkkgyd1dn3uJ5WRzkCiIKg5mNc1vxyoxa/bgTslNa5rBCvjEW9hH
+	a8JlqlT7E7bZaQRvOqnhNLNlLAqhpSzan9Q8Jj7pUAhxXLeKq5aZ3RoyEGKHbTF+
+	hnzM5ZbEnMWzfYdelLxMCZx1Is3kZgkt+lUvlqygyQtik6nVLqQJTOrLgJK2x1lA
+	wQoEmeSpcJlaLDPvvfR6m4ws6AT9Rd2Ao7jQi8LKlxKiVw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3r6gg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:26:26 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5b9333642so250528485a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:26:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745569564; x=1746174364;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UIoPxPd/4SKxFzQ2sbT9yyaISz0ZfnDIApKeqMxKAVM=;
-        b=XGJyzIFae0d26C3eOS0IW45kxzIu5VZCEGyKHYhHgwBnTpUZPJtDhrH5EBgpFYZVkj
-         tL/0k35vzDnTBuYaRGr4LIO/IRpOHJt26JAuhXIVWzm602w6wCludo0jU7O9Ruxb9OOI
-         v0vK2NaR/+SXM95Oz+k4NbvFKUkmqNuFInaXH+cwlQPzzPkAVLsTyhzxQEP7/shF0mgZ
-         pP6kI6rpNYX4RdcopMThoP9OU1A7zdHNoLMhf86Mk2r827AX5K7dcexJj500vp2U1c3U
-         lAz+884VoSzk+3kh5UhK7b+cYQRyq6MoDC949kOlnlZdWoISnzhbPRyTUeF2qeH7Ggum
-         MBjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjfHPXcqwRwha58uP0Cq+tzqT7S3fWnUXtU8aNOIkHaxvkhDNRwOcAQbIBodPQhuhpANiyDplTkffJyHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0sVgJkHI4zje3ijeICnEHKG//JGuMYNzsYJ6n2CN0hOzBqqxH
-	E/+Wo2GSDM7egibddr0P97UjrV0Xq4dC0Lau4fdYCR3UDg+MtUwjBkZDf39Qyw==
-X-Gm-Gg: ASbGnctMn3skMdyPBUwrS1Oeb97D8TzHS3X9Xpvf3waHMIVx7t6OUQVLbI2FYkpX9vJ
-	gTEezTiwMmkeGF4CuDBQSiw/DcnMQTaKbWdIVSrwYePUeeX3Xsh2pXQNOAYJPxEWMPiFT/TABg/
-	zCXB2yRYdDItWwWms8E0cWVUxxSszs5z5KbJmU5sGVSadDlIm+k2v/3q7abMNKeHzHGqTKFEI2W
-	CuFm4irrhSLQNmx4cF1tTLZY2NyZnTnEArBrXM0Dd4QPML6HxZEHyvulvIXQRZT9ay23RHuHlVD
-	nlCiXm4rjD7l5sIFdAN1I4hba7JRB/ZrjidmzG3StYs57mnOpsJlJpFPJJVIYGg0RR0CDA==
-X-Google-Smtp-Source: AGHT+IF7ci9aHN2WDhs7A1XDuuym2fXQ0c+JrRPPEzEqgV1pI/nJMNeBjSjR3voxcnyJVTXvDDG1FQ==
-X-Received: by 2002:a17:90b:35c5:b0:2ee:c6c8:d89f with SMTP id 98e67ed59e1d1-309f7df0012mr2983136a91.14.1745569563829;
-        Fri, 25 Apr 2025 01:26:03 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:4b10:d9aa:98d0:5bb5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f77417d6sm1019179a91.4.2025.04.25.01.26.01
+        d=1e100.net; s=20230601; t=1745569586; x=1746174386;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5GhjiZ6SmVr+1yf43/s7AZnEKUCWcw2NJ8cW+4voUf4=;
+        b=N+DdkCUx/ojOCm+c1zv2QloxLy5mKigg6niAb3xF5vOOJcYvCQMnvGwFPKPtVgGQ/z
+         A0MFLO++8GnZBfVLnet+jSggyAzbCXvSghfxmtvwai6bLe3nEysoPDrG92bsefe5huUc
+         SW0CIfamPcDBZfqRxun3vcfX7XeJuIA3j47WHqclaFxWkB1LoEYHN56cxcZTcELBZNmr
+         xvqBMA6Na3jcahbW+BUXXDshSbcjz6CRt4dU/fcTEEXAvTwDYeU4AcyMte6h1Qo7cILB
+         NO2DPHGsX6/ohEEm9uqlzaz8CA7QpWJDvlkVbsAXJpBlTKNXqiOjg+ZvJpT+I5LGiZvJ
+         qBYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZHF8LmCyxkTbS+kfKbC3DKv1GI21SASroe1MWBwa1mcR03f7f489vmRCe/hjuoi84wIrydhjsgdNKPR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6p6YfNOrF6q9O2nIJuWhXIeM/yF1kuX3IvfUE2L1Gl2ta/gyv
+	XLzlg3RaxuEgD/WwfPfjfZAgZnhX8X02jSNN0MSj1iB7o+nMZ8+T6rcc2PVgoWXcZH/An5N9j2t
+	i91OW++DAfqlCZZXHK+zvg2/aZ0gpqeAwE+7njnXgV7/MxneN3T92zS1DkrdwG/o=
+X-Gm-Gg: ASbGncsNx7f3VSn5+OS2lgH6azVqli8LB/WvXWBtVCZizKHS55bC3A61k9gXEv/Xg+3
+	8BuPGj1shtz7ZLhnRef2JaZYT2Bsi22dV7hzPAr/5Yjiy8mZTkC8P8/d6QfJLy0xXva31Ec8k7t
+	PaaT9+xOzwTGWQELPb5GJbbt90TnUEIzrlndU96I/KM23C+sfQZS1WrsCl9Wwbp29WViCWCJEYq
+	tP7AYDZcoV6dLJBqdkonBV9xVG3iJXXZWLYX/V/wzEjZ7wvUDbW0kZ8jDLNoAIXYbtwjUwY0PaX
+	UeUm1mWPL9RoZjSitoYE8bpRhSTWDorMqx4G/jK42p8YEK8bTHrMwmJAlZIezWzc62iaql8Zz9E
+	=
+X-Received: by 2002:a05:620a:170f:b0:7c5:42c8:ac89 with SMTP id af79cd13be357-7c96072019amr205522185a.33.1745569586074;
+        Fri, 25 Apr 2025 01:26:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhkTqNaE2ZpZTXAIFDdmsRFjOhc20VJdlsjzXMKpiPe6YXZLDPrC+Vxjm2BsPdc1TC/8L4Jw==
+X-Received: by 2002:a05:620a:170f:b0:7c5:42c8:ac89 with SMTP id af79cd13be357-7c96072019amr205519385a.33.1745569585576;
+        Fri, 25 Apr 2025 01:26:25 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb258c2sm524680e87.32.2025.04.25.01.26.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 01:26:03 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jiaxin Yu <jiaxin.yu@mediatek.com>,
-	linux-sound@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Darren Ye <darren.ye@mediatek.com>
-Subject: [PATCH 3/3] ASoC: mediatek: mt8183-afe-pcm: shorten mt8183_is_volatile_reg()
-Date: Fri, 25 Apr 2025 16:25:50 +0800
-Message-ID: <20250425082551.1467042-4-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-In-Reply-To: <20250425082551.1467042-1-wenst@chromium.org>
-References: <20250425082551.1467042-1-wenst@chromium.org>
+        Fri, 25 Apr 2025 01:26:24 -0700 (PDT)
+Date: Fri, 25 Apr 2025 11:26:22 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
+        Todor Tomov <todor.too@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Subject: Re: [PATCH v6 2/5] dt-bindings: media: Add qcom,x1e80100-camss
+Message-ID: <3kprgpvzffupnjbh2aodsowwklliywpemzwpsftd2cng562yuw@37tpwmpemr2c>
+References: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org>
+ <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-2-edcb2cfc3122@linaro.org>
+ <3ec3fd62-bf21-47e7-873c-ce151589d743@linaro.org>
+ <54eeb470-cd90-4bc2-b415-6dea1ce2321d@linaro.org>
+ <0ab31397-580f-4e5a-b9ad-d9bf79d29106@linaro.org>
+ <36feffed-4558-4e59-97db-2f0e916dbfc7@linaro.org>
+ <krofzevprczeuptn6yfj4n656qsw52s52c7cgiwotidxmi2xo6@d3q5bb5zbccc>
+ <f05cba73-6d8b-4b7b-9ebe-366fcd92a079@linaro.org>
+ <lwv5pk3dtyyxgtrwxss43dyecesv7pvrzvgwacwrnztkiowfkp@jqosvhrs3jk5>
+ <42b56d7d-26cc-4c10-aca2-a0a5a16b09f6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42b56d7d-26cc-4c10-aca2-a0a5a16b09f6@linaro.org>
+X-Proofpoint-ORIG-GUID: PMPJ-_oChPjBQ4Xy90xfIBHkkpJGJ28g
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2MCBTYWx0ZWRfXyg03XKVyfG2q YOJDyEL/kfQhfFB49s8W86ckbNH7eB8Gx0rJRZLWDg+UgiB4fDCXzdR+3Ja2U4h7+m2Vmr10/oF BXzdhErAxcfre0Bce8CDw3T9OOIa88Hs/TrhnfWBl3fGNUhUJ2g6i6SBxzctoB7Iz8+eeNnDZ/B
+ tbbzjTaE7CPsBoxvxRTcVKig4GDGa13WjMBUEcB9vu1NQwoucgscAgKnBbeXiwKTflSbgUSKt/x E5btffwmfzFTLG9nVsYCa2x/R0/l2kNqniCc/x9LM+aV+LJgMF13cikf1OgkKT4LXCXbUWwoc6S nSwZaOme5IEHjbEAdjSlqdIwWhF/nOVNmft+KXNRTD+rOftvOUG5+WpwG/WcLXfECfTskqnquYB
+ M5DaC3SMGj9vAE90wZ8bZbWE9BxxxabrrR6V03grF774PiC1huM9PjYpejfBWtU3E3uvFoHc
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=680b4732 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=mjvOFFmTwYZxuSbJlPoA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: PMPJ-_oChPjBQ4Xy90xfIBHkkpJGJ28g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=817 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250060
 
-mt8183_is_volatile_reg() is a large switch-case block that lists out
-every register that is volatile. Since many pairs of registers have
-consecutive addresses, the cases can be compressed down with the
-ellipsis, i.e. GCC extension "case ranges" [1] to cover more addresses
-in one case, shortening the source code.
+On Thu, Apr 24, 2025 at 12:51:31PM +0100, Bryan O'Donoghue wrote:
+> On 24/04/2025 12:32, Dmitry Baryshkov wrote:
+> > On Thu, Apr 24, 2025 at 12:29:39PM +0100, Bryan O'Donoghue wrote:
+> > > On 24/04/2025 11:45, Dmitry Baryshkov wrote:
+> > > > > Which would then be consistent across SoCs for as long as 0p9 and 1p2 are
+> > > > > the power-domains used by these PHYs.
+> > > > This won't be consistent with other cases where we have a shared power
+> > > > pin. For example, for PMICs we provide supply names which match pin
+> > > > names rather than one-supply-per-LDO.
+> > > 
+> > > Yes but taking a random example from a PMIC vdd-l2-l13-l14-supply is
+> > > specific to a given PMIC, so you need to name it specifically wrt its PMIC
+> > > pin-name whereas csiphyX-1p2 is there for every CSIPHY we have.
+> > 
+> > This is fine from my POV.
+> > 
+> > > For example on qcom2290 there's a shared power-pin for VDD_A_CAMSS_PLL_1P8
+> > > but then individual power-pins for VDD_A_CSI_0_1P2 and VDD_A_CSI_1_1P2.
+> > 
+> > So far so good.
+> > 
+> > > 
+> > > If we follow the general proposal of
+> > > 
+> > > vdd-csiphyX-1p2-supply
+> > > vdd-csiphyX-0p9-supply
+> > > 
+> > > in the yaml, then whether SoCs like qcm2290 share 1p8 or SoCs like sm8650,
+> > > sm8450, x1e have individual 1p8 pins is up to the dtsi to decide.
+> > 
+> > So, what should be the behaviour if the DT defines different supplies
+> > for csiphy0 and csiphy1? Would you express that constraint in DT?
+> > 
+> 
+> You'd have that for qcm2290
+> 
+> yaml:
+> 
+> vdd-csiphy0-1p2-supply
+> vdd-csiphy1-1p2-supply
+> 
+> vdd-csiphy0-0p8-supply
+> vdd-csiphy1-0p8-supply
+> 
+> qcm2290-example0.dtsi
+> 
+> vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- individual supply in PCB
+> vdd-csiphy1-1p2-supply = <&vreg_1p2_ex1>; <- individual supply in PCB
+> 
+> vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
+> vdd-csiphy1-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
 
-This is not completely the same, since the addresses are 4-byte aligned,
-and using the case ranges feature adds all unaligned addresses in
-between. In practice this doesn't matter since the unaligned addresses
-are blocked by the regmap core. This also ends up compiling slightly
-smaller with a reduction of 128 bytes in the text section.
+What should driver do if:
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Case-Ranges.html
+vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- individual supply in PCB
+vdd-csiphy1-1p2-supply = <&vreg_1p2_ex1>; <- individual supply in PCB
 
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 152 ++++++---------------
- 1 file changed, 40 insertions(+), 112 deletions(-)
+vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
+vdd-csiphy1-0p8-supply = <&vreg_0p9_ex1>; <- should be shared pin
 
-diff --git a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-index 5e340e77b9d5..c88a6705bf7e 100644
---- a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-@@ -533,86 +533,46 @@ static bool mt8183_is_volatile_reg(struct device *dev, unsigned int reg)
- 	/* these auto-gen reg has read-only bit, so put it as volatile */
- 	/* volatile reg cannot be cached, so cannot be set when power off */
- 	switch (reg) {
--	case AUDIO_TOP_CON0:	/* reg bit controlled by CCF */
--	case AUDIO_TOP_CON1:	/* reg bit controlled by CCF */
-+	case AUDIO_TOP_CON0 ... AUDIO_TOP_CON1:	/* reg bit controlled by CCF */
- 	case AUDIO_TOP_CON3:
--	case AFE_DL1_CUR:
--	case AFE_DL1_END:
--	case AFE_DL2_CUR:
--	case AFE_DL2_END:
--	case AFE_AWB_END:
--	case AFE_AWB_CUR:
--	case AFE_VUL_END:
--	case AFE_VUL_CUR:
--	case AFE_MEMIF_MON0:
--	case AFE_MEMIF_MON1:
--	case AFE_MEMIF_MON2:
--	case AFE_MEMIF_MON3:
--	case AFE_MEMIF_MON4:
--	case AFE_MEMIF_MON5:
--	case AFE_MEMIF_MON6:
--	case AFE_MEMIF_MON7:
--	case AFE_MEMIF_MON8:
--	case AFE_MEMIF_MON9:
--	case AFE_ADDA_SRC_DEBUG_MON0:
--	case AFE_ADDA_SRC_DEBUG_MON1:
--	case AFE_ADDA_UL_SRC_MON0:
--	case AFE_ADDA_UL_SRC_MON1:
-+	case AFE_DL1_CUR ... AFE_DL1_END:
-+	case AFE_DL2_CUR ... AFE_DL2_END:
-+	case AFE_AWB_END ... AFE_AWB_CUR:
-+	case AFE_VUL_END ... AFE_VUL_CUR:
-+	case AFE_MEMIF_MON0 ... AFE_MEMIF_MON9:
-+	case AFE_ADDA_SRC_DEBUG_MON0 ... AFE_ADDA_SRC_DEBUG_MON1:
-+	case AFE_ADDA_UL_SRC_MON0 ... AFE_ADDA_UL_SRC_MON1:
- 	case AFE_SIDETONE_MON:
--	case AFE_SIDETONE_CON0:
--	case AFE_SIDETONE_COEFF:
-+	case AFE_SIDETONE_CON0 ... AFE_SIDETONE_COEFF:
- 	case AFE_BUS_MON0:
--	case AFE_MRGIF_MON0:
--	case AFE_MRGIF_MON1:
--	case AFE_MRGIF_MON2:
--	case AFE_I2S_MON:
-+	case AFE_MRGIF_MON0 ... AFE_I2S_MON:
- 	case AFE_DAC_MON:
--	case AFE_VUL2_END:
--	case AFE_VUL2_CUR:
--	case AFE_IRQ0_MCU_CNT_MON:
--	case AFE_IRQ6_MCU_CNT_MON:
--	case AFE_MOD_DAI_END:
--	case AFE_MOD_DAI_CUR:
--	case AFE_VUL_D2_END:
--	case AFE_VUL_D2_CUR:
--	case AFE_DL3_CUR:
--	case AFE_DL3_END:
-+	case AFE_VUL2_END ... AFE_VUL2_CUR:
-+	case AFE_IRQ0_MCU_CNT_MON ... AFE_IRQ6_MCU_CNT_MON:
-+	case AFE_MOD_DAI_END ... AFE_MOD_DAI_CUR:
-+	case AFE_VUL_D2_END ... AFE_VUL_D2_CUR:
-+	case AFE_DL3_CUR ... AFE_DL3_END:
- 	case AFE_HDMI_OUT_CON0:
--	case AFE_HDMI_OUT_CUR:
--	case AFE_HDMI_OUT_END:
--	case AFE_IRQ3_MCU_CNT_MON:
--	case AFE_IRQ4_MCU_CNT_MON:
--	case AFE_IRQ_MCU_STATUS:
--	case AFE_IRQ_MCU_CLR:
-+	case AFE_HDMI_OUT_CUR ... AFE_HDMI_OUT_END:
-+	case AFE_IRQ3_MCU_CNT_MON... AFE_IRQ4_MCU_CNT_MON:
-+	case AFE_IRQ_MCU_STATUS ... AFE_IRQ_MCU_CLR:
- 	case AFE_IRQ_MCU_MON2:
--	case AFE_IRQ1_MCU_CNT_MON:
--	case AFE_IRQ2_MCU_CNT_MON:
--	case AFE_IRQ1_MCU_EN_CNT_MON:
--	case AFE_IRQ5_MCU_CNT_MON:
-+	case AFE_IRQ1_MCU_CNT_MON ... AFE_IRQ5_MCU_CNT_MON:
- 	case AFE_IRQ7_MCU_CNT_MON:
- 	case AFE_GAIN1_CUR:
- 	case AFE_GAIN2_CUR:
- 	case AFE_SRAM_DELSEL_CON0:
--	case AFE_SRAM_DELSEL_CON2:
--	case AFE_SRAM_DELSEL_CON3:
--	case AFE_ASRC_2CH_CON12:
--	case AFE_ASRC_2CH_CON13:
-+	case AFE_SRAM_DELSEL_CON2 ... AFE_SRAM_DELSEL_CON3:
-+	case AFE_ASRC_2CH_CON12 ... AFE_ASRC_2CH_CON13:
- 	case PCM_INTF_CON2:
--	case FPGA_CFG0:
--	case FPGA_CFG1:
--	case FPGA_CFG2:
--	case FPGA_CFG3:
--	case AUDIO_TOP_DBG_MON0:
--	case AUDIO_TOP_DBG_MON1:
--	case AFE_IRQ8_MCU_CNT_MON:
--	case AFE_IRQ11_MCU_CNT_MON:
--	case AFE_IRQ12_MCU_CNT_MON:
-+	case FPGA_CFG0 ... FPGA_CFG1:
-+	case FPGA_CFG2 ... FPGA_CFG3:
-+	case AUDIO_TOP_DBG_MON0 ... AUDIO_TOP_DBG_MON1:
-+	case AFE_IRQ8_MCU_CNT_MON ... AFE_IRQ12_MCU_CNT_MON:
- 	case AFE_CBIP_MON0:
--	case AFE_CBIP_SLV_MUX_MON0:
--	case AFE_CBIP_SLV_DECODER_MON0:
-+	case AFE_CBIP_SLV_MUX_MON0 ... AFE_CBIP_SLV_DECODER_MON0:
- 	case AFE_ADDA6_SRC_DEBUG_MON0:
--	case AFE_ADD6A_UL_SRC_MON0:
--	case AFE_ADDA6_UL_SRC_MON1:
-+	case AFE_ADD6A_UL_SRC_MON0... AFE_ADDA6_UL_SRC_MON1:
- 	case AFE_DL1_CUR_MSB:
- 	case AFE_DL2_CUR_MSB:
- 	case AFE_AWB_CUR_MSB:
-@@ -622,55 +582,23 @@ static bool mt8183_is_volatile_reg(struct device *dev, unsigned int reg)
- 	case AFE_VUL_D2_CUR_MSB:
- 	case AFE_DL3_CUR_MSB:
- 	case AFE_HDMI_OUT_CUR_MSB:
--	case AFE_AWB2_END:
--	case AFE_AWB2_CUR:
-+	case AFE_AWB2_END ... AFE_AWB2_CUR:
- 	case AFE_AWB2_CUR_MSB:
--	case AFE_ADDA_DL_SDM_FIFO_MON:
--	case AFE_ADDA_DL_SRC_LCH_MON:
--	case AFE_ADDA_DL_SRC_RCH_MON:
--	case AFE_ADDA_DL_SDM_OUT_MON:
--	case AFE_CONNSYS_I2S_MON:
--	case AFE_ASRC_2CH_CON0:
--	case AFE_ASRC_2CH_CON2:
--	case AFE_ASRC_2CH_CON3:
--	case AFE_ASRC_2CH_CON4:
--	case AFE_ASRC_2CH_CON5:
--	case AFE_ASRC_2CH_CON7:
--	case AFE_ASRC_2CH_CON8:
--	case AFE_MEMIF_MON12:
--	case AFE_MEMIF_MON13:
--	case AFE_MEMIF_MON14:
--	case AFE_MEMIF_MON15:
--	case AFE_MEMIF_MON16:
--	case AFE_MEMIF_MON17:
--	case AFE_MEMIF_MON18:
--	case AFE_MEMIF_MON19:
--	case AFE_MEMIF_MON20:
--	case AFE_MEMIF_MON21:
--	case AFE_MEMIF_MON22:
--	case AFE_MEMIF_MON23:
--	case AFE_MEMIF_MON24:
--	case AFE_ADDA_MTKAIF_MON0:
--	case AFE_ADDA_MTKAIF_MON1:
-+	case AFE_ADDA_DL_SDM_FIFO_MON ... AFE_ADDA_DL_SDM_OUT_MON:
-+	case AFE_CONNSYS_I2S_MON ... AFE_ASRC_2CH_CON0:
-+	case AFE_ASRC_2CH_CON2 ... AFE_ASRC_2CH_CON5:
-+	case AFE_ASRC_2CH_CON7 ... AFE_ASRC_2CH_CON8:
-+	case AFE_MEMIF_MON12 ... AFE_MEMIF_MON24:
-+	case AFE_ADDA_MTKAIF_MON0 ... AFE_ADDA_MTKAIF_MON1:
- 	case AFE_AUD_PAD_TOP:
- 	case AFE_GENERAL1_ASRC_2CH_CON0:
--	case AFE_GENERAL1_ASRC_2CH_CON2:
--	case AFE_GENERAL1_ASRC_2CH_CON3:
--	case AFE_GENERAL1_ASRC_2CH_CON4:
--	case AFE_GENERAL1_ASRC_2CH_CON5:
--	case AFE_GENERAL1_ASRC_2CH_CON7:
--	case AFE_GENERAL1_ASRC_2CH_CON8:
--	case AFE_GENERAL1_ASRC_2CH_CON12:
--	case AFE_GENERAL1_ASRC_2CH_CON13:
-+	case AFE_GENERAL1_ASRC_2CH_CON2 ... AFE_GENERAL1_ASRC_2CH_CON5:
-+	case AFE_GENERAL1_ASRC_2CH_CON7 ... AFE_GENERAL1_ASRC_2CH_CON8:
-+	case AFE_GENERAL1_ASRC_2CH_CON12 ... AFE_GENERAL1_ASRC_2CH_CON13:
- 	case AFE_GENERAL2_ASRC_2CH_CON0:
--	case AFE_GENERAL2_ASRC_2CH_CON2:
--	case AFE_GENERAL2_ASRC_2CH_CON3:
--	case AFE_GENERAL2_ASRC_2CH_CON4:
--	case AFE_GENERAL2_ASRC_2CH_CON5:
--	case AFE_GENERAL2_ASRC_2CH_CON7:
--	case AFE_GENERAL2_ASRC_2CH_CON8:
--	case AFE_GENERAL2_ASRC_2CH_CON12:
--	case AFE_GENERAL2_ASRC_2CH_CON13:
-+	case AFE_GENERAL2_ASRC_2CH_CON2 ... AFE_GENERAL2_ASRC_2CH_CON5:
-+	case AFE_GENERAL2_ASRC_2CH_CON7 ... AFE_GENERAL2_ASRC_2CH_CON8:
-+	case AFE_GENERAL2_ASRC_2CH_CON12 ... AFE_GENERAL2_ASRC_2CH_CON13:
- 		return true;
- 	default:
- 		return false;
+I don't want to allow DT authors to make this kind of mistake.
+
 -- 
-2.49.0.850.g28803427d3-goog
-
+With best wishes
+Dmitry
