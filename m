@@ -1,171 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12571A23A0;
-	Fri, 25 Apr 2025 17:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E551DE4F3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745600978; cv=none; b=I+LMBzJdUFhdydyB0ekBF3H9HuA43IlH/h5+m1GIZP7GY6yV5pRFGbGV8hCZoqWOrzBhZc/pRmqyYPqUf8tvhw8d0z9U0GZLvWSEGE2Lx+raBmsKyzo1VN6YqOPTUSGjrp2demqQ11XbdJgNVRtQ/s+pMei7gFYzBJywRRJTiXU=
+	t=1745600994; cv=none; b=lfPS1gHHwF/qWwKaxo0IIyesgKZtzAynZ9on2kcvhaWVbI+5X8fgd3Esr2Pp08ctiFIV5QmeT5N8Lgxec2AUSmPoCY45Yrx3x4KTrVhAYyZvht1K2Ebt5RH1lUBLl74TfXkedKj1Y5ZairADBI2a+4cgChbaVl5b+t5bP2dGFkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745600978; c=relaxed/simple;
-	bh=yPI9RwIxxq/NTAS39rdib9EWfVe1cDzmMU4iH7dYSU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kUYjiF+asWJZHXXJhPs/XGLgygE59kMLphzia8iPzx2gmq1BAglGx0om89Is+dXZVfWfQrhxqM7YqqjDxayZNytkMChXgPDln6TRPudV1vYBvCtQp6EgyQUoTuHZXnJBPWZts2ZtV3FDguBvbe9jOL47k3Ya7EnTobCxf2bnyrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK3ro41n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745600994; c=relaxed/simple;
+	bh=dYqLI7u6j7zrd5PXopfq6mUq2GOVheKBP/CHkLosnvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hm0/HUMIMmh6U38AhL536h4MV/CpMSRB66W0c7A5ntzDndn2swtHb2kUvC7cwVNy1ldM0en/oKuVuocL1AzK3RW8OzGH8L8mN2EJXJFPkK5TVZn8jD7tZCe4Mh4MrqMT1xlqgMrzPeWvsoKRk1B2KY2q+UWnTLZaiBK/2QGyNEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GXSdxail; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK3ro41n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D55EC4CEE4;
-	Fri, 25 Apr 2025 17:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745600978;
-	bh=yPI9RwIxxq/NTAS39rdib9EWfVe1cDzmMU4iH7dYSU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FK3ro41n0ITFuq+eCIkqVW6QZi1IqOB1y/tU2dwHj0f540wc3jIS2AFnScaQZbgBM
-	 71hgD/kIhac5YlE60SKsS3Xqve1l9t/O5fz/efn5atxJM0q4VeV7gAJhFxnCNpqlEA
-	 QN0Xlt2RqK+f2cvZnuep8h+ShKk+oopJiPmHr8jbyKQwJwil/XNt7vX0GXlmFEgsRi
-	 nZRd20ZWOmwKQXqO72pu2tUO9nKx4JlFmpvDpdAzXIQvW6wO0n0SYaQ0uv+hUsleka
-	 0RvHE0LDWMw/s79wtBqBGoeQbcz0hikY462IlUVC5ptHljF/VPY7Zi1ESGcoKOkhwQ
-	 5BN7+edDki9Vg==
-Date: Fri, 25 Apr 2025 10:09:34 -0700
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] mm: abstract initial stack setup to mm subsystem
-Message-ID: <202504250925.58434D763@keescook>
-References: <cover.1745592303.git.lorenzo.stoakes@oracle.com>
- <92a8e5ef7d5ce31a3b3cf631cb65c6311374c866.1745592303.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GXSdxail"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745600990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GqqQjjEwcJFLkEviIiNfaNPHHWIhRoIIV2Bq/TIESdo=;
+	b=GXSdxail2lOHpKcSHUspcRF/bihxGTKrBw9+DO3q3FoYthPob4NZ/j/YDMELoM2chutsUO
+	1V4zU9WgPckxxjUyxl20ZwOPN1KNK7sHI+9RgsfqweSMj0gXCnbO5o1wB6TByLyC4nfm78
+	1DpWGJ8Icx0Nu6AnFs7bwoE9CbUoZe4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-Ux3H4YJhPQW0vudd90qvtw-1; Fri,
+ 25 Apr 2025 13:09:44 -0400
+X-MC-Unique: Ux3H4YJhPQW0vudd90qvtw-1
+X-Mimecast-MFC-AGG-ID: Ux3H4YJhPQW0vudd90qvtw_1745600982
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 265E71956077;
+	Fri, 25 Apr 2025 17:09:42 +0000 (UTC)
+Received: from p16v.redhat.com (unknown [10.44.33.33])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B81031800D9F;
+	Fri, 25 Apr 2025 17:09:36 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v5 0/8] Add Microchip ZL3073x support (part 1)
+Date: Fri, 25 Apr 2025 19:09:27 +0200
+Message-ID: <20250425170935.740102-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92a8e5ef7d5ce31a3b3cf631cb65c6311374c866.1745592303.git.lorenzo.stoakes@oracle.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Apr 25, 2025 at 03:54:34PM +0100, Lorenzo Stoakes wrote:
-> There are peculiarities within the kernel where what is very clearly mm
-> code is performed elsewhere arbitrarily.
-> 
-> This violates separation of concerns and makes it harder to refactor code
-> to make changes to how fundamental initialisation and operation of mm logic
-> is performed.
-> 
-> One such case is the creation of the VMA containing the initial stack upon
-> execve()'ing a new process. This is currently performed in __bprm_mm_init()
-> in fs/exec.c.
-> 
-> Abstract this operation to create_init_stack_vma(). This allows us to limit
-> use of vma allocation and free code to fork and mm only.
-> 
-> We previously did the same for the step at which we relocate the initial
-> stack VMA downwards via relocate_vma_down(), now we move the initial VMA
-> establishment too.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> ---
->  fs/exec.c          | 51 +---------------------------------
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the common MFD driver that provides an access to the bus
+that can be either I2C or SPI.
 
-I'm kind of on the fence about this. On the one hand, yes, it's all vma
-goo, and should live with the rest of vma code, as you suggest. On the
-other had, exec is the only consumer of this behavior, and moving it
-out of fs/exec.c means that changes to the code that specifically only
-impacts exec are now in a separate file, and will no longer get exec
-maintainer/reviewer CCs (based on MAINTAINERS file matching). Exec is
-notoriously fragile, so I'm kind of generally paranoid about changes to
-its behaviors going unnoticed.
+The next part of the series is bringing the DPLL driver that will
+covers DPLL functionality. Another series will bring PTP driver and
+flashing capability via devlink in the MFD driver will follow soon.
 
-In defense of moving it, yes, this routine has gotten updates over the
-many years, but it's relatively stable. But at least one thing has gone in
-without exec maintainer review recently (I would have Acked it, but the
-point is review): 9e567ca45f ("mm/ksm: fix ksm exec support for prctl")
-Everything else was before I took on the role officially (Nov 2022).
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
 
-So I guess I'm asking, how do we make sure stuff pulled out of exec
-still gets exec maintainer review?
+Patch breakdown
+===============
+Patch 1 - Common DT schema for DPLL device and pin
+Patch 2 - DT bindings for microchip,zl3073* devices
+Patch 3 - Basic support for I2C, SPI and regmap configuration
+Patch 4 - Devlink device registration and info
+Patch 5 - Helpers for reading and writing register mailboxes
+Patch 6 - Fetch invariant register values used by DPLL/PTP sub-drivers
+Patch 7 - Clock ID generation for DPLL driver
+Patch 8 - Register/create DPLL device cells
 
-> [...]
->  static int __bprm_mm_init(struct linux_binprm *bprm)
->  {
-> -	int err;
-> [...]
-> -	return err;
-> +	return create_init_stack_vma(bprm->mm, &bprm->vma, &bprm->p);
->  }
+---
+v4->v5:
+* fixed DT patches description
+* dropped mailbox API
+* added type-safe register access functions
+* added an ability to protect multi-op accesses
+v3->v4:
+* fixed shortcomings in DT patches
+* completely reworked register access
+* removed a need to manage locking during mailbox accesses by callers
+* regcache switched to maple
+* dev_err_probe() in probe path
+* static mfd cells during sub-devices registration
 
-I'd prefer __bprm_mm_init() go away if it's just a 1:1 wrapper now.
-However, it doesn't really look like it makes too much sense for the NOMMU
-logic get moved as well, since it explicitly depends on exec-specific
-values (MAX_ARG_PAGES), so perhaps something like this:
+v1->v3:
+* dropped macros for generating register access functions
+* register access functions are provided in <linux/mfd/zl3073x_regs.h>
+* fixed DT descriptions and compatible wildcard usage
+* reworked regmap locking
+  - regmap uses implicit locking
+  - mailbox registers are additionally protected by extra mutex
+* fixed regmap virtual address range
+* added regmap rbtree cache (only for page selector now)
+* dropped patches for exporting strnchrnul and for supporting mfg file
+  this will be maybe added later
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 8e4ea5f1e64c..313dc70e0012 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -382,9 +382,13 @@ static int bprm_mm_init(struct linux_binprm *bprm)
- 	bprm->rlim_stack = current->signal->rlim[RLIMIT_STACK];
- 	task_unlock(current->group_leader);
- 
--	err = __bprm_mm_init(bprm);
-+#ifndef CONFIG_MMU
-+	bprm->p = PAGE_SIZE * MAX_ARG_PAGES - sizeof(void *);
-+#else
-+	err = create_init_stack_vma(bprm->mm, &bprm->vma, &bprm->p);
- 	if (err)
- 		goto err;
-+#endif
- 
- 	return 0;
- 
+Ivan Vecera (8):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  mfd: Add Microchip ZL3073x support
+  mfd: zl3073x: Add support for devlink device info
+  mfd: zl3073x: Protect operations requiring multiple register accesses
+  mfd: zl3073x: Fetch invariants during probe
+  mfd: zl3073x: Add clock_id field
+  mfd: zl3073x: Register DPLL sub-device during init
 
-
-On a related note, I'd like to point out that my claim that exec is
-the only consumer here, is slightly a lie. Technically this is correct,
-but only because this is specifically setting up the _stack_.
-
-The rest of the VMA setup actually surrounds this code (another
-reason I remain unhappy about moving it). Specifically the mm_alloc()
-before __bprm_mm_init (which is reached through alloc_brpm()). And
-then, following alloc_bprm() in do_execveat_common(), is the call to
-setup_new_exec(), which does the rest of the VMA setup, specifically
-arch_pick_mmap_layout() and related fiddling.
-
-The "create userspace VMA" logic, mostly through mm_alloc(), is
-used in a few places (e.g. text poking), but the "bring up a _usable_
-userspace VMA" logic (i.e. one also with functional mmap) is repeated in
-lib/kunit/alloc_user.c for allowing testing of code that touches userspace
-(see kunit_attach_mm() and the kunit_vm_mmap() users). (But these tests
-don't actually run userspace code, so no stack is set up.)
-
-I guess what I'm trying to say is that I think we need a more clearly
-defined "create usable userspace VMA" API, as we've got at least 3
-scattered approaches right now: exec ("everything"), non-mmap-non-stack
-users (text poking, et al), and mmap-but-not-stack users (kunit tests).
-
-And the One True User of a full userspace VMA, exec, has the full setup
-scattered into several phases, mostly due to needing to separate those
-phases because it needs to progressively gather the information needed
-to correctly configure each piece:
-- set up userspace VMA at all (mm_alloc)
-- set up a stack because exec args need to go somewhere (__bprm_mm_init)
-- move stack to the right place (depends on executable binary and task bits)
-- set up mmap (arch_pick_mmap_layout) to actually load executable binary
-  (depends on arch, binary, and task bits)
-
-Hopefully this all explains why I'm uncomfortable to see __bprm_mm_init
-get relocated. It'll _probably_ be fine, but I get antsy about changes
-to code that only exec uses...
+ .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |  45 +
+ .../bindings/dpll/microchip,zl30731.yaml      | 115 +++
+ MAINTAINERS                                   |  11 +
+ drivers/mfd/Kconfig                           |  32 +
+ drivers/mfd/Makefile                          |   5 +
+ drivers/mfd/zl3073x-core.c                    | 855 ++++++++++++++++++
+ drivers/mfd/zl3073x-i2c.c                     |  68 ++
+ drivers/mfd/zl3073x-regs.h                    |  54 ++
+ drivers/mfd/zl3073x-spi.c                     |  68 ++
+ drivers/mfd/zl3073x.h                         |  31 +
+ include/linux/mfd/zl3073x-regs.h              |  88 ++
+ include/linux/mfd/zl3073x.h                   | 188 ++++
+ 13 files changed, 1636 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 drivers/mfd/zl3073x-core.c
+ create mode 100644 drivers/mfd/zl3073x-i2c.c
+ create mode 100644 drivers/mfd/zl3073x-regs.h
+ create mode 100644 drivers/mfd/zl3073x-spi.c
+ create mode 100644 drivers/mfd/zl3073x.h
+ create mode 100644 include/linux/mfd/zl3073x-regs.h
+ create mode 100644 include/linux/mfd/zl3073x.h
 
 -- 
-Kees Cook
+2.49.0
+
