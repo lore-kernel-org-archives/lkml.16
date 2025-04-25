@@ -1,129 +1,157 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468D919AD48;
-	Fri, 25 Apr 2025 12:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5012512FC;
+	Fri, 25 Apr 2025 12:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585605; cv=none; b=pmuyMBxMsIPPGmtnmP5Suir+spMXMFrct7KRcpBO71Iz9PA15/n3I2Fqx+1p/31ouFx21LGO49VXK4/el1b0HhpFGMS5u3z/KJ3NbphKsJJ4LY/JyEMR/DzvnYpEZ6VcJov8wwTZCpp3GMX0jSA3IPlUCQlvrVvQkSBG/0DWMM8=
+	t=1745585606; cv=none; b=LmpGDeaJXROrz0khtEqm5lyjPMWnaNnpReJelqd/GA+LEHSYEdTOa8oN/cxwbvT7TQ55RzqqQTX/mkaA8mUor/SQEJYm0EROOXj+VbyjgogO0HilYIECJZyKkPPSwGWXpFqi8P67Rm2HmBt46s8OzW5N6rS5aMY5wKCxThF8QoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745585605; c=relaxed/simple;
-	bh=zKwxpE0nQgrl5ku11YFdu+sIcrI+jdK+kOVP8m8d2hs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qkxVEQyZqNp/p+zwokkYwvmY4vDa4iIdYMQYgfp0SYJ0N7ntgvm1cRnFcwzIWQPuN/3OD9p3hHzfKxPkOcRbpxCIxnYLitn1ERcPUUubmJfoT1NKmLHriXxAwVJXb84sIcqY4emBiJiF3kXNe97grGQWp66jCVrTGITfU7hsMz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=13kMQh3I; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="13kMQh3I"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P7b9Ov005857;
-	Fri, 25 Apr 2025 14:53:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	yuP2hz4+AAmK0hgkk1ltz/sdzsPjbchhks48Sx2DD3M=; b=13kMQh3IKs5Bgb1s
-	JKteJKieilegE2C1DugoLk1YyWfEDKw7R1oPQ+7oMP2wHmEj6Q7Jau2a9GIkSIUe
-	+R3oO0hieOgT6eC8n63Ctx/zYYuIPA//LxRDRPZHa7O6hMcaWgES3NWy8ChhcvD4
-	/Ns/6t9thac6hfd/EYYdZacVr5grSLwT6cl46Z+Hg7iXPMalBpY/j0fd2o2VoC+N
-	osNiD60Qs5rvzSpzlpxALTZJkMxCnXNNVKj8DlwaLCSxysHDVRXDajFcye0+Eefm
-	jN0faqt2jDTLdyj5/cTywRh5b15CGARz01oYw1Agloj2Caf4L/VbkoWbwUrYjGGR
-	Wk6Z8A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jk3mkec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 14:53:01 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5872B40055;
-	Fri, 25 Apr 2025 14:51:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 344329F78E9;
-	Fri, 25 Apr 2025 14:50:08 +0200 (CEST)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
- 2025 14:50:07 +0200
-Received: from [10.252.15.6] (10.252.15.6) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
- 2025 14:50:06 +0200
-Message-ID: <c78c1c19-cf11-4146-acda-fd435add6808@foss.st.com>
-Date: Fri, 25 Apr 2025 14:50:06 +0200
+	s=arc-20240116; t=1745585606; c=relaxed/simple;
+	bh=arctqHiIywNbfj4fQK7aS63ifAk/uioKQr9Lz4NYF5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DFhfAlzCqjmQJCy64+WLh/PDulRohJF8cesqp+pQk/I5dmfOucxUAsthfe62NUoUZ6Y3zYQtueNMjpKO9Q32sxkwAeUiQLzrCzIGHk5TNqlmj0sp+djHV376cAhr38Dn6hhQFQr8IXk/hbzLSMY3nbQd2+uNo5pBUg6pW0ayPPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AE2C168F;
+	Fri, 25 Apr 2025 05:53:17 -0700 (PDT)
+Received: from pluto.. (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC82D3F59E;
+	Fri, 25 Apr 2025 05:53:19 -0700 (PDT)
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org
+Cc: sudeep.holla@arm.com,
+	james.quinlan@broadcom.com,
+	f.fainelli@gmail.com,
+	vincent.guittot@linaro.org,
+	peng.fan@oss.nxp.com,
+	michal.simek@amd.com,
+	quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org,
+	maz@kernel.org,
+	johan@kernel.org,
+	Cristian Marussi <cristian.marussi@arm.com>
+Subject: [PATCH v2 3/4] firmware: arm_scmi: quirk: Fix CLOCK_DESCRIBE_RATES triplet
+Date: Fri, 25 Apr 2025 13:52:49 +0100
+Message-ID: <20250425125250.1847711-4-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250425125250.1847711-1-cristian.marussi@arm.com>
+References: <20250425125250.1847711-1-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] mfd: stm32-lptimer: add support for stm32mp25
-To: Lee Jones <lee@kernel.org>
-CC: <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jic23@kernel.org>,
-        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>, <robh@kernel.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <devicetree@vger.kernel.org>, <wbg@kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
-References: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
- <20250314171451.3497789-3-fabrice.gasnier@foss.st.com>
- <20250404144006.GB372032@google.com> <20250424130112.GD8734@google.com>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250424130112.GD8734@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_03,2025-04-24_02,2025-02-21_01
+Content-Transfer-Encoding: 8bit
 
-On 4/24/25 15:01, Lee Jones wrote:
-> On Fri, 04 Apr 2025, Lee Jones wrote:
-> 
->> On Fri, 14 Mar 2025, Fabrice Gasnier wrote:
->>
->>> Add support for STM32MP25 SoC.
->>> A new hardware configuration register (HWCFGR2) has been added, to gather
->>> number of capture/compare channels, autonomous mode and input capture
->>> capability. The full feature set is implemented in LPTIM1/2/3/4. LPTIM5
->>> supports a smaller set of features. This can now be read from HWCFGR
->>> registers.
->>>
->>> Add new registers to the stm32-lptimer.h: CCMR1, CCR2, HWCFGR1/2 and VERR.
->>> Update the stm32_lptimer data struct so signal the number of
->>> capture/compare channels to the child devices.
->>> Also Remove some unused bit masks (CMPOK_ARROK / CMPOKCF_ARROKCF).
->>>
->>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->>> ---
->>> Changes in V4:
->>> - Add DIEROK, ARROK status flags, and their clear flags.
->>> Changes in V2:
->>> - rely on fallback compatible as no specific .data is associated to the
->>>   driver. Compatibility is added by reading hardware configuration
->>>   registers.
->>> - read version register, to be used by clockevent child driver
->>> - rename register/bits definitions
->>> ---
->>>  drivers/mfd/stm32-lptimer.c       | 33 ++++++++++++++++++++++++++-
->>>  include/linux/mfd/stm32-lptimer.h | 37 ++++++++++++++++++++++++++++---
->>
->> At least the Clocksource driver depends on this.
->>
->> I need Acks from the other Maintainers before I can merge this.
-> 
-> Suggest you resubmit the set as a [RESEND] to re-gain traction.
-> 
+Convert an existing quirk in CLOCK_DESCRIBE_RATES parsing to the new quirk
+framework. This is a sort of a peculiar quirk since it matches any platform
+and any firmware.
 
-Hi Lee,
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+V1 -> V2
+- reduced the quirk size by placing the warn outside
+- using new compatibles conditions
+---
+ drivers/firmware/arm_scmi/clock.c  | 33 ++++++++++++++++++------------
+ drivers/firmware/arm_scmi/quirks.c |  2 ++
+ drivers/firmware/arm_scmi/quirks.h |  3 +++
+ 3 files changed, 25 insertions(+), 13 deletions(-)
 
-Thanks for suggesting.
-I recently found I needed to add a small delay in clocksource driver. So
-I just have sent a V5.
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index 2ed2279388f0..afa7981efe82 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -11,6 +11,7 @@
+ 
+ #include "protocols.h"
+ #include "notify.h"
++#include "quirks.h"
+ 
+ /* Updated only after ALL the mandatory features for that version are merged */
+ #define SCMI_PROTOCOL_SUPPORTED_VERSION		0x30000
+@@ -429,6 +430,23 @@ static void iter_clk_describe_prepare_message(void *message,
+ 	msg->rate_index = cpu_to_le32(desc_index);
+ }
+ 
++#define QUIRK_OUT_OF_SPEC_TRIPLET					       \
++	({								       \
++		/*							       \
++		 * A known quirk: a triplet is returned but num_returned != 3  \
++		 * Check for a safe payload size and fix.		       \
++		 */							       \
++		if (st->num_returned != 3 && st->num_remaining == 0 &&	       \
++		    st->rx_len == sizeof(*r) + sizeof(__le32) * 2 * 3) {       \
++			st->num_returned = 3;				       \
++			st->num_remaining = 0;				       \
++		} else {						       \
++			dev_err(p->dev,					       \
++				"Cannot fix out-of-spec reply !\n");	       \
++			return -EPROTO;					       \
++		}							       \
++	})
++
+ static int
+ iter_clk_describe_update_state(struct scmi_iterator_state *st,
+ 			       const void *response, void *priv)
+@@ -450,19 +468,8 @@ iter_clk_describe_update_state(struct scmi_iterator_state *st,
+ 			 p->clk->name, st->num_returned, st->num_remaining,
+ 			 st->rx_len);
+ 
+-		/*
+-		 * A known quirk: a triplet is returned but num_returned != 3
+-		 * Check for a safe payload size and fix.
+-		 */
+-		if (st->num_returned != 3 && st->num_remaining == 0 &&
+-		    st->rx_len == sizeof(*r) + sizeof(__le32) * 2 * 3) {
+-			st->num_returned = 3;
+-			st->num_remaining = 0;
+-		} else {
+-			dev_err(p->dev,
+-				"Cannot fix out-of-spec reply !\n");
+-			return -EPROTO;
+-		}
++		SCMI_QUIRK(clock_rates_triplet_out_of_spec,
++			   QUIRK_OUT_OF_SPEC_TRIPLET);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/firmware/arm_scmi/quirks.c b/drivers/firmware/arm_scmi/quirks.c
+index 9e93a8242182..120ac933ed2e 100644
+--- a/drivers/firmware/arm_scmi/quirks.c
++++ b/drivers/firmware/arm_scmi/quirks.c
+@@ -167,6 +167,7 @@ struct scmi_quirk {
+ 	__DEFINE_SCMI_QUIRK_ENTRY(_qn, _ven, _sub, _impl, ##__VA_ARGS__)
+ 
+ /* Global Quirks Definitions */
++DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL);
+ 
+ /*
+  * Quirks Pointers Array
+@@ -175,6 +176,7 @@ struct scmi_quirk {
+  * defined quirks descriptors.
+  */
+ static struct scmi_quirk *scmi_quirks_table[] = {
++	__DECLARE_SCMI_QUIRK_ENTRY(clock_rates_triplet_out_of_spec),
+ 	NULL
+ };
+ 
+diff --git a/drivers/firmware/arm_scmi/quirks.h b/drivers/firmware/arm_scmi/quirks.h
+index 28829b4f0646..7fdc496c94c7 100644
+--- a/drivers/firmware/arm_scmi/quirks.h
++++ b/drivers/firmware/arm_scmi/quirks.h
+@@ -45,4 +45,7 @@ static inline void scmi_quirks_enable(struct device *dev, const char *vend,
+ 
+ #endif /* CONFIG_ARM_SCMI_QUIRKS */
+ 
++/* Quirk delarations */
++DECLARE_SCMI_QUIRK(clock_rates_triplet_out_of_spec);
++
+ #endif /* _SCMI_QUIRKS_H */
+-- 
+2.47.0
 
-Best Regards,
-Fabrice
