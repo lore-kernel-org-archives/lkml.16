@@ -1,66 +1,65 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F46621B9C6
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FE222258F
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610529; cv=none; b=eqsjzs8n4UpvWdhqAWx3zu+82a0fsQrjaUJ0vAYDYq66FGAp922+uj5bKKFjfhc4Jmz6FJdvbVUW3v1a9U13ipbQSSJdE+WmGYorctZuqFuzFIS929tDpHqT6aUh1Px+DtP9OYxPdlo/Z+L8XeA+MrJuYpZOvr5rLpBm9V41oCM=
+	t=1745610530; cv=none; b=ehOszRS9Ex0wdyHCDgskTMgvs7H4xfUEAz4+XKtgzeUsCcZAIilATvotGU2HIbhfT+LhhejV2Ph/dcbYGPr3Y9KvRTJDd8Hxw+qSW1jVTLhfqjClQCfoFdseZ/x6x/kU1OQHQZzlt4k8GE8g0jFRrfG1g09SPYGWtzs+yZXFKOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610529; c=relaxed/simple;
-	bh=42Bpm3LHEmtVmQsrqnD99bk04O4x432C9JaHWtmjDWU=;
+	s=arc-20240116; t=1745610530; c=relaxed/simple;
+	bh=+HtaD1MMcC10nD909Zao9y6H0hANNmhyPMSU9hKMrJ8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Lpzc86PdWVgHYK8HvWaqkCYR9RqveeQ81Pls+ruRLvpekbppmqECyOoFXHLQG9JlWHdWcVbsatn4wJfQexpzLqX5yJU3/LCmlfT8IQXtbWLAyk1rEYJlHRA3EUztYpKP/EJZCWG/cOKxMg21NcynRbPG8RirTa8OIgu5TCa2GBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R4Zx5apM; arc=none smtp.client-ip=209.85.128.46
+	 In-Reply-To:To:Cc; b=U8TwbpU6MAto+C5052KXlHZsqwMvyBjunHXGT1bqYYDaH6Ojhq1PW15u2EXOAfhcNMEFRksdWXgwDHCXwzG20+INPGGlsetxE9xCOpA8VMLTgnTy7n4bFvrrwt9K9DoXR9cZ5gYggM2zju2cJJB1bClA+SxDSK+ivE4Elqag0lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PeA7DlZH; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R4Zx5apM"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so3420865e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PeA7DlZH"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so2427745e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745610525; x=1746215325; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745610527; x=1746215327; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=etxEC12lMB+ejp9f/Y42bos7wLJ3Y7W974k3fpFSzHk=;
-        b=R4Zx5apMYw+3f6GwbDPSG/z44mA0HGPad2bMycDuCrkMiNKBjyoEcWZv7sP8gET7R+
-         1Uyjg8jlAEdWbe+7v7/+FhMJgzCDle+ubnO5Mnr3X//6o/+9AYCopczAdKkrTEy/MInY
-         qTPH8vYMWFgnJ5boJuPUY1I0OruCHg9gUhOOe17xIBj2HEvg2OpAb8ZZ8dZKE4AMOTP5
-         RhQLOVAkBvZHrBsinK8MgPmlXVO4ZrIG6PjBJD+xPPh7b0Hqacjwx3eVeK+QuxIujr3d
-         yxJsORDaqAR1O2kCcRTZmgEh6+WNJQRXr0BdeXAkYZycCei7fg1hCNvD4P4HlXVI5bAA
-         TV1g==
+        bh=hhhHYs4KoUp1Dmqe4WieRh0AOyBX59ZVEuUqlgb/Xa8=;
+        b=PeA7DlZHvJHVYtZVzn2SV7eGzAvrhvVIDq+qNieK4ZeZK8T7+OkLoTj2JDzzM29056
+         WpnpSa1OjflAC7ky3vRPDnEC+//uVt3Cfssw6jOY5IU5e+KdqmERSy9+pzO8OWnAJwOt
+         TlmiirshlEyR5Zqsz8Hdv4g4tCXe4Ed9kMkvrtosSBve4yQBjA3Y3gFutWlW+372R3AE
+         DBQFXdfR8/+uHH/sgQS554EnJpatvtzw9nkZ+X1D+nddQCo/S5dDKfbF3tQ96mAdrlvx
+         c/wzWnFuRiIq90+uG71TyTipsWgvUftb9cg/sSA5Vt5OtIJyPYmsix3b0RkGOJDb2jel
+         epnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610525; x=1746215325;
+        d=1e100.net; s=20230601; t=1745610527; x=1746215327;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=etxEC12lMB+ejp9f/Y42bos7wLJ3Y7W974k3fpFSzHk=;
-        b=M+kGHiHhumHWSUs4At+jCAqFb9qmCccBycDLZhZkJcQwDYrgBj68yNZEwgwjSd2II1
-         q+mnKrBZjYTo/XdBvbXIBbGPJL1/W3dzIjp3cu42jNgvJv/VZzJQx03LAeX8+pTwyt9p
-         GpRpb1d+ejUbGHNC9VldRGcFSE+m/UbCmLh1x3oDv3SX2meUkdp9whrjkVfU97alXyqv
-         768oXnQQB++fgwCBlgtFytMFdf0KmbwzcUFE1cg7wch7ZPBasJ5YHF5j6QEPz3RX+tfY
-         2c1KUyB4HyoGstTFgWaJr2G96/31OrONVobsq5MXr5yLqVA2D/mVff4vukwfeLvKk7k6
-         Sldw==
-X-Forwarded-Encrypted: i=1; AJvYcCXxgls7z4IpS0EjlwPEw6oAp3u/+aNF8A9+JBBFCvMR6dqNT/9rKb9GN3T8BDvKfwHdlvKldEeetrHmgFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTC41yh53XH8TX8nQoK13sQ6nA0e7lehNkn9KBjNq9dGzqJb/d
-	5GhwNLtlulImbfZovIBzN90HdQlHkCpjN7mCVStbwD3/CR3BMIfny6ZBnrUB1+U=
-X-Gm-Gg: ASbGncvLVP7ldNf3nae3bvesuduJEUG9tIIR9h7MGO0VOHSj6fN06McDGbacSTy9pWO
-	haCTf7ue/uaGM3lo8/C5rqLxNrHjudkZyWWkDcipVZ42FVx+nRMXsaCtMEMVFQn+2GFIeYo/72S
-	o0teRp2ClngiZBcJsrbF/WfrsrwlAyqGTJyTW8YR0ddziXavKHVvWZg6AsLyJn6Ww8a8e2wJBbh
-	c2EaAsQv8xcEHIRdTJ8UwJfSO0GMsIrp9YbuTNy8qN6TFyQ+eKM1urK70RDDNB62p8IS5BCrBh7
-	Rh5BdCB7oQo1IBBjRj2cyazaIMGnH3Uv3C2zK5V1GxWluc37xc8R9RXAGVgPYXvOLJEaWA==
-X-Google-Smtp-Source: AGHT+IGZVtZLkR9nxPkUbvzOCdFjLRhSjWHRmpkwHUAsb2AXquVCMi3+Gvn4z8qa544N9iD+XiVgsw==
-X-Received: by 2002:a05:600c:ccc:b0:43d:301b:5508 with SMTP id 5b1f17b1804b1-440a65ceab8mr12011905e9.2.1745610525364;
-        Fri, 25 Apr 2025 12:48:45 -0700 (PDT)
+        bh=hhhHYs4KoUp1Dmqe4WieRh0AOyBX59ZVEuUqlgb/Xa8=;
+        b=HUT/dPjac26x2j4h15lzPZT0fvDAjJHnq0BPT4P+BORpo/5fz2eN+pwKm4dvmIIw7u
+         3ZJNLdNoqHuiwFpS4MbwjLOA+Pc8H2YMV5ZoNj+VHt2/y60r+bKLDHqAuOqEIWkZn4QO
+         /upNdgdeChpZ7LJjJIuLu9esH4ROFVpolVDXuFe2LDJmAp6rh7FgCMnzf4+IJ9XtSA+I
+         da5U7w/bmtHVqNP1t0koMP7U5JpYlxUOz5q06WLZIgm2pmzMWsom1Ok2Vpf8AxkFkX0y
+         ttZh72v/eb875l5ONFunL+EX8ZJvLcKCwoQAmMIBrbb/cMyZTVCe1rYtLy+2V7DQoScd
+         C6rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhi+rOMOT1+G0N8D9lOVyE4j25PnznjvhcTz8Wjsj0ROZ/b07QM8tVNrrOUL6bhNFv1N3lFmX0GFdLplc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/v8nKMErAOPCBftz4TjtkySeVgsMpfHsL8yCLZL3H4QyYLHYc
+	fvjy6jW/j83WurS+7DakaMuhxHfi4teKvS8YW0IJ1I52ec3YqsYLZZUVe1WvhGI=
+X-Gm-Gg: ASbGnctESw1mj1c2x1R73vLQ+HsHUTc+X2XjgcEL1mVTSf6gvXmorzYf+jQAaC1t8wh
+	YWeFZmTjc+u1u0FGBPFNSPmb71IAiRRnayxaR2gqhCs33BX3Fq1ZoATc5fAIcnMyhC60uVi2EJ1
+	R7pXqU16Vp+/toet7EZnpv2bXhXGEgOtHIHYSPAGlelMPpUtRN9uguiF9TEVH9OkNmrHwG9ky3W
+	8SO43u93Bk9HVZHxrOAUOXtrjIdpmjHyjo1aBFrs/mXg82hMti9q42XO/vI/ZcaB3zhBI8LLRzC
+	lytfAC2AvxNmAXIdOwpuSrDB7fzi+OT5KYZnnL3eNzHlmL345tjfayra0As=
+X-Google-Smtp-Source: AGHT+IFLaTSeRSUUGpyQQF47LNee1uEGXqbvZf8eFCoZYl+D6T7aT4sNdv5ZKx6ouKFqA9TQ2uy0OA==
+X-Received: by 2002:a05:600c:4e16:b0:439:9a5a:d3bb with SMTP id 5b1f17b1804b1-440a65bb214mr12389145e9.2.1745610526742;
+        Fri, 25 Apr 2025 12:48:46 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a2e59sm65922335e9.16.2025.04.25.12.48.44
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a2e59sm65922335e9.16.2025.04.25.12.48.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 12:48:44 -0700 (PDT)
+        Fri, 25 Apr 2025 12:48:46 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 25 Apr 2025 21:48:28 +0200
-Subject: [PATCH 5/6] arm64: dts: imx8mq: Move Ethernet aliases out of SoC
- DTSI
+Date: Fri, 25 Apr 2025 21:48:29 +0200
+Subject: [PATCH 6/6] arm64: dts: imx8qm: Add Ethernet aliases
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-dts-imx-aliases-ethernet-v1-5-15b9d5cca611@linaro.org>
+Message-Id: <20250425-dts-imx-aliases-ethernet-v1-6-15b9d5cca611@linaro.org>
 References: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
 In-Reply-To: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -82,199 +81,89 @@ Cc: Francesco Dolcini <francesco@dolcini.it>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux@ew.tq-group.com, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6930;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2479;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=42Bpm3LHEmtVmQsrqnD99bk04O4x432C9JaHWtmjDWU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoC+cSrpxTKzVN9MQW5WEKhUCnxySOLJmHDaUV3
- 1rTpgOcecKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaAvnEgAKCRDBN2bmhouD
- 13A9D/9AxkwwLjRniz+C+Uyac2kCQOPoMKIv3737edtkN6sEd6hYzK2WxGqFoiNRGYAUCo2r4F7
- ZeBJbKngrwsS2oc6FTeOTKoQE48MGvZ4zns1l23uXgH0PTozqTWOwABIG9FmROWoyoNRjM5fFDB
- 8njGYm9AOJc3KJvBgmKILVUQOeblAytOyRn8R2mv5Gl1+2f9zEZMCCEw1qwqEVkiLMO2cAAG/j2
- olEVbusgWYM+T7GOrW51JvwL+Vdz0R7iU/4h+u76LGltprGq9uJlLjtvnSYe3dwFtJRmf3zwNqY
- GAWzY/Je82zkk5iYgmi9/GlHfRNBu/R+t7FLlDrQt1+41eSIhWzJ7dDQ+7v/qxbwsVq6ziIg4m4
- FyRWcpCKHJp2uQ32PnSVCCQCyQMMSg99E2YCv50DkpaNlrS0SjxIiTZ0RZdkhbIUaPYAL99uK82
- pRnuZTntNYQGsnWTPYEEsixouLVdXzeH+PAsofKvNQUbkT+aeP//pMtNmUHCSBkgQsEuJFCqmBi
- MvUBHpBLtr99DCLyJubZzAfeRtNLMRdKc9spMtnV3A7k7a7G7xkyUcqwzoC8h3wqwJCiuCwe/Zb
- E8aTzYw3uB4SCexXFymPkMV9+Um5NOrCH2AxpAoS/aPtFTmRMclVfGIBN1vfKVJC4uvOJF3w9tG
- zwvwnDyvujCMvGg==
+ bh=+HtaD1MMcC10nD909Zao9y6H0hANNmhyPMSU9hKMrJ8=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoC+cT4fIlFtHdioeWVc2xOwVr9yZQOrIxjezPT
+ BqQvIyvneCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaAvnEwAKCRDBN2bmhouD
+ 10o+D/9wX+DtmPtvlcmDr/mCEaqmlp0wvwGsyDcSTM9w60nfSI5reGe0MqXrtxsvZrs8lKFxznN
+ 3PjNwe+ZxecVp/9kOaAe6EVlhj3Q3aFouo02F6cM/kLI6W2mVqMj38LgcYgZWbl6ZvP1LxCRXhL
+ ezNXFaxF2/0Xhn04nJK22kvW3YgWWwJRyuobDQCd+ihOmaIf2NoOv5xWD58TnjCcsCjNlrbnaPH
+ 7xRfa4/5zH9LS3YMHTJ8ha9Q0Zh0nDZhoox4fFnFKIr2B2l02aBp2udtZAbaHG0hdjv5LhLp3p+
+ ffbw/A5KcrbbJpA/VibMR4w4g9gJtTtRltZ4RJ/bOEGfFM+rzRc9uN+SLTodvJyyE2PJIjRUDB7
+ Q3bj0You2XJ7zg/URj/sAbVZzEzAVm8A+4nvAY1E8w4Ib93yWrdWK6C8ns2JSFtu/tAt0D4rUyS
+ 4Q0Yn2eUr5XEru36ARlvLY5/bMIZIv3t5YBmK7zO/I6i82ILF8eJU1LTqUg0GXl+tddS+8iVn55
+ 2l74XGR2x7nM+kIr6Lie5OxOZu7h+ncENhB3hj/ZgSmMFSKEQiBTotGYgThX/0q3YrLwLAim3QK
+ iHgqpgfu1my2QweV+ZXDV6RpemOo2CZi1XjMpkiDxi1xC8UjjnI/lMI8Mms7NK9J+1ewKm/AHxO
+ 56TGfJW6cEQJtHg==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Ethernet interface, like other exposed interfaces, aliases depend on
-actual board configuration, e.g. its labeling, thus aliases should be
-defined per each board or each SoM.
+Add Ethernet aliases for predictable names and for firmware or
+bootloader to fill up MAC address.
 
+Suggested-by: Francesco Dolcini <francesco@dolcini.it>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts                | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts | 1 +
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts     | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts        | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts           | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts           | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts            | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi            | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-thor96.dts             | 4 ++++
- arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi         | 1 +
- arch/arm64/boot/dts/freescale/imx8mq.dtsi                   | 1 -
- 11 files changed, 34 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi       | 2 ++
+ arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/imx8qm-mek.dts              | 5 +++++
+ 4 files changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index a87d0692c3bb372f77c04d5190e3741f93a142ec..1d11ebf1c8449541331aea51a6b2841f6e6c790a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -12,6 +12,10 @@ / {
- 	model = "NXP i.MX8MQ EVK";
- 	compatible = "fsl,imx8mq-evk", "fsl,imx8mq";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	chosen {
- 		stdout-path = &uart1;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts b/arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts
-index d8cf1f27c3ec8a33b7ad527c1fc2b489747a2d84..6ab8e2e07b8d403f1fa00ebe2e381e8e7ac5699a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-kontron-pitx-imx8m.dts
-@@ -15,6 +15,7 @@ / {
- 	compatible = "kontron,pitx-imx8m", "fsl,imx8mq";
- 
- 	aliases {
-+		ethernet0 = &fec1;
- 		i2c0 = &i2c1;
- 		i2c1 = &i2c2;
- 		i2c2 = &i2c3;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index d9f203c795197a8d02e6bfa831df6eacdefdc4b3..b1726e0a46bc591f617f25f9fa3ea39509657aba 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -16,6 +16,10 @@ / {
- 	model = "Purism Librem 5 devkit";
- 	compatible = "purism,librem5-devkit", "fsl,imx8mq";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	backlight_dsi: backlight-dsi {
- 		compatible = "pwm-backlight";
- 		/* 200 Hz for the PAM2841 */
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts b/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts
-index 3ae3824be0271f8c5804faf63eaf51aafde9875f..0794abfcb8ac78d7487bde8b2d7008f1b602bd31 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts
-@@ -14,6 +14,10 @@ / {
- 	compatible = "mntre,reform2", "boundary,imx8mq-nitrogen8m-som", "fsl,imx8mq";
- 	chassis-type = "laptop";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
-index 767819cce886cea8828fff68150f64fd21ad8f89..d84f566b85fd6918052040a71b9915b44c7cb846 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
-@@ -12,6 +12,10 @@ / {
- 	model = "Boundary Devices i.MX8MQ Nitrogen8M";
- 	compatible = "boundary,imx8mq-nitrogen8m", "fsl,imx8mq";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index e34045d10a12fd8060b0bb5e512ca7d4eae95695..bd9e41e09a03cc692a2228dbee8cc6c51a7cc0c0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -12,6 +12,10 @@ / {
- 	model = "Google i.MX8MQ Phanbell";
- 	compatible = "google,imx8mq-phanbell", "fsl,imx8mq";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	chosen {
- 		stdout-path = &uart1;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-index ec89b5adeb93d4a0ae4f8338117c196039961241..e9e54558d77e86744954fa55c9b3f562bfa3c7fc 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-@@ -15,6 +15,10 @@ / {
- 	model = "TechNexion PICO-PI-8M";
- 	compatible = "technexion,pico-pi-imx8m", "fsl,imx8mq";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	chosen {
- 		stdout-path = &uart1;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi
-index efc00f4abeb12ce41325ecc04b50349106a56337..915d14e9961830f181298c9cc394b42ec2f71a62 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-sr-som.dtsi
-@@ -6,6 +6,10 @@
- #include "imx8mq.dtsi"
+diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
+index dc127298715b3cf73ad93d25aff7b7b56e4049ab..8f976124053e196a556cb9ddf8ff8768ca332099 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
+@@ -5,6 +5,8 @@
  
  / {
-+	aliases {
+ 	aliases {
 +		ethernet0 = &fec1;
-+	};
-+
- 	reg_vdd_3v3: regulator-vdd-3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-always-on;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts b/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-index eaa9d0c0fcc180b42301be5641f33b1ecb6649b5..9b3d9d235ee114b147322e6f7d9cc55fb4e90ba4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
-@@ -12,6 +12,10 @@ / {
- 	model = "Einfochips i.MX8MQ Thor96";
- 	compatible = "einfochips,imx8mq-thor96", "fsl,imx8mq";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+	};
-+
- 	chosen {
- 		stdout-path = &uart1;
++		ethernet1 = &fec2;
+ 		rtc0 = &rtc_i2c;
+ 		rtc1 = &rtc;
  	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-index c7bbba45f368525e0afa3e22e10bd76b5cf372ac..04dee72be03757abc997a4856c13e778ba5ec056 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
+diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi
+index d4a1ad528f650d16e9de22e2e21d2e2cc684163e..28e64cc63e644f249b16c37d4a555667bea2f5c2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi
 @@ -7,6 +7,7 @@
  
  / {
  	aliases {
 +		ethernet0 = &fec1;
- 		mdio-gpio0 = &mdio0;
- 		rtc0 = &ds1341;
+ 		rtc0 = &rtc_i2c;
+ 		rtc1 = &rtc;
  	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 07925b387677b35766fd0e7ee4b8aff99b587c55..c3cecbf60d8276bb41c58d7f2bc71a3b5d2d97d6 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -21,7 +21,6 @@ / {
- 	#size-cells = <2>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi
+index 5e132c83e1b26b19840aac12d2c1014811c75c78..1f10f31e1e4d40d489e41cc8e65e8673330af07e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi
+@@ -7,6 +7,7 @@
  
+ / {
  	aliases {
--		ethernet0 = &fec1;
- 		gpio0 = &gpio1;
- 		gpio1 = &gpio2;
- 		gpio2 = &gpio3;
++		ethernet0 = &fec1;
+ 		rtc0 = &rtc_i2c;
+ 		rtc1 = &rtc;
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+index 353f825a8ac5db1ac70d1560318c134d188ae7ef..f0bc77cf07b7da73cbb7b438a045fd56ca921d9b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
++++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+@@ -13,6 +13,11 @@ / {
+ 	model = "Freescale i.MX8QM MEK";
+ 	compatible = "fsl,imx8qm-mek", "fsl,imx8qm";
+ 
++	aliases {
++		ethernet0 = &fec1;
++		ethernet1 = &fec2;
++	};
++
+ 	chosen {
+ 		stdout-path = &lpuart0;
+ 	};
 
 -- 
 2.45.2
