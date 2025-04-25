@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A32571B0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66092571B1;
 	Fri, 25 Apr 2025 12:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585609; cv=none; b=M5pGx0rFZ4c2dFn8acAGLsDd+lX3B3r4WVRoBNh7viHuOtOSQZkke6rx9Ce3Amy+1ssZFMuFm2IZkq6RMS7TRdF1Od+2Wc7JUqm1zWVo5NEofvYJ7ywYXHYT1WtMbCN4PJHzMkZ8bnflHbEe14qghSwULyRuwoFmCkCgfCduBGY=
+	t=1745585609; cv=none; b=qsswBMmNNRCzdEOa/6PubaH1qBDFzdnfv2sDZNmFTo832SjOVEvGA2rLBwc8WXhsjk/BvBJURHyRqneF9oq3iLS0BSj5LCNG0qlwH5RnARBOCfwoa7Ebq2EoESOYjCwydS5J6XNhRM94Jp59nq2eGz/MwoUwTbRoSEK7A0s3AYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745585609; c=relaxed/simple;
-	bh=OiZXl16w7s7qORYOTa9IexXDSbX4Y5FjYoBCt1zwMQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FJXtjpHGCNFHMMJrfnJNkd4ZQLNm79AWV+Xxkcm1VWO58IrpSNiBbPiv2r4GITYDVsFm2AwW3fuQRxfgofW7I++I6i8AjIRIfYw6oOeSC7OStci/SzTtzr4+36LmbMhKlWuPoJaKi3bcFg91FJq4RLkxUvVBFiOLhH3zza74iLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMzcy/zi; arc=none smtp.client-ip=10.30.226.201
+	bh=DavfpiZtyAiaygJhlYOgeY0PwmeprcdOrPwYCWNgMZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ugyXdenKji1+DZQ5sWauL4G9yUtC3aAvc0z5+fYwh8P5X2CHcpLZfZvtXnLfuczQCE2vAWCfFPTwdW5xO7mkdq2e7nXx99c6gLGXDvXw3YId5VcAqptVGYc7nBUNaAgsBKQecZn4R/iQ8uY/xO6S7oT6rcQT2Wh46Wwd2RTryAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUYcf2/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMzcy/zi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 316E5C4CEE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUYcf2/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC2EC4CEED;
 	Fri, 25 Apr 2025 12:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745585609;
-	bh=OiZXl16w7s7qORYOTa9IexXDSbX4Y5FjYoBCt1zwMQQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IMzcy/zigoWvgL5zgoR6anfXe6yIYd+FlW2EP/OMSEyKsDM3uRIQ9iAtoni0IzGIn
-	 6WqY/ifPqsm/qE5yySLyLGj5cnL07rNm7N0A2Km1EhWzd0N8k9i/SGByNo0Heksy6t
-	 My0cHB9Wn79rHKZpnbXQxVumbI4+C6hZnAOgyH5qBQolKaRl0uoF5v6lKfNAhrDbSM
-	 HwbYdgEk+NQT+bwMi8ooT648kHaYXWjld49gq0GHb4QUttVwD7M96ZHVT7Y6HAONww
-	 z+YhgMXSFE/Dgsio4DJwZ0VgbYJ0xbb9dl3QOFEoqCi7kNTAwXPDwu4UNDAoJ1vj+n
-	 DvGOtUoTi0jcQ==
+	bh=DavfpiZtyAiaygJhlYOgeY0PwmeprcdOrPwYCWNgMZg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QUYcf2/nuN5bkodzUF90qkzEvrZwd2wSXB9CVcyMPMpQ6NEM0RlhxhUcWWg8WB2Sy
+	 qBbdLTmxOMy3GOuOS4Fd9kKIwrIiOB5rcH+F2uziq7JWHWl6xyxBPNqtmaa6AXZGRW
+	 5KJsw+10EnI1t9WRB8v3KE8CTJ6d+8wD9O12VpNV+YBKQhb2EFkfvjUOlnGsxJ+RlM
+	 o/AGWZ4jsGYhUTBTqw3BHNEMldHvpWrlh6XEPFz++vVTXHa5VvPACdRYpRYwZ6IYiN
+	 MZTXc/Us/f3Cc9b5KCI+Ttpyg/pIIvJWQixyES9HjaT5l4S8ff95ZhV1fYtLX7C0nr
+	 jjz7KD/QgPgXg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1u8IYc-000000007OU-11Qh;
-	Fri, 25 Apr 2025 14:53:30 +0200
+	id 1u8IYd-000000007Oe-0fHk;
+	Fri, 25 Apr 2025 14:53:31 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
 	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/2] media: ov5675/ov8856: suppress probe deferral errors
-Date: Fri, 25 Apr 2025 14:52:36 +0200
-Message-ID: <20250425125238.28346-1-johan+linaro@kernel.org>
+Subject: [PATCH 2/2] media: ov8856: suppress probe deferral errors
+Date: Fri, 25 Apr 2025 14:52:38 +0200
+Message-ID: <20250425125238.28346-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425125238.28346-1-johan+linaro@kernel.org>
+References: <20250425125238.28346-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,25 +50,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Probe of the camera sensor on the Lenovo ThinkPad X13s is sometimes
-deferred when its supplies are not yet ready and this is incorrectly
-logged as an error:
+Probe deferral should not be logged as an error:
 
-	ov5675 24-0010: failed to get HW configuration: -517
+	ov8856 24-0010: failed to get HW configuration: -517
 
-This series suppress the bogus error in the ov5675 and ov8856 drivers.
+Use dev_err_probe() for the clock lookup and drop the (mostly) redundant
+dev_err() from sensor probe() to suppress it.
 
-Johan
+Note that errors during regulator lookup is already correctly logged
+using dev_err_probe().
 
-
-Johan Hovold (2):
-  media: ov5675: suppress probe deferral errors
-  media: ov8856: suppress probe deferral errors
-
- drivers/media/i2c/ov5675.c | 5 +----
+Fixes: 0c2c7a1e0d69 ("media: ov8856: Add devicetree support")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
  drivers/media/i2c/ov8856.c | 9 +++------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+index e6704d018248..4b6874d2a104 100644
+--- a/drivers/media/i2c/ov8856.c
++++ b/drivers/media/i2c/ov8856.c
+@@ -2276,8 +2276,8 @@ static int ov8856_get_hwcfg(struct ov8856 *ov8856, struct device *dev)
+ 	if (!is_acpi_node(fwnode)) {
+ 		ov8856->xvclk = devm_clk_get(dev, "xvclk");
+ 		if (IS_ERR(ov8856->xvclk)) {
+-			dev_err(dev, "could not get xvclk clock (%pe)\n",
+-				ov8856->xvclk);
++			dev_err_probe(dev, PTR_ERR(ov8856->xvclk),
++				      "could not get xvclk clock\n");
+ 			return PTR_ERR(ov8856->xvclk);
+ 		}
+ 
+@@ -2382,11 +2382,8 @@ static int ov8856_probe(struct i2c_client *client)
+ 		return -ENOMEM;
+ 
+ 	ret = ov8856_get_hwcfg(ov8856, &client->dev);
+-	if (ret) {
+-		dev_err(&client->dev, "failed to get HW configuration: %d",
+-			ret);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
+ 
 -- 
 2.49.0
 
