@@ -1,239 +1,294 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4805B2957B6;
-	Fri, 25 Apr 2025 22:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D9C2686B3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745621111; cv=none; b=N7WTT7BXTpnPxNDcJkgF2Q6xdIwANasda/BIULkvirqRcTkiIRUcABnXs5KfqKhLWQKIctcAvYTHgUKlQwS3TdMgK6CXEfbPBEfszRr623Vr3HYT5W9o6zsaQ8ciAJvK+tGosHe6tAgS0x25O52cpYriR7t6PEaymOLCZ4KFe0Q=
+	t=1745621124; cv=none; b=i9VgbdmROK2HiYkxm0/6VgsU1BL25mJ8nErOsp3hHu5xTu+6aw70PAK0JYamX10npxHXvqJvDYGFLSpGhSvvw1kNzvd6/Ol6p72AMu+OKHK4SrqHel11rXlnz+4sJU2gvoXunxyXwt5WiH1z0AQ5OD4MXOfbFfxGrW+A0O+tw8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745621111; c=relaxed/simple;
-	bh=m1yupztsyxl7cQ4kn1kX9OLaeAaGqeyZCazZnJSh7Sw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MuCRw+2e1eixfUsaF6ThxDkfICUPCoWsnWfbcK1+X1I4Gp5GyR+Sc6Vwi5ErehzDWGJ4xYxYF9xAKNHv0OGYfpO9qi7UHn6IT1UmpOHFOq8zBAG/qt4NQ83T9BDGUM3ggNHo/ebQuwZKCC1zCHQrqAgg3gXqjpEKti0mXXp0K9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNPpmPBi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745621124; c=relaxed/simple;
+	bh=DxjFR1cfA5b/PMiVtDs1ZU6V7y+Bn41BSCBzUEdn1eA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QSRGIifxJItkpCzWWjT1tK3xQcEJZX0QjwfyLQRptHsixbXs/eWXwhSznTY0qOZTjCWUJprAqVf2lbNtNVc5EIkV4b5EQ9MDu4+n3pZhoHClFDmqpE/zD+gbl3VjZpjbsxIY2aQctmtbGYunL5Bg7q+XayPFnW7Etx63HZMYjYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nj5kVxPf; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNPpmPBi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A732EC4CEE4;
-	Fri, 25 Apr 2025 22:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745621110;
-	bh=m1yupztsyxl7cQ4kn1kX9OLaeAaGqeyZCazZnJSh7Sw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JNPpmPBitNtn+f5UEYrD0AXc7Y1JyYzO7kUbgoGuf23ddRWjLn5QemhzLtDQgfghF
-	 QQwwKYXYCWiLc8Kr5V/QuMRDj/+q1O1lU+ExVlQQCBND+cXjdvnMBv+Qk0oADCnNOz
-	 y0omoEiMxsuKUv1yEr1qp/6aL/QLnfcxxyVeZu7OBrDqaBEuPJdirQR5LPF5dZuHGd
-	 7zkCE4y8wO2JEWhSruV03CJ/w53TZ6i57BGby0QC5DOGMCzMa1fcOAFc86Kx5Ykei9
-	 t7shHKl0MAx53zvNQCIVu53t/CgCihb3I1ak1lPkJFXf9ECj0aqS38T3AqjoeYful2
-	 8T6erUcjDFJYQ==
-From: Kees Cook <kees@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ali Saidi <alisaidi@amazon.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] binfmt_elf: Move brk for static PIE even if ASLR disabled
-Date: Fri, 25 Apr 2025 15:45:06 -0700
-Message-Id: <20250425224502.work.520-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nj5kVxPf"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7369c5ed395so3085824b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745621122; x=1746225922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PkZO4mi4lxG/wlqj2CFwXmhdIEjDtuyovfVkgLxS/v0=;
+        b=nj5kVxPfkMKgTF7dr8aD9uMz5x8dB+me4BVEf7aO6gtx0OTQWZKKo9Ll+DawLvl7sb
+         ZHhw3xGQyi4Ax1a923kjBOe9BQM1DVpwkG76ZtB9jr6YGWAmB/IXBMLOr4ezFgWLGPmD
+         HCnhuY7bmIczJSh01yZBUVJylwkyT5UFZD7ox+RcmGL6OpnZQ1ytqTGdveobQQ9LBwHK
+         vjJqX/fkE4Viifz5sJG6pk8hvXIdjQMxsH15bts1HYI99Kv0qZLb+UWU3qgrkLZyDisO
+         RRlzucWMmHaQDdtuzU49c84aMbLnEJqKaMCVcclbEfNietiJgTGovWhHXWiUDZVL7lUh
+         TgVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745621122; x=1746225922;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PkZO4mi4lxG/wlqj2CFwXmhdIEjDtuyovfVkgLxS/v0=;
+        b=ise/7iI/y1JILzk3ynsqxyuZMp+0D6/BaIgBMzYXnWkeCJaGx59GzzpF6FD7/r09Sl
+         9nt9qiNl4CsnUlYMc3E025hGb/c/pwvsohEA5KXDB28OOLMREwTgyz+E1aJG/Heda4wO
+         PEgr25tg+yjVbaBQIam9WsDJJsMAEYnejesCP9ig08a+svIWVnUtygODoAqm0aqxChCG
+         ZrS9HoY2Gr2bmowgoqESbDpr5DCxC/9hg1OiB9er6QRSWtP+tQWaDWuspHdfZ/gvCeo/
+         0LC0Nc3fNODV1koJMS8DHrRUjaFMW52r3ZsRVjrqr3KPLKcgvXtLuUkGxWrHpjEPy3q5
+         w9Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeHA0VvZFpKHLdmg/Q0ZMreQK5oOboEBdEHVP35UGYrSssuGDlXYFCGWyb6SHH8jqjwMGgMDgCekQsVeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG7m8DZdxMY2A87mfF3uOvT7bhV9X6vD2nEe44Gir3meg+56Me
+	k2QEsuKKQroKqb1yYQn4UV5WsVHcN51TcNsqzRLiY2ZkBZ8uSrf1TtDcU+JXqyfOaqBfVyPVGeq
+	qioqh9NxlmhBtyZ7KtH2GlA==
+X-Google-Smtp-Source: AGHT+IGmnJ65gmKyA3VF08u0JIu1lEdKstgsWN4dMP/m3HjVmCFFs4RaXPIOere/UVmxFSjxhjf6/nl08qkJgAlx8w==
+X-Received: from pfbky4.prod.google.com ([2002:a05:6a00:6f44:b0:73e:1a21:4bb9])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:228a:b0:736:3d7c:236c with SMTP id d2e1a72fcca58-73ff72e4055mr1450296b3a.14.1745621122037;
+ Fri, 25 Apr 2025 15:45:22 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:45:20 -0700
+In-Reply-To: <aAsJZuLjOAYriz8v@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8271; i=kees@kernel.org; h=from:subject:message-id; bh=m1yupztsyxl7cQ4kn1kX9OLaeAaGqeyZCazZnJSh7Sw=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8AoX8CtlHZqZG7zo3I4XhzIFZf72yUp3/TD0a/Er2e +D8w9nMHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABPJqmNkWG4wyXB153vzueuW zLnxMSMpsPPS7p4+5/5cJ/GkX5PmtTP8D97fmN3SapG+4XjMv0cXD5+Z+PvuNaEFz/kf/RGZs3x +Ey8A
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <cover.1726009989.git.ackerleytng@google.com> <38723c5d5e9b530e52f28b9f9f4a6d862ed69bcd.1726009989.git.ackerleytng@google.com>
+ <Z+6AGxEvBRFkN5mN@yzhao56-desk.sh.intel.com> <diqzh62ezgdh.fsf@ackerleytng-ctop.c.googlers.com>
+ <aAmPQssuN9Zba//b@yzhao56-desk.sh.intel.com> <aAm9OHGt6Ag7ztqs@yzhao56-desk.sh.intel.com>
+ <c4dae65f-b5e6-44fa-b5ab-8614f1d47cb5@intel.com> <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
+ <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
+ <diqz7c39zas0.fsf@ackerleytng-ctop.c.googlers.com> <aAsJZuLjOAYriz8v@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzwmb7yi67.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
+ HugeTLB page
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, Chenyi Qiang <chenyi.qiang@intel.com>, tabba@google.com, 
+	quic_eberman@quicinc.com, roypat@amazon.co.uk, jgg@nvidia.com, 
+	peterx@redhat.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
+	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
+	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
+	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
-direct loader exec"), the brk was moved out of the mmap region when
-loading static PIE binaries (ET_DYN without INTERP). The common case
-for these binaries was testing new ELF loaders, so the brk needed to
-be away from mmap to avoid colliding with stack, future mmaps (of the
-loader-loaded binary), etc. But this was only done when ASLR was enabled,
-in an attempt to minimize changes to memory layouts.
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-After adding support to respect alignment requirements for static PIE
-binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
-for static PIE"), it became possible to have a large gap after the
-final PT_LOAD segment and the top of the mmap region. This means that
-future mmap allocations might go after the last PT_LOAD segment (where
-brk might be if ASLR was disabled) instead of before them (where they
-traditionally ended up).
+> On Thu, Apr 24, 2025 at 11:15:11AM -0700, Ackerley Tng wrote:
+>> Vishal Annapurve <vannapurve@google.com> writes:
+>>=20
+>> > On Thu, Apr 24, 2025 at 1:15=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com=
+> wrote:
+>> >>
+>> >> On Thu, Apr 24, 2025 at 01:55:51PM +0800, Chenyi Qiang wrote:
+>> >> >
+>> >> >
+>> >> > On 4/24/2025 12:25 PM, Yan Zhao wrote:
+>> >> > > On Thu, Apr 24, 2025 at 09:09:22AM +0800, Yan Zhao wrote:
+>> >> > >> On Wed, Apr 23, 2025 at 03:02:02PM -0700, Ackerley Tng wrote:
+>> >> > >>> Yan Zhao <yan.y.zhao@intel.com> writes:
+>> >> > >>>
+>> >> > >>>> On Tue, Sep 10, 2024 at 11:44:10PM +0000, Ackerley Tng wrote:
+>> >> > >>>>> +/*
+>> >> > >>>>> + * Allocates and then caches a folio in the filemap. Returns=
+ a folio with
+>> >> > >>>>> + * refcount of 2: 1 after allocation, and 1 taken by the fil=
+emap.
+>> >> > >>>>> + */
+>> >> > >>>>> +static struct folio *kvm_gmem_hugetlb_alloc_and_cache_folio(=
+struct inode *inode,
+>> >> > >>>>> +                                                           p=
+goff_t index)
+>> >> > >>>>> +{
+>> >> > >>>>> +       struct kvm_gmem_hugetlb *hgmem;
+>> >> > >>>>> +       pgoff_t aligned_index;
+>> >> > >>>>> +       struct folio *folio;
+>> >> > >>>>> +       int nr_pages;
+>> >> > >>>>> +       int ret;
+>> >> > >>>>> +
+>> >> > >>>>> +       hgmem =3D kvm_gmem_hgmem(inode);
+>> >> > >>>>> +       folio =3D kvm_gmem_hugetlb_alloc_folio(hgmem->h, hgme=
+m->spool);
+>> >> > >>>>> +       if (IS_ERR(folio))
+>> >> > >>>>> +               return folio;
+>> >> > >>>>> +
+>> >> > >>>>> +       nr_pages =3D 1UL << huge_page_order(hgmem->h);
+>> >> > >>>>> +       aligned_index =3D round_down(index, nr_pages);
+>> >> > >>>> Maybe a gap here.
+>> >> > >>>>
+>> >> > >>>> When a guest_memfd is bound to a slot where slot->base_gfn is =
+not aligned to
+>> >> > >>>> 2M/1G and slot->gmem.pgoff is 0, even if an index is 2M/1G ali=
+gned, the
+>> >> > >>>> corresponding GFN is not 2M/1G aligned.
+>> >> > >>>
+>> >> > >>> Thanks for looking into this.
+>> >> > >>>
+>> >> > >>> In 1G page support for guest_memfd, the offset and size are alw=
+ays
+>> >> > >>> hugepage aligned to the hugepage size requested at guest_memfd =
+creation
+>> >> > >>> time, and it is true that when binding to a memslot, slot->base=
+_gfn and
+>> >> > >>> slot->npages may not be hugepage aligned.
+>> >> > >>>
+>> >> > >>>>
+>> >> > >>>> However, TDX requires that private huge pages be 2M aligned in=
+ GFN.
+>> >> > >>>>
+>> >> > >>>
+>> >> > >>> IIUC other factors also contribute to determining the mapping l=
+evel in
+>> >> > >>> the guest page tables, like lpage_info and .private_max_mapping=
+_level()
+>> >> > >>> in kvm_x86_ops.
+>> >> > >>>
+>> >> > >>> If slot->base_gfn and slot->npages are not hugepage aligned, lp=
+age_info
+>> >> > >>> will track that and not allow faulting into guest page tables a=
+t higher
+>> >> > >>> granularity.
+>> >> > >>
+>> >> > >> lpage_info only checks the alignments of slot->base_gfn and
+>> >> > >> slot->base_gfn + npages. e.g.,
+>> >> > >>
+>> >> > >> if slot->base_gfn is 8K, npages is 8M, then for this slot,
+>> >> > >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [4K, 2M=
++8K);
+>> >> > >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M+8K,=
+ 4M+8K);
+>> >> > >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M+8K,=
+ 6M+8K);
+>> >> > >> lpage_info[2M][3].disallow_lpage =3D 1, which is for GFN [6M+8K,=
+ 8M+8K);
+>> >> >
+>> >> > Should it be?
+>> >> > lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [8K, 2M);
+>> >> > lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M, 4M);
+>> >> > lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M, 6M);
+>> >> > lpage_info[2M][3].disallow_lpage =3D 0, which is for GFN [6M, 8M);
+>> >> > lpage_info[2M][4].disallow_lpage =3D 1, which is for GFN [8M, 8M+8K=
+);
+>> >> Right. Good catch. Thanks!
+>> >>
+>> >> Let me update the example as below:
+>> >> slot->base_gfn is 2 (for GPA 8KB), npages 2000 (for a 8MB range)
+>> >>
+>> >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GPA [8KB, 2MB);
+>> >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GPA [2MB, 4MB);
+>> >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GPA [4MB, 6MB);
+>> >> lpage_info[2M][3].disallow_lpage =3D 0, which is for GPA [6MB, 8MB);
+>> >> lpage_info[2M][4].disallow_lpage =3D 1, which is for GPA [8MB, 8MB+8K=
+B);
+>> >>
+>> >> lpage_info indicates that a 2MB mapping is alllowed to cover GPA 4MB =
+and GPA
+>> >> 4MB+16KB. However, their aligned_index values lead guest_memfd to all=
+ocate two
+>> >> 2MB folios, whose physical addresses may not be contiguous.
+>> >>
+>> >> Additionally, if the guest accesses two GPAs, e.g., GPA 2MB+8KB and G=
+PA 4MB,
+>> >> KVM could create two 2MB mappings to cover GPA ranges [2MB, 4MB), [4M=
+B, 6MB).
+>> >> However, guest_memfd just allocates the same 2MB folio for both fault=
+s.
+>> >>
+>> >>
+>> >> >
+>> >> > >>
+>> >> > >>   ---------------------------------------------------------
+>> >> > >>   |          |  |          |  |          |  |          |  |
+>> >> > >>   8K        2M 2M+8K      4M  4M+8K     6M  6M+8K     8M  8M+8K
+>> >> > >>
+>> >> > >> For GFN 6M and GFN 6M+4K, as they both belong to lpage_info[2M][=
+2], huge
+>> >> > >> page is allowed. Also, they have the same aligned_index 2 in gue=
+st_memfd.
+>> >> > >> So, guest_memfd allocates the same huge folio of 2M order for th=
+em.
+>> >> > > Sorry, sent too fast this morning. The example is not right. The =
+correct
+>> >> > > one is:
+>> >> > >
+>> >> > > For GFN 4M and GFN 4M+16K, lpage_info indicates that 2M is allowe=
+d. So,
+>> >> > > KVM will create a 2M mapping for them.
+>> >> > >
+>> >> > > However, in guest_memfd, GFN 4M and GFN 4M+16K do not correspond =
+to the
+>> >> > > same 2M folio and physical addresses may not be contiguous.
+>> >
+>> > Then during binding, guest memfd offset misalignment with hugepage
+>> > should be same as gfn misalignment. i.e.
+>> >
+>> > (offset & ~huge_page_mask(h)) =3D=3D ((slot->base_gfn << PAGE_SHIFT) &
+>> > ~huge_page_mask(h));
+>> >
+>> > For non guest_memfd backed scenarios, KVM allows slot gfn ranges that
+>> > are not hugepage aligned, so guest_memfd should also be able to
+>> > support non-hugepage aligned memslots.
+>> >
+>>=20
+>> I drew up a picture [1] which hopefully clarifies this.
+>>=20
+>> Thanks for pointing this out, I understand better now and we will add an
+>> extra constraint during memslot binding of guest_memfd to check that gfn
+>> offsets within a hugepage must be guest_memfd offsets.
+> I'm a bit confused.
+>
+> As "index =3D gfn - slot->base_gfn + slot->gmem.pgoff", do you mean you a=
+re going
+> to force "slot->base_gfn =3D=3D slot->gmem.pgoff" ?
+>
+> For some memory region, e.g., "pc.ram", it's divided into 2 parts:
+> - one with offset 0, size 0x80000000(2G),
+>   positioned at GPA 0, which is below GPA 4G;
+> - one with offset 0x80000000(2G), size 0x80000000(2G),
+>   positioned at GPA 0x100000000(4G), which is above GPA 4G.
+>
+> For the second part, its slot->base_gfn is 0x100000000, while slot->gmem.=
+pgoff
+> is 0x80000000.
+>
 
-On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
-a static PIE, has alignment requirements that leaves a gap large enough
-after the last PT_LOAD segment to fit the vdso and vvar, but still leave
-enough space for the brk (which immediately follows the last PT_LOAD
-segment) to be allocated by the binary.
+Nope I don't mean to enforce that they are equal, we just need the
+offsets within the page to be equal.
 
-fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-***[brk will go here at fffff7ffa000]***
-fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+I edited Vishal's code snippet, perhaps it would help explain better:
 
-After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
-implementation"), the arm64 vvar grew slightly, and suddenly the brk
-collided with the allocation.
+page_size is the size of the hugepage, so in our example,
 
-fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-***[oops, no room any more, vvar is at fffff7ffa000!]***
-fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
+  page_size =3D SZ_2M;
+  page_mask =3D ~(page_size - 1);
+  offset_within_page =3D slot->gmem.pgoff & page_mask;
+  gfn_within_page =3D (slot->base_gfn << PAGE_SHIFT) & page_mask;
 
-The solution is to unconditionally move the brk out of the mmap region
-for static PIE binaries. Whether ASLR is enabled or not does not change if
-there may be future mmap allocation collisions with a growing brk region.
+We will enforce that
 
-Update memory layout comments (with kernel-doc headings), consolidate
-the setting of mm->brk to later (it isn't needed early), move static PIE
-brk out of mmap unconditionally, and make sure brk(2) knows to base brk
-position off of mm->start_brk not mm->end_data no matter what the cause of
-moving it is (via current->brk_randomized). (Though why isn't this always
-just start_brk? More research is needed, but leave that alone for now.)
+  offset_within_page =3D=3D gfn_within_page;
 
-Reported-by: Ryan Roberts <ryan.roberts@arm.com>
-Closes: https://lore.kernel.org/lkml/f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com/
-Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: <linux-fsdevel@vger.kernel.org>
-Cc: <linux-mm@kvack.org>
----
- fs/binfmt_elf.c | 67 +++++++++++++++++++++++++++++++------------------
- 1 file changed, 43 insertions(+), 24 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 584fa89bc877..26c87d076adb 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -830,6 +830,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
- 	struct elf_phdr *elf_property_phdata = NULL;
- 	unsigned long elf_brk;
-+	bool brk_moved = false;
- 	int retval, i;
- 	unsigned long elf_entry;
- 	unsigned long e_entry;
-@@ -1097,15 +1098,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			/* Calculate any requested alignment. */
- 			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
- 
--			/*
--			 * There are effectively two types of ET_DYN
--			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
--			 * and loaders (ET_DYN without PT_INTERP, since they
--			 * _are_ the ELF interpreter). The loaders must
--			 * be loaded away from programs since the program
--			 * may otherwise collide with the loader (especially
--			 * for ET_EXEC which does not have a randomized
--			 * position). For example to handle invocations of
-+			/**
-+			 * DOC: PIE handling
-+			 *
-+			 * There are effectively two types of ET_DYN ELF
-+			 * binaries: programs (i.e. PIE: ET_DYN with
-+			 * PT_INTERP) and loaders (i.e. static PIE: ET_DYN
-+			 * without PT_INTERP, usually the ELF interpreter
-+			 * itself). Loaders must be loaded away from programs
-+			 * since the program may otherwise collide with the
-+			 * loader (especially for ET_EXEC which does not have
-+			 * a randomized position).
-+			 *
-+			 * For example, to handle invocations of
- 			 * "./ld.so someprog" to test out a new version of
- 			 * the loader, the subsequent program that the
- 			 * loader loads must avoid the loader itself, so
-@@ -1118,6 +1123,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			 * ELF_ET_DYN_BASE and loaders are loaded into the
- 			 * independently randomized mmap region (0 load_bias
- 			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
-+			 *
-+			 * See below for "brk" handling details, which is
-+			 * also affected by program vs loader and ASLR.
- 			 */
- 			if (interpreter) {
- 				/* On ET_DYN with PT_INTERP, we do the ASLR. */
-@@ -1234,8 +1242,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	start_data += load_bias;
- 	end_data += load_bias;
- 
--	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
--
- 	if (interpreter) {
- 		elf_entry = load_elf_interp(interp_elf_ex,
- 					    interpreter,
-@@ -1291,27 +1297,40 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	mm->end_data = end_data;
- 	mm->start_stack = bprm->p;
- 
--	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
-+	/**
-+	 * DOC: "brk" handling
-+	 *
-+	 * For architectures with ELF randomization, when executing a
-+	 * loader directly (i.e. static PIE: ET_DYN without PT_INTERP),
-+	 * move the brk area out of the mmap region and into the unused
-+	 * ELF_ET_DYN_BASE region. Since "brk" grows up it may collide
-+	 * early with the stack growing down or other regions being put
-+	 * into the mmap region by the kernel (e.g. vdso).
-+	 */
-+	if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
-+	    elf_ex->e_type == ET_DYN && !interpreter) {
-+		elf_brk = ELF_ET_DYN_BASE;
-+		/* This counts as moving the brk, so let brk(2) know. */
-+		brk_moved = true;
-+	}
-+	mm->start_brk = mm->brk = ELF_PAGEALIGN(elf_brk);
-+
-+	if ((current->flags & PF_RANDOMIZE) && snapshot_randomize_va_space > 1) {
- 		/*
--		 * For architectures with ELF randomization, when executing
--		 * a loader directly (i.e. no interpreter listed in ELF
--		 * headers), move the brk area out of the mmap region
--		 * (since it grows up, and may collide early with the stack
--		 * growing down), and into the unused ELF_ET_DYN_BASE region.
-+		 * If we didn't move the brk to ELF_ET_DYN_BASE (above),
-+		 * leave a gap between .bss and brk.
- 		 */
--		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
--		    elf_ex->e_type == ET_DYN && !interpreter) {
--			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
--		} else {
--			/* Otherwise leave a gap between .bss and brk. */
-+		if (!brk_moved)
- 			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
--		}
- 
- 		mm->brk = mm->start_brk = arch_randomize_brk(mm);
-+		brk_moved = true;
-+	}
-+
- #ifdef compat_brk_randomized
-+	if (brk_moved)
- 		current->brk_randomized = 1;
- #endif
--	}
- 
- 	if (current->personality & MMAP_PAGE_ZERO) {
- 		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
--- 
-2.34.1
-
+>> Adding checks at binding time will allow hugepage-unaligned offsets (to
+>> be at parity with non-guest_memfd backing memory) but still fix this
+>> issue.
+>>=20
+>> lpage_info will make sure that ranges near the bounds will be
+>> fragmented, but the hugepages in the middle will still be mappable as
+>> hugepages.
+>>=20
+>> [1] https://lpc.events/event/18/contributions/1764/attachments/1409/3706=
+/binding-must-have-same-alignment.svg
