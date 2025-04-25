@@ -1,83 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A35218ADE;
-	Fri, 25 Apr 2025 15:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893CB218ADE
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745595628; cv=none; b=Sxuw7KtYcbz6d3vmdx194fe1vmlYr3piGGvcbH/4zevDiTTQHLr5yrMbEDIQefVLbicbALiI8IYjn01NYW6/t7SclyPlZmhJmYG9YX2qOKDhKTMQPz55tNq/2pkOM/u+sthUPWl4nKzRiW35W0D0L4UtzmjHoNE1nL00h6H1P9A=
+	t=1745595805; cv=none; b=XVFRBx5kmbsA0SK3SIcE2/gOlWX3y2CTQfQprb14adPXH4cJaB3SElBpy6ypXhnXc9ytV3u5SQ5aTkZdg/RFV9mukl/dDAUKrMy3SqfG2oCUMpVukO7ukStbGLLHku947UVSEBesX/yoy9MGFvPcmgeFft8F7/XGeXFv4Eyy8Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745595628; c=relaxed/simple;
-	bh=xM4Z3LtZ7LXHApwD4pFmA72hVFcFp2bzGljl/jzk/58=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=KFHVPHA9OEuQsR/6UPhtkiHkUnCUMigMk7Kf35KKcdatZSxq1eZn1uV09NfIwK62/0TqawVUCwuewPzwIdI2tOv9zByBkP1g12Hi4KkH4k0v1fFid/tbnDjExyiWKa2Nu0C1lTnJak4GGnHXS5TUrJP2QdgT9jZImWbXr70PoeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYkWPO+/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745595805; c=relaxed/simple;
+	bh=QE61Ro96QLMT2qJnDn34ofb5m722rFs5Cd7Vq0A5ElU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DtiiOshkBNmjxCpPc9AgcOIK1Mq0xmBFZdWMwB/7H25s6BLhubcCeqQS+rxV9vJuLdxIv3/JgMRoV3wGUcAYSPm1gB3GTMLKXam57i/qGs7NdrjeEC1YHsWKZGXUvUh+l+HMeaofrSmySXaApEhoGVbSLH1f+vtuLrFLEk3WiTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=U5vAHlb8; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYkWPO+/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C2BC4CEFA;
-	Fri, 25 Apr 2025 15:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745595627;
-	bh=xM4Z3LtZ7LXHApwD4pFmA72hVFcFp2bzGljl/jzk/58=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=QYkWPO+/5ZeiSI9UJ43sTd/W+Eh8IQLzXJbIBOEf/tLtASg41adpBCSQ1vltBB/rO
-	 OOdykLAaEVC4vQsB63nsaYyY7Jcn1R72Q58OLOwR7YPLjGAC9xlBrm7BxkPDBwxK48
-	 xSpd6//JQ5+kU08HDHiH1ErPgua9bcLfmoAZdEeN1st5sukFFXrGf05tkFo7L5Blnu
-	 J28B2C7Jr1LQPCogKca9c9lAgzs3M1yEqUU86C6L9oRMx/Kq4tXv3FvuWNKQlyjRX8
-	 dZeWwLfrrMsp7NO8hGHKMoTBoXk9ySRhVyParE8TDPK7MWKnl9Cl04Y+ZcvbV75g5a
-	 lDZ3t4GURkZMQ==
-Date: Fri, 25 Apr 2025 08:40:23 -0700
-From: Kees Cook <kees@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>
-CC: Heiko Carstens <hca@linux.ibm.com>, gregkh@linuxfoundation.org,
- rafael@kernel.org, dakr@kernel.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org,
- Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>, Xiao Ni <xni@redhat.com>
-Subject: Re: [PATCH] devtmpfs: don't use vfs_getattr_nosec to query i_mode
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250425133259.GA6626@lst.de>
-References: <20250423045941.1667425-1-hch@lst.de> <20250425100304.7180Ea5-hca@linux.ibm.com> <20250425-stehlen-koexistieren-c0f650dcccec@brauner> <20250425133259.GA6626@lst.de>
-Message-ID: <D865215C-0373-464C-BB7D-235ECAF16E49@kernel.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="U5vAHlb8"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-604ad0347f5so616537eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745595802; x=1746200602; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u9pUe4E3ZeR1aU2CkECeBsvEMz+lXgJJoqB01YM8ajs=;
+        b=U5vAHlb84BgCSpvy98UeQlFZtN9QgGg1xFTFYC0u4sY9hi9qwE45pGVrpgjl+f3vQW
+         xPoJiRQNM6T/s3zwanahtIIXQal0mKPH3QsDVx4J/3RWbOkz8CLGMNX3/zUjnUteVYTu
+         Rk6b9gxepK/kjH5zPfjLJoDMFDYLb8fQ7WKDgIoBAmd654lJKWGDw1+vJ2bruWgKI1lX
+         yK03i9q5W+YFGbel/kZ4+dUNZoWiW7rBUp6ZBJ/dDx31nLNgrq/kF0iBWXco561CZOD9
+         55zTL316NyEXaIwPnPX4Isj0v1MAjKSrH0hXELgGTVxZnbrgIWHNxKT/lfnrdT+s292c
+         UVqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745595802; x=1746200602;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u9pUe4E3ZeR1aU2CkECeBsvEMz+lXgJJoqB01YM8ajs=;
+        b=kH65BC3UWDEXBZUF+wvkreq5qlxJ4Rjt0ZRhJN8O3wb0Cq4TDtmzG3DXOh2x3PYRPR
+         so4QI3R089E7SGiwPSdrI3U+hri14m276LFGyW50PG/yj3ZCFzgvih4heTZudV2zNIPC
+         HP5C2tF7TTk6WRdcbtzKyyYHCSxArp5Hysm04IB8Dib4JI+9NNGbQ1EeCYUHYWp8peVh
+         /iSZ/D2U2YQcWiQ+mifK8TJIqn9nhnHXhiUKmXzivQAex1qlf/Zui/71jgrp9IrOJvLL
+         udyiXkQB0YyDiTT5mZBjOQAA7qq//QtMwy2Qkt0q60JZmhnCmNCmp0Gguxekgj+fz91/
+         B6UA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoZAuWF8TbiU61f9UUdhlX9W9xyyM2ySvlVOV+L5NVWb8lNf4CmikdmHKCKWaARnTqFpexucVTS0nk/Fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg2sR1Sis01X0YBfKDC3vyv1s9AYGY4kqVoZM0G7XX1NacKirP
+	JSKiJK4JA6YSZKJ1YlAWPxbbKa7q4WVKw2aFke9vcZPXLCAcAoiug16NdB7XHLo=
+X-Gm-Gg: ASbGncsMsA/GCQd2HTE5rJEZ2ii9/PLbWm3+4wMmU1jLz6fNST/ZgBikP7OaFCPhiIB
+	PkDH65V1EwzWnFGz5mffHrmgtdXW/45o/H/NL1Abtx5kd8J1pXM1fUBP5PcrnJKJU69mJ8A5DcV
+	sk6QduGuUbufUbk0xwkHcLH1NAoAnomLHvVV8GPjufvgBCUPZKzyGykGhghxnaEAcPQWjgSQ0aT
+	6biuPwpIIjEtbQzpMK2ZhhLoiymRDO5nGVZPeKYl6i9ZT9gDF6Dn1CqfhIWgrYrxHix/lNe6eaq
+	bnxyC5TNVnZ14EmlSuUcw9t5DO+x/3WoEnkYVr4FfEb+L8NN71khankPG4R/RiVz/u8ow2KWs5L
+	LPqeqJlABp1TkdQA6G0mZbTM=
+X-Google-Smtp-Source: AGHT+IG/OtumwHC5swR6H2CFdXfQSy0Vcju9xSNeHVTBb4FxeQPAdHgsFE9XEjfhMfsokIExnHiTUw==
+X-Received: by 2002:a05:6820:2007:b0:603:fada:ac53 with SMTP id 006d021491bc7-60652bb3eb1mr1259572eaf.2.1745595802424;
+        Fri, 25 Apr 2025 08:43:22 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:96a3:e28:3f6:dbac? ([2600:8803:e7e4:1d00:96a3:e28:3f6:dbac])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60646882771sm776192eaf.14.2025.04.25.08.43.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 08:43:21 -0700 (PDT)
+Message-ID: <1ca81b41-f3a2-49a0-ae91-72fb068bb0d5@baylibre.com>
+Date: Fri, 25 Apr 2025 10:43:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/1] iio: adc: ad7192: Refactor filter config
+To: Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Alisa-Dariana Roman <alisa.roman@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
+References: <20250425132051.6154-1-alisa.roman@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250425132051.6154-1-alisa.roman@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 4/25/25 8:20 AM, Alisa-Dariana Roman wrote:
+> Dear maintainers,
+> 
+> Here is a pretty voluminous patch improving the filter setup for AD7192
+> and similar chips.
+> 
+> I removed the write options for two attributes and I know that is
+> questionable. I am sending this version just in case it is still viable
+> since I think the driver is a lot cleaner like this.
 
+If you can make the case that no one is using them, e.g. because the function
+didn't work correctly, then it could be OK. But best not to break userspace if
+we can help it.
 
-On April 25, 2025 6:32:59 AM PDT, Christoph Hellwig <hch@lst=2Ede> wrote:
->On Fri, Apr 25, 2025 at 12:12:36PM +0200, Christian Brauner wrote:
->> > That is: if dev_mynode(dev, inode) is not true some random value will=
- be returned=2E
->>=20
->> Don't bother resending, Christoph=2E
->> I've already fixed this with int err =3D 0 in the tree=2E
->
->Thanks!  Let me use this as a platform to rant about our option
->defaults and/or gcc error handling=2E  It seems like ever since we starte=
-d
->zeroing on-stack variables by default gcc stopped warnings about using
->uninitialized on-stack variables, leading to tons of these case where
->we don't catch uninitialized variables=2E  Now in this and in many cases
->the code works fine because it assumed zero initialization, but there are
->also cases where it didn't, leading to new bugs=2E
+For IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY, it seems easy enough to keep
+ad7192_set_3db_filter_freq() and just modify it a bit to call the new
+ad7192_set_filter_mode() with the 4 previously supported filter types.
 
-This isn't the case: the feature was explicitly designed in both GCC and C=
-lang to not disrupt -Wuninitialized=2E But -Wuninitialized has been so flak=
-ey for so long that it is almost useless (there was even -Wmaybe-uninitiali=
-zed added to try to cover some of the missed diagnostics)=2E And it's one o=
-f the many reasons stack variable zeroing is so important, since so much go=
-es undiagnosed=2E :(
+And IIO_CHAN_INFO_OVERSAMPLING_RATIO seems like it could be preserved too, but
+will take a bit more work. I'll comment more in the patch.
 
->Can we fix this somehow?
+> 
+> I also modified the size of the 3db filter low pass available attribute
+> since AD7193/AD7194 have 16 filter modes, unlike the other chips that
+> have 4.
+> 
+> Note that I moved a few of the functions around to be able to use them
+> where needed.
+> 
+> Have a great weekend!
+> 
+> Kind regards,
+> Alisa-Dariana Roman.
+> 
 
-Fixing -Wuninitialized would be lovely, but it seems no one has been able =
-to for years now=2E =F0=9F=98=AD
-
---=20
-Kees Cook
