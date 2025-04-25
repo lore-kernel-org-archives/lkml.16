@@ -1,111 +1,102 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560124C07E;
-	Fri, 25 Apr 2025 13:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7B224BBEE
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745586317; cv=none; b=IzwLAvafO1u2UoGxAdEipBX2KZc9XXEI2tLdc9+s3+IoNOqFIFYi8h6qvnkMenndN2Dq7zUWwqX53ClPiY80W2QTEwZsMAb9xCrpZSbz/tihpPyEfC1nB/Thl0Au3M6peEEofVlayzdhBP1ACtVGSLsMm1k6Ugny5D4PIaP0tlg=
+	t=1745586326; cv=none; b=NXDd+I9vmW0uVqPARPTv9kht8t0kHGfhU5Y5sBCYYE+9qbcNkjOWU1Rc8FWPuW5EJxL9WPVHWtKHtX6MG5NnnzLXjvDlugIsBIVQfp8Xdii/vPBoLp62xbBsbeVQIeUVu+LiKHaDWU1cBfgs9ZoOCx7phBbLE4vX85S8jLQkLBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745586317; c=relaxed/simple;
-	bh=4knc6zk55EjUi7YvMPgbHvB69e8SXVuYN6cNjQD8WVM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QEFNHLPMYsm9LdL6R2ck+I7SbRC+/ZEZNskglp5aMu3FD8FE2eEjGkf6PP/tQQxlPpYguw3BvyGBvC/Pkq2CE7xvOfaVgYPAKltFttZoD1fJiY7Mdio6OLVhQ0gPHX5yhh1icHq7vLQ2dHeVXKut0b+zqCa1s9iSkqiax/dl0io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pzyOup1Q; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745586326; c=relaxed/simple;
+	bh=sDGtqm1V//9UtS2zFSvlXkA7AXbkU/KZKXPn8F5C724=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jIRIvp9MSj82kS7sQgqiBuOB/hkP+8Yhswzca08+W5S2d5UO91vzTYywHO3RnlRwz4xZDhcCCVuj73wKWph0Bt+FzRXdr5ug8AjXHQktmU7f9qL27wFiu5IsuGq2Mj2lRNaHS/iqL93X0+vMaG/4z1UwvxgJF9cOeZxmZT5IaQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=VBh7Zsan; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pzyOup1Q"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PD57E12176482
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 08:05:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745586307;
-	bh=NFP2W2jmPvIjX4SKsg8ordEsFDwm2ltfl5D0WhF7rH8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=pzyOup1QdVC49a8w2KlyxMfn+vrDnXsxZuqzZe98WNl+tSjvQ21J90l3ZpYDAl571
-	 +DiVrH0vDyLyfE/VmdJ45ePkh7oEmMP+S95EazUktqr0ejM4EdKlg5if0oiCXWrGFT
-	 RIdQiKOH91Du2txW5oQ4P/OuLX0Pdk++YSSh55Aw=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PD57Mb019281
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 08:05:07 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 08:05:07 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 08:05:06 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PD51Bn053981;
-	Fri, 25 Apr 2025 08:05:02 -0500
-Message-ID: <c63cac69-6cfc-48b9-81a3-42a88dcd74f9@ti.com>
-Date: Fri, 25 Apr 2025 18:35:01 +0530
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="VBh7Zsan"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so21148735e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:05:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1745586323; x=1746191123; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mI4EMCjudvPEsRjkDPJuXzQzHFYKmrud5DGT+FL6aYw=;
+        b=VBh7ZsanftC8Wk6x2g7MYzJf9uWLNm1/ukm+IVE06Nzh72R1bgRo7JotbgtROnhpJg
+         JBsL9/QoAbzeOucCM+beFkCq0scStKjZnK2UuXyFa1tH0SFfV0NocXqIul188wyulDCL
+         w5be+PceYbONFWZBRaIKHVnA/bA2USyG+9/z9+I5/CK8eyTWtCsgTT+DVIrz6ywS5ve9
+         x+kQkdMF4r5Gy0b3bpAwUziOZvmbebfSd/WalfjkqiUohcLvyr1NlrpJKjEpdzspDzel
+         a1xsWNWLnG83q4wWUeCnmYnCLemf538hu2bnJXX+uMZ9tZPJ4Rym18TRGVIbqLFy0s8V
+         CXJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745586323; x=1746191123;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mI4EMCjudvPEsRjkDPJuXzQzHFYKmrud5DGT+FL6aYw=;
+        b=TssGmacrowTSHNavrDsAJbaqyatBxPTRxEgfZ9RXydSMbNVZC87iNqFp7vN/zS4Tx4
+         5/FvoBkN3k7DCTnNKsFpzxnz+jE0565Nyt7KesochGO1UIJIHKqvXUggoly9/ej0g8Oj
+         V4hcZf6uWvrxs08/zLlm1nhg7jg+t7pxN4PefucDyqJ0jsrloSkS9Yl9NyPY5BaqmrVb
+         4obRb0lY1PRo4P63suj3Q7DWwnOJoI0Fs0bGIXXDFpBzv5C8SPrxTz40luV5XuZSECEA
+         ExRuhqJVUEAoJFTVzgLGSwtAxxVskE/zepMraZZkAMD2LPony5eKDFHv2eQy5BeD1L6I
+         0Q1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVlShxMqmwW3U9Zl5p0Co4yy+4aES/CO/md884rnPP2qRrfPXN19Yz/sXh/euGL5FF+/PV9EyLej75X9z4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpDndH+WWjEocieSRRtWlNAOR23xOLzBMOJPiAmD2hdvyPpVqM
+	ZP+RqlBsXHuBUqT28r4hcBY6lktguDiyufAYGLrXrvp2eJr6Q0JPMF7vnbS3uag=
+X-Gm-Gg: ASbGncvAQPRsrfqsZBU5SHRyBqCe6+Oo51cvxqdVesTD+lM/btfkmZlJ6nT7OkguUyE
+	d5ffkqxY25rXRnbRZpkAcbP0thWR7uMx0yVazl+hdNAh5sF3ua9H/Qfc5fZjFp8d8+nf9n2RiW+
+	TZLC7nAQV4q/LipahPCOHwR6NnOozWuzQQ1F5VwoNJAto/0Tami9hgvuO5uQl43mTFD4v1vmowx
+	Pt+p9nFAWzppKmYP0rD8tRdKlsORBz2V/vN136NmACDImwg86b/cwvAd65TQHlyI7PMND5KojQ0
+	2VQcVV70cPEadee4kAYT0lpT2wEH
+X-Google-Smtp-Source: AGHT+IHHErR6NhpMN/Sy9UBcv9Lon9rgyckgM6zPHQxQJs/5oK9vVCdwR1q/Yg1TRreW6QGAYcjYIQ==
+X-Received: by 2002:a05:600c:a06:b0:43c:eec7:eab7 with SMTP id 5b1f17b1804b1-440a65d8e66mr16975955e9.11.1745586323513;
+        Fri, 25 Apr 2025 06:05:23 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::f716])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2dfc2fsm55718985e9.33.2025.04.25.06.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 06:05:23 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:05:22 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Mayuresh Chitale <mchitale@ventanamicro.com>
+Subject: Re: [PATCH 3/5] KVM: RISC-V: remove unnecessary SBI reset state
+Message-ID: <20250425-adf6ca95915c46a5403fb742@orel>
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+ <20250403112522.1566629-6-rkrcmar@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-j784s4-j742s2-main-common: fix length
- of serdes_ln_ctrl
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-CC: <stable@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <u-kumar1@ti.com>
-References: <20250423151612.48848-1-s-vadapalli@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250423151612.48848-1-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250403112522.1566629-6-rkrcmar@ventanamicro.com>
 
-Hello Siddharth
-
-On 4/23/2025 8:46 PM, Siddharth Vadapalli wrote:
-> Commit under Fixes corrected the "mux-reg-masks" property but did not
-> update the "length" field of the "reg" property to account for the newly
-> added register offsets which extend the region. Fix this.
->
-> Fixes: 38e7f9092efb ("arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix serdes_ln_ctrl reg-masks")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Thu, Apr 03, 2025 at 01:25:22PM +0200, Radim Krčmář wrote:
+> The SBI reset state has only two variables -- pc and a1.
+> The rest is known, so keep only the necessary information.
+> 
+> The reset structures make sense if we want userspace to control the
+> reset state (which we do), but I'd still remove them now and reintroduce
+> with the userspace interface later -- we could probably have just a
+> single reset state per VM, instead of a reset state for each VCPU.
+> 
+> Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
 > ---
+>  arch/riscv/include/asm/kvm_aia.h  |  3 --
+>  arch/riscv/include/asm/kvm_host.h | 12 ++++---
+>  arch/riscv/kvm/aia_device.c       |  4 +--
+>  arch/riscv/kvm/vcpu.c             | 58 +++++++++++++++++--------------
+>  arch/riscv/kvm/vcpu_sbi.c         |  9 +++--
+>  5 files changed, 44 insertions(+), 42 deletions(-)
 >
-> Hello,
->
-> This patch is based on commit
-> bc3372351d0c Merge tag 'for-6.15-rc3-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> of Mainline Linux.
->
-> Regards,
-> Siddharth.
->
->   arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-> index 1944616ab357..1fc0a11c5ab4 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-> @@ -77,7 +77,7 @@ pcie1_ctrl: pcie1-ctrl@4074 {
->   
->   		serdes_ln_ctrl: mux-controller@4080 {
->   			compatible = "reg-mux";
-> -			reg = <0x00004080 0x30>;
-> +			reg = <0x00004080 0x50>;
 
-
-Reviewed-by: Udit Kumar <u-kumar1@ti.com>
-
-
->   			#mux-control-cells = <1>;
->   			mux-reg-masks = <0x0 0x3>, <0x4 0x3>, /* SERDES0 lane0/1 select */
->   					<0x8 0x3>, <0xc 0x3>, /* SERDES0 lane2/3 select */
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
