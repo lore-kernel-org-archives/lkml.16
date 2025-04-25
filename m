@@ -1,189 +1,146 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9637022FF37
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDDA2356A8;
+	Fri, 25 Apr 2025 09:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745571600; cv=none; b=Kw3Dc+tcOUadDlCJK9s8LT1JsX7jodEboo4PV5LNbUFvUWP3GgGnB0sCsxXYfh0j+9a/wVC2dxq71Kxxx3Z/aAD/df4qYQdx2cdusQhL6INSGOvP3OBjnACM+tuXCIbVgRhnjEuXXy9FRDhUIeMmkftg/0vgAkFFSQnRRooNHwA=
+	t=1745571615; cv=none; b=Bi5eVL+o2IwgqiUXzDtSdJMEelRjaW3mazR5PHJcrFJmPLVx2cBJ2V9fnvKf/BGcQMQwd9tH7DBMpq34PVZ3cvAJUF6CNcRaqd5eqf2NKLRm5fNkD3hJ9sRnlvpZKk+sTnAaFYfFnCbtkqDTVheBB8bRdAFJwwxuv8b1uMCdpDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745571600; c=relaxed/simple;
-	bh=+xSCE9MB+iXnfupVs0CKDPm7yuZw6BhgZRJ8oAX0TzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nmco/3/W+WI0xbdbgWp5pUqIsgHE282NPEEeu06DakHjdDrCoAlBACDW3zfmYsvxRi7g6Fo2ebBd/vHiwPw03ZJ4q42bqPTGNKvANTlxE/PD85/uugo3rkjc/dLqczwEOHLLHnf46vddNNvdOHdvgIvOvNtSTPJ0aCLviUQOVjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MGFA6Ng3; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745571615; c=relaxed/simple;
+	bh=pL6a7vTITX5kkWE9MGLH1BU6Hb4KM83vxU1uj0XZhh4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rQdIII8HBFBl5blWXyq9y6dRwnM8uOtZS+gI6jXnatA95qTfWmNDpbmMNijPvTDj4r8qQRMVYnuYUSTRrBWRPP8Pd4TA8xqGmX4iPNpsrUFNyerjVXILStT5oI16Q+iLY/Ppm2SfsE4lIrH7o60Vp+2XpPsJ4VZlnP2+pXNb9n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=YO1N0ix2; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MGFA6Ng3"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c062b1f5so1710462b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:59:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745571598; x=1746176398; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QI7dIhq4gpO8qmw+kHNvoSNDB7nG2z7FjzlKM42EHH4=;
-        b=MGFA6Ng33aHaiphc4JPoqhxE8pOz8TySAC21Fsun0ihZIWo2F2P/bJErOap+DiRaTy
-         bb2YpBQiKVFyOiYxVc2n+eQe9WXuzisDAYpzjnzDLqSeqRcGrtdYYhfOoiRfAYdSh0Rb
-         CNSvmA2mu3C26K8Uzn0uVLBjIeCK8dDOHkHC+JyLwnPpoTzbi2NkNOdMYHc+7CJDPWgw
-         wYhk8Xw2uaWFA7INh2S+xXMb+9MoRteBbMKfFZZYST+oW4v40CeUkI0HTXBasouPFQzi
-         nalkuuwcg13DLewsN9x1q6A0X/oy5qiqKrtZjNQdBQGH9zJ6UAeJcxR/mnU649Cfl+CV
-         rcZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745571598; x=1746176398;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QI7dIhq4gpO8qmw+kHNvoSNDB7nG2z7FjzlKM42EHH4=;
-        b=SbA1YxDq873QyYNa8tIF+6m095ySYZ+rZF+sfhRKTuVxF1jafCeE/NmEtd1Bty+Ees
-         N6RKEeyQpoYivtI1827q4KySDxTMzWFM9aPGFr/EzZ9Vt4vOM4Hd0q9Ra/OqGwqxjWMQ
-         4f5Sz0tKzMHr6MBOZ3folMy+ZyikVqrLxjN4qbpR0IbxFmrDFZ66+PQgW26pt+AghtHZ
-         KJEo58R5NEZtpRZ62skB9NfoeFgnaCmqtzf3yxSg66zkLqxQkLDat6OYImGohg4FYvH6
-         HSSLMdeuf12RALWDrlE9Gmb8YBcAD8H3J0o8/1QHicPQY7NfmUvEM68m7q5gpZviOBtv
-         Zong==
-X-Forwarded-Encrypted: i=1; AJvYcCVzJWPuu+1A/RbK/jkCMbYfVuWVZinD+r0F9rD/795myFH9QOYamK70a3Qewc4V508VEdEjM7CMoPayBak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwAJRiArNQEmtxR/kJjJ2gPM6bFAETPR9I7pqF7u0qzmxSl64o
-	RFuYvGLbFAsY7YyaCqMuFXwhAnE9NZ7wJVE8SfYP/6Z57hnA9ohHSjUvW5EbiCg2oulihX86EMw
-	=
-X-Gm-Gg: ASbGncukCOSEbVOOJfIA3wvr1k2ZMhG8RQLhc4pof5PyQkxkgmOk0NU6061kg05Xjnk
-	JDsLcWKe2/yXukYVlyfOREk75xAbxvJ1A8oiMVJo/780sDflZHz1Hoi7XKI/0qM0QBUKkJHOPVn
-	LYdBJm3t3JEPG1ZKSYEa71wY39t36F4CJSfAR4yXY22gewai5l3QGPghzwagB9STLoTpSnfdmke
-	k7hOm4gnD7OBMg/YujHdP8YdjcoKnjHlTLrcIETsWPS8rGpwFR+Iz6ldCf/azI8Lv2M+GYWwY3w
-	ew7Vbn+rHj/VoBNPts2ROtb8qZ8N2sUk9HLRblHvOyCf/msOzjfEtqw1LM/zaA==
-X-Google-Smtp-Source: AGHT+IFkKSjUiJTYpCxdE0/nSPU4m+TRaoZshePJKHL8MiFoZ1AglBgvtTwnzJQU1uuNvqEmm4Tfww==
-X-Received: by 2002:a05:6a00:21c6:b0:73e:359:acf4 with SMTP id d2e1a72fcca58-73fc7866454mr2183157b3a.0.1745571597887;
-        Fri, 25 Apr 2025 01:59:57 -0700 (PDT)
-Received: from thinkpad ([120.60.77.160])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25962f61sm2688128b3a.74.2025.04.25.01.59.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 01:59:57 -0700 (PDT)
-Date: Fri, 25 Apr 2025 14:29:50 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, 
-	Jeff Johnson <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
-	Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>, 
-	Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kunwu Chan <chentao@kylinos.cn>, kernel@collabora.com, 
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
-Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
- suspend/hibernation
-Message-ID: <y5odcxzms6mwpz5bdxhbjxo7p6whsdgwm772usmmzqobhf6nam@p4ul7vn7d3an>
-References: <20250410145704.207969-1-usama.anjum@collabora.com>
- <h2wv7drxntokziiwbzjw5xjzbctbomp6cfcba7ppfbih6o7so7@p6dazv32xfx4>
- <1136c7cb-1c7b-410b-93d2-c74aec939196@collabora.com>
- <cfb3sntvqhupyhm2m5tevpsl77r6mzl2aqzr3wtxvr22bezmp3@qjh7ftr2kdjy>
- <4d87ef88-3533-4255-adc6-6c268818fe25@collabora.com>
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="YO1N0ix2"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4ZkRcp69rjz1HY3;
+	Fri, 25 Apr 2025 09:00:10 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.107]) by freedom.nl (Postfix) with ESMTPSA id 4ZkRcp1SyGz4Q;
+	Fri, 25 Apr 2025 09:00:10 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=YO1N0ix2;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1745571610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=dJwBAdZXMldHFkl0QrKaHnjwuJCR8Ojs5pgRUocE23g=;
+	b=YO1N0ix2NNxzzyEc92Zg+Jg6dA+PRp4KujXHrunV9Q5r5AvHQHr4+lj0u6ow8CwUFAvkR4
+	xOXF6lBfM/UdkQqM618EimXgD0e0FMpiT97M7WDhc+RgwxVtx1lm1Qjf8vt8SBBlacKZq9
+	FeM6QnjlSJf+XYXoiIVj+Ye2i1JAymiS4Ia1ExqKPmLU2P77KLnZV0xveULRsgvhY7YYiK
+	EDWC8tMGMe3UHORmXMOMtGAPGrjC7H/QKdsJkYH+5TadXNU2qn+vu9zDYV9AiMpjv6mUu8
+	+i1Pe1H30kmj6EyBlmnhvURLRT0IdpIyOccWrBJWTzzJ/Bn/FjnF1SGU6eTIgQ==
+X-CM-Envelope: MS4xfKhvMAFM3rn5Q4UPuc4fkiy8+G3CSi0OBFg8WRmoBmUKVAI64xVMdPzFRRQRVrZpsNtsWsy1hNuDoeAFbS/lOFo3jtyYnxvZCddpoFQo3qGWUHSPhgLy F1Ke7v6PrDSBN99POe9ejTResAhx0oDMzEB4gY7UMsTSfA8yhgsc8QK+UUQUwA3Qex7N83/wOHutbQEnQqQEXepYY2H8AeTEbg/v9+kgczXZgF2NwASGYML8 n+2kNGR0maaZ5bDowyfGsBGqKZViqY6mGyBZ5eiEraf3ttPuiFRAhppE1HEZYOWXiqxaCVdETZkTBuDI3H0zid0HIBGMS5GiBlYrrbTUwJUiVaZKAxvV5LwK qRdY4MRg
+X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=680b4f1a a=xVxOAnYOZqKVbrsbIgLjXQ==:117 a=xVxOAnYOZqKVbrsbIgLjXQ==:17 a=IkcTkHD0fZMA:10 a=xq3W2uTSAAAA:8 a=EUspDBNiAAAA:8 a=cajtFFVKkiF0S9Jybq0A:9 a=QEXdDO2ut3YA:10 a=P5L7wpMTXyg1GfFA3Gwx:22
+Message-ID: <ba2f5862-b503-44d8-9b01-a9a7686808ba@jjverkuil.nl>
+Date: Fri, 25 Apr 2025 11:00:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d87ef88-3533-4255-adc6-6c268818fe25@collabora.com>
+Subject: Re: [PATCH RESEND] media: adv7511-v4l2: use constants for BT.2020
+ colorimetry
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250417-adv7511-ec-const-v1-1-74301e17646e@oss.qualcomm.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hans@jjverkuil.nl>
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ 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
+In-Reply-To: <20250417-adv7511-ec-const-v1-1-74301e17646e@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-On Fri, Apr 25, 2025 at 12:42:38PM +0500, Muhammad Usama Anjum wrote:
-> On 4/25/25 12:32 PM, Manivannan Sadhasivam wrote:
-> > On Fri, Apr 25, 2025 at 12:14:39PM +0500, Muhammad Usama Anjum wrote:
-> >> On 4/25/25 12:04 PM, Manivannan Sadhasivam wrote:
-> >>> On Thu, Apr 10, 2025 at 07:56:54PM +0500, Muhammad Usama Anjum wrote:
-> >>>> Fix dma_direct_alloc() failure at resume time during bhie_table
-> >>>> allocation. There is a crash report where at resume time, the memory
-> >>>> from the dma doesn't get allocated and MHI fails to re-initialize.
-> >>>> There may be fragmentation of some kind which fails the allocation
-> >>>> call.
-> >>>>
-> >>>
-> >>> If dma_direct_alloc() fails, then it is a platform limitation/issue. We cannot
-> >>> workaround that in the device drivers. What is the guarantee that other drivers
-> >>> will also continue to work? Will you go ahead and patch all of them which
-> >>> release memory during suspend?
-> >>>
-> >>> Please investigate why the allocation fails. Even this is not a device issue, so
-> >>> we cannot add quirks :/
-> >> This isn't a platform specific quirk. We are only hitting it because
-> >> there is high memory pressure during suspend/resume. This dma allocation
-> >> failure can happen with memory pressure on any device.
-> >>
-> > 
-> > Yes.
-> Thanks for understanding.
+On 17/04/2025 00:46, Dmitry Baryshkov wrote:
+> Replace numeric values with constants from hdmi.h.
 > 
-> > 
-> >> The purpose of this patch is just to make driver more robust to memory
-> >> pressure during resume.
-> >>
-> >> I'm not sure about MHI. But other drivers already have such patches as
-> >> dma_direct_alloc() is susceptible to failures when memory pressure is
-> >> high. This patch was motivated from ath12k [1] and ath11k [2].
-> >>
-> > 
-> > Even if we patch the MHI driver, the issue is going to trip some other driver.
-> > How does the DMA memory goes low during resume? So some other driver is
-> > consuming more than it did during probe()?
-> Think it like this. The first probe happens just after boot. Most of the
-> RAM was empty. Then let's say user launches applications which not only
-> consume entire RAM but also the Swap. The DMA memory area is the first
-> ~4GB on x86_64 (if I'm not mistaken). Now at resume time when we want to
-> allocate memory from dma, it may not be available entirely or because of
-> fragmentation we cannot allocate that much contiguous memory.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+Just for future reference: please don't resend. If it is in
+https://patchwork.linuxtv.org/ then it will be picked up eventually.
+
+Regards,
+
+	Hans
+
+> ---
+>  drivers/media/i2c/adv7511-v4l2.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-
-Looks like you have a workload that consumes the limited DMA coherent memory.
-Most likely the GPU applications I think.
-
-> In our testing and real world cases, right now only wifi driver is
-> misbehaving. Wifi is also very important. So we are hoping to make wifi
-> driver robust.
+> diff --git a/drivers/media/i2c/adv7511-v4l2.c b/drivers/media/i2c/adv7511-v4l2.c
+> index f95a99d85360aa782279a127eee37132f9ad08fb..853c7806de928da2129f603e7cb673440a1fcfac 100644
+> --- a/drivers/media/i2c/adv7511-v4l2.c
+> +++ b/drivers/media/i2c/adv7511-v4l2.c
+> @@ -1370,9 +1370,9 @@ static int adv7511_set_fmt(struct v4l2_subdev *sd,
+>  	case V4L2_COLORSPACE_BT2020:
+>  		c = HDMI_COLORIMETRY_EXTENDED;
+>  		if (y && format->format.ycbcr_enc == V4L2_YCBCR_ENC_BT2020_CONST_LUM)
+> -			ec = 5; /* Not yet available in hdmi.h */
+> +			ec = HDMI_EXTENDED_COLORIMETRY_BT2020_CONST_LUM;
+>  		else
+> -			ec = 6; /* Not yet available in hdmi.h */
+> +			ec = HDMI_EXTENDED_COLORIMETRY_BT2020;
+>  		break;
+>  	default:
+>  		break;
 > 
-
-Sounds fair. If you want to move forward, please modify the exisiting
-mhi_power_down_keep_dev() to include this partial unprepare as well:
-
-mhi_power_down_unprepare_keep_dev()
-
-Since both APIs are anyway going to be used together, I don't see a need to
-introduce yet another API.
-
-- Mani
-
-> > 
-> >> [1]
-> >> https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
-> >> [2]
-> >> https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
-> >>
-> >> What do you think can be the way forward for this patch?
-> >>
-> > 
-> > Let's try first to analyze why the memory pressure happens during suspend. As I
-> > can see, even if we fix the MHI driver, you are likely to hit this issue
-> > somewhere else.>
-> > - Mani
-> > 
-> >>>
-> > 
-> > [...]
-> > 
-> >>> Did you intend to leak this information? If not, please remove it from
-> >>> stacktrace.
-> >> The device isn't private. Its fine.
-> >>
-> > 
-> > Okay.
-> > 
-> > - Mani
-> > 
+> ---
+> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+> change-id: 20250408-adv7511-ec-const-b46796340439
 > 
-> 
-> -- 
-> Regards,
-> Usama
+> Best regards,
 
--- 
-மணிவண்ணன் சதாசிவம்
