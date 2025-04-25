@@ -1,195 +1,133 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B5C218AAB;
-	Fri, 25 Apr 2025 20:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDD51A9B58;
+	Fri, 25 Apr 2025 20:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745612794; cv=none; b=JpEygXnyThc0TyVo2RvchzKj9zc8ezdNmGjFqKgBcYUsaaEtE+zcqLvNrB5ZhvV1g/Z1fwtABZn83NenmOIERI6EJkJf8SpyOYBodQ806+aqzaiNiQ3C2UkXay/IJMsWAlHGxWBIIEpcWoS72jBYgENO8sX+aJIHOPZ2p8vQBRA=
+	t=1745613030; cv=none; b=m1V8/AosS5dTeaT7so+IBFaa8jeElui/Ty9TCqXDZAtxe0rg/6446lsPd+ZM8PPJvxliIwfjPnYO6T+R5lhTrMW5Vad+tZuOGzuygQKczUETZF11+COXzmnfmv342OjiAPcAhDOgBgYLDYi5bO7hR1aMOwj/uU03TypHtawfB6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745612794; c=relaxed/simple;
-	bh=fCsTSJvREuwFZE/Gdvu5Y8LXtbw5+AtdK6L+caauw7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tz4OQM1FBYda9+MnSQUBeUvj6DToKxOhDGY2e7L6i5GLx1h6oqpmo6dX1uSKDe46x7AotYYb7BOwwWPzGt3MqmO6va7oiHFunOmOK7BEkz1/CaoTLWxX8RlygRlSiuPy6Q0h6QgfP2smjuGHztvxpioDuM0OK/O3QVUGT0V1hg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=p0V7Kzsv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745613030; c=relaxed/simple;
+	bh=pxPsTSSuze5Uru55U2WmKqbPrLrZUwPhrD4KPyph8OE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jceTp7d/Ghg54VZsi0/6EGkBFpARQlbILJ09nOjFjGccJ3MoRN4NVVSBKJz0k3u3mWjORD/KlwO0T2N9Pnnsnz3hnScmgJ0onBspFMEJfXJt6m08tQE095+abU8qzP2w+z59Ng0mXWQkZmwPCTYeKQozT3vMUQXuCiXoTHyADS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XmzXZhed; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="p0V7Kzsv"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJrqh011041;
-	Fri, 25 Apr 2025 20:26:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vDI+JoExhEM8MwWbaV2f1Sw4aj31+Bc6NXpJG1B8NIE=; b=p0V7Kzsvdq579ZLK
-	wUwKb4kWQc0Eof9wY8VVfVu4/CY0gT2HUzyM08kMlcTuGsxqw5dY9kJ6CgDzZOW6
-	5RdwfCBhJ7FcvZn33j5gcCPTvOj7zeHH9S6H5L2ufKh9f+MNM41UK5KNZSerRjVp
-	FxCbw1C7y3YTAcMxeqWS2Q2T9zjOXoC1kSoxWO6s+0/h8c2o8I/evOBEFL9boKU/
-	ZeOkGoCLcFcNT91wjf8R2Mt4K73nEB8JxeP21lDbRxTFqIHn9Kk3twgNpuJ0v9nc
-	9QCtr9c7cyg4/oG3R3c2EkHejB0eWTCiY8oxAq4U/ImDj5zPRzoyjU6NV/gWs/6X
-	T+Jv6g==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0jct8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 20:26:25 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PKQOmQ011625
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 20:26:24 GMT
-Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
- 2025 13:26:23 -0700
-Message-ID: <34b7a7fd-e10c-4cde-8c26-c2d7a024c8cd@quicinc.com>
-Date: Fri, 25 Apr 2025 13:26:23 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XmzXZhed"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKUI4t2267675
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 15:30:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745613018;
+	bh=Y7NoyDY9Dn6QVm3qjGWsuSrg+qy6pFgw5ECsoArjewM=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=XmzXZhedXXAIAjXF7RbhZY/1hUYkv9aofAu/d0J/hGiEwK+XSQlSf+6aqQiCX834w
+	 ZkRdbbkNjtDivyI9FtcgY4FvmQhkl10IiYoUXeavSvfq23XpPhOIRev0bWPfPsnxFE
+	 NHL69zY/5uBIfdOzjUzck2ZAHzFpYnmS/lIH72u4=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKUInC018335
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 15:30:18 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 15:30:17 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 15:30:17 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PKUHLk051233;
+	Fri, 25 Apr 2025 15:30:17 -0500
+Date: Fri, 25 Apr 2025 15:30:17 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Matt Coster <matt.coster@imgtec.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Frank Binns
+	<frank.binns@imgtec.com>,
+        Alessio Belle <alessio.belle@imgtec.com>,
+        Alexandru
+ Dadu <alexandru.dadu@imgtec.com>,
+        Luigi Santivetti
+	<luigi.santivetti@imgtec.com>,
+        Randolph Sapp <rs@ti.com>, Darren Etheridge
+	<detheridge@ti.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: ti: k3-am62: New GPU binding details
+Message-ID: <20250425203017.dzppbtl3euy4rmc4@ranking>
+References: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
+ <20250422-bxs-4-64-dts-v3-1-ec6657bde135@imgtec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] drm/msm/dpu: enable SmartDMA on SM8550
-To: Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250308-dpu-rework-vig-masks-v1-0-f1b5d101ae0b@linaro.org>
- <20250308-dpu-rework-vig-masks-v1-4-f1b5d101ae0b@linaro.org>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250308-dpu-rework-vig-masks-v1-4-f1b5d101ae0b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: GjIidZkOz4mY8N2y_BDrB9BFbVwqvMwB
-X-Proofpoint-ORIG-GUID: GjIidZkOz4mY8N2y_BDrB9BFbVwqvMwB
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=680beff1 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=iINAtZPE4VmR1exTeEMA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0NiBTYWx0ZWRfX9/Qc3gRzplzz OqiULUelICWTGhG3VhWdYqc9/GZmEu+uiH7aeYbJFJoJd7PLv8UhSHRMZklNCkWf23lwR5Uvt3V nOtlw4q8rKVhHFnpHHQYtZiEgxHg3MYHMyVIHvoqAeM25rfQpi1ksb7qq7wW7+k3/rZN0ypCLcO
- EMEnZsdaiBdmxwKd/L7pCobg6o1aorU+eSDOSNxmgs+cfduTl2Pb2441c2c/j4TZ4UutB3/5sbm vUwVyx1Bf9JV2XGBy75319iDOD/jT0w8Z6y0MNnXGZFUYxSHGkLObmjkUXOxVBwmOoj9Ci5UArl evYCKcVUV60Z7YxvYXVImZ0ytYPPU/68eivDV/uOsIXbKAAt2O1QkhszPfXvPwULrEYPJm9m7A7
- nSdiRBKVZYE4CBNPQY1FB6XuzPS6cEXVnIFnrYUMee8TOot5wBIEXe/VFYhkWW58NrQibZom
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=986 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250146
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250422-bxs-4-64-dts-v3-1-ec6657bde135@imgtec.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-On 3/7/2025 9:38 PM, Dmitry Baryshkov wrote:
-> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+On 16:26-20250422, Matt Coster wrote:
+> Use the new compatible string and power domain name as introduced in
+> commit 2c01d9099859 ("dt-bindings: gpu: img: Future-proofing
+> enhancements")[1].
 > 
-> In order to support more versatile configuration of the display pipes on
-> SM8550, enable SmartDMA for this platform.
+> [1]: https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-1-eda620c5865f@imgtec.com
+
+Please remove the lore link in the commit message, commit sha
+reference is sufficient, url could be used in the diffstat section to
+provide reference.
+
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
-With authorship fixed,
-
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-
+> Reviewed-by: Randolph Sapp <rs@ti.com>
+> Signed-off-by: Matt Coster <matt.coster@imgtec.com>
 > ---
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h   | 20 ++++++++++----------
->   1 file changed, 10 insertions(+), 10 deletions(-)
+> Changes in v3:
+> - None
+> - Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-1-9f8c09233114@imgtec.com
+> Changes in v2:
+> - Add Randolph's Rb
+> - Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-1-f7d3fa06625d@imgtec.com
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
-> index a5b90e5e31202900c0bb5bc4a705a6b269005474..2379e119c8c5cb9d68cfaa4feea990ce7e24d569 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h
-> @@ -66,70 +66,70 @@ static const struct dpu_sspp_cfg sm8550_sspp[] = {
->   	{
->   		.name = "sspp_0", .id = SSPP_VIG0,
->   		.base = 0x4000, .len = 0x344,
-> -		.features = VIG_SDM845_MASK,
-> +		.features = VIG_SDM845_MASK_SDMA,
->   		.sblk = &dpu_vig_sblk_qseed3_3_2,
->   		.xin_id = 0,
->   		.type = SSPP_TYPE_VIG,
->   	}, {
->   		.name = "sspp_1", .id = SSPP_VIG1,
->   		.base = 0x6000, .len = 0x344,
-> -		.features = VIG_SDM845_MASK,
-> +		.features = VIG_SDM845_MASK_SDMA,
->   		.sblk = &dpu_vig_sblk_qseed3_3_2,
->   		.xin_id = 4,
->   		.type = SSPP_TYPE_VIG,
->   	}, {
->   		.name = "sspp_2", .id = SSPP_VIG2,
->   		.base = 0x8000, .len = 0x344,
-> -		.features = VIG_SDM845_MASK,
-> +		.features = VIG_SDM845_MASK_SDMA,
->   		.sblk = &dpu_vig_sblk_qseed3_3_2,
->   		.xin_id = 8,
->   		.type = SSPP_TYPE_VIG,
->   	}, {
->   		.name = "sspp_3", .id = SSPP_VIG3,
->   		.base = 0xa000, .len = 0x344,
-> -		.features = VIG_SDM845_MASK,
-> +		.features = VIG_SDM845_MASK_SDMA,
->   		.sblk = &dpu_vig_sblk_qseed3_3_2,
->   		.xin_id = 12,
->   		.type = SSPP_TYPE_VIG,
->   	}, {
->   		.name = "sspp_8", .id = SSPP_DMA0,
->   		.base = 0x24000, .len = 0x344,
-> -		.features = DMA_SDM845_MASK,
-> +		.features = DMA_SDM845_MASK_SDMA,
->   		.sblk = &dpu_dma_sblk,
->   		.xin_id = 1,
->   		.type = SSPP_TYPE_DMA,
->   	}, {
->   		.name = "sspp_9", .id = SSPP_DMA1,
->   		.base = 0x26000, .len = 0x344,
-> -		.features = DMA_SDM845_MASK,
-> +		.features = DMA_SDM845_MASK_SDMA,
->   		.sblk = &dpu_dma_sblk,
->   		.xin_id = 5,
->   		.type = SSPP_TYPE_DMA,
->   	}, {
->   		.name = "sspp_10", .id = SSPP_DMA2,
->   		.base = 0x28000, .len = 0x344,
-> -		.features = DMA_SDM845_MASK,
-> +		.features = DMA_SDM845_MASK_SDMA,
->   		.sblk = &dpu_dma_sblk,
->   		.xin_id = 9,
->   		.type = SSPP_TYPE_DMA,
->   	}, {
->   		.name = "sspp_11", .id = SSPP_DMA3,
->   		.base = 0x2a000, .len = 0x344,
-> -		.features = DMA_SDM845_MASK,
-> +		.features = DMA_SDM845_MASK_SDMA,
->   		.sblk = &dpu_dma_sblk,
->   		.xin_id = 13,
->   		.type = SSPP_TYPE_DMA,
->   	}, {
->   		.name = "sspp_12", .id = SSPP_DMA4,
->   		.base = 0x2c000, .len = 0x344,
-> -		.features = DMA_CURSOR_SDM845_MASK,
-> +		.features = DMA_CURSOR_SDM845_MASK_SDMA,
->   		.sblk = &dpu_dma_sblk,
->   		.xin_id = 14,
->   		.type = SSPP_TYPE_DMA,
->   	}, {
->   		.name = "sspp_13", .id = SSPP_DMA5,
->   		.base = 0x2e000, .len = 0x344,
-> -		.features = DMA_CURSOR_SDM845_MASK,
-> +		.features = DMA_CURSOR_SDM845_MASK_SDMA,
->   		.sblk = &dpu_dma_sblk,
->   		.xin_id = 15,
->   		.type = SSPP_TYPE_DMA,
+> This patch was previously sent as [DO NOT MERGE]:
+> https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-17-eda620c5865f@imgtec.com
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> index 7d355aa73ea2116723735f70b9351cefcd8bc118..d17b25cae196b08d24adbe7c913ccaba7eed37eb 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> @@ -691,12 +691,14 @@ ospi0: spi@fc40000 {
+>  	};
+>  
+>  	gpu: gpu@fd00000 {
+> -		compatible = "ti,am62-gpu", "img,img-axe";
+> +		compatible = "ti,am62-gpu", "img,img-axe-1-16m", "img,img-axe",
+> +			     "img,img-rogue";
+>  		reg = <0x00 0x0fd00000 0x00 0x20000>;
+>  		clocks = <&k3_clks 187 0>;
+>  		clock-names = "core";
+>  		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+>  		power-domains = <&k3_pds 187 TI_SCI_PD_EXCLUSIVE>;
+> +		power-domain-names = "a";
+>  	};
+>  
+>  	cpsw3g: ethernet@8000000 {
+> 
+> -- 
+> 2.49.0
 > 
 
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
