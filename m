@@ -1,200 +1,105 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from forward201a.mail.yandex.net (forward201a.mail.yandex.net [178.154.239.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F1A191F92
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BD921B910;
+	Fri, 25 Apr 2025 20:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745611574; cv=none; b=F48D+HKAKH1e05ibprG+JaHTU8j3TUTfeiwYnIC3GIkSfM2/FrCM+zuByK8a7mOe9ltr4j/tFO0wY6Ksa87JsuKDZHKntPq2WSjhGqPp8VeMooC2zgkSrmAY+L6e3KSEkR/hxC9uwfGsvrDr45kyvTLejfaezV0l6Hm+8JbXCLk=
+	t=1745611613; cv=none; b=d6pPP7XWUNAwxZ0CX71CohrtBtzySxq8xOgsHSkzWcbzPSd0d9cjtRCFXSog9mDZV3gzZTS905OING7htji1XHyO1U31KYG+C4dGd4/lhqGkPavaXEgJHc6RoP1opXKk3nw8z0/RQq96zynmCAr8cPus/3Z6EVbfQ1mKqm1TwJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745611574; c=relaxed/simple;
-	bh=oSnWoBvwiL8zXIfukoiTiTzqEKDcbv0yN7J/kywW3EM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KHxybFF35czWGpkvoMfkVG5czvt4OxAfEXyDX3slE83FDKhcd7xWVOJl6Z5ipSNFyVFQRODtxK2zJ4RjWhX9oLMSpD7+bGqqGqoG0xGDwEvlIe2wJRip1lFuqGXmoNqfFPjJ157afNLIRcBlUT1+shnk31bbOzq9S67GRtIacPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oUKhVsLY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745611613; c=relaxed/simple;
+	bh=k/zP33OjbSmeuXYLwPcWfcL/pxTHOmfYtJxHon6HXVM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eq1EBM4ZvjvyinbXjlvu738lBK02zcF0y0JzuBaQ8LIAJShboJ5rDo7pNHfHnvWHF129EAaOUTrSHDUQwsJCmVxUzax87+60dLObecAHuaGTD2yrM6BBxpnO1X+86w7jjotmcGJD7aF8YIGxSIjfWmQE/bvczsJo0ylQIyZKFW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=bqEkieYt; arc=none smtp.client-ip=178.154.239.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oUKhVsLY"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGK15F021809
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:06:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JbkzYlr9FcucS7S5VCQ3UfLEUKAWk1iYNuI80KBt6hs=; b=oUKhVsLYbYpS4gsG
-	Jo08Cx5fDePu9XX8NoSq5zbFvEp9MCchBV52OU1EEYxMRrsHhDDkD4a4tLDsKQ+s
-	JSSOB9swc/ZdirF1p/Tlf9N6Fhwbw1j+FTMvfqx9xHsluiHRi1X7FGdtXpgw4akc
-	qFb2GxQ3wLUZVPYwHPxXEktHjO+9pq9n0GFaMLzBhMVb4evvOF5RAb/06mBlrPim
-	jgYO8KA16bGjkGOe79jvFwZbUHPkqbiJ8NlN8Mmmr6pLdUHrhFW6sfpF0EGhrmKH
-	QindxyjxDKlW1MMTdvXQ0nBFO8aruSQEPq5EuUr37VVsAdi9WYKMYtq4G4sFi3yY
-	bEZtmQ==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5j7sr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:06:10 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4775bdbcdc3so6381771cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:06:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745611570; x=1746216370;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JbkzYlr9FcucS7S5VCQ3UfLEUKAWk1iYNuI80KBt6hs=;
-        b=EGfiCDtKpYQy1Z+6WZcB360ZFD1AATCqvw4pJS96/3GbSj7gGKxSGuq5XeJIXj551l
-         bxHDSQCBsam0KO2EoY8cwu7SwqzPT4M30d3k3GO2OZmt7zbvdgRvsQh9vYTsMtzycTiD
-         RtA6PkrTM1LYGISfPcvZNCvoiEsg/T806gn24MM2oj2zKpbnmAEBJOr+EwDUaFsq6KTt
-         yh6AwFxJMVoyxo5jq4HHJDs6NUOUaepNEfljKOYkaXkPni6M2445IcokKtBcCKccHFAE
-         3YvSLLDC1t/UAMoijVECZkqDSiXNGI8zud0EfyRD4PGj4Y6Rt9nThQj2+dCOO17EhSHL
-         jE0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ/DimBQu0yFMrahDtX6NGum9W+Zk3RAnvnZTWpPCaz9QmSUX49+UJc6CB6REHBtIcWn2MYIu8qiJZ5wY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7toUtORhqIQWqpbA3RNzVvYa9xfQgG6ASUM0AqqS0WT5txm28
-	U7lCQ7dnn01XxaxD9nnNCvU0Y2kNPTin20til6TFQQXhVlk4uJprdCXPLZ7874P9M9otfu7y/u9
-	Ce0iSY1u+YgjIzEg0w/qGnP0OdTD1marncucq41ofvhbwzLJhhhHzFH53XX2nYYU=
-X-Gm-Gg: ASbGncuGCWlkQd4kPyIrBjjMvhYH890t+WH0xyydG1V0zZeYi3UsRmUCuSbOLZbf0rK
-	kciNQYQhwF4FuAhqu6poGpOhXs7O60Vrj0CbQEz/nmljqpd9T7J6p7V19I+2tGt3vCXHaI2N7qv
-	+cOca/Xud9Yi6QvhC49URQucUsVozwoGQpeD3/jY/C8WEKdULkFBy4B18lEO5mbHWMk3XzBTzkH
-	1avn42Yd5dCLEYLCz9yIZaYrqHB2n8/Jf/G7B0/0axGv0L1MEZy9e99MnGRKg39mBdedON0BV72
-	rSP6ZAG5HCdTrg12pt6h4cSL1CeHI57kSQFpOpizDPZPO4YW003d5ZZM+sKi60RhdVE=
-X-Received: by 2002:a05:622a:20f:b0:474:e213:7480 with SMTP id d75a77b69052e-4801e6f355emr20583991cf.15.1745611569846;
-        Fri, 25 Apr 2025 13:06:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG9Hh7yNKXMC83orMEjh4un0cdx38I27WuSPe2cISBmPqnEl2ZJLXpyzGB/8t69yh0ofQvoFw==
-X-Received: by 2002:a05:622a:20f:b0:474:e213:7480 with SMTP id d75a77b69052e-4801e6f355emr20583801cf.15.1745611569404;
-        Fri, 25 Apr 2025 13:06:09 -0700 (PDT)
-Received: from [192.168.65.156] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8955sm181397866b.117.2025.04.25.13.06.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 13:06:08 -0700 (PDT)
-Message-ID: <891c7909-69ef-4d9c-a99c-8d6d08dbfd02@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 22:06:07 +0200
+	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="bqEkieYt"
+Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d100])
+	by forward201a.mail.yandex.net (Yandex) with ESMTPS id 4ADDC64420;
+	Fri, 25 Apr 2025 23:01:03 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:623d:0:640:ecee:0])
+	by forward100a.mail.yandex.net (Yandex) with ESMTPS id 57714470D7;
+	Fri, 25 Apr 2025 23:00:55 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id s0YsVLCLh8c0-wB4UUojE;
+	Fri, 25 Apr 2025 23:00:54 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
+	t=1745611254; bh=1icPC1dV+orrOweNu0r0k0DOqWLOZGhjxwAB5E3wruM=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=bqEkieYt/zZUuEb5ku/DbLQIZdrgjXxYGVOdguHUmGa51VZPw7RqbbWW7dQleg0uw
+	 0b0/KorIcjBWKQhGNR/B0x41Izqyq4cBBSeV85YZiUN7eiyBQMOpm31QtytJpKc0rX
+	 wZoCL6ExfeRK6+zO/kGCBwL/cGDvAb5H3E6KLj1E=
+Authentication-Results: mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
+From: Alexei Safin <a.safin@rosa.ru>
+To: Eugene Shalygin <eugene.shalygin@gmail.com>
+Cc: Alexei Safin <a.safin@rosa.ru>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH v2] hwmon: (asus-ec-sensors) add WARN_ONCE() on invalid sensor index
+Date: Fri, 25 Apr 2025 23:00:51 +0300
+Message-Id: <20250425200051.2410-1-a.safin@rosa.ru>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: Add support for X1E80100 Dell
- Inspirion 14 Plus 7441
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org>
- <20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-2-ace76b31d024@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-2-ace76b31d024@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0NCBTYWx0ZWRfX8qjZ0pthjm9M WrmRZ6hc5iTHsasb6kOzrumwp6nvKGBfwQUL371lmthIHr4FH7scAefeN0YZx3pYfgD5nkH00ck t8vMZGJs08y0AhETXg0TQ6JE3aAYEHskhhbbwsP5m4INCRz3RzyKABqG8UESOBE3HwxTOUER4Hf
- iuF51uy56COscTqA4zY8h0Gf2QvhCwgl0QZ4EzI+a16GyKbNdisW0a2zOvLo+1ud7OrEVq3oHw4 TY8XheGS1npShPMcR/LSn33txEDQkCo3cjmh5FihzzQfjDclWaHCd+jn+3Ssqv+m2RUTO0jl8gr agaVNWPWS7ZcWdEnzl4lW+21wxiHyC8eNOuyT/X46ZxNL/pXUMm2SxDzFdFI+H8bnZ5lwc9Bkao
- jqlFxFGwAZXHPMczrlGhm7VFCmSX+Djps88NdvM1p92LTFbtut0lZYHS07K1osIXo2kp6cJE
-X-Proofpoint-GUID: 2XkA4jV73z6l63vxM3fBp0tRHgmnIdxt
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680beb32 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=LY3U4cgvXuRfn2pE898A:9 a=QEXdDO2ut3YA:10
- a=a_PwQJl-kcHnX1M80qC6:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 2XkA4jV73z6l63vxM3fBp0tRHgmnIdxt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250144
+Content-Transfer-Encoding: 8bit
 
-On 4/24/25 1:53 AM, Bryan O'Donoghue wrote:
-> Add support for Dell Inspiron 14p 7441.
-> 
-> Working:
-> - WiFi
-> - Bluetooth
-> - USB Type-C x 2
-> - USB Type-A
-> - USB Finger Print reader
-> - Display
-> - NVME
-> - Keyboard
-> - Touchpad
-> 
-> WIP not included:
-> - Audio
-> - Camera
-> - Embedded Controller
-> - Battery
-> 
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
+Prevent undefined behavior by adding WARN_ONCE() when find_ec_sensor_index()
+returns a negative value.
 
-[...]
+Even though unsupported attributes are filtered out by asus_ec_hwmon_is_visible(),
+a programming error could still cause an invalid sensor access.
 
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&cam_indicator_en>;
+Instead of silently returning an error, log a warning to highlight the problem,
+and propagate the original error code.
 
-property-n
-property-names
+Update both asus_ec_hwmon_read() and asus_ec_hwmon_read_string() accordingly.
 
-file-wide, please
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-[...]
+Fixes: d0ddfd241e57 ("hwmon: (asus-ec-sensors) add driver for ASUS EC")
+Signed-off-by: Alexei Safin <a.safin@rosa.ru>
+---
+v2: Use WARN_ONCE() instead of returning -EINVAL, and update
+    both asus_ec_hwmon_read() and asus_ec_hwmon_read_string()
+    as suggested by Eugene Shalygin.
+    
+ drivers/hwmon/asus-ec-sensors.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> +	/*
-> +	 * TODO: These two regulators are actually part of the removable M.2
-> +	 * card and not the CRD mainboard. Need to describe this differently.
-> +	 * Functionally it works correctly, because all we need to do is to
-> +	 * turn on the actual 3.3V supply above.
-> +	 */
+diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
+index d893cfd1cb82..a563d7acef2e 100644
+--- a/drivers/hwmon/asus-ec-sensors.c
++++ b/drivers/hwmon/asus-ec-sensors.c
+@@ -820,9 +820,8 @@ static int asus_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 	struct ec_sensors_data *state = dev_get_drvdata(dev);
+ 	int sidx = find_ec_sensor_index(state, type, channel);
+ 
+-	if (sidx < 0) {
++	if (WARN_ONCE(sidx < 0, "asus-ec-sensors: sensor not found\n"))
+ 		return sidx;
+-	}
+ 
+ 	ret = get_cached_value_or_update(dev, sidx, state, &value);
+ 	if (!ret) {
+@@ -839,6 +838,10 @@ static int asus_ec_hwmon_read_string(struct device *dev,
+ {
+ 	struct ec_sensors_data *state = dev_get_drvdata(dev);
+ 	int sensor_index = find_ec_sensor_index(state, type, channel);
++
++	if (WARN_ONCE(sensor_index < 0, "asus-ec-sensors: sensor not found\n"))
++		return sensor_index;
++
+ 	*str = get_sensor_info(state, sensor_index)->label;
+ 
+ 	return 0;
+-- 
+2.39.5 (Apple Git-154)
 
-Well there's definitely no CRD mainboard in there.. not quite, anyway
-
-[...]
-
-> +&i2c5 {
-> +	clock-frequency = <400000>;
-> +
-> +	status = "okay";
-> +
-> +	/* Type A Port1 */
-
-But there only seems to be one?
-
-[...]
-
-> +	/* FRP eUSB */
-
-Factory Reset Protection?
-
-Please spell out Fingerprint scanner if that's what that is
-
-[...]
-
-> +&i2c20 {
-> +	/* GPIO_80, GPIO_81 */
-
-That can be tracked down by looking up the node definition, it
-would be however good to know what sits on this bus and at what
-addresses
-
-[...]
-
-> +	cam_rgb_default: cam-rgb-default-state {
-> +		mclk-pins {
-> +			/* cam_aon_mclk4 */
-
-I don't think this comment adds much
-
-[...]
-
-> +&usb_mp_dwc3 {
-> +	phys = <&usb_mp_hsphy0>, <&usb_mp_qmpphy0>;
-> +	phy-names = "usb2-0", "usb3-0";
-
-Any reason to limit these?
-
-looks nice otherwise
-
-Konrad
