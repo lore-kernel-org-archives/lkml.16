@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925512701D7
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7082701D7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588878; cv=none; b=i3lQxhTyEmCACPrrjXTqQPwo2rW7DUizetf3jrsV9rQq9kgTZ//y+oDwELO8yX92zZrPVS1DwQ0bdsWke6vvYl8Vlt0vrCoO8CZZJRm1coGzp+6tTKMFLGo3pJPP8BkYxlM8mDtVIwqjlnyObdn5Gqg1NHhxWsli7wvEXoC6RIU=
+	t=1745588907; cv=none; b=ePrl7fagaTEu/2Ni8IjaD/gbYYuHJTbB3cf1qSKHtnuQd3fIQHyuLiBXnVGEt/XwI1+XuyLagzsubXF7ZhLxQ3gHOxirQYqLWufW6tbx7r1JBuP2bbwgjWE/+rqB3PE6+0uq2S1yaR7zpVTSsQHk8ejjzuYF/sPq0LEJeHu+dNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588878; c=relaxed/simple;
-	bh=/ywt+NrcLhg07jckumGrdFuBAmmAoNb6SfXQAnUnsNg=;
+	s=arc-20240116; t=1745588907; c=relaxed/simple;
+	bh=cj+oLYXcGKiacpS0bjb4XmtjQb/UzGDwSDUPuRVTJ3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OxDcDQbtDeVcxME9dMevkQXrB0xvuIKPgKy32zkx+pChaRztVvNz63E2pnn8IwN9MgOuCocd0mWgUwl/CrV/StfIBsOsRWWfjg+Tqf7IijRDeMqvdTw/f8JPnrhIQYUEzK7IKqSuRbR32FW9IikbH7XIYuU8yoDfBiF9JPipKvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2CyKRApy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=BXzLGvq0ax9ThEBhzENPgxf8y2/BTmGt9IKRgBr97oquzrFdVcGHsqa/rROLEBlYLpuQMwqC1mqdH4owaL7mijQ9GsUrB2FcBefeeq684rIF7ChXVQDpoSf2iZYfZX/CWCAU0guhKq1Sq+7ttU0/fV7g3lsyJITNy8qvPuXLiec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=j7auycRP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2CyKRApy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A280AC4CEE4;
-	Fri, 25 Apr 2025 13:47:57 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="j7auycRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2758C4CEE4;
+	Fri, 25 Apr 2025 13:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745588878;
-	bh=/ywt+NrcLhg07jckumGrdFuBAmmAoNb6SfXQAnUnsNg=;
+	s=korg; t=1745588907;
+	bh=cj+oLYXcGKiacpS0bjb4XmtjQb/UzGDwSDUPuRVTJ3Q=;
 	h=Date:From:To:Cc:Subject:From;
-	b=2CyKRApyQ91T+PMZQJIXceqzG7jFUPt9CJ4nuo10LQ4ShefU7j1y4XblQ1VFbCSWi
-	 mWAcP9N77fOnG/t/r1NS3NZqy6CWNA01H9P+NGd+WhGzfZ/SVnwm5X05gt3jDSYSa2
-	 VDfpBDNTSxm5UnVa+yF0aSj/wyhZxSaMUFb8QFtc=
-Date: Fri, 25 Apr 2025 15:47:55 +0200
+	b=j7auycRPQlQXE5pXWWEELeWcZO5LYe0PYPhtzuw4QUiwBKHFles7atKiwMFvFfUdt
+	 Ag4FkZCaAL0g3zC4nwZfXvViPnRRE7jRUvpmfv2J/5/QzguYBnI/Q3iEjCdveFf4ag
+	 bXeOYaP85a3fRkQGnE9gCg044pTVdLmN1VkLNlLs=
+Date: Fri, 25 Apr 2025 15:48:24 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [GIT PULL] Driver core fixes for 6.15-rc4
-Message-ID: <aAuSi9YCYEN46yXf@kroah.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Char/Misc driver fixes for 6.15-rc4
+Message-ID: <aAuSqCDdwHmRt4QZ@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
 The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
@@ -47,26 +46,25 @@ The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git tags/driver-core-6.15-rc4
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-6.15-rc4
 
-for you to fetch changes up to b9792abb76ae1649080b8d48092c52e24c7bbdc2:
+for you to fetch changes up to 4d239f447f96bd2cb646f89431e9db186c1ccfd4:
 
-  drivers/base/memory: Avoid overhead from for_each_present_section_nr() (2025-04-15 18:19:49 +0200)
+  firmware: stratix10-svc: Add of_platform_default_populate() (2025-04-15 18:23:02 +0200)
 
 ----------------------------------------------------------------
-Driver core fixes for 6.15-rc4
+Char/Misc driver fixes for 6.15-rc4
 
-Here are some small driver core fixes to resolve a number of reported
-problems.  Included in here are:
-  - driver core sync fix revert to resolve a much reported problem,
-    hopefully this is finally resolved
-  - MAINTAINERS file update, documenting that the driver-core tree is
-    now under a "shared" maintainership model, thanks to Rafael and
-    Danilo for offering to do this!
-  - auxbus documentation and MAINTAINERS file update
-  - MAINTAINERS file update for Rust PCI code
-  - firmware rust binding fixup
-  - software node link fix
+Here are some small char/misc driver fixes to resolve reported problems
+for 6.15-rc4.  Included in here are:
+  - misc chrdev region range fix reported by many people
+  - nvmem driver fixes and dt updates
+  - mei new device id and fixes
+  - comedi driver fix
+  - pps driver fix
+  - binder debug log fix
+  - pci1xxxx driver fixes
+  - firmware driver fix
 
 All of these have been in linux-next for over a week with no reported
 issues.
@@ -74,41 +72,79 @@ issues.
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Andy Shevchenko (1):
-      device property: Add a note to the fwnode.h
+Akhil P Oommen (1):
+      dt-bindings: nvmem: qfprom: Add X1E80100 compatible
 
-Christian Schrefl (1):
-      rust: firmware: Use `ffi::c_char` type in `FwFunc`
+Alexander Usyskin (1):
+      mei: me: add panther lake H DID
 
-Danilo Krummrich (1):
-      MAINTAINERS: pci: add entry for Rust PCI code
+Barnabás Czémán (1):
+      dt-bindings: nvmem: Add compatible for MS8937
 
-Dmitry Torokhov (3):
-      Revert "drivers: core: synchronize really_probe() and dev_uevent()"
-      driver core: introduce device_set_driver() helper
-      driver core: fix potential NULL pointer dereference in dev_uevent()
+Carlos Llamas (1):
+      binder: fix offset calculation in debug log
 
-Gavin Shan (1):
-      drivers/base/memory: Avoid overhead from for_each_present_section_nr()
+Dmitry Baryshkov (5):
+      dt-bindings: nvmem: fixed-cell: increase bits start value to 31
+      nvmem: core: fix bit offsets of more than one byte
+      nvmem: core: verify cell's raw_len
+      nvmem: core: update raw_len if the bit reading is required
+      nvmem: qfprom: switch to 4-byte aligned reads
 
-Greg Kroah-Hartman (1):
-      MAINTAINERS: update the location of the driver-core git tree
+Hans de Goede (2):
+      mei: vsc: Fix fortify-panic caused by invalid counted_by() use
+      mei: vsc: Use struct vsc_tp_packet as vsc-tp tx_buf and rx_buf type
 
-Leon Romanovsky (2):
-      drivers/base: Extend documentation with preferred way to use auxbus
-      drivers/base: Add myself as auxiliary bus reviewer
+Haoxiang Li (1):
+      mcb: fix a double free bug in chameleon_parse_gdd()
 
-Lizhi Xu (1):
-      software node: Prevent link creation failure from causing kobj reference count imbalance
+Heiko Stuebner (4):
+      nvmem: rockchip-otp: Move read-offset into variant-data
+      dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
+      dt-bindings: nvmem: rockchip,otp: Add compatible for RK3576
+      nvmem: rockchip-otp: add rk3576 variant data
 
- MAINTAINERS              | 17 ++++++++++++++---
- drivers/base/auxiliary.c | 10 ++++++++++
- drivers/base/base.h      | 17 +++++++++++++++++
- drivers/base/bus.c       |  2 +-
- drivers/base/core.c      | 38 ++++++++++++++++++++++++++++++++------
- drivers/base/dd.c        |  7 +++----
- drivers/base/memory.c    | 41 +++++++++++++++++------------------------
- drivers/base/swnode.c    |  3 +--
- include/linux/fwnode.h   |  5 +++++
- rust/kernel/firmware.rs  |  8 ++++++--
- 10 files changed, 106 insertions(+), 42 deletions(-)
+Ian Abbott (1):
+      comedi: jr3_pci: Fix synchronous deletion of timer
+
+Lorenzo Stoakes (1):
+      intel_th: avoid using deprecated page->mapping, index fields
+
+Mahesh Rao (1):
+      firmware: stratix10-svc: Add of_platform_default_populate()
+
+Raag Jadav (1):
+      pps: generators: tio: fix platform_set_drvdata()
+
+Rengarajan S (2):
+      misc: microchip: pci1xxxx: Fix Kernel panic during IRQ handler registration
+      misc: microchip: pci1xxxx: Fix incorrect IRQ status handling during ack
+
+Rudraksha Gupta (1):
+      dt-bindings: nvmem: Add compatible for MSM8960
+
+Sricharan Ramabadhran (1):
+      dt-bindings: nvmem: Add compatible for IPQ5018
+
+Thadeu Lima de Souza Cascardo (1):
+      char: misc: register chrdev region with all possible minors
+
+ .../bindings/nvmem/layouts/fixed-cell.yaml         |  2 +-
+ .../devicetree/bindings/nvmem/qcom,qfprom.yaml     |  4 +++
+ .../devicetree/bindings/nvmem/rockchip,otp.yaml    | 25 ++++++++++++++
+ drivers/android/binder.c                           |  2 +-
+ drivers/char/misc.c                                |  2 +-
+ drivers/comedi/drivers/jr3_pci.c                   |  2 +-
+ drivers/firmware/stratix10-svc.c                   | 14 ++++++--
+ drivers/hwtracing/intel_th/Kconfig                 |  1 +
+ drivers/hwtracing/intel_th/msu.c                   | 31 ++++-------------
+ drivers/mcb/mcb-parse.c                            |  2 +-
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c    |  8 +++--
+ drivers/misc/mei/hw-me-regs.h                      |  1 +
+ drivers/misc/mei/pci-me.c                          |  1 +
+ drivers/misc/mei/vsc-tp.c                          | 40 ++++++++++++----------
+ drivers/nvmem/core.c                               | 40 +++++++++++++++++-----
+ drivers/nvmem/qfprom.c                             | 26 ++++++++++----
+ drivers/nvmem/rockchip-otp.c                       | 17 +++++++--
+ drivers/pps/generators/pps_gen_tio.c               |  2 +-
+ 18 files changed, 151 insertions(+), 69 deletions(-)
