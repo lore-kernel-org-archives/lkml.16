@@ -1,99 +1,96 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (unknown [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCB8189B91
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429EF15E96;
+	Fri, 25 Apr 2025 03:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745551873; cv=none; b=sNVkqOaOHlblJZj8/YkehAqfR7wyhEiNxWVyYzXPABfojX4rPmy0FboN0QmRA5W9SPfhscqm1KkRaLaG/O5OowGrqw/F8i0FlwnUBg0Bcb2iNc6YTshJaVh4fuo/LNt+P4xzKfqHo5S6+hEEUlsU440UdZ2AqrXsgFKiN8BhhD8=
+	t=1745552030; cv=none; b=jG0rEH0gkl/NowNZtt+PhyPnVwJJr5Pg+dQ6h43i8jq8RFn/BPfOpdXPGLE2YtJwPGvK+pwcKXXfn/e2nNdZIjJ2nqM/lhebp/uDOjboY/kcjc33OW2mysAp71DNmdfnDYJO3Nrs818QY/6g5oLGGrmYG7fvvCAKfiHBKefiI9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745551873; c=relaxed/simple;
-	bh=jrRGhxPyf95ypPJHo2BAQFIRKdPXSpjIpa1ctUMjIXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ouh6RzCKMkW+YqYH8Ncp4vO3nleU6AEwDXdSxU71ry46vHUiGGydavCMIsdv87RiVeeUMdPGquDWd0Bdx5Ax7BNA9tq/eqvSG3hi6W35DsnRu9PJ7EpWEt6ZQ+sUhGiZFnngFqJhCfT2zGUj+TvK+MpUnMhbcdjadA3cfGbTNFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cCk29Fz1; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745552030; c=relaxed/simple;
+	bh=ILDSNG4BN8ua/52/v6nO5dC/RbrN54agJN769FpTzq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oM+u7SDlZVAbTJ9QC9aTHUzbhlkIQYbvhgcvEZTi84DGYgbSAN+LBa1AcwbsqJO9Sy82WjZMru7lbtwQU8Gm+4OIhilytMyN7LOMKteuIBVHxGYVgE80rcLRMA3/fwC9u2fhaaDQxgbtXhN0E2SIstWKhRik/AcqEFMOc8k9aww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=IFOEqFW+; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cCk29Fz1"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso3497691a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:31:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745551867; x=1746156667; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+X7UpAVVUSxTxgawTFy/Rtqo3IuG46uus58xF7sJ7Y=;
-        b=cCk29Fz1C0hLHkCm5qwn8DfPUw7FIYEPDCk84a3H0C/KXpd2feEgPSUAaZRd+AlXzs
-         gha19n5arA0FEYpqeN2TJyoma+NLCg77DEev7AtziC0PCYC6owNAXZFFEwPr7pgUlJzw
-         PzJNmbpqwYsMU8eJQhhNQvLRgWrLtTHlCzIgM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745551867; x=1746156667;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3+X7UpAVVUSxTxgawTFy/Rtqo3IuG46uus58xF7sJ7Y=;
-        b=un/2pZgfF2PXPo8y2ETogYkb7QHKaHGht+50m4MZEfkWNB6N5Lpg38ctY2dYn9xdEj
-         7Rh8w7CGhYyUIILp7SgXiI8129UooV/h/Y+0keKpHN+6NVmhzSLa6lg9M2WcnjEW4tjh
-         h7E6MzCG/jYISUb98+24HtyDIt7hyquViHBoC03uQiY3q+gqIiFFklG07srP4Sm3vU3D
-         QcacuVmrQ0tnLa4kKwpYo6QypZAWeyqazTNdH/llrXza786nj4atqVDHPQLm5FVz42FZ
-         vf22n7gjWwgKIlRDlF+KAwJWAcmo8t6qnLTsl+LGtZgVqmOgZuTFYH+8+SpDmFFr/byC
-         ETtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmmmQQNiXKt3LyDMebRaC44H4ltU4rhOte4NTCRw2fJZZkM1kRAqTL3eZUJqEFJ2753IaCJIhZwmUkVI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxiq/ZYIuWswXBLrtohBX+rj9ofAe+JTX2fgAEcwW8UQ2VfdLA+
-	eEOvPkoFgtUpoTPUrUJTP5x2cA4aA8Khbts0yUS+GuKbPL6wEfXoFMKdUzXAZPHrxoNnMjmrCmr
-	HcS8xlA==
-X-Gm-Gg: ASbGncsHUHRRW3J4oeTFPeYZtSXNN237glx+ZFd5FAFXJtHKK1q9XIQ0sLQANiPnO6N
-	bXf8X8k8JRWjyRsZPwiDOvpgsgX3iVa1SbDAKvioGo5BEZLpZy192as7ZzasVDzcMaNObqpwkjL
-	RBMuW9FqpI330OyuV5vS15CdGtq3nd2gkQibb+LXCAOnQSiub1MM4o5eAvl6SWbMeVpHDiq7RqC
-	g7v5oLKdzQ/u/QnCT6St3So17sMnin7AZ9yOO9XG5Yo32s/QYfKJ0eHqrmvr79DTAEK4XRnvwU3
-	88zIEdPjULnFtKh2+kNAKE+PMskHLkiaB3N1c+b+Ot9ewepEkcXefS+vXZHOuPrPnTbwO01wsSu
-	47WJ+QMGQYU3wtcVF5d/Qq2txCA==
-X-Google-Smtp-Source: AGHT+IF0jHbVkHoIntcj/+mNChVbABYQUs8Lqzh82NqarXA6s9uWgPhB91m55N4IpcS57NatEWOM/Q==
-X-Received: by 2002:a17:907:7241:b0:ac1:dfab:d38e with SMTP id a640c23a62f3a-ace7109521dmr64645966b.15.1745551867427;
-        Thu, 24 Apr 2025 20:31:07 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41db02sm63111366b.15.2025.04.24.20.31.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 20:31:06 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso3497659a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:31:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVrQH+4i2hnBuxltBOxIQfHBwBBhfmCBZNYQckGaF7AfRN/c3/wFPRip4ynZdg3m+wdEf8rXfqke72f5hE=@vger.kernel.org
-X-Received: by 2002:a17:907:6ea0:b0:acb:5c83:251 with SMTP id
- a640c23a62f3a-ace713cfb98mr63838566b.53.1745551866239; Thu, 24 Apr 2025
- 20:31:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="IFOEqFW+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=9+Echb/h9/wd7jtQ2NLKCLnG8Ibee6Bmh6epZ6KbK9Y=; b=IFOEqFW+37ViTyv1v69K/h9/OE
+	DiYHDdJTeyLfxoOz6ZrZnj5KpbtnXG9iSMFlmF7TM9bJ27pA9OzfXbejWtFv3ZziAvUz7ZshPSJUz
+	miMCL8oe400BXHK7cy+EXavI4mL5UbxG+aiQdiGNFwKy2jiPebtYI7Uu/LaXkVtVvBF2DnL/hUX9Y
+	bvF1he9YUx/k6zxN0e0l5j77EYMBQ2bA8Fm2ipGRGMIvqPaZ0I7gXOKC/t6p9CYaL/jHGQv/2PuCA
+	mzCCEEm5G5zMg2gDl8ClLVJwjaQB5Dcsa9hS2knMnAvI4/l6GZt4SVNCBmLOCkO8SMI/MSlZbf7rz
+	0FTdqamg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u89op-000ruh-1W;
+	Fri, 25 Apr 2025 11:33:40 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 25 Apr 2025 11:33:39 +0800
+Date: Fri, 25 Apr 2025 11:33:39 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: arm/blake2b - Set FINAL_NONZERO
+Message-ID: <aAsCk3jtbAE7dPpJ@gondor.apana.org.au>
+References: <aAop_uMhxVh2l5Fy@Red>
+ <aApN64n7i15ArnX4@gondor.apana.org.au>
+ <aAqhbdiLmkHV350S@Red>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425003342.GA795313@ax162> <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com>
- <20250425021138.GA3800209@ax162>
-In-Reply-To: <20250425021138.GA3800209@ax162>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 24 Apr 2025 20:30:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjDV3nOK34rbU8bdo6OjM=KYoCN92=1eVEVFu=FQr8TNA@mail.gmail.com>
-X-Gm-Features: ATxdqUH-bKC0VcMIV-F2AOd9j-f5mi3EXH_KaqVlz4TTORr-ZxoTf-cSfjxOSBI
-Message-ID: <CAHk-=wjDV3nOK34rbU8bdo6OjM=KYoCN92=1eVEVFu=FQr8TNA@mail.gmail.com>
-Subject: Re: Adding __popcountsi2 and __popcountdi2
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAqhbdiLmkHV350S@Red>
 
-On Thu, 24 Apr 2025 at 19:11, Nathan Chancellor <nathan@kernel.org> wrote:
+On Thu, Apr 24, 2025 at 10:39:09PM +0200, Corentin Labbe wrote:
 >
-> I will test declaring __popcount{s,d}i2() as aliases of
-> __sw_hweight{32,64}() to see what effect that has but I figured that
-> calling the __arch_hweight variants was more correct because some
-> architectures (at least RISC-V and x86 when I looked) use alternatives
-> in that path to use hardware instructions and avoid the software path
-> altogether. While there would still be the overhead from the function
-> call, I figured not using the software fallback would at least soften
-> that blow.
+> Thanks it fixes my crypto hw devices.
+> So Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
 
-Once you have the overhead of a function call - and all the register
-games etc that involves, you're almost certainly better off with the
-simple unconditional bitwise games.
+What about the sha1-ce failure on arm64? Did that go away too?
 
-                Linus
+That didn't seem related to crypto_engine.
+
+> But I still got some crash with blake2b:
+> +[   54.348477] alg: shash: blake2b-256-neon test failed (wrong result) on test vector 1, cfg="init+update+final aligned buffer"
+> +[   54.348525] alg: self-tests for blake2b-256 using blake2b-256-neon failed (rc=-22)
+> +[   54.348536] ------------[ cut here ]------------
+
+OK this is easy, I left out the FINAL_NONZERO bit in the arm patch:
+
+---8<---
+Set FINAL_NONZERO as blake2b expects to have at least one byte for
+finalisation.
+
+Reported-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+Fixes: cc28260ab4fb ("crypto: arm/blake2b - Use API partial block handling")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/arm/crypto/blake2b-neon-glue.c b/arch/arm/crypto/blake2b-neon-glue.c
+index 7ae4ba0afe06..2ff443a91724 100644
+--- a/arch/arm/crypto/blake2b-neon-glue.c
++++ b/arch/arm/crypto/blake2b-neon-glue.c
+@@ -52,7 +52,8 @@ static int crypto_blake2b_finup_neon(struct shash_desc *desc, const u8 *in,
+ 		.base.cra_driver_name	= driver_name,			\
+ 		.base.cra_priority	= 200,				\
+ 		.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY |	\
+-					  CRYPTO_AHASH_ALG_BLOCK_ONLY,	\
++					  CRYPTO_AHASH_ALG_BLOCK_ONLY |	\
++					  CRYPTO_AHASH_ALG_FINAL_NONZERO, \
+ 		.base.cra_blocksize	= BLAKE2B_BLOCK_SIZE,		\
+ 		.base.cra_ctxsize	= sizeof(struct blake2b_tfm_ctx), \
+ 		.base.cra_module	= THIS_MODULE,			\
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
