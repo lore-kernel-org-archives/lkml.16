@@ -1,144 +1,152 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5AA21638A
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5B242A96
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572421; cv=none; b=EnPZIYUmUN/YOo1qFP94AwxLTyKIiVBaWemHWQ9EBT8YGGHTc3okhchLHjxUgkTG4dLTyVxgM49TPGU8xv5i19N+x/LWlm5EaJxnxcyZwsxDWlALMFY+0z0y3mmQLDi/LbuuXNFICfC4eQPHDANi4dBoGj3NMMw3SDDza5vXZ/Y=
+	t=1745572441; cv=none; b=fNrPkGY4NNIwdp0H+eX3g4dAKbPhZW8XXwJt9m5cZtSQAnSpCRfeDDU/qAe5A/F/LoxYlg8MuYJfjTmOUdrveLTw070UUuOlfAvdf0EuOrq8yMk66L1VHUUmcERFmT0u04RHWbjMBWu2is2Gzg1D6esmTWs+I2mBp2zG9nUxzGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572421; c=relaxed/simple;
-	bh=hbAsa/ABnFkF+UFHf8+iOuqOHC4Cxk/Fhu3FtxRmOOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YDG4ayqIdFYP/ZJgxvpfF366CtLfHO2ldHZjLnSnwpN7RXma9i7SZLvOVfX1R3Sg0RlyrdfZFM5js1GRjU8M4dZc86q3komyGVW5zbrejiSJ0cGBhO/dRAjqH2JSYmhLCYOXNsusmKW9clSWA2KwDOJBoVnQQ1zpK+zJrwiVEHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uQKULTGS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zQOWKp0D; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uQKULTGS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zQOWKp0D; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745572441; c=relaxed/simple;
+	bh=+d5xi9g6vW5km+N3rMkR1JMirfPLvZmpAundHvmz3iI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ISPBYPjbmqbiEPFlYvbDVfhzaY03rtjJuphBl3EzqOfOAA0wlAjVvHoSHFhzhObBS2hcjdqYxJyxQA5q/JlyRbmriVm6EzHLPSS4qlHzbrMXb43o+2BqLnsOlnLHj4ZMKYG7vg+E3s0fJ0GYfEsX/fF9V64FxJl0GIonhPo1gG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XMDUGTsI; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uQKULTGS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zQOWKp0D";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uQKULTGS";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zQOWKp0D"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C0980210F4;
-	Fri, 25 Apr 2025 09:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745572417; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mXUDXhw17net05lqqHisrXbeaS6mPgXHDC3B6OTn9Tw=;
-	b=uQKULTGSfxBxxB8sSbNAYciYun+rFVkSX6rXzJ8igjByBX01eMidEmRR40uhfsFv1F8GPE
-	77pTqS0iKjs1QE3zw+8ZIB7tslPw+G3PRyqcUR7UaMvBTHhyPI0+wou9XaU/uFA0CInn27
-	4MJoMv5bDypIB50eyf1GSYN7ZN2Ov2Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745572417;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mXUDXhw17net05lqqHisrXbeaS6mPgXHDC3B6OTn9Tw=;
-	b=zQOWKp0DzcJkhbXLeDO/rAe5OOcrVMOP+bV0DVJohyogkox4dVZTSi6MeVCRUv2M0Km7V1
-	qrT0yum3abR2IJAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745572417; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mXUDXhw17net05lqqHisrXbeaS6mPgXHDC3B6OTn9Tw=;
-	b=uQKULTGSfxBxxB8sSbNAYciYun+rFVkSX6rXzJ8igjByBX01eMidEmRR40uhfsFv1F8GPE
-	77pTqS0iKjs1QE3zw+8ZIB7tslPw+G3PRyqcUR7UaMvBTHhyPI0+wou9XaU/uFA0CInn27
-	4MJoMv5bDypIB50eyf1GSYN7ZN2Ov2Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745572417;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mXUDXhw17net05lqqHisrXbeaS6mPgXHDC3B6OTn9Tw=;
-	b=zQOWKp0DzcJkhbXLeDO/rAe5OOcrVMOP+bV0DVJohyogkox4dVZTSi6MeVCRUv2M0Km7V1
-	qrT0yum3abR2IJAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B43BC13A79;
-	Fri, 25 Apr 2025 09:13:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cc20KEBSC2jrDAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 25 Apr 2025 09:13:36 +0000
-Date: Fri, 25 Apr 2025 10:13:35 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mm: move dup_mmap() to mm
-Message-ID: <i4g4glnafku73cfsj6yrrkkjxe2yape2eeamqkaqrw3zs7q2wq@f3oa6qkumuer>
-References: <cover.1745528282.git.lorenzo.stoakes@oracle.com>
- <4ee8edd6e54445b8af6077e6961543df6a639418.1745528282.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XMDUGTsI"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ONkUMG025716;
+	Fri, 25 Apr 2025 09:13:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
+	 bh=40PrTU9Pl6DG0oznrHmQPME36hN6eFppb2K1WSBFMa4=; b=XMDUGTsIZsDt
+	Jrw2G/gPBxCn/xFqdTccdL6wuhiAow13C8DKXrUjNKRDyZNaac+xdwkL6HhYi2zS
+	wppz6SnkSOltCRkNAvgQa8HDdOPV668fOfFHBHE9rUpPIlibLIe02m5jds5St15r
+	gEk7Kug5LoT/dh0RgPRWPffL38JnKjDna3SxkRBCtrnLi0WvIlNHOYRPJ1hw3Bet
+	/Cs306aBuA2zATYxIrRXuA4vSNVF+DEnrRL236ZjvaOM2CIsfnLlKDUvYidNmR2p
+	qF3/bdzoVXf1KYxZlJxfI11xRuUfErE4ZBgYlNssnlW85BkZ+Q03YM4L4tUk3cDP
+	4eazdM/p2A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467y90sxkj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 09:13:29 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53P9CKph014843;
+	Fri, 25 Apr 2025 09:13:29 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467y90sxkd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 09:13:29 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8WDxv008557;
+	Fri, 25 Apr 2025 09:13:28 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxvh2s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Apr 2025 09:13:28 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53P9DR5r18744056
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 09:13:27 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2286D58060;
+	Fri, 25 Apr 2025 09:13:27 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A654F5803F;
+	Fri, 25 Apr 2025 09:13:19 +0000 (GMT)
+Received: from [9.43.9.122] (unknown [9.43.9.122])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 25 Apr 2025 09:13:19 +0000 (GMT)
+Message-ID: <f02e2c1a-e65f-4078-a138-ccf734f84643@linux.ibm.com>
+Date: Fri, 25 Apr 2025 14:43:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ee8edd6e54445b8af6077e6961543df6a639418.1745528282.git.lorenzo.stoakes@oracle.com>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,oracle.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/5] sched: Inhibit cache aware scheduling if the
+ preferred LLC is over aggregated
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        Vincent Guittot
+ <vincent.guittot@linaro.org>,
+        Libo Chen <libo.chen@oracle.com>, Abel Wu <wuyun.abel@bytedance.com>,
+        Hillf Danton <hdanton@sina.com>, linux-kernel@vger.kernel.org,
+        Len Brown <len.brown@intel.com>, Chen Yu <yu.chen.surf@foxmail.com>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <cover.1745199017.git.yu.c.chen@intel.com>
+ <2c45f6db1efef84c6c1ed514a8d24a9bc4a2ca4b.1745199017.git.yu.c.chen@intel.com>
+ <cd6065dc-837f-474a-a4f5-0faa607da73a@linux.ibm.com>
+ <d221a260-51d5-4dec-8c08-37d27dd80145@intel.com>
+ <e45141a1a64d7dcfca2683f56735ba4da60ba19e.camel@linux.intel.com>
+Content-Language: en-US
+Reply-To: e45141a1a64d7dcfca2683f56735ba4da60ba19e.camel@linux.intel.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <e45141a1a64d7dcfca2683f56735ba4da60ba19e.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=aZRhnQot c=1 sm=1 tr=0 ts=680b5239 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pcUInrTLMDQ4R4IrCpkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: fRezSggGYyjgGpAv2xEIpbOWQ21f76lZ
+X-Proofpoint-ORIG-GUID: Hs114uIbUKacBXLLh0pIE6463OJHjqcn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2NiBTYWx0ZWRfX/eriBh2zjgyJ Mmxeg7WW1AuBqqhzq2AOiEVyI9OgBN/0k5iAIQURHXLfM73nkjPAl/VTfCaNJCXvz7ymfl7lLgw VC3jefc406Xz4E9ySV1o0NobMkGhs2f2rXMZpDo2bdJv1K8MlapvECGsEUy6+Tl7diWquP1IN82
+ I4LhKsYCKA4MJgJdwtZqBivDTbff7tv+02WDZ3WgQZBztzvstTf83vKJouPiMZAqkPJIer0obsD o66IKwyVpXZuEUsMrTILpJpLEuQ5cttBMd667eynYxFL2hz4SZOSw7EtjCss0cgBXHC+DHx8VQK zwjGLNPj/g2W96zLFBM5vo6H7yTL57IVB0YgR8U+dXlxa6v1OVkjco738fGAfXMXewtPuRo40Vd
+ Qz0AP6IWK0+8QIiFyw7fxO34fl7WkwP7m/u9BP50w4tGo18LfBs4x0ItCcs4N5KwZzXGB1Lv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
+ clxscore=1015 mlxlogscore=673 impostorscore=0 mlxscore=0 malwarescore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250066
 
-On Thu, Apr 24, 2025 at 10:15:28PM +0100, Lorenzo Stoakes wrote:
-> This is a key step in our being able to abstract and isolate VMA allocation
-> and destruction logic.
-> 
-> This function is the last one where vm_area_free() and vm_area_dup() are
-> directly referenced outside of mmap, so having this in mm allows us to
-> isolate these.
-> 
-> We do the same for the nommu version which is substantially simpler.
-> 
-> We place the declaration for dup_mmap() in mm/internal.h and have
-> kernel/fork.c import this in order to prevent improper use of this
-> functionality elsewhere in the kernel.
-> 
-> While we're here, we remove the useless #ifdef CONFIG_MMU check around
-> mmap_read_lock_maybe_expand() in mmap.c, mmap.c is compiled only if
-> CONFIG_MMU is set.
-> 
-> Suggested-by: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Hi Tim,
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+On 24/04/25 21:21, Tim Chen wrote:
+> On Thu, 2025-04-24 at 22:11 +0800, Chen, Yu C wrote:
+>>
+>>> It spawns lot of threads and is CPU intensive. So, I think it's not impacted
+>>> due to the below conditions.
+>>>
+>>> Also, in schbench numbers provided by you, there is a degradation in saturated
+>>> case. Is it due to the overhead in computing the preferred llc which is not
+>>> being used due to below conditions?
+>>
+>> Yes, the overhead of preferred LLC calculation could be one part, and we 
+>> also suspect that the degradation might be tied to the task migrations. 
+>> We still observed more task migrations than the baseline, even when the 
+>> system was saturated (in theory, after 25% is exceeded, we should 
+>> fallback to the generic task wakeup path). We haven't dug into that yet, 
+>> and we can conduct an investigation in the following days.
+> 
+> In the saturation case it is mostly the tail latency that has regression.
+> The preferred LLC has a tendency to have higher load than the
+> other LLCs. Load balancer will try to move tasks out and wake balance will
+> try to move it back to the preferred LLC. This increases the task migrations
+> and affect tail latency.
 
-Have I told you how awesome you are? Thank you so much for the series!
+Why would the task be moved back to the preferred LLC in wakeup path for the
+saturated case? The checks shouldn't allow it right?
 
--- 
-Pedro
+Thanks,
+Madadi Vineeth Reddy
+
+> 
+> Tim
+
