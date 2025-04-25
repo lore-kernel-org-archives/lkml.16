@@ -1,71 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67403288A5;
-	Fri, 25 Apr 2025 13:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9357C24A074;
+	Fri, 25 Apr 2025 13:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745587356; cv=none; b=YmeeDckkO4I9Ai+cmIlaGlAA/aE30IXRnrKUwlxQe6R7XrMOJQieXC5DU5CSZVRQomUdrtWwFcE8JAisYDzuCMMe+j7WVGRWE/2TcDAxJqqeJ8xaeRAtPZBDNyPIeVS1sAxIHTtzKlYnFZgg48E21YpqVBfQu9I2Z56ccXj5awY=
+	t=1745587377; cv=none; b=UlZL25hRWVWp/YAgvXNVR3bQ3TK0f6crlmZ7KWBpX0gSfV0U6+0RzkfAGc8wCpT4QCws4hqUxOHMcWCN6/g+DW5mGfUzUdocAF2W/BTRimljNwGBCBC9cbRjJ+fwskOCWCVRG/0K2fQBxFPSYvpp16r2YRkCxYAFuTJ3Laqrg6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745587356; c=relaxed/simple;
-	bh=Csu4kU53xYy8vIqw4BqzvpDFCe+FaWjgzttl9RTuU7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPJTCU1+gg+T+OiwzUX/UkIIhjsc0PfzjCMD0Yc2M38mOf9xi4wn0hZlaML1tVzgOwklMD9cdd7XZc/qiHb5SrqE6K7TChd+AisuaZ/FrFswmy7zUqwwT8yGu4gg2z54AM8ScEncRAUydb4kot+AUCveDWAZvl/SHnIXWk+FBUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UnwmJqpZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UnwmJqpZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F268C4CEE4;
-	Fri, 25 Apr 2025 13:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745587355;
-	bh=Csu4kU53xYy8vIqw4BqzvpDFCe+FaWjgzttl9RTuU7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UnwmJqpZ3Mpb0on/fQfoNEriirUddomsj8RAwg1ooWp3feHmVDBObHbt/AAdrG3KP
-	 Dns0dNyS9de5hOCSztOXdS7JGnFtf4QQRm5GEBeL5lEqJdEhnTtdoIOZffwZVZ3SR2
-	 jyNJTMVOb8EL9zolb6tFCrXp+xmRJ6JXTJBtVMZs=
-Date: Fri, 25 Apr 2025 15:22:33 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/3] gpiolib: finish conversion to devm_*_action*()
- APIs
-Message-ID: <2025042523-immovable-onyx-e648@gregkh>
-References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
- <aAfmBlE3ZXU65PQR@smile.fi.intel.com>
+	s=arc-20240116; t=1745587377; c=relaxed/simple;
+	bh=+UEqAdABQcBUW46BHo9XWuA/Hw8eE1ZJ7U7m5IB8G9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bAivs6qLWlREBVngCA2t3sZHpeZmvB/w4ofSoe/Xc6SwqWJLLU2vCqpTUyPxFPaVp9R94TdJbOe52uoi+3aCxKtsP9UC8rte5Y+A5TobJ5t9t5L/UKeSkWDIINRVjISvAQz7Yar/RABlPhvUAibacj/QhiYmHWd2BFS4Itzogx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82A88106F;
+	Fri, 25 Apr 2025 06:22:49 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67B103F59E;
+	Fri, 25 Apr 2025 06:22:52 -0700 (PDT)
+Date: Fri, 25 Apr 2025 14:22:50 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>, Yixun Lan
+ <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, Samuel Holland <samuel@sholland.org>, Maxime Ripard
+ <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, clabbe.montjoie@gmail.com
+Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
+ board
+Message-ID: <20250425142250.006a029d@donnerap.manchester.arm.com>
+In-Reply-To: <3681181a-0fbb-4979-9a7e-b8fe5c1b7c3c@lunn.ch>
+References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
+	<4ba3e7b8-e680-40fa-b159-5146a16a9415@lunn.ch>
+	<20250424150037.0f09a867@donnerap.manchester.arm.com>
+	<4643958.LvFx2qVVIh@jernej-laptop>
+	<20250424235658.0c662e67@minigeek.lan>
+	<3681181a-0fbb-4979-9a7e-b8fe5c1b7c3c@lunn.ch>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAfmBlE3ZXU65PQR@smile.fi.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 09:55:02PM +0300, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2025 at 06:20:25PM +0200, Andy Shevchenko wrote:
-> > GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
-> > calls. This mini-series is for that. The necessary prerequisites are here
-> > as well, namely:
-> > 1) moving the respective APIs to the devres.h;
-> > 2) adding a simple helper that GPIOLIB will rely on;
-> > 3) finishing the GPIOLIB conversion to the device managed action APIs.
+On Fri, 25 Apr 2025 04:01:30 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
+
+> > Ah, right, I dimly remembered there was some hardware setting, but your
+> > mentioning of those strap resistors now tickled my memory!
 > > 
-> > The series is based on another series that's available via immutable tag
-> > devres-iio-input-pinctrl-v6.15 [1]. The idea is to route this via GPIOLIB
-> > tree (or Intel GPIO for the starter) with an immutable tag for the device
-> > core and others if needed. Please, review and acknowledge.
+> > So according to the Radxa board schematic, RGMII0-RXD0/RXDLY is pulled
+> > up to VCCIO via 4.7K, while RGMII0-RXD1/TXDLY is pulled to GND (also via
+> > 4K7). According to the Motorcom YT8531 datasheet this means that RX
+> > delay is enabled, but TX delay is not.
+> > The Avaota board uses the same setup, albeit with an RTL8211F-CG PHY,
+> > but its datasheet confirms it uses the same logic.
+> > 
+> > So does this mean we should say rgmii-rxid, so that the MAC adds the TX
+> > delay? Does the stmmac driver actually support this? I couldn't find
+> > this part by quickly checking the code.  
 > 
-> Greg, I know you are busy, but do you have a chance to look at this and give
-> your Ack if you are okay with the idea? The route is assumed to be via GPIOLIB
-> tree.
+> No. It is what the PCB provides which matters. A very small number of
+> PCB have extra long clock lines to add the 2ns delay. Those boards
+> should use 'rgmii'. All other boards should use rgmii-id, meaning the
+> delays need to be provided somewhere else. Typically it is the PHY
+> which adds the delays.
+> 
+> The strapping should not matter, the PHY driver will override that. So
+> 'rgmii-id' should result in the PHY doing the basis 2ns in both
+> directions. The MAC DT properties then add additional delays, which i
+> consider fine tuning. Most systems don't actually need fine tuning,
+> but the YT8531 is funky, it often does need it for some reason.
 
-Looks fine to me:
+Ah, many thanks for the explanation, that clears that up! I read something
+about the MAC adding delays, which confused me, but what you say now makes
+sense.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks!
+Andre.
