@@ -1,180 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826CB149C51;
-	Fri, 25 Apr 2025 23:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B1D296D04;
+	Fri, 25 Apr 2025 23:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745622139; cv=none; b=SdRKf52Ou7cKpzQqpVdevj+1DiFpCQH6ghNILTJZPmGDKZu6Cbxx10SaY3gxVleEPeUmMV93s6X+2Zo0Za9YBgBUx6Ruz4Q8Ax62/X+7eeXPKv5f6lEkHCGsqBf5jEDnkwu9tAkvA+uxYvN2LrZSlwlWYXwS8H0hI+XyvqD3G4I=
+	t=1745622200; cv=none; b=pFtaoo46OpnLIALnTJ3A9XdMNLoErrfhmPEQGyu/0RV944i7rVQ7/wf6tVb8t6fomJZt4YPuI3WmqfMYkNTgZGNWB54vmQNShWQ646/qXe19GrdSUHP8rEZQkKB8oHyj+CdhLH8PT/yISf3WsdQC3T7xnUNTOxuaKIXZRhvg0Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745622139; c=relaxed/simple;
-	bh=AKl5B7sJ39Bf4hve2uTH2rAHe2W0wLVTw4+iXPRcnt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bYr63fKVQqhDyziadDP2ca89agPONyS8ZIt87lr6rt5f7X6anhnBDpBcXSrY4AliYhmprUpHwZXMw6OywYzh0l6D5WjOJTqKf7bUZXu3YYKTEF0r418i7r+SjD5Qe0r78XpfX0Y94a2ydJv2e1w7jRukAa0YIQjotYAw2puO4j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y1iDMeAk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745622200; c=relaxed/simple;
+	bh=HPDTCVI0kaASK1Ubw5yHoaNdg3VSMyENwPAPqkgC0f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGB7hnr5C5RQD4/EGJTt5Qjk7RtPSbImVbjA2K+lC7F0tH/Ho8lOc5qUNzayomtOiCQvztCXlWeCZ4cbjoq86xwrv2lCn4wYmQCdcrOB+ZjCGmf9VIW+BaZAJ6vRMqI7b2Vj3E2vDCQ7JTCwJ8+hdsSXVpXdnTna8cKXhcc0CsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr3vLE2q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y1iDMeAk"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJuRS001348;
-	Fri, 25 Apr 2025 23:01:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PVCoVGhbhHaQpzrYc6zL+NmjQ0+ewuCnFrIJjis5X1I=; b=Y1iDMeAkjL79nxRK
-	ZXi39MsyhYJBJp++z5y0kwRUg4KlZn6jRp+rzTLGJc6Cf29gWnTd51/Nl58K0OF4
-	hbGV+e2BN6h4n8QwcJyK65ARupvUmUFMa8kN/V/z0p8rKZiZrOWj5p83dbykv6dh
-	NqkY0VHmYL371SMfBv2dgNntrYrxzPMq9SVCO75lN41Kl+iet995yxYRkPkNmo49
-	5nrx1JWF1l4JezKTT4k9uZcz4d1PpXXqz9CmhywBAou+sJ4mMtHVTYE88Pm/YWMz
-	KGA83yueRQk+e3Ypoxq18dBnlyfTRzsPDfWCgl3BSLeMUvBNhAXk6jncIdV5W1hR
-	TDbu/Q==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3jg1m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 23:01:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PN1qVE000653
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 23:01:52 GMT
-Received: from [10.110.43.17] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
- 2025 16:01:50 -0700
-Message-ID: <beb866cb-0510-4e8c-84a0-ae66f864303e@quicinc.com>
-Date: Fri, 25 Apr 2025 16:01:49 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr3vLE2q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3023C4CEE4;
+	Fri, 25 Apr 2025 23:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745622199;
+	bh=HPDTCVI0kaASK1Ubw5yHoaNdg3VSMyENwPAPqkgC0f4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vr3vLE2qnPJODv0tf3Z77FzuM2uGoCo443ocJY+vPMmlJzvh6vF6/2VHrbZmoXapK
+	 P3mmCYzQlpjFIvS4pvUlMFYT47FT6svjqSVvNUiqutFQ57avrXyGUVuW2SaU6nRb/P
+	 ZdMOsGr3/13JNJDYcSHw6eji+aQjahvQbodbqp2d2VP5x7aFPdKpxOQvzPvk4jZs4B
+	 GvFbNYz00NBIbUnXEuFZL7qzlMLM6NzfCfB8OTJlKH+7iEHnvX3dpCT4Dsi3I9rnJn
+	 hiXJT4S5ibqFYcd5RuWy1nIiZbiwbTBBH9VgSi+CP8MB8LUyv9etCQG+f39eYyk5f9
+	 E0OGorAST+WhQ==
+Date: Fri, 25 Apr 2025 16:03:16 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, bpf@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
+Subject: Re: [RFC][PATCH 1/2] kthread: Add is_user_thread() and
+ is_kernel_thread() helper functions
+Message-ID: <202504251601.5D29BF8F01@keescook>
+References: <20250425204120.639530125@goodmis.org>
+ <20250425204313.616425861@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/7] drm/msm/mdp4: switch LVDS to use
- drm_bridge/_connector
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "Sean
- Paul" <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250425-fd-mdp4-lvds-v4-0-6b212160b44c@oss.qualcomm.com>
- <20250425-fd-mdp4-lvds-v4-6-6b212160b44c@oss.qualcomm.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250425-fd-mdp4-lvds-v4-6-6b212160b44c@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE2NSBTYWx0ZWRfX0BTU8LZ/tPk3 du2Ri2Maj/ZAkOx5kAZhXnhX2xTOU7iM9773HOfcEstyyVM6nAMMi9WLQhPgxyXaNpRxjW9ybVi 2KhHtREZC94X3W7zN8vyNI5HShqawG+cFiax797jMEGQx7DDiAf1a8YVRIf2S7ew+9j5gUteEEV
- S8y9IVG3Ir9gIyPeYfu7oeF1zFZP4ZnBL1BrSTd+avME44jMGZl1g46IL/WZaauE2N2cjaZ5VVA tVBY/13s1OCxkDKPQ/NMXZ+oIlm0Q9MznNJuTUE1v4khUBcwjTsVjHqHeMSyhWAqbUl/Nf4772e rFBnTBG1JH3oVxVejYxDIxGAokrPsZz86t93VxZwKoghJb5F3CNCNbCmnBI4um6YTpR0WrmUavw
- KeSdqEhu1M5uVcC6V6LX+JlFfPZVoXneUXfrq/yVyRCPFFmV3aiN4hmRZah6PsNA7MnhCod+
-X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=680c1460 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=mBQssbH8hIC3Lvm7LJMA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 9Cy1EhYJFLfHWBx0aUHbhKwvB1YM9lZh
-X-Proofpoint-GUID: 9Cy1EhYJFLfHWBx0aUHbhKwvB1YM9lZh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_07,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425204313.616425861@goodmis.org>
 
-
-
-On 4/25/2025 2:51 AM, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Fri, Apr 25, 2025 at 04:41:21PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> LVDS support in MDP4 driver makes use of drm_connector directly. However
-> LCDC encoder and LVDS connector are wrappers around drm_panel. Switch
-> them to use drm_panel_bridge/drm_bridge_connector. This allows using
-> standard interface for the drm_panel and also inserting additional
-> bridges between encoder and panel.
+> In order to know if a task is a user thread or a kernel thread it is
+> recommended to test the task flags for PF_KTHREAD. The old way was to
+> check if the task mm pointer is NULL.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> It is an easy mistake to not test the flag correctly, as:
+> 
+> 	if (!(task->flag & PF_KTHREAD))
+> 
+> Is not immediately obvious that it's testing for a user thread.
+> 
+> Add helper functions:
+> 
+>   is_user_thread()
+>   is_kernel_thread()
+> 
+> that can make seeing what is being tested for much more obvious:
+> 
+> 	if (is_user_thread(task))
+> 
+> Link: https://lore.kernel.org/all/20250425133416.63d3e3b8@gandalf.local.home/
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->   drivers/gpu/drm/msm/Makefile                       |   1 -
->   drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           |  34 +++++--
->   drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h           |   6 +-
->   drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c  |  20 +----
->   .../gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c    | 100 ---------------------
->   5 files changed, 28 insertions(+), 133 deletions(-)
+>  include/linux/sched.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
-> index 5df20cbeafb8bf07c825a1fd72719d5a56c38613..7a2ada6e2d74a902879e4f12a78ed475e5209ec2 100644
-> --- a/drivers/gpu/drm/msm/Makefile
-> +++ b/drivers/gpu/drm/msm/Makefile
-> @@ -48,7 +48,6 @@ msm-display-$(CONFIG_DRM_MSM_MDP4) += \
->   	disp/mdp4/mdp4_dsi_encoder.o \
->   	disp/mdp4/mdp4_dtv_encoder.o \
->   	disp/mdp4/mdp4_lcdc_encoder.o \
-> -	disp/mdp4/mdp4_lvds_connector.o \
->   	disp/mdp4/mdp4_lvds_pll.o \
->   	disp/mdp4/mdp4_irq.o \
->   	disp/mdp4/mdp4_kms.o \
-> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-> index 689e210660a5218ed1e2d116073723215af5a187..93c9411eb422bc67b7fedb5ffce4c330310b520f 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-> @@ -6,6 +6,8 @@
->   
->   #include <linux/delay.h>
->   
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_bridge_connector.h>
->   #include <drm/drm_vblank.h>
->   
->   #include "msm_drv.h"
-> @@ -189,7 +191,7 @@ static int mdp4_modeset_init_intf(struct mdp4_kms *mdp4_kms,
->   	struct msm_drm_private *priv = dev->dev_private;
->   	struct drm_encoder *encoder;
->   	struct drm_connector *connector;
-> -	struct device_node *panel_node;
-> +	struct drm_bridge *next_bridge;
->   	int dsi_id;
->   	int ret;
->   
-> @@ -199,27 +201,43 @@ static int mdp4_modeset_init_intf(struct mdp4_kms *mdp4_kms,
->   		 * bail out early if there is no panel node (no need to
->   		 * initialize LCDC encoder and LVDS connector)
->   		 */
-> -		panel_node = of_graph_get_remote_node(dev->dev->of_node, 0, 0);
-> -		if (!panel_node)
-> -			return 0;
-> +		next_bridge = devm_drm_of_get_bridge(dev->dev, dev->dev->of_node, 0, 0);
-> +		if (IS_ERR(next_bridge)) {
-> +			ret = PTR_ERR(next_bridge);
-> +			if (ret == -ENODEV)
-> +				return 0;
-> +			return ret;
-> +		}
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index f96ac1982893..823f38b0fd3e 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1785,6 +1785,16 @@ static __always_inline bool is_percpu_thread(void)
+>  #endif
+>  }
+>  
+> +static __always_inline bool is_user_thread(struct task_struct *task)
+> +{
+> +	return !(task->flags & PF_KTHREAD);
+> +}
+> +
+> +static __always_inline bool is_kernel_thread(struct task_struct *task)
+> +{
+> +	return task->flags & PF_KTHREAD;
 
-Alright, I think this will protect us against the fact that there is no 
-panel in the DT currently like before, hence
+nit: maybe do explicit type conversion:
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+	return !!(task->flags & PF_KTHREAD);
 
+but that's just a style issue, really.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+Thank you for not using current->mm -- KUnit, live patching, etc, all
+use current->mm but are kthreads. :)
+
+-- 
+Kees Cook
