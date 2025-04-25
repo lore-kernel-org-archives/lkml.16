@@ -1,223 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC9225DD17;
-	Fri, 25 Apr 2025 15:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076B8218ADE
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745594744; cv=none; b=jbjC5KaFBXdGRIyiX451t6dN0sU9ZNgkUdSYEAgaaBpB0pM7uI+1BM24glyCGa5EArLkcG0PVsZr5dPXldF6D8C7pQ3Q9HuFbPSX7edkUgw1ovismTjppgXLOzqmDDPTagwgpOmn+jY6st66m0cSvymrUXw6HJ+tqcvgE2RdYQ4=
+	t=1745594760; cv=none; b=iTRV2Ly1KxKXL9mxk4nnP7oWDHcaLyOJuI9bqgQaLrhELoifiejF3Bt4oXEjDiDRKOg+1PA0TOVLBB1lpiQMadxtApnpGH2Hab3/cCx99gV3FgCjRphgn+RG/NRJTxc48np7yJ7v+PEO1t2GmfgLEqTXIp4sEhNXqJVDWDFq3Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745594744; c=relaxed/simple;
-	bh=UR9k8ahkK/rABhgGKrX88aGg3brU18RdD8D4FOi+JRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjVDHg4D7VJkSaF1WmrmlBlbiCLtxGLv+hz4NEYvnzskTvRdVbs8ocNc7un01PhGWUUHjCaIiSKOhY/57ygsRkUF7BW6wvhhTfzQ5/ndVR5suRvBoF3RSLVyYKJrt+cm2jl5OAFIG4DM9bg8PoKJ/ijVJvl60Sa6u4E0DJ9GeJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUkehgWo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745594760; c=relaxed/simple;
+	bh=l6PfwDEF+ySZXDsa6ShqQORIy/iiP8Vyai8V4qClOrA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qrGbbjr/G8YQyLKI/7SFFN2U2c04izDQ08v2AqUjJv31fR2g7WhI4hFerbtUBHsCufBmx8BmIRHq9NlPi3ulgJAY9q5yxubs7vuIaNALVVDOO+ItbXggUCyRjkt+TY9PvLGvCLNKnFLTpVVRofXDIOrDl3VUtMwU12PdHRpK0cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bCaTDKVu; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUkehgWo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FCA8C4CEE9;
-	Fri, 25 Apr 2025 15:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745594743;
-	bh=UR9k8ahkK/rABhgGKrX88aGg3brU18RdD8D4FOi+JRA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VUkehgWo5fSGTa3UIQfH+yUBoVgaHtTOZynzfixsa9peJma4/QfWx247Wktax5Utt
-	 CrQkpDE8AWDhp+VRiDgcvqN0lg6DhiVrD4VfVn05IZmwRgM64xSv3F+E7c1PDfyZDd
-	 yZlNWxfsgKDjMZMkEGU6awvDpFhwZ1IV9XhZDb5Vn2+tWokki4W2wcpNyF6GH3AShh
-	 mcbXH3difhfvhOdalpfpBLHGi0krnqLOUjWqom0got04TR8J4tGIMV2evlOFMQZLZF
-	 3FcqvLMrWfJDGEv7E+qzo2cm0nsYUwIWcNTwiUhTwlOa9g0YR5t6ghhtT4d2JbjW76
-	 fKxcbpuf1HiUw==
-Date: Fri, 25 Apr 2025 17:25:36 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] rust: property: Move property_present to separate
- file
-Message-ID: <aAupcPT7GWgndVuA@pollux>
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-2-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bCaTDKVu"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso2541981b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745594758; x=1746199558; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SFMfmyje2Ay7PUB1MUIQLu/sa8uRRcfjUmehOtjPqDY=;
+        b=bCaTDKVukjjdfc2pFblnqmEpTJONg2WyF7V5cMDwt3rsQBYMBJPkqgWtIHThctfWby
+         guwBrunoU8mhtVO8yLL8MZV2lRPNHM+tfl6G4kRSQr9yVh6y1X+i5rj+92dZcu2i7kse
+         D8Q0ppP7hopvjWagTXQIH2Hw/Amk4jOeC+DRZS8nggPyJsxsasBT0IkGa+cfG7v3LPpb
+         Fp35rxR1T3XzHulbtlm1bVkUded7BFPtaA7dCoMTQ4eGuPZGmM9hT9oMRiMxTdT9+you
+         7GYjroHx1OXMnfZJp2+47jWumMq9IHacVxXliQYjZhRNQvusOLs4YyXpYAySthUgSRPE
+         nGJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745594758; x=1746199558;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SFMfmyje2Ay7PUB1MUIQLu/sa8uRRcfjUmehOtjPqDY=;
+        b=r1FO1/3I3Fm2oxcNRq1CLeDsGOSIttSVsY8bFWhN71N3qA6mEKP/OU37GFCovaLSA7
+         tFtiwfrAQiXf4mlbeNaOaBfZjlM/Ov6I5AggoSWKTFdTGR6IbJ3wJjXiFq+gFjWJiOo6
+         EkekkSjPkEPnvxgpDjoTkPzRj0C7hYtU1kZUUNRVsXm3nWQgN9QGDtTz4tEthOeEGdu8
+         AGSTpnfSpRnL7+3hXIapNdxZ4Qk2QluaYFMy5WQxEbgyI+BvEty0yaX1r53Feoe1lyhq
+         swFWW31Zhq1a8XTzvk1SjCGyakAjdYCtUFMV0bswvEd3A3aVVusTI4SZ/DuoV5/5Adu2
+         ED9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Z6Q+fYavcaDl+UQDE3DANyi73B4eb1KbjemebPLOnP0RZGTuPu2LwF9kQFZd0wiLWrIcxsfUjm4sLmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtofg+LiwOIVfCtyLkkWjzjGPbu4Fyv6Uf3GyWQPSJ25D2U8lo
+	YutnqMhEMKJdF2+tJtGIRndTOb66MjJ6gu0uZAvvayKjJBirdDgKGtjq89eAghcATqGMEg3vHOE
+	45/Unjol4QOdNsCFT1Sgcb1lbHHZ4h1EPRf3/ig==
+X-Gm-Gg: ASbGnctJganOw1EhMc+SWadWxY9SvHCTn2/ATaMoYiWvFfE4elrkk4D7WouF166qZvW
+	tvf/ZrwqDPgzrIn+BZdi92WY2gnDoR7iOE0FCxsMfNG+V+9uXuDT092ZEkSd0cIPNFpTKEaEKP1
+	tATY4cN15LnLJwx6UAVw1NTZFyhKMHZspbbFFflyf+0jdKR2Ivr85ejeo=
+X-Google-Smtp-Source: AGHT+IHZt/PvL0IYviSGWGwys58uHHU/qyJ3mVkVbS0ImrXbA+M9ZGv4a48+hBPrudXzjwRv0uMRYoHDKa+TdE0Dyk8=
+X-Received: by 2002:a05:6a00:18a6:b0:736:ab1e:7775 with SMTP id
+ d2e1a72fcca58-73fc7b51460mr3994796b3a.0.1745594758219; Fri, 25 Apr 2025
+ 08:25:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425150130.13917-2-remo@buenzli.dev>
+References: <20250408195922.770377-1-yabinc@google.com> <20250408195922.770377-3-yabinc@google.com>
+ <358f4a8c-29ad-4e5e-91b9-063f06e769ec@linaro.org>
+In-Reply-To: <358f4a8c-29ad-4e5e-91b9-063f06e769ec@linaro.org>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Fri, 25 Apr 2025 16:25:46 +0100
+X-Gm-Features: ATxdqUG1fmyZ5-PKnBFr3vozBSaptLAsvKtSFIiRksEvaZt8vaft2LpISC3dbm8
+Message-ID: <CAJ9a7VigiBrcenP9w84KS21iE8gnB7bGC9Q6ZFF33ZHveu9SEg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] coresight: core: Disable helpers for devices that
+ fail to enable
+To: James Clark <james.clark@linaro.org>
+Cc: Yabin Cui <yabinc@google.com>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@arm.com>, 
+	Jie Gan <quic_jiegan@quicinc.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 25, 2025 at 05:01:24PM +0200, Remo Senekowitsch wrote:
-> Not all property-related APIs can be exposed directly on a device.
-> For example, iterating over child nodes of a device will yield
-> fwnode_handle. Thus, in order to access properties on these child nodes,
-> the property access methods must be implemented on the abstraction over
-> fwnode_handle.
-> 
-> While it's possible to expose similar methods on `Device` directly for
-> convenience, those methods would have to get the `FwNode` first, which
-> is a fallible operation, making the API inconsistent. For this reason,
-> such duplicated methods are omitted. Users who need to read properties
-> of a device will have to explictily get the `FwNode` first (handle the
-> `None` case) and then read properties on that.
+On Tue, 15 Apr 2025 at 14:51, James Clark <james.clark@linaro.org> wrote:
+>
+>
+>
+> On 08/04/2025 8:59 pm, Yabin Cui wrote:
+> > When enabling a SINK or LINK type coresight device fails, the
+> > associated helpers should be disabled.
+> >
+> > Signed-off-by: Yabin Cui <yabinc@google.com>
+> > Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > ---
+> >   drivers/hwtracing/coresight/coresight-core.c | 9 +++++++--
+> >   1 file changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+> > index fb43ef6a3b1f..a56ba9087538 100644
+> > --- a/drivers/hwtracing/coresight/coresight-core.c
+> > +++ b/drivers/hwtracing/coresight/coresight-core.c
+> > @@ -486,8 +486,10 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+> >                        * that need disabling. Disabling the path here
+> >                        * would mean we could disrupt an existing session.
+> >                        */
+> > -                     if (ret)
+> > +                     if (ret) {
+> > +                             coresight_disable_helpers(csdev);
+>
+> Hi Yabin,
+>
+> Unfortunately coresight_disable_helpers() takes a path pointer now so
+> this needs to be updated.
+>
+> I tested with that change made and it works ok.
+>
+> >                               goto out;
+> > +                     }
+> >                       break;
+> >               case CORESIGHT_DEV_TYPE_SOURCE:
+> >                       /* sources are enabled from either sysFS or Perf */
+> > @@ -496,10 +498,13 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
+> >                       parent = list_prev_entry(nd, link)->csdev;
+> >                       child = list_next_entry(nd, link)->csdev;
+> >                       ret = coresight_enable_link(csdev, parent, child, source);
+> > -                     if (ret)
+> > +                     if (ret) {
+> > +                             coresight_disable_helpers(csdev);
+> >                               goto err;
+> > +                     }
+> >                       break;
+> >               default:
+> > +                     coresight_disable_helpers(csdev);
+>
+> Minor nit, you could collapse these last two into "goto
+> err_disable_helpers" and add another label before err: that disables
+> helpers before falling through to err:.
+>
+> Other than that:
+>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+>
+> >                       goto err;
+> >               }
+> >       }
+>
 
-I think I mentioned that in v2 [1]; when the commit subject says "rust:
-property: Move property_present to separate", the commit shouldn't do anything
-beyond this scope.
+Subject to James' comments -
 
-I can see that you switch from device_property_present() to
-fwnode_property_present(), without fixing users, so obviously the former is
-unused.
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
-Please make the implementation of the FwNode abstraction and the removal of
-device_property_present() separate commits.
 
-[1] https://lore.kernel.org/lkml/Z_0xGRsI74PsAL_E@cassiopeiae/
-
-> 
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> ---
->  MAINTAINERS                              |  3 +-
->  rust/helpers/helpers.c                   |  1 +
->  rust/helpers/property.c                  |  8 +++
->  rust/kernel/{device.rs => device/mod.rs} |  9 +--
->  rust/kernel/device/property.rs           | 70 ++++++++++++++++++++++++
->  5 files changed, 83 insertions(+), 8 deletions(-)
->  create mode 100644 rust/helpers/property.c
->  rename rust/kernel/{device.rs => device/mod.rs} (97%)
->  create mode 100644 rust/kernel/device/property.rs
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c8d9e8187..4585f9e7f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7112,7 +7112,8 @@ F:	include/linux/kobj*
->  F:	include/linux/property.h
->  F:	include/linux/sysfs.h
->  F:	lib/kobj*
-> -F:	rust/kernel/device.rs
-> +F:	rust/kernel/device/mod.rs
-> +F:	rust/kernel/device/property.rs
-
-This should just be
-
-	F:	rust/kernel/device/
-
->  F:	rust/kernel/device_id.rs
->  F:	rust/kernel/devres.rs
->  F:	rust/kernel/driver.rs
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 0640b7e11..b4eec5bf2 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -23,6 +23,7 @@
->  #include "platform.c"
->  #include "pci.c"
->  #include "pid_namespace.c"
-> +#include "property.c"
->  #include "rbtree.c"
->  #include "rcu.c"
->  #include "refcount.c"
-> diff --git a/rust/helpers/property.c b/rust/helpers/property.c
-> new file mode 100644
-> index 000000000..08f68e2da
-> --- /dev/null
-> +++ b/rust/helpers/property.c
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/property.h>
-> +
-> +void rust_helper_fwnode_handle_put(struct fwnode_handle *fwnode)
-> +{
-> +	fwnode_handle_put(fwnode);
-> +}
-> diff --git a/rust/kernel/device.rs b/rust/kernel/device/mod.rs
-> similarity index 97%
-> rename from rust/kernel/device.rs
-> rename to rust/kernel/device/mod.rs
-> index db2d9658b..e49107452 100644
-> --- a/rust/kernel/device.rs
-> +++ b/rust/kernel/device/mod.rs
-> @@ -6,7 +6,6 @@
->  
->  use crate::{
->      bindings,
-> -    str::CStr,
->      types::{ARef, Opaque},
->  };
->  use core::{fmt, ptr};
-> @@ -14,6 +13,8 @@
->  #[cfg(CONFIG_PRINTK)]
->  use crate::c_str;
->  
-> +pub mod property;
-> +
->  /// A reference-counted device.
->  ///
->  /// This structure represents the Rust abstraction for a C `struct device`. This implementation
-> @@ -181,12 +182,6 @@ unsafe fn printk(&self, klevel: &[u8], msg: fmt::Arguments<'_>) {
->              )
->          };
->      }
-> -
-> -    /// Checks if property is present or not.
-> -    pub fn property_present(&self, name: &CStr) -> bool {
-> -        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-> -        unsafe { bindings::device_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
-> -    }
->  }
->  
->  // SAFETY: Instances of `Device` are always reference-counted.
-> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-> new file mode 100644
-> index 000000000..d89715f7d
-> --- /dev/null
-> +++ b/rust/kernel/device/property.rs
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Unified device property interface.
-> +//!
-> +//! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
-> +
-> +use core::ptr;
-> +
-> +use crate::{bindings, device::Device, str::CStr, types::Opaque};
-> +
-> +impl Device {
-> +    /// Obtain the fwnode corresponding to the device.
-> +    pub fn fwnode(&self) -> Option<&FwNode> {
-> +        // SAFETY: `self` is valid.
-> +        let fwnode_handle = unsafe { bindings::__dev_fwnode(self.as_raw()) };
-> +        if fwnode_handle.is_null() {
-> +            return None;
-> +        }
-> +        // SAFETY: `fwnode_handle` is valid. Its lifetime is tied to `&self`. We
-> +        // return a reference instead of an `ARef<FwNode>` because `dev_fwnode()`
-> +        // doesn't increment the refcount. It is safe to cast from a
-> +        // `struct fwnode_handle*` to a `*const FwNode` because `FwNode` is
-> +        // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
-> +        Some(unsafe { &*fwnode_handle.cast() })
-> +    }
-> +}
-
-Given that the cover letter says "Remove the duplicated property reading methods
-on Device.", I assume that's the only Device method you introduce? If so, please
-keep this one in the impl block of device/mod.rs.
-
-Please also rebase onto driver-core-next and put this method in the following
-impl block.
-
-	impl<Ctx: DeviceContext> Device<Ctx>
-
-I assume this is valid to call from any device context.
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
