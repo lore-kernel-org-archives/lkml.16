@@ -1,148 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4874E2472A4;
-	Fri, 25 Apr 2025 12:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56D721CC46;
+	Fri, 25 Apr 2025 12:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745583894; cv=none; b=jE4CfyWLFgDLqDldRDR5nHj2ifiOsKAXKo6/7+gpfkvgI97zeFkUqDX8gzRXWJs5GWndFLtTDMvB+4Nj3M8DpWFBYikgdxNo6+6AV6VFxqOP8AT+nZK3gWN261XPp5No0kwd1r71iA2eGbO3J/C0Fbp299soG6Ub5oVDk9MkT0I=
+	t=1745584058; cv=none; b=ls7hDZgQjYg4zBO7k281NkuIbb/rUtSXVBXVJgyr6xHco1A+Mx46/esoZSGK0++8/dnyNE5SL3sisZTA7swxfzMWnukiGoJToja1BM4TWG4ot58fseEqwiN1gbSvEWp2f+zv2u187h2Z1LcaZOq22CCRxTYPrrOzLwuIROaJnlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745583894; c=relaxed/simple;
-	bh=o0G2Agd2ibaLb8R6Vx4aLbFASWkHWp0MhHcs9AOgB4Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WtN3D7dkxEo4WKbfS8zRS/9pbjMDGgJyWjsUafUuWoEGPYp5VJiPFyG9qpy9N8KyVnuduaUm+XOmg6eUouVT8xLeYcpaBbd3IQc9ZNWsZGerk41C0li9xka3SubCKOq8xUEtlWFbkaC5bYzxid0xS5KGdjRKgUR/BPOElJPVvB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cTNSIKhW; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745584058; c=relaxed/simple;
+	bh=1q/8Z0J+uxA4a3nHceJwqLaKct7h70mNRGxQRrVpxT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HZCN0aEEvZ+kgOYx/jqFEjC9rf36sWnq8vGzzYnLwGLZ3uFYvBdQsu4YycnwxM8sIMmHDjrNWkIjnuS5zGdUr/faBU09/KXzmGkQX1rDDAMyIRsK0vLCFs13IX4XH7IWhS2dr6nrlWZaJcALVwvqSQvZoTZBzp69mBm+Yf4tfSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DducLYH6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cTNSIKhW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745583892; x=1777119892;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=o0G2Agd2ibaLb8R6Vx4aLbFASWkHWp0MhHcs9AOgB4Q=;
-  b=cTNSIKhWxsRvZCRzQwB88RB+dXZvBsUL/a0t+cOfOSQeG8F8uFv7N3Qo
-   Y6MWJB+gOcUGQ2rg3CU+0FuQlZZumlAcddOlVyoQZkF8a93qQkpUoUC4E
-   oUFqDrYu3DT0YdNEa5n5qaN60MMrKULKdJ2N1Vksm8h2/9xXVC7as9ox9
-   FA9K8dweUR0OFIAlNbvDQ20bE8Eaw8p/Fb5deuywV3jRaLpWQbywLNveb
-   QWvr5bs1kiB2iIwpQwFZKUSn6weYB5FwzB4iUIFyllQNoA4cQuCazp6PR
-   sP+FiM2KnG0OH1VXYR4vqRa1N5ec2dgWmk/WRgSYvTXg4zjjWvfQy4Asz
-   Q==;
-X-CSE-ConnectionGUID: ADDYL31+TjORD/XdoyzcGw==
-X-CSE-MsgGUID: qKAk/pv7RvS8YaDTwNmfjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="58615646"
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="58615646"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 05:24:51 -0700
-X-CSE-ConnectionGUID: eGaKsxZvS+GeZKpa8TKIsQ==
-X-CSE-MsgGUID: YGxb5wC5QmCgcvgYPUdp5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,238,1739865600"; 
-   d="scan'208";a="132637150"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.154])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 05:24:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 25 Apr 2025 15:24:45 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN
- flag
-In-Reply-To: <aAtgIfG8VG7vLDPN@wunner.de>
-Message-ID: <e154f382-629e-f910-ea56-7cce262df079@linux.intel.com>
-References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com> <aAi734h55l7g6eXH@wunner.de> <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com> <aAnOOj91-N6rwt2x@wunner.de> <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
- <aAtgIfG8VG7vLDPN@wunner.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DducLYH6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1q/8Z0J+uxA4a3nHceJwqLaKct7h70mNRGxQRrVpxT8=; b=DducLYH6ztS5Yh/t/Y2u4p78zx
+	5BK2jpexk1qc90qvF1LPpFrnJmht/g0NtGbcAr/ORj2+DT43Xjt05H9XnyFw9x3LTO0oB9uriakjt
+	bZIT5kA8pTOd+E+dYU++W2fvFrMFQLp6pER9vhBl9zu3D6Wdd5aXtsZ5j3cFr4kC/U67cnDeoDvmK
+	uQ9FwDdvOOG7uk2/0609BQBjSLFYahvZMdPEAoOer3ox0YzoCTOQLZjpMV4poEuPC4DpYUtWWDM6j
+	t9AzB1Dg94/Bq9T5gFNfsZg2UJ87P5wC8M1LQU2P1TjPFNF4fLMbyMRdVsCveBz44CZDmXWCF70FJ
+	XCc4dTQA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u8I9N-0000000EUEK-00tZ;
+	Fri, 25 Apr 2025 12:27:25 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 642ED3003C4; Fri, 25 Apr 2025 14:27:24 +0200 (CEST)
+Date: Fri, 25 Apr 2025 14:27:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Shukla Manali <Manali.Shukla@amd.com>,
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+Message-ID: <20250425122724.GA22125@noisy.programming.kicks-ass.net>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <16d8265b-750d-4e3c-aeb1-772d28b6c79c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2091258201-1745583885=:950"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16d8265b-750d-4e3c-aeb1-772d28b6c79c@linux.intel.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Apr 16, 2025 at 03:22:02PM +0800, Mi, Dapeng wrote:
+> Kindly ping... Any comments on this patch series? Thanks.
 
---8323328-2091258201-1745583885=:950
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Fri, 25 Apr 2025, Lukas Wunner wrote:
-> On Thu, Apr 24, 2025 at 03:37:38PM +0300, Ilpo J=E4rvinen wrote:
-> > On Thu, 24 Apr 2025, Lukas Wunner wrote:
-> > >   The only concern here is whether the cached
-> > >   link speed is updated.  pcie_bwctrl_change_speed() does call
-> > >   pcie_update_link_speed() after calling pcie_retrain_link(), so that
-> > >   looks fine.  But there's a second caller of pcie_retrain_link():
-> > >   pcie_aspm_configure_common_clock().  It doesn't update the cached
-> > >   link speed after calling pcie_retrain_link().  Not sure if this can
-> > >   lead to a change in link speed and therefore the cached link speed
-> > >   should be updated?  The Target Link Speed isn't changed, but maybe
-> > >   the link fails to retrain to the same speed for electrical reasons?
-> >=20
-> > I've never seen that to happen but it would seem odd if that is forbidd=
-en=20
-> > (as the alternative is probably that the link remains down).
-> >=20
-> > Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as =
-the=20
-> > last step, then the irq handler returning IRQ_NONE doesn't matter.
->=20
-> Why pcie_reset_lbms()?  I was rather thinking that pcie_update_link_speed=
-()
-> should be called from pcie_retrain_link().  Maybe right after the final
-> pcie_wait_for_link_status().
-
-My reasonale for having it in pcie_reset_lbms() is that LBMS is cleared
-there which races with the irq handler reading LBMS. If LBMS is cleared=20
-before the irq handler reads linksta register, it returns IRQ_NONE and=20
-will misses the LBMS event. So this race problem is directly associated=20
-with the write-to-clear of LBMS.
-
-> That would ensure that the speed is updated in case retraining from
-> pcie_aspm_configure_common_clock() happens to lead to a lower speed.
-> And the call to pcie_update_link_speed() from pcie_bwctrl_change_speed()
-> could then be dropped.
->
-> PCIe r6.2 sec 7.5.3.19 says the Target Link Speed "sets an upper limit
-> on Link operational speed", which implies that the actual negotiated
-> speed might be lower.
-
-While I don't disagree with that spec interpretation, in case of ASPM, the=
-=20
-question is more complex than that. The link was already trained to speed=
-=20
-x, can the new link training result in failing to train to x (in=20
-practice).
-
-The funny problem here is that all 3 places have a different, but good=20
-reason to call pcie_update_link_speed():
-
-1) pcie_reset_lbms() because of the LBMS race mentioned above.
-
-2) pcie_retrain_link() because Link Speed could have changed because of=20
-   the link training.
-
-3) pcie_bwctrl_change_speed() because it asked to change link speed, and=20
-   also due to the known HW issue that some platforms do not reliably send=
-=20
-   LBMS (I don't recall if it was interrupt triggering issue or issue=20
-   with asserting LBMS itself, the effect is the same regardless).
-
-In addition, in the code 3) calls 2) and 2) calls 1), which leaves=20
-pcie_reset_lbms() as the function where all roads always lead to including=
-=20
-those that only call pcie_reset_lbms(). So if pcie_update_link_speed() is=
-=20
-to be placed not all those three places but only one, the best place seems=
-=20
-to be pcie_reset_lbms() as it covers all cases including those that only=20
-calls it directly.
-
---=20
- i.
-
---8323328-2091258201-1745583885=:950--
+I suppose its mostly okay, just a few nits.
