@@ -1,132 +1,165 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42FB6198E75;
-	Fri, 25 Apr 2025 18:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745605330; cv=none; b=Euy93h9zto296+95RmZ3yXtXmiCSroNSGjZqA3m+GSqqD/fFAV/QtRngUzRmDFeblGy+cGbrHlsfZeQOAYK6QztTVyY4J12dROdc7OqhAeCy21S0QXT3mpQmIQw8BsVfwzdw7EUp6mKFN/3HSZppJ1xPh314O7DSc0pSTbgOy1A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745605330; c=relaxed/simple;
-	bh=h/4Eajx1BB93vPcjQ+W2ynlD2GoC8tcFi87iz9uYlDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YjAfIMVWXBiqxB1UUfqt5uGNI4XvfU4pDwN+SZCMAq6I2kWREFuD40vkx3rEM7NDrMSp5R5EKpdV84USREGM+4+P0WBNisi0eLcIQmrqmTcajrZcj9X284jkSIq3VyjVBEZj21TK3Axh0Txy96o1NEeOnfW9dhIWShq+o+nDFqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NCQ0Mw5F; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD4A188733;
+	Fri, 25 Apr 2025 18:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745605423; cv=pass; b=Qiuv55P5m9X/4p3eGJuyynmoq3lHLz0eqBiOygePdzzEBp4tYAjAHEjzD6sO+gO85gZJf7PqwIetsYMnyRUTVj1tJnzDOj0EMBcR9qRzGapjxmY2jSxnJdI3kuuBRFMw2S6NheZ4xeVzCiH+OFT5H4UF+x4NktH4nPGjrXMwCtE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745605423; c=relaxed/simple;
+	bh=cTAlc/+Wf4vVMxPoxY1qiiaZu7vV+g+7hcErx0GI2WM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a6mze749H7Rulpwvdk0JECzvBcpesYQ4cVnxXek1vt6PubPqdk8SbXLvvoi9dO/MwJDGyNs8eST/iB72Fn4NR5cPWivW3ff5+oFgwMYT1h2Nnf2sf/OfLchs83vSY1CzHVBcnjd9OpzzJy2auccajkBGgU3CM2doMyx8CUygIEU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=FQXA+UJm; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NCQ0Mw5F"
-Received: from [10.16.80.157] (unknown [131.107.147.157])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 89D1120BCAD1;
-	Fri, 25 Apr 2025 11:22:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 89D1120BCAD1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745605328;
-	bh=GQxtF7jZT692Xg2kvpz9fFHAy7AjVV3zrXUfHqtyLPc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NCQ0Mw5FVpqSQI6GuSPdLS9Cl4TmaROvR7+mdZmykj1KFoZTIgITHgeZJ4zHMt8A4
-	 oF36azBo8C3/PbZaSz/tyqEH0Wu9Dsyk/ebsTARvufmGayBSwsDXgw7OSjfZrbBFgF
-	 4l721r760DtJtIeNBkyirOQQk3qW/xwV6jPAvfKk=
-Message-ID: <c57c6ce9-6ff8-431c-ab77-fa2c727fee09@linux.microsoft.com>
-Date: Fri, 25 Apr 2025 11:22:08 -0700
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="FQXA+UJm"
+ARC-Seal: i=1; a=rsa-sha256; t=1745605385; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XR4vgjGGKgdTAQTS2rACu8DaNC0+4UT/y6l9t417lb2cEStrUiXb49602fgwtccUsuX6Y7kHT14MvO7LiXz/8vP2d9vyBMllb1yfwmw+lyFAzcy6j11bYeX9roXbD72We6/FhhaGdz4R22SLlAc7fOCP1UFTbutm9Mb8ATzOW+w=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745605385; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0RChf9eM3DaEmdKL7oMWpMmY3Kl6bXdjA82ZsWOcius=; 
+	b=HeWEfNg05JGno+gblt9+NGBaOAc8R0q0ykioi6LxZ/YCrqqzWMn92WJP7wUnuLEU13sUQx4iPR0F5Y8oudQIORyGqJl3AQ9iSL4f4awb9YYVdgX3oO0WCm07xBMCeaAvUIncNk9u6U6px46oXvLSeXZ9mNfpdGv7lcXldvx9ml4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745605385;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=0RChf9eM3DaEmdKL7oMWpMmY3Kl6bXdjA82ZsWOcius=;
+	b=FQXA+UJmtg+IY7UgzEQ+P9azZOu+hNcePPWPRlkIrfJ+s8uJDDZI/ISowa6uJow9
+	FRLma6kBaxPxT8zOpGE3SAbplMgma1cSyjpRidXiVhN8Llw9AXWiT7APRkqa5RxjwLk
+	uqkyIB9cMsYFPNm1mNRFQkNmUZ1p3tlYCA5RYoVA=
+Received: by mx.zohomail.com with SMTPS id 1745605383428608.9673402692126;
+	Fri, 25 Apr 2025 11:23:03 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Jeffrey Hugo <quic_jhugo@quicinc.com>, linux-rockchip@lists.infradead.org,
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-doc@vger.kernel.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v2 4/7] accel/rocket: Add a new driver for Rockchip's NPU
+Date: Fri, 25 Apr 2025 20:22:55 +0200
+Message-ID: <2950819.ElGaqSPkdT@workhorse>
+In-Reply-To: <20250225-6-10-rocket-v2-4-d4dbcfafc141@tomeuvizoso.net>
+References:
+ <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
+ <20250225-6-10-rocket-v2-4-d4dbcfafc141@tomeuvizoso.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP
- ID confusion in hv_snp_boot_ap()
-To: Saurabh Singh Sengar <ssengar@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Cc: "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
- "mikelley@microsoft.com" <mikelley@microsoft.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- Tianyu Lan <Tianyu.Lan@microsoft.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, Allen Pais <apais@microsoft.com>,
- Ben Hillis <Ben.Hillis@microsoft.com>,
- Brian Perkins <Brian.Perkins@microsoft.com>,
- Sunil Muthuswamy <sunilmut@microsoft.com>
-References: <20250424215746.467281-1-romank@linux.microsoft.com>
- <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
- <KUZP153MB1444118E6199CBED8C78E6D4BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <8fa1045a-c3e9-48e0-86fe-ab554d7475c8@linux.microsoft.com>
- <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-
-
-On 4/25/2025 10:18 AM, Saurabh Singh Sengar wrote:
->   
->> On 4/25/2025 2:14 AM, Saurabh Singh Sengar wrote:
->>>>
->>>> On Thu, Apr 24, 2025 at 02:57:46PM -0700, Roman Kisel wrote:
->>>>> To start an application processor in SNP-isolated guest, a hypercall
->>>>> is used that takes a virtual processor index. The hv_snp_boot_ap()
->>>>> function uses that START_VP hypercall but passes as VP ID to it what
->>>>> it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
->>>>>
->>>>> As those two aren't generally interchangeable, that may lead to hung
->>>>> APs if VP IDs and APIC IDs don't match, e.g. APIC IDs might be
->>>>> sparse whereas VP IDs never are.
->>>>>
->>>>> Update the parameter names to avoid confusion as to what the
->>>>> parameter is. Use the APIC ID to VP ID conversion to provide correct
->>>>> input to the hypercall.
->>>>>
->>>>> Cc: stable@vger.kernel.org
->>>>> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP
->>>>> guest")
->>>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->>>>
->>>> Applied to hyperv-fixes.
->>>
->>> This patch will break the builds.
->>>
->>> Roman,
->>> Have you tested this patch on the latest linux-next ?
->>
->> Thanks for your help! Only on hyperv-next, looking how to repro and fix on
->> linux-next. The kernel robot was happy, or I am missing some context about
->> how the robot works...
->>
->> What was your kernel configuration, or just anything that enables Hyper-V?
->>
->> I thought the the linux-next tree would be a subset of hyper-next so should
->> work, realizing that have to check, likely there might be changes from other
->> trees.
->>
+On Tuesday, 25 February 2025 08:55:50 Central European Summer Time Tomeu Vizoso wrote:
+> This initial version supports the NPU as shipped in the RK3588 SoC and
+> described in the first part of its TRM, in Chapter 36.
 > 
+> This NPU contains 3 independent cores that the driver can submit jobs
+> to.
 > 
-> hyperv-fixes is broken too, here's the log for your ref:
+> This commit adds just hardware initialization and power management.
 > 
-> https://dashboard.kernelci.org/log-viewer?itemId=microsoft%3A20250425085833916790&o=microsoft&type=build&url=https%3A%2F%2Flisalogsb15850d3.blob.core.windows.net%2Flisa-logs%2Fdefault_default%2F20250425%2F20250425-085110-393%2Fkernel_installer%2Fbuild.log%3Fst%3D2025-04-25T09%253A09%253A35Z%26se%3D2025-05-02T09%253A09%253A35Z%26sp%3Dr%26sv%3D2024-11-04%26sr%3Db%26skoid%3D14b53b1d-f4fc-442e-a437-4989376b1754%26sktid%3D72f988bf-86f1-41af-91ab-2d7cd011db47%26skt%3D2025-04-25T09%253A09%253A35Z%26ske%3D2025-05-02T09%253A09%253A35Z%26sks%3Db%26skv%3D2024-11-04%26sig%3DZHfA7%2FC174KR6HT8zhchCb47NE1aceqw8h0APzKxsII%253D
+> v2:
+> - Split cores and IOMMUs as independent devices (Sebastian Reichel)
+> - Add some documentation (Jeffrey Hugo)
+> - Be more explicit in the Kconfig documentation (Jeffrey Hugo)
+> - Remove resets, as these haven't been found useful so far (Zenghui Yu)
+> - Repack structs (Jeffrey Hugo)
+> - Use DEFINE_DRM_ACCEL_FOPS (Jeffrey Hugo)
+> - Use devm_drm_dev_alloc (Jeffrey Hugo)
+> - Use probe log helper (Jeffrey Hugo)
+> - Introduce UABI header in a later patch (Jeffrey Hugo)
 > 
-> The hv_snp_boot_ap() function in arch/x86/hyperv/ivm.c currently fails to compile.
-> It looks like the function's argument was changed from 'cpu' to 'apic_id', but internal
-> references to cpu were not updated accordingly.
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
+>  Documentation/accel/index.rst           |    1 +
+>  Documentation/accel/rocket/index.rst    |   19 +
+>  MAINTAINERS                             |    8 +
+>  drivers/accel/Kconfig                   |    1 +
+>  drivers/accel/Makefile                  |    1 +
+>  drivers/accel/rocket/Kconfig            |   25 +
+>  drivers/accel/rocket/Makefile           |    8 +
+>  drivers/accel/rocket/rocket_core.c      |   71 +
+>  drivers/accel/rocket/rocket_core.h      |   29 +
+>  drivers/accel/rocket/rocket_device.c    |   29 +
+>  drivers/accel/rocket/rocket_device.h    |   29 +
+>  drivers/accel/rocket/rocket_drv.c       |  273 ++
+>  drivers/accel/rocket/rocket_drv.h       |   13 +
+>  drivers/accel/rocket/rocket_registers.h | 4425 +++++++++++++++++++++++++++++++
+>  14 files changed, 4932 insertions(+)
 > 
-> This might have gone unnoticed during your testing if CONFIG_AMD_MEM_ENCRYPT
-> was disabled, in which case this function wouldn't have been compiled.
+> [...]
+> diff --git a/drivers/accel/rocket/rocket_drv.c b/drivers/accel/rocket/rocket_drv.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..c22d965f20f1239a36b1d823d5fe5f372713555d
+> --- /dev/null
+> +++ b/drivers/accel/rocket/rocket_drv.c
+> @@ -0,0 +1,273 @@
+> [...]
+> +static int rocket_probe(struct platform_device *pdev)
+> +{
+> +	struct component_match *match = NULL;
+> +	struct device_node *core_node;
+> +
+> +	if (fwnode_device_is_compatible(pdev->dev.fwnode, "rockchip,rk3588-rknn-core"))
+> +		return component_add(&pdev->dev, &rocket_core_ops);
+> +
+> +	for_each_compatible_node(core_node, NULL, "rockchip,rk3588-rknn-core") {
+> +		if (!of_device_is_available(core_node))
+> +			continue;
+> +
+> +		drm_of_component_match_add(&pdev->dev, &match,
+> +					   component_compare_of, core_node);
+> +	}
+> +
+> +	return component_master_add_with_match(&pdev->dev, &rocket_drm_ops, match);
+> +}
 
-Must be the case! I did run the command to merge the CVM specific config
-options but I didn't check the result.
+Hi Tomeu,
 
-Yep, I see the issue. Will resend the patch.
+something I've noticed while playing with this: currently, it doesn't seem like
+it's possible to support 1-core NPUs. rknn-core-top is a real core, but if no
+rknn-core is enabled beside it, it'll call component_master_add_with_match with
+match being NULL. This causes a kernel Oops.
 
-> 
-> Regards,
-> Saurabh
+I'm not sure what the proper fix is, since the component API doesn't seem to
+really have a consideration for a master with no other components.
 
--- 
-Thank you,
-Roman
+I ran into this when I was trying to debug why I get job timeouts followed by
+a full SoC lock-up on RK3576 by running with only one of the two cores enabled.
+
+As an aside note, my throwaway rocket-on-RK3576-hacking-branch is at [1] and
+contains some changes you may want to consider for v3, e.g. [2] and [3]+[4]. In
+[4], specifically the `domain-supply` part which means the NPU regulators don't
+have to be always-on. Though feel free to pull in my entire ROCK 5B enablement
+patch.
+
+Kind regards,
+Nicolas Frattaroli, who discovered that his cat is apparently 5% space heater
+according to mobilenet while playing with this patch series.
+
+[1]: https://gitlab.collabora.com/fratti/linux/-/commits/tomeu-npu?ref_type=heads
+[2]: https://gitlab.collabora.com/fratti/linux/-/commit/73aba31a00b34c254be575b524da568e115d985d
+[3]: https://gitlab.collabora.com/fratti/linux/-/commit/bd3a7bf5054c54c2915a9dc0396730d0f24b3b7c
+[4]: https://gitlab.collabora.com/fratti/linux/-/commit/5da44d61b09c345309f76159574d447d071c295d
+
+
 
