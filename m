@@ -1,211 +1,392 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BD7296D31
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D218232368
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745622746; cv=none; b=SSB0YR2w3UCrwrpQ2cU/J5oPLzZ5xZ6QifnDxzHRhAgHwwdmDCOOryxkTsxqO/4DqYSCDQKLdqZj2qi/1ObfoK/tJXLiTJ41pgaiG9IflRdx4qkPJwZWUKx6MvL7x0YSeH1cL0eKPIdYSAd1Yx1qxU17t1hd/hMv4o1DsO+Akz4=
+	t=1745622834; cv=none; b=GU3f2jk8Yz1xO7+ynERaNOZyfDCXO8BG7nRkNpopCePekChjYQWMpCQ+oOefYDbjTtBKajnRfuifFtDkDZcMIhH1AM4qf6iG2/hIUPz4Vv2s3ylN4XgIUaT1nv58/65jXqnhAmCoSPoQJ0XWlCLfXqhmStfQBx7sWMydjQot+W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745622746; c=relaxed/simple;
-	bh=lBVWirH/wT4DSQRUxAHBU1Z8VmDEiDI997Qr1ai+VDU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=VUN8FMD/i7Ow6ijReaqA2kJjJB2tfL8b2Ph+QxcuVxBYqG/LXt3UPL2+9282NMF1iDWEAmtyek0x1KhVNqDW1JyBj3ZDsf3QIoPaKLakAySmM0bvYVIsQdkL7FxHndcvLa/xnW62yQl1nqx+/nlmcXAJzKlDx3TR58Y0ohwSMNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SU8611xk; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745622834; c=relaxed/simple;
+	bh=PngBN4fnbURLzAySAY30tx1qdDko/K5iW4qjRDdHsFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ADOcbQ/C5LY3GQDVTZCQvOgCWu8zclDk9LGNUPBsHncYDOKyY+PrsnqXPSH2mCYcZHTy323rJ60vi2apY4e0TUZcHfd6WYvnnUI1hrECMckQbEwrjIWfJRZpS3DB6yTkmuWRY3N318Xcds52d9Vno113tYcXGnNEHYDDU9CIMaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PUk2Anzp; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SU8611xk"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f4b7211badso4658248a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:12:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PUk2Anzp"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72c7332128eso1780847a34.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745622743; x=1746227543; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tmqGkrT8pKgcGDCBKcXPdyFIvAScDuIz/sDPPptlagc=;
-        b=SU8611xkbZtHfQgQjHmPiVWw4ovGxIpSLPe0TOgkJ/pFAt/ILhXm0WMswsIN1Qh+kB
-         93MXnjwFqJXpt8PotR4IciS/92EOfZAgcY0QCEoJ1N1sWJgk4b+JGDao2DOYuiTgwxW6
-         gtbodZvG7PlgwHrUeXC/U8auPLHvjwCSTd03Sdux3Vr9YUSUcRJjhfF6rh3mhIp9cz8Z
-         cKE0GgZHh97oPLvGOB/KdjkaGRkcCPOsWKCHX8TbbJymM3v0bF0a3GTSEM0yf6BSR00w
-         XhEZdyuuWu5pIsih7HQw8vEjFtvK+nYBITMnlKLgofy8lHrRO30y4liIUQgXG4gt3Xm5
-         Q1vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745622743; x=1746227543;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745622830; x=1746227630; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tmqGkrT8pKgcGDCBKcXPdyFIvAScDuIz/sDPPptlagc=;
-        b=Q5Qv5U4gpoJHL/rd3caGtto4H2UlGAKJaGR8S58Svm879aNtsUAO+Es38RV9yGUZtH
-         J64ReMydurqhG6U2sN4OUh8/mJfblrJ4Vqv4UujaSBFcRXdyGBf3GYBXfg9r+/Hhhgix
-         SSQos0aTnAypxjRJ0T7nK+zDqovq+fon9JIEKa7ifBSWd23JRubJqZ7ObMkjRkiopkj4
-         rGaP4TcGXeoPgKLZ8Rz5svXdA0M3Yo21h0WrhtIJeLzyQIcdDTFsbxo9izUKtxw8xZvb
-         lCRTnDBE6yc8yzZcnWulrs2VyX7/f+EBDemj67JKPXdKqTF2Sli6k/QBpICIswwAoMHk
-         CbNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeqWj85enLSsSSvYpsJC8sVZeSetsJUGIVmsLrm8z4ioS4HBWUAhuNPwnIE0d3pex86yNKiy3EKix91c0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5KOEZQJKoPiFkfmKUSKPJ/dz7cqy+0Zm6WphKBeMbVUAKmkhl
-	pwmb7hNrcK0sZHPGpvElpupG9VWO4wrdyyuRz+gQKY3Odts9q2CHItyd+m7GUJHwGO1cT5qfCbV
-	pFOY105RmQLj2YrrB+HCKS7xl41U=
-X-Gm-Gg: ASbGncuE2DIHI/I9rqy0xq+F+UHxO84Iw4vb8YOs3annBWdFoxnegUrADroTU9/H8Kx
-	n4YwStwZb0FU5XfBkVPsNwJW516Zg2cUCyeDe4QoaG5awQGOsWZ04lQo0v692kZ+ZnwaA3GsswQ
-	jfd+lbNLggowatgl6Cp9qN
-X-Google-Smtp-Source: AGHT+IFbYQ+2iFR7S/u7nsYXV11sOemyomei8G6gARGgyO0bDnQjksxdk7K85FYgv6vPimpeu2QI16jyGjeNrP3Ew9c=
-X-Received: by 2002:a17:907:3f17:b0:acb:58f5:4529 with SMTP id
- a640c23a62f3a-ace71394307mr313873366b.45.1745622742560; Fri, 25 Apr 2025
- 16:12:22 -0700 (PDT)
+        bh=B+3rb/tLAGnvLIt9IgNGUN65XhsnftVTZknFpZtsVlw=;
+        b=PUk2AnzpMmsL9x4bI3BiNLMqjY+ETaT1qygv3AzghvWuoHExRhHuqUhxgiN59teVcV
+         g5P5CeARl53jAfoWr53r6LAoxFnGChMXWPVAPUGunXfhWMtJlTQdvGHwqIn+qPzs/nYi
+         VK444HhDkFMs56CqvyUnFHs6fzNODG2Z3Kfu/Xje/i7CVHi6NZoO5IOuf6ishTP2BYVJ
+         8xTG9Q3UIn01GKDmRswJbbGce/e4kHL2ttPjVpN4klPJ0G7wOZ10dCiiqG65VluD4Wce
+         bTHiFDfAR5U0XNRK914l0npeBo8reM4kIbj25PMyFOxGIkqs5hhLYuYu74BvaEXs/h7i
+         bc3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745622830; x=1746227630;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B+3rb/tLAGnvLIt9IgNGUN65XhsnftVTZknFpZtsVlw=;
+        b=M4W4f+yTVOiH6X+W6ncc354XWiarxvHkWvnP8Uxu3tnj7o9TnWkozOPfGDjFuzLRD7
+         XaLEajdomkKWCe4Ont/PAWoiP2RtimFTZbQhNGe0hKo3lXiPaT9UQfdbXQ9zQdhv0G53
+         rRrWMOofQB9LQV9jHEqL/j9nKMoNvJpiyAZUlwY0XvNNtQnz7lcUIuVzvfnOScEuZCwm
+         Zvyi7itP2VgGpeV4O9sCA3s7FnQv2cIZhbKan25RINv7zAFnmvtwfnZMcSZG+JsUk0Mn
+         PRwIp6IhTub3n8TPmtmNEZAAD7mhP1hQsABqwWoB2uO0DH0mnYrqe+C3OGudzKEQipKW
+         DPSA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1xz5l6M4t/0aBYRy2QvBAszxLyTfPiT7OfN+/EKiNeb8g2Z/4qXAVSbaMTSY50Nbu6Gfgk/wB+iBvw14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiFHa9L41Q8l6taXQK9n3KIrt5XlBjJYy4DzZMq2v5Vo9e3gEs
+	86+gvrkaWaKpcPcEUHBc6vMyd5mjwI2+n4WFbBPGUR4cSpTcdbjeaej0rKfzPhM=
+X-Gm-Gg: ASbGncujejTlcjekj7mPowsIMleaSUf3V209lv0FyAALdCoBV79XgZTbsa2ackmKick
+	AvqIhhLyy+Qi9KvU0ticHqWbgEBe6EU9BtornRFWN5gQzDkk2U0huIKDwwu/TxENEp11W0olSw1
+	ZZIYeiEDUFkZhhW9ti57KRevJLuAOqR2tg+kPi4P9s423vAr0KRW5aYM8QoGoh5vq6hfv7qE8XL
+	GXqZ0Fo9nYGxKeaP54zvQmoL5vW/E+0PfLCO52uiRB02HTaM4XcqMk4/vMvxh7fP8Q+NdZ7pXLs
+	HakYrBdi5tGgiqc763X7UqHJyEJcrLzzWJHed1B+AfdCJO/VKGOiFw8ztvBuulBtXum4lMt7VYE
+	mFUVo6eGdJWL5
+X-Google-Smtp-Source: AGHT+IFMv0vnj0gyPnnBDlAAtjQ4qLxNurqnITAkClibY+ZJfAW3Guzqu2qpn/vLBJV0bNHfsRHU4w==
+X-Received: by 2002:a05:6830:3816:b0:72b:9f83:1155 with SMTP id 46e09a7af769-7305c9f62bamr2552310a34.17.1745622830303;
+        Fri, 25 Apr 2025 16:13:50 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:96a3:e28:3f6:dbac? ([2600:8803:e7e4:1d00:96a3:e28:3f6:dbac])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7304f19fb76sm873571a34.16.2025.04.25.16.13.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 16:13:49 -0700 (PDT)
+Message-ID: <c82b8c53-e653-4cd3-80ef-37c5daf9314c@baylibre.com>
+Date: Fri, 25 Apr 2025 18:13:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 26 Apr 2025 09:12:11 +1000
-X-Gm-Features: ATxdqUFSwwc7uu860_jUpvTlumw25sQQBYyeK2MYs5a6E0i_lkdE8bixFaKtgIM
-Message-ID: <CAPM=9twNOWYCQ6vXZqUAu8G=oxGrKUvcTYz-SL6Jc=4+8ivVew@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.15-rc4
-To: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] iio: adc: add support for ad4052
+To: Jorge Marques <jorge.marques@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-5-638af47e9eb3@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250422-iio-driver-ad4052-v2-5-638af47e9eb3@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 4/22/25 6:34 AM, Jorge Marques wrote:
+> The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit,
+> successive approximation register (SAR) analog-to-digital converter (ADC)
+> that enables low-power, high-density data acquisition solutions without
+> sacrificing precision.
+> This ADC offers a unique balance of performance and power efficiency,
+> plus innovative features for seamlessly switching between high-resolution
+> and low-power modes tailored to the immediate needs of the system.
+> The AD4052/AD4058/AD4050/AD4056 are ideal for battery-powered,
+> compact data acquisition and edge sensing applications.
+> 
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+>  MAINTAINERS              |    1 +
+>  drivers/iio/adc/Kconfig  |   14 +
+>  drivers/iio/adc/Makefile |    1 +
+>  drivers/iio/adc/ad4052.c | 1425 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Weekly drm fixes, mostly amdgpu, with some exynos cleanups and a
-couple of minor fixes, seems a bit quiet, but probably some lag from
-Easter holidays.
+This patch is way too big, so I didn't review most of it yet. But time to call
+it quits for today. In the future, it would be a lot easier for reviewers if
+you can split things into multiple patches instead of implementing all of the
+features at once. E.g. start with just a basic driver, then a patch to add
+oversampling support, then another patch to add SPI offload support. 500 lines
+is a more manageable size for review.
 
-Dave.
+...
 
-drm-fixes-2025-04-26:
-drm fixes for 6.15-rc4
+> +static int ad4052_update_xfer_offload(struct iio_dev *indio_dev,
+> +				      struct iio_chan_spec const *chan)
+> +{
+> +	struct ad4052_state *st = iio_priv(indio_dev);
+> +	const struct iio_scan_type *scan_type;
+> +	struct spi_transfer *xfer = &st->xfer;
+> +
+> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
+> +
+> +	if (IS_ERR(scan_type))
+> +		return PTR_ERR(scan_type);
+> +
+> +	xfer = &st->offload_xfer;
+> +	xfer->bits_per_word = scan_type->realbits;
+> +	xfer->len = BITS_TO_BYTES(scan_type->storagebits);
 
-amdgpu:
-- P2P DMA fixes
-- Display reset fixes
-- DCN 3.5 fixes
-- ACPI EDID fix
-- LTTPR fix
-- mode_valid() fix
+This doesn't work for oversampling. realbits may be 16 while storagebits is 32.
+But the SPI controller needs to know how many realbits-sized words to read.
 
-exynos:
-- fix spelling error
-- remove redundant error handling in exynos_drm_vidi.c module.
-- marks struct decon_data as const in the exynos7_drm_decon driver
-since it is only read.
-- Remove unnecessary checking in exynos_drm_drv.c module
+So this should be 
 
-meson:
-- Fix VCLK calculation
+	xfer->len = BITS_TO_BYTES(scan_type->realbits);
 
-panel:
-- jd9365a: Fix reset polarity
-The following changes since commit 9c32cda43eb78f78c73aee4aa344b777714e259b:
 
-  Linux 6.15-rc3 (2025-04-20 13:43:47 -0700)
 
-are available in the Git repository at:
+> +
+> +	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer, 1);
+> +	st->offload_msg.offload = st->offload;
+> +
+> +	return spi_optimize_message(st->spi, &st->offload_msg);
 
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-04-26
+I know it is like this in a few other drivers already, but I don't like having
+spi_optimize_message() in this funtion because it makes it really easy to
+forget to do have balanced calls to spi_unoptimize_message().
 
-for you to fetch changes up to 250130d2daaa0a828bafbd6ad58479a645029e82:
+> +}
+> +
 
-  Merge tag 'amd-drm-fixes-6.15-2025-04-23' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes (2025-04-26
-08:12:41 +1000)
+...
 
-----------------------------------------------------------------
-drm fixes for 6.15-rc4
+> +static const struct iio_buffer_setup_ops ad4052_buffer_setup_ops = {
+> +	.postenable = &ad4052_buffer_postenable,
+> +	.predisable = &ad4052_buffer_predisable,
+> +};
 
-amdgpu:
-- P2P DMA fixes
-- Display reset fixes
-- DCN 3.5 fixes
-- ACPI EDID fix
-- LTTPR fix
-- mode_valid() fix
+Would be nice to add "offload" to the name of this struct and the callbacks
+to make it clear that these are only for the SPI offload use case.
 
-exynos:
-- fix spelling error
-- remove redundant error handling in exynos_drm_vidi.c module.
-- marks struct decon_data as const in the exynos7_drm_decon driver
-since it is only read.
-- Remove unnecessary checking in exynos_drm_drv.c module
+...
 
-meson:
-- Fix VCLK calculation
+> +
+> +static bool ad4052_offload_trigger_match(struct spi_offload_trigger *trigger,
+> +					 enum spi_offload_trigger_type type,
+> +					 u64 *args, u32 nargs)
+> +{
 
-panel:
-- jd9365a: Fix reset polarity
+We should be checking the args here according to what I suggested in my reply
+to the devicetree bindings patch. Right now it is assuming that we are only
+using this for SPI offload and that the pin used is GP1 and the event is data
+read. We should at least verify that the args match those assumptions.
 
-----------------------------------------------------------------
-Anindya Sundar Gayen (1):
-      drm/exynos: fixed a spelling error
+For bonus points, we could implement allowing GPO as well.
 
-Christian Hewitt (1):
-      Revert "drm/meson: vclk: fix calculation of 59.94 fractional rates"
+> +	return type == SPI_OFFLOAD_TRIGGER_DATA_READY;
+> +}
+> +
+> +static const struct spi_offload_trigger_ops ad4052_offload_trigger_ops = {
+> +	.match = ad4052_offload_trigger_match,
+> +};
+> +
+> +static int ad4052_request_offload(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4052_state *st = iio_priv(indio_dev);
+> +	struct device *dev = &st->spi->dev;
+> +	struct dma_chan *rx_dma;
+> +	struct spi_offload_trigger_info trigger_info = {
+> +		.fwnode = dev_fwnode(dev),
+> +		.ops = &ad4052_offload_trigger_ops,
+> +		.priv = st,
+> +	};
+> +	struct pwm_state pwm_st;
+> +	int ret;
+> +
+> +	indio_dev->setup_ops = &ad4052_buffer_setup_ops;
+> +
+> +	ret = devm_spi_offload_trigger_register(dev, &trigger_info);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "failed to register offload trigger\n");
 
-Colin Ian King (1):
-      drm/exynos: Fix spelling mistake "enqueu" -> "enqueue"
+Strictly speaking, the trigger-source provider is indendant of using it for
+SPI offload. I guess this is fine here for now though.
 
-Dave Airlie (3):
-      Merge tag 'drm-misc-fixes-2025-04-22' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-      Merge tag 'exynos-drm-fixes-for-v6.15-rc4' of
-git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos into
-drm-fixes
-      Merge tag 'amd-drm-fixes-6.15-2025-04-23' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
+> +
+> +	st->offload_trigger = devm_spi_offload_trigger_get(dev, st->offload,
+> +							   SPI_OFFLOAD_TRIGGER_DATA_READY);
+> +	if (IS_ERR(st->offload_trigger))
+> +		return PTR_ERR(st->offload_trigger);
+> +
+> +	st->cnv_pwm = devm_pwm_get(dev, NULL);
+> +	if (IS_ERR(st->cnv_pwm))
+> +		return dev_err_probe(dev, PTR_ERR(st->cnv_pwm),
+> +				     "failed to get CNV PWM\n");
+> +
+> +	pwm_init_state(st->cnv_pwm, &pwm_st);
+> +
+> +	pwm_st.enabled = false;
+> +	pwm_st.duty_cycle = AD4052_T_CNVH_NS * 2;
+> +	pwm_st.period = DIV_ROUND_UP_ULL(NSEC_PER_SEC,
+> +					 AD4052_MAX_RATE(st->grade));
+> +
+> +	ret = pwm_apply_might_sleep(st->cnv_pwm, &pwm_st);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to apply CNV PWM\n");
+> +
+> +	ret = devm_add_action_or_reset(dev, ad4052_pwm_disable, st->cnv_pwm);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev, st->offload);
+> +	if (IS_ERR(rx_dma))
+> +		return PTR_ERR(rx_dma);
+> +
+> +	return devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev, rx_dma,
+> +							   IIO_BUFFER_DIRECTION_IN);
+> +}
+> +
+> +static int ad4052_probe(struct spi_device *spi)
+> +{
+> +	const struct ad4052_chip_info *chip;
+> +	struct device *dev = &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad4052_state *st;
+> +	int ret = 0;
+> +
+> +	chip = spi_get_device_match_data(spi);
+> +	if (!chip)
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "Could not find chip info data\n");
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->spi = spi;
+> +	spi_set_drvdata(spi, st);
+> +	init_completion(&st->completion);
+> +
+> +	st->regmap = devm_regmap_init_spi(spi, &ad4052_regmap_config);
+> +	if (IS_ERR(st->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				     "Failed to initialize regmap\n");
+> +
+> +	st->mode = AD4052_SAMPLE_MODE;
+> +	st->wait_event = false;
+> +	st->chip = chip;
+> +	st->grade = chip->prod_id <= 0x75 ? AD4052_2MSPS : AD4052_500KSPS;
+> +	st->oversampling_frequency = AD4052_FS_OFFSET(st->grade);
+> +	st->events_frequency = AD4052_FS_OFFSET(st->grade);
 
-Felix Kuehling (3):
-      drm/amdgpu: Use allowed_domains for pinning dmabufs
-      drm/amdgpu: Don't pin VRAM without DMABUF_MOVE_NOTIFY
-      drm/amdgpu: Allow P2P access through XGMI
+Somewhere around here, we should be turning on the power supplies. Also, it
+looks like we need some special handling to get the reference volage. If there
+is a supply connected to REF, use that, if not, use VDD which requires writing
+to a register to let the chip know.
 
-George Shen (1):
-      drm/amd/display: Use 16ms AUX read interval for LTTPR with old sinks
+> +
+> +	st->cnv_gp = devm_gpiod_get_optional(dev, "cnv", GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->cnv_gp))
+> +		return dev_err_probe(dev, PTR_ERR(st->cnv_gp),
+> +				     "Failed to get cnv gpio\n");
+> +
+> +	indio_dev->modes = INDIO_BUFFER_HARDWARE | INDIO_DIRECT_MODE;
 
-Gergo Koteles (1):
-      drm/amd/display: do not copy invalid CRTC timing info
+INDIO_BUFFER_HARDWARE should not be set here. If using SPI offload,
+devm_iio_dmaengine_buffer_setup_with_handle() will add it automatically.
+For non-SPI-offload operation, it should not be set.
 
-Guoqing Jiang (1):
-      drm/exynos: Remove unnecessary checking
+> +	indio_dev->num_channels = 1;
+> +	indio_dev->info = &ad4052_info;
+> +	indio_dev->name = chip->name;
+> +
+> +	st->offload = devm_spi_offload_get(dev, spi, &ad4052_offload_config);
 
-Hugo Villeneuve (1):
-      drm: panel: jd9365da: fix reset signal polarity in unprepare
+This
 
-Krzysztof Kozlowski (1):
-      drm/exynos: exynos7_drm_decon: Consstify struct decon_data
+> +	if (IS_ERR(st->offload))
+> +		return PTR_ERR(st->offload);
 
-Leo Li (1):
-      drm/amd/display: Default IPS to RCG_IN_ACTIVE_IPS2_IN_OFF
+should be
 
-Mario Limonciello (1):
-      drm/amd/display: Fix ACPI edid parsing on some Lenovo systems
+	ret = PTR_ERR_OR_ZERO(st->offload);
 
-Martin Blumenstingl (1):
-      drm/meson: use unsigned long long / Hz for frequency types
+> +
+> +	if (ret && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "Failed to get offload\n");
+> +
+> +	if (ret == -ENODEV) {
+> +		st->offload_trigger = NULL;
+> +		indio_dev->channels = chip->channels;
+> +	} else {
+> +		indio_dev->channels = chip->offload_channels;
+> +		ret = ad4052_request_offload(indio_dev);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to configure offload\n");
+> +	}
+> +
+> +	st->xfer.rx_buf = &st->d32;
 
-Nicholas Susanto (1):
-      drm/amd/display: Enable urgent latency adjustment on DCN35
+I don't think we want this set globally. I.e. it doesn't make sense for SPI
+offload xfers.
 
-Roman Li (2):
-      drm/amd/display: Fix gpu reset in multidisplay config
-      drm/amd/display: Force full update in gpu reset
+> +
+> +	ret = ad4052_soft_reset(st);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "AD4052 failed to soft reset\n");
+> +
+> +	ret = ad4052_check_ids(st);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "AD4052 fields assertions failed\n");
+> +
+> +	ret = ad4052_setup(indio_dev, indio_dev->channels);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4052_REG_DEVICE_STATUS,
+> +			   AD4052_DEVICE_STATUS_DEVICE_RESET);
 
-Wentao Liang (1):
-      drm/exynos/vidi: Remove redundant error handling in vidi_get_modes()
+Why not include this in ad4052_setup() or even ad4052_soft_reset()?
 
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c        |  52 +++++-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  41 ++---
- .../drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c  |   2 +-
- .../gpu/drm/amd/display/dc/dml/dcn35/dcn35_fpu.c   |   4 +-
- .../dc/link/protocols/link_dp_training_8b_10b.c    |  54 ++++--
- drivers/gpu/drm/exynos/exynos7_drm_decon.c         |   4 +-
- drivers/gpu/drm/exynos/exynos_drm_drv.c            |   3 +-
- drivers/gpu/drm/exynos/exynos_drm_fimc.c           |   2 +-
- drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   2 +-
- drivers/gpu/drm/exynos/exynos_drm_vidi.c           |   3 -
- drivers/gpu/drm/meson/meson_drv.c                  |   2 +-
- drivers/gpu/drm/meson/meson_drv.h                  |   2 +-
- drivers/gpu/drm/meson/meson_encoder_hdmi.c         |  29 +--
- drivers/gpu/drm/meson/meson_vclk.c                 | 195 +++++++++++----------
- drivers/gpu/drm/meson/meson_vclk.h                 |  13 +-
- drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c   |   4 +-
- 16 files changed, 229 insertions(+), 183 deletions(-)
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad4052_request_irq(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ad4052_update_xfer_raw(indio_dev, indio_dev->channels);
+> +
+> +	pm_runtime_set_active(dev);
+> +	ret = devm_pm_runtime_enable(dev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to enable pm_runtime\n");
+> +
+> +	pm_runtime_set_autosuspend_delay(dev, 1000);
+> +	pm_runtime_use_autosuspend(dev);
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static int ad4052_runtime_suspend(struct device *dev)
+> +{
+> +	struct ad4052_state *st = dev_get_drvdata(dev);
+> +
+> +	return regmap_write(st->regmap, AD4052_REG_DEVICE_CONFIG,
+> +			    FIELD_PREP(AD4052_DEVICE_CONFIG_POWER_MODE_MSK,
+> +				       AD4052_DEVICE_CONFIG_LOW_POWER_MODE));
+> +}
+> +
+> +static int ad4052_runtime_resume(struct device *dev)
+> +{
+> +	struct ad4052_state *st = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4052_REG_DEVICE_CONFIG,
+> +			   FIELD_PREP(AD4052_DEVICE_CONFIG_POWER_MODE_MSK, 0));
+
+regmap_clear_bits() would be shorter if there isn't going to be a macro to
+explain the meaning of 0.
+
+> +	return ret;
+> +}
+> +
