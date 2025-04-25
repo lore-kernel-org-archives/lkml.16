@@ -1,131 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D287230BC2;
-	Fri, 25 Apr 2025 09:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7D72343AF
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572798; cv=none; b=phuRWLVIo8E71iHvekB9gnZuUWBCQ3fJATqwP0rx0AHqD701XMCDbsoEJL9aiLWUJz+6f1iMm4xRmNpUsLNXtzAVLRYzULLW92vuzce0z78QgCt+qFGqJwgviI5EwSf4sjyl5fP2M1hgG/k4/i3UkXtaLXgMuB0qzUg+3T12ufo=
+	t=1745572822; cv=none; b=SAcALqY+d6me1XjH6uWOWVXLWNLl6qJruRfWd+/Ktin48RD67iSUBAIbiuyUZj8YrgLvdebn6B3gCKPrW9n7ltCDLJVEZ4XfZD1ZOIdfE1jd3eFEgeIw9kPYdKXFhKHMc6vFBLBoa3hzm8zpN9OhQh1J20vIxueWpqvMy9PRUIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572798; c=relaxed/simple;
-	bh=s+UM6pisdmKw4N9/rscRvpbQV5hWX+gCZWCLZQIJwcQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Pl3IRGVVdSNhgOZ8ELNYl5omwwuzqbPEu+1BGx2OFmd5yJ4ryi6+IcRrmLydCik3SsiUoRLIXfBos05batimMq80mU1UZGfyFTW2wfArlI0fMtsZD5qH24LoDiT0+HEoV9FyhatV3kzfptdBFv4y4b4vOXz5SUPveU3NnKlySpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcMWUsOY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745572822; c=relaxed/simple;
+	bh=GlTrV0NWZcEDUHLVWg40j5KzByNVEFc76P93JZiWIzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIlpPgn6wJbYmCnBXyXLAHwWd1cW4mL64c9M4YcRcpEpQfS01/TEBJdoWnj/DQR0kVPsWelHw7a6TA6ljepw11HVWrd3+0B7+YoZmQtC7bpvgOUjjAeKWZ229lnpj7zPoQ2Qo7trDTD2hPM+vFdtp3dWAqs2f6yVu2rn3elcqtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aF6ClIpQ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcMWUsOY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4C27C4CEE4;
-	Fri, 25 Apr 2025 09:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745572797;
-	bh=s+UM6pisdmKw4N9/rscRvpbQV5hWX+gCZWCLZQIJwcQ=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=QcMWUsOY+tfg+yMSUeRa0AJAjh2uSxwqe6c3JH4/d60hO20ZOglqn5AS28oQRnNyH
-	 OpXkDSpy9HrsN9SWaT1QhlhNPRnz0KnMOHifrGtw1idvHzjzpeGZFq2y+uk2tCdZRL
-	 heWBumAI+X+oJ8/G/RiAIQc1WEpDA/0aKOFB6oTh8IbBHt7ZfdtGlJ4cIIzDJ32Pwm
-	 42Mjcr02GaAtQc6AM1V7bLSOK6dgXZbDYEhvNaRPrLDAA/SJ3OjEzVjAsQ8aKUQOSp
-	 5mHbu7lZCuZJcdqgrecpfXTrdPDtokYJ4oJmZDlZ4QtZjF9xb6Ysq/t9JIr762QvWk
-	 QCSjJHnAXX5LA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA72C369D1;
-	Fri, 25 Apr 2025 09:19:57 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Fri, 25 Apr 2025 13:19:28 +0400
-Subject: [PATCH v2] net: dsa: qca8k: fix led devicename when using external
- mdio bus
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aF6ClIpQ"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8TBDJ007414
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:20:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=rMDIsHdsOYkyViUAsU0t/ePU
+	SWOO0YxJOUX3cKyNhU4=; b=aF6ClIpQAYUrCzDnHYfaXzQmwyNulXHEBtEuHA7R
+	oLdXml4MEUGZlFN1bhGbAzin8xp9PNjxOPvY8fm55P73h6zozQXKjFnu4d1bWK87
+	p78nCwPMoecpSxRcDOvQ3qhzklOP6kTXISooEg9LjB3ABMJPHIAOiS7FOdKWqB4h
+	4/wbqslrMQzCgnNDdUOgHQvIwZJBbPdBM4nBFkfSFILproO7iO6dVzLE230AKuqv
+	NrmDDfIYzWprXypPDQwo/rVqsxldkAUsGMnoJWX5mx5m2qu2kY8nGW3PER0ss5d3
+	Wo53ym5H/ep/vbCkOevCqO8F/JK+l+J4GZcF/4S1QK7WTg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0rc1p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:20:19 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c572339444so328761485a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:20:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745572819; x=1746177619;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rMDIsHdsOYkyViUAsU0t/ePUSWOO0YxJOUX3cKyNhU4=;
+        b=KV/JkJRyCiUggtqTqhwT7dVhB9R9GZCfRa7YY+z+dqV7u7QRq6J3cJryB1GhzZSr+W
+         iz7dzW8FL994dY41Wbt/RNmDw+ufgyDAGhRbYDfOproku9khLuOx/+FjjwHVO5KIrIoM
+         xhSDokRBjabPJQbHYI6T4aTcfgz0OVUv4XLHUhulI5FqX9+3zNhOwY4pnqlZGf7aW5Ka
+         zyjZyYKxPwdSDZbsjiD+58haEql0Px7KnSP/gLKVSOn5a+ozNUVmgfFt4H/UiSOXgtbI
+         mT4mH1eueZhOAvL2QT/YoobMPlxCqo8wrHOtzfpnLNWUydnBCnLmLr4xpwGrR9J/erXf
+         96lw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6nimiJ7GGWvErmWLovd8tvk7E7tu1KZgJ6JqrFatWSgAaGR0mj+da5mwvRWc/iIFWhtAykcUXErV/wso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCmrnAtNsskgoA3CvvZtwG6jJwOiodrpCemCgvRSGSSGPzV92h
+	X77VvcadZ9lIIaIA/OHzcBc6biUBGHQ4ZPEYaEFZmZVFgjLXus4Xht90PHyIc/sIPD+ShnSGN7z
+	P9W8Bcd7FiZn6fecicihI9r5LIJv0Fz2AHkHkobHv18GmczTqH0hsSR9lOE+T+70=
+X-Gm-Gg: ASbGncv2lLHkVcWLsaK/jtTtnjsgZhX3x7lPXl5CI9NJmAi+fyO0dwkGuppDwZM0ZkI
+	4c3Rh3kIHFj5J55E08xOVhIjrDEErYpqVtRDgU3TUl09aMUhQONyGcb8QDXqZBOFflPt9HirKYx
+	gsIRGG5RR43ALc+Mfr+0aj3iJgWvaJyX5EuRJM/CAwJRq+9b28MuQ9hiLNrkTCPsu40hhM8KAxS
+	99WJyBNBmN/bS6B+jQyYXNiDGe9wWE35UzVsVLVn01Olt74j7VjpXgpvzToCkpo4M3zu4EJRn2R
+	S66zqkS0SHighaY8GEcKeT7CsoeSxBpHYjEE03/LRBtTePSYbWlAsceePZbqxq+LgdvgyJkvXnY
+	=
+X-Received: by 2002:a05:620a:2801:b0:7c5:3b52:517d with SMTP id af79cd13be357-7c9607aa0d9mr312340485a.54.1745572818820;
+        Fri, 25 Apr 2025 02:20:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfBCKqtUoVTfxHiMTz/laWIXb+vyHohQFKZ/KaREmisUEpTMfrdz3hYOCR3l6/Jaa+ylyp/A==
+X-Received: by 2002:a05:620a:2801:b0:7c5:3b52:517d with SMTP id af79cd13be357-7c9607aa0d9mr312336985a.54.1745572818522;
+        Fri, 25 Apr 2025 02:20:18 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b96d45sm6445631fa.94.2025.04.25.02.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 02:20:17 -0700 (PDT)
+Date: Fri, 25 Apr 2025 12:20:16 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        laurentiu.tudor1@dell.com, abel.vesa@linaro.org, johan@kernel.org
+Subject: Re: [PATCH v3 2/4] drm/msm/dp: Account for LTTPRs capabilities
+Message-ID: <jdeuodvsnlezbnxoucihd75rwlrigskvessdt3n3ufuppw7qov@ujjgimndcdkp>
+References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
+ <20250417021349.148911-3-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-qca8k-leds-v2-1-b638fd3885ca@outlook.com>
-X-B4-Tracking: v=1; b=H4sIAJ9TC2gC/22MQQ7CIBBFr9LMWkwHpLGuvIfpAmFqJ61FoRJNw
- 93Frl38xfvJeytECkwRTtUKgRJH9nMBuavADma+kWBXGGQtdX2QWjytOY5iIheF0qTw2hqFbQ9
- FeATq+b3FLl3hgePiw2drJ/y9fzMJBYpGYWOcKpPy7F/L5P24t/4OXc75C4PqVLmmAAAA
-X-Change-ID: 20250425-qca8k-leds-35e31b9a319f
-To: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- George Moussalem <george.moussalem@outlook.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745572796; l=3435;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=ydGK36Kl5X3P/v+3CwPypXc8oDZyqDCNEcnQKXNutFA=;
- b=M4+pevfUAbWEi3MH1shAmBryPB6xZcVeewXJQthY8K/LnKGCjAm5MZD+k9aHotIPA/Rb6PEPN
- SGaAHTo0uWVBjuck36b1/Fa4nk6RbYnvbqZwaXZnuR45en4ILAEFpS3
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417021349.148911-3-alex.vinarskis@gmail.com>
+X-Proofpoint-ORIG-GUID: PAVbgR7i0EyGz7qB9MKPVR82WaJvgv64
+X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680b53d3 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=QaToclHOt1NPS2V0eqsA:9 a=CjuIK1q_8ugA:10 a=zgiPjhLxNE0A:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: PAVbgR7i0EyGz7qB9MKPVR82WaJvgv64
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2NiBTYWx0ZWRfX5Oy1Of6dZRO4 44hF9z+8wjbpZ+gAn8563qYkNjGCetCBl3B1rQ6GBoBhAEt0+YaXG2tu6oACAswvE/VVCCAv82Q opMsXTiOC55LyYSjcrSRFM+V+EkgsKrkYApdTY+XHR7xy1zjWFg9LjmOnrLG9VE+EvdaiURIPH4
+ lMF+NE6Hkt/PzuO05Vz9QAYUyukko1BV7XGV1TayxT7iiMRsyWkH9NHZMaWCrhPFZh0jbrdQrl5 YpaBrvT3LmrTC1xkPrnYnWs43bmunfXvj3SOvdGyUZIbp2ryhWEzi3XpK8kLZ01aiugfwnXKt9z yoObRYGzPpPe/JlnIppBsULGw6V7aUJfUVj52carodKdSv+WTLt1h/7M42B2FyI7Dq6C3Sf5xq4
+ xECPNkFyLhWEq1D2Rbb9xz/t5x4SpnQVhYIqY9OLqKFbwyGcjxXQjFBc1TLv9a5pV8dMGI64
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=771 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250066
 
-From: George Moussalem <george.moussalem@outlook.com>
+On Thu, Apr 17, 2025 at 04:10:33AM +0200, Aleksandrs Vinarskis wrote:
+> Take into account LTTPR capabilities when selecting maximum allowed
+> link rate, number of data lines.
+> 
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> ---
+>  drivers/gpu/drm/msm/dp/dp_display.c |  5 ++---
+>  drivers/gpu/drm/msm/dp/dp_link.h    |  3 +++
+>  drivers/gpu/drm/msm/dp/dp_panel.c   | 12 +++++++++++-
+>  3 files changed, 16 insertions(+), 4 deletions(-)
+> 
 
-The qca8k dsa switch can use either an external or internal mdio bus.
-This depends on whether the mdio node is defined under the switch node
-itself and, as such, the internal_mdio_mask is populated with its
-internal phys. Upon registering the internal mdio bus, the slave_mii_bus
-of the dsa switch is assigned to this bus. When an external mdio bus is
-used, it is left unassigned, though its id is used to create the device
-names of the leds.
-This leads to the leds being named '(efault):00:green:lan' and so on as
-the slave_mii_bus is null. So let's fix this by adding a null check and
-use the devicename of the external bus instead when an external bus is
-configured.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
-Fix the led device names when an external mdio is configured.
-The current codepath for registering led device names 'assumes' that the
-internal mdio bus is used. Therefore, add a check and fallback to the
-device name of the external mdio bus while creating the led device
-names.
-
-Wrong device names:
-root@OpenWrt:~# ls -l /sys/class/leds                                           
-lrwxrwxrwx    1 root     root             0 Jan  1  1970 (efault):00:green:lan -> ../../devices/platform/soc@0/90000.mdio/mdio_bus/90000.mdio-1/90000.n
-lrwxrwxrwx    1 root     root             0 Jan  1  1970 (efault):01:green:lan -> ../../devices/platform/soc@0/90000.mdio/mdio_bus/90000.mdio-1/90000.n
-lrwxrwxrwx    1 root     root             0 Jan  1  1970 (efault):02:green:lan -> ../../devices/platform/soc@0/90000.mdio/mdio_bus/90000.mdio-1/90000.n
-
-Correct device names:
-root@OpenWrt:~# ls -l /sys/class/leds                                                                                                                      
-lrwxrwxrwx    1 root     root             0 Jan  1  1970 90000.mdio-1:00:green:lan -> ../../devices/platform/soc@0/90000.mdio/mdio_bus/90000.mdio-1/90000.n
-lrwxrwxrwx    1 root     root             0 Jan  1  1970 90000.mdio-1:01:green:lan -> ../../devices/platform/soc@0/90000.mdio/mdio_bus/90000.mdio-1/90000.n
-lrwxrwxrwx    1 root     root             0 Jan  1  1970 90000.mdio-1:02:green:lan -> ../../devices/platform/soc@0/90000.mdio/mdio_bus/90000.mdio-1/90000.n
----
-Changes in v2:
-- Fixed c/p error from older kernel version: slave_mii_bus was renamed
-  to internal_mdio_bus
-- Link to v1: https://lore.kernel.org/r/20250425-qca8k-leds-v1-1-6316ad36ad22@outlook.com
----
- drivers/net/dsa/qca/qca8k-leds.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/dsa/qca/qca8k-leds.c b/drivers/net/dsa/qca/qca8k-leds.c
-index 43ac68052baf9f9926aaf4a9d8d09640f9022fcd..ef496e345a4e7dd5b9fb805b8e0ff3cce56e2986 100644
---- a/drivers/net/dsa/qca/qca8k-leds.c
-+++ b/drivers/net/dsa/qca/qca8k-leds.c
-@@ -429,7 +429,8 @@ qca8k_parse_port_leds(struct qca8k_priv *priv, struct fwnode_handle *port, int p
- 		init_data.fwnode = led;
- 		init_data.devname_mandatory = true;
- 		init_data.devicename = kasprintf(GFP_KERNEL, "%s:0%d",
--						 priv->internal_mdio_bus->id,
-+						 priv->internal_mdio_bus ?
-+						 priv->internal_mdio_bus->id : priv->bus->id,
- 						 port_num);
- 		if (!init_data.devicename) {
- 			fwnode_handle_put(led);
-
----
-base-commit: 02ddfb981de88a2c15621115dd7be2431252c568
-change-id: 20250425-qca8k-leds-35e31b9a319f
-
-Best regards,
 -- 
-George Moussalem <george.moussalem@outlook.com>
-
-
+With best wishes
+Dmitry
