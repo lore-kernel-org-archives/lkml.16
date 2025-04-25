@@ -1,196 +1,238 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58EE45258;
-	Fri, 25 Apr 2025 01:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A3517BD3;
+	Fri, 25 Apr 2025 01:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745542844; cv=none; b=cSVYo8tyVdfbGWvEIdMk55xIfEFcw52MJDD0NoC7WJvW/YhI6pu97FjlnKceD737B4XIYpDO/6oqPkAu+fbID/720hzvJStltjFcP4ypS9m4WuNjz4UnRQgzf3bM86w2UOdDwx9Onc0gDhexnFZs2y/E133npPWax2CilWjXE1k=
+	t=1745542863; cv=none; b=ZaIWCISBOhfyk9+6Wxh7hu0qR8OY0JvKT06ofYlxUXjGlD2muq0hfUuKgj095+YyiHgpbq7oNOa5v2SSpd8ykS0OVHDdwGDdppPcFMVmBVsWyY+xt7k3uqF+CDwISP9BezAawn8sxWzs1a1LLFTiGcJlA30qqMkdr7Wh1Z/wizk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745542844; c=relaxed/simple;
-	bh=q3/Ou0SX5DeHbn9YI7b/g85lWDwehl99b7xfTwAuLdA=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ATugirr9JXZuPcOpTtJ4hNrOjCw02MczTntVqJ9IcJqZL7OY8mc+eVo5s++j4zUqlJpRzf1TUCjXpmtmHrYDRxrEg9HUMcE1/0ozBN4IldpgJ146zQPFDYhzkq+Kowtv8ZkMtZ/2Wf0guMw5J85H7vetZEv+KEYr7BI3cM6qJOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZkDyH1Qbpz1d0t6;
-	Fri, 25 Apr 2025 08:59:35 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2F1DC180B46;
-	Fri, 25 Apr 2025 09:00:36 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 25 Apr 2025 09:00:34 +0800
-Subject: Re: [RESEND PATCH v18 1/2] ACPI: APEI: send SIGBUS to current task if
- synchronous memory error not recovered
-To: Shuai Xue <xueshuai@linux.alibaba.com>, "Luck, Tony"
-	<tony.luck@intel.com>, <rafael@kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <linux-edac@vger.kernel.org>, <x86@kernel.org>,
-	<justin.he@arm.com>, <ardb@kernel.org>, <ying.huang@linux.alibaba.com>,
-	<ashish.kalra@amd.com>, <baolin.wang@linux.alibaba.com>,
-	<tglx@linutronix.de>, <dave.hansen@linux.intel.com>, <lenb@kernel.org>,
-	<hpa@zytor.com>, <robert.moore@intel.com>, <lvying6@huawei.com>,
-	<xiexiuqi@huawei.com>, <zhuo.song@linux.alibaba.com>, <sudeep.holla@arm.com>,
-	<lpieralisi@kernel.org>, <linux-acpi@vger.kernel.org>,
-	<yazen.ghannam@amd.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-	<robin.murphy@arm.com>, <Jonathan.Cameron@Huawei.com>, <bp@alien8.de>,
-	<linux-arm-kernel@lists.infradead.org>, <wangkefeng.wang@huawei.com>,
-	<tanxiaofei@huawei.com>, <mawupeng1@huawei.com>, <linmiaohe@huawei.com>,
-	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <tongtiangen@huawei.com>,
-	<gregkh@linuxfoundation.org>, <will@kernel.org>, <jarkko@kernel.org>
-References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
- <20250404112050.42040-2-xueshuai@linux.alibaba.com>
- <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
- <709ee8d2-8969-424c-b32b-101c6a8220fb@linux.alibaba.com>
- <353809e7-5373-0d54-6ddb-767bc5af9e5f@huawei.com>
- <653abdd4-46d2-4956-b49c-8f9c309af34d@linux.alibaba.com>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <de5d2417-dc92-b276-1125-4feb5151de7f@huawei.com>
-Date: Fri, 25 Apr 2025 09:00:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	s=arc-20240116; t=1745542863; c=relaxed/simple;
+	bh=3NBBCGeKr2m5IBaqIkjQPLgZ1gmvbV+miikL5I2UHb0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iqQN/wTMMcH89uLMZSqr4IV3Xvyt2xfBJqxgmm8D5yaED6xrdSnvsoEXUVPC0CG1Tnj/vpnfQbGSx6vN24fkz8YyKCAfz/XyL1i9eJvK1AOjKkCJfH4hM7QtDfyuJXHAHAqnnsj7DvEZZqiQdmiaqbguYm1gQ+wMshbkEkPTSm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=daBcB89E; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="daBcB89E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745542863; x=1777078863;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3NBBCGeKr2m5IBaqIkjQPLgZ1gmvbV+miikL5I2UHb0=;
+  b=daBcB89Evau0SLmPlPDp0xqFaOCXDwhq0DB+Vn/dA5QYL/HWrIZ9BdS+
+   Y2Kx8G0vXwdiT2Mz98bBXhfTq+9HsCzX/c9em2T3sBmVkELrqoUwJ9xxx
+   Fn135fDkb3cywYZC7vW5wEu7nE13LAWtuODtEM73q6ITx5uQM1nYG2ZuJ
+   ax7sYr3QdpwgNbONq/0FANUaKucKGnxeJvhoJFePUWd1rTG/KsOZezO1q
+   7YM+7jZaWhrD8Z6LtECnLlI3kVlVz3VHM/PBzu8V4KIsyoOQcIBApu20l
+   ZTL7xvI8rk8z6QAESnfBNr3xOOfPgb/laFgafUrP0wNs/3TqBMhxNVesQ
+   w==;
+X-CSE-ConnectionGUID: NskdFmtoTOWJW217aaceDA==
+X-CSE-MsgGUID: W9h6q9TOSOKyT7wzkiBRdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58187333"
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="58187333"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 18:01:02 -0700
+X-CSE-ConnectionGUID: zYinjX53Rq2xK987hBUNDA==
+X-CSE-MsgGUID: s5TphgHrQyuN1UkyCzHYoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="163827607"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.108.124]) ([10.125.108.124])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 18:01:00 -0700
+Message-ID: <bf3e0b9b-1cf5-4ee5-8487-46851a84230d@intel.com>
+Date: Thu, 24 Apr 2025 18:00:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <653abdd4-46d2-4956-b49c-8f9c309af34d@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] iommu: Allow attaching static domains in
+ iommu_attach_device_pasid()
+To: Jack Vogel <jack.vogel@oracle.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ "shangsong2@lenovo.com" <shangsong2@lenovo.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250424034123.2311362-1-baolu.lu@linux.intel.com>
+ <4764ACC2-6D38-4CAE-8A6B-451AB3DAF3E0@oracle.com>
+ <a6e386bf-c9d4-4b3c-ad6e-dd1689330782@intel.com>
+ <0A18D37F-7457-49CC-9D67-369A3A8C9E7E@oracle.com>
+ <9b67710b-07bf-4c18-824a-27bc5df4fdfa@intel.com>
+ <C85B4AA4-793D-45CA-915A-4C7F4FB4CA64@oracle.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <C85B4AA4-793D-45CA-915A-4C7F4FB4CA64@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemf500002.china.huawei.com (7.185.36.57)
 
-On 2025/4/18 20:35, Shuai Xue wrote:
+
+
+On 4/24/25 5:55 PM, Jack Vogel wrote:
 > 
 > 
-> 在 2025/4/18 15:48, Hanjun Guo 写道:
->> On 2025/4/14 23:02, Shuai Xue wrote:
->>>
->>>
->>> 在 2025/4/14 22:37, Hanjun Guo 写道:
->>>> On 2025/4/4 19:20, Shuai Xue wrote:
->>>>> Synchronous error was detected as a result of user-space process 
->>>>> accessing
->>>>> a 2-bit uncorrected error. The CPU will take a synchronous error 
->>>>> exception
->>>>> such as Synchronous External Abort (SEA) on Arm64. The kernel will 
->>>>> queue a
->>>>> memory_failure() work which poisons the related page, unmaps the 
->>>>> page, and
->>>>> then sends a SIGBUS to the process, so that a system wide panic can be
->>>>> avoided.
->>>>>
->>>>> However, no memory_failure() work will be queued when abnormal 
->>>>> synchronous
->>>>> errors occur. These errors can include situations such as invalid PA,
->>>>> unexpected severity, no memory failure config support, invalid GUID
->>>>> section, etc. In such case, the user-space process will trigger SEA 
->>>>> again.
->>>>> This loop can potentially exceed the platform firmware threshold or 
->>>>> even
->>>>> trigger a kernel hard lockup, leading to a system reboot.
->>>>>
->>>>> Fix it by performing a force kill if no memory_failure() work is 
->>>>> queued
->>>>> for synchronous errors.
->>>>>
->>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>>> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
->>>>> Reviewed-by: Jane Chu <jane.chu@oracle.com>
->>>>> ---
->>>>>   drivers/acpi/apei/ghes.c | 11 +++++++++++
->>>>>   1 file changed, 11 insertions(+)
->>>>>
->>>>> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
->>>>> index b72772494655..50e4d924aa8b 100644
->>>>> --- a/drivers/acpi/apei/ghes.c
->>>>> +++ b/drivers/acpi/apei/ghes.c
->>>>> @@ -799,6 +799,17 @@ static bool ghes_do_proc(struct ghes *ghes,
->>>>>           }
->>>>>       }
->>>>> +    /*
->>>>> +     * If no memory failure work is queued for abnormal synchronous
->>>>> +     * errors, do a force kill.
->>>>> +     */
->>>>> +    if (sync && !queued) {
->>>>> +        dev_err(ghes->dev,
->>>>> +            HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable 
->>>>> error (SIGBUS)\n",
->>>>> +            current->comm, task_pid_nr(current));
->>>>> +        force_sig(SIGBUS);
->>>>> +    }
->>>>
->>>> I think it's reasonable to send a force kill to the task when the
->>>> synchronous memory error is not recovered.
->>>>
->>>> But I hope this code will not trigger some legacy firmware issues,
->>>> let's be careful for this, so can we just introduce arch specific
->>>> callbacks for this?
->>>
->>> Sorry, can you give more details? I am not sure I got your point.
->>>
->>> For x86, Tony confirmed that ghes will not dispatch x86 synchronous 
->>> errors
->>> (a.k.a machine check exception), in previous vesion.
->>> Sync is only used in arm64 platform, see is_hest_sync_notify().
+>> On Apr 24, 2025, at 16:15, Dave Jiang <dave.jiang@intel.com> wrote:
 >>
->> Sorry for the late reply, from the code I can see that x86 will reuse
->> ghes_do_proc(), if Tony confirmed that x86 is OK, it's OK to me as well.
+>>
+>>
+>> On 4/24/25 3:59 PM, Jack Vogel wrote:
+>>>
+>>>
+>>>> On Apr 24, 2025, at 15:40, Dave Jiang <dave.jiang@intel.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 4/24/25 3:34 PM, Jack Vogel wrote:
+>>>>> I am having test issues with this patch, test system is running OL9, basically RHEL 9.5, the kernel boots ok, and the dmesg is clean… but the tests in accel-config dont pass. Specifically the crypto tests, this is due to vfio_pci_core not loading.  Right now I’m not sure if any of this is my mistake, but at least it’s something I need to keep looking at.
+>>>>>
+>>>>> Also, since I saw that issue on the latest I did a backport to our UEK8 kernel which is 6.12.23, and on that kernel it still exhibited  these messages on boot:
+>>>>>
+>>>>> *idxd*0000:6a:01.0: enabling device (0144 -> 0146)
+>>>>>
+>>>>> [   21.112733] *idxd*0000:6a:01.0: failed to attach device pasid 1, domain type 4
+>>>>>
+>>>>> [   21.120770] *idxd*0000:6a:01.0: No in-kernel DMA with PASID. -95
+>>>>>
+>>>>>
+>>>>> Again, maybe an issue in my backporting… however I’d like to be sure.
+>>>>
+>>>> Can you verify against latest upstream kernel plus the patch and see if you still see the error?
+>>>>
+>>>> DJ
+>>>
+>>> Yes, the kernel was build from the tip this morning. Like I said, it got no messages booting up, all looked fine. But when running the actual test suite in the accel-config tarball specifically the iaa crypt tests, they failed and the dmesg was from vfio_pci_core failed to load with an unknown symbol.
+>>
+>> I'm not sure what the test consists of (haven't worked on this device for almost 2 years). But usually the device is either bound to the idxd driver or the vfio_pci driver. Not both. And if the idxd driver didn't emit any errors while loading, then the test failure may be something else...
+>>
+>> Another way to verify is to set CONFIG_IOMMU_DEFAULT_DMA_LAZY vs PASSTHROUGH. If the tests still fail then it's something else. 
+>>
+>> DJ
 > 
-> Hi, Hanjun,
-> 
-> Glad to hear that.
-> 
-> I copy and paste in the original disscusion with @Tony from mailist.[1]
-> 
->> On x86 the "action required" cases are signaled by a synchronous 
->> machine check
->> that is delivered before the instruction that is attempting to consume 
->> the uncorrected
->> data retires. I.e., it is guaranteed that the uncorrected error has 
->> not been propagated
->> because it is not visible in any architectural state.
-> 
->> APEI signaled errors don't fall into that category on x86 ... the 
->> uncorrected data
->> could have been consumed and propagated long before the signaling used 
->> for
->> APEI can alert the OS.
-> 
-> I also add comments in the code.
-> 
-> /*
->   * A platform may describe one error source for the handling of 
-> synchronous
->   * errors (e.g. MCE or SEA), or for handling asynchronous errors (e.g. SCI
->   * or External Interrupt). On x86, the HEST notifications are always
->   * asynchronous, so only SEA on ARM is delivered as a synchronous
->   * notification.
->   */
-> static inline bool is_hest_sync_notify(struct ghes *ghes)
-> {
->      u8 notify_type = ghes->generic->notify.type;
-> 
->      return notify_type == ACPI_HEST_NOTIFY_SEA;
-> }
-> 
-> 
-> If you are happy with code, please explictly give me your reviewed-by 
-> tags :)
+> There isn’t a lot of ways to test this driver, yes DPDK will use it, but apart from that? So, the tests that are part of your (Intel) accel-config package are the only convenient way that I’ve found to do so. It is also convenient, there is a “make check” target in the top Makefile that will invoke both set of DMA tests, and some crypto (IAA) tests. I have been planning to give this to our QA group as a verification suite. Do you have an alternative to this?
 
-Call force_sig(SIGBUS) directly in ghes_do_proc() is not my favourite,
-but I can bear that, please add
+This should be the right test package. Let me talk to our QA people and see if there are any issues. We can resolve this off list. If there's any issues that end up pointing to the original bug, we can raise that then. 
 
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+DJ
 
-Thanks
-Hanjun
+> 
+> Jack
+> 
+>>
+>>>
+>>> This sounds like the module was wrong, but i would think it was installed with the v6.15 kernel….. 
+>>>
+>>> Jack
+>>>
+>>>>
+>>>>>
+>>>>> Cheers,
+>>>>>
+>>>>> Jack
+>>>>>
+>>>>>
+>>>>>> On Apr 23, 2025, at 20:41, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>>>>>
+>>>>>> The idxd driver attaches the default domain to a PASID of the device to
+>>>>>> perform kernel DMA using that PASID. The domain is attached to the
+>>>>>> device's PASID through iommu_attach_device_pasid(), which checks if the
+>>>>>> domain->owner matches the iommu_ops retrieved from the device. If they
+>>>>>> do not match, it returns a failure.
+>>>>>>
+>>>>>>        if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+>>>>>>                return -EINVAL;
+>>>>>>
+>>>>>> The static identity domain implemented by the intel iommu driver doesn't
+>>>>>> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
+>>>>>> for the idxd driver if the device translation mode is set to passthrough.
+>>>>>>
+>>>>>> Generally the owner field of static domains are not set because they are
+>>>>>> already part of iommu ops. Add a helper domain_iommu_ops_compatible()
+>>>>>> that checks if a domain is compatible with the device's iommu ops. This
+>>>>>> helper explicitly allows the static blocked and identity domains associated
+>>>>>> with the device's iommu_ops to be considered compatible.
+>>>>>>
+>>>>>> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
+>>>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+>>>>>> Link: https://lore.kernel.org/linux-iommu/20250422191554.GC1213339@ziepe.ca/
+>>>>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>>>>> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>>>>>> ---
+>>>>>> drivers/iommu/iommu.c | 21 ++++++++++++++++++---
+>>>>>> 1 file changed, 18 insertions(+), 3 deletions(-)
+>>>>>>
+>>>>>> Change log:
+>>>>>> v3:
+>>>>>> - Convert all places checking domain->owner to the new helper.
+>>>>>> v2: https://lore.kernel.org/linux-iommu/20250423021839.2189204-1-baolu.lu@linux.intel.com/
+>>>>>> - Make the solution generic for all static domains as suggested by
+>>>>>>   Jason.
+>>>>>> v1: https://lore.kernel.org/linux-iommu/20250422075422.2084548-1-baolu.lu@linux.intel.com/
+>>>>>>
+>>>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>>>>> index 4f91a740c15f..b26fc3ed9f01 100644
+>>>>>> --- a/drivers/iommu/iommu.c
+>>>>>> +++ b/drivers/iommu/iommu.c
+>>>>>> @@ -2204,6 +2204,19 @@ static void *iommu_make_pasid_array_entry(struct iommu_domain *domain,
+>>>>>> return xa_tag_pointer(domain, IOMMU_PASID_ARRAY_DOMAIN);
+>>>>>> }
+>>>>>>
+>>>>>> +static bool domain_iommu_ops_compatible(const struct iommu_ops *ops,
+>>>>>> +struct iommu_domain *domain)
+>>>>>> +{
+>>>>>> +if (domain->owner == ops)
+>>>>>> +return true;
+>>>>>> +
+>>>>>> +/* For static domains, owner isn't set. */
+>>>>>> +if (domain == ops->blocked_domain || domain == ops->identity_domain)
+>>>>>> +return true;
+>>>>>> +
+>>>>>> +return false;
+>>>>>> +}
+>>>>>> +
+>>>>>> static int __iommu_attach_group(struct iommu_domain *domain,
+>>>>>> struct iommu_group *group)
+>>>>>> {
+>>>>>> @@ -2214,7 +2227,8 @@ static int __iommu_attach_group(struct iommu_domain *domain,
+>>>>>> return -EBUSY;
+>>>>>>
+>>>>>> dev = iommu_group_first_dev(group);
+>>>>>> -if (!dev_has_iommu(dev) || dev_iommu_ops(dev) != domain->owner)
+>>>>>> +if (!dev_has_iommu(dev) ||
+>>>>>> +   !domain_iommu_ops_compatible(dev_iommu_ops(dev), domain))
+>>>>>> return -EINVAL;
+>>>>>>
+>>>>>> return __iommu_group_set_domain(group, domain);
+>>>>>> @@ -3435,7 +3449,8 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
+>>>>>>    !ops->blocked_domain->ops->set_dev_pasid)
+>>>>>> return -EOPNOTSUPP;
+>>>>>>
+>>>>>> -if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+>>>>>> +if (!domain_iommu_ops_compatible(ops, domain) ||
+>>>>>> +   pasid == IOMMU_NO_PASID)
+>>>>>> return -EINVAL;
+>>>>>>
+>>>>>> mutex_lock(&group->mutex);
+>>>>>> @@ -3511,7 +3526,7 @@ int iommu_replace_device_pasid(struct iommu_domain *domain,
+>>>>>> if (!domain->ops->set_dev_pasid)
+>>>>>> return -EOPNOTSUPP;
+>>>>>>
+>>>>>> -if (dev_iommu_ops(dev) != domain->owner ||
+>>>>>> +if (!domain_iommu_ops_compatible(dev_iommu_ops(dev), domain) ||
+>>>>>>    pasid == IOMMU_NO_PASID || !handle)
+>>>>>> return -EINVAL;
+>>>>>>
+>>>>>> -- 
+>>>>>> 2.43.0
+> 
+
