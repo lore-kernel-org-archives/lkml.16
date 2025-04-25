@@ -1,779 +1,299 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A8524EAAF;
-	Fri, 25 Apr 2025 11:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E7323C39A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745580372; cv=none; b=G8NXi3AFKwBx6wJalvWrhTVRiWxw7XXfeVSRffzR5gZI1QQxXvgV/t+yXTuLYTOtQ883AH7wR4Bvkh2pvIURbLdiE1lJdFm3s+n4Wll1fzCZmsCul3a1NlA0ZiDOXCChaYWYbc/wEersrJy2HiruOPMRmpvjFlQlOwpKAo47q7o=
+	t=1745580460; cv=none; b=LVK1v05wDUJ/u3nWSgjyFSuSpv3LoacM1I+om53fKLdJOPr2KEFLhdDi0XhvqThwvLRLz806Vqanzcl2WtWW049hzGS7XOkWV+VfrL9PaAxdZjmdtgxWxzGKB3r6GaRN1alQ9IDudCFEXFHCm+u+ehibkS7ohRfS/pMU2UOJVL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745580372; c=relaxed/simple;
-	bh=8UkEEbhL1s79Vw5IwC5Ld8PX0aC0CvK5Fu8IaH5sBzA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EQBBbsdXi86RssrRDcWNWY4ty2s6U7W/sLRSXh/kfNyW8hZbvpJCQblZ5sHxdh0c4+TfeZ0u/dGuvD5W42Ww2+ZH0xzZFij0fcDJ/RFQvktx9P26oBS9tVHfwGyeb35rWWsHTx5rd5isXg5SUglxbBzWBreebNcMfF6nR1iCKR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=f+AI/IUE; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1745580460; c=relaxed/simple;
+	bh=L9I7eiN2f73J5dPVzszuLYpZejlZqjoUq0SaVPSprwE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=B0b0GkUVxHPUyQxme/BKnJUCHnDM1zaqKlUVMjfDYufUlPJnyGAbd+wxdza8CjpjOGPj+oplVS5dLWkTcnbk4vsAC2QwpIO5oKpCGNt+ieUbzTvf7Kubtrt/35/ijiQLiHu8ZDxUgKUxW0BxV0GmLb4A84tQKooZvkQZ04NIE24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BeKf1Jbv; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="f+AI/IUE"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8g6NN016641;
-	Fri, 25 Apr 2025 07:26:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=gq+l5
-	CuX7xPpACZ2N7XjAq8g3H8yeK+V+kdvFHp9+Rc=; b=f+AI/IUEwrA9kcqlZpLF9
-	oNDW3E1jRHTrA58URqNjD23yqBfeFBpbMwM7W9Sd1xMSm9XjfNTtLizCfOY00dBv
-	pcV1pkCtmicS0euL6e/NIKgPUUjA9sXLtW5v4UsGZ22h//mxrwCIJR81LDLTkQSK
-	fGdaIBaXq+XLkYV0KXNIJbctv5tObuTz2X1Abc2jEGd0n0vpzycXBOclMjcPfPT7
-	58+t1qJAN5JKAWEzeHJIX+Ntm4AfzhZQ2x+ynfloMhc0XC1NiYfAW2qBph5w1kz7
-	m4b5z1tevNjnXVRA3pgaimwoxRVUcDxibN+Gx3Kenv9KUXO7aepPdlyutN+NzB7n
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 46833j9qu7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 07:26:06 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53PBQ5k6049245
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 07:26:05 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 25 Apr 2025 07:26:05 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 25 Apr 2025 07:26:05 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 25 Apr 2025 07:26:05 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.211])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53PBPjc3003881;
-	Fri, 25 Apr 2025 07:26:02 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH v3 11/11] iio: adc: ad4080: add driver support
-Date: Fri, 25 Apr 2025 14:25:38 +0300
-Message-ID: <20250425112538.59792-12-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425112538.59792-1-antoniu.miclaus@analog.com>
-References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BeKf1Jbv"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-391324ef4a0so103785f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 04:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1745580456; x=1746185256; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9tdcxdU/uqiM5JHIE0ih8RzkRpPBvVsrQ+sQtZ+utPU=;
+        b=BeKf1JbvEe86laQNNzzsu38dwjJfOp2oJziFAnmoWqsMbkQX7rgfKSMJBcS5wn9lX/
+         le6OTfnKYIUDlr9y9es740hx/A9QyE25H/Yy+CuZFImgWB9RUme4Zk7a2clmaukJFFFF
+         //djvxQCG2JB89Vw4/pGrhGGowVfM6p8qj5ic2tcEPQ5D13mdFo3TQoIpozBKfyOlZNm
+         sprNbfWJ6nQNdxp2NXBN4IYtQk6d5oczduvV1ZJLHEB0gAgCUSl9EZmROHTItBH2ShDh
+         2+rVqlSze0iTzP8C2PHzqtFySPVO2sfoSKtGvY4RRXwUizBClW/EBnWfPWEMPnI8AZkM
+         ddhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745580456; x=1746185256;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9tdcxdU/uqiM5JHIE0ih8RzkRpPBvVsrQ+sQtZ+utPU=;
+        b=Hvcvcg0/iu16SPSbk6pq9fAZxCi6Oky7ZQ5w0ZRfLktrGsbyfjiUKMXgQgCiB18X9L
+         cMnv3ew5m4D+VKfz0v4N/6MIic3c/6OerI5n8TQB8UOatktRmcPT3FOeVJb4c3alrGwk
+         ujO6L8nxhp+rZHDyRkf1T4PjybagL5U2unZZ6q0OrYXDHfQ4hJiGHwT60LSZGKI4P1x/
+         cm4lPEgPvls5svkaERaFTO/txrlCBlcNdxxcp5Yth55NLdn7hJGhO9KI5qrVN07484tY
+         bKUKu+bVBopO8DvvPaUWnOBHQNJccbQVlghbVbvTxpkt7osZDyrnhl16nVnfcaVPPz02
+         8AZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHvtVgFVay4CnKLo1q2+xpgGaYX+e8j7inJnHdoR8n+PLT43wLvXmbJJGp/yX+ANtFy1/lYian3wpIwQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMrzJ6MtUvkiOn1FBNdlAgDdbXxEtqTh97R+i18iaI/u5042bz
+	Ks6kfSCyxvpog79/rLRSpuNR+/hNZzYCYbk5Yt59WKTPJZR6+mAt4Da4tTrAUzc=
+X-Gm-Gg: ASbGncsI5vUfnPCWN9i5L/5st6UNnEPPiOGKaxUwwdreVs/uZE+tiZYiUukmzKa0Aab
+	MqFgkEI4+M/Mnv2KKmpEQseHaZDdo58V8AiD53p6ySQqf8uU5vubDe3g+NzCJrWi0OC3imga1cm
+	7ejChAgP9C1OtsmunapObLEzSbRZDDBm5knMg/4biVE8eIw089OpYnZwKSrQG8CT257vbZ2WsAP
+	SSPlObxiYyhG8rT9uT/VyT/qNMYPGs+V547MEBXuumB6uryNFi0pNZnDF0hRwR8GAjpznhdc+bw
+	TFS5zrxH/+htjHYHBJJgZGH6Pp8znti8RBx/eDAoxq6CThFE
+X-Google-Smtp-Source: AGHT+IEQ9pK+JKMDBMS71i2ytNl3g5Iz5jsYozyFh9v4Ot2oPm70zEuu2n9VUWJTfr8L27VdCIYOXQ==
+X-Received: by 2002:a05:6000:420e:b0:39c:1efc:44ed with SMTP id ffacd0b85a97d-3a074e42259mr527990f8f.7.1745580456083;
+        Fri, 25 Apr 2025 04:27:36 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:84a3:2b0a:bdb8:ce08])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a536a02csm22002045e9.27.2025.04.25.04.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 04:27:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: 9BnDYB3nwgQvSMH-aBo_bUjVvot-bIUF
-X-Proofpoint-GUID: 9BnDYB3nwgQvSMH-aBo_bUjVvot-bIUF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA4MiBTYWx0ZWRfX5+BVnyYjzl7d TNHLOkZQFQ2YzP0VFi9tDxKSNJIrMMg7ytLDmwaM/QN2B0HolXElnn8lY+g8OZDmeCsFGl6Ednz 8gE78A6r/6jKDHjO7dvOfPmFPVZRqZvzfRRq1mrOKiVOfzi12qYE4spmIY96IWjrFTRwRW/D7EY
- BNE+iWugA1RoHuIW9rWU4/dkIMd7vRNdTEn7myxkSw/HUyrvUzizV8geHmFuZzkwxjnIRuROI61 nz28QeZybrPzYaaX7lvMOdznLn+E4fe4A4tYFm/SElszYEdz0H4xP7F0nMVVfwF2JPsdcc/Ag88 6CmemraCtVWMF0mj1sP/PDOvPQuLyzcNFVK4Hf1TYMP92IdOxTBN1d94CzlilgTD0fyNJT3K4ig
- wajHKQ69gu8PYg+NAeLB9lzk7P9hoZ97ULe4P7Buu4oPL7YFiGyWMq9UlvFb7Jo+LZDYwUHh
-X-Authority-Analysis: v=2.4 cv=Hu52G1TS c=1 sm=1 tr=0 ts=680b714e cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=XWQM0tir05fXBLfBid0A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0
- phishscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250082
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 25 Apr 2025 13:27:34 +0200
+Message-Id: <D9FOMMGOGOZS.FN9LKYJAB9PD@ventanamicro.com>
+Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and
+ save/restore of CSR_SSP on trap entry/exit
+Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar"
+ <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
+ "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
+ Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
+ "Zong Li" <zong.li@sifive.com>, "linux-riscv"
+ <linux-riscv-bounces@lists.infradead.org>
+To: "Deepak Gupta" <debug@rivosinc.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
+ <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
+ <aAl_HRk49lnseiio@debug.ba.rivosinc.com>
+ <D9EUJBQ5OHN0.2KUJHGXK262TR@ventanamicro.com>
+ <aAp7Un415hNqtshd@debug.ba.rivosinc.com>
+In-Reply-To: <aAp7Un415hNqtshd@debug.ba.rivosinc.com>
 
-Add support for AD4080 high-speed, low noise, low distortion,
-20-bit, Easy Drive, successive approximation register (SAR)
-analog-to-digital converter (ADC).
+2025-04-24T10:56:34-07:00, Deepak Gupta <debug@rivosinc.com>:
+> On Thu, Apr 24, 2025 at 01:52:43PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
+te:
+>>2025-04-23T17:00:29-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>> On Thu, Apr 10, 2025 at 01:04:39PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 w=
+rote:
+>>>>2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>>> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/includ=
+e/asm/thread_info.h
+>>>>> @@ -62,6 +62,9 @@ struct thread_info {
+>>>>>  	long			user_sp;	/* User stack pointer */
+>>>>>  	int			cpu;
+>>>>>  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
+>>>>> +#ifdef CONFIG_RISCV_USER_CFI
+>>>>> +	struct cfi_status	user_cfi_state;
+>>>>> +#endif
+>>>>
+>>>>I don't think it makes sense to put all the data in thread_info.
+>>>>kernel_ssp and user_ssp is more than enough and the rest can comfortabl=
+y
+>>>>live elsewhere in task_struct.
+>>>>
+>>>>thread_info is supposed to be as small as possible -- just spanning
+>>>>multiple cache-lines could be noticeable.
+>>>
+>>> I can change it to only include only `user_ssp`, base and size.
+>>
+>>No need for base and size either -- we don't touch that in the common
+>>exception code.
+>
+> got it.
+>
+>>
+>>> But before we go there, see below:
+>>>
+>>> $ pahole -C thread_info kbuild/vmlinux
+>>> struct thread_info {
+>>>          long unsigned int          flags;                /*     0     =
+8 */
+>>>          int                        preempt_count;        /*     8     =
+4 */
+>>>
+>>>          /* XXX 4 bytes hole, try to pack */
+>>>
+>>>          long int                   kernel_sp;            /*    16     =
+8 */
+>>>          long int                   user_sp;              /*    24     =
+8 */
+>>>          int                        cpu;                  /*    32     =
+4 */
+>>>
+>>>          /* XXX 4 bytes hole, try to pack */
+>>>
+>>>          long unsigned int          syscall_work;         /*    40     =
+8 */
+>>>          struct cfi_status          user_cfi_state;       /*    48    3=
+2 */
+>>>          /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+>>>          long unsigned int          a0;                   /*    80     =
+8 */
+>>>          long unsigned int          a1;                   /*    88     =
+8 */
+>>>          long unsigned int          a2;                   /*    96     =
+8 */
+>>>
+>>>          /* size: 104, cachelines: 2, members: 10 */
+>>>          /* sum members: 96, holes: 2, sum holes: 8 */
+>>>          /* last cacheline: 40 bytes */
+>>> };
+>>>
+>>> If we were to remove entire `cfi_status`, it would still be 72 bytes (8=
+8 bytes
+>>> if shadow call stack were enabled) and already spans across two cacheli=
+nes.
+>>
+>>It has only 64 bytes of data without shadow call stack, but it wasted 8
+>>bytes on the holes.
+>>a2 is somewhat an outlier that is not used most exception paths and
+>>excluding it makes everything fit nicely even now.
+>
+> But we can't exclude shadow call stack. It'll lead to increased size if t=
+hat
+> config is selected. A solution has to work for all the cases and not half
+> hearted effort.
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
-changes in v3:
- - name the defines to make associacion with register name.
- - drop redundant defines.
- - add trailing comma when needed.
- - drop explicit masking and use field_prep instead
- - add fsleep during sync process.
- - do not wrap where 80 chars is not exceeded.
- - use space for { }
- - drop channel definition macro
- - return dev_info on chip id mismatch.
- - flip expression to `if (!st->lvds_cnv_en)`
- - rework num_lanes property parse.
- - update the driver based on the new edits on the backend interface related to
-   this part and the last disscussions in v2.
- drivers/iio/adc/Kconfig  |  14 +
- drivers/iio/adc/Makefile |   1 +
- drivers/iio/adc/ad4080.c | 618 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 633 insertions(+)
- create mode 100644 drivers/iio/adc/ad4080.c
+We could drop a0 or user_sp and place the two ints next to each other,
+saving at least 16 bytes.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 27413516216c..17df328f5322 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -47,6 +47,20 @@ config AD4030
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ad4030.
- 
-+config AD4080
-+	tristate "Analog Devices AD4080 high speed ADC"
-+	depends on SPI
-+	select REGMAP_SPI
-+	select IIO_BACKEND
-+	help
-+	  Say yes here to build support for Analog Devices AD4080
-+	  high speed, low noise, low distortion, 20-bit, Easy Drive,
-+	  successive approximation register (SAR) analog-to-digital
-+	  converter (ADC). Supports iio_backended devices for AD4080.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called ad4080.
-+
- config AD4130
- 	tristate "Analog Device AD4130 ADC Driver"
- 	depends on SPI
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 9f26d5eca822..e6efed5b4e7a 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_AB8500_GPADC) += ab8500-gpadc.o
- obj-$(CONFIG_AD_SIGMA_DELTA) += ad_sigma_delta.o
- obj-$(CONFIG_AD4000) += ad4000.o
- obj-$(CONFIG_AD4030) += ad4030.o
-+obj-$(CONFIG_AD4080) += ad4080.o
- obj-$(CONFIG_AD4130) += ad4130.o
- obj-$(CONFIG_AD4695) += ad4695.o
- obj-$(CONFIG_AD4851) += ad4851.o
-diff --git a/drivers/iio/adc/ad4080.c b/drivers/iio/adc/ad4080.c
-new file mode 100644
-index 000000000000..b51893253941
---- /dev/null
-+++ b/drivers/iio/adc/ad4080.c
-@@ -0,0 +1,618 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices AD4080 SPI ADC driver
-+ *
-+ * Copyright 2025 Analog Devices Inc.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+#include <linux/types.h>
-+#include <linux/unaligned.h>
-+#include <linux/units.h>
-+
-+#include <linux/iio/backend.h>
-+#include <linux/iio/iio.h>
-+
-+#include <linux/clk.h>
-+
-+/* Register Definition */
-+#define AD4080_REG_INTERFACE_CONFIG_A				0x00
-+#define AD4080_REG_INTERFACE_CONFIG_B				0x01
-+#define AD4080_REG_DEVICE_CONFIG				0x02
-+#define AD4080_REG_CHIP_TYPE					0x03
-+#define AD4080_REG_PRODUCT_ID_L					0x04
-+#define AD4080_REG_PRODUCT_ID_H					0x05
-+#define AD4080_REG_CHIP_GRADE					0x06
-+#define AD4080_REG_SCRATCH_PAD					0x0A
-+#define AD4080_REG_SPI_REVISION					0x0B
-+#define AD4080_REG_VENDOR_L					0x0C
-+#define AD4080_REG_VENDOR_H					0x0D
-+#define AD4080_REG_STREAM_MODE					0x0E
-+#define AD4080_REG_TRANSFER_CONFIG				0x0F
-+#define AD4080_REG_INTERFACE_CONFIG_C				0x10
-+#define AD4080_REG_INTERFACE_STATUS_A				0x11
-+#define AD4080_REG_DEVICE_STATUS				0x14
-+#define AD4080_REG_ADC_DATA_INTF_CONFIG_A			0x15
-+#define AD4080_REG_ADC_DATA_INTF_CONFIG_B			0x16
-+#define AD4080_REG_ADC_DATA_INTF_CONFIG_C			0x17
-+#define AD4080_REG_PWR_CTRL					0x18
-+#define AD4080_REG_GPIO_CONFIG_A				0x19
-+#define AD4080_REG_GPIO_CONFIG_B				0x1A
-+#define AD4080_REG_GPIO_CONFIG_C				0x1B
-+#define AD4080_REG_GENERAL_CONFIG				0x1C
-+#define AD4080_REG_FIFO_WATERMARK_LSB				0x1D
-+#define AD4080_REG_FIFO_WATERMARK_MSB				0x1E
-+#define AD4080_REG_EVENT_HYSTERESIS_LSB				0x1F
-+#define AD4080_REG_EVENT_HYSTERESIS_MSB				0x20
-+#define AD4080_REG_EVENT_DETECTION_HI_LSB			0x21
-+#define AD4080_REG_EVENT_DETECTION_HI_MSB			0x22
-+#define AD4080_REG_EVENT_DETECTION_LO_LSB			0x23
-+#define AD4080_REG_EVENT_DETECTION_LO_MSB			0x24
-+#define AD4080_REG_OFFSET_LSB					0x25
-+#define AD4080_REG_OFFSET_MSB					0x26
-+#define AD4080_REG_GAIN_LSB					0x27
-+#define AD4080_REG_GAIN_MSB					0x28
-+#define AD4080_REG_FILTER_CONFIG				0x29
-+
-+/* AD4080_REG_INTERFACE_CONFIG_A Bit Definition */
-+#define AD4080_INTERFACE_CONFIG_A_SW_RESET_MSK			(BIT(7) | BIT(0))
-+#define AD4080_INTERFACE_CONFIG_A_ADDR_ASC_MSK			BIT(5)
-+#define AD4080_INTERFACE_CONFIG_A_SDO_ENABLE_MSK		BIT(4)
-+
-+/* AD4080_REG_INTERFACE_CONFIG_B Bit Definition */
-+#define AD4080_INTERFACE_CONFIG_B_SINGLE_INST_MSK		BIT(7)
-+#define AD4080_INTERFACE_CONFIG_B_SHORT_INST_MSK		BIT(3)
-+
-+/* AD4080_REG_DEVICE_CONFIG Bit Definition */
-+#define AD4080_DEVICE_CONFIG_OPERATING_MODES_MSK		GENMASK(1, 0)
-+
-+/* AD4080_REG_TRANSFER_CONFIG Bit Definition */
-+#define AD4080_TRANSFER_CONFIG_KEEP_STREAM_LENGTH_VAL_MSK	BIT(2)
-+
-+/* AD4080_REG_INTERFACE_CONFIG_C Bit Definition */
-+#define AD4080_INTERFACE_CONFIG_C_STRICT_REG_ACCESS_MSK		BIT(5)
-+
-+/* AD4080_REG_ADC_DATA_INTF_CONFIG_A Bit Definition */
-+#define AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK	BIT(6)
-+#define AD4080_ADC_DATA_INTF_CONFIG_A_INTF_CHK_EN_MSK		BIT(4)
-+#define AD4080_ADC_DATA_INTF_CONFIG_A_SPI_LVDS_LANES_MSK	BIT(2)
-+#define AD4080_ADC_DATA_INTF_CONFIG_A_DATA_INTF_MODE_MSK	BIT(0)
-+
-+/* AD4080_REG_ADC_DATA_INTF_CONFIG_B Bit Definition */
-+#define AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_CLK_CNT_MSK	GENMASK(7, 4)
-+#define AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_SELF_CLK_MODE_MSK	BIT(3)
-+#define AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_EN_MSK		BIT(0)
-+
-+/* AD4080_REG_ADC_DATA_INTF_CONFIG_C Bit Definition */
-+#define AD4080_ADC_DATA_INTF_CONFIG_C_LVDS_VOD_MSK		GENMASK(6, 4)
-+
-+/* AD4080_REG_PWR_CTRL Bit Definition */
-+#define AD4080_PWR_CTRL_ANA_DIG_LDO_PD_MSK			BIT(1)
-+#define AD4080_PWR_CTRL_INTF_LDO_PD_MSK				BIT(0)
-+
-+/* AD4080_REG_GPIO_CONFIG_A Bit Definition */
-+#define AD4080_GPIO_CONFIG_A_GPO_1_EN_MSK			BIT(1)
-+#define AD4080_GPIO_CONFIG_A_GPO_0_EN_MSK			BIT(0)
-+
-+/* AD4080_REG_GPIO_CONFIG_B Bit Definition */
-+#define AD4080_GPIO_CONFIG_B_GPIO_1_SEL				GENMASK(7, 4)
-+#define AD4080_GPIO_CONFIG_B_GPIO_0_SEL				GENMASK(3, 0)
-+
-+/* AD4080_REG_FIFO_CONFIG Bit Definition */
-+#define AD4080_FIFO_CONFIG_FIFO_MODE_MSK			GENMASK(1, 0)
-+
-+/* AD4080_REG_FILTER_CONFIG Bit Definition */
-+#define AD4080_FILTER_CONFIG_SINC_DEC_RATE_MSK			GENMASK(6, 3)
-+#define AD4080_FILTER_CONFIG_FILTER_SEL_MSK			GENMASK(1, 0)
-+
-+/* Miscellaneous Definitions */
-+#define AD4080_SPI_READ						BIT(7)
-+#define AD4080_CHIP_ID						GENMASK(2, 0)
-+
-+#define AD4080_MAX_SAMP_FREQ					40000000
-+#define AD4080_MIN_SAMP_FREQ					1250000
-+
-+enum ad4080_filter_type {
-+	FILTER_DISABLE,
-+	SINC_1,
-+	SINC_5,
-+	SINC_5_COMP
-+};
-+
-+static const unsigned int ad4080_scale_table[][2] = {
-+	{ 6000, 0},
-+};
-+
-+static const char *const ad4080_filter_type_iio_enum[] = {
-+	[FILTER_DISABLE]   = "disabled",
-+	[SINC_1]           = "sinc1",
-+	[SINC_5]           = "sinc5",
-+	[SINC_5_COMP]      = "sinc5_plus_compensation",
-+};
-+
-+static const int ad4080_dec_rate_iio_enum[] = {
-+	2, 4, 8, 16, 32, 64, 128, 256, 512, 1024,
-+};
-+
-+static const char * const ad4080_power_supplies[] = {
-+	"vdd33", "vdd11", "vddldo", "iovdd", "vrefin",
-+};
-+
-+struct ad4080_chip_info {
-+	const char *name;
-+	unsigned int product_id;
-+	int num_scales;
-+	const unsigned int (*scale_table)[2];
-+	const struct iio_chan_spec *channels;
-+	unsigned int num_channels;
-+};
-+
-+struct ad4080_state {
-+	struct spi_device		*spi;
-+	struct regmap			*regmap;
-+	struct clk			*clk;
-+	struct iio_backend		*back;
-+	const struct ad4080_chip_info	*info;
-+	/*
-+	 * Synchronize access to members the of driver state, and ensure
-+	 * atomicity of consecutive regmap operations.
-+	 */
-+	struct mutex			lock;
-+	unsigned int			num_lanes;
-+	unsigned int			dec_rate;
-+	enum ad4080_filter_type		filter_type;
-+	bool				lvds_cnv_en;
-+};
-+
-+static const struct regmap_config ad4080_regmap_config = {
-+	.reg_bits = 16,
-+	.val_bits = 8,
-+	.read_flag_mask = BIT(7),
-+	.max_register = 0x29,
-+};
-+
-+static int ad4080_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-+			     unsigned int writeval, unsigned int *readval)
-+{
-+	struct ad4080_state *st = iio_priv(indio_dev);
-+
-+	if (readval)
-+		return regmap_read(st->regmap, reg, readval);
-+
-+	return regmap_write(st->regmap, reg, writeval);
-+}
-+
-+static int ad4080_get_scale(struct ad4080_state *st, int *val, int *val2)
-+{
-+	unsigned int tmp;
-+
-+	tmp = (st->info->scale_table[0][0] * 1000000ULL) >>
-+		    st->info->channels[0].scan_type.realbits;
-+	*val = tmp / 1000000;
-+	*val2 = tmp % 1000000;
-+
-+	return IIO_VAL_INT_PLUS_NANO;
-+}
-+
-+static unsigned int ad4080_get_dec_rate(struct iio_dev *dev,
-+					const struct iio_chan_spec *chan)
-+{
-+	struct ad4080_state *st = iio_priv(dev);
-+	int ret;
-+	unsigned int data;
-+
-+	ret = regmap_read(st->regmap, AD4080_REG_FILTER_CONFIG, &data);
-+	if (ret)
-+		return ret;
-+
-+	return (1 << (FIELD_GET(AD4080_FILTER_CONFIG_SINC_DEC_RATE_MSK, data) + 1));
-+}
-+
-+static int ad4080_set_dec_rate(struct iio_dev *dev,
-+			       const struct iio_chan_spec *chan,
-+			       unsigned int mode)
-+{
-+	struct ad4080_state *st = iio_priv(dev);
-+	int ret;
-+
-+	if (st->filter_type >= SINC_5 && mode >= 512)
-+		return -EINVAL;
-+
-+	guard(mutex)(&st->lock);
-+	ret = regmap_update_bits(st->regmap, AD4080_REG_FILTER_CONFIG,
-+				 AD4080_FILTER_CONFIG_SINC_DEC_RATE_MSK,
-+				 FIELD_PREP(AD4080_FILTER_CONFIG_SINC_DEC_RATE_MSK,
-+					    (ilog2(mode) - 1)));
-+	if (ret)
-+		return ret;
-+
-+	st->dec_rate = mode;
-+
-+	return 0;
-+}
-+
-+static int ad4080_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan,
-+			   int *val, int *val2, long m)
-+{
-+	struct ad4080_state *st = iio_priv(indio_dev);
-+	int dec_rate;
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return ad4080_get_scale(st, val, val2);
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (st->filter_type == SINC_5_COMP)
-+			dec_rate = st->dec_rate * 2;
-+		else
-+			dec_rate = st->dec_rate;
-+		if (st->filter_type)
-+			*val = DIV_ROUND_CLOSEST(clk_get_rate(st->clk), dec_rate);
-+		else
-+			*val = clk_get_rate(st->clk);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*val = ad4080_get_dec_rate(indio_dev, chan);
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad4080_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return -EINVAL;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		return -EINVAL;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		return ad4080_set_dec_rate(indio_dev, chan, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad4080_lvds_sync_write(struct ad4080_state *st)
-+{
-+	unsigned int timeout = 100;
-+	bool sync_en;
-+	int ret;
-+
-+	guard(mutex)(&st->lock);
-+	if (st->num_lanes == 1)
-+		ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-+				   AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK |
-+				   AD4080_ADC_DATA_INTF_CONFIG_A_INTF_CHK_EN_MSK);
-+	else
-+		ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-+				   AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK |
-+				   AD4080_ADC_DATA_INTF_CONFIG_A_INTF_CHK_EN_MSK |
-+				   AD4080_ADC_DATA_INTF_CONFIG_A_SPI_LVDS_LANES_MSK);
-+	if (ret)
-+		return ret;
-+
-+	ret = iio_backend_data_alignment_enable(st->back);
-+	if (ret)
-+		return ret;
-+
-+	do {
-+		ret = iio_backend_sync_status_get(st->back, &sync_en);
-+		if (ret)
-+			return ret;
-+
-+		if (!sync_en)
-+			dev_dbg(&st->spi->dev, "Not Locked: Running Bit Slip\n");
-+
-+		fsleep(500);
-+	} while (--timeout && !sync_en);
-+
-+	if (timeout) {
-+		dev_info(&st->spi->dev, "Success: Pattern correct and Locked!\n");
-+		if (st->num_lanes == 1)
-+			return regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-+					    AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK);
-+		else
-+			return regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-+					    AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK |
-+					    AD4080_ADC_DATA_INTF_CONFIG_A_SPI_LVDS_LANES_MSK);
-+	} else {
-+		dev_info(&st->spi->dev, "LVDS Sync Timeout.\n");
-+		if (st->num_lanes == 1) {
-+			ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-+					   AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK);
-+			if (ret)
-+				return ret;
-+		} else {
-+			ret = regmap_write(st->regmap, AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-+					   AD4080_ADC_DATA_INTF_CONFIG_A_RESERVED_CONFIG_A_MSK |
-+					   AD4080_ADC_DATA_INTF_CONFIG_A_SPI_LVDS_LANES_MSK);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		return -ETIMEDOUT;
-+	}
-+}
-+
-+static ssize_t ad4080_get_filter_type(struct iio_dev *dev,
-+				      const struct iio_chan_spec *chan)
-+{
-+	struct ad4080_state *st = iio_priv(dev);
-+	unsigned int data;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, AD4080_REG_FILTER_CONFIG, &data);
-+	if (ret)
-+		return ret;
-+
-+	return FIELD_GET(AD4080_FILTER_CONFIG_FILTER_SEL_MSK, data);
-+}
-+
-+static int ad4080_set_filter_type(struct iio_dev *dev,
-+				  const struct iio_chan_spec *chan,
-+				  unsigned int mode)
-+{
-+	struct ad4080_state *st = iio_priv(dev);
-+	int ret;
-+
-+	if (mode >= SINC_5 && st->dec_rate >= 512)
-+		return -EINVAL;
-+
-+	guard(mutex)(&st->lock);
-+	ret = iio_backend_filter_type_set(st->back, mode);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(st->regmap, AD4080_REG_FILTER_CONFIG,
-+				 AD4080_FILTER_CONFIG_FILTER_SEL_MSK,
-+				 FIELD_PREP(AD4080_FILTER_CONFIG_FILTER_SEL_MSK,
-+					    mode));
-+	if (ret)
-+		return ret;
-+
-+	st->filter_type = mode;
-+
-+	return 0;
-+}
-+
-+static int ad4080_read_avail(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     const int **vals, int *type, int *length,
-+			     long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*vals = ad4080_dec_rate_iio_enum;
-+		*length = ARRAY_SIZE(ad4080_dec_rate_iio_enum);
-+		*type = IIO_VAL_INT;
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info ad4080_iio_info = {
-+	.debugfs_reg_access = ad4080_reg_access,
-+	.read_raw = ad4080_read_raw,
-+	.write_raw = ad4080_write_raw,
-+	.read_avail = ad4080_read_avail,
-+};
-+
-+static const struct iio_enum ad4080_filter_type_enum = {
-+	.items = ad4080_filter_type_iio_enum,
-+	.num_items = ARRAY_SIZE(ad4080_filter_type_iio_enum),
-+	.set = ad4080_set_filter_type,
-+	.get = ad4080_get_filter_type,
-+};
-+
-+static struct iio_chan_spec_ext_info ad4080_ext_info[] = {
-+	IIO_ENUM("filter_type", IIO_SHARED_BY_ALL, &ad4080_filter_type_enum),
-+	IIO_ENUM_AVAILABLE("filter_type", IIO_SHARED_BY_ALL,
-+			   &ad4080_filter_type_enum),
-+	{ }
-+};
-+
-+static const struct iio_chan_spec ad4080_channels[] = {
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 0,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
-+				BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all_available =
-+				BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.ext_info = ad4080_ext_info,
-+		.scan_index = 0,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 20,
-+			.storagebits = 32,
-+			.shift = 0,
-+		},
-+	}
-+};
-+
-+static const struct ad4080_chip_info ad4080_chip_info = {
-+	.name = "AD4080",
-+	.product_id = AD4080_CHIP_ID,
-+	.scale_table = ad4080_scale_table,
-+	.num_scales = ARRAY_SIZE(ad4080_scale_table),
-+	.num_channels = 1,
-+	.channels = ad4080_channels,
-+};
-+
-+static int ad4080_setup(struct iio_dev *indio_dev)
-+{
-+	struct ad4080_state *st = iio_priv(indio_dev);
-+	unsigned int id;
-+	int ret;
-+
-+	ret = regmap_write(st->regmap, AD4080_REG_INTERFACE_CONFIG_A,
-+			   AD4080_INTERFACE_CONFIG_A_SW_RESET_MSK);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(st->regmap, AD4080_REG_INTERFACE_CONFIG_A,
-+			   AD4080_INTERFACE_CONFIG_A_SDO_ENABLE_MSK);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(st->regmap, AD4080_REG_CHIP_TYPE, &id);
-+	if (ret)
-+		return ret;
-+
-+	if (id != AD4080_CHIP_ID)
-+		dev_info(&st->spi->dev, "Unrecognized CHIP_ID 0x%X\n", id);
-+
-+	ret = regmap_set_bits(st->regmap, AD4080_REG_GPIO_CONFIG_A,
-+			      AD4080_GPIO_CONFIG_A_GPO_1_EN_MSK);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(st->regmap, AD4080_REG_GPIO_CONFIG_B,
-+			   FIELD_PREP(AD4080_GPIO_CONFIG_B_GPIO_1_SEL, 3));
-+	if (ret)
-+		return ret;
-+
-+	ret = iio_backend_num_lanes_set(st->back, st->num_lanes);
-+	if (ret)
-+		return ret;
-+
-+	if (!st->lvds_cnv_en)
-+		return 0;
-+
-+	if (st->num_lanes) {
-+		ret = regmap_update_bits(st->regmap,
-+					 AD4080_REG_ADC_DATA_INTF_CONFIG_B,
-+					 AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_CLK_CNT_MSK,
-+					 FIELD_PREP(AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_CLK_CNT_MSK,
-+						    7));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = regmap_set_bits(st->regmap,
-+			      AD4080_REG_ADC_DATA_INTF_CONFIG_B,
-+			      AD4080_ADC_DATA_INTF_CONFIG_B_LVDS_CNV_EN_MSK);
-+	if (ret)
-+		return ret;
-+
-+	return ad4080_lvds_sync_write(st);
-+}
-+
-+static void ad4080_properties_parse(struct ad4080_state *st)
-+{
-+	st->lvds_cnv_en = device_property_read_bool(&st->spi->dev,
-+						    "adi,lvds-cnv-enable");
-+
-+	st->num_lanes = 1;
-+	device_property_read_u32(&st->spi->dev, "adi,num_lanes", &st->num_lanes);
-+}
-+
-+static int ad4080_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct device *dev = &spi->dev;
-+	struct ad4080_state *st;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+	st->spi = spi;
-+
-+	ret = devm_regulator_bulk_get_enable(dev,
-+					     ARRAY_SIZE(ad4080_power_supplies),
-+					     ad4080_power_supplies);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to get and enable supplies\n");
-+
-+	st->regmap = devm_regmap_init_spi(spi, &ad4080_regmap_config);
-+	if (IS_ERR(st->regmap))
-+		return PTR_ERR(st->regmap);
-+
-+	st->info = spi_get_device_match_data(spi);
-+	if (!st->info)
-+		return -ENODEV;
-+
-+	ret = devm_mutex_init(dev, &st->lock);
-+	if (ret)
-+		return ret;
-+
-+	st->info = spi_get_device_match_data(spi);
-+	if (!st->info)
-+		return -ENODEV;
-+
-+	indio_dev->name = st->info->name;
-+	indio_dev->channels = st->info->channels;
-+	indio_dev->num_channels = st->info->num_channels;
-+	indio_dev->info = &ad4080_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ad4080_properties_parse(st);
-+
-+	st->clk = devm_clk_get_enabled(&spi->dev, "cnv");
-+	if (IS_ERR(st->clk))
-+		return PTR_ERR(st->clk);
-+
-+	st->back = devm_iio_backend_get(dev, NULL);
-+	if (IS_ERR(st->back))
-+		return PTR_ERR(st->back);
-+
-+	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_iio_backend_enable(dev, st->back);
-+	if (ret)
-+		return ret;
-+
-+	ret = ad4080_setup(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(&spi->dev, indio_dev);
-+}
-+
-+static const struct spi_device_id ad4080_id[] = {
-+	{ "ad4080", (kernel_ulong_t)&ad4080_chip_info },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, ad4080_id);
-+
-+static const struct of_device_id ad4080_of_match[] = {
-+	{ .compatible = "adi,ad4080", &ad4080_chip_info },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad4080_of_match);
-+
-+static struct spi_driver ad4080_driver = {
-+	.driver = {
-+		.name = "ad4080",
-+		.of_match_table = ad4080_of_match,
-+	},
-+	.probe = ad4080_probe,
-+	.id_table = ad4080_id,
-+};
-+module_spi_driver(ad4080_driver);
-+
-+MODULE_AUTHOR("Antoniu Miclaus <antoniu.miclaus@analog.com");
-+MODULE_DESCRIPTION("Analog Devices AD4080");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0
+(user_sp, a0, a1, and a2 are just temporary storage.  I think would be
+ fine with just two temporaries + kernel_sp, to provide three registers
+ for new_vmalloc_check and we never need more.)
 
+>>> if shadow call stack were enabled) and already spans across two cacheli=
+nes. I
+>>> did see the comment above that it should fit inside a cacheline. Althou=
+gh I
+>>> assumed its stale comment given that it already spans across cacheline =
+and I
+>>> didn't see any special mention in commit messages of changes which grew=
+ this
+>>> structure above one cacheline. So I assumed this was a stale comment.
+>>>
+>>> On the other hand, whenever enable/lock bits are checked, there is a hi=
+gh
+>>> likelyhood that user_ssp and other fields are going to be accessed and
+>>> thus it actually might be helpful to have it all in one cacheline durin=
+g
+>>> runtime.
+>>
+>>Yes, although accessing enable/lock bits will be relatively rare.
+>>It seems better to have the overhead during thread setup, rather than on
+>>every trap.
+>>
+>>> So I am not sure if its helpful sticking to the comment which already i=
+s stale.
+>>
+>>We could fix the holes and also use sp instead of a0 in the
+>>new_vmalloc_check, so everything would fit better.
+>>
+>>We are really close to fitting into a single cache-line, so I'd prefer
+>>if shadow stack only filled thread_info with data that is used very
+>>often in the exception handling code.
+>
+> I don't get what's the big deal if it results in two cachelines. We can
+> (re)organize data structure in a way the most frequently accessed members=
+ are
+> together in a single cacheline. We just need to find those members.
+
+Yes, and because this patch is reorganizing the structure, I thought it
+would be better to do the analysis now, rather than to incur additional
+debt.
+
+thread_info members are accessed during the first instructions after a
+trap.  We want to maximize the chance that the execution doesn't stall
+until uarch has time to engage its crystal ball.
+
+> In the hot path of exception handling, I see accesses to pt_regs on stack=
+ as
+> well. These are definitley different cacheline than thread_info.
+
+Right, and we also access cache-lines for the code.
+
+I don't know how well each uarch keeps the early trap data/code in
+caches, but it doesn't seem like a bad idea to minimize the amount of
+cache-lines that are accessed early after trap.
+
+> I understand the argument of one member field crossing into two cacheline=
+s can
+> have undesired perf effects. I do not understand reasoning that thread_in=
+fo
+> exactly has to fit inside one cacheline.
+
+I agree that we could probably lift the constraint for some values --
+it's a lot of performance modeling and convincing, though...
+
+In this series, I think it would be good to avoid splitting kernel_sp
+and a0/a1 into two cache-lines.  kernel_sp and a0/a1 are accessed within
+the first few instructions.
+
+> If this was always supposed to fit in a single cacheline, clearly this
+> invariant isn't/wasn't maintained as changes trickled in. I would like to=
+ see
+> what maintainers have to say or someone who did data analysis on this.
+
+I don't think it is necessary to fix the rest, just not making things
+worse is already great.
+
+>>I think we could do without user_sp in thread_info as well, so there are
+>>other packing options.
+>
+> Sure, probably somewhere in task_struct. But fact of the matter is that i=
+t has
+> to be saved/restore during exception entry/exit. But then load/store to
+> task_struct is essentially a different cachline. Not sure what we will ac=
+hieve
+> here?
+
+user_sp is only temporarily storage space in thread_info.
+The sp register is restored from pt_regs, so we could refactor the code
+to drop user_sp from thread_info.
+
+e.g. use a0, a1, or a2 for the temporary storage: user_sp is not even
+the userspace sp, it is sp of the previous sp "user", which might have
+been the kernel.
+
+>>Btw. could ssp be added to pt_regs?
+>
+> I had that earlier. It breaks user abi. And it was a no go.
+
+Thanks, I was afraid of that. :)
+
+We might want to eventually push ssp to the stack to follow the same
+design for trap nesting as sp has, but that can happen when implementing
+ssp for the kernel.  Squeezing into thread_info should work for now.
