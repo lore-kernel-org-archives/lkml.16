@@ -1,147 +1,214 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113C92356B8
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994F1230BD8;
+	Fri, 25 Apr 2025 08:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570315; cv=none; b=d3IZu7gdG0eKaK8tK5NixvXDJJ6AFCzTS4tVxK5diHpDkOlqL31A6a0qFwXHo+g0df32nP1yRhYSG/yEuqCfuCNJFYuS35JoO5ohT29qrQud8nYIX8Tao+Nma7Gi785VYN1+/fSPbLA2CZKiRx+4T3w9GNpp8VXI1n9EcbiNpsQ=
+	t=1745570352; cv=none; b=Pvh3/UFo+FG2VdpipEgC8lDFxQ9VEQ1M1rUPyPYgFbldkgiTE2AWzi+YyO71uZ0Bq/JFQME5OYItY0AVN4QZHdxokVPJkEa+wx79QQ+UNBMS0ffNEzkhKgRTui7yBxRzg451pOjxN9d3TFS7D3CGdGgdIkBSIeJ3kfqfu4/zuoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570315; c=relaxed/simple;
-	bh=1mMtj98z3YShJdLxUAd5dw43PD6KBTkoMvJI6Gyi9wM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g4cjxPg8byTrCF2+3KZ0bm3VeKGNQ3JBlE38duxaMKGFZqC4oQ8UkxDohVJWEFki9CswohERXSyLaM/XmASCkc+cT/SVSSccZP0bOtCwylcKsqpfT5P98FzzI8Qjf8Zj+dFbdg5Wrh9Y0nYzyzKWU91/WSYrtwNichRPjAqv9Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dlFvvZ0R; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745570352; c=relaxed/simple;
+	bh=/yXX9pgvUOeDvQBrbXVUN8W1QFyPQNhdnV+dJfUxJ/4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=N/u/bp0153zeH+P9XyHV1tiA6XQ6XOEZ9YAK+HfYCqR2qHxpH5V5dI5drGiApeGQdeiEru74gtNfQl3dQ54MOLRuVvBKBOCA+J8cBVChXC1zeDSrQauQTd1ssRfyhLP0qeZo9udzG5vV2cOy+TkS5XeQe6UzsfG0yLCTfYt+g9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readahead.eu; spf=pass smtp.mailfrom=readahead.eu; dkim=pass (2048-bit key) header.d=readahead.eu header.i=@readahead.eu header.b=ElLrvg4w; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HnXq2HQk; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readahead.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=readahead.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dlFvvZ0R"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4E1D6982;
-	Fri, 25 Apr 2025 10:38:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745570309;
-	bh=1mMtj98z3YShJdLxUAd5dw43PD6KBTkoMvJI6Gyi9wM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dlFvvZ0RsAmZZnruhIOvgP/1hcZ71oMlzTUhKVDxi2Dmb81X8/EphUiA0KWueYZHI
-	 hQ3waux+4qNoKag7YlgA6h3TEHo/99FqJWnNHkilLNejAeWTei7tRRFjCW5XJDZaaz
-	 fn6nh6CRi/MyNdvQPfCaBoC6I4RQjwR6YcC0WRE4=
-Message-ID: <c432aca1-cbab-476c-ba3a-e0d9cc940da7@ideasonboard.com>
-Date: Fri, 25 Apr 2025 11:38:28 +0300
+	dkim=pass (2048-bit key) header.d=readahead.eu header.i=@readahead.eu header.b="ElLrvg4w";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HnXq2HQk"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8AA911140218;
+	Fri, 25 Apr 2025 04:39:06 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Fri, 25 Apr 2025 04:39:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=readahead.eu; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745570346;
+	 x=1745656746; bh=XnvyM4plL/VWjKsIduuUMp0AGlTQ6ZHweSxORhSaPAI=; b=
+	ElLrvg4w9Et7djySJSaqsYYSTHeWOyllNLyST+gW14VDygocISieLR9UdjIZ+KmC
+	juSTvFM/pE++E/8BEkxj19/z8YPByQGEKkwsP4gY8MP1g1QcljoPcC3SL60vTLst
+	ZeRZ3CG2YeHpap7ua+IeQJh8gx42N4ozi+6DUo/ulK7BK7OktIRMnB0qxgaPse7o
+	tGaYaCEETlf1Hqk0u75ojP8cwNaF6Fln5ZvOkkhh0jYy+cUaqMcsV3qaZvI5qfam
+	9/aHmF1O/uJLqmqo67zcZIsHgrilNcfCOqbdcRm3hzrg3003yqqof6FuP1WaGuO5
+	w50E/SV2UAatd+/Uuh5aUA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745570346; x=
+	1745656746; bh=XnvyM4plL/VWjKsIduuUMp0AGlTQ6ZHweSxORhSaPAI=; b=H
+	nXq2HQkrvQn3KCcT5xydJEpqiiQl7MVuZNAG49oq2mBpX/3aChiXeVfYqZZXNBsb
+	Azzivimrjd2yLv6PsweCIQIlcHvgG5V1Ipc3LbqRm0hPsjYaZSFp/54QMaxaF1FG
+	c0LXGyD3db04E6y6HCbhW1ygXPp4N3U5rlo9f8LKDExT/d+PwPdYQE8dTJBhuxeo
+	dZo85rBk31QDlRR0oXkkY5z2h1Sf81/cogAl78PhY+5X3I2iMoO6meenkI8xYPyb
+	t+ZeOgDwY/gMuEaq7p7x2hWUt3quX2yCkDU36aCq+xMcKbtm2YA8ihKCO21JZ9IY
+	91V+EwTnt6ORg9hUVl3lw==
+X-ME-Sender: <xms:KUoLaD6BrvEtZ243u7bFoc8e9rwbadWeZIvtNJDTmD4PSD2k6BJdzg>
+    <xme:KUoLaI7XiODhi5OEFyHIwV_a9U6_ZUHmr70_8HnPzBOXcTFZXD6E5IbvsWhepshRt
+    pzkDQtkdyXHnImMWso>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedukeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfffgrvhhiugcutfhhvghinhhssggvrhhgfdcuoegurghvihguse
+    hrvggruggrhhgvrggurdgvuheqnecuggftrfgrthhtvghrnhepueekteduueejkeehheel
+    vdefleeivdeugfekvdfffefgkeefuedvtdfftddvveeknecuffhomhgrihhnpehkvghrnh
+    gvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpegurghvihgusehrvggruggrhhgvrggurdgvuhdpnhgspghrtghpthhtohepudejpd
+    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehkuhhnihihuhesrghmrgiiohhnrdgt
+    ohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtth
+    hopegslhhutggrseguvggsihgrnhdrohhrghdprhgtphhtthhopegurggrnhdrjhdruggv
+    mhgvhigvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhooh
+    hglhgvrdgtohhmpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgigrnhguvghrsehmihhhrghlihgt
+    hihnrdgtohhm
+X-ME-Proxy: <xmx:KUoLaKezNV5TdX96i0hcAXZKW3tm6pFEMxn8sTIOZDrBuk57bcaD2g>
+    <xmx:KUoLaEL0HBEybq4fRAGMpvl_p3k_Gv17OTAfwTitj1SgF2xPUZlleQ>
+    <xmx:KUoLaHIQ4_Famr47P1XAtLg60JsEtUkoVugx3jiRQ_-WFWkEs6PxCQ>
+    <xmx:KUoLaNwIc4QoBzJj044NWxyyLX0M298_kQkkjvHyZtpnwF_FybuOoQ>
+    <xmx:KkoLaJ6jLFtsEBhotZ1JZwTKqfiy1M1m9ZDxDzQ24RlSdI1h-jobmHpy>
+Feedback-ID: id2994666:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8536F18A006B; Fri, 25 Apr 2025 04:39:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
- <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
- <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
- <20250327112009.6b4dc430@eldfell>
- <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
- <20250327175842.130c0386@eldfell>
- <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
- <20250331105446.098f0fbe@eldfell>
- <20250331082135.GB13690@pendragon.ideasonboard.com>
- <20250331135337.61934003@eldfell> <20250401162732.731ef774@eldfell>
- <73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
- <20250417111315.62a749e5@eldfell>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
- wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
- Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
- eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
- LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
- G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
- DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
- 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
- rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
- Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
- aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
- ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
- PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
- VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
- 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
- uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
- R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
- sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
- Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
- PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
- dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
- qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
- hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
- DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
- KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
- 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
- xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
- UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
- /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
- 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
- 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
- mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
- 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
- suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
- xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
- m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
- CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
- CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
- 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
- ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
- yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
- 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <20250417111315.62a749e5@eldfell>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: Tbcbd793788c73c94
+Date: Fri, 25 Apr 2025 10:38:45 +0200
+From: "David Rheinsberg" <david@readahead.eu>
+To: "Christian Brauner" <brauner@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Kuniyuki Iwashima" <kuniyu@amazon.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ netdev@vger.kernel.org, "Jan Kara" <jack@suse.cz>,
+ "Alexander Mikhalitsyn" <alexander@mihalicyn.com>,
+ "Luca Boccassi" <bluca@debian.org>,
+ "Lennart Poettering" <lennart@poettering.net>,
+ "Daan De Meyer" <daan.j.demeyer@gmail.com>, "Mike Yuan" <me@yhndnzj.com>
+Message-Id: <4950895a-9b99-4ec3-981c-a392a20ce74c@app.fastmail.com>
+In-Reply-To: <20250425-work-pidfs-net-v2-0-450a19461e75@kernel.org>
+References: <20250425-work-pidfs-net-v2-0-450a19461e75@kernel.org>
+Subject: Re: [PATCH v2 0/4] net, pidfs: enable handing out pidfds for reaped
+ sk->sk_peer_pid
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-Hi Pekka,
+Hi
 
-On 17/04/2025 11:13, Pekka Paalanen wrote:
->> My understanding is that the Y-only pixel formats behave in a well
->> defined way (or, as well defined as the YUV formats), and there's
->> nothing more to add here. Is that right?
-> 
-> There are two things:
-> 
-> - Y8 follows COLOR_RANGE property, just like all other YUV formats.
-> - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values).
-> 
-> I'd like these explicitly written down, so that they become obvious to
-> everyone. I suspect either one might be easy to forget when writing
-> code and taking shortcuts without thinking.
+On Fri, Apr 25, 2025, at 10:11 AM, Christian Brauner wrote:
+> SO_PEERPIDFD currently doesn't support handing out pidfds if the
+> sk->sk_peer_pid thread-group leader has already been reaped. In this
+> case it currently returns EINVAL. Userspace still wants to get a pidfd
+> for a reaped process to have a stable handle it can pass on.
+> This is especially useful now that it is possible to retrieve exit
+> information through a pidfd via the PIDFD_GET_INFO ioctl()'s
+> PIDFD_INFO_EXIT flag.
+>
+> Another summary has been provided by David in [1]:
+>
+>> A pidfd can outlive the task it refers to, and thus user-space must
+>> already be prepared that the task underlying a pidfd is gone at the time
+>> they get their hands on the pidfd. For instance, resolving the pidfd to
+>> a PID via the fdinfo must be prepared to read `-1`.
+>>
+>> Despite user-space knowing that a pidfd might be stale, several kernel
+>> APIs currently add another layer that checks for this. In particular,
+>> SO_PEERPIDFD returns `EINVAL` if the peer-task was already reaped,
+>> but returns a stale pidfd if the task is reaped immediately after the
+>> respective alive-check.
+>>
+>> This has the unfortunate effect that user-space now has two ways to
+>> check for the exact same scenario: A syscall might return
+>> EINVAL/ESRCH/... *or* the pidfd might be stale, even though there is no
+>> particular reason to distinguish both cases. This also propagates
+>> through user-space APIs, which pass on pidfds. They must be prepared to
+>> pass on `-1` *or* the pidfd, because there is no guaranteed way to get a
+>> stale pidfd from the kernel.
+>> Userspace must already deal with a pidfd referring to a reaped task as
+>> the task may exit and get reaped at any time will there are still many
+>> pidfds referring to it.
+>
+> In order to allow handing out reaped pidfd SO_PEERPIDFD needs to ensure
+> that PIDFD_INFO_EXIT information is available whenever a pidfd for a
+> reaped task is created by PIDFD_INFO_EXIT. The uapi promises that reaped
+> pidfds are only handed out if it is guaranteed that the caller sees the
+> exit information:
+>
+> TEST_F(pidfd_info, success_reaped)
+> {
+>         struct pidfd_info info = {
+>                 .mask = PIDFD_INFO_CGROUPID | PIDFD_INFO_EXIT,
+>         };
+>
+>         /*
+>          * Process has already been reaped and PIDFD_INFO_EXIT been set.
+>          * Verify that we can retrieve the exit status of the process.
+>          */
+>         ASSERT_EQ(ioctl(self->child_pidfd4, PIDFD_GET_INFO, &info), 0);
+>         ASSERT_FALSE(!!(info.mask & PIDFD_INFO_CREDS));
+>         ASSERT_TRUE(!!(info.mask & PIDFD_INFO_EXIT));
+>         ASSERT_TRUE(WIFEXITED(info.exit_code));
+>         ASSERT_EQ(WEXITSTATUS(info.exit_code), 0);
+> }
+>
+> To hand out pidfds for reaped processes we thus allocate a pidfs entry
+> for the relevant sk->sk_peer_pid at the time the sk->sk_peer_pid is
+> stashed and drop it when the socket is destroyed. This guarantees that
+> exit information will always be recorded for the sk->sk_peer_pid task
+> and we can hand out pidfds for reaped processes.
+>
+> Note, I'm marking this as RFC mostly because I'm open to other
+> approaches to solving the pidfs registration. The functionality in
+> general we should really provide either way.
+>
+> Link: 
+> https://lore.kernel.org/lkml/20230807085203.819772-1-david@readahead.eu 
+> [1]
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+> Changes in v2:
+> - Fix typo in pidfs_register_pid() kernel documentation.
+> - Remove SOCK_RCU_FREE check as it's already and better covered by 
+> might_sleep().
+> - Add comment to pidfd_prepare() about PIDFD_STALE only being valid if
+>   the caller knows PIDFD_INFO_EXIT information is guaranteed to be
+>   available.
+> - Fix naming of variables and adhere to net declaration ordering.
+> - Link to v1: 
+> https://lore.kernel.org/20250424-work-pidfs-net-v1-0-0dc97227d854@kernel.org
+>
+> ---
+> Christian Brauner (4):
+>       pidfs: register pid in pidfs
+>       net, pidfs: prepare for handing out pidfds for reaped sk->sk_peer_pid
+>       pidfs: get rid of __pidfd_prepare()
+>       net, pidfs: enable handing out pidfds for reaped sk->sk_peer_pid
+>
+>  fs/pidfs.c                 | 80 ++++++++++++++++++++++++++++++++++++++-----
+>  include/linux/pid.h        |  2 +-
+>  include/linux/pidfs.h      |  3 ++
+>  include/uapi/linux/pidfd.h |  2 +-
+>  kernel/fork.c              | 83 ++++++++++++++++----------------------------
+>  net/core/sock.c            | 14 +++-----
+>  net/unix/af_unix.c         | 85 ++++++++++++++++++++++++++++++++++++++++------
+>  7 files changed, 183 insertions(+), 86 deletions(-)
+> ---
+> base-commit: b590c928cca7bdc7fd580d52e42bfdc3ac5eeacb
+> change-id: 20250423-work-pidfs-net-bc0181263d38
 
-I didn't find a suitable place in the docs for this, but would this, in 
-the drm_fourcc.h, be enough:
+Thank you very much! Looks good to me!
 
-/*
-  * Y-only (greyscale) formats
-  *
-  * The Y-only formats are handled similarly to the YCbCr formats in the 
-display
-  * pipeline, with the Cb and Cr implicitly neutral (0.0 in nominal 
-values). This
-  * also means that COLOR_RANGE property applies to the Y-only formats.
-  *
-  */
+Reviewed-by: David Rheinsberg <david@readahead.eu>
 
-#define DRM_FORMAT_Y8		fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
-#define DRM_FORMAT_Y10_P32	fourcc_code('Y', 'P', 'A', '4')  /* [31:0] 
-x:Y2:Y1:Y0 2:10:10:10 little endian */
-
-  Tomi
-
+Thanks
+David
