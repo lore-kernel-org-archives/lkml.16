@@ -1,63 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABF4296D04;
-	Fri, 25 Apr 2025 23:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782B413B7A3;
+	Fri, 25 Apr 2025 23:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745624109; cv=none; b=N70YJOaFYNJQYKlt7dTR6VJWMa0ubnLo3qljQBMgK9XHGsrzeawtrP/gDp4PXws8HFD01cWv15HAOkfmvh9fhtdTN6tQFBm1HgM3RXgFJJErx7HS3Lb2lqlzGOOTUcZ7gU5PYVyCqcDy3dz9vAx5/zrU/ZnhVfoz4ibAfNDJh4A=
+	t=1745624185; cv=none; b=qEAAuj9SElUXHtcCGHfrLBTHXJr8+ZD6umyZQ7mTUaizJOFkUuel54kiH7EC7Zb/XCq9jdd7mFCNVzaWUh+0GhksiCtOySR9RG/Um+GOUxe4uAfsq55BkP35SqlEi9mMLzUVfymEwQnYUEI0DXiB04jfY7bXmgyU8DJFxcZmMvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745624109; c=relaxed/simple;
-	bh=9DOpeeDVNX/ufwNa4MPyCJJ0fjb+WNh2lMjb40IKwdo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=uJc1wG9PirROQ5T8qVZBflbwj5ICvBvbQYTa0/za4rZhlXyyyPtphoqcTfvIdGEj8/oue/5OzJoHT/nTg/hPvcgt0OhSutNGgh4hfihjgmBnRFOLWkOueo1arqT6hnLKM7xpigSKgBAv7qEr3+n0+DzeGreBmLPn7XqLt8JSU40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMr1QVrB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMr1QVrB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE0BC4CEE4;
-	Fri, 25 Apr 2025 23:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745624109;
-	bh=9DOpeeDVNX/ufwNa4MPyCJJ0fjb+WNh2lMjb40IKwdo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=CMr1QVrBlvYNATuwieOCwSVgKRb/vrsv5y/0sxaxWzh+svpK3OtfjTq8fVFg+uYXF
-	 zYn8qhQFD/vN3zCzKtU9T/dvBuPoq1Jl1pZBBouGBYM8Ot/H6oBEvJ/Vt+xgQ2Fkx+
-	 kAmUxC/AW/+HJZjSKwv0I8JrS0aJOqFrfKRRsY8lZ99mjJjAm41xsuZjoT9+tbNjAH
-	 JPGvMvrUq6d5pCBLp2SsiGkhttxTkDGzyMnoJmz3yTkpsF40e0Rv/fPpkuCcRtlOwf
-	 EM0UUh5oD4zkSEHG3TS/yB5tErmfFiQO88Largg6ZVO4Pho5qjCKLRnRxJJaqWs/iw
-	 zkerof3THJrKw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B82380CFD7;
-	Fri, 25 Apr 2025 23:35:49 +0000 (UTC)
-Subject: Re: [GIT PULL] Ceph fixes for 6.15-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250425183924.2739969-1-idryomov@gmail.com>
-References: <20250425183924.2739969-1-idryomov@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250425183924.2739969-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git tags/ceph-for-6.15-rc4
-X-PR-Tracked-Commit-Id: f452a2204614fc10e2c3b85904c4bd300c2789dc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 349b7d77f5a104cf4a81f5400184c6c446792bd3
-Message-Id: <174562414790.3874874.10632399815417158299.pr-tracker-bot@kernel.org>
-Date: Fri, 25 Apr 2025 23:35:47 +0000
-To: Ilya Dryomov <idryomov@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1745624185; c=relaxed/simple;
+	bh=uC+uqb7UlcVkB/i0xfNXC9o3FUOJRPHTBlXaQvLUIu0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZGvgqoHBlqgBuHs1ELy1VkNYLHLRf27Nhbx3P9Hs7E7um+tZW7DLaC66yoFjQsdU8FnaWWBOSBPw1D6lT74PVDw4aKbu2+9p95CJmSHxDrF2YIs9nRk9YFVtMHmXa+VwwhyFWiTwQv7uspnpDWPpqRgG9i5t4JtlbwpO7i5UD70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost.localdomain (unknown [116.232.18.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id BFFE6340A12;
+	Fri, 25 Apr 2025 23:36:19 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Yixun Lan <dlan@gentoo.org>
+Cc: Alex Elder <elder@riscstar.com>,
+	Haylen Chu <heylenay@4d2.org>,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] riscv: dts: spacemit: Add clocks to pinctrl and UART
+Date: Sat, 26 Apr 2025 07:35:39 +0800
+Message-ID: <174562390817.16593.734541789172552483.b4-ty@gentoo.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250424-05-dts-clock-v2-0-17d83a705c4c@gentoo.org>
+References: <20250424-05-dts-clock-v2-0-17d83a705c4c@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Fri, 25 Apr 2025 20:39:22 +0200:
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-6.15-rc4
+On Thu, 24 Apr 2025 15:48:07 +0800, Yixun Lan wrote:
+> Populate clock property for pinctrl and UART controller.
+> 
+> The pinctrl's clock dt-binding patch is still waiting to be merged[1].
+> 
+> The UART's dt-binding and driver code has already been accepted[2],
+> so we now are only sending the DT part patch.
+> 
+> [...]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/349b7d77f5a104cf4a81f5400184c6c446792bd3
+Applied, thanks!
 
-Thank you!
+[1/2] riscv: dts: spacemit: Acquire clocks for pinctrl
+      https://github.com/spacemit-com/linux/commit/1fa2b7dd8e3efb7b50a24d13f91dc04b25adc43d
+[2/2] riscv: dts: spacemit: Acquire clocks for UART
+      https://github.com/spacemit-com/linux/commit/fe066af241681269d809ece2ad663f334a0d8120
 
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Yixun Lan
+
