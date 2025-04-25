@@ -1,46 +1,45 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90DF221714;
-	Fri, 25 Apr 2025 19:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B621E08D;
+	Fri, 25 Apr 2025 19:34:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745609666; cv=none; b=ehwSe3l/srySoBOaWrfl4XPjBz5D5bBon8662O37kLt1fW9+5QlT06WfGTk+px3P37xiluIO4Dig5fnzhoYrXSrPeFScPVoXMCAb1VmiIB5uaSkCUIS/67rPuWdlMe53HPQLruazcAjKjt06LMufjYYOFMiZIbhh+xjXUkVVVmk=
+	t=1745609665; cv=none; b=RyFhXqt2czjauVTsT6uUG/j5jAdvaWmP+VcxAFlZlcRAB2CMtbpBZyS1djFREnsqTYI/CIHsx0rIA9pIicxBy/BVOiZhlQkAjvul7c0/y4ZY/8KrIgJw0fDkjxh5nyl0yk65YcZZFttK4LZVh5yUsFs69hNFHX9xpJToCBd3+mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745609666; c=relaxed/simple;
-	bh=nVy5aWKIgku0ASs8zTDYZiXGEtNCnxnzwhpSxvmTSYs=;
+	s=arc-20240116; t=1745609665; c=relaxed/simple;
+	bh=hqtJr8+mT8Zz8ZDa1vDTxS94/n4yDl8s7QStI+V417w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oLS3PlE62Dld4S3DCsR2JWojQ69Om3rRG4X01akiSdL1KoBfSSVojVGnfYEcf6kRjU4vjaoA0ZXZYJ9vyw9PPLhe2fTiYimVDnlyhv0C3uVmGHSuxV2EQ+ixAa1B4QMcBWl+BOHN6tbvWHE/lBcCwdDjRBHF+gcjyxdplVsQ3ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=M/Vu+IXU; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=BrdNuC8hrwcfhjVRs/J04CV6qvlrOjlmDS+7vkEMqiBmZbBDJaBhdyock6ZOdWKPtf3IvMib2oxsiD0fHbfMUE3MKzc6a/LqA8d3TCpH8+JB5sMATNWJrBBSycUy3GNeV8d05pljQxWUsQGpMfWMXBRQV0cwPg9fh76CN7FkpcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=FbztuFDs; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="M/Vu+IXU"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="FbztuFDs"
 Received: from kreacher.localnet (unknown [217.114.34.19])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id EC3D5664A4B;
-	Fri, 25 Apr 2025 21:34:19 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id DDC376646B5;
+	Fri, 25 Apr 2025 21:34:17 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745609660;
-	bh=nVy5aWKIgku0ASs8zTDYZiXGEtNCnxnzwhpSxvmTSYs=;
+	s=dkim; t=1745609658;
+	bh=hqtJr8+mT8Zz8ZDa1vDTxS94/n4yDl8s7QStI+V417w=;
 	h=From:Subject:Date;
-	b=M/Vu+IXUXpbX8iEUoY2TIj2ulH6EIaALgLo9NB2SngF9v1MQlJIOy0xvTkFeDXS0O
-	 miaaw9cZxHYn4/jYjM7+fG0w7HDcjfxSL+TTOqCyXiVzWdMbIY16iVZBhJYgQIs2jh
-	 1Hmo+CDWgcfZw2Xyi7OgWPvJHaJOBjwRulwkR2fQk3beB+CtngfL2ADO5KorZ08dS2
-	 RM0UwEZGCn+8fzlBpTHCRlJ7/HFPTSd3Eh1eovJQaQmR1tvnIaHAGtkIwrOVfYCvfX
-	 7pcAflp6mas8X1pwGbflD/whXGLGyPtA7WhQ9BANvyjSpsgEB51VKPx9eIKvb7fMu5
-	 3wpJI2tqxcqMw==
+	b=FbztuFDs5ftm4CRlXhuVQ9MUQsQqSe6ddPW7523aFBQF0WTiQl5BWd80SEctjEWV+
+	 x1tyA5uZst3xEQB+FwYglDPXl0+iA2dgbNcf7E+CW8LFDWlvijAD7eaZdpHeXhhGsQ
+	 ONNlX+VhKofL5HTOSdXG+gkHWTPskMWHHvD5+G0ozb6wOfJwdXApZtBTPTRacfO0R2
+	 yqp77gpu6rDi0Cwc2RgKyNGTu+x637yVeXxr++HbWppM+c3sj8t1LUTjjAK1wN3Ez2
+	 Kftl4FeiLSb6OmNicGTx6VxaT5PsBf7/oNWcH+bcoDcFIKrbiIOikTVDzW/GFupdng
+	 0Srxv4959fI3A==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
 Subject:
- [PATCH v1 09/19] ACPICA: Utilities: Fix spelling mistake "Incremement"  ->
- "Increment"
-Date: Fri, 25 Apr 2025 21:26:03 +0200
-Message-ID: <7814589.EvYhyI6sBW@rjwysocki.net>
+ [PATCH v1 11/19] ACPICA: actbl2.h: ERDT: Add typedef and other  definitions
+Date: Fri, 25 Apr 2025 21:27:24 +0200
+Message-ID: <3296755.5fSG56mABF@rjwysocki.net>
 In-Reply-To: <12671029.O9o76ZdvQC@rjwysocki.net>
 References: <12671029.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -54,37 +53,236 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 217.114.34.19
 X-CLIENT-HOSTNAME: 217.114.34.19
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnheptefhgffgueeileffleffieeuvefgtdetheeiheelveehtdfhveeggedtkeelgeehnecuffhomhgrihhnpehinhhtvghlrdgtohhmpdhgihhthhhusgdrtghomhenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohh
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-From: Colin Ian King <colin.i.king@gmail.com>
+From: Tony Luck <tony.luck@intel.com>
 
-ACPICA commit 0faa6e20cfe56fdaefc37a38f8fd04e3137fcdad
+ACPICA commit dddd9270531d74af523afa68515d8aae6a18bbe0
 
-There is a spelling mistake in a literal string. Fix it.
+The ERDT table (and its many subtables) enumerate capabilities
+and methods for Intel Resource Director Technology to monitor
+and control L3 cache allocation and memory bandwidth by CPU
+cores and IO devices.
 
-Fixes: a171306ed1a1 ("Reference count: add additional debugging details)
+Structure defined in the Intel Resource Director Technology (RDT)
+Architecture specification downloadable from www.intel.com/sdm
 
-Link: https://github.com/acpica/acpica/commit/0faa6e20
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Link: https://github.com/acpica/acpica/commit/dddd9270
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/acpica/utdelete.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/acpi/actbl2.h | 190 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 190 insertions(+)
 
-diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
-index c85bfa13ac1e..e8180099d01f 100644
---- a/drivers/acpi/acpica/utdelete.c
-+++ b/drivers/acpi/acpica/utdelete.c
-@@ -404,7 +404,7 @@ acpi_ut_update_ref_count(union acpi_operand_object *object, u32 action)
- 				  object, object->common.type,
- 				  acpi_ut_get_object_type_name(object),
- 				  new_count));
--		message = "Incremement";
-+		message = "Increment";
- 		break;
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index 2c07b097ef9f..ccbf543bceeb 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -29,6 +29,7 @@
+ #define ACPI_SIG_BDAT           "BDAT"	/* BIOS Data ACPI Table */
+ #define ACPI_SIG_CCEL           "CCEL"	/* CC Event Log Table */
+ #define ACPI_SIG_CDAT           "CDAT"	/* Coherent Device Attribute Table */
++#define ACPI_SIG_ERDT           "ERDT"	/* Enhanced Resource Director Technology */
+ #define ACPI_SIG_IORT           "IORT"	/* IO Remapping Table */
+ #define ACPI_SIG_IVRS           "IVRS"	/* I/O Virtualization Reporting Structure */
+ #define ACPI_SIG_LPIT           "LPIT"	/* Low Power Idle Table */
+@@ -450,6 +451,195 @@ struct acpi_table_ccel {
+ 	u64 log_area_start_address;
+ };
  
- 	case REF_DECREMENT:
++/*******************************************************************************
++ *
++ * ERDT - Enhanced Resource Director Technology (ERDT) table
++ *
++ * Conforms to "Intel Resource Director Technology Architecture Specification"
++ * Version 1.1, January 2025
++ *
++ ******************************************************************************/
++
++struct acpi_table_erdt {
++	struct acpi_table_header header;	/* Common ACPI table header */
++	u32 max_clos;		/* Maximum classes of service */
++	u8 reserved[24];
++	u8 erdt_substructures[];
++};
++
++/* Values for subtable type in struct acpi_subtbl_hdr_16 */
++
++enum acpi_erdt_type {
++	ACPI_ERDT_TYPE_RMDD = 0,
++	ACPI_ERDT_TYPE_CACD = 1,
++	ACPI_ERDT_TYPE_DACD = 2,
++	ACPI_ERDT_TYPE_CMRC = 3,
++	ACPI_ERDT_TYPE_MMRC = 4,
++	ACPI_ERDT_TYPE_MARC = 5,
++	ACPI_ERDT_TYPE_CARC = 6,
++	ACPI_ERDT_TYPE_CMRD = 7,
++	ACPI_ERDT_TYPE_IBRD = 8,
++	ACPI_ERDT_TYPE_IBAD = 9,
++	ACPI_ERDT_TYPE_CARD = 10,
++	ACPI_ERDT_TYPE_RESERVED = 11	/* 11 and above are reserved */
++};
++
++/*
++ * ERDT Subtables, correspond to Type in struct acpi_subtbl_hdr_16
++ */
++
++/* 0: RMDD - Resource Management Domain Description */
++
++struct acpi_erdt_rmdd {
++	struct acpi_subtbl_hdr_16 header;
++	u16 flags;
++	u16 IO_l3_slices;	/* Number of slices in IO cache */
++	u8 IO_l3_sets;		/* Number of sets in IO cache */
++	u8 IO_l3_ways;		/* Number of ways in IO cache */
++	u64 reserved;
++	u16 domain_id;		/* Unique domain ID */
++	u32 max_rmid;		/* Maximun RMID supported */
++	u64 creg_base;		/* Control Register Base Address */
++	u16 creg_size;		/* Control Register Size (4K pages) */
++	u8 rmdd_structs[];
++};
++
++/* 1: CACD - CPU Agent Collection Description */
++
++struct acpi_erdt_cacd {
++	struct acpi_subtbl_hdr_16 header;
++	u16 reserved;
++	u16 domain_id;		/* Unique domain ID */
++	u32 X2APICIDS[];
++};
++
++/* 2: DACD - Device Agent Collection Description */
++
++struct acpi_erdt_dacd {
++	struct acpi_subtbl_hdr_16 header;
++	u16 reserved;
++	u16 domain_id;		/* Unique domain ID */
++	u8 dev_paths[];
++};
++
++struct acpi_erdt_dacd_dev_paths {
++	struct acpi_subtable_header header;
++	u16 segment;
++	u8 reserved;
++	u8 start_bus;
++	u8 path[];
++};
++
++/* 3: CMRC - Cache Monitoring Registers for CPU Agents */
++
++struct acpi_erdt_cmrc {
++	struct acpi_subtbl_hdr_16 header;
++	u32 reserved1;
++	u32 flags;
++	u8 index_fn;
++	u8 reserved2[11];
++	u64 cmt_reg_base;
++	u32 cmt_reg_size;
++	u16 clump_size;
++	u16 clump_stride;
++	u64 up_scale;
++};
++
++/* 4: MMRC - Memory-bandwidth Monitoring Registers for CPU Agents */
++
++struct acpi_erdt_mmrc {
++	struct acpi_subtbl_hdr_16 header;
++	u32 reserved1;
++	u32 flags;
++	u8 index_fn;
++	u8 reserved2[11];
++	u64 reg_base;
++	u32 reg_size;
++	u8 counter_width;
++	u64 up_scale;
++	u8 reserved3[7];
++	u32 corr_factor_list_len;
++	u32 corr_factor_list[];
++};
++
++/* 5: MARC - Memory-bandwidth Allocation Registers for CPU Agents */
++
++struct acpi_erdt_marc {
++	struct acpi_subtbl_hdr_16 header;
++	u16 reserved1;
++	u16 flags;
++	u8 index_fn;
++	u8 reserved2[7];
++	u64 reg_base_opt;
++	u64 reg_base_min;
++	u64 reg_base_max;
++	u32 mba_reg_size;
++	u32 mba_ctrl_range;
++};
++
++/* 6: CARC - Cache Allocation Registers for CPU Agents */
++
++struct acpi_erdt_carc {
++	struct acpi_subtbl_hdr_16 header;
++};
++
++/* 7: CMRD - Cache Monitoring Registers for Device Agents */
++
++struct acpi_erdt_cmrd {
++	struct acpi_subtbl_hdr_16 header;
++	u32 reserved1;
++	u32 flags;
++	u8 index_fn;
++	u8 reserved2[11];
++	u64 reg_base;
++	u32 reg_size;
++	u16 cmt_reg_off;
++	u16 cmt_clump_size;
++	u64 up_scale;
++};
++
++/* 8: IBRD - Cache Monitoring Registers for Device Agents */
++
++struct acpi_erdt_ibrd {
++	struct acpi_subtbl_hdr_16 header;
++	u32 reserved1;
++	u32 flags;
++	u8 index_fn;
++	u8 reserved2[11];
++	u64 reg_base;
++	u32 reg_size;
++	u16 total_bw_offset;
++	u16 Iomiss_bw_offset;
++	u16 total_bw_clump;
++	u16 Iomiss_bw_clump;
++	u8 reserved3[7];
++	u8 counter_width;
++	u64 up_scale;
++	u32 corr_factor_list_len;
++	u32 corr_factor_list[];
++};
++
++/* 9: IBAD - IO bandwidth Allocation Registers for device agents */
++
++struct acpi_erdt_ibad {
++	struct acpi_subtbl_hdr_16 header;
++};
++
++/* 10: CARD - IO bandwidth Allocation Registers for Device Agents */
++
++struct acpi_erdt_card {
++	struct acpi_subtbl_hdr_16 header;
++	u32 reserved1;
++	u32 flags;
++	u32 contention_mask;
++	u8 index_fn;
++	u8 reserved2[7];
++	u64 reg_base;
++	u32 reg_size;
++	u16 cat_reg_offset;
++	u16 cat_reg_block_size;
++};
++
+ /*******************************************************************************
+  *
+  * IORT - IO Remapping Table
 -- 
 2.43.0
 
