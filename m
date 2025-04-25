@@ -1,148 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119B5199FAB;
-	Fri, 25 Apr 2025 16:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F38119F43A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745598428; cv=none; b=fR9uwyzdP4XImOnjmFI0yvcV0fbYecbW13iPbv6AynARLfSx/p37S1dm8U67x9ExcVpsBLI8ZBgeHjGdPmV+zvm5DSn7zlXKg74lmbtynl7ABS6w+vqq3rUnyyLQhXfzrkdODO+wby7vUoPyd9qIMbRG5xTZ7tqorZeapQp4aX8=
+	t=1745598430; cv=none; b=S9pAYWS0+bY5Yy5hdrTMvWrzfIjWeUS1f7vSCYZ2yKY6WFWSIF9tJIrx76nyNtny/z/qUfq8GtX12PLJaGeT0LoJ14USp2taWos0zlwvFbn6QH9o8K2tiX+aez2uPHwZL8lH9RkOmDC6teur4ITOvfV9VIoYlVBqtsSC00lbi68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745598428; c=relaxed/simple;
-	bh=cBn+oANr9dOUMRlNolRibIsRlHhJMhggDW3pxGrLgKA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p0CYiltLgvpiQ/IJwxwP+YlRZ+rJPRj3+GLlZYea0yB+UzDO7o7Vn5U5Y6fhtnFoxnW0YMJ2NwAzu2HcnyWmYT9tsQ5np8QL86K0bi7CPG9gmKskmu6zObfYOcIa1V7Nhb021SysFITupZkIxmAQspY0eNhhD8Yt9aIdCc1S6E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmAx8ep+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745598430; c=relaxed/simple;
+	bh=gfj6qfAB2+A2B2FUesZrGJqPp4VulFSQvkvzvy8kgwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nmybpX5Xtg7Q2Jry9TE8kGMkfHc7xf/n9JzVlQBkivDjehbfHMOIxA9SIVUBGPJcvSuBQ3s7DFRJ5puuBjwldsC9LmKb2BJov6Lluwd/dLuVI4qySvJA+PDEt0eD9brTP/+zZeO9nmT8PamR7YX8ToEJ/4Xiktwrvj10NUZwo+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RHBtXhP8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmAx8ep+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF7BC4CEE4;
-	Fri, 25 Apr 2025 16:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745598427;
-	bh=cBn+oANr9dOUMRlNolRibIsRlHhJMhggDW3pxGrLgKA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UmAx8ep+zizvn5Y301UKtoLPLk0Rrq+W7gesbRNPckYDCHO1SsPXGbnlK4/hDv71f
-	 TyowylOW8bYjPGry481TaxQSiFOhBcRTZqNb0p/xboaGLs0+Oft/yDAg2ZyPe+VJ7d
-	 ml3oVo9wKFJ5DoeyO4DYxuHskbGzJsiOHxOkK9ssct1zCDdSmLPL7rF+FCSbOYRqlV
-	 w5R3urJKmSfxT71HFFflV5ky52ig/CNv6PgqXtQXtBQW/vbLzYSeLu1BxyXwxbJ8K5
-	 8S7T67yBMtTBoNxNLAt4Qpd8E9T7UUxgVWvdk4dvNIoMftae13E4Gfm3IcNeGTeGiO
-	 CuTgz7lsgG0hg==
-Message-ID: <25f5e8e4-1b64-478f-84ab-eede2c669655@kernel.org>
-Date: Fri, 25 Apr 2025 18:27:02 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHBtXhP8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745598428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/MhH+JzUZ4LUQs+r61lBHwV7dFz4bYUCQFljM9RbcvE=;
+	b=RHBtXhP8da7XjrpJifMEMvv8WBYSqUbkxy6QHOGE7laRgDmWcre/qob9HHDoBjPQva6gxQ
+	FQvffRNy8SlBxBZCDG9D443OS23CjdvsU6VDaZNhOzEzM+4/9BvFjmNJXp/2U5JuYVrpb+
+	EkjTULrIyaWCjfwJYVtpzwFKYFyVkZ4=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-BNeni7X6MJ6jXL6zdSpOVQ-1; Fri, 25 Apr 2025 12:27:04 -0400
+X-MC-Unique: BNeni7X6MJ6jXL6zdSpOVQ-1
+X-Mimecast-MFC-AGG-ID: BNeni7X6MJ6jXL6zdSpOVQ_1745598424
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f2c9e1f207so40474766d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:27:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745598424; x=1746203224;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/MhH+JzUZ4LUQs+r61lBHwV7dFz4bYUCQFljM9RbcvE=;
+        b=NmLIJayM9EAsPUuVUKGXNTKp86h33GtzXOHmXKAU6JneDCmazKRl6KG+nnBGyU5Q2F
+         Yp1x2Y27eIoR4pHXWqEQ0cXKVh2rhLaAMyzK5a2uG+iuIvTO8T5w16ATi4tK3cw8mbEg
+         shYmUjoLe0fDz8tJpBiz/w5RcD9D224jrpGC6jNS7D0bEVRrgN0LiEeCBOFsI0/6ZpSK
+         SL9xsjgG4ivOVxGfGRHFm6guxNCM6DeOBUsMy+6kr22M+dAZ4O1QCfzrjYC7M+R3so8l
+         PLZUfBkH02f2n0kzdSWZfFwH8oTPYNBA3ZaRz1QzaoV2OhEmKYSRSCcHZCiYCmkB6CgQ
+         Zv/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX7y06uohW5XTp3LFlNqG5pDtJk86yBdab+/2A1ugkJZwJ5gB0OYMOd77voYRYzc9HbOMjD20djZgIg4aY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjBSaAXH+tmpVu1DksQ99u4yYY9T/pIF2P6djVX71XvFMcehaD
+	DBHC+uOb54Kdv91zfuyx68YXQ5KoLCsdO1zYr/kJhGJoR/efIKkC5NL2EptqBgfNBKwWv/IsWbn
+	k290/SApBb90I7KWT6dyiEtMycgycQj43ehaRMF4RqYO1hU9XwatTIYKS9/YyUw==
+X-Gm-Gg: ASbGncvizw+zIrXo1voCyO9SBfOax4ZNpZheB+09tfW9SYTp/3PChbC0QGiXliNrd/7
+	uNn2Uc2vNyCf4mlS5mCNyedhuhQZYG8iTjp+qG0nA8fhnJfXPm39K3uoLlJb/kkJeLne7h7wAdf
+	6Mghz1/C4UuYhWkbLeaA0ydhipKWA8d1KlJx8oz8aI8hVpMk/+4uZICkDITLgsiLRyWKHgVXsE1
+	8Wj0PkxZMa/UHi3PNEELdH3h3/sdZcHtcAdUgFDQR4GtXwvrNYrLFXhLfhRmYUTBDoHXJmdeWqJ
+	b+A=
+X-Received: by 2002:a05:6214:c2a:b0:6e6:65a6:79a4 with SMTP id 6a1803df08f44-6f4d1f9e216mr223246d6.44.1745598424262;
+        Fri, 25 Apr 2025 09:27:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGrsTAOZevjGCechpgS5uQE6KpTPiMl2lEp9QFsRSucLuWkkusPkRPE26kdYaQ3TBFsbWONiw==
+X-Received: by 2002:a05:6214:c2a:b0:6e6:65a6:79a4 with SMTP id 6a1803df08f44-6f4d1f9e216mr222976d6.44.1745598423934;
+        Fri, 25 Apr 2025 09:27:03 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c08ef0cdsm23874656d6.18.2025.04.25.09.27.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 09:27:03 -0700 (PDT)
+Date: Fri, 25 Apr 2025 12:27:00 -0400
+From: Peter Xu <peterx@redhat.com>
+To: James Houghton <jthoughton@google.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-stable <stable@vger.kernel.org>,
+	Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH 1/2] mm/userfaultfd: Fix uninitialized output field for
+ -EAGAIN race
+Message-ID: <aAu31E7CSbhw6Yh9@x1.local>
+References: <20250424215729.194656-1-peterx@redhat.com>
+ <20250424215729.194656-2-peterx@redhat.com>
+ <23e2d207-58ac-49d3-b93e-4105a0624f9d@redhat.com>
+ <CADrL8HVhMhG6_nSwLfVr4g8XpjA9xh+maLPrC1=jv+L6LNxxkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] PCI: cadence: Add callback functions for RP and EP
- controller
-To: hans.zhang@cixtech.com, bhelgaas@google.com, lpieralisi@kernel.org,
- kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: peter.chen@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Manikandan K Pillai <mpillai@cadence.com>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-6-hans.zhang@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250424010445.2260090-6-hans.zhang@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADrL8HVhMhG6_nSwLfVr4g8XpjA9xh+maLPrC1=jv+L6LNxxkA@mail.gmail.com>
 
-On 24/04/2025 03:04, hans.zhang@cixtech.com wrote:
-> From: Manikandan K Pillai <mpillai@cadence.com>
+On Fri, Apr 25, 2025 at 11:54:47AM -0400, James Houghton wrote:
+> On Fri, Apr 25, 2025 at 11:12 AM David Hildenbrand <david@redhat.com> wrote:
+> >
+> > On 24.04.25 23:57, Peter Xu wrote:
+> > > While discussing some userfaultfd relevant issues recently, Andrea noticed
+> > > a potential ABI breakage with -EAGAIN on almost all userfaultfd ioctl()s.
+> >
+> > I guess we talk about e.g., "man UFFDIO_COPY" documentation:
+> >
+> > "The copy field is used by the kernel to return the number of bytes that
+> > was actually copied,  or an  error  (a  negated errno-style value).  The
+> > copy field is output-only; it is not read by the UFFDIO_COPY operation."
+> >
+> > I assume -EINVAL/-ESRCH/-EFAULT are excluded from that rule, because
+> > there is no sense in user-space trying again on these errors either way.
+> > Well, there are cases where we would store -EFAULT, when we receive it
+> > from mfill_atomic_copy().
+> >
+> > So if we store -EAGAIN to copy.copy it says "we didn't copy anything".
+> > (probably just storing 0 would have been better, but I am sure there was
+> > a reason to indicate negative errors in addition to returning an error)
 > 
-> Add support for the Cadence PCIe HPA controller by adding
-> the required callback functions. Update the common functions for
-> RP and EP configuration. Invoke the relevant callback functions
-> for platform probe of PCIe controller using the callback function.
-> Update the support for TI J721 boards to use the updated Cadence
-> PCIe controller code.
+> IMHO, it makes more sense to store 0 than -EAGAIN (at least it will
+> mean that my userspace[1] won't break).
 > 
-> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
-> Co-developed-by: Hans Zhang <hans.zhang@cixtech.com>
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> ---
->  drivers/pci/controller/cadence/pci-j721e.c    |  12 +
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  29 +-
->  .../controller/cadence/pcie-cadence-host.c    | 263 ++++++++++++++++--
->  .../controller/cadence/pcie-cadence-plat.c    |  27 +-
->  drivers/pci/controller/cadence/pcie-cadence.c | 197 ++++++++++++-
->  drivers/pci/controller/cadence/pcie-cadence.h |  11 +-
->  6 files changed, 495 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index ef1cfdae33bb..154b36c30101 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -164,6 +164,14 @@ static const struct cdns_pcie_ops j721e_pcie_ops = {
->  	.start_link = j721e_pcie_start_link,
->  	.stop_link = j721e_pcie_stop_link,
->  	.link_up = j721e_pcie_link_up,
-> +	.host_init_root_port = cdns_pcie_host_init_root_port,
-> +	.host_bar_ib_config = cdns_pcie_host_bar_ib_config,
-> +	.host_init_address_translation = cdns_pcie_host_init_address_translation,
-> +	.detect_quiet_min_delay_set = cdns_pcie_detect_quiet_min_delay_set,
-> +	.set_outbound_region = cdns_pcie_set_outbound_region,
-> +	.set_outbound_region_for_normal_msg =
-> +					    cdns_pcie_set_outbound_region_for_normal_msg,
-> +	.reset_outbound_region = cdns_pcie_reset_outbound_region,
+> Userspace will need to know from where to restart the ioctl, and if we
+> put -EAGAIN in `mapped`/`copy`/etc., userspace will need to know that
+> -EAGAIN actually means 0 anyway.
 
-How did you resolve Rob's comments?
+Yes agreed, the API might be easier to follow if the kernel will only
+update >=0 values to copy.copy and only if -EAGAIN is returned, so that
+errno will be the only source of truth on the type of error that userapp
+must check first. For now, we may need to stick with the current API.
 
-These were repeated I think three times finally with:
+-- 
+Peter Xu
 
-"Please listen when I say we do not want the ops method used in other
-drivers. "
-
-I think you just send the same ignoring previous discussion which is the
-shortest way to get yourself NAKed.
-
-
-Best regards,
-Krzysztof
