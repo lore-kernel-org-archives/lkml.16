@@ -1,163 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5664928EC;
-	Fri, 25 Apr 2025 14:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C0128EC;
+	Fri, 25 Apr 2025 14:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592347; cv=none; b=Y2aHLToh61MKT3b+A/maSIMT/f3xSuZX0TmPXaTXRyBdCWHo4+SnB0xKBpyZksI7/Vj4dAlqp7AetfxMpBX1oZjSC1mXTEDKrnUI+VSiZAMx+MpJWjLmiIjNJj/Tx7FOIPmgQ/Zy04JG+eppH5bjdA9w/bJsTbcOgbb+lsnOYYs=
+	t=1745592406; cv=none; b=JN5qGqdLHhBCHlNXkbkpLOjDLbetLGmln4VQBqRUkRLQ7fzLBr7AzUC3gZjgcqEdZG+l9L6vMPorVRCV6vsxZ1yFS2WvRWMgG53UltzSJPuAt7jG/eSau9MblfDMFAHbFE3fMwGXB6G6Kb74Jl7KUFkPrQgQUp4p6VQGW01Onws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592347; c=relaxed/simple;
-	bh=Tbpyg/unb2pDILYaNqFu8shfhDo5HYaKrcdkDyYp/Bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iUZ9dJXAmS1TsyqVPp8ClhOZlaygDjzTS0WgO20dN1J9TccoAVRCFQpfRdWfpEqLfEu/nJDAYiCy4BSvTo0Rqf+cH4mYApHhBx0+5RnTXvzuiCbMke7rE55qQTXWRDV9Tm4WlGeQvqCa7DfnKRUeQIEpCeH99s6Jb8ocXsdWvQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0X+q4DxY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745592406; c=relaxed/simple;
+	bh=KHMe3OlGoGnWcRJInhRahIcJzYzyZrBrXPmSKdqnqVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dUx3dp6j/hlkf8JFtk9xBcp5LGf84q3VK6I2FNAKsvf1c59bPvmugrQiN4gVg8tFqm7ZEQxPHKrUtSDKs9JrVVjK6dPrf8yHbM4ztgw4s0AYQxv3civbbpkY0Bf68dqgsfK80kyrQCeuejT0GvqdrLTyFxFFrvjqYaSpJtDkS6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZZyu96I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0X+q4DxY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF05C4CEE4;
-	Fri, 25 Apr 2025 14:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745592346;
-	bh=Tbpyg/unb2pDILYaNqFu8shfhDo5HYaKrcdkDyYp/Bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0X+q4DxYRxO/eY/9MTaJR30+8g/1Ewc/wVZYK++zmXSQ69X8Q0+KhR3CMsBodAYew
-	 13HAilLCDObffmfhPjil+xScGrNcGrup+M7IO/5Fgjs/Iavi/722TcwvlCqtQtyzYC
-	 2CKPqgc9LNZOWJCJiIgn0lyJwKIt3ICbh3CG6Gdg=
-Date: Fri, 25 Apr 2025 16:45:44 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uaccess: rust: add strncpy_from_user
-Message-ID: <2025042538-sitter-flame-9a50@gregkh>
-References: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
- <680a5f5d.050a0220.2035d2.545b@mx.google.com>
- <aAtZQkre4KRU2kr1@google.com>
- <aAuQjSzatuNoDDXL@Mac.home>
- <2025042509-french-washbowl-5cde@gregkh>
- <aAudvTvdhLwBv9gG@Mac.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZZyu96I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1492CC4CEE4;
+	Fri, 25 Apr 2025 14:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745592405;
+	bh=KHMe3OlGoGnWcRJInhRahIcJzYzyZrBrXPmSKdqnqVU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=GZZyu96IMNdT1z0KhNQMJNel37QXrrRT2E18XI6r5HmIC5hmAImGK8Pp2um1bZCdd
+	 VdffQwW8aPOA4Qc+dlGKODCGamFqfxtM+Gomc0J49kJzKFlxfOCAsT8/wp/JzazdX2
+	 rJcCug3m1JSCmRNuzOpMPFUE/6BCR39HPTzqd4FDsJ3xH3Z1KKtG97vNlYaZQ2DxTw
+	 gJedKQHg7jYdGNwtLMwAMAcb1g57S5zUBw0gpizufJdwELCa8mnaBLkIYoI4kiT2St
+	 y3I4Ad5Z6HsIFvqui9Ni9zWCrHPjBLN0Bm0TR4TDlF6T2hyzjaVzodbjYbl60b+cx3
+	 5H96lN2rKkmrA==
+Message-ID: <fa054136-961e-4a0f-a2cb-cdd393c3b022@kernel.org>
+Date: Fri, 25 Apr 2025 16:46:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAudvTvdhLwBv9gG@Mac.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/10] ARM: dts: exynos: Add rtc clock definitions for
+ MAX77686 PMIC for Exynos4412 Odroid
+To: Anand Moon <linux.amoon@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ "open list:MAXIM PMIC AND MUIC DRIVERS FOR EXYNOS BASED BO..."
+ <linux-kernel@vger.kernel.org>,
+ "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-samsung-soc@vger.kernel.org>
+References: <20250425132727.5160-1-linux.amoon@gmail.com>
+ <20250425132727.5160-3-linux.amoon@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250425132727.5160-3-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 07:35:41AM -0700, Boqun Feng wrote:
-> On Fri, Apr 25, 2025 at 03:52:16PM +0200, Greg Kroah-Hartman wrote:
-> > On Fri, Apr 25, 2025 at 06:39:25AM -0700, Boqun Feng wrote:
-> > > On Fri, Apr 25, 2025 at 09:43:30AM +0000, Alice Ryhl wrote:
-> > > > On Thu, Apr 24, 2025 at 08:57:13AM -0700, Boqun Feng wrote:
-> > > > > On Thu, Apr 24, 2025 at 03:17:48PM +0000, Alice Ryhl wrote:
-> > > > > > This is needed for ioctls that operate on a user-provided string.
-> > > > > > 
-> > > > > > It is somewhat unfortunate that strncpy_from_user does not nul-terminate
-> > > > > > the string when the end of `buf` is reached. This implies that we can't
-> > > > > > return a &CStr from the function, since the buffer may not always be
-> > > > > > nul-terminated.
-> > > > > > 
-> > > > > > That said, we could add more convenient helpers on top that add a NUL
-> > > > > > byte in that case.
-> > > > > > 
-> > > > > > This method isn't defined on UserSliceReader because it complicates the
-> > > > > > semantics. The UserSliceReader type also has its own maximum length, so
-> > > > > > we would have to limit the read by that length too.
-> > > > > > 
-> > > > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > > > > > ---
-> > > > > >  rust/kernel/uaccess.rs | 27 +++++++++++++++++++++++++++
-> > > > > >  1 file changed, 27 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> > > > > > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..1bd82045e81ea887008e30241bd6de27f096b639 100644
-> > > > > > --- a/rust/kernel/uaccess.rs
-> > > > > > +++ b/rust/kernel/uaccess.rs
-> > > > > > @@ -369,3 +369,30 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-> > > > > >          Ok(())
-> > > > > >      }
-> > > > > >  }
-> > > > > > +
-> > > > > > +/// Reads a nul-terminated string into `buf` and returns the length.
-> > > > > > +///
-> > > > > > +/// Fails with [`EFAULT`] if the read happens on a bad address. If the end of `buf` is reached,
-> > > > > > +/// then the buffer will not be nul-terminated.
-> > > > > > +#[inline]
-> > > > > > +pub fn strncpy_from_user(ptr: UserPtr, buf: &mut [u8]) -> Result<usize> {
-> > > > > 
-> > > > > Sorry maybe there is an email I'm missing, but could you provide more
-> > > > > context of the usage?
-> > > > > 
-> > > > > First the function name is a bit weird, because the 'n' in "strncpy"
-> > > > > means the parameters should have an 'n' (i.e. length) in it, but there
-> > > > > is none in the Rust version.
-> > > > 
-> > > > There is a length! It's the length of `buf`. It's pretty normal that C
-> > > > methods with a pointer and length become a Rust method with a slice.
-> > > > 
-> > > 
-> > > That's exactly the point, no need to reuse a name from C if we have
-> > > something better.
-> > 
-> > Up to point, us kernel developers are used to the C names, so keep it
-> > close if at all possible, ESPECIALLY for just links/wrappers of C
-> > functions like this one is.
-> > 
+On 25/04/2025 15:26, Anand Moon wrote:
+> The MAX77686A includes a crystal driver with an external load capacitance.
+> When enabled, the crystal driver starts in low power mode. The
+> LowJitterMode bit controls the crystal driver, allowing it to switch
+> between low power mode and low jitter mode (high power mode).
+> Setting the LowJitterMode bit to 1 activates low jitter mode on
+> three channels simultaneously. These three 32khz buffer outputs
+> (32KHAP, 32KHCP, P32KH) are independently enabled/disabled over I2C.
 > 
-> Well, see my other suggestion about always putting a NUL at the end.
-> Then it's going to be a different function than what strncpy() does.
-
-Ah, I missed that, and yes, we should do that.
-
-> And I also asked for the usage there, because IMO, there's no point of
-> replicating a strncpy() in Rust, we should design a better API, rather
-> than mimic what C does.
-
-Fair enough.  But as this is going to be getting into the "let's make
-string copies correct", please add Kees Cook to the discussion as he's
-doing a lot of work here on the C side of this.
-
-> > You need to specify a max length, otherwise that's just going to confuse
-> > us all.  strncpy_from_user() is the function we are used to using for
-> > copying up to N number of bytes from userspace where a 0 termination
-> > stops the copy if N isn't reached.  So I vote highly for the original
-> > name here please.
-> > 
+> The 32khz_ap output is typically routed to the AP Processor, while the
+> 32khz_cp and 32khz_pmic outputs are intended for BT, WLAN, BB,
+> or peripheral chipsets.
 > 
-> Have you read the Rust the function signature? There is no parameter for
-> the max length, the max length is implied in the `buf` slice. Plus we
-> should really consider what the usage is, for example, wouldn't it be
-> ideal that we provide a buffer that has an extra byte so that the
-> copy result is always NUL terminated? I randomly checked a few users of
-> C strncpy_from_user() (alloc_name() in mm/memfd.c, mtrr_write() in
-> arch/x86/kernel/cpu/mtrr/if.c), they all do the same: providing the
-> extra byte (i.e. buf size is > n). So it seems preferable to me that we
-> provide a function doing that instead of just replicating
-> strncpy_from_user() semantics here.
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm/boot/dts/samsung/exynos4412-odroid-common.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> (You're the one that keeps telling us to focus on usages, and I think
-> that's a good perspective ;-))
+> diff --git a/arch/arm/boot/dts/samsung/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/samsung/exynos4412-odroid-common.dtsi
+> index 93ddbd4b0a18..03943c666d11 100644
+> --- a/arch/arm/boot/dts/samsung/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/samsung/exynos4412-odroid-common.dtsi
+> @@ -289,6 +289,13 @@ max77686: pmic@9 {
+>  		reg = <0x09>;
+>  		#clock-cells = <1>;
+>  
+> +		max77686_osc: clocks {
+> +			compatible = "max77686-rtc";
 
-Ok, fair enough, I had missed the "always put a NULL at the end" which
-is a good idea.  And yeah, "implying" the size by the size of the buffer
-passed in makes sense in one way, the function signature then does look
-odd, I missed that.
+I don't believe this works.
 
-So yes, a better name might be good, but again, let's try to sync with
-the C side where we can.  We now have C string functions that have an
-"implicit" length already in them that is discovered by the compiler at
-build time, so following their model is good.
-
-thanks,
-
-greg k-h
+Best regards,
+Krzysztof
