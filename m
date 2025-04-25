@@ -1,131 +1,108 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5522475C8
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376622126C
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745582984; cv=none; b=sH7DNR/f8fuL/5Y10JBcfoPNtpkMcyPo0xH9SdJI70GqEToDogfqoSmUR9ZPkQeF7QzfcK7NDGN7qjdECOxxKbK8ve66Xn8dwYK7u6P6DT+2QAPnA44jai/5pc/146VyDOnPeDWUrKCVksQ5/gCUy4owRR1b4vTc88+qbrn4ySY=
+	t=1745583050; cv=none; b=tNDbibv7SEiV1APiZZGq+56b2xP3M/ouI5VqRbwsqQgQQ9HtB+IuYL4NdpCdjS5HELA51RXeHctVaUCIM7ITWmq9SN7I0HPr9O2fbvFZ/0Aq6YR2SntJTWzd+uIJfQyUrZ4GX06AnXikMP87n0WsapYwHoetQ0sf0i66H7Ig6ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745582984; c=relaxed/simple;
-	bh=Zxm4WulE6nllv3dcY5iH7gFi33gUsbG3+YxtX1wnINQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u5As9ltgmVX0FICvCOWIF8V+eFU4aYyFDEFufbUOYHGdH5hZklCJdiEZzQ0KFjOeSFwrLennFypt0VoDTpDv4m3jvcsRZLPv+R6LXIzJrHouWY0Fo0nPb+5nFuofdiN0hDCBPiO1ExTe370XNUVDjiDi5DHAI+u5i++MhVR4QR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=zUi4Sgjl; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1745583050; c=relaxed/simple;
+	bh=FVLdy/reYIaU7YLW3jcTrS26AvzbBotUMnk7uUPToP8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=NCJ2xHhV9uI/VJZx2UdiCXTQcZIfU4PDnyCTptInXIt7cZYzKbZbX43+D4w6WIgZyMq+4bTkZibk+Ob5mibB9pJTqkovb3jVt2pNL380fvdBM2KjjNvf2sVoVJ2IWXoSV3SxAaozD5WFIWO1R2i2dK1Vu9YqcQvjXwDGnGKHJjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk3DXMfo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="zUi4Sgjl"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d813c1c39eso18449185ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 05:09:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1745582982; x=1746187782; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=viCw2qA4ejmDM4IL1wv9giS7D3cMPoAepDm5Vm/i2EM=;
-        b=zUi4SgjlJBzSh0xtjOn+Pcl21QkhhCwXgqVxRQr6287ChU/x8U1gPxDjcJ5JJd/a4W
-         8N+L9iyjGMqlDH13lwiilFCJQhTa+N9PiDHmp4XTg2SjgwwKcu3Rd7y2lr1aUuM+7Qou
-         QPndFx4ppyK5aK/Rh6OoxozSdZ07hXE8EKA3yOEAHPlzr6+IjVA+FgQdlHXC0AMjEyLt
-         s1YBbYN8ExY1Y/S02GgrlaUQz5Sr4GKaLMlGlq2hSVKds0uy6WiJWx2EDEtZ0QuCoXjI
-         RRA+MNKUFtYBC6JsnDcO1odi1doIoKbE3Nsvdk6MwKiEkUdBYVMBg68u4ay1NAMXRvoE
-         tBvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745582982; x=1746187782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=viCw2qA4ejmDM4IL1wv9giS7D3cMPoAepDm5Vm/i2EM=;
-        b=YdnWoS8ahaoU6TS9mzb5CcFx+qbvyAnnz0xYj9HMBIeFXp8YB7iunAK1UmzaV9iwBg
-         IzZgvAYL5TLXpZOoCfWgxgqFIqEUkwtQLuYyannDMrIlEKvohI5mvZXex6lh1YqSn+O7
-         /HuuPlBpryNbdGBCJP3jUrpSfDSJoMsbQk9/rK13wCdH4Rkw6lH0kLBlBpu4Pyr0M260
-         5F5b0JvOThtofLSwfjWAuxiDaGTXZRdD4qbFYUm+uD3Q6GCbZGv8kIq6W/hQ+FAXRmK/
-         x/vi9a2yet839IS7t7eZ8l+GB09bhtLHNos0kCEBQKm6oa3AiJ+QzGOCIMRrj6jwdJOP
-         oVWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvYxzO+cRCbaN+Y8CkxlZqsLPq6cxVSxVYItmxWFjLuh+m2Wbr5zp1FCa/7b/tYse/9D7yUwye/JjMKp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg3rpeOYvCBm3F98pOX1IVVCBV+fT+6Ibyara6GbWPKfJWy635
-	GvrdI07eCzsNCUFPjKAqM+MSZXAaln0j3Cifcc/p2l0uUMa2emjujX3gwhk3h9J2YrhmkwSjKSt
-	KHEFlg88cFUaVoCLcMa+bHmYuVGSmUCzFPhRrHg==
-X-Gm-Gg: ASbGnct23ybOiS8QwX0FIT0LnXIc/mswooXbAUfCaSJy4+/RtGjDmQi1CuZP9QbAWBo
-	g2Es1JIqCM58SoYq/6QsHlSYCq/0lsOqx+WtC32kHQariNaTW1bDPRw3oh/ptKUfKnMyHxGMAMi
-	VFV2SWTD8wIjL3QaQ7Gfd4D8DoEEi8gImZXg==
-X-Google-Smtp-Source: AGHT+IGoEJG5zH/Wr0uFePVEm/5CuSYxVySEAKvHuO5qDV3z6MJIg+y3hhgx9qY6URyzTt8T0jY2qH9X8K2GpPqyw1A=
-X-Received: by 2002:a05:6e02:174a:b0:3d4:2409:ce6 with SMTP id
- e9e14a558f8ab-3d93b3aad74mr19265945ab.5.1745582981830; Fri, 25 Apr 2025
- 05:09:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk3DXMfo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64729C4CEE9;
+	Fri, 25 Apr 2025 12:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745583049;
+	bh=FVLdy/reYIaU7YLW3jcTrS26AvzbBotUMnk7uUPToP8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=pk3DXMfo8n5FX9sh79Ao35bt1zWuaJ8I7jfJSvDmR1Zj/vQjVEn66MndX5EakgYc9
+	 qxblgy29DYCj6UWyRs/UatAGDdq+2Ho79/gi2Do/NeRtSOEx7uoYhzTIoaUzU76BWg
+	 3AHrnpUEe2slskEXaPZG852DJ5g8viK07ohgrRSmyhPwaIxoYQks+iOcmst/drRRyL
+	 TFCugs5pSPk13WjTEQSljAwVtgw3x+sUwwkNiqmZr8LeC3ztyuQinGs27mNrLK+Qh2
+	 ANZD0YQs5EM92mjnHZqixN+3KXlYI5wUtXNhk8a49banTMoLMNLx5QZeQm02BXRUKy
+	 QX/3pSXw1Orig==
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6EC901200043;
+	Fri, 25 Apr 2025 08:10:48 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Fri, 25 Apr 2025 08:10:48 -0400
+X-ME-Sender: <xms:yHsLaAa3hQQziR5QSaZDrSrC8AoSGuDsaO7CFir28h-YWnCP2Hz_PA>
+    <xme:yHsLaLZt3ERCl04ydlDf7WURTxF5YglLRF5H278oYxNQCMh9E0P4fGIa3lTLGtr59
+    gzofpzQx1c5xL2-UBg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedvfedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnh
+    gvlhdrohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfef
+    feeitdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvg
+    hlrdhorhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhm
+    thhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegrnh
+    gurhgvfidrtghoohhpvghrfeestghithhrihigrdgtohhmpdhrtghpthhtohepphgvthgv
+    rhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegurghrfihisehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepjhhohhhnrdhogh
+    hnvghssheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehtghhlgieslhhinhhu
+    thhrohhnihigrdguvgdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouh
+    hnuggrthhiohhnrdhorhhg
+X-ME-Proxy: <xmx:yHsLaK-SlEsG46a6ztLYJ-hIdqNdBQ3bgl3w0IJCvOdI40eynh2Xpg>
+    <xmx:yHsLaKoaQ-rNUNgyu1Uo9m76lAZ6U18ZDkH4rZyURzz8bLDSJLRUbA>
+    <xmx:yHsLaLragkWw-1XOTiAN1qjtmWHf2uGvwuEq2ow6mc-ibrN4sD9Xow>
+    <xmx:yHsLaITZmJl50QKA3CWAFgJ6b7ETcnfWFPzAE4Rv6x16NCe4hP0Ckw>
+    <xmx:yHsLaLrGzimQskFbU0o0Zy14dJxdqnv38UUPKnKVe1SdQL2tAevDsQgF>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3D8992220074; Fri, 25 Apr 2025 08:10:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324-kvm_selftest_improve-v1-0-583620219d4f@rivosinc.com> <20250324-kvm_selftest_improve-v1-1-583620219d4f@rivosinc.com>
-In-Reply-To: <20250324-kvm_selftest_improve-v1-1-583620219d4f@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 25 Apr 2025 17:39:30 +0530
-X-Gm-Features: ATxdqUFstmpMiz2VW1TbmZRJAZ7pd1khz3F8RMk9AGfAqqDs4TxHZFyQgyus6fM
-Message-ID: <CAAhSdy11BqtEV+RoFmnpizxCTiKaWexMQGKvP15BF-AkDZUDJQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] KVM: riscv: selftests: Add stval to exception handling
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Atish Patra <atishp@atishpatra.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Td35c5eaba32a0728
+Date: Fri, 25 Apr 2025 14:10:27 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Ingo Molnar" <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: "Ahmed S . Darwish" <darwi@linutronix.de>,
+ "Andrew Cooper" <andrew.cooper3@citrix.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "John Ogness" <john.ogness@linutronix.de>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>
+Message-Id: <956412a3-43c2-4d6e-bea2-2573c98233ae@app.fastmail.com>
+In-Reply-To: <20250425084216.3913608-14-mingo@kernel.org>
+References: <20250425084216.3913608-1-mingo@kernel.org>
+ <20250425084216.3913608-14-mingo@kernel.org>
+Subject: Re: [PATCH 13/15] x86/cpu: Make CONFIG_X86_CX8 unconditional
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025 at 6:10=E2=80=AFAM Atish Patra <atishp@rivosinc.com> w=
-rote:
->
-> Save stval during exception handling so that it can be decoded to
-> figure out the details of exception type.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+On Fri, Apr 25, 2025, at 10:42, Ingo Molnar wrote:
+> @@ -257,7 +256,7 @@ config X86_MINIMUM_CPU_FAMILY
+>  	int
+>  	default "64" if X86_64
+>  	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || 
+> MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
+> -	default "5" if X86_32 && X86_CX8
+> +	default "5" if X86_32
+>  	default "4"
+> 
 
-LGTM.
+I just noticed this one: the final 'default "4"' is no longer possible
+here and can be removed. All the remaining CPUs report family "5" or
+higher.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+There is an old issue for some rare CPUs (Geode LX and Crusoe) that
+support CMOV but report family=6. These to boot a kernel with X86_MINIMUM_CPU_FAMILY=6 because it triggers the boot time check.
 
-Regards,
-Anup
-
-> ---
->  tools/testing/selftests/kvm/include/riscv/processor.h | 1 +
->  tools/testing/selftests/kvm/lib/riscv/handlers.S      | 2 ++
->  2 files changed, 3 insertions(+)
->
-> diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tool=
-s/testing/selftests/kvm/include/riscv/processor.h
-> index 5f389166338c..f4a7d64fbe9a 100644
-> --- a/tools/testing/selftests/kvm/include/riscv/processor.h
-> +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
-> @@ -95,6 +95,7 @@ struct ex_regs {
->         unsigned long epc;
->         unsigned long status;
->         unsigned long cause;
-> +       unsigned long stval;
->  };
->
->  #define NR_VECTORS  2
-> diff --git a/tools/testing/selftests/kvm/lib/riscv/handlers.S b/tools/tes=
-ting/selftests/kvm/lib/riscv/handlers.S
-> index aa0abd3f35bb..2884c1e8939b 100644
-> --- a/tools/testing/selftests/kvm/lib/riscv/handlers.S
-> +++ b/tools/testing/selftests/kvm/lib/riscv/handlers.S
-> @@ -45,9 +45,11 @@
->         csrr  s0, CSR_SEPC
->         csrr  s1, CSR_SSTATUS
->         csrr  s2, CSR_SCAUSE
-> +       csrr  s3, CSR_STVAL
->         sd    s0, 248(sp)
->         sd    s1, 256(sp)
->         sd    s2, 264(sp)
-> +       sd    s3, 272(sp)
->  .endm
->
->  .macro restore_context
->
-> --
-> 2.43.0
->
+     Arnd
