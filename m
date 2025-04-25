@@ -1,156 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A09223BD04
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDBD238D22
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574662; cv=none; b=YRA3qmxTLAlhfY8fMvudcWIepAzEPD2wbneq6WKjjWeh1ULNCfsK/Gr3TJhJdnV641yCcBptAi/DRjqk2MP67G7CHMRjM9QsPSk9Wdg3z/lhtSq6M6EDyH8TzjFLAxGodHyqs8fdTlbRpqDWrJTJoogMDP7b2r5qH3gHb97o0VY=
+	t=1745574662; cv=none; b=rMkuUf4ZTyg56zPkTAc2HhDTVhRC2MyOUVK0PduA7K1wsBSjQ4EJA54VoFV/cQzLQDUCcusdMPUeLBj/afdj8rLcXnT1JQtzIcBPdd6xVO7ERAHT09g8hGhW8ynfb4kMljB3+8illH1+usI/bygwzV+7L+B+zqEMi4gJyGEF6VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745574662; c=relaxed/simple;
-	bh=goSww0P5SFEYhcqCWdBoe88SPIL4JuxXLc5uGO6rmaw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tTbyb+CmZ1/FCzXeVo0pGSWhZDSuQJ6p8NpIF8I58JioL92gNYjSqul56S8edkQOAzvWcimKQq0a4GYxAsscblGw1Fwvk+Uodj5F+9E+CdR68EZPWWwczGaO4HSfScb4T6HRliyq1V3Qnl6bWCk/um5vQNXvYIlXTuf+a1DdDvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAy93lce; arc=none smtp.client-ip=10.30.226.201
+	bh=dX4ilGL5lPcL4snnZPUpnS7XhUi6/KdBiTSBOQ3seOM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=doIm5U1zvORlO9hSowdPsWQIXA1HBFeC9D8s99WY5m8BUYOUXJlhKM3S0PNDjZwS1E+VQ2WDhi+If1Bs8UpuXgBFe0/Av17pFQiSCjiEl1h538KZFA3ZLpf4Gb5t0xbgRXjhBasM6a1gC5voKCklunn9s9vZ0a+wCn3KuMW9W/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IIJMWswK; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAy93lce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D3BC4CEED;
-	Fri, 25 Apr 2025 09:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745574661;
-	bh=goSww0P5SFEYhcqCWdBoe88SPIL4JuxXLc5uGO6rmaw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KAy93lcei+DzfvhvdLUJJhaZdqf7ej28LnCI1gBYT4eX/K69uKyfDaNQ80PQyaTBN
-	 XufgvYNTk3Dkg3PQFdlA+5G7aQc66o9lkhO4lkcdRPXygzxrdURe5Ov+XrpQ99ErM9
-	 7rNuL7wf8rEXfTbG9Aje/BEz00OVflJIYZaRnMFHIYa9hv0cKOyZwuwREI517EKj7/
-	 yimkEutthYVEDBDeuS0ZwjyeWrXUz/3xCWCA2xyzHomI8LH27zZTMvquJ7OJn5fVLj
-	 U9NQo6SYXCWJvWphmSEmo/3r36K+2w86B6UOYkYOa7oRYfoWq6BU9iShkaWi2ElwFx
-	 ewRlGQKRxnlbg==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH] f2fs: support FAULT_TIMEOUT
-Date: Fri, 25 Apr 2025 17:50:55 +0800
-Message-ID: <20250425095055.1129285-1-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IIJMWswK"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso12207465e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:51:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745574659; x=1746179459; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IcRjbktp1JPPzz7gGGH3NqrmgpZ1dN6ZyEZ2iFHKq40=;
+        b=IIJMWswKQCGd6lrwMZhtqxTRit9HLaSshCYwp3fyLir0a44fg7YXCxP0qzKX1N485P
+         iR9skTEEEc19L0n9zriAp+AhVntrCmAsbKx71tcMZjmoQjFEVrqbljbvSBHTzi+Thljz
+         GTJBCviQ41fztU/4iOM7w4/79IBZFuf9wjjkls1oGw5usYMxc8SkCs9317HbV93jqQee
+         UNC8xdxHoXDBIiRyFaBUrG91nvSDWDP0WNGI1p6dLBJU+ortBHgDJIkF9SDy0tidht6X
+         +4Y28bLwNKENS02mA2dkd09gW/is97Z9fsRiCtc7VRwh+dsqMM4V/t29MUUIKJTkiMs2
+         zCpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745574659; x=1746179459;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IcRjbktp1JPPzz7gGGH3NqrmgpZ1dN6ZyEZ2iFHKq40=;
+        b=RQ9bSTSYacYjOLJK1lfGe6Y+xAVk4cAGVrr8lQ7bZIU91djzX8bxOs3MyiSuBDc2vv
+         NrtJwXGinf3LPgrg/LDwscDasAdseo9UCSa/9XzNgh4XjhTZvMiHGpQlpHyXdAt9EpU1
+         4Bm/n+I0muzaWZmQ/6KR2AkkriGVRal8N52UQrR0chYJi0dOnuVBvZT3otlZAEW7cUEG
+         9IJRDwijBF/oSCQWIrRmpzOFVCbYEBqTVSA25pYDRhbSAJBQLM+ZnYNuaQ9ZPTY/fuMt
+         QSU/amcflcMBUyHpiSEcp35+nqqXIh1J3xU21HNEmmAWAWa3q6zk1JWD2E2ZbANcW0ja
+         v5Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUoGmvxrwPt5Y2hNqEN8bD50CGLAQw6BDpzEBjiwwnOr7AZzlL6WCfq8WnTMI7UPTKMcUvfWm1YhskkIoM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDXi5CDRy7zB8PSB0ChUCUE/yrr6r4Nf5Ekx4kmUdG54w4dPLq
+	yhQwVNR/yXpSkM3xnqmBEI8h2osk7fm/DbM6u6z+TJFHd4MGEng8uN0mnUTS7JF2O+sY50/NJx0
+	SBPc3k+Z3jPAzrA==
+X-Google-Smtp-Source: AGHT+IHV1TqFFWv0eFkjdCKsXzJrhLoT8GrmqmoKAN92v+TTDPi/wCPqetmug9u8SJQjmrSGVgeGlZirtQJgWjE=
+X-Received: from wmbfp9.prod.google.com ([2002:a05:600c:6989:b0:43c:f6c0:3375])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1d97:b0:440:67f8:7589 with SMTP id 5b1f17b1804b1-440a66143f0mr15961895e9.16.1745574659544;
+ Fri, 25 Apr 2025 02:50:59 -0700 (PDT)
+Date: Fri, 25 Apr 2025 09:50:57 +0000
+In-Reply-To: <CAJ-ks9nMqjj85rK6LsSnTPqsTHmMUDJsQxqJ7n2+r4oSZqBibA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com>
+ <aAomRMzyu3EX5Xal@google.com> <CAJ-ks9nMqjj85rK6LsSnTPqsTHmMUDJsQxqJ7n2+r4oSZqBibA@mail.gmail.com>
+Message-ID: <aAtbAVW8XXHTdDBe@google.com>
+Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Support to inject a timeout fault into function, currently it only
-support to inject timeout to commit_atomic_write flow to reproduce
-inconsistent bug, like the bug fixed by commit f098aeba04c9 ("f2fs:
-fix to avoid atomicity corruption of atomic file").
+On Thu, Apr 24, 2025 at 09:47:52AM -0400, Tamir Duberstein wrote:
+> > > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > > index 1df11156302a..d14ed86efb68 100644
+> > > --- a/rust/kernel/lib.rs
+> > > +++ b/rust/kernel/lib.rs
+> > > @@ -198,9 +198,15 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+> > >  /// ```
+> > >  #[macro_export]
+> > >  macro_rules! container_of {
+> > > -    ($ptr:expr, $type:ty, $($f:tt)*) => {{
+> > > -        let offset: usize = ::core::mem::offset_of!($type, $($f)*);
+> > > -        $ptr.byte_sub(offset).cast::<$type>()
+> > > +    ($field_ptr:expr, $Container:ty, $($fields:tt)*) => {{
+> >
+> > It's rather unusual to use an uppercase C in the name of this parameter.
+> 
+> I took the parameter name from `offset_of`:
+> https://doc.rust-lang.org/stable/std/mem/macro.offset_of.html.
 
-By default, the new type fault will inject 1000ms timeout, and the
-timeout process can be interrupted by SIGKILL.
-
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- Documentation/ABI/testing/sysfs-fs-f2fs |  1 +
- Documentation/filesystems/f2fs.rst      |  1 +
- fs/f2fs/f2fs.h                          | 17 +++++++++++++++++
- fs/f2fs/segment.c                       |  3 +++
- fs/f2fs/super.c                         |  1 +
- 5 files changed, 23 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index c805a48dd3dc..0dd0936e31b0 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -735,6 +735,7 @@ Description:	Support configuring fault injection type, should be
- 		FAULT_BLKADDR_CONSISTENCE        0x000080000
- 		FAULT_NO_SEGMENT                 0x000100000
- 		FAULT_INCONSISTENT_FOOTER        0x000200000
-+		FAULT_TIMEOUT                    0x000400000 (1000ms)
- 		===========================      ===========
- 
- What:		/sys/fs/f2fs/<disk>/discard_io_aware_gran
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index 95c64b5b5638..6dcafcf3bf54 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -207,6 +207,7 @@ fault_type=%d		 Support configuring fault injection type, should be
- 			 FAULT_BLKADDR_CONSISTENCE        0x000080000
- 			 FAULT_NO_SEGMENT                 0x000100000
- 			 FAULT_INCONSISTENT_FOOTER        0x000200000
-+			 FAULT_TIMEOUT                    0x000400000 (1000ms)
- 			 ===========================      ===========
- mode=%s			 Control block allocation mode which supports "adaptive"
- 			 and "lfs". In "lfs" mode, there should be no random
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index be752d833a06..3e0d1f9b62ba 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -63,6 +63,7 @@ enum {
- 	FAULT_BLKADDR_CONSISTENCE,
- 	FAULT_NO_SEGMENT,
- 	FAULT_INCONSISTENT_FOOTER,
-+	FAULT_TIMEOUT,
- 	FAULT_MAX,
- };
- 
-@@ -613,6 +614,9 @@ enum {
- /* congestion wait timeout value, default: 20ms */
- #define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(20))
- 
-+/* timeout value injected, default: 1000ms */
-+#define DEFAULT_FAULT_TIMEOUT	(msecs_to_jiffies(1000))
-+
- /* maximum retry quota flush count */
- #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT		8
- 
-@@ -4830,6 +4834,19 @@ static inline void f2fs_io_schedule_timeout(long timeout)
- 	io_schedule_timeout(timeout);
- }
- 
-+static inline void f2fs_io_schedule_timeout_killable(long timeout)
-+{
-+	while (timeout) {
-+		if (fatal_signal_pending(current))
-+			return;
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
-+		if (timeout <= DEFAULT_IO_TIMEOUT)
-+			return;
-+		timeout -= DEFAULT_IO_TIMEOUT;
-+	}
-+}
-+
- static inline void f2fs_handle_page_eio(struct f2fs_sb_info *sbi,
- 				struct folio *folio, enum page_type type)
- {
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 037d06d58fda..b1ce8a41becd 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -371,6 +371,9 @@ static int __f2fs_commit_atomic_write(struct inode *inode)
- 	}
- 
- out:
-+	if (time_to_inject(sbi, FAULT_TIMEOUT))
-+		f2fs_io_schedule_timeout_killable(DEFAULT_FAULT_TIMEOUT);
-+
- 	if (ret) {
- 		sbi->revoked_atomic_block += fi->atomic_write_cnt;
- 	} else {
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index de88084f9861..1c33d90c4c92 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -65,6 +65,7 @@ const char *f2fs_fault_name[FAULT_MAX] = {
- 	[FAULT_BLKADDR_CONSISTENCE]	= "inconsistent blkaddr",
- 	[FAULT_NO_SEGMENT]		= "no free segment",
- 	[FAULT_INCONSISTENT_FOOTER]	= "inconsistent footer",
-+	[FAULT_TIMEOUT]			= "timeout",
- };
- 
- int f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned long rate,
--- 
-2.49.0
-
+https://github.com/rust-lang/rust/pull/140285
