@@ -1,242 +1,110 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3481EA7CA
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B761626AC3
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575438; cv=none; b=FaxkXy3DLFMBRUBlmFlj3CQqiYK9PuPZYfNgd1DESSr3Yuv8n/CrLF3c1FY4u6+QJPEvlVoeoupJwiGWqEMFD/+QR+iTUGSgn1n1fO9igoMbZ6+ICq6n6YsMXZ+I0gBwlNKMKYGUal0wCBKi1FYp5aYzKigFFrspXBtNvBI8WEY=
+	t=1745575619; cv=none; b=pAoGmpy6WsWQGlH77jQxuKNFxNkKTc05FHU/I7OGkz53mVeYOiX/Shv2bGFBN5M2jspHG9tjQ+vmRcsnyS9QtqPd8LBvV3dLK9PhJpaRq3eZd6zY12p6ioaN6EEYAqRfKda4XBQsrziQSLBppmwvEspsmo+dy+ci6pJHRNik2LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575438; c=relaxed/simple;
-	bh=V85Lh/RAji9ar+Y+fOgWNG8zxLuq01/h9bKkCgnTLuU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=k3MGr14ZNjWXQ+8MaZ//Thslac0kqa4tZdv8HQEt8rud7PpcKU4O4nJIYiHYN8/bwr5XvXAteMdu1NrWCTWmANSO5TonzFXRTbxUKG3T7kwUnoLjXMqoyIvCixvkkxtg7j1wTNFlLxdT5Al8yl1Zy7paF4F1W6BFVo91wwY98Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bCeRm97x; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1745575619; c=relaxed/simple;
+	bh=obu+Qt9zPoq9Pg2EOlGvIr3eXjoQttpGQqYbnKED+rE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JD029XJ/eNO0h9N+7amEIUxyWtYAYtZyRpxA5bK8Dh71gs5si9nADzIRbVXAI5TwhElV+DloNUeXKisG2I++J725GC55ThX1za5GBwA+mgSLkkbWsfyNtjFnFwdik03qeRdrpd8xjB4D67lRl4vDrwsoZTnvsXqqWu4EqUs3b4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tX9XKfF7; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCeRm97x"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5e5c808e777so2397198a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:03:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tX9XKfF7"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso18172045e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:06:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745575434; x=1746180234; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
-        b=bCeRm97x8y+5K1KxqWUHmnCm7DX70KPMbfupJ+3sp1DmMF9/NEGXWIIwMjt5ZoBDHB
-         Meb+n+ZYnDNPYA9fGmbfbsHPBizlqB5j0Y8Tu4MZLLVNm4NoAkTvxw7N0HAZM2kQe3Sn
-         vI+0fS3thHdEpjAom2BGpYcCo5Bl1RZM8QxItySsVy1f8YtZ/ubPkslj3/4hFlyRU4rQ
-         Zcl58T0UgnJ9EISXiD38znfk9olyAUHsh9rDrwkxo05AbyxzLCpxgk1Jkgo6HyPF8GR9
-         XicxHvcSDS3PultE5bfYsif5xSigoSx/WD9X/OyimQgboKxt8KK54aPXRyygtgtNCShZ
-         LUiQ==
+        d=linaro.org; s=google; t=1745575616; x=1746180416; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CJc4EEGZ5NPCdipsMsCOV+mhzV5z2YlJ4t595WgVtEw=;
+        b=tX9XKfF7rl4zBkbO74LE69pIe31YkQV55gtGz0e0dQyEtA/ChN0OH4kK59xjM7b4IP
+         RjLXZpZx0x6mIdTEK6tVNF7NgnePoBSWy0MUdO6fruaLXrP/bFwpnRKbTkRPd6XVk9Wl
+         kg9S8DbbgyYBEoQOcI0V86ab7TsOLyYEJ6spNyMdx5WOW2lRaT54WJdjCCJBmldif/o8
+         uCe99kKzirSler/QOBecAONB1y1VHm2c6whXlKo1PvIgJrb4cMfQ8ZTt6dG+1ISxP7cc
+         Zzo/0mKB+s935dIjT3jAGABz2lnwNRz3IZByapVF0yeEo1h8YNaTpzSVCSHBgN7siasw
+         qlFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575434; x=1746180234;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a7rlen12ejE7Kp6bXJDjpGGuWlo+Ue7G8fz3prA3Prw=;
-        b=im6vswevTR3WZukrfJ/27XDsGWfLSWJq7S/Hq3AIor+jA5sZ2ErbhRJw9ou+LyjKAg
-         iANckCjitUpdllsBPl+bRVHh29ERbUheB3lor9/l53tIucbaUAasnXNtvg9frxw529vQ
-         u7LY7kgF5CjmOuo/aar6dtkkvP+uzpcm8FNOZBiruS12XUqEZImm42PS4eilCHrl9jBx
-         OA2bSXNvI1UbRqzQmaLcnZ0h6GkPM1smpNMjFcFyKjIMEshX/vNGxKZOvdy97b9ZaTNh
-         Cyd/pK+eFrt8SPhNn3eAzzhskx3adUhxOAL03n0a2P3dtU1tbPzq+XfXsH+oPazIL0mQ
-         0+Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTViBcagJ5x0TgfcVPaeP3sZHhQHglE1xBfM+Fq3dJrK25UFIcXZhnvCIfuCXMrMh9r32flmBCRLRJI5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8DGQCUnsklNTHpLKgl1vp9I3kUpRyie4Pw0aWy0ltvA2n8xiD
-	i0M5O4iJXgQq9sMN8HP6QGVEnGbI8bHk6FSSMMJMNYx1+BGmwqN+AqdsTlXXF3/XJcUmdW/M8Uy
-	Cbw==
-X-Google-Smtp-Source: AGHT+IHG5TA+QmbLDKkJMCAyUg3PjwW2vK849Wb9XZvQnRm50YUN7ROfE0bAGC+b4L9PnTOmviRtp5MKGwk=
-X-Received: from edr2.prod.google.com ([2002:a05:6402:44c2:b0:5ec:a0fe:757a])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:27d3:b0:5f6:59e5:5c8a
- with SMTP id 4fb4d7f45d1cf-5f722671d91mr1323489a12.5.1745575434691; Fri, 25
- Apr 2025 03:03:54 -0700 (PDT)
-Date: Fri, 25 Apr 2025 10:03:52 +0000
-In-Reply-To: <20250421000854.work.572-kees@kernel.org>
+        d=1e100.net; s=20230601; t=1745575616; x=1746180416;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CJc4EEGZ5NPCdipsMsCOV+mhzV5z2YlJ4t595WgVtEw=;
+        b=ic2iZdKa7r4nRRUVicYkk+WTE6P/c+NH5eFKSgO8alriZq5LmzFJzIb7rGY+Wt3gn8
+         ACmb9mBC8d+urfMLEUWxFSmvXAZKw5taBYl2BQT3jccyCv2X5a4dwQYjnqijQC2QEwDq
+         xAaTdAvtjGmJ9vVauH6hYmfGViPPSQDQK3D/iJlrYs5PvpLAGi2QZ0EUjeQhbphswvdB
+         +zVXrcSJ4qt9kY8iiJbBZsZyf7j/STNrORTfUWerogUbhhfW6o/DFVRF3u+/nA1MV9h/
+         CV3f4VwbmKp3wz2bBSECNZgVhno1TzugB+t8MSZVlf6alj/YIL9gcalEnt245l1f1hm1
+         qfgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVywdf57wmwSeLB3YYbrK5QT9pA0A1cTjyORnLbGDvaI2Wq84TVO2jOfgeUrxgkTfYgW7NtN0t1P4WkCKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP+q1DoHsfj1Y6dtzzrBbLdhcczlCo2q+oxlI1520k3FFHGmYr
+	KAB1UPGcwh8aC5S9HxHeWqW+65L07nGJ+eByqPAJvlcqlCKcF7bW8jkN5nUdnp0=
+X-Gm-Gg: ASbGncvSb1baPaNUOFFkDKZHnRlNga4YmqQyhM0onHl6ZufcKpQ564R7SkUMbe/zfxR
+	OSTUa/mbOLl6x6vggU1E7pBMYk3rb8w/gVtWjAI/giFIRNvoRpCrDzAeNyjkAqo7GKJe9eisC7Y
+	0D4fWerAdlfKWMGpU8uwOu9VGjPLay4FwZokpJIAqCNVKP7WL268X6LDG+C0LBeZfJ1LXNiIJyA
+	KA8wc8n8UVbipDrwc0HLwklXJFqlysc2O1gSKqwlldFeEUYkXkpOf8kPtt380oxlfm8RfT4VZRG
+	Si0EzfXwZHfHNhLUjF2O38fbLJ5MhO75+dhyY1dmBZOziInpqW6K5Nj8yv+kiDr9DwNBspCT+h/
+	XtMSVRA==
+X-Google-Smtp-Source: AGHT+IE5F4OU/e3M5Qxu03zUGP/1/CF6PkbZtrEE/1QB/qtY4l8x3I7V+uOqBhsxX/jjOQYPzZRFYg==
+X-Received: by 2002:a05:600c:35c4:b0:43d:738:4a9 with SMTP id 5b1f17b1804b1-440a66ab49bmr12249625e9.27.1745575616014;
+        Fri, 25 Apr 2025 03:06:56 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a530324dsm19279455e9.10.2025.04.25.03.06.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 03:06:55 -0700 (PDT)
+Message-ID: <b74d90d3-2a85-4853-9843-6a6f22720587@linaro.org>
+Date: Fri, 25 Apr 2025 11:06:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250421000854.work.572-kees@kernel.org>
-Message-ID: <aAtd9UvrHWBy454j@google.com>
-Subject: Re: [PATCH] landlock: Work around randstruct unnamed static
- initializer support
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: Kees Cook <kees@kernel.org>
-Cc: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>, "Dr. David Alan Gilbert" <linux@treblig.org>, Mark Brown <broonie@kernel.org>, 
-	WangYuli <wangyuli@uniontech.com>, Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Add Qualcomm SC8180X Camera clock
+ controller
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
+ <H56Iba_grof22uzTtGCI-APhiDAGSejNod6jsSVIykm9ijaaj7PWqyszShCEGjIpM2wCLOn4a3Vfb8Hjziqklg==@protonmail.internalid>
+ <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
+ <621d8556-f95b-4cbe-809b-864417f0d48a@linaro.org>
+ <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
+ <f74d8b50-35a1-4ce8-bfdd-4c90782b8db5@oss.qualcomm.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <f74d8b50-35a1-4ce8-bfdd-4c90782b8db5@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Kees!
+On 25/04/2025 10:35, Konrad Dybcio wrote:
+>> The dependent GCC clocks are marked always on from gcc probe, hence did not mention the dependency here.
+> Let's do what was done on x1e80100 - describe the AHB clock in CAMCC
+> bindings regardless of how we handle it.
+> 
+> This way the DT represents the real hw dependency, but the OS takes steps
+> to get them out of the way (and then ignores the GCC_CAMERA_AHB_CLK entry
+> because the clock is never registered with GCC)
 
-On Sun, Apr 20, 2025 at 05:08:59PM -0700, Kees Cook wrote:
-> Unnamed static initializers aren't supported by the randstruct GCC
-> plugin. Quoting the plugin, "set up a bogus anonymous struct field
-> designed to error out on unnamed struct initializers as gcc provides
-> no other way to detect such code". That is exactly what happens
-> with the landlock code, so adjust the static initializers for structs
-> lsm_ioctlop_audit and landlock_request that contain a randomized structur=
-e
-> (struct path) to use named variables, which avoids the intentional
-> GCC crashes:
->=20
-> security/landlock/fs.c: In function 'hook_file_ioctl_common':
-> security/landlock/fs.c:1745:61: internal compiler error: in count_type_el=
-ements, at expr.cc:7092
->  1745 |                         .u.op =3D &(struct lsm_ioctlop_audit) {
->       |                                                             ^
->=20
-> security/landlock/fs.c: In function 'log_fs_change_topology_path':
-> security/landlock/fs.c:1379:65: internal compiler error: in count_type_el=
-ements, at expr.cc:7092
->  1379 |         landlock_log_denial(subject, &(struct landlock_request) {
->       |                                                                 ^
->=20
-> We went 8 years before tripping over this! With this patch landed,
-> we can enable COMPILE_TEST builds with the randstruct GCC plugin again.
+Ah yes, this is an always-on clock isn't it ?
 
-I am still struggling to understand the boundaries of what the randstruct p=
-lugin
-supports and what it fails on.  Could you please clarify?  (Specific questi=
-ons
-below.)
+But in principle I agree, the DTS should just describe the hw as-is.
 
-
-> Reported-by: "Dr. David Alan Gilbert" <linux@treblig.org>
-> Closes: https://lore.kernel.org/lkml/Z_PRaKx7q70MKgCA@gallifrey/
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/lkml/20250407-kbuild-disable-gcc-plugins-=
-v1-1-5d46ae583f5e@kernel.org/
-> Reported-by: WangYuli <wangyuli@uniontech.com>
-> Closes: https://lore.kernel.org/lkml/337D5D4887277B27+3c677db3-a8b9-47f0-=
-93a4-7809355f1381@uniontech.com/
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: "Micka=C3=ABl Sala=C3=BCn" <mic@digikod.net>
-> Cc: "G=C3=BCnther Noack" <gnoack@google.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: <linux-security-module@vger.kernel.org>
-> ---
->  security/landlock/fs.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->=20
-> diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-> index 6fee7c20f64d..b2818afb0503 100644
-> --- a/security/landlock/fs.c
-> +++ b/security/landlock/fs.c
-> @@ -1376,14 +1376,14 @@ static void
->  log_fs_change_topology_path(const struct landlock_cred_security *const s=
-ubject,
->  			    size_t handle_layer, const struct path *const path)
->  {
-> -	landlock_log_denial(subject, &(struct landlock_request) {
-> +	struct landlock_request request =3D {
->  		.type =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
-> -		.audit =3D {
-> -			.type =3D LSM_AUDIT_DATA_PATH,
-> -			.u.path =3D *path,
-> -		},
-> +		.audit.type =3D LSM_AUDIT_DATA_PATH,
->  		.layer_plus_one =3D handle_layer + 1,
-> -	});
-> +	};
-> +	request.audit.u.path =3D *path;
-> +
-> +	landlock_log_denial(subject, &request);
->  }
-
-If I understood the commit message correctly, we are giving a name ("reques=
-t")
-to the struct landlock_request here, because the randstruct plugin needs th=
-at if
-the constructed struct (recursively?) contains a randstruct-enabled member,=
- like
-.audit.u.path in this case?
-
-I am surprised that you pulled the assignment to "request.audit.u.path" out=
- of
-the struct initialization expression though.  Was that also necessary for
-randstruct to work?
-
-Would it have worked to initialize it inline instead, like this?
-
-	struct landlock_request request =3D {
-		.type           =3D LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
-		.audit.type     =3D LSM_AUDIT_DATA_PATH,
-    .audit.u.path   =3D *path,
-		.layer_plus_one =3D handle_layer + 1,
-	};
-
-
-> =20
->  static void log_fs_change_topology_dentry(
-> @@ -1720,6 +1720,7 @@ static int hook_file_truncate(struct file *const fi=
-le)
->  static int hook_file_ioctl_common(const struct file *const file,
->  				  const unsigned int cmd, const bool is_compat)
->  {
-> +	struct lsm_ioctlop_audit audit_log;
->  	access_mask_t allowed_access =3D landlock_file(file)->allowed_access;
-> =20
->  	/*
-> @@ -1738,14 +1739,13 @@ static int hook_file_ioctl_common(const struct fi=
-le *const file,
->  				  is_masked_device_ioctl(cmd))
->  		return 0;
-> =20
-> +	audit_log.path =3D file->f_path;
-> +	audit_log.cmd =3D cmd;
-
-Same question here, I guess. This could not have been written like this?
-
-  struct lsm_ioctlop_audit audit_log =3D {
-    .path =3D file->f_path,
-    .cmd  =3D cmd,
-  };
-
-
->  	landlock_log_denial(landlock_cred(file->f_cred), &(struct landlock_requ=
-est) {
->  		.type =3D LANDLOCK_REQUEST_FS_ACCESS,
->  		.audit =3D {
->  			.type =3D LSM_AUDIT_DATA_IOCTL_OP,
-> -			.u.op =3D &(struct lsm_ioctlop_audit) {
-> -				.path =3D file->f_path,
-> -				.cmd =3D cmd,
-> -			},
-> +			.u.op =3D &audit_log,
->  		},
->  		.all_existing_optional_access =3D _LANDLOCK_ACCESS_FS_OPTIONAL,
->  		.access =3D LANDLOCK_ACCESS_FS_IOCTL_DEV,
-> --=20
-> 2.34.1
->=20
-
-That being said, the code transformation in this patch is obviously correct=
-, and
-it's good to fix the build, so looks good:
-
-Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
-
-But as Micka=C3=ABl also said, it seems worrying that otherwise correct C c=
-ode does
-not compile with that plugin, especially when the conditions under which th=
-at
-happens are not clear.
-
-I would also like to understand this better, so that we can avoid tripping =
-over
-it in the future.
-
-Thanks!
--G=C3=BCnther
+---
+bod
