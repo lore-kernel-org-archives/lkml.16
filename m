@@ -1,45 +1,45 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD1B223300;
-	Fri, 25 Apr 2025 20:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919FF2236FB;
+	Fri, 25 Apr 2025 20:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745614007; cv=fail; b=CwTglfKrbO53jxit7+fRxAWg7hN/N2rdxqnpQs53TbuOozDQvbff0T68M7ds3f6INc9pTYiZ3G+ZEio7/b7cD21P5RYZe9bFqWqYglU6J/U+MIIJSX51BqRyBaZIYtnfEAxEFM04Cu9vw88YJGs7eB161gXw96XQW7dN3Xsd83w=
+	t=1745614008; cv=fail; b=RJDpr6WA1zkyAmJGCPTybHFaJ3HC21E52OfkuQ7I17yeID+UjYncmY6P95KY07X2ifk0Q/cwkYo82uBhuJfpQuFg/mKdIzU2VuzdE4VSogXKOfqEIHnaVxLucGlntwR6Y/gSou7CGeIvNA2xRBTbptAwkS0KGABMgih8glJcKMw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745614007; c=relaxed/simple;
-	bh=44QT1Dkz1szFuS33SWwg3vfi0RBJRM1LxvTRdnQ9BiU=;
+	s=arc-20240116; t=1745614008; c=relaxed/simple;
+	bh=2EbcsiJOSnkUDqBX3I9YKDbLneeBnK2EEO70HQKSlkQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k0qG5zimSw9Y+OzXXZXBDJ+MEZSBiziWogjJwB8CGrec+cid/MhE9Dj32pmp02A42UPz/3uS/m2sWV36RLc3JhnJk+nfTfK+LROQjiVEDmM7oQmASAa9+nSbjL2yv4xv3v8pch27IYNe24Gnp1d0ttVPrqkSfvLqnwyv+hv03Og=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nckyla09; arc=fail smtp.client-ip=40.107.220.70
+	 MIME-Version:Content-Type; b=nGjxVT4qSaViBUcq004ED2TtmKv5EPm+0/WKu9/YtpxLNzFnngOUGbCN98ENihdGWsgmBYB6SrVlYSb7L6aDNrPnzo5Z6LI+TWB+XmvndcBuEJKmbedgCDFDlTTLAcEKkfpYOsIIRjFr7DfYb+UsDwv0YOzwNEA+FicFRw02QCs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TmtRL5F8; arc=fail smtp.client-ip=40.107.223.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nckyla09"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TmtRL5F8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rDMuAp2VnW6dmr81mCtC5EQQjL3Qhs1EN8uC976FHWVhQTufdrGY9Ic6YRxdIahRVL1lIWLQzCA/MmTYzc+WlM3N5f4j94Vq+bzZEyGIKfvXsXh6EhcGyVJt6ndV13yTdzBY4VeGdLXlocJKWPSaRgd/y5oepQI4WfVuizUOKCqz6L6DLNNxS74bdR8ebEwmrCj5Kxdba0I+1lJ1/uYEfT1A4JkB/tbm2xxrCKyvIPQ/NrUQ3nqTAiu29LR7QAKmrJIXnCYtzns9GY+JGCiFMgH5SB2pm5+CurXTmo6aXBE3oSE3lMPxfuHZ1PaPfD0bw8x2VJxFg7JF5RFZzUVZ9g==
+ b=Zhk2JAm+teN4HYu+B2/0Y5S2L+m1yroEpwUA7ljSMhlbn9fmUH47M31nHMgRw1wC0b/tkXiPf2BGb3zCeBPTE2+2YFB92zZoS8FzqqwMVkpC1uP32o8XHZVH0eJbuqYTJC9rKu0DBLgB6VLT05up+x/Bx6R50Kn1Ns5eEcndKSrugoGCKAvkpQjTLeQGai4y5byfz2HlQlfZPTMbD9NHXbIW1o2IuVTZ5UP+CKQfusa/iZEsNoWt+0UM8LrCBN/Jtrhrm13JW9km6w2de8TzqzJs4sbisv+0U+fNgbsqDlrciozP0YD88pPc/IQErtSfX4EqTp3MVz9oSyMA5PtSYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JPJB8pMA1o7H++9v8qT3qdHmziRjbtTrrzF5HB7mrbs=;
- b=U9gW/A+ate8L4uUexH5rJOGktfG2bxchJ6qRAKSOEd6BTYAsrI6bT2CeFECZS0B8LMFkLlpBJhUSPIcyooAMLVk/fizeuuolXDnZXDjbLsb/2HpnIYXruvpS1JRRI5hHJBGamWXHp3hRM+FBa4eLtt5wPcmplCbtsBFleDe7EzEhgtNWtyEX3O9jayXs/r0dbjyRPYtC5353XuceeMzS0KSeQEPsPLQq8ZIthHgMI5TP9+u34yVy3FG3QO/+aCxmjX5pe7sFBso41o7qZOkcxtdUnAWKQHS5RRZ4+Fzzl+fSu4dHQzG1ccvZ4M0D1kh+uQiLWmqJJ+w2Fm2F6EcfjA==
+ bh=WARgstx+K5MpDTF/h2KqUkEdJ1/TRshpVl4r1+xMIO8=;
+ b=AJmWm+WlpDh7n4uNDhZLj3gQ/PolxJ+18FHpcETlZu6TAjaqKjRFG7P7MfUVK+cF9bhN2Y0J7NAEUAR9Ryky7Bo46IUeT4+YsqVdMyYSdL1qJq6mqwW3zYV8mxjq4fGOGy/2q9zqG+jKNEOlnIqjlYBR1X6iPbhViwyBbawE0xrxobAM43G+ar2OeaXzU7Yz4USmedPaZS9jorx01EG9PsrYU2Ejdzg3SKaDU+900kFQP+4zm3RIqsxwC0uxYdCIjDt+nFSQEUbK1uuUboCdyhGKhJTHDqCsjYjA5zD4v6uMAb2NV3kRSodv5zig0pzL78+POOralcthcuRunGN9uQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JPJB8pMA1o7H++9v8qT3qdHmziRjbtTrrzF5HB7mrbs=;
- b=nckyla09zf9HGQkJX9zUtVUgG39R+rw9qmLhqBqouRNuLDdvw1E0Wig8wjX9uOfL4+naiPkEQTOCjKa3oExWqLu7BaG51ZYRoidtADFFHR9ku5LZC2gkRdDcc9R58ggdggVw/mrz1E4M9vdM3UDC5+ClvLoKSZnpmcdLeXilgS4=
-Received: from DM5PR08CA0050.namprd08.prod.outlook.com (2603:10b6:4:60::39) by
- SA1PR12MB8841.namprd12.prod.outlook.com (2603:10b6:806:376::5) with Microsoft
+ bh=WARgstx+K5MpDTF/h2KqUkEdJ1/TRshpVl4r1+xMIO8=;
+ b=TmtRL5F8Coet4ftsq6DiAum0wA6sJY33i+xWguNuXVqEAgScCJuIlY6BTovBv9Q/b1Hynohjb7pMjTDusHOX+uiqnrg/ljin0SYeEiP/n5IfkjzybkZQau707lwt2Uu9rlC7aoWxsJJ2BLMqIUNjrGSCO1EW2DobSRhtJX+FvEQ=
+Received: from DM5PR08CA0055.namprd08.prod.outlook.com (2603:10b6:4:60::44) by
+ DS0PR12MB8478.namprd12.prod.outlook.com (2603:10b6:8:15a::13) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.27; Fri, 25 Apr 2025 20:46:41 +0000
+ 15.20.8678.27; Fri, 25 Apr 2025 20:46:42 +0000
 Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
- (2603:10b6:4:60:cafe::77) by DM5PR08CA0050.outlook.office365.com
- (2603:10b6:4:60::39) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Fri,
- 25 Apr 2025 20:46:41 +0000
+ (2603:10b6:4:60:cafe::bd) by DM5PR08CA0055.outlook.office365.com
+ (2603:10b6:4:60::44) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.34 via Frontend Transport; Fri,
+ 25 Apr 2025 20:46:42 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,19 +49,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 20:46:40 +0000
+ 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 20:46:42 +0000
 Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
- 2025 15:46:39 -0500
+ 2025 15:46:41 -0500
 From: Shannon Nelson <shannon.nelson@amd.com>
 To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
 	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
 CC: Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH net-next 1/3] pds_core: remove extra name description
-Date: Fri, 25 Apr 2025 13:46:16 -0700
-Message-ID: <20250425204618.72783-2-shannon.nelson@amd.com>
+Subject: [PATCH net-next 3/3] pds_core: init viftype default in declaration
+Date: Fri, 25 Apr 2025 13:46:18 -0700
+Message-ID: <20250425204618.72783-4-shannon.nelson@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250425204618.72783-1-shannon.nelson@amd.com>
 References: <20250425204618.72783-1-shannon.nelson@amd.com>
@@ -76,74 +76,84 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|SA1PR12MB8841:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13033425-ae43-4520-cf72-08dd843a4829
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|DS0PR12MB8478:EE_
+X-MS-Office365-Filtering-Correlation-Id: fef0eec1-b60c-49a7-ff20-08dd843a491c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TawHZV/jW/dtwR4RGEYMfcsRAOh6J8Hv7f2h1ZQde01iIpSECTC4heYv9CHK?=
- =?us-ascii?Q?s4gs4s4HY8vlKVmEpS6Hv+dmGMrJDFMFDb9EgXiZ04kqkfO8d/eld06YTYX5?=
- =?us-ascii?Q?jDIABHB0OmSVY3RbXCcSd9qd4h1zlKqK41i8cDVGU75/wrthT/WAStQa0P5d?=
- =?us-ascii?Q?deWpC3y2F+lgJ/twuucn9GHB3LQAXplQXnZwkHySOvsubqG0N1RrMto7JN0t?=
- =?us-ascii?Q?LdKMjMVMH7vso0hCeyrtQPo97R2rbarlBdUV4A93AGvVoTRL27uELgfGBlJ1?=
- =?us-ascii?Q?EJ1IGrRjmn+XT69019sOowGECi8TWxkxe1xjAr0VeId35xBujPOMzZnPSTEI?=
- =?us-ascii?Q?9Qjpj1AByXKdoIjoLVI4fc8EKnnaLvuoagmj3hqViYcFMrDHFS/JNhosoDKO?=
- =?us-ascii?Q?QQvaEhNTLxFf5XQSXgTP1+Wn6GyN1DbfiUY/aEZacQa/3P8zDfRFqWuFROCP?=
- =?us-ascii?Q?y8jUSo0SqHpgmqZvycJBZl63dIWlfEDtE9/Fx4KwsIuF4mipjTYWj057rj+k?=
- =?us-ascii?Q?xGy+cjHNlKTrYzzV537WLUk0coM1rEblrd/lDoBqIiv7JpbI17uJOR0sFOvl?=
- =?us-ascii?Q?WxqMF8XbeQ1tsKKcHOxOhHdO/DBlzOCbiaxnJqO1x3Iyzeh5dUyDHcvOUxKQ?=
- =?us-ascii?Q?oANlBPJWO17dzVNSImg/8H68doGKC6J0tWAJqDEW1QG003U4NkOz4HSiCL4s?=
- =?us-ascii?Q?ZAREEbzvPQ1EynI4pGoc2ksvdDMmiDEl3bAwtnJocymu+Okb4G3a+Zro1PGF?=
- =?us-ascii?Q?jLqNTe26kx3PFo627hK2IeNaH0tj1eTUl7TEjwEbwYFGG9H6BUe8heGaiWWl?=
- =?us-ascii?Q?Hj9Y7EbyVYqvQg8/fqqRWy5KXo1BZU7Zqa9iipOxgrOmbwFQX5s6XUETs+qQ?=
- =?us-ascii?Q?w9zRyK6IE7lCQwtuTc78Y3QGcBsPM/ximMdMe+w15AmzQid5mTQZ6Up80egF?=
- =?us-ascii?Q?mLNKvRoGOajZntftgsEXEsxAiv4eKyUZy48SVxtVgIx5az8yPoMHC1yZKXvy?=
- =?us-ascii?Q?J4uNlcXO+DB1eMfsytgS+0IJxrQrKHSgqcayMM5fFThGp8Yz5/G5uorF+jW6?=
- =?us-ascii?Q?BLDVUc4ryNtfpALVGssesjHr6L6lQkkosowxLqNR2tN2BQGGcoCBz6Alv4oC?=
- =?us-ascii?Q?14YcqIzKpFxK6ednCWIYQ/uzwAr2XTJuLhjCP+YP5rPJU+lI+40fOabijIuq?=
- =?us-ascii?Q?C0TfO7+8FqrvtADZ+LQ0NdFDnIROBWo9+Ws03hw67uu06dZf/aS2sdCX3KsL?=
- =?us-ascii?Q?vRySUH+RbU1Na0Cikypfpdz4aeUY7a3NtOA7H7D7nLnw50btfxY1jbcmDk+d?=
- =?us-ascii?Q?/AbFQPfUoXq3Ps+H+DGWfu1ooY1h8umf4XLmbueVS8OeVlBBFKpp8m3ap9z9?=
- =?us-ascii?Q?OkywU4nsl37hLogo05PAyRVDd2wd679LlqRfwwr6FkjcI8N7gVVtCM1yd+DU?=
- =?us-ascii?Q?2wS7XIe094EEmxmV/hwl+SkCIq+vt2uaIW1eIfRMjWKJ7afRzlmBSsGDSFop?=
- =?us-ascii?Q?md9xe3IhfBn9wpxO7pZfTofDg6p+4N0xKEKl?=
+	=?us-ascii?Q?tjUpF2hx7RBEPlK4y1wdQ/q8mOckd5bRvZ4VD8VeKofkiq/CKpU4q+BrBkAt?=
+ =?us-ascii?Q?KQ1hr9GYFM/3WGM0gdcMUHshGY68hGqsH6MQqRaKkezzgyHFdpawOpdXlrN1?=
+ =?us-ascii?Q?B2WydO+YJTG8lH1wMilcXZlpnPKDrYR9Wljjb9mBsPnxGD1bqzR1djafJgnG?=
+ =?us-ascii?Q?VE8/C3pLmNBLZmsx53x6BXfaqPcluOO+2sXfe3IwEjjBK32zQq99QEkGr/mw?=
+ =?us-ascii?Q?EIAJ3KQc6V37f3SIv8aRZ4FUxZdB4OKLirnt7Gm1iXn3KCf9Z+5/K11+MD10?=
+ =?us-ascii?Q?rqvkmVgJ+g+rKNZMGdj5mdQcnXNQf6sty81tAzw1N1g7ab3Jxc0FwP3ezf8x?=
+ =?us-ascii?Q?2c9saBgFm7JRVHuvEXeAoLfPH7xnIsT2qNJIeB8ez3DlRm+BUV9+DW6C2KVO?=
+ =?us-ascii?Q?PyyfWy1eouhT58cOb50/KSoV5bwMd868Eb/OovMV1jVjpsEuJ9iB3MlaBsKw?=
+ =?us-ascii?Q?oQ9zeODsoQZdEzcItF78pgYCxL+O3F7kgEmvOCeAwe9PbalJWFJJXlYeK7Vg?=
+ =?us-ascii?Q?KJOCjSYBHeNlpe2a2YQmOyjzp18PQMHouPstEuhL/M1tp2Ph3nKHRWy9TreR?=
+ =?us-ascii?Q?QuViEbdvBwoLvF2wS+05qWh5GAbeBw2BtePO9p2f1UtpdyuPfO+Lkxw28rxs?=
+ =?us-ascii?Q?UxkTfQn1GKlitsZGYNKM9EwMIaieT1hYQYR6664yJIkeX1oER4B3spwqlrv6?=
+ =?us-ascii?Q?8mVl5uy8MiGRK2NxJCZRflDbVsFixIu9HRVJWhOW6ZkSYfrWblAuz7Sjpm2m?=
+ =?us-ascii?Q?gsK4qVIvRVECc0hQtvwIKvpqBcwkZ8O/9JgaBlycxXoIexq4mFSXnc/MD2jH?=
+ =?us-ascii?Q?o7QHoCBu5wyj+y40s8/5N9sVUf1cXl034BpUMPEjFQnpT6h444FrsKVyJSly?=
+ =?us-ascii?Q?qum4IK4A7VyMNxOwdwpJhAqKEodE36aX2rVZh/HCFPgdUckDy8I+NDqZxedq?=
+ =?us-ascii?Q?rdAu1uyAIwmvu4to6GXpk3g4ZDQS5oVbQGvoeR7DE8rWW/BZDHRXEb2IYYa4?=
+ =?us-ascii?Q?T3lb0L/ZyI3pwp4uxsRiY3X2tbPLMVGTtO2z1Js+mUz+mIU6bf407pUz5VoC?=
+ =?us-ascii?Q?XqFPQqeohYULYq4lJtbMS64HFAZ5+7lrscxq0I2dx8mhEAbSpnJKUDuoNkO8?=
+ =?us-ascii?Q?FOSxoxfIfDw4fx4loFhooCmvcTKVlox5eLCv1Cuffgc1ghXLk6VZ4PD297Iy?=
+ =?us-ascii?Q?zkRW0fb65P9l07ZKNhi4bIX1Im/+LSf+KMsV94MMP9F8mkeVfFohUHtjvxC9?=
+ =?us-ascii?Q?eFG1hmw4CjPDjvIRUvNC+1zzdJqR/TgpIkW3Gbh3WzCrWeJJft6wRT7eyvtV?=
+ =?us-ascii?Q?1K8yTeej4HCPLp81cHqz8Bnq72TyVbtc8PH+wSue+Ks6xNm83E8Jw6Zpe/RT?=
+ =?us-ascii?Q?wcoA4e0SpX1Cn/CgPSDFiF4iodIEnOw4REEHNaUMxC0jJbkmsZMJtXgcN3UH?=
+ =?us-ascii?Q?Y+VXXhPtew6UETceSDYI0zInssdExbiZSU7NeQie5AW4RdMvz+ccYzOb9yzL?=
+ =?us-ascii?Q?Cmclr+qnQDOUaydruqEyUB5WifkqZOnN/YiX?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 20:46:40.9522
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 20:46:42.5460
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13033425-ae43-4520-cf72-08dd843a4829
+X-MS-Exchange-CrossTenant-Network-Message-Id: fef0eec1-b60c-49a7-ff20-08dd843a491c
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SN1PEPF000397B5.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8841
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8478
 
-Fix the kernel-doc complaint
-include/linux/pds/pds_adminq.h:481: warning: Excess struct member 'name' description in 'pds_core_lif_getattr_comp'
+Initialize the .enabled field of the FWCTL viftype default in
+the declaration rather than as a bit of code as it is always
+to be enabled and needs no logic around it.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
 Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
 ---
- include/linux/pds/pds_adminq.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/amd/pds_core/core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/linux/pds/pds_adminq.h b/include/linux/pds/pds_adminq.h
-index ddd111f04ca0..339156113fa5 100644
---- a/include/linux/pds/pds_adminq.h
-+++ b/include/linux/pds/pds_adminq.h
-@@ -463,7 +463,6 @@ struct pds_core_lif_getattr_cmd {
-  * @rsvd:       Word boundary padding
-  * @comp_index: Index in the descriptor ring for which this is the completion
-  * @state:	LIF state (enum pds_core_lif_state)
-- * @name:	LIF name string, 0 terminated
-  * @features:	Features (enum pds_core_hw_features)
-  * @rsvd2:      Word boundary padding
-  * @color:	Color bit
+diff --git a/drivers/net/ethernet/amd/pds_core/core.c b/drivers/net/ethernet/amd/pds_core/core.c
+index 9512aa4083f0..223547e4077f 100644
+--- a/drivers/net/ethernet/amd/pds_core/core.c
++++ b/drivers/net/ethernet/amd/pds_core/core.c
+@@ -402,6 +402,7 @@ static int pdsc_core_init(struct pdsc *pdsc)
+ 
+ static struct pdsc_viftype pdsc_viftype_defaults[] = {
+ 	[PDS_DEV_TYPE_FWCTL] = { .name = PDS_DEV_TYPE_FWCTL_STR,
++				 .enabled = true,
+ 				 .vif_id = PDS_DEV_TYPE_FWCTL,
+ 				 .dl_id = -1 },
+ 	[PDS_DEV_TYPE_VDPA] = { .name = PDS_DEV_TYPE_VDPA_STR,
+@@ -431,9 +432,6 @@ static int pdsc_viftypes_init(struct pdsc *pdsc)
+ 		/* See what the Core device has for support */
+ 		vt_support = !!le16_to_cpu(pdsc->dev_ident.vif_types[vt]);
+ 
+-		if (vt == PDS_DEV_TYPE_FWCTL)
+-			pdsc->viftype_status[vt].enabled = true;
+-
+ 		dev_dbg(pdsc->dev, "VIF %s is %ssupported\n",
+ 			pdsc->viftype_status[vt].name,
+ 			vt_support ? "" : "not ");
 -- 
 2.17.1
 
