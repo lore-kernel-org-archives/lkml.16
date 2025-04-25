@@ -1,149 +1,182 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E53F52F88;
-	Fri, 25 Apr 2025 22:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BEB2248A4
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745618526; cv=none; b=C+iPN+0XyLaVzjPWg6StiCXQ7u+EYDo8w3flCSSyeXLsk20BFWZAVldCIyN89EGwXON/vIqEW6rHe3KxLhhelFbrcifbzobfykqt/3hElUzOtPUXPDr9b6EHOd81HZYN1pQNG2r9ewJgTRQ9iMR41wtbTkknbSi2teykfgPeTFY=
+	t=1745618549; cv=none; b=pxGC4qjBJEuMceFF6kX7ikmB08BD3UAP4U2MENfFlj4h/mvVl2NPGo/xS9ur2pyuNdG1V+HIAs4fnaSmvnwwFkniUly6wcZqeWzoOJs0tmyfqki5sF1W+bsq65SK4xIC5yWkmtZ4KRmYtxKuu3MmWsojIMOJt6eV3QLinGZMIyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745618526; c=relaxed/simple;
-	bh=47rmLKtnGjewfFqFrsBo/SrGrrhBbAjwXFmLr+zgxKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nKZx7NREEvRXN462AXj2rvxzgrfLG2YEwNlQYhKQf+FCZlN/EI43ZSfhTkYdWPl9u3MXu4ucIWQxhCvIfA6w7HBUJjelH/hCCud0YOXpOltYUzjog/+9IWqUB7g9GFbjDM45MQ2CoaqzVQEkMvA34Ftn8l6HBDbxsH0WbY4U/yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xd/eE53s; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745618549; c=relaxed/simple;
+	bh=u9Wq1WJC3u2YFpgUADJPcqVizui6J8PvWROC0Fshj0A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=t9Ooc8dBBn/7r8JPXmiBrg8KDUP3Ax37z9JcTyy/1Bfro/vu556BY4J8QKBD8eO1/hoP0nWxV58Ak8rIAJmODMKV4zF4c6W9f/Iest8VK9Frml4/Qi+sNDpmQGhAGmKdQdcMVvYy6tD8FKEhgwgCUE8FMi8DWERN4fmFdnHqAAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lVRRvj2W; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xd/eE53s"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PM1uFn2287326
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 17:01:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745618516;
-	bh=O9lhtYObgqPTwdDifBn0tG15p9vSULA3BvKuIwZYurg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=xd/eE53s+qb+/JKoPpNCDN4RJxGsVZL9EvhtvgdtA7UnmpJmenT5hIH702jyb+oSE
-	 50/lVw92AO0tPo/heSsflJHktEk1TJ9Wc3ULkl9pcH6WMO0MC6LBq6ipy7jFTTGNIZ
-	 lkGTVQ8vyp/Qr4kWgBbKAUS4tWpWpUneOO5SfqXU=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PM1uGb013085
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 17:01:56 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 17:01:55 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 17:01:55 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PM1tQb026268;
-	Fri, 25 Apr 2025 17:01:55 -0500
-Message-ID: <965765c3-324f-4621-bbd6-b55f6eb44d1d@ti.com>
-Date: Fri, 25 Apr 2025 17:01:55 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lVRRvj2W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=W+3Mp14GKoLEbrOW7e3SGWscXjSAfwYO/d9DNQkLdOA=; b=lVRRvj2WdB7wIiCxngA1eDMIT3
+	TcJb6aLbKMbXJRoage0QN2xOXbEmHvai0lgu1mJNAMhErecGbBu4SrThz9kmbbSq6IrP/R6V7mVb1
+	sqy+j0XEYSgq1+BYeNiF38Q/bIyeMc1Jl4oeujE+v62rA6rHJw9ig5wasU5TdT+WO0jYwx9KSw88x
+	ePibgLFwQExU65FqaDyuaQ+/lQV7XqKd5F+nWePFKFa6ya5JodO/gQS8AvedAXrNmKA/aNpFAykjW
+	t1jPaA7o3NkhU7lHxUHtRClkXJ1KMOAiOkLJQleE/SARh9y/sAdPF5r0V5etlvqzS7sz7JAdyZKUm
+	Yxvtjkig==;
+Received: from [172.31.31.140] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u8R7O-0000000C9yb-3TfJ;
+	Fri, 25 Apr 2025 22:01:59 +0000
+Message-ID: <d828f037583bf1a4380fd02b1156befa11128d89.camel@infradead.org>
+Subject: Re: [PATCH v4 1/7] mm: Introduce for_each_valid_pfn() and use it
+ from reserve_bootmem_region()
+From: David Woodhouse <dwmw2@infradead.org>
+To: David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Sauerwein, David"
+ <dssauerw@amazon.de>, Anshuman Khandual <anshuman.khandual@arm.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Marc Zyngier <maz@kernel.org>,  Mark Rutland <mark.rutland@arm.com>, Mike
+ Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Ruihan Li <lrh2000@pku.edu.cn>
+Date: Fri, 25 Apr 2025 23:01:58 +0100
+In-Reply-To: <0eae5cc8-5714-44dc-97b4-e1b991c0e918@redhat.com>
+References: <20250423133821.789413-1-dwmw2@infradead.org>
+	 <20250423133821.789413-2-dwmw2@infradead.org>
+	 <0eae5cc8-5714-44dc-97b4-e1b991c0e918@redhat.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-qmtlX3ECWyV6PXBfhZ8n"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] arm64: dts: ti: k3-am6*: Set eMMC clock parents to
- default
-To: Nishanth Menon <nm@ti.com>
-CC: "Kumar, Udit" <u-kumar1@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>
-References: <20250417233040.3658761-1-jm@ti.com>
- <20250417233040.3658761-2-jm@ti.com>
- <8f9aad2c-8e51-409e-be90-21230a53a4cf@ti.com>
- <7bc92282-6ce3-4ae4-8eef-897df992487f@ti.com>
- <20250422123748.ugkk2pzp54vzmyii@acorn>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20250422123748.ugkk2pzp54vzmyii@acorn>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Nishanth,
 
-On 4/22/25 7:37 AM, Nishanth Menon wrote:
-> On 09:36-20250421, Judith Mendez wrote:
->> Hi Udit,
->>
->> On 4/19/25 10:00 AM, Kumar, Udit wrote:
->>>
->>> On 4/18/2025 5:00 AM, Judith Mendez wrote:
->>>> Set eMMC clock parents to the defaults which is MAIN_PLL0_HSDIV5_CLKOUT
->>>> for eMMC. This change is necessary since DM is not implementing the
->>>> correct procedure to switch PLL clock source for eMMC and we have a
->>>> non-glich-free mux. To remove any potential issues, lets switch back to
->>>> the defaults.
->>>
->>> IMO, we need to fix DM  if not then documentation [0] .
->>
->> DM cannot be fixed for only one IP and documentation says what clock
->> parents are supported, it does not have to say what are the issues
->> that come with using a specific clock parent.
-> 
-> As I understand the arasan IP requirement is that the IP must be held in
-> reset while the clock is switched, which is not reasonable to implement
-> given decoupled systems like DM and Linux OS.
-> 
->>
->>>
->>> Then only this patch is ok because as per document [0]
->>>
->>> removed clock by this patch is valid parent for eMMC.
->>
->> The clock parent currently set is a valid parent, but we have non-
->> glitch-free muxes and to avoid any potential issues with these, we
->> should switch back to the defaults. It seems like we randomly switched
->> from the default for no good reason and it has been copy paste per
->> platforms since then, so we are switching back to the defaults now.
->>
->> ~ Judith
->>
->>>
->>> [0] https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j722s/clocks.html
->>>
->>> Thanks
->>>
->>> Udit
->>>
->>>>
->>>> Fixes: c37c58fdeb8a ("arm64: dts: ti: k3-am62: Add more peripheral
->>>> nodes")
->>>> Fixes: d3ae4e8d8b6a ("arm64: dts: ti: k3-am62a-main: Add sdhci0
->>>> instance")
->>>> Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more IPs")
-> 
-> Please follow ./Documentation/process/stable-kernel-rules.rst - this is
-> easier to backport if these were to be split into 3 different patches.
-> Please do not forget to add Cc: stable@vger.kernel.org as per the rules
-> as well.
+--=-qmtlX3ECWyV6PXBfhZ8n
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Understood, will split-up this series and respin, thanks.
+On Thu, 2025-04-24 at 23:11 +0200, David Hildenbrand wrote:
+>=20
+> > +	unsigned long pfn;
+> > =C2=A0=C2=A0=20
+> > -	for (; start_pfn < end_pfn; start_pfn++) {
+> > -		if (pfn_valid(start_pfn)) {
+> > -			struct page *page =3D pfn_to_page(start_pfn);
+> > +	for_each_valid_pfn (pfn, PFN_DOWN(start), PFN_UP(end)) {
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 ^ space should be removed
 
-~ Judith
 
-> 
->>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>> ---
->>>>    arch/arm64/boot/dts/ti/k3-am62-main.dtsi               | 2 --
->>>>    arch/arm64/boot/dts/ti/k3-am62a-main.dtsi              | 2 --
->>>>    arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 --
->>>>    3 files changed, 6 deletions(-)
->>>>
->>>> [..]
->>
-> 
+I was treating for_each_foobar() like for(), which always *does* have
+the space before the parentheses. But a quick grep shows that that's
+the minority, by at least two orders of magnitude. Fixing it locally;
+thanks.
 
+
+--=-qmtlX3ECWyV6PXBfhZ8n
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQyNTIyMDE1
+OFowLwYJKoZIhvcNAQkEMSIEIJtpQaX/Gxi4oakB/hmCQaiKohszCGksdgBceLiYIN3JMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIARcVyl9sSYDAV
+pxlhiqiy7jNzQuLeT5TxM3reujLZMId7y92Y5+sAC7yU+ch1mxGHs14j7GYEeKj0lomXf+/wdYaF
+WnBPxUH94QEP183s+DNe3xngMwIwTXM8Qu3fqYOM2szAXzoV1hCs6cSG4MGYOLYXbvoxWctvYGLe
+OO962h4HbV7D6frzdiYiBLFQuEbSvlBHcLA63Bei/Lj0AyaehPyT1eniOpDBuHdPljXBrnfIUDUr
+2MHZhY0VA42EkGF35lvZ8M0sZDw0651DChguaF6QXUvWXAo/6KrUPK2+2oVPPrAVuWL/NxUWegtl
+rFwIpV/hZfFkd5Xbuhjq7M5sl/YfWui4W+hNexlRK32AYLOhx2Bc1+SCFMVkNaNRN8XFZRl5zh59
+XUGN5275Gb5MtCJ20JwgCLhzb/ZU1lIw7/MMcWiYeW5F83NodAbVUq1WMHvh7fPNkzjlSfWNJ+s1
+n1YXI+wUkj/wOD5Cd6pJGXvqKdS2j0wm42avOZWfJ+4a5+NYKE+TRXtDrFQQ4X3XesUxZKAHMcrm
+Dv8J49v4Z9y+LC9RCDS+1105/YcY+Lg5sudZMGHwguWDr+F2ENLdIW8w/FgSyMaoxfY54bHS1KOG
+I+oGfokeVqYW3vsGNG+74RXJOJhANG8TvoPyXtPvKijdMhRKjRXHQZ298na0DFIAAAAAAAA=
+
+
+--=-qmtlX3ECWyV6PXBfhZ8n--
