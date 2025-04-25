@@ -1,108 +1,130 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB13A223702;
-	Fri, 25 Apr 2025 20:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDA5221D90
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745613236; cv=none; b=faHannKgYvtVgbDeb6Ig2lFrPgyJhXdG4qCRKuLEEBKxanfSuMX6LKAW244ZRUDRVDJSQKRE6An8+pfEDhUYNtUCX1wpvsFpcXU4RbnyD4xbBSBMH5LzxRPJUTDdTwQjQqRmf269ZPOWiW/INDoBUXZaTUsXjOYAtSEURaLXEkQ=
+	t=1745613360; cv=none; b=Hsub7MMWvLdwZg+LPIM6WRaXW8MvjeNplyOxEb2pkYE5+BwJMJG5ER4dx7xyD+9W9XxLz/ZsqOZCZDWlXq4GUng3aFO1O0OnlUkkJB2yNCSSqjhv98skzfeLdYSJZVOHqJfdyuHZ91krvLCPmSp/m15LRBjyj3OnrjYnMzwPeAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745613236; c=relaxed/simple;
-	bh=vTY4Da8XQHQWu/EAc4ok6OF85Ra9zVsYZMLVGRxA/s8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sJY4fqZL+0G9M1oML4YLbLVRHKdg5ke0hszbpPO9bU0OqR+fu+aY9bkTyDOl10Nyxm83G3YcA8JIjYMJRpwvrIMm0kP1UD7clEHqvCXEAzQY8XZzlEhcBSkredZvIpEZR2XeWs8R4be0XBuWhjwjqAId1JJt0aRHhiBP9q4Q62E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xnx/i1KQ; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745613360; c=relaxed/simple;
+	bh=SQExu4w4hPgGkdy5kCAct+RvK8+FjV4snNR+nLyJBNA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FyDRYm3Oh3bL34Prgnv5LaWzvP+bdVc9/Ev/ChzwKAzAy1Ztk8idgMPukV1DHkH4IizQuW0Dcq0UdyF24/vIZuizT5IgY7ZGhlAnL9tUDro3sdqrCiEemHcFeVuS8Lc2i4zLftIhctQSE/ktCGFot+iajCk+0LpKV1nu/h9lxmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AcqdYf7s; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xnx/i1KQ"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKXGcv3022327
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 15:33:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745613196;
-	bh=wSqo/AfVwSvR8bpJlcA+g4qgnYxVFikAnloTUt+XYa8=;
-	h=From:To:CC:Subject:Date;
-	b=xnx/i1KQLfRVsFIOEY0a+wVUscsRRta6cmsvqTQCi198BPognBol7LVC1uakVcRzo
-	 ZK452FvIfXYIOgcCm9GPhGoHa/yTIrMi29aqw1oe1K+fyTNZ/xME62kJO9Idbwd9ZJ
-	 Hux17+te+8HAuLzJ8TYhcTMRrMPk94ckf2iuL6tc=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PKXGPO048882
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 15:33:16 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 15:33:15 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 15:33:15 -0500
-Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PKXFbV054212;
-	Fri, 25 Apr 2025 15:33:15 -0500
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: <m-leonard@ti.com>, <praneeth@ti.com>
-Subject: [PATCH v4 0/3] Add TI TPS65215 PMIC GPIO Support
-Date: Fri, 25 Apr 2025 15:33:12 -0500
-Message-ID: <20250425203315.71497-1-s-ramamoorthy@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AcqdYf7s"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac3b12e8518so471877866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1745613355; x=1746218155; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qHF1zPVwXD8IdJu/yf1YIr/T0XDnrM1CQwq7Bj5CPDw=;
+        b=AcqdYf7sEb5O+p7PVg+SZBBLgQsUwDcGRQTQc2JJgrlVDWdBnJNhSSZvwB9Y/uq95v
+         SFZOHoWJVu8NVIHqXNYAkdH/DMLXOVm+keHTgYF5b4Ka8r3hg0WEDUVNB49RjBh7Z12x
+         Jj5oHdUODbq4ly6ayEpYN6M10Qjlnt3VJEsL8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745613355; x=1746218155;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qHF1zPVwXD8IdJu/yf1YIr/T0XDnrM1CQwq7Bj5CPDw=;
+        b=fBgtZKTsF5alYrUpM0P/JtNJ9OPnqyKDAp4L77HnHGLcvQkpEXVdQmDK/tvDiasaIZ
+         8aaXmTm0atDrZeNnXj9HLDvPjSQswbPWTfcMlzGYoFnakQHPI8CX8p9xIQsU4izg8Xhw
+         oM9CbHLQUASdvKt+lcnV+OAR7o8Y+jRlnSsF5oy2OCRXQsmNdjeajQSO7GPfCPgUKMvw
+         XeksqMEXiryMZEeJL90k5ZrFdbLYhdXUP5XYI+tCw72lGfV1KGWQTJsS7v9OIwOBmeu2
+         aTkRxzFVHrAKI5SXOeixuKufO6hfSB12/LyzDdAef5Hxu6MKEk4kitJ606xgqZfsWy+W
+         0yoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHIBo/I99Dl5UXFf006prpsp5E2tIVcal9V3Izd0hmEAbNhi6AusRF3st3s/PJO72xGnwdQVDCFBqJ6Wk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpZ2yU6aab5eNHckCDSzwhBcRbtr3ZgVkOlVdSyYTtlQD+s8PR
+	YILRku6P93BDTi/YKusaYBF2Be/uEVKa99MrUTKYjGDt5GXBC2whW2TvIYNiSxBN3f8eHpYfRkC
+	foI8=
+X-Gm-Gg: ASbGncvZZ9/UgsWShrLuXObihINHR8A8+SA17lvzBlnYOy59Qexh1HQHlVhE6ppcRRb
+	TWaH5TLA1C4ZHMT9HqrXNejZpRguHW4c+wDD9wYYFr2dQhCtYf4catayYvOgpYNAhSUzWBLtaoJ
+	u2R9cM04M645h+xoMo8EQeUasPIY8T+UZEP1vsGePnXNS+zG4mKysjrYFf4Zdb9U+6eLI0rqRyS
+	UNql8X3qw0XrflIux0HO7hoHVL6gUZuGIvCF50i97chX1EN4uwmDd/dtzgRvTDgIqxR8KLx+UfC
+	Bz6t7gWWLq16NDRPtwQzvrYGdnaLLG2tU0n5NGr5a55QTGsc+0/WUte/wV4pfv0Hb2VyiVeVAiT
+	7lrsuIHQpx3gxujk=
+X-Google-Smtp-Source: AGHT+IH6S6z1HMUsIEc7xWD6SNmQBgE7vR1LJ94DbdUG5y376ahLA8X+0ZS1sPA9btGkED0UeOi28g==
+X-Received: by 2002:a17:907:6d27:b0:ace:37c1:d4f5 with SMTP id a640c23a62f3a-ace8493db93mr61522566b.36.1745613355301;
+        Fri, 25 Apr 2025 13:35:55 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6eda7a0esm184458266b.163.2025.04.25.13.35.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 13:35:54 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac339f53df9so513353366b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:35:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXtXkppVsL57T7IStGyAP6AHHEmpAYfO1qAmgqN+B3Wh5twpxoEGHHtEbniyKtZt7xTwuz7SUoGl7FNB3M=@vger.kernel.org
+X-Received: by 2002:a17:907:7f24:b0:acb:107e:95af with SMTP id
+ a640c23a62f3a-ace84ad7774mr62978366b.39.1745613353476; Fri, 25 Apr 2025
+ 13:35:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com> <aAvlM1G1k94kvCs9@casper.infradead.org>
+In-Reply-To: <aAvlM1G1k94kvCs9@casper.infradead.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 25 Apr 2025 13:35:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiX-CVhm0S2Ba4+pLO2U=3dY0x56jcunMyOz2TEHAgnYg@mail.gmail.com>
+X-Gm-Features: ATxdqUGwKlTpu4bheZKrvcER-qlO-D6uY_4AgFPDdEUKnYAjfRZ_s0Tk9V5ZhUc
+Message-ID: <CAHk-=wiX-CVhm0S2Ba4+pLO2U=3dY0x56jcunMyOz2TEHAgnYg@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Rebase patch series for 6.16 cycle. The related MFD series was integrated 
-in mainline during 6.15 cycle [0].
+On Fri, 25 Apr 2025 at 12:40, Matthew Wilcox <willy@infradead.org> wrote:
+>
+> I think this is something that NTFS actually got right.  Each filesystem
+> carries with it a 128KiB table that maps each codepoint to its
+> case-insensitive equivalent.
 
-TPS65215 is a Power Management Integrated Circuit (PMIC) that has
-significant register map overlap with TPS65219. The series introduces
-TPS65215 and restructures the existing driver to support multiple devices.
+I agree that that is indeed a technically correct way to deal with
+case sensitivity at least from a filesystem standpoint.
 
-- Both TPS65215 and TPS65219 have 3 Buck regulators.
-- TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
-- TPS65215 and TPS65219's LDO1 are the same.
-- TPS65215's LDO2 maps to TPS65219's LDO3.
-- TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
-- The remaining features are the same.
+It does have some usability issues - exactly because of that "fixed at
+filesystem creation time" - but since in *practice* nobody actually
+cares about the odd cases, that isn't really much of a real issue.
 
-TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
+And the fixed translation table means that it at least gets versioning
+right, and you hopefully filled the table up sanely and don't end up
+with the crazy cases (ie the nonprinting characters etc) so hopefully
+it contains only the completely unambiguous stuff.
 
-AM62L + TPS65215 Test Logs:
-https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
+That said, I really suspect that in practice, folding even just the
+7-bit ASCII subset would have been ok and would have obviated even
+that table. And I say that as somebody who grew up in an environment
+that used a bigger character set than that.
 
----
-Change Log:
-v3 -> v4:
-- Update cover letter
-- Rebase for 6.16 cycle
-v2 -> v3:
-- Correct gpio_chip.ngpio line to use .offset field
-- Remove unnecessary newlines
-v1 -> v2:
-- have any PMIC lists be in alpha-numeric order: TPS65215, then TPS65219
-- remove comma after terminator
-- Add driver prefix to chip_data struct
----
-[0]: https://lore.kernel.org/all/173928615760.2233464.12306998726512431222.b4-ty@kernel.org/
+Of course, the NTFS stuff came about because FAT had code pages for
+just the 8-bit cases - and people used them, and that then caused odd
+issues when moving data around.
 
-Shree Ramamoorthy (3):
-  gpio: tps65219: Add TPS65215 to platform_device_id table
-  gpio: tps65219: Update GPIO0_IDX macro prefix
-  gpio: tps65219: Add support for varying gpio/offset values
+Again - 8-bit tables were entirely sufficient in practice but actually
+caused more problems than not doing it at all would have. And then
+people go "we switched to 16-bit wide characters, so we need to expand
+on the code table too".
 
- drivers/gpio/gpio-tps65219.c | 56 +++++++++++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 14 deletions(-)
+Which is obviously exactly how you end up with that 128kB table.
 
--- 
-2.43.0
+But you have to ask yourself: do you think that the people who made
+the incredibly bad choice to use a fixed 16-bit wide character set -
+which caused literally decades of trouble in Windows, and still shows
+up today - then made the perfect choice when dealing with case
+folding? Yeah, no.
 
+Still, I very much agree it was a better choice than "let's call
+random unicode routines we don't really appreciate the complexity of".
+
+            Linus
