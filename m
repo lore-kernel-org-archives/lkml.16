@@ -1,114 +1,176 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850F18494;
-	Fri, 25 Apr 2025 01:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3079C33E7
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745543807; cv=none; b=DDo69dry3g0Yv/a8JP9bukBaSIFoicshrr+Sv3JgrO1LlTGkPxYmUEBbdFX5Zzm2n/Zq8ri1uhGwy5PgWc5+DQlth1gp4Im7acDhTs5nTO8fYL1YVbd5+pYch8OauidNEBILSwMFtc+nwiKDeZKkwUeQVE8xiXzzhR7buuAK9Sc=
+	t=1745543968; cv=none; b=o95gofxyD7R9cQTSgTmHvpAHy1e9DRmaXEM698CIpnhpB/ny/SLHxAGbgz6sAavhDb/yN3o4qE8Lu29ye1DHZfdhLwiA3X/cZTklzyTMsUrufDet+z/s7XmiQ726gA/1+vWrU3frjf0uIy6EP4ahuZPpbth8Jfp0IYp+g21ynGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745543807; c=relaxed/simple;
-	bh=22cnopTo/mxALU1RwyL3KcFLtT6PURNTg9wJD5O4AvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tHQMDKOyKeJn8JDRQ8pAWdV4Ql7Jl0dDXmnJUQpg9MFZCMlcF0xs3usI8n36qNhNUicXUbOR4A+AIPot7Vdl/ftvqBdLYY3rI5yOPn13duPjVaUMfDd5iawECm4WJGKb5KE7/VT/BYOX9OqekviFJ0u8/KH6nU3awt02dFbljHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bwKC9WDG; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bwKC9WDG"
-Received: from [172.27.3.244] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P1FaK51878943
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 24 Apr 2025 18:15:37 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P1FaK51878943
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745543740;
-	bh=Eqcm/Hif/MkDs4mjYz2tKFyoVP1HuqqqBruNWCY5tSI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bwKC9WDGeH6PKjPk6PbPnscfTUG7uO0p90T8jZtRz/H1uV5R0u0jHyKPLpz4Lzuza
-	 jaan86VUYCLDqr62mFWyqSXvvBjaf+ve6G5ZtKNwudj3pQxiq/p0DQHubDAWAL4iVK
-	 Num9qesxZzs6c+gaFJIpcjhHqgTrRqcXI4bwh1tGXr1pf3tvinHjceiUPk+LlVYVAf
-	 mYaL7M4P9z3kr6aQ69HDJ4GJ4kjHFXVFi/8OoAlHsRrCGt5QgNwZK3Agfp39Cx1S5g
-	 BERlMv7+KxMZFAhG9+QYjnrsyKHBCBRF3w4ALl9e3WkwPa1KT4qcT1tq3RLd9c/O5Z
-	 dx3hBdqeJAyRA==
-Message-ID: <483eb20c-7302-4733-a15f-21d140396919@zytor.com>
-Date: Thu, 24 Apr 2025 18:15:36 -0700
+	s=arc-20240116; t=1745543968; c=relaxed/simple;
+	bh=9Y0c4cCk5XLOB9TPqpk0ouD8fs5c3qQNoyks5K7faQg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RdcBcpJGawFPnX7GZSHjyHsEGzL8Dgk97Sds2QVJerHwIW637fGEjH5Xns29Bntn+YglBXYY8EnMVt2tyfDnLKBCD1DBVtrQUkX9v9NgJHETMko2NvMr7QT/cPMH5t42D0LH19yjPGe3sdoS7e20gOiVECgbyc/b2eJHH/7UwrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85e4f920dacso138694839f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:19:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745543966; x=1746148766;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BNdloWePwz5N2EpSscO41G0aPDOXUWyWp3FxRW5qank=;
+        b=ORW6Snkz0mltyhS2onFGj26+nMPs+nOY4J6kha5faqShjPenZCjjFvDBkzADBZYxOK
+         NyNRvb4562L76ZVnm/cdS9NK3XRyVYBKwywkr7DkRyXDbOyZrAhScgnH4BLz2jnY4Yya
+         f51Ndz4Kt8IzrCkmTTaZOqOjDtzR+UFHNyQXs3wXh3S25njVQyDG8enC6VLWPB2zsxOu
+         cDAgLnR8n7pyTd5qyjE6pcJ+xXxtCYEVN4joOv2RV3Ba6kUWNnDrWPUqhQBm5beTjZ9n
+         wVTpcVt3tPP7/uVpFCuObguk5hZBA2228SeyOJcxjr9PNh9Rx4FxkV5fJh0wyisNAmii
+         +96g==
+X-Forwarded-Encrypted: i=1; AJvYcCV7pALWK4meQYKLvc//qZIYu4i42w+Ql44LfLaCJ6XIrPOiFdMlZCuhlO76TlECMEV2tOdIZOAEYP3aYK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA/g0icaM/a64yRg9qlqIcTPThxmBKD+3wcTLeb0/yGL1aD7Dv
+	J93dxy8tdYEGZ/XIwPtCLAI48aa9cbP6wy91YlcNLlOUPDv+faBWyEKBm7HtIgzXsT+P/pmd3J+
+	gKEHgXm5t0/DZV9aORJQ+xLrYduZY0zNDbMkcFxOrcEmDpvvRglan1y4=
+X-Google-Smtp-Source: AGHT+IEz8luqG7fjrdwt/uLH23QS7RtIa0ri9dCC+5NIHsHyfbhUiqIwYzoh4uPvCZALWWawg7CquuAlGILPTFlS+Lpbp/801qUR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        Xin Li
- <xin@zytor.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
-        andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
- <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
- <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
- <bb8f6b85-4e7d-440a-a8c3-0e0da45864b8@zytor.com>
- <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <0cdc6e9d-88eb-4ead-8d55-985474257d53@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:608b:b0:855:5e3a:e56b with SMTP id
+ ca18e2360f4ac-8645cda6f2emr62023839f.12.1745543966364; Thu, 24 Apr 2025
+ 18:19:26 -0700 (PDT)
+Date: Thu, 24 Apr 2025 18:19:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680ae31e.050a0220.2c0118.0c72.GAE@google.com>
+Subject: [syzbot] [fs?] [mm?] kernel BUG in __filemap_add_folio
+From: syzbot <syzbot+4d3cc33ef7a77041efa6@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, brauner@kernel.org, hare@suse.de, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mcgrof@kernel.org, syzkaller-bugs@googlegroups.com, 
+	willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/24/25 01:14, Jürgen Groß wrote:
->>
->> Actually, that is how we get this patch with the existing alternatives
->> infrastructure.  And we took a step further to also remove the pv_ops
->> MSR APIs...
-> 
-> And this is what I'm questioning. IMHO this approach is adding more
-> code by removing the pv_ops MSR_APIs just because "pv_ops is bad". And
-> I believe most refusal of pv_ops is based on no longer valid reasoning.
-> 
+Hello,
 
-pvops are a headache because it is effectively a secondary alternatives 
-infrastructure that is incompatible with the alternatives one...
+syzbot found the following issue on:
 
->> It looks to me that you want to add a new facility to the alternatives
->> infrastructure first?
-> 
-> Why would we need a new facility in the alternatives infrastructure?
+HEAD commit:    ac71fabf1567 gcc-15: work around sequence-point warning
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1269b204580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=68d9f79fc685cd4
+dashboard link: https://syzkaller.appspot.com/bug?extid=4d3cc33ef7a77041efa6
+compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b2cc70580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14a91ccc580000
 
-I'm not sure what Xin means with "facility", but a key motivation for 
-this is to:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c03ec6447343/disk-ac71fabf.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e02e7fb54511/vmlinux-ac71fabf.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7d53dcc94699/bzImage-ac71fabf.xz
 
-a. Avoid using the pvops for MSRs when on the only remaining user 
-thereof (Xen) is only using it for a very small subset of MSRs and for 
-the rest it is just overhead, even for Xen;
+The issue was bisected to:
 
-b. Being able to do wrmsrns immediate/wrmsrns/wrmsr and rdmsr 
-immediate/rdmsr alternatives.
+commit 47dd67532303803a87f43195e088b3b4bcf0454d
+Author: Luis Chamberlain <mcgrof@kernel.org>
+Date:   Fri Feb 21 22:38:22 2025 +0000
 
-Of these, (b) is by far the biggest motivation. The architectural 
-direction for supervisor states is to avoid ad hoc and XSAVES ISA and 
-instead use MSRs. The immediate forms are expected to be significantly 
-faster, because they make the MSR index available at the very beginning 
-of the pipeline instead of at a relatively late stage.
+    block/bdev: lift block size restrictions to 64k
 
-	-hpa
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d62c70580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13d62c70580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d62c70580000
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4d3cc33ef7a77041efa6@syzkaller.appspotmail.com
+Fixes: 47dd67532303 ("block/bdev: lift block size restrictions to 64k")
+
+ __handle_mm_fault mm/memory.c:6140 [inline]
+ handle_mm_fault+0x1129/0x1bf0 mm/memory.c:6309
+ do_user_addr_fault arch/x86/mm/fault.c:1337 [inline]
+ handle_page_fault arch/x86/mm/fault.c:1480 [inline]
+ exc_page_fault+0x45b/0x920 arch/x86/mm/fault.c:1538
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+------------[ cut here ]------------
+kernel BUG at mm/filemap.c:868!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 1 UID: 0 PID: 5909 Comm: syz-executor413 Not tainted 6.15.0-rc2-syzkaller-00493-gac71fabf1567 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:__filemap_add_folio+0x1554/0x16c0 mm/filemap.c:867
+Code: e9 c5 ff 4c 89 e7 48 c7 c6 80 0e 54 8c e8 44 43 12 00 90 0f 0b e8 cc e9 c5 ff 4c 89 e7 48 c7 c6 00 05 54 8c e8 2d 43 12 00 90 <0f> 0b e8 b5 e9 c5 ff 4c 89 e7 48 c7 c6 80 0e 54 8c e8 16 43 12 00
+RSP: 0018:ffffc90004087300 EFLAGS: 00010246
+RAX: ba56fbab94ec7e00 RBX: 0000000000000004 RCX: ffffffff93686020
+RDX: dffffc0000000000 RSI: ffffffff8e6497f7 RDI: 0000000000000001
+RBP: ffffc900040874b0 R08: ffffffff905fe577 R09: 1ffffffff20bfcae
+R10: dffffc0000000000 R11: fffffbfff20bfcaf R12: ffffea0001ededc0
+R13: ffffc90004087400 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000555577940380(0000) GS:ffff88812509a000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb2a265a1f0 CR3: 000000007eb78000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ filemap_add_folio+0x157/0x380 mm/filemap.c:969
+ page_cache_ra_unbounded+0x40c/0x820 mm/readahead.c:275
+ do_sync_mmap_readahead+0x3e6/0x6c0 mm/filemap.c:-1
+ filemap_fault+0x763/0x13d0 mm/filemap.c:3403
+ __do_fault+0x137/0x390 mm/memory.c:5098
+ do_shared_fault mm/memory.c:5582 [inline]
+ do_fault mm/memory.c:5656 [inline]
+ do_pte_missing mm/memory.c:4160 [inline]
+ handle_pte_fault+0xfcc/0x61c0 mm/memory.c:5997
+ __handle_mm_fault mm/memory.c:6140 [inline]
+ handle_mm_fault+0x1129/0x1bf0 mm/memory.c:6309
+ do_user_addr_fault arch/x86/mm/fault.c:1337 [inline]
+ handle_page_fault arch/x86/mm/fault.c:1480 [inline]
+ exc_page_fault+0x45b/0x920 arch/x86/mm/fault.c:1538
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+RIP: 0033:0x7fb2a25adba4
+Code: 2d 41 b8 13 00 00 00 bf 09 00 00 00 bb 03 00 00 00 e8 b0 14 03 00 ba 71 12 08 40 bf 10 00 00 00 48 b8 00 01 00 00 00 20 00 00 <48> c7 00 00 00 01 00 48 8b 35 1e 95 0a 00 48 89 c1 31 c0 e8 84 14
+RSP: 002b:00007ffd9b4d3c20 EFLAGS: 00010217
+RAX: 0000200000000100 RBX: 0000000000000003 RCX: 00007fb2a25df059
+RDX: 0000000040081271 RSI: 0000000000b36000 RDI: 0000000000000010
+RBP: 0000000000000000 R08: 0000000000000004 R09: 0000000000000000
+R10: 0000000000000013 R11: 0000000000000216 R12: 00007ffd9b4d3c4c
+R13: 00007ffd9b4d3c60 R14: 00007ffd9b4d3ca0 R15: 0000000000000008
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__filemap_add_folio+0x1554/0x16c0 mm/filemap.c:867
+Code: e9 c5 ff 4c 89 e7 48 c7 c6 80 0e 54 8c e8 44 43 12 00 90 0f 0b e8 cc e9 c5 ff 4c 89 e7 48 c7 c6 00 05 54 8c e8 2d 43 12 00 90 <0f> 0b e8 b5 e9 c5 ff 4c 89 e7 48 c7 c6 80 0e 54 8c e8 16 43 12 00
+RSP: 0018:ffffc90004087300 EFLAGS: 00010246
+RAX: ba56fbab94ec7e00 RBX: 0000000000000004 RCX: ffffffff93686020
+RDX: dffffc0000000000 RSI: ffffffff8e6497f7 RDI: 0000000000000001
+RBP: ffffc900040874b0 R08: ffffffff905fe577 R09: 1ffffffff20bfcae
+R10: dffffc0000000000 R11: fffffbfff20bfcaf R12: ffffea0001ededc0
+R13: ffffc90004087400 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000555577940380(0000) GS:ffff888124f9a000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb2a265a1f0 CR3: 000000007eb78000 CR4: 0000000000350ef0
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
