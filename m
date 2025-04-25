@@ -1,137 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92042225779;
-	Fri, 25 Apr 2025 21:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAFF20C000
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745617201; cv=none; b=TQhlT4KAHV3EOCP5qYP0smmVcBOaPJL52NCR+qQo0GPcD7gNUiOzsQNxp6bRx1otPgYwuzXA403CQKSVVbfRqXZUu/SmaIyuHJJ8EPcEM2woDJqVGIvDHLg/cyzG7I+Kz9ksrjKb94DXtNS/7RpAlp9SmcqvFSr+O176Mu6RMxQ=
+	t=1745617224; cv=none; b=bS1xQWpM1fVVAw/EQSmAhGJh1irnbSHRyDYQzQaRr2nLtB9rb1FChNw1dSPwSTzXXl/QQP1+hKupe8dldDcFULN9RohLCeqIq5zbbDGuC3wzwfCPaS6RsB2iz003+ZLpxuGp2IgcsjpvmHK2uOGuz0l9VxDhYjHKCtjDDC5Gz8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745617201; c=relaxed/simple;
-	bh=gpEjCaRQAeZ4xN2QXu04ciaWVtO8D/BOtpyF745Ope0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GPmFsdvcrtLBJ0SAhq+9lZs4k60Uv3dlO44iVOce5JWK4XCYxbFYXro4Ikz/CxxmsUAi5OEkhE6ZL3/xBG0AjexuAUnK8C+bKKaa0ShuDHB0DZEAAWZmBXR8MjtAgR+VMWUErhUN6nbhlH6YZhcgRApbz3esfDq6qYNWs5ZW+zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rv7JzYDM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745617224; c=relaxed/simple;
+	bh=sPm1j0kNASqcjC28KQkcio0SRLyxLR8PwRMkFcnheZc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=hPkDjIc9ddjb75MZTV7JKJ1YNxAU5tWPHG/BkD7+jsF9jgeUT6Q2owo5nKNX41pzi/9uwGvvszC02pCaxq3IUUD21TS+n4ul+xFRnifcqvQzXRLKkF3vxX2osa9ejc52V0G9VO7puhK/d600G1WoHG7UD4kt+HW1ezCw6ntXDa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ixQNTXaA; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rv7JzYDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71009C4CEEE;
-	Fri, 25 Apr 2025 21:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745617201;
-	bh=gpEjCaRQAeZ4xN2QXu04ciaWVtO8D/BOtpyF745Ope0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rv7JzYDMADbddJKQpQPNdj/yCvWSTJJ4CV3A/h0Lh77pJm3MiYRY/rE53GjO5QM27
-	 hr0HHCiUDrO3NNOs0aRWuQoBnv4FYiTinIAHGJvR4CsbCmY/xlraXldx7sRtmBDSSj
-	 DCf1X5DFE4/koSPmuEnXsk9ApgHIJxHienuM7w0FJOXEg8p384hJMw7q4T4fcsEkkE
-	 73wepkAfUYVc+FNAfQ2MIZkEugoiHsc8rVYplO0xXcLBU7kVDF/sMdqtk4sMT/Y5tr
-	 i6lU8g4TAMFx/HcKt4w0H4dA+jj6iF28LgH/m9dVPEpzM/65QM3M8saKRD78XqLlC6
-	 F8HHgkQyvqbnA==
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3fa6c54cc1aso2063504b6e.1;
-        Fri, 25 Apr 2025 14:40:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXA9hqGEVXjPRhx1OR9QBz2Ez0GijJ8DEHdAs5n7jk/o6hn6PifYEcy65g9VVRQbNaJ7tBTzqJKdYqIw7k=@vger.kernel.org, AJvYcCXw9o6Q1uaWR2ULKi/0jA/QwutOx/LjcU9KeJKPEKUg1GZnnb7iUbxChk4mLZhHb1Q7vcs8lceu8Eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/ACdIOzwqA5HIRRO2sZi2ZOul4smPwq4RUGev3R9rfrcQcbq1
-	6oqmUwk3DKnP/g25s4FOc1nbPy34bi2bozvMNIId4Inkf/gKgh8KXpNVmDbB5clz4p/bpKgENfA
-	ZT/8UFdCDitY4NTNW+AyiLKL+fqk=
-X-Google-Smtp-Source: AGHT+IEsffxvzq9Yr0/TB+vgHWzntwUD/rbIhUb17/qPQ3R6onl2Y6tmBGAUOYjZgUCXM6MsgXDHEc83j3KOHFY9CAk=
-X-Received: by 2002:a05:6808:2512:b0:3fa:d6d4:8160 with SMTP id
- 5614622812f47-401f289418cmr2583961b6e.10.1745617200762; Fri, 25 Apr 2025
- 14:40:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ixQNTXaA"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2242ce15cc3so24570155ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745617222; x=1746222022; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JZkT3hJLfXWyZhwGuTx/lA7lkjVFZuKbFGJdA8gIfD0=;
+        b=ixQNTXaAiJWVFbt01REqm6IjOEpJxiyk2FzLpew4JDc/YrSi3jrEhf7qex03eID/sR
+         6JSMu8nNT+S6zkk7AaL4GsbuNIOgMGmNTP1xagzKdMmpgI1WKUfNHzDMk/j03UViAG26
+         aHfeRw7fDzYe5qehUGnGBK30nf/CJuQr3YTZHMC05mPh4+2OIwmIIlFu+GxEjhVCMh5/
+         4qY3jv243+BPS/PSYvfcV5ufTxLE2yAzFrOOBg5ob2WyBdZKuqvD3bLl/c/lkJcZI5Vz
+         GFJbggfwJy+KAQG0/kCB69LDFFWmJX4UGvYJbiB6W2iG509lwJSJ67MpPe0d8FlOdbY7
+         T4EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745617222; x=1746222022;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JZkT3hJLfXWyZhwGuTx/lA7lkjVFZuKbFGJdA8gIfD0=;
+        b=OI4feHIMEyNkFLt6khuR85p6VuJhbBnXdVihEg6PPqdLi14BGHgKIF/eQrob6On7d2
+         yqL6VrJyGenRW9qlCh7Q0VJCT6vaCEszwFuLEUk/dO4Ggcu8nEMMUjHm6/SXDrnU0xuv
+         H+PATz/0cnHk5qySqeoI+9Qfk5omnAEOB6fZ2vKtiTQ3pnXYi8XcipYcfbQBxzt4l/bw
+         40vMUfTD3s+HUrcGwOh43cx70WsG3Oyy4fX59FMvcb1zNext0tnbIggOx3binfCqrZrV
+         KhKFWbnioUZq267rW8H+xIrWebLOnSr61JJxxBVO4nenNF5i0MWILNx4GAnAj5w/N8oR
+         dlWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhlIECcSAFlLQcBk6jXQu/0oCEDQJmTm3iBXdRO5ZKdrYATvU1VvoOfm+xC8c8xs18oWiEJn9Rk01wHXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzAvMsLRc2N5OptJbiJkkmJ88T6WTEb0l+lNJ9UkGNKZubj8Nz
+	uuJ1J/SuDwblHoYy5595pHyhPuW0fQVKz9pqQPfRLiN+6Z5aGxlXLL/jm+ZlJoNlVV4LVWanSKj
+	hy9omRQ==
+X-Google-Smtp-Source: AGHT+IHNnoSH+LJKc6L1xuZYAFnUOhlnqaRx2yzHzgCCWPjFmVxdahJT3uariE4SGmNSIj2Gs6T10wsSIiz3
+X-Received: from plbiz4.prod.google.com ([2002:a17:902:ef84:b0:223:34ac:396f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aaf:b0:21f:988d:5758
+ with SMTP id d9443c01a7336-22dbf63a198mr66131555ad.35.1745617221875; Fri, 25
+ Apr 2025 14:40:21 -0700 (PDT)
+Date: Fri, 25 Apr 2025 14:39:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <3344336.aeNJFYEL58@rjwysocki.net> <47159248.fMDQidcC6G@rjwysocki.net>
- <1c6b70d1-279c-4d9d-ae31-2751daed04f6@arm.com>
-In-Reply-To: <1c6b70d1-279c-4d9d-ae31-2751daed04f6@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 25 Apr 2025 23:39:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iFD3FddYTiOwSJ3uAz8mduh134WE2U8spfJtBs4At6Pw@mail.gmail.com>
-X-Gm-Features: ATxdqUF9mvv7igZMHI0jECB6e_wqgQfhBYsX95BGLNNQhV1xaEQdyY_JC5sdlMI
-Message-ID: <CAJZ5v0iFD3FddYTiOwSJ3uAz8mduh134WE2U8spfJtBs4At6Pw@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1 8/8] cpufreq: intel_pstate: EAS: Increase cost for
- CPUs using L3 cache
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, 
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <20250425214008.176100-1-irogers@google.com>
+Subject: [PATCH v3 00/10] Move uid filtering to BPF filters
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 11:32=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
->
-> On 4/16/25 19:12, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > On some hybrid platforms some efficient CPUs (E-cores) are not connecte=
-d
-> > to the L3 cache, but there are no other differences between them and th=
-e
-> > other E-cores that use L3.  In that case, it is generally more efficien=
-t
-> > to run "light" workloads on the E-cores that do not use L3 and allow al=
-l
-> > of the cores using L3, including P-cores, to go into idle states.
-> >
-> > For this reason, slightly increase the cost for all CPUs sharing the L3
-> > cache to make EAS prefer CPUs that do not use it to the other CPUs with
-> > the same perf-to-frequency scaling factor (if any).
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/cpufreq/intel_pstate.c |    8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > --- a/drivers/cpufreq/intel_pstate.c
-> > +++ b/drivers/cpufreq/intel_pstate.c
-> > @@ -979,6 +979,7 @@
-> >                          unsigned long *cost)
-> >  {
-> >       struct pstate_data *pstate =3D &all_cpu_data[dev->id]->pstate;
-> > +     struct cpu_cacheinfo *cacheinfo =3D get_cpu_cacheinfo(dev->id);
-> >
-> >       /*
-> >        * The smaller the perf-to-frequency scaling factor, the larger t=
-he IPC
-> > @@ -991,6 +992,13 @@
-> >        * of the same type in different "utilization bins" is different.
-> >        */
-> >       *cost =3D div_u64(100ULL * INTEL_PSTATE_CORE_SCALING, pstate->sca=
-ling) + freq;
-> > +     /*
-> > +      * Inrease the cost slightly for CPUs able to access L3 to avoid =
-litting
->
-> s/Inrease/Increase
-> and I guess s/litting/littering
->
-> > +      * it up too eagerly in case some other CPUs of the same type can=
-not
-> > +      * access it.
-> > +      */
-> > +     if (cacheinfo->num_levels >=3D 3)
+Rather than scanning /proc and skipping PIDs based on their UIDs, use
+BPF filters for uid filtering. The /proc scanning in thread_map is
+racy as the PID may exit before the perf_event_open causing perf to
+abort. BPF UID filters are more robust as they avoid the race. The
+/proc scanning also misses processes starting after the perf
+command. Add a helper for commands that support UID filtering and wire
+up. Remove the non-BPF UID filtering support given it doesn't work.
 
-This check actually doesn't work on Intel processors, I have a
-replacement patch for this one.
+v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
+    tmp.perf-tools-next.
 
-> > +             (*cost)++;
->
-> This makes cost(OPP1) of the SoC Tile e-core as expensive as cost(OPP0) o=
-f a
-> normal e-core.
+v2: Add a perf record uid test (Namhyung) and force setting
+    system-wide for perf trace and perf record (Namhyung). Ensure the
+    uid filter isn't set on tracepoint evsels.
 
-If "a normal Ecore" is one using L3, then yes.
+v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.com/
 
-> Is that the intended behaviour?
+Ian Rogers (10):
+  perf parse-events filter: Use evsel__find_pmu
+  perf target: Separate parse_uid into its own function
+  perf parse-events: Add parse_uid_filter helper
+  perf record: Switch user option to use BPF filter
+  perf tests record: Add basic uid filtering test
+  perf top: Switch user option to use BPF filter
+  perf trace: Switch user option to use BPF filter
+  perf bench evlist-open-close: Switch user option to use BPF filter
+  perf target: Remove uid from target
+  perf thread_map: Remove uid options
 
-Yes, it is.  I wanted the Ecores on L3 to appear somewhat more
-expensive, but not too much.
+ tools/perf/bench/evlist-open-close.c        | 36 ++++++++------
+ tools/perf/builtin-ftrace.c                 |  1 -
+ tools/perf/builtin-kvm.c                    |  2 -
+ tools/perf/builtin-record.c                 | 27 ++++++-----
+ tools/perf/builtin-stat.c                   |  4 +-
+ tools/perf/builtin-top.c                    | 22 +++++----
+ tools/perf/builtin-trace.c                  | 27 +++++++----
+ tools/perf/tests/backward-ring-buffer.c     |  1 -
+ tools/perf/tests/event-times.c              |  8 ++-
+ tools/perf/tests/keep-tracking.c            |  2 +-
+ tools/perf/tests/mmap-basic.c               |  2 +-
+ tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |  1 -
+ tools/perf/tests/openat-syscall.c           |  2 +-
+ tools/perf/tests/perf-record.c              |  1 -
+ tools/perf/tests/perf-time-to-tsc.c         |  2 +-
+ tools/perf/tests/shell/record.sh            | 26 ++++++++++
+ tools/perf/tests/switch-tracking.c          |  2 +-
+ tools/perf/tests/task-exit.c                |  1 -
+ tools/perf/tests/thread-map.c               |  2 +-
+ tools/perf/util/bpf-filter.c                |  2 +-
+ tools/perf/util/evlist.c                    |  3 +-
+ tools/perf/util/parse-events.c              | 33 ++++++++-----
+ tools/perf/util/parse-events.h              |  1 +
+ tools/perf/util/python.c                    | 10 ++--
+ tools/perf/util/target.c                    | 54 +++------------------
+ tools/perf/util/target.h                    | 15 ++----
+ tools/perf/util/thread_map.c                | 32 ++----------
+ tools/perf/util/thread_map.h                |  6 +--
+ tools/perf/util/top.c                       |  4 +-
+ tools/perf/util/top.h                       |  1 +
+ 31 files changed, 150 insertions(+), 182 deletions(-)
 
-It looks like *cost +=3D 2 would work better, though.
+-- 
+2.49.0.850.g28803427d3-goog
+
