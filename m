@@ -1,48 +1,48 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6D022068B;
-	Fri, 25 Apr 2025 20:23:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FFB22068B;
+	Fri, 25 Apr 2025 20:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745612635; cv=none; b=kg/vk3SL3nZfvQmSrjNXyjLP3sblcs+5QNDkE5LgYE0M06Leu0SmGfFtO5IsGSme7I0H63MinDcssjcj4ul5yJz9WYm5UZZWfKl5aBdIZZWVdK1Uai2dkZmLOcdJd86L1cylUhEZfsE3Hh2ymVVcBk9JGbVFGVHSQV/lqoyGm5s=
+	t=1745612688; cv=none; b=JWtdGj6gi4oyQALtU1TIVOS5IRPbWJJwMHgmXklTYnvCeu7xqaBSj3B6KjlJbr56iIUMnlgHbHvPYf3IjGgQM15dDPBqUnr8YhmmNfy5qdkIqpAHyKlfk/XBBYgzq8JqaKj+avhkqPqsU04CrUhIFdUtHkV4T0UEsnIl0LvLn88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745612635; c=relaxed/simple;
-	bh=fFcoNC3wwJ0Lu5h30CTNGVUIXvy6TKiZTNXR8Bhuzls=;
+	s=arc-20240116; t=1745612688; c=relaxed/simple;
+	bh=1XWxFj5nRr1x9vrMuHYbrtHZT6ZgbVTFoRVbQLvDzl4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=d8a4Na6sCC691goh0ULUQ3hweN0tcRFUjYoqfxjUkJjEsvU1K7v3f51V2qCceYPgIjCpau9gCFs6ZL4H5W9Hn7SDIzIfYlUj4gMgiq9RhdOf0hvPi+7cpM6O5MeOVjThErlbfyHW9QUtcbYBm41iANk/AjF2uBfjDBB8hBDGULc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QgoWR/5G; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=LADE6C+mLKOzGml7d6c3nHnKcGSRZqAWFa2Eukw04rz61z6m4gnmITWt3/6aZAg8heLh9S7fZkxwHZH4acHwKBAvB/tco7/i10r7X5xWEz18Sp2vwtVdgKJ7L6iQMP1o48GUHfnUpImtAPXfGxGtQZ+AiLo29ywPeVvCpjG+0Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e+CyW1H4; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QgoWR/5G"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e+CyW1H4"
 Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJuSZ024795;
-	Fri, 25 Apr 2025 20:23:03 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJuB1024750;
+	Fri, 25 Apr 2025 20:24:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/KDwDEpdnUNXRKrqruKzxT8foB1gE1Od/isNWuMdQt4=; b=QgoWR/5Gsg3wamjI
-	c5bhzpaYD4wbByWq7WwPw3I6Nd2Kk8MsXRZ7/CB4+Mix1peWzRUo/TV2KraFyx5t
-	gJ7C3wH4t3OPBJIsTzC2kUpfvlmlxqhI+/ElSbt7PdwW3D8BtUDdPgU5sHh8h1Sm
-	abafLHHf9O2zmRtXQZVz60qN1Mb6mcYxkKbenqBKqQ7Ht6ud4WIyOcdJVhKV0967
-	XO7l8fGCHnxtKeMHvIwS8QqtBp2kcbqjfECXb2FxzHuTFNscKr7YNaibbt3p64JI
-	oP4lXMoklvz6fKIjzENY6NihJPrZFbwBHnb14rTut3r4sHmnbo5zKvP/RISCWi5f
-	0jtFWA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0t35f-1
+	kcun9w3A1j/G1OzzsPcb3/mY7bDiEDLBGze6UIAGCZ0=; b=e+CyW1H4wfeZhM3O
+	N8ApVdvBP3jZC1FkvkUcBDaA2OMYxyf7GF0Az2iSWlJvtXLMEPH5HpqD6xEAvfUv
+	g1HnTJZaGLu6IpIHi31FXQJ6ap0s7xL/J3EPeMT43BKAmxbznUeGLUex5GCcgSNs
+	taI6v1/BnpKq9SR2UZ5AjbMKOnMIzoZIuFLQ4SWy6K0fWp14ssmIhOArMmyYRbZ4
+	A90fLkBpBbCUOBS05C70/meBy/OZfWdBLaa1X80IEkdLrl1v6Wcie1tmWssivRDY
+	2Q9K4Eh94p/6UXh7/uAcx+BFcn6BXRjr5Eirqya1zMofTa1dirOmgNKPwYQSH9iD
+	+PjKXg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0t389-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 20:23:03 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PKN2P8007707
+	Fri, 25 Apr 2025 20:24:37 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53PKOaJp003713
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Apr 2025 20:23:02 GMT
-Received: from [10.216.35.110] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 25 Apr 2025 20:24:36 GMT
+Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 25 Apr
- 2025 13:22:56 -0700
-Message-ID: <c95c2750-0431-42de-b881-d139d8697d0e@quicinc.com>
-Date: Sat, 26 Apr 2025 01:52:51 +0530
+ 2025 13:24:35 -0700
+Message-ID: <f1afcf58-2937-4ad4-b5ad-8935c3367190@quicinc.com>
+Date: Fri, 25 Apr 2025 13:24:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,36 +50,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1 3/3] scsi: ufs: qcom: Add support to disable UFS LPM
- Feature
-To: Rob Herring <robh@kernel.org>
-CC: <alim.akhtar@samsung.com>, <avri.altman@wdc.com>, <bvanassche@acm.org>,
-        <krzk+dt@kernel.org>, <mani@kernel.org>, <conor+dt@kernel.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <beanhuo@micron.com>, <peter.wang@mediatek.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250417124645.24456-1-quic_nitirawa@quicinc.com>
- <20250417124645.24456-4-quic_nitirawa@quicinc.com>
- <20250422124546.GB896279-robh@kernel.org>
- <06c6c892-c597-4d1f-9d28-52455d6471f9@quicinc.com>
- <20250423135617.GA227946-robh@kernel.org>
+Subject: Re: [PATCH 2/5] drm/msm/dpu: enable SmartDMA on SC8180X
+To: Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250308-dpu-rework-vig-masks-v1-0-f1b5d101ae0b@linaro.org>
+ <20250308-dpu-rework-vig-masks-v1-2-f1b5d101ae0b@linaro.org>
 Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <20250423135617.GA227946-robh@kernel.org>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250308-dpu-rework-vig-masks-v1-2-f1b5d101ae0b@linaro.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: pWmrqGJDax6wB5I_8t4HiPwV4eeTKIF6
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680bef27 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=JAHMj9Iui1wunJY2B10A:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: pWmrqGJDax6wB5I_8t4HiPwV4eeTKIF6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0NiBTYWx0ZWRfX23ofCbnAqL4N WQdHyWamX3ZiYeon8PkiwjHc7p62GDOXrDmyFU6hwKpsz9uCnae3ikSA0pRNYZlwj6lecF56wGV p+vk2HA9diGZ0hYldU3wsuzcQ5uHeaYT0HzepTX7DVdxnaw//UAhh0rWB9nadUTXD47GpkH/ZyX
- ecw6qWBG5gt4C8EWAc0v9o0aOs/PPQDcKcGAFM0jA/oN03QMPW1u7qy3ZDNsp7i4LNcrw7e28z7 pjIB1VYwQ4k+ArPnzZPaHQfr6nZbDv8ozSFgsBZ74jtYgie+IVDTnkxHcffApFccrz2BLjwWJTJ 12N5cTpcTpYAq1aOZMYOf2QMwH2qUvFg9aiATZamnS601DybHHDAyYD+dHMBVjjuRpfrUCp17rB
- jKrRVsZg7SG5Lq4Bf3nL/CsHNbLCI75rHLhq56cn/Rs9npL2g+2B7RhFZFImsVTrVkTGhMYt
+X-Proofpoint-ORIG-GUID: M5REsFV_lE3FfKzfgb6csjkq94wXydRw
+X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680bef85 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=SJCa53jPp-AOw9btYvwA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: M5REsFV_lE3FfKzfgb6csjkq94wXydRw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0NiBTYWx0ZWRfXxnXh3lYrrYuT SygwMhm5STjoyF5Sqb1zsYaFn8WnUmq6xaolKsgbc4ry5pR7Ccfn0wG1vrXMfuXdHADxvcV7yt/ YxNxxIcNiSSjSmzYj1Yz4jBpVOboyp04TXp9WljVKelPYTrE8m9yIeaxTEZLcWJYPjkhfj/0My9
+ zZN1PQgOEPxk+oCIaJyQozW0KBlEAkdlr1PVgcDhiz5Gbjbg/9YiX0w5kai+oYVnAXdsn36ZS5z eIjdg7qWhM6itC28yHwJVzN19rINH0BRcpJjw9Qrhet08acDdfCr3uYg5nOIzUPKDGsiiMfdEb8 0CGFHuyO1BJ2xShPtCkJkHPU/xLi6NJXcfzb/Y9WI1J7qda6pWKPK5SBGSgDZSFmXa0GCgnQGkz
+ C7/LBM2E//Irj+8Ow18Evk20RizOUAvtKY8IIZefeXV+IOd8sVn79N8aiC4LUl4RhezsbWz4
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
@@ -92,72 +90,96 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulksco
 
 
 
-On 4/23/2025 7:26 PM, Rob Herring wrote:
-> On Wed, Apr 23, 2025 at 01:14:27AM +0530, Nitin Rawat wrote:
->>
->>
->> On 4/22/2025 6:15 PM, Rob Herring wrote:
->>> On Thu, Apr 17, 2025 at 06:16:45PM +0530, Nitin Rawat wrote:
->>>> There are emulation FPGA platforms or other platforms where UFS low
->>>> power mode is either unsupported or power efficiency is not a critical
->>>> requirement.
->>>>
->>>> Disable all low power mode UFS feature based on the "disable-lpm" device
->>>> tree property parsed in platform driver.
->>>>
->>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>> ---
->>>>    drivers/ufs/host/ufs-qcom.c | 15 ++++++++-------
->>>>    1 file changed, 8 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
->>>> index 1b37449fbffc..1024edf36b68 100644
->>>> --- a/drivers/ufs/host/ufs-qcom.c
->>>> +++ b/drivers/ufs/host/ufs-qcom.c
->>>> @@ -1014,13 +1014,14 @@ static void ufs_qcom_set_host_caps(struct ufs_hba *hba)
->>>>
->>>>    static void ufs_qcom_set_caps(struct ufs_hba *hba)
->>>>    {
->>>> -	hba->caps |= UFSHCD_CAP_CLK_GATING | UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
->>>> -	hba->caps |= UFSHCD_CAP_CLK_SCALING | UFSHCD_CAP_WB_WITH_CLK_SCALING;
->>>> -	hba->caps |= UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
->>>> -	hba->caps |= UFSHCD_CAP_WB_EN;
->>>> -	hba->caps |= UFSHCD_CAP_AGGR_POWER_COLLAPSE;
->>>> -	hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
->>>> -
->>>> +	if (!hba->disable_lpm) {
->>>> +		hba->caps |= UFSHCD_CAP_CLK_GATING | UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
->>>> +		hba->caps |= UFSHCD_CAP_CLK_SCALING | UFSHCD_CAP_WB_WITH_CLK_SCALING;
->>>> +		hba->caps |= UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
->>>> +		hba->caps |= UFSHCD_CAP_WB_EN;
->>>> +		hba->caps |= UFSHCD_CAP_AGGR_POWER_COLLAPSE;
->>>> +		hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
->>>> +	}
->>>
->>> Doesn't RuntimePM already have userspace controls? And that's a Linux
->>> feature that shouldn't really be controlled by DT. I think this property
->>> should still to things defined by the UFS spec.
->>
->> Hi Rob,
->> Yes userspace has runtime PM control but by the time UFS driver probes
->> completes and userspace is up, there are chances runtime PM may get kicked
->> in.
+On 3/7/2025 9:38 PM, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> That sounds like a problem more than 1 device would have...
-
-Yes, Rob, since there's a possibility that runtime suspend might be 
-triggered for some devices before probe completes and userspace is up, 
-IMO it's better to disable the runtime PM capability during 
-initialization based on the device tree for specific FPGA platforms that 
-don't support LPM.
-
-What's your opinion on this?"
-
-Regards,
-Nitin
-
-
-
+> Reworking of the catalog dropped the SmartDMA feature bit on the SC8180X
+> platform. Renable SmartDMA support on this SoC.
 > 
-> Rob
+> Fixes: 460c410f02e4 ("drm/msm/dpu: duplicate sdm845 catalog entries")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+> index de8ccf589f1fe026ca0697d48f9533befda4659d..330490d10247e6347df71927ce601da1468f466e 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+> @@ -75,7 +75,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	{
+>   		.name = "sspp_0", .id = SSPP_VIG0,
+>   		.base = 0x4000, .len = 0x1f0,
+> -		.features = VIG_SDM845_MASK,
+> +		.features = VIG_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_vig_sblk_qseed3_1_4,
+>   		.xin_id = 0,
+>   		.type = SSPP_TYPE_VIG,
+> @@ -83,7 +83,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_1", .id = SSPP_VIG1,
+>   		.base = 0x6000, .len = 0x1f0,
+> -		.features = VIG_SDM845_MASK,
+> +		.features = VIG_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_vig_sblk_qseed3_1_4,
+>   		.xin_id = 4,
+>   		.type = SSPP_TYPE_VIG,
+> @@ -91,7 +91,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_2", .id = SSPP_VIG2,
+>   		.base = 0x8000, .len = 0x1f0,
+> -		.features = VIG_SDM845_MASK,
+> +		.features = VIG_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_vig_sblk_qseed3_1_4,
+>   		.xin_id = 8,
+>   		.type = SSPP_TYPE_VIG,
+> @@ -99,7 +99,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_3", .id = SSPP_VIG3,
+>   		.base = 0xa000, .len = 0x1f0,
+> -		.features = VIG_SDM845_MASK,
+> +		.features = VIG_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_vig_sblk_qseed3_1_4,
+>   		.xin_id = 12,
+>   		.type = SSPP_TYPE_VIG,
+> @@ -107,7 +107,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_8", .id = SSPP_DMA0,
+>   		.base = 0x24000, .len = 0x1f0,
+> -		.features = DMA_SDM845_MASK,
+> +		.features = DMA_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_dma_sblk,
+>   		.xin_id = 1,
+>   		.type = SSPP_TYPE_DMA,
+> @@ -115,7 +115,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_9", .id = SSPP_DMA1,
+>   		.base = 0x26000, .len = 0x1f0,
+> -		.features = DMA_SDM845_MASK,
+> +		.features = DMA_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_dma_sblk,
+>   		.xin_id = 5,
+>   		.type = SSPP_TYPE_DMA,
+> @@ -123,7 +123,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_10", .id = SSPP_DMA2,
+>   		.base = 0x28000, .len = 0x1f0,
+> -		.features = DMA_CURSOR_SDM845_MASK,
+> +		.features = DMA_CURSOR_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_dma_sblk,
+>   		.xin_id = 9,
+>   		.type = SSPP_TYPE_DMA,
+> @@ -131,7 +131,7 @@ static const struct dpu_sspp_cfg sc8180x_sspp[] = {
+>   	}, {
+>   		.name = "sspp_11", .id = SSPP_DMA3,
+>   		.base = 0x2a000, .len = 0x1f0,
+> -		.features = DMA_CURSOR_SDM845_MASK,
+> +		.features = DMA_CURSOR_SDM845_MASK_SDMA,
+>   		.sblk = &dpu_dma_sblk,
+>   		.xin_id = 13,
+>   		.type = SSPP_TYPE_DMA,
+> 
 
