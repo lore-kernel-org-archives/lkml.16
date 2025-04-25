@@ -1,132 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA5622156E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72250230BC2
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572668; cv=none; b=SM0Ks924eKlbZ+ytq6nvhg0IsTWrtHPjSLkPUxGef2ZVnOCx11Nt+8bb0H7GMLT7oEGCmmnTWCtesqgeLnBQ/EpTaieEBf+FZPeHIbNqXsvHvHwMgLRpcDjsIOtrlM/pguVenx/j3R1ChvDWJWiVNI/H/+SUd7TFqqYtiD8wa0Y=
+	t=1745572714; cv=none; b=WIq4Vj+0hOcp9BgekRYGR4aa2YF/xCYHdwxGUOxphS3kpIkQ5uZWcaNmhGwO/4cDS3zP4zbUp9P/N/u1fgJfhcLKAyjf20dN/i69+M5yLblHJqMYsqMhGQn/Gzu7Hi4JAptaNtDGGBCnQItQjwyyvNXetiljvcxenGXoLi/PJbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572668; c=relaxed/simple;
-	bh=Cgy/ew99CTAyh8TT8GWMGcHdWQLx7SIMZeGyXxuUhzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g+9Baok5phpIm1FtrevmhwausRENuppWcoujKuQYJ9ucDHeyM7w1OIvtGDdfZ3igJArY9KC2DaKEu4p/8Le+5nHSolt9Jq+OWB0cZoobr1xRZehT84O4VwDXfdf7Rq9DnAneVTrDlRuqVD36dULajRpT2Vp8nibryLQCiAB9hjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=muQgx57P; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745572714; c=relaxed/simple;
+	bh=S3Ck7vwc07MYkEysfARCrCCCX/V3182fdfUPmdNoVyo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dXkZCtLOLRz5v7K1tTAdXK3ihznye6yMSbKL/GMFV9hVrizCWfNln4yQYci7iTAMqYTthwyb2HBw8Yt4raukvsS3jE9nvyLuFLgAmapej03plkObC9LGuxLxVHgW5FRZifSnKBg8R1TNtMjXx3MeWD/s1umtHlOI6p+rs1Oru1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re; spf=pass smtp.mailfrom=mwa.re; dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b=U8jTMOCw; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="muQgx57P"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53P8T7MZ030818
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:17:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=WXe0NlKxDZrPju6112EiKpqV
-	yTfdsUulvcoDoYo4cFQ=; b=muQgx57P4ZWorYmED8WgvUdhFZUiUPW3sy+uF3p3
-	OGxNlsoyze28sRkhibP53thoMwaQZQaQCERfHqLKYWPdBxy5/M7lXAHBmvChA3II
-	mZMQuFQhIBWMsSDWRhs7lwAPUfy/9rwZtp7ImX1bLt+JQsZ9etmMoVsDHPuaJCdu
-	7vczfLWkRXhRPc303ABefG7k0w8mj7TMxDhumG+JmQDkOtbZpHVZIVYczdNfe8J9
-	xN6+cOkvpKOfHBv3v+Noo1QC8mKihj7XCpMu/rpEzERng9IqyBJFyqmEBHnPApYs
-	PZ8ZvpRuFKZDjGFeQvwpKt7HeAhRPWvdSCC9IKTEmWXMng==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5gfqu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:17:45 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c760637fe5so365514885a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:17:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="U8jTMOCw"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c14016868so1867027f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mwa.re; s=google; t=1745572711; x=1746177511; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=S3Ck7vwc07MYkEysfARCrCCCX/V3182fdfUPmdNoVyo=;
+        b=U8jTMOCw/kXdkFy9QKP8c2E8arPcg/MPEDhyD72nlo+pP4gvo1KYh+/upszNk6ytXE
+         ytg5S59bXBi1HH4xzLmideznPwLIBMcFQOaaD2vXYvyinQ3Du9NKEA/pngw10WZJOQ9S
+         hkyBke3+jC1/ITLyWU37G1TnNf1l9GeR9kPu6PuMFugGqUbdCZQwJCa+t+AdSuZmT9iY
+         /0w9ldfU7Bg5ejnUUKu875oaRjouxgqALMsPsu2ANy3dKX18NoTdPMJ4NLpKm0/cLlpx
+         WVW4ww4mQFwsk9QCKeEeLjRgbkBqlgN0jZ3LgusGLrvHRIoKkQHLTlCRm6WKb2AeFJ6E
+         gFRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745572664; x=1746177464;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXe0NlKxDZrPju6112EiKpqVyTfdsUulvcoDoYo4cFQ=;
-        b=ManH4WB8R8CD/4rsv2Y0CPXNY5REzolC6yBIfspYO58FuN8pn17N0fbVNDogME+WoN
-         LlSKqHW9CcusOgf1FT8CdIwZlldBFLRLFA6wUN6jbGDEAOLdrgXaBhvj58jMfnuO7LHp
-         6UBzFVim7zVOwhfgiRxrgps4hKER4jBduAUUhLzXrcP/OsgxbuMJCoEQ9WG5t+L4Cnjk
-         xM4mTe8K4UuuY1vqHvHLegwegXd101b48hW/oe3D052s3r7zvYu8/meusVp/Bh0J1+KS
-         mKFszIDcMs8IZa+y6OdieVj2Jr17QbRYvHe/ioLEYBXixl9TBqEiNpasLRVsFbXa4iBL
-         vKTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaj+csOLqYZWEkxylCHLO7+UKU48OmSucciB3uFrO4lgcC9Hf2P3RS6yqBOos/6eDROwUGHilOpou1l80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEvzm32sEa6Qj8nMFj/jy9tFnhwsWO8+rywTUWzZM1CM8f6AXe
-	4N0oFVKnwLXeeHlZybHTS/x1DswrKb5DINd5I53z8mMoWXn7UvRZgd0GFyIumYIFh5vr/kD9TGL
-	yoE8p7wz81aQfXhuBuOPpFWCAvLa7PizSPFUxNmCJ8SSbl1LhRnGAlLNjYVfqZJU=
-X-Gm-Gg: ASbGncu69FkEnvWrMkribLSmXoGPeQfPZQCOsHldaXlxdmMOXfismTA8o2F1I3XpkBQ
-	0/UBOFqFLHdrviEI9329/UINLxCF4iGaBMxUWKX26DxVlbD2g8KK8CHrf33BicXmIyFodIsrnFh
-	zvaux51kNsK019cTJHIT0jmTg4b4DxFneUay6ir4i5JjkC2EmOjR195n7FtK/kqL4TscpAxqzXj
-	EGvK83NqWL+p3aQBp/evXZsVzjmgbvPSnK0v66UWS+oaXqqprDXoHTfIw/CN9NLBgn5wX/sLo69
-	5SSbzlE8ymsRbm+FPJSwxrjlK9l/jwC3ZWfiR10+h+y8omyXV2RHyaGXy0R9QBzAuUsla81b3hw
-	=
-X-Received: by 2002:a05:620a:1b99:b0:7c5:4b91:6a41 with SMTP id af79cd13be357-7c9607880c8mr280227185a.42.1745572664420;
-        Fri, 25 Apr 2025 02:17:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZA3Q0DX1qcrcU6Q5IKBtyc3e5N50tRXbXJz2+iHVhL5w7s0njAeQLwBISLkAKAlk5TRfUGA==
-X-Received: by 2002:a05:620a:1b99:b0:7c5:4b91:6a41 with SMTP id af79cd13be357-7c9607880c8mr280223985a.42.1745572664115;
-        Fri, 25 Apr 2025 02:17:44 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b96d45sm6437751fa.94.2025.04.25.02.17.42
+        d=1e100.net; s=20230601; t=1745572711; x=1746177511;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S3Ck7vwc07MYkEysfARCrCCCX/V3182fdfUPmdNoVyo=;
+        b=Wq67g5I9nY0pwjje/BHiN8aCUgdoevWbmi+oSV95feTwwqDkJ/fQ0HtS0X3exHvxFq
+         esBuzsuroe2SfhTPNbw7V/ReXwNYsxzGPDg8T0wbWUTvzO+LLAmfoYn5M3/kNh9oZhsO
+         nkYnNCJ1D2bFJbkClYUwKT+imU0EBHwom0sIueXF8FEQQEgUpcCoOMK5GqaEnt/d8bZq
+         956+WPN3PST2C9Ck7sjcgWfWz5YeWpjitz9aZdDfUIrUtYtDasEx7yCOLf7yuFW5fbfw
+         t5TuxjKm1n76PJdHrOrbBdDbFtw9vp3GBceeRjrT599s7m0Gl+XHp4fbhCZrvtvyOv9f
+         a/Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIe6Lw/l3Xb32Huuz6SHOcCt7faxWjyQTsHyl6fiGzwzrKtQB/0/MHntrUMS1/nLTOOQNed9/380lmBVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPzMdhuNxDqPbrj4z9iQHD1NHLB778YnQ5NIpJXdsAJCCiYvB3
+	9INl5imkI0lR/H8BesZGcKzkv+/8Ic6OMO6OKBuGyWWlDMNgTGsS/NY5e+gb22klumrOHlTDvnn
+	jItE=
+X-Gm-Gg: ASbGnctL99khYbC/OcXri4H8qqJKyDkAyvDY6GxZHA/UlaYLMuvHBavtiSR6Tigt9b+
+	ZTXGLljMt0xnHFSLavlO3D9boYUB8h2r4yRfNnvS5hPdCpq13S9W+7/e776Y7L3mrcw+Pu/5qak
+	EuJVEQYzZD3RG1hcKwQl+2CgkVucpP0SoRvIxPNgi0eoctYDl9rJ8n1cfsklcIzKGcfCC7OnK3n
+	8jImcDReaWysrFmk0YZGmiIAUvEb0B0gEjnP0WsZbRhJnthgqeCuSmcK/qdtB9pkJf+wEwmNplR
+	WMpqsFEt8W348P4NEKiy5S6MfnPo7YKOZTxTFGUqkjTRjemgcTraksGweUaGJI9D9FW9z9LCS7Z
+	N
+X-Google-Smtp-Source: AGHT+IEy07M1Kka6h0pm1sIZsbtuaQoKm69f7gu2Qjmv8Z2/gVciyi0ynSFrOvtZvI9ezjUo9BawLA==
+X-Received: by 2002:adf:e28e:0:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-3a074e4261amr818270f8f.30.1745572710598;
+        Fri, 25 Apr 2025 02:18:30 -0700 (PDT)
+Received: from mw-ac-stu-3.corp.mwa.re (static-195-14-251-13.nc.de. [195.14.251.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c82fsm1714217f8f.85.2025.04.25.02.18.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:17:43 -0700 (PDT)
-Date: Fri, 25 Apr 2025 12:17:41 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up
- DisplayPort over USB-C
-Message-ID: <dfjrssqxny7wwcrhybbgx7fqvibvwxvkuba4sj7ufkadpfoqme@nwvcjyjrn4ze>
-References: <20250425-fp5-pmic-glink-dp-v3-0-cc9c2aeb42fb@fairphone.com>
- <20250425-fp5-pmic-glink-dp-v3-4-cc9c2aeb42fb@fairphone.com>
+        Fri, 25 Apr 2025 02:18:30 -0700 (PDT)
+Message-ID: <1f4d6de1f452021511301070e76695d1e56a14a1.camel@mwa.re>
+Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
+From: Antonios Salios <antonios@mwa.re>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, rcsekar@samsung.com, 
+	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@mwa.re,
+ jan@mwa.re,  Markus Schneider-Pargmann	 <msp@baylibre.com>
+Date: Fri, 25 Apr 2025 11:18:29 +0200
+In-Reply-To: <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
+References: <20250424125219.47345-2-antonios@mwa.re>
+	 <20250424-industrious-rottweiler-of-attack-e7ef77-mkl@pengutronix.de>
+	 <a5684bfe-981e-4ba3-bbea-d713b5b83160@wanadoo.fr>
+	 <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
+	 <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425-fp5-pmic-glink-dp-v3-4-cc9c2aeb42fb@fairphone.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA2NyBTYWx0ZWRfXz6dLMUdSbtXi XaL8+yMh/fDKM1u70mK9Hf0LKG9H/Lg4wPRwQXdleM2TeetJw+QlnKxdEAtsN/ibFLAv9lJr4rN gz1jryzdafiBaP3Tlx6+QT5qOYOyWZ0c1kM7gmmCNBlgJBKHdKxtp+0KB/eZDTYSUN0eV3zjflX
- ABtkpv2YWDD4BkzL8XwH0hMTIPhpHsoYQ0hFfz6XDmzPKFepik9vBKUhf3HLZ6UswefcaUIKkEz 2Qs3ldFDybrRhL/yyG/DvxEl0OpJOXjqd3gQkZlg5r2v+cBbgtvJivKzuIpkJmYHKpNzUj5v8Vj blO5y75lEgBPWgP0EG/0AcgrcPUHhnpUO1i/exJX1z5CRyXCWZstx4NVhsizCeaL7lID1jJP1jp
- RM/BFR+tdZVZNAs9cTC9V+dp0+5HFJ09rE92aFSAkIB6zIKw53/wjlYHjkoPSo983Lb9tUoS
-X-Proofpoint-GUID: vonWRrifW3xxu4UvA5ME4OSyzfOex7rS
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680b5339 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8 a=Df21-P5Y2jz7HsL4rSgA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-ORIG-GUID: vonWRrifW3xxu4UvA5ME4OSyzfOex7rS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=495
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250067
 
-On Fri, Apr 25, 2025 at 09:08:15AM +0200, Luca Weiss wrote:
-> Extend the USB graph to connect the OCP96011 switch, the PTN36502
-> redriver, the USB controllers and the MDSS, so that DisplayPort over
-> USB-C is working.
-> 
-> Connect some parts of the graph directly in the SoC dtsi since those
-> parts are wired up like this in the SoC directly.
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 54 ++++++++++++++++++++--
->  arch/arm64/boot/dts/qcom/sc7280.dtsi               |  9 +++-
->  2 files changed, 57 insertions(+), 6 deletions(-)
-> 
+On Fri, 2025-04-25 at 16:18 +0900, Vincent Mailhol wrote:
+> I guess this is because your kernel has CONFIG_DEBUG_SPINLOCK:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Indeed.
 
--- 
-With best wishes
-Dmitry
+> Without it, this would have been a more severe NULL pointer
+> dereference.
+
+Strangely, a NULL pointer dereference does not occur, when I try again
+with CONFIG_DEBUG_SPINLOCK disabled. The kernel does not crash, at
+least on rv64.
+
+Looking through the implementations of arch_spinlock_t, it seems that
+only PARISC's implementation would cause problems in this case since it
+uses an array.
+
+https://elixir.bootlin.com/linux/v6.15-rc3/source/arch/parisc/include/asm/s=
+pinlock_types.h#L11
+
+I think I'm missing something, why do you think a NULL pointer deref
+would occur in this case?
+
+
+Thanks for your feedback!
+
+--=20
+Antonios Salios
+Software Engineer
+
+MachineWare GmbH | www.machineware.de
+H=C3=BChnermarkt 19, 52062 Aachen, Germany
+Amtsgericht Aachen HRB25734
+
+Gesch=C3=A4ftsf=C3=BChrung
+Lukas J=C3=BCnger
+Dr.-Ing. Jan Henrik Weinstock
