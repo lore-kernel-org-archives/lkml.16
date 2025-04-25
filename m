@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A635025B690;
-	Fri, 25 Apr 2025 14:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567FB25C827;
+	Fri, 25 Apr 2025 14:56:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592975; cv=none; b=J4X+7xLC5xX0RlIXr1NC7mMof1MJsa6Oos0aE9MgAsZfLAL4nEJCmvxnnat39RI6RrEFopdU6Itm9SsMkyvJCh2PtcSa1N9H5PGV/iKBVd/y0o4pidoC+SlJ2tha7JDAaPT9rtKItx6ltpoYsC+6tPAOrlP5E/GRPDdpiWZ4+5Q=
+	t=1745592976; cv=none; b=TWzesnz0fCqKkg+MRKlhdgEU0ycY/HEWycSsUpc4QapBj33ZOPZavyiOuvQ03s7f1PwXfZBciW6dswuwi4XYMrISBvNehBIoBB7vPuNix1kRUkh+mYsq48igJIFrw4PVH1oTQv6BuR/y3IzRN/cONzrgxgumaclXhUXKcA1Whm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592975; c=relaxed/simple;
-	bh=ZUmhtdaJ3E0PnFMVgAGdGa/2OK5cIHz58Hb8kDM2KVU=;
+	s=arc-20240116; t=1745592976; c=relaxed/simple;
+	bh=jzN6CV2MqgOb/d1oFesv9PXnCLgcPzPLY+/5mDw+2uY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=dB9IdSNWKUfAEeb62/K0upYeM+Ln1PhWKGhVffiqRXPHQ+AZz5uttRkFLYwqfpPXBGBRW0BiqiTrm/ynrRTiwOnCvPUmvJnn0cs97Hki5+L3e2eGFmJdJI4ByJ0QLyXuwXWJo8GLhJKsNHYeVBzq4SI3NhwAI2ZITI9W1bQBfzg=
+	 Content-Type; b=cy3lsYgsgY2gSVFps3ptoXE6GRB1DV+UrTq3DeUdMLeh9IGvy5/hjUbXiqTiNcQoIrqdWyV95UmnfsPxmvBNAVjIg8EYdDjBHyshZJV4qHYPruLIG7JH4NT4e4oGYjMZ12dEufHTzdqn9dLC6Xt6shKdNCXzGwvjzMhfFpm/a8I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29A03C4CEE9;
-	Fri, 25 Apr 2025 14:56:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2779BC4CEE4;
+	Fri, 25 Apr 2025 14:56:16 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u8KVJ-0000000HSjq-0fK1;
-	Fri, 25 Apr 2025 10:58:13 -0400
-Message-ID: <20250425145813.007841132@goodmis.org>
+	id 1u8KVK-0000000HSnR-1TsK;
+	Fri, 25 Apr 2025 10:58:14 -0400
+Message-ID: <20250425145814.203285388@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 25 Apr 2025 10:54:30 -0400
+Date: Fri, 25 Apr 2025 10:54:37 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v6 08/18] unwind_user/deferred: Add unwind cache
+Subject: [PATCH v6 15/18] perf tools: Minimal CALLCHAIN_DEFERRED support
 References: <20250425145422.132820147@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -63,152 +63,224 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
 
-Cache the results of the unwind to ensure the unwind is only performed
-once, even when called by multiple tracers.
+Add a new event type for deferred callchains and a new callback for the
+struct perf_tool.  For now it doesn't actually handle the deferred
+callchains but it just marks the sample if it has the PERF_CONTEXT_
+USER_DEFFERED in the callchain array.
 
-The cache nr_entries gets cleared every time the task exits the kernel.
-When a stacktrace is requested, nr_entries gets set to the number of
-entries in the stacktrace. If another stacktrace is requested, if
-nr_entries is not zero, then it contains the same stacktrace that would be
-retrieved so it is not processed again and the entries is given to the
-caller.
+At least, perf report can dump the raw data with this change.  Actually
+this requires the next commit to enable attr.defer_callchain, but if you
+already have a data file, it'll show the following result.
 
-Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+  $ perf report -D
+  ...
+  0x5fe0@perf.data [0x40]: event: 22
+  .
+  . ... raw event: size 64 bytes
+  .  0000:  16 00 00 00 02 00 40 00 02 00 00 00 00 00 00 00  ......@.........
+  .  0010:  00 fe ff ff ff ff ff ff 4b d3 3f 25 45 7f 00 00  ........K.?%E...
+  .  0020:  21 03 00 00 21 03 00 00 43 02 12 ab 05 00 00 00  !...!...C.......
+  .  0030:  00 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00  ................
+
+  0 24344920643 0x5fe0 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 801/801: 0
+  ... FP chain: nr:2
+  .....  0: fffffffffffffe00
+  .....  1: 00007f45253fd34b
+  : unhandled!
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v5: https://lore.kernel.org/20250424162632.532889212@goodmis.org
+ tools/lib/perf/include/perf/event.h       |  7 +++++++
+ tools/perf/util/event.c                   |  1 +
+ tools/perf/util/evsel.c                   | 15 +++++++++++++++
+ tools/perf/util/machine.c                 |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  1 +
+ tools/perf/util/sample.h                  |  3 ++-
+ tools/perf/util/session.c                 | 17 +++++++++++++++++
+ tools/perf/util/tool.c                    |  1 +
+ tools/perf/util/tool.h                    |  3 ++-
+ 9 files changed, 47 insertions(+), 2 deletions(-)
 
-- Instead of clearing cache->nr_entries when entering from user, clear it
-  when exiting to user mode.
-
- include/linux/entry-common.h          |  2 ++
- include/linux/unwind_deferred.h       |  7 +++++++
- include/linux/unwind_deferred_types.h |  7 ++++++-
- kernel/unwind/deferred.c              | 27 ++++++++++++++++++++-------
- 4 files changed, 35 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-index fc61d0205c97..725ec0e87cdd 100644
---- a/include/linux/entry-common.h
-+++ b/include/linux/entry-common.h
-@@ -12,6 +12,7 @@
- #include <linux/resume_user_mode.h>
- #include <linux/tick.h>
- #include <linux/kmsan.h>
-+#include <linux/unwind_deferred.h>
- 
- #include <asm/entry-common.h>
- 
-@@ -361,6 +362,7 @@ static __always_inline void exit_to_user_mode(void)
- 	lockdep_hardirqs_on_prepare();
- 	instrumentation_end();
- 
-+	unwind_exit_to_user_mode();
- 	user_enter_irqoff();
- 	arch_exit_to_user_mode();
- 	lockdep_hardirqs_on(CALLER_ADDR0);
-diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
-index 5064ebe38c4f..c2d760e5e257 100644
---- a/include/linux/unwind_deferred.h
-+++ b/include/linux/unwind_deferred.h
-@@ -12,6 +12,11 @@ void unwind_task_free(struct task_struct *task);
- 
- int unwind_deferred_trace(struct unwind_stacktrace *trace);
- 
-+static __always_inline void unwind_exit_to_user_mode(void)
-+{
-+	current->unwind_info.cache.nr_entries = 0;
-+}
-+
- #else /* !CONFIG_UNWIND_USER */
- 
- static inline void unwind_task_init(struct task_struct *task) {}
-@@ -19,6 +24,8 @@ static inline void unwind_task_free(struct task_struct *task) {}
- 
- static inline int unwind_deferred_trace(struct unwind_stacktrace *trace) { return -ENOSYS; }
- 
-+static inline void unwind_exit_to_user_mode(void) {}
-+
- #endif /* !CONFIG_UNWIND_USER */
- 
- #endif /* _LINUX_UNWIND_USER_DEFERRED_H */
-diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-index aa32db574e43..b3b7389ee6eb 100644
---- a/include/linux/unwind_deferred_types.h
-+++ b/include/linux/unwind_deferred_types.h
-@@ -2,8 +2,13 @@
- #ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
- #define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
- 
--struct unwind_task_info {
-+struct unwind_cache {
- 	unsigned long		*entries;
-+	unsigned int		nr_entries;
-+};
-+
-+struct unwind_task_info {
-+	struct unwind_cache	cache;
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 37bb7771d914..f643a6a2b9fc 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -151,6 +151,12 @@ struct perf_record_switch {
+ 	__u32			 next_prev_tid;
  };
  
- #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
-diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index 6a4cec4877c5..99d4d9e049cd 100644
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -12,6 +12,7 @@
- int unwind_deferred_trace(struct unwind_stacktrace *trace)
- {
- 	struct unwind_task_info *info = &current->unwind_info;
-+	struct unwind_cache *cache = &info->cache;
- 
- 	/* Should always be called from faultable context */
- 	might_fault();
-@@ -20,17 +21,29 @@ int unwind_deferred_trace(struct unwind_stacktrace *trace)
- 	if (!current->mm)
- 		return -EINVAL;
- 
--       if (!info->entries) {
--               info->entries = kmalloc_array(UNWIND_MAX_ENTRIES, sizeof(long),
--                                             GFP_KERNEL);
--               if (!info->entries)
--		       return -ENOMEM;
-+	if (!cache->entries) {
-+		cache->entries = kmalloc_array(UNWIND_MAX_ENTRIES, sizeof(long),
-+					       GFP_KERNEL);
-+		if (!cache->entries)
-+			return -ENOMEM;
-+        }
++struct perf_record_callchain_deferred {
++	struct perf_event_header header;
++	__u64			 nr;
++	__u64			 ips[];
++};
 +
-+	trace->entries = cache->entries;
-+
-+	if (cache->nr_entries) {
-+               /*
-+                * The user stack has already been previously unwound in this
-+                * entry context.  Skip the unwind and use the cache.
-+                */
-+               trace->nr = cache->nr_entries;
-+               return 0;
-        }
+ struct perf_record_header_attr {
+ 	struct perf_event_header header;
+ 	struct perf_event_attr	 attr;
+@@ -494,6 +500,7 @@ union perf_event {
+ 	struct perf_record_read			read;
+ 	struct perf_record_throttle		throttle;
+ 	struct perf_record_sample		sample;
++	struct perf_record_callchain_deferred	callchain_deferred;
+ 	struct perf_record_bpf_event		bpf;
+ 	struct perf_record_ksymbol		ksymbol;
+ 	struct perf_record_text_poke_event	text_poke;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index c23b77f8f854..fec86519b7d4 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -58,6 +58,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_CGROUP]			= "CGROUP",
+ 	[PERF_RECORD_TEXT_POKE]			= "TEXT_POKE",
+ 	[PERF_RECORD_AUX_OUTPUT_HW_ID]		= "AUX_OUTPUT_HW_ID",
++	[PERF_RECORD_CALLCHAIN_DEFERRED]	= "CALLCHAIN_DEFERRED",
+ 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
+ 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3c030da2e477..b872236a2413 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2948,6 +2948,18 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+ 	data->vcpu = -1;
  
- 	trace->nr = 0;
--	trace->entries = info->entries;
- 	unwind_user(trace, UNWIND_MAX_ENTRIES);
- 
-+	cache->nr_entries = trace->nr;
++	if (event->header.type == PERF_RECORD_CALLCHAIN_DEFERRED) {
++		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
 +
- 	return 0;
++		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
++		if (data->callchain->nr > max_callchain_nr)
++			return -EFAULT;
++
++		if (evsel->core.attr.sample_id_all)
++			perf_evsel__parse_id_sample(evsel, event, data);
++		return 0;
++	}
++
+ 	if (event->header.type != PERF_RECORD_SAMPLE) {
+ 		if (!evsel->core.attr.sample_id_all)
+ 			return 0;
+@@ -3078,6 +3090,9 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 		if (data->callchain->nr > max_callchain_nr)
+ 			return -EFAULT;
+ 		sz = data->callchain->nr * sizeof(u64);
++		if (evsel->core.attr.defer_callchain && data->callchain->nr >= 1 &&
++		    data->callchain->ips[data->callchain->nr - 1] == PERF_CONTEXT_USER_DEFERRED)
++			data->deferred_callchain = true;
+ 		OVERFLOW_CHECK(array, sz, max_size);
+ 		array = (void *)array + sz;
+ 	}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2531b373f2cf..df76adce89ff 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2089,6 +2089,7 @@ static int add_callchain_ip(struct thread *thread,
+ 				*cpumode = PERF_RECORD_MISC_KERNEL;
+ 				break;
+ 			case PERF_CONTEXT_USER:
++			case PERF_CONTEXT_USER_DEFERRED:
+ 				*cpumode = PERF_RECORD_MISC_USER;
+ 				break;
+ 			default:
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 66b666d9ce64..abfd9b9a718c 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -343,6 +343,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(inherit_thread, p_unsigned);
+ 	PRINT_ATTRf(remove_on_exec, p_unsigned);
+ 	PRINT_ATTRf(sigtrap, p_unsigned);
++	PRINT_ATTRf(defer_callchain, p_unsigned);
+ 
+ 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index 0e96240052e9..9d6e2f14551c 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -108,7 +108,8 @@ struct perf_sample {
+ 		u16 p_stage_cyc;
+ 		u16 retire_lat;
+ 	};
+-	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
++	bool no_hw_idx;			/* No hw_idx collected in branch_stack */
++	bool deferred_callchain;	/* Has deferred user callchains */
+ 	char insn[MAX_INSN];
+ 	void *raw_data;
+ 	struct ip_callchain *callchain;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 60fb9997ea0d..30fb1d281be8 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -715,6 +715,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_CGROUP]		  = perf_event__cgroup_swap,
+ 	[PERF_RECORD_TEXT_POKE]		  = perf_event__text_poke_swap,
+ 	[PERF_RECORD_AUX_OUTPUT_HW_ID]	  = perf_event__all64_swap,
++	[PERF_RECORD_CALLCHAIN_DEFERRED]  = perf_event__all64_swap,
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+@@ -1118,6 +1119,19 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
+ 		sample_read__printf(sample, evsel->core.attr.read_format);
  }
  
-@@ -45,5 +58,5 @@ void unwind_task_free(struct task_struct *task)
++static void dump_deferred_callchain(struct evsel *evsel, union perf_event *event,
++				    struct perf_sample *sample)
++{
++	if (!dump_trace)
++		return;
++
++	printf("(IP, 0x%x): %d/%d: %#" PRIx64 "\n",
++	       event->header.misc, sample->pid, sample->tid, sample->ip);
++
++	if (evsel__has_callchain(evsel))
++		callchain__printf(evsel, sample);
++}
++
+ static void dump_read(struct evsel *evsel, union perf_event *event)
  {
- 	struct unwind_task_info *info = &task->unwind_info;
+ 	struct perf_record_read *read_event = &event->read;
+@@ -1348,6 +1362,9 @@ static int machines__deliver_event(struct machines *machines,
+ 		return tool->text_poke(tool, event, sample, machine);
+ 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
+ 		return tool->aux_output_hw_id(tool, event, sample, machine);
++	case PERF_RECORD_CALLCHAIN_DEFERRED:
++		dump_deferred_callchain(evsel, event, sample);
++		return tool->callchain_deferred(tool, event, sample, evsel, machine);
+ 	default:
+ 		++evlist->stats.nr_unknown_events;
+ 		return -1;
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 3b7f390f26eb..e78f16de912e 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -259,6 +259,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
+ 	tool->read = process_event_sample_stub;
+ 	tool->throttle = process_event_stub;
+ 	tool->unthrottle = process_event_stub;
++	tool->callchain_deferred = process_event_sample_stub;
+ 	tool->attr = process_event_synth_attr_stub;
+ 	tool->event_update = process_event_synth_event_update_stub;
+ 	tool->tracing_data = process_event_synth_tracing_data_stub;
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index db1c7642b0d1..9987bbde6d5e 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -42,7 +42,8 @@ enum show_feature_header {
  
--	kfree(info->entries);
-+	kfree(info->cache.entries);
- }
+ struct perf_tool {
+ 	event_sample	sample,
+-			read;
++			read,
++			callchain_deferred;
+ 	event_op	mmap,
+ 			mmap2,
+ 			comm,
 -- 
 2.47.2
 
