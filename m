@@ -1,115 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B1D296D04;
-	Fri, 25 Apr 2025 23:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B8D227BAD
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745622200; cv=none; b=pFtaoo46OpnLIALnTJ3A9XdMNLoErrfhmPEQGyu/0RV944i7rVQ7/wf6tVb8t6fomJZt4YPuI3WmqfMYkNTgZGNWB54vmQNShWQ646/qXe19GrdSUHP8rEZQkKB8oHyj+CdhLH8PT/yISf3WsdQC3T7xnUNTOxuaKIXZRhvg0Co=
+	t=1745622299; cv=none; b=Zczkkrf2heSk5db17JcXs9xWRFw8u+GYcsqF+eIgZTNqiGdd4o8IODSgx/R+oOqGU/VqevdTdnAFW0s+JQw1ePXeEYZhfy6kOIni12vI0AS6qfkBM1elOl1HrjfZkytHEycia/miJ/C+C7l2/0uUMC+sGRQa/JQyaMcT0AWJYDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745622200; c=relaxed/simple;
-	bh=HPDTCVI0kaASK1Ubw5yHoaNdg3VSMyENwPAPqkgC0f4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGB7hnr5C5RQD4/EGJTt5Qjk7RtPSbImVbjA2K+lC7F0tH/Ho8lOc5qUNzayomtOiCQvztCXlWeCZ4cbjoq86xwrv2lCn4wYmQCdcrOB+ZjCGmf9VIW+BaZAJ6vRMqI7b2Vj3E2vDCQ7JTCwJ8+hdsSXVpXdnTna8cKXhcc0CsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vr3vLE2q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745622299; c=relaxed/simple;
+	bh=jC7Vyid7HtzuDHocOQcW7XcF74WrMSPLkyU7pmcmv8o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=W8tUCar4NcHMgS2cQCCp3hSGgwDR/eIg1/0nEvJjfay1nASwNMXJ09dWhybjTlJjnubgIMkdTWmo1OVmfOvjD5FTF6B97ENQMwiCvnem0N+OoCnea1ZWckBQdvJH2twdJLAnCW6S0qvZ9eTHekVcx8EJrLW+oSgLDlq2JeLYC/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XNCo2KjS; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vr3vLE2q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3023C4CEE4;
-	Fri, 25 Apr 2025 23:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745622199;
-	bh=HPDTCVI0kaASK1Ubw5yHoaNdg3VSMyENwPAPqkgC0f4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vr3vLE2qnPJODv0tf3Z77FzuM2uGoCo443ocJY+vPMmlJzvh6vF6/2VHrbZmoXapK
-	 P3mmCYzQlpjFIvS4pvUlMFYT47FT6svjqSVvNUiqutFQ57avrXyGUVuW2SaU6nRb/P
-	 ZdMOsGr3/13JNJDYcSHw6eji+aQjahvQbodbqp2d2VP5x7aFPdKpxOQvzPvk4jZs4B
-	 GvFbNYz00NBIbUnXEuFZL7qzlMLM6NzfCfB8OTJlKH+7iEHnvX3dpCT4Dsi3I9rnJn
-	 hiXJT4S5ibqFYcd5RuWy1nIiZbiwbTBBH9VgSi+CP8MB8LUyv9etCQG+f39eYyk5f9
-	 E0OGorAST+WhQ==
-Date: Fri, 25 Apr 2025 16:03:16 -0700
-From: Kees Cook <kees@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, bpf@vger.kernel.org,
-	Tejun Heo <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
-Subject: Re: [RFC][PATCH 1/2] kthread: Add is_user_thread() and
- is_kernel_thread() helper functions
-Message-ID: <202504251601.5D29BF8F01@keescook>
-References: <20250425204120.639530125@goodmis.org>
- <20250425204313.616425861@goodmis.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XNCo2KjS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ut0e2XEgaxbZOv5cGCT4eAG2SutBsfimrhVe3RGjTWs=; b=XNCo2KjSFlFN/f343bsGvvMB90
+	0oHg0Zmu2TjtiuLa61nd4i68BUAUu9O1zgZ1tpXBd3hOxczWMXLZ8wos88k3tqZukoQzouV69gFb1
+	XtsO5yW5L70CbuvOPILQHY9HkI0JrNwP7jl34OG+7FyD6KRxYdKBKtxr23I6qYFegKFsw53DIOj1G
+	hOhcCoyynnwGZ95K+/PHaQ1eHZ3j9tsec88a/gayiXaHoQFtJbOoVorqfHDPB239CbTdKPG7lznVu
+	vmrxIefcSb3EyOlWuO/fSNzcFV5B2xokBMmBNF7Gf54n7ULMWc2HZdphJNeVkdYqdQHU5bdb83gHZ
+	k20QaiGw==;
+Received: from [172.31.31.140] (helo=u09cd745991455d.lumleys.internal)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u8S6A-0000000CADh-2CJH;
+	Fri, 25 Apr 2025 23:04:48 +0000
+Message-ID: <c15100fcf6781a60b852c4dbb43bdc98a678fcf0.camel@infradead.org>
+Subject: Re: [PATCH v4 7/7] mm/mm_init: Use for_each_valid_pfn() in
+ init_unavailable_range()
+From: David Woodhouse <dwmw2@infradead.org>
+To: David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "Sauerwein, David"
+ <dssauerw@amazon.de>, Anshuman Khandual <anshuman.khandual@arm.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Marc Zyngier <maz@kernel.org>,  Mark Rutland <mark.rutland@arm.com>, Mike
+ Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Ruihan Li <lrh2000@pku.edu.cn>
+Date: Sat, 26 Apr 2025 00:04:46 +0100
+In-Reply-To: <8fd728cf-bc54-433d-8701-234a67933a97@redhat.com>
+References: <20250423133821.789413-1-dwmw2@infradead.org>
+	 <20250423133821.789413-8-dwmw2@infradead.org>
+	 <cabc322e-d5ab-4371-a506-c7809717b38b@redhat.com>
+	 <91CA8854-2E86-4AF3-BAD0-8C47833F59D4@infradead.org>
+	 <8fd728cf-bc54-433d-8701-234a67933a97@redhat.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-T70qnRRoSmxW08sUwGY7"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425204313.616425861@goodmis.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Apr 25, 2025 at 04:41:21PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> In order to know if a task is a user thread or a kernel thread it is
-> recommended to test the task flags for PF_KTHREAD. The old way was to
-> check if the task mm pointer is NULL.
-> 
-> It is an easy mistake to not test the flag correctly, as:
-> 
-> 	if (!(task->flag & PF_KTHREAD))
-> 
-> Is not immediately obvious that it's testing for a user thread.
-> 
-> Add helper functions:
-> 
->   is_user_thread()
->   is_kernel_thread()
-> 
-> that can make seeing what is being tested for much more obvious:
-> 
-> 	if (is_user_thread(task))
-> 
-> Link: https://lore.kernel.org/all/20250425133416.63d3e3b8@gandalf.local.home/
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/sched.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index f96ac1982893..823f38b0fd3e 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1785,6 +1785,16 @@ static __always_inline bool is_percpu_thread(void)
->  #endif
->  }
->  
-> +static __always_inline bool is_user_thread(struct task_struct *task)
-> +{
-> +	return !(task->flags & PF_KTHREAD);
-> +}
-> +
-> +static __always_inline bool is_kernel_thread(struct task_struct *task)
-> +{
-> +	return task->flags & PF_KTHREAD;
 
-nit: maybe do explicit type conversion:
+--=-T70qnRRoSmxW08sUwGY7
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-	return !!(task->flags & PF_KTHREAD);
+On Fri, 2025-04-25 at 22:12 +0200, David Hildenbrand wrote:
+>=20
+> In any case, trying to figure out why Lorenzo ran into an issue ... if=
+=20
+> it's nit because of the pageblock, maybe something in for_each_valid_pfn=
+=20
+> with sparsemem is still shaky.
 
-but that's just a style issue, really.
+Yep, I think this was it:
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -2190,10 +2190,10 @@ static inline unsigned long next_valid_pfn(unsigned=
+ long pfn, unsigned long end_
+        /*
+         * Either every PFN within the section (or subsection for VMEMMAP) =
+is
+         * valid, or none of them are. So there's no point repeating the ch=
+eck
+-        * for every PFN; only call first_valid_pfn() the first time, and w=
+hen
+-        * crossing a (sub)section boundary (i.e. !(pfn & ~PFN_VALID_MASK))=
+.
++        * for every PFN; only call first_valid_pfn() again when crossing a
++        * (sub)section boundary (i.e. !(pfn & ~PAGE_{SUB,}SECTION_MASK)).
+         */
+-       if (pfn & (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
++       if (pfn & ~(IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
+                   PAGE_SUBSECTION_MASK : PAGE_SECTION_MASK))
+                return pfn;
+=20
+I've pushed the fixed version out to=20
+https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/for_eac=
+h_valid_pfn
 
-Thank you for not using current->mm -- KUnit, live patching, etc, all
-use current->mm but are kthreads. :)
 
--- 
-Kees Cook
+--=-T70qnRRoSmxW08sUwGY7
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQyNTIzMDQ0
+NlowLwYJKoZIhvcNAQkEMSIEID2+O2Ib6uI75tnS0RTDwB103/BGV/zTarkUZn987lHeMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAwDn9rkHVckXQ
+C9Y0xtGL+b8LPcZx7iNpWUsXztxgqjpxq3088LhLPfFCUwViYl4K04HBynF+tPQdJVJo93/kka39
+ioBGXF9UlH30MI+No2iLLDHcE3Rlx8Ew9OeeRWOXed9UbO/R8DPlLqMZufSynn2ncYn69q1QDrjK
+CwAVtaLG6GwswKW4ZEG1xpypWty0L1APjDCAL/KsxKhWjxNFYJDHZZVwYauPamLv+Yw8aTJ7tw8X
+YaqypiLwCiMQ5+GZnrRy+5nPAioJ3gY+ZD8dlV9rQtAQ2NmHE+agZL567BYx4FiqhEB/lquO+nQF
+zrHfP7m0/YZy8rxiyaOJWEkVfozAntSj7gmPtm8phLhr/0+5NxpsWt1blFF7+dFtKZX98DB1GIRt
+N7D3b7GUT/u0zXtbsphAotuHhLsjSB9Hh5rZ1enAnJ2XR+5fRJgZ8crgbaD5itZzMAn8/o4cTL7G
+TufKIZYc22N4OLwdnzGNXEm7NgRgYDp8immq8gUJkDcXjY/Ba2mr0al5OT9z8wIg4uLqpFO3T1eY
+/DCymHjoLJchTbk+PMk2xx9fhe/bHXwgtZXHVppFMUGoeX2CPe9JbPorVhv0TpYCIBf0OjpqkJHy
+oi2nMj4eApb78eCWac+4roE7/Yq478IClIfN/TYv0OmdXOSFvPySVlG2Zn4nJJkAAAAAAAA=
+
+
+--=-T70qnRRoSmxW08sUwGY7--
