@@ -1,118 +1,106 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6151DE2BF
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0309E23370F;
+	Fri, 25 Apr 2025 08:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745570110; cv=none; b=AZtujJKI4TnqtowanIpBI3YD+zy03LAL3MkgxxxjN+35p11dpXFT+zN77KYv12c2d2E6ATR11Iz/PbhIBdLguqLGFZk4ZwMEFumtHREh4oqSPFE0SqaRcSZfIRFGdIU0C+xJlNoEbLlvgt/G3j9qCTSmxnzZndUFpVyCUUJk5EA=
+	t=1745570140; cv=none; b=sQxseyBt0GeAbxMKe6mnLq9gpYl/LyEzjMdBSDGYEXWHl/7kfZ5u1N4qQDD7Zu3U1lWkoO6OWHPg9l9D4CFL67pnoT6nCDCSu4wU+NsIW3/ImUZAYPvRZ/cK74VWYvprUDNpnJUm5MWQZH46RHDy1pRApBZ2DHal7YGMaQmEORQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745570110; c=relaxed/simple;
-	bh=kTafQVInfgZE1CFO5s37dA0o4B8Xyn3K4GQ63U9KYqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rqcEU4DRiIYzhqk1x4/MRAxLXSgib2YN+5hPR5ly1Zf9mlY3lfksqgIA4mKsdsXV/7K36/Ci1+eKhFgCeODPGILaavx4Eq1/B49MdmyVlpHRRXXMO5go7vIdxObm88DOWIV/9Ttcz8sNhEitU+dFi2GUfurgywAkYY1vqe207cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OeRCwsOf; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745570140; c=relaxed/simple;
+	bh=0LtH58idrdHJS0ADA8Ea6eTsKCAoYlGOuXh/2yF2Ueo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rHPJUTEKPBd1iZPYDsEkzC6eNl9ItuygH8lI7lzy/IWmy0pUJHTE2qA7kTwdtJyoUoh0/orlyhutaJwc7Vm94SGiM8LTMfE+qXbm527TpRt11KYsM2g246UoCSQwqGSO/TQHEV7iF6sREAC4jQmPqsOUSUXSEqWLyMz46sua9ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=WmynG9wH; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OeRCwsOf"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so16959125e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745570107; x=1746174907; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+u8einId9BLaGDvz8um8Sc4lADMO7vEkfqq6FWkbjfA=;
-        b=OeRCwsOfDSlQTRL1GpyBFom8xW1oRHEF9dsYVOaXhCKZS6I0P+T2fhnlS0vjmhBBcl
-         /rEHOMJG1gvKFK9sP9BrVSXylOBI1HGlVDqmciGn4GCAP7BCLGV+4j//dc+djxePJc4H
-         ZB9f80C7wrb8onPlprPDZ2xZQl1e9pwmkvEJk30R0eicfCsWwIS1CpaondI5ELgY9Kln
-         GLC29osV4H66NyvXMRUD7avwXMf/bWk3dlinYwPtGBir2NK5SKPypgq03R52LigQS1N+
-         t3Ttgg1MicoODUGSaRRECt4XuMuC8eX3TXidox6aqOAiCrYf7KtDSo5AXvrtck+1g8h6
-         p1Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745570107; x=1746174907;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+u8einId9BLaGDvz8um8Sc4lADMO7vEkfqq6FWkbjfA=;
-        b=N8Tx9/rIVcRhTCBMSai+QuIeRQsn3FsYbU24MeT+YOSQp2nJyI8d96dpVSrbsxJmsS
-         AXRuBJK3U8kvCdSRqZLHxamHS8EQWVOc3IZ75Ihnkii7b1LMB4W8vojO2LiOoie53a5x
-         1MojlBmKcxpL8/Wnx35vP4h7lzvqK768VeXAqkOj+674jOxNWeORooNL/NEjsmfr+t8j
-         Xr6q/CpWlqaYf/m13LAy2594xSTufrkD92xA/f4B7mkgsWxUEhxescitKe1wZHLTLI0Z
-         NaLiKfp4XSAjaVJba09YHJsvpkjlDT+086MvxGRXLPw/nXGEMZFKJWzooGJMNDsmJKvD
-         mO6w==
-X-Forwarded-Encrypted: i=1; AJvYcCV5nrtKtY2d9WTNJHGbv2w3dcWJI7Hl5eD7LJ4lVxK2hXdrFtwSDuwjal+aYv0gxJfECi6SrqgvWY6V3Fw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3OqSfJVHPHgxxQu4uRSL9Mw+y4nEBQK1DlCL5v2WLTMiPOy8U
-	XK0alJ1ykwoitAMrHE9uIQQVnptLWBIEh0B6hsTcAY0ecvVbY6HDDC2fvBXp4ow=
-X-Gm-Gg: ASbGncs7cCdlpdFkiKGS3KPbnC+BdVYfr2pls5d0a0WLz/vVbvKWQpugxObB7GdzFLt
-	HYMlOgkgbHuyGxQjnFTo7HJqhreBGs7G8VRdX5yWMzKsgKydFea50++wsiouArsCRnwzDO61NJe
-	TZgGutdvacYcrodxDqasGZhew/fARHUrHYvRpteB5u7VEiwEYHf/UCJCNWsvd/ScdjCDzNM1jL2
-	dYlBoqOZwp8lm23GcdTCzQsdACktVghJIJS81TCmsc/+VPMarxlsSt0lKfk9bJLw0UOhdWWZCN/
-	GduDRzc9FiuIu2dklsiLTADMTWRnCSu+OwJeCX4RYW4MQ2v37BvIYMeulm9uzzkFjOWLRsdXwYs
-	PfZZTcA==
-X-Google-Smtp-Source: AGHT+IHbMaG/UpKmNGf2vUTKm7E0YA1Q3uH84FrSyUdv5AM2rW1f4hc1ymcUcyPYeZk5iuLyxezoog==
-X-Received: by 2002:a05:600c:510e:b0:43c:f8fc:f687 with SMTP id 5b1f17b1804b1-440a66b034amr9285185e9.27.1745570106663;
-        Fri, 25 Apr 2025 01:35:06 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2e0241sm49396355e9.37.2025.04.25.01.35.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 01:35:06 -0700 (PDT)
-Message-ID: <2dd28ebe-f69c-49c3-90c2-aedc0484a00e@linaro.org>
-Date: Fri, 25 Apr 2025 09:35:05 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WmynG9wH"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53P8Yg5V2390085
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Fri, 25 Apr 2025 01:35:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53P8Yg5V2390085
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745570103;
+	bh=HGw2nFQL5aKA5RzIm7/QSoWKBl/SarOifRVAMhDF5jc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WmynG9wHeRjV+Q3G3LyDwa0t8H2xdLhYQhh0ra6oIC+UKd/vIlwdgrqzDjKdCDec2
+	 PnojmoRouq3yIpIiGFGVI2h14sephA3L4z+tUh7+efsj9OhPET2PQZgkHJyaQryO1J
+	 HjXROz4i7dHc2FLIHeagMur/3NIya3J9of0PiuZl2K+1kbxBdagDgSqYF6kqkg7o13
+	 4Xt2UVPF8/kCortRdwMgreH8vjS20RTFSJPYmFHCcndr+PULwc5WvqeeXBnSMpd0Jj
+	 t76O0a/CmAPYaGzPF5p6HEpyekAJYxcBemmDnxV7IEH/jHg/7MdFfLjWdILBqGNFxn
+	 IJwSKbRyX0DGw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        dapeng1.mi@linux.intel.com
+Subject: [PATCH v3 07/14] x86/msr: Add the native_rdmsrq() helper
+Date: Fri, 25 Apr 2025 01:34:30 -0700
+Message-ID: <20250425083442.2390017-8-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425083442.2390017-1-xin@zytor.com>
+References: <20250425083442.2390017-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/5] dt-bindings: media: Add qcom,x1e80100-camss
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-References: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org>
- <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-2-edcb2cfc3122@linaro.org>
- <3ec3fd62-bf21-47e7-873c-ce151589d743@linaro.org>
- <54eeb470-cd90-4bc2-b415-6dea1ce2321d@linaro.org>
- <0ab31397-580f-4e5a-b9ad-d9bf79d29106@linaro.org>
- <36feffed-4558-4e59-97db-2f0e916dbfc7@linaro.org>
- <krofzevprczeuptn6yfj4n656qsw52s52c7cgiwotidxmi2xo6@d3q5bb5zbccc>
- <f05cba73-6d8b-4b7b-9ebe-366fcd92a079@linaro.org>
- <lwv5pk3dtyyxgtrwxss43dyecesv7pvrzvgwacwrnztkiowfkp@jqosvhrs3jk5>
- <42b56d7d-26cc-4c10-aca2-a0a5a16b09f6@linaro.org>
- <3kprgpvzffupnjbh2aodsowwklliywpemzwpsftd2cng562yuw@37tpwmpemr2c>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <3kprgpvzffupnjbh2aodsowwklliywpemzwpsftd2cng562yuw@37tpwmpemr2c>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25/04/2025 09:26, Dmitry Baryshkov wrote:
-> What should driver do if:
-> 
-> vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- individual supply in PCB
-> vdd-csiphy1-1p2-supply = <&vreg_1p2_ex1>; <- individual supply in PCB
-> 
-> vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
-> vdd-csiphy1-0p8-supply = <&vreg_0p9_ex1>; <- should be shared pin
-> 
-> I don't want to allow DT authors to make this kind of mistake.
+__rdmsr() is the lowest-level primitive MSR read API, implemented in
+assembly code and returning an MSR value in a u64 integer, on top of
+which a convenience wrapper native_rdmsr() is defined to return an MSR
+value in two u32 integers.  For some reason, native_rdmsrq() is not
+defined and __rdmsr() is directly used when it needs to return an MSR
+value in a u64 integer.
 
-I require anybody submitting patches to show how they tested this.
+Add the native_rdmsrq() helper, which is simply an alias of __rdmsr(),
+to make native_rdmsr() and native_rdmsrq() a pair of MSR read APIs.
 
-So you'd have to lie about testing it for a mistake like that to get 
-through.
-
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 ---
-bod
+
+Change in v2:
+* Split into two changes and add the native_rdmsrl() helper in the
+  first one with a proper explanation (Ingo).
+---
+ arch/x86/include/asm/msr.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index 82a908125b20..7b9713a49d59 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -107,6 +107,11 @@ do {							\
+ 	(void)((val2) = (u32)(__val >> 32));		\
+ } while (0)
+ 
++static __always_inline u64 native_rdmsrq(u32 msr)
++{
++	return __rdmsr(msr);
++}
++
+ #define native_wrmsr(msr, low, high)			\
+ 	__wrmsr(msr, low, high)
+ 
+-- 
+2.49.0
+
