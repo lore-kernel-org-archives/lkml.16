@@ -1,96 +1,160 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0106123816E
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49474220689;
+	Fri, 25 Apr 2025 09:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573460; cv=none; b=MS+NkJDZaVTJ1SmFRLVm7aKSk4X9rztU+FEl7cV78h0ym40MOCgtLNzwvrUaixzi9V4l8Bn7zGwNT+M/gdhx28oM4vDNZyaWpPzxz/3OTtIwpSZ1+j0ZN+0/19B0S8uW0EFqUnoMBpxkDQ5GpiGDIYi6Yv4EKVPyCs0vBbuk0UU=
+	t=1745573565; cv=none; b=CQ8dicW9RufwyqiNEIvuCCNJ8+St6itt8MILTFdKhfNem0ecS+hOl5EpAY6TjyvfXDPrmWVQc4RB5uLZmscvYK9P4th39zoUX380WK1F6Y0zXBsb71M91YuWm31Yb5sIBp+gNDHTw0sd5NVd/OeHZ1hEgCMLOcfiLsm9VKzNaew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573460; c=relaxed/simple;
-	bh=9qmt6GotGtFpPUj43Q5GmrTRbixA9WR9tVJV9/RDqpk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=da5q56loQPIYWyIqiTMgBbpRZDzKumlKRKwiHX4GQzqWDfdAvNVPQxPYVzvXC9eWbs+PYOFoKj6I911T0xkeIRVAfa9Z9xFT/HvajO9w1zWMVYOflSI1IzZcKwEWMOSMFYB9enjmYtzKkyJJgfzumMV1OhCL8Er/xz+2sK07S9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G4ZB65Pe; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1745573565; c=relaxed/simple;
+	bh=QnqXI6E8oWla77iLCWtnfxkuAOtKRxBqoaWYgXRSgGg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T+dOfrV2CtFL65IXR0WKq8qTBG4vOSejxwmzqbHa/Nca9USDlstBLiLThETZ2I+XSJigtVKutwVGmnv6dKbO90DbhRyfKqZcm5DXtsyS0nOLIkJmHkLeA9UYinLSwUfV5zEQ2iXIgOy+ukDLD15Nkt04mtRm9Jbo6DjCyQBW+0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=FyJiYuLV; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G4ZB65Pe"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d08915f61so10347045e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745573457; x=1746178257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9qmt6GotGtFpPUj43Q5GmrTRbixA9WR9tVJV9/RDqpk=;
-        b=G4ZB65PepfYPVUKTgDSyDgQMJ+g4YGHnftPlwhGAh8bd4ZUeUSO6m1DJh39QhtxZY5
-         njU+igAcDfWEJ/jobGwK2hHOtOG6iczWDSHNIifoYb4bsoxzh/BK682QrDDuS9U7tRZ3
-         hZJ5rgA+hL0nDrK1/RJdP8WO6f+qYaa7Ke1W90g8JMZZzFI5gKY2e8qrPHEUenjiD1s1
-         61guFE6xNVoLlEfLvqj7ogQBounA1uAytotQrAn9URR6P9M7qO2p7jMiVddjO7B8X97w
-         sHUSYpg5mwszy+DUl/Melmz+AhGHQIzkHLYo7azyjNyvWl3yj3aOjZIv2uZL3v3K4TA5
-         25Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573457; x=1746178257;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9qmt6GotGtFpPUj43Q5GmrTRbixA9WR9tVJV9/RDqpk=;
-        b=W7Lye0xMJbYLnmfDMT40qBL6fK569pQhRw73Y/1iGM57QZv0HntBWujN3PQV4Pe3ny
-         Y4DWDbXGi3EGOPAkXQB4KsP7lB+1FvPyhlIE2gou8L0/MeAJF7aKhoMDU516VUen4lL0
-         juvOFZSkwW9ggLLwN2sJaEEw8KOBAa3I8soO7fznil7AnoDBkcp1+s5LseHE+DeSrVge
-         jclw2KNhweMp5YT8t7Vt7h0ueXNQg0Mc+oEXTdHhOEkqg0+WSEbYpgMJHsNsjCCXu/ly
-         McyDAxZXEz1sLiSk5sH1SHFXDiF7fIlSIwRE2tBQZVlpc0VVhrf/gqJXxRVteQd30FKU
-         YQVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkFLfmYVvnTqUpkrUkTMMT3QKCtLHpDQMhr/WCWE7H63jlTclBecD9QSFhfoEk6cJfY8aRJD2cvwInCXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc1wvduDk5ebjCB+U4dd83F/MvSoeQh5rQgKzIEBYZfohe7ndf
-	hejITlpFSOUqLQA+cltvjyjT84ooStfe5vkaWFj1dYCL+jfmy5JNgXnoHfe2PSZxHFjk93cNknL
-	IimgcmdkCFOjSng==
-X-Google-Smtp-Source: AGHT+IGlhetKP7RZkN9IbOK83mTWI2fUL6K0Iol1JDx9CasoRoJrbMiASrCXxGML1ttYmKpDCNVZuZi/O0aH9ro=
-X-Received: from wmrs3.prod.google.com ([2002:a05:600c:3843:b0:43b:c914:a2d9])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3b0d:b0:43c:fa3f:8e5d with SMTP id 5b1f17b1804b1-440a65b6fdamr13947755e9.2.1745573457455;
- Fri, 25 Apr 2025 02:30:57 -0700 (PDT)
-Date: Fri, 25 Apr 2025 09:30:55 +0000
-In-Reply-To: <CAJ-ks9=wr84zoxsyncOu==BQUS+Y7Lc8CUgfgKwuJc9imu87rg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FyJiYuLV"
+X-UUID: 3ace472021b811f0980a8d1746092496-20250425
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=1isuPnnh+n7BvdRO35OseXymAaGWQ+x7QDQT/vTVVrk=;
+	b=FyJiYuLV+vAxSJRzmePdrw/mnnuoAWOgQtLTowG+p/B4SquCgw/oM3cjwam+/kk4LmK5k3aS0ppVGvkUNGOYrvDHYbsxa0k9CjuBzvt2qPcUzNwqtSRXif18orYEjawu03yIklA6jUUh4DYxmOR2Q//O62745kck3Vlwfw/nGvo=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:9291bca6-52c2-4ce2-a8b8-f2efa643b83c,IP:0,UR
+	L:0,TC:0,Content:29,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:29
+X-CID-META: VersionHash:0ef645f,CLOUDID:c3990a07-829c-41bc-b3dd-83387f72f90e,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:3|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 3ace472021b811f0980a8d1746092496-20250425
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1200385806; Fri, 25 Apr 2025 17:32:39 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 25 Apr 2025 17:32:38 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 25 Apr 2025 17:32:38 +0800
+From: Jason-JH Lin <jason-jh.lin@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>
+CC: Matthias Brugger <matthias.bgg@gmail.com>, Jason-JH Lin
+	<jason-jh.lin@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
+	<singo.chang@mediatek.com>, Paul-PL Chen <pual-pl.chen@mediatek.com>, Moudy
+ Ho <moudy.ho@mediatek.com>, Xavier Chang <xavier.chang@mediatek.com>,
+	Xiandong Wang <xiandong.wang@mediatek.com>, Sirius Wang
+	<sirius.wang@mediatek.com>, Fei Shao <fshao@chromium.org>, Chen-yu Tsai
+	<wenst@chromium.org>, <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>
+Subject: [PATCH v5 03/19] mailbox: mtk-cmdq: Add cmdq private data to cmdq_pkt for generating instruction
+Date: Fri, 25 Apr 2025 17:28:35 +0800
+Message-ID: <20250425093237.1543918-4-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250425093237.1543918-1-jason-jh.lin@mediatek.com>
+References: <20250425093237.1543918-1-jason-jh.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
- <20250422-vec-methods-v3-5-deff5eea568a@google.com> <5fb8bfb7-961a-442a-b091-0349c8aa5ddc@kernel.org>
- <aAokixHVo5YjazmL@google.com> <CAJ-ks9=wr84zoxsyncOu==BQUS+Y7Lc8CUgfgKwuJc9imu87rg@mail.gmail.com>
-Message-ID: <aAtWTzUjIZ1F6aI1@google.com>
-Subject: Re: [PATCH v3 5/7] rust: alloc: add Vec::retain
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Thu, Apr 24, 2025 at 09:49:18AM -0400, Tamir Duberstein wrote:
-> On Thu, Apr 24, 2025 at 7:46=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
- wrote:
-> >
-> > On Wed, Apr 23, 2025 at 02:14:11PM +0200, Danilo Krummrich wrote:
-> > > On 4/22/25 11:52 AM, Alice Ryhl wrote:
-> > > > Unfortunately this can't be a kunit test because it uses the upstre=
-am
-> > > > Rust implementation of Vec::retain as a comparison, which we can't =
-call
-> > > > from a kunit test.
-> > >
-> > > Would it work from the rusttest target? We can use our kernel Vec typ=
-e from
-> > > there, but I don't remember if we still can use std Vec from there.
-> >
-> > My guess is no, but I don't know for sure.
->=20
-> Isn't it possible to write a test without needing std's implementation?
+Add the cmdq_mbox_priv structure to store the private data of GCE,
+such as the shift bits of the physical address. Then, include the
+cmdq_mbox_priv structure within the cmdq_pkt structure.
 
-I could probably come up with a different test.
+This allows CMDQ users to utilize the private data in cmdq_pkt to
+generate GCE instructions when needed. Additionally, having
+cmdq_mbox_priv makes it easier to expand and reference other GCE
+private data in the future.
 
-Alice
+Add cmdq_get_mbox_priv() for CMDQ users to get all the private data
+into the cmdq_mbox_priv of the cmdq_pkt.
+
+Fixes: 0858fde496f8 ("mailbox: cmdq: variablize address shift in platform")
+Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
+---
+ drivers/mailbox/mtk-cmdq-mailbox.c       |  6 +++---
+ include/linux/mailbox/mtk-cmdq-mailbox.h | 18 ++++++++++++------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index a3d94f1eb1a3..b18808855680 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -102,13 +102,13 @@ static inline dma_addr_t cmdq_reg_revert_addr(u32 addr, const struct gce_plat *p
+ 	return ((dma_addr_t)addr << pdata->shift);
+ }
+ 
+-u8 cmdq_get_shift_pa(struct mbox_chan *chan)
++void cmdq_get_mbox_priv(struct mbox_chan *chan, struct cmdq_mbox_priv *priv)
+ {
+ 	struct cmdq *cmdq = container_of(chan->mbox, struct cmdq, mbox);
+ 
+-	return cmdq->pdata->shift;
++	priv->shift_pa = cmdq->pdata->shift;
+ }
+-EXPORT_SYMBOL(cmdq_get_shift_pa);
++EXPORT_SYMBOL(cmdq_get_mbox_priv);
+ 
+ static void cmdq_gctl_value_toggle(struct cmdq *cmdq, bool ddr_enable)
+ {
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index e1555e06e7e5..822958f92135 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -70,23 +70,29 @@ struct cmdq_cb_data {
+ 	struct cmdq_pkt		*pkt;
+ };
+ 
++struct cmdq_mbox_priv {
++	u8 shift_pa;
++};
++
+ struct cmdq_pkt {
+ 	void			*va_base;
+ 	dma_addr_t		pa_base;
+ 	size_t			cmd_buf_size; /* command occupied size */
+ 	size_t			buf_size; /* real buffer size */
++	struct cmdq_mbox_priv	priv; /* for generating instruction */
+ };
+ 
+ /**
+- * cmdq_get_shift_pa() - get the shift bits of physical address
++ * cmdq_get_mbox_priv() - get the private data of mailbox channel
+  * @chan: mailbox channel
++ * @priv: pointer to store the private data of mailbox channel
+  *
+- * GCE can only fetch the command buffer address from a 32-bit register.
+- * Some SOCs support more than 32-bit command buffer address for GCE, which
+- * requires some shift bits to make the address fit into the 32-bit register.
++ * While generating the GCE instruction to command buffer, the private data
++ * of GCE hardware may need to be referenced, such as the shift bits of
++ * physical address.
+  *
+- * Return: the shift bits of physical address
++ * This function should be called before generating the GCE instruction.
+  */
+-u8 cmdq_get_shift_pa(struct mbox_chan *chan);
++void cmdq_get_mbox_priv(struct mbox_chan *chan, struct cmdq_mbox_priv *priv);
+ 
+ #endif /* __MTK_CMDQ_MAILBOX_H__ */
+-- 
+2.43.0
+
