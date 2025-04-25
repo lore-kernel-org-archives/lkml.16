@@ -1,89 +1,93 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D952686B3;
-	Fri, 25 Apr 2025 22:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0ECC2147F6;
+	Fri, 25 Apr 2025 22:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745621152; cv=none; b=Jk0pRBqaOZU9Vbh0P9dO0CxVobBF/FVySVOCjO6yp5mEvo4wZfE/U247wld/VA75P9AA5qaJM8oXo04e/2Bfy9n4IVLVciHZlYp1ASdBnFrap1Fz50saTfV8BGsFOZq3uBHUE+NynCVN3Geu3Mn6AV1W0ROdcy46CLUHdq5UuZo=
+	t=1745621201; cv=none; b=emlpcpKNf+g6Vfv1utWcD5fSRS5muALsq5jVYOvgr9iqg2A4AzaXI5OaW8Cx2WS/oPyPw78MgBQFcT9PYT8RJnHe/XhdcUDy5cGpSFPcTmiV/y/MD16i6vZdezX1t9ow0o7odV9Spucd/I10Z/pZB6zN5+SNSbJtSF8L7N4Do8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745621152; c=relaxed/simple;
-	bh=kTr1BhN2Z4QFV4684nITve89LJWX0iF9IQ3PEiuD0mI=;
+	s=arc-20240116; t=1745621201; c=relaxed/simple;
+	bh=mqrro+vxZhjTZLSg80tSis2wub+LIUloe3g0FjU34k8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OzBL+hxz+/XSbGPXiBPUGdfjMf/TodLagcQo0euTZNwWeo0VdALrRe6VzCXj2exC9wRVBHg896GlA1Y4Kqmr4RYVqEEl1cfwF0prk/qNiiLBO5NCmW4hsRsDj3AxulQo1GjChGopxsm3uj533mieqDcZb1C13Jo3l0aIzJdXiyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQlm0yAX; arc=none smtp.client-ip=209.85.160.173
+	 MIME-Version:Content-Type; b=VEexe7Q8YECS6GLcbxfWZHp0nwGlwyN5xcqj0FJc1qexSXg8TW+i5eEB3whjj6WAeJZYdlDQwVBZvoU8pPRQJ1yMgtmGl6+HkjWFT9qnA9Qy8Gx1NN8ZqdmgHCV3pcFWVOc+ZNWu2fKTKySnBYfU90hcBzy+pfie5IQ4ylBJIoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c1TYpNMA; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQlm0yAX"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4774ce422easo32498361cf.1;
-        Fri, 25 Apr 2025 15:45:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1TYpNMA"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47690a4ec97so32416131cf.2;
+        Fri, 25 Apr 2025 15:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745621149; x=1746225949; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745621199; x=1746225999; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wpxvPODl8XU4Mrgb+cq2MoZhp3SQCnv4izTBeRkVjNw=;
-        b=nQlm0yAXPxjcofTUKdDJU4edE6bKBMB+/Lan5JoegVjSEf886L1zYYx+2uE+76N8RU
-         IsZFAqbWQk5jh+W/qv1HEfgfyEykVQzSB0ncdKtKpB58EHrN5CF++ohE1OGWDh6FSsQS
-         uRLXEjT+i5QIInhaR5e/6OzLer3t1DsRQZ76E53BbNzfZ58XhjHD8zu+vxWU2Jc5GHZU
-         yO/OiWNtmE/ooX1zCLAgs8v0xRmWzf+YWkzGcGbjpq+Eez59XaBJUVc8v+vFdLhrHo+g
-         aI//TpTNFjWm1VQ6VnLoPGkKC6T0nZx1nHvfUEoRz5U/7gKQS/IODkizrzcEswYRiznM
-         SHKw==
+        bh=5Ts2LHLz4I7Y52dAaMUvDVUrX5c5MFwWvzizIevoXa8=;
+        b=c1TYpNMAV2gVJmgme7STvRNOQgfaDuSPGr1/7aVm48GL0PKZzqwzQjXSINwn0Jz3lg
+         TeydQgxchVeyUQy10N8l3Sz0vFXEYp8WW2ojMPXXc5rkLxoOt2wAW3d0Z52puBX2B89y
+         xL73IrZWIJ3yN9/yaYQJ/i/zLduWlxJ3JBgLTzRvGuX7CO5M3lHk5m5Cz5N5xpu6Sghm
+         jECK/xcI62l0S+M8AIxbCybSIC/y4Ra9olmwNjFZclv+CmpffqclkEhUj3ZjXomEVsNP
+         O2lGrACpxAWdhvoEEs9KATfbSPezy/qNyXAzVGtT8osJZlSptmJk2ZUbZDDxY5ASfq0u
+         SWdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745621149; x=1746225949;
+        d=1e100.net; s=20230601; t=1745621199; x=1746225999;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wpxvPODl8XU4Mrgb+cq2MoZhp3SQCnv4izTBeRkVjNw=;
-        b=nGj6nZ3sdZMufnES/C/YM6G5DSlKqfcBlEBJY7oI0jbveHxdS6VIuJHWVMev4DXR6q
-         Vaz+LU34dlarhwgVF7My9l7M/kGvMw1Y8mCbHBG8Ux1mR7/MFEsLpmWBaS7NXPwLf8Rk
-         YNmdw1plCOwy1WoHPbcTGN9iunDgxQpUZXXixSctz2NqNcx9HG5Pw4q6OgK/zV6F0F7O
-         Gh79ksrHprNsfg6UlBvAXtkcXGbONZ+KyblRgSBtWbXss5sXiqw1Ua6MuU+KSHa0sjFU
-         mHHpCV/Wm4oyaDlDUICLTL4EIlXQx+mFyBH/1NYdhX4KCREEM9urW/GOyw+ggOBEg0M4
-         riZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTqwWvHt1ZdIs1cr5kO1SPStJWd7diZ9lAQU8TBBscZw0Z0dqcySeBTqBig/SUIMmOien0ykdZAb0D@vger.kernel.org, AJvYcCWPuii8x+KXcAs4EjbDhXDLtWBZPEZnutRAAsR0kP2cYaei3FDxRQjdSiolD8hOkv3o7N7Nxps5MOW0nxjL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKfqE41dQ9Q8kFtAxe6CNYDzndWekJXH2aJEbN50jGyBShjIlV
-	n5ysnr9r1S/GEYTQFrNRx5cN6nahBYAeknVoIKuhC1jNaQOs1ywA
-X-Gm-Gg: ASbGnct5PQyr988vdD/jqgWPR8dzFyTwSwRTLQzLLvWw1zJ1GWvObc/KfEy0GcgVPR0
-	oLpKTjXPWm2bqAEZs07ZFlbjSh/3YlxFcSL6gozUToNeWzl4FtlGpalraxqzVljcr4Q3i0gvu1i
-	zucvB9OWpdgFGe3qGM8gbzRxvt1oQE+TbwfHHSO0DVsxPNiEtE0PlnUAJOUJjK7fYFL1seNSr1j
-	2SgqCQQolcawbOyE/4hO2KE2eRbnKtNdb1YghsNTueMOvAZ7+yXlsCgwyDGk2/DGuIgXeExjSng
-	rdCWUdKBtWsHgg3v
-X-Google-Smtp-Source: AGHT+IE80Z+JWIw8051HVjg8pT0cQ+xe8MMsCMDbfTvfXwWaHxfynvaJjSTMoIgWVOj7FDMoV6TEqA==
-X-Received: by 2002:a05:622a:44b:b0:476:6625:eed4 with SMTP id d75a77b69052e-48132e8c157mr19310261cf.38.1745621149280;
-        Fri, 25 Apr 2025 15:45:49 -0700 (PDT)
+        bh=5Ts2LHLz4I7Y52dAaMUvDVUrX5c5MFwWvzizIevoXa8=;
+        b=beLg6B+OyoeJRhSj6qDIKhejuVeewAfT+jkwmEU7bPTfjtrmfFCMMbLxSirQtr0dgU
+         eQsBHQndGFUtFhMqPrtZwIGXLCzMqQEmEGQtoKjdeT8vC8BnKhx3V8rWaaftYw/l/mIF
+         WoLOmmN2nckpCynRm3TsP7q3cug0kMyI1q7BZEm08+qJ9jEJb5jUjT+cgG+hUtH9Ukbb
+         a3allJelbXa0jiUvZh2s0LZg+cXeHR47PsK8ar9jpc0wxhBGtetEa/ltrOUr8c4CRiP6
+         WIMt9Bl++P//VYHCxl9yJl+9smZazxXJgtqVi1QfvZ5jkM28fvDsVee34JqcT0rxcnWw
+         /42g==
+X-Forwarded-Encrypted: i=1; AJvYcCUzSVfNazTlmrnOvsluvOSvcYFjELmrlwam5WIwU+lyJJu1889i6nVGjafqnB3VLyIHC+21qVX+4gr8@vger.kernel.org, AJvYcCW8UZvxiLo2JAIOEho/0TEhqwbVtcPYKkCA9tKhLDwesgitSIBHOjw0AEZ5lWTlSndBkg7tR/bbQJ+Jm9XIjr2mCm8=@vger.kernel.org, AJvYcCWMbm5IP1Th0nUHZKXO5AYR2i1clAO13J3Sp77Z7PR22LsYvnaz5he13puqXAW7EQfB73/nIW2Q1FOvSGcq@vger.kernel.org, AJvYcCXZ6cDAVFQlD1ynWze92OC/To0K5LNqO7+hm4i5+JW4GL6ayw5BVbdvxO8mjBj4asQYI4Z8Yo37LgXy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/KwQtcyQ674zvvSCGsTruGEHuo2tgvjKPOJ3mXv2iLgnca+f5
+	1vARzvgNi2JjC5ISl4uGlHQGID+NuG1k9V56+LE/AFLfIoIm3TE4
+X-Gm-Gg: ASbGncub8F7FDNj1KaIFC4MCYzV6B4/X1PIwi1f869kQCYvhYJOc1I3gdMjEE3m06g9
+	wgY4Wn70BGc3da613VFJt51IFkOFldm9tTs43hNZ5M9AgQTxN14O37+p3OSUBuQvwYo+c2X0FmR
+	6dPbwfHLq8bGFDsUQEg5TsXcamlsrKZPMrWeBDsV8j4l/Djdi2aIUf2RV+B1no1eXVDUvWy3l1n
+	BRSwUfeBXmCAtel3EyuTAXU+uFdk3OyEq4/NaEpbnbuxqJmay4l4iOLEuovdZneAAH3NNv+tIi5
+	UuABip54CqRT09mn
+X-Google-Smtp-Source: AGHT+IHFMnb3Dv8ueG3yqBlwgHCe8l9Ust4EP/2O6HiGpIC9Wsr8B1BoBXzzFa/o+yntyw1+DEItgA==
+X-Received: by 2002:a05:622a:44:b0:476:653d:5aea with SMTP id d75a77b69052e-48022c311f2mr71095971cf.4.1745621198814;
+        Fri, 25 Apr 2025 15:46:38 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-480b050a57fsm8619191cf.75.2025.04.25.15.45.48
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47e9f7aade9sm31608541cf.40.2025.04.25.15.46.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 15:45:48 -0700 (PDT)
+        Fri, 25 Apr 2025 15:46:38 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
+To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Mark Brown <broonie@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Zixian Zeng <sycamoremoon376@gmail.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: (subset) [PATCH v2 0/8] riscv: sophgo: Add pinctrl support for SG2042
-Date: Sat, 26 Apr 2025 06:45:35 +0800
-Message-ID: <174562110477.44005.9722007878351490810.b4-ty@gmail.com>
+	linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	chao.wei@sophgo.com,
+	xiaoguang.xing@sophgo.com,
+	dlan@gentoo.org,
+	linux-renesas-soc@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v6 0/3] Add basic SPI support for SOPHGO SG2042 SoC
+Date: Sat, 26 Apr 2025 06:46:24 +0800
+Message-ID: <174562116075.44155.16153568743582416091.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250211051801.470800-1-inochiama@gmail.com>
-References: <20250211051801.470800-1-inochiama@gmail.com>
+In-Reply-To: <20250425-sfg-spi-v6-0-2dbe7bb46013@gmail.com>
+References: <20250425-sfg-spi-v6-0-2dbe7bb46013@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,25 +97,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 13:17:48 +0800, Inochi Amaoto wrote:
-> SG2042 has a simple pinctrl device for all configurable pins.
-> It supports setting pull up/down, drive strength and input schmitt
-> trigger.
+On Fri, 25 Apr 2025 10:28:11 +0800, Zixian Zeng wrote:
+> Implemented basic SPI support for SG2042 SoC[1] using
+> the upstreamed Synopsys DW-SPI IP.
 > 
-> Add support for SG2042 and SG2044 pinctrl device.
+> The way of testing can be found here [2].
 > 
-> Changed from v1:
-> - https://lore.kernel.org/all/20241024064356.865055-1-inochiama@gmail.com/
-> 1. Fix the binding documentation error.
-> 2. Refactor the cv18xx code so SG2042 can uses the same code.
-> 3. Add SG2044 pinctrl support as it has the same layout.
 > 
-> [...]
 
-Reapply this to the sophgo/for-next.
+Applied to for-next, thanks!
 
-[8/8] riscv: dts: sophgo: sg2042: add pinctrl support
-      https://github.com/sophgo/linux/commit/a1d04b8461eced3c8933fc3f58ddcc4b44ca9073
+[3/3] riscv: sophgo: dts: Add spi controller for SG2042
+      https://github.com/sophgo/linux/commit/ae246f5c0ce444e5c964aa3a7d2d14a6df9153d6
 
 Thanks,
 Inochi
