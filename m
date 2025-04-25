@@ -1,127 +1,149 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5A726AC3;
-	Fri, 25 Apr 2025 10:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125B0234963
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745575652; cv=none; b=TYAqzqbwC2ZjkTn7pxZhOdJvWM9eG/Qz+lo4190dIBFqxsh8maMaYpEUUtz/+zP6p/3S5eyE1/y4wh+k0HmURcOgMhue8gJzPlX0LPBghLZ76imw4YFq7NUpods03O7a7OwC4qZzEu0V6DJRHnUbu48cg37kvDXMPWMhUlCQQRc=
+	t=1745575668; cv=none; b=ut7aix4KqVdqzkysTAmU2aC1ufGvjBS1T09+akvFLhWLy3XFyqAcwnuPJ8ItmFu7+ktuD/XzCNNdfw77sccQV5nkVGqxfQ+NrBnwdnPWpr5UABDRbbc+kvOfAk2QKyx3WU+88TKnbUF/NI9wBSIx4Ly9PvOUkbX33yD1OwQ9msU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745575652; c=relaxed/simple;
-	bh=AEtQ4zVhOD5ipP+9Ofvo+I3POCv/ZAPLObFlY45PRVo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JCgcgJBpIujqISwLSYoJosHYFuYz+Nockv1x2wuRwefeE54gyuGnbXZ5Dh9r5QDvVAQZ79w3CYFkGvw+Rx1Tu3miJAYXIYGPEKbAdeMnOJvC4EeeCrZ4u6X8rOJjgZkVx7EkEZk2Bg8SYIqgW1k3tlQsGZ0QTMlSV+Yy5Hynhpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cRz8R4fN; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745575668; c=relaxed/simple;
+	bh=qV1pZ+3JNp92kKS0xXXAb/pAJaziKcnWjRvO2Z5j/JI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=O1VlL6F9OhRNOdcp+srdrvr/Qeger6ZpqDC1LPYlSKg4tvG46dy1/tIuCfNb0rmqcAL31X9ZhySD3a1n77p5nlDjUoMzxlFovqq09kah/1WZr0+qGRLCXdaSqH9eM04CH5J1Et+vQgVUtbdNwJUqnK6D+7fMeBQe4wxtPZYWhmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hi9sU/dE; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRz8R4fN"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af590aea813so3107274a12.0;
-        Fri, 25 Apr 2025 03:07:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hi9sU/dE"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so2797227b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745575651; x=1746180451; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9uPmzHYOFCtYn1VfRn4G0KZ5XWfuvrYmTvkQ5ZTDH8s=;
-        b=cRz8R4fN7dSlBirVjdrfUm2phowCC1GZ3ausi9WoEgYxHNEXp2Ic4Smf96vxI3VCYT
-         H3eKRCVFV63aSPLaV3GoaGzKeJyX2u2M1vdaL7Co8RC8L5nEZ4wOfhW+csCN7phi5gLa
-         OZzCA31spbSVoVfy158Ur+KDF5qJ3chdBYzn6pI2Fx1cfPXnndcryGD/KvMEDt7aviYZ
-         GKjGma1GaEsUrH9Xy1TChtFF6priEBScxyUvYzmcl44g9qTeITyHMLKUovVeN5/VjYe0
-         TQaTQ38rsBrtGZ1LMj4RUf+pSpwwl9Us25EUfrgAiMA12ecIKXVr6QT3lxK0tM556HhG
-         lILw==
+        d=broadcom.com; s=google; t=1745575666; x=1746180466; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=5B7y37K/WGDfH6iYqZP3IbPETHIDt3dOJy9LPqxh618=;
+        b=hi9sU/dEpFQfBFlaD5a7O2qhVFpneBbrm9Jc4YWpt7nxK7cZtmdKE50fsj+XqWrp1+
+         F8Wx4KzDWJBw7F25oW1NleaBjZB90nyK6+CRT7lQP0TbSYv7aRmSSYzKQQiib9HaV+CB
+         wX1A5dfcphrBYCEpmV3tY6oaAYsNC9wy1bImo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745575651; x=1746180451;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745575666; x=1746180466;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9uPmzHYOFCtYn1VfRn4G0KZ5XWfuvrYmTvkQ5ZTDH8s=;
-        b=IG2Se8ErSr7t8OCm9p1G7+80TP0wFK83OZMTUNEQHObo6yjj0xaxsPrz2o8GOjss8o
-         b95vG3/r7vfIRrpRbOXtfN3Tq8x3NJeHGoyJXsGsGMQEJCKM42TXrrhegjCxFiXeuW8f
-         2wxkkb+YVws7vMtTa1Wax0xBrUa7E+0zApUkzIXioPzFg/y47dZSpPjf6Ds0+zYL/Prt
-         3cSZTY7e5hUIVItY25O0ed9PfvTylN19UpQVrvITl5iMftoELSBN9TtfwBlSiMKIecO2
-         u9n/67/zwWv6V86H3DFunhccMzKvn50GXQ8BuJREfAmYNRGKlGcTiE7cVPW0ht8I3iEG
-         UQaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTQU4BPE592S/gZcJM3VprEATX1SCEGcPh19z2rEUtkmvHc8zqSTj0BnC4U9G0mpz/cR2bF+MvjrWo@vger.kernel.org, AJvYcCUkorRfhYE6+K+hNBsYCMOk+5r2/u1Inn9plQSYHj+4hTfGZnS4Y/wOSoVSWuKpjf/7tChf123o9ieWH17Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBT8aZQdZJCf3oyr+Up4TmT51sePJfABNhW6Wr4eJ0ECGWnLXF
-	fBg86UaanxwjiWeHOQj46JiB9WF+RViQTkEW+krE6C699ZAPjEEs
-X-Gm-Gg: ASbGncuFuVXSPzu5Lr+HnPpxJ7/k0v9kcQ8JbJUTd1MEAZOZb7SqzhJrS4NsQWkKjl8
-	zxEK6+asAArOIRi+LhEpAgNjVj7doouRxPnjXEQXwVtlhT++r0ypKPCwNKwzxo1pShkfXAtJ4vM
-	rmYE4t/Pja6o0whVTpAteE9BobVlloKToqCkVCXgaGiWyeycl6ZghL5WSYdfMqzChESODinbLC0
-	xQ8lF6ZTrKwl90HsIOKcYi1bS3q3qXKqoqeNm3Y4iRxnvNcBaFx44nQgstHAy2kHPasGdNXVBtw
-	pt54030gYqbpYyejuA2PJfZZRPn8YTMEUfowEvRCrvATuzMTXSsB
-X-Google-Smtp-Source: AGHT+IEOXFkBumaprnMtZPAH/o9LFhkdeVpSsvxZfbKPhXNApsgEGu3ARHcUpcaYofflyKnemwQfCg==
-X-Received: by 2002:a17:90b:2741:b0:2fe:93be:7c9d with SMTP id 98e67ed59e1d1-309f8992d63mr2194207a91.7.1745575650719;
-        Fri, 25 Apr 2025 03:07:30 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef03bb26sm3337254a91.6.2025.04.25.03.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 03:07:30 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 25 Apr 2025 14:07:31 +0400
-Subject: [PATCH v2] dt-bindings: usb: generic-ehci: Add VIA/WonderMedia
- compatible
+        bh=5B7y37K/WGDfH6iYqZP3IbPETHIDt3dOJy9LPqxh618=;
+        b=jaxp/vCve8q9wB7G3oDG3y5HDT34BD4BAf/+pjlUj30d7XwnoqNKOJImSpUNhu3/WQ
+         FFPEeWFG+F0lBLwAjXwJXHXKLuTrSTTrk2DoaJJFHKPYczyRBsGZYU7rY1NCfoes7LV0
+         2fLNTU+K4QL0xmEb1pfhU0gaq0TiZyRt/IAlUxYvcuDwCIJPNqgrCWjIlyJHWgFQUuXC
+         miHpODpLBQ8iKTwBptI7ixxCp7ThZfyNgnhyWv3qbMELY0Sus//xO1eBy+yhI8xjay2/
+         c/fW3s7Ai6RonkwneTEHP+M7T95gxrjI71szlarh5sb9wNLGgJ2d/Ew11lOyN+X9VAxV
+         8aTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXF0YMCYDFUkNZlX1WOBlDpEEeYsfEMtfGnnayZWe3cau3a9gudz9QbGNhcG6p5TO891pR8+v+aXovS3sU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGNZkMjFj0RmkAE+1Hv3i+8hkBfp3c7ZyajNW8OjnJyMQhICvP
+	6+gizQ4qI0zgaK6Xqna5vVVMim38JJDgM8GAdFY+ML72geCA4ZasMQ9eG55Lfg==
+X-Gm-Gg: ASbGncuWiWggtmK4AFSerxJ/GCMQcyt3WvSPuiBpFcjLXL+/KsycQDYyJM5cy7yQWfn
+	NMQL/QJ5baaW3hVu4XvsnY+8L0ZN4JQbbrWKDJDRqvWN0M1ZKSmwJhyms5wU9AYKMzY403ZSBLd
+	GvwZssvQk3vPdc+nWhZUpg4M2wj/r+5wSEWXVPFw0roaVOKxiA02Gp9T2vJA8a1Zz71SV5qAtr9
+	XSHS3llHmOa4GxoD+WyXuf//1f2bgEYoWoUAlVLzyv/5A1Ys92KdpN0LCJFIpXVeVZZf3C2FngQ
+	frijderNvdCDDr808zJ6exV+0+2H08Q+Yrnl4BjHU4/CfnNLWy/I4t6aqj8rA5cuB9yLoaZ8vwm
+	u2Khz+m0CQue9VRtQcxSTMvRZaX8E1prWMw==
+X-Google-Smtp-Source: AGHT+IH+RPx8vMoFBrGnE2UELbu76oBxdqLLmuOZ9MxvthItxwA6UQaxgwbV1lK1NsLiE9He6IufKQ==
+X-Received: by 2002:a05:6a21:6b0b:b0:1f3:1ba1:266a with SMTP id adf61e73a8af0-2045b1257f0mr2341262637.0.1745575666250;
+        Fri, 25 Apr 2025 03:07:46 -0700 (PDT)
+Received: from [192.168.1.105] (88-187-52-200.subs.proxad.net. [88.187.52.200])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f48b2sm2564155a12.8.2025.04.25.03.07.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 03:07:45 -0700 (PDT)
+Message-ID: <78cdc9c7-47f5-4522-8dea-b0bb3228dd7b@broadcom.com>
+Date: Fri, 25 Apr 2025 12:07:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 11/12] arm64: defconfig: Enable RP1
+ misc/clock/gpio drivers
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <928679d1511a43b8dda150009eb023b4eaaff5a2.1745347417.git.andrea.porta@suse.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <928679d1511a43b8dda150009eb023b4eaaff5a2.1745347417.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-vt8500-ehci-binding-v2-1-b4a350335add@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAOJeC2gC/32NQQrCMBBFr1Jm7cg0sSquvId00SSTdsCmkpSgl
- Nzd2APIX70P//0NEkfhBLdmg8hZkiyhgjo0YKchjIziKoMi1dFJaczrtSNCnqygkeAkjMhnuhg
- /eGeNh7p8Rfby3q2PvvIkaV3iZz/J7a/978st1nDVkdOarLqP8yDPo11m6EspX5r7yUO2AAAA
-X-Change-ID: 20250423-vt8500-ehci-binding-e607bfafdcbf
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
- Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745575666; l=1405;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=AEtQ4zVhOD5ipP+9Ofvo+I3POCv/ZAPLObFlY45PRVo=;
- b=vyHQLxiH6LvzFbCTrK/BQsAfEZwEPwwAEu0+Z2j4SM0N2lJrJeHP4v8CfMaEVeJROC0PduAWH
- nrT6KR+ej9LA4O4dHv1G5+WDymiZLntez9+TgpduHl/hqlgx3DnQBZT
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-VIA/WonderMedia SoCs use a plain vanilla EHCI controller with a
-compatible string "via,vt8500-ehci". This compatible is already
-used by the mainline Linux driver and relevant in-tree DTS files,
-so add it to the binding.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
-Changes in v2:
-- Amend the commit message to state that the compatible string in
-  question is already used by the driver and DTS (thanks Conor)
-- Add Conor's Ack
-- Link to v1: https://lore.kernel.org/r/20250423-vt8500-ehci-binding-v1-1-1edcb0d330c2@gmail.com
----
- Documentation/devicetree/bindings/usb/generic-ehci.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-index 223f2abd5e592ff8cc3ad97f9a325356ea57044a..508d958e698c2e8dad748a6fcdef65d6e883b97d 100644
---- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-@@ -86,6 +86,7 @@ properties:
-           - nuvoton,npcm845-ehci
-           - ti,ehci-omap
-           - usb-ehci
-+          - via,vt8500-ehci
- 
-   reg:
-     minItems: 1
+On 4/22/2025 8:53 PM, Andrea della Porta wrote:
+> Select the RP1 drivers needed to operate the PCI endpoint containing
+> several peripherals such as Ethernet and USB Controller. This chip is
+> present on RaspberryPi 5.
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250423-vt8500-ehci-binding-e607bfafdcbf
-
-Best regards,
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-Alexey Charkov <alchark@gmail.com>
+Florian
 
