@@ -1,238 +1,241 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A3517BD3;
-	Fri, 25 Apr 2025 01:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67111EF1D;
+	Fri, 25 Apr 2025 01:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745542863; cv=none; b=ZaIWCISBOhfyk9+6Wxh7hu0qR8OY0JvKT06ofYlxUXjGlD2muq0hfUuKgj095+YyiHgpbq7oNOa5v2SSpd8ykS0OVHDdwGDdppPcFMVmBVsWyY+xt7k3uqF+CDwISP9BezAawn8sxWzs1a1LLFTiGcJlA30qqMkdr7Wh1Z/wizk=
+	t=1745543015; cv=none; b=UvVQNDP4hl57TpG5A5PachKQ1YFGLl8xSq/3/8nSbYs4GsDCsPxmWYii8FQIZMBynQXgZXCZaVkHzVptXTXELPe7rv5xLCXs+kds86UC7yU94IQtdSmtjllLSMMlb8TQEVjxYcNReRKrar/9aSQsiPYfYu6n1n9pRACGAJztqRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745542863; c=relaxed/simple;
-	bh=3NBBCGeKr2m5IBaqIkjQPLgZ1gmvbV+miikL5I2UHb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iqQN/wTMMcH89uLMZSqr4IV3Xvyt2xfBJqxgmm8D5yaED6xrdSnvsoEXUVPC0CG1Tnj/vpnfQbGSx6vN24fkz8YyKCAfz/XyL1i9eJvK1AOjKkCJfH4hM7QtDfyuJXHAHAqnnsj7DvEZZqiQdmiaqbguYm1gQ+wMshbkEkPTSm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=daBcB89E; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745543015; c=relaxed/simple;
+	bh=yy+VuSc3Fx0mRi+RTnQZNXeln2i/gLwDFQIeSQEDxnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nCD4QvfStd/S1qGii+tKo06ZfiKOQ9TXpczjsv4oF5X3BjzXUY1u0UshAqMuf5W68PF4maAmuQ8h2xki0fOAlfCsb6PRhLyr7xsHwiyROxSNnCXNcVMPilnAjN1e0zbNSg5Shelg3/m6sNJHNyQqWv4rsQKHqTpibDbHwSsXDo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pktihD7d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="daBcB89E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745542863; x=1777078863;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3NBBCGeKr2m5IBaqIkjQPLgZ1gmvbV+miikL5I2UHb0=;
-  b=daBcB89Evau0SLmPlPDp0xqFaOCXDwhq0DB+Vn/dA5QYL/HWrIZ9BdS+
-   Y2Kx8G0vXwdiT2Mz98bBXhfTq+9HsCzX/c9em2T3sBmVkELrqoUwJ9xxx
-   Fn135fDkb3cywYZC7vW5wEu7nE13LAWtuODtEM73q6ITx5uQM1nYG2ZuJ
-   ax7sYr3QdpwgNbONq/0FANUaKucKGnxeJvhoJFePUWd1rTG/KsOZezO1q
-   7YM+7jZaWhrD8Z6LtECnLlI3kVlVz3VHM/PBzu8V4KIsyoOQcIBApu20l
-   ZTL7xvI8rk8z6QAESnfBNr3xOOfPgb/laFgafUrP0wNs/3TqBMhxNVesQ
-   w==;
-X-CSE-ConnectionGUID: NskdFmtoTOWJW217aaceDA==
-X-CSE-MsgGUID: W9h6q9TOSOKyT7wzkiBRdw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58187333"
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="58187333"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 18:01:02 -0700
-X-CSE-ConnectionGUID: zYinjX53Rq2xK987hBUNDA==
-X-CSE-MsgGUID: s5TphgHrQyuN1UkyCzHYoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="163827607"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.108.124]) ([10.125.108.124])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 18:01:00 -0700
-Message-ID: <bf3e0b9b-1cf5-4ee5-8487-46851a84230d@intel.com>
-Date: Thu, 24 Apr 2025 18:00:58 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pktihD7d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D2DAC4CEE3;
+	Fri, 25 Apr 2025 01:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745543015;
+	bh=yy+VuSc3Fx0mRi+RTnQZNXeln2i/gLwDFQIeSQEDxnA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pktihD7do4jfpD4mk1hZOjAyS5YcYd8Fw5XK2UywqIyjcSEDkT9PCmYwRMe+Py9xN
+	 vLvQaxaXXXLQ/nDojg8euNrFrC9wIp7eg5LuTL3P6r5/tLYR75sOsPm+yVSSUDZ7Dj
+	 0cWcY16/rjvAgY0rqIAKtQ1EOgfUYCN+weN/dBAbkG9v9J5qkUVOwB3nMi4UTYhh08
+	 RryYt+m26YUc65zjL+H1t9wXJ3sm5zWbwFERZaj3Xec28fWFeCLwFMSq5wwPcnQCgi
+	 VEbY31thX8G1b+A+uBgn/Kizm2YR/HsVpb3Mm65P1gx/7aBCt3MmBd16UJTx7UO5Hn
+	 T/vDf07kt/ihA==
+Date: Thu, 24 Apr 2025 18:03:33 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net-next v7 1/3] net: ethtool: Introduce per-PHY DUMP
+ operations
+Message-ID: <20250424180333.035ff7d3@kernel.org>
+In-Reply-To: <20250422161717.164440-2-maxime.chevallier@bootlin.com>
+References: <20250422161717.164440-1-maxime.chevallier@bootlin.com>
+	<20250422161717.164440-2-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] iommu: Allow attaching static domains in
- iommu_attach_device_pasid()
-To: Jack Vogel <jack.vogel@oracle.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Kevin Tian <kevin.tian@intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
- "shangsong2@lenovo.com" <shangsong2@lenovo.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250424034123.2311362-1-baolu.lu@linux.intel.com>
- <4764ACC2-6D38-4CAE-8A6B-451AB3DAF3E0@oracle.com>
- <a6e386bf-c9d4-4b3c-ad6e-dd1689330782@intel.com>
- <0A18D37F-7457-49CC-9D67-369A3A8C9E7E@oracle.com>
- <9b67710b-07bf-4c18-824a-27bc5df4fdfa@intel.com>
- <C85B4AA4-793D-45CA-915A-4C7F4FB4CA64@oracle.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <C85B4AA4-793D-45CA-915A-4C7F4FB4CA64@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 22 Apr 2025 18:17:14 +0200 Maxime Chevallier wrote:
+> +/* perphy ->start() handler for GET requests */
 
+Just because I think there are real bugs, I will allow myself an
+uber-nit of asking to spell the perphy as per-PHY or such in the
+comment? :)
 
-On 4/24/25 5:55 PM, Jack Vogel wrote:
-> 
-> 
->> On Apr 24, 2025, at 16:15, Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>
->>
->> On 4/24/25 3:59 PM, Jack Vogel wrote:
->>>
->>>
->>>> On Apr 24, 2025, at 15:40, Dave Jiang <dave.jiang@intel.com> wrote:
->>>>
->>>>
->>>>
->>>> On 4/24/25 3:34 PM, Jack Vogel wrote:
->>>>> I am having test issues with this patch, test system is running OL9, basically RHEL 9.5, the kernel boots ok, and the dmesg is clean… but the tests in accel-config dont pass. Specifically the crypto tests, this is due to vfio_pci_core not loading.  Right now I’m not sure if any of this is my mistake, but at least it’s something I need to keep looking at.
->>>>>
->>>>> Also, since I saw that issue on the latest I did a backport to our UEK8 kernel which is 6.12.23, and on that kernel it still exhibited  these messages on boot:
->>>>>
->>>>> *idxd*0000:6a:01.0: enabling device (0144 -> 0146)
->>>>>
->>>>> [   21.112733] *idxd*0000:6a:01.0: failed to attach device pasid 1, domain type 4
->>>>>
->>>>> [   21.120770] *idxd*0000:6a:01.0: No in-kernel DMA with PASID. -95
->>>>>
->>>>>
->>>>> Again, maybe an issue in my backporting… however I’d like to be sure.
->>>>
->>>> Can you verify against latest upstream kernel plus the patch and see if you still see the error?
->>>>
->>>> DJ
->>>
->>> Yes, the kernel was build from the tip this morning. Like I said, it got no messages booting up, all looked fine. But when running the actual test suite in the accel-config tarball specifically the iaa crypt tests, they failed and the dmesg was from vfio_pci_core failed to load with an unknown symbol.
->>
->> I'm not sure what the test consists of (haven't worked on this device for almost 2 years). But usually the device is either bound to the idxd driver or the vfio_pci driver. Not both. And if the idxd driver didn't emit any errors while loading, then the test failure may be something else...
->>
->> Another way to verify is to set CONFIG_IOMMU_DEFAULT_DMA_LAZY vs PASSTHROUGH. If the tests still fail then it's something else. 
->>
->> DJ
-> 
-> There isn’t a lot of ways to test this driver, yes DPDK will use it, but apart from that? So, the tests that are part of your (Intel) accel-config package are the only convenient way that I’ve found to do so. It is also convenient, there is a “make check” target in the top Makefile that will invoke both set of DMA tests, and some crypto (IAA) tests. I have been planning to give this to our QA group as a verification suite. Do you have an alternative to this?
+> +static int ethnl_perphy_start(struct netlink_callback *cb)
+> +{
+> +	struct ethnl_perphy_dump_ctx *phy_ctx = ethnl_perphy_dump_context(cb);
+> +	const struct genl_dumpit_info *info = genl_dumpit_info(cb);
+> +	struct ethnl_dump_ctx *ctx = &phy_ctx->ethnl_ctx;
+> +	struct ethnl_reply_data *reply_data;
+> +	const struct ethnl_request_ops *ops;
+> +	struct ethnl_req_info *req_info;
+> +	struct genlmsghdr *ghdr;
+> +	int ret;
+> +
+> +	BUILD_BUG_ON(sizeof(*ctx) > sizeof(cb->ctx));
+> +
+> +	ghdr = nlmsg_data(cb->nlh);
+> +	ops = ethnl_default_requests[ghdr->cmd];
+> +	if (WARN_ONCE(!ops, "cmd %u has no ethnl_request_ops\n", ghdr->cmd))
+> +		return -EOPNOTSUPP;
+> +	req_info = kzalloc(ops->req_info_size, GFP_KERNEL);
+> +	if (!req_info)
+> +		return -ENOMEM;
+> +	reply_data = kmalloc(ops->reply_data_size, GFP_KERNEL);
+> +	if (!reply_data) {
+> +		ret = -ENOMEM;
+> +		goto free_req_info;
+> +	}
+> +
+> +	/* Don't ignore the dev even for DUMP requests */
 
-This should be the right test package. Let me talk to our QA people and see if there are any issues. We can resolve this off list. If there's any issues that end up pointing to the original bug, we can raise that then. 
+another nit, this comment wasn't super clear without looking at the dump
+for non-per-phy case. Maybe:
 
-DJ
+	/* Unlike per-dev dump, don't ignore dev. The dump handler
+	 * will notice it and dump PHYs from given dev.
+	 */
+?
 
-> 
-> Jack
-> 
->>
->>>
->>> This sounds like the module was wrong, but i would think it was installed with the v6.15 kernel….. 
->>>
->>> Jack
->>>
->>>>
->>>>>
->>>>> Cheers,
->>>>>
->>>>> Jack
->>>>>
->>>>>
->>>>>> On Apr 23, 2025, at 20:41, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>>>>>
->>>>>> The idxd driver attaches the default domain to a PASID of the device to
->>>>>> perform kernel DMA using that PASID. The domain is attached to the
->>>>>> device's PASID through iommu_attach_device_pasid(), which checks if the
->>>>>> domain->owner matches the iommu_ops retrieved from the device. If they
->>>>>> do not match, it returns a failure.
->>>>>>
->>>>>>        if (ops != domain->owner || pasid == IOMMU_NO_PASID)
->>>>>>                return -EINVAL;
->>>>>>
->>>>>> The static identity domain implemented by the intel iommu driver doesn't
->>>>>> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
->>>>>> for the idxd driver if the device translation mode is set to passthrough.
->>>>>>
->>>>>> Generally the owner field of static domains are not set because they are
->>>>>> already part of iommu ops. Add a helper domain_iommu_ops_compatible()
->>>>>> that checks if a domain is compatible with the device's iommu ops. This
->>>>>> helper explicitly allows the static blocked and identity domains associated
->>>>>> with the device's iommu_ops to be considered compatible.
->>>>>>
->>>>>> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
->>>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
->>>>>> Cc: stable@vger.kernel.org
->>>>>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
->>>>>> Link: https://lore.kernel.org/linux-iommu/20250422191554.GC1213339@ziepe.ca/
->>>>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>>>>> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->>>>>> ---
->>>>>> drivers/iommu/iommu.c | 21 ++++++++++++++++++---
->>>>>> 1 file changed, 18 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> Change log:
->>>>>> v3:
->>>>>> - Convert all places checking domain->owner to the new helper.
->>>>>> v2: https://lore.kernel.org/linux-iommu/20250423021839.2189204-1-baolu.lu@linux.intel.com/
->>>>>> - Make the solution generic for all static domains as suggested by
->>>>>>   Jason.
->>>>>> v1: https://lore.kernel.org/linux-iommu/20250422075422.2084548-1-baolu.lu@linux.intel.com/
->>>>>>
->>>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->>>>>> index 4f91a740c15f..b26fc3ed9f01 100644
->>>>>> --- a/drivers/iommu/iommu.c
->>>>>> +++ b/drivers/iommu/iommu.c
->>>>>> @@ -2204,6 +2204,19 @@ static void *iommu_make_pasid_array_entry(struct iommu_domain *domain,
->>>>>> return xa_tag_pointer(domain, IOMMU_PASID_ARRAY_DOMAIN);
->>>>>> }
->>>>>>
->>>>>> +static bool domain_iommu_ops_compatible(const struct iommu_ops *ops,
->>>>>> +struct iommu_domain *domain)
->>>>>> +{
->>>>>> +if (domain->owner == ops)
->>>>>> +return true;
->>>>>> +
->>>>>> +/* For static domains, owner isn't set. */
->>>>>> +if (domain == ops->blocked_domain || domain == ops->identity_domain)
->>>>>> +return true;
->>>>>> +
->>>>>> +return false;
->>>>>> +}
->>>>>> +
->>>>>> static int __iommu_attach_group(struct iommu_domain *domain,
->>>>>> struct iommu_group *group)
->>>>>> {
->>>>>> @@ -2214,7 +2227,8 @@ static int __iommu_attach_group(struct iommu_domain *domain,
->>>>>> return -EBUSY;
->>>>>>
->>>>>> dev = iommu_group_first_dev(group);
->>>>>> -if (!dev_has_iommu(dev) || dev_iommu_ops(dev) != domain->owner)
->>>>>> +if (!dev_has_iommu(dev) ||
->>>>>> +   !domain_iommu_ops_compatible(dev_iommu_ops(dev), domain))
->>>>>> return -EINVAL;
->>>>>>
->>>>>> return __iommu_group_set_domain(group, domain);
->>>>>> @@ -3435,7 +3449,8 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
->>>>>>    !ops->blocked_domain->ops->set_dev_pasid)
->>>>>> return -EOPNOTSUPP;
->>>>>>
->>>>>> -if (ops != domain->owner || pasid == IOMMU_NO_PASID)
->>>>>> +if (!domain_iommu_ops_compatible(ops, domain) ||
->>>>>> +   pasid == IOMMU_NO_PASID)
->>>>>> return -EINVAL;
->>>>>>
->>>>>> mutex_lock(&group->mutex);
->>>>>> @@ -3511,7 +3526,7 @@ int iommu_replace_device_pasid(struct iommu_domain *domain,
->>>>>> if (!domain->ops->set_dev_pasid)
->>>>>> return -EOPNOTSUPP;
->>>>>>
->>>>>> -if (dev_iommu_ops(dev) != domain->owner ||
->>>>>> +if (!domain_iommu_ops_compatible(dev_iommu_ops(dev), domain) ||
->>>>>>    pasid == IOMMU_NO_PASID || !handle)
->>>>>> return -EINVAL;
->>>>>>
->>>>>> -- 
->>>>>> 2.43.0
-> 
+> +	ret = ethnl_default_parse(req_info, &info->info, ops, false);
+> +	if (ret < 0)
+> +		goto free_reply_data;
+> +
+> +	ctx->ops = ops;
+> +	ctx->req_info = req_info;
+> +	ctx->reply_data = reply_data;
+> +	ctx->pos_ifindex = 0;
+> +
+> +	return 0;
+> +
+> +free_reply_data:
+> +	kfree(reply_data);
+> +free_req_info:
+> +	kfree(req_info);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ethnl_perphy_dump_one_dev(struct sk_buff *skb,
+> +				     struct net_device *dev,
+> +				     struct ethnl_perphy_dump_ctx *ctx,
+> +				     const struct genl_info *info)
+> +{
+> +	struct ethnl_dump_ctx *ethnl_ctx = &ctx->ethnl_ctx;
+> +	struct phy_device_node *pdn;
+> +	int ret = 0;
+> +
+> +	if (!dev->link_topo)
+> +		return 0;
 
+Now for the bugs..
+
+> +	xa_for_each_start(&dev->link_topo->phys, ctx->pos_phyindex, pdn,
+> +			  ctx->pos_phyindex) {
+> +		ethnl_ctx->req_info->phy_index = ctx->pos_phyindex;
+> +
+> +		/* We can re-use the original dump_one as ->prepare_data in
+> +		 * commands use ethnl_req_get_phydev(), which gets the PHY from
+> +		 * the req_info->phy_index
+> +		 */
+> +		ret = ethnl_default_dump_one(skb, dev, ethnl_ctx, info);
+> +		if (ret)
+> +			break;
+
+		return ret;
+
+> +	}
+
+	ctx->pos_phyindex = 0;
+
+	return 0;
+
+IOW I don't see you resetting the pos_phyindex, so I think you'd only
+dump correctly the first device? The next device will try to dump its
+PHYs starting from the last index of the previous dev's PHY? [1]
+
+> +	return ret;
+> +}
+> +
+> +static int ethnl_perphy_dump_all_dev(struct sk_buff *skb,
+> +				     struct ethnl_perphy_dump_ctx *ctx,
+> +				     const struct genl_info *info)
+> +{
+> +	struct ethnl_dump_ctx *ethnl_ctx = &ctx->ethnl_ctx;
+> +	struct net *net = sock_net(skb->sk);
+> +	netdevice_tracker dev_tracker;
+> +	struct net_device *dev;
+> +	int ret = 0;
+> +
+> +	rcu_read_lock();
+> +	for_each_netdev_dump(net, dev, ethnl_ctx->pos_ifindex) {
+> +		netdev_hold(dev, &dev_tracker, GFP_ATOMIC);
+> +		rcu_read_unlock();
+> +
+> +		/* per-PHY commands use ethnl_req_get_phydev(), which needs the
+> +		 * net_device in the req_info
+> +		 */
+> +		ethnl_ctx->req_info->dev = dev;
+> +		ret = ethnl_perphy_dump_one_dev(skb, dev, ctx, info);
+> +
+> +		rcu_read_lock();
+> +		netdev_put(dev, &dev_tracker);
+
+missing
+
+		ethnl_ctx->req_info->dev = NULL;
+
+right? Otherwise if we need to send multiple skbs the "continuation"
+one will think we're doing a filtered dump.
+
+Looking at commits 7c93a88785dae6 and c0111878d45e may be helpful,
+but I doubt you can test it on a real system, filling even 4kB
+may be hard for small messages :(
+
+> +		if (ret < 0 && ret != -EOPNOTSUPP) {
+> +			if (likely(skb->len))
+> +				ret = skb->len;
+> +			break;
+> +		}
+> +		ret = 0;
+
+[1] or you can clear the pos_index here
+
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return ret;
+> +}
+> +
+> +/* perphy ->dumpit() handler for GET requests. */
+> +static int ethnl_perphy_dumpit(struct sk_buff *skb,
+> +			       struct netlink_callback *cb)
+> +{
+> +	struct ethnl_perphy_dump_ctx *ctx = ethnl_perphy_dump_context(cb);
+> +	struct ethnl_dump_ctx *ethnl_ctx = &ctx->ethnl_ctx;
+> +	int ret = 0;
+> +
+> +	if (ethnl_ctx->req_info->dev) {
+> +		ret = ethnl_perphy_dump_one_dev(skb, ethnl_ctx->req_info->dev,
+> +						ctx, genl_info_dump(cb));
+> +		if (ret < 0 && ret != -EOPNOTSUPP && likely(skb->len))
+> +			ret = skb->len;
+> +
+> +		netdev_put(ethnl_ctx->req_info->dev,
+> +			   &ethnl_ctx->req_info->dev_tracker);
+
+You have to release this in .done
+dumpit gets called multiple times until we run out of objects to dump.
+OTOH user may close the socket without finishing the dump operation.
+So all .dumpit implementations must be "balanced". The only state we
+should touch in them is the dump context to know where to pick up from
+next time.
+
+> +	} else {
+> +		ret = ethnl_perphy_dump_all_dev(skb, ctx, genl_info_dump(cb));
+> +	}
+> +
+> +	return ret;
+> +}
