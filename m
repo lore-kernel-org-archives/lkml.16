@@ -1,151 +1,224 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB70C1A5B92
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE69E21765B
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745611083; cv=none; b=QgcTgQxLuyR1g9snSwcfDV3TM/OILeqBRpMwFygNWo/UXxgLCPJgRyPZC3NOSh/cOZLalIH7pHu7AHbczWvJ9LZgArMHZkMOqpMnyv0/Ax4jpZEy4HrAn6W3jGTUY49baVndUgMkVoO8cENAJwylq9FrqF9rUNahoQ3aZ/77Yvc=
+	t=1745611125; cv=none; b=FWMlBbZ2Bj3IGHAiuuPDJRaSbBX5b4Yn0nUJFfeb3atbVNrk6brt2i4oX0hczGXtK744Qx0CLJ+2rBR920ektVqT+QdBGKWLWc8XEJtylpw1kJg8/9t7XHfkamuZ8P/eg0Lx2xbWdOilcHUhJkxCHOyoCszVGVu/PzNeUk5qOxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745611083; c=relaxed/simple;
-	bh=bEBUcjADCd3zfsE3rxcNbisFN5xwKcKbxpfCkmKbuW4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YJA/Xy5IMZ8yJl5shIUJypfsnw7F+sdXNZBt2kxi1MCL3WtS3nWGMquvAgc5WcIufl2zUuaE0/ZJFNND/W9oou5o7HEp8WRWf5cKD9wg4EP4wjA6m/lIm9Sn4WcobPN4w5ma0Mt6jp0nMCQYir48nykvUwLgxLfwptG1CAH3ky8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G7GkrNnU; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
+	s=arc-20240116; t=1745611125; c=relaxed/simple;
+	bh=oPyH9jOZf7ysBTai60NB2hxPD5A8XrYTTrzsOaiHKBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OGDvkkPvE/zLL0JDoLT6BQWubSCLlXuxVzjU+ON49vKe9KASmaq7hulO9I+b5p8ruYFZFDD8QTOlLn6Ww94PPBJAI61S/7qXF+f3ehjx+cMnLUk21gOkK0+FhMtvheMaYFliwvhjStF27Ba6i4uNaD03MktGGGEkCFCFHjzYUkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VarSxdeA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G7GkrNnU"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-309f0d465bdso2825487a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745611081; x=1746215881; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ElGhi8jor+XgJnYQ39DMHzZzJy0F5BMVEsDOoJJ5QCQ=;
-        b=G7GkrNnUhpFO3XvlpxGAlX7loTY5wheoVtMDsPCItwJ56NkGHRhJo5D6KibsnsUQlQ
-         NxdboWhV7HqP3LgllYeurC13+bNulQhqPxEwsmT7barSCDrec+au30t9SlOby9l1xI6a
-         zpck/SZlnGNYSUmzxmZybRdurPmqIPj6HpZpJiKe8EckrYqIpiGLSqAyIhdaTlLSF48M
-         mFcClSzJAIGhkhy8sJ4xqjb8WTtNIAlnCgd0wxZuUFnC7vB4FHGm/7Y8Hom+YwoZUeCK
-         OiEDz8GnP01AUW//kQtvR1nBaBb/LppP0Nq7UIZOA5HGoWAo8H3mrZpuf7X82EpJ2Vhz
-         lhaA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VarSxdeA"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJwtR032093
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:58:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yNtoPTL9iStSRPUJKcZJpTJAZ89LqGPt1UmcSw0fFnA=; b=VarSxdeA3/EhEQIw
+	jeR246EZaDYV1+SI5QQprcRxUOoPJbc3Hc3/2oZ4xL+ZC8QPDuHTNgW9NE+304W5
+	2HGA3F0RGdBa7iHP/2X0i7wz/usUxxr2MQ9rwx7PFl4pamFHqpdX6Zq82seQy2q2
+	ie5nxyukvs/v0N0hubJ2+l4p1lmiY3zfvIUeA+UntZ8RISrNOmaXRNXt1oEAMLQ4
+	vzHH+S3/LCszpRDz0FC75Ql0zNY69KY3QFBlz4UvIEQ0nDj6KB/4MTpRhSLn8dhW
+	ofqjwAPrW1t/aLR4PBsWhv0ykGQn6eGxSq6QGq+GfU0RquOOFq8NwQra41zhns2L
+	rGrM0A==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1a1ej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:58:42 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c547ab8273so11721085a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:58:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745611081; x=1746215881;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ElGhi8jor+XgJnYQ39DMHzZzJy0F5BMVEsDOoJJ5QCQ=;
-        b=gxKNHhLlFIdEcsWoESxkFk66N5QfZUfybyrTBJb+/tM3DwTnLUhRufJ3khoiyTJ2w+
-         aD7qK3l63rU+G3pDoA7f1mUG+an9WExQXQbMEsj8lmzZEc1xHECIA+DKZYllaDF0el2d
-         3c09Vrlx2a4uT4NrEn9Q4VMGNc643lrBAEUEtO1g1y4R9CCU6xHBwogVZCe4yMItmbi0
-         nUtju76NLMEEXjQ1r3p57cPXoaHZF8wNfjqTuklF7U5TkoSRzU7yMADBnqAzqPAObZOA
-         m9uEyK0XwFfDEIC6B1A3Vh9vqvI+T28Wy94xKWXjp/8f0WwTmQZK/MRkyNGJu0/H7tJo
-         APgw==
-X-Gm-Message-State: AOJu0YyaGaBkDbc/9+ehpTQBkCAhqjm/jfaGZug6Ek1HHjwXtcZK+TEe
-	fkGobQnYg/I7afmlpAQiSv0G8djxx08NyWWBW5NBVOSkOGit52W44EACjP3RJUpY09YzFBEqp5f
-	4CT8BRLr40JQ3v897Bp8/jEbF+WSTTqMo2utFdBzFY5Jqe6c3U4HNbYF19gyYRZ3NYZ8Hg8yYE/
-	PleucgK15D4HEGV7cfuszJeoNwq7dOjHq6GRTV4VZULyz5
-X-Google-Smtp-Source: AGHT+IH7w+H2q6k2sc5zQnvneid2gmd9k8gH49CvGOB1+GxUYPK4WUIq8cEsO+L5IvZ7bZIgonZO7sYT6L9O
-X-Received: from pjbsb5.prod.google.com ([2002:a17:90b:50c5:b0:2ff:4be0:c675])
- (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c88b:b0:2fe:b016:a6ac
- with SMTP id 98e67ed59e1d1-309f7df179fmr6240725a91.15.1745611081099; Fri, 25
- Apr 2025 12:58:01 -0700 (PDT)
-Date: Fri, 25 Apr 2025 12:57:55 -0700
+        d=1e100.net; s=20230601; t=1745611122; x=1746215922;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNtoPTL9iStSRPUJKcZJpTJAZ89LqGPt1UmcSw0fFnA=;
+        b=YcbRjXkNbWkILlMGemBuXaCnPkypw2lou0AhNceYZIs5AAIO5Cewq3qGfWU8oVIjuq
+         QW38Q+U/Gr5ZQgVLp4s8RRy343BZlygaYxHW1X4Y3L5f3OL8cvrrU0KjRBYFBxIKbhxC
+         mXD70t/K86UkO1dCECnJmrDIppKoIpDWqa3q1y+KKachYvQmPwQA6/gLVSr2xjt/c9a0
+         Utq6VppmFeJVfg4lvH2zbEoN6dJeisq7S7msKpEsdU/lE2hjB9en8dmo/IvWK89g/eCD
+         i1XeDpj8sT3Uryym7TYMQjsa6wrbl3iv3UoypNJ+ahSSLQ5BF3r5h4l3p3lcyuFcmdn2
+         UV1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdIFk1DBePgsiOaTZK+/SReUfMr4EgdIPsm5zlTC1uc9yuY5uylP4aQtY2LBd3qSaG3mE4aYHXkJhfn1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQi2CQRCLRICpilwYkF6Tkt6zc7LlDhs1Of+Rs7R9qnP0LZ2+h
+	B7rwlXD0mn9jB8/xeweDf5AooY3bTGgzwgvfTFjGqlzbtrKgDCBxTw8LQMkF7JXfFW+L+EBgYgU
+	4l9QMgeOyeGWLzxiVXWkpIjXVIU0G/vLYiivnVIvnE1mjZepQ0Qq4MmT84XYVVQM=
+X-Gm-Gg: ASbGnculzyQSx4yGWGZG1NN4yRhrN84sUboriCosJy1eYiwQKEv/JqUxdG8Y+6m/r4N
+	L0fWb+XS3Eg+bSNnbTb6wH1YC74LsEQrAZYBOD4esrKPEReXZ5xEEOsp+VTEtgwrDC75lx/cn83
+	+/LiUj6ISZGOhxwugRRF7slc/G1hGA/EuorOfEFCkZ7taVm0AwC1oRfezn+XTRmM+rKQRsva+8L
+	hwvGBhFKqhqVK+yGGr4yKpm8P68v4MqqWMteJnip4198s476BRJyEQinhqM4n8H3kn9TO4rnMQn
+	5LzeuZNHzd3z3oigrMebqAif7d8ksx9S4ZY96sGlkze97HNzAUiYl9xtmvm8RqT6rBw=
+X-Received: by 2002:a05:620a:25d4:b0:7c7:a574:94e8 with SMTP id af79cd13be357-7c960723dfamr190179885a.9.1745611121651;
+        Fri, 25 Apr 2025 12:58:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEs6uTHSx+y7Mx579TQd+STHV6sBZGedNrCyPkLHZ+PRRQmhhsgzyIO4lYzckySewL4JVEITQ==
+X-Received: by 2002:a05:620a:25d4:b0:7c7:a574:94e8 with SMTP id af79cd13be357-7c960723dfamr190178485a.9.1745611121304;
+        Fri, 25 Apr 2025 12:58:41 -0700 (PDT)
+Received: from [192.168.65.156] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e6efcsm183552366b.44.2025.04.25.12.58.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 12:58:40 -0700 (PDT)
+Message-ID: <86bc707d-72d7-44f2-b77f-3fa89e25789a@oss.qualcomm.com>
+Date: Fri, 25 Apr 2025 21:58:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250425195757.2139558-1-jstultz@google.com>
-Subject: [RFC][PATCH v2] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-From: John Stultz <jstultz@google.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: John Stultz <jstultz@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com, 
-	peter-yc.chang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/5] coresight: Add coresight QMI driver
+To: Mao Jinlong <quic_jinlmao@quicinc.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+ <mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250424115854.2328190-1-quic_jinlmao@quicinc.com>
+ <20250424115854.2328190-3-quic_jinlmao@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250424115854.2328190-3-quic_jinlmao@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Cur7J2dfmaAA7GNdwVuu0-eG35yb8j7I
+X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=680be972 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=iMEcykrR2jlrdE440VwA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: Cur7J2dfmaAA7GNdwVuu0-eG35yb8j7I
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDE0MiBTYWx0ZWRfX/L5rpO3vLKGK JwFAKMOMMN59cWacekQIRz90T3o+5M29EmE5+f9ONTq96crJ6gA6IYwIqc0gyvCLjkdO9RP59Z5 4DrNkFPTuVqprLlzZQdQTUcGII1FCydpJdoUJX9s1bg/548LZXdWz58+0gRrjnXjdTTts/kGLDu
+ t7EB2AEgD48NF0IpZ7EAdNikPzJGt2Get1lXiA//vJx6A3O7YID6RfXsQ/RveuKRA1CyTcE9eNZ ZDVHQL7NvIxe+7Bqug8DiY/Qgd4hZKOdzAOvpNbv05JmcNLcj9GjiCHpAW49N1uV8dd/uVlmElh pGs4ONfdFeQin/Ke515Xh2E90uSBbIOYuhDBDXphSHycsKUeqsDWns+xpmsRiNt3+HOPCX+hec7
+ Tn4M27MXHFcJlncd/oWqDv7Xz0FyOe21PGTjXum5NX2Lg4wIL30eElCpq5+V3KIAjNQaXltN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504250142
 
-It was reported that in 6.12, smpboot_create_threads() was
-taking much longer then in 6.6.
+On 4/24/25 1:58 PM, Mao Jinlong wrote:
+> Coresight QMI driver uses QMI(Qualcomm Messaging Interface) interfaces
+> to communicate with remote subsystems. Driver gets the instance id and
+> service id from device tree node and init the QMI connections to remote
+> subsystems. Send request function is for other coresight drivers to
+> communicate with remote subsystems.
+> 
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
 
-I narrowed down the call path to:
- smpboot_create_threads()
- -> kthread_create_on_cpu()
-    -> kthread_bind()
-       -> __kthread_bind_mask()
-          ->wait_task_inactive()
+[...]
 
-Where in wait_task_inactive() we were regularly hitting the
-queued case, which sets a 1 tick timeout, which when called
-multiple times in a row, accumulates quickly into a long
-delay.
+> +static int coresight_qmi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct device_node *child_node;
+> +	int ret;
+> +
+> +	/**
 
-I noticed disabling the DELAY_DEQUEUE sched feature recovered
-the performance, and it seems the newly create tasks are usually
-sched_delayed and left on the runqueue.
+Two starts means kerneldoc, please use one for a normal multiline comment
 
-So in wait_task_inactive() when we see the task
-p->se.sched_delayed, manually dequeue the sched_delayed task
-with DEQUEUE_DELAYED, so we don't have to constantly wait a
-tick.
+> +	 * Get the instance id and service id of the QMI service connection
+> +	 * from DT node. Creates QMI handle and register new lookup for each
 
-This seems to work, but I've only lightly tested it, so I'd love
-close review and feedback in case I've missed something in
-wait_task_inactive(), or if there is a simpler alternative
-approach.
+The first sentence is a bit redundant.
 
-NOTE: Peter did highlight[1] his general distaste for the
-kthread_bind() through wait_task_inactive() functions, which
-suggests a deeper rework might be better, but I'm not familiar
-enough with all its users to have a sense of how that might be
-done, and this fix seems to address the problem and be more
-easily backported to 6.12-stable, so I wanted to submit it
-again, as a potentially more short-term solution.
+In the second, Creates -> Create for imperative mood
 
-[1]: https://lore.kernel.org/lkml/20250422085628.GA14170@noisy.programming.kicks-ass.net/
+[...]
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: kernel-team@android.com
-Reported-by: peter-yc.chang@mediatek.com
-Signed-off-by: John Stultz <jstultz@google.com>
----
-v2:
-* Rework & simplify the check as suggested by K Prateek Nayak
-* Added Reported-by tag for proper attribution
----
- kernel/sched/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> +static const struct of_device_id coresight_qmi_match[] = {
+> +	{.compatible = "qcom,coresight-qmi"},
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index c81cf642dba05..b986cd2fb19b7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2283,6 +2283,12 @@ unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state
- 		 * just go back and repeat.
- 		 */
- 		rq = task_rq_lock(p, &rf);
-+		/*
-+		 * If task is sched_delayed, force dequeue it, to avoid always
-+		 * hitting the tick timeout in the queued case
-+		 */
-+		if (p->se.sched_delayed)
-+			dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
- 		trace_sched_wait_task(p);
- 		running = task_on_cpu(rq, p);
- 		queued = task_on_rq_queued(p);
--- 
-2.49.0.850.g28803427d3-goog
+Nit: please add a space after { and before }
 
+> +	{}
+> +};
+> +
+> +static struct platform_driver coresight_qmi_driver = {
+> +	.probe          = coresight_qmi_probe,
+> +	.remove         = coresight_qmi_remove,
+> +	.driver         = {
+> +		.name   = "coresight-qmi",
+> +		.of_match_table = coresight_qmi_match,
+> +	},
+> +};
+> +
+> +static int __init coresight_qmi_init(void)
+> +{
+> +	return platform_driver_register(&coresight_qmi_driver);
+> +}
+> +module_init(coresight_qmi_init);
+> +
+> +static void __exit coresight_qmi_exit(void)
+> +{
+> +	platform_driver_unregister(&coresight_qmi_driver);
+> +}
+> +module_exit(coresight_qmi_exit);
+
+You can drop the __init and __exit funcs and substitute them
+with module_platform_driver()
+
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("CoreSight QMI driver");
+> diff --git a/drivers/hwtracing/coresight/coresight-qmi.h b/drivers/hwtracing/coresight/coresight-qmi.h
+> new file mode 100644
+> index 000000000000..1d57e46177b8
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-qmi.h
+> @@ -0,0 +1,107 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +#ifndef _CORESIGHT_QMI_H
+> +#define _CORESIGHT_QMI_H
+> +
+> +#include <linux/soc/qcom/qmi.h>
+> +
+> +#define CORESIGHT_QMI_VERSION			(1)
+> +
+> +#define CORESIGHT_QMI_SET_ETM_REQ_V01		(0x002C)
+> +#define CORESIGHT_QMI_SET_ETM_RESP_V01		(0x002C)
+> +
+> +#define CORESIGHT_QMI_MAX_MSG_LEN (50)
+> +
+> +#define TIMEOUT_MS				(10000)
+
+Parentheses around constants are unnecesary
+
+> +
+> +/* Qmi data for the QMI connection */
+> +struct qmi_data {
+> +	u32			qmi_id;
+> +	u32			service_id;
+> +	struct list_head	node;
+> +	struct qmi_handle	handle;
+> +	bool			service_connected;
+> +	struct sockaddr_qrtr	s_addr;
+> +};
+> +
+> +/**
+> + * QMI service IDs
+
+This is not valid kerneldoc, try make W=1
+
+Konrad
