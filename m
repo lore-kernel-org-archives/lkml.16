@@ -1,73 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099C8CA6B;
-	Fri, 25 Apr 2025 05:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B776C19C540;
+	Fri, 25 Apr 2025 06:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745560764; cv=none; b=s81tr1GdsyrISrKmB4z0eHea/vyq1p24MLUcE4uwTcgTIF7WRGHvn8FkvsjkyZFQ7Tj/X/9654bTiMc39jcW2Yxlfi1yQ6OQX5jiJRSzXrGwS1QcrKnyEGYfgIvcQNaMIDz/TstmH2UcLPN7Ig909eG+bF9LGOR+HL32qFvXNgs=
+	t=1745560829; cv=none; b=VklU2ao8e9WMMVhq5b3Qfi+TwYIeuo2BUL6svpknWjZDgJrrMka1d9t6qWoMpj5ZXTD6O6sBDkSmvyipW54VJezFSkGbt9WkmDumVKJoFtucvsLhiC4RrPXckUf7xysGmqFehgSY5FKfpuivy5Rf9YmUoJ0gJLu0NSHH9CIUzh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745560764; c=relaxed/simple;
-	bh=GLp1ktjFa7K3wjwfc/rJPiarptC1W+shUho7laLH4QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pah7bOPkZ1I34F1FQ9vnL5yvrAhe2VmZPSBdx6K7zqG9k5QLxtY4TaciCw/FnuTQNa06tEAnzXe1EJpnTsObXlYeTC3W/2Sv+MyAXCWbx5FY6g81/HuL9zh/5p+mifG5xw+W3BTlPpk5fkvdLqJM03MwP/W+a46HUYiz7KkM8GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XEB75zzO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745560829; c=relaxed/simple;
+	bh=KklZdxaMaK2t+GzkmjlvOLyn33H5lbCp9kBUG3gbsdM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EyIyRzq4Baivw+K/t3ONX5elCn2opgFyy781u3u2XjYix2vm4HoX6Eeqg5RagWrVlDS/aO8X2Fijh8Bz58g8sLNgsfmjGvZR2QyTWEL8qUU8rqwLTWPQra/Y0SzcvXPGSDTGS+TjW1h/t+2DRXZijummccln3NLhMBaN/KyRa1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=eZVvTQJH; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XEB75zzO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2388C4CEE4;
-	Fri, 25 Apr 2025 05:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745560763;
-	bh=GLp1ktjFa7K3wjwfc/rJPiarptC1W+shUho7laLH4QA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XEB75zzOCleMN1u4qU3hI0/g19GzAUy2M4ejlMLMuvN3pDW3JLiLvdbOFayRSHEKq
-	 VQLk2z04wzXPeZGTEt+Bf56fI1AC9cmfAeSmNkOOc/zoP1/QykCMMNSF6XcjXOAcCJ
-	 yxTUAnYy1w4lEx0KA7CS0uRYVFRetp5ytT3t/hpZ6W6ddjFQ5XwPNxVUphz5eBlWR8
-	 iTAubyJLavL2lK132zU0OUS8KhXcl04eCWwtKnKK31lAvEZk90id4BvI7xjDIFYWz4
-	 z367m6L8C0kf6TeQAuhh5OU/RWrzRJKk7c7TwomYxT00sdb3YhwYau/arEN+TgFbzp
-	 /HFETG4ueoMGQ==
-Date: Fri, 25 Apr 2025 07:59:20 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Zixian Zeng <sycamoremoon376@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@outlook.com>, Alexandre Ghiti <alex@ghiti.fr>, Mark Brown <broonie@kernel.org>, 
-	Inochi Amaoto <inochiama@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, sophgo@lists.linux.dev, 
-	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, dlan@gentoo.org, 
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] spi: dt-bindings: snps,dw-apb-ssi: Add compatible
- for SOPHGO SG2042 SoC
-Message-ID: <20250425-prudent-ara-of-chivalry-bfffb5@kuoka>
-References: <20250425-sfg-spi-v6-0-2dbe7bb46013@gmail.com>
- <20250425-sfg-spi-v6-2-2dbe7bb46013@gmail.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="eZVvTQJH"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53P5xSXT12329904, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1745560768; bh=KklZdxaMaK2t+GzkmjlvOLyn33H5lbCp9kBUG3gbsdM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=eZVvTQJH18XWIc9zJZV++hpfHPkkhKIXhyoQvgH2bw1hSPl+RU538nOgplb/o72QC
+	 fYsbjKev5JncnLserer4z9FOoASMiLn+DTAYtaG4ByXa7FXdjAcNuucnmJPFLjkA0z
+	 IISAze91FAPNvEtTHfUSNc+znEoCNl/S8IpgeR20GLbY5Jl0EuTW05/PRsWlfqJ+4U
+	 kNQXZ+ZuH8bY3OQuoQl+QwfL4i1QJOUdA/TEGWihrjYJ3pfW96opDFA6ChqyoDd1GR
+	 dHw0aFI1CGgEyIDzWVtmWaebgFyg3AXyrF0Mye4F7Y4oTnrgCynPqFsbaSyo6CMjp/
+	 rsHShbTH/eHdQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53P5xSXT12329904
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 13:59:28 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 25 Apr 2025 13:59:28 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 25 Apr 2025 13:59:28 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Fri, 25 Apr 2025 13:59:28 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Alexei Safin <a.safin@rosa.ru>, Stanislaw Gruszka <stf_xl@wp.pl>
+CC: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        "Paolo
+ Abeni" <pabeni@redhat.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "lvc-project@linuxtesting.org"
+	<lvc-project@linuxtesting.org>
+Subject: RE: [PATCH v2] iwlegacy: 4965: fix possible out-of-bounds access in il4965_tx_cmd_build_rate()
+Thread-Topic: [PATCH v2] iwlegacy: 4965: fix possible out-of-bounds access in
+ il4965_tx_cmd_build_rate()
+Thread-Index: AQHbtUoyW+CeES1JwUC8udH5dJNFFbOz4pRg
+Date: Fri, 25 Apr 2025 05:59:27 +0000
+Message-ID: <ea0ce54e06104682b9a5d24b9bb75a91@realtek.com>
+References: <20250424185244.3562-1-a.safin@rosa.ru>
+In-Reply-To: <20250424185244.3562-1-a.safin@rosa.ru>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250425-sfg-spi-v6-2-2dbe7bb46013@gmail.com>
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Fri, Apr 25, 2025 at 10:28:13AM GMT, Zixian Zeng wrote:
-> Sophgo SG2042 ships an SPI controller [1] compatible with the Synopsys
-> DW-SPI IP. Add SoC-specific compatible string and use the generic one
-> as fallback.
-> 
-> Link: https://github.com/sophgo/sophgo-doc/blob/main/SG2042/TRM/source/SPI.rst [1]
-> 
-> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+Alexei Safin <a.safin@rosa.ru> wrote:
+>=20
+> Prevent out-of-bounds access in il4965_tx_cmd_build_rate() by rejecting
+> rate_idx values greater than or equal to RATE_COUNT_LEGACY.
+>=20
+> Use a correct bounds check to avoid accessing il_rates[] with
+> an invalid index. The previous comparison allowed rate_idx to become
+> equal to RATE_COUNT_LEGACY, which exceeds the array limit.
+>=20
+> Replace the check 'rate_idx > RATE_COUNT_LEGACY' with
+> 'rate_idx >=3D RATE_COUNT_LEGACY' to ensure memory safety.
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>=20
+> Fixes: 7ac9a364c172 ("iwlegacy: move under intel directory")
+
+The Fixes is obviously wrong. It just moved the code.=20
+
+> Signed-off-by: Alexei Safin <a.safin@rosa.ru>
 > ---
->  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 1 +
->  1 file changed, 1 insertion(+)
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
+> v2: change reciepent
+>  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> index 78dee8ccfebf..f60d9b9798c1 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+> @@ -1572,7 +1572,7 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
+>          */
+>         rate_idx =3D info->control.rates[0].idx;
+>         if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_=
+idx < 0
+> -           || rate_idx > RATE_COUNT_LEGACY)
+> +           || rate_idx >=3D RATE_COUNT_LEGACY)
+>                 rate_idx =3D rate_lowest_index(&il->bands[info->band], st=
+a);
+>         /* For 5 GHZ band, remap mac80211 rate indices into driver indice=
+s */
+>         if (info->band =3D=3D NL80211_BAND_5GHZ)
+> --
+> 2.39.5 (Apple Git-154)
+>=20
 
