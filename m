@@ -1,146 +1,108 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285E0242D64;
-	Fri, 25 Apr 2025 14:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D3D78F4B;
+	Fri, 25 Apr 2025 14:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745591779; cv=none; b=otriJ0miSNCvjMupb7QXgoRzWAQvCfRoMijFZu9QduqzmfHiWVKdWGts17fjpNSHcTuWvNiQ+jhEXk8bKB0D9KFt8SqBDp4bVzb3uH908UBLFeX9ZMqzA+ytbiWG9nhIMcRTIQB+N6nQyFcNrwD3VB39sbPsWR3VDSqCBnhzYUU=
+	t=1745591811; cv=none; b=AtnDAalzU89bXvRyHhXie5rmdwwtjcDhiCFWP9AxCFf29JhKHaXARq+vKtUwjeurWm8IcysHZjOwyxTD5HImjgc7OBBWrUaQsgZkDuCUdJABK8W+jGoO6m0D3czeq94hTRtmsHimskzGyga9paPnfQtMkch0M4jx45NW0xWWkb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745591779; c=relaxed/simple;
-	bh=l0t+c9VOElcgGwPJX41n44akw+bTfnQ6M36YJZwvlaE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HEaeX+/+D8q68cNadq9akhzJdCc7EnDkIz3Yoi/VE8qwbF0zIdNBbosmnmHalaFYXL7QiDvA7K8zcgloNtFkl/zCUvyQXf7BkX1JYGBnL190m9V6Gh0tCaet5uRG7h6yhIExFE7JUzAsGj4C046ApdpedP2ZvBcVFAn8uN1Y/Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549967c72bcso2629294e87.3;
-        Fri, 25 Apr 2025 07:36:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745591774; x=1746196574;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NR8AY7/r7j1Bynibp57ezAgc4LFEr9BMoNMHriAH6oo=;
-        b=eKqoCGZXUKVUyp8XMCQ2y9AECuyP2c1BXEUrhRWeg7G9D9HUhGP0SaTBVt7LGsAMvN
-         E8aeh/W75kCa70NM6LcPQJajNOE/4gLDRxfedsAU6Tvd/29yoYBrf9RbaRl/TURvXdzW
-         AkqzYJEHbogmDezylPUtIPq9HxpN8oXootxE0PdAVrJ6MFvl1+RobHcJxp2q5z5JCxM5
-         a1/BsBnmaiysGColCljFUr/PfnRmzyzG/2Ifnp4ISQEr6RpaHF6UhEyV3BQUOHaLY4CR
-         5yxpqtwHYThiJ0liU0bcA0TVNMLAGViggGZ57vNMdl+pKyNM4RVkvBdGLFz40nlEDwoZ
-         iVpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJliMQU363PK5GcCUy03Ii7eXIJ6MoCiTCj0gs5wxbzu+daPsaHIYNuZYts7JuAZX3QvATmOJs@vger.kernel.org, AJvYcCWLe/5aSg37yAUIXkdlXYVnRZsVtvWWy30EZoz6JlzuwEA+l7yKiF2AHI4jXGOp9Wkh0B3XSJxJfVQao5lD@vger.kernel.org, AJvYcCXjGZU56DXG691SgiU7trtqIkKm9IewUB5ITOjcxOk+N+H1rEQKb29fHlZZx3BeSxtlMNTf2tiP5gRX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk0jFaDZSvg9EeQDP4vuvP6gzo8Ekw/3HF4DiiBcfCAwk3GbLO
-	A0VZnCItuCgCQGKXd0gZ7MfaZoJryUSQH+6VWPeonwJkihvccuHGnnaOui3o354=
-X-Gm-Gg: ASbGncsH5j3xmO2Ic3tUfxdrsdvanDmPBIATs/bq4iinZaUj39+vgQtIsPBqyJgFxt4
-	/mr1fZw50zjTDfxUBywUvPzsdh9xf13Phpqc/VcEDAJdJJZQ9rk5yAgdHRmLKJRaMFre309o1GX
-	wMUJ2G/zp+SD/GLFQ0XGyMCFRqmHf3b98KThDHd75bVqbSH91VthTGtlEza+ceZCrEw7+8Qu9ro
-	4Z2P1FI0JwDNcQ3VBI9j1Keras0aw7EVgXpnApcd8HrDXr5ZlZQAtVplB3Tg2DQlCQfDrwv/ZOI
-	DSL4+wIxxRoFqHIdak8deUhDb3YZoVIX6TKB30TBd5O7uAOdfQ6Y6SH6Yy6gbwQhc/tiIwS3xA=
-	=
-X-Google-Smtp-Source: AGHT+IGznjhbuq6FiPRXXRyMXRoNBeQ0xweGlhYj/GZ0VH8V4UfHIjIuIGav+dLV/s7ivQ9XESHDrQ==
-X-Received: by 2002:ac2:4c4c:0:b0:54b:1039:fe61 with SMTP id 2adb3069b0e04-54e8cbd8e04mr996674e87.33.1745591773363;
-        Fri, 25 Apr 2025 07:36:13 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb2627asm629687e87.16.2025.04.25.07.36.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 07:36:13 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso22928491fa.3;
-        Fri, 25 Apr 2025 07:36:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUIIbn/1GrJvHJJ9w5tFkZbOFBxXNDWifRdLIAx0hv5Qt0TADzQm+x8z38f3ZO10/ZX9FdU+QMTyv/qF963@vger.kernel.org, AJvYcCVpwIsxXzAsNzAPP500ijLitFUELC9+kep5rRadb8j30t+dk3+Y8plGeNa8ObtPIRokb1gUZajh@vger.kernel.org, AJvYcCW10YhZIwiy0Lsoz/eS2TAYXeeekq2Uc1G71FPrqlZCmF0L1JwVVx6nfssHz2KIitGrXOmQ3+tInu7r@vger.kernel.org
-X-Received: by 2002:a2e:bc22:0:b0:30b:9813:b002 with SMTP id
- 38308e7fff4ca-31907611d07mr9058331fa.30.1745591772086; Fri, 25 Apr 2025
- 07:36:12 -0700 (PDT)
+	s=arc-20240116; t=1745591811; c=relaxed/simple;
+	bh=K2RdwYQvxoGdkMb4tRtn11nLabJWv4T2dHWe753R+lE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TxPIp+bjH6146wIYJCcMt7xu/K8+v6hNgBZCr3NyISdLRTEzdRqNAo8/IWtx8vRzL/d8tRQxIwEzapf5Ue/f/TS4TX0VJMSHqSeKOsX/+T+Aj6qdzyUpO6ncLWFjgWpx92nSILDDATzSvsHoljgQsA3dorL5p+sOb9QA8C5o90w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0BlZTgl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0BlZTgl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 045ABC4CEE4;
+	Fri, 25 Apr 2025 14:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745591810;
+	bh=K2RdwYQvxoGdkMb4tRtn11nLabJWv4T2dHWe753R+lE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G0BlZTgliYLpKMPqcPn0s9FTdF2UvlHq4qxPzcEaLoyqevgouX1IzelnR3Hg5t06K
+	 Ik706/6ehA0pE+fOk420fIvbz2USLSeUV6wb61gY2p4Or157l/RNF4WFNha8pFM+5A
+	 ceWIt7io1tvZyuLCj0w4gb08P9cw5ACpSGU0JpNkKTOpTG5fXq0D9K0A9rd72S6p/l
+	 SLZTt4kdl/mTfif4dlaa67I66ReQ+HHtPh7VzoLboicfCqolP3iSBH7l5ofIMYvFr/
+	 qF5sfl292IYrAQGsMxatk7tlFE+mcZ4sF+5FPxN+mi07DtHjl+ecKe/4/tpkVFCxKM
+	 UavRglTEVkZLA==
+Date: Fri, 25 Apr 2025 15:36:44 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Alex Elder <elder@riscstar.com>,
+	Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	spacemit@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v9 1/3] riscv: defconfig: spacemit: enable gpio support
+ for K1 SoC
+Message-ID: <20250425-unsuited-perennial-96d13be0b927@spud>
+References: <20250424-03-k1-gpio-v9-0-eaece8cc5a86@gentoo.org>
+ <20250424-03-k1-gpio-v9-1-eaece8cc5a86@gentoo.org>
+ <20250424-untried-refueling-50c5902d63c9@spud>
+ <20250425000406-GYA49092@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
- <20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org> <CAGb2v66a4ERAf_YhPkMWJjm26SsfjO3ze_Zp=QqkXNDLaLnBRg@mail.gmail.com>
- <20250425104128.14f953f3@donnerap.manchester.arm.com>
-In-Reply-To: <20250425104128.14f953f3@donnerap.manchester.arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Fri, 25 Apr 2025 22:35:59 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65QUrCjgHXWAb72Sdppqg1AUxXyD_ZcXShtkRSHCQBbOg@mail.gmail.com>
-X-Gm-Features: ATxdqUGytr4HbfY93aZiokaET82aJ2vi5Nhe3vDvbhoSCAK-s8uP_doJV3CtnsQ
-Message-ID: <CAGb2v65QUrCjgHXWAb72Sdppqg1AUxXyD_ZcXShtkRSHCQBbOg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet MAC
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Corentin Labbe <clabbe.montjoie@gmail.com>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kUnUDH4nBaYcHt5+"
+Content-Disposition: inline
+In-Reply-To: <20250425000406-GYA49092@gentoo>
+
+
+--kUnUDH4nBaYcHt5+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 5:41=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> On Fri, 25 Apr 2025 13:26:25 +0800
-> Chen-Yu Tsai <wens@csie.org> wrote:
->
-> Hi Chen-Yu,
->
-> > On Thu, Apr 24, 2025 at 6:09=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wro=
-te:
-> > >
-> > > Add EMAC0 ethernet MAC support which found on A523 variant SoCs,
-> > > including the A527/T527 chips. MAC0 is compatible to the A64 chip whi=
-ch
-> > > requires an external PHY. This patch only add RGMII pins for now.
-> > >
+On Fri, Apr 25, 2025 at 12:04:06AM +0000, Yixun Lan wrote:
+> Hi Conor,
+>=20
+> On 16:22 Thu 24 Apr     , Conor Dooley wrote:
+> > On Thu, Apr 24, 2025 at 05:40:49PM +0800, Yixun Lan wrote:
+> > > Enable GPIO support, in order to activate follow-up GPIO LED,
+> > > and ethernet reset pin.
+> > >=20
 > > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 40 ++++++++++++++++=
-++++++++++
-> > >  1 file changed, 40 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/ar=
-m64/boot/dts/allwinner/sun55i-a523.dtsi
-> > > index ee485899ba0af69f32727a53de20051a2e31be1d..c9a9b9dd479af05ba22fe=
-9d783e32f6d61a74ef7 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> > > @@ -126,6 +126,15 @@ pio: pinctrl@2000000 {
-> > >                         interrupt-controller;
-> > >                         #interrupt-cells =3D <3>;
-> > >
-> > > +                       rgmii0_pins: rgmii0-pins {
-> > > +                               pins =3D "PH0", "PH1", "PH2", "PH3", =
-"PH4",
-> > > +                                      "PH5", "PH6", "PH7", "PH9", "P=
-H10",
-> > > +                                      "PH14", "PH15", "PH16", "PH17"=
-, "PH18";
-> > > +                               allwinner,pinmux =3D <5>;
-> > > +                               function =3D "emac0";
-> > > +                               drive-strength =3D <40>;
-> >
-> > We should probably add
-> >
-> >                                   bias-disable;
-> >
-> > to explicitly turn off pull-up and pull-down.
->
-> Should we? I don't see this anywhere else for sunxi, probably because it =
-is
-> the (reset) default (0b00).
-> I wonder if we have a hidden assumption about this? As in: if no bias is
-> specified, we assume bias-disable? Then we should maybe enforce this is i=
-n
-> the driver?
+> >=20
+> > Do you want me to grab this patch, or do you have a defconfig branch to
+> > put it on?
+> >=20
+> Yes, I'd appreciate if you willing to pick it, to avoid potential conflic=
+ts?
 
-There isn't any assumption, as in we were fine with either the reset
-default or whatever the bootloader left it in. However in projects at
-work I learned that it's better to have explicit settings despite
-working defaults.
+Sure, done.
 
+> (I currently do not maintain defconfig branch)
+>=20
+> BTW, we might have few more in this cycle, e.g. - clock, reset
 
-ChenYu
+Cool, just poke me if you need them picked up. I should see an email,
+but failing that, @ me on your IRC channel.
+
+Cheers,
+Conor.
+
+--kUnUDH4nBaYcHt5+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAud/AAKCRB4tDGHoIJi
+0saMAPwOeQlQUrG6np6OmBikq8VoxLk3DzM+HkXJFjuDkb5spwD/VLAVmmRQJRdW
+7Kd+TdyJ9DvK5K22vsvOBcpQHKAbIAY=
+=qbG6
+-----END PGP SIGNATURE-----
+
+--kUnUDH4nBaYcHt5+--
