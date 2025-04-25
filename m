@@ -1,149 +1,374 @@
-Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.167])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB8C201100
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C41121D5BD
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745571073; cv=none; b=fAkEEevG48NvMbt7XjNv0OJRTIN6KRoBk1ybGqofFeICA0BCFzewmbZ5spyrouxFsEHzINrwEEAtnNbTjzxNXCCje9mXyTOq/GlgO5tEQxofhfLtoJTcN66IIZ+xhApwWCejMfVkj0OysWimwWFqBeTR1I7qYXdvZWVcrGY6D2c=
+	t=1745571075; cv=none; b=kuBes4jyxPgqhdCXzpLNCV8ZlproZcO4sy1F9b3yjcvjAijnjREXqb4ZrnTPHj4BOSAA8Ajh89MWtwE6v03HnQLhaHYfHS0iB6IQTwBhz0877Z73nIzyvdO12kFCSyF6DpikYfxba/2SAFZfvOtyDK8oZaX4sAQil5ehtc5V7Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745571073; c=relaxed/simple;
-	bh=QKM81Z5OKSv3auXVAY478OddXt6QHpbIxR9wosP5Auo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ewxd9+Y6wuh4OMeQ1WR70gJpo+1eBsXN9wmUhawSQulnvAPECLQXelohSZiAbpPKrII6zYaaQQgQGWt9H7HJYonMqGCknFb3gtdnTdIkWU7KUMjjDNd0UzdJDKixHm3euLFAqSjDW8v5Uc1ujA2VOpHFFK05N2mwL/syeLO7ohw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl; spf=pass smtp.mailfrom=xs4all.nl; dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b=C05ahXwG; arc=none smtp.client-ip=195.121.94.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xs4all.nl
+	s=arc-20240116; t=1745571075; c=relaxed/simple;
+	bh=FZWopE76g0GdqxKuvbnNQTyrmos3s+r/hLBaM//0J34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lzsN8++V02xamkpVV9fqBxCsbeKuckPbEtSh02CnZzRO9iOTDVMa1iInr6GdIYvlDsaC96z34aYlEWwX/Qxvw7rgwUPF/swHIkl2SImYy12RI2pp6qiJAJ+W1Qr/JkoQvm2mc/GuG1IV48GmrlfL2iG3kj02lEHA2RnR1OeC6VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hVkobYMX; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="C05ahXwG"
-X-KPN-MessageId: 93f16712-21b2-11f0-b9a0-005056abbe64
-Received: from smtp.kpnmail.nl (unknown [10.31.155.38])
-	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
-	id 93f16712-21b2-11f0-b9a0-005056abbe64;
-	Fri, 25 Apr 2025 10:52:11 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVkobYMX"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e731a56e111so177160276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=xs4all.nl; s=xs4all01;
-	h=content-type:from:to:subject:mime-version:date:message-id;
-	bh=ZUUJHctHfNsWNu1EuQFACb2hrUYidSMtniMgESDbRMU=;
-	b=C05ahXwGA4fFgl5pI9IJHaOIC76m8R/+Es89bI5CvWoa6HqeHuMK1mldeMHIPdQDi2kLlgzYGuFDe
-	 D6MuwZeTwD9wDa1XBMVKPiXUdLXcq+GTqnyBHWJmMljRXk48AhzZTUw4w3JcILCX9BZqxzGIjcGt45
-	 rVpMjojPveoEKJh8q2SHsNUin5NrH2hHy2UM/ToU41fRmD9iRhfZFZVHgj6RTwNoFsLryLF3BsJztF
-	 gaTSBezUZK3uueMs3FZ29rF3MDkksrwOCGH4rjzRi2+4egWucO06G46ulnDHCSBicLhtJMzaffZPP7
-	 sV5V8wKP1no2OVYkOrkoy9/F8HuD5EA==
-X-KPN-MID: 33|AF0t4UVO0ldgi6YmnFhYJXqAPxHkuBjosJGcKGQA7S6P7Abi1YftYhe8yCepFKM
- Um9AVCIhpwBzaPi+MzlrzvCTD1SHpo9+IS4F4rFr5JFU=
-X-KPN-VerifiedSender: Yes
-X-CMASSUN: 33|nqQMCrwmB3CHOeiz1JE1vwIQX38ApX4EwzMJX9cEX5ZmT/5GDgIxRdtlrbvDrcJ
- 3U9+ukECS2iUUeZHN8Kv+nQ==
-Received: from [192.168.1.10] (80-60-128-215.fixed.kpn.net [80.60.128.215])
-	by smtp.xs4all.nl (Halon) with ESMTPSA
-	id 6c670738-21b2-11f0-95a4-005056abf0db;
-	Fri, 25 Apr 2025 10:51:06 +0200 (CEST)
-Message-ID: <7d0096ad-a290-4fbc-8c06-dba49e8db8af@xs4all.nl>
-Date: Fri, 25 Apr 2025 10:51:05 +0200
+        d=linaro.org; s=google; t=1745571072; x=1746175872; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9GQfk+3zeIIKzUeHjqMJCPYPGJndG19Wjdr7pJZStAA=;
+        b=hVkobYMXDPiGMDjrjO7scyTWDArd2qmoCtMyq2jqguhhyfh+TBehTlYtGX5nBdP9gZ
+         5tvSaZ2xv/pT1UjquWN3DYTemJeA18gxIJIDe8xe7w4u5rPF8eiVpLsysBSm9mkxWozI
+         YScMuxZul5uxgnY1aCDP/W9Wb6v6tL5fGAveneUsjxQrm8V0oF/Kui6K307JIi6zIw+S
+         wfOdn5t06jqvhqasacc866HygSRwE1XtPI7UbjwYMH56riZEbsu9XKO4q3HS3R7z9eAd
+         rV4zjFNcgX4w7rlr3OHLM2l4N1pEUa1xVhAzCZTJGwf7dvnDvo7sew44GXoi50Qbo/EX
+         LSmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745571072; x=1746175872;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9GQfk+3zeIIKzUeHjqMJCPYPGJndG19Wjdr7pJZStAA=;
+        b=cS7EIPZoiPDWcOXxE0Tl+6Qzh2j5sCxrt3oy2bv424EnHnrNYwhdP2t6NrgZ0JJqsf
+         +UIqmBLD6tHv8p0ZjKwUNa+vnWEuf189NGFoxKHFpJ3NyOgWW2ZSQfpzjY0Z8a3BvU33
+         yKgZAVfPyjWClbFt+y+I9BxexIxi0Axfe6TW8+XrIVhk0QnFynlZbVA44Lc51w6x4hEl
+         JRpMPzFgS19/336FJY5MoC2DWxiXZdCERQGZ9RiEbsDsBWRu6/1YbtKh2f3sE0gznbQ3
+         NvjEDhYj+Y0r433cFruTwDrCfvQ3zBu5Bg/6VWPsCY8+6VcTHuPkO6pP83u4j3O8jk8C
+         j1Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXhy0guAzFIIT1usGWEVAyR9omp2Zt0vxTqZIDn1/KFQXWeS4T5BLIeldeQ+iiwwb0a1amrIcwi9uB7Xis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMaDE7oAoqaXU1X94sdef6jWf+b8eFp9cWFHAaHOV1uAJQeTJ3
+	EszBkJQcXAQ/25exx7FSSvSo0gH9dHP2QyOg1QtMnr1SszXt0TGBsUsbAsIin6H2p5DIL7oLePr
+	bCtJ7gV2dDXYdGl2rq1g/jkzbkkQ6vQMYjfScWeaUf8tO+o9FTFI=
+X-Gm-Gg: ASbGncuz423OGKQopcv4o/M09gEaT6uazcZrpPBPpsXsrOzh5OSRSSIxGjV9EhgyhY8
+	oMRmP93XsswoqpCn2paH31nCcgoxHTeAPz3CpI3K+aaaCk5S8XmGx3bKL4gF58aZWU3JkyMQGdM
+	EDECkcbWiK87Z5O+pGbaXUYRM=
+X-Google-Smtp-Source: AGHT+IE4B65BDpklwFJDxIOPbJ0Hzq8wAs89aXC+F3ZxVBmeN5cyfnzySlvgMFu/NcYkSePA20evRaUlepPFtsP+koI=
+X-Received: by 2002:a05:6902:2807:b0:e72:8658:5839 with SMTP id
+ 3f1490d57ef6-e7316881e05mr2063821276.32.1745571072238; Fri, 25 Apr 2025
+ 01:51:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/13] media: pci: cx18-av-vbi: Replace open-coded
- parity calculation with parity_odd()
-To: Kuan-Wei Chiu <visitorckw@gmail.com>,
- Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org, joel@jms.id.au,
- eajames@linux.ibm.com, andrzej.hajda@intel.com, neil.armstrong@linaro.org,
- rfoss@kernel.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
- hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- parthiban.veerasooran@microchip.com, johannes@sipsolutions.net,
- gregkh@linuxfoundation.org, jirislaby@kernel.org, yury.norov@gmail.com,
- akpm@linux-foundation.org, jdelvare@suse.com, linux@roeck-us.net,
- alexandre.belloni@bootlin.com, pgaj@cadence.com, hpa@zytor.com,
- alistair@popple.id.au, linux@rasmusvillemoes.dk,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
- linux-fsi@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-input@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mtd@lists.infradead.org, oss-drivers@corigine.com,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
- linux-serial@vger.kernel.org, bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
- Frank.Li@nxp.com, linux-hwmon@vger.kernel.org,
- linux-i3c@lists.infradead.org, david.laight.linux@gmail.com,
- andrew.cooper3@citrix.com, Yu-Chun Lin <eleanor15x@gmail.com>
-References: <20250409154356.423512-1-visitorckw@gmail.com>
- <20250409154356.423512-4-visitorckw@gmail.com>
- <25b7888d-f704-493b-a2d7-c5e8fff9cfb4@broadcom.com>
- <Z/bDnLzcajzIxey3@visitorckw-System-Product-Name>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <Z/bDnLzcajzIxey3@visitorckw-System-Product-Name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CGME20250414185316eucas1p2c2dbd33788d9141773546f7a479ac288@eucas1p2.samsung.com>
+ <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com> <20250414-apr_14_for_sending-v2-3-70c5af2af96c@samsung.com>
+In-Reply-To: <20250414-apr_14_for_sending-v2-3-70c5af2af96c@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 25 Apr 2025 10:50:35 +0200
+X-Gm-Features: ATxdqUExFbuTIHs9dJyH7CbSVLWAZOfs6hMxjA5h2peJwwEgi8V0avo5M5kQ388
+Message-ID: <CAPDyKFqX5cjQe3-MX3W9wMoQW3gzwSvb0QMf-_sTJuq_TeGsCg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] pmdomain: thead: Add GPU-specific clock and reset
+ handling for TH1520
+To: Michal Wilczynski <m.wilczynski@samsung.com>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 09/04/2025 20:59, Kuan-Wei Chiu wrote:
-> On Wed, Apr 09, 2025 at 08:43:09PM +0200, Arend van Spriel wrote:
->> On 4/9/2025 5:43 PM, Kuan-Wei Chiu wrote:
->>> Refactor parity calculations to use the standard parity_odd() helper.
->>> This change eliminates redundant implementations.
->>>
->>> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
->>> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
->>> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
->>> ---
->>>   drivers/media/pci/cx18/cx18-av-vbi.c | 12 ++----------
->>>   1 file changed, 2 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/media/pci/cx18/cx18-av-vbi.c b/drivers/media/pci/cx18/cx18-av-vbi.c
->>> index 65281d40c681..15b515b95956 100644
->>> --- a/drivers/media/pci/cx18/cx18-av-vbi.c
->>> +++ b/drivers/media/pci/cx18/cx18-av-vbi.c
->>
->> [...]
->>
->>> @@ -278,7 +270,7 @@ int cx18_av_decode_vbi_line(struct v4l2_subdev *sd,
->>>   		break;
->>>   	case 6:
->>>   		sdid = V4L2_SLICED_CAPTION_525;
->>> -		err = !odd_parity(p[0]) || !odd_parity(p[1]);
->>> +		err = !parity_odd(p[0]) || !parity_odd(p[1]);
->>
->> No need to call parity_odd() twice here. Instead you could do:
->>
->> 		err = !parity_odd(p[0] ^ p[1]);
++ Bartosz
 
-I prefer the original approach, it is easier to understand. Performance
-is not an issue here, clarity of the code is more important.
+On Mon, 14 Apr 2025 at 20:53, Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+> Extend the TH1520 power domain driver to manage GPU related clocks and
+> resets via generic PM domain start/stop callbacks.
+>
+> The TH1520 GPU requires a special sequence to correctly initialize:
+> - Enable the GPU clocks
+> - Deassert the GPU clkgen reset
+> - Delay for a few cycles to satisfy hardware requirements
+> - Deassert the GPU core reset
+>
+> This sequence is SoC-specific and must be abstracted away from the
+> Imagination GPU driver, which expects only a standard single reset
+> interface. Following discussions with kernel maintainers [1], this
+> logic is placed inside a PM domain, rather than polluting the clock or
+> reset frameworks, or the GPU driver itself.
 
-So for this patch (i.e. this v4 version):
+Speaking about special sequences for power-on/off devices like this
+one, that's a known common problem. We actually have a generic
+subsystem for this now, drivers/power/sequencing/*.
 
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
+Perhaps it's worth having a look at that, it should allow us to
+abstract things, so the GPU driver can stay more portable.
 
->>
->> This is orthogonal to the change to parity_odd() though. More specific to
->> the new parity_odd() you can now do following as parity_odd() argument is
->> u64:
->>
->> 		err = !parity_odd(*(u16 *)p);
->>
->>
-> Thanks for the feedback!
-> Would you prefer this change to be part of the parity() conversion
-> patch, or in a separate one?
+Kind regards
+Uffe
 
-Just leave it as-is, as mentioned above.
-
-Regards,
-
-	Hans
-
-> 
-> Regards,
-> Kuan-Wei
-
+>
+> To support this, the TH1520 PM domain implements `attach_dev` and
+> `detach_dev` callbacks, allowing it to dynamically acquire clock and
+> reset resources from the GPU device tree node at runtime. This allows to
+> maintain the separation between generic drivers and SoC-specific
+> integration logic.
+>
+> As a result, the PM domain not only handles power sequencing but also
+> effectively acts as the SoC specific "glue driver" for the GPU device,
+> encapsulating all TH1520-specific clock and reset management.
+>
+> This approach improves maintainability and aligns with the broader
+> direction of treating PM domains as lightweight SoC-specific power
+> management drivers [2].
+>
+> [1] - https://lore.kernel.org/all/CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com/
+> [2] - https://osseu2024.sched.com/event/1ej38/the-case-for-an-soc-power-management-driver-stephen-boyd-google
+>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  drivers/pmdomain/thead/th1520-pm-domains.c | 199 +++++++++++++++++++++++++++++
+>  1 file changed, 199 insertions(+)
+>
+> diff --git a/drivers/pmdomain/thead/th1520-pm-domains.c b/drivers/pmdomain/thead/th1520-pm-domains.c
+> index f702e20306f469aeb0ed15e54bd4f8309f28018c..75412efb195eb534c2e8ff10ced65ed4c4d2452c 100644
+> --- a/drivers/pmdomain/thead/th1520-pm-domains.c
+> +++ b/drivers/pmdomain/thead/th1520-pm-domains.c
+> @@ -5,10 +5,13 @@
+>   * Author: Michal Wilczynski <m.wilczynski@samsung.com>
+>   */
+>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+>  #include <linux/firmware/thead/thead,th1520-aon.h>
+>  #include <linux/slab.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/reset.h>
+>
+>  #include <dt-bindings/power/thead,th1520-power.h>
+>
+> @@ -16,6 +19,15 @@ struct th1520_power_domain {
+>         struct th1520_aon_chan *aon_chan;
+>         struct generic_pm_domain genpd;
+>         u32 rsrc;
+> +
+> +       /* PM-owned reset */
+> +       struct reset_control *clkgen_reset;
+> +
+> +       /* Device-specific resources */
+> +       struct device *attached_dev;
+> +       struct clk_bulk_data *clks;
+> +       int num_clks;
+> +       struct reset_control *gpu_reset;
+>  };
+>
+>  struct th1520_power_info {
+> @@ -61,6 +73,177 @@ static int th1520_pd_power_off(struct generic_pm_domain *domain)
+>         return th1520_aon_power_update(pd->aon_chan, pd->rsrc, false);
+>  }
+>
+> +static int th1520_gpu_init_consumer_clocks(struct device *dev,
+> +                                          struct th1520_power_domain *pd)
+> +{
+> +       static const char *const clk_names[] = { "core", "sys" };
+> +       int i, ret;
+> +
+> +       pd->num_clks = ARRAY_SIZE(clk_names);
+> +       pd->clks = devm_kcalloc(dev, pd->num_clks, sizeof(*pd->clks), GFP_KERNEL);
+> +       if (!pd->clks)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < pd->num_clks; i++)
+> +               pd->clks[i].id = clk_names[i];
+> +
+> +       ret = devm_clk_bulk_get(dev, pd->num_clks, pd->clks);
+> +       if (ret)
+> +               return dev_err_probe(dev, ret, "Failed to get GPU clocks\n");
+> +
+> +       return 0;
+> +}
+> +
+> +static int th1520_gpu_init_consumer_reset(struct device *dev,
+> +                                         struct th1520_power_domain *pd)
+> +{
+> +       int ret;
+> +
+> +       pd->gpu_reset = reset_control_get_exclusive(dev, NULL);
+> +       if (IS_ERR(pd->gpu_reset)) {
+> +               ret = PTR_ERR(pd->gpu_reset);
+> +               pd->gpu_reset = NULL;
+> +               return dev_err_probe(dev, ret, "Failed to get GPU reset\n");
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int th1520_gpu_init_pm_reset(struct device *dev,
+> +                                   struct th1520_power_domain *pd)
+> +{
+> +       pd->clkgen_reset = devm_reset_control_get_exclusive(dev, "gpu-clkgen");
+> +       if (IS_ERR(pd->clkgen_reset))
+> +               return dev_err_probe(dev, PTR_ERR(pd->clkgen_reset),
+> +                                    "Failed to get GPU clkgen reset\n");
+> +
+> +       return 0;
+> +}
+> +
+> +static int th1520_gpu_domain_attach_dev(struct generic_pm_domain *genpd,
+> +                                       struct device *dev)
+> +{
+> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
+> +       int ret;
+> +
+> +       /* Enforce 1:1 mapping - only one device can be attached. */
+> +       if (pd->attached_dev)
+> +               return -EBUSY;
+> +
+> +       /* Initialize clocks using the consumer device */
+> +       ret = th1520_gpu_init_consumer_clocks(dev, pd);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Initialize consumer reset using the consumer device */
+> +       ret = th1520_gpu_init_consumer_reset(dev, pd);
+> +       if (ret) {
+> +               if (pd->clks) {
+> +                       clk_bulk_put(pd->num_clks, pd->clks);
+> +                       kfree(pd->clks);
+> +                       pd->clks = NULL;
+> +                       pd->num_clks = 0;
+> +               }
+> +               return ret;
+> +       }
+> +
+> +       /* Mark device as platform PM driver managed */
+> +       device_platform_resources_set_pm_managed(dev, true);
+> +       pd->attached_dev = dev;
+> +
+> +       return 0;
+> +}
+> +
+> +static void th1520_gpu_domain_detach_dev(struct generic_pm_domain *genpd,
+> +                                        struct device *dev)
+> +{
+> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
+> +
+> +       /* Ensure this is the device we have attached */
+> +       if (pd->attached_dev != dev) {
+> +               dev_warn(dev,
+> +                        "tried to detach from GPU domain but not attached\n");
+> +               return;
+> +       }
+> +
+> +       /* Remove PM managed flag when detaching */
+> +       device_platform_resources_set_pm_managed(dev, false);
+> +
+> +       /* Clean up the consumer-owned resources */
+> +       if (pd->gpu_reset) {
+> +               reset_control_put(pd->gpu_reset);
+> +               pd->gpu_reset = NULL;
+> +       }
+> +
+> +       if (pd->clks) {
+> +               clk_bulk_put(pd->num_clks, pd->clks);
+> +               kfree(pd->clks);
+> +               pd->clks = NULL;
+> +               pd->num_clks = 0;
+> +       }
+> +
+> +       pd->attached_dev = NULL;
+> +}
+> +
+> +static int th1520_gpu_domain_start(struct device *dev)
+> +{
+> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
+> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
+> +       int ret;
+> +
+> +       /* Check if we have all required resources */
+> +       if (pd->attached_dev != dev || !pd->clks || !pd->gpu_reset ||
+> +           !pd->clkgen_reset)
+> +               return -ENODEV;
+> +
+> +       ret = clk_bulk_prepare_enable(pd->num_clks, pd->clks);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = reset_control_deassert(pd->clkgen_reset);
+> +       if (ret)
+> +               goto err_disable_clks;
+> +
+> +       /*
+> +        * According to the hardware manual, a delay of at least 32 clock
+> +        * cycles is required between de-asserting the clkgen reset and
+> +        * de-asserting the GPU reset. Assuming a worst-case scenario with
+> +        * a very high GPU clock frequency, a delay of 1 microsecond is
+> +        * sufficient to ensure this requirement is met across all
+> +        * feasible GPU clock speeds.
+> +        */
+> +       udelay(1);
+> +
+> +       ret = reset_control_deassert(pd->gpu_reset);
+> +       if (ret)
+> +               goto err_assert_clkgen;
+> +
+> +       return 0;
+> +
+> +err_assert_clkgen:
+> +       reset_control_assert(pd->clkgen_reset);
+> +err_disable_clks:
+> +       clk_bulk_disable_unprepare(pd->num_clks, pd->clks);
+> +       return ret;
+> +}
+> +
+> +static int th1520_gpu_domain_stop(struct device *dev)
+> +{
+> +       struct generic_pm_domain *genpd = pd_to_genpd(dev->pm_domain);
+> +       struct th1520_power_domain *pd = to_th1520_power_domain(genpd);
+> +
+> +       /* Check if we have all required resources and if this is the attached device */
+> +       if (pd->attached_dev != dev || !pd->clks || !pd->gpu_reset ||
+> +           !pd->clkgen_reset)
+> +               return -ENODEV;
+> +
+> +       reset_control_assert(pd->gpu_reset);
+> +       reset_control_assert(pd->clkgen_reset);
+> +       clk_bulk_disable_unprepare(pd->num_clks, pd->clks);
+> +
+> +       return 0;
+> +}
+> +
+>  static struct generic_pm_domain *th1520_pd_xlate(const struct of_phandle_args *spec,
+>                                                  void *data)
+>  {
+> @@ -99,6 +282,22 @@ th1520_add_pm_domain(struct device *dev, const struct th1520_power_info *pi)
+>         pd->genpd.power_off = th1520_pd_power_off;
+>         pd->genpd.name = pi->name;
+>
+> +       /* there are special callbacks for the GPU */
+> +       if (pi == &th1520_pd_ranges[TH1520_GPU_PD]) {
+> +               /* Initialize the PM-owned reset */
+> +               ret = th1520_gpu_init_pm_reset(dev, pd);
+> +               if (ret)
+> +                       return ERR_PTR(ret);
+> +
+> +               /* No device attached yet */
+> +               pd->attached_dev = NULL;
+> +
+> +               pd->genpd.dev_ops.start = th1520_gpu_domain_start;
+> +               pd->genpd.dev_ops.stop = th1520_gpu_domain_stop;
+> +               pd->genpd.attach_dev = th1520_gpu_domain_attach_dev;
+> +               pd->genpd.detach_dev = th1520_gpu_domain_detach_dev;
+> +       }
+> +
+>         ret = pm_genpd_init(&pd->genpd, NULL, true);
+>         if (ret)
+>                 return ERR_PTR(ret);
+>
+> --
+> 2.34.1
+>
