@@ -1,505 +1,275 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D0C24C084;
-	Fri, 25 Apr 2025 12:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9CA24EABD
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745585679; cv=none; b=KNbU64TYfkqg+0k6EQho9XlGWdqfxu77MNODPwEZtNs5ADxAt/u0gMRI/q7wZY6s/puJ29Fjk33MEDwxVkzxdo1CF8WL2bQ0cr89pxTC5P9is3Es4T7pG+pdtDf5HzO724+WNH38XgIiBuxO9Qcl8iFYxN2A5mQDAyeI0OW6OTk=
+	t=1745585723; cv=none; b=ebRzZxuCx7OuW+8lelKC9sWWdXdMyZk9B4Gjde5kcETqJW7O2oUIBK/lZIxQvBK/j3eb6rg0VqC/+JcwkphV7Vdldf+BDyzGdn94ZFMXEWfIp1f2J3wtX18JAXOuLVXQTEsCvoqN/nIb2tdrPcVNjw0J5Gapu6fP6YIfLUFMeJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745585679; c=relaxed/simple;
-	bh=AQGzvdobn9qp/yqrx8YaGGER1BqhwZ1p0wSeoBQin8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eefOl2FbTvljGlVui9pIM3FSKqxN9R8PGLCm7INNGdKGoXuPmLlXafAtxthsLGmm/VuN0BZ+7Bi5iXGSDELBpYv0750o+j91jNqBRlR3qe7vUKtIsekE+/R7KPrFnz1TdRtlzfcJUcbpB5ZqMwit+TyRdOsbrx9SdQy7AJcJXOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5940106F;
-	Fri, 25 Apr 2025 05:54:28 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7395C3F59E;
-	Fri, 25 Apr 2025 05:54:32 -0700 (PDT)
-Date: Fri, 25 Apr 2025 13:54:29 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, wens@csie.org,
- samuel@sholland.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
-Message-ID: <20250425135429.174a1871@donnerap.manchester.arm.com>
-In-Reply-To: <20250413134318.66681-3-jernej.skrabec@gmail.com>
-References: <20250413134318.66681-1-jernej.skrabec@gmail.com>
-	<20250413134318.66681-3-jernej.skrabec@gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1745585723; c=relaxed/simple;
+	bh=V0vzS2SBMmSwtDfpTnUAKP1Fy9rXUK+2CtvLBI82r4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ft0Lkp9+TlnoXNJVZNGXY2tJCPfveDgW4mLk2TMWPxxRaC9Xl/7QiormbBA50RT/VLGq8bWPyXZJYB/chRAC0adJG4+7rW+YZWIy/Vw8v3IIly3zygeJzI2Lk83gStvE4SNp0VV9XQWHABh5ezRt79LCZahO7oyLJwPOQIWy3Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DVbPO376; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DVbPO376"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0EA3E82E;
+	Fri, 25 Apr 2025 14:55:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745585716;
+	bh=V0vzS2SBMmSwtDfpTnUAKP1Fy9rXUK+2CtvLBI82r4Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DVbPO376F5YxoK8yNsIZgZ0pvtugPze8+PlJBPY6F1/C60SvPFGge85a9lMg/1ztK
+	 B8fHRQQJ1wc3xOUk0mZuvhQ3I6b/40hvxZTifRSOv/gdTupPu84Zfm5QPFGjoSENCd
+	 mCK1bLdJqVBlEZj8qWd9BmOf1hf+n7sHDbNTGpSo=
+Message-ID: <9c8f2ab2-4492-47df-a27e-7c603436ce36@ideasonboard.com>
+Date: Fri, 25 Apr 2025 15:55:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 16/17] drm/bridge: cdns-dsi: Tune adjusted_mode->clock
+ according to dsi needs
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jayesh Choudhary <j-choudhary@ti.com>
+References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
+ <20250414-cdns-dsi-impro-v3-16-4e52551d4f07@ideasonboard.com>
+ <7de0229a-192f-4d0f-8add-1a50c58f367b@linux.dev>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <7de0229a-192f-4d0f-8add-1a50c58f367b@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 13 Apr 2025 15:42:57 +0200
-Jernej Skrabec <jernej.skrabec@gmail.com> wrote:
+Hi,
 
-Hi Jernej,
+On 20/04/2025 21:01, Aradhya Bhatia wrote:
+> Hi Tomi,
+> 
+> On 14/04/25 16:41, Tomi Valkeinen wrote:
+>> The driver currently expects the pixel clock and the HS clock to be
+>> compatible, but the DPHY PLL doesn't give very finely grained rates.
+>> This often leads to the situation where the pipeline just fails, as the
+>> resulting HS clock is just too off.
+>>
+>> We could change the driver to do a better job on adjusting the DSI
+>> blanking values, hopefully getting a working pipeline even if the pclk
+>> and HS clocks are not exactly compatible. But that is a bigger work.
+>>
+>> What we can do easily is to see in .atomic_check() what HS clock rate we
+>> can get, based on the pixel clock rate, and then convert the HS clock
+>> rate back to pixel clock rate and ask that rate from the crtc. If the
+>> crtc has a good PLL (which is the case for TI K3 SoCs), this will fix
+>> any issues wrt. the clock rates.
+>>
+>> If the crtc cannot provide the requested clock, well, we're no worse off
+>> with this patch than what we have at the moment.
+>>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>> ---
+>>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 37 ++++++++++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> index 63031379459e..165df5d595b8 100644
+>> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>> @@ -908,6 +908,28 @@ static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+>>   	return input_fmts;
+>>   }
+>>   
+>> +static long cdns_dsi_round_pclk(struct cdns_dsi *dsi, unsigned long pclk)
+>> +{
+>> +	struct cdns_dsi_output *output = &dsi->output;
+>> +	unsigned int nlanes = output->dev->lanes;
+>> +	union phy_configure_opts phy_opts = { 0 };
+>> +	u32 bitspp;
+>> +	int ret;
+>> +
+>> +	bitspp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
+>> +
+>> +	ret = phy_mipi_dphy_get_default_config(pclk, bitspp, nlanes,
+>> +					       &phy_opts.mipi_dphy);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = phy_validate(dsi->dphy, PHY_MODE_MIPI_DPHY, 0, &phy_opts);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return div_u64((u64)phy_opts.mipi_dphy.hs_clk_rate * nlanes, bitspp);
+>> +}
+>> +
+>>   static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
+>>   					struct drm_bridge_state *bridge_state,
+>>   					struct drm_crtc_state *crtc_state,
+>> @@ -919,11 +941,26 @@ static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
+>>   	struct drm_display_mode *adjusted_mode = &crtc_state->adjusted_mode;
+>>   	struct cdns_dsi_cfg *dsi_cfg = &dsi_state->dsi_cfg;
+>>   	struct videomode vm;
+>> +	long pclk;
+>>   
+>>   	/* cdns-dsi requires negative syncs */
+>>   	adjusted_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
+>>   	adjusted_mode->flags |= DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC;
+>>   
+>> +	/*
+>> +	 * The DPHY PLL has quite a coarsely grained clock rate options. See
+>> +	 * what hsclk rate we can achieve based on the pixel clock, convert it
+>> +	 * back to pixel clock, set that to the adjusted_mode->clock. This is
+>> +	 * all in hopes that the CRTC will be able to provide us the requested
+>> +	 * clock, as otherwise the DPI and DSI clocks will be out of sync.
+>> +	 */
+>> +
+>> +	pclk = cdns_dsi_round_pclk(dsi, adjusted_mode->clock * 1000);
+>> +	if (pclk < 0)
+>> +		return (int)pclk;
+>> +
+>> +	adjusted_mode->clock = pclk / 1000;
+>> +
+>>   	drm_display_mode_to_videomode(adjusted_mode, &vm);
+>>   
+>>   	return cdns_dsi_check_conf(dsi, &vm, dsi_cfg);
+> 
+> I think at this point cdns_dsi_check_conf is really only creating a
+> dsi_cfg (from the video-mode) so that it can later be used, and then
+> running phy_mipi_dphy_get_default_config(), and phy_validate(), both of
+> which have nothing to do with the freshly made dsi_cfg.
 
-thanks for sending this, I now went through this in more detail and
-compared against the schematic, so some more nits below.
-I added the two comments from my other email before, so you can ignore that
-one now.
+True. And cdns_dsi_mode2cfg() can't fail anymore, so it could be just a 
+void function.
 
-> OrangePi 3 LTS is quite similar to original OrangePi 3, but it has a lot
-> small changes that makes DT sharing unpractical with it.
->=20
-> OrangePi 3 LTS has following features:
-> - Allwinner H6 quad-core 64-bit ARM Cortex-A53
-> - GPU Mali-T720
-> - 2 GB LPDDR3 RAM
-> - AXP805 PMIC
-> - AW859A Wifi/BT 5.0
-> - 2x USB 2.0 host port (A)
-> - USB 3.0 Host
-> - Gigabit Ethernet (Motorcomm YT8531C phy)
-> - HDMI 2.0 port
-> - soldered 8 GB eMMC
-> - 2x LED
-> - microphone
-> - audio jack
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
->  .../allwinner/sun50i-h6-orangepi-3-lts.dts    | 351 ++++++++++++++++++
->  2 files changed, 352 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lt=
-s.dts
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
-/allwinner/Makefile
-> index 00bed412ee31..72c43bd0e2ab 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -33,6 +33,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-p=
-lus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-beelink-gs1.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3-lts.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
-> new file mode 100644
-> index 000000000000..c8830d5c2f09
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
-> @@ -0,0 +1,351 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +// Copyright (C) 2025 Jernej Skrabec <jernej.skrabec@gmail.com>
-> +// Based on sun50i-h6-orangepi-3.dts, which is:
-> +// Copyright (C) 2019 Ond=C5=99ej Jirman <megous@megous.com>
-> +
-> +/dts-v1/;
-> +
-> +#include "sun50i-h6.dtsi"
-> +#include "sun50i-h6-cpu-opp.dtsi"
-> +#include "sun50i-h6-gpu-opp.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/leds/common.h>
-> +
-> +/ {
-> +	model =3D "OrangePi 3 LTS";
-> +	compatible =3D "xunlong,orangepi-3-lts", "allwinner,sun50i-h6";
-> +
-> +	aliases {
-> +		ethernet0 =3D &emac;
-> +		ethernet1 =3D &aw859a;
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path =3D "serial0:115200n8";
-> +	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		ddc-en-gpios =3D <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
-> +	ext_osc32k: ext_osc32k_clk {
+> If there is no benefit in running both the latter functions again after
+> cdns_dsi_round_pclk() runs them, then perhaps we can just drop the
+> cdns_dsi_check_conf() altogether in favor of cdns_dsi_mode2cfg() being
+> called from .atomic_check()?
 
-For the sake of completeness, as mentioned in the other mail, I think we
-want dashes in the node name.
+cdns_dsi_round_pclk() doesn't store the phy_cfg anywhere, whereas 
+cdns_dsi_check_conf() does.
 
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <32768>;
-> +		clock-output-names =3D "ext_osc32k";
+I think I originally wanted to have this structure, because:
 
-Should the output name also contain dashes instead?
+cdns_dsi_round_pclk() is given adjusted_mode->clock * 1000, and it 
+returns an "optimal" pixel clock that matches the DSI clock what the DSI 
+PLL can provide us.
 
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		led-0 {
-> +			function =3D LED_FUNCTION_POWER;
-> +			color =3D <LED_COLOR_ID_RED>;
-> +			gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-> +			default-state =3D "on";
+This rate is then divided by 1000, and set to adjusted_mode->clock.
 
-Maybe something for a follow up patch, but I noticed that the schematic
-does not show current limiting resistors for the LEDs. This probably works
-because the default drive strength is 0b01, so level 1 (in a range from 0
-to 3, which we map to 10, 20, 30, 40 mA). The exact LED is not mentioned,
-but I would imagine that more than 20 mA would not be healthy, and even
-this might be a stretch over longer times.
+We then call cdns_dsi_check_conf(), calling 
+phy_mipi_dphy_get_default_config() and phy_validate(), but this time 
+it's with the "optimal" pixel clock (although truncated to kHz). So the 
+calls are not identical to cdns_dsi_round_pclk().
 
-So should we force the drive-strength to <10> or <20> somewhere? How does
-this even work for those gpios references?
+Then, I have a local patch that adds some code to cdns_dsi_check_conf(). 
+It will check if there is a difference between the requested hs-clk 
+(which we got from phy_mipi_dphy_get_default_config()) and the final one 
+(which we got from phy_validate()), and if so, adjusts the DSI HFP so 
+that the total DSI line time would be close to the one we would have 
+gotten with the requested hs-clk.
 
-> +		};
-> +
-> +		led-1 {
-> +			function =3D LED_FUNCTION_STATUS;
-> +			color =3D <LED_COLOR_ID_GREEN>;
-> +			gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
-> +		};
-> +	};
-> +
-> +	reg_gmac_3v3: gmac-3v3 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "gmac-3v3";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		startup-delay-us =3D <150000>;
-> +		enable-active-high;
-> +		gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+While I think that code is valid, the adjustments were always so small 
+that they rounded to 0, so I did not post that patch. Nevertheless, it 
+kind of points out that calling the functions again is not totally 
+pointless =).
 
-Can you please add a "vin-supply =3D <&reg_vcc5v>;" line here, to chain them
-up nicely?
+To be honest, I'm a bit reluctant to start rehashing the series. It's 
+rather time consuming to test, and some errors are not immediately 
+visible, if they're only seen as occasional glitches on the screen.
 
-> +	};
-> +
-> +	reg_vcc5v: vcc5v {
-> +		/* board wide 5V supply directly from the DC jack */
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc-5v";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_wifi_3v3: wifi-3v3 {
-> +		/* 3.3V regulator for WiFi and BT */
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "wifi-3v3";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		enable-active-high;
-> +		gpio =3D <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+If the code has no issues as such, I would suggest to do further 
+cleanups on top so that we'd get the upstream fixed (as it's very badly 
+broken at the moment) asap.
 
-Same vin-supply here, please, this discrete regulator is fed by DCIN 5V.
+> Furthermore, I understand updating the adjusted_mode->clock might help
+> the CRTC to use a pixel clock that's more in-tune with the _actual_
+> hs_clk_rate that is going to be generated. But, I am worried that it'll
+> cause a delta from the intended fps from the CRTC's end because the
+> timings aren't adjusted in accordance with the pixel-clock.
 
-> +	};
-> +
-> +	wifi_pwrseq: wifi-pwrseq {
-> +		compatible =3D "mmc-pwrseq-simple";
-> +		clocks =3D <&rtc 1>;
+Yes, it does. Also, it's not "more in-tune", as in some cases the clocks 
+are not at all in-tune =). The DSI PLL here is quite coarse with the rates.
 
-As mentioned yesterday, please use CLK_OSC32K_FANOUT.
+> Perhaps, along with pixel-clock, we can update the dsi_htotal and
+> dpi_htotal both too, to
+> 
+> new_dsi_htotal = (hs_clk_rate * #lanes) / (dpi_votal * fps * 8)
+> new_dpi_htotal = (hs_clk_rate * #lanes) / (dpi_vtotal * fps * bitspp).
+> 
+> And then, the respective front-porches can too get updated accordingly.
 
-> +		clock-names =3D "ext_clock";
-> +		reset-gpios =3D <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
-> +		post-power-on-delay-ms =3D <200>;
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply =3D <&reg_dcdca>;
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&dwc3 {
-> +	status =3D "okay";
-> +};
-> +
-> +&ehci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&ehci3 {
-> +	status =3D "okay";
-> +};
-> +
-> +&emac {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&ext_rgmii_pins>;
-> +	phy-mode =3D "rgmii-rxid";
+Perhaps. But if there's a bridge after the cdns-dsi, its atomic_check 
+has already been called, with the original timings. Did it already use 
+those timings for creating its config?
 
-So relating to what Andrew said earlier today, should this read rgmii-id
-instead? Since the strap resistors just set some boot-up value, but we
-want the PHY driver to enable both RX and TX delay programmatically?
+And is it better to output with the timings that (at least try to) match 
+the requested ones, but with an adjusted pclk, resulting in fps that 
+slightly off, or with both adjusted timings and adjusted pclk, getting a 
+better fps match?
 
-> +	phy-handle =3D <&ext_rgmii_phy>;
-> +	phy-supply =3D <&reg_gmac_3v3>;
-> +	allwinner,rx-delay-ps =3D <0>;
-> +	allwinner,tx-delay-ps =3D <700>;
-> +	status =3D "okay";
-> +};
-> +
-> +&gpu {
-> +	mali-supply =3D <&reg_dcdcc>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi {
-> +	hvcc-supply =3D <&reg_bldo2>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
-> +&mdio {
-> +	ext_rgmii_phy: ethernet-phy@1 {
-> +		compatible =3D "ethernet-phy-ieee802.3-c22";
-> +		reg =3D <1>;
-> +
-> +		motorcomm,clk-out-frequency-hz =3D <125000000>;
-> +
-> +		reset-gpios =3D <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
-> +		reset-assert-us =3D <15000>;
-> +		reset-deassert-us =3D <100000>;
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	vmmc-supply =3D <&reg_cldo1>;
-> +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-> +	disable-wp;
-> +	bus-width =3D <4>;
-> +	status =3D "okay";
-> +};
-> +
-> +&mmc1 {
-> +	vmmc-supply =3D <&reg_wifi_3v3>;
-> +	vqmmc-supply =3D <&reg_bldo3>;
-> +	mmc-pwrseq =3D <&wifi_pwrseq>;
-> +	bus-width =3D <4>;
-> +	non-removable;
-> +	status =3D "okay";
-> +
-> +	aw859a: wifi@1 {
-> +		reg =3D <1>;
-> +	};
-> +};
-> +
-> +&mmc2 {
-> +	vmmc-supply =3D <&reg_cldo1>;
-> +	vqmmc-supply =3D <&reg_bldo2>;
-> +	cap-mmc-hw-reset;
-> +	non-removable;
-> +	bus-width =3D <8>;
-> +	status =3D "okay";
+In my experience devices usually allow variations in the pixel clock 
+quite easily, but some are very strict at getting exactly the timings 
+that it expects.
 
-Given that it's 1.8V on the I/O lines, I think we would need the
-mmc-ddr-1_8v and mmc-hs200-1_8v properties, for higher speed modes? Or
-does that not work?
-
-> +};
-> +
-> +&ohci0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&ohci3 {
-> +	status =3D "okay";
-> +};
-> +
-> +&pio {
-> +	vcc-pc-supply =3D <&reg_bldo2>;
-> +	vcc-pd-supply =3D <&reg_cldo1>;
-> +	vcc-pg-supply =3D <&reg_bldo3>;
-> +};
-> +
-> +&r_ir {
-> +	status =3D "okay";
-> +};
-> +
-> +&r_i2c {
-> +	status =3D "okay";
-> +
-> +	axp805: pmic@36 {
-> +		compatible =3D "x-powers,axp805", "x-powers,axp806";
-> +		reg =3D <0x36>;
-> +		interrupt-parent =3D <&r_intc>;
-> +		interrupts =3D <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +		x-powers,self-working-mode;
-> +		vina-supply =3D <&reg_vcc5v>;
-> +		vinb-supply =3D <&reg_vcc5v>;
-> +		vinc-supply =3D <&reg_vcc5v>;
-> +		vind-supply =3D <&reg_vcc5v>;
-> +		vine-supply =3D <&reg_vcc5v>;
-> +		aldoin-supply =3D <&reg_vcc5v>;
-> +		bldoin-supply =3D <&reg_vcc5v>;
-> +		cldoin-supply =3D <&reg_vcc5v>;
-> +
-> +		regulators {
-> +			reg_aldo1: aldo1 {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-name =3D "vcc-pl-led-ir";
-> +			};
-> +
-> +			reg_aldo2: aldo2 {
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-name =3D "vcc33-audio-tv-ephy-mac";
-> +			};
-> +
-> +			/* ALDO3 is shorted to CLDO1 */
-> +			reg_aldo3: aldo3 {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;cl
-> +				regulator-name =3D "vcc33-io-pd-emmc-sd-usb-uart-1";
-> +			};
-> +
-> +			reg_bldo1: bldo1 {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-name =3D "vcc18-dram-bias-pll";
-> +			};
-> +
-> +			reg_bldo2: bldo2 {
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-name =3D "vcc-efuse-pcie-hdmi-pc";
-> +			};
-> +
-> +			reg_bldo3: bldo3 {
-> +				regulator-min-microvolt =3D <1800000>;
-> +				regulator-max-microvolt =3D <1800000>;
-> +				regulator-name =3D "vcc-pm-pg-dcxoio-wifi";
-
-As you mention in the name, this rail is connected to VCC_DCXO, which IIUC
-is an essential supply, for the crystal oscillator circuit. So I think this
-needs to be always on?
-
-> +			};
-> +
-> +			bldo4 {
-> +				/* unused */
-> +			};
-> +
-> +			reg_cldo1: cldo1 {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <3300000>;
-> +				regulator-max-microvolt =3D <3300000>;
-> +				regulator-name =3D "vcc33-io-pd-emmc-sd-usb-uart-2";
-> +			};
-> +
-> +			cldo2 {
-> +				/* unused */
-> +			};
-> +
-> +			cldo3 {
-> +				/* unused */
-> +			};
-> +
-> +			reg_dcdca: dcdca {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <800000>;
-> +				regulator-max-microvolt =3D <1160000>;
-> +				regulator-ramp-delay =3D <2500>;
-> +				regulator-name =3D "vdd-cpu";
-> +			};
-
-Can you maybe add a comment here to say that DCDCB is polyphased to DCDCA?
-
-I went through the whole rest and compared against the schematic
-(looking at GPIOs and power rails), and that looks OK from what I can see.
-
-Thanks,
-Andre
-
-
-> +
-> +			reg_dcdcc: dcdcc {
-> +				regulator-enable-ramp-delay =3D <32000>;
-> +				regulator-min-microvolt =3D <810000>;
-> +				regulator-max-microvolt =3D <1080000>;
-> +				regulator-ramp-delay =3D <2500>;
-> +				regulator-name =3D "vdd-gpu";
-> +			};
-> +
-> +			reg_dcdcd: dcdcd {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <960000>;
-> +				regulator-max-microvolt =3D <960000>;
-> +				regulator-name =3D "vdd-sys";
-> +			};
-> +
-> +			reg_dcdce: dcdce {
-> +				regulator-always-on;
-> +				regulator-min-microvolt =3D <1200000>;
-> +				regulator-max-microvolt =3D <1200000>;
-> +				regulator-name =3D "vcc-dram";
-> +			};
-> +
-> +			sw {
-> +				/* unused */
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&rtc {
-> +	clocks =3D <&ext_osc32k>;
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart0_ph_pins>;
-> +	status =3D "okay";
-> +};
-> +
-> +&usb2otg {
-> +	dr_mode =3D "host";
-> +	status =3D "okay";
-> +};
-> +
-> +&usb2phy {
-> +	usb0_id_det-gpios =3D <&pio 2 15 GPIO_ACTIVE_HIGH>; /* PC15 */
-> +	usb0_vbus-supply =3D <&reg_vcc5v>;
-> +	usb3_vbus-supply =3D <&reg_vcc5v>;
-> +	status =3D "okay";
-> +};
-> +
-> +&usb3phy {
-> +	status =3D "okay";
-> +};
+  Tomi
 
