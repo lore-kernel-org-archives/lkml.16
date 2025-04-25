@@ -1,154 +1,357 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92362701D7;
-	Fri, 25 Apr 2025 13:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745588952; cv=none; b=AMMM8l0evNZx40cX41frWyBQ6GzBq+LbaWDnJ0uJm6+FV5xq0tcxQbghTzYgLofxcE3wuGjQ9vYJxyECVg9U6Py7+BENHb2x3L1gTDrMmqN1peLESqGmirGcFWAUa1Bq5NtsxHAPFDsyR6EqMjRwqIa0RNw8KCYcps52A10lWk0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745588952; c=relaxed/simple;
-	bh=FwuPWlq6Cw/29r+Y2VW5C7dzbjwD+MSu3wk62JqnBiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ET8qSkkWpx6biGRSRiuCx2JyUUmDZeFJ1LmF6zPQj1PNAK16h1BY+2jjNGWBuV7CI3SixR7ZMLagKb0i4kDZ8Xkcq/5RfZVwZEoz9+0MRtIP8rCuMkN/5QjHFwSTEoK1BCTKzVzsGKFfGA27xi2sd5U6JqWI73fT+Erw0GWEQKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=guztwcrq; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3846F30C
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745589010; cv=fail; b=YILr+/1j/8VKlJdl/KHf/qADOarkWUmCPNpHpg3ei9pYlxLMT0usslS9jGlBL1cm3b/jOI4yKPos3mmiizKwl+Bzq6yAryGb729+ogjMv7iPlW58N5YG4V/PupVDCWfxBj/rH2KrnWM+r2tZuCKKHroX3Nu8UCHwRWhMrgermco=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745589010; c=relaxed/simple;
+	bh=exwFtE0/yg7LfEWD8zltg7TZBadr8te0EWDsohHSpN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=f2TB8D3vZP4yLI8c73tBATfv4X7AyUCuSQ53uDU54aEoKR4yBhmWzA8LbF7ny7Lf4dAkurg5ujxy3Bv9ofv4ut8wSraEnwx/4KWQ/6ZeWeJ3Bg5zvolAucUhQYR4GpEFcabCR+okVq13Fopascc82dwA3ECbcx4ntBD7NYv2L1Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hukIjvi3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=pcJrZf89; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="guztwcrq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE83FC4CEE4;
-	Fri, 25 Apr 2025 13:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745588952;
-	bh=FwuPWlq6Cw/29r+Y2VW5C7dzbjwD+MSu3wk62JqnBiQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=guztwcrq3C1RUzUhAnOThbNN+wPu9Zz7cCyo9SAk9gpfxApoSwd0DlAVUH4O/INtt
-	 ytd7POSELEASGoVD3upYX6X9U3NbkHzUsdUq7K7XwOok8WBExVDMtyi93U0+UknsFV
-	 uMRXUqu5lvTITbnDktE1YjxqICe5cw2RcsEnAq88=
-Date: Fri, 25 Apr 2025 15:49:09 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB driver fixes for 6.15-rc4
-Message-ID: <aAuS1QXWLNwEf31j@kroah.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hukIjvi3";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="pcJrZf89"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PDl8oI026611;
+	Fri, 25 Apr 2025 13:49:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=MKlyrsDzo8mhbFBJrY
+	rL4eczv4ThbcDhu38jA+G803o=; b=hukIjvi3J64Ialf07sA58U66aZPQsu1JGr
+	jvEVfqKFO0OmZa7aShu/uXAYMSf52hgYmxFsor8kZ8NBLRnbyn6Ik7y9DZffDaRt
+	KqJh98cUhy2L4qPK8Mw/qP2tuwY0ojBYMfq/k6zW+X4KnqKGi7oHZpzlSXu4nKcx
+	90pWL1FlfTjvoEFvRDPUuCqfNPXK/BhrNh94SFtacfXLExED8eOhJIhBibIzzmWo
+	wlJcMvUqYu9HGoTPip3CO9Ph52jXp/kqeOH6DPj/uy5c+/27rs5tdbRl5F5N+agU
+	P63zw2UK48QG2/TTIfIE2VmAKTMqaFBiYMHE5xdJ0vIHAMJbw/TQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 468bjx8055-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 13:49:38 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53PDe1JK014194;
+	Fri, 25 Apr 2025 13:49:37 GMT
+Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17013077.outbound.protection.outlook.com [40.93.6.77])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 466jxrnmhn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 13:49:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Kixoxj/mvhPG7EOlnq3N5CQZe8NIB5JMazWHN24akbdlv4AmPGwczJ8N60w2BY9KT27o32zvrJo2jtm40ziY2WK3pkZxPu87X0LhC0jiRhuQ2qThQ9SuvCk0F9d47vjoc1XnqL7M4lauB2x10+NgZJeuaqZLPedR96VL1nKL7mkM534+JW8LhQs8qikbNJc7Y8tj30t3tkwsz0G7oPzsjDhXBIPgiuaVGhYibETOBn6FO9arpbsdO0//gZxwr+vtGVy2G/XCd5eRk7TukEYG4O4hWwUGgxzTRgOLYSDTNDdijG6aa2Lz1z3sZ8eQggvC5AvgMfSjtBYzgxArTh35LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MKlyrsDzo8mhbFBJrYrL4eczv4ThbcDhu38jA+G803o=;
+ b=CqcF8ZUiW4gbvWTfpgPOPgH1UQdd8w00QoDca2eXF1zomsoN3qeA53Un1+UbgOtCfUI48SnrbIu5la2de/FnAkpFgOukl/mSa5KWWkMFe7uJdk7WxHp0ccKBFz1Oi+GVPiP1yEDM4CVw/In1sR2F6JNx4J9/XPrQjFdEuNostTo2CZl2XWMQ9/TPwZesJ60+bEXBjn5CzjkIHK2eBc9+Q++rV8s6yZ3hZK1W5JA263x33xoq8FdBeUn4Vw+z/PpBGcXrUfN+ZREIRRCs7y5NwdWq6fyXu7MbnmMacrT5daQUUwMWUWCLJE5owE0ZayxbdQmIhWDq2sq7phy9pE4LXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MKlyrsDzo8mhbFBJrYrL4eczv4ThbcDhu38jA+G803o=;
+ b=pcJrZf89BKj8FBxMdwVv9znn6idiq4tCA//ok/JOVjAsLpHPdiSPfLV70QaI10fjrMbCsb3dIHFf0KH4CgaOSpv9RfuTwfzvwUNj2GakZcVD12fvur3ghx9EBJvezLyiYUXwcvpUHz6MawlOU7Gy028Ze24uPB0wio7+5CsCDfI=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by LV3PR10MB7841.namprd10.prod.outlook.com (2603:10b6:408:1b8::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
+ 2025 13:49:35 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
+ 13:49:35 +0000
+Date: Fri, 25 Apr 2025 14:49:31 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Hajime Tazaki <thehajime@gmail.com>
+Cc: linux-um@lists.infradead.org, ricarkol@google.com, Liam.Howlett@oracle.com,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/13] nommu UML
+Message-ID: <f4242067-0113-432e-b8d1-d26ff5e4a355@lucifer.local>
+References: <cover.1737348399.git.thehajime@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1737348399.git.thehajime@gmail.com>
+X-ClientProxiedBy: LO6P123CA0032.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:2fe::7) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|LV3PR10MB7841:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd188f6e-f6fc-49af-2107-08dd84000367
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/BZJez/ITGURg89yWzC6kXsZV1nIFtCJhj3DQ82O7a2QNwH6k76ldmhafDTB?=
+ =?us-ascii?Q?tTzWU1USAvBtFtXOc8P2D2NSsLcUPzktC5yixjYFtdVeHu+hEyqF0BCKthGv?=
+ =?us-ascii?Q?zQQmIE+Zzq87mMrAya3Tag1EpbgF9Gqjtu1DYWwQ8hBSnUhTMhAozULwAyV7?=
+ =?us-ascii?Q?za9NLZsdhZsPKVMd7i4x07CrmTK1Ctkc464qkhZSVEkRQAZq8HqKYqo+9He9?=
+ =?us-ascii?Q?4Nlcs7bMluTQGMRrRigvZH+k95y1hUaZcI7bCK4mhjt7GTbFIrLjAaiwRr6b?=
+ =?us-ascii?Q?rLUDDxyU3h8HNHzlmeDxAE0weCbtayOwWPpMJqcdUI4TLEbbeY8ub/85F8XB?=
+ =?us-ascii?Q?QE15dvFSR37wNVqQoYjDu7lBXb9Fsc8RRr2m9qdirguvIlQJmRW/soD+EJqe?=
+ =?us-ascii?Q?ebGL6Lz/46cdh+FJ2huGKK2XHo8YNH5UOLccH28aZ0pmUEtuyfBeC3+OZd0f?=
+ =?us-ascii?Q?WIpJc6wXUQ0Kq0ae4g/ktLuz2Thllhtrad+yAmVkT5+zp84dCyiW4WMMYqYu?=
+ =?us-ascii?Q?sgWBY42CXST2vLz6DG3UtHj1KLa6iI03Em8/rvuxqLVwDUS62vGZ4eKvziih?=
+ =?us-ascii?Q?G1EcXCQe6oeUUBmMmfQM3UvRKi37dXR5DeT0C+Uqs9Lsw1OQsF8Qdq/FGGzL?=
+ =?us-ascii?Q?NiEi6AO2zJtivA8NZMA3t7N6aMEzH3QpDdKpM7GnKPLtgGM5DZdZNXS0tXTL?=
+ =?us-ascii?Q?SqlixwN2GMKARRW1mY4KIuZDPXtKmQh0e2dvqPvhCOcVWCWmOdkhHxPuWOmQ?=
+ =?us-ascii?Q?vyybn24h2tGf7Ovrb5WsBqjO+QYDtLX5vx6Xk7q2llrWIn045ZNo6F9W5Avz?=
+ =?us-ascii?Q?A/OZBVOKWs2mrw5dR5OF1R4Oo7d51tnKEUDwCOkz6edPBjcndKgxS68UOS9m?=
+ =?us-ascii?Q?V0+0Y7RDLFSKfsjlL4fceYT9ymz4ZGfTfFwa9i4S4pdpd/Pcbhxp1/JIoxZe?=
+ =?us-ascii?Q?1x72RRwy0Q9Upd1Mli2XBj4UGmNhphoxOju2/v/Wq54guI7vp1HyZ5eks4Ei?=
+ =?us-ascii?Q?dDL8oWExLfYBXvmxeUW1Q5NQ3GlKoxrQoCeIP8Tl6e74c5mlqnGcnzaBCAs7?=
+ =?us-ascii?Q?LiA/yg9PQqjFYVrYFSiT5lHfsKglpTy/2U6Z6R359zlu6L1t+2TEirpE8h1n?=
+ =?us-ascii?Q?zdPXo+LWkiFbSgC8VgSKLJTEg1AcE+KkC5xgugrIajGamP4F6HQDCTfjZdDJ?=
+ =?us-ascii?Q?9W3dt+N5nRLRALZdx4Bz41ACOjdNyc6ZXf7nSooacPpMfDdOyjm7SzndWPqr?=
+ =?us-ascii?Q?kp/f+M48ydRr34d0W7ZcxoisI7qKzabDi/B+wK2bK6cl0dK+fuNipBwp4Vzn?=
+ =?us-ascii?Q?WiKy6bq3/6LvWHE79BOutpdVjNUssQbU7M9Z/aKQZyBwpBF/KZdReQMielBH?=
+ =?us-ascii?Q?KFPGtytmJ2l775TfxgkPpt7jjEhYWzdze062HjvMUmHWoePGp0pBo1TESJYc?=
+ =?us-ascii?Q?vnMAaTfYw3tS+xtkgtf2Uw8RM54stgDy?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ul/MnpBWHzBf/iUg0rAtUPgE9tEuy8tEEYmoTQWcWyk9CXkixeIkXUUjvk8K?=
+ =?us-ascii?Q?EdpvCMpTCrWyJ2f+UcOeK+oPd00vOmG91e1y9WdGeoEifNKHmwm1R8TWZ9JG?=
+ =?us-ascii?Q?pQ0N3+RgWUCAMbqs2Y7hUwNaTLfzXUMNNNdYQIjDaGEfvvJdLnDiFUzsMser?=
+ =?us-ascii?Q?DvX7Xtwk6N8Ulbw1At7UNs5Oscq6M9vOTRLtocbpTwJ4OZp11ANaUfZcoI5u?=
+ =?us-ascii?Q?DAuVy249C0owEGcM6+U7szmoKyO4E7BRmnRd7MpnytaYxcuCmBd4wh/ItQvJ?=
+ =?us-ascii?Q?9s9z3LlGOM6Of12tcQUwSPAnzBpDuXFnJXdcorANajHwWhVbXtC1+/7clMw5?=
+ =?us-ascii?Q?sRd2WIi61TlouiYKXK+GQ/SuXvONyvu5fJFlLICab6Ur4mSxP6PafEDPN4DY?=
+ =?us-ascii?Q?0R7vA+UQNWrLQS05uOhhlfhSVnUsqHo0/XfOlXxQOfPQ5+mUWpxySA/eb8cH?=
+ =?us-ascii?Q?sfqop9a6zpqaMapNT6So0IjwqXDaleqAcnKEFRUzTuCGgYjVyWJE+9tngIfK?=
+ =?us-ascii?Q?LlMQac7EIo+V6fs1bcaxwxlPO+4mFej7WJEs1zpAkWDVYuoQplNYYQRK76MH?=
+ =?us-ascii?Q?3To15SwUy0Iyyao5HnPSL5CbluqejMg3bo4Mm2OtjRdEG4Vy4s4z7qab2hR7?=
+ =?us-ascii?Q?dGJiEgJnD6JpkGywozB4N8Qnc2EMm6bNKPQNKaFU2kLRLZw9Tjdj774NES0n?=
+ =?us-ascii?Q?pUQt+52yisXU8JmG4hSvuf2cEnmfWiB4Pz9nyKz2MIeZvEnX7j13a8YJP1Ce?=
+ =?us-ascii?Q?bwqAiCxUayiktiEeJhuJsY08uVBa2p80hFLTOVTkcxTRL34744aiHv1ZxMTG?=
+ =?us-ascii?Q?W2HnmWSzrRIeOrozdsSvgs/Wy+wmUy/3xeGm0mjQwywUdLoYivf4Q8Mtoks0?=
+ =?us-ascii?Q?Ib9tqW9aSnpg7EApwK7AVdBuCzUc4S10FnlfwZMvhmBEfxY2Y2S+waf7Ov5I?=
+ =?us-ascii?Q?+70ThWReWC0a/ej5TzFBEnEjrVIA6xE2omGCEOGLAowFEijVkTUGbyjLayvn?=
+ =?us-ascii?Q?xoiFPLFIDkBunmB240udhwVedjRrq+94mId/OMzHS8nc4YOylT+IwS51Y5Ib?=
+ =?us-ascii?Q?P4veeFoVoO6EbqaPYN21+aGcsR+QA8d9sUgRA5zAxh6SEAdV45ANrI2lNT4x?=
+ =?us-ascii?Q?4o/1YO+BqEKUFk3lTCCKAbzKQzV6YyhRSQo+jlat0lvTt+7gqyXg8pFRMude?=
+ =?us-ascii?Q?IqPkz63tgxBawg+3b8h7ktAWPbHsH4/Pdijj+og96eJkMfLP1zQi10kd4Ik3?=
+ =?us-ascii?Q?oXrRCfT3DBA9Si7ZQmpUZKJtU3M0lAUVqKhJmyc+e4EovBUX192NQcBXvB6L?=
+ =?us-ascii?Q?tvsF5bwSgIocQnFGVs5OsoOWKYr0bAezfcI5Dzv/uX+GSOElkL9dpxCKVEjT?=
+ =?us-ascii?Q?lAq2+9SPoIRe/5yV3N1WC0OFM9RFTxhdrugZ/Upg8isORVoTt0Q1iP2sMwax?=
+ =?us-ascii?Q?rtcSyQfmajYN+qIj/qhf/blkQIQ2teRRucpI94/1sTtBFH8McIZUVm8l0Wf+?=
+ =?us-ascii?Q?mlqkwU8vm52NBF65s0SfF/4yTyRdP5f6LH2X44gauLRmkwlWMA+uLFPAt8JS?=
+ =?us-ascii?Q?TKtyk9olh7VxGODmRD+aBpeKMOyrI83tA06clgaim8P+wuhjKLxe3x5mMbbN?=
+ =?us-ascii?Q?Ew=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	CExH2+z5NpEbieyVjdnEIJKwyTGRwj5L11YeOuQfBHLO8BOC9UbhGxIGaFZEkCYJ0PUGBRfuP4yr7AqwRupgKcqFX+d0mTDuecftLZKTu4TckFzh6m3hJPq/2uKZSSXql7K2h7FgWw9q2yfVfO4P4zWGyHqGUUjWsPjGRQBc/4zsjArkaU7WIZFMdOkhDarSyCCtRbDBUO2r9I5W7GoVA/t+DnffKAPGrcYWJ3L/t0SKDiVygfiJ2+4/Qx+PclgUoLg7tYTHneslEWDllDDIyD7WQ649KTJ5fM5V9AMfSlkQFVOYC01y9ccTCT3jWIJhqMaXaPgwsw5FDLJXKo7yFwymgv9xBPvB98ETpJ5RyH4dIySyyIjmP0ojwHpyBhJSN/d5EoKNntwLVvC7aC25PQZr2kYsimdwhUIRTplZpO9tppuiE5Y7wgU9KTHuPnBO+lcmX2nnRZMdDlbaswzVk+pB8dNyWbvvxppixsFG/dm3adfwIg0UeEkWN/K7CIgnDISgJOwDxxuZtAeEgPZz306D8mHa/aKmwtc+AAZ5FlC9HmoPgP+k3NvKW9PEfFcfeSBGHDjAXuZgQv8QyJOCiVIRfnYNMuWfi9pRFp2XVvo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd188f6e-f6fc-49af-2107-08dd84000367
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 13:49:35.0917
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4KfH5dSHjNRm3iNHVTZiaRok8P1xTNZkfRH4QLIobsM1GJF0Etyi7RHht1AfBVchKifsiCq9Y6DyRPKL6WisoyLhf9FnKPM8VpRtnjUvTYY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB7841
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-25_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504250099
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDA5OSBTYWx0ZWRfX6ZUnnpTguxj5 /1vb9l6JMVGrXWKLE9ZSl7zPIWuownihF9Pq+gBcAhllrtvdBunA+MZllnIRde2x4av8T8Nc4vY C4q18xmJlD/MrPcPOJ32dPPio7WlrUmr6mP8OYboFfBVzSQxFk+XJfh8Zfve3fu8v0yYe/hi5vZ
+ RIymGrZUcKBebS3PAyKJx50lHK3SnPtmn0DehbKu0MSrPGdGsRKxoZvKIxoWmmQTSY1pv7xwy3O nFMiJ7xkWsFDC7RGRLUoKsaM2BR3YH6zP3X6pQPbnQ/25FDgjAJFwWsBhgwSiJR15WZEhJplghl HHrXzEW1+rS2p0VvTlConmMLLy7H7VgWt3f/yj+Qvt9e2KxWWyy3sG2qeGTficbz3OoHglkz2RY RfGqF8ii
+X-Proofpoint-ORIG-GUID: ufI77VWggW5UD7RjuPu_rIp3DPsGwkjf
+X-Proofpoint-GUID: ufI77VWggW5UD7RjuPu_rIp3DPsGwkjf
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
++cc current UML maintainers as per- current MAINTAINERS file, mm + kernel
+lists.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Hi,
 
-are available in the Git repository at:
+It seemed this series died, which is a pity, i'd be very useful to have
+this functionality to aid in easily testing nommu in mm code.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-6.15-rc4
+I know that I pushed back a little (or rather - wondering about the status
+of nommu in general) back in v2, however with it confirmed that nommu is
+required, this series becomes really quite important.
 
-for you to fetch changes up to 3dfc0445274252301dfcf3980d79acceea6409d1:
+This would need rebasing of course for a v8, but I wonder if there is any
+appetite for it or why this didn't go anywhere?
 
-  MAINTAINERS: Assign maintainer for the port controller drivers (2025-04-25 13:31:31 +0200)
+In any case, if you are still interested in this Hajime (thanks so much for
+all your hard work on it!), just saying there are definitely users out
+there.
 
-----------------------------------------------------------------
-USB fixes for 6.15-rc4
+Thanks, Lorenzo
 
-Here are some small USB driver fixes and new device ids for 6.15-rc4.
-Nothing major in here, just the normal set of issues that have cropped
-up after -rc1:
-  - new device ids for usb-serial drivers
-  - new device quirks added
-  - typec driver fixes
-  - chipidea driver fixes
-  - xhci driver fixes
-  - wdm driver fixes
-  - cdns3 driver fixes
-  - MAINTAINERS file update
-
-All of these, except for the MAINTAINERS file update, have been in
-linux-next for a while with no reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Adam Xue (1):
-      USB: serial: option: add Sierra Wireless EM9291
-
-Andrei Kuchynski (2):
-      usb: typec: class: Fix NULL pointer access
-      usb: typec: class: Invalidate USB device pointers on partner unregistration
-
-Craig Hesling (1):
-      USB: serial: simple: add OWON HDS200 series oscilloscope support
-
-Dan Carpenter (1):
-      usb: typec: class: Unlocked on error in typec_register_partner()
-
-Fedor Pchelkin (3):
-      usb: chipidea: ci_hdrc_imx: fix usbmisc handling
-      usb: chipidea: ci_hdrc_imx: fix call balance of regulator routines
-      usb: chipidea: ci_hdrc_imx: implement usb_phy_init() error handling
-
-Frode Isaksen (1):
-      usb: dwc3: gadget: check that event count does not exceed event buffer length
-
-Greg Kroah-Hartman (1):
-      Merge tag 'usb-serial-6.15-rc3' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial into usb-linus
-
-Heikki Krogerus (1):
-      MAINTAINERS: Assign maintainer for the port controller drivers
-
-Huacai Chen (1):
-      USB: OHCI: Add quirk for LS7A OHCI controller (rev 0x02)
-
-Mathias Nyman (3):
-      Revert "xhci: Avoid queuing redundant Stop Endpoint command for stalled endpoint"
-      Revert "xhci: Prevent early endpoint restart when handling STALL errors."
-      xhci: Limit time spent with xHC interrupts disabled during bus resume
-
-Miao Li (2):
-      usb: quirks: add DELAY_INIT quirk for Silicon Motion Flash Drive
-      usb: quirks: Add delay init quirk for SanDisk 3.2Gen1 Flash Drive
-
-Michael Ehrenreich (1):
-      USB: serial: ftdi_sio: add support for Abacus Electrics Optical Probe
-
-Michal Pecio (2):
-      usb: xhci: Fix Short Packet handling rework ignoring errors
-      usb: xhci: Fix invalid pointer dereference in Etron workaround
-
-Mike Looijmans (1):
-      usb: dwc3: xilinx: Prevent spike in reset signal
-
-Oliver Neukum (6):
-      USB: storage: quirk for ADATA Portable HDD CH94
-      USB: VLI disk crashes if LPM is used
-      USB: wdm: handle IO errors in wdm_wwan_port_start
-      USB: wdm: close race between wdm_open and wdm_wwan_port_stop
-      USB: wdm: wdm_wwan_port_tx_complete mutex in atomic context
-      USB: wdm: add annotation
-
-Ralph Siemsen (1):
-      usb: cdns3: Fix deadlock when using NCM gadget
-
- MAINTAINERS                            |  8 +++++--
- drivers/usb/cdns3/cdns3-gadget.c       |  2 ++
- drivers/usb/chipidea/ci_hdrc_imx.c     | 44 ++++++++++++++++++++++++----------
- drivers/usb/class/cdc-wdm.c            | 21 ++++++++++++----
- drivers/usb/core/quirks.c              |  9 +++++++
- drivers/usb/dwc3/dwc3-xilinx.c         |  4 +---
- drivers/usb/dwc3/gadget.c              |  6 +++++
- drivers/usb/host/ohci-pci.c            | 23 ++++++++++++++++++
- drivers/usb/host/xhci-hub.c            | 30 ++++++++++++-----------
- drivers/usb/host/xhci-ring.c           | 11 ++++-----
- drivers/usb/host/xhci.c                | 18 ++++----------
- drivers/usb/host/xhci.h                |  5 ++--
- drivers/usb/serial/ftdi_sio.c          |  2 ++
- drivers/usb/serial/ftdi_sio_ids.h      |  5 ++++
- drivers/usb/serial/option.c            |  3 +++
- drivers/usb/serial/usb-serial-simple.c |  7 ++++++
- drivers/usb/storage/unusual_uas.h      |  7 ++++++
- drivers/usb/typec/class.c              | 24 +++++++++++++++----
- drivers/usb/typec/class.h              |  1 +
- 19 files changed, 167 insertions(+), 63 deletions(-)
+On Mon, Jan 20, 2025 at 03:00:02PM +0900, Hajime Tazaki wrote:
+> This patchset is another spin of nommu mode addition to UML.  It doesn't
+> change a lot since the last version (v5), but contain clean ups.  It would
+> be nice to hear about your opinions on that.
+>
+> There are still several limitations/issues which we already found;
+> here is the list of those issues.
+>
+> - memory mapped by loadable modules are not distinguished from
+>   userspace memory.
+>
+> -- Hajime
+>
+> v7:
+> - properly handle FP register upon signal delivery [10/13]
+> - update benchmark result with new FP register handling [12/13]
+> - fix arch_has_single_step() for !MMU case [07/13]
+> - revert stack alignment as it is in uml/fixes tree [10/13]
+>
+> v6:
+> - rebase to the latest uml/next tree
+> - more clean up on mmu/nommu for signal handling [10/13]
+> - rename functions of mcontext routines [06,10/13]
+> - added Acked-by tag for binfmt_elf_fdpic [02/13]
+> - https://lore.kernel.org/linux-um/cover.1736853925.git.thehajime@gmail.com/
+>
+> v5:
+> - clean up stack manipulation code [05,06,07,10/13]
+> - https://lore.kernel.org/linux-um/cover.1733998168.git.thehajime@gmail.com/
+>
+> v4:
+> - add arch/um/nommu, arch/x86/um/nommu to contain !MMU specific codes
+> - remove zpoline patch
+> - drop binfmt_elf_fdpic patch
+> - reduce ifndef CONFIG_MMU if possible
+> - split to elf header cleanup patch [01/13]
+> - fix kernel test robot warnings [06/13]
+> - fix coding styles [07/13]
+> - move task_top_of_stack definition [05/13]
+> - https://lore.kernel.org/linux-um/cover.1733652929.git.thehajime@gmail.com/
+>
+> v3:
+> - https://lore.kernel.org/linux-um/cover.1733199769.git.thehajime@gmail.com/
+> - add seccomp-based syscall hook in addition to zpoline [06/13]
+> - remove RFC, add a line to MAINTAINERS file
+> - fix kernel test robot warnings [02/13,08/13,10/13]
+> - add base-commit tag to cover letter
+> - pull the latest uml/next
+> - clean up SIGSEGV handling [10/13]
+> - detect fsgsbase availability with elf aux vector [08/13]
+> - simplify vdso code with macros [09/13]
+>
+> RFC v2:
+> - https://lore.kernel.org/linux-um/cover.1731290567.git.thehajime@gmail.com/
+> - base branch is now uml/linux.git instead of torvalds/linux.git.
+> - reorganize the patch series to clean up
+> - fixed various coding styles issues
+> - clean up exec code path [07/13]
+> - fixed the crash/SIGSEGV case on userspace programs [10/13]
+> - add seccomp filter to limit syscall caller address [06/13]
+> - detect fsgsbase availability with sigsetjmp/siglongjmp [08/13]
+> - removes unrelated changes
+> - removes unneeded ifndef CONFIG_MMU
+> - convert UML_CONFIG_MMU to CONFIG_MMU as using uml/linux.git
+> - proposed a patch of maple-tree issue (resolving a limitation in RFC v1)
+>   https://lore.kernel.org/linux-mm/20241108222834.3625217-1-thehajime@gmail.com/
+>
+> RFC:
+> - https://lore.kernel.org/linux-um/cover.1729770373.git.thehajime@gmail.com/
+>
+> Hajime Tazaki (13):
+>   x86/um: clean up elf specific definitions
+>   x86/um: nommu: elf loader for fdpic
+>   um: decouple MMU specific code from the common part
+>   um: nommu: memory handling
+>   x86/um: nommu: syscall handling
+>   um: nommu: seccomp syscalls hook
+>   x86/um: nommu: process/thread handling
+>   um: nommu: configure fs register on host syscall invocation
+>   x86/um/vdso: nommu: vdso memory update
+>   x86/um: nommu: signal handling
+>   um: change machine name for uname output
+>   um: nommu: add documentation of nommu UML
+>   um: nommu: plug nommu code into build system
+>
+>  Documentation/virt/uml/nommu-uml.rst    | 177 ++++++++++++++++++++++
+>  MAINTAINERS                             |   1 +
+>  arch/um/Kconfig                         |  14 +-
+>  arch/um/Makefile                        |  10 ++
+>  arch/um/configs/x86_64_nommu_defconfig  |  64 ++++++++
+>  arch/um/include/asm/Kbuild              |   1 +
+>  arch/um/include/asm/futex.h             |   4 +
+>  arch/um/include/asm/mmu.h               |   8 +
+>  arch/um/include/asm/mmu_context.h       |   2 +
+>  arch/um/include/asm/ptrace-generic.h    |   8 +-
+>  arch/um/include/asm/uaccess.h           |   7 +-
+>  arch/um/include/shared/kern_util.h      |  12 ++
+>  arch/um/include/shared/os.h             |  16 ++
+>  arch/um/kernel/Makefile                 |   5 +-
+>  arch/um/kernel/mem-pgtable.c            |  55 +++++++
+>  arch/um/kernel/mem.c                    |  39 +----
+>  arch/um/kernel/process.c                |  25 ++++
+>  arch/um/kernel/skas/process.c           |  27 ----
+>  arch/um/kernel/um_arch.c                |   3 +
+>  arch/um/nommu/Makefile                  |   3 +
+>  arch/um/nommu/os-Linux/Makefile         |   7 +
+>  arch/um/nommu/os-Linux/signal.c         |  28 ++++
+>  arch/um/nommu/trap.c                    | 188 ++++++++++++++++++++++++
+>  arch/um/os-Linux/Makefile               |   8 +-
+>  arch/um/os-Linux/internal.h             |   5 +
+>  arch/um/os-Linux/mem.c                  |   4 +
+>  arch/um/os-Linux/process.c              | 149 ++++++++++++++++++-
+>  arch/um/os-Linux/seccomp.c              |  87 +++++++++++
+>  arch/um/os-Linux/signal.c               |  31 +++-
+>  arch/um/os-Linux/skas/process.c         | 132 -----------------
+>  arch/um/os-Linux/start_up.c             |  20 +++
+>  arch/um/os-Linux/util.c                 |   3 +-
+>  arch/x86/um/Makefile                    |   7 +-
+>  arch/x86/um/asm/elf.h                   |   8 +-
+>  arch/x86/um/asm/module.h                |  24 ---
+>  arch/x86/um/nommu/Makefile              |   8 +
+>  arch/x86/um/nommu/do_syscall_64.c       |  80 ++++++++++
+>  arch/x86/um/nommu/entry_64.S            | 113 ++++++++++++++
+>  arch/x86/um/nommu/os-Linux/Makefile     |   6 +
+>  arch/x86/um/nommu/os-Linux/mcontext.c   |  24 +++
+>  arch/x86/um/nommu/syscalls.h            |  16 ++
+>  arch/x86/um/nommu/syscalls_64.c         | 115 +++++++++++++++
+>  arch/x86/um/shared/sysdep/mcontext.h    |   4 +
+>  arch/x86/um/shared/sysdep/ptrace.h      |   2 +-
+>  arch/x86/um/shared/sysdep/syscalls_64.h |   6 +
+>  arch/x86/um/vdso/vma.c                  |  17 ++-
+>  fs/Kconfig.binfmt                       |   2 +-
+>  47 files changed, 1329 insertions(+), 246 deletions(-)
+>  create mode 100644 Documentation/virt/uml/nommu-uml.rst
+>  create mode 100644 arch/um/configs/x86_64_nommu_defconfig
+>  create mode 100644 arch/um/kernel/mem-pgtable.c
+>  create mode 100644 arch/um/nommu/Makefile
+>  create mode 100644 arch/um/nommu/os-Linux/Makefile
+>  create mode 100644 arch/um/nommu/os-Linux/signal.c
+>  create mode 100644 arch/um/nommu/trap.c
+>  create mode 100644 arch/um/os-Linux/seccomp.c
+>  delete mode 100644 arch/x86/um/asm/module.h
+>  create mode 100644 arch/x86/um/nommu/Makefile
+>  create mode 100644 arch/x86/um/nommu/do_syscall_64.c
+>  create mode 100644 arch/x86/um/nommu/entry_64.S
+>  create mode 100644 arch/x86/um/nommu/os-Linux/Makefile
+>  create mode 100644 arch/x86/um/nommu/os-Linux/mcontext.c
+>  create mode 100644 arch/x86/um/nommu/syscalls.h
+>  create mode 100644 arch/x86/um/nommu/syscalls_64.c
+>
+>
+> base-commit: 2d2b61ae38bd91217ea7cc5bc700a2b9e75b3937
+> --
+> 2.43.0
+>
+>
+>
