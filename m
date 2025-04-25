@@ -1,193 +1,100 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21603296141
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3543D21770C;
+	Fri, 25 Apr 2025 23:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745621464; cv=none; b=sFYHkrt7XJ3CHmZ3+syNEf+T+8ckW3EoT5zoUFrGH+gAestbPg6rwD+8MX2HApnxmE8Gznc5UwWNCxI4OFUB9LUao3B8d1/hy/kjnLbBzvsD4BkoJnIftZ0EiU5QLA5rP9R4E2aMUSVWllG26qrQBcQku+1irXj/A25ihLLFZOY=
+	t=1745622007; cv=none; b=J9WbRka57vl4qF5GO2MqsNG6FHqatYpDfRtwrInGRsKG2H55yLURPV6lPFsEm5t/Rfqqo7nXAsiHzLoSpnCFigvzNiEnZmn6VZep4Ih1cDE2/emg33/M1HVJZILD3h3AcmNZe+Dly5ZUI2kZ1BfVA66rWAQifwBVDcQfOS9Kcd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745621464; c=relaxed/simple;
-	bh=3Sasc5NlzHSJPJvPhpxiizeSf9Uujmi3R3Jl7ykq338=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WhJItOVSKRV1KvUowmA3iuwZBvrAHqluCHS1nDkSTz4kejdnDTYeZ/cm+ov9o70YBYIsMXQLmxmDeP9chMYS4NmnCPSw3hkjXlsdX+EaXI78cLWhoJTLs4CWb8vNfpF2EiaL1+qDg6YTM1DvBN3qC837YXSco8arGgIlQ1Pd8dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZwUpQbOx; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745622007; c=relaxed/simple;
+	bh=/bRJ1TosTwWc07Gu44FOUKRyH9x1FUl0wV2GXEtu9Bw=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=aMtnYmaiDZnJr1zSrH7DdznF/xh1mOfNi7cUbuIBF1PaU/Y9UMShybet9HNxasgYI/U8ZrBcpQf2oYExvCWbFIlMRUmFq0dAIOCsfDt4wUOQmU9rEEyZqlp1pB5iClJiAMRin4CMp4eTLnDnZssUrvRfmpIjNzVOJsTOvg9MAXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTLOmcjZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZwUpQbOx"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3f6eaa017d0so2375647b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745621461; x=1746226261; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uvQo2x2sdjed241L/Fl7xm8USCWMlw2PIjAk0qokWCI=;
-        b=ZwUpQbOxY8cjSIvtNrZYYTuUUMIpvc7dNrzaHTnOFqtekMm47JMOX8XlPbIVFw8yC3
-         3wAutpfu0p4A+Q3357F2+FzCMNPzu8GqwIbl49+OhzrW9EqaUaBw5NlbWfqJs5Lanxny
-         IPMKXOKJvZJnGOShSkHX9M4PejPSAOK+rouZ8NpvmvKTp1G6k34CuKdVvY0Pj1gKC4qO
-         Ln7fPCZ6s9ytk77T7boHbimno/IJZ7Eb7ATnVuJCLdTVkEYBvbAhxmn8j8VjMsqdFILa
-         9XsLQx35G45YsBqWPwsCw/QK9H9oGUb+3vrp0ctivQSrt4K6BkzKnBd8vaS3n+KST73C
-         tv0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745621461; x=1746226261;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uvQo2x2sdjed241L/Fl7xm8USCWMlw2PIjAk0qokWCI=;
-        b=KdwkjOCTRuuYKXCjE2afqncSnIJAVn241pjnNwDbosk80tgdCAIcF3cCkfO0xzFDPS
-         alidYHBknhfxN7qtOk8emNxM29V/yi0CAkPgoe0L9hzpUFdlFZselC1xb4VirAxawq/F
-         DIMgIKNvZW8ptAL0F1EXD3vOq05C8sjzOOpRoWkDPo5ELLpWVDQ4t1IOv7DWPOy0mTK4
-         ldJ8QtKd7nYsMmkRaOvV/d89VDRF2jsm3B+eodwr7cyfIUaVEhp2I2bj+o+PyMs8zNWw
-         j4n4UxBao7auJPJ+EsDxcuKjPrCGxCR/tOrKx6Avsq+BKG1MyI9s/xgY6enW2Ja4OkHo
-         w4Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFDqojeNhq+J7LDNOps7jl0UqPstFmoSszmNU+VWX4ZwzBvbeiLA/JzN/pxoNvWUX6ltZECjEjH8V3YxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyivnPthLxGAEnx5Q10e0cd55VydRj093ZkkV2d9rbn6I51QaG5
-	CActxsKZLSl/WvFoDRgs5crcBoptBKhHbt4lLy2t32QSwgrremvzXT59sliA2cA=
-X-Gm-Gg: ASbGnctgWoNKiJKXuZKKBmOiFFvYGejkFTwBVrQT+F+9BXywLjzdQ80VPptpatPzdMP
-	F7qa3sTnXSQe9g9bNrTmAbx4o5EfOL0MwYoIUyXGUFd1WsRFI3QKTSTwYBrbfyXrNxbwumQsryy
-	ynRGeDKCZWdhjlhNmZ1c8DhpbCszKH7lpJpWL+2/PQ9mMPw0rQH+KE212ZrT5F4Nweb3v4rSQcq
-	ezauJTsFLG8+zHflIzHrMdsFLR7GfrLLENs4cjYRva2JUSULNyG5R+FBF67MQvjxQgws6GDj+OQ
-	+5wAa/k6Vsur8aEMtebJH4+yXf9HhBJJeqp2LaMVvGs9RYDRdbclheOulW3qN5Ve04bn6EkQL+W
-	TvqU6itupFOJ8
-X-Google-Smtp-Source: AGHT+IGf/m/V8+j34YqopUYkV4XXjKnadKwCWf89O5k3xQSZs+EFyVqb9zHH9xJhJfgtnULMGvX75g==
-X-Received: by 2002:a05:6808:2745:b0:3fe:f41d:463a with SMTP id 5614622812f47-401f288d0e8mr2181349b6e.10.1745621461133;
-        Fri, 25 Apr 2025 15:51:01 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:96a3:e28:3f6:dbac? ([2600:8803:e7e4:1d00:96a3:e28:3f6:dbac])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401ec8cb1ebsm971268b6e.18.2025.04.25.15.50.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 15:51:00 -0700 (PDT)
-Message-ID: <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
-Date: Fri, 25 Apr 2025 17:50:58 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTLOmcjZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96D0C4CEE4;
+	Fri, 25 Apr 2025 23:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745622006;
+	bh=/bRJ1TosTwWc07Gu44FOUKRyH9x1FUl0wV2GXEtu9Bw=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=BTLOmcjZdXzEn8z5qOerh47Ehfu3VX9yrQ3lbcY7KFxeU8+Z8rci7MVHhRfaTLRKO
+	 mHxaElLVaMHz+sOIMvA7OEbIjdzRiI/IJxnKb7qKaNwJqLokd8O3otoPlPhJgOeOgd
+	 bwFHs8AP89LwLAnQbAlJxoAzrPZE4tV6n1LaDQTkln21uY0Sg64b/NB9B0hTAyDKIy
+	 lnngbK2IkEIi8t+eSn19bX2HwCvWmLRDkxBz3sqfsPfdBWnSMiiDyt/iaOL1UR4hKT
+	 VeRoIZWxntPc0/Qi8Z/tLNGPTBolQiFsqLYqHj6LwRIeHJLZnozofzW5p09eqFZcyY
+	 4pbybWu78T2wA==
+From: Mark Brown <broonie@kernel.org>
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, skomatineni@nvidia.com, 
+ ldewangan@nvidia.com, linux-spi@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kyarlagadda@nvidia.com, smangipudi@nvidia.com, Vishwaroop A <va@nvidia.com>
+In-Reply-To: <20250416110606.2737315-1-va@nvidia.com>
+References: <20250416110606.2737315-1-va@nvidia.com>
+Subject: Re: (subset) [PATCH v3 0/6] Configure Clocks, Add Internal DMA
+ support
+Message-Id: <174562200441.302167.12352642386794751784.b4-ty@kernel.org>
+Date: Sat, 26 Apr 2025 00:00:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] dt-bindings: iio: adc: Add adi,ad4052
-To: Jorge Marques <jorge.marques@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On 4/22/25 6:34 AM, Jorge Marques wrote:
-> Add dt-bindings for AD4052 family, devices AD4050/AD4052/AD4056/AD4058,
-> low-power with monitor capabilities SAR ADCs.
-> Each variant of the family differs in speed and resolution, resulting
-> in different scan types and spi word sizes, that are matched by the
-> compatible with the chip_info.
-> The device contains one input (cnv) and two outputs (gp0, gp1).
-
-Don't need line breaks after every period.
-
+On Wed, 16 Apr 2025 11:06:00 +0000, Vishwaroop A wrote:
+> This series introduces QSPI clock configuration and internal DMA
+> support for Quad SPI controller. The patches have been reorganized
+> for better logical flow and review comments from v2 have been addressed.
 > 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> ---
+> Vishwaroop A (6):
+>   spi: tegra210-quad: Fix X1_X2_X4 encoding and support x4 transfers
+>   spi: tegra210-quad: remove redundant error handling code
+>   spi: tegra210-quad: modify chip select (CS) deactivation
+>   arm64: tegra: Configure QSPI clocks and add DMA
+>   spi: tegra210-quad: Update dummy sequence configuration
+>   spi: tegra210-quad: Add support for internal DMA
+> 
+> [...]
 
-...
+Applied to
 
-> +  interrupts:
-> +    items:
-> +      - description: Signal coming from the GP0 pin (threshold).
-> +      - description: Signal coming from the GP1 pin (data ready).
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: gp0
-> +      - const: gp1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description: |
-> +      The first cell is the GPn number: 0 to 1.
-> +      The second cell takes standard GPIO flags.
-> +
-> +  cnv-gpios:
-> +    description: The Convert Input (CNV). If omitted, CNV is tied to SPI CS.
-> +    maxItems: 1
-> +
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Assuming the diagram at [1] is correct, for SPI offload use, we are missing:
+Thanks!
 
-  #trigger-source-cells:
-    const: 2
-    description: |
-      Output pins used as trigger source.
+[1/6] spi: tegra210-quad: Fix X1_X2_X4 encoding and support x4 transfers
+      commit: dcb06c638a1174008a985849fa30fc0da7d08904
+[2/6] spi: tegra210-quad: remove redundant error handling code
+      commit: 400d9f1a27cc2fceabdb1ed93eaf0b89b6d32ba5
+[3/6] spi: tegra210-quad: modify chip select (CS) deactivation
+      commit: d8966b65413390d1b5b706886987caac05fbe024
+[5/6] spi: tegra210-quad: Update dummy sequence configuration
+      commit: c283fcdc4e2b89678c171691fd26f576139fc256
+[6/6] spi: tegra210-quad: Add support for internal DMA
+      (no commit info)
 
-      Cell 0 defines which pin:
-      * 0 = GP0
-      * 1 = GP1
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-      Cell 1 defines the event:
-      * 0 = Data ready
-      * 1 = Min threshold
-      * 2 = Max threshold
-      * 3 = Either threshold
-      * 4 = Device ready
-      * 5 = Device enable
-      * 6 = Chop control
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Bonus points for adding a header with macros for the arbitrary event values.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-And we are missing:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  pwms:
-    maxItems: 1
-    description: PWM connected to the CNV pin.
-
-[1]: https://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/index.html
-
-> +  spi-max-frequency:
-> +    maximum: 62500000
-
-Datasheet Table 5. SPI Timing—ADC Modes, VIO ≥ 3.0 V says period can be 12 ns.
-
-So that would make max frequency 83333333.
-
-...
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        adc@0 {
-> +            compatible = "adi,ad4052";
-> +            reg = <0>;
-> +            vdd-supply = <&adc_vdd>;
-> +            vio-supply = <&adc_vio>;
-> +            spi-max-frequency = <25000000>;
-> +
-> +            interrupt-parent = <&gpio>;
-> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
-> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
-> +            interrupt-names = "gp0", "gp1";
-> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
-> +        };
-> +    };
-
-Could be nice to have a 2nd example showing SPI offload usage.
+Thanks,
+Mark
 
