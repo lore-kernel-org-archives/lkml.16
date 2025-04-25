@@ -1,74 +1,75 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B828192D87
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2E721767A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745606730; cv=none; b=ZRcxHR/eJwu9iNrfIJzrB1xOAKAZJvtp3YrPujDCuI+ykRmSzTUiTquxeO4cPCtR+Od6s0YX94eS9861a42IRJwMkO4+d+L2do3cdJdK/fwI8JmpbwP42xAS3KUs3Chfo8PyaTqPUelHb/oH/T58CJa8Dmfo9r8RfXQwLA0eask=
+	t=1745606732; cv=none; b=KG7xsAsV1+p7jqS0a7OhZZGTbkqsJl43hd98oh96sGVTyGUXYmFK4lHJQJnd0snAID8dnAxtf1UttqeWFCoWKvo9btPMFmwJ9iDNL8MwNUVBgXQhD4iYhbNPfeyPkeIS8VyNNTHbtxS+d4ES72jzx4/QiBWP8v3WRraK+ROnyPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745606730; c=relaxed/simple;
-	bh=BNpdicJXoLGWkWg4ZeGn9Ii+XhEcaBNojBK1EIAnv0Y=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UsFqTQ9qgruWL5Fs2r9/r69Xuf/n70qnFTzf6tTs2DV8a+w4YSxjbeLXCi1QGX4nIbsjYAC7Dk7xeVrLhMw6oTQgfZcs5S9tSVEaX4ZqcMDjZkAqih6grUHfwUkOT6QWkMmjfN9WSF51vL+D/cgqlbv6c9KUlC+AbMq4gHLmKpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DC8hQOTO; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1745606732; c=relaxed/simple;
+	bh=3/pOVwyRlrNgkCJ6KBPsHy4woF59FBNMCP1DMrGQy2M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=K0kU1f5xJZDxLUQEQevkz+1S+hj95zVpWSzeeL204NH0QRiPlrWgEB2qCF/bqM0aMYX+HqGcGeglAS2HrRqs37OAyxCo4jAQtPRbYD/8wbt3rZ6Gl5jj1Gs+HDswO6zXw7Ukjn5Kxc5bP2fOHqshebAWeSu8XQe0fO0fK59GSLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bYybe2Aw; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DC8hQOTO"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJqGS003978
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:45:27 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bYybe2Aw"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJq7d004639
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:45:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=fi9sboloBMqbSP3EVVpuP2
-	G1c7dk9xKFMIdYMIuaGQI=; b=DC8hQOTOKv1E75taRgPLP0NXSuy1/OZcM6G2zI
-	58is3urAZkP5OTimkMy/PnOzBVEeoro41Ts1lWhGXqhDuuUrJU1V4o1S8MCDpIFW
-	X2h5jr/RTKN8aEOnsYr78OCiuq6VcCjjxuqhhBs/CkPyBan/CNqK+Gq1SCDkDkVz
-	wk/VHxoVlNx//HDrBRDaH2PUxDoMk4quEeP/BrFoMNxO7qPd37cNHma6XZTVmra3
-	dFhg1MsT5vVxmAz09FhtX1AdQp4KrAeuIpk0Z8+ra5KI9oSbYEti9QcdO6B7C8PX
-	iFxLRHbZf47VUf3BB212qpPqzkhWm7NKZOJf7Wp8oQ167uew==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2a34f-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	EKJ3E1ee2NbHj1WRet4Kw0fB1IRn+u66pJmzaDKzoCc=; b=bYybe2AwRCnj9FnK
+	Z4fRTEkcbFCH2xbRHML0ArWEYYX1HcF2Lk1yYxq/sHh3swU/DdFms0ZP2Iz/KP2r
+	5CZ6lMgt4JKTdJS/0s1psiHfjyEh6CyRVFmfMHfYkwYsCcYfZaMXn5/sD8dAWP+X
+	fMHH6e8qkEKTnuh8KkWrCb2XT73yKu9jK9efWiu645zdLMbJbkT79XzySB2Ccgcf
+	gM5VPztTrob4OwV3Zz1kbIqYxBPRDOOhch9upXQJJrIFMzwjGaqy6LIb4Mmwfn/2
+	aYCXMO2OrwWdFVVV0bNdXefCYwEqYIAqizGxa3IIuLjYxcJ19x1kLPN97qbhQrFx
+	bCnGnw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0a1kw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:45:27 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c95e424b62so254531485a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:45:27 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:45:29 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c579d37eeeso382550685a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:45:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745606726; x=1746211526;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fi9sboloBMqbSP3EVVpuP2G1c7dk9xKFMIdYMIuaGQI=;
-        b=mJZyQipeDEziH3LPC+QX1EvWZUxFfpzNGHl089t5nYxUwM30kvsfHJ8FDSmIH2Uon3
-         0Ny8dOcW4F5h7JGhyZsjUcLtJKfst2ULNltLc5DH23WyeHysDoomkg/7EcYecPWuqLqN
-         kJ5QMXghisWJj5qFd5Usfau6xpK02kRb8djrQ4jpr+Nkbp4CzKv/JsyPDiZeAJeIxwiS
-         OJ5cCWdfp+KvaoYBcddWKcZerfPOApAtUhwsQ+uAQ0YvtDFy82fdYfY25YewBM8Qebi0
-         hLdpH1wT+xuoiqIbPTPNBYTimhzV5+23G0S8pEA8aoHcrf5PdxNajVjToFou8iM6POaI
-         QRHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVX1DvgNO6J3pb11iiVU2HyymRtXFK6GQ6SOOceEwopMTKfcz8Y6vGSlHSN2/9AWrT6cJs3jNahQlGCaYc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKWIYip70mn1SiAJBMJe8053zHUmFm33iEXUoippSOdMNP2Qcv
-	WsfRj4f5UuG0GNzXj12DPsVSKoR/DIaPu+hHUBz25mF0o8Q3N7QiojC4ZEfIrtsg+ISD/VzT/Q9
-	32wwnPcHDlDnI4mfoE2dKI0BzpJ4RZ7/RJe5eyRTHvSC1X3MdyiNW5pByEHX2yz0=
-X-Gm-Gg: ASbGnct5rlf/EF3vV4S71z2Dx/MCz3gFmb762+g3JhbnIrx+vkpA09C2/LiDV8Uxpoh
-	CyrnZVhRvncc9qcMRzSEXqxR61DIWd4B02tpMXAJOiQH2HllXJEP45lrRCcfZQapeCJNOUeksWL
-	NBxKkJLaar8ThUHkWFjytCRi2/TGLH2hCnof+07m8klPPYdFOmB+aL5Mf96kAVzOcJBEJnWgPOS
-	+IlWl/cbRjYFsnW6qDBihU2a+sdc4DA2ZKHQ3EbV8F0OAu8zYUWfKMWR+YNxqvuOzNevkVfmKT0
-	vNeqWCRErFhkTDWEJjUpQcJMCZaQ+baR5Il6nM8f8illoxj3AJf78oNguVu1PsWETuHNN3s8Wwg
-	XfBqj+tqgwBbE+q2fNR+NTkdP
-X-Received: by 2002:a05:620a:2805:b0:7c5:a20f:a091 with SMTP id af79cd13be357-7c95859ad12mr1195495685a.2.1745606726217;
-        Fri, 25 Apr 2025 11:45:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXm1vmoiTdWeuAnhhj3urgNVnN0twLPssYE6XSpmYFJdZ0adsQi97fPa5JHVZwSSNcVjQcmA==
-X-Received: by 2002:a05:620a:2805:b0:7c5:a20f:a091 with SMTP id af79cd13be357-7c95859ad12mr1195491485a.2.1745606725857;
-        Fri, 25 Apr 2025 11:45:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745606729; x=1746211529;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EKJ3E1ee2NbHj1WRet4Kw0fB1IRn+u66pJmzaDKzoCc=;
+        b=ZFIctFUz6UTGWhdaPjGV6ZhFruGmssgT7mfDix54cgjffBMIevKzw1sc5s/r03QrGN
+         9RuAs2L8P4Wfz+mgfXfCMhvuFHCKUtjIkIpNsfvD5HG2oI8B6SAhUi3M4HXY3idzLF8M
+         86NXt+upqs2k/BrUwzMa+O/eALamre8ABqAC2bwJR5+IRfqjqSvTQy/OgfNfhIBgD8LW
+         9Goso3cfGVJj58H/1D8tUSXP5X0T/iIgiZhIJeeQq9PggkubzCf9RJvdSzuEVV49M2vs
+         viP0+v/Z7Hn4KFWJLJghvlN8tbkb63nVsWUc8RVkfPcOatQ9kp/mZ209uSKtC1TCtaNN
+         nzfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcA5wHAbcVb3cyYhSH0FdtZYcTmAWmXdyg5XhaCnF6amQvpCXYZq7wBqJrIzKIgFFOCmoCCQ6HoLLxqhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYqSlu4ztNRcqEQlOaAbO4f/Ojt3SCq3llko0eeV+hZbBUuJu9
+	EPBjaPxoWs5fnK9enxtOvOBV97/dH3BbhTSnNTr9ohp4gTOx57pVG3GgVB/XmGfwBK5CCG6g3lp
+	wZDA2syfa6wjZj1hUTgkn7x3obilp+9pxIFUCYVYzOrXoPUS9GmUfAKzyf5hl0tg=
+X-Gm-Gg: ASbGncvoGxXneG2S+pIgU/98HZQ+Etmew1CdyhS9AN5goZ/eL1z9S3aTtQWMRYRLgsJ
+	PxYqpDNczB9Z921DbneTAAinFELnn36hwMw4GQX+Lf4Ryj3bDbXfPbQJMGWHxn/SHLddvsPwz0w
+	YjItq4Y7lRAzklXZK7vhqqMQQ7Fcqi5bSnDpsYaR2A8qZmO42ETlh0YSVtvtyyse9Ci8fuROVIL
+	Q/W8vWV/rxdGNnYQQaPPfvFUdPSU5etgA7hOzyTjCd2Cfb2Z4i7khDa+hdXG4XUr425zPljOt03
+	fJrxoaB53w+aB4/HkjetalQma08pR6t0soFMvSLLAhDkIU88A15+FxHmejxrJ/a6mivIGgkE4jp
+	AY+9/SE44aIjpH8EB2sl0i5+5
+X-Received: by 2002:a05:620a:2407:b0:7c5:54d7:d744 with SMTP id af79cd13be357-7c9668731demr96252685a.23.1745606728730;
+        Fri, 25 Apr 2025 11:45:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEggTNJKKFuCWQFK1y6LLAvfvg7a2JDYgPGYciMrnCbEgzFXsql4ztqCe+nuGynt3QcdsoTBA==
+X-Received: by 2002:a05:620a:2407:b0:7c5:54d7:d744 with SMTP id af79cd13be357-7c9668731demr96248785a.23.1745606728306;
+        Fri, 25 Apr 2025 11:45:28 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb8979sm688984e87.257.2025.04.25.11.45.24
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb8979sm688984e87.257.2025.04.25.11.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 11:45:24 -0700 (PDT)
+        Fri, 25 Apr 2025 11:45:26 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v5 0/2] Bluetooth: qca: add Qualcomm WCN3950 BT/WiFi chip
- support
-Date: Fri, 25 Apr 2025 21:45:21 +0300
-Message-Id: <20250425-rb1-bt-v5-0-154b35435b4d@oss.qualcomm.com>
+Date: Fri, 25 Apr 2025 21:45:22 +0300
+Subject: [PATCH v5 1/2] arm64: dts: qcom: qcm2290: fix (some) of QUP
+ interconnects
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,11 +78,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEHYC2gC/23MTQ6CMBCG4auYrq3plIG2rryHcdE/oIkB0xKiI
- dzdwoJgcPlN5nknknwMPpHraSLRjyGFvsujPJ+IbXXXeBpc3oQzXjLOgEYD1AzUeit0AagUOJK
- fX9HX4b2G7o+825CGPn7W7gjL9ZAYgTKqvVSVRcULJ2/P0OnYX/rYkKUx8v+OZ1c7RAYgUBlzc
- MXe8c0V2VVCCY1YCevdweHeic1hdk4Cq620CrX6cfM8fwHZFY6pRQEAAA==
-X-Change-ID: 20250201-rb1-bt-cec7a314991d
+Message-Id: <20250425-rb1-bt-v5-1-154b35435b4d@oss.qualcomm.com>
+References: <20250425-rb1-bt-v5-0-154b35435b4d@oss.qualcomm.com>
+In-Reply-To: <20250425-rb1-bt-v5-0-154b35435b4d@oss.qualcomm.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -89,79 +88,128 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1639;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4143;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=BNpdicJXoLGWkWg4ZeGn9Ii+XhEcaBNojBK1EIAnv0Y=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoC9hEry2y1Ev170WQH7/km4wS0ikUFkOMMx0Q+
- 9w2dIomY3+JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAvYRAAKCRCLPIo+Aiko
- 1V22B/4kNUWwXx7Dp4N9DP4cXRd2PdCtSJIU1T3SaM6f+8rlx84DXdhmQX26TS4tdHl+wWxVg0C
- jQs+HmHg+2N4I2MSEkgMwvnuhbg+eJ66NAavDPgclLF6xR0ECVBg84++hiijCxkGoGpfsJJWqfW
- zwqbrMkQyAXJpHz55VB+erQPNx0zzA6kqqUBsXdP/7pulq9A6d43Ln8Mn/OqAvkUMLm+QkJl+Wt
- +5ZtGbl0PmhVn5S1wRAvvBPz0q6rZvS56XPX0LWM84R7Bi+URdViSzbtCY7ZUvRsNLaJszTcomk
- yBf7s76new8y/mCHZVBvwS3X8b28lOeLAYo1L46N/RxkDVRM
+ bh=kyVnqEgktNyksbrU5xsGESzf3KJOgykR4CkPmnf+D88=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoC9hEPXXv2+ps3VUM4jhtGZjJnOR8WJfrZl36j
+ GHY5SEfkRWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAvYRAAKCRCLPIo+Aiko
+ 1Si1B/0f0RgyVlECGEyeYNMl00MbZvpD4NSI0pkwHgF/OiFoRHxgI/cNV4t+7gdk8m6dqnd5Ztw
+ tD0aSLuzxHAsOEf3bdsT8INEN+3h/FeBxlugX/KDEC640jAhdDWh5NILJZvn5M55Q+WvzQtzwVL
+ vo3Hvi4Z2npHcUTfQRVGtTdCDtw8bax8zPeW6EwCYqoC9F42o30Xkl8PmLG9aoWIwJERPTVvcz1
+ sHXoE+F5cxvQDyrWIQ8JwlseVg1IdQXJcCBBODgUUNJw09NwoJGyO8o/xs63G6aHW4hDCYNwCra
+ ZdBapwT1WHmCqPj4dDYXUjmxB6LaclihEcvxE/PKFUKd3fHx
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Authority-Analysis: v=2.4 cv=EtLSrTcA c=1 sm=1 tr=0 ts=680bd847 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=QHDpyB9KspxQiDUAPI4A:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: Br_EQE5j3KCW2s24xPLArVdLZgjm2OYo
-X-Proofpoint-ORIG-GUID: Br_EQE5j3KCW2s24xPLArVdLZgjm2OYo
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzMyBTYWx0ZWRfX1HnGOoOCKCOd E0xGeIMCVeC3itK+GGpJQokANfI56ujpdvaR2OM/Ps1CddpyWAhwbL3zL3dvQPqmqFzivdz1JCP efmgleqHhluSpyGz4o+DWc1z8Rvq4d+O34VTPpuLQhPGJHd64boUQ8oYZPozpjPc4k07cgaL818
- VbgAuUPiguc9ACgNLezCbPLZcnH+b+p6dTH8hbBJqZ9VEPLIydZKRB+6NnAE96W7i/o9O42OKQ+ clvlUXnqOweFuEbdTYz9s0+rRkxr9gc8Ij6SaY0zbuX+FoRUUUzrmPB5DE/xQZfJp16pKGRQrrm 2GUw2CgkMq8/CKIhYASZrGX/XzeN98QTaitEelNyCZbO7CyteUv2cZr1BB2Rob9w2sBLuUVcigy
- LugABxVPfvj4vEwwQ7YLAG5+j7fdCTJbTNLAgdzXBIAgwW7yavjI5AMVoICQZC5nKmQ7mubr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzMyBTYWx0ZWRfXwsfJ1NFjxA1b RshV1LEz7n7ZUuKkOzhLPmfHct+HCKeWl3xLrabvpRjDvWjnIdY3389g4Kma7zdhnra18ysdwie iaCHJfqbfbNAMZOPhavy4uyY6m721WLE9vSCUteNpuarQYgJxf0T3obv3iyUacpKRbhUqdtRP4p
+ nemvhhLNSUebK0GH/GHlJAutN/ycQfInfEByu2G7TqL836qAJvzxKDd7RxOlmzitXlnhBClgpIO 1AC7pvY0MueaZ4LD7fX58hC2GRrqEjp7eETgwiJ5TiTli746eZQp4ZAOnrOY1Bdl/ZBjlmFqQ8v PfYJ7qULMpd9uqt1YUviJF5hsTbCFpPgE8VigN6Iu/iONxtx4ielvYMMt+PIyJuI+hu1VsDcDvK
+ EI8zJxhwnM9yobV1NN39Z5mGw3V0yVgHlUYxnjKEQrYAQ0BTGGhFb2DF62UaSzhCpp3UwGhI
+X-Proofpoint-GUID: C-tV1l3wSS4nSOK6B5rV2yQAnISzvVNU
+X-Authority-Analysis: v=2.4 cv=ZuTtK87G c=1 sm=1 tr=0 ts=680bd849 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=9DfYs5r4dB8U4TQjKgMA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: C-tV1l3wSS4nSOK6B5rV2yQAnISzvVNU
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-25_05,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- suspectscore=0 mlxscore=0 clxscore=1015 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 suspectscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504250133
 
-Qualcomm Robotics RB1 platform uses a new member of the WCN39xx family
-of BT/WiFi chips. Add support for this member of the family and enable
-it to be used on the RB1 board.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
+While adding interconnect support for the QCM2290 platform some of them
+got the c&p error, rogue MASTER_APPSS_PROC for the config_noc
+interconnect. Turn that into SLAVE_QUP_0 as expected.
+
+Fixes: 5b970ff0193d ("arm64: dts: qcom: qcm2290: Hook up interconnects")
+Reported-by: Konrad Dybcio <konradybcio@kernel.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changes in v5:
-- Rebased on top of linux-next.
-- Dropped applied patches.
-- Link to v4: https://lore.kernel.org/r/20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org
+ arch/arm64/boot/dts/qcom/qcm2290.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Changes in v4:
-- Added empty line before status property (Konrad)
-- Reword Bluetooth commit message to follow linux-firmware changes
-  (cmnv13t.bin and cmnv13s.bin were merged).
-- Link to v3: https://lore.kernel.org/r/20250202-rb1-bt-v3-0-6797a4467ced@linaro.org
+diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+index 6a7ce2c6b88e51e126cb5add007a0857b0606a0e..c7946731438bae2882e6710c21504915eff30dfa 100644
+--- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
+@@ -1081,7 +1081,7 @@ spi0: spi@4a80000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				#address-cells = <1>;
+@@ -1100,7 +1100,7 @@ uart0: serial@4a80000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				status = "disabled";
+@@ -1145,7 +1145,7 @@ spi1: spi@4a84000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				#address-cells = <1>;
+@@ -1192,7 +1192,7 @@ spi2: spi@4a88000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				#address-cells = <1>;
+@@ -1239,7 +1239,7 @@ spi3: spi@4a8c000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				#address-cells = <1>;
+@@ -1303,7 +1303,7 @@ spi4: spi@4a90000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				#address-cells = <1>;
+@@ -1322,7 +1322,7 @@ uart4: serial@4a90000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				status = "disabled";
+@@ -1367,7 +1367,7 @@ spi5: spi@4a94000 {
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
+ 						 &qup_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+ 						<&bimc MASTER_APPSS_PROC RPM_ALWAYS_TAG
+-						 &config_noc MASTER_APPSS_PROC RPM_ALWAYS_TAG>;
++						 &config_noc SLAVE_QUP_0 RPM_ALWAYS_TAG>;
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				#address-cells = <1>;
 
-Changes in v3:
-- Mention new firmware files.
-- Link to v2: https://lore.kernel.org/r/20250201-rb1-bt-v2-0-fd44011749bb@linaro.org
-
-Changes in v2:
-- Corrected QUP interconnects (Konrad)
-- Added /delete-property/ interrupts and an empty line before status
-  (Konrad)
-- Enabled downloading of different NVMs as required for v1.3 of the chip.
-- Link to v1: https://lore.kernel.org/r/20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org
-
----
-Dmitry Baryshkov (2):
-      arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
-      arm64: dts: qcom: qrb2210-rb1: add Bluetooth support
-
- arch/arm64/boot/dts/qcom/qcm2290.dtsi    | 16 +++---
- arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 83 ++++++++++++++++++++++++++++++++
- 2 files changed, 91 insertions(+), 8 deletions(-)
----
-base-commit: 948bc2b5c6fec70fb8c5b63c78aaa27611d7eea4
-change-id: 20250201-rb1-bt-cec7a314991d
-
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+2.39.5
 
