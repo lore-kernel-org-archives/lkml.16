@@ -1,61 +1,68 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FED0192D6B
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E0A21FF28
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745615550; cv=none; b=JQok1ir8GY3GgpbpMg7g4AAs1zE67fTyDx1OFkqol56BGi45N8EJG428s9pYl4jLsi0D4NVMRUAT3bP+8eqGzsG85cxzFadR4vAPFkWqFNcyfeCht+h+DDi3u2AiFY73UY9y6qF5UjbogmbQcsDwVFOLL7lDLl94QOEl05iGdds=
+	t=1745615618; cv=none; b=GnkXR8m+49TcTfqTFibSx8MvxhLuWKWAURhU40koc9ngWVC7BkP8x+VFtt3G6CB3z+ovO+uPxNvt8Zcg+3rdLH8Bg18+9b3pudn6pxiLwoqzxViC7SDG5QSLvkFy8j1v3OFg9s3bRxblZUU7DIomfA7Dt8oU+dEN3Z83ZBRqfTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745615550; c=relaxed/simple;
-	bh=41IW46e6gDg4C4jg1vzCwRlZIgO5uBAS84n1qrKE2I8=;
+	s=arc-20240116; t=1745615618; c=relaxed/simple;
+	bh=RJEH5N2rv2n7jQnL+Pwcu4SRvIlmWdd6kQFOGGNXaKU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P+6YiH+WbGczo3IKBr/0VhCtODUjexbcKU4GROIadTP+2OOOK8exSpZ/o8dh7YUGVoUXOnfGDYZlYBqkClXMh6XWZCjxuwdkcbesq8r782VKzh7MnPC/mrDNIkNP8JB8Wr3oYBHXrlXehm5+uYLESApjpXSbTYIgqIAUdH3LJVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZvDBk8FI; arc=none smtp.client-ip=198.47.23.235
+	 MIME-Version:Content-Type; b=d5mCVOjpDRFicnJ8pcCWPwxM5A0+MZaqhd4ijuJ+7iEY0DdZvxybhnIBZJSvjFI7/Eu3C9zjTLNNr4cVAa7esKWHpGcaxZt/5ePtkAAsowM01YrDqbvK3beobbfoFywrccxIw6kBH9/3x6puD1rJCXYDhuI4xiGYV+hXn4gG8yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cL+Fd24e; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZvDBk8FI"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PLC68G3027242
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cL+Fd24e"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PLDL8c2277634
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 16:12:06 -0500
+	Fri, 25 Apr 2025 16:13:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745615526;
-	bh=53XdUqfFsxdrkTPF8ii63mrk/KIlvgnwsDsFFeftRxU=;
+	s=ti-com-17Q1; t=1745615601;
+	bh=3d436YQ3Xwtns+Rova8G3My78ycHIDiASiikPFHlDig=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ZvDBk8FINxfAVVdEMHDMIFpyEu68m8UfqsIg3+hLvhudhsuqvAQ+X6HC5ycYRa12b
-	 Hksw7Q0NfmfvAALvmLXoC3l98l5QcrxMKOcDzK1V8/61RLj9ICIGSsy/VslGXeYQhz
-	 DPvcPbOfU96V5EjGTDTCZX4ONZGGqzNPfuSMp7lU=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PLC62b017024
+	b=cL+Fd24e4c16T0NEX8BR+9csVnt3aBj/wDlq/Nu/CunR1sgCr6OlGSwtuxg4NE2za
+	 hwsvVfqygvEu9056IJyx6yQcVB7fmaml12BmqzpPUzkEsnz/EXBCNgJkxK18LQuMKD
+	 Y99IsOkcmT+CNOir2HMZ2b2OhGq2CdzoCDHO17mM=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PLDLaZ076287
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 16:12:06 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 25 Apr 2025 16:13:21 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 16:12:05 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 16:13:20 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 16:12:05 -0500
+ Frontend Transport; Fri, 25 Apr 2025 16:13:20 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PLC5gr096254;
-	Fri, 25 Apr 2025 16:12:05 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PLDKcF108011;
+	Fri, 25 Apr 2025 16:13:20 -0500
 From: Nishanth Menon <nm@ti.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jayesh Choudhary <j-choudhary@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <bjorn.andersson@oss.qualcomm.com>,
-        <krzysztof.kozlowski@linaro.org>, <geert+renesas@glider.be>,
-        <lumag@kernel.org>, <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
-        <elinor.montmasson@savoirfairelinux.com>, <ebiggers@google.com>,
-        <ross.burton@arm.com>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
-Date: Fri, 25 Apr 2025 16:12:02 -0500
-Message-ID: <174561548590.210587.7393005807062359269.b4-ty@ti.com>
+To: Judith Mendez <jm@ti.com>
+CC: Nishanth Menon <nm@ti.com>,
+        Bjorn Andersson
+	<bjorn.andersson@oss.qualcomm.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Geert Uytterhoeven
+	<geert+renesas@glider.be>,
+        Dmitry Baryshkov <lumag@kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] arm64: defconfig: Enable hwspinlock and eQEP for K3
+Date: Fri, 25 Apr 2025 16:13:15 -0500
+Message-ID: <174561554453.210950.14844325272015840507.b4-ty@ti.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250416182930.32132-1-j-choudhary@ti.com>
-References: <20250416182930.32132-1-j-choudhary@ti.com>
+In-Reply-To: <20250421201055.3889680-1-jm@ti.com>
+References: <20250421201055.3889680-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,25 +73,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Jayesh Choudhary,
+Hi Judith Mendez,
 
-On Wed, 16 Apr 2025 23:59:30 +0530, Jayesh Choudhary wrote:
-> Enable configs for cdns-dsi and cdns-dphy drivers required for DSI
-> display on the following TI platforms:
-> J721E-EVM, J721E-BeagleBone-AI64, J721S2-EVM, AM68-SK, J722S-EVM,
-> BeagleY-AI, AM62P5-SK, J784S4-EVM and J742S2-EVM
+On Mon, 21 Apr 2025 15:10:55 -0500, Judith Mendez wrote:
+> Enable CONFIG_HWSPINLOCK_OMAP to allow usage of these devices
+> across K3 SoC's. Also enable CONFIG_TI_EQEP which is enabled by
+> default on am64x SK board.
 > 
-> The dsi wrapper driver used by all the above mentioned platforms,
-> cdns-dsi-j721e is enabled by default if cdns-dsi config is enabled.
 > 
-> [...]
 
-I have applied the following to branch ti-k3-config-next on [1] with minor
-commit message update (Beagle is not a TI platform :) ).
+I have applied the following to branch ti-k3-config-next on [1].
 Thank you!
 
-[1/1] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
-      commit: 882c214572e43b56f781883d4ae48689381a68f1
+[1/1] arm64: defconfig: Enable hwspinlock and eQEP for K3
+      commit: 53802e60fbb57a6ddab01837a53e2040cd1f592a
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
