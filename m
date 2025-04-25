@@ -1,242 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6329F274658
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C4326FDBB;
+	Fri, 25 Apr 2025 15:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745593965; cv=none; b=k4Uok7LgQluTTT6xfmAwCHq166NIIDa+ZR4a9klf/VQNLh/4V0CDgfjFyXAMU+oxQCF5lxTfdX8H43V1LdTOlHnjtNMNPcxIQt3MugQ5F9ZxhFQs+9exFyonTwnuAdVRzTh79nWpPl8BExOH0ZBd3vCWoT0tZaoFxJN4gXGOxN0=
+	t=1745594035; cv=none; b=QC7bwwLl9wH4OJFjNXHuMhFr7XulQbuEP3f4GSXcR4I69pwKCEnu0qkTPKQT9vhiYNCFO5Qq0FmhnLzTulf6bdHmZXspwUoALKmOlgAf9silU+68cK+pIUKDhBX+FWyBh4pTa3kDNRCxBwwhG/srqLMJTVkeE7Ymhzam1r+uZVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745593965; c=relaxed/simple;
-	bh=3KEYF6wq5doHPSDEyFCUV31EnYHZGmE8JIMIGueI/dA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UEdkWlgZFOI/g/9y9+496dj5Dz1VTqRPRq7JupoV3Po7Q1DR9L85yHJ9RMlLBHyIOlFqFCi+jLbFh2QjvCsC/KkZeVIc9vLzeCKGaC9vA5yQ87a1/4jvuiRLTmHGefQetVUk/iLk5VUXOeyip9qbXLuL+b0yrYnGzE1LKieCIvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aaD4jQY/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745594035; c=relaxed/simple;
+	bh=2Fr79h5WpW0sk+9jfuwv/EfIloErPvJaRV1TKBMbIms=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=utsOTm86+lxhmQ0E5dryYvTPeBQ343VJdA2z2ZRGlIgqzxyMCXQ7SAvUkzWJm3PSE3tn0j5dfpfz47BFlsrW89AGYIH5W+YJAwdUGFlsoPyl5nzrbm/fjF5RZlA88FR6sETabFqxuUJLg/Dq5189p4xQYecFzt+6MHgnWkV/ffs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=MiecbeKS; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aaD4jQY/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745593962;
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="MiecbeKS"
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 4E4B2BBAC4;
+	Fri, 25 Apr 2025 15:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1745594025;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7wnpRUGCy1asyCGpaZqWQHx5uwoqnqV1Pz1YZ80UYmM=;
-	b=aaD4jQY/Lm78zy43eDArgb9iYVCyCsEgExnde9Dok6E8bfPxq/+96MFP/8hppa1OcCfxzX
-	Dn3ltW6ART2xjuZurbqJqcSPAo9wBi8YlIf7uxiD060jcX6LVsP1SjnYJs2WVnEVjQlk4a
-	n9sgG/9D23Qqy2UONJwOrJBQy2+0GYg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-672-LsbfjITrMcmNEjUKvuvTLA-1; Fri, 25 Apr 2025 11:12:41 -0400
-X-MC-Unique: LsbfjITrMcmNEjUKvuvTLA-1
-X-Mimecast-MFC-AGG-ID: LsbfjITrMcmNEjUKvuvTLA_1745593960
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39d9243b1c2so853456f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:12:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745593960; x=1746198760;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7wnpRUGCy1asyCGpaZqWQHx5uwoqnqV1Pz1YZ80UYmM=;
-        b=LpIU85rnh740ccljZch1bc5FSVGxuWLFsWM5/JJ4VjGxmd3yavFQatc8REfhAiITYX
-         nyTaGtdCShEWS0p2FqM1Yz8wuXfgKl1PAOmVwfW6c0+5PGMdtBz4YwUuFkdGChB6sLC4
-         OtaoJUmR4X48dnEciB9+bw4jDe1EEOYW6W0ohjnPE3dYr6vAQnT7flkE/S2R1d9Ew/aj
-         Ls/plAwo88g/5vKABcZ5JnbzqkmQJRV4zAFmvZniuS250qPiASWsFa7Mv9IbAZ/I3gdA
-         jeTN5z69w3aB4DZTeWOgHcRUyo0nqrYeXtoKN4fTWmlkh7JVvB9nhomSVtpu4X9By2iU
-         aC/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWytJfPuJbX5+Uev/dOxvi4ebFyXKj4N73CiOzPmonaYQ0VUzkhkHBD61TqH2Itkmg5cu0kqn1CEEAXreI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDXWUwe4V2EEUStRCyfc2DpAwsfjienOCH14JKdYd1Z3UtBEUy
-	OjKV2Dm+ZBocJNWmZ071OqVLor8HqwoGFz3mXXkIiomyOAp1/iYvZel5VhkJKqum/yaNX9trNes
-	nEquFlzBP5YEcz+ixUzyD2saKzMwvnm6gouzjMgH2BB1Y5vqiir1tqBxZGTTRrg==
-X-Gm-Gg: ASbGncustAC3BteLc8oF4dxhygqZKSDqWjyXOA3F2mDGpQTNOGz3I8H/Pz39E7IO7y0
-	bLZmLaaAVMjENRjz6b3svGWZL5/8OdRJnfnGCDUzcVh9otlQk3cXtjwbhr5BUosoXbEhzXEnOUj
-	cBkKSWfKW66TPj14vcpzCmMtJG69PIwT8YetwRMzpJ5vGRpumAAlS5r0RmLokvXSl3DTWNgvnm8
-	EcIPuMBbAYvz39suvWyo7EWGjHxL+Nr29rhv1eUJbbWFkNMbXpEUBZB++kQkh3eNaMw41xND9lX
-	z0r4E78I1kjsUgaYbPFLegPiBE0Pgq6CcVMp/58Bpl056VyrStyI80X1PC0kfVZfRawOElOoTuo
-	8HAHEm/OwIiV6VuQohR0c/a+qv/Q+6nRSopom
-X-Received: by 2002:a5d:5888:0:b0:391:1222:b444 with SMTP id ffacd0b85a97d-3a074e1eb59mr2612454f8f.20.1745593959682;
-        Fri, 25 Apr 2025 08:12:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFb8zX1fiNGn7dGhgouHSaj/JSOfWUgiuFpdN8caJ0tf/dvhMJAiX+roZ1dwcXdc6c/rcWKCg==
-X-Received: by 2002:a5d:5888:0:b0:391:1222:b444 with SMTP id ffacd0b85a97d-3a074e1eb59mr2612418f8f.20.1745593959236;
-        Fri, 25 Apr 2025 08:12:39 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70f:6900:6c56:80f8:c14:6d2a? (p200300cbc70f69006c5680f80c146d2a.dip0.t-ipconnect.de. [2003:cb:c70f:6900:6c56:80f8:c14:6d2a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ccb8e1sm2665832f8f.59.2025.04.25.08.12.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 08:12:38 -0700 (PDT)
-Message-ID: <23e2d207-58ac-49d3-b93e-4105a0624f9d@redhat.com>
-Date: Fri, 25 Apr 2025 17:12:37 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=ECsaLysjp6B31lix5ePZqbR776k53fktpSr8Jb8kvHE=;
+	b=MiecbeKSC9qPTxgyzouBu54qd4VjFtmkfHV/2qTsOefPU2eAaK5cBCTcImhw+T75qlqO2+
+	xsNGxQQjX0OdP68jb2HZKFeV8do4HMOWxaZhIfySqXsdEKz5Op//pZWwxEqwnctK8A8rVg
+	P2WjEybiUv3PnKk+10v9R9AGnDIaowzlxTfxSncUT2oXgzv8YLcXGPbJ5rn9brvr+KfYzt
+	y9ZSgyOeTe1KRw4YfSE60ZQrWAbmyN8y261B96MCfrdyWbqrTrbHB4hEewS6ZzpxeAxnO5
+	sW1MJRWbpDrguja+qwxdVjlEkU+50iOBR8LfCx5VBQuphi1fOseWw4tM2FcHfg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm/userfaultfd: Fix uninitialized output field for
- -EAGAIN race
-To: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Cc: Mike Rapoport <rppt@kernel.org>, James Houghton <jthoughton@google.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Axel Rasmussen <axelrasmussen@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- linux-stable <stable@vger.kernel.org>, Andrea Arcangeli <aarcange@redhat.com>
-References: <20250424215729.194656-1-peterx@redhat.com>
- <20250424215729.194656-2-peterx@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250424215729.194656-2-peterx@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Date: Fri, 25 Apr 2025 17:13:45 +0200
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, Rob Clark
+ <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Dmitry
+ Baryshkov <lumag@kernel.org>, Adam Skladowski <a_skl39@protonmail.com>,
+ Sireesh Kodali <sireeshkodali@protonmail.com>, Srinivas Kandagatla
+ <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
+ <danct12@riseup.net>
+Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: Add initial support for MSM8937
+In-Reply-To: <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
+References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
+ <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
+ <2e3d94a4-d9e1-429e-9f65-d004c80180e5@oss.qualcomm.com>
+ <790a0b7537e0b82b70bc4b32612ecee6@mainlining.org>
+ <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
+Message-ID: <5ccb39f9393b44761127717096a38a46@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 24.04.25 23:57, Peter Xu wrote:
-> While discussing some userfaultfd relevant issues recently, Andrea noticed
-> a potential ABI breakage with -EAGAIN on almost all userfaultfd ioctl()s.
-
-I guess we talk about e.g., "man UFFDIO_COPY" documentation:
-
-"The copy field is used by the kernel to return the number of bytes that 
-was actually copied,  or an  error  (a  negated errno-style value).  The 
-copy field is output-only; it is not read by the UFFDIO_COPY operation."
-
-I assume -EINVAL/-ESRCH/-EFAULT are excluded from that rule, because 
-there is no sense in user-space trying again on these errors either way. 
-Well, there are cases where we would store -EFAULT, when we receive it 
-from mfill_atomic_copy().
-
-So if we store -EAGAIN to copy.copy it says "we didn't copy anything". 
-(probably just storing 0 would have been better, but I am sure there was 
-a reason to indicate negative errors in addition to returning an error)
-
+On 2025-04-25 11:57, Konrad Dybcio wrote:
+> On 4/23/25 4:46 PM, barnabas.czeman@mainlining.org wrote:
+>> On 2025-04-23 16:03, Konrad Dybcio wrote:
+>>> On 4/21/25 10:18 PM, Barnabás Czémán wrote:
+>>>> From: Dang Huynh <danct12@riseup.net>
+>>>> 
+>>>> Add initial support for MSM8937 SoC.
+>>>> 
+>>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>>>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>>> ---
 > 
-> Quote from Andrea, explaining how -EAGAIN was processed, and how this
-> should fix it (taking example of UFFDIO_COPY ioctl):
+> [...]
 > 
->    The "mmap_changing" and "stale pmd" conditions are already reported as
->    -EAGAIN written in the copy field, this does not change it. This change
->    removes the subnormal case that left copy.copy uninitialized and required
->    apps to explicitly set the copy field to get deterministic
->    behavior (which is a requirement contrary to the documentation in both
->    the manpage and source code). In turn there's no alteration to backwards
->    compatibility as result of this change because userland will find the
->    copy field consistently set to -EAGAIN, and not anymore sometime -EAGAIN
->    and sometime uninitialized.
+>>>> +            gpu_opp_table: opp-table {
+>>>> +                compatible = "operating-points-v2";
+>>>> +
+>>>> +                opp-19200000 {
+>>>> +                    opp-hz = /bits/ 64 <19200000>;
+>>>> +                    opp-supported-hw = <0xff>;
+>>> 
+>>> The comment from the previous revision still stands
+>> If i remove opp-supported-hw i will got -22 EINVAL messages and the 
+>> opp will be not fine.
 > 
->    Even then the change only can make a difference to non cooperative users
->    of userfaultfd, so when UFFD_FEATURE_EVENT_* is enabled, which is not
->    true for the vast majority of apps using userfaultfd or this unintended
->    uninitialized field may have been noticed sooner.
+> Right, I have a series pending to improve this situation a bit..
 > 
-> Meanwhile, since this bug existed for years, it also almost affects all
-> ioctl()s that was introduced later.  Besides UFFDIO_ZEROPAGE, these also
-> get affected in the same way:
+> In the meantime, you should be able to define the nvmem cell and
+> fill in meaningful values for this platform
+As I wrote in the previous revision there is no nvmem for GPU on msm8937 
+only on msm8940.
 > 
->    - UFFDIO_CONTINUE
->    - UFFDIO_POISON
->    - UFFDIO_MOVE
-> 
-> This patch should have fixed all of them.
-> 
-> Fixes: df2cc96e7701 ("userfaultfd: prevent non-cooperative events vs mcopy_atomic races")
-> Fixes: f619147104c8 ("userfaultfd: add UFFDIO_CONTINUE ioctl")
-> Fixes: fc71884a5f59 ("mm: userfaultfd: add new UFFDIO_POISON ioctl")
-> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> Cc: linux-stable <stable@vger.kernel.org>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Axel Rasmussen <axelrasmussen@google.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Reported-by: Andrea Arcangeli <aarcange@redhat.com>
-> Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->   fs/userfaultfd.c | 28 ++++++++++++++++++++++------
->   1 file changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index d80f94346199..22f4bf956ba1 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -1585,8 +1585,11 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
->   	user_uffdio_copy = (struct uffdio_copy __user *) arg;
->   
->   	ret = -EAGAIN;
-> -	if (atomic_read(&ctx->mmap_changing))
-> +	if (unlikely(atomic_read(&ctx->mmap_changing))) {
-> +		if (unlikely(put_user(ret, &user_uffdio_copy->copy)))
-> +			return -EFAULT;
->   		goto out;
-> +	}
-
-Nit: It's weird that we do "return -EFAULT" in one case, in the other we 
-do "goto out;" which ends up doing a "return ret" ...
-
-Maybe to keep it consistent:
-
-ret = -EAGAIN;
-if (unlikely(atomic_read(&ctx->mmap_changing))) {
-	if (unlikely(put_user(ret, &user_uffdio_copy->copy)))
-		ret = -EFAULT;
-    	goto out;
-}
-
-
-In all of these functions, we should probably just get rid of the "goto 
-out" and just return directly. We have a weird mixture of "goto out;" 
-and return; ... a different cleanup.
-
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
-
+> Konrad
