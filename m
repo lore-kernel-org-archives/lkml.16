@@ -1,121 +1,105 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72250230BC2
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC401D63CF
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745572714; cv=none; b=WIq4Vj+0hOcp9BgekRYGR4aa2YF/xCYHdwxGUOxphS3kpIkQ5uZWcaNmhGwO/4cDS3zP4zbUp9P/N/u1fgJfhcLKAyjf20dN/i69+M5yLblHJqMYsqMhGQn/Gzu7Hi4JAptaNtDGGBCnQItQjwyyvNXetiljvcxenGXoLi/PJbQ=
+	t=1745572773; cv=none; b=AVxQ9Ycjce9y8NvMDOVtCh7hA7Wb6OoOYloEZ+uHFrxg3uUcIV6h4NcaIUPElPwftWGWvbUDT+79YIaiRZcvuH1H1duAtp2R0TGFt1uPo19n8bsnM5mbmYxpcSNuEQNM3/Da8Xc1wuGmyiXyuGVURcvbmT5Uvb4yzmDRyiq6Fyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745572714; c=relaxed/simple;
-	bh=S3Ck7vwc07MYkEysfARCrCCCX/V3182fdfUPmdNoVyo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dXkZCtLOLRz5v7K1tTAdXK3ihznye6yMSbKL/GMFV9hVrizCWfNln4yQYci7iTAMqYTthwyb2HBw8Yt4raukvsS3jE9nvyLuFLgAmapej03plkObC9LGuxLxVHgW5FRZifSnKBg8R1TNtMjXx3MeWD/s1umtHlOI6p+rs1Oru1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re; spf=pass smtp.mailfrom=mwa.re; dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b=U8jTMOCw; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
+	s=arc-20240116; t=1745572773; c=relaxed/simple;
+	bh=dTahdSR8SPsgQYw4kLVdrwQTJk9QEAfvhtdVTIYsStk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XutQ1iWG82JMDLShuMs0gx4RIEitWmzhMPriqQr/QQ/1eSibvUgSgVWqeKyKM1HVuZBIKRv/KfJvxdlFxdEF5Sr6HgGaVhyXdOmucJ6qUzDTd6w75NJzHk1idWyM9KWZwWQ5d49xN3Gda7O7sUdzYQ25TidBxu4EFcJJqeE6atQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hWUykK75; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="U8jTMOCw"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c14016868so1867027f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mwa.re; s=google; t=1745572711; x=1746177511; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=S3Ck7vwc07MYkEysfARCrCCCX/V3182fdfUPmdNoVyo=;
-        b=U8jTMOCw/kXdkFy9QKP8c2E8arPcg/MPEDhyD72nlo+pP4gvo1KYh+/upszNk6ytXE
-         ytg5S59bXBi1HH4xzLmideznPwLIBMcFQOaaD2vXYvyinQ3Du9NKEA/pngw10WZJOQ9S
-         hkyBke3+jC1/ITLyWU37G1TnNf1l9GeR9kPu6PuMFugGqUbdCZQwJCa+t+AdSuZmT9iY
-         /0w9ldfU7Bg5ejnUUKu875oaRjouxgqALMsPsu2ANy3dKX18NoTdPMJ4NLpKm0/cLlpx
-         WVW4ww4mQFwsk9QCKeEeLjRgbkBqlgN0jZ3LgusGLrvHRIoKkQHLTlCRm6WKb2AeFJ6E
-         gFRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745572711; x=1746177511;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S3Ck7vwc07MYkEysfARCrCCCX/V3182fdfUPmdNoVyo=;
-        b=Wq67g5I9nY0pwjje/BHiN8aCUgdoevWbmi+oSV95feTwwqDkJ/fQ0HtS0X3exHvxFq
-         esBuzsuroe2SfhTPNbw7V/ReXwNYsxzGPDg8T0wbWUTvzO+LLAmfoYn5M3/kNh9oZhsO
-         nkYnNCJ1D2bFJbkClYUwKT+imU0EBHwom0sIueXF8FEQQEgUpcCoOMK5GqaEnt/d8bZq
-         956+WPN3PST2C9Ck7sjcgWfWz5YeWpjitz9aZdDfUIrUtYtDasEx7yCOLf7yuFW5fbfw
-         t5TuxjKm1n76PJdHrOrbBdDbFtw9vp3GBceeRjrT599s7m0Gl+XHp4fbhCZrvtvyOv9f
-         a/Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIe6Lw/l3Xb32Huuz6SHOcCt7faxWjyQTsHyl6fiGzwzrKtQB/0/MHntrUMS1/nLTOOQNed9/380lmBVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPzMdhuNxDqPbrj4z9iQHD1NHLB778YnQ5NIpJXdsAJCCiYvB3
-	9INl5imkI0lR/H8BesZGcKzkv+/8Ic6OMO6OKBuGyWWlDMNgTGsS/NY5e+gb22klumrOHlTDvnn
-	jItE=
-X-Gm-Gg: ASbGnctL99khYbC/OcXri4H8qqJKyDkAyvDY6GxZHA/UlaYLMuvHBavtiSR6Tigt9b+
-	ZTXGLljMt0xnHFSLavlO3D9boYUB8h2r4yRfNnvS5hPdCpq13S9W+7/e776Y7L3mrcw+Pu/5qak
-	EuJVEQYzZD3RG1hcKwQl+2CgkVucpP0SoRvIxPNgi0eoctYDl9rJ8n1cfsklcIzKGcfCC7OnK3n
-	8jImcDReaWysrFmk0YZGmiIAUvEb0B0gEjnP0WsZbRhJnthgqeCuSmcK/qdtB9pkJf+wEwmNplR
-	WMpqsFEt8W348P4NEKiy5S6MfnPo7YKOZTxTFGUqkjTRjemgcTraksGweUaGJI9D9FW9z9LCS7Z
-	N
-X-Google-Smtp-Source: AGHT+IEy07M1Kka6h0pm1sIZsbtuaQoKm69f7gu2Qjmv8Z2/gVciyi0ynSFrOvtZvI9ezjUo9BawLA==
-X-Received: by 2002:adf:e28e:0:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-3a074e4261amr818270f8f.30.1745572710598;
-        Fri, 25 Apr 2025 02:18:30 -0700 (PDT)
-Received: from mw-ac-stu-3.corp.mwa.re (static-195-14-251-13.nc.de. [195.14.251.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c82fsm1714217f8f.85.2025.04.25.02.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 02:18:30 -0700 (PDT)
-Message-ID: <1f4d6de1f452021511301070e76695d1e56a14a1.camel@mwa.re>
-Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
-From: Antonios Salios <antonios@mwa.re>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, rcsekar@samsung.com, 
-	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@mwa.re,
- jan@mwa.re,  Markus Schneider-Pargmann	 <msp@baylibre.com>
-Date: Fri, 25 Apr 2025 11:18:29 +0200
-In-Reply-To: <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
-References: <20250424125219.47345-2-antonios@mwa.re>
-	 <20250424-industrious-rottweiler-of-attack-e7ef77-mkl@pengutronix.de>
-	 <a5684bfe-981e-4ba3-bbea-d713b5b83160@wanadoo.fr>
-	 <2fe59c0c7e0f7b9369976501790fce5beaea5bc7.camel@mwa.re>
-	 <CAMZ6Rq+QVHAh8HvWcn8rAYGE8VoJmhQUxOFNqBpijSQz10Dodg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hWUykK75"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745572770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qYO6uwpJSCSAVFzr4GnKDXsdqC4xWSXl2N62RVS1B5M=;
+	b=hWUykK75+FLiKNsgyvbRkqqrh4kzormC0v+F6CnFG3Jo7JVfO3jQIdmYz1APqXy9FnKCBf
+	boXpHyQvRY17JGfzfcGc4j+nelEyboOzQ1eROHMiguUvWRl+eZHvSPJa4mQf1RFn4Qppsv
+	TO/gEWdM6/NZHi9cLo/eb6eUQ0v8dGc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-212-QVD1HgshMHKZXZt688xphg-1; Fri,
+ 25 Apr 2025 05:19:25 -0400
+X-MC-Unique: QVD1HgshMHKZXZt688xphg-1
+X-Mimecast-MFC-AGG-ID: QVD1HgshMHKZXZt688xphg_1745572763
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90F1A1956078;
+	Fri, 25 Apr 2025 09:19:23 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.224.162])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 23E7E19560A3;
+	Fri, 25 Apr 2025 09:19:20 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH] tracing/osnoise: Allow arbitrarily long CPU string
+Date: Fri, 25 Apr 2025 11:18:39 +0200
+Message-ID: <20250425091839.343289-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, 2025-04-25 at 16:18 +0900, Vincent Mailhol wrote:
-> I guess this is because your kernel has CONFIG_DEBUG_SPINLOCK:
+Allocate kernel memory for processing CPU string
+(/sys/kernel/tracing/osnoise/cpus) also in osnoise_cpus_write to allow
+the writing of a CPU string of an arbitrary length.
 
-Indeed.
+This replaces the 256-byte buffer, which is insufficient with the rising
+number of CPUs. For example, if I wanted to measure on every even CPU
+on a system with 256 CPUs, the string would be 456 characters long.
 
-> Without it, this would have been a more severe NULL pointer
-> dereference.
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ kernel/trace/trace_osnoise.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Strangely, a NULL pointer dereference does not occur, when I try again
-with CONFIG_DEBUG_SPINLOCK disabled. The kernel does not crash, at
-least on rv64.
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index e732c9e37e14..6819b93309ce 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2302,7 +2302,7 @@ osnoise_cpus_read(struct file *filp, char __user *ubuf, size_t count,
+  * osnoise_cpus_write - Write function for "cpus" entry
+  * @filp: The active open file structure
+  * @ubuf: The user buffer that contains the value to write
+- * @cnt: The maximum number of bytes to write to "file"
++ * @count: The maximum number of bytes to write to "file"
+  * @ppos: The current position in @file
+  *
+  * This function provides a write implementation for the "cpus"
+@@ -2320,10 +2320,11 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
+ {
+ 	cpumask_var_t osnoise_cpumask_new;
+ 	int running, err;
+-	char buf[256];
++	char *buf __free(kfree) = NULL;
+ 
+-	if (count >= 256)
+-		return -EINVAL;
++	buf = kmalloc(count, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
+ 
+ 	if (copy_from_user(buf, ubuf, count))
+ 		return -EFAULT;
+-- 
+2.49.0
 
-Looking through the implementations of arch_spinlock_t, it seems that
-only PARISC's implementation would cause problems in this case since it
-uses an array.
-
-https://elixir.bootlin.com/linux/v6.15-rc3/source/arch/parisc/include/asm/s=
-pinlock_types.h#L11
-
-I think I'm missing something, why do you think a NULL pointer deref
-would occur in this case?
-
-
-Thanks for your feedback!
-
---=20
-Antonios Salios
-Software Engineer
-
-MachineWare GmbH | www.machineware.de
-H=C3=BChnermarkt 19, 52062 Aachen, Germany
-Amtsgericht Aachen HRB25734
-
-Gesch=C3=A4ftsf=C3=BChrung
-Lukas J=C3=BCnger
-Dr.-Ing. Jan Henrik Weinstock
