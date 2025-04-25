@@ -1,138 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ACB1BD9D0
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565781A256E;
+	Fri, 25 Apr 2025 18:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745606263; cv=none; b=Frd3vJ1l/du9KbH8AnHkYwN80l1Jgggm0AJQ2qQ9UnZY0zevk5SlBsXgELVdLGp1MQccvHAeU28nzDK7QQZ1DNVW3h03KsdopNXE42OONZ6R9H0Ahw7A3RcIptHVOEm+XnNUK0wTZWOti2h3UvVcUTqcjODA0rz8plO5ezlPD8I=
+	t=1745606385; cv=none; b=vAbZ8I5nzpg60oQnxJ4jExOLT8qjEFbXX1Bp27mtazTaUo5KdiXyGhd4Cq3hKhJPOg7eCazG6hWr42H1fs7oZM22fUtJgp9MhbGND1J9ctsUgeQRrbYRpxJLl/eqwls6YSCksYUlFZnkF7zVobj24u9ieUpU56I4Mr3/I0JZ7J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745606263; c=relaxed/simple;
-	bh=sci7nbeV+YMK27dwFXuG1VPRzxjVZNi+I0eALXkSelE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EPd/Ez+UusJyTDENkwb9sj8ni0bLhkN10LSvjko0p416VmHV735ceR34udcufyUrjiCo0Gqp/YEDYxPbjalgFl5gVGxGiRAhVRmi8t7s/8MSdu9hjaXx4bWy3WKwJqpnGrVhbc8Qjva0OUjUHa3zM3a8aosa7jXqdTXyPYxj9SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F30F3C4CEE4;
-	Fri, 25 Apr 2025 18:37:41 +0000 (UTC)
-Date: Fri, 25 Apr 2025 19:37:38 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux-MM <linux-mm@kvack.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: BUG: vdso changes expose elf mapping issue
-Message-ID: <aAvWchSUlnAfg42x@arm.com>
-References: <f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com>
+	s=arc-20240116; t=1745606385; c=relaxed/simple;
+	bh=gcbMfwuchExgCIg31v1vUna7Oyyi0oWTiWY84a+dhg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WvugIb2Irp4MTlwckfu8rotAwNoA0ChVAB5OeceKEGqfA1BF3q8dFTQ4VBUWwCSwlI2WRyaVhZ/J782KTTIwNDyPOljHCSFGvihYBfjD4H22CSa/wW5DBgpUCBuNopZ/eZr2xOZhsyq3keCPOYOvzcCf/cmEid9AkVp7OrdmKvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nDKcDPoF; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDKcDPoF"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so22804285e9.3;
+        Fri, 25 Apr 2025 11:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745606380; x=1746211180; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=igHnWocn5R9LyAG2oM7HyzlhM7FhyrOUUXReB1zj3bk=;
+        b=nDKcDPoFoUtP7bsqqdcswkSk7yyc7Eoh+BSo+O7dkKVdHoKCPwv2wRxWOo5Pi5v8bs
+         W+hbWb2l9rAnaUXdSdp3CNTXbYL8XN5O/rt9d32LZ3TM6kc3lH8yBgtNCxoqv2rhHdFQ
+         wDFIGXY3nFRmA2RnKLtIEa9uXa0eiLsr3sHmFPU4yt/VbA2Z7ZaYjhTvvPMOMvM6OU/U
+         g5gMq3x1loGWSrI9WEsqWhQuzEEM3fafLHW2vEbiPC+FpXxjrS6m0tNM/CXPDO/QN8aG
+         wCRGzvaTL5LqhkTjQR+lACc5SW6Xq4uKE3OCGmYMs+cES+NinJHElcN+Qqz8oj2kEBas
+         68EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745606380; x=1746211180;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=igHnWocn5R9LyAG2oM7HyzlhM7FhyrOUUXReB1zj3bk=;
+        b=EdWPEwWhCNuoD8/OxSqzBKI/CXIDUzO2Vmi54hF6rEg7coqcDxwVY3YxodMrVDURJ8
+         m/1k/5arJRNEVM1PwXJaD07VspRHxVRedF9WV1C6X78cXOsWGqxR4gqoigh6KuWkQLAo
+         aEJ1zlHp/WoAXg8TUVJVxFiCv5244xtHoLcAW7CDsGCE/OaVOYYQtpBqzYgdmLt0S5+B
+         ZeM1aRaOtig1YBbPLkUO4l5hVhJ6zbbuOvLZ/bU9KquhCT6CoKxSEaPxaY9MzF9sLAEZ
+         elvfQmCutC+iZRwntaHGOc/dQ18qM/JSAigm1xdtphUCkuEFCWAEJjHMByMexin4hw8C
+         h8tA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKsZ+4kgS2T2CANT8E1Dv0ZP5SEeQUYapxV4Z/vUFCbFRMA2RTFfQgckC/gBBo1QV62gmmL8rBn3jhQCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym9Y/Dq2ohHv7y0nAn8LZ+LJ7C6lSh82UYl6cy9kCmh4euNAK8
+	PF0B8E6VSW+pW9lQJpoNfi2EV1e09+lLBXhg6DrM0bzVslTD8pJ9Cco7ZQ==
+X-Gm-Gg: ASbGncsFhpehkRaOXz7VtbUctky8wlRj5QqsBLTGWAmV8VbIUplB8BHDRfs822dT2Qj
+	/PtmD/4VCJbv2SUIktz2nbOAloX1OuQFSF8XAhHC0HfPEAdsWRO/d/QlRTNFdxwfeh0QLR4mq+L
+	gyc6yOmSv3028mKI39QusIq5wlAcLUTWLr+vdnMgQ/e7KK/O6kQC2Ayjfsa01g5zxHWJeeZ5mDi
+	FfC3CP7kzW7uBaKqzvbqeUPAftwRUiS0NArbLsZsmZY67eADGkiNEY7pIkpDKmxBExS6C9P6DiY
+	TAVXe78S5DdRTWWt3ykSDnn9lBJoMkKK4w741ezEXFit0xHuiolz8Z7BX2EHTJKfCO/Ekf+e+ok
+	d3g0Xw+tKBl3OpwT9Rq4=
+X-Google-Smtp-Source: AGHT+IHj6IpZJB1Z0yK7CGubdXCZAXsRt2TUa2ds3VaS8TVBxn2HIBLywqSKFefoQQNIuf27uY1EJQ==
+X-Received: by 2002:a05:600c:4e16:b0:43b:ca39:6c75 with SMTP id 5b1f17b1804b1-440a660a95dmr37717415e9.16.1745606380264;
+        Fri, 25 Apr 2025 11:39:40 -0700 (PDT)
+Received: from localhost.localdomain (ip-94-112-167-15.bb.vodafone.cz. [94.112.167.15])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5369cc1sm32384915e9.32.2025.04.25.11.39.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 11:39:38 -0700 (PDT)
+From: Ilya Dryomov <idryomov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ceph-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 6.15-rc4
+Date: Fri, 25 Apr 2025 20:39:22 +0200
+Message-ID: <20250425183924.2739969-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 01:41:31PM +0100, Ryan Roberts wrote:
-> ldconfig is a statically linked, PIE executable. The kernel treats this as an 
-> interpreter and therefore does not map it into low memory but instead maps it 
-> into high memory using mmap() (mmap is top-down on arm64). Once it's mapped, 
-> vvar/vdso gets mapped and fills the hole right at the top that is left due to 
-> ldconfig's alignment requirements. Before the above change, there were 2 pages 
-> free between the end of the data segment and vvar; this was enough for ldconfig 
-> to get it's required memory with brk(). But after the change there is no space:
-> 
-> Before:
-> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
-> fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
-> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
-> fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
-> 
-> After:
-> fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426                    /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0 
-> fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0                          [vvar]
-> fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0                          [vdso]
-> fffffffdf000-1000000000000 rw-p 00000000 00:00 0                         [stack]
+Hi Linus,
 
-It does look like we've just been lucky so far. An ELF file requiring a
-slightly larger brk (by two pages), it could fail. FWIW, briefly after
-commit 9630f0d60fec ("fs/binfmt_elf: use PT_LOAD p_align values for
-static PIE"), we got:
+The following changes since commit 38fec10eb60d687e30c8c6b5420d86e8149f7557:
 
-          Start Addr           End Addr       Size     Offset  Perms  objfile
-      0xaaaaaaaa0000     0xaaaaaab5d000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
-      0xaaaaaab6b000     0xaaaaaab73000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
-      0xaaaaaab73000     0xaaaaaab78000     0x5000        0x0  rw-p   [heap]
-      0xfffff7ffd000     0xfffff7fff000     0x2000        0x0  r--p   [vvar]
-      0xfffff7fff000     0xfffff8000000     0x1000        0x0  r-xp   [vdso]
-      0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
+  Linux 6.14 (2025-03-24 07:02:41 -0700)
 
-This looks like a better layout to me when you load an ET_DYN file
-without !PT_INTERP.
+are available in the Git repository at:
 
-When the commit was reverted by aeb7923733d1 ("revert "fs/binfmt_elf:
-use PT_LOAD p_align values for static PIE""), we went back to:
+  https://github.com/ceph/ceph-client.git tags/ceph-for-6.15-rc4
 
-          Start Addr           End Addr       Size     Offset  Perms  objfile
-      0xfffff7f28000     0xfffff7fe5000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
-      0xfffff7ff0000     0xfffff7ff2000     0x2000        0x0  r--p   [vvar]
-      0xfffff7ff2000     0xfffff7ff3000     0x1000        0x0  r-xp   [vdso]
-      0xfffff7ff3000     0xfffff7ffb000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
-      0xfffff7ffb000     0xfffff8000000     0x5000        0x0  rw-p   [heap]
-      0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
+for you to fetch changes up to f452a2204614fc10e2c3b85904c4bd300c2789dc:
 
-With 6.15-rc3 my layout looks like Ryan's but in 5.18 above, the vdso is
-small enough and it's squeezed between the two ldconfig sections.
+  ceph: Fix incorrect flush end position calculation (2025-04-03 21:35:32 +0200)
 
-Quick hack forcing the vdso alignment to SZ_64K on arm64 (not a
-solution, it can still fail in other ways):
+----------------------------------------------------------------
+A small CephFS encryption-related fix and a dead code cleanup.
 
-------------------8<----------------------------
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index 78ddf6bdecad..9f9085e3e203 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -111,7 +111,7 @@ static int __setup_additional_pages(enum vdso_abi abi,
+----------------------------------------------------------------
+David Howells (1):
+      ceph: Fix incorrect flush end position calculation
 
- 	vdso_text_len = vdso_info[abi].vdso_pages << PAGE_SHIFT;
- 	/* Be sure to map the data page */
--	vdso_mapping_len = vdso_text_len + VDSO_NR_PAGES * PAGE_SIZE;
-+	vdso_mapping_len = ALIGN(vdso_text_len + VDSO_NR_PAGES * PAGE_SIZE, SZ_64K);
+Dr. David Alan Gilbert (1):
+      ceph: Remove osd_client deadcode
 
- 	vdso_base = get_unmapped_area(NULL, 0, vdso_mapping_len, 0, 0);
- 	if (IS_ERR_VALUE(vdso_base)) {
-------------------8<----------------------------
-
-gives:
-
-          Start Addr           End Addr       Size     Offset  Perms  objfile
-      0xfffff7f10000     0xfffff7f14000     0x4000        0x0  r--p   [vvar]
-      0xfffff7f14000     0xfffff7f16000     0x2000        0x0  r-xp   [vdso]
-      0xfffff7f20000     0xfffff7fdd000    0xbd000        0x0  r-xp   /usr/sbin/ldconfig
-      0xfffff7feb000     0xfffff7ff3000     0x8000    0xcb000  rw-p   /usr/sbin/ldconfig
-      0xfffff7ff3000     0xfffff7ff8000     0x5000        0x0  rw-p
-      0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
-
-
-Not sure what the best solution. IIUC when ld.so is loaded as an
-interpreter, it wouldn't need brk above its data section. However, when
-something like ldconfig (or ld.so) is executed directly, it should be
-loaded like any other ET_DYN executable at ELF_ET_DYN_BASE, e.g.:
-
-          Start Addr           End Addr       Size     Offset  Perms  objfile
-      0xaaaaaaaa0000     0xaaaaaaaab000     0xb000        0x0  r-xp   /usr/bin/wc
-      0xaaaaaaabf000     0xaaaaaaac1000     0x2000     0xf000  rw-p   /usr/bin/wc
-      0xfffff7fbe000     0xfffff7fe5000    0x27000        0x0  r-xp   /usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1
-      0xfffff7ff6000     0xfffff7ffa000     0x4000        0x0  r--p   [vvar]
-      0xfffff7ffa000     0xfffff7ffc000     0x2000        0x0  r-xp   [vdso]
-      0xfffff7ffc000     0xfffff8000000     0x4000    0x2e000  rw-p   /usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1
-      0xfffffffdf000    0x1000000000000    0x21000        0x0  rw-p   [stack]
-
--- 
-Catalin
+ fs/ceph/inode.c                 |  2 +-
+ include/linux/ceph/osd_client.h |  6 ------
+ net/ceph/osd_client.c           | 23 -----------------------
+ 3 files changed, 1 insertion(+), 30 deletions(-)
