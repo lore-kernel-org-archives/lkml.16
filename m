@@ -1,59 +1,61 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD098528E;
-	Fri, 25 Apr 2025 21:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305801B414B;
+	Fri, 25 Apr 2025 21:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745615316; cv=none; b=Oa9LoUys5/SYVTsK7d5cmPFXHAylWivwTsjldqbGdy6lt/gzARY9O1ms3BJ+8n/RvgHx54sLOlZefndAK3RzA5SihcoCGoLJQk019g6npp9Wic8Vj7xggqDhnMwXEDB2WKloqFg1uUCBcOzR8jdO1WlIsQjNp4/fMsb1oEcOlkA=
+	t=1745615357; cv=none; b=A0oBr0uxOdBWwNvScz3L7CsyW8iTL7CYKP6KTIZK3UEEFVfpE7zLAJxUFGjdmMQoh5lGQqrBkbHGRSs57pZPNsX8jO9hWnCzMayydteOVf33J+qaA1Y1eYE51nrbvbX7gktCESgI5MZGBGwf5fn8Bk/xNmAkEJ3bMAugrElTULI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745615316; c=relaxed/simple;
-	bh=bgEWsXsEWp17btz+NvNq+vHT010eepOfw3CluA5PjmU=;
+	s=arc-20240116; t=1745615357; c=relaxed/simple;
+	bh=/VyuKX/2Z7ayvme7V4TSX20vu+YsytWY6qoWRTej6nw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pgkXTqcY8W7eepu1pFInlfzoqvbkZXyzSlEHapj5LSv70nvz0mCDUQdJQMaNDZ6ZjcQdBf6jW3B/e07PdPu/OBVD5iSbf8ins0rLjuAy7jZeTXV7ldFljcVAWj+n74Gq5d7rQclv5HtZVhC9do1k9EGoIJGj2W08Y0F1GFX0S/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cKkVqxFL; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=bTtYBfJXA+2+JVE8IlqtAe8+MwT5aQ+mdVUVAJAqwvTuN6Tf569C8cTtbGQ2dr8z4TuY1ocyOMjzgOmGyODDO3VcOpon72UU5uvw1lauoTyJv51kQT7zWKIF1vOXtY4ee+wzl6rxpFpbR54AfYhc3SBRwf+MG4A+B7M7NOV957A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ebT9O2Oa; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cKkVqxFL"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL8RQJ2276113
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ebT9O2Oa"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL96Qu3026950
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Apr 2025 16:08:27 -0500
+	Fri, 25 Apr 2025 16:09:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745615307;
-	bh=bOLo4yI6anIB9RSZml2FqX4EolYygPTDxgSa2K0zE/g=;
+	s=ti-com-17Q1; t=1745615346;
+	bh=eru1uAB6XxcdGB6ETHFsUgF8NYEghEFeFKagaGASKFg=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=cKkVqxFL/z2T5f1UWy8G/FFzwwwGzvDo5RhQSX4qWi8jV5af7D5YWjCLMGYTxnkQn
-	 jmRDtDDgMgFSUkv2RK0AZHHgLo/Nru0Oi0N+nXg70M/EXlEamdzP+owbgBTH4/nTWA
-	 C4fCNmzBh+uwW0Vr6xoooVNNmrbCsqf9zL57xIuA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL8RqR078039
+	b=ebT9O2OaydUolYzIqIHMWRYDr7i7ZqMtelypk66uLG4HCw45+NbwXZrTjK8Xj0+gM
+	 lqLJKK/cgADx8Phr6K8tHWarZHR2F3KD+Uf+FiLZmXP2TQh2XfHniwPhew8gSpy/Jr
+	 F6FYAiQ/T/yTv1muWidAen7Ts+l5EuYSxDVX6hB0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PL96c5122444
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 25 Apr 2025 16:08:27 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 25 Apr 2025 16:09:06 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
- Apr 2025 16:08:27 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 16:09:05 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 25 Apr 2025 16:08:27 -0500
+ Frontend Transport; Fri, 25 Apr 2025 16:09:05 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PL8R2H103328;
-	Fri, 25 Apr 2025 16:08:27 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PL95iw092863;
+	Fri, 25 Apr 2025 16:09:05 -0500
 From: Nishanth Menon <nm@ti.com>
-To: <vigneshr@ti.com>, <u-kumar1@ti.com>, <devarsht@ti.com>,
-        <linux-kernel@vger.kernel.org>, Jayesh Choudhary <j-choudhary@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <kristo@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-common-proc-board-infotainment: Fix nodes for dtbs warnings
-Date: Fri, 25 Apr 2025 16:08:25 -0500
-Message-ID: <174561523560.209754.14404777210651479379.b4-ty@ti.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>, Andrew
+ Davis <afd@ti.com>
+CC: Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Fix remaining TI K3 CHECK_DTBS warnings
+Date: Fri, 25 Apr 2025 16:09:04 -0500
+Message-ID: <174561533074.210099.18320816568415769793.b4-ty@ti.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250424080328.57671-1-j-choudhary@ti.com>
-References: <20250424080328.57671-1-j-choudhary@ti.com>
+In-Reply-To: <20250421214620.3770172-1-afd@ti.com>
+References: <20250421214620.3770172-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,31 +66,30 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Jayesh Choudhary,
+Hi Andrew Davis,
 
-On Thu, 24 Apr 2025 13:33:28 +0530, Jayesh Choudhary wrote:
-> Fix hdmi-connector and tfp bridge node as per the bindings,
-> - remove 'digital' property which is required for DVI connector not HDMI
-> - Add 'ti,deskew' property which is a required property
-> - Fix ports property for tfp410 bridge
-> - Change node names appropriately
+On Mon, 21 Apr 2025 16:46:17 -0500, Andrew Davis wrote:
+> Until we resolve this thread[0] we do not have a set direction for
+> modeling our device's controller devices. For now as the AM654 MAIN
+> domain controller region is already one of the messy combination
+> syscon + child device containing nodes, no harm in silencing this last
+> DT check warning in the meantime.
 > 
-> Redefine the ports for dss and for k3-j721e-common-proc-board.dts,
-> add reg property for the port (@0) to get rid of dtbs_warnings in
-> infotainment overlay when ports for dss are re-defined.
+> Depending on the outcome of [0], this series can be safely unwound in
+> a couple ways without any backwards nor forwards compatibility breaks.
+> So no need to wait on the outcome there to take this series.
 > 
 > [...]
 
-I have applied the following to branch ti-k3-dts-next on [1]. I had
-done minor fixups in the commit message and dropped the fixes tag as
-the fixups donot seem to have functional impact to require to go down
-the stable flow. Let me know if you think otherwise and we can drop
-the patch and respin the series.
-
+I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/1] arm64: dts: ti: k3-j721e-common-proc-board-infotainment: Fix nodes for dtbs warnings
-      commit: 8a0bba5b6730a1491a111bf54de5d8dcc23c8e10
+[1/3] dt-bindings: mfd: ti,j721e-system-controller: Add compatible string for AM654
+      commit: 5959618631fec502ec0963f4082d565f7fbfff04
+[2/3] arm64: dts: ti: k3-am65-main: add system controller compatible
+      commit: 4765253055cc8ab3fdc5f9eb5b121d867e209fb1
+[3/3] arm64: dts: ti: am65x: Add missing power-supply for Rocktech-rk101 panel
+      commit: ae3ac9ffd59acf46b8934f4e7a5fa7a6803ac959
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
