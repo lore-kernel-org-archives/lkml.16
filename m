@@ -1,132 +1,121 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016AF22B595;
-	Fri, 25 Apr 2025 06:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2932199931
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 06:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745561181; cv=none; b=LAt4q1ecx+kYB2/CQbngScoio8c71I/VXc07qIlAARndoJIoMm7l8uAryock3zG8O6sKe9fXj4yBBT8WTmtidRHRr72IXY47iuZAqXYGnKk9APAek19HATGmW92SyA/5MeJx/VUTjxv9GXMubO7WDwoXxqbv1RKZt218KTR0AxA=
+	t=1745561198; cv=none; b=X3R0uumNdSejlKIhjQqg8aoQ7NRFIfGdNpaTl++4/6UYoEP/BHYJfMhwWRGBBVwMZPfz6wWe4LeWPxqUqUrYvW3JSDun3ysUvCSnI4yBB3MYgbdToBe5WscugsKQWVKn5mWLaBnNodIWvypdQzfdCuxJpQ9W7vBskTgddaECIDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745561181; c=relaxed/simple;
-	bh=VtArZyvh3OJVlev1TuT+mhv7J+r5VPbKR7V2yD85l78=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gg5i2UAmLpvUY2lTOCx3fmiooSJVfwy/C//MLXY6waPtJLsLuEo8qNMBebU2AAewxx7j8TXeehreFk4Im9ne//DvbfGHt+s/o7pyq/oU90NVZOzTg/LyTgE4ULq2GpT8Qw6CGEQAZUvSOqwEvR3RRk8QhdO5eskzTJxB8rk35o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Hw/Oj/IO; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1745561198; c=relaxed/simple;
+	bh=CpBT/GJTl/qOHB8XXefQW8z5QInEFr8XQOgxoGfmDlU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BZQfzfYcSQ7J89AZvRWyRxPfPxJQnTQ2ZaIcPKrjZediXk5dDIq2AYJkNQOfpMaOllVHp6Kma0Ef1hxDgH7zcuxLpmlmM1yZTD2qWEO1vvs3RflHbdcqTJ+UWT65RP418HobW3GAA7Enl7Tv05JDHYOhUMQHB1WLRrzW0L3Ynq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RFtSTVxY; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Hw/Oj/IO"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 26943102E13D0;
-	Fri, 25 Apr 2025 08:06:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745561170; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=ef+EBezQpcy3FcBFm+eU7MkGtMSmPuuasBxJN60QVdI=;
-	b=Hw/Oj/IO4Av7kOb3s35NwLPns3+xpbMuJVuqH+xEDaSFwjxveKEzr7E6GkEmGAbQ6i35dM
-	xfOtt+ma5ftYQe0YIuzr79f1lSRMvhwmHrJ1MKL1Op+VIQRjqdCRHl+OHvEnjjOZFJ+2Wa
-	LtflvHzHZfua9V3s/vsxEA9p/kxptvSAfc7b76Z9sg6Ev2gHQTqPZMgpYWon2RLzLaBCt2
-	4eoUgjaLQqtWm1M1X9UOXtMvYvlshLvuIQD/NRGIjBf/RLx1pizmf2RUTYAxUobIlbDqLt
-	ch/aX+sPqLBv6lvEWY1nDorOB4GpeiZ3MwqBpoZ7xZCUbBWY95Mbz5LJzCAHiQ==
-Date: Fri, 25 Apr 2025 08:05:56 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
- <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [net-next v7 4/7] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250425080556.138922a8@wsk>
-In-Reply-To: <0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
-References: <20250423072911.3513073-1-lukma@denx.de>
-	<20250423072911.3513073-5-lukma@denx.de>
-	<20250424181110.2734cd0b@kernel.org>
-	<0bf77ef6-d884-44d2-8ecc-a530fee215d1@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RFtSTVxY"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-524168b16d3so1785525e0c.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745561195; x=1746165995; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ajgJc89GPboKToxuB8Pj0D0uNjRPDnR6q+9b48EFZ2E=;
+        b=RFtSTVxYzNOCGv2rnwTHN+3CiPKXQBATPCXeP6dr7gaQRpBhBoalnkY+LbUx0sk0K0
+         uyWj5fDaidv+PnkUuO8tbvCDnuKmBCzQIZWOz1hEBc76bo18OqEBD5Oss8u10URqGgRQ
+         BMs/R/kC1OEknsAsU25OZXJvGLGWnmeq+yhLXDIU5LhKz4jUdWSM0/q/rcBT1Vb5UIYp
+         yibnkVOsVcZ4vQj/iAJ+eQ3TvnlV6RbQDIgst7u5CJ7Rlkd6Q4jQmnIFsYxEr9SWwjN/
+         NmYo42eVBTKO60T5mAo/Q11+g3gVoJLKhg4TExj0Wq0SNGr03vP1PeV/Gv6UA8BHCwAk
+         PWsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745561195; x=1746165995;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ajgJc89GPboKToxuB8Pj0D0uNjRPDnR6q+9b48EFZ2E=;
+        b=YKHcrRcat+Fa3iQW95Yg2Jck8Zfjowh6NSGfE0kWG/XLzVfZErkVmwXuI4XyyF/kY6
+         0MiCXQWZKphd4MgLcT72RVlVW99I9U7sEJj78a3g96OpZn56TW+tQKCrsOCb6ggQBZUt
+         N1nbSZDDIcUAFkkaeQ+Qxkh5EkAyK90U8Sf6itm/dZPuvp2rI1RJAs0TL02CeGxSrdiH
+         OOjqA+bTKBmPVM+SEpRawI77VtR6F9aXlrf0cdvP78f8Q9HFG6GXiDBKdWTmsF9DtM6e
+         /yYj64Up1hOEs49H1nZc3ec2HUak4653d1sOKba6tco29xn9gIQL6kdkmOZkWwChZxXg
+         dTQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHADLP1Y3LjEtjz79cY/gOO86QFGosScdXZFFgZolpyhXUc3TKd0XU5MjgN49/+LqxCDTGCSsYzreJsJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfQ/ZoV4qxvFKJ6b2z14UnbpPuBxMiBs4UquJp4rGNIQIQKZXe
+	WKgy01fuVVWdCiN6Ih+O0RC9A6k/7u3a4WNTyudzqCT/hZxqYcOylxlrv5mkT3XcQldztJpavF4
+	WjaCRVVmyYd0JkQZl1uxJwLDLz4nm/jg5ilLvwA==
+X-Gm-Gg: ASbGncvAdJAuSn/s0FH9I+wDWqSPh53gW8h1DtTCVM5V39Ukbpw3VGxF7KIFWGfubOO
+	PVXG5VTfJyKZ8Gp4gYdCZnxPT91qCMXmilzoFGhYFrAOa66+zpYs2XTzYbNqoh00KnUsxJslQdG
+	Qt+4RhMkt+1D1Zn9oL9cPEwNDLPwifpeKZxplDiUfD+jPA2ER7FC18JRgE
+X-Google-Smtp-Source: AGHT+IHk3Sh1recRtL0I0FAiNETtYwurKFY0CJ0FDTy8w0bAg/KMEvL/1tmqPiwb61pQkrz7JWUirq46fq8oitTFWfU=
+X-Received: by 2002:a05:6102:3e87:b0:4c1:9526:a636 with SMTP id
+ ada2fe7eead31-4d543fb6341mr362655137.15.1745561195672; Thu, 24 Apr 2025
+ 23:06:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8.TKQ2DIg4Q.iOHILDMF3JC";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+References: <CA+G9fYs+z4-aCriaGHnrU=5A14cQskg=TMxzQ5MKxvjq_zCX6g@mail.gmail.com>
+ <aAkhvV0nSbrsef1P@stanley.mountain>
+In-Reply-To: <aAkhvV0nSbrsef1P@stanley.mountain>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 25 Apr 2025 11:36:24 +0530
+X-Gm-Features: ATxdqUHyh1sPNfszHFCKsjMSGrXxYsTXLBiYXGTypFcI7J1MgDaUy852FfJYen0
+Message-ID: <CA+G9fYu1GagoVWnhNFnknWf0_zk-O+5XQXDiL-XUdt8knhJYaQ@mail.gmail.com>
+Subject: Re: [PATCH] rpmsg: qcom_smd: Fix uninitialized return variable in __qcom_smd_send()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Frieder Schrempf <frieder.schrempf@kontron.de>, Marek Vasut <marex@denx.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/8.TKQ2DIg4Q.iOHILDMF3JC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 23 Apr 2025 at 22:52, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>
+> The "ret" variable isn't initialized if we don't enter the loop.  For
+> example,  if "channel->state" is not SMD_CHANNEL_OPENED.
+>
+> Fixes: 33e3820dda88 ("rpmsg: smd: Use spinlock in tx path")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> Naresh, could you test this patch and see if it fixes the boot
+> problems you saw?
 
-Hi Krzysztof, Jakub,
+Dan, This patch fixes the reported problem.
 
-> On 25/04/2025 03:11, Jakub Kicinski wrote:
-> > On Wed, 23 Apr 2025 09:29:08 +0200 Lukasz Majewski wrote: =20
-> >> This patch series provides support for More Than IP L2 switch
-> >> embedded in the imx287 SoC.
-> >>
-> >> This is a two port switch (placed between uDMA[01] and
-> >> MAC-NET[01]), which can be used for offloading the network traffic.
-> >>
-> >> It can be used interchangeably with current FEC driver - to be more
-> >> specific: one can use either of it, depending on the requirements.
-> >>
-> >> The biggest difference is the usage of DMA - when FEC is used,
-> >> separate DMAs are available for each ENET-MAC block.
-> >> However, with switch enabled - only the DMA0 is used to
-> >> send/receive data to/form switch (and then switch sends them to
-> >> respecitive ports). =20
-> >=20
-> > Lots of sparse warnings and build issues here, at least on x86.
-> >=20
-> > Could you make sure it's clean with an allmodconfig config,=20
-> > something like:
-> >=20
-> > make C=3D1 W=3D1 drivers/net/ethernet/freescale/mtipsw/  =20
->=20
-> ... and W=3D1 with clang as well.
->=20
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-The sparse warnings are because of struct switch_t casting and register
-access with this paradigm (as it is done with other drivers).
+Links:
+ - https://lkft.validation.linaro.org/scheduler/job/8244118#L2441
 
-What is the advise here from the community?
-
-> Best regards,
-> Krzysztof
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/8.TKQ2DIg4Q.iOHILDMF3JC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgLJkQACgkQAR8vZIA0
-zr03Fgf+KfcqvqXrwV6oo9XJVMdSNQIoB0p4NlpvVAe5aBxAydJI1xm3RrEZXNPB
-TrcywFHW7nVupYx2HApaLOvpgBFWEK0WbXSfc2EbwtFXWaaUQ+HGbpV4jAmvHbul
-RWNftPG+5U26bQE9B6hrXU7Ceve1/wAscafs+U677XofK1RyE33ZOZYsuUsKbVgo
-duYePABd2Vo4o97byc0pHVPqCmjhfPA0ID+Arzs+7aGx2ym7JqZUjRjmbADnmKg3
-7dRtO0/LmgzGdP9i4B7AvcYeHox7iUjmmqp9yXfbqyagRKcsOKqguUVviqtSjwmP
-AlDFyZxoEjM8RW9Jw2Lyzwycn6MhzA==
-=ESLF
------END PGP SIGNATURE-----
-
---Sig_/8.TKQ2DIg4Q.iOHILDMF3JC--
+>
+>  drivers/rpmsg/qcom_smd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+> index 40d386809d6b..bb161def3175 100644
+> --- a/drivers/rpmsg/qcom_smd.c
+> +++ b/drivers/rpmsg/qcom_smd.c
+> @@ -746,7 +746,7 @@ static int __qcom_smd_send(struct qcom_smd_channel *channel, const void *data,
+>         __le32 hdr[5] = { cpu_to_le32(len), };
+>         int tlen = sizeof(hdr) + len;
+>         unsigned long flags;
+> -       int ret;
+> +       int ret = 0;
+>
+>         /* Word aligned channels only accept word size aligned data */
+>         if (channel->info_word && len % 4)
+> --
+> 2.47.2
+>
