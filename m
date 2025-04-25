@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CB5A2686BE
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B9921420F
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:40:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745602804; cv=none; b=e++hUy50UC8qxeZM3tRiWaJlhoHWDMw1P4y8bxxzT4jcJm1Ny4PDy1JM1H1wBEDqjje+msnrhQ8LW7e5DAM+Gu9snmePw4A+vjlt3ji6yQ2xmtVa/ezSR7ThZ8mziQ91JBkBciBHD4VnFatBBuMgDuegxtR2tXNjfy9fpYpmyXk=
+	t=1745602808; cv=none; b=FmjR17NozbrgRRxP3WTvwnd0K3HzAyiJdzSWS2IKfCu26Xc2UPY3DW+qmc1SoFuA0ZMf6rduj5j+I85rMTHVT+CV0lqNOSZE0on18dI+qS5LoXa3SqTvfVsbuYgKImZoDDVw8fUDqGx81X2+R4AfuQt7NiXKNT+1Pe6BocSAWiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745602804; c=relaxed/simple;
-	bh=PW8O6B8V/DVyLfV6IjnnpJ4jE22MJD+P3L2iuJwevhE=;
+	s=arc-20240116; t=1745602808; c=relaxed/simple;
+	bh=AFV6kiLPeaK70D/lS0cyFvChsU+2kByQhIjfd6t/u5Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EzAj1YV/H5VEwhJE2ic1tYi5E9/SWJua7C1gHxRo6ZCn3cwRZ6VFxSIeB437hrl4BdwE5VmjvryU3ztVYbn6HgZKBh1Z81/pByE47MHTd1FB80mTSc2mvIqcJA26suflr4LHTE7dxUkmaWfw2ch1jpd1Ul5JvUempGDAvbOlE+0=
+	 MIME-Version; b=Cmky65ekaU7z9yjuPeTO7bYPfF6I/tMhKt+P5759lnbEF5zc/hKy/v0ZSS3SJ+Bd7SKJRcO0XJzF07vNo4MC89dcIzUdUvsydt8GjP6QEFOGr5X7vVU/F7ZhE+tE1s2dEAx9jVXzfCKEYmmKd/UWzOXbc/zV3OeQhMTwrixwcNQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 553CD22C8;
-	Fri, 25 Apr 2025 10:39:56 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BC4F22D7;
+	Fri, 25 Apr 2025 10:40:01 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4456D3F59E;
-	Fri, 25 Apr 2025 10:39:57 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10D4A3F59E;
+	Fri, 25 Apr 2025 10:40:01 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -49,9 +49,9 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Dave Martin <Dave.Martin@arm.com>,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Babu Moger <babu.moger@amd.com>
-Subject: [PATCH v9 17/27] x86/resctrl: Prefer alloc(sizeof(*foo)) idiom in rdt_init_fs_context()
-Date: Fri, 25 Apr 2025 17:37:59 +0000
-Message-Id: <20250425173809.5529-18-james.morse@arm.com>
+Subject: [PATCH v9 18/27] x86/resctrl: Relax some asm #includes
+Date: Fri, 25 Apr 2025 17:38:00 +0000
+Message-Id: <20250425173809.5529-19-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250425173809.5529-1-james.morse@arm.com>
 References: <20250425173809.5529-1-james.morse@arm.com>
@@ -65,17 +65,13 @@ Content-Transfer-Encoding: 8bit
 
 From: Dave Martin <Dave.Martin@arm.com>
 
-rdt_init_fs_context() sizes a typed allocation using an explicit
-sizeof(type) expression, which checkpatch.pl complains about.
+checkpatch.pl identifies some direct #includes of asm headers that
+can be satisfied by including the corresponding <linux/...> header
+instead.
 
-Since this code is about to be factored out and made generic, this
-is a good opportunity to fix the code to size the allocation based
-on the target pointer instead, to reduce the chance of future mis-
-maintenance.
+Fix them.
 
-Fix it.
-
-No functional change.
+No intentional functional change.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 Signed-off-by: James Morse <james.morse@arm.com>
@@ -84,24 +80,34 @@ Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Tested-by: Amit Singh Tomar <amitsinght@marvell.com> # arm64
 Tested-by: Shanker Donthineni <sdonthineni@nvidia.com> # arm64
 Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v2:
+ * asm->linux for resctrl.h moved into an earlier patch.
+---
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 472e93ea56fc..e42bdb52378f 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2951,7 +2951,7 @@ static int rdt_init_fs_context(struct fs_context *fc)
- {
- 	struct rdt_fs_context *ctx;
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index db0b75b45fe4..bb39ffdd8524 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -11,6 +11,8 @@
  
--	ctx = kzalloc(sizeof(struct rdt_fs_context), GFP_KERNEL);
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
+ #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
++#include <linux/cacheflush.h>
++#include <linux/cacheinfo.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+ #include <linux/debugfs.h>
+@@ -22,7 +24,6 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ 
+-#include <asm/cacheflush.h>
+ #include <asm/cpu_device_id.h>
+ #include <asm/perf_event.h>
  
 -- 
 2.39.5
