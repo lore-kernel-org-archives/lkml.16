@@ -1,66 +1,65 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E3178F4B;
-	Fri, 25 Apr 2025 14:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2C78F4B;
+	Fri, 25 Apr 2025 14:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745591656; cv=none; b=Pi5CNNI54U4iWXgUGUTMmJtesQxlNzgKOc93wXIVVE/5l2MjObV3rgRmw48QJlRX+BVJG5Q2YANqqpvQm+8p5M0GEfxCUk4yKmcsx6ZKm5PeR5ZJALBgQZN4rzPLxsZDp2ZGFBbo/XhV5UYP4pP5P8MuPC5N4GDtUdEFdJNcXjo=
+	t=1745591663; cv=none; b=rV/RYDiU72dzsOpWaPwm/yx51rGGe87m/hIdViy7s56D8gMkuPC9MuU34CZWrOt45LgRj31x3X+Os4E2TwAVjzbT242AFwf0T8MK38YJ7vQ1YUeiuQaqFMxPrIJu52R0GGrZ8cxiRQlEAeXWZtFlQ1ZPTdK/FdpsZLRxYEgIa7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745591656; c=relaxed/simple;
-	bh=7MoBmJQeZLl1d5tdgIVwQgJNL7HZP8gebnQnY4ucRwo=;
+	s=arc-20240116; t=1745591663; c=relaxed/simple;
+	bh=dxmjWywiK0Xyl1oGWV/pydlU53vhd1+AcfgyENDB0jE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=d+NnX2oSbaIBF4WdoupJWj5qYYuBXUoIXxI1wrMYFm6DDUYylZAASFlTkbGgQsx3jXgOTry6UIrnPUMNEqTkqQpraIunSb5V6u0OAnzNLkujwcfJW9k/4wiJoaMzYRO6SgD1rK380Kfn7RpB8tahbMpXueLIUIfYJZgnEARCfeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkLnu9Fw; arc=none smtp.client-ip=209.85.214.176
+	 In-Reply-To:To:Cc; b=mZrO8qzc7goYm4/Btdd+LgE9CdT6F7qtpmhpQXv78s/GVwQHZeWQsElwok4cGXcXzxnvtgJI7vaXZOhjIFtD1rwFZ2NI1NUo4omqCaTDz6yiApglsrdM+28AwrKHpvfZBnvaNDo9MtvNWPHROKItN8wte+0eLQinoLnpvMWC1S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3xpt4dP; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkLnu9Fw"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fd89d036so30054235ad.1;
-        Fri, 25 Apr 2025 07:34:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3xpt4dP"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2243803b776so40023625ad.0;
+        Fri, 25 Apr 2025 07:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745591654; x=1746196454; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745591661; x=1746196461; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pep0nEe9nBYLhazzxkyxDOa4AuBJd4R+Hgm/7v3gc7Q=;
-        b=OkLnu9Fw5nN/sf5iTWUJsOvWC5peAEYiunnrKF7RhhHTuVo8flteHzuHXD6xi5wMS9
-         ZpJn0NycX9FsIn/qCvgfTuv7gzJwH9Zqd/CyXe2wI3Ukbq+aIiG+C1pLcJ3xEKnGlrsn
-         /9QeLL7CDaj0DilP6YV66XJpS1KK32NKYkQxvohKOf1cmrv/dFYIz7jXgtIQ2BiBBgkN
-         qz2RwurCHo1HU7I4S8S7DRaFA+P+zOCFOHPO2QOhv7Axyw661cgukMTe9irXU37M4juP
-         OmhrW5Qmr4qyE/MON862E6T5tmmztsPe7qXp3mzwzNjrtPGa6dQkf3jwGQZcW67aYaxN
-         +ZtA==
+        bh=+tWJq6XlOyiQDY9fEz34q6TpB8T/RU7UR54sdkDEpSg=;
+        b=Y3xpt4dPliZZndaFagpWX7S3pBOI2tRzZCOktB38pnBMOReeaXymZmL8whtgOj2HGw
+         GXZ2ja534gAQaPGZop7KzMJInDthwGrZoJFTKdoRVfWxp5DWisjQ+hTwQkhYrVrd/LAJ
+         4tNhDM60WlEqvGtmH2Q+PDsvzmZT8Sec3p3/d2w7tFX6KsqIPSvGk1MPrgY8n3yAsQfy
+         D57RdI8F/BvfLgltZ4AL/En5waIoGXWBbRWmEyyxhP1ChCa/eJZyRMY8nax6gqhmVKZi
+         ABX8jGyNoyqfKkWAXOiSTZuu+MsB9AgwEt0vk52569iY6dR2wSZ0BI/z0GtenwcH5rfh
+         2ucQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745591654; x=1746196454;
+        d=1e100.net; s=20230601; t=1745591661; x=1746196461;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pep0nEe9nBYLhazzxkyxDOa4AuBJd4R+Hgm/7v3gc7Q=;
-        b=fjZjWFwLplOdcobu7KbDwXpaw5NRzJuIxj1OuPR7hY0D57PkVtvkGMDBto6PTW8WJW
-         4bOIQIhXhGAM5tPo57IsKbZihgBU0AgSbeW9iJCa0wBBjhrLIElLkhRBQT4xBsJQ4BI7
-         +9DDwsn7l2pv91KE+nRFqvrGMRgr5E87jBlZVJhU58+LKAnR/aOvYtVHCl5xTucVh/dN
-         JlY2r2a7y/QS/vG9cLR29hIgtJXldluX+gQB2+H8ocD4AvRPBn0/nFMVmXIxSiOsuAzp
-         mNlY7S9dC1Jmx0K+KoBBKn2ucGoMJDzwznxuuy/eWbHzlw7S9oqhZ54pC1tCLw7KyLfq
-         BPNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3uJF5q2+EhsypInYLk25bDP1U3tOY8UTqfSKL2Y4qarDzPV9MtJWQD2++SmN2Nrd2szol8Mn0VhjEctA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBqQK2cCCiz+sDabnYUFfKiHtTEfb2GTZnY0vgazzqBaeHGxlc
-	tJVmje0hI73UAx2gzupVzjRHZRnrtqTi7ikWmRB98oZCTS/3RVtY
-X-Gm-Gg: ASbGncs4XuWpaXcs9+iKiUBPPje/8dKvPMFJrwQlM93femvBez0035T08fMqHdbKTTD
-	9535P8MrBx0C6GY49c/+Z0KrCYd6eM2lTt81bnY6UlEbnTU4A1j4/yRW4S+1T7hMo+x2MZHIe+P
-	TFgEGjP17gu5t2jMFdkqGUZS2mQ+9u2zn6GnbY7qm2E9rYNrBsjGV1WfHLHwUIT8FITjsskJzDZ
-	T+Mpkg/B2VyJMNWCpv3AS+PKtSl45TYvgDJjSJJSriy03WuYwsjllwhwA/sw21NhSOOTT0Dtydp
-	NH6hgDUG8RuMdtJIj4CgQPriVXiNh2O9WQiQsY1dPyAMHbeT++lO
-X-Google-Smtp-Source: AGHT+IEcth0n/p22LWn2V8E8hbKZoQEDrKaCxIGxb667TJCFfUnCcjwg4Wa+wnAp2NhbEJka85wSJQ==
-X-Received: by 2002:a17:903:3c47:b0:21f:4c8b:c514 with SMTP id d9443c01a7336-22dbf635456mr41642505ad.45.1745591654499;
-        Fri, 25 Apr 2025 07:34:14 -0700 (PDT)
+        bh=+tWJq6XlOyiQDY9fEz34q6TpB8T/RU7UR54sdkDEpSg=;
+        b=VQulhOn0vXN4TR+LQYgo/W8Th5WiwRmvH79FuwYJLLPipQuUZbefiBD3n9OKmAVf8Q
+         28KbWyXiSz38bjpC6I6PZGRpxOaOvRgNsr7w1B5R9cjt7+ukUnWs3RcHXXrfvlDZyy8z
+         a0dfiM8MZWercoVwhomYt1Sjpc3uzUU9Y5ORAvaRDTO6pHc3RGwvIVY7wIyMpy9WjyKi
+         9lXHBEw4o/EjZ5IpsvP5ao0+IkI2c0Ae9TDeKkHeAOXA/Fg95j7VSil0Eo+0XzwgQKI8
+         eIyNIjQ8AW8VbaJx56RarJ2jgv0p5pjBp3F2NQCUW0b99lH5RxEgI6+Lqsuz/bCrbLkH
+         0XNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSOIMHvtuCb/6zk/u+46a4f0iKvhgmjBIQkmINWdhm3OICZ8V0bs8VtFi+5b8xfBB2FvXfdVV2gv3U2sk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaenDvoNAhkuakpZxeiuH2N4WlII72WyaIvgiucJl5ERcm0cIT
+	HeIj99rgV3fbIEZrxdzSaeIeA+49y9tp1xJApf0wyvj1qlKzu9Z3D+7xLSixXLk=
+X-Gm-Gg: ASbGncvaXUO5gzSNVisObj07YXJLO+uQkx9Eqhv4pDfZAm/+Hfl5ghp8qKnabHh1ovE
+	cRm65GFyRBdHgU2SU11ic6a3aMXIEIiMpd8WHF3mqKAuOfjxiVbQcrYqkbnh1xub1LrUc8vNcBi
+	XpkYWwThA2gnyNwcDBC5nsKHb1HAIMCeSI62G4VS2xS41gRbY9fPsoPa9jwLfLWQXtX7BQsqzZ9
+	OlV6tIzKTx/CkODQiTHNI02okXvHh/7n3BBC2UtAZD4pMGyqPL+7sBZUMAZnjzNYYYF/udXUumT
+	BaUf3lmY74py37IzHJ6CwFvCpAF4h5Qm9wRnQcsb4c+gARsG6HgO
+X-Google-Smtp-Source: AGHT+IEU0GV52aKMbgW3P/kjXtOrQ1JtVfrrWBFeROicqQ5bV8dmN7cDixmkQXRl7zWJEGMK+bSwLA==
+X-Received: by 2002:a17:902:d2c8:b0:224:10a2:cad5 with SMTP id d9443c01a7336-22dbf4c8508mr41907325ad.10.1745591661178;
+        Fri, 25 Apr 2025 07:34:21 -0700 (PDT)
 Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5216c35sm32860695ad.233.2025.04.25.07.34.08
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5216c35sm32860695ad.233.2025.04.25.07.34.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 07:34:14 -0700 (PDT)
+        Fri, 25 Apr 2025 07:34:20 -0700 (PDT)
 From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 25 Apr 2025 18:34:13 +0400
-Subject: [PATCH v4 1/2] dt-bindings: arm: vt8500: Add VIA APC Rock/Paper
- boards
+Date: Fri, 25 Apr 2025 18:34:14 +0400
+Subject: [PATCH v4 2/2] ARM: dts: vt8500: Add VIA APC Rock/Paper board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-apc_paper_binding-v4-1-0ec2d0febe21@gmail.com>
+Message-Id: <20250425-apc_paper_binding-v4-2-0ec2d0febe21@gmail.com>
 References: <20250425-apc_paper_binding-v4-0-0ec2d0febe21@gmail.com>
 In-Reply-To: <20250425-apc_paper_binding-v4-0-0ec2d0febe21@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -77,64 +76,95 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745591663; l=1622;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745591663; l=2603;
  i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=7MoBmJQeZLl1d5tdgIVwQgJNL7HZP8gebnQnY4ucRwo=;
- b=ZogAjhlcaxC3gJmCAVTDtMtupBzVVHeqIG6M/2afBJrBzqAKQZ4y+P+6tHwEWWNynupPAtqt4
- bZIhzoL+75OCFB8MKwO8MbxZ40WC8ZjxH+yyJ52r5DjB94IbdFh9SFQ
+ bh=dxmjWywiK0Xyl1oGWV/pydlU53vhd1+AcfgyENDB0jE=;
+ b=sTNaqM2U+dP1CoAz8PAv3Jd62z7GBeFLFgjCyco+k8uSfsLW3hshOnAwbkJcvqd9QcgZ8c9io
+ 61Mc7w12CLNBAL2i7Bkm3gm8NcclYY/oRWxBhXxTagW5WgBJoXagIHp
 X-Developer-Key: i=alchark@gmail.com; a=ed25519;
  pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-APC Rock is a development board based on WonderMedia WM8950 SoC
-released around 2013. Paper is the same as Rock but lacking a
-VGA port and shipped with a recycled cardboard case.
+APC Rock is a development board based on WonderMedia WM8590 released
+around 2013. Paper is the same board, but with the VGA port left
+unpopulated, and shipped with a recycled cardboard case
 
-While at that, put myself as the maintainer, given that Tony is
-unavailable as of lately.
+Its hardware includes:
+* Single-core Cortex-A9 CPU at 800 MHz
+* 512MB DDR3 RAM
+* 4GB NAND flash
+* 8MB SPI NOR flash
+* ARM Mali-400 GPU
+* HDMI output (type A) capable of 1080p
+* VGA output (on Rock, but not on Paper)
+* 2x USB 2.0 type A
+* 1x USB 2.0 OTG (microUSB connector)
+* microSD slot
+* 10/100M Ethernet
+* 3.5mm minijack connector with combined headphones/mic
+* Half-height miniPCIe slot (with only USB 2.0 signals)
 
 Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/vt8500.yaml | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/vt8500/Makefile            |  3 ++-
+ arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/vt8500/wm8950.dtsi         | 11 +++++++++++
+ 3 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/vt8500.yaml b/Documentation/devicetree/bindings/arm/vt8500.yaml
-index 5d5ad5a60451f569e6ef30c924a1964d02e1aa82..f2164144a7af29ca77761bc58fe7f4558e7d101c 100644
---- a/Documentation/devicetree/bindings/arm/vt8500.yaml
-+++ b/Documentation/devicetree/bindings/arm/vt8500.yaml
-@@ -7,19 +7,24 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: VIA/Wondermedia VT8500 Platforms
- 
- maintainers:
--  - Tony Prisk <linux@prisktech.co.nz>
--description: test
-+  - Alexey Charkov <alchark@gmail.com>
- 
- properties:
-   $nodename:
-     const: '/'
-   compatible:
--    items:
--      - enum:
--          - via,vt8500
--          - wm,wm8505
--          - wm,wm8650
--          - wm,wm8750
--          - wm,wm8850
-+    oneOf:
-+      - items:
-+          - enum:
-+              - via,vt8500
-+              - wm,wm8505
-+              - wm,wm8650
-+              - wm,wm8750
-+              - wm,wm8850
+diff --git a/arch/arm/boot/dts/vt8500/Makefile b/arch/arm/boot/dts/vt8500/Makefile
+index 255f4403af91c1d6a22416ab694b8eab44bf98a2..6fd29c41f3660d29d0368e4f8772d46b0a3c414c 100644
+--- a/arch/arm/boot/dts/vt8500/Makefile
++++ b/arch/arm/boot/dts/vt8500/Makefile
+@@ -4,4 +4,5 @@ dtb-$(CONFIG_ARCH_VT8500) += \
+ 	wm8505-ref.dtb \
+ 	wm8650-mid.dtb \
+ 	wm8750-apc8750.dtb \
+-	wm8850-w70v2.dtb
++	wm8850-w70v2.dtb \
++	wm8950-apc-rock.dtb
+diff --git a/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
+new file mode 100644
+index 0000000000000000000000000000000000000000..58b3c8deb4f20ae072bf1381f1dfa5e5adeb414a
+--- /dev/null
++++ b/arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2025 Alexey Charkov <alchark@gmail.com>
++ */
 +
-+      - description: VIA APC Rock and Paper boards
-+        items:
-+          - const: via,apc-rock
-+          - const: wm,wm8950
- 
- additionalProperties: true
++/dts-v1/;
++/include/ "wm8950.dtsi"
++
++/ {
++	model = "VIA APC Rock";
++	compatible = "via,apc-rock", "wm,wm8950";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x20000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/vt8500/wm8950.dtsi b/arch/arm/boot/dts/vt8500/wm8950.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..31fba05d3c3e70b21a64d08b5cdf645102a1faf3
+--- /dev/null
++++ b/arch/arm/boot/dts/vt8500/wm8950.dtsi
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2025 Alexey Charkov <alchark@gmail.com>
++ */
++
++/* No differences have been discovered vs. WM8850, but chip markings differ */
++/include/ "wm8850.dtsi"
++
++/ {
++	compatible = "wm,wm8950";
++};
 
 -- 
 2.49.0
