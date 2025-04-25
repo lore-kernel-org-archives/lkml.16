@@ -1,65 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC74238C20
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A09223BD04
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745574655; cv=none; b=OiC3jszRbJO1+ancFltm2wEcjU3A9M1rxwuAt1HJe5mdMXzs7TdyHef34JZ+7ryGAzl13roIo1zNCUhtsxkgp0qM8Tdcg+Xt144jB4ZbrJxAvI6AX4S2IWnrIHoKu4GDXnbRck1MWDOYlotUoVK/J15tK5AGVoO6B6W+imZICUE=
+	t=1745574662; cv=none; b=YRA3qmxTLAlhfY8fMvudcWIepAzEPD2wbneq6WKjjWeh1ULNCfsK/Gr3TJhJdnV641yCcBptAi/DRjqk2MP67G7CHMRjM9QsPSk9Wdg3z/lhtSq6M6EDyH8TzjFLAxGodHyqs8fdTlbRpqDWrJTJoogMDP7b2r5qH3gHb97o0VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745574655; c=relaxed/simple;
-	bh=gHVy4393QSE347hh2XtpuJpdfukZqnMuqB0vOXD26A8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HSA6QEX6PHAwn0876JAAWl48/wfaP5ujZjpoqfG78wnv5Mx3e2m6tBHn1jeXDnJ6mkcWVOd6nIFhxLlcve8hN2/GB+obWbrx10mVQEHqgqgDgTm7c6ZPzAFU1Arfe2YrMcmYCHdAB/XAZbxr+8pmKzp6g8ml0UDnTOVz8120ayo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ambvOn06; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745574662; c=relaxed/simple;
+	bh=goSww0P5SFEYhcqCWdBoe88SPIL4JuxXLc5uGO6rmaw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tTbyb+CmZ1/FCzXeVo0pGSWhZDSuQJ6p8NpIF8I58JioL92gNYjSqul56S8edkQOAzvWcimKQq0a4GYxAsscblGw1Fwvk+Uodj5F+9E+CdR68EZPWWwczGaO4HSfScb4T6HRliyq1V3Qnl6bWCk/um5vQNXvYIlXTuf+a1DdDvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAy93lce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ambvOn06"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745574652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bKtouiS9DTlvW60p6pnNSxNeJTjkKYdDD3KZrPdVKA0=;
-	b=ambvOn069MApr2ZpaPVDmCkBteaNOx2kgvfzD9tWTLzYPCsiZhg3pwS4xGyovk4X9ICUyY
-	e1oR8u6j6jjlTdw6sxX7Oz8B4rbgjAiPhn5P+ZoxpEj9+5JSZ8UfFdpzFal9wkHRiiJzQt
-	HprGGIu5Jlp21msA4TZUbG3BNlnC8LE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-UGJBBMmYN72JZ2YPxs-vaw-1; Fri,
- 25 Apr 2025 05:50:49 -0400
-X-MC-Unique: UGJBBMmYN72JZ2YPxs-vaw-1
-X-Mimecast-MFC-AGG-ID: UGJBBMmYN72JZ2YPxs-vaw_1745574647
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8BDD1955E79;
-	Fri, 25 Apr 2025 09:50:47 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.44.34.172])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D63EF195608D;
-	Fri, 25 Apr 2025 09:50:37 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v7 5/8] drm/i915/display: Add drm_panic support
-Date: Fri, 25 Apr 2025 11:37:51 +0200
-Message-ID: <20250425094949.473060-6-jfalempe@redhat.com>
-In-Reply-To: <20250425094949.473060-1-jfalempe@redhat.com>
-References: <20250425094949.473060-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAy93lce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D3BC4CEED;
+	Fri, 25 Apr 2025 09:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745574661;
+	bh=goSww0P5SFEYhcqCWdBoe88SPIL4JuxXLc5uGO6rmaw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KAy93lcei+DzfvhvdLUJJhaZdqf7ej28LnCI1gBYT4eX/K69uKyfDaNQ80PQyaTBN
+	 XufgvYNTk3Dkg3PQFdlA+5G7aQc66o9lkhO4lkcdRPXygzxrdURe5Ov+XrpQ99ErM9
+	 7rNuL7wf8rEXfTbG9Aje/BEz00OVflJIYZaRnMFHIYa9hv0cKOyZwuwREI517EKj7/
+	 yimkEutthYVEDBDeuS0ZwjyeWrXUz/3xCWCA2xyzHomI8LH27zZTMvquJ7OJn5fVLj
+	 U9NQo6SYXCWJvWphmSEmo/3r36K+2w86B6UOYkYOa7oRYfoWq6BU9iShkaWi2ElwFx
+	 ewRlGQKRxnlbg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] f2fs: support FAULT_TIMEOUT
+Date: Fri, 25 Apr 2025 17:50:55 +0800
+Message-ID: <20250425095055.1129285-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,157 +41,116 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-This adds drm_panic support for a wide range of Intel GPU. I've
-tested it only on 4 laptops, Haswell (with 128MB of eDRAM),
-Comet Lake, Alder Lake, and Lunar Lake.
-For hardware using DPT, it's not possible to disable tiling, as you
-will need to reconfigure the way the GPU is accessing the
-framebuffer, so this will be handled by the following patches.
+Support to inject a timeout fault into function, currently it only
+support to inject timeout to commit_atomic_write flow to reproduce
+inconsistent bug, like the bug fixed by commit f098aeba04c9 ("f2fs:
+fix to avoid atomicity corruption of atomic file").
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+By default, the new type fault will inject 1000ms timeout, and the
+timeout process can be interrupted by SIGKILL.
+
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
+ Documentation/ABI/testing/sysfs-fs-f2fs |  1 +
+ Documentation/filesystems/f2fs.rst      |  1 +
+ fs/f2fs/f2fs.h                          | 17 +++++++++++++++++
+ fs/f2fs/segment.c                       |  3 +++
+ fs/f2fs/super.c                         |  1 +
+ 5 files changed, 23 insertions(+)
 
-v4:
- * Add support for Xe driver.
+diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+index c805a48dd3dc..0dd0936e31b0 100644
+--- a/Documentation/ABI/testing/sysfs-fs-f2fs
++++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+@@ -735,6 +735,7 @@ Description:	Support configuring fault injection type, should be
+ 		FAULT_BLKADDR_CONSISTENCE        0x000080000
+ 		FAULT_NO_SEGMENT                 0x000100000
+ 		FAULT_INCONSISTENT_FOOTER        0x000200000
++		FAULT_TIMEOUT                    0x000400000 (1000ms)
+ 		===========================      ===========
  
-v6:
- * Use struct intel_display instead of drm_i915_private for intel_atomic_plane.c
- 
-v7:
- * Fix mismatch {} in intel_panic_flush() (Jani Nikula)
-
- .../gpu/drm/i915/display/intel_atomic_plane.c | 81 ++++++++++++++++++-
- 1 file changed, 80 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index 7276179df878..c863249ab980 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -33,13 +33,16 @@
- 
- #include <linux/dma-fence-chain.h>
- #include <linux/dma-resv.h>
-+#include <linux/iosys-map.h>
- 
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_blend.h>
- #include <drm/drm_damage_helper.h>
-+#include <drm/drm_cache.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_gem_atomic_helper.h>
-+#include <drm/drm_panic.h>
- 
- #include "gem/i915_gem_object.h"
- #include "i915_config.h"
-@@ -47,6 +50,7 @@
- #include "i915_vma.h"
- #include "i9xx_plane_regs.h"
- #include "intel_atomic_plane.h"
-+#include "intel_bo.h"
- #include "intel_cdclk.h"
- #include "intel_cursor.h"
- #include "intel_display_rps.h"
-@@ -54,6 +58,7 @@
- #include "intel_display_types.h"
- #include "intel_fb.h"
- #include "intel_fb_pin.h"
-+#include "intel_fbdev.h"
- #include "skl_scaler.h"
- #include "skl_universal_plane.h"
- #include "skl_watermark.h"
-@@ -1251,14 +1256,88 @@ intel_cleanup_plane_fb(struct drm_plane *plane,
- 	intel_plane_unpin_fb(old_plane_state);
- }
- 
-+/* Only used by drm_panic get_scanout_buffer() and panic_flush(), so it is
-+ * protected by the drm panic spinlock
-+ */
-+static struct iosys_map panic_map;
-+
-+static void intel_panic_flush(struct drm_plane *plane)
-+{
-+	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-+	struct intel_plane *iplane = to_intel_plane(plane);
-+	struct intel_display *display = to_intel_display(iplane);
-+	struct drm_framebuffer *fb = plane_state->hw.fb;
-+
-+	/* Force a cache flush, otherwise the new pixels won't show up */
-+	drm_clflush_virt_range(panic_map.vaddr, fb->height * fb->pitches[0]);
-+
-+	/* Don't disable tiling if it's the fbdev framebuffer.*/
-+	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev))
-+		return;
-+
-+	if (fb->modifier && iplane->disable_tiling)
-+		iplane->disable_tiling(iplane);
-+}
-+
-+static int intel_get_scanout_buffer(struct drm_plane *plane,
-+				    struct drm_scanout_buffer *sb)
-+{
-+	struct intel_plane_state *plane_state;
-+	struct drm_gem_object *obj;
-+	struct drm_framebuffer *fb;
-+	struct intel_display *display = to_intel_display(plane->dev);
-+
-+	if (!plane->state || !plane->state->fb || !plane->state->visible)
-+		return -ENODEV;
-+
-+	plane_state = to_intel_plane_state(plane->state);
-+	fb = plane_state->hw.fb;
-+	obj = intel_fb_bo(fb);
-+	if (!obj)
-+		return -ENODEV;
-+
-+	iosys_map_clear(&panic_map);
-+	if (to_intel_framebuffer(fb) == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
-+		intel_fbdev_get_map(display->fbdev.fbdev, &panic_map);
-+	} else {
-+		int ret;
-+		/* Can't disable tiling if DPT is in use */
-+		if (intel_fb_uses_dpt(fb))
-+			return -EOPNOTSUPP;
-+		ret = intel_bo_panic_map(obj, &panic_map);
-+		if (ret)
-+			return ret;
-+	}
-+	if (iosys_map_is_null(&panic_map))
-+		return -ENOMEM;
-+
-+	sb->map[0] = panic_map;
-+	sb->width = fb->width;
-+	sb->height = fb->height;
-+	sb->format = fb->format;
-+	sb->pitch[0] = fb->pitches[0];
-+
-+	return 0;
-+}
-+
- static const struct drm_plane_helper_funcs intel_plane_helper_funcs = {
- 	.prepare_fb = intel_prepare_plane_fb,
- 	.cleanup_fb = intel_cleanup_plane_fb,
+ What:		/sys/fs/f2fs/<disk>/discard_io_aware_gran
+diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
+index 95c64b5b5638..6dcafcf3bf54 100644
+--- a/Documentation/filesystems/f2fs.rst
++++ b/Documentation/filesystems/f2fs.rst
+@@ -207,6 +207,7 @@ fault_type=%d		 Support configuring fault injection type, should be
+ 			 FAULT_BLKADDR_CONSISTENCE        0x000080000
+ 			 FAULT_NO_SEGMENT                 0x000100000
+ 			 FAULT_INCONSISTENT_FOOTER        0x000200000
++			 FAULT_TIMEOUT                    0x000400000 (1000ms)
+ 			 ===========================      ===========
+ mode=%s			 Control block allocation mode which supports "adaptive"
+ 			 and "lfs". In "lfs" mode, there should be no random
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index be752d833a06..3e0d1f9b62ba 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -63,6 +63,7 @@ enum {
+ 	FAULT_BLKADDR_CONSISTENCE,
+ 	FAULT_NO_SEGMENT,
+ 	FAULT_INCONSISTENT_FOOTER,
++	FAULT_TIMEOUT,
+ 	FAULT_MAX,
  };
  
-+static const struct drm_plane_helper_funcs intel_primary_plane_helper_funcs = {
-+	.prepare_fb = intel_prepare_plane_fb,
-+	.cleanup_fb = intel_cleanup_plane_fb,
-+	.get_scanout_buffer = intel_get_scanout_buffer,
-+	.panic_flush = intel_panic_flush,
-+};
+@@ -613,6 +614,9 @@ enum {
+ /* congestion wait timeout value, default: 20ms */
+ #define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(20))
+ 
++/* timeout value injected, default: 1000ms */
++#define DEFAULT_FAULT_TIMEOUT	(msecs_to_jiffies(1000))
 +
- void intel_plane_helper_add(struct intel_plane *plane)
- {
--	drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
-+	if (plane->base.type == DRM_PLANE_TYPE_PRIMARY)
-+		drm_plane_helper_add(&plane->base, &intel_primary_plane_helper_funcs);
-+	else
-+		drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
+ /* maximum retry quota flush count */
+ #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT		8
+ 
+@@ -4830,6 +4834,19 @@ static inline void f2fs_io_schedule_timeout(long timeout)
+ 	io_schedule_timeout(timeout);
  }
  
- void intel_plane_init_cursor_vblank_work(struct intel_plane_state *old_plane_state,
++static inline void f2fs_io_schedule_timeout_killable(long timeout)
++{
++	while (timeout) {
++		if (fatal_signal_pending(current))
++			return;
++		set_current_state(TASK_UNINTERRUPTIBLE);
++		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
++		if (timeout <= DEFAULT_IO_TIMEOUT)
++			return;
++		timeout -= DEFAULT_IO_TIMEOUT;
++	}
++}
++
+ static inline void f2fs_handle_page_eio(struct f2fs_sb_info *sbi,
+ 				struct folio *folio, enum page_type type)
+ {
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 037d06d58fda..b1ce8a41becd 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -371,6 +371,9 @@ static int __f2fs_commit_atomic_write(struct inode *inode)
+ 	}
+ 
+ out:
++	if (time_to_inject(sbi, FAULT_TIMEOUT))
++		f2fs_io_schedule_timeout_killable(DEFAULT_FAULT_TIMEOUT);
++
+ 	if (ret) {
+ 		sbi->revoked_atomic_block += fi->atomic_write_cnt;
+ 	} else {
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index de88084f9861..1c33d90c4c92 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -65,6 +65,7 @@ const char *f2fs_fault_name[FAULT_MAX] = {
+ 	[FAULT_BLKADDR_CONSISTENCE]	= "inconsistent blkaddr",
+ 	[FAULT_NO_SEGMENT]		= "no free segment",
+ 	[FAULT_INCONSISTENT_FOOTER]	= "inconsistent footer",
++	[FAULT_TIMEOUT]			= "timeout",
+ };
+ 
+ int f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned long rate,
 -- 
 2.49.0
 
