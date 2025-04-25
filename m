@@ -1,92 +1,94 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69D22973CB
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCF9297A41
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745623410; cv=none; b=crIc+UTfD9doPLFtJbS1gF3V3HzbCpRn/IX43Q/HNz+yfTWYh/TxLchQsrfk0eXebPvDfCzoFKV6RjFyg1ovb0yv9oPLvKqnwZdz+vazfWa8YsAmH+3DxTUsbY+i9/I60F0eckJOhTv5JgwW4GdGPGitUZk4UVYy7+e2eCbSYBw=
+	t=1745623426; cv=none; b=kNV4/CDMTGaaT0Ygb+KDaqJS+nxuunX1X9lINBJGjJ8ME588Ctxtoy9vnM63AmQMnz2Sinc8buadVjulFLj9+Mdgwsxdb5QbiR4uJSRG/Ul9AfH2UDTTziXYt13cY9MxbV+LBintBRPTuMj5VIB6aK/I6bfo+W2rVwXcL4tViuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745623410; c=relaxed/simple;
-	bh=xRQfMP1XFOx9qITimYkGXWDvRrdKrkeHm+DJCoV+Prk=;
+	s=arc-20240116; t=1745623426; c=relaxed/simple;
+	bh=W/4u0lOWc81NccjcB9uXLRxjfQvmJccU9FvvMv7UnLY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=feGT8oduWrP/ibANfYeWICeZN41WGufzUhjo7JzdNpgcFWTJ1N0W6znNQ5q7LG6J4hvq24t1l/QDcTdRiZkfFywO9wyAY13Nwtc3ydUvOvULQzNcwk4FO+SpqF5kriFZ1+2+/+p+Dwf8593uj7mVoQMNWkDi9h0OPsGYp5AZPdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Poums8hn; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=if3Gdo2LwTL83rlTpHPN38X1WvwU+VUeZYXSzOv7YxfX84Uwzy7uNJWzlOaFfZSKHHTHAUziOAzuh1Ee34kReKq7DyUiD0D4YiW9Yo+JaUZtr2tilPfQ+fKVHK47QoBuIyfEfvRJgI+Ml/CcAwxnnlSgUx8Tvtr1pUvhuVj+scg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F0lfLbsI; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Poums8hn"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2241e7e3addso24483465ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:23:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F0lfLbsI"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so2200593a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 16:23:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745623408; x=1746228208; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745623424; x=1746228224; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ywngk5EyrH43CSmFrX2G8BVOihut64iaWtRXLrbOWSE=;
-        b=Poums8hnsmcZsMIzFoYFHduhssn2oN/W2959doE6GOJ2ODHHIbeGgyOSuXdVOjGHIV
-         lU0/KyA0kvl6YbdfVFwW9FmXg0JtgBQxo5Byo4UIzfTnPkJ2i7Amj+t7DpeYo99AtG+p
-         bmuDz+hHdqEBEJl+Gt4kYdA2OBcXdcCK0dMc+AC9H0yy2ImcKTBAQykJszPyLujJWMDq
-         s0K0xp9mHSYeULUQ8fXRupAakQtZydXEB3FzmDExMAU9MdZ9SuSuT6VmqaxgmTCG3bJ9
-         /HC7EGhQpnKTGc2WIY8fGGQjlOYDTW/rVRps6UHgpIz5VwxTnpMXbs8wxglvxLiNHwcC
-         R4dQ==
+        bh=2iS6vvTC2BG7KBzpZ2hrMru0/r0uhvHtjUyGqFDzSlk=;
+        b=F0lfLbsI3rP8+2UlV2J8c2LtshROTUDxyr9nvtReO9TJEoILIbMazejyYmeAqR7gGh
+         SyOz/Il0SgQP0l5MWzrc4v98FyyUszQF/NPbSmtbMsvxABNPUxyzQNz/XAraNV0aqobi
+         csAkGQHdm2u1i/w6NiJQY8uLedXIyQgTN7USPPukp/i656/Ksi9YCpQuzSmWOCAQ1xtj
+         fdTL5jqe/QLhLX8JJ7h7m9GdRa2Nj+ulHMgkdHwlRRJrmgLjWdWW+/TwDjKh+DCKoZ1I
+         J3m/IORv7pknYmupsalCE4+QyHVzrtL/Lgpz9TjV6RPSq8XRRvbzZSh6OtI9KlcKPQ1L
+         DLwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745623408; x=1746228208;
+        d=1e100.net; s=20230601; t=1745623424; x=1746228224;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ywngk5EyrH43CSmFrX2G8BVOihut64iaWtRXLrbOWSE=;
-        b=tufNWSuW5mb1Ic6zbMJmSqhxGcc6Vkd2qJH3cr+9v3wjUiHCk0TmrBXsph5Vguo5mg
-         /tKOR1XOSTENnt3tfuLqnbHDpg6rmq4k+xGFlScmEzhVVKUajJj0C8FFtDJibTGB6jfN
-         O2YKhAqxVRFsXO7L/oteqMla/IpJN7EzntYqvDmayJM15eIM8VXtQemLCKbKL7D4aqvr
-         8a08y66zUjNA06dXQJaP0ullBqrf3EXAhMPmtxqv/bATnTowSgA9iHLEbVpWrsvt5jw/
-         UJHfEHXnq9tSy81cOWoOxO4A6ZZ9mZGDpkC8JjEPzXR6lWfEX8O27gZOhhhCu4diKHw5
-         ARLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKbmPLnOoEiKL5QghbJSe7MHHK0l3dnXM3UpqLl1PMGw2mHft7ZGbrbk8HLMp+D++Yd8qKprYVL6KWIXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCCtKSv5L+Cfv5WZo/itt+uzU4HBQw9o6b+BraIhSZEtyPLXC3
-	UBwiH1zxtBqi0NmPSITtt5zumj36KudvglSs34Y303RNWUQIrYnJO3MK1yv5ogeiymeqRAtHMx+
-	Cug==
-X-Google-Smtp-Source: AGHT+IHVxXK3XxZbeGt/u4CyqKrgiBasZXhRdDliozQ4/a+jP1h/kb8v1M5XZMgqEeCFii+UcH9HIfN932k=
-X-Received: from plblf7.prod.google.com ([2002:a17:902:fb47:b0:220:ddee:5ee])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2ec7:b0:223:5945:ffd5
- with SMTP id d9443c01a7336-22dbf6409femr57525515ad.32.1745623408006; Fri, 25
- Apr 2025 16:23:28 -0700 (PDT)
-Date: Fri, 25 Apr 2025 16:23:14 -0700
-In-Reply-To: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
+        bh=2iS6vvTC2BG7KBzpZ2hrMru0/r0uhvHtjUyGqFDzSlk=;
+        b=kZ1mvT/ytZ71TFz4U766z1+myqnyn7Sa9qChpmnaG0URWeWbDiw+W8nrjavKfPdeMX
+         63IhH9xegsXSxpGC/JPmEx/WhLJYNotM1rH2dYLsLduAJYrC1y3aLXTgeyoEpqEBvhLQ
+         ngbRhGUT+8RPf5GzRRVE7ZQsvDQiF+n0YCfqP4MJACvO7AGBtljaL/juLfzAXmV6HEfP
+         sNbSzSrgK9QTaKxoCBxiwYyujuOyM7nYmhsdAdcLp29BWbQZhUhy5zg88gs2hyCNT2ja
+         sm2LIWNYqvRO/idQTQCK/HOVnpOf7WJiEyHaaUDNzLdauj3lrbRKQnaqJ0aA/xJfuCbI
+         qegg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9w5IUXoCm6c8QkZFnGGj+xTv18hGcMWrpLgIwGXPyuLdd1HoDf4q/VYnsHGBUj5aygVabHzDUUBcZDJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD337jTa9ZobfOWNSXS9fBcEB1kf1NrZg4ih8dj5gr+a5VlpaW
+	vlS7BvLW2PuN6UcEm9d1UwGP+mJUs47WyMQEPaFfv5NPlugWPzNzwMh4Jq72+lkmwDnBsOV4FF/
+	0nw==
+X-Google-Smtp-Source: AGHT+IGE7Db7SsvC780U6iZxFCfU1flMB6i6zwPX8CAN+B1wZoleiriiDrI6HnQqyvwglWB85GjmXPxrcrM=
+X-Received: from pjbsi3.prod.google.com ([2002:a17:90b:5283:b0:308:670e:aa2c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2544:b0:2f1:2fa5:1924
+ with SMTP id 98e67ed59e1d1-309f7e60a39mr4757679a91.26.1745623423952; Fri, 25
+ Apr 2025 16:23:43 -0700 (PDT)
+Date: Fri, 25 Apr 2025 16:23:18 -0700
+In-Reply-To: <20250310201603.1217954-1-kim.phillips@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
+References: <20250310201603.1217954-1-kim.phillips@amd.com>
 X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <174562166515.1002335.4837189500291274188.b4-ty@google.com>
-Subject: Re: [PATCH] x86/cpufeatures: Define X86_FEATURE_PREFETCHI (AMD)
+Message-ID: <174562133546.1000664.8086467435503867991.b4-ty@google.com>
+Subject: Re: [PATCH v5 0/2] KVM: SEV: Add support for the ALLOWED_SEV_FEATURES feature
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, pbonzini@redhat.com, 
-	Babu Moger <babu.moger@amd.com>
-Cc: x86@kernel.org, hpa@zytor.com, daniel.sneddon@linux.intel.com, 
-	jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com, 
-	thomas.lendacky@amd.com, perry.yuan@amd.com, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
+To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, Michael Roth <michael.roth@amd.com>, 
+	Ashish Kalra <ashish.kalra@amd.com>, "Nikunj A . Dadhania" <nikunj@amd.com>, 
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, Naveen N Rao <naveen@kernel.org>, 
+	Alexey Kardashevskiy <aik@amd.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 
-On Tue, 08 Apr 2025 17:57:09 -0500, Babu Moger wrote:
-> The latest AMD platform has introduced a new instruction called PREFETCHI.
-> This instruction loads a cache line from a specified memory address into
-> the indicated data or instruction cache level, based on locality reference
-> hints.
+On Mon, 10 Mar 2025 15:16:01 -0500, Kim Phillips wrote:
+> AMD EPYC 5th generation processors have introduced a feature that allows
+> the hypervisor to control the SEV_FEATURES that are set for, or by, a
+> guest [1].  ALLOWED_SEV_FEATURES can be used by the hypervisor to enforce
+> that SEV-ES and SEV-SNP guests cannot enable features that the
+> hypervisor does not want to be enabled.
 > 
-> Feature bit definition:
-> CPUID_Fn80000021_EAX [bit 20] - Indicates support for IC prefetch.
+> Patch 1/2 adds support to detect the feature.
 > 
 > [...]
 
-Applied to kvm-x86 misc, with a rewritten shortlog and changelog to make it super
-clear this is KVM enabling.
+Applied to kvm-x86 svm, thanks!
 
-[1/1] KVM: x86: Advertise support for AMD's PREFETCHI
-      https://github.com/kvm-x86/linux/commit/d88bb2ded2ef
+[1/2] x86/cpufeatures: Add "Allowed SEV Features" Feature
+      https://github.com/kvm-x86/linux/commit/67e672eb2e89
+[2/2] KVM: SEV: Configure "ALLOWED_SEV_FEATURES" VMCB Field
+      https://github.com/kvm-x86/linux/commit/51c4b387555d
 
 --
 https://github.com/kvm-x86/linux/tree/next
