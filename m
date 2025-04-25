@@ -1,172 +1,136 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2044.outbound.protection.outlook.com [40.107.236.44])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1FF22370F;
-	Fri, 25 Apr 2025 20:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745614008; cv=fail; b=eFFv2MFQBaGkKiUMLRKNHJXzyESLq5HnoFXxueAK+t98jTc6k6ZsyMsKb86IHLe8RJrw+XHavvHDO1PZpNXxo6d/bztEVPXOijKAvPSYGNvchRUDcCYVyS+KEo81v8teuxMVot8KzwlfZnK+0CbpQJexFVonFeaBCZ6ejAkN8xI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745614008; c=relaxed/simple;
-	bh=T7C+Hngt31R5TO0gEPEt7xOtSiPW/34IC+UhPir1HmA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F9F22539D;
+	Fri, 25 Apr 2025 20:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745614014; cv=none; b=eNELQ1buZLHvwx7a/VVdtVeRBn6BmCfVnwFW+LyINigByo9iI3ysqczVqimCzGssMyg+7PxgCBclpM/WGtmjd7bHWZ3y5gvX2NVppXvo4FJ2fBPhF3If378dLPG53mgvUVHmMU/sixHi5jDDEn1Bygia+I/1IpVPjCqWCeFWb28=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745614014; c=relaxed/simple;
+	bh=Q2j8AgYptvGhX1CCldmrMv0sriO+eLrH7eAydpVEGOs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D9hB/MvoyZev1WGPE3/X9s3z9K4tAVHfvpvQObnIV2eTwtqUur57c5TiardxWvSt26fYwmcdLHDdNZ+L8vWvbo3vJ4BZ8U5K8onYjjRBVZQqShOdKvTgCLjca/uSpxfzcLQqReFA2tQN0l15Ikf9RstvSw6CMldPrMIeuhsi8DI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UjCxvs/L; arc=fail smtp.client-ip=40.107.236.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	 MIME-Version:Content-Type; b=b/QG1GIsdI7Vv4kRQKfojkX/pyerSuO/5vbNal/CP2daReOwq8wiuInSS11fFZIb0aQ3ODcJNf/HlcSXpXElriOUyQMuJO8CEefOTv62Mpq5We7/n59riqscyMnqSn8ISFRJh7wzXcirjqk37ySjrHnFGEx5Nlg9yYzLY7QE0Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=mUOahFw2; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UjCxvs/L"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z6PvBbYDoAj2mH+7oPALETGOn2xQ8cBz463K3aNb4T96TsUrewq2EFyEVmZOihTeuoqjpJQsKYVT6ib9SstkU798jXIx7gVHMEWYthlNYruETko5UUkfIjFPsCeNtfle/Mg9GW2vWoyfC01R9t9usS24CXPQD+1y2akX4xeID7ZDKvdoAjjw64KsaYkiQ/8s410PEj02e0xpyXlEjXLSXWjco9u6BvStcHzM1g8HEl85uX3vSfUFIFz4p5xMP+pBU5VooVRYfjIOlXE3oGpl1Hn2ksOyBtv8A1jFz7CpKp347Qn9LqqIXRVkwwXkvkRJxkJ3FBcTlXOJvBFVKx1L0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eeLtd28lRzgSUr+KXHpIb/7/2qU7mzX5+7qXydQm5X4=;
- b=KS5xTCIcUHAnsIDdILlhxoTW7jR6aqsuUQMn8zgtJ0w0w00hDgy6X1riKA4bj3ed/nZIG0K697qARc7VC+OiDQBmKYTgA8NQy8xyG0T3f35XIVyZHo+8mpW+agGA6y6qSPjt+YmdNEz1IYMLBfrSfG3KnkmX+B4acM+bjyS5D9B9VCfLXynfkLrTwO0x0qt+Rd7xh0M4jjWUT/Rhe+EQUDNqxTcQHvtEO9c/LRFSPypbq05ZJV+jfzQdscuNpZmj1UCBiBZy5hnXptJGeBUCXZlWponHsTYOE+nbPU3Ew9oHUHKUKoBubHhFOJ4aOvKyu1d2/01wHek3CL1O/HJ03w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eeLtd28lRzgSUr+KXHpIb/7/2qU7mzX5+7qXydQm5X4=;
- b=UjCxvs/LOjj5LlckgMm1qfO8t/xEa55RCFqiTXSoDLLODYENxqj8Y3Ty6xVCZhYgBKsie6VR1wCNyf3m5wi25qzHx/dtMUh107bKv2PWSZu7YLMDRyIzKzjap4R7/B85gH+kpE4JYTVGvYwXI5JuppPb5wjdguwg7dhU7TXnHWE=
-Received: from DM5PR08CA0030.namprd08.prod.outlook.com (2603:10b6:4:60::19) by
- IA1PR12MB6388.namprd12.prod.outlook.com (2603:10b6:208:388::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.26; Fri, 25 Apr 2025 20:46:42 +0000
-Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
- (2603:10b6:4:60:cafe::89) by DM5PR08CA0030.outlook.office365.com
- (2603:10b6:4:60::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Fri,
- 25 Apr 2025 20:46:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Fri, 25 Apr 2025 20:46:41 +0000
-Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 25 Apr
- 2025 15:46:40 -0500
-From: Shannon Nelson <shannon.nelson@amd.com>
-To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-CC: Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH net-next 2/3] pds_core: smaller adminq poll starting interval
-Date: Fri, 25 Apr 2025 13:46:17 -0700
-Message-ID: <20250425204618.72783-3-shannon.nelson@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250425204618.72783-1-shannon.nelson@amd.com>
-References: <20250425204618.72783-1-shannon.nelson@amd.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mUOahFw2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1745614010; x=1777150010;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kTjNtVzivnzTy/oybVUy2SYwiaPHJOJ2MNj6K8muiDk=;
+  b=mUOahFw2bRg2/ZZTnK1tgZh4lYHtmLRE1uIeV3SqW2UE8D9mFg1SH+aq
+   /wS1k+jppQR6sA1N4LZwzVXed7PNeiyZ8G4N4kG4kx+26NhzMY0XSZhUR
+   6j59R164V16tkFrlebzRK3TgrwhkqEPprMpPVumUXNw1lG3EJIrXK4dUT
+   g=;
+X-IronPort-AV: E=Sophos;i="6.15,240,1739836800"; 
+   d="scan'208";a="483805900"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 20:46:46 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:11515]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.42.20:2525] with esmtp (Farcaster)
+ id 6f09c9c8-3454-4d43-892c-532df97ba350; Fri, 25 Apr 2025 20:46:44 +0000 (UTC)
+X-Farcaster-Flow-ID: 6f09c9c8-3454-4d43-892c-532df97ba350
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 25 Apr 2025 20:46:44 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.142.164.216) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 25 Apr 2025 20:46:40 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <me@yhndnzj.com>, <netdev@vger.kernel.org>,
+	<oleg@redhat.com>, <pabeni@redhat.com>
+Subject: Re: [PATCH v2 2/4] net, pidfs: prepare for handing out pidfds for reaped sk->sk_peer_pid
+Date: Fri, 25 Apr 2025 13:46:05 -0700
+Message-ID: <20250425204632.44889-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250425-work-pidfs-net-v2-2-450a19461e75@kernel.org>
+References: <20250425-work-pidfs-net-v2-2-450a19461e75@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|IA1PR12MB6388:EE_
-X-MS-Office365-Filtering-Correlation-Id: 480e5f6e-69fb-4f54-4046-08dd843a489c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?A9SEEJJ2zsUvjUKGTF/L3PgOSahOyYMX3IytDdgEhorwel5+ajd5U6Jyv0Oc?=
- =?us-ascii?Q?PP2LD74IA7cJrqPx0uYKPAw2Pz36pOimbwgru0GdZhufghzYzFCNFbVgg8De?=
- =?us-ascii?Q?7UGkwUutDOUAZRNNBNIKLrlNXd6tJX0hsUqouI/WhnQsyMvQx0o4Ipx/7wdc?=
- =?us-ascii?Q?zluOQ1lDV+jS/KdfNP/AvkDViNYCQTO0RA6h7+CgDevEpqCRsRECumJGDlhF?=
- =?us-ascii?Q?km+80czaMA6ng31E+9zSTExnINteusCn/tLcG2wXdKqcQGe+qCaEFXewa0IZ?=
- =?us-ascii?Q?LbEoZ3xur9o2OYgZE8HW2b+GC4W+j29ZKhM1spVuMJCZpfhTNLB8+IxJB8df?=
- =?us-ascii?Q?wSo7sC8iNmN6gc7jlwxT0Pr/7WFJ495f3fmUtMtyKly888ApobxXaEci3W34?=
- =?us-ascii?Q?nHAvO34rpX498omfSn+dtDb+sbinbTOq4+9OLaIUXbtho7zazyBvYhtYd3+c?=
- =?us-ascii?Q?7LSDGbHxGKWNb2zsRmJ3A6hEKMZPIFaM8XBFLHrUwkWZnMParSuhwlr+3ic1?=
- =?us-ascii?Q?PRXZKIXTLaTqsy6TaZOwMtMJHfuW8BmoF6YTXm1herP6gf2NjcfooVQJjaAA?=
- =?us-ascii?Q?qqG36o+y6Gi+te5jJDbKIXJjRZFxHIbBU5QmrM24nQQUB3RD4DXYsNPTfD7y?=
- =?us-ascii?Q?uA2eXa64pfdtQcqxvipTWCTHvdwwbiPlINfHbpST1sODgbUXcyhunY78f4zI?=
- =?us-ascii?Q?Z5WQZ540mBmhfZDZRzGmkrn5OQWG4y1sQUNaEhqCgXQrBntyC00axA52ASgh?=
- =?us-ascii?Q?WnO/jBPe75G/SkoiEb4gciLZR6/iBdk6JXqNxiT9l1EPHAwOHbrjobJ0IxV4?=
- =?us-ascii?Q?pW3MRopXHjyqMIdAKJzpbfJ3xXrarUHXCDU9QimmEq2Gs9OmVJiAYFPbiE64?=
- =?us-ascii?Q?S0795uR1O7iXTfkAXSOQDSIUZRWVViuqd1S0GdU2NqhXLdhoZrnfEgOicNGz?=
- =?us-ascii?Q?mjAaGrYn3RP3gwyPoGgu5dACKwgVqQ4Jncqli4S9HmFsseDoPk5kYJ2ytsIh?=
- =?us-ascii?Q?2qCH+nVnzYWX7J4p1ibCexa33oGITYO2ofrc6AqzF8qC458uleq3+cuI8FqM?=
- =?us-ascii?Q?T/9RJIflZhwDeeq01xCXC4XSgCMLveVBk1eSEPs8L5XoV7iv3L7VZ2QAGZvT?=
- =?us-ascii?Q?5dkTScsv0vY4WoTS+qc2dH12fQrlKWJ1d3nsdf7EiiFuLbqqKHKM8BIkhPW3?=
- =?us-ascii?Q?wCYWmh5RoZ5NhOwCNhS4NY8i2tDVGVHTKP12/CkKFcmSjeDtb4qpcPlyBSzV?=
- =?us-ascii?Q?7qX6LbtNisCXyXR32ofXbe54lJ/RLY9oSM7Grp5uAq5SkzeGw6FzHFsNKJId?=
- =?us-ascii?Q?JA/zJ0953taIDrCNBWRCGvN/4h8VP0dzpKwE228Yf1lLGv2FMhq6WMOo0VWI?=
- =?us-ascii?Q?fPpXnCOZnqyL8w9zkt8CAwxj3aGjMl25RKWaaaqIW6vPVSXjiWT/sHkZ60js?=
- =?us-ascii?Q?05nH9iDCcwFKAtVRUFIJarPmNWjFR91y0vy7x+6BS/+iTDApD/0f8apLCuWj?=
- =?us-ascii?Q?cDq+pTMNsOkQ1JG6um8yG1Oh9Pity4ntwD4m?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2025 20:46:41.7022
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 480e5f6e-69fb-4f54-4046-08dd843a489c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B5.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6388
+X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Shorten the adminq poll starting interval in order to notice
-any transaction errors more quickly.
+From: Christian Brauner <brauner@kernel.org>
+Date: Fri, 25 Apr 2025 10:11:31 +0200
+> SO_PEERPIDFD currently doesn't support handing out pidfds if the
+> sk->sk_peer_pid thread-group leader has already been reaped. In this
+> case it currently returns EINVAL. Userspace still wants to get a pidfd
+> for a reaped process to have a stable handle it can pass on.
+> This is especially useful now that it is possible to retrieve exit
+> information through a pidfd via the PIDFD_GET_INFO ioctl()'s
+> PIDFD_INFO_EXIT flag.
+> 
+> Another summary has been provided by David in [1]:
+> 
+> > A pidfd can outlive the task it refers to, and thus user-space must
+> > already be prepared that the task underlying a pidfd is gone at the time
+> > they get their hands on the pidfd. For instance, resolving the pidfd to
+> > a PID via the fdinfo must be prepared to read `-1`.
+> >
+> > Despite user-space knowing that a pidfd might be stale, several kernel
+> > APIs currently add another layer that checks for this. In particular,
+> > SO_PEERPIDFD returns `EINVAL` if the peer-task was already reaped,
+> > but returns a stale pidfd if the task is reaped immediately after the
+> > respective alive-check.
+> >
+> > This has the unfortunate effect that user-space now has two ways to
+> > check for the exact same scenario: A syscall might return
+> > EINVAL/ESRCH/... *or* the pidfd might be stale, even though there is no
+> > particular reason to distinguish both cases. This also propagates
+> > through user-space APIs, which pass on pidfds. They must be prepared to
+> > pass on `-1` *or* the pidfd, because there is no guaranteed way to get a
+> > stale pidfd from the kernel.
+> > Userspace must already deal with a pidfd referring to a reaped task as
+> > the task may exit and get reaped at any time will there are still many
+> > pidfds referring to it.
+> 
+> In order to allow handing out reaped pidfd SO_PEERPIDFD needs to ensure
+> that PIDFD_INFO_EXIT information is available whenever a pidfd for a
+> reaped task is created by PIDFD_INFO_EXIT. The uapi promises that reaped
+> pidfds are only handed out if it is guaranteed that the caller sees the
+> exit information:
+> 
+> TEST_F(pidfd_info, success_reaped)
+> {
+>         struct pidfd_info info = {
+>                 .mask = PIDFD_INFO_CGROUPID | PIDFD_INFO_EXIT,
+>         };
+> 
+>         /*
+>          * Process has already been reaped and PIDFD_INFO_EXIT been set.
+>          * Verify that we can retrieve the exit status of the process.
+>          */
+>         ASSERT_EQ(ioctl(self->child_pidfd4, PIDFD_GET_INFO, &info), 0);
+>         ASSERT_FALSE(!!(info.mask & PIDFD_INFO_CREDS));
+>         ASSERT_TRUE(!!(info.mask & PIDFD_INFO_EXIT));
+>         ASSERT_TRUE(WIFEXITED(info.exit_code));
+>         ASSERT_EQ(WEXITSTATUS(info.exit_code), 0);
+> }
+> 
+> To hand out pidfds for reaped processes we thus allocate a pidfs entry
+> for the relevant sk->sk_peer_pid at the time the sk->sk_peer_pid is
+> stashed and drop it when the socket is destroyed. This guarantees that
+> exit information will always be recorded for the sk->sk_peer_pid task
+> and we can hand out pidfds for reaped processes.
+> 
+> Link: https://lore.kernel.org/lkml/20230807085203.819772-1-david@readahead.eu [1]
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
----
- drivers/net/ethernet/amd/pds_core/adminq.c | 4 ++--
- include/linux/pds/pds_adminq.h             | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/amd/pds_core/adminq.c b/drivers/net/ethernet/amd/pds_core/adminq.c
-index 506f682d15c1..097bb092bdb8 100644
---- a/drivers/net/ethernet/amd/pds_core/adminq.c
-+++ b/drivers/net/ethernet/amd/pds_core/adminq.c
-@@ -225,7 +225,7 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 		     union pds_core_adminq_comp *comp,
- 		     bool fast_poll)
- {
--	unsigned long poll_interval = 1;
-+	unsigned long poll_interval = 200;
- 	unsigned long poll_jiffies;
- 	unsigned long time_limit;
- 	unsigned long time_start;
-@@ -252,7 +252,7 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 	time_limit = time_start + HZ * pdsc->devcmd_timeout;
- 	do {
- 		/* Timeslice the actual wait to catch IO errors etc early */
--		poll_jiffies = msecs_to_jiffies(poll_interval);
-+		poll_jiffies = usecs_to_jiffies(poll_interval);
- 		remaining = wait_for_completion_timeout(wc, poll_jiffies);
- 		if (remaining)
- 			break;
-diff --git a/include/linux/pds/pds_adminq.h b/include/linux/pds/pds_adminq.h
-index 339156113fa5..40ff0ec2b879 100644
---- a/include/linux/pds/pds_adminq.h
-+++ b/include/linux/pds/pds_adminq.h
-@@ -4,7 +4,7 @@
- #ifndef _PDS_CORE_ADMINQ_H_
- #define _PDS_CORE_ADMINQ_H_
- 
--#define PDSC_ADMINQ_MAX_POLL_INTERVAL	256
-+#define PDSC_ADMINQ_MAX_POLL_INTERVAL	256000	/* usecs */
- 
- enum pds_core_adminq_flags {
- 	PDS_AQ_FLAG_FASTPOLL	= BIT(1),	/* completion poll at 1ms */
--- 
-2.17.1
-
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
