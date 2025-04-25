@@ -1,237 +1,100 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1E8241662;
-	Fri, 25 Apr 2025 09:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FD92356B8;
+	Fri, 25 Apr 2025 09:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573572; cv=none; b=dS/jc6LSNUExTzpTFNr2Tjq++hsj7gs+7DlPPUJCGKgb5v2Sr+JUITJQQm6RaQJrgAkY2qnTsM+cW/YZcE6Qi3Rb0I35Zja06G4EOI0c8w2EC8Maxh6gELnr2Lyre1vpJHdd4ARfK/HThsojr2T1hLyHJDRNlDsaEDTiplhmhu8=
+	t=1745573594; cv=none; b=NArM32PV+MdmS/LkdiWQE3XhyYfX8riefiMLwys3vF66q1J2dT8Y/cKI1Ey/4d0HmZiZDkow90Cy0dtVn7iVySvK74lBqDqzqIE5pImXMe/pduHOcdJmlthd1pEx3qJDTChU1kRspqEfKBE3IQv2o85Y30W+FKwK7JWxkt25glc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573572; c=relaxed/simple;
-	bh=cXmqpQ2zVMpAk5TOXk5ulNe5nKFWFV8jUE90oXY/TUk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QK7C+ZY2XzjgoCVYJwuFnbBX7aNJqWBGTPZUMsdqhzZi+ZFKCi4u3gPGxqplxCKk8VAc4pLeLzodKXNr1IFZftZHixC+sZyK9T+7PmpxvP04+P/sUg6wj4uANDFqrQu5VSlXkje0l0swgoSim/RH6lxss+q/hySZ5SU3h/sDx/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ip9IG0TV; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1745573594; c=relaxed/simple;
+	bh=WNBCzVUdr2nMr5n1g8TkgRuxVBJ3OvFR4kRECxsx0dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7KGFIR8sWGRNRWUa3vPvvb4hZ17UsewXLW86IXo95m6tPeQ2tNl0R4S37/Drxnwreqe+ymqddy7JQXMfkTtoX5rNMTKqGyj4LVtJDodBn8Gp7FujxrP2tHPgR3AgGbPauAnNEdnU6QXb0NSFLlW9XPYR/kcwoW6G10pnwyQyuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ipRQI3we; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=alm4dm3r; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ip9IG0TV"
-X-UUID: 3c3766e621b811f09b6713c7f6bde12e-20250425
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=6VbUAEeV39eL80nnS9lHM6fAPeFr3119Wt/l0LVAUKA=;
-	b=ip9IG0TViOh0WjDhtbzkZLxk/JSINYrYhZ+t1Xt9ET1+M9TSNvxdVNxAeAyu6J4LMf1srQZzGapZhD+m7I9wDFSq9a2CKIbBTtbmpCAbbfyWKana62Vo+OB/0f/UxnvjX1Q7XHncPQWUYWe0CLm9Shw1GmkIlp1FOConQGBdoZQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:5ee56e8e-0236-450f-a189-9e952c3cb18d,IP:0,UR
-	L:0,TC:0,Content:41,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:41
-X-CID-META: VersionHash:0ef645f,CLOUDID:9b39cb76-5fec-4b3e-b8cb-933843551e81,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:4|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 3c3766e621b811f09b6713c7f6bde12e-20250425
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 737590061; Fri, 25 Apr 2025 17:32:41 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 25 Apr 2025 17:32:40 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 25 Apr 2025 17:32:40 +0800
-From: Jason-JH Lin <jason-jh.lin@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, Jason-JH Lin
-	<jason-jh.lin@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
-	<singo.chang@mediatek.com>, Paul-PL Chen <pual-pl.chen@mediatek.com>, "Moudy
- Ho" <moudy.ho@mediatek.com>, Xavier Chang <xavier.chang@mediatek.com>,
-	Xiandong Wang <xiandong.wang@mediatek.com>, Sirius Wang
-	<sirius.wang@mediatek.com>, Fei Shao <fshao@chromium.org>, Chen-yu Tsai
-	<wenst@chromium.org>, <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-media@vger.kernel.org>
-Subject: [PATCH v5 19/19] soc: mediatek: mtk-cmdq: Remove cmdq_pkt_write() and cmdq_pkt_write_mask()
-Date: Fri, 25 Apr 2025 17:28:51 +0800
-Message-ID: <20250425093237.1543918-20-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250425093237.1543918-1-jason-jh.lin@mediatek.com>
-References: <20250425093237.1543918-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ipRQI3we";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="alm4dm3r"
+Date: Fri, 25 Apr 2025 11:33:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745573590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttWMI3IxwHR18qgiavYlZ7Wrde1QtcOjDwO9mA75nyw=;
+	b=ipRQI3weeZvi54Pj/z6HcZh1yPAgKNFKQqK2uWbTP9LrftmBQwUREE/oSZm7ZblPbYb4Oj
+	GdXSeYy0BJWEjqn3WQ1MnPDUrrbWEoe1U5rp55kAZecRI4C/aCqPJdTgle5Ig6Xjc7ey+S
+	8I+zBS8poyVvxWB2pwsqxb8Sg+aYnHqx0uQgJXvi5533F6oANT1p/aKHVcB/Rgw2NBxbW2
+	/P2lspWZqQ49JL/uy7AWPuPnh2Uujao/IjcR7c7D+H81KgE6Y2Z0yVZj9a1vXjt+BC6v6y
+	nWRdVosrfkI0/JeljEugAyMn7b9762C/4f5LD3rgL2ssCDV1JdKY5F/s52UtQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745573590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttWMI3IxwHR18qgiavYlZ7Wrde1QtcOjDwO9mA75nyw=;
+	b=alm4dm3rSKXMYLXTb6ZshjlB0OGQ7Un5JbIALvYLgiN7mv3thBSkmwd+Oq7JF6FjGH5ML1
+	WOcvexXwgKTCfmAA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
+Message-ID: <20250425093309.RkeoCUBC@linutronix.de>
+References: <cover.1745390829.git.namcao@linutronix.de>
+ <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
+ <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
+ <20250425063456.NBE35YHR@linutronix.de>
+ <169b8478-1eff-46b1-a782-f0cb529330bb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169b8478-1eff-46b1-a782-f0cb529330bb@redhat.com>
 
-The original cmdq_pkt_write() and cmdq_pkt_write_mask() only supported
-generating GCE instructions with subsys ID. They have been replaced by
-cmdq_pkt_write_pa(), cmdq_pkt_write_subsys(), cmdq_pkt_write_mask_pa()
-and cmdq_pkt_write_mask_subsys().
+On Fri, Apr 25, 2025 at 07:35:36AM +0000, Gabriele Monaco wrote:
+> 2025-04-25T06:35:09Z Nam Cao <namcao@linutronix.de>:
+> > On Thu, Apr 24, 2025 at 03:55:34PM +0200, Gabriele Monaco wrote:
+> >> I quickly tried the same with the other monitor comparing the number of
+> >> errors with the page_faults generated by perf, but that didn't make too
+> >> much sense. Perhaps I'm doing something wrong here though (the number
+> >> reported by perf for page faults feels a bit too high).
+> >>
+> >> perf stat -e page-faults -e rv:error_pagefault stress-ng --cyclic 1
+> >
+> > This command run a non-real-time thread to do setup, and a cyclic real-time
+> > thread. The number of pagefaults of each thread would be roughly
+> > proportional to the code size executed by each thread. As the non-real-time
+> > thread's code size is bigger, it sounds reasonable that the number of
+> > pagefaults is greater than the number of monitor's warnings.
+> 
+> Mmh I guessed something like that, although numbers were a bit out of
+> proportion (e.g. 500 page-faults and 8 errors), but again, I didn't check
+> too carefully what happens under the hood.
 
-These 2 functions can now be removed as they are no longer in use.
+Keep in mind that the non-real-time thread is calling into glibc. While
+the real-time thread is a small loop doing nanosleep.
 
-Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
----
- drivers/soc/mediatek/mtk-cmdq-helper.c | 49 ++++++++++----------------
- include/linux/soc/mediatek/mtk-cmdq.h  | 35 ------------------
- 2 files changed, 18 insertions(+), 66 deletions(-)
+> > I tested the monitor on a real system. My system has some real-time audio
+> > processing processes (pipewire, firefox running youtube), yours also
+> > should.
+> 
+> That's a good point, also I didn't mention I was running these tests in a
+> VM (virtme-ng), so the system stress is minimal and perhaps the setup
+> triggers some different oddities (filesystems are overlays and some other
+> things are set up differently from a real system).
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 0a718ffa5f3b..5822a3d13bda 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -201,18 +201,6 @@ static int cmdq_pkt_mask(struct cmdq_pkt *pkt, u32 mask)
- 	return cmdq_pkt_append_command(pkt, inst);
- }
- 
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
--{
--	struct cmdq_instruction inst = {
--		.op = CMDQ_CODE_WRITE,
--		.value = value,
--		.offset = offset,
--		.subsys = subsys
--	};
--	return cmdq_pkt_append_command(pkt, inst);
--}
--EXPORT_SYMBOL(cmdq_pkt_write);
--
- int cmdq_pkt_write_pa(struct cmdq_pkt *pkt, u8 subsys /*unused*/, u32 pa_base,
- 		      u16 offset, u32 value)
- {
-@@ -229,27 +217,16 @@ EXPORT_SYMBOL(cmdq_pkt_write_pa);
- int cmdq_pkt_write_subsys(struct cmdq_pkt *pkt, u8 subsys, u32 pa_base /*unused*/,
- 			  u16 offset, u32 value)
- {
--	return cmdq_pkt_write(pkt, subsys, offset, value);
-+	struct cmdq_instruction inst = {
-+		.op = CMDQ_CODE_WRITE,
-+		.value = value,
-+		.offset = offset,
-+		.subsys = subsys
-+	};
-+	return cmdq_pkt_append_command(pkt, inst);
- }
- EXPORT_SYMBOL(cmdq_pkt_write_subsys);
- 
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
--			u16 offset, u32 value, u32 mask)
--{
--	u16 offset_mask = offset;
--	int err;
--
--	if (mask != GENMASK(31, 0)) {
--		err = cmdq_pkt_mask(pkt, mask);
--		if (err < 0)
--			return err;
--
--		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
--	}
--	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
--}
--EXPORT_SYMBOL(cmdq_pkt_write_mask);
--
- int cmdq_pkt_write_mask_pa(struct cmdq_pkt *pkt, u8 subsys /*unused*/, u32 pa_base,
- 			   u16 offset, u32 value, u32 mask)
- {
-@@ -267,7 +244,17 @@ EXPORT_SYMBOL(cmdq_pkt_write_mask_pa);
- int cmdq_pkt_write_mask_subsys(struct cmdq_pkt *pkt, u8 subsys, u32 pa_base /*unused*/,
- 			       u16 offset, u32 value, u32 mask)
- {
--	return cmdq_pkt_write_mask(pkt, subsys, offset, value, mask);
-+	u16 offset_mask = offset;
-+	int err;
-+
-+	if (mask != GENMASK(31, 0)) {
-+		err = cmdq_pkt_mask(pkt, mask);
-+		if (err < 0)
-+			return err;
-+
-+		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-+	}
-+	return cmdq_pkt_write_subsys(pkt, subsys, pa_base, offset_mask, value);
- }
- EXPORT_SYMBOL(cmdq_pkt_write_mask_subsys);
- 
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 4a2acceb8581..f4663fbfb5a0 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -113,17 +113,6 @@ int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *pkt, size_t siz
-  */
- void cmdq_pkt_destroy(struct cmdq_client *client, struct cmdq_pkt *pkt);
- 
--/**
-- * cmdq_pkt_write() - append write command to the CMDQ packet
-- * @pkt:	the CMDQ packet
-- * @subsys:	the CMDQ sub system code
-- * @offset:	register offset from CMDQ sub system
-- * @value:	the specified target register value
-- *
-- * Return: 0 for success; else the error code is returned
-- */
--int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
--
- /**
-  * cmdq_pkt_write_pa() - append write command to the CMDQ packet with pa_base
-  * @pkt:	the CMDQ packet
-@@ -150,19 +139,6 @@ int cmdq_pkt_write_pa(struct cmdq_pkt *pkt, u8 subsys /*unused*/,
- int cmdq_pkt_write_subsys(struct cmdq_pkt *pkt, u8 subsys,
- 			  u32 pa_base /*unused*/, u16 offset, u32 value);
- 
--/**
-- * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-- * @pkt:	the CMDQ packet
-- * @subsys:	the CMDQ sub system code
-- * @offset:	register offset from CMDQ sub system
-- * @value:	the specified target register value
-- * @mask:	the specified target register mask
-- *
-- * Return: 0 for success; else the error code is returned
-- */
--int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
--			u16 offset, u32 value, u32 mask);
--
- /**
-  * cmdq_pkt_write_mask_pa() - append write command with mask to the CMDQ packet with pa
-  * @pkt:	the CMDQ packet
-@@ -460,11 +436,6 @@ static inline int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *p
- 
- static inline void cmdq_pkt_destroy(struct cmdq_client *client, struct cmdq_pkt *pkt) { }
- 
--static inline int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
--{
--	return -ENOENT;
--}
--
- static inline int cmdq_pkt_write_pa(struct cmdq_pkt *pkt, u8 subsys /*unused*/,
- 				    u32 pa_base, u16 offset, u32 value)
- {
-@@ -477,12 +448,6 @@ static inline int cmdq_pkt_write_subsys(struct cmdq_pkt *pkt, u8 subsys,
- 	return -ENOENT;
- }
- 
--static inline int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
--				      u16 offset, u32 value, u32 mask)
--{
--	return -ENOENT;
--}
--
- static inline int cmdq_pkt_write_mask_pa(struct cmdq_pkt *pkt, u8 subsys /*unused*/,
- 					 u32 pa_base, u16 offset, u32 value, u32 mask)
- {
--- 
-2.43.0
+Oddities are good, they make some corner cases appear.
 
+Evidently I need to torture the monitors much more, let's see what else
+shows up..
+
+Best regards,
+Nam
