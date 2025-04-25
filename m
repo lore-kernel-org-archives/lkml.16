@@ -1,70 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CED23D2A7;
-	Fri, 25 Apr 2025 11:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91346242D89
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745580557; cv=none; b=eu7HG3s9Q6AvZYr7J/wjGvpwUUORghiQolFVJ/9ZMA02F56fS1wO4Nlyd/G5BsP9p4VNbGGyYsjTbJraBSixtUfVJJnHgI+gdILWX3yPiuRPxdfyes2fMN8rlDndaZ/7uRjgpL5OgAIp2bCgBRnojXWJkwz+sJihY5qXt0cjtr4=
+	t=1745580609; cv=none; b=Xrz7JZVl8Vl2fpKdyXPSWBzihJx75zL9R/pzjvzjPtH9c1DmJJhywJhEALsVE4TQN6K0GpuzJe/NscYfI3jw9jk0cU04TxMwxj004mJrEJHgw5ZGGUnoF0wPR+jVychGmFKBpVBxPiVtJh0ESuLQx/3KuqQSNehwCxi7WYigUwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745580557; c=relaxed/simple;
-	bh=l4pbyFyJKgsL7EPZcn7j6uWIxIOaHPFWYyhX+MyM2yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rHVJyQLb96KRZS5Iub95sIFjfW5c+we6rO/LIIcA4pFtShL/M+ksLKk3uop82ioYQYyvwLY8giPuqOwTuRGNh67kF6cnHs6P2KU9GCkUT81HHlTRIeFYudp614wBQFRr2DyKpSJDckp0BJqX1U8ccSeZO4qC90Lb3wg1Qgu96lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6T7d/VN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745580609; c=relaxed/simple;
+	bh=t23Xl2aGJqI5dCFOLXadAg2Ch/8/EBXNLbMaJ8LntOY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=VBuw8Du+RLTGVQE+9q3SdbcT/0JiWiqr17DQVYb8h/Ko/U+F+5V/A1BDeKwDikT0nBDMNKl1Hm3JfzEWJf9J2/R2/emSw7KtjrDm21XF4szQjnOPtQMfUm9PLROw2loaMLCKiREvNuGjjWTBkgdBpE/2vRpJDHwOIHcYK0jWkrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=DggQIO1D; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6T7d/VN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED620C4CEE4;
-	Fri, 25 Apr 2025 11:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745580555;
-	bh=l4pbyFyJKgsL7EPZcn7j6uWIxIOaHPFWYyhX+MyM2yo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h6T7d/VNOP5MFUv8fVjNrVzwKe108c7cd2yUnFIDkAERZT0OAORlxukO0Pa6ymvh6
-	 9jXRs814OZa8LyweGU4Ovrv/1l7oq6pGKM6Ge6iYdwGFxKwr9b2V85mW/2cqNS5W4c
-	 uzONH+E5U7Mh1qgsOBBsRL8WD3dCXImD4FxfxZGo0mk53kfM6cZtnH/u+NEuWWFtI1
-	 FU9zjuAyn78/x7oLfwRxthWiXuB1dcH564nhHip5b/8e3QF8MAojqeXhx55xU9c4tu
-	 tL7i2YTSnlp7JvCm8+rGB0mhVY6wz9Y58KeeDDG7iK6qAXHpbVYjRs0hL2EBMHClAq
-	 x2t++k7A+Wx6A==
-Date: Fri, 25 Apr 2025 13:29:10 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: carlos.song@nxp.com
-Cc: aisheng.dong@nxp.com, frank.li@nxp.com, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-i2c@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Message-ID: <34ally74jbpae6etevqskr4zmcv5xyac46n4hl2j5ybihwtezn@jd2gvr762gs7>
-References: <20250421062341.2471922-1-carlos.song@nxp.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DggQIO1D"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250425112957euoutp0158057d7ca8dd235c5573610be59a8698~5jE4lJ13t1490014900euoutp01B
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 11:29:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250425112957euoutp0158057d7ca8dd235c5573610be59a8698~5jE4lJ13t1490014900euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745580597;
+	bh=Zlx0XyWwMoPWWBL42Jl0fyK9NUIVNTNt8hE5fXcMSVA=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=DggQIO1Dn3hqdBnUpk9T3ndOj6HfxgRuLYgJzeJ5XvFDzddAjdey3Zq+fb/6qiNkp
+	 hc/n1AFV4enKhldXIwxW856J4Fczh5N/d/bxid4RhGyomtCEIXLgsJMZzf64yNwzmP
+	 s83pyW5DsmIA5TOTlmVZwbGyzyfXSfpBbU18HOrw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250425112957eucas1p281bfd7cf959d48b35649ce4b9827798d~5jE4VDFiR2263022630eucas1p2N;
+	Fri, 25 Apr 2025 11:29:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 06.26.00837.5327B086; Fri, 25
+	Apr 2025 12:29:57 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250425112957eucas1p110e8b84689ce013eb26967a47681ee75~5jE4DxSlQ3274832748eucas1p1z;
+	Fri, 25 Apr 2025 11:29:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250425112957eusmtrp1be696d5f4241fd870afbbb9ab46a2f1f~5jE4DWGcc1393913939eusmtrp1U;
+	Fri, 25 Apr 2025 11:29:57 +0000 (GMT)
+X-AuditID: cbfec7f2-32fff70000000345-6e-680b72355e8e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 03.D7.19654.5327B086; Fri, 25
+	Apr 2025 12:29:57 +0100 (BST)
+Received: from AMDC4653.digital.local (unknown [106.120.51.32]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250425112956eusmtip2230eed71c84b4db44d3bc79fddcfc277~5jE3sVOkN1539315393eusmtip2_;
+	Fri, 25 Apr 2025 11:29:56 +0000 (GMT)
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev, Marek Szyprowski
+	<m.szyprowski@samsung.com>
+Subject: [GIT PULL] dma-mapping fixes for Linux 6.15
+Date: Fri, 25 Apr 2025 13:29:39 +0200
+Message-Id: <20250425112939.501985-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421062341.2471922-1-carlos.song@nxp.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNIsWRmVeSWpSXmKPExsWy7djPc7qmRdwZBhMPK1j8+mJhcXnXHDaL
+	tUfusls86nvL7sDicWLGbxaPF5tnMnr0bVnF6PF5k1wASxSXTUpqTmZZapG+XQJXxtS7k1gL
+	3vBUtN5by9rAeJWri5GTQ0LAROL6l81MXYxcHEICKxgl3q66AuV8YZT4/+4dK4TzmVFiz7HF
+	zF2MHGAt+3cqQcSXM0q0rNnDCtex+dMzZpC5bAKGEl1vu9hAbBEBI4nPL66wgjQzC6RJrLyr
+	DxIWBppz5fk/dpAwi4CqxIf5eSBhXgE7iUv/H7NCXCcvsf/gWWaIuKDEyZlPWEBsZqB489bZ
+	zCBrJQT+skvsuz4XqsFF4vi8y+wQtrDEq+NboGwZidOTe1ggGtoZJRb8vs8E4UxglGh4fosR
+	ospa4s65X2wQh2pKrN+lDxF2lJhwdjkrxPN8EjfeCkIcwScxadt0aJjwSnS0CUFUq0nMOr4O
+	bu3BC5eYIWwPibc//4KdKSQQK9H24jnrBEaFWUhem4XktVkINyxgZF7FKJ5aWpybnlpsmJda
+	rlecmFtcmpeul5yfu4kRmD5O/zv+aQfj3Fcf9Q4xMnEwHmKU4GBWEuFdas2dIcSbklhZlVqU
+	H19UmpNafIhRmoNFSZx30f7WdCGB9MSS1OzU1ILUIpgsEwenVAOT0tub4tI7fhq+rn8iPTc7
+	dILoSqd0H9PTHW4+z891PDQQZnF5wzVZQc9gp+Cn/2wxJ5LmudXanlzu4Ji41MQx/pmm4Jf2
+	BwofT9/gyJWZs7CPI+mp/A11SeYtN/UUV7K5+t9YtrTi2TPXllKW3sTWYz8Lv0jdnaz7oOu4
+	wKeXT3y6uD/EqP6z3m1alfdFruvRjaXPH/xOkyoscHQ6f+jjAv5ri9mt1SeG6Uo5K33kZCs/
+	4Ne+/dSrhWf4Tt6cMuf///Wm1gU+PfMebKxkzMgpvfR/T7zmfZWjHgbB60tEp3RHNej+SjOr
+	uCNcuWRLu2ReKl+I6anZ6gG3pFoMf3lofNzlf1hGzLt1+qYTte+UWIozEg21mIuKEwHksUPI
+	jgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsVy+t/xe7qmRdwZBnv+cVr8+mJhcXnXHDaL
+	tUfusls86nvL7sDicWLGbxaPF5tnMnr0bVnF6PF5k1wAS5SeTVF+aUmqQkZ+cYmtUrShhZGe
+	oaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJextS7k1gL3vBUtN5by9rAeJWri5GDQ0LA
+	RGL/TqUuRi4OIYGljBLtJ46ydjFyAsVlJE5Oa4CyhSX+XOtiA7GFBD4xSkxe6QBiswkYSnS9
+	hYiLCBhJfH5xhRVkJrNAhsSeSbIgYWGg8Vee/2MHCbMIqEp8mJ8HEuYVsJO49P8x1HR5if0H
+	zzJDxAUlTs58wgJiMwPFm7fOZp7AyDcLSWoWktQCRqZVjCKppcW56bnFRnrFibnFpXnpesn5
+	uZsYgSG77djPLTsYV776qHeIkYmD8RCjBAezkgjvUmvuDCHelMTKqtSi/Pii0pzU4kOMpkDn
+	TWSWEk3OB0ZNXkm8oZmBqaGJmaWBqaWZsZI4L9uV82lCAumJJanZqakFqUUwfUwcnFINTFXK
+	qxhuv9t+XHLbpHhj1TvRqyYZv/qhPCdWwqXyhs4Z9/T4r538m5jlnv38cFGq7ZiWhLqHrbHs
+	uluPivc9M1vdkDt7NcvVbaKRHe7eEzd6XF05c+qnszZrC5VaDrJ/N8jzk93ud+dduHiOtVKB
+	xIS+Z23rvSU/cX4Q1tzZFqHqMs/i2Kc+s/rMLb6RR2+zSB0K1XSe8Mw4WVj/+3I71W5RXePU
+	7dacrnflJtqlr/M4d9zE4K4HZ+Fix2lPs6yadIReK3Fdbt75d29ZiWjK7vAzCXPvKS0S7dVJ
+	Wnaw2Ci6QPNNa8YhZ1eeN/51dn6W542lvjbfk6z5vO3K5F3mldt4YxZu6Qy+d/W+dfYTJZbi
+	jERDLeai4kQAaJWmbOICAAA=
+X-CMS-MailID: 20250425112957eucas1p110e8b84689ce013eb26967a47681ee75
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250425112957eucas1p110e8b84689ce013eb26967a47681ee75
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250425112957eucas1p110e8b84689ce013eb26967a47681ee75
+References: <CGME20250425112957eucas1p110e8b84689ce013eb26967a47681ee75@eucas1p1.samsung.com>
 
-On Mon, Apr 21, 2025 at 02:23:41PM +0800, carlos.song@nxp.com wrote:
-> From: Clark Wang <xiaoning.wang@nxp.com>
-> 
-> Deferred probe with pm_runtime_put() may delay clock disable, causing
-> incorrect clock usage count. Use pm_runtime_put_sync() to ensure the
-> clock is disabled immediately.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-What is the outcome of the incorrect clock usage count? Do you
-have any logs?
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> Signed-off-by: Jun Li <jun.li@nxp.com>
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+are available in the Git repository at:
 
-Carlo's SoB should be at the end of the chain. Should be nice to
-know what these are, though, are they co-developed-by? tested-by?
-Why so many SoB's?
+  https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.15-2025-04-25
 
-(no need to resend for this)
+for you to fetch changes up to 89461db349cc00816c01d55507d511466b3b7151:
 
-Andi
+  dma-coherent: Warn if OF reserved memory is beyond current coherent DMA mask (2025-04-22 17:44:09 +0200)
+
+----------------------------------------------------------------
+dma-maping fixes for Linux 6.15
+
+- avoid unused variable warnings (Arnd Bergmann, Marek Szyprowski)
+- add runtume warnings and debug messages for devices with limited DMA
+  capabilities (Balbir Singh, Chen-Yu Tsai)
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      dma/contiguous: avoid warning about unused size_bytes
+
+Balbir Singh (2):
+      dma/mapping.c: dev_dbg support for dma_addressing_limited
+      dma-mapping: Fix warning reported for missing prototype
+
+Chen-Yu Tsai (1):
+      dma-coherent: Warn if OF reserved memory is beyond current coherent DMA mask
+
+Marek Szyprowski (1):
+      dma-mapping: avoid potential unused data compilation warning
+
+ include/linux/dma-mapping.h | 12 ++++++++----
+ kernel/dma/coherent.c       | 12 +++++++++---
+ kernel/dma/contiguous.c     |  3 +--
+ kernel/dma/mapping.c        | 25 +++++++++++++++++--------
+ 4 files changed, 35 insertions(+), 17 deletions(-)
+----------------------------------------------------------------
+
+Thanks!
+
+Best regards
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
