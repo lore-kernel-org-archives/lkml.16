@@ -1,139 +1,150 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC3A2594B4;
-	Fri, 25 Apr 2025 11:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2262571DF;
+	Fri, 25 Apr 2025 11:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745579933; cv=none; b=iNHzg7KV9aIaKVD9ozzzkpw4EtXMDinaWgXJ1WgS4z/JQAzIEpe38De24XIninf2MXxjZif8jYpu4Tx1kfF/Q8GxjHtAKuLUhnZORDh+6OgJYVEwtYmXZd/CSNGaQXkv020wNAt4rE6t7ZaRZqGJrzrNKY9tnzbjqXA3GPpYmNs=
+	t=1745579932; cv=none; b=KRIUgycEfqpkKpocOIfb4ZuczRf3lCZq4zwttlEemvJKtwS4xqm0IlrSVSpRG8ms0AlGlEurznd6r80XWFUWC3a1JgseRid8K9P1bFOhP95t5HLGMmz7pXw1X7cXItr3gBGadufyFUoGw516ThgNjm6sDPQI7XDt8nLoMacNUhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745579933; c=relaxed/simple;
-	bh=T7PKyVUt3crhS062wcPX6RuQLioSxyB4opN5XxKCgAY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wx50jAkU5BEXkFCTBFqVUxM5LO0TqagfUgt/0XLmtW7xhEIn7Z9H84gIyy5BgFuh/n8t1AKqNtUKNyuG6S12r+IJAH+LRIBjNZXAAPkpegxqifMYYVD1TcUTg4msVhtavdAJ0r9XypIzwT8PxBUKTKT6akI5kp8xirgoT55q6/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=gN9XDfXO; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1745579932; c=relaxed/simple;
+	bh=skvexJzYlW4JuBMtInk0nYvYYmknX8QIlJFtBmm34aE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ib+Npc+HLdJspEQkNIc+DUJtWRVMCsEVlM9Fh2WYbqh7t3WN2/BGwIPv99m/fVmMKd6UsZ9OwJ4CUxzT0N+a+3UOm4KeZOCbNUu0WNYluMg+lTRV49xsptZ5EAadjmwpJsgWYgU4R5RqY35FV3v/mbqqTCybyJR3Dy+fRlEsyNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=b4W7lB3q; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="gN9XDfXO"
-Received: from localhost.localdomain (unknown [IPv6:2a02:2149:8a3b:5a00:3490:6581:3910:8337])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 4DF772E028F6;
-	Fri, 25 Apr 2025 14:18:48 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1745579929;
-	bh=EOM7xb1wc43oU0lf5rEDD2j76CA4sncrvzR8q1EepOk=; h=From:To:Subject;
-	b=gN9XDfXO9bZuksSsw7C9sWYvNPOBsB77UZG1AoldwsHpf3RsJacLdDwCOxqYqiS+o
-	 C9HcCfuMGURG2GWy8WDQEWwLryfHeISXzXqmvquLiiHfOiyENWtNc99prITGsoQsQe
-	 Tvrg4ba7t6hVZrdU9D/N6b0yKzDVYr4tj4KkLo+o=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a02:2149:8a3b:5a00:3490:6581:3910:8337) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
-	Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org,
-	sre@kernel.org,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	mario.limonciello@amd.com,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v10 16/16] platform/x86: oxpec: Convert defines to using tabs
-Date: Fri, 25 Apr 2025 13:18:21 +0200
-Message-ID: <20250425111821.88746-17-lkml@antheas.dev>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425111821.88746-1-lkml@antheas.dev>
-References: <20250425111821.88746-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="b4W7lB3q"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4ZkVhj1yVYz1Mvv;
+	Fri, 25 Apr 2025 11:18:45 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4ZkVhh6BT1z2xMR;
+	Fri, 25 Apr 2025 11:18:44 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=b4W7lB3q;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1745579925;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BZuo5HAuIG4iMY22uUoOZzzfPbaHnwAOsOxEtFWKQs4=;
+	b=b4W7lB3qo2Bzx23qcUfuqw5oVJPoIzt70Ey1oSB35ORcn/k1Ty4CKomxzaPlb75P8mwEj9
+	Pho6JdLtgnSZVRIHnsST/s7HtLjE2Dw8oVVuevy5uvufTEsWFr7bZXAgUzIQzLoLBwA8e2
+	jCPSu7yU5I6NS+0kqhX7zXlkHE6fyVdrUYwxEQGz6CpxQi9CKjWGQLokS3/TuD0BWWOu/j
+	BDpVOi/mlI5t1TCSrE9gO30SROsoJO2jznkwmW0TK5QQ4gj7KCYH8aH+mr82hgQQtMSEh+
+	BBmwKfWRQ9YQhF5ZStX3jIuDFZXYh3CaKw4IaUr0m6J5dyxu/Tcq+rFPS9xo2w==
+X-CM-Envelope: MS4xfGdsihsR6tcCoeTf3TelIQMkvCpQl2Bg60QdT1w7vUryS7Oz1m8jWYCrtSKiQURaaGo8oEmGj9iGaJjpax4cyr1APUi5C8sIRqRVaWiuHfPd+IC1S0F4 V4Wohb4QNahvOvDIFEhli/rtTwfbiiAMoLqEJnQlAY2JY0D5SfBohbse2M8LWihoIUR1MNX6WsCUELoyUs4Zy72s7LfaBG2T26YOrfHSxNH9QVQQc9DMIa6I gEkAEuvbXO/RCcRKd1PQoYP0G2HBEYKKTbCRr5ms1SdiwvvAW1i56SEhysqfJil11h9L7Zjl39Iuc4LP3Eycli/e0c/QghXeDjMPDP5OShRZ2wmXRN0S4+PJ keU9RAYk
+X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=680b6f95 a=xVxOAnYOZqKVbrsbIgLjXQ==:117 a=xVxOAnYOZqKVbrsbIgLjXQ==:17 a=IkcTkHD0fZMA:10 a=cEcZ1jVqqoP-keUFMK0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+Message-ID: <36261b27-99b9-4e9e-ac1c-87c06c6dc0bd@jjverkuil.nl>
+Date: Fri, 25 Apr 2025 13:18:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] media: v4l: get_device() when no errors are possible
+ anymore
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <13860e023a920cd472cf5acecee88794c815b9c4.1743199603.git.mirq-linux@rere.qmqm.pl>
+Content-Language: en-US, nl
+From: Hans Verkuil <hans@jjverkuil.nl>
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ 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
+In-Reply-To: <13860e023a920cd472cf5acecee88794c815b9c4.1743199603.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174557992913.23354.14997138938371653254@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-Spampanel-Class: ham
 
-The defines used spaces previously. Convert all of them to use tabs.
+Hi Michał,
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/oxpec.c | 36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+On 28/03/2025 23:07, Michał Mirosław wrote:
+> Avoid leaking reference from get_device() in the error path.
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 692a6d6d08316..a07ba9c2fe4f5 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -64,36 +64,36 @@ static enum oxp_board board;
- static struct device *oxp_dev;
- 
- /* Fan reading and PWM */
--#define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
--#define OXP_2_SENSOR_FAN_REG           0x58 /* Fan reading is 2 registers long */
--#define OXP_SENSOR_PWM_ENABLE_REG      0x4A /* PWM enable is 1 register long */
--#define OXP_SENSOR_PWM_REG             0x4B /* PWM reading is 1 register long */
--#define PWM_MODE_AUTO                  0x00
--#define PWM_MODE_MANUAL                0x01
-+#define OXP_SENSOR_FAN_REG		0x76 /* Fan reading is 2 registers long */
-+#define OXP_2_SENSOR_FAN_REG		0x58 /* Fan reading is 2 registers long */
-+#define OXP_SENSOR_PWM_ENABLE_REG	0x4A /* PWM enable is 1 register long */
-+#define OXP_SENSOR_PWM_REG		0x4B /* PWM reading is 1 register long */
-+#define PWM_MODE_AUTO			0x00
-+#define PWM_MODE_MANUAL			0x01
- 
- /* OrangePi fan reading and PWM */
--#define ORANGEPI_SENSOR_FAN_REG        0x78 /* Fan reading is 2 registers long */
--#define ORANGEPI_SENSOR_PWM_ENABLE_REG 0x40 /* PWM enable is 1 register long */
--#define ORANGEPI_SENSOR_PWM_REG        0x38 /* PWM reading is 1 register long */
-+#define ORANGEPI_SENSOR_FAN_REG		0x78 /* Fan reading is 2 registers long */
-+#define ORANGEPI_SENSOR_PWM_ENABLE_REG	0x40 /* PWM enable is 1 register long */
-+#define ORANGEPI_SENSOR_PWM_REG		0x38 /* PWM reading is 1 register long */
- 
- /* Turbo button takeover function
-  * Different boards have different values and EC registers
-  * for the same function
-  */
--#define OXP_TURBO_SWITCH_REG           0xF1 /* Mini Pro, OneXFly, AOKZOE */
--#define OXP_2_TURBO_SWITCH_REG         0xEB /* OXP2 and X1 */
--#define OXP_MINI_TURBO_SWITCH_REG      0x1E /* Mini AO7 */
-+#define OXP_TURBO_SWITCH_REG		0xF1 /* Mini Pro, OneXFly, AOKZOE */
-+#define OXP_2_TURBO_SWITCH_REG		0xEB /* OXP2 and X1 */
-+#define OXP_MINI_TURBO_SWITCH_REG	0x1E /* Mini AO7 */
- 
--#define OXP_MINI_TURBO_TAKE_VAL        0x01 /* Mini AO7 */
--#define OXP_TURBO_TAKE_VAL             0x40 /* All other models */
-+#define OXP_MINI_TURBO_TAKE_VAL		0x01 /* Mini AO7 */
-+#define OXP_TURBO_TAKE_VAL		0x40 /* All other models */
- 
--#define OXP_TURBO_RETURN_VAL           0x00 /* Common return val */
-+#define OXP_TURBO_RETURN_VAL		0x00 /* Common return val */
- 
- /* X1 Turbo LED */
--#define OXP_X1_TURBO_LED_REG           0x57
-+#define OXP_X1_TURBO_LED_REG		0x57
- 
--#define OXP_X1_TURBO_LED_OFF           0x01
--#define OXP_X1_TURBO_LED_ON            0x02
-+#define OXP_X1_TURBO_LED_OFF		0x01
-+#define OXP_X1_TURBO_LED_ON		0x02
- 
- /* Battery extension settings */
- #define EC_CHARGE_CONTROL_BEHAVIOURS	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)             | \
--- 
-2.49.0
+It's not actually leaking anything. If dev == NULL, then get_device
+does nothing.
+
+I'll reject this patch.
+
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/media/v4l2-core/v4l2-device.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-device.c b/drivers/media/v4l2-core/v4l2-device.c
+> index 5e537454f5cd..277ea2c241b8 100644
+> --- a/drivers/media/v4l2-core/v4l2-device.c
+> +++ b/drivers/media/v4l2-core/v4l2-device.c
+> @@ -23,7 +23,6 @@ int v4l2_device_register(struct device *dev, struct v4l2_device *v4l2_dev)
+>  	spin_lock_init(&v4l2_dev->lock);
+>  	v4l2_prio_init(&v4l2_dev->prio);
+>  	kref_init(&v4l2_dev->ref);
+> -	get_device(dev);
+>  	v4l2_dev->dev = dev;
+>  	if (dev == NULL) {
+>  		/* If dev == NULL, then name must be filled in by the caller */
+> @@ -32,6 +31,8 @@ int v4l2_device_register(struct device *dev, struct v4l2_device *v4l2_dev)
+>  		return 0;
+>  	}
+>  
+> +	get_device(dev);
+> +
+>  	/* Set name to driver name + device name if it is empty. */
+>  	if (!v4l2_dev->name[0])
+>  		snprintf(v4l2_dev->name, sizeof(v4l2_dev->name), "%s %s",
 
