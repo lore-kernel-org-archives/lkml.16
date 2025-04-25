@@ -1,126 +1,167 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5B81607AC;
-	Fri, 25 Apr 2025 14:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F11B24BC10
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 14:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592433; cv=none; b=HpCfKkdEBltF8SyTNrKr8dCZ5uEFWToQQyrhKwTx1io1+EcU6A3CPET6lf5YRQOoGu1IfRALrHeSXgRx2Su5D5I0Clv8lCuR4SeSRoree37l0cikgvKcQm+efuFeHNOUHESpVCB9ru9C7QgYlxfELbIZcN1U6KIJ/Cm7qS/0TTw=
+	t=1745592444; cv=none; b=GmeiBzx6jwOpePnOgrhHu3L78CiLuTNOh88K3kR06/Lp7rHs25Wbe10jUcW9xb9RhYgOoLm97lJijnxeXeFYDNHpp6qIBvPtEoc11qc/NzUUWIk+3jNOU+Mnn1qKtb8lwPqtq8sZOV60HcFYPnOcpkwUlWf0l2+28AeaCx/5XdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592433; c=relaxed/simple;
-	bh=LER9aU+L0aeoLrB3bj1csguH/ZwflKpZIZu3s7LPh+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r4bFff7mTTOfxFgFpBf57q1i8fofOD5cZbgRG/cE08jKCBuHrafbpth6Qkc12rusQCvUB8EkQNpyZv+7jqv/7DuvMhXGyerrMKA2KWW/gyuZHEXwex+rngKnZKMAimikxtHoYKy0L/R8B9xZoCAjXJm5zpi+VVavu200XWbevVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XSIB+P22; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745592444; c=relaxed/simple;
+	bh=fPAudd0pNdvSq70SAtg2Ygg2O9zP1xgrVtnfFsN3fh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oBRCZ0mvRa1k1ytjBVldijKeSczp+PZRN7Hf4sIr2FEvhjrimYaoZeDVVbg9A5Ibhh0YtXoVdl1GVjCCqRpxN0GkepggDkRWi1tUN5qTyU53Apj2KMuuY9HFcovJExgT1dV4nWVABPd+mPKOrNktrArIMbJxIQBDR6nP+vnuSjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z79926m5; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XSIB+P22"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4769b16d4fbso15330721cf.2;
-        Fri, 25 Apr 2025 07:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z79926m5"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224191d92e4so26751585ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:47:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745592429; x=1746197229; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5vQ3ECSy7kq++7n9LdZsctmJdxrSk1yP0N+IbR2cYEw=;
-        b=XSIB+P2272sx59mwGrBV4q8mItNAUWHOyDqez9YDzyyfsGb2DOUzBkWvnlZMi5rOUh
-         ZcG1mRv6DkJvdp2oZWxldbiY4T1ktmu9BW2l7f9QL+5fJcfx5qDZgTHcaMmx4z93PuWU
-         iZNe27njzlUuosbMshEApJpYVPtx78tyO5bFgG4C5ZWFLZqpIsLZ5OZ5TCMj7JhC7vh5
-         DaA1Rxar8BRH7mWWfifJJ12g0mMnlsHCFcYVlyLp1Km9efazdrTctQxFPBJTh9SWbRqa
-         R+H43h5Bn20nOtsaGjQe/W6pE8e/T+OSzlKeCIkkS27N1+I1W6W7zE5n+Ct7GP3F9p8V
-         BE7Q==
+        d=linaro.org; s=google; t=1745592442; x=1746197242; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tMds6CmcdH779xJQucw6BprWPQmeQRUV0l1L2HM0TV4=;
+        b=z79926m52YRywzSBxfcdXJ1kijC9lg3l4zWjYj9kuoguWruPIbvxz/h/oV0azWjgSt
+         prZMO2VkKjmKNWz3a8F8SegNkdWtFM6/+/zphXyds/jpIr60vasdyAP0ERwPvQv+foT9
+         Xg3gDXQpgK9W9MHw4fsYjySCMoFJD/Mhw0YYwiAC6gjyRbgErqbJ4sLW/owpNtIB0mop
+         VlKDQqUdIFtnc1JShaROE2sBJfzr1kpvB+VOuQTGvU3q/TWHOxXzUktlKuAwD/DfK7Uu
+         2hoiF405FR551wBJPZJbBLCb0YcqNcqq6DtLcUcdBXK+eq6q+4LN49S4RfOtr6tkixdY
+         hn5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745592429; x=1746197229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5vQ3ECSy7kq++7n9LdZsctmJdxrSk1yP0N+IbR2cYEw=;
-        b=lxPZPEbEydvcvV5z1q7S3iCJ21KNEBUAtedZee1fJHldA/jjBueJdnkk5AGp/4drUo
-         eNA8AoIyk3tv2GQNWLG3Aq9x4P9K0NQ9WNKLDvuzvIN6AEuyHYhhwhC1wmtkRiN5DV4+
-         fvjPxHI7YNRxa0czUL/XDLi3MvaLJJaYmQvZkI7bQGWPRI/uamGVYCduvgAVIV8S0yNX
-         +CbX0j8btnvMkERVNjHPkfUCvfX14uS6d52LvWFSnJrAM5071U1FT//yqdutU/FqBDAC
-         v+5wuLkrMYQ2AR4ieVqvTF4Ga8F2khw/MRDEPOgJL93hfUWy8LCCC/8uV1n09QBmY5vG
-         jdWg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8qY2AQ9yQY36jb9tT5LYIhOi2NiRO2/wdBiOu/vrdN/nVQWjCgdFeh3ol877UM02PIht15DK4h+NjKso=@vger.kernel.org, AJvYcCV9ellItojGU85HMgTRSoroP/UkywMLQIVxQFLpP38M6EwLnpNgh8T3UnOVv388JeDmOhSahRUS@vger.kernel.org, AJvYcCXmhigCO7MiOsUCi6bA89fpJ90JTyy6EdW/l9j1QF8TuTSdNM3omGcUOQDAi90EBoKBOoiwZbiBmAhP@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIJkWKpbOsxwsmDKjsJX/2cTcNIMfMioa1HCfbYu6x6+Fx9OCd
-	Ff66V9d+W89xYcpPCexYFtZY4g/cV3W1M8jVNDXuEU5zA4rv9RIaIPfKchEq5osMJn0yb2ZK6r7
-	j8LIbYp4xMwSyZ2hdEs1TXDgdANw=
-X-Gm-Gg: ASbGncsQ9bhXapXWoGz04u+9pFUpPkJzzCucvTzvbj7r+VAFGi+7c4EtSc2X98oqT2t
-	Uy3iZVv6oDy0oDa9KLdmNHlKGK07dYDBjmArAvC2W/9yGBxUHG3d5dGQ7XPcJ2BFqmUdgXNUaDq
-	Cv5QyDJHcOfqYIb3IS8fH+rsoarpYfdC8xELi85EElj2SKYxngbE86Q5R6GgITgCSz
-X-Google-Smtp-Source: AGHT+IHdyaZUkjx2wLyQvz4EyKo0TT9LnRXvma57qycBPjr9Qe5W18EFaKNddII2vuw42lPtPbimo+O1vIN0gI8NBpY=
-X-Received: by 2002:a05:622a:30c:b0:476:90ea:8ee4 with SMTP id
- d75a77b69052e-4801e3f7027mr45924211cf.32.1745592428986; Fri, 25 Apr 2025
- 07:47:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745592442; x=1746197242;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tMds6CmcdH779xJQucw6BprWPQmeQRUV0l1L2HM0TV4=;
+        b=mX0KEpcKfNNnbvFCXtHrlyT+dilnWcOdKYUIE4/Obv9rM4vjOntb0tlov/pOHCWCrL
+         CejpLRoqE9gLmuzIQ9APlmttyxeNG4i18wEzzPj76Zojj0isPwEhGaLx7hbtwxUi0MNG
+         RO8pv6su0Xez0ePBjTM5Iq6W4Ha5X5EaBaAlXiGhm7PnHnTlXKjudxeJ4mzYDlfjX1y+
+         jKCO976HISabP9cG9vWV7U9bb2Th7xepTCpc94/3vYsvp83ZnJwv2METF9tip2YrAicp
+         Xhs26gK2mRBvqx0CFE4BvfR8LZ9v/rcTXdKqmOluNuT0vAjXdQ9KSkd8W1uJjFVE4Jlb
+         6F8w==
+X-Forwarded-Encrypted: i=1; AJvYcCW1LGsTfV0kzhM89T/ie96M3YPs8iLVLOSd4JX4GIzQyK2Sfo85TYlSjROqED9TWR6p6kJT3usFJG8/U1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfnAOhjoJMZY+lB537knk7w2gVjiA0YB/b6T6BFAXTFtZ58uy8
+	gDfD93+eQ5ZX6oRksiRZE/lFlhGYcsM8Ul+DN/5k0biYJeWhS2X8Sy4IT9TZaQ==
+X-Gm-Gg: ASbGnct0wUwCkMlf/pg8TuUwcuxiS5Ay7x44SF9nWYDYCq52KZ3oZQ1qJpvTImkzCA/
+	nOpBy2h42if8TF6+bjgxGtXj1XYqXCfy12P1xvjMRfUuAP4EtwsGkDhFerngFbJ0zS2ydiUxSIm
+	OQj6Wps/lS+DnVQ3gtqjeP/G2U9nhvK6ZSEN6je7n693xTaiwhOPLklyezOeaOY0tooYq52f0XP
+	LjIP+WrghHjnviV9FRexh2TsaoMPxCdA+7EQJPQZUUDz+EKLucD8tQUlcdSMZvZANblPNoVDznI
+	IvNDMm8aOiRiO53MNniOMIq0ps1/Cy/hVE+RtfOG7GW0gs63i5ea
+X-Google-Smtp-Source: AGHT+IGlccZ19AfD3jdnufZp8LMe8Yz57J7vptNmjyBiI0lLh+m+16U65auA9epwL1IrRm+aNvHWgg==
+X-Received: by 2002:a17:902:e805:b0:223:5de7:6c81 with SMTP id d9443c01a7336-22dbf5f34f9mr38226475ad.27.1745592441695;
+        Fri, 25 Apr 2025 07:47:21 -0700 (PDT)
+Received: from thinkpad ([120.56.201.179])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db521614dsm32962505ad.215.2025.04.25.07.47.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 07:47:21 -0700 (PDT)
+Date: Fri, 25 Apr 2025 20:17:14 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, 
+	Jeff Johnson <jjohnson@kernel.org>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
+	Yan Zhen <yanzhen@vivo.com>, Youssef Samir <quic_yabdulra@quicinc.com>, 
+	Qiang Yu <quic_qianyu@quicinc.com>, Alex Elder <elder@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kunwu Chan <chentao@kylinos.cn>, kernel@collabora.com, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
+Subject: Re: [PATCH v2] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+Message-ID: <eypd4xigl3yydfj47usazm7ca3kplz5w7bkk7qf6piks4vtaa4@rmecjnlfix66>
+References: <20250410145704.207969-1-usama.anjum@collabora.com>
+ <h2wv7drxntokziiwbzjw5xjzbctbomp6cfcba7ppfbih6o7so7@p6dazv32xfx4>
+ <1136c7cb-1c7b-410b-93d2-c74aec939196@collabora.com>
+ <cfb3sntvqhupyhm2m5tevpsl77r6mzl2aqzr3wtxvr22bezmp3@qjh7ftr2kdjy>
+ <4d87ef88-3533-4255-adc6-6c268818fe25@collabora.com>
+ <y5odcxzms6mwpz5bdxhbjxo7p6whsdgwm772usmmzqobhf6nam@p4ul7vn7d3an>
+ <a403eb91-c90d-444c-b508-c428a8ef1447@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425-uhci-clock-optional-v1-1-a1d462592f29@gmail.com> <2025042549-comma-whoever-ffe7@gregkh>
-In-Reply-To: <2025042549-comma-whoever-ffe7@gregkh>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 25 Apr 2025 18:47:20 +0400
-X-Gm-Features: ATxdqUGwH3DNr9STx1xUjKlf5u6ZwPeMTDrUv9cMSBaOb0zfPHoNmV5rMIxw104
-Message-ID: <CABjd4Yxmk9qLekptHjN3pO7rn8kJ=rtNRBSMJCCU8rafROsq6g@mail.gmail.com>
-Subject: Re: [PATCH] usb: uhci-platform: Make the clock really optional
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>, 
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a403eb91-c90d-444c-b508-c428a8ef1447@collabora.com>
 
-On Fri, Apr 25, 2025 at 6:20=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Apr 25, 2025 at 06:11:11PM +0400, Alexey Charkov wrote:
-> > Device tree bindings state that the clock is optional for UHCI platform
-> > controllers, and some existing device trees don't provide those - such
-> > as those for VIA/WonderMedia devices.
-> >
-> > The driver however fails to probe now if no clock is provided, because
-> > devm_clk_get returns an error pointer in such case.
-> >
-> > Switch to devm_clk_get_optional instead, so that it could probe again
-> > on those platforms where no clocks are given.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 26c502701c52 ("usb: uhci: Add clk support to uhci-platform")
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  drivers/usb/host/uhci-platform.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/usb/host/uhci-platform.c b/drivers/usb/host/uhci-p=
-latform.c
-> > index a7c934404ebc7ed74f64265fafa7830809979ba5..62318291f5664c9ec94f245=
-35c71d962e28354f3 100644
-> > --- a/drivers/usb/host/uhci-platform.c
-> > +++ b/drivers/usb/host/uhci-platform.c
-> > @@ -121,7 +121,7 @@ static int uhci_hcd_platform_probe(struct platform_=
-device *pdev)
-> >       }
-> >
-> >       /* Get and enable clock if any specified */
-> > -     uhci->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > +     uhci->clk =3D devm_clk_get_optional(&pdev->dev, NULL);
->
-> Why does this need to go to all stable trees all of a sudden?  This has
-> been "broken" for years, what changed recently to cause this to show up?
+On Fri, Apr 25, 2025 at 04:41:43PM +0500, Muhammad Usama Anjum wrote:
+> On 4/25/25 1:59 PM, Manivannan Sadhasivam wrote:
+> > On Fri, Apr 25, 2025 at 12:42:38PM +0500, Muhammad Usama Anjum wrote:
+> >> On 4/25/25 12:32 PM, Manivannan Sadhasivam wrote:
+> >>> On Fri, Apr 25, 2025 at 12:14:39PM +0500, Muhammad Usama Anjum wrote:
+> >>>> On 4/25/25 12:04 PM, Manivannan Sadhasivam wrote:
+> >>>>> On Thu, Apr 10, 2025 at 07:56:54PM +0500, Muhammad Usama Anjum wrote:
+> >>>>>> Fix dma_direct_alloc() failure at resume time during bhie_table
+> >>>>>> allocation. There is a crash report where at resume time, the memory
+> >>>>>> from the dma doesn't get allocated and MHI fails to re-initialize.
+> >>>>>> There may be fragmentation of some kind which fails the allocation
+> >>>>>> call.
+> >>>>>>
+> >>>>>
+> >>>>> If dma_direct_alloc() fails, then it is a platform limitation/issue. We cannot
+> >>>>> workaround that in the device drivers. What is the guarantee that other drivers
+> >>>>> will also continue to work? Will you go ahead and patch all of them which
+> >>>>> release memory during suspend?
+> >>>>>
+> >>>>> Please investigate why the allocation fails. Even this is not a device issue, so
+> >>>>> we cannot add quirks :/
+> >>>> This isn't a platform specific quirk. We are only hitting it because
+> >>>> there is high memory pressure during suspend/resume. This dma allocation
+> >>>> failure can happen with memory pressure on any device.
+> >>>>
+> >>>
+> >>> Yes.
+> >> Thanks for understanding.
+> >>
+> >>>
+> >>>> The purpose of this patch is just to make driver more robust to memory
+> >>>> pressure during resume.
+> >>>>
+> >>>> I'm not sure about MHI. But other drivers already have such patches as
+> >>>> dma_direct_alloc() is susceptible to failures when memory pressure is
+> >>>> high. This patch was motivated from ath12k [1] and ath11k [2].
+> >>>>
+> >>>
+> >>> Even if we patch the MHI driver, the issue is going to trip some other driver.
+> >>> How does the DMA memory goes low during resume? So some other driver is
+> >>> consuming more than it did during probe()?
+> >> Think it like this. The first probe happens just after boot. Most of the
+> >> RAM was empty. Then let's say user launches applications which not only
+> >> consume entire RAM but also the Swap. The DMA memory area is the first
+> >> ~4GB on x86_64 (if I'm not mistaken). Now at resume time when we want to
+> >> allocate memory from dma, it may not be available entirely or because of
+> >> fragmentation we cannot allocate that much contiguous memory.
+> >>
+> > 
+> > Looks like you have a workload that consumes the limited DMA coherent memory.
+> > Most likely the GPU applications I think.
+> > 
+> >> In our testing and real world cases, right now only wifi driver is
+> >> misbehaving. Wifi is also very important. So we are hoping to make wifi
+> >> driver robust.
+> >>
+> > 
+> > Sounds fair. If you want to move forward, please modify the exisiting
+> > mhi_power_down_keep_dev() to include this partial unprepare as well:
+> > 
+> > mhi_power_down_unprepare_keep_dev()
+> > 
+> > Since both APIs are anyway going to be used together, I don't see a need to
+> > introduce yet another API.
+> I've looked at usages of mhi_power_down_keep_dev(). Its getting used by
+> ath12k and ath11k both. We would have to look at ath12k as well before
+> we can change mhi_power_down_keep_dev(). Unfortunately, I don't have
+> device using ath12k at hand.
+> 
 
-Users who suffer from nonfunctional built-in keyboards on WM8650 and
-WM8850 based laptops complain. It used to work on even older kernels,
-but not on current ones. What changed is that I found the time to
-investigate :)
+ath12k conversion looks trivial. So please go ahead with this new API conversion
+for that driver as well.
 
-The way 26c502701c52 ("usb: uhci: Add clk support to uhci-platform")
-described the change implies that "optional" was the intended behavior
-from the outset, so I believe it deserves a backport. Don't know if
-the age of a regression prevents it from being considered a regression
-or not.
+- Mani
 
-Best regards,
-Alexey
+-- 
+மணிவண்ணன் சதாசிவம்
