@@ -1,91 +1,93 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4182949E6
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67CC1A3145
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 22:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745620208; cv=none; b=Fxi1a3ceCSNjzw2cH9QsZELvFLUTEm8KOo8jsDgeJToVsb6TcgPljIVJtZN0h/QdGIsuQ0Sq5FI22q6MCi/jw4oRkptBu8C5F4a8CickDqFdmdoD1XMEoLE6iq5Wp5VGNIMMXS8HcWtHwfzED2ldY1PtSk1MzPByIFr3Z/QqzYQ=
+	t=1745620652; cv=none; b=atSGdfvG0nWyn9HxBghykjEy+o7i2pi/MTj9FHne4MmB/5TAsc90qcxPrAcRzdHhHP2e2kNO2ytbS/+tFs6ZirKCX/lcVzwwUISLBwOB8Q9t6qmdEO57r57sPJ+4cWNsRC56piov/ZTh0mia9YmmkZVIGww4PmDoMM9tVgCs+xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745620208; c=relaxed/simple;
-	bh=No2WdcR85nQLhD9Rcq+fHij7hSPtf+sRVRTw6HaupAw=;
+	s=arc-20240116; t=1745620652; c=relaxed/simple;
+	bh=3KArTu/2RUkabCmBtv0e7fMu9ZeDP06C6FtALBblSxI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eUUVOdj/9PJakSyhKo1SgAnuNaDbcr47FlEW6f4/pWtDPgVgf7GY0z+/kV0l0CYTL6jmOy+7xdmKfFzdkILGActM4hTla9ql8OmcLvCVE0EyAV3LEB6MjXh2N1+JBMGorNdQ0bVTeWb39kKIJryq26Q0tj4SaitZR6nt3pGiOpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bmxKFfCR; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=kUJ5qxifoTUuWqktrcUuE2ZeaatPz/ctcTlhsNgIUPIvpQz0YxDkTCAlIdPVauHcWWjSh6z8eYX2v0suCCYqizbtgnVXipb7q9WYT0RDoQAH2w1w+dfQdPfHPyIQMToBvuRxFulzv4WpcKVNYdHj0m41bQSIuKxqbcKmAow816o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t+DQ0tSt; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bmxKFfCR"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af5310c1ac1so1582278a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t+DQ0tSt"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-308677f7d8cso2511560a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 15:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745620206; x=1746225006; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745620650; x=1746225450; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y2vrxKS37XFkzYSXdYDYazU7IYtsM4nDy6zkgVBtQZ0=;
-        b=bmxKFfCRt/CTKpXMYCTfKyUR7H9F6DC9IWmJDeCrfWHVaVtsjQd5R8o7dMVpOgpWyA
-         cfilJVUEssrtOPNzIrXUzfB//ObYHqyXBvvo6/hfKZiMYxWvNp/zXpgz6sH4oU3GZPvg
-         cu1wVp+jQjNraQEWwhgD9V7ebhuuMWrmvpZdrkfRkPd+k/i+eHm5i1WYxbNe14Lg7BnT
-         QVy8vTVTfGNXXAwDlvxKHwcz4mkwzl6OWt0OQ9w5G+2+TRrZTwHjRhNk5tMSWCxvS2Iy
-         KgxF5DrqctP9sZEyleKaUehZfdM8IBFE/2pSwSKnthijNdtJZrZA811iAtodrcFrXdC6
-         783A==
+        bh=4wtD+GeTJ9u0QHb0+YR6eCa58uhDG2aJS2glA/Qc9l0=;
+        b=t+DQ0tStN9s7v/HazE8xr5ZnphR2BzFtr+Dk4ApcPzKxpnLTwi94rAtfg4jkgap3oN
+         f2imSHiCqfvIf/rVX1gDlkMIs/5cFsrh7ayV7jbwXzE5yxpPyk8CxnbeNWp4g6UACvIH
+         PAnJMc5mQubHaW3MUbZu63I5RZ5VZAdmBc5rhTWXjrD1FimC4HSG5wX5dRSyT1BqYX5l
+         bakYB3oECrnb67N3+wbb2GqdahyvISq+4jCINFzPc+LVekX1XeRhvai5F63l3SW32IiG
+         mqLa5hY2h4iPb/A/ydGnBCQtCSZzmdkh/fsBNydX0RQmyFB37nJrWJo01wMQ0AS1Xxgu
+         HQLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745620206; x=1746225006;
+        d=1e100.net; s=20230601; t=1745620650; x=1746225450;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y2vrxKS37XFkzYSXdYDYazU7IYtsM4nDy6zkgVBtQZ0=;
-        b=X3fN+juy0KIFHU78sIMM0UZg+QVpYOL5fGQ6Q+FeTwm+4z5pXKdFQxqLWdcy2/4Cll
-         9CbHuutDwTtgOAsfvc6c3WBd59VYKceCrwxjef617GYCLlISMo1hMdg2+8rpx69PVzza
-         AiE9O3ab+CTnUFp/C9+qLYQswoA458TFSh862yL5ZQGRruVo2qzec5EK3kmbqSMXrzgX
-         Y6OhhNWgPzyGDPCPyS1VkbHS+OT4+WWalBNhAKjSxcVXnC4CF5WS7tKBsTKzZa9onmfH
-         YGI/VSTzyglZQc7Yz11DTC2Fq+tDjhG+oQbsnhzHW8SnlF/iiqTt8dUwyrGwQC68BHQm
-         imfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjnocA2W8Rq+wZSIMr48OtA7OD1ROi7wvmjW8y37E9YcZ9OOYfmNoIRglsy4fYWzwWMUMNfHIoKhG75/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi24uUq6ITv/R7clmRRdI8RnHCrKqSt+k1F70htcAENpjUQOBh
-	Yw0c96OAcOo61EiZXmrxWkI1krxz+cQVzykDAeHwnaifJzVJvhutuXXy4AoGdIfN+ixIdW118M/
-	KxQ==
-X-Google-Smtp-Source: AGHT+IFyEmW/h75Y0a4u5zU8k/xtyBAAGO36YOhCBdvDLlZHji33XZ6TelcG/U3Ix6o3kynmbJjWiJBqCfA=
-X-Received: from pgah14.prod.google.com ([2002:a05:6a02:4e8e:b0:b14:df7a:ff1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9203:b0:1f5:6a1a:329b
- with SMTP id adf61e73a8af0-2045b99e11dmr6794527637.32.1745620206560; Fri, 25
- Apr 2025 15:30:06 -0700 (PDT)
-Date: Fri, 25 Apr 2025 15:09:10 -0700
-In-Reply-To: <20250304013335.4155703-1-seanjc@google.com>
+        bh=4wtD+GeTJ9u0QHb0+YR6eCa58uhDG2aJS2glA/Qc9l0=;
+        b=Dc+96AedsJ23J0qyI4sg8NhER2KO+tXk8A5jxiVmOlnrDXbmX2TPgThwgwiU2Wf94U
+         DxCXH/4rPTtGjKeEOVGIdxHEo3BHJgE4ICbc0sGSUOzGy5HvD7Gnr46EWVkBvnw8UGLw
+         N9kMyUvl1dL5mWWo21+c1ulkd0LBMBaeXxA/JVlHa+LYkswIQ+ch+enzMay2xMFiQzNN
+         s6ijGnA9MZHhZnZVBIBi/nI1ZY2Ku0YdufC6cAX2JA3POl6alUxZmjjQXeTuufX5cGbq
+         bcRg6bfCdWf16CnX3MND9oSyDYIXdGcnUA4TJkHKUukJF9Kpe9hV4XCHy2GrM7q4xjEE
+         SooQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNzublEiXWQoJQ/vgfEwjTIeBrr6RXQ9ponM2Eoa0nhk5AmBBSo/jt2dpRco4kF0IYvG3+u6Xmu5z4GL0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyiwksboQ+A4B3B5xpvZvPvIeC0UWog86OQ+qtyb/qb1uENjTv
+	rMjdy1L4lS/7nCVQbBbXq3gJcLpIHd9yAKPr8uQWn9PMF4U0Ra5YR5Um5PPCpluxUHgqR3+JzHb
+	1hQ==
+X-Google-Smtp-Source: AGHT+IGgiNwVkXSP9zfX8Bwz9AFDrYnzhJff3zo34deIREPzgpgi0hqQsE0ginF6C31hQ2DJIXsWXGg0zEc=
+X-Received: from pjbkl16.prod.google.com ([2002:a17:90b:4990:b0:2fc:201d:6026])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2810:b0:2ff:502e:62d4
+ with SMTP id 98e67ed59e1d1-309f7e8ec70mr5160431a91.32.1745620649938; Fri, 25
+ Apr 2025 15:37:29 -0700 (PDT)
+Date: Fri, 25 Apr 2025 15:37:17 -0700
+In-Reply-To: <20250221163352.3818347-1-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250304013335.4155703-1-seanjc@google.com>
+References: <20250221163352.3818347-1-yosry.ahmed@linux.dev>
 X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <174559673791.891425.18442555338696362642.b4-ty@google.com>
-Subject: Re: [PATCH v5 0/3] KVM: x86: Optimize "stale" EOI bitmap exiting
+Message-ID: <174559612575.886958.13255435526046364721.b4-ty@google.com>
+Subject: Re: [PATCH 0/3] Unify IBRS virtualization
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kai Huang <kai.huang@intel.com>, xuyun <xuyun_xy.xy@linux.alibaba.com>, 
-	weizijie <zijie.wei@linux.alibaba.com>
+To: Sean Christopherson <seanjc@google.com>, x86@kernel.org, Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, 
+	David Kaplan <David.Kaplan@amd.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
 
-On Mon, 03 Mar 2025 17:33:32 -0800, Sean Christopherson wrote:
-> Slightly modified version of the patch (now mini-series) to optimize EOI
-> bitmap exiting for "stale" routes, i.e. for the case where a vCPU has an
-> in-flight IRQ when the routing changes, and needs one final EOI exit to
-> deassert the IRQ.
+On Fri, 21 Feb 2025 16:33:49 +0000, Yosry Ahmed wrote:
+> To properly virtualize IBRS on Intel, an IBPB is executed on emulated
+> VM-exits to provide separate predictor modes for L1 and L2.
 > 
-> Kai, I dropped your Reviewed-by as the change was non-trivial.
+> Similar handling is theoretically needed for AMD, unless IbrsSameMode is
+> enumerated by the CPU (which should be the case for most/all CPUs
+> anyway). For correctness and clarity, this series generalizes the
+> handling to apply for both Intel and AMD as needed.
 > 
 > [...]
 
 Applied to kvm-x86 misc, thanks!
 
-[1/3] KVM: x86: Isolate edge vs. level check in userspace I/O APIC route scanning
-      commit: b1f7723a5a5b018f4bc3fb8e234510be7c44ad00
-[2/3] KVM: x86: Add a helper to deduplicate I/O APIC EOI interception logic
-      commit: c2207bbc0c0f4b6ae8dbb73ec26e17aa0c45a3ca
-[3/3] KVM: x86: Rescan I/O APIC routes after EOI interception for old routing
-      commit: 87e4951e250bbccac47a8822f6f023a1de8b96ec
+[1/3] x86/cpufeatures: Define X86_FEATURE_AMD_IBRS_SAME_MODE
+      commit: 9a7cb00a8ff7380a09fa75287a3f2642c472d562
+[2/3] KVM: x86: Propagate AMD's IbrsSameMode to the guest
+      commit: 65ca2872015c232d6743b497e3c08ff96596b917
+[3/3] KVM: x86: Generalize IBRS virtualization on emulated VM-exit
+      commit: 656d9624bd21d35499eaa5ee97fda6def62901c8
 
 --
 https://github.com/kvm-x86/linux/tree/next
