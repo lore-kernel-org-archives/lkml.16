@@ -1,127 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E170A1C4A24;
-	Fri, 25 Apr 2025 21:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FED0192D6B
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745615541; cv=none; b=To3YqT7sJik+GNZzJ+zc1COL2FoMvlWx0nkbwrcGghfyP+VoiUh+zKfBEftrKwo5M/DonZQ2H2tm/jLSXoIykV4aMcwjbRDSkZdCNVM4+LuowKDF+Fi4PSO0WZnEYYBHscJP+rGS8VSP6+Ah9U3T9c7YqVFh9xGnlV/PnVikNag=
+	t=1745615550; cv=none; b=JQok1ir8GY3GgpbpMg7g4AAs1zE67fTyDx1OFkqol56BGi45N8EJG428s9pYl4jLsi0D4NVMRUAT3bP+8eqGzsG85cxzFadR4vAPFkWqFNcyfeCht+h+DDi3u2AiFY73UY9y6qF5UjbogmbQcsDwVFOLL7lDLl94QOEl05iGdds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745615541; c=relaxed/simple;
-	bh=IUm+4famjmO7lUrcR+kqmqU5Zk+d0ARmoqS23p02RSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOzDf8e1cme9gM9s1RHcY6WhhzUZIsFwSmSvkk5Z5il8hOsGDPiR/n/r8A1hjsUOfH1noohYz1LHTFOsMaOJ3ujIy7ZJOqVg65ulfrYMqvMTV79mausloymXVI3wlBp6nx+vIZzWIWdGs5sR3CFgreuimXZ8ri9eGICtYt2LQQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STaccKN2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745615550; c=relaxed/simple;
+	bh=41IW46e6gDg4C4jg1vzCwRlZIgO5uBAS84n1qrKE2I8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P+6YiH+WbGczo3IKBr/0VhCtODUjexbcKU4GROIadTP+2OOOK8exSpZ/o8dh7YUGVoUXOnfGDYZlYBqkClXMh6XWZCjxuwdkcbesq8r782VKzh7MnPC/mrDNIkNP8JB8Wr3oYBHXrlXehm5+uYLESApjpXSbTYIgqIAUdH3LJVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZvDBk8FI; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STaccKN2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7FBC4CEE4;
-	Fri, 25 Apr 2025 21:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745615540;
-	bh=IUm+4famjmO7lUrcR+kqmqU5Zk+d0ARmoqS23p02RSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=STaccKN2JZnDb6RYesWAeHyMuoFuPUTf4sH9HrSwuEFuo6z5/CmGFbOF+Qk6DI2gw
-	 NRzeIgVIP6gv/Jgpk1JOX9k1FutGvBLYx9etAdL7qu0uUyGomHVPGlJTYr/imUK1AK
-	 DIK5aQoWi7LpNe7WgtBC80m7oPCo2Yy8SqnA6aE87rPhtDUednfKs/YvtwDvuM6K0v
-	 7xv5vpPbywQF3sDjgrs+IekU7z+En3K9ZbdHowec3Ulf4cut2PBNWZ/S5Zzqk8rn1C
-	 mMUVW1Ox4LMAMEASdMdYwvm+5zV87av7b427sy8skks/jBb+fhmLYT5H6p6qNIjaEg
-	 VwEVT8Jy7+TRg==
-Date: Fri, 25 Apr 2025 21:12:18 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-	"mikelley@microsoft.com" <mikelley@microsoft.com>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	Tianyu Lan <Tianyu.Lan@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, Allen Pais <apais@microsoft.com>,
-	Ben Hillis <Ben.Hillis@microsoft.com>,
-	Brian Perkins <Brian.Perkins@microsoft.com>,
-	Sunil Muthuswamy <sunilmut@microsoft.com>
-Subject: Re: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and
- VP ID confusion in hv_snp_boot_ap()
-Message-ID: <aAv6slMtA7Kioy_3@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250424215746.467281-1-romank@linux.microsoft.com>
- <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
- <KUZP153MB1444118E6199CBED8C78E6D4BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <8fa1045a-c3e9-48e0-86fe-ab554d7475c8@linux.microsoft.com>
- <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
- <c57c6ce9-6ff8-431c-ab77-fa2c727fee09@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZvDBk8FI"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53PLC68G3027242
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Apr 2025 16:12:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745615526;
+	bh=53XdUqfFsxdrkTPF8ii63mrk/KIlvgnwsDsFFeftRxU=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ZvDBk8FINxfAVVdEMHDMIFpyEu68m8UfqsIg3+hLvhudhsuqvAQ+X6HC5ycYRa12b
+	 Hksw7Q0NfmfvAALvmLXoC3l98l5QcrxMKOcDzK1V8/61RLj9ICIGSsy/VslGXeYQhz
+	 DPvcPbOfU96V5EjGTDTCZX4ONZGGqzNPfuSMp7lU=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53PLC62b017024
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 25 Apr 2025 16:12:06 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 25
+ Apr 2025 16:12:05 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 25 Apr 2025 16:12:05 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53PLC5gr096254;
+	Fri, 25 Apr 2025 16:12:05 -0500
+From: Nishanth Menon <nm@ti.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jayesh Choudhary <j-choudhary@ti.com>
+CC: Nishanth Menon <nm@ti.com>, <bjorn.andersson@oss.qualcomm.com>,
+        <krzysztof.kozlowski@linaro.org>, <geert+renesas@glider.be>,
+        <lumag@kernel.org>, <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
+        <elinor.montmasson@savoirfairelinux.com>, <ebiggers@google.com>,
+        <ross.burton@arm.com>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
+Date: Fri, 25 Apr 2025 16:12:02 -0500
+Message-ID: <174561548590.210587.7393005807062359269.b4-ty@ti.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250416182930.32132-1-j-choudhary@ti.com>
+References: <20250416182930.32132-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c57c6ce9-6ff8-431c-ab77-fa2c727fee09@linux.microsoft.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 25, 2025 at 11:22:08AM -0700, Roman Kisel wrote:
-> 
-> 
-> On 4/25/2025 10:18 AM, Saurabh Singh Sengar wrote:
-> > > On 4/25/2025 2:14 AM, Saurabh Singh Sengar wrote:
-> > > > > 
-> > > > > On Thu, Apr 24, 2025 at 02:57:46PM -0700, Roman Kisel wrote:
-> > > > > > To start an application processor in SNP-isolated guest, a hypercall
-> > > > > > is used that takes a virtual processor index. The hv_snp_boot_ap()
-> > > > > > function uses that START_VP hypercall but passes as VP ID to it what
-> > > > > > it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
-> > > > > > 
-> > > > > > As those two aren't generally interchangeable, that may lead to hung
-> > > > > > APs if VP IDs and APIC IDs don't match, e.g. APIC IDs might be
-> > > > > > sparse whereas VP IDs never are.
-> > > > > > 
-> > > > > > Update the parameter names to avoid confusion as to what the
-> > > > > > parameter is. Use the APIC ID to VP ID conversion to provide correct
-> > > > > > input to the hypercall.
-> > > > > > 
-> > > > > > Cc: stable@vger.kernel.org
-> > > > > > Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP
-> > > > > > guest")
-> > > > > > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > > > > 
-> > > > > Applied to hyperv-fixes.
-> > > > 
-> > > > This patch will break the builds.
-> > > > 
-> > > > Roman,
-> > > > Have you tested this patch on the latest linux-next ?
-> > > 
-> > > Thanks for your help! Only on hyperv-next, looking how to repro and fix on
-> > > linux-next. The kernel robot was happy, or I am missing some context about
-> > > how the robot works...
-> > > 
-> > > What was your kernel configuration, or just anything that enables Hyper-V?
-> > > 
-> > > I thought the the linux-next tree would be a subset of hyper-next so should
-> > > work, realizing that have to check, likely there might be changes from other
-> > > trees.
-> > > 
-> > 
-> > 
-> > hyperv-fixes is broken too, here's the log for your ref:
-> > 
-> > https://dashboard.kernelci.org/log-viewer?itemId=microsoft%3A20250425085833916790&o=microsoft&type=build&url=https%3A%2F%2Flisalogsb15850d3.blob.core.windows.net%2Flisa-logs%2Fdefault_default%2F20250425%2F20250425-085110-393%2Fkernel_installer%2Fbuild.log%3Fst%3D2025-04-25T09%253A09%253A35Z%26se%3D2025-05-02T09%253A09%253A35Z%26sp%3Dr%26sv%3D2024-11-04%26sr%3Db%26skoid%3D14b53b1d-f4fc-442e-a437-4989376b1754%26sktid%3D72f988bf-86f1-41af-91ab-2d7cd011db47%26skt%3D2025-04-25T09%253A09%253A35Z%26ske%3D2025-05-02T09%253A09%253A35Z%26sks%3Db%26skv%3D2024-11-04%26sig%3DZHfA7%2FC174KR6HT8zhchCb47NE1aceqw8h0APzKxsII%253D
-> > 
-> > The hv_snp_boot_ap() function in arch/x86/hyperv/ivm.c currently fails to compile.
-> > It looks like the function's argument was changed from 'cpu' to 'apic_id', but internal
-> > references to cpu were not updated accordingly.
-> > 
-> > This might have gone unnoticed during your testing if CONFIG_AMD_MEM_ENCRYPT
-> > was disabled, in which case this function wouldn't have been compiled.
-> 
-> Must be the case! I did run the command to merge the CVM specific config
-> options but I didn't check the result.
-> 
-> Yep, I see the issue. Will resend the patch.
+Hi Jayesh Choudhary,
 
-I have removed this from hyperv-fixes.
+On Wed, 16 Apr 2025 23:59:30 +0530, Jayesh Choudhary wrote:
+> Enable configs for cdns-dsi and cdns-dphy drivers required for DSI
+> display on the following TI platforms:
+> J721E-EVM, J721E-BeagleBone-AI64, J721S2-EVM, AM68-SK, J722S-EVM,
+> BeagleY-AI, AM62P5-SK, J784S4-EVM and J742S2-EVM
+> 
+> The dsi wrapper driver used by all the above mentioned platforms,
+> cdns-dsi-j721e is enabled by default if cdns-dsi config is enabled.
+> 
+> [...]
+
+I have applied the following to branch ti-k3-config-next on [1] with minor
+commit message update (Beagle is not a TI platform :) ).
+Thank you!
+
+[1/1] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
+      commit: 882c214572e43b56f781883d4ae48689381a68f1
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+
