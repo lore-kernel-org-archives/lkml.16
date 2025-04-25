@@ -1,186 +1,231 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2052.outbound.protection.outlook.com [40.107.237.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E76D22FAFD;
-	Fri, 25 Apr 2025 07:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745564949; cv=fail; b=DaA12CApAg1BxT/mpZHD7f+SxbJbmZePG0UkLwdnwCAa7hm0meE4HnEbmfe++6bAQkbNw9PdF8fceniiBjQ9DOYB756wr3d601oE/XZ3AJeq0i2AzLFaqvtU4plYMBJOWy+vCgY0OE2YYDVW7qOR19UFJwC+FB6703IZY5sjryE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745564949; c=relaxed/simple;
-	bh=zMASIzDR3bAtK1cJdpE6oGUuBjRpEKevX5rtqDSk/jM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=p0QrJYykNk04qV8qSKgjGnpxkY16mN4MzMJm+P5N9Ex4bu6VCaAGCDuoMz+b40v0ut7BIJSAfkxuSSV96mxE4JZS/9WeUJTUVcaBkKoKBBclvYm8jQUFtGB7KpjGISJjrGBflHrqXZnPBeuRZVHxwzfKa1830Le+2JukHJ0yUIc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=gUTyxaZ6; arc=fail smtp.client-ip=40.107.237.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24A122D4DC;
+	Fri, 25 Apr 2025 07:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745564958; cv=none; b=k1blH5TxLtWiLeXfcD0GWRIILT+puVCiPmq96pMyp+RmoBA0AL2FYx9Ea4LBBP0/B70eqkjgDZDileNr+dDbuxVEp+fSc7DQ25tq5VQiCdVv84/r5ocstFlwmFW4lA1lZk/edXckAZTUSLl68BomY1KJTsCfVyIfC/eV4CNnvZU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745564958; c=relaxed/simple;
+	bh=XRJaobu20wNxHoup9s4R3YDQJkYv5i9HIMk9O25Dr6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gUPVdwd65aq/AdAe4L598+Ip8yRxYfTerbHqwp5usmyCDCYE+pYZvndFzClr2g6br8OQEaDHEsli9OMuraX/6cPA51P1dqyjCBXeZyCyR2N/9cyfpgrv0JFbHKlwdZ/MQ3rZIUmYhaqkt0UojvERFX9LE8TQ5kTuOoQqsBVTvr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfgEML46; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="gUTyxaZ6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ty20c2/5CuzZW6pK24L1j1H+HBvpW9ARQlDFExUclo/Z3jaAmJrZO419VlYOlXZJxn+9MwNcS63HwukwIGz+/oymL+0S5D0Dc9zTGc+z1ZMLuRjJJnfO8cB877oMPSy7k1O2f3OYvrJg0lyUTLb360OWz4RGcYalc5oNTM6nf1hFEdpVkgChtlvY2jCvNRuDjgI8fFziUuB+KHUf5YqndCvCB1q4U1xZC4vkuu2F4v5RYehq/HpWazP28y+gCCYRfYsXBMMFpif6Vltmoz1mcKC8hTxrnKAUJxjVdK4nM6mokBycBp9sKnoqg3wKQiQ57IGJTr6BZxZy/wKfJ4/tzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zMASIzDR3bAtK1cJdpE6oGUuBjRpEKevX5rtqDSk/jM=;
- b=jayUmusthWG1Lv9gll/qORxGi4k+QtfP48fVLQoGdRqay0gZhZVhdMLiXiyZY6480xu4RhVrZC9mwtusz+cgaFNpdSbD3GqPMxgiKBVVlFfFHm7yE3S/xxV8IQJgy4mCJAaasa5HFqnPNAk8cB0J5O7k4o1X0+IT8ath8OOR31bLXbQGlP4MUY+4gIYKHlpBY+K9XYvJCaAKXWuuGxTgAaxkBz+4WVrBwZWrouMPvGJBcPgUxkTnUXV176aduahwFzG6WopZr+qunnVEkBJMMtanfO/ZpyM4Q1UfAuNSWG9oX6Sf91AXkDul05IIiWKZFbQ2B2/CymB5pVa+MtnDBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zMASIzDR3bAtK1cJdpE6oGUuBjRpEKevX5rtqDSk/jM=;
- b=gUTyxaZ6cG1eUMQGQf+5lwWNlYhQMvT74rxQesdYwUX1/t+1R4u5GF2HWg4L0ajq1BvftydnZeoFhyOOhZ+z2MxGP+Sa3Ew/oofaHjRYJEbspIQqGU7VT89tqBpA9lchc8N8dpRWHkfLQ9zr/wMYqro0s4e6t7XemZe2ADasBq+VDJ4nbra9vfCgFRg20/pRmGQLv7XK9QrbZNg5XTRppwFv4wYneKfxtMEmR2bfJagDrfT15bxoNYwIPeiwlrTUYhkKoycNXUSmVoz/ovZwzFhz0c3Ph9eo7yLPLJks/u4kxBgHonUjkkpH+Wu5MhPGnDFNwnDF/Dpz5ZrEiTY0ow==
-Received: from BN8PR03MB5073.namprd03.prod.outlook.com (2603:10b6:408:dc::21)
- by BN9PR03MB6011.namprd03.prod.outlook.com (2603:10b6:408:134::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 25 Apr
- 2025 07:09:06 +0000
-Received: from BN8PR03MB5073.namprd03.prod.outlook.com
- ([fe80::7483:7886:9e3d:f62a]) by BN8PR03MB5073.namprd03.prod.outlook.com
- ([fe80::7483:7886:9e3d:f62a%3]) with mapi id 15.20.8678.025; Fri, 25 Apr 2025
- 07:09:06 +0000
-From: "Ng, Boon Khai" <boon.khai.ng@altera.com>
-To: Paolo Abeni <pabeni@redhat.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, Furong Xu <0x1207@gmail.com>, "Gerlach, Matthew"
-	<matthew.gerlach@altera.com>, "Ang, Tien Sung" <tien.sung.ang@altera.com>,
-	"Tham, Mun Yew" <mun.yew.tham@altera.com>, "G Thomas, Rohan"
-	<rohan.g.thomas@altera.com>
-Subject: RE: [PATCH net-next v4 2/2] net: stmmac: dwxgmac2: Add support for
- HW-accelerated VLAN stripping
-Thread-Topic: [PATCH net-next v4 2/2] net: stmmac: dwxgmac2: Add support for
- HW-accelerated VLAN stripping
-Thread-Index: AQHbstql1M+19hkYQkerBvuZ57i4x7OyuVOAgAFCtdA=
-Date: Fri, 25 Apr 2025 07:09:06 +0000
-Message-ID:
- <BN8PR03MB5073E770EB46B2BBB65702B7B4842@BN8PR03MB5073.namprd03.prod.outlook.com>
-References: <20250421162930.10237-1-boon.khai.ng@altera.com>
- <20250421162930.10237-3-boon.khai.ng@altera.com>
- <edfa1585-c10c-4211-a985-ebfcb8e671d5@redhat.com>
-In-Reply-To: <edfa1585-c10c-4211-a985-ebfcb8e671d5@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN8PR03MB5073:EE_|BN9PR03MB6011:EE_
-x-ms-office365-filtering-correlation-id: 64509013-ff05-43e6-881c-08dd83c81121
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?QTlkTFZ5V1pmWGgxN2hjcFBXWkVvcXQ0cGx5Q1JMM3dscEExU3JwY2lrbElR?=
- =?utf-8?B?TktQYUEvWUFXU0toVUlVS1VXR1RwdnZWdG1iMng1T2hrVWpGRkNxM2JVaGZj?=
- =?utf-8?B?b3YvcGxGSmdMUS96NUtxaGZKM1RFOUtRNGIzNnROYkFuWG5jRndEZ1I1aDBm?=
- =?utf-8?B?dTh2TnN5bXNZVWZNK2dzZmlpM0lrSnJoN0ZwUmFWZjh6SUEzeEw0aHVwNTY2?=
- =?utf-8?B?TCtkMWRGaG8zVUVnNmJ2aVVOVEtxd1hWR3B0MlZJUENlWitJMk43dm1WRTJr?=
- =?utf-8?B?Q0dUWm0vUDZjU0ZXQjVEUjE1YXR2ZGtZOFlycWljOVo4NGswUGxzaXBPWENX?=
- =?utf-8?B?U254NmZQMjI5Zm05ZTNWMkVqMkFXalRCMFZUUENTakl3MnFXSGhzMTM3ZWt3?=
- =?utf-8?B?d2lrZFNrcHI1ZmlsRWNjb3RFa0tQL29pSVIzYmdyL2RDOEdFelhSMGxMNTNr?=
- =?utf-8?B?WFdDNHkrMkhCQksvZG5rNHdXNkN3QzRybGNWcU9Kdjd3eWcrUHVWMWZoUXp4?=
- =?utf-8?B?Q29xWmJibjhGSXFZdnFDZi94ZkJ3anczNjRKdVl6dCtRK3VGYUloeEsxUnkv?=
- =?utf-8?B?dDBvYURTek1YcjE1ZUJ3NnlacXJlR3dyd3BIN0dWbnJPQ3MrSXc5QWIxdVk5?=
- =?utf-8?B?bnV1NzlzTEFDZjhDL0FPcEFRakEvN0taN2N6ZEFpL3FxVmg0R21mUUJZOGg3?=
- =?utf-8?B?M0srNzMvUitYU0g3SFNPQXRXYXlldXo3MFVJdUFpaVRnUkFMVW9UTE1UL21w?=
- =?utf-8?B?cWxCTVVVNUNHOGRQbkdNN0d5ZFVWaldDQXFFcWFoVDBxbnJ0eXZ1QWl2K3pa?=
- =?utf-8?B?MUVGRnhmS3ZzMWVlc2l3NzBlbGZWdHdEZXFobENqbmVuTFBZVkpLZzNvaHRH?=
- =?utf-8?B?eGVDdUUzTnFxMXBqQXRBUklqSkk0cVBUV3BUY1BZdStCcUNSeGRiSXpLNmkz?=
- =?utf-8?B?SkxXQzI3OFlIZ1VQdnlLbTBTRjFPajAyMWM1d0pMekhFRFhncE1MMzZiQXVZ?=
- =?utf-8?B?MklZZ0VkOUpmMjZaZ0RuZVZ2cDVDR3Fwdll4WVFWZDRpeG9TSVRBVDN1U3RT?=
- =?utf-8?B?VVJUZFIrYUF4QUFiU2JONURjYkliZjRPWWlicXdRMC9DaXptY1g3WDI3aXli?=
- =?utf-8?B?SWtpbFQ1eFhKcWwrY2Z1WXBacGJVbXJJYUNxVE1IOEFadVl0dE1odXlLZ0kv?=
- =?utf-8?B?Z2hEK2FuZ2w5WDRqbDlNdlRMM1hiWUhFODBLZ0gxOW16NWlwblc2QjJxcWYw?=
- =?utf-8?B?M3k5d0krMU5yZnp1WG02VU1nMWJGR0pmVmREekpnWlZYVjcvVUorL0xoUDZx?=
- =?utf-8?B?bi9zWlNHcUhlRGxGZDNrdkNmakFTVFFQTmxBemVjRm1MSEdmc2xPSVB6ZWVI?=
- =?utf-8?B?ODlRQ3p4YnZNeFZTdUcvNnY5dFNhcHVvZzBXaWd6VVBWamFpMkVXYXBqRUwy?=
- =?utf-8?B?ZkdXT09IVVJxVFZRTTh4VU5RejZpelFxV2JBRjE5MEFCb09TN3JXQjZyQWhP?=
- =?utf-8?B?Rmx6bXZFak9tUzNHQkhEd1ViQUZIbGsraFoyeDRHV1hIR084VjFVd292QUZZ?=
- =?utf-8?B?VVMzb0lVc0tSL0kzQWFiMlFyQjVaUEV0VFJOcXBka08zSUkxNS9YVFJiNklY?=
- =?utf-8?B?QjBCdWJ6MWZiK0lxWWZvbHpaU1BCQ2tpMnJTb3NXU1A3RzE4YlFRT1phVk13?=
- =?utf-8?B?aGZOb3kyRTAzSDErVVFvMGk2SUtYWm1UTzh2aHd5UWJ6RThmUzdaa3ZDMnBN?=
- =?utf-8?B?Q2p0OXV3YWVlSEx0cFpNUG5zZmc2VkZHejhyYTFqbmkzbXRNMWVSZEZtODYw?=
- =?utf-8?B?a084S0k0dERoNzJDeW85R3R6WnV3cTJ3bzZzQ2FZaGdJeGZTbGFTSmxoaU9N?=
- =?utf-8?B?S3dscHdVN3dKdER4QjVlT0dtVnZHbXJtN3RicVJwRCsvQ2xSUWduMlhHdFBl?=
- =?utf-8?B?MTdOMXRETFk2aHkveTBUNGVRb0Z3NzFqWks5NFVuZXM4THRQbzNvbFpIN3Fv?=
- =?utf-8?B?NWFuS05mQ1N3PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR03MB5073.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Yk5kWHJ2NHhDR3RyclQ3Z01WeHlnRVI3bWZtTzltU1Z2Y0U0cWV5N3RqV3ha?=
- =?utf-8?B?TE5VRzZGbG5IRW1WTWdON29Kd1BNSDNjOWpZbzdrWll5bDU1a3Fxd1VXNzJH?=
- =?utf-8?B?MlAxbkVBU3p2RWFtZzRzSHRZMTVQcndGWS9nWWZzeHhGZkV5QWxWaGNQWE5v?=
- =?utf-8?B?UWFmN1hxUjl3cVhmUFJWclRRVHp1TVRuTnZGeHdnWFBTNzFnNXgzM2NJR24v?=
- =?utf-8?B?Yng3NTczUW9hTlMyaG5QM3RKSDNTWHc4M3VLWkdpRUIwTTU5ekFmSzdOV0Q4?=
- =?utf-8?B?enhqMzVMaTArZkYrYnVpZC9hY2JJVzZrS0JGL285QkZUOU1uWUFnN2ZSMzIw?=
- =?utf-8?B?SkZwU2ZxTVJLbzhOeU13dU41QjBCeEZPYjM3RnRpa0lveVA0T3MxYmhwTUw2?=
- =?utf-8?B?d2ZmcFRyb3czZDBsYm81VG5OdlR6ZU9tWXhQM0lqT3d5dHM1MVNCNTRTbjVT?=
- =?utf-8?B?d2d3aFlETjJ6dVFDQkRsWThKOGcxVlhkTytrOHpqTG9FR2VwWFdLejk1TTZi?=
- =?utf-8?B?b1dTY1JqVkZMdWsvSEIvZlFtRCtSTmVOZFh1MXo3RlZwRm1RTUNmblhFbFgy?=
- =?utf-8?B?NEw3MC9MNC9EeXRUbmRTMFhPNEFlend4M1BYV3FBdU9HNkZpaEpaVjJTUFBU?=
- =?utf-8?B?YUNtWHpNb1F5K3J3RXJHd3JTbkE4Y0JKczV3dHN2SHdCemV3ZlY3eWpCSVJ3?=
- =?utf-8?B?VmRzQVBycENnc0htZ0NhQWV5eEdzU2F6K3hMTGZRSG0zNVltVFdxWHE1b1lO?=
- =?utf-8?B?cmR5aHJoc1RyVVVsL21FVkRxbi8wdnBzZ25DSEVEMlN1eURQWGdYckRqbmNX?=
- =?utf-8?B?SUlvSks0aTZZUHdIeHJGa1JqTUxpSTIzN0craExTMTBPRVhaZzNvd1JaTVBI?=
- =?utf-8?B?UU1CeFMxYXdWQmlibXdoWGRnQmU4VmJhUjRJVDFDV3lhVXF1TDJQU1dwbVQr?=
- =?utf-8?B?QlUrRmdEbndrOGxmbFE2NGJ2Rk5pREw2MzN2aFd4QjYzWG5lZytDOHVPcWww?=
- =?utf-8?B?MGVNbWxYanhXeGhwQk0vYy9Ya2w0eThqS1VaL2ZMR1NwMW95d2JhT0NDS0t2?=
- =?utf-8?B?cXFQeFhadDNBQ1VGd1Jsc0U0QVQwdDlzQ1hGZndUY1VzU2JvQndDYi9GYnZT?=
- =?utf-8?B?aWRPTFpKWGZaSTZZMDVEL0svVUc0K3FRaEY0eVFJQkMzWFdadlIzUTFEU3hh?=
- =?utf-8?B?UjkxcDhTRmxia3hIcTVjdVZOSkJkSE5BT1RWUFBrVmUya05VbllPejE2UktW?=
- =?utf-8?B?YVA0dUVwUVZpc0p1YVp4eFVWYkhOZnYwR1hXUUlnMDJTYWFCcnlZbXZ0R2N2?=
- =?utf-8?B?d0k1TEcwRE5aelN0elQ2R2N1dEptK1hVSzE4SmViNUVLcElIUjEvd2w2NmhW?=
- =?utf-8?B?Vk9Qd2pWVFdnQ00xV2V6WHlHc0dld1VWNEJqaklJMngxV0k3Z29LVGpEdVln?=
- =?utf-8?B?bC9vcjV3Y0x3aXBVR0JqSmphTnVkSTBtTzQ0NGxkbUVpclZyTzlKTEpQbWV4?=
- =?utf-8?B?YkdHdUMvZndzUG5iOGdCQWc0SEFNWEw3OWpUN092WjN5Y012dU44V1owYkow?=
- =?utf-8?B?aDZCTUszS1JqVVppNHZHeTAyUXRySmVxRG9MQ0lta3FCZWMzRjliNG9zV3JC?=
- =?utf-8?B?WkVZRkx1dnZrQmFXWUgvNmRFUU82K1YySkZPcHBGYURMdXdaMkhKTEdXZ3ZG?=
- =?utf-8?B?SjhUSEdmenpVT0o1S0xDL2wyM2ZUSFBXZ25pd3dBZUUvbzVXMGljb2RHOExU?=
- =?utf-8?B?eklpTDM0NmFkNksybjBBcVVUdDRERzNxbUozeFBHUkJVZGdOUXRLeE9qWXc4?=
- =?utf-8?B?NWZITzNicGIvL3lEQ21oUDJUclU2SHNOSmdoSlpxQ0JaWmZBMlgzbkY0V096?=
- =?utf-8?B?VnRsOHU3SGxZaEh4ck00QXl1V3NlemxxQlRtd2hneFhHUDEyL2VIMGJkc1Ru?=
- =?utf-8?B?NWVHMHc0cEJ1a2ZHUDRPVHdtUlpXOWVpUXNETGxGc3VoU2pxeUQ0YURVcUds?=
- =?utf-8?B?OHZiVVkvWXJjKzdOaS9YTDBORWEzSU55UHVXd1hEaHRTVWdkSVI1Yk05RjA3?=
- =?utf-8?B?UTBaOWNTUHQ3RFJ3clpOMDZsK3ZteE9zWUY3NjhLMk9keXlqUUhQM2NHQjlU?=
- =?utf-8?B?eDlRME9xS1FzRkJraHFOTzMwTnk4Y29EUWdWRHp2bnIrNmtzQ2l2eDNhZDVT?=
- =?utf-8?Q?PyhChl2g+8NdCt1uqhTBKiNtGJ7Fp2QF97LCQUIYJYOL?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfgEML46"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B205AC4CEE4;
+	Fri, 25 Apr 2025 07:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745564958;
+	bh=XRJaobu20wNxHoup9s4R3YDQJkYv5i9HIMk9O25Dr6k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WfgEML463b0+bWtPIloy53Rqep5I1ojunbyxFP+bzc9GS2sAG8LRFar6fOcW3siuO
+	 IgP7K5EsZ6MZphcoA07kXQzRZG8ouQRTz9x1UlLLGL9Dy8KrEWrGdfsV01I8QjXWlm
+	 FErYl8AxCDHubZU1yT+tw3NHF9OveIHBZkpmYiIKVxsQkAMDqoU0BPZW/fLePr3Dpb
+	 JH+SnSZAIbQ3bSNGeGpOwudvdgH6b8FmITLdvJKt7L88ybptMF2UYs3N/bRXnEZ2n8
+	 e8pBVM32tAJLS1iedQXy1EGxWOOJtqFV/4Zhla839fffv+QnMDOjaIDiRjAtkYN1uG
+	 +KO9/gzMUiDZA==
+Date: Fri, 25 Apr 2025 09:09:15 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Michal Wilczynski <m.wilczynski@samsung.com>, 
+	Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, Drew Fustini <drew@pdp7.com>, 
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed
+ flag
+Message-ID: <20250425-lumpy-marmot-of-popularity-cdbbcd@houat>
+References: <CGME20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028@eucas1p1.samsung.com>
+ <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
+ <20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
+ <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
+ <b9c4182d-38c2-4173-a35a-0e1773c8f2ed@samsung.com>
+ <CAJZ5v0gE0anjW_mDSwNXY8xoZ_0=bDDxiSbUq1GP7-NycDojrQ@mail.gmail.com>
+ <cbf20469-02ab-403a-8db7-2b66e9936b4f@samsung.com>
+ <CAPDyKFqND2JrH8nLUzAqwWgHkwia6M9XOJoY6AqxtR0t120JUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR03MB5073.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64509013-ff05-43e6-881c-08dd83c81121
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2025 07:09:06.0515
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FKHyKSLWfl26C99t+duH7bZq8k9AQQ9QAJP8aDNQmuXoUNzSNeLYpFiWXvo1eti9wxSrMTCdwxnJwg81dSsG4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR03MB6011
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="vw35xu6fptfqmd4m"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqND2JrH8nLUzAqwWgHkwia6M9XOJoY6AqxtR0t120JUA@mail.gmail.com>
 
-PiANCj4gUGxlYXNlLCBhdm9pZCAnaW5saW5lJyBmdW5jdGlvbiBpbiAuYyBmaWxlcywgZXNwZWNp
-YWxseSBmb3IgZnVuY3Rpb25zIHRoYXQgd2lsbCBsYW5kDQo+IGludG8gZnVuY3Rpb24gcG9pbnRl
-ciBsaWtlIHRoaXMgb25lLg0KPiANCj4gVGhhbmtzLA0KPiANCj4gUGFvbG8NCg0KSGkgUGFvbG8s
-IA0KDQpTdXJlIHdpbGwgZml4IHRoaXMgaW4gdjUuDQoNClJlZ2FyZHMsDQpCb29uIEtoYWkuDQoN
-Cg==
+
+--vw35xu6fptfqmd4m
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed
+ flag
+MIME-Version: 1.0
+
+Hi,
+
+On Thu, Apr 24, 2025 at 06:51:00PM +0200, Ulf Hansson wrote:
+> On Thu, 17 Apr 2025 at 18:19, Michal Wilczynski
+> <m.wilczynski@samsung.com> wrote:
+> > On 4/16/25 16:48, Rafael J. Wysocki wrote:
+> > > On Wed, Apr 16, 2025 at 3:32=E2=80=AFPM Michal Wilczynski
+> > > <m.wilczynski@samsung.com> wrote:
+> > >>
+> > >> On 4/15/25 18:42, Rafael J. Wysocki wrote:
+> > >>> On Mon, Apr 14, 2025 at 8:53=E2=80=AFPM Michal Wilczynski
+> > >>> <m.wilczynski@samsung.com> wrote:
+> > >>>>
+> > >>>> Introduce a new dev_pm_info flag - platform_resources_managed, to
+> > >>>> indicate whether platform PM resources such as clocks or resets are
+> > >>>> managed externally (e.g. by a generic power domain driver) instead=
+ of
+> > >>>> directly by the consumer device driver.
+> > >>>
+> > >>> I think that this is genpd-specific and so I don't think it belongs=
+ in
+> > >>> struct dev_pm_info.
+> > >>>
+> > >>> There is dev->power.subsys_data->domain_data, why not use it for th=
+is?
+> > >>
+> > >> Hi Rafael,
+> > >>
+> > >> Thanks for the feedback.
+> > >>
+> > >> You're right =E2=80=94 this behavior is specific to genpd, so embedd=
+ing the flag
+> > >> directly in struct dev_pm_info may not be the best choice. Using
+> > >> dev->power.subsys_data->domain_data makes more sense and avoids bloa=
+ting
+> > >> the core PM structure.
+> > >>
+> > >>>
+> > >>> Also, it should be documented way more comprehensively IMV.
+> > >>>
+> > >>> Who is supposed to set it and when?  What does it mean when it is s=
+et?
+> > >>
+> > >> To clarify the intended usage, I would propose adding the following
+> > >> explanation to the commit message:
+> > >>
+> > >> "This flag is intended to be set by a generic PM domain driver (e.g.,
+> > >> from within its attach_dev callback) to indicate that it will manage
+> > >> platform specific runtime power management resources =E2=80=94 such =
+as clocks
+> > >> and resets =E2=80=94 on behalf of the consumer device. This implies =
+a delegation
+> > >> of runtime PM control to the PM domain, typically implemented through
+> > >> its start and stop callbacks.
+> > >>
+> > >> When this flag is set, the consumer driver (e.g., drm/imagination) c=
+an
+> > >> check it and skip managing such resources in its runtime PM callbacks
+> > >> (runtime_suspend, runtime_resume), avoiding conflicts or redundant
+> > >> operations."
+> > >
+> > > This sounds good and I would also put it into a code comment somewher=
+e.
+> > >
+> > > I guess you'll need helpers for setting and testing this flag, so
+> > > their kerneldoc comments can be used for that.
+> > >
+> > >> This could also be included as a code comment near the flag definiti=
+on
+> > >> if you think that=E2=80=99s appropriate.
+> > >>
+> > >> Also, as discussed earlier with Maxime and Matt [1], this is not abo=
+ut
+> > >> full "resource ownership," but more about delegating runtime control=
+ of
+> > >> PM resources like clocks/resets to the genpd. That nuance may be wor=
+th
+> > >> reflecting in the flag name as well, I would rename it to let's say
+> > >> 'runtime_pm_platform_res_delegated', or more concise
+> > >> 'runtime_pm_delegated'.
+> > >
+> > > Or just "rpm_delegated" I suppose.
+> > >
+> > > But if the genpd driver is going to set that flag, it will rather mean
+> > > that this driver will now control the resources in question, so the
+> > > driver should not attempt to manipulate them directly.  Is my
+> > > understanding correct?
+> >
+> > Yes, your understanding is correct =E2=80=94 with one minor clarificati=
+on.
+> >
+> > When the genpd driver sets the flag, it indicates that it will take over
+> > control of the relevant PM resources in the context of runtime PM, i.e.,
+> > via its start() and stop() callbacks. As a result, the device driver
+> > should not manipulate those resources from within its RUNTIME_PM_OPS
+> > (e.g., runtime_suspend, runtime_resume) to avoid conflicts.
+> >
+> > However, outside of the runtime PM callbacks, the consumer device driver
+> > may still access or use those resources if needed e.g for devfreq.
+> >
+> > >
+> > > Assuming that it is correct, how is the device driver going to know
+> > > which resources in particular are now controlled by the genpd driver?
+> >
+> > Good question =E2=80=94 to allow finer-grained control, we could replac=
+e the
+> > current single boolean flag with a u32 bitmask field. Each bit would
+> > correspond to a specific category of platform managed resources. For
+> > example:
+> >
+> > #define RPM_TAKEOVER_CLK        BIT(0)
+> > #define RPM_TAKEOVER_RESET      BIT(1)
+> >
+> > This would allow a PM domain driver to selectively declare which
+> > resources it is taking over and let the consumer driver query only the
+> > relevant parts.
+>=20
+> Assuming we are targeting device specific resources for runtime PM;
+> why would we want the driver to be responsible for some resources and
+> the genpd provider for some others? I would assume we want to handle
+> all these RPM-resources from the genpd provider, if/when possible,
+> right?
+>=20
+> The tricky part though (maybe Stephen had some ideas in his talk [a]
+> at OSS), is to teach the genpd provider about what resources it should
+> handle. In principle the genpd provider will need some kind of device
+> specific knowledge, perhaps based on the device's compatible-string
+> and description in DT.
+>=20
+> My point is, using a bitmask doesn't scale as it would end up having
+> one bit for each clock (a device may have multiple clocks), regulator,
+> pinctrl, phy, etc. In principle, reflecting the description in DT.
+
+My understanding is that it's to address a situation where a "generic"
+driver interacts with some platform specific code. I think it's tied to
+the discussion with the imagination GPU driver handling his clocks, and
+the platform genpd clocks overlapping a bit.
+
+But then, my question is: does it matter? clocks are refcounted, and
+resets are as well iirc, so why do we need a transition at all? Can't we
+just let the platform genpd code take a reference on the clock, the GPU
+driver take one as well, and it's all good, right?
+
+Maxime
+
+--vw35xu6fptfqmd4m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaAs1GwAKCRAnX84Zoj2+
+do8sAX9FbcAEu04m80R/QWM9SUbClB57KbU/Zbb/SrxS41bJSYzLDFQbballhRWa
+UWhmg2YBfRcskqou4btHfDm4ChKCQ7giQfUQ0IOm9WRVcNZTCKQJvrz64wvKsA7C
+NKJ4T4yLqA==
+=loki
+-----END PGP SIGNATURE-----
+
+--vw35xu6fptfqmd4m--
