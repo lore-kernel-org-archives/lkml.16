@@ -1,231 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24A122D4DC;
-	Fri, 25 Apr 2025 07:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B061822F741
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 07:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745564958; cv=none; b=k1blH5TxLtWiLeXfcD0GWRIILT+puVCiPmq96pMyp+RmoBA0AL2FYx9Ea4LBBP0/B70eqkjgDZDileNr+dDbuxVEp+fSc7DQ25tq5VQiCdVv84/r5ocstFlwmFW4lA1lZk/edXckAZTUSLl68BomY1KJTsCfVyIfC/eV4CNnvZU=
+	t=1745564980; cv=none; b=huiEHte+VHYth/CEDCmb3xNVqqbl9WCmj/S4CHb6D20ReyPPHA4GxJEgSjSvhSk6gNRe4MPFMCY1RTOYWkD3DC+evCCUH7Mnns+Pu928cDgdYgpe0r4Zur/Yrf+Tzcfav5KFQulPMlzWXbatCSBL2zJrA3Z7AxU3pziQbbldoX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745564958; c=relaxed/simple;
-	bh=XRJaobu20wNxHoup9s4R3YDQJkYv5i9HIMk9O25Dr6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gUPVdwd65aq/AdAe4L598+Ip8yRxYfTerbHqwp5usmyCDCYE+pYZvndFzClr2g6br8OQEaDHEsli9OMuraX/6cPA51P1dqyjCBXeZyCyR2N/9cyfpgrv0JFbHKlwdZ/MQ3rZIUmYhaqkt0UojvERFX9LE8TQ5kTuOoQqsBVTvr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfgEML46; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfgEML46"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B205AC4CEE4;
-	Fri, 25 Apr 2025 07:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745564958;
-	bh=XRJaobu20wNxHoup9s4R3YDQJkYv5i9HIMk9O25Dr6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WfgEML463b0+bWtPIloy53Rqep5I1ojunbyxFP+bzc9GS2sAG8LRFar6fOcW3siuO
-	 IgP7K5EsZ6MZphcoA07kXQzRZG8ouQRTz9x1UlLLGL9Dy8KrEWrGdfsV01I8QjXWlm
-	 FErYl8AxCDHubZU1yT+tw3NHF9OveIHBZkpmYiIKVxsQkAMDqoU0BPZW/fLePr3Dpb
-	 JH+SnSZAIbQ3bSNGeGpOwudvdgH6b8FmITLdvJKt7L88ybptMF2UYs3N/bRXnEZ2n8
-	 e8pBVM32tAJLS1iedQXy1EGxWOOJtqFV/4Zhla839fffv+QnMDOjaIDiRjAtkYN1uG
-	 +KO9/gzMUiDZA==
-Date: Fri, 25 Apr 2025 09:09:15 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, 
-	Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, Drew Fustini <drew@pdp7.com>, 
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
-	Matt Coster <matt.coster@imgtec.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed
- flag
-Message-ID: <20250425-lumpy-marmot-of-popularity-cdbbcd@houat>
-References: <CGME20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028@eucas1p1.samsung.com>
- <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
- <20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
- <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
- <b9c4182d-38c2-4173-a35a-0e1773c8f2ed@samsung.com>
- <CAJZ5v0gE0anjW_mDSwNXY8xoZ_0=bDDxiSbUq1GP7-NycDojrQ@mail.gmail.com>
- <cbf20469-02ab-403a-8db7-2b66e9936b4f@samsung.com>
- <CAPDyKFqND2JrH8nLUzAqwWgHkwia6M9XOJoY6AqxtR0t120JUA@mail.gmail.com>
+	s=arc-20240116; t=1745564980; c=relaxed/simple;
+	bh=xx4FggphWlc5tildOMi3gmGwn1EpWCfAqq6rlD0XiyI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=EU+BWvqJdbQ68lthWKU5i84OJ7oW2SfmVKkaOTcB2PFO9um+A/5Hqj7pMOEs8wB8d1TBCgfA31WrDibXOG3QWNWoKqmGA2sPD/vrpqPk3HBFk26DUOA7e0uvoqXIHvViGoLE/cb/ll7HtTi385knYKy0As0C/PCkBejWwj8L3Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85ed07f832dso192782039f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 00:09:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745564978; x=1746169778;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JuMGdO7tj9pfcgeSkM1hIOwSR02/KINreWPYKsu6KZ4=;
+        b=bDd6DLISCX+2Z1ch7czSOAg8qLyjIoWYFym3ok2NmbC2fObGHsL9jNxnReK/IILuF4
+         jTEwcUJvdgQ05Q+cwCDjmgqlh501XcJ6mlbybHCokDZCorqkTTy87PcUXpVJkFXVdQqK
+         K8SptsNv3FIO9noQ4eKDd7fSE1SKANw1/75xdgQ0f/xllYDSnudB7fTByNwllIKbbrPd
+         jQ5pXgfKeMwGNjha+uJyCVKxX7LIyor/1jRLNTKxhFa5mUYBPwLAhkEZfp8po/BzQmsZ
+         BAKfOk2hkINaRBp7RTeuA1h16/ZOGhb+gBXyTWi8Bz6YSpEmt2zMhQmffpZg8xeKCa5S
+         Il7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXZWCewTxEJ7JeOCslCBNQ25vP6X1FWvPeoVl4WqWR9lmIqRQbLplO1fc+boKoQEHG5Y/q049pPiEGZrAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhTqWdL1rJZM2f3WzTizGTc3sTJNfnopHiyOfWgYGax4ha83/S
+	Gcb8c2L6Olln+lJNm02xwD9Q8jsr0hbyoHi8PWVY1E3Jp9L9b3y3NJdpR/RFJwWH2rbVnFYr3UW
+	fCqciCtewPUxXLp3kNu5Glmvt7dTX6UMrWkoBo/4MWELjPZ1+J6NEJ+A=
+X-Google-Smtp-Source: AGHT+IEywZEMj7N5BOdWQpG2Ine7Jd8YZEo11eImJbUohPlO28ID38004mXuXo4StVPj8Xr+MeGDiNTbfHGFNR3DfvYrAClKte/z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="vw35xu6fptfqmd4m"
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqND2JrH8nLUzAqwWgHkwia6M9XOJoY6AqxtR0t120JUA@mail.gmail.com>
+X-Received: by 2002:a05:6e02:221b:b0:3d8:1d2d:60ab with SMTP id
+ e9e14a558f8ab-3d93b3c15c1mr12219745ab.3.1745564977827; Fri, 25 Apr 2025
+ 00:09:37 -0700 (PDT)
+Date: Fri, 25 Apr 2025 00:09:37 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680b3531.050a0220.10d98e.0011.GAE@google.com>
+Subject: [syzbot] [mm?] INFO: task hung in exit_mmap (2)
+From: syzbot <syzbot+cdd6c0925e12b0af60cc@syzkaller.appspotmail.com>
+To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, andrii@kernel.org, 
+	ast@kernel.org, dvyukov@google.com, eddyz87@gmail.com, elver@google.com, 
+	glider@google.com, jannh@google.com, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	netdev@vger.kernel.org, sdf@google.com, syzkaller-bugs@googlegroups.com, 
+	vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    750d0ac001e8 MAINTAINERS: Add entry for Socfpga DWMAC ethe..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15580ccc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2a31f7155996562
+dashboard link: https://syzkaller.appspot.com/bug?extid=cdd6c0925e12b0af60cc
+compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1082263f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10809ccc580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/61fe708710bd/disk-750d0ac0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7e7cb0c4c97b/vmlinux-750d0ac0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/93c49eac7367/bzImage-750d0ac0.xz
+
+The issue was bisected to:
+
+commit 68ca5d4eebb8c4de246ee5f634eee26bc689562d
+Author: Andrii Nakryiko <andrii@kernel.org>
+Date:   Tue Mar 19 23:38:50 2024 +0000
+
+    bpf: support BPF cookie in raw tracepoint (raw_tp, tp_btf) programs
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17849a6f980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=14449a6f980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10449a6f980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cdd6c0925e12b0af60cc@syzkaller.appspotmail.com
+Fixes: 68ca5d4eebb8 ("bpf: support BPF cookie in raw tracepoint (raw_tp, tp_btf) programs")
+
+INFO: task syz-executor253:8529 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc2-syzkaller-00258-g750d0ac001e8 #0
+      Blocked by coredump.
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor253 state:D stack:24424 pid:8529  tgid:8527  ppid:5850   task_flags:0x40054c flags:0x00004002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x1b88/0x5240 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x163/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_write_slowpath+0xedd/0x1420 kernel/locking/rwsem.c:1176
+ __down_write_common kernel/locking/rwsem.c:1304 [inline]
+ __down_write kernel/locking/rwsem.c:1313 [inline]
+ down_write+0x1da/0x220 kernel/locking/rwsem.c:1578
+ mmap_write_lock include/linux/mmap_lock.h:128 [inline]
+ exit_mmap+0x305/0xde0 mm/mmap.c:1292
+ __mmput+0x115/0x420 kernel/fork.c:1379
+ exit_mm+0x221/0x310 kernel/exit.c:589
+ do_exit+0x994/0x27f0 kernel/exit.c:940
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1102
+ get_signal+0x1696/0x1730 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x98/0x810 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xce/0x340 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x210 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f0e7faaa6e9
+RSP: 002b:00007f0e7fa42218 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007f0e7fb34338 RCX: 00007f0e7faaa6e9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f0e7fb34338
+RBP: 00007f0e7fb34330 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f0e7fb01074
+R13: 0000200000000040 R14: 00002000000002c0 R15: 00002000000002c8
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/31:
+ #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180 kernel/locking/lockdep.c:6764
+2 locks held by dhcpcd/5506:
+ #0: ffffffff8edf61b0 (dup_mmap_sem){.+.+}-{0:0}, at: dup_mm kernel/fork.c:1733 [inline]
+ #0: ffffffff8edf61b0 (dup_mmap_sem){.+.+}-{0:0}, at: copy_mm+0x1d6/0x22c0 kernel/fork.c:1786
+ #1: ffff88805a8a3de0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock_killable include/linux/mmap_lock.h:146 [inline]
+ #1: ffff88805a8a3de0 (&mm->mmap_lock){++++}-{4:4}, at: dup_mmap kernel/fork.c:620 [inline]
+ #1: ffff88805a8a3de0 (&mm->mmap_lock){++++}-{4:4}, at: dup_mm kernel/fork.c:1734 [inline]
+ #1: ffff88805a8a3de0 (&mm->mmap_lock){++++}-{4:4}, at: copy_mm+0x2a8/0x22c0 kernel/fork.c:1786
+2 locks held by getty/5594:
+ #0: ffff8880319c50a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000332e2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x5bb/0x1700 drivers/tty/n_tty.c:2222
+1 lock held by syz-executor253/8529:
+ #0: ffff88807b09bde0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock include/linux/mmap_lock.h:128 [inline]
+ #0: ffff88807b09bde0 (&mm->mmap_lock){++++}-{4:4}, at: exit_mmap+0x305/0xde0 mm/mmap.c:1292
+1 lock held by dhcpcd/8530:
+ #0: ffff8880253947e0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock_killable include/linux/mmap_lock.h:146 [inline]
+ #0: ffff8880253947e0 (&mm->mmap_lock){++++}-{4:4}, at: __vm_munmap+0x213/0x520 mm/vma.c:3010
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc2-syzkaller-00258-g750d0ac001e8 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x4ab/0x4e0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0x1058/0x10a0 kernel/hung_task.c:437
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted 6.15.0-rc2-syzkaller-00258-g750d0ac001e8 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:pv_native_safe_halt+0x13/0x20 arch/x86/kernel/paravirt.c:81
+Code: cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 73 8f 18 00 f3 0f 1e fa fb f4 <c3> cc cc cc cc cc cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90000197dc0 EFLAGS: 000002c2
+RAX: 330d1d9510403d00 RBX: ffffffff8197272e RCX: ffffffff8c2fa93c
+RDX: 0000000000000001 RSI: ffffffff8e6499b7 RDI: ffffffff8ca1b5a0
+RBP: ffffc90000197f20 R08: ffff8880b8732b5b R09: 1ffff110170e656b
+R10: dffffc0000000000 R11: ffffed10170e656c R12: 1ffff92000032fd2
+R13: 1ffff11003ad9b40 R14: 0000000000000001 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff88812509a000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6b30e296c0 CR3: 000000000eb38000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
+ default_idle+0x13/0x20 arch/x86/kernel/process.c:748
+ default_idle_call+0x74/0xb0 kernel/sched/idle.c:117
+ cpuidle_idle_call kernel/sched/idle.c:185 [inline]
+ do_idle+0x22e/0x5d0 kernel/sched/idle.c:325
+ cpu_startup_entry+0x42/0x60 kernel/sched/idle.c:423
+ start_secondary+0xfe/0x100 arch/x86/kernel/smpboot.c:315
+ common_startup_64+0x13e/0x147
+ </TASK>
 
 
---vw35xu6fptfqmd4m
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed
- flag
-MIME-Version: 1.0
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Hi,
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-On Thu, Apr 24, 2025 at 06:51:00PM +0200, Ulf Hansson wrote:
-> On Thu, 17 Apr 2025 at 18:19, Michal Wilczynski
-> <m.wilczynski@samsung.com> wrote:
-> > On 4/16/25 16:48, Rafael J. Wysocki wrote:
-> > > On Wed, Apr 16, 2025 at 3:32=E2=80=AFPM Michal Wilczynski
-> > > <m.wilczynski@samsung.com> wrote:
-> > >>
-> > >> On 4/15/25 18:42, Rafael J. Wysocki wrote:
-> > >>> On Mon, Apr 14, 2025 at 8:53=E2=80=AFPM Michal Wilczynski
-> > >>> <m.wilczynski@samsung.com> wrote:
-> > >>>>
-> > >>>> Introduce a new dev_pm_info flag - platform_resources_managed, to
-> > >>>> indicate whether platform PM resources such as clocks or resets are
-> > >>>> managed externally (e.g. by a generic power domain driver) instead=
- of
-> > >>>> directly by the consumer device driver.
-> > >>>
-> > >>> I think that this is genpd-specific and so I don't think it belongs=
- in
-> > >>> struct dev_pm_info.
-> > >>>
-> > >>> There is dev->power.subsys_data->domain_data, why not use it for th=
-is?
-> > >>
-> > >> Hi Rafael,
-> > >>
-> > >> Thanks for the feedback.
-> > >>
-> > >> You're right =E2=80=94 this behavior is specific to genpd, so embedd=
-ing the flag
-> > >> directly in struct dev_pm_info may not be the best choice. Using
-> > >> dev->power.subsys_data->domain_data makes more sense and avoids bloa=
-ting
-> > >> the core PM structure.
-> > >>
-> > >>>
-> > >>> Also, it should be documented way more comprehensively IMV.
-> > >>>
-> > >>> Who is supposed to set it and when?  What does it mean when it is s=
-et?
-> > >>
-> > >> To clarify the intended usage, I would propose adding the following
-> > >> explanation to the commit message:
-> > >>
-> > >> "This flag is intended to be set by a generic PM domain driver (e.g.,
-> > >> from within its attach_dev callback) to indicate that it will manage
-> > >> platform specific runtime power management resources =E2=80=94 such =
-as clocks
-> > >> and resets =E2=80=94 on behalf of the consumer device. This implies =
-a delegation
-> > >> of runtime PM control to the PM domain, typically implemented through
-> > >> its start and stop callbacks.
-> > >>
-> > >> When this flag is set, the consumer driver (e.g., drm/imagination) c=
-an
-> > >> check it and skip managing such resources in its runtime PM callbacks
-> > >> (runtime_suspend, runtime_resume), avoiding conflicts or redundant
-> > >> operations."
-> > >
-> > > This sounds good and I would also put it into a code comment somewher=
-e.
-> > >
-> > > I guess you'll need helpers for setting and testing this flag, so
-> > > their kerneldoc comments can be used for that.
-> > >
-> > >> This could also be included as a code comment near the flag definiti=
-on
-> > >> if you think that=E2=80=99s appropriate.
-> > >>
-> > >> Also, as discussed earlier with Maxime and Matt [1], this is not abo=
-ut
-> > >> full "resource ownership," but more about delegating runtime control=
- of
-> > >> PM resources like clocks/resets to the genpd. That nuance may be wor=
-th
-> > >> reflecting in the flag name as well, I would rename it to let's say
-> > >> 'runtime_pm_platform_res_delegated', or more concise
-> > >> 'runtime_pm_delegated'.
-> > >
-> > > Or just "rpm_delegated" I suppose.
-> > >
-> > > But if the genpd driver is going to set that flag, it will rather mean
-> > > that this driver will now control the resources in question, so the
-> > > driver should not attempt to manipulate them directly.  Is my
-> > > understanding correct?
-> >
-> > Yes, your understanding is correct =E2=80=94 with one minor clarificati=
-on.
-> >
-> > When the genpd driver sets the flag, it indicates that it will take over
-> > control of the relevant PM resources in the context of runtime PM, i.e.,
-> > via its start() and stop() callbacks. As a result, the device driver
-> > should not manipulate those resources from within its RUNTIME_PM_OPS
-> > (e.g., runtime_suspend, runtime_resume) to avoid conflicts.
-> >
-> > However, outside of the runtime PM callbacks, the consumer device driver
-> > may still access or use those resources if needed e.g for devfreq.
-> >
-> > >
-> > > Assuming that it is correct, how is the device driver going to know
-> > > which resources in particular are now controlled by the genpd driver?
-> >
-> > Good question =E2=80=94 to allow finer-grained control, we could replac=
-e the
-> > current single boolean flag with a u32 bitmask field. Each bit would
-> > correspond to a specific category of platform managed resources. For
-> > example:
-> >
-> > #define RPM_TAKEOVER_CLK        BIT(0)
-> > #define RPM_TAKEOVER_RESET      BIT(1)
-> >
-> > This would allow a PM domain driver to selectively declare which
-> > resources it is taking over and let the consumer driver query only the
-> > relevant parts.
->=20
-> Assuming we are targeting device specific resources for runtime PM;
-> why would we want the driver to be responsible for some resources and
-> the genpd provider for some others? I would assume we want to handle
-> all these RPM-resources from the genpd provider, if/when possible,
-> right?
->=20
-> The tricky part though (maybe Stephen had some ideas in his talk [a]
-> at OSS), is to teach the genpd provider about what resources it should
-> handle. In principle the genpd provider will need some kind of device
-> specific knowledge, perhaps based on the device's compatible-string
-> and description in DT.
->=20
-> My point is, using a bitmask doesn't scale as it would end up having
-> one bit for each clock (a device may have multiple clocks), regulator,
-> pinctrl, phy, etc. In principle, reflecting the description in DT.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-My understanding is that it's to address a situation where a "generic"
-driver interacts with some platform specific code. I think it's tied to
-the discussion with the imagination GPU driver handling his clocks, and
-the platform genpd clocks overlapping a bit.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-But then, my question is: does it matter? clocks are refcounted, and
-resets are as well iirc, so why do we need a transition at all? Can't we
-just let the platform genpd code take a reference on the clock, the GPU
-driver take one as well, and it's all good, right?
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Maxime
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
---vw35xu6fptfqmd4m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaAs1GwAKCRAnX84Zoj2+
-do8sAX9FbcAEu04m80R/QWM9SUbClB57KbU/Zbb/SrxS41bJSYzLDFQbballhRWa
-UWhmg2YBfRcskqou4btHfDm4ChKCQ7giQfUQ0IOm9WRVcNZTCKQJvrz64wvKsA7C
-NKJ4T4yLqA==
-=loki
------END PGP SIGNATURE-----
-
---vw35xu6fptfqmd4m--
+If you want to undo deduplication, reply with:
+#syz undup
