@@ -1,170 +1,243 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FE222258F
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06473202C31
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610530; cv=none; b=ehOszRS9Ex0wdyHCDgskTMgvs7H4xfUEAz4+XKtgzeUsCcZAIilATvotGU2HIbhfT+LhhejV2Ph/dcbYGPr3Y9KvRTJDd8Hxw+qSW1jVTLhfqjClQCfoFdseZ/x6x/kU1OQHQZzlt4k8GE8g0jFRrfG1g09SPYGWtzs+yZXFKOU=
+	t=1745610538; cv=none; b=GmQe6bZIFwdE8rE5gL/R766SrOrOfUTbyTsd1GjTiq2PCwwv3WvXFzJazlYjS0IIDiQlxjzynog4rADeLnjLFABiOmjrr5l4hTrNdq68z/IowFbWbGuaLKxGumt7DWQl9FYzB5HUNdONtDeKlnOKq6ZIHHxejQu8W47tKO/KHAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610530; c=relaxed/simple;
-	bh=+HtaD1MMcC10nD909Zao9y6H0hANNmhyPMSU9hKMrJ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U8TwbpU6MAto+C5052KXlHZsqwMvyBjunHXGT1bqYYDaH6Ojhq1PW15u2EXOAfhcNMEFRksdWXgwDHCXwzG20+INPGGlsetxE9xCOpA8VMLTgnTy7n4bFvrrwt9K9DoXR9cZ5gYggM2zju2cJJB1bClA+SxDSK+ivE4Elqag0lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PeA7DlZH; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745610538; c=relaxed/simple;
+	bh=aqtGkRqBbu1U2b+axzTR7k2vGKCBOVbewJQT47q4o40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ir7I8/2Moi3vlEdgAjFA6ozYAD9CRhii19Fqxopf43lN6Nw7+e0v+29pt0AvXz6f0qiY4vFEOaqoduNvS9PRuMYou+NwWrg14oQQcBPBAJXtZfNeuvtmPga0EstBkUSGOx4Tn+/sSTcTjeS7IcIw3pGt09Tn/2Q1X+RYHyV52Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O+t1bQU4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PeA7DlZH"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so2427745e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745610527; x=1746215327; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hhhHYs4KoUp1Dmqe4WieRh0AOyBX59ZVEuUqlgb/Xa8=;
-        b=PeA7DlZHvJHVYtZVzn2SV7eGzAvrhvVIDq+qNieK4ZeZK8T7+OkLoTj2JDzzM29056
-         WpnpSa1OjflAC7ky3vRPDnEC+//uVt3Cfssw6jOY5IU5e+KdqmERSy9+pzO8OWnAJwOt
-         TlmiirshlEyR5Zqsz8Hdv4g4tCXe4Ed9kMkvrtosSBve4yQBjA3Y3gFutWlW+372R3AE
-         DBQFXdfR8/+uHH/sgQS554EnJpatvtzw9nkZ+X1D+nddQCo/S5dDKfbF3tQ96mAdrlvx
-         c/wzWnFuRiIq90+uG71TyTipsWgvUftb9cg/sSA5Vt5OtIJyPYmsix3b0RkGOJDb2jel
-         epnw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+t1bQU4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745610535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Iyio0+rdGGHZ3rJEpArzIbX1q77xWWWNHXXnWo3MTWI=;
+	b=O+t1bQU41M+2cIK0CrRj1GH+/nN8ZWeWkjCX7E9U9RKtm9WyRVhGIz06TLtkbBiFKkMA67
+	/Bwd9mk2ovTPx16+Uj2oUU2H7rtUPNhuehfRTi+jVINHC3t1G+taZhnAjMcE2tv0LToRMs
+	OImxAX0pLQd6uEiC81mKlse7AghMK0Y=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-664-gT8P-k62NiK-ZaX5fI25vw-1; Fri, 25 Apr 2025 15:48:54 -0400
+X-MC-Unique: gT8P-k62NiK-ZaX5fI25vw-1
+X-Mimecast-MFC-AGG-ID: gT8P-k62NiK-ZaX5fI25vw_1745610533
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso16356855e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610527; x=1746215327;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hhhHYs4KoUp1Dmqe4WieRh0AOyBX59ZVEuUqlgb/Xa8=;
-        b=HUT/dPjac26x2j4h15lzPZT0fvDAjJHnq0BPT4P+BORpo/5fz2eN+pwKm4dvmIIw7u
-         3ZJNLdNoqHuiwFpS4MbwjLOA+Pc8H2YMV5ZoNj+VHt2/y60r+bKLDHqAuOqEIWkZn4QO
-         /upNdgdeChpZ7LJjJIuLu9esH4ROFVpolVDXuFe2LDJmAp6rh7FgCMnzf4+IJ9XtSA+I
-         da5U7w/bmtHVqNP1t0koMP7U5JpYlxUOz5q06WLZIgm2pmzMWsom1Ok2Vpf8AxkFkX0y
-         ttZh72v/eb875l5ONFunL+EX8ZJvLcKCwoQAmMIBrbb/cMyZTVCe1rYtLy+2V7DQoScd
-         C6rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhi+rOMOT1+G0N8D9lOVyE4j25PnznjvhcTz8Wjsj0ROZ/b07QM8tVNrrOUL6bhNFv1N3lFmX0GFdLplc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/v8nKMErAOPCBftz4TjtkySeVgsMpfHsL8yCLZL3H4QyYLHYc
-	fvjy6jW/j83WurS+7DakaMuhxHfi4teKvS8YW0IJ1I52ec3YqsYLZZUVe1WvhGI=
-X-Gm-Gg: ASbGnctESw1mj1c2x1R73vLQ+HsHUTc+X2XjgcEL1mVTSf6gvXmorzYf+jQAaC1t8wh
-	YWeFZmTjc+u1u0FGBPFNSPmb71IAiRRnayxaR2gqhCs33BX3Fq1ZoATc5fAIcnMyhC60uVi2EJ1
-	R7pXqU16Vp+/toet7EZnpv2bXhXGEgOtHIHYSPAGlelMPpUtRN9uguiF9TEVH9OkNmrHwG9ky3W
-	8SO43u93Bk9HVZHxrOAUOXtrjIdpmjHyjo1aBFrs/mXg82hMti9q42XO/vI/ZcaB3zhBI8LLRzC
-	lytfAC2AvxNmAXIdOwpuSrDB7fzi+OT5KYZnnL3eNzHlmL345tjfayra0As=
-X-Google-Smtp-Source: AGHT+IFLaTSeRSUUGpyQQF47LNee1uEGXqbvZf8eFCoZYl+D6T7aT4sNdv5ZKx6ouKFqA9TQ2uy0OA==
-X-Received: by 2002:a05:600c:4e16:b0:439:9a5a:d3bb with SMTP id 5b1f17b1804b1-440a65bb214mr12389145e9.2.1745610526742;
-        Fri, 25 Apr 2025 12:48:46 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a2e59sm65922335e9.16.2025.04.25.12.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 12:48:46 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 25 Apr 2025 21:48:29 +0200
-Subject: [PATCH 6/6] arm64: dts: imx8qm: Add Ethernet aliases
+        d=1e100.net; s=20230601; t=1745610533; x=1746215333;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Iyio0+rdGGHZ3rJEpArzIbX1q77xWWWNHXXnWo3MTWI=;
+        b=llNLFvixpRMidUzY6YHYNSLa3spZaFxT4gbmUsu7dAUus/kIWVA6JNO2xwM65Q9f/j
+         cC7fAGZbGivD30OG2Y6XH5g2IiN+u1Mkcq3MeLvx3/sS+fXmo0eKr0LafeMpx5gLAhyV
+         wvTywc/9sikOXtUl65oMOceEjFZl6vriWWqFq3BUOfYSIzvt3YTLdcIzf9uqMuS8Q6VR
+         RByhguQa1mirK/QhGg/7lbAaHXAU+nUsTz9U7wYGAKOQXc2PVeCM6MXmDZ72VPKa41B1
+         rwTKVk4VsjX+g3/BjVkgq8h/TyrVVJCK6dHFVkObnVSdSNTbMN26AZapTGv1/76yUDPb
+         3yYQ==
+X-Gm-Message-State: AOJu0YyUDOUSrhdk4MHXazPeIaOJYXLVqBMZQZDrD0BxV/rPI60Ee9EU
+	NR22SKE3c66yaBu4IVTEyXCONZgmPqSoYOpiNy8ySxphCej+a/fuHS7+lCJAGPaZYZusgyJrc+p
+	vQX83zUyLgnrWd6xm3AWC8UhThm1sCbEnh5gzfuWEnKaYz5aORQRe43BzYC7poQ==
+X-Gm-Gg: ASbGncs2KgsSkOuilFh3gJCjxJaArG0nIfLuSWI9Ir8Q42IEEkzuvMz3Ksk1tOnHwx3
+	LUqFOkd5Lf+I2ZVm487TxAsD0aQX9mRo0jm675oSUjPgpPatj+X/t4xkS7kD/jVcHDz6MsHq4Vq
+	Sh+cC+ySLOh9vm46oTSyl92uJcReWRsyUlz5jXzEcWiCFIshvZq0EGy+mvX//eixahIUwNAZmoo
+	B95CC4wkwoSVex5lgBR/UVFirzt0rH70nsOOYIqK28xsgQ5KfmA0ZTTA2PrgndNsA+fgXVigoQj
+	Ngljn64BrSDzGcSKO8za6HhoQzIv1Zk1qWjIYOC7Fw==
+X-Received: by 2002:a05:600c:45d0:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409c4de02dmr67828725e9.11.1745610533009;
+        Fri, 25 Apr 2025 12:48:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCFfrtzSc+UtPRGo0BIvDxCf3n2hnwRdIbAoPATpGWLsnc5w/p+CDOEbj1RMEvVgHKgNRMBw==
+X-Received: by 2002:a05:600c:45d0:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409c4de02dmr67828555e9.11.1745610532645;
+        Fri, 25 Apr 2025 12:48:52 -0700 (PDT)
+Received: from [192.168.3.141] (p4ff23df8.dip0.t-ipconnect.de. [79.242.61.248])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5310ad2sm34335985e9.21.2025.04.25.12.48.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 12:48:52 -0700 (PDT)
+Message-ID: <78f88303-6b00-42cf-8977-bf7541fa45a9@redhat.com>
+Date: Fri, 25 Apr 2025 21:48:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
+ pfnmap_sanitize_pgprot()
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-3-david@redhat.com> <aAvjJOmvm5GsZ-JN@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aAvjJOmvm5GsZ-JN@x1.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250425-dts-imx-aliases-ethernet-v1-6-15b9d5cca611@linaro.org>
-References: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
-In-Reply-To: <20250425-dts-imx-aliases-ethernet-v1-0-15b9d5cca611@linaro.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: Francesco Dolcini <francesco@dolcini.it>, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux@ew.tq-group.com, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2479;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=+HtaD1MMcC10nD909Zao9y6H0hANNmhyPMSU9hKMrJ8=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoC+cT4fIlFtHdioeWVc2xOwVr9yZQOrIxjezPT
- BqQvIyvneCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaAvnEwAKCRDBN2bmhouD
- 10o+D/9wX+DtmPtvlcmDr/mCEaqmlp0wvwGsyDcSTM9w60nfSI5reGe0MqXrtxsvZrs8lKFxznN
- 3PjNwe+ZxecVp/9kOaAe6EVlhj3Q3aFouo02F6cM/kLI6W2mVqMj38LgcYgZWbl6ZvP1LxCRXhL
- ezNXFaxF2/0Xhn04nJK22kvW3YgWWwJRyuobDQCd+ihOmaIf2NoOv5xWD58TnjCcsCjNlrbnaPH
- 7xRfa4/5zH9LS3YMHTJ8ha9Q0Zh0nDZhoox4fFnFKIr2B2l02aBp2udtZAbaHG0hdjv5LhLp3p+
- ffbw/A5KcrbbJpA/VibMR4w4g9gJtTtRltZ4RJ/bOEGfFM+rzRc9uN+SLTodvJyyE2PJIjRUDB7
- Q3bj0You2XJ7zg/URj/sAbVZzEzAVm8A+4nvAY1E8w4Ib93yWrdWK6C8ns2JSFtu/tAt0D4rUyS
- 4Q0Yn2eUr5XEru36ARlvLY5/bMIZIv3t5YBmK7zO/I6i82ILF8eJU1LTqUg0GXl+tddS+8iVn55
- 2l74XGR2x7nM+kIr6Lie5OxOZu7h+ncENhB3hj/ZgSmMFSKEQiBTotGYgThX/0q3YrLwLAim3QK
- iHgqpgfu1my2QweV+ZXDV6RpemOo2CZi1XjMpkiDxi1xC8UjjnI/lMI8Mms7NK9J+1ewKm/AHxO
- 56TGfJW6cEQJtHg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Add Ethernet aliases for predictable names and for firmware or
-bootloader to fill up MAC address.
+On 25.04.25 21:31, Peter Xu wrote:
+> On Fri, Apr 25, 2025 at 10:17:06AM +0200, David Hildenbrand wrote:
+>> ... by factoring it out from track_pfn_remap().
+>>
+>> For PMDs/PUDs, actually check the full range, and trigger a fallback
+>> if we run into this "different memory types / cachemodes" scenario.
+> 
+> The current patch looks like to still pass PAGE_SIZE into the new helper at
+> all track_pfn_insert() call sites, so it seems this comment does not 100%
+> match with the code?  Or I may have misread somewhere.
 
-Suggested-by: Francesco Dolcini <francesco@dolcini.it>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi       | 2 ++
- arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi | 1 +
- arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi | 1 +
- arch/arm64/boot/dts/freescale/imx8qm-mek.dts              | 5 +++++
- 4 files changed, 9 insertions(+)
+No, you're right, while reshuffling the patches I forgot to add the 
+actual PMD/PUD size.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
-index dc127298715b3cf73ad93d25aff7b7b56e4049ab..8f976124053e196a556cb9ddf8ff8768ca332099 100644
---- a/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
-@@ -5,6 +5,8 @@
- 
- / {
- 	aliases {
-+		ethernet0 = &fec1;
-+		ethernet1 = &fec2;
- 		rtc0 = &rtc_i2c;
- 		rtc1 = &rtc;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi
-index d4a1ad528f650d16e9de22e2e21d2e2cc684163e..28e64cc63e644f249b16c37d4a555667bea2f5c2 100644
---- a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.1.dtsi
-@@ -7,6 +7,7 @@
- 
- / {
- 	aliases {
-+		ethernet0 = &fec1;
- 		rtc0 = &rtc_i2c;
- 		rtc1 = &rtc;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi
-index 5e132c83e1b26b19840aac12d2c1014811c75c78..1f10f31e1e4d40d489e41cc8e65e8673330af07e 100644
---- a/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-apalis-ixora-v1.2.dtsi
-@@ -7,6 +7,7 @@
- 
- / {
- 	aliases {
-+		ethernet0 = &fec1;
- 		rtc0 = &rtc_i2c;
- 		rtc1 = &rtc;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-index 353f825a8ac5db1ac70d1560318c134d188ae7ef..f0bc77cf07b7da73cbb7b438a045fd56ca921d9b 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-@@ -13,6 +13,11 @@ / {
- 	model = "Freescale i.MX8QM MEK";
- 	compatible = "fsl,imx8qm-mek", "fsl,imx8qm";
- 
-+	aliases {
-+		ethernet0 = &fec1;
-+		ethernet1 = &fec2;
-+	};
-+
- 	chosen {
- 		stdout-path = &lpuart0;
- 	};
+> 
+> Maybe it's still easier to keep the single-pfn lookup to never fail..  more
+> below.
+> 
 
+[...]
+
+>>   /*
+>> @@ -1556,8 +1553,23 @@ static inline void untrack_pfn_clear(struct vm_area_struct *vma)
+>>   extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+>>   			   unsigned long pfn, unsigned long addr,
+>>   			   unsigned long size);
+>> -extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
+>> -			     pfn_t pfn);
+>> +
+>> +/**
+>> + * pfnmap_sanitize_pgprot - sanitize the pgprot for a pfn range
+> 
+> Nit: s/sanitize/update|setup|.../?
+> 
+> But maybe you have good reason to use sanitize.  No strong opinions.
+
+What it does on PAT (only implementation so far ...) is looking up the 
+memory type to select the caching mode that can be use.
+
+"sanitize" was IMHO a good fit, because we must make sure that we don't 
+use the wrong caching mode.
+
+update/setup/... don't make that quite clear. Any other suggestions?
+
+> 
+>> + * @pfn: the start of the pfn range
+>> + * @size: the size of the pfn range
+>> + * @prot: the pgprot to sanitize
+>> + *
+>> + * Sanitize the given pgprot for a pfn range, for example, adjusting the
+>> + * cachemode.
+>> + *
+>> + * This function cannot fail for a single page, but can fail for multiple
+>> + * pages.
+>> + *
+>> + * Returns 0 on success and -EINVAL on error.
+>> + */
+>> +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
+>> +		pgprot_t *prot);
+>>   extern int track_pfn_copy(struct vm_area_struct *dst_vma,
+>>   		struct vm_area_struct *src_vma, unsigned long *pfn);
+>>   extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index fdcf0a6049b9f..b8ae5e1493315 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+>>   			return VM_FAULT_OOM;
+>>   	}
+>>   
+>> -	track_pfn_insert(vma, &pgprot, pfn);
+>> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
+>> +		return VM_FAULT_FALLBACK;
+> 
+> Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
+> trigger, though.
+> 
+> Maybe we could have a "void pfnmap_sanitize_pgprot_pfn(&pgprot, pfn)" to
+> replace track_pfn_insert() and never fail?  Dropping vma ref is definitely
+> a win already in all cases.
+
+It could be a simple wrapper around pfnmap_sanitize_pgprot(), yes. 
+That's certainly helpful for the single-page case.
+
+Regarding never failing here: we should check the whole range. We have 
+to make sure that none of the pages has a memory type / caching mode 
+that is incompatible with what we setup.
+
+
+Thanks a bunch for the review!
 -- 
-2.45.2
+Cheers,
+
+David / dhildenb
 
