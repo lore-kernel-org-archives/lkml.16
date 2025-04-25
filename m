@@ -1,119 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365121D5CC4
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF11E2D78A;
+	Fri, 25 Apr 2025 19:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745608650; cv=none; b=KyYZ0JnZSD6zCQeo76hfn3Wjwn8mIGF9t97UjlgV2QJFqrX6n/MajWovvg83UvlajTc+C4q9na3Mprbw1jHzXGP8RnwOddnVIian/Vw98Z8MxeQTJZMvGI8ILCdC/AWoUD0hVjJKCunxRt8q9oIyVIixMh5KXplWKfwplv9amVs=
+	t=1745608691; cv=none; b=VKUXPfGprA32ERc1JURW96vSrjnM0H9I2ARjaqyfj7gjXaV41snt2wvWAhhHLslNKnEo24ksaR1qvRzHuqtzcM+0RmOjcK6mr525f55O7pMHsFAwU04NIFU3yWEU91GPgW1EHk6riOs82oyuRyVltIfERDbPqYnRwp3vf9x7p+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745608650; c=relaxed/simple;
-	bh=/eHKeSZlC+sG2RSbp5FBHIx3+dmEo7RrjA+oItbP7s4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E8vkEvDj4n2AnCMK2YY+btSXCkvkbBjVZIDD+oPncscGNOP4nD/tfMfx+0WiKzpd2sVgC/GEVqtwbrzJe0cxtv2E7di22f37CpzSyrA81qQYNirvTDBzIOdGv87zQU/YtSvdyrRTMcByxbXzBo8sQzN2Z7HqJlpcIlFT4Qbpq7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=X5QAuYyL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745608691; c=relaxed/simple;
+	bh=VURIFLvJMlHbwvKBM2tzEUd1MXIR+jjLfjKCMpwkC6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dD6Ga0EGMB1Ivp/ramO1YSk4j5iPd5Dk8IZvTmFvUMxMnhrJXbLfnpf2RKP+U+U5F9v4trKzjV0Wf6ZAVxFTA2u+/ly6HGT3Fr14/WpjPLiSYmvOCTjO1hSPWM5dzuHsUKgLKg1rXD+i4YZVpOxNNYF4SuILIYrlZWVKGxSuP1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQ7RKpD7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="X5QAuYyL"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53PGJrXs011042
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:17:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zW4BUb9FJeIyuxTGb9b82pbw8fbGpR+wNWb2Ep/lNvI=; b=X5QAuYyL+Oy0kz2N
-	9XGOknSgXa4sgRM097HDNaLvXo4B99GjTQvOcedu1RoilUorgRcK6gpZh3pVOCQz
-	4ZGQAlpzX2YIo0uYbLFcYwnAHX+fP24IM9U5KFdCzZVpL7OIqHVhBfuTdk95p2KS
-	IKvMb8MjAtYFXSIPOl9XJooM8D/XddQcW93B8hkvoU1RCCXPqtuDHxnI7i7DOBAU
-	MDuRzlHyl8S6vor61m6layMJHeyaRb+IXaIPUdnpH0DkOn/4QqLPYfMgc/xPhSNa
-	cL/O8qt+Ryz9dBHpoFoi7sSVbiwao70XPwcioMpDpw47LDtdIvYJRNH6DA/BUj5A
-	n6yQzA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0j87d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:17:28 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5ad42d6bcso58453185a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:17:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745608647; x=1746213447;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zW4BUb9FJeIyuxTGb9b82pbw8fbGpR+wNWb2Ep/lNvI=;
-        b=KDr06Dg2iYr15pNMg8iFTo1DVbCsWGHCAYHOdfe7MzlbA1KAyY1LjCWOp4dQvRaY1i
-         Gn5qKtUytnB8lFSTHyGgraCG+ZJKg15oJC0tklV/3GjeDO0BJKIFG7EL6JckrjLYdtC3
-         vuF7SZah7rLdJ41CSB7QB/xyz5KDJohZDved2q33ye+NnHmXmbvTZK4+0rHsLx2vrq3u
-         5rYR7T1b8fl9ds1LurAJiRty/4+oQc81TQaS46zyLRuJ1a9ptBbP++G03HRBVrELLsGO
-         /wM52BAlVQFFrMxQdV4eIEYmOSiIbyfHq0crb9VXjH3wQ16sTnLRU+IFLlcAZT/Fuk+V
-         rGUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGF3Ti9nGZtK3cmTSYE5bcfRcBpM0Kb2UBLTucDYIjQ2qi8vKOzesjGbBdJLvdXB9IRE/mJ0DhMeVwwdU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSDjFGfFtvhqso64ADMmJlwYJU6k0Czg0a4GknD8sokMbL5VKK
-	fYo8BfyaAuHaH6cLuJk2ARBB8JZ5m2Nh1xNH2bE3rL3d92zCB+KPeqiWOw+20eq522y1GIP/hFX
-	E0OhnQqnDgd4c7kjmzbEyGCP1cWXAabaVWD9rQSBBDtpZtIU78lsdEMWNK/UWWWQ=
-X-Gm-Gg: ASbGncvLMoNIQMCYK8gsBwMkaGX9mznMDdi2fn7w5S8V5PBVODF/86IraYs7rka0XHi
-	I1tbFvimTmssSRPm+v60OhNJfv/kzNL44ATNINzMLAHLPKo02XanlOrfqisYuDDFri6qmct7p+Z
-	FjWVtTP8p4NwmgpVn1gBRFeZTNJ3n3mKDOcB6BbSY3h7w5WAHDDPZ17qMoGf0en5xJGKMHX/2DZ
-	RoM54KV7Uf9nT72PUniBpzTh4ft7xXhG0l8Q3x0/FOOyrPPNDJBE0U7G5GAypzEmpzkjycD44EH
-	3eUrUwUYxtzqA8r2M32Un1yi9nNyUHK3A5h/xoGWHWEANnGBJO3asDWX67UANtZEP44=
-X-Received: by 2002:a05:620a:24c9:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7c9607a7a59mr149124185a.11.1745608647084;
-        Fri, 25 Apr 2025 12:17:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhxvPbUgf4x5IWB/fQYC99GfuF5ue+amA++zXhl2G8A3b5eTC8c/agPDJ4FcIoJ3T+aG5dJg==
-X-Received: by 2002:a05:620a:24c9:b0:7c3:bae4:2339 with SMTP id af79cd13be357-7c9607a7a59mr149122485a.11.1745608646681;
-        Fri, 25 Apr 2025 12:17:26 -0700 (PDT)
-Received: from [192.168.65.156] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f6811sm1690254a12.47.2025.04.25.12.17.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 12:17:25 -0700 (PDT)
-Message-ID: <7ba896eb-6d22-420e-a289-2f7f650fd39b@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 21:17:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQ7RKpD7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D28C4CEE4;
+	Fri, 25 Apr 2025 19:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745608690;
+	bh=VURIFLvJMlHbwvKBM2tzEUd1MXIR+jjLfjKCMpwkC6s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eQ7RKpD7wXQ49G4nETSjVLgHEj0gxbIND+XhiDJjUGu8MfjwLfN+48n66/23Dl8Eg
+	 nZT3d5aNT+OOa3OHiH9uhNZYjbvzH3ciojIXYi+ZaN/Z+CnIAPltifPJO8Qql//1U5
+	 YwfoqtVQuArwlo0C6SlYSziovjXTO5svNCBbUNqRzLVCXI9rDIm7gbFJjOzrjoPIab
+	 bbomkZdzbRlK3kqHL3vgqG5CE81Fo14gIRHtKSS/qBqKP2ynuH5Etq+StaT92QKoI9
+	 KD5upa33m4OM7+MjBt3fQJ28bd71yYRe8FShUFvppLPygdbJxLD9QgPbKcPbhLJWvg
+	 +mzwmyo2T/ObA==
+Date: Fri, 25 Apr 2025 14:18:08 -0500
+From: Rob Herring <robh@kernel.org>
+To: Grzegorz Jaszczyk <jaszczyk@chromium.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	saravanak@google.com, dmaluka@chromium.org, bgrzesik@google.com,
+	jaszczyk@google.com, ilpo.jarvinen@linux.intel.com,
+	usamaarif642@gmail.com, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, tnowicki@google.com,
+	mazurekm@google.com, vineethrp@google.com
+Subject: Re: [PATCH v2 2/2] x86/of: add support for reserved memory defined
+ by DT
+Message-ID: <20250425191808.GA2681888-robh@kernel.org>
+References: <20250418124718.1009563-1-jaszczyk@chromium.org>
+ <20250418124718.1009563-3-jaszczyk@chromium.org>
+ <20250423140913.GA360030-robh@kernel.org>
+ <CAGptq8GzJh38349ZZpEOw9sV8ihtJMHqV=PH9WUbG-C7b0tJjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] docs: firmware: qcom_scm: Fix kernel-doc warnings
-To: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@oss.qualcomm.com, Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250425-fix_scm_doc_warn-v2-1-05a4f81de691@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250425-fix_scm_doc_warn-v2-1-05a4f81de691@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: FjZBVHTwIhtvYXFWnK5ntTm3AAtOloyz
-X-Proofpoint-ORIG-GUID: FjZBVHTwIhtvYXFWnK5ntTm3AAtOloyz
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=680bdfc8 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=KcDGLjRRELW1gusNAwwA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI1MDEzNyBTYWx0ZWRfX7JOsKTQg4+JY Joy84YCo7KlSrDAa9jJWmCU+oAdkRgPwsDdsAKf4zpD7qdNToGUj9hzkMKXCsQiz/Myws7W5eqH HAm5ETIXaYdvAl9TCqpHzNxAatED818HfQCYZMmqkggvVJWu3QIPP9WDnm1mJVp7J5DiUg2slPy
- 5r2y7rh0hklmxq7/zDsVG1hdUbU1+O5S55BXQIipCix0m+bm2fT6jHZehzalv97xuV1C3zAhyh0 OfWazwW8CrN/ljVrmw+VAotADiHkuO0+/O/cAWjXEqmQVqVuAU/vDTshv14LoXYo5lIpwDTtR/M Gv1Q57oAmQR28EoVK+VlY9FzE4qzUnhf/ULJma74JmkNB1GFtiufIUQ0HK6yj6p6FbN99c1KrjP
- NGbcPzXduPHWGeUWboMqY1Yf4tffIjVqjWfefkOCPTfHW5JwIRxY/ntACp8iXGrFODrna7LX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-25_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504250137
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGptq8GzJh38349ZZpEOw9sV8ihtJMHqV=PH9WUbG-C7b0tJjg@mail.gmail.com>
 
-On 4/25/25 7:32 PM, Unnathi Chalicheemala wrote:
-> Add description for return values and other arguments of a few
-> functions to fix kernel-doc warnings.
+On Thu, Apr 24, 2025 at 08:06:33PM +0200, Grzegorz Jaszczyk wrote:
+> On Wed, Apr 23, 2025 at 4:09 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Apr 18, 2025 at 12:47:18PM +0000, Grzegorz Jaszczyk wrote:
+> > > From: Grzegorz Jaszczyk <jaszczyk@google.com>
+> > >
+> > > The DT reserved-memory nodes can be present in DT as described in
+> > > Documentation/devicetree/bindings/reserved-memory/reserved-memory.yaml.
+> > > Similar to other architecture, which supports DT, there is a need to
+> > > create reserved memory regions for such nodes.
+> > >
+> > > Additionally, the x86 architecture builds its memory map based on E820
+> > > description passed by bootloader and not on DT. Since x86 already has
+> > > some DT support and allows booting with both ACPI and DT at the same
+> > > time, let's register an arch specific hook which will validate if a
+> > > reserved-memory region passed by DT is valid (covered by E820 reserved
+> > > region entry).
+> > >
+> > > Without this check, the reserved memory from DT could be successfully
+> > > registered, even though such a region could conflict with e820
+> > > description e.g. it could be described as E820_RAM and could be already
+> > > used at early x86 boot stage for memblock initialization (which happens
+> > > before DT parsing).
+> >
+> > Sorry, I don't get how it conflicts. Wouldn't the E820_RAM be registered
+> > with memblock and memblock then handles the conflict (or should).
+> >
 > 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
-> ---
+> On x86, early memblock setup is performed by e820__memblock_setup()
+> and regions which are marked as E820_RAM are added to the memblock
+> "memory" type and such regions can be later on used for memblock
+> allocation on early x86 setup. If memblock allocation is performed
+> after e820__memblock_setup and before x86_flattree_get_config,  the
+> reserved region described in DT (but described as RAM in e820) could
+> be silently used before we scan DT for reserved memory regions.
+> 
+> Additionally there are more reasons why we want to make sure that e820
+> reserved regions are in sync with DT reserved memory: resource tree
+> building and setup pci gap based on e820.
+> On the x86 resource tree is built taking into account e820 entries
+> (e820__reserve_resources()) while on other arch like e.g. arm64, which
+> relies on DT, the resource tree is built taking into account
+> information from DT(request_standard_resources). Mixing both on x86
+> seems problematic and at first glance could be achieved by e.g.
+> patching e820_table via e820__range_update so other part of the early
+> x86 kernel setup such as e820__setup_pci_gap() will also not use
+> region which is described in DT as reserved-memory. But it is not
+> straight-forward (initially I've tried to go through this path) e.g.
+> it will require handling DT earlier (x86_flattree_get_config) but at
+> the same time x86_flattree_get_config relies on the memblock being set
+> up. Therefore it seems that making a requirement that the e820
+> reserved region should be in sync with DT reserved-memory on x86 is
+> reasonable.
 
-I only noticed now that the commit title is funky (unexpected "docs:"
-prefix)
+x86_flattree_get_config() is a bit odd in that the DT is mapped and 
+unflattened in one shot. Usually the flat DT is mapped and scanned 
+early, and then only unflattened once memblock is up. You will be better 
+off moving the early mapping and scanning earlier. Then the next thing 
+you want from the DT early will be there. For example, the console or 
+handling for kexec (which is its own reserved regions).
 
-Konrad
+Rob
