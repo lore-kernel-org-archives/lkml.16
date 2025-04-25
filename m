@@ -1,143 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34C32367A1;
-	Fri, 25 Apr 2025 10:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1A8238D5A
+	for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 10:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745576463; cv=none; b=oVC80LsYjK5YCttGBpqAKRU72ZRjzs7JKIjTkymtQbA8gLFXkxJGxkC3MBrRqGyIRvUTNvbWFHftp6WSPiNcFjRhIcvCveydvtuWi2JjZHFelDatkzSN7tiLvK3p2UMXyxe75b7LRFCaiiEKRvFJshyLVlXzkci2sCfV7DUPX54=
+	t=1745576479; cv=none; b=mt7MlvufyRqQTTS6bAEm22bUkTe0uQ8Huo9XoEY+iBWxjsBq2Oc62XrXaZdY/MHrB3/zC4XZd7JkhsIS5I+7CAwvWx52owiXSkqF1yg2WYBr3RYPFGaXJ+y+Ipp4Suyi4duwqs5DuMVRuGsy2CdNoyG6L7+A8m7kXpH/0LgkXxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745576463; c=relaxed/simple;
-	bh=Mdpk2ZsvpBn5ks3syBMCHsZS+/pOlHM9FFEXGwjhKiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f+smRBcojO8a2RyB/2cNj9iIQb88+EzzZNEevPHwGL6YWbKEGKFnXSvwtX6N1+Cy4UDMgIxu/wiJVlKCPXRLmFC/ZOQZnDcn0vJvmYih+mD4vnicadqe4F3GW9JtrSAUJWRVyo/UMt6KNu8aFeJkrgN/Q3FxoM5ORWkEEVpSf7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOjlYB7+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745576479; c=relaxed/simple;
+	bh=bea2MAWR2xePWrRZDSwx6U/cct68IawnA8pK7VpVqac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PRmlLwQDCARkNVHDNpVLVKn/CnpSdJwBtw9O17ufQn6ntVCcriX0yUG+XwudVGoO7qf6Rrta53Pqs7+OvnwLip8blGvbSuumGYVMtjhECRsX/aSTcJatO0S9tZKkWwsJTyjkFKREgustWY5livC+SqYr/Wwzt5QmibB/Auxwe78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pYQ2pLQw; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOjlYB7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E59C4CEE4;
-	Fri, 25 Apr 2025 10:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745576463;
-	bh=Mdpk2ZsvpBn5ks3syBMCHsZS+/pOlHM9FFEXGwjhKiY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XOjlYB7+i08z+GoERDeUNeRnW0A9Bvm08AqKS36Q2N6vuB7y1GvX2opDGHquz/pOK
-	 Dc5FfrjUnbbW12hfBw6BGW1FVlIjBNOGQ6/qIvfPkhf3g9mTeTxU/lmxi2ZPZmMoPc
-	 rSHxh+arrbfFu1t6EXDrrg464dJuBWDcqUD6Vl/auZc97KILBf04NHknHFG+3JOmf1
-	 BGyn0SlTu4qVzQlHULHbFQSGMQq9caCrao9cxea/gRO+WL4cEiouX81O1fb//WPI4O
-	 +lfByFXD8CFNeuvhurZby9acl8kw3ENTWmyBlH3wa8CEgeV2XSvNq7kKP3pJw/8pRQ
-	 C/rQxIjFnNtXw==
-Message-ID: <b32ac98d-6db7-493e-a780-5c4943111184@kernel.org>
-Date: Fri, 25 Apr 2025 12:20:59 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pYQ2pLQw"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7053f85f059so20071217b3.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 03:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745576476; x=1746181276; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4xtlWzmg2HNhGfo1n6j6VZxV97pQa994I7X0fglbPbg=;
+        b=pYQ2pLQw7RRly8kASM2fnwPGu5txqC0V03JcFX+3sAdpNhASp1KUas1PdBoQkhV1Xp
+         qUfvvfwyLbe/Yo71EZ46W6jntyzwIjKqwwOD2BaTYqRU1j7gv/uEy0BMDIWTT+y6Ltgq
+         8E6bWn94SKa3MgIdSyfOpzt3PlSnLWeyeKtix/VoOpZNofc9j/3bZacJXYEQcCUg/YAD
+         5OeImXyixZv2KQBruhIP7k9RHvXoBSOQYPoQgVGqxflI5J4vmT535yq1++ypzpBiTn0e
+         wBa3h4uFoS2ESq6g8eCL0uEwiT3Wbji1DjN3DxvTmourvcfWEE+tj2gSiqnNk+Os4gd+
+         ko9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745576476; x=1746181276;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4xtlWzmg2HNhGfo1n6j6VZxV97pQa994I7X0fglbPbg=;
+        b=tfTiAheRRVmwTp395lgw2SXpajK6Smc35u1e14SCD1yToJsVpehj816Dx+ISalENxQ
+         hogzUKx3atDN7FQxgl3bKRYxL42cEvzR6weoo3SiKkS8BiZdA47I4Uj1MJc8JWfgHFo4
+         ZE0268TcdUpTH6yX7CRIWH9CmoT+0hZSAxa57xtOwfD5Dco3jZ/f6lAfpHRyFKzP48mN
+         +J46QqMbt2UoG87kGvfnxqzTy9Mkx7U+XZACmkCKtjmpblFErh2TRQ3n2Ac/z1rCmR+n
+         w2c+EdNAnaQtl3SOlZiSCcC5mPgGBYPyzaXL8HplACM2jscrt+G0nBz8dV5xGiIo/tGm
+         HNOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtqgwbkiAsfrcj/iRoU6/KA/y60xHBvS76eeq+z9/joUu/U76mLedlD4S+C6pCTWWzgn+LpNwhv21/KzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJtt75B5B9y3pwWtLP5s46whytyvGduwlgf02TCpubLdhsjwSN
+	lV98Ia7IEPhEMR1TGF2ImtXDobbUqgIHOfjqWU7JpHHguYGUqIuDXtzc+asnu2khaQXZSEsKDOD
+	8dDTuYkrYP7OLXgBV9jXu50ZxCPgxrjGEQAAucQ==
+X-Gm-Gg: ASbGncutfcsGOsQTLrXIQK87iuhUPhEfVXmuATcHZpmnH1kyPN9mdLADiRTZUxDVp/J
+	AMkMQU7iS0ZnwzfIWLxEL2b0hn2jocfQcQaPSQGcvEX6F62V/nfxy8hW1wJl3U4jmVtTurtc+KZ
+	tlAcRko1SkRqp5yN/slksmFUM=
+X-Google-Smtp-Source: AGHT+IFwzWvVcQW2OIuOPuNm7S3wzxb/4DZpY2/AfSEZfPmecvdAWyRMS5KH+2afz+oKQvj6DmCUtklI/lnuHoLlgh8=
+X-Received: by 2002:a05:6902:2411:b0:e6d:e8d4:681f with SMTP id
+ 3f1490d57ef6-e73168936fdmr2304939276.35.1745576476343; Fri, 25 Apr 2025
+ 03:21:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: soc: Add VIA/WonderMedia SoC
- identification
-To: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250423-wmt-soc-driver-v1-0-bd8bf32521c2@gmail.com>
- <20250423-wmt-soc-driver-v1-1-bd8bf32521c2@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250423-wmt-soc-driver-v1-1-bd8bf32521c2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250417074645.81480-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250417074645.81480-1-krzysztof.kozlowski@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 25 Apr 2025 12:20:40 +0200
+X-Gm-Features: ATxdqUFX3-aj6uGzZ6MjZfzJuyAtiwi1E0if2kOJDDTWutgbL5RxXK5HHoQxSiU
+Message-ID: <CAPDyKFpTKxA1fvppkADP=XVbU5YroczNMfYtjELK_TyGR54f2A@mail.gmail.com>
+Subject: Re: [PATCH] pmdomain: arm: Do not enable by default during compile testing
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 23/04/2025 21:18, Alexey Charkov wrote:
-> VIA/WonderMedia SoC's have a chip ID register inside their system
-> configuration controller space, which can be used to identify
-> appropriate hardware quirks at runtime. Add binding for it.
-> 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+On Thu, 17 Apr 2025 at 09:46, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Enabling the compile test should not cause automatic enabling of all
+> drivers, but only allow to choose to compile them.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
+
+>
 > ---
->  .../devicetree/bindings/soc/vt8500/via,scc-id.yaml | 37 ++++++++++++++++++++++
-
-chipid should probably go to hwinfo directory in bindings.
-
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml b/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..eac72bd66fd6331c8d9316288bc1acc3e337efaa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/vt8500/via,scc-id.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VIA/WonderMedia SoC system configuration information
-> +
-> +maintainers:
-> +  - Alexey Charkov <alchark@gmail.com>
-> +
-> +description:
-> +  The system configuration controller on VIA/WonderMedia SoC's contains a chip
-> +  identifier and revision used to differentiate between different hardware
-> +  versions of on-chip IP blocks having their own peculiarities which may or
-> +  may not be captured by their respective DT compatible strings
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: via,scc-id
-
-Compatible based on SoC (and then also keep filename matching it).
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-Best regards,
-Krzysztof
+>
+> For longer rationale:
+> https://lore.kernel.org/all/191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com/
+> ---
+>  drivers/pmdomain/arm/Kconfig | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pmdomain/arm/Kconfig b/drivers/pmdomain/arm/Kconfig
+> index efa139c34e08..afed10d382ad 100644
+> --- a/drivers/pmdomain/arm/Kconfig
+> +++ b/drivers/pmdomain/arm/Kconfig
+> @@ -2,7 +2,7 @@
+>  config ARM_SCMI_PERF_DOMAIN
+>         tristate "SCMI performance domain driver"
+>         depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> -       default y
+> +       default ARM_SCMI_PROTOCOL
+>         select PM_GENERIC_DOMAINS if PM
+>         help
+>           This enables support for the SCMI performance domains which can be
+> @@ -14,7 +14,7 @@ config ARM_SCMI_PERF_DOMAIN
+>  config ARM_SCMI_POWER_DOMAIN
+>         tristate "SCMI power domain driver"
+>         depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> -       default y
+> +       default ARM_SCMI_PROTOCOL
+>         select PM_GENERIC_DOMAINS if PM
+>         help
+>           This enables support for the SCMI power domains which can be
+> @@ -27,7 +27,7 @@ config ARM_SCMI_POWER_DOMAIN
+>  config ARM_SCPI_POWER_DOMAIN
+>         tristate "SCPI power domain driver"
+>         depends on ARM_SCPI_PROTOCOL || (COMPILE_TEST && OF)
+> -       default y
+> +       default ARM_SCPI_PROTOCOL
+>         select PM_GENERIC_DOMAINS if PM
+>         help
+>           This enables support for the SCPI power domains which can be
+> --
+> 2.45.2
+>
