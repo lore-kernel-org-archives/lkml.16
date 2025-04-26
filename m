@@ -1,51 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1A21DF988
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 19:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B92701C4;
+	Sat, 26 Apr 2025 19:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745694596; cv=none; b=SHulNxdY8jqxDDa/O69kYXReWVU6SKN4j+CtNXgdj50yc/ntmqUwG3JnDr6qUyIVZdyaaMxZrFW+E0wytnae5nr3saTTgS5NLn5N6Kf4VUJPtpxdM80IpvpjwyOvU3M557eo5chzQMWlTKE7LoGD1kAOHQRfyrI6iUEyYZ9N6Ac=
+	t=1745694935; cv=none; b=e0pvM8+J+lyJ+Ank5WpwvmG/lNOwmX7peNBidpF89KlS8hlmv2g+zCZco/N10tYjG0PF4bXvaULxQ3LWxQtHHt7WUDaooyadEw9pt0J6mgtRQBxcIjvUMmMp5PRv8Nnza2oU57MlbcgR98kNR8u6Q3C+neTcy5OrTd3GXF/2Zx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745694596; c=relaxed/simple;
-	bh=07l3WctL9NqhfdN89XZmqkm5zTdk90Q/ztrcy/DErjg=;
+	s=arc-20240116; t=1745694935; c=relaxed/simple;
+	bh=brOk3A6MPbfofZsQC9PM6kvZwS6E7KFFlMtFDrx1zJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZXDNKIV60bIKEDwhhgopzrihmmrVpNoaCCq7tAa94kYZI2W5WvpXJpzUBI2pGwUm2DGEi0kM0mhmSYuPUZz02YRj4hmiheeFL+IFLBuPcvotx/Xzs3QHMBu++qdLwDAP/SlrAa7ujYwVjhfEISx2MKA+fniBvcB2ZenrAQ/RwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVfY67VW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iIBgOFXzPXt3Wr1QqPmW/ZUe8S2oYoq42ossg6mMdv+TmOfinAm+0P0ltF3w2UIgwWJ3w/Fv+/tGfuWAe8FPF7OOpoTBkup+oiy7cgfN/s75FGebGQVf7PJFuigPuZGDW1bDDlPz7VB9rj9F+mstyFcncaz78k4h2Mncq4hIdWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=frwqe0Gj; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVfY67VW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92973C4CEE2;
-	Sat, 26 Apr 2025 19:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745694596;
-	bh=07l3WctL9NqhfdN89XZmqkm5zTdk90Q/ztrcy/DErjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NVfY67VWhCVqlpe7m2m9BJZW2pOZWxvq9m7gF6cpOJC+vZijOXds7YNWbZ8+8wBvK
-	 v0gjXTJEl6up/BuqExzotOfQNrcXc/iSM12njyAUxBde+8Eggt3fT+zKp8fTm6tuJg
-	 PqZcKEa/R/OEzNXAO+yXnU6NhDVPIpDthVGKhEvfVRk+4pGzH/5SzmMqyuTgw06Net
-	 2QKbaK8Jk0J2yQtumpT3m2LmZs6und/oVXYc2A3uUnU4wd5IXdmNpOFcvbYSDKcFti
-	 t0C5fSSHVbnxYk09jk/DjG8CzVR9FPjIaAhbJGXXFKVxVxysfDBpTOKlMWy2bDoXHd
-	 +ZfFc3/gEW3qQ==
-Date: Sat, 26 Apr 2025 21:09:50 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] [RFC] x86/cpu: rework instruction set selection
-Message-ID: <aA0vft1cPuvzdZvJ@gmail.com>
-References: <20250425141740.734030-1-arnd@kernel.org>
- <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="frwqe0Gj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745694933; x=1777230933;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=brOk3A6MPbfofZsQC9PM6kvZwS6E7KFFlMtFDrx1zJQ=;
+  b=frwqe0GjJbZhaoJrpsquC6+9hmJlNgQ66mH0i8huhOG4ZshdyERfd12L
+   esQ9OtMb+3e63riTg6872nxjHaYc3DzuAl/d9iI8J5VG5yPbwFJXF4LQx
+   A0i3vMx12lOx+ZkfKc0O0m/wVCGTBnTjrtR6e6L8YZ5B0HK9KEnH3Jpwy
+   ATrVh5kV2vdRA5QMnSW+fpdrwuE8x5V6dnQb+hY0xp9LZu05RPKZH3p9a
+   osL/F9y0MBzBpp8C3Z5g+KbR0ulLt8UDQuY1BTyTT8G0WaygbN9GnxLpH
+   JdWWoVDnF+cdVn6U0Xa9f1HsgO4VISGozgwUlWMdX0qcPsiVKTTsnUO5s
+   A==;
+X-CSE-ConnectionGUID: BJl1FCuPQEmf1SnLZmiebQ==
+X-CSE-MsgGUID: fpalePb0Q3Wa0wR5uYWIaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="46445891"
+X-IronPort-AV: E=Sophos;i="6.15,242,1739865600"; 
+   d="scan'208";a="46445891"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 12:15:33 -0700
+X-CSE-ConnectionGUID: gokFKn95S0S6quEt4GqBow==
+X-CSE-MsgGUID: tawfhFxxRKmiVUC6cgQZOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,242,1739865600"; 
+   d="scan'208";a="133477669"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Apr 2025 12:15:29 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8kzn-0005xV-1e;
+	Sat, 26 Apr 2025 19:15:27 +0000
+Date: Sun, 27 Apr 2025 03:15:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Eugen Hristev <eugen.hristev@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+Message-ID: <202504270311.4lppXI1u-lkp@intel.com>
+References: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,28 +72,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
+In-Reply-To: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
+
+Hi David,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on aff301f37e220970c2f301b5c65a8bfedf52058e]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/iio-introduce-IIO_DECLARE_BUFFER_WITH_TS-macros/20250426-051240
+base:   aff301f37e220970c2f301b5c65a8bfedf52058e
+patch link:    https://lore.kernel.org/r/20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248%40baylibre.com
+patch subject: [PATCH v3 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+config: openrisc-randconfig-r053-20250427 (https://download.01.org/0day-ci/archive/20250427/202504270311.4lppXI1u-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504270311.4lppXI1u-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504270311.4lppXI1u-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/container_of.h:5,
+                    from include/linux/list.h:5,
+                    from include/linux/kobject.h:19,
+                    from include/linux/cdev.h:5,
+                    from drivers/iio/industrialio-core.c:13:
+>> include/linux/build_bug.h:78:41: error: static assertion failed: "macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment"
+      78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                         ^~~~~~~~~~~~~~
+   include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
+      77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+         |                                  ^~~~~~~~~~~~~~~
+   include/linux/iio/iio.h:815:1: note: in expansion of macro 'static_assert'
+     815 | static_assert(IIO_DMA_MINALIGN % sizeof(s64) == 0,
+         | ^~~~~~~~~~~~~
 
 
-* Arnd Bergmann <arnd@arndb.de> wrote:
+vim +78 include/linux/build_bug.h
 
-> CMOV is missing not just on old Socket 5/7 CPUs (Pentium MMX, AMD K6, 
-> Cyrix MII) but also newer embedded Via C3, Geode GX and 
-> Vortex86DX/MX/EX/DX2. The replacement Nehemiah (2003), GeodeLX (2005) 
-> and Vortex86DX3/EX2 (2015!) have CMOV, but the old ones were sold 
-> alongside them for years, and some of the 586-class Vortex86 products 
-> are still commercially available.
+bc6245e5efd70c Ian Abbott       2017-07-10  60  
+6bab69c65013be Rasmus Villemoes 2019-03-07  61  /**
+6bab69c65013be Rasmus Villemoes 2019-03-07  62   * static_assert - check integer constant expression at build time
+6bab69c65013be Rasmus Villemoes 2019-03-07  63   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  64   * static_assert() is a wrapper for the C11 _Static_assert, with a
+6bab69c65013be Rasmus Villemoes 2019-03-07  65   * little macro magic to make the message optional (defaulting to the
+6bab69c65013be Rasmus Villemoes 2019-03-07  66   * stringification of the tested expression).
+6bab69c65013be Rasmus Villemoes 2019-03-07  67   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  68   * Contrary to BUILD_BUG_ON(), static_assert() can be used at global
+6bab69c65013be Rasmus Villemoes 2019-03-07  69   * scope, but requires the expression to be an integer constant
+6bab69c65013be Rasmus Villemoes 2019-03-07  70   * expression (i.e., it is not enough that __builtin_constant_p() is
+6bab69c65013be Rasmus Villemoes 2019-03-07  71   * true for expr).
+6bab69c65013be Rasmus Villemoes 2019-03-07  72   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  73   * Also note that BUILD_BUG_ON() fails the build if the condition is
+6bab69c65013be Rasmus Villemoes 2019-03-07  74   * true, while static_assert() fails the build if the expression is
+6bab69c65013be Rasmus Villemoes 2019-03-07  75   * false.
+6bab69c65013be Rasmus Villemoes 2019-03-07  76   */
+6bab69c65013be Rasmus Villemoes 2019-03-07  77  #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+6bab69c65013be Rasmus Villemoes 2019-03-07 @78  #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+6bab69c65013be Rasmus Villemoes 2019-03-07  79  
+07a368b3f55a79 Maxim Levitsky   2022-10-25  80  
 
-Very few (if any) of the commercially available products will run 
-modern 6.16+ kernels, right?
-
-Note that the real danger the 32-bit x86 kernel is going to be facing 
-in 2-5 years is total removal due to lack of development interest, but 
-I think we can support 686+ reasonably far into the future, and can 
-keep it tested reasonably - while covering like 99%+ of the currently 
-available 32-bit-only x86 products on the market. The fewer variants, 
-the better.
-
-Thanks,
-
-	Ingo
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
