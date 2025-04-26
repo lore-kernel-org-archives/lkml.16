@@ -1,86 +1,83 @@
-Received: from www572.your-server.de (www572.your-server.de [188.40.218.140])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2644A02;
-	Sat, 26 Apr 2025 02:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.218.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D31E834D;
+	Sat, 26 Apr 2025 02:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745634049; cv=none; b=gV2M+cWlEIFR/f8GFTExdV99vmv8ING2XlvO5QRRtKmuOEiN6kZhXkLBbuLyJqPCRfLkfzU1CU/CponBSRuSJ2Qm7LOorBpv5/y8A1gZQd9OsSO5EClQqJZMKPg/boyrNkG3ZTedCESI6XIDSPyKNUg4Gdavq38q+1valqw0nh0=
+	t=1745634771; cv=none; b=fs4VH7kMmRna2oWrUGntihuvxHH0D8Yjb6zviOFuxRpCrqyhixi0qSwIbZVUHWFycbQT1iNTtSqpENnvxOOo2uBo7MbZVqGPmA8tjDOV6FOpYI7uhX9eqg97w9JQyIe/yOPtFTY9Htw3vkq9jrxuZcUDVeXtyUqmqG2hdqwMgUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745634049; c=relaxed/simple;
-	bh=abpqB7r7yhSJl9fJC74FAcYqtD9rIO9MlBWGIhv9euM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jqAhob3AS8e1IM5bv4iNjl5DMueOUaAaz1z0n2FE/lX99ieTh7fTXQfUJ9KRB9knIqeyDmO7qZ98lMdCcJ26ZbwljlwZzSKwBVIM1YdQLC/VgaDmcKOlNVwuGn3ks1SAyyZJkvF34jVLz0psNUhMQ5jjp8h4OZs58KBn4otGTNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ponkila.com; spf=pass smtp.mailfrom=ponkila.com; dkim=pass (2048-bit key) header.d=ponkila.com header.i=@ponkila.com header.b=HfMNfN2x; arc=none smtp.client-ip=188.40.218.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ponkila.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ponkila.com
+	s=arc-20240116; t=1745634771; c=relaxed/simple;
+	bh=+RUTWIt3VFeUueyp+/LHBU7OQa1nslQTo03DjgGapQA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KZvxPmMh8fPvildNUB50dIGBJOh8LKZJLnVSTVKpTdJ4cOpiDP+pD103TAmRuZBcFzw4AwWYju6Crsa6XeJC5itsK89tIFjfPRodca2poR43PFjNS65orNctStefg8eziXAakNIwZIX5yO3R5uabW7cEg7AvuLah223sBHxSBsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NV3HH5cT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ponkila.com header.i=@ponkila.com header.b="HfMNfN2x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ponkila.com
-	; s=default2410; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=tz9cMsRoYeMhEHGF4I0Gy1Va1L8t4+FiGi1VZlVHcl0=; b=HfMNfN2xhuruSkGspT+3OMODbL
-	7TtPuVvrPBq7qOr+W7d2mBtDOK7nR+6IFMFMyS5/o/wNU12risL7vZ1f638aLxPPu12GrIbTjV0zk
-	jvtBKEbkSyJq0HNA7ZKyAJ4qyK7a6U5FucAjl1JhpqPag+C0Z9gvyrtxuXXXM4lZxrJhnTlzFcQAN
-	0Emh0q2coGju0VBVY0zo2FaYgTO4QH6BE+L1IiRV+G+OfzNYb4V0G2W435KSqyWiZ0GRDk4YU32Fx
-	Jz506kxcGVVXB9IUgHDc0QOcIQpvU+b8kt1CrztNpbRzRYNyQyTr9tUT+zI4A5W/CobDjeB8ieajD
-	9H0DU1Pw==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-	by www572.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <jesse@ponkila.com>)
-	id 1u8Uuw-000OFY-2X;
-	Sat, 26 Apr 2025 04:05:21 +0200
-Received: from [2001:14ba:a86b:a900::1373] (helo=localhost)
-	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <jesse@ponkila.com>)
-	id 1u8Uuv-000OeU-1f;
-	Sat, 26 Apr 2025 04:05:21 +0200
-From: Jesse Karjalainen <jesse@ponkila.com>
-To: linux-leds@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Jesse Karjalainen <jesse@ponkila.com>
-Subject: [PATCH] leds: pca995x: fix typo
-Date: Sat, 26 Apr 2025 05:04:54 +0300
-Message-ID: <20250426020454.47059-1-jesse@ponkila.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NV3HH5cT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B430EC4CEE4;
+	Sat, 26 Apr 2025 02:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745634770;
+	bh=+RUTWIt3VFeUueyp+/LHBU7OQa1nslQTo03DjgGapQA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NV3HH5cTytNLqUSnhZu/e/1hOQv76j3RXu91ccBhnAZKPShm2ywlHlwxEmP2NFyJ8
+	 9mJGv0SrHBCtXVkieOdFVL+aj36B86SkAmVo+3g7zY7zwp1CWMsmr/ZbWtOT8bEZyr
+	 8NA5f5WhQqLgsoDwMQL/xkJ+DI4oOl2RlkHukU3w=
+Date: Fri, 25 Apr 2025 19:32:49 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd
+ Bergmann <arnd@arndb.de>, =?ISO-8859-1?Q?Ma=EDra?= Canal
+ <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook
+ <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>, David Gow
+ <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, Brendan
+ Higgins <brendan.higgins@linux.dev>, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, Daniel
+ Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, Guenter
+ Roeck <linux@roeck-us.net>, Alessandro Carminati
+ <alessandro.carminati@gmail.com>, Jani Nikula <jani.nikula@intel.com>,
+ dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org
+Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
+Message-Id: <20250425193249.78b45d2589575c15f483c3d8@linux-foundation.org>
+In-Reply-To: <20250313114329.284104-1-acarmina@redhat.com>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: jesse@ponkila.com
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27619/Fri Apr 25 10:35:46 2025)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Remove the stray space between the '.' and the 'data' field name in
-the PCA995x device-tree match table.
+On Thu, 13 Mar 2025 11:43:15 +0000 Alessandro Carminati <acarmina@redhat.com> wrote:
 
-Signed-off-by: Jesse Karjalainen <jesse@ponkila.com>
----
- drivers/leds/leds-pca995x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Some unit tests intentionally trigger warning backtraces by passing bad
+> parameters to kernel API functions. Such unit tests typically check the
+> return value from such calls, not the existence of the warning backtrace.
 
-diff --git a/drivers/leds/leds-pca995x.c b/drivers/leds/leds-pca995x.c
-index 11c7bb69573e..6ad06ce2bf64 100644
---- a/drivers/leds/leds-pca995x.c
-+++ b/drivers/leds/leds-pca995x.c
-@@ -197,7 +197,7 @@ MODULE_DEVICE_TABLE(i2c, pca995x_id);
- 
- static const struct of_device_id pca995x_of_match[] = {
- 	{ .compatible = "nxp,pca9952", .data = &pca9952_chipdef },
--	{ .compatible = "nxp,pca9955b", . data = &pca9955b_chipdef },
-+	{ .compatible = "nxp,pca9955b", .data = &pca9955b_chipdef },
- 	{ .compatible = "nxp,pca9956b", .data = &pca9956b_chipdef },
- 	{},
- };
+I've had this series in mm.git's mm-new branch for a while.  I didn't
+send it up for 6.15-rc1 due to what I believe to be unresolved review
+issues.
 
-base-commit: 02ddfb981de88a2c15621115dd7be2431252c568
--- 
-2.48.1
+I'll drop this v4 series.  Please resend if/when suitable.
 
+Some notes I have taken are:
+
+https://lkml.kernel.org/r/202504190918.JLNuRGVb-lkp@intel.com
+https://lkml.kernel.org/r/20250402074550.GQ5880@noisy.programming.kicks-ass.net
+#arm64-add-support-for-suppressing-warning-backtraces.patch: check review
+
+Some fixes I had merged which presumably should be carried forward are
+https://lore.kernel.org/all/20250330212934.3F898C4CEDD@smtp.kernel.org/T/
+https://lkml.kernel.org/r/20250330212739.85827C4CEDD@smtp.kernel.org
+
+Thanks.
