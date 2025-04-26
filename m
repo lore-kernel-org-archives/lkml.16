@@ -1,104 +1,86 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C3D1DE4F3;
-	Sat, 26 Apr 2025 11:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4D92253A7;
+	Sat, 26 Apr 2025 11:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745666654; cv=none; b=EMCsXlmJc1E2FXRT1XN6cQZoSMhgF2Ns5UNijJOuq4ZYGAshZYDzEsEHVpEO9qpYOIf1EViFifWtNkpL13GDielHd0m7UfkFM92ReWOcl5OSzw7Eql7ylQATZjU5ZnpXhl3uKI1dFdbsxoC8FJKimjjTSFGw+ik9jSTK1t96FMI=
+	t=1745666670; cv=none; b=Ya6fKkWqtUjAmGpDCnw5/rWENjgcnf9TzPNPailV+G+jSkriycmot800HARt8ci0hRecTuxDRHG7ZJjTW0Op9S431hfte/OYpwqTvHfP9shIVJueFrC3OQeEitL1Ngrass09MZ2ce3geaYBPMELrB+R6XPlmIYirBAnspK0GEX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745666654; c=relaxed/simple;
-	bh=D56xyUsRNjS6kGwI5WFwC9fzpNAmFejvLD+smYXxh4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c2KXie0zQr9Szpazl/uWyeSGTrY8uqYty7897KN2WqD7U1dzcMvg2BE2aw0FaB7Vk++EEZTxR0RcbInlBu059MIrjDI3emP33ntAMGyhS8FfXz53heMaYf0JU/xYQlXisHbsCfJ/diL2NUQAqvYhxkJ/Nu1YsRK4aMCt71oqrNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e7uDT957; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745666670; c=relaxed/simple;
+	bh=Vm3IZsXSU/eJ3GT/vGl/2eAMEOMlqN1H1YjSaFCjHPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kX+6RSGEBI6wyZEfbZ/gvNXKX+aW3Z7X/ycofHOT337Max6M2UJQlU9HT3TiAgg6mv8+EtZfEt5m//H1pMPHF2wtGLm1xRGopXkekI2ib+CmvqnpO7cGd6atby/F7tF2O5D2ZoU/plofKF7gFEceNbtIT6Hk30HEeZl2PUKgoaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCnEm0L9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7uDT957"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5e2fe5f17so330969485a.3;
-        Sat, 26 Apr 2025 04:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745666651; x=1746271451; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pqnzJpyxKOv8D4bjtcYPnfE8mIr/LA4bSJZ1glU6cV8=;
-        b=e7uDT957IdMvj7RowpbWuXtZH6eGBnkIA5wpQHInNvhH+dEtcp+p7QZvv80Zdf9Zu+
-         bZVP3J/ytal60CLY2O7O6GgfyskmaENIjsoIo6xt+vYoJFIjEcALmU2lxkWD+EfnRlpJ
-         hsUEhyx5Bj5Cj+lCJka565tgMApXlMBbV7qqh8tU3l7DehGDTzfxXyhh5i6kuKyVMwVU
-         p+js1tkbaRxQV/rR5NW0gKY1UWsDU0V43Lr6eIbWPZUj3qhdAWyzZGrq9x5wFenLW19B
-         L+dLNa5h2u8WPFfoQoGwh4dSsIJf1dqUDOMe4dFkflpXktcoWs6MocQ/7oqtPYfFK0tC
-         2h3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745666651; x=1746271451;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pqnzJpyxKOv8D4bjtcYPnfE8mIr/LA4bSJZ1glU6cV8=;
-        b=QApXOoOPS5AZG6BVFhPCc7VJoDnyAC2mSfl7segIcN4cxgcuzdBCTX4LRyqdf5+bxc
-         x0EyXVo8o+auNFZTYyAMwG63PzmLG8M12HhW7uSNNFXNH7AWU8nUCKEPV+tKb/1l04bG
-         OwpURPkrtLFeceMluDZPL/xfX+FIoK/OHCcME7QCAtwERehFcqXxW1+yzQs3e4A0XYYC
-         n8qloNWTKZYzuj9PDinnOigf0p+k72GJW30/5c641YdnT2J4pvlA+voNbEUBJRG+iRKp
-         Kk7kqjPR0lbUewFN/+AZeZ1U4fvFWw9GwhrroF5PObzrDbLsVSaiGVSmohTvAdPgX5v+
-         i+zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlUznq0DrWVnDV+XsTX02NVzknSmxTENUop9MS2rq8De0hZ3qRGpn4jmOM+humEU+vXqOZeAp4mFUWlQsH@vger.kernel.org, AJvYcCUqj/SCVoIh4/f3YDmgL+4dha3XzJoyct5UofP5Vgy2supDIX8e93FZI1cL/Ecm3rNwqLnOY8BlVgfL@vger.kernel.org, AJvYcCVEbeSDFKoORc7FMpTvFHCh90UcBYTfAU1VCHW27iohQETdyfqpnQrQZqpTpstXgwhJ0tACroz+3gKB@vger.kernel.org, AJvYcCXcM676fNq03EStAySDszAUKnYlUooGRYJig0XRjDKPNa9MeyzBAcvBD3Lr6spiMcLwGH8AEF1AmSpG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfN29lvRR8T0NCwriFwzuygkNQMSC6jxqTABz9btAhkWJHzuKZ
-	84iU46l5/PBzBuRWC+IInqr0teZjc+i74/HYQphDc0DF+izMZuqb
-X-Gm-Gg: ASbGnct2C8sK+yTPT74Ds4z9nbCdzj/cqIqjIVdYlS6icdZyARyTxhG6gN3kItyJCgh
-	CaYGwWWsofB0wswszITWqW73M3hvPp0chCEql3Aw/wBYclZtYEY9BpRSxkK5M3ZoKLnMhg0vkUW
-	YvkL6ztif417EkcBy1+em87BVbSWIEPT+8+TK7TfKQ9LGitvVWGHOxUNeKYOb0i6uKLZ2pJkVlH
-	1CuxyyDNsXnBWGf1o48oDiQHSAJ30diqu0kngJ7ualrX44KmS5ed/xuWb2Zdc6aUh53i9RkOLx2
-	vG7OAAfpILiduy8W
-X-Google-Smtp-Source: AGHT+IHTJyjJW4zRKKH13NlfTIwZIg4GsuvT7hEkrKwp+YV3SS8iaJApxOfdun7TkRMs5S8LELbrRQ==
-X-Received: by 2002:a05:620a:460a:b0:7c5:562d:cd01 with SMTP id af79cd13be357-7c9606f9a48mr802679585a.16.1745666651286;
-        Sat, 26 Apr 2025 04:24:11 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c958c91a10sm337284985a.22.2025.04.26.04.24.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 04:24:10 -0700 (PDT)
-Date: Sat, 26 Apr 2025 19:23:58 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, 
-	Jisheng Zhang <jszhang@kernel.org>, Chao Wei <chao.wei@sophgo.com>
-Subject: Re: [PATCH v2 00/10] riscv: sophgo: Introduce SG2044 SRD3-10 board
- support
-Message-ID: <2feyvebloqdcxxzmywe6azmwnz7zqulh2lixhw53ciw2ldisch@n2q3duucrp2r>
-References: <20250413223507.46480-1-inochiama@gmail.com>
- <MA0P287MB22626253965E96829B7371A1FE872@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCnEm0L9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD53C4CEE2;
+	Sat, 26 Apr 2025 11:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745666670;
+	bh=Vm3IZsXSU/eJ3GT/vGl/2eAMEOMlqN1H1YjSaFCjHPE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kCnEm0L9XsLd42X/d0xWdPdEJPU7tmJ/15p7TAlv5KLJSJb/CYnsflVssIrYoHGP1
+	 oA6ItURQH2h4irWSOEx0cwTW0DyppMfy62Odo7Nfg/LEctieuYFG+iEE9qnpl+CYYI
+	 isU6WMDFGU1kqGnyZo8GjCRXfuO4TozI/bgSIIV4qHX82t572Nz5lUDBeKecp/KwH1
+	 tPMolfjPPAnSng9TgfCpRQN6jTZod1Fo0mnA+AQzr+4lerl5riS+Vwo0KyXWdSohC+
+	 RihIlAISvJgbTjwVFlsdrZIvsWmKJ+5pab9hPI/gnz2S39gH99ix+JAQ2V1JYgsZhO
+	 OPPIZ6TSSGM8Q==
+Date: Sat, 26 Apr 2025 12:24:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/6] iio: adc: ad4695: use
+ IIO_DECLARE_DMA_BUFFER_WITH_TS
+Message-ID: <20250426122422.29660e70@jic23-huawei>
+In-Reply-To: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-3-f12df1bff248@baylibre.com>
+References: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com>
+	<20250425-iio-introduce-iio_declare_buffer_with_ts-v3-3-f12df1bff248@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MA0P287MB22626253965E96829B7371A1FE872@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 26, 2025 at 03:36:41PM +0800, Chen Wang wrote:
-> Hi, Inochi,
+On Fri, 25 Apr 2025 16:08:45 -0500
+David Lechner <dlechner@baylibre.com> wrote:
+
+> Use IIO_DECLARE_DMA_BUFFER_WITH_TS() to declare the buffer that gets
+> used with iio_push_to_buffers_with_ts(). This makes the code a bit
+> easier to read and understand.
 > 
-> Will you apply this patchset on sophgo/for-next? I see there are changes
-> just about dts/bindings.
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/iio/adc/ad4695.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Chen
+> diff --git a/drivers/iio/adc/ad4695.c b/drivers/iio/adc/ad4695.c
+> index 0c633d43e480d5404074e9fa35f1d330b448f0a2..992abf6c63b51dee222caf624e172455fb9b9900 100644
+> --- a/drivers/iio/adc/ad4695.c
+> +++ b/drivers/iio/adc/ad4695.c
+> @@ -160,8 +160,7 @@ struct ad4695_state {
+>  	struct spi_transfer buf_read_xfer[AD4695_MAX_CHANNELS * 2 + 3];
+>  	struct spi_message buf_read_msg;
+>  	/* Raw conversion data received. */
+> -	u16 buf[ALIGN((AD4695_MAX_CHANNELS + 1) * sizeof(u16),
+> -		      sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
+> +	IIO_DECLARE_DMA_BUFFER_WITH_TS(u16, buf, AD4695_MAX_CHANNELS + 1);
+
+As a follow up, maybe we can rename that AD4695_MAX_CHANNELS to
+AD4695_MAX_ADC_CHANNELS so I don't wonder why there is a + 1?
+
+>  	u16 raw_data;
+>  	/* Commands to send for single conversion. */
+>  	u16 cnv_cmd;
 > 
 
-I can only take 2, 3, 4, 9, 10 for now. The left I think they
-should be take by the subsystem maintainers.
-
-Regards,
-Inochi
