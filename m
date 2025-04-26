@@ -1,57 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4AD79CF;
-	Sat, 26 Apr 2025 15:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF79722FE08
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745679750; cv=none; b=eXj4bxXmRvThCHRIZRR7cWVeMyOVAtwhrb2Nd/CMOdm56nRa/NuRSQ9Z5GP0WcvaXxd2ibCzQnQQYtGP5Mb66FBJ8glE/VJieo+Z+jpe+vjHO4L+ZHirL0wrBVUzo9vOG4erro0Ytbk38M4K4gBMK8rvrdgEDr/8Jh6VrpiBxJY=
+	t=1745679798; cv=none; b=t8qsgicvsbXBoNLbvH7W/dy9ihY4+uiQXk6tRclKYSA8A+essrraKGmgveg8Subq+5tF3zxymTY4Hv6figlr+RUWoAY6p0j4vBiL8rxMfkcjfG4Zq9U6QgoNUAtZRQGD+TASXoJttZeXYLj16lrvsK8gqQVc6ozZVysgGp9EjmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745679750; c=relaxed/simple;
-	bh=vm+BLppbw1VD4WX0DPD3q9NuAeJlDbqTxlZ+9ctOkKo=;
+	s=arc-20240116; t=1745679798; c=relaxed/simple;
+	bh=Vm8is0fZMA8KIAs1cGn6dnzN77suefz/64PXNNt+6pE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBlkcNTTfo3MjD06PJsHTMmGLj6Dxn67R+4rRwZWGsrUgTUTOGA00PclghfF9+mvpum52a8dY2lR5F7ukquV5KJWDHjyKn1MsLOMU+/3jtNhS6PtLQG7UVLJDZo8lEw84bnjLbDprJksB6m4kk+Q4tBr0tkn+vhAU8Qf/DzmG20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm1vUHVN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=omRSDlQ1OErMSn/W/mWC9oneZYYB6KQGm+tzHiAGjDyIZDkUuUDuD5YljVa6hZB6GXy/1rvjsQlMTc7FfGUg8HYnmBsATLykOvUanHkoLWjskChzBKXWWBKZU9wbT4yfabOu7rpdjuib4M+59BB54YdoizE8BO+9DpHVtcvtc70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bgBoFfuu; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm1vUHVN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8004C4CEE2;
-	Sat, 26 Apr 2025 15:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745679749;
-	bh=vm+BLppbw1VD4WX0DPD3q9NuAeJlDbqTxlZ+9ctOkKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lm1vUHVNH2GMp5VCJ0wSxwGSSZVshXdpyLM4IgVENZOIZlt9lq5blXFiHzPcbiZ3C
-	 usqHNaw5fgQWTfsn1RUhWSyZYQgRFBA6AMVPRxiimQp5gTLuT4pZNnIcXjEdeqmkW1
-	 D6wo5vVAM5w0MRF6FLyONqs353v026DoR/dQJZlT+wT2NhPn91nOtB/96ZErif5VQj
-	 2O/qZZjknr3KI5eV+psonhcexQkqmigTUH7raw/jLIkAT3EH/HGGaLMKK/bEe2Ze0t
-	 AfUOAMA/mftmbxwH3mokmwsYT42BdgskYAD3PgXn11aqwtmCLEUPfPDYFhkvTq+CFy
-	 HRAA3ZclTTUDg==
-Date: Sat, 26 Apr 2025 17:02:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-Message-ID: <aAz1f2jhdwjXmHex@cassiopeiae>
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-4-remo@buenzli.dev>
- <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
- <aAyyR5LyhmGVNQpm@pollux>
- <D9GIUOH0CKE4.3R01AYKCCG54O@buenzli.dev>
- <aAzrg31NB2g0X4qL@cassiopeiae>
- <39798ebd-35a8-4a67-9df4-f12a6f20ef11@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bgBoFfuu"
+Date: Sat, 26 Apr 2025 11:03:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745679792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nfBFNtrkXGpwEI1f8qxFcLLJ+djj3QoJA6M531zvfsg=;
+	b=bgBoFfuucV1MYv23Sx+JWqkW37ke3hwsYGwVnAywb7CCGdvWPBhkaOVe6kU9Ji/OrgPuZc
+	uGvUevBF2m4UPwGcFH4UmpGEcBGhSzOevfJ8QF+0V3v4p1nWfsLhK3c3f92fA3PXHCWFkM
+	HbfMBFjpPoVmBYELvhEhkq2coWXPCgY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com, 
+	bfoster@redhat.com, linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	davem@davemloft.net, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] bcachefs: Fix unit-value within btree_bounce_alloc()
+Message-ID: <c32cu4mrdeln3kovzgehwjccfx2qpfh7evsgiug6ckshfux76q@ms6mab54ivy5>
+References: <000000000000736bd406151001d7@google.com>
+ <20250423163718.194316-1-richard120310@gmail.com>
+ <ur4a24w2wb3euh3ej7ybeqnvmqyhzmqp2wwsjtilh6mfetv45l@qlxs3vggfq5h>
+ <aAu-Heqb3malYkjI@vaxr-BM6660-BM6360>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,33 +47,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39798ebd-35a8-4a67-9df4-f12a6f20ef11@gmail.com>
+In-Reply-To: <aAu-Heqb3malYkjI@vaxr-BM6660-BM6360>
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Apr 26, 2025 at 04:35:07PM +0200, Dirk Behme wrote:
-> On 26.04.25 16:19, Danilo Krummrich wrote:
-> > On Sat, Apr 26, 2025 at 01:08:39PM +0200, Remo Senekowitsch wrote:
-> >> On Sat Apr 26, 2025 at 12:15 PM CEST, Danilo Krummrich wrote:
-> >>> If it'd be possible to use dev_err!() instead I wouldn't object in this specific
-> >>> case. But this code is used by drivers from probe(), hence printing the error
-> >>> without saying for which device it did occur is a bit pointless.
-> >>>
-> >>> Drivers can still decide to properly print the error if the returned Result
-> >>> indicates one.
-> >>
-> >> One alternative would be to store a reference count to the device in
-> >> `FwNode`. At that point we'd be guaranteed to have a valid reference
-> >> whenever we want to log something.
+On Sat, Apr 26, 2025 at 12:53:49AM +0800, I Hsin Cheng wrote:
+> On Wed, Apr 23, 2025 at 12:45:20PM -0400, Kent Overstreet wrote:
+> > On Thu, Apr 24, 2025 at 12:37:18AM +0800, I Hsin Cheng wrote:
+> > > Use "kvzalloc()" instead of "kvmalloc()" in btree_bounce_alloc() to
+> > > prevent uninit-value issue.
+> > > 
+> > > Reported-by: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com
+> > > Closes: https://syzkaller.appspot.com/bug?extid=549710bad9c798e25b15
+> > > Fixes: cb6fc943b650 ("bcachefs: kill kvpmalloc()")
+> > > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> > > ---
+> > > syzbot reported an uninit-value issue. [1]
+> > > 
+> > > Though the uninit value was detected in the context of crc32_body(), the
+> > > memory was actually allocated in "btree_bounce_alloc()". Use
+> > > "kvzalloc()" to allocate the memory can solve the issue, and I've tested
+> > > against syzbot. [2]
+> > > 
+> > > If there're any further tests needed to be performed, please let me
+> > > know. I'll be more than happy to assist you with that, thanks !
 > > 
-> > Yes, that would work. However, I'm not convinced that it's worth to store an
-> > ARef<Device> (i.e. take a device reference) in each FwNode structure *only* to
-> > be able to force an error print if a required device property isn't available.
-> > 
-> > Why do you think it is important to force this error print by having it in
-> > PropertyGuard::required() and even take an additional device reference for this
-> > purpose, rather than leaving it to the driver when to print a message for an
-> > error condition that makes it fail to probe()?
+> > See Documentation/filesystems/bcachefs/SubmittingPatches.
+> >
 > 
-> To my understanding doing the error print in "core" was proposed by
-> Rob [1]:
+> Sure ! Thanks for the info.
+> 
+> > And this isn't the correct fix - the correct fix is already in Linus's
+> > tree.
+> 
+> Ahh ok, may I ask for the commit hash or title so I can learn from it ?
 
-That is fine, though it doesn't answer my question above. :)
+9c3a2c9b471a bcachefs: Disable asm memcpys when kmsan enabled
