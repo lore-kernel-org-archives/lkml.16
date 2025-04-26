@@ -1,79 +1,99 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105EF139E;
-	Sat, 26 Apr 2025 21:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34371FDE14;
+	Sat, 26 Apr 2025 21:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745704243; cv=none; b=iXdiQK+MMYH8/MhI2IylQ8EmQmQNLbsV8HYmp4M+6vVGmwLhUGCwrSHvoGacDYmSKxf9BYXgw4GLYhok60NuUxU0IOoKBqFMJUf5/bDjFnvIK88hwx6/DKt/QNnjaGBEjR7N9L6SSiTK5lEEsEleSmyX26fFoQ+N9smuR1Rg0QA=
+	t=1745704248; cv=none; b=De+cmh0QaUcXmahw3Wtg8Uqu9ZbbgVpjlwocEIB7Q8QL6P4/kDtTjxebtSjPIDRVx42LjOG9Bf1g2WzHXcBbO7h7uMaF32PfO8tXDo28RWyaOpSustbIIvyB5P77frk6q06rvG+VgEW78iU927wpxu2LWB/Al8fdDDfRVoOyAqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745704243; c=relaxed/simple;
-	bh=oj1ed+lif75XFCDbJ4JLwfD8UViWsjn8GRULMAlSsRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pMHO5IvIzp5PelIpatsI0k60zfu408TkqmnQJwV79/TRu+HeKG8DBv5QIPx9aFzfXn1FhjXAiaGp60D3CDLTO7pags3puflSkHNAj1wCbLgDyUukMvwSvdf5jXDPCU+zWihM21PxIFgBUKTJlLMcrXVA6Rlq2bqrGADmL5wU99k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=atpPnZjB; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="atpPnZjB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=39W61SoZ/RKxkXTNmTVGYLh5vGymKKFC6iomj8QCgqM=; b=atpPnZjBTjM3lbCpUpbo5/cMW+
-	/eFlqFUCQZiJWD7SD5VNaKnSC7k7FmjOZ6f+ydZUIg2gHDdUTHDrAFfcv1AV3AIWOTfRzpR+p6D8W
-	QMap/0rcY8+Q26sKFRpZiJABOBIvxIwLZyPuP4QPPgTClrrBYtjLKOJXIUNHKnxMMksGnr9NvjA5f
-	2naeNdo8diTeRA8uLeEbSOzfrMTBbNt6uDii9rT1YLQXoY10ofRvDlplGANNiZaEHoj4I6KD8aCCT
-	UFvSL3BCZ6nhrTYelgU60jkJtpDFtkFaJ7+H1yaZ7SrDxbOkzRfp/zFhmUFvkr0+WjmL25BfHSffQ
-	A55q6OsQ==;
-Received: from i53875aba.versanet.de ([83.135.90.186] helo=phil..)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1u8nLu-0001OR-3d; Sat, 26 Apr 2025 23:46:26 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	kernel@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: enable pcie on Sige5
-Date: Sat, 26 Apr 2025 23:46:16 +0200
-Message-ID: <174570370141.31943.7222231536133274406.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250414-rk3576-sige5-pcie-v1-1-0e950a96f392@collabora.com>
-References: <20250414-rk3576-sige5-pcie-v1-1-0e950a96f392@collabora.com>
+	s=arc-20240116; t=1745704248; c=relaxed/simple;
+	bh=OOoxSyFSPyTLPl4FCcqmITLqQVrGDeYeXBwjw9sRGPc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=hT4lNkHPsUdJH8gWtYirp3Dk+Pb1+zw3W1SO6Tp7vWAm+23mbEcHg4sJZ1xhy0+IGGWE1nr4/v0giL0bJkDripEmf4DtUm7jz/sABH/V6etK/wn5cqM+ChvbXEA9ooli+y1DaSM2ybfZGBXwP7t7WVWyZfW2SOpo+2FVMcIkWtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZlNgJ5Cq4z9slv;
+	Sat, 26 Apr 2025 23:50:36 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 26 Apr 2025 23:50:31 +0200
+Message-Id: <D9GWI4GT3ZK4.25N3DYX5MSX0P@buenzli.dev>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Dirk Behme"
+ <dirk.behme@gmail.com>
+Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Dirk Behme" <dirk.behme@de.bosch.com>,
+ <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+References: <20250425150130.13917-1-remo@buenzli.dev>
+ <20250425150130.13917-4-remo@buenzli.dev> <aAuryiI0lY4qYyIt@pollux>
+ <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com> <aAyyR5LyhmGVNQpm@pollux>
+ <D9GIUOH0CKE4.3R01AYKCCG54O@buenzli.dev> <aAzrg31NB2g0X4qL@cassiopeiae>
+ <39798ebd-35a8-4a67-9df4-f12a6f20ef11@gmail.com>
+ <aAz1f2jhdwjXmHex@cassiopeiae>
+In-Reply-To: <aAz1f2jhdwjXmHex@cassiopeiae>
 
+On Sat Apr 26, 2025 at 5:02 PM CEST, Danilo Krummrich wrote:
+> On Sat, Apr 26, 2025 at 04:35:07PM +0200, Dirk Behme wrote:
+>> On 26.04.25 16:19, Danilo Krummrich wrote:
+>> > On Sat, Apr 26, 2025 at 01:08:39PM +0200, Remo Senekowitsch wrote:
+>> >> On Sat Apr 26, 2025 at 12:15 PM CEST, Danilo Krummrich wrote:
+>> >>> If it'd be possible to use dev_err!() instead I wouldn't object in t=
+his specific
+>> >>> case. But this code is used by drivers from probe(), hence printing =
+the error
+>> >>> without saying for which device it did occur is a bit pointless.
+>> >>>
+>> >>> Drivers can still decide to properly print the error if the returned=
+ Result
+>> >>> indicates one.
+>> >>
+>> >> One alternative would be to store a reference count to the device in
+>> >> `FwNode`. At that point we'd be guaranteed to have a valid reference
+>> >> whenever we want to log something.
+>> >=20
+>> > Yes, that would work. However, I'm not convinced that it's worth to st=
+ore an
+>> > ARef<Device> (i.e. take a device reference) in each FwNode structure *=
+only* to
+>> > be able to force an error print if a required device property isn't av=
+ailable.
+>> >=20
+>> > Why do you think it is important to force this error print by having i=
+t in
+>> > PropertyGuard::required() and even take an additional device reference=
+ for this
+>> > purpose, rather than leaving it to the driver when to print a message =
+for an
+>> > error condition that makes it fail to probe()?
+>>=20
+>> To my understanding doing the error print in "core" was proposed by
+>> Rob [1]:
+>
+> That is fine, though it doesn't answer my question above. :)
 
-On Mon, 14 Apr 2025 20:37:38 +0200, Nicolas Frattaroli wrote:
-> The ArmSoM Sige5 board exposes PCIe controller 0 on its M.2 slot on the
-> bottom of the board. Enable the necessary nodes for it, and also add the
-> correct pins for both the power enable GPIO and the PCIe reset GPIO.
-> 
-> 
-
-Applied, thanks!
-
-[1/1] arm64: dts: rockchip: enable pcie on Sige5
-      commit: 8ea46f3b9348ce9105a32be6a1afec0b23adc906
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+If the question is addressed to me, I don't think it is important.
+I don't have a particular preference either way. I'm just trying to
+come up with a solution that is satisfactory to everyone. We should
+hear from Rob if he's ok with removing the logging entirely given the
+limitations.
