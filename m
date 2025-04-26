@@ -1,123 +1,119 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947E617E4;
-	Sat, 26 Apr 2025 20:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B341A76BC
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 20:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745698547; cv=none; b=aIGOB3wHE0/0XBYk/cUzwBaM5mSh3A9CR9m6p2fvt5rZqKKRo0OUECa0zHkUKZHb9oGh3xGKbdq3CeqEV94DI0JIptTpc+QZZryLcHuHiYCIq8ZwmY8tjlJ107Y/tqVDfi4OUj58UfQJR+tDR4qL0zuYOsnjY/Pmx9hCCKmGxHg=
+	t=1745698586; cv=none; b=N1GorZChaeDoawOA0t/1CVUdVKSSN0Q+dQEMIs+sOpMuE0l15itnB7tBHwlDo6wFbT98tnM9PkNE+wfFxKIRUdgiyCpf+/G2gRsRtyfyVjjUJObxeEgUc0o6BQNQisVnvhGm7lnuukNzF2tyiTGyLVflP5zls4+3uamFZcOHDpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745698547; c=relaxed/simple;
-	bh=oQI2Vlcq+Do2XX0ueKuIVwWTWrjJ/Mpedkekpl8YqUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZucEtkYx15bcRhukSxRu8GKthN2pcp2g4KWtHfQr7+4QVWI6AMlZk7erfVh3uuqN2wTukzCd016/3XT98zaluzRjR4IivXRg1xBqYFlvQCWFPrAsn9UWWXn4F3eFh55pXWqyhggadloZWBCBR8ZI05BPftbCETEFtQ3O9uXwcE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UHecRaCx; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745698586; c=relaxed/simple;
+	bh=ax2v0J7dfzR1YneEovbkCdIhFdsZ7fhCRCbLv5lqnfA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FVG0kfUlHI5M6mzeLuJ0+0yWwLzNm1MpmfgagBrdGlpJo7Jf93lZORZ/7ChVAO4Du5shIWVuD0Sml9Kk5uBzUsxZf8d24FrnTNYb7R9l/i6W+/qqsGnRIsPLJJBhCineTEBcTVIqgfKFrWRkNDCMflXwjAl4Tuw1og7YglcYLiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=jAcALqYo; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHecRaCx"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso5518345a12.1;
-        Sat, 26 Apr 2025 13:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745698544; x=1746303344; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SA3kbs8doy++bBhyIV82eRDJHhYXZx0+209uQTZFZ5o=;
-        b=UHecRaCx8D06J3DggcnKuTZ3qlmv2be0Ot0wHzUlF2YUSpn1OZKX5zvWHrpgxpguz4
-         axF97c4S4pwIoGTNmskHPPfNLeGBVQtkSy3pTE1bEgO77kNYHZw61lLAdnOT4spGxdCD
-         6DuH1WiQUnqzXZm3N3XcaP7bUoeNcE29DRfPtU011T0wkmYiXsj3TbBrBZOpzG6VNT6z
-         7TcpidFLiSDTKukwUhf05xyGjScoTjDVnIj/E7Swtq4+0xRaxDfrifkxOxjDdl2CRPHw
-         YOi6qkAJaoOEM5R++VePzNWNpNKExOmiUzwW6mP8JJ9NibP7g23wCOjYXb+RaTCovCAE
-         dfQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745698544; x=1746303344;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SA3kbs8doy++bBhyIV82eRDJHhYXZx0+209uQTZFZ5o=;
-        b=n8tjAiXOWBYnfBguk1Ed7Ms0FPq0iXokpWsshqjVczsI1zgfblacIGRLIUpy75/Qhq
-         7018LNIo3d3Zol/H8cknQSdE8QSu1PMviSqjan0CTdk9BFF/C6r8Jp7KTuvbqTTeYErx
-         beieOgrAhLf6EERliaF4s0hfeotCfFvFuDi50Y2tw/VoU2uXLp51MEkiqUQzyUmnrSzh
-         00uZ4LOWxo5RoJqT4tN3hLVPL06lJPwcn5a2igPUFnHNwN65TPYj0B1kcctBF9mz0pSL
-         0rPuujmrKEoYgCGibHJnUN/2fXyUywIAM5XBSZwWPJ4EJyf37RJzI5x48lEKnoZ4o1I5
-         Orgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZTpvzXsdA/QKE4vwZpBiARVtmqpVHHWbPHANmAdO0hhvezZR0MdkWkZ4Y0cbxo7MgUQ4hJCBw0SSQ0GQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiiEWCKz8eeL9x6f1IHuONavEcornFmID3jXSvtnUMCYUm4of4
-	OfqD0s0qAE/lCsQswlAmAxyCEHKVtoSZSynvauXF3WhVjaCytnFpcd0wAG62RdiqZw==
-X-Gm-Gg: ASbGncuuT/04KgB8ZSK3H/7cycXl/q4rpNQzg8MPiT/lj0+tHmuOYHD9xqMT6quB+Ou
-	aai7PjBPxUrO5MBimeN7eqL3fH09612VLK8/2SilG4e6P0mWRrr/dWmMJV1j9NTaOhjkAUZMVqj
-	6cGYUme867PfcoukfxumOn7LtOMFjwl6DtyKT10Pu2MTQJ6UfEWmmk12HgAWkrnUUqJEC7xjnHR
-	pE9X8G47MgGTWFi5y6D8++XBrIa1jpGqOTbB4/G0LQG/0y2w5Y8Pa2Rfvs8e3UzfUp9uM5FoxPf
-	wr4dkZdSRaFWJegxgA4d+wYi57OHBMxv/yL2Df24u3ByD57YH1wJrTFn32igOyxd62TZNFYARta
-	NLmqKwtvzJGyoVvygqX2HRNtamqs+eTFmeDCF/86p8wyIBJowDg8O/xX//DT+PpnJyeKxiaemJa
-	awp5s5uR+xENra
-X-Google-Smtp-Source: AGHT+IHSxI2OpEowghVxOjDGVFRGURz+LYyOygcmh6W2OqXBDlb0eIjEZe5Q7f5TL5Mwxz/StBd3Cg==
-X-Received: by 2002:a17:907:26c9:b0:acb:5adb:bd37 with SMTP id a640c23a62f3a-ace710c6dc9mr637864766b.23.1745698543460;
-        Sat, 26 Apr 2025 13:15:43 -0700 (PDT)
-Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-4b21-a36c-f1bf-ef25.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:4b21:a36c:f1bf:ef25])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bc62sm333457966b.25.2025.04.26.13.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 13:15:43 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: andy@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 2/2] Staging: media: atomisp: style corrections
-Date: Sat, 26 Apr 2025 22:15:08 +0200
-Message-Id: <20250426201508.522222-1-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="jAcALqYo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=hrjpr3ctenbj5iyf6xt2mw2wua.protonmail; t=1745698580; x=1745957780;
+	bh=fCr6MO2jeMxolSVIhe975fXrm9ILcoSnsr1U9vPDunY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=jAcALqYoD+Bu+zyZenl81XeKT+huwOkqc8CjN2s1mkLRGO16d6Gk+PP3rQS52BvOZ
+	 M63pzU31w3pmXOUwHlHA3chNWumKAfx44V+CAdU/YG5htTjgPduCdv3wqZJkdCJY/Q
+	 waCr1VW+C22kMkVlL2Vuhr/Dah2METMgsQm2TK8T9nCuhkKFOKYYrIRAL4VhVm+9xj
+	 dxdsqy5pe8EWaLnPIVB/YyHi2L7ieam6FSU5neYGCXF5dkaID5E5vzHsvaiG7REaRj
+	 EFhXOdjtIFgRazN0zDiEazFRdEmAA0Ot3qHxMbUdvarMAdfXG1bhMks3choT1Y9oNb
+	 sKOtGTpHoCZUQ==
+Date: Sat, 26 Apr 2025 20:16:14 +0000
+To: Christian Schrefl <chrisi.schrefl@gmail.com>, Boqun Feng <boqun.feng@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
+Message-ID: <D9GUHUN3G7F6.2C5KX11EECKJU@proton.me>
+In-Reply-To: <6dbec9b3-b1a2-4fe7-9861-6bc879d7332c@gmail.com>
+References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-2-dakr@kernel.org> <aa747122-fc78-45db-a410-ceb53b4df65e@gmail.com> <aA0P4lr0A2s--5bI@Mac.home> <6dbec9b3-b1a2-4fe7-9861-6bc879d7332c@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 462ca6cc3dd1ccdf3d4cae64bdfbfe6494d3cf92
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Corrected consistent spacing around '*' and braces positions
+On Sat Apr 26, 2025 at 7:03 PM CEST, Christian Schrefl wrote:
+> On 26.04.25 6:54 PM, Boqun Feng wrote:
+>> On Sat, Apr 26, 2025 at 06:44:03PM +0200, Christian Schrefl wrote:
+>>> On 26.04.25 3:30 PM, Danilo Krummrich wrote:
+>>>> Implement an unsafe direct accessor for the data stored within the
+>>>> Revocable.
+>>>>
+>>>> This is useful for cases where we can proof that the data stored withi=
+n
+>>>> the Revocable is not and cannot be revoked for the duration of the
+>>>> lifetime of the returned reference.
+>>>>
+>>>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>>>> ---
+>>>> The explicit lifetimes in access() probably don't serve a practical
+>>>> purpose, but I found them to be useful for documentation purposes.
+>>>> --->  rust/kernel/revocable.rs | 12 ++++++++++++
+>>>>  1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+>>>> index 971d0dc38d83..33535de141ce 100644
+>>>> --- a/rust/kernel/revocable.rs
+>>>> +++ b/rust/kernel/revocable.rs
+>>>> @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&se=
+lf, f: F) -> Option<R> {
+>>>>          self.try_access().map(|t| f(&*t))
+>>>>      }
+>>>> =20
+>>>> +    /// Directly access the revocable wrapped object.
+>>>> +    ///
+>>>> +    /// # Safety
+>>>> +    ///
+>>>> +    /// The caller must ensure this [`Revocable`] instance hasn't bee=
+n revoked and won't be revoked
+>>>> +    /// for the duration of `'a`.
+>>>> +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
+>>> I'm not sure if the `'s` lifetime really carries much meaning here.
+>>> I find just (explicit) `'a` on both parameter and return value is clear=
+er to me,
+>>> but I'm not sure what others (particularly those not very familiar with=
+ rust)
+>>> think of this.
+>>=20
+>> Yeah, I don't think we need two lifetimes here, the following version
+>> should be fine (with implicit lifetime):
+>>=20
+>> =09pub unsafe fn access(&self) -> &T { ... }
+>>=20
+>> , because if you do:
+>>=20
+>> =09let revocable: &'1 Revocable =3D ...;
+>> =09...
+>> =09let t: &'2 T =3D unsafe { revocable.access() };
+>>=20
+>> '1 should already outlive '2 (i.e. '1: '2).
+>
+> I understand that implicit lifetimes desugars to=20
+> effectively the same code, I just think that keeping
+> a explicit 'a makes it a bit more obvious that the
+> lifetimes need to be considered here.
+>
+> But I'm also fine with just implicit lifetimes here.
 
-Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+We elide lifetimes all over the place especially for methods taking
+`&self` and returning `&T`. I don't think that it serves a purpose here.
+
 ---
- drivers/staging/media/atomisp/pci/sh_css.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index 5a8e8e67aa13..77c7245091bb 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -333,9 +333,9 @@ static struct sh_css_hmm_buffer_record
- 				   enum ia_css_buffer_type type);
- 
- static unsigned int get_crop_lines_for_bayer_order(const struct
--	ia_css_stream_config *config);
-+	ia_css_stream_config * config);
- static unsigned int get_crop_columns_for_bayer_order(const struct
--	ia_css_stream_config *config);
-+	ia_css_stream_config * config);
- static void get_pipe_extra_pixel(struct ia_css_pipe *pipe,
- 				 unsigned int *extra_row, unsigned int *extra_column);
- 
-@@ -2260,8 +2260,7 @@ alloc_continuous_frames(struct ia_css_pipe *pipe, bool init_time)
- 		ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE_PRIVATE,
- 				    "alloc_continuous_frames() IA_CSS_FRAME_FORMAT_RAW_PACKED\n");
- 		ref_info.format = IA_CSS_FRAME_FORMAT_RAW_PACKED;
--	} else
--	{
-+	} else {
- 		ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE_PRIVATE,
- 				    "alloc_continuous_frames() IA_CSS_FRAME_FORMAT_RAW\n");
- 		ref_info.format = IA_CSS_FRAME_FORMAT_RAW;
-@@ -7889,8 +7888,7 @@ ia_css_stream_create(const struct ia_css_stream_config *stream_config,
- 
- 	/* check if mipi size specified */
- 	if (stream_config->mode == IA_CSS_INPUT_MODE_BUFFERED_SENSOR)
--		if (!IS_ISP2401 || !stream_config->online)
--		{
-+		if (!IS_ISP2401 || !stream_config->online) {
- 			unsigned int port = (unsigned int)stream_config->source.port.port;
- 
- 			if (port >= N_MIPI_PORT_ID) {
--- 
-2.34.1
+Cheers,
+Benno
 
