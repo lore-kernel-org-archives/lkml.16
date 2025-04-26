@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CDE25D919;
-	Sat, 26 Apr 2025 17:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC3025CC62;
+	Sat, 26 Apr 2025 17:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745687108; cv=none; b=fjU1MSenayQYAb+Ayts+JL7Ep6KG/KXCPdrLcQJLP4PPcLyUSSygu4iOVV87+oZ8TiLWP2WWPIdxMYGBiwmZTffV//9Kda6NbgMr74rJnh5Gj4A97vsPz9AK5RZ4RRJj22Melvdq2qmFb3XDhKHQj/woVEftd+eStbcjSdJXorU=
+	t=1745687113; cv=none; b=ecMU/DPotdEJy1Iahqz5ONKS2aZsep1gX6sy414cZFwZ+dIkosxZKuLuVhDOP3sQ63uF3pL3nn6m9/vr/u65YRf31lAW3VvvCn19sQsfqh9GWrv8p8FdaNR/T/rISkhv6ghGj5BFei+zCOdhA49FwNSTnTTidIFIdx9KYus8qfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745687108; c=relaxed/simple;
-	bh=2oAqj/LWYQDAxKQEhHlUzD+MafDqPmD1Lo/MLkLkVgA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YFA634Hc6av/xd0cFldmXL731gJXoKn5XkcsJ5SblaN8VdIjI7eiwB7FeI6iGWXYvMOSJRkp1AnZB+hLourQPk/FgC4Br+aIQ+Dz1l32yYX8Lo9tLy+TP/HOPkQhLe3qz+YcfY8md92z5ZC+NfQ3FtN2M2tZq7op2hgSrpGlrLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3ndKIiQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745687113; c=relaxed/simple;
+	bh=WPJx7uGEUu0qSBoHXXUKJoIaCIpAcLgbVUJ7OsZxi3Y=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ISe13wZzjWupacE6Z/UD/1f87/UI7vjLlnklF7xVJ4ZFs7j/HzYqjOGY9BjFq1tfWkABMsQH0QP7t1oUzQKBV8XgUPKPtr/bwEvdY6u2YOIh0Dgkm6cwCm6kwJnccvB+7vcQsduio9Gcl/dUtP2LVuBES6P7v2HjWc13LDDtWmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOJ1jXpc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3ndKIiQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E846DC4CEEC;
-	Sat, 26 Apr 2025 17:05:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOJ1jXpc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38394C4CEE2;
+	Sat, 26 Apr 2025 17:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745687108;
-	bh=2oAqj/LWYQDAxKQEhHlUzD+MafDqPmD1Lo/MLkLkVgA=;
+	s=k20201202; t=1745687113;
+	bh=WPJx7uGEUu0qSBoHXXUKJoIaCIpAcLgbVUJ7OsZxi3Y=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=h3ndKIiQ4bjgnz4MKF4t4cMHS8o2mhuoa3mx5r3DMD26eSxeiqS3cMtLBCsSqT+ox
-	 v+pksHsIsYFNbUiV3xyxo2TNR5mZD0TC/mLUozxlKBv2U8EGogotRnRZb3XNhLufG2
-	 v/50qoEw+pYEMGt+Q8VUJo3v0xF99NZHmoQNyG6L6cEY8Tyo1IpTK3uc1mwW1XJ0Kz
-	 Tw/0lhZ+jQQe6h5wQGZBPpJTpw02g0f2YTKE4bIV3ied419Bc+bgoJoIbXoBmo+Tws
-	 9s/2JsepnvrIZYY/vExpShUBHOjytOFy5//vPKSjcP++mMM+Sb0MSwypPyQLYl16kE
-	 OHb5AotePW38g==
+	b=QOJ1jXpcWIZvFJ62q1B9dX43QhcfwDjB4uyLQoYfb5jlEsuKpvmEQSWdJIccHo98J
+	 Bc9Mqe75Bf3KJJla0vns0nmlHjXWASEjW/0QX/1PpufSDaIJEf2UvIHNTtI0H7oVWb
+	 apEoSBN9HvzT8A5XZ+nCmcNfqf6qqLxTw4DFYM6STF8TYcIoWipk1Z65JPdnF7XmmK
+	 eWAY3sG82BrboahozwmsNCqmCRk8pt6MrF5uaEHgcd5JgCI90zZas+kv9dfpnNzAYB
+	 pN6Gl7EKPrhHm/PSD1tijiSeiTX+++ppKbK75PrOzI/2APANyLGMoJ7mpNoPRBDTYh
+	 dcFPGwtEKOeMA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB08138111CC;
-	Sat, 26 Apr 2025 17:05:47 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v6.15-rc4
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CE738111CC;
+	Sat, 26 Apr 2025 17:05:53 +0000 (UTC)
+Subject: Re: [GIT PULL] OpenRISC updates for 6.15
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250426102259.1232395-1-chenhuacai@loongson.cn>
-References: <20250426102259.1232395-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20250426102259.1232395-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-1
-X-PR-Tracked-Commit-Id: 5add0dbbebd60628b55e5eb8426612dedab7311a
+In-Reply-To: <aAx9lbfe28qzOpf_@antec>
+References: <aAx9lbfe28qzOpf_@antec>
+X-PR-Tracked-List-Id: <linux-openrisc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aAx9lbfe28qzOpf_@antec>
+X-PR-Tracked-Remote: https://github.com/openrisc/linux.git tags/for-linus
+X-PR-Tracked-Commit-Id: 66ffd2f3161124f2f5019b55d8ef3add26a002a5
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e742bd199092e4991b559ca63d565457b519153a
-Message-Id: <174568714668.4031081.7018730487305431889.pr-tracker-bot@kernel.org>
-Date: Sat, 26 Apr 2025 17:05:46 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+X-PR-Merge-Commit-Id: ec0c2d5359e2f288d75d98465829d31c6d26da47
+Message-Id: <174568715187.4031081.4258314944883122973.pr-tracker-bot@kernel.org>
+Date: Sat, 26 Apr 2025 17:05:51 +0000
+To: Stafford Horne <shorne@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux OpenRISC <linux-openrisc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 26 Apr 2025 18:22:59 +0800:
+The pull request you sent on Sat, 26 Apr 2025 07:30:45 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-1
+> https://github.com/openrisc/linux.git tags/for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e742bd199092e4991b559ca63d565457b519153a
+https://git.kernel.org/torvalds/c/ec0c2d5359e2f288d75d98465829d31c6d26da47
 
 Thank you!
 
