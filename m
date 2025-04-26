@@ -1,82 +1,71 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D44515A864;
-	Sat, 26 Apr 2025 03:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88D418DB0E
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 03:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745636901; cv=none; b=PV750KJHGCLpvCCBLDI3EK+2BDiEleoayvgPGILQVnOBFnhaXzyCn5Jg1807sLt1YOgWllgnxZPYnJw1fSbV+nq1f5lOpF1nJoKSAVZfzxlfehhEKl66yo72Bo8kY0PZR5f/2n50vFGYrTaUyEYJIhm9noIa77xSjm9UPyBeKEM=
+	t=1745636985; cv=none; b=SBVPmQJCWLuv6zPU26UewdSLiszToJqF7JN1tWHHwhSujHnp+Nra1bdEESLQoHrSUD8aW1nGXnvoktRsHZUZvk54oGVINnzodyW+Ggs7f8qcFB8VXBv8GqiVHQO563L3+7j6gdPl9L1WcYV78wQNHNwvrG4m9j3XJQyMxhM97Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745636901; c=relaxed/simple;
-	bh=CGjzNzdzKFH4Gj78+YzgzHjCFj1v8rlnNrxy08JXJnY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rk1rTjyP6/MlNac3QtpFyGQiSTbLyUWun2xN446dk4wafN5feeR8r7HmeIaF8tL9OJSgUWzpiXHNcfjX4dIZ4uRHX0HJIKQ8nWo0otbzq6A8McbWEk+ZWryOqaa44qsuXOZfTQnEubLMmn5pVDU7PcFoETvckUWpIxxoqZsYNWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mDVsKtt8; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745636985; c=relaxed/simple;
+	bh=441V5ESwkAxGr81gZEhh08rmYdBnNkpNFEQUap5lXmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ToUHOUoVJjuAzNwHdF5fINkp1V9FBMnfOZYinvQMJUSaHn8nJRz0sHy6mSo3vgjToG+OxwZy4EHpE6hbxt9ORZT/4LM/MLAtiweexaAmy2Il02TQwJWHofAGMvAyDHOUUMcUGnBJlENRzgNHibywlKiSyv8/LXD4hrI1vdPoNHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=luCRFcXb; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mDVsKtt8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=ZGMWlj6kL1jQK9ZM4giUmGu7K0/eNr6oYtoajS8KpC4=; b=mDVsKtt8f9/bOaEWDwJznrphwP
-	rPDvbShA1Gojf9Zs0hs2pjIez+fY4n3zlezFHXcoTz8xw0fYkg0UntTRFaNu1H1ahgJ/dNLNVGpYg
-	M+BmpD7r74EEc57wWo/7VEIkMdrqXd6h7SgvtjUBwhscBYdPoq21ho0qbQ47cOMz2w4/vjjeUn6wh
-	jhzff9lnWpj4tpz61qc36unRNHhr56UWq00Rlb8pArWp2KNup0ZDfRGTGSvmp3wDclnL0lXTi5WoP
-	m9w42UfcQjta7uUUFmczFmQiBYWu+RA0t0ytFOAraFBI6eN3bgy35dZYizyEYnJU04sHO/ZQ4Y8kI
-	IDFdtwrA==;
-Received: from [50.39.124.201] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u8Vto-00000001LYF-0EYl;
-	Sat, 26 Apr 2025 03:08:16 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-openrisc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: [PATCH] usr/include: openrisc: don't HDRTEST bpf_perf_event.h
-Date: Fri, 25 Apr 2025 20:08:15 -0700
-Message-ID: <20250426030815.1310875-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="luCRFcXb"
+Date: Fri, 25 Apr 2025 23:09:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745636981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FdhrJFKY8wVSb1r5E4UtBdzhzCn51MOc3SmLaIlgc+s=;
+	b=luCRFcXbUS92iZSWsmcP3ERBvSJF6ldURjsrhJDD2Wgso+SXeOilH/XyBR4sbLPQHyY7gd
+	PS5FcFpu/A4fK8aevi3FlkYrWpRVEFT47JliBUuvOiEc4Gys6FsOhMhoImwLmhD5ownYwj
+	nuGMAwe2WA5UinFxmb59hB1bA7D+p1c=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <lmp73ynmvpl55lnfym3ry76ftegc6bu35akltfdwtwtjyyy46z@d3oygrswoiki>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+ <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+ <mlsjl7qigswkjvvqg2bheyagebpm2eo66nyysztnrbpjau2czt@pdxzjedm5nqw>
+ <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Since openrisc does not support PERF_EVENTS, omit the HDRTEST of
-bpf_perf_event.h for arch/openrisc/.
+On Fri, Apr 25, 2025 at 08:04:08PM -0700, Linus Torvalds wrote:
+> On Fri, 25 Apr 2025 at 20:00, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> >
+> > No, what I wrote is exactly how CI lookups work with the dcache. Go have
+> > a look.
+> 
+> Kent, I literally wrote most of that code,
 
-Fixes a build error:
-usr/include/linux/bpf_perf_event.h:14:28: error: field 'regs' has incomplete type
+The subject is CI lookups, and I'll eat my shoe if you wrote that.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Cc: Stafford Horne <shorne@gmail.com>
-Cc: linux-openrisc@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
----
- usr/include/Makefile |    4 ++++
- 1 file changed, 4 insertions(+)
+> and you are claiming that the CI case is trying to be the fast case.
 
---- linux-next-20250424.orig/usr/include/Makefile
-+++ linux-next-20250424/usr/include/Makefile
-@@ -59,6 +59,10 @@ ifeq ($(SRCARCH),arc)
- no-header-test += linux/bpf_perf_event.h
- endif
- 
-+ifeq ($(SRCARCH),openrisc)
-+no-header-test += linux/bpf_perf_event.h
-+endif
-+
- ifeq ($(SRCARCH),powerpc)
- no-header-test += linux/bpf_perf_event.h
- endif
+Are you being obtuse on purpose?
+
+I'm saying the CI case is a combination of overoptimized and poorly
+designed. I'm not saying the CI case is trying to be the fast path
+relative to case-sensitive lookups, that would be insane.
