@@ -1,150 +1,133 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E0521C9EF;
-	Sat, 26 Apr 2025 11:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0193421C9EF;
+	Sat, 26 Apr 2025 11:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745665735; cv=none; b=s2C8k8xZjVW6mQWw5+DvnwlXBS9fnXdB5bf4fE+VKM2LU6nmU2o/khAXQEEaonsjl2NI0/BmJx61k8Q40EezvPJyzZU4ggaadpKzTVjpAaPKUFWD9Pp2Fa2d8ia1ETgWHVrReO/RpPRKoXEwXe5KEyKAVnekAw+h8nXVHJdd3pw=
+	t=1745665770; cv=none; b=qPGxQONHoVsfS2GvOCMW0iUotTSlxiUw1qGHRMr6CxiE9NPKr+4s3l2TO+xAK3GFS2N6yKn71H5RdwhTqoAOMMHThH2m+zqOXGOzOdikm3Xxy9ox7Dcx8i0I548W0lV1kxSREMxQ+nx3L2cOnI4er+fDlK4c7TVMF61z0LqrxoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745665735; c=relaxed/simple;
-	bh=kaNWFF+h4vOOtS7f2lNS3Ec3pgTH9YNyoefDXVBW78w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=kA+iEjrNPGyYzn69F5dn791zoZmkJxMgWire90y8PmRaOxwY2MbUzQ7/40Ale+uC8zPvJLpWEcE1qbiBWUTLh8D2rT3EylhQzZ9EF+a41dvAc43Z88uV0fLrq3lq8VBL9fP9X37QOI5JVVpcqTZVHvJ/QBicR3UoU3BkFM7MaQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	s=arc-20240116; t=1745665770; c=relaxed/simple;
+	bh=dgjGpipyMoa9Ud54nCP2vbHddyFOBRvn6OgnTHCKbv8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=vGk6mXzn2jLGJ55XZw3W/eUh54MyflvTu+9rR0OAGAa7jhxk3MPS1cTu7gctUSrs9/mPTITuc0XrRdRhAdvYINCfQh7q4t9AOyTOy6UL3+pEIWWvXhBAMzMeXkEPe++q3d8moNPDkcfPeFyPDodAxLpykOwxmNBvbeA2hg85Dnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=k8Eaj3p0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="k8Eaj3p0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 33F2240E01FF;
+	Sat, 26 Apr 2025 11:09:16 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id vr4N2quaIm86; Sat, 26 Apr 2025 11:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745665750; bh=uTZUPbANBn1FT5juyhJpDoDSfFqVfzieIPf+T2BMphw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=k8Eaj3p0gPnwEf+CsFhhIh4WpbDa9DIP8CuE3FvMDNuS9goYpEVEqj2/y1jsPvNR3
+	 c50CDHMm7LO3cQCZ4XoZVE4NA5JlDqE66RyGmnvwwfVzCvwPbYBjVKlebR7BgdRPbQ
+	 ib2k0uk0/G8EXqfhLjVxcFz/YtJGkIk380dCgqcwOcp6a93YiULEk6XK/NY1OHfrEv
+	 xmaFxRNMzbFfQQ7OsQjMMvO0C510NMxHKEObr/b+kUkhdpBdTF1Sou6G2S8MJ+JLsv
+	 agufLgVWpSveFdSQmM2kYnUSiBhPZEzOhR31hv64jSrOU+xNcbetJhDtzjOzOa/2yS
+	 IOCSqq3hxS1lmC5+PB08+X++1Ra2j2h9LjuTlZloA94KVFS9tyuW2Tq4gTrl82bQud
+	 HU/DLYd8jKst5SRw+yAP9fg8qpBY8410ydmdJRdLCEdklXXsjOClob5vx/TSf2PCnI
+	 n4Ma8FbK/6l/5gMEiJ6CnQGWp+HCCC4r9GCoG8JP80h2MaPSg62fpCH3N0jYZG8Fql
+	 9k830mZL+dtKp81TrHfTA7Jh0loCUrBAOegakV7KN5HaUywWA0YrfHMa1NhkYE1g9F
+	 3p68xYKJ5Pln3e6gmGz2LPohAYuBL6InZD3rMh8mzSHrPB5h2pou+V5jKlry9QSDyh
+	 jGjDsmRkhVxxegmwWVnE1wqI=
+Received: from [IPv6:::1] (unknown [IPv6:2a02:3037:20b:53e8:6ccf:ad1c:d318:e478])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Zl6Qh3qWsz9sx4;
-	Sat, 26 Apr 2025 13:08:44 +0200 (CEST)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9E01D40E01F6;
+	Sat, 26 Apr 2025 11:08:52 +0000 (UTC)
+Date: Sat, 26 Apr 2025 14:08:46 +0300
+From: Borislav Petkov <bp@alien8.de>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+CC: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Kees Cook <kees@kernel.org>,
+ bpf@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
+ cocci@inria.fr
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC=5D=5BPATCH_1/2=5D_k?=
+ =?US-ASCII?Q?thread=3A_Add_is=5Fuser=5Fthr?=
+ =?US-ASCII?Q?ead=28=29_and_is=5Fkernel=5Fthread=28=29_helper_functions?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250425204313.616425861@goodmis.org>
+References: <20250425204120.639530125@goodmis.org> <20250425204313.616425861@goodmis.org>
+Message-ID: <26F4E8D1-4DDF-48EC-AE21-478EDF4C65C3@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 26 Apr 2025 13:08:39 +0200
-Message-Id: <D9GIUOH0CKE4.3R01AYKCCG54O@buenzli.dev>
-To: "Danilo Krummrich" <dakr@kernel.org>, "Dirk Behme"
- <dirk.behme@gmail.com>
-Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Dirk Behme" <dirk.behme@de.bosch.com>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-4-remo@buenzli.dev> <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com> <aAyyR5LyhmGVNQpm@pollux>
-In-Reply-To: <aAyyR5LyhmGVNQpm@pollux>
 
-On Sat Apr 26, 2025 at 12:15 PM CEST, Danilo Krummrich wrote:
-> On Sat, Apr 26, 2025 at 08:19:09AM +0200, Dirk Behme wrote:
->> On 25.04.25 17:35, Danilo Krummrich wrote:
->> > On Fri, Apr 25, 2025 at 05:01:26PM +0200, Remo Senekowitsch wrote:
->> >> This abstraction is a way to force users to specify whether a propert=
-y
->> >> is supposed to be required or not. This allows us to move error
->> >> logging of missing required properties into core, preventing a lot of
->> >> boilerplate in drivers.
->> >>
->> >> It will be used by upcoming methods for reading device properties.
->> >>
->> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
->> >> ---
->> >>  rust/kernel/device/property.rs | 57 ++++++++++++++++++++++++++++++++=
-++
->> >>  1 file changed, 57 insertions(+)
->> >>
->> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/prop=
-erty.rs
->> >> index 28850aa3b..de31a1f56 100644
->> >> --- a/rust/kernel/device/property.rs
->> >> +++ b/rust/kernel/device/property.rs
->> >> @@ -146,3 +146,60 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
->> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
->> >>      }
->> >>  }
->> >> +
->> >> +/// A helper for reading device properties.
->> >> +///
->> >> +/// Use [`Self::required`] if a missing property is considered a bug=
- and
->> >> +/// [`Self::optional`] otherwise.
->> >> +///
->> >> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provi=
-ded.
->> >> +pub struct PropertyGuard<'fwnode, 'name, T> {
->> >> +    /// The result of reading the property.
->> >> +    inner: Result<T>,
->> >> +    /// The fwnode of the property, used for logging in the "require=
-d" case.
->> >> +    fwnode: &'fwnode FwNode,
->> >> +    /// The name of the property, used for logging in the "required"=
- case.
->> >> +    name: &'name CStr,
->> >> +}
->> >> +
->> >> +impl<T> PropertyGuard<'_, '_, T> {
->> >> +    /// Access the property, indicating it is required.
->> >> +    ///
->> >> +    /// If the property is not present, the error is automatically l=
-ogged. If a
->> >> +    /// missing property is not an error, use [`Self::optional`] ins=
-tead.
->> >> +    pub fn required(self) -> Result<T> {
->> >> +        if self.inner.is_err() {
->> >> +            pr_err!(
->> >> +                "{}: property '{}' is missing\n",
->> >> +                self.fwnode.display_path(),
->> >> +                self.name
->> >> +            );
->> >=20
->> > Hm, we can't use the device pointer of the fwnode_handle, since it is =
-not
->> > guaranteed to be valid, hence the pr_*() print...
->> >=20
->> > Anyways, I'm not sure we need to print here at all. If a driver wants =
-to print
->> > that it is unhappy about a missing required property it can do so by i=
-tself, I
->> > think.
->>=20
->> Hmm, the driver said by using 'required' that it *is* required. So a
->> missing property is definitely an error here. Else it would have used
->> 'optional'. Which doesn't print in case the property is missing.
->>=20
->> If I remember correctly having 'required' and 'optional' is the result
->> of some discussion on Zulip. And one conclusion of that discussion was
->> to move checking & printing the error out of the individual drivers
->> into a central place to avoid this error checking & printing in each
->> and every driver. I think the idea is that the drivers just have to do
->> ...required()?; and that's it, then.
+On April 25, 2025 11:41:21 PM GMT+03:00, Steven Rostedt <rostedt@goodmis=2E=
+org> wrote:
+>From: Steven Rostedt <rostedt@goodmis=2Eorg>
 >
-> Yes, I get the idea.
+>In order to know if a task is a user thread or a kernel thread it is
+>recommended to test the task flags for PF_KTHREAD=2E The old way was to
+>check if the task mm pointer is NULL=2E
 >
-> If it'd be possible to use dev_err!() instead I wouldn't object in this s=
-pecific
-> case. But this code is used by drivers from probe(), hence printing the e=
-rror
-> without saying for which device it did occur is a bit pointless.
+>It is an easy mistake to not test the flag correctly, as:
 >
-> Drivers can still decide to properly print the error if the returned Resu=
-lt
-> indicates one.
+>	if (!(task->flag & PF_KTHREAD))
+>
+>Is not immediately obvious that it's testing for a user thread=2E
+>
+>Add helper functions:
+>
+>  is_user_thread()
+>  is_kernel_thread()
+>
+>that can make seeing what is being tested for much more obvious:
+>
+>	if (is_user_thread(task))
+>
+>Link: https://lore=2Ekernel=2Eorg/all/20250425133416=2E63d3e3b8@gandalf=
+=2Elocal=2Ehome/
+>
+>Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis=2Eorg>
+>---
+> include/linux/sched=2Eh | 10 ++++++++++
+> 1 file changed, 10 insertions(+)
+>
+>diff --git a/include/linux/sched=2Eh b/include/linux/sched=2Eh
+>index f96ac1982893=2E=2E823f38b0fd3e 100644
+>--- a/include/linux/sched=2Eh
+>+++ b/include/linux/sched=2Eh
+>@@ -1785,6 +1785,16 @@ static __always_inline bool is_percpu_thread(void)
+> #endif
+> }
+>=20
+>+static __always_inline bool is_user_thread(struct task_struct *task)
+>+{
+>+	return !(task->flags & PF_KTHREAD);
+>+}
+>+
+>+static __always_inline bool is_kernel_thread(struct task_struct *task)
+>+{
+>+	return task->flags & PF_KTHREAD;
 
-One alternative would be to store a reference count to the device in
-`FwNode`. At that point we'd be guaranteed to have a valid reference
-whenever we want to log something.
+return !is_user_thread(task);
+
+or the other way around=2E=20
+
+=F0=9F=99=82
+
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
