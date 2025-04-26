@@ -1,61 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0529523BE;
-	Sat, 26 Apr 2025 12:37:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C0823BE;
+	Sat, 26 Apr 2025 12:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745671069; cv=none; b=tHLxouprJlRTfqyL1AC6Kl0KB9i6iGtD4rRSJrWbQ7mEAIX3gIcFCDMe0twSX85ewtJiHNWFtInI64t5kZiGaRIB1E9zwC7Quj7jXzjan2+AOqmJVZXPbx/VZDw6AkMGOcaFlnB8B6muo8RvcZ2tgQnnuY3kWPjnWGgoRLPExRc=
+	t=1745671081; cv=none; b=hGuGRb7LViBBJQLge2zcfgb+8hUeCsZLo6c0SyudyV1jOdjj8N2XDrs+YQ+6Q6XntdYdyCmIwNE7PFxVXv2a5DNMUzfzPnGVVxz7HlIxGoqRxqPuXYGRTZhNghGInqupr6ErP9yCcPcWmKJp4D2gKDN1xNthA4gBcT5E7+HbIPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745671069; c=relaxed/simple;
-	bh=FhnB/f2eS+TpixKJZ1oPFU936Rb5zabms5B2x9SIPro=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uxCqlLDWBzkWGaghjNPn+OeCvlbBTmBHczo9owcM56dGJkQSR3ii9bmY9f6s6xjhXgkqk22wf6vPEpjIprdgqZ5keUGPaNibMFqaotKbty4qwe0mUW01H0jZ0AvmL7QCBIEcGXrz2uSDu6WpqKBwtwZsTPFT8FNinflZ0qQzw4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87ABDC4CEE2;
-	Sat, 26 Apr 2025 12:37:46 +0000 (UTC)
-Date: Sat, 26 Apr 2025 08:37:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>,
- x86@kernel.org, Kees Cook <kees@kernel.org>, bpf@vger.kernel.org, Tejun Heo
- <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix
- <nicolas.palix@imag.fr>, cocci@inria.fr
-Subject: Re: [RFC][PATCH 1/2] kthread: Add is_user_thread() and
- is_kernel_thread() helper functions
-Message-ID: <20250426083745.77590827@batman.local.home>
-In-Reply-To: <26F4E8D1-4DDF-48EC-AE21-478EDF4C65C3@alien8.de>
-References: <20250425204120.639530125@goodmis.org>
-	<20250425204313.616425861@goodmis.org>
-	<26F4E8D1-4DDF-48EC-AE21-478EDF4C65C3@alien8.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745671081; c=relaxed/simple;
+	bh=iVm0TgSUq1X8824i7H5Q1jPfT2hTMoopWW3MVt+gxGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Puv8IfC/Bh5HXuBBwqiFokeqrTOeaiiM5NfE77m6ZvjPqfol40pD+RRlPUZKSWUgsMNaXnG956h5p6TeXMrsIL65qCkUwU5Ap8ufakvNR0jeS8hMFsf3Gd06Op4OQPlV/fJGBSz8IQJG1quR/SsMpzf/Dk/8krjn7uCV4f7TZ04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCg5U5Kh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCg5U5Kh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FC4C4CEE2;
+	Sat, 26 Apr 2025 12:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745671080;
+	bh=iVm0TgSUq1X8824i7H5Q1jPfT2hTMoopWW3MVt+gxGY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KCg5U5Kh6ytIvx9abvrcD2HVSNWglQs1xGcBJjPHx0QiYqzuk0R4yiDRPmKgaUkFV
+	 /iB85Th2hjKMYUpkii6KI6RkRzju0yMnzAqpv/deXHfvoJPh+J+tybP3tgWM7Wqszt
+	 Ce2BkM2R7oiPTvF/Uw/Kqg89+HXpC4KroTQjjSYNo8vs0yxWYa4wmpuVAoDJa+CJCK
+	 FsU3EaKme/AVePY7c32+FUgK3/7WR7VF1REmllzqekAJzjQUdAGn7Q4QgSBsq9FhZG
+	 l6s15Mbmw4R46HRUOUxm93dYSeSMwvOuDSXtdZfnvLcLbfS/rA1S4gNg/YrgdLDFaV
+	 UNg4Lq0sV8A1Q==
+Message-ID: <7bc208b3-5d28-4f25-8a59-c17f3ffa1907@kernel.org>
+Date: Sat, 26 Apr 2025 22:37:56 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/nolibc: Add m68k support
+To: Daniel Palmer <daniel@0x0f.com>, Willy Tarreau <w@1wt.eu>
+Cc: linux@weissschuh.net, linux-m68k@vger.kernel.org, geert@linux-m68k.org,
+ linux-kernel@vger.kernel.org
+References: <20250426041212.4141152-1-daniel@0x0f.com>
+ <20250426051423.GA8239@1wt.eu>
+ <CAFr9PXkU3W6DdYKhHz13K7bk9bnik67R85wqYUwHeROKEx59zA@mail.gmail.com>
+Content-Language: en-US
+From: Greg Ungerer <gerg@kernel.org>
+In-Reply-To: <CAFr9PXkU3W6DdYKhHz13K7bk9bnik67R85wqYUwHeROKEx59zA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Sat, 26 Apr 2025 14:08:46 +0300
-Borislav Petkov <bp@alien8.de> wrote:
+Hi Daniel,
 
-> >+static __always_inline bool is_kernel_thread(struct task_struct *task)
-> >+{
-> >+	return task->flags & PF_KTHREAD;  
+On 26/4/25 16:16, Daniel Palmer wrote:
+> Hi Willy,
 > 
-> return !is_user_thread(task);
+> On Sat, 26 Apr 2025 at 14:14, Willy Tarreau <w@1wt.eu> wrote:
+>> Nice, thank you! Could you please also add support for it to
+>> tools/testing/selftests/nolibc/ and verify that it works ?
 > 
-> or the other way around. 
+> Sure, doing that now. For now it'll be using the mmu enabled m68k virt
+> machine that QEMU supports out of the box.
+> 
+>> changes. You may possible have to add a few ifndef, as I don't
+>> think we've ever had a nommu platform yet. If you face too many
+>> failures or just difficulties, please let us know so that we can
+>> figure together a suitable solution.
+> 
+> I need to test actually building and running something for nommu but I
+> will do that later today.
+> Making nommu test automatically might be a bit difficult though as I
+> think it only really works with some changes I have to linux and QEMU.
 
-Yeah, I thought about doing that but decided against it.
+It works out-of-the-box for m68k qemu and a mainline kernel configured
+for m5208evb_defconfig - when using the qemu "mcf5208evb" machine.
+That is a nommu m68k/coldfire variant.
 
-As Kees mentioned to use !!, I think using the !is_user_thread() is a
-better approach.
+Regards
+Greg
 
--- Steve
+
