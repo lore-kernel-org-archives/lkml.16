@@ -1,133 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8BF1D5CDD;
-	Sat, 26 Apr 2025 21:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3150B1F09B4
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 21:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745702649; cv=none; b=NyK/c4duVpb4g/FbK1FSNkQ6qYKOGz4W0qIF2rXnr8oPMt5DHhSCVn3TwDEPVgnGH9tRO4+yJf9YBZz1yLYo+G4IjEF9TAg1V2vo2HLcE9EyYRs/so8RK1jWY656TD254g0EoNv+OGqJVNaz3xrphLIMZUVJMa+8K2Utixwm220=
+	t=1745702687; cv=none; b=uD8ZQ2DoIByemCj1xLWpkLV3KvPmFhYBSb4j/hQ2VBqSz1x6xKoOHL5aFLVnEZGHzSwixaS6fJQLgV3/+kZYsSigXyGK6Hk4qS/7ue8H8jamAC9Cad8HD4RJnqElbyaVfEbVjzPsVNO8ANaBHNJQwOeKZlysEXX6A+brwflNqzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745702649; c=relaxed/simple;
-	bh=KLJnmowEU+MNFxEcyRwWXecaoBq3TaKxQVFB2EjCS64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k6O0CXcFwBntrdengXTBLeMziAPKTL+ZnI677cOLfpwp44VSk4ojmKDxdvHYqA7T8BYbrUtmmgHm0B7G0v87pecueXvX7j/w6vuhOY9MLD9M6eTiammU/djJAwMlEv+MtBUsLb4rLudtaSih1io1WHtNE/1D3naSL2B3yFasLI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHDW/jas; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745702687; c=relaxed/simple;
+	bh=Dg3fCarQHR/JTqvGhOBfZR+xsGq8DTqd0lvEpfJG5Ks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PhfAm/0L2KYjLWkM2HtR5Dzq0u1mlyJMz+WwfPzpf4GUQ0RDRFVawEdKP3UzHyA9jOhqIeROaRb4r+ZOnt7gMgVCjseZKVUn+moVhVtyvUK0uZzueE7dss+xMD+k499kkg8q7x7/EtQ+LRccZIm+MK0Lyc5kF73m+GM0rLKNBPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g83zWtzu; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHDW/jas"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD93C4CEE2;
-	Sat, 26 Apr 2025 21:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745702648;
-	bh=KLJnmowEU+MNFxEcyRwWXecaoBq3TaKxQVFB2EjCS64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HHDW/jas22rogQcHXyRbn73zocRA7tKgEeZL6XGO+/fEnn7FZfvQGswBIy7LfayiG
-	 eSSfQG+R/XmYm6JOo2OexX5rPOaHH2mQpQhVWEqBjCylWCZTSpRB2SxBJ2/uxz+Ocp
-	 Q23DBCsCZeUsjY00sjtGZLTsKDtXUT28KyhacRXxCsuC8lWhufoUPQXwIL8+ECFYnf
-	 hRfFSRDr3qqSoOXnNZ+ZksZurGwSWvvvTFuvp7eUtqoc3Kqz7IJtDkErYYcALcpXgB
-	 y1w6BnvvNk00dEj4MwhTyNG9PQm2tt8VTpK8Sd6cmBgb5SisnsiTeCtW4Zqclkdwp+
-	 nzyj5TkjhH/KA==
-Date: Sat, 26 Apr 2025 23:24:01 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Message-ID: <aA1O8Wem1FhyybF5@pollux>
-References: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g83zWtzu"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30effbfaf61so38812461fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745702683; x=1746307483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K1mqAIBnp7KMTnNYtwdmaVxEXl0tUjHzIuN2rlUSfs8=;
+        b=g83zWtzuFZFO+Vqj29C01+uQQf515igBwWI/IV3sCGAgUyki5q20OgFlJhio7tTuuK
+         k4TqMJKLQcKcciKqJtytQF52SCqGO2wb6XDeYXBZEDIgBoPPGYl7ZehnVaFSjuqK3ZnR
+         +Y9u7A5nwkZfKjmXmROG2h0lZUQr4/0Y9JhgCeJOJks0lQrEIBMch4XdS10QPSy0J/bp
+         DOvCxeaTL/br3NuP/1pHZJkseo/1z19VaNPltTvSHrhgg3N8bUCZtc1MmL6JGN4oiIn+
+         2bS6I2sOmJQWR7rMt4AkebVr2GJG3+vjR16/dOU1cmJhcDQ+h80YKJZ+clyC+2zG9Wz4
+         2N0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745702683; x=1746307483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K1mqAIBnp7KMTnNYtwdmaVxEXl0tUjHzIuN2rlUSfs8=;
+        b=WlVLvQfC6z7z96W/YC+V/NuJvvfZbDQp27XxP49221tgI0pBrsn38N73hbvY7zOPUJ
+         upCTz0Sdf8/euiPrF1P5qHOlD191G5Rl/hGGQq70DHW43zlm8X3bJh6Ls7OLdhKGL4ej
+         bcrN9LO7SnCrJ4IlYyH9yHVp8LfwGSj+G3RHced//ZX9KxQD5S8RKiBo9pM/ATFva8Ur
+         RyEbc3Sp6tdFD914Lnk9EQvTsk2zZPvGtZ4H1fr8uuOU/0vmSNs+kP5PrxTFcnZjBSew
+         lhKtYQAFRxo/8hWUjUwLFhOV2WLj0Uk8I5/yuskMIdNdQvJs4TBxrBC2/cfgINw6ycnt
+         Sseg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ZtKWk+ieuk+JeTAXEjbs4uI2ELCZGbkFfllv9St+5XTnfVvIn6eMtj/FBiLYWcUkyxqxlTx5T7T0IxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6FzJS3dMS4Rj7b8NWImrK0aWrEDBn1M+pd9xY9lhucYNXG3Ga
+	el2xOzAcc6xjrxbENxa+UR1+T+PsdkTsZVhCKdYR5Xtj7g1eMYy60eYDlPSqY0UqhBnYE/Dca4/
+	6CQtFadKKmO7vPFvufEk8gGnUW3a8cUUJmSJjEA==
+X-Gm-Gg: ASbGnctYxaRDLCId8wRy+UalJFiavsZOxdHK83jVF5P96FebaMd7pS+Q+2Svoc+I2SE
+	x7k4dDfdXI0Jq52wNibHSAHdsFzpISKgQVcKuteaPbg1sirw/0yOp5FzZ1bGtDhjdYnu+SsI9zi
+	Lzu8DvKIB/9ZHd+fAHrA9c/W2ETjufJe9l8Q==
+X-Google-Smtp-Source: AGHT+IFJMmStyVBuIyxQECB5iELQPgDUnywD2WJ46nDL9IgJLHD7iPOWbRPUoe3umTLlnkE5eoleE6r364MYg9Jxl1Q=
+X-Received: by 2002:a05:651c:222a:b0:30b:9f7b:c186 with SMTP id
+ 38308e7fff4ca-317cc3b4c3dmr33874231fa.1.1745702683231; Sat, 26 Apr 2025
+ 14:24:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me>
+References: <20250304181400.78325-1-thorsten.blum@linux.dev>
+In-Reply-To: <20250304181400.78325-1-thorsten.blum@linux.dev>
+From: Lee Duncan <lduncan@suse.com>
+Date: Sat, 26 Apr 2025 14:24:32 -0700
+X-Gm-Features: ATxdqUFRXwxiD0AZ10vGLZVX25IArlcs-9mCmM5d-L5qj3q4zIK9ecGpSwHodS0
+Message-ID: <CAPj3X_VKZz_8oq0puSuh96_=ozR+t8xL_whb5+UaNYS0MOrpKw@mail.gmail.com>
+Subject: Re: [PATCH] scsi: target: Remove size arguments when calling strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
+	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 26, 2025 at 08:28:30PM +0000, Benno Lossin wrote:
-> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
-> > Implement a direct accessor for the data stored within the Devres for
-> > cases where we can proof that we own a reference to a Device<Bound>
-> > (i.e. a bound device) of the same device that was used to create the
-> > corresponding Devres container.
-> >
-> > Usually, when accessing the data stored within a Devres container, it is
-> > not clear whether the data has been revoked already due to the device
-> > being unbound and, hence, we have to try whether the access is possible
-> > and subsequently keep holding the RCU read lock for the duration of the
-> > access.
-> >
-> > However, when we can proof that we hold a reference to Device<Bound>
-> > matching the device the Devres container has been created with, we can
-> > guarantee that the device is not unbound for the duration of the
-> > lifetime of the Device<Bound> reference and, hence, it is not possible
-> > for the data within the Devres container to be revoked.
-> >
-> > Therefore, in this case, we can bypass the atomic check and the RCU read
-> > lock, which is a great optimization and simplification for drivers.
-> >
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >
-> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> > index 1e58f5d22044..ec2cd9cdda8b 100644
-> > --- a/rust/kernel/devres.rs
-> > +++ b/rust/kernel/devres.rs
-> > @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
-> >  
-> >          Ok(())
-> >      }
-> > +
-> > +    /// Obtain `&'a T`, bypassing the [`Revocable`].
-> > +    ///
-> > +    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
-> > +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
-> > +    ///
-> > +    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
-> > +    /// has been created with.
-> > +    ///
-> > +    /// # Example
-> > +    ///
-> > +    /// ```no_run
-> 
-> The `no_run` is not necessary, as you don't run any code, you only
-> define a function.
+On Tue, Mar 4, 2025 at 10:30=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> The size parameter of strscpy() is optional because strscpy() uses
+> sizeof() to determine the length of the destination buffer if it is not
+> provided as an argument. Remove it to simplify the code.
+>
+> Remove some unnecessary curly braces.
+>
+> No functional changes intended.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/target/target_core_configfs.c | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/target/target_core_configfs.c b/drivers/target/targe=
+t_core_configfs.c
+> index c40217f44b1b..9b2b9786ce2f 100644
+> --- a/drivers/target/target_core_configfs.c
+> +++ b/drivers/target/target_core_configfs.c
+> @@ -673,12 +673,10 @@ static ssize_t emulate_model_alias_store(struct con=
+fig_item *item,
+>                 return ret;
+>
+>         BUILD_BUG_ON(sizeof(dev->t10_wwn.model) !=3D INQUIRY_MODEL_LEN + =
+1);
+> -       if (flag) {
+> +       if (flag)
+>                 dev_set_t10_wwn_model_alias(dev);
+> -       } else {
+> -               strscpy(dev->t10_wwn.model, dev->transport->inquiry_prod,
+> -                       sizeof(dev->t10_wwn.model));
+> -       }
+> +       else
+> +               strscpy(dev->t10_wwn.model, dev->transport->inquiry_prod)=
+;
+>         da->emulate_model_alias =3D flag;
+>         return count;
+>  }
+> @@ -1433,7 +1431,7 @@ static ssize_t target_wwn_vendor_id_store(struct co=
+nfig_item *item,
+>         ssize_t len;
+>         ssize_t ret;
+>
+> -       len =3D strscpy(buf, page, sizeof(buf));
+> +       len =3D strscpy(buf, page);
+>         if (len > 0) {
+>                 /* Strip any newline added from userspace. */
+>                 stripped =3D strstrip(buf);
+> @@ -1464,7 +1462,7 @@ static ssize_t target_wwn_vendor_id_store(struct co=
+nfig_item *item,
+>         }
+>
+>         BUILD_BUG_ON(sizeof(dev->t10_wwn.vendor) !=3D INQUIRY_VENDOR_LEN =
++ 1);
+> -       strscpy(dev->t10_wwn.vendor, stripped, sizeof(dev->t10_wwn.vendor=
+));
+> +       strscpy(dev->t10_wwn.vendor, stripped);
+>
+>         pr_debug("Target_Core_ConfigFS: Set emulated T10 Vendor Identific=
+ation:"
+>                  " %s\n", dev->t10_wwn.vendor);
+> @@ -1489,7 +1487,7 @@ static ssize_t target_wwn_product_id_store(struct c=
+onfig_item *item,
+>         ssize_t len;
+>         ssize_t ret;
+>
+> -       len =3D strscpy(buf, page, sizeof(buf));
+> +       len =3D strscpy(buf, page);
+>         if (len > 0) {
+>                 /* Strip any newline added from userspace. */
+>                 stripped =3D strstrip(buf);
+> @@ -1520,7 +1518,7 @@ static ssize_t target_wwn_product_id_store(struct c=
+onfig_item *item,
+>         }
+>
+>         BUILD_BUG_ON(sizeof(dev->t10_wwn.model) !=3D INQUIRY_MODEL_LEN + =
+1);
+> -       strscpy(dev->t10_wwn.model, stripped, sizeof(dev->t10_wwn.model))=
+;
+> +       strscpy(dev->t10_wwn.model, stripped);
+>
+>         pr_debug("Target_Core_ConfigFS: Set emulated T10 Model Identifica=
+tion: %s\n",
+>                  dev->t10_wwn.model);
+> @@ -1545,7 +1543,7 @@ static ssize_t target_wwn_revision_store(struct con=
+fig_item *item,
+>         ssize_t len;
+>         ssize_t ret;
+>
+> -       len =3D strscpy(buf, page, sizeof(buf));
+> +       len =3D strscpy(buf, page);
+>         if (len > 0) {
+>                 /* Strip any newline added from userspace. */
+>                 stripped =3D strstrip(buf);
+> @@ -1576,7 +1574,7 @@ static ssize_t target_wwn_revision_store(struct con=
+fig_item *item,
+>         }
+>
+>         BUILD_BUG_ON(sizeof(dev->t10_wwn.revision) !=3D INQUIRY_REVISION_=
+LEN + 1);
+> -       strscpy(dev->t10_wwn.revision, stripped, sizeof(dev->t10_wwn.revi=
+sion));
+> +       strscpy(dev->t10_wwn.revision, stripped);
+>
+>         pr_debug("Target_Core_ConfigFS: Set emulated T10 Revision: %s\n",
+>                  dev->t10_wwn.revision);
+> --
+> 2.48.1
+>
+>
 
-Yet, I'd like to keep it to make it obvious that this test isn't supposed to
-run.
-
-> > +    /// # use kernel::{device::Core, devres::Devres, pci};
-> > +    ///
-> > +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x4>>) -> Result<()> {
-> > +    ///     let bar = devres.access_with(dev.as_ref())?;
-> > +    ///
-> > +    ///     let _ = bar.read32(0x0);
-> > +    ///
-> > +    ///     // might_sleep()
-> > +    ///
-> > +    ///     bar.write32(0x42, 0x0);
-> > +    ///
-> > +    ///     Ok(())
-> > +    /// }
-> 
-> Missing '```'?
-
-Good catch -- interestingly the doctest did compile anyways.
-
-> 
-> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> Result<&'s T> {
-> 
-> I don't think that we need the `'d` lifetime here (if not, we should
-> remove it).
-
-If the returned reference out-lives dev it can become invalid, since it means
-that the device could subsequently be unbound. Hence, I think we indeed need to
-require that the returned reference cannot out-live dev.
+Reviewed-by: Lee Duncan <lduncan@suse.com>
