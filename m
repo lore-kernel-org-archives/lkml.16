@@ -1,184 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8470F1F463A;
-	Sat, 26 Apr 2025 15:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CFE8488;
+	Sat, 26 Apr 2025 16:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745683100; cv=none; b=klDtOYdu3v3NqzprR2zzBe5AOANjfC99Hzgyy3zjTchO3kAUrC3V3lGhSFfEJ/hAxtqGxtQ2G/lHnT8CThw0ycPm/tXwSIcaYYXZjj3o8/ol5a2gStj4T8qwBpXjnECnKas0SzC78SJaeo4P2mtlj7963jmwoAX3wbE5EK0QsnA=
+	t=1745683243; cv=none; b=kJAWN7IgX8haunInpDzJu53Us35ugvt6TsY3PUydlhUaCWNhkKo5YQpQFgAYhombefB44PsoXw8+9BKmyEJ+HgXkFkjLxpk8XxBTb193oDMaC/F5bJW3uNwuz7oEw+h4MxuXpD/h4XrbTDW/4EZHw0lxbq+r8Y/Rb7q7kdXDMag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745683100; c=relaxed/simple;
-	bh=QvWssyGW6dMZkAmmfo99P/c0i6wBrHho57YA9Sb0npE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tF9Bfr1PiF3vTUCYyOr4OXGpO8NBj16Hm40o9QElMUXbeRQctnbJCANEDDcY7EtYrChLgvbCEsS2/DH1Vl2XOUh3DysspLeZ8ZzInZWNSLi0RAiroHqdrc/ig5imNmN6DyJ/jHxIrkMVMKK7OYq3JplexCBD9+YUeNw6fICZboA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkukN2Bg; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745683243; c=relaxed/simple;
+	bh=wGwWAknTOCMxz0RPq8zv6IjjubENWlU5qOlxtfmR5t0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bw1e9dvfXaYxWDgUHk15J1Fk+q/mXNTrg+Veu0MUqwIti8ogsvhvbCF3fW5k5qxWoe64k7snOyn/1camGMMWhGZwbUSOx/KqQSIeKdDPC4CZYLka0ZZKQCpPcRohfDyVGU3GVL8J8awTBsdM2Rh1EzVDSaVYNWzUvQebncyha1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsVvjLcp; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkukN2Bg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745683099; x=1777219099;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=QvWssyGW6dMZkAmmfo99P/c0i6wBrHho57YA9Sb0npE=;
-  b=IkukN2BgOyDjzD2f6IUq9qYH1rurMr26KfP20Z7rXX8sDohxd3po6W96
-   AN2RxkISA8mXYP8gLTi1x7khw9j0qklRvh/D+3y4Tl8TdIs+2R8NwvlxP
-   Nm/38ThUyK7ozyxHfPYjz2bwf3EaKLu2v1TwA0lX5y+NiFl4cXKRfDJ0I
-   PE/bIfU09kc3n/Ak+1XKLGqjFFSjTJpfnOf7/77A/qBj+udYwYGHTuQ0m
-   lucTwSmiOvevtemucWVHu3Fu1W5L4V9PybbF6d1QLrmXN5RCYfSD9wdVu
-   THZ5a4f2989Nn9QgvfzfzspOlbZ1qIVF7U89w0UI2CFxpA85UZh2mhkPk
-   g==;
-X-CSE-ConnectionGUID: SUZGKRX7Tlibe/T4mUNEHA==
-X-CSE-MsgGUID: mSFtPcKDSKOoFyA7vwWQNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="50993846"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="50993846"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 08:58:18 -0700
-X-CSE-ConnectionGUID: 2vEr5gz1S/y3CulU83JLAw==
-X-CSE-MsgGUID: Vqg5r5wVRwaES00n2qxAxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="133117275"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 26 Apr 2025 08:58:15 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8huv-0005t9-2A;
-	Sat, 26 Apr 2025 15:58:13 +0000
-Date: Sat, 26 Apr 2025 23:57:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Likun Gao <Likun.Gao@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>, linux-doc@vger.kernel.org
-Subject: drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c:3209: warning: This comment
- starts with '/**', but isn't a kernel-doc comment. Refer
- Documentation/doc-guide/kernel-doc.rst
-Message-ID: <202504262320.z3me9W8d-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsVvjLcp"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7396f13b750so3723612b3a.1;
+        Sat, 26 Apr 2025 09:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745683241; x=1746288041; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=znOdau2L+/dcZkQ6O6k0/5CeHr55iQYi/h0B2Jyxhy8=;
+        b=QsVvjLcpUWuSmXDhdUa5Cg3pBT0j7m1Be3Ay0GK0Ry4rST89vNLbHjj0ix7WOSIx4B
+         opqQT3A/o5UzNK74vpfnC+g54Motqm+E24ZXmZVpf066Nel9s5a0KvxSQYc24QfJaXFk
+         ewaHWEs4leWsPCRew5PqozsWSjg6TMx9LM+GqHRVlhuZ3bMA8eZjvJahXUUJAmvseeiz
+         TX0dlOZ2CYlJDL4Xyl33jc3AwbaDYh7/x1Q19mLXWY2STy4nJwyPFsO3NMsPSQ/cKKVa
+         E/foO0auvQYkb5oUQS3TCGipkWCv/7C+aG4/aCSnt5Iw9Wz7U8y7iuKAjO8Y99Lh60Fk
+         gH7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745683241; x=1746288041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=znOdau2L+/dcZkQ6O6k0/5CeHr55iQYi/h0B2Jyxhy8=;
+        b=gRBbPx5PPyryQdRnqf8022gycSIjU4KvdG0CVJHAnM7hRA7hBcP0jSckgDEEJ3C8Y+
+         1ZRXsv81w55KwtEH2Z3V3jN4U2nHFzoBSdrfzxPFCC4Ge2KZ0/UHhmhFnFZdjnZ1TFgT
+         7OyVmpRE3L24Xq7h7BMOD3+wSoruWkyj82WinWiI+pDHw+lFMj16b/osVfbI61ONlfVM
+         inadJ5ZUbrnvrJgzGkpyrjg2XXOXcYxzhOkwdhy8Qidx/Td4WFeAbdtooUGJBVDXXM8W
+         NDOx6xNY9lTUxDu7AVogE6uhuz9WRDDS0XwkPo9UKJrD2l9PLCX2RG5GN8v4jUuYuRY5
+         worA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1HigWYTBiSl2IsbjPMKlGm9KnKmiBaszJlwRkM/iKmBgt3ptokDCpnX+85b4K0l1O774=@vger.kernel.org, AJvYcCV9BP6HuAt8ToBI2+b8ENl5McLD0OhSA9mGdIhQQOGX29lu8y7FKmEQE8s4RWlB28QOzpUE6Aqv@vger.kernel.org, AJvYcCVrFMH4bMmoJ2CdFEx32xWNz4Paqktpk1OwB4CxsaWB4g5Dyg27MINW3QgPczaiJjCu4sUVB9tj64+CTSX5pQLQ@vger.kernel.org, AJvYcCX/+/IU54gc+EPU61Ljd9NzgSkN6Du9SmlBgP68BWbURITPvSWmAPgDSjG6kJ4MniUnq/jHeB2dqtKUdXd3NQkkVtLM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr5A0I3gS5xEAGV6GAUi1t3Em3FkNbkwuHrjLCVMDIxd6gtWot
+	xH/8I/kqPCBy93XFex5+92mJ6UR9qy28p2YDw4h8Tgjp3Q+tp7uo
+X-Gm-Gg: ASbGncvFIxs/k6CiZddY2f75cuL/0oLnSjUGYYUxq0ecypkpoOmzuPz8oEJiqXmNeaT
+	8BIgWFW6qd/GFFSgCqPeFU6VPZJiuabEaNX2/GgMbYf6uOE/8tcL3HL5go20blZwXpFmVEUEfrP
+	aMcU398Bkkx2ESsGv41xpnzy1DbzcukvnwbPS6UFNY5jnosVYa8d/cdFW9GLzF21MRLKlTXV0Ju
+	1VcDIFgPZ4TZL3tpi0Zrr9+qIPcF+GydA+sAEB+Ey7fVHzIjM+7SD7/8xwDn5CDcXndWZHgSenQ
+	RPP+DPFiucsIlWfX7CT2JJGWie00/nK1wpppDuYv6fI=
+X-Google-Smtp-Source: AGHT+IGcovqBau2DivQ0yh8b8PJpIgtx+uIrmZAQJE5XOKpzVaC3xkNekpOyApo9s2Jjcrh6mQst/g==
+X-Received: by 2002:a05:6a00:1742:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-73fd8f4e0c7mr8710527b3a.21.1745683241340;
+        Sat, 26 Apr 2025 09:00:41 -0700 (PDT)
+Received: from ubuntu2404.. ([122.231.145.226])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941cc1sm5174760b3a.60.2025.04.26.09.00.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 09:00:40 -0700 (PDT)
+From: KaFai Wan <mannkafai@gmail.com>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	mykolal@fb.com,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	leon.hwang@linux.dev,
+	mannkafai@gmail.com
+Subject: [PATCH bpf-next 0/4] bpf: Allow get_func_[arg|arg_cnt] helpers in raw tracepoint programs
+Date: Sun, 27 Apr 2025 00:00:23 +0800
+Message-ID: <20250426160027.177173-1-mannkafai@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   02ddfb981de88a2c15621115dd7be2431252c568
-commit: 52cb80c12e8a647aa9c903903d58916e6c1c4d38 drm/amdgpu: Add gfx v12_0 ip block support (v6)
-date:   12 months ago
-config: sparc-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250426/202504262320.z3me9W8d-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 10.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504262320.z3me9W8d-lkp@intel.com/reproduce)
+hi, 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504262320.z3me9W8d-lkp@intel.com/
+We can use get_func_[arg|arg_cnt] helpers in fentry/fexit/fmod_ret programs
+currently[1]. But they can't be used in raw_tp/tp_btf programs.
 
-All warnings (new ones prefixed by >>):
+Adding support to use get_func_[arg|arg_cnt] helpers in raw_tp/tp_btf
+programs.
+Adding BPF_PROG_TEST_RUN for tp_btf.
+Add selftests to check them.
 
->> drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c:3209: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
-                    * For gfx 12, rlc firmware loading relies on smu firmware is
-   drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c:4562: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
-                            * GFX12 could support more than 4 SEs, while the bitmap
+Thanks,
+KaFai
 
+[1] https://lore.kernel.org/bpf/20211208193245.172141-1-jolsa@kernel.org/
+---
+KaFai Wan (4):
+  bpf: Allow get_func_[arg|arg_cnt] helpers in raw tracepoint programs
+  bpf: Enable BPF_PROG_TEST_RUN for tp_btf
+  selftests/bpf: Add raw_tp_test_run for tp_btf
+  selftests/bpf: Add tests for get_func_[arg|arg_cnt] helpers in raw
+    tracepoint programs
 
-vim +3209 drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-
-  3152	
-  3153	static int gfx_v12_0_hw_init(void *handle)
-  3154	{
-  3155		int r;
-  3156		struct amdgpu_device *adev = (struct amdgpu_device *)handle;
-  3157	
-  3158		if (adev->firmware.load_type == AMDGPU_FW_LOAD_RLC_BACKDOOR_AUTO) {
-  3159			if (adev->gfx.imu.funcs) {
-  3160				/* RLC autoload sequence 1: Program rlc ram */
-  3161				if (adev->gfx.imu.funcs->program_rlc_ram)
-  3162					adev->gfx.imu.funcs->program_rlc_ram(adev);
-  3163			}
-  3164			/* rlc autoload firmware */
-  3165			r = gfx_v12_0_rlc_backdoor_autoload_enable(adev);
-  3166			if (r)
-  3167				return r;
-  3168		} else {
-  3169			if (adev->firmware.load_type == AMDGPU_FW_LOAD_DIRECT) {
-  3170				if (adev->gfx.imu.funcs && (amdgpu_dpm > 0)) {
-  3171					if (adev->gfx.imu.funcs->load_microcode)
-  3172						adev->gfx.imu.funcs->load_microcode(adev);
-  3173					if (adev->gfx.imu.funcs->setup_imu)
-  3174						adev->gfx.imu.funcs->setup_imu(adev);
-  3175					if (adev->gfx.imu.funcs->start_imu)
-  3176						adev->gfx.imu.funcs->start_imu(adev);
-  3177				}
-  3178	
-  3179				/* disable gpa mode in backdoor loading */
-  3180				gfx_v12_0_disable_gpa_mode(adev);
-  3181			}
-  3182		}
-  3183	
-  3184		if ((adev->firmware.load_type == AMDGPU_FW_LOAD_RLC_BACKDOOR_AUTO) ||
-  3185		    (adev->firmware.load_type == AMDGPU_FW_LOAD_PSP)) {
-  3186			r = gfx_v12_0_wait_for_rlc_autoload_complete(adev);
-  3187			if (r) {
-  3188				dev_err(adev->dev, "(%d) failed to wait rlc autoload complete\n", r);
-  3189				return r;
-  3190			}
-  3191		}
-  3192	
-  3193		adev->gfx.is_poweron = true;
-  3194	
-  3195		if (get_gb_addr_config(adev))
-  3196			DRM_WARN("Invalid gb_addr_config !\n");
-  3197	
-  3198		if (adev->firmware.load_type == AMDGPU_FW_LOAD_PSP)
-  3199			gfx_v12_0_config_gfx_rs64(adev);
-  3200	
-  3201		r = gfx_v12_0_gfxhub_enable(adev);
-  3202		if (r)
-  3203			return r;
-  3204	
-  3205		if ((adev->firmware.load_type == AMDGPU_FW_LOAD_DIRECT ||
-  3206		     adev->firmware.load_type == AMDGPU_FW_LOAD_RLC_BACKDOOR_AUTO) &&
-  3207		     (amdgpu_dpm == 1)) {
-  3208			/**
-> 3209			 * For gfx 12, rlc firmware loading relies on smu firmware is
-  3210			 * loaded firstly, so in direct type, it has to load smc ucode
-  3211			 * here before rlc.
-  3212			 */
-  3213			if (!(adev->flags & AMD_IS_APU)) {
-  3214				r = amdgpu_pm_load_smu_firmware(adev, NULL);
-  3215				if (r)
-  3216					return r;
-  3217			}
-  3218		}
-  3219	
-  3220		gfx_v12_0_constants_init(adev);
-  3221	
-  3222		if (adev->nbio.funcs->gc_doorbell_init)
-  3223			adev->nbio.funcs->gc_doorbell_init(adev);
-  3224	
-  3225		r = gfx_v12_0_rlc_resume(adev);
-  3226		if (r)
-  3227			return r;
-  3228	
-  3229		/*
-  3230		 * init golden registers and rlc resume may override some registers,
-  3231		 * reconfig them here
-  3232		 */
-  3233		gfx_v12_0_tcp_harvest(adev);
-  3234	
-  3235		r = gfx_v12_0_cp_resume(adev);
-  3236		if (r)
-  3237			return r;
-  3238	
-  3239		return r;
-  3240	}
-  3241	
+ kernel/trace/bpf_trace.c                      | 17 +++++--
+ net/bpf/test_run.c                            | 16 +++----
+ .../bpf/prog_tests/raw_tp_get_func_args.c     | 48 +++++++++++++++++++
+ .../bpf/prog_tests/raw_tp_test_run.c          | 18 ++++++-
+ .../bpf/progs/test_raw_tp_get_func_args.c     | 47 ++++++++++++++++++
+ .../bpf/progs/test_raw_tp_test_run.c          | 16 +++++--
+ 6 files changed, 146 insertions(+), 16 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/raw_tp_get_func_args.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_raw_tp_get_func_args.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
