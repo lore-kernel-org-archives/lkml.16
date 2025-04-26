@@ -1,116 +1,92 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E08256D
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4AD79CF;
+	Sat, 26 Apr 2025 15:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745679411; cv=none; b=e09gQkIAsZ8P9tb2B7qiDVvW20ULYN9W/9wJotATfB3P7Nn0XZH2hHQU1RdfIVK/BEJaoDj/7t5q2D3lNW/dWF7/QXGVbIW0k1xrTpt8Ook3gqOcf/B9iXCt8Sob5cZWKtS2YUIkzlw8oH6Ax/cg0ABUd5izbt7ILvwArwi0TnA=
+	t=1745679750; cv=none; b=eXj4bxXmRvThCHRIZRR7cWVeMyOVAtwhrb2Nd/CMOdm56nRa/NuRSQ9Z5GP0WcvaXxd2ibCzQnQQYtGP5Mb66FBJ8glE/VJieo+Z+jpe+vjHO4L+ZHirL0wrBVUzo9vOG4erro0Ytbk38M4K4gBMK8rvrdgEDr/8Jh6VrpiBxJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745679411; c=relaxed/simple;
-	bh=bHBQBm0qlrFLSPTQ5kZMOgmZuQIX6guRz1psjWrgWzQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cnu/c/6bUjfe2oBVHG58S8wOBRgQcybgloXXztCcYsNWGHPZzHhly5y9PtmwDCCX8WMzLbKCsaEtoLlfG+01ktl2gae8yxEpCqofLUX0+jrpEKqPUX+8S2D8LJsdLf+bOTQSlKLzG1bfe6+TStctzHNQm9eH2lV32ZryXelcmr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=V97VpETT; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1745679750; c=relaxed/simple;
+	bh=vm+BLppbw1VD4WX0DPD3q9NuAeJlDbqTxlZ+9ctOkKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oBlkcNTTfo3MjD06PJsHTMmGLj6Dxn67R+4rRwZWGsrUgTUTOGA00PclghfF9+mvpum52a8dY2lR5F7ukquV5KJWDHjyKn1MsLOMU+/3jtNhS6PtLQG7UVLJDZo8lEw84bnjLbDprJksB6m4kk+Q4tBr0tkn+vhAU8Qf/DzmG20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm1vUHVN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="V97VpETT"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1745679397;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GICB4BFYHCXkZcWANyav9UTGwPzsmDF0x+dfscxZ+3E=;
-	b=V97VpETThcQMI2V6pF8NhEa6hJbzknZuXEklIlmiA3b0ryvgW4Ki8dI3NbrTDsRvdx+oJH
-	SCOxyM6iqtdWcFQQ+wUd9mHMuIhgZxbJaBUsH9kieekgvikhAWiJGEKFXi9UD4d8pRduE4
-	ZXq983R6AJ+HS2XHOUoPOF8jIkkcZKnnjfh8HmydHdhLeQoHra/VtZqX6NiPrlbcb08RC+
-	8taQ3XUXyhgwNVsbmd3GiaHCdteW8BXeIB7pbU6rY9I1KQAEgBUZp5jXnrBD7AZOYQqFkQ
-	N37TMYVibwe0Q/scWSR/urLfgOuB/Kdq0EORg9SPenxHXvjFtKdZjpJGbZYabA==
-From: Ignacio Encinas <ignacio@iencinas.com>
-Subject: [PATCH v4 0/2] Implement endianess swap macros for RISC-V
-Date: Sat, 26 Apr 2025 16:56:17 +0200
-Message-Id: <20250426-riscv-swab-v4-0-64201404a68c@iencinas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm1vUHVN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8004C4CEE2;
+	Sat, 26 Apr 2025 15:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745679749;
+	bh=vm+BLppbw1VD4WX0DPD3q9NuAeJlDbqTxlZ+9ctOkKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lm1vUHVNH2GMp5VCJ0wSxwGSSZVshXdpyLM4IgVENZOIZlt9lq5blXFiHzPcbiZ3C
+	 usqHNaw5fgQWTfsn1RUhWSyZYQgRFBA6AMVPRxiimQp5gTLuT4pZNnIcXjEdeqmkW1
+	 D6wo5vVAM5w0MRF6FLyONqs353v026DoR/dQJZlT+wT2NhPn91nOtB/96ZErif5VQj
+	 2O/qZZjknr3KI5eV+psonhcexQkqmigTUH7raw/jLIkAT3EH/HGGaLMKK/bEe2Ze0t
+	 AfUOAMA/mftmbxwH3mokmwsYT42BdgskYAD3PgXn11aqwtmCLEUPfPDYFhkvTq+CFy
+	 HRAA3ZclTTUDg==
+Date: Sat, 26 Apr 2025 17:02:23 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Dirk Behme <dirk.behme@gmail.com>
+Cc: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
+Message-ID: <aAz1f2jhdwjXmHex@cassiopeiae>
+References: <20250425150130.13917-1-remo@buenzli.dev>
+ <20250425150130.13917-4-remo@buenzli.dev>
+ <aAuryiI0lY4qYyIt@pollux>
+ <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
+ <aAyyR5LyhmGVNQpm@pollux>
+ <D9GIUOH0CKE4.3R01AYKCCG54O@buenzli.dev>
+ <aAzrg31NB2g0X4qL@cassiopeiae>
+ <39798ebd-35a8-4a67-9df4-f12a6f20ef11@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABH0DGgC/23MQQ7CIBCF4as0rMUAU2px5T2MC6BTnYWtAYOap
- neXNia2xuV7yfcPLGIgjGxfDCxgokh9l0e5KZi/2O6MnJq8mRJKCxA7Hij6xOPDOu5q6UxpjfX
- SsQxuAVt6zrHjKe8LxXsfXnM7yen9ZKRYZpLkkkNZaYWtRDTVgbDz1Nm49f2VTaWkltqstOKCN
- xpc1VTWGan/aPjqUsBKQ9bg2p3QTS0Q4EeP4/gG6i983iMBAAA=
-X-Change-ID: 20250307-riscv-swab-b81b94a9ac1b
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
- Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
- skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
- linux-arch@vger.kernel.org, Ignacio Encinas <ignacio@iencinas.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39798ebd-35a8-4a67-9df4-f12a6f20ef11@gmail.com>
 
-Motivated by [1]. A couple of things to note:
+On Sat, Apr 26, 2025 at 04:35:07PM +0200, Dirk Behme wrote:
+> On 26.04.25 16:19, Danilo Krummrich wrote:
+> > On Sat, Apr 26, 2025 at 01:08:39PM +0200, Remo Senekowitsch wrote:
+> >> On Sat Apr 26, 2025 at 12:15 PM CEST, Danilo Krummrich wrote:
+> >>> If it'd be possible to use dev_err!() instead I wouldn't object in this specific
+> >>> case. But this code is used by drivers from probe(), hence printing the error
+> >>> without saying for which device it did occur is a bit pointless.
+> >>>
+> >>> Drivers can still decide to properly print the error if the returned Result
+> >>> indicates one.
+> >>
+> >> One alternative would be to store a reference count to the device in
+> >> `FwNode`. At that point we'd be guaranteed to have a valid reference
+> >> whenever we want to log something.
+> > 
+> > Yes, that would work. However, I'm not convinced that it's worth to store an
+> > ARef<Device> (i.e. take a device reference) in each FwNode structure *only* to
+> > be able to force an error print if a required device property isn't available.
+> > 
+> > Why do you think it is important to force this error print by having it in
+> > PropertyGuard::required() and even take an additional device reference for this
+> > purpose, rather than leaving it to the driver when to print a message for an
+> > error condition that makes it fail to probe()?
+> 
+> To my understanding doing the error print in "core" was proposed by
+> Rob [1]:
 
-RISC-V needs a default implementation to fall back on. There is one
-available in include/uapi/linux/swab.h but that header can't be included
-from arch/riscv/include/asm/swab.h. Therefore, the first patch in this
-series moves the default implementation into asm-generic.
-
-Tested with crc_kunit as pointed out here [2]. I can't provide
-performance numbers as I don't have RISC-V hardware yet.
-
-[1] https://lore.kernel.org/all/20250302220426.GC2079@quark.localdomain/
-[2] https://lore.kernel.org/all/20250216225530.306980-1-ebiggers@kernel.org/
-
-Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
----
-Changes in v4:
-
-- Add missing include in the 1st patch, reported by 
-  https://lore.kernel.org/all/202504042300.it9RcOSt-lkp@intel.com/
-- Rewrite the ARCH_SWAB macro as suggested by Arnd
-- Define __arch_swab64 for CONFIG_32BIT (Ben)
-- Link to v3: https://lore.kernel.org/r/20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com
-
-Arnd, I know you don't like Patch 1 but I tried your suggestions and
-couldn't make them work. Please let me know if I missed anything [3] [4]
-
-[3] https://lore.kernel.org/linux-riscv/f5464e26-faa0-48f1-8585-9ce52c8c9f5f@iencinas.com/
-[4] https://lore.kernel.org/linux-riscv/b3b59747-0484-4042-bdc4-c067688e3bfe@iencinas.com/
-
-Changes in v3:
-
-PATCH 2:
-  Use if(riscv_has_extension_likely) instead of asm goto (Eric). It 
-  looks like both versions generate the same assembly. Perhaps we should 
-  do the same change in other places such as arch/riscv/include/asm/bitops.h
-- Link to v2: https://lore.kernel.org/r/20250319-riscv-swab-v2-0-d53b6d6ab915@iencinas.com
-
-Changes in v2:
-- Introduce first patch factoring out the default implementation into
-  asm-generic
-- Remove blank line to make checkpatch happy
-- Link to v1: https://lore.kernel.org/r/20250310-riscv-swab-v1-1-34652ef1ee96@iencinas.com
-
----
-Ignacio Encinas (2):
-      include/uapi/linux/swab.h: move default implementation for swab macros into asm-generic
-      riscv: introduce asm/swab.h
-
- arch/riscv/include/asm/swab.h   | 62 +++++++++++++++++++++++++++++++++++++++++
- include/uapi/asm-generic/swab.h | 33 ++++++++++++++++++++++
- include/uapi/linux/swab.h       | 33 +---------------------
- 3 files changed, 96 insertions(+), 32 deletions(-)
----
-base-commit: a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
-change-id: 20250307-riscv-swab-b81b94a9ac1b
-
-Best regards,
--- 
-Ignacio Encinas <ignacio@iencinas.com>
-
+That is fine, though it doesn't answer my question above. :)
