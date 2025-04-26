@@ -1,75 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A08282EE
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 01:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E861DF972;
+	Sat, 26 Apr 2025 01:11:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745629540; cv=none; b=SHa8nTtW4V0Kd5HNk/p1C0jtNZ35EOUVHp47QE6nMg7sXHsrVChEMxr2qX/GuiGEEw6rGT8ARcyzj5eZaycDjMgoUEtPo/NwrOtembKAvOLc15paLYIdH1/iY/T47ZZkHCsK74LAWqewcnCYD8o5bMNpIW04lSPKzUPA/V3fwHg=
+	t=1745629860; cv=none; b=rnm+XnOZmFqnX49n9POQ4Ui3iQj6hayscAODZONu9oyixkagG/KJWUnyyjVklk5wnBNbYKuC7hppnJuo8gpfmvj2JznCZ6qyNPiKuq/Ex8VYNK6Q8AKLbilaJGPbY7G5r2hAVAMkBOX59uHCg9uRo0bNovu7uz5lyhAJkTEWuLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745629540; c=relaxed/simple;
-	bh=yRkkSopWJBJ2Bj5q9h+LnLhTYo69bmvHBvjCNpIHSMo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Kh9MFrrH5XRZItTPpvBXnVroUSd8/qyAYCOGqyqARaqoJ1AOUotxvEuCZ8gJuQjt7UK1M2Fa2UPTC2qbz4y0U34ld/niC+fEsAA9I4uWzv/bGOKjaGmK79niU8XRy5SbEj5U62zd8U/HD4XxBOp2U5k+MuC7ipurV85JvNkfdK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dNd1PisT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745629860; c=relaxed/simple;
+	bh=GUs6TKtXii+/XXjYUhm5P6PA6lNQdKk+Fhn0VAcFzCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlV49BPg5AbvvmVpdsltbncxGcjkbmeRhzWc0Tna3jpoR2D6s9KmuuBenEsJ5BGIJzt27CxWimhNP1jTNABr2kgaXMsopVF2uTNx5ETff931RGbLG91aaCmn27fb+mpnEeICHeWftbNMECjZee59eUVx7wGUsRdL5G97UlKQUI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxqczATS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dNd1PisT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0284C4CEE4;
-	Sat, 26 Apr 2025 01:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745629540;
-	bh=yRkkSopWJBJ2Bj5q9h+LnLhTYo69bmvHBvjCNpIHSMo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dNd1PisT9Z2inqRSOaf++3O+j3G8lSR90Ugh9+x8FPGbLpod0FyGWl9bDZyfIOsX1
-	 cgZ48RcefaV1fdsdkTsz59lFUR2utD/US/vQklmdrJaxQEJdqmZxOA2HkvXaaJ1Slq
-	 lLitP9QhEdRnsQNspsu+MrVoEiOgZZ1ct+S+qP4s=
-Date: Fri, 25 Apr 2025 18:05:39 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de>
-Cc: <dwmw2@infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <lkp@intel.com>, <rppt@kernel.org>,
- <yajun.deng@linux.dev>
-Subject: Re: [PATCH] mm: memblock: Fix arguments passed to
- memblock_set_node()
-Message-Id: <20250425180539.2b780a8b3d0958fcc2e8a500@linux-foundation.org>
-In-Reply-To: <20250425102003.64122-1-bercantu@amazon.de>
-References: <bd5842a92bd340799a74063f8da83d96@amazon.de>
-	<20250425102003.64122-1-bercantu@amazon.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxqczATS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F060C4CEE4;
+	Sat, 26 Apr 2025 01:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745629859;
+	bh=GUs6TKtXii+/XXjYUhm5P6PA6lNQdKk+Fhn0VAcFzCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KxqczATSjba7r4EOiuW4Y78kxeaOmUn3hrN1Qeb61Bk1IEG5UNMQYfKkJP6rYhrV7
+	 8AmTGD/13GYjzSccgNMwsaqeRlpmwPv5meAChJXDj5Q06hhFENBCp7oBqxPzuc9ZO0
+	 pGKSNgygnGuSGADjucID9fOYBRhKR7ry0z4g2sDjEkMTeG3qIIFlI5culzVUuXi3wA
+	 bC8BOIqRt8uMC02v1ZmTGzq2dYb7qx2Xfv5q8Rxtr63FLkVeFvfiizkWxan0m4YeBl
+	 KHc2CWUVFGRL3C1kNb40DgyDJqN6VrFEUEYi9ZwapTJakiV2SfEKCIjtwm38N6h5V5
+	 f3X4MpEQ8rQEw==
+Date: Fri, 25 Apr 2025 18:10:57 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 05/24] dma-mapping: Provide an interface to allow
+ allocate IOVA
+Message-ID: <aAwyoXHzhU42P06W@bombadil.infradead.org>
+References: <cover.1745394536.git.leon@kernel.org>
+ <f08e12b1539b73c9ae27c06afbfe4f0ee3b85609.1745394536.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f08e12b1539b73c9ae27c06afbfe4f0ee3b85609.1745394536.git.leon@kernel.org>
 
-On Fri, 25 Apr 2025 10:20:03 +0000 "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de> wrote:
+The subject reads odd, how about:
 
-> memblock_set_node() receives a `base` and a `size` arguments, but we are
-> passing the `start` and `end` of the memory regions when iterating over
-> them in memmap_init_reserved_pages() to set their node ids.
-> 
-> This results in the function setting the node ids for the reserved memory
-> regions in `[base, base + base + size)` instead of `[base, base + size)`.
-> 
-> Pass `start` and `size`, so that we iterate over the correct range.
-> 
-> Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
-> 
-> ...
->
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2196,7 +2196,7 @@ static void __init memmap_init_reserved_pages(void)
->  		if (memblock_is_nomap(region))
->  			reserve_bootmem_region(start, end, nid);
->  
-> -		memblock_set_node(start, end, &memblock.reserved, nid);
-> +		memblock_set_node(start, region->size, &memblock.reserved, nid);
->  	}
->  
->  	/*
+dma-mapping: Provide an interface to allocate IOVA
 
-What were the runtime effects of this bug?
+> +/**
+> + * dma_iova_free - Free an IOVA space
+> + * @dev: Device to free the IOVA space for
+> + * @state: IOVA state
+> + *
+> + * Undoes a successful dma_try_iova_alloc().
+> + *
+> + * Note that all dma_iova_link() calls need to be undone first.  For callers
+> + * that never call dma_iova_unlink(), dma_iova_destroy() can be used instead
+> + * which unlinks all ranges and frees the IOVA space in a single efficient
+> + * operation.
+> + */
+
+Probably does't matter but dma_iova_destroy() doesn't exist yet here.
+
+Other than that:
+
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+
+  Luis
