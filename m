@@ -1,177 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78C6253F06
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F79724EF91;
+	Sat, 26 Apr 2025 13:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745675651; cv=none; b=d5/fB2K+j56Fji8/tWZg2wy6om2twJYa9hsvz02/FVSNvmkEn4p+SWImMezl5Fr0tWjMqvK0nJUspU4BznxD8zjXNcfFztX1oQl2zK/WgiRDS6bEH1yah3y9q+JJvrZV3o7Ajn9pHrsy6H2e7ROPMeiuWgVaqYCcBa+w6fAasQQ=
+	t=1745675791; cv=none; b=OP5pytDJgBN7eT3//4qXjbASb2lH1mbc6+pQZCxAkm8tQQ2RPcWz9nvPLS0HWmUKPGClm0JPQiSqxXbjUP/kRHSsSGlY4Sli8Un++Top7BQlPsIg2lSj84dkbVYioPPsXXyMwnYxUr2twKri/SYBPPrwmvNFdKI1M4c4iAWZj1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745675651; c=relaxed/simple;
-	bh=Bq4NL4fbSYSVSelTOMMmjwb7zt/O6DpSlBDxmYSqjr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JBF6CD3OTnaM0uFGiiHjdO9Lt8cyiDKxvvkO+vvmtokZ73idQr9I+MHa2q4YEwL2KovSv5dxtzP+dwpX/r34OvZa7xptT7Gu3TqZ6l4SL36yM8MIAFvpsCaWMDN113azaEDF36462JzT7iZ9zeoBw9LssMXJTMjQZ7bycMSInQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIbOXzVg; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745675791; c=relaxed/simple;
+	bh=HjEsxHsJLRu2c1XpvTAME47d2FHhpw2EQcrOvq5s3+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cwx4Y2b9kUnksYisNqVcL/P1ufpyqkkMbuGei22YsQE9kk/LWCF2a62gPx3NQEVvkDxVZHaMnFDtK1kIdXyWG5u8+QZ8I334xpTyY5q+42o/l/cFL+3qVTUHfpTI9r3hAsnBgEQvMgswme2Ad5Ck6M5HRblGUcS85ClqOMuUZ2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dn6/uUOB; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIbOXzVg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745675649; x=1777211649;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Bq4NL4fbSYSVSelTOMMmjwb7zt/O6DpSlBDxmYSqjr0=;
-  b=iIbOXzVgqfbVBOPtFXo2J6LvOUGocTKuwJr7t12w2DVqCpANbL9p0Q1l
-   61o6q87NczYA3rXOszVCDIg/0lh6Oe56xjU3OntfwQ9SArU1bIo3cKtyA
-   bGcZfQ3gI2gPLYbyU9nuBi15s1khc4xcMhhTAaEnTxpwcLdyWHi9Bu1/z
-   0HiEWONLYB1t+4E2G9qHCvVjCLSac3886+rVrNZItKLW6Mz8XMExGK9Y5
-   DhA9ttQkUE1ap5cmlw0Q3y9YLVbb/LZs1OjCG0ZmJN7t3QfQq1c6bS3sT
-   uK1Xc0ftu1ovA07iwDNXDiV2xifCUnOq3pyTyctsGe9BfLSdB3137q4wU
-   g==;
-X-CSE-ConnectionGUID: PnxOpl0TRAG6lAULhQX1gA==
-X-CSE-MsgGUID: X2OQVYkwT1mXWz6AfgKPlg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="46436161"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="46436161"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:54:08 -0700
-X-CSE-ConnectionGUID: VAaCOq1uTaKnqiUl/6wEbw==
-X-CSE-MsgGUID: 3/JNZBneSyug/BVNoe09MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="134063680"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 26 Apr 2025 06:54:07 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8fym-0005qJ-2m;
-	Sat, 26 Apr 2025 13:54:04 +0000
-Date: Sat, 26 Apr 2025 21:54:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Stefan Herdler <herdler@nurfuerspam.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Subject: drivers/staging/media/av7110/av7110.c:162: warning: cannot
- understand function prototype: '} else if (av7110_init_analog_module(av7110)
- == 0) '
-Message-ID: <202504262127.FkkWHzfs-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dn6/uUOB"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8fce04655so35035846d6.3;
+        Sat, 26 Apr 2025 06:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745675788; x=1746280588; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S1n7bn3fviWPvz6Rw9RjP7e3YFwmWOwqg06fB5bOqNg=;
+        b=dn6/uUOBdNMewk5/2dEvJZsec/8Gr5sw/q82iwYZsAZKqvYE8mpyglpB0Oes9FYUVi
+         IUkZ/zK56M8DXSKHH0dwq+5OsaetKQ3F3D73YuQktHtETV2kf9wyziY04JqnDyqIcon/
+         WGCeaepikKob5rwrXWVtnS9M+XLH4Stb8mHXBiLNoJrhSISLogS57W3ri6/lMJmvr/7e
+         R/+Udvhr3VV6testPP8QBXR7oCHQqH0PBm22NbHvoBJ4tn78a5HaGFnrU5Pin8/y1VKu
+         QVraPo1Flnlt8disCT2yv5BDUCOFdpP0qMVQIdeJ8mjiTjL7bGEGhJlTsFWJ6TGrSKkO
+         9pAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745675788; x=1746280588;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S1n7bn3fviWPvz6Rw9RjP7e3YFwmWOwqg06fB5bOqNg=;
+        b=N4ABIv/i1qX6+1EmfDCoShRTHdMDI5L2XlzdFI2UK93DQvecddJHxNTmzlmoMmrkce
+         KNTrLGhhfuhsCDc9GaWlXabcxWqfBnPkHKMTKKCHmZdThzUb2J5oj1dXhfY5W3CtoWTB
+         vVg41VQpeixAASSauvtDzeOjn4C0hjlvl7SVkh2QRze/deOhqMx7AfAQWhFcers0fXkc
+         WjAsHwTo1fsxEpPjTB+OAxIF1wEncqEYCQTTz0LEMkRH9sX+WtZoRWNNZxPk1CvXMEDF
+         HeGr0cEqdmB0DKT9ZBVhBZvI4c8lw9oLGJIkLREoZUi8RAIEr/MkuTEdozADNeVqC3at
+         IAsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+NmzjQ2AEMmfT7UDLgBJowosKaBSSOhgACtuQbrdr02EdC3opy9TEqVsg2DmV8CLcNCAh80VqPoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysBwzJ1iEAb0m0oNac71B9oQu+qqr8lRLJzYlOn8QpxH0rZDn1
+	YVMqNHg2KAz9mOExs+U1f510ZMbTOiqmEIM15Jd2VZ1D2UikpdjE
+X-Gm-Gg: ASbGncs2xonb34oaZAGFciavfam4NqUumzIgtEoDZFONeBmqfOe8sap+L1rWPLx5wyU
+	DRYaZeNJs9f6zWfJ71yVXt80ekNberwZOLARVWX7TbPr9wei2H9NzoHBtC2u4qScIBgDY+tmIwW
+	Ik3duA+6vbMKFsN4jzX3IzhlzWT4t4ADA1a0J3XxVQKEAziApTUlQzhSppT7PQ1Xc8X80/0893H
+	YNI+PrccN43QAwJuz6NuwNDLoWE+0H1COA90woKXXGZ6r9YDs59PpEYlrGUh1flFYk11QsyBtZp
+	oy0LT/7+jatC6qjMjPEi7a3k0j4L8AFN3iycKyyS69SomtikvnZ+qDUoOqLD9ZcZF9ye
+X-Google-Smtp-Source: AGHT+IGxsexQf4apoKG715mJ6JVUh4PQR+eAh20J9Y/sXkltg7AOkr4tsqcsJSuWQrXEQijaWg9hLQ==
+X-Received: by 2002:ad4:596a:0:b0:6f4:c8c9:c4fb with SMTP id 6a1803df08f44-6f4cb9d2178mr83177706d6.11.1745675788195;
+        Sat, 26 Apr 2025 06:56:28 -0700 (PDT)
+Received: from localhost.localdomain ([39.144.154.62])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c096eb13sm34901406d6.68.2025.04.26.06.56.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 06:56:27 -0700 (PDT)
+From: chris.wei.cui@gmail.com
+To: corbet@lwn.net,
+	linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Cui Wei <chris.wei.cui@gmail.com>
+Subject: [PATCH] Documentation: fix speculation.rst chapter
+Date: Sat, 26 Apr 2025 21:56:09 +0800
+Message-ID: <20250426135609.735-1-chris.wei.cui@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   02ddfb981de88a2c15621115dd7be2431252c568
-commit: 3c08dc38e3cf018a74c64e75cebcc803d973196c media: av7110: coding style fixes: comparsations
-date:   11 months ago
-config: x86_64-buildonly-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250426/202504262127.FkkWHzfs-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504262127.FkkWHzfs-lkp@intel.com/reproduce)
+From: Cui Wei <chris.wei.cui@gmail.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504262127.FkkWHzfs-lkp@intel.com/
+'Mitigating speculation side-channels' should be a chapter rather
+than title.
 
-All warnings (new ones prefixed by >>):
+Signed-off-by: Cui Wei <chris.wei.cui@gmail.com>
+---
+ Documentation/staging/speculation.rst | 1 -
+ 1 file changed, 1 deletion(-)
 
->> drivers/staging/media/av7110/av7110.c:162: warning: cannot understand function prototype: '} else if (av7110_init_analog_module(av7110) == 0) '
-
-
-vim +162 drivers/staging/media/av7110/av7110.c
-
-   112	
-   113	static void init_av7110_av(struct av7110 *av7110)
-   114	{
-   115		int ret;
-   116		struct saa7146_dev *dev = av7110->dev;
-   117	
-   118		/* set internal volume control to maximum */
-   119		av7110->adac_type = DVB_ADAC_TI;
-   120		ret = av7110_set_volume(av7110, av7110->mixer.volume_left, av7110->mixer.volume_right);
-   121		if (ret < 0)
-   122			printk("dvb-ttpci:cannot set internal volume to maximum:%d\n",ret);
-   123	
-   124		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetMonitorType,
-   125				    1, (u16)av7110->display_ar);
-   126		if (ret < 0)
-   127			printk("dvb-ttpci: unable to set aspect ratio\n");
-   128		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetPanScanType,
-   129				    1, av7110->display_panscan);
-   130		if (ret < 0)
-   131			printk("dvb-ttpci: unable to set pan scan\n");
-   132	
-   133		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetWSSConfig, 2, 2, wss_cfg_4_3);
-   134		if (ret < 0)
-   135			printk("dvb-ttpci: unable to configure 4:3 wss\n");
-   136		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetWSSConfig, 2, 3, wss_cfg_16_9);
-   137		if (ret < 0)
-   138			printk("dvb-ttpci: unable to configure 16:9 wss\n");
-   139	
-   140		ret = av7710_set_video_mode(av7110, vidmode);
-   141		if (ret < 0)
-   142			printk("dvb-ttpci:cannot set video mode:%d\n",ret);
-   143	
-   144		/* handle different card types */
-   145		/* remaining inits according to card and frontend type */
-   146		av7110->analog_tuner_flags = 0;
-   147		av7110->current_input = 0;
-   148		if (dev->pci->subsystem_vendor == 0x13c2 && dev->pci->subsystem_device == 0x000a)
-   149			av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, ADSwitch, 1, 0); // SPDIF on
-   150		if (i2c_writereg(av7110, 0x20, 0x00, 0x00) == 1) {
-   151			printk ("dvb-ttpci: Crystal audio DAC @ card %d detected\n",
-   152				av7110->dvb_adapter.num);
-   153			av7110->adac_type = DVB_ADAC_CRYSTAL;
-   154			i2c_writereg(av7110, 0x20, 0x01, 0xd2);
-   155			i2c_writereg(av7110, 0x20, 0x02, 0x49);
-   156			i2c_writereg(av7110, 0x20, 0x03, 0x00);
-   157			i2c_writereg(av7110, 0x20, 0x04, 0x00);
-   158	
-   159			/**
-   160			 * some special handling for the Siemens DVB-C cards...
-   161			 */
- > 162		} else if (av7110_init_analog_module(av7110) == 0) {
-   163			/* done. */
-   164		} else if (dev->pci->subsystem_vendor == 0x110a) {
-   165			printk("dvb-ttpci: DVB-C w/o analog module @ card %d detected\n",
-   166				av7110->dvb_adapter.num);
-   167			av7110->adac_type = DVB_ADAC_NONE;
-   168		} else {
-   169			av7110->adac_type = adac;
-   170			printk("dvb-ttpci: adac type set to %d @ card %d\n",
-   171				av7110->adac_type, av7110->dvb_adapter.num);
-   172		}
-   173	
-   174		if (av7110->adac_type == DVB_ADAC_NONE || av7110->adac_type == DVB_ADAC_MSP34x0) {
-   175			// switch DVB SCART on
-   176			ret = av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, MainSwitch, 1, 0);
-   177			if (ret < 0)
-   178				printk("dvb-ttpci:cannot switch on SCART(Main):%d\n",ret);
-   179			ret = av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, ADSwitch, 1, 1);
-   180			if (ret < 0)
-   181				printk("dvb-ttpci:cannot switch on SCART(AD):%d\n",ret);
-   182			if (rgb_on &&
-   183			    ((av7110->dev->pci->subsystem_vendor == 0x110a) ||
-   184			     (av7110->dev->pci->subsystem_vendor == 0x13c2)) &&
-   185			     (av7110->dev->pci->subsystem_device == 0x0000)) {
-   186				saa7146_setgpio(dev, 1, SAA7146_GPIO_OUTHI); // RGB on, SCART pin 16
-   187				//saa7146_setgpio(dev, 3, SAA7146_GPIO_OUTLO); // SCARTpin 8
-   188			}
-   189		}
-   190	
-   191		if (dev->pci->subsystem_vendor == 0x13c2 && dev->pci->subsystem_device == 0x000e)
-   192			av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, SpdifSwitch, 1, 0); // SPDIF on
-   193	
-   194		ret = av7110_set_volume(av7110, av7110->mixer.volume_left, av7110->mixer.volume_right);
-   195		if (ret < 0)
-   196			printk("dvb-ttpci:cannot set volume :%d\n",ret);
-   197	}
-   198	
-
+diff --git a/Documentation/staging/speculation.rst b/Documentation/staging/speculation.rst
+index 8045d99bcf12..0d526ba55d14 100644
+--- a/Documentation/staging/speculation.rst
++++ b/Documentation/staging/speculation.rst
+@@ -63,7 +63,6 @@ of an out-of-bounds address, while the second call will influence
+ microarchitectural state dependent on this value. This may provide an
+ arbitrary read primitive.
+ 
+-====================================
+ Mitigating speculation side-channels
+ ====================================
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
