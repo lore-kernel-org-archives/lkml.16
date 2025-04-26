@@ -1,66 +1,67 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A60E1FCCF8
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 22:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EED8200127
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 22:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745707975; cv=none; b=juPHrfv5U4qMvP3V74iCWN0WCQ8x9V5TMzbysW/gQTrrYvdT6km0k/udkcGROGv+JkDF3Gfc/m3iSiIdw35PZ0L7c6jGzHm2aRMYLe7SIjggd20K7qTVEZbZhSGLnERQ4IO41tuhYaYZLXe9oRtQk0u07n47iGheMMT5SiXaRAI=
+	t=1745707976; cv=none; b=Zcm2YjVRDvH8IIiI9FrTKl9dwJ/prcjY+NHiDF9CnAYt18igwfI8dcYIABzrrY0OlQEZPk0hDBYEbKubu0h9/pGZDmN6gfjUd15K4LxcCQtz+/dP1W4HDZtFDUzJaoRM782dOI3IFhvNzN898VeYfaQXKsBXGY2RnKy1GYvLznA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745707975; c=relaxed/simple;
-	bh=rdh3wDpVtJEWEyCTvExoPgmS4r310hhuoJQars1m3m4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nXaiWkfVb0t/mHr2EiXTCldIbal/VO9KEafFz6dQvsFzbRAHnRAaWVdnwSkqbAx9LXftjK3BHhi8EhVkWJ3pVqM0Wl6WR+h0ByFnkUOhHjIv0ZzWQ1J+Kb5almd6U5n6fKEqqvFRRAW8HChq/LoelvrjLx/lek+JZywMZRwf0lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mrxH3FCv; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1745707976; c=relaxed/simple;
+	bh=wcxEeIG/nILR9pbCjMso9yZS3cwzR9yIu9oGH3Xl5mg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DM7wG3uz8c0fc9BguVGek3PLVZebLfNFQ6oIEbzYSycfg7SSG8ohv7hlPtIaIt/yhp+YDn086VHQgDiMoQgcLs9jR9hUWw/XtuYc6iPQgoOTWyBxZyXo1BCLrQhiFblGkAeHZN5IjcgN09gDbA2IIojm3IBhm4rC6v6vu2wivu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kUavhUVN; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mrxH3FCv"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so23288635e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:52:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kUavhUVN"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso24429895e9.1
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745707971; x=1746312771; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PWKU44iyRT6MGYXYHtBkKoO71GOnzFlZ72+iACIXW+U=;
-        b=mrxH3FCvkbi4PUHIWQMVl7iVEbpkDUI2Zj0deDZ9rWY1bZzSMIozILP8zYqzHPW/A5
-         dlyrijSRqkLEDayZTpI7a55kFabbydSbRaSC06CQP92cfNdXVOqaAHDXB/LerQKFB1DM
-         jWMuRef1y+PVZY95jw2nQhz7C7ODBYZL0Y01fRBT44xcnnC7+niDB35wnEiA2RA1DwVe
-         AF7P2xy5vw5IV3AwnXAx9bOdOdXTDVavv42YTqOnwd7pOi0ucepMn5mGEo6L4ji7NnEh
-         SLirRVVO/aG9w9xJ4P7DHg1b9bfOoVLAT38uyhysSedXj2/CXf9EHUY0B1aeeZkBiGRw
-         inIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745707971; x=1746312771;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1745707973; x=1746312773; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PWKU44iyRT6MGYXYHtBkKoO71GOnzFlZ72+iACIXW+U=;
-        b=W+XHLXTuAsFzm5E0rfYFX7KNfrXOcii0+6RhEB7zNuaDPAUmj+k3i20+vnUPGqxuQr
-         GHs0Pas6f7mW4/NLu5r+Owdo7/iva2J9TxfMMqS2DHB7DSHoySOYtlio5D9NQce9HaLP
-         32PPAQVV3OKm13DOchbzxB2wH6K6OBD/66LpOh8aRTHSuz0UZNGuD0pFMY0D2DRzWxt0
-         /4bXSH2l/iZ/pvWo3m2a0Xn1fiAXlQrC5Vw6PYoOeK69RwUW06AcKru/b+fAsB6nfJky
-         WcWWYDO7V6gptowz/cwolQ/Hw5B74XtP1GQoL8XisVsUQ/yzJuvRsaLdnF8gljTfNXGV
-         qhCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXdJOeh9DSr9GTntXuISgJSiHXHz78C/6GFKWPbaQJTbTmQGuOZOJabiE5axeIKnmXmYiRjpGoljKVf5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEVDqja7BAU6QDubIhK2/7DKm4Vogai2mQVWw9hnaR9o7fm5YC
-	MmkqRIvaoLst05fTrA3PBs7FWZHMyKCb2rJ10NVLkyAa/St/0sHPYfcb6J4HMDY=
-X-Gm-Gg: ASbGnctkXsU7k9FAq3w6zxsjzpRqikzWG0IrsyDCfAJBZ/1RIQ4gp8QW64d6bj13COY
-	JAx74PUSpUlwh/P459tPyWJrhKYYoUOjUGgO8X4CkO9Y0M7noiijFij8v2GkbJivb4DYDofgpfp
-	wpa88asS2Qx1KNkVzn7E+NS7AZUrnfuHJfs3a5aX6VtF3+a/N+ip7VPXCCDhslJAYz1N530aP5+
-	deK2UUo8yk+1tpo6LOf85yXBeFfRQImgNnXWGv49kzKdilFsmUoBKU/5iZzwHH67s+abkpx5bSY
-	NazaAlhHexV05skdoZ4scjuFe5l87hAziNw917upvSw0aqP1SwGf8tIjYdYZl9ILdCZq8aJUYjl
-	yd+OhEA==
-X-Google-Smtp-Source: AGHT+IGmSQQ+Lz7dfvrpQ8sguVCCaZxaRG7py10AosMWDBRcc8fXJgyUplpyWeq6fU0k3yrFTkRRxQ==
-X-Received: by 2002:a05:600c:55c7:b0:43b:4829:8067 with SMTP id 5b1f17b1804b1-4409c4615e0mr80399865e9.6.1745707971366;
-        Sat, 26 Apr 2025 15:52:51 -0700 (PDT)
+        bh=HAQCWAaBVBZ9L8/5seSjJb98H17XEO01YnL9fUDtsAc=;
+        b=kUavhUVNFCunb+/ArDVqhVNs9clfIDx47XOGqEzLLWi3IloOxq3inIGKhci1Fg0851
+         ONaTK/9YUdQ+MHnQTCysix4xQKgn1u+et82ZGfGhAj5WFEidb7AdKEn6IN4aDzVaQVRR
+         f9PsqDp/ycuBkNcAFVbTobQFEyzF2RvDcMPZU9kybVXqcroI4wQGLCfGiPmgwd+oUa73
+         NQvks6GzQNX3z+QrB4iAASp22+Vaty7djUXrLPFz0LxIK+fkZs0KMPI6kQqSd++ACX7W
+         HIJEWmwdVDMcEBkdcCW2a8V3gnaVpIEg0LMAXzFZUVolxjMOJsuX5WrYVevwbcXVuoln
+         erlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745707973; x=1746312773;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HAQCWAaBVBZ9L8/5seSjJb98H17XEO01YnL9fUDtsAc=;
+        b=wBXpowJA60uA3LH8bRN//Inf13v+gKUCQVM0jvNeCBJcnvJ1Dd4zl2AgodJ+BMovaf
+         9x77VrXwgcGuW8PYGTKEQ3684eX4rPZeMCX2RDazoGe21jVtHorgYPodkARoK8IJEBUq
+         Tfr2n0tETHm3BZpwkleUNiAl1qNr/p5SnJoAhyWLuHDKKKFXZ2xx5BjZJ9gdXJwYn2bV
+         1fnm4pUbj+CaYJfCyerfE5HhBKPQF5y8r4Lxb0+WoZOt5n5yh4d7E8TxuI8MChEA8H8f
+         hXw8NFUtgShYNdRm43adohORbf/ReiTOefZhxtHlWOkW5rlVAOQkYL9jt2iSotyjOEBv
+         fZtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGs6Mc5ySb/6mZSO83UqHhl6HJnjLFp8mevnkg/btz2Wfw01c4F2uCwDuCDrmcfh1tF4dz671Tqpd7m3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzljU/ydqreWdGpWauQWuAq2LrS9Er5FFBpCDKffFqpBVpt8jGh
+	1kuorpB0J2oaMpQv15c8OkwKHinyQ2FjLwglUkQFLfwfbEMTurzo7EVCQxmfj1I=
+X-Gm-Gg: ASbGncuI/Qokx5P19KMTF46p2IMzSWgbo5eStl7IKDgMofxLuiPNvOm2yhgz3cg7l40
+	b6mEGQQvGvqUUhDXFzMkozVbElO2WAbJ0cJJM6sr2UERV5ZS/nSm8pOUeOm5HKg805lrl+Vzzjj
+	ZwNaEULHDpHAPE3tTefU+2TMyeIjcA+4vyEPs+tzlxsYoS5+wi98RECYz6hjkDRFyviDY525ELC
+	bQTTC7XnexQ38w8zKVm6sCZPRO8ETFvj0tbQIlgIxyehIGdKCvnW/M47OoWZK28NJUqaHyi664e
+	rlpvOQTh9SL6i11Zo3Y5qBtBsm84zhZnPomOb52PPFKRt3yCtRxzx4WXPSbWQsv/SJqwB3/PRMG
+	9+7RjSg==
+X-Google-Smtp-Source: AGHT+IF1Asy0853DyQQ9p4VHU/AtjevRBJ+r0Z+2rcSHTVtDv8isvqLYBjAZhzTgjqdud5T8mcm1tw==
+X-Received: by 2002:a05:600c:1c96:b0:43c:fb36:d296 with SMTP id 5b1f17b1804b1-440ab845facmr27097195e9.25.1745707972717;
+        Sat, 26 Apr 2025 15:52:52 -0700 (PDT)
 Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a53044besm75268915e9.14.2025.04.26.15.52.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a53044besm75268915e9.14.2025.04.26.15.52.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 15:52:50 -0700 (PDT)
+        Sat, 26 Apr 2025 15:52:52 -0700 (PDT)
 From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v3 0/2] media: qcom: camss: x1e80100: Add support for
- individual CSIPHY supplies
-Date: Sat, 26 Apr 2025 23:52:47 +0100
-Message-Id: <20250426-b4-media-committers-25-04-25-camss-supplies-v3-0-19e5e72ffc3e@linaro.org>
+Date: Sat, 26 Apr 2025 23:52:48 +0100
+Subject: [PATCH v3 1/2] dt-bindings: media: qcom,x1e80100-camss: Fixup
+ csiphy supply names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,11 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL9jDWgC/6WNQQ6CMBBFr0K6dkwZWkRX3sO4GNoKkwAlLRIN4
- e4Wdm5185P3F+8tIrrALopLtojgZo7shwTFIROmpaFxwDaxQIlaKtRQK+idZQLj+56nyYUI6ZZ
- qW0N9jBCf49glKZRYaaOlLC2hSMYxuAe/9trtnrjlOPnw3uNzvr2/deYcJCAV1hakTlTSteOBg
- j/60IgtNOMfckzyyuSotKzxXKgv+bquH/UXZUdEAQAA
-X-Change-ID: 20250425-b4-media-committers-25-04-25-camss-supplies-6285c5006da2
+Message-Id: <20250426-b4-media-committers-25-04-25-camss-supplies-v3-1-19e5e72ffc3e@linaro.org>
+References: <20250426-b4-media-committers-25-04-25-camss-supplies-v3-0-19e5e72ffc3e@linaro.org>
+In-Reply-To: <20250426-b4-media-committers-25-04-25-camss-supplies-v3-0-19e5e72ffc3e@linaro.org>
 To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -84,97 +83,124 @@ Cc: dmitry.baryshkov@oss.qualcomm.com, loic.poulain@oss.qualcomm.com,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3212;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3102;
  i=bryan.odonoghue@linaro.org; h=from:subject:message-id;
- bh=rdh3wDpVtJEWEyCTvExoPgmS4r310hhuoJQars1m3m4=;
- b=owEBbQKS/ZANAwAIASJxO7Ohjcg6AcsmYgBoDWPBvjSpeAqF8p8puUEfS151xzYoJLaqMu7MQ
- zS8qciFAPOJAjMEAAEIAB0WIQTmk/sqq6Nt4Rerb7QicTuzoY3IOgUCaA1jwQAKCRAicTuzoY3I
- Ot4nEACNg/GojHHCP7YvwevtzAeAOBm4j+RXKgcGWeC+wTy5q3N5zgjOTHq8C5UfNYH3e9z8oIQ
- Yk9vD0bUBH1YyFE276vgi8hyxU1YaXJhVOwzFgu2D2DLj2jVPcDlEAF4IQLTIhqq/XYDdNUrUhq
- wTRalH6cWKyKb7SB5HHXX8ciMQRcAHwXEsOxUi+u0o4J7/RnuiD10lmwy/8cEYZnspAkensAuPe
- yL7ejagQKrqZNnDcVIyXWZmCHvsGyfenGOCrxZNnxurbg48GWpIrGUYmKXuPrdpqLnpP57Uv/zj
- f9LaCIroGLUBDS50HmgnwVe5TNw6ypL+jdpzk/HibPf6jm67Pj70qedVbj+9v+n8b12zWecStGg
- ErdIhdIEV8pniCs8JKuBKJusfL0ruMnpvXtOlfX0daMrUDGQvfM6sx5GUP9YEXzUJOvAGIFTuDv
- syDaUbO+yHPIi44Js5E1lDUL1E8TbZE2bAjKOUOQstBpQYfHsTa9bTNE2NhHZ0Bz/CflVyyIEoA
- uBpywvQeOvlEQvL3XPHrpnhvA4sUl2/pLjU/P4ZhFVOjKRPAPACfV9QtyTCqCJ4OPxUkZc5wG82
- kbRnexBcg+rR0zvbG2zVsvNx8ThVMgKckHA/zx9werC89+Isbs1q+equGLR5xZ+jxhiSQWr0rfS
- 3TFYtn7wz3eGTgQ==
+ bh=wcxEeIG/nILR9pbCjMso9yZS3cwzR9yIu9oGH3Xl5mg=;
+ b=owEBbQKS/ZANAwAIASJxO7Ohjcg6AcsmYgBoDWPBzGEZSJqfm4ZbNjN/QS7q1pKZyOgCWXXda
+ M0/FqOxwHiJAjMEAAEIAB0WIQTmk/sqq6Nt4Rerb7QicTuzoY3IOgUCaA1jwQAKCRAicTuzoY3I
+ OjVZD/9yC+3Vj7UdQNC9B4RnJTA7QRFfdvRDQY2w5JFlb2Gk7MdKBz2z+PgDekROQdp7hMGDyAa
+ OGnb0fNIQaW0AGnis5K71lV4WsFS3TMwYcYc6Q35P+qCZfQjBYOhxDrWFAx+FXINNPu/TWXH4ys
+ 0Bp773ZGBwucBFhbxVCxgU05t8CP5a+7A/qGLfMMLlKHI4djLRWi1q6BIN0RhDeoozbFNkmm3J1
+ Tq8wpBDDXI3k0ICLL9641o/hk0bdNoFNwrNY3ORTghc8c2XH/Gcbn4r8DmZzFuSzkQoNnMxLlE9
+ lJ2VkMM/2OubHVjYYF7m5PaelWhSQbEFfJ9t+l9xRzb8Z64A1Xd/Bb4WdmNqBYN/JOqIX66iBwM
+ eR7wievt7EEr0RChq3l8yegtRpzo8LzttWuXf1dP/8rCUHKNhIszFl2KAquVN095kf5D4e5MX94
+ vdAMEtLYZukcUjNFIRP6w1bvdox6ivM6yxYFs6imUYOYBouc7etvjuX7PyUZz6qtKH1IkRYrsW/
+ SXivT8vKba4sfRf0gg0lHJt9qa4uMuSvjTLuMfSKvKqge5Z8HsQjDuhzhmHNy4At2Iaow2Ot0FV
+ hMWt39D14yBxFAx9Li/Zb/hlPsURcDJ9rDQRRtMYloCJkcx375YngsvR9myRZ8nBrpzx0L5a1ac
+ g0554o3qeiHFMDg==
 X-Developer-Key: i=bryan.odonoghue@linaro.org; a=openpgp;
  fpr=E693FB2AABA36DE117AB6FB422713BB3A18DC83A
 
-v3:
-- Changes commit log of patch #2 to reflect no ABI breakage - Dmitry
-- Link to v2: https://lore.kernel.org/r/20250425-b4-media-committers-25-04-25-camss-supplies-v2-0-8c12450b2934@linaro.org
+Declare a CSIPHY regulator pair 0p8 and 1p2 for each CSIPHY.
 
-v2:
-- Fixes an indentation error I missed in v1 - Rob's robot
-- Link to v1: https://lore.kernel.org/r/20250425-b4-media-committers-25-04-25-camss-supplies-v1-0-2a3dd3a47a6a@linaro.org
+Name the inputs based on the voltage so as to have a consistent naming of
+these rails across SoCs and PCBs.
 
-v1:
-In x1e each CSIPHY has its own 0p8 and 1p2 voltage rail. These voltage
-rails in previous SoCs were shared between PHYs, over time the hardware
-differentiated out the rails per PHY but CAMSS didn't keep-up with or know
-about that change.
-
-We have two options to support individual rails per PHY.
-
-- Logical naming of the supply lines
-  In this case supply names describe the PHY and its expected voltage input
-  For example vdd-csiphy0-0p8-supply for the 0v8 voltage rail to CSIPHY 0.
-
-- Pin naming of the supply lines
-  In this case supply names will align to the name of the SoC pin.
-  For example on x1e the supply name would be vdd vdd-a-csi-0-1-1p2.
-
-This series chooses the first approach for the following reasons:
-
-- Naming coherency across SoCs and PCBs.
-  Virtually every CSIPHY has 0p8 and 1p2 voltage rails and these are akin
-  to an architectural feature of these PHYs or at the very least a common
-  pattern across SoCs.
-  
-  This means that the pin name on x1e might be VDD_A_CSI_0_1_1P2 and on
-  qcm2290 VDD_A_CSI_0_1P2 but the yaml standard will be for the regulator
-  name to be vdd-csiphy0-1p2-supply.
-
-- Accounting for upstreamers who don't have schematic or qcom IP access
-  Not everybody making upstream submissions has access to schematics or to
-  Qualcomm's SoC-level pin definitions instead working from
-  vendor/downstream DT information.
-
-  It should still be possible to construct a valid upstream definition from
-  that downstream DT.
-
-- The counter arugment.
-  The counter argument is that aligning the pin-names to the regulator
-  names is less error prone and I agree with that statement.
-  What I'd say here is - the requirement for CAMSS regulator defintions
-  in DT at least from my perspective is a putative upstreamer should
-  be able to show how they have tested a given DT submission.
-
-  If that submission isn't tested, it isn't working and should be rejected.
-
-  That should then address the concern of having as another example:
-
-  vdd-csiphy0-0p8-supply = <&vreg_oops_wrong_regulator>;
-
-I'm promulgating this series in the context of x1e but it should also
-unblock qcm2290 and sm8650.
+There are no upstream users of this yaml definition yet so this change is
+safe to make.
 
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
-Bryan O'Donoghue (2):
-      dt-bindings: media: qcom,x1e80100-camss: Fixup csiphy supply names
-      media: qcom: camss: x1e80100: Fixup x1e csiphy supply names
-
  .../bindings/media/qcom,x1e80100-camss.yaml        | 52 +++++++++++++++++-----
- drivers/media/platform/qcom/camss/camss.c          | 16 +++----
- 2 files changed, 48 insertions(+), 20 deletions(-)
----
-base-commit: 1d1e564fce1bc361af1a1980a7f915a0475a008a
-change-id: 20250425-b4-media-committers-25-04-25-camss-supplies-6285c5006da2
+ 1 file changed, 40 insertions(+), 12 deletions(-)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/media/qcom,x1e80100-camss.yaml b/Documentation/devicetree/bindings/media/qcom,x1e80100-camss.yaml
+index 113565cf2a991a8dcbc20889090e177e8bcadaac..dc7c1a9394c3b547f5e0885bf501ed42dfbeba88 100644
+--- a/Documentation/devicetree/bindings/media/qcom,x1e80100-camss.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,x1e80100-camss.yaml
+@@ -118,14 +118,6 @@ properties:
+       - const: ife1
+       - const: top
+ 
+-  vdd-csiphy-0p8-supply:
+-    description:
+-      Phandle to a 0.8V regulator supply to a PHY.
+-
+-  vdd-csiphy-1p2-supply:
+-    description:
+-      Phandle to 1.8V regulator supply to a PHY.
+-
+   ports:
+     $ref: /schemas/graph.yaml#/properties/ports
+ 
+@@ -157,6 +149,30 @@ properties:
+               - clock-lanes
+               - data-lanes
+ 
++  vdd-csiphy0-0p8-supply:
++    description: Phandle to a 0.8V regulator supply to csiphy0.
++
++  vdd-csiphy0-1p2-supply:
++    description: Phandle to a 1.2V regulator supply to csiphy0.
++
++  vdd-csiphy1-0p8-supply:
++    description: Phandle to a 0.8V regulator supply to csiphy1.
++
++  vdd-csiphy1-1p2-supply:
++    description: Phandle to a 1.2V regulator supply to csiphy1.
++
++  vdd-csiphy2-0p8-supply:
++    description: Phandle to a 0.8V regulator supply to csiphy2.
++
++  vdd-csiphy2-1p2-supply:
++    description: Phandle to a 1.2V regulator supply to csiphy2.
++
++  vdd-csiphy4-0p8-supply:
++    description: Phandle to a 0.8V regulator supply to csiphy4.
++
++  vdd-csiphy4-1p2-supply:
++    description: Phandle to a 1.2V regulator supply to csiphy4.
++
+ required:
+   - compatible
+   - reg
+@@ -170,10 +186,22 @@ required:
+   - iommus
+   - power-domains
+   - power-domain-names
+-  - vdd-csiphy-0p8-supply
+-  - vdd-csiphy-1p2-supply
+   - ports
+ 
++anyOf:
++  - required:
++      - vdd-csiphy0-0p8-supply
++      - vdd-csiphy0-1p2-supply
++  - required:
++      - vdd-csiphy1-0p8-supply
++      - vdd-csiphy1-1p2-supply
++  - required:
++      - vdd-csiphy2-0p8-supply
++      - vdd-csiphy2-1p2-supply
++  - required:
++      - vdd-csiphy4-0p8-supply
++      - vdd-csiphy4-1p2-supply
++
+ additionalProperties: false
+ 
+ examples:
+@@ -347,8 +375,8 @@ examples:
+                                  "ife1",
+                                  "top";
+ 
+-            vdd-csiphy-0p8-supply = <&csiphy_0p8_supply>;
+-            vdd-csiphy-1p2-supply = <&csiphy_1p2_supply>;
++            vdd-csiphy0-0p8-supply = <&csiphy_0p8_supply>;
++            vdd-csiphy0-1p2-supply = <&csiphy_1p2_supply>;
+ 
+             ports {
+                 #address-cells = <1>;
+
 -- 
-Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+2.49.0
 
