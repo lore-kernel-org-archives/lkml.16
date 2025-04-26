@@ -1,109 +1,137 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22569221266
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 11:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499D122615
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 11:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745667417; cv=none; b=iTt3SV4lkkrIZYWMFZOITJj6sGXcU+DF9npvWldbj04Zj+bbjCMFSmwZCZcN7p9qgq4dsEMdkzFnWQeJk6q4Ox0ygCCNF7Wp7cL+j6a6uUxpjJOVaqwEi4WNsca1QxaZMAytVBDFpZE9K7j2z63Q4pv18/yKfGgS00V9wv7z2og=
+	t=1745668143; cv=none; b=SZkgNLYekMHcjEf8JcJC+nIzsiSxv8tyI0V+XkSi+5Hu4MaWr360j19UH5oASKm2LDvukKdqt86RmYctqE4rb2HmByqGGEmmNLhlDvSS+6y7oSJDtH1h+CVz4cuahnC/3yiA27tl2S37vTCkSSq4yJk4rXdHfL4L03dxsNHE0S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745667417; c=relaxed/simple;
-	bh=TMXGzls145JZPx0Jr/HCsy7YFmzt3afYUBJieX1EcUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DNjoaYlno7z5PSsufDRo70cKEgNi8SVNARqyBIku9DGgwiwrtYdd9PnTnOcBUF3Q2rPDdP9p7ji/rqqWdHDXOhN3xvp9Fxwi/Tpey4ZfmIrm3d4R8d2I9NCva2XyVPOFUuIpxVPkreGG/aGEViA6ptO/IZVuOlb19B8lYIfjtFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cULeZN5P; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745668143; c=relaxed/simple;
+	bh=9qY009RV75gqbE+jedcoHrBfx5CXmKwBngAS1X7fotI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dAEMrufnvHRGTvReU69yi8YC72lWw5VAE4mOU2Y+IVWdkr1jEkT6KWNriAKjKe41zfrXBSK6DyL8ZXFdQR8ZLmkd2R9h+TkAVrZvwPxuMMBPFgBDN8iYNciVkIwIUMGDHiG+UAWqLQqLIQH0PW+q+ke1OQ4r1PuotWdt0CaDT/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KU2t9Kw+; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cULeZN5P"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bb647eb23so2728781b3a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 04:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745667415; x=1746272215; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SQ31PiGWR14ALO3eZTihChu6gSdJQVhVuQNq4pfsfDA=;
-        b=cULeZN5PLVQFcvi2OEUyBDSs9lG1hcTF1cNntqEAVV6yFASq42xNhw6hU6RF/evU+r
-         YjjedWUxgDuI/IKzHieOQZB0qj82/IIUBMO9XldyZTlPeZwzjodMjX8PbqoAn+TpIoor
-         b/ZxifMsCZCXxu+Zu0/QVHw/GHhNbwll7fyTkViShqsKP/KLOXXs7ewoptN4HdKQlTgO
-         urPdWabz1b8Qgnz+2Uoyp2N13GRXTR36YC7w1dJcUwz1CTrw9CjZTqGku1ucDYwZR60e
-         X1cfiIjEdhiiTZ9kx5rwiBDZ/stAbLuYqBrjGA70Dc4/yEVmdoa30rEHCCTaE6Pnoi96
-         SgLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745667415; x=1746272215;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SQ31PiGWR14ALO3eZTihChu6gSdJQVhVuQNq4pfsfDA=;
-        b=auVg3FW95pnAGhnARg0k2QjXHqqKdA0jWEKhWSuRBwWoJdS4f2+X+8++J+2WJF7cTX
-         7q0fdRZaocBcKayGXOuHXkNOUx2A+27JCRExTGhf16nXuDSS5MmiEZ60NdmClX5TaAqf
-         R7IGfnAXeTVvehOjcYSjHMW5iDqQbkALt15IRIzuzw3T8GBcwtr/TBP0JoV5cEkyeGpu
-         8AMkSCqGQIIe7ohRzGTXVXy9qoyFB8JI3r9uuxTuu6rZy1koc8h7csUqU+BhbucSTABT
-         y2cULanHX5oQpaXu9lnHNFXnS160++6m/1/96D6U34KY/yi2PPtfubPldH29QXX86L2L
-         iTEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwEfRQCyU0vQhn7NbIvtK7tjHI8n081rQHm5m/3RmfcQsme6MpE+S0MMOAnONfU6EVcSWyy1DtYakt1ZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxERkefn9508ryh2AAMIIyRVZmIHvKkPIfrEt+i6YK7Pwnfxbr
-	ZwBrf0eU73eqKY9XBWDnz5Lye/0gQ3YNbxB7aam5FAiGHZ/p7hJE5iPu5YHo3EU=
-X-Gm-Gg: ASbGncvNNBpbuHaccsqxwrp8esJ88vvlxGZt/xbq4fPPKlmJGEayrUYCboBrysu134F
-	jga9g5AOiOQQS+Eh6s4XqYuj29jLzpq4x1i4CEhXgjt9m+BI+bTfGCgTPr/bDbrDcEa5YR5EHDN
-	LfZDgviCl9/uKPKxAk1prJVhNiMTg46AEoDb4vBCXtpci6Js712abmk7vI6+0D7PWzqeBT9OTnG
-	VYEY1S2JrrGhtIC0Yw4VoRplTIwuYULgd4loue4o0njeU/GXN4gppBghV+N1KhwdAXlb9BHb/jC
-	5Ud+qm3CQnrbcC6HhSX52uRIFObbKmRDL/bh8/NJgNyfdyOAAlvgZMRUYa+gSaFf
-X-Google-Smtp-Source: AGHT+IGGyjuZeyvual3SpMAZsA9vKjssaPPAI54rrl94SqHOvQZle0H2psV5wK3ogAuBsX7XOwAQxQ==
-X-Received: by 2002:a05:6a00:130d:b0:736:4fe0:2661 with SMTP id d2e1a72fcca58-73ff72af24emr3304618b3a.11.1745667415253;
-        Sat, 26 Apr 2025 04:36:55 -0700 (PDT)
-Received: from localhost.localdomain ([122.182.179.188])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941e53sm4812494b3a.56.2025.04.26.04.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 04:36:54 -0700 (PDT)
-From: Darshan Rathod <darshanrathod475@gmail.com>
-To: abbotti@mev.co.uk0
-Cc: hsweeten@visionengravers.com,
-	linux-kernel@vger.kernel.org,
-	Darshan Rathod <darshanrathod475@gmail.com>
-Subject: [PATCH] Staging: comedi: das16: Fixed a stucture warning in code
-Date: Sat, 26 Apr 2025 11:36:27 +0000
-Message-ID: <20250426113627.36525-1-darshanrathod475@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KU2t9Kw+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745668140; x=1777204140;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=9qY009RV75gqbE+jedcoHrBfx5CXmKwBngAS1X7fotI=;
+  b=KU2t9Kw+fvDazhZysctW2ZsqWDY0/nfIotXk+7skZ1YoJo58+fNjgexW
+   l7Qb9rKaXGDsHoXixM3rxDa/l1eiFLANFwGTyqO/62T/QHa/T+pl9UNVe
+   +7gJ+UpUfUIEHSttr/ZXcYyDLRJ6ZNlBfFDzqvN/nMNdQR73Jkx5KxOJ1
+   Zh3dmEdcY88Etfki/7I7onQh11G8iLAzoNFPfH7MYOIXHq7PTacXjPwDu
+   ZGbLE+FeZZbP1eTG8wS1QwcPUBoiJH85ryWXzLs5wOAQvjYaJHYkzF9BP
+   cZdet55EVpYqnFyDr+wESa03WmRuhdFEZrR2Y8bdHijcfiS+3AebXCR4h
+   A==;
+X-CSE-ConnectionGUID: xZMMO3glQRKuH8VpGuLQpg==
+X-CSE-MsgGUID: pUtUowX3Q4+9bd8e/BKVGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="64845772"
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="64845772"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 04:48:59 -0700
+X-CSE-ConnectionGUID: d1B1/+U/R7+zf63cNUhacg==
+X-CSE-MsgGUID: SzZrDdoRRPODvMWF8ShVlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="134049929"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 26 Apr 2025 04:48:58 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8e1g-0005oT-0J;
+	Sat, 26 Apr 2025 11:48:56 +0000
+Date: Sat, 26 Apr 2025 19:48:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Maarten Lankhorst <dev@lankhorst.se>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Maxime Ripard <mripard@kernel.org>,
+	Friedrich Vock <friedrich.vock@gmx.de>
+Subject: kernel/cgroup/dmem.c:21: warning: Cannot understand          * @ref:
+ References keeping the region alive.
+Message-ID: <202504261939.1yj5iNwS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixed a warning message in das16.c file.
-Signed-off-by: Darshan Rathod <darshanrathod475@gmail.com>
----
- drivers/comedi/drivers/das16.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: b168ed458ddecc176f3b9a1f4bcd83d7a4541c14 kernel/cgroup: Add "dmem" memory accounting cgroup
+date:   4 months ago
+config: riscv-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250426/202504261939.1yj5iNwS-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504261939.1yj5iNwS-lkp@intel.com/reproduce)
 
-diff --git a/drivers/comedi/drivers/das16.c b/drivers/comedi/drivers/das16.c
-index f5ca6c0d4d0c..73717f75d60f 100644
---- a/drivers/comedi/drivers/das16.c
-+++ b/drivers/comedi/drivers/das16.c
-@@ -956,8 +956,8 @@ static const struct comedi_lrange *das16_ai_range(struct comedi_device *dev,
- 
- 	/* get any user-defined input range */
- 	if (pg_type == das16_pg_none && (min || max)) {
--		struct comedi_lrange *lrange;
--		struct comedi_krange *krange;
-+		const struct comedi_lrange *lrange;
-+		const struct comedi_krange *krange;
- 
- 		/* allocate single-range range table */
- 		lrange = comedi_alloc_spriv(s,
-@@ -990,8 +990,8 @@ static const struct comedi_lrange *das16_ao_range(struct comedi_device *dev,
- 
- 	/* get any user-defined output range */
- 	if (min || max) {
--		struct comedi_lrange *lrange;
--		struct comedi_krange *krange;
-+		const struct comedi_lrange *lrange;
-+		const struct comedi_krange *krange;
- 
- 		/* allocate single-range range table */
- 		lrange = comedi_alloc_spriv(s,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504261939.1yj5iNwS-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/cgroup/dmem.c:21: warning: Cannot understand          * @ref: References keeping the region alive.
+    on line 21 - I thought it was a doc line
+>> kernel/cgroup/dmem.c:30: warning: Cannot understand          * @region_node: Linked into &dmem_cgroup_regions list.
+    on line 30 - I thought it was a doc line
+>> kernel/cgroup/dmem.c:36: warning: Cannot understand          * @pools: List of pools linked to this region.
+    on line 36 - I thought it was a doc line
+>> kernel/cgroup/dmem.c:48: warning: Cannot understand          * @unregistered: Whether the region is unregistered by its caller.
+    on line 48 - I thought it was a doc line
+   kernel/cgroup/dmem.c:300: warning: Excess function parameter 'dev' description in 'dmem_cgroup_state_evict_valuable'
+   kernel/cgroup/dmem.c:300: warning: Excess function parameter 'index' description in 'dmem_cgroup_state_evict_valuable'
+   kernel/cgroup/dmem.c:635: warning: Function parameter or struct member 'region' not described in 'dmem_cgroup_try_charge'
+   kernel/cgroup/dmem.c:635: warning: Excess function parameter 'dev' description in 'dmem_cgroup_try_charge'
+
+
+vim +21 kernel/cgroup/dmem.c
+
+    18	
+    19	struct dmem_cgroup_region {
+    20		/**
+  > 21		 * @ref: References keeping the region alive.
+    22		 * Keeps the region reference alive after a succesful RCU lookup.
+    23		 */
+    24		struct kref ref;
+    25	
+    26		/** @rcu: RCU head for freeing */
+    27		struct rcu_head rcu;
+    28	
+    29		/**
+  > 30		 * @region_node: Linked into &dmem_cgroup_regions list.
+    31		 * Protected by RCU and global spinlock.
+    32		 */
+    33		struct list_head region_node;
+    34	
+    35		/**
+  > 36		 * @pools: List of pools linked to this region.
+    37		 * Protected by global spinlock only
+    38		 */
+    39		struct list_head pools;
+    40	
+    41		/** @size: Size of region, in bytes */
+    42		u64 size;
+    43	
+    44		/** @name: Name describing the node, set by dmem_cgroup_register_region */
+    45		char *name;
+    46	
+    47		/**
+  > 48		 * @unregistered: Whether the region is unregistered by its caller.
+    49		 * No new pools should be added to the region afterwards.
+    50		 */
+    51		bool unregistered;
+    52	};
+    53	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
