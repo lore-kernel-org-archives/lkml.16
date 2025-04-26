@@ -1,99 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621EB2628D;
-	Sat, 26 Apr 2025 20:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE23C1D88AC;
+	Sat, 26 Apr 2025 20:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745697994; cv=none; b=lYtu55Sz3I2ii3l+pxO4h5T9IkSjT/FlBvfqJjuGdf+XR3PO8YxwzPBBygRGs1fCKZ7pt4vK4nO2PIgi9FZxzA+f0i6FwaEVPbqi57yLxTb2nnk5QXR27zYXQ6wRHJc3vYuBXuVbhK8b3OI4hFsLqPdB+HrCX9YaVpNVpp1mUa8=
+	t=1745698423; cv=none; b=D6iGHo94y3gxucF0p+kvSTrRac8572rh4/SZu+EBFNcWnJdFpJzDvuNeQ7APMsxbzJYLiL71XplY560ac3OnKKYUEAnGJaGXDkDYPe90+aaBL7AVkkxpmA4iovJ0oEt7LUGLNoEPzE7kKVGIqe5EVdNC8UDI/yvjbJ5b1mUE8aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745697994; c=relaxed/simple;
-	bh=MsTrO+1ne8sHT0CmfxeIoNCxi2M7Yv+mTJfpHw2klGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HoYWkE5KvZhqArTnsM8ks5DRdix8xLm6RxuYhysdVTBWAduej9aCNGg8ZsMwHHeWEFCFE29GHN7/7i9sFmqHog60cZWiFCqmnMGCCzoqw2BQMsyFO/oPOTl4vf0Xulsg9bs27vWERKSX06lKzOlz+IxpjfxhsCjg4ee2YdoEHQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5AB4C4CEE2;
-	Sat, 26 Apr 2025 20:06:31 +0000 (UTC)
-Date: Sat, 26 Apr 2025 16:06:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar
- <mingo@redhat.com>, x86@kernel.org, Kees Cook <kees@kernel.org>,
- bpf@vger.kernel.org, Tejun Heo <tj@kernel.org>, Julia Lawall
- <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
- cocci@inria.fr, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner
- <tglx@linutronix.de>
-Subject: Re: [PATCH] sched/core: Introduce task_*() helpers for PF_ flags
-Message-ID: <20250426160630.46108366@gandalf.local.home>
-In-Reply-To: <aA0pDUDQViCA1hwi@gmail.com>
-References: <20250425204120.639530125@goodmis.org>
-	<20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
-	<20250426084320.335d4cb2@batman.local.home>
-	<aA0pDUDQViCA1hwi@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745698423; c=relaxed/simple;
+	bh=gjccBlvCWrBL49MXup4mGARaIMgxPNin5SIQOWU+oCE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qGJIrgScTqwYRVCZ0Ab7KmcOjTmNduz40bWwgheJgXwH+i8G95taeXWXFONXNN4jJx5Uqa6O8z1Ky82BFReaZgPx5SEV6vbuXwggyDwUieIZldqMHEGEjplLO8N7dhqC0BnDamzKtUfy51vBpb9P1GjjOFpMxd4YPOPve9cezec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbmeIanh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbmeIanh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4262C4CEE2;
+	Sat, 26 Apr 2025 20:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745698422;
+	bh=gjccBlvCWrBL49MXup4mGARaIMgxPNin5SIQOWU+oCE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=MbmeIanh+mG2cl7rfOuvPgiE+pJC7Z2ffmAWFn3P91mP/xK/tXOUZfccSuJeL11L0
+	 zq96vjIMAhJ91EktORazsidAgEPFr/1xJsmeX5ynlU7UWOWBjiHClEvsg0o2uXmbDe
+	 BmAkbZH+kWeBETTUeZ5zivhyrCj2kP2xltcXtDNMxo/zSNjlhodX1Blg+AGJy0ZwQw
+	 wK4jUKdH1V0sCeuOygiVhziHFJmXVeNudITWFQYcOWZkECuG3jD0Rn4GTbOh/viWao
+	 8Dz2DWTjLXs0CH/SOMJGTGNvDSs6npVwSdkqveC3zKDzhG8pRTu4uJF9/ZsoofJQBI
+	 wrFL63RFN2I5Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF4E38111CC;
+	Sat, 26 Apr 2025 20:14:22 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v6.15
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250426195957.GA598020@bhelgaas>
+References: <20250426195957.GA598020@bhelgaas>
+X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250426195957.GA598020@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pci-v6.15-fixes-3
+X-PR-Tracked-Commit-Id: 442cacac2d9935a0698332a568afcb5c6ab8be17
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5bc1018675ec28a8a60d83b378d8c3991faa5a27
+Message-Id: <174569846138.4054201.10380850453076813913.pr-tracker-bot@kernel.org>
+Date: Sat, 26 Apr 2025 20:14:21 +0000
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Yi Lai <yi1.lai@intel.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Niklas Cassel <cassel@kernel.org>, Frank Li <Frank.Li@nxp.com>, Guenter Roeck <linux@roeck-us.net>, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Ondrej Jirman <megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sat, 26 Apr 2025 20:42:21 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+The pull request you sent on Sat, 26 Apr 2025 14:59:57 -0500:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pci-v6.15-fixes-3
 
-> > kernel/sched/core.c:    if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
-> > kernel/sched/fair.c:    if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
-> > kernel/trace/bpf_trace.c:                    current->flags & (PF_KTHREAD | PF_EXITING)))
-> > kernel/trace/bpf_trace.c:       if (unlikely(task->flags & (PF_KTHREAD | PF_EXITING)))
-> > 
-> > Maybe we can have a: is_user_exiting_or_kthread() ?  
-> 
-> No, we don't need is_user_exiting_or_kthread(). At all. Ever. In this 
-> universe. Or in any alternative universes. We don't even need 
-> is_user_exiting_or_kthread() in horror fiction novels written for 
-> kernel developers: there's really a limit to the level of horror that 
-> people are able to accept. Sheesh ...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5bc1018675ec28a8a60d83b378d8c3991faa5a27
 
-Ingo,
+Thank you!
 
-A simple "No we do not need that" would suffice. This isn't 2005 anymore,
-where we come up with creative ways to insult each other. We're better now.
-
-
-
-> And no, we don't need separate helpers for !task_kthread() et al: the C 
-> logical negation unary operator is perfectly readable when placed 
-> before a function call or a macro invocation, and a competent Linux 
-> kernel developer is expected to recognize it on sight:
-> 
-> 	if (!task_kthread(task))
-> 		...
-
-Not really. I originally tried just having a single "is_kernel_thread()"
-where I would use the "!is_kernel_thread()" for user thread, but honestly,
-it wasn't much better than the "!(task->flags & PF_KTHREAD)".
-
-And just because it's not a kernel thread, does it mean it will always be a
-user space thread? Could it one day also be a guest thread (if we decide to
-have such a thing)?
-
-Wanting to know if something is a user space thread, "if (!task_kthread(task))"
-seems short sighted. As it assumes that we only have two types of threads.
-It may be true today, but may not be the case in the future.
-
-	if (!task_kthread(task))
-
-Still takes a second more to understand that's a user space thread than:
-
-	if (task_user(task))
-
-would.
-
--- Steve
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
