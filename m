@@ -1,101 +1,109 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA69D1B415F;
-	Sat, 26 Apr 2025 11:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22569221266
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 11:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745667383; cv=none; b=OuY7pzfU5TSusfYk2ci8VZCTjd0RtWgSs7mpXtjgM+rTg7+523t4/c6q/rqgWovHE/q0WylaMHE41/KZX2S+2jVkgEYcXwM84U+pRaCKb+KgLlhLD2RynU5XCR0IesFLcUnd+7DAyCpVsLU4gt89s/28o+oqwXwPveCZvz4ZfFA=
+	t=1745667417; cv=none; b=iTt3SV4lkkrIZYWMFZOITJj6sGXcU+DF9npvWldbj04Zj+bbjCMFSmwZCZcN7p9qgq4dsEMdkzFnWQeJk6q4Ox0ygCCNF7Wp7cL+j6a6uUxpjJOVaqwEi4WNsca1QxaZMAytVBDFpZE9K7j2z63Q4pv18/yKfGgS00V9wv7z2og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745667383; c=relaxed/simple;
-	bh=n/4iha95Zbcp86peH449f0fki/aJK2xFRxxSlsPap44=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cvWkK7hrmPkBFtEA58YoAl6jWOaepkPViS2/jKqW7RU2EDjesP1hO0IUsYY/UEuvVqAIvyCv9yoVXlH2fpJbeTBEpCW7CSYnbAbH/ThkXnrC14K5xX8SFpmAVuRoxYU7aaKbpxer/HZ6haI24FK/jIDpmNfwY1zhiVBmHwk33zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NCNHa4or; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1745667417; c=relaxed/simple;
+	bh=TMXGzls145JZPx0Jr/HCsy7YFmzt3afYUBJieX1EcUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DNjoaYlno7z5PSsufDRo70cKEgNi8SVNARqyBIku9DGgwiwrtYdd9PnTnOcBUF3Q2rPDdP9p7ji/rqqWdHDXOhN3xvp9Fxwi/Tpey4ZfmIrm3d4R8d2I9NCva2XyVPOFUuIpxVPkreGG/aGEViA6ptO/IZVuOlb19B8lYIfjtFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cULeZN5P; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCNHa4or"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso17446085e9.3;
-        Sat, 26 Apr 2025 04:36:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cULeZN5P"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bb647eb23so2728781b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 04:36:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745667380; x=1746272180; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0/VMm3QuljiLlffJxVJ6L4JY1qtpOC7HK9j5X/vctqU=;
-        b=NCNHa4orjC4dPApR5yT8QXniKvWLevaFvqx3d3RcZhNnTj6OTp9H60BGWWvdzfqIHe
-         V73Vnt5JuOM8UXLSoJCsKErnSDYHFh1HhFP3WTolOOfx92o+MnyCRosnb3mKi8YKv9kE
-         J6RxtI7rH6EhgWAYda1YYxJwNA4oB9OBEXm+isO2CuHL2MwABgKEk3nn+WsqJMhYbLMI
-         1AJGHFOEoULTzrvoPS6DznLyVfbMGS9oad2v1wOtT/j1EGzYXozIEB2MaxRIG20EzxHy
-         dj76sAHB2xs962M0fm8wVzLjgx458+yvo2+NSQCLH5dNFStcZsQyWcRsBTOewQcvu1T2
-         Yk0Q==
+        d=gmail.com; s=20230601; t=1745667415; x=1746272215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SQ31PiGWR14ALO3eZTihChu6gSdJQVhVuQNq4pfsfDA=;
+        b=cULeZN5PLVQFcvi2OEUyBDSs9lG1hcTF1cNntqEAVV6yFASq42xNhw6hU6RF/evU+r
+         YjjedWUxgDuI/IKzHieOQZB0qj82/IIUBMO9XldyZTlPeZwzjodMjX8PbqoAn+TpIoor
+         b/ZxifMsCZCXxu+Zu0/QVHw/GHhNbwll7fyTkViShqsKP/KLOXXs7ewoptN4HdKQlTgO
+         urPdWabz1b8Qgnz+2Uoyp2N13GRXTR36YC7w1dJcUwz1CTrw9CjZTqGku1ucDYwZR60e
+         X1cfiIjEdhiiTZ9kx5rwiBDZ/stAbLuYqBrjGA70Dc4/yEVmdoa30rEHCCTaE6Pnoi96
+         SgLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745667380; x=1746272180;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0/VMm3QuljiLlffJxVJ6L4JY1qtpOC7HK9j5X/vctqU=;
-        b=niLAxac5U19I97snSVcoWkmVEcy7WqQUFvi9mcqEVckujqT+/BpNEcZWRNHaD8aOKY
-         1d/Q3WDkbfohwNEz1ClPqTycLyZ5mPtyss/LAyIFeY2PpID+EMRu3pjNhtwpPheU2/P+
-         9PWSg9qUEaFaGjeiGsfxQhGV7qdA8/fuf84drZB4CzHh3rqc/oALjCDX/94J1r7Qwv/+
-         Yat59KYRmIJg47quNzILQAJ9NAlvOSz8/+Xg6FkIQCENUW70Ri3ckpXq2JmlAL+3H2ML
-         Tpampczq+S5F59si+x23CvekIggTtkKpXxPrJxOmfvt72lqhCJx4C5LzSuH2573TNedG
-         ph6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUxi+b9b3jX3vTrf/lcO6xOC5S+LL9y7Vu1W/StqJ7cvTQ9sQXvToHLL9Agmgf2dffaMlNoCxpbQ5FID8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwfvttnhbyoaTZvFFF8QyNl20EVOThsYF356KwyMP4DC361Wbd
-	pTRQ2b3oPH1MjSXuaUJJWXFkKajXgu+4r3BAYtq2S/dxjii6ysuB
-X-Gm-Gg: ASbGncsTjRryMAb5Wim+z0KUX6c3NPvduCuzvhTbiyJM/mfje1OwkpyVrtZaBaAKwI2
-	D1PcIC2VpXJGqGfVk9FqxWlNGvMV0uK6QFM8cUfcQdu+vHb5ioPzbD/Od2NXr3gpWOoCrnnuRPf
-	m0eqwEL8mRxX96gYx0qrmD0BiaU5qs+MQqT+Y1MUhyXG7C5ruJhWqLLWIERjggV0k6B7SEK1VTu
-	sHXqMImCPYU/o9xDH0Y8PRJ5uMYLIpYEsAibJ86hkKOTT/Pqm4Bqi2FBWafPJ7fJgw+larIEi/z
-	v5JOOBx7C5wQQvEoUcr4p+VaUTCA7JkO1zm0ZDLZ5DbjfJjFhbt4RA==
-X-Google-Smtp-Source: AGHT+IFQNbhBheWfvqI5jKGbv4tsqpTFU/tqF6Ou4LGxW4bdRwrVniQ+n7zLzMppUST3EmrCgMVW/Q==
-X-Received: by 2002:a05:600d:1:b0:43d:526:e0ce with SMTP id 5b1f17b1804b1-440aa5bd66amr34264245e9.21.1745667380022;
-        Sat, 26 Apr 2025 04:36:20 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5310ad2sm56664515e9.21.2025.04.26.04.36.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 04:36:19 -0700 (PDT)
-Message-ID: <3d214f39-e529-45ce-b6f7-9dd50d0e119c@gmail.com>
-Date: Sat, 26 Apr 2025 13:36:18 +0200
+        d=1e100.net; s=20230601; t=1745667415; x=1746272215;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SQ31PiGWR14ALO3eZTihChu6gSdJQVhVuQNq4pfsfDA=;
+        b=auVg3FW95pnAGhnARg0k2QjXHqqKdA0jWEKhWSuRBwWoJdS4f2+X+8++J+2WJF7cTX
+         7q0fdRZaocBcKayGXOuHXkNOUx2A+27JCRExTGhf16nXuDSS5MmiEZ60NdmClX5TaAqf
+         R7IGfnAXeTVvehOjcYSjHMW5iDqQbkALt15IRIzuzw3T8GBcwtr/TBP0JoV5cEkyeGpu
+         8AMkSCqGQIIe7ohRzGTXVXy9qoyFB8JI3r9uuxTuu6rZy1koc8h7csUqU+BhbucSTABT
+         y2cULanHX5oQpaXu9lnHNFXnS160++6m/1/96D6U34KY/yi2PPtfubPldH29QXX86L2L
+         iTEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwEfRQCyU0vQhn7NbIvtK7tjHI8n081rQHm5m/3RmfcQsme6MpE+S0MMOAnONfU6EVcSWyy1DtYakt1ZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxERkefn9508ryh2AAMIIyRVZmIHvKkPIfrEt+i6YK7Pwnfxbr
+	ZwBrf0eU73eqKY9XBWDnz5Lye/0gQ3YNbxB7aam5FAiGHZ/p7hJE5iPu5YHo3EU=
+X-Gm-Gg: ASbGncvNNBpbuHaccsqxwrp8esJ88vvlxGZt/xbq4fPPKlmJGEayrUYCboBrysu134F
+	jga9g5AOiOQQS+Eh6s4XqYuj29jLzpq4x1i4CEhXgjt9m+BI+bTfGCgTPr/bDbrDcEa5YR5EHDN
+	LfZDgviCl9/uKPKxAk1prJVhNiMTg46AEoDb4vBCXtpci6Js712abmk7vI6+0D7PWzqeBT9OTnG
+	VYEY1S2JrrGhtIC0Yw4VoRplTIwuYULgd4loue4o0njeU/GXN4gppBghV+N1KhwdAXlb9BHb/jC
+	5Ud+qm3CQnrbcC6HhSX52uRIFObbKmRDL/bh8/NJgNyfdyOAAlvgZMRUYa+gSaFf
+X-Google-Smtp-Source: AGHT+IGGyjuZeyvual3SpMAZsA9vKjssaPPAI54rrl94SqHOvQZle0H2psV5wK3ogAuBsX7XOwAQxQ==
+X-Received: by 2002:a05:6a00:130d:b0:736:4fe0:2661 with SMTP id d2e1a72fcca58-73ff72af24emr3304618b3a.11.1745667415253;
+        Sat, 26 Apr 2025 04:36:55 -0700 (PDT)
+Received: from localhost.localdomain ([122.182.179.188])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941e53sm4812494b3a.56.2025.04.26.04.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 04:36:54 -0700 (PDT)
+From: Darshan Rathod <darshanrathod475@gmail.com>
+To: abbotti@mev.co.uk0
+Cc: hsweeten@visionengravers.com,
+	linux-kernel@vger.kernel.org,
+	Darshan Rathod <darshanrathod475@gmail.com>
+Subject: [PATCH] Staging: comedi: das16: Fixed a stucture warning in code
+Date: Sat, 26 Apr 2025 11:36:27 +0000
+Message-ID: <20250426113627.36525-1-darshanrathod475@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] rust: pin-init: improve documentation for `Zeroable`
- derive macros
-To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250426083901.13289-1-benno.lossin@proton.me>
- <20250426083901.13289-2-benno.lossin@proton.me>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20250426083901.13289-2-benno.lossin@proton.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 26.04.25 10:39 AM, Benno Lossin wrote:
-> Specify that both `MaybeZeroable` and `Zeroable` work on `union`s. Add a
-> doc example for a union. Also include an example with visibility on the
-> field.
-> 
-> Link: https://github.com/Rust-for-Linux/pin-init/pull/48/commits/ab0985a0e08df06c60a32ca5888f74adcc2c1cf3
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-> ---
-> Also see the compile-fail & macro expansion tests added by this commit
-> (not included in the kernel, since the test files are only upstream):
-> 
->     https://github.com/Rust-for-Linux/pin-init/pull/48/commits/278070d12b41f0fca1b0d6dff6c5f38f3cf46044
-> ---
+Fixed a warning message in das16.c file.
+Signed-off-by: Darshan Rathod <darshanrathod475@gmail.com>
+---
+ drivers/comedi/drivers/das16.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+diff --git a/drivers/comedi/drivers/das16.c b/drivers/comedi/drivers/das16.c
+index f5ca6c0d4d0c..73717f75d60f 100644
+--- a/drivers/comedi/drivers/das16.c
++++ b/drivers/comedi/drivers/das16.c
+@@ -956,8 +956,8 @@ static const struct comedi_lrange *das16_ai_range(struct comedi_device *dev,
+ 
+ 	/* get any user-defined input range */
+ 	if (pg_type == das16_pg_none && (min || max)) {
+-		struct comedi_lrange *lrange;
+-		struct comedi_krange *krange;
++		const struct comedi_lrange *lrange;
++		const struct comedi_krange *krange;
+ 
+ 		/* allocate single-range range table */
+ 		lrange = comedi_alloc_spriv(s,
+@@ -990,8 +990,8 @@ static const struct comedi_lrange *das16_ao_range(struct comedi_device *dev,
+ 
+ 	/* get any user-defined output range */
+ 	if (min || max) {
+-		struct comedi_lrange *lrange;
+-		struct comedi_krange *krange;
++		const struct comedi_lrange *lrange;
++		const struct comedi_krange *krange;
+ 
+ 		/* allocate single-range range table */
+ 		lrange = comedi_alloc_spriv(s,
+-- 
+2.43.0
 
