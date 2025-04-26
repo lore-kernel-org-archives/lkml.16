@@ -1,155 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199051B415F;
-	Sat, 26 Apr 2025 11:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA69D1B415F;
+	Sat, 26 Apr 2025 11:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745667319; cv=none; b=OUVDCXVUV1lcl/clMci/auul+SQjvb/WIgyR6lTeR8yBKpgWd6Pt96AI36q7T0paAVfsvHBaVlUCJfvxllJKa2rzpHqSt9kLhrLTddjSTN8j1JShri8ikLzpp4xgvqFLtW7D02T8ZBs+/+DYownn3b8cglv5t8sAZTyuCcX2GTs=
+	t=1745667383; cv=none; b=OuY7pzfU5TSusfYk2ci8VZCTjd0RtWgSs7mpXtjgM+rTg7+523t4/c6q/rqgWovHE/q0WylaMHE41/KZX2S+2jVkgEYcXwM84U+pRaCKb+KgLlhLD2RynU5XCR0IesFLcUnd+7DAyCpVsLU4gt89s/28o+oqwXwPveCZvz4ZfFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745667319; c=relaxed/simple;
-	bh=W5+9Ox8Zfwkqoo1wtMpLkQdOALYNITyDBGxiimDOcgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J+5byntzu++y1IJYETrjwcDP0HH0Bw0cuj6ZpxmhgNa7kFHftg+v+aKR8NBY3d4Au07XDfzM/iTUhuMl+FD9JPPHg4PEeh1JFiz9xG8Rjb5q8m1CnRJNrlnIuOIPVsjBvOyZp6F6z66+sFRxniYZT7VFgNi833WcZWnKigTDyjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/MczSbQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745667383; c=relaxed/simple;
+	bh=n/4iha95Zbcp86peH449f0fki/aJK2xFRxxSlsPap44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cvWkK7hrmPkBFtEA58YoAl6jWOaepkPViS2/jKqW7RU2EDjesP1hO0IUsYY/UEuvVqAIvyCv9yoVXlH2fpJbeTBEpCW7CSYnbAbH/ThkXnrC14K5xX8SFpmAVuRoxYU7aaKbpxer/HZ6haI24FK/jIDpmNfwY1zhiVBmHwk33zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NCNHa4or; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/MczSbQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F7DC4CEE2;
-	Sat, 26 Apr 2025 11:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745667318;
-	bh=W5+9Ox8Zfwkqoo1wtMpLkQdOALYNITyDBGxiimDOcgo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=g/MczSbQSQ044Au5V+WIXPOi99BlpoIK8a5nH0UwMKC7lxZVZw1PkYexMWdvB718I
-	 yVDqc55UwCECNOI++NgMgtVG/0WCDf2FW8kvgMZgSE3pVaja/ekwYmNUJ8w1Ng7xXO
-	 117U43pqKc9gBvekkYM2EkLNywj2JXNyjIJNYinWRtL5AzmP9rnK2933aKTW33KWc1
-	 WU5BvmkrSk3Lrfa8HI6W38CAwRe1mrUecnhA++VgpGM9U32Cs0aPFxt2H+5qaP9ADt
-	 AM4E65EN/Iva0jHtft0GdBt4Utkp3vjZZ9FOUJEyMTApqV6pdngSQVhUnRQicVp2po
-	 mqYsBcxhxUkFA==
-Date: Sat, 26 Apr 2025 12:35:09 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-Message-ID: <20250426123509.0b04f0f9@jic23-huawei>
-In-Reply-To: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
-References: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com>
-	<20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCNHa4or"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso17446085e9.3;
+        Sat, 26 Apr 2025 04:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745667380; x=1746272180; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0/VMm3QuljiLlffJxVJ6L4JY1qtpOC7HK9j5X/vctqU=;
+        b=NCNHa4orjC4dPApR5yT8QXniKvWLevaFvqx3d3RcZhNnTj6OTp9H60BGWWvdzfqIHe
+         V73Vnt5JuOM8UXLSoJCsKErnSDYHFh1HhFP3WTolOOfx92o+MnyCRosnb3mKi8YKv9kE
+         J6RxtI7rH6EhgWAYda1YYxJwNA4oB9OBEXm+isO2CuHL2MwABgKEk3nn+WsqJMhYbLMI
+         1AJGHFOEoULTzrvoPS6DznLyVfbMGS9oad2v1wOtT/j1EGzYXozIEB2MaxRIG20EzxHy
+         dj76sAHB2xs962M0fm8wVzLjgx458+yvo2+NSQCLH5dNFStcZsQyWcRsBTOewQcvu1T2
+         Yk0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745667380; x=1746272180;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0/VMm3QuljiLlffJxVJ6L4JY1qtpOC7HK9j5X/vctqU=;
+        b=niLAxac5U19I97snSVcoWkmVEcy7WqQUFvi9mcqEVckujqT+/BpNEcZWRNHaD8aOKY
+         1d/Q3WDkbfohwNEz1ClPqTycLyZ5mPtyss/LAyIFeY2PpID+EMRu3pjNhtwpPheU2/P+
+         9PWSg9qUEaFaGjeiGsfxQhGV7qdA8/fuf84drZB4CzHh3rqc/oALjCDX/94J1r7Qwv/+
+         Yat59KYRmIJg47quNzILQAJ9NAlvOSz8/+Xg6FkIQCENUW70Ri3ckpXq2JmlAL+3H2ML
+         Tpampczq+S5F59si+x23CvekIggTtkKpXxPrJxOmfvt72lqhCJx4C5LzSuH2573TNedG
+         ph6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUxi+b9b3jX3vTrf/lcO6xOC5S+LL9y7Vu1W/StqJ7cvTQ9sQXvToHLL9Agmgf2dffaMlNoCxpbQ5FID8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwfvttnhbyoaTZvFFF8QyNl20EVOThsYF356KwyMP4DC361Wbd
+	pTRQ2b3oPH1MjSXuaUJJWXFkKajXgu+4r3BAYtq2S/dxjii6ysuB
+X-Gm-Gg: ASbGncsTjRryMAb5Wim+z0KUX6c3NPvduCuzvhTbiyJM/mfje1OwkpyVrtZaBaAKwI2
+	D1PcIC2VpXJGqGfVk9FqxWlNGvMV0uK6QFM8cUfcQdu+vHb5ioPzbD/Od2NXr3gpWOoCrnnuRPf
+	m0eqwEL8mRxX96gYx0qrmD0BiaU5qs+MQqT+Y1MUhyXG7C5ruJhWqLLWIERjggV0k6B7SEK1VTu
+	sHXqMImCPYU/o9xDH0Y8PRJ5uMYLIpYEsAibJ86hkKOTT/Pqm4Bqi2FBWafPJ7fJgw+larIEi/z
+	v5JOOBx7C5wQQvEoUcr4p+VaUTCA7JkO1zm0ZDLZ5DbjfJjFhbt4RA==
+X-Google-Smtp-Source: AGHT+IFQNbhBheWfvqI5jKGbv4tsqpTFU/tqF6Ou4LGxW4bdRwrVniQ+n7zLzMppUST3EmrCgMVW/Q==
+X-Received: by 2002:a05:600d:1:b0:43d:526:e0ce with SMTP id 5b1f17b1804b1-440aa5bd66amr34264245e9.21.1745667380022;
+        Sat, 26 Apr 2025 04:36:20 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5310ad2sm56664515e9.21.2025.04.26.04.36.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 04:36:19 -0700 (PDT)
+Message-ID: <3d214f39-e529-45ce-b6f7-9dd50d0e119c@gmail.com>
+Date: Sat, 26 Apr 2025 13:36:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] rust: pin-init: improve documentation for `Zeroable`
+ derive macros
+To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250426083901.13289-1-benno.lossin@proton.me>
+ <20250426083901.13289-2-benno.lossin@proton.me>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250426083901.13289-2-benno.lossin@proton.me>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 25 Apr 2025 16:08:43 -0500
-David Lechner <dlechner@baylibre.com> wrote:
-
-> Add new macros to help with the common case of declaring a buffer that
-> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
-> to do correctly because of the alignment requirements of the timestamp.
-> This will make it easier for both authors and reviewers.
+On 26.04.25 10:39 AM, Benno Lossin wrote:
+> Specify that both `MaybeZeroable` and `Zeroable` work on `union`s. Add a
+> doc example for a union. Also include an example with visibility on the
+> field.
 > 
-> To avoid double __align() attributes in cases where we also need DMA
-> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
-> 
-Generally good.  A few little things though...
-
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> Link: https://github.com/Rust-for-Linux/pin-init/pull/48/commits/ab0985a0e08df06c60a32ca5888f74adcc2c1cf3
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
 > ---
+> Also see the compile-fail & macro expansion tests added by this commit
+> (not included in the kernel, since the test files are only upstream):
 > 
-> v3 changes:
-> * Use leading double-underscore for "private" macro to match "private"
->   functions that do the same.
-> * Use static_assert() from linux/build_bug.h instead of _Static_assert()
-> * Fix incorrectly using sizeof(IIO_DMA_MINALIGN).
-> * Add check that count argument is constant. (Note, I didn't include a
->   message in this static assert because it already gives a reasonable
->   message.)
-> 
-> /home/david/work/bl/linux/drivers/iio/accel/sca3300.c:482:51: error: expression in static assertion is not constant
->   482 |         IIO_DECLARE_BUFFER_WITH_TS(s16, channels, val);
->       |                                                   ^~~
-> 
-> v2 changes:
-> * Add 2nd macro for DMA alignment
+>     https://github.com/Rust-for-Linux/pin-init/pull/48/commits/278070d12b41f0fca1b0d6dff6c5f38f3cf46044
 > ---
->  include/linux/iio/iio.h | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..1115b219271b76792539931edc404a67549bd8b1 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -7,6 +7,8 @@
->  #ifndef _INDUSTRIAL_IO_H_
->  #define _INDUSTRIAL_IO_H_
->  
-> +#include <linux/align.h>
-> +#include <linux/build_bug.h>
->  #include <linux/device.h>
->  #include <linux/cdev.h>
->  #include <linux/compiler_types.h>
-> @@ -777,6 +779,42 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
->   * them safe for use with non-coherent DMA.
->   */
->  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
-> +
-> +#define __IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> +	static_assert(count); \
 
-Why do we care if count is 0?  Or is intent to check if is constant?
-If the thought is we don't care either way about 0 (as rather nonsensical)
-and this will fail to compile if not constant, then perhaps a comment would
-avoid future confusion?
-
-> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
-> +
-> +/**
-> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
-> + * @type: element type of the buffer
-> + * @name: identifier name of the buffer
-> + * @count: number of elements in the buffer
-> + *
-> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
-> + * addition to allocating enough space for @count elements of @type, it also
-> + * allocates space for a s64 timestamp at the end of the buffer and ensures
-> + * proper alignment of the timestamp.
-> + */
-> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
-> +
-> +/**
-> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
-> + * @type: element type of the buffer
-> + * @name: identifier name of the buffer
-> + * @count: number of elements in the buffer
-> + *
-> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
-> + * to ensure that the buffer doesn't share cachelines with anything that comes
-> + * before it in a struct. This should not be used for stack-allocated buffers
-> + * as stack memory cannot generally be used for DMA.
-> + */
-> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
-> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
-> +
-> +static_assert(IIO_DMA_MINALIGN % sizeof(s64) == 0,
-That message isn't super helpful if seen in a compile log as we aren't reading the code here
-"IIO_DECLARE_DMA_BUFFER_WITH_TS() assumes that ...
-
-> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
-> +
->  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
->  
->  /* The information at the returned address is guaranteed to be cacheline aligned */
-> 
+Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
