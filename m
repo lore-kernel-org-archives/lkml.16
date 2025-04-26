@@ -1,219 +1,178 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2050.outbound.protection.outlook.com [40.107.92.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3475617E4
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745656270; cv=none; b=gBYXCmQRfSnbmgloXEfrj1hfmCk+Qltq0ZXa3xHFb7hZnSOZiNHJzQmzc0SL90ticMSRXE4RuE/IBHWk2azLiHjO/niNxXdqyWBnMXntoI9HWff9pbPo5+MxhVK8Ztj7dIrHYzIsC2Ej+SYMjuBGoyU2xZf5Yza8/VTFxEduw+w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745656270; c=relaxed/simple;
-	bh=J+giZeB1nGQyLstpdMGxH56JL+TCObbPV8QKpLDf4Y4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iTOOIeTmTFwgc9ux5/4DrCupJRTJSM4K1/Nst/NkZwScU9dLjPDPke/eVKREjzhmaAoPMKK46tNafEychvU6vT2tRudfWjcJjS0quyqUeke+P9IOw8Ug34/C2sc2x2YpL5KoQkeJHQKHSeZNMB9VjDVxotZKK997sFxBvX/bnOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Tx8keTq7; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B0C17E4
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745656349; cv=fail; b=RlkgIGyOO/SUUJmKGR0s5QN0D8hYgsSqLeYvHZSb2iAzKdM5alonF14Z7gO15YfyVQTXY70FTmwurPebH6vSLZ+g5UxSXBtaQltimIXPH9lcfY4APv8hXvnTR/gJq6tW9ab2zote+d6iVmx/kvXHVgrj5wH+MbN/q2rajrriiWg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745656349; c=relaxed/simple;
+	bh=oiru0oQzWf1nnI/zPLyH2YVVHuuzUEJk++2sQ6Yybig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QhrbpcOmNGyH6NDMf+VbMqQpQTEzmABbQzWd6I2ouzZrIdQdBclmyB/rDCkbsDuHzSc455WQhLi6TsUksaFd1dkQF5PLq5GobXwXZJqk9VAQeU/w0uEyuvXDETsvmBgfbWa5qBpOADEOvQM9NYzlBxUjbZDj7wvsLbCx9VYw6Pc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=hTEk60NR; arc=fail smtp.client-ip=40.107.92.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tx8keTq7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7H6mO4q0nClq44HpCW0anQPlhk29yZVL0iATcH2dfQQ=; b=Tx8keTq7wunSHryHsYM0NoeFnR
-	/oWRoZ7Rd33R4/gazf1eeFhPpAUeOmXBmYBY2AtaYqb41LZdH3WDYKOPvnEU/d4NIL4ZfveWNZE64
-	iynk2KvGccB4HVrk9day2fxO/fPhVn+rfqNDAmXKde0ZeQBewCDSGCPPchu3Dv5SSNLzadubIKokI
-	kEC7HpPvGGv6MfeS9qG5oJ8AlzSGeuM00oXCc0vZC/zAQSKhgaf81amLTGduUuq+wfjILA56MLvhX
-	0NPx8v1+Rj7tnlIm6GSfpXvrNLElLTW2HhzcJGccNJyaiIQKQfz1n3Xux5arzNkhdORoFip0sNHAI
-	PWm44dwQ==;
-Received: from [172.31.31.140] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u8avy-0000000CEmt-2qY7;
-	Sat, 26 Apr 2025 08:30:50 +0000
-Message-ID: <ac77c07ecda8805a5f942f5c71b3a2ef0f9183ce.camel@infradead.org>
-Subject: Re: [PATCH v4 7/7] mm/mm_init: Use for_each_valid_pfn() in
- init_unavailable_range()
-From: David Woodhouse <dwmw2@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
-	 <lorenzo.stoakes@oracle.com>
-Cc: Mike Rapoport <rppt@kernel.org>, "Sauerwein, David"
- <dssauerw@amazon.de>,  Anshuman Khandual <anshuman.khandual@arm.com>, Ard
- Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Mike Rapoport <rppt@linux.ibm.com>, Will
- Deacon <will@kernel.org>,  linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,  linux-mm@kvack.org, Ruihan Li
- <lrh2000@pku.edu.cn>
-Date: Sat, 26 Apr 2025 09:30:50 +0100
-In-Reply-To: <20250425163813.58b72a3aa2d3ebbd96d1929e@linux-foundation.org>
-References: <20250423133821.789413-1-dwmw2@infradead.org>
-	 <20250423133821.789413-8-dwmw2@infradead.org>
-	 <e772cf66-c661-422d-911a-bc13ba4d59fb@lucifer.local>
-	 <20250425163813.58b72a3aa2d3ebbd96d1929e@linux-foundation.org>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-Bb+h1mZfog+7aFPuGzRE"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="hTEk60NR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v6d/6lC1M4NbepO/BRqeLMe7jU5f+l5lQrxQ8iyHWPwY3Vpr2jrT8j5GLKjGhNdfT69lz6uVjmJWtAZ2Q9NYDm02eZ6xPGI5TVMCXlXCiIdYgatIWEve2JP4xHPhsJnZAcVnBxDRO5AAigY2WLKsVXXdAqota7n1MKUHtO5YRaRgS8AHizS9V1zb9CzeFyl4swHlN4TpQKmotEcdObDAXJUwP3Tux/2RijW+2sM3e4cTiUH1gbad3B9PlsGWuIeDlett1Aph5eFSZG+o2xrOZ7gAMWIZPFq3WTULMTutcRnmcS/wAlFdWtCidKgisXlU7esSFajBhPwSgMmIqps4Fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cJe53mNxfAe4Ki3rGi+qWczVxMVev+ZZVnPZocPwXXc=;
+ b=HMbGK3ggJaG0A7dCk9in5cn5UHGAYv8r5usi/eb4Ns67Y5tsk6WETHIFBctlqWH5s4DDX0aueBivltJ5TD0OoBZlKwQQ9uXQ/blhg7Z2SbYIMeqpFTvk47JFOnQB9tn02Onp2QDJwG1PaDIyI7t5bS7IbrLXGvrjxiJKGUVqN/QMqgMDLhT6e9nAwpHbcxIeODTsG/BhnOagr1NwPkHEe0NvPIszxy0Wc9XREu6t0S5999EBSm0vEZMMp6yWE3sPzIwSr1HKqJYJcukZlhzDHiJZaxEnngBYhPFl7nAy62Gm3GsDMaFkWFqHAold4owoJaQu6ORFwnkMCCqsgqVg3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
+ pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cJe53mNxfAe4Ki3rGi+qWczVxMVev+ZZVnPZocPwXXc=;
+ b=hTEk60NR4FSYQz9HN6+ovYVzZbssoZKk0XPBnCJwsaTYYRiabSxeGBIbkNb4ec0acQ363VhRRVGdzpseTa1ic14m8HWMhMlbQs6zPMQxnSeVkhXQOvuIRFJaGS8Kud5XsNUZkbGDKjsZpM5iCFnylPYC61pGHgw/I++RDo//TWiFsU0nijMbLaaPB+3cpgKO5d1tk7AI74Ag2HuXtpZVgdDnNYeDtsSe7Uwzah6BR1ybZ3bzt67c6GdxsNFYuupYN6D0LVHPJQ/zRpQhz6TPeRLzf/yZdrsbeXsHDgumOLvn97vxozCRPBPH5nRxKNkr13KI1XBc1praDUzizkOSmQ==
+Received: from BN0PR04CA0063.namprd04.prod.outlook.com (2603:10b6:408:ea::8)
+ by SA1PR22MB3904.namprd22.prod.outlook.com (2603:10b6:806:325::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Sat, 26 Apr
+ 2025 08:32:24 +0000
+Received: from BL6PEPF0001AB50.namprd04.prod.outlook.com
+ (2603:10b6:408:ea:cafe::90) by BN0PR04CA0063.outlook.office365.com
+ (2603:10b6:408:ea::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Sat,
+ 26 Apr 2025 08:32:24 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
+ smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
+Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
+ not designate 165.85.157.49 as permitted sender)
+ receiver=protection.outlook.com; client-ip=165.85.157.49;
+ helo=atlrelay1.compute.ge-healthcare.net;
+Received: from atlrelay1.compute.ge-healthcare.net (165.85.157.49) by
+ BL6PEPF0001AB50.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Sat, 26 Apr 2025 08:32:24 +0000
+Received: from 56525d0f2b9b.fihel.lab.ge-healthcare.net (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
+	by builder1.fihel.lab.ge-healthcare.net (Postfix) with ESMTP id 50402CFB78;
+	Sat, 26 Apr 2025 11:32:22 +0300 (EEST)
+From: Ian Ray <ian.ray@gehealthcare.com>
+To: linux-kernel@vger.kernel.org
+Cc: ian.ray@gehealthcare.com,
+	nandor.han@gehealthcare.com
+Subject: [PATCH v2] MAINTAINERS: .mailmap: Update after GEHC spin-off
+Date: Sat, 26 Apr 2025 11:32:20 +0300
+Message-ID: <20250426083220.110-1-ian.ray@gehealthcare.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB50:EE_|SA1PR22MB3904:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 49a494a0-a989-4f13-9ee6-08dd849cdeb4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IhZLNlI5+CYiYmwKpodVA7IV62loUoDuAsEO2KJAzZbzXko1hA4ytOHPOVq2?=
+ =?us-ascii?Q?WbolGTkaSae+u2vLZ1ts/LB7ufq1YDmGW7m3FZmL/U42sIBXCRNnVq4pnfAA?=
+ =?us-ascii?Q?NQgWj9tAC4CcqOYNJhW4qkUxEBphAXfLCaTipd5V6XdKEaxVEC942uoDXM/Q?=
+ =?us-ascii?Q?lKGdDiwapsWdZSRpOpJZIdrZWW8gZzcdGWJ6J+DwMzfwWB/PREPFYH1ErOir?=
+ =?us-ascii?Q?Twzg4qMKxFRytiJtRT44RrXF2bhPwARtGrqM4p0OM34yWbKpDCQm06kVoe2+?=
+ =?us-ascii?Q?3O/YOYZcppcdYfZkgR3ghvzQGvGiGQhCV58sfLqJZeCMF0roVHYTeIA2/MuZ?=
+ =?us-ascii?Q?skYe5VUSF1ftUJSWrs0eM/Np8ie+UEy4Di2WHJlqDgEOtzp7B/RBgxG5buxU?=
+ =?us-ascii?Q?O6aN3HXu6MPxcvd/qxRoKEBxmY6bBbWmDeSQEu4pt/ZTja+XuRpMMfPmUv4U?=
+ =?us-ascii?Q?cSMTR8vR1W8csoPf7kgjOrM3SV6L15six4MMczZtOjsCS81/81F8P7y8XgqV?=
+ =?us-ascii?Q?yunh5YNJXNDo5iOgr7ZJTOJUGPd3yuHFieGHf3XR2S2nQweHhX4btkHmHhGg?=
+ =?us-ascii?Q?9dov9y0JRfXk9tWlzwB7E/QmjdWIbmpUuV09D/MIMGOvM0LR3oiweKrPbRy0?=
+ =?us-ascii?Q?XSkVQGWGNGo6KcrQIBA/W/mH51ZpcGAnYMwrY+VTZ6VMoaw3SKFflJDD1jyq?=
+ =?us-ascii?Q?dkDJdOValLu0oZwUVL+NGIsuhN8Oto840DWwnb77zf13URpsHN0e9P+5IOcD?=
+ =?us-ascii?Q?duUS/ve+fg0tTkGhdmOkZs+8HY5e44zhvysYcsEvM3jMWtjg+Se4Lq6z3RRS?=
+ =?us-ascii?Q?g8ln1rlCkJAjwPsObFtwRHAnA6CG16fsgji6LLqut5KamV2IpW6N7igEI/fc?=
+ =?us-ascii?Q?atFzPKD5F5KZ+wvf3Vt5WbhGzXx5Z4050bdKzInPQOBCdN2Y9nzOsIuSKRoT?=
+ =?us-ascii?Q?s1QlROWB3XrlBh81cJ2gNijBa9aZARCSzOTpw/uZfHYmH7CHj+uCc2fYmNA3?=
+ =?us-ascii?Q?DKD0sZaR7r9Y/5ZA9TcczSc9okEIHdpaGu0Glw+aJLdR2/a2DBE7NMPpdVlM?=
+ =?us-ascii?Q?wGfU2+E+xLlTaQKmn2/d7eYMU0gGU8HYyW7NRUINTeRK1IJVnmT8Ili026zI?=
+ =?us-ascii?Q?LwJQO0bp6s76ASEr3RCHU19SKJlBvDtTbQ4IpgF/pcW9c7eePa+JmSxOydHE?=
+ =?us-ascii?Q?CyDSTjMGgL3X41CLS7noGdsu1u/2taZ59tLRZ7u9UbzHzCr1ZaB3ZPO+v1d8?=
+ =?us-ascii?Q?SWlFkft5+qoZqNvj9HNnulf6Wl4xAYmxn8Ad4nrWkw9SxE+Lwn0LEw2GqiPn?=
+ =?us-ascii?Q?QmNLMBJ+TcJqXVJOocuRympq2Rbx0fpDHzvxhjoe2Ld82Mu5C4X7rAw4hllv?=
+ =?us-ascii?Q?WM6b9hbuhf4f3ikiSrZcP1uE0K9FfAL40N7di0ttaRj6q3fWZIYjZXL1jhhi?=
+ =?us-ascii?Q?Ev6C9Yx2EYxhIlJKZSXnxgC8Qzd4idS2EY0pAZcwgJrfQ5ZPOM+4Hg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:atlrelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: gehealthcare.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2025 08:32:24.0590
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49a494a0-a989-4f13-9ee6-08dd849cdeb4
+X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[atlrelay1.compute.ge-healthcare.net]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BL6PEPF0001AB50.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR22MB3904
 
+Update our email addresses, from @ge.com to @gehealthcare.com, after GE
+HealthCare was spun-off from GE.
 
---=-Bb+h1mZfog+7aFPuGzRE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
+---
+Changes since v1:
+ * Include mailmap.
+---
+ .mailmap    | 2 ++
+ MAINTAINERS | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-On Fri, 2025-04-25 at 16:38 -0700, Andrew Morton wrote:
-> On Fri, 25 Apr 2025 17:11:10 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracl=
-e.com> wrote:
->=20
-> > Andrew - can we drop this from mm-new? It's breaking it.
->=20
-> I almost did, but David seems to have a fix.
->=20
-> --- a/include/linux/mmzone.h~mm-mm_init-use-for_each_valid_pfn-in-init_un=
-available_range-fix
+diff --git a/.mailmap b/.mailmap
+index 9afde79e1936..f8baaa6f49d7 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -289,6 +289,7 @@ Henrik Rydberg <rydberg@bitmath.org>
+ Herbert Xu <herbert@gondor.apana.org.au>
+ Huacai Chen <chenhuacai@kernel.org> <chenhc@lemote.com>
+ Huacai Chen <chenhuacai@kernel.org> <chenhuacai@loongson.cn>
++Ian Ray <ian.ray@gehealthcare.com> <ian.ray@ge.com>
+ Ike Panhc <ikepanhc@gmail.com> <ike.pan@canonical.com>
+ J. Bruce Fields <bfields@fieldses.org> <bfields@redhat.com>
+ J. Bruce Fields <bfields@fieldses.org> <bfields@citi.umich.edu>
+@@ -531,6 +532,7 @@ Mythri P K <mythripk@ti.com>
+ Nadav Amit <nadav.amit@gmail.com> <namit@vmware.com>
+ Nadav Amit <nadav.amit@gmail.com> <namit@cs.technion.ac.il>
+ Nadia Yvette Chambers <nyc@holomorphy.com> William Lee Irwin III <wli@holomorphy.com>
++Nandor Han <nandor.han@gehealthcare.com> <nandor.han@ge.com>
+ Naoya Horiguchi <nao.horiguchi@gmail.com> <n-horiguchi@ah.jp.nec.com>
+ Naoya Horiguchi <nao.horiguchi@gmail.com> <naoya.horiguchi@nec.com>
+ Natalie Vock <natalie.vock@gmx.de> <friedrich.vock@gmx.de>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f31aeb6b452e..0767f0177536 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15237,7 +15237,7 @@ F:	drivers/usb/mtu3/
+ 
+ MEGACHIPS STDPXXXX-GE-B850V3-FW LVDS/DP++ BRIDGES
+ M:	Peter Senna Tschudin <peter.senna@gmail.com>
+-M:	Ian Ray <ian.ray@ge.com>
++M:	Ian Ray <ian.ray@gehealthcare.com>
+ M:	Martyn Welch <martyn.welch@collabora.co.uk>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
+@@ -26644,7 +26644,7 @@ W:	http://www.marvell.com
+ F:	drivers/i2c/busses/i2c-xlp9xx.c
+ 
+ XRA1403 GPIO EXPANDER
+-M:	Nandor Han <nandor.han@ge.com>
++M:	Nandor Han <nandor.han@gehealthcare.com>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
+-- 
+2.39.5
 
-The symptoms only manifested when it got used in
-init_unavailable_range() but that's actually a fix for the sparsemem
-implementation of for_each_valid_pfn(), as David H surmised.
-
-Please could the fix be folded into
-mm-implement-for_each_valid_pfn-for-config_sparsemem.patch ?
-
-This is what it should look like with the fix:
-https://git.infradead.org/?p=3Dusers/dwmw2/linux.git;a=3Dcommitdiff;h=3D55b=
-ebbb093
-
-If you want to keep the fix separate, then that's the patch that it
-fixes. Do you want a commit message? I'll certainly give you a proper
-SoB:
-
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-
-Happy to resend the fixed series if it helps; it looks like you've
-already basically sorted it though?
-
-Thanks!
-
-> +++ a/include/linux/mmzone.h
-> @@ -2190,10 +2190,10 @@ static inline unsigned long next_valid_p
-> =C2=A0	/*
-> =C2=A0	 * Either every PFN within the section (or subsection for VMEMMAP)=
- is
-> =C2=A0	 * valid, or none of them are. So there's no point repeating the c=
-heck
-> -	 * for every PFN; only call first_valid_pfn() the first time, and when
-> -	 * crossing a (sub)section boundary (i.e. !(pfn & ~PFN_VALID_MASK)).
-> +	 * for every PFN; only call first_valid_pfn() again when crossing a
-> +	 * (sub)section boundary (i.e. !(pfn & ~PAGE_{SUB,}SECTION_MASK)).
-> =C2=A0	 */
-> -	if (pfn & (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
-> +	if (pfn & ~(IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
-> =C2=A0		=C2=A0=C2=A0 PAGE_SUBSECTION_MASK : PAGE_SECTION_MASK))
-> =C2=A0		return pfn;
-> =C2=A0
-> _
->=20
-
-
---=-Bb+h1mZfog+7aFPuGzRE
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQyNjA4MzA1
-MFowLwYJKoZIhvcNAQkEMSIEIBy8KcCc+fF86qyfa11nuIr+YrYTVaV/xl9Dwe3Mzc+HMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAE1XjvUqETwYQ
-Fi6Dt0mXFbk9r7kBv5JnxC1eKACBFQgvmA9gYg4MbXWkvX75XG1MumdeFs5u38KBvy8i/fIwRUCs
-ZC0fKaucHDKKekAQQbAmje8Vc01wr/zvIJV24eamd1Q/H4hI+sY/eDUJVTmR7L78Lb40cdAmdgV9
-Zd5D+r5bFan67bpy8zogWzK/0DIBRkyBB9z4Pg3DH7LZ+Rc9/ppqFYQjaHvkUqL1xZRaTGoJqoXx
-xZA4SeBUGZZ1aM4MyLzYUP0FesjA7dmbYT4Rc1KUGPt5c799aT/ANb694Peg260Kfw/G9R79iLzg
-ulIVdG2nU8EHtQ/v0jAHmSGXKSUXH4ZbsMRotfWbLwE+MikHAhZSedJzFc/HXNOqIsKpk2jlZhIA
-xxytMccGANc2Ddd7Uj8psP4JSgHHnSGtCYlJOEmivQP/mmEzRKI9K1N+rbra+E+0/KmyjiSGzJK1
-doHf+yRLAaR1vcU7igsOVoiDgbbsP3zfEn7IlnxHZ5PLrAo7NqCPvdsMzZJbCsGKax4D2wB1F5EN
-BzoXAqyeV4ApsIIcaRSsxEhPSo2Wco/rCmi60EDIGhUPSpJy1gn3tU/3xoev8q0a/ZzkSMGcaZs7
-BZO8C3EnBw5R/JcZxCNps8XZqDRJMWV7XLH96zlhmoW9AsQcNRwa8UGLY90l2AkAAAAAAAA=
-
-
---=-Bb+h1mZfog+7aFPuGzRE--
