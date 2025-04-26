@@ -1,142 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341E21C36
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 09:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDB31C36;
+	Sat, 26 Apr 2025 09:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745658504; cv=none; b=g+IDr0eznQ8+2zXxSSqCd7pn4cTWps0RAwgyN2OBvOXZCmSbCympFkkMRR6TIxwwbYfXL/zgrl8eMvIzjY7n5wyS6lMIKRuSFpID+ouLUGt+H+oQAFVCaR3/V1tCdnaV3yXd8niEeDsSPYKImw77J3w4wn9u+EvlqUoQCouNXjM=
+	t=1745658664; cv=none; b=Hx0ZfeRzySsl5PQMhC46eED9/qQTY6CPt429zFLpvESW4kwQ1JKCLqxgWeMSaSzTeKrhT7L5GTcOErAWSvVqeizic2EOKXCPLSYHqcGEwGkrLE4ro/ILg2Byw+uv2d9CCeUI1n18CPYcLnnPRfk2vXlfXsnu05LV+BPmpFqKBqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745658504; c=relaxed/simple;
-	bh=gtPGdDzl64Mz9Zx1cUzJOISLq2z3aPslFucPHuiO+fA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2h+lekzQt6BjGPrZ/Wffu/ltqE6+xS1ITibC6gMFrmxo1S1zOIKjIQIbwHpBskmwPgJVQ0mFyW8fzs8vk+MYJL5zIlNbQxUsec5RapMn/wulN2N2CDj5TW8uFejk/2KgtFdozbLuS3BPe4WiZfKMx1iPZKltL8CyflvLfJwpYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sn/xHeda; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745658664; c=relaxed/simple;
+	bh=FtQjZM5OpR8eTj/Tk+/peoGkalxU+ZbYVlDYxiH1EPI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cGCwaDzMuM4OhJRae3ePQ10AssO6K13f7CVBDjX+6NAy83WZ7pcXLFLa5APuauNl4QRjPGBd/DkHQhgjF2kx/vjT1eKtXtrxYETD2CtEx3xdarsdH4C6L3rXoO8LGw6prIz1eJOryeo5fK8rs8BDkY6NbQVB0JQHlkehkoB354U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bpo8Q55o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sn/xHeda"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D666CC4CEE2;
-	Sat, 26 Apr 2025 09:08:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bpo8Q55o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F766C4CEE2;
+	Sat, 26 Apr 2025 09:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745658503;
-	bh=gtPGdDzl64Mz9Zx1cUzJOISLq2z3aPslFucPHuiO+fA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Sn/xHeda0Ce/B3kGA2mC+8qnGHbSm7nRkIFCRQ4wp1KtCf3BA5YM6ubsDrAxhrNE/
-	 XpJz4rKh7lY7OmLGJ4j1ic0bQ3bO68Y/U4d7Q45XLE8O+Ey09zNZChO6EYE3AZZGKF
-	 pGD0qSkvNVB+7dbncqBBE5v+UXk2OvCXzXYsTnsHF2uSwGmGj6pK0KMyYK1k0H82KI
-	 2nfHXMnOetJXD0aNsSAiONei8f2sG6d5Uvnx4qqg18CPw7Cj4JwxcQZ5+E6tMa31nq
-	 pBuE2iEPSKmxHIf1v0PjymHn5e/rOag3QbSAkdWmEHlNRehhau7oZ2HQSFoZgupLJd
-	 /MBQc3+mu0reQ==
-Date: Sat, 26 Apr 2025 11:08:17 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] [RFC] x86/cpu: rework instruction set selection
-Message-ID: <aAyiganPp_UsNlnZ@gmail.com>
-References: <20250425141740.734030-1-arnd@kernel.org>
+	s=k20201202; t=1745658663;
+	bh=FtQjZM5OpR8eTj/Tk+/peoGkalxU+ZbYVlDYxiH1EPI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Bpo8Q55o67h7IwV7XIqnLMwJzS5hk0JlwLkWShp8X/AuNAuzFZIGLbhEhwmORDQll
+	 utyYeCKtBH02BDpXzFi5Q1FKvNhyPsZBt461UT/aAjxLE4OiGapNZriDHHI8l+7QXr
+	 n9eotkJikcjBuB5HJJspSA4xt66VwS5Fo+237shW5zLiSgUeEOqQVBAqBD1KGKoxqD
+	 moj7nfOPSMrCmLKbKDLYqEowYy+npb3+2hA2IE87vcQa2omMyyLmyXIFr7iaKWGtR4
+	 336OAdWEBAX7Zrbd0jqsolxYv5QUou7cyANxX79PsDPK/IGBihIfL/m1APtOMPUOki
+	 +UAtUVW0IVm+A==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-310447fe59aso34978481fa.0;
+        Sat, 26 Apr 2025 02:11:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVXcg2H3aO/JsKChBj/Ciz6dzj9fF3JbFbTQlyMZbWFw1zGtH4bZ3vI7uSRs6JtKRlNNcIFumKacwFlAbL@vger.kernel.org, AJvYcCUbIOkyGUNUbYDccaYtZSPFbIyLZD07ays472zI6L71K+79I5sgQzwvk4hv0Z++DIksv/zqmoxmzsp4Lg==@vger.kernel.org, AJvYcCV8MbfkuudArvIMO77e0xet8FcPNmXJH+AuNf6+tzbVN8IFYl4a52Nys7eD12d6NlMQ9iwE0COQv9GTvQ==@vger.kernel.org, AJvYcCVze77QoYm8t5ch0Gj6ppTcN2NY9jUUCEjBJzSGVHON6hDEE+D5W1x5WsUPI+FVooPn0kdSxqjcgh/bMA==@vger.kernel.org, AJvYcCX9ki7npoaarmMGKorsoXM6y3z/DbvPYzm8YWotznm+y0iVijzd8WqtX2EEoSlyNXg6MSviQHwQN/jg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+DTEqIl66ty9q/W21YiArKAb4X3mCBVtmoBk2yNz9NXvUfXQT
+	jvLnORbXPKZwMAzrklqPbzBoMrRW0AN6DKVcdYFKy7hKYlWJIQleL2xFqLr2riCxwbdQv0nZkJC
+	iLt16FazptJXWNNg5ib+ViH54Q4A=
+X-Google-Smtp-Source: AGHT+IHLH5VeWV0U4iLUEk8k7RFRILjWBSdawBeD90fjLlL8DQGJ5x0W8iCulQNonT8aL01WrKimT1BHnCLrasm95sk=
+X-Received: by 2002:a2e:a5c9:0:b0:30b:bba5:ac18 with SMTP id
+ 38308e7fff4ca-31905b6a5f0mr15804561fa.3.1745658661713; Sat, 26 Apr 2025
+ 02:11:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425141740.734030-1-arnd@kernel.org>
+References: <20250426065041.1551914-1-ebiggers@kernel.org> <20250426065041.1551914-3-ebiggers@kernel.org>
+In-Reply-To: <20250426065041.1551914-3-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 26 Apr 2025 11:10:50 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG+stJai+pQqAL7QwZHXV2a-hP4jjQKH7O2cBm1GK2aOA@mail.gmail.com>
+X-Gm-Features: ATxdqUFDuzRMzSvvkZhhFNt-cqI-JOG2ysnGNbi6gxycTT7GyUoo4km_JN24bFc
+Message-ID: <CAMj1kXG+stJai+pQqAL7QwZHXV2a-hP4jjQKH7O2cBm1GK2aOA@mail.gmail.com>
+Subject: Re: [PATCH 02/13] crypto: arm/sha256 - implement library instead of shash
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org, 
+	linux-s390@vger.kernel.org, x86@kernel.org, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-
-* Arnd Bergmann <arnd@kernel.org> wrote:
-
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> With cx8 and tsc being mandatory features, the only important
-> architectural features are now cmov and pae.
-> 
-> Change the large list of target CPUs to no longer pick the instruction set
-> itself but only the mtune= optimization level and in-kernel optimizations
-> that remain compatible with all cores.
-> 
-> The CONFIG_X86_CMOV instead becomes user-selectable and is now how
-> Kconfig picks between 586-class (Pentium, Pentium MMX, K6, C3, GeodeGX)
-> and 686-class (everything else) targets.
-> 
-> In order to allow running on late 32-bit cores (Athlon, Pentium-M,
-> Pentium 4, ...), the X86_L1_CACHE_SHIFT can no longer be set to anything
-> lower than 6 (i.e. 64 byte cache lines).
-> 
-> The optimization options now depend on X86_CMOV and X86_PAE instead
-> of the other way round, while other compile-time conditionals that
-> checked for MATOM/MGEODEGX1 instead now check for CPU_SUP_* options
-> that enable support for a particular CPU family.
-> 
-> Link: https://lore.kernel.org/lkml/dd29df0c-0b4f-44e6-b71b-2a358ea76fb4@app.fastmail.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Sat, 26 Apr 2025 at 08:51, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> From: Eric Biggers <ebiggers@google.com>
+>
+> Instead of providing crypto_shash algorithms for the arch-optimized
+> SHA-256 code, instead implement the SHA-256 library.  This is much
+> simpler, it makes the SHA-256 library functions be arch-optimized, and
+> it fixes the longstanding issue where the arch-optimized SHA-256 was
+> disabled by default.  SHA-256 still remains available through
+> crypto_shash, but individual architectures no longer need to handle it.
+>
+> To merge the scalar, NEON, and CE code all into one module cleanly, add
+> !CPU_V7M as a direct dependency of the CE code.  Previously, !CPU_V7M
+> was only a direct dependency of the scalar and NEON code.  The result is
+> still the same because CPU_V7M implies !KERNEL_MODE_NEON, so !CPU_V7M
+> was already an indirect dependency of the CE code.
+>
+> To match sha256_blocks_arch(), change the type of the nblocks parameter
+> of the assembly functions from int to size_t.  The assembly functions
+> actually already treated it as size_t.
+>
+> While renaming the assembly files, also fix the naming quirk where
+> "sha2" meant sha256.  (SHA-512 is also part of SHA-2.)
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 > ---
-> This is what I had in mind as mentioned in the earlier thread on
-> cx8/tsc removal. I based this on top of the Ingo's [RFC 15/15]
-> patch.
-> ---
->  arch/x86/Kconfig                |   2 +-
->  arch/x86/Kconfig.cpu            | 100 ++++++++++++++------------------
->  arch/x86/Makefile_32.cpu        |  48 +++++++--------
->  arch/x86/include/asm/vermagic.h |  36 +-----------
->  arch/x86/kernel/tsc.c           |   2 +-
->  arch/x86/xen/Kconfig            |   1 -
->  drivers/misc/mei/Kconfig        |   2 +-
->  7 files changed, 74 insertions(+), 117 deletions(-)
+>  arch/arm/configs/exynos_defconfig             |   1 -
+>  arch/arm/configs/milbeaut_m10v_defconfig      |   1 -
+>  arch/arm/configs/multi_v7_defconfig           |   1 -
+>  arch/arm/configs/omap2plus_defconfig          |   1 -
+>  arch/arm/configs/pxa_defconfig                |   1 -
+>  arch/arm/crypto/Kconfig                       |  21 ----
+>  arch/arm/crypto/Makefile                      |   8 +-
+>  arch/arm/crypto/sha2-ce-glue.c                |  87 --------------
+>  arch/arm/crypto/sha256_glue.c                 | 107 ------------------
+>  arch/arm/crypto/sha256_glue.h                 |   9 --
+>  arch/arm/crypto/sha256_neon_glue.c            |  75 ------------
+>  arch/arm/lib/crypto/.gitignore                |   1 +
+>  arch/arm/lib/crypto/Kconfig                   |   6 +
+>  arch/arm/lib/crypto/Makefile                  |   8 +-
+>  arch/arm/{ => lib}/crypto/sha256-armv4.pl     |   0
+>  .../sha2-ce-core.S => lib/crypto/sha256-ce.S} |  10 +-
+>  arch/arm/lib/crypto/sha256.c                  |  64 +++++++++++
+>  17 files changed, 84 insertions(+), 317 deletions(-)
+>  delete mode 100644 arch/arm/crypto/sha2-ce-glue.c
+>  delete mode 100644 arch/arm/crypto/sha256_glue.c
+>  delete mode 100644 arch/arm/crypto/sha256_glue.h
+>  delete mode 100644 arch/arm/crypto/sha256_neon_glue.c
+>  rename arch/arm/{ => lib}/crypto/sha256-armv4.pl (100%)
+>  rename arch/arm/{crypto/sha2-ce-core.S => lib/crypto/sha256-ce.S} (91%)
+>  create mode 100644 arch/arm/lib/crypto/sha256.c
+>
 
-While the simplification is nice on its face, this looks messy:
-
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index a9d717558972..1e33f88c9b97 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1438,7 +1438,7 @@ config HIGHMEM
->  
->  config X86_PAE
->  	bool "PAE (Physical Address Extension) Support"
-> -	depends on X86_32 && X86_HAVE_PAE
-> +	depends on X86_32 && X86_CMOV
-
-Coupling CMOV to PAE ... :-/
-
-> +config X86_CMOV
-> +	bool "Require 686-class CMOV instructions" if X86_32
-> +	default y
->  	help
-> -	  This is the processor type of your CPU. This information is
-> -	  used for optimizing purposes. In order to compile a kernel
-> -	  that can run on all supported x86 CPU types (albeit not
-> -	  optimally fast), you can specify "586" here.
-> +	  Most x86-32 processor implementations are compatible with
-> +	  the the CMOV instruction originally added in the Pentium Pro,
-> +	  and they perform much better when using it.
-> +
-> +	  Disable this option to build for 586-class CPUs without this
-> +	  instruction. This is only required for the original Intel
-> +	  Pentium (P5, P54, P55), AMD K6/K6-II/K6-3D, Geode GX1 and Via
-> +	  CyrixIII/C3 CPUs.
-
-Very few users will know anything about CMOV.
-
-I'd argue the right path forward is to just bite the bullet and remove 
-non-CMOV support as well, that would be the outcome *anyway* in a few 
-years. That would allow basically a single 'modern' 32-bit kernel that 
-is supposed to boot on every supported CPU. People might even end up 
-testing it ... ;-)
-
-Thanks,
-
-	Ingo
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
