@@ -1,98 +1,173 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322D1A55
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 00:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE87C360;
+	Sat, 26 Apr 2025 00:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745625850; cv=none; b=m35cUzGzUNYux1rol53T4Ba+sc3q7p8M2UaH66xqnsmvQ6uhFK9IRnmvRGskkG06RjEnaqXLPXcHgl6XTSS/50m75k8SOfXk6snl9h5lJWUOh5OPJJmTT/0w12KpBp7OjcmQLKQeZBf3dV7Bzw6sUiibjcLB5hhc68XQpZBA4C4=
+	t=1745626033; cv=none; b=ZqYoiSweJ24+7XqzzTGYrx7rBf/GcdbPvc30eUFVT8haf2QU+OU0lP8TxriKXG5JLvAJy9hzUTm7eSGqJtXF1PInCKAhvA700BkG3u8+MgRC7bROftcyISLmzKpIo9U8jsCbicrqtKZnY9NHxE0883uWL9zfKntJaku2C+l2SkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745625850; c=relaxed/simple;
-	bh=MbjGITwUvtsTWjuSKgwhf+PF0YnV5wSJ6uOrmSM77cQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SKPQPpkKAUUFQgYFH37p/4s92ypgIacphPOZDcIDm5Z/gNqJz7i4H9SjUEtUYVr4ID4tBQlRn+MJhMz6flskpeFkBXsM4ekbPaqjG33hStdiJ5lOYZDdaJdgwl9gutaL6qDxgWk3e81n16Ss0EHFOeS/mVqZ7XijVoslhDM5rH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3H2Cl73L; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745626033; c=relaxed/simple;
+	bh=UoxqykoSJQYy0HuyseAsAhDvn5nbQ6gFG5I+BwMHNN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BYtoEDN/LE1D0D/DTmrjBAKIzwUInvoWWRf7g2k2dJL3s4QWO4mmRXt3J3Z8OqxyXPFPQYCvzQ5ZzdKWF/OQIkfEFW4uSUd/1EYZmc+Gj3iRrcoYz7VCwiPeklUve17YrFL4GUpn5T8+UPdFqArXF9mzoUSUKi3a5Zr//u+3PfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyxhD+pD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3H2Cl73L"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c560c55bc1so340977885a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:04:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745625845; x=1746230645; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2H1oHjaYjf3btHBmR82KW7qaxLzIr6eWZYLDaZIXmcA=;
-        b=3H2Cl73LULPRzCtAtynAIHw2koPnYbfFeWvphSoB6k56/I58ASwW2tZvn4KquXbVB/
-         S4klv3BJs4xbdqkAQNdZTqE8mSZogX09xr/z0NheIQqGYElUz8ynKnRWk9UdVZx19dAH
-         KdnN0XycDClLIObVY5ZSgLjgAHOMoo67pILiHQzaaoSCfF3lHtBvIG8LBSD7A5kXgZ1i
-         QagracVFAxQN4pXxVTMi9E3+Sk3eNp38fX04ixON48V7mDgY8j32/qmtzT4VxNn6wIdR
-         VhfOjvuJuoMDKHlQk4/eRJ7wJVYjYYBPRjeaHwWB721h8D4p01tDIbw8nG6LEjjCfuyX
-         +oDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745625845; x=1746230645;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2H1oHjaYjf3btHBmR82KW7qaxLzIr6eWZYLDaZIXmcA=;
-        b=FQP6+Whj4jHxT2zSsGcwM9eLWej4l+AkWe7iB33RonLgl481NQFrHOBcfIxYtoDu9K
-         K2vay7dzdphMz6G8CyYuLesoAp9xI+G0WB6BJpx/RiSEQsIkiWG8/0by6s3nPGjZn2lP
-         Gtg8cbZ8yp1dZYHcVe55Xw5hk1myzJgCpvmXPAlQJaKDEOPazFtlTlLPJC25+IvAr25F
-         t5YBp/z5ozRDARht0cGp+Mh1gQ6aYc++mkaEUqD0svyv+6zi9C9b8Wwy2ejwsfSeSkBB
-         YsxLbhVdAw14Vy7Qt/YBY+Y+paNxEGZaAvPFhwNhBamQYoGUQ51qzrNQ6VxwAkPSnEv/
-         ULHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDABdOsYzQuopUkgOY1ebjPiOSKWL2W26NemCE0CiQeE0/lgCGch8kRkBzPFVegCkm4IvWc0B9QhFO2nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW2sWMJ9HuoT9tQZO5XuWWNtLTAO7OyExPXQ/ek/p0hLB497oD
-	mtu3ABYRqQHKPUmDYxfEloWMc/NUA9A5ik7NKrlUEHDFGOL7DMGDjPez2HhhroE=
-X-Gm-Gg: ASbGnctsDp+DpopugVL1F6iPw7YlhR13pA4Uml7hxVuA2U0d4GRQpXO15H2fzYxNgcC
-	cwFr6CTgFeefJ41dnGF3PPfQvtoEJGQ1lv4DcppqdXGQ5Y5EaZpak8yyzKuX7uGYX3VOjTXywJ3
-	S+80WwkmQCmJe2idvXUT9iqaLJr7vamVk4HUoDRukbo3V60Elb+Pjg98Lr3GMOC9Hmc0DAi2NHN
-	jBN6tWv50DpHmHa5hb64NaLzZz9c92SKfBc4Z1f91EYgTSewwTKObOrt7y2Xm2O1dVXpfDo1hwV
-	KvSPrQt+lx2FPwWuQx+ASkpE+hTa1yIMMTBZ77tOUi0M8IZpzzV4z732ih3UxEnuPOIgreWi5UW
-	28JkUhw==
-X-Google-Smtp-Source: AGHT+IGS0yFE108vCgvzYUlSwZkDLhPa5LlGuOaJreW/ipzxWx8E59zBMc1i+DzyansBvoUWNu8AEw==
-X-Received: by 2002:a05:620a:414d:b0:7c9:1335:633e with SMTP id af79cd13be357-7c961975b8fmr676998685a.1.1745625844735;
-        Fri, 25 Apr 2025 17:04:04 -0700 (PDT)
-Received: from [192.168.0.188] (syn-174-103-227-163.res.spectrum.com. [174.103.227.163])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958c91abbsm283338185a.15.2025.04.25.17.04.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 17:04:03 -0700 (PDT)
-Message-ID: <7ad12473-6eb4-4cd4-a3de-be5255d84a44@kernel.dk>
-Date: Fri, 25 Apr 2025 18:04:02 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyxhD+pD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D51C4CEE4;
+	Sat, 26 Apr 2025 00:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745626033;
+	bh=UoxqykoSJQYy0HuyseAsAhDvn5nbQ6gFG5I+BwMHNN4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LyxhD+pDYH3mjbUMG//m/KUkrdANKLMw3grgt8i8YT5xwkE94n8Z2aiuf6XSevq2g
+	 cUHMR3b4atIiGWOAU3grWRCvFXXF0fcDQR09BX2ocOaaXlzO20JvFbpdLb030pXKxc
+	 iHdfSnyN+dCNzw4+GhYAxntVXppGpPrjCp0BG6a/GFkaJpRxyquZDQ14mKf65j2Sp6
+	 sygJeHT2VQPsZqXKH6uEHk75BD4CbiM1iIusPGtx9gatYZqOfJNEnMV4tOfBGZaR5I
+	 +nP5iiDOGtLZbU/uGNGP0nbT5COPK3Pp2Kkwx0/y0M6IG0h+FhlyjUZCHSUI1UE/40
+	 +hOxdd4ba+ONw==
+From: Kees Cook <kees@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	Maxime Ripard <mripard@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Natalie Vock <natalie.vock@gmx.de>,
+	Xavier <xavier_qy@163.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Maarten Lankhorst <dev@lankhorst.se>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] kernel-doc: Add initial binfmt docs
+Date: Fri, 25 Apr 2025 17:07:09 -0700
+Message-Id: <20250426000704.work.637-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iov_iter: Use iov_offset for length calculation in
- iov_iter_aligned_bvec
-To: Nitesh Shetty <nj.shetty@samsung.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: gost.dev@samsung.com, nitheshshetty@gmail.com,
- linux-kernel@vger.kernel.org
-References: <CGME20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2@epcas5p4.samsung.com>
- <20250415181419.16305-1-nj.shetty@samsung.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250415181419.16305-1-nj.shetty@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3675; i=kees@kernel.org; h=from:subject:message-id; bh=UoxqykoSJQYy0HuyseAsAhDvn5nbQ6gFG5I+BwMHNN4=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8ymv+MN5+cXzSpIM+axNt1BPnLo44Hs5T8Nn678GH0 zgkD3m96ihlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjIp90M//StpQIm+71lj3ER dbGc5rC16sK9oG6B8NT7/3J2Vvzfb8Hwv+6MpNf2ra1yyxmT2X/2xpx7+Wv5E7U1EYcuf26KLZ2 iygQA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 4/15/25 12:14 PM, Nitesh Shetty wrote:
-> If iov_offset is non-zero, then we need to consider iov_offset in length
-> calculation, otherwise we might pass smaller IOs such as 512 bytes
-> with 256 bytes offset.
+Adds a framework to hold the initial exec.c and binfmt_elf.c
+kernel-docs. Updates scripts/kernel-doc to allow leading whitespace so
+that embedded "DOC:" tags can be found that aren't at the start of a
+line so that in-function documentation can be found, like that recently
+marked up in binfmt_elf.c[1].
 
-As Andrew points out, would be nicer with a (much) better commit
-message. Your current reply has a lot of the stuff that should go in
-there, including a Fixes tag. With that done:
+Link: https://lore.kernel.org/lkml/20250425224502.work.520-kees@kernel.org/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: <linux-doc@vger.kernel.org>
+Cc: <linux-mm@kvack.org>
+---
+ Documentation/core-api/exec-binfmt.rst | 30 ++++++++++++++++++++++++++
+ Documentation/core-api/index.rst       |  1 +
+ MAINTAINERS                            |  1 +
+ scripts/kernel-doc                     |  4 ++--
+ 4 files changed, 34 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/core-api/exec-binfmt.rst
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-
+diff --git a/Documentation/core-api/exec-binfmt.rst b/Documentation/core-api/exec-binfmt.rst
+new file mode 100644
+index 000000000000..7e9b515a8107
+--- /dev/null
++++ b/Documentation/core-api/exec-binfmt.rst
+@@ -0,0 +1,30 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++======================================
++execve(2) internals and Binary Formats
++======================================
++
++Overview
++========
++To perform execve(), the kernel loads the header of a file from disk,
++searches through all binary handlers to find a match, and then builds a
++new process memory layout with the resulting binfmt, before transferring
++userspace execution control to it.
++
++ELF PIE Handling Notes
++======================
++.. kernel-doc:: fs/binfmt_elf.c
++   :doc: PIE handling
++
++brk handling
++============
++.. kernel-doc:: fs/binfmt_elf.c
++   :doc: "brk" handling
++
++Functions and structures
++========================
++.. kernel-doc:: fs/exec.c
++   :identifiers:
++
++.. kernel-doc:: fs/binfmt_elf.c
++   :identifiers:
+diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+index e9789bd381d8..e44b9b2e60ef 100644
+--- a/Documentation/core-api/index.rst
++++ b/Documentation/core-api/index.rst
+@@ -62,6 +62,7 @@ Low level entry and exit
+    :maxdepth: 1
+ 
+    entry
++   exec-binfmt
+ 
+ Concurrency primitives
+ ======================
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fa1e04e87d1d..0dca4c2cbbff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8820,6 +8820,7 @@ M:	Kees Cook <kees@kernel.org>
+ L:	linux-mm@kvack.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
++F:	Documentation/core-api/exec-binfmt.rst
+ F:	Documentation/userspace-api/ELF.rst
+ F:	fs/*binfmt_*.c
+ F:	fs/Kconfig.binfmt
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index af6cf408b96d..a2af8ac5acff 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -243,7 +243,7 @@ my $decl_type;
+ # Name of the kernel-doc identifier for non-DOC markups
+ my $identifier;
+ 
+-my $doc_start = '^/\*\*\s*$'; # Allow whitespace at end of comment start.
++my $doc_start = '^\s*/\*\*\s*$'; # Allow whitespace at end of comment start.
+ my $doc_end = '\*/';
+ my $doc_com = '\s*\*\s*';
+ my $doc_com_body = '\s*\* ?';
+@@ -2261,7 +2261,7 @@ sub process_file($) {
+ 
+     $section_counter = 0;
+     while (<IN_FILE>) {
+-        while (!/^ \*/ && s/\\\s*$//) {
++        while (!/^\s* \*/ && s/\\\s*$//) {
+             $_ .= <IN_FILE>;
+         }
+         # Replace tabs by spaces
 -- 
-Jens Axboe
+2.34.1
 
