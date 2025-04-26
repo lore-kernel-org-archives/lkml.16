@@ -1,109 +1,140 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D5B1917FB
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 18:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EC4757EA;
+	Sat, 26 Apr 2025 18:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745690926; cv=none; b=qUCdpDpgIue20AnLCiiRYcWVRx3PXHwXcDx35r0Fp8V5QBifIG9kfOhoTearfBuGCxJbIhT5IilkZU1jclPDWzNY5dwT0+sDElgTy4Ccl1nyGzkxw2SzEhueAFfxbHimN5I4BjJC27VHfJxaMnNzERvmN5HTtuPi9wIN8ghk+kk=
+	t=1745691210; cv=none; b=WMXzSrkbfGjKf46dR80Us4QoOVNwobv3/OhQhGECDY5lHZShJIA9YdTsIIQBvCk+dRhb/I6RI15BtupwgimAVjb6aUhZxnvl/03DpcEJhTf/zX4wM88tqBljQQytVRAnqC7957N6Lj+r2JhnUa8jGEqj0shofproqWQf7AXbwQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745690926; c=relaxed/simple;
-	bh=y4ya+INrEVixoCif62MVtLyM7OQQtp5jHaZL/WHf6Rs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rT+1oK5DjhsYYbe9PfW2UJF7e9Jbc8ITnpzgPbV5d/eTR+c+yDRXFzZvGN8gPZ9FwAwkvGMc/VMcQp1bvYRx9EYKVrjfwKom0+rSM4N6NbevpgpISYNXcIitVNsyIOGyc7URsOwnW5DrWWonL56IWXevoruFBm0dxpUR+vsGqR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OY51rKhz; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745691210; c=relaxed/simple;
+	bh=LhE4SeXnk5k636Fq+ooPMjm/NrlC4oZZROzZSTVqIvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OtQaHHDkVfJisqH2enJd0uUigdk+cellrk3ArP0jWT0IU++YFbAsZhSkvWotFo70Oe0K9FofLWrX+FkQEOf5m/+5aq2emmR5UZPaqnPPKFw8X6n+jcqtAHBXZ1sOVZes20pSl9lwnPeDFpJEdX4Tcygpxdkw+qQZyVU11DiMwtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eIC0dwYr; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OY51rKhz"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736a7e126c7so3235416b3a.3
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 11:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745690925; x=1746295725; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bhX60juYce9oJjVZnoa2KcWxhL21D5ai/fJlhe3KT5I=;
-        b=OY51rKhzu1JdD3HnmHJV3ZKhzABV9dhA1TXaPLLqwipoDTrbLB5vwxsGo9qZb7dECU
-         XCs3fDgVUtyGf9qjw9CRCB1m87ZU7pFlRne4LFVPCnew84WFwPJMQJwmazHoYi66J7aE
-         YlaqkOQ1WnVzuwRGXQFcFWmawUxpQxvl9dAil7HMDS8IqyV/bHz+F0uN/9CbLvxswZFK
-         FcLGntmFD7SpXf2glj7yj1Kjmmz784ocmf+6VdXnRwopmncOPMfpp2LXHJYy7TM7RzXz
-         McY6Tj14jPSGXtKu7lAntw6QsLpGT5qVMvSa6wR6acKup7fyL2A/v/Ni0RKJ1908arBO
-         sbHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745690925; x=1746295725;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bhX60juYce9oJjVZnoa2KcWxhL21D5ai/fJlhe3KT5I=;
-        b=VnQLVfqNU3j77b/nAVphSnxta5JijtCUvk15o5P5YFrk9Vcm0t7KP3gs23RbdmpgSb
-         88OPbrTiwWlt6RKK6mvq7g8hEjUNIwfUdI+9/txCuE6Ju8je6StxXT8AYaBG37XrCCUH
-         RfvutP9DmtWjn0kWz8jkHVmqnNdE4EAZyae5F+uqW1uqgS9sbhrdtDtQZNDa2QgAWxKS
-         01NfvEwhV5wtxS9fYGhFqcsrMYY8u10FIq7Ueoe4us9hlm+ysdbpZappHDu71l2sLPnO
-         oOyDlw7nfY/UyAseOVa77J/daGwoWwkzvfCfoA9JTnNrO+vNhM0zH5xrvaTIinSJrNoo
-         bnEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVa0SIIhAqGw5GFCRzk98c30eQ6sHOt5FtIY08P+5NdWWXVE9cNIlI9hrtsMXmUKfeBkqYVXbJhk03NDNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgXBsJB8r5xxhX5WxuNat6CxprahGDk4AoaZ1rAr2j4/lnztw1
-	HWcIYFFwBX10Q9FoysI5eIzO1CfV/3qHaJpToidm4EyhxIAnSA5V
-X-Gm-Gg: ASbGncubpyOFVQ/WsH6M/JJfUZz3w0kZE8ULqJZphonu8WIPGtNbd9Slxea1kwyDFjt
-	s+WMmqgWUmXaqlrir6euoAXqLdOuptUPmEpss2kWxo2Lfhzys8IyL8Qd7Yt8gbNICvPggeRc1LQ
-	2m4bDbVaNbCF0wn3hvnrvyM7cNHbx0q2VpZImla6TuPU7FuYQyLCKBU7oAGJnxUps8Jpz+Ig4no
-	F4CghxtexCEGS2jf76Yin5Q4EG5sj0Kk5F9muwwLUAYmNBWM/6Wl7z9Qpe2g1TTlS2fMlbkcz5c
-	PrdnDi2ze3siXjLwbG5V55S50sTNYOGvOTB4biXKew==
-X-Google-Smtp-Source: AGHT+IHKYHk8tYB2+bPO+mVa5uOZOMvO77Bd8R7LCrZBAekBmdc86v0OFmQ6Z46ePtfA09/qISQZlQ==
-X-Received: by 2002:a05:6a21:9984:b0:1f5:8d3b:e272 with SMTP id adf61e73a8af0-2046a404462mr4446789637.1.1745690924854;
-        Sat, 26 Apr 2025 11:08:44 -0700 (PDT)
-Received: from pop-os.. ([177.21.143.178])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a995a6sm5256274b3a.139.2025.04.26.11.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 11:08:44 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com,
-	surenb@google.com
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>
-Subject: [PATCH] mm: alloc_tag: change the KASAN_TAG_WIDTH for HW_TAGS
-Date: Sat, 26 Apr 2025 15:08:37 -0300
-Message-Id: <20250426180837.82025-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eIC0dwYr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745691208; x=1777227208;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=LhE4SeXnk5k636Fq+ooPMjm/NrlC4oZZROzZSTVqIvs=;
+  b=eIC0dwYrx584fnOqt9SSOqLjM35RC14fkB3Tv7PnYWQ12dikt3uxRdpv
+   atGXDK6gITfsNlaO7Ui9kPtbkhHE0hfb9TgR/dBCtsukf/VfMUVlw2XIJ
+   KGv3DNRD/sycDD+UwgxnG+nN6/L3VNKmy3HkB6luzeEbDYCz6pI/ARWXv
+   y/c1ZvDl/VyEG33mDL73I4poVlmT4ay6PooALbh/3HO64igPFQIChHga3
+   Zt/rqkXUk2bNLrMBSWycse/H1dJkAY9467sp8pxXszLr5V5M6R2CZoaC+
+   AubbgODOuYUoCGheNRm/SkBkhsjK480sy4KtmTGdNh9fVW0jxLAS5YTIv
+   g==;
+X-CSE-ConnectionGUID: P5RG7YP+R8qz9tj/wi0/gw==
+X-CSE-MsgGUID: pmqfjp5iQ3Gw0EN/ublVEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="49977645"
+X-IronPort-AV: E=Sophos;i="6.15,242,1739865600"; 
+   d="scan'208";a="49977645"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 11:13:27 -0700
+X-CSE-ConnectionGUID: OfhAktAPT46l2213WsEbAQ==
+X-CSE-MsgGUID: tOiVkebtS166gX/g5t8D8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,242,1739865600"; 
+   d="scan'208";a="133657364"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 26 Apr 2025 11:13:26 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8k1j-0005wp-2V;
+	Sat, 26 Apr 2025 18:13:23 +0000
+Date: Sun, 27 Apr 2025 02:12:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jiawen Wu <jiawenwu@trustnetic.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+	linux-doc@vger.kernel.org
+Subject: drivers/net/ethernet/wangxun/libwx/wx_ptp.c:415: warning: This
+ comment starts with '/**', but isn't a kernel-doc comment. Refer
+ Documentation/doc-guide/kernel-doc.rst
+Message-ID: <202504270243.xykBkzwC-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-the KASAN_TAG_WIDTH is 8 bits for both (HW_TAGS and SW_TAGS), but for
-HW_TAGS the KASAN_TAG_WIDTH can be 4 bits bits because due to the design
-of the MTE the memory words for storing metadata only need 4 bits.
-Change the preprocessor define KASAN_TAG_WIDTH for check if SW_TAGS is
-define, so KASAN_TAG_WIDTH should be 8 bits, but if HW_TAGS is define,
-so KASAN_TAG_WIDTH should be 4 bits.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: 2d8967e86c9b12e7b8a82a531572186b2b97e804 net: ngbe: Add support for 1PPS and TOD
+date:   9 weeks ago
+config: arm64-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250427/202504270243.xykBkzwC-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504270243.xykBkzwC-lkp@intel.com/reproduce)
 
-Suggested-by: Andrey Konovalov <andreyknvl@gmail.com>
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- include/linux/page-flags-layout.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504270243.xykBkzwC-lkp@intel.com/
 
-diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
-index 4f5c9e979bb9..760006b1c480 100644
---- a/include/linux/page-flags-layout.h
-+++ b/include/linux/page-flags-layout.h
-@@ -72,8 +72,10 @@
- #define NODE_NOT_IN_PAGE_FLAGS	1
- #endif
- 
--#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
-+#if defined(CONFIG_KASAN_SW_TAGS)
- #define KASAN_TAG_WIDTH 8
-+#elif defined(CONFIG_KASAN_HW_TAGS)
-+#define KASAN_TAG_WIDTH 4
- #else
- #define KASAN_TAG_WIDTH 0
- #endif
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/ethernet/wangxun/libwx/wx_ptp.c:415: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+            * When PPS is enabled, unmask the interrupt for the ClockOut
+
+
+vim +415 drivers/net/ethernet/wangxun/libwx/wx_ptp.c
+
+   408	
+   409	static int wx_ptp_feature_enable(struct ptp_clock_info *ptp,
+   410					 struct ptp_clock_request *rq, int on)
+   411	{
+   412		struct wx *wx = container_of(ptp, struct wx, ptp_caps);
+   413	
+   414		/**
+ > 415		 * When PPS is enabled, unmask the interrupt for the ClockOut
+   416		 * feature, so that the interrupt handler can send the PPS
+   417		 * event when the clock SDP triggers. Clear mask when PPS is
+   418		 * disabled
+   419		 */
+   420		if (rq->type != PTP_CLK_REQ_PEROUT || !wx->ptp_setup_sdp)
+   421			return -EOPNOTSUPP;
+   422	
+   423		/* Reject requests with unsupported flags */
+   424		if (rq->perout.flags & ~(PTP_PEROUT_DUTY_CYCLE |
+   425					 PTP_PEROUT_PHASE))
+   426			return -EOPNOTSUPP;
+   427	
+   428		if (rq->perout.phase.sec || rq->perout.phase.nsec) {
+   429			wx_err(wx, "Absolute start time not supported.\n");
+   430			return -EINVAL;
+   431		}
+   432	
+   433		if (rq->perout.period.sec != 1 || rq->perout.period.nsec) {
+   434			wx_err(wx, "Only 1pps is supported.\n");
+   435			return -EINVAL;
+   436		}
+   437	
+   438		if (rq->perout.flags & PTP_PEROUT_DUTY_CYCLE) {
+   439			struct timespec64 ts_on;
+   440	
+   441			ts_on.tv_sec = rq->perout.on.sec;
+   442			ts_on.tv_nsec = rq->perout.on.nsec;
+   443			wx->pps_width = timespec64_to_ns(&ts_on);
+   444		} else {
+   445			wx->pps_width = 120000000;
+   446		}
+   447	
+   448		if (on)
+   449			set_bit(WX_FLAG_PTP_PPS_ENABLED, wx->flags);
+   450		else
+   451			clear_bit(WX_FLAG_PTP_PPS_ENABLED, wx->flags);
+   452	
+   453		return wx->ptp_setup_sdp(wx);
+   454	}
+   455	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
