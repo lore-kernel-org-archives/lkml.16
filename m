@@ -1,142 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF4F12B73;
-	Sat, 26 Apr 2025 13:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF82A55;
+	Sat, 26 Apr 2025 13:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745672416; cv=none; b=At8aoJt8vhSaMMlKEkaLT79RtCSjB0Tcwrs/N1sSWnJ+JcziABCsi7aDtDvZPuz+KTJb+dmOqjnzOHDzj6wImy6Nr/CYGAAPXvR/6hV/L0AYuussT6TtMxSHu6gRd/Ytig7hvwRBgYMWti/9ltQsA/PKbPcpozRRuRmDOy9y2yg=
+	t=1745672531; cv=none; b=gjnF8r/aEN0mZn9+n/55E5sFlDNfPGigceloYpqpGA+DGlrl9O6BZaZYmust1Ha8aa0MEfzdcD+V5mQgrOy++Jg9HleJg7UObGAZIjFW6HdcifyrxCZgqaqcR11Nrta7XUvgYz2JlrxA1yJqwBq00tajuurI/3KlUXXP6IhBozM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745672416; c=relaxed/simple;
-	bh=8lzPKSvLL4xki+UzGTVEQf754K7mp3zBbel/pXCugbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ctwCC81eSunxlG3w+20csBbAi/yWm7cfObXsjeIcHbO8rku7eCu2/6bGCTeffnh+i48KsJTLlEOXEq8NCDgPpAL6yKWSveDyyaSjbQ58Iom2OrR+L0dolaLOtSQPW6PXceX29f7VDhfJfumXZMg4YVWjYOAAPFSLRX9cX6SqNsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSiYylpS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745672531; c=relaxed/simple;
+	bh=OKE665Bl2Yy8MukRJPxgjLpludfwT5ohBBeio0C4TTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hd4sTuaHB5T7VkScECLMBuOwe4lWOhYFN7eEbPgBXPG6BUX/SxvI9mWKJKVuKSlh3rNAEvqsAt5t/E2YLjaPdjrIOsxXknmEiMUcfnzyY0734s6PgTYSkRuDBSShQf2yjqzbCqBrUKrEl4TkK8cNwy/5gq3/QXrkV7AbJr0nGoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NM6BgfME; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSiYylpS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9175FC4CEE2;
-	Sat, 26 Apr 2025 13:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745672414;
-	bh=8lzPKSvLL4xki+UzGTVEQf754K7mp3zBbel/pXCugbc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SSiYylpSkUnY4vU6FWLD53bdXMb8K4/xbF7keJtMniGrZGt2QiNuvhYRbGDO/HQUN
-	 vlYEBODjW3cBYi96AG3GAj90UeBQ1b7HILIdpyE3fL44wJ/DfVgelqT7PbruguU+J9
-	 qZ2U865ygnV6yy/ww/ig75AMri4siLaNKsthxbx/+Rl5n1LHdB+CDWY+JUrGd6hNCv
-	 K5AGmSzjgDuRNqQjaf2x6Pm1zhIPciPP4aMUdhTJO1ekR8r+ZYxEVMFMS6pZIrBvRM
-	 zFvnbjkA+zbB9MLt+ygHX2RpPDJXrHyd/SdOzCg6rcPd4QB6W/RNHhgArjHZuxXLo8
-	 ub2zW177r8Nxw==
-Message-ID: <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
-Date: Sat, 26 Apr 2025 08:00:09 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM6BgfME"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so5135435a12.2;
+        Sat, 26 Apr 2025 06:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745672527; x=1746277327; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9+DYeZqYBcR9JQccEFP/h/dHS2RjGn5FPfmXbvBGKsU=;
+        b=NM6BgfME7hhDSve+4s3U8FfjjelTzHcOmkHZWPfXFhFMKBfNv0xRwSMrLCYbkKmL6H
+         sYBfVoTsbiEzZQ+6dDCXuFqjfjOOGB0A6gRhc/lXXAm+y9KXN9WVmy4stG13tfO6fV9Y
+         1Wh2DA+gkqjM8xAreZfGwGpTQhFDYEolLt0q0HnE+0klyaw9412l9Ur6Yf5fLVrolLww
+         Lbi8Iy8XWDlt73uJbhsWV6//LYXDPTX/4v8ZlhL9yq3s2xnmc9W+I5NVMZU1Olo+VDiB
+         Ft59HFRuvak3bqEwamR/DH8/FYLcqPaFUgm3TvWp56dbxbd94arwBgZxhcxCdR+9H3gu
+         mB3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745672527; x=1746277327;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9+DYeZqYBcR9JQccEFP/h/dHS2RjGn5FPfmXbvBGKsU=;
+        b=oQe5OlMTeiTXbM67+zE+iiHd5OOjDLZGrLJ9DfBp/NSjfWI8Ma3o1lwh5XiCVvwHz6
+         eDMRa1Nal8lXleehwUywXc0G3O1ApyKDFRKPZYs/1v8KLeStfMP97QakxsMLg9A6Tg3O
+         8KFh+okjm5phXp5hTY5e4DGc7/tr07bagnhc+wVL8XP+vq6QyngwvhY8YCn/FJ6nvF7R
+         phlpMVU7cwYnqMb1ObbjZLXqaqL66FchZXGCbWjVFFjAFZeNnsgH7sot27FD2P2dvAIG
+         4VUY/XbqfS+0NwLCAiXqv57aqKZ5mH8BzbGQgsL+t3RfM5a84ABGFZiCmU9L63Cwvbcb
+         iitw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaXRD+ZxlCLAcoZxmW8dYMadjNfouq/PnupTVd9ru6+GzYzmBbNxX97KEr0yNWDqk/Mp7CW3bGP+TwCyDJ@vger.kernel.org, AJvYcCVp+IKCsZGlclw1K7BEGGJVFpJANyM+O8jKYwsF5WMbHouO8mcx3CJmCXfwusxX1jbxpd1P0R1FoTSezJH+aA==@vger.kernel.org, AJvYcCWlbrkO5eoEcm7A2oBAy3MCB34CFaVg1fTvhwTpQcpt2gt6+qrNjzkHxZR0OyRsOi6+cza/viJHASk4@vger.kernel.org, AJvYcCXBEfC6/s05/9uMMHVW7lOYIYFTxkBS15AGTtvBzvVI2TUCsgj2x/1rv8GBT/CyPECwLki+UDyHFcOc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3wVq9Ei5gqqm6O2NSNk0ZL9Vctay+um64N9TCatKWxfmR0ctw
+	BlXeZuHtAM1AkGAK4SQKCmqF622JPt182O00wgx6MTtPSyzoUvU=
+X-Gm-Gg: ASbGncvPMZXN530AkRol1587JAHJO0yvc2bBxO+r/GbkLVrYZ3NJj3HV1SkeDxzN6lo
+	L7qbbZYQQG6YhrUhRA9e+ncSN495FnND4FAtLSajRlFzf0i6VXdkjFKppL9foxlGM+z8A6uk0xT
+	yiz+YFuWfkgNS9PboeTupBA+hVdMwXTmoFVU0LuVktCIeeAobIGolt4zp28V7ajxozdcNOJBK7C
+	4KSTtq8JEmCtbY05BMndtzrIBd1fQ7bzzyj0nx32NL2g8IJAXrBJjKpETAMWLfjq0UBkl6nR9Zb
+	a2AQD75TgooPVob2Z62BFfZnEB25IvreQixLJFcmzAGtQQ==
+X-Google-Smtp-Source: AGHT+IGqr0lvrcpl6TuiVabgrcL04bTpP2on4P6isYpjsk7p+9fVD7HOSA4ODagyOwexvut7iubt0A==
+X-Received: by 2002:a17:907:6ea0:b0:ac1:791c:1532 with SMTP id a640c23a62f3a-ace84af5697mr227475866b.51.1745672526836;
+        Sat, 26 Apr 2025 06:02:06 -0700 (PDT)
+Received: from alex-x1.lan ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6eda7affsm286452566b.170.2025.04.26.06.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 06:02:06 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	maud_spierings@hotmail.com,
+	dmitry.baryshkov@oss.qualcomm.com
+Subject: [PATCH v4 0/4] X1E Asus Zenbook A14 support
+Date: Sat, 26 Apr 2025 14:57:56 +0200
+Message-ID: <20250426130203.37659-1-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
- with META + L
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-References: <20250425162949.2021325-1-superm1@kernel.org>
- <aAyWFI+o/kU9hDVs@duo.ucw.cz>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <aAyWFI+o/kU9hDVs@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Introduce support for the mentioned laptop.
 
+Particular device exists in two model numbers:
+* UX3407QA: X1P-42-100 or X1-26-100 (as tested)
+* UX3407RA: X1E-78-100
 
-On 4/26/25 03:15, Pavel Machek wrote:
-> On Fri 2025-04-25 11:29:48, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
->> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
->> to lock the screen. Modern hardware [2] also sends this sequence of
->> events for keys with a silkscreen for screen lock.
->>
->> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
->> emitted by driver to META + L.
-> 
-> Fix gnome and kde, do not break kernel...
+Mostly similar to other X1-based laptops. Notable differences are:
+* Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+  and Qualcomm FastConnect 7800 on UX3407RA
+* USB Type-C retimers are Parade PS8833, appear to behave identical
+  to Parade PS8830
+* gpio90 is TZ protected
 
-I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+When comparing device firmware between UX3407QA, UX3407RA, it seems
+that only ADSP firmware is different, CDSP and GPU firmware appears to
+be the same. (At least assuming the GPU firmware name in both cases is
+`qcdxkmsuc8380.mbn`). Since at least some blobs are different betweeen
+X1E and X1/X1P, define new firmware directory for `qcom/x1p42100`. This
+also makes it easier for distros to automatically extract firmware from
+Windows and place all blobs for the model under the same path. If/When
+firmware blobs make it to linux-firmware, same blobs can be easily
+symlinked between `qcom/x1e80100` and `qcom/x1p42100`.
 
-That's going to break modern hardware lockscreen keys.  They've all 
-obviously moved to META+L because that's what hardware today uses.
+NVMe SSD depends on [1]. USB Type-A over USB MP controller  depends on
+[2], or equivalent proposed solution.
 
-That's also what earlier versions of my series tried to change just 
-amd-pmf over to use, but Armin Wolf said this should be done in the 
-input subsystem for all drivers instead.
+Qualcomm FastConnect 6900 on UX3407QA did not work out of the box, and
+additionally required both newer firmware and patches to `board-2.bin`.
+I added a short how-to [3], as it is not exactly trivial.
 
-> 									Pavel
-> 
->>   
->> +config INPUT_SCREENLOCK_EMULATION
->> +	bool "Pass KEY_SCREENLOCK as META + L"
->> +	help
->> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
->> +	  META + L.
->> +
->> +	  If unsure, say Y.
->> +
->>   comment "Input Device Drivers"
->>   
->>   source "drivers/input/keyboard/Kconfig"
->> diff --git a/drivers/input/input.c b/drivers/input/input.c
->> index dfeace85c4710..983e3c0f88e5f 100644
->> --- a/drivers/input/input.c
->> +++ b/drivers/input/input.c
->> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
->>   	}
->>   }
->>   
->> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned int type,
->> +					int value)
->> +{
->> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
->> +	input_handle_event(dev, type, KEY_L, value);
->> +}
->> +
->>   /**
->>    * input_event() - report new input event
->>    * @dev: device that generated the event
->> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
->>   {
->>   	if (is_event_supported(type, dev->evbit, EV_MAX)) {
->>   		guard(spinlock_irqsave)(&dev->event_lock);
->> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
->> +		if (code == KEY_SCREENLOCK) {
->> +			handle_screenlock_as_meta_l(dev, type, value);
->> +			return;
->> +		}
->> +#endif
->>   		input_handle_event(dev, type, code, value);
->>   	}
->>   }
->> @@ -2134,6 +2147,13 @@ void input_set_capability(struct input_dev *dev, unsigned int type, unsigned int
->>   
->>   	switch (type) {
->>   	case EV_KEY:
->> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
->> +		if (code == KEY_SCREENLOCK) {
->> +			__set_bit(KEY_L, dev->keybit);
->> +			__set_bit(KEY_LEFTMETA, dev->keybit);
->> +			break;
->> +		}
->> +#endif
->>   		__set_bit(code, dev->keybit);
->>   		break;
->>   
-> 
+ACPI dumps can be found on aarch64-laptops' github [4]. HWids on
+dtbloader's github [5].
+
+[1] https://lore.kernel.org/linux-arm-msm/20250319094544.3980357-1-quic_wenbyao@quicinc.com/
+[2] https://lore.kernel.org/all/20250318-xps13-fingerprint-v1-1-fbb02d5a34a7@oss.qualcomm.com/
+[3] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14?tab=readme-ov-file#wcn688x-wifi
+[4] https://github.com/aarch64-laptops/build/pull/134/files
+[5] https://github.com/TravMurav/dtbloader/pull/4/files
+
+Changes to v3:
+* Drop redundant comments
+* Drop incomplete wcn7850 as it is causing dt errors
+* Picked a-by
+Link to v3: https://lore.kernel.org/all/20250416232345.5240-1-alex.vinarskis@gmail.com/
+
+Changes to v2:
+* Fix/re-add PS8833 as fallback
+* Add EC's i2c address
+* Add pwrseq for wcn6855, placeholder for wcn7850 until its tested
+* Rename x1-zenbook.dtsi to x1-asus-zenbook.dtsi
+Link to v2: https://lore.kernel.org/all/20250402084646.10098-1-alex.vinarskis@gmail.com/
+
+Changes to v1:
+* Drop PS8833 variant, fallback to PS8830 as they behave the same
+* Drop wrong pcie6a_phy compatible revert
+* Drop redundant comments, fix order of properties in the device-tree
+* Fix device name bindings, express in model names instead of the soc
+* Fix GPU firmware name for UX3407QA
+* Fix model string, enclose variant in parenthesis
+* Added missing new lines before 'status = "okay";'
+* Updated cover letter to reflect some of the above changes
+* Left SPI10 disabled as it is unknown how/what for to use it as of now
+Link to v1: https://lore.kernel.org/all/20250331215720.19692-1-alex.vinarskis@gmail.com/
+
+Aleksandrs Vinarskis (4):
+  dt-bindings: usb: Add Parade PS8833 Type-C retimer variant
+  dt-bindings: arm: qcom: Add Asus Zenbook A14
+  firmware: qcom: scm: Allow QSEECOM on Asus Zenbook A14
+  arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
+
+ .../devicetree/bindings/arm/qcom.yaml         |    2 +
+ .../bindings/usb/parade,ps8830.yaml           |    7 +-
+ arch/arm64/boot/dts/qcom/Makefile             |    2 +
+ .../boot/dts/qcom/x1-asus-zenbook-a14.dtsi    | 1307 +++++++++++++++++
+ .../dts/qcom/x1e80100-asus-zenbook-a14.dts    |   33 +
+ .../dts/qcom/x1p42100-asus-zenbook-a14.dts    |  137 ++
+ drivers/firmware/qcom/qcom_scm.c              |    2 +
+ 7 files changed, 1488 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/x1-asus-zenbook-a14.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-asus-zenbook-a14.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/x1p42100-asus-zenbook-a14.dts
+
+-- 
+2.45.2
 
