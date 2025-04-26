@@ -1,199 +1,183 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010012.outbound.protection.outlook.com [52.103.68.12])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20141AAE01;
-	Sat, 26 Apr 2025 07:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745652331; cv=fail; b=RGq5bE0CVHHkCUcxuXav8M/bdrM7moPkV69rp9wF1wY5S0FYB/Dqfx415lnDDlYqiah8qWzbxY1bfzMhza2onD2a1ycvSrefSmUsghRZHrfBXfO5kRjq8bNLuNdixAn4eCUy6dnvudC7mU6+fdGmhI91lLp7Xs/PB15eCQM6jhU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745652331; c=relaxed/simple;
-	bh=6UgS4Tn8QSE4M2KSFigYDHBdrYDaemZ9FtQTv5oh9W0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TkmcAzrpECvxuyETZL84lR0dBuA3aA/8+Gxq7DzVw5ssod/2TiOxZ6/sqRo7Pp/mZw8Awknc7i9oCG0F6oTKtJ8PNaFspH9NydUwxbNLkcsqX4Msjvys7pPbNEGJw7uyAzq/Z2tYGKNr5w2U/HTOzNENio4cfkdSKNbm9V/kfew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ejt9Hs0x; arc=fail smtp.client-ip=52.103.68.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCCD192D97;
+	Sat, 26 Apr 2025 07:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745652496; cv=none; b=FsM5Jp3qVceYJEXqiwhGuR+18GDtWCZQFpMdAvM8RABNLDbpm/GAXkkHDqty+OyBkuWxX8SS11qjkUsswjSOCKz1Z3T9TR23p2gwGBbUhAz9+P/a/aQxYAtyngrjKd3gVmm4zxml6UZRsmksTcE2Z0oNb4WVUU3WZiofF6MriOM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745652496; c=relaxed/simple;
+	bh=XjMjO7HflcfiRrSXpoSWT54pSI6eenhpN6xe1KG2F+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lcGye+Fzy4pavwNqtPvdn59Msv2TM2y7fFhc1wTRX75ClwZ+unhkArnSlEUMcLHqvgLuZSrENgFvmrYg3bq5DFTXLi251uy4LrvK0LWyEMZG21EFCSR1k6PmMeGhxbZxMtX4olELmw4AQI3PxTDjYjMpRwgWz5hfr3Y73Z0Cr20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RjCSEzfE; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ejt9Hs0x"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZOCdvpsUurWCAdNW3Os/6XUwVlexqAquJWlr3HpHFSN8dsBJ5VLnA3wP1VzeLlc2HM4kKflBhXGcdGjd5xoDW55CNFrZOnyHUbBTAlQJAIH2cf756truFn5qNDzp1bfbnaVPYEnQDwCjOaYDIffyPqQbD4WhXmMgI+jyxxbLS8m6uTmjGRQcfR6rCEAKWVfk8vbUQoyowODmmiAxSz3OP/tcspeX1ukjt+fs7ErDhtGiGeDa7Jsv0U+qshwn5uKjNt/cAcJn4QFrIa+SCAHofB9VZs5uY2B5x2Yadue/5vw1T7oqJ8+uAjxlamBYiWzE1QUHHwlH8r/0SBg/PaQUBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1OjfAV2Upp0b7yI5RAWPIBQWMY8vDy68ZLaHWrAqyfM=;
- b=B/lbbPw+fYbrCqM8MQAdWE8gExjwVmNC0EKZLWwFn6bf/ObE63B6cJ/AUXipE8IX/n6s0L/mU9iEubqcQayuiHjE+cLh5mo6FGYJD10GLxnfCZ2xdfaIgK7l0L7s26a5YeNpduJdLm+FWXrnirljvH+fNqZ8vOAcfq8iQTUy3w0U9iR3K/8w43CLERxMILJetNDWJIbSmOKKmYlw1PwBlHF8kR9OXpcSplG4+3FDRS3WC6U+xfV0AV2hFB2SObmG+NmkCXXpINxzsaQaUzIFnjJIddWK6Ny+I5r1WQdTeF16zlUfrTINAqc6KIPreimSHDTED/Xl9NHSvBvXFXshqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1OjfAV2Upp0b7yI5RAWPIBQWMY8vDy68ZLaHWrAqyfM=;
- b=ejt9Hs0xsAMhIO2kuiL+607am1HPN5+Kt0LUllbemLK8grYjShTKlqG1cnxLDit37Ds/oHcbla1jTF502qzXw6M9OZBAcy6zMVkA/8ZLk8S9F1PAQs5yh7giUF2NDjKRObj+ovAcEylbFM6+nArsTFLEzPJO+giNXFHP903zCZk7d1uwkmFFWqtJzVRoZ+1B9ma0KJyCH6wTjaupew10c4wIaT0NfKyJewpueQqR0ZuCynFyxq9b1R5wznYlonG7P0n0lAS+wfC8OIeZywietxNKkgydoN4V8kBDQsKLvn168XbS9MZPHS9OPdAM5CgVi69Omz9Yg/dqhGhkZUk0DA==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by MAZP287MB0076.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:47::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Sat, 26 Apr
- 2025 07:25:22 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8678.027; Sat, 26 Apr 2025
- 07:25:22 +0000
-Message-ID:
- <MA0P287MB2262EA042510853498EDD60CFE872@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Sat, 26 Apr 2025 15:25:18 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] riscv: pwm: sophgo: add pwm support for SG2044
-To: Longbin Li <looong.bin@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-References: <20250424012335.6246-1-looong.bin@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250424012335.6246-1-looong.bin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYCPR01CA0175.jpnprd01.prod.outlook.com
- (2603:1096:400:2b2::15) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <77c47a0a-1f4f-4f27-b8f8-e9988e70407d@outlook.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RjCSEzfE"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53Q7RDlh4064371
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 26 Apr 2025 00:27:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53Q7RDlh4064371
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745652440;
+	bh=9M1Htgas0CGK26R6ri7TrX3Gr2qZnASXeVTeX3rMiIs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RjCSEzfElpajKkgYYkV/+MBKINyow1AsiXOQ9t25nN80YY48sfqpaQzNKvS9wovLg
+	 89fcrOmFuSALWEVhtziqyKoX4p5+bDKC5sOXnITQu0I9pzln1i6o6Kx+Zinny/P5J/
+	 NtEGeb3UHVlgAvvXUqporCfcK2cJ/ScxE0e/jUuyshXzNKua/GrB89ci8uE7KvUwGr
+	 Y+kiGMd8OPAUFViUOU2URxLWLLEYaoVuPqTFFCaZP8kPE0qL1U3xNnaxmiw3VuRSm3
+	 mSAabdcMTMuBrPZX+0RkvM1HHS/HvGIAZaennDGAFdhkrlTWeAl7NP0whBGetXW0Sb
+	 G0dkIqzJjgfFg==
+Message-ID: <e62b81f3-1952-43e6-85fd-18c6f37d531d@zytor.com>
+Date: Sat, 26 Apr 2025 00:27:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|MAZP287MB0076:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02af8b6e-c128-42c6-c4ee-08dd84938149
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|5072599009|7092599003|15080799006|6090799003|8060799006|19110799003|1602099012|10035399004|3412199025|4302099013|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?d2xSRzlMUi83c05sQjRtc0pFRUJKQ0VoZ1R2eFI4WHpFSzFaWGlmMGpnS3ow?=
- =?utf-8?B?V0hTTDhabGh6dGxsMU9zbG1ySG9DV0NaWHlZR3ZTUHJZRzYvTjBOYXB3aHBX?=
- =?utf-8?B?Z1lRL0tTbVNlTldCNWpVWHdXNlhzWmFTR1U3TUZ6NElKdm8wdkZmeTBGd0FT?=
- =?utf-8?B?eldvMnFMemFSNUVFQ0w1czZlODlJenVxR2VoTXhPL2tndUE5QVUzaUxTR3Nx?=
- =?utf-8?B?Vy94dTJGamFBUTNLNzBoemd1UTNLYnovYkF5WndwQ2FOOFFEdFZZVVJ0WG8r?=
- =?utf-8?B?dzJLWllYRnBmemlyM01KcTZiaFpHYzF3QVFNT3hUQTE4TGFSOGpmTTljMDBt?=
- =?utf-8?B?aG83S2pGMGhtV1pRYUtMdHRtc05tKzV6SlZja05xVkRpdE5UZWdKYzFTNURC?=
- =?utf-8?B?RXNUMGh5cjdLZ2Q3K0ZVZ0RnVlFBRjB5akozRXNIOTZRZDJzUUNuK1puZy9F?=
- =?utf-8?B?cnFwYUxpWllCZ3hrRlFWZkRpWWlRYTJydVRlb1JVbVBtdHd5OUZSMGtPSEpv?=
- =?utf-8?B?cTZjb0pmbi9iN3M3ODYvTDIzcVRkVktJVHZHS1RhZWEvdk4zczI1UkVxSTU3?=
- =?utf-8?B?c1ZUR1Q2RXlGM1pxb1A3cGJzWDRsR0N5bWdXVjZQaVJORXRkbzBxMy9iQTZz?=
- =?utf-8?B?SUYrM0NEVEZ3ZFk1V2tGeEJhdS9DNVdEd0I0TWRyc2JyQnRXaGFXR1lCdFNO?=
- =?utf-8?B?eHZUOThrM242ZUZCVlozaUY1TllqZUZwV0xHa0ZtZXFqemkza1Q5TFlYZ3RX?=
- =?utf-8?B?OXBmMmRsZE9zQ0dEdU50MkZ0VU1oRFVTSEVUNTRveFdGSkQ4cXlVbFZ6ck1N?=
- =?utf-8?B?QjRMbmpPVm1kQVc1eklwUjB2OVBVaVRSdTM2dDB0TzgyQmJRbUNTRzZkL2Vr?=
- =?utf-8?B?dnpGMVdCcUYzdTAzWm1sZnpSTG5udGQ0Sm5VQzFPU0IrLzRlMU9Ea2ZvaWV5?=
- =?utf-8?B?U29BdGoxWGlBWk1IQmxCaW5mazVwNzR6MzVBWkxpTW5uMmdOMUdVN2p5SGNp?=
- =?utf-8?B?N2MwZGtmTGx1ZW8vc01jdUxUcERzckJJZHFHekUzdVdvaXFjTmp3L3NBSHpX?=
- =?utf-8?B?bThqZThzU2VxNVNxekhWc0F6eEx2Z2I4N2pWd3gralRNOG9mQTkyNkVZbHR4?=
- =?utf-8?B?Tjk2SDV2dGh6aDUwYWVPVy92MzduazBXUWtWUm01WXY4WGtNZ3d3VFVjcENX?=
- =?utf-8?B?REppVDRtdXdMSFRSRFY4MVkyTDZoRzlXdWR2U3ZRZC9sZGs1emZWYzE2TU80?=
- =?utf-8?B?MXQ4NWlWQnhUdXVJbGJWa1JiWWNqazJJcTZIbmpoZUpJT1QxamhCSCtVQjhJ?=
- =?utf-8?B?Z0MzV3hxeDlOY1hHbXdPZVQ0UDIrb3JJNndiZW03N2lGZStMa1BtVkVyYitR?=
- =?utf-8?B?YnZzYTNhSlY0OTlRZHA1ZHkvZnY5NFZaeThTc0NDT0J5THdhOEY2T2NpRlRL?=
- =?utf-8?B?REE5R1NnL0luOGRxTFNkbURScnU4K0J2Rk5MRnk0NlhFaCt3bmxkSjM2SUhh?=
- =?utf-8?B?cFpDNm90NDRSa1NqWU1SUlRNL0xES0VSS1NJVzRvUEFOVWlYdjZZbTEyUmJM?=
- =?utf-8?B?ckY4Z21FRXF4dHE3RjFhenplSktEd01YNW9Lem1pSHlYb2hqbVNHR3d4a0dU?=
- =?utf-8?B?UjZZaUJFZm1lQ1VpNnN3b0syMlFIVURDUHhZSU95RFdhSjkwNExIOWl0QUZh?=
- =?utf-8?B?SzBnUldoYkRpUWI1cmN4bllLMlNBNUhJWWVNcTAxV21GZmVNNmtVRGplL2l3?=
- =?utf-8?Q?eITH0k08W34r9zoGcGvnj5Hq/of0kkRiKZ9FCgB?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OVl5QXBnVkl2RUUxUXNBZk5yWDUwRy8xdDdtNWtmazlmb3FndTk2L0xxUURZ?=
- =?utf-8?B?YnpyUU1KWURxdysyUFFYUHRManZPN252NGF2Y3h3MUF1aHpHa3RhYVdHWmd6?=
- =?utf-8?B?T2VyVDZOSHBHRis3MjI2eEJvYUdERjVlaW1LanE3UkMyais4R1YrOElza0hC?=
- =?utf-8?B?V0FiT283M01PN1poeHJoNXZoaC9yS1RJbmpQNHZjZ0srTGo2alh5U05Hb28v?=
- =?utf-8?B?enptRFlQREhRMFR6aTU2M1FuSlo2aCtTL0J0V3pya3pXd0ljSWpJV1o4cFBp?=
- =?utf-8?B?Ky9obDh5NkFaVU5Na016NGs4R01wSlJHR2tXQVowT1o0R1duS0R0V2pZaER0?=
- =?utf-8?B?aUxaUlJBMDRPYll1TDQ5SHVrWEdFR0FJMW8rTHI2cU1uUy9haDV4eEliWmV3?=
- =?utf-8?B?RzJtdXgzOTBKRUtJeUlkUGFSNyt5TmhjVGhNZDFiOVNuaTkxa3BjMlV1a1ZO?=
- =?utf-8?B?ZGMxRWdXZitOLzdJZTFyemR3aTJYZjRvNklGUDdIZ0xFak0wcnJxYWF5N25T?=
- =?utf-8?B?elhvaXh3a2ZjOGh6M1QrNnVkL21IcXJqWVc1VTVHa09rUEdFZXlqSTVZZ1c4?=
- =?utf-8?B?UDdMTE9UcURpZ2MvUW1vMEZQZmlsRUsvalJKckhDdUZsMkRDZEpHdUtwa2ZL?=
- =?utf-8?B?RWk0WHRIN1Q1VmQwQUQ4WmtaZDJSUllCcjNlUXVEQzF0cVB2b0NzVkNDQ3VV?=
- =?utf-8?B?cG92UDVPWVRmUnVpSzc4V3N6QW9jUFp1ZnhCc0dYN0JJcE90STdkQUVxb1JJ?=
- =?utf-8?B?ckpieXd4cndvblN6UjRqR21HQkhWa0tORzJsVmh2aXVqQlhUTEdCVVdwMlpQ?=
- =?utf-8?B?Q24yU2JMSitVSi80elFtd2o5UW80U0xNTHRaQVEraWdZNzh0dStmZXJ6V1da?=
- =?utf-8?B?NEZrRVFpRjFRVFVCSHVzRlZkb2pTeWcwN2o3TTZ2dGVEc05OTUxCUENmVzF0?=
- =?utf-8?B?SmFKREExVWI4S3hoRlBaQy9JSW9BVTBDYURQT3pDVStFU0tBOHVqR2c4elNa?=
- =?utf-8?B?UDlBQ3gyVGViTUI0VEZhNE1TUUY5bHA3bVVWK3NGa2NUY1JpMFJmVUxob3F5?=
- =?utf-8?B?TFh4VTlBMTRIOFFVOTRmQzk0clZVb3d1cVVYSWg1ajRuUUdQQU9na0E2Z245?=
- =?utf-8?B?dDhwaGZMbzdNTTdTbXd1UUpQcUhreGNEMzNTOERlOXZ3Rlg2cExFcHhaNnkw?=
- =?utf-8?B?UFRPOWVJZFRhRnhpY3pxaVk3VE9HcDBrWEI2eGZZVlhZVkxBZDhTcHJXODFY?=
- =?utf-8?B?Z0c2VjFNQXdlcXMydW1mSEQrTnQvWENUYjh6eTR3M1hYazV6Skc1eHZXTzl2?=
- =?utf-8?B?TXRmL1VhOVhmQk02QzJIclZlakc5emVDcWx0aDRUdG95aXl0SVRNUytReHdP?=
- =?utf-8?B?SHg4RktEVnF4UFlYNlR0V2Z2eCs2b1BEcHlCZjV0c01ZK3FhQ0VXZDVFdXBJ?=
- =?utf-8?B?S0NvOW9Qb1c2ZjhpSDZOVkoycGhaNkNHZEpRUDFQRWFrZUdvelZFUkVDUTNq?=
- =?utf-8?B?MHd4RFJFLzJkYnZkbEQyRUdqWUh1MTFJa0p0aGZ2SFo2TXZjQ1FEZmNnYWNw?=
- =?utf-8?B?Vm5KbXhMWGt6cy8veWtWdjJab05LSit5ZENJTzZBOW5LT2M2OUlzQlk4WE54?=
- =?utf-8?B?K3czYXIvNStuUjFucUxsQzNsQXM4UWQ1Q29RWjhpb3BvTHhKRCs4dE4yNlQy?=
- =?utf-8?B?NEliUUxUdkxCVGI4eXBDeUZMTzZNL21Db2xtK1ZtSHZiYnNPMXJJa0U1NzFF?=
- =?utf-8?Q?udMs6dA0MEBZHctOJQ=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02af8b6e-c128-42c6-c4ee-08dd84938149
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2025 07:25:22.4786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZP287MB0076
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/14] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        dapeng1.mi@linux.intel.com
+References: <20250425083442.2390017-1-xin@zytor.com>
+ <20250425083442.2390017-2-xin@zytor.com>
+ <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <42dc90e1-df2a-2324-d28c-d75fb525e4a2@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi，Longbin
+On 4/25/2025 8:45 AM, Ilpo Järvinen wrote:
+> To me this looks really a random set of source files, maybe it helped some
+> build success but it's hard for me to review this because there are still
+> cases that depend on indirect include chains.
+> 
+> Could you just look into solving all missing msr.h includes instead
+> as clearly some are still missing after 3 pre-existing ones and you adding
+> it into 3 files:
+> 
+> $ git grep -e rdmsr -e wrmsr -l drivers/platform/x86/
+> drivers/platform/x86/intel/ifs/core.c
+> drivers/platform/x86/intel/ifs/load.c
+> drivers/platform/x86/intel/ifs/runtest.c
+> drivers/platform/x86/intel/pmc/cnp.c
+> drivers/platform/x86/intel/pmc/core.c
+> drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
+> drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> drivers/platform/x86/intel/tpmi_power_domains.c
+> drivers/platform/x86/intel/turbo_max_3.c
+> drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> drivers/platform/x86/intel_ips.c
+> 
+> $ git grep -e 'msr.h' -l drivers/platform/x86/
+> drivers/platform/x86/intel/pmc/core.c
+> drivers/platform/x86/intel/tpmi_power_domains.c
+> drivers/platform/x86/intel_ips.c
 
-Seems you missed my "Tested-by" tag for v2.
+I think you want me to add all necessary direct inclusions, right?
 
-Others LGTM,
+This is the right thing to do, and I did try it but gave up later.
 
-Thanks,
+I will do it in the next iteration as you asked.  But I want to make my
+points:
 
-Chen
+1) It's not just two patterns {rd,wr}msr, there are a lot of definitions
+    in <asm/msr.h> and we need to cover all of them:
 
-On 2025/4/24 9:23, Longbin Li wrote:
-> This patch adds PWM controller support for four independent
-> PWM channel outputs.
->
-> ---
->
-> Changes in v3:
->
->    - Rename macro definitions to unify naming.
->    - Modify code style.
->
-> Changes in v2:
->    You can simply review or test the patches at the link [2].
->
->    - Modify variable naming and code logic.
->    - update "MODULE_AUTHOR".
->
-> Changes in v1:
->    You can simply review or test the patches at the link [1].
->
-> Link: https://lore.kernel.org/linux-riscv/20250407072056.8629-1-looong.bin@gmail.com/ [1]
-> Link: https://lore.kernel.org/linux-riscv/20250418022948.22853-1-looong.bin@gmail.com/ [2]
-> ---
->
-> Longbin Li (3):
->    pwm: sophgo: reorganize the code structure
->    pwm: sophgo: add driver for SG2044
->    dt-bindings: pwm: sophgo: add pwm controller for SG2044
->
->   .../bindings/pwm/sophgo,sg2042-pwm.yaml       |   4 +-
->   drivers/pwm/pwm-sophgo-sg2042.c               | 151 ++++++++++++++----
->   2 files changed, 125 insertions(+), 30 deletions(-)
->
-> --
-> 2.49.0
->
+       struct msr_info
+       struct msr_regs_info
+       struct saved_msr
+       struct saved_msrs
+       {read,write}_msr
+       rdpmc
+       .*msr.*_on_cpu
+
+2) Once all necessary direct inclusions are in place, it's easy to
+    overlook adding a header inclusion in practice, especially if the
+    build passes.  Besides we often forget to remove a header when a
+    definition is removed.  In other words, direct inclusion is hard to
+    maintain.
+
+3) Some random kernel configuration combinations can cause the current
+    kernel build to fail.  I hit one in x86 UML.
+
+
+We all know Ingo is the best person to discuss this with :).  While my
+understanding of the header inclusion issue may be inaccurate or
+outdated.
+
+So for me, using "make allyesconfig" is a practical method for a quick
+local build check, plus I always send my patches to Intel LKP.
+
+
+There probably wants a script that identifies all files that reference a
+definition in a header thus need to include it explicitly.  And indirect
+includes should be zapped.
+
+
+> 
+> I'd also prefer the patch(es) adding missing includes be in a different
+> patch.
+
+Great suggestion!  It clearly highlights the most significant changes.
+
+Thanks!
+     Xin
