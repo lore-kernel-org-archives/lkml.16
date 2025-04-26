@@ -1,124 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E516F1F3B8B
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 20:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600431F4C9D;
+	Sat, 26 Apr 2025 20:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745699317; cv=none; b=nPafsHxiYkWWcPTP3ZVL17varNUovzMDH5oPJvMh0RJivRQvk+7H7JTSWESVS4ZPEBY983k9qGsq7aTQBQj2JODl3SuyY0hdYrnXX6xwsayahhQmVxeRAdOPuk3Rd597d3SJMKMon6N0NQEDYtVAxqk09fYc2t5Jf12Anai7ipA=
+	t=1745699320; cv=none; b=X48w2o+2vsHxo2YNAXf3c4WeggxOWqYl7qXWIGjkK1CGm/zX8VAym8TpSaigJjEkjaQWkaHZeVp9nUE3NSMqasTQ0l3+JBC6Ls+TxIv/Tx/viJS80zufmn/n0fY62bZMNYSzZqKEgAhRq09BLjj/Hey1lAQBB8ryKPLJ3+pxipY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745699317; c=relaxed/simple;
-	bh=mNXXTcVKUUz50eSUe3QE6Wd5LmCexaP8c+TKZxSTxLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MyeN8R9MPqvitiEsXnfsj+6Gp3m2g9BuG/+bIF4gr7tHCb1l9tFI/UN0stoOMOfJaVQhbMKHaMtG0kj15MDYQBESbrlUO35XALlIFpobdpiDvM1qYhvOtkYWpCGOrffgMMxqeHBoGKlImDXcwmis9CHgJQeIx8T+lTqPxgYuX1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LO4q7UkF; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745699320; c=relaxed/simple;
+	bh=88EtV/mGcZoHKKDXGKVNBEhHCGTptwKCLaNpfDc5wdQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rVU2KDLq5NadKYfMYt+dER6u1dgVOztKW9w9yTTgIwnKf09jDOCH3HKquQC1J8kL5xgWq4pi9esmmMgVXhd4+LgM91aEGW/rZj0ufGlj3h7AkNNbGUrCStbvck9rCMChtOTWFYq0Lm+oiXDMGKjRei0yxLg1roeW25q+6dD67mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=YJrh6AHZ; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LO4q7UkF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745699316; x=1777235316;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=mNXXTcVKUUz50eSUe3QE6Wd5LmCexaP8c+TKZxSTxLI=;
-  b=LO4q7UkF1LxTH6dWSClfhIzGj0ncUyHDayPmqCUnMl5mzH+3kKTDwWcG
-   ZyVts7Gkf5xeZRRUbW2/OqXmVwYKKQlq7Eo7RWGXuaNBc7/+umwS5a493
-   qzmaaeNjZ7Bw8y/1S8NAYmWKOp1XLP50aA4JcIQdTUBnS4/oe3VUNXYVB
-   fR514+W1DsrhX64BMAw3jdiJ/qw90n9h/W6tQ7y1pFfWCsrYn3wStcra2
-   gLhGB4KYobjmjQD74JY+Zd6rimYSvXmKdLJBbtKHLPWt5lblKd/b2pm+v
-   deBv9A+6AO2yzTPJKefkKQNix14yKmwMZ7Rjyr2I65Bjzm1ltpUB/GxoA
-   w==;
-X-CSE-ConnectionGUID: z0LBV/UUQjW0sjOdAn7dbg==
-X-CSE-MsgGUID: LHBN0lWdRiGa/CX4g7h1mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="49981172"
-X-IronPort-AV: E=Sophos;i="6.15,242,1739865600"; 
-   d="scan'208";a="49981172"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 13:28:35 -0700
-X-CSE-ConnectionGUID: 8BV+OAFUTqubI/9V1aWcdw==
-X-CSE-MsgGUID: Ekmu35D9TaSitN95YcVC3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,242,1739865600"; 
-   d="scan'208";a="133670546"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 26 Apr 2025 13:28:34 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8m8W-0005yj-0M;
-	Sat, 26 Apr 2025 20:28:32 +0000
-Date: Sun, 27 Apr 2025 04:28:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bob Peterson <rpeterso@redhat.com>
-Subject: fs/gfs2/glock.c:1213: warning: Function parameter or struct member
- 'ip' not described in '__gfs2_holder_init'
-Message-ID: <202504270418.VcPbMEFk-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="YJrh6AHZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1745699315; x=1745958515;
+	bh=MPleTffi9PJatIhTljtKprfEHz/ZbPvLwsb0DsnbTE8=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=YJrh6AHZmsQFFuuK+bRIB3yycU+/sZMG6pW9c0pmUwPvzmnG43SkCjvRnyfCkxagb
+	 DhJVx6tndaCN1JUub93tG6oeQ+AqIDM/W9ODJ49uj9P5Yp93w717Scq4whfHwzocn+
+	 wNKj0YHovpp40TixDT++SaNx4eckzuM9PVGtuI4H3sm9qH1QGDubMJPxLMpIGg60ic
+	 8OeTR335EHcE13B9v1CMNgIBbKd9zjsjZ4tSKoqr6wW1t0ElAnHbRXszl6pezePX/T
+	 XiKdNu9M0eT8tWsGjERVyF2RCDWQu8IevWquRmcITzsO+LLmjCcAsiqSws9TLtTqBW
+	 drtoK+Ry7KGYA==
+Date: Sat, 26 Apr 2025 20:28:30 +0000
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
+Message-ID: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 49d762bcc2a01b4562a57c62ea85d48cb293f34b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andreas,
+On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
+> Implement a direct accessor for the data stored within the Devres for
+> cases where we can proof that we own a reference to a Device<Bound>
+> (i.e. a bound device) of the same device that was used to create the
+> corresponding Devres container.
+>
+> Usually, when accessing the data stored within a Devres container, it is
+> not clear whether the data has been revoked already due to the device
+> being unbound and, hence, we have to try whether the access is possible
+> and subsequently keep holding the RCU read lock for the duration of the
+> access.
+>
+> However, when we can proof that we hold a reference to Device<Bound>
+> matching the device the Devres container has been created with, we can
+> guarantee that the device is not unbound for the duration of the
+> lifetime of the Device<Bound> reference and, hence, it is not possible
+> for the data within the Devres container to be revoked.
+>
+> Therefore, in this case, we can bypass the atomic check and the RCU read
+> lock, which is a great optimization and simplification for drivers.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> index 1e58f5d22044..ec2cd9cdda8b 100644
+> --- a/rust/kernel/devres.rs
+> +++ b/rust/kernel/devres.rs
+> @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: =
+T, flags: Flags) -> Result {
+> =20
+>          Ok(())
+>      }
+> +
+> +    /// Obtain `&'a T`, bypassing the [`Revocable`].
+> +    ///
+> +    /// This method allows to directly obtain a `&'a T`, bypassing the [=
+`Revocable`], by presenting
+> +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] ins=
+tance has been created with.
+> +    ///
+> +    /// An error is returned if `dev` does not match the same [`Device`]=
+ this [`Devres`] instance
+> +    /// has been created with.
+> +    ///
+> +    /// # Example
+> +    ///
+> +    /// ```no_run
 
-FYI, the error/warning still remains.
+The `no_run` is not necessary, as you don't run any code, you only
+define a function.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   02ddfb981de88a2c15621115dd7be2431252c568
-commit: b016d9a84abdd2efaa273814eaeb59e112ecffbd gfs2: Save ip from gfs2_glock_nq_init
-date:   3 years, 6 months ago
-config: csky-randconfig-r036-20230303 (https://download.01.org/0day-ci/archive/20250427/202504270418.VcPbMEFk-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504270418.VcPbMEFk-lkp@intel.com/reproduce)
+> +    /// # use kernel::{device::Core, devres::Devres, pci};
+> +    ///
+> +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x=
+4>>) -> Result<()> {
+> +    ///     let bar =3D devres.access_with(dev.as_ref())?;
+> +    ///
+> +    ///     let _ =3D bar.read32(0x0);
+> +    ///
+> +    ///     // might_sleep()
+> +    ///
+> +    ///     bar.write32(0x42, 0x0);
+> +    ///
+> +    ///     Ok(())
+> +    /// }
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504270418.VcPbMEFk-lkp@intel.com/
+Missing '```'?
 
-All warnings (new ones prefixed by >>):
+> +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> =
+Result<&'s T> {
 
->> fs/gfs2/glock.c:1213: warning: Function parameter or struct member 'ip' not described in '__gfs2_holder_init'
-   fs/gfs2/glock.c:1213: warning: expecting prototype for gfs2_holder_init(). Prototype was for __gfs2_holder_init() instead
+I don't think that we need the `'d` lifetime here (if not, we should
+remove it).
+
+> +        if self.0.dev.as_raw() !=3D dev.as_raw() {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        // SAFETY: `dev` being the same device as the device this `Devre=
+s` has been created for
+> +        // proofes that `self.0.data` hasn't been revoked and is guarant=
+eed to not be revoked as
+
+s/proofes/proves/
+
+---
+Cheers,
+Benno
+
+> +        // long as `dev` lives; `dev` lives at least as long as `self`.
+> +        Ok(unsafe { self.deref().access() })
+> +    }
+>  }
+> =20
+>  impl<T> Deref for Devres<T> {
 
 
-vim +1213 fs/gfs2/glock.c
-
-b3b94faa5fe596 David Teigland      2006-01-16  1201  
-b3b94faa5fe596 David Teigland      2006-01-16  1202  /**
-b3b94faa5fe596 David Teigland      2006-01-16  1203   * gfs2_holder_init - initialize a struct gfs2_holder in the default way
-b3b94faa5fe596 David Teigland      2006-01-16  1204   * @gl: the glock
-b3b94faa5fe596 David Teigland      2006-01-16  1205   * @state: the state we're requesting
-b3b94faa5fe596 David Teigland      2006-01-16  1206   * @flags: the modifier flags
-b3b94faa5fe596 David Teigland      2006-01-16  1207   * @gh: the holder structure
-b3b94faa5fe596 David Teigland      2006-01-16  1208   *
-b3b94faa5fe596 David Teigland      2006-01-16  1209   */
-b3b94faa5fe596 David Teigland      2006-01-16  1210  
-b016d9a84abdd2 Andreas Gruenbacher 2021-09-30  1211  void __gfs2_holder_init(struct gfs2_glock *gl, unsigned int state, u16 flags,
-b016d9a84abdd2 Andreas Gruenbacher 2021-09-30  1212  			struct gfs2_holder *gh, unsigned long ip)
-b3b94faa5fe596 David Teigland      2006-01-16 @1213  {
-b3b94faa5fe596 David Teigland      2006-01-16  1214  	INIT_LIST_HEAD(&gh->gh_list);
-b3b94faa5fe596 David Teigland      2006-01-16  1215  	gh->gh_gl = gl;
-b016d9a84abdd2 Andreas Gruenbacher 2021-09-30  1216  	gh->gh_ip = ip;
-b1e058da50f793 Pavel Emelyanov     2008-02-07  1217  	gh->gh_owner_pid = get_pid(task_pid(current));
-b3b94faa5fe596 David Teigland      2006-01-16  1218  	gh->gh_state = state;
-b3b94faa5fe596 David Teigland      2006-01-16  1219  	gh->gh_flags = flags;
-b3b94faa5fe596 David Teigland      2006-01-16  1220  	gh->gh_error = 0;
-b3b94faa5fe596 David Teigland      2006-01-16  1221  	gh->gh_iflags = 0;
-b3b94faa5fe596 David Teigland      2006-01-16  1222  	gfs2_glock_hold(gl);
-b3b94faa5fe596 David Teigland      2006-01-16  1223  }
-b3b94faa5fe596 David Teigland      2006-01-16  1224  
-
-:::::: The code at line 1213 was first introduced by commit
-:::::: b3b94faa5fe5968827ba0640ee9fba4b3e7f736e [GFS2] The core of GFS2
-
-:::::: TO: David Teigland <teigland@redhat.com>
-:::::: CC: Steven Whitehouse <swhiteho@redhat.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
