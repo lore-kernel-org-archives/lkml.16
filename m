@@ -1,221 +1,155 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6D722615;
-	Sat, 26 Apr 2025 11:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199051B415F;
+	Sat, 26 Apr 2025 11:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745667202; cv=none; b=F+5RJNoptaBnPbUahIObsVJirvxhD/ncapZ2eC6ym8vBv1zlf+w9uVhRzdg0/f1KU8MRxJ2rzYZal75ohu3+PwDcI9JBKdagWuedap2Ewb730Juu1/4Rtpg5m/t/DEthnmTbIdOky26hqbL/fLpLuJ6wullqssWmeSi8pOIdWIQ=
+	t=1745667319; cv=none; b=OUVDCXVUV1lcl/clMci/auul+SQjvb/WIgyR6lTeR8yBKpgWd6Pt96AI36q7T0paAVfsvHBaVlUCJfvxllJKa2rzpHqSt9kLhrLTddjSTN8j1JShri8ikLzpp4xgvqFLtW7D02T8ZBs+/+DYownn3b8cglv5t8sAZTyuCcX2GTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745667202; c=relaxed/simple;
-	bh=5YrhEPD7/gooPK/qmbQQu3HmTfBXyYSI1UtxLSuRW/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DmH2OCaSa2q8TIkCivErKTZjFCOgablZwD3DyXRu5btYIp7Awho3BCySZt8ubhHzn74/w/H958QzGX/7tyfwkB96w5JQgFIDlxbHvvMeb+764+diuImnleS98bQufetoDZOUBWoNG+Pvm/H44BA9NRLQgqaLCi+nvbvEmTO8tRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=U4ebAV2P; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1745667319; c=relaxed/simple;
+	bh=W5+9Ox8Zfwkqoo1wtMpLkQdOALYNITyDBGxiimDOcgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J+5byntzu++y1IJYETrjwcDP0HH0Bw0cuj6ZpxmhgNa7kFHftg+v+aKR8NBY3d4Au07XDfzM/iTUhuMl+FD9JPPHg4PEeh1JFiz9xG8Rjb5q8m1CnRJNrlnIuOIPVsjBvOyZp6F6z66+sFRxniYZT7VFgNi833WcZWnKigTDyjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/MczSbQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="U4ebAV2P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745667166; x=1746271966; i=deller@gmx.de;
-	bh=saU175Joz9QcsGyRzAZUu/ki5+/5BGbUfFRQ/c8MoYc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=U4ebAV2PYsU191wNSuhz+9bbGTcrxXOY2pimwAdAHhfzqz9l2T48e2imw6uGfnU2
-	 PhXZUeWKEfLU8Lh04a9ziS9P3sg0AkAxDgmy+08YaQl2oSUjPhhw3yKxr5R1ODEXV
-	 60mn7ylURFJrpx08g3DLRHu7C+wuDAxJvpw+6cj7miVkVZIT8kdtQbSU0/Z3vGh67
-	 VKJ/OCq3DbQn6ElyHJZZ6RRKWprXqJxMNEv+h3shhco0S5z+GmuIpK3aVRMa9Pjpi
-	 Lz5IgYFH2waH1S0QiPezTM6hRWB73FZAgn/BMonBjzlXa9kqorsznHbIdFC/VZxRg
-	 tucqgVLHgO8GdLezsw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.173] ([109.250.63.181]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MORAU-1uRqNP3n2s-00MG3L; Sat, 26
- Apr 2025 13:32:45 +0200
-Message-ID: <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
-Date: Sat, 26 Apr 2025 13:32:44 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/MczSbQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F7DC4CEE2;
+	Sat, 26 Apr 2025 11:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745667318;
+	bh=W5+9Ox8Zfwkqoo1wtMpLkQdOALYNITyDBGxiimDOcgo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=g/MczSbQSQ044Au5V+WIXPOi99BlpoIK8a5nH0UwMKC7lxZVZw1PkYexMWdvB718I
+	 yVDqc55UwCECNOI++NgMgtVG/0WCDf2FW8kvgMZgSE3pVaja/ekwYmNUJ8w1Ng7xXO
+	 117U43pqKc9gBvekkYM2EkLNywj2JXNyjIJNYinWRtL5AzmP9rnK2933aKTW33KWc1
+	 WU5BvmkrSk3Lrfa8HI6W38CAwRe1mrUecnhA++VgpGM9U32Cs0aPFxt2H+5qaP9ADt
+	 AM4E65EN/Iva0jHtft0GdBt4Utkp3vjZZ9FOUJEyMTApqV6pdngSQVhUnRQicVp2po
+	 mqYsBcxhxUkFA==
+Date: Sat, 26 Apr 2025 12:35:09 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+Message-ID: <20250426123509.0b04f0f9@jic23-huawei>
+In-Reply-To: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
+References: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com>
+	<20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
-To: Kees Cook <kees@kernel.org>
-Cc: Javier Martinez Canillas <javierm@redhat.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Zheyu Ma <zheyuma97@gmail.com>,
- Samuel Thibault <samuel.thibault@ens-lyon.org>,
- Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250426062305.work.819-kees@kernel.org>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- xsFNBF3Ia3MBEAD3nmWzMgQByYAWnb9cNqspnkb2GLVKzhoH2QD4eRpyDLA/3smlClbeKkWT
- HLnjgkbPFDmcmCz5V0Wv1mKYRClAHPCIBIJgyICqqUZo2qGmKstUx3pFAiztlXBANpRECgwJ
- r+8w6mkccOM9GhoPU0vMaD/UVJcJQzvrxVHO8EHS36aUkjKd6cOpdVbCt3qx8cEhCmaFEO6u
- CL+k5AZQoABbFQEBocZE1/lSYzaHkcHrjn4cQjc3CffXnUVYwlo8EYOtAHgMDC39s9a7S90L
- 69l6G73lYBD/Br5lnDPlG6dKfGFZZpQ1h8/x+Qz366Ojfq9MuuRJg7ZQpe6foiOtqwKym/zV
- dVvSdOOc5sHSpfwu5+BVAAyBd6hw4NddlAQUjHSRs3zJ9OfrEx2d3mIfXZ7+pMhZ7qX0Axlq
- Lq+B5cfLpzkPAgKn11tfXFxP+hcPHIts0bnDz4EEp+HraW+oRCH2m57Y9zhcJTOJaLw4YpTY
- GRUlF076vZ2Hz/xMEvIJddRGId7UXZgH9a32NDf+BUjWEZvFt1wFSW1r7zb7oGCwZMy2LI/G
- aHQv/N0NeFMd28z+deyxd0k1CGefHJuJcOJDVtcE1rGQ43aDhWSpXvXKDj42vFD2We6uIo9D
- 1VNre2+uAxFzqqf026H6cH8hin9Vnx7p3uq3Dka/Y/qmRFnKVQARAQABzRxIZWxnZSBEZWxs
- ZXIgPGRlbGxlckBnbXguZGU+wsGRBBMBCAA7AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheA
- FiEERUSCKCzZENvvPSX4Pl89BKeiRgMFAl3J1zsCGQEACgkQPl89BKeiRgNK7xAAg6kJTPje
- uBm9PJTUxXaoaLJFXbYdSPfXhqX/BI9Xi2VzhwC2nSmizdFbeobQBTtRIz5LPhjk95t11q0s
- uP5htzNISPpwxiYZGKrNnXfcPlziI2bUtlz4ke34cLK6MIl1kbS0/kJBxhiXyvyTWk2JmkMi
- REjR84lCMAoJd1OM9XGFOg94BT5aLlEKFcld9qj7B4UFpma8RbRUpUWdo0omAEgrnhaKJwV8
- qt0ULaF/kyP5qbI8iA2PAvIjq73dA4LNKdMFPG7Rw8yITQ1Vi0DlDgDT2RLvKxEQC0o3C6O4
- iQq7qamsThLK0JSDRdLDnq6Phv+Yahd7sDMYuk3gIdoyczRkXzncWAYq7XTWl7nZYBVXG1D8
- gkdclsnHzEKpTQIzn/rGyZshsjL4pxVUIpw/vdfx8oNRLKj7iduf11g2kFP71e9v2PP94ik3
- Xi9oszP+fP770J0B8QM8w745BrcQm41SsILjArK+5mMHrYhM4ZFN7aipK3UXDNs3vjN+t0zi
- qErzlrxXtsX4J6nqjs/mF9frVkpv7OTAzj7pjFHv0Bu8pRm4AyW6Y5/H6jOup6nkJdP/AFDu
- 5ImdlA0jhr3iLk9s9WnjBUHyMYu+HD7qR3yhX6uWxg2oB2FWVMRLXbPEt2hRGq09rVQS7DBy
- dbZgPwou7pD8MTfQhGmDJFKm2jvOwU0EXchrcwEQAOsDQjdtPeaRt8EP2pc8tG+g9eiiX9Sh
- rX87SLSeKF6uHpEJ3VbhafIU6A7hy7RcIJnQz0hEUdXjH774B8YD3JKnAtfAyuIU2/rOGa/v
- UN4BY6U6TVIOv9piVQByBthGQh4YHhePSKtPzK9Pv/6rd8H3IWnJK/dXiUDQllkedrENXrZp
- eLUjhyp94ooo9XqRl44YqlsrSUh+BzW7wqwfmu26UjmAzIZYVCPCq5IjD96QrhLf6naY6En3
- ++tqCAWPkqKvWfRdXPOz4GK08uhcBp3jZHTVkcbo5qahVpv8Y8mzOvSIAxnIjb+cklVxjyY9
- dVlrhfKiK5L+zA2fWUreVBqLs1SjfHm5OGuQ2qqzVcMYJGH/uisJn22VXB1c48yYyGv2HUN5
- lC1JHQUV9734I5cczA2Gfo27nTHy3zANj4hy+s/q1adzvn7hMokU7OehwKrNXafFfwWVK3OG
- 1dSjWtgIv5KJi1XZk5TV6JlPZSqj4D8pUwIx3KSp0cD7xTEZATRfc47Yc+cyKcXG034tNEAc
- xZNTR1kMi9njdxc1wzM9T6pspTtA0vuD3ee94Dg+nDrH1As24uwfFLguiILPzpl0kLaPYYgB
- wumlL2nGcB6RVRRFMiAS5uOTEk+sJ/tRiQwO3K8vmaECaNJRfJC7weH+jww1Dzo0f1TP6rUa
- fTBRABEBAAHCwXYEGAEIACAWIQRFRIIoLNkQ2+89Jfg+Xz0Ep6JGAwUCXchrcwIbDAAKCRA+
- Xz0Ep6JGAxtdEAC54NQMBwjUNqBNCMsh6WrwQwbg9tkJw718QHPw43gKFSxFIYzdBzD/YMPH
- l+2fFiefvmI4uNDjlyCITGSM+T6b8cA7YAKvZhzJyJSS7pRzsIKGjhk7zADL1+PJei9p9idy
- RbmFKo0dAL+ac0t/EZULHGPuIiavWLgwYLVoUEBwz86ZtEtVmDmEsj8ryWw75ZIarNDhV74s
- BdM2ffUJk3+vWe25BPcJiaZkTuFt+xt2CdbvpZv3IPrEkp9GAKof2hHdFCRKMtgxBo8Kao6p
- Ws/Vv68FusAi94ySuZT3fp1xGWWf5+1jX4ylC//w0Rj85QihTpA2MylORUNFvH0MRJx4mlFk
- XN6G+5jIIJhG46LUucQ28+VyEDNcGL3tarnkw8ngEhAbnvMJ2RTx8vGh7PssKaGzAUmNNZiG
- MB4mPKqvDZ02j1wp7vthQcOEg08z1+XHXb8ZZKST7yTVa5P89JymGE8CBGdQaAXnqYK3/yWf
- FwRDcGV6nxanxZGKEkSHHOm8jHwvQWvPP73pvuPBEPtKGLzbgd7OOcGZWtq2hNC6cRtsRdDx
- 4TAGMCz4j238m+2mdbdhRh3iBnWT5yPFfnv/2IjFAk+sdix1Mrr+LIDF++kiekeq0yUpDdc4
- ExBy2xf6dd+tuFFBp3/VDN4U0UfG4QJ2fg19zE5Z8dS4jGIbLg==
-In-Reply-To: <20250426062305.work.819-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1S3zvciCiuaF2ZFFgka1cN5KYqrJSnPPfOQwlKCQhBbZYHbYNyA
- HQzYCk+2Z0HF3crIPsdsQFp62B3UdL3ieefJUsprM1biJpkEzOjC+qFxGf2ZjyNz4ybl4c3
- xd4ZT/7gHzgc4Rro/W0XEBC9hpuYElU7gptkFJj8zhJuxwOSmuXfmT59MqlhlRimMiQheWM
- 899Wil/xfYzcI7Dxg4HlA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XEiqCWyyu34=;qlN/rJFu9tX5OmBgSmJrPCwuNFK
- 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
- w==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 4/26/25 08:23, Kees Cook wrote:
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type=
-.)
->=20
-> The assigned type is "struct dac_info *" but the returned type will be
-> "struct ics5342_info *", which has a larger allocation size. This is
-> by design, as struct ics5342_info contains struct dac_info as its first
-> member. Cast the allocation type to match the assignment.
->=20
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Fri, 25 Apr 2025 16:08:43 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Thanks Kees!
-I applied your patch, but wouldn't this untested patch be cleaner and fulf=
-ill the
-same purpose to match a kzalloc return type?
+> Add new macros to help with the common case of declaring a buffer that
+> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+> to do correctly because of the alignment requirements of the timestamp.
+> This will make it easier for both authors and reviewers.
+> 
+> To avoid double __align() attributes in cases where we also need DMA
+> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS().
+> 
+Generally good.  A few little things though...
 
-diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
-index 7d131e3d159a..a57c8a992e11 100644
-=2D-- a/drivers/video/fbdev/arkfb.c
-+++ b/drivers/video/fbdev/arkfb.c
-@@ -431,7 +431,8 @@ static struct dac_ops ics5342_ops =3D {
- =20
-  static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_reg=
-s_t dwr, void *data)
-  {
--       struct dac_info *info =3D (struct dac_info *)kzalloc(sizeof(struct=
- ics5342_info), GFP_KERNEL);
-+       struct ics5342_info *ics_info =3D kzalloc(sizeof(struct ics5342_in=
-fo), GFP_KERNEL);
-+       struct dac_info *info =3D &ics_info->dac;
- =20
-         if (! info)
-
-
-Helge
-
-  ---
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Javier Martinez Canillas <javierm@redhat.com>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Zheyu Ma <zheyuma97@gmail.com>
-> Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>
-> Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> Cc: <linux-fbdev@vger.kernel.org>
-> Cc: <dri-devel@lists.freedesktop.org>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
->   drivers/video/fbdev/arkfb.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
-> index 082501feceb9..7d131e3d159a 100644
-> --- a/drivers/video/fbdev/arkfb.c
-> +++ b/drivers/video/fbdev/arkfb.c
-> @@ -431,7 +431,7 @@ static struct dac_ops ics5342_ops =3D {
->  =20
->   static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_r=
-egs_t dwr, void *data)
->   {
-> -	struct dac_info *info =3D kzalloc(sizeof(struct ics5342_info), GFP_KER=
-NEL);
-> +	struct dac_info *info =3D (struct dac_info *)kzalloc(sizeof(struct ics=
-5342_info), GFP_KERNEL);
->  =20
->   	if (! info)
->   		return NULL;
+> 
+> v3 changes:
+> * Use leading double-underscore for "private" macro to match "private"
+>   functions that do the same.
+> * Use static_assert() from linux/build_bug.h instead of _Static_assert()
+> * Fix incorrectly using sizeof(IIO_DMA_MINALIGN).
+> * Add check that count argument is constant. (Note, I didn't include a
+>   message in this static assert because it already gives a reasonable
+>   message.)
+> 
+> /home/david/work/bl/linux/drivers/iio/accel/sca3300.c:482:51: error: expression in static assertion is not constant
+>   482 |         IIO_DECLARE_BUFFER_WITH_TS(s16, channels, val);
+>       |                                                   ^~~
+> 
+> v2 changes:
+> * Add 2nd macro for DMA alignment
+> ---
+>  include/linux/iio/iio.h | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..1115b219271b76792539931edc404a67549bd8b1 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -7,6 +7,8 @@
+>  #ifndef _INDUSTRIAL_IO_H_
+>  #define _INDUSTRIAL_IO_H_
+>  
+> +#include <linux/align.h>
+> +#include <linux/build_bug.h>
+>  #include <linux/device.h>
+>  #include <linux/cdev.h>
+>  #include <linux/compiler_types.h>
+> @@ -777,6 +779,42 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
+>   * them safe for use with non-coherent DMA.
+>   */
+>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
+> +
+> +#define __IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+> +	static_assert(count); \
+
+Why do we care if count is 0?  Or is intent to check if is constant?
+If the thought is we don't care either way about 0 (as rather nonsensical)
+and this will fail to compile if not constant, then perhaps a comment would
+avoid future confusion?
+
+> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
+> +
+> +/**
+> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
+> + * @type: element type of the buffer
+> + * @name: identifier name of the buffer
+> + * @count: number of elements in the buffer
+> + *
+> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
+> + * addition to allocating enough space for @count elements of @type, it also
+> + * allocates space for a s64 timestamp at the end of the buffer and ensures
+> + * proper alignment of the timestamp.
+> + */
+> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
+> +
+> +/**
+> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
+> + * @type: element type of the buffer
+> + * @name: identifier name of the buffer
+> + * @count: number of elements in the buffer
+> + *
+> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
+> + * to ensure that the buffer doesn't share cachelines with anything that comes
+> + * before it in a struct. This should not be used for stack-allocated buffers
+> + * as stack memory cannot generally be used for DMA.
+> + */
+> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
+> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
+> +
+> +static_assert(IIO_DMA_MINALIGN % sizeof(s64) == 0,
+That message isn't super helpful if seen in a compile log as we aren't reading the code here
+"IIO_DECLARE_DMA_BUFFER_WITH_TS() assumes that ...
+
+> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
+> +
+>  struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+>  
+>  /* The information at the returned address is guaranteed to be cacheline aligned */
+> 
 
