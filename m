@@ -1,132 +1,83 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EADE84A35;
-	Sat, 26 Apr 2025 03:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5F81E1DF0
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 04:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745639496; cv=none; b=G9O7pyjwdrR8Fp0RupxsB7D0aNDyXbVifDsNiO57eSwqm8Arr2NVOY6/HrsB4g209AzKqSLI1XXy/tjvoSNbbBPMy3G1PVXXfD09dZXaGQdlTitP5biDqi8Tsfyemc0XmZ0xWNjklcxIpKuayAmFPh67mz2dPBvreutpN3K3tJs=
+	t=1745640006; cv=none; b=ofdpecaUrdiYNWMwi7HzcIpRUYKwrbZmOrhXlCaV0lChID3WZNLMuOH3n7+W6Rr1i1+gwD+hJmVHhxNNtgym1E2UaPdNyD8rWx7QFq1XXEiuYbNxQpIcbRtDtYRZ5jR755EGozpBJ4FI5a67kCngaZUXXUyOzLfv8RTMvmWF0Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745639496; c=relaxed/simple;
-	bh=3FCNAGBuMVeRlPJxHJKV9k+4t1GboLe5+s7gSRP29To=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=W9VCo4LeFQfm2CtTB0V+R/XhQ+tQd8eY+vqbB3Fx2SU84EKVYSn++h5pFJ1xEOTiw3JEfgdHd0+RxNMJgsq3fSXkNYn/+EmtYAMeIb/z2WmF2hfNE7oxdMvl815ggRlQOPaQdPsmgiFbl383SQ+snRDLYJ6QAppp/dZORRMnS5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=coIDnhWS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=M8xwFcWK; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
+	s=arc-20240116; t=1745640006; c=relaxed/simple;
+	bh=wrSq9RWI0GVzFpQQ2pzZObfsuqYX84mPI3FjVdf4KNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdEyEa5GzXHRLyXgsrv1pv6UbzGpLTHaN43Isj+c/TEnPMtL2W3g7uosUZwJ1wId07XQFlqza9rv31isyYZobEw+sO7ClALY/pGw5whSRQk8Kp5dKboaD1EGnkJ+7ELIC6KPj/LpOaPCltwR7AXtu7tbmt5ILI348AL/kSSvSpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=j9L7ipVC; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="coIDnhWS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="M8xwFcWK"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id 7E3F213803F2;
-	Fri, 25 Apr 2025 23:51:29 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Fri, 25 Apr 2025 23:51:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
-	 h=cc:cc:content-id:content-type:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1745639489; x=
-	1745725889; bh=OVocey+a7Pu/T08paWCevg+P1KK8ac/ZJAcer9HGsLM=; b=c
-	oIDnhWS7oZ/v1FRa25fNQExJhMNcHwHg02Mi016H1/hptbQilHyHnVQTqNaLJ0Lz
-	wQvQUqEusotmTdbEz+DCVX9yRYKldtJ6y9Ojac7EYl/P19nKcgBz1Ojqt7TDNJwe
-	B9N7nzsXT3wepeXRvYzhROJ2+ODokcj93CHctMBJ8utRpvnTdi0Ka9Ry5jGq8f1D
-	tFKtn4LmY1LN/nkqpbWr7ox+c7YDajoJNVARx2DgFIm+tDXkgeQS9c53oaLTZ5Hj
-	NY15e2DE2Fe4p+G5ZasVmppaMnFTdTiCXURS/wwTISGXN/RybdffsDGTHSFnm6Lc
-	4ocjg3b2Jr14jfrpWt4XQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-id:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1745639489; x=1745725889; bh=O
-	Vocey+a7Pu/T08paWCevg+P1KK8ac/ZJAcer9HGsLM=; b=M8xwFcWKS/Aqe8fa0
-	4eEKlLgtQQHXYVqi0ihn1MTAgKbWYuMSf0Ye5GUx6wDhw922jmeR1/MfWZrLsYTu
-	SKHYwxmoqWsyqrGziwUZmQR5rS7QIZq6v7/HKFad5O914YxcY5LGYhGLJwFi7ped
-	p8fEvBj105FPgRTJiQIxWhpgGJ7Z5AjKQZjd8VS0NUWzsOlABqSvijP4xAKswh+f
-	r0htO2y9y66ZVH6fWx8GYbbIw8iNlghh0RGumGemGiliaIx7flG2zsOVsAuPD3SE
-	6zVWH+GpwdzLhRcqDbmWiNNZx26olJSNkJbmeOAMuzMZYXsRbMT0YdIOJ1obzey+
-	mieVw==
-X-ME-Sender: <xms:QFgMaP9TjPUgvNppVTWhBFqPD7dHqBYW6Mogmn9AWLRP0KJriZ6NXw>
-    <xme:QFgMaLv5QHmO1MjmUoZy1yjXxSQlc7gSeNtPldCaddrCexvJwusR2CTuj8PdxE7w8
-    s4wBTJjJCqAK4F83yE>
-X-ME-Received: <xmr:QFgMaNCuzFpCt95YzmvKPJAvDPODIc2fmjGfOona-4yY52DWdj0Yn_HworcHrmY6zLnu0A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvheegudeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefujghfofggtgffkfesthdtredtredt
-    vdenucfhrhhomheplfgrhicugghoshgsuhhrghhhuceojhhvsehjvhhoshgsuhhrghhhrd
-    hnvghtqeenucggtffrrghtthgvrhhnpeejvdfghfetvedvudefvdejgeelteevkeevgedt
-    hfdukeevieejueehkeegffejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehjvhesjhhvohhssghurhhghhdrnhgvthdpnhgspghrtghpthht
-    ohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrrgiiohhrsegslhgrtg
-    hkfigrlhhlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
-    thdprhgtphhtthhopehlihhuhhgrnhhgsghinhesghhmrghilhdrtghomhdprhgtphhtth
-    hopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhhorhhmshes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohep
-    tghrrghtihhusehnvhhiughirgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvug
-    hhrghtrdgtohhm
-X-ME-Proxy: <xmx:QFgMaLe62FqbKcV93osDtJmURibHfjS2EWW-0BHtLD0dVgMxf6u2DQ>
-    <xmx:QFgMaEOu_3TuBtTwrcza1OpP8WNn8h7ktBcvoXLEXPDVbET7A6L6hA>
-    <xmx:QFgMaNkAGMgvaKuB5_PDfcrvoPDUOYqyGgyS77Lb_tgXxLOER31MIw>
-    <xmx:QFgMaOvjpCskvassSRkqkYbbI6NYxhxzrymYTyt0zWBkqL_Mh59ESQ>
-    <xmx:QVgMaL4XmfUpcRPZgJToeJ_uqxRr84hdhZEDR_aWraztX9PvTNxeo5wo>
-Feedback-ID: i53714940:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 25 Apr 2025 23:51:28 -0400 (EDT)
-Received: by famine.localdomain (Postfix, from userid 1000)
-	id 43C7F9FD42; Fri, 25 Apr 2025 20:51:27 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-	by famine.localdomain (Postfix) with ESMTP id 423BE9FC54;
-	Fri, 25 Apr 2025 20:51:27 -0700 (PDT)
-From: Jay Vosburgh <jv@jvosburgh.net>
-To: Jakub Kicinski <kuba@kernel.org>
-cc: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
-    Andrew Lunn <andrew+netdev@lunn.ch>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Nikolay Aleksandrov <razor@blackwall.org>,
-    Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 net] bonding: assign random address if device address is
- same as bond
-In-reply-to: <20250425190419.273eb34b@kernel.org>
-References: <20250424042238.618289-1-liuhangbin@gmail.com>
- <587559.1745538292@famine> <20250425190419.273eb34b@kernel.org>
-Comments: In-reply-to Jakub Kicinski <kuba@kernel.org>
-   message dated "Fri, 25 Apr 2025 19:04:19 -0700."
-X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="j9L7ipVC"
+Date: Fri, 25 Apr 2025 23:59:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745639990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=42a9CcNpaAyyKeCs3vlzfwEx+fGgirdyRpOf+fcdZ+k=;
+	b=j9L7ipVCxpZQw2CCXdzUHjBkvcvUkK95EOh47JE6Nu0x8ybfq0M1wghLqBqv2SkvFtYPrG
+	yZQuuciIkpalJCRjw4Y3hb380gOHAZB1HkR9++FgLIjOiHhMXGK5XyYRWffU8HGMvp6zWr
+	8lbg6c3h1kIfUWcJvsq95/5eoxIkreo=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <opsx7zniuyrf5uef3x4vbmbusu34ymdt5myyq47ajiefigrg4n@ky74wpog4gr4>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+ <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+ <mlsjl7qigswkjvvqg2bheyagebpm2eo66nyysztnrbpjau2czt@pdxzjedm5nqw>
+ <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
+ <lmp73ynmvpl55lnfym3ry76ftegc6bu35akltfdwtwtjyyy46z@d3oygrswoiki>
+ <CAHk-=wiZ=ZBZyKfg-pyA3wmEq+RkscKB1s68c7k=3GaT48e9Jg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <657156.1745639487.1@famine>
-Date: Fri, 25 Apr 2025 20:51:27 -0700
-Message-ID: <657157.1745639487@famine>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiZ=ZBZyKfg-pyA3wmEq+RkscKB1s68c7k=3GaT48e9Jg@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Jakub Kicinski <kuba@kernel.org> wrote:
+On Fri, Apr 25, 2025 at 08:40:48PM -0700, Linus Torvalds wrote:
+> On Fri, 25 Apr 2025 at 20:09, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> >
+> > The subject is CI lookups, and I'll eat my shoe if you wrote that.
+> 
+> Start chomping. That nasty code with d_compare and d_hash goes way back.
+> 
+> From a quick look, it's from '97, and got merged in in 2.1.50. It was
+> added (obviously) for FAT. Back then, that was the only case that
+> wanted it.
+> 
+> I don't have any archives from that time, and I'm sure others were
+> involved, but that whole init_name_hash / partial_name_hash /
+> end_name_hash pattern in 2.1.50 looks like code I remember. So I was
+> at least part of it.
+> 
+> The design, if you haven't figured it out yet, is that filesystems
+> that have case-independent name comparisons can do their own hash
+> functions and their own name comparison functions, exactly so that one
+> dentry can match multiple different strings (and different strings can
+> hash to the same bucket).
+> 
+> If you get dentry aliases, you may be doing something wrong.
 
->On Thu, 24 Apr 2025 16:44:52 -0700 Jay Vosburgh wrote:
->> 	The code flow is a little clunky in the "if (situation one) else
->> if (situation two) else goto skip_mac_set" bit, but I don't really have
->> a better suggestion that isn't clunky in some other way.
->> 
->> 	This implementation does keep the already complicated failover
->> logic from becoming more complicated for this corner case.
->
->Any thoughts on whether we should route this as a fix or as a -next
->improvement? The commit under Fixes is almost old enough to drink.
+Yeah, Al just pointed me at generic_set_sb_d_ops().
 
-	I'm fine with -next, the hardware this option was originally
-intended for was uncommon even then (IBM POWER ehea).  I'm not aware of
-any recent-ish devices with the issue this was solving (that multiple
-ports of the NIC programmed with the same MAC made the hardware cranky),
-so it's more of a correctness exercise in my mind.
-
-	-J
-
----
-	-Jay Vosburgh, jv@jvosburgh.net
+Which is a perverse way to hide an ops struct. Bloody hell...
