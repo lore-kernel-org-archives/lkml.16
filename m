@@ -1,148 +1,98 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D37E17A30B
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 06:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826804414;
+	Sat, 26 Apr 2025 06:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745648897; cv=none; b=pnJcBiCwxMh1wXXOoomHnAm4yc+3CAKzb1vpdlhrPResuRx7/I+4tzo/ZtQe+MBXMYnkbf/e64xGh1qgDXvnSZJEolv9x9wBOCGI5n0Ct2UwEwn/M/0mv7eY5/dYdwZhgDIlbaoE5qDJ0X6G1UkiLZVeEN0X6mn2mblPsCN8t1M=
+	t=1745648954; cv=none; b=bW1/kE0W/wpH1T2MOKNZJ4oo5t9xE6OTeGS+aajRS/TuvX6Ayl11UQahddM3Ji3nEl5P7SLux1PZ1Yj0Z8eAZwBP6l7tJDVsrYMikhOdoF/Ebd8kEBcs8a3VTk7ZAGE56/eShyLTsS6SbZuY53o37aCRwMjQRSnNM65yvl50Zz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745648897; c=relaxed/simple;
-	bh=iLSvSZrpExHs6iGtLUUAugyRIjzInghTCIhpfN7xuNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ss5e3AYA0DRhZCnLwghxYvZhnR24FjJtBVnC8TJjpmvNwnfUcnXTVeaTSafvbBSBoeBC4IIpDXlCJp8kvvhySqUoWDHNuR8advjF6bg2Cx2YaLjICNmdTNiH7uJgF/Ot5BAV647/NYOsR/xGAo04gabIbRjFbsQUnuKZqrNgyYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OY82lwqS; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745648954; c=relaxed/simple;
+	bh=CwtoCaEwiTUrpNzo5zHNsmceswlFZAlAFiBVZxCCdwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gz/+79LXB/BEeg86uJkh1cA8ZnNJOG43gBwiNZmggPd/S8Q5ORlrZMEQUDBmHhEJNPZi1emt0fJaxDuSNTO79PJ8BhEJKAK4zmjhpKJW6v43xZZ1mEkksggUeTfMdCk6WyiDgEBo51s8PmlOF631S4Uo8EAdVFJ8b/iKTVKq7Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJxiphkw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OY82lwqS"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so442061966b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 23:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745648892; x=1746253692; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xv4tKOaC/Hpdjay7QKa+hiaqSaXkzeRpeVA+weQIJVQ=;
-        b=OY82lwqSylwAvBqdaUaQ43jXRcdI36jfT35lHHcV7x3MvFV2ExlEJnEszOsjRu8tcC
-         ElwM0WBy/l5iDYu+19cB67sB57JntwuQ7AcileGLA3jHciUQ56lpOrX6Wc/d+yQo86mE
-         TBItgY+558mfOTNiFcYo+8fIE0XJMjRe3nzJIspoN6z5VtyYda14xw9AehrC6Iotri5j
-         z47h2oRmWCdHpSGf0JqkXV2WXCi2fbrWCXdisdTKHmjqSdaDzdOpqoejhVLnjt2DChTl
-         Tp6IY5MfgiMiw4coB0ydAba1fhMASIOlrTRHNLdOBXcTPiL6fMdLmrCzB6vRStRXG6mu
-         x9KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745648892; x=1746253692;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xv4tKOaC/Hpdjay7QKa+hiaqSaXkzeRpeVA+weQIJVQ=;
-        b=EeYeoqkxsEgW4jOtOQ3Qt39/UGjDfohteKDil1FSkdKjUQ5CXjCD+wtTGrepmZ6F9M
-         bIY4V0+0lRRO4hSHri/lx4B+Muej6WXzIjw9SEkxI4bN3yvA97oTsMUbC+4+uTBuRzh3
-         6jCZFbzAAB/7pQUEVI5gmp6SDnRaZ4SaZl4KDoeBu9u6MdN5ouY3vkEw3gkd5qQuHqhC
-         wASjCAN9aB2oilTvQoQfK57bAjfq/p1FWOlkF6HFq/UbjtILVkIcxi33QKKan+P+3zQ6
-         F8UDCHeOx1CEXavL1vTb+7EAsWZRlvt6dHFgaJRduHVU6QgVPOlGvqFqytRdTDQlM1XU
-         lCAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVc3MXwr7ZD2Bh/EzhIUrvSnnjq3IzSjFyLzV9HOnmITaxsW75up5qlPbAXrpYaL97tXHMiNMio2zRgLmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUXJVRLv6n8HM8bL3yRJVs0h+gBksrfKVaAozKDue1G+hBz6ei
-	KBz5J/Pa2WYX3wCziPuBseUgqnTzPM20DWHs55htXdq5jCMGoWFcA4F+d88/ZV4=
-X-Gm-Gg: ASbGncvIKq2/cXRGmHK3+nc+GPQZ50jSyy16kfE0rWAqqYimMDdHDN/HKZzgeUyeOKm
-	C9IjDPL3jqUc4ydB/FSeAD5n2ZksLyxxaL0bWa8O6x9BLxCldSDbvqGf2+M+1yGV+14TSjoK9Mt
-	92qVmjzXD0eiEm+e2sjwnrTIRzDQ9idc5wNug45QRa8STDjI+fTYt/eFmhYXcWTUcAys2F9hUvp
-	K+Olpso3/D5ERTjW2hd6Qqg83eUS/wfqx7ZUngT7T+yS9xwUJeDU1LE8hCTEQnveoPbLw/P4jKU
-	R/ljOmHLRQ5O0htdzpjA5OcD/k0vK8+kD4JSAiO7A/KeWPohNH+0akzT5fStF4w0fUT0
-X-Google-Smtp-Source: AGHT+IESqmurfVzpwJY+LRtMTyy9+uS5Dp4QmJ2LQdrE9JHCD+tPlEB/tEuiwBzn7LlHhYd7RH99Aw==
-X-Received: by 2002:a17:907:9492:b0:acb:b9ab:6d6f with SMTP id a640c23a62f3a-ace713a19b6mr428854466b.38.1745648892392;
-        Fri, 25 Apr 2025 23:28:12 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef1475ccsm4637134a91.44.2025.04.25.23.28.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 23:28:11 -0700 (PDT)
-Message-ID: <5671cd19-6026-4bfd-946a-daffdb899e1d@suse.com>
-Date: Sat, 26 Apr 2025 15:58:06 +0930
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJxiphkw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F18AC4CEE2;
+	Sat, 26 Apr 2025 06:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745648954;
+	bh=CwtoCaEwiTUrpNzo5zHNsmceswlFZAlAFiBVZxCCdwY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fJxiphkw/nEpHBGFGrfbdevA2CipjH1UHHY9qUdKqvWyoMTAjZYC0i6F5G6v0+xks
+	 D0bz+Rt8PLhq8lGRxd/xA0vpQYlTmmmyLOuq4FTLxuMyOyEow/TBFDgvTZHJy5amyg
+	 fuZHnHz2oaQIyoPku0MUCWZHoswqOqh/AamBnbLE/Izkv53Ss4iJ0yMvYseT2XxnJJ
+	 4aVschQYpQ18I903FVuQaCv+mQqw1g6eyTy0/RQnzC6f+EZVtXipGW4RlxWtbk47X4
+	 aHFdfhZDAC3JrEC7TosGRrFvCmWWON/o9him6DT2VfFohbuC4/NH47Ac01X83XbJCB
+	 vTTS9PCH6Orbw==
+From: Christian Brauner <brauner@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	David Rheinsberg <david@readahead.eu>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Luca Boccassi <bluca@debian.org>,
+	Lennart Poettering <lennart@poettering.net>,
+	Daan De Meyer <daan.j.demeyer@gmail.com>,
+	Mike Yuan <me@yhndnzj.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH v2 0/4] net, pidfs: enable handing out pidfds for reaped sk->sk_peer_pid
+Date: Sat, 26 Apr 2025 08:28:55 +0200
+Message-ID: <20250426-unbeteiligt-kalium-61b1b4a215de@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250425-work-pidfs-net-v2-0-450a19461e75@kernel.org>
+References: <20250425-work-pidfs-net-v2-0-450a19461e75@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: compression: Adjust cb->compressed_folios
- allocation type
-To: Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250426062328.work.065-kees@kernel.org>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <20250426062328.work.065-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1621; i=brauner@kernel.org; h=from:subject:message-id; bh=CwtoCaEwiTUrpNzo5zHNsmceswlFZAlAFiBVZxCCdwY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWTw1Bo9FjecxcqyN+Hh0+MRTfMMz9lViFTt3F6wdZPtr 2lvZ8jxdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkchbDP721H/UNlZac+dNu Ipvyvbs6ac031wjG4ocibHfnbVZhm8XI8HP9z5avdf/L7sZ5Pp6xvqY99sUXw6mvHjDrSSdNkf3 qzwoA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-
-
-在 2025/4/26 15:53, Kees Cook 写道:
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
+On Fri, 25 Apr 2025 10:11:29 +0200, Christian Brauner wrote:
+> SO_PEERPIDFD currently doesn't support handing out pidfds if the
+> sk->sk_peer_pid thread-group leader has already been reaped. In this
+> case it currently returns EINVAL. Userspace still wants to get a pidfd
+> for a reaped process to have a stable handle it can pass on.
+> This is especially useful now that it is possible to retrieve exit
+> information through a pidfd via the PIDFD_GET_INFO ioctl()'s
+> PIDFD_INFO_EXIT flag.
 > 
-> The assigned type is "struct folio **" but the returned type will be
-> "struct page **". These are the same allocation size (pointer size), but
-> the types don't match. Adjust the allocation type to match the assignment.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
+> [...]
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
+Applied to the vfs-6.16.pidfs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.pidfs branch should appear in linux-next soon.
 
-Thanks,
-Qu
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> ---
-> Cc: Chris Mason <clm@fb.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: David Sterba <dsterba@suse.com>
-> Cc: <linux-btrfs@vger.kernel.org>
-> ---
->   fs/btrfs/compression.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-> index e7f8ee5d48a4..7f11ef559be6 100644
-> --- a/fs/btrfs/compression.c
-> +++ b/fs/btrfs/compression.c
-> @@ -606,7 +606,7 @@ void btrfs_submit_compressed_read(struct btrfs_bio *bbio)
->   	free_extent_map(em);
->   
->   	cb->nr_folios = DIV_ROUND_UP(compressed_len, PAGE_SIZE);
-> -	cb->compressed_folios = kcalloc(cb->nr_folios, sizeof(struct page *), GFP_NOFS);
-> +	cb->compressed_folios = kcalloc(cb->nr_folios, sizeof(struct folio *), GFP_NOFS);
->   	if (!cb->compressed_folios) {
->   		ret = BLK_STS_RESOURCE;
->   		goto out_free_bio;
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.pidfs
+
+[1/4] pidfs: register pid in pidfs
+      https://git.kernel.org/vfs/vfs/c/477058411c45
+[2/4] net, pidfs: prepare for handing out pidfds for reaped sk->sk_peer_pid
+      https://git.kernel.org/vfs/vfs/c/fd0a109a0f6b
+[3/4] pidfs: get rid of __pidfd_prepare()
+      https://git.kernel.org/vfs/vfs/c/a71f402acd71
+[4/4] net, pidfs: enable handing out pidfds for reaped sk->sk_peer_pid
+      https://git.kernel.org/vfs/vfs/c/358ab1fd6922
