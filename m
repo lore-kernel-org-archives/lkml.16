@@ -1,179 +1,100 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1EC1F4720;
-	Sat, 26 Apr 2025 02:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D4E1EDA13
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 02:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745635153; cv=none; b=uf3IqiL4MIuLBClDNehfIKVy0HbCr1ZHBdxD8pUKdwALKFe3nj2wDDFYuiAnbxIDAO4wnWy5hLz6ui59IbzqIXi5w2Lrvl7dQ6xdQJoSTY4F1bY2q3AFd+0mQpFL2eyF9bQCCf5HRmFF2iJ1XtBixJbLyVKwZ9TrgCgzKzXC49o=
+	t=1745635653; cv=none; b=UPOtKTjBoG8kN+7dJJrR7yXofwFXXxuE5azGCavmG0iEWOmvbzO+u0C/q2sq8UMlD8cOEzXjkAiBWHDUB+q3tOrFZfAqP5v265zbzQULvn+gQhGU0/temNusxUUi+9iPUIfVGSmflJTf3Jofkz6ucx67niBSjTxbMAO1Y0g2XHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745635153; c=relaxed/simple;
-	bh=1FqjtnhNDJ7FHUEMh+JAetY3FAIKW7glSvclDAKtT9A=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=iCSNuFClcDYqWWKpm2rP8g9b7xaiVrJeRlX/u0ZdFLaS9MNoWeKT34IWjIStaQZCnSAOOgzjcm/sCRagTOcVg9Rww31Rp7i7RzUGlZtGo5ch8vt19+m/ODXWFvgspoahTntpYE0tOP+akeGi4yStBvyNoTzOzlKsooIyr8suYzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhWUwB1M; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745635653; c=relaxed/simple;
+	bh=dEmOUfiZRIXIVolwLjkWI1ddw6yx/lDkW5uzEFubTfg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QCYgrDXlh3oCB6NL3mwzn0ZKsisnMTdvBWYW1shCpwFY1AtN7e0IcCun735n9fpL6Pu2XwDz7Fzdpzxx9jKWr8y6WIOQqZhwgkogWw+ZbnSIyjbm3BRI4bRSwhiCTDnhC3DvksrO//tuDAYbH/Yz+kDovFJ1+bCYHJlUSmsHOyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=R3/HZBhu; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhWUwB1M"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af579e46b5dso2095637a12.3;
-        Fri, 25 Apr 2025 19:39:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="R3/HZBhu"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso3811628a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745635151; x=1746239951; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JpplSP/dFAaY6jk9LLlgcDCITdJ17ib1uCJw3e53Eew=;
-        b=WhWUwB1M2P1wxcgDyPhZUKKxfYvCX4duGXFxDdArkcfWsIEWXsGmqSGOb19Xts9/rF
-         muaSCDfk15Dx1nqKNiOQ0rytMW7g816IT8sWak0804Z6qwNZeZb2eFgjfGPb3RUEBkpJ
-         q/bb+eMOkjPB0HpPOjI0rBQ+EOfbzKVL1oTz+VG+tEMN7PAc7ba1Nrprk06fkJc8XuBr
-         qtpyNVUBmk2+1Pcg9qnyHC/fYUr4wL7r/LGYtfjcaUdFRmYgNAPJy+pEi0uOn2RoKnPf
-         5Nkm6X+2KWhsduiflxfq3d1xChPkFWsmuqIVe5YIhui4BxTwTxNPR7UTNHFdgTXF6bpa
-         P/0Q==
+        d=linux-foundation.org; s=google; t=1745635649; x=1746240449; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=d+Vis1nKLgTG0tNyn050nySpncZ/GwqyHhgeT6wraGk=;
+        b=R3/HZBhuMYf39RRSJI415KOvjRp7P3vDgeNbGWAh6/NzePYMGioiDZiRSJnlO5YdST
+         EXThTGAKKHd8X2vdVohzamvS9AXIeKfkqg1kGcE5tIPVX5Nlgd7hp8hhE4DpCyb4oPTz
+         nn3yooHlt6cwIKzqFAI7js3GxkfW8+mw1TWww=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745635151; x=1746239951;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JpplSP/dFAaY6jk9LLlgcDCITdJ17ib1uCJw3e53Eew=;
-        b=ZuL47D6QVLX5e7DFocS+NJ7K5JjcTLULPhKumd0mez45xxo3xy5vDogGcHPLsWS0EB
-         jqDYMw/m1kUDJiU7sSbGBo0tEnCJdAKRMyJFfSfZtUDAhHrmiQZI6aZK2K56aNnpG0wu
-         wK4B7v2yNe/tY7GMz+UhT0+hbrlLy6/1wYXDuSEAijXfKJgk0GY7Gyp+M2ds2BviFbVG
-         EvkD46V2RVzZusF6LatUEoqMYNTKdtC791j2w0Q8Kj6Vv6QtTi5eQl6lX3wLaGw+ICOI
-         t206sLY58Ib/LomKjnhUVwQXd0avKez6PGoSOZKzE/Z7JEIgnoPlS1BM8jF6OF+MbDoK
-         BJxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDhvFAnQovlDl+eIXfRolLUVmSTtjmHohsuCYOiMB39M9pW4PD7Lx16335eoBbAmKxk29q5/K+zB6TuMGL@vger.kernel.org, AJvYcCXUsZrPQOGn+FeXQJL2/fxOUc4VxkaEYbx91tr/gXBr/DWGTgXiHb8hbO/VSjdCY+WUMgr9Iw6ADQq8Ybyb@vger.kernel.org, AJvYcCXnmzMGjghU/FiTRxDaFuC4ZrzC8xvz7bQN4LvOuzcVp6IZbR3KEOiw9u6AX9u8qIDfMxtwEtj4gZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9VbtiijcJ/V0wspAKUBbXcHxt2wRc7C55BWxudKX2cqYzN4oj
-	HQT0K+3modVVoo6f4AuVo7/5E3CdIjRxMSysZlzfkLC46zJXSpAp
-X-Gm-Gg: ASbGnctM85dLopXmzVXCBHQzWlsQLWGbr37QBbTsHYCHVSvoymZ6+JtulJ3fuyXo0jj
-	eX5sAeOtscYd1VK7+TljH96bvTwazwZS9Ek5AynbhGAAvqlsmqfdHWmNWqwmC4MjZT+DXGIsEyq
-	jsNbZ8dw5PzoM4ohgyvbi93vkCa76250L3FpigoEyDo7unnwuiAT/UdQUSyiMJa5dtLzx9o6RQw
-	KWP1UG4JQD+33EOAftGDxPwBrcWTARpGKKTQ5pinuFdHL+pkSxh9CQzCc4KBIPAvZnON/FKyuzw
-	+1eXqxRnCYUONtqQRqzMog/ByKPUgBuX98VOuoy45xmC4lyBTbpZCjpyM3rEaVeLn2MJXMwV0CZ
-	sIO0InNgI2tg=
-X-Google-Smtp-Source: AGHT+IE44KmkhgPN/y1Z+QQtUhDR0Rj3E1Ytzqt5IZB/2pxGjM8oeA/JwKOp+X642fQ81dh589yQ+w==
-X-Received: by 2002:a05:6a20:7f90:b0:1f5:7353:c303 with SMTP id adf61e73a8af0-2045b6f5372mr6075481637.11.1745635151397;
-        Fri, 25 Apr 2025 19:39:11 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a133sm4016961b3a.90.2025.04.25.19.39.06
+        d=1e100.net; s=20230601; t=1745635649; x=1746240449;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d+Vis1nKLgTG0tNyn050nySpncZ/GwqyHhgeT6wraGk=;
+        b=ZmvtmbD7+3FJv2Rly4SqJi/9BvNtuxKBafiWmLoCuuuE+xvJuOY0RPp2+bd4aPwWI5
+         hzirEd0vOnMxhAAk3aT90dp/KGw9QhEJ/3KqqvG2Sv0AkRgqq6JCzt1dcHzPYqlYos5d
+         jE2M4I3wxiqpzIMdSIhkKPWKqaJi1Mo9kprNshQL1pS7wra5qmG5oiqqCUXl34vWDwta
+         KjXJ9zTPtk6env8ZluPXz75W9lduOwl+Wh5d0pSLVEJiTajnA8bNBQygLaZ+/eLkwvZ5
+         e3kp+19yVVDqet0ckTTJGrSWFJJy/0pxYHcbei1GM2txqwjWM7vcdNnjTnBRk3D/tX4y
+         n7IA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEttIZ1YH2QloFzFJUmnnl04BbHAkN3daZbW7SLFu91H99KWeeux2KtJWOa/eNvZ1Jou0zbfuWo2mjYJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU4e8xgy8nnMor6qhh2s3gCDhIGnRd3N79VT2AjWmgEgEBzrvq
+	kyg2Tfqh5l9zrs/8cWJhi9LTGUSfQkIg0yOG0PQ15hJKxT4iu5PKx6BDZa6STVt2hbj0tYHYGoV
+	QPPs=
+X-Gm-Gg: ASbGncvUsPbrDxU2e9twKgm3ZvlafSmMUOFIwJeBSHi2dPc3UX/wDeT7m1ZM5FpPbIg
+	5FCTZrxizrpdK9u6q3fVvfyGwknrn4eM8GnIRSxrdzlda9CudUCwyne393aXY1bhGlj6Uu2L/+Y
+	J7z/vUJ0pqkVCRDk1h12P3Tp54u5IFGjjeKgzc/BeejRB7HE60mQ9iymn91rUTHsfqBibLbuDi9
+	3OnXm47XjwAmvSw8MnJGnROGQz3HW1teZC/TihANfsCd3U+mFk/TqTd+oIUzGZtZyOJnTyU0Y+f
+	l8l6SYw3rK6vwdbxZwi9NOYJKmAsWKKNGMobuCN1VZ1jsuCpUO6dmJgSO1DKtRBKIgdK7hZGDzQ
+	gvY4neG1+x8VWfvo=
+X-Google-Smtp-Source: AGHT+IER452nhGAIGrFcYynw9chZlX+Fb6Nsk9An0jaUTzmyAb9ZzztGqDOdQs9l62NmPBj2b7nQbw==
+X-Received: by 2002:a05:6402:5187:b0:5de:4b81:d3fd with SMTP id 4fb4d7f45d1cf-5f7395f1b8bmr1241013a12.13.1745635648830;
+        Fri, 25 Apr 2025 19:47:28 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7011fc52fsm2057445a12.11.2025.04.25.19.47.26
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 19:39:11 -0700 (PDT)
-Message-ID: <22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
-Date: Sat, 26 Apr 2025 11:39:05 +0900
+        Fri, 25 Apr 2025 19:47:27 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso3811592a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:47:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUyRQWAaVgq+PZd7Lzq9NGhUWrAoMbWVyLSiMFdS2lTNbo5DPhN+JdF1LbifHkYrwg3swxwWwXugVkLdYI=@vger.kernel.org
+X-Received: by 2002:a17:907:72ca:b0:ac8:197f:3ff6 with SMTP id
+ a640c23a62f3a-ace8493ad90mr121410766b.28.1745635646503; Fri, 25 Apr 2025
+ 19:47:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: airlied@gmail.com, corbet@lwn.net, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
- joonas.lahtinen@linux.intel.com, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, masahiroy@kernel.org, mripard@kernel.org,
- nathan@kernel.org, nicolas.schier@linux.dev, rodrigo.vivi@intel.com,
- simona@ffwll.ch, tursulin@ursulin.net, tzimmermann@suse.de,
- mchehab+huawei@kernel.org, Akira Yokosawa <akiyks@gmail.com>
-References: <cover.1745453655.git.mchehab+huawei@kernel.org>
-Subject: Re: [PATCH v4 0/4] Don't create Python bytecode when building the
- kernel
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <cover.1745453655.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com> <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+In-Reply-To: <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 25 Apr 2025 19:47:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+X-Gm-Features: ATxdqUHnAFqikS6_GN0pI3h-AB6C0IvbAMYuZ-wE_sCeheyXsgajo17SdM6k4eQ
+Message-ID: <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Andy,
-
-Responding to Mauro's cover-letter of v4 at:
-
-    https://lore.kernel.org/cover.1745453655.git.mchehab+huawei@kernel.org/
-
-, which did not CC'd to you.
-
-On Thu, 24 Apr 2025 08:16:20 +0800, Mauro Carvalho Chehab wrote:
-> As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
-> when W=1. Due to Python's normal behavior, its JIT compiler will create
-> a bytecode and store it under scripts/lib/*/__pycache__.  As one may be using
-> O= and even having the sources on a read-only mount point, disable its
-> creation during build time.
-> 
-> This is done by adding PYTHONDONTWRITEBYTECODE=1 on every place
-> where the script is called within Kbuild and when called via another script.
->  
-> This only solves half of the issue though, as one may be manually running
-> the script by hand, without asking Python to not store any bytecode.
-> This should be OK, but afterwards, git status will list the __pycache__ as
-> not committed. To prevent that, add *.pyc to .gitignore.
-> 
-> This series contain 4 patches:
-> 
-> - patch 1 adjusts a variable that pass extra data to scripts/kerneldoc.py;
-> - patch 2moves scripts/kernel-doc location to the main makefile
->   and exports it, as scripts/Makefile.build will need it;
-> - patch 3 disables __pycache__ generation and ensure that the entire Kbuild
->   will use KERNELDOC var for the location of kernel-doc;
-> - patch 4 adds *.pyc at the list of object files to be ignored.
-
-I see Jon has merged them all, but responding here anyway.
-
-In https://lore.kernel.org/Z_zYXAJcTD-c3xTe@black.fi.intel.com/, you said:
-
-> This started well, until it becomes a scripts/lib/kdoc.
-> So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
-> "disgusting turd" )as said by Linus) in the clean tree.
+On Fri, 25 Apr 2025 at 18:38, Kent Overstreet <kent.overstreet@linux.dev> wrote:
 >
->*) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.w
+> On Fri, Apr 25, 2025 at 09:35:27AM -0700, Linus Torvalds wrote:
+> >
+> > The thing is, you absolutely cannot make the case-insensitive lookup
+> > be the fast case.
+>
+> That's precisely what the dcache code does, and is the source of the
+> problems.
 
-Andy, I don't agree with your words "__pycache__ disaster" and 
-".gitignore IS NOT a solution".
+I think you're confused, and don't know what you are talking about.
+You'd better go learn how the dcache actually works.
 
-Running "find . -name ".gitignore" -exec grep -nH --null -F -e ".pyc" \{\} +"
-under today's Linus master returns this:
-
--------------------------------------------------------------
-./scripts/gdb/linux/.gitignore:2:*.pyc
-./drivers/comedi/drivers/ni_routing/tools/.gitignore:3:*.pyc
-./tools/perf/.gitignore:32:*.pyc
-./tools/testing/selftests/tc-testing/.gitignore:3:*.pyc
-./Documentation/.gitignore:3:*.pyc
--------------------------------------------------------------
-
-, and they have been working perfectly.
-
-Having seen your response at https://lore.kernel.org/aAoERIArkvj497ns@smile.fi.intel.com/ :
-
-> I tried before, but I admit, that I have missed something. It was a mess
-> in that case. Now I probably can't repeat as I don't remember what was
-> the environment and settings I had that time. I'm really glad to see it
-> is working this way!
-
-, I'm guessing you had a traumatic experience caused by python's bytecode
-caching in the past.  Do you still believe ".gitignore IS NOT a solution"?
-
-From my viewpoint, applying only 4/4 of this series is the right thing to do.
-
-Bothering with might-become-incompatilbe-in-the-future python environment
-variables in kernel Makefiles looks over-engineering to me.
-Also, as Mauro says in 3/4, it is incomplete in that it does not cover
-the cases where those scripts are invoked outside of kernel build.
-And it will interfere with existing developers who want the benefit of
-bytecode caching.
-
-I'm not precluding the possibility of incoherent bytecode cache; for example
-by using a shared kernel source tree among several developers, and only
-one of them (owner) has a write permission of it.  In that case, said
-owner might update the tree without running relevant python scripts.
-
-I don't know if python can notice outdated cache and disregard it.
-
-In such a situation, setting PYTHONPYCACHEPREFIX as an environment
-variable should help, for sure, but only in such special cases.
-
-Andy, what do you say if I ask reverts of 1/4, 2/4/, and 3/4?
-
-Regards,
-Akira
-
+            Linus
