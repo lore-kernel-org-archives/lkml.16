@@ -1,71 +1,165 @@
-Received: from forward103a.mail.yandex.net (forward103a.mail.yandex.net [178.154.239.86])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0288F6F
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD2225C802
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745679322; cv=none; b=JrEMsaXQxMdBg5uketLKZ7KOZFNCMNFTNWbGC7f/nqdBOq4JwQU9kx9F89ZUKLQhlQQPOPqtsKnuCbgNrTQARcIAVNRU3oPfRxy2FlHJltZPBwIRWKp+IAAfk+gaxSZ9h8nqbsxJjgF0hO7GF2GRi+654kbql5EqDL9gHAFY13k=
+	t=1745679402; cv=none; b=HqeyJfHr2M0ewpI0alqCSMuYmOQljwouKl3F6ouvQkdMirCq1XOxLuKScIOxy57HMemS2vZykjXGZpFzZLUFI9V/pQiJEFDfIHqmaFNfmKKwNdtqYLpPB1+6x2TOlqUQOeGyO9Wq6mhRG02L8cYjV34E1kbFbw7GERZ45i5CrdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745679322; c=relaxed/simple;
-	bh=q5YydfhGtpN4iXoHAO0dYH2QUYP1BayF+l8hxHkskFg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O5rzTXu5w2AGm6WwQgS8L1AzhMXP5skCZT6uS4IViII/FG43HWG3UalhclNKj5xEhdPnwL+yFP6QcR0fZKIvpSxBx55PEN8VbeXMmhvreDdbblpGPcop+h1DcA41rRWAny/iTpf3qyTZc+M/4HKLp6H/ADRQgdYL5+cskKMc79w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com; spf=pass smtp.mailfrom=yandex.com; dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b=NV5fAcM4; arc=none smtp.client-ip=178.154.239.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.com
+	s=arc-20240116; t=1745679402; c=relaxed/simple;
+	bh=A91oyDJzVW2A+SsBR2soCVb/dkMc/nCruf6KCnJLaKo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GhVRwsuMPU8m62S7YWehvMBCkz0o+BOs3Lg+VSd8zi6N5wFDnteebkjqidALE68wVOHCsRUrvzqRchHJVwuKcupnj0pTQejTXcvHycsbWBwC59STBd4C5xAwqPEkjbOQIpxHcgmaayd0eGJcfkUZh5xbZ2BXUyDtBs4fRjWGTVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=X6B2J3t5; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b="NV5fAcM4"
-Received: from mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:623d:0:640:ecee:0])
-	by forward103a.mail.yandex.net (Yandex) with ESMTPS id 71BAE60D3D
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 17:55:09 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 7tTcSFLLkCg0-AjbLSZHz;
-	Sat, 26 Apr 2025 17:55:09 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.com; s=mail;
-	t=1745679309; bh=3HM654FexT8qb3OhVQUdDp9BKtsmT1rjSh0VLsFVKCk=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=NV5fAcM452mFlB4wvKsd3j0XIbvDzMwtLx51jyMwdKaVFdVSlD1YGDB9oqKXPafBL
-	 c6Hz7UCewr0StU0n2PsILFc/k6QCw2YEUVg821myqonX2wr4qhCubuxtxRkn/IN/l3
-	 VKrsGpNoU90YRFCEH8IMz4py3MLEDByehlDw6eEY=
-Authentication-Results: mail-nwsmtp-smtp-production-main-84.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.com
-From: AncherbakNA <AncherbakNA@yandex.com>
-To: linux-kernel@vger.kernel.org
-Cc: AncherbakNA <AncherbakNA@yandex.com>
-Subject: [PATCH] improving speed when accessing memory address
-Date: Sat, 26 Apr 2025 17:53:40 +0300
-Message-ID: <20250426145340.46485-1-AncherbakNA@yandex.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="X6B2J3t5"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
+	s=key1; t=1745679398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T3D2Wq7EVGu9ukjexMYuq8e+jDjRLdPow92yjOGXrYg=;
+	b=X6B2J3t5QVaUwP7jK9sXf5HGgOifbaWiOZg7lIwgwDBLFPRYVgRamqlr5U8nc3JXmLJDg9
+	pvIfOWv387GbCj1rEYzJQhlCqtjAxKhV5yg6gW4rJ6Ez6ct8uUf0QNF5l9vlKVVsJnV5ou
+	k17pnrDQs0cGuZ6dj80CFkBYSYvnqZpUM6fi+oKfAlbm3786HwXtb416wIhHOY9ggXETjv
+	e3owhLIaP/k11iVwMF3+smUv77RheHhryHr9iQfJxHP/Qb+KShLMthcsdrpXD8bNBVij2M
+	qm683yde833B5QC6WMFFbHFVoGEWsi8dO2mxzONqA7hZLVu8ZEuIRq0C891UDg==
+From: Ignacio Encinas <ignacio@iencinas.com>
+Date: Sat, 26 Apr 2025 16:56:18 +0200
+Subject: [PATCH v4 1/2] include/uapi/linux/swab.h: move default
+ implementation for swab macros into asm-generic
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250426-riscv-swab-v4-1-64201404a68c@iencinas.com>
+References: <20250426-riscv-swab-v4-0-64201404a68c@iencinas.com>
+In-Reply-To: <20250426-riscv-swab-v4-0-64201404a68c@iencinas.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
+ Arnd Bergmann <arnd@arndb.de>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
+ skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>, 
+ =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
+ linux-arch@vger.kernel.org, Ignacio Encinas <ignacio@iencinas.com>
+X-Migadu-Flow: FLOW_OUT
 
+Move the default byteswap implementation into asm-generic so that it can
+be included from arch code.
+
+This is required by RISC-V in order to have a fallback implementation
+without duplicating it.
+
+Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
 ---
- net/ipv4/netfilter/iptable_nat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/asm-generic/swab.h | 33 +++++++++++++++++++++++++++++++++
+ include/uapi/linux/swab.h       | 33 +--------------------------------
+ 2 files changed, 34 insertions(+), 32 deletions(-)
 
-diff --git a/net/ipv4/netfilter/iptable_nat.c b/net/ipv4/netfilter/iptable_nat.c
-index a5db7c67d61b..e6bd63b16837 100644
---- a/net/ipv4/netfilter/iptable_nat.c
-+++ b/net/ipv4/netfilter/iptable_nat.c
-@@ -151,12 +151,12 @@ static int __init iptable_nat_init(void)
- 	 * before calling iptable_nat_table_init().
- 	 */
- 	ret = register_pernet_subsys(&iptable_nat_net_ops);
--	if (ret < 0)
-+	if (&ret < 0)
- 		return ret;
+diff --git a/include/uapi/asm-generic/swab.h b/include/uapi/asm-generic/swab.h
+index f2da4e4fd4d1..232e81661dc5 100644
+--- a/include/uapi/asm-generic/swab.h
++++ b/include/uapi/asm-generic/swab.h
+@@ -3,6 +3,7 @@
+ #define _ASM_GENERIC_SWAB_H
  
- 	ret = xt_register_template(&nf_nat_ipv4_table,
- 				   iptable_nat_table_init);
--	if (ret < 0)
-+	if (&ret < 0)
- 		unregister_pernet_subsys(&iptable_nat_net_ops);
+ #include <asm/bitsperlong.h>
++#include <linux/types.h>
  
- 	return ret;
+ /*
+  * 32 bit architectures typically (but not always) want to
+@@ -16,4 +17,36 @@
+ #endif
+ #endif
+ 
++/*
++ * casts are necessary for constants, because we never know how for sure
++ * how U/UL/ULL map to __u16, __u32, __u64. At least not in a portable way.
++ */
++#define ___constant_swab16(x) ((__u16)(				\
++	(((__u16)(x) & (__u16)0x00ffU) << 8) |			\
++	(((__u16)(x) & (__u16)0xff00U) >> 8)))
++
++#define ___constant_swab32(x) ((__u32)(				\
++	(((__u32)(x) & (__u32)0x000000ffUL) << 24) |		\
++	(((__u32)(x) & (__u32)0x0000ff00UL) <<  8) |		\
++	(((__u32)(x) & (__u32)0x00ff0000UL) >>  8) |		\
++	(((__u32)(x) & (__u32)0xff000000UL) >> 24)))
++
++#define ___constant_swab64(x) ((__u64)(				\
++	(((__u64)(x) & (__u64)0x00000000000000ffULL) << 56) |	\
++	(((__u64)(x) & (__u64)0x000000000000ff00ULL) << 40) |	\
++	(((__u64)(x) & (__u64)0x0000000000ff0000ULL) << 24) |	\
++	(((__u64)(x) & (__u64)0x00000000ff000000ULL) <<  8) |	\
++	(((__u64)(x) & (__u64)0x000000ff00000000ULL) >>  8) |	\
++	(((__u64)(x) & (__u64)0x0000ff0000000000ULL) >> 24) |	\
++	(((__u64)(x) & (__u64)0x00ff000000000000ULL) >> 40) |	\
++	(((__u64)(x) & (__u64)0xff00000000000000ULL) >> 56)))
++
++#define ___constant_swahw32(x) ((__u32)(			\
++	(((__u32)(x) & (__u32)0x0000ffffUL) << 16) |		\
++	(((__u32)(x) & (__u32)0xffff0000UL) >> 16)))
++
++#define ___constant_swahb32(x) ((__u32)(			\
++	(((__u32)(x) & (__u32)0x00ff00ffUL) << 8) |		\
++	(((__u32)(x) & (__u32)0xff00ff00UL) >> 8)))
++
+ #endif /* _ASM_GENERIC_SWAB_H */
+diff --git a/include/uapi/linux/swab.h b/include/uapi/linux/swab.h
+index 01717181339e..ca808c492996 100644
+--- a/include/uapi/linux/swab.h
++++ b/include/uapi/linux/swab.h
+@@ -6,38 +6,7 @@
+ #include <linux/stddef.h>
+ #include <asm/bitsperlong.h>
+ #include <asm/swab.h>
+-
+-/*
+- * casts are necessary for constants, because we never know how for sure
+- * how U/UL/ULL map to __u16, __u32, __u64. At least not in a portable way.
+- */
+-#define ___constant_swab16(x) ((__u16)(				\
+-	(((__u16)(x) & (__u16)0x00ffU) << 8) |			\
+-	(((__u16)(x) & (__u16)0xff00U) >> 8)))
+-
+-#define ___constant_swab32(x) ((__u32)(				\
+-	(((__u32)(x) & (__u32)0x000000ffUL) << 24) |		\
+-	(((__u32)(x) & (__u32)0x0000ff00UL) <<  8) |		\
+-	(((__u32)(x) & (__u32)0x00ff0000UL) >>  8) |		\
+-	(((__u32)(x) & (__u32)0xff000000UL) >> 24)))
+-
+-#define ___constant_swab64(x) ((__u64)(				\
+-	(((__u64)(x) & (__u64)0x00000000000000ffULL) << 56) |	\
+-	(((__u64)(x) & (__u64)0x000000000000ff00ULL) << 40) |	\
+-	(((__u64)(x) & (__u64)0x0000000000ff0000ULL) << 24) |	\
+-	(((__u64)(x) & (__u64)0x00000000ff000000ULL) <<  8) |	\
+-	(((__u64)(x) & (__u64)0x000000ff00000000ULL) >>  8) |	\
+-	(((__u64)(x) & (__u64)0x0000ff0000000000ULL) >> 24) |	\
+-	(((__u64)(x) & (__u64)0x00ff000000000000ULL) >> 40) |	\
+-	(((__u64)(x) & (__u64)0xff00000000000000ULL) >> 56)))
+-
+-#define ___constant_swahw32(x) ((__u32)(			\
+-	(((__u32)(x) & (__u32)0x0000ffffUL) << 16) |		\
+-	(((__u32)(x) & (__u32)0xffff0000UL) >> 16)))
+-
+-#define ___constant_swahb32(x) ((__u32)(			\
+-	(((__u32)(x) & (__u32)0x00ff00ffUL) << 8) |		\
+-	(((__u32)(x) & (__u32)0xff00ff00UL) >> 8)))
++#include <asm-generic/swab.h>
+ 
+ /*
+  * Implement the following as inlines, but define the interface using
+
 -- 
-2.45.2
+2.49.0
 
