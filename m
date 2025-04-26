@@ -1,118 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3493F2F24;
-	Sat, 26 Apr 2025 12:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF4F12B73;
+	Sat, 26 Apr 2025 13:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745672243; cv=none; b=u6KaEFM7g80GUFmv9h3wupu0b9Y3LJgCyAfiWh4v99qJ4ClnFSpRhIawUg4oXWLSM4TOPzlw3fISqys7CcpT9jwgl1dV9fXKklyB/z/1DZO84UdhBYI1F5OlVVkkOvines/nXp30K+y+xWHbrHNvXqnz1Znqlqf8b2N7fv8YhrE=
+	t=1745672416; cv=none; b=At8aoJt8vhSaMMlKEkaLT79RtCSjB0Tcwrs/N1sSWnJ+JcziABCsi7aDtDvZPuz+KTJb+dmOqjnzOHDzj6wImy6Nr/CYGAAPXvR/6hV/L0AYuussT6TtMxSHu6gRd/Ytig7hvwRBgYMWti/9ltQsA/PKbPcpozRRuRmDOy9y2yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745672243; c=relaxed/simple;
-	bh=7vnqcVl5ngC2WnVfizhAsL0Eks4mJZUDw7HzflzBWOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UP+XWldd5mYrw1m5vbjXpsjSJs8rFJ4DI9kz6QqFDdKXjr9Topep/49RpwMJk5PXL2zrJqXBR7CgH/jNP+ql77/P5hFfnaoYsIRUtM/ClvRAzpiXmCkfBagu1KAy6M6KxtDOAVQDRfpwEb5dx6OGzXLMVvH0aZRydiXVJfyA7tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMuCLQgI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745672416; c=relaxed/simple;
+	bh=8lzPKSvLL4xki+UzGTVEQf754K7mp3zBbel/pXCugbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ctwCC81eSunxlG3w+20csBbAi/yWm7cfObXsjeIcHbO8rku7eCu2/6bGCTeffnh+i48KsJTLlEOXEq8NCDgPpAL6yKWSveDyyaSjbQ58Iom2OrR+L0dolaLOtSQPW6PXceX29f7VDhfJfumXZMg4YVWjYOAAPFSLRX9cX6SqNsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSiYylpS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMuCLQgI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8C96C4CEE2;
-	Sat, 26 Apr 2025 12:57:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSiYylpS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9175FC4CEE2;
+	Sat, 26 Apr 2025 13:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745672242;
-	bh=7vnqcVl5ngC2WnVfizhAsL0Eks4mJZUDw7HzflzBWOI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oMuCLQgIKpLjI+JSbeLr/pxzfWwb4AEqiajhWDjJ/K96eva/VELbmm37Yk2ZYZe7f
-	 Vg8A7Dl7Zjgf0mc7kjwMiQsm6b4ZS8madUWixIRihiSiQHWNz1WFL2AzHeqi4DiCsk
-	 PHZYuNER9j2uOXc3BwGq5lOe1SI2GXaW3+4KCI30zojnYZbA22oh7wHXDMX8OaTsGI
-	 Z+SlxlyLJgNW2M9Mthj/eOHUwv3c1hbqEBkLT1AJ3PhOOygFj23ihq/kTCdsWN/fTV
-	 ZRjA2efx9Xlpg9m3Yefh/iwXUkWMxLAiPY1+IB629NYJbT/wo3xJK0guh7q46WQ23R
-	 NFvCyAbiZe0pQ==
-Date: Sat, 26 Apr 2025 20:57:08 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, airlied@gmail.com,
- corbet@lwn.net, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
- joonas.lahtinen@linux.intel.com, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, masahiroy@kernel.org,
- mripard@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev,
- rodrigo.vivi@intel.com, simona@ffwll.ch, tursulin@ursulin.net,
- tzimmermann@suse.de
-Subject: Re: [PATCH v4 0/4] Don't create Python bytecode when building the
- kernel
-Message-ID: <20250426205708.4f90a83d@sal.lan>
-In-Reply-To: <22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
-References: <cover.1745453655.git.mchehab+huawei@kernel.org>
-	<22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1745672414;
+	bh=8lzPKSvLL4xki+UzGTVEQf754K7mp3zBbel/pXCugbc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SSiYylpSkUnY4vU6FWLD53bdXMb8K4/xbF7keJtMniGrZGt2QiNuvhYRbGDO/HQUN
+	 vlYEBODjW3cBYi96AG3GAj90UeBQ1b7HILIdpyE3fL44wJ/DfVgelqT7PbruguU+J9
+	 qZ2U865ygnV6yy/ww/ig75AMri4siLaNKsthxbx/+Rl5n1LHdB+CDWY+JUrGd6hNCv
+	 K5AGmSzjgDuRNqQjaf2x6Pm1zhIPciPP4aMUdhTJO1ekR8r+ZYxEVMFMS6pZIrBvRM
+	 zFvnbjkA+zbB9MLt+ygHX2RpPDJXrHyd/SdOzCg6rcPd4QB6W/RNHhgArjHZuxXLo8
+	 ub2zW177r8Nxw==
+Message-ID: <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+Date: Sat, 26 Apr 2025 08:00:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Akira,
 
-Em Sat, 26 Apr 2025 11:39:05 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
 
-> Bothering with might-become-incompatilbe-in-the-future python environment
-> variables in kernel Makefiles looks over-engineering to me.
-> Also, as Mauro says in 3/4, it is incomplete in that it does not cover
-> the cases where those scripts are invoked outside of kernel build.
-> And it will interfere with existing developers who want the benefit of
-> bytecode caching.
+On 4/26/25 03:15, Pavel Machek wrote:
+> On Fri 2025-04-25 11:29:48, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+>> to lock the screen. Modern hardware [2] also sends this sequence of
+>> events for keys with a silkscreen for screen lock.
+>>
+>> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+>> emitted by driver to META + L.
 > 
-> I'm not precluding the possibility of incoherent bytecode cache; for example
-> by using a shared kernel source tree among several developers, and only
-> one of them (owner) has a write permission of it.  In that case, said
-> owner might update the tree without running relevant python scripts.
+> Fix gnome and kde, do not break kernel...
+
+I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+
+That's going to break modern hardware lockscreen keys.  They've all 
+obviously moved to META+L because that's what hardware today uses.
+
+That's also what earlier versions of my series tried to change just 
+amd-pmf over to use, but Armin Wolf said this should be done in the 
+input subsystem for all drivers instead.
+
+> 									Pavel
 > 
-> I don't know if python can notice outdated cache and disregard it.
+>>   
+>> +config INPUT_SCREENLOCK_EMULATION
+>> +	bool "Pass KEY_SCREENLOCK as META + L"
+>> +	help
+>> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
+>> +	  META + L.
+>> +
+>> +	  If unsure, say Y.
+>> +
+>>   comment "Input Device Drivers"
+>>   
+>>   source "drivers/input/keyboard/Kconfig"
+>> diff --git a/drivers/input/input.c b/drivers/input/input.c
+>> index dfeace85c4710..983e3c0f88e5f 100644
+>> --- a/drivers/input/input.c
+>> +++ b/drivers/input/input.c
+>> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
+>>   	}
+>>   }
+>>   
+>> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned int type,
+>> +					int value)
+>> +{
+>> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
+>> +	input_handle_event(dev, type, KEY_L, value);
+>> +}
+>> +
+>>   /**
+>>    * input_event() - report new input event
+>>    * @dev: device that generated the event
+>> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
+>>   {
+>>   	if (is_event_supported(type, dev->evbit, EV_MAX)) {
+>>   		guard(spinlock_irqsave)(&dev->event_lock);
+>> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+>> +		if (code == KEY_SCREENLOCK) {
+>> +			handle_screenlock_as_meta_l(dev, type, value);
+>> +			return;
+>> +		}
+>> +#endif
+>>   		input_handle_event(dev, type, code, value);
+>>   	}
+>>   }
+>> @@ -2134,6 +2147,13 @@ void input_set_capability(struct input_dev *dev, unsigned int type, unsigned int
+>>   
+>>   	switch (type) {
+>>   	case EV_KEY:
+>> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+>> +		if (code == KEY_SCREENLOCK) {
+>> +			__set_bit(KEY_L, dev->keybit);
+>> +			__set_bit(KEY_LEFTMETA, dev->keybit);
+>> +			break;
+>> +		}
+>> +#endif
+>>   		__set_bit(code, dev->keybit);
+>>   		break;
+>>   
 > 
-> In such a situation, setting PYTHONPYCACHEPREFIX as an environment
-> variable should help, for sure, but only in such special cases.
-> 
-> Andy, what do you say if I ask reverts of 1/4, 2/4/, and 3/4?
-
-Patches 1 and 2 are, IMO, needed anyway, as they fix a problem:
-KERNELDOC environment is not used consistently.
-
-Now, patch 3 is the one that may require more thinking.
-
-I agree with Andy that, when O=<dir> is used, nothing shall be
-written to source dir.
-
-There are a couple of reasons for that:
-
-1. source dir may be read only;
-2. one may want to do cross compilation and use multiple output
-   directories, one for each version;
-3. the source dir could be mapped via NFS to multiple machines
-   with different architectures.
-
-For (3), it could mean that multiple machines may have different
-Python versions, so, sharing the Python bytecode from source dir doesn't
-sound a good idea. Also, I'm not sure if the pyc from different archs
-would be identical.
-
-With that, there are two options:
-
-a. disable cache;
-b. set PYTHONCACHEPREFIX.
-
-We're currently doing (a). I guess everybody agrees that this is
-is not ideal.
-
-So, ideally, we should move to (b). For Spinx, the easiest solution
-is just to place it under Documentation/output, but this is not
-generic enough: ideally, we should revert patch 3 and set
-PYTHONCACHEPREFIX when O is used. Eventually, we can apply my
-patch for Documentation/output, while we craft such logic.
-
-Regards,
-Mauro
 
