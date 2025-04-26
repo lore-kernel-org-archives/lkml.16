@@ -1,236 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7796522F751
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 12:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742DC1F8ACA;
+	Sat, 26 Apr 2025 12:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745669598; cv=none; b=odLlfo6XYXO2rBV5k4j7kvjWos1ZtGF3roFnEtP0eWwPWsH8ElhsgYJ4Gm96m07u4KBFP4QMcJPU8ZxMwkWfLk3rLoBRIP9OlKUyPE5PIgaKDSaGinhTcv0h/NaGuMQvVmiygJDtM880wXWt9lqB6MuPT25WPwdc7j9cHnZsFsE=
+	t=1745669648; cv=none; b=kDEun2SpwWDXL8LKpG6EFw8V0aDs/itL7jUn1QFoDMAFmLmFPAoYdA1eJXNGNpl73tkMcgWuBQG77n0jTXhYd76I8qfi5D1v4BrH1VM6D43MX6rJdRLifebPCjdPZaKFi+Mgwo8nS/I20cMPZ7NKPMpb0slcWy9776YGDod03Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745669598; c=relaxed/simple;
-	bh=53WPXHcZDRdCxH3dOJiupnW+3yRJeUva+6PJxzQa+fY=;
+	s=arc-20240116; t=1745669648; c=relaxed/simple;
+	bh=tHR2ncmKak9quhJ3NJQqmiDOJ+7stReEKBw5PGBT/Ng=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YZCsqAhXhELRHo/EHhUWDmTPybRZ+grOtXjGr/Oydwds/j/Qu38mDzZ3BWqqA2CXutVMyTmLxjFEh67uvDZ7mIWs6gRUNmj4ue3OUGeLK/My7O4j7yo2KidP4RO4AoxYey5/VCJ7+8jgl7BeOHOjo3WDOHeJeiKNAu2q4kRK+sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZIhYvVC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=fXQtoCGnkzz7w1H6EcdXu/VpahkmEauYHo1RQlEqfvwVLcd8EJ3gZp1bR3mcTTDfY4Eeq+6V7twjIAWn1iC4NhgDbjUqcKeXMYfd8ivSPX4kaL18FiYFyjhx3HX7dyyYLS1UwthEo4UqFy6KZe4Qhrv5uT6l4vMVML3eWXojU1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9BQYtSa; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZIhYvVC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745669595;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8xTcAXMj4tAsirXSeiAXOoY8tnLHpYX9Lnnx10mXT5k=;
-	b=GZIhYvVCpsEGoCki7U26BLQDzWYfUltlCl8HpNnv1ClqjQ8ZraSDcQDaDJi86qbGrwXbTl
-	6WFP/A+RS2vuzOfe3uoqg6XOJa7N3v7v49qEho4W/PISaVzlFPFro/CWD9jXuLlryTPYum
-	b62ScYlKifPGa1LwnHFFiczQyK8CGH4=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-578-ToAnP57pPoKhmusTVgxstw-1; Sat, 26 Apr 2025 08:13:13 -0400
-X-MC-Unique: ToAnP57pPoKhmusTVgxstw-1
-X-Mimecast-MFC-AGG-ID: ToAnP57pPoKhmusTVgxstw_1745669592
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3087a703066so3088663a91.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 05:13:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9BQYtSa"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so3405739f8f.3;
+        Sat, 26 Apr 2025 05:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745669645; x=1746274445; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iqHO8e/kxK05Q6w+crpG5qUQ8aCaFtVXM157XelPMI4=;
+        b=e9BQYtSaEREhVvs5KStqv3uCitfbmGl1+e9xMGsEQ6oU6aPOVYDCFLmu3pPZQPlLxZ
+         1ASUYAY4omKCLSUM/lMbYUd6cTE6dkQSGdTj1BXYGjhdeuzu4uWbWrgYCpwV10Ygl8mR
+         XdlagqeqeTzQXv5O+HMR86GVKDA5hcj5xpbABmrVpRHvN/QvKpkD1zAgtc23al3twPTX
+         qG7EZFJ5dLhCFXUdTQRqSEQNmYHMiHgaORImRHmIFHcQFVCa2/LFxAn87DINJn38Ohjs
+         5jvo2NVG6VRy3tUkGwu2D9YtdaS1nmI7/IC0UHGOaQe4wyRCDNEvDkAl5PgSiHnU+V0E
+         yDhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745669592; x=1746274392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8xTcAXMj4tAsirXSeiAXOoY8tnLHpYX9Lnnx10mXT5k=;
-        b=UdwPm/AWrQw9omFoLEBp007bq3Q6VvdZCnrfJ5nvnn+TBFWWPFtTUrMN+bKRPwMFkl
-         26AaCOrrEFNgpQILGbrwcOgaF3PI0Eq88/xyYK2vIBnKWlWqqArOmHT9aRtfoBTa8lxq
-         f8V9HVP5UrUWGSmWpSrizLDfpr6x14hE4M1XjXNHTGoAnzUQCAlMJ1HkZloCxvlWkfPV
-         To1Wvcja9gblWDasC8GEsRoTloPdag/0dVEfLAwpf+v9YbjrpP9sb1W7dCQvR/WtwQA6
-         7smS8OPr0EAaYi9hLlIZAN48u0ogiMSEGB12Xv7ryzP/SSRUFyXYqoU58vWLfLSNGQXr
-         Yagw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6I1arm+k5fqV9AOVBfqpWA2r/EIP1XcCrbNskrTLYfXlpBfiNVNG4prJGPLqb3s8ELaXbRNOmX3HoPoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCqoUaLTBwpQk9rmb8x4mxYIo9VnSZeqnsUZv+tgrYpS2p5xk/
-	TBy7faKlYsoTnGzfIzA9jRBVSOedSYzy9QEdVlqgjYlOv1NFGprXxj0PerF7l1sNNWv7HA0sDci
-	0s/6Rr1wfo5X4reLq3XdUeWG7nVKdOKCgbbKZhXIMTqyzUQzBMFAJ2V8Z8mQTHz+/NNbPMUN6Vv
-	GPNkqkaQmtpd0LQXBaNjGgmoH/6ZFi1wRV0Sdq
-X-Gm-Gg: ASbGncvHwyhTpr+rV9HgGiQO5kyFSzpXHnbuavDs6ywu40GbdYzmc80aJfSITm8iMJn
-	FBjwKJI1Du4y0Xeb3LrlZKTcSAA5v1iOTKCST3erLyuD1P+bdrvFpGuupGbuLfqP479ERYsUOCf
-	f7l6qGqlkQ+woNWeXcSzh7cqxw
-X-Received: by 2002:a17:90a:e70b:b0:301:1d9f:4ba2 with SMTP id 98e67ed59e1d1-30a01398557mr4355672a91.28.1745669592381;
-        Sat, 26 Apr 2025 05:13:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFbEOQ7OJ1l+r0ODl6FuQUy8VHIQMHy0KMCDKAuggeFJa2xVPLoqb7dQAjINDCv4vafGglRIW52yLgCmTZ3urA=
-X-Received: by 2002:a17:90a:e70b:b0:301:1d9f:4ba2 with SMTP id
- 98e67ed59e1d1-30a01398557mr4355644a91.28.1745669592087; Sat, 26 Apr 2025
- 05:13:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745669645; x=1746274445;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iqHO8e/kxK05Q6w+crpG5qUQ8aCaFtVXM157XelPMI4=;
+        b=LPVDdXY2nPI5evb3ww3FFykrWhyiEvuA1mpwzBKCQeLb1eA7azylhM0fvKWlk1u6v9
+         fIevhZrd8KXXWlIEDHHZ+kt1fxT2/HNmIsXuyYT47Xspv/AQJrO8C6bEkv2lCvjzkndQ
+         KwyIsWiELyS3RcIfnVNVv/RT+Lj6PHMfM1M5QomOFsDvqi7bVUjy6dJafVKIInIx4AIh
+         dvgQUmXfUxSNe7BkE+3ByPoUXp5SGN8lxMOv873RTNz1jFtKzaIxURh2t/so3xOlZfN9
+         3yHBxWRZIfIzEKu4dBr35DGaYgWYObm+bCsCTuJ8y8IY93QdCFPlWOCk0FL2udQk3LtJ
+         uLcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDFtqE7ur1K6vgNywdwUrDzP0QHbZb+ffobAPczho6dFkJQWEEqbocOeLWW6x4mGeGXdQPXSV14+WK@vger.kernel.org, AJvYcCUKju7ZpOO6THAypExtRAFHccnNTZPF0s6x5M/gYqZJMHBIkiafvnOx+Wu3xEomuQAhagpbn1uLojXEdIIAcQ==@vger.kernel.org, AJvYcCWLPwRrDYg6ykrgatjMrKIcqc/bQxtkSJtbflf5JzWsjT8lMd6V3x3OL0WWqM8fw3CfHyWdnFPCT6Jw@vger.kernel.org, AJvYcCWjibkWaw2efIKtI7S/kk1e6CDcPeA5JLRPi72Xt+wW5o06z82LcBuMYwN6fsKQkGm9mBV0MyQ6Jy3ZwCNE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzubJZ7gNxAfzFhegaJJx5t2XSP3yuCOTfUZNxGe9+TK3ZtvaVP
+	Z89uxEkw2O+6nJZ7GU9jzeZzbn+rX9aX4M8iuOqDQNOWMmUB+Yt33p+8kZCIwxPwWW19XdxXw5D
+	kG8uSY9TKDpHIH8hdEbPlTOLuPg==
+X-Gm-Gg: ASbGncuCTCplOFgHqAJ43CsFkLZiILqxYZSp6gvSiEjluDU5osQOImxFZGgXI+lnvNQ
+	z5AqA7fWki5/JKLpYRw0xX5IXQjRSGTjLN0Do74VTVQ/pd5wGkOzK+bQihui3x+v4hJT4T4NDA5
+	8Y+1+ZsH84AvtxBuO4U7zxVw==
+X-Google-Smtp-Source: AGHT+IF/Uwo9o99laUdn8MB2fPZ83NF09SfGpOWI1/rYVHd/7bhwDYks2rvdcwjz9aeLhGR2GSYYkPGqKJUNiMiPcdU=
+X-Received: by 2002:a05:6000:186c:b0:38f:4acd:975c with SMTP id
+ ffacd0b85a97d-3a074e4196fmr4145681f8f.27.1745669644261; Sat, 26 Apr 2025
+ 05:14:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425063234.757344-1-ryasuoka@redhat.com> <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
-In-Reply-To: <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Date: Sat, 26 Apr 2025 21:13:00 +0900
-X-Gm-Features: ATxdqUEw5zYtq3FD3jK20hIdBkgB26BvzEwuuPr00vWIGWH2Uh-jkXnoDtXz9Kg
-Message-ID: <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
-Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
- atomic helpers
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: drawat.floss@gmail.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	jfalempe@redhat.com, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20250416232345.5240-1-alex.vinarskis@gmail.com>
+ <20250416232345.5240-5-alex.vinarskis@gmail.com> <fb21ba17-88ae-4cad-b7ca-57b5e8082b5e@oss.qualcomm.com>
+In-Reply-To: <fb21ba17-88ae-4cad-b7ca-57b5e8082b5e@oss.qualcomm.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Sat, 26 Apr 2025 14:13:53 +0200
+X-Gm-Features: ATxdqUGZL3TtLLgfstEotnJ_89eWTm5WF8i-XC_jsUGF-CHwe5aTEpaCkVDe-U0
+Message-ID: <CAMcHhXreXNFr5vD3rMKZygqfvP2y7=t1OUr8d37O-zRc-quc5g@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, maud_spierings@hotmail.com, 
+	dmitry.baryshkov@oss.qualcomm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Javier,
+On Sat, 26 Apr 2025 at 12:19, Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 4/17/25 1:20 AM, Aleksandrs Vinarskis wrote:
+> > Initial support for Asus Zenbook A14. Particular moddel exists
+> > in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+> >
+> > Mostly similar to other X1-based laptops. Notable differences are:
+> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+> >   and Qualcomm FastConnect 7800 on UX3407RA
+> > * USB Type-C retimers are Parade PS8833, appear to behave identical
+> >   to Parade PS8830
+> > * gpio90 is TZ protected
+> >
+> > Working:
+> > * Keyboard
+> > * Touchpad
+> > * NVME
+> > * Lid switch
+> > * Camera LED
+> > * eDP (FHD OLED, SDC420D) with brightness control
+> > * Bluetooth, WiFi (WCN6855)
+> > * USB Type-A port
+> > * USB Type-C ports in USB2/USB3/DP (both orientations)
+> > * aDSP/cDPS firmware loading, battery info
+> > * Sleep/suspend, nothing visibly broken on resume
+> >
+> > Out of scope of this series:
+> > * Audio (Speakers/microphones/headphone jack)
+> > * Camera (OmniVision OV02C10)
+> > * HDMI (Parade PS185HDM)
+> > * EC
+> >
+> > Add dtsi and create two configurations for UX3407QA, UX3407RA.
+> > Tested on UX3407QA with X1-26-100.
+> >
+> > Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> > ---
+>
+> [...]
+>
+> > +     /* Left-side display-adjacent port, PS8833 */
+>
+> nit: The mention of PS8833 in the comment is rather uneventful given it
+> says so right below it as well
 
-On Fri, Apr 25, 2025 at 4:15=E2=80=AFPM Javier Martinez Canillas
-<javierm@redhat.com> wrote:
+Good point, will remove.
+
 >
-> Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
+> > +     typec-mux@8 {
+> > +             compatible = "parade,ps8833", "parade,ps8830";
 >
-> Hello Ryosuke,
+> [...]
 >
-> > Drop simple-KMS in favor of regular atomic helpers to make the code mor=
-e
-> > modular. The simple-KMS helper mix up plane and CRTC state, so it is
-> > obsolete and should go away [1]. Since it just split the simple-pipe
-> > functions into per-plane and per-CRTC, no functional changes is
-> > expected.
-> >
-> > [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@s=
-use.de/
-> >
-> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
-> >
->
->
->
-> > -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
-> > -                            struct drm_crtc_state *crtc_state,
-> > -                            struct drm_plane_state *plane_state)
-> > +static const uint32_t hyperv_formats[] =3D {
-> > +     DRM_FORMAT_XRGB8888,
+> > +&uart14 {
+> > +     status = "okay";
+> > +
+> > +     bluetooth {
+> > +             /* TODO: add pwrseq once validated */
+> > +             compatible = "qcom,wcn7850-bt";
+> > +
+> > +             max-speed = <3000000>;
+> > +     };
 > > +};
-> > +
-> > +static const uint64_t hyperv_modifiers[] =3D {
-> > +     DRM_FORMAT_MOD_LINEAR,
-> > +     DRM_FORMAT_MOD_INVALID
-> > +};
-> > +
 >
-> I think the kernel u32 and u64 types are preferred ?
+> Drop it for now, the dt checker is angry about partial definitions
 
-I'm not sure if I should fix this in this patch because I did not add these
-variables. IMO, we need to split the commit if we fix them.
+Hmm, but then this variant won't have bluetooth working at all...
+Will drop, let's hope someone from the community has x1e variant to
+test pwrseq for wnc7850 for a follow up patch soon.
 
-> > +static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
-> > +                                          struct drm_atomic_state *sta=
-te)
-> >  {
-> > -     struct hyperv_drm_device *hv =3D to_hv(pipe->crtc.dev);
-> > -     struct drm_shadow_plane_state *shadow_plane_state =3D to_drm_shad=
-ow_plane_state(plane_state);
-> > +     struct hyperv_drm_device *hv =3D to_hv(crtc->dev);
-> > +     struct drm_plane *plane =3D &hv->plane;
-> > +     struct drm_plane_state *plane_state =3D plane->state;
-> > +     struct drm_crtc_state *crtc_state =3D crtc->state;
-> >
-> >       hyperv_hide_hw_ptr(hv->hdev);
-> >       hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
-> >                               crtc_state->mode.hdisplay,
-> >                               crtc_state->mode.vdisplay,
-> >                               plane_state->fb->pitches[0]);
-> > -     hyperv_blit_to_vram_fullscreen(plane_state->fb, &shadow_plane_sta=
-te->data[0]);
-> >  }
-> >
-> > -static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
-> > -                          struct drm_plane_state *plane_state,
-> > -                          struct drm_crtc_state *crtc_state)
-> > +static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
-> > +                                           struct drm_atomic_state *st=
-ate)
-> > +{ }
-> > +
->
-> Why do you need an empty CRTC atomic disable callback? Can you just not
-> set it instead?
+Thanks,
 
-OK. I'll fix it in my next patch.
+Alex
 
-> >
-> > -static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
-> > -                            struct drm_plane_state *old_state)
-> > +static void hyperv_plane_atomic_update(struct drm_plane *plane,
-> > +                                                   struct drm_atomic_s=
-tate *old_state)
-> >  {
-> > -     struct hyperv_drm_device *hv =3D to_hv(pipe->crtc.dev);
-> > -     struct drm_plane_state *state =3D pipe->plane.state;
-> > +     struct drm_plane_state *old_pstate =3D drm_atomic_get_old_plane_s=
-tate(old_state, plane);
-> > +     struct hyperv_drm_device *hv =3D to_hv(plane->dev);
-> > +     struct drm_plane_state *state =3D plane->state;
 >
-> You should never access the plane->state directly, instead the helper
-> drm_atomic_get_new_plane_state() should be used. You can also rename
-> the old_state paramete to just state, since it will be used to lookup
-> both the old and new atomic states.
+> I think it looks ok otherwise
 >
-> More info is in the following email from Ville:
->
-> https://lore.kernel.org/dri-devel/Yx9pij4LmFHrq81V@intel.com/
-
-OK. I'll fix it in my next patch. Thank you for sharing the url.
-
-> >       struct drm_shadow_plane_state *shadow_plane_state =3D to_drm_shad=
-ow_plane_state(state);
-> >       struct drm_rect rect;
-> >
-> > -     if (drm_atomic_helper_damage_merged(old_state, state, &rect)) {
-> > +     if (drm_atomic_helper_damage_merged(old_pstate, state, &rect)) {
->
-> I know that most of the simple-KMS drivers do this but since this driver
-> enables FB damage clips support, it is better to iterate over the damage
-> areas. For example:
->
->         struct drm_atomic_helper_damage_iter iter;
->         struct drm_rect dst_clip;
->         struct drm_rect damage;
->
->         drm_atomic_helper_damage_iter_init(&iter, old_pstate, state);
->         drm_atomic_for_each_plane_damage(&iter, &damage) {
->                 dst_clip =3D state->dst;
->
->                 if (!drm_rect_intersect(&dst_clip, &damage))
->                         continue;
->
->                 hyperv_blit_to_vram_rect(state->fb, &shadow_plane_state->=
-data[0], &damage);
->                 hyperv_update_dirt(hv->hdev, &damage);
->         }
->
-
-OK. As you said, other drivers like mgag200 implement like this. I'll
-fix them in my next patch.
-
-> Other than these small comments, the patch looks good to me. So if you ta=
-ke
-> into account my suggestions, feel free to add:
->
-> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
-
-Thank you for your review and comment. I'll fix them and add your ack.
-
-Best regards,
-Ryosuke
-
-> --
-> Best regards,
->
-> Javier Martinez Canillas
-> Core Platforms
-> Red Hat
->
-
+> Konrad
