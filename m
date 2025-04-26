@@ -1,135 +1,151 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E1F1922D4;
-	Sat, 26 Apr 2025 08:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A728C1A256E;
+	Sat, 26 Apr 2025 08:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655236; cv=none; b=XGWCUX465E7fGSVltXW805hANNX8CjTcudilr0e2In8BxF2/zcaKHY0RRJ54EeTdpKO6FECpGhzR8ENmfnBWRJaNB1yQY/Fo09xeXbxebR2r/znsbwDxi0mqWT7zhH3HINf0CGhSLkCNI2Yzjbp8oTxLXJIUC0Th1KQTqhf+On4=
+	t=1745655322; cv=none; b=r3A37zDF1K8RpZ/bekoCE7wlbrNQZnkaBN3+1uOZ4xi8UvXOOnmU1S2HPumgVWdLJK7ZG4gb7ogxuxRHeEZj6JVbT/Z6QOO+8nvUkyzB2uwNMuAq3lWAzTHEkV1RYvDWAFibk2keNHs7NZMX9+ucdThcqV6Bex+5r3M+UefDvYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655236; c=relaxed/simple;
-	bh=RRgJ0M8WImGsVCT3LiCickwe65JTKgCkTOOLN+aRAdM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RP39WHzvZAugiPM5AMebHo6BhNdhxI12ubExwhobCxqxI28ZBhLLEBG4bDpBJoBbhgVFkj6rXZN+DOHT9XgFJMoFZgfABzMyRGWq4IqzSt4F3nW8gYRd+RLfzu2YRDpKOy6tO4QfUxGYXZpyr3keMXRCkucGDm39sSFMj5Bh6Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HFkvH3nT; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745655322; c=relaxed/simple;
+	bh=7hCpdRrHPG5AnrvBhsmUCpwkT+h/yAAlPnblQqDEZqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKwiuK/LLUO55Yw0lu8ySL8lwRUFisVTPicwYfpInDMnltjeqnIWJ69zpSwWe6TFdHv9Ou9ueaQvxLbEZfc4iI3TfWId6TpyJ1S8FS+NnAl8KQc+JqXDpHjklWD5ZtZl+KKNhfWgqKOtfE1TgXxugJWZqveEq/1bYSqZOg7SSE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=FiOHQD92; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFkvH3nT"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7376dd56f60so2346798b3a.3;
-        Sat, 26 Apr 2025 01:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745655233; x=1746260033; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eH8QzBJQF0/lOlRD7wA47uCgpgIE30Df48r/OH+A7Vc=;
-        b=HFkvH3nTaViOSV4SzoDwY0I5nliY4pbVAJxTcRCsE/1maYMjr1xnf3dwIgob+c/8bn
-         /7JyXFwusU/XvoeHpMOPQICDcbvQ/b4mgMN6PGOZVuJET8MexfP5SE+gV7MwQDQZ01MR
-         QwNb/e38ECyPXhTy03db6N3/gNC0n5K+Y8DFl+gGEflwOM+zRUs4RGaScoXieU0wH1ZM
-         B62v8BqZ6EtCMW+BegHTuBqOHG3djQouZqcO9wVNi4VHqgciJPKfLrlZ0QEL01AVnMlH
-         /QCRI6IyUWnsoFv5/aIOLcX8RAXieG4HuTFVZGVntPxDMDPgZdcdgGmie9uVFFOocSPB
-         10BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745655233; x=1746260033;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eH8QzBJQF0/lOlRD7wA47uCgpgIE30Df48r/OH+A7Vc=;
-        b=acy/GEg2YoVOmHsUJw6T5fICGGa7/8hPFdlX+OID+wW21001yy+MbszL3j6BCM+hq+
-         OLz+3W3CyoOxwRoAg0xi4yiM3b9aAFekueSNUqOfRSt96HW5wYd5pJQYLg/QYxV6MbV6
-         ixt11XhgLW2ufiiMzunU1kXVwxSitR0esmskNwtpwPYXM47JujkeJomPBva9EISB7EGW
-         1jCDCWxpy2zg8+eIoT9dvXwr8AdHK09WRWO7H2OrS5cxP/NGkEu4jrCvsgLbbBagl0Hc
-         ULSUa/ldfUyf0fq4jnwKSRmy63dTN4XMaXnUjhjV+AIWVxBb+OO6y9J7UA/EHmM86/ul
-         x3/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWt74UqfQh0YxTRSS8xYNtvoflxNq014seD5vLI+aQHKLhJ24mWhYhNa40Q+OpOQSuC1jXn7TO1voNtbic6@vger.kernel.org, AJvYcCXkDOGt+Xf2kk09G6JOvx/Qn3HbhEKdj6N98bBgRETRydYDrfOkFpKUOQDa5D30OsuuSGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxplYP8rwLtq3NmgcJIefjoJkkKEwNKTmho4oU6W0e0xVsp0MA4
-	7aGwvi6j6+6St3qniMyQndDN+RBtoQTpYMYH0G5QD3MuoSfUj5G44wGqZHvI
-X-Gm-Gg: ASbGnctt247ORRuQW/hzXKXGBN38zvp1ii5O4xyr0QvOFCIn9E5S9Qf3imcdCMpKhEW
-	3DsObQUO75MgDLrV2pUdcis7Zj7XgKS8xH/I7w+C4qwNJO/fkILZqUdrZOpD8PSQDszmKwGKPOj
-	eoCvK/18qEUnwkQTVSfN2Ic9zB0CS4w0c2A8y7AK3maRbi1SBwrccmOxwD5wo4RJT3BrcsOG9qJ
-	7bbdbhrL7oczDfDV2gavRtzoPkUzLbnPF9FgC7zyk+sOF1jcdKJvS/OERocntSYHZHW80L5DNk5
-	oZQzfjPk0gy2MWiLy9/ylVWsgAuCknRVt8kvCUfwN/86MkSKwKI+E3g+
-X-Google-Smtp-Source: AGHT+IEnU9oZyJ5GoaLkPDm5yq3VJd2HPNs7PPm0BnwPXq1TSM0GRuSCzfX7Q++U5KRAZsW8ctxlbw==
-X-Received: by 2002:a05:6a00:228e:b0:736:4d44:8b77 with SMTP id d2e1a72fcca58-73fd6de9577mr7983197b3a.8.1745655233008;
-        Sat, 26 Apr 2025 01:13:53 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:52b1:1f45:145e:af27])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73e25941bf7sm4503700b3a.68.2025.04.26.01.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 01:13:52 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net-next v2 2/2] xsk: convert xdp_copy_frags_from_zc() to use page_pool_dev_alloc()
-Date: Sat, 26 Apr 2025 15:12:20 +0700
-Message-ID: <20250426081220.40689-3-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250426081220.40689-1-minhquangbui99@gmail.com>
-References: <20250426081220.40689-1-minhquangbui99@gmail.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="FiOHQD92"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id A08B91C00B2; Sat, 26 Apr 2025 10:15:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745655316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k53jycQ1Z1Eu66/LQMNEr9yLtX94D7f7ZDVDMYc63pY=;
+	b=FiOHQD92UDWxgvy+h8JIRPjndClKxi/cQcGvDS8O8GUrf2YR/o3mh7/4pHG2/t3HQZzMu6
+	xJlhRjqiltiNVV5QsxpT9E3mTgsjGE+ogMsug8ZAHTPLcoyJ9wHmvTtVCrcBy9cRzs+6K7
+	adcerje2Cq0OTBU0rgDxcCM0p0Y+uDA=
+Date: Sat, 26 Apr 2025 10:15:16 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+Message-ID: <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+References: <20250425162949.2021325-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i07FpDtmzUu2qUCx"
+Content-Disposition: inline
+In-Reply-To: <20250425162949.2021325-1-superm1@kernel.org>
 
-This commit makes xdp_copy_frags_from_zc() use page allocation API
-page_pool_dev_alloc() instead of page_pool_dev_alloc_netmem() to avoid
-possible confusion of the returned value.
 
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
- net/core/xdp.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+--i07FpDtmzUu2qUCx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index 89111c68e545..4e91c7790671 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -701,21 +701,21 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
- 		const skb_frag_t *frag = &xinfo->frags[i];
- 		u32 len = skb_frag_size(frag);
- 		u32 offset, truesize = len;
--		netmem_ref netmem;
-+		struct page *page;
- 
--		netmem = page_pool_dev_alloc_netmem(pp, &offset, &truesize);
--		if (unlikely(!netmem)) {
-+		page = page_pool_dev_alloc(pp, &offset, &truesize);
-+		if (unlikely(!page)) {
- 			sinfo->nr_frags = i;
- 			return false;
- 		}
- 
--		memcpy(__netmem_address(netmem) + offset,
--		       __netmem_address(frag->netmem) + skb_frag_off(frag),
-+		memcpy(page_address(page) + offset,
-+		       skb_frag_page(frag) + skb_frag_off(frag),
- 		       LARGEST_ALIGN(len));
--		__skb_fill_netmem_desc_noacc(sinfo, i, netmem, offset, len);
-+		__skb_fill_page_desc_noacc(sinfo, i, page, offset, len);
- 
- 		tsize += truesize;
--		pfmemalloc |= netmem_is_pfmemalloc(netmem);
-+		pfmemalloc |= page_is_pfmemalloc(page);
- 	}
- 
- 	xdp_update_skb_shared_info(skb, nr_frags, xinfo->xdp_frags_size,
--- 
-2.43.0
+On Fri 2025-04-25 11:29:48, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>=20
+> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+> to lock the screen. Modern hardware [2] also sends this sequence of
+> events for keys with a silkscreen for screen lock.
+>=20
+> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+> emitted by driver to META + L.
 
+Fix gnome and kde, do not break kernel...
+									Pavel
+
+> =20
+> +config INPUT_SCREENLOCK_EMULATION
+> +	bool "Pass KEY_SCREENLOCK as META + L"
+> +	help
+> +	  Say Y here if you want KEY_SCREENLOCK to be passed to userspace as
+> +	  META + L.
+> +
+> +	  If unsure, say Y.
+> +
+>  comment "Input Device Drivers"
+> =20
+>  source "drivers/input/keyboard/Kconfig"
+> diff --git a/drivers/input/input.c b/drivers/input/input.c
+> index dfeace85c4710..983e3c0f88e5f 100644
+> --- a/drivers/input/input.c
+> +++ b/drivers/input/input.c
+> @@ -370,6 +370,13 @@ void input_handle_event(struct input_dev *dev,
+>  	}
+>  }
+> =20
+> +static void handle_screenlock_as_meta_l(struct input_dev *dev, unsigned =
+int type,
+> +					int value)
+> +{
+> +	input_handle_event(dev, type, KEY_LEFTMETA, value);
+> +	input_handle_event(dev, type, KEY_L, value);
+> +}
+> +
+>  /**
+>   * input_event() - report new input event
+>   * @dev: device that generated the event
+> @@ -392,6 +399,12 @@ void input_event(struct input_dev *dev,
+>  {
+>  	if (is_event_supported(type, dev->evbit, EV_MAX)) {
+>  		guard(spinlock_irqsave)(&dev->event_lock);
+> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+> +		if (code =3D=3D KEY_SCREENLOCK) {
+> +			handle_screenlock_as_meta_l(dev, type, value);
+> +			return;
+> +		}
+> +#endif
+>  		input_handle_event(dev, type, code, value);
+>  	}
+>  }
+> @@ -2134,6 +2147,13 @@ void input_set_capability(struct input_dev *dev, u=
+nsigned int type, unsigned int
+> =20
+>  	switch (type) {
+>  	case EV_KEY:
+> +#ifdef CONFIG_INPUT_SCREENLOCK_EMULATION
+> +		if (code =3D=3D KEY_SCREENLOCK) {
+> +			__set_bit(KEY_L, dev->keybit);
+> +			__set_bit(KEY_LEFTMETA, dev->keybit);
+> +			break;
+> +		}
+> +#endif
+>  		__set_bit(code, dev->keybit);
+>  		break;
+> =20
+
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--i07FpDtmzUu2qUCx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAyWFAAKCRAw5/Bqldv6
+8uhKAKCjfvAZFk7Uua0kfLuXA45ZnzJbnQCcD/rUkXDBqsEQKK8A86UKF0DFdzA=
+=OY5R
+-----END PGP SIGNATURE-----
+
+--i07FpDtmzUu2qUCx--
