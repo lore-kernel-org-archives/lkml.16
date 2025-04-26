@@ -1,144 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8EF13777E;
-	Sat, 26 Apr 2025 13:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F09D10E5;
+	Sat, 26 Apr 2025 13:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745673302; cv=none; b=qF7Hwg/uh1SMfJiX/uth3GJuzsjcDeqP8MtQ109SAv8YD3kLr7W8Iis1J+iM0ijd4ti/S/UecXyE9N2HSZ9ToAvdKZsAXmKRqehT+i1qveOJUbsMpwXs1zMxHbggvrPeeyKzj9zJtu4pPHjIIGeFYYlEvvFzag1uSTxXJNcCd9g=
+	t=1745673329; cv=none; b=Wqc+1144yicD5ar42jAUaF4TRADwxCtpUfxUcHE1uQtwXwXCeq8Uf8vozwbKuujZkoEeypVt2o6UpWfoaFbbDQL7bqWv8C28URG9Rc+Y8eG3chs5qxq5+sChWBBfu5qGw6wwrnPMX7O47oZc0BhMqz81z/19IJgHPTBrN/gS4zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745673302; c=relaxed/simple;
-	bh=AFi3KdsvjqYyfX8dyI4Wdz5V6ie382V5cdvIOs3lmFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QsDCeU2jtZ5LtITqPSvQ8/DSFlUM3smGbflEGCbB5M285UJWWxTtVyB8q/6l/waQxVmTTRHAzvDgIj04j3SWZaYRkqRZzSrcZp5r7ZDDPuj+p+g+sekSu8g4peEQdP1NnyxyRzdYbla6bE8NfbGMjW2Sm3bwbt5sPAQlp2TlS+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1FRYKoK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1FRYKoK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F7C9C4CEE2;
-	Sat, 26 Apr 2025 13:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745673302;
-	bh=AFi3KdsvjqYyfX8dyI4Wdz5V6ie382V5cdvIOs3lmFg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k1FRYKoK0R6a8PVWK5/nJj6fiIoiBoqU71CbVYibHEoVPGXUHk5PE/65cWjYPs7+N
-	 KlksrkNIm/mm+hvV3Ygp+UsI4rwk2EAA32rV1dE3mDPybIIUxvBb+GD3/oVwLgj47m
-	 Gqgfd2V/jA2QWkv4ydPUsFqMjGsbQukVryak1qLtMYEnbPhENw+/WRqikuPBVOaY/Y
-	 tMAv8LeRDF4Pqda0LiFFkneo6omJxNs1Y2/JOyj5FSdligksQaGCZtwWxIF798kRQ8
-	 XIkMQu+kvS+zq16mNZl3v9GtUfSMkwOl4puPZeULSSAVV7qBiKHkuKAQwNCivHqG39
-	 hiSz/SRLFFfag==
-Date: Sat, 26 Apr 2025 14:14:55 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Nuno Sa 
- <nuno.sa@analog.com>
-Subject: Re: [PATCH v3 01/11] iio: backend: add support for filter config
-Message-ID: <20250426141455.05487816@jic23-huawei>
-In-Reply-To: <20250425112538.59792-2-antoniu.miclaus@analog.com>
-References: <20250425112538.59792-1-antoniu.miclaus@analog.com>
-	<20250425112538.59792-2-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745673329; c=relaxed/simple;
+	bh=wmWtsJ24OwgPn4tBDpWsmi4U8Po3bYIO0oB2dXDrHuw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ItiaKTAN19N1T51U1a+F6R5i8IlxDhuu7PfQ4y9iNFj+BVXted65ISgur3iPhCky2io/mCZj8THrpl2HHg9BwC17GBlvr5rY2BA1T4O3NrTiKNLTmdjBgjsWDE1ToDHjPT9bZRQpkzR+08g57tGSbDkTo7UHzcfw3d0sawgKMBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Sat, 26 Apr
+ 2025 16:14:05 +0300
+Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Sat, 26 Apr
+ 2025 16:14:05 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: syzbot <syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [syzbot] [usb?] WARNING in gl861_ctrl_msg/usb_submit_urb
+Date: Sat, 26 Apr 2025 16:13:53 +0300
+Message-ID: <20250426131356.764288-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <680aaf92.050a0220.317436.0050.GAE@google.com>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-On Fri, 25 Apr 2025 14:25:28 +0300
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+Hi,
 
-> Add backend support for digital filter type selection.
-> 
-> This setting can be adjusted within the IP cores interfacing devices.
-> 
-> The IP core can be configured based on the state of the actual
-> digital filter configuration of the part.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-All these backend things look fine to me. However, as for all backend
-stuff I'm not the expert so will be looking for other reviews on these.
+> ------------[ cut here ]------------
+> usb 2-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
+> WARNING: CPU: 0 PID: 5845 at drivers/usb/core/urb.c:413 usb_submit_urb+0x11dd/0x18c0 drivers/usb/core/urb.c:411
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 5845 Comm: syz-executor566 Not tainted 6.15.0-rc2-syzkaller-00488-g6fea5fabd332 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> RIP: 0010:usb_submit_urb+0x11dd/0x18c0 drivers/usb/core/urb.c:411
+> ...
+> Call Trace:
+>  <TASK>
+>  usb_start_wait_urb+0x11a/0x530 drivers/usb/core/message.c:59
+>  usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+>  usb_control_msg+0x2b3/0x4c0 drivers/usb/core/message.c:154
+>  gl861_ctrl_msg+0x332/0x6f0 drivers/media/usb/dvb-usb-v2/gl861.c:58
+>  gl861_i2c_master_xfer+0x3b4/0x650 drivers/media/usb/dvb-usb-v2/gl861.c:144
+>  __i2c_transfer+0x859/0x2250 drivers/i2c/i2c-core-base.c:-1
+> ...
 
-+CC Nuno
+This issue seems similar to another one [1], syzkaller managing to
+craft a I2C transfer request with 0-length read message. That
+request is moved to 0-length USB read request, which is forbidden.
 
-> ---
-> changes in v3:
->  - update function to set the actual filter type instead of just enable/disable.
->  drivers/iio/industrialio-backend.c | 15 +++++++++++++++
->  include/linux/iio/backend.h        | 13 +++++++++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
-> index d4ad36f54090..2d28eabb1607 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -778,6 +778,21 @@ static int __devm_iio_backend_get(struct device *dev, struct iio_backend *back)
->  	return 0;
->  }
->  
-> +/**
-> + * iio_backend_filter_type_set - Set filter type
-> + * @back: Backend device
-> + * @type: Filter type.
-> + *
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
-> +int iio_backend_filter_type_set(struct iio_backend *back,
-> +				enum iio_backend_filter_type type)
-> +{
-> +	return iio_backend_op_call(back, filter_type_set, type);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iio_backend_filter_type_set, "IIO_BACKEND");
-> +
->  /**
->   * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate) mode
->   * @back: Backend device
-> diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
-> index e45b7dfbec35..5526800f5d4a 100644
-> --- a/include/linux/iio/backend.h
-> +++ b/include/linux/iio/backend.h
-> @@ -76,6 +76,14 @@ enum iio_backend_interface_type {
->  	IIO_BACKEND_INTERFACE_MAX
->  };
->  
-> +enum iio_backend_filter_type {
-> +	IIO_BACKEND_FILTER_TYPE_DISABLED,
-> +	IIO_BACKEND_FILTER_TYPE_SINC1,
-> +	IIO_BACKEND_FILTER_TYPE_SINC5,
-> +	IIO_BACKEND_FILTER_TYPE_SINC5_PLUS_COMP,
-> +	IIO_BACKEND_FILTER_TYPE_MAX
-> +};
-> +
->  /**
->   * struct iio_backend_ops - operations structure for an iio_backend
->   * @enable: Enable backend.
-> @@ -100,6 +108,7 @@ enum iio_backend_interface_type {
->   * @read_raw: Read a channel attribute from a backend device
->   * @debugfs_print_chan_status: Print channel status into a buffer.
->   * @debugfs_reg_access: Read or write register value of backend.
-> + * @filter_type_set: Set filter type.
->   * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
->   * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
->   * @data_stream_enable: Enable data stream.
-> @@ -150,6 +159,8 @@ struct iio_backend_ops {
->  					 size_t len);
->  	int (*debugfs_reg_access)(struct iio_backend *back, unsigned int reg,
->  				  unsigned int writeval, unsigned int *readval);
-> +	int (*filter_type_set)(struct iio_backend *back,
-> +			       enum iio_backend_filter_type type);
->  	int (*ddr_enable)(struct iio_backend *back);
->  	int (*ddr_disable)(struct iio_backend *back);
->  	int (*data_stream_enable)(struct iio_backend *back);
-> @@ -190,6 +201,8 @@ int iio_backend_data_sample_trigger(struct iio_backend *back,
->  int devm_iio_backend_request_buffer(struct device *dev,
->  				    struct iio_backend *back,
->  				    struct iio_dev *indio_dev);
-> +int iio_backend_filter_type_set(struct iio_backend *back,
-> +				enum iio_backend_filter_type type);
->  int iio_backend_ddr_enable(struct iio_backend *back);
->  int iio_backend_ddr_disable(struct iio_backend *back);
->  int iio_backend_data_stream_enable(struct iio_backend *back);
+Alan suggested a fix [2] to issue [1]. I guess it makes sense to
+do something similar here as well. Unless there is a consensus
+about checking for such cases deeper in I2C core?
+
+[1] https://syzkaller.appspot.com/bug?extid=c38e5e60d0041a99dbf5
+[2] https://lore.kernel.org/all/c7f67d3b-f1e6-4d68-99aa-e462fdcb315f@rowland.harvard.edu/
+
+
+Regards,
+Nikita
+
+
 
