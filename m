@@ -1,88 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4FA926
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B93A926;
+	Sat, 26 Apr 2025 14:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745676980; cv=none; b=NADrOy+F2OEbXyP2OQegEu4Vj378QHvKkGpurPbtPGSe+iqakMg36HgoO01ln7U4dLEfVUcn4J5oJxbwPGqfl5+E7aqa5c/44YjP7HN0GUShzRI+1qWXA5pKPJCFVciJo6i+5XHDNCKMH7OVehf0JXfemH22wtoZf/dllMRCFDs=
+	t=1745677073; cv=none; b=u8I2HBjg63jwb8C2xpt4Uxu7xeKgn9wWznG22Fx27mgjPJb2jqH3sCCfhF44QSHh7hEWl6i91ZA3ThMLeh86E/VjsMPPlvGcLq+G5MZ3wszqWskPwrWxov9/0nNCNoLogNF6MUTkDr2Xn56YLaJ/rvgiNffMr+ROG5p4+kn1Rls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745676980; c=relaxed/simple;
-	bh=N1YWiN0vUP+4GgolL3DpxN1tliOksTTr9DRMbL1qvM0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mZZK9ZNWmJDZYGlE5eHsoIglyn8PiY4YmVbTu03fvLkaLPb1SzEpGMRgE2Bi52bekXXy/XTlM5pwomjFgnf8qDhBAEl8KdDvAFzQzAeaco8kXizUWlNd22ajfIY/rUsr4wS8vtRcv+7gfI0X1sia6v0YjOlwf3NziVcfwtN1KYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMz1trMC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745677073; c=relaxed/simple;
+	bh=cuEInkRwNerk6OIj59R3c5CceD+2y0SbZ4SaWSSSy+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jw3NM+J86tkJYd3fL3SvaRR06YDkGkq9IAxaD9djq1J1uRW9cb4sK5WbWG5F1Lfza5CeJ863GDlXjIn7w7vdm+znvYvYEsvOoW1IzVpK8n4N4Zs3z/iAChyKndMFB0xI+zKUBq5Y2lZiScmpZ/NJKLjPDczJU+MKHBNTAHZCVY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwPtB/qk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMz1trMC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B38E3C4CEE2;
-	Sat, 26 Apr 2025 14:16:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwPtB/qk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16886C4CEE2;
+	Sat, 26 Apr 2025 14:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745676977;
-	bh=N1YWiN0vUP+4GgolL3DpxN1tliOksTTr9DRMbL1qvM0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FMz1trMCj79iKTZy3+andh8lEk3lSz0Bxpuibpsq0nEw3s33ZWizckYBinIheg2Ox
-	 Nex9FKhCEHcK8wtdOhb2g2oVekKixg+kUzID5KijKYihOoWehrnw5sZanGhr7CqbDo
-	 g7/Lgdi35rt5lkHy2FGR1XVq+B8BN7+b9jbaw/O5+Lrm2p+wSb0J/rQmVmWAer4jIH
-	 ehgAAiOFqPWq0N6EPH+gkfhtxbcyJPYqqFswgJulVzEWioYqSgOEOd+9L88ZK3WxFi
-	 V3HCx6cKHu+6SaFjUwzhyR0FYVlygkudoEnOjJHRoHg0Y14LfreEOB1Kn5vCiMHgR3
-	 bUBZFZMlHTlKA==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH] riscv: enable mseal sysmap for RV64
-Date: Sat, 26 Apr 2025 21:59:54 +0800
-Message-ID: <20250426135954.5614-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=k20201202; t=1745677072;
+	bh=cuEInkRwNerk6OIj59R3c5CceD+2y0SbZ4SaWSSSy+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RwPtB/qkxig3paTp7m1RpRlCAA5RCyqTq6FFtfQ1baIQuvGHBKJrFlIPHYIxg8aKn
+	 L7lPlhIMYWXER4bVjYgpPY0u+6LCAxfBAKEL/MamSkR27UwtjR3JUb6GxbNv4RO2/Y
+	 OEiKkWoqH5T/nhzmTPuFaog/hYM6LAF6rP7I9/vXfs71+3uVg9nygNYl1B3gYn5vaX
+	 2NiqWpm9w0qUA1vq06NiZZfOlS6XMSoFKScTiGBncYTpCgvL6ytnk9xTDO1mg3uIWW
+	 t58zlr1EC06lR9l5SapjKiz/Bn1PthT2rdzcGwqfppxkxKFT3+15QJx2oKNDJjwkR1
+	 eV+a2Ksxujw6A==
+Date: Sat, 26 Apr 2025 15:17:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Eason Yang <j2anfernee@gmail.com>, lars@metafoo.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, dlechner@baylibre.com,
+ nuno.sa@analog.com, javier.carrasco.cruz@gmail.com, gstols@baylibre.com,
+ olivier.moysan@foss.st.com, alisadariana@gmail.com, tgamblin@baylibre.com,
+ antoniu.miclaus@analog.com, eblanc@baylibre.com,
+ joao.goncalves@toradex.com, ramona.gradinariu@analog.com,
+ marcelo.schmitt@analog.com, matteomartelli3@gmail.com,
+ chanh@os.amperecomputing.com, KWLIU@nuvoton.com, yhyang2@nuvoton.com,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <20250426151738.43f0d25a@jic23-huawei>
+In-Reply-To: <aAoU6iWGPkqjon7Z@smile.fi.intel.com>
+References: <20250424083000.908113-1-j2anfernee@gmail.com>
+	<20250424083000.908113-3-j2anfernee@gmail.com>
+	<aAoU6iWGPkqjon7Z@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS for RV64, covering the
-vdso, vvar.
 
-Passed sysmap_is_sealed and mseal_test self tests.
-Passed booting a buildroot rootfs image and a cli debian rootfs image.
+> 
+> > +	/* Enable Channel */
+> > +	if (chip->num_vin_channels <= 8) {
+> > +		err = regmap_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
+> > +				   GENMASK(chip->num_vin_channels - 1, 0));  
+> 
+> > +		if (err)
+> > +			return dev_err_probe(dev, err, "Failed to enable channel\n");  
+> 
+> This...
+> 
+> > +	} else {
+> > +		err = regmap_bulk_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
+> > +					&data, sizeof(data));  
+> 
+> > +		if (err)
+> > +			return dev_err_probe(dev2, err, "Failed to enable channel\n");  
+> 
+> ...and this are identical, deduplicate by moving outside of if-else.
+> 
+Not worth the dev vs dev2 distinction.  They are ultimately the same device so
+just use dev for both.
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Cc: Jeff Xu <jeffxu@chromium.org>
----
- arch/riscv/Kconfig       | 1 +
- arch/riscv/kernel/vdso.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index bbec87b79309..3cb0b05eef62 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -70,6 +70,7 @@ config RISCV
- 	# LLD >= 14: https://github.com/llvm/llvm-project/issues/50505
- 	select ARCH_SUPPORTS_LTO_CLANG if LLD_VERSION >= 140000
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN if LLD_VERSION >= 140000
-+	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS if 64BIT && MMU
- 	select ARCH_SUPPORTS_PAGE_TABLE_CHECK if MMU
- 	select ARCH_SUPPORTS_PER_VMA_LOCK if MMU
- 	select ARCH_SUPPORTS_RT
-diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
-index cc2895d1fbc2..3a8e038b10a2 100644
---- a/arch/riscv/kernel/vdso.c
-+++ b/arch/riscv/kernel/vdso.c
-@@ -136,7 +136,7 @@ static int __setup_additional_pages(struct mm_struct *mm,
- 
- 	ret =
- 	   _install_special_mapping(mm, vdso_base, vdso_text_len,
--		(VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC),
-+		(VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC | VM_SEALED_SYSMAP),
- 		vdso_info->cm);
- 
- 	if (IS_ERR(ret))
--- 
-2.47.2
+> > +	}  
+> 
+> 
 
