@@ -1,173 +1,210 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7921B0402
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 22:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354657494
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 22:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745706858; cv=none; b=Fjto5/Hie9ciJzGllonB+z0rendlPOWf8QB2DU13xC62UEyLV2KZRpQdjWzmdoJq2Jxqn3EQJgKe6HO+e6YugM21EgLGuhZZoN5Y0srKW3jifw1IMzR08ar62L/zTBsTFPsemBwWcfoVkUOJaEkDvFAvl4pakZ9Qn5F8QsRyVi4=
+	t=1745706928; cv=none; b=h7SWtZA0+teftcWVNnF2E8NRnGKZUatnuadQlDqjRM73kZhGlHy3sC2Ajt/FuycRaGtmhamOS/vKFwH8LTQ79OipcvJIFJNSOMz2CTeD977fpIg0i8PrSDt7urAtcsrz/ORA3XKrcxXA1IKj97NH7fe7f0sauIEYmivUb9W1i6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745706858; c=relaxed/simple;
-	bh=KFP/OMt+pVNyA5FsCHR48Mx5Hg0N9JcRJgmsN3DujQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=evJ+/g093vRJdiSqhZ5S0MHRqNx94LXehIDRPt+mpjGSddSbCRDQ16rHaXzn1dcQn2ZBYWddru+qM2ep/AWLjsgJjp42jZElRegLspozfpKphQWwhJnMCoSTSi6b0RWsK1C59kKAC4CWs2OxC7sKk5PSRTpXUaJMtAR/hVwdND0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BNZzBz+y; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745706928; c=relaxed/simple;
+	bh=yY0sW+6kY7zbaaxZ/o7AcKZ79mhZjHG/DAk/FyArlD0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SYxopQ+dsGpGV8SQCK4qnYhODtbWDqON9QvJBqmTbbXOdTGi2ifIuyAgUtX5RTxIi6WtFy7D1ryow+QK5hcyJvgBb+/OiccB2Ik6o5MXlQbLzXwRREgvLbPpJMf7iUxewkhjiA5ELSMuMGLY7ht4qXB16lg7+HWQxYq3o2+jVns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gi8I83ot; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BNZzBz+y"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3fbc00143d6so3002226b6e.3
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:34:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gi8I83ot"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so2103132f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:35:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745706853; x=1746311653; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iYVVUGhcXIwOLu06TILyWFwu4mq3jXrLLzPklRAXR6Q=;
-        b=BNZzBz+yhzpzg/M0/JeYdSA0M4sh+kTyxVvRWshrqxAjCrGijFMxrmGJJGdiW74xnv
-         /+bJ7Ygwl9HIAv8l66EUPeuxtMQmPUQD2vvswyh7vBam5dJivvAkGiG2S3SYe8ZwRugp
-         w2h/uLtkmMelldCyBxVpJ+zS1Nwirr3Ic4+Od+5iCE4lU2TVwNaLhG1EiIgJgTUlAgtx
-         meDP+mAh05TbInY7fBOpapiKmvnaEudqyde6/IsXCABRvsznGCv425fVO0kYpahhNITH
-         LzcJO1/4P03/98IKsdO6ymloRoefOjEJTk4V48OTxreyAtFtxTYK6t45mf1MUQ6UCuOv
-         c6zw==
+        d=linaro.org; s=google; t=1745706924; x=1746311724; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WNrnxhz6g4RdxB4ag2AWYSptriqYwf47OU+jpmhkkQ8=;
+        b=gi8I83otDm5M6QuQhIFE5o6uonGBcEEBgnpWl8gPo5fXDx9fRqFiRDFjp9Zqov4IBE
+         cvECetJ9LBgb/zclmhxQ66kVPIcthpGWh4KnkwKxL2ts13WU9+98TC2VG5wDO1i4clhj
+         HR4DF7OSjFUs53WjA2yKeIf3iMuZ17Uc+56a5QAZLFHJYqPhxVHvVQ24S4HWMw5J/ZAS
+         gQLSykFKVk/gEwpQBW7A940juQLUZeiD2s4ddaKKU40seOGUeSB0uT2Dcz9uQkPHuvXP
+         LhmOqMIKfow38zcUPtYnu24rpfYz8RFR42tN+rJOqYksBBth7tnHvWtQpoh0VaAh9q0H
+         AADA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745706853; x=1746311653;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iYVVUGhcXIwOLu06TILyWFwu4mq3jXrLLzPklRAXR6Q=;
-        b=Zq4cZs/Y4T8rsuBSc+TNaQFVU3hrywDssOg7eg12e66ggtpuHPdnyg1Yhj9HbRGTrL
-         YVHc5QHXlppzuYL6SzTBkP31XpqsA1WnnId5LrbzIEVsYVgqzYPhgmOwpFUZjLHzz1o4
-         qtZreKfaul1oBGst7FUq0IYiaLjnzwWFxTv0cWsstrVdePzPSEf8QdxZVsjl+S+MuHZb
-         ik8b+vsI5a+egwctKRQGTcq3bCi4fMmd5CfNIhi/DqoRa8X2GOiPJGqOAFlJOT95PxYH
-         wJiN0HXXbVl7p143MJkdNDwn6YbYYG0LNKc+Zy7ATL+lDQoaytu8AAwSLKOvqblFfS82
-         ULsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTphdH7Dpfn2O+8XVfYM+Fk4zW3//2qbXOT0IAHjOTER5ydQD5j0f8H3ftN/vuqz4XJOrFQA7lx5v2GWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfPJu36FI56+SnlZbRoANH6AnM6gP530Tz/3LQ9XJP5zKAZ7H5
-	lWM49fzLcuzq+UCi4A1/kBBNhflLh2Fc1ixkTN4TPkUOMeOBy1FPS1TrrUME4DA=
-X-Gm-Gg: ASbGncsQdzGMGRhYdiQh8PIElCbEMoOPKUwg748YF7DUdaa9LB3RqPfg+TEjypOJYtM
-	kNnUL+XO7YGiH4mtTnKejiiN/4nXJSY5Gn13r9a5AJqzfkx1b83on2SjyDGDOpDl3uV/j2Q0TIh
-	iNiTo+t0QIqkNZDi110aFUSDwNIMJmP4IPzzYrI/ILjzu3f7WRYpDIJjoRvpygnuBaq9Tj2/aZV
-	PflaKCcM/mKiDJab4MzOIDYsrqAyo9hNM9TJJBDIJrqsFIDtMkfUpnU26CQpa4OKJw17m+geoHT
-	sZXKE8X2ZFuEF5LiYhf6dFJ5ushVX4uT9SHBOZOJ/UowOIXjHJexi0bc5dzpH2/qp/dpKtU/dxo
-	Idy85FBGiMoyeLXb6Ag==
-X-Google-Smtp-Source: AGHT+IEWcdgjh8/VjhINgT8GfioFVGPqEFDg87O6EIU4BE5z/R9+CNVDT1w95ttosllom+MZY3JBMQ==
-X-Received: by 2002:a05:6808:338a:b0:3f9:3de3:c8de with SMTP id 5614622812f47-401f289161fmr3985703b6e.12.1745706853626;
-        Sat, 26 Apr 2025 15:34:13 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:96ff:7f79:37f3:5c67? ([2600:8803:e7e4:1d00:96ff:7f79:37f3:5c67])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401ec977dafsm1329187b6e.41.2025.04.26.15.34.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 15:34:13 -0700 (PDT)
-Message-ID: <8a57a332-c2a6-4825-a5f7-d765ea15bd6f@baylibre.com>
-Date: Sat, 26 Apr 2025 17:34:10 -0500
+        d=1e100.net; s=20230601; t=1745706924; x=1746311724;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WNrnxhz6g4RdxB4ag2AWYSptriqYwf47OU+jpmhkkQ8=;
+        b=u0DrEE30lzG36TJeqxGzRckvupsT1013BuL/1FI8qnezFX0482KYpCHQso9fBW415O
+         Om2UA9NeOKdAbvFienGyM+UlP0eMB3elGNvv0PBugsKNQR4uhxUixfo9dWdyncCWaUZy
+         +1BNmF/SFsu6rSweJOn/3N+vEIg2wgFPWCFeKv1tIS+nlvungAans9FK5/X8zIMrmXmp
+         gd8a7hoFdZSgj1CNhYoFdPauDQT+aqqJlNt5HL0Jht3NQ8hFBrM4wMv1c4Wan/22nxHI
+         msGkgy67HMCIP7egaZOy8F+nQ3n/WdysVmZxza1dxSi3CLM3YJR0wZLqPbPdZ3f8FbxQ
+         7S1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVKhgLGHVwH1t88cIVmtCbz9IFdThM1RsgzcqZp3JA9G7maL4B/tR71uNDXLXIK0RquL3yg2fpM4+GtQ1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHkZEhlt33qRfKIsarQLk/LsDXFW3Yy39Qoyq9Zpjet1BCa7Oa
+	KCPlKju9hGdKQ1d4T7+ULeSmn6KzvMtXlEU4SDnB9ld5QDII+kiUiMX6lt9Z3wY=
+X-Gm-Gg: ASbGncsKBsD7jElmnFDQ2Lw2itOFj+8FTRe2/IbJOYWgWbqJKbuXh/SPzuPg2zOk7b8
+	b6bTd5uQHjVB1ojRvB3uZphqx8tX8EIfyrmy/ufWr5eUHd1HZs4MANtwuFaXxgmC19PXdMuRA2k
+	QIM0yorxXfDxaWUcN2nTmeGpsGguojVXcTl5gaEfOikv3W3Uk58rlL9m/8+h6ZeXffynXAj/jtn
+	K+hIh0mwYQIEPkpeWJxFikL5tFv+jVDLRDC40B3pOuF8f80BoEEXFk4pklSbjswvX8xPFbEzASX
+	MOEEbV9YZS8MvYPWRiBeJKgsyZgBiWmI/CZPyvL/UFVXERhXoRcRL8MhVU83MpYVvw9byD6Tw02
+	mv4/wTqfpeq5bebn/
+X-Google-Smtp-Source: AGHT+IHksr9oz6ICNBggkESZpybwGKJ3RYgoiYZEZ1vMXPzCTT7AMNN7ENOfnvoEl96SRJxZIesvGA==
+X-Received: by 2002:a05:6000:40df:b0:39e:e3ef:5cbf with SMTP id ffacd0b85a97d-3a074e1dcf9mr5070496f8f.24.1745706924505;
+        Sat, 26 Apr 2025 15:35:24 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5e1c6sm6885212f8f.98.2025.04.26.15.35.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 15:35:23 -0700 (PDT)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Date: Sat, 26 Apr 2025 23:35:21 +0100
+Subject: [PATCH] media: dt-bindings: Add OminiVision 0V02C10
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com>
- <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
- <20250426123509.0b04f0f9@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250426123509.0b04f0f9@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-v1-1-9a46124fae7b@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAKhfDWgC/x2NQQqDMBAAvyJ77kISNUi/UnqIya4u2KRkUVrEv
+ zcU5jKXmROUqpDCvTuh0iEqJTextw7iGvJCKKk5OONGMziP84AaZNuVS0WPtoEjqiyZEpbDuGg
+ NfsNrQz/Ffu6Tj8wMrfeuxPL5vx7P6/oBJiRzr3sAAAA=
+X-Change-ID: 20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-68c3b3d6cfff
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Bryan O'Donoghue <bod@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4029;
+ i=bryan.odonoghue@linaro.org; h=from:subject:message-id;
+ bh=yY0sW+6kY7zbaaxZ/o7AcKZ79mhZjHG/DAk/FyArlD0=;
+ b=owEBbQKS/ZANAwAIASJxO7Ohjcg6AcsmYgBoDV+qWAdHyuODYB7TozuWJs/pPl7CKF7Q38Mht
+ aAb25wXsICJAjMEAAEIAB0WIQTmk/sqq6Nt4Rerb7QicTuzoY3IOgUCaA1fqgAKCRAicTuzoY3I
+ OlwGD/9W9Rw7Ud+R4f7DLU2y+37JAIKFk0dLdy3s/kL8eRlltEhiMig+SaXmeCb4qQ+PRvwrgb6
+ jxYg/VgsyRLlbMtYnmFTyZX2JN/QR+wpWCSbj3I672lsHFjv1Gng4RqyMHAORr8eMXNT7BkWdoQ
+ 4TYc3ptwErCymPT560vM0557oLBUv4OgXFANxh8ZWVxc1bsymGEEUBtsDOj+tDvscoby1uJVDZj
+ iptyisFQPuq+4s6F1GmF3gS2Eo+VHOHbOWjVrT28os8PjrlbcJE5B+Z2KaEKWVXqd3F+p76/3Mb
+ 1BBbb2tSGId2wLb/VhpmKehTCuQFbh9ocqdcFI8xqa9h70LKXD3qp0gDHWNeDfs/2sQaSN5Nsn5
+ k9qvWJgxBRbmGBzF75/k3AsQBlLPgG9AKknuYpfqNh8PvHLiSSP919aeuC2XYjF+ZhaxTKirwhF
+ /WaopTqCTWzchcg4GuQdz0YNYROZOw6hRZTda7zK43FXqhs1zU2DXjy7b3Zqnw5MST8BSBqXx88
+ iLw/oK7Cg5SisWTswwUA7tkF0FcKwbFwJJEkT9kwWX0lpPI1SDnuPqvcIbiDGlkavWwmOpCF+oK
+ BLLsHBbvorWp9O28fjNukTTB2b6XtE7NCsRXBA6xwFnam5vuyJZExZe3RSTC9XytPXfFmE4qdEk
+ zim/xYHu+meOJ8w==
+X-Developer-Key: i=bryan.odonoghue@linaro.org; a=openpgp;
+ fpr=E693FB2AABA36DE117AB6FB422713BB3A18DC83A
 
-On 4/26/25 6:35 AM, Jonathan Cameron wrote:
-> On Fri, 25 Apr 2025 16:08:43 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
+Extend the ov02e10 bindings yaml to describe the ov02c10 sensor which has
+the same bindings with a different compat string and different i2c
+address only.
 
-...
+Other differences in sensor capabilities exist but are not expressed in
+devicetree.
 
->> @@ -777,6 +779,42 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
->>   * them safe for use with non-coherent DMA.
->>   */
->>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
->> +
->> +#define __IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
->> +	static_assert(count); \
-> 
-> Why do we care if count is 0?  Or is intent to check if is constant?
-> If the thought is we don't care either way about 0 (as rather nonsensical)
-> and this will fail to compile if not constant, then perhaps a comment would
-> avoid future confusion?
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+I previously submitted a standalone ov02c10 yaml file but, it was pointed
+out to me by Krzysztof that the ov02e10 yaml has exactly the same bindings
+and we should therefore extend the ov02e10 yaml.
 
-I would be inclined to just leave out the check. But yes, it is just checking
-that count is constant and we don't expect 0.
+Link: https://lore.kernel.org/linux-media/da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org/
 
-> 
->> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
->> +
->> +/**
->> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
->> + * @type: element type of the buffer
->> + * @name: identifier name of the buffer
->> + * @count: number of elements in the buffer
->> + *
->> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
->> + * addition to allocating enough space for @count elements of @type, it also
->> + * allocates space for a s64 timestamp at the end of the buffer and ensures
->> + * proper alignment of the timestamp.
->> + */
->> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
->> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
->> +
->> +/**
->> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
->> + * @type: element type of the buffer
->> + * @name: identifier name of the buffer
->> + * @count: number of elements in the buffer
->> + *
->> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
->> + * to ensure that the buffer doesn't share cachelines with anything that comes
->> + * before it in a struct. This should not be used for stack-allocated buffers
->> + * as stack memory cannot generally be used for DMA.
->> + */
->> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
->> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
->> +
->> +static_assert(IIO_DMA_MINALIGN % sizeof(s64) == 0,
-> That message isn't super helpful if seen in a compile log as we aren't reading the code here
-> "IIO_DECLARE_DMA_BUFFER_WITH_TS() assumes that ...
-> 
->> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
->> +
+The accompanying patch:
 
-Seems we actually have an arch (openrisc) that triggers this [1]. This arch
-doesn't define ARCH_DMA_MINALIGN so it falls back to:
+- Updates the overall description to differentiate between the two sensors
+- Adds ovti,ov02c10 compat string
+- Adds an example for the ov02c10
 
-#define ARCH_DMA_MINALIGN __alignof__(unsigned long long)
+Once merged we can also merge the ov02c10 driver, which contains a compat
+string requiring yaml description as precursor to merge.
+---
+ .../bindings/media/i2c/ovti,ov02e10.yaml           | 47 ++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
-Apparently this is only of those 32-bit arches that only does 4 byte alignment.
-From the official docs [2]:
+diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
+index 4ac4e11a16c8bb7a53db0c44289b1004dbdc282a..1561a3e96caa8b09a4c105b87536bb0d00b2adf8 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
+@@ -11,12 +11,22 @@ maintainers:
+   - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+ 
+ description: |
+-  The Omnivision OV02E10 is a 2 megapixel, CMOS image sensor which supports:
++  The Omnivision OV02E10 and 0V02C10 sensors are 2 megapixel, CMOS image sensors which support:
+   - Automatic black level calibration (ABLC)
+   - Programmable controls for frame rate, mirror and flip, binning, cropping
+     and windowing
+-  - Output formats 10-bit 4C RGB RAW, 10-bit Bayer RAW
+-  - 2-lane MIPI D-PHY TX @ 720 Mbps per lane
++  - OVO2C10
++    - 10 bit 1920x1080 60 fps 2-lane @ 800 Mbps/lane
++    - 10 bit 1920x1080 60 fps 1-lane @ 1500 Mbps/lane
++    - 10 bit 1280x720 60 fps cropped 1-lane @ 960 Mbps/lane
++    - 10 bit RGB/BW 640x480 60 fps bin2 or skip2 1-lane @ 800 Mbps/lane
++    - 10 bit RGB/BW 480x270 60 fps bin4 or skip4 1-lane @ 800 Mbps/lane
++  - OV02E10
++    - 10 bit 1920x1088 60 fps 2-lane @ 720 Mbps/lane
++    - 10 bit 1280x1080 60 fps 2-lane @ 720 Mbps/lane
++    - 10 bit 960x540 60 fps 2-lane 4c1 360 Mbps/lane
++    - 8 bit 480x270 1/3/5/10 fps 4c1 sub2 288 Mbps/lane
++    - 8 bit 232x132 1/3/5/10 fps 4c1 sub4 144 Mbps/lane
+   - Dynamic defect pixel cancellation
+   - Standard SCCB command interface
+ 
+@@ -25,7 +35,9 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: ovti,ov02e10
++    enum:
++      - ovti,ov02c10
++      - ovti,ov02e10
+ 
+   reg:
+     maxItems: 1
+@@ -109,5 +121,32 @@ examples:
+                 };
+             };
+         };
++
++        ov02c10: camera@36 {
++            compatible = "ovti,ov02c10";
++            reg = <0x36>;
++
++            reset-gpios = <&tlmm 237 GPIO_ACTIVE_LOW>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&cam_rgb_defaultt>;
++
++            clocks = <&ov02c10_clk>;
++
++            assigned-clocks = <&ov02c10_clk>;
++            assigned-clock-parents = <&ov02c10_clk_parent>;
++            assigned-clock-rates = <19200000>;
++
++            avdd-supply = <&vreg_l7b_2p8>;
++            dvdd-supply = <&vreg_l7b_1p8>;
++            dovdd-supply = <&vreg_l3m_1p8>;
++
++            port {
++                ov02c10_ep: endpoint {
++                    remote-endpoint = <&csiphy4_ep>;
++                    data-lanes = <1 2>;
++                    link-frequencies = /bits/ 64 <400000000>;
++                };
++            };
++        };
+     };
+ ...
 
-	Current OR32 implementations (OR1200) do not implement 8 byte alignment,
-	but do require 4 byte alignment. Therefore the Application Binary
-	Interface (chapter 16) uses 4 byte alignment for 8 byte types. Future
-	extensions such as ORVDX64 may require natural alignment.
+---
+base-commit: 8b5b11babc761c25602230260fb001267645b9a1
+change-id: 20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-68c3b3d6cfff
 
-[1]: https://lore.kernel.org/linux-iio/20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com/T/#m91e0332673438793ff76949037ff40a34765ca30
-[2]: https://openrisc.io/or1k.html
-
-
-It looks like this could work (it compiles for me):
-
-	__aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
-
-If that is OK we could leave out the static_assert(), unless we think there
-could be an arch with IIO_DMA_MINALIGN not a power of 2?!
+Best regards,
+-- 
+Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
