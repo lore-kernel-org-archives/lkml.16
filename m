@@ -1,53 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FFC1B4F0F;
-	Sat, 26 Apr 2025 10:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085701B4F0F
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745662542; cv=none; b=TihR8Zngmbbg5wVzYMS2Bxn267HYHYwfOHfMXuISueq0DlG+oGh8Zk3Fus3+3ds+6u13l/9BjT/xD2RBaIohQWEUoxMBLI+gPP27Jk4Y68XxtkcVoLeY3he4ndiXMlCeL4yN/klTxvLH09y/2Rg5v+XepsMvn4LxXknHKwrbrAA=
+	t=1745662557; cv=none; b=q0EVpz4wlX06uY+cYwkM9ZT7ErnC5knrWuN8ZT40uERJHMHuAyVnU80zrh3JWOwQE9BSiuOY1LT79tKcKaBruGW/dlk7k4YdpNukv3hWl6pIN5A/RA7AUfho0rc6lwWVe2oQuHYRM6aHMtXH4aLFsl6JmJ0iP3kXII//gwWdfts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745662542; c=relaxed/simple;
-	bh=hry7/PUHiav3tgWqoqsQqrRYhZ9+bBE+V2R9v/Y/I14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=taUxgcJP2xVKHx3In2BTVVIxvA+4F/aRPt8gOdJbESXBhWKPe6M6t9xsuI1g3gE/R6gmQQCeBnZXe1g0XDUlbVdkRYIXTHWc+z20lL+gMMQgUmRIHYyBFPLLQH+dIrtGpNJRqdrA9MNhw59R/aY7HkvBmilmKXcPtje3R5RgIZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUhQtHjy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745662557; c=relaxed/simple;
+	bh=Bgg33G1mN4LgBsqM1Yzp9RAosd2oACBOwE1ILaEVsgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UI2zSrN/RHTTN+QtUnj+igukxbcSCAUxMOSpoJvkafKd03flKuu2VKWytmiEHTsht53O36gzq231fuuVgmoPbgCk2obHlb+I/n9/pKy61soxuatAIToh1rFW9rTdWUJoQs4LKRb0IA5pH4UdHEesm9NECtSDsJmLR/xMRBv9rbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iAWTdLnF; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUhQtHjy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E224C4CEE2;
-	Sat, 26 Apr 2025 10:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745662542;
-	bh=hry7/PUHiav3tgWqoqsQqrRYhZ9+bBE+V2R9v/Y/I14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FUhQtHjyxIUc2biG2aheOhyo3/N/rd5wvpNcK8N3vj80Yo0+S1b4dklyKAGGe90W0
-	 PE1SZpuT79hZbd/xuFEI/8ZvEmPAKCkJOcmT/xIvon89nHso4PASyabQ1w/+DDb8u4
-	 UfwcNZyReTcfm6CZo1Hb/VFaTFTwin7b6JGq79q2xX3dZI2BE7dLuHXGfU5SnDAMMR
-	 fyAw1s+y4uZsSxJVydTRoRwK6yVkzHYpQmT7blO67m/Y3VkuTg8baAL1Aw3VfW4IAA
-	 g43G5ytHuAyPawDhCwSxbveQsiwqPtE7eyZWp+1xNc4hnNmHU965ajEaJIKLIDFfyN
-	 yH/98CwxFOdRA==
-Date: Sat, 26 Apr 2025 12:15:35 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-Message-ID: <aAyyR5LyhmGVNQpm@pollux>
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-4-remo@buenzli.dev>
- <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iAWTdLnF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745662555; x=1777198555;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Bgg33G1mN4LgBsqM1Yzp9RAosd2oACBOwE1ILaEVsgo=;
+  b=iAWTdLnFG3MhYUMr/HM85FmpfDTS1+Ais7TfNuyiJoeAU1cER/NRgn6T
+   aAc8T+leuzy0DfWu2GvFQ85tpzBykH5291orWqGlgKKFE/Pkx1Klt9MTy
+   a35fVLT22UBhvhV8Nt+OuKFUW9ae9oLa6E9tCdmoQ8jOEG3UPixulPbRE
+   UtCOX1lHRTvqS/sNMHgWGUD60JNlK26+74voi3LT77qMTxbnN+C2y4kb0
+   vTBtYtXobqs6A4+RWr4us/XtxpDW9cnwku8wslMVZ0m4PU7Us0ZPRxTl6
+   YJJrD93C/7yoRmudeyqObM9jKDpKHPS8lcAwvJQJHNLue9EtiBVb90+n/
+   w==;
+X-CSE-ConnectionGUID: a1LsRRnfRzK/oDkj4QW3Qw==
+X-CSE-MsgGUID: oot/4q1ARNGnrWWcaRRy4g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="47440632"
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="47440632"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 03:15:54 -0700
+X-CSE-ConnectionGUID: iGNUiYHKTDarzNwTKIgAdw==
+X-CSE-MsgGUID: heu8r2mfQLC2d9QR24KzzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="132988490"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Apr 2025 03:15:53 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8cZa-0005np-1S;
+	Sat, 26 Apr 2025 10:15:50 +0000
+Date: Sat, 26 Apr 2025 18:15:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shengyang Chen <shengyang.chen@starfivetech.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>
+Subject: drivers/phy/starfive/phy-jh7110-dphy-tx.c:178: warning: Cannot
+ understand          * @maps:
+Message-ID: <202504261831.YcGFqEO5-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,83 +63,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
 
-On Sat, Apr 26, 2025 at 08:19:09AM +0200, Dirk Behme wrote:
-> On 25.04.25 17:35, Danilo Krummrich wrote:
-> > On Fri, Apr 25, 2025 at 05:01:26PM +0200, Remo Senekowitsch wrote:
-> >> This abstraction is a way to force users to specify whether a property
-> >> is supposed to be required or not. This allows us to move error
-> >> logging of missing required properties into core, preventing a lot of
-> >> boilerplate in drivers.
-> >>
-> >> It will be used by upcoming methods for reading device properties.
-> >>
-> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> >> ---
-> >>  rust/kernel/device/property.rs | 57 ++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 57 insertions(+)
-> >>
-> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-> >> index 28850aa3b..de31a1f56 100644
-> >> --- a/rust/kernel/device/property.rs
-> >> +++ b/rust/kernel/device/property.rs
-> >> @@ -146,3 +146,60 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
-> >>      }
-> >>  }
-> >> +
-> >> +/// A helper for reading device properties.
-> >> +///
-> >> +/// Use [`Self::required`] if a missing property is considered a bug and
-> >> +/// [`Self::optional`] otherwise.
-> >> +///
-> >> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
-> >> +pub struct PropertyGuard<'fwnode, 'name, T> {
-> >> +    /// The result of reading the property.
-> >> +    inner: Result<T>,
-> >> +    /// The fwnode of the property, used for logging in the "required" case.
-> >> +    fwnode: &'fwnode FwNode,
-> >> +    /// The name of the property, used for logging in the "required" case.
-> >> +    name: &'name CStr,
-> >> +}
-> >> +
-> >> +impl<T> PropertyGuard<'_, '_, T> {
-> >> +    /// Access the property, indicating it is required.
-> >> +    ///
-> >> +    /// If the property is not present, the error is automatically logged. If a
-> >> +    /// missing property is not an error, use [`Self::optional`] instead.
-> >> +    pub fn required(self) -> Result<T> {
-> >> +        if self.inner.is_err() {
-> >> +            pr_err!(
-> >> +                "{}: property '{}' is missing\n",
-> >> +                self.fwnode.display_path(),
-> >> +                self.name
-> >> +            );
-> > 
-> > Hm, we can't use the device pointer of the fwnode_handle, since it is not
-> > guaranteed to be valid, hence the pr_*() print...
-> > 
-> > Anyways, I'm not sure we need to print here at all. If a driver wants to print
-> > that it is unhappy about a missing required property it can do so by itself, I
-> > think.
-> 
-> Hmm, the driver said by using 'required' that it *is* required. So a
-> missing property is definitely an error here. Else it would have used
-> 'optional'. Which doesn't print in case the property is missing.
-> 
-> If I remember correctly having 'required' and 'optional' is the result
-> of some discussion on Zulip. And one conclusion of that discussion was
-> to move checking & printing the error out of the individual drivers
-> into a central place to avoid this error checking & printing in each
-> and every driver. I think the idea is that the drivers just have to do
-> ...required()?; and that's it, then.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: d3ab7955330843699cdcc413edd7993923e6c016 phy: starfive: Add mipi dphy tx support
+date:   11 months ago
+config: riscv-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250426/202504261831.YcGFqEO5-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504261831.YcGFqEO5-lkp@intel.com/reproduce)
 
-Yes, I get the idea.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504261831.YcGFqEO5-lkp@intel.com/
 
-If it'd be possible to use dev_err!() instead I wouldn't object in this specific
-case. But this code is used by drivers from probe(), hence printing the error
-without saying for which device it did occur is a bit pointless.
+All warnings (new ones prefixed by >>):
 
-Drivers can still decide to properly print the error if the returned Result
-indicates one.
+>> drivers/phy/starfive/phy-jh7110-dphy-tx.c:178: warning: Cannot understand          * @maps:
+    on line 178 - I thought it was a doc line
+
+
+vim +178 drivers/phy/starfive/phy-jh7110-dphy-tx.c
+
+   175	
+   176	struct stf_dphy_info {
+   177		/**
+ > 178		 * @maps:
+   179		 *
+   180		 * Physical lanes and logic lanes mapping table.
+   181		 *
+   182		 * The default order is:
+   183		 * [data lane 0, data lane 1, data lane 2, date lane 3, clk lane]
+   184		 */
+   185		u8 maps[STF_MAP_LANES_NUM];
+   186	};
+   187	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
