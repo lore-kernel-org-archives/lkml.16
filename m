@@ -1,191 +1,171 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8B51865FA
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 00:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9913A244;
+	Sat, 26 Apr 2025 00:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745626261; cv=none; b=iYvb1vPX+93L8pnLrYnHHJWcicTnWeqH41CmMzIkaFCNl/G3WPC2iqun/JGa1kVnki8sR1i3nFMK/Uf6R92Pe2sC4/ezPiPVEK3b/RslFkmpOP7yE344seXlMm3+LxXCadRkIz5D6Sf8wksQi1uPNydo5X5xgQls6SW3WTZBUgk=
+	t=1745626283; cv=none; b=WdgcExRY9yokFhqTtN4kGEJP6czhHRja/db8VzgzJCBkImaUxhelx58UNn9UNJH4pXUcJNMBRlo92eb0sIogs3wOr3vhdDMn78n7/aGBNz35k/NGUOsBgT37NG0eu1n0AXI9jKX+XBLpTO2nNtszS5Cjt+cS7IOVm1nVEeypPpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745626261; c=relaxed/simple;
-	bh=Avelv97rIb7+XDqbtGCU1l8O1wt5sW1oyTruiq/tt3E=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=T+waUtQdLTdC9pTKnecViUocYzihEr13G/Of6aOPHYV2IIl5lMpciOCGbQM1v4PlxUz3A8LSl9/piLzNU3QeAavnVWB5cuG8gEKohpRBYmT5gPmzSoC5YWCxk6WlPmMN033wSVY/mcIK4NqZs7QoTlv8j2VrhJi9wIFEWIfJ3sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rv/fpouL; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745626283; c=relaxed/simple;
+	bh=DFNipnoqmsR5fihOyPm8o+8H9EYU2K0QxreJWh7S2IU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MvEX5ou1MlLeO//RCFv8ROcmrcMwX02MaCOanadFZk7/VpIyVmzZ1+koYK5ZTx9s2AmRNO/QHhq9G8JUFQZPcrQNAHGeQGJ6ka/G18rdFPglPt1nNPLADb5xCLTeiFJyx+P936GH60OkVefFfrCglRAAX+R73Gjm1Cupp1IriBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgIq0piQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rv/fpouL"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3086107d023so2552205a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745626259; x=1746231059; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nl6mE3UI0wvrR40I9/vu5uuYJQkYp5pTF9U7DAxBDpI=;
-        b=rv/fpouLK8aPcy35oZvVI/63bKIFzCgFdvxXaqJ0A6T4NuXk37urYigi50JZ2eqEFD
-         MTnrMHpzvSG0UZ4slro0ntVD+Zhf1pDP75xm8s2DDIf3VdVkcvSTdkov0kX9Afk255k6
-         Ul2Hba9FJH7bi9RzK5XzB7H46nwtmEEJ81aGbOg4CeBtak1jkQ6lGse/ZJ+ts20Oiu6t
-         UdpjJHF1dLPFFcE+F/U5Q/olMDuXkOJfhUwPaSPXYXzHKJXQdUOM2Vc9smgbtmjE3zpj
-         TAgUFZzYtdnZMwGH4D94bqJ1+EF9vaHwSrxBhmPZUmWyrH+CgaqMyW9z50b+9cYeL9MN
-         vQ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745626259; x=1746231059;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nl6mE3UI0wvrR40I9/vu5uuYJQkYp5pTF9U7DAxBDpI=;
-        b=RdSCd2FkT7B0b81nJ1KmGh24OzPMW2h485KVpOlFfsni76pDNd5MzDNbY5QTWB633X
-         aeNhIundbAwFyyY2pKlZCw4HEVJBqqsb82SFLXDCKRdpb/UA5Lyv/TysiLnfh5avIfYd
-         RHyZJBcq+jVw+KNIjLXXVyorMeX8cOL6JAzeDbSst+DDxYB11J+i3V2hBR13ceRPMBZi
-         2EuyUK9IRq7AEFSbcdYneuwielZ3GiqWPNB6TLFYvQfJEBug6wT2OUmD60ebPOdsW0yO
-         sZYquJ3ghSQrh8TlqnTp5fbwARElcO+I6XQtVB/VIQzU7K1BfFEWSUlhVwP0qISXlOaF
-         JuhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrqpSKHmmR95DexuY1tQcUx/R0DbbvDnK6y+y69Xj0N7Oe2rbK/yK+uzZNxP2dgFexoPemOlRbR+/2tnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMWfYyax2wUDPINLVBo/G/04Rcf7xqoT7sa6w6xLjJ3LK1bq9Q
-	1id1lc3W3ogq/neJfXOsbcJ7iuukMynjs/XZF3UUURBcNDjz1prPEu9wi1XfDV6cbQh1PiKrarU
-	9tQ==
-X-Google-Smtp-Source: AGHT+IHfbQHFbqz93GMMPMKs0cmOBBcFd1R66lZeP3m1CeHDWsS397BMJ08LGsYc/3f1gB8dcpav34eDBso=
-X-Received: from pjbsm11.prod.google.com ([2002:a17:90b:2e4b:b0:301:2a0f:b03d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dcd:b0:2fe:99cf:f566
- with SMTP id 98e67ed59e1d1-309f7dde70emr5977861a91.13.1745626258881; Fri, 25
- Apr 2025 17:10:58 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 25 Apr 2025 17:10:56 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgIq0piQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E672C4CEE4;
+	Sat, 26 Apr 2025 00:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745626282;
+	bh=DFNipnoqmsR5fihOyPm8o+8H9EYU2K0QxreJWh7S2IU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WgIq0piQPB32xXyAho4BKC8PU4ny3GmB6xplNbn6HMbs1bPzGdu99PZdxqK0EKahj
+	 enZSTa/WInTc6O5uARi/BCiVMry2bA6vYt2ZZwBYmjLXkqQuF/ycwKsVnPKehLAINO
+	 IfkwPHGpzlDXBDHkPTY/zWY7T2SPZGxiftPYrxuQpE5vNa/m6PDAZdq1Ahz74Edjgj
+	 4VsvkHUW+svDuOYqup//vYx6FhLkt3sfbxNRP375+hkxVvfIZTirxVz17vmmVzyQTx
+	 mEKOkEIOzZsUNh8sOzf3ZsLfkFXLEWcikRQoWyeBeqGTXtmtZWGYrRobI87WeeA8w+
+	 Rg3hAmQTpj/HA==
+From: Kees Cook <kees@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Erhard Furtner <erhard_f@mailbox.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] mm: vmalloc: Support more granular vrealloc() sizing
+Date: Fri, 25 Apr 2025 17:11:07 -0700
+Message-Id: <20250426001105.it.679-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250426001056.1025157-1-seanjc@google.com>
-Subject: [PATCH] KVM: x86/mmu: Prevent installing hugepages when mem
- attributes are changing
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Roth <michael.roth@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3832; i=kees@kernel.org; h=from:subject:message-id; bh=DFNipnoqmsR5fihOyPm8o+8H9EYU2K0QxreJWh7S2IU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8KrMa8utO1i8SvnOyNfzJwpStsSc+S6xfEHJq4puwp awzvl/m6ChlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjIx8WMDO1H2qZ43jOfe+fV ahXXxJQTxdtvXN8j8bCzZVHbx/+5K/8zMjw4eTmkufjmp4aFrLfa3n1U/+T2dbFQ8b6vbgdd1m1 pWccBAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-When changing memory attributes on a subset of a potential hugepage, add
-the hugepage to the invalidation range tracking to prevent installing a
-hugepage until the attributes are fully updated.  Like the actual hugepage
-tracking updates in kvm_arch_post_set_memory_attributes(), process only
-the head and tail pages, as any potential hugepages that are entirely
-covered by the range will already be tracked.
+Introduce struct vm_struct::requested_size so that the requested
+(re)allocation size is retained separately from the allocated area
+size. This means that KASAN will correctly poison the correct spans
+of requested bytes. This also means we can support growing the usable
+portion of an allocation that can already be supported by the existing
+area's existing allocation.
 
-Note, only hugepage chunks whose current attributes are NOT mixed need to
-be added to the invalidation set, as mixed attributes already prevent
-installing a hugepage, and it's perfectly safe to install a smaller
-mapping for a gfn whose attributes aren't changing.
-
-Fixes: 8dd2eee9d526 ("KVM: x86/mmu: Handle page fault for private memory")
-Cc: stable@vger.kernel.org
-Reported-by: Michael Roth <michael.roth@amd.com>
-Tested-by: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Closes: https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
+Fixes: 3ddc2fefe6f3 ("mm: vmalloc: implement vrealloc()")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- arch/x86/kvm/mmu/mmu.c | 68 ++++++++++++++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 16 deletions(-)
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Cc: <linux-mm@kvack.org>
+---
+ include/linux/vmalloc.h |  1 +
+ mm/vmalloc.c            | 31 ++++++++++++++++++++++++-------
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 63bb77ee1bb1..218ba866a40e 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7669,9 +7669,30 @@ void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
- }
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 31e9ffd936e3..5ca8d4dd149d 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -61,6 +61,7 @@ struct vm_struct {
+ 	unsigned int		nr_pages;
+ 	phys_addr_t		phys_addr;
+ 	const void		*caller;
++	unsigned long		requested_size;
+ };
  
- #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
-+static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-+				int level)
-+{
-+	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
-+}
-+
-+static void hugepage_clear_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-+				 int level)
-+{
-+	lpage_info_slot(gfn, slot, level)->disallow_lpage &= ~KVM_LPAGE_MIXED_FLAG;
-+}
-+
-+static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-+			       int level)
-+{
-+	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
-+}
-+
- bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 					struct kvm_gfn_range *range)
+ struct vmap_area {
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3ed720a787ec..2d7511654831 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1940,7 +1940,7 @@ static inline void setup_vmalloc_vm(struct vm_struct *vm,
  {
-+	struct kvm_memory_slot *slot = range->slot;
-+	int level;
-+
- 	/*
- 	 * Zap SPTEs even if the slot can't be mapped PRIVATE.  KVM x86 only
- 	 * supports KVM_MEMORY_ATTRIBUTE_PRIVATE, and so it *seems* like KVM
-@@ -7686,6 +7707,37 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
- 		return false;
+ 	vm->flags = flags;
+ 	vm->addr = (void *)va->va_start;
+-	vm->size = va_size(va);
++	vm->size = vm->requested_size = va_size(va);
+ 	vm->caller = caller;
+ 	va->vm = vm;
+ }
+@@ -3133,6 +3133,7 @@ struct vm_struct *__get_vm_area_node(unsigned long size,
  
-+	if (WARN_ON_ONCE(range->end <= range->start))
-+		return false;
-+
+ 	area->flags = flags;
+ 	area->caller = caller;
++	area->requested_size = requested_size;
+ 
+ 	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0, area);
+ 	if (IS_ERR(va)) {
+@@ -4063,6 +4064,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
+  */
+ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ {
++	struct vm_struct *vm = NULL;
++	size_t alloced_size = 0;
+ 	size_t old_size = 0;
+ 	void *n;
+ 
+@@ -4072,15 +4075,17 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ 	}
+ 
+ 	if (p) {
+-		struct vm_struct *vm;
+-
+ 		vm = find_vm_area(p);
+ 		if (unlikely(!vm)) {
+ 			WARN(1, "Trying to vrealloc() nonexistent vm area (%p)\n", p);
+ 			return NULL;
+ 		}
+ 
+-		old_size = get_vm_area_size(vm);
++		alloced_size = get_vm_area_size(vm);
++		old_size = vm->requested_size;
++		if (WARN(alloced_size < old_size,
++			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
++			return NULL;
+ 	}
+ 
+ 	/*
+@@ -4088,14 +4093,26 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ 	 * would be a good heuristic for when to shrink the vm_area?
+ 	 */
+ 	if (size <= old_size) {
+-		/* Zero out spare memory. */
+-		if (want_init_on_alloc(flags))
++		/* Zero out "freed" memory. */
++		if (want_init_on_free())
+ 			memset((void *)p + size, 0, old_size - size);
++		vm->requested_size = size;
+ 		kasan_poison_vmalloc(p + size, old_size - size);
+-		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
+ 		return (void *)p;
+ 	}
+ 
 +	/*
-+	 * If the head and tail pages of the range currently allow a hugepage,
-+	 * i.e. reside fully in the slot and don't have mixed attributes, then
-+	 * add each corresponding hugepage range to the ongoing invalidation,
-+	 * e.g. to prevent KVM from creating a hugepage in response to a fault
-+	 * for a gfn whose attributes aren't changing.  Note, only the range
-+	 * of gfns whose attributes are being modified needs to be explicitly
-+	 * unmapped, as that will unmap any existing hugepages.
++	 * We already have the bytes available in the allocation; use them.
 +	 */
-+	for (level = PG_LEVEL_2M; level <= KVM_MAX_HUGEPAGE_LEVEL; level++) {
-+		gfn_t start = gfn_round_for_level(range->start, level);
-+		gfn_t end = gfn_round_for_level(range->end - 1, level);
-+		gfn_t nr_pages = KVM_PAGES_PER_HPAGE(level);
-+
-+		if ((start != range->start || start + nr_pages > range->end) &&
-+		    start >= slot->base_gfn &&
-+		    start + nr_pages <= slot->base_gfn + slot->npages &&
-+		    !hugepage_test_mixed(slot, start, level))
-+			kvm_mmu_invalidate_range_add(kvm, start, start + nr_pages);
-+
-+		if (end == start)
-+			continue;
-+
-+		if ((end + nr_pages) <= (slot->base_gfn + slot->npages) &&
-+		    !hugepage_test_mixed(slot, end, level))
-+			kvm_mmu_invalidate_range_add(kvm, end, end + nr_pages);
++	if (size <= alloced_size) {
++		kasan_unpoison_vmalloc(p + old_size, size - old_size,
++				       KASAN_VMALLOC_PROT_NORMAL);
++		/* Zero out "alloced" memory. */
++		if (want_init_on_alloc(flags))
++			memset((void *)p + old_size, 0, size - old_size);
++		vm->requested_size = size;
 +	}
 +
- 	/* Unmap the old attribute page. */
- 	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
- 		range->attr_filter = KVM_FILTER_SHARED;
-@@ -7695,23 +7747,7 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	return kvm_unmap_gfn_range(kvm, range);
- }
- 
--static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
--				int level)
--{
--	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
--}
- 
--static void hugepage_clear_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
--				 int level)
--{
--	lpage_info_slot(gfn, slot, level)->disallow_lpage &= ~KVM_LPAGE_MIXED_FLAG;
--}
--
--static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
--			       int level)
--{
--	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
--}
- 
- static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
- 			       gfn_t gfn, int level, unsigned long attrs)
-
-base-commit: 2d7124941a273c7233849a7a2bbfbeb7e28f1caa
+ 	/* TODO: Grow the vm_area, i.e. allocate and map additional pages. */
+ 	n = __vmalloc_noprof(size, flags);
+ 	if (!n)
 -- 
-2.49.0.850.g28803427d3-goog
+2.34.1
 
