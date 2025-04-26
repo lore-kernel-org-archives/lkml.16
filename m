@@ -1,47 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF44322E;
-	Sat, 26 Apr 2025 12:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAD14A02;
+	Sat, 26 Apr 2025 12:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745670771; cv=none; b=PFUBfC1NbPyynmXxhpremjS+BOB1k79QMggVYRD4v6fQ9zyR9tNJX3AQLfoMt4TNqJ2j/9d3H913w+QHbffdYXMgeOeWfprzRrTQzj7ti9pamEhb7UKEznZWa9YVl5wW5NvQs/78ISwkG31EsmOz9ulxI6+O1arM4GCPo9Jcd9g=
+	t=1745670998; cv=none; b=XJQaXYrs41rGIaeexkN6CKEofyTvnJ755kxqd/Xv3clT9jcJZn8RP653ytexf7UI5UZPT2IfokzBmuXd1BxB/fKzXyMf0x0OwtcwSGX2wGESieEf9MgNjyzM7aiXxe5/QW8svsrUMSwlQk/UkssQp8MwcH/KKLaHl+Ob06k78TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745670771; c=relaxed/simple;
-	bh=kYRWP9F1X54xHhWxMgVlZK6lr+cRk3emxfKCNO5t184=;
+	s=arc-20240116; t=1745670998; c=relaxed/simple;
+	bh=c1/6bhetYzynX5wt9IYS4FQqt0Cw7IxKGHtBcV9vP/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PTrvFW0dvtTYPin0mSChFeSXWEkD+EcReM6AFEu3UjBX/CgY8Fzg01DenhxzcK9xLZrrJBPCPGGOKKRshbjugV/muuJLsFIh6VhReIoUSrL6fx5teQf5FM+6cG2/eX+KGL6NH4GwOwOh15vXurWL4J27glU9kt1jr5na8EWnXyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSZu9biw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSZu9biw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D9FC4CEEA;
-	Sat, 26 Apr 2025 12:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745670771;
-	bh=kYRWP9F1X54xHhWxMgVlZK6lr+cRk3emxfKCNO5t184=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JSZu9biwIXUTO0YKWYhmWh8FcY/aLhiAemo7n8gJ3NnuBQ4xsrheAnsBGZIeNfJZN
-	 QO3QDSBqrG752oCEncefVUVExFUFwNXm87wecJcxB/AL/ZFEFOw9dlkI0z2trEHapT
-	 gF7miHsprC2N770X/JG/HxWjkHMlOvKTL/5z7OyiyNO2vYUcwiwZCAckTacC+ixiPn
-	 YtIQTrGm5M46del/FJ+tnt3ETVhAIsxCO6ZJXgdxzmJdjXKVFrwnjxtL2c8/fw1O07
-	 1XI1RJcctbBoxN1OtTjo6NaKd8JHiWlpHauRZ3dGQtCyzUJe4v1PEyGlLXhIH3btMJ
-	 tKqEACnzFTiAQ==
-Date: Sat, 26 Apr 2025 13:32:41 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Alisa-Dariana Roman <alisadariana@gmail.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Alisa-Dariana Roman
- <alisa.roman@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 1/1] iio: adc: ad7192: Refactor filter config
-Message-ID: <20250426133241.7d14c776@jic23-huawei>
-In-Reply-To: <6d0ff620-ec1a-4b17-9b5d-b9c48078271a@baylibre.com>
-References: <20250425132051.6154-1-alisa.roman@analog.com>
-	<20250425132051.6154-2-alisa.roman@analog.com>
-	<6d0ff620-ec1a-4b17-9b5d-b9c48078271a@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=udvaH+2x1jchdh30mDoC/uxzEHtxWkelM/i/iOFhqgnoS7p1kR80klcqoCtbapmRJoShubEuAIPgBEwgsKb+feKBhuxeOxUdLT7UXvBzNCLjXPxi3y3ETWU/lnvNFjcP1QF6Of1yFFBjiHaz6hGPKXczThUdAk+lKAYzIsJvxOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D9CC4CEE2;
+	Sat, 26 Apr 2025 12:36:36 +0000 (UTC)
+Date: Sat, 26 Apr 2025 08:36:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>,
+ x86@kernel.org, bpf@vger.kernel.org, Tejun Heo <tj@kernel.org>, Julia
+ Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
+ cocci@inria.fr
+Subject: Re: [RFC][PATCH 1/2] kthread: Add is_user_thread() and
+ is_kernel_thread() helper functions
+Message-ID: <20250426083634.25897a33@batman.local.home>
+In-Reply-To: <202504251601.5D29BF8F01@keescook>
+References: <20250425204120.639530125@goodmis.org>
+	<20250425204313.616425861@goodmis.org>
+	<202504251601.5D29BF8F01@keescook>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,95 +42,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 25 Apr 2025 10:43:29 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Fri, 25 Apr 2025 16:03:16 -0700
+Kees Cook <kees@kernel.org> wrote:
 
-> On 4/25/25 8:20 AM, Alisa-Dariana Roman wrote:
-> > It is not useful for users to set the 3db filter frequency or the
-> > oversampling value. Remove the option for these to be set by the user.
-
-I'm curious.  Why isn't it useful?
-
-> > 
-> > The available arrays for 3db filter frequency and oversampling value are
-> > not removed for backward compatibility.
-> > 
-> > The available array for 3db filter frequency is dynamic now, since some
-> > chips have 4 filter modes and others have 16.  
+> > +static __always_inline bool is_kernel_thread(struct task_struct *task)
+> > +{
+> > +	return task->flags & PF_KTHREAD;  
 > 
-> The available array only makes sense if the matching attribute is writeable.
-> As mentioned in my reply to the cover letter, I think we should keep it
-> writeable for backwards compatibility. But we don't need to extend it to allow
-> writing new options, so keeping the previous available array seems fine to me.
+> nit: maybe do explicit type conversion:
 > 
-> > 
-> > Expose the filter mode to user, providing an intuitive way to select
-> > filter behaviour.
-> > 
-> > Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
-
-> > +static const char *const ad7192_filter_modes_str[] = {
-> > +	[AD7192_FILTER_SINC4] =			"sinc4",
-> > +	[AD7192_FILTER_SINC3] =			"sinc3",
-> > +	[AD7192_FILTER_SINC4_CHOP] =		"sinc4+chop",
-
-Is chop really a filter? I had to look it up and to me at least it
-seems like it isn't even though one thing it does is remove
-some types of noise.  It also removes linear offsets (some types
-of filter kind of do that, but the affect of chop smells more like
-a calibration tweak than a filter)  
-
-Maybe we need a separate control for chop, rather than trying to
-force it through our already complex filter type attributes?
-
-
-> > +	[AD7192_FILTER_SINC3_CHOP] =		"sinc3+chop",
-> > +	[AD7192_FILTER_SINC4_AVG2] =		"sinc4+avg2",
-> > +	[AD7192_FILTER_SINC3_AVG2] =		"sinc3+avg2",
-> > +	[AD7192_FILTER_SINC4_CHOP_AVG2] =	"sinc4+chop+avg2",
-> > +	[AD7192_FILTER_SINC3_CHOP_AVG2] =	"sinc3+chop+avg2",
-> > +	[AD7192_FILTER_SINC4_AVG8] =		"sinc4+avg8",
-> > +	[AD7192_FILTER_SINC3_AVG8] =		"sinc3+avg8",
-> > +	[AD7192_FILTER_SINC4_CHOP_AVG8] =	"sinc4+chop+avg8",
-> > +	[AD7192_FILTER_SINC3_CHOP_AVG8] =	"sinc3+chop+avg8",
-> > +	[AD7192_FILTER_SINC4_AVG16] =		"sinc4+avg16",
-> > +	[AD7192_FILTER_SINC3_AVG16] =		"sinc3+avg16",
-> > +	[AD7192_FILTER_SINC4_CHOP_AVG16] =	"sinc4+chop+avg16",
-> > +	[AD7192_FILTER_SINC3_CHOP_AVG16] =	"sinc3+chop+avg16",
-> > +};  
+> 	return !!(task->flags & PF_KTHREAD);
 > 
-> We need to make these match the values already defined in the ABI docs as much
-> as we can.
-> 
-> I see in the datasheets that there is a REJ60 bit in the MODE register, so I
-> would expect to see "sinc3+rej60" in this list as well.
-> 
-> We already have "sinc3+sinc1" that is defined as 'Sinc3 + averaging by 8' so
+> but that's just a style issue, really.
 
-hmm. That definition is odd.
+I may use Boris's suggestion (which I thought of doing originally too)
+and have this return:
 
-> "sinc3+avg8" would be redunant. And given that this driver already uses
-> the oversampling_ratio attribute to control the avg2/8/16, I'm wondering if we
-> can keep that instead of introducing more filter types.
-
-Tricky bit is whether the device changes the output rate (as needed for oversampling)
-or whether it is applying the filter but retaining full output data rate.
-
-Not sure which is happening here.  Given we previously had oversampling I guess
-the datarate was affected?
+	return !is_user_thread(task);
 
 
 > 
-> I also wonder if "sinc3+pf1" could be used for "sinc3+chop" since it is defined
-> as a device-specific post filter. Or make the case that "chop" is common enough
-> that it deseres it's own name.
+> Reviewed-by: Kees Cook <kees@kernel.org>
+
+Thanks.
+
 > 
-> I'm not the best expert on filters though, so I'm sure Jonathan will have some
-> better wisdom to share here.
+> Thank you for not using current->mm -- KUnit, live patching, etc, all
+> use current->mm but are kthreads. :)
 
-Not a lot.  Too long since I last went anywhere near filters, so beyond agreeing
-that we should stick to existing ABI where possible I don't really have any
-useful guidance here.
+Yeah, Peter was stressing this.
 
-
-
+-- Steve
