@@ -1,286 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C06F1C5486;
-	Sat, 26 Apr 2025 16:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AE22BD04
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 16:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745684963; cv=none; b=IP+mOd/XII1DAB/T5kfNv20WEAp029ZRe5b4xDqTxKCjT/X5x+/0OcCovCAKj50QG4MaBmcr8LeFuHPd0QmLML64nsWOlXNcZ1dnEZxITTZmDuf8mNAil5oMUCNYPgBRT/5nqNj1bm6KlJRdZS8D76u+NLnDKi2wtzIc1ZI/hhY=
+	t=1745685615; cv=none; b=oo9RnB3AYecPHr7Ilp+booufZvrDBXl58U4OGeeOy9gfk/HxOzB7of9y7p5/e3LAG7moi31EuWd474FiMzDM5WTe56054r2rIAqzNKIrWrnZmqtsM82lZiQKUnNppY1QEgNBWnN/mp0cVn9Vb+Xrl8EDVG97nCUpjui1n8dIeCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745684963; c=relaxed/simple;
-	bh=2GWhl92P7oAW9ExEf7++CKsqJSUvpkesZH5ExqqP6yI=;
+	s=arc-20240116; t=1745685615; c=relaxed/simple;
+	bh=wy+6QKzWQzOxQS5scLOiW/jejliu5GP0TiK4wLoJWyI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zvbc0BTNC6aH2czuMQ39PFWU42gesxLGOiSXPvYUxpODmgEwalPXbj3JyNspESOPEhEdGtFw1fzVX3lVGJYgF+WCXggSv0uv3YIKmucQHehFEdLaYIf7TrFc26PmQ7mCgPhNCVnckcQbslXFqCH2mcrvI1qVxZ/Tc+O0etwi7Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XvUg6ll5; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tZ5XjG4eKEReaUmw62T6oDs5J4JUZHdp45PSO3AVIQEC/2xSWykR9wvJb66Zb3Rihv1P9OAgwEHL7khksQ7+BNYQ2rwoTKaLvCyfJPlMyvo3XNDYXWLBtzbL1w7zNJDAf9Tx9IWNZpNVBFVScd5nrz3HKK7Rz0vDziN0vwzyht8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zsm8Xfwi; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XvUg6ll5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745684962; x=1777220962;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2GWhl92P7oAW9ExEf7++CKsqJSUvpkesZH5ExqqP6yI=;
-  b=XvUg6ll53Squ+koQ+RxwhvaG5GmN7BLKB8lyumSRMghkUHMmAy1CodGR
-   wylDp/+Wa8lTaKhXo4WIgP5JNTK095bCGRTT/bkRPCnbeXH1JNz3+Ei1v
-   NTQeg4S4XwNFLpqYnjdiYIu6qx3Rc1haM4K/w2D4Cbo8rmmEDjSfSArQO
-   /vSykO6reagKzUSTqFL35v+W5xHrOdrOoQVLx+Nz04xMyivHtfKHk6fiy
-   1DHpXmiAW501lOxjSqsGkvgQf7BLxbkujB6RX88eafxL+2BJK5UMH/9Z0
-   uK9His8VBxvAKJE7Xe1zGMAtMIBAw3ez7LdztdpfKwVPFIk9F5RJMzZ0T
-   w==;
-X-CSE-ConnectionGUID: uUWuzlPNSGGC2r3grSIx2A==
-X-CSE-MsgGUID: Nni3UlnfR1+GE200hyXRow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="47409888"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="47409888"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 09:29:21 -0700
-X-CSE-ConnectionGUID: EGaZ1FxsSOanIGctfTMPHA==
-X-CSE-MsgGUID: iwt7+TXJSHGMZGg0Ez2+EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="170359922"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 26 Apr 2025 09:29:19 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8iOy-0005uv-1V;
-	Sat, 26 Apr 2025 16:29:16 +0000
-Date: Sun, 27 Apr 2025 00:28:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: Re: [PATCH v2 1/3] soc: qcom: socinfo: Add support for new fields in
- revision 20
-Message-ID: <202504270011.Jftyvklb-lkp@intel.com>
-References: <20250425135946.1087065-1-mukesh.ojha@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsm8Xfwi"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736c3e7b390so3559031b3a.2
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 09:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745685613; x=1746290413; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=G1dxk80zPIpL1q4PhQ4ndWv9Mj5fqZbTdnW5ZkYRDcU=;
+        b=zsm8Xfwiz3e3STpvFeJrFwLoqRastVmc1jelVfHaKCSP053YiTMcF/eQBdy5NhbJS3
+         m2U/d5jm8MvdQvKWqQKbouxL7kimYtD7B4f6GIBztIa4bHpavjrKFU9+dR/FcpZmJVwV
+         Mxv7i3IBS5Re95dj0ZQWxTim9daR6u7H+YkJ1jr4BehOSXzh2mZrCf1xwX1vYISt91aH
+         9tXBZdbBh8lNOBbSxIiao6dri2rN/AO4MwYXDWPIeD9iFwIJdKjJ8vaefRpR5OJciXOt
+         09GOGjVIHlgwkhk9M5nZNZLhb/CEFzyVoumCywLMFXGEaP+uSK+ZPv1bP7SaGrRSGL/x
+         +5Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745685613; x=1746290413;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1dxk80zPIpL1q4PhQ4ndWv9Mj5fqZbTdnW5ZkYRDcU=;
+        b=bwTb+h5hal6rgsWLdLlpwGGQl6DkjgwzpGfxDkRhFdHu2+l4JQ3YwKvVnhX2EA3/IV
+         /HTKmwRdZaSZisJEhePnuNcDSCKDF8SszVIcZlkFPLH1JxYGh8H3RSCaNY7D5KVffTBZ
+         GSC+9hif0CL2P6tBhsFj67QF96nvzzXL/QjFRSKCbDZo2mZVzQfhcZzW7P6fLW+JqcIh
+         Nl+ppebPJBrQO4RcurzbMifzpFiDOvtP9Uh3xO/QmRFW6+2lhhwF8Sp+dBSrnU+vnVon
+         RwhqZaAOnZtsTFhtA5ilncqZQETJN9dRczGVayo8+tZHaiUEAmI9cgN1USHaUekXbO3p
+         ynCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPwLlSdd6k8zkJWeby0855WwSDPITPFsFs/Wfu/n95z2EU3MvNaKBFJ8EdQi1gyljVgrNqaQ+jfku+0zM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLPNXIddVp1rEr8XoIJlPFsD+wgd1Z0K8mOI+URq2Z+s5QwXA7
+	2xO1IkTPVys2AkzVL0DgvjKKOyG9Lu1Jd6FTR8CCJtxjXlalyrvbMJknUQJK5g==
+X-Gm-Gg: ASbGnct0j3Ku3AS5bCXONCvWg7/3fGKGxTtD5hm8ZX1ZYnvcTe3hVYU0kWzxKpw7zU8
+	gWPgFoWCNu2ulpOv8ImdosHegNbP9NBCX2AVy7oSX4gxpz0ppL5aRJu+MmptPcFrySTam7wD9g/
+	kSrecfSrN+QYZN+Qr9koBoxv5HP2CNto5mBm4AO3axDQk21VFprYz+51m7xaBupurwz1zg5DMfe
+	vn9Rp1FVnYjyGj0DtrETDpJ7Jfs0OLD9rQ6nBb5+V1NW7reojtQ2TBr07Pic89KXixMbeWmP+m0
+	l/kziReQImx09kVZoRmx83RdPFvK10FQWxd32mgocl0wt9NK5EqU
+X-Google-Smtp-Source: AGHT+IEwFTn2KnzLPGidnDgvRdMd237ilzSbG/yZ5gr9RWrr3uHMD0GXUKLpE0ghRpRy4DDG51PaGQ==
+X-Received: by 2002:a05:6a00:c85:b0:73e:30e0:8a2a with SMTP id d2e1a72fcca58-73fd896a123mr7017507b3a.17.1745685612904;
+        Sat, 26 Apr 2025 09:40:12 -0700 (PDT)
+Received: from thinkpad ([120.60.143.241])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941bbbsm5216582b3a.65.2025.04.26.09.40.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 09:40:12 -0700 (PDT)
+Date: Sat, 26 Apr 2025 22:10:07 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com, shawn.lin@rock-chips.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 0/3] PCI: dw-rockchip: Reorganize register and
+ bitfield definitions
+Message-ID: <b6loj46o6txf3g7xrcjbewcz6kph7wh3lg732k4nfp72pfbnms@hsxzofycadgl>
+References: <20250423153214.16405-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250425135946.1087065-1-mukesh.ojha@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250423153214.16405-1-18255117159@163.com>
 
-Hi Mukesh,
+On Wed, Apr 23, 2025 at 11:32:11PM +0800, Hans Zhang wrote:
+> 1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+> 2. PCI: dw-rockchip: Reorganize register and bitfield definitions
+> 3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
+> 
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc3 next-20250424]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- Mani
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mukesh-Ojha/soc-qcom-socinfo-Add-support-for-new-fields-in-revision-21/20250425-220213
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250425135946.1087065-1-mukesh.ojha%40oss.qualcomm.com
-patch subject: [PATCH v2 1/3] soc: qcom: socinfo: Add support for new fields in revision 20
-config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20250427/202504270011.Jftyvklb-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504270011.Jftyvklb-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504270011.Jftyvklb-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/soc/qcom/socinfo.c: In function 'socinfo_debugfs_init':
->> drivers/soc/qcom/socinfo.c:613:17: warning: this statement may fall through [-Wimplicit-fallthrough=]
-     613 |                 debugfs_create_u32("raw_package_type", 0444, qcom_socinfo->dbg_root,
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     614 |                                    &qcom_socinfo->info.raw_package_type);
-         |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/soc/qcom/socinfo.c:615:9: note: here
-     615 |         case SOCINFO_VERSION(0, 19):
-         |         ^~~~
-
-
-vim +613 drivers/soc/qcom/socinfo.c
-
-   592	
-   593	static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
-   594					 struct socinfo *info, size_t info_size)
-   595	{
-   596		struct smem_image_version *versions;
-   597		struct dentry *dentry;
-   598		size_t size;
-   599		int i;
-   600		unsigned int num_pmics;
-   601		unsigned int pmic_array_offset;
-   602	
-   603		qcom_socinfo->dbg_root = debugfs_create_dir("qcom_socinfo", NULL);
-   604	
-   605		qcom_socinfo->info.fmt = __le32_to_cpu(info->fmt);
-   606	
-   607		debugfs_create_x32("info_fmt", 0444, qcom_socinfo->dbg_root,
-   608				   &qcom_socinfo->info.fmt);
-   609	
-   610		switch (qcom_socinfo->info.fmt) {
-   611		case SOCINFO_VERSION(0, 20):
-   612			qcom_socinfo->info.raw_package_type = __le32_to_cpu(info->raw_package_type);
- > 613			debugfs_create_u32("raw_package_type", 0444, qcom_socinfo->dbg_root,
-   614					   &qcom_socinfo->info.raw_package_type);
-   615		case SOCINFO_VERSION(0, 19):
-   616			qcom_socinfo->info.num_func_clusters = __le32_to_cpu(info->num_func_clusters);
-   617			qcom_socinfo->info.boot_cluster = __le32_to_cpu(info->boot_cluster);
-   618			qcom_socinfo->info.boot_core = __le32_to_cpu(info->boot_core);
-   619	
-   620			debugfs_create_u32("num_func_clusters", 0444, qcom_socinfo->dbg_root,
-   621					   &qcom_socinfo->info.num_func_clusters);
-   622			debugfs_create_u32("boot_cluster", 0444, qcom_socinfo->dbg_root,
-   623					   &qcom_socinfo->info.boot_cluster);
-   624			debugfs_create_u32("boot_core", 0444, qcom_socinfo->dbg_root,
-   625					   &qcom_socinfo->info.boot_core);
-   626			fallthrough;
-   627		case SOCINFO_VERSION(0, 18):
-   628		case SOCINFO_VERSION(0, 17):
-   629			qcom_socinfo->info.oem_variant = __le32_to_cpu(info->oem_variant);
-   630			debugfs_create_u32("oem_variant", 0444, qcom_socinfo->dbg_root,
-   631					   &qcom_socinfo->info.oem_variant);
-   632			fallthrough;
-   633		case SOCINFO_VERSION(0, 16):
-   634			qcom_socinfo->info.feature_code = __le32_to_cpu(info->feature_code);
-   635			qcom_socinfo->info.pcode = __le32_to_cpu(info->pcode);
-   636	
-   637			debugfs_create_u32("feature_code", 0444, qcom_socinfo->dbg_root,
-   638					   &qcom_socinfo->info.feature_code);
-   639			debugfs_create_u32("pcode", 0444, qcom_socinfo->dbg_root,
-   640					   &qcom_socinfo->info.pcode);
-   641			fallthrough;
-   642		case SOCINFO_VERSION(0, 15):
-   643			qcom_socinfo->info.nmodem_supported = __le32_to_cpu(info->nmodem_supported);
-   644	
-   645			debugfs_create_u32("nmodem_supported", 0444, qcom_socinfo->dbg_root,
-   646					   &qcom_socinfo->info.nmodem_supported);
-   647			fallthrough;
-   648		case SOCINFO_VERSION(0, 14):
-   649			qcom_socinfo->info.num_clusters = __le32_to_cpu(info->num_clusters);
-   650			qcom_socinfo->info.ncluster_array_offset = __le32_to_cpu(info->ncluster_array_offset);
-   651			qcom_socinfo->info.num_subset_parts = __le32_to_cpu(info->num_subset_parts);
-   652			qcom_socinfo->info.nsubset_parts_array_offset =
-   653				__le32_to_cpu(info->nsubset_parts_array_offset);
-   654	
-   655			debugfs_create_u32("num_clusters", 0444, qcom_socinfo->dbg_root,
-   656					   &qcom_socinfo->info.num_clusters);
-   657			debugfs_create_u32("ncluster_array_offset", 0444, qcom_socinfo->dbg_root,
-   658					   &qcom_socinfo->info.ncluster_array_offset);
-   659			debugfs_create_u32("num_subset_parts", 0444, qcom_socinfo->dbg_root,
-   660					   &qcom_socinfo->info.num_subset_parts);
-   661			debugfs_create_u32("nsubset_parts_array_offset", 0444, qcom_socinfo->dbg_root,
-   662					   &qcom_socinfo->info.nsubset_parts_array_offset);
-   663			fallthrough;
-   664		case SOCINFO_VERSION(0, 13):
-   665			qcom_socinfo->info.nproduct_id = __le32_to_cpu(info->nproduct_id);
-   666	
-   667			debugfs_create_u32("nproduct_id", 0444, qcom_socinfo->dbg_root,
-   668					   &qcom_socinfo->info.nproduct_id);
-   669			DEBUGFS_ADD(info, chip_id);
-   670			fallthrough;
-   671		case SOCINFO_VERSION(0, 12):
-   672			qcom_socinfo->info.chip_family =
-   673				__le32_to_cpu(info->chip_family);
-   674			qcom_socinfo->info.raw_device_family =
-   675				__le32_to_cpu(info->raw_device_family);
-   676			qcom_socinfo->info.raw_device_num =
-   677				__le32_to_cpu(info->raw_device_num);
-   678	
-   679			debugfs_create_x32("chip_family", 0444, qcom_socinfo->dbg_root,
-   680					   &qcom_socinfo->info.chip_family);
-   681			debugfs_create_x32("raw_device_family", 0444,
-   682					   qcom_socinfo->dbg_root,
-   683					   &qcom_socinfo->info.raw_device_family);
-   684			debugfs_create_x32("raw_device_number", 0444,
-   685					   qcom_socinfo->dbg_root,
-   686					   &qcom_socinfo->info.raw_device_num);
-   687			fallthrough;
-   688		case SOCINFO_VERSION(0, 11):
-   689			num_pmics = le32_to_cpu(info->num_pmics);
-   690			pmic_array_offset = le32_to_cpu(info->pmic_array_offset);
-   691			if (pmic_array_offset + 2 * num_pmics * sizeof(u32) <= info_size)
-   692				DEBUGFS_ADD(info, pmic_model_array);
-   693			fallthrough;
-   694		case SOCINFO_VERSION(0, 10):
-   695		case SOCINFO_VERSION(0, 9):
-   696			qcom_socinfo->info.foundry_id = __le32_to_cpu(info->foundry_id);
-   697	
-   698			debugfs_create_u32("foundry_id", 0444, qcom_socinfo->dbg_root,
-   699					   &qcom_socinfo->info.foundry_id);
-   700			fallthrough;
-   701		case SOCINFO_VERSION(0, 8):
-   702		case SOCINFO_VERSION(0, 7):
-   703			DEBUGFS_ADD(info, pmic_model);
-   704			DEBUGFS_ADD(info, pmic_die_rev);
-   705			fallthrough;
-   706		case SOCINFO_VERSION(0, 6):
-   707			qcom_socinfo->info.hw_plat_subtype =
-   708				__le32_to_cpu(info->hw_plat_subtype);
-   709	
-   710			debugfs_create_u32("hardware_platform_subtype", 0444,
-   711					   qcom_socinfo->dbg_root,
-   712					   &qcom_socinfo->info.hw_plat_subtype);
-   713			fallthrough;
-   714		case SOCINFO_VERSION(0, 5):
-   715			qcom_socinfo->info.accessory_chip =
-   716				__le32_to_cpu(info->accessory_chip);
-   717	
-   718			debugfs_create_u32("accessory_chip", 0444,
-   719					   qcom_socinfo->dbg_root,
-   720					   &qcom_socinfo->info.accessory_chip);
-   721			fallthrough;
-   722		case SOCINFO_VERSION(0, 4):
-   723			qcom_socinfo->info.plat_ver = __le32_to_cpu(info->plat_ver);
-   724	
-   725			debugfs_create_u32("platform_version", 0444,
-   726					   qcom_socinfo->dbg_root,
-   727					   &qcom_socinfo->info.plat_ver);
-   728			fallthrough;
-   729		case SOCINFO_VERSION(0, 3):
-   730			qcom_socinfo->info.hw_plat = __le32_to_cpu(info->hw_plat);
-   731	
-   732			debugfs_create_u32("hardware_platform", 0444,
-   733					   qcom_socinfo->dbg_root,
-   734					   &qcom_socinfo->info.hw_plat);
-   735			fallthrough;
-   736		case SOCINFO_VERSION(0, 2):
-   737			qcom_socinfo->info.raw_ver  = __le32_to_cpu(info->raw_ver);
-   738	
-   739			debugfs_create_u32("raw_version", 0444, qcom_socinfo->dbg_root,
-   740					   &qcom_socinfo->info.raw_ver);
-   741			fallthrough;
-   742		case SOCINFO_VERSION(0, 1):
-   743			DEBUGFS_ADD(info, build_id);
-   744			break;
-   745		}
-   746	
-   747		versions = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_IMAGE_VERSION_TABLE,
-   748					 &size);
-   749	
-   750		for (i = 0; i < ARRAY_SIZE(socinfo_image_names); i++) {
-   751			if (!socinfo_image_names[i])
-   752				continue;
-   753	
-   754			dentry = debugfs_create_dir(socinfo_image_names[i],
-   755						    qcom_socinfo->dbg_root);
-   756			debugfs_create_file("name", 0444, dentry, &versions[i],
-   757					    &qcom_image_name_ops);
-   758			debugfs_create_file("variant", 0444, dentry, &versions[i],
-   759					    &qcom_image_variant_ops);
-   760			debugfs_create_file("oem", 0444, dentry, &versions[i],
-   761					    &qcom_image_oem_ops);
-   762		}
-   763	}
-   764	
+> ---
+> Changes for v3:
+> - Delete the redundant Spaces in the comments of patch 2/3.
+> 
+> Changes for v2:
+> - Add register annotations to enhance readability.
+> - Use macro definitions instead of magic numbers.
+> 
+> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+> 
+> Bjorn Helgaas:
+> These would be material for a separate patch:
+> 
+> - The #defines for register offsets and bits are kind of a mess,
+>   e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+>   PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+>   PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+>   names, and they're not even defined together.
+> 
+> - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+>   PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
+> 
+> - PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
+>   Sure wouldn't guess that from the names or the order of #defines.
+> 
+> - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+> 
+> - Submissions based on the following v5 patches:
+> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+> ---
+> 
+> Hans Zhang (3):
+>   PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+>   PCI: dw-rockchip: Reorganize register and bitfield definitions
+>   PCI: dw-rockchip: Unify link status checks with FIELD_GET
+> 
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 87 +++++++++++--------
+>  1 file changed, 50 insertions(+), 37 deletions(-)
+> 
+> 
+> base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+> prerequisite-patch-id: 5d9f110f238212cde763b841f1337d0045d93f5b
+> prerequisite-patch-id: b63975b89227a41b9b6d701c9130ee342848c8b6
+> prerequisite-patch-id: 46f02da0db4737b46cd06cd0d25ba69b8d789f90
+> prerequisite-patch-id: d06e25de3658b73ad85d148728ed3948bfcec731
+> -- 
+> 2.25.1
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
