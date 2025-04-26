@@ -1,107 +1,188 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99330A94A;
-	Sat, 26 Apr 2025 13:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AED1DE2A0
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745675921; cv=none; b=SxCmyuiFc6zgQWt9Ykv+zkR0nENSGlnOj2ps0c2F1lHIim5rVGkSIDBHS2tW/lEJw5Phkre8hI4q/H6o1kpf5BCT4VEulCVHrLMfBCp1huLgEz1u09ojeZlF6h8I5+RJ8zTEg75Pnzo89AWrZu/9eYjd2VHtbM4a3y5V6OMu17Y=
+	t=1745676214; cv=none; b=bIMAwG1CErhxqOp2ApTuA21dBIIhTT0i60aqxHwAGPzoQmAVIhu4Ogo/RA+vST5suMWSgFcu3mVD19acnEXXLWBH9LdORs6F3dt/LwyT97a1ploQPp5Vmj9TekORG0bMJicU5FEedI+bQw974XBkzifR99+6LKNGXAcQEBQH0PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745675921; c=relaxed/simple;
-	bh=jcJH2uY7xwisDKTpoXiSdFpRmVUr1IsGNewM+lcU89g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hgfxCl9z8X+23lWJxM3eAKbAUnDF/krdv1/Y474nxUX3TWqIlrV8ZAdQP7+d9Nen+ctXsgwfX2XDeCorwPaj+ZqAV9wJAuKKtM4Nf/nZ5nMekUoKeAxMgWfc6gQIAMiRxgCHKlEyMm6VBLQ1wK1eetNnYOZGW101s54GAIDfK5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcDOe0D9; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745676214; c=relaxed/simple;
+	bh=+/XlGJ40QyLJ1yxLqAsymj/3uMv2LvI3xGqt6JlJRkY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uGm74YtJoJ4pCWu/XP8kp5N1TtYzzDzdbp9WnvV2bmkZdPgWkjCT29g9N4ex3wg8lAy3mP/SwInhKN+CZ58KNDPX/7mm9feEIE97u2MbbKwvR6/JmAA/5Y3efWcqnuKmgNVNLpGe1MwLEucLOx2Sm5Sb77PcwmpVaOnUZAeBNcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=axSbnKP0; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcDOe0D9"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af5085f7861so2420290a12.3;
-        Sat, 26 Apr 2025 06:58:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axSbnKP0"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d4ff564c5so502060e87.3
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 07:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745675919; x=1746280719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hiGdo2FHJd8De8ADEidT5DPemaaP0nnmMXhnvOOqxuo=;
-        b=WcDOe0D9pcNnF5RHMh8yMK/5JYaPsUYCYcIaAqjh4xabQsN54pkhBs8fBtqo+SPixp
-         mynrk7ZPS3JjOCo4yjX27mpqpANQxKluI4ygrJFOtFzbx8qFhGOrRAayqVK9pLareuMn
-         YS706urO764gTyz2JmGtXxcNEi9dREnqANCD0061PQHgOG8Lszs5JuVvV0q78vc5OR5N
-         MafxtGJSClxuhm/7vFmj3s76tAZnuZegi7WCvT5rvU6+5xwt3acHar6Tw1SzLJ3d50hj
-         qvR7Ifs+Yc7NH148cutMq9EjMexVIKjgs9F8VWLkcZmWKac5uFSqLECsyAcbSzhf9jTP
-         UmPg==
+        d=linaro.org; s=google; t=1745676211; x=1746281011; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vw+DsU15ptDiXJLxLZqHIzjz8lENUeO28XhBBnI/KzU=;
+        b=axSbnKP0wzkqrG+zVQ4JMEx9nZm/UAJm+bWflfONPHvMKBEks3/n6M8P3IHkF1GTsD
+         yRUGnayeerAJ4He7XxhCsDK+FWoel0bpLHpfILKT3nBBdzj0jenAfs65uYGGo6hHtZxS
+         Ns6ZJ3SOC6pEvCd4Z8yDsAmIsbtaiEDyKWo3bSC4Xex9D2JN6nEhIk55D9+v3R7f5Xxw
+         RrSqqMHpXjJXLBokbDwlOfpynUmtriP5IEjuUJNW5v+ZXM5tL7AzsmsDQz2MMLevGRuh
+         Mz8K5kcC5kYuvM0U+zQDIhhqQzr8qDKj5CgehznFpK3/XCUhJJVvjypAYG4p0JADtGXH
+         ZF7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745675919; x=1746280719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hiGdo2FHJd8De8ADEidT5DPemaaP0nnmMXhnvOOqxuo=;
-        b=WSJ+K/DNkSu1OEZaPU/Cq/bOz3+N4VGk7/MAJ/JSo+37L+r3iq7gT+EHd/kmx+xQuB
-         6X+gY2V99ascUVkyc2LTrVbQe8coK51d//3u7Rtl6LXf2CNSabiqqzSCwBjB8PA4YiEX
-         1D/jjBcL4L2qxj7Fx/hfLPVnqNSN9zXYy3F549+N8d1znygbTaXqs+AT0iKfleWGJRVP
-         imrNQFp0ZOrcvPuDFHhKPOy7KpimY5OcDYnoau7nAPhZ2tTk6rzsWn8eOzNjsGVQ7dbe
-         qZk8duhUVxxcn/kA/9Ppfu7SkNFuNpQjrf2Absurozw7PYjnWVI6pN9YZnRh2feJnWyw
-         Uutw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmUcek5onOZVZ6LPzihZNOYUdgd6v4rJjwWXw0tcRqtXxhttKiARbMtkAjgBDtkFgA/t04Hdm8/3TtM8T/518=@vger.kernel.org, AJvYcCV6kr448q/aqkJ6dFWG7GE8Rt3Mw/rwumBuPNvv2/ygDBkEwiifNFoPr82oicHVaImiu/kg3TVvgBDe9VPJ@vger.kernel.org, AJvYcCXf8s2LxdswYW1CYXajtWG8UQeAvLW/5vvhGJWglTfSx0raVHzQgqWlH8p3Gjq2FTUuqSP8UMwwU3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMICi+Z5ZFYY9zzzDv7wUDgFYyY4bpXtq6N4lintm5GFV4rBIT
-	u/o1o6UbDyVBsX0Uyfnr3wtH51Zit2rkMW7OFaj8o+dMiB6cgKa6VddeWpChdF8MTVm73EJzfYl
-	SN9yBleljOMkWHneUXyGVML3KfKUxEXpttqE=
-X-Gm-Gg: ASbGncuRo9vSg/C7X4In5+at2Q/FhnFBWe/DE/gPHJ2v7ayqb7z4B9Vfm1sUq7+jISJ
-	aoHMHuuGtNCwqERFc6xXlgIpINW9NowfvRff8+/cCXMQlk0FRgj9JUfo+8yy875Unz4gzcpxdXz
-	MkWvKWqbFN1H1NDZsRRw+ciA==
-X-Google-Smtp-Source: AGHT+IHQRfyQdCrnuIRknDKukO/4PUTw6x1XqIRIJ3y1/jSIKnziD8NYCuXTLTCYgrjJm9l1uKOVnAOp5Cj+UcTxHZM=
-X-Received: by 2002:a17:90b:47:b0:2ff:58a4:9db3 with SMTP id
- 98e67ed59e1d1-30a013c3fdfmr4966449a91.35.1745675918898; Sat, 26 Apr 2025
- 06:58:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745676211; x=1746281011;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vw+DsU15ptDiXJLxLZqHIzjz8lENUeO28XhBBnI/KzU=;
+        b=gZ0/Qu9cWowf0J7Aj+NaGxgsnIb6GNVctaAi6lr8kFegEEFQJEX5cQRNILLBvLuHls
+         d29Wh9SU7TFLoCGfvCnijd/j3P8TNeu8N29qIpQ6DC6RhLmPsQEiTlub+yPZgleF2YxP
+         CibeMnxU2v13pvUv6uM9PO13/ePzT7iC1+xqhnf8VHv7ySliAduQyMz65zqbJi/5wbAO
+         x6J2obGOi7lpdLuC9uGLQkOyFj3GVQKVpQGvfRwoD9yN+wMwHnYblrh+daTKEcuv6n1V
+         PZF77Ei3USl+Xz3Zg925WUV3/PdakiMR09BlQPO9CUqpU93zIycTI8HBui9JKISuoh5k
+         oUUA==
+X-Forwarded-Encrypted: i=1; AJvYcCULznpESWrMpdwA+sYViZLRqs6QKozye3919QnTDj5rOvf9j/75kor0ptBJtXX2240Lx+3v183xqtRfeUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXfcZe2I6DJUtK07Y3yOsW/R7y7J0AQfV7oPqw0Pjz1ori6NAF
+	RNKDrzEsLqJNp1sQqQe1sxRT9SOcoTbLfq7pFwgQE9HAtjTZ9wEh4N+kS997e6k=
+X-Gm-Gg: ASbGncuJnObisDd7bkCL9Kt4ZMvwQOFj1nVpuDt4pE1719DBkYe9s98CZ9qIltHIaY0
+	0YcH8cu6qpT+lWBAKhjhFQGG/vlEoWWwDoZ8SYSlCAD+cYTmRK7cKvQbWbuRNY00updhl1A6aKH
+	VHYLFH1av2EMgN0dP5rMFsmhLT8llwIa6lM37OH+6WOa/zShO2G5gCvuV+bKi6utzBrEyRjJOMC
+	uFlXz3Y8uroVLYDbKLpd0fCS368kqXp5loVPORyYhL8fdFOJ9ln/9Z53HTAd01ifnmenWd8kVlb
+	InpMPnq0sMKeH4OznTEyCxuX9eBaQLSTeZ8gceq2gJmaH39Dab8A28Qx6hRSssF+o6JxAovDn6o
+	Whw9wCtmXTEtTg3KzwfM6IaQMVrTErw==
+X-Google-Smtp-Source: AGHT+IF1Ip7CcXoeKnygcwDIVwoNCBJjRB68C/jdSo6GKg66tIbe4aPB/aVZwdQypXq6CJVRBvutGQ==
+X-Received: by 2002:a05:6512:3d9f:b0:549:8b24:9884 with SMTP id 2adb3069b0e04-54e8cbd53d5mr523947e87.4.1745676210813;
+        Sat, 26 Apr 2025 07:03:30 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb2633asm1000722e87.10.2025.04.26.07.03.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 07:03:30 -0700 (PDT)
+Message-ID: <a4149ac8-7e47-48a9-84ef-42aa367d014e@linaro.org>
+Date: Sat, 26 Apr 2025 17:03:29 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425201018.12756-1-by.ann.yun@gmail.com> <aAyeY-cFSDuLYnJZ@antec>
-In-Reply-To: <aAyeY-cFSDuLYnJZ@antec>
-From: Ann Yun <by.ann.yun@gmail.com>
-Date: Sat, 26 Apr 2025 09:58:28 -0400
-X-Gm-Features: ATxdqUEsSIOWUKOM40YB5o8sO36FbTC11EnJNuwZDiW3l41_jTXfMS9YN9U9EaY
-Message-ID: <CAB60mtNRLstmV7c97=tUnW9GhMkn809eKHcGnA4x1iGcpGjYLQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation:openrisc: Add build instructions with initramfs
-To: Stafford Horne <shorne@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, corbet@lwn.net, 
-	linux-openrisc@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Add Qualcomm SC8180X Camera clock
+ controller
+Content-Language: ru-RU
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
+ <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Stafford,
+On 4/22/25 08:42, Satya Priya Kakitapalli wrote:
+> Add device tree bindings for the camera clock controller on
+> Qualcomm SC8180X platform.
+> 
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+>   .../bindings/clock/qcom,sc8180x-camcc.yaml         |  65 ++++++++
+>   include/dt-bindings/clock/qcom,sc8180x-camcc.h     | 181 +++++++++++++++++++++
+>   2 files changed, 246 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..b17f40ee53a3002b2942869d60773dbecd764134
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,sc8180x-camcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Camera Clock & Reset Controller on SC8180X
+> +
+> +maintainers:
+> +  - Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> +
+> +description: |
+> +  Qualcomm camera clock control module provides the clocks, resets and
+> +  power domains on SC8180X.
+> +
+> +  See also: include/dt-bindings/clock/qcom,sc8180x-camcc.h
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sc8180x-camcc
+> +
+> +  clocks:
+> +    items:
+> +      - description: Board XO source
 
-I am sending my same reply to the whole group again, because I
-previously did not do "Reply All".
+ From sc8180x_rpmh_clocks[] in clk/qcom/clk-rpmh.c I get that there is
+RPMH_CXO_CLK_A clock also, shall it be added to this list then?
 
-On Sat, Apr 26, 2025 at 4:50=E2=80=AFAM Stafford Horne <shorne@gmail.com> w=
-rote:
->
-> I think this is good, but maybe we can mention to refer to Documentation/=
-filesystems/ramfs-rootfs-initramfs.rst
-> for more details on this?
+If yes, and taking into account Konrad's ask for GCC_CAMERA_AHB_CLK, it
+implies that the new dt bindings can be omitted, instead please consider
+to add the 'qcom,sc8180x-camcc' compatible into qcom,sa8775p-camcc.yaml.
 
-Thanks for pointing that out. That is an excellent idea, I will add that.
+However still there is a difference, qcom,sa8775p-camcc and qcom,qcs8300-camcc
+does not contain 'required-opps' property, it might be an omission over
+there though, please double check it. The ultimate goal would be to get
+a shorter list of different camcc dt bindings.
 
-> Also, it may be helpful to mention we can get pre-built busybox rootfs im=
-ages
-> here:
->
->   https://github.com/stffrdhrn/or1k-rootfs-build/releases
->
-> But if we do that then it would be better to show how to use thos rootfs =
-images,
-> which maybe something better we have in our openrisc/tutorials[0].
->
-> -Stafford
->
-> [0] https://github.com/openrisc/tutorials
+> +      - description: Sleep clock source
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +    description:
+> +      A phandle and PM domain specifier for the MMCX power domain.
+> +
+> +  required-opps:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to an OPP node describing required MMCX performance point.
+> +
+> +allOf:
+> +  - $ref: qcom,gcc.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - power-domains
+> +  - required-opps
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sc8180x.h>
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/power/qcom-rpmpd.h>
+> +    clock-controller@ad00000 {
+> +      compatible = "qcom,sc8180x-camcc";
+> +      reg = <0x0ad00000 0x20000>;
+> +      clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +               <&sleep_clk>;
+> +      power-domains = <&rpmhpd SC8180X_MMCX>;
+> +      required-opps = <&rpmhpd_opp_low_svs>;
+> +
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +...
 
-Exactly! I was working on a QEMU tutorial inside openrisc/tutorials
-and that prompted me to add that one line here.
-
-Ann
+--
+Best wishes,
+Vladimir
