@@ -1,111 +1,92 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E8115574E;
-	Sat, 26 Apr 2025 08:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAAA15574E
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655799; cv=none; b=Zx//5TWAEMd5gR84sswiCaIPj5XyNnfaAw7N1vS0kIETrcsaqPtikSvzXmRX0nmpLYcI8Oto7yTQxuNOBCV9TBZWALwT5LdQLJeo0zQ+B8t70THaDiYOlJQhyBn6qZHEY2POqF2rZ2K3WVhnV+MKXmgVjvo3JGt+CGU2wU5RjGg=
+	t=1745656016; cv=none; b=r+SRYE9tI3LO9I7eUZbIvK491u22kc2a0JhYldgSXpmWD5f/vLWFom8mXGaooiveLOuV1jUq03+f3e5UIFjB7DT/cfUwgCehJ+1q386Xbq36l1Qt0XFQHIegL/A0qRlE8iTOpBRsO+vXlZOW6a+zemPTdAz64Zk8Y6ccU+nTgNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655799; c=relaxed/simple;
-	bh=T/0xTqND7PjkXvzjFIewwatpFzxkpl5LjaRGjg/Ft2M=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=XFIeCnRO5DXRtgOzHu2Itz5iN1K+9P99jjRqwBhOeUVh7+IKuwNaa29WmNwFmOqa285uzL26w8FWLJRjNlhnlKCJeOXUmlTSb150/Oo7BpQpsxvF/RYQlgRzAv6zeJlZ3XJsdxXCRTxyub3hE0rWMCwKDj1DDdijnQdlwxq9xR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3zeK7mJo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uLdT5WYn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745656016; c=relaxed/simple;
+	bh=RVnCcmr9Mg20S5n5EjDVOuVDBVithBL364argSJiVzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rBWMwoGajf+Quq/M8LDZJIx8DjeK2aL8yOiEi4Icyt5o0Gaj8agm4miGFqyviiQ3KeLz5vERFp0Ru2ki2nHbAibs8atJLauvvV2d4fZxLPOPHC5snvRlNlfNoykqFftUxrgsxLchKMOByci5td4N1aCyuzQTQV7kLFe/RE2GPuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=fcvnb6O/; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3zeK7mJo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uLdT5WYn"
-Date: Sat, 26 Apr 2025 08:23:02 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745655789;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=RtykLyqSPHAkwQ6ztUn4+zSx9nu7whQ+1FHXMP8EBzw=;
-	b=3zeK7mJozIYwyEnFeOZTQfO8qJPxevDiJo5cBah0a6hr8S+xq+hZ/qRhVTBQkTyn9kKoIm
-	g9IeibbUfPwdokmiLmP0yiYLqIIHcAj6GETipOTZLsNXDbhAR0rAIwOs6GGgv2O04bZD2b
-	cN0Uz7MNUzRFmP0KfXnz4sTdDazCWs2hKxbWD6noPGFyg/bBJfrL4YDV4hrWhEI4H+tKfB
-	NbAZ/S5UKnOkf/q91u8tZJPaVXLV6dpT0Nc3wWwOBAjv3em+fjzHmDn2bqbhXilutuwSzD
-	QzFfvNaFmAEW/LEFGxE5M3bTbq90hLwcLm1vXaCVm2m/9Gq+DNKaPyXyt7mAuA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745655789;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=RtykLyqSPHAkwQ6ztUn4+zSx9nu7whQ+1FHXMP8EBzw=;
-	b=uLdT5WYn7IIMK9xcm8rI0egTtl9QAa36osfAKRjfhFT3HqGl7QoomJvLUep4hRSwGKoCtc
-	mQUjvrs/VCiQeVDw==
-From: "tip-bot2 for Suzuki K Poulose" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/gic-v2m: Prevent use after free of
- gicv2m_get_fwnode()
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- Marc Zyngier <maz@kernel.org>, stable@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="fcvnb6O/"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 2614F1C00B2; Sat, 26 Apr 2025 10:26:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745656012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rW9DlELSO6TPvA/H/EzsqAQbCqHifzUnKm3Zx+TxQL8=;
+	b=fcvnb6O/FwQJ5ZAKjMW/i24Yrx6lp6s17vnC6XIUWvxOYGa7Xk8awab6Yw/b6Qs4eRIaIS
+	kScwM9SJsQfFWsAoPRvXS05xk1Bf1LFbWBKcW+YtUWlj5JOpkVHbGqCwDdd8uyWBzjXA9j
+	imS3jRwtMx4JYlMy0nr43Se5jjjgzPc=
+Date: Sat, 26 Apr 2025 10:26:51 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+Message-ID: <aAyYyyiTY02DW8pH@duo.ucw.cz>
+References: <20250425084216.3913608-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174565578285.31282.8068570844383766961.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DAA9AA4+Jf1+l8Nf"
+Content-Disposition: inline
+In-Reply-To: <20250425084216.3913608-1-mingo@kernel.org>
 
-The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     3318dc299b072a0511d6dfd8367f3304fb6d9827
-Gitweb:        https://git.kernel.org/tip/3318dc299b072a0511d6dfd8367f3304fb6d9827
-Author:        Suzuki K Poulose <suzuki.poulose@arm.com>
-AuthorDate:    Tue, 22 Apr 2025 17:16:16 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 26 Apr 2025 10:17:24 +02:00
+--DAA9AA4+Jf1+l8Nf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-irqchip/gic-v2m: Prevent use after free of gicv2m_get_fwnode()
+Hi!
 
-With ACPI in place, gicv2m_get_fwnode() is registered with the pci
-subsystem as pci_msi_get_fwnode_cb(), which may get invoked at runtime
-during a PCI host bridge probe. But, the call back is wrongly marked as
-__init, causing it to be freed, while being registered with the PCI
-subsystem and could trigger:
+> In the x86 architecture we have various complicated hardware emulation
+> facilities on x86-32 to support ancient 32-bit CPUs that very very few
+> people are using with modern kernels. This compatibility glue is sometimes
+> even causing problems that people spend time to resolve, which time could
+> be spent on other things.
 
- Unable to handle kernel paging request at virtual address ffff8000816c0400
-  gicv2m_get_fwnode+0x0/0x58 (P)
-  pci_set_bus_msi_domain+0x74/0x88
-  pci_register_host_bridge+0x194/0x548
+We have open-source 486 cores, such as
+https://github.com/MiSTer-devel/ao486_MiSTer . I'm not aware of
+open-source 586 cores... so this is a bit sad.
 
-This is easily reproducible on a Juno board with ACPI boot.
+Best regards,
+									Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
 
-Retain the function for later use.
+--DAA9AA4+Jf1+l8Nf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Fixes: 0644b3daca28 ("irqchip/gic-v2m: acpi: Introducing GICv2m ACPI support")
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
----
- drivers/irqchip/irq-gic-v2m.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index c698948..dc98c39 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -421,7 +421,7 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
- #ifdef CONFIG_ACPI
- static int acpi_num_msi;
- 
--static __init struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
-+static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
- {
- 	struct v2m_data *data;
- 
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAyYywAKCRAw5/Bqldv6
+8nQjAJ9edIbnnFWtpFI49h5SD5q0vMeWHgCdFT3vVO7KreRtuhJHJj+66/6AFtw=
+=dT61
+-----END PGP SIGNATURE-----
+
+--DAA9AA4+Jf1+l8Nf--
