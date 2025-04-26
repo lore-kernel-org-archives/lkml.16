@@ -1,132 +1,115 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4221188733;
-	Sat, 26 Apr 2025 09:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309662236F4;
+	Sat, 26 Apr 2025 09:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745661424; cv=none; b=CUJ6NMzwI9WgrOK37wkBQMmwmaGRuImlQlsNYuAmvrKZKcmvXRwyNwx8Ua6j30i+z2Ayj5L2DA0G3kXqm7NaFyj4Jl01DphF9J+JjoIOPifNU8fSZslmqVF03PyM37NGSL/ZJKk2ioowZdcnfbzzu5ImWrmaI3cDMpBbleXOvbI=
+	t=1745661425; cv=none; b=spakh/8Bpan+qXoQhk+i3JkM1qlT2wIsgzXD0qfvTCyVoJFRhk6bc4/DzyiPmgiw7EwqqSYE+NaTNvrxlorXr3Z9GhGatIl+4jgq5Q1YAlqUT7XZpAYOFdwFRWbAYURW4cAivbA4LbchObkP8LKROZotwrZN85HyAhzH4Gh6qIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745661424; c=relaxed/simple;
-	bh=MDU1hpe7MUhDbj+7Jlmd85zleSl3IuJZRAxiCiOb1Do=;
+	s=arc-20240116; t=1745661425; c=relaxed/simple;
+	bh=UFdFohhvUI0lR9JUpGGDnGXuOYo6YMXj5OM5Or86BY4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qelgne6RFPg0Frt1kdvM6G0R34Ny+S0DCTDWI22f2W78TYShx2GZdSYBzpmgyPoDR8xmZgiJIsRrc+0JPBZkooJmf7FmtiTplCYT/XWJLScdwHNu3dYE77y9zyDG5bj0cgZ/iByzp4QZRE00t7EAWpOS3K7bms2w2Ox0noMmf2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=glHtuqf/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PjpL5ksX; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=O+CV+gpB9vTKKyU6tHlGNJK8y+WfEksqLd1eOqRHX9YZutOugUucp0Y81oAHJr619pHlxg+SuMLmYgXXTrpu1CG7LbcTZZBnqjcGnZi3pR8+605JRty4JyZLWdf5LZZpxhtL1s+jPkx7h4UOXmdJ/9zPVpXsEPANAopZ7eh/aqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XXbEmsQg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f3E9de0e; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="glHtuqf/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PjpL5ksX"
-Date: Sat, 26 Apr 2025 09:56:54 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XXbEmsQg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f3E9de0e"
+Date: Sat, 26 Apr 2025 09:57:01 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745661420;
+	s=2020; t=1745661422;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DSvpJ+vgMGaPtX3iAQ6Li5JL/KPVeJOe4vWv5mn23dc=;
-	b=glHtuqf//h+4hFZTaEgSjdHUK0ltujqo/4LAoA/5vNs9C8q4XKTFtY0pVuLG52tcyLtaAa
-	fQB8lJ9eDmH3pmcXwW6qJnnEfbRujY6KUwrNzVbYCylBX4FfJhxsRYFDB3eU12X5HiVDWB
-	lP2RrhDhWNTtToqMcSIAMM4/zuYsvyEh3xTn/gA9ttq45jocSd+JR21ZFGDo/rz1nFajOP
-	Y+wGVTHk9/dNWaBdEcSe/BVEG/uuz7TTEXgFrdnHEIN45E9970r1k1ddPB/XS5KCdRaESN
-	wIhwlEqryA9h9KrMnBs7gWJmFhwmQx7/S9ybUbIfcGiFUYyb+5Gq4Xc8QhWvUQ==
+	bh=0jm/nIph0Am0JXbeYwRs+q0ixelAuTMn8AaY5zmnzZc=;
+	b=XXbEmsQg4wudVXqNG+hO3/9dKPWiZmkfdmRfqrNmkpt5dY7B5DhNyXe+W03hCLBysyl547
+	n43RqU1UU99Dz4l7i6aztZkBt3FS868eI0gK8qpk47HvD3gDENupbJaaELrlnuCoeTGsYX
+	pBfOHAUreGrxYudhKz6k26ammxfw/MfLdXhybqZza4pr5107sviYSHfjIM8xouARsz72o9
+	9nxREW5fP5cGs4d9XFI6rA5w8PU79KBFyqrhMQ7KCCKtdSLNBZNUTTLvrcl89fQlJOB4u2
+	rK+VlQGdZgnqAzM99tzOthiWbrYuOFlQ7AzXs7b5VurPHkWiTwNtg9Uw8XyF+A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745661420;
+	s=2020e; t=1745661422;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DSvpJ+vgMGaPtX3iAQ6Li5JL/KPVeJOe4vWv5mn23dc=;
-	b=PjpL5ksXP7VIctjbugH4VJ/u6Gn52V7ktemouRljY/drmLxnrSjQcY8VItf+qDQVst0qSq
-	puZ88gn++YPpOQBA==
+	bh=0jm/nIph0Am0JXbeYwRs+q0ixelAuTMn8AaY5zmnzZc=;
+	b=f3E9de0encpsYLafLGeCEg6MOpzdkoUvxCjbDAS8IevA61GQMx3Co/oAEzkRfHgti4cI1E
+	+Hf3a0Uhp0u862Bw==
 From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/platform] platform/x86/amd/pmc: Use FCH_PM_BASE definition
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
+Subject:
+ [tip: x86/platform] i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86
+Cc: Ingo Molnar <mingo@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Sanket Goswami <Sanket.Goswami@amd.com>,
  Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, platform-driver-x86@vger.kernel.org,
+ Yazen Ghannam <yazen.ghannam@amd.com>, linux-i2c@vger.kernel.org,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250422234830.2840784-5-superm1@kernel.org>
-References: <20250422234830.2840784-5-superm1@kernel.org>
+In-Reply-To: <20250422234830.2840784-3-superm1@kernel.org>
+References: <20250422234830.2840784-3-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174566141546.31282.9421067258808557948.tip-bot2@tip-bot2>
+Message-ID: <174566142162.31282.14563943332282106355.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/platform branch of tip:
 
-Commit-ID:     7094702a9e6d1256f1444ceff7be97414db51dbb
-Gitweb:        https://git.kernel.org/tip/7094702a9e6d1256f1444ceff7be97414db=
-51dbb
+Commit-ID:     7e173eb82ae97175fd1ae8390259227f1a76a41f
+Gitweb:        https://git.kernel.org/tip/7e173eb82ae97175fd1ae8390259227f1a76a41f
 Author:        Mario Limonciello <mario.limonciello@amd.com>
-AuthorDate:    Tue, 22 Apr 2025 18:48:29 -05:00
+AuthorDate:    Tue, 22 Apr 2025 18:48:27 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 26 Apr 2025 11:41:16 +02:00
+CommitterDate: Sat, 26 Apr 2025 11:40:46 +02:00
 
-platform/x86/amd/pmc: Use FCH_PM_BASE definition
+i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86
 
-The s2idle MMIO quirk uses a scratch register in the FCH.
-Adjust the code to clarify that.
+PIIX4 and compatible controllers are only for X86. As some headers are
+being moved into x86 specific headers PIIX4 won't compile on non-x86.
 
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Sanket Goswami <Sanket.Goswami@amd.com>
 Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: platform-driver-x86@vger.kernel.org
-Link: https://lore.kernel.org/r/20250422234830.2840784-5-superm1@kernel.org
+Cc: linux-i2c@vger.kernel.org
+Link: https://lore.kernel.org/r/20250422234830.2840784-3-superm1@kernel.org
 ---
- arch/x86/include/asm/amd/fch.h            | 1 +
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/amd/fch.h b/arch/x86/include/asm/amd/fch.h
-index 28972bd..01ee15b 100644
---- a/arch/x86/include/asm/amd/fch.h
-+++ b/arch/x86/include/asm/amd/fch.h
-@@ -7,5 +7,6 @@
- /* Register offsets from PM base: */
- #define FCH_PM_DECODEEN			0x00
- #define FCH_PM_DECODEEN_SMBUS0SEL	GENMASK(20, 19)
-+#define FCH_PM_SCRATCH			0x80
-=20
- #endif /* _ASM_X86_AMD_FCH_H_ */
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86=
-/amd/pmc/pmc-quirks.c
-index b4f4972..b706b1f 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -11,6 +11,7 @@
- #include <linux/dmi.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-+#include <asm/amd/fch.h>
-=20
- #include "pmc.h"
-=20
-@@ -20,7 +21,7 @@ struct quirk_entry {
- };
-=20
- static struct quirk_entry quirk_s2idle_bug =3D {
--	.s2idle_bug_mmio =3D 0xfed80380,
-+	.s2idle_bug_mmio =3D FCH_PM_BASE + FCH_PM_SCRATCH,
- };
-=20
- static struct quirk_entry quirk_spurious_8042 =3D {
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 83c88c7..bbbd624 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -200,7 +200,7 @@ config I2C_ISMT
+ 
+ config I2C_PIIX4
+ 	tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+-	depends on PCI && HAS_IOPORT
++	depends on PCI && HAS_IOPORT && X86
+ 	select I2C_SMBUS
+ 	help
+ 	  If you say yes to this option, support will be included for the Intel
