@@ -1,100 +1,85 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F1114D2A0;
-	Sat, 26 Apr 2025 19:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D7019DF8B;
+	Sat, 26 Apr 2025 19:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745695845; cv=none; b=XQm+wLnGPCTTszhakYxce77I/AAIuPrbWi4FcEARaGQ/42EWOQo1A9//oEmQaw5w4SWq9NsqBxV0ElgnE5mWuqVi23TBfUDZwFSLjaWgXc4x58jyFtCbgtiVTpuG5t+ubZT2polJBxLj9/Yvs83VIpH+rczE2/t0QcU4AREEAto=
+	t=1745696987; cv=none; b=CGRhjGg3lvdRdNaP6UlR2edUdFahxznBZo2bPAe9y9Shbd7gUU7hSFZKqvPZqPOuVMYDD1mJ4OxQA+LOL3Kq6g0oJ465/FV/TnmGc86A8sSzx4Qw7lm2yqYV1o+CvebYzrDu9OXhBbKSEeVK9mDC8fsM11HmNt/d4Ah0B78oFxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745695845; c=relaxed/simple;
-	bh=+UMWPfZQGprhjvZC3NEM1Phb2xl1Ra+yrRsJZw1MGzA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YOCOJVeVEYTi6nWfd8Jk9GLmiD31HZnsPGTYYB11i1e19g2yAKWWdZGlZ5WkHqNvYioUjZeqtE59ESPSE8FBemut9Ku5kMoq5H4DedNIrrEzKknqQtfMmYft0SPqhOfZPYfYOStg0XYmkMgxLtMUZ1r7fgHpc1CXtfWX+vP5nhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3YgwuPe; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745696987; c=relaxed/simple;
+	bh=0QhmbA6z9dDYLS2F8XMNw6kfXNMzDVFZileQBPf7FD4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=okIkNX15cUJe2maHEvmjeF51o3tdzRbBKasUh/YyRw/U8BYvLSWLagOkm5P/2C6bYxQ3jvxHJiRzIASwJABcfFPZQ0CpcFzy15unN5D5ktUE9jNObdmexf0P60jGuWQhjN1UgvYPpV8r/ggYc1q0enFcYLpBlARE/7XeXXM25hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rl8BRUVW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3YgwuPe"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb39c45b4eso533357966b.1;
-        Sat, 26 Apr 2025 12:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745695842; x=1746300642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A/pCvwb99p1XOTcj4o1cOPpPIeZSgX90ZCLw51SM5Aw=;
-        b=V3YgwuPesdUVSuH17EbB51NdYUOMT8XxT8wWT7GfOzLRDedla27EFFz3RmtqsLEqkD
-         0WS87FUwVLojTUNWawGJ/F/2CFTRwEt64+z5CVjCtNPPVhXbIp80DHgitgCoSJHgKArK
-         NBI4hKtxy2A4uu+8sgcsnbcAOcVbA6Gy66pw6Uzj935v8Rf8ZRIIkWiaRwe+1pMiMpNG
-         VUo21CNeeiqAaHXhI8okTfMHv/RPFnRZBENStbFBP77U/ChbLvGzZrnIrFiRiI0yEFG+
-         zopegQbW5cutS+NjpA4/Tocu03T94hwDmZKKXjp/px9YKFX1lLaJMazexmZUlTVXkNuH
-         0VQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745695842; x=1746300642;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A/pCvwb99p1XOTcj4o1cOPpPIeZSgX90ZCLw51SM5Aw=;
-        b=NrLD9hmN3ggDqEXhKe//GXG1pmGIb8ILhZ7fXeicDFpl+tkOUhe3+4/97L+0OL7VYd
-         +gRWLJZx9PHix742CCa1RkH5i0FW4TJ93daJCe13WE6No5PcndGJXZgQ4nlvlkjyAjxL
-         XOQNgHWni5oMcQtjy8Ol3ULeqqcmTaEccX7IH9zOYlIq5ISNLdm+q/WP+s3s8gQbyw6S
-         VSEtn6WDF5uhJ9CC6H8DQyqsAGrfUIVaNcAStH4J7n5TVdfseZ/MAD6XE0cdRKbE+UwA
-         h6HZdwKbpF2VdmlPROZSQUQBH9KzLJ4w5QYldXDwnhSvOVPDGcm/nkLF7KSuClY3/S0I
-         yzbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEvie3WvzMQR4n0LYCxQX1ohFfObMZllvqin49bndVq93zTg/3rb8PLxQp+b3p1OKXcEOHUvvgyTzqL78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyayF2t3ZPAjUuC7fIVPgnwewlifFWnht0fUVjvIGrVp3WTfrG2
-	1ojt7e87llZw3d/GDZjd8QV675aeLxk3tRMMryq0Q6lYl34DT5ma
-X-Gm-Gg: ASbGncu8ErNCsQARl74Xi8ls2y24c/mcjM+p2CnjoNSV5oD7R26RagZBw2LDjeW2OAx
-	ddevlvgT0PzazVWVedQs/GzmhYitGPbQ9q31t5DiQqEx5Cn440oO0Y4HABOO2lb7fLzWtLBO1fu
-	Np3wtbxWaxpikLUxIJokbSTeO9j/LkoBclLN2sJj917I8oBiNEwcabHZwdxCVpcjh2S425+1c3x
-	UVdqNRmB1krJcLWzCRbl6ORrlATiOxa/BS5n0smr5F1ydVRng9lhhXxkHQzx7Id0WrnkUDm7tHT
-	z/wnWcUaYaGSmqQBIUZEGU8DVneJIHSP49mlE/dvnEUJeTyWGMsKPTrmwxD8VpEFgtR8c0IXU/T
-	a77py1WAZ4W990CKb06+JEUbzK7CmtObzglB7777ufx8BCz12ngcJEyIxjH4wQehEZxbf6w0V9e
-	Xqpw==
-X-Google-Smtp-Source: AGHT+IH61R8D2jHhsglCOU8QAPHAO5jpQ7rR6j8uwaUOp/yV6DrlRdqQrnlWcLhIGfK7gMZVpwNXxA==
-X-Received: by 2002:a17:907:c0e:b0:acb:ac30:61f2 with SMTP id a640c23a62f3a-ace73a45d9emr606873666b.18.1745695841967;
-        Sat, 26 Apr 2025 12:30:41 -0700 (PDT)
-Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-3c37-b7fb-5879-3e83.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:3c37:b7fb:5879:3e83])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7011fbfbdsm3061867a12.12.2025.04.26.12.30.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 12:30:41 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: andy@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH] staging: media: atomisp: fixed spaces to tabs
-Date: Sat, 26 Apr 2025 21:30:33 +0200
-Message-Id: <20250426193033.483124-1-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rl8BRUVW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B46ADC4CEE2;
+	Sat, 26 Apr 2025 19:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745696986;
+	bh=0QhmbA6z9dDYLS2F8XMNw6kfXNMzDVFZileQBPf7FD4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Rl8BRUVWnwk40+UZPvP+4t2WYn8HGeTQNpGvPvvDZsEbd9JMOIGCz9r6KaNAfKeU1
+	 EO+/2SfjbKWzSh50Pg3Fib7v9rcn4S+8ULMAPQIfOTMQSrw9oiRT8v+R71aJ8sMtM9
+	 5BIlgUfsBeW98YAtX37EGKQpUOj6FT3AJQuKj6bUavnjdUtDBoyqTjrXerWE5fW6/3
+	 EQegwLXDdRU9oMK3h0da3CBdFZ9SbUyrHMLwNu/SRdE9EQlI2gcA43M994ftrnE5+h
+	 9Evt3Hdfenz1iQNEkJC9DvK9SLqg9i70zcTT4g3xFucbQ/H4HKxw0XDDJUPgBXC88l
+	 cr6KcbYFXdFcw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+ "Rob Herring (Arm)" <robh@kernel.org>, Tamir Duberstein <tamird@gmail.com>
+Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org
+In-Reply-To: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
+References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
+Subject: Re: [PATCH v19 0/3] rust: xarray: Add a minimal abstraction for
+ XArray
+Message-Id: <174569693396.840230.8180149993897629324.b4-ty@kernel.org>
+Date: Sat, 26 Apr 2025 21:48:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev
 
-Removed spaces and substituted them with tabs.
 
-Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
----
- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, 23 Apr 2025 09:54:36 -0400, Tamir Duberstein wrote:
+> This is a reimagining relative to earlier versions[0] by Asahi Lina and
+> Maíra Canal.
+> 
+> It is needed to support rust-binder, though this version only provides
+> enough machinery to support rnull.
+> 
+> 
+> [...]
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-index e176483df301..0d5e35845ed7 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-@@ -518,7 +518,7 @@ static int gmin_subdev_add(struct gmin_subdev *gs)
- 
- 	/*WA:CHT requires XTAL clock as PLL is not stable.*/
- 	gs->clock_src = gmin_get_var_int(dev, false, "ClkSrc",
--				         VLV2_CLK_PLL_19P2MHZ);
-+						VLV2_CLK_PLL_19P2MHZ);
- 
- 	/*
- 	 * Get ACPI _PR0 derived clock here already because it is used
+Applied, thanks!
+
+[1/3] rust: types: add `ForeignOwnable::PointedTo`
+      commit: a68f46e837473de56e2c101bc0df19078a0cfeaf
+[2/3] rust: xarray: Add an abstraction for XArray
+      commit: dea08321b98ed6b4e06680886f60160d30254a6d
+[3/3] MAINTAINERS: add entry for Rust XArray API
+      commit: 1061e78014e80982814083ec8375c455848abdb4
+
+Best regards,
 -- 
-2.34.1
+Andreas Hindborg <a.hindborg@kernel.org>
+
 
