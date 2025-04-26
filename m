@@ -1,77 +1,82 @@
-Received: from mail-qv1-f97.google.com (mail-qv1-f97.google.com [209.85.219.97])
+Received: from mail-pl1-f225.google.com (mail-pl1-f225.google.com [209.85.214.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2D419006B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C63C1531E3
 	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 01:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.97
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745630259; cv=none; b=bqfPmD6V4G2w+y0Yysw3UntNOzMk7pwzvF6zaihnxbv/z0blgEznQW8glco04+8J3QY54tdGZMOB2cWuCgE3uQioby1LLrxk/Js2F/LBhk5NFSa4z4RdVPgFfS25CqCsOCexEslyjP7JoyL6dZPjk+O/Rsp93ZRxFPzpqbnXTtM=
+	t=1745630259; cv=none; b=KE55ooZ2IpRYUHECqiTK7R0SP97nF3k0+ZBhTdQhmbiJhl8LNQXjgyFt+A2Ks2zLsZr02m/hi+jG8CN30Y1T5TUZQKcUCH95Zu8zxpqvpp5MP+Qg0T2pSEWTA/qyXoWrYNgHd5MlmXPUuvVNf1ppJomao4jh04G8ZUWQnpAO9d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745630259; c=relaxed/simple;
-	bh=3SdRMZedVNsGhoUkRDA0ELdVBKWAQIbe+N/5UZyBhJ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXvWVUG+8jTc8tA95QE8zt8T6dKXNNDptdHpYL52AzvEWYfjxMSk8bfJ2ReHHNtv8M+t5cOcvxGbwr1eHGnWsO2qHBF+bcgGXq8yE9cI2N0hZI1k27neSmGuvLyYmobVoBJnsr2qvYG1YS0dMh7EnMOim9CSStbPTjoZkBL/b24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=CRKq6wUd; arc=none smtp.client-ip=209.85.219.97
+	bh=vDrHtxaXCASrQzRkEIF0GNIz5C0/SSp+lBfDNtlXLYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O84YY5q2IlhvQhoaUctutURtmnNc4YUsJf8Dg9egLhzbOqZWR8Hy+vrEt5lJcir/BJur/2TCFd4Ou9XqXP6r7FOgEHo7Fp/WXn6mKHhVbpiQhz2I5AH/s78ouEkDe12EZQ2NZOF8w9xBODK8pZ8BiaGLGryptm8/Kz4juE7wyMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=AAdmAtym; arc=none smtp.client-ip=209.85.214.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="CRKq6wUd"
-Received: by mail-qv1-f97.google.com with SMTP id 6a1803df08f44-6e8fa1f99a6so3440406d6.3
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="AAdmAtym"
+Received: by mail-pl1-f225.google.com with SMTP id d9443c01a7336-227e29b6c55so4935045ad.1
         for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 18:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745630256; x=1746235056; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sWoTSB4woNticZtUd9FUCqOsuMx2ByEG0kxwm3khTAw=;
-        b=CRKq6wUdni9Qufz8JWcpx+oqWwdfu1gLN/rimX4RX62/QWslIHvisI9aADz//p9xUO
-         w3z1if0k9hSiB7Fz6MmPLS9oluk6vFuhx6YnbaXXMmzGpWE0yGQsVnYpUaahnFF+jrdQ
-         hNLfoz+cRJqzjrZL1zynv9sGHopENq7zIPNqH5Y5Y4PEtpwmnO9GJVUansPK6lQ78e3V
-         BQeLfPPhyXyhak2mrDchBEghTzVW/hRWD+MRL3f+8stmgX4kXImQOuUIAyMusLWoPDAt
-         HvmDdhiIA4SkqIXijmd/a+27xKPAUCpuT8+rNzL7fgNtXMAscyOlfnt7qFCS4DyMgG+A
-         0fbQ==
+        d=purestorage.com; s=google2022; t=1745630257; x=1746235057; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kn7WNOBSA3+MlrBrNQ2tCaRe/xJOjXsGpS6QMvkVlSs=;
+        b=AAdmAtymMYT6RkWIspfg4jaU79dleZrlXVaMBJa+7U4dgr5QWxWwYs8aLFjxWzlx2P
+         7TxumkYglU2s+i5RV519Te73tJ1uMVPgqWLZaZTIs8Gi6x/7ZIqjsdz2Y8rDP2qVu5r0
+         7y++kPXlXcnxCSrL1h/pxuqVnrcz4epU7NBRAFghUxIeiq5oK1jcFDsc/zVznSDD4pjl
+         jOjnjsiTLkhuoR8RrtvzDwM4lSK8E095EDywwIWOmkGQPXMap3BYbTWdC6Q/GcpgGpqk
+         5rsjWLfH7bLl5zbpjKB68paz9S07n72ZzU1LGy3Zj6+IRhzRPLC7mIdOEtaZyh6tEgCz
+         Hhkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745630256; x=1746235056;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sWoTSB4woNticZtUd9FUCqOsuMx2ByEG0kxwm3khTAw=;
-        b=mIsdVVSOEVdN97QabqcjsiYyDFQBawNgRaZ3JkFuk7OeArWVTz44S/IdZ5DMbdCDCH
-         vxAOBMSZjUS8MQbpJgI445yLfNVqpuTf4MY8FnmL3EbVPyXpK5iR0lXHqerDV4p1kSNE
-         SmT9QpUjtecX4RQ3SJMsApMoHVjL0jRyVdPSUSViWTIsJHt+SDwGtSSeQ6zTycCsS0jW
-         TiGQj7Uwb+fkx23Vg5jujQeHLFIx8GbNhC0cuLnPFYxVawYq+/rUcE4+HuE64DjaJKXr
-         DdLGcqQ6o7oxFinvdWRxNfjeO7O/DlNey6QNoUSj9V4ll50YWWfkzih5qJziNxi2DrmN
-         XTwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfklG15avTD5mfkv0LIcy4CXRm2CPW6oVTH0UV8d0XtTHC+Eq61LvIGlDTY+lc9ExaMKynFxW9OyVViGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhbnQIIHXWKhJMASkC+cT8J1Hz7/05pO2qIJ1VlS2oVK5hmXrl
-	ZM/Fo24yN0x1pnVSh+uaIVloCCZHpSzJiPpilheIKGarzY8PAoH8qG/9Qtqzw9i6cGbovxGfn05
-	WhUJxi9OnyeT42ObWIpjRFflc5vlnIMdR
-X-Gm-Gg: ASbGncup5/IFY+olMpxDMKL46McZBeoTLKSu4xjzr7BkjNHdb7zpkfM3SrcFMnL6uJV
-	Nj8Ho1aNcdoaEf5Ml3cTd7gw5o/464QQeVF3onVLkReH9oaP4N0E+s2eRn/R81U6MbwDGkZ175P
-	LbR5E70B08wxxzimm8zStdwfveYPphbknegPpaYOk7t8hKyHoX4+kuuTADKkRJUYrBS5oJ8+E/x
-	KF+zoc34oLVGfUonwYUl9b95toKy+E8UMBPudtp1VyxoJQ478mqAP4EF+VHfjJNhRnQNlMefWqw
-	6wT70kGU+o3g4M+KV6O9WCTAjugyLt9dtKs3UhuTHgWW
-X-Google-Smtp-Source: AGHT+IGKOnOAGNaR2172G+3uzVJGtJ0TwGdbe9ifds15Yrh4dQ+LSR97ANlr718s3pllfYeAXRU6CtDhyvT7
-X-Received: by 2002:ad4:5dc2:0:b0:6e4:449c:ab1d with SMTP id 6a1803df08f44-6f4cb9b43edmr27466936d6.2.1745630256282;
+        d=1e100.net; s=20230601; t=1745630257; x=1746235057;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kn7WNOBSA3+MlrBrNQ2tCaRe/xJOjXsGpS6QMvkVlSs=;
+        b=gJIhCI+yUZKOwzA9MDkYkUDJLr67qvat72DhGWvEylwQMjE/XjWyVmbR2ZMZU2xMBd
+         /wipLRjvxP9xdDiDlqhm9fWtEIJpn0UNs7pGnMKEk80pbdCn+kKaIn1S448aSyHeI0E4
+         /5s1ME4rnlTCdB7l6f/QiKJTpjg6C3lBcOOyAl/++5S3bR/ajQjkQUN5h71de+BgaVGl
+         ndGKWlIrxGBk85IdATH0pnOoQ/5TAzXKTvvwBNMKLqrdeBxHfwKsdqbJmXs5tVcGBEzk
+         I9DyYtUzVKmkyOHMXL5DnKIgw4sA1nDIEZWojxaWMlk3MmSJhYoCPDMHFguAEJW6JHIO
+         8D5A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1LuUoBiEoL7yuAtEFT1P1CQmv+ggo/K5gzQwpe2YLpYmtD42VGpqn9pFmgiPWmbC7EepO8Fv0BF5OKxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXKjHiTEBwoUnNHS/p6hNNArF2vkbX0dGBOyhmBloCw2Tm99Ra
+	eksapHAo9ykPiogQ1S/04dX1wKuTScu4BZlqkYd+7XuiunVUaBvcpkAdFgqdS+qcEM62FdA7Um0
+	7C0Dskp9iD0vOUCWogI4myIbxAgoaZy0w
+X-Gm-Gg: ASbGnctkgFmUD7RRcyWmg4Dl3jta+Si0sMd3fhCAMGAfT9g36/34tSq493+hFodIGbx
+	Kw0gr94so/bbGZVe1iULhke4H562RtzM93+Sw6zF9ego1YqYmT5FMUFr2uB+oVfoCFOqT+cCoGA
+	7NAq7Z8yrsIO2NaEyXa5GfEUg1jWN+CENm0OpDOCYAwzH04odUuQ5VysPO3MUS6DS+SvXmz+tpj
+	b10iJ7ieLkrtgVaXZKGYhla5GDp81Ub847amCI4lyEB/B3JEFs7rEnF/UidGu8UCJlHZnr5GVJs
+	lCcVyFxlbuQZTMkMXTQ4/5sfxun9t9PmVu1uwaj2FGGP
+X-Google-Smtp-Source: AGHT+IGF8OjXCTgKiDS6URxBaFTTypnMe621FigXusTuihJwufzzZI1acv3nPcxmOKS5nrg/1xh6Agf7y3VF
+X-Received: by 2002:a17:902:dac2:b0:21f:356:758f with SMTP id d9443c01a7336-22dbf5df830mr24444435ad.3.1745630256635;
         Fri, 25 Apr 2025 18:17:36 -0700 (PDT)
 Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f4c602821dsm1903696d6.41.2025.04.25.18.17.36
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-22db4df11b8sm2187395ad.49.2025.04.25.18.17.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 25 Apr 2025 18:17:36 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 476823402A4;
-	Fri, 25 Apr 2025 19:17:35 -0600 (MDT)
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0B056340572;
+	Fri, 25 Apr 2025 19:17:36 -0600 (MDT)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 40BEDE41BE9; Fri, 25 Apr 2025 19:17:35 -0600 (MDT)
+	id AA6C4E41BE9; Fri, 25 Apr 2025 19:17:35 -0600 (MDT)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Jens Axboe <axboe@kernel.dk>
 Cc: Christoph Hellwig <hch@infradead.org>,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 0/3] block: avoid hctx spinlock for plug with multiple queues
-Date: Fri, 25 Apr 2025 19:17:25 -0600
-Message-ID: <20250426011728.4189119-1-csander@purestorage.com>
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v2 1/3] block: take rq_list instead of plug in dispatch functions
+Date: Fri, 25 Apr 2025 19:17:26 -0600
+Message-ID: <20250426011728.4189119-2-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250426011728.4189119-1-csander@purestorage.com>
+References: <20250426011728.4189119-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,46 +85,141 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-blk_mq_flush_plug_list() has a fast path if all requests in the plug
-are destined for the same request_queue. It calls ->queue_rqs() with the
-whole batch of requests, falling back on ->queue_rq() for any requests
-not handled by ->queue_rqs(). However, if the requests are destined for
-multiple queues, blk_mq_flush_plug_list() has a slow path that calls
-blk_mq_dispatch_list() repeatedly to filter the requests by ctx/hctx.
-Each queue's requests are inserted into the hctx's dispatch list under a
-spinlock, then __blk_mq_sched_dispatch_requests() takes them out of the
-dispatch list (taking the spinlock again), and finally
-blk_mq_dispatch_rq_list() calls ->queue_rq() on each request.
+blk_mq_plug_issue_direct(), __blk_mq_flush_plug_list(), and
+blk_mq_dispatch_plug_list() take a struct blk_plug * but only use its
+mq_list. Pass the struct rq_list * instead in preparation for calling
+them with other lists of requests.
 
-Acquiring the hctx spinlock twice and calling ->queue_rq() instead of
-->queue_rqs() makes the slow path significantly more expensive. Thus,
-batching more requests into a single plug (e.g. io_uring_enter syscall)
-can counterintuitively hurt performance by causing the plug to span
-multiple queues. We have observed 2-3% of CPU time spent acquiring the
-hctx spinlock alone on workloads issuing requests to multiple NVMe
-devices in the same io_uring SQE batches.
+Drop "plug" from the function names as they are no longer plug-specific.
 
-Add a medium path in blk_mq_flush_plug_list() for plugs that don't have
-elevators or come from a schedule, but do span multiple queues. Filter
-the requests by queue and call ->queue_rqs()/->queue_rq() on the list of
-requests destined to each request_queue.
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ block/blk-mq.c      | 26 ++++++++++++--------------
+ block/mq-deadline.c |  2 +-
+ 2 files changed, 13 insertions(+), 15 deletions(-)
 
-With this change, we no longer see any CPU time spent in _raw_spin_lock
-from blk_mq_flush_plug_list and throughput increases accordingly.
-
-Caleb Sander Mateos (3):
-  block: take rq_list instead of plug in dispatch functions
-  block: factor out blk_mq_dispatch_queue_requests() helper
-  block: avoid hctx spinlock for plug with multiple queues
-
- block/blk-mq.c      | 110 +++++++++++++++++++++++++++++++-------------
- block/mq-deadline.c |   2 +-
- 2 files changed, 79 insertions(+), 33 deletions(-)
-
-v2:
-- Leave unmatched requests in plug list instead of building a new list
-- Add Reviewed-by tags
-
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 554380bfd002..fb514fd41d76 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2788,19 +2788,19 @@ static blk_status_t blk_mq_request_issue_directly(struct request *rq, bool last)
+ 	if (!blk_mq_get_budget_and_tag(rq))
+ 		return BLK_STS_RESOURCE;
+ 	return __blk_mq_issue_directly(hctx, rq, last);
+ }
+ 
+-static void blk_mq_plug_issue_direct(struct blk_plug *plug)
++static void blk_mq_issue_direct(struct rq_list *rqs)
+ {
+ 	struct blk_mq_hw_ctx *hctx = NULL;
+ 	struct request *rq;
+ 	int queued = 0;
+ 	blk_status_t ret = BLK_STS_OK;
+ 
+-	while ((rq = rq_list_pop(&plug->mq_list))) {
+-		bool last = rq_list_empty(&plug->mq_list);
++	while ((rq = rq_list_pop(rqs))) {
++		bool last = rq_list_empty(rqs);
+ 
+ 		if (hctx != rq->mq_hctx) {
+ 			if (hctx) {
+ 				blk_mq_commit_rqs(hctx, queued, false);
+ 				queued = 0;
+@@ -2827,29 +2827,28 @@ static void blk_mq_plug_issue_direct(struct blk_plug *plug)
+ out:
+ 	if (ret != BLK_STS_OK)
+ 		blk_mq_commit_rqs(hctx, queued, false);
+ }
+ 
+-static void __blk_mq_flush_plug_list(struct request_queue *q,
+-				     struct blk_plug *plug)
++static void __blk_mq_flush_list(struct request_queue *q, struct rq_list *rqs)
+ {
+ 	if (blk_queue_quiesced(q))
+ 		return;
+-	q->mq_ops->queue_rqs(&plug->mq_list);
++	q->mq_ops->queue_rqs(rqs);
+ }
+ 
+-static void blk_mq_dispatch_plug_list(struct blk_plug *plug, bool from_sched)
++static void blk_mq_dispatch_list(struct rq_list *rqs, bool from_sched)
+ {
+ 	struct blk_mq_hw_ctx *this_hctx = NULL;
+ 	struct blk_mq_ctx *this_ctx = NULL;
+ 	struct rq_list requeue_list = {};
+ 	unsigned int depth = 0;
+ 	bool is_passthrough = false;
+ 	LIST_HEAD(list);
+ 
+ 	do {
+-		struct request *rq = rq_list_pop(&plug->mq_list);
++		struct request *rq = rq_list_pop(rqs);
+ 
+ 		if (!this_hctx) {
+ 			this_hctx = rq->mq_hctx;
+ 			this_ctx = rq->mq_ctx;
+ 			is_passthrough = blk_rq_is_passthrough(rq);
+@@ -2858,13 +2857,13 @@ static void blk_mq_dispatch_plug_list(struct blk_plug *plug, bool from_sched)
+ 			rq_list_add_tail(&requeue_list, rq);
+ 			continue;
+ 		}
+ 		list_add_tail(&rq->queuelist, &list);
+ 		depth++;
+-	} while (!rq_list_empty(&plug->mq_list));
++	} while (!rq_list_empty(rqs));
+ 
+-	plug->mq_list = requeue_list;
++	*rqs = requeue_list;
+ 	trace_block_unplug(this_hctx->queue, depth, !from_sched);
+ 
+ 	percpu_ref_get(&this_hctx->queue->q_usage_counter);
+ 	/* passthrough requests should never be issued to the I/O scheduler */
+ 	if (is_passthrough) {
+@@ -2912,23 +2911,22 @@ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
+ 		 * already know at this point that all requests belong to the
+ 		 * same queue, caller must ensure that's the case.
+ 		 */
+ 		if (q->mq_ops->queue_rqs) {
+ 			blk_mq_run_dispatch_ops(q,
+-				__blk_mq_flush_plug_list(q, plug));
++				__blk_mq_flush_list(q, &plug->mq_list));
+ 			if (rq_list_empty(&plug->mq_list))
+ 				return;
+ 		}
+ 
+-		blk_mq_run_dispatch_ops(q,
+-				blk_mq_plug_issue_direct(plug));
++		blk_mq_run_dispatch_ops(q, blk_mq_issue_direct(&plug->mq_list));
+ 		if (rq_list_empty(&plug->mq_list))
+ 			return;
+ 	}
+ 
+ 	do {
+-		blk_mq_dispatch_plug_list(plug, from_schedule);
++		blk_mq_dispatch_list(&plug->mq_list, from_schedule);
+ 	} while (!rq_list_empty(&plug->mq_list));
+ }
+ 
+ static void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
+ 		struct list_head *list)
+diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+index 754f6b7415cd..2edf1cac06d5 100644
+--- a/block/mq-deadline.c
++++ b/block/mq-deadline.c
+@@ -713,11 +713,11 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 		list_add_tail(&rq->queuelist, &per_prio->fifo_list[data_dir]);
+ 	}
+ }
+ 
+ /*
+- * Called from blk_mq_insert_request() or blk_mq_dispatch_plug_list().
++ * Called from blk_mq_insert_request() or blk_mq_dispatch_list().
+  */
+ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 			       struct list_head *list,
+ 			       blk_insert_t flags)
+ {
 -- 
 2.45.2
 
