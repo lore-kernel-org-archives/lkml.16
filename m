@@ -1,96 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF6B1C36
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC221C36
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745662186; cv=none; b=BpMt6iDIGOs+Vcu8ux0AjLK5gsSuK9JJ+9xYVsfKuA3qQRRW86hQZdho83W/EA7uJW9OPaawOOT4/oVMUIv+8UhxkKCouVRlCunaPPFOg/vpSZrULANg4EnK/It5bSCFpI19Vm/6f3Jf9nZzu64gOEjHhoH4MwX7s+H/5Ycfgds=
+	t=1745662215; cv=none; b=cEnvRULmiKS9ApHs4IoIBcwUY4J4Jfjhj6bquQJwIiznZXEQZJU7Gf6Zxd7BEupXAwsRUpKVESG5muqccZpNATurH8qFh0jgkdhGeGcBLEMktLgkVDxOoTAZ3/hU9MyNZAcrD5rH0iKj0OmWwiK6VJ6DEYu8CSFACmyxVRhpI/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745662186; c=relaxed/simple;
-	bh=+dSeHCDPkLi4s13f7givFRWz0QNyRYjrVGiCHP5glzc=;
+	s=arc-20240116; t=1745662215; c=relaxed/simple;
+	bh=w2OTMbZH1TRrDA8DMHeOyx8pTNe4i1Sbt87eGm89KV0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=feDYTD/J0vNm6lGWohmNf+a/fAUYzpG1EKZZK9JDlVjMSeuXmqH5taQwxFMefWdNtXaRbOMyibM1tCWMyPlm9jotCO8Ptr+nbmQpRatR+o1tKsw9PG0MNHxucK6PC1tlgNCfwtQ3AC7xxhxoGDqhKmrGGAoInoNaisG/M9CFc6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiCwMDig; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Bmulw08bqA1brHeq+NP6okQSpWr4vbW+kWp+GYD0TIm+xXgKsQmh0rG6FOMj/sjrpSbRn3iPizZg2IpLKNzkoWn0GwDkZNFt+qKp/HqasLfHYeYxW57Sbhf0pOh/qxPGqo3ixuGY7Z2dv79ip9q2IFHWGE29IATWUcufSY16VmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMll3e91; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiCwMDig"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E123EC4CEEB
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:09:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMll3e91"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 758A6C4CEE2
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745662185;
-	bh=+dSeHCDPkLi4s13f7givFRWz0QNyRYjrVGiCHP5glzc=;
+	s=k20201202; t=1745662214;
+	bh=w2OTMbZH1TRrDA8DMHeOyx8pTNe4i1Sbt87eGm89KV0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XiCwMDigvoBeSkH+tG4v4+R7hq4qu7y63WHd4Cqg4TUWCk51IMYegmabySKN1UDAt
-	 hh/+gp09FgMLHVIOkZR3i6w15HvMyTeJxNIjsKpLDiczL+1FFNeYjLXjr18WuZc10U
-	 EAj4bAHFLsiaK1Nsfl1mHnE7gt7MtR2p49xtkpbo+tzZYNTvBiQdt4umpNBlj7FmXb
-	 1PiwU+1Ivcldt494BCGsdfk3IsEStJQNpQAUJryw02CoMCncGwHLEUt01UCL99Ry5j
-	 A1dzcFz2TUYZIQwV/IERO3+SoExXTKxdUIttv8Os4lE0O3I7hu3nDS+fXVSG9+KVP+
-	 3SIKjQ89nKoyA==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3b12e8518so540452266b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 03:09:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVpC1n+NlWcv5xoKSJZaWJ/paTBw11kkbBGJiabEjb4RxSry4nheLHrfDE47GLAgueRaCZjmZbcpQJe2zE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzArp2JGjuElFxYbqsMxYb5NyFJVkYMZjf4pBouuF8cQv2g5Mtk
-	4u9F1qnUWXJUTBugy7ejWme4eGKqXyFCedBm0z+If5HmDUkGdbf8M6AMMUfFS2okiV4HCi34hdK
-	Qn5iDFlWeiX4LPB0Wt0jF1XJS09k=
-X-Google-Smtp-Source: AGHT+IGiCA2J42eJM1hxcTb7t1MjZL2vpEWpK37pKd4NlNOTF8InkxUxvzV7PS9ia/U3F9kdJIwWYyVKrTqiptmT2lI=
-X-Received: by 2002:a17:907:2dab:b0:ace:4fde:c28f with SMTP id
- a640c23a62f3a-ace84ad7a54mr196891266b.41.1745662184520; Sat, 26 Apr 2025
- 03:09:44 -0700 (PDT)
+	b=WMll3e91GN1rIkF1UItGVmsveNAbUR2ZzdPBReKv5XZesQkSDXmNPj6sO9YesM7py
+	 cyJecgb92HjcFxLkWojGL450xy2KvxWeyW5NEs2KthEGJ+SYd5raS35HMEPJ9h1zXB
+	 dQ6TeZthJ/hOoPry6O478AOrqENL0YiWhzD8zjIu96nndIwPp/iMNF3a0UWJpCi1Lo
+	 v4BbvcWdRZnlOzJkVqROUQJnQUM7MXpihFGoOjHp4UC7uiTzZ3T3IU66sDX0jNv/Qz
+	 xT0MyFFCOLmwhJHgZzZh9oElcwuXFsctvhFH5i/DStRJJYELISgKiLXI0FS47cYUoK
+	 tYxaUz1e/feuw==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ace333d5f7bso503556266b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 03:10:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU44GxxvjjH4w4VP/32YadQD4UQ5rpmOQS5QTasYOuF6AsiO/B7c4RkZV0bxnpHUEkhWSb8x8HVyPWBhGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwblJzrL+5WVo8eYAeZJn/5UeiJVIU5n4VdWq92Rya9R+dfQ/N4
+	hY/HlPF9k5U+WRIROAXZz1o6XXMsR/vCUpZOsCa50suHLQbliN8dTaFUUaT+lBWcF/pAmZQGZfo
+	3lMNMXxH7FG5Xa8oVGI6x/RnpXZg=
+X-Google-Smtp-Source: AGHT+IGF85u+9LUHo+3f8sW1FTOQjSRyVq6ObG3byug0H/kuQX0oI85RYmmRr2TC28shLSQxCgzMdggPu5TEB0jd/Ow=
+X-Received: by 2002:a17:907:2ce3:b0:ace:8389:7c03 with SMTP id
+ a640c23a62f3a-ace848f8bdamr169357766b.23.1745662213066; Sat, 26 Apr 2025
+ 03:10:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
-In-Reply-To: <CC80F694AAFA2099+20250417080746.352276-1-wangyuli@uniontech.com>
+References: <20250422110719.15673-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20250422110719.15673-1-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 26 Apr 2025 18:09:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7d5CQW2nPeUQNG4Y3RJRAF-AePWKLyOrEAa105muUOAw@mail.gmail.com>
-X-Gm-Features: ATxdqUEsWNQ2lM6EcfQj5ldyBfzquoyTXLjtve2BiEeTdjeGznJHVA_uO5kjWzo
-Message-ID: <CAAhV-H7d5CQW2nPeUQNG4Y3RJRAF-AePWKLyOrEAa105muUOAw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Select ARCH_USE_MEMTEST
-To: WangYuli <wangyuli@uniontech.com>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	jiaxun.yang@flygoat.com, liuyun@loongson.cn, chenhuacai@loongson.cn, 
-	zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com, 
-	Erpeng Xu <xuerpeng@uniontech.com>
+Date: Sat, 26 Apr 2025 18:10:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6-mj9=38rkHMLLAQ5kcp5dL5cG6tZqxVCx+zDOkzJV9Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFjXxH8j46ZuOfuDTGQkIHODPVMIYHzg_3cdP_SalbS65yoam31QWtPwbs
+Message-ID: <CAAhV-H6-mj9=38rkHMLLAQ5kcp5dL5cG6tZqxVCx+zDOkzJV9Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Refine regs_irqs_disabled() and do_xyz()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Series applied, thanks.
 
 Huacai
 
-On Thu, Apr 17, 2025 at 4:08=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
-rote:
+On Tue, Apr 22, 2025 at 7:07=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> As of commit dce44566192e ("mm/memtest: add ARCH_USE_MEMTEST"),
-> architectures must select ARCH_USE_MEMTESET to enable CONFIG_MEMTEST.
+> Tiezhu Yang (2):
+>   LoongArch: Make regs_irqs_disabled() more clear
+>   LoongArch: Make do_xyz() handlers more robust
 >
-> Commit 628c3bb40e9a ("LoongArch: Add boot and setup routines") added
-> support for early_memtest but did not select ARCH_USE_MEMTESET.
+>  arch/loongarch/include/asm/ptrace.h |  4 ++--
+>  arch/loongarch/kernel/traps.c       | 20 ++++++++++++--------
+>  2 files changed, 14 insertions(+), 10 deletions(-)
 >
-> Fixes: 628c3bb40e9a ("LoongArch: Add boot and setup routines")
-> Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
-> Tested-by: Yuli Wang <wangyuli@uniontech.com>
-> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
-> ---
->  arch/loongarch/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 54ed5b59a690..1ce9b8f5fd03 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -74,6 +74,7 @@ config LOONGARCH
->         select ARCH_SUPPORTS_RT
->         select ARCH_USE_BUILTIN_BSWAP
->         select ARCH_USE_CMPXCHG_LOCKREF
-> +       select ARCH_USE_MEMTEST
->         select ARCH_USE_QUEUED_RWLOCKS
->         select ARCH_USE_QUEUED_SPINLOCKS
->         select ARCH_WANT_DEFAULT_BPF_JIT
 > --
-> 2.49.0
+> 2.42.0
+>
 >
