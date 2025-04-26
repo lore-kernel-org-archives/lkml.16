@@ -1,121 +1,159 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550D91ABEA5;
-	Sat, 26 Apr 2025 08:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8214B1474B8;
+	Sat, 26 Apr 2025 08:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745657449; cv=none; b=Ysd3NStydxmGdeSIX5xWZTp0bsBfbZPSLW2T8G6/z1kxm/c3RhqQR223B4xNcaZl/FOVJrua2Bfwn5+F2srVhHG3nw4ti8u9u5Fw8K8atLZZ+dUJVRJf/3Dr3meZFP3lyjHoAdMapZGGlHqNFOumqKdk0R2FgGmnpIiavP7KtTs=
+	t=1745657786; cv=none; b=PvdBTgeLsinHdtEPY8Va/FMf+cNJslwyccdllCn/A5Z0fs0+ZrZZrLW7xwp58sWy5JxATrNMxizWTicrg8Q6sR3rAzEtfLRKFWE5HyeD46hgw1oJrvN5iPFDN/m5lkfpEFc/BEjvJKJXVAuDjf05+qeIDBGQ30TOO7CctcG7It4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745657449; c=relaxed/simple;
-	bh=vOC+XArWTnrUyRqnOa0YSxgxbCDfn7LGUYWPMoGQ3xA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ex1iQlXCT7dV/7F8gU9E4elnrIYecb/bNciC9UxeM8OdgD1BrJ5rk/lNPpKUtccB3HsgpgBDvIog4IZrPUyFR9v5bXtQyBxym2h9WccxCGSNPMPGXyK+rJU4ZTy8Mm1J1toT+B9BfrfcEcitV9k7CJ5CfnPj9YSPqPWYxdOpEHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nEqWeTt9; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745657786; c=relaxed/simple;
+	bh=XWrNA2nHnF64Qjwnxsez+bk9+XFX3IdjM9pnNVVsYCU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=nvII7RE0XG37jjQo+XYKkSHIVq7SGr6OfHs5L7Z2DrGhEPXqXdqVs3noBy3gjMnefnHqVmcZY/Wz+nvHKWUqHBVOL9CepprtVd9sKzEVZV3He+0Y+Ho9tMAMT2gRA4XuWWRQ7bFwIi1JPPy0/B67E7azoQUqojDk3Q7k1Jll+DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4jAQrg3O; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9tMuVYuA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEqWeTt9"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso27979175e9.1;
-        Sat, 26 Apr 2025 01:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745657445; x=1746262245; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u++CHq19depwRXmivfgeucz9xTKpXmOjbCOWLfIjFrw=;
-        b=nEqWeTt9B3OZYjGtGITv+eRHwJIWc2Qy0+hjTAisXq6LXVSWVJgBeC9YMXnacBapJg
-         BTqi5A9a49CRMMvTfSUjtghhQVKxPNgYdOnu1yM7mBZnG6ESY1wtGka6DGWeV95Yuz+d
-         uxbXRLILzmRx31RrNkzRj736IQUHCA70fqvd29vEb9ZznoeCyLY4IKhgTxQ+U6mPA2+e
-         hAu/wSXYGXXQQd6a/JSaZ5ugppZrPHfoPPyLvX53sj16EBIu4Atc4oF7Z7wfJVHrFYD+
-         aqWCGzz/NVKu6pa9p8BkBnUcJTRjO02sfbsUxONegSU0UXCARnPt5SXUJHm8Os2hfarG
-         5prQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745657445; x=1746262245;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u++CHq19depwRXmivfgeucz9xTKpXmOjbCOWLfIjFrw=;
-        b=eHhzzbpqRmRXUH/gtB1FF1f0sFdiesxxqkG3n5xvDg+xb831/3Knrxz8kmG4fxWFFp
-         47CmYaigjX7Ud1gqp47oOVqmFtZvF3OuHfSZzpyouyAcRGx/LtNHYcobECzEjB0VY0rH
-         Rf4Uu4NgqqV0EPGUd8WOgyDMzqdwKT9zNdt3d9TLKvJCONaVQzZebOPaFVw9ne3DiQP0
-         MxvlJGtvbM2s7X7+HD6VHQcW87fvyEhxwMkmk/XvWua9qgH45fT4dA1TM+tXKyIDTm4x
-         G0O45/zUXiC/YZrFSw+qKmIl0k3a29sWW+60+mml+k/65ffWt3QTCTl0cw1sADB5FHmz
-         VYAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnaoq+PIltRtKD5K7Ydh9N5SwrpyTbzXkeJW1QOj1ty2RwWmNUrhWwMneGmss5YZ9WAIh44mvXuFw=@vger.kernel.org, AJvYcCVoL/jCfTq2O/ggESbi2bNDNhxk0dMZkepNKlQeVqayVsOFsw4jbMZcarHYWPHEwguOYu9kDpUmW6tcwliVJOg=@vger.kernel.org, AJvYcCWOhIl86SJf3Z5ZoDGCqYQA6BntMDVRzMeAtcXxh0XI/ak3ZHsNA8p5AnAz45deAVNrRxnxz9KrEcqMBfAN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdGu1c/IKsKtmH/Q22mFOZq5a0o/XkaW1kE7tVocaAUgy/HbU4
-	/KKURbI7DYS+Y4QdX65nx79eHY0T4FXFZ/ZRn3Odhbd9rJrezJKiSX5/yQ==
-X-Gm-Gg: ASbGnct/DAumDq3qyuBpgxj7nPUcvBtSyED0tUv8ATlvTm4USQar0b2jFP6fteUxZtn
-	8Bou6po+8fo5zjMrAAMWw8kN3mxhcfv+trAZibQ0erzDJuUHBOSjbWgYeF4XDfpfbSD1DgAB8q/
-	grFdLgS4kdHRGkmVLAg1LQ+5uApd/WFJu/JN2XZoZj1/pi3h8yiVFC3T0r75fihzkreVMNczyhG
-	U6TGiOxMyu6XllkLDrXiQh9KCSnsHkRKHCYI7da0h31pjPpx4wZckKOKx9YOkfOLbvt+ZRyjdzE
-	eCOUgJXtzRtHwXcTI4cTxzRPyq1BUPyBDNOUPJVGJJv1rD/22GrCZ5j4d/jSlyyDLYsDpRX7lDM
-	3otn+tVvJh41SS0Y=
-X-Google-Smtp-Source: AGHT+IGZ2JKoAMAnk3e/zD6qAb4IjMbF8OfH0tbLCxS6bSA2+zmwJ6Akf6HD9MCHePtBzvsH/W9qwg==
-X-Received: by 2002:a05:600c:a345:b0:43d:82c:2b23 with SMTP id 5b1f17b1804b1-440a66985e6mr40692515e9.23.1745657445195;
-        Sat, 26 Apr 2025 01:50:45 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29ba29sm85440365e9.7.2025.04.26.01.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 01:50:44 -0700 (PDT)
-Date: Sat, 26 Apr 2025 09:50:43 +0100
-From: Stafford Horne <shorne@gmail.com>
-To: Ann Yun <by.ann.yun@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, corbet@lwn.net,
-	linux-openrisc@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation:openrisc: Add build instructions with
- initramfs
-Message-ID: <aAyeY-cFSDuLYnJZ@antec>
-References: <20250425201018.12756-1-by.ann.yun@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4jAQrg3O";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9tMuVYuA"
+Date: Sat, 26 Apr 2025 08:56:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745657782;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZvPsxwC+TOjq1y1HcZFEbMNV53nXVh9iwak+UjeNuh4=;
+	b=4jAQrg3Opnve7ubLX56ZPb1o+QrRp2zRthS+9yrZgrBwbfhoKqOMXjN1NWq91+Ec2gpbGo
+	I7IvywSqWKYNLlN7JOACrut7h62v4J4LytRUZi71Wg1XWiP4A0Y4U3nRgJ1kdKIhCP7WpC
+	h+fcr9lxizdbpN8yGnTxXEWrFRYZRfL3vT58iFAoja+nmvRQFn1+kPoI3Ko8k5TejUuHdM
+	RmtbRkfObtYSTz2+xhw1zKEuot50GLzpG1M0SALMENvmrJm2BvQDvmntGB31xiF4RcuE3h
+	+Z88qBnnGqYJpZwZiGRaXJB+9Nm2uc6QoboqlAjO+zhSkl7UX4rc5DvEe/36Tw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745657782;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZvPsxwC+TOjq1y1HcZFEbMNV53nXVh9iwak+UjeNuh4=;
+	b=9tMuVYuAlwGCP9Z+181HRMt8iQt+v/T1Mq12Nt52ZDq/SFFevwLhq3yh8nBvwxux451I8h
+	j7lbQAPjxgKtjfAA==
+From: "tip-bot2 for Omar Sandoval" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/eevdf: Fix se->slice being set to U64_MAX
+ and resulting crash
+Cc: Omar Sandoval <osandov@fb.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To:
+ <f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com>
+References:
+ <f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425201018.12756-1-by.ann.yun@gmail.com>
+Message-ID: <174565777736.31282.9126332941284995798.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 04:10:18PM -0400, Ann Yun wrote:
-> Mention how to include initramfs when building the kernel
-> 
-> Signed-off-by: Ann Yun <by.ann.yun@gmail.com>
-> ---
->  Documentation/arch/openrisc/openrisc_port.rst | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/arch/openrisc/openrisc_port.rst b/Documentation/arch/openrisc/openrisc_port.rst
-> index a8f307a3b499..4ab28879d7ed 100644
-> --- a/Documentation/arch/openrisc/openrisc_port.rst
-> +++ b/Documentation/arch/openrisc/openrisc_port.rst
-> @@ -40,6 +40,10 @@ Build the Linux kernel as usual::
->  	make ARCH=openrisc CROSS_COMPILE="or1k-linux-" defconfig
->  	make ARCH=openrisc CROSS_COMPILE="or1k-linux-"
->  
-> +If you want to embed initramfs in the kernel, also pass ``CONFIG_INITRAMFS_SOURCE``. For example::
-> +
-> +	make ARCH=openrisc CROSS_COMPILE="or1k-linux-" CONFIG_INITRAMFS_SOURCE="path/to/rootfs path/to/devnodes"
-> +
+The following commit has been merged into the sched/urgent branch of tip:
 
-I think this is good, but maybe we can mention to refer to Documentation/filesystems/ramfs-rootfs-initramfs.rst
-for more details on this?
+Commit-ID:     bbce3de72be56e4b5f68924b7da9630cc89aa1a8
+Gitweb:        https://git.kernel.org/tip/bbce3de72be56e4b5f68924b7da9630cc89aa1a8
+Author:        Omar Sandoval <osandov@fb.com>
+AuthorDate:    Fri, 25 Apr 2025 01:51:24 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 26 Apr 2025 10:44:36 +02:00
 
-Also, it may be helpful to mention we can get pre-built busybox rootfs images
-here:
+sched/eevdf: Fix se->slice being set to U64_MAX and resulting crash
 
-  https://github.com/stffrdhrn/or1k-rootfs-build/releases
+There is a code path in dequeue_entities() that can set the slice of a
+sched_entity to U64_MAX, which sometimes results in a crash.
 
-But if we do that then it would be better to show how to use thos rootfs images,
-which maybe something better we have in our openrisc/tutorials[0].
+The offending case is when dequeue_entities() is called to dequeue a
+delayed group entity, and then the entity's parent's dequeue is delayed.
+In that case:
 
--Stafford
+1. In the if (entity_is_task(se)) else block at the beginning of
+   dequeue_entities(), slice is set to
+   cfs_rq_min_slice(group_cfs_rq(se)). If the entity was delayed, then
+   it has no queued tasks, so cfs_rq_min_slice() returns U64_MAX.
+2. The first for_each_sched_entity() loop dequeues the entity.
+3. If the entity was its parent's only child, then the next iteration
+   tries to dequeue the parent.
+4. If the parent's dequeue needs to be delayed, then it breaks from the
+   first for_each_sched_entity() loop _without updating slice_.
+5. The second for_each_sched_entity() loop sets the parent's ->slice to
+   the saved slice, which is still U64_MAX.
 
-[0] https://github.com/openrisc/tutorials
+This throws off subsequent calculations with potentially catastrophic
+results. A manifestation we saw in production was:
 
->  3) Running on FPGA (optional)
->  
->  The OpenRISC community typically uses FuseSoC to manage building and programming
-> -- 
-> 2.37.2
-> 
+6. In update_entity_lag(), se->slice is used to calculate limit, which
+   ends up as a huge negative number.
+7. limit is used in se->vlag = clamp(vlag, -limit, limit). Because limit
+   is negative, vlag > limit, so se->vlag is set to the same huge
+   negative number.
+8. In place_entity(), se->vlag is scaled, which overflows and results in
+   another huge (positive or negative) number.
+9. The adjusted lag is subtracted from se->vruntime, which increases or
+   decreases se->vruntime by a huge number.
+10. pick_eevdf() calls entity_eligible()/vruntime_eligible(), which
+    incorrectly returns false because the vruntime is so far from the
+    other vruntimes on the queue, causing the
+    (vruntime - cfs_rq->min_vruntime) * load calulation to overflow.
+11. Nothing appears to be eligible, so pick_eevdf() returns NULL.
+12. pick_next_entity() tries to dereference the return value of
+    pick_eevdf() and crashes.
+
+Dumping the cfs_rq states from the core dumps with drgn showed tell-tale
+huge vruntime ranges and bogus vlag values, and I also traced se->slice
+being set to U64_MAX on live systems (which was usually "benign" since
+the rest of the runqueue needed to be in a particular state to crash).
+
+Fix it in dequeue_entities() by always setting slice from the first
+non-empty cfs_rq.
+
+Fixes: aef6987d8954 ("sched/eevdf: Propagate min_slice up the cgroup hierarchy")
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com
+---
+ kernel/sched/fair.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a..0fb9bf9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7081,9 +7081,6 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+ 		h_nr_idle = task_has_idle_policy(p);
+ 		if (task_sleep || task_delayed || !se->sched_delayed)
+ 			h_nr_runnable = 1;
+-	} else {
+-		cfs_rq = group_cfs_rq(se);
+-		slice = cfs_rq_min_slice(cfs_rq);
+ 	}
+ 
+ 	for_each_sched_entity(se) {
+@@ -7093,6 +7090,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+ 			if (p && &p->se == se)
+ 				return -1;
+ 
++			slice = cfs_rq_min_slice(cfs_rq);
+ 			break;
+ 		}
+ 
