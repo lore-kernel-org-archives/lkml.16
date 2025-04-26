@@ -1,171 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9913A244;
-	Sat, 26 Apr 2025 00:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7F51865FA
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 00:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745626283; cv=none; b=WdgcExRY9yokFhqTtN4kGEJP6czhHRja/db8VzgzJCBkImaUxhelx58UNn9UNJH4pXUcJNMBRlo92eb0sIogs3wOr3vhdDMn78n7/aGBNz35k/NGUOsBgT37NG0eu1n0AXI9jKX+XBLpTO2nNtszS5Cjt+cS7IOVm1nVEeypPpg=
+	t=1745626444; cv=none; b=kmaEUKyXF5bw7eilR/v5wEfpSFQ1BxAXWE+IJM+j1TP95zGgHwlkveqjrCHVcojA5SOHGpOKmLX2/iMnanIoGeEMJku1FlaqEkhX5V4twT9/efje5kK3iX6+41uKChb7c/pLp5S93zZ3T4KCSKHyw54W4dsv7Mw1HM0tJXt4l2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745626283; c=relaxed/simple;
-	bh=DFNipnoqmsR5fihOyPm8o+8H9EYU2K0QxreJWh7S2IU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MvEX5ou1MlLeO//RCFv8ROcmrcMwX02MaCOanadFZk7/VpIyVmzZ1+koYK5ZTx9s2AmRNO/QHhq9G8JUFQZPcrQNAHGeQGJ6ka/G18rdFPglPt1nNPLADb5xCLTeiFJyx+P936GH60OkVefFfrCglRAAX+R73Gjm1Cupp1IriBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgIq0piQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745626444; c=relaxed/simple;
+	bh=5ZI1miHdJz7wfQVJ3AKTnq8ZxdU0aecNlHa6tzNWZxE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uLSh0nJhHSyK9efgIVV3z6TMTolzeS4PXTFlVF1u8R42PGybs/WdnLvAobTk8szDC1c2lPY7Gqf/ZyLpunstXPBgSox6hAMlggtPNviKB7RYP4i/wMhmfpgPdBy8RduoG2QGAu8d+Ki8EDsTqo/hpCguH/Tj4TD4oXiwmopw0ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lybnRj71; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgIq0piQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E672C4CEE4;
-	Sat, 26 Apr 2025 00:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745626282;
-	bh=DFNipnoqmsR5fihOyPm8o+8H9EYU2K0QxreJWh7S2IU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WgIq0piQPB32xXyAho4BKC8PU4ny3GmB6xplNbn6HMbs1bPzGdu99PZdxqK0EKahj
-	 enZSTa/WInTc6O5uARi/BCiVMry2bA6vYt2ZZwBYmjLXkqQuF/ycwKsVnPKehLAINO
-	 IfkwPHGpzlDXBDHkPTY/zWY7T2SPZGxiftPYrxuQpE5vNa/m6PDAZdq1Ahz74Edjgj
-	 4VsvkHUW+svDuOYqup//vYx6FhLkt3sfbxNRP375+hkxVvfIZTirxVz17vmmVzyQTx
-	 mEKOkEIOzZsUNh8sOzf3ZsLfkFXLEWcikRQoWyeBeqGTXtmtZWGYrRobI87WeeA8w+
-	 Rg3hAmQTpj/HA==
-From: Kees Cook <kees@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Erhard Furtner <erhard_f@mailbox.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] mm: vmalloc: Support more granular vrealloc() sizing
-Date: Fri, 25 Apr 2025 17:11:07 -0700
-Message-Id: <20250426001105.it.679-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lybnRj71"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2242ade807fso46554625ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745626442; x=1746231242; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bxpVCBLHTfcLtbj0gBx4eYSK7GUN1WhxDLmW+4nAY1I=;
+        b=lybnRj71bcsgCzrsxS62lOXwTsxB+aoTRgUedTWvZQ9SQHi9YkxQyifFe8QytC+RcE
+         sZd4BWyrzwf86MXgPEV95GYGbwxwF39To/u0H+/WPtO/YA19J2x74vjnbZineKCb1UrH
+         FMAOoqKx5v94b3MA6C8QideorQoXqRksdlebX1KnS2LVqkKc+vgnV/Zurjmi7NOGywNr
+         D0wvtSMkf48+HLkg+9ZE1rK4b3ds6mHOvL7R56SST9YUon9eEdP660N7W/jLruMzJ3dT
+         Hwiam5MacLwrfznZPk7/d9uAd7mpPKTpqSuVogjS3JjOovkbQ79kWqg8MY0JBcMLC0cE
+         d4Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745626442; x=1746231242;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bxpVCBLHTfcLtbj0gBx4eYSK7GUN1WhxDLmW+4nAY1I=;
+        b=S0kjn2J96i6WHCryEu2f5vstGuG9WUrMp4bjifb9NyeFfjxxPd/oLh5HRX3Cw7c/Em
+         tjXDIsuQl/9mQ16vis8lAHh7fzx1XDvWDzD0wUigDd7hPVx046NDWk/JQwvOzx6/8WxI
+         ZXDRSJfQieRpJOpilplqToBYD+tOLe9TmGESK+PIT2btzJkjU780j0YfeGcQM+EJMoTA
+         CnVT/S/ph58bdCACmJg8ARHJvcwWoGpKUZKp32ERtjAyfu4qcEJIDekArT/0wdX+pq2d
+         tTmFgvJGn/9CMcsGjsAL+6FgNnfMfsvIZYnX1A8UrrDjFL/m3IQJOf/jjI39Qh6rcZWI
+         PzYg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3mPMuKS8KyBFjqSE5wCfV7t4Ksy+ZEhwNm/+1LiuZ4GOnl6+K9Wu7YAtwAEFvp5gmsZG0eg5wpJG/Xp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF/DFvnslMuGyArdmNhh8oE1SIxEDR52pZAR2oOIQ9mzUEFwnx
+	/JcZ4qpSqLEj/JenFt1eQuL9JqYSQXOjmx6LZwnXHzkyg99mb11gzvLSMg1/iZnMMRzIaShRcm8
+	iLw==
+X-Google-Smtp-Source: AGHT+IE2zeHpQPZegtnClFnzj4+h59uTeKaFQ58TNuLPt2n5wY8qYg8PRH47N7frx+oBKxsilN/R1JEII2E=
+X-Received: from pgns27.prod.google.com ([2002:a63:925b:0:b0:af0:e359:c50a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef4f:b0:224:24d5:f20a
+ with SMTP id d9443c01a7336-22dbf740c03mr67564265ad.48.1745626442696; Fri, 25
+ Apr 2025 17:14:02 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 25 Apr 2025 17:13:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3832; i=kees@kernel.org; h=from:subject:message-id; bh=DFNipnoqmsR5fihOyPm8o+8H9EYU2K0QxreJWh7S2IU=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk8KrMa8utO1i8SvnOyNfzJwpStsSc+S6xfEHJq4puwp awzvl/m6ChlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjIx8WMDO1H2qZ43jOfe+fV ahXXxJQTxdtvXN8j8bCzZVHbx/+5K/8zMjw4eTmkufjmp4aFrLfa3n1U/+T2dbFQ8b6vbgdd1m1 pWccBAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <20250426001355.1026530-1-seanjc@google.com>
+Subject: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest with
+ vCPU's value.
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Seth Forshee <sforshee@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Sean Christopherson <seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Introduce struct vm_struct::requested_size so that the requested
-(re)allocation size is retained separately from the allocated area
-size. This means that KASAN will correctly poison the correct spans
-of requested bytes. This also means we can support growing the usable
-portion of an allocation that can already be supported by the existing
-area's existing allocation.
+When generating the MSR_IA32_PEBS_ENABLE value that will be loaded on
+VM-Entry to a KVM guest, mask the value with the vCPU's desired PEBS_ENABLE
+value.  Consulting only the host kernel's host vs. guest masks results in
+running the guest with PEBS enabled even when the guest doesn't want to use
+PEBS.  Because KVM uses perf events to proxy the guest virtual PMU, simply
+looking at exclude_host can't differentiate between events created by host
+userspace, and events created by KVM on behalf of the guest.
 
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Closes: https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
-Fixes: 3ddc2fefe6f3 ("mm: vmalloc: implement vrealloc()")
-Signed-off-by: Kees Cook <kees@kernel.org>
+Running the guest with PEBS unexpectedly enabled typically manifests as
+crashes due to a near-infinite stream of #PFs.  E.g. if the guest hasn't
+written MSR_IA32_DS_AREA, the CPU will hit page faults on address '0' when
+trying to record PEBS events.
+
+The issue is most easily reproduced by running `perf kvm top` from before
+commit 7b100989b4f6 ("perf evlist: Remove __evlist__add_default") (after
+which, `perf kvm top` effectively stopped using PEBS).	The userspace side
+of perf creates a guest-only PEBS event, which intel_guest_get_msrs()
+misconstrues a guest-*owned* PEBS event.
+
+Arguably, this is a userspace bug, as enabling PEBS on guest-only events
+simply cannot work, and userspace can kill VMs in many other ways (there
+is no danger to the host).  However, even if this is considered to be bad
+userspace behavior, there's zero downside to perf/KVM restricting PEBS to
+guest-owned events.
+
+Note, commit 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily
+in two rare situations") fixed the case where host userspace is profiling
+KVM *and* userspace, but missed the case where userspace is profiling only
+KVM.
+
+Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+Reported-by: Seth Forshee <sforshee@kernel.org>
+Closes: https://lore.kernel.org/all/Z_VUswFkWiTYI0eD@do-x1carbon
+Cc: stable@vger.kernel.org
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Danilo Krummrich <dakr@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Cc: <linux-mm@kvack.org>
----
- include/linux/vmalloc.h |  1 +
- mm/vmalloc.c            | 31 ++++++++++++++++++++++++-------
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 31e9ffd936e3..5ca8d4dd149d 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -61,6 +61,7 @@ struct vm_struct {
- 	unsigned int		nr_pages;
- 	phys_addr_t		phys_addr;
- 	const void		*caller;
-+	unsigned long		requested_size;
- };
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cd6329207311..75a376478b21 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4625,7 +4625,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	arr[pebs_enable] = (struct perf_guest_switch_msr){
+ 		.msr = MSR_IA32_PEBS_ENABLE,
+ 		.host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+-		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
++		.guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+ 	};
  
- struct vmap_area {
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3ed720a787ec..2d7511654831 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1940,7 +1940,7 @@ static inline void setup_vmalloc_vm(struct vm_struct *vm,
- {
- 	vm->flags = flags;
- 	vm->addr = (void *)va->va_start;
--	vm->size = va_size(va);
-+	vm->size = vm->requested_size = va_size(va);
- 	vm->caller = caller;
- 	va->vm = vm;
- }
-@@ -3133,6 +3133,7 @@ struct vm_struct *__get_vm_area_node(unsigned long size,
- 
- 	area->flags = flags;
- 	area->caller = caller;
-+	area->requested_size = requested_size;
- 
- 	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0, area);
- 	if (IS_ERR(va)) {
-@@ -4063,6 +4064,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
-  */
- void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
- {
-+	struct vm_struct *vm = NULL;
-+	size_t alloced_size = 0;
- 	size_t old_size = 0;
- 	void *n;
- 
-@@ -4072,15 +4075,17 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
- 	}
- 
- 	if (p) {
--		struct vm_struct *vm;
--
- 		vm = find_vm_area(p);
- 		if (unlikely(!vm)) {
- 			WARN(1, "Trying to vrealloc() nonexistent vm area (%p)\n", p);
- 			return NULL;
- 		}
- 
--		old_size = get_vm_area_size(vm);
-+		alloced_size = get_vm_area_size(vm);
-+		old_size = vm->requested_size;
-+		if (WARN(alloced_size < old_size,
-+			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
-+			return NULL;
- 	}
- 
- 	/*
-@@ -4088,14 +4093,26 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
- 	 * would be a good heuristic for when to shrink the vm_area?
- 	 */
- 	if (size <= old_size) {
--		/* Zero out spare memory. */
--		if (want_init_on_alloc(flags))
-+		/* Zero out "freed" memory. */
-+		if (want_init_on_free())
- 			memset((void *)p + size, 0, old_size - size);
-+		vm->requested_size = size;
- 		kasan_poison_vmalloc(p + size, old_size - size);
--		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
- 		return (void *)p;
- 	}
- 
-+	/*
-+	 * We already have the bytes available in the allocation; use them.
-+	 */
-+	if (size <= alloced_size) {
-+		kasan_unpoison_vmalloc(p + old_size, size - old_size,
-+				       KASAN_VMALLOC_PROT_NORMAL);
-+		/* Zero out "alloced" memory. */
-+		if (want_init_on_alloc(flags))
-+			memset((void *)p + old_size, 0, size - old_size);
-+		vm->requested_size = size;
-+	}
-+
- 	/* TODO: Grow the vm_area, i.e. allocate and map additional pages. */
- 	n = __vmalloc_noprof(size, flags);
- 	if (!n)
+ 	if (arr[pebs_enable].host) {
+
+base-commit: 2492e5aba2be064d0604ae23ae0770ecc0168192
 -- 
-2.34.1
+2.49.0.850.g28803427d3-goog
 
