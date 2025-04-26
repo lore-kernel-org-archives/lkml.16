@@ -1,92 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA257A13A
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E8115574E;
+	Sat, 26 Apr 2025 08:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655766; cv=none; b=p7lJ/mFBrr3cM7U1+wNLfGpByZx1fHBPJqbK+zk2lER6/Dcylr150YibR7xQO9PaEaT4jyNjIRrwU/Xjs1rsP86MCWhThCB5qvmB6kKorGdAUZRNsa21bNY2n5hLTna3REDdR5az5WrjmiLs4RgaVpH/rd3rMw4Ll/kAfaiojNw=
+	t=1745655799; cv=none; b=Zx//5TWAEMd5gR84sswiCaIPj5XyNnfaAw7N1vS0kIETrcsaqPtikSvzXmRX0nmpLYcI8Oto7yTQxuNOBCV9TBZWALwT5LdQLJeo0zQ+B8t70THaDiYOlJQhyBn6qZHEY2POqF2rZ2K3WVhnV+MKXmgVjvo3JGt+CGU2wU5RjGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655766; c=relaxed/simple;
-	bh=7Bl7de4B1CcHT/qr+JjEpriesTtHJODEoTtEeQXzAkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kcI6teKM0gHa9jvbsKZ+mU03v/CG6uB5ENBHTHZTB6+bqB2OJR4nnWJXjLvtMbMzWVR3qFAInf4PvuvbDdFKb1GZ3wYv20pu+ZRYSIJSXeuzJEXdMFa25atxotIERmEjxnRcR8IF9t5JZUx1WkeM6b+/itCLfWiobn9u6TQGG+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJHaeRL1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745655799; c=relaxed/simple;
+	bh=T/0xTqND7PjkXvzjFIewwatpFzxkpl5LjaRGjg/Ft2M=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=XFIeCnRO5DXRtgOzHu2Itz5iN1K+9P99jjRqwBhOeUVh7+IKuwNaa29WmNwFmOqa285uzL26w8FWLJRjNlhnlKCJeOXUmlTSb150/Oo7BpQpsxvF/RYQlgRzAv6zeJlZ3XJsdxXCRTxyub3hE0rWMCwKDj1DDdijnQdlwxq9xR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3zeK7mJo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uLdT5WYn; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJHaeRL1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98959C4CEE2;
-	Sat, 26 Apr 2025 08:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745655765;
-	bh=7Bl7de4B1CcHT/qr+JjEpriesTtHJODEoTtEeQXzAkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJHaeRL12xwlkkkBC+jsJeEVr9fi1ApDZSdVzQ5yOExRKsw6gBHotqsfnF2oz3Lk/
-	 ruaQsnEyhzIOfF9lwX1R0X8/HV08J/+ceGT8uPxsBd4nCnNuozq635mUBDDj+hpr3P
-	 2n1zBihSzqe7gKpB1YMe8u5ib2FbvioCKlszUGnJenADLpkgXwddcrBYDzxjnqlfgu
-	 XDxXV0E6/YMVCctw8wNmeAqu4EVSUMJSo9wYSl7nIj3eosllzvHr+yD85QZEX6WHk/
-	 f6VQfAvY0Kfp21TtpwnDW5PiAKqbhdpfrd+Dq7yuBvI5jBULIB/DVoBklcfTneVw3u
-	 0XzDbQFewiNdQ==
-Date: Sat, 26 Apr 2025 11:22:39 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de>
-Cc: akpm@linux-foundation.org, dwmw2@infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lkp@intel.com,
-	yajun.deng@linux.dev
-Subject: Re: [PATCH] mm: memblock: Fix arguments passed to memblock_set_node()
-Message-ID: <aAyXzywgqH2qFRKn@kernel.org>
-References: <bd5842a92bd340799a74063f8da83d96@amazon.de>
- <20250425102003.64122-1-bercantu@amazon.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3zeK7mJo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uLdT5WYn"
+Date: Sat, 26 Apr 2025 08:23:02 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745655789;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=RtykLyqSPHAkwQ6ztUn4+zSx9nu7whQ+1FHXMP8EBzw=;
+	b=3zeK7mJozIYwyEnFeOZTQfO8qJPxevDiJo5cBah0a6hr8S+xq+hZ/qRhVTBQkTyn9kKoIm
+	g9IeibbUfPwdokmiLmP0yiYLqIIHcAj6GETipOTZLsNXDbhAR0rAIwOs6GGgv2O04bZD2b
+	cN0Uz7MNUzRFmP0KfXnz4sTdDazCWs2hKxbWD6noPGFyg/bBJfrL4YDV4hrWhEI4H+tKfB
+	NbAZ/S5UKnOkf/q91u8tZJPaVXLV6dpT0Nc3wWwOBAjv3em+fjzHmDn2bqbhXilutuwSzD
+	QzFfvNaFmAEW/LEFGxE5M3bTbq90hLwcLm1vXaCVm2m/9Gq+DNKaPyXyt7mAuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745655789;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=RtykLyqSPHAkwQ6ztUn4+zSx9nu7whQ+1FHXMP8EBzw=;
+	b=uLdT5WYn7IIMK9xcm8rI0egTtl9QAa36osfAKRjfhFT3HqGl7QoomJvLUep4hRSwGKoCtc
+	mQUjvrs/VCiQeVDw==
+From: "tip-bot2 for Suzuki K Poulose" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/gic-v2m: Prevent use after free of
+ gicv2m_get_fwnode()
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425102003.64122-1-bercantu@amazon.de>
+Message-ID: <174565578285.31282.8068570844383766961.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Bernardo,
+The following commit has been merged into the irq/urgent branch of tip:
 
-On Fri, Apr 25, 2025 at 10:20:03AM +0000, Bernardo C. Gutierrez Cantu wrote:
-> memblock_set_node() receives a `base` and a `size` arguments, but we are
-> passing the `start` and `end` of the memory regions when iterating over
-> them in memmap_init_reserved_pages() to set their node ids.
-> 
-> This results in the function setting the node ids for the reserved memory
-> regions in `[base, base + base + size)` instead of `[base, base + size)`.
-> 
-> Pass `start` and `size`, so that we iterate over the correct range.
-> 
-> Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
-> 
-> Signed-off-by: Bernardo C. Gutierrez Cantu <bercantu@amazon.de>
+Commit-ID:     3318dc299b072a0511d6dfd8367f3304fb6d9827
+Gitweb:        https://git.kernel.org/tip/3318dc299b072a0511d6dfd8367f3304fb6d9827
+Author:        Suzuki K Poulose <suzuki.poulose@arm.com>
+AuthorDate:    Tue, 22 Apr 2025 17:16:16 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 26 Apr 2025 10:17:24 +02:00
 
-There's already a fix in memblock tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git/commit/?h=for-next&id=06eaa824fd239edd1eab2754f29b2d03da313003
+irqchip/gic-v2m: Prevent use after free of gicv2m_get_fwnode()
 
-Will send PR to Linus soon.
+With ACPI in place, gicv2m_get_fwnode() is registered with the pci
+subsystem as pci_msi_get_fwnode_cb(), which may get invoked at runtime
+during a PCI host bridge probe. But, the call back is wrongly marked as
+__init, causing it to be freed, while being registered with the PCI
+subsystem and could trigger:
 
-> ---
->  mm/memblock.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 0a53db4d9f7b..9639f04b4fdf 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2196,7 +2196,7 @@ static void __init memmap_init_reserved_pages(void)
->  		if (memblock_is_nomap(region))
->  			reserve_bootmem_region(start, end, nid);
->  
-> -		memblock_set_node(start, end, &memblock.reserved, nid);
-> +		memblock_set_node(start, region->size, &memblock.reserved, nid);
->  	}
->  
->  	/*
-> -- 
-> 2.47.1
+ Unable to handle kernel paging request at virtual address ffff8000816c0400
+  gicv2m_get_fwnode+0x0/0x58 (P)
+  pci_set_bus_msi_domain+0x74/0x88
+  pci_register_host_bridge+0x194/0x548
 
--- 
-Sincerely yours,
-Mike.
+This is easily reproducible on a Juno board with ACPI boot.
+
+Retain the function for later use.
+
+Fixes: 0644b3daca28 ("irqchip/gic-v2m: acpi: Introducing GICv2m ACPI support")
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ drivers/irqchip/irq-gic-v2m.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index c698948..dc98c39 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -421,7 +421,7 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
+ #ifdef CONFIG_ACPI
+ static int acpi_num_msi;
+ 
+-static __init struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
++static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
+ {
+ 	struct v2m_data *data;
+ 
