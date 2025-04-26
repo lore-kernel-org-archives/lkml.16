@@ -1,124 +1,215 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542001FF61A
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 22:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4F317E4;
+	Sat, 26 Apr 2025 22:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745707508; cv=none; b=FjCEtBbGfs3JJwRI70CZmQz8daoQTTLBXM0S58fx22PKTo/6KaHf5zZsisivgw4rz7cgJivCRkhuVr6tHXIjgahBeWFML88Vs+pScsEjdp2MDp7w+qlcTo4BSPmv/xOY9EGGD8AH85fdFWSHIK7/2iyYpLEBRxXn4MZAguRRLC8=
+	t=1745707593; cv=none; b=SCJwqSlP42pLgpd+Wq8YdUc15rdKctnPo4TeQLSGih/8IlG8ot3pa1qXWg/LViRfBQ9biQxCac7BbTzDuMmb5TsM5NffkBAzQmskdfxg5jJhJXFB+eiVctakf+rU1OPXiQ7UF+Noq2EiR9Q3OrcWJesR6y2UaGZ9E8BwVDJ9F04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745707508; c=relaxed/simple;
-	bh=HclsCHX3HZsdp7zwi/DFMXgxd59RhS+xuS2yD/7/K7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qqc3L6n9NAc89epjObo1X2VH8dpDte4zhBQQKXJdHqL0R/reRUogKPgIyms/HN7mLaqwbhyAXNivwVIN1sYahX7AlS4Kt6s75cBd/40dIC79i4nMO42PNIvun2d5dhQCfEgwz2deFvftCGm87GGFOPqlngZiJtVbni1Sj9dsa6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wcEQW+X0; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745707593; c=relaxed/simple;
+	bh=it71BWM3Pceo9WRIYilwNRCMXHq8+IvGJApDek517BE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/W6gbQh4x9i9aECZ43tCuHGRcXMLuSSkKsFvw1gqpxef6tnmY4EjDEK0Ig0POFBl25im5w5BcVzrC1fk8SSOJFAY35vJEpRI3H1ko0GMYu2WQltS8RklFjwFdg2rPgifrBRPNp18DqdantlPCY2w705bGx91lbgP4t7NAGv1XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKGaQruU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wcEQW+X0"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6066c02cd92so1440eaf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745707505; x=1746312305; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qwcUemuBqfTlPEEr1NWNN3RuE7oJcYf6SWcx828cxO8=;
-        b=wcEQW+X09pwfiDxaDCnktFvGz6sHyWMKEVDhWhbmIi6P071t+gNgKWLM1HfyHdGvbR
-         AxQZexwcwZu74emSx2be+DLH+fLnvnIfo2Rg0Eb8FqPnSAkdjo4/9RSpyfNgyjIV+7rJ
-         guzO0MYQR3F5viEhISkrT15hOAq3rZ3ZLGi7tI4k0n6ObYYPL+63EUpBcivtOmXRHv3Y
-         EHje7aiL4UbC1pz19/Oqxi4BMtYrkV01EEhMN52HJXIdWTELnKoseyy8BNDBLcud3LnW
-         nYuLBAgNJvhr9XuDUxithQ5qXihvt2QW9sn1B8oqsRiKTEskGTy9S54L4fkVfuyyZttY
-         liiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745707505; x=1746312305;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qwcUemuBqfTlPEEr1NWNN3RuE7oJcYf6SWcx828cxO8=;
-        b=Kq8zsWOU4aOUiczGJz1qsrxz+otjaLn/qZ8vM5n9D4qkxPjLtkzZtKqsA6hfFeh93V
-         AEcbi78GkO8SMUKGnPI7Mf9tFGCOX6fgyqsT87FeKG1DEh+cXmLGP89MdkOoWoAhVhKc
-         s8MC7kRlNvpfUp/8270/dyxQIXdt3wAdTNL95F3FSwoS7l7/PnSaXedVMbrMLW0u0YGq
-         Ktq9pXpqWc4GPSciQy93DZUEH7AwcOFzgL5v2UI4R+dPKrV4cO2M4wynty1CxGDVv47s
-         82sAlFyikk24aRafRKrf6gB5/Ck1ms8aolayaWH+fO52evL5DBrqSBgE4WY6n1dvO+C0
-         VVvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEPju1fT7mt/amlLxIdR5jM2r0bBF4tHJcEP4kKeYsCQC8YlaU6Km+ptONZ1EUPFmUxZ+kbftQAXu1sgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpEPInv6nl6LGB0NSq85Jgs2SAdV81ur9G91erAsIBx4MBa+5Y
-	8I/hWRXRhyhnqJPSItjTHxd4U9LILp/jJGYb0504F/oMZPUiD2SFEpxOMUHH7lE=
-X-Gm-Gg: ASbGncuK01p+ZxKEZBJhyIvnlrluoa5WpNd0pD3pginRPwMiQZV3PlFLQd0Wjq4VTGV
-	w1Zjzb+33z3eeej31oaO2vKwH/C9KtidFLDd0T/mtvnmX/YHI4pP1CvKU+evS/mcqyFfvfYWCkP
-	N1KlfN1vgThL2KQVEw14KsGEH9U+WWWR8JmiKK2myLAKHVjoP4faymOspm3oiDWkYunr/urUpIK
-	gd4zyOp8vXTobgfzlv/IJBekKTXag7c27bjZmS+h1d22u24FkLS+BnAWC6Cp6BjwotymwqTuFGT
-	EY9K7Y13oRwmXKYGhZ3QknVpHb5new/KW3AtbgNlu30I9jUO3Y157a+JUjsLzH2WGR6UN25e3QT
-	Ou85COMZnVPEE3gnxhQ==
-X-Google-Smtp-Source: AGHT+IFMpqMDcXejTTk+tlxMwyA7VG93Vje/R8vi0xdzIwwdgKGdmtlFvNJLYgocXCOKMvE6S+lSSQ==
-X-Received: by 2002:a4a:e84c:0:b0:604:5e57:80ab with SMTP id 006d021491bc7-606527b299cmr3850433eaf.0.1745707505264;
-        Sat, 26 Apr 2025 15:45:05 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:96ff:7f79:37f3:5c67? ([2600:8803:e7e4:1d00:96ff:7f79:37f3:5c67])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-606468a16a7sm1303347eaf.22.2025.04.26.15.45.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 15:45:03 -0700 (PDT)
-Message-ID: <f5de85b7-489c-4a81-a111-fbe7a893694c@baylibre.com>
-Date: Sat, 26 Apr 2025 17:45:02 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKGaQruU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CF1C4CEE2;
+	Sat, 26 Apr 2025 22:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745707592;
+	bh=it71BWM3Pceo9WRIYilwNRCMXHq8+IvGJApDek517BE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YKGaQruU+xGKGdoV3l0Vdfka/Y45JUZ628iUFoujF9GwWY3FxppXFkzRMUG35MpSg
+	 EaiOBb12LBgx+b82Q725iKeAXZvDOQrTrYDbpjGsFJD/9JoTAfzclwS22FBORZc6ek
+	 YrQeuCfAS9736Zz+L8ezEhzujNRGjLTWdfKLTu8z+Sj/Nf/KYu+5QuqEX0RYVcxQVu
+	 iuNkpiXmoht3Sz9eAnub+4DM+HlcT4q+qLJWPn7TfVySmbrV5ShZFLhZN6chXawY7/
+	 o0K1zUEdi2U8Gb27lMdTVWTZAdL8kVWJyUyes55gZ+Haf+mBp0qPllLRO9rYmNiAcI
+	 bgflnweJDU5Mw==
+Date: Sat, 26 Apr 2025 15:46:30 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 07/24] dma-mapping: Implement link/unlink ranges API
+Message-ID: <aA1iRtCsPkuprI-X@bombadil.infradead.org>
+References: <cover.1745394536.git.leon@kernel.org>
+ <2d6ca43ef8d26177d7674b9e3bdf0fe62b55a7ed.1745394536.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: adc: ad7173: fix compiling without gpiolib
-To: Jonathan Cameron <jic23@kernel.org>,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Guillaume Ranquet <granquet@baylibre.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
- <CAHp75VfHkKC81EinO+oN1b0=NRkwmNBLPky=HkrvPJCmt4njDQ@mail.gmail.com>
- <20250426161814.1bbf7f82@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250426161814.1bbf7f82@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d6ca43ef8d26177d7674b9e3bdf0fe62b55a7ed.1745394536.git.leon@kernel.org>
 
-On 4/26/25 10:18 AM, Jonathan Cameron wrote:
-> On Wed, 23 Apr 2025 00:03:38 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Wed, Apr 23, 2025 at 11:12:58AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
->> On Tue, Apr 22, 2025 at 11:12 PM David Lechner <dlechner@baylibre.com> wrote:
->>>
-
-...
-
->>> Not related to the fix, but I also question the use of the regmap here.
->>> This is one of the ad_sigma_delta drivers that does funny things with
->>> the SPI bus, like keeping it locked during the entire time a buffer is
->>> enabled. So, if someone tried to use a GPIO during a buffered read, the
->>> GPIO call could block (waiting for the SPI bus mutex) until the buffer
->>> is disabled, which could be an indefinitely long time. And to make it
->>> even worse, this is not an interruptible wait, so the GPIO consumer
->>> would effectively be deadlocked.  
->>
->> I would say either the entire buffer mode is broken (in software), or
->> hardware is broken and GPIO shouldn't be supported at all if the
->> buffer mode is enabled. I think the best solution here is to remove
->> the GPIO chip before enabling buffered mode. If GPIO is in use, fail
->> the buffer mode.
-> I'd kind of assume that anyone using these GPIOs is doing it in a fashion
-> related closely to the ADC itself.
+> Introduce new DMA APIs to perform DMA linkage of buffers
+> in layers higher than DMA.
 > 
-> Can we make any other use fail more cleanly? 
+> In proposed API, the callers will perform the following steps.
+> In map path:
+> 	if (dma_can_use_iova(...))
+> 	    dma_iova_alloc()
+> 	    for (page in range)
+> 	       dma_iova_link_next(...)
+> 	    dma_iova_sync(...)
+> 	else
+> 	     /* Fallback to legacy map pages */
+>              for (all pages)
+> 	       dma_map_page(...)
 > 
-> J
->>
+> In unmap path:
+> 	if (dma_can_use_iova(...))
+> 	     dma_iova_destroy()
+> 	else
+> 	     for (all pages)
+> 		dma_unmap_page(...)
 > 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/iommu/dma-iommu.c   | 261 ++++++++++++++++++++++++++++++++++++
+>  include/linux/dma-mapping.h |  32 +++++
+>  2 files changed, 293 insertions(+)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index d2c298083e0a..2e014db5a244 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1818,6 +1818,267 @@ void dma_iova_free(struct device *dev, struct dma_iova_state *state)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_iova_free);
+>  
+> +static int __dma_iova_link(struct device *dev, dma_addr_t addr,
+> +		phys_addr_t phys, size_t size, enum dma_data_direction dir,
+> +		unsigned long attrs)
+> +{
+> +	bool coherent = dev_is_dma_coherent(dev);
+> +
+> +	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+> +		arch_sync_dma_for_device(phys, size, dir);
 
-My inclination would be to implement it like [1] where we use iio_claim_direct()
-to return -EBUSY during buffered reads to avoid the deadlock-like possibility
-instead of using the gpio regmap.
+So arch_sync_dma_for_device() is a no-op on some architectures, notably x86.
+So since you're doing this work and given the above pattern is common on
+the non iova case, we could save ourselves 2 branches checks on x86 on
+__dma_iova_link() and also generalize savings for the non-iova case as
+well. For the non-iova case we have two use cases, one with the attrs on
+initial mapping, and one without on subsequent sync ops. For the iova
+case the attr is always consistently used.
 
-[1]: https://lore.kernel.org/linux-iio/2a789531fda5031c135fc207a547f2c3f00a13ea.1744325346.git.Jonathan.Santos@analog.com/
+So we could just have something like this:
+
+#ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE
+static inline void arch_sync_dma_device(struct device *dev,
+                                        phys_addr_t paddr, size_t size,
+                                        enum dma_data_direction dir)
+{
+    if (!dev_is_dma_coherent(dev))
+        arch_sync_dma_for_device(paddr, size, dir);
+}
+
+static inline void arch_sync_dma_device_attrs(struct device *dev,
+                                              phys_addr_t paddr, size_t size,
+                                              enum dma_data_direction dir,
+                                              unsigned long attrs)
+{
+    if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+        arch_sync_dma_for_device(paddr, size, dir);
+}
+#else
+static inline void arch_sync_dma_device(struct device *dev,
+                                        phys_addr_t paddr, size_t size,
+                                        enum dma_data_direction dir)
+{
+}
+
+static inline void arch_sync_dma_device_attrs(struct device *dev,
+                                              phys_addr_t paddr, size_t size,
+                                              enum dma_data_direction dir,
+                                              unsigned long attrs)
+{
+}
+#endif
+
+> +/**
+> + * dma_iova_link - Link a range of IOVA space
+> + * @dev: DMA device
+> + * @state: IOVA state
+> + * @phys: physical address to link
+> + * @offset: offset into the IOVA state to map into
+> + * @size: size of the buffer
+> + * @dir: DMA direction
+> + * @attrs: attributes of mapping properties
+> + *
+> + * Link a range of IOVA space for the given IOVA state without IOTLB sync.
+> + * This function is used to link multiple physical addresses in contiguous
+> + * IOVA space without performing costly IOTLB sync.
+> + *
+> + * The caller is responsible to call to dma_iova_sync() to sync IOTLB at
+> + * the end of linkage.
+> + */
+> +int dma_iova_link(struct device *dev, struct dma_iova_state *state,
+> +		phys_addr_t phys, size_t offset, size_t size,
+> +		enum dma_data_direction dir, unsigned long attrs)
+> +{
+> +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+> +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> +	struct iova_domain *iovad = &cookie->iovad;
+> +	size_t iova_start_pad = iova_offset(iovad, phys);
+> +
+> +	if (WARN_ON_ONCE(iova_start_pad && offset > 0))
+> +		return -EIO;
+> +
+> +	if (dev_use_swiotlb(dev, size, dir) && iova_offset(iovad, phys | size))
+
+There is already a similar check for the non-iova case for this on
+iommu_dma_map_page() and a nice comment about what why this checked,
+this seems to be just screaming for a helper:
+
+/*                                                                       
+ * Checks if a physical buffer has unaligned boundaries with respect to
+ * the IOMMU granule. Returns non-zero if either the start or end
+ * address is not aligned to the granule boundary.
+*/
+static inline size_t iova_unaligned(struct iova_domain *iovad,
+                                    phys_addr_t phys,
+				    size_t size)
+{                                                                                
+	return iova_offset(iovad, phys | size);
+}  
+
+Other than that, looks good.
+
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+
+  Luis
