@@ -1,68 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F851A5BA3;
-	Sat, 26 Apr 2025 06:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A7186334
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 06:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745647244; cv=none; b=WqlTLsJxKypTPbtI5e4QmlYwWjtkYMTxzoLBtFjaYuBYJ/R9/4C8ryYLgmCiakaS5BBZVe6i9KXezK0UPg3A7mEkwQI4phWzw8Z+r1zIYQjMYL98E8KQRK8zDoKwagTp1pONL30s80TLUqErytrj5Gk7sTZoNcAfq/UCC4OsogM=
+	t=1745647438; cv=none; b=rqlazf4vHkUP62zHbLIRsFHUuXfS83zp8XGp+M1QwfgubaeMWORieLtVnbYVBxDcANVdXX/uc/g1jBLYeOJY/p5d88jb9RJYuvMm63BunR91HkdQ1kQ0QQl7KpYoxKPRXuaSQMaBZNl87UbrAZvNB9DOKZ/gPMCehGSx/QmzQF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745647244; c=relaxed/simple;
-	bh=DHN+2XwaGWSWPVgZUpkQ5NWYnVCsHjEBcx8IoO728h0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hyUPkC9FgBBXTSKohoMrRnrTkRzdm0IG3XrFcQe5DAX+42U3yJqWKpzbb6Tdm2q+HbntoyfQaO0oRcRy0cgf4UBNTo8SjIAVWKmpauxsivZv3Ul/BTFMf6lfuHkVWw7wwIm9s2P5oY6rgWHHH6vfZIIpc/QOVBDgX0P4Ykt+vrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWKotXnk; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745647438; c=relaxed/simple;
+	bh=0XokfoSh8++cl3/KKEd8xD10OAMywI6GvWNX7omzZHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mk8cGgF3WxlbbchB3+o+VbvlonjkOyClvxDqHvw99l4tamgwsClIZQvVKdfEBRW/Idq0vVn4GCW66S+R9WbFg2q/wHiDXxc726yumsYpQ+ajBybZEZhCywieoVWQHKlox9Fauxfu7ogMzwsFcg060c5b0wdifYKon16SRQ8C0BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQSQDSPq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWKotXnk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745647242; x=1777183242;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DHN+2XwaGWSWPVgZUpkQ5NWYnVCsHjEBcx8IoO728h0=;
-  b=VWKotXnkCmPbL7t8bSLFLpjAKyRKWmweuVZJ/yn+E6Pf7tiu3xgQVx5e
-   7He+YqtrBaOy56lSE84+65riWkRc8hwqsddgfH4wpLByi5AZF68Y8s9Ru
-   qyJI7Xossz3+BM/rgy/R7dGmoCtezLwAwDKRR03w6jmIADGcV/LSVD4cG
-   X7i/D6dKKpvWoVM5jDqZdxn4G+z1/WETA7KqVDRS9t6jp0TWD5rAJLUIY
-   RBJNKSNFrI6/tixUJw2wklHCVwq2KsZ+LJ+s0KhAnYDl13BA34LXOhoFN
-   WwngoXGg5LzZ2rk6iUXaSRs5v4vEQucX+0+Ezfb3fXLBn/C6hR/WUzWtw
-   g==;
-X-CSE-ConnectionGUID: HJjMGsXYTkuHqTAsWRnvag==
-X-CSE-MsgGUID: tObNXKajTUeVpydfi7I6Mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="57951641"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="57951641"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 23:00:41 -0700
-X-CSE-ConnectionGUID: fGVsoJFCSU20yY+XSe/Qyg==
-X-CSE-MsgGUID: ckQjLZxXSfiXaCohK5TDOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="170290518"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 25 Apr 2025 23:00:37 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8YaX-0005iR-2e;
-	Sat, 26 Apr 2025 06:00:33 +0000
-Date: Sat, 26 Apr 2025 13:59:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
-	andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
-	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org,
-	jkeeping@inmusicbrands.com, john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	markus.mayer@linaro.org, matt.porter@linaro.org,
-	namcao@linutronix.de, paulmck@kernel.org, pmladek@suse.com,
-	schnelle@linux.ibm.com, sunilvl@ventanamicro.com,
-	tim.kryger@linaro.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v4 2/4] serial: 8250: introduce serial8250_discard_data()
-Message-ID: <202504261327.CEtXsr6g-lkp@intel.com>
-References: <20250425062425.68761-2-cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQSQDSPq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500BFC4CEE2;
+	Sat, 26 Apr 2025 06:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745647437;
+	bh=0XokfoSh8++cl3/KKEd8xD10OAMywI6GvWNX7omzZHM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=HQSQDSPq0QX9v8P9A0t14Uyhckho356ZjRBtjOadxduEn6RH4tEhvn7whOpG+ENpD
+	 S7loToyDnQbbQv7fIjbcDb5rhfq0+k52w7QFiiR2cfoYKInL523uUXksM++yHdAFlf
+	 RRHBhdczW0bzxSZ0jTKi6NzwbtSphhcXWuFEHqO+4JgPagOuAExwKoUkZxcfp2OfVb
+	 k1bpY+6YSd1anyvAq/5lBR67yPtJ902hIyUru3jyI1lsoKLdhSvtb3wAse8d/7VYtm
+	 6n6yy2V8vEALKrpO4LnJ7iHo24+bmHMn9MJZksvGwKObKvjN3kPKqe1nn+kfnw9awX
+	 0kr/xMM6dWM9g==
+Date: Fri, 25 Apr 2025 23:03:54 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] move-lib-kunit fix for v6.15-rc4
+Message-ID: <202504252302.665FB14F3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,70 +41,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425062425.68761-2-cuiyunhui@bytedance.com>
 
-Hi Yunhui,
+Hi Linus,
 
-kernel test robot noticed the following build errors:
+Please pull this single fix for the kunit lib/tests/ relocation for
+v6.15-rc4.
 
-[auto build test ERROR on soc/for-next]
-[cannot apply to tty/tty-testing tty/tty-next tty/tty-linus usb/usb-testing usb/usb-next usb/usb-linus linus/master v6.15-rc3 next-20250424]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yunhui-Cui/serial-8250-introduce-serial8250_discard_data/20250425-142655
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
-patch link:    https://lore.kernel.org/r/20250425062425.68761-2-cuiyunhui%40bytedance.com
-patch subject: [PATCH v4 2/4] serial: 8250: introduce serial8250_discard_data()
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20250426/202504261327.CEtXsr6g-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504261327.CEtXsr6g-lkp@intel.com/reproduce)
+-Kees
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504261327.CEtXsr6g-lkp@intel.com/
+The following changes since commit 3f2925174f8bd811f9399cb4049f6b75fd2fba91:
 
-All errors (new ones prefixed by >>):
+  lib/prime_numbers: KUnit test should not select PRIME_NUMBERS (2025-04-15 13:50:43 -0700)
 
->> drivers/tty/serial/8250/8250_port.c:2146:32: error: use of undeclared identifier 'flags'
-    2146 |         uart_port_lock_irqsave(port, &flags);
-         |                                       ^
-   drivers/tty/serial/8250/8250_port.c:2150:36: error: use of undeclared identifier 'flags'
-    2150 |         uart_port_unlock_irqrestore(port, flags);
-         |                                           ^
-   2 errors generated.
+are available in the Git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/move-lib-kunit-v6.15-rc4
 
-vim +/flags +2146 drivers/tty/serial/8250/8250_port.c
+for you to fetch changes up to 4ea404fdbc39971814cd3eb36b43c11fb6f32e17:
 
-  2131	
-  2132	#ifdef CONFIG_CONSOLE_POLL
-  2133	/*
-  2134	 * Console polling routines for writing and reading from the uart while
-  2135	 * in an interrupt or debug context.
-  2136	 */
-  2137	
-  2138	static int serial8250_get_poll_char(struct uart_port *port)
-  2139	{
-  2140		struct uart_8250_port *up = up_to_u8250p(port);
-  2141		int status = NO_POLL_CHAR;
-  2142		u16 lsr;
-  2143	
-  2144		serial8250_rpm_get(up);
-  2145	
-> 2146		uart_port_lock_irqsave(port, &flags);
-  2147		lsr = serial_port_in(port, UART_LSR);
-  2148		if ((lsr & UART_LSR_DR))
-  2149			status = serial_port_in(port, UART_RX);
-  2150		uart_port_unlock_irqrestore(port, flags);
-  2151	out:
-  2152		serial8250_rpm_put(up);
-  2153		return status;
-  2154	}
-  2155	
+  lib: Ensure prime numbers tests are included in KUnit test runs (2025-04-22 08:48:10 -0700)
+
+----------------------------------------------------------------
+move-lib-kunit fix for v6.15-rc4
+
+- Ensure prime numbers tests are included in KUnit test runs (Mark Brown)
+
+----------------------------------------------------------------
+Mark Brown (1):
+      lib: Ensure prime numbers tests are included in KUnit test runs
+
+ tools/testing/kunit/configs/all_tests.config | 2 ++
+ 1 file changed, 2 insertions(+)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
