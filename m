@@ -1,65 +1,80 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA6D221719
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F281922D4;
+	Sat, 26 Apr 2025 08:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655115; cv=none; b=ul+nZWj201jIVW8pbKAux44OpzH+ZwbcsRLEMSp0VADA2iNUYlHmRLBdShb9uI5t1YwVG0ZDJl3fyT2qW/q1PlGmmYkMw68hRbRWxq+lrlOwurugpDTOrjJg/umC8O3pUwTUQMlBKc/J5X11lx/WhF7RWSpA5ndg1PgKgaUMNRg=
+	t=1745655225; cv=none; b=S5bYfEXw89D4rsURb6qVlfrHdpa9g04afoxLXAZv86YJ5cCSlo0hF8IjjAPQIyybbD4SSKOBnCllCyn60RgsWct7U37iX3lElp5YqfZ3uEJka7Enox03zEFxYkQFRn/WeuMFhEOBh6D6YRwjhzHBruxe1zxVocWCT3Gm0a1GhuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655115; c=relaxed/simple;
-	bh=fUao/0zNH0DgkZ1vpqY/8i593DHfgBHmukSrAR8PXCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=l57TqWDJ7CBLUcogHblqkuuHr02lFIbdaa9EgiKNxrqAPj08WG7cDn6iHQkkZgt0VMR7EhlNWIeKAePTj9pV2a2PXviS9Xd180D4SnNu25Zm1ZpAQ8Lm/SWOPJKFOVPTdHFTnuqI/ptgQ4kLMqM+b2jvDPa8hWDFHaOTBC3hGkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fXDv/Ixr; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745655225; c=relaxed/simple;
+	bh=NOoqkO+zz1eeFYdOVt3Zh1aQaTUST3R452WF15ma55o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XXGfl+391ct9gcUAEzZb1Nc8M5+vrtYbW45EoO/1eKOG3OyWeJly/0v39yvqv6QdsNM2784XiTW7doJdB6NhqNPuOPpLB1x30D8eqdykwYRjc6jEwUIre+ZiLr/YgzvoPb4SdcWNLT7gzq+n2fax5NrSb2i+LG8nxCZ09nrfmSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mbKGZZEe; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fXDv/Ixr"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250426081141epoutp013576dad9d1d33733dfdf1304c1f6e446~50BDoIyGK2840828408epoutp01G
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:11:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250426081141epoutp013576dad9d1d33733dfdf1304c1f6e446~50BDoIyGK2840828408epoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745655101;
-	bh=dSsoXkYUmwOkyr1PD748E4O6HThE8qvbiBOT0LR7VnE=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=fXDv/IxrRiiEKmvivheGCJQ/wQ78aNnxQg7eUZKJwIOmS+CQbLjW94mPorlTgLQoN
-	 ryU97MFTRD/pacLCKu6FHge/9gdhg/2JE/TheSf1gd2GCIIGt1MXddDUqANGj8Bxtl
-	 bwTHtoBLw6U8gIrrbAkQZ4uBA3cFMcKGqcILiQxo=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250426081141epcas5p4df8d936dc585de80584b782998711ef7~50BDJKBOB0031900319epcas5p4F;
-	Sat, 26 Apr 2025 08:11:41 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4Zl2VM1hGcz3hhT7; Sat, 26 Apr
-	2025 08:11:39 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250426080212epcas5p2d0c592a4bd539eed242d5ac31d23b323~5z4xvU0mi2074720747epcas5p2t;
-	Sat, 26 Apr 2025 08:02:12 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250426080212epsmtrp18ead141dd34116a54c8ea496e3d8887e~5z4xunzou1063610636epsmtrp1g;
-	Sat, 26 Apr 2025 08:02:12 +0000 (GMT)
-X-AuditID: b6c32a2a-d57fe70000002265-94-680c9304c56a
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8B.78.08805.4039C086; Sat, 26 Apr 2025 17:02:12 +0900 (KST)
-Received: from green245.sa.corp.samsungelectronics.net (unknown
-	[107.99.41.245]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250426080211epsmtip132d515b1371c2289a6ca837bde3ae263~5z4wgAIg81307413074epsmtip19;
-	Sat, 26 Apr 2025 08:02:11 +0000 (GMT)
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton
-	<akpm@linux-foundation.org>
-Cc: axboe@kernel.dk, gost.dev@samsung.com, nitheshshetty@gmail.com, Nitesh
-	Shetty <nj.shetty@samsung.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] iov_iter: Use iov_offset for length calculation in
- iov_iter_aligned_bvec
-Date: Sat, 26 Apr 2025 13:23:10 +0530
-Message-Id: <20250426075310.6597-1-nj.shetty@samsung.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbKGZZEe"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so2705909b3a.3;
+        Sat, 26 Apr 2025 01:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745655222; x=1746260022; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OvvbhvACfeE0d7OS1ELo9a7xaL7zTrcX+KxjV9AKeRY=;
+        b=mbKGZZEeugRzHtX8ri6R5nSZ61LDmRbNIg05uR2RB15BUWe8FhgdGoi2Hsx6loeftN
+         1/i1rpUNMk9Te97o5gTlri2wF1ypkeevOCAlcwgor8za57VBpoU+ZDfqa0+hcy9y1u2j
+         zUS2HuLMPgUtrMp8AJqWedoGtAMyHq7hDhB52oVBFdqgsy0a2e/aT000mOnlE3tTIRu5
+         zlAA7nR2tif3lp5tCn53dMFdO+rS4DdEricYpDef7mhgUn2masZTX/lvY2CGupMqYvo5
+         HqnycjSAeL/Cgfy/s8Gh0mLXtUd/OlXHLWmZVEVG+q+2IU1Q7NFNJNoUhzdmv3eyEnaL
+         Dk6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745655222; x=1746260022;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OvvbhvACfeE0d7OS1ELo9a7xaL7zTrcX+KxjV9AKeRY=;
+        b=TDuZob9sKnwv94ZGEcN++sIblZDCC+4bTwCPSPIRT5H/e9iz0v3khhHkR8X+hHNjjK
+         Na7UQjqof000VbvYir8fwB1txTpRsiOqTJR/K6kDBTv26O5behtk8T37KGRUIzD3Y5cU
+         x1e7TxZkQc+iAJtqktKD2+Ub18sSyvfy0EfTTyfYf7+fs6gvWgUrMu5LMVqueCn/QRgk
+         Zg0RHsAsaPoqMI6jWoRlajgHreZ0KkrFxOg3JTRTkNsaA5o6f7cqLCxpC5Z3STL/FLIP
+         IX0Z7Gsz9Lyo77tkxy0IZE6B9Ni2OqOfL73+kl0sYHjs5DAwDNSvxvWCzdLWg/AbrT9I
+         eafg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGqlcu9tGpJk02stP7I4OFc8nll5VKqrow+o+em5zbrif79WgaeV8rWMWuo3OYFCGd4UI=@vger.kernel.org, AJvYcCWxkrr3q/u7bKqghLQXzwH25CafsGdmRl7VtNNhS2KD5vIf9qGp3vgZ3BTga6VqCbysPqLHfmgD85EJvDAF@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvBGl6XVs626StNj2FoBnvg80n4PDxtsZ3yDADkLU3qtjVtEna
+	PVbGWOIjTTkhKfdniSmmc4lgW2Vc6p2oHleBI/eqvni+AtF0iPcGRHuNTUMS
+X-Gm-Gg: ASbGncvl5eETVFTlOAh3IUSCpd9J7siBtyZiIQ4EcRfvfdvr7UqIT1cz7CyBjks9QkT
+	//DjG7qVLqQWgjWoDkwyhEDF/d1Eb6a9jURNPVfOUH2jv58Rhv6bq6vWUu5b5Fdo8VKJq2OtKbM
+	cw4WCMLy3Y4v2VGIz9p4fBzS6DSF5BxaB1hHujFDM3ShUI6YuXjZoX48qX19o9jmT38pDWD5EUm
+	Li8LMDUgM2UCUyKHkYhyWbdzrDnRzdpaFVtkZLe/VOwL0t+eZkXi7y30WzIE2DrLKP0Eh/bkfUs
+	QroK/ZxgF2kxmWNjfGEdQnTcCydeNiFZJ+CklZWcOThHtwwkBdOqCgLp
+X-Google-Smtp-Source: AGHT+IFz1ZiIYco42Yj8rxuh0jm8GrjxmOyjIZConlJzyLKDnmQjNC/3puibLi5Qt6eudH1z7jN2AA==
+X-Received: by 2002:a05:6a20:d04e:b0:1f5:52fe:dcf8 with SMTP id adf61e73a8af0-2045b99e15emr8022451637.26.1745655222155;
+        Sat, 26 Apr 2025 01:13:42 -0700 (PDT)
+Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:52b1:1f45:145e:af27])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73e25941bf7sm4503700b3a.68.2025.04.26.01.13.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 01:13:41 -0700 (PDT)
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bui Quang Minh <minhquangbui99@gmail.com>
+Subject: [PATCH net-next v2 0/2] xsk: respect the offsets when copying frags
+Date: Sat, 26 Apr 2025 15:12:18 +0700
+Message-ID: <20250426081220.40689-1-minhquangbui99@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,68 +82,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSnC7LZJ4Mg+MdShZz1q9hs1h9t5/N
-	4uaBnUwWl3fNYbPY8aSR0WLb7/nMFuf/Hmd1YPfYOesuu8fls6UeJ2b8ZvHo27KK0ePzJjmP
-	TU/eMgWwRXHZpKTmZJalFunbJXBlrJt/gK1gHVdF5yL1BsbtHF2MnBwSAiYSnQevs3QxcnEI
-	CexmlDj0fxY7REJSYtnfI8wQtrDEyn/P2SGKmpkkfqz7B+RwcLAJaEuc/g82SEQgUmLN4V9M
-	IDXMAv2MEmcbmhhBEsICMRJNZyaxgNgsAqoS56e8ZAWxeQUsJR5sXcwGsUBeYvWGA8wQcUGJ
-	kzOfsIDMZxZQl1g/TwgkzAxU0rx1NvMERv5ZSKpmIVTNQlK1gJF5FaNkakFxbnpusWGBUV5q
-	uV5xYm5xaV66XnJ+7iZGcGBrae1g3LPqg94hRiYOxkOMEhzMSiK8S625M4R4UxIrq1KL8uOL
-	SnNSiw8xSnOwKInzfnvdmyIkkJ5YkpqdmlqQWgSTZeLglGpgSlu4b6IlM5fEqoXx5hOvFSQc
-	Kz3VO1/60L1vIttviFawL4iflR5Y0Jzzt7h1Y8Orn4bfO980FsR03z14Z1ETd5jMIoaLtQf+
-	2l8//e3d9hlSh2OYprfZSP52PN9+8qmbwBpbFtl1zzwU2rNNHmYaPNXhuX9Cv1EjPvlJak2q
-	s1CYRJHMZoPZ22U9nabLbRZL5Dvp93vH9Z0f2do8XlybdzT4kJxZsZRqW9cbxo992VHZFYcf
-	v9yzkKPdK4LNws9Bfs4nlrg5Ttf3/7izmtn4idUVpskboz47yK+5dsh7+V6zuE0uDL/W39l4
-	JyKLa2eWcVNOAfOOw7aZk0Wmz9r8vGmF2hEb7+0ms1van7l9V2Ipzkg01GIuKk4EAK5t6Hrb
-	AgAA
-X-CMS-MailID: 20250426080212epcas5p2d0c592a4bd539eed242d5ac31d23b323
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250426080212epcas5p2d0c592a4bd539eed242d5ac31d23b323
-References: <CGME20250426080212epcas5p2d0c592a4bd539eed242d5ac31d23b323@epcas5p2.samsung.com>
 
-If iov_offset is non-zero, then we need to consider iov_offset in length
-calculation, otherwise we might pass smaller IOs such as 512 bytes, in
-below scenario[1].
-This issue is reproducible using lib-uring test/fixed-seg.c application
-with fixed buffer on a 512 LBA formatted device.
-Fixes â3639f96f24a121ec9f037981b81daf5a8d60a
+Hi everyone,
 
-[1]
-At present we pass the alignment check,
-for 512 LBA formatted devices, len_mask = 511
-when IO is smaller, i->count = 512
-has an offset, i->io_offset = 3584
-with bvec values, bvec->bv_offset = 256, bvec->bv_len = 3840.
-In short, the first 256 bytes are in the current page,
-next 256 bytes are in the second page.
-Ideally we expect to fail the IO.
+In commit 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb
+conversion"), we introduce a helper to convert zerocopy xdp_buff to skb.
+However, in the frag copy, we mistakenly ignore the frag's offset. This
+series adds the missing offset when copying frags in
+xdp_copy_frags_from_zc(). This function is not used anywhere so no
+backport is needed.
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
----
- lib/iov_iter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series also makes xdp_copy_frags_from_zc() use page allocation API
+page_pool_dev_alloc() instead of page_pool_dev_alloc_netmem() to avoid
+possible confusion of the returned value.
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index bc9391e55d57..9ce83ab71bac 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -820,7 +820,7 @@ static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned addr_mask,
- 	size_t size = i->count;
- 
- 	do {
--		size_t len = bvec->bv_len;
-+		size_t len = bvec->bv_len - skip;
- 
- 		if (len > size)
- 			len = size;
+Thanks,
+Quang Minh.
 
-base-commit: 02ddfb981de88a2c15621115dd7be2431252c568
+Bui Quang Minh (2):
+  xsk: respect the offsets when copying frags
+  xsk: convert xdp_copy_frags_from_zc() to use page_pool_dev_alloc()
+
+ net/core/xdp.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
 -- 
 2.43.0
 
