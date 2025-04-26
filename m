@@ -1,159 +1,71 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742DC1F8ACA;
-	Sat, 26 Apr 2025 12:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE2379FD;
+	Sat, 26 Apr 2025 12:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745669648; cv=none; b=kDEun2SpwWDXL8LKpG6EFw8V0aDs/itL7jUn1QFoDMAFmLmFPAoYdA1eJXNGNpl73tkMcgWuBQG77n0jTXhYd76I8qfi5D1v4BrH1VM6D43MX6rJdRLifebPCjdPZaKFi+Mgwo8nS/I20cMPZ7NKPMpb0slcWy9776YGDod03Io=
+	t=1745669875; cv=none; b=c+dvSfrIfwW82bDZdaDxRTP8Nx3NAxWqtl2OGny8shZM3wnkkNkuLo3pZIjUdyKstxj0loWh1WN0wb00DLbaPRfOgln55yRtKgQMMtv6UNcgizbUenjH8pOyRZviZtxXfR/8gFSWhO+6NfLWHxomcjc6ur/6iFg8F7PNKYMU494=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745669648; c=relaxed/simple;
-	bh=tHR2ncmKak9quhJ3NJQqmiDOJ+7stReEKBw5PGBT/Ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fXQtoCGnkzz7w1H6EcdXu/VpahkmEauYHo1RQlEqfvwVLcd8EJ3gZp1bR3mcTTDfY4Eeq+6V7twjIAWn1iC4NhgDbjUqcKeXMYfd8ivSPX4kaL18FiYFyjhx3HX7dyyYLS1UwthEo4UqFy6KZe4Qhrv5uT6l4vMVML3eWXojU1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9BQYtSa; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745669875; c=relaxed/simple;
+	bh=a2gnhEhVAxzz17+YbFBxFlSD7XTaw+gmqqKOR1M44uY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JOzkTGxVwIKa5VCm2Xdpd2cpWr2TDWvBl8CTfqLZzj4hi5A0cxwPvAuUZsrRNxUMf9xU/nuxMi+Qzjl5BSctQE3AtMMt0sZdyt1kD3c9Y3pMwnQgvJnr2dvQAVqCxKKyQNu0mBLGdjKqzL/kdbHBUjOCgAOeBXF/+WggpJLJXNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCQe1cI/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9BQYtSa"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so3405739f8f.3;
-        Sat, 26 Apr 2025 05:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745669645; x=1746274445; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iqHO8e/kxK05Q6w+crpG5qUQ8aCaFtVXM157XelPMI4=;
-        b=e9BQYtSaEREhVvs5KStqv3uCitfbmGl1+e9xMGsEQ6oU6aPOVYDCFLmu3pPZQPlLxZ
-         1ASUYAY4omKCLSUM/lMbYUd6cTE6dkQSGdTj1BXYGjhdeuzu4uWbWrgYCpwV10Ygl8mR
-         XdlagqeqeTzQXv5O+HMR86GVKDA5hcj5xpbABmrVpRHvN/QvKpkD1zAgtc23al3twPTX
-         qG7EZFJ5dLhCFXUdTQRqSEQNmYHMiHgaORImRHmIFHcQFVCa2/LFxAn87DINJn38Ohjs
-         5jvo2NVG6VRy3tUkGwu2D9YtdaS1nmI7/IC0UHGOaQe4wyRCDNEvDkAl5PgSiHnU+V0E
-         yDhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745669645; x=1746274445;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iqHO8e/kxK05Q6w+crpG5qUQ8aCaFtVXM157XelPMI4=;
-        b=LPVDdXY2nPI5evb3ww3FFykrWhyiEvuA1mpwzBKCQeLb1eA7azylhM0fvKWlk1u6v9
-         fIevhZrd8KXXWlIEDHHZ+kt1fxT2/HNmIsXuyYT47Xspv/AQJrO8C6bEkv2lCvjzkndQ
-         KwyIsWiELyS3RcIfnVNVv/RT+Lj6PHMfM1M5QomOFsDvqi7bVUjy6dJafVKIInIx4AIh
-         dvgQUmXfUxSNe7BkE+3ByPoUXp5SGN8lxMOv873RTNz1jFtKzaIxURh2t/so3xOlZfN9
-         3yHBxWRZIfIzEKu4dBr35DGaYgWYObm+bCsCTuJ8y8IY93QdCFPlWOCk0FL2udQk3LtJ
-         uLcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDFtqE7ur1K6vgNywdwUrDzP0QHbZb+ffobAPczho6dFkJQWEEqbocOeLWW6x4mGeGXdQPXSV14+WK@vger.kernel.org, AJvYcCUKju7ZpOO6THAypExtRAFHccnNTZPF0s6x5M/gYqZJMHBIkiafvnOx+Wu3xEomuQAhagpbn1uLojXEdIIAcQ==@vger.kernel.org, AJvYcCWLPwRrDYg6ykrgatjMrKIcqc/bQxtkSJtbflf5JzWsjT8lMd6V3x3OL0WWqM8fw3CfHyWdnFPCT6Jw@vger.kernel.org, AJvYcCWjibkWaw2efIKtI7S/kk1e6CDcPeA5JLRPi72Xt+wW5o06z82LcBuMYwN6fsKQkGm9mBV0MyQ6Jy3ZwCNE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzubJZ7gNxAfzFhegaJJx5t2XSP3yuCOTfUZNxGe9+TK3ZtvaVP
-	Z89uxEkw2O+6nJZ7GU9jzeZzbn+rX9aX4M8iuOqDQNOWMmUB+Yt33p+8kZCIwxPwWW19XdxXw5D
-	kG8uSY9TKDpHIH8hdEbPlTOLuPg==
-X-Gm-Gg: ASbGncuCTCplOFgHqAJ43CsFkLZiILqxYZSp6gvSiEjluDU5osQOImxFZGgXI+lnvNQ
-	z5AqA7fWki5/JKLpYRw0xX5IXQjRSGTjLN0Do74VTVQ/pd5wGkOzK+bQihui3x+v4hJT4T4NDA5
-	8Y+1+ZsH84AvtxBuO4U7zxVw==
-X-Google-Smtp-Source: AGHT+IF/Uwo9o99laUdn8MB2fPZ83NF09SfGpOWI1/rYVHd/7bhwDYks2rvdcwjz9aeLhGR2GSYYkPGqKJUNiMiPcdU=
-X-Received: by 2002:a05:6000:186c:b0:38f:4acd:975c with SMTP id
- ffacd0b85a97d-3a074e4196fmr4145681f8f.27.1745669644261; Sat, 26 Apr 2025
- 05:14:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCQe1cI/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C20C4CEE2;
+	Sat, 26 Apr 2025 12:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745669874;
+	bh=a2gnhEhVAxzz17+YbFBxFlSD7XTaw+gmqqKOR1M44uY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sCQe1cI/CJSk09ymCyaTuvk4+wk1+CtOk54v/1axGfNvd0sTb8IXMKQVBxp8P1+O0
+	 OyxshcTMECq9dli7MDgJG8tVaOZp5dsVGW1Oc4WLU4eWnJFZNN8eH4qAGtA+K4u60Q
+	 g0TNtS3mfoRSpXdjXhRfO46GNz8zW2vv/I83oUl13dkciSs7saLEHjND2/MBBfstJ8
+	 zuSsppzY+upDQRecRJtzlodPeCsc7zf5cS/za6F+LR9XaH1KdWAZ/EBEumkdlbE/Hk
+	 diVVR8pbblgNtVRHHUlTGWry4MRwhfkLPJAp9GOBVZtEfTZ3wiKFunx/CSek9fJtaN
+	 t+FMDsceBU7rg==
+Message-ID: <055220fe-c153-4023-8890-5545693d2122@kernel.org>
+Date: Sat, 26 Apr 2025 07:17:52 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416232345.5240-1-alex.vinarskis@gmail.com>
- <20250416232345.5240-5-alex.vinarskis@gmail.com> <fb21ba17-88ae-4cad-b7ca-57b5e8082b5e@oss.qualcomm.com>
-In-Reply-To: <fb21ba17-88ae-4cad-b7ca-57b5e8082b5e@oss.qualcomm.com>
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Date: Sat, 26 Apr 2025 14:13:53 +0200
-X-Gm-Features: ATxdqUGZL3TtLLgfstEotnJ_89eWTm5WF8i-XC_jsUGF-CHwe5aTEpaCkVDe-U0
-Message-ID: <CAMcHhXreXNFr5vD3rMKZygqfvP2y7=t1OUr8d37O-zRc-quc5g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: qcom: Add support for X1-based Asus
- Zenbook A14
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, maud_spierings@hotmail.com, 
-	dmitry.baryshkov@oss.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] EDAC/altera: fix cut and paste error
+To: Matthew Gerlach <matthew.gerlach@altera.com>, bp@alien8.de,
+ tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
+ rric@kernel.org, tthayer@opensource.altera.com, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>, stable@kernel.org
+References: <20250425142640.33125-1-matthew.gerlach@altera.com>
+ <20250425142640.33125-2-matthew.gerlach@altera.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20250425142640.33125-2-matthew.gerlach@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, 26 Apr 2025 at 12:19, Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 4/17/25 1:20 AM, Aleksandrs Vinarskis wrote:
-> > Initial support for Asus Zenbook A14. Particular moddel exists
-> > in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
-> >
-> > Mostly similar to other X1-based laptops. Notable differences are:
-> > * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
-> >   and Qualcomm FastConnect 7800 on UX3407RA
-> > * USB Type-C retimers are Parade PS8833, appear to behave identical
-> >   to Parade PS8830
-> > * gpio90 is TZ protected
-> >
-> > Working:
-> > * Keyboard
-> > * Touchpad
-> > * NVME
-> > * Lid switch
-> > * Camera LED
-> > * eDP (FHD OLED, SDC420D) with brightness control
-> > * Bluetooth, WiFi (WCN6855)
-> > * USB Type-A port
-> > * USB Type-C ports in USB2/USB3/DP (both orientations)
-> > * aDSP/cDPS firmware loading, battery info
-> > * Sleep/suspend, nothing visibly broken on resume
-> >
-> > Out of scope of this series:
-> > * Audio (Speakers/microphones/headphone jack)
-> > * Camera (OmniVision OV02C10)
-> > * HDMI (Parade PS185HDM)
-> > * EC
-> >
-> > Add dtsi and create two configurations for UX3407QA, UX3407RA.
-> > Tested on UX3407QA with X1-26-100.
-> >
-> > Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> > ---
->
-> [...]
->
-> > +     /* Left-side display-adjacent port, PS8833 */
->
-> nit: The mention of PS8833 in the comment is rather uneventful given it
-> says so right below it as well
+On 4/25/25 09:26, Matthew Gerlach wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+> 
+> Test correct structure member, ecc_cecnt_offset, before using it.
+> 
+> Fixes: 73bcc942f427 ("EDAC, altera: Add Arria10 EDAC support")
+> Cc: stable@kernel.org
+> Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> ---
+> v3:
+>   - Use 12 digit HASH for Fixes: tag.
+> 
+> v2:
+>   - Improve commit message.
+>   - Add Fixes: and Cc: tags.
+> ---
 
-Good point, will remove.
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
 
->
-> > +     typec-mux@8 {
-> > +             compatible = "parade,ps8833", "parade,ps8830";
->
-> [...]
->
-> > +&uart14 {
-> > +     status = "okay";
-> > +
-> > +     bluetooth {
-> > +             /* TODO: add pwrseq once validated */
-> > +             compatible = "qcom,wcn7850-bt";
-> > +
-> > +             max-speed = <3000000>;
-> > +     };
-> > +};
->
-> Drop it for now, the dt checker is angry about partial definitions
-
-Hmm, but then this variant won't have bluetooth working at all...
-Will drop, let's hope someone from the community has x1e variant to
-test pwrseq for wnc7850 for a follow up patch soon.
-
-Thanks,
-
-Alex
-
->
-> I think it looks ok otherwise
->
-> Konrad
