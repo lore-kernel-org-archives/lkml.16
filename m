@@ -1,80 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A3A31;
-	Sat, 26 Apr 2025 15:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF64825CC52
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745681227; cv=none; b=h6RSHVSReBEa9M7HyIoaaeVu9OZCuzW7xfgNV2Tc4nvtqV3R8iSjZAPbEHB+z/qJbKdWv8ab7viG5Il0dNXjm5Q3CtkekZUYURXtchcN8mUJVgCxCoSWDS7x17V1aiSAJR1rH+Jtf9z2N/UeL/1DpvIumelc4lZoxMWxJgCoNrA=
+	t=1745681239; cv=none; b=sE3tcUiYjoekWmTEGZsnihEAqVYLz7yBrdNxD0Vuo3nqYUo0iT2s/9zALPZ+S35bcUv7ncBL8NJlXLeZHxK7Kg+kmpYVh+/u4hVxM8DmQUFLDGfDB6dnEhJC+xUpDCqw3NDEWYH9RA3f+WUhanC/UpL1Qgfm6vHyht03hqxUoPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745681227; c=relaxed/simple;
-	bh=xg7cH77o+Zu4oFh7/hJOJwiI2nIPiwrKXvo9u09DWLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ho5miU3hY9RIUfhqa/KIW4Prds4rAnIhwi+dZS6lFmsLAQfLQVFP5Fw0YY9D8zg5O6bApoGfVkIJB8SK6SHY33ueHrZVZm2ErTFZdUmaw3QT+JmMjLf/oBGIW7JC3H1uW7S91yZS6+kqJGeDmVodmndMpgBN6zP+vs8xgsDSvsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yi6Et77C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745681239; c=relaxed/simple;
+	bh=Qtd0dyIZfJKj7+m+rfi4DTy1I/LCHUZ/AplD+F81XpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YfM44oRiDWEwhqRPtjDntaQLr9cLqRQQdeoAvRQgBTcMEyp93rnQp32qgqgwG9crilZH4YKZKG3dCjcFrNVbDot5xLFpxUfHhe9Cgef47VBPk78ANS4lkZ4ws0SlRTytcCWgseMhoQat7rkzX3bzlof54oFcfWStk8gpMmJ9Ars=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CPOeXVjE; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yi6Et77C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FABAC4CEE2;
-	Sat, 26 Apr 2025 15:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745681227;
-	bh=xg7cH77o+Zu4oFh7/hJOJwiI2nIPiwrKXvo9u09DWLo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Yi6Et77CVwcasf/aB0jE2MdoiXZILQq5kipc+QWh/oLt9kU7jNqqRdcxOg1wZo6p6
-	 LaohpWIezPBHi/L9xkDU22ZJ+jOZZNoCf4y/jQIq+Mdj94jdYFcj8fL6LojP+3Z65o
-	 K1VJzCikdIe9AjWkdIGv8qMfNGwME43W2jLvd6JJRWq1Sl3kQwiRYJRMFU4yfrokQ1
-	 Xe2TVm0YSEhn+xcHLeGsYi+T+UXleC63C/YXw/bUPU5M2nyRwl8/w+0S3dM8/qIKUw
-	 XHgtJaNdiv9CHBIvWlkrwtdyksrVOcsy3yIbivwpsrwHEbnst37xtvDHMHwlNspVr5
-	 74t+Ro72y7gPg==
-Date: Sat, 26 Apr 2025 16:27:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: pressure: bmp280: drop sensor_data array
-Message-ID: <20250426162701.4dd1f282@jic23-huawei>
-In-Reply-To: <CAHp75VdAw8T_3t8=2JLO07zddjy1_eYX0bSoG9R=7TFPY9pWbA@mail.gmail.com>
-References: <20250422-iio-pressure-bmp280-rework-push-to-buffers-v1-1-ee722f29aeca@baylibre.com>
-	<CAHp75Ve_C6BXo75xy4+xZ5b1O9-TT5TGGQDgTR_F1s3TFK3p6Q@mail.gmail.com>
-	<12dac98d-3e6b-4c2b-8ac0-d526bdb5efd4@baylibre.com>
-	<CAHp75VcHMTSGRrodixsLDS-xCi8KQJ0MtMSMi7tfATUgd3E5uA@mail.gmail.com>
-	<22e934cd-117f-40fb-a788-edcfc0f8b0ba@baylibre.com>
-	<CAHp75VdAw8T_3t8=2JLO07zddjy1_eYX0bSoG9R=7TFPY9pWbA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CPOeXVjE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745681237; x=1777217237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qtd0dyIZfJKj7+m+rfi4DTy1I/LCHUZ/AplD+F81XpA=;
+  b=CPOeXVjEsWwnpJKp4bmyAWwk2a0131tyKdfCoE9v9Uyt14821gpCZ/vu
+   7ZgaUkynTiLkDOD8DWD01eM1ltNdRjXIaih3pfwX6tWrx6NBiJkFGwTEO
+   b9rEldouE9pTFd+JT3YCNobxQrxgjx+txlBpCB5jqbweeTlogbePXbIs3
+   yDXXshESN3FwkBJsueH/DC+ssqskLBc1IWcYaUexhb83KFjrdNNT05hoK
+   W+q3nJDLfwiK3POUMiEoMhm9gCPGQuMWBLlVowXJgu2FtomPRUbres/5W
+   3EQGaZ+ojtzalEqf6o379/wyqtdQXbMH2lxhEEuD32PlgQj9dmfh5aEbh
+   w==;
+X-CSE-ConnectionGUID: 8RJTKPquRYuoLXXEyrf7Jw==
+X-CSE-MsgGUID: Rjk5946/R/24ZYQeDWxNEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="51140956"
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="51140956"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 08:27:15 -0700
+X-CSE-ConnectionGUID: vIOf90g1TqmfwU94/Brdog==
+X-CSE-MsgGUID: yT0Jv8AjQ/asx7LR1shiGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="133449003"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Apr 2025 08:27:14 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8hQt-0005sb-1z;
+	Sat, 26 Apr 2025 15:27:11 +0000
+Date: Sat, 26 Apr 2025 23:26:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Darshan Rathod <darshanrathod475@gmail.com>, abbotti@mev.co.uk0
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	hsweeten@visionengravers.com, linux-kernel@vger.kernel.org,
+	Darshan Rathod <darshanrathod475@gmail.com>
+Subject: Re: [PATCH] Staging: comedi: das16: Fixed a stucture warning in code
+Message-ID: <202504262332.cRQb8NpG-lkp@intel.com>
+References: <20250426113627.36525-1-darshanrathod475@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250426113627.36525-1-darshanrathod475@gmail.com>
 
-On Wed, 23 Apr 2025 01:38:13 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Hi Darshan,
 
-> On Wed, Apr 23, 2025 at 1:32=E2=80=AFAM David Lechner <dlechner@baylibre.=
-com> wrote:
-> > On 4/22/25 5:19 PM, Andy Shevchenko wrote: =20
-> > > On Wed, Apr 23, 2025 at 12:22=E2=80=AFAM David Lechner <dlechner@bayl=
-ibre.com> wrote: =20
->=20
-> ...
->=20
-> > > Ah, I meant the plural: of the supported sensors. Otherwise are you
-> > > talking only about one sensor?
-> > > =20
-> > "each type of the sensors" doesn't sound right to me either.
-> >
-> > I am talking about more than one type, not more than one sensor. Sensor=
- just
-> > describes what types I am talking about.
-> >
-> > So perhaps we could just avoid it with "each different sensor type". =20
->=20
-> Okay, it might be my misunderstanding... Use the original one if you
-> think it's better.
->=20
+kernel test robot noticed the following build errors:
 
-I stuck to original text.  Applied.
+[auto build test ERROR on staging/staging-testing]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Darshan-Rathod/Staging-comedi-das16-Fixed-a-stucture-warning-in-code/20250426-193741
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/20250426113627.36525-1-darshanrathod475%40gmail.com
+patch subject: [PATCH] Staging: comedi: das16: Fixed a stucture warning in code
+config: arm64-randconfig-003-20250426 (https://download.01.org/0day-ci/archive/20250426/202504262332.cRQb8NpG-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504262332.cRQb8NpG-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504262332.cRQb8NpG-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/comedi/drivers/das16.c:969:18: error: cannot assign to variable 'lrange' with const-qualified type 'const struct comedi_lrange *'
+     969 |                 lrange->length = 1;
+         |                 ~~~~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:959:31: note: variable 'lrange' declared const here
+     959 |                 const struct comedi_lrange *lrange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+>> drivers/comedi/drivers/das16.c:971:15: error: cannot assign to variable 'krange' with const-qualified type 'const struct comedi_krange *'
+     971 |                 krange->min = min;
+         |                 ~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:960:31: note: variable 'krange' declared const here
+     960 |                 const struct comedi_krange *krange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/comedi/drivers/das16.c:972:15: error: cannot assign to variable 'krange' with const-qualified type 'const struct comedi_krange *'
+     972 |                 krange->max = max;
+         |                 ~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:960:31: note: variable 'krange' declared const here
+     960 |                 const struct comedi_krange *krange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/comedi/drivers/das16.c:973:17: error: cannot assign to variable 'krange' with const-qualified type 'const struct comedi_krange *'
+     973 |                 krange->flags = UNIT_volt;
+         |                 ~~~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:960:31: note: variable 'krange' declared const here
+     960 |                 const struct comedi_krange *krange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/comedi/drivers/das16.c:1003:18: error: cannot assign to variable 'lrange' with const-qualified type 'const struct comedi_lrange *'
+    1003 |                 lrange->length = 1;
+         |                 ~~~~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:993:31: note: variable 'lrange' declared const here
+     993 |                 const struct comedi_lrange *lrange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/comedi/drivers/das16.c:1005:15: error: cannot assign to variable 'krange' with const-qualified type 'const struct comedi_krange *'
+    1005 |                 krange->min = min;
+         |                 ~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:994:31: note: variable 'krange' declared const here
+     994 |                 const struct comedi_krange *krange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/comedi/drivers/das16.c:1006:15: error: cannot assign to variable 'krange' with const-qualified type 'const struct comedi_krange *'
+    1006 |                 krange->max = max;
+         |                 ~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:994:31: note: variable 'krange' declared const here
+     994 |                 const struct comedi_krange *krange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/comedi/drivers/das16.c:1007:17: error: cannot assign to variable 'krange' with const-qualified type 'const struct comedi_krange *'
+    1007 |                 krange->flags = UNIT_volt;
+         |                 ~~~~~~~~~~~~~ ^
+   drivers/comedi/drivers/das16.c:994:31: note: variable 'krange' declared const here
+     994 |                 const struct comedi_krange *krange;
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   8 errors generated.
+
+
+vim +969 drivers/comedi/drivers/das16.c
+
+742c4a095973f69 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-12  947  
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  948  static const struct comedi_lrange *das16_ai_range(struct comedi_device *dev,
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  949  						  struct comedi_subdevice *s,
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  950  						  struct comedi_devconfig *it,
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  951  						  unsigned int pg_type,
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  952  						  unsigned int status)
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  953  {
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  954  	unsigned int min = it->options[4];
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  955  	unsigned int max = it->options[5];
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  956  
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  957  	/* get any user-defined input range */
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  958  	if (pg_type == das16_pg_none && (min || max)) {
+5c47473ec0f437f drivers/comedi/drivers/das16.c         Darshan Rathod      2025-04-26  959  		const struct comedi_lrange *lrange;
+5c47473ec0f437f drivers/comedi/drivers/das16.c         Darshan Rathod      2025-04-26  960  		const struct comedi_krange *krange;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  961  
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  962  		/* allocate single-range range table */
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  963  		lrange = comedi_alloc_spriv(s,
+ee8ed0141d532d6 drivers/comedi/drivers/das16.c         Gustavo A. R. Silva 2022-01-25  964  					    struct_size(lrange, range, 1));
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  965  		if (!lrange)
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  966  			return &range_unknown;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  967  
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  968  		/* initialize ai range */
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26 @969  		lrange->length = 1;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  970  		krange = lrange->range;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26 @971  		krange->min = min;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  972  		krange->max = max;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  973  		krange->flags = UNIT_volt;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  974  
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  975  		return lrange;
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  976  	}
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  977  
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  978  	/* use software programmable range */
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  979  	if (status & DAS16_STATUS_UNIPOLAR)
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  980  		return das16_ai_uni_lranges[pg_type];
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  981  	return das16_ai_bip_lranges[pg_type];
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  982  }
+0ce8280e2876091 drivers/staging/comedi/drivers/das16.c H Hartley Sweeten   2015-01-26  983  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
