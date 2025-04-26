@@ -1,212 +1,236 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011034.outbound.protection.outlook.com [40.107.130.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BA9208997;
-	Sat, 26 Apr 2025 12:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745669362; cv=fail; b=a83m0rp8DArzMiUGYP5CvWDolYhB0zqLiWk5ysVUbxW0Xck1XVSLH5lOGiXykmw0/ajwN3gGkKcczwNpUs8w/spoTm7q5g1BNBl+hFniYbQm/491KN1Aufvn2qamvUPPkOf37NGNXv+h+3T3pLViVXyDUWsx4t9f8K+5k3ORCXw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745669362; c=relaxed/simple;
-	bh=p3UXKSO7qFZzCMMBR94XJVA+Lv3sL6ht0QdPX3m9FqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aiGuWeiQcnF/h0ihoCafBVQVTJXjSnEHOngXRQDtCFDPcAq1oXwCtTXq1wc0fpZFMik1mReOAWP74NKcaBmiansKVszBk9yJDUIu2TX/8Kjd907bMLaalqUCVxcdMglFRPgW3yCpx3gFkzBnEh5/sS2Z8HmtRZ/2yi9co4TYjgU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=G3dKIGvA; arc=fail smtp.client-ip=40.107.130.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7796522F751
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 12:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745669598; cv=none; b=odLlfo6XYXO2rBV5k4j7kvjWos1ZtGF3roFnEtP0eWwPWsH8ElhsgYJ4Gm96m07u4KBFP4QMcJPU8ZxMwkWfLk3rLoBRIP9OlKUyPE5PIgaKDSaGinhTcv0h/NaGuMQvVmiygJDtM880wXWt9lqB6MuPT25WPwdc7j9cHnZsFsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745669598; c=relaxed/simple;
+	bh=53WPXHcZDRdCxH3dOJiupnW+3yRJeUva+6PJxzQa+fY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YZCsqAhXhELRHo/EHhUWDmTPybRZ+grOtXjGr/Oydwds/j/Qu38mDzZ3BWqqA2CXutVMyTmLxjFEh67uvDZ7mIWs6gRUNmj4ue3OUGeLK/My7O4j7yo2KidP4RO4AoxYey5/VCJ7+8jgl7BeOHOjo3WDOHeJeiKNAu2q4kRK+sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZIhYvVC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="G3dKIGvA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KAXYgDcF9MLKUQ9/6xqa6bfjayyO1Ki2dpT9VRIDUx4KJpwXXFrFzxH985WCXqLu2h5gBRKUNZedkqyVM7FNo/kjHfnns6etff/3z84KNlCX8P44adNBvyFQNmX3BT6etWpoQHo1BNW8Ae3U9h13d5JOW7hgiYCp/L0BQdU/zzCgWNKoCUIKY+6OroBERZXW6tERVU9Mau1kStw0GU2V/xE4Vdf8TesDRBnicz4L1zdvReKFWQfgAIalh7AyBn2ol6mU1eg8s85g/XRzIsajBNxi4r6/xrbmNs9w2if8ZA0k+HTywma+TIEENeU/e4F0bYCFo9lCjF3/inbhAxFOEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PdVixiK6AA3uGT/KDYmNOBn4S48Kipz1Dn8Oa05jBQ8=;
- b=y78cFVaRtFforybnKImnKZEk4IRpWLpFNoXy2lE73Kz4YPFII2XBIQZHbrHRzPHW3Jn6+C+7M3vGUFFyzcVA6/P0hSyCEAyKGbFQM+WGpWH2YgajhoG1uVJdaZRXVTJ8aMJVh1gQCpu0czpW9QduA7O9p3dI55s6lqIhGaMYGkWn3TQKhZxuv4aTZJUL9ejv/3Ylx6+z7zQnIbQc8U2qNEnbDY9O6K76iOzBa2DN0/1R4J0XYXZIw2lvJv+fZu6DGwS/nMRumzw65Z7RVoifKxLQSFzRLyVIIVz9HKr7zD191htZRBOP9MJgPGlXug75FAWmICTGVx5CqDgQxxdQuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PdVixiK6AA3uGT/KDYmNOBn4S48Kipz1Dn8Oa05jBQ8=;
- b=G3dKIGvACl8LWA/teBpdUpZsb8qg23yxYI4nTFJVU7BGg44d5Cl3vZUdOTvkuBfOoCVkZS1llF1pi+dSu7ZMzzdpPSTfnSNFvdxlnhvriXUT2qUSt5DyP2I+Cdrf8nXCO1ECHBH9QtnlJY5F+eFdoWE8w7wd61yBcMlNKxD/CO9q8K0CF6aHNV82ZP2gQK9BdMgsCaSHtzxEhgTnkTKgLcDP0rCDZy+ybQX0OkTc6Eo/c3z+y3+t3XEHm+4W1Ugl4hNMDf+R/5qKzUZNcaqdFG3MYz6odaCiXfRkTPZRCqB0dtMGsQQVYJucPGYqQdve2BK5BF284biSqlb8SZW7hA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DBAPR04MB7445.eurprd04.prod.outlook.com (2603:10a6:10:1a7::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Sat, 26 Apr
- 2025 12:09:15 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8678.025; Sat, 26 Apr 2025
- 12:09:15 +0000
-Date: Sat, 26 Apr 2025 21:18:04 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc: andersson@kernel.org, mathieu.poirier@linaro.org, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] remoteproc: imx_rproc: release carveout under
- imx_rproc after rproc_attach() fails
-Message-ID: <20250426131804.GA13806@nxa18884-linux>
-References: <20250426065348.1234391-1-xiaolei.wang@windriver.com>
- <20250426065348.1234391-2-xiaolei.wang@windriver.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426065348.1234391-2-xiaolei.wang@windriver.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI1PR02CA0056.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::7) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZIhYvVC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745669595;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8xTcAXMj4tAsirXSeiAXOoY8tnLHpYX9Lnnx10mXT5k=;
+	b=GZIhYvVCpsEGoCki7U26BLQDzWYfUltlCl8HpNnv1ClqjQ8ZraSDcQDaDJi86qbGrwXbTl
+	6WFP/A+RS2vuzOfe3uoqg6XOJa7N3v7v49qEho4W/PISaVzlFPFro/CWD9jXuLlryTPYum
+	b62ScYlKifPGa1LwnHFFiczQyK8CGH4=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-578-ToAnP57pPoKhmusTVgxstw-1; Sat, 26 Apr 2025 08:13:13 -0400
+X-MC-Unique: ToAnP57pPoKhmusTVgxstw-1
+X-Mimecast-MFC-AGG-ID: ToAnP57pPoKhmusTVgxstw_1745669592
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3087a703066so3088663a91.0
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 05:13:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745669592; x=1746274392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8xTcAXMj4tAsirXSeiAXOoY8tnLHpYX9Lnnx10mXT5k=;
+        b=UdwPm/AWrQw9omFoLEBp007bq3Q6VvdZCnrfJ5nvnn+TBFWWPFtTUrMN+bKRPwMFkl
+         26AaCOrrEFNgpQILGbrwcOgaF3PI0Eq88/xyYK2vIBnKWlWqqArOmHT9aRtfoBTa8lxq
+         f8V9HVP5UrUWGSmWpSrizLDfpr6x14hE4M1XjXNHTGoAnzUQCAlMJ1HkZloCxvlWkfPV
+         To1Wvcja9gblWDasC8GEsRoTloPdag/0dVEfLAwpf+v9YbjrpP9sb1W7dCQvR/WtwQA6
+         7smS8OPr0EAaYi9hLlIZAN48u0ogiMSEGB12Xv7ryzP/SSRUFyXYqoU58vWLfLSNGQXr
+         Yagw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6I1arm+k5fqV9AOVBfqpWA2r/EIP1XcCrbNskrTLYfXlpBfiNVNG4prJGPLqb3s8ELaXbRNOmX3HoPoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCqoUaLTBwpQk9rmb8x4mxYIo9VnSZeqnsUZv+tgrYpS2p5xk/
+	TBy7faKlYsoTnGzfIzA9jRBVSOedSYzy9QEdVlqgjYlOv1NFGprXxj0PerF7l1sNNWv7HA0sDci
+	0s/6Rr1wfo5X4reLq3XdUeWG7nVKdOKCgbbKZhXIMTqyzUQzBMFAJ2V8Z8mQTHz+/NNbPMUN6Vv
+	GPNkqkaQmtpd0LQXBaNjGgmoH/6ZFi1wRV0Sdq
+X-Gm-Gg: ASbGncvHwyhTpr+rV9HgGiQO5kyFSzpXHnbuavDs6ywu40GbdYzmc80aJfSITm8iMJn
+	FBjwKJI1Du4y0Xeb3LrlZKTcSAA5v1iOTKCST3erLyuD1P+bdrvFpGuupGbuLfqP479ERYsUOCf
+	f7l6qGqlkQ+woNWeXcSzh7cqxw
+X-Received: by 2002:a17:90a:e70b:b0:301:1d9f:4ba2 with SMTP id 98e67ed59e1d1-30a01398557mr4355672a91.28.1745669592381;
+        Sat, 26 Apr 2025 05:13:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbEOQ7OJ1l+r0ODl6FuQUy8VHIQMHy0KMCDKAuggeFJa2xVPLoqb7dQAjINDCv4vafGglRIW52yLgCmTZ3urA=
+X-Received: by 2002:a17:90a:e70b:b0:301:1d9f:4ba2 with SMTP id
+ 98e67ed59e1d1-30a01398557mr4355644a91.28.1745669592087; Sat, 26 Apr 2025
+ 05:13:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DBAPR04MB7445:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99279ca1-e885-458d-7115-08dd84bb2978
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?u/t/Oyphn0o8cFrWmvlupTjtLl77/h71HdMps+0pmQvFm8ZH2Jldb/dH3urF?=
- =?us-ascii?Q?8Orso68z/7JdrzO1uYzD4CozsXgJ9aBcMz3moR7gaixKWkc1Smtx5MsV7hwH?=
- =?us-ascii?Q?KURGkMhO8FOoRvOSk2ZtNUWdpD+K14XkolLCXJrt7api6EGqFR3MFM2umPUh?=
- =?us-ascii?Q?TfCZwrB7fV3iMAA/MAL8FiMgg/Ue8+9TjOIzo8tghDRVEMbdgM9PhotUbdLN?=
- =?us-ascii?Q?M4ZfmavMuiz9roSbLQK4l5G84806wGjOl+CRIFkU5o/kHSto+oTlO0djNRmJ?=
- =?us-ascii?Q?SffdQXOftJ18MZH03O/FQjiRG+MliX2SB8CgDb1GZGtmbl3mpyQ3uHt8WndM?=
- =?us-ascii?Q?ptlrJ4L6+vTzHguVnrrCtv5oDks43S6z4LYGmhCNa5B3SRGiIXc2Jhu254pw?=
- =?us-ascii?Q?gnssqnUxVg+uonjypS5EdPy2z8lBFz/UmEBKCtfKdulBmndmWHGoykFPZNYk?=
- =?us-ascii?Q?mDUHeMwk/FkrA2hIr1vdZnS83Oj/65641cplSn2UPzJgbqCju2tlzJutQIg3?=
- =?us-ascii?Q?1GE3O4s+1U/7qWmI56N77zo030JHJAOnk+H+J0QygUzHqCBp7wIvD8ObuFNk?=
- =?us-ascii?Q?/vAwv1GzfTwEeKW4lcAi33Hj/9hCp2soizyOKg+fiuVlBkh5uGKC4rESNHgd?=
- =?us-ascii?Q?VwUtup5quHbHOl6Ac6/uDMZ5lWFB6g1ZYeMPUM/NoiXc6DgEcacxfSqWYidZ?=
- =?us-ascii?Q?Bd1jzZSK4fljYiJsECPTe68kTBDCIOPiTeaDhm2yclhu/dwHOmmZqBmBtycd?=
- =?us-ascii?Q?Nm8a7SGviZqpPSLIkCG+OM8ry/2GAqiVInmxgwz1hvskjtLOJ0nyQHWH8XKI?=
- =?us-ascii?Q?qnuM/4sCn1Sj7Bq9pETqdUY7hCbNtx79MIzLWl4/cl7Oet7J5N9yMhj9LATA?=
- =?us-ascii?Q?TzLKJxu+DPW8TWMj/ZYW5K5Scb/HZtP++LB5vwC10H/FjkdEul8+Bs00dkFp?=
- =?us-ascii?Q?gD3Ghr8I8sM2DuPAPa1xWjsBLSHL7Q21Hgz7CfuHZYn+VPKLOC8YvC8sk71j?=
- =?us-ascii?Q?qYTTAWHjwr8Py7KOgHoeQPrqzLd9MoXKGwu+tv+49oBiMqNlrVFQ5a9KU8h5?=
- =?us-ascii?Q?FACRbLYjLs1L/Lop3UxTPRBQoNcSbwjTjNNh40VadHNP6lPtn3hJ4gyQ1/x/?=
- =?us-ascii?Q?hkQhTbL98LSQrhd/xplVKjVYOpHbnG7kMKNxOuB8VFDggfQI3HAxXxS1TmN9?=
- =?us-ascii?Q?0MIiIqPqW7GQIwxtu9Ob5/o2QYQdGOoIhZJPPueeMz7gVNJv/1+15zcwvTuA?=
- =?us-ascii?Q?sj4EI+19mVKmdYzZ2afdSeizC7Te3EB2nGyZoWnNJfDp0U+qmY1OoYZPtSWi?=
- =?us-ascii?Q?65I2KBDhmVpKIZEuP8Rhs5Nkc4SPOdhIexveCmVNoP5Sk4Yp06Q+Dt8Hs711?=
- =?us-ascii?Q?kg42cfK7BZHvZNtq84jXKwJeTfK9KitpnvfadoG9qlDs251G3OqRyMpJdSZ5?=
- =?us-ascii?Q?mL773VS8uUP8FAgGnATTsdC0X+BbI4K6QZnOP1us7paVNHvk44LzeSj1RTde?=
- =?us-ascii?Q?+h8UERYU0FWX7/w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fIkDZCzMD7Up2iM7QOpq9cnYiuy+ZH5PbLz4eE+XJFq1CW8z5r1K4IapJY53?=
- =?us-ascii?Q?PBEAK3Jihg6raSaKlF34dtzj9uZ0grH932GCCuDlX7JgxYDNzCtFJP17bEkw?=
- =?us-ascii?Q?LLoiOFbkJLzmnwoE3c2y9piIhg0KD1Zdi5SPUCcDX9DWBKzQJra+QJ5CuK0S?=
- =?us-ascii?Q?avfBt7q8Gf9n+ZSTz+GXU2Si3ZTP4m5TesznxVYj8PGlFe+hSg0DbyIZGZWG?=
- =?us-ascii?Q?cMSmRDPNnC/bNNVAlY/ty1twunJmtHujTQaa9rIbW12DLEwiLV5rcDsldPG6?=
- =?us-ascii?Q?wPEcwGhOWLocwwtFQsUKgD80Ufy4xKk6SGucDU9bcmAM86VOqvOtCaKUX2eR?=
- =?us-ascii?Q?Lxc3Auu5ke47ysENmtCJdAaAk08GhEIgPwFH1xzE/bT/Ne90WmrwcqI1nusW?=
- =?us-ascii?Q?emgEWF565HOWVg9PhFx6xUZIVy3JTD6LP4ZXlAR+jtuqW+ZbZbasbMX9tXbe?=
- =?us-ascii?Q?ABD2GcGQDkuJVsB0c4Xn0aUcc2xhlkzdb1Iw/63i/hVCJhRFtLW8jW/tFtlG?=
- =?us-ascii?Q?ndmsW4Ta0YZb0HUE5RlR3k2cxacn61YeB3jfwOjHA0MjOr665fUWkVMwdXgR?=
- =?us-ascii?Q?VsE/2OHaKdP6gYu+jtXls6FHa+wkvFnJVrWg19No1tF6YdG8qN+e9Eui0HBZ?=
- =?us-ascii?Q?5+oKDMD5pAOPiE5lPLvWOWqG7fkeTtFUu+nlZJNIM2LUB34dGsTXX/uSM4Pj?=
- =?us-ascii?Q?X0iGvC9A8ogga06x2l3xqpyuEitmmKzpDgqDy5ZnqBUWXhaI+dIWjSNK7sGk?=
- =?us-ascii?Q?eDHbuSN9/q4jqncg5FtHVmSmMU7vDhJpZ68zDGtqk3A3RHxXdG22s+n/Ujpb?=
- =?us-ascii?Q?Jksl1lUx6wbpQtlzFw6vYHPYxzeYH/P1OLAnc+iaxSXLk75B4gjQ3Fdso4ip?=
- =?us-ascii?Q?wzkTBOVNg0jA4RFE8Vg7Kffj4BbgZDTxS4wis/RABeo6KPQhGSz4pV+FwKZe?=
- =?us-ascii?Q?fbKSmky1qPT7QcII0aPXQ2XFA2i7kDtp0Labm7++/5xB6FkpJLz4ZHOngJCR?=
- =?us-ascii?Q?r55w4A6q2DKXTo3y9FxQdrDyUIi8nZiDiYs66a3S/nEWKhn2BDHGhr9a4Dwf?=
- =?us-ascii?Q?XaXT/p7mCcAwHoOf9Yymb5tDhV1eX97Fwgg3amr5ky8wn7pndV87AzoDuy6H?=
- =?us-ascii?Q?CNY8NoJSboyuZYQbRmNoF6K2PNXpF+CD2TMfJP3j9HQ7JMKb9DWhjPPSctyd?=
- =?us-ascii?Q?p2f0Kn/ztYxlYyyuYqD7Dzbl7CAp9jXJgK3019fRGqjDvEDdMZAMI4a9ECmm?=
- =?us-ascii?Q?0kDbVjnh2JQZLgrk5UC3sqoSDc91PSPMj6ueGuVs/nEblLu2/pT+xzsMfmgx?=
- =?us-ascii?Q?1YYOx3opr77WgJ2F1VYD9vPxM9zT0Tqc2WCVWsguDtefNep+2Y2Py2nxlLOO?=
- =?us-ascii?Q?Y75cbIN82bGPcnj67GYF7Yzn+TcTPgWiIbFFqMP/VUoj9toD4k1FnCdiuCAK?=
- =?us-ascii?Q?49weZ/Q0dDLc239hyTElkOjLSz47bv/Z8Y3Mj9gSTMRtroPic0YWoGhGsiBs?=
- =?us-ascii?Q?l0+ejjwJkQSMKEeJ9jHq/+JPMsANOaTIujoYaYRUVDWRsT66X7xspswVAonS?=
- =?us-ascii?Q?BfTrzoff611kfeG8rS3XonqwjWU2aeCL7CMhIHlA?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99279ca1-e885-458d-7115-08dd84bb2978
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2025 12:09:15.2565
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sm+0xeBWeHgLFugJZbXj2XZGDtV+n676QQZMRFIZMucOXmqrmML7ONLngm8NZcTuPqDtdKlhejKlyjMzM5sQ/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7445
+References: <20250425063234.757344-1-ryasuoka@redhat.com> <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
+In-Reply-To: <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
+From: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Date: Sat, 26 Apr 2025 21:13:00 +0900
+X-Gm-Features: ATxdqUEw5zYtq3FD3jK20hIdBkgB26BvzEwuuPr00vWIGWH2Uh-jkXnoDtXz9Kg
+Message-ID: <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
+Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
+ atomic helpers
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: drawat.floss@gmail.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	jfalempe@redhat.com, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 26, 2025 at 02:53:47PM +0800, Xiaolei Wang wrote:
->When rproc->state = RPROC_DETACHED and rproc_attach() is used
->to attach to the remote processor, if rproc_handle_resources()
->returns a failure, the resources allocated by rproc_prepare_device()
->should be released, otherwise the following memory leak will occur.
+Hi Javier,
+
+On Fri, Apr 25, 2025 at 4:15=E2=80=AFPM Javier Martinez Canillas
+<javierm@redhat.com> wrote:
 >
->Therefore, add imx_rproc_unprepare() to imx_rproc to release the
->memory allocated in imx_rproc_prepare().
+> Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
 >
->unreferenced object 0xffff0000861c5d00 (size 128):
->comm "kworker/u12:3", pid 59, jiffies 4294893509 (age 149.220s)
->hex dump (first 32 bytes):
->00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->00 00 02 88 00 00 00 00 00 00 10 00 00 00 00 00 ............
->backtrace:
-> [<00000000f949fe18>] slab_post_alloc_hook+0x98/0x37c
-> [<00000000adbfb3e7>] __kmem_cache_alloc_node+0x138/0x2e0
-> [<00000000521c0345>] kmalloc_trace+0x40/0x158
-> [<000000004e330a49>] rproc_mem_entry_init+0x60/0xf8
-> [<000000002815755e>] imx_rproc_prepare+0xe0/0x180
-> [<0000000003f61b4e>] rproc_boot+0x2ec/0x528
-> [<00000000e7e994ac>] rproc_add+0x124/0x17c
-> [<0000000048594076>] imx_rproc_probe+0x4ec/0x5d4
-> [<00000000efc298a1>] platform_probe+0x68/0xd8
-> [<00000000110be6fe>] really_probe+0x110/0x27c
-> [<00000000e245c0ae>] __driver_probe_device+0x78/0x12c
-> [<00000000f61f6f5e>] driver_probe_device+0x3c/0x118
-> [<00000000a7874938>] __device_attach_driver+0xb8/0xf8
-> [<0000000065319e69>] bus_for_each_drv+0x84/0xe4
-> [<00000000db3eb243>] __device_attach+0xfc/0x18c
-> [<0000000072e4e1a4>] device_initial_probe+0x14/0x20
+> Hello Ryosuke,
+>
+> > Drop simple-KMS in favor of regular atomic helpers to make the code mor=
+e
+> > modular. The simple-KMS helper mix up plane and CRTC state, so it is
+> > obsolete and should go away [1]. Since it just split the simple-pipe
+> > functions into per-plane and per-CRTC, no functional changes is
+> > expected.
+> >
+> > [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@s=
+use.de/
+> >
+> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+> >
+>
+>
+>
+> > -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+> > -                            struct drm_crtc_state *crtc_state,
+> > -                            struct drm_plane_state *plane_state)
+> > +static const uint32_t hyperv_formats[] =3D {
+> > +     DRM_FORMAT_XRGB8888,
+> > +};
+> > +
+> > +static const uint64_t hyperv_modifiers[] =3D {
+> > +     DRM_FORMAT_MOD_LINEAR,
+> > +     DRM_FORMAT_MOD_INVALID
+> > +};
+> > +
+>
+> I think the kernel u32 and u64 types are preferred ?
+
+I'm not sure if I should fix this in this patch because I did not add these
+variables. IMO, we need to split the commit if we fix them.
+
+> > +static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+> > +                                          struct drm_atomic_state *sta=
+te)
+> >  {
+> > -     struct hyperv_drm_device *hv =3D to_hv(pipe->crtc.dev);
+> > -     struct drm_shadow_plane_state *shadow_plane_state =3D to_drm_shad=
+ow_plane_state(plane_state);
+> > +     struct hyperv_drm_device *hv =3D to_hv(crtc->dev);
+> > +     struct drm_plane *plane =3D &hv->plane;
+> > +     struct drm_plane_state *plane_state =3D plane->state;
+> > +     struct drm_crtc_state *crtc_state =3D crtc->state;
+> >
+> >       hyperv_hide_hw_ptr(hv->hdev);
+> >       hyperv_update_situation(hv->hdev, 1,  hv->screen_depth,
+> >                               crtc_state->mode.hdisplay,
+> >                               crtc_state->mode.vdisplay,
+> >                               plane_state->fb->pitches[0]);
+> > -     hyperv_blit_to_vram_fullscreen(plane_state->fb, &shadow_plane_sta=
+te->data[0]);
+> >  }
+> >
+> > -static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+> > -                          struct drm_plane_state *plane_state,
+> > -                          struct drm_crtc_state *crtc_state)
+> > +static void hyperv_crtc_helper_atomic_disable(struct drm_crtc *crtc,
+> > +                                           struct drm_atomic_state *st=
+ate)
+> > +{ }
+> > +
+>
+> Why do you need an empty CRTC atomic disable callback? Can you just not
+> set it instead?
+
+OK. I'll fix it in my next patch.
+
+> >
+> > -static void hyperv_pipe_update(struct drm_simple_display_pipe *pipe,
+> > -                            struct drm_plane_state *old_state)
+> > +static void hyperv_plane_atomic_update(struct drm_plane *plane,
+> > +                                                   struct drm_atomic_s=
+tate *old_state)
+> >  {
+> > -     struct hyperv_drm_device *hv =3D to_hv(pipe->crtc.dev);
+> > -     struct drm_plane_state *state =3D pipe->plane.state;
+> > +     struct drm_plane_state *old_pstate =3D drm_atomic_get_old_plane_s=
+tate(old_state, plane);
+> > +     struct hyperv_drm_device *hv =3D to_hv(plane->dev);
+> > +     struct drm_plane_state *state =3D plane->state;
+>
+> You should never access the plane->state directly, instead the helper
+> drm_atomic_get_new_plane_state() should be used. You can also rename
+> the old_state paramete to just state, since it will be used to lookup
+> both the old and new atomic states.
+>
+> More info is in the following email from Ville:
+>
+> https://lore.kernel.org/dri-devel/Yx9pij4LmFHrq81V@intel.com/
+
+OK. I'll fix it in my next patch. Thank you for sharing the url.
+
+> >       struct drm_shadow_plane_state *shadow_plane_state =3D to_drm_shad=
+ow_plane_state(state);
+> >       struct drm_rect rect;
+> >
+> > -     if (drm_atomic_helper_damage_merged(old_state, state, &rect)) {
+> > +     if (drm_atomic_helper_damage_merged(old_pstate, state, &rect)) {
+>
+> I know that most of the simple-KMS drivers do this but since this driver
+> enables FB damage clips support, it is better to iterate over the damage
+> areas. For example:
+>
+>         struct drm_atomic_helper_damage_iter iter;
+>         struct drm_rect dst_clip;
+>         struct drm_rect damage;
+>
+>         drm_atomic_helper_damage_iter_init(&iter, old_pstate, state);
+>         drm_atomic_for_each_plane_damage(&iter, &damage) {
+>                 dst_clip =3D state->dst;
+>
+>                 if (!drm_rect_intersect(&dst_clip, &damage))
+>                         continue;
+>
+>                 hyperv_blit_to_vram_rect(state->fb, &shadow_plane_state->=
+data[0], &damage);
+>                 hyperv_update_dirt(hv->hdev, &damage);
+>         }
 >
 
-Fix Tag?
+OK. As you said, other drivers like mgag200 implement like this. I'll
+fix them in my next patch.
 
->Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
->---
-> drivers/remoteproc/imx_rproc.c | 14 ++++++++++++++
-> 1 file changed, 14 insertions(+)
+> Other than these small comments, the patch looks good to me. So if you ta=
+ke
+> into account my suggestions, feel free to add:
 >
->diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
->index 74299af1d7f1..c489bd15ee91 100644
->--- a/drivers/remoteproc/imx_rproc.c
->+++ b/drivers/remoteproc/imx_rproc.c
->@@ -595,6 +595,19 @@ static int imx_rproc_prepare(struct rproc *rproc)
-> 	return  0;
-> }
-> 
->+static int imx_rproc_unprepare(struct rproc *rproc)
->+{
->+	struct rproc_mem_entry *entry, *tmp;
->+
->+	rproc_coredump_cleanup(rproc);
->+	/* clean up carveout allocations */
->+	list_for_each_entry_safe(entry, tmp, &rproc->carveouts, node) {
->+		list_del(&entry->node);
->+		kfree(entry);
->+	}
->+	return  0;
+> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
 
-Could "rproc_resource_cleanup(rproc);" be used here?
+Thank you for your review and comment. I'll fix them and add your ack.
 
-Regards,
-Peng
+Best regards,
+Ryosuke
+
+> --
+> Best regards,
+>
+> Javier Martinez Canillas
+> Core Platforms
+> Red Hat
+>
+
