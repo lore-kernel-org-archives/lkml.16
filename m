@@ -1,90 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C33822F01;
-	Sat, 26 Apr 2025 05:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4766A22F01;
+	Sat, 26 Apr 2025 05:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745646644; cv=none; b=IXu5X3qzdi1+zS8QEoQyerLyTqobSduUO7gQGV/aac1v7ogjABEWYNlv6RWKCXqpwsT0E3ZMlukesApb0ML+6BctMjggL4ALDbJ1JZ8KFkKmuTOofligNOJ9na0G1bu9BCHwAZ31SMgBbN+Ck5Fsc9yG2KNzapCyQZL3vQluI2M=
+	t=1745647040; cv=none; b=oGQZR5GoKX8rLUNYHKp/Wew82VTIP/YaMz3Se0W3CPoAr8wAZoHMdfCAV2ubfntjQG/rZrZDEFsu5gdSCUjH2NIzVOOKbVTzRWmPOHDem+PbQ+2eMM5SFcWv5jDo4JOxDXTW3EA0hMeyU7wjlo4uF87IgD/DBpr5o5HSva1RIaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745646644; c=relaxed/simple;
-	bh=BudDdJdIe2IGgtGFEZcHbe4JSt6SJdc71G+PwuhE1dA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JIvqhj3DKujd0WtFJ5pU5UkPjK+roig27fmG8fxNywYnrBW3p/V/3HvySIwKfnlSz55hMDSIJ4RHMtYvvgTF3nl3RcWoSbN8nW3VyrmCusjzz+WS7oo9kcQrccUc2s3pFY6Rjf/mcLYwgLn+J6DqLsgYoxIB29bO77J2uuxRc94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CG2yK28x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745647040; c=relaxed/simple;
+	bh=EuGaXO4AUfqge9aIu3U3/cXrkwZjHu3A2QfX97QhXTw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VwM0WXUbdGlZA5LqLooNYQouKuMssI2tg00gysxP7BpcimnBl63V0M/YgIa9K3a80Coh3sRTWM/lAPnqWA6tP+MLpsivO9uSfQEz64IiCoN1nym4S/hBD1W4ShG6WRaR402KX7gwg96TtGCelCHu5JBHoEQ+EEP87EMM537anZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1vec6Pi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CG2yK28x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60D3C4CEE2;
-	Sat, 26 Apr 2025 05:50:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1vec6Pi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95909C4CEEC;
+	Sat, 26 Apr 2025 05:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745646643;
-	bh=BudDdJdIe2IGgtGFEZcHbe4JSt6SJdc71G+PwuhE1dA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CG2yK28xiStzJ0iYBg9Dsf9zKscn1vK32HUoNF0r3Y2U3ywquXlgE+w+gUzHkLDKI
-	 PDITrDRNm/su8yEunsvk0NZW4ID54eGt37zLIaWYwBSryPe5t1AAUcwlGlKDEQgc4P
-	 ENmHDkKIAE70SHhnAWR1QxGCARykfRQJM76JaxCX4Vetuc19RuxokzziA7Kg1DvRNr
-	 Mc/Itj0G2HrdZnW9VUUu/DnF10xW+G8+Z23y49wrvLV7bwhSAbrdERKsQeGNA0f50L
-	 yLy+7YY41m3AZPz6cMh4SgJAkcSkr+2dK/0ZUI4oAW+bVVcpAEpgE3JM17eo2LUOyD
-	 WERCSS+sILmhQ==
-Date: Fri, 25 Apr 2025 22:50:40 -0700
-From: Kees Cook <kees@kernel.org>
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, nathan@kernel.org, hch@lst.de,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: [linux-next-20250422] Build failure: Wvla-larger-than=0 is
- meaningless
-Message-ID: <202504252249.6F09D31FD1@keescook>
-References: <7780883c-0ac8-4aaa-b850-469e33b50672@linux.ibm.com>
+	s=k20201202; t=1745647039;
+	bh=EuGaXO4AUfqge9aIu3U3/cXrkwZjHu3A2QfX97QhXTw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g1vec6PiTS5hnnXT5+r1D22bj9uzumUJtcPUoYAjcMwIevE5RjOFuS0ef2RkRoX+H
+	 4h9LpQ6ferxW5CZXoF68fvy4KmHJ0e+8U70sPYI7i1HsiKisubQqpymvTyetIVcnMb
+	 /2W5hElxfilWLx+/g5Y7lMtowN/5OvP21KU12saGFehoSt8fIiNahuZv7uemKN4O9w
+	 U0E6AmOuQFOQ3ZFOgWNtfO31PGj8NIFC7/o8RQn/b94aAYGQRwJJwZPOomtqQCQw1W
+	 +vGMm8AfZ3htGUDKNX4zXawK14inor8mBkXhzBm4ERN9HYJwKXTad2fh+eL4F1mODB
+	 2++IMnXgojzlA==
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e6405e4ab4dso3397549276.0;
+        Fri, 25 Apr 2025 22:57:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3YKh9/pWl2bBaeS8QZvGYdVMcNaV7c8Rq8wDmsgN3f4vrgFV9c5+S0WSNANQQvP7GnvpD3zr7Z/W1DIjGu/06BhAC9/c4@vger.kernel.org, AJvYcCW+E16WFhzDiCDebPxTUG5Px4qtKrz44fDrFwPRmY6Gop5+H/oLtoOM82GW4hagmnko4Ch6oxf+beZen3Q=@vger.kernel.org, AJvYcCWrc8QDoJn49p9ZBbfJp2vleZ2GFL2XXjmEWDVZYgmtt1J3bIkhXjT0G2MWoyHibgTxgwYyV4m7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUOaD+0QP2sv55XEb9x4i9D1/76BlPmlJ8tL1sfNo9jXS7lr1q
+	r7eAynRMXOoD2hBSeMAw4/Rs4V+xegrKd8IZKCGh7rkcLwXDeQtRghhhFdk4qvTTqQmHXGjJDHV
+	VAU+fshseNOI5G40lvaR7t2in/OM=
+X-Google-Smtp-Source: AGHT+IEAUrMAb4lbk41X/zXeOwV5Q9goltln/OCwQoil3huO4u47ZZisUzs7Nl6JphjqqoIjeypLZ9IginYBDCo+fNs=
+X-Received: by 2002:a05:6902:908:b0:e5d:f98f:6f33 with SMTP id
+ 3f1490d57ef6-e73051a07cbmr13356033276.10.1745647038911; Fri, 25 Apr 2025
+ 22:57:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7780883c-0ac8-4aaa-b850-469e33b50672@linux.ibm.com>
+References: <CAHC9VhROjCvwaEJ1-Vc9SQU-x3wmZjeFknxkFGJcpPL28fGm1w@mail.gmail.com>
+ <20250426041542.23444-1-alexjlzheng@tencent.com>
+In-Reply-To: <20250426041542.23444-1-alexjlzheng@tencent.com>
+From: Fan Wu <wufan@kernel.org>
+Date: Fri, 25 Apr 2025 22:57:08 -0700
+X-Gmail-Original-Message-ID: <CAKtyLkGyaoHr_xVGrWCTSFkqyf8b+hkOX1A0vyOpZUkTcTGtvQ@mail.gmail.com>
+X-Gm-Features: ATxdqUG7hYlINfjIqdbRB9oRJuRhxFnLUSnkOZ7MgMMeCIUrNqeNgZQcEfySDso
+Message-ID: <CAKtyLkGyaoHr_xVGrWCTSFkqyf8b+hkOX1A0vyOpZUkTcTGtvQ@mail.gmail.com>
+Subject: Re: [PATCH] securityfs: fix missing of d_delete() in securityfs_remove()
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+Cc: paul@paul-moore.com, alexjlzheng@tencent.com, chrisw@osdl.org, 
+	greg@kroah.com, jmorris@namei.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, serge@hallyn.com, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 07:11:43PM +0530, Venkat Rao Bagalkote wrote:
-> I am observing linux-next build failure on IBM Power8 server.
-> 
-> 
-> Repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> 
-> Branch: master
-> 
-> GCC: 8.5.0 20210514
-> 
-> ldd (GNU libc) 2.28
-> 
-> Attached is the .config file.
-> 
-> 
-> Build errors:
-> 
-> 
-> [[01m^[[Kcc1:^[[m^[[K ^[[01;36m^[[Knote: ^[[m^[[K-Wvla-larger-than=0 is
-> meaningless
+On Fri, Apr 25, 2025 at 9:15=E2=80=AFPM Jinliang Zheng <alexjlzheng@gmail.c=
+om> wrote:
+>
+> On Fri, 25 Apr 2025 18:06:32 -0400, Paul Moore wrote:
+> > On Fri, Apr 25, 2025 at 5:25=E2=80=AFAM <alexjlzheng@gmail.com> wrote:
+> > >
+> > > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > >
+> > > Consider the following module code:
+> > >
+> > >   static struct dentry *dentry;
+> > >
+> > >   static int __init securityfs_test_init(void)
+> > >   {
+> > >           dentry =3D securityfs_create_dir("standon", NULL);
+> > >           return PTR_ERR(dentry);
+> > >   }
+> > >
+> > >   static void __exit securityfs_test_exit(void)
+> > >   {
+> > >           securityfs_remove(dentry);
+> > >   }
+> > >
+> > >   module_init(securityfs_test_init);
+> > >   module_exit(securityfs_test_exit);
+> > >
+> > > and then:
+> > >
+> > >   insmod /path/to/thismodule
+> > >   cd /sys/kernel/security/standon     <- we hold 'standon'
+> > >   rmmod thismodule                    <- 'standon' don't go away
+> > >   insmod /path/to/thismodule          <- Failed: File exists!
+>
+> Thank you for your reply. :)
+>
+> >
+> > A quick procedural note, and you may have gotten an email about this
+> > from the stable kernel folks already, you generally shouldn't add the
+> > stable alias to your emails directly.  You may want to look at the
+> > kernel docs on the stable kernel if you haven't already:
+> >
+> > * https://docs.kernel.org/process/stable-kernel-rules.html
+>
+> Sorry for that, I will read it. And thank you for your pointing it out.
+>
+> >
+> > Beyond that, we don't currently support dynamically loading or
+> > unloading LSMs so the immediate response to the reproducer above is
+> > "don't do that, we don't support it" :)  However, if you see a similar
+> > problem with a LSM properly registered with the running kernel please
+> > let us know.
+>
+> I don't think that not supporting dynamic loading/unloading of LSMs means
+> that directories/files under securityfs cannot be dynamically added/delet=
+ed.
+>
+> The example code in the commit message is just to quickly show the proble=
+m,
+> not the actual usage scenario.
+>
+> I'm not sure whether existing LSMs have dynamic addition/deletion of file=
+s,
+> but I don't think we should prohibit these operations.
+>
+> Moreover, since securityfs provides the securityfs_remove() interface, it
+> is necessary to handle the deletion of dentry whenever it is used. What's
+> more, we have EXPORT_SYMBOL_GPL(securityfs_remove).
+>
+> (By the way, the reason why I noticed this problem is because I needed to
+> dynamically create/delete configuration directories/files when implementi=
+ng
+> an LSM. Of course, I am not dynamically loading/unloading LSM, but
+> dynamically adding/deleting directories/files under securityfs according =
+to
+> the status during LSM operation.)
+>
+> Therefore, I think we need this patch and strongly recommend it. At least=
+,
+> it has no harm. Hahahaha
+>
+> thanks,
+> Jinliang Zheng :)
+>
 
-Weird that it doesn't get dropped by "cc-option". I reproduced the
-issue, and this patch seems to fix it:
+We have added securityfs_recursive_remove() for this purpose.
 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 70ff932fd5ec..59d3d196fe4f 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -51,7 +51,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, dangling-pointer)
- # types, so depend on GCC for now to keep stack VLAs out of the tree.
- # https://github.com/llvm/llvm-project/issues/57098
- # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98217
--KBUILD_CFLAGS += $(call cc-option,-Wvla-larger-than=0)
-+KBUILD_CFLAGS += $(call cc-option,-Wvla-larger-than=1)
- 
- # disable pointer signed / unsigned warnings in gcc 4.0
- KBUILD_CFLAGS += -Wno-pointer-sign
+To the best of my knowledge, IPE is the only LSM that will delete
+dentry during normal operation.
 
-
--- 
-Kees Cook
+-Fan
