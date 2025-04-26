@@ -1,43 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A4A4A11;
-	Sat, 26 Apr 2025 10:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977454A11;
+	Sat, 26 Apr 2025 10:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745663735; cv=none; b=TuOfnQhlx/5isj6eOW4cAdqsxaWftIWBPANT1uZ826PUtFqkhuQ2dbXdozee+chmUOQI75lUIqn0IV2INW8uJs2i8Ez1JN6xZVtoisWQciF4Y/jrOvpqxr5FZaSYn/Nve92OD+LkZWe/YS188rth3SOe7SIWnhdkNHPSZMz+RW0=
+	t=1745664158; cv=none; b=jkrEgYtmaNdaL4wx5jQuQAYANyKXlrRliBcZ1Va7ODWBx8bVHQWMpJhC68cyLLjPJbnlFthhle7qw8hjP40aX2p9PTz7KxiY2Bw5xQHWWP/S84yOjqxwAiieM4LS/K8WN6bnXWX4uIqQG2loULH66HZMBz6CkRwt5vjNCJGRvIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745663735; c=relaxed/simple;
-	bh=i8cDxMGUpkLnVgo9XK3kLh6sBf1XEthOL/++p313vBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gMk2QNntTRHV4S6clGW7WEqpPuApwa5VRVPVJMn7wfvZPmNMPam2b503FIB3IYtvL3b0Jp8dSgcKYw18+K9/8bMcRCKC2pZ4yk0oqGT7Z1xvfCccFAreKXO5P/BV5AfmGbYTd3AqBEX0Dj1ZDob0hI+EDn+6t4GjDnW5T1i92e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAohL+zO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745664158; c=relaxed/simple;
+	bh=syAC0nIhx/IzZ9cs+2fbRHm/RrvyLvqr234Zh1733+Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cMJGG8d5WEDQqsYYr/qGqJ+PtY+qCdJaRP5bJCSJa+YZzBKdILg+bJ9jEU3MmFD3Davu+Q5lM5dPDxuUsWk7CIOYr/EIMtSTXsQ0GouQnhu1ya4kS1/Z89b5RZN21AYfGn+RjLpcEyBRyucnlKJGjZeQeyLz9vZEktFARbCop1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=BsxY6/GI; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAohL+zO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E761C4CEE2;
-	Sat, 26 Apr 2025 10:35:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745663735;
-	bh=i8cDxMGUpkLnVgo9XK3kLh6sBf1XEthOL/++p313vBs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CAohL+zOpOLy87N5MjephXKH1v0BxnNRdO/GD9WYEXLhJb2bnwFH88g+N97KqAHIS
-	 0d3XjWiZBkJKeHLKO9+Bgg4kYMSKKwUMIgLThWuqR+xV5mXTvSMFZKBKn29lyR5StN
-	 7JrQxhmTvws3rwtdh2AQ+7h0YhfD/xMcA/5SgEMKLrfZVW8REe+Sx4yCV9KyJmcC9N
-	 o/8xiRq31kgsOZteSfmhuUsaJeAckyrqnBVod/BKO3a+/RPZeLgPYHwjYV9d5ydSum
-	 UftcjICtZ65jJMXyx24LCnlmVWKHmun8YYMmLiY1fqmiSj690hEP3/tekVcwAy/tR3
-	 ZPcwv2n362u7w==
-Date: Sat, 26 Apr 2025 11:35:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andrew Ijano <andrew.ijano@gmail.com>
-Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org, jstephan@baylibre.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: accel: sca3000: remove duplicated code in
- sca3000_read_data()
-Message-ID: <20250426113527.20b2069b@jic23-huawei>
-In-Reply-To: <20250425235130.56122-1-andrew.lopes@alumni.usp.br>
-References: <20250425235130.56122-1-andrew.lopes@alumni.usp.br>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="BsxY6/GI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Tta21mMLGTn3K2tn7y/mZmOLIBCqpI/zDg0q/+0iZrY=;
+  b=BsxY6/GIz4yYQnPeJ4rraSi74jJFmOXgRQ8FBe86HvDPPB6vsN02m5e1
+   tm8WoafQPSrgoQtF4FVmIWrpJIFS7IWaPEgAHQ+Ey0tpQCzaDNhoKTbvO
+   oqMz/3NLoFM5mf0TL+f7gIfxzN+r5KGhZ8Zh+qReTtC5gIXzG9NDu/BC/
+   E=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,241,1739833200"; 
+   d="scan'208";a="219554437"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 12:41:23 +0200
+Date: Sat, 26 Apr 2025 12:41:23 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Andrew Morton <akpm@linux-foundation.org>
+cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+    linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>, 
+    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Ingo Molnar <mingo@redhat.com>, x86@kernel.org, 
+    Kees Cook <kees@kernel.org>, bpf@vger.kernel.org, 
+    Tejun Heo <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, 
+    Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
+Subject: Re: [RFC][PATCH 0/2] Add is_user_thread() and is_kernel_thread()
+ helper functions
+In-Reply-To: <20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
+Message-ID: <alpine.DEB.2.22.394.2504261157210.3375@hadrien>
+References: <20250425204120.639530125@goodmis.org> <20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,218 +57,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Fri, 25 Apr 2025 20:50:51 -0300
-Andrew Ijano <andrew.ijano@gmail.com> wrote:
-
-> Remove duplicated code between sca3000_read_data() and
-> sca3000_read_data_short() functions.
-> 
-> The common behavior is centralized in just one sca3000_read_data()
-> function and used for every case.
-> 
-> Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
-> Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
-> Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
-
-Look at the helpers that exist for spi sequences like this.
-This is an old driver so may not be making full use of newer infrastructure.
-
-In particular a lot of these can probably become spi_w8r8()and
-it may make sense to move the SCA3000_READ_REG() to the callers to avoid the
-need for these helpers at all.
-
-Note that is not an appropriate change for the large reads though as
-spi_write_then_read() bounces all buffers and so would add a copy
-to those high(ish) performance paths.
-
-> ---
->  drivers/iio/accel/sca3000.c | 82 ++++++++++++++-----------------------
->  1 file changed, 30 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-> index aabe4491efd7..c4b1da7f8de1 100644
-> --- a/drivers/iio/accel/sca3000.c
-> +++ b/drivers/iio/accel/sca3000.c
-> @@ -281,10 +281,11 @@ static int sca3000_write_reg(struct sca3000_state *st, u8 address, u8 val)
->  	return spi_write(st->us, st->tx, 2);
->  }
->  
-> -static int sca3000_read_data_short(struct sca3000_state *st,
-> -				   u8 reg_address_high,
-> -				   int len)
-> +static int sca3000_read_data(struct sca3000_state *st,
-> +			     u8 reg_address_high,
-> +			     int len)
->  {
-> +	int ret;
->  	struct spi_transfer xfer[2] = {
->  		{
->  			.len = 1,
-> @@ -296,7 +297,10 @@ static int sca3000_read_data_short(struct sca3000_state *st,
->  	};
->  	st->tx[0] = SCA3000_READ_REG(reg_address_high);
->  
-> -	return spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> +	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> +	if (ret)
-> +		dev_err(&st->us->dev, "problem reading register\n");
-> +	return ret;
->  }
->  
->  /**
-> @@ -309,7 +313,7 @@ static int sca3000_reg_lock_on(struct sca3000_state *st)
->  {
->  	int ret;
->  
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_STATUS_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_STATUS_ADDR, 1);
-As above this could be simply
-	ret = spi_w8r8(st->spi, SCA3000_READ_REG(SCA3000_REG_STATUS_ADDR));
-	if (ret)
-		return ret;
-	return !(ret & SCA3000_LOCKED);
 
 
-I think...
-You will want to walk through how that helper is implemented to check it
-ends up doing the same thing as the existing code though and remove
-st->rx as part of the conversion.
 
+On Fri, 25 Apr 2025, Andrew Morton wrote:
 
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -412,7 +416,7 @@ static int sca3000_read_ctrl_reg(struct sca3000_state *st,
->  	ret = sca3000_write_reg(st, SCA3000_REG_CTRL_SEL_ADDR, ctrl_reg);
->  	if (ret)
->  		goto error_ret;
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
->  	if (ret)
->  		goto error_ret;
->  	return st->rx[0];
-> @@ -432,7 +436,7 @@ static int sca3000_print_rev(struct iio_dev *indio_dev)
->  	struct sca3000_state *st = iio_priv(indio_dev);
->  
->  	mutex_lock(&st->lock);
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_REVID_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_REVID_ADDR, 1);
->  	if (ret < 0)
->  		goto error_ret;
->  	dev_info(&indio_dev->dev,
-> @@ -575,7 +579,7 @@ static inline int __sca3000_get_base_freq(struct sca3000_state *st,
->  {
->  	int ret;
->  
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
->  	if (ret)
->  		goto error_ret;
->  	switch (SCA3000_REG_MODE_MODE_MASK & st->rx[0]) {
-> @@ -665,7 +669,7 @@ static int sca3000_read_3db_freq(struct sca3000_state *st, int *val)
->  {
->  	int ret;
->  
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
->  	if (ret)
->  		return ret;
->  
-> @@ -703,7 +707,7 @@ static int sca3000_write_3db_freq(struct sca3000_state *st, int val)
->  		mode = SCA3000_REG_MODE_MEAS_MODE_OP_2;
->  	else
->  		return -EINVAL;
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
->  	if (ret)
->  		return ret;
->  
-> @@ -732,7 +736,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
->  				return -EBUSY;
->  			}
->  			address = sca3000_addresses[chan->address][0];
-> -			ret = sca3000_read_data_short(st, address, 2);
-> +			ret = sca3000_read_data(st, address, 2);
->  			if (ret < 0) {
->  				mutex_unlock(&st->lock);
->  				return ret;
-> @@ -742,7 +746,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
->  					     chan->scan_type.realbits - 1);
->  		} else {
->  			/* get the temperature when available */
-> -			ret = sca3000_read_data_short(st,
-> +			ret = sca3000_read_data(st,
->  						      SCA3000_REG_TEMP_MSB_ADDR,
->  						      2);
+> On Fri, 25 Apr 2025 16:41:20 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > While working on the deferred stacktrace code, Peter Zijlstra told
+> > me to use task->flags & PF_KTHREAD instead of checking task->mm for NULL.
+> > This seemed reasonable, but while working on it, as there were several
+> > places that check if the task is a kernel thread and other places that
+> > check if the task is a user space thread I found it a bit confusing
+> > when looking at both:
+> >
+> > 	if (task->flags & PF_KTHREAD)
+> > and
+> > 	if (!(task->flags & PF_KTHREAD))
+> >
+> > Where I mixed them up sometimes, and checked for a user space thread when I
+> > really wanted to check for a kernel thread. I found these mistakes before
+> > sending out my patches, but going back and reviewing the code, I always had
+> > to stop and spend a few unnecessary seconds making sure the check was
+> > testing that flag correctly.
+> >
+> > To make this a bit more obvious, I introduced two helper functions:
+> >
+> > 	is_user_thread(task)
+> > 	is_kernel_thread(task)
+> >
+> > which simply test the flag for you. Thus, seeing:
+> >
+> > 	if (is_user_thread(task))
+> > or
+> > 	if (is_kernel_thread(task))
+> >
+> > it was very obvious to which test you wanted to make.
+>
+> Seems sensible.  Please consider renaming PF_KTHREAD in order to break
+> missed conversion sites.
 
-For this spi_w8r16() may be applicable.
+Maybe:
 
+@r depends on !(file in "include/linux/sched.h")@ // Kees's suggestion
+position p;
+expression e;
+@@
 
->  			if (ret < 0) {
-> @@ -830,7 +834,7 @@ static ssize_t sca3000_read_av_freq(struct device *dev,
->  	int len = 0, ret, val;
->  
->  	mutex_lock(&st->lock);
-> -	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-> +	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
->  	val = st->rx[0];
->  	mutex_unlock(&st->lock);
->  	if (ret)
-> @@ -969,32 +973,6 @@ static const struct attribute_group sca3000_attribute_group = {
->  	.attrs = sca3000_attributes,
->  };
->  
-> -static int sca3000_read_data(struct sca3000_state *st,
-> -			     u8 reg_address_high,
-> -			     u8 *rx,
-> -			     int len)
-> -{
-> -	int ret;
-> -	struct spi_transfer xfer[2] = {
-> -		{
-> -			.len = 1,
-> -			.tx_buf = st->tx,
-> -		}, {
-> -			.len = len,
-> -			.rx_buf = rx,
-> -		}
-> -	};
-> -
-> -	st->tx[0] = SCA3000_READ_REG(reg_address_high);
-> -	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-> -	if (ret) {
-> -		dev_err(&st->us->dev, "problem reading register\n");
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  /**
->   * sca3000_ring_int_process() - ring specific interrupt handling.
->   * @val: Value of the interrupt status register.
-> @@ -1008,7 +986,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
->  	mutex_lock(&st->lock);
->  
->  	if (val & SCA3000_REG_INT_STATUS_HALF) {
-> -		ret = sca3000_read_data_short(st, SCA3000_REG_BUF_COUNT_ADDR,
-> +		ret = sca3000_read_data(st, SCA3000_REG_BUF_COUNT_ADDR,
->  					      1);
->  		if (ret)
->  			goto error_ret;
-> @@ -1017,7 +995,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
->  		 * num_available is the total number of samples available
->  		 * i.e. number of time points * number of channels.
->  		 */
-> -		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR, st->rx,
-> +		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR,
->  					num_available * 2);
-This is the one case were spi_write_then_read() is probably not appropriate due to the
-large buffers that are potentially involved.
-I think this will be the only remaining case to use the old infrastructure.
+(
+e = (PF_KTHREAD | ...)
+|
+e |= (PF_KTHREAD | ...)
+|
+PF_KTHREAD@p
+)
 
-Thanks,
+@script:ocaml@ // change to python if desired
+p << r.p;
+@@
 
-Jonathan
+Printf.printf "%s:%d: Warning: remaining use of PF_KTHREAD\n" (List.hd p).file (List.hd p).line
+
+julia
+
