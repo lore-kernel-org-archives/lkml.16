@@ -1,78 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FD110F9;
-	Sat, 26 Apr 2025 02:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505CF10F9;
+	Sat, 26 Apr 2025 02:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745633518; cv=none; b=ivEvJDhGkZkJ+c9XLFtiTrc0nwdE1HP66qQIlZvUhFfIqS1iYaHBuG+drGn5sTNP/+wvNmieyz2NPaHZo36P8Laq5COfoD0bgXc1zhY5QIbpTYLTufWuk6DfTHfAwb8yM3FvgzRtJzX3T1EZ1vjTyjGE1pgdGG3A/wb7ufvxwKI=
+	t=1745633595; cv=none; b=lmhUrwIeBzkUTLhryAO3xm1eoSI4U2JCdnlXSV9/wKp+J6nTPRwJwwn46xTsglifu3FnN+3NkMBdzhr1Pv9YBt7qn/fTPWPIuDS/tHmrzM+mqfTEr4WSx6z3WBp5biesHwZJNJMURvFjKZXFhx60pMduAiKhs86UuFWRHUUJ5BI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745633518; c=relaxed/simple;
-	bh=fINprzh/TtN1ZLojNEawV4dlHAuKXAlsctSeK/3zSSc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=J2gj7wR9DSD16FHccJ/SazaABrpp/xFUUxvr34TBPIfA+b0EsdkddHO+Fqf9nJLjZbFmEPGowXCEBAkq0YCvbE7kvl8CEVGl2RfqEeVw2Inu8jcaw+Ibx0gIOEF8hRpZh16Y7XhMi/UE6DhRKVwgU4ZbK4a18oaDIpb7fj7dH3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=V5UEZnSf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745633595; c=relaxed/simple;
+	bh=CZWHyrSRI9rXVWjIfZhJMz/8qMBovApYmofIr02qYqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qz+gdJZqcW/ZBfxGcHkDk+vygfm0VyCnBB2VIJHaRenr6jKM5b9HYLIdyLstwgLJHJk7CRBtCz0rgq9Vot1uUtTQB/jcl+rDDoEvwJCF8llAPoIkVsw5+uA8xwYMSTXS4kIq+olVK5S2+fPnPwUd7HIOG9MpGV4VA7aCV8kq28g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihFHd1dp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="V5UEZnSf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC1AC4CEE4;
-	Sat, 26 Apr 2025 02:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745633517;
-	bh=fINprzh/TtN1ZLojNEawV4dlHAuKXAlsctSeK/3zSSc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihFHd1dp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1667AC4CEE4;
+	Sat, 26 Apr 2025 02:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745633594;
+	bh=CZWHyrSRI9rXVWjIfZhJMz/8qMBovApYmofIr02qYqc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=V5UEZnSfXFUZUOdR3IhLqvYRj1ojiBIiVmSIlpsHuDQbavYCshW1iY76vfyulhXk0
-	 LwcVZV84WXBumvLKOynLmkYNaEiAyaUUbUAoYBK19FU8B+aQYvZwCzbddrwnt2MOhC
-	 X7FI7mgxWFyk2u7T2VrUHm89hHEPOQLrkkrKy9H8=
-Date: Fri, 25 Apr 2025 19:11:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Huang, Ying" <ying.huang@linux.alibaba.com>
-Cc: Raghavendra K T <raghavendra.kt@amd.com>, Nikhil Dhama
- <nikhil.dhama@amd.com>, bharata@amd.com,
- raghavendra.kodsarathimmappa@amd.com, oe-lkp@lists.linux.dev,
- lkp@intel.com, Huang Ying <huang.ying.caritas@gmail.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, Mel Gorman
- <mgorman@techsingularity.net>
-Subject: Re: [PATCH v3] mm: pcp: increase pcp->free_count threshold to
- trigger free_high
-Message-Id: <20250425191156.c83d082b1c15e46f77c122b3@linux-foundation.org>
-In-Reply-To: <87mscn5ilt.fsf@DESKTOP-5N7EMDA>
-References: <20250407105219.55351-1-nikhil.dhama@amd.com>
-	<87mscn8msp.fsf@DESKTOP-5N7EMDA>
-	<c8b2a3c9-2252-4c0a-85a9-26fa6b519757@amd.com>
-	<87mscn5ilt.fsf@DESKTOP-5N7EMDA>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=ihFHd1dpkRKkjIbze4T1hv+T18Nf9KFeghaGyUMZCpU7f7WKRL6++Fig2DqIke+bG
+	 LujSGPHQiWXmVCH3ySideOWtYonDKfE7bfckOZPVoKofWqZizYhpKDxPimyXDSO986
+	 ACyfYdbA2LoD2qiLEp2AEGse5ZNuT2ozeCrpBB7F7idY7PLeRX11aAcQtBC/9vucuS
+	 kWQqJpTCDBzvleYUdng9gDyEYqHhno8BXg6erh3y+qS0XGOsxvzUR2t5jQ4vcJ90yX
+	 QnpeEqBY/CkdgFgkTR8op9wItIWHU+9sfsjAMulC8MRmTbxLY1SexJi020RkHjPWMC
+	 iqU08BtkrtplA==
+Date: Fri, 25 Apr 2025 19:13:13 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, Felix Fietkau
+ <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, Lorenzo Bianconi
+ <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Biao
+ Huang <biao.huang@mediatek.com>, Yinghua Pan <ot_yinghua.pan@mediatek.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, kernel@collabora.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net v2 2/2] net: ethernet: mtk-star-emac: rearm
+ interrupts in rx_poll only when advised
+Message-ID: <20250425191313.3692348b@kernel.org>
+In-Reply-To: <20250424111623.706c1acc@device-40.home>
+References: <20250424-mtk_star_emac-fix-spinlock-recursion-issue-v2-0-f3fde2e529d8@collabora.com>
+	<20250424-mtk_star_emac-fix-spinlock-recursion-issue-v2-2-f3fde2e529d8@collabora.com>
+	<20250424111623.706c1acc@device-40.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Apr 2025 14:15:42 +0800 "Huang, Ying" <ying.huang@linux.alibaba.com> wrote:
-
-> >> in my analysis in
-> >> https://lore.kernel.org/all/875xjmuiup.fsf@DESKTOP-5N7EMDA/
-> >> If you think my analysis is correct, can you add that in patch
-> >> description too?  This makes it easier for people to know why the code
-> >> looks this way.
-> >> 
-> >
-> > Yes. This makes sense. Andrew has already included the patch in mm tree.
-> >
-> > Nikhil,
-> >
-> > Could you please help with the updated write up based on Ying's
-> > suggestion assuming it works for Andrew?
+On Thu, 24 Apr 2025 11:16:23 +0200 Maxime Chevallier wrote:
+> > In mtk_star_rx_poll function, on event processing completion, the
+> > mtk_star_emac driver calls napi_complete_done but ignores its return
+> > code and enable RX DMA interrupts inconditionally. This return code
+> > gives the info if a device should avoid rearming its interrupts or not,
+> > so fix this behaviour by taking it into account.
+> > 
+> > Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
+> > Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>  
 > 
-> Thanks!
+> I'm unsure wether this counts as a bugfix, as no bug was
+> seen, and there are quite a few divers that already ignore the return
+> from napi_complete_done().
 > 
-> Just send a updated version, Andrew will update the patch in mm tree
-> unless it has been merged by mm-stable.
+> I don't think the patch is wrong, but maybe it should be sent to
+> net-next :/
 
-[ two weeks pass ]
-
-Nikhil's attentions are presumably elsewhere.  Could someone (Ying or
-Raghavendra?) please send along altered changelog text which I can
-paste in there?
+Agreed, probably the only case where it would matter would be busy
+polling. But it's trivial and looks correct, so probably not worth 
+the respin
