@@ -1,123 +1,173 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD4B1EF396
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 20:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745701042; cv=none; b=X3oNukY+yGHSLkMVppJlpv+4BKazqOYZrzTAjgiZ5VOYkqIZeBm59yjiQCzLAZVWWFL2uAD7FN9AH15z11jjPOm7gUpi6rsMRgnr2e4ICq+v2CKx/wYRBJ+udS6AKozs5CIN72vzFIhz4QAs/HFZr0amTwIhd7EMjB3NZCaJLBI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745701042; c=relaxed/simple;
-	bh=vrnKQhr5cfP9Ei4CCB31DhEqb6QWvhLq1OVYP4NPdFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dS/Hsc0ehLh1iTUkISBlagBUqyBYZvDGSBuvUlf0d7NcnGpyYsVyo+5YIfpGOSBGKJDs4g7epYTv2Dibzt7QhdVLNEL/A2FP00k+hmfpx/eovBLUY2xMeX1ksMlB+CtWn6tkMeUojn0qKjtJVzdOYzDzvuIwLqxsUFUabzOZx8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WDu2d7JZ; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EB71F3D45;
+	Sat, 26 Apr 2025 20:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745701058; cv=pass; b=KCtvy788N+eA6pdlobCiyqer+tk47o704rwxq4IExcLMrUkcgfw7UFPpFAhyASUFYXYcTzbmwS+LPX8GV2HZj0gmrcCGZyxIarwmM7J3GOXH07ob73xWq7bKHziJWUf44tl4YuQfmEyCXvopVzWHSYsta3bljhX/dK2ks6X7nvk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745701058; c=relaxed/simple;
+	bh=p0BZViD/yOTJLjUeoWQCI8234JU2GTuhrpX40eCaEFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GkaQ8HwPpFzHnlcO8VvrUHeNXUkgxG7ie9N4C4DBWjk6KDWlPjIYdxYxhCZg2sS5cxpQd8d2RAOy87IEAp+f5P9TKKFXPh4bujeUAHxjDG0BoJxTI7xZBr/35sQPLcdf7Bz5HgWpugqZM+VLIPWPQDEQq+GWScygWioeWEsfptM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=PZDOouGS; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WDu2d7JZ"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so5559968a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745701038; x=1746305838; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UoAad0UF3aMOunyUShqi7DpSlcddCQ3yXawelXX5azs=;
-        b=WDu2d7JZIdChj9dkRvwNMXfXn6NrI70pIy18/AhhzN7r5Cywja7os97V6BjKxMNtY8
-         9ChkgjNesBEUZNeP6GnSPTsMpLWjCI4AnY5RZTIL5g+ZVBQRYekjQe34Y4okh5SN3/kQ
-         EpHmi/+AL51e8ZkQ9ybphkjgbl2+QGtneDw9o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745701038; x=1746305838;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UoAad0UF3aMOunyUShqi7DpSlcddCQ3yXawelXX5azs=;
-        b=Om9D2UcZna3MmcHZQdhELfv1QIZNUd15HVDaTF9KkAvs3fKzmNge+mWZ1W+xIyZjZx
-         d8tI+Gj3Apxu1wQT3TX/IJmIdqz/X3Wd0btujrS7krUStEEO71XR9X0HtSXolr7ptYz/
-         TMTsyFg7J3MhUeyxzysu0YQjSwrWtNNYMfZdevTSV8hfCUuM/LSjbcwkcfDiZmVLGMIb
-         EJ0tVBiLLPXyeYhP8a9gbjZJ44Q78Vl6WHqLqlawD/8ZDbtF+aABa+f+Tigpp5b/h0y3
-         mAH/UOL43oukMNN/FV2Q1Azu2FLGantRm4m7v+5bBeCiQTZmsKNhuZunzFq655ziUkNN
-         Rt3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWXHVtEotuux/TYNSU/mw/vhQfY5psttbxvyrmn0JDQt/Evpa8eCGLIRFR8t0QXmx1fsAbsw+/V110N2SM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyiD5WZXpN0zbMoAS5s6HVSYq6TyZ0w/wh3HfYZX+HfAcpI0mx
-	ZF6WLKZ8KDBjNvvY7TPRlDR/uakkkGPS+R2I4MOu3xJ/Bl7oqUFufVFNzKibEEva8myz5Bw/b8U
-	zTq2VlQ==
-X-Gm-Gg: ASbGncvZIDMQkEgvR/0/gbal+vVnTC2EJQ4ElAcSjPaoI5s9/U2zqzr3Yz2rf1Iqpme
-	+Ryyi5GULIvhCxMxTw1s42cI8l9FUqZ6+GIKiZMngVQZxsg2fdrE9w3Y3r/6AOSS1jd/nthT6HT
-	km6BdZWBdfK7iztAgDimvxHou10wdiyZB8enVED6hRLGcdjXHHX+hqlWl0FPJyfA+83UkWa2AdF
-	D5cGPtXWlPqFNqSHw6i29C7aIXFZfmic1Nr4nUDtLw7xQXEgYYRmfVsgS7++B50QvZfXeMTgG8I
-	hKGehC7Fkk+En1oy5z37z1f0Xyoq/GfPvgSWTy9j2DGeqMy6hF4wjVOx9Mpjc4xCaMfh+Ly1sai
-	s5VhW+j1AASRFEC/GktCyMpQH1A==
-X-Google-Smtp-Source: AGHT+IEeyUBktqeIzFP7F0NNLVj5tQ/IDnukii6UXu1wZwMhPZe3xQCh+blhKPgkErxOIqHzBqB9ww==
-X-Received: by 2002:a05:6402:3496:b0:5f4:d4e7:3c37 with SMTP id 4fb4d7f45d1cf-5f739594b2fmr2951764a12.6.1745701038029;
-        Sat, 26 Apr 2025 13:57:18 -0700 (PDT)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f66b7sm3223929a12.46.2025.04.26.13.57.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 13:57:16 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acb2faa9f55so429042166b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:57:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUn/oy82Ik0hJptLtlhm+Uv8zUm2GYDUTiFyl8HdbVq5q4M5OqsAU1b2rvwpMpwNjR1+QifNVpVdscPEtA=@vger.kernel.org
-X-Received: by 2002:a17:907:da6:b0:aca:d5e9:9ce with SMTP id
- a640c23a62f3a-ace848c0444mr251602866b.9.1745701035588; Sat, 26 Apr 2025
- 13:57:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="PZDOouGS"
+ARC-Seal: i=1; a=rsa-sha256; t=1745701030; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kY8x2uGSh2Jlnn13Q7cIzSmnWqtv4xd7Z4SjbnhFP0KScN2GeQI4K3LT0eKY117HSjFkxmb6B8PXRmk15LEE70tM0J10XGxtaN2+7kjsu3igRs02sXAaMDBh+W3ufRNPlKTm/IDDfFw3gYA5ESoozPgt7J6xMSbzfe6stEiJVeQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745701030; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=d5RUawyA0HZ8iOrYQ/UIr7PD1runCe3i/3feWl3o2dw=; 
+	b=CA5u7SYQvsCIFJgMNKhE8vA7o0/3vWx/lkh77k3OctLSvLkOHz8w1LPyYFXnjRrm3k5FLtxc+tdnBfB6IU/C/aT0hhN34NWI4A0OYR7Wt5PJd4f6Q+KQYBLKxOKO9VUrA1DEFua5BSrMeP5LVhi69/4i/rEkfPfsTXL4Sf8w/to=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745701030;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=d5RUawyA0HZ8iOrYQ/UIr7PD1runCe3i/3feWl3o2dw=;
+	b=PZDOouGSbvvhbt4Z2xQnoXSSwlqd8WH3rsALrYFcBDvKFIi9OU1ItkP8MjHc0oFr
+	soAxiGgeWJPgYt4WnNFQrg7I25OX4fveMjP4B8/U8wkEWtUntFNSvmgY8N6V/arlmlQ
+	A8FW1sTCRkKxTSTSZag8nR/gOW5q2NNfJng6Ahdk=
+Received: by mx.zohomail.com with SMTPS id 1745701030129397.68583282935344;
+	Sat, 26 Apr 2025 13:57:10 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Jonas Karlman <jonas@kwiboo.se>,
+ Diederik de Haas <didi.debian@cknow.org>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+Subject:
+ Re: [PATCH v5 5/7] thermal: rockchip: support reading trim values from OTP
+Date: Sat, 26 Apr 2025 22:57:04 +0200
+Message-ID: <2891736.iZASKD2KPV@workhorse>
+In-Reply-To: <D9GH5V09WW47.358SY1F7LJ9ZV@cknow.org>
+References:
+ <20250425-rk3576-tsadc-upstream-v5-0-0c840b99c30e@collabora.com>
+ <20250425-rk3576-tsadc-upstream-v5-5-0c840b99c30e@collabora.com>
+ <D9GH5V09WW47.358SY1F7LJ9ZV@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wiq=E0fwJLFpCc3wPY_9BPZF3dbdqGgVoOmK9Ykj5JEeg@mail.gmail.com>
- <CAHk-=wip2-yTrWpAkrUQ0iejEo2PjReddu4xntwBvdnSvWDbzg@mail.gmail.com> <20250426200513.GA427956@ax162>
-In-Reply-To: <20250426200513.GA427956@ax162>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 26 Apr 2025 13:56:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgPCbZv0JgqoNWMOO+p=N772YW16xYk_pmb1GU7aeuPFA@mail.gmail.com>
-X-Gm-Features: ATxdqUFEDV4hwTKkCo5LsFlF2depTN17SPH8wq3XkwJj60cqlzJsiqa-S0xR4lk
-Message-ID: <CAHk-=wgPCbZv0JgqoNWMOO+p=N772YW16xYk_pmb1GU7aeuPFA@mail.gmail.com>
-Subject: Re: clang and drm issue: objtool warnings from clang build
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Harry Wentland <harry.wentland@amd.com>, 
-	Leo Li <sunpeng.li@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, 26 Apr 2025 at 13:05, Nathan Chancellor <nathan@kernel.org> wrote:
->
->     KBUILD_CFLAGS += -mllvm -trap-unreachable
+On Saturday, 26 April 2025 11:49:13 Central European Summer Time Diederik de Haas wrote:
+> Hi Nicolas,
+> 
+> On Fri Apr 25, 2025 at 9:34 PM CEST, Nicolas Frattaroli wrote:
+> > Many of the Rockchip SoCs support storing trim values for the sensors in
+> > factory programmable memory. These values specify a fixed offset from
+> > the sensor's returned temperature to get a more accurate picture of what
+> > temperature the silicon is actually at.
+> >
+> > The way this is implemented is with various OTP cells, which may be
+> > absent. There may both be whole-TSADC trim values, as well as per-sensor
+> > trim values.
+> >
+> > In the downstream driver, whole-chip trim values override the per-sensor
+> > trim values. This rewrite of the functionality changes the semantics to
+> > something I see as slightly more useful: allow the whole-chip trim
+> > values to serve as a fallback for lacking per-sensor trim values,
+> > instead of overriding already present sensor trim values.
+> >
+> > Additionally, the chip may specify an offset (trim_base, trim_base_frac)
+> > in degrees celsius and degrees decicelsius respectively which defines
+> > what the basis is from which the trim, if any, should be calculated
+> > from. By default, this is 30 degrees Celsius, but the chip can once
+> > again specify a different value through OTP cells.
+> 
+> Would it be useful to define all the values in the same unit?
+> Having celsius and decicelsius and millicelsius sounds like a recipe for
+> (future) off-by-10/-100/-1000 errors.
 
-Hmm. That certainly builds for me, but yeah, it generates new objtool
-warnings, notably
+No. It is not possible to redefine the unit of these, because the values are 
+factory programmed into these one-time programmable cells.
 
-   panic() missing __noreturn in .c/.h or NORETURN() in noreturns.h
+> And possibly define-ing the '30' so people don't need this commit
+> message to figure out where that magic number comes from?
 
-and I *think* that is because that flag makes clang not honour our
-*explicit* "this code is unreachable" annotations.
+There is no constant of 30 in the code to define anywhere. This is what the
+factory programmed values are referenced against.
 
-So now objtool complains about the fact that clang has generated some
-random code that follows a call to 'panic()' even though objtool knows
-that panic() cannot return.
+> And also the '923' for ``.trim_slope``?
 
-And those explicit annotations definitely should be honored.
+.trim_slope is an SoC specific value that does not need to be defined a second
+time in a different place, it lives in the SoC data for that reason, much like
+the code tables and which functions the driver should use for this chip. There
+is nothing to be gained here from the indirection.
 
-IOW, there's a *big* difference between "the programmer told me this
-is unreachable, so I won't generate code past this point" and "I have
-decided this is undefined behavior, so now I won't generate code past
-this point".
+> 
+> > The implementation of these trim calculations have been tested
+> > extensively on an RK3576, where it was confirmed to get rid of pesky 1.8
+> > degree Celsius offsets between certain sensors.
+> >
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  drivers/thermal/rockchip_thermal.c | 221 +++++++++++++++++++++++++++++++++----
+> >  1 file changed, 202 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> > index 89e3180667e2a8f0ef5542b0db4d9e19a21a24d3..3beff9b6fac3abe8948b56132b618ff1bed57217 100644
+> > --- a/drivers/thermal/rockchip_thermal.c
+> > +++ b/drivers/thermal/rockchip_thermal.c
+> > @@ -9,6 +9,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> >  #include <linux/module.h>
+> > +#include <linux/nvmem-consumer.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_irq.h>
+> > @@ -69,16 +70,18 @@ struct chip_tsadc_table {
+> >   * struct rockchip_tsadc_chip - hold the private data of tsadc chip
+> >   * @chn_offset: the channel offset of the first channel
+> >   * @chn_num: the channel number of tsadc chip
+> > - * @tshut_temp: the hardware-controlled shutdown temperature value
+> > + * @trim_slope: used to convert the trim code to a temperature in millicelsius
+> > + * @tshut_temp: the hardware-controlled shutdown temperature value, with no trim
+> 
+> Having the same units used everywhere would also avoid possible
+> confusion here as ``trim_slope`` explicitly mentions millicelsius, but
+> ``tshut_temp`` does not, but AFAIK it's also in millicelsius.
 
-So what I'm asking for is absolutely not "trap on unreachable". That's
-wrong and just plain stupid.
+That seems like an additional change out of scope for this series, and does not
+need to hold up this patch series for a v6.
 
-I'm asking for "trap on UD instead of *assuming* it's unreachable".
+> 
+> Cheers,
+>   Diederik
+> 
+> >   * @tshut_mode: the hardware-controlled shutdown mode (0:CRU 1:GPIO)
+> >   * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
+> >   * @initialize: SoC special initialize tsadc controller method
+> >   * @irq_ack: clear the interrupt
+> >   * @control: enable/disable method for the tsadc controller
+> > - * @get_temp: get the temperature
+> > + * @get_temp: get the raw temperature, unadjusted by trim
+> >   * @set_alarm_temp: set the high temperature interrupt
+> >   * @set_tshut_temp: set the hardware-controlled shutdown temperature
+> >   * @set_tshut_mode: set the hardware-controlled shutdown mode
+> > + * @get_trim_code: convert a hardware temperature code to one adjusted for by trim
+> >   * @table: the chip-specific conversion table
+> >   */
+> >  struct rockchip_tsadc_chip {
+> > @@ -86,6 +89,9 @@ struct rockchip_tsadc_chip {
+> 
 
-Because clearly that code *can* be reached, it's just doing something undefined.
 
-See? Big big difference.
 
-             Linus
+
