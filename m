@@ -1,85 +1,118 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EE15661;
-	Sat, 26 Apr 2025 12:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3493F2F24;
+	Sat, 26 Apr 2025 12:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745672096; cv=none; b=Qf9Uv2IWzCf7PfeUgIw5NM86U/q3dLJu+ozW4Jw7yhyE0Z4eIEPoELVLe6f8g+NAS4HIXYJkuc1j2xXAaG2zQbRST0VJ9qzgBQ1tIsayNnSt0i18AtTvLow8/YfnRe2mrymcnqo54D4DcRfZreReeYsV2mzUHodPQb19i/GpIxk=
+	t=1745672243; cv=none; b=u6KaEFM7g80GUFmv9h3wupu0b9Y3LJgCyAfiWh4v99qJ4ClnFSpRhIawUg4oXWLSM4TOPzlw3fISqys7CcpT9jwgl1dV9fXKklyB/z/1DZO84UdhBYI1F5OlVVkkOvines/nXp30K+y+xWHbrHNvXqnz1Znqlqf8b2N7fv8YhrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745672096; c=relaxed/simple;
-	bh=qbqKmJyaTbaUBHuw1e5uY4FwjJY7zF+2e5++z6J+52E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y5EWbvQxkn72cRdjrYk1Zv9oGvaf5Gx6ZYdS5x8REuOHFOzRGxAXLB1Wy5oXeUVzl8e+3ejd080yL4Reu/pAdb8Rz0g14SbwxdSCALvm145bbgMSjMWu2+3Q3GN2WE45oSQgUQbiQMqUzu+KhOkmzV+GGz8/0XkjB4fvfA68mgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=MlJea2bk; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1745672243; c=relaxed/simple;
+	bh=7vnqcVl5ngC2WnVfizhAsL0Eks4mJZUDw7HzflzBWOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UP+XWldd5mYrw1m5vbjXpsjSJs8rFJ4DI9kz6QqFDdKXjr9Topep/49RpwMJk5PXL2zrJqXBR7CgH/jNP+ql77/P5hFfnaoYsIRUtM/ClvRAzpiXmCkfBagu1KAy6M6KxtDOAVQDRfpwEb5dx6OGzXLMVvH0aZRydiXVJfyA7tU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMuCLQgI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="MlJea2bk"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.5])
-	by mail.ispras.ru (Postfix) with ESMTPSA id A16B740737DD;
-	Sat, 26 Apr 2025 12:54:43 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru A16B740737DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1745672083;
-	bh=0RV3L+Qf5fQ1ETxGFcMm68u6hLC3r2iQrxdAPrtncRw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MlJea2bkXDqiv78LxsFaG/nXcXqeG/lf2vG6hjST/ahT3PkEtxyrs6c5zXpjPqbFx
-	 YCpEriB5fDgczX7qCy4HPkT0TZUN+Dg/acGOEaMrlaLrxpS0oCr+B9lnlBzhrhAbhH
-	 WBpqDq3/mO6n3lTKYmGRLVs9gcg9JBXHwbnQ1eTw=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Peter De Schrijver <pdeschrijver@nvidia.com>,
-	Prashant Gaikwad <pgaikwad@nvidia.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Timo Alho <talho@nvidia.com>,
-	linux-clk@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] clk: tegra: do not overallocate memory for bpmp clocks
-Date: Sat, 26 Apr 2025 15:54:28 +0300
-Message-ID: <20250426125429.31838-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMuCLQgI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8C96C4CEE2;
+	Sat, 26 Apr 2025 12:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745672242;
+	bh=7vnqcVl5ngC2WnVfizhAsL0Eks4mJZUDw7HzflzBWOI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oMuCLQgIKpLjI+JSbeLr/pxzfWwb4AEqiajhWDjJ/K96eva/VELbmm37Yk2ZYZe7f
+	 Vg8A7Dl7Zjgf0mc7kjwMiQsm6b4ZS8madUWixIRihiSiQHWNz1WFL2AzHeqi4DiCsk
+	 PHZYuNER9j2uOXc3BwGq5lOe1SI2GXaW3+4KCI30zojnYZbA22oh7wHXDMX8OaTsGI
+	 Z+SlxlyLJgNW2M9Mthj/eOHUwv3c1hbqEBkLT1AJ3PhOOygFj23ihq/kTCdsWN/fTV
+	 ZRjA2efx9Xlpg9m3Yefh/iwXUkWMxLAiPY1+IB629NYJbT/wo3xJK0guh7q46WQ23R
+	 NFvCyAbiZe0pQ==
+Date: Sat, 26 Apr 2025 20:57:08 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Akira Yokosawa <akiyks@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, airlied@gmail.com,
+ corbet@lwn.net, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+ joonas.lahtinen@linux.intel.com, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, masahiroy@kernel.org,
+ mripard@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev,
+ rodrigo.vivi@intel.com, simona@ffwll.ch, tursulin@ursulin.net,
+ tzimmermann@suse.de
+Subject: Re: [PATCH v4 0/4] Don't create Python bytecode when building the
+ kernel
+Message-ID: <20250426205708.4f90a83d@sal.lan>
+In-Reply-To: <22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
+References: <cover.1745453655.git.mchehab+huawei@kernel.org>
+	<22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-struct tegra_bpmp::clocks is a pointer to a dynamically allocated array
-of pointers to 'struct tegra_bpmp_clk'.
+Hi Akira,
 
-But the size of the allocated area is calculated like it is an array
-containing actual 'struct tegra_bpmp_clk' objects - it's not true, there
-are just pointers.
+Em Sat, 26 Apr 2025 11:39:05 +0900
+Akira Yokosawa <akiyks@gmail.com> escreveu:
 
-Found by Linux Verification Center (linuxtesting.org) with Svace static
-analysis tool.
+> Bothering with might-become-incompatilbe-in-the-future python environment
+> variables in kernel Makefiles looks over-engineering to me.
+> Also, as Mauro says in 3/4, it is incomplete in that it does not cover
+> the cases where those scripts are invoked outside of kernel build.
+> And it will interfere with existing developers who want the benefit of
+> bytecode caching.
+> 
+> I'm not precluding the possibility of incoherent bytecode cache; for example
+> by using a shared kernel source tree among several developers, and only
+> one of them (owner) has a write permission of it.  In that case, said
+> owner might update the tree without running relevant python scripts.
+> 
+> I don't know if python can notice outdated cache and disregard it.
+> 
+> In such a situation, setting PYTHONPYCACHEPREFIX as an environment
+> variable should help, for sure, but only in such special cases.
+> 
+> Andy, what do you say if I ask reverts of 1/4, 2/4/, and 3/4?
 
-Fixes: 2db12b15c6f3 ("clk: tegra: Register clocks from root to leaf")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- drivers/clk/tegra/clk-bpmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patches 1 and 2 are, IMO, needed anyway, as they fix a problem:
+KERNELDOC environment is not used consistently.
 
-diff --git a/drivers/clk/tegra/clk-bpmp.c b/drivers/clk/tegra/clk-bpmp.c
-index b2323cb8eddc..77a2586dbe00 100644
---- a/drivers/clk/tegra/clk-bpmp.c
-+++ b/drivers/clk/tegra/clk-bpmp.c
-@@ -635,7 +635,7 @@ static int tegra_bpmp_register_clocks(struct tegra_bpmp *bpmp,
- 
- 	bpmp->num_clocks = count;
- 
--	bpmp->clocks = devm_kcalloc(bpmp->dev, count, sizeof(struct tegra_bpmp_clk), GFP_KERNEL);
-+	bpmp->clocks = devm_kcalloc(bpmp->dev, count, sizeof(*bpmp->clocks), GFP_KERNEL);
- 	if (!bpmp->clocks)
- 		return -ENOMEM;
- 
--- 
-2.49.0
+Now, patch 3 is the one that may require more thinking.
+
+I agree with Andy that, when O=<dir> is used, nothing shall be
+written to source dir.
+
+There are a couple of reasons for that:
+
+1. source dir may be read only;
+2. one may want to do cross compilation and use multiple output
+   directories, one for each version;
+3. the source dir could be mapped via NFS to multiple machines
+   with different architectures.
+
+For (3), it could mean that multiple machines may have different
+Python versions, so, sharing the Python bytecode from source dir doesn't
+sound a good idea. Also, I'm not sure if the pyc from different archs
+would be identical.
+
+With that, there are two options:
+
+a. disable cache;
+b. set PYTHONCACHEPREFIX.
+
+We're currently doing (a). I guess everybody agrees that this is
+is not ideal.
+
+So, ideally, we should move to (b). For Spinx, the easiest solution
+is just to place it under Documentation/output, but this is not
+generic enough: ideally, we should revert patch 3 and set
+PYTHONCACHEPREFIX when O is used. Eventually, we can apply my
+patch for Documentation/output, while we craft such logic.
+
+Regards,
+Mauro
 
