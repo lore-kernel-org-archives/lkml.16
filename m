@@ -1,125 +1,84 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288847A13A;
-	Sat, 26 Apr 2025 08:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464E67A13A;
+	Sat, 26 Apr 2025 08:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655396; cv=none; b=ZGJhjQqYqn0ciLgsEFSamDXDeVSHTy47rMXtp/Y1Wtx9sXh8HdE258T0deQxUk7BhmsjZ91cDn4gk99RvYWb91uO+65vnqQGVSusCdAL7rwatk0B3OfH3Zln5wwmgNzaDot2aGfbRgQOJlb2FHhH7SNjm/L1UqrRbwin3bNEE40=
+	t=1745655481; cv=none; b=eMyB7ucCeJVVGkhkKqDCo/56Gg3utIloHpYTkC+EBc4riBmRFJTat0hhGr8nybbDBOq0ulOgAxMfBnEeGbwObGORPW6cMzCBDNIzTZwC5Yw1GL9Xhaqe9KHM0OLxGCTOPLb6orWFGXOQrMESxBCAVurLLKOFTSpQbII4i65on4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655396; c=relaxed/simple;
-	bh=f5nFF9hrf8k+mrJsshn3YqKT1TsxR5hPPisEV2OefvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jAfvkzidhxLYmWcp7dbkaEFHceFUSnEpcgP6aUZi1NMS8rpKDNUbOBaJGco7Jxry1S6o/wWZLOc2DFZ5xyvDfqnuNvXXrUY+v+40iujB8yMFjqgleZgtnWAcouZZksZEqe2wVnETsV1hHMIGuMP64vZCrc4UN6UHFnQUNRIs3VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EKxNffB2; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745655481; c=relaxed/simple;
+	bh=V8rXVnQBFMOuvbQCwxCpqt8lVtCV9UxgAO97EewSuxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZphfJki2y5AcaF4pa9U7r+9e4je/Ddj+hLcFFnX7xwpYLssTOhAdrU3udQRVFB3VF/znQqRZCtEygjJhPCLthR/lw/JAiU7/7hAo5xGE1SQtTI7OHrdqkg76ykZGZDs/NVblBVi03gCuFOXRNw157KZh1kS0AvFTMBrfvMYrYY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=hg6YPb07; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKxNffB2"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22d95f0dda4so48227015ad.2;
-        Sat, 26 Apr 2025 01:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745655394; x=1746260194; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f5nFF9hrf8k+mrJsshn3YqKT1TsxR5hPPisEV2OefvY=;
-        b=EKxNffB2kmw7X3O4tbt/WQxN0/bBYWR+9ySAASb03QPl/KWbvIwt+9YrH9Tlzqn5JP
-         ikR4r5KB6liNRX/H/5oqc0raK6GZjNKrSTW6+6ZtvbW/aozg6SpF6dz//LxWEEhjM7lb
-         sb38ikCCr4RYmaK6PVRtvKaq1GnsT4ty/ig32oHw4xv02nYJ7u3aznibMVpShOyxAaqi
-         v4w4DSwHqsiXGkbOKCqqRzv6TvxAMD/UhUd94iETFl7Xabit0PbSOyrAm3nPgj6EbYcA
-         oAaAyd/30Gz5m6BOY2/AaFFrlUTxLgy+FHwQD3oQHH3Ad93C2NwbZLGQm0uwd3jDrUEF
-         K8kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745655394; x=1746260194;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f5nFF9hrf8k+mrJsshn3YqKT1TsxR5hPPisEV2OefvY=;
-        b=WL0mAk5XZCD7Ni6GQOywFhjL0g/zYqnlPCOiMAVCgdtE4OJC2X1VBwy5Un4z+5eijf
-         EWOrxjLdbBN999Svq1+5v/UdPY7ylNmAOYBV+jfI7oxHEiJrGMNTli+g9e2mp3ysQMt0
-         xbqj+XUJia4LccuTilyiV40KltRjm6x4AR89KFGC+bDqPV6qgs2W34tCnL33s4BliCSr
-         sqz5P5pc3NXtQGr1q6oMfrPNnDs3YtIK/TvmQX3aGRt7crlqOnakZTNL+hGjsfaK5AA+
-         eKNrsLSkJRqg309xYfgLwl6eKsFFCfReCfY9lZdVcJyDIdH3f2Mi109CtoDd1N3BgCHh
-         Ye5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVKH6jmlq89Uh2+HPEPN2w9BPw46zW1/cEHjM+O1ms2eluxpAQjIl7IIjOSDwJzVQ7ESCtH1BVIER/CmfZF@vger.kernel.org, AJvYcCW9BHL+8f1ew7FIdJaNrU0DoK0QKN27Q8EicOeJj3i5EHJLXSPDqms/p3M8qrjAQ5nC/D6OlGi8ZomgtQByTg==@vger.kernel.org, AJvYcCXf96T4KjIiA0q1I5AkE49OiW3/Ig1fy6suhlf82VJJ1Xb3IMrF0bo68rjTYHSla4Ut95aMls0XThO7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX/oAfTVPg/gUqt08Uj/pZluL4/YNVjeQZutvSkWV7qnE4/+hb
-	PS+KgyrEdhtuPvKgvTY0UckTCcVcCzOLvsm6QMf8RAvLEKVyJRczUUhBDw==
-X-Gm-Gg: ASbGncvBTPUV47500yPXMTIeMkYXESYAMQ7kKGoQmPTgrbOirGYYU1Mgr9xFmCzL9MM
-	+9SI/oUzYvs17nvWcmBqsN/kPd9n4dCt/qNSPECVyrXVVFRUfaA8cAx/qTMKau29UTl7+jdQojl
-	vO8muObwDSFAHEvxgYNtgUTqVH8JY/mG68l3Aij1hO3wS714rzBO9ANflCb+44dAV00wxjypzJl
-	lkKJlwwD4xzq+PXO1tjMhqh4ODKpacLyMkHGEQEpUfpzqSlA0Y/lQ8VsfSrkU+XcHdsraiKMmm5
-	HkuYpTasmXzc07NU/LRdlR9VYWaDI4iYZx39nTM=
-X-Google-Smtp-Source: AGHT+IH2uRpVPaRuKcj/Dnooeg5tCZHg5INKprYzVhvYC8u33M/5h6/1Yrvk8VqXDWgVX0OSW7Ou1w==
-X-Received: by 2002:a17:903:41c8:b0:224:76f:9e44 with SMTP id d9443c01a7336-22dbf4c84e4mr63259185ad.8.1745655394358;
-        Sat, 26 Apr 2025 01:16:34 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5219c47sm44906405ad.240.2025.04.26.01.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 01:16:33 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: dmitry.baryshkov@oss.qualcomm.com
-Cc: abel.vesa@linaro.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	kishon@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	mitltlatltl@gmail.com,
-	robh@kernel.org,
-	sfr@canb.auug.org.au,
-	vkoul@kernel.org
-Subject: Re: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg override handler
-Date: Sat, 26 Apr 2025 16:14:23 +0800
-Message-ID: <20250426081424.422590-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <q6zqfk3l2khp3tkodxd4pzhufiesyjcypl66zoqzslolwoveyo@ltrw2iulrkqs>
-References: <q6zqfk3l2khp3tkodxd4pzhufiesyjcypl66zoqzslolwoveyo@ltrw2iulrkqs>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="hg6YPb07"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 0C4B11C00B2; Sat, 26 Apr 2025 10:17:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745655476;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zpSb/OzFjM7DCGmtwaDp97ospmMcrmI2Zn6F65g37Pc=;
+	b=hg6YPb07zVg6n+MlMCSypzqI7ZNgU6SyiAx8EeulKeRV5sjUPkmL8k878i3CvNg9r5QTau
+	JnK8MGMq1i4UFIWGxG4rVa1hi1fthrMmowkthEjyN9Dsm3Oo1drpMaMIZRi1t+txsGM57g
+	NXqmchYFiNDoyy/JLVoamqUpNsgzyHg=
+Date: Sat, 26 Apr 2025 10:17:55 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Werner Sembach <wse@tuxedocomputers.com>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v8 0/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+Message-ID: <aAyWs6XJXc4g1lDb@duo.ucw.cz>
+References: <20250423153804.64395-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aShk3lLC9/M7nOg1"
+Content-Disposition: inline
+In-Reply-To: <20250423153804.64395-1-wse@tuxedocomputers.com>
 
-On Sat, Apr 26, 2025 at 3:41 AM Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
-> On Wed, Apr 16, 2025 at 08:02:01PM +0800, Pengyu Luo wrote:
-> > In downstream tree, many registers need to be overridden, it varies
-> > from devices and platforms, with these registers getting more, adding
-> > a handler for this is helpful.
->
-> It should be noted that previously all values were applied during _init
-> phase, before checking the status etc. Now the overrides are programmed
-> from the set_mode. Should you still program sane defaults at the init
-> stage too?
->
 
-I think programming in set_mode is ok. When we init(dwc3_core_init), we
-set_mode(dwc3_core_init_mode) later, please check
-https://elixir.bootlin.com/linux/v6.14.3/source/drivers/usb/dwc3/core.c#L2287
+--aShk3lLC9/M7nOg1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually, in the downstream, all the things are done in init, it
-overrides first, then masked write the deaults, finally it set_mode,
-you can check here
-https://github.com/OnePlusOSS/android_kernel_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/drivers/usb/repeater/repeater-qti-pmic-eusb2.c#L356
+On Wed 2025-04-23 17:33:09, Werner Sembach wrote:
+> @Ilpos you can ignore my small question from my last e-mail. The spec file
+> of the firmware wants the struct to be zeroed (albeit it does also work if
+> not) so I implemented it like that.
 
-> BTW, is there a real need to override those for the platform you are
-> working on? Could you please provide some details, maybe in the cover
-> letter.
+You forgot to cc me.
 
-I am not quite sure, recently, I expirenced mode switching failure,
-when I `echo device > /sys/kernel/debug/usb/a600000.usb/mode`, Ethernet
-Gadget wouldn't work again, my desktop can't connect to it.
+Anyway, lets not do this. Kernel should have real interfaces, not
+crazy tables to emulate Microsoft interface noone else uses.
 
-BTW, as you can see in line 356, it is most likely that overrides
-related to charging feature. I have not ported charging yet, but adding
-more overrides seems harmless, and if overriding, distinguishing which
-mode seems necessary, even if some devices use the same sequence. So I
-sent the patch.
+NAK.
 
-Best wishes,
-Pengyu
+									Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--aShk3lLC9/M7nOg1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAyWswAKCRAw5/Bqldv6
+8oH+AJ99zpXT/sIs4mKnCgxXBJobRfbLJwCgqqRc4NWCRqywmMOmpM3mxG558hQ=
+=8yPr
+-----END PGP SIGNATURE-----
+
+--aShk3lLC9/M7nOg1--
