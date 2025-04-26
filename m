@@ -1,113 +1,94 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666211DDC00
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34B854A11;
+	Sat, 26 Apr 2025 10:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745663029; cv=none; b=uSXmh1P6zGKcTOoovTPMMw96K/WPE7aWLk2DWoBEpZIa6QgOTqOfAs4KmfNpGSxPB+U8sK6i9oqtm5BlQe/llfdzPhMdV89XY8BlzwLcMueoXbHsufll47UUNLpmWsprz0mNBbeWWzCRqgWPN8d3CM6FG65EsNK5YbEMzOCnD1A=
+	t=1745663544; cv=none; b=Bf8ZLdvRg3E09ti8/qw9AJRbKUyup0+YQjf+CUBEbJZZBI2P69uBKGbsGuNozP3gmoHAZa9OYrTO4pZh/mnV2mVBo2TgL0FuKuiQeaTEos8XGVgtsAqQCejy6uPZ6IH5TLhG3fjESh6o8U2Y9ntjCoI5njlJUt1n8hSXSGf2h5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745663029; c=relaxed/simple;
-	bh=ru15U/s3x3GM6bcn/BiGbM2DcGsqFmej86zNWz/DyU8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FadwOdY82yq9FcoY4GWw3kciZ5bqgu5jgGloIle1ix/Lj5v/P8qY9gXa4O1PQpmdCRSWovXCEEJ96/EuTuGlHPlz6ENi77sfQzQ0xhAN58J+6MBSIeTzb91gztnLZ/VTLRj/DWAJi61XN3j1V8b3PCVu9jtsqDo7PVMqjIywewY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8BxrOIotAxoPb7GAA--.28331S3;
-	Sat, 26 Apr 2025 18:23:36 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMAxTsUjtAxo456WAA--.42675S2;
-	Sat, 26 Apr 2025 18:23:35 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.15-rc4
-Date: Sat, 26 Apr 2025 18:22:59 +0800
-Message-ID: <20250426102259.1232395-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1745663544; c=relaxed/simple;
+	bh=m31Z+0bhfG048O9BNHlvK19iEVGmN6dHVgGcgE4xlMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5r+OkhSpZRwAy5px3V7T8F+3O4XaKKSppfntoBCPC8GoS/CiBC/1UZnczEs7lACzNjG7rly/vZ3B/0DhoLZVUFKDW1h56u78AGigUgTkupYshk0Qf4pJAfBWdDsfSzFVwFluVuf8mN2uSTKUhWmBbuwAdp7N6oftyOt5pQnFvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 53QAVwTm018112;
+	Sat, 26 Apr 2025 12:31:58 +0200
+Date: Sat, 26 Apr 2025 12:31:58 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 05/15] tools/nolibc: add getrandom()
+Message-ID: <20250426103158.GB17549@1wt.eu>
+References: <20250423-nolibc-misc-v1-0-a925bf40297b@linutronix.de>
+ <20250423-nolibc-misc-v1-5-a925bf40297b@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxTsUjtAxo456WAA--.42675S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WryfXFyxWry8JFyxZr4rtFc_yoW8Zw1Dpr
-	ya9FnxGr4rGrWfXrnxt34UWrn8tr1xGr1SqF43try8Ar1UZr1UW348Xr97XFyUJ3yfJr40
-	qr1rGw4YgF1UJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
-	0xZFpf9x07jepB-UUUUU=
+In-Reply-To: <20250423-nolibc-misc-v1-5-a925bf40297b@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The following changes since commit 9c32cda43eb78f78c73aee4aa344b777714e259b:
+Hi Thomas,
 
-  Linux 6.15-rc3 (2025-04-20 13:43:47 -0700)
+On Wed, Apr 23, 2025 at 05:01:35PM +0200, Thomas Weiﬂschuh wrote:
+> --- /dev/null
+> +++ b/tools/include/nolibc/sys/random.h
+> @@ -0,0 +1,32 @@
+> +/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
+> +/*
+> + * random definitions for NOLIBC
+> + * Copyright (C) 2025 Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> + */
+> +
 
-are available in the Git repository at:
+Note: don't forget to add your nolibc include here from the other series.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.15-1
+> +#ifndef _NOLIBC_SYS_RANDOM_H
+> +#define _NOLIBC_SYS_RANDOM_H
+> +
+> +#include "../arch.h"
+> +#include "../sys.h"
+(...)
 
-for you to fetch changes up to 5add0dbbebd60628b55e5eb8426612dedab7311a:
+> diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+> index abe0ae794208762f6d91ad81e902fbf77253a1c1..95d08e9ccf5b3be924548100e9621cd47f39e8c2 100644
+> --- a/tools/testing/selftests/nolibc/nolibc-test.c
+> +++ b/tools/testing/selftests/nolibc/nolibc-test.c
+(...)
+> +int test_getrandom(void)
+> +{
+> +	uint64_t rng = 0;
+> +	ssize_t ret;
+> +
+> +	ret = getrandom(&rng, sizeof(rng), 0);
+> +	if (ret != sizeof(rng))
+> +		return ret;
+> +
+> +	if (!rng) {
+> +		errno = EINVAL;
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
 
-  LoongArch: KVM: Fix PMU pass-through issue if VM exits to host finally (2025-04-26 09:58:13 +0800)
+Just a thought about this one: in a not-so-distant past, getrandom()
+could hang forever when lacking entropy (classical problem when booting
+a headless machine having no RNG), and since a recent kernel it turned
+to "only" multiple seconds. I'm not seeing any easy solution to this,
+but we need to keep an eye on this one, and in case of bad reports,
+maybe have this test as an opt-in or something like this. Anyway the
+best way to know is to have it right now and wait for reports to
+arrive.
 
-----------------------------------------------------------------
-LoongArch fixes for v6.15-rc4
-
-Add a missing Kconfig option, fix some bugs about exception handler,
-memory management and KVM.
-----------------------------------------------------------------
-Bibo Mao (2):
-      LoongArch: KVM: Fully clear some CSRs when VM reboot
-      LoongArch: KVM: Fix PMU pass-through issue if VM exits to host finally
-
-Ming Wang (1):
-      LoongArch: Return NULL from huge_pte_offset() for invalid PMD
-
-Petr Tesarik (1):
-      LoongArch: Remove a bogus reference to ZONE_DMA
-
-Tiezhu Yang (3):
-      LoongArch: Make regs_irqs_disabled() more clear
-      LoongArch: Make do_xyz() exception handlers more robust
-      LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-
-Yuli Wang (1):
-      LoongArch: Select ARCH_USE_MEMTEST
-
-Yulong Han (1):
-      LoongArch: KVM: Fix multiple typos of KVM code
-
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/fpu.h    | 39 ++++++++++++++++++++++---------------
- arch/loongarch/include/asm/lbt.h    | 10 +++++++---
- arch/loongarch/include/asm/ptrace.h |  4 ++--
- arch/loongarch/kernel/fpu.S         |  6 ++++++
- arch/loongarch/kernel/lbt.S         |  4 ++++
- arch/loongarch/kernel/signal.c      | 21 --------------------
- arch/loongarch/kernel/traps.c       | 20 +++++++++++--------
- arch/loongarch/kvm/intc/ipi.c       |  4 ++--
- arch/loongarch/kvm/main.c           |  4 ++--
- arch/loongarch/kvm/vcpu.c           |  8 ++++++++
- arch/loongarch/mm/hugetlbpage.c     |  2 +-
- arch/loongarch/mm/init.c            |  3 ---
- 13 files changed, 68 insertions(+), 58 deletions(-)
-
+Willy
