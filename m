@@ -1,96 +1,104 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5F91A256E
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 20:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B176A1A256E;
+	Sat, 26 Apr 2025 20:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745699450; cv=none; b=rhkg0LfN6DYlzKUdBrfA+7J+yCTd9M/vLS0iY6hLLZVYx/lYq4PJYfxmnBUIJ8u2rNKxhtDRWP+lzAWJmooP5StvlhRth6SbOj2Odw1Y7LNc1+02qyJD7rPkRZ+9qKzQ4O6CnihA9+qnI7rbTtdiEa4G22LQUd0MeMW5D7RfaNA=
+	t=1745699518; cv=none; b=NtjMudwsAKp7vg+LvNaQTSDMIgP4Ne8UXJpvdNZL4pExTJFVRyLbRlPVaE9SLuNp+nZOgIprIVfxtCqu1pT2EZaVVnNycB0hLIl09z+u4zy5x3v3WGgRSz8adeySBN3bjp23HKyW5JN3qwLob79c5auL3Gm8rAOIcU+IUt6d7dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745699450; c=relaxed/simple;
-	bh=+nmKiUjEEox7XNLRBATJdYPinA8FVwEJGegf7U+k6Io=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m7Rx425fQ+mmxpvrXN3VhIS/Z6G44raETScU8A6918aqthxOWYnC1n36WGmJEr2SNG47v0Jks16tDClPLb3S1rzC6Ky7wAmBvrc7J++KgjvdUuy46RqCImqL0dXlBqBH9joKotU6XjnG5giC168b4UivsGmNcEQ77mQh2o4G3TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ONhBxUON; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1745699518; c=relaxed/simple;
+	bh=/d7WgnJlhFDFOPT/pMzYke23MSyxRdwvNSrZRgypGGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGFAhMDRTbo+Wbjl66utugSCC/OBVyuu2MeCKuMR/NpcDqykjY9hm475M+aXmcu3UQqlnWHv3vNhGVsn6rGcOvXeGwsFkkNvVNWW1jxS7Y1bvBQvbT5srM3nOs8pScIVIWlV7bkUKjhpZq9z4kGFoF2WAoeOqda8ItKRce/CSR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjNYLvvR; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ONhBxUON"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1745699446; x=1745958646;
-	bh=F5aVZIYhmzSD+hbmShagvcb5LiFVBTl3TseGY+Mtgpk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=ONhBxUONiUZ3zeKDgWwXPyIkiiEZcLKSVmep9xJPyEA5X88V5Tc20vh8X8aX51qGe
-	 J92a+lDbAKCLVLRbzg1m9onbOXsCLfS6r+lLVNXiVD1jSTrZIPwSs7kjQ5gXx9c/30
-	 pQR5ZR8ChY3/i3QsQUk2VEntpWG5sGi60rSiUCIc/cdIUTY4yrVyZ/AN0qLgRA16LM
-	 +nzA0Q08RqpIHSEwQiXrk4ktdPDLB5Dz4mqVoWR+y1jNXLMcPKEtmbMxA/npPzW3mg
-	 nJn4UJpq1EcAOx254jZ65qaCY6hI2hfp+laFHAO47rhozYNwgIZWcjqkTTQLO3sEAx
-	 AtH8BHwo+1RIA==
-Date: Sat, 26 Apr 2025 20:30:39 +0000
-To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] samples: rust: pci: take advantage of Devres::access_with()
-Message-ID: <D9GUSVZY3ZT7.O3RTG4N0ZIK0@proton.me>
-In-Reply-To: <20250426133254.61383-4-dakr@kernel.org>
-References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-4-dakr@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 290df5c563af9ef6991f59c11dee525e66be2616
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjNYLvvR"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso2217079f8f.0;
+        Sat, 26 Apr 2025 13:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745699515; x=1746304315; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OlrCwyFIoqZ6mkArF2EMwtxWYwKdteVMOtJ71tqXtAY=;
+        b=HjNYLvvR5+TpU++bVJC4lEhITzfZpkGQROVlnmRxcC6LfS07xHYCvRA6qdNETSk+4B
+         8uZvfI+dOH3loPaWh27XGjxh/Y5nhJUFR4G+RsTRKZtnWGFpW3LVzpK/rYmOPUsz5mKV
+         NDqXKS5WgSNwKfFtee4gbrnjMBAFd17Q8bM0LrdmKz2n9ElLVIoCYFjhDAMasIEkzxAO
+         DC9FA6g68Ii3lktt+acQRy+H4wWZLpIR233AlSaKWcTfOPsvCKvlOWBdMxWrdx9n4sQW
+         c7BwuLMfPrm8pkc+oxXyHfB16dSl4+yFxG3b0bvZlcUK9j0AB3kRFo5fgNCHM+EhvkG9
+         Tjqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745699515; x=1746304315;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OlrCwyFIoqZ6mkArF2EMwtxWYwKdteVMOtJ71tqXtAY=;
+        b=LlqDN4kJKubTCgR/bWqQ2WcxXL5TgP1w5yxKZANX1HZn6u77w5V1aMlCgR2TzEiFOM
+         XjnlI5l1Bxbw/JWQsvdHIHt/B1FDJYru/5GaWiLMnlQDiQAJqjlJxesrQKn+YYvp+gSm
+         3yOVMqpuFkK18BxobPIdg/LeYUad/wLrQvlj+NnBTmbk7LpoZWFF0QTQxBhzB7kVOpEt
+         1IQhwyQODAW0StJsA0OmHSOwxt5mg0Gk79kd0pVGV/z0RDsAgPKA+9p4eSjrLvyVsnva
+         Aiq8KY32Mxbe4kPQo0CryBydYpJXbSiZut3FdeCPSXmmT5lrTZr4dyuVXHFfUZcQSqQT
+         StFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfr0M5R1h7IfPmNr4k5l61vT/Xf8fLhCpxraP1TIUerWGFM8g3/jOw89C9qRzcos0EI6SHZySz/PqRo3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB0xJh/N+WTw7R5OtScYnYBrECZVvK0AJVbRI+tYgJi0GxKwW4
+	cA43niuL+LqQH4b035V76rpoYZ+sGfAQIVaNv2Y8NLpMZXt7JVRQ
+X-Gm-Gg: ASbGncvAh7zscwTW9B7XHbogpTeKrRuywMkq/xtzqYedqsq+ecBty04Ys+igzHAdgT3
+	kL3PT8D+fxqYCJ+E5sQj44ufj5Z9noQGvDoAp4atxE+3etvlXcPAN0TiKiU6xyyTCV5+1dF2KRe
+	FDP7xTvK18z+GYdTOG5zCYDlu/stHN771B2rbYoilYxNRj5EmNCc5u/qDjM+EMBEqjLtzDipvtV
+	aO1N6Svayxeqykc79yX75ixs7WpgKBqTjngJ1MP+aA0amuWtqUWpe6rrpAikib7PQ8RAwyE3xwj
+	3Bg0UxkQDIMCF3pPLCD+mKqIoTObxWHh/gDOojZEdQ==
+X-Google-Smtp-Source: AGHT+IFo9Zap7VRkBOdcGJybmP2OJOAo05CfEBwmnzTAL2vvIxeY33VY6vR+1R6pEs07a4Uy3ZySGg==
+X-Received: by 2002:a5d:4ac6:0:b0:392:c64:9aef with SMTP id ffacd0b85a97d-3a07aa6ea9dmr2626657f8f.20.1745699514803;
+        Sat, 26 Apr 2025 13:31:54 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073e46869sm6534182f8f.72.2025.04.26.13.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 13:31:53 -0700 (PDT)
+Date: Sat, 26 Apr 2025 22:31:51 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/9] Clean up the crypto testing options
+Message-ID: <aA1Ct6rhGbZlkBKY@Red>
+References: <20250422152151.3691-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250422152151.3691-1-ebiggers@kernel.org>
 
-On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
-> For the I/O operations executed from the probe() method, take advantage
-> of Devres::access_with(), avoiding the atomic check and RCU read lock
-> required otherwise entirely.
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  samples/rust/rust_driver_pci.rs | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_p=
-ci.rs
-> index 9ce3a7323a16..3e1569e5096e 100644
-> --- a/samples/rust/rust_driver_pci.rs
-> +++ b/samples/rust/rust_driver_pci.rs
-> @@ -83,12 +83,12 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::IdInf=
-o) -> Result<Pin<KBox<Self>
->              GFP_KERNEL,
->          )?;
-> =20
-> -        let res =3D drvdata
-> -            .bar
-> -            .try_access_with(|b| Self::testdev(info, b))
-> -            .ok_or(ENXIO)??;
-> -
-> -        dev_info!(pdev.as_ref(), "pci-testdev data-match count: {}\n", r=
-es);
-> +        let bar =3D drvdata.bar.access_with(pdev.as_ref())?;
+Le Tue, Apr 22, 2025 at 08:21:42AM -0700, Eric Biggers a écrit :
+> This series reworks the crypto testing kconfig options to fix some
+> longstanding issues:
+> 
+> - Replace the inverted option CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with a
+>   regular option CONFIG_CRYPTO_SELFTESTS.
+> 
+> - Make CONFIG_CRYPTO_SELFTESTS enable the full set of tests by default,
+>   removing CONFIG_CRYPTO_MANAGER_EXTRA_TESTS.
+> 
+> - Automatically enable CONFIG_CRYPTO_MANAGER when needed for the tests.
+> 
+> - Rename cryptomgr.noextratests to cryptomgr.noslowtests.
+> 
+> - Remove cryptomgr.panic_on_fail, as panic_on_warn can be used instead.
+> 
+> - Rename CONFIG_CRYPTO_TEST to CONFIG_CRYPTO_BENCHMARK.
+> 
 
-Since this code might inspire other code, I don't think that we should
-return `EINVAL` here (bubbled up from `access_with`). Not sure what the
-correct thing here would be though...
+Hello
 
----
-Cheers,
-Benno
+I have ibuild/booted tested this against all my crypto hw, no problem.
 
-> +        dev_info!(
-> +            pdev.as_ref(),
-> +            "pci-testdev data-match count: {}\n",
-> +            Self::testdev(info, bar)?
-> +        );
-> =20
->          Ok(drvdata.into())
->      }
+Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
 
-
+Thanks
+Regards
