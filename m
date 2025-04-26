@@ -1,84 +1,102 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF79722FE08
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3604979CF;
+	Sat, 26 Apr 2025 15:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745679798; cv=none; b=t8qsgicvsbXBoNLbvH7W/dy9ihY4+uiQXk6tRclKYSA8A+essrraKGmgveg8Subq+5tF3zxymTY4Hv6figlr+RUWoAY6p0j4vBiL8rxMfkcjfG4Zq9U6QgoNUAtZRQGD+TASXoJttZeXYLj16lrvsK8gqQVc6ozZVysgGp9EjmM=
+	t=1745679798; cv=none; b=DRCvYkXPN142RhSPgSKBInWb3RzTO0Tv6iysPEExC8L8hiLV/c1UuYoiuVdkeFPR+PqtHeTyzQ8vRWrIEow5RyjpAdv4i06a2ZQHty6rOunFK17hWKDlD43NGz9qAc95laxnbHdljbclDFXNZgMqk3xaj4yweEkw78MFlUqjQK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745679798; c=relaxed/simple;
-	bh=Vm8is0fZMA8KIAs1cGn6dnzN77suefz/64PXNNt+6pE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omRSDlQ1OErMSn/W/mWC9oneZYYB6KQGm+tzHiAGjDyIZDkUuUDuD5YljVa6hZB6GXy/1rvjsQlMTc7FfGUg8HYnmBsATLykOvUanHkoLWjskChzBKXWWBKZU9wbT4yfabOu7rpdjuib4M+59BB54YdoizE8BO+9DpHVtcvtc70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bgBoFfuu; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=qcwLaEogrcneoQ3HfNmnr34uKQuRptXO8bBDkZuKctk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UD3choS3F83zBRxGTC3EuLv8KbKd+CH1PvMW/QXO3pqqPnstoFAEyNhMakxwcrQN/M4kVUTVTh0fpmirEvDmcdeBksWXn9LilPw5QFxM/i7UhrGI4WvSafhGcXiTRIyY+iO06dY45I73CmI97TigGlzCUmzh3PQh54J4h8iXWKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MTNfI1bj; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bgBoFfuu"
-Date: Sat, 26 Apr 2025 11:03:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745679792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nfBFNtrkXGpwEI1f8qxFcLLJ+djj3QoJA6M531zvfsg=;
-	b=bgBoFfuucV1MYv23Sx+JWqkW37ke3hwsYGwVnAywb7CCGdvWPBhkaOVe6kU9Ji/OrgPuZc
-	uGvUevBF2m4UPwGcFH4UmpGEcBGhSzOevfJ8QF+0V3v4p1nWfsLhK3c3f92fA3PXHCWFkM
-	HbfMBFjpPoVmBYELvhEhkq2coWXPCgY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com, 
-	bfoster@redhat.com, linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	davem@davemloft.net, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] bcachefs: Fix unit-value within btree_bounce_alloc()
-Message-ID: <c32cu4mrdeln3kovzgehwjccfx2qpfh7evsgiug6ckshfux76q@ms6mab54ivy5>
-References: <000000000000736bd406151001d7@google.com>
- <20250423163718.194316-1-richard120310@gmail.com>
- <ur4a24w2wb3euh3ej7ybeqnvmqyhzmqp2wwsjtilh6mfetv45l@qlxs3vggfq5h>
- <aAu-Heqb3malYkjI@vaxr-BM6660-BM6360>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MTNfI1bj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=2NTP26rZSO4aLxowU1tMWp58BMiXt/URHc+KIhHuxrE=;
+	b=MTNfI1bjj/6sOwjhpxl6bkmPC/+LTUKOPSiUAIeVV8nKWRz27uFqb1sJ+lDGtQ
+	63MoHFbayfTFrFSrFK+NANLTRI56wf+0T1ppXgIdKpVkRgIFTswtZJ8DfmcNUM85
+	eMNUYZOx0YDL/JumkNNFBNzS8YHXDrsFhuJdclLcPClrM=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wBXbM5v9QxolMNQCw--.59638S2;
+	Sat, 26 Apr 2025 23:02:08 +0800 (CST)
+Message-ID: <5e2844cc-8359-4b87-a8ce-eb5ebb85f8ff@163.com>
+Date: Sat, 26 Apr 2025 23:02:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAu-Heqb3malYkjI@vaxr-BM6660-BM6360>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] PCI: Remove redundant MPS configuration
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, thomas.petazzoni@bootlin.com,
+ manivannan.sadhasivam@linaro.org, yue.wang@Amlogic.com,
+ neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250425095708.32662-1-18255117159@163.com>
+ <20250425095708.32662-3-18255117159@163.com>
+ <20250425181345.bybgcht5tweyg43k@pali>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250425181345.bybgcht5tweyg43k@pali>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXbM5v9QxolMNQCw--.59638S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZryUGr4UtrWfAw1rGF18Grg_yoW8Wr4xpa
+	13XFs3JF4Fqr15uF17Ja10gr1fXasIkFy5Xws8GFW3Za4aqw1UGFy2krs0kasrXr4v9F17
+	Za42v3ySyanxtaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmYL9UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxM6o2gLzK+LogABst
 
-On Sat, Apr 26, 2025 at 12:53:49AM +0800, I Hsin Cheng wrote:
-> On Wed, Apr 23, 2025 at 12:45:20PM -0400, Kent Overstreet wrote:
-> > On Thu, Apr 24, 2025 at 12:37:18AM +0800, I Hsin Cheng wrote:
-> > > Use "kvzalloc()" instead of "kvmalloc()" in btree_bounce_alloc() to
-> > > prevent uninit-value issue.
-> > > 
-> > > Reported-by: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com
-> > > Closes: https://syzkaller.appspot.com/bug?extid=549710bad9c798e25b15
-> > > Fixes: cb6fc943b650 ("bcachefs: kill kvpmalloc()")
-> > > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> > > ---
-> > > syzbot reported an uninit-value issue. [1]
-> > > 
-> > > Though the uninit value was detected in the context of crc32_body(), the
-> > > memory was actually allocated in "btree_bounce_alloc()". Use
-> > > "kvzalloc()" to allocate the memory can solve the issue, and I've tested
-> > > against syzbot. [2]
-> > > 
-> > > If there're any further tests needed to be performed, please let me
-> > > know. I'll be more than happy to assist you with that, thanks !
-> > 
-> > See Documentation/filesystems/bcachefs/SubmittingPatches.
-> >
-> 
-> Sure ! Thanks for the info.
-> 
-> > And this isn't the correct fix - the correct fix is already in Linus's
-> > tree.
-> 
-> Ahh ok, may I ask for the commit hash or title so I can learn from it ?
 
-9c3a2c9b471a bcachefs: Disable asm memcpys when kmsan enabled
+
+On 2025/4/26 02:13, Pali Rohár wrote:
+> On Friday 25 April 2025 17:57:08 Hans Zhang wrote:
+>> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+>> index a29796cce420..d8852892994a 100644
+>> --- a/drivers/pci/controller/pci-aardvark.c
+>> +++ b/drivers/pci/controller/pci-aardvark.c
+>> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>>   	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>   	reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+>>   	reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+>> -	reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>>   	reg &= ~PCI_EXP_DEVCTL_READRQ;
+>> -	reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+>>   	reg |= PCI_EXP_DEVCTL_READRQ_512B;
+>>   	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>   
+>> -- 
+>> 2.25.1
+>>
+> 
+> Please do not remove this code. It is required part of the
+> initialization of the aardvark PCI controller at the specific phase,
+> as defined in the Armada 3700 Functional Specification.
+
+Hi Pali,
+
+This series of patches is discussing the initialization of DevCtl.MPS by 
+the Root Port. Please look at the first patch I submitted. If there is a 
+reasonable method in the end, DevCtl.MPS will also be configured 
+successfully. The PCIe maintainer will give the review opinions. Please 
+rest assured that it will not affect the functions of the aardvark PCI 
+controller.
+
+Rockchip's RK3588 also has the same problem.
+
+
+https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+
+Best regards,
+Hans
+
