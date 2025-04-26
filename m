@@ -1,160 +1,103 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AA1A1898FB;
-	Sat, 26 Apr 2025 01:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0957218DB2F;
+	Sat, 26 Apr 2025 01:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745631304; cv=none; b=o4fRS4ACcKbgLOFaaVK3aRFfxrCb/3LHSQx/KWxINO+gFYmse1irFQZUjTJtohYq7wLjvt5sbzdsTXjC4o0mupq3UzyFM5PIsSEzxyO5oUdK81bW6Q2gPTWFZD4qgHuJsofNTQzujOtg7Rn6xlHfx5Jw1WK9xdSpPmFH1XHiIwg=
+	t=1745631395; cv=none; b=O0iu534cIO6KTidChmqgSnQbquKY8l402SCOzzaw/fo271gYd0SrUAsgZsudxoe920iALCd8XweYGAw3cnb7S9ShJAvG+sLOnRWGaPCz784z3V8V1HrERR0S0tvdEYIrIPm6ihOvU2p0KvdyXAVDdl8UWCBUbZV59Uy96LctS0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745631304; c=relaxed/simple;
-	bh=X9Q07Iw8Ge5odoZPqL2Sv3x3fr3O4KTILz8tnr1vMBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UtRj+XEUFedK1/LSH6yWwJlkaldTiyAuarXv33VsG3GXxXTNhUOKLR0d1aPOyqKZunTUCSA0v4zSDpLbKjjcXUouaU9WepsiVrAAHvWTyqRTm5kedoe1vfHNlrvMB80nRhXC4daUtkksNrbfvwduMpMBTZ5hFoLQUp2ab/Hpfpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gkG81CaL; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gkG81CaL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=1xHokVF6O080vTQ6fGVAu/ld+ZN9rRooZSQLpIx6Wlo=;
-	b=gkG81CaL0AH40dajj0ygE7QZyu9Tt13IauC15qc39gp0A+BkCKZAx3v3ewG94p
-	1xkinPsjKpfX4vcjnOcCfGdxMrQOm8R3ewbi6rosUjcXvPfyTat18RFUnLqz3gOC
-	qSqL09vqQGPj+LHZO9uQv/T9Sg+XnT1HPwZvVdz2bDSBQ=
-Received: from [192.168.5.16] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3l0c5OAxoOH7TCg--.45202S2;
-	Sat, 26 Apr 2025 09:34:49 +0800 (CST)
-Message-ID: <1a389cab-08fe-486b-9fa2-240e6e1a3984@163.com>
-Date: Sat, 26 Apr 2025 09:34:49 +0800
+	s=arc-20240116; t=1745631395; c=relaxed/simple;
+	bh=SMSNuUX7ZHc+q5C14GZZDuTM/OgTxpbj1zQTohnASTQ=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QW0BHJn4Ws2JfVYMosnLr7Y1UGdDAIWeTymfn/YE04F8UGcAsHpjPwHIQksQVcj9w1TAPy39nYRbugqvStslNY1IO1ntn++Omn8Z1FmWnuDGBBexQbYeka48ixjeWReKnAeGYsnyXCye2aayQrCPIsBj0f6UT6+GOmNL4HmRWIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u8UNB-000000007iz-3kmJ;
+	Sat, 26 Apr 2025 01:36:25 +0000
+Date: Sat, 26 Apr 2025 02:36:22 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Chad Monroe <chad@monroe.io>, Felix Fietkau <nbd@nbd.name>,
+	Bc-Bocun Chen <bc-bocun.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net] net: ethernet: mtk_eth_soc: fix SER panic with 4GB+
+ RAM
+Message-ID: <aAw4lsGc_5HwBeiK@makrotopia.org>
+References: <995df78417d6f117062d1d7ef63228426b97a26e.1745630570.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] xfs: Enable concurrency when writing within
- single block
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chi Zhiling <chizhiling@kylinos.cn>
-References: <20250425103841.3164087-1-chizhiling@163.com>
- <20250425103841.3164087-3-chizhiling@163.com>
- <20250425151539.GO25675@frogsfrogsfrogs>
-Content-Language: en-US
-From: Chi Zhiling <chizhiling@163.com>
-In-Reply-To: <20250425151539.GO25675@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3l0c5OAxoOH7TCg--.45202S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuF15KFW3tw4xJw1kJF45GFg_yoW5WFWxpr
-	Zaya1YkrZ2qry7ArnaqF15Xwn3K3Z7Xr47ZryIgF17Z3Z8Arsa93WSvryY9a1UJrs7Zr40
-	9r40kFy8Cw1jyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U2Ap5UUUUU=
-X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/1tbiKQo7nWgMNEZQQAAAsD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <995df78417d6f117062d1d7ef63228426b97a26e.1745630570.git.daniel@makrotopia.org>
 
-On 2025/4/25 23:15, Darrick J. Wong wrote:
-> On Fri, Apr 25, 2025 at 06:38:41PM +0800, Chi Zhiling wrote:
->> From: Chi Zhiling <chizhiling@kylinos.cn>
->>
->> For unextending writes, we will only update the pagecache and extent.
->> In this case, if our write occurs within a single block, that is,
->> within a single folio, we don't need an exclusive lock to ensure the
->> atomicity of the write, because we already have the folio lock.
->>
->> Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
->> ---
->>   fs/xfs/xfs_file.c | 34 +++++++++++++++++++++++++++++++++-
->>   1 file changed, 33 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
->> index a6f214f57238..8eaa98464328 100644
->> --- a/fs/xfs/xfs_file.c
->> +++ b/fs/xfs/xfs_file.c
->> @@ -914,6 +914,27 @@ xfs_file_dax_write(
->>   	return ret;
->>   }
->>   
->> +#define offset_in_block(inode, p) ((unsigned long)(p) & (i_blocksize(inode) - 1))
+On Sat, Apr 26, 2025 at 02:25:23AM +0100, Daniel Golle wrote:
+> From: Chad Monroe <chad@monroe.io>
 > 
-> Is it correct to cast an loff_t (s64) to unsigned long (u32 on i386)
-> here?
-
-I'm not sure if there is an issue here, although there is a type cast,
-it shouldn't affect the final result of offset_in_block.
-
+> If the mtk_poll_rx() function detects the MTK_RESETTING flag, it will
+> jump to release_desc and refill the high word of the SDP on the 4GB RFB.
+> Subsequently, mtk_rx_clean will process an incorrect SDP, leading to a
+> panic.
 > 
->> +
->> +static inline bool xfs_allow_concurrent(
+> Add patch from Mediatek SDK to resolve this.
 > 
-> static inline bool
-> xfs_allow_concurrent(
+> Fixes: 2d75891ebc09 ("net: ethernet: mtk_eth_soc: support 36-bit DMA addressing on MT7988")
+> Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/11857ce2f90bf065b5e53211d182622d999a4542
+
+The above link has to be replaced by
+Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/71f47ea785699c6aa3b922d66c2bdc1a43da25b1
+
+> Signed-off-by: Chad Monroe <chad@monroe.io>
+> ---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 > 
-> (separate lines style nit)
-
-Okay
-
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 47807b202310..7bac5ccfb79c 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -2252,14 +2252,17 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
+>  		ring->data[idx] = new_data;
+>  		rxd->rxd1 = (unsigned int)dma_addr;
+>  release_desc:
+> +		if (MTK_HAS_CAPS(eth->soc->caps, MTK_36BIT_DMA)) {
+> +			if (unlikely(dma_addr == DMA_MAPPING_ERROR))
+> +				addr64 = FIELD_GET(RX_DMA_ADDR64_MASK, rxd->rxd2);
+> +			else
+> +				addr64 = RX_DMA_PREP_ADDR64(dma_addr);
+> +		}
+> +
+>  		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
+>  			rxd->rxd2 = RX_DMA_LSO;
+>  		else
+> -			rxd->rxd2 = RX_DMA_PREP_PLEN0(ring->buf_size);
+> -
+> -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_36BIT_DMA) &&
+> -		    likely(dma_addr != DMA_MAPPING_ERROR))
+> -			rxd->rxd2 |= RX_DMA_PREP_ADDR64(dma_addr);
+> +			rxd->rxd2 = RX_DMA_PREP_PLEN0(ring->buf_size) | addr64;
+>  
+>  		ring->calc_idx = idx;
+>  		done++;
+> -- 
+> 2.49.0
 > 
->> +	struct kiocb		*iocb,
->> +	struct iov_iter		*from)
->> +{
->> +	struct inode		*inode = iocb->ki_filp->f_mapping->host;
->> +
->> +	/* Extending write? */
->> +	if (iocb->ki_flags & IOCB_APPEND ||
->> +	    iocb->ki_pos >= i_size_read(inode))
->> +		return false;
->> +
->> +	/* Exceeds a block range? */
->> +	if (iov_iter_count(from) > i_blocksize(inode) ||
->> +	    offset_in_block(inode, iocb->ki_pos) + iov_iter_count(from) > i_blocksize(inode))
->> +		return false;
->> +
->> +	return true;
->> +}
 > 
-> ...and since this helper only has one caller, maybe it should be named
-> xfs_buffered_write_iolock_mode and return the lock mode directly?
-
-Yes, this is better. I will update it in the next patch.
-
-
-Thanks
-
-> 
->> +
->>   STATIC ssize_t
->>   xfs_file_buffered_write(
->>   	struct kiocb		*iocb,
->> @@ -925,8 +946,12 @@ xfs_file_buffered_write(
->>   	bool			cleared_space = false;
->>   	unsigned int		iolock;
->>   
->> +	if (xfs_allow_concurrent(iocb, from))
->> +		iolock = XFS_IOLOCK_SHARED;
->> +	else
->> +		iolock = XFS_IOLOCK_EXCL;
->> +
->>   write_retry:
->> -	iolock = XFS_IOLOCK_EXCL;
->>   	ret = xfs_ilock_iocb_for_write(iocb, &iolock, false);
->>   	if (ret)
->>   		return ret;
->> @@ -935,6 +960,13 @@ xfs_file_buffered_write(
->>   	if (ret)
->>   		goto out;
->>   
->> +	if (iolock == XFS_IOLOCK_SHARED &&
->> +	    iocb->ki_pos + iov_iter_count(from) > i_size_read(inode)) {
->> +		xfs_iunlock(ip, iolock);
->> +		iolock = XFS_IOLOCK_EXCL;
->> +		goto write_retry;
->> +	}
->> +
->>   	trace_xfs_file_buffered_write(iocb, from);
->>   	ret = iomap_file_buffered_write(iocb, from,
->>   			&xfs_buffered_write_iomap_ops, NULL);
->> -- 
->> 2.43.0
->>
->>
-
