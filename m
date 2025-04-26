@@ -1,94 +1,177 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC04828373;
-	Sat, 26 Apr 2025 13:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78C6253F06
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745675307; cv=none; b=E4S/VTizPzpTQCyk/HyR7IlQs2WoXCG4l9NPdnEBPjelqncTE443xb2fn9N+nA6tcU1cY718zMbtXiZYos1u4P0GsOfpV/O38joOzymIco5bYk22t89/a/waO7PfuCyAJFSVgJwobaCh+xiZr2lwxGe+JL8TXYF+bGeiVNaz6AY=
+	t=1745675651; cv=none; b=d5/fB2K+j56Fji8/tWZg2wy6om2twJYa9hsvz02/FVSNvmkEn4p+SWImMezl5Fr0tWjMqvK0nJUspU4BznxD8zjXNcfFztX1oQl2zK/WgiRDS6bEH1yah3y9q+JJvrZV3o7Ajn9pHrsy6H2e7ROPMeiuWgVaqYCcBa+w6fAasQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745675307; c=relaxed/simple;
-	bh=nrZSCfPbnk5nx5eNvJ+bauiybIFi8fpp8A71FO4JFzg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SsA6Eb9DJvoR6p6yZsXVFxlt///Q4ESQT4mUdgrUzzEWizJTirWSgGCKgF+giUVHXgtJbVz0gcuguLvuONc35IZ03bukRA6kOXcvOAnYpexoDE13mSX/Mg8AOWre/yZzHy4wQUHlVBrJSMrxatUZa272kjG0Mzm7DmZb0yAXYW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=K+bpHxuT; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1745675651; c=relaxed/simple;
+	bh=Bq4NL4fbSYSVSelTOMMmjwb7zt/O6DpSlBDxmYSqjr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JBF6CD3OTnaM0uFGiiHjdO9Lt8cyiDKxvvkO+vvmtokZ73idQr9I+MHa2q4YEwL2KovSv5dxtzP+dwpX/r34OvZa7xptT7Gu3TqZ6l4SL36yM8MIAFvpsCaWMDN113azaEDF36462JzT7iZ9zeoBw9LssMXJTMjQZ7bycMSInQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iIbOXzVg; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="K+bpHxuT"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.5])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 63D7B40737DD;
-	Sat, 26 Apr 2025 13:48:22 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 63D7B40737DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1745675302;
-	bh=IUpEVYdhOlEyZsxKVHyuvQMfByNjhpVm12RTwE2N+Zk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K+bpHxuTfxmPSkqnNRFn+jcirmWbEDHJg5vwzMyvfIdHQWtVLXTMenJSmmA3y9DrG
-	 LOohz1Lqz3JwwFHYFw8/UTZL4vMau8JdpJQRYieLrhsNCL5kRq7RNj7VqiZaVb1rv3
-	 cvP5q3XxNrDPBS8uWkbJGgvRkBdVAjcQsYRs2cHA=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	Brian Foster <bfoster@redhat.com>,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Alexey Nepomnyashih <sdl@nppct.ru>,
-	stable@vger.kernel.org
-Subject: [PATCH] xfs: fix diff_two_keys calculation for cnt btree
-Date: Sat, 26 Apr 2025 16:42:31 +0300
-Message-ID: <20250426134232.128864-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iIbOXzVg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745675649; x=1777211649;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Bq4NL4fbSYSVSelTOMMmjwb7zt/O6DpSlBDxmYSqjr0=;
+  b=iIbOXzVgqfbVBOPtFXo2J6LvOUGocTKuwJr7t12w2DVqCpANbL9p0Q1l
+   61o6q87NczYA3rXOszVCDIg/0lh6Oe56xjU3OntfwQ9SArU1bIo3cKtyA
+   bGcZfQ3gI2gPLYbyU9nuBi15s1khc4xcMhhTAaEnTxpwcLdyWHi9Bu1/z
+   0HiEWONLYB1t+4E2G9qHCvVjCLSac3886+rVrNZItKLW6Mz8XMExGK9Y5
+   DhA9ttQkUE1ap5cmlw0Q3y9YLVbb/LZs1OjCG0ZmJN7t3QfQq1c6bS3sT
+   uK1Xc0ftu1ovA07iwDNXDiV2xifCUnOq3pyTyctsGe9BfLSdB3137q4wU
+   g==;
+X-CSE-ConnectionGUID: PnxOpl0TRAG6lAULhQX1gA==
+X-CSE-MsgGUID: X2OQVYkwT1mXWz6AfgKPlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="46436161"
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="46436161"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:54:08 -0700
+X-CSE-ConnectionGUID: VAaCOq1uTaKnqiUl/6wEbw==
+X-CSE-MsgGUID: 3/JNZBneSyug/BVNoe09MQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
+   d="scan'208";a="134063680"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 26 Apr 2025 06:54:07 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8fym-0005qJ-2m;
+	Sat, 26 Apr 2025 13:54:04 +0000
+Date: Sat, 26 Apr 2025 21:54:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stefan Herdler <herdler@nurfuerspam.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Hans Verkuil <hverkuil@xs4all.nl>
+Subject: drivers/staging/media/av7110/av7110.c:162: warning: cannot
+ understand function prototype: '} else if (av7110_init_analog_module(av7110)
+ == 0) '
+Message-ID: <202504262127.FkkWHzfs-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Currently the difference is computed on 32-bit unsigned values although
-eventually it is stored in a variable of int64_t type. This gives awkward
-results, e.g. when the diff _should_ be negative, it is represented as
-some large positive int64_t value.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: 3c08dc38e3cf018a74c64e75cebcc803d973196c media: av7110: coding style fixes: comparsations
+date:   11 months ago
+config: x86_64-buildonly-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250426/202504262127.FkkWHzfs-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504262127.FkkWHzfs-lkp@intel.com/reproduce)
 
-Perform the calculations directly in int64_t as all other diff_two_keys
-routines actually do.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504262127.FkkWHzfs-lkp@intel.com/
 
-Found by Linux Verification Center (linuxtesting.org) with Svace static
-analysis tool.
+All warnings (new ones prefixed by >>):
 
-Fixes: 08438b1e386b ("xfs: plumb in needed functions for range querying of the freespace btrees")
-Cc: stable@vger.kernel.org
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- fs/xfs/libxfs/xfs_alloc_btree.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+>> drivers/staging/media/av7110/av7110.c:162: warning: cannot understand function prototype: '} else if (av7110_init_analog_module(av7110) == 0) '
 
-diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
-index a4ac37ba5d51..b3c54ae90e25 100644
---- a/fs/xfs/libxfs/xfs_alloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_alloc_btree.c
-@@ -238,13 +238,13 @@ xfs_cntbt_diff_two_keys(
- 	ASSERT(!mask || (mask->alloc.ar_blockcount &&
- 			 mask->alloc.ar_startblock));
- 
--	diff =  be32_to_cpu(k1->alloc.ar_blockcount) -
--		be32_to_cpu(k2->alloc.ar_blockcount);
-+	diff = (int64_t)be32_to_cpu(k1->alloc.ar_blockcount) -
-+			be32_to_cpu(k2->alloc.ar_blockcount);
- 	if (diff)
- 		return diff;
- 
--	return  be32_to_cpu(k1->alloc.ar_startblock) -
--		be32_to_cpu(k2->alloc.ar_startblock);
-+	return (int64_t)be32_to_cpu(k1->alloc.ar_startblock) -
-+			be32_to_cpu(k2->alloc.ar_startblock);
- }
- 
- static xfs_failaddr_t
+
+vim +162 drivers/staging/media/av7110/av7110.c
+
+   112	
+   113	static void init_av7110_av(struct av7110 *av7110)
+   114	{
+   115		int ret;
+   116		struct saa7146_dev *dev = av7110->dev;
+   117	
+   118		/* set internal volume control to maximum */
+   119		av7110->adac_type = DVB_ADAC_TI;
+   120		ret = av7110_set_volume(av7110, av7110->mixer.volume_left, av7110->mixer.volume_right);
+   121		if (ret < 0)
+   122			printk("dvb-ttpci:cannot set internal volume to maximum:%d\n",ret);
+   123	
+   124		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetMonitorType,
+   125				    1, (u16)av7110->display_ar);
+   126		if (ret < 0)
+   127			printk("dvb-ttpci: unable to set aspect ratio\n");
+   128		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetPanScanType,
+   129				    1, av7110->display_panscan);
+   130		if (ret < 0)
+   131			printk("dvb-ttpci: unable to set pan scan\n");
+   132	
+   133		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetWSSConfig, 2, 2, wss_cfg_4_3);
+   134		if (ret < 0)
+   135			printk("dvb-ttpci: unable to configure 4:3 wss\n");
+   136		ret = av7110_fw_cmd(av7110, COMTYPE_ENCODER, SetWSSConfig, 2, 3, wss_cfg_16_9);
+   137		if (ret < 0)
+   138			printk("dvb-ttpci: unable to configure 16:9 wss\n");
+   139	
+   140		ret = av7710_set_video_mode(av7110, vidmode);
+   141		if (ret < 0)
+   142			printk("dvb-ttpci:cannot set video mode:%d\n",ret);
+   143	
+   144		/* handle different card types */
+   145		/* remaining inits according to card and frontend type */
+   146		av7110->analog_tuner_flags = 0;
+   147		av7110->current_input = 0;
+   148		if (dev->pci->subsystem_vendor == 0x13c2 && dev->pci->subsystem_device == 0x000a)
+   149			av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, ADSwitch, 1, 0); // SPDIF on
+   150		if (i2c_writereg(av7110, 0x20, 0x00, 0x00) == 1) {
+   151			printk ("dvb-ttpci: Crystal audio DAC @ card %d detected\n",
+   152				av7110->dvb_adapter.num);
+   153			av7110->adac_type = DVB_ADAC_CRYSTAL;
+   154			i2c_writereg(av7110, 0x20, 0x01, 0xd2);
+   155			i2c_writereg(av7110, 0x20, 0x02, 0x49);
+   156			i2c_writereg(av7110, 0x20, 0x03, 0x00);
+   157			i2c_writereg(av7110, 0x20, 0x04, 0x00);
+   158	
+   159			/**
+   160			 * some special handling for the Siemens DVB-C cards...
+   161			 */
+ > 162		} else if (av7110_init_analog_module(av7110) == 0) {
+   163			/* done. */
+   164		} else if (dev->pci->subsystem_vendor == 0x110a) {
+   165			printk("dvb-ttpci: DVB-C w/o analog module @ card %d detected\n",
+   166				av7110->dvb_adapter.num);
+   167			av7110->adac_type = DVB_ADAC_NONE;
+   168		} else {
+   169			av7110->adac_type = adac;
+   170			printk("dvb-ttpci: adac type set to %d @ card %d\n",
+   171				av7110->adac_type, av7110->dvb_adapter.num);
+   172		}
+   173	
+   174		if (av7110->adac_type == DVB_ADAC_NONE || av7110->adac_type == DVB_ADAC_MSP34x0) {
+   175			// switch DVB SCART on
+   176			ret = av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, MainSwitch, 1, 0);
+   177			if (ret < 0)
+   178				printk("dvb-ttpci:cannot switch on SCART(Main):%d\n",ret);
+   179			ret = av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, ADSwitch, 1, 1);
+   180			if (ret < 0)
+   181				printk("dvb-ttpci:cannot switch on SCART(AD):%d\n",ret);
+   182			if (rgb_on &&
+   183			    ((av7110->dev->pci->subsystem_vendor == 0x110a) ||
+   184			     (av7110->dev->pci->subsystem_vendor == 0x13c2)) &&
+   185			     (av7110->dev->pci->subsystem_device == 0x0000)) {
+   186				saa7146_setgpio(dev, 1, SAA7146_GPIO_OUTHI); // RGB on, SCART pin 16
+   187				//saa7146_setgpio(dev, 3, SAA7146_GPIO_OUTLO); // SCARTpin 8
+   188			}
+   189		}
+   190	
+   191		if (dev->pci->subsystem_vendor == 0x13c2 && dev->pci->subsystem_device == 0x000e)
+   192			av7110_fw_cmd(av7110, COMTYPE_AUDIODAC, SpdifSwitch, 1, 0); // SPDIF on
+   193	
+   194		ret = av7110_set_volume(av7110, av7110->mixer.volume_left, av7110->mixer.volume_right);
+   195		if (ret < 0)
+   196			printk("dvb-ttpci:cannot set volume :%d\n",ret);
+   197	}
+   198	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
