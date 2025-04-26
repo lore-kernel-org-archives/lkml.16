@@ -1,68 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1CA29B0;
-	Sat, 26 Apr 2025 04:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7EC29B0;
+	Sat, 26 Apr 2025 04:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745642859; cv=none; b=KBtTWA5wjUgMpV8zDa0HNDH8KVlq4xexcrGkI8yE20UUxA57MXThAWwZ+WNyf2lWqn63Bps87hUmEMPzBfF8w+g4hG1hAG2eDHrQd26oYfyT1+r45niJUJ0vjt0fUJgpU1u9itP7Oiqe/plCkONPHgEJxUEWqKv/TFfIXmBhI+0=
+	t=1745642999; cv=none; b=L6I82/THsUM5qNqUlgNqFIFwCADlAlSSl9W0lK91aUrCBF82oHAaBhvraZmKkf26E0JzvX/RVJrqeYsJ6NC1YCzYc/lbvEJSXvBjY97CX81RXa0ZSSEsrm2wK+xqhe26rx0MxT+UOYS3+a55+kjDLZ5zMh6p4eEW8rK36xHWJPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745642859; c=relaxed/simple;
-	bh=Pwj2pD0Y5iJR/YgIKVz2ShrUKt3/7MLRgBv+br9tb80=;
+	s=arc-20240116; t=1745642999; c=relaxed/simple;
+	bh=O4rp6IwoUrX6ClOEHBMGSVhVYVqknK0cRFU5ZLyTr7U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2/GVUIDt4hCx+3XSBh5PZyGQTf0pPZs+20X4OpC38YpOkTcvZdM4OG6Vk4rh6hOAVB058/GMqil24SD/9Nq4a/6SBJjEyvVKPy7FjtfapSAwvszMFaiEmPAaZedYwRpMm+12nVTGe9eX3JZSGzA8xUHPoHB1gtV6yW1hukOW/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCTG3cXT; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mEomcE34lTep1ytuF7ckoU5iItXa2g+RI1LkSzaU2RmR3LfIKqYJAdwW8sof+fOOFHVs6ETtisF7SeDGvWaZxishwBJE2JeGj4cPV5SYK2nuyOnTuP98gaMwcXc1W/2JMgVTV1RF8qPnIuclmYRNAV5sUjK66R+nVLrUYAghCyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n1RriIzW; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCTG3cXT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745642856; x=1777178856;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Pwj2pD0Y5iJR/YgIKVz2ShrUKt3/7MLRgBv+br9tb80=;
-  b=TCTG3cXTndX3djbAkLuijIZ4Zd7DhB9Br6ugFTkLFEWXJ0KhMAd/KgJr
-   8IZt0RhTv+pbwiJ8sWkzJ0+kVsopB11ENTniz2Fhv6/0QOaYEFCZKPjbQ
-   kM1PrM5gJuBpzs2vCsN054Fm3MxUGjtDqW38QO8vJASro4Nuu5S0O/RGg
-   Jk5iTnwTaIKDRJ1z/ZF2x/picUpgV3q+7X+/2pZZG+BUT5bc2LquynvHf
-   kTBhJnWY8cvD2ZqWf3poTjTkVODJZ0yySDpsdFtZ23+lkgYen+0hAvMpQ
-   2AnGIVdluZAMYl1b0GMF/lZcAFvhYIM8+j/xYXQQM0FOYvwGKK2CAp4Rv
-   A==;
-X-CSE-ConnectionGUID: 1GqAV/KWSRKvcs7RJoL+HQ==
-X-CSE-MsgGUID: /Xywdna1T5KRdMNk4bX5PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="64836051"
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="64836051"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 21:47:35 -0700
-X-CSE-ConnectionGUID: v6lAdVMuR3S8iK9FVPvOhw==
-X-CSE-MsgGUID: 1Ev+ij+nRgWV74SWSDegzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="133377135"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 25 Apr 2025 21:47:31 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8XRp-0005hR-0Y;
-	Sat, 26 Apr 2025 04:47:29 +0000
-Date: Sat, 26 Apr 2025 12:47:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
-	andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
-	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org,
-	jkeeping@inmusicbrands.com, john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	markus.mayer@linaro.org, matt.porter@linaro.org,
-	namcao@linutronix.de, paulmck@kernel.org, pmladek@suse.com,
-	schnelle@linux.ibm.com, sunilvl@ventanamicro.com,
-	tim.kryger@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v4 2/4] serial: 8250: introduce serial8250_discard_data()
-Message-ID: <202504261249.RVGiOFHl-lkp@intel.com>
-References: <20250425062425.68761-2-cuiyunhui@bytedance.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n1RriIzW"
+Date: Sat, 26 Apr 2025 00:49:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745642984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qfL8sNSt8aBeDy41/of+ea5k84Wg2W7P9qGzyIHgGJs=;
+	b=n1RriIzWGjdHBv5Cn/E/nL83jN2ElZ7qJee66C09Ub7VH7mtYmrpsMJwPC42qVwh8xyW+6
+	V2NStu1aHj+OT1EtdksOFvjz7+iGG+dsZGoB31wnbIvzHFTU3fylg0TIsJsQLDkoKxAH34
+	13ZwJ9/8CVNi3TN3F1tGLDt1Gbml3tw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <rn2bojnk2h3z6xavoap6phjbib55poltxclv64xaijtikg4f5v@npknltjjnzan>
+References: <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
+ <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
+ <mlsjl7qigswkjvvqg2bheyagebpm2eo66nyysztnrbpjau2czt@pdxzjedm5nqw>
+ <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
+ <lmp73ynmvpl55lnfym3ry76ftegc6bu35akltfdwtwtjyyy46z@d3oygrswoiki>
+ <CAHk-=wiZ=ZBZyKfg-pyA3wmEq+RkscKB1s68c7k=3GaT48e9Jg@mail.gmail.com>
+ <opsx7zniuyrf5uef3x4vbmbusu34ymdt5myyq47ajiefigrg4n@ky74wpog4gr4>
+ <CAHk-=wjGiu1BA_hOBYdaYWE0yMyJvMqw66_0wGe_M9FBznm9JQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,71 +51,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425062425.68761-2-cuiyunhui@bytedance.com>
+In-Reply-To: <CAHk-=wjGiu1BA_hOBYdaYWE0yMyJvMqw66_0wGe_M9FBznm9JQ@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Yunhui,
+On Fri, Apr 25, 2025 at 09:11:18PM -0700, Linus Torvalds wrote:
+> On Fri, 25 Apr 2025 at 20:59, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> >
+> > Yeah, Al just pointed me at generic_set_sb_d_ops().
+> >
+> > Which is a perverse way to hide an ops struct. Bloody hell...
+> 
+> Kent, it's that perverse thing EXACTLY FOR THE REASONS I TOLD YOU.
 
-kernel test robot noticed the following build errors:
+And you never noticed that the complaints I had about the dcache bits
+didn't make sense and how I said it should work was how it actually does
+work? Heh.
 
-[auto build test ERROR on soc/for-next]
-[cannot apply to tty/tty-testing tty/tty-next tty/tty-linus usb/usb-testing usb/usb-next usb/usb-linus linus/master v6.15-rc3 next-20250424]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+We were talking past each other because everywhere else in filesystem
+land you define your ops structs, which means you can read through them,
+but when the ops struct is behind a helper that can be called from
+anywhere (the ext4 init code is what, 400 lines ballpark last I check) -
+good luck...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yunhui-Cui/serial-8250-introduce-serial8250_discard_data/20250425-142655
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
-patch link:    https://lore.kernel.org/r/20250425062425.68761-2-cuiyunhui%40bytedance.com
-patch subject: [PATCH v4 2/4] serial: 8250: introduce serial8250_discard_data()
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250426/202504261249.RVGiOFHl-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504261249.RVGiOFHl-lkp@intel.com/reproduce)
+> The common case will never even *look* at the dentry ops, because
+> that's way too damn expensive, and the common case wants nothing at
+> all to do with case insensitivity.
+> 
+> So guess why that odd specialized function exists?
+> 
+> Exactly because the dcache makes damn sure that the irrelevant CI case
+> is never in the hot path. So when you set those special dentry
+> operations to say that you want the CI slow-paths, the VFS layer then
+> sets magic bits in the dentry itself that makes it go to there.
+> 
+> That way the dentry code doesn't do the extra check for "do I have
+> special dentry operations for hashing on bad filesystems?" IOW, in
+> order to avoid two pointer dereferences, we set one bit in the dentry
+> flags instead, and now we have that information right there.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504261249.RVGiOFHl-lkp@intel.com/
+Well, that's d_set_op(), for the "flags to skip hitting the ops struct"
+bits. That's perfectly sane, sensible thing to do; you could still pass
+a d_ops to it that was defined within that specific filesystem.
 
-All error/warnings (new ones prefixed by >>):
+generic_set_sb_d_ops() just hides the fact that a d_operations exists.
+That's where the confusion came from, because if any of the other major
+local filesystems defined one I'd have seen it.
 
-   drivers/tty/serial/8250/8250_port.c: In function 'serial8250_get_poll_char':
->> drivers/tty/serial/8250/8250_port.c:2146:39: error: 'flags' undeclared (first use in this function)
-    2146 |         uart_port_lock_irqsave(port, &flags);
-         |                                       ^~~~~
-   drivers/tty/serial/8250/8250_port.c:2146:39: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/tty/serial/8250/8250_port.c:2151:1: warning: label 'out' defined but not used [-Wunused-label]
-    2151 | out:
-         | ^~~
+> So yes, people who want to use case-insensitive lookups need to go to
+> some extra effort, exactly because we do NOT want that garbage to
+> affect the well-behaved paths.
+> 
+> And no, I'm not surprised that you didn't get it all right. The VFS
+> layer is complicated, and the dentry cache is some of the more complex
+> parts of it.
 
+I think the more hilarious part is that CI lookups without the special
+d_ops seems to actually work - passes tests and I got a report today
+that the code I finished last night "works now, please don't change it".
 
-vim +/flags +2146 drivers/tty/serial/8250/8250_port.c
-
-  2131	
-  2132	#ifdef CONFIG_CONSOLE_POLL
-  2133	/*
-  2134	 * Console polling routines for writing and reading from the uart while
-  2135	 * in an interrupt or debug context.
-  2136	 */
-  2137	
-  2138	static int serial8250_get_poll_char(struct uart_port *port)
-  2139	{
-  2140		struct uart_8250_port *up = up_to_u8250p(port);
-  2141		int status = NO_POLL_CHAR;
-  2142		u16 lsr;
-  2143	
-  2144		serial8250_rpm_get(up);
-  2145	
-> 2146		uart_port_lock_irqsave(port, &flags);
-  2147		lsr = serial_port_in(port, UART_LSR);
-  2148		if ((lsr & UART_LSR_DR))
-  2149			status = serial_port_in(port, UART_RX);
-  2150		uart_port_unlock_irqrestore(port, flags);
-> 2151	out:
-  2152		serial8250_rpm_put(up);
-  2153		return status;
-  2154	}
-  2155	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So, yeah. Fun times.
