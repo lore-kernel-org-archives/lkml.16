@@ -1,83 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D31E834D;
-	Sat, 26 Apr 2025 02:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1EC1F4720;
+	Sat, 26 Apr 2025 02:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745634771; cv=none; b=fs4VH7kMmRna2oWrUGntihuvxHH0D8Yjb6zviOFuxRpCrqyhixi0qSwIbZVUHWFycbQT1iNTtSqpENnvxOOo2uBo7MbZVqGPmA8tjDOV6FOpYI7uhX9eqg97w9JQyIe/yOPtFTY9Htw3vkq9jrxuZcUDVeXtyUqmqG2hdqwMgUQ=
+	t=1745635153; cv=none; b=uf3IqiL4MIuLBClDNehfIKVy0HbCr1ZHBdxD8pUKdwALKFe3nj2wDDFYuiAnbxIDAO4wnWy5hLz6ui59IbzqIXi5w2Lrvl7dQ6xdQJoSTY4F1bY2q3AFd+0mQpFL2eyF9bQCCf5HRmFF2iJ1XtBixJbLyVKwZ9TrgCgzKzXC49o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745634771; c=relaxed/simple;
-	bh=+RUTWIt3VFeUueyp+/LHBU7OQa1nslQTo03DjgGapQA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KZvxPmMh8fPvildNUB50dIGBJOh8LKZJLnVSTVKpTdJ4cOpiDP+pD103TAmRuZBcFzw4AwWYju6Crsa6XeJC5itsK89tIFjfPRodca2poR43PFjNS65orNctStefg8eziXAakNIwZIX5yO3R5uabW7cEg7AvuLah223sBHxSBsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NV3HH5cT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745635153; c=relaxed/simple;
+	bh=1FqjtnhNDJ7FHUEMh+JAetY3FAIKW7glSvclDAKtT9A=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=iCSNuFClcDYqWWKpm2rP8g9b7xaiVrJeRlX/u0ZdFLaS9MNoWeKT34IWjIStaQZCnSAOOgzjcm/sCRagTOcVg9Rww31Rp7i7RzUGlZtGo5ch8vt19+m/ODXWFvgspoahTntpYE0tOP+akeGi4yStBvyNoTzOzlKsooIyr8suYzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhWUwB1M; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NV3HH5cT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B430EC4CEE4;
-	Sat, 26 Apr 2025 02:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745634770;
-	bh=+RUTWIt3VFeUueyp+/LHBU7OQa1nslQTo03DjgGapQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NV3HH5cTytNLqUSnhZu/e/1hOQv76j3RXu91ccBhnAZKPShm2ywlHlwxEmP2NFyJ8
-	 9mJGv0SrHBCtXVkieOdFVL+aj36B86SkAmVo+3g7zY7zwp1CWMsmr/ZbWtOT8bEZyr
-	 8NA5f5WhQqLgsoDwMQL/xkJ+DI4oOl2RlkHukU3w=
-Date: Fri, 25 Apr 2025 19:32:49 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alessandro Carminati <acarmina@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>, Arnd
- Bergmann <arnd@arndb.de>, =?ISO-8859-1?Q?Ma=EDra?= Canal
- <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>, Kees Cook
- <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>, David Gow
- <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>, Brendan
- Higgins <brendan.higgins@linux.dev>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>, Daniel
- Vetter <daniel@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, Guenter
- Roeck <linux@roeck-us.net>, Alessandro Carminati
- <alessandro.carminati@gmail.com>, Jani Nikula <jani.nikula@intel.com>,
- dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, loongarch@lists.linux.dev, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] Add support for suppressing warning backtraces
-Message-Id: <20250425193249.78b45d2589575c15f483c3d8@linux-foundation.org>
-In-Reply-To: <20250313114329.284104-1-acarmina@redhat.com>
-References: <20250313114329.284104-1-acarmina@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhWUwB1M"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af579e46b5dso2095637a12.3;
+        Fri, 25 Apr 2025 19:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745635151; x=1746239951; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JpplSP/dFAaY6jk9LLlgcDCITdJ17ib1uCJw3e53Eew=;
+        b=WhWUwB1M2P1wxcgDyPhZUKKxfYvCX4duGXFxDdArkcfWsIEWXsGmqSGOb19Xts9/rF
+         muaSCDfk15Dx1nqKNiOQ0rytMW7g816IT8sWak0804Z6qwNZeZb2eFgjfGPb3RUEBkpJ
+         q/bb+eMOkjPB0HpPOjI0rBQ+EOfbzKVL1oTz+VG+tEMN7PAc7ba1Nrprk06fkJc8XuBr
+         qtpyNVUBmk2+1Pcg9qnyHC/fYUr4wL7r/LGYtfjcaUdFRmYgNAPJy+pEi0uOn2RoKnPf
+         5Nkm6X+2KWhsduiflxfq3d1xChPkFWsmuqIVe5YIhui4BxTwTxNPR7UTNHFdgTXF6bpa
+         P/0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745635151; x=1746239951;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JpplSP/dFAaY6jk9LLlgcDCITdJ17ib1uCJw3e53Eew=;
+        b=ZuL47D6QVLX5e7DFocS+NJ7K5JjcTLULPhKumd0mez45xxo3xy5vDogGcHPLsWS0EB
+         jqDYMw/m1kUDJiU7sSbGBo0tEnCJdAKRMyJFfSfZtUDAhHrmiQZI6aZK2K56aNnpG0wu
+         wK4B7v2yNe/tY7GMz+UhT0+hbrlLy6/1wYXDuSEAijXfKJgk0GY7Gyp+M2ds2BviFbVG
+         EvkD46V2RVzZusF6LatUEoqMYNTKdtC791j2w0Q8Kj6Vv6QtTi5eQl6lX3wLaGw+ICOI
+         t206sLY58Ib/LomKjnhUVwQXd0avKez6PGoSOZKzE/Z7JEIgnoPlS1BM8jF6OF+MbDoK
+         BJxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDhvFAnQovlDl+eIXfRolLUVmSTtjmHohsuCYOiMB39M9pW4PD7Lx16335eoBbAmKxk29q5/K+zB6TuMGL@vger.kernel.org, AJvYcCXUsZrPQOGn+FeXQJL2/fxOUc4VxkaEYbx91tr/gXBr/DWGTgXiHb8hbO/VSjdCY+WUMgr9Iw6ADQq8Ybyb@vger.kernel.org, AJvYcCXnmzMGjghU/FiTRxDaFuC4ZrzC8xvz7bQN4LvOuzcVp6IZbR3KEOiw9u6AX9u8qIDfMxtwEtj4gZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9VbtiijcJ/V0wspAKUBbXcHxt2wRc7C55BWxudKX2cqYzN4oj
+	HQT0K+3modVVoo6f4AuVo7/5E3CdIjRxMSysZlzfkLC46zJXSpAp
+X-Gm-Gg: ASbGnctM85dLopXmzVXCBHQzWlsQLWGbr37QBbTsHYCHVSvoymZ6+JtulJ3fuyXo0jj
+	eX5sAeOtscYd1VK7+TljH96bvTwazwZS9Ek5AynbhGAAvqlsmqfdHWmNWqwmC4MjZT+DXGIsEyq
+	jsNbZ8dw5PzoM4ohgyvbi93vkCa76250L3FpigoEyDo7unnwuiAT/UdQUSyiMJa5dtLzx9o6RQw
+	KWP1UG4JQD+33EOAftGDxPwBrcWTARpGKKTQ5pinuFdHL+pkSxh9CQzCc4KBIPAvZnON/FKyuzw
+	+1eXqxRnCYUONtqQRqzMog/ByKPUgBuX98VOuoy45xmC4lyBTbpZCjpyM3rEaVeLn2MJXMwV0CZ
+	sIO0InNgI2tg=
+X-Google-Smtp-Source: AGHT+IE44KmkhgPN/y1Z+QQtUhDR0Rj3E1Ytzqt5IZB/2pxGjM8oeA/JwKOp+X642fQ81dh589yQ+w==
+X-Received: by 2002:a05:6a20:7f90:b0:1f5:7353:c303 with SMTP id adf61e73a8af0-2045b6f5372mr6075481637.11.1745635151397;
+        Fri, 25 Apr 2025 19:39:11 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a133sm4016961b3a.90.2025.04.25.19.39.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 19:39:11 -0700 (PDT)
+Message-ID: <22d7bca2-cdfb-4e06-acb2-41363ba13333@gmail.com>
+Date: Sat, 26 Apr 2025 11:39:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: airlied@gmail.com, corbet@lwn.net, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com,
+ joonas.lahtinen@linux.intel.com, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, masahiroy@kernel.org, mripard@kernel.org,
+ nathan@kernel.org, nicolas.schier@linux.dev, rodrigo.vivi@intel.com,
+ simona@ffwll.ch, tursulin@ursulin.net, tzimmermann@suse.de,
+ mchehab+huawei@kernel.org, Akira Yokosawa <akiyks@gmail.com>
+References: <cover.1745453655.git.mchehab+huawei@kernel.org>
+Subject: Re: [PATCH v4 0/4] Don't create Python bytecode when building the
+ kernel
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <cover.1745453655.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Mar 2025 11:43:15 +0000 Alessandro Carminati <acarmina@redhat.com> wrote:
+Hi Andy,
 
-> Some unit tests intentionally trigger warning backtraces by passing bad
-> parameters to kernel API functions. Such unit tests typically check the
-> return value from such calls, not the existence of the warning backtrace.
+Responding to Mauro's cover-letter of v4 at:
 
-I've had this series in mm.git's mm-new branch for a while.  I didn't
-send it up for 6.15-rc1 due to what I believe to be unresolved review
-issues.
+    https://lore.kernel.org/cover.1745453655.git.mchehab+huawei@kernel.org/
 
-I'll drop this v4 series.  Please resend if/when suitable.
+, which did not CC'd to you.
 
-Some notes I have taken are:
+On Thu, 24 Apr 2025 08:16:20 +0800, Mauro Carvalho Chehab wrote:
+> As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
+> when W=1. Due to Python's normal behavior, its JIT compiler will create
+> a bytecode and store it under scripts/lib/*/__pycache__.  As one may be using
+> O= and even having the sources on a read-only mount point, disable its
+> creation during build time.
+> 
+> This is done by adding PYTHONDONTWRITEBYTECODE=1 on every place
+> where the script is called within Kbuild and when called via another script.
+>  
+> This only solves half of the issue though, as one may be manually running
+> the script by hand, without asking Python to not store any bytecode.
+> This should be OK, but afterwards, git status will list the __pycache__ as
+> not committed. To prevent that, add *.pyc to .gitignore.
+> 
+> This series contain 4 patches:
+> 
+> - patch 1 adjusts a variable that pass extra data to scripts/kerneldoc.py;
+> - patch 2moves scripts/kernel-doc location to the main makefile
+>   and exports it, as scripts/Makefile.build will need it;
+> - patch 3 disables __pycache__ generation and ensure that the entire Kbuild
+>   will use KERNELDOC var for the location of kernel-doc;
+> - patch 4 adds *.pyc at the list of object files to be ignored.
 
-https://lkml.kernel.org/r/202504190918.JLNuRGVb-lkp@intel.com
-https://lkml.kernel.org/r/20250402074550.GQ5880@noisy.programming.kicks-ass.net
-#arm64-add-support-for-suppressing-warning-backtraces.patch: check review
+I see Jon has merged them all, but responding here anyway.
 
-Some fixes I had merged which presumably should be carried forward are
-https://lore.kernel.org/all/20250330212934.3F898C4CEDD@smtp.kernel.org/T/
-https://lkml.kernel.org/r/20250330212739.85827C4CEDD@smtp.kernel.org
+In https://lore.kernel.org/Z_zYXAJcTD-c3xTe@black.fi.intel.com/, you said:
 
-Thanks.
+> This started well, until it becomes a scripts/lib/kdoc.
+> So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
+> "disgusting turd" )as said by Linus) in the clean tree.
+>
+>*) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.w
+
+Andy, I don't agree with your words "__pycache__ disaster" and 
+".gitignore IS NOT a solution".
+
+Running "find . -name ".gitignore" -exec grep -nH --null -F -e ".pyc" \{\} +"
+under today's Linus master returns this:
+
+-------------------------------------------------------------
+./scripts/gdb/linux/.gitignore:2:*.pyc
+./drivers/comedi/drivers/ni_routing/tools/.gitignore:3:*.pyc
+./tools/perf/.gitignore:32:*.pyc
+./tools/testing/selftests/tc-testing/.gitignore:3:*.pyc
+./Documentation/.gitignore:3:*.pyc
+-------------------------------------------------------------
+
+, and they have been working perfectly.
+
+Having seen your response at https://lore.kernel.org/aAoERIArkvj497ns@smile.fi.intel.com/ :
+
+> I tried before, but I admit, that I have missed something. It was a mess
+> in that case. Now I probably can't repeat as I don't remember what was
+> the environment and settings I had that time. I'm really glad to see it
+> is working this way!
+
+, I'm guessing you had a traumatic experience caused by python's bytecode
+caching in the past.  Do you still believe ".gitignore IS NOT a solution"?
+
+From my viewpoint, applying only 4/4 of this series is the right thing to do.
+
+Bothering with might-become-incompatilbe-in-the-future python environment
+variables in kernel Makefiles looks over-engineering to me.
+Also, as Mauro says in 3/4, it is incomplete in that it does not cover
+the cases where those scripts are invoked outside of kernel build.
+And it will interfere with existing developers who want the benefit of
+bytecode caching.
+
+I'm not precluding the possibility of incoherent bytecode cache; for example
+by using a shared kernel source tree among several developers, and only
+one of them (owner) has a write permission of it.  In that case, said
+owner might update the tree without running relevant python scripts.
+
+I don't know if python can notice outdated cache and disregard it.
+
+In such a situation, setting PYTHONPYCACHEPREFIX as an environment
+variable should help, for sure, but only in such special cases.
+
+Andy, what do you say if I ask reverts of 1/4, 2/4/, and 3/4?
+
+Regards,
+Akira
+
