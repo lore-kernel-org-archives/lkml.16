@@ -1,137 +1,132 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4CB1FE455;
-	Sat, 26 Apr 2025 23:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627AD1FDA9E
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 23:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745708770; cv=none; b=FFmtELgL9eMKFKi3LIRR2R7CPU7e/JSxT/3ZgLyu373ss1snTUAt4Lc+2mM6EU9IkpuftD47PX/ilw5XPndIcDxMSO12ky40QsNp4Zr8FxxAY9fCJ+NPseGqXZ1VdW5dLa1AgXROZihbFU2dLo2lJ5gvpU6RDJ0iP76AHaXluFc=
+	t=1745709111; cv=none; b=Yqbsczc4O6+/G92ffvBUspAJotTiwb6Q160rFUY/FuEuNk4NEIcp3GE9ut25zdaYkgXDmadukZ67N10c6UcUFk7ejFzeM2EuDk550G3L98W30Ko4HSoIrrXypJqPUtIX6F7Ans96MuxS6N/ODAWXQnHvK2SsWi08AJBExDGsjCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745708770; c=relaxed/simple;
-	bh=m+RA8gzsvOfscFAGRmCDVeYxN0tmD5osbA5ye6MRq48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NS9IuRe3grLe++AyRBz2NWis85rhkc++gZh5IytjW9JICHYC6g4+MQcw3J2cSqfhFggq5PQZpUcn+2TXnjJ9dLB51cNkI+yOgVAsj2OXSuBBfROvnpRF8nYNtOM5qGXe39L3oh0NvFTO9S8ipDRpiuP6rkHxzg7DqZYQxCm033Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7p2cZjY; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745709111; c=relaxed/simple;
+	bh=JSANf/ScvX3Uq8GbQH+CQs9vUfv+iD40hGemgQNE7O4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jEbae3q22bVH/Bt3pHENFo2SNgtE3i47dRXSZCPdJ07id3kdVIO2eh64CUGBzulw16aRhyqz3jxWuaNiFeg6MwCB+Rp4g2i4oVhZd+hzYqoKxzLzaSEXcJTNH/Q+knUJmxUH8ugE7hGKsPekEL2CtU5JQ0yykazTeDMJH42QmE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=simulevski.at; spf=pass smtp.mailfrom=simulevski.at; dkim=pass (2048-bit key) header.d=simulevski.at header.i=@simulevski.at header.b=ej3gwfBo; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=simulevski.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simulevski.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7p2cZjY"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22c33e5013aso43295245ad.0;
-        Sat, 26 Apr 2025 16:06:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=simulevski.at header.i=@simulevski.at header.b="ej3gwfBo"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acacb8743a7so579535766b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 16:11:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745708768; x=1746313568; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+laHSLvAxUEnN7XoD7+RpZEC9zqXbmDcxTDzKjoExLM=;
-        b=K7p2cZjYYf2Fq1tgLUMV0oa0j8xRn+1z+qHrPVABO7514o3TTIOppwqMoshf2fKnp2
-         COwFgm5VJKgdD39miVEKXjvnyZc/DV7fhFmIVRbMAebi6p0eE0A1OHmKFv19cIKpkKE+
-         BNsJoTLOyEt10WTZxoyWsQ9lFxd0lpVzoXlZsNjMkxEnO9tkKt65BJCCnOLmKr+nilgt
-         3BQyf4ZqyMerqkTZVWBN4+Dunme/sfAy1lW33uMuOaTMxINuqKaNsAqqBN3bgVmAS3aR
-         M18AdlHx/f/fG/Ouh/+3Fv4pIxW2f/CUsmIsrOEZ9D3aqAWfbOXafDn4CxMNQdf7RhK5
-         f8+w==
+        d=simulevski.at; s=google; t=1745709108; x=1746313908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+0ils+A1DyFIjuTkRyJHSGr6AwB7PLZzZgPR+43TOG0=;
+        b=ej3gwfBo5UrVAtQLiN2vLWHgLlgT+j3XXsyn0fcSFeXgFnYHOsXBtc8KA826z5LOYA
+         /hN7+17+FSvampYl9T/13G5OxYIYpR2b+AlRl95oMWtUTlSJP1x7if3rUTNdVKKORG5q
+         j7lAhD43a0ehPRKLv2ewCfBNITxfMG7mVvTfPJXcvcW3202BUOFoi8Z4RIbF5vHcXPLC
+         bnefKlaWVVsrZj/PPDpQjbxbtssgZDgYFJ04ExDnzSOraJISFuMPR7X+0llyrCYBhPPp
+         m+NwNSU0/P1lOfl8cvAJZUWmHabslRHMJzurDNvzuqv3PUF8Ol/1ITS6acJfHblfp52h
+         PnDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745708768; x=1746313568;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+laHSLvAxUEnN7XoD7+RpZEC9zqXbmDcxTDzKjoExLM=;
-        b=ZQN4weR4S0oVqoBS/V+kocc2FEWlWC+oyUAYqRMjKvpWSwGJHJylfWXjLjXdBkPMLK
-         arpqT2eI58H0fEoMeFo1nNiGzCJmFdGbe1HycQc2f7HQesgcF/j3hOVWpFrv584/libJ
-         gHzSMEg1fz7ZpGuOF3tc2P07lUKQX/aYAowN4PnZsmu0yi6v/sx1Wlx5RgEYmVh9HWvN
-         4n5XbivhzH7A92xC42QLKx5qTiOi25VOBDMRIPaKS7/9EZycca9dI8QLkshuV8BXtoeo
-         P7UIxI1GIf1MiWXDtvKNpDM4GTJl1Cn1g+lbuXsnZZUuXIpQqAcXySTPXCi1sG2pgeFw
-         WLVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLiKkXaAcpaLD9b4LmNQXRqGK9oRgcUqB1pUrT6iqDlc9i8y5L6aEzw3mCJnoVCILDMks+HeoV/QY=@vger.kernel.org, AJvYcCXQ+Qu5rwYG2JldeQxf24uYH3f7ovFtiqrJL/aBOHZNkifYOCObGI+CSXT47rViclg4lLfE5tdHvE0KtVc5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/YTEOV+RxW6G46wqDd+laqd8vA7SvbNrVWB3y2lEzM18XL8x1
-	EKTpHXrBqu7rQ+DYZ670qnNBlKBICc4h5yttjY2GbLRw/LAyrzlE
-X-Gm-Gg: ASbGnctdYeQ5f3tz4wQynUnsKLlrAwxDkau0Ruj/KcqVIAnbSRE8R5GSihyyRh6qhTw
-	pqE2/k5TDzmcZGH9FOAugy/XCVytJfvYWnkwh3Qte1Fzw9diC5Jj9yPBZCXmFL+dNWe1me6SNXf
-	qSa5Zf607kgtWV3VYI+xqTH/viu4AZyZkN4QACDCugJF+eG5HmTPMQcpVSGOokqGv6U8FkN8wu4
-	ZhWnZFniNP8lxOQgn9BRLncKm5HauGsSP0LZLoQFuk1/XJJR3LWYSBTnMEt71OXR5XqTqYJFS+P
-	LpSS8nx8U8w9AODayFPRVGSBm4KAbWV1F8l1tFX6DHVLdT55x2YlGQ==
-X-Google-Smtp-Source: AGHT+IGbeJRcVif92g/Ta6VxscgASXIih4Sizr4bZSGbCaReYMuG4jR90AjMjeCNxKbvry9EDkGePw==
-X-Received: by 2002:a17:903:41c9:b0:223:f9a4:3fa8 with SMTP id d9443c01a7336-22dc6a040dcmr59753305ad.19.1745708768435;
-        Sat, 26 Apr 2025 16:06:08 -0700 (PDT)
-Received: from archlinux ([189.101.161.220])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51028basm55143605ad.196.2025.04.26.16.06.05
+        d=1e100.net; s=20230601; t=1745709108; x=1746313908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+0ils+A1DyFIjuTkRyJHSGr6AwB7PLZzZgPR+43TOG0=;
+        b=wRZ0UGk+nHMGFv9f8Kdo0IpguXzA6UgVztiv5nbWs7sP0X6HBTvOsbMIJsXlLQ9t6y
+         ts4P96F/UZOvaqhmQMz45XcdQDM3JGXMKf7Yxd7lR8E1ecQKDoCsYgcjzr8QQHhzLIXe
+         TK+BRhpTN3g6A2qT7oXwk1hOKla/nnUkybL/ee1zFh3YgWeOZ/RHrWr/7K1I0ZCbkEOa
+         oKme6EzIx4hWFmrYSlkRDl96pyMW+GhNlDzdMrIDceuGpQbakqYfyTpYhl1S6hlT0/QR
+         fxUS2iEWIcVTVn37f7bCcoNYFHrr7cGaxZSgle+BK0Nkp5xZk4t/mztDm/Lr5N72OV0+
+         i3Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqDUcoBnbv45k7Wx9dYC5sf9eS3uGBS/kfDg2VrNeyIajI4YAxJG6ESeo/n3HKVC/5ZQeDtLhS75yts9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8RH1B18RI3dk2DnjDfLyiP2TUWkGO1fuA67lOR9ZYOOTRLtiD
+	0xQQ5atEeyeCojFTpdqrM9VXXVnDZFYc8ItP+UN2RAbHXuoPLiRpf+mGT61X67ilvRV/e0IwbCo
+	r/Dw=
+X-Gm-Gg: ASbGncst1RfXKdFL4XxBSxpKjuLmNKu6q8J2S3BkdDJDLF9iMYd/RsRAXbSdOtkd+KX
+	WyDpbsmX5WuzRsQiHHEZcWOK/+80H10haRAenPdz1dIytz6w979j2FCxxyXSh/EJDX10Kjhert/
+	lP+v/Y5a3BCePWhMAqbZXUAjNsGmB95wY+tpo8WIVH8GgBYYXxCCJzlASJiCjuiQJvo4cAk283m
+	qH4mOPLB8SZyan6kIKiL2QPg2N/X5gTiNTne4SobK4tl5sNbLGD/DsztQERAlVASvLr496CwVp0
+	Ctx7MbFP6jksrm2kL+QX8PODJLkna5rG2rBd9NbUGM37w2mX7w5Q45rs
+X-Google-Smtp-Source: AGHT+IGF7q6Y/O1AMqtv/2FTw0V6Nej7VHeWZTipaKNqnypUptBFQ62R9Y8XdpuSKQiMrtPIB8ucwg==
+X-Received: by 2002:a17:907:3e05:b0:acb:3acd:2845 with SMTP id a640c23a62f3a-ace5a482bb3mr781313366b.25.1745709107533;
+        Sat, 26 Apr 2025 16:11:47 -0700 (PDT)
+Received: from fedora.home.simulevski.at ([91.65.134.65])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecfa8f7sm358018366b.105.2025.04.26.16.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 16:06:08 -0700 (PDT)
-Date: Sat, 26 Apr 2025 20:06:01 -0300
-From: Gustavo Silva <gustavograzs@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Alex Lanzano <lanzano.alex@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: imu: bmi270: add support for motion events
-Message-ID: <tksgr4m2bl2pppeyhoqobwtqes5kgjueo6yflps6ib3au2itpv@nh3i5yvvn53u>
-References: <20250424-bmi270-events-v1-0-a6c722673e5f@gmail.com>
- <20250424-bmi270-events-v1-3-a6c722673e5f@gmail.com>
- <CAHp75VcxoyoHYkSJw_OudEs7kAsaan9urhPofZQXyOyOVdBWuQ@mail.gmail.com>
+        Sat, 26 Apr 2025 16:11:47 -0700 (PDT)
+From: Ariel Simulevski <ariel@simulevski.at>
+To: mika.westerberg@linux.intel.com,
+	andy@kernel.org,
+	linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ariel Simulevski <ariel@simulevski.at>,
+	Guido Trentalancia <guido2022@trentalancia.com>
+Subject: [PATCH] pinctrl: alderlake: Add missing I2C2/I2C3/I2C4 pin definitions
+Date: Sun, 27 Apr 2025 01:11:27 +0200
+Message-ID: <20250426231127.190090-1-ariel@simulevski.at>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VcxoyoHYkSJw_OudEs7kAsaan9urhPofZQXyOyOVdBWuQ@mail.gmail.com>
 
-On Fri, Apr 25, 2025 at 08:25:00AM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 25, 2025 at 3:15 AM Gustavo Silva <gustavograzs@gmail.com> wrote:
-> >
-> > Add support for any-motion/no-motion events based on acceleration slope
-> > on each axis. Threshold and duration can be configured from userspace.
-> 
-> I'm wondering if you are using --histogram diff algo when preparing
-> the patches. If not, please do so for the next version.
-> 
-Yeah, I am indeed using the histogram algorithm.
+The PixArt I2C touchpad (PIXA3848) found on several Alder Lake
+laptops is not detected unless the Tiger Lake pinctrl driver is used.
 
-> ...
-> 
-> > +       irq_reg = bmi270_int_map_reg(data->irq_pin);
-> > +       if (irq_reg < 0)
-> > +               return -EINVAL;
-> 
-> Why is the error code shadowed?
-> 
-I might have forgotten to update this line. Will fix it in v2.
+This patch adds missing I2C2, I2C3, and I2C4 pin definitions
+to the Alder Lake pinctrl driver, based on Tiger Lake mappings,
+with corrected pin numbering and proper community assignment.
 
-> ...
-> 
-> > +               case IIO_EV_INFO_PERIOD:
-> > +                       if (!in_range(val, 0, 163))
-> 
-> 162 + 1
-> 
-Ack.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=220056
+Co-developed-by: Guido Trentalancia <guido2022@trentalancia.com>
+Signed-off-by: Ariel Simulevski <ariel@simulevski.at>
+Signed-off-by: Guido Trentalancia <guido2022@trentalancia.com>
+---
+ drivers/pinctrl/intel/pinctrl-alderlake.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-> > +                               return -EINVAL;
-> > +
-> > +                       raw = BMI270_INT_MICRO_TO_RAW(val, val2,
-> > +                                                     BMI270_MOTION_DURAT_SCALE);
-> > +
-> > +                       return bmi270_update_feature_reg(data, reg,
-> > +                               BMI270_FEAT_MOTION_DURATION_MSK,
-> > +                               FIELD_PREP(BMI270_FEAT_MOTION_DURATION_MSK,
-> > +                                          raw));
-> 
-> ...
-> 
-> > +       case IIO_EV_TYPE_MAG:
-> > +               reg = bmi270_motion_config_reg(dir);
-> > +               if (reg < 0)
-> > +                       return -EINVAL;
-> 
-> Shadowed error code, why?
-> 
+diff --git a/drivers/pinctrl/intel/pinctrl-alderlake.c b/drivers/pinctrl/intel/pinctrl-alderlake.c
+index 108eac205aa9..bf0d910a7c2a 100644
+--- a/drivers/pinctrl/intel/pinctrl-alderlake.c
++++ b/drivers/pinctrl/intel/pinctrl-alderlake.c
+@@ -677,6 +677,14 @@ static const struct pinctrl_pin_desc adls_pins[] = {
+ 	PINCTRL_PIN(301, "JTAG_TCK"),
+ 	PINCTRL_PIN(302, "DBG_PMODE"),
+ 	PINCTRL_PIN(303, "CPU_TRSTB"),
++
++	/* Missing I2C buses based on TigerLake: fixes #220056 */
++	PINCTRL_PIN(79, "I2C2_SDA"),
++	PINCTRL_PIN(80, "I2C2_SCL"),
++	PINCTRL_PIN(81, "I2C3_SDA"),
++	PINCTRL_PIN(82, "I2C3_SCL"),
++	PINCTRL_PIN(83, "I2C4_SDA"),
++	PINCTRL_PIN(84, "I2C4_SCL"),
+ };
+ 
+ static const struct intel_padgroup adls_community0_gpps[] = {
+@@ -709,6 +717,7 @@ static const struct intel_padgroup adls_community4_gpps[] = {
+ static const struct intel_padgroup adls_community5_gpps[] = {
+ 	ADL_GPP(0, 270, 294, 448),			/* GPP_D */
+ 	ADL_GPP(1, 295, 303, INTEL_GPIO_BASE_NOMAP),	/* JTAG */
++	ADL_GPP(2, 304, 309, INTEL_GPIO_BASE_NOMAP),	/* I2C fix #220056 */
+ };
+ 
+ static const struct intel_community adls_communities[] = {
+@@ -716,7 +725,7 @@ static const struct intel_community adls_communities[] = {
+ 	ADL_S_COMMUNITY(1, 95, 150, adls_community1_gpps),
+ 	ADL_S_COMMUNITY(2, 151, 199, adls_community3_gpps),
+ 	ADL_S_COMMUNITY(3, 200, 269, adls_community4_gpps),
+-	ADL_S_COMMUNITY(4, 270, 303, adls_community5_gpps),
++	ADL_S_COMMUNITY(4, 270, 309, adls_community5_gpps),
+ };
+ 
+ static const struct intel_pinctrl_soc_data adls_soc_data = {
+-- 
+2.49.0
 
-Same as above. Will fix in v2.
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
