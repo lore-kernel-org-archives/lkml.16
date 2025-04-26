@@ -1,158 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25DD190462
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 00:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A08282EE
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 01:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745629159; cv=none; b=UWZ6luJH3+63CbZaTouUJoMdxXczAEBcF1uRXDDUTT3u5rezIZrVN3kMXwJCOqrm253QkQisqzxuNtMvOf3EDTEuKhDotEQfJIlVFVV9Mw9bc8tCQzJbWYSkzBtu6trNMcs1Y04rdfcpgz75kMUsJ82netfjqgY1EXD67tAd3t8=
+	t=1745629540; cv=none; b=SHa8nTtW4V0Kd5HNk/p1C0jtNZ35EOUVHp47QE6nMg7sXHsrVChEMxr2qX/GuiGEEw6rGT8ARcyzj5eZaycDjMgoUEtPo/NwrOtembKAvOLc15paLYIdH1/iY/T47ZZkHCsK74LAWqewcnCYD8o5bMNpIW04lSPKzUPA/V3fwHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745629159; c=relaxed/simple;
-	bh=/ojsbPJUUmFpD76uxXEjrUZURGgqcVS2sIV0Pe+zm8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=AMygsp5Thf8qWzD/z2q2cHniRoHcML5pL+CnWWkxuIMzr/hq/vUQkPlo1mB7v3ra7Zx2iwmP4AYWcb+ZmnQkz+g2L3QBjQYAvvuHAeSCumJsQj1bjy90X232dp7csGs9b+3tHRXru28Qj4tVzT9Mq7M1q8qSgfBE5fLs5980qsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nTJ8R8UT; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745629540; c=relaxed/simple;
+	bh=yRkkSopWJBJ2Bj5q9h+LnLhTYo69bmvHBvjCNpIHSMo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Kh9MFrrH5XRZItTPpvBXnVroUSd8/qyAYCOGqyqARaqoJ1AOUotxvEuCZ8gJuQjt7UK1M2Fa2UPTC2qbz4y0U34ld/niC+fEsAA9I4uWzv/bGOKjaGmK79niU8XRy5SbEj5U62zd8U/HD4XxBOp2U5k+MuC7ipurV85JvNkfdK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dNd1PisT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nTJ8R8UT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745629158; x=1777165158;
-  h=date:from:to:cc:subject:message-id;
-  bh=/ojsbPJUUmFpD76uxXEjrUZURGgqcVS2sIV0Pe+zm8Y=;
-  b=nTJ8R8UTFfJ0yCI80dSxLoVfAx6onQgSoYq3YOqk6BUbtbE7PAng6TFC
-   5/SQn7cDZZlOCkT0cKRjV3so+SCkgQdBNpHSgNkcYRoKdHgLRNHoe1/KQ
-   Y5yKrvFCVR2UEOZBrmIaca6+q/rh50AR2dA5nZUWv+nmnOQBv9/iQLLeN
-   IOmhkot7EUXtKN74KhzFMpWGSfH0vGCssbTwegkI8zmUdFPNoAzBuNO1x
-   6BJl8yMSFYwN4Yo6uBGEY+s+jHvbDcj0+JVqeJemjE+6UC8Gy5MWQqgx/
-   0dJnykGfcU5J8RoohTRywce4wRU0Qcgfl+tMcSyvF4xmGA772Kz0uVRl8
-   g==;
-X-CSE-ConnectionGUID: 0YIAEPTjSQu/edewJCVteg==
-X-CSE-MsgGUID: UT5KMCXDS1Gebs98HVD4Fw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="64829215"
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="64829215"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 17:59:15 -0700
-X-CSE-ConnectionGUID: PX2ZrweNTAWNjyIxjkt1qg==
-X-CSE-MsgGUID: gtV+Oc+0RS62C9oskzE+Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
-   d="scan'208";a="137851471"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 25 Apr 2025 17:59:14 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8Tsu-0005cn-09;
-	Sat, 26 Apr 2025 00:59:12 +0000
-Date: Sat, 26 Apr 2025 08:59:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev] BUILD SUCCESS
- be77f5238d220efa4b1347b47ce27054e343658f
-Message-ID: <202504260853.0unKHhoU-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dNd1PisT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0284C4CEE4;
+	Sat, 26 Apr 2025 01:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745629540;
+	bh=yRkkSopWJBJ2Bj5q9h+LnLhTYo69bmvHBvjCNpIHSMo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dNd1PisT9Z2inqRSOaf++3O+j3G8lSR90Ugh9+x8FPGbLpod0FyGWl9bDZyfIOsX1
+	 cgZ48RcefaV1fdsdkTsz59lFUR2utD/US/vQklmdrJaxQEJdqmZxOA2HkvXaaJ1Slq
+	 lLitP9QhEdRnsQNspsu+MrVoEiOgZZ1ct+S+qP4s=
+Date: Fri, 25 Apr 2025 18:05:39 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de>
+Cc: <dwmw2@infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <lkp@intel.com>, <rppt@kernel.org>,
+ <yajun.deng@linux.dev>
+Subject: Re: [PATCH] mm: memblock: Fix arguments passed to
+ memblock_set_node()
+Message-Id: <20250425180539.2b780a8b3d0958fcc2e8a500@linux-foundation.org>
+In-Reply-To: <20250425102003.64122-1-bercantu@amazon.de>
+References: <bd5842a92bd340799a74063f8da83d96@amazon.de>
+	<20250425102003.64122-1-bercantu@amazon.de>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
-branch HEAD: be77f5238d220efa4b1347b47ce27054e343658f  rcu: Protect ->defer_qs_iw_pending from data race
+On Fri, 25 Apr 2025 10:20:03 +0000 "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de> wrote:
 
-elapsed time: 1456m
+> memblock_set_node() receives a `base` and a `size` arguments, but we are
+> passing the `start` and `end` of the memory regions when iterating over
+> them in memmap_init_reserved_pages() to set their node ids.
+> 
+> This results in the function setting the node ids for the reserved memory
+> regions in `[base, base + base + size)` instead of `[base, base + size)`.
+> 
+> Pass `start` and `size`, so that we iterate over the correct range.
+> 
+> Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
+> 
+> ...
+>
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -2196,7 +2196,7 @@ static void __init memmap_init_reserved_pages(void)
+>  		if (memblock_is_nomap(region))
+>  			reserve_bootmem_region(start, end, nid);
+>  
+> -		memblock_set_node(start, end, &memblock.reserved, nid);
+> +		memblock_set_node(start, region->size, &memblock.reserved, nid);
+>  	}
+>  
+>  	/*
 
-configs tested: 81
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                   randconfig-001-20250426    gcc-8.5.0
-arc                   randconfig-002-20250426    gcc-10.5.0
-arm                               allnoconfig    clang-21
-arm                   randconfig-001-20250426    clang-21
-arm                   randconfig-002-20250426    gcc-7.5.0
-arm                   randconfig-003-20250426    clang-21
-arm                   randconfig-004-20250426    clang-21
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250426    clang-16
-arm64                 randconfig-002-20250426    gcc-8.5.0
-arm64                 randconfig-003-20250426    clang-17
-arm64                 randconfig-004-20250426    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250426    gcc-14.2.0
-csky                  randconfig-002-20250426    gcc-10.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250426    clang-19
-hexagon               randconfig-002-20250426    clang-19
-i386        buildonly-randconfig-001-20250426    gcc-12
-i386        buildonly-randconfig-002-20250426    gcc-12
-i386        buildonly-randconfig-003-20250426    clang-20
-i386        buildonly-randconfig-004-20250426    clang-20
-i386        buildonly-randconfig-005-20250426    gcc-12
-i386        buildonly-randconfig-006-20250426    clang-20
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250426    gcc-14.2.0
-loongarch             randconfig-002-20250426    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250426    gcc-10.5.0
-nios2                 randconfig-002-20250426    gcc-8.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                randconfig-001-20250426    gcc-7.5.0
-parisc                randconfig-002-20250426    gcc-7.5.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250426    gcc-6.5.0
-powerpc               randconfig-002-20250426    clang-21
-powerpc               randconfig-003-20250426    gcc-8.5.0
-powerpc64             randconfig-001-20250426    gcc-6.5.0
-powerpc64             randconfig-002-20250426    clang-21
-powerpc64             randconfig-003-20250426    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250426    gcc-14.2.0
-riscv                 randconfig-002-20250426    clang-21
-s390                              allnoconfig    clang-21
-s390                  randconfig-001-20250426    clang-21
-s390                  randconfig-002-20250426    clang-21
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250426    gcc-14.2.0
-sh                    randconfig-002-20250426    gcc-12.4.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250426    gcc-10.3.0
-sparc                 randconfig-002-20250426    gcc-10.3.0
-sparc64               randconfig-001-20250426    gcc-7.5.0
-sparc64               randconfig-002-20250426    gcc-9.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250426    clang-21
-um                    randconfig-002-20250426    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20250426    gcc-12
-x86_64      buildonly-randconfig-002-20250426    clang-20
-x86_64      buildonly-randconfig-003-20250426    gcc-12
-x86_64      buildonly-randconfig-004-20250426    clang-20
-x86_64      buildonly-randconfig-005-20250426    clang-20
-x86_64      buildonly-randconfig-006-20250426    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250426    gcc-14.2.0
-xtensa                randconfig-002-20250426    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What were the runtime effects of this bug?
