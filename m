@@ -1,175 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AB91DC185;
-	Sat, 26 Apr 2025 11:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D2E1B415F
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 11:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745666372; cv=none; b=CI5BW+KmCg7RXAFbxeRB3JTlRBXQgdNWY9v3+7zaRzuz69x7BXOvU4jGb4j8VVSLUu2d0eU4XqN+EJMlInIgnaKI6/OrDRcabPj+6jxajIfIc++4Wc3OoDDFeiX+SRn83HGvbjqGIkDRkVHfHmbgze9iHXgObu5Tk+2+fbZ0hDk=
+	t=1745666603; cv=none; b=ZNGOjQUO3po3dCADPsvBkaAvY075AHXJIcpAJ43FRbaUkBSNUAIGXU24YqT3a8KauVxEgZXkFX0msJLSzj1uwjl0sFoiGKs2aaWWdDvQEyqepJbUoGIe+xlwYglJfTeT7+Z4zqCyy6DMbbesyAjI9sJ1Vq9wi1F38JRF4WxTm40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745666372; c=relaxed/simple;
-	bh=WD7l31tTK78CVAokxpQ9pdADeNBxjT8XEmfXKrkLxoc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ULLO7KAvyPEzbgEbVmYsQMDfjlDNVSforCNs2nMmGz0CB9BCEMxwHaJAwtNXyG8qYW4hY238V3nag4lk443jsek3HtlYL+zSpBME0Oocdu0C0PpAzfU8996F94rs8zoXq5jBlWgvfOD9lvBE1L4GbSRz0916fpVXqxDWmhJMdX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVtT9cyg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745666603; c=relaxed/simple;
+	bh=x3i4HzMbO44Q7jrUgJieySTzyi/c10pYmwrR/Byr1x0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=cONTUsh97anoLf1eytLAn39keorhPTPuoVKBdoMdCQEeqmG1/tyfVkYdZG3zaWUGBSwbGTU5uW+T+cBLol2IsD3X/uiQqHuC0fheEmqJ4DXWRvlMdygIQPv0Sq4tISNwXjblTzPpp/Ste6X9Lw/FNL9VpRDlUjdl/sF9sEFtVXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PNaohYDP; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVtT9cyg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C245FC4CEE2;
-	Sat, 26 Apr 2025 11:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745666370;
-	bh=WD7l31tTK78CVAokxpQ9pdADeNBxjT8XEmfXKrkLxoc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HVtT9cygcnh+KdWQfuD5PONAV2X6EbSyoywQMvxrjED7lwBdEZ/cQ0wsQmkLmGkFR
-	 xP27R48qRFp66MOdrHgFaNLwNJdqaQYl51S5dFxl0Q2crm0QEOLibA9IN7LiKpTW9Q
-	 T+hJ77t3fCPmq7ebIch7GTVAqQmd6uY2ZBLEtnAychE+L0vaKwll4btCwf6cTmiJ2R
-	 v72qun0n5wLf4iMr18CS2Errw2uVNR/nl78j8OnzQ/pXltDxVvdcO23JRUmWIcd2CD
-	 bVhqbGEoPAh5ttcJG1i04AEBNcDywQ2auEdCD1BuK2j6/regJJw3cz//eQx2VVZfp5
-	 a2knJb6AzboZg==
-Date: Sat, 26 Apr 2025 12:19:21 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Eugen
- Hristev <eugen.hristev@linaro.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-Message-ID: <20250426121921.24c89212@jic23-huawei>
-In-Reply-To: <b4218efe-3785-4065-a3f7-57824e882f09@baylibre.com>
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
-	<20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
-	<701bfc6a715046044dbc789f1c11c7f85395c7a8.camel@gmail.com>
-	<b4218efe-3785-4065-a3f7-57824e882f09@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PNaohYDP"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0FBD840E01F6;
+	Sat, 26 Apr 2025 11:23:19 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fYF9eBlUI2mf; Sat, 26 Apr 2025 11:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745666593; bh=c9+KCKVlASN7E8rHyCzG90/PK49s8DdZ0OkQYLXM8+4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=PNaohYDPHUfbFSWlDW0oYInYN2Q3osJn7hIJMSJLybZx3aL18Fp23TD1QjxNzCPBV
+	 4zVIofRBMEooIMJF8fgPcMt0ttaeqGexqpSMRSwya5WTUsXwU2uPIUxCc+4Sf9xYv1
+	 YubgbPQxGb50NyPaG7fuLdpHd1FcjApRtlcJVwADPXgeY/GFzTEK0JwFteXuQP0nzF
+	 ly8uWcuNBy+cku4ILmGmVDyNYKZNBpkH0N1f7Hpexx2g5vqrCp5bMYeGxrDZbKj70L
+	 50nonXscPVJTDvQP+yRfiscbHAR1crloQ+e638b+gXGG/ddnw89tw6Yp6jAz7Urn3z
+	 Y7oJXhl/Nq+TWl0weVzn1BoXo8DVPr293LONEttR78OMCkPozt8E8BtrcNIlPl72+R
+	 rR6GGjZNMx1hw6Nu/w6fmkT5OzjFdXTcUSNDGYVN7ggsbeeUgW4dph9bbYjWEtTFu+
+	 701PJlYu7qxzFx0hksnC39zwddLgDiVjYRdrCmpy/biAx31yI7MRf3X8b0oIvLVX8v
+	 gzAEYz3CbNQaqtT0ihqBZkaVCa914kSfowD+ddZJ7C+J+mHMGxooNcVeni6rW8euIs
+	 8O1zMwqqwoB180smVo4N6e0sHIrr4lefLs8JHQCkbHR12Kvqdqd7UA+qA3iuSiiqt7
+	 O5riyXCM3WykYNC/gjQomyhA=
+Received: from [IPv6:::1] (unknown [IPv6:2a02:3037:20b:53e8:6ccf:ad1c:d318:e478])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6445840E0192;
+	Sat, 26 Apr 2025 11:23:03 +0000 (UTC)
+Date: Sat, 26 Apr 2025 14:22:56 +0300
+From: Borislav Petkov <bp@alien8.de>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+CC: Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v5 03/16] x86/bugs: Restructure MMIO mitigation
+User-Agent: K-9 Mail for Android
+In-Reply-To: <LV3PR12MB9265EA487C377CA33F2731F594842@LV3PR12MB9265.namprd12.prod.outlook.com>
+References: <20250418161721.1855190-1-david.kaplan@amd.com> <20250418161721.1855190-4-david.kaplan@amd.com> <20250424201918.GAaAqcxqFV0raTOOKP@renoirsky.local> <LV3PR12MB9265795E7CF35195B7FE02A594852@LV3PR12MB9265.namprd12.prod.outlook.com> <20250425080946.GBaAtDShGzNQqi30vr@renoirsky.local> <LV3PR12MB9265EA487C377CA33F2731F594842@LV3PR12MB9265.namprd12.prod.outlook.com>
+Message-ID: <320802FA-6BD0-4E3E-8812-0B8D5FB5F464@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 Apr 2025 09:51:25 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On April 25, 2025 4:28:14 PM GMT+03:00, "Kaplan, David" <David=2EKaplan@amd=
+=2Ecom> wrote:
+>It was the intent to imply that=2E  If you look at patch 1, 2, and 4 then=
+ if verw_mitigation_selected is ever set to true, it means that some mitiga=
+tion is going to force X86_FEATURE_CLEAR_CPU_BUF=2E
 
-> On 4/23/25 4:18 AM, Nuno S=C3=A1 wrote:
-> > Hi David,
-> >=20
-> > Nice patch, I really think these will be very helpful... Just one comme=
-nt bellow
-> >=20
-> > On Tue, 2025-04-22 at 17:07 -0500, David Lechner wrote: =20
-> >> Add new macros to help with the common case of declaring a buffer that
-> >> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
-> >> to do correctly because of the alignment requirements of the timestamp.
-> >> This will make it easier for both authors and reviewers.
-> >>
-> >> To avoid double __align() attributes in cases where we also need DMA
-> >> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS.
-> >>
-> >> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> >> ---
-> >> =C2=A0include/linux/iio/iio.h | 36 ++++++++++++++++++++++++++++++++++++
-> >> =C2=A01 file changed, 36 insertions(+)
-> >>
-> >> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> >> index
-> >> 638cf2420fbd85cf2924d09d061df601d1d4bb2a..4dd811e3530e228a6fadbd80cfb2=
-f5068c3d
-> >> 6a9a 100644
-> >> --- a/include/linux/iio/iio.h
-> >> +++ b/include/linux/iio/iio.h
-> >> @@ -7,6 +7,7 @@
-> >> =C2=A0#ifndef _INDUSTRIAL_IO_H_
-> >> =C2=A0#define _INDUSTRIAL_IO_H_
-> >> =C2=A0
-> >> +#include <linux/align.h>
-> >> =C2=A0#include <linux/device.h>
-> >> =C2=A0#include <linux/cdev.h>
-> >> =C2=A0#include <linux/compiler_types.h>
-> >> @@ -777,6 +778,41 @@ static inline void *iio_device_get_drvdata(const =
-struct
-> >> iio_dev *indio_dev)
-> >> =C2=A0 * them safe for use with non-coherent DMA.
-> >> =C2=A0 */
-> >> =C2=A0#define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
-> >> +
-> >> +#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> >> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) /
-> >> sizeof(type)]
-> >> +
-> >> +/**
-> >> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
-> >> + * @type: element type of the buffer
-> >> + * @name: identifier name of the buffer
-> >> + * @count: number of elements in the buffer
-> >> + *
-> >> + * Declares a buffer that is safe to use with iio_push_to_buffer_with=
-_ts().
-> >> In
-> >> + * addition to allocating enough space for @count elements of @type, =
-it also
-> >> + * allocates space for a s64 timestamp at the end of the buffer and e=
-nsures
-> >> + * proper alignment of the timestamp.
-> >> + */
-> >> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> >> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
-> >> +
-> >> +/**
-> >> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer wi=
-th
-> >> timestamp
-> >> + * @type: element type of the buffer
-> >> + * @name: identifier name of the buffer
-> >> + * @count: number of elements in the buffer
-> >> + *
-> >> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses
-> >> __aligned(IIO_DMA_MINALIGN)
-> >> + * to ensure that the buffer doesn't share cachelines with anything t=
-hat
-> >> comes
-> >> + * before it in a struct. This should not be used for stack-allocated=
- buffers
-> >> + * as stack memory cannot generally be used for DMA.
-> >> + */
-> >> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
-> >> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count)
-> >> __aligned(IIO_DMA_MINALIGN)
-> >> +
-> >> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) =3D=3D 0,
-> >> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp
-> >> alignment");
-> >> =20
-> >=20
-> > I wonder about the usefulness of the above assert... AFAICT, the defaul=
-t =20
->=20
-> Jonathan seemed minorly concerned that a strange new architecture might h=
-ave
-> IIO_DMA_MINALIGN is < 8 some day, so I threw it in there. But agree, it s=
-eems
-> highly unlikely to actually happen.
+Aaaand the other shoe dropped=2E=2E=2E
 
-Yeah, it's unlikely.  Architectures using small sizes is not about cacheline
-length any more but rather than they guarantee that the system will work fi=
-ne irrespective
-of the cacheline length.  (e.g. x86_64 where the min align has been 8 for a=
- long
-time - possibly always? and cachelines are generally 64 bytes)  It seems ve=
-ry unlikely
-anyone will care about smaller than that so such a macro is really just
-paranoia!
+>Maybe the solution here is to clarify the comment above verw_mitigation_s=
+elected that it is set if any of those 4 bugs are going to enable X86_FEATU=
+RE_CLEAR_CPU_BUF=2E  So it implies that specific VERW-based mitigation=2E
+>
+>Or perhaps I could even rename the variable to be 'clear_cpu_buf_selected=
+'?
 
-The ARCH_DMA_MINALIGN fallback is sizeof(unsigned long long).
+Right, I think both should be the optimal thing as it would make it crysta=
+l clear=2E
 
-Basically I want the assert so I don't have to pay attention to weird new a=
-rchitectures.
-I'm not that fussed though if it is hard to do for some reason.
+>I think clarifying what verw_mitigation_selected means is better=2E  When=
+ that becomes clear, I think that the existing comments make sense=2E
+>
 
-Jonathan
+Ok, all clear=2E
+
+But you don't have to resend an updated set - I'll fix that up while apply=
+ing=2E
+
+Thx=2E
+
+
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
