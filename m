@@ -1,64 +1,72 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5F31F8AF8;
-	Sat, 26 Apr 2025 10:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056BA221DB7
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745664517; cv=none; b=OLfDdhO9R8QiAFKL/NWdYW2I7nTOlPVpxyRnNaD79tGmuRqS43F0+3B9cKgwk/UndCdIOf/z6/RP2AMmAiWrUrqXl10f8oWJosTQCJ7yq2uA8BGt7bZ8dXUNdMe31dqAOJw2rjGRzPh04azIBu+dcXv67fQocOVyY/dby69ywxs=
+	t=1745664524; cv=none; b=Mt0BfbE/FItL9D4IhlrEypS0gP48riRxL0KHLYiNJzE6yIy3Vjasx81gabYRuXPgwMuSMw049E/D2UrRc+XAtFxKA8SqZiVhMiCzTPctShwykhm9A9ktQ61Av8m32RZzLJskXCrqGziAjWa5WuhRZCnTte+BATshKERtlb4mxfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745664517; c=relaxed/simple;
-	bh=pKTDCK4cY26jRil8CWKoDTVuO0+ZKNDD8/E881y5Xes=;
+	s=arc-20240116; t=1745664524; c=relaxed/simple;
+	bh=4sRaghWWcD60w7uXTlO9CQBIPxZMoc5Qe6bm0cuHaKk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uvx9xqo17lAL5WmnJP5i+F52KwYe3lSYETYFiM54XNnor+/dt126plLJufO80wGiUrjQH3FhidmebmpZIng++tNwBtPHtGIbo+vMECZm9PInlblOTt1u/4h/18HKHaK27punUzBcMlB5KW9aseqoZBmSKJqNAdfhAOdEmdtUE0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8+O4Kx1; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=ap28rsPSR2Km+gjFDzoxYvtUUBovTOBv51kxvkdYPXSS9vD8eOHPeKtqkuTrHefhem55Kh/6yJycTyh1QZTkJRwdIRABUaeqTCqDvMSdkz9AdpoCT9HPCKdYbt0XMRfPLicvqZAKOwBI1brWT6f8dtNaWwp9xD9tKZHD8nZzP4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G1XVeFCq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8+O4Kx1"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so19548505e9.2;
-        Sat, 26 Apr 2025 03:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745664513; x=1746269313; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1DXo9j8925u2hJh5R0nY4xsxuRuRQj8ll0SgQyWiY5c=;
-        b=E8+O4Kx1NiSUdI9QT8iXHRDXMM4JYQYQq9UG8YGLmf6YqR5C1PwS+4i56YThg5S3//
-         RvvNhY/DI/EGH/e64twSAcrOu0kSRAjV60X5PMsHZvhxSKdDlDQna/25vJfhLAYmuyBi
-         qYAQzX5AlnpKRwoF1DmO4yLM+ys+QzGrVK5QMh7lXZ+urS+WC7n6xu4PG/cioDuihFTq
-         tVnI4eH480LPFjLZOAg0S4M9kJFFp75tBMQv7bRnQ0FaOoAtqudYGLWNtWxiWwNH2dMn
-         1+nUPvftoxyi20wkDShgTafLeEoTJk0RsoVfWc9UDsigf4QeXmaOV48EudGOd5xUH5UT
-         CRfA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G1XVeFCq"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53Q4drpZ016115
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:48:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	DJpZvWXgtHuZU26lIpKxv2J9vl2iSDRp1jpslHEmWKI=; b=G1XVeFCqeV64K18k
+	D+nNmwVTTSzGjSYxggyku5VPu1UdxPOxm85OuA7HWLzt4AUAXEatMgGS767fDH4R
+	W/6oyMft4wNca25RNUIm1/xD0s00h7OmjiUbruR6cbA3qcbtx/l9I8qIvLGAXoEw
+	1V8rYvjFA6Or3PbhOucfyRqD38miP7BFEhBS/0ZySZ7SM8u4PHdGmFJKUf+wOvtr
+	gOUEWy/QDhqDT+kdzOuspZwDMVNcQj8CKt5Ajsa3oq1Glogk6Onzz3KBZu5D/uEI
+	+HJkRuDIh6izodPEcC2iDS+EvKVUhXcttEr+2FgbDyPUexOBwgzcCw9JN893uPs1
+	KJtvmg==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnmrrw9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 10:48:42 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6eeb8a269a7so9524286d6.0
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 03:48:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745664513; x=1746269313;
+        d=1e100.net; s=20230601; t=1745664521; x=1746269321;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1DXo9j8925u2hJh5R0nY4xsxuRuRQj8ll0SgQyWiY5c=;
-        b=RELfWIXZrzL6kv1UibxMg7DvcSZycQpGuGB+zab0+K/5wSIQgbkIiipPmqr1TmDKnd
-         fWzT6yTr/FbCFQLzWsz8IEHTvv2pN6GHZ+kZGeP+ujpgX+WzGLe8ZqkFEjOjDwdl6NCU
-         /CmqjrKtC67YvSUY9s+1cwBHv5T797TzF/8ZsHlG9BO5ZJXPtz4hJjOAtfnNw2oXAO+t
-         CStV5xrkcifzznN0YcS4HcjcJEIuoQVwRUE69K2TXmxBST1eOow+t3XPyTMS/AdMMbVU
-         fbau1Yl9BPyLpbwPutTe3h7TcoIeD0G1EdLJnaX9FJ9kTywuyYIomeiOraJLE6+TMkTO
-         GFFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDQgrn7PWITjlV3cGmMDINph2r3iSYNevPEXGQ7A7LSpNHgrC/G+bYwOdxjKlsKKH0bihzp3NSVukeuNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOS4QpojA3AHw3+XVx56jv8xAFW8zPU0D9DGBfjHXLlzwJm1y4
-	bexSV8Bv96NzIRMIqBpzFp+R7p33qJd93EdRcdYw0t1u2iRLuhAa
-X-Gm-Gg: ASbGnct8R+/E3vSwfe+gab8h2ovZzvKI2u8Yy+DP2XkNEGzF422WeF3A2D3O7hbbtvy
-	1f4112PUSi+KJJcxw+iMVWn49UZkCMukgBmECucYnTeHeFr/4DV+PB+2Sj83mymXx53PMlOW/OM
-	DgmEQ+Qfzw+q0aOy0XXeJO704drD1dBVx009Tv6zBk+fI5icIhKu7NF3LCsdUQNi0HD4YW+PlEk
-	R037MOogYOhGH+/LL/oR/cBfNO2u9ZKJmEqyYwqkmkgXyEng6LbJrnGr5ZqDLLv9EKN8yQE4AvZ
-	eAWuvN1NcwgzXTm2qcjo4KdzCwWs/hs2+XT1Hz1nbtpXNTueYbh0Ow==
-X-Google-Smtp-Source: AGHT+IHR27TaJXcIDk87X9O4X9rTf8eBIEdWKyhhRifdVmAv7cVmRMYL/veddYC5/nrZtLKd32NVxw==
-X-Received: by 2002:a05:600c:a363:b0:43d:47b7:b32d with SMTP id 5b1f17b1804b1-440a66aaf09mr41548825e9.25.1745664513464;
-        Sat, 26 Apr 2025 03:48:33 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a530324dsm54255275e9.10.2025.04.26.03.48.32
+        bh=DJpZvWXgtHuZU26lIpKxv2J9vl2iSDRp1jpslHEmWKI=;
+        b=QXrzsOJiiKSjr+Jn5FItZIW4/p2Ngstc1wckDxKSeWG4FjS+O192oVL0Q0aogZ29aY
+         OUbXqGWj/uQNnt+e2KJ0mliN7+BD77C+zNpWCr2AlWYnp8722bikY1BdCEbHeylVAG4s
+         0T8DtFkuvLzcPWW1lvIzta+DQMft+mnK8h2AJv76k93GwvySNRAmIY8nOTjSEzptoZxC
+         DeDW2rUrIQR9SbQWyuJd3K12BAU2e1W1zK8SLN0rk2StZnyZQEzwdSyp+2/yK5FeXdKl
+         +hcbpE6ikjufmS76u56iRFyDMvunCY4epUxVvDpssAAFQivZJb1Tayvw0XJHl3I27Hbr
+         QhEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKb3FNXSgiw70F6bp/8OQsnXoxICk0KV+6QRvbxuuPsRVjk17R12kKZtT1KDMTgqOgyxfa56FFq6V18J0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcv0/5ZKZ/JorK4Ykm+WxVT7dn+71zeD8Xm0i3PDZqMNvlHyQ1
+	ptKu7CezcrwDt757xWOVke2TOq48ss4hLstcWOC80opjLGeONRnFVBJoILYaJW4aGxlWj4O9HfR
+	hR3EBMCs/bAwqbu2E2UCZ/tKGdVebIO/LuTTeqR4SOeMHLypgMUU5WzueCn+WaTw=
+X-Gm-Gg: ASbGncuSZbLtJQByOXLD0PDnoAosXyR2jJnQcExVHqc3sSV9ZU4G7o2ExGtEaNqQ9Dp
+	YpmerZDTi/BNF32WTVFaJ++DG/HiAw+wnbK+qQ46+ourOSSpglOQQIcRnCAq64iJVlKi5cd4vHo
+	rdVnrHkAB727g1zjIghTMXNobllzRmIjU18YdqMc1/SY5756KfCsOw4dcMzBw+vZDR2M6UPpVp/
+	6y8bviH+1KUVZMFunT2+09MNNBa2P1bv5tLugldBTtpbgNOJ6PQWesSV9L1Zod9bFyA+WiLjkjq
+	oeNAAzvjqnJDNMQ5Lp6xD7anINc+yaEol2ZniXy9d4mf15pdan96D8V5CLsxJHkovBU=
+X-Received: by 2002:ad4:5ca8:0:b0:6e8:fcd2:360e with SMTP id 6a1803df08f44-6f4cba61ff7mr32939266d6.8.1745664520785;
+        Sat, 26 Apr 2025 03:48:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF66thbVT17q0t+hsUlfIDPNUs130uihaEVBIxsM6mBjrr8hzmW8LMlanJd82uYVVyB8uTOEg==
+X-Received: by 2002:ad4:5ca8:0:b0:6e8:fcd2:360e with SMTP id 6a1803df08f44-6f4cba61ff7mr32939076d6.8.1745664520440;
+        Sat, 26 Apr 2025 03:48:40 -0700 (PDT)
+Received: from [192.168.65.154] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7014006desm2478040a12.31.2025.04.26.03.48.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 03:48:33 -0700 (PDT)
-Message-ID: <fd150149-e7d3-4b09-b6e2-a633edda5791@gmail.com>
-Date: Sat, 26 Apr 2025 12:48:26 +0200
+        Sat, 26 Apr 2025 03:48:39 -0700 (PDT)
+Message-ID: <17a1a4d9-fdc5-477a-bf4e-91cae5a62479@oss.qualcomm.com>
+Date: Sat, 26 Apr 2025 12:48:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,49 +74,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] rust: pin-init: fix typos
-To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250426083901.13289-1-benno.lossin@proton.me>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20250426083901.13289-1-benno.lossin@proton.me>
+Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: x1e80100-qcp: Add qref supply
+ for PCIe PHYs
+To: Johan Hovold <johan@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com, quic_cang@quicinc.com, quic_qianyu@quicinc.com
+References: <20250425092955.4099677-1-quic_wenbyao@quicinc.com>
+ <20250425092955.4099677-5-quic_wenbyao@quicinc.com>
+ <aAtbFQIQMJO-BYe_@hovoldconsulting.com>
+ <e82eda3b-b27f-4584-ad23-562ca4b22847@oss.qualcomm.com>
+ <aAt54vikoREWZyGY@hovoldconsulting.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <aAt54vikoREWZyGY@hovoldconsulting.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: iRkgQqcuOnRNWanqXkIC2rQTnB9RlQ_1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI2MDA3MyBTYWx0ZWRfXyUBT/+5rHdl1 UlfOJHQin5zycbyB3uWRUJS12vXLSB2H42MbHe2MI1DLtofpwFdPXlrHa2qDCoMdrDJVd9Ay7uj ZHH7qR/1wIVP/cz5etvDg/Jy7APKuzfR83SCHbopk44XEggeRWwGqHxo9XcZZp1T0UTjbkNSKyA
+ 6aYotYHKkOBcE+gfr6yWc62hdbczgVuSatu/9pCyVBmzAFOVP/38oIaGmtzj1pxVRqfk3pu3MwU 8GYLdRrILTrBEb0zhzk2xZrFMG+xkGUWYIEsk3Ks/2W9at2QhLOY1/arZxCRpaSEx85FSGB3Fyk wTgy0KfZc0kqSfyZWtpot7GeKV/fd2nA4NUS173dGp5TohOuh5wiU+CEmELR9pLd+tkENYoV09e
+ hdfALnNcpjKoT9M1mPivh0pU+CwCgrzWiK7/ONmbaorvDUwq6dxZ3PNNHMBmy/4W+2sO2NwU
+X-Proofpoint-GUID: iRkgQqcuOnRNWanqXkIC2rQTnB9RlQ_1
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=680cba0a cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=8SvZGl_aAWB78hht054A:9 a=QEXdDO2ut3YA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-26_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504260073
 
-On 26.04.25 10:39 AM, Benno Lossin wrote:
-> Correct two typos in the `Wrapper::pin_init` documentation.
+On 4/25/25 2:02 PM, Johan Hovold wrote:
+> On Fri, Apr 25, 2025 at 12:03:06PM +0200, Konrad Dybcio wrote:
+>> On 4/25/25 11:51 AM, Johan Hovold wrote:
+>>> On Fri, Apr 25, 2025 at 05:29:55PM +0800, Wenbin Yao wrote:
+>>>> From: Qiang Yu <quic_qianyu@quicinc.com>
+>>>>
+>>>> All PCIe PHYs on X1E80100 require vdda-qref power supplies, but this is
+>>>> missing in the current PHY device tree node. The PCIe port can still
+>>>> function because the regulator L3J, which vdda-qref consumes, is voted by
+>>>> other components.
+>>>>
+>>>> Since the device tree should accurately describe the hardware, add the
+>>>> vdda-qref power supply explicitly in all PCIe PHY device nodes.
+>>>
+>>> AFAIU the PHYs do not use this qref supply directly so it does not
+>>> belong in the PHY node (but possibly in the tcsr node that provides the
+>>> refclk).
+>>>
+>>> Since commit 031b46b4729b ("phy: qcom: qmp-pcie: drop bogus x1e80100
+>>> qref supplies") it also won't have any effect for pcie4 and pcie6.
+>>
+>> QREF is a separate hw block distributing the reference clocks across
+>> certain on-SoC peripherals
+>>
+>> If its power goes out, I don't think much of the platform would be
+>> functional anyway, so it's redundant here..
+>>
+>> It doesn't have its own single register region and it's frankly
+>> one-shot-configured way before Linux starts up, so there should be
+>> no need of describing it at all.
 > 
-> Link: https://github.com/Rust-for-Linux/pin-init/pull/48/commits/fd0bf5e244b685188dc642fc4a0bd3f042468fdb
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-> ---
-> Second round of pin-init syncs for v6.16. Depends on
-> 
->     https://lore.kernel.org/all/20250421221728.528089-1-benno.lossin@proton.me
-> ---
->  rust/pin-init/src/lib.rs | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-> index 05a0cd6ad8f4..b5a295effd9c 100644
-> --- a/rust/pin-init/src/lib.rs
-> +++ b/rust/pin-init/src/lib.rs
-> @@ -1580,7 +1580,7 @@ unsafe impl<$first: Zeroable, $($t: Zeroable),*> Zeroable for ($first, $($t),*)
->  /// });
->  /// ```
->  pub trait Wrapper<T> {
-> -    /// Create an pin-initializer for a [`Self`] containing `T` form the `value_init` initializer.
-> +    /// Creates an pin-initializer for a [`Self`] containing `T` from the `value_init` initializer.
->      fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E>;
->  }
->  
-> 
-> base-commit: 39051adb070432b283e6c11b2b24937281b9f97f
+> Then it sounds like the qref supplies should be marked as always-on. Can
+> they be disabled at all?
 
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+The best answer I can say is "maybe". I would (without knowing any better)
+assume RPMh wouldn't let you turn them off. QREF predictably takes VDD_CX/MX
+and some additional lines
 
+Konrad
