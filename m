@@ -1,122 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365E13594E;
-	Sat, 26 Apr 2025 09:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5660C18C91F
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 09:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745659460; cv=none; b=VTcb6rF269NqsucMWH92mj7ff7QltRNfET8m6AR4X7UTmht68aPjiUKZFPBZbWIvG0YECkBFXLvzDpAroIH9Af3xE7ZfPsACSkbnJtCIpTxVeCHXY+ZYp0FuQDILyDC7kIUL7ZywJ6PLdKd1vFobj+ByUOOOLgScdxK6K1Lsw+A=
+	t=1745660534; cv=none; b=AShWBtXkbfvmXRmxr2tM3W5VhVft9D+E2BunHYj5ye1+NRcEHV5XdQQ1wNGz6wUzitw/nUE5ncUon7cup2oMXWj5tvNZP+Iwcz2URKr8r/10w45vsUg2nLYupiwQss9LxkffUAnOL39IsXDTOR9S09P4EFQikAfv8cVdd/80U7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745659460; c=relaxed/simple;
-	bh=3HU1llpcqAH9jf1dYiuQkto3Ic+P7zmEPkPzWsUsNQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ga0zI+JtfJ8VtDlKKFuWt5XkuA/u956oMXi3lEjJzPXe4dVHQu3XtF3EgY8g0MILIi4ddCvoLlQFkuN/TZE/R7TN0RQHtCIxZGj2mo/sBIsvcpPM3ZdZ2LroWYMjdbGeNWzB8VHxPtAW1Isouhvq1G6Bs9BB/R9c1iXyGBB2FH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UeACbn+P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745660534; c=relaxed/simple;
+	bh=Nv0rYP6IGqsq13b+hvJr3Ld1oMy6sVANAyed5w1+V3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KUCj68gAQAvlsoIyMYvhEx0QmT9KVOryN/ixDOR6HB6Xc1N0i5f9d0co0RIZBXnpCVfGWCR7jDlJvAX6NTaudzkHgmv1qA8Np2SAlJsJM0yCbk8oKof23TN7T1xKrckMVEF/eadRSlv/CMEApyUd3OkZRtTNI+85U8b7mxDsGYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CknSa5wL; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UeACbn+P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88F44C4CEE2;
-	Sat, 26 Apr 2025 09:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745659459;
-	bh=3HU1llpcqAH9jf1dYiuQkto3Ic+P7zmEPkPzWsUsNQs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UeACbn+PcZfg+BhOKoasZijSgsRiiCZKL+ZukPX8tiUGPxBq78RDB87bD0fjxW/m5
-	 gEAmPRed/W3X6k5Vma18OHSjEHE12n6CTwGsxchKzziZLuAjLRFpyLydV1espN0euV
-	 /NwcWknM/c2Ajqmy+Iq1cTrWA+esiGqaUt+xEFss=
-Date: Sat, 26 Apr 2025 11:24:17 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Nicolas Pitre <nico@fluxnic.net>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Nicolas Pitre <npitre@baylibre.com>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/14] vt: implement proper Unicode handling
-Message-ID: <2025042609-diagnoses-whinny-36b1@gregkh>
-References: <2025042517-defacing-lushly-10d5@gregkh>
- <2EDC209B-7D6B-4EFB-ADD0-58D494D8AF98@fluxnic.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CknSa5wL"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22d95f0dda4so48787725ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 02:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745660532; x=1746265332; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VQ3DTZIDBKyUTpC89W+rkrQQ38tOpW2Rf19IbsFWFyw=;
+        b=CknSa5wL/25rjRl34fVdds8E0t6MW0rOsSetnPQZniku54SZSGusqvSX+eDqmlBLOG
+         X0iX2ss/kBrMmbpWViXJY0j69g4D5udfEcO1EXgKneq704mZqV01tulEcbop/7W2wXT3
+         uAzi6A6AvnOSM7DOk2LvpFp8sL/XESpBrasLDZ8dYC1ZgsowR7I+5fR/MefdNoJ2BtxV
+         5bJ4zTTK/FE1uFNvDroQ5PrJNK8bpjEab9LOYF1VEA+B79vcKkyYAhzKeqctQejawWQ8
+         zSlhTDQBsEcg1TgXITv/gOvWDErgImR/PbYanBWadm7in2DBK+eb0wvizElp14C2It97
+         jzIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745660532; x=1746265332;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VQ3DTZIDBKyUTpC89W+rkrQQ38tOpW2Rf19IbsFWFyw=;
+        b=GIoE4GTEC9p+PE8D9/ntYU8GarWpaCk9D8754XdrbdyYSB2Q6DgN6e7/IOO73rWroj
+         He4xfmVfcbQvvGeGk8/zoTz8S3S6zNNviqbGfV11BfaeS3bKYq4T2I29bgUkz5JBvT2L
+         C5y27pUkSTCBFCi8TJtFYkOm7nXhVNvA+vmSj4LdkhXs0/hRGEidE9Hs0qzIMKhZPaVg
+         lOMN9f2wpooStG6ekMjcztEdMeQpjsyZ816p/sT1awo/n+bT8tEKnDQWRTN4b646/7sa
+         DqY/vZtIm8HyWEM2GjpQWyxB4TZ3IpoHZrzw0kCh1zUee5pUfGvdSLKsiEcq1oTsAT5i
+         rPCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWS1pan+nOIdaKoCD6FUESsw6abQb7UbUTtiH86wyM3vvu0ERqQRpkc828R4qL00H3uHcKuZNs0GFn/e7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1QZKJnicUV7BWEWYhZGRhbUHmJPb5IJGqEHyJNsDaNgKbEa3V
+	h0j752tyPgXYWHLCsnVRw2eZrNy+8AGVj00fO5GBgn+8I6KoBcGo
+X-Gm-Gg: ASbGnctHdZkGaBXM0g1J5mym7LG8cgy0N+z41DFzaST7AoeivvZ4h/60yp54LuF2ygk
+	qqHNSbMI92qXiljDQdKHY/+VeYZkLu3UJt2umkxrkUNINdusE3kamD08yypGy4kRG6Dca+TyKD6
+	fbcSLngbaZprOQjcX4eZh+tB2sO/4wEZbsSW2786HhaDRBG+P+NB0wDhuJsWzQ/RL1WllN5Lje4
+	o0SLxBkU8YWn6vScYVbRf6OcribtssiTJ5mnHkhqu/Es9H9DFExTz40OdYJXKqLgNlLpXEsZFeZ
+	enLnpgfsPdT3ggxRM6D+GS7Mg7P28il9z+jYCUrW5Cv4ukM1MAWxQvr/B5sx3lMm
+X-Google-Smtp-Source: AGHT+IGO+1eyJtJ2d8jWLaBlSuplGgg+UQXEcNY99QeUtdj+GjRBjplxauCwihmyYWjE4smmygvL0Q==
+X-Received: by 2002:a17:902:ce84:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22dbf62168amr83880595ad.41.1745660532401;
+        Sat, 26 Apr 2025 02:42:12 -0700 (PDT)
+Received: from localhost.localdomain ([122.182.179.188])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e74dfsm46369825ad.124.2025.04.26.02.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 02:42:11 -0700 (PDT)
+From: Darshan Rathod <darshanrathod475@gmail.com>
+To: abbotti@mev.co.uk
+Cc: hsweeten@visionengravers.com,
+	linux-kernel@vger.kernel.org,
+	Darshan Rathod <darshanrathod475@gmail.com>
+Subject: [PATCH] staging: comedi: das16 : fixed a struct warning in code
+Date: Sat, 26 Apr 2025 09:41:45 +0000
+Message-ID: <20250426094145.13564-1-darshanrathod475@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2EDC209B-7D6B-4EFB-ADD0-58D494D8AF98@fluxnic.net>
 
-On Fri, Apr 25, 2025 at 11:13:40AM -0500, Nicolas Pitre wrote:
-> 
-> 
-> > Le 25 avr. 2025 à 09:29, Greg Kroah-Hartman <gregkh@linuxfoundation.org> a écrit :
-> > 
-> > ﻿On Thu, Apr 17, 2025 at 02:45:02PM -0400, Nicolas Pitre wrote:
-> >> The Linux VT console has many problems with regards to proper Unicode
-> >> handling:
-> >> 
-> >> - All new double-width Unicode code points which have been introduced since
-> >>  Unicode 5.0 are not recognized as such (we're at Unicode 16.0 now).
-> >> 
-> >> - Zero-width code points are not recognized at all. If you try to edit files
-> >>  containing a lot of emojis, you will see the rendering issues. When there
-> >>  are a lot of zero-width characters (like "variation selectors"), long
-> >>  lines get wrapped, but any Unicode-aware editor thinks that the content
-> >>  was rendered properly and its rendering logic starts to work in very bad
-> >>  ways. Combine this with tmux or screen, and there is a huge mess going on
-> >>  in the terminal.
-> >> 
-> >> - Also, text which uses combining diacritics has the same effect as text
-> >>  with zero-width characters as programs expect the characters to take fewer
-> >>  columns than what they actually do.
-> >> 
-> >> Some may argue that the Linux VT console is unmaintained and/or not used
-> >> much any longer and that one should consider a user space terminal
-> >> alternative instead. But every such alternative that is not less maintained
-> >> than the Linux VT console does require a full heavy graphical environment
-> >> and that is the exact antithesis of what the Linux console is meant to be.
-> >> 
-> >> Furthermore, there is a significant Linux console user base represented by
-> >> blind users (which I'm a member of) for whom the alternatives are way more
-> >> cumbersome to use reducing our productivity. So it has to stay and
-> >> be maintained to the best of our abilities.
-> >> 
-> >> That being said...
-> >> 
-> >> This patch series is about fixing all the above issues. This is accomplished
-> >> with some Python scripts leveraging Python's unicodedata module to generate
-> >> C code with lookup tables that is suitable for the kernel. In summary:
-> >> 
-> >> - The double-width code point table is updated to the latest Unicode version
-> >>  and the table itself is optimized to reduce its size.
-> >> 
-> >> - A zero-width code point table is created and the console code is modified
-> >>  to properly use it.
-> >> 
-> >> - A table with base character + combining mark pairs is created to convert
-> >>  them into their precomposed equivalents when they're encountered.
-> >>  By default the generated table contains most commonly used Latin, Greek,
-> >>  and Cyrillic recomposition pairs only, but one can execute the provided
-> >>  script with the --full argument to create a table that covers all
-> >>  possibilities. Combining marks that are not listed in the table are simply
-> >>  treated like zero-width code points and properly ignored.
-> >> 
-> >> - All those tables plus related lookup code require about 3500 additional
-> >>  bytes of text which is not very significant these days. Yet, one
-> >>  can still set CONFIG_CONSOLE_TRANSLATIONS=n to configure this all out
-> >>  if need be.
-> >> 
-> >> Note: The generated C code makes scripts/checkpatch.pl complain about
-> >>      "... exceeds 100 columns" because the inserted comments with code
-> >>      point names, well, make some inlines exceed 100 columns. Please make
-> >>      an exception for those files and disregard those warnings. When
-> >>      checkpatch.pl is used on those files directly with -f then it doesn't
-> >>      complain.
-> >> 
-> >> This series was tested on top of v6.15-rc2.
-> > 
-> > I've taken the first version of this, should I revert all of them and
-> > then apply these, or do you want to send a diff between this and what is
-> > in the tty-next tree?
-> Please remove what you have and replace with this v3. Will be much cleaner this way. 
+fixed a warning messages for a struct
+Signed-off-by: Darshan Rathod <darshanrathod475@gmail.com>
+---
+ drivers/comedi/drivers/das16.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Ok, just did that, thanks.
+diff --git a/drivers/comedi/drivers/das16.c b/drivers/comedi/drivers/das16.c
+index f5ca6c0d4d0c..73717f75d60f 100644
+--- a/drivers/comedi/drivers/das16.c
++++ b/drivers/comedi/drivers/das16.c
+@@ -956,8 +956,8 @@ static const struct comedi_lrange *das16_ai_range(struct comedi_device *dev,
+ 
+ 	/* get any user-defined input range */
+ 	if (pg_type == das16_pg_none && (min || max)) {
+-		struct comedi_lrange *lrange;
+-		struct comedi_krange *krange;
++		const struct comedi_lrange *lrange;
++		const struct comedi_krange *krange;
+ 
+ 		/* allocate single-range range table */
+ 		lrange = comedi_alloc_spriv(s,
+@@ -990,8 +990,8 @@ static const struct comedi_lrange *das16_ao_range(struct comedi_device *dev,
+ 
+ 	/* get any user-defined output range */
+ 	if (min || max) {
+-		struct comedi_lrange *lrange;
+-		struct comedi_krange *krange;
++		const struct comedi_lrange *lrange;
++		const struct comedi_krange *krange;
+ 
+ 		/* allocate single-range range table */
+ 		lrange = comedi_alloc_spriv(s,
+-- 
+2.43.0
 
-greg k-h
