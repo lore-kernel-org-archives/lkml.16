@@ -1,161 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E1D2236FB;
-	Sat, 26 Apr 2025 07:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62071187FFA;
+	Sat, 26 Apr 2025 07:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745650908; cv=none; b=LnJ0XXBgN9/FTwcBYBMtMxChjhEEzGEjGWf28bEWHW28G6SMxRyMdzIB6uKZDcNI8svzRXHX4KHbNvOODUmaMqXTj3JTO8bF0E2fh8I5SIfzfeObYdtusXMS+BxvUkrI7cRTcdlG7/vycyivmsC4sVpMIG0c700ZJH/w98lTvc0=
+	t=1745651821; cv=none; b=IXXkD5ftSUGonesM7d7nVBUmJ18niPu49UOuW2GidkSinBVOHkvjl1tM0TMJiYdTjJynTHRve0zX7D5BMMllDvcJwr3ez4JiX2x9bYrP/s6UuamvyZrm+NZsFaNyZz3hrqLp7nAO/4Q7khPX/Zb2acfMHn9wmkyrx2iSlEBxj24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745650908; c=relaxed/simple;
-	bh=GP0K1Rv9ZXdHQPB5bmi50oLNLtVvYZGG8O2PcVpf/mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Noel+yuhC+wBIouF5iNL9z73B4NscaGf6iwaiiLkHpuSUxT2GELHsLh+Pd+J7yaZTzRKQ7jYQT1jj3oS8RtKfsYvgIhVMGWZQOoAjZeGsea9RHoGtLK8fICEkaMMET0vX27sxACI5q3kgYCJzEugreHFeOHDuOzGP3vBnRocIHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5l3cfcv; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745651821; c=relaxed/simple;
+	bh=RZs2dAKJe9VKR+N9+Zul2QDjzytVTXQkvTXnhgdAz3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ur1lpAV0XK6hVAXR2YtLNakDUhRLY9Fva9bP4/qkJC3wNmgE50EPRf4ka87w6rh+VJFB1e8AmRN+65NtrkLb8uDI6TFTykUHEEJi5UHUhCo8AYOGfz4YBTZwzpx0JCwoe1SQgc0WXiyYpylPoUmMVAHaw47egAUYIs75OI3DcJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aFbWVctW; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5l3cfcv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745650907; x=1777186907;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GP0K1Rv9ZXdHQPB5bmi50oLNLtVvYZGG8O2PcVpf/mg=;
-  b=k5l3cfcv7wiw2SitjxMFDLQjo2i0DD2CwW9exphdvNUPtVcDwc48m9jP
-   045xiwMxp0rsypAKq2O1cv1ZG0T0K1dkxJKmsiez3dCZozWM7oM/b7Pxj
-   kHXO4HqB5a2i121bXJsBB7i0de7HADzqkYprez/vrvIHH1cpAV8weAYd1
-   y/PJcmoZpH7IdoHApHDSb1wpFyGZy2/xBnCp1Q96EqIXrQtelSOT2BrSR
-   oDcb5mIjPfOUGZvVvIlsXvNdwjcq6CUQe0j0Y912CV/BPQQEJHKRsR2uN
-   mopqmsQ8zjiM8cBkMto4ajo8ORpWi4Y2AUWzq9uwEUZkQ78DIQqOsQ/VG
-   w==;
-X-CSE-ConnectionGUID: J9iDnp3MTfaFlGK7t9A12g==
-X-CSE-MsgGUID: Yn2vQo1DTeeQZ0tMZBtVJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="51112568"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="51112568"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 00:01:46 -0700
-X-CSE-ConnectionGUID: UB3CB3T6QZWK5LSf3Zj6Ag==
-X-CSE-MsgGUID: ALlMkpTIRLKP8WKzX6udoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="138238692"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 26 Apr 2025 00:01:40 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8ZXe-0005lJ-18;
-	Sat, 26 Apr 2025 07:01:38 +0000
-Date: Sat, 26 Apr 2025 15:01:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, lee@kernel.org,
-	alexandre.torgue@foss.st.com, daniel.lezcano@linaro.org,
-	tglx@linutronix.de
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	ukleinek@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	jic23@kernel.org, robh@kernel.org, catalin.marinas@arm.com,
-	will@kernel.org, devicetree@vger.kernel.org, wbg@kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	olivier.moysan@foss.st.com, fabrice.gasnier@foss.st.com
-Subject: Re: [PATCH v5 3/7] clocksource: stm32-lptimer: add support for
- stm32mp25
-Message-ID: <202504261456.aCATBoYN-lkp@intel.com>
-References: <20250425124755.166193-4-fabrice.gasnier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aFbWVctW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=mXo6Y
+	IPjrSN2c1K17qouHUGEumJJRJfHpUXH7X0cEzI=; b=aFbWVctWoxty0ezwkpQMe
+	JctZBqkfM+f/sRtxMmdyvKwTfzo4qdi9SkEYwGomYOQAm1zHZn0c9fU/bS0Jygu5
+	57KgATMyS4Ep6XLUzzQHb5oAz7Ez/y6nfM0a1y71QYM7jwMH388XofUAJO0Nw3P6
+	Uy8McZb+MGMQ34tuyU8N2o=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3H1s0iAxo+8N6Cg--.20762S3;
+	Sat, 26 Apr 2025 15:16:09 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: krzk+dt@kernel.org,
+	robh@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	inux-rockchip@lists.infradead.org,
+	Andy Yan <andyshrk@163.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: Enable eDP display for Cool Pi GenBook
+Date: Sat, 26 Apr 2025 15:15:41 +0800
+Message-ID: <20250426071554.1305042-2-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250426071554.1305042-1-andyshrk@163.com>
+References: <20250426071554.1305042-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425124755.166193-4-fabrice.gasnier@foss.st.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3H1s0iAxo+8N6Cg--.20762S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7trWxtFW8Ww1DKw48Jr1kXwb_yoW8Zr4fpw
+	nrAFZagF1furW7JwnIyrn7GF1rJw4vyrW3Ca4fZFy8tF47WFykGasrW3ySyr1UJFWIvayr
+	AF1qqFy2gF1qqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE0PfJUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAE7XmgMf-Tn0AAAss
 
-Hi Fabrice,
+Cool Pi CM5 GenBook equipped with a 1080P eDP panel, the panel
+connected on board with 30/40 pin connector.
 
-kernel test robot noticed the following build warnings:
+There is no hpd hooked up on the board, so we need to set
+hpd-absent-delay-ms in dts.
 
-[auto build test WARNING on lee-mfd/for-mfd-next]
-[also build test WARNING on lee-leds/for-leds-next linus/master v6.15-rc3 next-20250424]
-[cannot apply to atorgue-stm32/stm32-next lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Andy Yan <andyshrk@163.com>
+---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Fabrice-Gasnier/dt-bindings-mfd-stm32-lptimer-add-support-for-stm32mp25/20250425-210409
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20250425124755.166193-4-fabrice.gasnier%40foss.st.com
-patch subject: [PATCH v5 3/7] clocksource: stm32-lptimer: add support for stm32mp25
-config: arm-randconfig-003-20250426 (https://download.01.org/0day-ci/archive/20250426/202504261456.aCATBoYN-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504261456.aCATBoYN-lkp@intel.com/reproduce)
+ .../rockchip/rk3588-coolpi-cm5-genbook.dts    | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504261456.aCATBoYN-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/clocksource/timer-stm32-lp.c:57:6: warning: logical not is only applied to the left hand side of this bitwise operator [-Wlogical-not-parentheses]
-      57 |         if (!val & STM32_LPTIM_ENABLE) {
-         |             ^    ~
-   drivers/clocksource/timer-stm32-lp.c:57:6: note: add parentheses after the '!' to evaluate the bitwise operator first
-      57 |         if (!val & STM32_LPTIM_ENABLE) {
-         |             ^                        
-         |              (                       )
-   drivers/clocksource/timer-stm32-lp.c:57:6: note: add parentheses around left hand side expression to silence this warning
-      57 |         if (!val & STM32_LPTIM_ENABLE) {
-         |             ^
-         |             (   )
-   1 warning generated.
-
-
-vim +57 drivers/clocksource/timer-stm32-lp.c
-
-    50	
-    51	static int stm32mp25_clkevent_lp_set_evt(struct stm32_lp_private *priv, unsigned long evt)
-    52	{
-    53		int ret;
-    54		u32 val;
-    55	
-    56		regmap_read(priv->reg, STM32_LPTIM_CR, &val);
-  > 57		if (!val & STM32_LPTIM_ENABLE) {
-    58			/* Enable LPTIMER to be able to write into IER and ARR registers */
-    59			regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
-    60			/*
-    61			 * After setting the ENABLE bit, a delay of two counter clock cycles is needed
-    62			 * before the LPTIM is actually enabled. For 32KHz rate, this makes approximately
-    63			 * 62.5 micro-seconds, round it up.
-    64			 */
-    65			udelay(63);
-    66		}
-    67		/* set next event counter */
-    68		regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
-    69		/* enable ARR interrupt */
-    70		regmap_write(priv->reg, STM32_LPTIM_IER, STM32_LPTIM_ARRMIE);
-    71	
-    72		/* Poll DIEROK and ARROK to ensure register access has completed */
-    73		ret = regmap_read_poll_timeout_atomic(priv->reg, STM32_LPTIM_ISR, val,
-    74						      (val & STM32_LPTIM_DIEROK_ARROK) ==
-    75						      STM32_LPTIM_DIEROK_ARROK,
-    76						      10, 500);
-    77		if (ret) {
-    78			dev_err(priv->dev, "access to LPTIM timed out\n");
-    79			/* Disable LPTIMER */
-    80			regmap_write(priv->reg, STM32_LPTIM_CR, 0);
-    81			return ret;
-    82		}
-    83		/* Clear DIEROK and ARROK flags */
-    84		regmap_write(priv->reg, STM32_LPTIM_ICR, STM32_LPTIM_DIEROKCF_ARROKCF);
-    85	
-    86		return 0;
-    87	}
-    88	
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-genbook.dts b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-genbook.dts
+index 6dc10da5215f..738637ecaf55 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-genbook.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-genbook.dts
+@@ -148,6 +148,40 @@ vcc5v0_usb_host0: vcc5v0_usb30_host: regulator-vcc5v0-usb-host {
+ 	};
+ };
+ 
++&edp1 {
++	force-hpd;
++	status = "okay";
++
++	aux-bus {
++		panel {
++			compatible = "edp-panel";
++			hpd-absent-delay-ms = <200>;
++			no-hpd;
++			backlight = <&backlight>;
++			power-supply = <&vcc3v3_lcd>;
++
++			port {
++				panel_in_edp: endpoint {
++					remote-endpoint = <&edp_out_panel>;
++				};
++			};
++		};
++	};
++};
++
++&edp1_in {
++	edp1_in_vp2: endpoint {
++		remote-endpoint = <&vp2_out_edp1>;
++	};
++};
++
++&edp1_out {
++	edp_out_panel: endpoint {
++		remote-endpoint = <&panel_in_edp>;
++	};
++};
++
++
+ /* HDMI CEC is not used */
+ &hdmi0 {
+ 	pinctrl-0 = <&hdmim0_tx0_hpd &hdmim0_tx0_scl &hdmim0_tx0_sda>;
+@@ -170,6 +204,10 @@ &hdptxphy0 {
+ 	status = "okay";
+ };
+ 
++&hdptxphy1 {
++	status = "okay";
++};
++
+ &i2c4 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+@@ -383,6 +421,8 @@ &usb_host1_xhci {
+ };
+ 
+ &vop {
++	assigned-clocks = <&cru DCLK_VOP2_SRC>;
++	assigned-clock-parents = <&cru PLL_V0PLL>;
+ 	status = "okay";
+ };
+ 
+@@ -396,3 +436,10 @@ vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
+ 		remote-endpoint = <&hdmi0_in_vp0>;
+ 	};
+ };
++
++&vp2 {
++	vp2_out_edp1: endpoint@ROCKCHIP_VOP2_EP_EDP1 {
++		reg = <ROCKCHIP_VOP2_EP_EDP1>;
++		remote-endpoint = <&edp1_in_vp2>;
++	};
++};
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
