@@ -1,104 +1,123 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B176A1A256E;
-	Sat, 26 Apr 2025 20:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD4B1EF396
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 20:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745699518; cv=none; b=NtjMudwsAKp7vg+LvNaQTSDMIgP4Ne8UXJpvdNZL4pExTJFVRyLbRlPVaE9SLuNp+nZOgIprIVfxtCqu1pT2EZaVVnNycB0hLIl09z+u4zy5x3v3WGgRSz8adeySBN3bjp23HKyW5JN3qwLob79c5auL3Gm8rAOIcU+IUt6d7dU=
+	t=1745701042; cv=none; b=X3oNukY+yGHSLkMVppJlpv+4BKazqOYZrzTAjgiZ5VOYkqIZeBm59yjiQCzLAZVWWFL2uAD7FN9AH15z11jjPOm7gUpi6rsMRgnr2e4ICq+v2CKx/wYRBJ+udS6AKozs5CIN72vzFIhz4QAs/HFZr0amTwIhd7EMjB3NZCaJLBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745699518; c=relaxed/simple;
-	bh=/d7WgnJlhFDFOPT/pMzYke23MSyxRdwvNSrZRgypGGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JGFAhMDRTbo+Wbjl66utugSCC/OBVyuu2MeCKuMR/NpcDqykjY9hm475M+aXmcu3UQqlnWHv3vNhGVsn6rGcOvXeGwsFkkNvVNWW1jxS7Y1bvBQvbT5srM3nOs8pScIVIWlV7bkUKjhpZq9z4kGFoF2WAoeOqda8ItKRce/CSR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjNYLvvR; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745701042; c=relaxed/simple;
+	bh=vrnKQhr5cfP9Ei4CCB31DhEqb6QWvhLq1OVYP4NPdFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dS/Hsc0ehLh1iTUkISBlagBUqyBYZvDGSBuvUlf0d7NcnGpyYsVyo+5YIfpGOSBGKJDs4g7epYTv2Dibzt7QhdVLNEL/A2FP00k+hmfpx/eovBLUY2xMeX1ksMlB+CtWn6tkMeUojn0qKjtJVzdOYzDzvuIwLqxsUFUabzOZx8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WDu2d7JZ; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjNYLvvR"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso2217079f8f.0;
-        Sat, 26 Apr 2025 13:31:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WDu2d7JZ"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so5559968a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:57:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745699515; x=1746304315; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OlrCwyFIoqZ6mkArF2EMwtxWYwKdteVMOtJ71tqXtAY=;
-        b=HjNYLvvR5+TpU++bVJC4lEhITzfZpkGQROVlnmRxcC6LfS07xHYCvRA6qdNETSk+4B
-         8uZvfI+dOH3loPaWh27XGjxh/Y5nhJUFR4G+RsTRKZtnWGFpW3LVzpK/rYmOPUsz5mKV
-         NDqXKS5WgSNwKfFtee4gbrnjMBAFd17Q8bM0LrdmKz2n9ElLVIoCYFjhDAMasIEkzxAO
-         DC9FA6g68Ii3lktt+acQRy+H4wWZLpIR233AlSaKWcTfOPsvCKvlOWBdMxWrdx9n4sQW
-         c7BwuLMfPrm8pkc+oxXyHfB16dSl4+yFxG3b0bvZlcUK9j0AB3kRFo5fgNCHM+EhvkG9
-         Tjqw==
+        d=linux-foundation.org; s=google; t=1745701038; x=1746305838; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UoAad0UF3aMOunyUShqi7DpSlcddCQ3yXawelXX5azs=;
+        b=WDu2d7JZIdChj9dkRvwNMXfXn6NrI70pIy18/AhhzN7r5Cywja7os97V6BjKxMNtY8
+         9ChkgjNesBEUZNeP6GnSPTsMpLWjCI4AnY5RZTIL5g+ZVBQRYekjQe34Y4okh5SN3/kQ
+         EpHmi/+AL51e8ZkQ9ybphkjgbl2+QGtneDw9o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745699515; x=1746304315;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OlrCwyFIoqZ6mkArF2EMwtxWYwKdteVMOtJ71tqXtAY=;
-        b=LlqDN4kJKubTCgR/bWqQ2WcxXL5TgP1w5yxKZANX1HZn6u77w5V1aMlCgR2TzEiFOM
-         XjnlI5l1Bxbw/JWQsvdHIHt/B1FDJYru/5GaWiLMnlQDiQAJqjlJxesrQKn+YYvp+gSm
-         3yOVMqpuFkK18BxobPIdg/LeYUad/wLrQvlj+NnBTmbk7LpoZWFF0QTQxBhzB7kVOpEt
-         1IQhwyQODAW0StJsA0OmHSOwxt5mg0Gk79kd0pVGV/z0RDsAgPKA+9p4eSjrLvyVsnva
-         Aiq8KY32Mxbe4kPQo0CryBydYpJXbSiZut3FdeCPSXmmT5lrTZr4dyuVXHFfUZcQSqQT
-         StFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfr0M5R1h7IfPmNr4k5l61vT/Xf8fLhCpxraP1TIUerWGFM8g3/jOw89C9qRzcos0EI6SHZySz/PqRo3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB0xJh/N+WTw7R5OtScYnYBrECZVvK0AJVbRI+tYgJi0GxKwW4
-	cA43niuL+LqQH4b035V76rpoYZ+sGfAQIVaNv2Y8NLpMZXt7JVRQ
-X-Gm-Gg: ASbGncvAh7zscwTW9B7XHbogpTeKrRuywMkq/xtzqYedqsq+ecBty04Ys+igzHAdgT3
-	kL3PT8D+fxqYCJ+E5sQj44ufj5Z9noQGvDoAp4atxE+3etvlXcPAN0TiKiU6xyyTCV5+1dF2KRe
-	FDP7xTvK18z+GYdTOG5zCYDlu/stHN771B2rbYoilYxNRj5EmNCc5u/qDjM+EMBEqjLtzDipvtV
-	aO1N6Svayxeqykc79yX75ixs7WpgKBqTjngJ1MP+aA0amuWtqUWpe6rrpAikib7PQ8RAwyE3xwj
-	3Bg0UxkQDIMCF3pPLCD+mKqIoTObxWHh/gDOojZEdQ==
-X-Google-Smtp-Source: AGHT+IFo9Zap7VRkBOdcGJybmP2OJOAo05CfEBwmnzTAL2vvIxeY33VY6vR+1R6pEs07a4Uy3ZySGg==
-X-Received: by 2002:a5d:4ac6:0:b0:392:c64:9aef with SMTP id ffacd0b85a97d-3a07aa6ea9dmr2626657f8f.20.1745699514803;
-        Sat, 26 Apr 2025 13:31:54 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073e46869sm6534182f8f.72.2025.04.26.13.31.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 13:31:53 -0700 (PDT)
-Date: Sat, 26 Apr 2025 22:31:51 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] Clean up the crypto testing options
-Message-ID: <aA1Ct6rhGbZlkBKY@Red>
-References: <20250422152151.3691-1-ebiggers@kernel.org>
+        d=1e100.net; s=20230601; t=1745701038; x=1746305838;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UoAad0UF3aMOunyUShqi7DpSlcddCQ3yXawelXX5azs=;
+        b=Om9D2UcZna3MmcHZQdhELfv1QIZNUd15HVDaTF9KkAvs3fKzmNge+mWZ1W+xIyZjZx
+         d8tI+Gj3Apxu1wQT3TX/IJmIdqz/X3Wd0btujrS7krUStEEO71XR9X0HtSXolr7ptYz/
+         TMTsyFg7J3MhUeyxzysu0YQjSwrWtNNYMfZdevTSV8hfCUuM/LSjbcwkcfDiZmVLGMIb
+         EJ0tVBiLLPXyeYhP8a9gbjZJ44Q78Vl6WHqLqlawD/8ZDbtF+aABa+f+Tigpp5b/h0y3
+         mAH/UOL43oukMNN/FV2Q1Azu2FLGantRm4m7v+5bBeCiQTZmsKNhuZunzFq655ziUkNN
+         Rt3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWXHVtEotuux/TYNSU/mw/vhQfY5psttbxvyrmn0JDQt/Evpa8eCGLIRFR8t0QXmx1fsAbsw+/V110N2SM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyiD5WZXpN0zbMoAS5s6HVSYq6TyZ0w/wh3HfYZX+HfAcpI0mx
+	ZF6WLKZ8KDBjNvvY7TPRlDR/uakkkGPS+R2I4MOu3xJ/Bl7oqUFufVFNzKibEEva8myz5Bw/b8U
+	zTq2VlQ==
+X-Gm-Gg: ASbGncvZIDMQkEgvR/0/gbal+vVnTC2EJQ4ElAcSjPaoI5s9/U2zqzr3Yz2rf1Iqpme
+	+Ryyi5GULIvhCxMxTw1s42cI8l9FUqZ6+GIKiZMngVQZxsg2fdrE9w3Y3r/6AOSS1jd/nthT6HT
+	km6BdZWBdfK7iztAgDimvxHou10wdiyZB8enVED6hRLGcdjXHHX+hqlWl0FPJyfA+83UkWa2AdF
+	D5cGPtXWlPqFNqSHw6i29C7aIXFZfmic1Nr4nUDtLw7xQXEgYYRmfVsgS7++B50QvZfXeMTgG8I
+	hKGehC7Fkk+En1oy5z37z1f0Xyoq/GfPvgSWTy9j2DGeqMy6hF4wjVOx9Mpjc4xCaMfh+Ly1sai
+	s5VhW+j1AASRFEC/GktCyMpQH1A==
+X-Google-Smtp-Source: AGHT+IEeyUBktqeIzFP7F0NNLVj5tQ/IDnukii6UXu1wZwMhPZe3xQCh+blhKPgkErxOIqHzBqB9ww==
+X-Received: by 2002:a05:6402:3496:b0:5f4:d4e7:3c37 with SMTP id 4fb4d7f45d1cf-5f739594b2fmr2951764a12.6.1745701038029;
+        Sat, 26 Apr 2025 13:57:18 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f66b7sm3223929a12.46.2025.04.26.13.57.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 13:57:16 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acb2faa9f55so429042166b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:57:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUn/oy82Ik0hJptLtlhm+Uv8zUm2GYDUTiFyl8HdbVq5q4M5OqsAU1b2rvwpMpwNjR1+QifNVpVdscPEtA=@vger.kernel.org
+X-Received: by 2002:a17:907:da6:b0:aca:d5e9:9ce with SMTP id
+ a640c23a62f3a-ace848c0444mr251602866b.9.1745701035588; Sat, 26 Apr 2025
+ 13:57:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422152151.3691-1-ebiggers@kernel.org>
+References: <CAHk-=wiq=E0fwJLFpCc3wPY_9BPZF3dbdqGgVoOmK9Ykj5JEeg@mail.gmail.com>
+ <CAHk-=wip2-yTrWpAkrUQ0iejEo2PjReddu4xntwBvdnSvWDbzg@mail.gmail.com> <20250426200513.GA427956@ax162>
+In-Reply-To: <20250426200513.GA427956@ax162>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 26 Apr 2025 13:56:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgPCbZv0JgqoNWMOO+p=N772YW16xYk_pmb1GU7aeuPFA@mail.gmail.com>
+X-Gm-Features: ATxdqUFEDV4hwTKkCo5LsFlF2depTN17SPH8wq3XkwJj60cqlzJsiqa-S0xR4lk
+Message-ID: <CAHk-=wgPCbZv0JgqoNWMOO+p=N772YW16xYk_pmb1GU7aeuPFA@mail.gmail.com>
+Subject: Re: clang and drm issue: objtool warnings from clang build
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Harry Wentland <harry.wentland@amd.com>, 
+	Leo Li <sunpeng.li@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, "the arch/x86 maintainers" <x86@kernel.org>, 
+	dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Le Tue, Apr 22, 2025 at 08:21:42AM -0700, Eric Biggers a écrit :
-> This series reworks the crypto testing kconfig options to fix some
-> longstanding issues:
-> 
-> - Replace the inverted option CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with a
->   regular option CONFIG_CRYPTO_SELFTESTS.
-> 
-> - Make CONFIG_CRYPTO_SELFTESTS enable the full set of tests by default,
->   removing CONFIG_CRYPTO_MANAGER_EXTRA_TESTS.
-> 
-> - Automatically enable CONFIG_CRYPTO_MANAGER when needed for the tests.
-> 
-> - Rename cryptomgr.noextratests to cryptomgr.noslowtests.
-> 
-> - Remove cryptomgr.panic_on_fail, as panic_on_warn can be used instead.
-> 
-> - Rename CONFIG_CRYPTO_TEST to CONFIG_CRYPTO_BENCHMARK.
-> 
+On Sat, 26 Apr 2025 at 13:05, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+>     KBUILD_CFLAGS += -mllvm -trap-unreachable
 
-Hello
+Hmm. That certainly builds for me, but yeah, it generates new objtool
+warnings, notably
 
-I have ibuild/booted tested this against all my crypto hw, no problem.
+   panic() missing __noreturn in .c/.h or NORETURN() in noreturns.h
 
-Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+and I *think* that is because that flag makes clang not honour our
+*explicit* "this code is unreachable" annotations.
 
-Thanks
-Regards
+So now objtool complains about the fact that clang has generated some
+random code that follows a call to 'panic()' even though objtool knows
+that panic() cannot return.
+
+And those explicit annotations definitely should be honored.
+
+IOW, there's a *big* difference between "the programmer told me this
+is unreachable, so I won't generate code past this point" and "I have
+decided this is undefined behavior, so now I won't generate code past
+this point".
+
+So what I'm asking for is absolutely not "trap on unreachable". That's
+wrong and just plain stupid.
+
+I'm asking for "trap on UD instead of *assuming* it's unreachable".
+
+Because clearly that code *can* be reached, it's just doing something undefined.
+
+See? Big big difference.
+
+             Linus
