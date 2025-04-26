@@ -1,66 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B7211CA0;
-	Sat, 26 Apr 2025 12:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FB78F5A;
+	Sat, 26 Apr 2025 12:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745671404; cv=none; b=RBJ8sGg06BP1ZJ3PI01HAbpJp0jRB+rZdkZtMniFkqikOFPAm4H0qCWD6SrdF/2+UEKVmHz6eqmk1EynhWy+GLUva0kzLXcc5Vpc4M9bfgv+eIx7yE1ClfB3mRxkOh4ucvZqEGmo2V1Wui0SVDbANy32L3gRDq3AekEvfc/K5n4=
+	t=1745671753; cv=none; b=C42bmvITL0tdUl3TrObMIh0UYAl3633Uu4oBwNlGCrA88/8GVB3a6IJR4Bgb1E5MAcJwXwB4491x3FkRSSkJfCgDpQr9bY0OHSZxe5TaaqsVya9Uj+kKgKXvL48qOyeeeOq6pXhB8pN01laAwKELmNBJkafxx6ZYZkQvXTo6tdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745671404; c=relaxed/simple;
-	bh=oFQ/UdfmwAsRFBa2Lc+Bk893yAmilXQtfZU7lTtdhw4=;
+	s=arc-20240116; t=1745671753; c=relaxed/simple;
+	bh=3IwxfYhPqqfQZ+MA07TU0Kmr5RuA9Hk6yvABNGkXtjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e8SjCJRTfil19dWmUwlqa/rbtCtGfIqweE7dXmfIMJGCfNmUpa8dv9Lzmm2dqPg++uWBC/cynBi+KcQYSRaXMHyVD59403/zc2R6y+xK3NkLQP5teL34aFVhJ2k/5uE6CEf4p3WlHRIp+oZc4LtwlrQKfwffQJiH2M7/ldjLzDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AF5C4CEE2;
-	Sat, 26 Apr 2025 12:43:21 +0000 (UTC)
-Date: Sat, 26 Apr 2025 08:43:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>,
- Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Kees Cook
- <kees@kernel.org>, bpf@vger.kernel.org, Tejun Heo <tj@kernel.org>, Julia
- Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
- cocci@inria.fr
-Subject: Re: [RFC][PATCH 0/2] Add is_user_thread() and is_kernel_thread()
- helper functions
-Message-ID: <20250426084320.335d4cb2@batman.local.home>
-In-Reply-To: <20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
-References: <20250425204120.639530125@goodmis.org>
-	<20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=J0HaupFQeqI4Tk1kI213tlSaRTb6xku3PZ3BESTMKOagZ9gKjLhJjRDLWLPHz2jdfnSb7B7VjH8MMbz96SFk5lCKMcCBbaUhyZK7L+U/yzdXUcIjZzuIdvAORFoP7H8XU+lw5pRMFUVI5MNVvO6DPPqysCLnqTbMcRBw1pe4yAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/yjAY/M; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/yjAY/M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94450C4CEE2;
+	Sat, 26 Apr 2025 12:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745671753;
+	bh=3IwxfYhPqqfQZ+MA07TU0Kmr5RuA9Hk6yvABNGkXtjs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D/yjAY/MZMs9TxBw/aSqz84hDOQUOAOta8EZFGCoQ3G+6pieJxBJCI722JXFER7Yv
+	 YoUmmLfHjPUUU2X68q1Pr6bCVXBqZxApZjuSNTfDEPrQP3IYgmw4/3JG4imluj/YmQ
+	 Rbcs5K1fJXFvW/xSGhKS7iic1qh3U2vFbUiTVsOBOv4KtlIOMDc775ymh/CcK+nTqn
+	 AF6PcTy8GXoa8IbbQHwlcHeG158haRsNpQzFwHHB8ZWfZtjw+ygXk6bLqh0250Na76
+	 BLJssAUXy3C3d5pZcdtAhGYr7MBLCNgG5FviQpMfX3/Zoyiy0sTgdyOd1+4PaRMewE
+	 GWAThNV40jsRQ==
+Date: Sat, 26 Apr 2025 13:49:07 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Kim Seer Paller <kimseer.paller@analog.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+Message-ID: <20250426134907.764491cb@jic23-huawei>
+In-Reply-To: <8ea9b3b7-1896-470e-9c7e-023d4ea248bc@baylibre.com>
+References: <20250425-togreg-v6-0-47b6f9878ae5@analog.com>
+	<20250425-togreg-v6-3-47b6f9878ae5@analog.com>
+	<8ea9b3b7-1896-470e-9c7e-023d4ea248bc@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 25 Apr 2025 16:14:49 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+On Fri, 25 Apr 2025 11:48:50 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-> Seems sensible.  Please consider renaming PF_KTHREAD in order to break
-> missed conversion sites.
+> On 4/25/25 7:54 AM, Kim Seer Paller wrote:
+> > The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> > low-power, 16-bit, buffered voltage output DACs with software-
+> > programmable gain controls, providing full-scale output spans of 2.5V or
+> > 5V for reference voltages of 2.5V. These devices operate from a single
+> > 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> > variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disa=
+bled
+> > by default.
+> >=20
+> > Support for monitoring internal die temperature, output voltages, and
+> > current of a selected channel via the MUXOUT pin using an external ADC
+> > is currently not implemented.
+> >=20
+> > Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+> > --- =20
+>=20
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+>=20
+> Just a few small things in the latest changes that could be improved...
 
-It's not wrong to use the thread. I just find using these helper
-functions a bit easier to review code. There's also some places that
-have special tests where it can't use the flag:
+FWIW I took another look and have nothing to add to David's review comments.
 
-kernel/sched/core.c:    if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
-kernel/sched/fair.c:    if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
-kernel/trace/bpf_trace.c:                    current->flags & (PF_KTHREAD | PF_EXITING)))
-kernel/trace/bpf_trace.c:       if (unlikely(task->flags & (PF_KTHREAD | PF_EXITING)))
+Hopefully with those tweaks v7 should be good to go.
 
-Maybe we can have a: is_user_exiting_or_kthread() ?
+Thanks,
 
-Note, for coccinelle patches, I would wait till the end of the merge
-window, run the scripts on what's in Linus's tree, run my tests, and
-then submit. This way it catches most of the conversions with the least
-amount of conflicts.
+Jonathan
 
--- Steve
