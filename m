@@ -1,72 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEEF189B8B;
-	Sat, 26 Apr 2025 18:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4872D18991E;
+	Sat, 26 Apr 2025 18:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745692858; cv=none; b=VhaLcSdTknKG/NpV+DsnJnrrG0o3bshlyHfn8xBwx/RiYf9nR7X5ZNkB6ogeci7qwkNsRgnyYrZCmdHABVOni4TNKTwYADGXOeBxj0jSpCnnc/VQ3hEJyTPpmjvZLbkkYPUs1Eli4OGQLnc85Me/nIsXR5ct7nuOZM81+iKKQRk=
+	t=1745692896; cv=none; b=Tusz3uFidvuv9CytbBClFwoyzGvLIVUMxVrqzqHildtaYSjHzVdey3au2k+GakQRB1UYMW7ghu4o5o5QWW9J1jBbfqWV0LO3MAiNilS9h9nTjXG4Ju9X+D9vHxN7BjcHSKWAnRwdj534C8m1PKQd68B6z+LgyOFZ/vL52CrAwFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745692858; c=relaxed/simple;
-	bh=ZaGIf7yCz3SC46Se03VJ0gSeERyiwwtS+yB+BWbbfOU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=thxGVyca5tEWKVlKM98E6rUqEcfcFtx2nggfA19eJl3LBNwUcS67YFMTC4YmOudqxP9QAi3jOwvWhDv77FnVvROkanGFuAPW/7YDppHv8k0HyZxbbEwVHZewE0rO1Scm3MT+mWRYLwhxyCfqSocMHAiTJ0FRwsqFcpQSrBV5vzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8Fjv2xU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745692896; c=relaxed/simple;
+	bh=cWWR0wPjTvKc8YdwgJuVjbWX6EEWZoqzcJztRbMXrv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=poLHdGrdwTpm4aoNmw8LlEfO1i6/pbLk+23wm803EgV6x2VcLEWxrx8t/yWd92U958bX0s3LUBE6aonm2PIUIvpkIUlHCIaxsVTgajBwDewZRSRKyhmEJ9Hx7Ljz2TDcl/bwzur3ArOXDpyrI9dxfTS1ws5sw+pz9YK219rsUWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=BICfrT6b; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8Fjv2xU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A30FC4CEE2;
-	Sat, 26 Apr 2025 18:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745692857;
-	bh=ZaGIf7yCz3SC46Se03VJ0gSeERyiwwtS+yB+BWbbfOU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=g8Fjv2xUKNIiqh8HwqWJiwBILyX6i9CuX2Pm3kqVOsuHLfyb+WoVpJ9/EhzEm/K+y
-	 GMpe6JwDbk/3EbZaxPeJkVod93is1YBfHZFMDiFcSsV0l1S7VKZN2YYRoYp0cXMCnc
-	 QV4LueADtGbhgj3fe+yaXGGVbT53G5s0q7ArsudSKgOYYUE0iwEjVjfp2SYpVf7/W7
-	 /Se55mHoeG+FloRcMqvGgch3QYvXv3SGK+zY6qlVWG1y81LGhYxkMTXPcvLMENLgMo
-	 pSlaQ/LmCH19LALnxOfsSF6ypOGVYXg5JhmNU8uk2INCAY3JtlvuELhdDKl2uip2+R
-	 3oetxv7mr/X5Q==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH mm-unstable] samples/damon: trigger build even if only mtier is enabled
-Date: Sat, 26 Apr 2025 11:40:54 -0700
-Message-Id: <20250426184054.11437-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="BICfrT6b"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id B2A1C1C00B2; Sat, 26 Apr 2025 20:41:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745692889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z+N3ikL+7LB9ZULui0uMCjjk+tz0nXeU8sd/76ilCcg=;
+	b=BICfrT6bPQuvZEW/YMVE8V8V2L0vWZSdNwPe6QD9qKUQqzk+T5sWsxKlvv7Ub/w7YEJiR8
+	C7KpnT3UaQ9jt8CpowQ6NgHdRU3a6Zt4ZfMB+C0sVVUlvlP4Svc9mm+7r5T9cSNCmmHwnk
+	zZGg7mrJJ1psj4V3NS+QTGZfxjQZCRQ=
+Date: Sat, 26 Apr 2025 20:41:29 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+Message-ID: <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2piM8uojtVCsJ8y+"
+Content-Disposition: inline
+In-Reply-To: <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
 
-mtier can be built only if one or more of other DAMON sample modules are
-build-enabled.  This is because commit 66001f0476f4 ("samples/damon:
-implement a DAMON module for memory tiering") on mm-unstable tree is not
-connecting it on samples/Makefile.  Fix it by adding the connection on
-samples/Makefile.
 
-Fixes: 66001f0476f4 ("samples/damon: implement a DAMON module for memory tiering") # mm-unstable
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- samples/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+--2piM8uojtVCsJ8y+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/samples/Makefile b/samples/Makefile
-index bf6e6fca5410..0545e6a0e84d 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -42,4 +42,5 @@ obj-$(CONFIG_SAMPLE_FPROBE)		+= fprobe/
- obj-$(CONFIG_SAMPLES_RUST)		+= rust/
- obj-$(CONFIG_SAMPLE_DAMON_WSSE)		+= damon/
- obj-$(CONFIG_SAMPLE_DAMON_PRCL)		+= damon/
-+obj-$(CONFIG_SAMPLE_DAMON_MTIER)	+= damon/
- obj-$(CONFIG_SAMPLE_HUNG_TASK)		+= hung_task/
+Hi!
 
-base-commit: 863dea93e0e1e959d3b277a98781081442f9cfbd
--- 
-2.39.5
+> > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+> > > to be. Modern versions of Windows [1], GNOME and KDE support "META" +=
+ "L"
+> > > to lock the screen. Modern hardware [2] also sends this sequence of
+> > > events for keys with a silkscreen for screen lock.
+> > >=20
+> > > Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+> > > emitted by driver to META + L.
+> >=20
+> > Fix gnome and kde, do not break kernel...
+>=20
+> I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+>=20
+> That's going to break modern hardware lockscreen keys.  They've all
+> obviously moved to META+L because that's what hardware today uses.
+
+Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+screen locking, no?
+
+Best regards,
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--2piM8uojtVCsJ8y+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaA0o2QAKCRAw5/Bqldv6
+8rGtAJwNrCGnvNF3FHcCSgpuIF8lM+a1CwCfev0NWDap259Nrt29hHFaErNz0nQ=
+=c8R+
+-----END PGP SIGNATURE-----
+
+--2piM8uojtVCsJ8y+--
