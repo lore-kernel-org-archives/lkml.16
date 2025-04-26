@@ -1,86 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FB78F5A;
-	Sat, 26 Apr 2025 12:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEE75661
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 12:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745671753; cv=none; b=C42bmvITL0tdUl3TrObMIh0UYAl3633Uu4oBwNlGCrA88/8GVB3a6IJR4Bgb1E5MAcJwXwB4491x3FkRSSkJfCgDpQr9bY0OHSZxe5TaaqsVya9Uj+kKgKXvL48qOyeeeOq6pXhB8pN01laAwKELmNBJkafxx6ZYZkQvXTo6tdc=
+	t=1745671822; cv=none; b=nSZKqZLhqeFNJQbXKuAa2MPRYB8qpASnoxFJYtt+2yT3MdVijZ+H4QpYwk6B9wCa5qef7IRzKLSnyXmbpQafzc/R1m1j2Om+SOKQlY7Zc/JyMiDcSmoSLc8VxqgtCCC19b5TEd+zY3AkCEmveFTyKAsJ3TTsvWOB/Bx6r8SYAiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745671753; c=relaxed/simple;
-	bh=3IwxfYhPqqfQZ+MA07TU0Kmr5RuA9Hk6yvABNGkXtjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J0HaupFQeqI4Tk1kI213tlSaRTb6xku3PZ3BESTMKOagZ9gKjLhJjRDLWLPHz2jdfnSb7B7VjH8MMbz96SFk5lCKMcCBbaUhyZK7L+U/yzdXUcIjZzuIdvAORFoP7H8XU+lw5pRMFUVI5MNVvO6DPPqysCLnqTbMcRBw1pe4yAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/yjAY/M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745671822; c=relaxed/simple;
+	bh=pPjkIvAb973JIjC0KrnU484B3+Q0+y9rM7H88YyWnGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P0jyZ5327qSs/vKkvSFILVIg9EYQs6qmaFPk4XWt4+lymeeoA/GRh4ZFNop9vNnT2QstHYCOubJvI47GaE7WT/er9IfjJ/fc7Mdrl7HwMC8PISC/BjwZTXsOXwlW6kX3sKIGiR3allgN3kwLD0aj0Us4Pjs2Ct282xWsR4jAL68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brownhat.org; spf=pass smtp.mailfrom=brownhat.org; dkim=pass (1024-bit key) header.d=brownhat.org header.i=@brownhat.org header.b=ifFJmfEc; arc=none smtp.client-ip=185.125.25.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brownhat.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brownhat.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/yjAY/M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94450C4CEE2;
-	Sat, 26 Apr 2025 12:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745671753;
-	bh=3IwxfYhPqqfQZ+MA07TU0Kmr5RuA9Hk6yvABNGkXtjs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=D/yjAY/MZMs9TxBw/aSqz84hDOQUOAOta8EZFGCoQ3G+6pieJxBJCI722JXFER7Yv
-	 YoUmmLfHjPUUU2X68q1Pr6bCVXBqZxApZjuSNTfDEPrQP3IYgmw4/3JG4imluj/YmQ
-	 Rbcs5K1fJXFvW/xSGhKS7iic1qh3U2vFbUiTVsOBOv4KtlIOMDc775ymh/CcK+nTqn
-	 AF6PcTy8GXoa8IbbQHwlcHeG158haRsNpQzFwHHB8ZWfZtjw+ygXk6bLqh0250Na76
-	 BLJssAUXy3C3d5pZcdtAhGYr7MBLCNgG5FviQpMfX3/Zoyiy0sTgdyOd1+4PaRMewE
-	 GWAThNV40jsRQ==
-Date: Sat, 26 Apr 2025 13:49:07 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Kim Seer Paller <kimseer.paller@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Message-ID: <20250426134907.764491cb@jic23-huawei>
-In-Reply-To: <8ea9b3b7-1896-470e-9c7e-023d4ea248bc@baylibre.com>
-References: <20250425-togreg-v6-0-47b6f9878ae5@analog.com>
-	<20250425-togreg-v6-3-47b6f9878ae5@analog.com>
-	<8ea9b3b7-1896-470e-9c7e-023d4ea248bc@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=brownhat.org header.i=@brownhat.org header.b="ifFJmfEc"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zl8Rg0h1yzYwb;
+	Sat, 26 Apr 2025 14:39:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=brownhat.org;
+	s=20191113; t=1745671182;
+	bh=Olfu3brFWDS51/0/ryjEK1Ts5wIML5vHhBtSBjeGn1M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ifFJmfEc1FOCIgKpJS3CmV/oFxLwNtEOuu3N1PglAJNIrXe4ppOjcGxlb++vl9DyK
+	 JbAw7/MiqXxys6UudQhbbmx9ZSnasJ8LrtZ+CBS0ghmiydCm9NiL/Ec2r0vl+5PFha
+	 SDEvQRap2v9uEdv6aOxSN5DtOwovM7031rbBrtN8=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zl8Rc499kzDBB;
+	Sat, 26 Apr 2025 14:39:40 +0200 (CEST)
+Message-ID: <559370be-a366-4754-8baf-3a4b332be025@brownhat.org>
+Date: Sat, 26 Apr 2025 14:39:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/8] net: ethernet: sis900: Use pure PCI devres API
+To: Philipp Stanner <phasta@kernel.org>, Sunil Goutham
+ <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Geetha sowjanya <gakula@marvell.com>, Subbaraya Sundeep
+ <sbhatta@marvell.com>, hariprasad <hkelam@marvell.com>,
+ Bharat Bhushan <bbhushan2@marvell.com>,
+ Taras Chornyi <taras.chornyi@plvision.eu>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Helge Deller <deller@gmx.de>,
+ Simon Horman <horms@kernel.org>, Jacob Keller <jacob.e.keller@intel.com>,
+ Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Al Viro <viro@zeniv.linux.org.uk>, Shannon Nelson <shannon.nelson@amd.com>,
+ Sabrina Dubroca <sd@queasysnail.net>
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+References: <20250425085740.65304-2-phasta@kernel.org>
+ <20250425085740.65304-7-phasta@kernel.org>
+Content-Language: en-US
+From: Daniele Venzano <venza@brownhat.org>
+In-Reply-To: <20250425085740.65304-7-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Infomaniak-Routing: alpha
 
-On Fri, 25 Apr 2025 11:48:50 -0500
-David Lechner <dlechner@baylibre.com> wrote:
-
-> On 4/25/25 7:54 AM, Kim Seer Paller wrote:
-> > The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
-> > low-power, 16-bit, buffered voltage output DACs with software-
-> > programmable gain controls, providing full-scale output spans of 2.5V or
-> > 5V for reference voltages of 2.5V. These devices operate from a single
-> > 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
-> > variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disa=
-bled
-> > by default.
-> >=20
-> > Support for monitoring internal die temperature, output voltages, and
-> > current of a selected channel via the MUXOUT pin using an external ADC
-> > is currently not implemented.
-> >=20
-> > Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-> > --- =20
->=20
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
->=20
-> Just a few small things in the latest changes that could be improved...
-
-FWIW I took another look and have nothing to add to David's review comments.
-
-Hopefully with those tweaks v7 should be good to go.
-
-Thanks,
-
-Jonathan
-
+On 25/04/2025 10:57, Philipp Stanner wrote:
+> The currently used function pci_request_regions() is one of the
+> problematic "hybrid devres" PCI functions, which are sometimes managed
+> through devres, and sometimes not (depending on whether
+> pci_enable_device() or pcim_enable_device() has been called before).
+>
+> The PCI subsystem wants to remove this behavior and, therefore, needs to
+> port all users to functions that don't have this problem.
+>
+> Replace pci_request_regions() with pcim_request_all_regions().
+>
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Acked-by: Daniele Venzano <venza@brownhat.org>
+> ---
+>   drivers/net/ethernet/sis/sis900.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/sis/sis900.c b/drivers/net/ethernet/sis/sis900.c
+> index 332cbd725900..df869f82cae8 100644
+> --- a/drivers/net/ethernet/sis/sis900.c
+> +++ b/drivers/net/ethernet/sis/sis900.c
+> @@ -468,7 +468,7 @@ static int sis900_probe(struct pci_dev *pci_dev,
+>   	SET_NETDEV_DEV(net_dev, &pci_dev->dev);
+>   
+>   	/* We do a request_region() to register /proc/ioports info. */
+> -	ret = pci_request_regions(pci_dev, "sis900");
+> +	ret = pcim_request_all_regions(pci_dev, "sis900");
+>   	if (ret)
+>   		goto err_out;
+>   
