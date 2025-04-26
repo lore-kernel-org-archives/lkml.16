@@ -1,147 +1,64 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7CE1DF759;
-	Sat, 26 Apr 2025 17:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B49A1DF759
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 17:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745686994; cv=none; b=Hi4D1QXrY1gLsEiEpiPOO83bL8Jg2UZKmlkKc42kIfo6FIANC+dDOnYD+i86daZFFmBdhCJGdoSmApjqhw1tYfKiLqjanuW/2MCiHwzM2xfwDglQ3RZldYrxvLojDiRI/bRQte/kiGsiJfVTD5K0OPHEe+plbvWI3QWCb5t2g+s=
+	t=1745687106; cv=none; b=BAJ+zLZj7uhzAfM5nQlRgFVMEU8SP8hPm26iUVN5EEFZ+QPdzNGKaEfU4lgMHN5w4jw1KiWgCiZqi+2iwrJ7O8Xd+hUT9Dol5mLBzU7YdOz3e7tYTzu2C3zPvbDLMBQkr+ykOUUqC+r17H4j4tXKJVEuCZewLUSTiAj35ih72OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745686994; c=relaxed/simple;
-	bh=03zwjvkFYEhG92+qrn2T8pzd8ejfnuU4rL0Z97HZbwA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2rz8GBubWfSYLzMycAXipGSM79dHfWJp3weaAKrdR3KVyIka6HXOydEbWnY/Qehsa+tTzOjvkw5+4m4NJUs8q0Q4N2cpLK5E4teX8QJaTBQimTnnnWOETos1kShU+ORqK/zpPNXMTx3Cq1W8nVa9eCmw5X/5KsuDCDWQaHETpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H0S3V1QR; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745687106; c=relaxed/simple;
+	bh=bmB4LNaG9qJ93DN1uHQ2PlYyTGX66NmUX7nCJlCeUnQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=P8ZVnmgiezyb1Z18yS5n/Le1/GtJouuRxy5A43dSr3Laa+cCKn9aiRjygGzAEL7DzC3HTs4ysoQsTCEgNcrRsICagSBxVVBGv2ltYTqzEUxCR/GTd/gj6JV2+Fumj0HG7xQ3PukDqpefGPmgOkklqJ+gNfbHBXdCMazQldg0koY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATWfkJB4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0S3V1QR"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so3328458f8f.1;
-        Sat, 26 Apr 2025 10:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745686991; x=1746291791; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Cp/74oQlHgQhlB2p0NP6nWfW2urC5wbKdAuUswkKDNc=;
-        b=H0S3V1QR7z2S1xe2BB+RJQZdfaxieTE8sbjV07XGuKGreK57srBDr2gfkiDxqD6Ehq
-         Gch/kNiWMXb0ltxeuFLGt/xUvOKd3gjwFWICMBIcBLCunpzDEE8nutC4fWgasrN+mJ5h
-         lWn5X8Az88ElzBiwsjM05Y3oBTXhVEsEqvRSLH3D8JpMI8Rf/5HY97Om1R6S/Avd5qGr
-         VEoS6HFHBQmFevYfKGIR3sCSqqv1+q0+fEl6strWFbubY9OW/Jr0rL3w6hL5ZuEMmRBd
-         0gB5yOcmVTnzXq1oirtFcvjeBxxYuDfZpepEajfTZG/dAOKCAtW+A3eguBRDGfyM8PPi
-         rt2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745686991; x=1746291791;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cp/74oQlHgQhlB2p0NP6nWfW2urC5wbKdAuUswkKDNc=;
-        b=lYaU4pyjIyTi9XOvK3YPfwJEaK5945rLomjg0AWmrbpVqrk4qO4osdwE9RKQW4JIhY
-         YSfCG3Hdd75pHGnsdLY07TCTyz2nicyEDoIS0y8aumZKkItxZJAVxX2NPJSbYDCCFoek
-         WKRbaMvS9YytcF/jHOwRLqDch96TaybrERBc6iFgu3YT7uxLB1e5s4xB8AYHN3cWPwYf
-         WbU6dsElFFtKQgGKOCzdDLqYN0jznLaC9ESSAHZprhKndkYv9eYeHXvSr/veTl+EiMNV
-         n5QrnbO381wC3ytS/VPa1LN1GPsdOo4dQnxS9SIi9yn5penCC5uqh0OowX3ecLXLLriO
-         qOSg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7osbvLNJNrWwucl1IacPQpPakdmGuEZH+GzrAaosP5KXuIvRXMB448IUhyvxYfdBi5WYsLt1rjksL@vger.kernel.org, AJvYcCUJuf6XZTX1gyen7z1QfzTa48hTenTRzqXs8nYoykRk/LPV3ilsiYYcQQhhsCwcb64GXatqWHiCb3q5u4o=@vger.kernel.org, AJvYcCXNfB1BfKVhbTFHqkW8+gqcA5/YYscgIVPP30+H7DmfQ5S0GkvQNwRiIWse5pDMNQggfsW256hOwaupvGbN60M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/tBGQ0m5GexVwipXisceP4c+ydOIXMNKA1lt+Vt0/xr9Grvet
-	P3GJR0K8IQHBOqTF3ugOGTVvQJWv5rxp3Vfd8zmWxuFq163+6f1r
-X-Gm-Gg: ASbGncsNbCXIgQ/cXHZ06jpcSqBsXI4I+erYpoE+oCDAOcv9bcpTU8f+gkJNgigM7Cy
-	/W8LFVSAiHTD261CFtJ8vtNRUUr3JLc6n4HEvubP5yzMJ0pp+wm1aIQyN7f71GaBUWDLGZ1/cEO
-	8Zohnl9PPytcV6QuDa8ubYvmNat2V7Dpgr8t36zAYBCq2N17jcmtW5wSRonIUJz8EyR0p9S7bZB
-	dwUg5ViPwg8cWKmqy7RN7TTq68eKjrY0Rts65BdeX0LsNJ8vmPvC8/o6s9Opoq0KRyAH1bx25ny
-	ne2FkkwzieMdCLdzhKU3ygkK28DP1n7zDpsROfRwoTtr7dB9/MLQUg==
-X-Google-Smtp-Source: AGHT+IHywWch+T5IWv3eRg7oA6vXiUjd8/epyZW9drC7HEQUbATbsi7aXsStUfAMRqKcbF+s2iLN+w==
-X-Received: by 2002:a05:6000:290c:b0:391:47d8:de25 with SMTP id ffacd0b85a97d-3a074f39725mr4296416f8f.41.1745686990820;
-        Sat, 26 Apr 2025 10:03:10 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5e198sm6219061f8f.97.2025.04.26.10.03.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 10:03:10 -0700 (PDT)
-Message-ID: <6dbec9b3-b1a2-4fe7-9861-6bc879d7332c@gmail.com>
-Date: Sat, 26 Apr 2025 19:03:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATWfkJB4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFBBCC4CEE2;
+	Sat, 26 Apr 2025 17:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745687106;
+	bh=bmB4LNaG9qJ93DN1uHQ2PlYyTGX66NmUX7nCJlCeUnQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ATWfkJB4QqO7tVeeW0lmkzxSGgYEjUs/9FB0YOMC7aQQjwJ1a1uAH1Fh0zzeMe2Ni
+	 JuEh4zelNZv5v1HOvP+rrXRC6U7WIya1CspNAhVsWHUJMAEGg90vja83XMeSnuJd5O
+	 U7fGaMfxSNngZBLz5AyzggUmZ+A1Q46Dh5sdEaTLhLLYPu9H9NmBMh0UyDdYBfha1g
+	 DKcfSlpAYYo9A28DTipJo01XsDbRLpCOaiZuaQawBoLEyCrolIhBFj1pwMErRKNMK/
+	 zC+QL2Ten0JQOSJpJTC9uCKCrKIHsfp+vvJNQ2lF4ykx74kMSJeRpa0UFeKv9BngFI
+	 gr/m1z66KazBQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB05F38111CC;
+	Sat, 26 Apr 2025 17:05:45 +0000 (UTC)
+Subject: Re: [git pull] drm fixes for 6.15-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9twNOWYCQ6vXZqUAu8G=oxGrKUvcTYz-SL6Jc=4+8ivVew@mail.gmail.com>
+References: <CAPM=9twNOWYCQ6vXZqUAu8G=oxGrKUvcTYz-SL6Jc=4+8ivVew@mail.gmail.com>
+X-PR-Tracked-List-Id: Direct Rendering Infrastructure - Development
+ <dri-devel.lists.freedesktop.org>
+X-PR-Tracked-Message-Id: <CAPM=9twNOWYCQ6vXZqUAu8G=oxGrKUvcTYz-SL6Jc=4+8ivVew@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-04-26
+X-PR-Tracked-Commit-Id: 250130d2daaa0a828bafbd6ad58479a645029e82
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fa573aefdf9bc6e4a903551d381ddcbd60f37943
+Message-Id: <174568714456.4031081.785120233885422966.pr-tracker-bot@kernel.org>
+Date: Sat, 26 Apr 2025 17:05:44 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
- rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org,
- zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com,
- acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com,
- acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
- linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250426133254.61383-1-dakr@kernel.org>
- <20250426133254.61383-2-dakr@kernel.org>
- <aa747122-fc78-45db-a410-ceb53b4df65e@gmail.com> <aA0P4lr0A2s--5bI@Mac.home>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <aA0P4lr0A2s--5bI@Mac.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 26.04.25 6:54 PM, Boqun Feng wrote:
-> On Sat, Apr 26, 2025 at 06:44:03PM +0200, Christian Schrefl wrote:
->> On 26.04.25 3:30 PM, Danilo Krummrich wrote:
->>> Implement an unsafe direct accessor for the data stored within the
->>> Revocable.
->>>
->>> This is useful for cases where we can proof that the data stored within
->>> the Revocable is not and cannot be revoked for the duration of the
->>> lifetime of the returned reference.
->>>
->>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->>> ---
->>> The explicit lifetimes in access() probably don't serve a practical
->>> purpose, but I found them to be useful for documentation purposes.
->>> --->  rust/kernel/revocable.rs | 12 ++++++++++++
->>>  1 file changed, 12 insertions(+)
->>>
->>> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
->>> index 971d0dc38d83..33535de141ce 100644
->>> --- a/rust/kernel/revocable.rs
->>> +++ b/rust/kernel/revocable.rs
->>> @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
->>>          self.try_access().map(|t| f(&*t))
->>>      }
->>>  
->>> +    /// Directly access the revocable wrapped object.
->>> +    ///
->>> +    /// # Safety
->>> +    ///
->>> +    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
->>> +    /// for the duration of `'a`.
->>> +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
->> I'm not sure if the `'s` lifetime really carries much meaning here.
->> I find just (explicit) `'a` on both parameter and return value is clearer to me,
->> but I'm not sure what others (particularly those not very familiar with rust)
->> think of this.
-> 
-> Yeah, I don't think we need two lifetimes here, the following version
-> should be fine (with implicit lifetime):
-> 
-> 	pub unsafe fn access(&self) -> &T { ... }
-> 
-> , because if you do:
-> 
-> 	let revocable: &'1 Revocable = ...;
-> 	...
-> 	let t: &'2 T = unsafe { revocable.access() };
-> 
-> '1 should already outlive '2 (i.e. '1: '2).
+The pull request you sent on Sat, 26 Apr 2025 09:12:11 +1000:
 
-I understand that implicit lifetimes desugars to 
-effectively the same code, I just think that keeping
-a explicit 'a makes it a bit more obvious that the
-lifetimes need to be considered here.
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-04-26
 
-But I'm also fine with just implicit lifetimes here.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fa573aefdf9bc6e4a903551d381ddcbd60f37943
 
-Cheers
-Christian
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
