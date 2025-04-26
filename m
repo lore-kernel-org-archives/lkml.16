@@ -1,188 +1,153 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3150B1F09B4
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 21:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009EB1FBCA1
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 21:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745702687; cv=none; b=uD8ZQ2DoIByemCj1xLWpkLV3KvPmFhYBSb4j/hQ2VBqSz1x6xKoOHL5aFLVnEZGHzSwixaS6fJQLgV3/+kZYsSigXyGK6Hk4qS/7ue8H8jamAC9Cad8HD4RJnqElbyaVfEbVjzPsVNO8ANaBHNJQwOeKZlysEXX6A+brwflNqzE=
+	t=1745702691; cv=none; b=nccOWkZ76hxpU/Pk/i2j8ORU7QJAdI7SbDYF10cLupVgtwrYmmiTyj1Ppj5LbXrwnqlThOBH4lZaXSkUma0KqgN76b27Qvd3u1wBP5Vlwwh9F8VEN8V21yw0yqZaJC9PQMCYBnz3+MkY/g0Wr2RIzD5YbWwGgcZghxsT1xdrNmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745702687; c=relaxed/simple;
-	bh=Dg3fCarQHR/JTqvGhOBfZR+xsGq8DTqd0lvEpfJG5Ks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PhfAm/0L2KYjLWkM2HtR5Dzq0u1mlyJMz+WwfPzpf4GUQ0RDRFVawEdKP3UzHyA9jOhqIeROaRb4r+ZOnt7gMgVCjseZKVUn+moVhVtyvUK0uZzueE7dss+xMD+k499kkg8q7x7/EtQ+LRccZIm+MK0Lyc5kF73m+GM0rLKNBPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=g83zWtzu; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745702691; c=relaxed/simple;
+	bh=+e2jnoEU0KW0QXVKjWeyp4SP2tcdhAZ7keq7BZMyPA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bbw5wuJp3+V7NL9gVMX4YPbsga/ZRHTqgdMJ7mGW4SkHcHAQWsyB7OsU+2kMIp7IKH7Cnyqk/X90fCz4FRt2Aa68h0O777epyvoVQB7i6x83XFg5cbUy4F912gSC3M8nmjWh5L4GXjFgBg48b/czGCIlEoMqklMvZ9olSQiObYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fgjrAf1v; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g83zWtzu"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30effbfaf61so38812461fa.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745702683; x=1746307483; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K1mqAIBnp7KMTnNYtwdmaVxEXl0tUjHzIuN2rlUSfs8=;
-        b=g83zWtzuFZFO+Vqj29C01+uQQf515igBwWI/IV3sCGAgUyki5q20OgFlJhio7tTuuK
-         k4TqMJKLQcKcciKqJtytQF52SCqGO2wb6XDeYXBZEDIgBoPPGYl7ZehnVaFSjuqK3ZnR
-         +Y9u7A5nwkZfKjmXmROG2h0lZUQr4/0Y9JhgCeJOJks0lQrEIBMch4XdS10QPSy0J/bp
-         DOvCxeaTL/br3NuP/1pHZJkseo/1z19VaNPltTvSHrhgg3N8bUCZtc1MmL6JGN4oiIn+
-         2bS6I2sOmJQWR7rMt4AkebVr2GJG3+vjR16/dOU1cmJhcDQ+h80YKJZ+clyC+2zG9Wz4
-         2N0w==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fgjrAf1v"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53QGM3kS007504
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 21:24:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WR+R0rhCOjYqlZUhhYUXJ0Rz5/y0uM5IX/cfP7qDHJ4=; b=fgjrAf1vO8jRmSJz
+	tWe1iBFd3RV+TWEznsjja5vdAx2BbLr45XiDh37J0Ccq9eJJNjoqgwidMInDyk5n
+	iWF6d5NgwymuNCuu3oMjEDDV6DV4Up5pMfI4qFU2lFsXTM6NPOgL8c+E8RgQ33O9
+	I1FRyApyHBfU1U368E/0NMZXHNFW70cqho7CUe9MrpWT/7RSvoQm9y0Y21qRGEfq
+	GKxqOKuMXwloz43augz0oGF5lUKjOtRvdqsEMPxiIrT2UZUpvNhnzF8hvNAY7Qej
+	Kx06axuzKbf3o135CE4mf6cMtzHdiDHaOz+zkWjCnY9WrlCxYXjx+blG5IkEQvYG
+	S6Iuow==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnmsyj9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 21:24:49 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8f3c21043so8773556d6.1
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 14:24:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745702683; x=1746307483;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K1mqAIBnp7KMTnNYtwdmaVxEXl0tUjHzIuN2rlUSfs8=;
-        b=WlVLvQfC6z7z96W/YC+V/NuJvvfZbDQp27XxP49221tgI0pBrsn38N73hbvY7zOPUJ
-         upCTz0Sdf8/euiPrF1P5qHOlD191G5Rl/hGGQq70DHW43zlm8X3bJh6Ls7OLdhKGL4ej
-         bcrN9LO7SnCrJ4IlYyH9yHVp8LfwGSj+G3RHced//ZX9KxQD5S8RKiBo9pM/ATFva8Ur
-         RyEbc3Sp6tdFD914Lnk9EQvTsk2zZPvGtZ4H1fr8uuOU/0vmSNs+kP5PrxTFcnZjBSew
-         lhKtYQAFRxo/8hWUjUwLFhOV2WLj0Uk8I5/yuskMIdNdQvJs4TBxrBC2/cfgINw6ycnt
-         Sseg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5ZtKWk+ieuk+JeTAXEjbs4uI2ELCZGbkFfllv9St+5XTnfVvIn6eMtj/FBiLYWcUkyxqxlTx5T7T0IxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6FzJS3dMS4Rj7b8NWImrK0aWrEDBn1M+pd9xY9lhucYNXG3Ga
-	el2xOzAcc6xjrxbENxa+UR1+T+PsdkTsZVhCKdYR5Xtj7g1eMYy60eYDlPSqY0UqhBnYE/Dca4/
-	6CQtFadKKmO7vPFvufEk8gGnUW3a8cUUJmSJjEA==
-X-Gm-Gg: ASbGnctYxaRDLCId8wRy+UalJFiavsZOxdHK83jVF5P96FebaMd7pS+Q+2Svoc+I2SE
-	x7k4dDfdXI0Jq52wNibHSAHdsFzpISKgQVcKuteaPbg1sirw/0yOp5FzZ1bGtDhjdYnu+SsI9zi
-	Lzu8DvKIB/9ZHd+fAHrA9c/W2ETjufJe9l8Q==
-X-Google-Smtp-Source: AGHT+IFJMmStyVBuIyxQECB5iELQPgDUnywD2WJ46nDL9IgJLHD7iPOWbRPUoe3umTLlnkE5eoleE6r364MYg9Jxl1Q=
-X-Received: by 2002:a05:651c:222a:b0:30b:9f7b:c186 with SMTP id
- 38308e7fff4ca-317cc3b4c3dmr33874231fa.1.1745702683231; Sat, 26 Apr 2025
- 14:24:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745702688; x=1746307488;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WR+R0rhCOjYqlZUhhYUXJ0Rz5/y0uM5IX/cfP7qDHJ4=;
+        b=Ish4h1pJHI1efAvcU5tAKKQncQQeJfuF7SfG42zr69WQ51aG3rEScc7Vdk4DIyFl6q
+         nYHRHQ8lxj+ahF37v/0Z222jT8hK+nUWj9PkN9z5605QfW8pCLHNzYVYXw7q7oKCVkT7
+         YuSApC0yKC8WZWreproE2TDTbhlyLuw8A9AMJ7eWFaV2S7IH+MAbeNXJjlwlrC3id7J6
+         bB2oc8/nNLIm5UpYZ//QjO4CJltpSh/Fb5fJZay+jH0QpQBNIHxSOVMdlxG4whsVmXlG
+         +lv8JusAJ0BrU/ELI7ul1WAD9wq6/uFb5h/vBwEAk6B5Ym8D7+kozAo7KAP++oRP4hA0
+         p5Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEyScGIbG0V5LVyzOjA+XdZSehQ0qpecpsXfY4y1gV3Fhrt7IeXixld+n+QLsJEikpxzRAjLiY78fLfMc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEDOac25ZID1Wd5bGjCY90baM7C6KncuS2HeIvjYXUXKDIxGkG
+	mxp4PidSDlpoR2Lm9/rluYa0nbKtKwswuWWRF753nH/IRhAXyR3P2Fp3GbQrpJDwHxOlZ7JeKB4
+	lNDQg+UDw+9dNKYAFwMFUXBzhm9QjIFLp0x3FVElAYIonW/Nph2q4kApXqN7c6eY=
+X-Gm-Gg: ASbGncudp++b7oH4J6eubGeGiiP5KNHNZNRuL3JoHpiUORfwvjRXMYu3M+snzOJlp6E
+	6729c0MLXKX4pvl6WlCHSPYl1giSvyD2o+asNbZtOsTCw3OVJDtlFRSU9jH2QQpU7D9qMyM6DFB
+	4+jjRzux8SYby3oZ7wksL+e2RCob8wpj/EOeZlG1FhGTb3dq9Rhu6kQrSB0RMFfIlAvJfM2lkQw
+	4u2e6WtM0IEAR4PmjDSckkIJvoSe7TrDpFOUNWElGK6xftZ9rjoFytGct6Z0gwZZcONwBxbrJbj
+	0zmCdL97TRh4URxdbx+FTvD3b9db8C9YKJiHfWEEiSVd+5vkeaywpDk22GxyTIIpVhM=
+X-Received: by 2002:a05:620a:4723:b0:7c5:687f:d79d with SMTP id af79cd13be357-7c96071e76cmr432500785a.8.1745702687804;
+        Sat, 26 Apr 2025 14:24:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE91mB/OTCAHM6ZPMMnYcSN+AYgw89fz7uJMpE+BIsfhFRJH7wciNvcBCPhWb0E3BpFD0EuKA==
+X-Received: by 2002:a05:620a:4723:b0:7c5:687f:d79d with SMTP id af79cd13be357-7c96071e76cmr432499085a.8.1745702687493;
+        Sat, 26 Apr 2025 14:24:47 -0700 (PDT)
+Received: from [192.168.65.152] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e587f1csm343657866b.79.2025.04.26.14.24.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 14:24:47 -0700 (PDT)
+Message-ID: <dafd9a80-9aec-404a-88bb-dfc91c8ac224@oss.qualcomm.com>
+Date: Sat, 26 Apr 2025 23:24:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304181400.78325-1-thorsten.blum@linux.dev>
-In-Reply-To: <20250304181400.78325-1-thorsten.blum@linux.dev>
-From: Lee Duncan <lduncan@suse.com>
-Date: Sat, 26 Apr 2025 14:24:32 -0700
-X-Gm-Features: ATxdqUFRXwxiD0AZ10vGLZVX25IArlcs-9mCmM5d-L5qj3q4zIK9ecGpSwHodS0
-Message-ID: <CAPj3X_VKZz_8oq0puSuh96_=ozR+t8xL_whb5+UaNYS0MOrpKw@mail.gmail.com>
-Subject: Re: [PATCH] scsi: target: Remove size arguments when calling strscpy()
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
-	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        maud_spierings@hotmail.com, dmitry.baryshkov@oss.qualcomm.com
+References: <20250426130203.37659-1-alex.vinarskis@gmail.com>
+ <20250426130203.37659-5-alex.vinarskis@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250426130203.37659-5-alex.vinarskis@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: sqYN59YKhlnDuOOnIFR805A3biG65LXT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI2MDE0NiBTYWx0ZWRfX0qzHOaDeUo4M DSW8T5LsWE3M2CWyFtxJMSVwBATskul5R0wmW8bk1yyowBInPqIYqYTebfcOvwDFiJupI5CkSC6 M2bQ+/gULn2DEY0H8eb5xbOMy4mB6IIfOKZ6fIgheHybKBivV73AVqc1G7VvDzxrB2DIyhpYcgr
+ rnpWz48oYo0S6bFnswtNFtvXs9iRyYt31PYhPSqxnu4Qqv5appicNSifJv5F6iFBgHn8503FgXw nWxMbH45cuyL9f7e07rcTZMq8wH1arv4Ug8kKLwX/TNinIGprbptWeeLYFjuypChPVQgxkXG1me YPzpZ1QIWQzqhn1urzH5vD86ILJphHp6s+hElKbqlM05N+iO8hVOf5stWI+q/8X2S0a6CRqkw5Y
+ cKosL5/k5+WiSVqXbhffvQGvSrfU1jStbu8KPUzcniuACTmhYb6/2gfeoPjhwWbFsxP0fhEr
+X-Proofpoint-GUID: sqYN59YKhlnDuOOnIFR805A3biG65LXT
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=680d4f21 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=04dXdBH-sfCwm-JsXqsA:9 a=QEXdDO2ut3YA:10
+ a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-26_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504260146
 
-On Tue, Mar 4, 2025 at 10:30=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> The size parameter of strscpy() is optional because strscpy() uses
-> sizeof() to determine the length of the destination buffer if it is not
-> provided as an argument. Remove it to simplify the code.
->
-> Remove some unnecessary curly braces.
->
-> No functional changes intended.
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+On 4/26/25 2:58 PM, Aleksandrs Vinarskis wrote:
+> Initial support for Asus Zenbook A14. Particular moddel exists
+> in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+> 
+> Mostly similar to other X1-based laptops. Notable differences are:
+> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407QA
+>   and Qualcomm FastConnect 7800 on UX3407RA
+> * USB Type-C retimers are Parade PS8833, appear to behave identical
+>   to Parade PS8830
+> * gpio90 is TZ protected
+> 
+> Working:
+> * Keyboard
+> * Touchpad
+> * NVME
+> * Lid switch
+> * Camera LED
+> * eDP (FHD OLED, SDC420D) with brightness control
+> * Bluetooth, WiFi (WCN6855)
+> * USB Type-A port
+> * USB Type-C ports in USB2/USB3/DP (both orientations)
+> * aDSP/cDPS firmware loading, battery info
+> * Sleep/suspend, nothing visibly broken on resume
+> 
+> Out of scope of this series:
+> * Audio (Speakers/microphones/headphone jack)
+> * Camera (OmniVision OV02C10)
+> * HDMI (Parade PS185HDM)
+> * EC
+> 
+> Add dtsi and create two configurations for UX3407QA, UX3407RA.
+> Tested on UX3407QA with X1-26-100.
+> 
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
 > ---
->  drivers/target/target_core_configfs.c | 20 +++++++++-----------
->  1 file changed, 9 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/target/target_core_configfs.c b/drivers/target/targe=
-t_core_configfs.c
-> index c40217f44b1b..9b2b9786ce2f 100644
-> --- a/drivers/target/target_core_configfs.c
-> +++ b/drivers/target/target_core_configfs.c
-> @@ -673,12 +673,10 @@ static ssize_t emulate_model_alias_store(struct con=
-fig_item *item,
->                 return ret;
->
->         BUILD_BUG_ON(sizeof(dev->t10_wwn.model) !=3D INQUIRY_MODEL_LEN + =
-1);
-> -       if (flag) {
-> +       if (flag)
->                 dev_set_t10_wwn_model_alias(dev);
-> -       } else {
-> -               strscpy(dev->t10_wwn.model, dev->transport->inquiry_prod,
-> -                       sizeof(dev->t10_wwn.model));
-> -       }
-> +       else
-> +               strscpy(dev->t10_wwn.model, dev->transport->inquiry_prod)=
-;
->         da->emulate_model_alias =3D flag;
->         return count;
->  }
-> @@ -1433,7 +1431,7 @@ static ssize_t target_wwn_vendor_id_store(struct co=
-nfig_item *item,
->         ssize_t len;
->         ssize_t ret;
->
-> -       len =3D strscpy(buf, page, sizeof(buf));
-> +       len =3D strscpy(buf, page);
->         if (len > 0) {
->                 /* Strip any newline added from userspace. */
->                 stripped =3D strstrip(buf);
-> @@ -1464,7 +1462,7 @@ static ssize_t target_wwn_vendor_id_store(struct co=
-nfig_item *item,
->         }
->
->         BUILD_BUG_ON(sizeof(dev->t10_wwn.vendor) !=3D INQUIRY_VENDOR_LEN =
-+ 1);
-> -       strscpy(dev->t10_wwn.vendor, stripped, sizeof(dev->t10_wwn.vendor=
-));
-> +       strscpy(dev->t10_wwn.vendor, stripped);
->
->         pr_debug("Target_Core_ConfigFS: Set emulated T10 Vendor Identific=
-ation:"
->                  " %s\n", dev->t10_wwn.vendor);
-> @@ -1489,7 +1487,7 @@ static ssize_t target_wwn_product_id_store(struct c=
-onfig_item *item,
->         ssize_t len;
->         ssize_t ret;
->
-> -       len =3D strscpy(buf, page, sizeof(buf));
-> +       len =3D strscpy(buf, page);
->         if (len > 0) {
->                 /* Strip any newline added from userspace. */
->                 stripped =3D strstrip(buf);
-> @@ -1520,7 +1518,7 @@ static ssize_t target_wwn_product_id_store(struct c=
-onfig_item *item,
->         }
->
->         BUILD_BUG_ON(sizeof(dev->t10_wwn.model) !=3D INQUIRY_MODEL_LEN + =
-1);
-> -       strscpy(dev->t10_wwn.model, stripped, sizeof(dev->t10_wwn.model))=
-;
-> +       strscpy(dev->t10_wwn.model, stripped);
->
->         pr_debug("Target_Core_ConfigFS: Set emulated T10 Model Identifica=
-tion: %s\n",
->                  dev->t10_wwn.model);
-> @@ -1545,7 +1543,7 @@ static ssize_t target_wwn_revision_store(struct con=
-fig_item *item,
->         ssize_t len;
->         ssize_t ret;
->
-> -       len =3D strscpy(buf, page, sizeof(buf));
-> +       len =3D strscpy(buf, page);
->         if (len > 0) {
->                 /* Strip any newline added from userspace. */
->                 stripped =3D strstrip(buf);
-> @@ -1576,7 +1574,7 @@ static ssize_t target_wwn_revision_store(struct con=
-fig_item *item,
->         }
->
->         BUILD_BUG_ON(sizeof(dev->t10_wwn.revision) !=3D INQUIRY_REVISION_=
-LEN + 1);
-> -       strscpy(dev->t10_wwn.revision, stripped, sizeof(dev->t10_wwn.revi=
-sion));
-> +       strscpy(dev->t10_wwn.revision, stripped);
->
->         pr_debug("Target_Core_ConfigFS: Set emulated T10 Revision: %s\n",
->                  dev->t10_wwn.revision);
-> --
-> 2.48.1
->
->
 
-Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
