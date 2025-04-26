@@ -1,137 +1,249 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED84318C01D
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 04:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3699315A864
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 04:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745640700; cv=none; b=HMHUDFVasPxuq83XF3iCklbwNX6ErbdY+aQD8ewHFUWOLQ1p+4XfEwFlP+nhldgqMeI6rsU4xP8jTh87cgmmayd1AV3guG/yf8zR5sLR+4hbjbyIKczxGBxp1Xs8qTsb4PJkt/g29XmYvSXAU0Ll0MM2pENQtf6gyOUBEq2QX4I=
+	t=1745640742; cv=none; b=sZfCneEZxM/19t3IJV5XYWdRujaNEIwLqlTxuTflEO/abtz3V/0F9Y7UCaaC2JjgKR9V+cps4HSzPeOU3RREJ3hlL0o+zd/kovPh02BiQ/jAg8852tOQcoBYtto0UIJ3osZM/L9KKkHHaMiaUhXlCCImqXTXUiXeIsJKVoB7HBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745640700; c=relaxed/simple;
-	bh=LZaA39QZ/1ssboLrqcr0tnGr9TONpBKqHUvnz68tQ8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rXIntzM/ZH3qST6M47osfX4FRZ+rcuAQTh1JegW6czLeTQOzpq9vg2G4je3irycioONykyCCiKugSC4NNU+RXoJee6KKpvKWVanFZmlq2riGysg8caWLCSZby7wMXqEjteCXr/tYWpwtJczWFMb0WC+rpgCm1OL2p/3I9Zo3tAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Bmcq/u1R; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745640742; c=relaxed/simple;
+	bh=X798se1yqIjQj7BbSweueyaGMPQVZK7ePL+HlYpOiZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BT4YyuyqWOdTw8LhXYpAWZOq43RZpz/otiPqQo9P9FSc9CWWax9W+4/Kazi6P5+YrGg0+DZA3nEIX+V/pAePz5DjJO4LzBwgiQOCEpJv6mz9F3p6lDjc/b1jBBNkTgNYMDMPm6D+d9D6JHHuEDdqJ5aNp3SC4tX6KvWQHOPXl10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b=q4dqkHAF; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Bmcq/u1R"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso367016766b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:11:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="q4dqkHAF"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22423adf751so33034955ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:12:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745640696; x=1746245496; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eyFr35xmw7E/ixwUNF7HuIhiUoN7WKp+7IA8FTndH+M=;
-        b=Bmcq/u1RB1lM5/VGjc8i38+Dx04UFrmd7ooQOIRdasLO83MLOVWYrL1PMb4yxWidDV
-         8LOH0iQgGVQw1ALUHnPUjdJ2Zzz/GHmbSD7FHnKYjRdmoLAX5eMBTwdmDxg/TKEWPBSX
-         H33boTApfw6+ZLt9zoPv+SXZxOCddHgcnNp9U=
+        d=0x0f.com; s=google; t=1745640738; x=1746245538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LuPMmzATkY8xATRRwXVPRE8uVlsNQkZoSS0OdxW6pAs=;
+        b=q4dqkHAFNc3Pn+JawZchO8BBJ6LPgnT8aiqXxj3ZwvFhuttaoA9IWpH9RbOxVHzolH
+         A/s3+IPdgR8AvX2790EUa10YcRvHmGTjnLfFmIk/GDreQzOgQ6rVFNIpKUhhxPWrcY5K
+         nwr7UCti+JysAAWb4JvsA4XN3UvHZ2TUvbgCs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745640696; x=1746245496;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745640738; x=1746245538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eyFr35xmw7E/ixwUNF7HuIhiUoN7WKp+7IA8FTndH+M=;
-        b=IC1dSvYDHrTe99y555cFe8Es3fv9M+Ffp7AfRQywAinNaCdARHEKwi00rG/UNGTeBc
-         P2QgVcHBAVpeQM4v515lk4+I8mL8jxC1Lmv8wXxrnBXAGwxxdWn1bAZncvG+PRuzw5MC
-         nXRm70vkHWEMYZp/p8eUfjUa/U7w2kVPZvR93YYLeyKw3VmHfAWbQmo9fG5TXbGcWh9A
-         LHUx2IOTlvZfjUtWu50+3W+lV+Q1Yn7FWVCNI5LuQ/bruxBYKAo7WVuhM5G6j/bMVByF
-         Td50cUKw4aO/cCDUf40QRhaGvnEsITNj8ZhOu11VY6KMNu7vt9dP4uOot4y3tovlBf5d
-         ak8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWFH1OIwGrEYgnI3y9QMNMmkkB/4vWZo9jghSuQMvTS22lQsLhViO13yd3I4LfBbkPPVGVd7Whvua9VxHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZLvycK+7FhEz6HY38/yPwJUD6YkRBN4tk6nb9qbelKJCBA2l0
-	h4mMkus0cJo0dqJVrVteEvrAs5Z8TrQR0NA+/KmeALIPLoEvKZ4BOd65DTjZNJDtQA9sKs2umLd
-	4owg=
-X-Gm-Gg: ASbGncvi2KVlsFOg2p0sMvBzvm2gbv0f07R0t1OpDpwKZHqTh8G02HFglpcskJonvgn
-	bj7WdU1Anhbi3PrkDD46GEEpQ3TFBFNmbG+enTtcrer+VhYLMXx/UKjcW1VpYgyrAGgVonaNP3Y
-	qiMjFm22JE26g3cFPQYVTAT+i6nu+cwZOBXpAwTvGOrkDwE70slFHWT+ZHoeL2zkl27u/gQrbfa
-	Ttw6AdTjd2pAW+rI4IIXc03Nwl7koXw1TxaoQJ5ztrJ/OD4GTEheq8mxhtm56+Q2k7z5h8Sx7cS
-	LyTWddWy73MKRT6rrhEIG4ZlueLUGmP5I0dN5uqLqDyaGzH2U6Pqpcp+D8cy2eZApH6d08h1oDW
-	0ysg6Z/8cPVIjsQE=
-X-Google-Smtp-Source: AGHT+IFc5p4tyURvGYf7Zegh5YK9NXTOsP2zpIEiHMfqkBcyiF/FIpY8LYF1BgZCaYSFzCecyntzxQ==
-X-Received: by 2002:a17:907:1b1f:b0:abf:6d24:10bb with SMTP id a640c23a62f3a-ace7136c44bmr406092266b.44.1745640695987;
-        Fri, 25 Apr 2025 21:11:35 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf7397sm234705866b.92.2025.04.25.21.11.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 21:11:35 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so5066912a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 21:11:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVu1axZRJKornLEdf+FxHUe5w91DGu7z8PdqZz4Ys6PIffmiyszB/2AhEJhM6bzo0KrBbBhamz+R8u6b8Q=@vger.kernel.org
-X-Received: by 2002:a17:907:7f8d:b0:ac2:912d:5a80 with SMTP id
- a640c23a62f3a-ace7103925bmr389163066b.5.1745640694818; Fri, 25 Apr 2025
- 21:11:34 -0700 (PDT)
+        bh=LuPMmzATkY8xATRRwXVPRE8uVlsNQkZoSS0OdxW6pAs=;
+        b=NepeSuY/U1+tVX9KB4TbLQ8cLd7+AC47MIQVBTOaPXPZ5soQibVXW5wL2npTAtVR7A
+         qBEtHBqFIcektKEN5/zXK83G9Bb2PX5fHSn+xWtRjlsj4BsqYQnao/pvbssd+Q+0A7Uv
+         i3r/R5DWkhS1fchqz8yvt5YiOe472yUVKzPsq+lQH+Detsu7YeYHzdf2QRS5n7KZ1Reb
+         fFbYr3PpRjRcMpL4wqsyy+VqN34auqS5lEqFgXYBdOsI+68C0kXnkh9U9FAwNqdoovzB
+         jxihWKcFeIk4RKXRTZTxu32peZqQOQrwvq2SbfgF9mWLtst5hAwNcUEXZ1RL66UzqThp
+         CLIA==
+X-Gm-Message-State: AOJu0Yyp+3xknOF+oDo2KNi1xhje5nWjbs3Bz0l1BdDzmzhKq281t3NR
+	y6yXTaGcrB6wMbKTHYcOjOfcTgO4p4Av9iTFbeOSX8xIjiQ56zt9IsVX8Haq1hYo/1QcBEIplR3
+	QmB8=
+X-Gm-Gg: ASbGncuFX0q5z6r5yXi0tuJIxEOsFEGFpTRu0eaLiM2z9leCEZ+C/cW2r1jCfAVbZiR
+	6SKwVfOwFGPlEkaetm7emNp+apa8xugzxiF13sAUlFfOaoiEnqrDT2KxMmtAPjrNi5iLUrPnBGc
+	kvLTX5zJoJgIoNG+GB7V622HngFfUPhuKVOZflUEQhBZYy1i/W1Zn4lu5ax7l4p95CG+mDoDwmy
+	h75XKE6S4fJ0Qx/s8sM6uwVQNbp4rwGl8f+zRUJV9q57B630d9u2o61x/hr2HVbVrJn8ezN4IPl
+	xTt+tV2MwktueNTWKWu+gSlTIKnKn1hHZEaL2R1cB0Xagtx9x+Kd/o9lgj9VUu/g
+X-Google-Smtp-Source: AGHT+IHIZFD7SC+VCaiJEN9Ucea/7xDUmwe56OfPeUEExIBNy9kJZpr29LjEj0S+2onGXU4Fs1xFhw==
+X-Received: by 2002:a17:903:3d08:b0:224:910:23f6 with SMTP id d9443c01a7336-22dbf743518mr74777915ad.45.1745640738287;
+        Fri, 25 Apr 2025 21:12:18 -0700 (PDT)
+Received: from shiro.work.home.arpa. ([2400:4162:2428:2ffe:5393:61f3:16d7:186f])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22db51025basm41093945ad.187.2025.04.25.21.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Apr 2025 21:12:17 -0700 (PDT)
+From: Daniel Palmer <daniel@0x0f.com>
+To: w@1wt.eu,
+	linux@weissschuh.net,
+	linux-m68k@lists.linux-m68k.org,
+	geert@linux-m68k.org
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Palmer <daniel@thingy.jp>
+Subject: [PATCH] tools/nolibc: Add m68k support
+Date: Sat, 26 Apr 2025 13:12:12 +0900
+Message-ID: <20250426041212.4141152-1-daniel@0x0f.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
- <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
- <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
- <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
- <q3thzkbsq6bwur7baoxvxijnlvnobyt6cx4sckonhgdkviwz76@45b6xlzvrtkr>
- <CAHk-=wh09TvgFu3WKaeLu8jAxCmwZa24N7spAXi=jrVGW7X9ZA@mail.gmail.com>
- <mlsjl7qigswkjvvqg2bheyagebpm2eo66nyysztnrbpjau2czt@pdxzjedm5nqw>
- <CAHk-=wiSXnaqfv0+YkOkJOotWKW6w5oHFB5xU=0yJKUf8ZFb-Q@mail.gmail.com>
- <lmp73ynmvpl55lnfym3ry76ftegc6bu35akltfdwtwtjyyy46z@d3oygrswoiki>
- <CAHk-=wiZ=ZBZyKfg-pyA3wmEq+RkscKB1s68c7k=3GaT48e9Jg@mail.gmail.com> <opsx7zniuyrf5uef3x4vbmbusu34ymdt5myyq47ajiefigrg4n@ky74wpog4gr4>
-In-Reply-To: <opsx7zniuyrf5uef3x4vbmbusu34ymdt5myyq47ajiefigrg4n@ky74wpog4gr4>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 25 Apr 2025 21:11:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjGiu1BA_hOBYdaYWE0yMyJvMqw66_0wGe_M9FBznm9JQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEOndetjy9WXSDQF_xoaos9kB0PLMfvWcYcUeLMoKS_bINLgYq1z0VMTUs
-Message-ID: <CAHk-=wjGiu1BA_hOBYdaYWE0yMyJvMqw66_0wGe_M9FBznm9JQ@mail.gmail.com>
-Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Apr 2025 at 20:59, Kent Overstreet <kent.overstreet@linux.dev> wrote:
->
-> Yeah, Al just pointed me at generic_set_sb_d_ops().
->
-> Which is a perverse way to hide an ops struct. Bloody hell...
+From: Daniel Palmer <daniel@thingy.jp>
 
-Kent, it's that perverse thing EXACTLY FOR THE REASONS I TOLD YOU.
+Add nolibc support for m68k. Should be helpful for nommu where
+linking libc can bloat even hello world to the point where you get
+an OOM just trying to load it.
 
-The common case will never even *look* at the dentry ops, because
-that's way too damn expensive, and the common case wants nothing at
-all to do with case insensitivity.
+Signed-off-by: Daniel Palmer <daniel@thingy.jp>
+---
+ tools/include/nolibc/arch-m68k.h | 141 +++++++++++++++++++++++++++++++
+ tools/include/nolibc/arch.h      |   2 +
+ 2 files changed, 143 insertions(+)
+ create mode 100644 tools/include/nolibc/arch-m68k.h
 
-So guess why that odd specialized function exists?
+diff --git a/tools/include/nolibc/arch-m68k.h b/tools/include/nolibc/arch-m68k.h
+new file mode 100644
+index 000000000000..6dac1845f298
+--- /dev/null
++++ b/tools/include/nolibc/arch-m68k.h
+@@ -0,0 +1,141 @@
++/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
++/*
++ * m68k specific definitions for NOLIBC
++ * Copyright (C) 2025 Daniel Palmer<daniel@thingy.jp>
++ *
++ * Roughly based on one or more of the other arch files.
++ *
++ */
++
++#ifndef _NOLIBC_ARCH_M68K_H
++#define _NOLIBC_ARCH_M68K_H
++
++#include "compiler.h"
++#include "crt.h"
++
++#define _NOLIBC_SYSCALL_CLOBBERLIST "memory"
++
++#define my_syscall0(num)                                                      \
++({                                                                            \
++	register long _num __asm__ ("d0") = (num);                            \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r"(_num)                                                  \
++		: "r"(_num)                                                   \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++#define my_syscall1(num, arg1)                                                \
++({                                                                            \
++	register long _num __asm__ ("d0") = (num);                            \
++	register long _arg1 __asm__ ("d1") = (long)(arg1);                    \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r"(_num)                                                  \
++		: "r"(_arg1)                                                  \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++#define my_syscall2(num, arg1, arg2)                                          \
++({                                                                            \
++	register long _num __asm__ ("d0") = (num);                            \
++	register long _arg1 __asm__ ("d1") = (long)(arg1);                    \
++	register long _arg2 __asm__ ("d2") = (long)(arg2);                    \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r"(_num)                                                  \
++		: "r"(_arg1), "r"(_arg2)                                      \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++#define my_syscall3(num, arg1, arg2, arg3)                                    \
++({                                                                            \
++	register long _num __asm__ ("d0")  = (num);                           \
++	register long _arg1 __asm__ ("d1") = (long)(arg1);                    \
++	register long _arg2 __asm__ ("d2") = (long)(arg2);                    \
++	register long _arg3 __asm__ ("d3") = (long)(arg3);                    \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r"(_num)                                                  \
++		: "r"(_arg1), "r"(_arg2), "r"(_arg3)                          \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++#define my_syscall4(num, arg1, arg2, arg3, arg4)                              \
++({                                                                            \
++	register long _num __asm__ ("d0") = (num);                            \
++	register long _arg1 __asm__ ("d1") = (long)(arg1);                    \
++	register long _arg2 __asm__ ("d2") = (long)(arg2);                    \
++	register long _arg3 __asm__ ("d3") = (long)(arg3);                    \
++	register long _arg4 __asm__ ("d4") = (long)(arg4);                    \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r" (_num)                                                 \
++		: "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4)              \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++#define my_syscall5(num, arg1, arg2, arg3, arg4, arg5)                        \
++({                                                                            \
++	register long _num __asm__ ("d0") = (num);                            \
++	register long _arg1 __asm__ ("d1") = (long)(arg1);                    \
++	register long _arg2 __asm__ ("d2") = (long)(arg2);                    \
++	register long _arg3 __asm__ ("d3") = (long)(arg3);                    \
++	register long _arg4 __asm__ ("d4") = (long)(arg4);                    \
++	register long _arg5 __asm__ ("d5") = (long)(arg5);                    \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r" (_num)                                                 \
++		: "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4), "r"(_arg5)  \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++#define my_syscall6(num, arg1, arg2, arg3, arg4, arg5, arg6)                  \
++({                                                                            \
++	register long _num __asm__ ("d0")  = (num);                           \
++	register long _arg1 __asm__ ("d1") = (long)(arg1);                    \
++	register long _arg2 __asm__ ("d2") = (long)(arg2);                    \
++	register long _arg3 __asm__ ("d3") = (long)(arg3);                    \
++	register long _arg4 __asm__ ("d4") = (long)(arg4);                    \
++	register long _arg5 __asm__ ("d5") = (long)(arg5);                    \
++	register long _arg6 __asm__ ("a0") = (long)(arg6);                    \
++									      \
++	__asm__ volatile (                                                    \
++		"trap #0\n"                                                   \
++		: "+r" (_num)                                                 \
++		: "r"(_arg1), "r"(_arg2), "r"(_arg3), "r"(_arg4), "r"(_arg5), \
++		  "r"(_arg6)                                                  \
++		: _NOLIBC_SYSCALL_CLOBBERLIST                                 \
++	);                                                                    \
++	_num;                                                                 \
++})
++
++void _start(void);
++void __attribute__((weak, noreturn)) __nolibc_entrypoint __no_stack_protector _start(void)
++{
++	__asm__ volatile (
++		"movel %sp, %sp@-\n"
++		"jsr _start_c\n"
++	);
++	__nolibc_entrypoint_epilogue();
++}
++
++#endif /* _NOLIBC_ARCH_M68K_H */
+diff --git a/tools/include/nolibc/arch.h b/tools/include/nolibc/arch.h
+index 8a2c143c0fba..ba3da0f098f1 100644
+--- a/tools/include/nolibc/arch.h
++++ b/tools/include/nolibc/arch.h
+@@ -33,6 +33,8 @@
+ #include "arch-s390.h"
+ #elif defined(__loongarch__)
+ #include "arch-loongarch.h"
++#elif defined(__m68k__)
++#include "arch-m68k.h"
+ #else
+ #error Unsupported Architecture
+ #endif
+-- 
+2.49.0
 
-Exactly because the dcache makes damn sure that the irrelevant CI case
-is never in the hot path. So when you set those special dentry
-operations to say that you want the CI slow-paths, the VFS layer then
-sets magic bits in the dentry itself that makes it go to there.
-
-That way the dentry code doesn't do the extra check for "do I have
-special dentry operations for hashing on bad filesystems?" IOW, in
-order to avoid two pointer dereferences, we set one bit in the dentry
-flags instead, and now we have that information right there.
-
-So yes, people who want to use case-insensitive lookups need to go to
-some extra effort, exactly because we do NOT want that garbage to
-affect the well-behaved paths.
-
-And no, I'm not surprised that you didn't get it all right. The VFS
-layer is complicated, and the dentry cache is some of the more complex
-parts of it.
-
-And a lot of that complexity comes from all the performance tuning -
-and a small part of it has very much been about getting this CI crap
-out of the way.
-
-A much bigger part has admittedly been all the locking complexity, the
-RCU lookup, and the whole extra 'struct path' layer that allows us to
-share the same dentry across multiple mounts.
-
-The credit for almost all of *that* complexity goes to Al. Because
-some of that code scares even me, and I'm supposed to know that part
-of the kernel better than most.
-
-             Linus
