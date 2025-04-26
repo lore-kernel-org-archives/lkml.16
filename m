@@ -1,61 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485623C0C;
-	Sat, 26 Apr 2025 02:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF093C0C
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 02:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745633061; cv=none; b=dslJRpMUa46A5rZ5nJ187jelCOSlmoeJZ7kxTRaQzZqElxADZFs6pjlTieXpMeQaP0aigHl+HUGNAAe7x9TlIgF/94KjoyMwT3E8cA+33XEk+MXyev/8Rd0FXMO4kvHcnKC9ieYCXWQIFcsqP4NmWsBmmsiDm9Sae1ES//G91EY=
+	t=1745633122; cv=none; b=HSdW7UYNBn9OmIRwD4VZhXtpbOyOTFK9qook3eW0AB/qLW8qbbum5AWug+c0K5ZtnmtRLflMbN3fHDCjhQou4YV3gMqgcmFeEHjvxg4bRFe4Ce7cmOjxdX0wDNXxfxErTxIyWQFATDVcPnRxs3ELyJy46p4lAG84NnYXAc71nHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745633061; c=relaxed/simple;
-	bh=YBjGs75TGQoZrkN95ihq97NwqfZ/Jj7+bTvUZ5KWgEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WLEOxTTAuI9B+dB4iT7FOBV50atcz66LOznUGPTb/puLqIltV4CSBOY4QnGSQFgIjEwlznFZuUvXFrOMYZGE1s4N2aPa0yMIrAhRsxluppmdj0Ok1BsVwldg7WBP9tT0vbK0QQr2MXRKwwi+LN68A+KvNeADR/Un70zBvB1+L0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nf8gdMuy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745633122; c=relaxed/simple;
+	bh=+MYToG7EccjfFHrEZpf+eIg2lqSQxzzC4596A+uDudg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=eb0h3Lb+WdS7qKqxNsu5TuoHKQzmFIcKEGL2B6ULl9AmMouzG8VZzV9Jask0f4W+CfGoD3FtvJCAi/Lsbyh7MgHU2DxFg+6itJUMG+aIw5hg/UQl9V/pZxJvIE15xWZDG+SkPyOjprGe8wgWmaJP0ginT2+ltYI8RqlTPovjZ/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JlQuz80c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nf8gdMuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5731CC4CEE4;
-	Sat, 26 Apr 2025 02:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745633060;
-	bh=YBjGs75TGQoZrkN95ihq97NwqfZ/Jj7+bTvUZ5KWgEQ=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JlQuz80c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E22DEC4CEE4;
+	Sat, 26 Apr 2025 02:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745633122;
+	bh=+MYToG7EccjfFHrEZpf+eIg2lqSQxzzC4596A+uDudg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Nf8gdMuyryTogJAdnxFXaOwXRzS8ToMPO+8+uINeXpCHvCJHaMKeg7uzVSnErVuIw
-	 yL1k3jTbPqUVOs2Y71FNdL4UBJmeU617wuuzCdsFt6CJAdzLSV7nXFMhfldIW3wxHl
-	 VOubRmwsixw0QPirPJGUjSCHsKk/ePJFj6fi6jr0Do+if6GPUqtssaAxWMdFaSP6Qx
-	 pdpesPOmoJ2kNN/NVQurngCd7koM8FPvfG+kFSrdM3D6H7/hYzPlHyY69WzM5fPEAf
-	 zeg3VQ1VVvm6Rc8ePL8Dviuk1eomrol6yUZDANa7PCwdB3oxlTiFjJTTy+B8Loki3w
-	 EGgPAxrt5uFiA==
-Date: Fri, 25 Apr 2025 19:04:19 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jay Vosburgh <jv@jvosburgh.net>
-Cc: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Nikolay
- Aleksandrov <razor@blackwall.org>, Simon Horman <horms@kernel.org>, Cosmin
- Ratiu <cratiu@nvidia.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 net] bonding: assign random address if device address
- is same as bond
-Message-ID: <20250425190419.273eb34b@kernel.org>
-In-Reply-To: <587559.1745538292@famine>
-References: <20250424042238.618289-1-liuhangbin@gmail.com>
-	<587559.1745538292@famine>
+	b=JlQuz80cv10Y3QL76aIeeLqpD+uU9jubW7G68l6Dq6e5KcEyNvZ/9HwMjup1VqJcq
+	 0l0++/wEpJt74biPZNL4CWOpSJEGQN7vL5bWc9Dc7H+rrtJKNRo7KqLOvAyxvwosmt
+	 d9cqpSSCz0wohmIkDTBdb9yMLc5qmzAzx6Na6IRs=
+Date: Fri, 25 Apr 2025 19:05:21 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-mm@kvack.org, yuzhao@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: vmscan: apply proportional reclaim pressure for
+ memcg when MGLRU is enabled
+Message-Id: <20250425190521.63ba5b25afcb938102b69335@linux-foundation.org>
+In-Reply-To: <20250404141118.3895592-1-koichiro.den@canonical.com>
+References: <20250404141118.3895592-1-koichiro.den@canonical.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Apr 2025 16:44:52 -0700 Jay Vosburgh wrote:
-> 	The code flow is a little clunky in the "if (situation one) else
-> if (situation two) else goto skip_mac_set" bit, but I don't really have
-> a better suggestion that isn't clunky in some other way.
-> 
-> 	This implementation does keep the already complicated failover
-> logic from becoming more complicated for this corner case.
+On Fri,  4 Apr 2025 23:11:18 +0900 Koichiro Den <koichiro.den@canonical.com> wrote:
 
-Any thoughts on whether we should route this as a fix or as a -next
-improvement? The commit under Fixes is almost old enough to drink.
+> The scan implementation for MGLRU was missing proportional reclaim
+> pressure for memcg, which contradicts the description in
+> Documentation/admin-guide/cgroup-v2.rst (memory.{low,min} section).
+> 
+> ...
+>
+
+Could we please have some review of this proposal?
+
+Thanks.
