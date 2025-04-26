@@ -1,77 +1,92 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F887A13A;
-	Sat, 26 Apr 2025 08:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA257A13A
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655720; cv=none; b=rXlvoCanXfsIWTwkMcEsESu8uNkunwdJ1MNssKpVWmCwO2sfdV8c1plzZ200RnSQtWiuKhvWwjv9GZ+IBLpjgVLVd6QdFmrWPFDk54sOcYXbHy1zWUy/q9fZ70IQm5y9fTcqVl+zJyfGfYtNvboQXsO3aOREftIDQhpwI5jo2iU=
+	t=1745655766; cv=none; b=p7lJ/mFBrr3cM7U1+wNLfGpByZx1fHBPJqbK+zk2lER6/Dcylr150YibR7xQO9PaEaT4jyNjIRrwU/Xjs1rsP86MCWhThCB5qvmB6kKorGdAUZRNsa21bNY2n5hLTna3REDdR5az5WrjmiLs4RgaVpH/rd3rMw4Ll/kAfaiojNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655720; c=relaxed/simple;
-	bh=fzKR/ufsieUr8oxDbrm52cAQXJCN5hqEVmsE660kjTY=;
+	s=arc-20240116; t=1745655766; c=relaxed/simple;
+	bh=7Bl7de4B1CcHT/qr+JjEpriesTtHJODEoTtEeQXzAkM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgIScswQbd/V+h6jgdJSbJ4fgcKk/kOuH5+5ljoupzbps9w2WbwZWOjijGAMZjLPqnCZSlAZOPxe42CNZA6RYfEnrPopuzRG3BneXFDcSMB6e6p1TkVV7i/u8YxmRuEeFFdcgnUewhDEtA9Ft+hrYpLbG17Tdkp4/8DQRFVegT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=CsIqNmuk; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcI6teKM0gHa9jvbsKZ+mU03v/CG6uB5ENBHTHZTB6+bqB2OJR4nnWJXjLvtMbMzWVR3qFAInf4PvuvbDdFKb1GZ3wYv20pu+ZRYSIJSXeuzJEXdMFa25atxotIERmEjxnRcR8IF9t5JZUx1WkeM6b+/itCLfWiobn9u6TQGG+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJHaeRL1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="CsIqNmuk"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id B08771C00B2; Sat, 26 Apr 2025 10:21:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1745655715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LApoH+hql5fj1iVHW98H1KX0KFIlCyUgfPPdG8y5U20=;
-	b=CsIqNmuk+1cL+vSLFfS8Yo8Df+lDCHwfh2SLlM9P9vUO1YUyMNgI9tUrg34KbVHm94j5bk
-	Z/yCELdKcV8u+6UVEsgTHHudiVA/0lwXIzC/ACMqgLWj+eKgB1QfmDynLS0rTUybrzPrnt
-	GoYJ8w0KtzzkJuNNlfFecfODwwUcFQY=
-Date: Sat, 26 Apr 2025 10:21:55 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v9 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <aAyXo7m8pvJc258V@duo.ucw.cz>
-References: <20250425210043.342288-1-wse@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJHaeRL1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98959C4CEE2;
+	Sat, 26 Apr 2025 08:22:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745655765;
+	bh=7Bl7de4B1CcHT/qr+JjEpriesTtHJODEoTtEeQXzAkM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OJHaeRL12xwlkkkBC+jsJeEVr9fi1ApDZSdVzQ5yOExRKsw6gBHotqsfnF2oz3Lk/
+	 ruaQsnEyhzIOfF9lwX1R0X8/HV08J/+ceGT8uPxsBd4nCnNuozq635mUBDDj+hpr3P
+	 2n1zBihSzqe7gKpB1YMe8u5ib2FbvioCKlszUGnJenADLpkgXwddcrBYDzxjnqlfgu
+	 XDxXV0E6/YMVCctw8wNmeAqu4EVSUMJSo9wYSl7nIj3eosllzvHr+yD85QZEX6WHk/
+	 f6VQfAvY0Kfp21TtpwnDW5PiAKqbhdpfrd+Dq7yuBvI5jBULIB/DVoBklcfTneVw3u
+	 0XzDbQFewiNdQ==
+Date: Sat, 26 Apr 2025 11:22:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de>
+Cc: akpm@linux-foundation.org, dwmw2@infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lkp@intel.com,
+	yajun.deng@linux.dev
+Subject: Re: [PATCH] mm: memblock: Fix arguments passed to memblock_set_node()
+Message-ID: <aAyXzywgqH2qFRKn@kernel.org>
+References: <bd5842a92bd340799a74063f8da83d96@amazon.de>
+ <20250425102003.64122-1-bercantu@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hIDcK2E21PriQdgi"
-Content-Disposition: inline
-In-Reply-To: <20250425210043.342288-1-wse@tuxedocomputers.com>
-
-
---hIDcK2E21PriQdgi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250425102003.64122-1-bercantu@amazon.de>
 
-On Fri 2025-04-25 22:53:28, Werner Sembach wrote:
-> Note that I'm away from my work PC for the next week so expect my next
-> response the monday after.
+Hi Bernardo,
 
-Forgot to cc LED lists. NAK.
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+On Fri, Apr 25, 2025 at 10:20:03AM +0000, Bernardo C. Gutierrez Cantu wrote:
+> memblock_set_node() receives a `base` and a `size` arguments, but we are
+> passing the `start` and `end` of the memory regions when iterating over
+> them in memmap_init_reserved_pages() to set their node ids.
+> 
+> This results in the function setting the node ids for the reserved memory
+> regions in `[base, base + base + size)` instead of `[base, base + size)`.
+> 
+> Pass `start` and `size`, so that we iterate over the correct range.
+> 
+> Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
+> 
+> Signed-off-by: Bernardo C. Gutierrez Cantu <bercantu@amazon.de>
 
---hIDcK2E21PriQdgi
-Content-Type: application/pgp-signature; name="signature.asc"
+There's already a fix in memblock tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git/commit/?h=for-next&id=06eaa824fd239edd1eab2754f29b2d03da313003
 
------BEGIN PGP SIGNATURE-----
+Will send PR to Linus soon.
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaAyXowAKCRAw5/Bqldv6
-8gUEAKDBAqA2i2qckGriCTQPP5bcc13XwQCgreLCTnH1AIIW6wFVtURQfyXmj3o=
-=ns29
------END PGP SIGNATURE-----
+> ---
+>  mm/memblock.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 0a53db4d9f7b..9639f04b4fdf 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -2196,7 +2196,7 @@ static void __init memmap_init_reserved_pages(void)
+>  		if (memblock_is_nomap(region))
+>  			reserve_bootmem_region(start, end, nid);
+>  
+> -		memblock_set_node(start, end, &memblock.reserved, nid);
+> +		memblock_set_node(start, region->size, &memblock.reserved, nid);
+>  	}
+>  
+>  	/*
+> -- 
+> 2.47.1
 
---hIDcK2E21PriQdgi--
+-- 
+Sincerely yours,
+Mike.
