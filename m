@@ -1,136 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E774120B;
-	Sat, 26 Apr 2025 13:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE0BC148
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 13:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745672829; cv=none; b=uMgPkZCBvfZ+ZJ9xX48pqTB1W0LCg1pKjYsOm3TGObVXoHPS3IughHNr/CVyxPZqRI3m5crXp/NrgonUdXMdrvEEs0c2gvA/QXT2zqqBfYZ2v0ywVZ8NUtDk/oWbEiYHJSspcuLSWCHgFbfofBT/je4UtM8s3ZFPQ0RsoDMFETI=
+	t=1745672989; cv=none; b=n58t8gi+AT5TrGS+jVtZeFJuRO/+6yq1uhgG73ikrN3byKS0+RNmLlkUkNcc052lXk+ObcFeaQIZ/Nwns5bxWJwA2HBq9HLJQOgqbSDp0D5fpGOKASt4qeRYhO6R6TRxHwGGoF74jQdQHdnQaw8BGYRpFlaOk/qEyOhhBy9YnGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745672829; c=relaxed/simple;
-	bh=tP+8zaOhxz1rLnbBTSygHoqJ133ZXSPGoXBXXm9NE0c=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LUZVL6V/N59kFq+cpgT1PtrT3L2sooRrF1nLVKa9Bqf+z2oXn223tTEe90XyJlKvSgbhXVjZbWEg6R3zBWcBuiafT4qcs+mOYmrxcjY1yAZZYDPK4xY+TVZyNg6YRHaMIuFowgWBEDpWbYlPRQ7p3ZQMpsPD2ITe8cFiCanNJvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEoTnsf6; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745672989; c=relaxed/simple;
+	bh=TrjXobdC90aiaVYJS8Yxpcn8NpZlegdCI/+sCJqaMoI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNGN6l2n+rTObQTd6KxCg75I5LTmYrt+FzcnafVE6/K4BTKzQMbNFUOhgYRUiTpwmSgJnOoIlpWmqR3B5KC7VGzFap28Y54+vt+1BOUvJe41WePO+TxjrKtzVh1SMtfJpAAF2jDggP4EC3DuNOCJRW4u/TaFz5m5gaLjZ/vg3c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b=G8OYn6RV; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEoTnsf6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745672828; x=1777208828;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tP+8zaOhxz1rLnbBTSygHoqJ133ZXSPGoXBXXm9NE0c=;
-  b=JEoTnsf6XV+YbYv2J+hzq3JhJorMtdp9WfH9xaMkMYno4lLFQKh0lg6g
-   sJbbG+fkNCcmLcmhDAXU4UBnd9GaFmL1v34sgro0YqrCD/E+7qewKQOd7
-   6SC+/pvS7PrI5hvw/FtNZiY157/hONZWBW2J17cWL+ImTMdTQwQBfVMDY
-   CL0OPsCihSY62Jnnfbxnu8P92qzWABwl5atxHt8XWwYXzGyN0us0//ilA
-   QFiUrMMtg+GgzhsAWgeiOmNbn1f48ZCkfWv9eIKC/SsWl0yD2Dr75kp/M
-   Hz2JX+KS1TXnl/t72rwVhNnCTUULBSxAtqZIIUhjHd7BURf8tU/QfBzcB
-   A==;
-X-CSE-ConnectionGUID: dB1Zm1HxSuqlWw+H07LW9A==
-X-CSE-MsgGUID: GwEpi+r4SSqh5nZ9NQ8LDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="57964027"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="57964027"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:07:05 -0700
-X-CSE-ConnectionGUID: RGjYzt7ASDeYdX+vRbDOVw==
-X-CSE-MsgGUID: 6QrmOG/mR8aeRL3O0vgrHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="134057442"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 06:07:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 26 Apr 2025 16:06:56 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: corbet@lwn.net, bhelgaas@google.com, kuurtb@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, vkoul@kernel.org, 
-    yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
-    sanyog.r.kale@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, dakr@kernel.org, 
-    dan.j.williams@intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    Dell.Client.Kernel@dell.com, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 4/7] pci: doe: Replace sysfs visibility macro
-In-Reply-To: <5546db361d2d474b97d80345473628d0e5a55093.camel@linux.intel.com>
-Message-ID: <a8581a58-e994-ff5e-6bdc-ca9efe319da1@linux.intel.com>
-References: <20250423175040.784680-1-david.e.box@linux.intel.com>  <20250423175040.784680-5-david.e.box@linux.intel.com>  <8d261613-60d3-8825-e073-1b39daadc29a@linux.intel.com> <5546db361d2d474b97d80345473628d0e5a55093.camel@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="G8OYn6RV"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af52a624283so2932750a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 06:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google; t=1745672987; x=1746277787; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TrjXobdC90aiaVYJS8Yxpcn8NpZlegdCI/+sCJqaMoI=;
+        b=G8OYn6RVQSDqkXv3ue8YtDBU0Uuw3cA/Qe/FE4rQOs+xOJrrqUQKOeNsgoRaxQ2347
+         uY6Ho3K1oMTW23zNkJgQ2+uRT12l0WecniqeepvFp1d3RNi8up2sc4TchllMDs9GkthQ
+         qaKGI+ylR7/AbaT2yFSU8i101WuKOWdV7aoZI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745672987; x=1746277787;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TrjXobdC90aiaVYJS8Yxpcn8NpZlegdCI/+sCJqaMoI=;
+        b=kjYSwL8WFJuF2KItgNJsUA2syfkLlLqK8MbpDrTacSTpH/o3K87ndT7MiZRTN3z5Hd
+         QH42QR986Iqb8SE41IBll2Ib7ihOKVzTlkmnV6VOQ8rnSl2mDmxS67tHN70OyGr6h1Ns
+         WXPcOiWQxSy/KZ1DgE/9K0t7UR2NvUUjP9HuUY2B+RXu0exNsC7RDI3xgOuTBoWU6MWa
+         Xu8Irqt7Mfb0o3evT1VKEVWI8tXZdvpb2o/ZrLeArhIx2yc3oM1fdy5CClF59qxv3k+D
+         MggkbhTTt+/Zx6IArOAulRWfqDA1tbgje/hIWH8K0lOTVrINUN0Owp+jJHa9dqtK8IeY
+         98Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2JZZZKtSBPrwqokKY5ja9Bpknp34igZiwqUfvaDMk4iOavljakCgszT1zd0MOfZ3KxYnfhjomx2+o14A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2nu2dgim8PW/UiCCvEWyIjrAHCJcWXtV3gGYiFFiOdBOIFFX5
+	UyOZNtwp+ZyNpCzYXeQhtdH7fC/2yb/uI8lpFhsD2d8NmXrjkFCKA15F9vfF3hg/dQ8u1lwbLxp
+	h1NowBWXQK3p8aBXxDxGeTn+5SbwDPs8S2co0CA==
+X-Gm-Gg: ASbGnct6MdOlL9H2acfgjBfQLhd0OgbP4XxnfaXyhdQa0LsiM1gl9CHXFjLFOAhyqMD
+	ASBoUSRWUT3Dm1Ag3l0zdGfMOB1R0HFDllLkFDvnSVJvawK8idy4jx8/cVlhmvbmz9Y6HWTDsj9
+	QFRWyDgwdVOv7Cx4OcWPK6EZH4btEH884+QStD7C2bFhgva3swGvfaLjyE
+X-Google-Smtp-Source: AGHT+IFJ8jroVMyUx46fuQkn5I3LWI3lMSwo+PJo+v8BlHjbMXEDdo7FPKYRBfs7dbf21CFrjeWTjH3Cwc5FS76f3UA=
+X-Received: by 2002:a17:90b:42:b0:2fa:2268:1af4 with SMTP id
+ 98e67ed59e1d1-309ee37b550mr14275518a91.7.1745672986837; Sat, 26 Apr 2025
+ 06:09:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1919316634-1745672816=:944"
+References: <20250426041212.4141152-1-daniel@0x0f.com> <20250426051423.GA8239@1wt.eu>
+ <CAFr9PXkU3W6DdYKhHz13K7bk9bnik67R85wqYUwHeROKEx59zA@mail.gmail.com> <20250426065613.GA8661@1wt.eu>
+In-Reply-To: <20250426065613.GA8661@1wt.eu>
+From: Daniel Palmer <daniel@0x0f.com>
+Date: Sat, 26 Apr 2025 22:09:36 +0900
+X-Gm-Features: ATxdqUF5EkdwYJngK6gRuGlAEq-Y6P1m84eowWORfZZjV9CfX2nsT1VdlVXuheU
+Message-ID: <CAFr9PXn8-y9eq9YeOAzAs40WJM6Z93O6LYr_0PwMdT8TqiSnaA@mail.gmail.com>
+Subject: Re: [PATCH] tools/nolibc: Add m68k support
+To: Willy Tarreau <w@1wt.eu>
+Cc: linux@weissschuh.net, linux-m68k@vger.kernel.org, geert@linux-m68k.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Willy,
 
---8323328-1919316634-1745672816=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Sat, 26 Apr 2025 at 15:56, Willy Tarreau <w@1wt.eu> wrote:
+> OK no worries, my point really is that it's important to implement the
+> test for the target platform. If it's mmu only that's fine, as it will
+> ensure we don't break it in future updates.
 
-On Fri, 25 Apr 2025, David E. Box wrote:
+I sent a v2 that adds the tests to run on the QEMU virt machine and
+seems to pass.
+I tried the user mode as well and that passed also.
 
-> On Fri, 2025-04-25 at 13:57 +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 23 Apr 2025, David E. Box wrote:
-> >=20
-> > > Replace deprecated DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() call with the =
-new
-> > > DEFINE_SYSFS_GROUP_VISIBILITY() helper for the pci_doe_features_sysfs=
- group
-> > > in drivers/pci/doe.c.
-> > >=20
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > ---
-> > > =C2=A0drivers/pci/doe.c | 2 +-
-> > > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > > index aae9a8a00406..18b355506dc1 100644
-> > > --- a/drivers/pci/doe.c
-> > > +++ b/drivers/pci/doe.c
-> > > @@ -119,7 +119,7 @@ static bool pci_doe_features_sysfs_group_visible(=
-struct
-> > > kobject *kobj)
-> > > =C2=A0
-> > > =C2=A0=09return !xa_empty(&pdev->doe_mbs);
-> > > =C2=A0}
-> > > -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
-> > > +DEFINE_SYSFS_GROUP_VISIBILITY(pci_doe_features_sysfs)
-> >=20
-> > Hi David,
-> >=20
-> > Is it intentional to not have semicolon at the end?
->=20
-> Hi Ilpo,
->=20
-> I was just doing a straight name swap and didn't not notice the lack of a
-> semicolon. Of course, since DEFINE_SYSFS_GROUP_VISIBILITY() expands to a
-> function definition, a trailing semicolon isn't necessary.
->=20
-> I suspect the issue is with the other instances where it was added, which=
- makes
-> the usage inconsistent. What would you suggest?
+Thanks,
 
-Hi,
-
-When I saw that lack of semicolon, my first assumption was there's=20
-something special here that _requires_ leaving the semicolon out, which=20
-turned out untrue after an unnecessary roundtrip to read the macro. So IMO=
-=20
-it would be better to have the semicolon there to tell the reader there's=
-=20
-nothing of special interest here.
-
-Also, you used semicolon in the example. :-)
-
---=20
- i.
-
---8323328-1919316634-1745672816=:944--
+Daniel
