@@ -1,178 +1,286 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2050.outbound.protection.outlook.com [40.107.92.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B0C17E4
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745656349; cv=fail; b=RlkgIGyOO/SUUJmKGR0s5QN0D8hYgsSqLeYvHZSb2iAzKdM5alonF14Z7gO15YfyVQTXY70FTmwurPebH6vSLZ+g5UxSXBtaQltimIXPH9lcfY4APv8hXvnTR/gJq6tW9ab2zote+d6iVmx/kvXHVgrj5wH+MbN/q2rajrriiWg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745656349; c=relaxed/simple;
-	bh=oiru0oQzWf1nnI/zPLyH2YVVHuuzUEJk++2sQ6Yybig=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QhrbpcOmNGyH6NDMf+VbMqQpQTEzmABbQzWd6I2ouzZrIdQdBclmyB/rDCkbsDuHzSc455WQhLi6TsUksaFd1dkQF5PLq5GobXwXZJqk9VAQeU/w0uEyuvXDETsvmBgfbWa5qBpOADEOvQM9NYzlBxUjbZDj7wvsLbCx9VYw6Pc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=hTEk60NR; arc=fail smtp.client-ip=40.107.92.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gehealthcare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A301487E1;
+	Sat, 26 Apr 2025 08:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745656398; cv=none; b=cJLfBoI5F+hKsK8ioaPZIe5dgRWMNYsue4eZWD/MZeJLHmcEktN7j4XOEVCFMKPKmae0N14bBnKc5X81Ps4jRsmSzMgvnuPW8BB7Zgpq24imOyKDhtJ2TD1zkRiKMR1xGC8DzMeXBJGGnb9wc7OT/XvA9AtpPncZa1aL+x68ZDg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745656398; c=relaxed/simple;
+	bh=cq/kgfvwWTD+KOCGbdVDLUFl6oNg/Ou2BRx0e32C2q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gXVqvNlDHqZDBAxejrz5rui+UYfVaCBuUO43/bgmDVVGkoePQWS+z1HpoIAkRLwqQaCvftweV9lijWVBdDY4i/Ab9nSugNV4Pf7BB41ZGGpH/j/gjIqV2nBAzftXB7gQzpxT4E3uaTJJkxbWgpRkrr+ArHVSXiJrsywYiSDQQ7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i5he3Tko; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="hTEk60NR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v6d/6lC1M4NbepO/BRqeLMe7jU5f+l5lQrxQ8iyHWPwY3Vpr2jrT8j5GLKjGhNdfT69lz6uVjmJWtAZ2Q9NYDm02eZ6xPGI5TVMCXlXCiIdYgatIWEve2JP4xHPhsJnZAcVnBxDRO5AAigY2WLKsVXXdAqota7n1MKUHtO5YRaRgS8AHizS9V1zb9CzeFyl4swHlN4TpQKmotEcdObDAXJUwP3Tux/2RijW+2sM3e4cTiUH1gbad3B9PlsGWuIeDlett1Aph5eFSZG+o2xrOZ7gAMWIZPFq3WTULMTutcRnmcS/wAlFdWtCidKgisXlU7esSFajBhPwSgMmIqps4Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cJe53mNxfAe4Ki3rGi+qWczVxMVev+ZZVnPZocPwXXc=;
- b=HMbGK3ggJaG0A7dCk9in5cn5UHGAYv8r5usi/eb4Ns67Y5tsk6WETHIFBctlqWH5s4DDX0aueBivltJ5TD0OoBZlKwQQ9uXQ/blhg7Z2SbYIMeqpFTvk47JFOnQB9tn02Onp2QDJwG1PaDIyI7t5bS7IbrLXGvrjxiJKGUVqN/QMqgMDLhT6e9nAwpHbcxIeODTsG/BhnOagr1NwPkHEe0NvPIszxy0Wc9XREu6t0S5999EBSm0vEZMMp6yWE3sPzIwSr1HKqJYJcukZlhzDHiJZaxEnngBYhPFl7nAy62Gm3GsDMaFkWFqHAold4owoJaQu6ORFwnkMCCqsgqVg3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 165.85.157.49) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=gehealthcare.com; dmarc=fail (p=quarantine sp=quarantine
- pct=100) action=quarantine header.from=gehealthcare.com; dkim=none (message
- not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gehealthcare.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cJe53mNxfAe4Ki3rGi+qWczVxMVev+ZZVnPZocPwXXc=;
- b=hTEk60NR4FSYQz9HN6+ovYVzZbssoZKk0XPBnCJwsaTYYRiabSxeGBIbkNb4ec0acQ363VhRRVGdzpseTa1ic14m8HWMhMlbQs6zPMQxnSeVkhXQOvuIRFJaGS8Kud5XsNUZkbGDKjsZpM5iCFnylPYC61pGHgw/I++RDo//TWiFsU0nijMbLaaPB+3cpgKO5d1tk7AI74Ag2HuXtpZVgdDnNYeDtsSe7Uwzah6BR1ybZ3bzt67c6GdxsNFYuupYN6D0LVHPJQ/zRpQhz6TPeRLzf/yZdrsbeXsHDgumOLvn97vxozCRPBPH5nRxKNkr13KI1XBc1praDUzizkOSmQ==
-Received: from BN0PR04CA0063.namprd04.prod.outlook.com (2603:10b6:408:ea::8)
- by SA1PR22MB3904.namprd22.prod.outlook.com (2603:10b6:806:325::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Sat, 26 Apr
- 2025 08:32:24 +0000
-Received: from BL6PEPF0001AB50.namprd04.prod.outlook.com
- (2603:10b6:408:ea:cafe::90) by BN0PR04CA0063.outlook.office365.com
- (2603:10b6:408:ea::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Sat,
- 26 Apr 2025 08:32:24 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 165.85.157.49)
- smtp.mailfrom=gehealthcare.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=gehealthcare.com;
-Received-SPF: Fail (protection.outlook.com: domain of gehealthcare.com does
- not designate 165.85.157.49 as permitted sender)
- receiver=protection.outlook.com; client-ip=165.85.157.49;
- helo=atlrelay1.compute.ge-healthcare.net;
-Received: from atlrelay1.compute.ge-healthcare.net (165.85.157.49) by
- BL6PEPF0001AB50.mail.protection.outlook.com (10.167.242.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Sat, 26 Apr 2025 08:32:24 +0000
-Received: from 56525d0f2b9b.fihel.lab.ge-healthcare.net (zoo13.fihel.lab.ge-healthcare.net [10.168.174.111])
-	by builder1.fihel.lab.ge-healthcare.net (Postfix) with ESMTP id 50402CFB78;
-	Sat, 26 Apr 2025 11:32:22 +0300 (EEST)
-From: Ian Ray <ian.ray@gehealthcare.com>
-To: linux-kernel@vger.kernel.org
-Cc: ian.ray@gehealthcare.com,
-	nandor.han@gehealthcare.com
-Subject: [PATCH v2] MAINTAINERS: .mailmap: Update after GEHC spin-off
-Date: Sat, 26 Apr 2025 11:32:20 +0300
-Message-ID: <20250426083220.110-1-ian.ray@gehealthcare.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5he3Tko"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736b98acaadso3066707b3a.1;
+        Sat, 26 Apr 2025 01:33:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745656396; x=1746261196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x7xDbNUtc3GNk6oeUFqhP9sjyvenI2ax5rh3mY81Ris=;
+        b=i5he3TkoRjii+HonlLPrTIsvg0miO2hLdW5cpy+l3Mg1ebDXANx2hnU5kH3rGi0NGf
+         u1lXiPI/r35Jy1YmWADtzifXaYBbQY9dr8mR4HafRE8NFleag2YJSKXT3bAOCU2GosFP
+         iozvvz0OZcPijfQmrKA+Dh3yVBTBpFJG/qEVc1fiawFeRC+6c+3K9micSum1GLg2FfzY
+         vGODK7vORFtks6Q0ZEegiZ6fcCl/fsGhAf7kclxdTqnRZW89GxuEHa96ZsXyfzqqJywR
+         PfAItUm010MbZMzmqYo6tiz3yVdeIvMWtrKkvfPAU2RYVXSC5EAmFgc8IObNz3G4HzN9
+         RaiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745656396; x=1746261196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x7xDbNUtc3GNk6oeUFqhP9sjyvenI2ax5rh3mY81Ris=;
+        b=nrop+cy3s+NDLCouErkOeqm3MkhRUhlULrSr5kC7Gc+dql07RTmpHOUZKhfEuwfVRy
+         FGmu0ALBrTGpRSCfODTrJHuIUy3CC3ADpnLYxhtOwx+VTM0JaHvseNGOzrztDhAAeMor
+         nRk/QbSux4sptROWmxjZYugiob7K2i/H8haEMVM1GiGP6R7+6Db1NFbdEq4E1E+fuxsM
+         KdHxMj0QiJLu+gl5jwdnbLIs9xYQARp4wi26uDnep9nIBMB3IuRa8uQntO8B04WwhBBh
+         EZW1vkAhdQVSJAn4k3uUsfiB3pVfX4HMSplMeld699JvSWP32eHr0Lgu/CFo8pbBuLvH
+         qrTw==
+X-Forwarded-Encrypted: i=1; AJvYcCX23vvS4uUFP4sORbeCrhC7AKbNHX3mNIViQ8e0gKe0rNwuDpH0fukslkiIOQS1yvlRLpw=@vger.kernel.org, AJvYcCXs3nAainN3yfy621ETFzL8ZLkUuqDRIOg8df1Sk8Q4989tsEbYugfjwis2BlBQTVfh8Ibi/v9OdY8Nl6xQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8/9XkW+J0RZojqvv64DFyXoNgjvjmpxxQzOFKTc1rw17WWLF8
+	1ljxmIz6eb9sQlQemf2ms1rR/juh/HlHc4gz7nR0UEm7gTQfCvaei9MG0wXr
+X-Gm-Gg: ASbGncszTX0+H1PKgDIxk1Rrdo3wnIVL6GJG4APOpjxwW8+evRWQklNNP/9+lnfnFYD
+	BeMoKWrirrwDSjB9XraOxG537TDQq7o7juBhn827U2xXht1NYR4i6Gq8O8plDcgNAqsVVI+LZOC
+	8OFKKn2Bv1uJYHWEYNIteXRhx3uaQ74iA+OKKEOxTRKZkvzJeNJyOrrPu/Ed/kDo4MsQenyh2+Z
+	x62zxknofBfoTdqPhmrxW+DyMxU1Xtn9e22jq/X/C6lEnx6oD1vX1+l/XY16bYlAebIYMfRGLyI
+	7OZSn5nlW9q+wkQXWKyhBcp9Cw89tELnaYn1sZ4zebOna3W4GmtfDkJL121a8mB6XVPKy4d0rIA
+	QtKoH+F6D/k9vEj8e8nsFOhjFTbRCGg==
+X-Google-Smtp-Source: AGHT+IFFzdieNjceqUWjKCn57tE0HAT55Xq8uc8EhTbvjF77l7dXFwaf0Cd4FmYWkJbLx3Eoywyfvg==
+X-Received: by 2002:a05:6a00:4606:b0:736:5dae:6b0d with SMTP id d2e1a72fcca58-73fd72c7c31mr7101427b3a.10.1745656395842;
+        Sat, 26 Apr 2025 01:33:15 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:52b1:1f45:145e:af27? ([2001:ee0:4f0e:fb30:52b1:1f45:145e:af27])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25912ad3sm4546267b3a.13.2025.04.26.01.33.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 01:33:15 -0700 (PDT)
+Message-ID: <6b918a27-4c87-4c8c-bb31-7a5cca15844f@gmail.com>
+Date: Sat, 26 Apr 2025 15:33:07 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB50:EE_|SA1PR22MB3904:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 49a494a0-a989-4f13-9ee6-08dd849cdeb4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?IhZLNlI5+CYiYmwKpodVA7IV62loUoDuAsEO2KJAzZbzXko1hA4ytOHPOVq2?=
- =?us-ascii?Q?WbolGTkaSae+u2vLZ1ts/LB7ufq1YDmGW7m3FZmL/U42sIBXCRNnVq4pnfAA?=
- =?us-ascii?Q?NQgWj9tAC4CcqOYNJhW4qkUxEBphAXfLCaTipd5V6XdKEaxVEC942uoDXM/Q?=
- =?us-ascii?Q?lKGdDiwapsWdZSRpOpJZIdrZWW8gZzcdGWJ6J+DwMzfwWB/PREPFYH1ErOir?=
- =?us-ascii?Q?Twzg4qMKxFRytiJtRT44RrXF2bhPwARtGrqM4p0OM34yWbKpDCQm06kVoe2+?=
- =?us-ascii?Q?3O/YOYZcppcdYfZkgR3ghvzQGvGiGQhCV58sfLqJZeCMF0roVHYTeIA2/MuZ?=
- =?us-ascii?Q?skYe5VUSF1ftUJSWrs0eM/Np8ie+UEy4Di2WHJlqDgEOtzp7B/RBgxG5buxU?=
- =?us-ascii?Q?O6aN3HXu6MPxcvd/qxRoKEBxmY6bBbWmDeSQEu4pt/ZTja+XuRpMMfPmUv4U?=
- =?us-ascii?Q?cSMTR8vR1W8csoPf7kgjOrM3SV6L15six4MMczZtOjsCS81/81F8P7y8XgqV?=
- =?us-ascii?Q?yunh5YNJXNDo5iOgr7ZJTOJUGPd3yuHFieGHf3XR2S2nQweHhX4btkHmHhGg?=
- =?us-ascii?Q?9dov9y0JRfXk9tWlzwB7E/QmjdWIbmpUuV09D/MIMGOvM0LR3oiweKrPbRy0?=
- =?us-ascii?Q?XSkVQGWGNGo6KcrQIBA/W/mH51ZpcGAnYMwrY+VTZ6VMoaw3SKFflJDD1jyq?=
- =?us-ascii?Q?dkDJdOValLu0oZwUVL+NGIsuhN8Oto840DWwnb77zf13URpsHN0e9P+5IOcD?=
- =?us-ascii?Q?duUS/ve+fg0tTkGhdmOkZs+8HY5e44zhvysYcsEvM3jMWtjg+Se4Lq6z3RRS?=
- =?us-ascii?Q?g8ln1rlCkJAjwPsObFtwRHAnA6CG16fsgji6LLqut5KamV2IpW6N7igEI/fc?=
- =?us-ascii?Q?atFzPKD5F5KZ+wvf3Vt5WbhGzXx5Z4050bdKzInPQOBCdN2Y9nzOsIuSKRoT?=
- =?us-ascii?Q?s1QlROWB3XrlBh81cJ2gNijBa9aZARCSzOTpw/uZfHYmH7CHj+uCc2fYmNA3?=
- =?us-ascii?Q?DKD0sZaR7r9Y/5ZA9TcczSc9okEIHdpaGu0Glw+aJLdR2/a2DBE7NMPpdVlM?=
- =?us-ascii?Q?wGfU2+E+xLlTaQKmn2/d7eYMU0gGU8HYyW7NRUINTeRK1IJVnmT8Ili026zI?=
- =?us-ascii?Q?LwJQO0bp6s76ASEr3RCHU19SKJlBvDtTbQ4IpgF/pcW9c7eePa+JmSxOydHE?=
- =?us-ascii?Q?CyDSTjMGgL3X41CLS7noGdsu1u/2taZ59tLRZ7u9UbzHzCr1ZaB3ZPO+v1d8?=
- =?us-ascii?Q?SWlFkft5+qoZqNvj9HNnulf6Wl4xAYmxn8Ad4nrWkw9SxE+Lwn0LEw2GqiPn?=
- =?us-ascii?Q?QmNLMBJ+TcJqXVJOocuRympq2Rbx0fpDHzvxhjoe2Ld82Mu5C4X7rAw4hllv?=
- =?us-ascii?Q?WM6b9hbuhf4f3ikiSrZcP1uE0K9FfAL40N7di0ttaRj6q3fWZIYjZXL1jhhi?=
- =?us-ascii?Q?Ev6C9Yx2EYxhIlJKZSXnxgC8Qzd4idS2EY0pAZcwgJrfQ5ZPOM+4Hg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.85.157.49;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:atlrelay1.compute.ge-healthcare.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: gehealthcare.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2025 08:32:24.0590
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49a494a0-a989-4f13-9ee6-08dd849cdeb4
-X-MS-Exchange-CrossTenant-Id: 9a309606-d6ec-4188-a28a-298812b4bbbf
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=9a309606-d6ec-4188-a28a-298812b4bbbf;Ip=[165.85.157.49];Helo=[atlrelay1.compute.ge-healthcare.net]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BL6PEPF0001AB50.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR22MB3904
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next] virtio-net: support zerocopy multi buffer
+ XDP in mergeable
+To: netdev@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250426082752.43222-1-minhquangbui99@gmail.com>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250426082752.43222-1-minhquangbui99@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Update our email addresses, from @ge.com to @gehealthcare.com, after GE
-HealthCare was spun-off from GE.
+On 4/26/25 15:27, Bui Quang Minh wrote:
+> Currently, in zerocopy mode with mergeable receive buffer, virtio-net
+> does not support multi buffer but a single buffer only. This commit adds
+> support for multi mergeable receive buffer in the zerocopy XDP path by
+> utilizing XDP buffer with frags.
+>
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> ---
+>   drivers/net/virtio_net.c | 107 +++++++++++++++++++--------------------
+>   1 file changed, 51 insertions(+), 56 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 848fab51dfa1..8d21767dd607 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -45,6 +45,8 @@ module_param(napi_tx, bool, 0644);
+>   #define VIRTIO_XDP_TX		BIT(0)
+>   #define VIRTIO_XDP_REDIR	BIT(1)
+>   
+> +#define VIRTNET_MAX_ZC_SEGS	8
+> +
+>   /* RX packet size EWMA. The average packet size is used to determine the packet
+>    * buffer size when refilling RX rings. As the entire RX ring may be refilled
+>    * at once, the weight is chosen so that the EWMA will be insensitive to short-
+> @@ -1232,65 +1234,53 @@ static void xsk_drop_follow_bufs(struct net_device *dev,
+>   	}
+>   }
+>   
+> -static int xsk_append_merge_buffer(struct virtnet_info *vi,
+> -				   struct receive_queue *rq,
+> -				   struct sk_buff *head_skb,
+> -				   u32 num_buf,
+> -				   struct virtio_net_hdr_mrg_rxbuf *hdr,
+> -				   struct virtnet_rq_stats *stats)
+> +static int virtnet_build_xsk_buff_mrg(struct virtnet_info *vi,
+> +				      struct receive_queue *rq,
+> +				      u32 num_buf,
+> +				      struct xdp_buff *xdp,
+> +				      struct virtnet_rq_stats *stats)
+>   {
+> -	struct sk_buff *curr_skb;
+> -	struct xdp_buff *xdp;
+> -	u32 len, truesize;
+> -	struct page *page;
+> +	unsigned int len;
+>   	void *buf;
+>   
+> -	curr_skb = head_skb;
+> +	if (num_buf < 2)
+> +		return 0;
+> +
+> +	while (num_buf > 1) {
+> +		struct xdp_buff *new_xdp;
+>   
+> -	while (--num_buf) {
+>   		buf = virtqueue_get_buf(rq->vq, &len);
+> -		if (unlikely(!buf)) {
+> -			pr_debug("%s: rx error: %d buffers out of %d missing\n",
+> -				 vi->dev->name, num_buf,
+> -				 virtio16_to_cpu(vi->vdev,
+> -						 hdr->num_buffers));
+> +		if (!unlikely(buf)) {
+> +			pr_debug("%s: rx error: %d buffers missing\n",
+> +				 vi->dev->name, num_buf);
+>   			DEV_STATS_INC(vi->dev, rx_length_errors);
+> -			return -EINVAL;
+> -		}
+> -
+> -		u64_stats_add(&stats->bytes, len);
+> -
+> -		xdp = buf_to_xdp(vi, rq, buf, len);
+> -		if (!xdp)
+> -			goto err;
+> -
+> -		buf = napi_alloc_frag(len);
+> -		if (!buf) {
+> -			xsk_buff_free(xdp);
+> -			goto err;
+> +			return -1;
+>   		}
+>   
+> -		memcpy(buf, xdp->data - vi->hdr_len, len);
+> -
+> -		xsk_buff_free(xdp);
+> +		new_xdp = buf_to_xdp(vi, rq, buf, len);
+> +		if (!new_xdp)
+> +			goto drop_bufs;
+>   
+> -		page = virt_to_page(buf);
+> +		/* In virtnet_add_recvbuf_xsk(), we ask the host to fill from
+> +		 * xdp->data - vi->hdr_len with both virtio_net_hdr and data.
+> +		 * However, only the first packet has the virtio_net_hdr, the
+> +		 * following ones do not. So we need to adjust the following
+> +		 * packets' data pointer to the correct place.
+> +		 */
+> +		new_xdp->data -= vi->hdr_len;
+> +		new_xdp->data_end = new_xdp->data + len;
+>   
+> -		truesize = len;
+> +		if (!xsk_buff_add_frag(xdp, new_xdp))
+> +			goto drop_bufs;
+>   
+> -		curr_skb  = virtnet_skb_append_frag(head_skb, curr_skb, page,
+> -						    buf, len, truesize);
+> -		if (!curr_skb) {
+> -			put_page(page);
+> -			goto err;
+> -		}
+> +		num_buf--;
+>   	}
+>   
+>   	return 0;
+>   
+> -err:
+> +drop_bufs:
+>   	xsk_drop_follow_bufs(vi->dev, rq, num_buf, stats);
+> -	return -EINVAL;
+> +	return -1;
+>   }
+>   
+>   static struct sk_buff *virtnet_receive_xsk_merge(struct net_device *dev, struct virtnet_info *vi,
+> @@ -1307,23 +1297,28 @@ static struct sk_buff *virtnet_receive_xsk_merge(struct net_device *dev, struct
+>   	num_buf = virtio16_to_cpu(vi->vdev, hdr->num_buffers);
+>   
+>   	ret = XDP_PASS;
+> +	if (virtnet_build_xsk_buff_mrg(vi, rq, num_buf, xdp, stats))
+> +		goto drop;
+> +
+>   	rcu_read_lock();
+>   	prog = rcu_dereference(rq->xdp_prog);
+> -	/* TODO: support multi buffer. */
+> -	if (prog && num_buf == 1)
+> +	if (prog)
+>   		ret = virtnet_xdp_handler(prog, xdp, dev, xdp_xmit, stats);
+>   	rcu_read_unlock();
+>   
+>   	switch (ret) {
+>   	case XDP_PASS:
+> -		skb = xsk_construct_skb(rq, xdp);
+> +		skb = xdp_build_skb_from_zc(xdp);
 
-Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
----
-Changes since v1:
- * Include mailmap.
----
- .mailmap    | 2 ++
- MAINTAINERS | 4 ++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+This function has a bug which needs this fix commit to be applied to 
+work correctly: 
+https://lore.kernel.org/netdev/20250426081220.40689-2-minhquangbui99@gmail.com/
 
-diff --git a/.mailmap b/.mailmap
-index 9afde79e1936..f8baaa6f49d7 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -289,6 +289,7 @@ Henrik Rydberg <rydberg@bitmath.org>
- Herbert Xu <herbert@gondor.apana.org.au>
- Huacai Chen <chenhuacai@kernel.org> <chenhc@lemote.com>
- Huacai Chen <chenhuacai@kernel.org> <chenhuacai@loongson.cn>
-+Ian Ray <ian.ray@gehealthcare.com> <ian.ray@ge.com>
- Ike Panhc <ikepanhc@gmail.com> <ike.pan@canonical.com>
- J. Bruce Fields <bfields@fieldses.org> <bfields@redhat.com>
- J. Bruce Fields <bfields@fieldses.org> <bfields@citi.umich.edu>
-@@ -531,6 +532,7 @@ Mythri P K <mythripk@ti.com>
- Nadav Amit <nadav.amit@gmail.com> <namit@vmware.com>
- Nadav Amit <nadav.amit@gmail.com> <namit@cs.technion.ac.il>
- Nadia Yvette Chambers <nyc@holomorphy.com> William Lee Irwin III <wli@holomorphy.com>
-+Nandor Han <nandor.han@gehealthcare.com> <nandor.han@ge.com>
- Naoya Horiguchi <nao.horiguchi@gmail.com> <n-horiguchi@ah.jp.nec.com>
- Naoya Horiguchi <nao.horiguchi@gmail.com> <naoya.horiguchi@nec.com>
- Natalie Vock <natalie.vock@gmx.de> <friedrich.vock@gmx.de>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f31aeb6b452e..0767f0177536 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15237,7 +15237,7 @@ F:	drivers/usb/mtu3/
- 
- MEGACHIPS STDPXXXX-GE-B850V3-FW LVDS/DP++ BRIDGES
- M:	Peter Senna Tschudin <peter.senna@gmail.com>
--M:	Ian Ray <ian.ray@ge.com>
-+M:	Ian Ray <ian.ray@gehealthcare.com>
- M:	Martyn Welch <martyn.welch@collabora.co.uk>
- S:	Maintained
- F:	Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
-@@ -26644,7 +26644,7 @@ W:	http://www.marvell.com
- F:	drivers/i2c/busses/i2c-xlp9xx.c
- 
- XRA1403 GPIO EXPANDER
--M:	Nandor Han <nandor.han@ge.com>
-+M:	Nandor Han <nandor.han@gehealthcare.com>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/gpio/gpio-xra1403.txt
--- 
-2.39.5
+>   		if (!skb)
+> -			goto drop_bufs;
+> +			break;
+>   
+> -		if (xsk_append_merge_buffer(vi, rq, skb, num_buf, hdr, stats)) {
+> -			dev_kfree_skb(skb);
+> -			goto drop;
+> -		}
+> +		/* Later, in virtnet_receive_done(), eth_type_trans()
+> +		 * is called. However, in xdp_build_skb_from_zc(), it is called
+> +		 * already. As a result, we need to reset the data to before
+> +		 * the mac header so that the later call in
+> +		 * virtnet_receive_done() works correctly.
+> +		 */
+> +		skb_push(skb, ETH_HLEN);
+>   
+>   		return skb;
+>   
+> @@ -1332,14 +1327,11 @@ static struct sk_buff *virtnet_receive_xsk_merge(struct net_device *dev, struct
+>   		return NULL;
+>   
+>   	default:
+> -		/* drop packet */
+> -		xsk_buff_free(xdp);
+> +		break;
+>   	}
+>   
+> -drop_bufs:
+> -	xsk_drop_follow_bufs(dev, rq, num_buf, stats);
+> -
+>   drop:
+> +	xsk_buff_free(xdp);
+>   	u64_stats_inc(&stats->drops);
+>   	return NULL;
+>   }
+> @@ -1396,6 +1388,8 @@ static int virtnet_add_recvbuf_xsk(struct virtnet_info *vi, struct receive_queue
+>   		return -ENOMEM;
+>   
+>   	len = xsk_pool_get_rx_frame_size(pool) + vi->hdr_len;
+> +	/* Reserve some space for skb_shared_info */
+> +	len -= SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+>   
+>   	for (i = 0; i < num; ++i) {
+>   		/* Use the part of XDP_PACKET_HEADROOM as the virtnet hdr space.
+> @@ -6721,6 +6715,7 @@ static int virtnet_probe(struct virtio_device *vdev)
+>   	dev->netdev_ops = &virtnet_netdev;
+>   	dev->stat_ops = &virtnet_stat_ops;
+>   	dev->features = NETIF_F_HIGHDMA;
+> +	dev->xdp_zc_max_segs = VIRTNET_MAX_ZC_SEGS;
+>   
+>   	dev->ethtool_ops = &virtnet_ethtool_ops;
+>   	SET_NETDEV_DEV(dev, &vdev->dev);
 
