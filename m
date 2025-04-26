@@ -1,110 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D10A18FDB9
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 12:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B87221719;
+	Sat, 26 Apr 2025 12:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745670064; cv=none; b=Nq2FEyMXymlC8/EqbNjSFyMduWkho06q7e9iOmj2UkDcmiF7jSjzl/UcTCG6ON7haLpAyhWtiR73BpbixUO4x0vD4/91+6+Vy/UsxcM0hQ5xRokqoicgw7HmYUOfoNxX6r9IzlDfeKvilQK4AYova5e2i3A75Tzm5Z7n1MLCXhk=
+	t=1745670204; cv=none; b=d2Kx15YobPILnfxN+76E7Zj6EvVxMY4RwBvdYR7+QFXnSJlzw2iUKwAkXLztP5L/Nj3GZkfSTsy2Fxnrcf4H+5jpy7Z4drHx6GAiI+dkpV5rSb7ByYB7goABomiPCu+J3rF74LVK0kU4YY7nynZ9be4IcyizyAgNRmtU1H4dEbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745670064; c=relaxed/simple;
-	bh=9B36O3TVmdU2j+6b4aV49wQf8xcZzj1Fs7I7g7pbQx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mRmpAx5D6nKW4lwHfwchOW3Yj77jXyMxOPTPlW7m/+eGxWaXweGL/CPpk4sff9eCm8XmBmz7HzMs5wxfOPqFJ/RWclxFA0ZFsvtCttP3r+/FpVS5SMeb6AFpX1wLl9np7WHdAyZl8H4+IEv6nz16ZRrrg4ogwSZj0Gcnj47Asno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JBXi114S; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745670204; c=relaxed/simple;
+	bh=N9abW1lOZDc+B91BOCRly9ah+nCCCdochLw4pC52qyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=urOSSRrhxYSmpqsVjP56LkCS1fpDQE1JlvikO/utjaeu6+x7ODxf5lpXmP+2VD5zHdBOBXX+romru9mEwuVwt2aujU2DTW3ydgyyTOaB3j376xMeqXlaX0KOd7hDJPh2jFLuu7ukqNZBKf3EQG9IBG+a1M8TALU7gX6AOGfA5NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEA8gJWc; arc=none smtp.client-ip=209.85.208.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JBXi114S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745670063; x=1777206063;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=9B36O3TVmdU2j+6b4aV49wQf8xcZzj1Fs7I7g7pbQx0=;
-  b=JBXi114SblMQLU04ELMBZ4djkGMdp7NKYdrMPZSbMIiz1yI+Bv9b5x6B
-   6x3SGWPvA53+YZT4dIb6PySdKHq1IzHQ1IT/dEOKwUIcTHRJvPSAStryf
-   rctEX7tA9fOvoa/Pc5GfTUZ9mQTNQvRBPOdKsvzN5MLBwvd35OY1bCNTf
-   6THVB4vEjFgb88P0qwPb3YjeM2I0dX9vas6VGJ39UacGtDbAQ15VFrQXc
-   tKDgdCc420lmOdUZikceheyf4/XxPpU/Lt9MlkSIboq9Wbm/umv/tq9zm
-   PPtPLy1sisMAV/uA6y/pq4HY5JDbz3zZm9mAVhSnU4nFROQvZyrEX+HTP
-   w==;
-X-CSE-ConnectionGUID: Vxk8nN0XT9aC2denCEsTVw==
-X-CSE-MsgGUID: tNQeHEGJTBe/xvml0VzlDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="57963019"
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="57963019"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 05:21:02 -0700
-X-CSE-ConnectionGUID: iS2RKCw5SIiaFGyDyD6oXQ==
-X-CSE-MsgGUID: DgBZyib7QYe3MbEeDrrp8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,241,1739865600"; 
-   d="scan'208";a="137170500"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Apr 2025 05:21:00 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8eWg-0005ou-0P;
-	Sat, 26 Apr 2025 12:20:58 +0000
-Date: Sat, 26 Apr 2025 20:20:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: drivers/pci/controller/dwc/pcie-qcom.c:247: warning: Function
- parameter or struct member 'no_l0s' not described in 'qcom_pcie_cfg'
-Message-ID: <202504262001.OoBjFg5j-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEA8gJWc"
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso5058058a12.1;
+        Sat, 26 Apr 2025 05:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745670201; x=1746275001; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xlEHe5Mf7pIzMqaAH5RZWW7mKF5X71NbDyCS4gm98zw=;
+        b=fEA8gJWcUCRgavrp9lsj5+iXj5Ph+utF645bf4c8Ju6xtXcCVo7GRd2Wn6pEkFf9rS
+         NUMrk0kozXOF+onPv7TdB/2BkDE7T8hLHJEeo1zZD9kxBFDiqv63ovh+sjVNZxcSFiwi
+         P+TQCzK3FSyHTRQps8oAC9Qc13oPQXtd6aK9EM6zYhMg0yCtvLRhfhjynbSZnuh399Tr
+         H11R/j8xpQKu2eK8D1T0ng7T5zG5yrEVipNcWO9wEExDhMAi775Wfcz4yq/pmgYPFD8D
+         X1ab7maAaATFs2HvM0Ys8Gu75bMTjK8/sN2JbDCS/YvITLxEWbzqkgCVk/uYnLZ+ni0O
+         ru7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745670201; x=1746275001;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xlEHe5Mf7pIzMqaAH5RZWW7mKF5X71NbDyCS4gm98zw=;
+        b=rUpbm3W4plUFt1QWHDAQMRu349BWXIenvT30vAxPjAl9uhRgxps5Ub8MBeW5Rfi1HA
+         KpbUmR0IZceOYl8g/aBN2dtykAq+Arw7Hpn5EYrcP3SIrW9ej28kKmB6vhdZLGBUISgh
+         92wzlZ+67T9pwUcRo5z3WIgyfQACsviuK5+ybwhKd5/CoNnJsa+NllFtOppN++EtaAoy
+         4OOX4ENRnOIXMlChsynZco6e1nML88KOA2x6bc7ClpVp9C85JcZPSL9k+R/iR3R2FZCO
+         JjC20BrcXRERk8jG1+119PeNzOeBkzCbwo1yvqsmt0Zcs0SI4ZXbpMOqYhKadaTOt5Or
+         PRew==
+X-Forwarded-Encrypted: i=1; AJvYcCUyMbBfWM1l9nkGMoBeIomL00bofkRc+zyw0QF0ZzqP6jpG4Dxdg0SyCzNaADimeExoOwD7XtdAHdVkF5Sn@vger.kernel.org, AJvYcCX+28uUhexyx0oXsrQxmyATyyQ1DmBqObAQCLVa9wN6o+B5msWS9vIbpRUFL3UwH5wcx6t+b7Y/1Cg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfO3UodSZFoZMlEXoULtFNOFSdCoMYdUv7E/02wFB4IaSBwlLE
+	R/m4/osapSrJ8daW5iktN032sxE2a85no91eyMR3ZpzdyEwhea+h
+X-Gm-Gg: ASbGncvubpEZLyMgTWrxQF2licEVGH0YgyMMLWz25PH30aHHumpLBmDnpAYppCFsxIL
+	MZMxjDYg5Jm0Qv1CiwDTKhmt/O/urPMXP1+IHbejR5c+evZOD/ERjQuYzPDRYfaqPfuLQvmEJJx
+	vD0ph1INYJ4m1yH1LstZT9rFtocUJ5MNP+sUmk5NEDct7tCKRw6S1VHyZEdEXsmpE00087qxR/I
+	ysm6xuqlBgxreRxA+zgw+Zb5ccBf8ChMBDkEwDxKBjbki5//F/YyQed7ORJDtxNSy7wymU+sHTy
+	Vb58PLscD2OipNAJIAGoxj8o18JVIhW2RhNFqErFA77o8W5rQg==
+X-Google-Smtp-Source: AGHT+IHwgMkPsZH/36tTOE1Z1B+hEOgMAfZLu1qKxmPXwC0LWc+7uO4GJlB51CYIN7M/tlaXfMJ3Ng==
+X-Received: by 2002:a17:907:3da5:b0:aca:e2d9:41f with SMTP id a640c23a62f3a-ace71425c63mr500343666b.60.1745670200387;
+        Sat, 26 Apr 2025 05:23:20 -0700 (PDT)
+Received: from be-Latitude-E6510.home.local ([2a01:8b82:54fd:b800::4bb])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed72826sm278745566b.154.2025.04.26.05.23.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 05:23:20 -0700 (PDT)
+From: =?UTF-8?q?Adrian=20B=C3=BCtler?= <buetlera123@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Adrian=20B=C3=BCtler?= <buetlera123@gmail.com>
+Subject: [PATCH v2] Documentation: x86: Fix a typo in fsgs.rst
+Date: Sat, 26 Apr 2025 14:23:03 +0200
+Message-Id: <20250426122303.15905-1-buetlera123@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250425135836.19081-1-buetlera123@gmail.com>
+References: <20250425135836.19081-1-buetlera123@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   02ddfb981de88a2c15621115dd7be2431252c568
-commit: 1d648bf79d4dca909f242b1a0cdc458e4f9d0253 PCI: qcom: Override NO_SNOOP attribute for SA8775P RC
-date:   10 months ago
-config: sh-randconfig-002-20250426 (https://download.01.org/0day-ci/archive/20250426/202504262001.OoBjFg5j-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250426/202504262001.OoBjFg5j-lkp@intel.com/reproduce)
+Fix a spelling typo in fsgs.rst.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504262001.OoBjFg5j-lkp@intel.com/
+Signed-off-by: Adrian Bütler <buetlera123@gmail.com>
+---
+v1->v2: added Signed-off-by
+v1: https://lore.kernel.org/linux-doc/20250425135836.19081-1-buetlera123@gmail.com/T/#u
 
-All warnings (new ones prefixed by >>):
+ Documentation/arch/x86/x86_64/fsgs.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> drivers/pci/controller/dwc/pcie-qcom.c:247: warning: Function parameter or struct member 'no_l0s' not described in 'qcom_pcie_cfg'
-
-
-vim +247 drivers/pci/controller/dwc/pcie-qcom.c
-
-82a823833f4e37 drivers/pci/host/pcie-qcom.c           Stanimir Varbanov 2015-12-18  236  
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  237   /**
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  238    * struct qcom_pcie_cfg - Per SoC config struct
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  239    * @ops: qcom PCIe ops structure
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  240    * @override_no_snoop: Override NO_SNOOP attribute in TLP to enable cache
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  241    * snooping
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  242    */
-b89ff410253d74 drivers/pci/controller/dwc/pcie-qcom.c Prasad Malisetty  2021-10-07  243  struct qcom_pcie_cfg {
-b89ff410253d74 drivers/pci/controller/dwc/pcie-qcom.c Prasad Malisetty  2021-10-07  244  	const struct qcom_pcie_ops *ops;
-1d648bf79d4dca drivers/pci/controller/dwc/pcie-qcom.c Mrinmay Sarkar    2024-03-11  245  	bool override_no_snoop;
-d1997c98781459 drivers/pci/controller/dwc/pcie-qcom.c Johan Hovold      2024-03-06  246  	bool no_l0s;
-b89ff410253d74 drivers/pci/controller/dwc/pcie-qcom.c Prasad Malisetty  2021-10-07 @247  };
-b89ff410253d74 drivers/pci/controller/dwc/pcie-qcom.c Prasad Malisetty  2021-10-07  248  
-
-:::::: The code at line 247 was first introduced by commit
-:::::: b89ff410253d7468f84720d2d5c2bb0bafedf3bd PCI: qcom: Replace ops with struct pcie_cfg in pcie match data
-
-:::::: TO: Prasad Malisetty <pmaliset@codeaurora.org>
-:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-
+diff --git a/Documentation/arch/x86/x86_64/fsgs.rst b/Documentation/arch/x86/x86_64/fsgs.rst
+index d07e445dac5c..6bda4d16d3f7 100644
+--- a/Documentation/arch/x86/x86_64/fsgs.rst
++++ b/Documentation/arch/x86/x86_64/fsgs.rst
+@@ -130,7 +130,7 @@ instructions. Clang 5 supports them as well.
+ 
+   =================== ===========================
+   _readfsbase_u64()   Read the FS base register
+-  _readfsbase_u64()   Read the GS base register
++  _readgsbase_u64()   Read the GS base register
+   _writefsbase_u64()  Write the FS base register
+   _writegsbase_u64()  Write the GS base register
+   =================== ===========================
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
