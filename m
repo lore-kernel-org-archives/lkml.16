@@ -1,159 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8214B1474B8;
-	Sat, 26 Apr 2025 08:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8535A1474B8
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745657786; cv=none; b=PvdBTgeLsinHdtEPY8Va/FMf+cNJslwyccdllCn/A5Z0fs0+ZrZZrLW7xwp58sWy5JxATrNMxizWTicrg8Q6sR3rAzEtfLRKFWE5HyeD46hgw1oJrvN5iPFDN/m5lkfpEFc/BEjvJKJXVAuDjf05+qeIDBGQ30TOO7CctcG7It4=
+	t=1745657817; cv=none; b=TyElHl8Qf7+vv2J4dLRQ4+Jmtao+v5tBCvnuUBIljyPZo1DCsr2yv1I+tvfgJpdgzG1fygxjFsA9F6Cg3uKnjbmc/1I5lfZJXjCHY5DMRwQVdYE1ZjHhB6696mKHrYmYhEVssvAXiX9r53QyvJBvBY6hr4KadzQeKPOpMrO/79E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745657786; c=relaxed/simple;
-	bh=XWrNA2nHnF64Qjwnxsez+bk9+XFX3IdjM9pnNVVsYCU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nvII7RE0XG37jjQo+XYKkSHIVq7SGr6OfHs5L7Z2DrGhEPXqXdqVs3noBy3gjMnefnHqVmcZY/Wz+nvHKWUqHBVOL9CepprtVd9sKzEVZV3He+0Y+Ho9tMAMT2gRA4XuWWRQ7bFwIi1JPPy0/B67E7azoQUqojDk3Q7k1Jll+DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4jAQrg3O; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9tMuVYuA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745657817; c=relaxed/simple;
+	bh=+okRqECAD/FxpyKfQF7OwJM595pE1E5eRGmV9+FtLLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j9vBT+7AD4WqY3TAmkUr//gkCw2yqAK58dxKGHUeIC32tbqIPyslwUHt2HVpA+QHkku2gRm9Ut0kKzdnEbNB7zti9RU9O11kEqGUwmlWi5LEan8SeXi/yme/db+m1UfcDcXmI8Eb9cwvVW/DJfTDWcK9ytENQFbgAgJwgDOVElA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QF8LID/W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4jAQrg3O";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9tMuVYuA"
-Date: Sat, 26 Apr 2025 08:56:16 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745657782;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZvPsxwC+TOjq1y1HcZFEbMNV53nXVh9iwak+UjeNuh4=;
-	b=4jAQrg3Opnve7ubLX56ZPb1o+QrRp2zRthS+9yrZgrBwbfhoKqOMXjN1NWq91+Ec2gpbGo
-	I7IvywSqWKYNLlN7JOACrut7h62v4J4LytRUZi71Wg1XWiP4A0Y4U3nRgJ1kdKIhCP7WpC
-	h+fcr9lxizdbpN8yGnTxXEWrFRYZRfL3vT58iFAoja+nmvRQFn1+kPoI3Ko8k5TejUuHdM
-	RmtbRkfObtYSTz2+xhw1zKEuot50GLzpG1M0SALMENvmrJm2BvQDvmntGB31xiF4RcuE3h
-	+Z88qBnnGqYJpZwZiGRaXJB+9Nm2uc6QoboqlAjO+zhSkl7UX4rc5DvEe/36Tw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745657782;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZvPsxwC+TOjq1y1HcZFEbMNV53nXVh9iwak+UjeNuh4=;
-	b=9tMuVYuAlwGCP9Z+181HRMt8iQt+v/T1Mq12Nt52ZDq/SFFevwLhq3yh8nBvwxux451I8h
-	j7lbQAPjxgKtjfAA==
-From: "tip-bot2 for Omar Sandoval" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/eevdf: Fix se->slice being set to U64_MAX
- and resulting crash
-Cc: Omar Sandoval <osandov@fb.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com>
-References:
- <f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QF8LID/W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC35C4CEE2;
+	Sat, 26 Apr 2025 08:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745657816;
+	bh=+okRqECAD/FxpyKfQF7OwJM595pE1E5eRGmV9+FtLLI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QF8LID/WNlWV3OJ4nifXcX1e0Fx5HqCENfgbQQ9PMF0CCCOfe/4MPw/GgmXjXRMFO
+	 7yOuWWqat3TJQ9IhRJ64RnfyQEV+k/QpfbRXRLtnrB/pATCDJfHIxSppX0w2zTIhCV
+	 ZA31qvVVb5V1ou5T4p7W1Ux1+1LO9XnQcPcTeoJH95Me+c+vhHgJZbUHnP+yjlZHO/
+	 Drtysjyc2GOA4aKxmvbacdUk/lTxFqtmD4pQ7XiHBEtOkKwD0CYzwkLL4mNKUDmXwG
+	 D/O4p7rirvJpGZB7TvdtywhkLe9NEpg/RDh0D2KsZJ/7VSM8Ehk0rdfHd0s2QVMT+r
+	 3u/Dz/dEZl3fg==
+Date: Sat, 26 Apr 2025 10:56:52 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [GIT PULL] x86 fixes
+Message-ID: <aAyf1K5VDFjt0rsN@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174565777736.31282.9126332941284995798.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The following commit has been merged into the sched/urgent branch of tip:
+Linus,
 
-Commit-ID:     bbce3de72be56e4b5f68924b7da9630cc89aa1a8
-Gitweb:        https://git.kernel.org/tip/bbce3de72be56e4b5f68924b7da9630cc89aa1a8
-Author:        Omar Sandoval <osandov@fb.com>
-AuthorDate:    Fri, 25 Apr 2025 01:51:24 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 26 Apr 2025 10:44:36 +02:00
+Please pull the latest x86/urgent Git tree from:
 
-sched/eevdf: Fix se->slice being set to U64_MAX and resulting crash
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-04-26
 
-There is a code path in dequeue_entities() that can set the slice of a
-sched_entity to U64_MAX, which sometimes results in a crash.
+   # HEAD: 85fd85bc025a525354acb2241beb3c5387c551ec x86/insn: Fix CTEST instruction decoding
 
-The offending case is when dequeue_entities() is called to dequeue a
-delayed group entity, and then the entity's parent's dequeue is delayed.
-In that case:
+Misc fixes:
 
-1. In the if (entity_is_task(se)) else block at the beginning of
-   dequeue_entities(), slice is set to
-   cfs_rq_min_slice(group_cfs_rq(se)). If the entity was delayed, then
-   it has no queued tasks, so cfs_rq_min_slice() returns U64_MAX.
-2. The first for_each_sched_entity() loop dequeues the entity.
-3. If the entity was its parent's only child, then the next iteration
-   tries to dequeue the parent.
-4. If the parent's dequeue needs to be delayed, then it breaks from the
-   first for_each_sched_entity() loop _without updating slice_.
-5. The second for_each_sched_entity() loop sets the parent's ->slice to
-   the saved slice, which is still U64_MAX.
+ - Fix 32-bit kernel boot crash if passed physical
+   memory with more than 32 address bits
 
-This throws off subsequent calculations with potentially catastrophic
-results. A manifestation we saw in production was:
+ - Fix Xen PV crash
 
-6. In update_entity_lag(), se->slice is used to calculate limit, which
-   ends up as a huge negative number.
-7. limit is used in se->vlag = clamp(vlag, -limit, limit). Because limit
-   is negative, vlag > limit, so se->vlag is set to the same huge
-   negative number.
-8. In place_entity(), se->vlag is scaled, which overflows and results in
-   another huge (positive or negative) number.
-9. The adjusted lag is subtracted from se->vruntime, which increases or
-   decreases se->vruntime by a huge number.
-10. pick_eevdf() calls entity_eligible()/vruntime_eligible(), which
-    incorrectly returns false because the vruntime is so far from the
-    other vruntimes on the queue, causing the
-    (vruntime - cfs_rq->min_vruntime) * load calulation to overflow.
-11. Nothing appears to be eligible, so pick_eevdf() returns NULL.
-12. pick_next_entity() tries to dereference the return value of
-    pick_eevdf() and crashes.
+ - Work around build bug in certain limited build environments
 
-Dumping the cfs_rq states from the core dumps with drgn showed tell-tale
-huge vruntime ranges and bogus vlag values, and I also traced se->slice
-being set to U64_MAX on live systems (which was usually "benign" since
-the rest of the runqueue needed to be in a particular state to crash).
+ - Fix CTEST instruction decoding in insn_decoder_test
 
-Fix it in dequeue_entities() by always setting slice from the first
-non-empty cfs_rq.
+ Thanks,
 
-Fixes: aef6987d8954 ("sched/eevdf: Propagate min_slice up the cgroup hierarchy")
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/f0c2d1072be229e1bdddc73c0703919a8b00c652.1745570998.git.osandov@fb.com
----
- kernel/sched/fair.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+	Ingo
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e43993a..0fb9bf9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7081,9 +7081,6 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 		h_nr_idle = task_has_idle_policy(p);
- 		if (task_sleep || task_delayed || !se->sched_delayed)
- 			h_nr_runnable = 1;
--	} else {
--		cfs_rq = group_cfs_rq(se);
--		slice = cfs_rq_min_slice(cfs_rq);
- 	}
- 
- 	for_each_sched_entity(se) {
-@@ -7093,6 +7090,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
- 			if (p && &p->se == se)
- 				return -1;
- 
-+			slice = cfs_rq_min_slice(cfs_rq);
- 			break;
- 		}
- 
+------------------>
+Ard Biesheuvel (1):
+      x86/boot: Work around broken busybox 'truncate' tool
+
+Juergen Gross (1):
+      x86/mm: Fix _pgd_alloc() for Xen PV mode
+
+Kirill A. Shutemov (1):
+      x86/insn: Fix CTEST instruction decoding
+
+Mike Rapoport (Microsoft) (1):
+      x86/e820: Discard high memory that can't be addressed by 32-bit systems
+
+
+ arch/x86/boot/Makefile                |  2 +-
+ arch/x86/include/asm/pgalloc.h        | 19 +++++++++++--------
+ arch/x86/kernel/e820.c                |  8 ++++++++
+ arch/x86/kernel/machine_kexec_32.c    |  4 ++--
+ arch/x86/lib/x86-opcode-map.txt       |  4 ++--
+ arch/x86/mm/pgtable.c                 |  4 ++--
+ arch/x86/platform/efi/efi_64.c        |  4 ++--
+ tools/arch/x86/lib/x86-opcode-map.txt |  4 ++--
+ 8 files changed, 30 insertions(+), 19 deletions(-)
