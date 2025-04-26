@@ -1,106 +1,158 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6D13A1BA
-	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 00:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25DD190462
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 00:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745628989; cv=none; b=sEgMfYx2W1U69gQKQKVDXTTt6qVHhxTXq+CuKC/nLQZ+He1KNcfZtbIZW0LSoi+S/f7EHurT2e4t3wy8HgrUIa2PqagXqCSfSAH0lYa1JMGmuNYpUhAxlh/a9MEV25MC7wE95HA8zt69PgcQlZbj9K3eSL6tjTAoyJitwZH661M=
+	t=1745629159; cv=none; b=UWZ6luJH3+63CbZaTouUJoMdxXczAEBcF1uRXDDUTT3u5rezIZrVN3kMXwJCOqrm253QkQisqzxuNtMvOf3EDTEuKhDotEQfJIlVFVV9Mw9bc8tCQzJbWYSkzBtu6trNMcs1Y04rdfcpgz75kMUsJ82netfjqgY1EXD67tAd3t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745628989; c=relaxed/simple;
-	bh=YNqrg8Gr6LknvkSnE39xuKcwg34P/Fnl13QkwkqPjak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UfpzMZsMY36dxdO9mf2R0IxNv8DrDncZeH5SLWEc19Ddj+5aXgxRPe5r+SS4zIXY8Y+b3WYOcAGNgTXewn/PK+QobjS6+a4Epbhyj2nUH/7O/+l1QIm7MrXcfDqYLSRiHBWBjSYz6NwqvGhEx+FQcRaYHr5WHRIUB/m9dNB1TFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cplNAm4e; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745629159; c=relaxed/simple;
+	bh=/ojsbPJUUmFpD76uxXEjrUZURGgqcVS2sIV0Pe+zm8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=AMygsp5Thf8qWzD/z2q2cHniRoHcML5pL+CnWWkxuIMzr/hq/vUQkPlo1mB7v3ra7Zx2iwmP4AYWcb+ZmnQkz+g2L3QBjQYAvvuHAeSCumJsQj1bjy90X232dp7csGs9b+3tHRXru28Qj4tVzT9Mq7M1q8qSgfBE5fLs5980qsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nTJ8R8UT; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cplNAm4e"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac25520a289so449746066b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745628984; x=1746233784; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Em+2y0/Onk6EnYtiiChWd1rtBYQR732zIpd3lcrr3Xk=;
-        b=cplNAm4e6nKveh5crIpZIgSsPTMwSzCHYSULlDl4yvGTrhD2LQjbBvkFv4lWSb+rqL
-         JCGTAzBUoS8XRrbi+6xvVVy7725Hh7QsKj5G3I/jWGDyFcbDcP/rTHkXSw7XYkJMSkT8
-         Xingrgaxow396cKvfZ7mAkcarpeiJZkeDnmaE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745628984; x=1746233784;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Em+2y0/Onk6EnYtiiChWd1rtBYQR732zIpd3lcrr3Xk=;
-        b=I18T7VKztzbSSOhMBfRHxD3V4d6A08ULM8tb7f68PkRoskRSAwwZnQ3fbcLHiKOZJ+
-         1m01OvA8a87urYxm5bxLSVSNMGigJdpOYqDqeerIG34TCpey/tKVLJJqKtTYLCT1jk1s
-         xuMojNKqYB6r8fCq0gsi0fyLmrE87w4u+jIIDrdyyz/WGsvH2vf8rXtXLJpfuo4i2aRi
-         2KKFTzo0VYfjUtqV3AZ2X2yPH61/j1iA5usl+zyhZ3OSxH7YBRwGMjgZMmsFwNU1NYh9
-         n/df+elarLUCdtziH1KMaRyU5dnJVo+SuT4zTSSZ3zsOlj2STV6tH5X7asrpeZsxy1BA
-         dF7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUvrlbF6xBXQ26tAd58OdPbH1/et7AsZZvqRHnLx2kQpfROBjg+5mNobzghYFE2anY1LYuaFM3w2Lrh3uU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrXw2GrdO1zRnfZiphwRxgq3faFMii49+ksi7ZJMKT1CMgFvCM
-	qu/16024b0jJPVWvGfztnRuycFOZXdeODblpeLeI97lL8oPxRR80Ty6lgCxLPp6hn7HLZgxVpQY
-	R/tQ=
-X-Gm-Gg: ASbGncugp51l0WJYgRIzL5mpFlsALIAQBBwe6/MnjK3iPXpSFw9FnEZxDPzNDoWum2Y
-	O+n/EtDorUdQd780glDQk4BskZfG6yv06xYB7cFb7999hHhz4v6QuPXkvi0Rube4SJGEb4qfiQ4
-	PCAeKaY0z7XSqmj+PpbcgO66Wr/PPNMOIrZx9b78LbM/hAUwLjp5ZQ9LJN17eBZFcGceo9LZiNJ
-	QvclsmDFL1Ki04goXpJ/tXRzm4EUSqs6I4arxLvjO2Y1EdyHop/pFmPYRtTVQqhjKMqR0P3EjFl
-	1QEHyFNGk8x8yswJY4KJh5MAck2DtyvVsr8Ch9ncbYwO3EjiYM6Yv54RGNv3xezBAKiaEiHoEnT
-	iCxv5OdZO0OeB8jc=
-X-Google-Smtp-Source: AGHT+IFm+d7HRsVHy8WMz/RtyGTXahcthJBBSyQh7s+3hgCoH1EzRz5ETp3CE+sGBxynR7VaSvai8Q==
-X-Received: by 2002:a17:907:7fa4:b0:ac8:1efc:bf66 with SMTP id a640c23a62f3a-ace713f9b38mr346967466b.50.1745628984059;
-        Fri, 25 Apr 2025 17:56:24 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edafed3sm211730666b.180.2025.04.25.17.56.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 17:56:23 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so3636695a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Apr 2025 17:56:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWkIQMjgISGPT2KAGK3XaXkco8Xfoep/ubseM8q6DfK9eeuWJzLDHSMbHHZCEH5m6I1Bty7qiQDja7b3vc=@vger.kernel.org
-X-Received: by 2002:a17:907:9492:b0:aca:cac7:28e2 with SMTP id
- a640c23a62f3a-ace71399bdcmr380685966b.40.1745628983049; Fri, 25 Apr 2025
- 17:56:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nTJ8R8UT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745629158; x=1777165158;
+  h=date:from:to:cc:subject:message-id;
+  bh=/ojsbPJUUmFpD76uxXEjrUZURGgqcVS2sIV0Pe+zm8Y=;
+  b=nTJ8R8UTFfJ0yCI80dSxLoVfAx6onQgSoYq3YOqk6BUbtbE7PAng6TFC
+   5/SQn7cDZZlOCkT0cKRjV3so+SCkgQdBNpHSgNkcYRoKdHgLRNHoe1/KQ
+   Y5yKrvFCVR2UEOZBrmIaca6+q/rh50AR2dA5nZUWv+nmnOQBv9/iQLLeN
+   IOmhkot7EUXtKN74KhzFMpWGSfH0vGCssbTwegkI8zmUdFPNoAzBuNO1x
+   6BJl8yMSFYwN4Yo6uBGEY+s+jHvbDcj0+JVqeJemjE+6UC8Gy5MWQqgx/
+   0dJnykGfcU5J8RoohTRywce4wRU0Qcgfl+tMcSyvF4xmGA772Kz0uVRl8
+   g==;
+X-CSE-ConnectionGUID: 0YIAEPTjSQu/edewJCVteg==
+X-CSE-MsgGUID: UT5KMCXDS1Gebs98HVD4Fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11414"; a="64829215"
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="64829215"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2025 17:59:15 -0700
+X-CSE-ConnectionGUID: PX2ZrweNTAWNjyIxjkt1qg==
+X-CSE-MsgGUID: gtV+Oc+0RS62C9oskzE+Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,240,1739865600"; 
+   d="scan'208";a="137851471"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 25 Apr 2025 17:59:14 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8Tsu-0005cn-09;
+	Sat, 26 Apr 2025 00:59:12 +0000
+Date: Sat, 26 Apr 2025 08:59:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev] BUILD SUCCESS
+ be77f5238d220efa4b1347b47ce27054e343658f
+Message-ID: <202504260853.0unKHhoU-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAPM=9twNOWYCQ6vXZqUAu8G=oxGrKUvcTYz-SL6Jc=4+8ivVew@mail.gmail.com>
-In-Reply-To: <CAPM=9twNOWYCQ6vXZqUAu8G=oxGrKUvcTYz-SL6Jc=4+8ivVew@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 25 Apr 2025 17:56:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj+h6i94DyxGQ2Ez6tvp2sBs70EfY7Lp0N1umpwHL_VrQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFsc5Vl9i5t5E_wRus16PP7tDoqjOmUpZWiYCSfOvKDtoPPplMogMN2b3w
-Message-ID: <CAHk-=wj+h6i94DyxGQ2Ez6tvp2sBs70EfY7Lp0N1umpwHL_VrQ@mail.gmail.com>
-Subject: Re: [git pull] drm fixes for 6.15-rc4
-To: Dave Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 25 Apr 2025 at 16:12, Dave Airlie <airlied@gmail.com> wrote:
->
-> Weekly drm fixes, mostly amdgpu, with some exynos cleanups and a
-> couple of minor fixes, seems a bit quiet, but probably some lag from
-> Easter holidays.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+branch HEAD: be77f5238d220efa4b1347b47ce27054e343658f  rcu: Protect ->defer_qs_iw_pending from data race
 
-Hmm. Is freedesktop.org feeling a bit under the weather?
+elapsed time: 1456m
 
-I'm getting
+configs tested: 81
+configs skipped: 1
 
-  remote: GitLab is not responding
-  fatal: unable to access
-'https://gitlab.freedesktop.org/drm/kernel.git/': The requested URL
-returned error: 502
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-and when I look at it with a web browser, I get
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                   randconfig-001-20250426    gcc-8.5.0
+arc                   randconfig-002-20250426    gcc-10.5.0
+arm                               allnoconfig    clang-21
+arm                   randconfig-001-20250426    clang-21
+arm                   randconfig-002-20250426    gcc-7.5.0
+arm                   randconfig-003-20250426    clang-21
+arm                   randconfig-004-20250426    clang-21
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250426    clang-16
+arm64                 randconfig-002-20250426    gcc-8.5.0
+arm64                 randconfig-003-20250426    clang-17
+arm64                 randconfig-004-20250426    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250426    gcc-14.2.0
+csky                  randconfig-002-20250426    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250426    clang-19
+hexagon               randconfig-002-20250426    clang-19
+i386        buildonly-randconfig-001-20250426    gcc-12
+i386        buildonly-randconfig-002-20250426    gcc-12
+i386        buildonly-randconfig-003-20250426    clang-20
+i386        buildonly-randconfig-004-20250426    clang-20
+i386        buildonly-randconfig-005-20250426    gcc-12
+i386        buildonly-randconfig-006-20250426    clang-20
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250426    gcc-14.2.0
+loongarch             randconfig-002-20250426    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250426    gcc-10.5.0
+nios2                 randconfig-002-20250426    gcc-8.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                randconfig-001-20250426    gcc-7.5.0
+parisc                randconfig-002-20250426    gcc-7.5.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc               randconfig-001-20250426    gcc-6.5.0
+powerpc               randconfig-002-20250426    clang-21
+powerpc               randconfig-003-20250426    gcc-8.5.0
+powerpc64             randconfig-001-20250426    gcc-6.5.0
+powerpc64             randconfig-002-20250426    clang-21
+powerpc64             randconfig-003-20250426    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250426    gcc-14.2.0
+riscv                 randconfig-002-20250426    clang-21
+s390                              allnoconfig    clang-21
+s390                  randconfig-001-20250426    clang-21
+s390                  randconfig-002-20250426    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250426    gcc-14.2.0
+sh                    randconfig-002-20250426    gcc-12.4.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250426    gcc-10.3.0
+sparc                 randconfig-002-20250426    gcc-10.3.0
+sparc64               randconfig-001-20250426    gcc-7.5.0
+sparc64               randconfig-002-20250426    gcc-9.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250426    clang-21
+um                    randconfig-002-20250426    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20250426    gcc-12
+x86_64      buildonly-randconfig-002-20250426    clang-20
+x86_64      buildonly-randconfig-003-20250426    gcc-12
+x86_64      buildonly-randconfig-004-20250426    clang-20
+x86_64      buildonly-randconfig-005-20250426    clang-20
+x86_64      buildonly-randconfig-006-20250426    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250426    gcc-14.2.0
+xtensa                randconfig-002-20250426    gcc-14.2.0
 
-    HTTP 502: Waiting for GitLab to boot
-
-and it talks about it taking a few minutes, but it's been going on for
-longer than "a few minutes" by now..
-
-                         Linus
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
