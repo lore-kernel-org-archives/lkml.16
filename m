@@ -1,138 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8536B256C77;
-	Sat, 26 Apr 2025 12:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF44322E;
+	Sat, 26 Apr 2025 12:32:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745670560; cv=none; b=UiQMdfTpBONQXGf4usGsLHmrSug9m+LjPTPPWNXUQMvkkE1ryhfLzDL9xu1+srimxpJcvXMtGa+Qpmb5vv0XhpJjPScPYKqiRTQUKilu1pL7b/jK805RFVUfAO/DOpgjOwXYg2JjZNb3nYsE5UUW4i/aDl2roRtvoTfJ/vBrCWw=
+	t=1745670771; cv=none; b=PFUBfC1NbPyynmXxhpremjS+BOB1k79QMggVYRD4v6fQ9zyR9tNJX3AQLfoMt4TNqJ2j/9d3H913w+QHbffdYXMgeOeWfprzRrTQzj7ti9pamEhb7UKEznZWa9YVl5wW5NvQs/78ISwkG31EsmOz9ulxI6+O1arM4GCPo9Jcd9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745670560; c=relaxed/simple;
-	bh=KR+rfuw8H//rMIq7kpzvnAJPweissT+mX1RMC6mTrso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nOVoUomD2mkjHg1P3sjge40nPMN59oP/3J4zwmp0p9gcPkiuPWRF3zuFkZcTL14T6BaBS4TEVr01qeofZU+3XlvgGM81nl2Vb3FTOCgjKxaEcmEC/a0ev9mtjG5KMU6Ps+rCX5USc3sEf4ItXSwuIX/B85aPViDUdA81WFwILy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ck1xjdwm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745670771; c=relaxed/simple;
+	bh=kYRWP9F1X54xHhWxMgVlZK6lr+cRk3emxfKCNO5t184=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PTrvFW0dvtTYPin0mSChFeSXWEkD+EcReM6AFEu3UjBX/CgY8Fzg01DenhxzcK9xLZrrJBPCPGGOKKRshbjugV/muuJLsFIh6VhReIoUSrL6fx5teQf5FM+6cG2/eX+KGL6NH4GwOwOh15vXurWL4J27glU9kt1jr5na8EWnXyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSZu9biw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ck1xjdwm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53490C4CEE2;
-	Sat, 26 Apr 2025 12:29:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSZu9biw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D9FC4CEEA;
+	Sat, 26 Apr 2025 12:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745670560;
-	bh=KR+rfuw8H//rMIq7kpzvnAJPweissT+mX1RMC6mTrso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ck1xjdwm3NiB03q7WeQHdfrtGxmlWGUvUDhPpClLGoWvsPkWnI+c60xzDYNjff7P2
-	 1nSLwGgomrcjjJBbNXpRLQwYmr6gxazNdqu18NYlCGdxvE3ww+aNgvHHrIrhtTz5b4
-	 IQumcCn+Ssr0KHBGOaawgUyPpCWjLIauLJv9IlR4LEvHoFRUIyOg/7Awd0MiqZyIF5
-	 lt4AmGEJ5uwIGV3puw8kDQeFpj1RvVLP+2vuA3ytvN5BK3SbJEbrRUlpNc/sLPzgxI
-	 SF1vpeCbJGjBrOUPb1vglz8AgiC4Auwm93cVu7pWnXsa+Ww03aHWk7rBdJGE4QXH/9
-	 +/BM3fGBmF3Hw==
-Date: Sat, 26 Apr 2025 14:29:15 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Joe Damato <jdamato@fastly.com>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Sridhar Samudrala <sridhar.samudrala@intel.com>, 
-	Alexander Duyck <alexander.h.duyck@intel.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
- the future
-Message-ID: <20250426-haben-redeverbot-0b58878ac722@brauner>
-References: <20250416185826.26375-1-jdamato@fastly.com>
+	s=k20201202; t=1745670771;
+	bh=kYRWP9F1X54xHhWxMgVlZK6lr+cRk3emxfKCNO5t184=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JSZu9biwIXUTO0YKWYhmWh8FcY/aLhiAemo7n8gJ3NnuBQ4xsrheAnsBGZIeNfJZN
+	 QO3QDSBqrG752oCEncefVUVExFUFwNXm87wecJcxB/AL/ZFEFOw9dlkI0z2trEHapT
+	 gF7miHsprC2N770X/JG/HxWjkHMlOvKTL/5z7OyiyNO2vYUcwiwZCAckTacC+ixiPn
+	 YtIQTrGm5M46del/FJ+tnt3ETVhAIsxCO6ZJXgdxzmJdjXKVFrwnjxtL2c8/fw1O07
+	 1XI1RJcctbBoxN1OtTjo6NaKd8JHiWlpHauRZ3dGQtCyzUJe4v1PEyGlLXhIH3btMJ
+	 tKqEACnzFTiAQ==
+Date: Sat, 26 Apr 2025 13:32:41 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Alisa-Dariana Roman <alisadariana@gmail.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Alisa-Dariana Roman
+ <alisa.roman@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 1/1] iio: adc: ad7192: Refactor filter config
+Message-ID: <20250426133241.7d14c776@jic23-huawei>
+In-Reply-To: <6d0ff620-ec1a-4b17-9b5d-b9c48078271a@baylibre.com>
+References: <20250425132051.6154-1-alisa.roman@analog.com>
+	<20250425132051.6154-2-alisa.roman@analog.com>
+	<6d0ff620-ec1a-4b17-9b5d-b9c48078271a@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250416185826.26375-1-jdamato@fastly.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 06:58:25PM +0000, Joe Damato wrote:
-> Avoid an edge case where epoll_wait arms a timer and calls schedule()
-> even if the timer will expire immediately.
-> 
-> For example: if the user has specified an epoll busy poll usecs which is
-> equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
-> unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
-> consumed the entire timeout duration so it is unnecessary to induce
-> scheduling latency by calling schedule() (via schedule_hrtimeout_range).
-> 
-> This can be measured using a simple bpftrace script:
-> 
-> tracepoint:sched:sched_switch
-> / args->prev_pid == $1 /
-> {
->   print(kstack());
->   print(ustack());
-> }
-> 
-> Before this patch is applied:
-> 
->   Testing an epoll_wait app with busy poll usecs set to 1000, and
->   epoll_wait timeout set to 1ms using the script above shows:
-> 
->      __traceiter_sched_switch+69
->      __schedule+1495
->      schedule+32
->      schedule_hrtimeout_range+159
->      do_epoll_wait+1424
->      __x64_sys_epoll_wait+97
->      do_syscall_64+95
->      entry_SYSCALL_64_after_hwframe+118
-> 
->      epoll_wait+82
-> 
->   Which is unexpected; the busy poll usecs should have consumed the
->   entire timeout and there should be no reason to arm a timer.
-> 
-> After this patch is applied: the same test scenario does not generate a
-> call to schedule() in the above edge case. If the busy poll usecs are
-> reduced (for example usecs: 100, epoll_wait timeout 1ms) the timer is
-> armed as expected.
-> 
-> Fixes: bf3b9f6372c4 ("epoll: Add busy poll support to epoll with socket fds.")
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> ---
->  v2: 
->    - No longer an RFC and rebased on vfs/vfs.fixes
->    - Added Jan's Reviewed-by
->    - Added Fixes tag
->    - No functional changes from the RFC
-> 
->  rfcv1: https://lore.kernel.org/linux-fsdevel/20250415184346.39229-1-jdamato@fastly.com/
-> 
->  fs/eventpoll.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 100376863a44..4bc264b854c4 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -1996,6 +1996,14 @@ static int ep_try_send_events(struct eventpoll *ep,
->  	return res;
->  }
->  
-> +static int ep_schedule_timeout(ktime_t *to)
-> +{
-> +	if (to)
-> +		return ktime_after(*to, ktime_get());
-> +	else
-> +		return 1;
-> +}
-> +
->  /**
->   * ep_poll - Retrieves ready events, and delivers them to the caller-supplied
->   *           event buffer.
-> @@ -2103,7 +2111,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
->  
->  		write_unlock_irq(&ep->lock);
->  
-> -		if (!eavail)
-> +		if (!eavail && ep_schedule_timeout(to))
->  			timed_out = !schedule_hrtimeout_range(to, slack,
->  							      HRTIMER_MODE_ABS);
+On Fri, 25 Apr 2025 10:43:29 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Isn't this buggy? If @to is non-NULL and ep_schedule_timeout() returns
-false you want to set timed_out to 1 to break the wait. Otherwise you
-hang, no?
+> On 4/25/25 8:20 AM, Alisa-Dariana Roman wrote:
+> > It is not useful for users to set the 3db filter frequency or the
+> > oversampling value. Remove the option for these to be set by the user.
+
+I'm curious.  Why isn't it useful?
+
+> > 
+> > The available arrays for 3db filter frequency and oversampling value are
+> > not removed for backward compatibility.
+> > 
+> > The available array for 3db filter frequency is dynamic now, since some
+> > chips have 4 filter modes and others have 16.  
+> 
+> The available array only makes sense if the matching attribute is writeable.
+> As mentioned in my reply to the cover letter, I think we should keep it
+> writeable for backwards compatibility. But we don't need to extend it to allow
+> writing new options, so keeping the previous available array seems fine to me.
+> 
+> > 
+> > Expose the filter mode to user, providing an intuitive way to select
+> > filter behaviour.
+> > 
+> > Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+
+> > +static const char *const ad7192_filter_modes_str[] = {
+> > +	[AD7192_FILTER_SINC4] =			"sinc4",
+> > +	[AD7192_FILTER_SINC3] =			"sinc3",
+> > +	[AD7192_FILTER_SINC4_CHOP] =		"sinc4+chop",
+
+Is chop really a filter? I had to look it up and to me at least it
+seems like it isn't even though one thing it does is remove
+some types of noise.  It also removes linear offsets (some types
+of filter kind of do that, but the affect of chop smells more like
+a calibration tweak than a filter)  
+
+Maybe we need a separate control for chop, rather than trying to
+force it through our already complex filter type attributes?
+
+
+> > +	[AD7192_FILTER_SINC3_CHOP] =		"sinc3+chop",
+> > +	[AD7192_FILTER_SINC4_AVG2] =		"sinc4+avg2",
+> > +	[AD7192_FILTER_SINC3_AVG2] =		"sinc3+avg2",
+> > +	[AD7192_FILTER_SINC4_CHOP_AVG2] =	"sinc4+chop+avg2",
+> > +	[AD7192_FILTER_SINC3_CHOP_AVG2] =	"sinc3+chop+avg2",
+> > +	[AD7192_FILTER_SINC4_AVG8] =		"sinc4+avg8",
+> > +	[AD7192_FILTER_SINC3_AVG8] =		"sinc3+avg8",
+> > +	[AD7192_FILTER_SINC4_CHOP_AVG8] =	"sinc4+chop+avg8",
+> > +	[AD7192_FILTER_SINC3_CHOP_AVG8] =	"sinc3+chop+avg8",
+> > +	[AD7192_FILTER_SINC4_AVG16] =		"sinc4+avg16",
+> > +	[AD7192_FILTER_SINC3_AVG16] =		"sinc3+avg16",
+> > +	[AD7192_FILTER_SINC4_CHOP_AVG16] =	"sinc4+chop+avg16",
+> > +	[AD7192_FILTER_SINC3_CHOP_AVG16] =	"sinc3+chop+avg16",
+> > +};  
+> 
+> We need to make these match the values already defined in the ABI docs as much
+> as we can.
+> 
+> I see in the datasheets that there is a REJ60 bit in the MODE register, so I
+> would expect to see "sinc3+rej60" in this list as well.
+> 
+> We already have "sinc3+sinc1" that is defined as 'Sinc3 + averaging by 8' so
+
+hmm. That definition is odd.
+
+> "sinc3+avg8" would be redunant. And given that this driver already uses
+> the oversampling_ratio attribute to control the avg2/8/16, I'm wondering if we
+> can keep that instead of introducing more filter types.
+
+Tricky bit is whether the device changes the output rate (as needed for oversampling)
+or whether it is applying the filter but retaining full output data rate.
+
+Not sure which is happening here.  Given we previously had oversampling I guess
+the datarate was affected?
+
+
+> 
+> I also wonder if "sinc3+pf1" could be used for "sinc3+chop" since it is defined
+> as a device-specific post filter. Or make the case that "chop" is common enough
+> that it deseres it's own name.
+> 
+> I'm not the best expert on filters though, so I'm sure Jonathan will have some
+> better wisdom to share here.
+
+Not a lot.  Too long since I last went anywhere near filters, so beyond agreeing
+that we should stick to existing ABI where possible I don't really have any
+useful guidance here.
+
+
+
