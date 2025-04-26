@@ -1,109 +1,84 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B19925C708;
-	Sat, 26 Apr 2025 18:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344797E110;
+	Sat, 26 Apr 2025 18:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745690454; cv=none; b=k/9yp1mJRR9zW4hfJXX6/aoohSyNQ/JwYUehQM8LGZYmKlprdKeXiCZCAGFoF+lQIH4HsQr0EcE4SLVCiIvnhm0bo6oHFVWUDUfekmOkvhGJJyfcPi9xmC3Sk5qgRrSU29ows0q6kFWlq2xFVUDIhveXih23U9kWaxv4Ht45RSY=
+	t=1745690609; cv=none; b=saujoxRmjQ9XHEK6REVMA0X1opnRxC467toBl7nEtbWzQDCYLW5n5CJnH9WjNs6l+uO9knjKqO8O9ouOfkuTd0zX0I8G9B45E3MPUSp/KJDfIXmP6rm+BhU0Tfxs5ALekZ+ZbleeZdx5qqDLrhLZFOOzxC/i3aYoPr81Kzj/YcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745690454; c=relaxed/simple;
-	bh=PEMMQuRLMmuObss6aZpzBeo6DJxl3rhuVaA5bJo36nU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KdWL1om9QqQVmp8aUCdEVxTyIx1QMFHsgzSGEiI6c1bsTlUQGxPPSpfiDvk0lvtDFNvBu0IluN5rSX/dJkZVXU5nUNK/XSZM64rbhAMjCIJ7q1x2A0fuph5yNasb9d9bX5mN4bgGvy5HhlfRBxCjiC/srlF1K/X5gThq1Liv0W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wpc2njmf; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745690609; c=relaxed/simple;
+	bh=thPYajZSkuIUqKSQ0PKrjdP700DcSK2zwAu2Gky2T80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UsC0QOWAIu4XUqFxjJcTrGlll4PmDrzRsoPly9KFq4dgg3F4fGPbpZu2tjW9FhNE6WPzsKSHuGSJbsZKHNkc+Zxib8kyWf2qPh2cPWGjh9L6tG/p+zJclW2e8wCH8TOuAruQceVJirwdhqqof7IAQ4XvFRFK9mfBU28hAzrtv6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAIxHEC/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wpc2njmf"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f6fb95f431so3768850a12.0;
-        Sat, 26 Apr 2025 11:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745690451; x=1746295251; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMLBbAwF6tPlQxRVDk5Jnfst5lz7qyDDTn8jiS12DUs=;
-        b=Wpc2njmfuwL8knCfIi+8Tt6h1LuO7HCF60xx5DywrEfOPG3k+9djZ3vyPoMB0Ik5jR
-         aYOtCC9Ywn5qeG7jEkI84X+WEsQaiALB/xdKteVo0xr9ROKpd+j9AcSjmgBM0wUwCqV3
-         bnktjxLfeg0x8ZCq4S5fOeRL6jKJvUvGUV6bSvGDCks+mEZF+8E9f9gJQJljlnwJrvLq
-         dQcu559ZNEcwsQX0/R54oXT6fy5iYHnGxjAbxqK2T5f8oohi9Gs3LPU1vGfNXxQvn4lQ
-         DgJUl1SQNPtsujqC+NXZUVUQjTMPeE1blAbBrSMDsYoiL0EgLwWEIlLuxDue22rfQmmU
-         2V+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745690451; x=1746295251;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AMLBbAwF6tPlQxRVDk5Jnfst5lz7qyDDTn8jiS12DUs=;
-        b=EhAvfNOlTezlXmEFapl3x76u+8IH66FYpy12jKWTT0qcEz8VeTF7zElbQqTVFwW41f
-         tKyTqzTcEv24LiidyDN1sp1Fd+PRPjE3IgemovZ133kvOSCxq5k19Rv+D7SDG8V1ESUI
-         sgxccWgMfTvE1mNs/6lFHafphLl8fX6C1uoLHhcNf7CtzTuQ8WaCTnmhK4H+SVNJwY5I
-         7y+ofSu6li9pz3j2YzT2rU0FDhYd2XCXZ/0+HB3+Nb/OBY5RCPXE2A1NwcCix0Y6/h7h
-         4Tqi0M0Zc/syzXYT2TVlu/zBFqVhS09PCtaNAQvQJpU2drBIYFsbeKf7t71debu0jZ9O
-         Nu7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUELoY11C/8wHt+RMSVWon5y43ylzgmYUokrVErVkgp7kKFi2opqf8T4HiweHiXwA9B/IidwZc+MZcA@vger.kernel.org, AJvYcCV0euluO8QvRTrj2Bv64VukyYVok/jW4xQX7f4ZekhpDYJeymkOjoYR8ZH7BBfTxmuAErLdZ4kLGJjuadFF@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgFeC5Qs/3FiSKIyS2AkaV/a11jDwNscE+/yR0QOh+NqB09FRC
-	Z7KBMauFPp9WL6aopGK3+rfsJyXk6t7JxZZUKVbFzyvxWhfWONVs
-X-Gm-Gg: ASbGncv/PleNTmJcFEZu4OhIN95VcICy+lKHyQoasKnfCI50Ws/sCqoZ202pHvi+4xb
-	uiPcD73vczwlbGCV5LfzFMzDJ59GfvxJ98b0iiVWPq6pVKWu7CLY41zbs/74sPoZd2oYa9+8ONO
-	meit7rmZwaEQxAGs6Q4toEiQt0UwvLiQhE6So2JAl0zjyqce95GyNqIOU7RPW3q7rkhcQHjxV6m
-	hsKPtdzMkYtUcvK2MTqymNel41Tnq2wS5Gx1imSK5ak/OJWlSgOqtb/5U3QRY1eMYafzHDVjfqk
-	kieiss0zTJAsEj5amZH8CVZcBqjaPk+FtuynBEYQ50qMHyIjGYCpu6X2RIYRfg==
-X-Google-Smtp-Source: AGHT+IGcpmUd6V//Dy8oAGqBTp+EMOuxREYwc/MqDM/gwlxvfz17SlAjfX0874oELfIxArWQUWoL6w==
-X-Received: by 2002:a17:907:94d2:b0:ac1:ecb0:ca98 with SMTP id a640c23a62f3a-ace5a48320dmr822844966b.26.1745690450982;
-        Sat, 26 Apr 2025 11:00:50 -0700 (PDT)
-Received: from jernej-laptop.localnet ([188.159.248.16])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4f7c3csm325590366b.68.2025.04.26.11.00.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 11:00:50 -0700 (PDT)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Andre Przywara <andre.przywara@arm.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, wens@csie.org,
- samuel@sholland.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
-Date: Sat, 26 Apr 2025 20:00:49 +0200
-Message-ID: <2219754.irdbgypaU6@jernej-laptop>
-In-Reply-To: <cd7fd026-2f82-43d1-abdb-482bfe600bb5@lunn.ch>
-References:
- <20250413134318.66681-1-jernej.skrabec@gmail.com>
- <20250425135429.174a1871@donnerap.manchester.arm.com>
- <cd7fd026-2f82-43d1-abdb-482bfe600bb5@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAIxHEC/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C994C4CEE2;
+	Sat, 26 Apr 2025 18:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745690608;
+	bh=thPYajZSkuIUqKSQ0PKrjdP700DcSK2zwAu2Gky2T80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nAIxHEC/RBFXC7YAAr3+tsr8rzEcee3Oga1vMPOVdLEclJGRGGYsap6d40ssYdREa
+	 631y8iWvrWajenPInP5JKnMuJ2fzsFVn4xbQ/K+cHhgPVnyuchNRRoD0ozvKffZkS3
+	 MqUsr8paPOUnFmn+B8HDI8yKlJGh1TXUf3fq6tuJ1SIjPZir6nq73386jFGlYKnBTI
+	 uo2ZHr9L3pkwpshwb0rthNh+eao6mVOKjQYtoSDUrpgKEgzJXu+h6VzFzy4Z/K4auE
+	 MgMeah9RtM9RNppv7fmQMq0y8aXytAvAE0U5aitXE09LbzHtDgGADWAkJrVYOWn55s
+	 dQXkKhP5hQ5yw==
+Date: Sat, 26 Apr 2025 11:03:26 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
+	linux-s390@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
+	Jason@zx2c4.com, torvalds@linux-foundation.org
+Subject: Re: [PATCH 11/13] crypto: x86/sha256 - implement library instead of
+ shash
+Message-ID: <20250426180326.GA1184@sol.localdomain>
+References: <20250426065041.1551914-12-ebiggers@kernel.org>
+ <aAy6g3nblKtRj1l3@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAy6g3nblKtRj1l3@gondor.apana.org.au>
 
-Dne petek, 25. april 2025 ob 17:34:14 Srednjeevropski poletni =C4=8Das je A=
-ndrew Lunn napisal(a):
-> > > +&emac {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&ext_rgmii_pins>;
-> > > +	phy-mode =3D "rgmii-rxid";
-> >=20
-> > So relating to what Andrew said earlier today, should this read rgmii-id
-> > instead? Since the strap resistors just set some boot-up value, but we
-> > want the PHY driver to enable both RX and TX delay programmatically?
->=20
-> Yes.
->=20
-> There is a checkpatch.pl patch working its way through the system
-> which will add warning about any rgmii value other than rgmii-id. Such
-> values need a comment that the PCB has extra long clock
-> lines. Hopefully that will make people actually stop and think about
-> this, rather than just copy broken vendor code.
+On Sat, Apr 26, 2025 at 06:50:43PM +0800, Herbert Xu wrote:
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > +void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
+> > +                       const u8 *data, size_t nblocks)
+> > +{
+> > +       if (static_branch_likely(&have_sha256_x86) && crypto_simd_usable()) {
+> > +               kernel_fpu_begin();
+> > +               static_call(sha256_blocks_x86)(state, data, nblocks);
+> > +               kernel_fpu_end();
+> > +       } else {
+> > +               sha256_blocks_generic(state, data, nblocks);
+> > +       }
+> 
+> Why did you restore the SIMD fallback path? Please provide a real
+> use-case for doing SHA2 in a hardirq or I'll just remove it again.
 
-I spent quite some time working on ethernet support for this board. Once
-I've found PHY datasheet, I confirmed that there is added delay. So this
-particular board needs "rgmii-rxid" mode.
+The SHA-256 library functions currently work in any context, and this patch
+series preserves that behavior.  Changing that would be a separate change.
 
-Best regards,
-Jernej
+But also as I've explained before, for the library API the performance benefit
+of removing the crypto_simd_usable() doesn't seem to be worth the footgun that
+would be introduced.  Your position is, effectively, that if someone calls one
+of the sha256*() functions from a hardirq, we should sometimes corrupt a random
+task's FPU registers.  That's a really bad bug that is very difficult to
+root-cause.  My position is that we should make it just work as expected.
 
+Yes, no one *should* be doing SHA-256 in a hardirq.  But I don't think that
+means we should corrupt a random task's FPU registers if someone doesn't follow
+best practices, when we can easily make the API just work as expected.
 
+- Eric
