@@ -1,105 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E72512E7F;
-	Sat, 26 Apr 2025 15:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB521F463A
+	for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 15:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745682334; cv=none; b=Aq0VOFnj5sWLgWUQbDJy4VNhc42LqoWVjWLszS07gvM54Jweim4jK9d0cUbfQv1p0KLflTAUql7WWhqs+1A4u52g6mv5vuSj/OVF6GIZIOhce7NNsLfqXR+LsIKc6V3AjAkeD6kKo/u2M7lrGa5Kx19OPmXSwrF79yD/dKtxe8M=
+	t=1745682342; cv=none; b=NtnY+VWoVoShB32KIam+mOBNK8NRIHvn7xYFbbU9uCIM3EgElZCYLzvV4HkVV1CbkteZkij0hUKAw3n88gc472vLBekpf6tbtRGLfErlVtbc/I94YfS/alAWlSlwJJ2Qu3+kHpggZbBsu4FQ+/QpHyELb/cvs/6NQaMJKvuTxfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745682334; c=relaxed/simple;
-	bh=oJgRJQeAarDSih5pb3xmukdeVC4ZewQLObQrPLvqIX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fvoWACFCHqOR6u66XiSkGaUycm10dT8kYRlGhAha12mxviNvMqXYkUwxyfSU9oFIq6MWuY1B9X6tQnKAJQJKosW3cvc42oeCGApN6mLLgvU6EtgTnYl+igcvRIBsVyZKsXAxOLHKMg2ZLlIVXnaixfmcwLK6LSFEUwpfj2czViQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkJx5L1P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745682342; c=relaxed/simple;
+	bh=zsGuSSgMkpqELyC7eO5oc6nGti8HXzlmRKq7fViP0SI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iOxNPd2nMGU+HBc4J1QjMl+SYEoBXq3py0ehhXWYVEZf9nLfK6TXlAG2+FL7ugtTjqMAQSLO+rxF1Yml+jMdzFg8MT+wJszUBroHM324cxPO4x1LsV0PENKQExoQDe5GvByJ2i9/1+GN0sb7lmGa6Mu73N6boBCC6VpTmseuvWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jwAf0Vje; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkJx5L1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D244FC4CEE2;
-	Sat, 26 Apr 2025 15:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745682333;
-	bh=oJgRJQeAarDSih5pb3xmukdeVC4ZewQLObQrPLvqIX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IkJx5L1P0ovu3NDMEJG+/TJJUt9APv+2cRlbNN8U+dBaB5oKVoFSIPvAZvf1O3AEk
-	 wxoFbELvwfwvlGH9P+2XjjwYkPNLyBAVc07QYdT366dpQAD8a72TWIIn4LWHIvlY51
-	 IVT17lsP5ZOGzDJmp5S0vDhc4NJTHJTvl0mTrxj+30BC9ZZ4UdaN2iFR3diDNMUA/K
-	 srD2IILmNdlsetXVKrXxe08LrfRnjFL9neYFAgzgpD/0CaadnnSSN8OkdTlpKaSZVU
-	 ZFjs/Jv2KXb93E+ABIMpOfhaO6fzBsUH6fAWHo4w0Iwhqi81y051CrKGRiQZFsu0D7
-	 2rTNGCLzuXBZQ==
-Date: Sat, 26 Apr 2025 16:45:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] iio: code: mark iio_dev as const in
- iio_buffer_enabled
-Message-ID: <20250426164524.166ce3c8@jic23-huawei>
-In-Reply-To: <20250422-iio-driver-ad4052-v2-2-638af47e9eb3@analog.com>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
-	<20250422-iio-driver-ad4052-v2-2-638af47e9eb3@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jwAf0Vje"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-60219d9812bso916210eaf.0
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 08:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745682340; x=1746287140; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wz8Gg4B5hI6TDT0A3Q/3R8lvLikep56DrZXN8aO4Gm0=;
+        b=jwAf0VjeypUi0LqfrtmQ9A9bckJkpZs9i4q4AsEYZXy1498kpIunHHw326umdvEWzK
+         k3BVPGVL5GvmW9DL9qUxYjJo9F4c86weL3erqXYTOvL0Uhc4uQ8ItaNRb8k8qTS/oxGF
+         BZUNj7PMiy8MOU87xF24H9BuQj/NfTK2mQf/ZkoPIWCDjyBBP+I7Hfgp/ltJWoMiXrnE
+         HTsDMgusDpCEgsBjbq+nlVqqkpF8yH3gzmNygZa9EGVTfPNzoLyrq74W7oSh9QpZaDXe
+         po70lh2kcZ/AUARomWmDkXfpi4boahuiikemfM5Jysb/Af2N29EY+aG/OSWkaW0JwDgJ
+         zvDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745682340; x=1746287140;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wz8Gg4B5hI6TDT0A3Q/3R8lvLikep56DrZXN8aO4Gm0=;
+        b=dIhbtkk1ZKA7JoJyQUASmOgL8hMEOOBJi0G1PcPsXt5MmAu5HiHh58MnxG6ahjlksC
+         tpTn001B+jmZYMjMF8W2RPfnZhOHqr35f8n21ZMSIDJTSEN04vCwWtRbI7bFY1Q5Zeth
+         haDHGMYyMMEHd6VQYvyc+9IKWvRiRScLv+FNwRXsmSX/0YGiZPtvsSLFTlOtlcxEzKxm
+         Ub1WZ+qWwPP7QYmCfJIURR3wW2lrpNato4uevm70NbR8iKik7NJXYCqUUpbFFVaV+fhT
+         tzlMt7biYzH5t597jSXgf/z1Im4nxCBJ6t0Rh8hVS15M8WNWoVBEqUNqfi/8AFxsQSDS
+         RC+A==
+X-Forwarded-Encrypted: i=1; AJvYcCX0+qQCCguXh99w3YbMbLKdrqbgcfr2NjyraW84mOR3IrbCSb04XmYFvSuz4SzXy00kuGIDwB/0R2Kk+Wk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycoPtILPRxel/wIVUid9OwxQkXIyPPVYBXlpwhWeKWw1z5GKsE
+	gWmVlSQ/ECAqvc3dEQlpvrF8c1IC4x0HBJVrsn0HcHBMJac3XsQiNIzAySr28wHut2Rc5rP0UKT
+	yolJXkaztsgT/sSkZ5N+2TUIosizJVOccAg4J
+X-Gm-Gg: ASbGncv3OJmUySn6D1yAI/aBWhkBWsCjcyq7uFuFHWx4KrEieO3jDMZYrz4ARbs26Bf
+	rtWFj1msPxzwJ4/F30nHAUXymYt1H1bq6u8HXWNE56sgjWCIEbOlc3uB/U87ZiyLSSo+h9wntSA
+	lPIFKXuv9CJSEQsOP/C4vDr0hDBONTPonv5spGXCBWdWQUA9tW8UiczkpT5ZhGvw==
+X-Google-Smtp-Source: AGHT+IGVX6xyyzk7BrsSRq1Du2lQKeFPIJ1wlJbXc/q66nYf69PNExhyd8riE3+LNrMzT/os4Jg+FiWU7xVVjhJHv8I=
+X-Received: by 2002:a05:6820:4c07:b0:603:ffc3:60f4 with SMTP id
+ 006d021491bc7-60652a42ac0mr3447248eaf.1.1745682339548; Sat, 26 Apr 2025
+ 08:45:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250423134344.3888205-2-bqe@google.com> <20250423134344.3888205-6-bqe@google.com>
+ <aAkbw0jEp_IGzvgB@yury> <CACQBu=XaOohewMnLj9PvgR5rYBxzYSXf2OAjCzUY=GFTJ9L=+Q@mail.gmail.com>
+ <680a6b54.d40a0220.27afd9.5e84@mx.google.com> <680abbce.050a0220.144721.78ac@mx.google.com>
+ <CACQBu=VEATxHmFvt0TKbb+Hx5jeEGO8SL733=0m8LNnX6S+ZKw@mail.gmail.com>
+ <aAuR_0om4FI5Pb_F@Mac.home> <CACQBu=VkFT5yDuDz098L+S+tGvtGHMvm4FaZ6p3sr9VCp88jww@mail.gmail.com>
+ <aAzZsqK5Gm7aooys@yury>
+In-Reply-To: <aAzZsqK5Gm7aooys@yury>
+From: Burak Emir <bqe@google.com>
+Date: Sat, 26 Apr 2025 17:45:26 +0200
+X-Gm-Features: ATxdqUHZfljnJaWz86FI_5Sj9VPW_bltrBwF3N5Er_0YbVDjz8s2ZOmzc3uj0NA
+Message-ID: <CACQBu=UQLHquztim+=ZGjS-EcQabQ7e2HPc9WEJXSJB1sQjGMA@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rong Xu <xur@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 22 Apr 2025 13:34:47 +0200
-Jorge Marques <jorge.marques@analog.com> wrote:
+On Sat, Apr 26, 2025 at 3:03=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> On Fri, Apr 25, 2025 at 06:17:59PM +0200, Burak Emir wrote:
+> > On Fri, Apr 25, 2025 at 3:45=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
+m> wrote:
+> > >
+> > > On Fri, Apr 25, 2025 at 02:20:13PM +0200, Burak Emir wrote:
+> > > > On Fri, Apr 25, 2025 at 12:31=E2=80=AFAM Boqun Feng <boqun.feng@gma=
+il.com> wrote:
+> > > > >
+> > > > > On Thu, Apr 24, 2025 at 09:48:17AM -0700, Boqun Feng wrote:
+> > > > > > On Thu, Apr 24, 2025 at 06:45:33PM +0200, Burak Emir wrote:
+> > > > > > > On Wed, Apr 23, 2025 at 6:56=E2=80=AFPM Yury Norov <yury.noro=
+v@gmail.com> wrote:
+> > > > > > > > So? Can you show your numbers?
+> > > > > > >
+> > > > > > > For now, I only have numbers that may not be very interesting=
+:
+> > > > > > >
+> > > > > > > - for find_next_bit,  find_next_zero_bit and find_next_zero_b=
+it (sparse):
+> > > > > > >   22 ns/iteration in C, 32 ns/iteration in Rust.
+> > > > > > >
+> > > > > > > - for sparse find_next_bit (sparse):
+> > > > > > >   60 ns/iteration in C, 70 ns/iteration in Rust.
+> > > > > > >
+> > > > > > > This is a VM running nested in a VM. More importantly: the C =
+helper
+> > > > > > > method is not inlined.
+> > > > > > > So we are likely measuring the overhead (plus the extra bound=
+s checking).
+> >
+> > Alice and I discussed that it may be better to do away with the extra
+> > bounds check.
+> > Micro benchmark, for the upcoming v8 that has the bounds check removed
+> > (and the test changed to >=3D, as requested):
+> >
+> > [] Start testing find_bit() with random-filled bitmap
+> > [] find_next_bit:                 3598165 ns, 164282 iterations
+> > [] find_next_zero_bit:            3626186 ns, 163399 iterations
+> > [] Start testing find_bit() with sparse bitmap
+> > [] find_next_bit:                   40865 ns,    656 iterations
+> > [] find_next_zero_bit:            7100039 ns, 327025 iterations
+> > [] find_bit_benchmark_rust_module: Start testing find_bit() Rust with
+> > random-filled bitmap
+> > [] find_bit_benchmark_rust_module: next_bit:
+> > 4572086 ns, 164112 iterations
+> > [] find_bit_benchmark_rust_module: next_zero_bit:
+> > 4582930 ns, 163569 iterations
+> > [] find_bit_benchmark_rust_module: Start testing find_bit() Rust with
+> > sparse bitmap
+> > [] find_bit_benchmark_rust_module: next_bit:
+> > 42622 ns,    655 iterations
+> > [] find_bit_benchmark_rust_module: next_zero_bit:
+> > 8835122 ns, 327026 iterations
+>
+> So I'm lost. You're going to keep those hardenings, but show the
+> numbers without hardening on VM. Is that right?
 
-> The iio_dev struct is never modified inside the method, mark it as
-> const.
-> This allows to be called from get_current_scan_type, and is useful
-> when the scan_type depends on the buffer state.
-Now I'm confused.   scan type is only relevant when the buffer is enabled
-so how can it change as a result of that action?
+No, I will remove the bounds checks where they are not needed for safety.
+Indeed the latest are numbers without hardening in nested VM.
 
-Maybe all will become clear in later patches!
+> Can you please show the numbers on bare-metal with the final
+> configuration?
 
-Jonathan
+Sure, will include in v8 cover letter.
 
-> 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> ---
->  drivers/iio/industrialio-core.c | 2 +-
->  include/linux/iio/iio.h         | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 178e99b111debc59a247fcc3a6037e429db3bebf..bc6a2ac6415eccf201e148ea98c0b5982787eb6d 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -212,7 +212,7 @@ EXPORT_SYMBOL_GPL(iio_device_id);
->   *
->   * Returns: True, if the buffer is enabled.
->   */
-> -bool iio_buffer_enabled(struct iio_dev *indio_dev)
-> +bool iio_buffer_enabled(const struct iio_dev *indio_dev)
->  {
->  	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
->  
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..88569e1a888bde4d2bfb5b9f030096af1c15d68d 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -629,7 +629,7 @@ struct iio_dev {
->  
->  int iio_device_id(struct iio_dev *indio_dev);
->  int iio_device_get_current_mode(struct iio_dev *indio_dev);
-> -bool iio_buffer_enabled(struct iio_dev *indio_dev);
-> +bool iio_buffer_enabled(const struct iio_dev *indio_dev);
->  
->  const struct iio_chan_spec
->  *iio_find_channel_from_si(struct iio_dev *indio_dev, int si);
-> 
-
+cheers,
+Burak
