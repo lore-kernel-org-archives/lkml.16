@@ -1,65 +1,120 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E06610D
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 06:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAE71C6FFA;
+	Sun, 27 Apr 2025 06:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745734028; cv=none; b=PPwwEPjOXzr87laCMqsVzP3xUgBP6CEkx9icHThE7w9/RhWxpPQylu8jIKo1UFqXd7cfPqk7N6Ckmx5Al612+QhucTX00D4Ape852dE6Sr0e2aNP15TUhmBRbp3j/P9Q2zaBpjJf/h93RaV8PMT7XSZViOZCNU9lHeRVYGB5SUg=
+	t=1745734242; cv=none; b=C4Kv3Fq+pWpbdqGYB0af5u/YBMO58RZlt9B60KkGOEbRway6t03NCalQhi9FUDEdvF3wPIUd3xjo0T3YXL5PCYXLhP/j2iHcddI0KxCYAAP0Fz6bbNb/BnSJH/OrlBEpZBNvPHSRh3cdxbcvcf/8Hbt9j6EsBjnUGfOH12IFmxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745734028; c=relaxed/simple;
-	bh=nWonDwXa6lTHreu5HkvLHRjxafxaPKpG2JJX7sYMwOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mxUKLdhmBVQX5UjmBdTYpgwsJ5m2zi3Tl93ookb4Bb9iVv0C1OmNT/2Znx3s/stwHysVWiAQ2t9y2j4BLi6d62onsYPdVbGpHG3p28E++ZjAP5Y2bsLND0/inHrPSbXQT+h/087fGPuHGb6S4Oh2d2fqdBCG0ONy6YeKg8t/lgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nKdWAIIS; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1745734242; c=relaxed/simple;
+	bh=vdsODpVoF4YdSqvnPZlYoCUv0rxMIVC7vPQyys2/Gmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Chn1WdskbjxBd0dlgIMyP+P9jHpMpaCqfbChmTAbpIe4L2Y7n8X1u80+PR7K3SuMrKsu89NSAZt/OjTwtiguUgYve0jQwoY4W/HKXfFOEwbfO7TSPxvILxVNS9V8/msnoBrZu4K3ZXRC6lvv7p0Jj5uzeoI25xlT1/eY26SyHQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=HcQk6BVv; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nKdWAIIS"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745734017; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hC0xG7CwTbEtPZFEoTnnKtGHvz9QFvegQL55crSubn4=;
-	b=nKdWAIISdbjy9dNGUMExXyl7h2Z+FuT/KqykpnU3/ncK1EwhSrTTMi6Fvju3tBXaeG5JqX5n/6W4hErJu/osv1DWQ65BlXiu1X87Q5gMfCDs1v1KzCxhnbtgi0gEqC1eNL23gpUFeQawn/xiL5xJEwAYeBfpHgGVc6BywzjzTMg=
-Received: from 30.74.144.120(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WY7uW41_1745734016 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 27 Apr 2025 14:06:56 +0800
-Message-ID: <5945408b-e4f0-429f-ad25-a67cd2014737@linux.alibaba.com>
-Date: Sun, 27 Apr 2025 14:06:56 +0800
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="HcQk6BVv"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id D82CA1C00B2; Sun, 27 Apr 2025 08:10:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1745734236;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7+UKRv0LlLVrHcnwlixHJZ6sKOpPhYxJTAue1dbgF+c=;
+	b=HcQk6BVvvKqzpWi+/J0tKVsnymtnurbxjHdp+0v7xf8Ysju3AvAjVHS+rS/4q29KerAFZX
+	sKPAr15OHMnn2vVa3nYJG8RKZE0d7EAVLx7XWOrX3WrXz3yNWP2kE/36Y4HZGmyNqBKZdh
+	SL0393wmjzPULR4dC/7/Ozc37yUqjEA=
+Date: Sun, 27 Apr 2025 08:10:36 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+Message-ID: <aA3KXNCKKH17mb+a@duo.ucw.cz>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+ <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+ <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm/huge_memory: Remove useless folio pointers
- passing
-To: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
- akpm@linux-foundation.org
-Cc: gshan@redhat.com, david@redhat.com, willy@infradead.org, ziy@nvidia.com,
- linmiaohe@huawei.com, hughd@google.com, revest@google.com,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org
-References: <20250425103859.825879-1-gavinguo@igalia.com>
- <20250425103859.825879-3-gavinguo@igalia.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250425103859.825879-3-gavinguo@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DmgUZx/QP4T2HwRh"
+Content-Disposition: inline
+In-Reply-To: <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
 
 
+--DmgUZx/QP4T2HwRh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/4/25 18:38, Gavin Guo wrote:
-> Since the previous commit "mm/huge_memory: Adjust try_to_migrate_one() and
-> split_huge_pmd_locked()" has simplified the logic by leveraging the
-> folio verification in page_vma_mapped_walk(), this patch removes the
-> unnecessary folio pointers passing.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Link: https://lore.kernel.org/all/98d1d195-7821-4627-b518-83103ade56c0@redhat.com/
-> Link: https://lore.kernel.org/all/91599a3c-e69e-4d79-bac5-5013c96203d7@redhat.com/
-> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
+Hi!
 
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > > > > In the PC industry KEY_SCREENLOCK isn't used as frequently as it =
+used
+> > > > > to be. Modern versions of Windows [1], GNOME and KDE support "MET=
+A" + "L"
+> > > > > to lock the screen. Modern hardware [2] also sends this sequence =
+of
+> > > > > events for keys with a silkscreen for screen lock.
+> > > > >=20
+> > > > > Introduced a new Kconfig option that will change KEY_SCREENLOCK w=
+hen
+> > > > > emitted by driver to META + L.
+> > > >=20
+> > > > Fix gnome and kde, do not break kernel...
+> > >=20
+> > > I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+> > >=20
+> > > That's going to break modern hardware lockscreen keys.  They've all
+> > > obviously moved to META+L because that's what hardware today uses.
+> >=20
+> > Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+> > screen locking, no?
+>=20
+> This was actually the first path I looked down before I even started the
+> kernel patch direction for this problem.
+>=20
+> GNOME doesn't support assigning more than one shortcut key for an action.
+
+So if I want to start calculator on meta+c on internal keyboard, and
+have calculator button on USB keyboard, I'm out of luck?
+
+Sounds that should be fixed :-).
+
+Alternatively, you can just turn KEY_SCREENLOCK into META+L inside
+Gnome.
+
+BR,
+									Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--DmgUZx/QP4T2HwRh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaA3KXAAKCRAw5/Bqldv6
+8s2IAJ9jY4h4zq6eODq20aJxzo1bXLE6/wCgmfoW2tJuEV1zMrev3d+6r4JZpX0=
+=6yuk
+-----END PGP SIGNATURE-----
+
+--DmgUZx/QP4T2HwRh--
