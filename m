@@ -1,47 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE9F8F6F;
-	Sun, 27 Apr 2025 12:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9E42AEE1
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 12:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745758597; cv=none; b=VHZqeepea4RmJ7rKFR7MnWfgotSmbSm7s7DLv65Ns0Fb/CwRIgcaAHh+AIHzQGw0Vh4cbOe/OKHtJ7Yj08ORkeL8ocqxgMA6ZpQjBC6APDOsBDYocof3rjky35Yo28UvPbQdJIMr9WjviiqKafKGW1qh5d4TZ9q8RUTpWxQnNdA=
+	t=1745758715; cv=none; b=IFp0S/wZdD0QxIHiwk5bIouh+kjipOacE1gc1N3BRdUSbg57gtLvEqxOdsDtsHX4DY1vfWXorP6Q8hqVWAeYnhREAQbbyjeF2E3MZyqPbHmgx02L8kJFVFkvWrjjw/NaSDnDVYDqzyrP3zET2+B7hC/Z4olBEJ1LCcupmKgN1xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745758597; c=relaxed/simple;
-	bh=AgqV1hMsSjVwY25pYZciWVxf7VAWpBvP9JfqHyR35EI=;
+	s=arc-20240116; t=1745758715; c=relaxed/simple;
+	bh=LuIU5a4+RaKhmxjmGZ/A3rHG2uBu7Z2ONKOEnOeInjY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J6b880KcCZ0eq7TMRE5USqL9qMUx73jXHI93vC3FjFwH/c2gbgy8ypnZ03+V0VXaJmi3cmkqu+NLKlmfntIASIad2h9+LdC0D3+UPLpwYHdISqztpu+vEn2o+Cg54bVW+D67nFeHsQvxR96Fbo34BXqPAgOw2mQwKl1GkBAxXoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qV/qYJtt; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ovmp6Z/PsIY5w0QsSmj3rLHvs6W4IXFYkHyZJpgqphX6DdCl3YMGLjWH0bPlvB/L5kHTuzx2dBejeJU0tDaojPngahkA1sdtz7CT8jp2uJataamzRIjhKvaxssK226s8pXFoExV8q5vV7ptwOC70sJqM8MpfJP41Sn07o4oBLX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HSzWxPhi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qV/qYJtt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD42C4CEE3;
-	Sun, 27 Apr 2025 12:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745758596;
-	bh=AgqV1hMsSjVwY25pYZciWVxf7VAWpBvP9JfqHyR35EI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qV/qYJttnMqF/e8OqPLChbglT+OXe0BUI3C3XJkFZdTZhhNyHpOmlW5bb+1pxLyao
-	 gwGGLC+l03/YlzGd5+J56KHsYr0ohKSxDi747S0hGoCacZJ2qaaZmYUqJ2US3FnkyK
-	 Tu/o38Ex6SQrwWRr+GMMtqdU70l2SZNmFzlAG7PYaH28iELmPY1EI0osYVw1sYYhyG
-	 uGzqeuOneXyF0+JHSk9mnATjjGPRJIaqEHig6iKUkyyMDrwIc+ilmnaGMs99Mvxqgv
-	 8h/Ac2RS79Wo+V7nYuNH9MBFb5lhQYMARyeMIsV0ibobHTJbQn5pg36EgAkKZDDFP6
-	 PxMIuzZeFmMsQ==
-Date: Sun, 27 Apr 2025 05:56:41 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [v2 PATCH 00/13] Architecture-optimized SHA-256 library API
-Message-ID: <20250427125641.GB1161@quark>
-References: <cover.1745734678.git.herbert@gondor.apana.org.au>
- <20250427123514.GA1161@quark>
- <aA4mAlozk3RvxvTe@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HSzWxPhi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745758712;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iWgEc8ufAgptgVygRVS205l4twTMcaOQPmrxzOh7Ubw=;
+	b=HSzWxPhigFHyyPypIxlKsU897x90DXYJ5qGr16prIvKbSdSSEp8lwwZup8ycjC1NtH2CUo
+	+29LjWkvIHdtZQY+4KL6UXRpP1el5dZnhmtX2yxVhxeYU4Qh3nhDNDcx8GeWgJf5gMdpp3
+	PtNI22f54Te7IcMZEC5XA7xqce3T5H4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-78-8wBr4P9XMGuY3BAiGqhvaA-1; Sun,
+ 27 Apr 2025 08:58:28 -0400
+X-MC-Unique: 8wBr4P9XMGuY3BAiGqhvaA-1
+X-Mimecast-MFC-AGG-ID: 8wBr4P9XMGuY3BAiGqhvaA_1745758707
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5CAFB180048E;
+	Sun, 27 Apr 2025 12:58:27 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.119])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C5A3A195608D;
+	Sun, 27 Apr 2025 12:58:23 +0000 (UTC)
+Date: Sun, 27 Apr 2025 20:58:18 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] ublk: fix "immepdately" typo in comment
+Message-ID: <aA4p6n7eIX9-fhAM@fedora>
+References: <20250427045803.772972-1-csander@purestorage.com>
+ <20250427045803.772972-3-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,34 +58,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aA4mAlozk3RvxvTe@gondor.apana.org.au>
+In-Reply-To: <20250427045803.772972-3-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Sun, Apr 27, 2025 at 08:41:38PM +0800, Herbert Xu wrote:
-> On Sun, Apr 27, 2025 at 05:35:14AM -0700, Eric Biggers wrote:
-> >
-> > Well, barely a day and you've already ruined my patch series.  Now instead of a
-> > clean design where the crypto_shash API is built on top of the normal library
-> > API (sha256_update() etc.), there's now a special low-level API
-> > "sha256_choose_blocks()" just for shash that it's built on top of instead, for
-> > no good reason.  You're also still pushing your broken BLOCK_HASH_UPDATE_BLOCKS
-> > macro that doesn't work with size_t, and putting my name on your broken code
-> > that uses it.
+On Sat, Apr 26, 2025 at 10:57:57PM -0600, Caleb Sander Mateos wrote:
+> Looks like "immediately" was intended.
 > 
-> Your design is unacceptable because you're forcing the partial block
-> handling on shash where it's not needed,
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-Excuse me?  It's the other way around.  In my version the partial block handling
-is only in the library, not shash.  In your version you've forced it into the
-shash layer, even though the library does it already.  I understand that you've
-added support for partial block handling to crypto/shash.c and you want to feel
-like your work is useful, but in this case it's not, since the libray has to
-handle arbitrary-length inputs anyway.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-> just as you're forcing the hardirq support on everything.
+Thanks,
+Ming
 
-If you want crypto_shash to warn on hardirq usage you should just put a
-WARN_ON(in_hardirq()) in crypto_shash_*(), which will actually achieve that.
-Not add a shash-specific non-hardirq-safe low-level API to the library that can
-silently corrupt random tasks' SIMD registers on production systems.
-
-- Eric
