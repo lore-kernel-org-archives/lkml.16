@@ -1,99 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D737A1DE3CE
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 15:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358C72C181;
+	Sun, 27 Apr 2025 15:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745769119; cv=none; b=d5FcqZGx9OmdnKkFBjAzhWqz6vZHpSG9cij1IidtawTCxB4i3m+yyTqbFmuv6QsTtAhhlQ/Rp06bZGa0qb90HU9zoBLpocMO369EA31vDloFLm66bNGLaN1yow8Glxk+eRrri0ZW5rli1v2uG6soTZKPmIrMB5qQnkEm1jwN/Js=
+	t=1745769454; cv=none; b=cv0mo+FQCl1eA6jMzt7dlAGCNmqr1SgFG1pDhmPX2Wto6CdmiZ2Ta3f5ZIOIOASz7+G9PQL1AlxbS+EiZVTxVK1+hbyfMnE4s2w7mQycb2l5PLq0A8A8ujZ8QOQKaHJOIaOopHHgRWt5W/1T8ilx18UfKVifrIE3twuDlpht5+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745769119; c=relaxed/simple;
-	bh=fB1w5EdlophF9FygpQ1v2gxIq4Vfe+fEHjSkE38dAW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c8EibkJuQI78j4I5EKOoXYnMoit0dv4SjC5vfcMCKTD9ACRJ4qoTf6HVTBBxj5qCEz6AvCiGV/x9jbI8MCv++dd4/bWqFjU8c1NkUhr0s5EMcBlI7h1F50kpiBIvUwDrAJXy9azfyntNofqyHTvshDLkOq8inI/elKj01pJ0IgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CW8AziDb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CW8AziDb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745769116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZEsO7LxrjwCVQiphxbxj8Q1M9BC5vnt9cQxUJ75ymR0=;
-	b=CW8AziDbeyfLDs6qRpKHLpcEbNLInUvpzdHlWBwng1xnWGuXzcCLz5Ts+jUm4AsdRCMQ3+
-	RvnsXFyjU+P4BxwEdDWQIQQAWu5oLyqbpI7D9YemWoweQozVsRNyfYWXBzjMrvfEFil9XT
-	Fw6KV5p2ooTexnScc928NSoJrEmf2fI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-178-JrxdJ07tOBin5wljtoGs2Q-1; Sun,
- 27 Apr 2025 11:51:50 -0400
-X-MC-Unique: JrxdJ07tOBin5wljtoGs2Q-1
-X-Mimecast-MFC-AGG-ID: JrxdJ07tOBin5wljtoGs2Q_1745769108
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 625D21956088;
-	Sun, 27 Apr 2025 15:51:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DA0BC19560A3;
-	Sun, 27 Apr 2025 15:51:39 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 27 Apr 2025 17:51:09 +0200 (CEST)
-Date: Sun, 27 Apr 2025 17:51:00 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 09/22] uprobes/x86: Add uprobe syscall to speed
- up uprobe
-Message-ID: <20250427155059.GD9350@redhat.com>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-10-jolsa@kernel.org>
+	s=arc-20240116; t=1745769454; c=relaxed/simple;
+	bh=XOQafipO7beyZgz2C3iXwZ08d33zoF7SkznZ/YaEObw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C0R27DUearyIm2YCW/JZbsv2yhN7WpZ+DXIVIsDjFpnq8uCsIpGanXfYyg+LrAbZ9Q0ne0m9VeaBdMOXqaItJjfdR/xy/Dge76RGwXoZsBUL9iLDZs/Yuqj7xO1ek5P1hDdYFuDcIhWpVjNSeg6T6/CzRTo526vLTG7QkfFQdKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
+Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:d84:340a:c5d0:109f])
+	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 84DE740A25;
+	Sun, 27 Apr 2025 15:57:23 +0000 (UTC)
+Authentication-Results: Plesk;
+	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:d84:340a:c5d0:109f) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
+Received-SPF: pass (Plesk: connection is authenticated)
+From: Arnaud Lecomte <contact@arnaud-lcm.com>
+To: syzbot+3291296495fc970e4b1c@syzkaller.appspotmail.com
+Cc: axboe@kernel.dk,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: syztest
+Date: Sun, 27 Apr 2025 17:57:17 +0200
+Message-ID: <20250427155717.69658-1-contact@arnaud-lcm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <680addfc.050a0220.2c0118.0c71.GAE@google.com>
+References: <680addfc.050a0220.2c0118.0c71.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421214423.393661-10-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <174576944393.5571.4486595482979274817@Plesk>
+X-PPP-Vhost: arnaud-lcm.com
 
-On 04/21, Jiri Olsa wrote:
->
-> We do not allow to execute uprobe syscall if the caller is not
-> from uprobe trampoline mapping.
+#syz test
 
-...
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -691,6 +691,9 @@ static void bio_truncate(struct bio *bio, unsigned new_size)
+  */
+ void guard_bio_eod(struct bio *bio)
+ {
++	if (unlikely(!bio->bi_bdev)
++		return;
++
+ 	sector_t maxsector = bdev_nr_sectors(bio->bi_bdev);
+ 
+ 	if (!maxsector)
+-- 
+2.43.0
 
-> +SYSCALL_DEFINE0(uprobe)
-> +{
-> +	struct pt_regs *regs = task_pt_regs(current);
-> +	unsigned long ip, sp, ax_r11_cx_ip[4];
-> +	int err;
-> +
-> +	/* Allow execution only from uprobe trampolines. */
-> +	if (!in_uprobe_trampoline(regs->ip))
-> +		goto sigill;
-
-I honestly don't understand why do we need this check. Same for the similar
-trampoline_check_ip() check in sys_uretprobe(). Nevermind, I won't argue.
-
-Oleg.
 
