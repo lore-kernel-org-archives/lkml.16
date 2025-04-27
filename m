@@ -1,130 +1,163 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEC220FA9E;
-	Sun, 27 Apr 2025 10:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1CF248883
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745750812; cv=none; b=rh/24wAdxW3SdHMeFM4O9Tn0ZFZPX0H0FStoOW0nATIdQRRUfti6uY8kJyEsAix8xPv7hznYE0puNkOwyExU8M1u1aX9bR3/9qMP4H5iTcEU/dZkyxg5sSXbd9/rBfQ+ZeUBTy8q+xH/aDMpGnD3PyqVegIOBQVF7VJ7cvlfm2A=
+	t=1745751082; cv=none; b=BqaPQldZxGaCeTP/Di7yihcwwZqM7hoDBgMR/0pumMlSoqnQXXh5dxbkA4wbqdHpBo1IR7BUfHfCAVanPA+LdUpWEcSY6bqrRVWKmYM2vFROOabsouUSMzuDHtaNpzsq9Gho43KB3KHvO2WtVa08sZw+AGi61xTTAUTko4cFSfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745750812; c=relaxed/simple;
-	bh=89oIJurDleZCWMcum9C/95n6oPTTVUoE7SRYjQXQAa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hd7dWvU6GVyp6eJuT+yuOO/MRTWnyfVfqfzyR63nnimtkFlS3zC2gveO/Eowj3+LijQ/Fv4T+Ubc4RYmM9+69ztIlTh+gCvyOtKDnJrdD8vmMmYP+KhThvFRdYjeQ3rqjqbg9xGK07WvTQrP7NoLLoBRS+9oA493OFBOGD8gGTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkF81ZG4; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745751082; c=relaxed/simple;
+	bh=VBNyX+A/EB/Cj4qU0XgLHNxhJ97XrYmyCZDdhGUIJhA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=peU5Gsek44jWrJWtmJDn6QS3NRX6wEdxvEGQQiYKDwrg+qR8LhvjY5qYLEwh4LP1NISv0b3ShlXRP514jAgtNTj7jtG/hqbU6qY5soFTj4qvvgkouMlVGTaT6NcqkEC9b6EfpgI6hmM29CUpBouY4xUEVeitXBu7J2xz8ji/ryE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mCLo/6n7; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkF81ZG4"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39149bccb69so3396147f8f.2;
-        Sun, 27 Apr 2025 03:46:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCLo/6n7"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac339f58631so45767966b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 03:51:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745750809; x=1746355609; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lfYdI2QMrU/YgMx02oqGgwewbVMGDLfbMn9txjVQQQU=;
-        b=GkF81ZG4qlPcRbBlVDX/nMk3+4KJEgg1OncNZWCI/kmSOT5LDomQrftMyXBVZzwYSq
-         8rKL0y6ApFnRzzM9AS8GO5DkKUfTFdxLGIATOrLPAqeT036WLKLMWsZxmtG1/QEpY72F
-         Pcn07JjSSHgQJ1AFvQFCNQNjbht3b3EKrGGeip+XxEqYwDRP+yN+7WOJ8SPBrlh6x8Od
-         A8N64o6kxyRf/32GMTu1SkF17Cit0jV4RbdnYjOUm741Iqzs0xe2hrMNOU+RLkaSq5rA
-         MQ14YdF74DlbLNHlfn7U9d39zzjlu2tLwHgc68guU9Y7bIyzb0uGNmldXCuMJMQcF67a
-         0rCw==
+        d=linaro.org; s=google; t=1745751079; x=1746355879; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yljTxf0X+Iy2a+Dq+Yedd2V84jdSSx02dCrGHjuEXak=;
+        b=mCLo/6n7YcacJpfy8sZkiCzpd5Yq/QVcgQOcktwXnQndQ4AN2/2WHDmER/KUXDMZB9
+         McBmeP9g/lDHD2Q2U3BiyKwMKlKyc+AG3UWexEytt0BQ1EHGQORYehIu9z+XV30CWgG0
+         3OrdfE3T7sKNqCPFoxJuKsAT+k3e+d4wCIycJiZcbj2+i0yTF66mI7sadcKHbUtqVIv1
+         TL9Oq+m4Bzob8bRUwAdif0lSN6Fpcp+t+ev668rxCIrOyTZ27ax+sNvPEnWEp44Rd7u7
+         Z4f2CQsvPmgO2RMfL83kbSFrNAxfKgvZoDzVxEbD+DwbiH2N844LYwjEY7Ukfk4AGHhW
+         vqRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745750809; x=1746355609;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lfYdI2QMrU/YgMx02oqGgwewbVMGDLfbMn9txjVQQQU=;
-        b=O5xIEo6TmGFOukfBj1nGSU7c1x4rmy61kXpQzUqXleucuB7bjjpVbbh7ls+GkM0i0I
-         nf6KFZjhKKcVL5iA07MGETKCMcHUd8KX4g7DmBqo3WsDTPNVHuWCW6zDXiwI8aEYINMg
-         kOtaXutfhiXYVSl1geJiwSviLcVUfugXJFKlKd7XsUiv0zzRJde67hEvDplao4I/b+a0
-         YeXqOFFZ1xGtrhDyvuH1dn8RpibQl8tD2IMz6f9Of3u0DPkvOBQeBizMCU+FzVMpKbJB
-         aUyEI4j1mC2+rAivATn0AasY8iGURcHTqIVAGRQuwGYz/qbhsJY3AYb0fPjlkaVjyksv
-         jQBA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1yEBwRjgYDm+wrT+oCYX51ehdjr+ycc+R+1Uk2xwEv5aXQUj1fiZIvNg2GLq+LHEk5H1deRve9YnnFUo=@vger.kernel.org, AJvYcCXmukdCfGcPuR9EXGD3VJxIOambZcEkMZa8m7hYuWbRduB2hO/uF/0g5zvh4nC86Gau+J7FUtSi@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxXz+tFl/fW5wTXUpJ5UppyGjdLstQGxYEQPPmDZSxpNeXC/k8
-	lEbR+ENLWU/3xRGH1nOUzU1R5KEJTnBRbEMSim9hmOBpJBeMhTU1
-X-Gm-Gg: ASbGncv4JBe91ZOgUMwcRcPTlp48oN1aRIOwls0xXeQDb/mVaP9wq7mDzuFOq4a9dTe
-	R0M2/j1jeMXwoSyrfL0BKVA4LqMsQv28zfwZ+A53zksyXQ35a5S5vr8+787debi89Nvnu3HFmqB
-	FfP7scgFLx9JKmwDtK0e4Vl7rA4vWbStc5kZpkqN+2OhZq75+0c9dte/22UYXhfI/+bgCC4Ju1S
-	ujZZVmTIokeG+FbHpylpqAW5LgosT95k6dg4+Us6Gz6QkMJYTyeTxTy4YS5zInfGNhAAugMQch4
-	zjFoKWBB82wIYg7ad+NeYFqTJR5H6zVy1BqbcDMUToaTryhik5ILMT8OB66mH07NaYxjPF9VpcW
-	nh9g=
-X-Google-Smtp-Source: AGHT+IEgHTgWsgiR2ymodQy5ZCXcHYIbCWocVJl7Q/IZ42e7Ck55BBEMJdI0HemvJEaz6hEQyi3AVw==
-X-Received: by 2002:a05:6000:2283:b0:39c:f0d:9146 with SMTP id ffacd0b85a97d-3a074f11d7fmr6620694f8f.45.1745750808505;
-        Sun, 27 Apr 2025 03:46:48 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e464eesm8071840f8f.68.2025.04.27.03.46.47
+        d=1e100.net; s=20230601; t=1745751079; x=1746355879;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yljTxf0X+Iy2a+Dq+Yedd2V84jdSSx02dCrGHjuEXak=;
+        b=uy5S4HTfU659tz4mJspuPO6LqECJEmmbuR36E9u7GlFZkf3sTjXW0gmEUg2hd+Hzeb
+         9JCEdVjGgGX/X5H8p4A948+jVMHSCIbIZsiYS1RVh2E9fatiE8qRQF0bsw93Uhjbg4kj
+         E0vkylGADTygzoUCby6YYPaEBASn8IifVDgHO9O89QXpwb1YsovczkzzJX6TeorGv48G
+         l/P6WdfkH9T9+MR0L1LxmVYcVBuUeepeArWBWkuyWssDu94UKAkyYKLN3Hqk1LgRsEOc
+         J73IK9Xy67MGdQ7c8w+EDJ1InfHGKR2qLtJKE6d/80ZATzxzyhqW7b5jO/peX4Ff+uqp
+         vGmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUW2Zmch3CHxXBj5AUgQ1bY70la0Ar59Dw/GNJ2VX1Chmvh744XgTlP0kaksQI2s1+X1nFmNOguqalCi3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUCiz+vfrrJHpT7hSQYb/cZCUioQJ1LUx20AIc8XjmhTklJULN
+	Y444kpQJbdJ7pJXJNB3fh/ybzBYxYrjyydsvoNiG+ynDfbOavYp5dIhMR6+phos=
+X-Gm-Gg: ASbGncscIROMgwVb1ibjDGlV4mUxME2wB5fO5E56q+c9lrP+LupE3G5mthc3HzCSZe/
+	0N29DmaYLOxdXhGXxXaAYUD/i5QZTg7EopKKqMDHm8ZDnbDOrMZy60CU91fWdVSUwwWSt2652Nw
+	P8Ym6+UPXaf4v7bQFrDua8VCMDLu2erU0r4sJB1C77OemTM+Fue6tWfMtR37J09kpRsMQbpBVpq
+	hT17uiCq0X2JbRIs9a41R/F9JKCe3++68dWyY5rYLEMwu0PLOiuPuO/2hf7B5a9JnQwPGiqzwvm
+	cOaV9V+moIBCS85bEmO5qA369vqHh/AXwMVggDjFyinKGuDcaA==
+X-Google-Smtp-Source: AGHT+IGhMTLffqdEgqGOe3aQqJyYJ+B8VJatnZKsdwxT6z/hpa0miMBIbPX1H8NsL96ToaFl+7ia4A==
+X-Received: by 2002:a17:907:70d:b0:acb:7dde:d88f with SMTP id a640c23a62f3a-ace710952cfmr213755866b.5.1745751078562;
+        Sun, 27 Apr 2025 03:51:18 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e5087e4sm425679266b.73.2025.04.27.03.51.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 03:46:47 -0700 (PDT)
-Date: Sun, 27 Apr 2025 11:46:46 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Justin Lai <justinlai0215@realtek.com>
-Cc: <kuba@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
- <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
- <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
- <horms@kernel.org>, <pkshih@realtek.com>, <larry.chiu@realtek.com>
-Subject: Re: [PATCH net v2 3/3] rtase: Fix a type error in min_t
-Message-ID: <20250427114646.4253b39d@pumpkin>
-In-Reply-To: <20250416124534.30167-4-justinlai0215@realtek.com>
-References: <20250416124534.30167-1-justinlai0215@realtek.com>
-	<20250416124534.30167-4-justinlai0215@realtek.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sun, 27 Apr 2025 03:51:17 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Shenghao Ding <shenghao-ding@ti.com>,
+	Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	kernel test robot <lkp@intel.com>,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: [PATCH 1/2] ASoC: codecs: wsa88xx/wcd938x: Drop kerneldoc marker from inner comment
+Date: Sun, 27 Apr 2025 12:51:06 +0200
+Message-ID: <20250427105105.18164-3-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2016; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=VBNyX+A/EB/Cj4qU0XgLHNxhJ97XrYmyCZDdhGUIJhA=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoDgwZBz05ULqfGRWDmIA3VjNhzumOvxtTsbMlY
+ dg+5GjAnS2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaA4MGQAKCRDBN2bmhouD
+ 15QJD/90D9EKpDVCJB3Q1L4eB3Pe5TU6dT1kGsAhZA+Pqf8oYw+k73PHzJOhdzxDcYw7Jh9APL1
+ l0oPIwaq4Ss64RIt/2aX/hGXvBLrHLd0Pr3GtCvJxKa3G/Byx41Tjnu5L8IvKapft0iG9SeN2RR
+ ZuH5GgxAf0H2j2r72Gq7SmxRm4T0B+fo3Tk9jcjx+2TExtvNy2/m9g+h1d3kSHGJkdC8yZILyZp
+ /61MQ0I9T0hbCINYxg2LHvjmdmaVu4kdCSqTiFrltzPpFCFOfuB7uBNtZUd7u2hnN0Mb/cCCIio
+ i/PftL0i2+SM3Qd63HLxjKKZL+28ztNL+e4rStAeAiWl+pUQngfGXKphkywZHjnVivsHmpKgGLL
+ 1R+N2W+dUj2TEAJnig7cEdtFqGF3EG+6brrpLNziAywA9oCF+V0dd0yka/51q4CKBWUBZ5hsQby
+ 8SwhWV6YnMnHr7WxQocZmHQNBSXZnT7dgkb9avwz2jg7J6YwhTJ+ZdTSlxhW7HIK9Jb4Z9RzEwX
+ YDnrub4G93/Z4Ic4nEf3txXJKLJOdYwt+4QMhE8My4n4S/EVAuG2hWXQLjLqYyYfYx1ivv9fxzj
+ tG9wxyJ7FtfBwbBS0kOyhp8H+BVPMPuWphQ1XRpxi6llC85FdFRrffSYg3Hmz79FRGP6w2l7JnC dbEzfqOuSPOcfLA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Wed, 16 Apr 2025 20:45:34 +0800
-Justin Lai <justinlai0215@realtek.com> wrote:
+Drop the kerneldoc marker from a comment within a function:
 
-> Fix a type error in min_t.
+  wsa883x.c:1402: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
 
-NAK, in particular u16 is likely to be buggy
-Consider what would happen if RTBASE_MITI_MAX_PKT_NUM was 65536.
-(Yes, I know that isn't the intent of the code...)
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504261851.TJGZIvtl-lkp@intel.com/
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-As pointed out earlier using min() shouldn't generate a compile warning
-and won't mask off significant bits.
+---
 
-Also I think it isn't a bug in any sense because the two functions
-have a single caller that passes a constant.
+Cc: Dmitry Baryshkov <lumag@kernel.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>
+---
+ sound/soc/codecs/wcd938x-sdw.c | 2 +-
+ sound/soc/codecs/wsa883x.c     | 2 +-
+ sound/soc/codecs/wsa884x.c     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-	David
-
-
-> 
-> Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> ---
->  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> index 55b8d3666153..bc856fb3d6f3 100644
-> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
->  	u8 msb, time_count, time_unit;
->  	u16 int_miti;
->  
-> -	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
-> +	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
->  
->  	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
->  		msb = fls(time_us);
-> @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
->  	u8 msb, pkt_num_count, pkt_num_unit;
->  	u16 int_miti;
->  
-> -	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> +	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
->  
->  	if (pkt_num > 60) {
->  		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+diff --git a/sound/soc/codecs/wcd938x-sdw.c b/sound/soc/codecs/wcd938x-sdw.c
+index cabddadc90ef..e822cc145250 100644
+--- a/sound/soc/codecs/wcd938x-sdw.c
++++ b/sound/soc/codecs/wcd938x-sdw.c
+@@ -1225,7 +1225,7 @@ static int wcd9380_probe(struct sdw_slave *pdev,
+ 	if (!wcd)
+ 		return -ENOMEM;
+ 
+-	/**
++	/*
+ 	 * Port map index starts with 0, however the data port for this codec
+ 	 * are from index 1
+ 	 */
+diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
+index 1c9df7c061bd..f04d99c66f33 100644
+--- a/sound/soc/codecs/wsa883x.c
++++ b/sound/soc/codecs/wsa883x.c
+@@ -1584,7 +1584,7 @@ static int wsa883x_probe(struct sdw_slave *pdev,
+ 	wsa883x->sconfig.type = SDW_STREAM_PDM;
+ 	mutex_init(&wsa883x->sp_lock);
+ 
+-	/**
++	/*
+ 	 * Port map index starts with 0, however the data port for this codec
+ 	 * are from index 1
+ 	 */
+diff --git a/sound/soc/codecs/wsa884x.c b/sound/soc/codecs/wsa884x.c
+index daada1a2a34c..fd6ebc25fe89 100644
+--- a/sound/soc/codecs/wsa884x.c
++++ b/sound/soc/codecs/wsa884x.c
+@@ -2085,7 +2085,7 @@ static int wsa884x_probe(struct sdw_slave *pdev,
+ 	wsa884x->sconfig.direction = SDW_DATA_DIR_RX;
+ 	wsa884x->sconfig.type = SDW_STREAM_PDM;
+ 
+-	/**
++	/*
+ 	 * Port map index starts with 0, however the data port for this codec
+ 	 * are from index 1
+ 	 */
+-- 
+2.45.2
 
