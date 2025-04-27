@@ -1,100 +1,176 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75840204090;
-	Sun, 27 Apr 2025 09:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE297204090;
+	Sun, 27 Apr 2025 09:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745747874; cv=none; b=lOnHXNTBTRbjEhCp3e2Mic8ov7VfBlQJ7d6J4TM9pEY/Nl6BriCMJDi6S90bt0RiF/fXk0TFZo32yhl4RIBdoxHTpDgn0ZLI7ImWmEkpNwpwMym5fTPPBYUvVz5K+10zr/GOhiU+B146CGxg9vgDNGv4IYVWfRHcJNKwLelk16w=
+	t=1745747879; cv=none; b=FOcmWhOuW3QhtK4ZIPMYIqhT07+Ke+B+/gJ7bmuf4Qdu8JyohtzeIWsI+MDRBB9PvsIGFSBVn0CV5ErzTiZ4yv8XLtgrZGaJbqklO1X2It8xH3/fuRZlxRp4kDWVNh8rGxkV+aR8xH2H5P49AoTMN4CNyQe00QKc2en/zzTiIBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745747874; c=relaxed/simple;
-	bh=TlpuGJ0bMIigOMRpg0+97w+8+BynbCFp1g2PtIdfSto=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JqayrsOdCGJKe/nH++S6uN6hHPu8fzJm1iJXSbnnQ4wrfBtwTwRknX8DCEZ19lDeuIp25CPmTS0HC+h9ivqahzrqhmCXqj/TJNuavA8GATNwPoJJp993PtKY6Q0104zNvGj9P37mUKK0jNDvnUspnnUxGzx3ccTNlC8Nv2mRKAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNiC1LwM; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1745747879; c=relaxed/simple;
+	bh=l5Tb27Y5vyg3wY4lvkOBbo+U4H8Yv7JXSiafDA/SyBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NrMMo9DmHw7YvhCH19LgYm18vDoivkFDI58UDmCO0DLyZQmGaOMbkr0yNQg3HO/ok7qf0cd8XyfY/phwuvLnEd01Rn23H9muj24iNE4AxdMhsB8lqkwL7aqVi50ERlAcjrzzrVRWvO11mkodLQvvOChJZp0ukpKOjGj+Ipu8esQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bo6VpUfT; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNiC1LwM"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so6533519a12.0;
-        Sun, 27 Apr 2025 02:57:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bo6VpUfT"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3995ff6b066so1873409f8f.3;
+        Sun, 27 Apr 2025 02:57:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745747871; x=1746352671; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LxBTUJ+SNYbNqrW5ub0gWFIX7kS/soTqDckkd/+r4lM=;
-        b=mNiC1LwMHl3XJJQ3nH9n+B9LMVHCdIANWi+KgW9iryp6NQ8CGRj8lamYD0le/M1kfR
-         BMecm9xeUSYmr6farfQ6ISFWhrGWjsh2YPLVaQvYisS5tTRkeXIn6jNvgEgs9l9XjgbI
-         sBpk5Fu9Pd81tSvapmpswyW6Wwfhff2boqdWvB8OkjjWTv3MQzXN3WRknZQKpJfb3odj
-         cmIfqR2KIvv+rvl1HXv7zJnqBC9Ei26H6j5tf8CEyfsGrSPnVIJ7tvPNSTHdiV3NPNKg
-         DBPzwJrhbf0LrXbuDrwa+3YCY7F3Hs4GuQJZ21cNJgEg92QiwUvKVpYOEbdobz4cbyis
-         nSuw==
+        d=gmail.com; s=20230601; t=1745747876; x=1746352676; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zi8y+KhY8MsuzyCXspyB4bbIiSJsbGXeifwHJP4F24E=;
+        b=bo6VpUfT4yINkNVRQ9l+Bl7T3ImZtre+HLFMMvtNzcojeokOtGmBFxOlPPUEhFrhT6
+         MIhu2KP6G5IrHFBKx/C9WUCXw82B2fCRax1g3YJJ5EOHVxq6bdJY1Nwvv1LabAr8JaoF
+         8IhI4qpE7vNw4GRmFEYOSQY+ZB8bWATqKYqi7YUO1QJvTXNstEKYkR93BdXr2Ctig4wM
+         ja2RlzXiH1mB5FT87FPnbqlMwAjJmE10w7YXo+1tpiaTYRCXbxU6Jj3xQJQqFBNHgWsF
+         BYffI+kYsPe4Sgte25VUEFsWosALwAxu0E+hHiunqP4EU5ThlIqdQHx3A4CszeE5JU01
+         Xv5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745747871; x=1746352671;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LxBTUJ+SNYbNqrW5ub0gWFIX7kS/soTqDckkd/+r4lM=;
-        b=qjrLOxI3y040lJERH8XVcPzTXZAvaiNquLGZck3HD2BhvOMnBfW7DbsFWI29BiAy0x
-         JiLr4YoCsMuB1YyLqA45W8wRq594Dcf30JGxA9Ab6cHRBO8D46ImoJYc1z6smq4Ha0Ct
-         xv72ZOzOqvxGrb6CwmPTevgxgXa7sCOEybvwFfFkjlikvkHx/JvppK3ynt0LDp8pFGMG
-         4uKuEy3ifSv49vzQrtlp8OTylvSgh1qpy09dLVSxTw8NVhNwKfINMk+go95sfXbXnoH8
-         wOd6bollTy/1xRlEXTnku++F2i5cOnCgixvz22oqp2sqRoU/mtf0uIeBHdwlHveXBhxw
-         kQ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUaBdRz5EX9lFVEWfIdYu64o05MpeEXsRaFUTfn9Wv4lsXD6taZ8ozM8h0JXZH1sC5Yv9C+2beBhVH5SE/x+oo=@vger.kernel.org, AJvYcCXIfgGZh6Q1fBdUpfImaGhEFwX40lQbb/vXrXZ4e1jzoA/L41phTitbA2L5gFW/qflVp03K7umv0Y5xETA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrHcL4d+fVNVVC6EmPjdNy031G8EKEISM7Q7/RGNU+YVWLzNR2
-	Hdlwh2RC9Va+SUUobeIglOv9y5RAjbt8n/4NF5UgvAzbaaJu4/N4Er6/ZIqJ
-X-Gm-Gg: ASbGncvddT3nzyDO+100dEvrG9M28sJUZtoGg9gjvq519686nOF4FIaaWX9WT8dDDeJ
-	30PotjjFuYVuv+u/1UD82g6NYvZ1Eg+wMtfGjQ3Xo59fol1bgHnMryjc7ui7pqnT97KCm0diz1y
-	SUG6POpfIo/THMbDwcXp42cAfpgaJcg0Tv/zrXB8zlyx9EuXpqT48DxU4X7GsbE6kNb8qCu01gc
-	QYFVTv59xphIxpEK30ay+gqAy9AZP7OCknkWB3cODd+hBLoHvGaK/nBf+jcAXWgXF++7jyUMTdm
-	G67n8Gw9bc1mRtg0aQm5VxVIXEVwkUAH0KNou54=
-X-Google-Smtp-Source: AGHT+IHadKh3mh3Ib3ydj4hk0Zjl9p47LcKrV35HTQdygvQwQhk2pbY9rpDdxgjEnGZDeffUrnIzCQ==
-X-Received: by 2002:a05:6402:268c:b0:5f6:23b1:ab43 with SMTP id 4fb4d7f45d1cf-5f7219ade61mr7290431a12.0.1745747870585;
-        Sun, 27 Apr 2025 02:57:50 -0700 (PDT)
-Received: from pc ([165.51.0.225])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f70354638bsm3867990a12.63.2025.04.27.02.57.47
+        d=1e100.net; s=20230601; t=1745747876; x=1746352676;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zi8y+KhY8MsuzyCXspyB4bbIiSJsbGXeifwHJP4F24E=;
+        b=RcrforHJksy3f7CsdABkmuZdjT49fMU1/z6yCOcVPUCn4DbF4twUmx9BwDlxdhTqlA
+         Y2MQBbb9YfPYzVYQT3JpJfjhvZ7j8ispZ6v8L2wjPCOW6fXKUHUvFPKpMYlPf3R37P9H
+         nYx13BhxcC3Bnz+YoJDiREEQ941NPe/vtlik0kNotlHZ9kMCK1EsiZP8UdhRZwyUSGyU
+         3iFVse68DxZYXaTRVVd40VV+dtBlY9Snu/NjFaHNkhTJsF4NB4oo3/bvx+of+dRAqGT4
+         XinT0kjPWosEkuT+ECSC63hodOx8kxy6ycJi/TFFdJ6XR2+60WCkP5gKaXTLM92Of6Nr
+         w9HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCIcqYIE+2Kl8Kt0ZRLwy6wHwUyrAZl9LcZqvBRUtxN+zopwL9UQYxhRDFjNoJW6+mBK1X3fP9PufDZSs=@vger.kernel.org, AJvYcCWNSJhTNQ2B+FREo8hnEkPFUGyjvMIeIfnCcGN/bUVekxbu5u7FP+KcVnAOU/YcIR7VoiPjFf1z@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS7MKEkI6aCgmYL+5u/nKGrWZFFC9Ebjw1+9GhSVhUzXpZ67Ml
+	Ui9+/wsdBaN4GxS518XwczwtDvL9/2Sm+fv73oK7GZParTZgMx8c
+X-Gm-Gg: ASbGnctOkIKDe3uyeqwgm5Q2jPUfTOxXpfRxsuBHZdqKyg4HXWMifTH6JOrI3OAgty2
+	yZk2MQVfkVgcjyoyibBHNm3mOmYw7m1lGPm6doHzt+FWLXyayfTKZk7KTtzvRZSlbiIxJb7oI7y
+	cqfJmRZlsaEipGnLai0lBsy0kPKDl3mVWIqfpDRyxSx2PlBTHLDBlXggpTYBe+M/H2MiUrnW1/m
+	5Q5m5cX+6ZV2djlZiFJG01i73xo/dWGTehOXHhIuRH2JGkKvcreaH4RnhVquaMKRdeS7xYMzTPK
+	l9qKOFnYDTkDs1JFKcZao+LblIOBUGYdkKO2J7oMHvL54ovQjzxwW7LzXTozPbZqqPlytRJEFfB
+	5AZW02j0U7fPTPg==
+X-Google-Smtp-Source: AGHT+IHuYyVGFk9WjYZYs2dMxl6iVkS/EC6ijwaWExOoiJPt+HXv1feQNnbFXAK9zx4qKDIFzeetVQ==
+X-Received: by 2002:a05:6000:2283:b0:39f:6e9:8701 with SMTP id ffacd0b85a97d-3a07aa5ad4dmr3931241f8f.7.1745747875550;
+        Sun, 27 Apr 2025 02:57:55 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46454sm7987033f8f.78.2025.04.27.02.57.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 02:57:49 -0700 (PDT)
-Date: Sun, 27 Apr 2025 10:57:45 +0100
-From: Salah Triki <salah.triki@gmail.com>
-To: Srinivasan Raju <srini.raju@purelifi.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: salah.triki@gmail.com
-Subject: [PATCH] wireless: purelifi: plfxlc: fix memory in
- plfxlc_usb_wreq_asyn()
-Message-ID: <aA3_maPlEJzO7wrL@pc>
+        Sun, 27 Apr 2025 02:57:55 -0700 (PDT)
+Date: Sun, 27 Apr 2025 10:57:50 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Justin Lai <justinlai0215@realtek.com>, kuba@kernel.org,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, pkshih@realtek.com, larry.chiu@realtek.com, Andrew
+ Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net v3 3/3] rtase: Fix a type error in min_t
+Message-ID: <20250427105750.2f8efb02@pumpkin>
+In-Reply-To: <20250422132831.GH2843373@horms.kernel.org>
+References: <20250417085659.5740-1-justinlai0215@realtek.com>
+	<20250417085659.5740-4-justinlai0215@realtek.com>
+	<20250422132831.GH2843373@horms.kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add usb_free_urb() in the error path to prevent memory leak.
+On Tue, 22 Apr 2025 14:28:31 +0100
+Simon Horman <horms@kernel.org> wrote:
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- drivers/net/wireless/purelifi/plfxlc/usb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> + David Laight
+> 
+> On Thu, Apr 17, 2025 at 04:56:59PM +0800, Justin Lai wrote:
+> > Fix a type error in min_t.
+> > 
+> > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
+> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > ---
+> >  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > index 55b8d3666153..bc856fb3d6f3 100644
+> > --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
+> >  	u8 msb, time_count, time_unit;
+> >  	u16 int_miti;
+> >  
+> > -	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
+> > +	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);  
+> 
+> Hi Justin, Andrew, David, all,
+> 
+> I may be on the wrong track here, but near the top of minmax.h I see:
+> 
+> /*
+>  * min()/max()/clamp() macros must accomplish several things:
+>  *
+>  * - Avoid multiple evaluations of the arguments (so side-effects like
+>  *   "x++" happen only once) when non-constant.
+>  * - Perform signed v unsigned type-checking (to generate compile
+>  *   errors instead of nasty runtime surprises).
+>  * - Unsigned char/short are always promoted to signed int and can be
+>  *   compared against signed or unsigned arguments.
+>  * - Unsigned arguments can be compared against non-negative signed constants.
+>  * - Comparison of a signed argument against an unsigned constant fails
+>  *   even if the constant is below __INT_MAX__ and could be cast to int.
+>  */
+> 
+> So, considering the 2nd last point, I think we can simply use min()
+> both above and below. Which would avoid the possibility of
+> casting to the wrong type again in future.
+> 
+> Also, aside from which call is correct. Please add some colour
+> to the commit message describing why this is a bug if it is
+> to be treated as a fix for net rather than a clean-up for net-next.
 
-diff --git a/drivers/net/wireless/purelifi/plfxlc/usb.c b/drivers/net/wireless/purelifi/plfxlc/usb.c
-index 10d2e2124ff8..c2a1234b59db 100644
---- a/drivers/net/wireless/purelifi/plfxlc/usb.c
-+++ b/drivers/net/wireless/purelifi/plfxlc/usb.c
-@@ -503,8 +503,10 @@ int plfxlc_usb_wreq_async(struct plfxlc_usb *usb, const u8 *buffer,
- 			  (void *)buffer, buffer_len, complete_fn, context);
- 
- 	r = usb_submit_urb(urb, GFP_ATOMIC);
--	if (r)
-+	if (r) {
-+		usb_free_urb(urb);
- 		dev_err(&udev->dev, "Async write submit failed (%d)\n", r);
-+	}
- 
- 	return r;
- }
--- 
-2.43.0
+Indeed.
+Using min_t(u16,...) is entirely an 'accident waiting to happen'.
+If you are going to cast all the arguments to a function you really
+better ensure the type is big enough for all the arguments.
+The fact that one is 'u16' in no way indicates that casting the
+other(s) won't discard high significant bits.
+(and if you want a u16 result it is entirely wrong.)
+
+In this case i don't understand the code at all.
+The function is static and is only called once with a compile-time
+constant value.
+So, AFIACT, should reduce to a compile time constant.
+
+There is also the entire 'issue' of using u16 variables at all.
+You might want u16 structure members (to save space or map hardware)
+but for local variables they are only likely to increase code size.
+
+	David
+
+
+> 
+> >  
+> >  	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
+> >  		msb = fls(time_us);
+> > @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
+> >  	u8 msb, pkt_num_count, pkt_num_unit;
+> >  	u16 int_miti;
+> >  
+> > -	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+> > +	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+
+So a definite NAK on that change.
+
+> >  
+> >  	if (pkt_num > 60) {
+> >  		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+> > -- 
+> > 2.34.1
+> >   
 
