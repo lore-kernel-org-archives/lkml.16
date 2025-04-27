@@ -1,118 +1,201 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-87.freemail.mail.aliyun.com (out30-87.freemail.mail.aliyun.com [115.124.30.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CB4238C3C;
-	Sun, 27 Apr 2025 06:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4783BB48;
+	Sun, 27 Apr 2025 06:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745734590; cv=none; b=NkTFPfQqAiGr6j/95kkWrbewCU36Zl4YRtubxtUMevvCiZ0ZEt2j/eAKyDx2X7QRjKJVIlxFQxri22wT3kKrSn/zIEzUnG7sP76d37tR0Qe5/nH/ctyNw+9grdzmLQnrDE1VU6oVSFXrps4IMJuTdLqAbUEe9ER6kRWktLACqE0=
+	t=1745734635; cv=none; b=glqK/NYo+g3MvJsGnMOaa9gTVzIkPo2Lb8D2wkNNvkxP/20Qs7RhKNV3cOMmOmu8HKmvivVt2jZraknlhoIjxlmzcjgYoZd9tfbDQ23/uJxWiz+HR2F1KSBnoPEpdOyEPSuTqzrDh92hKft/FU+WwePyuBMUz1WCU5td/2y6qOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745734590; c=relaxed/simple;
-	bh=JHmA+1ZeQK8oyp8y9eMk6Hv0vqiXhbFGyjgYkZxY8Io=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GwGJUoKMFq3ZKCIkAJ5wOXEWVwRi8uwIFh6yrZIqedBCRrQXrKzhSKiAHsWZq1s/kpMXTvSrADI2+fTGvy4twIGTubzOE67h//BCtbxFJpVU+ZP6EfRI/CZ27MNhUdDJ1Pel9Atoscq0oOzGe5/xg2dJMceKZppPkZ3h2E2OyFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDTz8vrJ; arc=none smtp.client-ip=209.85.216.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745734635; c=relaxed/simple;
+	bh=gbSMFJmbFCs8UxyB41r2trmHJs9hJWBd2mtskWj+NY8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=obzJ66VcUHM3ZfgP/1S+4aJZvU6F+oLUhdStTPrEKVm6/5I8uEQ9qyC8G2SUqbAuYfWUeY7Xq/t1fda4uVWIWcxGBp8gYX3yptwrMtTK+MokjsJuyjci3/eMd0f6ghTktHZJfE6M01PuMbQDZmXrCa9oOyowq7KnZl6nRdEbehw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aliyun.com; spf=pass smtp.mailfrom=aliyun.com; dkim=pass (1024-bit key) header.d=aliyun.com header.i=@aliyun.com header.b=QnrpRDGZ; arc=none smtp.client-ip=115.124.30.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aliyun.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aliyun.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDTz8vrJ"
-Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-30863b48553so4383262a91.0;
-        Sat, 26 Apr 2025 23:16:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745734588; x=1746339388; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=arlXjTtgy3BAr37xUh1VQDxToO9hlb9HPCoLz/1bTAk=;
-        b=iDTz8vrJCqfbfnb02QAkF0yOAgxJwpaczB1jLjFVksmJKH1WRviCaY4nsVT6GI66/f
-         lEQ7xXeSKtiCswmczIirTFmcYaGXZce8Ty2c5HKHGN7mmFY4XtqH9JIinMdMxw8TDDeC
-         l+2q6A0Ld8ASQP+33bWygribi0c+STLTPcInwXMoO4s38yjQUwK9CQl1wtdO440pOzqD
-         ECeKvR/p5qfZEKlNrUSENw22sEVFzDNVQcNu5XBZ988jxTh87j/NA6vEN17WF4xjF6hG
-         AqkLYjSdsKILB8+9rpj3prkJpi57CqVf2HH3o2+itau8IOu9v/6n+8171ofnTDENm053
-         9VKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745734588; x=1746339388;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=arlXjTtgy3BAr37xUh1VQDxToO9hlb9HPCoLz/1bTAk=;
-        b=JmctQVuITjjEyPrCRc27RIb5mPP23GrE8VDIWsJgdU2plqnKnWmDdgz2UAcpwQ/ic9
-         kJczinIiyHR434Klwo4gEY/g7iaEXBhq2tuZ+OOzKB/4DHLvUuRlZe/nFRB/HyfAGVDk
-         8PJPnqDJTokHWFXSMZaBtMk8kAql/wQtyZbz9ych4AQEeS1DtoZcuWDdgp2IIaCSIPvy
-         q2tbZ+uPhTcRNOjQKoyPlQM5aGO7rB4ePb4/eSuXkrhVr5fe0OQTgNC0GDwd7DbP/IyA
-         0MZGPznWuRzzrxxkMAuhPdZ9DIHbq/8sBj62aZ6aHNn8uxiDE4YNQRBwO2JssckdkwhK
-         f6gw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7BgMwMlBdQftKf8oatktAiqUs9osDtd8dBjPM5LG/FqiWH1CgniGUgJ6VsdW3lwLsleJnOVj7ZKKXyis=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz4UGRr25+g3LLw0igEB5q3rfkXfICTvJX9Ic0uID0hYaVtvnk
-	n3g8yptYimKShDWXDCzFaMQHAXdlZ8HYVpoSZg7h49L5ZbfEOHb/
-X-Gm-Gg: ASbGncsTLo2eivIBEwCzrehSISql0iqs47l41v5FB+oXwAyxsQfastg6kcEeeHl0fHJ
-	GwVca+AOSeLG3bi2k3jGCeGGp8VSKN91ekXJ5pRuLd6yC/rHwjBbAXYRlJ3JawiIIij9LBHt+6U
-	0ddZQ+/ZDTC7iVdAuIXLbrkup9FLIcdejvugHyG38s9G5H9UJhM8pxYcH2blim6czf0SjSA8Aop
-	51xHawl7QIyNAz6+76YYyAI/8OGOmbGGHQZmH4BWJx24352lLf3at7/IRPMVEBiSKRvYDjwdGST
-	KofsNB1QJNgCIVe4Abmt7wCG
-X-Google-Smtp-Source: AGHT+IHI7FfMmiHvegnH3jYRRExzK2Sstbajg7ZocUmpjDuKv+l+0QX83bfc8/fIIkBGnpajgMyTQQ==
-X-Received: by 2002:a17:90b:42:b0:2fa:2268:1af4 with SMTP id 98e67ed59e1d1-309ee37b550mr17322947a91.7.1745734588534;
-        Sat, 26 Apr 2025 23:16:28 -0700 (PDT)
-Received: from [127.0.1.1] ([2a0d:2683:c100::bf])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f782d461sm5080287a91.39.2025.04.26.23.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 23:16:28 -0700 (PDT)
-From: Troy Mitchell <troymitchell988@gmail.com>
-Date: Sun, 27 Apr 2025 14:16:10 +0800
-Subject: [PATCH v2 2/2] i2c: imx: drop master prefix
+	dkim=pass (1024-bit key) header.d=aliyun.com header.i=@aliyun.com header.b="QnrpRDGZ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=aliyun.com; s=s1024;
+	t=1745734629; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=ewz3YKdZUxD2ycD/PcdBcvNZjRxN+t3Ej5aU5o05fNA=;
+	b=QnrpRDGZQqWjjoFLrtI+kT+7ENmGwYztLudweAVDfSfGtLLHiqbZDJ+XqSJCqz/Tpjd7yJ6pJqpUQUOFw1LkJ/i/t9Ry74LBVtLwgRUXLOegyIh3tHfYYtOedQafFm0OT1LpCNHaBlIjxZEA+Ds27UJ4y+zh0B+e1KttfNkzhEU=
+Received: from wdhh6.sugon.cn(mailfrom:wdhh6@aliyun.com fp:SMTPD_---0WY7wnYI_1745734628 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 27 Apr 2025 14:17:09 +0800
+From: Chaohai Chen <wdhh6@aliyun.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	steffen.klassert@secunet.com,
+	herbert@gondor.apana.org.au,
+	paul@paul-moore.com,
+	pablo@netfilter.org,
+	kadlec@netfilter.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	Chaohai Chen <wdhh6@aliyun.com>
+Subject: [PATCH] net:ipv4: Use shift left 2 to calculate the length of the IPv4 header.
+Date: Sun, 27 Apr 2025 14:17:06 +0800
+Message-Id: <20250427061706.391920-1-wdhh6@aliyun.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250427-i2c-imx-update-v2-2-d312e394b573@gmail.com>
-References: <20250427-i2c-imx-update-v2-0-d312e394b573@gmail.com>
-In-Reply-To: <20250427-i2c-imx-update-v2-0-d312e394b573@gmail.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Cc: linux-i2c@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Troy Mitchell <troymitchell988@gmail.com>, Yongchao Jia <jyc0019@gmail.com>, 
- Ahmad Fatoum <a.fatoum@pengutronix.de>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745734572; l=873;
- i=troymitchell988@gmail.com; h=from:subject:message-id;
- bh=JHmA+1ZeQK8oyp8y9eMk6Hv0vqiXhbFGyjgYkZxY8Io=;
- b=brBU5+4z/15z6LPbx1Emc7dlsMzWr4mB+pXCEvGTacv+PnzSKbtWKD2fEFPLA/3wrRBLY49cj
- ffZoQ1gOG/EChkqymt2Edi//dG0kft8qcLuY1pf/DD6+0X0LiDOVCjO
-X-Developer-Key: i=troymitchell988@gmail.com; a=ed25519;
- pk=2spEMGBd/Wkpd36N1aD9KFWOk0aHrhVxZQt+jxLXVC0=
+Content-Transfer-Encoding: 8bit
 
-In light of the recent updates to the i2c subsystem,
-drop master prefix.
+Encapsulate the IPV4_HEADER_LEN macro and use shift left 2 to calculate
+the length of the IPv4 header instead of multiplying 4 everywhere.
 
-Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+Signed-off-by: Chaohai Chen <wdhh6@aliyun.com>
 ---
- drivers/i2c/busses/i2c-imx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/ip.h                    | 2 ++
+ net/ipv4/ah4.c                      | 8 ++++----
+ net/ipv4/cipso_ipv4.c               | 4 ++--
+ net/ipv4/ip_input.c                 | 8 ++++----
+ net/ipv4/netfilter/nf_reject_ipv4.c | 4 ++--
+ 5 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index a98bf01c5dde..fca3d1adb627 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1689,8 +1689,8 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
- }
+diff --git a/include/net/ip.h b/include/net/ip.h
+index ba7b43447775..0fa172d73a52 100644
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -38,6 +38,8 @@
+ #define IPV4_MAX_PMTU		65535U		/* RFC 2675, Section 5.1 */
+ #define IPV4_MIN_MTU		68			/* RFC 791 */
  
- static const struct i2c_algorithm i2c_imx_algo = {
--	.master_xfer = i2c_imx_xfer,
--	.master_xfer_atomic = i2c_imx_xfer_atomic,
-+	.xfer = i2c_imx_xfer,
-+	.xfer_atomic = i2c_imx_xfer_atomic,
- 	.functionality = i2c_imx_func,
- 	.reg_slave	= i2c_imx_reg_slave,
- 	.unreg_slave	= i2c_imx_unreg_slave,
-
++#define IPV4_HEADER_LEN(ihl)    (ihl << 2)
++
+ extern unsigned int sysctl_fib_sync_mem;
+ extern unsigned int sysctl_fib_sync_mem_min;
+ extern unsigned int sysctl_fib_sync_mem_max;
+diff --git a/net/ipv4/ah4.c b/net/ipv4/ah4.c
+index 64aec3dff8ec..d09e07408c2e 100644
+--- a/net/ipv4/ah4.c
++++ b/net/ipv4/ah4.c
+@@ -77,7 +77,7 @@ static inline struct scatterlist *ah_req_sg(struct crypto_ahash *ahash,
+ static int ip_clear_mutable_options(const struct iphdr *iph, __be32 *daddr)
+ {
+ 	unsigned char *optptr = (unsigned char *)(iph+1);
+-	int  l = iph->ihl*4 - sizeof(struct iphdr);
++	int  l = IPV4_HEADER_LEN(iph->ihl) - sizeof(struct iphdr);
+ 	int  optlen;
+ 
+ 	while (l > 0) {
+@@ -134,7 +134,7 @@ static void ah_output_done(void *data, int err)
+ 	top_iph->frag_off = iph->frag_off;
+ 	if (top_iph->ihl != 5) {
+ 		top_iph->daddr = iph->daddr;
+-		memcpy(top_iph+1, iph+1, top_iph->ihl*4 - sizeof(struct iphdr));
++		memcpy(top_iph + 1, iph + 1, IPV4_HEADER_LEN(top_iph->ihl) - sizeof(struct iphdr));
+ 	}
+ 
+ 	kfree(AH_SKB_CB(skb)->tmp);
+@@ -194,7 +194,7 @@ static int ah_output(struct xfrm_state *x, struct sk_buff *skb)
+ 
+ 	if (top_iph->ihl != 5) {
+ 		iph->daddr = top_iph->daddr;
+-		memcpy(iph+1, top_iph+1, top_iph->ihl*4 - sizeof(struct iphdr));
++		memcpy(iph + 1, top_iph + 1, IPV4_HEADER_LEN(top_iph->ihl) - sizeof(struct iphdr));
+ 		err = ip_clear_mutable_options(top_iph, &top_iph->daddr);
+ 		if (err)
+ 			goto out_free;
+@@ -250,7 +250,7 @@ static int ah_output(struct xfrm_state *x, struct sk_buff *skb)
+ 	top_iph->frag_off = iph->frag_off;
+ 	if (top_iph->ihl != 5) {
+ 		top_iph->daddr = iph->daddr;
+-		memcpy(top_iph+1, iph+1, top_iph->ihl*4 - sizeof(struct iphdr));
++		memcpy(top_iph + 1, iph + 1, IPV4_HEADER_LEN(top_iph->ihl) - sizeof(struct iphdr));
+ 	}
+ 
+ out_free:
+diff --git a/net/ipv4/cipso_ipv4.c b/net/ipv4/cipso_ipv4.c
+index 740af8541d2f..9134d31bd64b 100644
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -1501,7 +1501,7 @@ unsigned char *cipso_v4_optptr(const struct sk_buff *skb)
+ 	int optlen;
+ 	int taglen;
+ 
+-	for (optlen = iph->ihl*4 - sizeof(struct iphdr); optlen > 1; ) {
++	for (optlen = IPV4_HEADER_LEN(iph->ihl) - sizeof(struct iphdr); optlen > 1; ) {
+ 		switch (optptr[0]) {
+ 		case IPOPT_END:
+ 			return NULL;
+@@ -1728,7 +1728,7 @@ void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
+ 	 */
+ 
+ 	memset(opt, 0, sizeof(struct ip_options));
+-	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
++	opt->optlen = IPV4_HEADER_LEN(ip_hdr(skb)->ihl) - sizeof(struct iphdr);
+ 	rcu_read_lock();
+ 	res = __ip_options_compile(dev_net(skb->dev), opt, skb, NULL);
+ 	rcu_read_unlock();
+diff --git a/net/ipv4/ip_input.c b/net/ipv4/ip_input.c
+index 30a5e9460d00..235553f50b6c 100644
+--- a/net/ipv4/ip_input.c
++++ b/net/ipv4/ip_input.c
+@@ -276,7 +276,7 @@ static inline bool ip_rcv_options(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	iph = ip_hdr(skb);
+ 	opt = &(IPCB(skb)->opt);
+-	opt->optlen = iph->ihl*4 - sizeof(struct iphdr);
++	opt->optlen = IPV4_HEADER_LEN(iph->ihl) - sizeof(struct iphdr);
+ 
+ 	if (ip_options_compile(dev_net(dev), opt, skb)) {
+ 		__IP_INC_STATS(dev_net(dev), IPSTATS_MIB_INHDRERRORS);
+@@ -501,7 +501,7 @@ static struct sk_buff *ip_rcv_core(struct sk_buff *skb, struct net *net)
+ 		       IPSTATS_MIB_NOECTPKTS + (iph->tos & INET_ECN_MASK),
+ 		       max_t(unsigned short, 1, skb_shinfo(skb)->gso_segs));
+ 
+-	if (!pskb_may_pull(skb, iph->ihl*4))
++	if (!pskb_may_pull(skb, IPV4_HEADER_LEN(iph->ihl)))
+ 		goto inhdr_error;
+ 
+ 	iph = ip_hdr(skb);
+@@ -514,7 +514,7 @@ static struct sk_buff *ip_rcv_core(struct sk_buff *skb, struct net *net)
+ 		drop_reason = SKB_DROP_REASON_PKT_TOO_SMALL;
+ 		__IP_INC_STATS(net, IPSTATS_MIB_INTRUNCATEDPKTS);
+ 		goto drop;
+-	} else if (len < (iph->ihl*4))
++	} else if (len < IPV4_HEADER_LEN(iph->ihl))
+ 		goto inhdr_error;
+ 
+ 	/* Our transport medium may have padded the buffer out. Now we know it
+@@ -527,7 +527,7 @@ static struct sk_buff *ip_rcv_core(struct sk_buff *skb, struct net *net)
+ 	}
+ 
+ 	iph = ip_hdr(skb);
+-	skb->transport_header = skb->network_header + iph->ihl*4;
++	skb->transport_header = skb->network_header + IPV4_HEADER_LEN(iph->ihl);
+ 
+ 	/* Remove any debris in the socket control block */
+ 	memset(IPCB(skb), 0, sizeof(struct inet_skb_parm));
+diff --git a/net/ipv4/netfilter/nf_reject_ipv4.c b/net/ipv4/netfilter/nf_reject_ipv4.c
+index 87fd945a0d27..ec2d8d93c241 100644
+--- a/net/ipv4/netfilter/nf_reject_ipv4.c
++++ b/net/ipv4/netfilter/nf_reject_ipv4.c
+@@ -27,10 +27,10 @@ static int nf_reject_iphdr_validate(struct sk_buff *skb)
+ 	len = ntohs(iph->tot_len);
+ 	if (skb->len < len)
+ 		return 0;
+-	else if (len < (iph->ihl*4))
++	else if (len < IPV4_HEADER_LEN(iph->ihl))
+ 		return 0;
+ 
+-	if (!pskb_may_pull(skb, iph->ihl*4))
++	if (!pskb_may_pull(skb, IPV4_HEADER_LEN(iph->ihl)))
+ 		return 0;
+ 
+ 	return 1;
 -- 
 2.34.1
 
