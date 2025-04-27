@@ -1,201 +1,133 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D65B26AF5
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5A96F2F2
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745763258; cv=none; b=jVH5/ncBDJGaQCyYk/UydsyAksnIPpqMrPvywuP2+yjB66D2xj4KzkHViUnJh8yayPNiPmxyxgvoOBre9MZQd9qkhIlQ9xK9hW2e2+x7EkLSvSkN4uRE/f/5+fdaSt28q82lNG8KaHQFKr2/JPTVDrI5dYI7zFfJWfpJnOscG+M=
+	t=1745763274; cv=none; b=rvxijNoclUJLCvF2lfQ2OTLKSBt4Lk4Q3tiM4/oip3VfhVHkm6qrlr0iD/zzeJPHU0r0P1jLXjxz8dy5kfHWkIEFGpA6fcTZIEreYbIi0GZudze3quPwel4x8BkNlDDCNBm+aclK22t+CFSNwR3v7L2pggpkmjlEnZ6Q4EnXlY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745763258; c=relaxed/simple;
-	bh=rkRAGu8tTnx7TSm3R/NqNuU2jUskZCs4cycJWjam2DU=;
+	s=arc-20240116; t=1745763274; c=relaxed/simple;
+	bh=49DuRZhOVTYQFxHgGdK6okYEXh4PRTvvhmby35xZFuQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eLjvFLims25Bj46rIiwL93scC4XLWYLhuEp/RdBlAXQ7p7V2OS9hVvPEh9Wvd+HDsiQojN9CIWOlbMGcTmIKB9wIeppgvPLHF/CzJ8KF5MyhMdiM/pQXct9Y1wCoD4ed0JyLa+s8mFZePPzhmZYgxNtP0kCQ5ALwtdmBqExwvaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GeCNf/ru; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DTHRrAdojY4EIArWcEcVUz/T3MFBFevhiM85uX5kc8TwgkNpz8agfv3Sx0lUqaXU58SRozsFgJA10gpXtWUsrj4nBgjakiyC+VRFl4C6hS8EUIB3wZxRlhrXHBc8dUJgGZJurRamzh9CcAC3H9BKUjgFr2atoi/Lzy7YwcHjAJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XWWvnbXW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GeCNf/ru"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736c277331eso4649280b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745763255; x=1746368055; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ACNBxPO8ZTcboVmh3x2UF5/k0ixRgW7g046Uv0nuIS4=;
-        b=GeCNf/ru9VwUnZsUh5E776cNUDOtJdoZYNtyZz/IrIxgdx5kmVbeltFIq4HsiBy+bd
-         7EGr6z8GeeyOZE+BqW9Lx7lY03fB7F8NAGkT1Evt6fdVKn6GZzfoatjtztymfb4lX6SM
-         Jj4kO1i7jWDBjVp37Vj1060x5K5BqXoyvuGq2BTHSsnGtdblXX5AKcrRYkB4tKLje8nd
-         6+AmtnbNQ3X5KJctUo5674lZYiWZROwMh1dpbSZdoDbIPtHbs47wQ7QmGqkYZtAoJ/7g
-         HxCn7fef7p1yqrF3QYDDRW2tCXxbM6CDS+VEPmOEpn0goiFEDCzzYeLUcsjr/ShO2epi
-         SJmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745763255; x=1746368055;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ACNBxPO8ZTcboVmh3x2UF5/k0ixRgW7g046Uv0nuIS4=;
-        b=d7b+q/FtGQxvXj5pK4VNhu3yl/qg5pPoaVZKtk6dPHvqtkhLjdjXibA6rey0Qc/ynH
-         wwzaoQh3DQ6WUEQZ+GsM+5zEV5fJBsrE9Pw6nthguNGh4KLfYKIyK9md5EPXksGdyLgx
-         oEXReV3i7mG/wMiYQCaXr22KhgHk4cSF40wYvoumkF8R3bv9ZMwoJDY7AWcYiL8T1s8P
-         B6QSWc5K3/MWxtauwhb/lsI3tjPSQWGEV+QpJsEfwL4BQJaGJ1vbqzkk8shCjQpPOh0o
-         VgM92pYLi3GD5whIWY1YZ7vVwZELljDCCPc6VfMZ09S+U+NGpwOb8D+0C+uZyiGVyZpN
-         uPyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWz0PYKqH6t2YZBNrlAVo/R0rnjU1gEZC+fHkda/DcYwSIRmRo5VFAKGZFiBLxm/+48BDTTT59BrNr2PfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcGpEhb2Q3DwiDSAyEsNBRXXTXMJBhMiRIuP7EPSLXjtcPAdjk
-	u2asY3JjcZXGGfAkHRDsXt0sMAm50tRXS0dDFrQWhAZTW317cPNzlDueoZIncQ==
-X-Gm-Gg: ASbGncuNRKRZv929lbuPQgZO7wD68sQe741+MOutV+ZllbUJrXuSCUxrdr+UbiPDESY
-	X7qO6Lxtk/2dLMxPKZNPG3tmB12MiXwwpZMvzqd43yELiN6v/RAQ7D6e/tNayycumSXXyFy+jBZ
-	UE0ig6ROOQibnOFwyMWg4FruzpyFmCtJZo9fdYsyQnCCFfwWVSUXcQDmLJGpHKbhQcwTWph63wY
-	QdIzHl057unlsw+Sy0huqPYnNY7tEH7B3laXwlgFnww8gL87lOj7iiq//6rVMXvLB30lLI9N3l4
-	qu2WoNj5ghLPww++X2ascIPfQnsKFi86+m9Lmadx+NATM0nrAWgz
-X-Google-Smtp-Source: AGHT+IHjWEH0dSAl/SHWrSYJFzYKk/J+piJ5N7UDrAAAZ6BtOMkHd9X5c8VlDHgDtN0O4ARPSiTzjA==
-X-Received: by 2002:a05:6a20:c6ca:b0:1fd:f4df:ab67 with SMTP id adf61e73a8af0-2045b64f481mr12361009637.21.1745763254720;
-        Sun, 27 Apr 2025 07:14:14 -0700 (PDT)
-Received: from thinkpad ([120.60.143.241])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25912325sm6480321b3a.14.2025.04.27.07.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 07:14:14 -0700 (PDT)
-Date: Sun, 27 Apr 2025 19:44:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
-	heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com, shawn.lin@rock-chips.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v4 2/3] PCI: dw-rockchip: Reorganize register and
- bitfield definitions
-Message-ID: <mbgc46teac74goifhuj4fegmtaagfoqkhlm4uid23jurbvi2xa@wnhycs77kk6w>
-References: <20250427125316.99627-1-18255117159@163.com>
- <20250427125316.99627-3-18255117159@163.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWWvnbXW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745763272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNjVVte3p3EsUaESR/jga3ypvTF1DEPySfxUJUdW+ts=;
+	b=XWWvnbXWj9BI2uKCEO2x49y60LAeP9gXVCCkT/dg+k1UddwZ82npKAv8VicG6ws8AwRyvR
+	76NK+PHW0D4noazJWv4YqQUT9jSiieQcTfjUhJtRp+kXs38yR3VsQ+Q71h3swj178OhTTW
+	DLK5TF3PFxQ52GOHj7yvlcoaYg0vB3c=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-NkxcXgFHPNizLPHKlO-eyQ-1; Sun,
+ 27 Apr 2025 10:14:25 -0400
+X-MC-Unique: NkxcXgFHPNizLPHKlO-eyQ-1
+X-Mimecast-MFC-AGG-ID: NkxcXgFHPNizLPHKlO-eyQ_1745763263
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A589C19560AA;
+	Sun, 27 Apr 2025 14:14:21 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 645D1180045C;
+	Sun, 27 Apr 2025 14:14:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun, 27 Apr 2025 16:13:43 +0200 (CEST)
+Date: Sun, 27 Apr 2025 16:13:35 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
+ of uprobe_write_opcode
+Message-ID: <20250427141335.GA9350@redhat.com>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-4-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250427125316.99627-3-18255117159@163.com>
+In-Reply-To: <20250421214423.393661-4-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Sun, Apr 27, 2025 at 08:53:15PM +0800, Hans Zhang wrote:
-> Register definitions were scattered with ambiguous names (e.g.,
-> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
-> hierarchical grouping. Magic values for bit operations reduced code
-> clarity.
-> 
-> Group registers and their associated bitfields logically. This improves
-> maintainability and aligns the code with hardware documentation.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 49 ++++++++++++-------
->  1 file changed, 31 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index e7d33d545d5b..a778f4f61595 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -33,24 +33,37 @@
->  
->  #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
->  
-> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
-> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
-> -#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
-> -#define PCIE_CLIENT_INTR_MASK_MISC	0x24
-> -#define PCIE_SMLH_LINKUP		BIT(16)
-> -#define PCIE_RDLH_LINKUP		BIT(17)
-> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-> -#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
-> -#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
-> -#define PCIE_CLIENT_GENERAL_CONTROL	0x0
-> +/* General Control Register */
-> +#define PCIE_CLIENT_GENERAL_CON		0x0
-
-Is this the actual name of the register as per the documentation? Just asking
-because of '_CON' instead of '_CONTROL'.
-
-- Mani
-
-> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
-> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+On 04/21, Jiri Olsa wrote:
+>
+> +static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
+> +{
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	int err;
 > +
-> +/* Interrupt Status Register Related to Legacy Interrupt */
->  #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+> +	/* We are going to replace instruction, update ref_ctr. */
+> +	if (uprobe->ref_ctr_offset) {
+> +		err = update_ref_ctr(uprobe, mm, 1);
+> +		if (err)
+> +			return err;
+> +	}
 > +
-> +/* Interrupt Status Register Related to Miscellaneous Operation */
-> +#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
-> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
-> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+> +	err = set_swbp(&uprobe->arch, vma, vaddr);
 > +
-> +/* Interrupt Mask Register Related to Legacy Interrupt */
->  #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
-> +
-> +/* Interrupt Mask Register Related to Miscellaneous Operation */
-> +#define PCIE_CLIENT_INTR_MASK_MISC	0x24
-> +
-> +/* Hot Reset Control Register */
->  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-> +#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
-> +
-> +/* LTSSM Status Register */
->  #define PCIE_CLIENT_LTSSM_STATUS	0x300
-> -#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
-> -#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
-> +#define  PCIE_SMLH_LINKUP		BIT(16)
-> +#define  PCIE_RDLH_LINKUP		BIT(17)
-> +#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-> +#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
->  
->  struct rockchip_pcie {
->  	struct dw_pcie pci;
-> @@ -161,13 +174,13 @@ static u32 rockchip_pcie_get_ltssm(struct rockchip_pcie *rockchip)
->  static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
->  {
->  	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
-> -				 PCIE_CLIENT_GENERAL_CONTROL);
-> +				 PCIE_CLIENT_GENERAL_CON);
+> +	/* Revert back reference counter if instruction update failed. */
+> +	if (err && uprobe->ref_ctr_offset)
+> +		update_ref_ctr(uprobe, mm, -1);
+> +	return err;
 >  }
->  
->  static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
->  {
->  	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
-> -				 PCIE_CLIENT_GENERAL_CONTROL);
-> +				 PCIE_CLIENT_GENERAL_CON);
+...
+> +static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
+> +{
+> +	int err = set_orig_insn(&uprobe->arch, vma, vaddr);
+> +
+> +	/* Revert back reference counter even if instruction update failed. */
+> +	if (uprobe->ref_ctr_offset)
+> +		update_ref_ctr(uprobe, vma->vm_mm, -1);
+> +	return err;
 >  }
->  
->  static int rockchip_pcie_link_up(struct dw_pcie *pci)
-> @@ -516,7 +529,7 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->  	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
->  
->  	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
-> -				 PCIE_CLIENT_GENERAL_CONTROL);
-> +				 PCIE_CLIENT_GENERAL_CON);
->  
->  	pp = &rockchip->pci.pp;
->  	pp->ops = &rockchip_pcie_host_ops;
-> @@ -562,7 +575,7 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
->  	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
->  
->  	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_EP_MODE,
-> -				 PCIE_CLIENT_GENERAL_CONTROL);
-> +				 PCIE_CLIENT_GENERAL_CON);
->  
->  	rockchip->pci.ep.ops = &rockchip_pcie_ep_ops;
->  	rockchip->pci.ep.page_size = SZ_64K;
-> -- 
-> 2.25.1
-> 
 
--- 
-மணிவண்ணன் சதாசிவம்
+This doesn't look right even in the simplest case...
+
+To simplify, suppose that uprobe_register() needs to change a single mm/vma
+and set_swbp() fails. In this case uprobe_register() calls uprobe_unregister()
+which will find the same vma and call set_orig_refctr(). set_orig_insn() will
+do nothing. But update_ref_ctr(uprobe, vma->vm_mm, -1) is wrong/unbalanced.
+
+The current code updates ref_ctr after the verify_opcode() check, so it doesn't
+have this problem.
+
+-------------------------------------------------------------------------------
+OTOH, I think that the current logic is not really correct too,
+
+	/* Revert back reference counter if instruction update failed. */
+	if (ret < 0 && is_register && ref_ctr_updated)
+		update_ref_ctr(uprobe, mm, -1);
+
+I think that "Revert back reference counter" logic should not depend on
+is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
+uprobe_unregister() fails, then another uprobe_register() comes at the
+same address, and after that uprobe_unregister() succeeds.
+
+Oleg.
+
