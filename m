@@ -1,116 +1,98 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EC779C4;
-	Sun, 27 Apr 2025 14:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30819D898
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745763867; cv=none; b=PnKtDE0BhGgc5tCXPOMbI5MMviOPBYEjlRhCqvkgNN1hin00GJfQQKVLsLgy4rKfnXAtOtO+Uqpoux/8fBv/U/xhxiVPJYRoyUnhimVSrUA6dS9dkYC6b2YlFqNrrPcIoIx/6R3Ftk64irEAIZxRYvDYVTIvCUx/bdC5CN2Yn8A=
+	t=1745763905; cv=none; b=Q1i1QL8+bCb7T+YzDCzLl8B4oiLPjQD0wQKBQiAa3Wiwzn2cqhqyfnHCoixn9QB6NvhV1MIkazNA9i/ijUs4wGqw63AGwuJ9z8lWmAmHY7ImzpzESR107QebDbwRAi6RqF/M6kdw7IL59SdjfFvp6RI1buk+9P1qrUBxXDn4nBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745763867; c=relaxed/simple;
-	bh=CYELTFpR5RO+UOyF9XdelPjNz+Bh+smiwCLw6IrLdZ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BfydODlMa+fxj7gR9FXW2CyQJphJdPUlVmzEdlXFyYKYGXTU85rbJDO2BmOMRIcKWHpK/TbMws6n+pF/qYC5ZC9repbfgEV/wjazLCCFvMm4McdjJJMcclcu2ZtEiTz8mChkmITjv7cidEJ2gm5EK/MsBzeU1h3KuFb8Wkc8zi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUz0RzZK; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745763905; c=relaxed/simple;
+	bh=Ps7sTe8S6LYJCX4j2bIheJAnRl1QnQmJk/rY3rgwsbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvlnIjFAt+Ban1ZRPb+kBrCPARoEd/iaOK8G48zm+5tyzlOcfQyvSSL6S68KTiqb7zYhMhXj2WPkvowowQ1bPaHnSOlPyvJ1otZbHeIu6VtrV+OjOercw5SkleNJ/mAfAWgNU7glPLDSsr0SxYYKDQ7GmhiSckaF1bXe/i3OyCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fs4koffE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUz0RzZK"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso7385117a12.3;
-        Sun, 27 Apr 2025 07:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745763864; x=1746368664; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bTdCSXyXKLGjb4xxRuXuC2QAcp6Bhl4G5LPZiZnxAkg=;
-        b=CUz0RzZKR05KT7vLGB8Rn5afblt+COzKsUCyeZ8JqLq2msC9J+R6ej5B2cNnKYXpqZ
-         BEqMOLs4MlqUStdcW6t5YA8rhr2cep/5X/zx43YnzmQdmcZPmZf3Kcqog271b+cWqGa6
-         VJFm1O6xO+SA3NszDUSM40+PuFuZSrbQBtN0s6+qs54HLZ5u+67pPgu2hfIlgAlvLLuF
-         AwWuh4kAx8lm5OYFP+WJ2Mskdl7Ojl7AM0DtBzaJiCO28OTfkGM830l5Wy6hT04KT9lo
-         tpW48Zkw+9jirf2A1qBvs8PXGuOy0wf5tNoyJ4inDptr0zTuxyEDIqwiBxC4YRffbq0Z
-         mexQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745763864; x=1746368664;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bTdCSXyXKLGjb4xxRuXuC2QAcp6Bhl4G5LPZiZnxAkg=;
-        b=GOrhTMJiuoo0xAoHPiQDUa/iyugy3wuz0CkX0hDXNIUTd3+V5rK2IbfJYVT8SXh4SB
-         sOKG2HQz6M4nBrVcFZs9BD0R/UalY9Fok3QXPjo729X9hBdFOP0ZzYVONLShdygz+fqt
-         sJXFKWe5cINXvqVqiEuUwpw6MBT44U6/fHA4TBg5JtMGfAn3gtHs8uWLWSsxoqxBIfXF
-         NuKaoXval8kmzcI5D3VJmQCF/oNK49mQqo6Z7xg5O6gX6skUPmKsBIMNiVtxkU9Oxmg4
-         ZmW+o5tG6QNntROR0UDYWz38JCH44sp6RfyPtH1avI6klqrqJF9r1a2qhuGX5xoJtOKv
-         2SxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPt0x6lHUEvrvZhRP3u5znZeERZn1KzlsAR0deTBVWZPMwhAmS0LapezBpfnGAFh5SLG5KC9Rl899KFQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZriykhYm0X0FNM4WX1p8XUG3bAURiX8CaH5PUA/NpKBEN8ZFk
-	t5kk0URWnv2d19/A8XVmCJgvDTz+kx7/XQFTR+mHY5hjo2j6bsqf
-X-Gm-Gg: ASbGncvMM/X9vfP+PTe5NnEMLOXnYaCqPINMSviwp9iZf1WuSdUZzfLcQg2z5PngkLV
-	fp7em6SLTupiCRlUulqiUTLb0WtDKenqhH7befM+y5aZYAVAR2gIlQiTEwlnrSr6CbMhX3aCnfE
-	0rYn8ZfJH79P6M5zMoa2Jxo6Yozlcm9SRTrhKEZcXGJ9+oLGa7AtDqnGRczW3HPfPPAEZE4U5eC
-	dRej1E7Z6WHbZTtgeU1Kr3BWB1MJKaEGYjFQOHl2cX8GsJWgeHFoLbqtr9xLDm0i76D+3v7HU+l
-	WZiAO87BVkgwMnzSh6xMtKzjrcA5R8OT1K0HCBKAfzgMj5qzSnoY7B8LgK4hvxZ2pWeOZL8dGlC
-	FvkQdcQ6eiJ0rCX9Bw1vIZbTXWFvb7OQb7n0LPgVVB2jbiXnAKCV8Gl5aQ4s7VCRbP98Vu80tl9
-	0hBG8n5+2pGZjb
-X-Google-Smtp-Source: AGHT+IEGGx+E6y0ja04a6qnyw/DrZz43zsPPJqJEON+oYaLNJPZ/6oFZnmp5gDVsYnh60N40JF2ChQ==
-X-Received: by 2002:a17:907:97c9:b0:aca:d54d:a1f8 with SMTP id a640c23a62f3a-ace711175a7mr969009066b.31.1745763863610;
-        Sun, 27 Apr 2025 07:24:23 -0700 (PDT)
-Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-1150-51db-ebed-e084.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:1150:51db:ebed:e084])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed6fea9sm447956566b.127.2025.04.27.07.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 07:24:23 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: andy@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	thomas.andreatta2000@gmail.com
-Subject: Re: [PATCH 2/2] Staging: media: atomisp: style corrections
-Date: Sun, 27 Apr 2025 16:24:22 +0200
-Message-Id: <20250427142422.88271-1-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAHp75Vef0DuupHr9CAaU9qnDEw6O6KRPaO51uzrKXPwvfAiiJA@mail.gmail.com>
-References: <CAHp75Vef0DuupHr9CAaU9qnDEw6O6KRPaO51uzrKXPwvfAiiJA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fs4koffE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745763901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tmwk3zN05evJEspzQM+NK/fIVHBMNvMlBhD9GL7xf0s=;
+	b=Fs4koffE2yGBnrvWcFZiWY525VdBEYs++6zLJLxtQLYEi7lGo+N+HI+B2r40FP8ftsJ4eR
+	L0JRFYkYmKlH+griUaOzDlFtrxTiJBQhLG9FSJ4MpgiLWQtCJbQmguuGyQMLdjbxXWr7XI
+	c6pWuLBqDx5b128cRb+aUUDVSb7ORgQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-167-b92HLJ8VP0-OFpGc71vt3A-1; Sun,
+ 27 Apr 2025 10:24:53 -0400
+X-MC-Unique: b92HLJ8VP0-OFpGc71vt3A-1
+X-Mimecast-MFC-AGG-ID: b92HLJ8VP0-OFpGc71vt3A_1745763888
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9EF7F195608C;
+	Sun, 27 Apr 2025 14:24:47 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EEC51195608D;
+	Sun, 27 Apr 2025 14:24:40 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun, 27 Apr 2025 16:24:09 +0200 (CEST)
+Date: Sun, 27 Apr 2025 16:24:01 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 07/22] uprobes: Remove breakpoint in
+ unapply_uprobe under mmap_write_lock
+Message-ID: <20250427142400.GB9350@redhat.com>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-8-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421214423.393661-8-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Sun, Apr 27, 2025 at 12:41:34PM +0300, Andy Shevchenko wrote:
-> On Sat, Apr 26, 2025 at 11:15 PM Thomas Andreatta
-> <thomasandreatta2000@gmail.com> wrote:
-> >
-> > Corrected consistent spacing around '*' and braces positions
-> 
-> Missed period.
-> And what is the correct spacing and why?
+On 04/21, Jiri Olsa wrote:
+>
+> @@ -1483,7 +1483,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+>  	struct vm_area_struct *vma;
+>  	int err = 0;
+>
+> -	mmap_read_lock(mm);
+> +	mmap_write_lock(mm);
 
-I agree that the spacing looks weird and I questioned it too, but the script
-checkpatch.pl highlights as error:
-`sh_css.c:336: ERROR: need consistent spacing around '*' (ctx:WxV)`
-`sh_css.c:338: ERROR: need consistent spacing around '*' (ctx:WxV)`
+So uprobe_write_opcode() is always called under down_write(), right?
+Then this
 
-Should this be ignored because the script tries its best and it becomes common
-sense that the suggested spacing is "wrong"?
+	* Called with mm->mmap_lock held for read or write.
 
-> 
-> ...
-> 
-> >  static unsigned int get_crop_lines_for_bayer_order(const struct
-> > -       ia_css_stream_config *config);
-> > +       ia_css_stream_config * config);
-> >  static unsigned int get_crop_columns_for_bayer_order(const struct
-> > -       ia_css_stream_config *config);
-> > +       ia_css_stream_config * config);
-> 
-> No, this makes it the opposite. Please, read Coding Style if it sheds
-> a light on this. In any case the kernel style is to avoid spacing
-> between asterisk and name.
+comment should be probably updated.
 
-Understood. I'll resubmit with the correct spacing.
+And perhaps the comment above mmap_write_lock() in register_for_each_vma()
+should be updated too... or even removed.
 
-Thanks,
-Thomas
+Oleg.
+
