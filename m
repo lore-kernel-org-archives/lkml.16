@@ -1,115 +1,326 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A8D1610C;
-	Sun, 27 Apr 2025 12:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8972E40B;
+	Sun, 27 Apr 2025 13:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745758791; cv=none; b=Wade4wa4f0hme6/g2mOUMeY4hPOzvLyTgKZAJ5iF/CPsnBqseTvmSUlW+15aCIBxGH2Hfzn/kBqnfKzu2sve8xsgU7TZ4E/3ilkF7IUXNw/Xqw7zp/eA1uUlEeYIx4kef2ex99yw9EeUtr8FlbNfTKastoebOhfKOSxYIOw8Lv8=
+	t=1745758839; cv=none; b=IPZwIbSmIiI2rxAxYlrdsB5UpGHvcKLczLggP8JgTVgi/DZ5afqYsaYdzCC3DHq60OY6b5ulVzcRh4ec5vzfIAtd3R1banY2xjLgmRdFYSVzO59700UZ2GK4dOs+G8oGxEyWtcUYESspfKp9nKLIznxv/b5aGxcWsE5IbnsTyVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745758791; c=relaxed/simple;
-	bh=DYfyxH/ZFe6ArRfv/bzScnGtIGzfArNFDSQdJeA1yCU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mHqBFIcKGTAWQi0/DAdpz2ke/USIrifjBt8Dmc8zCo9TuLF97y41mZEwO1xQYZRA5fP6WsektxK6kbekkAWUO5aYKKnrnDikHHGR19KE5q9VlzDcFqtvP/rM8HN0SLmwlojJ2nJX/YXEuYJs40lYzGh4yomn2As2ZVCFVWDECAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W+o3lnqk; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745758839; c=relaxed/simple;
+	bh=6A3YPxnYIajY2KKSBg8ZauVcaWCp3yZ98jnEczEU+Zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iXTEjmgKEUpJPkJKKXmjfyrqw4nj6jpDJQWVr0zSiaq05bCqV2aa9aZmSdkm0DNA/Pxo6tMX9vRwv2BbZJByZ4OsBQd4KTFHHh9sRoXmq1UYBSeE3bKoTJauRZUj8ObSPyb/NBBh1PLd+ccmnN7YppRIn4HN99EcYU2nnyA1gdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfH5MD3w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W+o3lnqk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=DQSPcZTtwb3AyD/BZAXLpksdXqfkUHT2zq46CYmEdMo=;
-	b=W+o3lnqkGrJokPTPdUKgRc8dwTJEGEBZXqXDzpzBAphAGv0S3ucsCC4ciSNyAw
-	54nZPdtYvnX8mrIZkIeARrVv6XR6YPeuLTUchZ6CIOc/K3nrrY9ggild7Dg5fJ5o
-	a+uwQyRZELgr/MsaeTeo5jAxITNQvaWR0fHQYNyhcuSbY=
-Received: from [192.168.142.52] (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgC3lQ4ZKg5onKoZBA--.22488S2;
-	Sun, 27 Apr 2025 20:59:08 +0800 (CST)
-Message-ID: <40658509-180d-435b-aa1c-663e7536eba2@163.com>
-Date: Sun, 27 Apr 2025 20:59:05 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfH5MD3w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3D4C4CEE3;
+	Sun, 27 Apr 2025 13:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745758839;
+	bh=6A3YPxnYIajY2KKSBg8ZauVcaWCp3yZ98jnEczEU+Zw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jfH5MD3wGcHrr1g+CVZ1f3l9Z3m9/U/TcOFUhMXxhVS9xJU7cZflsWWTgf4puPond
+	 pxJvxa5huKDU5I4Zjpcpld2SSx+MTXbHBJPj7WfiYklQCUrdVKpC1/bug26JOWnDX6
+	 4MeyBkJOEouGZyf4it/LGCSt8yTXvtE2wSGBecPSwYN1SIPaBqVVMfk7yQcej/aC1/
+	 7ZEfbEsjQyXU+fw/GQXGEJwE6UeA+nRlo22WidgdsssY/zvelU+f8YmryADmT2PQng
+	 5VfQsu7xn1Jys1A8E0bkFTL+6Lb64nwu+cfw10/u7poWuaTP/6u53nbd+hvkXSxIhg
+	 tt+eOovsvap7Q==
+Date: Sun, 27 Apr 2025 14:00:32 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v7 10/11] iio: accel: adxl345: add coupling detection
+ for activity/inactivity
+Message-ID: <20250427140032.3112f51b@jic23-huawei>
+In-Reply-To: <20250421220641.105567-11-l.rubusch@gmail.com>
+References: <20250421220641.105567-1-l.rubusch@gmail.com>
+	<20250421220641.105567-11-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] PCI: dw-rockchip: Reorganize register and bitfield
- definitions
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com,
- shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250423153214.16405-1-18255117159@163.com>
- <yhcnrmmmphqz2egrws5sxobysf6ntnd7xxl5vuzo34y5aunbj5@pe7i352kgdm7>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <yhcnrmmmphqz2egrws5sxobysf6ntnd7xxl5vuzo34y5aunbj5@pe7i352kgdm7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PigvCgC3lQ4ZKg5onKoZBA--.22488S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWr4fAFykAw45XrWfGF4Uurg_yoW5GFy8pa
-	s5Ga93Cr47Jw4xAan2yr1xZFy0g3ZxAF98Zws8Kw1jyay5X3WfXFWS9F1Y9ry7Xr4fKr1I
-	vw47Xw1I934Yva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UloGQUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwU8o2gOJqRbegAAsQ
 
+On Mon, 21 Apr 2025 22:06:40 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-
-On 2025/4/27 19:10, Manivannan Sadhasivam wrote:
-> On Wed, Apr 23, 2025 at 11:32:11PM +0800, Hans Zhang wrote:
->> 1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
->> 2. PCI: dw-rockchip: Reorganize register and bitfield definitions
->> 3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
->>
->> ---
->> Changes for v3:
->> - Delete the redundant Spaces in the comments of patch 2/3.
->>
->> Changes for v2:
->> - Add register annotations to enhance readability.
->> - Use macro definitions instead of magic numbers.
->>
->> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
->>
->> Bjorn Helgaas:
->> These would be material for a separate patch:
->>
->> - The #defines for register offsets and bits are kind of a mess,
->>    e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
->>    PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
->>    PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
->>    names, and they're not even defined together.
->>
->> - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
->>    PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
->>
->> - PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
->>    Sure wouldn't guess that from the names or the order of #defines.
->>
->> - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
->>
->> - Submissions based on the following v5 patches:
->> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
->> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
->> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
+> Add coupling activity/inactivity detection by the AC/DC bit. This is an
+> addititional enhancement for the detection of activity states and
+> completes the activity / inactivity feature of the ADXL345.
 > 
->> https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+
+I've dragged the table from the earlier patch into this one that actually uses it.
+However I'm a little unsure on exactly how we present this feature.
+
+So until those questions are resolved I've dropped the patch (you'll need
+to rebase on my testing branch and fix up missing table for v8).
+
+The bit that made me not apply this series (with some tweaks) was that
+I'd expect enabling AC events to be visible as disabling of DC ones.
+
+Also, I just noticed you aren't pushing the new event types.
+
+These controls need to look like a separate event detector hardware block
+with it's own controls + its own event codes.  The fact only this or
+the DC version can be enabled at any time should only be exposed in the
+reported state, not apparent via what files we expose etc.  On some
+other device they may be independent hardware blocks.
+
+Note I'd also expect to see value controls for these new events. You may
+need to cache the values and update on event change if the meaning is
+very different.   That's because the expectation would be an event
+setup sequence from userspace is:
+
+1) Set value of threshold
+2) Enable event
+
+On a change of event (due to shared hardware) The value set may scramble
+the event already enabled.
+
+So write the values into a cache and update to the right one when changing
+event.
+
+> ---
+>  drivers/iio/accel/adxl345_core.c | 162 ++++++++++++++++++++++++++++++-
+>  1 file changed, 159 insertions(+), 3 deletions(-)
 > 
-> Because of *this* dependency, I couldn't apply this series. I'd suggest to
-> respin this series avoiding the above mentioned patch and just rebase on top of
-> controller/dw-rockchip branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
+> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
+> index b25efcad069b..c07ad5774c8a 100644
+> --- a/drivers/iio/accel/adxl345_core.c
+> +++ b/drivers/iio/accel/adxl345_core.c
+> @@ -37,7 +37,9 @@
+>  #define ADXL345_REG_TAP_SUPPRESS_MSK	BIT(3)
+>  #define ADXL345_REG_TAP_SUPPRESS	BIT(3)
+>  #define ADXL345_REG_ACT_AXIS_MSK	GENMASK(6, 4)
+> +#define ADXL345_REG_ACT_ACDC_MSK	BIT(7)
+>  #define ADXL345_REG_INACT_AXIS_MSK	GENMASK(2, 0)
+> +#define ADXL345_REG_INACT_ACDC_MSK	BIT(3)
+>  #define ADXL345_POWER_CTL_INACT_MSK	(ADXL345_POWER_CTL_AUTO_SLEEP | ADXL345_POWER_CTL_LINK)
+>  
+>  #define ADXL345_TAP_Z_EN		BIT(0)
+> @@ -91,6 +93,11 @@ static const unsigned int adxl345_act_thresh_reg[] = {
+>  	[ADXL345_INACTIVITY] = ADXL345_REG_THRESH_INACT,
+>  };
+>  
+> +static const unsigned int adxl345_act_acdc_msk[] = {
+> +	[ADXL345_ACTIVITY] = ADXL345_REG_ACT_ACDC_MSK,
+> +	[ADXL345_INACTIVITY] = ADXL345_REG_INACT_ACDC_MSK,
+> +};
+> +
+>  enum adxl345_odr {
+>  	ADXL345_ODR_0P10HZ = 0,
+>  	ADXL345_ODR_0P20HZ,
+> @@ -204,6 +211,18 @@ static struct iio_event_spec adxl345_events[] = {
+>  			BIT(IIO_EV_INFO_RESET_TIMEOUT) |
+>  			BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
+>  	},
+> +	{
+> +		/* activity, activity - ac bit */
+Comment says activity and inactivity but channel type wise this
+is just activity (as rising)
 
-Dear Mani,
+> +		.type = IIO_EV_TYPE_MAG_REFERENCED,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +	{
+> +		/* activity, inactivity - ac bit */
 
-Thank you very much for your reply and suggestions. I have submitted the 
-V4 patch based on the controller/dw-rockchip branch. Please help merge 
-it. :)
+Likewise this seems to be inactivity.  Should this be in the x&y&z
+channel, not this one?
 
-V4:
-https://patchwork.kernel.org/project/linux-pci/cover/20250427125316.99627-1-18255117159@163.com/
+> +		.type = IIO_EV_TYPE_MAG_REFERENCED,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+>  };
+>  
+>  #define ADXL345_CHANNEL(index, reg, axis) {					\
+> @@ -320,6 +339,69 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
+>  
+>  /* act/inact */
+>  
+> +static int adxl345_is_act_inact_ac(struct adxl345_state *st,
+> +				   enum adxl345_activity_type type, bool *ac)
+> +{
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &regval);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (type == ADXL345_ACTIVITY)
+> +		*ac = FIELD_GET(ADXL345_REG_ACT_ACDC_MSK, regval);
+> +	else
+> +		*ac = FIELD_GET(ADXL345_REG_INACT_ACDC_MSK, regval);
+> +
+> +	return 0;
+> +}
+> +
+> +static int adxl345_set_act_inact_ac(struct adxl345_state *st,
+> +				    enum adxl345_activity_type type, bool ac)
+> +{
+> +	unsigned int act_inact_ac = ac ? 0xff : 0x00;
+> +
+> +	/*
+> +	 * A setting of false selects dc-coupled operation, and a setting of
+> +	 * true enables ac-coupled operation. In dc-coupled operation, the
+> +	 * current acceleration magnitude is compared directly with
+> +	 * ADXL345_REG_THRESH_ACT and ADXL345_REG_THRESH_INACT to determine
+> +	 * whether activity or inactivity is detected.
+> +	 *
+> +	 * In ac-coupled operation for activity detection, the acceleration
+> +	 * value at the start of activity detection is taken as a reference
+> +	 * value. New samples of acceleration are then compared to this
+> +	 * reference value, and if the magnitude of the difference exceeds the
+> +	 * ADXL345_REG_THRESH_ACT value, the device triggers an activity
+> +	 * interrupt.
+> +	 *
+> +	 * Similarly, in ac-coupled operation for inactivity detection, a
+> +	 * reference value is used for comparison and is updated whenever the
+> +	 * device exceeds the inactivity threshold. After the reference value
+> +	 * is selected, the device compares the magnitude of the difference
+> +	 * between the reference value and the current acceleration with
+> +	 * ADXL345_REG_THRESH_INACT. If the difference is less than the value in
+> +	 * ADXL345_REG_THRESH_INACT for the time in ADXL345_REG_TIME_INACT, the
+> +	 * device is considered inactive and the inactivity interrupt is
+> +	 * triggered. [quoted from p. 24, ADXL345 datasheet Rev. G]
+> +	 *
+> +	 * In a conclusion, the first acceleration snapshot sample which hit the
+> +	 * threshold in a particular direction is always taken as acceleration
+> +	 * reference value to that direction. Since for the hardware activity
+> +	 * and inactivity depend on the x/y/z axis, so do ac and dc coupling.
+> +	 * Note, this sw driver always enables or disables all three x/y/z axis
+> +	 * for detection via act_axis_ctrl and inact_axis_ctrl, respectively.
+> +	 * Where in dc-coupling samples are compared against the thresholds, in
+> +	 * ac-coupling measurement difference to the first acceleration
+> +	 * reference value are compared against the threshold. So, ac-coupling
+> +	 * allows for a bit more dynamic compensation depending on the initial
+> +	 * sample.
+> +	 */
+> +	return regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTRL,
+> +				 adxl345_act_acdc_msk[type], act_inact_ac);
+> +}
 
-Best regards,
-Hans
+>  static int adxl345_find_range(struct adxl345_state *st, int val, int val2,
+> @@ -797,9 +886,51 @@ static int adxl345_find_range(struct adxl345_state *st, int val, int val2,
+>  
+>  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
+>  {
+> -	return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
+> +	unsigned int act_threshold, inact_threshold;
+> +	unsigned int range_old;
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &regval);
+> +	if (ret)
+> +		return ret;
+> +	range_old = FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
+> +
+> +	ret = regmap_read(st->regmap,
+> +			  adxl345_act_thresh_reg[ADXL345_ACTIVITY],
+> +			  &act_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap,
+> +			  adxl345_act_thresh_reg[ADXL345_INACTIVITY],
+> +			  &inact_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
+>  				 ADXL345_DATA_FORMAT_RANGE,
+>  				 FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, range));
+> +	if (ret)
+> +		return ret;
+> +
+> +	act_threshold = act_threshold
+> +		* adxl345_range_factor_tbl[range_old]
+> +		/ adxl345_range_factor_tbl[range];
+> +	act_threshold = min(255, max(1, inact_threshold));
+> +
+This is first use of the range table. So introduce that in this patch.
+
+> +	inact_threshold = inact_threshold
+> +		* adxl345_range_factor_tbl[range_old]
+> +		/ adxl345_range_factor_tbl[range];
+> +	inact_threshold = min(255, max(1, inact_threshold));
+> +
+> +	ret = regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_ACTIVITY],
+> +			   act_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_INACTIVITY],
+> +			   inact_threshold);
+>  }
+>  
+>  static int adxl345_read_avail(struct iio_dev *indio_dev,
+> @@ -938,7 +1069,7 @@ static int adxl345_read_event_config(struct iio_dev *indio_dev,
+>  				     enum iio_event_direction dir)
+>  {
+>  	struct adxl345_state *st = iio_priv(indio_dev);
+> -	bool int_en;
+> +	bool int_en, act_ac, inact_ac;
+>  	int ret;
+>  
+>  	switch (type) {
+> @@ -983,6 +1114,21 @@ static int adxl345_read_event_config(struct iio_dev *indio_dev,
+>  		if (ret)
+>  			return ret;
+>  		return int_en;
+> +	case IIO_EV_TYPE_MAG_REFERENCED:
+> +		switch (dir) {
+> +		case IIO_EV_DIR_RISING:
+> +			ret = adxl345_is_act_inact_ac(st, ADXL345_ACTIVITY, &act_ac);
+
+Do we not need a check in the enabling of the DC events as well?  If we have enabled
+AC the DC one should report disabled (and if we enable that again then we should
+update this.
+
+> +			if (ret)
+> +				return ret;
+> +			return act_ac;
+> +		case IIO_EV_DIR_FALLING:
+> +			ret = adxl345_is_act_inact_ac(st, ADXL345_INACTIVITY, &inact_ac);
+> +			if (ret)
+> +				return ret;
+> +			return inact_ac;
+> +		default:
+> +			return -EINVAL;
+> +		}
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -1019,6 +1165,16 @@ static int adxl345_write_event_config(struct iio_dev *indio_dev,
+>  		}
+>  	case IIO_EV_TYPE_MAG:
+>  		return adxl345_set_ff_en(st, state);
+> +	case IIO_EV_TYPE_MAG_REFERENCED:
+> +		switch (dir) {
+> +		case IIO_EV_DIR_RISING:
+> +			return adxl345_set_act_inact_ac(st, ADXL345_ACTIVITY, state);
+
+Similar to read path.  The DC events should be affected by this as well as the AC ones.
+
+> +		case IIO_EV_DIR_FALLING:
+> +			return adxl345_set_act_inact_ac(st, ADXL345_INACTIVITY, state);
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+>  	default:
+>  		return -EINVAL;
+>  	}
 
