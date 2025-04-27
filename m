@@ -1,149 +1,63 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D289E1FA178;
-	Sun, 27 Apr 2025 22:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA2FCA5A;
+	Sun, 27 Apr 2025 22:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745793687; cv=none; b=cc8NaiIAUk6i4ozlucxgqzA2gJicG9FDFewKCOlsVIGbTd/6S+hgtmAVpCzQ9aQ9O5Vs01sN9sT2H8Wg5gQDE+N7eIGNIkae3oZ7H+ca5IsRpfH/EKHH10GjMEJY6PH2MXcpQsFlVugE2tkvvsYRzWGoYOGH8VAT9yVfQ4pOHqQ=
+	t=1745794219; cv=none; b=Cu+z5AeMPsOPMd1l5T3S34gLE+FEVxIErlA/AFs8i5Ss53XSwdkiorD2NUWDiorJ85/+BfeiU8owLXb3sXPni/OK539zg2xBZxrLOyhMV8IvphBwY3wBo3aomgbvaILSgQIV9/8CA9LOq3b0sOsid0pKqykWAme29VZwR3HM47k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745793687; c=relaxed/simple;
-	bh=wtjd8L/0azCH9T+z6iWF+p97hxjlqggSKTwSzYAvbEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=or/4GYAmcv4oIJ9x19WB7iqnHqesDtI/+wRm7ZNNL8GxImyAOkDfc7MlE8XEIQuYEUuJQ9EVXKKtPlqF4q+nXKt3Ng9e1C+mGvilqMEsKTArsiuav5LL9eIu9T3FTPcGryez3NKLpT7eWzZsDYPuLWPezfBCgwlVyjG3ZPfc9kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GERQ3Cm3; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GERQ3Cm3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745793681;
-	bh=h8Wke9512R7pLsZpDTyHYp9yzeWwTS+aTzs0lF2qGso=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GERQ3Cm3q5WA0s/eHDRDK250fBFKxjgdWFLnsQiD14tCm8ZR8ZO1XQjMrDjEnbZwV
-	 OmK7YU9vLMN/M96WDb8jg22p/faiOIuQdPSAIdL9C/pYnGNtF1wBFCLCjK+MF1JF+2
-	 qCaZuWC7WGH6Rb8ZlkWgkjbNxFnCId63ztc1+vZlaMTrJnuMHzYVBcqHBn5FE381oo
-	 EXa5vbd41973WlMc0WjkjgG5R/GQBvR7l2Gc6gsBC+DibXSrVKAsrTh3vMm/24ctnV
-	 0FdF/2ggXVwwRzREEgiw140exQm+Ln2Y5zEqF5cDbfdJasbqFuYc2LUW3N240XKi2U
-	 N75V+7GcDlt/Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm1lL5qwqz4wcx;
-	Mon, 28 Apr 2025 08:41:18 +1000 (AEST)
-Date: Mon, 28 Apr 2025 08:41:17 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: luogengkun@huaweicloud.com, Andrew Morton <akpm@linux-foundation.org>
-Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, dianders@chromium.org,
- joel.granados@kernel.org, song@kernel.org, Thomas Gleixner
- <tglx@linutronix.de>
-Subject: Re: [linux-next]Build Failure: kernel/watchdog.c:936:2: error: too
- many arguments
-Message-ID: <20250428084117.31215b8c@canb.auug.org.au>
-In-Reply-To: <339e2b3e-c7ee-418f-a84c-9c6360dc570b@linux.ibm.com>
-References: <339e2b3e-c7ee-418f-a84c-9c6360dc570b@linux.ibm.com>
+	s=arc-20240116; t=1745794219; c=relaxed/simple;
+	bh=5aEq1QPIGztKU2UH0UG2ljvohKb3aCC/THa7DUSt13w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pXisqQihreVXC5KxH20EF7a/bOGV4UXxQ3BJ1sV24L7NTps3ubbKaQxkCZ8UqNmS5FJUNadQwd9jakRjCc3muFOJoukjlBnnfxOxstyXpId2A6OSHCdnJZNW2V2pz6txrPKu+VnQZbkrPV24t2y73zLpdAvth7YDWUmzl8q+y/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51DEC4AF0C;
+	Sun, 27 Apr 2025 22:50:18 +0000 (UTC)
+Received: by venus (Postfix, from userid 1000)
+	id BC6C4180F9A; Mon, 28 Apr 2025 00:50:16 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Sebastian Reichel <sre@kernel.org>, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250307-reboot-mode-chars-v1-1-d83ff95da524@linaro.org>
+References: <20250307-reboot-mode-chars-v1-1-d83ff95da524@linaro.org>
+Subject: Re: [PATCH] power: reset: reboot-mode: better compatibility with
+ DT (replace ' ,/')
+Message-Id: <174579421676.295785.14214055614630227030.b4-ty@collabora.com>
+Date: Mon, 28 Apr 2025 00:50:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5C_pjXH_9j8aHU6ya_il4iO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.2
 
---Sig_/5C_pjXH_9j8aHU6ya_il4iO
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Fri, 07 Mar 2025 07:50:18 +0000, André Draszik wrote:
+> This driver's purpose is to parse boot modes described in DT, via key
+> (node name) / value pairs, and to match them to a reboot mode requested
+> by the kernel. Unfortunately, DT node names can not contain certain
+> characters, like space ' ' or comma ',' or slash '/', while the
+> requested reboot mode may.
+> 
+> This is a problem because it makes it impossible to match reboot modes
+> containing any of those characters.
+> 
+> [...]
 
-On Sat, 26 Apr 2025 20:39:26 +0530 Venkat Rao Bagalkote <venkat88@linux.ibm=
-.com> wrote:
->=20
-> I am observing below build failure on IBM Power8 server with linux-next-2=
-0250424 repo.
->=20
-> This issue seems to be introduced by the below commit. After reverting th=
-e below commit, kernel build is successful.
->=20
-> Bad Commit: 6b07f9a0fa41 watchdog: fix watchdog may detect false positive=
- of softlockup
->=20
-> Note: To hit this issue, one should first resolve this [1] <https://lore.=
-kernel.org/all/e8bf676e-7bf0-4896-b104-ac75e1b22d2e@linux.ibm.com/>
->=20
-> Repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> Branch: master
-> GCC: 8.5.0 20210514
-> ldd (GNU libc) 2.28
->=20
-> Attached is the .config file.
->=20
-> Errors:
->=20
-> kernel/watchdog.c: In function 'lockup_detector_reconfigure':
-> kernel/watchdog.c:936:2: error: too many arguments to function '__lockup_=
-detector_reconfigure'
->  =C2=A0 __lockup_detector_reconfigure(false);
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/watchdog.c:926:13: note: declared here
->  =C2=A0static void __lockup_detector_reconfigure(void)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/watchdog.c: In function 'lockup_detector_setup':
-> kernel/watchdog.c:940:2: error: too many arguments to function '__lockup_=
-detector_reconfigure'
->  =C2=A0 __lockup_detector_reconfigure(false);
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/watchdog.c:926:13: note: declared here
->  =C2=A0static void __lockup_detector_reconfigure(void)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/watchdog.c: In function 'proc_watchdog_update':
-> kernel/watchdog.c:962:2: error: too many arguments to function '__lockup_=
-detector_reconfigure'
->  =C2=A0 __lockup_detector_reconfigure(thresh_changed);
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/watchdog.c:926:13: note: declared here
->  =C2=A0static void __lockup_detector_reconfigure(void)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> If you happen to fix this, please add below tag.
->=20
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Applied, thanks!
 
-Yeah, the CONFIG_SOFTLOCKUP_DETECTOR unset version of
-__lockup_detector_reconfigure() was not updated :-(
+[1/1] power: reset: reboot-mode: better compatibility with DT (replace ' ,/')
+      commit: ca3d2ea52314286dda597f03b07ed759c5798fba
 
-This is now commit
+Best regards,
+-- 
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
-  45c4eb661074 ("watchdog: fix watchdog may detect false positive of softlo=
-ckup")
-
-in the mm-nonmm-unstable tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/5C_pjXH_9j8aHU6ya_il4iO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgOso0ACgkQAVBC80lX
-0GymOQf6AkqjWHoMD+xeE+Vc/n/Scxt9D4TlOKi7RAit52MZiyUNZoopiHxt+jqF
-SG0qkc2oeuGBkX0c07GIKbVKuazvqCRfA7f2Nn1NRomDQOQrPtkCCbUAoU21SNJS
-+8PyDVUzpEoF9/NF0cEfJ3eRKzetuQTuMpubGfnJLPOwqubWTSRqX1nprUbsVry2
-fYLURanrBUT5aWBtCBderR+kioWuJS70qTVZiHuPnyrJ/PjmrhTaVftTm8vkfJCG
-Ttx2X3MeWV//tuPAHGbh25wpq6zZaMkT8LgAwWK2koaJmNzEoA1DkN/C26KJZfct
-9ZtKNUxT3r8OjJJaz6SuEq63H9Bl/Q==
-=n8ip
------END PGP SIGNATURE-----
-
---Sig_/5C_pjXH_9j8aHU6ya_il4iO--
