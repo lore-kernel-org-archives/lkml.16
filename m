@@ -1,185 +1,184 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011045.outbound.protection.outlook.com [52.101.70.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E8124503E
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745742085; cv=none; b=NF7MuNwtVz1vhSDeQuYkWwXpTlO7v6XzHk9bhxQRbKvlbL6jxuvRqwV8Y9tAbbTWLV2Y015NhXkHZP/1PpbWLVBUFDQx8wfz+DU6p8G32ZcemB++6BlRs7PeXwNCHcpQc79tbM6D2i/ZqUHvSChJ7SKo51cv7tDYoU9b5aSRJlo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745742085; c=relaxed/simple;
-	bh=buMXtnro85aLbJ8vzlE+WVBcMzVVJdOoueenXL85wUI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OLEIEj/VMAGFQR/lo73nDJKa7qPW27JmaoTFyi4Q5H0S9dN5z/TpFjaPB3H5+8BFv9t84IVsyXdWM0Naqc8yYZ8GvPBT4Let4Tv4stVCUmv9PyL6HeBsmbsSnLPGWMQmUmjQe2gb885IwUJ1vBARplgoCEeLF0LutZFS3iUl38k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85ed07f832dso354916639f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 01:21:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745742082; x=1746346882;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+vAf/JFA/8xW4355KhkGlJwhLhf96j10N4gFAjUa7/E=;
-        b=rRCpCwTA+RWlGXcWtE/SToeoKoiibfCFbZpgEp9dWiY0yOxaNedwC+scHpyojZMfaE
-         VHP6khBs1tKrimd773jEer30ow1RkhaCEUeiMv9MY4K40PwrM7NXa2k7PLgLz5XsMBAJ
-         2y878HBNlDTjoq13lrP0PI9rklFlzyU5+3ewbwEFlk/QrqEsybe+GoAnjsSsk0PoelTb
-         a4hOC0I0Nvljm9kIKX7K4KECM60IB5cWddKlamrw5ajdyamhI+2erJUcNuQTsvmuwT9Z
-         GRYKhTzmXq43B1AMDh+9SJtNPSI0g3jGN5UANxouVBAufQdIu+f5Rput6ytHOl6KWuIH
-         rRug==
-X-Forwarded-Encrypted: i=1; AJvYcCU3rWsQTPl5npaxIM7IqybQFIY4sR04ymIH9dkGMtCSyOLVEA04wzh5+1GLc+q1fGfbn40DVEVFchfUCds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjtRhRO8AF1+QUrFoWS1K8lR06BmdFUUiK9L2xY/+S0SF5G7qI
-	DvPdWRtVzCkyGBRj64tv/C9TnGPEgWicJ+Ek4MRaDWpkANMObr/czhED5zmJasY6LIW/UINzZxu
-	/58OF03+PrJEQ630GhPoarwJiWcQIM4EgrLjUCw/VyYnvt4+Ob6NdOJg=
-X-Google-Smtp-Source: AGHT+IGE7hEw88NJG3K6Qu+an7B7jyY6Me8dPkz4tLYNe3C6IrTsSxcikrvR7eDOrshYhqZ7dVNPNAvG4BlInsb2fOMtRDDeBa2k
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1292459FB;
+	Sun, 27 Apr 2025 08:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745742109; cv=fail; b=dcA74uEY6Cu2+wEWGWNgSwayxD0hQSkIfbgTLYas5kNTLBPDDie82gL2sFIpTybQeNhD4yiim7UuN7/3YqIim8x4UXJ2ZZppPytXg1F8YQ07Qw3Kx3ccuEQI4ocUWdWrjO03Jzi1EuB5G4M6FsUjd2BVZau8XcWMoSQzN98E1Sw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745742109; c=relaxed/simple;
+	bh=xdy33f+wvVfh8uILDTuHQ49dS9/alBQqAogYoYYkEW4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=L+PSU3NXijNc7ONe2RlKk29vFO+4eFxaG7DpUurUnZ30aHK4B0tQ2zhdoe3GF0OYKnT4Z8KyuqT+ERYDjavQqyZFELHaogiIcUI3moPAR1FINDT7Kwd+1ayvKPkxclhZ73pEXOKzU+OFMBYIx32kiTJyxGFP2SQyWdXk2ZnJ2zo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XlO6u0cG; arc=fail smtp.client-ip=52.101.70.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XlO6u0cG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QvI9OW6pdxmvXmp5/X8MEZYkP1JZ9UbHXBPAY8izHmHrs1baugXYfx1OCJPpisg+N8ZJa71y6SWTG6Q8RtCsHOOiK7H0dJ7SIhkW3vGs2itUxlYNjClhfN8bDllwpa7sS951rz3HrDBGbA7VINchxFj0hV2NrfErbG7krCLCPf7U/6j60oImRK5ejN3Vk6TBvPSwS1DL1PD/ye5LNfFjPtm9gq+MjINmQ1uXILvuhdeTQzXc1syEbjyVC6gt2m2QZtGE2iLSj/V1wqdGGGsWa58jovuZokLo8h3Sw4SWcgC/fNRYByONFDG/8MkJNgVQivJfU3pc6Z5zxxrymy+QYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oycBP6yqW27uZT51VlHXLLBBxUPx5auAcswmU0U4OWk=;
+ b=lbZHmkAd4GTYb3RT2ErLk/NHHjJIXpsCkA84zNV6rOzV+GE8TsDNbopOJs5fFhGqc9cJzW9EryoMIdZLzZFHGqjz3HPFel5KJ0lYkZq5Wx3hRYFnjbkoSHXr124OM7BZ6wgHM8mKXqw6r2NKrA1dy7oGzn/uda2itsTRk08+dhIzXoLLClLy/RqTfDNqVeaa601V1hLDTLtvSwKPJzGm0vipO8VZI6/smbegQCNR2QRy/WmHGjHum4osuLK9k0Oip3XSQjRbMfP632FxTewrdMc3hqpAvFhOUUmKPXwVKH16X1FCHnPxqrsxjnw6gq1utCqCslqn50aO6iB6D4nnVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oycBP6yqW27uZT51VlHXLLBBxUPx5auAcswmU0U4OWk=;
+ b=XlO6u0cGWffo+2bwwqBtx8ZXBAB88R35xyXYSh+j/kAQ8OwOWcVfFgo+JUS9xupSWO6+Y1V+1/gqF4cNwufhxVILPDJxncYT6vlocf8IedmhQP0Mll+5rENFkAU5B7+7JnkIrjv4w4FrLRAOGfcP9fGTKZP7BWbWKyUcfGX97WSni6SLcFuy3JBNgOAkrrnRiVgt3ZCxtsPND+RJ+ZMuVRctwsfNHuSFMFfMl6K5QNgOrP2cjTwCg7+zeiO6410CXGNicflfR0YmKne+2GO/bNuwCtIzeGYBt8vA6rYBsIAVjhyfvsE+CQD4LWgSHQfvc0t6zMW//RYJXi/njIr0KQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
+ (2603:10a6:800:293::14) by PAXPR04MB8474.eurprd04.prod.outlook.com
+ (2603:10a6:102:1dd::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Sun, 27 Apr
+ 2025 08:21:44 +0000
+Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
+ ([fe80::75ad:fac7:cfe7:b687]) by VI2PR04MB11147.eurprd04.prod.outlook.com
+ ([fe80::75ad:fac7:cfe7:b687%7]) with mapi id 15.20.8678.028; Sun, 27 Apr 2025
+ 08:21:42 +0000
+From: carlos.song@nxp.com
+To: miquel.raynal@bootlin.com,
+	Frank.Li@nxp.com,
+	alexandre.belloni@bootlin.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	conor.culhane@silvaco.com
+Cc: linux-i3c@lists.infradead.org,
+	imx@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V4 0/3] support different number of clocks for svc i3c controller
+Date: Sun, 27 Apr 2025 16:32:27 +0800
+Message-Id: <20250427083230.3325700-1-carlos.song@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0009.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::10) To VI2PR04MB11147.eurprd04.prod.outlook.com
+ (2603:10a6:800:293::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6c0b:b0:864:48eb:30fd with SMTP id
- ca18e2360f4ac-8645cd45231mr786974639f.11.1745742082674; Sun, 27 Apr 2025
- 01:21:22 -0700 (PDT)
-Date: Sun, 27 Apr 2025 01:21:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680de902.050a0220.3b8549.0081.GAE@google.com>
-Subject: [syzbot] [ext4?] general protection fault in jbd2_journal_dirty_metadata
-From: syzbot <syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com>
-To: jack@suse.com, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI2PR04MB11147:EE_|PAXPR04MB8474:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85e70c97-5df3-4d16-2d50-08dd85648a47
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?iMVl0vgOLfLXPsjjwKYX4+N9vyrXmz8bi0LOj2eR4HWxLuF5/9Ux7JyoN9rK?=
+ =?us-ascii?Q?7k101cBFphw3ZUQP4ZptYPrI9MaeWv5jpi14bHnII+5l4VIUXWuN59To6ecO?=
+ =?us-ascii?Q?Y5onagAX3SSW0BXBjT8Zpn70IEWVoUCP3VJk3CZ+QWrglSGR6oQ+9cp1m86/?=
+ =?us-ascii?Q?2b+PDhUW6Khbj9ub5tww2u2rQdsXKCBzOBOt40a3T4VMmuWh7f8cfMOAU3ms?=
+ =?us-ascii?Q?k9JoAX+umGTZausp+WkiU2/t9WuAiDmwy9ifSHWHdxhiuroVE+xmgyNdZ3f/?=
+ =?us-ascii?Q?DjoWw2vBGPViafEPAjIKb9aosAgUg0vYGeNl73PEhYd+jvZ4SJ6711Qz812S?=
+ =?us-ascii?Q?TfLaND4HE2aKJJOGfyaYQwgb1l512urePONfyr/2NnH9PgN7iUUbDYoxUuRs?=
+ =?us-ascii?Q?FNs5ghkEgRNwAa4FT4BXQ5q0DhOq5ZbiqmaYS8tfCkdOpU+A/fgPBqDegq68?=
+ =?us-ascii?Q?qT2SUD5uRP79Cjd5OikNwtqXeWZtimvOQCqwfmhZTCzHIVyLcrphdr5Wf0TS?=
+ =?us-ascii?Q?uCXBDtP6a2X9cjxRP7pAFF350uAzBekH3TkiFBuaLvWFxhsVgSKaylvFLVhw?=
+ =?us-ascii?Q?cJNNDBVK+NEbOgUUjlj0sKzcRFmj7R+ndVvg8o6cueaCnM94sByOtuOE3X6r?=
+ =?us-ascii?Q?Itsz62Zb48Ap8lp1LOpF+dp/IPtntxSSvxReG+Tf0Dhpc/CwHpunxTxlhG4f?=
+ =?us-ascii?Q?2e3PWxb/DFbXsz3ECNmptQJcn7u+fo26DYpJ1Av+DfIxYcWb93syPizEzF1W?=
+ =?us-ascii?Q?j40pN41VRIr9mSjscJ5b0p0JJr21bLDSDMwxCLXWxRMnDeG17GXy9DKe7Opw?=
+ =?us-ascii?Q?eOSWbLIZefRfUlHOL7X+t6Omu70T80QttGaQPwF5Iq2SJPcQxYQoqtbQpqCm?=
+ =?us-ascii?Q?w3TSXgBEbBZTjO2wpqZXLxCov0vCVl2eRy9u/nQtYIeRQEkn+taVBfzh7YFD?=
+ =?us-ascii?Q?elyq0Ut5FRrwGHHWvzgOLcLcYSz8JMlwWUs/gwP5MO80qYs1CFyPBOOXPhTC?=
+ =?us-ascii?Q?t0Lsg8zDzXsA7uB0naaKCMVxF9pmEnUHbBStLLY2Wkc129ycyE2k3lWfLDoH?=
+ =?us-ascii?Q?bgxsGJS0GsI2YHMrzwr5MRBNbKVymp4F26WL7m0sscQlBtRyV46vxKSDSWHG?=
+ =?us-ascii?Q?wGqkXoCoc0x+2yLntCnAiV2nIvF8aF2/cUMuNtXrwv5R2r22pGLudzkWQE1D?=
+ =?us-ascii?Q?ni/BMHDGbZBN315II6qj/VY3Lr8JKWYg0MS4Z8VFwelQKtX5BYUynwIgxQPr?=
+ =?us-ascii?Q?Aw8UHvfvsnuDNW6UBh94Rfq46jq2rBLpps//rgAMnGM3aBgWciT3A2F9KjKo?=
+ =?us-ascii?Q?dLE9XkUMhFUFE2ye00+t5EEurlQUD4kzp+SkDpn/qQQNSStOigM5evl4CdXW?=
+ =?us-ascii?Q?iH2IotU1SCcsK4a1h6EW4Smn2TsOUuG2tnX0WQzo4oy6Git+XZC1wLLrIlLK?=
+ =?us-ascii?Q?6qikgnhz+gGDLFcUPn+13Fcf9ImKaQxb+0wWZ6xwFvzZu9/OQ1koR1Nrp7UF?=
+ =?us-ascii?Q?S6OssNg99ombsww=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI2PR04MB11147.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TDA9ksrUjipjdSaQD7AuO9/nvIMMOkOOgSevINbNB2H22xdGkgb4L/734Dan?=
+ =?us-ascii?Q?9gdiYgwReAEGAN6MSt2pPtp+YX0hb0skeSmbZnw4BfDNlu0Tb1K8Oc+F/m8f?=
+ =?us-ascii?Q?qsxmZROViDspFAHnqZac5bR3gd4lk/BFGu3fgFHkJFibOehI3FDwIXQi6KFg?=
+ =?us-ascii?Q?/kEIOdPyOIxin/brduF6NsaU7vqcYFjQO/dO0U1VsdmmSs8ncgdxV2fFXtim?=
+ =?us-ascii?Q?FuOZBZCj9PA9W7ew/K/vJ1+jfYKKDtLcAvDyhC84k0sEbrIUb4KGqUgKDxbx?=
+ =?us-ascii?Q?Cgqbl8DG2w3iZRMC0e2oVN3UYWDZ0CiMYYGtz9bcoxAVvHNEvYmwtfPJQrch?=
+ =?us-ascii?Q?mjB4MQ33v6bNsmnyVc6p53ZpL4zzovFDF2HMbuN+M7cCRgyOpm9mew0HJ6ea?=
+ =?us-ascii?Q?58mS6lSE81PafRRGfSSz+o6I5+099f2fEX5cZKn1VI0ug8we7pK/u9EOTE9O?=
+ =?us-ascii?Q?NEvzBD2JG6G/fJDURCcE10XkryZ1IiL8rMCyTav+O0i9L7pciWPtwtJlKm05?=
+ =?us-ascii?Q?Jz4y4E/C9dZCmTcfuxMCxNsBBJzQae3J1O/L2phK+uLVOslhcIh67BRGwtPe?=
+ =?us-ascii?Q?0T6mXNigHA2ookexaMJF3/H/bi534VEcn1tmb/bUI1TvDv8/VWg+jY0aE1fu?=
+ =?us-ascii?Q?7azoxMV8fMrJelTiW9ZwKFPmz0KdkgXWOf3Msfg+glAwR8/Lcx1/iYHV4M6v?=
+ =?us-ascii?Q?7McJKJC1SYEIWSRPGQ5cG8UYPN0uI1qNHL3PBHeOLUPkkojoxMrpEcs5ipqe?=
+ =?us-ascii?Q?Z45e9yhQHZe2LKwRy7mtdliELU2g2KJUGbKVpwtDxRFQbyTpZ/XsTpyMSA7P?=
+ =?us-ascii?Q?Fk4EPMUu1DkOezSHRZM186aPT5cRdQ8SvX8jgo6xkDnvsT+gcZURstLK2J3o?=
+ =?us-ascii?Q?48YRXq7tWMcg70KqYRsSrfGsxDgwS4I7Gx6frUhK4/VGLDFn5O5r1fDhyLnZ?=
+ =?us-ascii?Q?qkxFwDXURO1aniCg0fmNOcodnFFfdwQ/KWZ9F7rr9wn2e8aGrfsByp6KBxBS?=
+ =?us-ascii?Q?qdNm+B81aY7i+X4kCCkpc3JKqWpZcKDaJUJvkNLXr0VEl/KIgn5BEBMC6S5e?=
+ =?us-ascii?Q?Uvv/Ys41Gyb1QH8Q5gvjsLXlDM2LjmbiIIdozv8T8opp2SHnAHNOECj36ScE?=
+ =?us-ascii?Q?NN2x+hP/fmNi0NKus4WdDOC+Oz/Rsq611Cx2tpuVOVStslNeRhZ+c2E0ILoB?=
+ =?us-ascii?Q?3U0QPBgFAubO1IgZldLVFujsSeldGzti/XuOyAlIn5C2JsbFQsy2BXwQFGJ5?=
+ =?us-ascii?Q?4PlS+3rkC3egNDodl1DEdxMlYPoYEiI6C8bqxnG/vylX1ZzvRw/C4a9hQJ9j?=
+ =?us-ascii?Q?Z+8GeSmPbhInfpjebBK+wGvBvJ6/XudkoKkAJDCgGtirifaegckosrHuvwuo?=
+ =?us-ascii?Q?PSgUj7nFochPoCBJPcW/rAW4RP6CwUBh5XqGMToLy40hUHRuNtb/9i3vossa?=
+ =?us-ascii?Q?M/0YqrKVTigsMTtpkoHbf4KnV3UbXn8eaL1okH8B1yWa0KuJ8KPF8HFFL8KG?=
+ =?us-ascii?Q?SfJDBR8BMthsP890kGmruJOBzHy87TGrZiyZbdSQMbZjdqgYpV6KeWD8o7xN?=
+ =?us-ascii?Q?Ys/By3HFodBUYJG7JV4J7rXvheSN/YrqvJ1QIPGu?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85e70c97-5df3-4d16-2d50-08dd85648a47
+X-MS-Exchange-CrossTenant-AuthSource: VI2PR04MB11147.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2025 08:21:42.3570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BOOESAF/yAfxTgozrHuRKFmyV6Nu6SvN14ShaOmVUPfk3LFw+9jtDsL9CJFMK8ASvnaE6pXwLOGF0ExC1y50kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8474
 
-Hello,
+From: Carlos Song <carlos.song@nxp.com>
 
-syzbot found the following issue on:
-
-HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12730374580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
-dashboard link: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149e6270580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-5bc10186.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3a2f39285e07/vmlinux-5bc10186.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2a37a55f34fb/bzImage-5bc10186.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/852ff332bbf1/mount_0.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=14730374580000)
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/e42a022d555a/mount_9.gz
-mounted in repro #3: https://storage.googleapis.com/syzbot-assets/7cbdc25f298f/mount_13.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=109e6270580000)
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
-
-(syz.0.497,7529,0):ocfs2_xa_prepare_entry:2151 ERROR: status = -30
-(syz.0.497,7529,0):ocfs2_xa_set:2254 ERROR: status = -30
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 UID: 0 PID: 7529 Comm: syz.0.497 Not tainted 6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:jbd2_journal_dirty_metadata+0x234/0xcd0 fs/jbd2/transaction.c:1531
-Code: 74 08 4c 89 ff e8 ec a5 9c ff 4d 39 37 0f 84 49 01 00 00 e8 de b0 3a ff 31 c0 e9 5e 05 00 00 4c 8b 34 24 4c 89 f0 48 c1 e8 03 <80> 3c 18 00 74 08 4c 89 f7 e8 be a5 9c ff 49 8b 06 48 89 44 24 38
-RSP: 0018:ffffc9000d47ec18 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: dffffc0000000000 RCX: 0000000000000000
-RDX: ffff88801f980000 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff888043abc420 R08: ffff888043aacd9f R09: 1ffff110087559b3
-R10: dffffc0000000000 R11: ffffed10087559b4 R12: 1ffff1100382e0df
-R13: 1ffff11008757884 R14: 0000000000000000 R15: 1ffff1100382e0dc
-FS:  00007f9939c2b6c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f5fec172720 CR3: 000000004e785000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ocfs2_journal_dirty+0x149/0x740 fs/ocfs2/journal.c:812
- ocfs2_xa_journal_dirty fs/ocfs2/xattr.c:1453 [inline]
- ocfs2_xa_set+0x2516/0x3050 fs/ocfs2/xattr.c:2263
- ocfs2_xattr_block_set+0x3c4/0x2bc0 fs/ocfs2/xattr.c:2985
- __ocfs2_xattr_set_handle+0x661/0xf20 fs/ocfs2/xattr.c:3387
- ocfs2_xattr_set+0xde8/0x11f0 fs/ocfs2/xattr.c:3650
- __vfs_setxattr+0x439/0x480 fs/xattr.c:200
- __vfs_setxattr_noperm+0x12d/0x660 fs/xattr.c:234
- vfs_setxattr+0x16b/0x2f0 fs/xattr.c:321
- do_setxattr fs/xattr.c:636 [inline]
- filename_setxattr+0x274/0x600 fs/xattr.c:665
- path_setxattrat+0x364/0x3a0 fs/xattr.c:713
- __do_sys_setxattr fs/xattr.c:747 [inline]
- __se_sys_setxattr fs/xattr.c:743 [inline]
- __x64_sys_setxattr+0xbc/0xe0 fs/xattr.c:743
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9938d8e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f9939c2b038 EFLAGS: 00000246 ORIG_RAX: 00000000000000bc
-RAX: ffffffffffffffda RBX: 00007f9938fb6160 RCX: 00007f9938d8e969
-RDX: 0000200000000240 RSI: 0000200000000140 RDI: 0000200000000080
-RBP: 00007f9938e10ab1 R08: 0000000000000002 R09: 0000000000000000
-R10: 000000000000001e R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f9938fb6160 R15: 00007fff798d5618
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:jbd2_journal_dirty_metadata+0x234/0xcd0 fs/jbd2/transaction.c:1531
-Code: 74 08 4c 89 ff e8 ec a5 9c ff 4d 39 37 0f 84 49 01 00 00 e8 de b0 3a ff 31 c0 e9 5e 05 00 00 4c 8b 34 24 4c 89 f0 48 c1 e8 03 <80> 3c 18 00 74 08 4c 89 f7 e8 be a5 9c ff 49 8b 06 48 89 44 24 38
-RSP: 0018:ffffc9000d47ec18 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: dffffc0000000000 RCX: 0000000000000000
-RDX: ffff88801f980000 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff888043abc420 R08: ffff888043aacd9f R09: 1ffff110087559b3
-R10: dffffc0000000000 R11: ffffed10087559b4 R12: 1ffff1100382e0df
-R13: 1ffff11008757884 R14: 0000000000000000 R15: 1ffff1100382e0dc
-FS:  00007f9939c2b6c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c000940c71 CR3: 000000004e785000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	74 08                	je     0xa
-   2:	4c 89 ff             	mov    %r15,%rdi
-   5:	e8 ec a5 9c ff       	call   0xff9ca5f6
-   a:	4d 39 37             	cmp    %r14,(%r15)
-   d:	0f 84 49 01 00 00    	je     0x15c
-  13:	e8 de b0 3a ff       	call   0xff3ab0f6
-  18:	31 c0                	xor    %eax,%eax
-  1a:	e9 5e 05 00 00       	jmp    0x57d
-  1f:	4c 8b 34 24          	mov    (%rsp),%r14
-  23:	4c 89 f0             	mov    %r14,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	80 3c 18 00          	cmpb   $0x0,(%rax,%rbx,1) <-- trapping instruction
-  2e:	74 08                	je     0x38
-  30:	4c 89 f7             	mov    %r14,%rdi
-  33:	e8 be a5 9c ff       	call   0xff9ca5f6
-  38:	49 8b 06             	mov    (%r14),%rax
-  3b:	48 89 44 24 38       	mov    %rax,0x38(%rsp)
-
+I.MX94 and I.MX95 I3C only need two clocks and legacy I3C needs three
+clocks. So add restrictions for clock and clock-names properties for
+different Socs. In driver, use the clk_bulk API to handle clocks to
+support different numbers of clocks more easily. Make the code cleaner
+and more flexible.
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Change for V4:
+- Drop comment in yaml and add nuvoton compatible.
+Change for V3:
+- Remove unrelated fix in imx95.dtsi.
+Change for V2:
+- Fix bot found errors running 'make dt_binding_check'
+- Fix warning from bot test. Use -EINVA instead of uninitialized ret in
+  dev_err_probe
+- Use master->fclk = master->clks[i].clk instead of devm_clk_get
+  (dev, "fast_clk");
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Carlos Song (3):
+  dt-bindings: i3c: silvaco,i3c-master: add i.MX94 and i.MX95 I3C
+  i3c: master: svc: switch to bulk clk API for flexible clock support
+  arm64: dts: imx95: correct i3c node in imx95
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+ .../bindings/i3c/silvaco,i3c-master.yaml      | 45 +++++++++--
+ arch/arm64/boot/dts/freescale/imx95.dtsi      | 10 +--
+ drivers/i3c/master/svc-i3c-master.c           | 76 +++++++------------
+ 3 files changed, 69 insertions(+), 62 deletions(-)
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+-- 
+2.34.1
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
