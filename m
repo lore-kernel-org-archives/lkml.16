@@ -1,80 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BAF84A35;
-	Sun, 27 Apr 2025 13:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F5B2E40B
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 13:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745758889; cv=none; b=q/uFkbe0G0ESOhqAPbY5l4x594kXMFurexH0pY1/LgqBClEKRyN8q7SRYu54RLhW4C/Y/jWsoh7CO1W8sddsCdsxynjpPLShXlSVjUIHhtgTQ/rWWmSFyU8jUE+Ye/Qgswlz1j5i4yWiE1hnHs90lZFPi9jToD+HPt1f748xpKc=
+	t=1745758905; cv=none; b=A6reXhKcO1f/lH3zJxUUiBFGRLafxtDF6Vy74PborUA9IHSR1h5nSnBYuFLq/OVU7CU1R8tg36HBNl78Imjc4vOmuezm6MZ50h5sh/YMF5VA9rOhUwJL/0ttQ48KMLVqj9eG3BVr/fFVqzgV7FqYmaMiKtU0imcQxbfCn0qU4os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745758889; c=relaxed/simple;
-	bh=jKAZnhfe4uFzdmI24dv10h3B5f4znfkAVF0qA0bSa+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aU5MfZ6ZQ47KO8NQTTxqModuZQpxgYByhkhaEc5ckUIFuJxbIKGD8gij1kQHrW/3oBjG2bGP8/p+vmwELgXkXKIVtvGttMXJP6a0lRmfgxd5/iAn77IByBOsd8VyAo82IACM9kv/irwksbC80ZBGWWcGL1LFyjj1yWSqXEye0i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akDSrTv3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745758905; c=relaxed/simple;
+	bh=ZglE8CasNQkRyZwqQ07x19uhJCcBvo7NtP6MxqxWpbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jbxf0P03n/kl4bClp66X8Lx+s1k2DZVD7w0dnos2xUH1jK6SdK6VAKsbUhorfnFAd0OrLPA0Rl8EJS0zTeIZifvvuQXwc8+2m0XAz8FlPih4Jzns5xD90EuW+zZzXUI+anstWsvslJrGQHi5sUkWVO7kB2omZRHfv/IoifHylIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qn+QtVQW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akDSrTv3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3124DC4CEE3;
-	Sun, 27 Apr 2025 13:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745758888;
-	bh=jKAZnhfe4uFzdmI24dv10h3B5f4znfkAVF0qA0bSa+A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=akDSrTv3jrbCQr2euOA4/lYIIJElm/nwRLSJjnLZzePG+4YtAsYx7yEEKJR2DASdp
-	 graLqHaJlXu0aFdltKxIHjXNTIr+0dNqsjY131rlqt7IohXNQY406zyfkNaXN6vozt
-	 gmt1+xz2klO8D4uQE9Xb8O0A4uZaIQJ5iw08vzCXT6xd+9eh9juiVxAqRa+9gyG0OH
-	 5aw/plAFYrqdJWxqR8K1HmFSlsOZgxYN92rOF0mikWcaw7jlz8BFThg5Lx5P1q/GNk
-	 Lqt1gG4oO5RIhXezqOTWr5F+hib+z1B8N+IlbzH+6Fpy9R1T81913UBXV5NvFpdei5
-	 sXNoZjJxC4o5g==
-Date: Sun, 27 Apr 2025 14:01:21 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v7 00/11] iio: accel: adxl345: add interrupt based
- sensor events
-Message-ID: <20250427140121.2aaafee7@jic23-huawei>
-In-Reply-To: <20250421220641.105567-1-l.rubusch@gmail.com>
-References: <20250421220641.105567-1-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qn+QtVQW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745758903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XBmV6ADRgSJ8LWAWXhID2kwENoWgHwUt/9lB9Waom7Y=;
+	b=Qn+QtVQWmF4/V1i7lt3k6ayySSmbtm/B5/FWcwTIAejF6Ox7MmMm5JXNJxWl0brn/FsTPo
+	hxb/4iRsLEzoCoN2xj9ASJuaITtWqHkoH4j3f2+xVdV4QW74bEc0GoIY8EKuYinv017461
+	EVTeCkcapIlD3MeAxfZSOmh1shGVUkQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-623-kXjJx-vhPeaIZojRNwztHQ-1; Sun,
+ 27 Apr 2025 09:01:40 -0400
+X-MC-Unique: kXjJx-vhPeaIZojRNwztHQ-1
+X-Mimecast-MFC-AGG-ID: kXjJx-vhPeaIZojRNwztHQ_1745758899
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0AF0195608A;
+	Sun, 27 Apr 2025 13:01:39 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.119])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17FA3180045B;
+	Sun, 27 Apr 2025 13:01:35 +0000 (UTC)
+Date: Sun, 27 Apr 2025 21:01:31 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] ublk: remove misleading "ubq" in
+ "ubq_complete_io_cmd()"
+Message-ID: <aA4qqwHaEM42pzN_@fedora>
+References: <20250427045803.772972-1-csander@purestorage.com>
+ <20250427045803.772972-4-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427045803.772972-4-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Mon, 21 Apr 2025 22:06:30 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
-
-> Add several interrupt based sensor detection events:
-> - single tap
-> - double tap
-> - free fall
-> - activity
-> - inactivity
-> - sample frequency
-> - full frequency g range approach
-> - documentation
+On Sat, Apr 26, 2025 at 10:57:58PM -0600, Caleb Sander Mateos wrote:
+> ubq_complete_io_cmd() doesn't interact with a ublk queue, so "ubq" in
+> the name is confusing. Most likely "ubq" was meant to be "ublk".
 > 
-> All the needed parameters for each and methods of adjusting them, and
-> forward a resulting IIO event for each to the IIO channel.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-Hi.
-As you'll see if you follow replies through. I tweaked and queued much of this
-but then noticed some issues in patch 9.  Hence I've bounced it back to you and
-backed out the patches from my tree for now.
-
-Please either incorporate the changes I mentioned (or point out why they are wrong!)
-
-Also rebase the whole thing iio.git/togreg so that you don't have the patches
-that are already applied in v8.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 Thanks,
+Ming
 
-Jonathan
