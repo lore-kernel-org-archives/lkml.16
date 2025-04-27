@@ -1,83 +1,82 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B541DE4C8;
-	Sun, 27 Apr 2025 02:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408E37081E;
+	Sun, 27 Apr 2025 02:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745719748; cv=none; b=lt3aUEvcwjVPk0PGZuvELOzFTM65jmOy2ejvWFhciq4Bog1TjaT/H8dnT89T9ko0QBNt5ZdacT/GVuK61qH37kwwegrqZ+NrU024h/sFQIJKX6fTzOeO2nux94mWoxogpWpUWXEyx/VrZG768rppVnm+lNVkAe/gTqoj0f3Yaac=
+	t=1745719946; cv=none; b=bW0X6aJe6c9zEa3ufEp91uwwgEOSXCYYaPw/SHWgrXK0lprkfk6yotEPVBDVcKSPp2qvPWfS6PqPC7MEBqY3GvYg2nQT5rvYdvDesJMYUM9n+2KmRNx+Zmz7b43oL+8tYlNrryQKWqYvTdSayoTZ1XtPBbm8o0esr4ztl7lbXOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745719748; c=relaxed/simple;
-	bh=IkDhm/b3MVpQQ+omlOa9k0KNQHFp5h3F+Lfrp6VFaJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/iK0F3k63qECGcOdTopcypzZZF0omfMZBhd+o1mek5UO3p137/K6E6O1OT/hLiMRw3RXv6a09JFebVtYEQClTY9Kujb3m1YgsNlMODsaRyZVPND5RFaLHrseuuSVZa+HbQgdL2G0Aa34a4d+MPFtPg3agGHmR7aoC25ypOVMeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=bL/C1Qcv; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="bL/C1Qcv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=mCSGe0hd9nC0wheXB+gSEHvBf5j2sNZqM+duHcgxviI=; b=bL/C1Qcvgn5BWiPkJ27+dJ7Es8
-	wwSoSEMzq4YcvjJsWSmMepkvcU0C+LR+JcK4d4+iSMjdzlqhOGHE3AF2kMOhQHHx5zatXSJemRQUa
-	+4h6wO0WkFQUX9WdKq6GRaJ9/mZ17PlsiqC0wdJhCc9trhF25UN90ckF1QyCHeZRx0n89B0uSwkLG
-	uUSof0rmZhN5waLKmnv8FlDyjrKsMtYRIDRqFgglTsQWEPgcKsVVxKbPbA5yOE0L7Ivk2Ohmjs+Gm
-	LWKBoqlKkfHG+z5IZWuBDTy+jUSYT0zXWKQ2YQGCxsKc4gNCr1zLOsKj79gKZojc877uD54ab34ip
-	84RfoZpA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u8rRz-001Jud-1b;
-	Sun, 27 Apr 2025 10:09:00 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 27 Apr 2025 10:08:59 +0800
-Date: Sun, 27 Apr 2025 10:08:59 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
-	linux-s390@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 01/13] crypto: sha256 - support arch-optimized lib and
- expose through shash
-Message-ID: <aA2Ru1SHXRB-ZAc3@gondor.apana.org.au>
-References: <20250426065041.1551914-2-ebiggers@kernel.org>
- <aA2DKzOh8xhCYY8C@gondor.apana.org.au>
- <20250427011228.GC68006@quark>
- <aA2FqGSHWNO8cRLD@gondor.apana.org.au>
- <20250427015041.GF68006@quark>
- <aA2N6oJ9fQYQUtD4@gondor.apana.org.au>
- <20250427020550.GG68006@quark>
+	s=arc-20240116; t=1745719946; c=relaxed/simple;
+	bh=8SlZx8IDK4mrOVwOhaBkfuNILVycHluTOoS33F7tk/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nTm35kQdo8XKm+9FqeTHkPsdqnuSkyQqwBtbB8efgtfPIBO+ACRVtOfZzTmlTcE+gPjWUXLeLY2z1JU38r10vqqSFMG4tdMOP+XxpaVBESCqdF2Uoqp+DQsyZqj0wecNwwCqy2eIDiJjZcHkJr2N6OEMsKrPI3STwH8qIW/U0rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 051703be230d11f0b29709d653e92f7d-20250427
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:f5da28e7-f15c-4baa-b8d3-4f661a13e098,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:26e37ef5d2fd9291bbbd5166ffbfe02f,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 051703be230d11f0b29709d653e92f7d-20250427
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 562180624; Sun, 27 Apr 2025 10:12:07 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 5C05016003841;
+	Sun, 27 Apr 2025 10:12:07 +0800 (CST)
+X-ns-mid: postfix-680D9277-121054143
+Received: from kylin-pc.. (unknown [172.25.130.133])
+	by node4.com.cn (NSMail) with ESMTPA id A643A16003840;
+	Sun, 27 Apr 2025 02:12:06 +0000 (UTC)
+From: Ai Chao <aichao@kylinos.cn>
+To: rydberg@bitmath.org,
+	dmitry.torokhov@gmail.com
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH] Input: MT - add input sync to refresh touch points after screen locked
+Date: Sun, 27 Apr 2025 10:12:03 +0800
+Message-ID: <20250427021203.1888063-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427020550.GG68006@quark>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 26, 2025 at 07:05:50PM -0700, Eric Biggers wrote:
->
-> Why?  And how is that relevant here, when the export format should just be
+If the touchscreen support ten-figers press it to lock touchscreen. When
+the touchscreen is locked, the ABS_MT_TRACKING_ID event remains
+buffered. We need to used input-sync to refresh the event buffer.
 
-Because I want to be able to fall back from an ahash to shash in
-the middle of a hash, i.e., I need to be able to export from the
-ahash, import it into an shash, and then continue hashing.
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ drivers/input/input-mt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> struct sha256_state, as it was before?
+diff --git a/drivers/input/input-mt.c b/drivers/input/input-mt.c
+index 337006dd9dcf..659d752ca830 100644
+--- a/drivers/input/input-mt.c
++++ b/drivers/input/input-mt.c
+@@ -147,6 +147,7 @@ bool input_mt_report_slot_state(struct input_dev *dev=
+,
+=20
+ 	if (!active) {
+ 		input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1);
++		input_sync(dev);
+ 		return false;
+ 	}
+=20
+--=20
+2.47.1
 
-Because I've already changed the shash export format to use a
-generic partial buffer for all algorithms and it's not the same
-as struct sha256_state.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
