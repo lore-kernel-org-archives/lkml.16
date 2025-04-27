@@ -1,216 +1,159 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2083.outbound.protection.outlook.com [40.107.100.83])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9A41D5ACE;
-	Sun, 27 Apr 2025 22:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745791948; cv=fail; b=PzpLU/nfilJtZ6el7IQg6scH3tOqkgc/yaxLWXQPiLa/mnS9TBAUw1EllMbhEyy8b/u7T4OmLcT3zIwfES1yNy74t3/Ix4UZFLSvsnHHq8p+fZ5Lb1Oh4J3m9CemRPO/Fl+wnpNQzHNdv0uR1XnXnzivpYya3JUwswRXMPS0fSg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745791948; c=relaxed/simple;
-	bh=flFv9bK6e44WiN12Xo0OKo3mvInToj7ImHwoUzv4z6k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hLav+nG0Vbo3weGPVRph4f2ZmR+SyfrnTccUWWienAk9VdLU37tVg2sWHjXN+wM6KqTyHj9+4GI6M9MQkSsgH8EEqlxE5N/ptyxOJEQaDVPJBGGwHLmBXBF3pgVog8n0flrN1380A2FMx82JckvSg3398Nw6tJXfyT5ppjv0RuM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=or72TEyu; arc=fail smtp.client-ip=40.107.100.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70102A8DD
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 22:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745792369; cv=none; b=KuQndQ4sW97VSNnt+XEkUXYny6Rd4CSSDBj726rWYFMlPlA3zosYZa2Oh4ehcpTPvGVfIjKRivKkXU5Lu+xCDDb7wQFK8m6rPT1Il8FbH1Z/Hxma/7monHb7vWdTRANJ1o6TMx6/jzPeg8nkBs8xieAFaVydCt4NkBQ5T5IAAWc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745792369; c=relaxed/simple;
+	bh=pK2Rfrkca+Z47S8qjbclg2Q9eSpavlYxdJ9BIoBb384=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPakfPaonAvHkjtsSb9d6ng5QFI92IDTCWpW/0heCw+v4YEba/0dg+6xQBqJi7ont1w7Oit9CCUVDqGFI/HavSYv3scREufUIewAYiSv9dt2yPoV52G2KEHlCJuWvZq76Z3k4rT33mjgQqzKBpXvoNfiyww+W/tagUYY8bbwq2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eEJsPBjo; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="or72TEyu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gwJy+6xOXC96M7vDRKcyvnTeVFUVIV4amAcLXAziRcS861b4TobbEExZasor3EgyrqItTWYJDqqXviUSAvomYVtgdBKjqsfJrqB9IyhY7TOlWgTGlhcgA11G22wzuItmvlYoXWxc9zCH1+vfSSk8uiHaIaQ9/DQtmnFhqUAf6+dRbjs8tqQh0F4IEo+NfVIUmMWT+4tKugg2xltcJ2w+h/rcTuYhaAH/bwCrWoDfiSqYdTnLcXu+wg4QhDPUM9LyS22hgtQ0afFMAL8EH2CjdLBMPUSPMue83N34/2qj1a0KWCQibTW6zknzZ8Cr1AsZd3T2BfMHm1asARLRinMDqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=39chpzhovg1n3HUuGs/n00QIH+CWE4AKRYvL66dKZRk=;
- b=t/FZRER2HT52mtq0xj8Bo/UvTVKbxA5YyP/HtdhbKLGD0vN45OkzFKjuZqh3YpoJPVB/nUkon+RSid6vqjB5vGDUV5gwdaORxU+4I7CPm9nGmkINhvSmYjcarKbF7Z4VtoTnBXnfx7nakLLHl8Wet9TGsxEzOQN6q1lgFsgLeLbBGYDn9nyB5kKfySLQKBd+e6b5xCJIA68ccUaF/0AZRuQDf4CLUQEVtgje1nGBZhNRv6Ow4EQwCskn3w7duAQ9Qsfmhw8776mdg9gIXftrZQ11/XyjMZR8zXt/a/ND6MvC25FRlfx37Bb3ZT0AdLkDlFUaxwxBW4eUwu5JpH+bBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=39chpzhovg1n3HUuGs/n00QIH+CWE4AKRYvL66dKZRk=;
- b=or72TEyupJohTSThNsTgPX4/zVXgIT1nGUst14rOAsl/9SyULy+08flzcSg0VC//2wTeqNKAWL57G6U8Re/M+2qsYZjtUbvKFvf3bGEQ/zGgwRgJy+rUqtKX33wwnvXHNMF8e2FEXgJFIxBCCLjYhngqLdW+1BU2wty4wmqsgvxrgopg577YNo5KfiMpRpFMLYGQHujxiks3/v5QiSsRdK43mGMdRRQ329m+V3CIqe7ZbfoPhj5L7TW7wmQGHdt32k9KO2mDLCthYNB7vQDyIqEpJEcXbeb/M8JvfC/EbDya7QDM7kDZcWEf0+nR/rw1Nixxz8R7DG6myDEBmHx3lQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
- by DM4PR12MB6446.namprd12.prod.outlook.com (2603:10b6:8:be::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.31; Sun, 27 Apr 2025 22:12:21 +0000
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4%7]) with mapi id 15.20.8678.025; Sun, 27 Apr 2025
- 22:12:21 +0000
-Message-ID: <c922d67c-ab20-4e46-9359-01fb32223d17@nvidia.com>
-Date: Sun, 27 Apr 2025 15:12:18 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
-To: Remo Senekowitsch <remo@buenzli.dev>, Danilo Krummrich <dakr@kernel.org>,
- Dirk Behme <dirk.behme@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Dirk Behme
- <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-4-remo@buenzli.dev> <aAuryiI0lY4qYyIt@pollux>
- <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com> <aAyyR5LyhmGVNQpm@pollux>
- <D9GIUOH0CKE4.3R01AYKCCG54O@buenzli.dev> <aAzrg31NB2g0X4qL@cassiopeiae>
- <39798ebd-35a8-4a67-9df4-f12a6f20ef11@gmail.com>
- <aAz1f2jhdwjXmHex@cassiopeiae> <D9GWI4GT3ZK4.25N3DYX5MSX0P@buenzli.dev>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <D9GWI4GT3ZK4.25N3DYX5MSX0P@buenzli.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR04CA0003.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::13) To LV2PR12MB5968.namprd12.prod.outlook.com
- (2603:10b6:408:14f::7)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eEJsPBjo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745792368; x=1777328368;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pK2Rfrkca+Z47S8qjbclg2Q9eSpavlYxdJ9BIoBb384=;
+  b=eEJsPBjo9vitWSDCAILo6WXYSOQHiAiRfUpPpgswdOmMJfZ1ITWF6mnE
+   UleCGEviEZLckAyEV7oKkerQBi3PcPNoOgV3W7zM8MROrw+MYWeOMN1OP
+   R5yzAxI9hcJC9Q6S/hDQlWvqYd8AYhZcfQhT0jT6hc4JkaACCF39KIk6L
+   6V72eN9MLHHKtnnQrYuvGzrdChN8l7cPZaRpaWL3WeEpaRe2gapC+M+bV
+   LqZVuwqGKpWo2fNGlbXumVl1JhBJCWifGStlYXEP1qxuUYj6ObXkn1K2r
+   MOKpEm7sloELcrFHpSqOHgFg9JyBjYfATU0u7uc7UAP/uMkQfuyc8yQ2V
+   w==;
+X-CSE-ConnectionGUID: iEezyLfnTh+QJUPs1Tnobw==
+X-CSE-MsgGUID: fNG3b+BHQ8uI1h6TgWv2Mg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="51194158"
+X-IronPort-AV: E=Sophos;i="6.15,244,1739865600"; 
+   d="scan'208";a="51194158"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 15:19:27 -0700
+X-CSE-ConnectionGUID: BGGc8FArTWKVhr7bS/HM2g==
+X-CSE-MsgGUID: 9pFRPTiRSWmiMz7V3jm9iw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,244,1739865600"; 
+   d="scan'208";a="133883606"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 27 Apr 2025 15:19:23 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u9ALI-0006U9-33;
+	Sun, 27 Apr 2025 22:19:20 +0000
+Date: Mon, 28 Apr 2025 06:19:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	linux-kernel@vger.kernel.org, Kairui Song <kasong@tencent.com>
+Subject: Re: [PATCH 5/6] mm: move folio_index to mm/swap.h and remove no
+ longer needed helper
+Message-ID: <202504280527.sowjkuQU-lkp@intel.com>
+References: <20250427185908.90450-6-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|DM4PR12MB6446:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d9d4b51-527a-4229-f0fc-08dd85d894d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RXV5VmloRnp3SG9RNnBFMGtEODlYektic0J6Z1BhMFpYZktjNm8xWUlMRE9q?=
- =?utf-8?B?cTl1Tlh6c01rUGxOVTdQdk51aDZBeFdLTm9GV3hyQkdkQ2w0S1VxTFNPdzFX?=
- =?utf-8?B?TThROHU4SWlMQXRwL2tSK0lkYWMwRmQwMWRwbStBWldxQnVmL0ZyTTFKSlhl?=
- =?utf-8?B?bUFqNlpIYlhORmJ2TnJlcmE0c3hyN2NhRVBJa0JXWThXdVp1cmJvRnhMRXJO?=
- =?utf-8?B?dXFKRDVjbjBNTnRRM05BZm9ZdEJIakZodDdCOG1MNGxIL2x5SVRoMGREV2ZL?=
- =?utf-8?B?eGpESDdNelVRTTBtcFFVaDJtOE1kVVNHOFdQdU1pVG9pYkxpbkxuVEEzREh1?=
- =?utf-8?B?UmNFSVMzQ0hUNHNOakEzT0haNGhUaUhSVlJ6Vkk4Q0Q1WlFDT3FtbWtSS0Qv?=
- =?utf-8?B?dHFiZitxVzBkTVJLcWZ3SXR6SThmWnZOVU9LcFZmOUFrNE5HVGlLK3B5TTFE?=
- =?utf-8?B?TXNOdmhpSlNaK082ZzNFRlhmZ3I1RFV6OWwrL0UreWUwQWczVmFTTW1wM0Zt?=
- =?utf-8?B?TnVXMHlkWk83MTdsOXp2Vi9TNUtYc1dhaDJjOERCdEZkcCttMWZLOVhXMUls?=
- =?utf-8?B?bjlOUHB1WEtrbUZYRXg3dWtodzJsV0kxR01SdGdHcVVGdzg1TEJCRlg3amhz?=
- =?utf-8?B?Zi9oTVgyMWhTakRnbE0xY1BwMU1RbGp4bEIydXZRbHFvTHcrSnA5OWJOaUFU?=
- =?utf-8?B?QVFrUjRIdVhNY0doWkVDRmpuYTI4bFh6RE9PMldRemNaWDJGdEkvYWhiclJk?=
- =?utf-8?B?Tjk3WjhvMXFJS3lYOFUveHYrK3pKcFA2d0FQYkwxZkI0SElRS3R0TTJXbjRF?=
- =?utf-8?B?OEdJYXpKMjZ2ci90cElsanZNck44bnViT2hlVlVpMlU5QWVaNEwrWE5POVpt?=
- =?utf-8?B?TGNLeFZObmdTVkNtQk9xVUpSZ2FLS250YjNDdStQQllLWW1xaS9vQkZncDU4?=
- =?utf-8?B?NVIreFdWMmE4dUhBZWJUS0U0bTJKTkRTRE5sR2hjQmtCcURydkszckh3NEhH?=
- =?utf-8?B?WGgzSjBmMCtNUFNWWkc1WTRjMnpzMU9xeEg3YjNKakhEeTlMS09JbCtjLytE?=
- =?utf-8?B?S3V6dWJhcXhqYlpTTzFqbkZPMlUxclVtaUJhWWR4UEd6M3g5dXRDUlVwbktx?=
- =?utf-8?B?ZWN5dUdMdEE0L21BYTZQRDdBYUlhamJDMTdJUjlLZ1pQMzlnTGVMNytqa25V?=
- =?utf-8?B?ZGhXK0s0eE5GZkdhS0JzR25Yamh5KzFmZ2ovUEUra2tVeUs0QnZCTHVua2l1?=
- =?utf-8?B?eWlIRHdQcTdJVTk0QllVRit2T29YZk90d2psV0pabCtyRDdhZXhZZEM2UXp5?=
- =?utf-8?B?ang0SDIzbU81aDdRdDI1R05zYjNnbHhIcXhuTGN5elRwU01lakhPcDJOWVZU?=
- =?utf-8?B?aUNiOGJ1Ym1tQzUwbjlmak82SFJIQmNocStCZVExdVk4WmNvR29oL0JuTXdG?=
- =?utf-8?B?aHAwek5vRWdxM2RMWW1EUW1RMnZVbHY1WEduSXp0UkpETnZXOER4ME16aElr?=
- =?utf-8?B?enN2ZHpDL0tES0xuOHFWRGlGdWRWSDZjVkR1Z1F6YjJWam1xakJFNXB1bDdS?=
- =?utf-8?B?T2M3WlNacUhFTkdvZUJ2SHhFZUZjaDNidkxxTHhpTDFpdDRDOW5TYlZTTG0v?=
- =?utf-8?B?cjhFRFJFOWFKZUhhdkEvT2I5TEwrdEpjYStZS3BZU25Za0haSzVWQ2FkTTM5?=
- =?utf-8?B?d1AvSldDTjlZZStLdjZVeFp0eDBzRlNTY0VpbWdzRlRzdHRPeTZOQ1BRVHV0?=
- =?utf-8?B?Rm9WOGFnNWJMTXdOV1FwZUFiOEwrVVpWbDhQQ3FkQ1hKc3hpcjN5S3Vmemtt?=
- =?utf-8?B?TnFCakxqbFU4RE5NUSthNlJmOFlYSTgyVlVLZHUxQWRybTk5ZGpoYWZzanVX?=
- =?utf-8?B?L0Y0N0owK2ZXVitMZlB3Wld4OUQ0RThGWXM4SUt6YmpNRFlWV1dCZmpVandm?=
- =?utf-8?Q?3DNKzyn/4H4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cEx5NHJyWjhKQTRuLzBnc0tmMUxxV1o3Sm9SNXIrQ3VuVi9KMTR0WU94bHBJ?=
- =?utf-8?B?OG5mYjJjMmZHdzVZaDBKTXZPTlY2S3dhUG1VRWNSMSthZFJ4UHR0di9Od1Fr?=
- =?utf-8?B?UkozTXMvQllzNWo3bkpjS01landJSFNTVzVPQUoyYVNmSzdBWEVYZkNoaDQx?=
- =?utf-8?B?bnVTMXJ0blBBOVZQNEtzZnVQaCszeFltVU5iQXMvWGd0QnpDZlcwaHl1NUlY?=
- =?utf-8?B?YUZZa01VdG9ZdjlKbXZUamxHVDJiSm1QOE9taGtBalNjWWE4QnNMUDlWcXRX?=
- =?utf-8?B?c21uT213cW42amF4aDVMKzVqSU5PdVlIWFZnWVF1YXVtYjZBbFBwWndxYjlI?=
- =?utf-8?B?RTNuT09uM1ZGaWFQTzhDeWx2QjNOaHJFSStqNkxZbHByYUwyVTZQdmcxSHNK?=
- =?utf-8?B?RDYvN2x1QW9zbU9yWmJPK1RuNGZ1TXFTQlUwQ2FRdmkzUXFmQ1V5Vi9xQUpk?=
- =?utf-8?B?MnN4YnV0OXRwak1MY1hNZ28yMXkyeTdDdzVEVFFSRmkrcDFjaUFQampxeTVZ?=
- =?utf-8?B?cEVvcEZnKzYwZStoL1dQZTZodTc4LzlNdUFUbzRqbXVvZEFKN2MydmxLMnhD?=
- =?utf-8?B?bStiTzkzUGFwQjNDZW85ODU3NEt1THZ1UzJuM1JrcWVaRmdPVE1Rd1ZMV2M0?=
- =?utf-8?B?MUgxQ1pSZkx2MnlhQmJwd1NmcDdqbXp0MDBGMkYxbThQSVZzaHZ1eUpzNkFY?=
- =?utf-8?B?TkRrdWY2V3EyWElGd1pWOHNvdiswWENoQ3FkVW9HcDJNcVlVVWdhaGsrODIr?=
- =?utf-8?B?RlZuTU9Iemc3UGRpY0NrTXJkUTIrcS8yekRBVUp6bU5KbWRtTzVGWnNZbGhy?=
- =?utf-8?B?K1ZNVFVXWWtDbENaRE8yT1B4cjJvWU1lN3BqbHRBZzIzbmtZcHlwaXdNYWo1?=
- =?utf-8?B?SXVWWkszR1gvZCs1Mnc0cGsvNHFhRVV3cVM2ZlVITHlWU0F1QnZacmt0UXF6?=
- =?utf-8?B?OE9pZCtLOVFoVFdqaEplMktacWhtcGtVTS91RFFoMWYwbTVSMmZBVENjZ1Yx?=
- =?utf-8?B?cHdpR2cyMlpFNHhoc2NkNFdCTUZVZmxUWkFGKzdYU2VOcUFiQ2c2czZ1QVdw?=
- =?utf-8?B?SEZNZmZPZHFMOVhoRFNTTVVjSllMekpVdENpMHREbThtbmxTMlpaU3hkOWRC?=
- =?utf-8?B?N3FzUTZucmVMT0dyanFNcExLUndzWmEzY2NqUTJDcGEzQk9ZWWovS0c5a2Nl?=
- =?utf-8?B?UE04WTE5WjVjbWV6TkQwWjgzMWpuNFNmektGWHVkMWNRL3U2azNKRGJjNEJk?=
- =?utf-8?B?OEVXYVhZZFRaQm56RGZjY3g2MnorbHN5KzNIUWZvRXRJOTBITVhOSDlmd0Ir?=
- =?utf-8?B?RXNKN0QwTCtQOEtGU2RGb2MwMkM4RXVxSTBJUGhhWGRId3dBVVBZc1lDYnhN?=
- =?utf-8?B?MDJVZ2ZLbytadVVFZ0F4N3lGbTVSK2wrL2FPYm5jVFlQNzB6MHJYR0dDQ2dK?=
- =?utf-8?B?cDBKMVZTTmJ5RGNVTmZpWi83LzN1dkxKbnJoTTMxQTRLV1J4YmZ5dkNXRllR?=
- =?utf-8?B?YW1OVDhzaklSVTd3V0V5NU1IQ0w0TkRkaE1LTjZLU2d4Zlo3R2dpN1htc2dJ?=
- =?utf-8?B?dVdwOHBsRGlLS0szTUxsTUg0ZUhqZi9BTHdlZFJKcU16b0hoaXU3VUg5Z1Vq?=
- =?utf-8?B?WitvRTJMdllQRkQzMjU1dUpaSWdLRG82Lzd6cGlwakRPdTlIWkx5Umxia3Bk?=
- =?utf-8?B?TWQxTnB4a2JFMGM5d3F0MmhUanl4azc5ZUcvODV1Y2xBaTdhSjhtYjNoOG5N?=
- =?utf-8?B?QzUxUElDbHNaZC8zdHpVRFNBaHZOemdRR0g0ckFQV3ZoWVBkazhOS0s0RVJ0?=
- =?utf-8?B?Q3JXRTBYVFl1WDNoejMzeHFRV2EyTjVxUlA3eEpMSzNUWWhJanRQVTFJTUYz?=
- =?utf-8?B?bk16TkZTeUxIeUpXNC9lQkR4M3JYTW5HL05pb1JFWW8rN1ozcTY3cUlEWWRs?=
- =?utf-8?B?OWJDaHkrbksxdWUxZlBoTHdPbEN3Q2tRZDJZMUFQSTJUODUxazV5ZG5DZ3BO?=
- =?utf-8?B?ck53cVZLQmREYU9TQmg0cXdpSDk2Y3ZuVTd6cG9saFZGbEtUdUljTG0yOUZ0?=
- =?utf-8?B?WDREREVtNmNPNVBFYlNaQVBBMmpsdWZWVWFiMmZlQW5yczBDQ1BGMUJSZHB5?=
- =?utf-8?B?Vy9uSVAwbytzOUZIYURHMm5STFJjWVd3UkVKUVFEN1FoQnZFT2Y1bjhXUzBQ?=
- =?utf-8?B?OUE9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d9d4b51-527a-4229-f0fc-08dd85d894d6
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2025 22:12:21.4517
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NgsIC4g5xCZBzt0BhZHdRl2NWGA/1nBaUwYuMCyai9ndaoOE326yDaoKy/t12k7zHuFqmkVMW6h6iQrHw7HAyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6446
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427185908.90450-6-ryncsn@gmail.com>
 
-On 4/26/25 2:50 PM, Remo Senekowitsch wrote:
-> On Sat Apr 26, 2025 at 5:02 PM CEST, Danilo Krummrich wrote:
->> On Sat, Apr 26, 2025 at 04:35:07PM +0200, Dirk Behme wrote:
->>> On 26.04.25 16:19, Danilo Krummrich wrote:
->>>> On Sat, Apr 26, 2025 at 01:08:39PM +0200, Remo Senekowitsch wrote:
->>>>> On Sat Apr 26, 2025 at 12:15 PM CEST, Danilo Krummrich wrote:
-...
->>>> Why do you think it is important to force this error print by having it in
->>>> PropertyGuard::required() and even take an additional device reference for this
->>>> purpose, rather than leaving it to the driver when to print a message for an
->>>> error condition that makes it fail to probe()?
->>>
->>> To my understanding doing the error print in "core" was proposed by
->>> Rob [1]:
->>
->> That is fine, though it doesn't answer my question above. :)
-> 
-> If the question is addressed to me, I don't think it is important.
-> I don't have a particular preference either way. I'm just trying to
+Hi Kairui,
 
-Generally, printing in libraries an lower level routines (in this case,
-"core") is undesirable. We'll do it anyway, sometimes:
+kernel test robot noticed the following build errors:
 
-     a) Behind a *_DEBUG configuration, to debug the core itself, or
+[auto build test ERROR on akpm-mm/mm-everything]
 
-     b) Desperation: hard to recover from errors, that the upper layers
-        for some reason lack context to provide an adequate error
-        message for.
+url:    https://github.com/intel-lab-lkp/linux/commits/Kairui-Song/fuse-drop-usage-of-folio_index/20250428-030234
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250427185908.90450-6-ryncsn%40gmail.com
+patch subject: [PATCH 5/6] mm: move folio_index to mm/swap.h and remove no longer needed helper
+config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20250428/202504280527.sowjkuQU-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250428/202504280527.sowjkuQU-lkp@intel.com/reproduce)
 
-The idea is that the lower level you are in the software stack, the
-more rare printing should be.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504280527.sowjkuQU-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> mm/page-writeback.c:2767:36: error: call to undeclared function 'folio_index'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    2767 |                 __xa_set_mark(&mapping->i_pages, folio_index(folio),
+         |                                                  ^
+   mm/page-writeback.c:2767:36: note: did you mean 'folio_inode'?
+   include/linux/pagemap.h:567:29: note: 'folio_inode' declared here
+     567 | static inline struct inode *folio_inode(struct folio *folio)
+         |                             ^
+   mm/page-writeback.c:3047:38: error: call to undeclared function 'folio_index'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    3047 |                 __xa_clear_mark(&mapping->i_pages, folio_index(folio),
+         |                                                    ^
+   mm/page-writeback.c:3084:36: error: call to undeclared function 'folio_index'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    3084 |                 XA_STATE(xas, &mapping->i_pages, folio_index(folio));
+         |                                                  ^
+   3 errors generated.
+--
+>> mm/gup.c:3652:21: error: call to undeclared function 'folio_index'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    3652 |                                     next_idx != folio_index(fbatch.folios[i]))
+         |                                                 ^
+   mm/gup.c:3652:21: note: did you mean 'folio_inode'?
+   include/linux/pagemap.h:567:29: note: 'folio_inode' declared here
+     567 | static inline struct inode *folio_inode(struct folio *folio)
+         |                             ^
+   1 error generated.
 
 
-thanks,
+vim +/folio_index +2767 mm/page-writeback.c
+
+b9ea25152e5636 Konstantin Khlebnikov   2015-04-14  2742  
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2743) /*
+dc6e0ae5b1700c Kemeng Shi              2024-04-25  2744   * Mark the folio dirty, and set it dirty in the page cache.
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2745)  *
+203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2746)  * If warn is true, then emit a warning if the folio is not uptodate and has
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2747)  * not been truncated.
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2748)  *
+a8cd9d4ce35eae Shakeel Butt            2024-10-24  2749   * It is the caller's responsibility to prevent the folio from being truncated
+a8cd9d4ce35eae Shakeel Butt            2024-10-24  2750   * while this function is in progress, although it may have been truncated
+3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2751)  * before this function is called.  Most callers have the folio locked.
+3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2752)  * A few have the folio blocked from truncation through other means (e.g.
+3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2753)  * zap_vma_pages() has it mapped and is holding the page table lock).
+3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2754)  * When called from mark_buffer_dirty(), the filesystem should hold a
+3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2755)  * reference to the buffer_head that is being marked dirty, which causes
+3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2756)  * try_to_free_buffers() to fail.
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2757)  */
+203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2758) void __folio_mark_dirty(struct folio *folio, struct address_space *mapping,
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2759) 			     int warn)
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2760) {
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2761) 	unsigned long flags;
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2762) 
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2763) 	xa_lock_irqsave(&mapping->i_pages, flags);
+203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2764) 	if (folio->mapping) {	/* Race with truncate? */
+203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2765) 		WARN_ON_ONCE(warn && !folio_test_uptodate(folio));
+203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2766) 		folio_account_dirtied(folio, mapping);
+203a3151661611 Matthew Wilcox (Oracle  2021-05-04 @2767) 		__xa_set_mark(&mapping->i_pages, folio_index(folio),
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2768) 				PAGECACHE_TAG_DIRTY);
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2769) 	}
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2770) 	xa_unlock_irqrestore(&mapping->i_pages, flags);
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2771) }
+6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2772) 
+
 -- 
-John Hubbard
-
-> come up with a solution that is satisfactory to everyone. We should
-> hear from Rob if he's ok with removing the logging entirely given the
-> limitations.
-> 
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
