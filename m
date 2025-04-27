@@ -1,62 +1,62 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858F18BE7
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 19:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD8D1FDE33
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 19:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745780420; cv=none; b=A/QC4+jSKeyNryJUznMjTamTUL8CZEmEIuUi6YjywLj0cypcOY3B7mcoLbPm+ubhhgsSpD+DfdpmrT8F1KiemodX70WSaOCbiKbT/9alp7rWtqU26+SRsPW0vAqrr9+eJBRXk6LrYYRirFVwFUxgx6TAIEdBOZLlbOzgSoyeql8=
+	t=1745780423; cv=none; b=pnSHaN7uw/paE6ePr6vSVmDRdE4UH0WZU+y0V+YybbmB/D8BKjwx8j9PWJofoh6b9poAIl+G4zhNZLB7YwYtFaVoeE+X7uo5XCBcuxMypQ49r5GLdeIol1aYP1B+xJBNtaJw1MA0r0gT8jKD4qF6U/Q5HOKzHbUOog9egMqdZnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745780420; c=relaxed/simple;
-	bh=wM68GCXbiSerHyiJjiF8qiDn6ozAYSo+GCvSaYYs5yM=;
+	s=arc-20240116; t=1745780423; c=relaxed/simple;
+	bh=YAPaKQufsSkymYOV0BNJBbozknIm7Gc106mHlRJF3Ug=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bdwdbclsyPZE6icd8Cmjz+il0SbUCiXhQfmT1V4v/SDZt9rtqdlOYczuo5B1Wkzv2g8VW34vfDL7T13gi7ud/Mk/9VwpqwmWXVeINCqf+CZH+K66SYFO/P11IEFzeVeoD1FseDlwBIhpFh7e1kf68FOwh5NwXy4d+/HyHwDNqws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6R6x2TO; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=jObr3y4n7VhVooSgOfVdnOX6YuSKdQ2WCiuqSDYprqnkfvYM3yuMAnRrXZ3hvAPiudl6vdTLyhzNYfDhn5jxpf1lrub1yEwPtRVpgPK6Ahxdn5uHxhEoio8UO8KHIDK88AKkSv4xxDY89zds36dc91LOrPEIF52gfArJrRpYLIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLNMrh8/; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6R6x2TO"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224100e9a5cso47271285ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 12:00:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLNMrh8/"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso3950670b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 12:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745780418; x=1746385218; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745780421; x=1746385221; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=kiHWomkf3wcsR+tvD4RLDrQZNUBMxVnHVwy9itXWJo8=;
-        b=b6R6x2TOsC/XjdHalNJmC/IDLJbtwvbNOleFrCmpwRlKaTauJVFllD0mIfWkvKGLwi
-         2sJIIb7HlV088hVsJPFTbWfCbrB9u7ajgZdNk+udE1SDZlq2DeEf/MU/TtwO8qUBH4Md
-         svE3X61i5lwlCg7B+ordVHxDUjzl6nWQFcQa48RetFRMngRMtBecMKJi0aotNhEU+Fh3
-         6m6O7vZHmV8z/2E6PEt4nR9x6XtCNIL9Soh06FbEFhCsWzlpFsq+/N9cws+yDuFS31wi
-         SpBT6AvKZ84S1BCLIw1aEAAucH42etqYxgDASKp5jgeD/vK/fTtd5zUwru7EqtjIn25i
-         bqsg==
+        bh=mCqwAYZCSc0dh66qfmmYusnvvBLoAOnre8x5oj+2T0I=;
+        b=NLNMrh8/etIHeVMpFTUNOcZ2j0K5Z3FG56zzDZnANZhNXtHnGo9HJ5mEGUT0h/H7pl
+         1X7r3PgLAN/OGJozZQVqJhYKwr1JDvItJX2O4/m4jFG/1+aMYeE/pSxtpBq3yKeNpD/x
+         M/HxZzlRXRnbm9IhZ81KTEqSaVl/UDlzvfS52NAt3UdA3DB8emI66mhR4Druhupsi9kX
+         UYJCxn5s8NzmPXecXXUbXh5NPZWHIcg5pjFFkdWrBMr3rRnXy7LXZBP1Cit479mbxpSR
+         HCE5WGP1mRJqQyr7pTYrJcKmHrz3q4hRBertFL0cNEunxmztfzX8FBybtSIxMdJwpbhx
+         YG2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745780418; x=1746385218;
+        d=1e100.net; s=20230601; t=1745780421; x=1746385221;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kiHWomkf3wcsR+tvD4RLDrQZNUBMxVnHVwy9itXWJo8=;
-        b=aO/RV6XeZD50JPfekUArexX8IIIU08ptsetXiZ7z6p7EhxEG0iU6gTbfZ1gUeCY+es
-         F+qeQK1Aj/ZitcVXkbJH6g//W+kIQ5ONxLv074TVjvP9vMzb7MqSjf2RvfZRHibLuNij
-         9142Pg+IG78dsrfcsaCvibl/iSfrJ0riBzhtc/IbnYyZFYBp3p7QtSMyHgTJjKhEJwts
-         g8x5PQt13AHKMJM4NzdMG+7aU7we3RbjbDQMLdvHexKep1YL89H/rszvmxaB1mT/MJsk
-         +JvJw/5hi3U1DLtn24fJjAIpIlK1q0AmsmbaNHot3PoLwkCXasa3K1Oiv5KeRj6QZ9IH
-         6mDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfXTm3L9C41uyyTMbqvUWtCTrnzb45X+L1d3XDYIhnmjF5GF+NuKtsIo2OTw/stoapImOWkGpwa4o3DPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw64HzeyUN4KuKIrSbFwRRtHHsNm1BXyiaO1hAarzyXBcjD9VeR
-	s/G8/VTk4s14I/3ea6fuNwagOVRcuJ/z33DcfsLI8jOwLOWURsGX
-X-Gm-Gg: ASbGncsqQ/mp3wjkowAAqboriPJ1mnZvcLB1e0IeFiLT7Fd8dizdnsJS4XVIdxhZb9+
-	8y8A8/tfMgqpQEQdN6Qzbmnl+FxZVeebgVux9J4rCQpGcW6hNvMcID6BKHh6SEyB0mJ3p2XBs3x
-	bEXjRYpaZmO+DKKFSFeQfoF6Vfkc3U7zxR5oFTj+KfViC93QXjOcBOmMtEgRDuMsVRkMY6IPoB2
-	ka+2IwgmGi1n/AeYdEdDDZdAkwYWzzcRVtCs+Ri/m3tio9weSx95aOyw9XiikomZSz20Omkh1Ib
-	hJLMajEay6db09K43amkmjb5FxntWkxtzYMjr/seSUi/e2r/kBSb+tS2fVS2vg==
-X-Google-Smtp-Source: AGHT+IFUylfVVyaQkdTj7G9SXw4aWzBB2+YYrPKPSQjJoZLloI+KVj4P63eCYK2iieWNVOo68Fjdwg==
-X-Received: by 2002:a17:902:e18c:b0:22d:c605:a30c with SMTP id d9443c01a7336-22dc605a33bmr81867745ad.11.1745780417680;
-        Sun, 27 Apr 2025 12:00:17 -0700 (PDT)
+        bh=mCqwAYZCSc0dh66qfmmYusnvvBLoAOnre8x5oj+2T0I=;
+        b=H9WiQ8PYd8TRhYzgzmB/Bw82euiK7cHOZM5S7uvYuj2Hys8q+A4ZXX5kBkmOaCRSId
+         MNArjvqi1DRlhYaMPFi7l3LmvE8ZfgocfwTkqEsbH7VXiP1sViyvogmxM5hZDYDORN9m
+         ahOG6bc/Nc7Rb4aHaMwGDOBMrKHzdThfXkeXXPwo0caXcCZtsBXOA3vDEJTPKUyHTa6F
+         MUry5W6ua87EwfUDf0O1MPSTgAjpbDD7eo18a/bRjeQebsQOH+OzUTu6eT0LYaFbpaG9
+         kSbtxBBnTCDWDzdb7cHmuWtdCgmIXF7JFUF6TUqbAbOiIXczlsmLD7+GxhfMgoXfWU93
+         E/3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXfHHbqyETmcOZOqcLZAY7hnIBDGQ4YCtd5hUh1Cc440M0lPWQ9W49J95E6svOnj/DOCxIDKq3co1KO3eM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1pkxJzXdGndiOiJGiZ3W+ulUWIqZ9g2CCjEQha14HFLgUvs6P
+	ilTRLQq0UjKCxpZMlphJjGlKQACsXbs6AUDoy/lBMcjYE3p93Cja
+X-Gm-Gg: ASbGncsNsKQDISkNFB7Iotllp/OE30AC5ZzVpL5JeSiox2V1IFHouBkqoMZ7AuenQRR
+	7XVicJxreyYWV63KQpxjz3xOLQFZOJ1HZh6DwIUPOddGOAMT5pAGgwBHfNLH7MppcFxjD+0KCSa
+	Jlp+fiDK/mu/7/ahVP/kqctP3A/Ye69337YR/uoEFhZV/533k7DNUBNpxrJkzLHnJyeU5syFLJy
+	K1AjPeKij+weHlTgZRACW6LfSUTusRB9QEAd+R8oY8mtpjHxEuFUV1EILb+Y0BEKso/5Rlf4XE8
+	D2RsDN4Rx22jdYEpPTedEJczmyATEfU7ycKUUnR0Gxx22B9K4oLI+f1T8A+ABQ==
+X-Google-Smtp-Source: AGHT+IHnhP8OfwmNTbj23T0LsccS6Liv4VufDh0OTB4zjqyQzJVvlOs0vxIfu0mxzqpCysWHijiiWg==
+X-Received: by 2002:a05:6a21:9004:b0:1f5:535c:82dc with SMTP id adf61e73a8af0-2046a74a4d9mr7876792637.42.1745780421233;
+        Sun, 27 Apr 2025 12:00:21 -0700 (PDT)
 Received: from KASONG-MC4.tencent.com ([115.171.40.102])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faded554sm5862153a12.72.2025.04.27.12.00.13
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faded554sm5862153a12.72.2025.04.27.12.00.18
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 27 Apr 2025 12:00:17 -0700 (PDT)
+        Sun, 27 Apr 2025 12:00:20 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-mm@kvack.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -69,13 +69,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Nhat Pham <nphamcs@gmail.com>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH 3/6] f2fs: drop usage of folio_index
-Date: Mon, 28 Apr 2025 02:59:05 +0800
-Message-ID: <20250427185908.90450-4-ryncsn@gmail.com>
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH 4/6] filemap: do not use folio_contains for swap cache folios
+Date: Mon, 28 Apr 2025 02:59:06 +0800
+Message-ID: <20250427185908.90450-5-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250427185908.90450-1-ryncsn@gmail.com>
 References: <20250427185908.90450-1-ryncsn@gmail.com>
@@ -90,82 +87,57 @@ Content-Transfer-Encoding: 8bit
 
 From: Kairui Song <kasong@tencent.com>
 
-folio_index is only needed for mixed usage of page cache and swap
-cache, for pure page cache usage, the caller can just use
-folio->index instead.
+Currently, none of the folio_contains callers will encounter swap
+cache folios.
 
-It can't be a swap cache folio here.  Swap mapping may only call into fs
-through `swap_rw` and that is not supported for f2fs.  So just drop it
-and use folio->index instead.
+For fs/ callers, swap cache folios are never part of their workflow.
 
-Signed-off-by: Kairui Song <kasong@tencent.com>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org> (maintainer:F2FS FILE SYSTEM)
-Cc: Chao Yu <chao@kernel.org> (maintainer:F2FS FILE SYSTEM)
-Cc: linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE SYSTEM)
+For filemap and truncate, folio_contains is only used for sanity checks
+to verify the folio index matches the expected lookup/invalidation target.
+The swap cache does not utilize filemap or truncate helpers in ways that
+would trigger these checks, as it mostly implements its own cache management.
+
+Shmem won't interact with these sanity checks either unless thing went
+wrong, it would directly trigger a BUG, because swap cache index are
+unrelated to shmem index, and would almost certainly mismatch (unless
+on collide).
+
+While some filemap helpers works for swap cache space, the swap cache
+is different from the page cache in many ways. So this helper will
+unlikely to work in a helpful way for swap cache folios.
+
+So make it explicit here that folio_contains should not be used for
+swap cache folios. This helps to avoid misuse and remove the folio_index
+usage here.
+
 Signed-off-by: Kairui Song <kasong@tencent.com>
 ---
- fs/f2fs/data.c   | 4 ++--
- fs/f2fs/inline.c | 4 ++--
- fs/f2fs/super.c  | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ include/linux/pagemap.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 54f89f0ee69b..5745b97ca1f0 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2077,7 +2077,7 @@ static int f2fs_read_single_page(struct inode *inode, struct folio *folio,
- 	sector_t last_block;
- 	sector_t last_block_in_file;
- 	sector_t block_nr;
--	pgoff_t index = folio_index(folio);
-+	pgoff_t index = folio->index;
- 	int ret = 0;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index af25fb640463..a0bed4568c66 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -935,14 +935,14 @@ static inline struct page *folio_file_page(struct folio *folio, pgoff_t index)
+  * @folio: The folio.
+  * @index: The page index within the file.
+  *
+- * Context: The caller should have the page locked in order to prevent
+- * (eg) shmem from moving the page between the page cache and swap cache
+- * and changing its index in the middle of the operation.
++ * Context: The caller should ensure folio->index is stable and it's
++ * not added to the swap cache.
+  * Return: true or false.
+  */
+ static inline bool folio_contains(struct folio *folio, pgoff_t index)
+ {
+-	return index - folio_index(folio) < folio_nr_pages(folio);
++	VM_BUG_ON_FOLIO(folio_test_swapcache(folio), folio);
++	return index - folio->index < folio_nr_pages(folio);
+ }
  
- 	block_in_file = (sector_t)index;
-@@ -2392,7 +2392,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
- 		}
- 
- #ifdef CONFIG_F2FS_FS_COMPRESSION
--		index = folio_index(folio);
-+		index = folio->index;
- 
- 		if (!f2fs_compressed_file(inode))
- 			goto read_single_page;
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index ad92e9008781..aaaec3206538 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -86,7 +86,7 @@ void f2fs_do_read_inline_data(struct folio *folio, struct page *ipage)
- 	if (folio_test_uptodate(folio))
- 		return;
- 
--	f2fs_bug_on(F2FS_I_SB(inode), folio_index(folio));
-+	f2fs_bug_on(F2FS_I_SB(inode), folio->index);
- 
- 	folio_zero_segment(folio, MAX_INLINE_DATA(inode), folio_size(folio));
- 
-@@ -130,7 +130,7 @@ int f2fs_read_inline_data(struct inode *inode, struct folio *folio)
- 		return -EAGAIN;
- 	}
- 
--	if (folio_index(folio))
-+	if (folio->index)
- 		folio_zero_segment(folio, 0, folio_size(folio));
- 	else
- 		f2fs_do_read_inline_data(folio, ipage);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index f087b2b71c89..eac1dcb44637 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3432,7 +3432,7 @@ static int __f2fs_commit_super(struct f2fs_sb_info *sbi, struct folio *folio,
- 	bio = bio_alloc(sbi->sb->s_bdev, 1, opf, GFP_NOFS);
- 
- 	/* it doesn't need to set crypto context for superblock update */
--	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio_index(folio));
-+	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio->index);
- 
- 	if (!bio_add_folio(bio, folio, folio_size(folio), 0))
- 		f2fs_bug_on(sbi, 1);
+ unsigned filemap_get_folios(struct address_space *mapping, pgoff_t *start,
 -- 
 2.49.0
 
