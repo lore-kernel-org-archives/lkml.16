@@ -1,43 +1,36 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A2024633C;
-	Sun, 27 Apr 2025 08:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A679246326
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745744198; cv=none; b=RAL/86BWRHhARQVfL4Oyb0NLE0AA2Pd3HU7wlQwxxHhYJlRcM3x1uW6PMf/cbEFJMI13hBQ5wldZ7g5rMcImTSMYMUl4nxsYoFKnTGnO60SDbXBb/j0B1n48EeakrpgtzYQkacK83P82Lg/gOpHkCusAvdeywRLrjfJKdsQYdo4=
+	t=1745744242; cv=none; b=DzsrnSrn1yxkzoQTH2hmuQIJyl/NRc0/ZO65CeUoTr7yFPmTgkfWI16CRfrib70I6yxhRQ+Q+jOeNrW5epEss/pvZZcGbBFScwq1x02sFOLmTV/DkdiMxpiP1cBBN49DiEMyGPRL2VJkBCg2LI4d3Qp2K0mlI/SGAByFYYEanRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745744198; c=relaxed/simple;
-	bh=eS7yzfDWlqN6IRBfAXgT8yj7yIjtM1geYYgjXUyjIUc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CSrXg5q1g9SjJ0jEOlzSo0wLFOgmzAjcyl2sRsHPj6grGr7ai5wz29tAtsoSCthBWTaPSqe4yF9/N+OLeMUx27q0aoFEugzxm1TOzefNmQNombMx1X8CH6DzZ845DNcVILAE32e+xG/Jl6h2npvKZsH6x+qv5XXEORpEgOimNDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=RW4uMR0H; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1745744242; c=relaxed/simple;
+	bh=YJJpOOPhhRGCzDekeP0edTFaZoiIZvlimNyXq/m4AT0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRwd3i02J1c2YnRkKKFWbTuvpHNeq9QAoSoYjMM+J93DwG5efv9tCWmc5T5bCLCFSWXA8h86l4o7a3ef6LGY2DXnklXq31PlWM9z9N7wOjwELH9R2pWMpUjwMagV8hBT/RyPbgIhSlZCS1x1GP2XnCi5JnOhL1guyALGp3RnIyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gb3ESE6h; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="RW4uMR0H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=ttfjfcex3bdgxjbbczeexkt3ae.protonmail; t=1745744193; x=1746003393;
-	bh=WIsNNrHNWvNmxZ3FsMH+MSWRK3+6s9rB7du+OZv23xg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=RW4uMR0Haf5ghjyQC/oHwitNUD52iHRmBSFxM63IEP0BhBkwBr1FpZOsnkbfQYi8/
-	 f7rCmQ9XNi5bFlLGE+4ndWzmaak1potJ1us0ibISznCyr4Red2XrPHkL5imBucWgKh
-	 OrLY6Y0QUgY0frdPaEevqEuaj8fQEhV2ucvbYwlbNe4PI81beeDaa68qlynfne+jOW
-	 AAbG8Uj4CLg17hvEEXXGcvGnSeP2zFilAEJ5WFxczlyCErTS7xg3Gq6+TLk6Wa2eH4
-	 GBtD8InIh7qXlwChbHCzVVNwXg662Ur7eI+JxEcITXM5WSn1kSEk+5velE1SngpumQ
-	 iA5/neHqX3jPg==
-Date: Sun, 27 Apr 2025 08:56:29 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] samples: rust: pci: take advantage of Devres::access_with()
-Message-ID: <D9HAO06XMT9X.1NL63T3GBQG7B@proton.me>
-In-Reply-To: <aA1PjHrG4yT7XpCI@pollux>
-References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-4-dakr@kernel.org> <D9GUSVZY3ZT7.O3RTG4N0ZIK0@proton.me> <aA1PjHrG4yT7XpCI@pollux>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 9b50c9087772bc346d8770f942d75f0cd6d416ef
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gb3ESE6h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1745744233;
+	bh=YJJpOOPhhRGCzDekeP0edTFaZoiIZvlimNyXq/m4AT0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gb3ESE6hAVpaam9l4jNbXwEihGzD3do0F2/tP/MPr8ScvyM+V9vb54ng8H3zi0Bmh
+	 3eZ1ssrP+W9ZlS9ZwCTP8+ZAoIovfn/sD2+0pxAqfEyqpf7czdebDJOuxCl88/BVEk
+	 eJTzJpmdWFEfT7yn0tV4V8N4o/+sKTmtNXUCEf4o=
+Date: Sun, 27 Apr 2025 10:57:13 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Daniel Palmer <daniel@0x0f.com>
+Cc: w@1wt.eu, linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org, 
+	linux-kernel@vger.kernel.org, Daniel Palmer <daniel@thingy.jp>
+Subject: Re: [PATCH v3] tools/nolibc: Add m68k support
+Message-ID: <63007b04-80e1-497a-ae80-ee518c9c0792@t-8ch.de>
+References: <20250426224738.284874-1-daniel@0x0f.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,71 +38,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250426224738.284874-1-daniel@0x0f.com>
 
-On Sat Apr 26, 2025 at 11:26 PM CEST, Danilo Krummrich wrote:
-> On Sat, Apr 26, 2025 at 08:30:39PM +0000, Benno Lossin wrote:
->> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
->> > For the I/O operations executed from the probe() method, take advantag=
-e
->> > of Devres::access_with(), avoiding the atomic check and RCU read lock
->> > required otherwise entirely.
->> >
->> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
->> > ---
->> >  samples/rust/rust_driver_pci.rs | 12 ++++++------
->> >  1 file changed, 6 insertions(+), 6 deletions(-)
->> >
->> > diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_drive=
-r_pci.rs
->> > index 9ce3a7323a16..3e1569e5096e 100644
->> > --- a/samples/rust/rust_driver_pci.rs
->> > +++ b/samples/rust/rust_driver_pci.rs
->> > @@ -83,12 +83,12 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::Id=
-Info) -> Result<Pin<KBox<Self>
->> >              GFP_KERNEL,
->> >          )?;
->> > =20
->> > -        let res =3D drvdata
->> > -            .bar
->> > -            .try_access_with(|b| Self::testdev(info, b))
->> > -            .ok_or(ENXIO)??;
->> > -
->> > -        dev_info!(pdev.as_ref(), "pci-testdev data-match count: {}\n"=
-, res);
->> > +        let bar =3D drvdata.bar.access_with(pdev.as_ref())?;
->>=20
->> Since this code might inspire other code, I don't think that we should
->> return `EINVAL` here (bubbled up from `access_with`). Not sure what the
->> correct thing here would be though...
->
-> I can't think of any other error code that would match better, EINVAL see=
-ms to
-> be the correct thing. Maybe one could argue for ENODEV, but I still think=
- EINVAL
-> fits better.
+On 2025-04-27 07:47:38+0900, Daniel Palmer wrote:
+> Add nolibc support for m68k. Should be helpful for nommu where
+> linking libc can bloat even hello world to the point where you get
+> an OOM just trying to load it.
+> 
+> Signed-off-by: Daniel Palmer <daniel@thingy.jp>
 
-The previous iteration of the sample used the ENXIO error code.
+Thanks!
 
-In this sample it should be impossible to trigger the error path. But
-others might copy the code into a context where that is not the case and
-then might have a horrible time debugging where the `EINVAL` came from.
-I don't know if our answer to that should be "improve debugging errors
-in general" or "improve the error handling in this case". I have no
-idea how the former could look like, maybe something around
-`#[track_caller]` and noting the lines where an error was created? For
-the latter case, we could do:
+Acked-by: Thomas Weißschuh <linux@weissschuh.net>
 
-    let bar =3D match drvdata.bar.access_with(pdev.as_ref()) {
-        Ok(bar) =3D> bar,
-        Err(_) =3D> {
-            // `bar` was just created using the `pdev` above, so this shoul=
-d never happen.
-            return Err(ENXIO);
-        }
-    };
+> ---
+>  tools/include/nolibc/arch-m68k.h            | 141 ++++++++++++++++++++
+>  tools/include/nolibc/arch.h                 |   2 +
+>  tools/testing/selftests/nolibc/Makefile     |   5 +
+>  tools/testing/selftests/nolibc/run-tests.sh |   5 +
+>  4 files changed, 153 insertions(+)
+>  create mode 100644 tools/include/nolibc/arch-m68k.h
 
----
-Cheers,
-Benno
-
+<snip>
