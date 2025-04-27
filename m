@@ -1,80 +1,72 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08C6247289
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C802472BC
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745739854; cv=none; b=LuEg0RWiUUVxlhTvhYDsjfNd8zWMuNKXxucdz8PJM0bMjBO64Gvz2Lpdgfu67VSvBWmms/zpbKH703xGMGzRS3BkEfun0PGYyTGbZBeSQg3Hqln6vdutHJMkCcpHd1aJkR0iaWzBCg3ElTxPV/RLStkUH1uleMc2ETksMrHUrTg=
+	t=1745739856; cv=none; b=e+zc4z1upkGRYof00k6cBGLMYCOasUAHViqZLfsTic82+cy2McpmtHLBn6CvYEDNzaTW41qzYAWrpToW+LdmAPrL1GATWHX1m9n9Rukb13tsGHlTyydZ2rD51Oc7+D8GfAGE2mzsi0Bwjxef5jyETReVmbjWo0CLHOC1Rsousm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745739854; c=relaxed/simple;
-	bh=5/ognVn2gV4roYlrwA3n7Saujcjw7zfVtgoIux2q/NA=;
+	s=arc-20240116; t=1745739856; c=relaxed/simple;
+	bh=XNdCoV5cl6dJwVbDSjCJSD6fHhWGupv9B7+HEWYrjHM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bzycs4c3tsrms8yRFeYPID9VdSr1gyXLEU8L3qVAL0WdW8wmuiQCD3dfoSIpPBeW5oYrel+3u7gDMBNaG3QxWL4xjHplH1HEcNZX3Sec+jXmBYBxkvoPLRbkQnO79Caj7uWN52UhJfASBJ9XMzwYg01yNFZS7lNpiQZfPZxtzI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Tk02Lb9q; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version; b=pkP8geSgwbqpBR96rEUXdUiiTa7G10i1Ffm4TIbpgr9QJQZe0sw/fN+DejmL1TMbUqSPiCmgYWpU3B1OSyJaBiOC4lmlt2QmqQTdSTINU2G5sSpKlfv2h0+CI3MjgpTvMaCnZsE4nBiAlc2eoYbwYCPr1bDE5BhDSoLSqsNSeig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=OdFgjjGD; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Tk02Lb9q"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso34379065e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:44:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OdFgjjGD"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ede096d73so26252705e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1745739851; x=1746344651; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1745739852; x=1746344652; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FpQyYzT4X9HKnHUwrDxKtpV4uiqgR6fRfhBMNjhjrS0=;
-        b=Tk02Lb9qYJpXx4zzkppFNH7YLliR84aoVIlxUIKBJkisBMZCS2MNljI6pFctsTYNWQ
-         iYLu1UWJrf2ZB1Rjg3DDYsfKn7fq2lukPZuDDb9UkDmMKbueIGtyqqigkiXFE3B7O10e
-         QLxvPwm66I52gp5NFjNnHpY0nFzdhLLL1ptrs=
+        bh=tKsx1Y0DBxO5LiUGbdeLz4euTGTr3L8Ie2JztiqIkG8=;
+        b=OdFgjjGDNNzYftZbT9xq7UV9LUnIZpRnsMbR7gcOBuKwASwLVmiuIJfdMNGSUdPnsR
+         Io52FFYrOW62/Sbe31p55KYql7NeFWNUBkWDlUexCQbOwI8K9cIvqZ5HgB3ZuGJz/OP9
+         F4A9e681DDo3ZkhrDhIs7hFPQGKk3Rhb+KK4I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745739851; x=1746344651;
+        d=1e100.net; s=20230601; t=1745739852; x=1746344652;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FpQyYzT4X9HKnHUwrDxKtpV4uiqgR6fRfhBMNjhjrS0=;
-        b=HEYSaFuPuYQDwV95tB4N9mQbTIqnfV6x+UTNUpwq8s9R6vST1V48M4/5QNy5DBrisE
-         4FK/RrizyTzVUR9XgilhEsYQSqISEpARW091oyUupQ6lK5l5oS11p2UaPJWe5828YWQL
-         JtPa7qfka/TTTdmHi9imITBh0H6/CzmSBZveeffQwQeYBRT7rhld7s8FuL5NmB0znvf8
-         b5jcetTl/Ca44ISE3GJJrP/g6d7sNdUKiCcVm+3xqoEBgx3p2EJbX/5Yz2SoRMgHwUUb
-         49e5ZhWdswqfaLJWA9aGUG1wFyZf+0M/EYDDUG1C3nZqqHiz/DIFNjX4hFz0Nz7ySB0Q
-         VXyA==
-X-Gm-Message-State: AOJu0YwUl7CZayu9/dBX21S5a49a9kyopCodUAPEYPExzewB6/ickUEX
-	L8Rbg+cP5+Ctfe4W82rtn33L6ouWgHAGqXpiM2FLrmN29LwQguSW63lKHn4sEYnwhQr7E94WOc5
-	V
-X-Gm-Gg: ASbGnctp083R5IoixtWSn2OPIT6awpiQsRJDsNqeUK7cSWGtEtdz4ntXeJrAu/+DlpC
-	pEbkFApMTq34c9fs92Hut35H5yje09OvlR2vD3UWo+YYvZorsK/OsuUYlxrQZoM9w3qPrUmeVtJ
-	2bu2BkbXV/1kzolt6MxrkqCq2AAUZfCeyukvHmfIz88B7WAfwAr+J3HMbjwRzqwwziwaD4Lxawx
-	pL49eTNEuk8dS5g+M2h33Z4sM8T5h6awMBvCpT0v9FyxrJreaxtsVx4tTX1cPWjqv+t1p1B7c6u
-	QdVGoYHbRjOqAy7x7xv4GFkYcAbDTnHwRha7GZUclXQpi2UNBTCvOMHUvqRe1nJwD5t8Kw+21mq
-	vAMkIow==
-X-Google-Smtp-Source: AGHT+IHnx27fFK0oDHbVYzNEsRJgFRPiklQgqUZhae0lH9ygvIp4VX+fSkkY91P89JAIMZaLdkoxOQ==
-X-Received: by 2002:a05:600c:a15:b0:439:9e13:2dd7 with SMTP id 5b1f17b1804b1-440a64c159cmr74150165e9.2.1745739851229;
-        Sun, 27 Apr 2025 00:44:11 -0700 (PDT)
+        bh=tKsx1Y0DBxO5LiUGbdeLz4euTGTr3L8Ie2JztiqIkG8=;
+        b=raxwP+3tbrc6ka3Q2vaciYdWtRDucfSDw0xL5mf12ChkjsLci774lswzqW4PzRCrW/
+         3tFK/g/LIUgA9RzczId8sf8DmuU/7m88ZUCz7bICBraCdQcm1DGJ3YIAPXi/eF2Fs7Nr
+         L/hyNfCG2JVl/rN797Tauv9qorYlImH2EpWZKdbWeUO26QsfzTEDH3UlzZCVTGt/lYVR
+         BC6cofnGCOn5GlA4V2aVFA+P/qS+hVDB9nB8YOkfjVDklsr7bgm2EBlqLSGbnI45qwPL
+         nBl0DlxlhPmBqROKIHdIMpdGI8IVabx2EymFSZYbI+uCdN4/q8/KpAPlFowDDMhTqmNW
+         d/yQ==
+X-Gm-Message-State: AOJu0YwifG9OS0wTPY6/27cHGWoswqiO9UNnyN3Z3cyfUd5XcZ7it9mE
+	9hNyf20hfRQ51AC8JB+URJR3LxKoLxevm1+SBiFOIsU1meWLeFq8Jrx26jscE04XmunFxPdfdoZ
+	+
+X-Gm-Gg: ASbGncs373MmrLRgd1whZzHJrInBLy2PDr614yCZaAliJ45XmZATKn6a+w1wJywDKnH
+	xEy7Z1QuwmXaFT+/TK0HuKrZfuqklOd1QH7f92LOa56v9TMP9PYAKhUz74PoqZMTCcj/00ofu1C
+	PMey59THGW8CbB50uhpjUaKdcVPqRRlLF0PSulWNLYuwd17fs4N8AfvYM/rxuB/aWyHJvb5/3Q4
+	SvUelnGXT3fpha8ap7XarwTG5AkP/L8DTkfAERYGxIjrlH74oC+VdxnmWe59te5j4Fhck9j1btT
+	y2ew6AKvQYUJ8G1KN7fdflm6mxFKXLv5wAkEVk548RJkH6DveUL/STFtEwrQATxr0yTotvAeGjV
+	xhq0s7A==
+X-Google-Smtp-Source: AGHT+IFCEy8x0o5oo3zFYyMXFfS94FwDsXqBWsDjwWzSNdIUrFG48zSXY2rcjCPvG2HDuHNuAL8VeQ==
+X-Received: by 2002:a05:600c:1c18:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-440a66abe22mr49622795e9.28.1745739852516;
+        Sun, 27 Apr 2025 00:44:12 -0700 (PDT)
 Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.40.180])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm87682015e9.7.2025.04.27.00.44.09
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm87682015e9.7.2025.04.27.00.44.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 00:44:10 -0700 (PDT)
+        Sun, 27 Apr 2025 00:44:12 -0700 (PDT)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	linux-amarula@amarulasolutions.com,
 	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Amelie Delaunay <amelie.delaunay@foss.st.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 2/8] dt-bindings: arm: stm32: add compatible for stm32h747i-disco board
-Date: Sun, 27 Apr 2025 09:43:21 +0200
-Message-ID: <20250427074404.3278732-3-dario.binacchi@amarulasolutions.com>
+Subject: [PATCH 3/8] ARM: stm32: add a new SoC - STM32H747
+Date: Sun, 27 Apr 2025 09:43:22 +0200
+Message-ID: <20250427074404.3278732-4-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
 References: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
@@ -86,40 +78,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The board includes an STM32H747XI SoC with the following resources:
- - 2 Mbytes Flash
- - 1 MByte SRAM
- - LCD-TFT controller
- - MIPI-DSI interface
- - FD-CAN
- - USB 2.0 high-speed/full-speed
- - Ethernet MAC
- - camera interface
-
-Detailed information can be found at:
-https://www.st.com/en/evaluation-tools/stm32h747i-disco.html
+The STM32H747 is a dual-core MCU (Cortex-M7 running up to 480 MHz +
+Cortex-M4 running up to 240 MHz) containing from 1 to 2 Mbytes of Flash
+memory and 1 Mbyte of internal RAM.
 
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 ---
 
- Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mach-stm32/board-dt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-index 5fee2f38ff25..75ef877530f9 100644
---- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-@@ -42,6 +42,10 @@ properties:
-               - st,stm32h743i-disco
-               - st,stm32h743i-eval
-           - const: st,stm32h743
-+      - items:
-+          - enum:
-+              - st,stm32h747i-disco
-+          - const: st,stm32h747
-       - items:
-           - enum:
-               - st,stm32h750i-art-pi
+diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-dt.c
+index 5dcc4ddd1a56..e6233c8725ae 100644
+--- a/arch/arm/mach-stm32/board-dt.c
++++ b/arch/arm/mach-stm32/board-dt.c
+@@ -17,6 +17,7 @@ static const char *const stm32_compat[] __initconst = {
+ 	"st,stm32f746",
+ 	"st,stm32f769",
+ 	"st,stm32h743",
++	"st,stm32h747",
+ 	"st,stm32h750",
+ 	"st,stm32mp131",
+ 	"st,stm32mp133",
 -- 
 2.43.0
 
