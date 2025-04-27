@@ -1,109 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B635B10E0;
-	Sun, 27 Apr 2025 07:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B8D1DE3AC
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745738790; cv=none; b=JuknIHekORO42Qr5LTrrYTWUueHVuVH2y5lpZk7aYZrhbrYkZ5/LZIw4FDLSzw4KFf9K4CfXzdliV1/N2kwTlAk7vNan8fVHye46HSZ+sBlrmsmka41Mx4QmxUG4HwcE36vEk9gLi8ajG727Y+ufhEpKKdDYXY+1+jFj3D8csxQ=
+	t=1745738970; cv=none; b=Pum33gyZtYI7W9bVPm6s9HKLV1qdCdFuZ9PRPyR48M4vn3OvRa2e5acQThjwqnvWK5OIGuUwzuymlNbYbb0teYqutwhqg8UDlDlplviEjrIXgegQN4p6SBZDbUljd0fwjvhuJruuZ1+QiDYpp1mD/+rctY67UXflTsJ/BvLmBzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745738790; c=relaxed/simple;
-	bh=Jmn+u6fFBrsun9XakIeVgT39XGKP2ToxwISS/MEt76w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZ16HpEF3FsPMKyaTKZuGPS1TWlTSW6/kH+eDlYpYi6lpcQ+eqI1IBL6+Yx+99KlaeMRZNGqHLdFGK/KSnnZ3DtPoYEzFkcThEnEbAlfse8NQqSl4uK9SuHBUCXI6M0rL0nXuBAzdhn2fd3ZxVt4rYB97QEJuUk1Oe9F6WNhNHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ow5hOO3d; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745738970; c=relaxed/simple;
+	bh=YmIdSq43KeqVX2RY3EWr0cE19/g+nxXYj6wkj+8bK7M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UB+gdYaGGBm9ujTKY/p63SmklOeTH877nsFubp2y8YgJ1ZlFsnCLXFFwt3vhMQlTzNnt589gQXSa/cqtMX/gqdJDbW6ITvWT8/pdJDL6F2AteF0KaFExHFiRDUBRpzYRYzLuFgYHMa26DhdfDvKtFaCsX7Yzw84y1p0d4+d1/BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Is+oWpTV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ow5hOO3d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745738789; x=1777274789;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Jmn+u6fFBrsun9XakIeVgT39XGKP2ToxwISS/MEt76w=;
-  b=Ow5hOO3dYdPH0bm9AffH6yeAFD7CCB0RIYwBaD2sFblt8KuyX2XRiK8t
-   M63DFWJ2N1cU7Gi4dOBQyCdq+sBMmrrDtO6U24dE5FVSUY2C43vHTadZq
-   swYAasRJ6lecXN4KTQ+DdBmATuzBRoaLMirCjJK25DE1vU6ABw2IzHGht
-   3DQBnyc04vtGl3oD+Zr9Qgj+EwQPb3HTAx16dowlH3JbZIbAQwiQkV0hx
-   XWWpelvGb+iUpfckbXNdNS3AUV+SnnY3dh6QSCTodkglgTCvaeGIGFtF6
-   MOBrgenJz10QDSIo59+a4G7CiMqKNEVGy9rxtG/jIv4/a3mfkJP9B86S3
-   Q==;
-X-CSE-ConnectionGUID: SkYzLka3Rden+VeSTREfmQ==
-X-CSE-MsgGUID: EVpScRpuSgyfLGkk0neDug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="58710628"
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="58710628"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 00:26:28 -0700
-X-CSE-ConnectionGUID: tjr0bvpUSgWfm/XawVYnrA==
-X-CSE-MsgGUID: OXjYL/GnT9ykpQQNpcmQ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="164217471"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 00:26:22 -0700
-Message-ID: <376566b4-6c13-45ad-b1e5-8cfe2de437bc@linux.intel.com>
-Date: Sun, 27 Apr 2025 15:22:13 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Is+oWpTV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745738967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wcGQpFTguItVa6CDu+q0byxuNxLDL/Np928mwDKp2zQ=;
+	b=Is+oWpTV6S7/aK/v/Ng3NVe5/7DfH8YuLnihzo7J5jXqu4OB6r8Z5/yAQ88foLmlx6iVeW
+	jJL2GN05tCzxgI0SVK0g/WFmiCUy1X09+ZeOoqUcBDh5JQLB+bTtaYi5NS36tSlziIYd4j
+	uMB1DSsn5unJ7x37W63KhwRcsxrChVo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-554-TT62dsfcNpirg4YClsN7jw-1; Sun, 27 Apr 2025 03:29:25 -0400
+X-MC-Unique: TT62dsfcNpirg4YClsN7jw-1
+X-Mimecast-MFC-AGG-ID: TT62dsfcNpirg4YClsN7jw_1745738964
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so18142635e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:29:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745738964; x=1746343764;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wcGQpFTguItVa6CDu+q0byxuNxLDL/Np928mwDKp2zQ=;
+        b=mMy7chRj0B4HP6SLb3EU5TF1N9d50sjx1Zbiav2TgvX0wDYftkp61qOvb9l/EspPXp
+         P2ydbwH1deyJhLHODAfdhuFhad7qDK1cpOuJnLLlkBfs13AHBp9KpY1D51gfT01iFw0A
+         aJvxh8iCwUlGZruoLEU1NIu8SBpsw7FRL18lQzi84jVJurKFtVruz5y3YnyZKc5d4Uds
+         BOVm/FYMGfzfEQn7/WNUDOXsIGAUFXFKQnvyayT9UezAST7mLlGJY7gBUsWrx0eI+mzt
+         fQjOUHA/77XUqSRQ0+yOL5RkP1exqj5ngCy4Ebo4UbbA7zJuYVQwPrgwGwoN1e57I8Kx
+         dBJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSVRN4TUd6klSakIBxZknl7P4+0PsQFvg6eHLJB5wMBtPXGjwsm4umX+LvEALFPmQTIyctkgah/FGT0L4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx571ffbqCxZsNK+YxVhmqqAv4aPeX8ry+YnVo3s2xuFQMHsgXN
+	OAztuv+pjPiithYtNIKjkArt+UGzqBTZPxNJcGI82+T4BUlfGGRkMdRhdSxgBM7g939zLLRa4xD
+	WhCUFowU7KfTjpDkjABc6yGfYZ8Dr/Fjx/Vk8H0QHxN+SXqaO6YqqGMGD90iqEA==
+X-Gm-Gg: ASbGncuhLbdWqmWpufQgHwssFwT4PM475XCXG3Y5Al2CYb+hGCdF5W7R8IGfCxD/sZC
+	n61Go8DgCRjUhhudsvrt4i/XL8YWBOb0NtqufGYIeR+kjLmJxhSFWdRQX5ErPc0QTuj93rEgSiu
+	cgKO92pir2tR2RjPK+T2wKJUdKiyQwlQqa0EB9bFIREA81UHi0NaHJZkw0JJiSxi+twTTS3zn25
+	jg6MbYd3zbPzdeJtAgU46RiV0II+e5KrwpgcRC+Bj8rrL+IFv2K+mMlV6BchmJYodFQo4qS7KqP
+	9przDwcIvU0sRgXYZ34dxxAYpNQMnbvN6uIDb9zYjCr52MVob0YmRkL78tTylAVvt53AOQ==
+X-Received: by 2002:a05:600c:1e84:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-440a66b7b68mr66727295e9.29.1745738963930;
+        Sun, 27 Apr 2025 00:29:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHimZlDfyKX+dV1RunsI8DPPpzKCieKScXo5Xcy7H8gXFHsd947YK1+IzF4ivCFxFOjPMb/Zw==
+X-Received: by 2002:a05:600c:1e84:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-440a66b7b68mr66727125e9.29.1745738963562;
+        Sun, 27 Apr 2025 00:29:23 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d0a7802sm102831515e9.1.2025.04.27.00.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 00:29:22 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Cc: drawat.floss@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+ simona@ffwll.ch, jfalempe@redhat.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
+ atomic helpers
+In-Reply-To: <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
+References: <20250425063234.757344-1-ryasuoka@redhat.com>
+ <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
+ <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
+Date: Sun, 27 Apr 2025 09:29:20 +0200
+Message-ID: <87selugizz.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/22] iommufd: Abstract iopt_pin_pages and
- iopt_unpin_pages helpers
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
- corbet@lwn.net, will@kernel.org
-Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
- thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
- shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
- peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
- praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
- linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
- alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 4/26/25 13:58, Nicolin Chen wrote:
-> The new vCMDQ object will be added for HW to access the guest memory for a
-> HW-accelerated virtualization feature. It needs to ensure the guest memory
-> pages are pinned when HW accesses them and they are contiguous in physical
-> address space.
-> 
-> This is very like the existing iommufd_access_pin_pages() that outputs the
-> pinned page list for the caller to test its contiguity.
-> 
-> Move those code from iommufd_access_pin/unpin_pages() and related function
-> for a pair of iopt helpers that can be shared with the vCMDQ allocator. As
-> the vCMDQ allocator will be a user-space triggered ioctl function, WARN_ON
-> would not be a good fit in the new iopt_unpin_pages(), thus change them to
-> use WARN_ON_ONCE instead.
+Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
 
-I'm uncertain, but perhaps pr_warn_ratelimited() would be a better
-alternative to WARN_ON() here? WARN_ON_ONCE() generates warning messages
-with kernel call traces in the kernel messages, which might lead users
-to believe that something serious has happened in the kernel.
+Hello Ryosuke,
 
-> 
-> Rename check_area_prot() to align with the existing iopt_area helpers, and
-> inline it to the header since iommufd_access_rw() still uses it.
-> 
-> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
-> ---
->   drivers/iommu/iommufd/io_pagetable.h    |   8 ++
->   drivers/iommu/iommufd/iommufd_private.h |   6 ++
->   drivers/iommu/iommufd/device.c          | 117 ++----------------------
->   drivers/iommu/iommufd/io_pagetable.c    |  95 +++++++++++++++++++
->   4 files changed, 117 insertions(+), 109 deletions(-)
+> Hi Javier,
+>
+> On Fri, Apr 25, 2025 at 4:15=E2=80=AFPM Javier Martinez Canillas
+> <javierm@redhat.com> wrote:
+>>
+>> Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
+>>
+>> Hello Ryosuke,
+>>
+>> > Drop simple-KMS in favor of regular atomic helpers to make the code mo=
+re
+>> > modular. The simple-KMS helper mix up plane and CRTC state, so it is
+>> > obsolete and should go away [1]. Since it just split the simple-pipe
+>> > functions into per-plane and per-CRTC, no functional changes is
+>> > expected.
+>> >
+>> > [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@=
+suse.de/
+>> >
+>> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+>> >
+>>
+>>
+>>
+>> > -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
+>> > -                            struct drm_crtc_state *crtc_state,
+>> > -                            struct drm_plane_state *plane_state)
+>> > +static const uint32_t hyperv_formats[] =3D {
+>> > +     DRM_FORMAT_XRGB8888,
+>> > +};
+>> > +
+>> > +static const uint64_t hyperv_modifiers[] =3D {
+>> > +     DRM_FORMAT_MOD_LINEAR,
+>> > +     DRM_FORMAT_MOD_INVALID
+>> > +};
+>> > +
+>>
+>> I think the kernel u32 and u64 types are preferred ?
+>
+> I'm not sure if I should fix this in this patch because I did not add the=
+se
+> variables. IMO, we need to split the commit if we fix them.
+>
 
-Thanks,
-baolu
+Right, I got confused for how the diff showed the changes. But I agree with
+you that should be a separate patch since the variables already exist.
+
+[...]
+
+>>
+>> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+>
+> Thank you for your review and comment. I'll fix them and add your ack.
+>
+
+Thanks!
+
+> Best regards,
+> Ryosuke
+>
+
+--=20
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
