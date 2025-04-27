@@ -1,40 +1,36 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE0117A2F0
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 46E5E2512C0;
+	Sun, 27 Apr 2025 11:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745753738; cv=none; b=G9Bco7AZlhmrghFB8b0zcL/ZT+tmRjhZOKriwdzwcAZBHWqMdLb5dgKdC4EAd4S98Xdl6VfoNKdKW/qdI6+p3DXlv0ED1A9tNT6pu9i5vaVFeFe1b8X5MySl9+Pc+5h7GLtou4IpR5ib+DKcdqKsFfRxZAYV1igIP6MT4mVFNJ0=
+	t=1745753744; cv=none; b=s81hyC1Jyg7Lhs8gp/AGgfMlr6wMCEJpOnrAiS2WSMec7yoRl9q++hbc7Jh6JJF2qMl3fnBTHKTxyzKdrPOX7tVC9lVLcJg4wgifrFRNfuvTMFCEmils/pHZUwUztHK2GK7cl3Wf85nGZ3foXQvyZJgnpnWaHpQ4l+H0DnmOR7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745753738; c=relaxed/simple;
-	bh=jmvndnXismTNZl16DZ1DIdluALOH15b+ESCZyIyPXO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FDs/suWeJT8CHl4c8VoEwqOQfSmxnN7pODmTAHLNNkmgXOmLAF9FG0/aK5H3kFty3NyG2mTE7QX4ECr710hJPq8v3whucC7RtDFmKZh0vseTcwzT9kBsMP8BKvrvRwg4HYmK76drVlg9h8O9hGMEb+oBrZcQVW4squG76PIMZ/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CVi/hRLo; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CVi/hRLo"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745753722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hW4519CYvEA+gdkgAaMdE31EOuLdWmzDYGdg411anRE=;
-	b=CVi/hRLo9aiX4RAl4jdxPta5M5UJDDubLc3IsviJ3VPH2NBGChnmoyzijVL+ngINTZkWUN
-	1ddqYuTWLakyvmS5OIjp5CMID6b74yXmzEuns5csfTUg0zrXW//rckxpTN2pliTL4iFxuz
-	AeoTbyP6m0MCEETg3POpVxXZm076Jsg=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] MIPS: Fix MAX_REG_OFFSET
-Date: Sun, 27 Apr 2025 13:34:24 +0200
-Message-ID: <20250427113423.67040-2-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1745753744; c=relaxed/simple;
+	bh=QOLVD4XARfihC0BVLJ9ka6TW3KW0UYOgHaX04+ZAmNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=DEd6wOfwkU8q2E3RgPwn9WRzrTB7fxEghfoHUIlQ74vPWJKZd2RH0SLeHR0VWc37GIAVXQ05WB03VlrhlNQ0zmrrh+6wtCqJQrdSiINCOBYHA9rUCfkIuOT1yspSzNAoVi3L8yxYrTeWqPTDBlivwYE5X806WvAHxO8rEd/G7GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 5661D60196435;
+	Sun, 27 Apr 2025 19:35:38 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: 
+Cc: Su Hui <suhui@nfschina.com>,
+	tglx@linutronix.de,
+	eahariha@linux.microsoft.com,
+	geert@linux-m68k.org,
+	anna-maria@linutronix.de,
+	ojeda@kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2 1/3] time/jiffies: change register_refined_jiffies() to void __init
+Date: Sun, 27 Apr 2025 19:35:28 +0800
+Message-Id: <20250427113529.1473800-2-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20250427113529.1473800-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,43 +38,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Fix MAX_REG_OFFSET to point to the last register in 'pt_regs' and not to
-the marker itself, which could allow regs_get_register() to return an
-invalid offset.
+register_refined_jiffies() is only used in setup code and always return 0.
+Mark it to __init to save some bytes and change it to void.
 
-Fixes: 40e084a506eb ("MIPS: Add uprobes support.")
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Su Hui <suhui@nfschina.com>
 ---
-Compile-tested only.
+v2:
+ - No change. 
 
-Changes in v2:
-- Fix MAX_REG_OFFSET as suggested by Maciej (thanks!)
-- Link to v1: https://lore.kernel.org/lkml/20250411090032.7844-1-thorsten.blum@linux.dev/
+ include/linux/jiffies.h | 2 +-
+ kernel/time/jiffies.c   | 5 +----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-Changes in v3:
-- Keep the marker and avoid using #ifdef by adjusting MAX_REG_OFFSET as
-  suggested by Thomas and Maciej
-- Link to v2: https://lore.kernel.org/lkml/20250417174712.69292-2-thorsten.blum@linux.dev/
----
- arch/mips/include/asm/ptrace.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-index 85fa9962266a..ef72c46b5568 100644
---- a/arch/mips/include/asm/ptrace.h
-+++ b/arch/mips/include/asm/ptrace.h
-@@ -65,7 +65,8 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
+diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+index 0ea8c9887429..91b20788273d 100644
+--- a/include/linux/jiffies.h
++++ b/include/linux/jiffies.h
+@@ -59,7 +59,7 @@
+ /* LATCH is used in the interval timer and ftape setup. */
+ #define LATCH ((CLOCK_TICK_RATE + HZ/2) / HZ)	/* For divider */
  
- /* Query offset/name of register from its name/offset */
- extern int regs_query_register_offset(const char *name);
--#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last))
-+#define MAX_REG_OFFSET \
-+	(offsetof(struct pt_regs, __last) - sizeof(unsigned long))
+-extern int register_refined_jiffies(long clock_tick_rate);
++extern void register_refined_jiffies(long clock_tick_rate);
  
- /**
-  * regs_get_register() - get register value from its offset
+ /* TICK_USEC is the time between ticks in usec assuming SHIFTED_HZ */
+ #define TICK_USEC ((USEC_PER_SEC + HZ/2) / HZ)
+diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
+index bc4db9e5ab70..34eeacac2253 100644
+--- a/kernel/time/jiffies.c
++++ b/kernel/time/jiffies.c
+@@ -75,13 +75,11 @@ struct clocksource * __init __weak clocksource_default_clock(void)
+ 
+ static struct clocksource refined_jiffies;
+ 
+-int register_refined_jiffies(long cycles_per_second)
++void __init register_refined_jiffies(long cycles_per_second)
+ {
+ 	u64 nsec_per_tick, shift_hz;
+ 	long cycles_per_tick;
+ 
+-
+-
+ 	refined_jiffies = clocksource_jiffies;
+ 	refined_jiffies.name = "refined-jiffies";
+ 	refined_jiffies.rating++;
+@@ -100,5 +98,4 @@ int register_refined_jiffies(long cycles_per_second)
+ 	refined_jiffies.mult = ((u32)nsec_per_tick) << JIFFIES_SHIFT;
+ 
+ 	__clocksource_register(&refined_jiffies);
+-	return 0;
+ }
 -- 
-2.49.0
+2.30.2
 
