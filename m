@@ -1,131 +1,137 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3EF1CEADB;
-	Sun, 27 Apr 2025 14:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360FA1C4609
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745763936; cv=none; b=chvJi8FpIiVYvURkJdVbLkYQx/p04/ofaUtjRVlpjIskiZDl1BVwkXLGvRUnExglkXl8qEn2ZfurYm/uMJ/ylhaA0Txnd5ULVoY31OHgypLZHgmdB6BDn57lHcJaxJbiQgGZqUPpkmmWdLxhMXL8hOMiMIkduAqnvPeDQjacUdg=
+	t=1745763946; cv=none; b=JoCZDf23Oqjjtewn03ug1qlRd7i+ZyBBeWwExQewuZQfXXS45FbDDdUt5TZ5PLZrsEcXUSPFHC1/BYJOo8EDYzC52wGydd9ZcRpmNMhVsPn7HuUJyHjiE7LDYqoouv2Om7WqJIvZq8vJhQxVbSjJw/4KUwJt6+mAuXe7zW/JCu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745763936; c=relaxed/simple;
-	bh=h43/JFNo6LCvxmTnoJsqQ2wSk+f2aaZbipXz39J4cxw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jI9xM1uvhZpsfWv0RU/LkS9suPHymMv2HHFtDs60YPICPL9QvYT/Polod7zPKRs+FFdI0NxnoxdMQ7YQV+lqXskwIYpA7lCcO+b7J2JUNKe3YMqg+zGMOdl8f3STV+gQVMDG3USYTjFZmVZJntqUUcjE2EO/fyKRt8c3r9lxd4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WDzG7LKq; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745763946; c=relaxed/simple;
+	bh=1w2H2C99iP+VWYBXrmGdZQ9ALrTsVwpsWtw8L8F/la8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kWbwB1bjnZqHKrgkRs44tVUNgK08dTfxGezg/Pj57RFAXJFf5hva1UoYpD2Ceds37cLyjGkhSPJ/Tb9pcyjysCLBZpFR+7QBymQ9xWThlqS3MPz44dS8j+pLUi8dCMz+4jkayaouLfi/rxFtpRJwA48N/UiE3SYH0/DTGfsjdoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fpt6oovH; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDzG7LKq"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bef9b04adso39047001fa.1;
-        Sun, 27 Apr 2025 07:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745763932; x=1746368732; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ehkKd/S9OU9qUgpjp1lZbmN7V0G9VzQJCuY2t4gA7ss=;
-        b=WDzG7LKqlm1aC91YO1QmKiNIJzzfh5XW8F+m3WEAZvL0X5PylSvo0KTXo6kOjb9dJ0
-         s7KPUsT32B5n3yRnu8votFrKyuhO8ycnW72qH/P4OXOHxy0YSSZIUgbIAija9u/mLCAt
-         Mdv9qGVwFiWYdKgYsKWN1ArhAssUO83VL85H04LlR9B9WUBbl7RGGFpDQGeH/maydM7E
-         R0GnXGCPsKzFEoyevOUixmdGDHodPaKy2ZcGIr/E5M+8C/DPpNcdvai26/DO91xcp26N
-         /8MplRDVTfp/WFAGudx1XBZp5B4j2QOraQGWqUFT7T+YVLSMu/RgrmDk5ip9ufMhxrgn
-         jGQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745763932; x=1746368732;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ehkKd/S9OU9qUgpjp1lZbmN7V0G9VzQJCuY2t4gA7ss=;
-        b=VFuGjr8f3fU/9c/u1ezeix682GQ+msZuWLn1CkmSkKgDLhzOZZnCIW6yxGUdrqhZvx
-         m4rlw2b7EXPSRCyuFdPOThwBPCiLIj9bPmIYGEJIm4ZR3/nfKzjNkU9uThpKsCpI7TOn
-         yzIVyAo35WtB/KkNZd9FDXKyDk8FfNUerFCEhvp1ZNbzJvHymx39kxBfnnxuCQQ5rpQA
-         h+RWGp8w9XNZFkclzUzlYvkia7kvmWjk8n4ChwKC8oxRzOs+LP123VciCAHYMs2BtY15
-         FIhou/RYKDV8HvV6XrktQ3UTbk472DnWu/9TEwRDDrqUq5nUj9odFqln9UZRk8FSHN1U
-         BBiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnn+6+uI7m/Mjp5dOiUka0gOvjkc188psvf8OmMteSSm+gfK8WiL6jP41UIKwXj76N7ToqYyiqFcz5@vger.kernel.org, AJvYcCXyur4as+H5D9gWXRUa20o5hytUy7/exxqcgbh9+cUKhI00I+y8E3EHF1tLlBGvF4tBxVzvU/dY+5+W@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvRh1siyw6Y29yBDgFjREu41m8qPa5VEQ7IddeGgvsQN6cUn94
-	HfZW8bloMGxcm/kngPfrSPc1MTJSnuLgJyCqnhoZHWUMUM2SzVgcwBQovHpmqzTk
-X-Gm-Gg: ASbGnct5la/aFGivJ975aAdxBHUrA/a3ou91jWdfVtA2LLWBTMVYMoSONU0G727sy8Q
-	8G0SeKdT2PCx4rExWacgpU21bfrtILJC1JlAvATI13WQ5ZhwxowGTlJ3u2436azRad5Mq+kxamf
-	Wpy4PYEEQxeGRrgTomIexBFoJVsJ94VWCkve489GMTFy6bNh9nP4K4/1IIPvYbjQ+Ok33uUnX+4
-	NcB2y/KDbracbEPTKKiGwBLaEqdpn8EmgeILrDyiV3UFoMkSuXb8xaC4mI7jfOFKt9LUoZXemHw
-	lMplzNTvD/iXKr804qy/LOQGti7nMUteIrcWrNUghptqCZq1+Tdk0S+C
-X-Google-Smtp-Source: AGHT+IGLFpAqg2RLvOpyGg3GqdGLS7yvAzNGtXYHl5esGTKNk58qPrWitKbJKkJMbZDpUAYewQ6wGA==
-X-Received: by 2002:a05:651c:12c9:b0:30b:e983:9ba0 with SMTP id 38308e7fff4ca-31907022667mr27391711fa.23.1745763932152;
-        Sun, 27 Apr 2025 07:25:32 -0700 (PDT)
-Received: from localhost.localdomain ([178.176.177.108])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317cfb482b1sm17659191fa.29.2025.04.27.07.25.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 07:25:31 -0700 (PDT)
-From: Aleksandr Shubin <privatesub2@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Aleksandr Shubin <privatesub2@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Cheo Fusi <fusibrandon13@gmail.com>,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v12 3/3] riscv: dts: allwinner: d1: Add pwm node
-Date: Sun, 27 Apr 2025 17:24:55 +0300
-Message-Id: <20250427142500.151925-4-privatesub2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250427142500.151925-1-privatesub2@gmail.com>
-References: <20250427142500.151925-1-privatesub2@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fpt6oovH"
+Date: Sun, 27 Apr 2025 10:25:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745763931;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyLlP6GUrckZb1AH9cVw05rtmrOhGgAntLb6HhdZFFw=;
+	b=fpt6oovH+5bBiwYASqXcBztqfHKx98i3/nV+T5KCcCp+3xK/guVoOHTOtoTlkzD8o69jFV
+	W3suKuM2Jly95zflfzq2hcgAaJC6WFh0fWqVAdXyDDuzNIygRM5y+d7hF9XmDGyUSdoOOe
+	TNoMjikFJPNatAUcqULPJzwUWdWv1DM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, 
+	Carlos Maiolino <cem@kernel.org>, Chandan Babu R <chandanbabu@kernel.org>, 
+	Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org, Alexey Nepomnyashih <sdl@nppct.ru>, stable@vger.kernel.org, 
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] xfs: fix diff_two_keys calculation for cnt btree
+Message-ID: <kip7kv57wpvhft65vsbrddakjva66nyld7i2lrp6cnax4t6wbw@ywc6e6yvzqwl>
+References: <20250426134232.128864-1-pchelkin@ispras.ru>
+ <20250426150359.GQ25675@frogsfrogsfrogs>
+ <vx6bowvzlqixc4ap7vvj4mwarsuqm7y65cejg6yoc5wgpeh4j6@74rej3wf6uqq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vx6bowvzlqixc4ap7vvj4mwarsuqm7y65cejg6yoc5wgpeh4j6@74rej3wf6uqq>
+X-Migadu-Flow: FLOW_OUT
 
-D1 and T113s contain a pwm controller with 8 channels.
-This controller is supported by the sun20i-pwm driver.
+On Sun, Apr 27, 2025 at 02:56:39PM +0300, Fedor Pchelkin wrote:
+> Hi,
+> 
+> On Sat, 26. Apr 08:03, Darrick J. Wong wrote:
+> > On Sat, Apr 26, 2025 at 04:42:31PM +0300, Fedor Pchelkin wrote:
+> > > Currently the difference is computed on 32-bit unsigned values although
+> > > eventually it is stored in a variable of int64_t type. This gives awkward
+> > > results, e.g. when the diff _should_ be negative, it is represented as
+> > > some large positive int64_t value.
+> > > 
+> > > Perform the calculations directly in int64_t as all other diff_two_keys
+> > > routines actually do.
+> > > 
+> > > Found by Linux Verification Center (linuxtesting.org) with Svace static
+> > > analysis tool.
+> > > 
+> > > Fixes: 08438b1e386b ("xfs: plumb in needed functions for range querying of the freespace btrees")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+> > > ---
+> > >  fs/xfs/libxfs/xfs_alloc_btree.c | 8 ++++----
+> > >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
+> > > index a4ac37ba5d51..b3c54ae90e25 100644
+> > > --- a/fs/xfs/libxfs/xfs_alloc_btree.c
+> > > +++ b/fs/xfs/libxfs/xfs_alloc_btree.c
+> > > @@ -238,13 +238,13 @@ xfs_cntbt_diff_two_keys(
+> > >  	ASSERT(!mask || (mask->alloc.ar_blockcount &&
+> > >  			 mask->alloc.ar_startblock));
+> > >  
+> > > -	diff =  be32_to_cpu(k1->alloc.ar_blockcount) -
+> > > -		be32_to_cpu(k2->alloc.ar_blockcount);
+> > > +	diff = (int64_t)be32_to_cpu(k1->alloc.ar_blockcount) -
+> > > +			be32_to_cpu(k2->alloc.ar_blockcount);
+> > 
+> > Perhaps it's time to hoist cmp_int to include/ and refactor all these
+> > things to use it?
+> > 
+> > #define cmp_int(l, r)          ((l > r) - (l < r))
+> > 
+> > --D
+> > 
+> 
+> Thanks, that would be worth it, I think. Though the current xfs
+> ***diff_two_keys() implementations try to compute and return the actual
+> difference between two values, not the result of their comparison. Now
+> looking at diff_two_keys() use cases, I see only the latter one is needed
+> anyway so a good bit to refactor.
+> 
+> 
+> The thing I'm pondering over now is whether the macro in its current
+> form is okay to move up to include/. There is no argument restrictions and
+> typechecking intended to catch up obviously misleading usage patterns
+> though we'd need some if this is hoisted to a generic header and exported
+> for potential use by others?
+> 
+> There are four places where cmp_int is defined at the moment:
+> - bcachefs
+> - md/bcache
+> - xfs_zone_gc
+> - pipe.c
+> 
+> bcachefs is the largest user having all kinds of different arguments
+> providing to the macro, bitfields included. It also has several rather
+> generic wrappers, like u64_cmp, unsigned_cmp, u8_cmp, cmp_le32 and
+> others..
+> 
+> AF_UNIX code even has
+> 
+> 	#define cmp_ptr(l, r)	(((l) > (r)) - ((l) < (r)))
+> 
+> for pointer comparisons.
+> 
+> 
+> So in my opinion we'd probably need to come up with something like a new
+> include/linux/cmp.h header where all this stuff will be gathered in a
+> generic way.
+> 
+> Any objections/suggestions on that? Or just moving
+> 
+> 	#define cmp_int(l, r)          ((l > r) - (l < r))
 
-Add a device tree node for it.
-
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
----
- arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-index e4175adb028d..2c26cb8b2b07 100644
---- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-@@ -145,6 +145,18 @@ uart3_pb_pins: uart3-pb-pins {
- 			};
- 		};
- 
-+		pwm: pwm@2000c00 {
-+			compatible = "allwinner,sun20i-d1-pwm";
-+			reg = <0x02000c00 0x400>;
-+			clocks = <&ccu CLK_BUS_PWM>,
-+				 <&dcxo>,
-+				 <&ccu CLK_APB0>;
-+			clock-names = "bus", "hosc", "apb";
-+			resets = <&ccu RST_BUS_PWM>;
-+			status = "disabled";
-+			#pwm-cells = <0x3>;
-+		};
-+
- 		ccu: clock-controller@2001000 {
- 			compatible = "allwinner,sun20i-d1-ccu";
- 			reg = <0x2001000 0x1000>;
--- 
-2.25.1
-
+Ack. It avoids underflow issues when using a subtract and gcc generates
+good code for it.
