@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E556E253959;
-	Sun, 27 Apr 2025 09:21:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6993252900;
+	Sun, 27 Apr 2025 09:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745745698; cv=none; b=MShcAVOVzR9iAsXZP7GuFf9FAFgEhti3CDMSq/ZFv9WN6sJKCzJ7IY/+iXFzpY2/4RlmrFv4MinD5nY0apzrDhzJJi1YrnTuMVI1MtqS/GiysGmTtouCTdDwHwWHLeYylzF9eRBMrHJbKtpPZWFpo+1vVCjmqCCFAuZhi/Lu854=
+	t=1745745697; cv=none; b=eNUJshIdSGGnYc2fwdLL/JOT7dMw3KPwtdJsPYgRnoRF7uwYeIiX2VQqsbdZiUS3PlYseDbGmBl3e2IYpgyA6D0NJLjNYQFoh9TkODqoqeTXWhxifSD4xqLDRMIwvXZhgNsxNkPdE0lt71SVT4ARRSnAfcpo+3oxQ9cR8dRaADA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745745698; c=relaxed/simple;
-	bh=OS1y00M6nUqPAmb7VOw9fHGsSGTPfh2ajEfFaeIv6qI=;
+	s=arc-20240116; t=1745745697; c=relaxed/simple;
+	bh=+vAkAmxzXYdQ7DHyzTYgczxeCtY6E6PCVIeemR8f2UE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UK6xhw9EmnMKeVnQf7TaWlOjbsrzxRkGcZApbhzN5KL+r75EzsNNwC1foaYKzPPfdxSkJXRNkKRW5ZvHxvqY85LJUuIbj5O9LONBkNrvqEfC3UUO6nWr7fmNfZUgpxKrW51PTEqZxj3sQsBF1kscfq+ha4JUzCkV4eAkX8SIv9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Qe7DdUyA; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=I4QS30/SElKaYm53DpW/PghHArE6AAnHMrk+o7yNP7qyy1RqoVWo0vOFgk5JfB4u/DDQrPY9jPAdCmL0bKkSJ6v6bHyfucnWp1ft8vSgge3fv6jhMV7G/tNISrk/Euw4TDZb4aB4fQ96xPMCvdgdDugVVWqLxT33QTd5HikhDJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Nqa5qcgm; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qe7DdUyA"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Nqa5qcgm"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R9KRS81598826
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R9KRS11598826
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 27 Apr 2025 02:20:54 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R9KRS81598826
+	Sun, 27 Apr 2025 02:20:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R9KRS11598826
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745745656;
-	bh=bzFeWw6MFKyWrGw0/gn3Z8aFXHMt/Uenz11b4dG3MDc=;
+	s=2025042001; t=1745745642;
+	bh=p8ppX0g6LR5uDE4H5rP+F1T7auiPTWqUYddLIkJbPBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qe7DdUyA6Vfc8M4QRIxa4Z9YkrXEdOqRRWeljkIsdUk3S4jQ0WofjiJl/3JtPZfRa
-	 oqYLhNa9F2QGhF74XS4fySVpp8gUtxFi4eGGCFmiLuWoGJTzccCu6vKUJxTqaN1p/9
-	 i/ooQbZ0h1EJW57gJwo9FzQk1GNeYSlypakueXANTztoi0o6vItHNEVUV01dWO9Uoa
-	 eudFhhaYI3XxIT5LpI91SsbwdMc33b51+WdKFBmbeTLbM2d3b+o0fahMn0n17WD5RG
-	 kWY/LYuOeuPBrl8OO2lTxqBNoHq+wD10METAdlfpDLmlGTBeOlSi18XTgg9dWCWVSt
-	 ULCokpcBvc9vg==
+	b=Nqa5qcgm1xt2cbOzPOOE5NTQDSJVVDFWZs7ob5S90pzNOZfMWVzZfhzHCfPnW8k7H
+	 zGpTUYIqhLXK8edV6yOy5p8PVMegfBJ1AMwHGn3Wa6T8BFhC5IEyjwLALmMZVQHZvj
+	 FeAbywJiMCctZCYsrmeOmeRizPkCyPvpQqB4s20r9z+1KwReqSF0DU+LNVxkOYQyxN
+	 AIOC2xb33NMVp462kdpe7gascdkGx9CtJomG+ik64uXcr/WH65c56t948uSi/JqPTJ
+	 iYcnejO0EO5nB8HlBGaTzztJpKwC4CTb1LA+IrTBxA5vlEjmvH3lhGeW1IdF6DrQFD
+	 0gDpuTZqKjvRQ==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com,
         dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v4 11/15] x86/xen/msr: Remove pmu_msr_{read,write}()
-Date: Sun, 27 Apr 2025 02:20:23 -0700
-Message-ID: <20250427092027.1598740-12-xin@zytor.com>
+Subject: [PATCH v4 04/15] x86/msr: Rename rdpmcl() to rdpmc()
+Date: Sun, 27 Apr 2025 02:20:16 -0700
+Message-ID: <20250427092027.1598740-5-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250427092027.1598740-1-xin@zytor.com>
 References: <20250427092027.1598740-1-xin@zytor.com>
@@ -65,152 +65,149 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As pmu_msr_{read,write}() are now wrappers of pmu_msr_chk_emulated(),
-remove them and use pmu_msr_chk_emulated() directly.
+Now that rdpmc() is gone, i.e. rdpmcl() is the sole PMC read helper,
+simply rename rdpmcl() to rdpmc().
 
-As pmu_msr_chk_emulated() could easily return false in the cases where
-it would set *emul to false, remove the "emul" argument and use the
-return value instead.
-
-While at it, convert the data type of MSR index to u32 in functions
-called in pmu_msr_chk_emulated().
-
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Suggested-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
 
-Change in v4:
-*) Remove two "else" that no longer make sense (Juergen Gross).
-
-Change in v3:
-*) Remove the "emul" argument of pmu_msr_chk_emulated() (Juergen Gross).
+Changes in v3:
+*) Explain the reason of the renaming in the changelog (Dave Hansen).
+*) Use shorter name rdpmc() instead of rdpmcq() as the name of the
+   sole PMC read helper (Sean Christopherson).
 ---
- arch/x86/xen/enlighten_pv.c | 15 ++++++++-------
- arch/x86/xen/pmu.c          | 33 ++++++++-------------------------
- arch/x86/xen/xen-ops.h      |  3 +--
- 3 files changed, 17 insertions(+), 34 deletions(-)
+ arch/x86/events/amd/uncore.c              |  2 +-
+ arch/x86/events/core.c                    |  2 +-
+ arch/x86/events/intel/core.c              |  4 ++--
+ arch/x86/events/intel/ds.c                |  2 +-
+ arch/x86/include/asm/msr.h                |  2 +-
+ arch/x86/include/asm/paravirt.h           |  2 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 12 ++++++------
+ 7 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 61e51a970f3c..528a2f4df050 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1090,7 +1090,7 @@ static u64 xen_do_read_msr(unsigned int msr, int *err)
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 2a3259df619a..42c833cf9d98 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -108,7 +108,7 @@ static void amd_uncore_read(struct perf_event *event)
+ 	if (hwc->event_base_rdpmc < 0)
+ 		rdmsrq(hwc->event_base, new);
+ 	else
+-		rdpmcl(hwc->event_base_rdpmc, new);
++		rdpmc(hwc->event_base_rdpmc, new);
+ 
+ 	local64_set(&hwc->prev_count, new);
+ 	delta = (new << COUNTER_SHIFT) - (prev << COUNTER_SHIFT);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 85b55c1dc162..ea618dd8a678 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -134,7 +134,7 @@ u64 x86_perf_event_update(struct perf_event *event)
+ 	 */
+ 	prev_raw_count = local64_read(&hwc->prev_count);
+ 	do {
+-		rdpmcl(hwc->event_base_rdpmc, new_raw_count);
++		rdpmc(hwc->event_base_rdpmc, new_raw_count);
+ 	} while (!local64_try_cmpxchg(&hwc->prev_count,
+ 				      &prev_raw_count, new_raw_count));
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 394fa83b537b..8ac7a03ae4e9 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2724,12 +2724,12 @@ static u64 intel_update_topdown_event(struct perf_event *event, int metric_end,
+ 
+ 	if (!val) {
+ 		/* read Fixed counter 3 */
+-		rdpmcl((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
++		rdpmc((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
+ 		if (!slots)
+ 			return 0;
+ 
+ 		/* read PERF_METRICS */
+-		rdpmcl(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
++		rdpmc(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
+ 	} else {
+ 		slots = val[0];
+ 		metrics = val[1];
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 410a8975d1b9..be05e93b48e7 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2274,7 +2274,7 @@ intel_pmu_save_and_restart_reload(struct perf_event *event, int count)
+ 	WARN_ON(this_cpu_read(cpu_hw_events.enabled));
+ 
+ 	prev_raw_count = local64_read(&hwc->prev_count);
+-	rdpmcl(hwc->event_base_rdpmc, new_raw_count);
++	rdpmc(hwc->event_base_rdpmc, new_raw_count);
+ 	local64_set(&hwc->prev_count, new_raw_count);
+ 
+ 	/*
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index e05466e486fc..ae96d35e0621 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -234,7 +234,7 @@ static inline int rdmsrq_safe(u32 msr, u64 *p)
+ 	return err;
+ }
+ 
+-#define rdpmcl(counter, val) ((val) = native_read_pmc(counter))
++#define rdpmc(counter, val) ((val) = native_read_pmc(counter))
+ 
+ #endif	/* !CONFIG_PARAVIRT_XXL */
+ 
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index c4dedb984735..faa0713553b1 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -244,7 +244,7 @@ static inline u64 paravirt_read_pmc(int counter)
+ 	return PVOP_CALL1(u64, cpu.read_pmc, counter);
+ }
+ 
+-#define rdpmcl(counter, val) ((val) = paravirt_read_pmc(counter))
++#define rdpmc(counter, val) ((val) = paravirt_read_pmc(counter))
+ 
+ static inline void paravirt_alloc_ldt(struct desc_struct *ldt, unsigned entries)
  {
- 	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
- 
--	if (pmu_msr_read_emulated(msr, &val))
-+	if (pmu_msr_chk_emulated(msr, &val, true))
- 		return val;
- 
- 	if (err)
-@@ -1162,12 +1162,13 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
- 	default:
- 		val = (u64)high << 32 | low;
- 
--		if (!pmu_msr_write_emulated(msr, val)) {
--			if (err)
--				*err = native_write_msr_safe(msr, low, high);
--			else
--				native_write_msr(msr, low, high);
--		}
-+		if (pmu_msr_chk_emulated(msr, &val, false))
-+			return;
-+
-+		if (err)
-+			*err = native_write_msr_safe(msr, low, high);
-+		else
-+			native_write_msr(msr, low, high);
- 	}
- }
- 
-diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
-index b6557f2d1a2e..5f3d2a6c70f1 100644
---- a/arch/x86/xen/pmu.c
-+++ b/arch/x86/xen/pmu.c
-@@ -128,7 +128,7 @@ static inline uint32_t get_fam15h_addr(u32 addr)
- 	return addr;
- }
- 
--static inline bool is_amd_pmu_msr(unsigned int msr)
-+static bool is_amd_pmu_msr(u32 msr)
- {
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
- 	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-@@ -194,8 +194,7 @@ static bool is_intel_pmu_msr(u32 msr_index, int *type, int *index)
- 	}
- }
- 
--static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
--				  int index, bool is_read)
-+static bool xen_intel_pmu_emulate(u32 msr, u64 *val, int type, int index, bool is_read)
- {
- 	uint64_t *reg = NULL;
- 	struct xen_pmu_intel_ctxt *ctxt;
-@@ -257,7 +256,7 @@ static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
- 	return false;
- }
- 
--static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
-+static bool xen_amd_pmu_emulate(u32 msr, u64 *val, bool is_read)
- {
- 	uint64_t *reg = NULL;
- 	int i, off = 0;
-@@ -298,33 +297,17 @@ static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
- 	return false;
- }
- 
--static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
--				 bool *emul)
-+bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read)
- {
- 	int type, index = 0;
- 
- 	if (is_amd_pmu_msr(msr))
--		*emul = xen_amd_pmu_emulate(msr, val, is_read);
--	else if (is_intel_pmu_msr(msr, &type, &index))
--		*emul = xen_intel_pmu_emulate(msr, val, type, index, is_read);
--	else
--		return false;
--
--	return true;
--}
--
--bool pmu_msr_read_emulated(u32 msr, u64 *val)
--{
--	bool emulated;
-+		return xen_amd_pmu_emulate(msr, val, is_read);
- 
--	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
--}
-+	if (is_intel_pmu_msr(msr, &type, &index))
-+		return xen_intel_pmu_emulate(msr, val, type, index, is_read);
- 
--bool pmu_msr_write_emulated(u32 msr, u64 val)
--{
--	bool emulated;
--
--	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
-+	return false;
- }
- 
- static u64 xen_amd_read_pmc(int counter)
-diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
-index 163e03e33089..fd7f845b83a3 100644
---- a/arch/x86/xen/xen-ops.h
-+++ b/arch/x86/xen/xen-ops.h
-@@ -274,8 +274,7 @@ void xen_pmu_finish(int cpu);
- static inline void xen_pmu_init(int cpu) {}
- static inline void xen_pmu_finish(int cpu) {}
- #endif
--bool pmu_msr_read_emulated(u32 msr, u64 *val);
--bool pmu_msr_write_emulated(u32 msr, u64 val);
-+bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read);
- int pmu_apic_update(uint32_t reg);
- u64 xen_read_pmc(int counter);
- 
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 26c354bdea07..15ff62d83bd8 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -1019,8 +1019,8 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
+ 	 * used in L1 cache, second to capture accurate value that does not
+ 	 * include cache misses incurred because of instruction loads.
+ 	 */
+-	rdpmcl(hit_pmcnum, hits_before);
+-	rdpmcl(miss_pmcnum, miss_before);
++	rdpmc(hit_pmcnum, hits_before);
++	rdpmc(miss_pmcnum, miss_before);
+ 	/*
+ 	 * From SDM: Performing back-to-back fast reads are not guaranteed
+ 	 * to be monotonic.
+@@ -1028,8 +1028,8 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
+ 	 * before proceeding.
+ 	 */
+ 	rmb();
+-	rdpmcl(hit_pmcnum, hits_before);
+-	rdpmcl(miss_pmcnum, miss_before);
++	rdpmc(hit_pmcnum, hits_before);
++	rdpmc(miss_pmcnum, miss_before);
+ 	/*
+ 	 * Use LFENCE to ensure all previous instructions are retired
+ 	 * before proceeding.
+@@ -1051,8 +1051,8 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
+ 	 * before proceeding.
+ 	 */
+ 	rmb();
+-	rdpmcl(hit_pmcnum, hits_after);
+-	rdpmcl(miss_pmcnum, miss_after);
++	rdpmc(hit_pmcnum, hits_after);
++	rdpmc(miss_pmcnum, miss_after);
+ 	/*
+ 	 * Use LFENCE to ensure all previous instructions are retired
+ 	 * before proceeding.
 -- 
 2.49.0
 
