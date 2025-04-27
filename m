@@ -1,174 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8833FD
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 05:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCEA7E9;
+	Sun, 27 Apr 2025 05:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745730878; cv=none; b=Dhdn3M70XZEY6IguXdKgAvYwXzGjkmrI9zIqaD2hPCVa7uqLgv07uNQhvx1UvT13ucE7OD9KUEBQ+iCug3jbHZ9HH3hYAajQlccqdx/fmDQYdJbd3YombL9qinPcZsHBdYn4w0nZSd+D/YSR4LNbmSCxbWLAYdjnhNOTV12a8Pw=
+	t=1745731287; cv=none; b=CvGc/rYXqdv1eU+bFEFeKa5iyyjpDqnhmpt3fC5KK0zUBu/70cUMYEJJfe1YTmt9x4+vWDUO1Se8y4kSrXCzjAvkFuqtwm+afJ/uHrJmZMoS9wNACuugNNHx5mLIhxvXIQwafPq5f0js21G+uz/oUFhOqYoW3snufS7FoTi8CXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745730878; c=relaxed/simple;
-	bh=jkBLzN2drb+fa2jLDURCQoV3/FrHTdVbdplP8s7EN14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GE6Njw/ybIH+MXa3rs7s/IWkWabMJI+rxgJDDGSrr1PyH5FZqB5Eac3clYbCOWvs7lj3wSUsirghngcw5QHFcOhLWibzmR4cff2S1I6mv3LI46AmRubr5GULQxvj6xOH2TSaWuqLifVWOosBssZj5c39C+dvXPqb8+BeRUTvoAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k4I025Hw; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745731287; c=relaxed/simple;
+	bh=uT6wQrZz+Og81uIA0fnWp17n5iisubP/qNtIyRxnCXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQyVu+5FpL43AVu8FsRCARLLdvbP6bvvwSNzMWctxRskqFXgzEnU8v2ryoKtu1ttruwDr4HjmuVJF7GIIxLkVTpAe3hK/GQAh0i0FkmE5gXxoEAVO2eMtrE1DLyc+tQRbWP5UcigLCeKTsGjrkJMBrEfiEtw4kw9b5iefsG0IGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=dGnaoUBg; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k4I025Hw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745730877; x=1777266877;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jkBLzN2drb+fa2jLDURCQoV3/FrHTdVbdplP8s7EN14=;
-  b=k4I025Hwq9gzeVbOyMeh0LxgGg/6IUBkRKBSYym8lQlsIjeGNTmO3dJy
-   PIAqMtxIJbz9EAi9L77A5cixBEi/E5+rQ8w2n9Yz0d8zODXBVI8X74Yyl
-   C70e+Rmuv6qlj+5wzOEiePZXuhbD2JgoRpmu30XMdo4ldH+u/shTzspmt
-   wAD1OPG9HhSBsBZMep590yJafOLBQMHPhdJAAbxWQLTVbo4Q+x867EI9s
-   /zKPWRhTika5LU0P693N17EP3Lh3Fdvi+qDX1ayxT4CDFwULR6LK8igzz
-   zgZLH8uD40gy7yqB9XmzHndI/IFH2KONwtcEJeNN/J0H0aEvfCapFZlKJ
-   w==;
-X-CSE-ConnectionGUID: l96kE1c+S/iStj01sg/mCA==
-X-CSE-MsgGUID: i0vuRK/KQX6Zzy16KVsH5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="34956138"
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="34956138"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 22:14:36 -0700
-X-CSE-ConnectionGUID: 4+peumw0T/SilcU3U+0Ezg==
-X-CSE-MsgGUID: IGh30APlRTq38v9Kp8sAgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="133758639"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 22:14:33 -0700
-Message-ID: <8373789b-929e-4ad9-ab0b-6ec620719a7e@linux.intel.com>
-Date: Sun, 27 Apr 2025 13:10:24 +0800
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="dGnaoUBg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Pl2+iJoLEKyoEY1+QMbzNQxE4vs1/OpqeGo2MbFswoc=; b=dGnaoUBgwG+MFM/UgCXPevwWE5
+	1SBPXmQTDAAc/9iOYOSD/BlyZtCEk3qq8qm0xiPTxGOsP0Dv0Cw7NIlflY5pITkraHSwdkFx7tBEu
+	kNOVMTuERLnZjhJ97P/WUb5iDMqM7BFVuNjR2p1i8CPh29AUn0QzldJUQHx63UY9Gtj4dZFw+4J60
+	7EAM3fs081VqfaaOkty5cnDU3lpHYiWRncdhaPEG3RRHmegrSfjx8TOlUtTKeao0saw22Kz+s2kbK
+	iDNll0edL8bDHDIHJMTq0JiEhdzcGql3p4Was7EPbmHmk5EEwlBqueiaFepnGV2nfCTSxBFlxEi4C
+	UTWU99PQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u8uRz-001KyE-1U;
+	Sun, 27 Apr 2025 13:21:12 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 27 Apr 2025 13:21:11 +0800
+Date: Sun, 27 Apr 2025 13:21:11 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
+	linux-s390@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 11/13] crypto: x86/sha256 - implement library instead of
+ shash
+Message-ID: <aA2-x-grUfoulkDf@gondor.apana.org.au>
+References: <20250426065041.1551914-1-ebiggers@kernel.org>
+ <20250426065041.1551914-12-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] iommu/vt-d: Simplify domain_attach_iommu()
-To: Dan Williams <dan.j.williams@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250423031020.2189546-1-baolu.lu@linux.intel.com>
- <20250423031020.2189546-4-baolu.lu@linux.intel.com>
- <680bd94098249_1d522945b@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <680bd94098249_1d522945b@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250426065041.1551914-12-ebiggers@kernel.org>
 
-On 4/26/25 02:49, Dan Williams wrote:
-> Lu Baolu wrote:
->> Use the __free(kfree) attribute with kzalloc() to automatically handle
->> the freeing of the allocated struct iommu_domain_info on error or early
->> exit paths, eliminating the need for explicit kfree() calls in error
->> handling branches.
->>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c | 29 ++++++++---------------------
->>   1 file changed, 8 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index 3a9ea0ad2cd3..12382c85495f 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -1337,13 +1337,14 @@ static bool first_level_by_default(struct intel_iommu *iommu)
->>   
->>   int domain_attach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
->>   {
->> -	struct iommu_domain_info *info, *curr;
->> -	int num, ret = -ENOSPC;
->> +	struct iommu_domain_info *curr;
->> +	int num;
->>   
->>   	if (domain->domain.type == IOMMU_DOMAIN_SVA)
->>   		return 0;
->>   
->> -	info = kzalloc(sizeof(*info), GFP_KERNEL);
->> +	struct iommu_domain_info *info __free(kfree) =
->> +		kzalloc(sizeof(*info), GFP_KERNEL);
->>   	if (!info)
->>   		return -ENOMEM;
->>   
->> @@ -1351,34 +1352,20 @@ int domain_attach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
-> [..]
->> -err_clear:
->> -	ida_free(&iommu->domain_ida, info->did);
->> -err_unlock:
->> -	kfree(info);
->> -	return ret;
->> +	return xa_err(xa_store(&domain->iommu_array, iommu->seq_id,
->> +			       no_free_ptr(info), GFP_KERNEL));
->>   }
-> 
-> This pattern looks like it wants a "xa_store_or_{reset,kfree}()" helper that
-> handles both canceling a scope based cleanup and taking responsibility for
-> error-exit-freeing @info in one statement.
-> 
-> I.e. this is similar to a:
-> 
-> 	"return devm_add_action_or_reset(..., no_free_ptr(obj), ...)"
-> 
-> ...pattern.
-> 
+On Fri, Apr 25, 2025 at 11:50:37PM -0700, Eric Biggers wrote:
+>
+> +void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
+> +			const u8 *data, size_t nblocks)
+> +{
+> +	if (static_branch_likely(&have_sha256_x86) && crypto_simd_usable()) {
+> +		kernel_fpu_begin();
+> +		static_call(sha256_blocks_x86)(state, data, nblocks);
+> +		kernel_fpu_end();
+> +	} else {
+> +		sha256_blocks_generic(state, data, nblocks);
+> +	}
+> +}
+> +EXPORT_SYMBOL(sha256_blocks_arch);
 
-Yes. Perhaps adding a xa_store variant would be beneficial in all
-places that require this pattern.
+Because of the back-reference to sha256_blocks_generic, I get
+this with a fully modular build:
 
-Something like this?
+depmod: ERROR: Cycle detected: libsha256 -> sha256_x86_64 -> libsha256
+depmod: ERROR: Found 2 modules in dependency cycles!
 
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index 78eede109b1a..efbdff7ebda4 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -626,6 +626,35 @@ static inline void *xa_store_irq(struct xarray *xa, 
-unsigned long index,
-         return curr;
-  }
+I'm going to split libsha256 up into the block function and the
+lib API.
 
-+/**
-+ * xa_store_or_kfree() - Store this entry in the XArray.
-+ * @xa: XArray.
-+ * @index: Index into array.
-+ * @entry: New entry.
-+ * @gfp: Memory allocation flags.
-+ *
-+ * This function is like calling xa_store() except it kfrees the new
-+ * entry if an error happened.
-+ *
-+ * Context: Process context. Any context. Takes and releases the xa_lock.
-+ * May sleep if the @gfp flags permit.
-+ * Return: The old entry at this index or xa_err() if an error happened.
-+ */
-+static inline void *xa_store_or_kfree(struct xarray *xa, unsigned long 
-index,
-+               void *entry, gfp_t gfp)
-+{
-+       void *curr;
-+
-+       xa_lock(xa);
-+       curr = __xa_store(xa, index, entry, gfp);
-+       xa_unlock(xa);
-+
-+       if (xa_err(curr))
-+               kfree(entry);
-+
-+       return curr;
-+}
-+
-  /**
-   * xa_erase_bh() - Erase this entry from the XArray.
-   * @xa: XArray.
-
-Thanks,
-baolu
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
