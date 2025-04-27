@@ -1,130 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D9F18E025
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 17:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22AC155389;
+	Sun, 27 Apr 2025 17:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745773961; cv=none; b=XnMmnxQzxQH2BsII9boBFubs3bnDpgi+s50BDL8zm4VfAtHKBcFUOObXX21M/kIMnj2s1diu88ulUJu+ZCOgtjuJtkTnpmjfakLPP8vgbIVLvnZhWL/uU+wRNmu1HChdnECgRSaDmj2ij5S5PQQedo7mgkmuI/hMmLBoMM7oDHE=
+	t=1745774158; cv=none; b=nwZLAVlqAwRsxZj9ZeIah+2t2TdJg//Z4abr1bI0aL/heqKciHMF1gLly+ySC+lwwLjhyIK5J/Hnq66X2Tiyz/f/fkYWGdfWQwP37V7KM0mFh6AyGMHTNWYLaoHWfEHIImEfAlWTAiaCVftlHs86jgHNALubqcA/ohCkhgfyxlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745773961; c=relaxed/simple;
-	bh=/UX2eRg/DxKbZA4wXsLnH0EE2F/jJhGgRQ6zS46tbKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZAetcl68jVM01p/rKAfA4sCDQvdJ7HDcbfjOEaTi/ojdFEzKFK/12uLPXmtnO8g0m2bL4+Z+iNtYlh/yoN4uwKmjEEVhFTJlpJ6fUbwSooXVY6ohgilUkHlUWJVf4g8Rjs8Ome2zDxXvglZXkhgVik3RmnY5OQIXMuld0XrDQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F0QaRjoE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745774158; c=relaxed/simple;
+	bh=EY6zshMpHuKMi9GkwPaveoyuujbJdsaKWPi4lc/rwl8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dkJENVDjx4fscd7WTT+B2xmNh2TUD1lAUegC5kUZ/VlsQWbROzB6QL6+k4E+zrPd/PO8qDUa3Ge8JyXvjCwacaBemycurFnTH0+BKi6bqa1i1E5ljgF9E2nN8/cT/SHiAKZ4YXlBfQAtq9uHMma4NjQO4XEWB82jPwgAB/ezkKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=bB32K6jX; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F0QaRjoE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745773958;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vSo5qlLIAZ4o+8kKkCdWcYkoEy2DHr0WHSd64t2G4bM=;
-	b=F0QaRjoEUN4h12f/mKKEkFrkwIFPso00Co6fgjRunXQS3e5mCRFkPC6q7P5tHajBiezgEk
-	fpX9RYNOdYSyWc96YHXcQaY1MOg8G3KLKwd4G4v688KvsY6i1JkowPEwibFZxCZGRhQnEf
-	nSomv6MIINsIizYkT9pYHCTkQHUQiK8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-McLM3ZcROEq8TXP7O4_W_w-1; Sun,
- 27 Apr 2025 13:12:32 -0400
-X-MC-Unique: McLM3ZcROEq8TXP7O4_W_w-1
-X-Mimecast-MFC-AGG-ID: McLM3ZcROEq8TXP7O4_W_w_1745773949
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8386B19560AA;
-	Sun, 27 Apr 2025 17:12:29 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 563B5180045C;
-	Sun, 27 Apr 2025 17:12:23 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 27 Apr 2025 19:11:51 +0200 (CEST)
-Date: Sun, 27 Apr 2025 19:11:43 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 10/22] uprobes/x86: Add support to optimize
- uprobes
-Message-ID: <20250427171143.GA27775@redhat.com>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-11-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="bB32K6jX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1745774153; x=1746033353;
+	bh=oNY/dnOz3jwg3jimqTTHInVyKqIo/WYcv2VYaSZg94s=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=bB32K6jXAuv1hpvpknBf0RaLcQ8RaIumRfelbDnJwtDdmoBgT2FCQQWttBOn7k9j6
+	 h2xrg7+HwLgEjmhtzf4n1rJwFjjh9RErkb318qXPWvZlXKc5UbctUiF4RZsc53vSOd
+	 3g/V+v5goAjHlohXK2ap9hy2Lpz/6KImzg4qXyQWKgcfLHx4C0RkRJwstiuQn+8m/3
+	 X88y/Wyl7Y5UozgVRca6VDLrkHTG181dAz4IkR18tSJL16o1Gr0MIg2IAtv38gL4Tz
+	 fuUxUJhcxngIH14wai1zMmpXvR8mbdGS1+VoifHP2jAiU8jbQYJwffKiWj4tSR/4Rg
+	 XjNPNwP54eGUQ==
+Date: Sun, 27 Apr 2025 17:15:48 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
+Message-ID: <D9HLAAZJRDKB.3CRXXMTLLPQ9J@proton.me>
+In-Reply-To: <aA4DNEHgrKMmzxBP@pollux>
+References: <D9HA92TSMC3M.2CRRX8P64NGD0@proton.me> <aA4DNEHgrKMmzxBP@pollux>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 6d7e3bccd236afe6b8900c83c52cf8490fcbca62
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421214423.393661-11-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I didn't actually read this patch yet, but let me ask anyway...
-
-On 04/21, Jiri Olsa wrote:
+On Sun Apr 27, 2025 at 12:13 PM CEST, Danilo Krummrich wrote:
+> On Sun, Apr 27, 2025 at 08:37:00AM +0000, Benno Lossin wrote:
+>> On Sat Apr 26, 2025 at 11:18 PM CEST, Danilo Krummrich wrote:
+>> > On Sat, Apr 26, 2025 at 08:24:14PM +0000, Benno Lossin wrote:
+>> >> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
+>> >> > Implement an unsafe direct accessor for the data stored within the
+>> >> > Revocable.
+>> >> >
+>> >> > This is useful for cases where we can proof that the data stored wi=
+thin
+>> >> > the Revocable is not and cannot be revoked for the duration of the
+>> >> > lifetime of the returned reference.
+>> >> >
+>> >> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>> >> > ---
+>> >> > The explicit lifetimes in access() probably don't serve a practical
+>> >> > purpose, but I found them to be useful for documentation purposes.
+>> >> > ---
+>> >> >  rust/kernel/revocable.rs | 12 ++++++++++++
+>> >> >  1 file changed, 12 insertions(+)
+>> >> >
+>> >> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+>> >> > index 971d0dc38d83..33535de141ce 100644
+>> >> > --- a/rust/kernel/revocable.rs
+>> >> > +++ b/rust/kernel/revocable.rs
+>> >> > @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(=
+&self, f: F) -> Option<R> {
+>> >> >          self.try_access().map(|t| f(&*t))
+>> >> >      }
+>> >> > =20
+>> >> > +    /// Directly access the revocable wrapped object.
+>> >> > +    ///
+>> >> > +    /// # Safety
+>> >> > +    ///
+>> >> > +    /// The caller must ensure this [`Revocable`] instance hasn't =
+been revoked and won't be revoked
+>> >> > +    /// for the duration of `'a`.
+>> >>=20
+>> >> Ah I missed this in my other email, in case you want to directly refe=
+r
+>> >> to the lifetime, you should keep it defined. I would still remove the
+>> >> `'s` lifetime though.
+>> >> > +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
+>> >> > +        // SAFETY: By the safety requirement of this function it i=
+s guaranteed that
+>> >> > +        // `self.data.get()` is a valid pointer to an instance of =
+`T`.
+>> >>=20
+>> >> I don't see how the "not-being revoked" state makes the `data` ptr be
+>> >> valid. Is that an invariant of `Revocable`? (it's not documented to h=
+ave
+>> >> any invariants)
+>> >
+>> > What else makes it valid?
+>>=20
+>> IMO an `# Invariants` section with the corresponding invariant that
+>> `data` is valid when `is_available` is true.
 >
-> +static int swbp_optimize(struct vm_area_struct *vma, unsigned long vaddr, unsigned long tramp)
-> +{
-> +	struct write_opcode_ctx ctx = {
-> +		.base = vaddr,
-> +	};
-> +	char call[5];
-> +	int err;
-> +
-> +	relative_call(call, vaddr, tramp);
-> +
-> +	/*
-> +	 * We are in state where breakpoint (int3) is installed on top of first
-> +	 * byte of the nop5 instruction. We will do following steps to overwrite
-> +	 * this to call instruction:
-> +	 *
-> +	 * - sync cores
-> +	 * - write last 4 bytes of the call instruction
-> +	 * - sync cores
-> +	 * - update the call instruction opcode
-> +	 */
-> +
-> +	text_poke_sync();
+> Yeah, I agree that the # Invariants section is indeed missing and should =
+be
+> fixed.
+>
+>> > AFAICS, try_access() and try_access_with_guard() argue the exact same =
+way,
+>> > except that the reason for not being revoked is the atomic check and t=
+he RCU
+>> > read lock.
+>>=20
+>> Just because other code is doing the same mistake doesn't make it
+>> correct. If I had reviewed the patch at that time I'm sure I would have
+>> pointed this out.
+>
+> I would say that try_access() and try_access_with_guard() are wrong, they=
+ rely
 
-Hmm. I would like to understand why exactly we need at least this first
-text_poke_sync() before "write last 4 bytes of the call instruction".
+Did you mean to write `wouldn't`? Otherwise the second part doesn't
+match IMO.
 
+> on the correct thing, we just missed documenting the corresponding invari=
+ant.
 
-And... I don't suggest to do this right now, but I am wondering if we can
-use mm_cpumask(vma->vm_mm) later, I guess we don't care if we race with
-switch_mm_irqs_off() which can add another CPU to this mask...
+Yeah it's not a behavior error, but since you agree that something
+should be fixed, there also is something that is 'wrong' :)
 
-> +void arch_uprobe_optimize(struct arch_uprobe *auprobe, unsigned long vaddr)
-> +{
-> +	struct mm_struct *mm = current->mm;
-> +	uprobe_opcode_t insn[5];
-> +
-> +	/*
-> +	 * Do not optimize if shadow stack is enabled, the return address hijack
-> +	 * code in arch_uretprobe_hijack_return_addr updates wrong frame when
-> +	 * the entry uprobe is optimized and the shadow stack crashes the app.
-> +	 */
-> +	if (shstk_is_enabled())
-> +		return;
+>> I opened an issue about this:
+>>=20
+>>     https://github.com/Rust-for-Linux/linux/issues/1160
+>
+> Thanks for creating the issue!
+>
+> What do you suggest for this patch?
 
-Not sure I fully understand the comment/problem, but what if
-prctl(ARCH_SHSTK_ENABLE) is called after arch_uprobe_optimize() succeeds?
+I don't mind if you take it with the lifetime changes, so
 
-Oleg.
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+
+But I'd like the invariant to be documented (maybe we should tag the
+issue with good-first-issue -- I don't actually think it is one, but
+maybe you disagree).
+
+---
+Cheers,
+Benno
 
