@@ -1,116 +1,139 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432F6A55
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 19:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7DCA55;
+	Sun, 27 Apr 2025 19:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745780544; cv=none; b=Pm/v9x9JiPzMUsdFFhPW5cDc6bhBMlR1nEWFrNI8Mxw3LSbpYGGDhXM2QqTOIKkw4QomLusvHEMCM5BoOAsmjI3Rz038rAdsxeUce26K22i/cTw0xdDId7Zo1fwR2aXAqhpS6Sac8VkWpmDXuCoMOkO8FGqkED9kIX7mFTfVKXE=
+	t=1745780555; cv=none; b=PI2i7Azxhb44WTuczaZq/RfjG+W6m6NCbkz7bxgXEpJ4yqPL7jzWQKHPDb4U7YsMk6KtgVxV13AV0U8neZcjkrUNwy2fZPk1oOUfgnW50La4ZQ07QAG1t6tPacfXYjuetKWjTMRtLmtzMrzsc28rRXyU3N4pl3l2EzutSrAe+a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745780544; c=relaxed/simple;
-	bh=F6b907E0q1NnoYDyDm0n8OMnVyfUHGPTmeS7ucUIsgE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BVmMVfoxdfeHOzctK0UJA6dqC/wuQ5NVRZwK9/08sCNjm1dwytFzkpJdr6zr/y8BGHribEpvnde+bf2j6dEeZyhhFgVswUX6M7JTkvckUfTFOsRuNNxkw3d4FGcNdR1V3o1cftnJVW2y4q465wiAsMd9PQCmOebN1gKEu3cAZmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTi+I275; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745780555; c=relaxed/simple;
+	bh=R8tOTglTl8ZwDIpzs55Bm4A/NsGF97weBUTxT59Zeao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wcjy3IFjWlLf2mWpF7AdEUG6Ds2hQ2+a3ErQBkI/e2lFo+Jj09PZLEUCGXJCcnOf0XiI0FNwxkf4dihxjBSWOcfHUej1bKATC0bXb8qcpd4igY2Xz3w29hTUd2CL8ylU8FL+nmxe97+/NCyxveUbOkENNmKDlCIKpfzyY1TZ0l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLf+t2h3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTi+I275"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5499614d3d2so4217204e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 12:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745780540; x=1746385340; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QaPmd9YiR7u0cQFaQBbg/+xZGk1+cLK6Ao/42+Ljo6g=;
-        b=CTi+I275CKJ2jlsU2oKunUAPZjSvFtq/yOCEeP9d/tp+3YSN7DX4PDex05AbqQwcd4
-         ElQOqxybTXzTiKcJR1QajHuKZ66x9JRBFJxr9BBf2A1TsR+398aTj6fwcKsrdvMlCerz
-         OpSAOz9vFX7/qzA9zzbkfqGVVdGf48pw8ZRdTd+FnoZtIQu/fUejcrpq7CoDhQi/zAm7
-         bcoODzdNe3ucLrVnDOlNYWdYAvZWGBgS/TKI0Ds0u74BMKv55kk2DDSxteX+j9xDuVeF
-         L1fpDCocw5BQy+uNmConq2q7/N9iFcOdkDuJ09dgaxqBD9BUBJT3lb+BhxlR/Ub+xrry
-         JvGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745780540; x=1746385340;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QaPmd9YiR7u0cQFaQBbg/+xZGk1+cLK6Ao/42+Ljo6g=;
-        b=T95lhSU07dWqn4q0Pu3fWWaHN9QGkhUbFknjjesbfmMQ0dKpuFq8gMeT1yMsyHwgwY
-         tdqPX/WX98KFeIYB2yD0/Xv0MEIbnmMg91w3GBDqNjZF46i4zWILEx7KNPnf1Dclj0Gk
-         xEOaYbxOFZ3iGAVFNUm8J3F5j7ojb3MkeROLWlLQGKT1WQwEQxy7AmrmQ/lLRgeeq3gF
-         if8Xw9s8jLc973eeyo8DaMt4EoESz0QEQjAehpEH83lhM7+7QcGw/3WqqAVXJu3q2AHU
-         DODPKeD/JY9hibVVxYgQv2m0E4plCrfUeCIM+2OPmIIECmpEtCboyjCREsoBhs4n4wjY
-         6QUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWX4ZhjxIeGlcL649WEA+GmwyjqCkJoiw6OMK/GvPyMd+RPZppWaPxLyjuP5l7VVwnlWpHlGq2y8Z7y520=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynwvINfXA/vMdmV7vxyXft2JwtGuPMO+iAsJVTVWWp4SJNXiT+
-	W27ZTLTgAUMQx2aHc7CHoV1Bbw1btSVomINMjr3abVqL8gWPVnqtv1gGYvXT+igygKXVT3o2/z4
-	Ln/lRpgHFLP1ffouVNe/kj09lkXA=
-X-Gm-Gg: ASbGnctHZ3UblEDzSXbMx/YVGkdnUv1Q2FFpJo8IDPWJtH+WKY2a9lH+7Fw3aX/fnGl
-	+36gOYa2xE/2XTetrq2ya/CtaQ/88Z4hQC3Atk/EMqwMgfAyditr0q0qRGHPsk+ItP7dlg47itP
-	OrOxVEu2N630NfqTjngV/mdUeVQUQ/XkP5
-X-Google-Smtp-Source: AGHT+IHWiQabEQvzZn/gJJDNCBQro1R9DpRyeMEUSWGCTEA5LCHCYvP4MVSgJDZSZgfyKi8OV+mqGVl41yhcqWUGx24=
-X-Received: by 2002:a2e:bea2:0:b0:300:3307:389d with SMTP id
- 38308e7fff4ca-319070257c7mr33511981fa.19.1745780540070; Sun, 27 Apr 2025
- 12:02:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLf+t2h3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D722C4CEE3;
+	Sun, 27 Apr 2025 19:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745780554;
+	bh=R8tOTglTl8ZwDIpzs55Bm4A/NsGF97weBUTxT59Zeao=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KLf+t2h3Wf9Etv4/OzPqw3E0joZD0wt9h9wHqV0EWwlPAJIih0n0Jg5gWuYJk3Z6q
+	 JYBaH6PPtNmFYG3LvFsFfi3/2Nofz0otGv6nwQHkz8Isx2ZhE7I3mOain9faTW3B5L
+	 GIJaxywty4yY894+hq1+2IVHe7GEaP+b+bWcMLqmRcJFlmHls/4iSCvmrDgDGtiUPG
+	 I/E/FV6zJdBv5HxKoriByZ3w2ke/YbL9Tow8xF3Pn+0ljIzW02U/QBBnc1C73+6pso
+	 7i0H9CflQY6y9kxidrPJN3SXkgnPLux3jQ06E5CV68eimo7WxHwIuCcKGaLu8D4ZCM
+	 XdAPGU31k9+tg==
+Message-ID: <364cb2a9-af29-4952-acca-59b9c2d73267@kernel.org>
+Date: Sun, 27 Apr 2025 21:02:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427185908.90450-1-ryncsn@gmail.com>
-In-Reply-To: <20250427185908.90450-1-ryncsn@gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 28 Apr 2025 03:02:03 +0800
-X-Gm-Features: ATxdqUE8KRHu9JAAsSR6mshU6QdBJrhqHafCjj6o9Ntpfk2Q2LRBFeME5awI3u8
-Message-ID: <CAMgjq7Av8weoyhnk0-u6HZFdJn29bUzkJ60X9=sz5qrWGPNp1A@mail.gmail.com>
-Subject: Re: [PATCH 0/6] mm, swap: clean up swap cache mapping helper
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, 
-	David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, "Huang, Ying" <ying.huang@linux.alibaba.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: nuvoton: Add EDAC controller
+To: William Kennington <william@wkennington.com>
+Cc: Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>,
+ Tali Perry <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250416001350.2066008-1-william@wkennington.com>
+ <9dc96af3-239f-4cb6-b095-875b862be493@kernel.org>
+ <CAD_4BXhMs4sopska1=czqWDM8nY6gswXv3LBeUGNzFWn1+7V8g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAD_4BXhMs4sopska1=czqWDM8nY6gswXv3LBeUGNzFWn1+7V8g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 28, 2025 at 3:00=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
-e:
->
-> From: Kairui Song <kasong@tencent.com>
->
-> This series removes usage of folio_index usage in fs/, and remove swap
-> cache checking in folio_contains.
->
-> Currently, the swap cache is already no longer directly exposed to fs,
-> and swap cache will be more different from page cache. Clean up the
-> helpers first to simplify the code and eliminate the helpers used for
-> resolving circular header dependency issue between filemap and swap
-> headers.
->
-> Kairui Song (6):
->   fuse: drop usage of folio_index
->   btrfs: drop usage of folio_index
->   f2fs: drop usage of folio_index
->   filemap: do not use folio_contains for swap cache folios
->   mm: move folio_index to mm/swap.h and remove no longer needed helper
->   mm, swap: remove no longer used swap mapping helper
->
->  fs/btrfs/extent_io.c    |  2 +-
->  fs/f2fs/data.c          |  4 ++--
->  fs/f2fs/inline.c        |  4 ++--
->  fs/f2fs/super.c         |  2 +-
->  fs/fuse/file.c          |  4 ++--
->  include/linux/pagemap.h | 29 ++++-------------------------
->  mm/memfd.c              |  1 +
->  mm/migrate.c            |  1 +
->  mm/swap.h               | 18 ++++++++++++++++++
->  mm/swapfile.c           | 15 ---------------
->  10 files changed, 32 insertions(+), 48 deletions(-)
->
-> --
-> 2.49.0
->
+On 25/04/2025 23:23, William Kennington wrote:
+> On Tue, Apr 15, 2025 at 11:53 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 16/04/2025 02:13, William A. Kennington III wrote:
+>>> We have the driver support but need a common node for all the 8xx
+>>> platforms that contain this device.
+>>>
+>>> Signed-off-by: William A. Kennington III <william@wkennington.com>
+>>> ---
+>>
+>> You just sent it, so this is v2? If so, then use v2 in subject (see
+>> other patches) and provide changelog under ---.
+>>
+>>>  arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+>>> index 4da62308b274..ccebcb11c05e 100644
+>>> --- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+>>> +++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+>>> @@ -56,6 +56,13 @@ clk: rstc: reset-controller@f0801000 {
+>>>                       #clock-cells = <1>;
+>>>               };
+>>>
+>>> +             mc: memory-controller@f0824000 {
+>>> +                     compatible = "nuvoton,npcm845-memory-controller";
+>>> +                     reg = <0x0 0xf0824000 0x0 0x2000>;
+>>> +                     interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>>> +                     status = "disabled";
+>>
+>> Why is this disabled? What resources are missing?
+>>
+> 
+> I was avoiding enabling anything would not be used in the most minimal
+> kernel configuration (Kdump). Anyone actually using the EDAC data from
+> the memory controller could enable it. The np]cm7xx common dts also
+> has this node disabled, so it would be consistent with that SoC.
+DTS is nowwhere relatd to your kernel configuration, so that's wrong
+assumption and wrong goals. DTSI should have disabled only devices which
+need board-level resources. It seems not the case here, so drop it.
 
-I just realized I added duplicated Sign-off-by in a few commits, sorry abou=
-t it.
+Best regards,
+Krzysztof
