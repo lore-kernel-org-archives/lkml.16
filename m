@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DA923FC4C;
-	Sun, 27 Apr 2025 06:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FED23ED5A;
+	Sun, 27 Apr 2025 06:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745735120; cv=none; b=fPBW0eMhNZF1JGeu1xnD086hpar3p2sjFcieQBroN+nAkHr7IdO1BbConbyHsj51C6/0ISZZF05VUiXYWkPwXFstw/ww0+Z8y8fe0SX1pAz0QQaUACA9MmpoWlPGw+Varz0Qiv54FcUUaeO5ThHiOCKPxJPFzKi0n2OgsrQGJW4=
+	t=1745735244; cv=none; b=jS26g7Pv0RH/q8OU7XgIXBW75mwHTups3T3JGRBczhZGE2bTZxb06qnTt2DGHcMnJzlvyt4vYcCVoSNyVjVclQkexxefIyGkPbgplYbfMYshItr+woz3XcH5KhLNW2qb8XEcvWkKKpIb90vh+GcZWz9zkuJzFe5jm7fK7UnoSI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745735120; c=relaxed/simple;
-	bh=FWcrry3t+sNJr7gey8S2h20kX41J+xHQ2HEJQdJI/MY=;
+	s=arc-20240116; t=1745735244; c=relaxed/simple;
+	bh=zWCaQZ1KM5kxjq+H2Wc0WrFDLnUxF+a0Fvp2+fzSRD0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HqT/P2El3z5QNUdCbFjglScOL45nG/BOC1j7djQwUnfkDbx2e4J9SQI1HcRIDWrQu5ADQW9PHoQs+JQ/13Of2oxE4ns6nFa3mH7+QGXMHy0ORsGJfAyUfMG+qOLPC2X68dEABHjbCgxwpwFo6+FoeyZkniTHWxGqhLWZTgLlKfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXHp5+UO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=WKxT7OC4obq+AR0lLcjNefJCUyDzKq1l0I1W0/W9S3Ie1nHB7ilp+3BTQ8FZwlCf0ZrZS+EZQeF9zuWLUVJWTpWXKUmQkEH6aadrP+DRgkWQVlly+EmjPJXZYKS4ckYx6gDQAfrAlfUHdxjW6a7tGflK6ikKKQ9SHwtj7syd4nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6CvjrpU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXHp5+UO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CC88C4CEE9;
-	Sun, 27 Apr 2025 06:25:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6CvjrpU"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 502F8C4CEF0;
+	Sun, 27 Apr 2025 06:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745735118;
-	bh=FWcrry3t+sNJr7gey8S2h20kX41J+xHQ2HEJQdJI/MY=;
+	s=k20201202; t=1745735244;
+	bh=zWCaQZ1KM5kxjq+H2Wc0WrFDLnUxF+a0Fvp2+fzSRD0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=kXHp5+UOdI63m9dvZW+5Xg6AogHZ1dyNyO13UomNy911DPgqSax42ihHIfZ8RBrbF
-	 SBhiuicu25bXFXXL/E5NDUSNTKOBGZNFsHB6s38hSzEL4LjPbEEs7QUbuoscCTFMmz
-	 WqffgqFvGhcmKGvremIM3jeQOy2asZSM7WO4NrFfwx9sD+rhSxVjXcDVGdtZ+wSxYn
-	 RoHqs3Wd5gI6fDb/TBEb2WwI7LrfWiGjiM9atEtwTt0S8FQZNnANypVgKA9FRqf/nH
-	 Y5mCzl4LUmyDaxoAYDJ3rJKJO3iH5M8KT2eJOAYPoKKivhA7+vp1CR4ENheRxFJuvs
-	 AC/ipHjzQxYYg==
+	b=j6CvjrpUx1hFY3MnV6XYW3qHNZklYdCw/jK3woJJeNuzJM4JsbBs8MuoUxL13uqz4
+	 bXtKVZZQ3mbxCnR4JZExg3TA/mVeQBtmCYZ3TpFdPhoUlTrTOTbYxbqcu0UiLVPE3s
+	 Y3qO10huj3LuS9KCeS7dUKUPRRhOcrM4pATlSWKaHux50DYGkgYQMtA1X8AJ4qqCn0
+	 XMyETC67UAmaDbHDRAGupBAftoW/79UiKwYF3hUQQM4QN4nboY84Y3M/Iy/DE/4heJ
+	 g/u9XkqY2sNV5POS5jtKa7KD9h9vkSHpwRkXs3WbBQUFre2QhLxepm6KEUlGEy7SRP
+	 0/f4GuzBdUIyA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB14C369DC;
-	Sun, 27 Apr 2025 06:25:18 +0000 (UTC)
-From: Kurt Borja via B4 Relay <devnull+kuurtb.gmail.com@kernel.org>
-Date: Sun, 27 Apr 2025 03:24:49 -0300
-Subject: [PATCH v2 2/2] Documentation: wmi: alienware-wmi: Add GPIO control
- documentation
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4438BC369D8;
+	Sun, 27 Apr 2025 06:27:24 +0000 (UTC)
+From: Keke Li via B4 Relay <devnull+keke.li.amlogic.com@kernel.org>
+Date: Sun, 27 Apr 2025 14:27:11 +0800
+Subject: [PATCH v9 03/10] dt-bindings: media: Add
+ amlogic,c3-mipi-adapter.yaml
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,135 +41,176 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250427-awcc-gpio-v2-2-c731373b5d02@gmail.com>
-References: <20250427-awcc-gpio-v2-0-c731373b5d02@gmail.com>
-In-Reply-To: <20250427-awcc-gpio-v2-0-c731373b5d02@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Gabriel Marcano <gabemarcano@yahoo.com>, 
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5285; i=kuurtb@gmail.com;
- h=from:subject:message-id;
- bh=zC8+gJDq11VBsTxTMVnO6aUkwcVu2ZYewNrS8rkQd+k=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBm8Z8+4+7vMOnyoK9+6QtPZIvq0nU+WWtNaRYmdT+u3Z
- 3LZ9p7rKGVhEONikBVTZGlPWPTtUVTeW78Dofdh5rAygQxh4OIUgIkcuMPwT99iWi4b75XcjcLi
- AS+1fjak/A5cZZO9JphHRrjR8LjzRkaGv2fu50VNfPWs4b3Y7zdLZAOSEi/efqaew37ni7aVaZQ
- qHwA=
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
-X-Endpoint-Received: by B4 Relay for kuurtb@gmail.com/default with
- auth_id=387
-X-Original-From: Kurt Borja <kuurtb@gmail.com>
-Reply-To: kuurtb@gmail.com
+Message-Id: <20250427-c3isp-v9-3-e0fe09433d94@amlogic.com>
+References: <20250427-c3isp-v9-0-e0fe09433d94@amlogic.com>
+In-Reply-To: <20250427-c3isp-v9-0-e0fe09433d94@amlogic.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com, 
+ laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, 
+ jacopo.mondi@ideasonboard.com, Keke Li <keke.li@amlogic.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745735242; l=4007;
+ i=keke.li@amlogic.com; s=20240902; h=from:subject:message-id;
+ bh=RbGj6DlXmuaC9VWX3FEp2WWl0N66DRYJzUfwr8Q350g=;
+ b=6PNrD6LMte43HAU+AQeflZpLZNWqgVgaiiuXm6hSq5EO/PHuAMBqIKycgj8qAjADUACKCBu8L
+ hZDjLDUEUdZBoTMM1BpIv1KXt4g+r1X2HVrockgUEeTgcL2V0/DnmN5
+X-Developer-Key: i=keke.li@amlogic.com; a=ed25519;
+ pk=XxNPTsQ0YqMJLLekV456eoKV5gbSlxnViB1k1DhfRmU=
+X-Endpoint-Received: by B4 Relay for keke.li@amlogic.com/20240902 with
+ auth_id=204
+X-Original-From: Keke Li <keke.li@amlogic.com>
+Reply-To: keke.li@amlogic.com
 
-From: Kurt Borja <kuurtb@gmail.com>
+From: Keke Li <keke.li@amlogic.com>
 
-Add documentation for the GPIO control methods.
+c3-mipi-adapter is used to organize mipi data and
+send raw data to ISP module.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Keke Li <keke.li@amlogic.com>
 ---
- Documentation/wmi/devices/alienware-wmi.rst | 78 +++++++++++++++++++++++++++--
- 1 file changed, 74 insertions(+), 4 deletions(-)
+ .../bindings/media/amlogic,c3-mipi-adapter.yaml    | 111 +++++++++++++++++++++
+ MAINTAINERS                                        |   6 ++
+ 2 files changed, 117 insertions(+)
 
-diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
-index 79238051b18bc5de9b502325017cd5c5fcf41748..2a6052efb9ae0e3fe0a5d9d5775073234dfc96fb 100644
---- a/Documentation/wmi/devices/alienware-wmi.rst
-+++ b/Documentation/wmi/devices/alienware-wmi.rst
-@@ -231,6 +231,70 @@ WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
- AWCC supports memory overclocking, but this method is very intricate and has
- not been deciphered yet.
+diff --git a/Documentation/devicetree/bindings/media/amlogic,c3-mipi-adapter.yaml b/Documentation/devicetree/bindings/media/amlogic,c3-mipi-adapter.yaml
+new file mode 100644
+index 000000000000..ba43bc6709a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/amlogic,c3-mipi-adapter.yaml
+@@ -0,0 +1,111 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/amlogic,c3-mipi-adapter.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic C3 MIPI adapter receiver
++
++maintainers:
++  - Keke Li <keke.li@amlogic.com>
++
++description:
++  MIPI adapter is used to convert the MIPI CSI-2 data
++  into an ISP supported data format.
++
++properties:
++  compatible:
++    enum:
++      - amlogic,c3-mipi-adapter
++
++  reg:
++    maxItems: 3
++
++  reg-names:
++    items:
++      - const: top
++      - const: fd
++      - const: rd
++
++  power-domains:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: vapb
++      - const: isp0
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: input port node.
++
++      port@1:
++        $ref: /schemas/graph.yaml#/properties/port
++        description: output port node.
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - power-domains
++  - clocks
++  - clock-names
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/amlogic,c3-peripherals-clkc.h>
++    #include <dt-bindings/power/amlogic,c3-pwrc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        adap: adap@ff010000 {
++            compatible = "amlogic,c3-mipi-adapter";
++            reg = <0x0 0xff010000 0x0 0x100>,
++                  <0x0 0xff01b000 0x0 0x100>,
++                  <0x0 0xff01d000 0x0 0x200>;
++            reg-names = "top", "fd", "rd";
++            power-domains = <&pwrc PWRC_C3_ISP_TOP_ID>;
++            clocks = <&clkc_periphs CLKID_VAPB>,
++                     <&clkc_periphs CLKID_ISP0>;
++            clock-names = "vapb", "isp0";
++            assigned-clocks = <&clkc_periphs CLKID_VAPB>,
++                              <&clkc_periphs CLKID_ISP0>;
++            assigned-clock-rates = <0>, <400000000>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    c3_adap_in: endpoint {
++                        remote-endpoint = <&c3_mipi_csi_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    c3_adap_out: endpoint {
++                        remote-endpoint = <&c3_isp_in>;
++                    };
++                };
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e5e3aac34227..c543a7d1e39c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1258,6 +1258,12 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
+ F:	drivers/perf/amlogic/
+ F:	include/soc/amlogic/
  
-+GPIO control Methods
-+====================
++AMLOGIC MIPI ADAPTER DRIVER
++M:	Keke Li <keke.li@amlogic.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/amlogic,c3-mipi-adapter.yaml
 +
-+Alienware and Dell G Series devices with the AWCC interface usually have an
-+embedded STM32 RGB lighting controller with USB/HID capabilities. It's vendor ID
-+is ``187c`` while it's product ID may vary from model to model.
-+
-+The control of two GPIO pins of this MCU is exposed as WMI methods for debugging
-+purposes.
-+
-++--------------+--------------------------------------------------------------+
-+| Pin          | Description                                                  |
-++==============+===============================+==============================+
-+| 0            | Device Firmware Update (DFU)  | **HIGH**: Enables DFU mode   |
-+|              | mode pin.                     | on next MCU boot.            |
-+|              |                               +------------------------------+
-+|              |                               | **LOW**: Disables DFU mode   |
-+|              |                               | on next MCU boot.            |
-++--------------+-------------------------------+------------------------------+
-+| 1            | Negative Reset (NRST) pin.    | **HIGH**: MCU is ON.         |
-+|              |                               |                              |
-+|              |                               +------------------------------+
-+|              |                               | **LOW**: MCU is OFF.         |
-+|              |                               |                              |
-++--------------+-------------------------------+------------------------------+
-+
-+See :ref:`acknowledgements` for more information on this MCU.
-+
-+.. note::
-+   Some GPIO control methods break the usual argument structure and take a
-+   **Pin number** instead of an operation on the first byte.
-+
-+WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-+------------------------------------------------------------------
-+
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| Pin number         | Set the pin status                 | - Byte 1: Pin      |
-+|                    |                                    |   status           |
-++--------------------+------------------------------------+--------------------+
-+
-+WMI method ReadTotalofGPIOs([out] uint32 argr)
-+----------------------------------------------
-+
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x00               | Get the total number of GPIOs      | - None             |
-++--------------------+------------------------------------+--------------------+
-+
-+WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-+------------------------------------------------------------------
-+
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| Pin number         | Get the pin status                 | - None             |
-++--------------------+------------------------------------+--------------------+
-+
-+.. note::
-+   There known firmware bug in some laptops where reading the status of a pin
-+   also flips it.
-+
- Other information Methods
- =========================
- 
-@@ -239,10 +303,16 @@ WMI method ReadChassisColor([out] uint32 argr)
- 
- Returns the chassis color internal ID.
- 
-+.. _acknowledgements:
-+
- Acknowledgements
- ================
- 
--Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ and
--`T-Troll <https://github.com/T-Troll/alienfx-tools/>`_ for documenting and
--testing some of this device's functionality, making it possible to generalize
--this driver.
-+Kudos to
-+
-+* `AlexIII <https://github.com/AlexIII/tcc-g15>`_
-+* `T-Troll <https://github.com/T-Troll/alienfx-tools/>`_
-+* `Gabriel Marcano <https://gabriel.marcanobrady.family/blog/2024/12/16/dell-g5-5505-se-acpi-or-figuring-out-how-to-reset-the-rgb-controller/>`_
-+
-+for documenting and testing some of this device's functionality, making it
-+possible to generalize this driver.
+ AMLOGIC MIPI CSI2 DRIVER
+ M:	Keke Li <keke.li@amlogic.com>
+ L:	linux-media@vger.kernel.org
 
 -- 
 2.49.0
