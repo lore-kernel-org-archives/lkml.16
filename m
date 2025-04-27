@@ -1,93 +1,120 @@
-Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B8810E5
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 06:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C2C2376E6;
+	Sun, 27 Apr 2025 06:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745734577; cv=none; b=K9sUDq/NuoknnKFjEmz4vmgLmd0b1hI6aB3LoGg/uI/LN6WOUbLldPYbZeK6LCnJ9pfTElIzAhY+1O9qzVKkrNUKgOTsYTqe/laBKoG9PT6/9mpyLtPrFk2TYVsRlTECKUeR4hTCHlKn8wFb8ZLenD3wk7SjgqMyL96QlThFWC4=
+	t=1745734583; cv=none; b=WtsIdtAagAPPiGnlw2wqo9hAcOw66YiUIA+qzsyQdckOG9K2SJ9H728VDGGbYK1jRmRhGbD6elAMPo3+5eYry7PAl92R81jzO8mE/AFlZ87coKKT4tKuFopqq+xlghNyF/6awFZC7fQxJxkX7MjhFSC7Qky3PxEFl0ES9P7W9UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745734577; c=relaxed/simple;
-	bh=uxnruMTEieBwjTHSvBt1nHOSf/Ie3aH8icaXsc0a7YU=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=ViJQviBD5JG9EDRW7Lj8dis8YTEkRFkfRPr/90ezh6hsHe0060cTobyvtPc+gGGOrqgkzs4DI68drG5Tadu79KcEv2sCHtcoQZvSHYnbwKoyEJ8BydJxf6CnU7k2JVqb3AvCHsaUQ+W7xRLmpQ0RKmegBuXHiZAzQfry1s46jeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OLU5VAEw; arc=none smtp.client-ip=162.62.57.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1745734583; c=relaxed/simple;
+	bh=DtaW7OP2HYTPn66Jo2Rzozz1dqRdlYrtqq0+MD41MKA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aAZAqvU4hljU+vbNEQ0myx8qdQuEVZ8Nu2WoSsAPFzE+kGx3pY47WRI8wSMBJTHEo5NNn6hDL8OIwzCcgvkT2WcoAnI2Wao9gsv4k/dUgJLnQp0UZXFWTTkWyjbLsSLUi8BRpnucaBOkb02uRNgl0uY2azkjrk/fLe3K8UYiSjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfKLc7ae; arc=none smtp.client-ip=209.85.215.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OLU5VAEw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1745734561; bh=JADm9sLhPOlgyvPadH5StISQzwN1fU2VLalMOuW/29E=;
-	h=From:To:Cc:Subject:Date;
-	b=OLU5VAEw6jKv8U49sYZS+RPazVMVmd+yfkrvp8zY6WN+8lVpXN+w7zxfZkKRKjuve
-	 c1UlNPA4mfYEP3cfUUqZknkvf1NQDR8zr4Wxk2IGqEE2S/DLIDIBG/jTuNHOnFQ9JW
-	 RQlAzVYm8q9DUV2M+YyPfy27r8s0sc9zADsYJhQU=
-Received: from localhost.localdomain ([36.111.64.85])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 3ABB3611; Sun, 27 Apr 2025 14:14:43 +0800
-X-QQ-mid: xmsmtpt1745734483tbxwd139x
-Message-ID: <tencent_C263C0783702591C464F887E3D3C496E6B08@qq.com>
-X-QQ-XMAILINFO: MC6m07AaSFhrE4NspI8KCHLkkt63Z7TSdkfNo7n1S6m43AQC6WRMV6VcttPzXd
-	 o9praB98wph5PNaXpQQj6gZpJutBLSEFOjaFna83oe3gHEOnWV0ZR+dbkh6N7noWWH1cGEFxvJ7t
-	 YVNxU0ccGIkaj3jXSj5GK9eRrufpzPBfa8lPxIcFSqV5//wIMPHRYUiRdpds5gkaiIqpFayJ3S7S
-	 A1nUtdUkzQj2ebMJURt5Vc54mJBUdYMb+seAqSmZelmcj6gyZ78iSN3ilbOonrAP0tCMdwh5bgXK
-	 P3BxxcCI6XgUEejPeh/1BBFQgiWUv4JdSPqGlJFYgQesmh6hOIbjr3nno/72sjMW/SWXacDxZCu0
-	 erOnTu8m4L8d/Z5ZJ4VppOC3+K0sT5aI8KPhiQozaccMYu8mSC73l6pTs8q8/KkqhjyItTGM8EJ0
-	 l9k4HSdfSMxtxIApDQZV0xd0YfNOQFHdm4I1DYxkvYHe84tq9JJLqZUZHRsk2kI/ZeYwHDEmaSy7
-	 OX2tFuAV5kpJOQ/tX0fp8V3WvFXDUcpFK9BFvQ3HrvDrSFSDc3vlvhu8T4P8VxlzD5OeH+Hp9Q1T
-	 OkzHrNLTJNqczMYnFacnQkhCg4n3ylInbQUBH8hOyC/qYKsnysFPBo59U2wcIccLKjV/Jbz0ZwHi
-	 mvZpMJ772Gz9QpHf+w8BcAF1sMfpDfwUfpam3Fb3esS64os5LYM+nFB2cqscRZfLmKLVK3Jig9Zi
-	 NkdjhEbao85LL9l1DB/iv770+Geb7OhUo/JRLfLypznhtx1qUSJwniGNqshfAfJhqVAAU+LsHhcL
-	 mXZbt1P5ajiqmp2/AzoWCh9HkBH2WTejsDxuB1du/PNOA8M+av+opbbWQevc7hBmyomcYTwGtuPl
-	 ppB0Pyms5s4ns5jlM6ZIDfGDAtRtj2FTnkTBRklX80TCPAGI4YZHxUjoNRmIazHWt4HSYBOB9l10
-	 RGwsW2DyjcvFtOw4u93kKZ1J/d8VsFeDGvTp3PJaARw+JPGPBHbwirNMnXuVMuBdgjbctfEBBI3x
-	 1GEGEQ11S7vgQYKcNmZrrFUJFUMEU82xDGV2hRN+DP4KkMiimc
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Feng Lee <379943137@qq.com>
-To: akpm@linux-foundation.org
-Cc: david@redhat.com,
-	ryan.roberts@arm.com,
-	libang.li@antgroup.com,
-	peterx@redhat.com,
-	maobibo@loongson.cn,
-	baohua@kernel.org,
-	lance.yang@linux.dev,
-	anshuman.khandual@arm.com,
-	trivial@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Feng Lee <379943137@qq.com>
-Subject: [PATCH] mm: remove useless code
-Date: Sun, 27 Apr 2025 14:13:59 +0800
-X-OQ-MSGID: <20250427061359.2647-1-379943137@qq.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfKLc7ae"
+Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-af9a6b3da82so2373949a12.0;
+        Sat, 26 Apr 2025 23:16:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745734579; x=1746339379; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sVkOXl+FItqnBG4PWwNvXOPdmDOL8HuWkGunCwBr2+Y=;
+        b=RfKLc7aeBoqMFB20O9dG2TGIxdUPTBQKy5wvpZCsTaJRSHy4Jokg+xLR7wmfSbUcmS
+         Q8d7ClF5L+DRlrsyVAMmtAZlW+jgIQ5/JqCdH/0Uvfk2hU5h32OMZT/9He7/yldXzSgX
+         tyacy2ao6Zf8cmausLSDM2qEUPCP/2V9fVLySCfiPRL4i1ovwYbL9O+2VInTJ4erw+ZS
+         UuGyYGBWyY4vN6xMZs9kPH5SU0EfhYXn2wg/MtQ9KiNrcg4Xpoan6f0TmCK7tQ87lsEM
+         1FLuPOQ3q5C7n6FPKXxa6KWXHPVAPK+21Z/7yJU3PWZLLk3t1IOda9XYHrnqTlXVoxGo
+         ezog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745734579; x=1746339379;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sVkOXl+FItqnBG4PWwNvXOPdmDOL8HuWkGunCwBr2+Y=;
+        b=hgLGbYn+d2DL01YCsEpofNvQV7ROV4XhpASwj3zaKzVxbLPTJKGDENNdiXq2w/uowd
+         1wWLkwy2K6mSQNpTKcXUzpamRnbkHJBPkGO9SPZMTWeurmkhLNjLTpWyDEjp0BZCi029
+         H5NveiB8oMwknOK/n3VFSj3mSUcrMDBEwYa3nYuDDWtgfOIe2xash/2TDJrDB2WnwU6G
+         dOni9VZalYx0R1grjJ25KmsbwxJoUxyuFO+FNgIG3k1DpB4IZUFPibdcFUP7xbGlnT01
+         1EoEivaHreHtT54FqX2MD6lQzq72mETUbveUMv8fiFbNG3tTB0Tj3sgIkuTp65yb/3mJ
+         9LqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWoHo9Ph6/JEK+/tMMkHqDgmNRmk20TGB5d6osjVRStiYvy5iaTloYBKTV7sEbGl9xXsH323e+FmyYo7E8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyaT215majCRgluZHle83XRLhaY/O0NjRUtgzAb2Pmw069wbXs
+	NVojYTPuojjHiOl/O33cqVYECGCUNFE1ooKasdYPh3eM3+PvTKJhEPY6dNMGkKVVfaZM
+X-Gm-Gg: ASbGnctwWiYqSTELgBGMAxq089q7LhNkyVT5ObaUkrMV6hZ6OSs0xb/4iclcDQO4d4R
+	o8DXn4Hx4MhUXvx8DtuDgCFEPfF5vJqbaDNhggUQAToi8Zce8Ezti43CUGn4fo557FV0SZ6LxaZ
+	yYaHb0OMZgzYiGGFOfRNT2xL5Wh2pjwYqvyRIP8b8fVT1mz7NJ4iJ5DkR3u63wEWXJJ1kyKhqqd
+	qP+ceNik+Qh4VdbjRY7dqvf9+MM5UM5EpkmI++G58Bj8b5ZfJLANjfFirreWkzWz+F4rKNt8on4
+	YXfRQrJrJ0zUfdbBmfaoDwWDsPt8Y8JQVLA=
+X-Google-Smtp-Source: AGHT+IGBhNvZrPFXBrP6EMdlDeC9iJtG6LNBbpfeI0Y349BALjf9LLYTf9Dnt8oACeh5pZIUz91ILQ==
+X-Received: by 2002:a17:90b:3a0e:b0:305:2d68:8d39 with SMTP id 98e67ed59e1d1-309f7ddd52dmr14596177a91.12.1745734578705;
+        Sat, 26 Apr 2025 23:16:18 -0700 (PDT)
+Received: from [127.0.1.1] ([2a0d:2683:c100::bf])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f782d461sm5080287a91.39.2025.04.26.23.16.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 23:16:18 -0700 (PDT)
+From: Troy Mitchell <troymitchell988@gmail.com>
+Subject: [PATCH v2 0/2] i2c: imx: adapting the mainline
+Date: Sun, 27 Apr 2025 14:16:08 +0800
+Message-Id: <20250427-i2c-imx-update-v2-0-d312e394b573@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKjLDWgC/3XMywqDMBCF4VeRWXeKkzQqXfU9igvJjDpQLyRWL
+ OK7N3Xf5X/gfDtECSoR7tkOQVaNOo0pzCUD3zdjJ6icGkxuXH4zhGo86rDhe+ZmEWQiLgrmqpQ
+ K0mkO0up2gs86da9xmcLn9Ff6rX+plTBHIlu21Fpn2T26odHX1U8D1MdxfAGDSpRyrAAAAA==
+To: Oleksij Rempel <o.rempel@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Cc: linux-i2c@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Troy Mitchell <troymitchell988@gmail.com>, Yongchao Jia <jyc0019@gmail.com>, 
+ Frank Li <Frank.Li@nxp.com>, Ahmad Fatoum <a.fatoum@pengutronix.de>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745734572; l=1057;
+ i=troymitchell988@gmail.com; h=from:subject:message-id;
+ bh=DtaW7OP2HYTPn66Jo2Rzozz1dqRdlYrtqq0+MD41MKA=;
+ b=UQtKorS1lD5nKkZmkn2u6pSa0dlWJkQzqKzsVPpcbHAb8Slpn66/D3G0oDkLFVwsW3schQyFm
+ P7g6OrbvRz9CPWLOHqVmAs8/0owueY6zScF+rcKWD8vSwBXI/eVJbrO
+X-Developer-Key: i=troymitchell988@gmail.com; a=ed25519;
+ pk=2spEMGBd/Wkpd36N1aD9KFWOk0aHrhVxZQt+jxLXVC0=
 
-Remove unused conditional macros.
+Since this patch[1], we have new callback function names.
+Since this patch[2], we can use `guard` to call `spin_lock_irqsave`
+and release this lock when it goes out of scope.
 
-Signed-off-by: Feng Lee <379943137@qq.com>
+Link:
+https://lore.kernel.org/all/20240706112116.24543-2-wsa+renesas@sang-engineering.com/ [1]
+https://lore.kernel.org/all/20250227221924.265259-10-lyude@redhat.com/ [2]
+
+Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
 ---
- include/linux/pgtable.h | 2 --
- 1 file changed, 2 deletions(-)
+Changes in v2:
+- Add more details in the commit message
+- Drop a useless variable
+- Refactor the logic of i2c_imx_isr function
+- Link to v1: https://lore.kernel.org/r/20250421-i2c-imx-update-v1-0-1137f1f353d5@gmail.com
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index b50447ef1c92..47c5a54b7551 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1164,9 +1164,7 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
- }
- #endif
- 
--#ifndef __HAVE_ARCH_PGD_OFFSET_GATE
- #define pgd_offset_gate(mm, addr)	pgd_offset(mm, addr)
--#endif
- 
- #ifndef __HAVE_ARCH_MOVE_PTE
- #define move_pte(pte, old_addr, new_addr)	(pte)
+---
+Troy Mitchell (2):
+      i2c: imx: use guard to take spinlock
+      i2c: imx: drop master prefix
+
+ drivers/i2c/busses/i2c-imx.c | 43 ++++++++++++++++++++-----------------------
+ 1 file changed, 20 insertions(+), 23 deletions(-)
+---
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+change-id: 20250421-i2c-imx-update-d11d66dd87e8
+
+Best regards,
 -- 
-2.49.0
+Troy Mitchell <troymitchell988@gmail.com>
 
