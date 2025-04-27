@@ -1,131 +1,228 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805598BE7
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5F8BE7;
+	Sun, 27 Apr 2025 08:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745741073; cv=none; b=juJTqkrcOHngsILrnrVXtMJUZHaW8FpV0TwYuaL80Q9BxgQ0Mn1Q81i2IP/Xfx5nYwQ/LVQeIt5McIutsO6mlRgRNgqrJREKaekZZDDjRAd+M+zQeLg9QeF5RQkJvsI/zIw4Ki3XzJRU+HpU1SftwI0wV5YhkJXfD1D4SnSkKgs=
+	t=1745741599; cv=none; b=AXt6OT6qujARVFBUhoLNMN/dYFlxEZzzwttgZhxSBucwfNf277IKW6h6yCOzuvTmIsOguwIIzc5KFjzDA+7c7NQFZyDno2r/Vw1wLepN8jPSsO0R9UQ93bJIhisBz5qeuKwcIoId4XtwsVyFuCcacODRZD1Bvqxz/lhLNTPx2bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745741073; c=relaxed/simple;
-	bh=WBSJc7oB+yR13DAvdQSBqLkKRXyHSO2MBCampK9h5KQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V1xMwD4ssyAo8epLXs0H7rv+0XELjYnl8oUsb/1gm8yVM6n6sB3MoGaeC73Af6Dj09+T7j5S/D4j53Ek+asUfEFO8cIuJw5RJb8vFn73y3jlxj+u0d/3+mUEDTIm2quCZzwFkRi80oXNl0/fvGj6LaJs9Bd9/Ay+vpWBRbBj3QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RrB+nrqz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ov+8iBvC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RrB+nrqz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ov+8iBvC; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745741599; c=relaxed/simple;
+	bh=n1LP0hWDAYYPPGoxCmhHUpx37KloYPiSW/LsrkJ+pog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ck3+Dr72d+ZWiBqQdru1YnbO9WYjNmjpoNDItlRUyQt7WjfQx9qakiZbJ3ORxYR2HaJZkkOAe8pTEHIxN2uIe6JGkDVtjh0w8w1tmxWOicCZLvs0Q88J24gMZSz2o3TxdTDGVQ42a7f4RVaAdMDkilu7jP5Gx8haG+QMu1fCn6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/Og4bFj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RrB+nrqz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ov+8iBvC";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RrB+nrqz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ov+8iBvC"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 940FA1F749;
-	Sun, 27 Apr 2025 08:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745741069; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/xgdygPLSQTBfZrtxZDlXzTaXvQR6hthcsY3VTYUN84=;
-	b=RrB+nrqzgmS0WyplsrVf/KU8Jyo9r2OgHJwcIOnP5lyiC+DX3bdYKgTosKCS8d9khd4vR4
-	awPOz5lKzeb9lmOFpmgziYaB2Yd5ZJk3TEAdQ2foxDr2pIQkpfYacRtS5KfwM0C+MzDKGm
-	4kYvG5/pmL1DAi0QzvWxfazRG9k8cFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745741069;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/xgdygPLSQTBfZrtxZDlXzTaXvQR6hthcsY3VTYUN84=;
-	b=ov+8iBvCaxb8eZENdujWj/Nc8I3Rlazz6GkrOrwJlENK5yugEhcA/iOrL3Iow7sT59K5dm
-	HOUQVfDAeVOvEdAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745741069; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/xgdygPLSQTBfZrtxZDlXzTaXvQR6hthcsY3VTYUN84=;
-	b=RrB+nrqzgmS0WyplsrVf/KU8Jyo9r2OgHJwcIOnP5lyiC+DX3bdYKgTosKCS8d9khd4vR4
-	awPOz5lKzeb9lmOFpmgziYaB2Yd5ZJk3TEAdQ2foxDr2pIQkpfYacRtS5KfwM0C+MzDKGm
-	4kYvG5/pmL1DAi0QzvWxfazRG9k8cFw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745741069;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/xgdygPLSQTBfZrtxZDlXzTaXvQR6hthcsY3VTYUN84=;
-	b=ov+8iBvCaxb8eZENdujWj/Nc8I3Rlazz6GkrOrwJlENK5yugEhcA/iOrL3Iow7sT59K5dm
-	HOUQVfDAeVOvEdAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 62E4A13927;
-	Sun, 27 Apr 2025 08:04:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0eLNFg3lDWhXKgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Sun, 27 Apr 2025 08:04:29 +0000
-Date: Sun, 27 Apr 2025 10:04:29 +0200
-Message-ID: <87r01exc6q.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chris Chiu <chris.chiu@canonical.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	kailang@realtek.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda: Apply volume control on speaker+lineout for HP EliteStudio AIO
-In-Reply-To: <20250425103618.534951-1-chris.chiu@canonical.com>
-References: <20250425103618.534951-1-chris.chiu@canonical.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/Og4bFj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 103DBC4CEE3;
+	Sun, 27 Apr 2025 08:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745741598;
+	bh=n1LP0hWDAYYPPGoxCmhHUpx37KloYPiSW/LsrkJ+pog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l/Og4bFjNyyLOyqiobd0OX+NlvlhiWMjlqCuR7bjQ3koqjqNsiHAbxhyy+n6EFWpx
+	 F0s02toBkpYSqLGr5zllGOwnm/YR+cBtijfhM7TVWEWRlqZZD7tdVQ2f1cr6H3j+vY
+	 /V4qD4omORMMjdDmZK0stm+5Mw4PJdjUhKlKsl6UBn8mYclrE4YOqm0/14yFLod31h
+	 ZCy3hMjY93C/oDHv0y2/amWuCxtPm2rAUMkBEU2/j5WJZJ36ZRGs00HmVVhJdNAAU3
+	 OAmjF5VOgM3oeArUzKcU+xI7P+9v0yugvVf2x9c6hhu7fKaqUTKAgYRmAQgjnW9EMm
+	 4KL9ASZVaAifQ==
+Date: Sun, 27 Apr 2025 11:13:12 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 07/24] dma-mapping: Implement link/unlink ranges API
+Message-ID: <20250427081312.GE5848@unreal>
+References: <cover.1745394536.git.leon@kernel.org>
+ <2d6ca43ef8d26177d7674b9e3bdf0fe62b55a7ed.1745394536.git.leon@kernel.org>
+ <aA1iRtCsPkuprI-X@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[canonical.com:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aA1iRtCsPkuprI-X@bombadil.infradead.org>
 
-On Fri, 25 Apr 2025 12:36:18 +0200,
-Chris Chiu wrote:
+On Sat, Apr 26, 2025 at 03:46:30PM -0700, Luis Chamberlain wrote:
+> On Wed, Apr 23, 2025 at 11:12:58AM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > Introduce new DMA APIs to perform DMA linkage of buffers
+> > in layers higher than DMA.
+> > 
+> > In proposed API, the callers will perform the following steps.
+> > In map path:
+> > 	if (dma_can_use_iova(...))
+> > 	    dma_iova_alloc()
+> > 	    for (page in range)
+> > 	       dma_iova_link_next(...)
+> > 	    dma_iova_sync(...)
+> > 	else
+> > 	     /* Fallback to legacy map pages */
+> >              for (all pages)
+> > 	       dma_map_page(...)
+> > 
+> > In unmap path:
+> > 	if (dma_can_use_iova(...))
+> > 	     dma_iova_destroy()
+> > 	else
+> > 	     for (all pages)
+> > 		dma_unmap_page(...)
+> > 
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > Tested-by: Jens Axboe <axboe@kernel.dk>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> >  drivers/iommu/dma-iommu.c   | 261 ++++++++++++++++++++++++++++++++++++
+> >  include/linux/dma-mapping.h |  32 +++++
+> >  2 files changed, 293 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index d2c298083e0a..2e014db5a244 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -1818,6 +1818,267 @@ void dma_iova_free(struct device *dev, struct dma_iova_state *state)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dma_iova_free);
+> >  
+> > +static int __dma_iova_link(struct device *dev, dma_addr_t addr,
+> > +		phys_addr_t phys, size_t size, enum dma_data_direction dir,
+> > +		unsigned long attrs)
+> > +{
+> > +	bool coherent = dev_is_dma_coherent(dev);
+> > +
+> > +	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+> > +		arch_sync_dma_for_device(phys, size, dir);
 > 
-> This hardware has ALC274 codec with speaker NID 0x17 and line out
-> NID 0x16 for audio output. The line out is routed correctly but
-> the speaker is not. Thus the volume can't be controlled.
+> So arch_sync_dma_for_device() is a no-op on some architectures, notably x86.
+> So since you're doing this work and given the above pattern is common on
+> the non iova case, we could save ourselves 2 branches checks on x86 on
+> __dma_iova_link() and also generalize savings for the non-iova case as
+> well. For the non-iova case we have two use cases, one with the attrs on
+> initial mapping, and one without on subsequent sync ops. For the iova
+> case the attr is always consistently used.
+
+I want to believe that compiler will discards these "if (!coherent &&
+!(attrs & DMA_ATTR_SKIP_CPU_SYNC)))" branch if case is empty.
+
 > 
-> This patch removes DAC NID 0x06 (without volume control) from the
-> connection list for speaker NID 0x17. Routing both speaker and line
-> out pins to DAC NID 0x02 which controls the output volume.
+> So we could just have something like this:
 > 
-> Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
+> #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE
+> static inline void arch_sync_dma_device(struct device *dev,
+>                                         phys_addr_t paddr, size_t size,
+>                                         enum dma_data_direction dir)
+> {
+>     if (!dev_is_dma_coherent(dev))
+>         arch_sync_dma_for_device(paddr, size, dir);
+> }
+> 
+> static inline void arch_sync_dma_device_attrs(struct device *dev,
+>                                               phys_addr_t paddr, size_t size,
+>                                               enum dma_data_direction dir,
+>                                               unsigned long attrs)
+> {
+>     if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+>         arch_sync_dma_for_device(paddr, size, dir);
+> }
+> #else
+> static inline void arch_sync_dma_device(struct device *dev,
+>                                         phys_addr_t paddr, size_t size,
+>                                         enum dma_data_direction dir)
+> {
+> }
+> 
+> static inline void arch_sync_dma_device_attrs(struct device *dev,
+>                                               phys_addr_t paddr, size_t size,
+>                                               enum dma_data_direction dir,
+>                                               unsigned long attrs)
+> {
+> }
+> #endif
 
-Applied to for-linus branch now.  Thanks.
+The problem is that dev_is_dma_coherent() and DMA_ATTR_SKIP_CPU_SYNC
+checks are scattered over all dma-iommu.c file with different
+combinations. While we can do new static functions for small number of
+use cases, it will be half-solution.
 
+> 
+> > +/**
+> > + * dma_iova_link - Link a range of IOVA space
+> > + * @dev: DMA device
+> > + * @state: IOVA state
+> > + * @phys: physical address to link
+> > + * @offset: offset into the IOVA state to map into
+> > + * @size: size of the buffer
+> > + * @dir: DMA direction
+> > + * @attrs: attributes of mapping properties
+> > + *
+> > + * Link a range of IOVA space for the given IOVA state without IOTLB sync.
+> > + * This function is used to link multiple physical addresses in contiguous
+> > + * IOVA space without performing costly IOTLB sync.
+> > + *
+> > + * The caller is responsible to call to dma_iova_sync() to sync IOTLB at
+> > + * the end of linkage.
+> > + */
+> > +int dma_iova_link(struct device *dev, struct dma_iova_state *state,
+> > +		phys_addr_t phys, size_t offset, size_t size,
+> > +		enum dma_data_direction dir, unsigned long attrs)
+> > +{
+> > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> > +	struct iova_domain *iovad = &cookie->iovad;
+> > +	size_t iova_start_pad = iova_offset(iovad, phys);
+> > +
+> > +	if (WARN_ON_ONCE(iova_start_pad && offset > 0))
+> > +		return -EIO;
+> > +
+> > +	if (dev_use_swiotlb(dev, size, dir) && iova_offset(iovad, phys | size))
+> 
+> There is already a similar check for the non-iova case for this on
+> iommu_dma_map_page() and a nice comment about what why this checked,
+> this seems to be just screaming for a helper:
+> 
+> /*                                                                       
+>  * Checks if a physical buffer has unaligned boundaries with respect to
+>  * the IOMMU granule. Returns non-zero if either the start or end
+>  * address is not aligned to the granule boundary.
+> */
+> static inline size_t iova_unaligned(struct iova_domain *iovad,
+>                                     phys_addr_t phys,
+> 				    size_t size)
+> {                                                                                
+> 	return iova_offset(iovad, phys | size);
+> }  
 
-Takashi
+I added this function, thanks.
+ 
+> Other than that, looks good.
+> 
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> 
+>   Luis
