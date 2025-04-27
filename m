@@ -1,74 +1,97 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E52442A83;
-	Sun, 27 Apr 2025 01:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D351E7C3B;
+	Sun, 27 Apr 2025 01:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745716019; cv=none; b=mbgUd5koTJwWY+4CCw5I6meoJlzBZGcfB+E1bVn0sb7vLkFisMN4xCyYCph3u9pnrzlmT+PxtFTfLSehRFS+5mGDkrB73Um5vzT9OuYTwijoe5HeDmmkLKbTphQjLv/jiHuYGcYYoEd66ogQKEHeZI7swi0ZTXjEwSuvTvKih3Y=
+	t=1745716080; cv=none; b=tgttTkfrqe0ZoPfzlMQns/7Kd7tc2HQ2mGjoZWP6PLyPIcG4k0xsibSq9D+BNgY8BaG+D7iY2jwQ1vMtrOM8ywI+6QmqZjeQWA2RtJ8LeD5g4uydj+P9e3dAe8P7U68q43TR0EnQWkxoSQLZSP+ywJHSmcTmw1h3xvZNVeyvQ34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745716019; c=relaxed/simple;
-	bh=NEjCPwylKFu5h1oJCIOdgWyzeTdHMf2449XU97bfmA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sLWdmNcM1367378YZT5DxydMCQiRISVQdGRfCoRfJnAcoF5My6YJd8UMDeUM+RMxe1tldBacYPBrnBYUFurJN2NqNQNhE72bBuV+h7zr725x6AzL+pdBLIUatY+gbScD9TtITaaaOkLl14xR+b41nK9PecBpFljaJh+08OmGso4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ZBrOvF8Q; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745716080; c=relaxed/simple;
+	bh=Qz3H5UonH+F0Ejh4eB3KlmRFyRFKO6k4cPWFEyvmaN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGhXwFwuvRmgRTGjcCKbQf5GTip2LBamUtoKdG2fGcvok7J7B37bgMhaAxCv/SeKRacdv1Ws7qxZ2Qd8X9BplmmRCqAvTueeaYH4fxDNqAtdMwhhGxO8H5npYwL8qHQtp5yQrROEN3eX/f1GRbqp/qpvvOUp0SwVOYFNOwrLuAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SEbK4uQe; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ZBrOvF8Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jYBIW8eL1CHTTgYqVhOJdPq6bgjz5FSbg7i5wPZVhNg=; b=ZBrOvF8Qo8J4cuQs3xdMmfCOmr
-	a75wN5BWC+Ggi02u2OkOXrfsQ9WcEbBmShuNkPBIwY5k8gKcO64kwqMOWu5SPYtCvTaxpGgh1merV
-	okY/E4Dc3UjeuouK5DAuujPEUKJfgmyff4qyX0PDfV+qHY82qO5T9bV8EaMigXon62TNK2EShmvTo
-	ycU37GIkPwCW2lxYAvbAPFbfWsCtQGn/1V5XhZLm7Uc2ZJ/D0WP+sndPm7ZWFW45zCDDyvSMrD663
-	EmNxoqe0ba9PaADtu/SUu+jI7XAmTYVSPafPQOTMCQhhe/7wTYd2mJVuiomGfs3Ucf7Lp5k0I/HvN
-	DyF1yCTQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u8qTr-001JP9-0H;
-	Sun, 27 Apr 2025 09:06:52 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 27 Apr 2025 09:06:51 +0800
-Date: Sun, 27 Apr 2025 09:06:51 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
-	linux-s390@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 01/13] crypto: sha256 - support arch-optimized lib and
- expose through shash
-Message-ID: <aA2DKzOh8xhCYY8C@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEbK4uQe"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-309d2e8c20cso4359344a91.0;
+        Sat, 26 Apr 2025 18:07:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745716078; x=1746320878; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Qi/DM2NVeWE17m30+tFBeykLvgqkmQd+TLzeOQAEaxA=;
+        b=SEbK4uQerDat63CCQToLjN/BKwcCrBlyZhKkntZHAEsw91RLfx9WQ61yrelaZ5flIH
+         q2uAKRKnN1mB9Ud5z7qUfyXjv1sUl+sU+XzF+dM8VFLf00vG41kqwxeh8DrnFW88gMyS
+         1CFr1Vz1IOOq6IR5tPOm0wsZlD3ksCfgeXNoO1fsfyeMHKC2l4719zykGYNLMraKudSW
+         zQLWIj1+jiqEiHtO2iw6vMHuD8csitncS+AW9lcPJkx5m9cPhY/vID88OrufacJHgncB
+         nL6jpwFXZHK/D11SWXfoXEJ/Qp1/e67NeRYjLjx5Ue6Pdj7ZbHd9xUu+i/8NhG7ZwMyj
+         YnNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745716078; x=1746320878;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qi/DM2NVeWE17m30+tFBeykLvgqkmQd+TLzeOQAEaxA=;
+        b=lOMzl5hHDgTz67wJviSPBM9cDqvF42PkHk/pfpe1Ecs0j2A+67zdGa4Yy4ATbpkVRx
+         xnezuGEgk3pfoSgi1Z8qkWm01BSrG52A2M2tFY8OdXLxrdmmer5FS78k5s2mxzLILK/6
+         N/cyNR1IuO6AayPDL/VCZaEwUnLb/NqPJAeLoFRxtxNN1O4foUQDtqJCEDMkfERYX7pB
+         9kFyeHDqgwATg5XejE/RnJDv8puW0k8r+tVkbSjLeaYmFFIjdG1cQPnL6B8s0P+hSoZ+
+         LH2ptxN5RzK5G73DFoYhtR+2uImjMVfIsdbaInmHXor/0tf0nfNl3jLrTveLmVTmwFg5
+         uEUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUe0LQcDqCO49NS69vpyFdOxSzaz6aEYMyY2t71W3j2j4pqHdNS3c4yTmfD84hp2TadZnwp32v9YdHEAA1/@vger.kernel.org, AJvYcCX2Gz+qbIdolAznByPD770IJHz+iP5odn3lggvV/FwAgZX/sOQ36jUNlEY/geH1hj+04rajOpzQFcR/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXZgvcbzlfeX7ujn6r6zGlY0HdlLliW2MXXCcstVYwlwIxXo6F
+	j+ncuguch6rhXms4bawgzPAX+YygBInB4htqcqlt4hIgcHUqNef2
+X-Gm-Gg: ASbGnctcvFRAZEkvmerquJV27VDU1Gd01+WVBjvEQ6F1XJHAmHTR/u5XGqBk1lD1iTq
+	7f0bo6/c65fCGlPlscZtd8nAAvpyw3ZNwY0Arc1JY47DcAnFuO3lmLX3qjnUTi8gVhFRZhQnufZ
+	AEWWgKRiMXAXOxDBE8UtpLCn3DDrUMbFV4oFLaWFyCB3LNWMs2b4Yg3tQkdDxFyWqZzhsIER200
+	rwSlkzJt39MQrrz2gfnkYVjULuPKrSsa/XmRX8vgu+oUl4IizI2Nr+oiAkMoiFzIVuji4wKWwqE
+	OdpkKbuSnwxYOKWtcXHhao4fCl90H/5jakNntLi5Aw==
+X-Google-Smtp-Source: AGHT+IEOE2HNR8Z62iAJd3A4G+i2avNNhNGvpebOOqlr1I5tJlN3/vtrc9yI9fUiyGEU1soypp/xSg==
+X-Received: by 2002:a17:90b:57c8:b0:2fe:8c22:48b0 with SMTP id 98e67ed59e1d1-309f7dfddc6mr11264812a91.15.1745716078381;
+        Sat, 26 Apr 2025 18:07:58 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-309ef1475ccsm6041086a91.44.2025.04.26.18.07.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 18:07:57 -0700 (PDT)
+Date: Sun, 27 Apr 2025 09:07:55 +0800
+From: Longbin Li <looong.bin@gmail.com>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v3 0/3] riscv: pwm: sophgo: add pwm support for SG2044
+Message-ID: <efpbhawsfg7nlp4waxtp366bemzzoznpoikob4ndzzoibs6n3d@6y3jdfw6zrhi>
+References: <20250424012335.6246-1-looong.bin@gmail.com>
+ <MA0P287MB2262EA042510853498EDD60CFE872@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250426065041.1551914-2-ebiggers@kernel.org>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <MA0P287MB2262EA042510853498EDD60CFE872@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 
-Eric Biggers <ebiggers@kernel.org> wrote:
->
-> +static int crypto_sha256_update_arch(struct shash_desc *desc, const u8 *data,
-> +                                    unsigned int len)
-> +{
-> +       sha256_update(shash_desc_ctx(desc), data, len);
-> +       return 0;
-> +}
+On Sat, Apr 26, 2025 at 03:25:18PM +0800, Chen Wang wrote:
+> Hi，Longbin
+> 
+> Seems you missed my "Tested-by" tag for v2.
+> 
+> Others LGTM,
+> 
+> Thanks,
+> 
+> Chen
+> 
 
-Please use the block functions directly in the shash implementation.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Sorry! I will add that, thanks.
