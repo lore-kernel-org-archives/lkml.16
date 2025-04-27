@@ -1,37 +1,37 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FB322FE0F;
-	Sun, 27 Apr 2025 09:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1058D24A07B;
+	Sun, 27 Apr 2025 09:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745745693; cv=none; b=talEvxKUoRSejDK1bzhO3IBsifHM/dvE7PNput0Pzq0JqOfr+YmvbiNrS3RDBYPjZpALu+9xXHHHAUv7U7XbZyXJXCLNC8/iuqO2WyrUBe2OQGCa5iEnDCnJJACzIAaqm8JnFP45f/dIA44CQjawz5uIlJrDfp7QzBO5w8vJ1pg=
+	t=1745745694; cv=none; b=hts7SXbbBG8Kk2rYEamgT2G/6Rdm+PEBjfRhqaO0FZFMOEdPCPR8chwjIDUsk4vl3tJcV3MRusbgX/E/zUzumgiB5hhq4xRUyWvYn3+x4ZyEFHMBQCPGd8KuJb2NLE7JGzEnSCAPtfY9bHLQ6znG5srBmWBzyJRJ/h/ClyTa0FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745745693; c=relaxed/simple;
-	bh=gAVsBqYmphdvteioDhpuIyj96UEEG6AI5Pdex3LqtTc=;
+	s=arc-20240116; t=1745745694; c=relaxed/simple;
+	bh=FAdq6ToSrkZ1v9RbmfT0ZshNIWnj/wjai1A1DP2J6q4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qVvq8yOgb6o3EhvJ+oj+9Tm+6PNCPDIhk5k3stFEr7iZQRHMhY6T3dXNkjZo333G+t9cB80b/ITu5INdYWgVvrMezn1Mt6995a5UwoOPuSa7pFvIYi8KCRj7AN1PJMGuV+RTdTtws55MzhLLMqqOkRF8ZuhEFFZHOE7McibGd6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=fwYDpBGx; arc=none smtp.client-ip=198.137.202.136
+	 MIME-Version; b=sSN3mUbYqgSahmNMPBa7RtSDEjlq2+S6xllSzHjtA0pieC/RALseVU6F17U6INp7nE6GHWC7KHo/Lkje/iNiJ8xGhCblsXDZzQg5sj9jrbaiYZpAadyUY+6AhRKDQwUkgDrpi5Kr6aluwfeCMquZTq+s/HlzOtiedMJfKVvbXH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=D0Z3JphR; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fwYDpBGx"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="D0Z3JphR"
 Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
 	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R9KRS41598826
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R9KRS91598826
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 27 Apr 2025 02:20:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R9KRS41598826
+	Sun, 27 Apr 2025 02:20:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R9KRS91598826
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745745648;
-	bh=JLxtRAmbQOgcf+M8hxrL2QlzJtGODft8UGEAzChuz28=;
+	s=2025042001; t=1745745658;
+	bh=poLuCOtMFQCl7P/FC7Lp5EQw98+Q3dUwMneiYGrrVc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fwYDpBGxLzic3FzktMZu088OT7qviO5RyC/sSXV9swDqg9u0JnEOY6gP9xd27UU6L
-	 8fjDXB/+sr13tTQBMtui/nKBSyh6LgBbxNYR41Y0kmejN7K8U19iykP1H4HvDWR1bW
-	 HUhr2EGWiPELwFcI2i3+QEGYcX80J7gG6IDB/sJ5cbtNqeVgoUpJwybjbmkTu8wY57
-	 ATV4buqAHapa7PAYwwE1VPp+KBAPgwpY71DARYvEe+pKfgx6w7AMZwidH+QawtvXLs
-	 3yVR2UkuiKUkY1pokl/y47pYxIH+lehWKhSxIjy8JXZM/lNvbWm317ieXxVArTA9UX
-	 1n78tWsCn26Ww==
+	b=D0Z3JphR30AQW+3j6oRkGj/eZF9EDJwfOTUKrT6busV8ib1cm4rRHxVn8xnMn2dRi
+	 4msTB2mg+Fyb7ivuH2KqHR9+Aez0rjMOvFOjl6MRfPD0NDiTt/EhkXcR/cYdMH0yE/
+	 UURFhqyp8deXUeSzTNivEFL4k0UdAZNWB+G/DCGjkD2GQTPTbuq1jFZtJngGbKZw5/
+	 SZlagdAbjZpUIIWdZnVXImCueJbTNHF9Zi+nnVvnxWqc5Fa8+a+8ZErMzXTJPVOOy1
+	 YiPnW9YklNd0V7B62LnCJdQ6XcjQuBniinamKhUatno7C/H8ptJTOtaShyOxVU3pf0
+	 Y7M6wIaYIlQug==
 From: "Xin Li (Intel)" <xin@zytor.com>
 To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, decui@microsoft.com,
         dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v4 07/15] x86/msr: Convert __wrmsr() uses to native_wrmsr{,q}() uses
-Date: Sun, 27 Apr 2025 02:20:19 -0700
-Message-ID: <20250427092027.1598740-8-xin@zytor.com>
+Subject: [PATCH v4 12/15] x86/xen/msr: Remove the error pointer argument from set_seg()
+Date: Sun, 27 Apr 2025 02:20:24 -0700
+Message-ID: <20250427092027.1598740-13-xin@zytor.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250427092027.1598740-1-xin@zytor.com>
 References: <20250427092027.1598740-1-xin@zytor.com>
@@ -65,136 +65,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-__wrmsr() is the lowest level MSR write API, with native_wrmsr()
-and native_wrmsrq() serving as higher-level wrappers around it:
+set_seg() is used to write the following MSRs on Xen:
 
-  #define native_wrmsr(msr, low, high)                    \
-          __wrmsr(msr, low, high)
+    MSR_FS_BASE
+    MSR_KERNEL_GS_BASE
+    MSR_GS_BASE
 
-  #define native_wrmsrl(msr, val)                         \
-          __wrmsr((msr), (u32)((u64)(val)),               \
-                         (u32)((u64)(val) >> 32))
+But none of these MSRs are written using any MSR write safe API.
+Therefore there is no need to pass an error pointer argument to
+set_seg() for returning an error code to be used in MSR safe APIs.
 
-However, __wrmsr() continues to be utilized in various locations.
-
-MSR APIs are designed for different scenarios, such as native or
-pvops, with or without trace, and safe or non-safe.  Unfortunately,
-the current MSR API names do not adequately reflect these factors,
-making it challenging to select the most appropriate API for
-various situations.
-
-To pave the way for improving MSR API names, convert __wrmsr()
-uses to native_wrmsr{,q}() to ensure consistent usage.  Later,
-these APIs can be renamed to better reflect their implications,
-such as native or pvops, with or without trace, and safe or
-non-safe.
-
-No functional change intended.
+Remove the error pointer argument.
 
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
 
-Change in v2:
-* Use native_wrmsr() where natural [rmid_p, closid_p] high/lo parameters
-  can be used, without the shift-uglification (Ingo).
+Change in v3:
+*) Fix a typo: set_reg() => set_seg() (Juergen Gross).
 ---
- arch/x86/events/amd/brs.c                 | 2 +-
- arch/x86/include/asm/apic.h               | 2 +-
- arch/x86/include/asm/msr.h                | 6 ++++--
- arch/x86/kernel/cpu/mce/core.c            | 2 +-
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 6 +++---
- 5 files changed, 10 insertions(+), 8 deletions(-)
+ arch/x86/xen/enlighten_pv.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/events/amd/brs.c b/arch/x86/events/amd/brs.c
-index ec4e8a4cace4..3f5ecfd80d1e 100644
---- a/arch/x86/events/amd/brs.c
-+++ b/arch/x86/events/amd/brs.c
-@@ -44,7 +44,7 @@ static inline unsigned int brs_to(int idx)
- static __always_inline void set_debug_extn_cfg(u64 val)
- {
- 	/* bits[4:3] must always be set to 11b */
--	__wrmsr(MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3, val >> 32);
-+	native_wrmsrq(MSR_AMD_DBG_EXTN_CFG, val | 3ULL << 3);
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 528a2f4df050..c247e7689bc3 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1110,17 +1110,11 @@ static u64 xen_do_read_msr(unsigned int msr, int *err)
+ 	return val;
  }
  
- static __always_inline u64 get_debug_extn_cfg(void)
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 1c136f54651c..0174dd548327 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -214,7 +214,7 @@ static inline void native_apic_msr_write(u32 reg, u32 v)
- 
- static inline void native_apic_msr_eoi(void)
+-static void set_seg(unsigned int which, unsigned int low, unsigned int high,
+-		    int *err)
++static void set_seg(u32 which, u32 low, u32 high)
  {
--	__wrmsr(APIC_BASE_MSR + (APIC_EOI >> 4), APIC_EOI_ACK, 0);
-+	native_wrmsrq(APIC_BASE_MSR + (APIC_EOI >> 4), APIC_EOI_ACK);
+ 	u64 base = ((u64)high << 32) | low;
+ 
+-	if (HYPERVISOR_set_segment_base(which, base) == 0)
+-		return;
+-
+-	if (err)
+-		*err = -EIO;
+-	else
++	if (HYPERVISOR_set_segment_base(which, base))
+ 		WARN(1, "Xen set_segment_base(%u, %llx) failed\n", which, base);
  }
  
- static inline u32 native_apic_msr_read(u32 reg)
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 73d44081e597..82a908125b20 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -144,10 +144,12 @@ static inline u64 native_read_msr_safe(u32 msr, int *err)
- static inline void notrace
- native_write_msr(u32 msr, u32 low, u32 high)
- {
--	__wrmsr(msr, low, high);
-+	u64 val = (u64)high << 32 | low;
-+
-+	native_wrmsrq(msr, val);
+@@ -1136,15 +1130,15 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
  
- 	if (tracepoint_enabled(write_msr))
--		do_trace_write_msr(msr, ((u64)high << 32 | low), 0);
-+		do_trace_write_msr(msr, val, 0);
- }
+ 	switch (msr) {
+ 	case MSR_FS_BASE:
+-		set_seg(SEGBASE_FS, low, high, err);
++		set_seg(SEGBASE_FS, low, high);
+ 		break;
  
- /* Can be uninlined because referenced by paravirt */
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 255927f0284e..1ae75ec7ac95 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1306,7 +1306,7 @@ static noinstr bool mce_check_crashing_cpu(void)
- 		}
+ 	case MSR_KERNEL_GS_BASE:
+-		set_seg(SEGBASE_GS_USER, low, high, err);
++		set_seg(SEGBASE_GS_USER, low, high);
+ 		break;
  
- 		if (mcgstatus & MCG_STATUS_RIPV) {
--			__wrmsr(MSR_IA32_MCG_STATUS, 0, 0);
-+			native_wrmsrq(MSR_IA32_MCG_STATUS, 0);
- 			return true;
- 		}
- 	}
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 61d762555a79..6e5edd76086e 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -483,7 +483,7 @@ int resctrl_arch_pseudo_lock_fn(void *_plr)
- 	 * cache.
- 	 */
- 	saved_msr = __rdmsr(MSR_MISC_FEATURE_CONTROL);
--	__wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
-+	native_wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
- 	closid_p = this_cpu_read(pqr_state.cur_closid);
- 	rmid_p = this_cpu_read(pqr_state.cur_rmid);
- 	mem_r = plr->kmem;
-@@ -495,7 +495,7 @@ int resctrl_arch_pseudo_lock_fn(void *_plr)
- 	 * pseudo-locked followed by reading of kernel memory to load it
- 	 * into the cache.
- 	 */
--	__wrmsr(MSR_IA32_PQR_ASSOC, rmid_p, plr->closid);
-+	native_wrmsr(MSR_IA32_PQR_ASSOC, rmid_p, plr->closid);
+ 	case MSR_GS_BASE:
+-		set_seg(SEGBASE_GS_KERNEL, low, high, err);
++		set_seg(SEGBASE_GS_KERNEL, low, high);
+ 		break;
  
- 	/*
- 	 * Cache was flushed earlier. Now access kernel memory to read it
-@@ -532,7 +532,7 @@ int resctrl_arch_pseudo_lock_fn(void *_plr)
- 	 * Critical section end: restore closid with capacity bitmask that
- 	 * does not overlap with pseudo-locked region.
- 	 */
--	__wrmsr(MSR_IA32_PQR_ASSOC, rmid_p, closid_p);
-+	native_wrmsr(MSR_IA32_PQR_ASSOC, rmid_p, closid_p);
- 
- 	/* Re-enable the hardware prefetcher(s) */
- 	wrmsrq(MSR_MISC_FEATURE_CONTROL, saved_msr);
+ 	case MSR_STAR:
 -- 
 2.49.0
 
