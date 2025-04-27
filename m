@@ -1,123 +1,269 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02E61ABEC5;
-	Sun, 27 Apr 2025 10:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF5B1ABEC5;
+	Sun, 27 Apr 2025 10:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745748798; cv=none; b=bFOK8Q2vkFcXYPKZXRlqdn6HucFUpPRF+C24MDdyb2C3m0TZrxUPIvPzLeNNWy1D2tBCNlN55VjypoWzRnIrLAEiRZPqoG+gmiz8ffqm2nUcIuMz1j2Y4Uw9CtxfpbeEJbKd1PxNLvehLlkM6FZY10r0gguC+qVqch0mHcqqAak=
+	t=1745748803; cv=none; b=nH0qpZqGzjyEGtnCrEITIjYmLGfMCOP9urIwLay3PkOVyFQY96w5Zw7QafCWB1a4OaKCk0EE9UxNK1aMIO/sBtiZL8QBAibxIN8g4HIEhAL0xmK3onFKPpTrGXRKow6pNUUTm8FnfabVfJnrZC3d97+1i/Z/ibHydQhY9cTJNRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745748798; c=relaxed/simple;
-	bh=yegWmCWPr2oBxNhpO1pLh+k+JNbNoD8FKo7GQBRmCuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mxJ22+zNYkDW6isSR2dNs2H7c4SWyG00GFGvBHMI2AjyPStFVAOuxHTM+XXnYSmnvgow8k5CunuFyNcXR4b+ExlAPWcZbq0/9oX09hsnG0+7aCBa1Gwx10JpiYGoQYiucrU/gOtxogDuqOKvnjZXMnPNxFkzzW5Cn9pn+Dk2bo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udUSNP0I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745748803; c=relaxed/simple;
+	bh=8eWwbbuZABqTs1ENQRQR8TnUIzNNiOQap8h8jxOuxlU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=msswUfrRjsiFE1yWr8ETHmuHt6tqag5wgIC3UQaGDbCzL4P3rCupRZQL5RdjMYPlZj3Uj34dJTFG5bZSAm/bxJ3bz1XJgnjW/jmGu8VmOA/jLa8sgokZzcH54VwzqeSELyS4x0uhTfAKkoaTLqDU9CgYKvWfzcyBmG9beJxBquQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maSik9pE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udUSNP0I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905FEC4CEE3;
-	Sun, 27 Apr 2025 10:13:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maSik9pE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B7AC4AF09;
+	Sun, 27 Apr 2025 10:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745748796;
-	bh=yegWmCWPr2oBxNhpO1pLh+k+JNbNoD8FKo7GQBRmCuA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=udUSNP0IT8mcewRV2I8tuq9DP95xYgTlZ7nt+etgUFssGHTIMXDnKCRuAjv6sxKbq
-	 MkFWDdM1bWjKLAYoqeqDqxnDw4NJXs3rVA0iFw1YRewHpCYmO7RwPci+IDD2nCr/vj
-	 cI++n+TrL7q7SKO5vTKyconTFptAEzbVto57W2cwBLDD9y+dNr0QLgjvR6cHT6EXxS
-	 264GbpV6Xwk1W4QinDdw5kweYwCRClDl677vTXzRL+6CIXk2dOHtc0O+TjUxB0CcRN
-	 OuAaayF1Zrtw1TdS2B3YjBJXlXf8jUZ1f+L7U92+KULcGWSHioEKU/2X8Q+UPODJbl
-	 gwwCBC5hs6rxA==
-Date: Sun, 27 Apr 2025 12:13:08 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rust: revocable: implement Revocable::access()
-Message-ID: <aA4DNEHgrKMmzxBP@pollux>
-References: <D9HA92TSMC3M.2CRRX8P64NGD0@proton.me>
+	s=k20201202; t=1745748802;
+	bh=8eWwbbuZABqTs1ENQRQR8TnUIzNNiOQap8h8jxOuxlU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=maSik9pEtOgpYhHT9YIWukXxpTiXTk5HE6tAJqbPGbnftVQmCXLn2/N4tZxjXU+JE
+	 N4xd4wWTTq3erdQPO3zo3n1eUyLadYiMF3+rhJfSfMh4709jGroYpg5GyVnmBi7NSh
+	 1Jh0mCFz2JUqvSlwDJrGMRiZlA+yQzEIJezg1bOLT4XHQEC+X4QyPBjjw703SGtFNV
+	 xs1fTWmZQP02mDCwBvUi4O8HXRl8tdy8mZDsfMO1DKQiUtBBeiwl6VQ0My9pIdTMaS
+	 y/QI/FFI6b0nd1DSWJlqz2DSen/lFNJAtA251dmW9M5C5573SU0pqpjq3sYtsyf+yf
+	 Bh+IAtDouzKBA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f624291db6so6504722a12.3;
+        Sun, 27 Apr 2025 03:13:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2znO/Udpq4ESNqjJ9PPUI3EbzUp4yOfhTC+O4aOZ77qsre4gdQ3KqQ82H7haJutf0BD8CllJ0Oa7+zQ==@vger.kernel.org, AJvYcCVUSBjztHwFeZKau/3rWbdxi3juK4/nPcYNPE3ZCGqtcHfjdIAblurIui06QMapuHXs1oK9Oej/9UO1HLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhwzVWyoqBXmB89lV2Z8AywwdJdypcMpRjspkd1C4JrOU3EJuO
+	wYFCFdOqa96FAKVx9r4QT9A7bg88nEdghLC2i3t/AB0EfHihJB0v9kWN4cbp8+x6FseosdwPehI
+	NsS6hTshOo18srTLPg/l/+hBV5qI=
+X-Google-Smtp-Source: AGHT+IG6fQJpNysz3C7zmZd8D5k2f0nkYrh5DPoU1Qw6dMeUXhJQwVDzdJVJK8ymDINO2YUuDdCwNcFUF9lhhNcgNxg=
+X-Received: by 2002:a17:906:c14c:b0:ace:9d4e:d0cd with SMTP id
+ a640c23a62f3a-ace9d4ed62bmr246475066b.7.1745748801059; Sun, 27 Apr 2025
+ 03:13:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9HA92TSMC3M.2CRRX8P64NGD0@proton.me>
+References: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
+In-Reply-To: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 27 Apr 2025 18:13:10 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6JSKwWvLwPSK7Bu6jZixRn4U+xtpxGL4KBtsmjhc3PVA@mail.gmail.com>
+X-Gm-Features: ATxdqUFerU0TO4qWcekIXXooiAhSnCIDsgFGmXVbaG2s1h4X5IheC2ZSDhyFiiw
+Message-ID: <CAAhV-H6JSKwWvLwPSK7Bu6jZixRn4U+xtpxGL4KBtsmjhc3PVA@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: SMP: Implement parallel CPU bring up for EyeQ
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 27, 2025 at 08:37:00AM +0000, Benno Lossin wrote:
-> On Sat Apr 26, 2025 at 11:18 PM CEST, Danilo Krummrich wrote:
-> > On Sat, Apr 26, 2025 at 08:24:14PM +0000, Benno Lossin wrote:
-> >> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
-> >> > Implement an unsafe direct accessor for the data stored within the
-> >> > Revocable.
-> >> >
-> >> > This is useful for cases where we can proof that the data stored within
-> >> > the Revocable is not and cannot be revoked for the duration of the
-> >> > lifetime of the returned reference.
-> >> >
-> >> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> >> > ---
-> >> > The explicit lifetimes in access() probably don't serve a practical
-> >> > purpose, but I found them to be useful for documentation purposes.
-> >> > ---
-> >> >  rust/kernel/revocable.rs | 12 ++++++++++++
-> >> >  1 file changed, 12 insertions(+)
-> >> >
-> >> > diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-> >> > index 971d0dc38d83..33535de141ce 100644
-> >> > --- a/rust/kernel/revocable.rs
-> >> > +++ b/rust/kernel/revocable.rs
-> >> > @@ -139,6 +139,18 @@ pub fn try_access_with<R, F: FnOnce(&T) -> R>(&self, f: F) -> Option<R> {
-> >> >          self.try_access().map(|t| f(&*t))
-> >> >      }
-> >> >  
-> >> > +    /// Directly access the revocable wrapped object.
-> >> > +    ///
-> >> > +    /// # Safety
-> >> > +    ///
-> >> > +    /// The caller must ensure this [`Revocable`] instance hasn't been revoked and won't be revoked
-> >> > +    /// for the duration of `'a`.
-> >> 
-> >> Ah I missed this in my other email, in case you want to directly refer
-> >> to the lifetime, you should keep it defined. I would still remove the
-> >> `'s` lifetime though.
-> >> > +    pub unsafe fn access<'a, 's: 'a>(&'s self) -> &'a T {
-> >> > +        // SAFETY: By the safety requirement of this function it is guaranteed that
-> >> > +        // `self.data.get()` is a valid pointer to an instance of `T`.
-> >> 
-> >> I don't see how the "not-being revoked" state makes the `data` ptr be
-> >> valid. Is that an invariant of `Revocable`? (it's not documented to have
-> >> any invariants)
-> >
-> > What else makes it valid?
-> 
-> IMO an `# Invariants` section with the corresponding invariant that
-> `data` is valid when `is_available` is true.
+Hi, Gregory and Thomas,
 
-Yeah, I agree that the # Invariants section is indeed missing and should be
-fixed.
+I'm sorry I'm late, but I have some questions about this patch.
 
-> > AFAICS, try_access() and try_access_with_guard() argue the exact same way,
-> > except that the reason for not being revoked is the atomic check and the RCU
-> > read lock.
-> 
-> Just because other code is doing the same mistake doesn't make it
-> correct. If I had reviewed the patch at that time I'm sure I would have
-> pointed this out.
+On Mon, Apr 14, 2025 at 3:12=E2=80=AFAM Gregory CLEMENT
+<gregory.clement@bootlin.com> wrote:
+>
+> Added support for starting CPUs in parallel on EyeQ to speed up boot time=
+.
+>
+> On EyeQ5, booting 8 CPUs is now ~90ms faster.
+> On EyeQ6, booting 32 CPUs is now ~650ms faster.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+> Hello,
+>
+> This patch allows CPUs to start in parallel. It has been tested on
+> EyeQ5 and EyeQ6, which are both MIPS64 and use the I6500 design. These
+> systems use CPS to support SMP.
+>
+> As noted in the commit log, on EyeQ6, booting 32 CPUs is now ~650ms
+> faster.
+>
+> Currently, this support is only for EyeQ SoC. However, it should also
+> work for other CPUs using CPS. I am less sure about MT ASE support,
+> but this patch can be a good starting point. If anyone wants to add
+> support for other systems, I can share some ideas, especially for the
+> MIPS_GENERIC setup that needs to handle both types of SMP setups.
+>
+> Gregory
+> ---
+>  arch/mips/Kconfig                |  2 ++
+>  arch/mips/include/asm/topology.h |  3 +++
+>  arch/mips/kernel/smp-cps.c       |  2 ++
+>  arch/mips/kernel/smp.c           | 18 ++++++++++++++++++
+>  4 files changed, 25 insertions(+)
+>
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index fc0772c1bad4ab736d440a18b972faf66a610783..e0e6ce2592b4168facf337b60=
+fd889d76e81a407 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -617,6 +617,7 @@ config EYEQ
+>         select USB_UHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
+>         select USB_UHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+>         select USE_OF
+> +       select HOTPLUG_PARALLEL if SMP
+>         help
+>           Select this to build a kernel supporting EyeQ SoC from Mobileye=
+.
+>
+> @@ -2287,6 +2288,7 @@ config MIPS_CPS
+>         select MIPS_CM
+>         select MIPS_CPS_PM if HOTPLUG_CPU
+>         select SMP
+> +       select HOTPLUG_SMT if HOTPLUG_PARALLEL
+>         select HOTPLUG_CORE_SYNC_DEAD if HOTPLUG_CPU
+>         select SYNC_R4K if (CEVT_R4K || CSRC_R4K)
+>         select SYS_SUPPORTS_HOTPLUG_CPU
+> diff --git a/arch/mips/include/asm/topology.h b/arch/mips/include/asm/top=
+ology.h
+> index 0673d2d0f2e6dd02ed14d650e5af7b8a3c162b6f..5158c802eb6574d292f6ad251=
+2cc7772fece4aae 100644
+> --- a/arch/mips/include/asm/topology.h
+> +++ b/arch/mips/include/asm/topology.h
+> @@ -16,6 +16,9 @@
+>  #define topology_core_id(cpu)                  (cpu_core(&cpu_data[cpu])=
+)
+>  #define topology_core_cpumask(cpu)             (&cpu_core_map[cpu])
+>  #define topology_sibling_cpumask(cpu)          (&cpu_sibling_map[cpu])
+> +
+> +extern struct cpumask __cpu_primary_thread_mask;
+> +#define cpu_primary_thread_mask ((const struct cpumask *)&__cpu_primary_=
+thread_mask)
+>  #endif
+>
+>  #endif /* __ASM_TOPOLOGY_H */
+> diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
+> index e85bd087467e8caf0640ad247ee5f8eb65107591..02bbd7ecd1b9557003186b9d3=
+d98ae17eac5eb9f 100644
+> --- a/arch/mips/kernel/smp-cps.c
+> +++ b/arch/mips/kernel/smp-cps.c
+> @@ -236,6 +236,7 @@ static void __init cps_smp_setup(void)
+>                         /* Use the number of VPEs in cluster 0 core 0 for=
+ smp_num_siblings */
+>                         if (!cl && !c)
+>                                 smp_num_siblings =3D core_vpes;
+> +                       cpumask_set_cpu(nvpes, &__cpu_primary_thread_mask=
+);
+>
+>                         for (v =3D 0; v < min_t(int, core_vpes, NR_CPUS -=
+ nvpes); v++) {
+>                                 cpu_set_cluster(&cpu_data[nvpes + v], cl)=
+;
+> @@ -364,6 +365,7 @@ static void __init cps_prepare_cpus(unsigned int max_=
+cpus)
+>         cl =3D cpu_cluster(&current_cpu_data);
+>         c =3D cpu_core(&current_cpu_data);
+>         cluster_bootcfg =3D &mips_cps_cluster_bootcfg[cl];
+> +       cpu_smt_set_num_threads(core_vpes, core_vpes);
+>         core_bootcfg =3D &cluster_bootcfg->core_config[c];
+>         bitmap_set(cluster_bootcfg->core_power, cpu_core(&current_cpu_dat=
+a), 1);
+>         atomic_set(&core_bootcfg->vpe_mask, 1 << cpu_vpe_id(&current_cpu_=
+data));
+> diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
+> index 39e193cad2b9e4f877e920b71bbbb210e52607d0..1726744f2b2ec10a44420a7b9=
+b9cd04f06c4d2f6 100644
+> --- a/arch/mips/kernel/smp.c
+> +++ b/arch/mips/kernel/smp.c
+> @@ -56,8 +56,10 @@ EXPORT_SYMBOL(cpu_sibling_map);
+>  cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
+>  EXPORT_SYMBOL(cpu_core_map);
+>
+> +#ifndef CONFIG_HOTPLUG_PARALLEL
+>  static DECLARE_COMPLETION(cpu_starting);
+>  static DECLARE_COMPLETION(cpu_running);
+> +#endif
+>
+>  /*
+>   * A logical cpu mask containing only one VPE per core to
+> @@ -74,6 +76,8 @@ static cpumask_t cpu_core_setup_map;
+>
+>  cpumask_t cpu_coherent_mask;
+>
+> +struct cpumask __cpu_primary_thread_mask __read_mostly;
+> +
+>  unsigned int smp_max_threads __initdata =3D UINT_MAX;
+>
+>  static int __init early_nosmt(char *s)
+> @@ -374,10 +378,15 @@ asmlinkage void start_secondary(void)
+>         set_cpu_core_map(cpu);
+>
+>         cpumask_set_cpu(cpu, &cpu_coherent_mask);
+> +#ifdef CONFIG_HOTPLUG_PARALLEL
+> +       cpuhp_ap_sync_alive();
+This is a "synchronization point" due to the description from commit
+9244724fbf8ab394a7210e8e93bf037abc, which means things are parallel
+before this point and serialized after this point.
 
-I would say that try_access() and try_access_with_guard() are wrong, they rely
-on the correct thing, we just missed documenting the corresponding invariant.
+But unfortunately, set_cpu_sibling_map() and set_cpu_core_map() cannot
+be executed in parallel. Maybe you haven't observed problems, but in
+theory it's not correct.
 
-> I opened an issue about this:
-> 
->     https://github.com/Rust-for-Linux/linux/issues/1160
+Huacai
 
-Thanks for creating the issue!
-
-What do you suggest for this patch?
+> +#endif
+>         notify_cpu_starting(cpu);
+>
+> +#ifndef CONFIG_HOTPLUG_PARALLEL
+>         /* Notify boot CPU that we're starting & ready to sync counters *=
+/
+>         complete(&cpu_starting);
+> +#endif
+>
+>         synchronise_count_slave(cpu);
+>
+> @@ -386,11 +395,13 @@ asmlinkage void start_secondary(void)
+>
+>         calculate_cpu_foreign_map();
+>
+> +#ifndef CONFIG_HOTPLUG_PARALLEL
+>         /*
+>          * Notify boot CPU that we're up & online and it can safely retur=
+n
+>          * from __cpu_up
+>          */
+>         complete(&cpu_running);
+> +#endif
+>
+>         /*
+>          * irq will be enabled in ->smp_finish(), enabling it too early
+> @@ -447,6 +458,12 @@ void __init smp_prepare_boot_cpu(void)
+>         set_cpu_online(0, true);
+>  }
+>
+> +#ifdef CONFIG_HOTPLUG_PARALLEL
+> +int arch_cpuhp_kick_ap_alive(unsigned int cpu, struct task_struct *tidle=
+)
+> +{
+> +       return mp_ops->boot_secondary(cpu, tidle);
+> +}
+> +#else
+>  int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+>  {
+>         int err;
+> @@ -466,6 +483,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *ti=
+dle)
+>         wait_for_completion(&cpu_running);
+>         return 0;
+>  }
+> +#endif
+>
+>  #ifdef CONFIG_PROFILING
+>  /* Not really SMP stuff ... */
+>
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250411-parallel-cpu-bringup-78999a9235ea
+>
+> Best regards,
+> --
+> Gr=C3=A9gory CLEMENT, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
+>
