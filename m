@@ -1,160 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2392376E0
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEC220FA9E;
+	Sun, 27 Apr 2025 10:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745750619; cv=none; b=nu2Hvq99wiLuP8afE+UQq8ItvH2OzW3Ixo+Wnzed51E4Xw96u3KXy7S9W3mFtaMgsdN4rQJkcn1HQqyY7NqOK8EtlbR2hWxCoRJc6SifSLflWOsBShALNmY5s5RVqoHQdoyH4o8g2VTWzYJorad28i4MAe9BLk/NuZjITjdtFhU=
+	t=1745750812; cv=none; b=rh/24wAdxW3SdHMeFM4O9Tn0ZFZPX0H0FStoOW0nATIdQRRUfti6uY8kJyEsAix8xPv7hznYE0puNkOwyExU8M1u1aX9bR3/9qMP4H5iTcEU/dZkyxg5sSXbd9/rBfQ+ZeUBTy8q+xH/aDMpGnD3PyqVegIOBQVF7VJ7cvlfm2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745750619; c=relaxed/simple;
-	bh=5R3YcrRM8+b5edzNfnHiwtuClP1tBnje+vx1dKrwfO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5nxfoI8cg8ikkbv8EH8mEMMiPfpgrxsTYGefzJDIURoTsSTH3mP8OWc3lXjY9GmdXj0w51Zomy9nO8L/gmL7P/xzItfM9HxHO0s46pS+snr6Gap4Go3kCWc2Q3r0h/LaWhmE9W/F2cUEbbxpu84V2VauaBcrBOx2YfNk5h+unA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODk1q4Jl; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745750812; c=relaxed/simple;
+	bh=89oIJurDleZCWMcum9C/95n6oPTTVUoE7SRYjQXQAa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hd7dWvU6GVyp6eJuT+yuOO/MRTWnyfVfqfzyR63nnimtkFlS3zC2gveO/Eowj3+LijQ/Fv4T+Ubc4RYmM9+69ztIlTh+gCvyOtKDnJrdD8vmMmYP+KhThvFRdYjeQ3rqjqbg9xGK07WvTQrP7NoLLoBRS+9oA493OFBOGD8gGTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkF81ZG4; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODk1q4Jl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745750616; x=1777286616;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=5R3YcrRM8+b5edzNfnHiwtuClP1tBnje+vx1dKrwfO0=;
-  b=ODk1q4JlsGkS7z98q8ae8pkPiOXZn85Cvn2NFwS0WpSr53byS3Yo1gBb
-   RMc0xyWlt3pzEl+8sz/Czt4zTmr+emYWtErzpuZKnq+aWLCTxW349c43u
-   mnwmrbGifhe8HzIUXq4qVS16Ld4PSqAxC5QxPGfOTGiTPaWMjZNco+NMU
-   bcriqf+D5BJXb231kU+7nqmW1RSaQrTriwLtFPcPKXdlWFuXoUwyLa5wy
-   Ff/cjD/WovUM8cU9CXtW1wTORpgxuyj3vt3sfgmXjYozgU2hHt6EjKXAZ
-   87K/YhQ22Jymck8YITObBNNsYsFan7CaTJEkCWryQTFNrE7jQTJ5N0vRQ
-   w==;
-X-CSE-ConnectionGUID: KFz/GNZxQ96yWOoz1hZAyA==
-X-CSE-MsgGUID: +oQMHST5QoOVR/lD37EE0Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="64887658"
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="64887658"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 03:43:35 -0700
-X-CSE-ConnectionGUID: dQ5n7KwjQ4WekgdaJH8a5A==
-X-CSE-MsgGUID: ytUu+YufRASEiwkQ1l0I+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="133767169"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Apr 2025 03:43:34 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8zTv-0006FJ-2v;
-	Sun, 27 Apr 2025 10:43:31 +0000
-Date: Sun, 27 Apr 2025 18:42:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Penkler <dpenkler@gmail.com>, gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Dave Penkler <dpenkler@gmail.com>
-Subject: Re: [PATCH 3/3] staging: gpib: Avoid unused variable warning
-Message-ID: <202504271805.WmPdV7YW-lkp@intel.com>
-References: <20250427091018.13705-4-dpenkler@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkF81ZG4"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39149bccb69so3396147f8f.2;
+        Sun, 27 Apr 2025 03:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745750809; x=1746355609; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lfYdI2QMrU/YgMx02oqGgwewbVMGDLfbMn9txjVQQQU=;
+        b=GkF81ZG4qlPcRbBlVDX/nMk3+4KJEgg1OncNZWCI/kmSOT5LDomQrftMyXBVZzwYSq
+         8rKL0y6ApFnRzzM9AS8GO5DkKUfTFdxLGIATOrLPAqeT036WLKLMWsZxmtG1/QEpY72F
+         Pcn07JjSSHgQJ1AFvQFCNQNjbht3b3EKrGGeip+XxEqYwDRP+yN+7WOJ8SPBrlh6x8Od
+         A8N64o6kxyRf/32GMTu1SkF17Cit0jV4RbdnYjOUm741Iqzs0xe2hrMNOU+RLkaSq5rA
+         MQ14YdF74DlbLNHlfn7U9d39zzjlu2tLwHgc68guU9Y7bIyzb0uGNmldXCuMJMQcF67a
+         0rCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745750809; x=1746355609;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lfYdI2QMrU/YgMx02oqGgwewbVMGDLfbMn9txjVQQQU=;
+        b=O5xIEo6TmGFOukfBj1nGSU7c1x4rmy61kXpQzUqXleucuB7bjjpVbbh7ls+GkM0i0I
+         nf6KFZjhKKcVL5iA07MGETKCMcHUd8KX4g7DmBqo3WsDTPNVHuWCW6zDXiwI8aEYINMg
+         kOtaXutfhiXYVSl1geJiwSviLcVUfugXJFKlKd7XsUiv0zzRJde67hEvDplao4I/b+a0
+         YeXqOFFZ1xGtrhDyvuH1dn8RpibQl8tD2IMz6f9Of3u0DPkvOBQeBizMCU+FzVMpKbJB
+         aUyEI4j1mC2+rAivATn0AasY8iGURcHTqIVAGRQuwGYz/qbhsJY3AYb0fPjlkaVjyksv
+         jQBA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1yEBwRjgYDm+wrT+oCYX51ehdjr+ycc+R+1Uk2xwEv5aXQUj1fiZIvNg2GLq+LHEk5H1deRve9YnnFUo=@vger.kernel.org, AJvYcCXmukdCfGcPuR9EXGD3VJxIOambZcEkMZa8m7hYuWbRduB2hO/uF/0g5zvh4nC86Gau+J7FUtSi@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxXz+tFl/fW5wTXUpJ5UppyGjdLstQGxYEQPPmDZSxpNeXC/k8
+	lEbR+ENLWU/3xRGH1nOUzU1R5KEJTnBRbEMSim9hmOBpJBeMhTU1
+X-Gm-Gg: ASbGncv4JBe91ZOgUMwcRcPTlp48oN1aRIOwls0xXeQDb/mVaP9wq7mDzuFOq4a9dTe
+	R0M2/j1jeMXwoSyrfL0BKVA4LqMsQv28zfwZ+A53zksyXQ35a5S5vr8+787debi89Nvnu3HFmqB
+	FfP7scgFLx9JKmwDtK0e4Vl7rA4vWbStc5kZpkqN+2OhZq75+0c9dte/22UYXhfI/+bgCC4Ju1S
+	ujZZVmTIokeG+FbHpylpqAW5LgosT95k6dg4+Us6Gz6QkMJYTyeTxTy4YS5zInfGNhAAugMQch4
+	zjFoKWBB82wIYg7ad+NeYFqTJR5H6zVy1BqbcDMUToaTryhik5ILMT8OB66mH07NaYxjPF9VpcW
+	nh9g=
+X-Google-Smtp-Source: AGHT+IEgHTgWsgiR2ymodQy5ZCXcHYIbCWocVJl7Q/IZ42e7Ck55BBEMJdI0HemvJEaz6hEQyi3AVw==
+X-Received: by 2002:a05:6000:2283:b0:39c:f0d:9146 with SMTP id ffacd0b85a97d-3a074f11d7fmr6620694f8f.45.1745750808505;
+        Sun, 27 Apr 2025 03:46:48 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e464eesm8071840f8f.68.2025.04.27.03.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 03:46:47 -0700 (PDT)
+Date: Sun, 27 Apr 2025 11:46:46 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: <kuba@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+ <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
+ <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <horms@kernel.org>, <pkshih@realtek.com>, <larry.chiu@realtek.com>
+Subject: Re: [PATCH net v2 3/3] rtase: Fix a type error in min_t
+Message-ID: <20250427114646.4253b39d@pumpkin>
+In-Reply-To: <20250416124534.30167-4-justinlai0215@realtek.com>
+References: <20250416124534.30167-1-justinlai0215@realtek.com>
+	<20250416124534.30167-4-justinlai0215@realtek.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250427091018.13705-4-dpenkler@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Dave,
+On Wed, 16 Apr 2025 20:45:34 +0800
+Justin Lai <justinlai0215@realtek.com> wrote:
 
-kernel test robot noticed the following build errors:
+> Fix a type error in min_t.
 
-[auto build test ERROR on staging/staging-testing]
+NAK, in particular u16 is likely to be buggy
+Consider what would happen if RTBASE_MITI_MAX_PKT_NUM was 65536.
+(Yes, I know that isn't the intent of the code...)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dave-Penkler/staging-gpib-Fix-PCMCIA-config-identifier/20250427-171209
-base:   staging/staging-testing
-patch link:    https://lore.kernel.org/r/20250427091018.13705-4-dpenkler%40gmail.com
-patch subject: [PATCH 3/3] staging: gpib: Avoid unused variable warning
-config: x86_64-buildonly-randconfig-002-20250427 (https://download.01.org/0day-ci/archive/20250427/202504271805.WmPdV7YW-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504271805.WmPdV7YW-lkp@intel.com/reproduce)
+As pointed out earlier using min() shouldn't generate a compile warning
+and won't mask off significant bits.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504271805.WmPdV7YW-lkp@intel.com/
+Also I think it isn't a bug in any sense because the two functions
+have a single caller that passes a constant.
 
-All errors (new ones prefixed by >>):
-
-   drivers/staging/gpib/ines/ines_gpib.c: In function 'ines_gpib_config':
->> drivers/staging/gpib/ines/ines_gpib.c:1118:9: error: 'dev' undeclared (first use in this function); did you mean 'cdev'?
-    1118 |         dev = link->priv;
-         |         ^~~
-         |         cdev
-   drivers/staging/gpib/ines/ines_gpib.c:1118:9: note: each undeclared identifier is reported only once for each function it appears in
+	David
 
 
-vim +1118 drivers/staging/gpib/ines/ines_gpib.c
+> 
+> Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
+> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+> ---
+>  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> index 55b8d3666153..bc856fb3d6f3 100644
+> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
+>  	u8 msb, time_count, time_unit;
+>  	u16 int_miti;
+>  
+> -	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
+> +	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
+>  
+>  	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
+>  		msb = fls(time_us);
+> @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
+>  	u8 msb, pkt_num_count, pkt_num_unit;
+>  	u16 int_miti;
+>  
+> -	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+> +	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+>  
+>  	if (pkt_num > 60) {
+>  		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
 
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1107  
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1108  /*
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1109   * gpib_config() is scheduled to run after a CARD_INSERTION event
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1110   * is received, to configure the PCMCIA socket, and to make the
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1111   * device available to the system.
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1112   */
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1113  static int ines_gpib_config(struct pcmcia_device *link)
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1114  {
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1115  	int retval;
-77b41a9342f610 Dave Penkler  2025-01-14  1116  	void __iomem *virt;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1117  
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18 @1118  	dev = link->priv;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1119  
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1120  	retval = pcmcia_loop_config(link, &ines_gpib_config_iteration, NULL);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1121  	if (retval) {
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1122  		dev_warn(&link->dev, "no configuration found\n");
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1123  		ines_gpib_release(link);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1124  		return -ENODEV;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1125  	}
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1126  
-0de51244e7b7e3 Dave Penkler  2025-02-20  1127  	dev_dbg(&link->dev, "ines_cs: manufacturer: 0x%x card: 0x%x\n",
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1128  		link->manf_id, link->card_id);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1129  
-2de3fa2c3f4e25 Paul Retourné 2025-04-11  1130  	/*
-2de3fa2c3f4e25 Paul Retourné 2025-04-11  1131  	 * for the ines card we have to setup the configuration registers in
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1132  	 * attribute memory here
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1133  	 */
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1134  	link->resource[2]->flags |= WIN_MEMORY_TYPE_AM | WIN_DATA_WIDTH_8 | WIN_ENABLE;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1135  	link->resource[2]->end = 0x1000;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1136  	retval = pcmcia_request_window(link, link->resource[2], 250);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1137  	if (retval) {
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1138  		dev_warn(&link->dev, "pcmcia_request_window failed\n");
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1139  		ines_gpib_release(link);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1140  		return -ENODEV;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1141  	}
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1142  	retval = pcmcia_map_mem_page(link, link->resource[2], 0);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1143  	if (retval) {
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1144  		dev_warn(&link->dev, "pcmcia_map_mem_page failed\n");
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1145  		ines_gpib_release(link);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1146  		return -ENODEV;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1147  	}
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1148  	virt = ioremap(link->resource[2]->start, resource_size(link->resource[2]));
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1149  	writeb((link->resource[2]->start >> 2) & 0xff, virt + 0xf0); // IOWindow base
-77b41a9342f610 Dave Penkler  2025-01-14  1150  	iounmap(virt);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1151  
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1152  	/*
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1153  	 * This actually configures the PCMCIA socket -- setting up
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1154  	 * the I/O windows and the interrupt mapping.
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1155  	 */
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1156  	retval = pcmcia_enable_device(link);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1157  	if (retval) {
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1158  		ines_gpib_release(link);
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1159  		return -ENODEV;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1160  	}
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1161  	return 0;
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1162  } /* gpib_config */
-bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1163  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
