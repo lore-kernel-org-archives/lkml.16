@@ -1,48 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A71714D428;
-	Sun, 27 Apr 2025 13:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D726139CE3
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 13:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745759493; cv=none; b=MDOG15CH2SzoDighq2w+KaQ+a6G7bGVurvCxox/SAqfcPQ/w9CffGT7p+xkkxkEdLrvIFloWv3bqM2BMqX9whI0Ht5TiK6vCBee/jfBXOGiUEMhQyZAPo7Jb7OS97rmpToP3xbNBWTJc8ZeXJrkBA6qxRNYUnAcZ9P/gZ/i+QeQ=
+	t=1745759645; cv=none; b=q9HeEQnUrm3kMKeqtKImQHdYY+eBjowLlicUKstw6MQMp2X2xg8FDi2WwiRUd8VLzX6jh32fQ8tFGwA+fBmOb1g5d5Es5agSq4piVehFMo/064ETpo43eGJS7CBhvqdcjc7YwOZQbtZaGB099tjH3VOol7xcO4cKewaV0uSswKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745759493; c=relaxed/simple;
-	bh=hIg9xiL1wTkWBQvd+WTVpN2UA7enXw1novSCVk6FraQ=;
+	s=arc-20240116; t=1745759645; c=relaxed/simple;
+	bh=wU5G/ORd7jg7YqY8ZVW0sjM/fQEAp7t1iOVZNN7dnHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O05llTusSEKQ01B6aQKVYvFTNAC/3+ILXeUPzeRUPaD40q9R/fHrNKNKPz1fTByoRKIfnQLMmPIw5Qf5VuZ7E2+S0q4vB6BozN5qF6J0CiEje7ARBXrhJE7FGO9w42uhgYXXVvErC1LRxwgjKSQ4JfT/oSWdgZQgfbmjpLPLW50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Js5eBBxo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcFge75sMcuu9c5ECfACElCEa7tFyQNDi39gUHS2TVNaC/xB9pvWar3zISuiASYlNH+LYqQOIQhj1D8OgyJBA01LBGDowqAhmc+whdd1qHYaHrXvQksFEtIuAuICkD+b7OrkwPd/m8eKOnhKdIbVftFGa/0tbUoBruLC+vsLhs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DBo2pN2Y; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Js5eBBxo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8414C4CEE3;
-	Sun, 27 Apr 2025 13:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745759493;
-	bh=hIg9xiL1wTkWBQvd+WTVpN2UA7enXw1novSCVk6FraQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Js5eBBxoHlcS56/LWyr45u7eRowNxoCYA6Md7I33bPaPRQLs3baLIHPlyTp0csghf
-	 mNCXTEbu1yNMtMOT7JTf854tXYRVvArrq3HZEnVUBQlFqylkwky2LSYaFxEK8/Kw5X
-	 Z/AcD9AseJYp4rgJMRwQ8XY9rmHzUm+sI/ac4vuLvW0OU9Ii9N2xfO9Puzy+QkAVof
-	 Nyn3ibUt23OszHmj1FWPHbibu4rE+VmW/6hBdidH2RcSqJWI7TquPP9TueEjIP/oSw
-	 /d5OvCZ/JlLLJjOP3DLWAlgxyVxgFiRpBDxeOK061Pq27N2K0t8Z0HoPDa2VNsTeb+
-	 FuI4gqQiU6ppA==
-Date: Sun, 27 Apr 2025 06:11:38 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [v2 PATCH 00/13] Architecture-optimized SHA-256 library API
-Message-ID: <20250427131138.GC1161@quark>
-References: <cover.1745734678.git.herbert@gondor.apana.org.au>
- <20250427123514.GA1161@quark>
- <aA4mAlozk3RvxvTe@gondor.apana.org.au>
- <20250427125641.GB1161@quark>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DBo2pN2Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745759642;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KB57MTnRwOC/Yn6FUIY4COt0ItfQNeHUwh5m3vAZJSw=;
+	b=DBo2pN2YHJPBEWZY+KRTPhvtcLum+MWuOd1a40DLt+YUEZoGrKETuc7HNnjUN6Yw9nIL2G
+	3wcu/aIPppdh4lhdtYn57LisrFFOMQ43h6QGxc0/Qver6U4s90dx9KIS7pVJTraBoT8Jfc
+	0HXKo//EIRTUSO7n/W5LitqUQ8fCBmM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-qgdJ5Y3EP6SUV_UFDnPo5w-1; Sun,
+ 27 Apr 2025 09:13:58 -0400
+X-MC-Unique: qgdJ5Y3EP6SUV_UFDnPo5w-1
+X-Mimecast-MFC-AGG-ID: qgdJ5Y3EP6SUV_UFDnPo5w_1745759637
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 45CEE1800446;
+	Sun, 27 Apr 2025 13:13:57 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.119])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A580E1956094;
+	Sun, 27 Apr 2025 13:13:53 +0000 (UTC)
+Date: Sun, 27 Apr 2025 21:13:48 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/8] ublk: check UBLK_IO_FLAG_OWNED_BY_SRV in
+ ublk_abort_queue()
+Message-ID: <aA4tjJdyzYtmi0s3@fedora>
+References: <20250427045803.772972-1-csander@purestorage.com>
+ <20250427045803.772972-8-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,46 +59,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427125641.GB1161@quark>
+In-Reply-To: <20250427045803.772972-8-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Sun, Apr 27, 2025 at 05:56:43AM -0700, Eric Biggers wrote:
-> On Sun, Apr 27, 2025 at 08:41:38PM +0800, Herbert Xu wrote:
-> > On Sun, Apr 27, 2025 at 05:35:14AM -0700, Eric Biggers wrote:
-> > >
-> > > Well, barely a day and you've already ruined my patch series.  Now instead of a
-> > > clean design where the crypto_shash API is built on top of the normal library
-> > > API (sha256_update() etc.), there's now a special low-level API
-> > > "sha256_choose_blocks()" just for shash that it's built on top of instead, for
-> > > no good reason.  You're also still pushing your broken BLOCK_HASH_UPDATE_BLOCKS
-> > > macro that doesn't work with size_t, and putting my name on your broken code
-> > > that uses it.
-> > 
-> > Your design is unacceptable because you're forcing the partial block
-> > handling on shash where it's not needed,
+On Sat, Apr 26, 2025 at 10:58:02PM -0600, Caleb Sander Mateos wrote:
+> ublk_abort_queue() currently checks whether the UBLK_IO_FLAG_ACTIVE flag
+> is cleared to tell whether to abort each ublk_io in the queue. But it's
+> possible for a ublk_io to not be ACTIVE but also not have a request in
+> flight, such as when no fetch request has yet been submitted for a tag
+> or when a fetch request is cancelled. So ublk_abort_queue() must
+> additionally check for an inflight request.
 > 
-> Excuse me?  It's the other way around.  In my version the partial block handling
-> is only in the library, not shash.  In your version you've forced it into the
-> shash layer, even though the library does it already.  I understand that you've
-> added support for partial block handling to crypto/shash.c and you want to feel
-> like your work is useful, but in this case it's not, since the libray has to
-> handle arbitrary-length inputs anyway.
+> Simplify this code by checking for UBLK_IO_FLAG_OWNED_BY_SRV instead,
+> which indicates precisely whether a request is currently inflight.
 > 
-> > just as you're forcing the hardirq support on everything.
-> 
-> If you want crypto_shash to warn on hardirq usage you should just put a
-> WARN_ON(in_hardirq()) in crypto_shash_*(), which will actually achieve that.
-> Not add a shash-specific non-hardirq-safe low-level API to the library that can
-> silently corrupt random tasks' SIMD registers on production systems.
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-By the way, as I mentioned in my cover letter:
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-    For now the SHA-256 library is well-covered by the crypto_shash
-    self-tests, but I plan to add a test for the library directly later.
 
-But due to your gratuitous changes where crypto_shash is no longer built on top
-of the normal SHA-256 library API, that's no longer the case.
+Thanks,
+Ming
 
-So while I do still plan to add a SHA-256 library test anyway, I don't see the
-reason for not also making crypto_shash just do the right thing.
-
-- Eric
