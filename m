@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783A81F941;
-	Sun, 27 Apr 2025 19:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42EB1F941;
+	Sun, 27 Apr 2025 19:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745780931; cv=none; b=nGs1i4XbYCgbxZaPNXdcmOcvluedp2gXPOSs59rkyd8c+Kk+3yChqkXz9VbZQdbr9xi9bkezhUD2LMDiWDQGhXE2Rl499atfBsv33daPBKGRDWdKMb5iiF1nOpiHF0unZvNgLwgfa5nM2rPcYlD1GXJaiKFzK+oLFuFVI5bryCE=
+	t=1745781014; cv=none; b=HfCyvPx8UakAlmCnXbX9Wfo1Xm6MVHPFJdpMzS3QT8lOjHBO1bvaeH1HuYLK3DPvYtxg79g2nyQnAJgDjaQn/QaBANyGjTi3Dv1VZNyf2eTFY6pfFX0S8PLyyA3iMlqskK5an/sLgmqcpu04udJpEjqGyzKhlqV1DS9VbaOfgZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745780931; c=relaxed/simple;
-	bh=afv3Mgyi1BfkBpf0MStrpUY87jKDJnug026Jb+53Dmw=;
+	s=arc-20240116; t=1745781014; c=relaxed/simple;
+	bh=jJ9qtpmfCTiYPgY6V9D9D/6hWa8Cv4qj/8xEwO9l7rg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g2WkHurnr5eKe7DPT449jPaaJMK4pApszXF1Waf1KCb1UVf4CkB1zhrkHlaAMbm1f7dBKsWC6b1r2+dCbeLgtnDUFXfJdBISbXw5++/2IQni2YT2KUM3pm6CV1qgPOpqUGZkIVIVufiVThK3F/XUCGybgfz3FAeioOPz36pYOr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRI5jv3+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lDZCFptzECVyPR7roFaMbxEP2jjGy9LcujC18I30s0x2ZLb8zuSN5kH4zispuGcsVQlntVnlHarK1kf36qNM+gLeGFB+vtbmgOnPqNz20f+jGjSP7PMp646Z/RDISgcllgMzHaxRWLRmvZgpXRLa1eMTk/HstOeyjtFE3Ti8VVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O78lEHOh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRI5jv3+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96781C4CEE3;
-	Sun, 27 Apr 2025 19:08:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O78lEHOh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2631C4CEE3;
+	Sun, 27 Apr 2025 19:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745780930;
-	bh=afv3Mgyi1BfkBpf0MStrpUY87jKDJnug026Jb+53Dmw=;
+	s=k20201202; t=1745781013;
+	bh=jJ9qtpmfCTiYPgY6V9D9D/6hWa8Cv4qj/8xEwO9l7rg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dRI5jv3+R+XkkHJqTVPyGynT/8ucmcw5oB4wixNNn5MYXDhzgube+7PSbOhh62SxO
-	 vW6ICFGJW4U9SCawCu1XpZv2enitVdEwC7v4ef0Lxn3CWJKXhAA4Bj+0WQSJuVCUZj
-	 /iZdExKjvwYkiAz3ddlzVsKkCzDeWCNddmhd1apjsNQSEMdvY4xGNF0ldj3+IsxGkC
-	 koi+gzksl52E1xOqra1CMS5LT44nymzXiHPFa1YO9kK8UHJrKusrrECI+P0QC43aQr
-	 GbEju1ybSQrvy7jtA4Q+1gkpYLXfCl1irU+JdWH2F1oAoskxyOCJ2Zcq8jx2kpWrql
-	 E98+mwCN4ecfQ==
-Message-ID: <f39ae724-8f5b-4738-9308-995e68adfcf1@kernel.org>
-Date: Sun, 27 Apr 2025 21:08:45 +0200
+	b=O78lEHOhcLjTZ/HBTomTeQqYzczq5+0t9AEyWjj64x9YwsBeScr/VgBgtWYsj0ch2
+	 /sNHsRPAocOfHRVoedwkC16nZp7pjLV+THLIkdzKdGB7OmTyDhjeGxEQR3kdNeOqKP
+	 Nc+xfukkAExW8NujN6lbxPMx3cLxWfyKOfT1AQ/70cv4imJjQfSenwBvhfKPPy+pCc
+	 YXKHKQA5fsL7kwsv/l7H50XJ3kiVtsTduVc5w5zvHcIOTKxmlKdTvmzaCKT2fTkgV/
+	 3ky8o85iDHSKMp+D6jZkllkwJmoouDMaDg7WFykPIPk4oKEYbgqBvY1RWUgMMLBBoE
+	 smXwZZc4hXgUg==
+Message-ID: <d11e00b3-45ea-4eb5-8ac5-54c051b32a81@kernel.org>
+Date: Sun, 27 Apr 2025 21:10:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,29 +35,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] dt-bindings: pci: cadence: Extend compatible for
- new EP configurations
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
- Hans Zhang <hans.zhang@cixtech.com>, Conor Dooley <conor@kernel.org>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "peter.chen@cixtech.com" <peter.chen@cixtech.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
- <20250424010445.2260090-3-hans.zhang@cixtech.com>
- <20250424-elm-magma-b791798477ab@spud>
- <20250424-proposal-decrease-ba384a37efa6@spud>
- <CH2PPF4D26F8E1CB9CA518EE12AFDA8B047A2842@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250425-drained-flyover-4275720a1f5a@spud>
- <5334e87c-edf3-4dd9-a6d5-265cd279dbdc@cixtech.com>
- <b25406dc-affd-48f2-bccb-48ee01bdfcf1@kernel.org>
- <DS0PR07MB10492178596F396BC1A52BE2FA2862@DS0PR07MB10492.namprd07.prod.outlook.com>
+Subject: Re: [PATCH] arm64: dts: nuvoton: Add USB Hosts
+To: William Kennington <william@wkennington.com>
+Cc: Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>,
+ Tali Perry <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250416001818.2067486-1-william@wkennington.com>
+ <2d3d4240-65ab-4fd1-a86a-503bb40f34a6@kernel.org>
+ <CAD_4BXgO3F0JVKQTAZxLXjPXHv4Rgf2Cz+Cm0PMzLDTx5C56tg@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -103,53 +90,34 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <DS0PR07MB10492178596F396BC1A52BE2FA2862@DS0PR07MB10492.namprd07.prod.outlook.com>
+In-Reply-To: <CAD_4BXgO3F0JVKQTAZxLXjPXHv4Rgf2Cz+Cm0PMzLDTx5C56tg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 27/04/2025 05:55, Manikandan Karunakaran Pillai wrote:
-> work.
->>>>>>>
->>>>>>> Same applies to the other binding patch.
->>>>>> Additionally, since this IP is likely in use on your sky1 SoC, why is a
->>>>>> soc-specific compatible for your integration not needed?
->>>>>>
->>>>> The sky1 SoC support patches will be developed and submitted by the
->> Sky1
->>>>> team separately.
->>>> Why? Cixtech sent this patchset, they should send it with their user.
->>>
->>> Hi Conor,
->>>
->>> Please look at the communication history of this website.
->>>
->>> https://urldefense.com/v3/__https://patchwork.kernel.org/project/linux-
->> pci/patch/CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F
->> 8E1C.namprd07.prod.outlook.com/__;!!EHscmS1ygiU1lA!Gh-
->> UeyTbbr2R3ocWWa4QZHM_GYBRXws7a5zc3lZvSy_XYVCkcg8mmeEaAWS4wEvI
->> SMV2tGCEylE$
+On 25/04/2025 23:18, William Kennington wrote:
+> On Tue, Apr 15, 2025 at 11:52 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >>
->> And in that thread I asked for Soc specific compatible. More than once.
->> Conor asks again.
+>> On 16/04/2025 02:18, William A. Kennington III wrote:
+>>> The npcm 8xx chip has 2 EHCI and 2 OHCI hosts with driver support
+>>> already existing in the kernel.
+>>>
+>>> Signed-off-by: William A. Kennington III <william@wkennington.com>
+>>> ---
+>>>  .../dts/nuvoton/nuvoton-common-npcm8xx.dtsi   | 28 +++++++++++++++++++
 >>
->> I don't understand your answers at all.
+>> Please do not send 10 separate patches, but one patchset for given
+>> subsystem.
 > 
-> The current support is for the IP from Cadence.  There can be multiple SoC developed based on this IP and it is for
-> the SoC companies to build in support as and when the SoC support needs to be available.
-> 
-> Since the CIX SoC is available, it can be send together with this patch. 
-> However, I do not understand the need for  clubbing these in a single patch.
+> When I send a patchset should I add the reply-to tags for all of these
+> previous reviews? Or just resend as a new review?
 
-No one asks for this. The point is such IP blocks are usually customized
-per SoC this generic compatibles are not enough. That's the argument
-here, not whether you can have multiple vendors (we all know this,
-imagine we know Cadence, Synopsys etc) or whether you want to combine
-here Cix or not. Answer rather how much software interface is compatible
-or common between different implementations.
+I don't understand what you are asking me. You NEVER add manually
+in-reply to. You should use either git send-email or b4 or patman.
+Nothing else, no manual edits, no weird headers.
 
-... AND even then you always need soc specific compatible. See writing
-bindings for the reason (or any other tutorial/guide/speech about
-writing bindings).
+If you ask about review, that's entirely different topic - see
+submitting patches. BTW, kernel docs also explain how to actually send
+these emails...
 
 Best regards,
 Krzysztof
