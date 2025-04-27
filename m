@@ -1,145 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C14D1E231E;
-	Sun, 27 Apr 2025 10:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19831EF396
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745749247; cv=none; b=d/H/3J2fumWUrFydJ34I3un7qiQbDTsZg3U5GkIEbcqbtygM5s2p5L0teQo4EY8oyIapRb0f8dPmn2f3D/522FsenzhsCxoAEiVSDGH1pLog550LjYjfQMDqjnLqZjKlhG4F0Zldvbh5Fx9RwvLAFxLrOfSzd7EKRHeqJnOAdfg=
+	t=1745749356; cv=none; b=PWWV7LmoEhsNevB8bY9iKReXtiNaLDj1Nsqm0dqptoSG+IYZTM3cVGwWd4oxnM4JJ76BfV8LAIUcxYVyyppb4lBZ+TlDk36R8OAwNo0KTr4Rrw9sF8z5nZMxteP/FhicX2BnnJu0eru7okLytejjpXv8YEwG6gwD15GuZTTyl04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745749247; c=relaxed/simple;
-	bh=UvgX/22nEMLGVHnLX7utgwefDV5CfKGMP+fQPcGv4Q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fhcBrFpZTrnvApp6XtW+TFkYeY+BMagWhoQ73dHT/LzeW34eW9wFvmZjL6/WgJxOEg3VHyeNaOyQrHUmpnqwmvMFbnMtJfizvyc5tyXnUOWlf9+RJiUvz/ON244mmRL8FKGkD13mbZsMIrSyuRe46z+vZ0QVPVjDVSFRGbCZE5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mc+LLps/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745749356; c=relaxed/simple;
+	bh=wWeiUfIu7WBUlDRFnFPlieoNxj0f6cEU4fu1RaK7Tuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ih1G7zqkY6aA5rR5n8gb+GyT+QPbY2YiCpybf5khE4Ua0bLi8/mpkIELv4ImpkidHlaY8flY+BgJBy/Kbnxl6DgJ7SpQqzpQGKYSXf+BlcuD5ir63Im5t7oeg0vz4j2jpH7sFa5i0tQO/CgidBJyUT5NJnNLB9fUojy1mixJQAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C64Iidw8; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mc+LLps/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C48CEC4CEE3;
-	Sun, 27 Apr 2025 10:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745749245;
-	bh=UvgX/22nEMLGVHnLX7utgwefDV5CfKGMP+fQPcGv4Q8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Mc+LLps/OnHxQfbiaghh+dEvxoV3Tu6fQOxBLkQ/rdYm27bU20RcLqL3a9YmusXM5
-	 CS+/188Z1gv96pms5EKq1PJ/3ynRurt6g+z1sZVQLY4Sr/E8ke8RMIANy4VNuY8ZtU
-	 O/csuIRW74bWlRCxv5qi1miUsupmS1z4uxFcnk5cxEkrjiXFxtQcZTZB/YR1zsqizi
-	 VcddKI4RMtewnXSIjbuFWddJ/+x8n8F/uB1mLjc1nPmqEoZ4yi+AiSFtA2oTvaJf+A
-	 efRx5rTreJQNcidxZ9jMT8nyWtVu38+aKrM1rtQI3Z9BvOF6Lo6LDdzsT6udCocyyk
-	 tsRD8/vZCyVsg==
-Date: Sun, 27 Apr 2025 11:20:35 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-Message-ID: <20250427112035.112d086d@jic23-huawei>
-In-Reply-To: <8a57a332-c2a6-4825-a5f7-d765ea15bd6f@baylibre.com>
-References: <20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com>
-	<20250425-iio-introduce-iio_declare_buffer_with_ts-v3-1-f12df1bff248@baylibre.com>
-	<20250426123509.0b04f0f9@jic23-huawei>
-	<8a57a332-c2a6-4825-a5f7-d765ea15bd6f@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C64Iidw8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745749355; x=1777285355;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=wWeiUfIu7WBUlDRFnFPlieoNxj0f6cEU4fu1RaK7Tuk=;
+  b=C64Iidw8+QcuCRr/Gc13nNfntfpwELEqxGS0F1AnzfGJCWPuCOobyTQF
+   tA03M08YLffsu4aBj4feA8f1PiMS0eLGEd6wGB8dWzh6rsqEBV2VC5Wtk
+   AMNkv5ov86oABcRRhmegFskoKVxcGN1ajneHFQVssLIyjztUVhrSbPRil
+   wwGSfwnsV0X5RmdZEalRfqthetSJb8P0GC+szvpYOvLpcaRyvdNlGT3PB
+   9e5bblvv/bUDtvndgNzVHgq5T1Gxzh+tth9GYX8/s+lk91bFb7XUHp5Z9
+   B5+S4iuTjnculkUMA5mGnirUfOA2m2URhlIokLTW+zkDCqyfpYuwj8g+o
+   w==;
+X-CSE-ConnectionGUID: QiFTt9NmSqmy6kecbK74wg==
+X-CSE-MsgGUID: PUXwQudhTcKa9MWuKYOpQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="34966754"
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="34966754"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 03:22:34 -0700
+X-CSE-ConnectionGUID: 7c45Uxn+QUWlAmiQQJCZ9A==
+X-CSE-MsgGUID: QUKDlXb1RBaI3LjdD8b0YA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="133252974"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 27 Apr 2025 03:22:33 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u8z9a-0006Er-1o;
+	Sun, 27 Apr 2025 10:22:30 +0000
+Date: Sun, 27 Apr 2025 18:22:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lijo Lazar <lijo.lazar@amd.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>
+Subject: drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2168: warning: Function
+ parameter or struct member 'AMDGPU_RAS_BLOCK__ANY' not described in 'if'
+Message-ID: <202504271826.xy2fFO28-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, 26 Apr 2025 17:34:10 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: e1ee2111ca48169a9fdc5075f7863f5d4d591e2f drm/amdgpu: Prefer RAS recovery for scheduler hang
+date:   5 months ago
+config: sparc-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250427/202504271826.xy2fFO28-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 10.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504271826.xy2fFO28-lkp@intel.com/reproduce)
 
-> On 4/26/25 6:35 AM, Jonathan Cameron wrote:
-> > On Fri, 25 Apr 2025 16:08:43 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >   
-> 
-> ...
-> 
-> >> @@ -777,6 +779,42 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
-> >>   * them safe for use with non-coherent DMA.
-> >>   */
-> >>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
-> >> +
-> >> +#define __IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> >> +	static_assert(count); \  
-> > 
-> > Why do we care if count is 0?  Or is intent to check if is constant?
-> > If the thought is we don't care either way about 0 (as rather nonsensical)
-> > and this will fail to compile if not constant, then perhaps a comment would
-> > avoid future confusion?  
-> 
-> I would be inclined to just leave out the check. But yes, it is just checking
-> that count is constant and we don't expect 0.
-> 
-> >   
-> >> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
-> >> +
-> >> +/**
-> >> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
-> >> + * @type: element type of the buffer
-> >> + * @name: identifier name of the buffer
-> >> + * @count: number of elements in the buffer
-> >> + *
-> >> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
-> >> + * addition to allocating enough space for @count elements of @type, it also
-> >> + * allocates space for a s64 timestamp at the end of the buffer and ensures
-> >> + * proper alignment of the timestamp.
-> >> + */
-> >> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> >> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
-> >> +
-> >> +/**
-> >> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
-> >> + * @type: element type of the buffer
-> >> + * @name: identifier name of the buffer
-> >> + * @count: number of elements in the buffer
-> >> + *
-> >> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
-> >> + * to ensure that the buffer doesn't share cachelines with anything that comes
-> >> + * before it in a struct. This should not be used for stack-allocated buffers
-> >> + * as stack memory cannot generally be used for DMA.
-> >> + */
-> >> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
-> >> +	__IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
-> >> +
-> >> +static_assert(IIO_DMA_MINALIGN % sizeof(s64) == 0,  
-> > That message isn't super helpful if seen in a compile log as we aren't reading the code here
-> > "IIO_DECLARE_DMA_BUFFER_WITH_TS() assumes that ...
-> >   
-> >> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
-> >> +  
-> 
-> Seems we actually have an arch (openrisc) that triggers this [1]. This arch
-> doesn't define ARCH_DMA_MINALIGN so it falls back to:
-> 
-> #define ARCH_DMA_MINALIGN __alignof__(unsigned long long)
-> 
-> Apparently this is only of those 32-bit arches that only does 4 byte alignment.
-> From the official docs [2]:
-> 
-> 	Current OR32 implementations (OR1200) do not implement 8 byte alignment,
-> 	but do require 4 byte alignment. Therefore the Application Binary
-> 	Interface (chapter 16) uses 4 byte alignment for 8 byte types. Future
-> 	extensions such as ORVDX64 may require natural alignment.
-> 
-> [1]: https://lore.kernel.org/linux-iio/20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com/T/#m91e0332673438793ff76949037ff40a34765ca30
-> [2]: https://openrisc.io/or1k.html
-> 
-> 
-> It looks like this could work (it compiles for me):
-> 
-> 	__aligned(MAX(IIO_DMA_MINALIGN, sizeof(s64)))
-> 
-> If that is OK we could leave out the static_assert(), unless we think there
-> could be an arch with IIO_DMA_MINALIGN not a power of 2?!
-> 
-That change seems fine.  Non power of 2 arch would be fun but implausible any time soon :)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504271826.xy2fFO28-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
+
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2168: warning: Function parameter or struct member 'AMDGPU_RAS_BLOCK__ANY' not described in 'if'
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2168: warning: expecting prototype for If the current interrupt is caused by a non(). Prototype was for if() instead
+
+
+vim +2168 drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+
+  2148	
+  2149	/* For the hardware that cannot enable bif ring for both ras_controller_irq
+  2150	 * and ras_err_evnet_athub_irq ih cookies, the driver has to poll status
+  2151	 * register to check whether the interrupt is triggered or not, and properly
+  2152	 * ack the interrupt if it is there
+  2153	 */
+  2154	void amdgpu_ras_interrupt_fatal_error_handler(struct amdgpu_device *adev)
+  2155	{
+  2156		/* Fatal error events are handled on host side */
+  2157		if (amdgpu_sriov_vf(adev))
+  2158			return;
+  2159		/**
+  2160		 * If the current interrupt is caused by a non-fatal RAS error, skip
+  2161		 * check for fatal error. For fatal errors, FED status of all devices
+  2162		 * in XGMI hive gets set when the first device gets fatal error
+  2163		 * interrupt. The error gets propagated to other devices as well, so
+  2164		 * make sure to ack the interrupt regardless of FED status.
+  2165		 */
+  2166		if (!amdgpu_ras_get_fed_status(adev) &&
+  2167		    amdgpu_ras_is_err_state(adev, AMDGPU_RAS_BLOCK__ANY))
+> 2168			return;
+  2169	
+  2170		if (adev->nbio.ras &&
+  2171		    adev->nbio.ras->handle_ras_controller_intr_no_bifring)
+  2172			adev->nbio.ras->handle_ras_controller_intr_no_bifring(adev);
+  2173	
+  2174		if (adev->nbio.ras &&
+  2175		    adev->nbio.ras->handle_ras_err_event_athub_intr_no_bifring)
+  2176			adev->nbio.ras->handle_ras_err_event_athub_intr_no_bifring(adev);
+  2177	}
+  2178	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
