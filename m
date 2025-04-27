@@ -1,111 +1,140 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3EB3BB48;
-	Sun, 27 Apr 2025 11:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B03A1474CC;
+	Sun, 27 Apr 2025 11:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745752483; cv=none; b=b9XCrgDF7hux/eOecoSRJjOBitKP2WeJwg123H3MTmwlMu0fJfi7Wo7hXaXCB+MRCR48UGd5DRxJXyRQYY5ihEUlRmyiMnlmqNzDX5ofJ4p1VpznJteS//tzVz64FK7ZjvBqdjJ0S17kmYbh+RxX5rT885gdtJhp8GT7uBvPM8k=
+	t=1745752520; cv=none; b=UYMuUoCphWGR8ZHhRxGjmge969ecAHglB3w+O9c5b6Br8GUYBKJQAVXO7n8J+NCslx5n7LLk3lbqaBVPVhpMa2X5VNNUvJZ6io28iwpWRLU8z61PDrBzvwukeDE/O0iGtr4q5mH3CJxkzkFw/tSSNh05xBN/Z0EFi33wCLr8qXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745752483; c=relaxed/simple;
-	bh=OHPq3cQvYAfeMfKNid5wSfhkKzwBaStHV8HzBeC3uzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WlslH6VhZzH0N5cQQ4RN3WtVb9ACgys126rN9pckTe89iLO6MmoJ8wF59mmPaVRHWKhL61JT4JKCi9KJt4LEPZzurhVGYuCzhQ+aGNCX+NBd8LSVCPv4ikxb6PDR7v71Avudtp6cLRNrdbVHmyJz89Kc2oyEEl5vSYKiYIXeJSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AayA9886; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745752520; c=relaxed/simple;
+	bh=i4vulNmaxI46QD5NEW8baIS4md2fyWWDhpv/LKHgO0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QVIcqAWwN9wMYjbYGqdRpVpZO6NPCJAw7GJo9PlSMJ3/ghTU1b8ZYHzdYfyGKTee10nBq/k+85bjTfMMSDNWfQzro7BL9hfv+KGHHiwpyo+ZP1zdSPa7T9sdm3Hez3fc+P0jpvsR4BnAiyU7eHy3jLwlx1NIR/X/mkGVRtzk2OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=UI6khAWq; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AayA9886"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so25011925e9.1;
-        Sun, 27 Apr 2025 04:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745752480; x=1746357280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W3KBITx9RJaJB+v1y23nabF6VYlDwF1hnHk+X2NkE0k=;
-        b=AayA9886PFux3PP0lMXAtHj7a5s5sPSWLzmTotHyNx1gq6pFsfks8p1ueNCa9zn5VK
-         PuJZiAtNIJGrSmHYjC8cIzxzPznV9UDJPs+keCQJOeqpOoJUb29pfvbSkMc3CkVMS1rw
-         gT8bVPw5Iq6rtHwMXkibFacM0qZjxg660YKX6Epf2HWYo83IhQRMgQVhwY0/XhGTVvla
-         eaEV/AJXQ6Am/2gAkJF8YTBvJAHAK2N434q09KiQSjPVizwkZjr1MnRb5CJnSLWHMqMt
-         XzrOOc0xI4GziWgP4HMws4x306tRoHQZuEogBNbBfJ9PMvkIZvlWHxB1G2eS+fhUbubi
-         9ePA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745752480; x=1746357280;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W3KBITx9RJaJB+v1y23nabF6VYlDwF1hnHk+X2NkE0k=;
-        b=hoD5OnUETnH+TdMW2jlSVzSaXNubUNgXX1xP3BL17I0Qy9eQGbI/7aL+ClJyh8oyLM
-         Ti3sFhBml2FLbeiHYRe6XUP3ba2UWEcQwSQXmhCkFP2JOSH/Ni5OBL43tRVNf8eSwUex
-         WsQ6EJ60MQn2e1V6TskavP/Mec/P/XfBNsIv6qyboJPBWVowfPEYgulYfHKXLgqVCjff
-         C5FFsalLphzRBIwUmdwOm4Ex2vCg0CCyNYlBRHgLrRPiDUt5hTotOXhZkmK9WMGaiWOb
-         iSABHBd2atqzhnZuCyyl2R6H8gn03nUeNYRLyoswD4R/QEAHkcUVxMejWzOJQ0yqbXEu
-         LBsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxZZnCL+BeU6lMQY2cuZFbqSu1STuUXqg3+pfnnZL7q7E0cQrqY5wDdDMQ9VuK21bb58h9tQ3zqA/YUYQ=@vger.kernel.org, AJvYcCWL72HQo3md59gxZdHv5kJjulFujJg7xT7GUkTJZx4Lybg0aFwoMqRe5uKJ7hsCzVT198SjDbiVNxEM2MNh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYbeKK0lxrNQi4bjiDlV6BRSHCvLVz5jvuh9vRIMmH/nJVmLH4
-	i8N5GFrzfLRvZEUZmIyOMss79/YMxx5j43lxtmqlFczL5N+EZHsB
-X-Gm-Gg: ASbGncvs4KhlxRuSuRm3Kz/zQSZMX5mRO1e7ZiM3WpU8Jg/j563cKA0mjdp4R/01lKS
-	wvoFv5cvn9XxQKmyzjToEx6PjSurNLR0yNJGTv0pcqIQK7dKpM9iPlU0RpRR+ZpaGPE7U+v3j2F
-	EVwLtYTviB1c3nvo5E9hhcOtBgcJU2hAoKra0SRgL8ACPYa1JMEQ9ENAONkriVlDKaIhXHdsU6W
-	iHBU+Rl29+aPLmcr7isprFr8Go7VhYP5asdMJwlxcMH6grZjSREkELIV6+E+tUIo9amq0hznIr3
-	2ZEIUzvfX9oOKYF6bAxl3H7HiyLtehgUeOw4iY/llTgO4t7WsmiARBkfYzhSKpd9
-X-Google-Smtp-Source: AGHT+IEjc9o8H8oECCb05JlQieQM2HuT1pOumzI29bfNceULPIWLWaiAlh6hn8YYL7mavp+K+CgJLg==
-X-Received: by 2002:a05:600c:8109:b0:439:873a:1114 with SMTP id 5b1f17b1804b1-440a65d27edmr65047645e9.6.1745752479653;
-        Sun, 27 Apr 2025 04:14:39 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4409d2e0241sm122350515e9.37.2025.04.27.04.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 04:14:39 -0700 (PDT)
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: herbert@gondor.apana.org.au,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	wens@csie.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH RESEND] crypto: sun8i-ss: do not use sg_dma_len before calling DMA functions
-Date: Sun, 27 Apr 2025 13:12:36 +0200
-Message-ID: <20250427111236.25668-1-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="UI6khAWq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=QkVkz6dk4cOLjXYYtXS5CCd0YLGWAVsLoyMR7Wnuhxc=; b=UI6khAWq+pM6v4WdeLYhnQsgp/
+	lHTRCJ/dOLzPTbwx4z/4b9eMdtZKySKYeya+7mepfDy/Zvhpc7sbvJISaK0QEzpf0kly057pSuec+
+	gsnhNjtGd/7LxC+lY4l49HoLN2vUriKIb/SSXh3pvQKm/ulbt+NO24DEmA7aM4Nx9A0Yvds14+AaY
+	vMXyIMgmeWPKLPXCBnYl9BV8o7ykMuVYndjJwBVcIKiLBDIWgoO/+stCCcafW6tsCHe2ckvlCtIHb
+	wjdeLvIiJKbXWRSgrn7aV0/9XBLLYjc12FXtcGtyYa0dApxjkF9C55819jao9BUU++s4HoXTBI5zx
+	3jG2cdqg==;
+Received: from i53875aba.versanet.de ([83.135.90.186] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u8zyN-0003VC-98; Sun, 27 Apr 2025 13:14:59 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: linux-rockchip@lists.infradead.org, Hao Zhang <hao.zhang@coolkit.cn>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ conor+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+ linux-kernel@vger.kernel.org, "hao.zhang" <hao.zhang@coolkit.cn>
+Subject:
+ Re: [PATCH 1/1] ARM: dts: rockchip: Wifi improvements for Sonoff iHost
+Date: Sun, 27 Apr 2025 13:14:58 +0200
+Message-ID: <1929240.tdWV9SEqCh@diego>
+In-Reply-To: <20250427065013.99871-2-hao.zhang@coolkit.cn>
+References:
+ <20250427065013.99871-1-hao.zhang@coolkit.cn>
+ <20250427065013.99871-2-hao.zhang@coolkit.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-When testing sun8i-ss with multi_v7_defconfig, all CBC algorithm fail crypto
-selftests.
-This is strange since on sunxi_defconfig, everything was ok.
-The problem was in the IV setup loop which never run because sg_dma_len
-was 0.
+Hi,
 
-Fixes: 359e893e8af4 ("crypto: sun8i-ss - rework handling of IV")
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
+Am Sonntag, 27. April 2025, 08:50:13 Mitteleurop=C3=A4ische Sommerzeit schr=
+ieb Hao Zhang:
+> From: "hao.zhang" <hao.zhang@coolkit.cn>
+>=20
+> After some Sonoff-iHosts have been running for a long time,=20
+> the WiFi module will run abnormally.
+>=20
+> Adjust the pmu_io_domains and sdio properties=20
+> to solve the WiFi module operation abnormality.
 
-If someone know why sunxi_defconfig have sg_dma_len() which always works
-even with any DMA call not done.
+"adjust the ... properties", really sounds like hacking around some issue.
 
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi b/arch/a=
+rm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
+> index 9a87dc0d5f66..3c0371103015 100644
+> --- a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
+> +++ b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
+> @@ -323,15 +323,15 @@ wifi_enable_h: wifi-enable-h {
+>  };
+> =20
+>  &pmu_io_domains {
+> -	pmuio0-supply =3D <&vcc1v8_pmu>;
+> +	pmuio0-supply =3D <&vcc3v3_sys>;
+>  	pmuio1-supply =3D <&vcc3v3_sys>;
+>  	vccio1-supply =3D <&vcc_1v8>;
+>  	vccio2-supply =3D <&vccio_sd>;
+> -	vccio3-supply =3D <&vcc3v3_sd>;
+> -	vccio4-supply =3D <&vcc_dovdd>;
+> -	vccio5-supply =3D <&vcc_1v8>;
+> -	vccio6-supply =3D <&vcc_1v8>;
+> -	vccio7-supply =3D <&vcc_dovdd>;
+> +	vccio3-supply =3D <&vcc_3v3>;
+> +	vccio4-supply =3D <&vcc_3v3>;
+> +	vccio5-supply =3D <&vcc_3v3>;
+> +	vccio6-supply =3D <&vcc_3v3>;
+> +	vccio7-supply =3D <&vcc_1v8>;
+>  	status =3D "okay";
+>  };
 
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-index 4caf17310e90..ddec1b08d4f6 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-@@ -141,7 +141,7 @@ static int sun8i_ss_setup_ivs(struct skcipher_request *areq)
- 
- 	/* we need to copy all IVs from source in case DMA is bi-directionnal */
- 	while (sg && len) {
--		if (sg_dma_len(sg) == 0) {
-+		if (sg->length == 0) {
- 			sg = sg_next(sg);
- 			continue;
- 		}
--- 
-2.49.0
+=46irst of all, this would be two patches.  If the io-domains do not follow
+the schematics, fixing this is one patch, but for such a big change
+I do expect actual references to the devices' schematics for that.
+
+This is even more important, as you're switching some supplies
+between sources of different voltages
+
+
+> @@ -342,18 +342,15 @@ &saradc {
+> =20
+>  &sdio {
+>  	bus-width =3D <4>;
+> -	cap-sd-highspeed;
+>  	cap-sdio-irq;
+>  	keep-power-in-suspend;
+> -	max-frequency =3D <50000000>;
+> +	max-frequency =3D <25000000>;
+>  	mmc-pwrseq =3D <&sdio_pwrseq>;
+> +	supports-sdio;
+>  	non-removable;
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&sdmmc1_clk &sdmmc1_cmd &sdmmc1_bus4>;
+>  	rockchip,default-sample-phase =3D <90>;
+> -	sd-uhs-sdr50;
+> -	vmmc-supply =3D <&vcc3v3_sd>;
+> -	vqmmc-supply =3D <&vcc_1v8>;
+>  	status =3D "okay";
+>  };
+
+and here it looks like you're more or less randomly adding and removing
+properties until it worked "for you".
+
+Especially removing the supply-regulators does not really make sense.
+If you see instabilities, the main contenders would be max-frequency and
+sd-uhs-sdr50 as culprits.
+
+Similarly, supports-sdio is not even a valid property, so neither the
+devicetree spec does allow it, nor does the kernel handle it at all.
+
+
+Heiko
+
 
