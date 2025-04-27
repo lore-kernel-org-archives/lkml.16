@@ -1,114 +1,95 @@
-Received: from out28-103.mail.aliyun.com (out28-103.mail.aliyun.com [115.124.28.103])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3CA1FBEB1;
-	Sun, 27 Apr 2025 06:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8DD1CAA4;
+	Sun, 27 Apr 2025 06:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745736688; cv=none; b=O0rupggHrN+OokRtOcdeMTZJFQ27hAtH9jx0pbbu47N9kX3VauGytpBaZlqWXWW/z6coQPsFUgtPr+G4XTFyADxDi28xkbVx4Pc8pcDPUlQAP0FauKsj3evOZIo8S0YFuiVwse75lwNVgHyTQbLhGiRI1WrSrevlAA0s/6yKkYQ=
+	t=1745737199; cv=none; b=HQgNFqFVWobKKU1BYhjjEWkFIQC/6/z1RCIiPjLlnwx5jS5pHBWoEind7YNpPrybH14Z4JZYyhchTlRRdJSurnOw9nfVzvY34rMxhoo3WW+uyebVFlOcAHa+PL3sv5c0exl4VP2SKjECUunFm3foiIaPHJydHSJt+fL/F9p1rzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745736688; c=relaxed/simple;
-	bh=nV10xEN1bqIZGv+lItmOBNbiZrYFsrxkH7IWf1RKO6c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gv5pmWD4Ttxy4kuU4MsG5rLPlIFTrrXWiaS/ElrdOb/SEf1MS0oWordj2bkmc0REW/1d9k9ky7xmcwTVvcibPVLRxG7EaJcFll2UvPtkOkwDd1R31NiBUcnbRaKUHPmFVJ0OYpShldMw222gpxYZ3F/KXAHA5oVf3oRLbIcvLp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn; spf=pass smtp.mailfrom=coolkit.cn; dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b=aEwctLrk; arc=none smtp.client-ip=115.124.28.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coolkit.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coolkit.cn
+	s=arc-20240116; t=1745737199; c=relaxed/simple;
+	bh=WPVNiPXysA+ZKbcBuVxOUqy7B0r28vdmFSIesJvE8b0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLbKQrx67SoIDSBdOVlcGo0luYt3ruX+cC+y4eJtRKB02/hIJAtfTOAroC8mAT4SjI8XxLK6J5mkU4Bfb4Wd9idDhxkoCvvqMrJx4qE5SWryoAGH2GaO/zUYP+ZJHeLDHmUb0foZw4/gX/99k3ntSmKgfJA4w+uNKKGuV9GtObU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IiuJCj6s; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=coolkit.cn header.i=@coolkit.cn header.b="aEwctLrk"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=coolkit.cn; s=default;
-	t=1745736673; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=g+oNp7kZwyjwPU4Kaggu77LkvQ8spC/gbYZMK3mhNrw=;
-	b=aEwctLrkYD4F3/krsU9oaWDyR1HpT+QaVmnkB0EH1bn1s+SEt+4SX+3mfQq8Wy7T9k5LCFwXToKcfTm9Pfn4fnXY0cKkn0DxVDycqYBW691q3TOw1wWU6D9XZJwhalgozAMtrJQrB34rwzpbIfzS0QXMRV4SIDD1QEuUPOEQbcU=
-Received: from ubuntu-z.lan(mailfrom:hao.zhang@coolkit.cn fp:SMTPD_---.cY70L5V_1745736638 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Sun, 27 Apr 2025 14:51:13 +0800
-From: Hao Zhang <hao.zhang@coolkit.cn>
-To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	krzysztof.kozlowski+dt@linaro.org,
-	robh+dt@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"hao.zhang" <hao.zhang@coolkit.cn>
-Subject: [PATCH 1/1] ARM: dts: rockchip: Wifi improvements for Sonoff iHost
-Date: Sun, 27 Apr 2025 14:50:13 +0800
-Message-Id: <20250427065013.99871-2-hao.zhang@coolkit.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250427065013.99871-1-hao.zhang@coolkit.cn>
-References: <20250427065013.99871-1-hao.zhang@coolkit.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IiuJCj6s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745737197; x=1777273197;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WPVNiPXysA+ZKbcBuVxOUqy7B0r28vdmFSIesJvE8b0=;
+  b=IiuJCj6sUEdUdqrXmghiZw5SNqOZF8xqpg5/DwJ89XH4mR42KWCOGlws
+   R9Z+4yF4mFTBsHvzQXDRtcxFXwNJ4lor9cSrswJyh6/np+zSLsao0wZNE
+   MgvvlAX8X4mKkLVafjFI5GGrQHLdydUF7mxGeR0pAomd/WlP7kSplt6j5
+   JPS8HoLT49IGjEVD9sO57qrQOWy4OSAL/TCASwtFYotlZkKUnvXcnpRrM
+   XhbJepYa26l7bW4X8sZqGklMqXuvv76U5oj9eefo5c4Gu3oCxPMZh8ot8
+   FH9gtV0+097gpSs7ayfjSeMVBsf/UJv7SoEFtFxKXE7m1QcC/lVPRbb4s
+   w==;
+X-CSE-ConnectionGUID: HkDl3RIyTlmjIwFnB7sf+g==
+X-CSE-MsgGUID: BFEFsiaZRwOxoqNxwc1Tjg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="47230524"
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="47230524"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 23:59:56 -0700
+X-CSE-ConnectionGUID: d1ZTnjH0RQyh27Uc3LKjrw==
+X-CSE-MsgGUID: v/r5yexURzibspAZ8Nkryw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="138394240"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 23:59:49 -0700
+Message-ID: <9737606f-d3af-4c20-b1ce-7c705a7c8590@linux.intel.com>
+Date: Sun, 27 Apr 2025 14:55:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/22] iommufd: Add iommufd_struct_destroy to revert
+ iommufd_viommu_alloc
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
+ corbet@lwn.net, will@kernel.org
+Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+ thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+ shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+ peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+ praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
+ alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <3d8c60fe9f1cdaecd59ce3e395eb6ca029ca8ded.1745646960.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <3d8c60fe9f1cdaecd59ce3e395eb6ca029ca8ded.1745646960.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "hao.zhang" <hao.zhang@coolkit.cn>
+On 4/26/25 13:58, Nicolin Chen wrote:
+> An IOMMU driver that allocated a vIOMMU may want to revert the allocation,
+> if it encounters an internal error after the allocation. So, there needs a
+> destroy helper for drivers to use.
 
-After some Sonoff-iHosts have been running for a long time, 
-the WiFi module will run abnormally.
+A brief explanation or a small code snippet illustrating a typical
+allocation and potential abort scenario would be helpful.
 
-Adjust the pmu_io_domains and sdio properties 
-to solve the WiFi module operation abnormality.
+> Move iommufd_object_abort() to the driver.c file and the public header, to
+> introduce common iommufd_struct_destroy() helper that will abort all kinds
+> of driver structures, not confined to iommufd_viommu but also the new ones
+> being added in the future.
+> 
+> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
 
-Signed-off-by: "hao.zhang" <hao.zhang@coolkit.cn>
----
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
- .../dts/rockchip/rv1126-sonoff-ihost.dtsi     | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
-index 9a87dc0d5f66..3c0371103015 100644
---- a/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rv1126-sonoff-ihost.dtsi
-@@ -323,15 +323,15 @@ wifi_enable_h: wifi-enable-h {
- };
- 
- &pmu_io_domains {
--	pmuio0-supply = <&vcc1v8_pmu>;
-+	pmuio0-supply = <&vcc3v3_sys>;
- 	pmuio1-supply = <&vcc3v3_sys>;
- 	vccio1-supply = <&vcc_1v8>;
- 	vccio2-supply = <&vccio_sd>;
--	vccio3-supply = <&vcc3v3_sd>;
--	vccio4-supply = <&vcc_dovdd>;
--	vccio5-supply = <&vcc_1v8>;
--	vccio6-supply = <&vcc_1v8>;
--	vccio7-supply = <&vcc_dovdd>;
-+	vccio3-supply = <&vcc_3v3>;
-+	vccio4-supply = <&vcc_3v3>;
-+	vccio5-supply = <&vcc_3v3>;
-+	vccio6-supply = <&vcc_3v3>;
-+	vccio7-supply = <&vcc_1v8>;
- 	status = "okay";
- };
- 
-@@ -342,18 +342,15 @@ &saradc {
- 
- &sdio {
- 	bus-width = <4>;
--	cap-sd-highspeed;
- 	cap-sdio-irq;
- 	keep-power-in-suspend;
--	max-frequency = <50000000>;
-+	max-frequency = <25000000>;
- 	mmc-pwrseq = <&sdio_pwrseq>;
-+	supports-sdio;
- 	non-removable;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc1_clk &sdmmc1_cmd &sdmmc1_bus4>;
- 	rockchip,default-sample-phase = <90>;
--	sd-uhs-sdr50;
--	vmmc-supply = <&vcc3v3_sd>;
--	vqmmc-supply = <&vcc_1v8>;
- 	status = "okay";
- };
- 
--- 
-2.34.1
-
+Thanks,
+baolu
