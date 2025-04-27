@@ -1,80 +1,86 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A2563A9
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 23:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACAACA5A
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 23:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745796623; cv=none; b=QKWDxtj/qlSbnGWXlGoa+3fPU92CsNmNGG+0MMnxyQ6eChfyvD2Js1sBMY0Br8lp2X3VYBmWqo/xBlTrx/ieuI+MoK3Cbs4Hc+LCElpocfTj65YpjKR7d+12qEvx8lHbhY29+uAeFMirg2SLnXP6fG+him/DOVxjfQNuXASKATk=
+	t=1745797030; cv=none; b=CWIqceeKjzsdu9JjWj0SFpxxzAbslYnp3l86CK2kPsN7QAPNelpmv7PAIR1f/IPokHmY8PqOwb+3fIYjm90WyUR8hDdgi5LrCi5RMiM1FAgZunzIfyB2xvQkxqpc3joJGjZTNiw7jy+zh7O89i8azHGJU0ysJ7mAQw5dBwF8o3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745796623; c=relaxed/simple;
-	bh=qC0cof0TG29XLBAu2iLtkaKEqep3HGv/4gBofq79CHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mzLKRwDP/135NR4CnRggeJX6X96wlKRPQwyz+3rWdVjlSVOksQ5/mQ8gWs34PW79qKDhIzK945EMKC3U5Ja3Ya/n8sHME0w6SnhBGjKAnipOmq5JcEklqBZU5z/FIfLxxIz4KN0Z2GTbxQrjIpbBzBOw8iYB0kGLAb8BPxZ1ht4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=PNZHyo5/; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="PNZHyo5/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=THsb5OlOsoQipkgpscGZtTDIF02P0Acq+zPTefXP8+c=; b=PNZHyo5/t0Wrku0w
-	q3vksLShQjGNMEW7T06XOkWBF7dRNvdD/D1e/ze4OZqpuAyxZgcnft2rSswaJbmKaiWoeSKx2olHC
-	mSmhLjC2msdmnLqBetDz15BKZmfj0NwzLFVpFsT/L/F3uf1pDoqODWdxrS/hjflWMlK7ybOBBIvWg
-	o56sejfkAk3yS4bmfZ6LW1cgsC/JW6a9O7y9XsWpcuJySxlKl9WRR4LpBOGQzlU9m+kbU1c5loPj4
-	OkmmBgQseiEOcUtFYcrUG2qQlzpYG8HlP5qRAPuCTLoVC6AWMOIxiHUe0/U1HoZqpMD6yCbjo3Kyj
-	TSMBNv1IB/0mRiuJ/w==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u9BRx-0001ZL-2d;
-	Sun, 27 Apr 2025 23:30:17 +0000
-From: linux@treblig.org
-To: gregkh@linuxfoundation.org,
-	dragan.cvetic@xilinx.com,
-	derek.kiernan@xilinx.com
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] MAINTAINERS: Fix XILINX SD-FEC entry
-Date: Mon, 28 Apr 2025 00:30:16 +0100
-Message-ID: <20250427233016.124044-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745797030; c=relaxed/simple;
+	bh=qtRjSKLfiQMiS15ic3ebxNl4OsQFpBgv0v/cD3OGpQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=InaKDiEl2x1Jxx53IHzH00Fn+u20ewNfs2onkEuwRZMhiS5dgq37O4aw+lEzScZRzYQLUJHc9XzCg3AucpR8V69kZewjTJvqyV3GO9+DW8V8FrgmQK0CZ1KOab+4iEjZjDkwXrxjEo2/5M4jI8FMEI5oYaaBdAzOjgbG+GyWNAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2416C4CEE3;
+	Sun, 27 Apr 2025 23:37:08 +0000 (UTC)
+Message-ID: <ac188e54-7f23-4ecd-805c-c0437a53247a@linux-m68k.org>
+Date: Mon, 28 Apr 2025 09:37:04 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] m68k: Enable dead code elimination
+To: Daniel Palmer <daniel@0x0f.com>, geert@linux-m68k.org,
+ linux-m68k@lists.linux-m68k.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250416114240.2929832-1-daniel@0x0f.com>
+Content-Language: en-US
+From: Greg Ungerer <gerg@linux-m68k.org>
+In-Reply-To: <20250416114240.2929832-1-daniel@0x0f.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Hi Daniel,
 
-The SD-FEC entry claims ownership of the generic
-   drivers/misc/Kconfig   and
-   drivers/misc/Makefile
+On 16/4/25 21:42, Daniel Palmer wrote:
+> Allow the experimental dead code elimination config to be enabled.
+> 
+> For my 68000 nommu config this frees up a few hundred K of memory
+> so seems worth while.
+> 
+> Boot and build tested on nommu and mmu enabled configs.
+> 
+> Before:
+> Memory: 5388K/8192K available (1986K kernel code, 114K rwdata,
+> 244K rodata, 92K init, 41K bss, 2624K reserved, 0K cma-reserved)
+> 
+> After
+> Memory: 5684K/8192K available (1714K kernel code, 112K rwdata,
+> 228K rodata, 92K init, 37K bss, 2328K reserved, 0K cma-reserved)
+> 
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 
-in reality that driver is just one of many using those files.
+Nice. It worked fine on ColdFire builds as well (both nommu and mmu).
 
-Remove those file entries.
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
 
-Fixes: e00feed03f8d ("MAINTAINERS: add maintainer for SD-FEC")
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- MAINTAINERS | 2 --
- 1 file changed, 2 deletions(-)
+I notice that some other architectures (arm and powerpc) have version
+checks on gcc or ld in the config. Do you know if there is any version
+limitations for m68k here?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8c7d796131a8..246bc1af2be3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -26491,8 +26491,6 @@ M:	Dragan Cvetic <dragan.cvetic@amd.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/misc/xlnx,sd-fec.yaml
- F:	Documentation/misc-devices/xilinx_sdfec.rst
--F:	drivers/misc/Kconfig
--F:	drivers/misc/Makefile
- F:	drivers/misc/xilinx_sdfec.c
- F:	include/uapi/misc/xilinx_sdfec.h
- 
--- 
-2.49.0
+Regards
+Greg
+
+
+
+> ---
+>   arch/m68k/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> index eb5bb6d36899..11835eb59d94 100644
+> --- a/arch/m68k/Kconfig
+> +++ b/arch/m68k/Kconfig
+> @@ -32,6 +32,7 @@ config M68K
+>   	select HAVE_ASM_MODVERSIONS
+>   	select HAVE_DEBUG_BUGVERBOSE
+>   	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !CPU_HAS_NO_UNALIGNED
+> +	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+>   	select HAVE_MOD_ARCH_SPECIFIC
+>   	select HAVE_UID16
+>   	select MMU_GATHER_NO_RANGE if MMU
 
