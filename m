@@ -1,91 +1,91 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BA118DB01;
-	Sun, 27 Apr 2025 21:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9421AA1E0
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 22:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745791177; cv=none; b=JBfYkbZE7grtNGouv8+hM1XkvfcT64U6Hd/E0voUHOkqlMMWGVbih23M9iQR7LIZGObPw2UFUTdEPYGpefLsyU12lC2oH0wBxleHDDhTmyTbwVNEYwZAW98704fwVIwV/7hPpqBabuOt/snGMqZepTnV6RmtN1PnL9Pfnr2KJlY=
+	t=1745791405; cv=none; b=eK3WAbrOhFeIKjY3i6KsMCgH0zIUok9s7u3oDXiJzSt57dKFRAgS/z5tcZflFy61z7BGN83z2wU2+ux5E1O/KeJ8MqRgxobc/ddVvSH9u51u1HLZyBfB1QERO0WNUFlLKgxlXWI7F1+NILXRMyVcbXYELyl941eQAuNBzr1xhaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745791177; c=relaxed/simple;
-	bh=tOCzVrVwRUiae/+vvcTDjau6EHA7iXxxfQF4v5iQEQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VdRfueZKi1a4avaZOicMS0egcG0A8873uO6nkSBdi8cxkz/g6VwJmodWEV6cuo8Fq6ZFDVL858RXsQo0mMpOyyOf3sF+tQDdyG+HOr7vHBCj1Yt6MWmEI8pDCIWXb6CCJCQnWAgJpPrWdxRxwKzsII/uLLnZabiJXB/GZ00q6Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GKm2sfCk; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745791405; c=relaxed/simple;
+	bh=wbWIQsG0TRi0Z69jTSR/6qQLHNml0VY3lWNXqp2lK74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZOf4838mED9SpygpD43KCF1ncRQkjbLaIm94em6mFDw5+WUo/EExfZEKSG8RGvMzoCiTkRJ48F7qa2BJk8nx6jabLjvRHZOanns0XsMk/L2CpJqfbLZ3DLKdRQNmtZXycMPFJVHyN8M3IVNPckTUtGrLtUdcZ2nK09MDS1cq1ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=sVwmnSMN; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GKm2sfCk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745791162;
-	bh=tOCzVrVwRUiae/+vvcTDjau6EHA7iXxxfQF4v5iQEQw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GKm2sfCkE3OFxLPgxYFZOiZla7HjKxB91aQGj63GdXr1j/0uGtVmI9Xia58Mv38c2
-	 7Yhl+ASj/GxQP1ATa2XfloubPolHmscBPS3z9dYZrQty4qeQU6sGGBWEiPMeB+hQLA
-	 CG24colB++UrZac8QVMq+Iu/rIytPhPGqGJvO6eNde5Drnz3q1IikQiW6b3f2FpSVL
-	 XLRGfl6VUQoUpTDVUV1yX5xNSCus537EUi8DFRe8x8Ht/bIFW+YqXFkRGlY+qPcimI
-	 6qUkJka4jIilr5j8cZ0+KUG4GdtbNj6g0cUeDVe7A3ch1jn42zGji8j9UHVKL49/jp
-	 +Zjb85r2sb6aA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm0py5TnGz4wyl;
-	Mon, 28 Apr 2025 07:59:22 +1000 (AEST)
-Date: Mon, 28 Apr 2025 07:59:22 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: error fetching the tee tree
-Message-ID: <20250428075922.165aaa54@canb.auug.org.au>
-In-Reply-To: <CAHUa44GxOGGO_CQp=HGGT-gbX76aDNbzfvU2ZWgg5fRbdzP2aQ@mail.gmail.com>
-References: <20250417090436.1c58cd18@canb.auug.org.au>
-	<CAHUa44GxOGGO_CQp=HGGT-gbX76aDNbzfvU2ZWgg5fRbdzP2aQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="sVwmnSMN"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-8647e143f28so19146039f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 15:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745791401; x=1746396201; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=iNCX7jQ7H/so529jI/n/le9Q7aHsjoCS5ZZgId6Z/yc=;
+        b=sVwmnSMNmyED1KlmSA2O2DWYL8qBOCeqgKjDwG/OM9DL+OrHdi71+vlXzHK1nD5iOs
+         drFkHPc1+rteWEpTwrr4PLAKeG5ZigLa0HlG0GFRqhK1KyJjDETw00+BBIb0EzEBLf/x
+         Ki+11mHqM8UbB7jEoXU3bp34bqe8kXU7RVoKTC6gAKIEF+zpzj4k+lH/RxZhvXKqU2LI
+         QVg49wGGroz/WJShJUKOXNJoF+NFLWI2JDc5DVEUofYoITUmRokB1NRzISFXZZcTRtO1
+         Nnoc0nloexBbEO58XkkXjef00iOw/qVKoKiJdihFXCt3uBoiuyErOtYmJFdenGATURYn
+         HqSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745791401; x=1746396201;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iNCX7jQ7H/so529jI/n/le9Q7aHsjoCS5ZZgId6Z/yc=;
+        b=TXy9WREMLKX59ft01IzCrSzbkqEDojD3HS3OGEqmIoD3wGO+q7XU7fVjdnqRz8mn30
+         51QDDlxw4Rb1T9i76Xc4ugrgqUDe3/QXzOrDYT4T9jZkocOCE51GDC441nAw2J3lhdb9
+         Ed7jSdmVRG+uAj9C9lt/+yEfVF3X7P9Cr4EqUa0wU+33Dky3m4MHJZELAKrFUS94OucX
+         ZdZzl7HYa+vWEpQs8TTSSDGkdiztsczWHAo6TC1P4BlszVFnC46T7xshnwKbW7XAg72A
+         2sPIJO6vjkyBuYWTj88zdklgVLKkHtIjFUFidIT39NMOYB3hjXxVYYs5JFO044VlriUB
+         1IvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+VQ//kj1651GJLERAKMpGoT3udxDAB5IZEZU+vUjSwh2YMili4nDJ/Ilu8rOOk0D0q2D3y9FP0OblXQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiHb7joWRnQ47eQ5DUtSYHTkdOQ6KDVYWnNSq/dtdBA7RJ4BI5
+	mq2k0ubDA6KQA6yJhBYZ0XnrfMh+N6d1t6uz540HDNj3NQdSKVt5emC0W7XTOCg=
+X-Gm-Gg: ASbGnct59/Ty5MeZ0apcopFvaPtBJIBZfvo5vouA/fbNeQSn5T05cns00Q/2gHRpMM1
+	gGN7pHWUMb4cCwqzZflLdvxIF/v3k28tJk0ZAjRg1rxj3vtcXTDdxGbbeinTR55KUiEnzC3T1aH
+	gfKP2k4AAaQ61XYJ+FYMrvTfA+ZLXiDQk73na5Op5Tyo+A4N+D3TYkveKnNFs/vZOrR9mD0ktg9
+	fiUjZYoVZu0jSp/1D1O2o6QZ5zxdHE5BhjebhHBXC3PQmJKkGVgtlwtj15WJus4ZgN69XSf3Aq/
+	dpzTJb9XINhHi5KnoFPxEd2S2DMiRiIEnPmEWw==
+X-Google-Smtp-Source: AGHT+IH8E48JkKAwtfL07JN1fQUrwgYyFUebyUWasSyzEypQDtEo25xd4qLu7SAT4RR9O351jR9ePQ==
+X-Received: by 2002:a05:6602:4915:b0:864:677e:ddae with SMTP id ca18e2360f4ac-864677f0f9fmr543606539f.6.1745791400964;
+        Sun, 27 Apr 2025 15:03:20 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f824b84a22sm1919686173.92.2025.04.27.15.03.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Apr 2025 15:03:20 -0700 (PDT)
+Message-ID: <fb3add67-c469-483e-ac51-e53dea7df360@kernel.dk>
+Date: Sun, 27 Apr 2025 16:03:19 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0lPLee.piIlwm=21eqJ79lf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: rnbd: add .release to rnbd_dev_ktype
+To: Salah Triki <salah.triki@gmail.com>,
+ "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Jack Wang <jinpu.wang@ionos.com>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <aA5Rzse_xM5JWjgg@pc>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <aA5Rzse_xM5JWjgg@pc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/0lPLee.piIlwm=21eqJ79lf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/27/25 9:48 AM, Salah Triki wrote:
+> Every ktype must provides a .release function that will be called after
+> the last kobject_put.
 
-Hi Jens,
+This commit needs:
 
-On Fri, 25 Apr 2025 10:58:58 +0200 Jens Wiklander <jens.wiklander@linaro.or=
-g> wrote:
->
-> Thanks for the nudge. I've meant to move my tree to kernel.org for
-> some time. My new tree is now at
-> git://git.kernel.org/pub/scm/linux/kernel/git/jenswi/linux-tee.git,
-> please pull the "next" branch into linux-next and retire my old tree
-> https://git.linaro.org/people/jens.wiklander/linux-tee.git.
+1) A description of the problem. There's just a vague statement in
+   there.
+2) A Fixes tag
 
-Done from today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0lPLee.piIlwm=21eqJ79lf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgOqLoACgkQAVBC80lX
-0GzvxAf/asC9zMeZunP07LJZBKyhNl/s4LU/Ebb6O0KXquaeDmO7VSB59QqYJif8
-NyelbZlV8sKphmy5NS9/OGfQ0TUxi0eR/LNvEjP9sC2JXRT9hpf0Mx5W0oOv99us
-IaCRORWSDB+j9epZJRJXbTPjXc/M7ImZ73cGZQwEosah1nUjyuRyrWlpsvg/2Z6z
-EVr12XfJm13M/r9AqN+hx5/Q78yqPmDRGytMZAf9EngOraa0Pqfr9TJP7kwMewZI
-8Oh8PnFPsJFDXRm6t1uls7VyfN934mOLgoatDH0SiDUoHwMZiLSoIDggKjz5UNLS
-OAVv5VCrk7soah/h23rLG1L3lAN9Jg==
-=tosD
------END PGP SIGNATURE-----
-
---Sig_/0lPLee.piIlwm=21eqJ79lf--
+-- 
+Jens Axboe
