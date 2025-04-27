@@ -1,124 +1,122 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68802522B4
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860C8610D
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 12:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745755060; cv=none; b=h3V1QdSVRMyzWTDlz0LFh7jHLpa8NBLMr/hveQ9L8C1YzA0KlIboeszkeywIaeCRSfqysGVIOwY7pjnjahHKsVbY48ffbbiYJi8uCxapKYc44XZVgK+bnlaOlqQ92Qc2fsm5wI3Oi3csv2mQ/8tS2nKoku/5oQeWYj+f/lR4/2Y=
+	t=1745755241; cv=none; b=RgH73FFLVzBKD84B2B6qGbP5LMD8kQ5EnPnLH8Bt4ItdFG494qeiF7gqaIIbKzJZDcLtfVyANq+P3HPQ3jBPcJO6K5Gkng2+p5N+ypwgX7zcF6kmZzz1PfgPWhGxflZORoLzcyPTGejXS9Gh2OSgUS/ZQmjvKHGKnOy9Dw5CAP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745755060; c=relaxed/simple;
-	bh=PBjPcyuMpEZLQB0/vy9bfQ0v8f/kjSCCYbtmIsssx3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P/+n6TbDyjckNm6Yq6Ro8wTpjps0ENfJ6lj5Zw7PLl5hCIWvhJB8kaJszLqkeiORIYRqWAhaqE5B6/rVLVdcTP4caVt/3I9ILhiBz8R45/rzepR6NmSSCtm3oKwtsnSmaScApgkFSchMJ0VDRQzlaOE+/4cl9/oxK9MSs+cgHJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jd4oxdYl; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745755241; c=relaxed/simple;
+	bh=vjKNVaBnwosmkT5BpsGBh7zV8V9cGcBGgi5D7xz0xtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGXwMGFZORlqGG6eI6GpTLUGOA7F5ImnjFrjOot0yIC6dN48dfxv/buCxZXOapSFsZS1DYjPgIqqGdzMsDjsftwRFMG/M00bzuW2qDCB33KqrDvblJ0Jn+/MpOFCwjz+S6LEmqKUnLI+ToqAPTIGxw9bYkritdVyG0yF32ZFka4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=B5yA2iL/; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jd4oxdYl"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso45041145ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="B5yA2iL/"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f2c45ecaffso42406516d6.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 05:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745755058; x=1746359858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8RUGcbbLGFA1723YUU8ZP07EgO2qAswkxsFY9VKy3CQ=;
-        b=jd4oxdYl7a3NsbJR/n601htvltqlVFMHsf1khc22SANgvMJh8j2exWQ8ae0qOAFFIl
-         1U9BRsmRjkyVdi6upAgIROnSo6uQ42/Ji5OW4F23kRmwl2iCzGfqgXAF1Jlm9RjgKsbk
-         y0HxAI/cR7AeNNL14bSyDbnxEZrsyHW2/BLGXPxACsDmRb9RBX4/xWJWgG1zWMSoREQf
-         t25BBI8L4RuEi3mBX8TzrdPLSqo2AZOi/jHNtZGXdVnmrwEjUfo3s9CkTpQoor1bdx1p
-         oP1BaA5VOGId6zPlwFhfE/xBpZWVZM8o5f5mvNsAWoO4uc93jD9i+CbwjAS7zKoq9BZV
-         b0QQ==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745755238; x=1746360038; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=idxqq/A2oTSdkkSRkt+wEJC8bkXWvT6a+WYUMvQqbyM=;
+        b=B5yA2iL/yssB7EC5snX6mNqszBqocLDMfLVcHBmWbyuK44opjtVWFIlsQhhxVTHoTE
+         Haf0Ir6Miiqg3Mwp5KhnRwZqzaV0AieQeFVBu0ANrurOLaBFX/QYxr9h6+cXjZJf7cSI
+         Ecwou2i5zckyKaoPFZQzX2uyLioU8/eXW2aR+m13OufbqYvjCGllgmgcN2OWOj1VHZe0
+         8N0OuM4Y1vMCZBWNa6LrUPuXsVCrSXQTQ1iHD+BlHK04/UobCfAqNyStpkH4/MLLb55s
+         qt79vSf5FTV0GuUY9t+xNUU986/IMr9er8oMnjPlsK0otUKyQU+aiuqe/AptK7CtgqDD
+         yZMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745755058; x=1746359858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8RUGcbbLGFA1723YUU8ZP07EgO2qAswkxsFY9VKy3CQ=;
-        b=e9zqMOk8d1yRlrhj+ADHMgtU42PzlscA7VKNd2aMDbQZ4eqrOm5FbjET3JyFJkVoed
-         aqmTtqoHyl+obIzaDaamDV3yG+gR62vWSJ/oSu8fILGDDvGNI51VXx2wlpt4i6igaRzX
-         7d1PBsgZqQwNeuc0C+jwpYiQhebTKLKXduV+djutoAFI7qAMPlB0yValKCmQ86ilsqN1
-         01oJtfBB7lqW8jRv52p9mr3FkoYs0Wp2HgsDPjfGV17GGUz9+tH9B6QcGis2XcOCrJtk
-         3SCpzTZHgEZBkZAIN1PhJsymyB+N4BpWJKR/aWTsmhkn9jDjnt08Hp5ke0g4geqbI4pE
-         cW2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXL6D3blRLFhGc/GbWt2hyn+eJHMTpG9ZAGHgnfsr5zbJ3h6n9UIx9bAdph2cYW/tvQPndogZjPyT7B4L4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvk8nLwul/UusWWQRwsInvVb6sO+BiLhr9p7GtIa+p0E3tVhKM
-	tPDU6i1wummzSFuqlAe4VMCjdZ92PzGuoeG4eqqhB4759MoMV1rBlgSUsOJofg==
-X-Gm-Gg: ASbGncuUCMgNp3MnSFPV15m2AgepV5fcwRr/ZRz2HRPYwud5+s8mMD7EHremggV9Ijz
-	0Wvkv0oayOSzLu14AXTJ4jk0RsjdLmARvmynR7W93MQh7Y4QBaNqy8D9/kmGWNf17r9neJPOiFi
-	LLDAlKAyQUgMOf2Ymm7jz9ilGlix0pyk+AafX011NYJmMFncP5O10sDAEp+WEVzHZkgevwhqVtE
-	4vPD+nOW1M77Na8vj3iYj92cTM102otseMPVuM8YM7tRYxFNl8OsbnOZvr5NheFoGPK7YS8EzzI
-	GYcPKdgoZdc/mZrwRaR17+KEWRhG6McmjtN7z8Z4YIBrzrwU5ukpvNo=
-X-Google-Smtp-Source: AGHT+IF5v/6Ko/fvCwFf4ZE0KXGbwqh1gFSaF2rE1KE1z2Bwiq95JPxzfmr1/BPwNIqto7+dgvX58A==
-X-Received: by 2002:a17:902:da8e:b0:225:b718:4dff with SMTP id d9443c01a7336-22dbf7487ffmr128283355ad.53.1745755057990;
-        Sun, 27 Apr 2025 04:57:37 -0700 (PDT)
-Received: from thinkpad.. ([120.60.143.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5103259sm62956035ad.185.2025.04.27.04.57.33
+        d=1e100.net; s=20230601; t=1745755238; x=1746360038;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=idxqq/A2oTSdkkSRkt+wEJC8bkXWvT6a+WYUMvQqbyM=;
+        b=NhvrBhqJst+Jdq52zvubdpUm4Qz4XHh9QmpHcW0kHDak90MWQ1++GAEMklDdW0inKb
+         LJlcjGhBL9X1OB6X5QiRMZA1EhJcsbSVSL2DqOLa3oeRAazpC97AQho0dAXBI4wujDsw
+         SitcQEfOWbRWZlpj5ETllgc9cglgXDJUHAy8pN3xC3lO8w2Ab0YEsNEVguXg6NBrCnY1
+         AZzJi1fhJzmpRwuI8vSHgaWGeluC9a5MSdRvDq9gfacNBZJceZihe0IsWa3iAQA2plxM
+         2sKqbGF41oPj73yHpvIKlSpuq3codHTOkve175AlruufNhYiv9pJHb3HwmOC1WESFcv/
+         QYCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUc9wN9tI0qGYH3QwgUX6xFn6pihDzBit6MK3K0w5+c4xo6j04mQzlOIBw4Cv21PfA32yI0GwXYhhEEeoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzySaKbhlvGSsorFsDgM249N+/eFnZOrwFfbUhE1MxvATsjcpn1
+	Yvn20YVHXvbaWSxkhaoTq8Og+h2u4iWfqpodaJkOYFo9s68Znz69ARhm0GpFSZs=
+X-Gm-Gg: ASbGncsorkGRpoMZp/YyfPujsLiQfFlcRmSyDTGDiWPzYdLMzAVkrCTpEL6pOaDJHoL
+	VqGWKci0QuXfrTJnA25F3/ShnJ+A2hiMlzBY2cETOAU4vjuLGkvFfio9e6f5zX66RBuAZgV3H9W
+	UGkBTQPOytSGN1lHqMEQW8tRhDdnRP28ufwuocYsHN6DKY718JbhlG8GQMKUGviiGccbDgYFyHQ
+	NqcLqzcSupdLrGt8J3QjUAyNIcbmpjazDKEoKgk6FyXwrzpldlxv9jR3rEyIzMoRqH+lSuZH2Gm
+	WTX+ccRKeUJzPZlgt3NjXqN8w61Kqbk5jsQdA5qaa3xT0o1PcA==
+X-Google-Smtp-Source: AGHT+IGtJaXq4IPT7rxUZP3lATTpBxPpUwKLTeijuMDfj5iSTz0S/zVyxdqV+dyZRXdtWU1698wUTg==
+X-Received: by 2002:ad4:5d47:0:b0:6e6:683c:1e32 with SMTP id 6a1803df08f44-6f4cb9b8e9emr179935356d6.8.1745755238323;
+        Sun, 27 Apr 2025 05:00:38 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f4c09341c8sm44086486d6.31.2025.04.27.05.00.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 04:57:37 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v6 0/7] Add some enhancements for i.MX95 PCIe
-Date: Sun, 27 Apr 2025 17:27:28 +0530
-Message-ID: <174575498081.15979.12453799870165824890.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
-References: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
+        Sun, 27 Apr 2025 05:00:37 -0700 (PDT)
+Date: Sun, 27 Apr 2025 08:00:36 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Huan Yang <link@vivo.com>
+Cc: Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Francesco Valla <francesco@valla.it>,
+	Raul E Rangel <rrangel@chromium.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Guo Weikang <guoweikang.kernel@gmail.com>,
+	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Hyeonggon Yoo <hyeonggon.yoo@sk.com>,
+	Paul Moore <paul@paul-moore.com>, opensource.kernel@vivo.com
+Subject: Re: [PATCH v3 3/3] mm/memcg: use kmem_cache when alloc memcg pernode
+ info
+Message-ID: <20250427120036.GC116315@cmpxchg.org>
+References: <20250425031935.76411-1-link@vivo.com>
+ <20250425031935.76411-4-link@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425031935.76411-4-link@vivo.com>
 
-
-On Wed, 16 Apr 2025 16:13:07 +0800, Richard Zhu wrote:
-> Add some enhancements for i.MX95 PCIe.
-> - Refine the link procedure to speed up link training.
-> - Add two ERRATA SW workarounds.
-> - To align PHY's power on sequency, add COLD reset.
-> - Add PLL clock lock check.
-> - Save/retore the LUT table in supend/resume callbacks.
-> - 3/7 relies on "arm64: dts: imx95: Correct the range of PCIe app-reg region"
->   https://lore.kernel.org/imx/20250314060104.390065-1-hongxing.zhu@nxp.com/
+On Fri, Apr 25, 2025 at 11:19:25AM +0800, Huan Yang wrote:
+> When tracing mem_cgroup_per_node allocations with kmalloc ftrace:
 > 
-> [...]
+> kmalloc: call_site=mem_cgroup_css_alloc+0x1d8/0x5b4 ptr=00000000d798700c
+>     bytes_req=2896 bytes_alloc=4096 gfp_flags=GFP_KERNEL|__GFP_ZERO node=0
+>     accounted=false
+> 
+> This reveals the slab allocator provides 4096B chunks for 2896B
+> mem_cgroup_per_node due to:
+> 
+> 1. The slab allocator predefines bucket sizes from 64B to 8096B
+> 2. The mem_cgroup allocation size (2312B) falls between the 2KB and 4KB
+>    slabs
+> 3. The allocator rounds up to the nearest larger slab (4KB), resulting in
+>    ~1KB wasted memory per memcg alloc - per node.
+> 
+> This patch introduces a dedicated kmem_cache for mem_cgroup structs,
+> achieving precise memory allocation. Post-patch ftrace verification shows:
+> 
+> kmem_cache_alloc: call_site=mem_cgroup_css_alloc+0x1b8/0x5d4
+>     ptr=000000002989e63a bytes_req=2896 bytes_alloc=2944
+>     gfp_flags=GFP_KERNEL|__GFP_ZERO node=0 accounted=false
+> 
+> Each mem_cgroup_per_node alloc 2944bytes(include hw cacheline align),
+> compare to 4096, it avoid waste.
+> 
+> Signed-off-by: Huan Yang <link@vivo.com>
 
-Applied, thanks!
-
-[1/7] PCI: imx6: Start link directly when workaround is not required
-      commit: 9c03e30e3ade32136fed5a4ab7872dcb205687d3
-[2/7] PCI: imx6: Skip one dw_pcie_wait_for_link() in workaround link training
-      commit: 4a4be0c088e3029a482ef8ac98bb2acb94af960e
-[3/7] PCI: imx6: Toggle the cold reset for i.MX95 PCIe
-      commit: 47f54a902dcd3b756e8e761f2c4c742af57dfff0
-[4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit L23 ready
-      commit: ce0c43e855c7f652b6351110aaaabf9b521debd7
-[5/7] PCI: imx6: Let i.MX95 PCIe compliance with 8GT/s Receiver Impedance ECN
-      commit: 744a1c20ce933dcaca0f161fe7da115902a2f343
-[6/7] PCI: imx6: Add PLL clock lock check for i.MX95 PCIe
-      commit: 047e8b6b3bc3e6b25bfa12896a39d9fb82b591be
-[7/7] PCI: imx6: Save and restore the LUT setting for i.MX95 PCIe
-      commit: e4d66131caaf18d7c3c69914513f4be0519ddaaf
-
-Best regards,
--- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
