@@ -1,228 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250453D3B8;
-	Sun, 27 Apr 2025 09:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75840204090;
+	Sun, 27 Apr 2025 09:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745747647; cv=none; b=n9AJx3L7m/8XAJ6MhHGnC9BcAlvGdLkhLKzlnShxo3eSd3ZpgZQ1FmqJ4JEgptNsKmrr3PdmN/VCdXsr+td/soyFQAFoLEgiSBhbQ84+qd4s00GB+RxfV0a6IKS1gi4TeenytHsHZnGBydj8xxuBSSv+RghQmcAcUe0MTgFScu0=
+	t=1745747874; cv=none; b=lOnHXNTBTRbjEhCp3e2Mic8ov7VfBlQJ7d6J4TM9pEY/Nl6BriCMJDi6S90bt0RiF/fXk0TFZo32yhl4RIBdoxHTpDgn0ZLI7ImWmEkpNwpwMym5fTPPBYUvVz5K+10zr/GOhiU+B146CGxg9vgDNGv4IYVWfRHcJNKwLelk16w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745747647; c=relaxed/simple;
-	bh=lJywy2heovpguXmU4RXA81i8PyjXRqZ9d0GMwK1U8GI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P99+p1D95u9BIzhluhXcuPyhCkzYaYZ1eZlx3mqJsTLAr1HNHHL0/N0OXrXbhOOa22HBLDvj0xddhMxhQrm7sN3lWdwZ3jIcKTj9nuvajIkWVwvsu9uaNKgHgmSFGBHOvGa0yE9D0O/jMj7qQJmoFIu9RJE0+SLe5xrfWSONROg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dk14C0Z6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745747874; c=relaxed/simple;
+	bh=TlpuGJ0bMIigOMRpg0+97w+8+BynbCFp1g2PtIdfSto=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JqayrsOdCGJKe/nH++S6uN6hHPu8fzJm1iJXSbnnQ4wrfBtwTwRknX8DCEZ19lDeuIp25CPmTS0HC+h9ivqahzrqhmCXqj/TJNuavA8GATNwPoJJp993PtKY6Q0104zNvGj9P37mUKK0jNDvnUspnnUxGzx3ccTNlC8Nv2mRKAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNiC1LwM; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dk14C0Z6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F6A1C4CEEE;
-	Sun, 27 Apr 2025 09:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745747646;
-	bh=lJywy2heovpguXmU4RXA81i8PyjXRqZ9d0GMwK1U8GI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dk14C0Z6CUa16mxHCfUfO8KFnrgzSDj9cZSevSs1v0YzK2zKzThHyf+NMQTYl7q44
-	 9uM1IbEk7Mw/3f2AcH7A+9YTDALUMoYJfwRNDUNHu2YojafjjfYy0qqT+PVI/tKb8E
-	 rNY21xvWOQMFXX3Dag5YW06hbYRNwsn01kyEYOlsrfGVet3IV4CMk4sK2nHLNZ1tFd
-	 pCdQOjYNV0+iL//mvpwghV62lyLgM7KblTcTHixOXuGtLe+rrawgoc8s78asuFSwez
-	 mqakfNrte3usR5YprLC2lnQP0EM/yM+VScG2wvvbkSjwSCDsHH+W+CxH4i/apCY7/Q
-	 vQwrppNbgow5Q==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ace98258d4bso106372066b.1;
-        Sun, 27 Apr 2025 02:54:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW2yurXpnHLHvrLi//RWA0pvZcErm4AAew4Qs8QScZuVGxoDsf1UW90PGpgNoTJZjvboh32k21StdbPvss=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPNmzS+hfc0xusfJOHHrsk9K4zQExJ3MS+Szs//5y2Esjy3ZP1
-	7MRHStdCF+Xajlj+dqEJWE1APi8psLJdv9ZjycIYeesWR761S0IQeos17lW948Y4TtfbvMWub3T
-	BPCKh0k2b/FObxdDSMIa/6D3EOCI=
-X-Google-Smtp-Source: AGHT+IFdd2EJQ7n8SypqXMqm8qzf6ftGrwF80c/azWJ3IohnTTU+rfmczlWwbqE06/zNhcJM7ZIcoskdFpILELI+8yE=
-X-Received: by 2002:a17:906:6a13:b0:ace:6a1e:61e0 with SMTP id
- a640c23a62f3a-ace71105624mr700041466b.25.1745747645198; Sun, 27 Apr 2025
- 02:54:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNiC1LwM"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so6533519a12.0;
+        Sun, 27 Apr 2025 02:57:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745747871; x=1746352671; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LxBTUJ+SNYbNqrW5ub0gWFIX7kS/soTqDckkd/+r4lM=;
+        b=mNiC1LwMHl3XJJQ3nH9n+B9LMVHCdIANWi+KgW9iryp6NQ8CGRj8lamYD0le/M1kfR
+         BMecm9xeUSYmr6farfQ6ISFWhrGWjsh2YPLVaQvYisS5tTRkeXIn6jNvgEgs9l9XjgbI
+         sBpk5Fu9Pd81tSvapmpswyW6Wwfhff2boqdWvB8OkjjWTv3MQzXN3WRknZQKpJfb3odj
+         cmIfqR2KIvv+rvl1HXv7zJnqBC9Ei26H6j5tf8CEyfsGrSPnVIJ7tvPNSTHdiV3NPNKg
+         DBPzwJrhbf0LrXbuDrwa+3YCY7F3Hs4GuQJZ21cNJgEg92QiwUvKVpYOEbdobz4cbyis
+         nSuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745747871; x=1746352671;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LxBTUJ+SNYbNqrW5ub0gWFIX7kS/soTqDckkd/+r4lM=;
+        b=qjrLOxI3y040lJERH8XVcPzTXZAvaiNquLGZck3HD2BhvOMnBfW7DbsFWI29BiAy0x
+         JiLr4YoCsMuB1YyLqA45W8wRq594Dcf30JGxA9Ab6cHRBO8D46ImoJYc1z6smq4Ha0Ct
+         xv72ZOzOqvxGrb6CwmPTevgxgXa7sCOEybvwFfFkjlikvkHx/JvppK3ynt0LDp8pFGMG
+         4uKuEy3ifSv49vzQrtlp8OTylvSgh1qpy09dLVSxTw8NVhNwKfINMk+go95sfXbXnoH8
+         wOd6bollTy/1xRlEXTnku++F2i5cOnCgixvz22oqp2sqRoU/mtf0uIeBHdwlHveXBhxw
+         kQ4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUaBdRz5EX9lFVEWfIdYu64o05MpeEXsRaFUTfn9Wv4lsXD6taZ8ozM8h0JXZH1sC5Yv9C+2beBhVH5SE/x+oo=@vger.kernel.org, AJvYcCXIfgGZh6Q1fBdUpfImaGhEFwX40lQbb/vXrXZ4e1jzoA/L41phTitbA2L5gFW/qflVp03K7umv0Y5xETA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrHcL4d+fVNVVC6EmPjdNy031G8EKEISM7Q7/RGNU+YVWLzNR2
+	Hdlwh2RC9Va+SUUobeIglOv9y5RAjbt8n/4NF5UgvAzbaaJu4/N4Er6/ZIqJ
+X-Gm-Gg: ASbGncvddT3nzyDO+100dEvrG9M28sJUZtoGg9gjvq519686nOF4FIaaWX9WT8dDDeJ
+	30PotjjFuYVuv+u/1UD82g6NYvZ1Eg+wMtfGjQ3Xo59fol1bgHnMryjc7ui7pqnT97KCm0diz1y
+	SUG6POpfIo/THMbDwcXp42cAfpgaJcg0Tv/zrXB8zlyx9EuXpqT48DxU4X7GsbE6kNb8qCu01gc
+	QYFVTv59xphIxpEK30ay+gqAy9AZP7OCknkWB3cODd+hBLoHvGaK/nBf+jcAXWgXF++7jyUMTdm
+	G67n8Gw9bc1mRtg0aQm5VxVIXEVwkUAH0KNou54=
+X-Google-Smtp-Source: AGHT+IHadKh3mh3Ib3ydj4hk0Zjl9p47LcKrV35HTQdygvQwQhk2pbY9rpDdxgjEnGZDeffUrnIzCQ==
+X-Received: by 2002:a05:6402:268c:b0:5f6:23b1:ab43 with SMTP id 4fb4d7f45d1cf-5f7219ade61mr7290431a12.0.1745747870585;
+        Sun, 27 Apr 2025 02:57:50 -0700 (PDT)
+Received: from pc ([165.51.0.225])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f70354638bsm3867990a12.63.2025.04.27.02.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 02:57:49 -0700 (PDT)
+Date: Sun, 27 Apr 2025 10:57:45 +0100
+From: Salah Triki <salah.triki@gmail.com>
+To: Srinivasan Raju <srini.raju@purelifi.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: salah.triki@gmail.com
+Subject: [PATCH] wireless: purelifi: plfxlc: fix memory in
+ plfxlc_usb_wreq_asyn()
+Message-ID: <aA3_maPlEJzO7wrL@pc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403161143.361461-1-marco.crivellari@suse.com> <20250403161143.361461-2-marco.crivellari@suse.com>
-In-Reply-To: <20250403161143.361461-2-marco.crivellari@suse.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 27 Apr 2025 17:53:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG7O6UOZTB94ey4wgCL-bRgs7u44phjvOJQ9mMKeiAx0hFOrzW3s2BZXec
-Message-ID: <CAAhV-H6WszbD2o=fUqzz-FcOho-=ZxMQjW3EHKE5z=azntdbeQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] MIPS: Fix idle VS timer enqueue
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, "Maciej W . Rozycki" <macro@orcam.me.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi, Marco and Thomas,
+Add usb_free_urb() in the error path to prevent memory leak.
 
-On Fri, Apr 4, 2025 at 12:11=E2=80=AFAM Marco Crivellari
-<marco.crivellari@suse.com> wrote:
->
-> MIPS re-enables interrupts on its idle routine and performs
-> a TIF_NEED_RESCHED check afterwards before putting the CPU to sleep.
->
-> The IRQs firing between the check and the 'wait' instruction may set the
-> TIF_NEED_RESCHED flag. In order to deal with this possible race, IRQs
-> interrupting __r4k_wait() rollback their return address to the
-> beginning of __r4k_wait() so that TIF_NEED_RESCHED is checked
-> again before going back to sleep.
->
-> However idle IRQs can also queue timers that may require a tick
-> reprogramming through a new generic idle loop iteration but those timers
-> would go unnoticed here because __r4k_wait() only checks
-> TIF_NEED_RESCHED. It doesn't check for pending timers.
->
-> Fix this with fast-forwarding idle IRQs return address to the end of the
-> idle routine instead of the beginning, so that the generic idle loop
-> handles both TIF_NEED_RESCHED and pending timers.
->
-> CONFIG_CPU_MICROMIPS has been removed along with the nop instructions.
-> There, NOPs are 2 byte in size, so change the code with 3 _ssnop which ar=
-e
-> always 4 byte and remove the ifdef. Added ehb to make sure the hazard
-> is always cleared.
->
-> Fixes: c65a5480ff29 ("[MIPS] Fix potential latency problem due to non-ato=
-mic cpu_wait.")
-> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
-> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-> Acked-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->  arch/mips/include/asm/idle.h |  3 +-
->  arch/mips/kernel/genex.S     | 62 +++++++++++++++++++++---------------
->  arch/mips/kernel/idle.c      |  7 ----
->  3 files changed, 37 insertions(+), 35 deletions(-)
->
-> diff --git a/arch/mips/include/asm/idle.h b/arch/mips/include/asm/idle.h
-> index 0992cad9c632..2bc3678455ed 100644
-> --- a/arch/mips/include/asm/idle.h
-> +++ b/arch/mips/include/asm/idle.h
-> @@ -6,8 +6,7 @@
->  #include <linux/linkage.h>
->
->  extern void (*cpu_wait)(void);
-> -extern void r4k_wait(void);
-> -extern asmlinkage void __r4k_wait(void);
-> +extern asmlinkage void r4k_wait(void);
->  extern void r4k_wait_irqoff(void);
->
->  static inline int using_rollback_handler(void)
-> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-> index a572ce36a24f..46d975d00298 100644
-> --- a/arch/mips/kernel/genex.S
-> +++ b/arch/mips/kernel/genex.S
-> @@ -104,42 +104,52 @@ handle_vcei:
->
->         __FINIT
->
-> -       .align  5       /* 32 byte rollback region */
-> -LEAF(__r4k_wait)
-> -       .set    push
-> -       .set    noreorder
-> -       /* start of rollback region */
-> -       LONG_L  t0, TI_FLAGS($28)
-> -       nop
-> -       andi    t0, _TIF_NEED_RESCHED
-> -       bnez    t0, 1f
-> -        nop
-> -       nop
-> -       nop
-> -#ifdef CONFIG_CPU_MICROMIPS
-> -       nop
-> -       nop
-> -       nop
-> -       nop
-> -#endif
-> +       /* Align to 32 bytes for the maximum idle interrupt region size. =
-*/
-> +       .align  5
-> +LEAF(r4k_wait)
-> +       /* Keep the ISA bit clear for calculations on local labels here. =
-*/
-> +0:     .fill   0
-> +       /* Start of idle interrupt region. */
-> +       local_irq_enable
-> +       /*
-> +        * If an interrupt lands here, before going idle on the next
-> +        * instruction, we must *NOT* go idle since the interrupt could
-> +        * have set TIF_NEED_RESCHED or caused a timer to need resched.
-> +        * Fall through -- see rollback_handler below -- and have the
-> +        * idle loop take care of things.
-> +        */
-> +1:     .fill   0
-> +       /* The R2 EI/EHB sequence takes 8 bytes, otherwise pad up.  */
-> +       .if             1b - 0b > 32
-> +       .error  "overlong idle interrupt region"
-> +       .elseif 1b - 0b > 8
-> +       .align  4
-> +       .endif
-> +2:     .fill   0
-> +       .equ    r4k_wait_idle_size, 2b - 0b
-> +       /* End of idle interrupt region; size has to be a power of 2. */
->         .set    MIPS_ISA_ARCH_LEVEL_RAW
-> +r4k_wait_insn:
->         wait
-> -       /* end of rollback region (the region size must be power of two) =
-*/
-> -1:
-> +r4k_wait_exit:
-> +       .set    mips0
-> +       local_irq_disable
->         jr      ra
-> -        nop
-> -       .set    pop
-> -       END(__r4k_wait)
-> +       END(r4k_wait)
-> +       .previous
-I'm very sorry for the late response, but I think ".previous" should
-be moved to the second patch.
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+ drivers/net/wireless/purelifi/plfxlc/usb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Huacai
+diff --git a/drivers/net/wireless/purelifi/plfxlc/usb.c b/drivers/net/wireless/purelifi/plfxlc/usb.c
+index 10d2e2124ff8..c2a1234b59db 100644
+--- a/drivers/net/wireless/purelifi/plfxlc/usb.c
++++ b/drivers/net/wireless/purelifi/plfxlc/usb.c
+@@ -503,8 +503,10 @@ int plfxlc_usb_wreq_async(struct plfxlc_usb *usb, const u8 *buffer,
+ 			  (void *)buffer, buffer_len, complete_fn, context);
+ 
+ 	r = usb_submit_urb(urb, GFP_ATOMIC);
+-	if (r)
++	if (r) {
++		usb_free_urb(urb);
+ 		dev_err(&udev->dev, "Async write submit failed (%d)\n", r);
++	}
+ 
+ 	return r;
+ }
+-- 
+2.43.0
 
->
->         .macro  BUILD_ROLLBACK_PROLOGUE handler
->         FEXPORT(rollback_\handler)
->         .set    push
->         .set    noat
->         MFC0    k0, CP0_EPC
-> -       PTR_LA  k1, __r4k_wait
-> -       ori     k0, 0x1f        /* 32 byte rollback region */
-> -       xori    k0, 0x1f
-> +       /* Subtract/add 2 to let the ISA bit propagate through the mask. =
- */
-> +       PTR_LA  k1, r4k_wait_insn - 2
-> +       ori     k0, r4k_wait_idle_size - 2
-> +       .set    noreorder
->         bne     k0, k1, \handler
-> +       PTR_ADDIU       k0, r4k_wait_exit - r4k_wait_insn + 2
-> +       .set    reorder
->         MTC0    k0, CP0_EPC
->         .set pop
->         .endm
-> diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
-> index 5abc8b7340f8..80e8a04a642e 100644
-> --- a/arch/mips/kernel/idle.c
-> +++ b/arch/mips/kernel/idle.c
-> @@ -35,13 +35,6 @@ static void __cpuidle r3081_wait(void)
->         write_c0_conf(cfg | R30XX_CONF_HALT);
->  }
->
-> -void __cpuidle r4k_wait(void)
-> -{
-> -       raw_local_irq_enable();
-> -       __r4k_wait();
-> -       raw_local_irq_disable();
-> -}
-> -
->  /*
->   * This variant is preferable as it allows testing need_resched and goin=
-g to
->   * sleep depending on the outcome atomically.  Unfortunately the "It is
-> --
-> 2.49.0
->
