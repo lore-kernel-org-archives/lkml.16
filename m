@@ -1,56 +1,172 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5136E522A;
-	Sun, 27 Apr 2025 16:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE3E522A;
+	Sun, 27 Apr 2025 16:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745770992; cv=none; b=cQBdbGPxZd8HWxfUcKSoLWaMVIub+rFQRQ26UyYVHPFzANfgyc0nA8oMnJJ7zsVZV7cR8tjQmfODYZgze689raukYpehI+mb+yvhElZ4xj5G8dPKGCjvQWQ8GNgzzPfcQyhsiUdiFvMP/18q3+2PD7NGfLz8cFpLxpdcxJVfIkk=
+	t=1745771004; cv=none; b=rolT1QUwDNlUjl4emhhsUX/pW1mSKa8x1syTWxmEn7ancDS32Ge7SUVafRP4AzEm7Zz9knh8S05PliREHXCSaiM3/E5A/XKFqESDYO98l5aVpe5TtpXCdhYgnpbwEW+F483EBIIuz4W9GSIT8b+QDtZ99NT3xTDG+nUCqOWZyPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745770992; c=relaxed/simple;
-	bh=EIOPmxx/fF9h+f6rhelUy6/ZY96XIzB0YB+Bilpm+es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9D+qxdXisIQ/h+o9+zyus/SCTAqVMWEngvv2WWxzndQ2JTv6BcR5OZpmj9oJ/ybL1KVAyAqojB/K+w3lzxlrkBkmN+UDDd/uvkXiMltDvjTtx40EcVzQ8Vcx+8AH53MJ7FWqS+K6dWEtnKnzvCw6LydilmMYp49t5/WBQ1vu28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1u94mV-0001Ut-00; Sun, 27 Apr 2025 18:23:03 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id D6D1CC01A2; Sun, 27 Apr 2025 18:22:50 +0200 (CEST)
-Date: Sun, 27 Apr 2025 18:22:50 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Oleg Nesterov <oleg@redhat.com>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] MIPS: Fix MAX_REG_OFFSET and remove zero-length
- struct member
-Message-ID: <aA5Z2izR-HKAdi99@alpha.franken.de>
-References: <20250417174712.69292-2-thorsten.blum@linux.dev>
- <aAIF_kEFlOOVNDaE@alpha.franken.de>
- <DAD22E95-6D33-43D5-B5E5-3A7B45A63944@linux.dev>
- <alpine.DEB.2.21.2504181108170.18253@angie.orcam.me.uk>
- <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
- <alpine.DEB.2.21.2504181337350.18253@angie.orcam.me.uk>
- <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
+	s=arc-20240116; t=1745771004; c=relaxed/simple;
+	bh=ZoFAR+DzIuQgSzDzF+2BJDpN4FfRssopwE4j8Pe4wBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqwwvdcSZWU+wtHb6IptThb5Ya6580jxVcE421dN4HFmc6lKVfkHSSMLf+mrk9rxBsP3eFaoncgsmVarWCh9WrSuT4uFxi3z8PRpkCKDM1HVLwSRukBb6/xGPT58g1UI/Ql7VX/mow4zsnwL3K7pzpx0W7OyK+DdjSoQ4DHCS04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B04D106F;
+	Sun, 27 Apr 2025 09:23:13 -0700 (PDT)
+Received: from [192.168.2.88] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE7493F66E;
+	Sun, 27 Apr 2025 09:23:13 -0700 (PDT)
+Message-ID: <a8f11abd-758e-4e5e-bf78-419b95100918@arm.com>
+Date: Sun, 27 Apr 2025 18:23:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT][PATCH v1 7/8] cpufreq: intel_pstate: Align perf domains
+ with L2 cache
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Morten Rasmussen <morten.rasmussen@arm.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ Pierre Gondois <pierre.gondois@arm.com>,
+ Christian Loehle <christian.loehle@arm.com>,
+ Tim Chen <tim.c.chen@linux.intel.com>
+References: <3344336.aeNJFYEL58@rjwysocki.net>
+ <1964444.taCxCBeP46@rjwysocki.net>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <1964444.taCxCBeP46@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 18, 2025 at 03:38:36PM +0200, Thorsten Blum wrote:
-> Would it make sense to also change the register arrays 'mpl' and 'mtp'
-> from ULL to UL? ULL seems unnecessarily confusing to me.
+On 16/04/2025 20:10, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> On some hybrid platforms a group of cores (referred to as a module) may
+> share an L2 cache in which case they also share a voltage regulator and
+> always run at the same frequency (while not in idle states).
+> 
+> For this reason, make hybrid_register_perf_domain() in the intel_pstate
+> driver add all CPUs sharing an L2 cache to the same perf domain for EAS.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> New in v1.
+> 
+> ---
+>  drivers/cpufreq/intel_pstate.c |   23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -999,8 +999,11 @@
+>  {
+>  	static const struct em_data_callback cb
+>  			= EM_ADV_DATA_CB(hybrid_active_power, hybrid_get_cost);
+> +	struct cpu_cacheinfo *cacheinfo = get_cpu_cacheinfo(cpu);
+> +	const struct cpumask *cpumask = cpumask_of(cpu);
+>  	struct cpudata *cpudata = all_cpu_data[cpu];
+>  	struct device *cpu_dev;
+> +	int ret;
+>  
+>  	/*
+>  	 * Registering EM perf domains without enabling asymmetric CPU capacity
+> @@ -1014,9 +1017,25 @@
+>  	if (!cpu_dev)
+>  		return false;
+>  
+> -	if (em_dev_register_perf_domain(cpu_dev, HYBRID_EM_STATE_COUNT, &cb,
+> -					cpumask_of(cpu), false))
+> +	if (cacheinfo) {
+> +		unsigned int i;
+> +
+> +		/* Find the L2 cache and the CPUs sharing it. */
+> +		for (i = 0; i < cacheinfo->num_leaves; i++) {
+> +			if (cacheinfo->info_list[i].level == 2) {
+> +				cpumask = &cacheinfo->info_list[i].shared_cpu_map;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	ret = em_dev_register_perf_domain(cpu_dev, HYBRID_EM_STATE_COUNT, &cb,
+> +					  cpumask, false);
+> +	if (ret) {
+> +		cpudata->em_registered = ret == -EEXIST;
+> +
+>  		return false;
+> +	}
+>  
+>  	cpudata->em_registered = true;
 
-no, ULL is correct. These registers are always 64bit independent whether
-CPU is in 32bit or 64bit mode.
+There seems to be an issue with late CPU-hotplug-in and this alignment
+on L2 cache boundaries.
 
-Thomas.
+Example:
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+i7-13700K [P-cores: [0,2,4,6,8,10,12,14] E-cores: [16-23] w/ 'nosmt' and
+'maxcpus=12', [16-19] & [20-23] share L2 cache.
+
+root:/sys/kernel/debug/energy_model# cat cpu*/cpus
+0
+10
+12
+14
+16-19
+2
+4
+6
+8
+
+# echo 1 > /sys/devices/system/cpu/cpu20/online
+
+...
+[  496.616050] root_domain 0,2,4,6,8,10,12,14,16-20: pd20:{ cpus=20
+nr_pstate=4 } pd16:{ cpus=16-19 nr_pstate=4 } pd14:{ cpus=14 nr_pstate=4
+} pd12:{ cpus=12 nr_pstate=4 } pd10:{ cpus=10 nr_pstate=4 } pd8:{ cpus=8
+nr_pstate=4 } pd6:{ cpus=6 nr_pstate=4 } pd4:{ cpus=4 nr_pstate=4 }
+pd2:{ cpus=2 nr_pstate=4 } pd0:{ cpus=0 nr_pstate=4 }
+...
+
+root:/sys/kernel/debug/energy_model# cat cpu*/cpus
+0
+10
+12
+14
+16-19
+20
+2
+4
+6
+8
+
+# echo 1 > /sys/devices/system/cpu/cpu21/online
+
+...
+[  589.001256] root domain span: 0,2,4,6,8,10,12,14,16-21
+[  589.001265] pd_init: no EM found for CPU21
+[  589.001266] sched_energy_set: stopping EAS
+...
+
+root:/sys/kernel/debug/energy_model# cat cpu*/cpus
+0
+10
+12
+14
+16-19
+20
+2
+4
+6
+8
+
