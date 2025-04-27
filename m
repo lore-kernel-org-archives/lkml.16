@@ -1,116 +1,76 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A4143C5D
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 15:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0B71898FB
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 15:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745766514; cv=none; b=ncwUuQrJvN5Ox3PZC1XdrSyLR23nfy4x/9ON4oSNp/z8W67Zz4dtaLDmb4Pztd/Xe2KwQ4Rr/ivbORnvrVlgkJl/qf8t3Q7X/tiAz1t4ZGb8bumn7oQCu33J6VxAb8yyiMkB+p9bn4bea+SwvF6Dov2fqK8kQEIS0jmNC957qyc=
+	t=1745766605; cv=none; b=qrRYK4F3YhWXPDbHQ6nsO+bTqxBIS+M6IvNwQxe0wjaEx95C2pIvQiYAaOHNOYH6HzfaaORk1c7GlbXzDEJ95IUx4xObnhfFMIUWY2i8LHzcr7WiJLBTDKZj8QeWGcKbCGznuMu8En1KxkiV8cf53GqrAUo3+c+HkxREPMo/BQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745766514; c=relaxed/simple;
-	bh=MHBvij10nNzO+rqusVyrgIx9GF+nGIkjyjaycWLq3Vk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZbFY2UZ1u+W910RthVdUdLAyGilcYYliD5Jsb9NTIIzcTYA2yuh/ziPi7Jz6sir6Ml/VQqboUroGzbsPAitdt1o/FN+hc0Bq3V1FjTdhpjmmEaoUDadh/lnx6HW33V0pYiNaEEAy8utg/82c0ZJ2V553o8VqIogiukabLoPM6VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AG3RFH8W; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AG3RFH8W"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0B10D40E01DA;
-	Sun, 27 Apr 2025 15:08:21 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 0EA-oVhjCYgP; Sun, 27 Apr 2025 15:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745766495; bh=H1J8AtcECk6XsjUI+sew8jrQhjJ2IxlGG7IYis+lyCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AG3RFH8WMh9MQ2jyfipDN3EBieB8qx/5cRLZxXMdqPm1EiRGrxnmBi7cscVUuoGpE
-	 zKBVw0o6YcW2HhLEBQwymy5L4xYODb7xpTO75Xfur/zQ8oopZ2DZRBpj5D+w3x6Vy8
-	 giBv9w2ByXvl31lFY8QoTeeeJiEdPoCLb1Em5Oey3ClvDkm2+eNKJwKOn+c3RC1tnF
-	 htsbDXmgM9Q15/+74BXFHhN+wmMQ6TL+vBrcwazjYMo+vzD6fDzdtKFu5spcn/IVEJ
-	 N+U+Ldp5gAp+O8zjuD/HYQIKKyBvS0UIhTrc/EXGZpuBtlLeb8MDyLTk4xo2RiuLzh
-	 k24jgH8EKcudW9OaHVR87uAbxQFYwKXSRhlqfWJoCePQPYH4MGD2rvIqU2eFiXWgK5
-	 98NrGyv3LCLT+ryHWjf3wFTFdg8cnnkjrOMl9BSuOdfPmgtYTmyH9Uy4PO8KUe48ws
-	 CalHNTx5kx3YvSS7SeLsP1xAKg7CWn2Yp5/tnd6Tl/xhU4JpIW2C48GpyrSHwRWVXI
-	 rk1hZskT1b49gCzatcjFUFyHN70+UfIrwGP2YA53scd76UrVzrvYjS1G14OM3E4B5t
-	 PmQJ9RzIt9LowZ5GhCj0DxnmY6T8HUT+lAORqfMqo3s8sKWMwXk0a37oq9hiWT8qfx
-	 yBCDqJat1q0DcHREljmgKEqw=
-Received: from rn.tnic (unknown [IPv6:2a02:3038:263:e72f:8736:46f5:3e28:41ad])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 1094740E015D;
-	Sun, 27 Apr 2025 15:08:05 +0000 (UTC)
-Date: Sun, 27 Apr 2025 17:09:03 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 04/16] x86/bugs: Restructure RFDS mitigation
-Message-ID: <20250427150903.GAaA5Ij3L6IHenvlMF@renoirsky.local>
-References: <20250418161721.1855190-1-david.kaplan@amd.com>
- <20250418161721.1855190-5-david.kaplan@amd.com>
+	s=arc-20240116; t=1745766605; c=relaxed/simple;
+	bh=mNysrkB63gyeeGOhUajqs4rPJ4E7c2LlXC0pIqCtTDg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Zve1dQLjNWIoqjy5sdZkCHy9gDDfZTUKIsg4jgSRC1Uq9Nsyk8YVzxnZmChaF2qYdiZrLD+xdJPLF/tKfwGAi09A4N2GiXTJlKKmS5erB4XwqEig94N9Y3OvTDcS/uDvEqh2MpATPQaRmJDMvuOgaxNPW2dLhse1hE4ud/kdLS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d43d3338d7so66790645ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:10:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745766603; x=1746371403;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q5sLRFDxOKvRTKH1+cL5jCRz2EAvoXeqiUjjbHr3n6Y=;
+        b=t0ndd3AaCph2Hitj/S09He0m/Q81XlGVqB3ViYdsIVxDsa/+EtPHWv41gqKrHzARGP
+         q45c4Ajw/FVc9j7sfOKjNzHoooCGAL3fsE+LeV+FwaigoKs9X5zJG2YYod0UvehyxvfN
+         JNsS8j2RrMfwjv2p/JuY5anssOEN9lgVZjP8uWa1Rh5Mb/QTlrRekiHRP6xJDEcrRIIP
+         21gcfjRyJLxuebPx0UpScSSinIyfzdraXStb3C8rnQFi2iSOM2K90VkIyyqx/kjohUOz
+         QPCrdFSshe6odcTWIikQ0o8fOTJ1NlnB+KfFKYcmLSQOotZHiFHvBQMS+RozU8EJws9a
+         ciLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyX24ab1MmVEWjpjm3FtzasDLtZnOHThhA+24y0mVwf/LF8KswNY1/UBIj6LUmVIab9cB14zpMENABtq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2VKK2fhT3bqj2fEs6BYKNqGtX+zsnZQOb2i3vLEsP4pT0EQnm
+	bJbdc7p/Hn7SWHaKKPFrABwugAyyKoqZc4kiR6ZVys/K14SVPapaOLST5skN0wwTJzSNW4ODXs/
+	+h/TAYk5FEaCGWJGxNMyaOSAqUqhExQgOHjYnD8+8D8KBTHkL3d54c6Y=
+X-Google-Smtp-Source: AGHT+IEcqaCtbCXF2OXrYv12RwpFH5VYzbmQ/hwIAX4fPFkqtcNGOB0YAmEoXUvr8oz4umMxnojRaT8ZRxR2YBwZewLzZ/AlmDmx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250418161721.1855190-5-david.kaplan@amd.com>
+X-Received: by 2002:a92:c244:0:b0:3d5:df21:8481 with SMTP id
+ e9e14a558f8ab-3d942c72d96mr61819135ab.0.1745766603215; Sun, 27 Apr 2025
+ 08:10:03 -0700 (PDT)
+Date: Sun, 27 Apr 2025 08:10:03 -0700
+In-Reply-To: <6772228e.050a0220.2f3838.04b8.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680e48cb.a70a0220.23e4d2.0024.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_stripe_validate
+From: syzbot <syzbot+f57d864a5d6eff90da3b@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 18, 2025 at 11:17:09AM -0500, David Kaplan wrote:
-> +static bool __init rfds_has_ucode(void)
-> +{
-> +	return (x86_arch_cap_msr & ARCH_CAP_RFDS_CLEAR);
-> +}
+syzbot suspects this issue was fixed by commit:
 
-Might as well call it what the bit means and then the code reads a bit better:
+commit 71f8e806a5e4edada72456ee3b2e2d7eab6fadee
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Fri Apr 18 16:49:00 2025 +0000
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index e668ccccd8c7..2705105d9a5e 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -630,7 +630,7 @@ static const char * const rfds_strings[] = {
- 	[RFDS_MITIGATION_UCODE_NEEDED]		= "Vulnerable: No microcode",
- };
- 
--static bool __init rfds_has_ucode(void)
-+static inline bool __init verw_clears_cpu_reg_file(void)
- {
- 	return (x86_arch_cap_msr & ARCH_CAP_RFDS_CLEAR);
- }
-@@ -648,7 +648,7 @@ static void __init rfds_select_mitigation(void)
- 	if (rfds_mitigation == RFDS_MITIGATION_OFF)
- 		return;
- 
--	if (rfds_has_ucode())
-+	if (verw_clears_cpu_reg_file())
- 		verw_clear_cpu_buf_mitigation_selected = true;
- }
- 
-@@ -661,7 +661,7 @@ static void __init rfds_update_mitigation(void)
- 		rfds_mitigation = RFDS_MITIGATION_VERW;
- 
- 	if (rfds_mitigation == RFDS_MITIGATION_VERW) {
--		if (!rfds_has_ucode())
-+		if (!verw_clears_cpu_reg_file())
- 			rfds_mitigation = RFDS_MITIGATION_UCODE_NEEDED;
- 	}
- 
+    bcachefs: Stricter checks on "key allowed in this btree"
 
--- 
-Regards/Gruss,
-    Boris.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b9e270580000
+start commit:   ccb98ccef0e5 Merge tag 'platform-drivers-x86-v6.13-4' of g..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ba7cde9482d6bb6
+dashboard link: https://syzkaller.appspot.com/bug?extid=f57d864a5d6eff90da3b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131666df980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10556ac4580000
 
-https://people.kernel.org/tglx/notes-about-netiquette
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: bcachefs: Stricter checks on "key allowed in this btree"
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
