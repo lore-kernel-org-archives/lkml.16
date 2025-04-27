@@ -1,221 +1,111 @@
-Received: from mail66.out.titan.email (mail66.out.titan.email [3.216.99.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F08B2C9A
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 09:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327C1DB127
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 09:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745745377; cv=none; b=LuIRK1vREsoGCl/SutFD2TZzFuHRS1Ge5jRCERXbb9DrQ8cZYSW10kSeOODNSuCyYZLnfit1XPO0anpGvufv4GAvaUBOSIZpyak/42MIQTMM0DaAq4DBTEbyhJGBpEoVtV7eq7bK6S5Znci4e+BwZQBOAXpq4jA8gF6TO+NRD/4=
+	t=1745745549; cv=none; b=r1OY+0Dsbc28KKYs8TMvARAAYQdqfq1v3kZXUADR2MQy8Ub6vEADhWRj6O0aiN1IicLe3KOY6jIPRujslLq26aFD+nxez7wO2DO2t/WiUIdmDpADtJ4owOBh/zsDtS7q8jxcnGS+QjLV5sPu28pLx9QWRj36aes1X3DddHOGS30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745745377; c=relaxed/simple;
-	bh=SnKDtn9vNNEvBK7+Ork9k+3FMuZ/BPGhOp5jL12zxrg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ta1u8v6uu+Cgw2l54rg2wA3JanaalaFWefW+khxh5OR97lZTnGr0V/2l0ClaR1bu0VcXTjXpEHgg24dpNShMyEk0xKRkYmNOO+zAZJx8cbR5C2LoF/gYwa1E7gOnVdfDIa9VNkUkGW5FuwS6k/yKJtusy20XwGYuoz979MbvahA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=PgqdcOqV; arc=none smtp.client-ip=3.216.99.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1745745549; c=relaxed/simple;
+	bh=DGBpbhXvuQ0xEpNrO0isiwgt3s6etMZ8qjti7C0evdA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e3nz7pnJVVgcvS5rU23FDCFLXFZ1glc0WsaCwXGF5h5DluQJpb4KXS9sEgRFRC8UWZab7v/g+2zWm3xxkFbnC0SJZ3pJYqd6RHHA70L4BAgnB2J440Q8aytsfUbrQmSp2dQO5ZBFh7uOi4qUO1IJ/II9fcUjq74Eov/e051UaDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c0FBTjqX; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="PgqdcOqV"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id CCDA060044;
-	Sun, 27 Apr 2025 06:48:15 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=bQYeXUX70C/rw//HG2eTPdfBxl6JMtsEVq9jZKgzyKc=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=from:to:subject:cc:references:mime-version:in-reply-to:date:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1745736495; v=1;
-	b=PgqdcOqVqt+jjQSSE7o6p7HfsCdoMUDlzBggVwEqnpHlCqGJmf5HxriVcC1vdVauXKCp1JfL
-	euNNMmfRDdxuilG2f82OsJ0ZbWcF/NJso/ZEpDlvMkAyHhOf0BV9DB6KJXXigw3+TOHbTj7WWlH
-	iEvIlCgfDt0N6TRMAdtLeFWs=
-Received: from smtpclient.apple (v133-18-227-172.vir.kagoya.net [133.18.227.172])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id ED03360110;
-	Sun, 27 Apr 2025 06:48:12 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0FBTjqX"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so36175855e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 02:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745745546; x=1746350346; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nLe9Nl33nhWrZdDvjcJcQXnden9NZdZx4I15zXBAdL8=;
+        b=c0FBTjqXTQ9LX9QNoMgB1Z7sCcqZNqtDc42weXDLeUXDx+dPwuxKBgqmqTRzu9jvcx
+         T23JOCRA041i/QXGG7TBrCdaDSjYbmA9+Bz743SzCTi19faK4totptx5BPthy/wCuC+L
+         QRqZ2K42KCq2OxuKTJU+Ux75Zwe6Isl+uM5vvMAtHEUWCY0ZefbAALgRtuudoHG4RdSd
+         WcTJShAH1MLnaTML0MVmwOumfZ+dL5bOnaBLkm/YgHgKhiv9LHLx9ERPxfpubo3Bg0vh
+         NbiaO6ts9RGZJbfU1XKCPUBRxn5GU/30v03MajDtwXrJGM4zhXLrDvIryULkEzrm8YWR
+         Wu7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745745546; x=1746350346;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nLe9Nl33nhWrZdDvjcJcQXnden9NZdZx4I15zXBAdL8=;
+        b=SiZJsAUpVQIZLbyFXepebDCXvZ2X3qGJSiVlggiRbR+SAFbsAJ5pvouq72nPrJUuUQ
+         561vqX0eaJBstfbDzrSaiu4TCyM45VRAeGxRlsklP2oXUaB8G1TJ2G/OHmrH0n4lM9gi
+         mxrB+E8GxQdJQtrev/0jiGW6imY/nGZbBNdmn3AcyRIkwRmk/xg43ZdlICmiWSe0aO3g
+         2iV4/ZUf2683xSJ8Vy6I6olBvbDwudq8rsSHndmGAL4Do49a0qgwoMimmB7EcosWh4wy
+         Rnud+lSM4Ak5351jl5o8s8zX/R1MaaPQ1EmE6QnWyZgkSbvq7D8q3ckdAI4jH/1zu37y
+         wXZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvPJPyHLux6Y51JmgnPWf9xRo4pWM8CvjYh7kpoYOrSdiiMjXJr+XXlhHBLigfY8kHW/y/CM/hTe6OmtE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw+8ktZDzpqdyWjWDrFHzbErstAacFH9vJd+mg19TxdDuucGKI
+	lDkeHEWWyLxfG2UNUL7UPIE/QhTfiaI5g8BZoNcKbsBV4BIEFFea
+X-Gm-Gg: ASbGnct9x90j7dRoqawMQA9RSb17qQjQJFixy4ViWQjBDNJh1yCxxguNsirMrixT49R
+	MWJeA5/49G+/hnF5GGn6GZrx5Ee2s/eje9IUY3Cvk2CczJkon9hdg4Ii9R2iBxonbgJllMHCooc
+	Gdf9KE06Sa3uIQpU1Fb6mzBI8vejlU6DvY/iF6XNy/V8fgHLgN0W0HxX0tMPHDOgku5GGQmDxKD
+	q+tac5MKBGgSv0EcH0g0NA3zjLctshgbXwNTO70N/KCpXy/mr0bwAI6XsBpsK3uV+XMr9D5a81p
+	jRJJtLsUHiGSUtST4yWk8DtuCKvuHVcEKRuVq//XtzpTmnCJYJiduhsnwUhErLQuYYvD2fVfB0a
+	o
+X-Google-Smtp-Source: AGHT+IG917R/W1vcqTTec0X9u5YY6XbXjMGwUWW2UkxaRZJWw0xk7JcR7AOuU4kg2ET7KWpRyWH6AA==
+X-Received: by 2002:a05:600c:3b0d:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-440a669994dmr58408145e9.21.1745745545636;
+        Sun, 27 Apr 2025 02:19:05 -0700 (PDT)
+Received: from localhost.localdomain (82-64-73-52.subs.proxad.net. [82.64.73.52])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d04802fsm98730625e9.1.2025.04.27.02.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 02:19:04 -0700 (PDT)
+From: Dave Penkler <dpenkler@gmail.com>
+To: gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Dave Penkler <dpenkler@gmail.com>
+Subject: [PATCH 3/3 V2] staging: gpib: Avoid unused variable warning
+Date: Sun, 27 Apr 2025 11:19:02 +0200
+Message-ID: <20250427091902.16301-1-dpenkler@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH] bcache: add the deferred_flush IO processing path in the
- writeback mode
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-X-Priority: 3
-In-Reply-To: <tencent_5EFAC84160EC2688341D1A8F@qq.com>
-Date: Sun, 27 Apr 2025 14:47:59 +0800
-Cc: Coly Li <colyli@kernel.org>,
- "kent.overstreet" <kent.overstreet@linux.dev>,
- linux-bcache <linux-bcache@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- =?utf-8?B?5aSP5Y2O?= <xiahua@kylinos.com.cn>,
- =?utf-8?B?6YKT5pe65rOi?= <dengwangbo@kylinos.com.cn>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DEAB3741-AF2F-4CD3-B715-EBC3AB9B394E@coly.li>
-References: <20250425035021.921-1-zhoujifeng@kylinos.com.cn>
- <ug3sqyn42af4bjsp3l5d5ymiabtc767oaoud3ddzv6jnw2eh27@4gcxqaq5tatf>
- <tencent_5EFAC84160EC2688341D1A8F@qq.com>
-To: Zhou Jifeng <zhoujifeng@kylinos.com.cn>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1745736495701004276.5242.6327280174020665267@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=O7TDvA9W c=1 sm=1 tr=0 ts=680dd32f
-	a=mj4eMbsE5mSnrU54dbyulA==:117 a=mj4eMbsE5mSnrU54dbyulA==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=2g-bObx1AAAA:8 a=VwQbUJbxAAAA:8
-	a=fA3rBA8wnNJP-tMNtCUA:9 a=QEXdDO2ut3YA:10 a=2vxvtA42U9rPmyYw9DsL:22
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+This addresses a warning produced by make W=1 with the configuration
+parameter CONFIG_GPIB_PCMCIA=y
 
+ines/ines_gpib.c:1115:28: warning: variable 'dev' set but not used [-Wunused-but-set-variable]
 
-> 2025=E5=B9=B44=E6=9C=8825=E6=97=A5 16:18=EF=BC=8CZhou Jifeng =
-<zhoujifeng@kylinos.com.cn> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Hi Coly Li,
-> Thank you for your reply and your question.
->=20
-> On Fri, 25 Apr 2025 at 13:46, Coly Li <colyli@kernel.org> wrote:
->>=20
->> Hi Jifeng,
->>=20
->> Thanks for posting the patch.
->>=20
->> On Fri, Apr 25, 2025 at 11:50:21AM +0800, Zhou Jifeng wrote:
->>> In some scenarios with high requirements for both data reliability =
-and
->>> write performance, the various cache modes of the current bcache =
-cannot
->>=20
->> Could you provide the detail workload or circumstance which requires =
-both
->> data reliability and write performance that current bcache cannot =
-serve?
->=20
-> For example, in some database application scenarios, the requirements =
-for data
-> security are relatively high. When writing frequently, flush is called =
-more often,
-> and the performance of write dsync is of great concern. The =
-operational performance
-> of several cache modes of bcache in such scenarios at present:
-> none: The cache does not work and is of no help to performance. The =
-performance is
-> the same as that of the backing device and cannot meet the performance =
-requirements.
-> writeround and writethrough: They are not helpful for write =
-performance. The write
-> performance is the same as that of the backing device and cannot meet =
-the write
-> performance requirements.
-> writeback: Since when it writes back dirty data, it only marks bio as =
-REQ_OP_WRITE,
-> there is a risk of data loss due to power failure. In addition, since =
-it needs to send a
-> flush request to the backing device when handling requests with the =
-flush mark, it will
-> affect the write performance.
->=20
->>> fully match the requirements. deferred_flush aims to increase the
->>> reliability of writeback write-back. And reduce the sending of =
-PREFLUSH
->>> requests to the backing device to enhance data security and dsync =
-write
->>> performance in wrieback mode.
->>=20
->> I'd like to see the detailed description on how deferred flush is =
-defined,
->> and how it works. And why deferred flush may provide the data =
-reliability
->> and performance better than current bcache code.
->=20
-> deferred flush: When data is processed through the writeback path, it =
-will determine
-> whether a PREFLUSH needs to be sent to the backing device. The =
-judgment criterion
-> is whether a write request has been sent through bypass or =
-writethrough before. If not,
-> it is not necessary. Put the PREFLUSH semantics into the dirty data =
-write-back stage
-> to ensure the reliability of the dirty data write-back. Here, by =
-reducing the sending of
-> PRELUSH to the backing device, the delay for the backing device to =
-process PRELUSH
-> is decreased, thereby improving the performance of dsync write =
-requests when the
-> cache space is abundant. During the dirty data write-back stage, the =
-FUA method is
-> adopted to ensure that the dirty data will not be lost due to factors =
-such as power failure.
->=20
->> I don't look into the patch yet, just with my intuition the overall
->> performance won't be quite optimized by setting FUA on writeback =
-I/Os.
->=20
-> Using the FUA method to write back dirty data does indeed have an =
-impact on the speed
-> of writing back dirty data. In a test where I/O is written randomly at =
-4K, the speed of
-> writing back dirty data is approximately half that of the non-FUA =
-method. However,
-> considering that the data is not written at a high intensity =
-continuously, this provides some
-> buffer time for writing back dirty data. In extreme cases, when the =
-effective space of the
-> cache is tight, its write efficiency is not lower than the performance =
-of the backing device.
-> Therefore, enabling deferred_flush is effective in low-cost deployment =
-solutions that require
-> the use of SSD to accelerate the performance of dsync.
+Remove the declaration and assignment of the unused variable.
 
-I am not sure whether the situation you stated is acceptable or not for =
-most of users.
+Signed-off-by: Dave Penkler <dpenkler@gmail.com>
+---
+V1 -> V2
+  Remove the setting of the unused variable and say so in
+  the commit message
 
-I hope to see more testing data.
+ drivers/staging/gpib/ines/ines_gpib.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
->=20
->> And the cache mode can swtich arbitarily in run time, if cache mode =
-was none
->> or writethough, then switch to writeback, I don't see your patch =
-handles
->> such situation.
->=20
-> When switching from other cache modes to writeback and simultaneously =
-enabling=20
-> deferred_flush, a REQ_PREFLUSH request will be sent to the backing =
-device.
-> Code location in the patch:
-> +   if (attr =3D=3D &sysfs_deferred_flush) {
-> +       v =3D __sysfs_match_string(bch_deferred_flush, -1, buf);
-> +       if (v < 0)
-> +           return v;
-> +
-> +       if ((unsigned int) v !=3D BDEV_DEFERRED_FLUSH(&dc->sb)) {
-> +           if (v && (BDEV_CACHE_MODE(&dc->sb) !=3D =
-CACHE_MODE_WRITEBACK)) {
-> +               pr_err("It's not the writeback mode that can't enable =
-deferred_flush.\n");
-> +               return -EINVAL;
-> +           }
-> +
-> +           SET_BDEV_DEFERRED_FLUSH(&dc->sb, v);
-> +           bch_write_bdev_super(dc, NULL);
-> +           if (v) {
-> +               bio_init(&flush, dc->bdev, NULL, 0, REQ_OP_WRITE | =
-REQ_PREFLUSH);
-> +               /* I/O request sent to backing device */
-> +               submit_bio_wait(&flush);
-> +           }
-> +       }
-> +   }
+diff --git a/drivers/staging/gpib/ines/ines_gpib.c b/drivers/staging/gpib/ines/ines_gpib.c
+index a16219c0f7c8..c851fd014f48 100644
+--- a/drivers/staging/gpib/ines/ines_gpib.c
++++ b/drivers/staging/gpib/ines/ines_gpib.c
+@@ -1112,12 +1112,9 @@ static int ines_gpib_config_iteration(struct pcmcia_device *link, void *priv_dat
+  */
+ static int ines_gpib_config(struct pcmcia_device *link)
+ {
+-	struct local_info *dev;
+ 	int retval;
+ 	void __iomem *virt;
+ 
+-	dev = link->priv;
+-
+ 	retval = pcmcia_loop_config(link, &ines_gpib_config_iteration, NULL);
+ 	if (retval) {
+ 		dev_warn(&link->dev, "no configuration found\n");
+-- 
+2.49.0
 
-And when read/write congestion happen, part of read/write requests will =
-directly from/to hard drive and bypass cache device.
-
-Anyway, long time high load testing result is necessary. I assume this =
-patch will decrease general write back throughput and result higher =
-pressure for cache device garbage collection load triggered by =
-allocator.
-Maybe I am wrong, I=E2=80=99d like to learn from your benchmark results.
-
-Thanks.
-
-Coly Li=
