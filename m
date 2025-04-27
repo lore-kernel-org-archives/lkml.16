@@ -1,101 +1,135 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A791A1FF5EA;
-	Sun, 27 Apr 2025 05:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7938C747F;
+	Sun, 27 Apr 2025 05:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745731667; cv=none; b=UhbeIYAPGODej6l1iT9tZjZTcQpfDUZbkswAREHcBf4AwN9pfqqz3GCCU0PHfjRSCaCd7bXU04Bh/cJrMivGoBNbBkyywIH3roywtEj13LyQiuvaEnJMwBzGTjRVv4E7TeGZGf8AUc5FZAZwUNfGwEgj0owZYeYecDI9ngfLMw0=
+	t=1745731757; cv=none; b=O1MbmMaUKxgswcszMVUCKuNKo4/r9lT39XHfFIH51FqwrPnh7VXx7xNhucbq2tuXlw1IWLaM5ImTimwjKbqByTCWeBoCp87WcaO9raF7/S7RWZzHHjgnFGPw3hh8N5J1dhUlySHdM8o4DaQ5c8az7/1S0iqn955gGj2pLoXYnTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745731667; c=relaxed/simple;
-	bh=CN5cORl45Pm7GGozDnA8fgjxJb9dGeiTgZrk/Bg3kWw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GzD+JS9x8Zvk72gBkBMOCKzI6mUgLlGAourHTFMl5tII96lOjNh0BhLd+bCNsOoiE4tFcHrEN8knjnGzMg5SKc7dYE7z/Jvvqr2ztIEzXgsH7USddVojFGVFy3F2uxJ9YYXLvyHY4f3nBeAXBEHBQx09HKjxZnRS2mQIFOFLUFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=kLybqRWD; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="kLybqRWD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=TFI6xwIhNpUpAdLw227pae0Xtnqh797v9lwYBKCrCRk=; b=kLybqRWDLb5NMYqdRQRLQG6g2S
-	0bNUYTc/EruEkbSs6W+LTUtGYMjuuS8pe+QfQNw7TenZA782lfCVeplFVeBRC1dFxdlT1Jstm+Po2
-	SX5No1tVIZnSD13SJMEgAzRgFHnlJbIweadaV0BBiX7p0IHVf3312gPQid/ohD0vn+ZXhRAYD77jp
-	IzT180ABcons5TnznglMJeGA5yejPwGdwdd2DhgYtIHwOOcN79qnigttByBlDasWXbYgGRGOgj/SA
-	MHKaHqnRJNQGlLw1RC41QpIbAYgfNYw7NKbjVrgbk1fIwLgCyPX5qfXk/rUMdP6v/TxSRDohK104Z
-	UtQyBNzQ==;
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	Tony Lindgren <tony@atomide.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 1/2] ARM: dts: omap4: panda: fix resources needed for Wifi
-Date: Sun, 27 Apr 2025 07:27:34 +0200
-Message-Id: <20250427052735.88133-2-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250427052735.88133-1-andreas@kemnade.info>
-References: <20250427052735.88133-1-andreas@kemnade.info>
+	s=arc-20240116; t=1745731757; c=relaxed/simple;
+	bh=1FUe7aXRzxsu+EjRvAhzLXksbJrtabn2nY+5vLDSRVs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PvcREE4PnWKlO+fL1GKw11v4hXPrlMIV8xe+B/eHQWG7T9FS9h1lZAzTCbXBuyhoC/eFF8Adfm9stzk9iwCv7IO4SBo9zYVQQ4Pa8I+oPbpSSUatUOmER8iz8/LsieQs+SFR5iPhSCUnciv81AcDDCxBs1+zKFEfbE7j2KCN9kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-549963b5551so3616562e87.2;
+        Sat, 26 Apr 2025 22:29:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745731750; x=1746336550;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fDi3xnZL6fsQsXT2rLh2TNElIcjVvgvD9LuKBrnF8Ww=;
+        b=W1JUASVF1Cs+wuqtP4fIL+uYnJ1rjfFqG7zA8ORGchCvd0jLJFcw6ihksgU5WyAbjg
+         ZZ+5DOpqFwYzkSV85qoRORT4l+JtKH9JO8Mvia2cr+bG35b2Dj8pYhrlLXzuiLro31GF
+         Vg/YbLMX9rM/B2JDHJtQxt0FGri36dRngjfOvmr5KqINBADNEqMN/zJL6lmraLJKau3Q
+         rJmUXoJRGhWWuWq3GNY1uEfUjLTkEb4fzUMRJ8+Sg6RN/EaW+EJVodC1POlZhPWdCyew
+         42DPxEQ3/LFWDODITtqn4AY8BYxPrQ8L+xD1C41BS/73sp+nvcr3TYcyUcXDGkGL3Xne
+         7UAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIRQ2NdqCnRvqwJ1s1/G2sc45WTFLZWT7eiU2UI7COEkOJxCSCV1KrmbpPgBIdjPMSY9RtX5hxRkjlw5+G@vger.kernel.org, AJvYcCW3kgZXuxtbGcj0DC6IcZA19soca9Xdv4TbzQdTv8qwmKw+Fq4P/Zdleg6+iWixMOtleGnhjM/lz8dd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGhWncp8DAqI1J+rCe9/9tRNm9JV2/psn/vZZnoWCKSKFsKUmx
+	iY4s8k99Dqr30XIun8ky/0xbRbFQCGKjNfjWL3ouTXl/pb5gcesHa5PXeiE551s=
+X-Gm-Gg: ASbGncs/8FwcGEEUlN8rdqpRaH1RPCH1RgyoKqvuZ4lXk+mbbyVaUzGwMjGv47rH2Tw
+	XcuOj335eJ+sQzsCffrJqnv8VkwwhG0pz8VRYERFvXqxiTozggqPBsbLmItVBequTF7s3UW/ll3
+	pl9gpKa6EhRmLMepMWudBlpqQkLljd8ohTEsaTTtXGVyg4FuUy1r2VifLJuruLOgLoxnePVss7Y
+	avqhRuv4LAUNoWotVJQWyQqlSAqbDMcWgDXeVvHvOeTIwIh/7aRTrlNGcXbsCJD/IyOXRB61UJs
+	W0ihVfQSW+xwLKHrmpAzZB0hp3VFW1/tapBGvsMqEeDcscdEFqLIv6lYFeCPsdPA+8YTQM5Sm0M
+	nGXVfhxtH
+X-Google-Smtp-Source: AGHT+IEWPDJC3w7cRgMg/ifjyR+rVIpAuSYNEu3glQcvSCJ+kAdzp8jRsmnUhmx8TuQSC69Ve68sqA==
+X-Received: by 2002:a05:6512:33d6:b0:549:91bc:67a9 with SMTP id 2adb3069b0e04-54e8cbcddafmr1799242e87.9.1745731750257;
+        Sat, 26 Apr 2025 22:29:10 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cc9f719sm1238209e87.124.2025.04.26.22.29.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Apr 2025 22:29:10 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30db1bc464dso37994391fa.0;
+        Sat, 26 Apr 2025 22:29:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVpVt9Gg7R+TJw0dmOPcAwdrJ8WIM4xD0BV79oMM/OCZa0m0A//Ml92LV0x9xchFlmhbpeyZszrIB3z@vger.kernel.org, AJvYcCX8aBVlXelicc+3NaEPTvDkG6QCHTeJPs2nmyz85inVX0sfyGljFPWrGMjz/asu2IExIJKquG4r98h9kD3o@vger.kernel.org
+X-Received: by 2002:a2e:ad90:0:b0:30d:e104:b796 with SMTP id
+ 38308e7fff4ca-319087b0605mr23238281fa.40.1745731749733; Sat, 26 Apr 2025
+ 22:29:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250418-opz-audio-v1-1-4e86bb5bc734@posteo.net>
+In-Reply-To: <20250418-opz-audio-v1-1-4e86bb5bc734@posteo.net>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Sun, 27 Apr 2025 13:28:58 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67-1tk0uAmYL-y6479itUxBJua76qhjn+0tTsN+Ni_a1w@mail.gmail.com>
+X-Gm-Features: ATxdqUEYYTKOqIRqwitrJwW2PxZXei0_VhgNMizMN4MUT9WfXUWnAmdzTIPf0Jo
+Message-ID: <CAGb2v67-1tk0uAmYL-y6479itUxBJua76qhjn+0tTsN+Ni_a1w@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: allwinner: orangepi-zero: Enable audio codec
+To: j.ne@posteo.net
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Pandaboard needs a 32k clock in the TWL6030 to be enabled
-for Wifi to work.
-With some luck, it is enabled by some U-Boot fork.
-Do not rely on it and properly specify the requirement.
+On Fri, Apr 18, 2025 at 7:32=E2=80=AFAM J. Neusch=C3=A4fer via B4 Relay
+<devnull+j.ne.posteo.net@kernel.org> wrote:
+>
+> From: "J. Neusch=C3=A4fer" <j.ne@posteo.net>
+>
+> Line out playback and microphone capture work, after enabling the
+> corresponding ALSA controls. Tested with the Orange Pi Zero interface
+> board, which is a (mostly) passive adapter from the 13-pin header to
+> standard connectors (2x USB A, 1x Audio/Video output, 1x built-in
+> microphone).
+>
+>   https://orangepi.com/index.php?route=3Dproduct/product&product_id=3D871
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
----
- arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+What about the USB ports?
 
-diff --git a/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi b/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi
-index 97706d6296a6..c860b590142a 100644
---- a/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/omap4-panda-common.dtsi
-@@ -130,6 +130,12 @@ hsusb1_phy: hsusb1_phy {
- 		clock-frequency = <19200000>;
- 	};
- 
-+	wl12xx_pwrseq: wl12xx-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&twl 0>;
-+		clock-names = "ext_clock";
-+	};
-+
- 	/* regulator for wl12xx on sdio5 */
- 	wl12xx_vmmc: wl12xx_vmmc {
- 		pinctrl-names = "default";
-@@ -408,6 +414,7 @@ twl: twl@48 {
- 		reg = <0x48>;
- 		/* IRQ# = 7 */
- 		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N cascaded to gic */
-+		#clock-cells = <1>;
- 		system-power-controller;
- 	};
- 
-@@ -488,6 +495,7 @@ &mmc5 {
- 	non-removable;
- 	bus-width = <4>;
- 	cap-power-off-card;
-+	mmc-pwrseq = <&wl12xx_pwrseq>;
- 
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--- 
-2.39.5
+In any case, we don't enable peripherals on "headers" by default. That's
+up to the end user. The description for the whole adapter board could be
+an overlay that users can then apply directly.
 
+
+ChenYu
+
+> Signed-off-by: J. Neusch=C3=A4fer <j.ne@posteo.net>
+> ---
+>  arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts =
+b/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
+> index 1b001f2ad0efd2e77218742efe6d8edfdd18a816..d65ede3dd6ed1206248a39c91=
+e46065684e7ba29 100644
+> --- a/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
+> +++ b/arch/arm/boot/dts/allwinner/sun8i-h2-plus-orangepi-zero.dts
+> @@ -112,6 +112,14 @@ wifi_pwrseq: pwrseq {
+>         };
+>  };
+>
+> +&codec {
+> +       allwinner,audio-routing =3D
+> +               "Line Out", "LINEOUT",
+> +               "MIC1", "Mic",
+> +               "Mic",  "MBIAS";
+> +       status =3D "okay";
+> +};
+> +
+>  &cpu0 {
+>         cpu-supply =3D <&reg_vdd_cpux>;
+>  };
+>
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250417-opz-audio-890849c8bb2e
+>
+> Best regards,
+> --
+> J. Neusch=C3=A4fer <j.ne@posteo.net>
+>
+>
+>
