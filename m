@@ -1,122 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19831EF396
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EF5189B9D;
+	Sun, 27 Apr 2025 10:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745749356; cv=none; b=PWWV7LmoEhsNevB8bY9iKReXtiNaLDj1Nsqm0dqptoSG+IYZTM3cVGwWd4oxnM4JJ76BfV8LAIUcxYVyyppb4lBZ+TlDk36R8OAwNo0KTr4Rrw9sF8z5nZMxteP/FhicX2BnnJu0eru7okLytejjpXv8YEwG6gwD15GuZTTyl04=
+	t=1745749617; cv=none; b=Treri3j6Et+MNRwHXlyXBB4a4/625iUC5F/8JvGY4H66v6QFzLlI/ETkR075UaDNBsBFPRyaxdc5ZGrAiplDa9+z8I/YUsY1wh4fxge1fBoWiqUuqUA8R4JBl9HNQvJcOXj/0GBmhuDkMeJMyIiZnGynOGm6B2X9IQp7RsSmsZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745749356; c=relaxed/simple;
-	bh=wWeiUfIu7WBUlDRFnFPlieoNxj0f6cEU4fu1RaK7Tuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ih1G7zqkY6aA5rR5n8gb+GyT+QPbY2YiCpybf5khE4Ua0bLi8/mpkIELv4ImpkidHlaY8flY+BgJBy/Kbnxl6DgJ7SpQqzpQGKYSXf+BlcuD5ir63Im5t7oeg0vz4j2jpH7sFa5i0tQO/CgidBJyUT5NJnNLB9fUojy1mixJQAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C64Iidw8; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745749617; c=relaxed/simple;
+	bh=L/7d+0sCrBkkhNvjbYbI7sHyU7E2+1tFiqTht7ojsAk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XM07ApzHLm/1LFmDxHNoSpLgcHB8VtcHE9KIK83EHeQEpBRWyvys4gN5MGQtdw14c0Gzhe7AtNEewWoKoYzYUDDHHayfJYuTS8V4R6bKtDM6YyvLjVGSstiZtqoqejkutJ9dynkPK+NZOWz0Qr7utT0WBkCO/jfBmPPFgS8qMd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DWTN4r51; arc=none smtp.client-ip=209.85.215.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C64Iidw8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745749355; x=1777285355;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wWeiUfIu7WBUlDRFnFPlieoNxj0f6cEU4fu1RaK7Tuk=;
-  b=C64Iidw8+QcuCRr/Gc13nNfntfpwELEqxGS0F1AnzfGJCWPuCOobyTQF
-   tA03M08YLffsu4aBj4feA8f1PiMS0eLGEd6wGB8dWzh6rsqEBV2VC5Wtk
-   AMNkv5ov86oABcRRhmegFskoKVxcGN1ajneHFQVssLIyjztUVhrSbPRil
-   wwGSfwnsV0X5RmdZEalRfqthetSJb8P0GC+szvpYOvLpcaRyvdNlGT3PB
-   9e5bblvv/bUDtvndgNzVHgq5T1Gxzh+tth9GYX8/s+lk91bFb7XUHp5Z9
-   B5+S4iuTjnculkUMA5mGnirUfOA2m2URhlIokLTW+zkDCqyfpYuwj8g+o
-   w==;
-X-CSE-ConnectionGUID: QiFTt9NmSqmy6kecbK74wg==
-X-CSE-MsgGUID: PUXwQudhTcKa9MWuKYOpQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="34966754"
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="34966754"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 03:22:34 -0700
-X-CSE-ConnectionGUID: 7c45Uxn+QUWlAmiQQJCZ9A==
-X-CSE-MsgGUID: QUKDlXb1RBaI3LjdD8b0YA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="133252974"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 27 Apr 2025 03:22:33 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u8z9a-0006Er-1o;
-	Sun, 27 Apr 2025 10:22:30 +0000
-Date: Sun, 27 Apr 2025 18:22:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lijo Lazar <lijo.lazar@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>
-Subject: drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2168: warning: Function
- parameter or struct member 'AMDGPU_RAS_BLOCK__ANY' not described in 'if'
-Message-ID: <202504271826.xy2fFO28-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWTN4r51"
+Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-af548cb1f83so3985412a12.3;
+        Sun, 27 Apr 2025 03:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745749615; x=1746354415; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rG4wi/dNPtItNd0KVOI4rRQ1RlH3zfmT05+Zcy25VSA=;
+        b=DWTN4r51yQSkmXrMvorjiweu3Yt2FuxyJ8cnYCTRxCe73Ole1pTGtoDeNZIZQM5o61
+         /sjOthSn69iLVF1AUmylX5QTIP414Vj7HBv/XaYvWIUNuBMt2ZbDsD8/0NGEPr5Xyv2k
+         TpsT0LsrN71/6ODsCkGC2oKWH9coPaSkn2n0QdheyG9W8Nvmh5lrRxZnDnhsBCr00OXQ
+         H3rDn3ABoB+xt5foUCbuVNJjQzQMNRfWvM1mDAnIqFc0rqvr6IfbzPAUlKrrTx1bUXpQ
+         UkXe0DIBNi1Vo1d8uzzuS4gnraEWv+cfMY1c8di79NQKXHcSdY+oxo1DePIqBxvVcSgb
+         lvuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745749615; x=1746354415;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rG4wi/dNPtItNd0KVOI4rRQ1RlH3zfmT05+Zcy25VSA=;
+        b=LPbB8EDc2A6PafptjRaX5T7eN74idT/NJqCNzKh4Jn9ivA+1Bbkor9qDfT8US8etWQ
+         GVc7dPMmJwgYAxSxPjRgfcl+piq64APsagOiaEW0jq1C8qviw7deAjNhXug8kaaR49of
+         lQbpDr5ZdLrXj85NygOU38bHCWdvzFHDF4ETKfnr/qtsn4E6TP7tRB4YQCBdfQqnmq5I
+         e58kaLuZLgm3PdeId2jwctQP/EQfIf5sgQBO291yudz3A1hySyKO90xynHe52sbJ5ZEC
+         RIC6NiyTkGCA9Y2QCQIZZFP7mVxdPZ9QarLOKNFyWu7RiBsPx+Lkv+qCWIQ3Xck4XCOz
+         Xq6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWVd/4pdvXmRRSRdee86Uj7eXjNJQXaUHmpETOUlfIGrujCRywoWu+Aiz8df41rzrbDIm1f8TSYSt1NnoecvXpq@vger.kernel.org, AJvYcCXozU3fK70AaOXjJPTmzDefhsXutv2CGP8gHMGGPYtSm2sbbCi4Dea9tEqj46vG7GGBGn3n2CD9aRqmBm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaVQZUgQhEGbQ5XqicVImA6MGigwGGyzzhPHH7BMcHoq4P4x09
+	rH4gAaQhI41W4zSDrM+0rA7cu1fKdAmXXpvxP8euTlGJ4VNd9wKt
+X-Gm-Gg: ASbGncuvYkXqXATxqvuBub/Kvzq22PX8hjEDA3f6Q0WAWVQDvXMEgUW1rGddE7FjFOF
+	7Lsb4qn5FQDq8Zimcl/BSw5CbB6mYz8wzK37ZwWgoWwu0NskRcjeK8cx8cG8eTmd+dJ/6pwQjsi
+	SNETH/+agslV5TVOcx40+d2jRu5GVIt1i9m1uRPvtfVfXSQ0ByjpxNr2ulvahUiTwQlvpq+wkUC
+	xALpY1vhXvfNS0h2je91Mlslq7/VTc3cf2aNBbgnuFu3ZjNnS2pQ+wN/o1bdt46DLCA+HqAwnE6
+	jL68TJhTxNEdQiptVM1sSFpLD+77yE0cl6QRHaLaIsTKey8PJHEo4wSlrHE=
+X-Google-Smtp-Source: AGHT+IGUa2Tx/EYX0ogpIqp9guU98wCtywVQo/NXZ5wFhd6QoXBDnQgp7Xjl56+ehyjTtG3Uj0Ld+Q==
+X-Received: by 2002:a17:903:3d0e:b0:229:1717:8812 with SMTP id d9443c01a7336-22dc6826e1dmr85333375ad.0.1745749615424;
+        Sun, 27 Apr 2025 03:26:55 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.229.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221677sm61672545ad.248.2025.04.27.03.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 03:26:55 -0700 (PDT)
+From: Siddarth G <siddarthsgml@gmail.com>
+To: akpm@linux-foundation.org
+Cc: shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	Siddarth G <siddarthsgml@gmail.com>
+Subject: [PATCH] selftests/mm: use long for dwRegionSize
+Date: Sun, 27 Apr 2025 15:56:39 +0530
+Message-ID: <20250427102639.39978-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   02ddfb981de88a2c15621115dd7be2431252c568
-commit: e1ee2111ca48169a9fdc5075f7863f5d4d591e2f drm/amdgpu: Prefer RAS recovery for scheduler hang
-date:   5 months ago
-config: sparc-randconfig-001-20250426 (https://download.01.org/0day-ci/archive/20250427/202504271826.xy2fFO28-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 10.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504271826.xy2fFO28-lkp@intel.com/reproduce)
+Change the type of 'dwRegionSize' in wp_init() and wp_free()
+from int to long to match callers that pass long or
+unsigned long long values.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504271826.xy2fFO28-lkp@intel.com/
+wp_addr_range function is left unchanged because it passes
+'dwRegionSize' parameter directly to pagemap_ioctl, which expects
+an int.
 
-All warnings (new ones prefixed by >>):
+Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+---
+ tools/testing/selftests/mm/pagemap_ioctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2168: warning: Function parameter or struct member 'AMDGPU_RAS_BLOCK__ANY' not described in 'if'
->> drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:2168: warning: expecting prototype for If the current interrupt is caused by a non(). Prototype was for if() instead
-
-
-vim +2168 drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-
-  2148	
-  2149	/* For the hardware that cannot enable bif ring for both ras_controller_irq
-  2150	 * and ras_err_evnet_athub_irq ih cookies, the driver has to poll status
-  2151	 * register to check whether the interrupt is triggered or not, and properly
-  2152	 * ack the interrupt if it is there
-  2153	 */
-  2154	void amdgpu_ras_interrupt_fatal_error_handler(struct amdgpu_device *adev)
-  2155	{
-  2156		/* Fatal error events are handled on host side */
-  2157		if (amdgpu_sriov_vf(adev))
-  2158			return;
-  2159		/**
-  2160		 * If the current interrupt is caused by a non-fatal RAS error, skip
-  2161		 * check for fatal error. For fatal errors, FED status of all devices
-  2162		 * in XGMI hive gets set when the first device gets fatal error
-  2163		 * interrupt. The error gets propagated to other devices as well, so
-  2164		 * make sure to ack the interrupt regardless of FED status.
-  2165		 */
-  2166		if (!amdgpu_ras_get_fed_status(adev) &&
-  2167		    amdgpu_ras_is_err_state(adev, AMDGPU_RAS_BLOCK__ANY))
-> 2168			return;
-  2169	
-  2170		if (adev->nbio.ras &&
-  2171		    adev->nbio.ras->handle_ras_controller_intr_no_bifring)
-  2172			adev->nbio.ras->handle_ras_controller_intr_no_bifring(adev);
-  2173	
-  2174		if (adev->nbio.ras &&
-  2175		    adev->nbio.ras->handle_ras_err_event_athub_intr_no_bifring)
-  2176			adev->nbio.ras->handle_ras_err_event_athub_intr_no_bifring(adev);
-  2177	}
-  2178	
-
+diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
+index 57b4bba2b45f..5773666f07ea 100644
+--- a/tools/testing/selftests/mm/pagemap_ioctl.c
++++ b/tools/testing/selftests/mm/pagemap_ioctl.c
+@@ -112,7 +112,7 @@ int init_uffd(void)
+ 	return 0;
+ }
+ 
+-int wp_init(void *lpBaseAddress, int dwRegionSize)
++int wp_init(void *lpBaseAddress, long dwRegionSize)
+ {
+ 	struct uffdio_register uffdio_register;
+ 	struct uffdio_writeprotect wp;
+@@ -136,7 +136,7 @@ int wp_init(void *lpBaseAddress, int dwRegionSize)
+ 	return 0;
+ }
+ 
+-int wp_free(void *lpBaseAddress, int dwRegionSize)
++int wp_free(void *lpBaseAddress, long dwRegionSize)
+ {
+ 	struct uffdio_register uffdio_register;
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
