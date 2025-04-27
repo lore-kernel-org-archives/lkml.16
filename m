@@ -1,60 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644D624BBE1
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2392376E0
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745749958; cv=none; b=pbsKOER09jZzdLjkM9je+iVF556fWC3UDHFe4dkud4b81K4QaVG7WQ71WbT7oJpSLeW6sOSIsm8sSkiWChjBWDt8c2vMR28eQEeD4WLYxNQ9webGLBjQdGHOrxwBldhr4Jt1B509PmfggtziRrQVKbwg+cCaf9ggnwaYIMG9dWo=
+	t=1745750619; cv=none; b=nu2Hvq99wiLuP8afE+UQq8ItvH2OzW3Ixo+Wnzed51E4Xw96u3KXy7S9W3mFtaMgsdN4rQJkcn1HQqyY7NqOK8EtlbR2hWxCoRJc6SifSLflWOsBShALNmY5s5RVqoHQdoyH4o8g2VTWzYJorad28i4MAe9BLk/NuZjITjdtFhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745749958; c=relaxed/simple;
-	bh=k2/z9kcXsQJ7meYivpJpuNUhu4YGGk81DForHjmwz1s=;
+	s=arc-20240116; t=1745750619; c=relaxed/simple;
+	bh=5R3YcrRM8+b5edzNfnHiwtuClP1tBnje+vx1dKrwfO0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSHdxuhPwoO/jT6ui2NbqFC1Rb6YbO1ghIUmbZAn0puHSEyFmrKKEZf6I2Wco9zLcRREd/XgC1qGITYG1Vs+mqTO9PXnAZlVqvy6kpc8CG1tQNOA1bDakIZTs9UuDRNPjOy+HIS+xasSlEfGN9WL/DynZhthC2kkbnJR9n6sCvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f65xq2St; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5nxfoI8cg8ikkbv8EH8mEMMiPfpgrxsTYGefzJDIURoTsSTH3mP8OWc3lXjY9GmdXj0w51Zomy9nO8L/gmL7P/xzItfM9HxHO0s46pS+snr6Gap4Go3kCWc2Q3r0h/LaWhmE9W/F2cUEbbxpu84V2VauaBcrBOx2YfNk5h+unA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODk1q4Jl; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f65xq2St"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODk1q4Jl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745749956; x=1777285956;
+  t=1745750616; x=1777286616;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=k2/z9kcXsQJ7meYivpJpuNUhu4YGGk81DForHjmwz1s=;
-  b=f65xq2StXkWg320FsRPBMDP+WO6sdFWW1qcb/7QW6S6oX4/RJ4BLaDrk
-   5j4VxOFBCb1HfWoTzH8mdzssGzE6dEAveJlA7S+7cXerw+D4mDC8Uw0Cn
-   +QbQ2xeYudRDzXwSgXdcYOr9plxQR1cRffRflQXLudhzLV+9XabMtEvW+
-   T4FOcQfjVW0V81qpqR8P4Q0Y3RyjZCCep9U6XSXUJBUaN9zcGXCbFz2GV
-   y39TMTLzW6BxfiUw10EOsp20hmAjGMPrTwQGCTtftSVi1lQLc6focEpOR
-   W/Izt0e4TxacuVS+ei2FPGQs6wXxOjyvACZG4k6BiwEnGQbnD4m+0UyPA
-   A==;
-X-CSE-ConnectionGUID: teFP1H7aTfyBqOWwyWuAGQ==
-X-CSE-MsgGUID: i8Kxl65PTs+SZi/WEKMshA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="46470879"
+  bh=5R3YcrRM8+b5edzNfnHiwtuClP1tBnje+vx1dKrwfO0=;
+  b=ODk1q4JlsGkS7z98q8ae8pkPiOXZn85Cvn2NFwS0WpSr53byS3Yo1gBb
+   RMc0xyWlt3pzEl+8sz/Czt4zTmr+emYWtErzpuZKnq+aWLCTxW349c43u
+   mnwmrbGifhe8HzIUXq4qVS16Ld4PSqAxC5QxPGfOTGiTPaWMjZNco+NMU
+   bcriqf+D5BJXb231kU+7nqmW1RSaQrTriwLtFPcPKXdlWFuXoUwyLa5wy
+   Ff/cjD/WovUM8cU9CXtW1wTORpgxuyj3vt3sfgmXjYozgU2hHt6EjKXAZ
+   87K/YhQ22Jymck8YITObBNNsYsFan7CaTJEkCWryQTFNrE7jQTJ5N0vRQ
+   w==;
+X-CSE-ConnectionGUID: KFz/GNZxQ96yWOoz1hZAyA==
+X-CSE-MsgGUID: +oQMHST5QoOVR/lD37EE0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="64887658"
 X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="46470879"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 03:32:35 -0700
-X-CSE-ConnectionGUID: 8xvmdnDcQvyUFgEL9HjW4Q==
-X-CSE-MsgGUID: 2hPdWLk0SISSO8nf4DPFRA==
+   d="scan'208";a="64887658"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 03:43:35 -0700
+X-CSE-ConnectionGUID: dQ5n7KwjQ4WekgdaJH8a5A==
+X-CSE-MsgGUID: ytUu+YufRASEiwkQ1l0I+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
-   d="scan'208";a="138088705"
+   d="scan'208";a="133767169"
 Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 27 Apr 2025 03:32:33 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 27 Apr 2025 03:43:34 -0700
 Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u8zJH-0006F3-0X;
-	Sun, 27 Apr 2025 10:32:31 +0000
-Date: Sun, 27 Apr 2025 18:32:18 +0800
+	id 1u8zTv-0006FJ-2v;
+	Sun, 27 Apr 2025 10:43:31 +0000
+Date: Sun, 27 Apr 2025 18:42:35 +0800
 From: kernel test robot <lkp@intel.com>
 To: Dave Penkler <dpenkler@gmail.com>, gregkh@linuxfoundation.org,
 	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Dave Penkler <dpenkler@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, Dave Penkler <dpenkler@gmail.com>
 Subject: Re: [PATCH 3/3] staging: gpib: Avoid unused variable warning
-Message-ID: <202504271837.SgHoiLBt-lkp@intel.com>
+Message-ID: <202504271805.WmPdV7YW-lkp@intel.com>
 References: <20250427091018.13705-4-dpenkler@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -77,24 +76,26 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Dave-Penkler/staging-gpib
 base:   staging/staging-testing
 patch link:    https://lore.kernel.org/r/20250427091018.13705-4-dpenkler%40gmail.com
 patch subject: [PATCH 3/3] staging: gpib: Avoid unused variable warning
-config: arm-randconfig-001-20250427 (https://download.01.org/0day-ci/archive/20250427/202504271837.SgHoiLBt-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504271837.SgHoiLBt-lkp@intel.com/reproduce)
+config: x86_64-buildonly-randconfig-002-20250427 (https://download.01.org/0day-ci/archive/20250427/202504271805.WmPdV7YW-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504271805.WmPdV7YW-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504271837.SgHoiLBt-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504271805.WmPdV7YW-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/staging/gpib/ines/ines_gpib.c:1118:2: error: use of undeclared identifier 'dev'
+   drivers/staging/gpib/ines/ines_gpib.c: In function 'ines_gpib_config':
+>> drivers/staging/gpib/ines/ines_gpib.c:1118:9: error: 'dev' undeclared (first use in this function); did you mean 'cdev'?
     1118 |         dev = link->priv;
-         |         ^
-   1 error generated.
+         |         ^~~
+         |         cdev
+   drivers/staging/gpib/ines/ines_gpib.c:1118:9: note: each undeclared identifier is reported only once for each function it appears in
 
 
-vim +/dev +1118 drivers/staging/gpib/ines/ines_gpib.c
+vim +1118 drivers/staging/gpib/ines/ines_gpib.c
 
 bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1107  
 bb1bd92fa0f2c9 Dave Penkler  2024-09-18  1108  /*
