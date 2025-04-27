@@ -1,90 +1,115 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3D6246326;
-	Sun, 27 Apr 2025 08:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A2024633C;
+	Sun, 27 Apr 2025 08:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745744119; cv=none; b=oqUjkKDMJL+aebN8bHNzAITBj7fLxb2+Vqlh1ynq/KcF+G5C8HNum5WkGvRwHgJpq57ui7QkKYIkG+8Jz/Sg8rcC7cyWNOv8/jOb7EPZWl8SC2RRnsHbPhV5npcyvAsqkaHMfPwPAD8xZRSfYzDPh1iYi3PvwX7FB+YU3GF1p1U=
+	t=1745744198; cv=none; b=RAL/86BWRHhARQVfL4Oyb0NLE0AA2Pd3HU7wlQwxxHhYJlRcM3x1uW6PMf/cbEFJMI13hBQ5wldZ7g5rMcImTSMYMUl4nxsYoFKnTGnO60SDbXBb/j0B1n48EeakrpgtzYQkacK83P82Lg/gOpHkCusAvdeywRLrjfJKdsQYdo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745744119; c=relaxed/simple;
-	bh=xoJ/+Kxws9hcyMvKoFMln5L5fp0JObvMuvDv3kAi3Ek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z32g/11iBW7YMo+XVO0q01ZM6B4byS5GvFgiCsCC+a/pN+GRnKsELzuP49Oz6GbLB5kfu35S8/8CaLn/Tnnu7yy91zIZ+ZzG4cTtFdnE6iUp/C+AyeWmCkY4AMW2/YU1mHnY5e92SbMrLOF/lT47hYrZ0E2xzsKVa6Mt4XvSOJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IeWoDXkx; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745744198; c=relaxed/simple;
+	bh=eS7yzfDWlqN6IRBfAXgT8yj7yIjtM1geYYgjXUyjIUc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CSrXg5q1g9SjJ0jEOlzSo0wLFOgmzAjcyl2sRsHPj6grGr7ai5wz29tAtsoSCthBWTaPSqe4yF9/N+OLeMUx27q0aoFEugzxm1TOzefNmQNombMx1X8CH6DzZ845DNcVILAE32e+xG/Jl6h2npvKZsH6x+qv5XXEORpEgOimNDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=RW4uMR0H; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IeWoDXkx"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso619454666b.1;
-        Sun, 27 Apr 2025 01:55:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745744114; x=1746348914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xoJ/+Kxws9hcyMvKoFMln5L5fp0JObvMuvDv3kAi3Ek=;
-        b=IeWoDXkxbU9Gw1rmwdVgSyxIjUgzxokUKLbDAe+3cOHhuzX0nIGH2a+Z4M9BRwyW5G
-         nXWxzq//sJkIYUbHPDjpEEyFXiXM0TmJ6qyfppODkTWOxkp4VBLsvKZtlcGGbkPEpCsx
-         86sayopqnCzpayAr8J89GIem8bAIYQvKmfEaojBlq4AEvwGt+RY5GV76b6YLfANxF9Ef
-         iyXpxBpFg6/qu+9USOZcINJaJdoplxNvGBCc69ezaBku7T4v19Tt51Gcaz2XhICNUfBk
-         LeDvLqiZflxH0z8ts7TVF1H3CMpynLGOf/emE/mTiaLXrEXBg9peNa/CleBB3dir/uEM
-         2bqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745744114; x=1746348914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xoJ/+Kxws9hcyMvKoFMln5L5fp0JObvMuvDv3kAi3Ek=;
-        b=LAD2Uz+cnXsKuftT8aMB+wmDkjNaRPZPgjVCoL2AZ+8NhtVtK/NpK4Qao0ygIBmH3g
-         WIXThcAUcWfMaQ0+PjVARzxtlYF32UhbZqCXfN17aWmLdMW/gGIK5XDj7XQliuBNXi7w
-         NgDXYtcCHZjj7Vd+mshjBgqys9yTUwk5KuLyzxnXolFNbWfusUyYaazWopXk27DuI7sq
-         ZNNWG5R0XEOuy/1LXMzXa2n3ZnzjGzUIoB8HsCMN9LhL9fbb0gMbVCuHpYybOkO4evgd
-         5roKXILqQtlg07L1eosCNffXvuk6PXl5UXiCZs68MgbqAprIDwihD3KN7oj2ccLlIiWK
-         TjVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU79OpvURDqawaRvAeLeT5/Mccw6wNan5Pw7R7qhF8UbC3UltyMgNPqVc7hZmEMcsSsJARX6+aiDfyg@vger.kernel.org, AJvYcCWQgDh5bgmNoTNsMVgu5gaujMK5q0s0lz0OYmm9TOJJhTQS2v1Peq0g48N1hyhQTemhdUVqUqf/km+Gsti6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQGmKTNKFaTq1RSOai+qt/lPoR/bcuDk5MbHtcz2sy0bIbxkgi
-	+ehqqmWDTdRaWA8tKB3WCDoGeVMJiXddEsi7fH9pBpWimo4qYy4dkb0/XbPyU94+gtsE6gPi2Fb
-	B/j4guzKtHJHwJJJl4OBIFZPcAGo=
-X-Gm-Gg: ASbGncuBl3cBQS6privUvzNX0PZqSrzWjWOFZylcNTne3Me5jqRsD2JIeSNBei3V0uU
-	GhyqjwdqPOrYtIjS21WJdeg0iBXNM5SbY7CsP5h1wrju6pbhYCQOsllZ7yPQJt8xZW3lwnYKSy1
-	PL1231b4qrCvz9NRPWleSbzdjM+SGBar7g
-X-Google-Smtp-Source: AGHT+IFWiy9LJ5L5w5vCuPgZqC4QHw+FesRweBH/UokuUi4+dKeIyxrTwPSebkoZVCO8QO4FAgsPsXoV5xqijAh9mxg=
-X-Received: by 2002:a17:907:3f0b:b0:ac6:f5aa:87f5 with SMTP id
- a640c23a62f3a-ace710a20b7mr623326566b.14.1745744114072; Sun, 27 Apr 2025
- 01:55:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="RW4uMR0H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=ttfjfcex3bdgxjbbczeexkt3ae.protonmail; t=1745744193; x=1746003393;
+	bh=WIsNNrHNWvNmxZ3FsMH+MSWRK3+6s9rB7du+OZv23xg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=RW4uMR0Haf5ghjyQC/oHwitNUD52iHRmBSFxM63IEP0BhBkwBr1FpZOsnkbfQYi8/
+	 f7rCmQ9XNi5bFlLGE+4ndWzmaak1potJ1us0ibISznCyr4Red2XrPHkL5imBucWgKh
+	 OrLY6Y0QUgY0frdPaEevqEuaj8fQEhV2ucvbYwlbNe4PI81beeDaa68qlynfne+jOW
+	 AAbG8Uj4CLg17hvEEXXGcvGnSeP2zFilAEJ5WFxczlyCErTS7xg3Gq6+TLk6Wa2eH4
+	 GBtD8InIh7qXlwChbHCzVVNwXg662Ur7eI+JxEcITXM5WSn1kSEk+5velE1SngpumQ
+	 iA5/neHqX3jPg==
+Date: Sun, 27 Apr 2025 08:56:29 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] samples: rust: pci: take advantage of Devres::access_with()
+Message-ID: <D9HAO06XMT9X.1NL63T3GBQG7B@proton.me>
+In-Reply-To: <aA1PjHrG4yT7XpCI@pollux>
+References: <20250426133254.61383-1-dakr@kernel.org> <20250426133254.61383-4-dakr@kernel.org> <D9GUSVZY3ZT7.O3RTG4N0ZIK0@proton.me> <aA1PjHrG4yT7XpCI@pollux>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 9b50c9087772bc346d8770f942d75f0cd6d416ef
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426231127.190090-1-ariel@simulevski.at>
-In-Reply-To: <20250426231127.190090-1-ariel@simulevski.at>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 27 Apr 2025 11:54:37 +0300
-X-Gm-Features: ATxdqUGWzCZoGHYF9n1Zc1OjBcvlWH4y0FKIuKAiyIfaBdwAYt6KFZzU8gWm-6Q
-Message-ID: <CAHp75VcAM0ca6E-wC7m-mkJ-LONweYesWdP7s4=kMCwYQPO4Lw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: alderlake: Add missing I2C2/I2C3/I2C4 pin definitions
-To: Ariel Simulevski <ariel@simulevski.at>
-Cc: mika.westerberg@linux.intel.com, andy@kernel.org, linus.walleij@linaro.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guido Trentalancia <guido2022@trentalancia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 27, 2025 at 2:11=E2=80=AFAM Ariel Simulevski <ariel@simulevski.=
-at> wrote:
+On Sat Apr 26, 2025 at 11:26 PM CEST, Danilo Krummrich wrote:
+> On Sat, Apr 26, 2025 at 08:30:39PM +0000, Benno Lossin wrote:
+>> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
+>> > For the I/O operations executed from the probe() method, take advantag=
+e
+>> > of Devres::access_with(), avoiding the atomic check and RCU read lock
+>> > required otherwise entirely.
+>> >
+>> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>> > ---
+>> >  samples/rust/rust_driver_pci.rs | 12 ++++++------
+>> >  1 file changed, 6 insertions(+), 6 deletions(-)
+>> >
+>> > diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_drive=
+r_pci.rs
+>> > index 9ce3a7323a16..3e1569e5096e 100644
+>> > --- a/samples/rust/rust_driver_pci.rs
+>> > +++ b/samples/rust/rust_driver_pci.rs
+>> > @@ -83,12 +83,12 @@ fn probe(pdev: &pci::Device<Core>, info: &Self::Id=
+Info) -> Result<Pin<KBox<Self>
+>> >              GFP_KERNEL,
+>> >          )?;
+>> > =20
+>> > -        let res =3D drvdata
+>> > -            .bar
+>> > -            .try_access_with(|b| Self::testdev(info, b))
+>> > -            .ok_or(ENXIO)??;
+>> > -
+>> > -        dev_info!(pdev.as_ref(), "pci-testdev data-match count: {}\n"=
+, res);
+>> > +        let bar =3D drvdata.bar.access_with(pdev.as_ref())?;
+>>=20
+>> Since this code might inspire other code, I don't think that we should
+>> return `EINVAL` here (bubbled up from `access_with`). Not sure what the
+>> correct thing here would be though...
 >
-> The PixArt I2C touchpad (PIXA3848) found on several Alder Lake
-> laptops is not detected unless the Tiger Lake pinctrl driver is used.
->
-> This patch adds missing I2C2, I2C3, and I2C4 pin definitions
-> to the Alder Lake pinctrl driver, based on Tiger Lake mappings,
-> with corrected pin numbering and proper community assignment.
+> I can't think of any other error code that would match better, EINVAL see=
+ms to
+> be the correct thing. Maybe one could argue for ENODEV, but I still think=
+ EINVAL
+> fits better.
 
-Thanks for the patch and report. Why can't the Tigerlake driver be used?
+The previous iteration of the sample used the ENXIO error code.
 
---=20
-With Best Regards,
-Andy Shevchenko
+In this sample it should be impossible to trigger the error path. But
+others might copy the code into a context where that is not the case and
+then might have a horrible time debugging where the `EINVAL` came from.
+I don't know if our answer to that should be "improve debugging errors
+in general" or "improve the error handling in this case". I have no
+idea how the former could look like, maybe something around
+`#[track_caller]` and noting the lines where an error was created? For
+the latter case, we could do:
+
+    let bar =3D match drvdata.bar.access_with(pdev.as_ref()) {
+        Ok(bar) =3D> bar,
+        Err(_) =3D> {
+            // `bar` was just created using the `pdev` above, so this shoul=
+d never happen.
+            return Err(ENXIO);
+        }
+    };
+
+---
+Cheers,
+Benno
+
