@@ -1,109 +1,109 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CE81DE2B5
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 09:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42931C1AAA;
+	Sun, 27 Apr 2025 09:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745746290; cv=none; b=VoWPbP6KO2FSsBXKv8eqCYpJEEGtFxm/Ie3cp/RNYPA5jh1mR3M3HY9yU0xh1h20R1kjPGXv4Kj6nbsPkNr+6J21vT2izeb9EC7tSFaWyqjUeG2EM9CZX2GuWR/RPMJ8qdOSYuO50xIHSW98I4xBEYdEGS5znVgZMv/D8alMtps=
+	t=1745746578; cv=none; b=mZLEcYXsBjxLK+CIhVFNGJbgLC+l2LjpfzzpI0VXPc8D9nF0FHw/aPSAM7qh3gm1D6OmttsC/enYXzA4fFeGhhC6ySP6xQD1DHZ1lwM1D8gVO7ppHj2bCwU+qjsZfiBCvdh1IEC2qFlkTSk59rN10LxtI/tJRZ1Q/XSpYNMYb9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745746290; c=relaxed/simple;
-	bh=5N+hSozI+ZeQMfPomkR+Uu0oNbUf8g7rTlgBZ0iuMWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U7xsk8bUPpG1Oz0OiwKQA0mEr18Eb4Vacpue1cTgwzfFlGzPkKkEFYnyIcDP6qzvA/73KzzHgB+q144bodFm5z9mubTipuPc4WDwz1+w5uh7KUsuvhNkbeDxkfibZbaqWpdSDnWZ68mwnafjdMbCjowf782Ifhsbgq///dBwjkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XUw7Enc5; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1745746578; c=relaxed/simple;
+	bh=MdAzOBzJ96CVTG/k+zrYOIKxEWgopRH+Nsp2O2nItI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QjqnbqTbkOSVL2o2Tj0sJnwQWT97DHyjMZ7nvJyex/wzlgvnNad4s+5A8wUzNgR9fuEu3KBhBKDY/xcjck5o3MW3NmkYmXX3Q3FClW7Lpo3R+TKJ7PDPqJH1EYYfukTIMX8THAHTt8igTxaXtSBaEYASrSNvlN/CxrZMGLatpAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IpSA12oI; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUw7Enc5"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso2308832f8f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 02:31:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpSA12oI"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so720184066b.2;
+        Sun, 27 Apr 2025 02:36:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745746287; x=1746351087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGSXLlYfTCNyEK1sS+8taaZTIKIMp6RlBt29lDZeXCg=;
-        b=XUw7Enc5GTpZoKRsyukdAtxyfos2hoCDh7ASgTx6o9PXhhZ7bFTIdgJe9DyEtxrqFG
-         rkPUpFM+7/4u2KW82fTZ2MMGucsnE7i1/GU2tiQn5B+ePc3farO40vZ01o8ldxDddQ4d
-         89DkoRTsQ3PXpjAks07PeKRi+rjHKy3TZSM1dFX/i+iARGrzyuPnsFUvzefAtpRDYQRe
-         mdKB5KYa6nGPGZXHuLNJxLLqmUirBqmo4kDT90kJtHXPpNqbv0XR4uIT/mR5gN/+Ur4W
-         EoN4At3XEz9r5bSSIFSK53hTaIwxyvdYSnmGemyU6q68ZtFHqc/00XIdADfiCn1DAzSX
-         8ECQ==
+        d=gmail.com; s=20230601; t=1745746573; x=1746351373; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VGzuohvyvvCrwS5zOnEccgXhaNKdly9XzL/s3vD+/6M=;
+        b=IpSA12oIbKaIbfvlgQesrzjvqb6HCbgmEMc4n2ef7WR5sajeYLEdInwuiHpjrg6dF3
+         ++a19gEHMhyaSuCln/rY59lUBPGibnyw/8epCXmRn4hBRl5SYM7Cjs7mcqTeQt+Ke8CB
+         LaJW1FwIYT6JZulq+DZHEGkQC3C+ikaYqaW/d8lnTO2Amoqoptfcbbf9bR1Yw819W2mq
+         Vwb3xX0cWEL6pKB1U1ilXaF3bZGUKY634vNisU1oN9U+ZJnKnXOuJiDk1dBHGs+Z0QTH
+         LVF9O0gUPDgiitA+Bpp+wOaCUnVFSpF3Q1bUdbC4bMgKxxASXh7+kpg/BEhoqSPmVqYj
+         JXNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745746287; x=1746351087;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SGSXLlYfTCNyEK1sS+8taaZTIKIMp6RlBt29lDZeXCg=;
-        b=XGA1UeN6w6DUlU1/XNdYN4nj69A8vwIWBq+0PLtyOwjIOEj4fQlp7YlrVkf742wz3G
-         /CABvvCQrfqDYLEQUloKMmPrcO9ZcrkZh0gTmkVRX/X1uS+LoQ5jN1Md0ofuxADoKvGW
-         OC1sE1kIUJwq02qgbwVG77BBgaNF0DS0gtC+9Kvln9VDGzENTljJBMXtsgLuItIMoRLq
-         3b60ynPGijxbZro2z8gSXTzMupq22oAjGahjcfmD0i1qHIP4Sfvfzp6Pam8i+OyMbMPq
-         83jvyBCj2ExERBDm3xIpSMIs2lNhWlyY/15zh6RrIw1s2/rxEiDM6XQv7qcxbMTip8XU
-         V+fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWugW8HOTH5Xg4vPUt8HdteAZNFmScDaa40U1aHa8CD+UJmnz/csUydCKWDtKYogfS8ZPvXnP1ocYRroHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyFYl7D7JnI035S5ZwHc7UbBeD8YWLTUEJVQKhcsWWvGtw0JTg
-	uCg887wXNxzvPy01jqc20pDP/ucXB3JmUr4bS1y7HG8aIjA13KOzlICGI4Pn
-X-Gm-Gg: ASbGnctZMqQ9b8nvbJPUm2t/DtzyF0NZcx8KPHKnz8NMIRPQsSY09tjbK7T612rdBSq
-	mBixkKfgG/tawy1+B1UriVNUnjzR+NwikqDtIs/92TmeoKIkDeCrYXunTuhHCcKuDQMKtFcGwBE
-	s0CoMTd91bit8RKoqiMkaFBrWXlJo7aRiH9W3sPm11JyXWHRQ3YKiar+Pi/PJ2vEWE8WiWGvUGW
-	pit0cJ7RsJyVm1LQemryrWFVsje3HKtwfykDr3WzCy3fRRsc9D2jBG608TrOTR8SkX4eQnpti73
-	A1Ut5vTCjubs8yf+IcHHiAAnTJnFO4aQn6LWlTFNnu3WQbqIeB1lw/SMzKyPMghCYg/fPWQ7Ys+
-	w
-X-Google-Smtp-Source: AGHT+IF1iPGBEhuUkDfpQzYO1sUsCZHS8vfSUjGFEM6LDflYs37IgTMzv6Af/wCGkwLP4sT/88uACA==
-X-Received: by 2002:a05:6000:2210:b0:3a0:824f:b552 with SMTP id ffacd0b85a97d-3a0824fb5c9mr832776f8f.10.1745746286740;
-        Sun, 27 Apr 2025 02:31:26 -0700 (PDT)
-Received: from localhost.localdomain (82-64-73-52.subs.proxad.net. [82.64.73.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5c6a0sm7856212f8f.86.2025.04.27.02.31.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 02:31:26 -0700 (PDT)
-From: Dave Penkler <dpenkler@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Dave Penkler <dpenkler@gmail.com>
-Subject: [PATCH] staging: gpib: Avoid unused variable warnings
-Date: Sun, 27 Apr 2025 11:31:23 +0200
-Message-ID: <20250427093123.18565-1-dpenkler@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1745746573; x=1746351373;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VGzuohvyvvCrwS5zOnEccgXhaNKdly9XzL/s3vD+/6M=;
+        b=Y7n6/UDTcbLUQN7+tqiG1OUJOaXMwm//OsrmOzMhdADqmlocA3ghHGhjGajVj2+ATz
+         Xn1ImQDKPKm7nmdKDHq+YSKLgiQ7xfrTq1HzF2J5tMr6rGP6Cl4SFvMDSD7RAsSIob6F
+         r5WCOXr1UBvYH9Rw+en/5CDpxtqr+5MyQtTPlAOi6T8co56XpaCb3jtNxMFnjbEjsrC1
+         Q7TaUFHat2NQtFNHgEGlX4GA/2YnLHQJKu6OSMiChrFZRx3QOFrZw3mXunq6nAZZIH0E
+         ahXgAAIW6GUmRZ7TvcAS5Fs71A6WPK/Ee+ADQmCyJ4LyJU73XG+pJpy4TbvCDfFkFXPg
+         XdqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVT0tk+wbKhVrwWjqUSa4z1+lQYGUYjK5/jhK/G+nQvqtMvJo5ybXuFYdsGbUeXS1p/oLJbv5LoyHBnvzkd@vger.kernel.org, AJvYcCW5rBOGBHQxSJPSc1f2Qwnhfv0+Yg0J8IovhOAg2wK8jr0X6+o1+ypqKl8Bbx1tkxs/6GC88WXsZb3N@vger.kernel.org, AJvYcCWA7Es0fNeiAAjJdkvpCWG/SkinCwb8gwaxddEfsqNZr+xcKL/ONepT1bsbhw/aWYvWaqzB4oSrDfLr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkOkAu1JM2cScW2bvIhwFgL/i//O1JJvoSB6PFF8d5jmyKR09H
+	DPbwrzzHCS4qXhcBKcioCsHafBm8rQ1IyZN8sjyEECpZDF38KV3nOUrm2V/BmDoXq3R01+Nw/5g
+	I9tImmr9yBz6cZyYsyEc5jGsBvZM=
+X-Gm-Gg: ASbGncsFnELAmOQ+9ek5XRBjcV7GXa1L3F/vgJNzIozpZArXePEHEh+RONH/WZU2ZBa
+	QFBouEsw2foJ7VM7o5/DTNVbvHGqLTfYpwbBItZefxvg4Mq5HlRbkHg9tz3+MJndv2CbagP6PVr
+	/bg3LSSD0jjKnh1bfaGM/IUw==
+X-Google-Smtp-Source: AGHT+IGoMZeNr5qp9wE08uyFjEL0FL5TyWGe8HMPsjjHQFeYThqcDC1gvwy6V+CCzAKFcw66C1iNantjGyqQ4J9Y5fw=
+X-Received: by 2002:a17:906:478b:b0:acb:aea9:5ab0 with SMTP id
+ a640c23a62f3a-ace73b1cd63mr635799166b.39.1745746572690; Sun, 27 Apr 2025
+ 02:36:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250427082447.138359-1-trannamatk@gmail.com>
+In-Reply-To: <20250427082447.138359-1-trannamatk@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 27 Apr 2025 12:35:36 +0300
+X-Gm-Features: ATxdqUHZ_-HZyhqiJ9dWL2SAXfBdPhoDJFCF5q7xMB2DoNABvHtVkjCzw97WyVA
+Message-ID: <CAHp75Vch8i50stVO6nH0Tnn=g4xSMji_iPj6q-CE1tLnvesqcQ@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix
+ LED driver
+To: Nam Tran <trannamatk@gmail.com>
+Cc: andy@kernel.org, geert@linux-m68k.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, christophe.jaillet@wanadoo.fr, corbet@lwn.net, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, florian.fainelli@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This addresses warnings produced by make W=1 with the configuration
-parameter CONFIG_GPIB_PCMCIA=y
+On Sun, Apr 27, 2025 at 11:25=E2=80=AFAM Nam Tran <trannamatk@gmail.com> wr=
+ote:
+>
+> This patch series adds support for the TI/National Semiconductor LP5812
+> 4x3 matrix RGB LED driver. The driver supports features such as autonomou=
+s
+> animation and time-cross-multiplexing (TCM) for dynamic LED effects.
+>
+> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> ---
+> Changes in v8:
+> - Move driver to drivers/auxdisplay/ instead of drivers/leds/.
+> - Rename files from leds-lp5812.c/.h to lp5812.c/.h.
+> - Move ti,lp5812.yaml binding to auxdisplay/ directory,
+>   and update the title and $id to match new path.
+> - No functional changes to the binding itself (keep Reviewed-by).
+> - Update commit messages and patch titles to reflect the move.
+> - Link to v7: https://lore.kernel.org/linux-leds/20250422190121.46839-1-t=
+rannamatk@gmail.com/
 
-cb7210/cb7210.c:1251:28: warning: variable 'dev' set but not used [-Wunused-but-set-variable]
-cb7210/cb7210.c:1250:31: warning: variable 'handle' set but not used [-Wunused-but-set-variable]
+Out of sudden without discussing with auxdisplay maintainers/reviewers?
+Thanks, no.
+Please, put into the cover letter the meaningful summary of what's
+going on and why this becomes an auxdisplay issue. Brief review of the
+bindings sounds more likely like LEDS or PWM subsystems.
 
-Remove the declarations and assignments of the unused variables.
 
-Signed-off-by: Dave Penkler <dpenkler@gmail.com>
----
- drivers/staging/gpib/cb7210/cb7210.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/drivers/staging/gpib/cb7210/cb7210.c b/drivers/staging/gpib/cb7210/cb7210.c
-index c686896bb088..298ed306189d 100644
---- a/drivers/staging/gpib/cb7210/cb7210.c
-+++ b/drivers/staging/gpib/cb7210/cb7210.c
-@@ -1247,13 +1247,8 @@ static int cb_gpib_config_iteration(struct pcmcia_device *link, void *priv_data)
- 
- static int cb_gpib_config(struct pcmcia_device  *link)
- {
--	struct pcmcia_device *handle;
--	struct local_info *dev;
- 	int retval;
- 
--	handle = link;
--	dev = link->priv;
--
- 	retval = pcmcia_loop_config(link, &cb_gpib_config_iteration, NULL);
- 	if (retval) {
- 		dev_warn(&link->dev, "no configuration found\n");
--- 
-2.49.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
