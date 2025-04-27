@@ -1,154 +1,120 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE5533991;
-	Sun, 27 Apr 2025 11:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549B6241665
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745755006; cv=none; b=HpW2wrbi4lx2a8LOqDex+gy1gu1V75NZvp+saXtPiAPp8/FaGIUPvEjQXTiaflppr9KGEUnksU+Ffgdf2OrbSG6UvAq3FH+LVzCNu88pJj/FF6T9ssTdEJxanlILmhsv/B1jQKHhzQk3ZeUE+R1yJyzfYymbuEwkfPLxgzLVASs=
+	t=1745755016; cv=none; b=uU5E8knQ+BVrTkCH1Bt8udSvMG730Sj9PyP2dDccz2HPRAyXDfCMPzZPBKQ/glOe9ANkR7TAoKOYG2T3oAoZMX/vLQ3gYJ4xyBTc6r7xD/Lj9BAPfDmRcRbJ/GxDJafh19h4x/6THV3cyAGRTHxosGLdY0K7zUpj5Fg7jl8UhQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745755006; c=relaxed/simple;
-	bh=KfSCwSPKSyiYR+s5s/KODZu0ZUy3G3uMK4Swk+Hd9Yk=;
+	s=arc-20240116; t=1745755016; c=relaxed/simple;
+	bh=KkuM9J9srAIq0iB1EJ3En1a60/DwuR89aCnCUTZyRvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dC5lP/HAsBM5GXk7k+jvESYzxQCYpdJhLGYY4608mbdiGO0VuNwxzdn0CEsxs6Vwtn29QSm5ncuehBlXjdeqAAVakRHzRwY07xr5T5A5DVbrfWzEk7ZMthRhELXQTdDM3wMLyQES+/3CTw6oL3j2FzdAuJgnt4XFK1G/M1eWib8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=CvwVsTCo; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	 Content-Type:Content-Disposition:In-Reply-To; b=sZq4C3N/md6pHcdLOA5C9yTMR5rJFC4D+weUr4BWf048xGLMG7ACG6mD521xaQ4th62eSzd+Xua7zDNTRPhMTYuIMVyXTrdhFKIEdrUlAx9j/dLB5wg2WVx3dqGVZKS7/yjOO2rryp2w8ijW1AsiPGnfsbHxadXzwNaxQZoS8rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=W72OZ96j; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="CvwVsTCo"
-Received: from localhost (unknown [10.10.165.8])
-	by mail.ispras.ru (Postfix) with ESMTPSA id DF8CE5275402;
-	Sun, 27 Apr 2025 11:56:39 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru DF8CE5275402
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1745754999;
-	bh=aBhjtzPKuRcQIwa9oNeuv//8wZdbjOT8VqZkshDuJ5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CvwVsTCopgyl6sQZCBUPvWwjpDD1EsnZZSa8oxrDktG889xrrZdxstkRpaX9Tv9Pw
-	 0CwTSjXiBnSqPPOX+3ZQDuNlG45453A5rtC7Z664+IA2i/HOOkYE3mkHd+5z42eWQj
-	 Tnj8bl52tC17a9mLBAjAbeCOd6W55MtXOZjCZOaw=
-Date: Sun, 27 Apr 2025 14:56:39 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: "Darrick J. Wong" <djwong@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Carlos Maiolino <cem@kernel.org>, 
-	Chandan Babu R <chandanbabu@kernel.org>, Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, Alexey Nepomnyashih <sdl@nppct.ru>, 
-	stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] xfs: fix diff_two_keys calculation for cnt btree
-Message-ID: <vx6bowvzlqixc4ap7vvj4mwarsuqm7y65cejg6yoc5wgpeh4j6@74rej3wf6uqq>
-References: <20250426134232.128864-1-pchelkin@ispras.ru>
- <20250426150359.GQ25675@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="W72OZ96j"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8f8657f29so38859096d6.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745755013; x=1746359813; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3aguYnD7Euw8idfB6uGeUk5hHv75Psmkn+8V49As6tk=;
+        b=W72OZ96jwlqEREiWjDrLNbrF/uzXSIldIXQebSRqIcgiVRLh6crdRhT4yvOmsMKXAm
+         W9zPJEoypdsV5PgX1nAKNjGV5L5vtczxe7CQJvpPSkPVB996unpNooSzKOFgeCh+w9Kk
+         JgrKAYGbMUAq0Jt99k+oEH2bFDjnCF3oFLDxyqODtjnAlPY+82rOv5Uv6q5oKL1tjREA
+         cl+VpSQhiS2EF3vBY0AG8dg45LjPqFYJ1RIAaKP15CCl6RF/qCEQ47Ns9YA+OvMlrUgj
+         lPcK7uSr8v1yqsfE4uh/cLmvCF79g/YJEL2A/u1UeU0rIsTVge19Iq8ayYiYJDnosoIJ
+         69gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745755013; x=1746359813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3aguYnD7Euw8idfB6uGeUk5hHv75Psmkn+8V49As6tk=;
+        b=E4elVbd/iNk6IkcBD3IRypR8Ohl9pdXKKC3Z70dT+GduaUCcrVapw7Gtrf2DBZ7DiD
+         GQy7Szo6kPF6PpNzUMiRy0dia3kLjXIaa23041DilV9kgwHFurm0oKMih6E83dyS8OxQ
+         YjOgeQTQLIa31ICukUzjxPumtKMSuWhgjwyoUpdIZJTktdoQP9panifl36oSHb6QNOjK
+         Zy8vGvvBkVYQj0uF6oUit8AJnU9JPOyuwTE2ZQTYIs/75sCKwDgUq2k91e+HLNzLvvwL
+         X56bYIWdkfkCOC4rglHL3bN9qYG6mkhf7GCJ4Nla3RgBqowC03aF6o/xmzddErbpGiSG
+         NPCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoJFtuBLlM2RirjpLXj70tQfdOeZ3oMTJ2AkzPs/phta2b17VCBlRGMCD7c1f1q7rLU+6IXvdGukK5yw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz59OheaXcbk6kcZT63RuGD5amUZvsgUdfTxYUKFSnIaZkJ6POP
+	otCBl9ZdzQ5k4mWcNu2UR39UThdmY/QWDmMS8Pe4vMOAoK5VTeJeS1F82XwQ7Aw=
+X-Gm-Gg: ASbGnctAdB0Lwm9qI4e8a5h0//UiOq46/ZLuK/IQEtf0uE5aYr7toiH9tX8mM7I4HYy
+	VGj/ZGJGR1MN2Ql4jEMzfq6+a0Jg2RYvk7EjtuXgrijlTO57wF1JjY+Z8rslLbKw6fZ/r08OKSo
+	3s0Lmiuzmxaw5KfOzo4r5daqZ6N8gRKAoli7OUiCB6V4W07I1GforpZxmZg8v5qd4bedSGVlxlX
+	HNnPXVKOZ84zwvd1+Ikyjg2P0dTOHShvwIBQdh0BOxhwdQ3kysDN4zKbeZzu9CoTE32kHOMhf1c
+	KAtDYevUul1g99PqX9HU+uCdpQACRz0JOc8RCP8=
+X-Google-Smtp-Source: AGHT+IEDgU2yzVXpkA7DFn1W4/QXxXBxTe6pwCbgIO5g9SsnH+5MeNqwj18r14AAziVsNIFTvvqe0w==
+X-Received: by 2002:ad4:5c66:0:b0:6e4:2872:45f5 with SMTP id 6a1803df08f44-6f4d1f16818mr102027586d6.25.1745755012925;
+        Sun, 27 Apr 2025 04:56:52 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f4c0a7429asm43859846d6.69.2025.04.27.04.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 04:56:52 -0700 (PDT)
+Date: Sun, 27 Apr 2025 07:56:47 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Huan Yang <link@vivo.com>
+Cc: Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Francesco Valla <francesco@valla.it>,
+	Raul E Rangel <rrangel@chromium.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Huang Shijie <shijie@os.amperecomputing.com>,
+	Guo Weikang <guoweikang.kernel@gmail.com>,
+	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com
+Subject: Re: [PATCH v3 2/3] mm/memcg: use kmem_cache when alloc memcg
+Message-ID: <20250427115647.GB116315@cmpxchg.org>
+References: <20250425031935.76411-1-link@vivo.com>
+ <20250425031935.76411-3-link@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250426150359.GQ25675@frogsfrogsfrogs>
+In-Reply-To: <20250425031935.76411-3-link@vivo.com>
 
-Hi,
-
-On Sat, 26. Apr 08:03, Darrick J. Wong wrote:
-> On Sat, Apr 26, 2025 at 04:42:31PM +0300, Fedor Pchelkin wrote:
-> > Currently the difference is computed on 32-bit unsigned values although
-> > eventually it is stored in a variable of int64_t type. This gives awkward
-> > results, e.g. when the diff _should_ be negative, it is represented as
-> > some large positive int64_t value.
-> > 
-> > Perform the calculations directly in int64_t as all other diff_two_keys
-> > routines actually do.
-> > 
-> > Found by Linux Verification Center (linuxtesting.org) with Svace static
-> > analysis tool.
-> > 
-> > Fixes: 08438b1e386b ("xfs: plumb in needed functions for range querying of the freespace btrees")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> > ---
-> >  fs/xfs/libxfs/xfs_alloc_btree.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
-> > index a4ac37ba5d51..b3c54ae90e25 100644
-> > --- a/fs/xfs/libxfs/xfs_alloc_btree.c
-> > +++ b/fs/xfs/libxfs/xfs_alloc_btree.c
-> > @@ -238,13 +238,13 @@ xfs_cntbt_diff_two_keys(
-> >  	ASSERT(!mask || (mask->alloc.ar_blockcount &&
-> >  			 mask->alloc.ar_startblock));
-> >  
-> > -	diff =  be32_to_cpu(k1->alloc.ar_blockcount) -
-> > -		be32_to_cpu(k2->alloc.ar_blockcount);
-> > +	diff = (int64_t)be32_to_cpu(k1->alloc.ar_blockcount) -
-> > +			be32_to_cpu(k2->alloc.ar_blockcount);
+On Fri, Apr 25, 2025 at 11:19:24AM +0800, Huan Yang wrote:
+> When tracing mem_cgroup_alloc() with kmalloc ftrace, we observe:
 > 
-> Perhaps it's time to hoist cmp_int to include/ and refactor all these
-> things to use it?
+> kmalloc: call_site=mem_cgroup_css_alloc+0xd8/0x5b4 ptr=000000003e4c3799
+>     bytes_req=2312 bytes_alloc=4096 gfp_flags=GFP_KERNEL|__GFP_ZERO node=-1
+>     accounted=false
 > 
-> #define cmp_int(l, r)          ((l > r) - (l < r))
+> The output indicates that while allocating mem_cgroup struct (2312 bytes),
+> the slab allocator actually provides 4096-byte chunks. This occurs because:
 > 
-> --D
+> 1. The slab allocator predefines bucket sizes from 64B to 8096B
+> 2. The mem_cgroup allocation size (2312B) falls between the 2KB and 4KB
+>    slabs
+> 3. The allocator rounds up to the nearest larger slab (4KB), resulting in
+>    ~1KB wasted memory per allocation
 > 
+> This patch introduces a dedicated kmem_cache for mem_cgroup structs,
+> achieving precise memory allocation. Post-patch ftrace verification shows:
+> 
+> kmem_cache_alloc: call_site=mem_cgroup_css_alloc+0xbc/0x5d4
+>     ptr=00000000695c1806 bytes_req=2312 bytes_alloc=2368
+>     gfp_flags=GFP_KERNEL|__GFP_ZERO node=-1 accounted=false
+> 
+> Each memcg alloc offer 2368bytes(include hw cacheline align), compare to
+> 4096, avoid waste.
+> 
+> Signed-off-by: Huan Yang <link@vivo.com>
 
-Thanks, that would be worth it, I think. Though the current xfs
-***diff_two_keys() implementations try to compute and return the actual
-difference between two values, not the result of their comparison. Now
-looking at diff_two_keys() use cases, I see only the latter one is needed
-anyway so a good bit to refactor.
-
-
-The thing I'm pondering over now is whether the macro in its current
-form is okay to move up to include/. There is no argument restrictions and
-typechecking intended to catch up obviously misleading usage patterns
-though we'd need some if this is hoisted to a generic header and exported
-for potential use by others?
-
-There are four places where cmp_int is defined at the moment:
-- bcachefs
-- md/bcache
-- xfs_zone_gc
-- pipe.c
-
-bcachefs is the largest user having all kinds of different arguments
-providing to the macro, bitfields included. It also has several rather
-generic wrappers, like u64_cmp, unsigned_cmp, u8_cmp, cmp_le32 and
-others..
-
-AF_UNIX code even has
-
-	#define cmp_ptr(l, r)	(((l) > (r)) - ((l) < (r)))
-
-for pointer comparisons.
-
-
-So in my opinion we'd probably need to come up with something like a new
-include/linux/cmp.h header where all this stuff will be gathered in a
-generic way.
-
-Any objections/suggestions on that? Or just moving
-
-	#define cmp_int(l, r)          ((l > r) - (l < r))
-
-to a generic header and dropping the corresponding defines from the
-separate in-kernel users would be enough in this case?
-
---
-Thanks,
-Fedor
-
-> >  	if (diff)
-> >  		return diff;
-> >  
-> > -	return  be32_to_cpu(k1->alloc.ar_startblock) -
-> > -		be32_to_cpu(k2->alloc.ar_startblock);
-> > +	return (int64_t)be32_to_cpu(k1->alloc.ar_startblock) -
-> > +			be32_to_cpu(k2->alloc.ar_startblock);
-> >  }
-> >  
-> >  static xfs_failaddr_t
-> > -- 
-> > 2.49.0
-> > 
-> > 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
