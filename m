@@ -1,81 +1,96 @@
-Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA6C19048A;
-	Sun, 27 Apr 2025 08:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC6A1B87EB;
+	Sun, 27 Apr 2025 08:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745743281; cv=none; b=oZ/gkcG3my55bGe7NPoZ773Q2IPTc8ORnMMygMAhI4bOnckOLA7vm7gVtQ5miT5RMD61+IICR8fPpWZTQHmxatMI3fESQpCjWhY4ztRZYmiipEqnjNfGtZR7jaGxsGwzvVAO5ymKkW85CwrXbpV6kK4dQl7eiPDmmQh8PBZwV5A=
+	t=1745743629; cv=none; b=qQvVzl/jLRt0Ei+w2PGvh1vxwh2fH0dP9IvP43prk+i04yXfgo/e7z9ISeArMkd2mK8fG0O3SSsSsDrle1BioVfwNqQNFAhGT5kyxjTbcMNZTWCTiKOOEJ/zI+geiCmBV79MELukx6P9t+pPiv/JfeHHwHorWUaiSnk7VCaNjiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745743281; c=relaxed/simple;
-	bh=6ttQTFlnLRk5umQOwmKH2yxEnh/cM8lnhIS1sNIMgwE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JnIwWUtcRDHqGztUa8VpQXHSYNMN8XvKgedWOoTa1JrjDy3d8aUQuEz0iTyhPYNG714m3/tn54rKoben02yfmy7a1HswAbuddXu8PefYJJWxJTNuRemVopTM+/KOf8A1bztpTc6ygUu+WqiyU9qjMw5oHY6bReN1DiO+Ua9ldh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=AaxiIQj+; arc=none smtp.client-ip=109.224.244.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="AaxiIQj+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1745743266; x=1746002466;
-	bh=EuMz3kZQGQn4bADul2EcojS+v3oCdcGvpvDdhtvlJVw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=AaxiIQj+sRwbNym/0B8oK8rQIsYn42qeTwKNTcAUbPIf8PbRUajZThVJPQzzV71xi
-	 zDFvOarPSExw3Elq+3Q5o9e8uRVxMCsIZ89UHEmTXLYvwP+Nlx0X8j+GfNmAWk9Zp+
-	 YsTqUGaWYqocGnjGjycMmMqHxX4T2QnKmo1CWs0v7HwAPlkbmWXRCLZhI7myhttxeG
-	 Tr3ZoBp/4YQ0nUfMf9gYZ31zxf2KyynwGevbhHzab1tUGc3RVdd3pdEwsJgZjVZdJU
-	 2D0wJtl2AAnwwjlfl3zVXP4Olxg81MYTGDsK//vYcB4stO9qBXPWXJ4Z59x9QZfXCf
-	 yClrqHjrGKtyA==
-Date: Sun, 27 Apr 2025 08:41:02 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com, joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Message-ID: <D9HAC6KW2GTG.ICOFCQX4A2U3@proton.me>
-In-Reply-To: <aA1O8Wem1FhyybF5@pollux>
-References: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me> <aA1O8Wem1FhyybF5@pollux>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: bb8e0fa1479c64fc29feef18bdaa8bd6644ac35b
+	s=arc-20240116; t=1745743629; c=relaxed/simple;
+	bh=oP7MmUhexz+8ribINaFF4SVxpAdiyMvHpVWa3eQzcic=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P6XQwnw+wTP02Ja7EQR/dyE1aTkLgLOBiMhsM9NEBM836k+tzFkawBDVFuNw6A7xu/9GMfNTGDQPeOQcalE2YyKocJpHjkL32aG4PC9ALOyQapCwfAEr8ToVFUszT6LIr03+EPurldh68dOzH/PisMSA2A3VTIv31BTljO3XBMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4ZlgDp5BZdzYQv4g;
+	Sun, 27 Apr 2025 16:47:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 399291A018D;
+	Sun, 27 Apr 2025 16:47:06 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAXenoG7w1oOVIpKg--.9945S6;
+	Sun, 27 Apr 2025 16:47:06 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: hch@lst.de,
+	axboe@kernel.dk,
+	kbusch@kernel.org
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH v2 2/3] brd: fix aligned_sector from brd_do_discard()
+Date: Sun, 27 Apr 2025 16:39:24 +0800
+Message-Id: <20250427083925.157984-3-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250427083925.157984-1-yukuai1@huaweicloud.com>
+References: <20250427083925.157984-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAXenoG7w1oOVIpKg--.9945S6
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr4fXFW7ur45Ar1fXF1kKrg_yoWfGwc_C3
+	WFvF4xXrykJr1jkr1Yya4SvrZIv3WjvFZ5uF1Sqr93Xay8X3ZFy34qvr98Zr1UWFW5Aa4a
+	y3ZrXr47Xw42gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbH8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14v2
+	6r1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUjpuWJUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Sat Apr 26, 2025 at 11:24 PM CEST, Danilo Krummrich wrote:
-> On Sat, Apr 26, 2025 at 08:28:30PM +0000, Benno Lossin wrote:
->> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
->> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) =
--> Result<&'s T> {
->>=20
->> I don't think that we need the `'d` lifetime here (if not, we should
->> remove it).
->
-> If the returned reference out-lives dev it can become invalid, since it m=
-eans
-> that the device could subsequently be unbound. Hence, I think we indeed n=
-eed to
-> require that the returned reference cannot out-live dev.
+From: Yu Kuai <yukuai3@huawei.com>
 
-I meant the following signature:
+The calculation is just wrong, fix it by round_up().
 
-    pub fn access_with<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a =
-T>
-
-You don't need to specify the additional `'d` one, since lifetimes allow
-subtyping [1]. So if I have a `&'s self` and a `&'d Device<Bound>` and
-`'d: 's`, then I can supply those arguments to my suggested function and
-the compiler will shorten `'d` to be `'s` or whatever is correct in the
-context.
-
-[1]: https://doc.rust-lang.org/nomicon/subtyping.html#subtyping
-
+Fixes: 9ead7efc6f3f ("brd: implement discard support")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
-Cheers,
-Benno
+ drivers/block/brd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index 98c9297beafe..567aee2f882c 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -160,7 +160,7 @@ static void brd_free_one_page(struct rcu_head *head)
+ 
+ static void brd_do_discard(struct brd_device *brd, sector_t sector, u32 size)
+ {
+-	sector_t aligned_sector = (sector + PAGE_SECTORS) & ~PAGE_SECTORS;
++	sector_t aligned_sector = round_up(sector, PAGE_SECTORS);
+ 	struct page *page;
+ 
+ 	size -= (aligned_sector - sector) * SECTOR_SIZE;
+-- 
+2.39.2
 
