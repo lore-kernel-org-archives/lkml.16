@@ -1,228 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5F8BE7;
-	Sun, 27 Apr 2025 08:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7181633FD;
+	Sun, 27 Apr 2025 08:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745741599; cv=none; b=AXt6OT6qujARVFBUhoLNMN/dYFlxEZzzwttgZhxSBucwfNf277IKW6h6yCOzuvTmIsOguwIIzc5KFjzDA+7c7NQFZyDno2r/Vw1wLepN8jPSsO0R9UQ93bJIhisBz5qeuKwcIoId4XtwsVyFuCcacODRZD1Bvqxz/lhLNTPx2bA=
+	t=1745741719; cv=none; b=JHv4viWAs8GuMhSK7dMWFpcBdtK8jTd0OOvuh1cl7TxXQ8MdW203JS8epotO+881e3+3f2I8xgmZw9al6vcyVjlvWI1SfRbUvlD0HwWt1f2Flw7R8TdDxvC/21eiqWIyOW/GzLHk6xG1HEcXyRlp/M9nZdxM9Rx7wm2HcAuWGkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745741599; c=relaxed/simple;
-	bh=n1LP0hWDAYYPPGoxCmhHUpx37KloYPiSW/LsrkJ+pog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ck3+Dr72d+ZWiBqQdru1YnbO9WYjNmjpoNDItlRUyQt7WjfQx9qakiZbJ3ORxYR2HaJZkkOAe8pTEHIxN2uIe6JGkDVtjh0w8w1tmxWOicCZLvs0Q88J24gMZSz2o3TxdTDGVQ42a7f4RVaAdMDkilu7jP5Gx8haG+QMu1fCn6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/Og4bFj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745741719; c=relaxed/simple;
+	bh=aJnF4XHEh/0J5e+6Rlsg9uDZhB8qdoyrhtfofnQolgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JbOD6N3VuX+H+8FKHQpv81IR+6HeVRthSgyUw5+PEoweKmKhdqWfEzEJlHgySZybmX9Kkq2yyPMcRh7qFaUiSx4iNml7Tx+Z7skoKJE+pPtKE+rSzQJ5v4l/7ndpg4vUQeGDtgHFjD+SxjZTLjBoELVym9OzSmzTqTF4XkpxU5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hviUbNP1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/Og4bFj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 103DBC4CEE3;
-	Sun, 27 Apr 2025 08:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745741598;
-	bh=n1LP0hWDAYYPPGoxCmhHUpx37KloYPiSW/LsrkJ+pog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l/Og4bFjNyyLOyqiobd0OX+NlvlhiWMjlqCuR7bjQ3koqjqNsiHAbxhyy+n6EFWpx
-	 F0s02toBkpYSqLGr5zllGOwnm/YR+cBtijfhM7TVWEWRlqZZD7tdVQ2f1cr6H3j+vY
-	 /V4qD4omORMMjdDmZK0stm+5Mw4PJdjUhKlKsl6UBn8mYclrE4YOqm0/14yFLod31h
-	 ZCy3hMjY93C/oDHv0y2/amWuCxtPm2rAUMkBEU2/j5WJZJ36ZRGs00HmVVhJdNAAU3
-	 OAmjF5VOgM3oeArUzKcU+xI7P+9v0yugvVf2x9c6hhu7fKaqUTKAgYRmAQgjnW9EMm
-	 4KL9ASZVaAifQ==
-Date: Sun, 27 Apr 2025 11:13:12 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 07/24] dma-mapping: Implement link/unlink ranges API
-Message-ID: <20250427081312.GE5848@unreal>
-References: <cover.1745394536.git.leon@kernel.org>
- <2d6ca43ef8d26177d7674b9e3bdf0fe62b55a7ed.1745394536.git.leon@kernel.org>
- <aA1iRtCsPkuprI-X@bombadil.infradead.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hviUbNP1"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53QMQuLn028040;
+	Sun, 27 Apr 2025 08:14:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Lbqq24M/Ux40LvkCpduFkVyXMFtWO1BJAG+CznhRMrg=; b=hviUbNP1WkT4L6Cl
+	TeMFp/y8yFaBQ0iEtWxgbXvoD97b1BgD4eD7zPifVnSMuamnC0GMBanw3WBhjouQ
+	NwivsIqRujQdkSBBs/MiCIiGYK+2jElLdLAlF4qeOOWfpPKt52HhBuMy62/ajbgV
+	NjFyPAab4D7jSkeWlIlMhRf+rmkQbP7T4WgMBgI1eH3S8c6tCEbltTckKOI769yy
+	CDN68HaOdMouprdnOvLd7/xcUnj/xtxeQsqew2djQi2ac3od6p6dksOm7cKS6thZ
+	RQSTxsAoBZ1GTMjUw318BjFSSvS4DRGBd7tDxUt3oIhJR75fTD2EPXEFsH0Zsf7q
+	u/ZQ8A==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnmu73g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 27 Apr 2025 08:14:45 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53R8EinN022865
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 27 Apr 2025 08:14:44 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 27 Apr
+ 2025 01:14:40 -0700
+Message-ID: <df287609-a095-4234-b23b-d335b474a130@quicinc.com>
+Date: Sun, 27 Apr 2025 16:14:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA1iRtCsPkuprI-X@bombadil.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/8] Support Multi-frequency scale for UFS
+To: Luca Weiss <luca.weiss@fairphone.com>, <quic_cang@quicinc.com>,
+        <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
+        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
+        <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
+        <quic_nitirawa@quicinc.com>, <peter.wang@mediatek.com>,
+        <quic_rampraka@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        "Neil
+ Armstrong" <neil.armstrong@linaro.org>,
+        Matthias Brugger
+	<matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>,
+        "open list:ARM/Mediatek SoC
+ support:Keyword:mediatek" <linux-kernel@vger.kernel.org>,
+        "moderated
+ list:ARM/Mediatek SoC support:Keyword:mediatek"
+	<linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC
+ support:Keyword:mediatek" <linux-mediatek@lists.infradead.org>
+References: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
+ <D9FZ9U3AEXW4.1I12FX3YQ3JPW@fairphone.com>
+Content-Language: en-US
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <D9FZ9U3AEXW4.1I12FX3YQ3JPW@fairphone.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lFvji37wv4xtfm_F5Wf2kgIrqNMKD_iJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI3MDA2NSBTYWx0ZWRfXyeSi3DIebcyu wI9VJLPSF79+Ik+T4tOJP8qSGaR7jZQPnmTXuHodSQIAHCOKCFOuPCTzZJIc/K6KQAtXAHO6SW7 vifv4qg+NKzdXKOBqgNJ8V6hceifslXXFsXVHIaxgsPzREtMymnF3bJS9YNiexW6/XcujEoN0qn
+ 59ZU2uJRDj5PsjgH8NpoJWwQmXFqHFileyv78R9krpIj3omzDm+e12i1E3+/SnpiUUthH78UcNM QMnOGBEJ/CfGQpI8yJe0CZZKyitoKcSe+p5JdNG2Aq5EwvE2leeqi4iHe3ARGJBHW2nLdjAPh+W z06AAixhIm9bIJBNAFKvw8aJOVBuXb+mN5EWRx7kh7rDClVlbTZTSJSZ+sqQjys7W2IQkDBh0M9
+ 3ODkBuPorBc/1j1uQxqBuoq4AeaZvy4guhq0ILbM8jEJ6lEriubv937RmbEX6jwkeOx96bxk
+X-Proofpoint-GUID: lFvji37wv4xtfm_F5Wf2kgIrqNMKD_iJ
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=680de775 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=6H0WHjuAAAAA:8 a=cA56n_0BHuVisEfHO2oA:9
+ a=QEXdDO2ut3YA:10 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-27_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504270065
 
-On Sat, Apr 26, 2025 at 03:46:30PM -0700, Luis Chamberlain wrote:
-> On Wed, Apr 23, 2025 at 11:12:58AM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Introduce new DMA APIs to perform DMA linkage of buffers
-> > in layers higher than DMA.
-> > 
-> > In proposed API, the callers will perform the following steps.
-> > In map path:
-> > 	if (dma_can_use_iova(...))
-> > 	    dma_iova_alloc()
-> > 	    for (page in range)
-> > 	       dma_iova_link_next(...)
-> > 	    dma_iova_sync(...)
-> > 	else
-> > 	     /* Fallback to legacy map pages */
-> >              for (all pages)
-> > 	       dma_map_page(...)
-> > 
-> > In unmap path:
-> > 	if (dma_can_use_iova(...))
-> > 	     dma_iova_destroy()
-> > 	else
-> > 	     for (all pages)
-> > 		dma_unmap_page(...)
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Tested-by: Jens Axboe <axboe@kernel.dk>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  drivers/iommu/dma-iommu.c   | 261 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/dma-mapping.h |  32 +++++
-> >  2 files changed, 293 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > index d2c298083e0a..2e014db5a244 100644
-> > --- a/drivers/iommu/dma-iommu.c
-> > +++ b/drivers/iommu/dma-iommu.c
-> > @@ -1818,6 +1818,267 @@ void dma_iova_free(struct device *dev, struct dma_iova_state *state)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dma_iova_free);
-> >  
-> > +static int __dma_iova_link(struct device *dev, dma_addr_t addr,
-> > +		phys_addr_t phys, size_t size, enum dma_data_direction dir,
-> > +		unsigned long attrs)
-> > +{
-> > +	bool coherent = dev_is_dma_coherent(dev);
-> > +
-> > +	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
-> > +		arch_sync_dma_for_device(phys, size, dir);
-> 
-> So arch_sync_dma_for_device() is a no-op on some architectures, notably x86.
-> So since you're doing this work and given the above pattern is common on
-> the non iova case, we could save ourselves 2 branches checks on x86 on
-> __dma_iova_link() and also generalize savings for the non-iova case as
-> well. For the non-iova case we have two use cases, one with the attrs on
-> initial mapping, and one without on subsequent sync ops. For the iova
-> case the attr is always consistently used.
+Hi Luca,
 
-I want to believe that compiler will discards these "if (!coherent &&
-!(attrs & DMA_ATTR_SKIP_CPU_SYNC)))" branch if case is empty.
+Thanks for your report.
+Really,  6350 is a special platform that the UFS_PHY_AXI_CLK doesn't
+match to the UFS_PHY_UNIPRO_CORE_CLK. We already found out the root
+cause and discussing the fix. We will submit change to fix this corner
+case.
 
-> 
-> So we could just have something like this:
-> 
-> #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE
-> static inline void arch_sync_dma_device(struct device *dev,
->                                         phys_addr_t paddr, size_t size,
->                                         enum dma_data_direction dir)
-> {
->     if (!dev_is_dma_coherent(dev))
->         arch_sync_dma_for_device(paddr, size, dir);
-> }
-> 
-> static inline void arch_sync_dma_device_attrs(struct device *dev,
->                                               phys_addr_t paddr, size_t size,
->                                               enum dma_data_direction dir,
->                                               unsigned long attrs)
-> {
->     if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC))
->         arch_sync_dma_for_device(paddr, size, dir);
-> }
-> #else
-> static inline void arch_sync_dma_device(struct device *dev,
->                                         phys_addr_t paddr, size_t size,
->                                         enum dma_data_direction dir)
-> {
-> }
-> 
-> static inline void arch_sync_dma_device_attrs(struct device *dev,
->                                               phys_addr_t paddr, size_t size,
->                                               enum dma_data_direction dir,
->                                               unsigned long attrs)
-> {
-> }
-> #endif
+BRs
+Ziqi
 
-The problem is that dev_is_dma_coherent() and DMA_ATTR_SKIP_CPU_SYNC
-checks are scattered over all dma-iommu.c file with different
-combinations. While we can do new static functions for small number of
-use cases, it will be half-solution.
+On 4/26/2025 3:48 AM, Luca Weiss wrote:
+> Hi Ziqi,
+> 
+> On Thu Feb 13, 2025 at 9:00 AM CET, Ziqi Chen wrote:
+>> With OPP V2 enabled, devfreq can scale clocks amongst multiple frequency
+>> plans. However, the gear speed is only toggled between min and max during
+>> clock scaling. Enable multi-level gear scaling by mapping clock frequencies
+>> to gear speeds, so that when devfreq scales clock frequencies we can put
+>> the UFS link at the appropraite gear speeds accordingly.
+> 
+> I believe this series is causing issues on SM6350:
+> 
+> [    0.859449] ufshcd-qcom 1d84000.ufshc: ufs_qcom_freq_to_gear_speed: Unsupported clock freq : 200000000
+> [    0.886668] ufshcd-qcom 1d84000.ufshc: UNIPRO clk freq 200 MHz not supported
+> [    0.903791] devfreq 1d84000.ufshc: dvfs failed with (-22) error
+> 
+> That's with this patch, I actually haven't tried without on v6.15-rc3
+> https://lore.kernel.org/all/20250314-sm6350-ufs-things-v1-2-3600362cc52c@fairphone.com/
+> 
+> I believe the issue appears because core clk and unipro clk rates don't
+> match on this platform, so this 200 MHz for GCC_UFS_PHY_AXI_CLK is not a
+> valid unipro clock rate, but for GCC_UFS_PHY_UNIPRO_CORE_CLK it's
+> specified to 150 MHz in the opp table.
+> 
+> Regards
+> Luca
+> 
+>>
+>> This series has been tested on below platforms -
+>> sm8550 mtp + UFS3.1
+>> SM8650 MTP + UFS3.1
+>> SM8750 MTP + UFS4.0
 
-> 
-> > +/**
-> > + * dma_iova_link - Link a range of IOVA space
-> > + * @dev: DMA device
-> > + * @state: IOVA state
-> > + * @phys: physical address to link
-> > + * @offset: offset into the IOVA state to map into
-> > + * @size: size of the buffer
-> > + * @dir: DMA direction
-> > + * @attrs: attributes of mapping properties
-> > + *
-> > + * Link a range of IOVA space for the given IOVA state without IOTLB sync.
-> > + * This function is used to link multiple physical addresses in contiguous
-> > + * IOVA space without performing costly IOTLB sync.
-> > + *
-> > + * The caller is responsible to call to dma_iova_sync() to sync IOTLB at
-> > + * the end of linkage.
-> > + */
-> > +int dma_iova_link(struct device *dev, struct dma_iova_state *state,
-> > +		phys_addr_t phys, size_t offset, size_t size,
-> > +		enum dma_data_direction dir, unsigned long attrs)
-> > +{
-> > +	struct iommu_domain *domain = iommu_get_dma_domain(dev);
-> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
-> > +	struct iova_domain *iovad = &cookie->iovad;
-> > +	size_t iova_start_pad = iova_offset(iovad, phys);
-> > +
-> > +	if (WARN_ON_ONCE(iova_start_pad && offset > 0))
-> > +		return -EIO;
-> > +
-> > +	if (dev_use_swiotlb(dev, size, dir) && iova_offset(iovad, phys | size))
-> 
-> There is already a similar check for the non-iova case for this on
-> iommu_dma_map_page() and a nice comment about what why this checked,
-> this seems to be just screaming for a helper:
-> 
-> /*                                                                       
->  * Checks if a physical buffer has unaligned boundaries with respect to
->  * the IOMMU granule. Returns non-zero if either the start or end
->  * address is not aligned to the granule boundary.
-> */
-> static inline size_t iova_unaligned(struct iova_domain *iovad,
->                                     phys_addr_t phys,
-> 				    size_t size)
-> {                                                                                
-> 	return iova_offset(iovad, phys | size);
-> }  
-
-I added this function, thanks.
- 
-> Other than that, looks good.
-> 
-> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> 
->   Luis
