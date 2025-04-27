@@ -1,75 +1,80 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F56A2459EE
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08C6247289
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745739853; cv=none; b=IiaAePD1gKFRtPIBuMyunXSOei2pTO3SxUrAc4WozAZwJPVMOt4KbIV4jBIvpywQvsnGEfKBsA2jFkKshPaSGaPHjJgp2c6aWmmQZbapII7vdIoAOu56ejgzePVzwJ3iGVrgGtRncUevVlk+yIjQthzvo1JdPWUGN/fuP8X4bCs=
+	t=1745739854; cv=none; b=LuEg0RWiUUVxlhTvhYDsjfNd8zWMuNKXxucdz8PJM0bMjBO64Gvz2Lpdgfu67VSvBWmms/zpbKH703xGMGzRS3BkEfun0PGYyTGbZBeSQg3Hqln6vdutHJMkCcpHd1aJkR0iaWzBCg3ElTxPV/RLStkUH1uleMc2ETksMrHUrTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745739853; c=relaxed/simple;
-	bh=Fjn6a5R/gNqLw9tBNcBsmfV8WKgMwXQOeIVdmxwfqeg=;
+	s=arc-20240116; t=1745739854; c=relaxed/simple;
+	bh=5/ognVn2gV4roYlrwA3n7Saujcjw7zfVtgoIux2q/NA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DP6mQsCLG6IJI0kmYAHqxO3RkfikUYSZ4GYLbkaWMnvEe9puZccX+Zk3noCOrOaqNw14kvX8Vgm+xtSg+AtDHauX2ZB1SoqPhTTbwArqvKDSAjaj7RfpbkooCgGY+nhoQOt4sb44kS/L1BiRplOqcbfq7qFYVLtabQ+V9wT+lmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Y15Qem27; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=bzycs4c3tsrms8yRFeYPID9VdSr1gyXLEU8L3qVAL0WdW8wmuiQCD3dfoSIpPBeW5oYrel+3u7gDMBNaG3QxWL4xjHplH1HEcNZX3Sec+jXmBYBxkvoPLRbkQnO79Caj7uWN52UhJfASBJ9XMzwYg01yNFZS7lNpiQZfPZxtzI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Tk02Lb9q; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Y15Qem27"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so35314775e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:44:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Tk02Lb9q"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso34379065e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1745739849; x=1746344649; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1745739851; x=1746344651; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=noNFGyMHn+G12oU3fMyt85bZyrL7/rnSlw7jXK1JU9I=;
-        b=Y15Qem27ddhRP2qxUM7QnLXQijXb872fokV0xaYfYNRj9FQIwLo3jdv4VvwfQ5bxLP
-         WYFzdeMfa/MN+Ta4g6FcRNRjQ1NlaZMKUmmQ6urt69z/TPbyT0lmiL2h4/x+p+zudWTa
-         02SzXHZ2QVL00pDkjhWTRSItawnezXk41NKkU=
+        bh=FpQyYzT4X9HKnHUwrDxKtpV4uiqgR6fRfhBMNjhjrS0=;
+        b=Tk02Lb9qYJpXx4zzkppFNH7YLliR84aoVIlxUIKBJkisBMZCS2MNljI6pFctsTYNWQ
+         iYLu1UWJrf2ZB1Rjg3DDYsfKn7fq2lukPZuDDb9UkDmMKbueIGtyqqigkiXFE3B7O10e
+         QLxvPwm66I52gp5NFjNnHpY0nFzdhLLL1ptrs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745739849; x=1746344649;
+        d=1e100.net; s=20230601; t=1745739851; x=1746344651;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=noNFGyMHn+G12oU3fMyt85bZyrL7/rnSlw7jXK1JU9I=;
-        b=wJfoKYXAYsaWDZAXI2C4Pthm9f/3sJdK+dCHuGAzclwWIA5Ibne8wTtf0azR3SMKCh
-         4wrcbj6xJS9ufMN50CxOQa5TTA9MKq1u4JR22TvUvKCx4+ayeAB7BpWIjiTRUkcnWiu4
-         o6Hfci//bUXRMKrijGvz20hawFrN1g7NrjImEPVCnH5vLLzAFYI36bjAxOEEZE2poE/U
-         mHj6M/sMsO0tYAWgdltagGSEu/pV4cMrXEJD0+3NDK0bp7VY88gUy+7azleXT7NkEXVU
-         VG1BeGcJ3kzCmlVKjc+4+q2Xps+TwmimJInW1p1HRqenJEtwva64VAOD8ejxI0Ch5cqY
-         ywjA==
-X-Gm-Message-State: AOJu0Yx4wdT1nvv1qZDZ48pOTXhEQWR94qrmwBtoFXT1s0YsboqTnAW/
-	hBqLqaAOGTipI/bDo21NJ2h7uGCQ2y4MVnCcCPGns7bHxBh6vSZKDevdutTWQgm5MEjGAtINI0C
-	G
-X-Gm-Gg: ASbGnctZAO+fRUR90tKAaeOFM3vojx3bCGMse7tYgi9c1haKKKxAGbBYUf/5jL/EA1Q
-	mZIenE/fg+dACNS8/6gRzwKislgBS1E4JELpgyCEXq5FLRt3t2esXefKRZHE/mZEe3auZ4LxRL5
-	ycmZ0rEm4GC/A4+i6qvnQYWqv8787ZnIUD4caq8e7NHTC0vmcs8tae1SuTyT3dwLMptb21xG0XM
-	8zi4ckqSUnD9cXPOKlp9Lc2E01k/kwpG3exbKXCUMgomvG10wu9xuTIAQQDhYV/WwK6KBLwePaD
-	6S2W7B5cAOB2BGM8nxS8PG+bEFY/vMdiHL/you03E9ygvwL8VOEn2U5zOXlfsPDLRAn4Qm8tl9X
-	0B5CU3rUpzeBcTsHH
-X-Google-Smtp-Source: AGHT+IH4VnwQA0G2EjuoChB3GFw2EN00/9sNtBiR6r7qJ1qzu/LcPcmBTKtOPPgOwsnIXhXKwnF/jA==
-X-Received: by 2002:a05:600c:524a:b0:43c:fbe2:df3c with SMTP id 5b1f17b1804b1-440ab845dfemr33087695e9.26.1745739849570;
-        Sun, 27 Apr 2025 00:44:09 -0700 (PDT)
+        bh=FpQyYzT4X9HKnHUwrDxKtpV4uiqgR6fRfhBMNjhjrS0=;
+        b=HEYSaFuPuYQDwV95tB4N9mQbTIqnfV6x+UTNUpwq8s9R6vST1V48M4/5QNy5DBrisE
+         4FK/RrizyTzVUR9XgilhEsYQSqISEpARW091oyUupQ6lK5l5oS11p2UaPJWe5828YWQL
+         JtPa7qfka/TTTdmHi9imITBh0H6/CzmSBZveeffQwQeYBRT7rhld7s8FuL5NmB0znvf8
+         b5jcetTl/Ca44ISE3GJJrP/g6d7sNdUKiCcVm+3xqoEBgx3p2EJbX/5Yz2SoRMgHwUUb
+         49e5ZhWdswqfaLJWA9aGUG1wFyZf+0M/EYDDUG1C3nZqqHiz/DIFNjX4hFz0Nz7ySB0Q
+         VXyA==
+X-Gm-Message-State: AOJu0YwUl7CZayu9/dBX21S5a49a9kyopCodUAPEYPExzewB6/ickUEX
+	L8Rbg+cP5+Ctfe4W82rtn33L6ouWgHAGqXpiM2FLrmN29LwQguSW63lKHn4sEYnwhQr7E94WOc5
+	V
+X-Gm-Gg: ASbGnctp083R5IoixtWSn2OPIT6awpiQsRJDsNqeUK7cSWGtEtdz4ntXeJrAu/+DlpC
+	pEbkFApMTq34c9fs92Hut35H5yje09OvlR2vD3UWo+YYvZorsK/OsuUYlxrQZoM9w3qPrUmeVtJ
+	2bu2BkbXV/1kzolt6MxrkqCq2AAUZfCeyukvHmfIz88B7WAfwAr+J3HMbjwRzqwwziwaD4Lxawx
+	pL49eTNEuk8dS5g+M2h33Z4sM8T5h6awMBvCpT0v9FyxrJreaxtsVx4tTX1cPWjqv+t1p1B7c6u
+	QdVGoYHbRjOqAy7x7xv4GFkYcAbDTnHwRha7GZUclXQpi2UNBTCvOMHUvqRe1nJwD5t8Kw+21mq
+	vAMkIow==
+X-Google-Smtp-Source: AGHT+IHnx27fFK0oDHbVYzNEsRJgFRPiklQgqUZhae0lH9ygvIp4VX+fSkkY91P89JAIMZaLdkoxOQ==
+X-Received: by 2002:a05:600c:a15:b0:439:9e13:2dd7 with SMTP id 5b1f17b1804b1-440a64c159cmr74150165e9.2.1745739851229;
+        Sun, 27 Apr 2025 00:44:11 -0700 (PDT)
 Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.40.180])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm87682015e9.7.2025.04.27.00.44.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm87682015e9.7.2025.04.27.00.44.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 00:44:09 -0700 (PDT)
+        Sun, 27 Apr 2025 00:44:10 -0700 (PDT)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	linux-amarula@amarulasolutions.com,
 	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Amelie Delaunay <amelie.delaunay@foss.st.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
 	Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 1/8] ARM: dts: stm32h7-pinctrl: add _a suffix to u[s]art_pins phandles
-Date: Sun, 27 Apr 2025 09:43:20 +0200
-Message-ID: <20250427074404.3278732-2-dario.binacchi@amarulasolutions.com>
+Subject: [PATCH 2/8] dt-bindings: arm: stm32: add compatible for stm32h747i-disco board
+Date: Sun, 27 Apr 2025 09:43:21 +0200
+Message-ID: <20250427074404.3278732-3-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
 References: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
@@ -81,114 +86,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow expanding possible configurations for the same peripheral,
-consistent with the scheme adopted in Linux.
+The board includes an STM32H747XI SoC with the following resources:
+ - 2 Mbytes Flash
+ - 1 MByte SRAM
+ - LCD-TFT controller
+ - MIPI-DSI interface
+ - FD-CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
+ - camera interface
+
+Detailed information can be found at:
+https://www.st.com/en/evaluation-tools/stm32h747i-disco.html
 
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 ---
 
- arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi  | 8 ++++----
- arch/arm/boot/dts/st/stm32h743i-disco.dts  | 2 +-
- arch/arm/boot/dts/st/stm32h743i-eval.dts   | 2 +-
- arch/arm/boot/dts/st/stm32h750i-art-pi.dts | 6 +++---
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi
-index 7f1d234e1024..ad00c1080a96 100644
---- a/arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi
-@@ -198,7 +198,7 @@ pins2 {
- 		};
- 	};
- 
--	uart4_pins: uart4-0 {
-+	uart4_pins_a: uart4-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('A', 0, AF8)>; /* UART4_TX */
- 			bias-disable;
-@@ -211,7 +211,7 @@ pins2 {
- 		};
- 	};
- 
--	usart1_pins: usart1-0 {
-+	usart1_pins_a: usart1-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 14, AF4)>; /* USART1_TX */
- 			bias-disable;
-@@ -224,7 +224,7 @@ pins2 {
- 		};
- 	};
- 
--	usart2_pins: usart2-0 {
-+	usart2_pins_a: usart2-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('D', 5, AF7)>; /* USART2_TX */
- 			bias-disable;
-@@ -237,7 +237,7 @@ pins2 {
- 		};
- 	};
- 
--	usart3_pins: usart3-0 {
-+	usart3_pins_a: usart3-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 10, AF7)>, /* USART3_TX */
- 				 <STM32_PINMUX('D', 12, AF7)>; /* USART3_RTS_DE */
-diff --git a/arch/arm/boot/dts/st/stm32h743i-disco.dts b/arch/arm/boot/dts/st/stm32h743i-disco.dts
-index 2b452883a708..8451a54a9a08 100644
---- a/arch/arm/boot/dts/st/stm32h743i-disco.dts
-+++ b/arch/arm/boot/dts/st/stm32h743i-disco.dts
-@@ -105,7 +105,7 @@ &sdmmc1 {
- };
- 
- &usart2 {
--	pinctrl-0 = <&usart2_pins>;
-+	pinctrl-0 = <&usart2_pins_a>;
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/st/stm32h743i-eval.dts b/arch/arm/boot/dts/st/stm32h743i-eval.dts
-index 5c5d8059bdc7..4b0ced27b80e 100644
---- a/arch/arm/boot/dts/st/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/st/stm32h743i-eval.dts
-@@ -145,7 +145,7 @@ &sdmmc1 {
- };
- 
- &usart1 {
--	pinctrl-0 = <&usart1_pins>;
-+	pinctrl-0 = <&usart1_pins_a>;
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/st/stm32h750i-art-pi.dts b/arch/arm/boot/dts/st/stm32h750i-art-pi.dts
-index 44c307f8b09c..00d195d52a45 100644
---- a/arch/arm/boot/dts/st/stm32h750i-art-pi.dts
-+++ b/arch/arm/boot/dts/st/stm32h750i-art-pi.dts
-@@ -197,14 +197,14 @@ partition@0 {
- };
- 
- &usart2 {
--	pinctrl-0 = <&usart2_pins>;
-+	pinctrl-0 = <&usart2_pins_a>;
- 	pinctrl-names = "default";
- 	status = "disabled";
- };
- 
- &usart3 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&usart3_pins>;
-+	pinctrl-0 = <&usart3_pins_a>;
- 	dmas = <&dmamux1 45 0x400 0x05>,
- 	       <&dmamux1 46 0x400 0x05>;
- 	dma-names = "rx", "tx";
-@@ -221,7 +221,7 @@ bluetooth {
- };
- 
- &uart4 {
--	pinctrl-0 = <&uart4_pins>;
-+	pinctrl-0 = <&uart4_pins_a>;
- 	pinctrl-names = "default";
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 5fee2f38ff25..75ef877530f9 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -42,6 +42,10 @@ properties:
+               - st,stm32h743i-disco
+               - st,stm32h743i-eval
+           - const: st,stm32h743
++      - items:
++          - enum:
++              - st,stm32h747i-disco
++          - const: st,stm32h747
+       - items:
+           - enum:
+               - st,stm32h750i-art-pi
 -- 
 2.43.0
 
