@@ -1,35 +1,35 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266E87081F;
-	Sun, 27 Apr 2025 09:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C294D7081F;
+	Sun, 27 Apr 2025 09:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745747026; cv=none; b=mopmWB3iUAmI6nq5QPsbvrsZbiaz/Lkf3hVVjuOrEI4Adx1WjUrGr+OWZBOa37elrDnhPkdwqoRDwtL6nBjlHptAcKsDY1sqaNN1AIu2AK3mNYh003+uUtrsiT3qL14L/z3Vfk5Se/uQpGITgYFkYQpExmaDDmDb/Rg7bPvf05o=
+	t=1745747034; cv=none; b=FptFQMEmUxu5jAEk414rl/j+qCv79Yls0yslcIY3avdwUMjrxkx2X8FrQxPrEA6V98MB/Ag6UEmN6Ah1XoMy2SASyzH4/qdd8TguGq/qrLTcs/8c0Z2GvB+4kjHzqP4d6AKWN1I/EmnfHfquevJC/7B9jwsZ+U932mfPdXbPNHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745747026; c=relaxed/simple;
-	bh=zZzy9nO3I8ovKYQrg77YqGeqwsYUZdlhxgMwGWiqRSI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FXU0OZsUgefe7xUm+2UjWJNyy8CV1bxgp/lxRVz2rWLez1O6da23Sjn2XdmajrJ6/Utwo4wR5Hqmq5fkyJ8urtsAHGofPZgB/UqlJoaGOFHTH6tqUimgoQaIxqlslehTWTj4KtahK00FIyVqyHAjb72bB2EeyP/dkrnKC1SDQdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=kqs/rmpI; arc=none smtp.client-ip=54.243.244.52
+	s=arc-20240116; t=1745747034; c=relaxed/simple;
+	bh=+NkiG3jX3SEIpGCj43Ct8brYjSD4g7Ru1t1WzHIo0UU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=rmGr4Df6yPbQ1uUyv7m1PCSGpXEcAHRYchvTfApnRW79jmrffqWtOrT6iDLB6VnWgoIgFfNNLJ2PJBg7oGBJjH/+j7J461+vCq7xdXtxvOBgFt1zL33QrNXzjhPC1UBxene5mGMjRcBKGYayKkIvOoc8qrqdQxAnOlIqrOsQp7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=fo0JMPAv; arc=none smtp.client-ip=54.207.19.206
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="kqs/rmpI"
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="fo0JMPAv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
-	s=altu2504; t=1745746959;
-	bh=3dBcTOwhLLAnlZ3/5xvuemZ5v+zbRuhaM6dLdrtDIek=;
+	s=altu2504; t=1745746956;
+	bh=kPSSrSb3jP6BCqf5pwKmn+N4eRAqsp/w9IrrNpu2wWQ=;
 	h=From:To:Subject:Date:Message-Id;
-	b=kqs/rmpIxQfkymK10KdXVWwt6Furve0cGOMtkeXGukNm84ItUbX4Sa26I9BLi3nFS
-	 wMOQCncUD1Sjx9Bddohi5cGdG8Pp3ahCu0pYFGsHZ9KMqqUVD+JkBxwoG7BFD0/gcP
-	 NqqQK3pva3wp+4JXZnwsobtXd3o3/vBIibzrLVks=
-X-QQ-mid: esmtpgz13t1745746953tea6e95f9
-X-QQ-Originating-IP: 0CyvTdPCnkit835WDRKZUzn1no0tgQjOj1qT+l5BIpo=
+	b=fo0JMPAv3B5Tbg1cDp42RKbPvmkAVbw2ryrf+xBoeOfM7RiT8ES85czoaLa/a/1om
+	 ktKLzUcyBPqudHfqR0HJ6EAnwavQHu9uYPl4hiQWxwphaj3cM40W7ZTYgCIjqe5GMK
+	 8EXdoFfB/pSm5F0snMChdotT8CfpC7ZCKLiEKIhA=
+X-QQ-mid: esmtpgz13t1745746949tec797486
+X-QQ-Originating-IP: /T03SnbxL73Bju9CPvvuA08Yp8+fugFNhO3ZT4bd8gM=
 Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 27 Apr 2025 17:42:30 +0800 (CST)
+	id ; Sun, 27 Apr 2025 17:42:26 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 12905984598938793410
+X-BIZMAIL-ID: 7345639608399007083
 EX-QQ-RecipientCnt: 20
 From: Chaoyi Chen <kernel@airkyi.com>
 To: Heiko Stuebner <heiko@sntech.de>
@@ -52,30 +52,30 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: rockchip: Add rk3399-evb-ind board
-Date: Sun, 27 Apr 2025 17:42:11 +0800
-Message-Id: <20250427094211.246-3-kernel@airkyi.com>
+Subject: [PATCH 1/2] dt-bindings: arm: rockchip: Add rk3399 industry evaluation board
+Date: Sun, 27 Apr 2025 17:42:10 +0800
+Message-Id: <20250427094211.246-2-kernel@airkyi.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250427094211.246-1-kernel@airkyi.com>
 References: <20250427094211.246-1-kernel@airkyi.com>
 X-QQ-SENDSIZE: 520
 Feedback-ID: esmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: NV9lVvsB36OpbcFDcLZiJ/gJssUNoSAUtHkkMuI+IDj4b6CShKWaKlxh
-	phTa2NXkDT7JZe1YaMB+gYsSRI1moel0Gh3GLaf4+mJh/Uy0Rv4DayCCuXTi3sg49wQ3GUE
-	kG15uUGcQdKygevg4tPKp7HQisfSF3mO+JKrrW8EZIEtCSrD/KaJX6DE0p7Uw/0mQl94+wH
-	AiWU6zUU2E8MGpqh3utV7I8Tzxx4j6peoXL+aZls7fx4scub7xq4zAFKKXRHZLBCZGcWUpo
-	KP/h+RbGMLFLNtZdZ8zQcgKXltHKJdU4d2YXFioE7aY5DxArEwzAERZmp+uJthKu1UOAzc1
-	e2k2t7wxYs7SnGORvBkIMr3ncBPRkBfo7G6UfjpMIcUbfcaNA9OUh8ootlD6gQpQ0f9jkbF
-	r7tEYRgBIHDmNEapDcUE2nojwBPXed3b48muAlOoT2JDABpyO4b+ZCna6gc4BychTorh4RZ
-	eOiXqByIWZZl+AifO2Susv8uO1cemftT0ewLqyVH6XySilgxQ6rdKO32oSUVr2PcIpCdQ1R
-	Usw+UeZb2nYNtnYRTgu9T0WugaS8J4kZmr1tHLW9B5kNoW4PjdkuTPATefVALuWAJ990tjT
-	Gi5tHblCOQbLOOCJSvNzZcfyzv2updWsT2saPAjtD8nOhrzwecYnC787rAjLDYZ1lJBPHx1
-	q6wRi/sItYS4SI7/1C5AdcQ6mWwgR4czIPcrY/u3ZLM8MYQ2M0wzuLDXUtk6lYYcDMiL+Jk
-	dKIn5QjLUXZnnbyNF5tl4DuMnPj8KHNKSfBRA4MUeoaNzD5WE/B1wV87XiM9Qtdpjm/PcAS
-	WGCpDoC6dSx4Ujo5DbHubFjV39SnNWKhmZs1GczrjTdib24CEBtJm3P2FrT1sfKhWP3zZbr
-	OcvCYfhNI14lN5yRnqPK2peoMO3LL42d4izNsB6lZqTdU4uepocRniDB38vli99IppzftZZ
-	DEAyw3wKj1PGUPumautnwSwSoo8tLZSsF02gmK68xVhGttRqcE7oUYd2UP17D4nOBWYA=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-XMAILINFO: MgQY1K25Ph0m69AjCHDG8dL3hBqrmdXSfid7xJf5VUMV91uYYBeZ1EI9
+	UrqM9K0jxpexEz1Zc1hEobiDcaY4SPOQlv8uVcowEWgacqMU1+4ZmYRIlkDK6TnA7xc/RAc
+	IJQanCak27/v/1UGeju/EFCc9IfUZ1g1rUUo/7HSPu+qgntwZIz3Rm7CyvE291HFkdt7XQs
+	q1reLfQ8kWxKUTd3eG51jypywBf3FN97vwp6+nq0og1fQ8VgVgGk7Q7PpiJBZxmxeuuuHtx
+	vc4oMQ0PDX0FTsSr2J3XoPm75HGHMCLynDT3BXJ/t4AHY27wpkOxqxxurG9U1yoz2sZzVk2
+	5tR2Q7qffWU4z+7IlgjG0yd1Gr3u1rJG40AsAsHYFWUWkph7OS2WJH6zqmiAbuyVOaFGrg9
+	IOu+rIF8vHxo4fM1vZ2K6c0ItcWBGo71K3A00Uo0Je6FyayFMjMz/lTB7aBC7CxG12oS9Rj
+	sKbKO2FoRmBPrVo7+Yb3Pr4kMcr5hnIwa6k0iFA1llQupBmcs2igTn6qitvKniRO/HAsoK3
+	Z0PRz1vrniZy11AOFwjLwvlIK7PVXAOj3q3q0DgEgZ4BfUvK3yi2Met5+Aec/4Nv4ligp7o
+	f9tdy0+HWDU9yZr2dc7n2mft2o0mlTcdRUKTdaNZr5dVR9zPGrt8JqTioNwemZSlYH3OsRe
+	PsJ3PklKE+WuJvDevnrmuGwQlIZjM2QHP+RJOCS0NlqCvSAG4oeHEhB7KF2801biY/dDGKk
+	7D/N3Z4owRrPieTBdX9+DFOj2zyW/iix9NKdATTuuVr91jew56hIHSMSJanz5Y5IC5sn5/a
+	ksKOVige01jJGcfIWGqch8gvqSMyo3Obo0HrXviM7frKCpezlNoTnp+k8EW/fkiib2rmZAh
+	/yLIi/whi4D6u0N3mqP5jd2y5v8X59THrinRnb1XkzrUrvjUcoVzEYipL0781jgG9kfXIr0
+	ufvaUYK4qz7ymITFC7iNBSLQsYEHvcWI/dFoXSmGdR1e678v765nbMdHcnDuJYv3TQUc=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
 X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -85,267 +85,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-General feature for rk3399 industry evaluation board:
-- Rockchip RK3399
-- 4GB LPDDR4
-- emmc5.1
-- SDIO3.0 compatible TF card
-- 1x HDMI2.0a TX
-- 1x HDMI1.4b RX with TC358749XBG HDMI to MIPI CSI2 bridge chip
-- 1x type-c DisplayPort
-- 3x USB3.0 Host
-- 1x USB2.0 Host
-- 1x Ethernet / USB3.0 to Ethernet
-
-Tested with HDMI/GPU/USB2.0/USB3.0/Ethernet/TF card/emmc.
+Add devicetree binding for the rk3399 industry evaluation board.
 
 Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 ---
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3399-evb-ind.dts      | 222 ++++++++++++++++++
- 2 files changed, 223 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 3e8771ef69ba..8a3adb7482ca 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -40,6 +40,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-eaidk-610.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb-ind.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-ficus.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
-new file mode 100644
-index 000000000000..a995d4ff202d
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2025 Rockchip Electronics Co., Ltd.
-+ */
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 650fb833d96e..684d48ba20fc 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -1047,6 +1047,11 @@ properties:
+           - const: rockchip,rk3399-evb
+           - const: rockchip,rk3399
+ 
++      - description: Rockchip RK3399 Industry Evaluation board
++        items:
++          - const: rockchip,rk3399-evb-ind
++          - const: rockchip,rk3399
 +
-+/dts-v1/;
-+#include "rk3399-base.dtsi"
-+
-+/ {
-+	model = "Rockchip RK3399 EVB IND LPDDR4 Board";
-+	compatible = "rockchip,rk3399-evb-ind", "rockchip,rk3399";
-+
-+	aliases {
-+		ethernet0 = &gmac;
-+		mmc0 = &sdhci;
-+		mmc1 = &sdmmc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	clkin_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clkin_gmac";
-+		#clock-cells = <0>;
-+	};
-+
-+	vcc5v0_sys: regulator-vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+	};
-+
-+	vcc_phy: regulator-vcc-phy {
-+		compatible = "regulator-fixed";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-name = "vcc_phy";
-+	};
-+};
-+
-+&emmc_phy {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	assigned-clocks = <&cru SCLK_RMII_SRC>;
-+	assigned-clock-parents = <&clkin_gmac>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	clock_in_out = "input";
-+	phy-supply = <&vcc_phy>;
-+	phy-mode = "rgmii";
-+	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 150000>;
-+	tx_delay = <0x22>;
-+	rx_delay = <0x23>;
-+	status = "okay";
-+};
-+
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_i2c_xfer>, <&hdmi_cec>;
-+	status = "okay";
-+};
-+
-+&hdmi_in_vopl {
-+	status = "disabled";
-+};
-+
-+&hdmi_sound {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	clock-frequency = <400000>;
-+	i2c-scl-falling-time-ns = <4>;
-+	i2c-scl-rising-time-ns = <168>;
-+	status = "okay";
-+
-+	vdd_gpu: tcs4526@10 {
-+		compatible = "tcs,tcs4525";
-+		reg = <0x10>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vsel2_gpio>;
-+		fcs,suspend-voltage-selector = <1>;
-+		vin-supply = <&vcc5v0_sys>;
-+		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
-+		regulator-compatible = "fan53555-reg";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-initial-state = <3>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-min-microvolt = <712500>;
-+		regulator-name = "vdd_gpu";
-+		regulator-ramp-delay = <1000>;
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	max-frequency = <150000000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	bus-width = <8>;
-+	keep-power-in-suspend;
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+	no-sdio;
-+	no-sd;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&tcphy0 {
-+	status = "okay";
-+};
-+
-+&tcphy1 {
-+	status = "okay";
-+};
-+
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_host {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+&u2phy1 {
-+	status = "okay";
-+};
-+
-+&u2phy1_host {
-+	status = "okay";
-+};
-+
-+&u2phy1_otg {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&usbdrd_dwc3_0 {
-+	status = "okay";
-+};
-+
-+&usbdrd3_0 {
-+	status = "okay";
-+};
-+
-+&usbdrd3_1 {
-+	status = "okay";
-+};
-+
-+&usbdrd_dwc3_1 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pmic {
-+		vsel2_gpio: vsel2-gpio {
-+			rockchip,pins = <1 RK_PB6 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+};
-+
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
+       - description: Rockchip RK3399 Sapphire standalone
+         items:
+           - const: rockchip,rk3399-sapphire
 -- 
 2.49.0
 
