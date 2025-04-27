@@ -1,97 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6676C3FB1B;
-	Sun, 27 Apr 2025 12:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F9A7610C;
+	Sun, 27 Apr 2025 12:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745758148; cv=none; b=be3gwutKshorMT0bn2btp8WZ68+tvXA6FHApiMuIv8V+PKE0TPwtfBxK2lYPZLScZkG+iZwHnAUxrddTQ1FsqSL381LmwAmuRKouDxESfPi7jNC3NiY6Npu43YgM64vQN5GteSlPtKwibGHBv39aruiRWGKP6Fl8krvCU/7Jyfo=
+	t=1745758329; cv=none; b=Lot/MKUrM1vWjFA+xQ0VAHDJliA6UV4wRj2MSB7T9L2o+ANA3bP3lmvtmz845NGAUeqSgckEmMSpQKTilEFu0esjf7PPo9ql1j+3bfFobR7Z5QfKQ8g/zFuoiFjgDpF0mAddISAfWh48Iarfc9FUoaAbyrUqs0OsHpsz8C869yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745758148; c=relaxed/simple;
-	bh=JmcVMxmKTanoOPxTXt5eJutrIuKrOgq9JRia9SpFtgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mi5/tX7Mw+MW6ObOgZz0kz7gUz4ey7Icf/er7WfNYSVsmzOXAwC8gTCqCDhV3NqCi5oaeuF6YvDd03mRFicBsoa/z6uZeVhIx+qIJSQNq46YVK3Cou5vRkq9kH1wxtPjQgBueoc7aS5RtjDGVBuO0TrFTqeRCp20rMK4KARP5ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srmickLK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srmickLK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74AA3C4CEE3;
-	Sun, 27 Apr 2025 12:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745758147;
-	bh=JmcVMxmKTanoOPxTXt5eJutrIuKrOgq9JRia9SpFtgc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=srmickLKRaDYx/gLFp0zSSMadtaTf5utONalU1onTNUz53EAowYKK7I8p6I/iMItT
-	 1pwQKoV30rkE564+T8ZNmcVa7zXcxh+KD7a7/IErwZ5pGxjlpKzp0PTP4x1R3j5aK8
-	 JLv1+gtdYCae8GkMUY/RslxTSIWw4Ya8K4WoOZhTpp4tAskDyFHr89FdHel0CSp6Ry
-	 e+zYKL9xQb6/1cs5bWiS4s40N0jbZqi73bgBoRcuak3V0Wr449qeK9I0UEA3j2DzGt
-	 CWXakDUOTE11SoqjBLHKAeNu5Riu4ocUFXBEEx/vaKEPh/jl15HwpczbKxkcEn14LD
-	 kzxobXjnvrbWw==
-Date: Sun, 27 Apr 2025 13:49:00 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v7 09/11] iio: accel: adxl345: add inactivity feature
-Message-ID: <20250427134900.35d19116@jic23-huawei>
-In-Reply-To: <20250421220641.105567-10-l.rubusch@gmail.com>
-References: <20250421220641.105567-1-l.rubusch@gmail.com>
-	<20250421220641.105567-10-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745758329; c=relaxed/simple;
+	bh=6cEZKR3sZKuXHUIDeK4kcLFUsoi8b21G0ldm2TLtdWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BQN9PJvFSD134XlHfkvpq11vzdGAgtgYfjPuB1SKLY/Jo2QNphG5EEB91HXWwBMxlpIREhmC0mNftKV5uZk3EvNAFJhJFWmfm/ZDAB5ILMWE544N/+ZSKi3/TeHN+dh/JTDb/FCxd+ph/HfIeo7hTExsL0sXa7j1nb+XqVKkAg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1u91UK-0000ST-00; Sun, 27 Apr 2025 14:52:04 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 7CAA9C01A2; Sun, 27 Apr 2025 14:51:54 +0200 (CEST)
+Date: Sun, 27 Apr 2025 14:51:54 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	Oleg Nesterov <oleg@redhat.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] MIPS: Fix MAX_REG_OFFSET
+Message-ID: <aA4oag9MAXT3y0t8@alpha.franken.de>
+References: <20250427113423.67040-2-thorsten.blum@linux.dev>
+ <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com>
 
-On Mon, 21 Apr 2025 22:06:39 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
-
-> Add the inactivity feature of the sensor. When activity and inactivity
-> are enabled, a link bit will be set linking activity and inactivity
-> handling. Additionally, the auto-sleep mode will be enabled. Due to the
-> link bit the sensor is going to auto-sleep when inactivity was
-> detected.
+On Sun, Apr 27, 2025 at 08:32:05PM +0800, Huacai Chen wrote:
+> Hi, Thorsten,
 > 
-> Inactivity detection needs a threshold to be configured, and a time
-> after which it will go into inactivity state if measurements under
-> threshold.
-> 
-> When a ODR is configured this time for inactivity is adjusted with a
-> corresponding reasonable default value, in order to have higher
-> frequencies and lower inactivity times, and lower sample frequency but
-> give more time until inactivity. Both with reasonable upper and lower
-> boundaries, since many of the sensor's features (e.g. auto-sleep) will
-> need to operate beween 12.5 Hz and 400 Hz. This is a default setting
-> when actively changing sample frequency, explicitly setting the time
-> until inactivity will overwrite the default.
-> 
-> Similarly, setting the g-range will provide a default value for the
-> activity and inactivity thresholds. Both are implicit defaults, but
-> equally can be overwritten to be explicitly configured.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-One more thing I only noticed later...
+> On Sun, Apr 27, 2025 at 7:35 PM Thorsten Blum <thorsten.blum@linux.dev> wrote:
+> >
+> > Fix MAX_REG_OFFSET to point to the last register in 'pt_regs' and not to
+> > the marker itself, which could allow regs_get_register() to return an
+> > invalid offset.
+> >
+> > Fixes: 40e084a506eb ("MIPS: Add uprobes support.")
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> > Compile-tested only.
+> >
+> > Changes in v2:
+> > - Fix MAX_REG_OFFSET as suggested by Maciej (thanks!)
+> > - Link to v1: https://lore.kernel.org/lkml/20250411090032.7844-1-thorsten.blum@linux.dev/
+> >
+> > Changes in v3:
+> > - Keep the marker and avoid using #ifdef by adjusting MAX_REG_OFFSET as
+> >   suggested by Thomas and Maciej
+> > - Link to v2: https://lore.kernel.org/lkml/20250417174712.69292-2-thorsten.blum@linux.dev/
+> > ---
+> >  arch/mips/include/asm/ptrace.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
+> > index 85fa9962266a..ef72c46b5568 100644
+> > --- a/arch/mips/include/asm/ptrace.h
+> > +++ b/arch/mips/include/asm/ptrace.h
+> > @@ -65,7 +65,8 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
+> >
+> >  /* Query offset/name of register from its name/offset */
+> >  extern int regs_query_register_offset(const char *name);
+> > -#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last))
+> > +#define MAX_REG_OFFSET \
+> > +       (offsetof(struct pt_regs, __last) - sizeof(unsigned long))
+> There is no 80 columns limit now, so no new line needed here.
 
->  enum adxl345_odr {
-> @@ -232,6 +241,16 @@ static const struct iio_event_spec adxl345_freefall_event_spec = {
->  		BIT(IIO_EV_INFO_PERIOD),
->  };
->  
-> +/* inactivity */
-> +static const struct iio_event_spec adxl345_inactivity_event_spec = {
-> +		.type = IIO_EV_TYPE_THRESH,
+but not forbidden to care about it. I still prefer this limit.
 
-Similar to the activity detector. I'd expect inactivity to be magnitude
-based not signed value (which EV_TYPE_THRESH is).
+Thomas.
 
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_PERIOD),
-> +
-> +};
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
