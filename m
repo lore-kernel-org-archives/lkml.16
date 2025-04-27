@@ -1,151 +1,83 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBF4D530
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 01:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B86C5661;
+	Sun, 27 Apr 2025 01:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745716981; cv=none; b=T/JLGJQjA2NgbfDInl7lQp/YAuVSaye+t6rhRPO++yf4PBEFC/tyELIaSV7fkisCLnRJonfjpug04AjIBiuqqlp9w9vghZPV//6LxOHsPC0v+PHgUSLrFTt+Fmr3LlURhGLeMQ4dWj3gcqpBRGgDBr3mTFKvz3OYSxSyfifmsfI=
+	t=1745717838; cv=none; b=fJLUWz8YESQtjodFa1vds99e1Q3UjnHoarOeJdjOdJxQq9MHfZTtG4rF88MvI8AWzf7s3GJHrtv4AjS9SzmCSfAL/IMy4VFywxkGYa4RnO+B64g//ol7LTCcg38A4X9FBd9+JaWGCPJnX1d890h6jDBGiJzRxZk367opvlorTaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745716981; c=relaxed/simple;
-	bh=fEX+59ag3imFa8GqlDM/EEM3i6sAOoK81fQCOVxrbzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDB30Xvf/aCYKoKK1e1JwxQJuCTSjuYMLrImqaDntKDjotvlJZmjTWg4sgCtc5aRTR7Ef2wS4MM52KTYB7KkcqAhImf1uWjqHxGU7qsU7sXj70wf9SLQLXtk2n31GsUwa/7/1D3lWypM5oyDZ+xgIQz34Nz5wo0Cg2y6opPXBQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=A56f7W0f; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="A56f7W0f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=JO551g2WHEhEdipJcdDRnOYvb81qG97yGVQmxR7KK0s=; b=A56f7W0fS+LbYj1x
-	4iKlV5klDQlG+ITrCNdc49dBzfAosS4d+wZRg2EYEuRd/HkDd0q+TxKCnJgWTwXhK1l/TimJJVRZQ
-	zXWqduOQBXVTZlCnxp2WFbzziEiMkmkSFyf9lD1lUjO1NLl213cUT0nqVTFRvLLm9EXuqQ8bOnHRj
-	j3zqnMfAP32pmFIlayADGql7v/IyDS+ASYXb7vExRnZOIsjYeFxQdMD+3tXGMbuA9re8qjNS+tV7H
-	ectvzVMtFt0vc82MG7+bVO6jyFBDNFNYwmTB4rJZ+OwnO0JCvm96RNylHrc43UBMnlTOH3YMN3AHu
-	c3A3UmyQUU7uQJwnpg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u8qjK-00E5d8-1w;
-	Sun, 27 Apr 2025 01:22:50 +0000
-From: linux@treblig.org
-To: broonie@kernel.org,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] regmap: Remove unused regmap_field_bulk_(alloc,free)
-Date: Sun, 27 Apr 2025 02:22:50 +0100
-Message-ID: <20250427012250.244752-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745717838; c=relaxed/simple;
+	bh=FvBxvV778LoatI+v+YK3cVyGvx8TJr8MXzRsyaqkYbU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=T9WAA1gI3g8wwJt1wRuHgilG1XTtPEW/545A2yEuoHnCLP03+5UEp9vKxCXMFL2Tz/4qaVoS+5fSomRkzgYLiyE4W/QS+kFT7eFqwnPNzLTi5tmntHRqB7QDvZgH1hZsh1vMngnB2stAe9THk+vVKqXx40RlTX7zTNEzCoWm2wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZlTh80Dlsz4f3kvh;
+	Sun, 27 Apr 2025 09:36:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A05181A06D7;
+	Sun, 27 Apr 2025 09:37:05 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCH618+ig1obRS4Kg--.18096S3;
+	Sun, 27 Apr 2025 09:37:05 +0800 (CST)
+Subject: Re: [PATCH v2 4/5] md: fix is_mddev_idle()
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+ song@kernel.org, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+ nadav.amit@gmail.com, ubizjak@gmail.com, cl@linux.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
+ <20250418010941.667138-5-yukuai1@huaweicloud.com>
+ <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <f14eac30-ab65-85b2-3e65-de6d50ea15e2@huaweicloud.com>
+Date: Sun, 27 Apr 2025 09:37:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCH618+ig1obRS4Kg--.18096S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_GFv_Wryl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
+	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	OmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Hi,
 
-regmap_field_bulk_alloc() and regmap_field_bulk_free() were added in
-2020 by
-commit ea470b82f205 ("regmap: add support to regmap_field_bulk_alloc/free
-apis")
+在 2025/04/22 14:35, Xiao Ni 写道:
+>> +       unsigned long                   last_events;    /* IO event timestamp */
+> Can we use another name? Because mddev has events counter. This name
+> can easily be confused with that counter.
 
-but have remained unused.
+Sorry for the late reply.
 
-Remove them.
+Sure, how about, normal_IO_events?
 
-The devm_ versions are still used and are left alone.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/base/regmap/regmap.c | 46 ------------------------------------
- include/linux/regmap.h       |  5 ----
- 2 files changed, 51 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index f2843f814675..b805753fc556 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1248,40 +1248,6 @@ struct regmap_field *devm_regmap_field_alloc(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_regmap_field_alloc);
- 
--
--/**
-- * regmap_field_bulk_alloc() - Allocate and initialise a bulk register field.
-- *
-- * @regmap: regmap bank in which this register field is located.
-- * @rm_field: regmap register fields within the bank.
-- * @reg_field: Register fields within the bank.
-- * @num_fields: Number of register fields.
-- *
-- * The return value will be an -ENOMEM on error or zero for success.
-- * Newly allocated regmap_fields should be freed by calling
-- * regmap_field_bulk_free()
-- */
--int regmap_field_bulk_alloc(struct regmap *regmap,
--			    struct regmap_field **rm_field,
--			    const struct reg_field *reg_field,
--			    int num_fields)
--{
--	struct regmap_field *rf;
--	int i;
--
--	rf = kcalloc(num_fields, sizeof(*rf), GFP_KERNEL);
--	if (!rf)
--		return -ENOMEM;
--
--	for (i = 0; i < num_fields; i++) {
--		regmap_field_init(&rf[i], regmap, reg_field[i]);
--		rm_field[i] = &rf[i];
--	}
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(regmap_field_bulk_alloc);
--
- /**
-  * devm_regmap_field_bulk_alloc() - Allocate and initialise a bulk register
-  * fields.
-@@ -1318,18 +1284,6 @@ int devm_regmap_field_bulk_alloc(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_regmap_field_bulk_alloc);
- 
--/**
-- * regmap_field_bulk_free() - Free register field allocated using
-- *                       regmap_field_bulk_alloc.
-- *
-- * @field: regmap fields which should be freed.
-- */
--void regmap_field_bulk_free(struct regmap_field *field)
--{
--	kfree(field);
--}
--EXPORT_SYMBOL_GPL(regmap_field_bulk_free);
--
- /**
-  * devm_regmap_field_bulk_free() - Free a bulk register field allocated using
-  *                            devm_regmap_field_bulk_alloc.
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index d17c5ea3d55d..d4e9b39f1946 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -1444,11 +1444,6 @@ struct regmap_field *devm_regmap_field_alloc(struct device *dev,
- 		struct regmap *regmap, struct reg_field reg_field);
- void devm_regmap_field_free(struct device *dev,	struct regmap_field *field);
- 
--int regmap_field_bulk_alloc(struct regmap *regmap,
--			     struct regmap_field **rm_field,
--			     const struct reg_field *reg_field,
--			     int num_fields);
--void regmap_field_bulk_free(struct regmap_field *field);
- int devm_regmap_field_bulk_alloc(struct device *dev, struct regmap *regmap,
- 				 struct regmap_field **field,
- 				 const struct reg_field *reg_field,
--- 
-2.49.0
+Thanks,
+Kuai
 
