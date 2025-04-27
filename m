@@ -1,91 +1,60 @@
-Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6A0190057
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 05:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A731518DB0A;
+	Sun, 27 Apr 2025 05:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745731908; cv=none; b=tVfe+fLajDgRVLVWiVTY976aldOp082+zHyAXfGxRp88ZJ4XtMxEkfUUuaosLABQJsSGjnOZJUjUKYD7a0pfGyq8Eej3RcHJwkVGq1rTXmTADoOcu3ePj9nBBG2R6whkehoMxlyoGHV+mCL/prjHZulxEg/cq6j2A5aBiZ/E4R0=
+	t=1745732393; cv=none; b=KXVXdyk38K1jKMziQu8vgWa98alfkXo2UxZVDxXKYNrVsbydKJRARrpmJuONxlDjoLEbB7r7384B0e725z/Z8WtdTEPmnfDQwzfMV5sYwh6AItifKSckVFgPhiC4z7/e7jDo1i0AAbKU6jrYg1Xh/v7fYpxPy+/xUI/SRZROyUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745731908; c=relaxed/simple;
-	bh=ChvuVFcTle+bdz4TLuJPKItVHIzpD/9WsikcUtPWufU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=uL7nYl/YfOHuWD92KaFtsSyftS23FdH0wd0HYqz0RAeUVophHKxs4iFfFNgmKbGL3Qx45ys1hehLrV19kkq9zrvI5on9u/HWxN51T9UbWF454Kh22psD6jU5wjupmSl7pqoIypGjaB0orx0YtMlAmj7Kqh4TZgvbAIbwQ1erBJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSQX5FjR; arc=none smtp.client-ip=209.85.219.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSQX5FjR"
-Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e72cc45d99cso3293537276.3
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 22:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745731906; x=1746336706; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FpfcE1hb7qHzAzOOl9Fxh623mfRW3LeNV7JV5Ct/whw=;
-        b=kSQX5FjROtXdPFgXoevFt0vD/BqGdSI3QN82VNCNsraFd5q0uUSJxXr8iMC/MWvLkA
-         06IebDLy6mCIXicMNcBpM5r1BWpFKftGMjkLXsbfQWeCPbTqrEmeE7AAHKxobO5epRCP
-         TaFAd/E+PWlwN/AEnFa1HUAoEiDWz2oXejrjQsQnRvQuYfaK7C3F5PuWFKrQQlx+xJF1
-         KMlIQmUEOD2Kqyw8lfn9P0o5tg/kH30bJ+dj5qE4ajrF6G89o13aZxoKJnkhOsLR8ULl
-         9pcdwlw2Fbu+SIDRA63KOoB8NDoq2GZeOysuC2dDRvajLn3EfX54bqDH8/kDXvL2tOor
-         ROdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745731906; x=1746336706;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FpfcE1hb7qHzAzOOl9Fxh623mfRW3LeNV7JV5Ct/whw=;
-        b=GRcdV2W/BnjP7dAsBpwL/0ygs13sK0cQSQ8E17BJbUrM9S1lT+PwLzDZwheImshjYb
-         UO0GCX4OutJwt5p54xiO1dt254U6YU3xeYoVmLu2XUgG6qPA/U6DGUoAiCWqEJ27AAKX
-         a7AfAKSI4MSphohtSdBdmzAiqmV8Psp9ZHui1Q94HIo+XAVaSbzJDvE+Vv7Z5yJPRC8u
-         PF2B4LtvItCh813dwvOCCBE1CbQ5LhEIs2hhNiE2NY+NQd+3uxzdGw2focNZcFzlhD+e
-         MtknAUVEwD7bBeV5Njnm0ly+AR789Q+UWF8TV04Hsr/b1v3oMX/nuXdsT8K5PqONNYo6
-         dvCQ==
-X-Gm-Message-State: AOJu0YxEp9O9wSLlQssE0PcaG40sL05tM0/h+sX4FBHV3Gez89EVQN1V
-	TvwZbdmHY1Z/cCA4xprM7IhNEcXRCna2J2WuKrzxyok9/VQua4DW4qNju99580JTPmdAt2OQXVa
-	KxQUImL21gIpE1goGbIlKPRLVAV1bEuAsDv8qVw==
-X-Gm-Gg: ASbGnctMKV5BOAcHhvsdaH3f4vtm0HKFKi22RLQ3dWtfq/rB+rXOOddEXrkOKGKQ7++
-	i0GTi85JAJKH6NtIJiPninm1xEp+oPl4vIxjFoLR4Th7Kj8QxmMh+R73ERGHIAK/zE0IoBiPjfD
-	t3JZaQeo+6LXtLRP8bOtH/2l+fL4TQVfhHbIkXyqVyfV/Op9YiPYpDPn8E
-X-Google-Smtp-Source: AGHT+IEZMx/q2OGqlYZXnqmKxPp9QRcahWMIShHxWqY0lwCz5cojld6KsRvkYWKIaWifCxaU288Z06IIGptnxWP4Ojc=
-X-Received: by 2002:a05:6902:114a:b0:e73:3279:9fd0 with SMTP id
- 3f1490d57ef6-e733279baa6mr2201493276.9.1745731906148; Sat, 26 Apr 2025
- 22:31:46 -0700 (PDT)
+	s=arc-20240116; t=1745732393; c=relaxed/simple;
+	bh=H21k1pBrbn6I0vPZPACkqm5gr2fShDbnXJv+KMcufWA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mk61TgAdghedNy5arahXts5IDKfEGfwviLpr84KxSHuFHWYHANQdz9xt+xABtdqIO3y2KhaEuUFYTNce0fymCxIrbrBzt9ip+CFIMV1eyo93KTWvT8pnmVrDKQDda4GFHPhCT8oiwTeUw90dNSIQ2sVSJ7e7OuJlrBT/yF2/oK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD91DC4CEE3;
+	Sun, 27 Apr 2025 05:39:51 +0000 (UTC)
+Received: from wens.tw (localhost [127.0.0.1])
+	by wens.tw (Postfix) with ESMTP id 3D4EB5FA0F;
+	Sun, 27 Apr 2025 13:39:49 +0800 (CST)
+From: Chen-Yu Tsai <wens@csie.org>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: samuel@sholland.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250413135848.67283-1-jernej.skrabec@gmail.com>
+References: <20250413135848.67283-1-jernej.skrabec@gmail.com>
+Subject: Re: [PATCH] Revert "arm64: dts: allwinner: h6: Use RSB for AXP805
+ PMIC connection"
+Message-Id: <174573238919.922936.17995587846709082958.b4-ty@csie.org>
+Date: Sun, 27 Apr 2025 13:39:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Amit <amitchoudhary0523@gmail.com>
-Date: Sun, 27 Apr 2025 11:01:35 +0530
-X-Gm-Features: ATxdqUE8TEbahtB9kU00mMgQp1xrKo4MjxoutVqsl7dCy1I4LqDEMI10dtyoAvg
-Message-ID: <CAFf+5zi4JSZq=Y2FkNJyPUTFuvwa5UJmn4zd6ve=VO8aSK9FOg@mail.gmail.com>
-Subject: Some useful bash aliases (file .bash_aliases)
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-===========
-.bash_aliases
-===========
+On Sun, 13 Apr 2025 15:58:48 +0200, Jernej Skrabec wrote:
+> This reverts commit 531fdbeedeb89bd32018a35c6e137765c9cc9e97.
+> 
+> Hardware that uses I2C wasn't designed with high speeds in mind, so
+> communication with PMIC via RSB can intermittently fail. Go back to I2C
+> as higher speed and efficiency isn't worth the trouble.
+> 
+> 
+> [...]
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" ||
-eval "$(dircolors -b)"
-    alias l='ls --color=auto'
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-fi
+Applied to fixes-for-6.15 in git@github.com:linux-sunxi/linux-sunxi.git, thanks!
 
-alias ll='ls -l'
-alias la='ls -A'
-alias lltr='ll -tr'
-alias l1='ls -1'
+[1/1] Revert "arm64: dts: allwinner: h6: Use RSB for AXP805 PMIC connection"
+      commit: 573f99c7585f597630f14596550c79e73ffaeef4
 
-alias grepl='grep -n'
+Best regards,
+-- 
+Chen-Yu Tsai <wens@csie.org>
 
-alias cp='cp -i'
-alias mv='mv -i'
-alias rm='rm -i'
-alias vi='vim'
-alias vimdiff='vimdiff +0'
-alias sudo='sudo '
