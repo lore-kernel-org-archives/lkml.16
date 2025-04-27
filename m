@@ -1,121 +1,352 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BF9226CE5;
-	Sun, 27 Apr 2025 05:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745732606; cv=none; b=octWBoWVLtK/4MEiVDwIiI9uj/XeiGSqMYNvtNsor8ZZyYN8Qx4NJo0gnRnmHqqEU1ZMpikFADsOaG5UecvjCkhb/eLkYZrH4mCqzjPpBGrsb4x92YB3Z2OqnXp9CDkaTJAJ9rnIeVzRpw+hN7ytBQqryhX7gWn6X55n4+X/eNc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745732606; c=relaxed/simple;
-	bh=fGptivm7HpFQnBALM9ABS0OE4T0+36zBT/L71NS477Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tcrdFnFpObbiUNO1zGvJZBZvJXsqS8IPASld1l2/DZADhUApQ2Ona3Pvo8XjWmxJ/uOp1eWaxntUc3AyujnV9yWHQiDt5nkgaaXoczGEVDJ8kQNeTj1wUadParQeJHGR7pvq/O3Wiq4/VNS2Eh98F72+PnnkDcF7QEGG6Lcsr1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d8e9f26b96so31895895ab.1;
-        Sat, 26 Apr 2025 22:43:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745732601; x=1746337401;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oy4M4hL9SuSSgN6ArJgNtJBu7fkhmoEiZXyOUTNGzv8=;
-        b=tt40fIlinBzUgnxDBQUUi9Jqz3Z6ew/XHzCisYcEq9ETTIF4lQ3CKrsMBWJp5lbFob
-         2EnCRGjy+J3TXojBrwMZAywnvbfutGUua91y0fc18XHicVFjxEUXQ+JTXZeLEKlFGzM+
-         VfntOve0i+IQbyZbODrOvuLSgatUWdC2PTrNTXP7DVrAiHyiiT+9eknIiUV2fE0gRg6V
-         1RmjtvSmSgwYH9Cg5ww55ATkh2g4akyfVbmxBA2HR6cgaId5U8kUUWUc+txV9w2qKxyx
-         N8d+NLsC2sk/WQg829bsa6gp39PBPUGTxiWyUDN6ZEPxhvJbzIqYCQ6spC0e+OmTeGSi
-         QffA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaA+js85aEVLs48d7uIIeUHCY0c/ROd/q7OAkccrJBADLzdOAc8AUbTT4BuLHWraJ5rOocaglz@vger.kernel.org, AJvYcCWp7lfGyaXacgW4tiGkuYdZdSN66zheghCmklOGKhA1tJCyYM+LjWBcHDWVrT+L1buz2bOrX1sipYuN@vger.kernel.org, AJvYcCXuI46egPlWg+N2uU8E+BjWjj6JMy4A2E9n9Iqtnr9yHlYt95mfl4d50BnJWyfwhEU3pqYYpYUoEZyno+4D@vger.kernel.org
-X-Gm-Message-State: AOJu0YzofOwxO+M9JVVSohy0RwmDngplMVepYii42kSytYh8vo+3QJCn
-	VnvMx59UwqME2UfnpFC73VPyeqkSnlnyMbyukQ/oP/qCX5QUwI5qixxPpLurNe0=
-X-Gm-Gg: ASbGnctgGXH2FzbkvgdeDE0aKEFoLZp+XG6XSoRh4fOL59YTXDe4bjvY3KIG3JdaBX+
-	AtVqdU8ZC79XqIt7k953PUIftjTBcgzU3BAdwyqxaLk+65KU3/6ZJNvK04+E36vkpsHpCDSQVzr
-	xy2pLl6fO3O/w98YfWEIu5Huckko+SnhhGSl3Z7QN5WDpZkWwU61LdLNDPGjFelU/bQOXdfDUrN
-	SdmiciYqeT9ti0iR+G4ZTYbF2gCd8Phkvss03hXi9LopsCo0N5NnWIhLipk7ZNaHptEa630/l+U
-	fVXHP8fCIuj9Thuo+JQb6I6jtV+mBTX+o+IqkHEFFSudWF+ZtILzkWGU6SRW1Cz5gwo3KQoQ3CQ
-	Pz70feL6K
-X-Google-Smtp-Source: AGHT+IEOemKhKGhg4a4tg8ITb1dquc69hh1KYuf5vsdw87ScX1yRti50XS5o1E8t+CiITwRmsLaS+w==
-X-Received: by 2002:a05:6e02:318a:b0:3d6:d147:81c9 with SMTP id e9e14a558f8ab-3d93b46e94fmr97825505ab.12.1745732601683;
-        Sat, 26 Apr 2025 22:43:21 -0700 (PDT)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com. [209.85.166.174])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f824a42153sm1610801173.56.2025.04.26.22.43.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Apr 2025 22:43:21 -0700 (PDT)
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d8e9f26b96so31895555ab.1;
-        Sat, 26 Apr 2025 22:43:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDw9ZPPBno6JfuX6flLfwbObWdv7VTwvh+ObJc75bsUegOQNgGp1tnhC8iBdp32bCR5mg+0qT8irkH@vger.kernel.org, AJvYcCWV28s41ojcs/HxNWTXGfbBGGsq3n76H7eYSyHwpB10yCpMmDfRA8/8OFwsxGS9Oto7qwGUJf/+MbpeQgTB@vger.kernel.org, AJvYcCXGmNaHZpDaD5EuR6Qk3tY0ukg23/5rVL47P/OrCMLho8ePdas2F+P7QpQ8WcYJk2EQs0IAEPmH@vger.kernel.org
-X-Received: by 2002:a92:ca48:0:b0:3d8:1d34:4edf with SMTP id
- e9e14a558f8ab-3d93b5cd78fmr81686365ab.15.1745732601011; Sat, 26 Apr 2025
- 22:43:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8461F22A4EA
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 05:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745732954; cv=fail; b=Q6hCkdLfrSh2TWQO6HGyDRershBppTZnpylCzGzPBme9kIQrU7TFNL4gxWxBr03jguNEQD7yAdgrrmroqwWlZt6/XSiIZ8eIb1rWTbCHVu5H5/hY7XBxs2SysVMfA16EJHsPxhbRWERgEUd3n59UbPCeMZqf4Zj3JWqp1IXW3u4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745732954; c=relaxed/simple;
+	bh=XlYL0diz185mNsrQwSgTqLgl09slqsDr/pBROOLhDhw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RS2xyB/n7mKjE7Lizy4cF0rXAoAtA8eBxWqkLpyCK6h+k2lTCgTx8eOV2CNiLoj+WTHr/B+umQesCnob10RlyRpCisPpXx7h51VI1GMOIL6Xqiadt4T9bs1vy18lbZ36zYgzNziOZxoGzaaUQvN9w3+M+l/8kXhhaBQHFJKY7eQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gdawwN6H; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gdawwN6H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745732952; x=1777268952;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=XlYL0diz185mNsrQwSgTqLgl09slqsDr/pBROOLhDhw=;
+  b=gdawwN6HjVJOXYxKmwz6sD35YANQtLMfmQb+b11ziN2kZU9Woh8a5cAa
+   D66WEUrsSrxmm0ylEM8od9I6DlmKp/ifr4rSVnauE8GAZybl4/DkrQLCQ
+   EO+QGEfEkcaXgNl0ecN6Vvf0RRqeR+KCTIH41ib30ecOWfTba/1uGWcWo
+   Y1/A1gkrwJSU9fyHMEG6NXpZZw6UA3O0tgoRKAMsvvFKOoETg19s2VJJQ
+   xMJb7wcIf12bMaLnxSr3phz9bFtldEYfEWeGO8MThs+w73b88HuTHM+2d
+   pV2efYTw0bogUSoswDlxXSg+l/l0aIfSzOX8bK7KcGm7/AVY2LYgF7Qt3
+   A==;
+X-CSE-ConnectionGUID: waZYVx6CT1mxS+2qfkuVPg==
+X-CSE-MsgGUID: niEk0QVqQ1GSzxxqn5iUSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="49994216"
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="49994216"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 22:49:11 -0700
+X-CSE-ConnectionGUID: lF9M23ouSDaKuuhrNAnzxA==
+X-CSE-MsgGUID: PVksJImPS/+0e+hRmXg7Zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="156465158"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 22:49:10 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sat, 26 Apr 2025 22:49:09 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Sat, 26 Apr 2025 22:49:09 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Sat, 26 Apr 2025 22:49:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wZ0YmgXoFcJrcAqpEDjVb4vZ5O3T9Thkz1lohM10jygb/AzxgXzD0nXsolnemQYZrpIqWVKMTpV+lTCvDl4qsFkHlarJnCe8VbAhKemJoCF8IemNOTJTKoRnnN99iLd2xW1km4nqPStf18XT05l5miGSh7dXZJQs+9DxKhhHEeVDjRmyau6UXe9uh99UuhJispyAGWtPdjAhqbkzk9WrZvzqmntwkay4+8mkAPIzrqC0Jp/iY2BGOSUa1dIfklGwRKYdnTVsmmPDY0pCiudi7W4mUXi+yFpVybpE3iAz4cttUp/RZu/d/1r/uD1FgHIhSwWxY9OUgY6idxuwEkQ7kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=52WEVZa9eGrJZbwhU4dsNBEED/eAxbN2TTbS3Fx0CQg=;
+ b=k2SLvSja5q/TCLrS8N+H0lSV9MOAwz1goi7qAC0mQWXQstUEm4U00ojwR8QRA7brY8dQMiCP79zOVRbQ8H7zhFH8JO944bbU/+YYUaeAhMEmdpJsE/YC6iS5mLXmRDhU02VMTU1GWYb9qHrpm6AnexLd9pxHZKzpXJs1R0SbNzy2VLUNDcK7MlAfNRoINjsC3nmnKNYHZmdr1zxktJNPbcunjBh9KYanrHgPMtRd9emGMECGB/S1Toq+aJMJzfaYbqRYlr+9gtyXf2ydjHNRkFV7xoEvTNXqaa03U5WamuRJJgJl4hSV0YhNtvUkf+z3sTlEZiWtrp9Hijpv8x7TmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by SJ2PR11MB8297.namprd11.prod.outlook.com (2603:10b6:a03:539::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Sun, 27 Apr
+ 2025 05:48:46 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8678.028; Sun, 27 Apr 2025
+ 05:48:46 +0000
+Date: Sun, 27 Apr 2025 13:48:31 +0800
+From: Oliver Sang <oliver.sang@intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+CC: <oe-lkp@lists.linux.dev>, kernel test robot <lkp@intel.com>,
+	<linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, "Linus
+ Torvalds" <torvalds@linux-foundation.org>, John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, <oliver.sang@intel.com>
+Subject: Re: [linus:master] [x86/cpu]  f388f60ca9:
+ BUG:soft_lockup-CPU##stuck_for#s![swapper:#]
+Message-ID: <aA3FL6e1HVAw1J+w@xsang-OptiPlex-9020>
+References: <202504211553.3ba9400-lkp@intel.com>
+ <59198081-15e2-4b02-934f-c34dd1a0ac93@app.fastmail.com>
+ <aAmeJmL0hUx2kcXC@xsang-OptiPlex-9020>
+ <f1ccb8b4-bbe2-42bc-bb86-c2bf3f9c557d@app.fastmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <f1ccb8b4-bbe2-42bc-bb86-c2bf3f9c557d@app.fastmail.com>
+X-ClientProxiedBy: KU2P306CA0067.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:39::11) To SJ2PR11MB8587.namprd11.prod.outlook.com
+ (2603:10b6:a03:568::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org> <20250424-01-sun55i-emac0-v2-2-833f04d23e1d@gentoo.org>
-In-Reply-To: <20250424-01-sun55i-emac0-v2-2-833f04d23e1d@gentoo.org>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Sun, 27 Apr 2025 13:43:06 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64vy9Zx-mJgT7dLMMcx4nbAeQ3n8pbvwT6QkuMTL6kQTg@mail.gmail.com>
-X-Gm-Features: ATxdqUH2fWJgqqz2HBql7fBmhdeRPMb6pK4jyUd7a8JS30hjhTPhRmRmPYt9c6Q
-Message-ID: <CAGb2v64vy9Zx-mJgT7dLMMcx4nbAeQ3n8pbvwT6QkuMTL6kQTg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: arm: sunxi: Add A523 EMAC0 compatible
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Andre Przywara <andre.przywara@arm.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SJ2PR11MB8297:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ef352ae-2d0b-4c16-f0c2-08dd854f2a0b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?bxIwy/Ry6/fJpold0ymnRVMwz1CWk7aSg0daQOCJ12DmMmY8EANKSlr/qcx8?=
+ =?us-ascii?Q?zgQXvhkK4CNo8B760fRQxxCL5ZQW1Gl14K4fuGvxsjlxTld6qxFXleI0zAp5?=
+ =?us-ascii?Q?LgCEOBg1RyYow/B6ucBNBjJAwYQ6zAN0arHLwvVvMMRiy3F/m1AYsnHqgLdC?=
+ =?us-ascii?Q?HlKo3FsJDpZv8FjIEexSZQtlDwNiDh9SycFf2Li19E4UxmAj/Pp5gmamCk8g?=
+ =?us-ascii?Q?B5ZAr7Yh8b9oZcfT4nWsiCWLJ+qX3eaT2ou06DiKl1QcqHmkouW+MMCzjD6k?=
+ =?us-ascii?Q?7im31ucDSYs71VFeCC4CqjHvyuqJMcN9evbBAGhXJtHdv6JtMgaPZxfXbaZi?=
+ =?us-ascii?Q?TwSxn4hOIRY2Qwxl/lbJSk5zqCpgvhTWUwGtLdR94qL3q9JDSeMIbcdW/xUK?=
+ =?us-ascii?Q?8TB/PvIJFxsqpJX1weATzLrdQXL7Tc4bvSjtN7xD5/BVXeBH373PEX9MjesT?=
+ =?us-ascii?Q?Uxa0DlFXiaMITyCNRkun9jh8GKKW0F6cSlMYiAKDR0zEnGYmpn0BK7iwdT/8?=
+ =?us-ascii?Q?1CeQ9nzV6waipFOqPUhoYIF8mTf4N2ylwLnqUvN5f8e8zCJ5ZssxTtvijfP/?=
+ =?us-ascii?Q?jiMA1KxRP35FPohj83O5Cvkmm3W0kyFttce/INCXqRHw2ZAsb7t7tIjwTRif?=
+ =?us-ascii?Q?oXgJJsLK610cfDpoI8InluumfQvSl4XFLjVMT08eAhX/YZpLLwDNvQyY29Su?=
+ =?us-ascii?Q?1wroL6JMQuVT3ZhEkoB7dOlYbFQbMtYPKciwDXHgv/QPl3RjMG8QdJfl3j/j?=
+ =?us-ascii?Q?qX5YV64Je52rITwAXhbmq+rTqPMWLmzpO5rmvkNdHX2YSZCEpYJoR7zq6Lwc?=
+ =?us-ascii?Q?odJ2R6uwm0VBqDpLCL7414snQxJ8uen4xSymkyVFcWM/E0LctVobnHfHcy7U?=
+ =?us-ascii?Q?GfcHFJ9igtap6B2Txh0R5uGXiSU4DgE7akHaY6fAGDDpK53DY5Ckzn5KS9Re?=
+ =?us-ascii?Q?LmAMuuX3JMweK6Z5+Z8PPQ9LFvgknzNf7UN2C6Ql/5AjbizEyYKvkGE1WKX1?=
+ =?us-ascii?Q?K1NR/n/0QcinmOJkSA6ZDM+IlAMevg2w7Kl3YqDduDuQUIWIG1KAR8nGgqj/?=
+ =?us-ascii?Q?tTfu61vfME2BDKXqbD0MkvW9vviBcVu8f3UEx8g7m81CbuxI61ojIgqZchEh?=
+ =?us-ascii?Q?Gvnz59XiHKV2QFgzJ9Tx3za512Nbh3mkjB2VlrW+5X76ndsAzZ/6Xh8lEONA?=
+ =?us-ascii?Q?n+c8WHrTw4AY6YQ5QDDTrqWUuzgTbXPRTqoslMCVSXjDZwM9jNCNW9CB0Kiu?=
+ =?us-ascii?Q?beJYa67UP34avYxKvL7Abzltwz0dD6L3uvao+K54l18gGFgKKEXGSBr/ZYeZ?=
+ =?us-ascii?Q?AJkAPblRiyOY5Z0fBKs2vbdaBOsH4ymj54fqND4+Pe5WUOvECNpjkIEp5pz2?=
+ =?us-ascii?Q?znSBwCXB2yBeB7VbIW/FMA3JZgJ6mmjg7tN2aEdtJF5vYOjAcXhEpHW4Tsfr?=
+ =?us-ascii?Q?ymJtCBU/Sik=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8MaPSaLEwo1ExtEz17uhSZDiteEQibRjP3vKpkXnV18GLanFItVysCmbDtrs?=
+ =?us-ascii?Q?1YIsStNS8yuBoUyq0Ao/d5ozqGTVaq4MGvehax5qPzc7YzUUzKQsG4JxOjs+?=
+ =?us-ascii?Q?BBaVH91f4DZcoblOgifHUNvCGS1x0+BtfkzMQiE85SXtZUm3t/WDvqpnOn62?=
+ =?us-ascii?Q?wN9NNLDX/qGDJPbMiSdAy/ix5FwyogCzsiXXLdFprGQGyqpKvFfxZdtZtghY?=
+ =?us-ascii?Q?2H4C4mzYkRB7GHmJpv7aEEF8kB2GG85jxos9i9P1EJQviWIGO1ktl6Sh8ipy?=
+ =?us-ascii?Q?ruOY2QJiky5gGjllPvipfq744gEL8H4oWPemkrSHwwuKYNQ7OW3ZrM0mw8On?=
+ =?us-ascii?Q?R4ejJATSHCYcPXvw9SnTmi/lm2rZlpFetT4VLtK66FEMczBAXj0qcHnFL5K0?=
+ =?us-ascii?Q?M/QdO0YiorXKpAvLxm/S5vHcKgYgPRHAtGvTprr0Vvd9Bxrk4xiCBy5qHC1n?=
+ =?us-ascii?Q?tHmqdRzronBAMSMEor9iNLGO7bVALBfvHl33yoUFOOeYNDm+RAk38K6nKNDW?=
+ =?us-ascii?Q?/NkTxQkafTfZgseikLSujzk8eb76+onlmE4mz/e8udLzht/jYyzYinnPAYTq?=
+ =?us-ascii?Q?xns/HaBZoQmKPnxnLByF/xl91Bg6K/NdgcHUTxZdOYOcQyUj5GUGXrgfEYz8?=
+ =?us-ascii?Q?hsyP1ZhM7++V91MHXw/dyvQYn7uLPnQ2eBmz6AnxyM8mVHy8w98VBE0Hxnm/?=
+ =?us-ascii?Q?U+j2qXXHJ1XNoEysEFYZP1iyEPaBAqB5jNEOq72roA6biO65pGu988LvVYij?=
+ =?us-ascii?Q?6gs+LYtvd5JqT2TgxEAbSDM8q+QtC0PfQW/BzXcAgDUG5IiIPeltF9AXoFga?=
+ =?us-ascii?Q?MYD3C04eSND1P2GDe3XOlUygDSpArDq/tSiMJJqpuOBijJBigvfgg8FuvmZF?=
+ =?us-ascii?Q?TeqjgnaPi0dxgUJeOxd3EVJ75IBzuFtaQFkBJDzcz068Vb8g/ZP+XOOP/da6?=
+ =?us-ascii?Q?8HfRwmjasXfhpG3+v49Wq3kz1DZ8CJnMekw5EyfpCEiPVAT49SfG4KsijHWz?=
+ =?us-ascii?Q?ay1xHCP30brEbB9185NXQHvNmmxpWFLNsmZrDHGxNfUhx2YDtUa/6h9wJNkH?=
+ =?us-ascii?Q?0r6gm8B0jynITfNhk5iB+ylnp2iPh+flQRqHZB52Ghjga3JiZez1me7B4GAb?=
+ =?us-ascii?Q?gFcwcFqE5XE0+9+oUfiKUrN2GunUL+JNTOxSYqQyWk5SzJdxOzG/mv1KQK/G?=
+ =?us-ascii?Q?h5ajtlctSBj/Gqu0EUFlC0KcZ1vEXxN8kqxs1WIIC1IBFyxTrGZ+E9zBrEEL?=
+ =?us-ascii?Q?8YZaNETgAHmU7woGK/wcoJGLvDm43rjX/HyFsnKA47B/vldro685uySgpZFI?=
+ =?us-ascii?Q?0dTKsQJtsW1xWaFXnXfHZmDTt4OBZWLHJjvOmb76v8avmxXtgd3ySbLK5QeK?=
+ =?us-ascii?Q?C+JNKDsD33JdKrJLNib2bct5HoaP/sVTT0nigUCRmiMJSY/OIpM9uQG7Daoy?=
+ =?us-ascii?Q?xTG36WRdC2HmXsitYsg+/sfGLR5Lwjh82gybh71XjdrN+As7penH415pkx16?=
+ =?us-ascii?Q?N1IZVS0uz7s60wE8ufXdtincWqiamkq1pu6qHhWBXD5ODtNDoQZUbdti2FQi?=
+ =?us-ascii?Q?I4tOXKWwsTe4ENInlnh2ZThJtRpQlV7Z9gYN7bmowkPfRlr2d6CRFS1lPTWa?=
+ =?us-ascii?Q?5w=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ef352ae-2d0b-4c16-f0c2-08dd854f2a0b
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8587.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2025 05:48:45.9544
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ljw7NMXMgVzpKXVGT9u+/vpWZmdpXbQgjSTF4YyX34QorqKIHi+yZjqZ9y2wfEHH3GX4FkgZ6hZ/OGcnR5Cbaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8297
+X-OriginatorOrg: intel.com
 
-On Thu, Apr 24, 2025 at 6:09=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
->
-> Allwinner A523 SoC variant (A527/T527) contains an "EMAC0" Ethernet
-> MAC compatible to the A64 version.
+hi, Arnd,
 
-The patch subject prefix should be "dt-bindings: net: sun8i-emac: ".
+On Thu, Apr 24, 2025 at 09:59:38AM +0200, Arnd Bergmann wrote:
+> On Thu, Apr 24, 2025, at 04:12, Oliver Sang wrote:
+> > On Tue, Apr 22, 2025 at 12:16:33PM +0200, Arnd Bergmann wrote:
+> 
+> Cc:  x86 and timekeeping maintainers, see
+> https://lore.kernel.org/lkml/202504211553.3ba9400-lkp@intel.com/
+> for the thread so far.
+> 
+> >> > [ 721.016779][ C0] hardirqs last disabled at (159506): 
+> >> > sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049) 
+> >> > [ 721.016779][ C0] softirqs last enabled at (159174): handle_softirqs 
+> >> > (kernel/softirq.c:408 kernel/softirq.c:589) 
+> >> > [ 721.016779][ C0] softirqs last disabled at (159159): __do_softirq 
+> >> > (kernel/softirq.c:596) 
+> >> > [  721.016779][    C0] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 
+> >> > 6.14.0-rc3-00037-gf388f60ca904 #1
+> >> > [  721.016779][    C0] Hardware name: QEMU Standard PC (i440FX + PIIX, 
+> >> > 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> >> > [ 721.016779][ C0] EIP: timekeeping_notify 
+> >> > (kernel/time/timekeeping.c:1522) 
+> >> 
+> >> Timekeeping code could be related, I see that CONFIG_X86_TSC
+> >> is disabled for i486SX configurations, so even if a TSC is present
+> >> in the emulated machine, it is not being used to measure time
+> >> accurately.
+> >> 
+> >> > -CONFIG_X86_CMPXCHG64=y
+> >> 
+> >> This could be another issue, if there is code that relies on
+> >> the cx8/cmpxchg8b feature to be used. Since this is a non-SMP
+> >> kernel, this is less likely to be the cause of the problem.
+> >
+> > thanks a lot for all these details!
+> >
+> >> 
+> >> Can you try what happens when you enable the two options, either
+> >> by changing CONFIG_M486SX to CONFIG_M586TSC, or with a patch
+> >> like the one below? Note that CONFIG_X86_CMPXCHG64 recently
+> >> got renamed to CONFIG_X86_CX8, but they are the exact same thing.
+> >
+> > I applied your patch directly upon f388f60ca9 (change for X86_CMPXCHG64
+> > instead of X86_CX8 as you metnioned), commit id is
+> > c1f7ef63239411313163a7b1bff654236f48351c
+> >
+> ...
+> > by running same tests, now it backs to the clean status like
+> > fc2d5cbe541032e7 (parent of f388f60ca9)
+> 
+> Thanks for confirming. So a 486-targeted kernel still passes
+> your tests on modern hardware if we force TSC and CX8 to
+> be enabled, but the boot fails if the options are turned
+> off in Kconfig (though available in emulated hardware).
+> 
+> To be completely sure, you could re-run the same test with
+> just one of these enabled, but I'm rather sure that the TSC
+> is the root cause.
 
-And this needs an Ack from the DT binding maintainers.
+just FYI. we rerun the tests. if only enable X86_TSC, the config diff is
 
-ChenYu
+--- /pkg/linux/i386-randconfig-r071-20250410/gcc-12/f388f60ca9041a95c9b3f157d316ed7c8f297e44/.config    2025-04-15 15:41:17.009901645 +0800
++++ /pkg/linux/i386-randconfig-r071-20250410/gcc-12/801597ddaae3bdc15546df3d0eba6e9e4e157b8d/.config    2025-04-25 14:24:49.488257697 +0800
+@@ -351,6 +351,7 @@ CONFIG_X86_F00F_BUG=y
+ CONFIG_X86_INVD_BUG=y
+ CONFIG_X86_ALIGNMENT_16=y
+ CONFIG_X86_INTEL_USERCOPY=y
++CONFIG_X86_TSC=y
+ CONFIG_X86_MINIMUM_CPU_FAMILY=4
+ CONFIG_IA32_FEAT_CTL=y
+ CONFIG_X86_VMX_FEATURE_NAMES=y
+
+the various issues still exists:
+fc2d5cbe541032e7 f388f60ca9041a95c9b3f157d31 801597ddaae3bdc15546df3d0eb
+---------------- --------------------------- ---------------------------
+       fail:runs  %reproduction    fail:runs  %reproduction    fail:runs
+           |             |             |             |             |
+           :496         29%         145:494         31%         153:500   last_state.booting
+           :496          7%          35:494         14%          71:500   dmesg.BUG:kernel_hang_in_boot_stage
+           :496          0%            :494          0%           1:500   dmesg.BUG:soft_lockup-CPU##stuck_for#s![kworker##:#]
+           :496          9%          45:494          5%          25:500   dmesg.BUG:soft_lockup-CPU##stuck_for#s![swapper:#]
+           :496          0%           1:494          0%            :500   dmesg.EIP:__timer_delete_sync
+           :496          1%           5:494          1%           3:500   dmesg.EIP:_raw_spin_unlock_irq
+           :496          0%           2:494          0%           1:500   dmesg.EIP:_raw_spin_unlock_irqrestore
+           :496          0%           1:494          0%            :500   dmesg.EIP:console_emit_next_record
+           :496          0%            :494          0%           1:500   dmesg.EIP:finish_task_switch
+           :496          0%           1:494          1%           4:500   dmesg.EIP:handle_softirqs
+           :496          1%           3:494          1%           4:500   dmesg.EIP:lock_acquire
+           :496          0%           2:494          0%           2:500   dmesg.EIP:lock_release
+           :496          0%            :494          0%           1:500   dmesg.EIP:preempt_schedule_thunk
+           :496          0%           1:494          0%            :500   dmesg.EIP:queue_delayed_work_on
+           :496          0%            :494          0%           1:500   dmesg.EIP:rmqueue_pcplist
+           :496          9%          45:494          5%          25:500   dmesg.EIP:timekeeping_notify
+           :496          3%          14:494          2%           8:500   dmesg.INFO:rcu_preempt_detected_stalls_on_CPUs/tasks
+           :496          0%            :494          0%           1:500   dmesg.INFO:rcu_preempt_self-detected_stall_on_CPU
+           :496          6%          32:494          9%          46:500   dmesg.INFO:task_blocked_for_more_than#seconds
+           :496          9%          45:494          5%          26:500   dmesg.Kernel_panic-not_syncing:softlockup:hung_tasks
 
 
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 1=
- +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-e=
-mac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.=
-yaml
-> index 7fe0352dff0f8d74a08f3f6aac5450ad685e6a08..7b6a2fde8175353621367c8d8=
-f7a956e4aac7177 100644
-> --- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yam=
-l
-> +++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yam=
-l
-> @@ -23,6 +23,7 @@ properties:
->                - allwinner,sun20i-d1-emac
->                - allwinner,sun50i-h6-emac
->                - allwinner,sun50i-h616-emac0
-> +              - allwinner,sun55i-a523-emac0
->            - const: allwinner,sun50i-a64-emac
->
->    reg:
->
-> --
-> 2.49.0
->
->
+if only enable X86_CMPXCHG64:
+
+--- /pkg/linux/i386-randconfig-r071-20250410/gcc-12/f388f60ca9041a95c9b3f157d316ed7c8f297e44/.config    2025-04-15 15:41:17.009901645 +0800
++++ /pkg/linux/i386-randconfig-r071-20250410/gcc-12/dce28f73d4220df77c7fd6c41e854f1ef0af1d02/.config    2025-04-25 14:30:26.838037407 +0800
+@@ -351,7 +351,8 @@ CONFIG_X86_F00F_BUG=y
+ CONFIG_X86_INVD_BUG=y
+ CONFIG_X86_ALIGNMENT_16=y
+ CONFIG_X86_INTEL_USERCOPY=y
+-CONFIG_X86_MINIMUM_CPU_FAMILY=4
++CONFIG_X86_CMPXCHG64=y
++CONFIG_X86_MINIMUM_CPU_FAMILY=5
+ CONFIG_IA32_FEAT_CTL=y
+ CONFIG_X86_VMX_FEATURE_NAMES=y
+ CONFIG_CPU_SUP_INTEL=y
+@@ -5745,6 +5746,7 @@ CONFIG_GENERIC_NET_UTILS=y
+ # CONFIG_PRIME_NUMBERS is not set
+ CONFIG_RATIONAL=y
+ CONFIG_GENERIC_IOMAP=y
++CONFIG_ARCH_USE_CMPXCHG_LOCKREF=y
+ CONFIG_ARCH_HAS_FAST_MULTIPLIER=y
+ CONFIG_ARCH_USE_SYM_ANNOTATIONS=y
+
+
+various issues gone:
+
+fc2d5cbe541032e7 f388f60ca9041a95c9b3f157d31 dce28f73d4220df77c7fd6c41e8
+---------------- --------------------------- ---------------------------
+       fail:runs  %reproduction    fail:runs  %reproduction    fail:runs
+           |             |             |             |             |
+           :496         29%         145:494          0%            :500   last_state.booting
+           :496          7%          35:494          0%            :500   dmesg.BUG:kernel_hang_in_boot_stage
+           :496          9%          45:494          0%            :500   dmesg.BUG:soft_lockup-CPU##stuck_for#s![swapper:#]
+           :496          0%           1:494          0%            :500   dmesg.EIP:__timer_delete_sync
+           :496          1%           5:494          0%            :500   dmesg.EIP:_raw_spin_unlock_irq
+           :496          0%           2:494          0%            :500   dmesg.EIP:_raw_spin_unlock_irqrestore
+           :496          0%           1:494          0%            :500   dmesg.EIP:console_emit_next_record
+           :496          0%           1:494          0%            :500   dmesg.EIP:handle_softirqs
+           :496          1%           3:494          0%            :500   dmesg.EIP:lock_acquire
+           :496          0%           2:494          0%            :500   dmesg.EIP:lock_release
+           :496          0%           1:494          0%            :500   dmesg.EIP:queue_delayed_work_on
+           :496          9%          45:494          0%            :500   dmesg.EIP:timekeeping_notify
+           :496          3%          14:494          0%            :500   dmesg.INFO:rcu_preempt_detected_stalls_on_CPUs/tasks
+           :496          6%          32:494          0%            :500   dmesg.INFO:task_blocked_for_more_than#seconds
+           :496          9%          45:494          0%            :500   dmesg.Kernel_panic-not_syncing:softlockup:hung_tasks
+
+
+> I tried reproducing the problem locally
+> with your .config on a qemu/tcg emulation running on an
+> arm64 host, but this seems to run fine, including the
+> rcutorture tests.
+> 
+> Comparing my results with your log file, I see that your
+> crash happens while changing the clocksource:
+> 
+> Your dmesg:
+> [   92.548514][    T1] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+> [  721.016745][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 626s! [swapper:1]
+> 
+> My dmesg:
+> [    1.154511][    T1] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+> [    1.157896][    T1] clocksource: Switched to clocksource tsc-early
+> 
+> There are also clearly some differences between TCG and KVM in
+> the handling of TSC, e.g. I get this warning from qemu itself
+> for the SandyBridge CPU:
+> 
+> qemu-system-i386: warning: TCG doesn't support requested feature: CPUID.01H:ECX.tsc-deadline [bit 24]
+> 
+> I tried a few other variations, including KVM on an x86 laptop
+> (using kvmclock or tsc-early clocksource), but none of them failed
+> the way yours did.
+> 
+>       Arnd
+> 
