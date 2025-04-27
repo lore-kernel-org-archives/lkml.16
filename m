@@ -1,137 +1,261 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 866C21BF58;
-	Sun, 27 Apr 2025 02:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out199-6.us.a.mail.aliyun.com (out199-6.us.a.mail.aliyun.com [47.90.199.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE7F1BF58;
+	Sun, 27 Apr 2025 02:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745722239; cv=none; b=LUb1p8q5SfkYk6xxVksllzdFpX86Sw1dgyjHZ6mnIg8IqgbJy2RRtrphAyRgfmgSldcqQzO7BOu4NHxP8zdpgup5T0NuYKb+ZQY+Y429Y09Jban49e2YtCjdsD7tbXY3uTBocN9cmAlXkaanCWEas1CgEzNUXlGcJxGokm1QA9U=
+	t=1745722330; cv=none; b=sL8z2FNrECTbxeZ8snJdCSsy5pse9ZNR2xydG6mDG6SFktYu5opVU2UEAiZFgucSzu8f6KGBhCqDt5AVHnY/iSP/+ZWW/y3xRqVpfmCyLrfmSmpimbH6M+xAYGtCwYEMe7Gt7cBe5WRZNe42G6V3VPX8aLadF/lmNAPeUjnvvyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745722239; c=relaxed/simple;
-	bh=TGZLcsC/sBWPz3pHPkhHmDMqiIJeLWq/erDIoTVstOc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VGqF8/OIBo9ULbtsAduiqrcDNZ0rgwAU2ho+jHR9F21/fw5CLXXtQQWGqzpFr/N+enwCclFkp9d9fuIiyUtKbKCWDWFYcluwfemlxzD4AsIA1MdMdAYyQuRGp/poND5Lv4sKbLRc2PQTcYasU+6AKIsSKSHJWj7p1yoH+Z04HzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxXWt7mw1oiAvHAA--.2449S3;
-	Sun, 27 Apr 2025 10:50:35 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMBx3MR4mw1o8OeXAA--.50601S3;
-	Sun, 27 Apr 2025 10:50:34 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Fully clear some registers when VM reboot
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250424063846.3927992-1-maobibo@loongson.cn>
- <CAAhV-H51WRgk8Bs5dsF1LrgdaqL7dk9ioy7H79voZKapov9U2g@mail.gmail.com>
- <883cb562-9236-f161-71fa-0b963db22a11@loongson.cn>
- <CAAhV-H5taW2fAGW8CQ7MF5wjW8nuYREcNd6SSmvBmCtoJta5rQ@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <4e728f47-2453-f95f-587d-5df8fd2217e6@loongson.cn>
-Date: Sun, 27 Apr 2025 10:49:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1745722330; c=relaxed/simple;
+	bh=VRzYfPOqmTOEx8IP2DEXI8W+F2Y3OcwWJjkhRpfFHCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YshxZrkVQSKc5KGzW3zQ3jZ2ms2FodRyaK8Fh70MGo5fdvLjh7/fdQ07OcfTHT5QtrVSlRpq+XxmcSOb35vDwpJAPgf3kfTEsMWanazmr29oBmvjaQ0rhsgt1pc1oWuhHi8QivFMHmttJ/amI9kQdAJ2TZS/1XWFjshJkI7qDNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hU8ZYD1H; arc=none smtp.client-ip=47.90.199.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hU8ZYD1H"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745722307; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=iEt3uhcsxnbov9JPbGYyEFMzZDrl62NJAHFLHUNnAIs=;
+	b=hU8ZYD1HWaQj2QU3EhcPPuWe5F3jh7f2VBIpek1ZRPeyjTogj6B8yEdxDUDGp6nCBhxnvNh5vozu4wKPDDLKnfK/x6WWmN09qcJRpeSzbYIiUQTEcO7Brvza6kU8NbjDYAoh0Bx2LxVlhIZTR6hPG1aCv0JkAlWch8UToSy5600=
+Received: from 30.74.144.120(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WY7FM4o_1745722302 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 27 Apr 2025 10:51:43 +0800
+Message-ID: <5de38fe3-4a73-443b-87d1-0c836ffdbe30@linux.alibaba.com>
+Date: Sun, 27 Apr 2025 10:51:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5taW2fAGW8CQ7MF5wjW8nuYREcNd6SSmvBmCtoJta5rQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBx3MR4mw1o8OeXAA--.50601S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KF4fGryrGFWfJw18ur1Utwc_yoW5JF15pr
-	WjkF1Dur48Wr17tF12qwsYgF1aqrZ7Kr48XF9xXFy2yrn0v345tF40krW2kF98X348JF1x
-	ZF1UC3yS9F4qy3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
-	e5UUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/12] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-7-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250417000238.74567-7-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2025/4/26 下午6:20, Huacai Chen wrote:
-> On Thu, Apr 24, 2025 at 3:07 PM bibo mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/4/24 下午2:53, Huacai Chen wrote:
->>> Hi, Bibo,
->>>
->>> On Thu, Apr 24, 2025 at 2:38 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> Some registers such as LOONGARCH_CSR_ESTAT and LOONGARCH_CSR_GINTC
->>>> are partly cleared with function _kvm_set_csr(). This comes from hardware
->>> I cannot find the _kvm_set_csr() function, maybe it's a typo?
->> oop, it is _kvm_setcsr(), will refresh in next version.
->>
->>> And the tile can be "LoongArch: KVM: Fully clear some CSRs when VM reboot"
->> yeap, this title is more suitable.
-> Already applied with those modifications.
-Thanks for doing this  -:)
-
+On 2025/4/17 08:02, Nico Pache wrote:
+> khugepaged scans PMD ranges for potential collapse to a hugepage. To add
+> mTHP support we use this scan to instead record chunks of utilized
+> sections of the PMD.
 > 
-> Huacai
+> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
+> that represents chunks of utilized regions. We can then determine what
+> mTHP size fits best and in the following patch, we set this bitmap while
+> scanning the PMD.
 > 
->>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>
->>>> specification, some bits are read only in VM mode, and however it can be
->>>> written in host mode. So it is partly cleared in VM mode, and can be fully
->>>> cleared in host mode.
->>>>
->>>> These read only bits show pending interrupt or exception status. When VM
->>>> reset, the read-only bits should be cleared, otherwise vCPU will receive
->>>> unknown interrupts in boot stage.
->>>>
->>>> Here registers LOONGARCH_CSR_ESTAT/LOONGARCH_CSR_GINTC are fully cleared
->>>> in ioctl KVM_REG_LOONGARCH_VCPU_RESET vCPU reset path.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    arch/loongarch/kvm/vcpu.c | 8 ++++++++
->>>>    1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>>> index 8e427b379661..80b2316d6f58 100644
->>>> --- a/arch/loongarch/kvm/vcpu.c
->>>> +++ b/arch/loongarch/kvm/vcpu.c
->>>> @@ -902,6 +902,14 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
->>>>                           vcpu->arch.st.guest_addr = 0;
->>>>                           memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
->>>>                           memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
->>>> +
->>>> +                       /*
->>>> +                        * When vCPU reset, clear the ESTAT and GINTC registers
->>>> +                        * And the other CSR registers are cleared with function
->>>> +                        * _kvm_set_csr().
->>>> +                        */
->>>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_GINTC, 0);
->>>> +                       kvm_write_sw_gcsr(vcpu->arch.csr, LOONGARCH_CSR_ESTAT, 0);
->>>>                           break;
->>>>                   default:
->>>>                           ret = -EINVAL;
->>>>
->>>> base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
->>>> --
->>>> 2.39.3
->>>>
->>>>
->>
+> max_ptes_none is used as a scale to determine how "full" an order must
+> be before being considered for collapse.
+> 
+> When attempting to collapse an order that has its order set to "always"
+> lets always collapse to that order in a greedy manner without
+> considering the number of bits set.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   include/linux/khugepaged.h |  4 ++
+>   mm/khugepaged.c            | 94 ++++++++++++++++++++++++++++++++++----
+>   2 files changed, 89 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+> index 1f46046080f5..18fe6eb5051d 100644
+> --- a/include/linux/khugepaged.h
+> +++ b/include/linux/khugepaged.h
+> @@ -1,6 +1,10 @@
+>   /* SPDX-License-Identifier: GPL-2.0 */
+>   #ifndef _LINUX_KHUGEPAGED_H
+>   #define _LINUX_KHUGEPAGED_H
+> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
 
+Why is the minimum mTHP order set to 2? IMO, the file large folios can 
+support order 1, so we don't expect to collapse exec file small folios 
+to order 1 if possible?
+
+(PS: I need more time to understand your logic in this patch, and any 
+additional explanation would be helpful:) )
+
+> +#define KHUGEPAGED_MIN_MTHP_NR	(1<<KHUGEPAGED_MIN_MTHP_ORDER)
+> +#define MAX_MTHP_BITMAP_SIZE  (1 << (ilog2(MAX_PTRS_PER_PTE) - KHUGEPAGED_MIN_MTHP_ORDER))
+> +#define MTHP_BITMAP_SIZE  (1 << (HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER))
+>   
+>   extern unsigned int khugepaged_max_ptes_none __read_mostly;
+>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 5e9272ab82da..83230e9cdf3a 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -94,6 +94,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
+>   
+>   static struct kmem_cache *mm_slot_cache __ro_after_init;
+>   
+> +struct scan_bit_state {
+> +	u8 order;
+> +	u16 offset;
+> +};
+> +
+>   struct collapse_control {
+>   	bool is_khugepaged;
+>   
+> @@ -102,6 +107,18 @@ struct collapse_control {
+>   
+>   	/* nodemask for allocation fallback */
+>   	nodemask_t alloc_nmask;
+> +
+> +	/*
+> +	 * bitmap used to collapse mTHP sizes.
+> +	 * 1bit = order KHUGEPAGED_MIN_MTHP_ORDER mTHP
+> +	 */
+> +	DECLARE_BITMAP(mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+> +	DECLARE_BITMAP(mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+> +	struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_SIZE];
+> +};
+> +
+> +struct collapse_control khugepaged_collapse_control = {
+> +	.is_khugepaged = true,
+>   };
+>   
+>   /**
+> @@ -851,10 +868,6 @@ static void khugepaged_alloc_sleep(void)
+>   	remove_wait_queue(&khugepaged_wait, &wait);
+>   }
+>   
+> -struct collapse_control khugepaged_collapse_control = {
+> -	.is_khugepaged = true,
+> -};
+> -
+>   static bool khugepaged_scan_abort(int nid, struct collapse_control *cc)
+>   {
+>   	int i;
+> @@ -1118,7 +1131,8 @@ static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+>   
+>   static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   			      int referenced, int unmapped,
+> -			      struct collapse_control *cc)
+> +			      struct collapse_control *cc, bool *mmap_locked,
+> +				  u8 order, u16 offset)
+>   {
+>   	LIST_HEAD(compound_pagelist);
+>   	pmd_t *pmd, _pmd;
+> @@ -1137,8 +1151,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	 * The allocation can take potentially a long time if it involves
+>   	 * sync compaction, and we do not need to hold the mmap_lock during
+>   	 * that. We will recheck the vma after taking it again in write mode.
+> +	 * If collapsing mTHPs we may have already released the read_lock.
+>   	 */
+> -	mmap_read_unlock(mm);
+> +	if (*mmap_locked) {
+> +		mmap_read_unlock(mm);
+> +		*mmap_locked = false;
+> +	}
+>   
+>   	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+> @@ -1273,12 +1291,72 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   out_up_write:
+>   	mmap_write_unlock(mm);
+>   out_nolock:
+> +	*mmap_locked = false;
+>   	if (folio)
+>   		folio_put(folio);
+>   	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
+>   	return result;
+>   }
+>   
+> +// Recursive function to consume the bitmap
+> +static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long address,
+> +			int referenced, int unmapped, struct collapse_control *cc,
+> +			bool *mmap_locked, unsigned long enabled_orders)
+> +{
+> +	u8 order, next_order;
+> +	u16 offset, mid_offset;
+> +	int num_chunks;
+> +	int bits_set, threshold_bits;
+> +	int top = -1;
+> +	int collapsed = 0;
+> +	int ret;
+> +	struct scan_bit_state state;
+> +	bool is_pmd_only = (enabled_orders == (1 << HPAGE_PMD_ORDER));
+> +
+> +	cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +		{ HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER, 0 };
+> +
+> +	while (top >= 0) {
+> +		state = cc->mthp_bitmap_stack[top--];
+> +		order = state.order + KHUGEPAGED_MIN_MTHP_ORDER;
+> +		offset = state.offset;
+> +		num_chunks = 1 << (state.order);
+> +		// Skip mTHP orders that are not enabled
+> +		if (!test_bit(order, &enabled_orders))
+> +			goto next;
+> +
+> +		// copy the relavant section to a new bitmap
+> +		bitmap_shift_right(cc->mthp_bitmap_temp, cc->mthp_bitmap, offset,
+> +				  MTHP_BITMAP_SIZE);
+> +
+> +		bits_set = bitmap_weight(cc->mthp_bitmap_temp, num_chunks);
+> +		threshold_bits = (HPAGE_PMD_NR - khugepaged_max_ptes_none - 1)
+> +				>> (HPAGE_PMD_ORDER - state.order);
+> +
+> +		//Check if the region is "almost full" based on the threshold
+> +		if (bits_set > threshold_bits || is_pmd_only
+> +			|| test_bit(order, &huge_anon_orders_always)) {
+> +			ret = collapse_huge_page(mm, address, referenced, unmapped, cc,
+> +					mmap_locked, order, offset * KHUGEPAGED_MIN_MTHP_NR);
+> +			if (ret == SCAN_SUCCEED) {
+> +				collapsed += (1 << order);
+> +				continue;
+> +			}
+> +		}
+> +
+> +next:
+> +		if (state.order > 0) {
+> +			next_order = state.order - 1;
+> +			mid_offset = offset + (num_chunks / 2);
+> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +				{ next_order, mid_offset };
+> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +				{ next_order, offset };
+> +			}
+> +	}
+> +	return collapsed;
+> +}
+> +
+>   static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   				   struct vm_area_struct *vma,
+>   				   unsigned long address, bool *mmap_locked,
+> @@ -1445,9 +1523,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   	pte_unmap_unlock(pte, ptl);
+>   	if (result == SCAN_SUCCEED) {
+>   		result = collapse_huge_page(mm, address, referenced,
+> -					    unmapped, cc);
+> -		/* collapse_huge_page will return with the mmap_lock released */
+> -		*mmap_locked = false;
+> +					    unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
+>   	}
+>   out:
+>   	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
