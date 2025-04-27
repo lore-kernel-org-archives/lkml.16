@@ -1,146 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AE41FFC5F;
-	Sun, 27 Apr 2025 12:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7497AF9D9;
+	Sun, 27 Apr 2025 12:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745756480; cv=none; b=WkIiChKr6npiahfnvMz2bZJk8DEsDcwIfBW8bJ7t8tipRAz8ucrm4E69fFTpNgaFBZq4jJep6a/lrpY4fKSTdmTKsxoNB6FsEXlWLs5VRzoe0q7WBzHNcy7IWfe+S/9TXjKVw44V4Zhy0ev9Jtd/o145HlZjqdXtpVWCLdpC7Sc=
+	t=1745756606; cv=none; b=VY3mrvKO4Fcncj7gbobQxOlgiYn29FCFCSIbhFCSVbPNIB7X+RF7JmLi5I4D6/WWCxfsP+ZGUSBWf+1oNBJSz8bQ8lJBCVx+FyuUJd1DQiOeHYQfta1X5mc+JbNVrgFAJXWAjjF6V1KyRj390DM502c+srts191jAnhsq8bTqTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745756480; c=relaxed/simple;
-	bh=qgR2lz3v3NjAxknpyrFWkaL7/bhQwLOU/tYgivfTSX4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qsWvA9tFWLP0TJvZr68BfRddQLFKE+hic2ON8Z27NNoINKNX3AvlYyerL3XQ0fETpS7cPz+BGGCpK9jxJq9+ojmcsbeLsZCIf/yhJkl3QT2aM4J+yThSut+PM/pnxqYU7SdyzUeSKpeH1eHY/geD3e37Zh2srGnRP4eNksN5Hfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWQ8KECx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745756606; c=relaxed/simple;
+	bh=5lF9R3W3tII2MDLw+0o9ahkg2UFpuIiu8LfXbM8rc3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbg9WVthhfE7f0YSMSbmU88inI2utZQ25XF8LSgAwXX/M909FAzDMZ/I0qfzSndLHHvlmjkUSLOWhwmQi+TFjSJd6sEPYG8Iju80MU98aun71+OTnscYvsL99Vagva5MGFJOyhD0TZ2yG8YCAaG3jdxZU2VBnuVw6gJ47nLgGUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDzgRD2A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWQ8KECx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A76FC4CEE3;
-	Sun, 27 Apr 2025 12:21:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDzgRD2A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52354C4CEE3;
+	Sun, 27 Apr 2025 12:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745756480;
-	bh=qgR2lz3v3NjAxknpyrFWkaL7/bhQwLOU/tYgivfTSX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XWQ8KECxSqdvcp0sL5nci/HcxJBQ9cMd8jZsZOy+5vCNBuICJhnuoSM0hN4Zvkn9o
-	 ZcRXK7xE3yXvb9HbhD0i8sH3+o336Ic7QwGjMbQr5qVXf5nCgn77ELHE0N46tHlrHf
-	 lfRu+4a7odTFME8AhUdMG0PGZidoWHoGd1h7YpOPkjcByZnzR3GxpU/Y2dmB6+Drz9
-	 9dfzsRHXLAXP7ba/6fVX8uzDbuIgoop1wkdZHmlPX1PX1CCZm6euVKOCKOS7HmU1PB
-	 gI6dHnlIYGmdmHYQ8cUsbdO1St7JLNwU6M5tI4FVsFcsY+xZJSCCpa7vwQNRKwtG/F
-	 EZdL2ivuJHM0Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u910X-009GIf-FL;
-	Sun, 27 Apr 2025 13:21:17 +0100
-Date: Sun, 27 Apr 2025 13:21:16 +0100
-Message-ID: <86frhtkd6r.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: D Scott Phillips <scott@os.amperecomputing.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark
- <james.clark@linaro.org>,
-	James Morse <james.morse@arm.com>,
-	Joey Gouly
- <joey.gouly@arm.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Mark Brown
- <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Oliver Upton
- <oliver.upton@linux.dev>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Shiqi Liu
- <shiqiliu@hust.edu.cn>,
-	Will Deacon <will@kernel.org>,
-	Yicong Yang
- <yangyicong@hisilicon.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	open list
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] arm64: errata: Work around AmpereOne's erratum AC03_CPU_36
-In-Reply-To: <86frhx9ex6.fsf@scott-ph-mail.amperecomputing.com>
-References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
-	<86wmbkk1yz.wl-maz@kernel.org>
-	<86frhx9ex6.fsf@scott-ph-mail.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1745756605;
+	bh=5lF9R3W3tII2MDLw+0o9ahkg2UFpuIiu8LfXbM8rc3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZDzgRD2Aas89Hajq0s1tPy4PsfnN9yU9O9kTsUFjifH2QcFhw+8m7GEbvwEDCNP9P
+	 8KLWoWVcwAJRpPbn0kvlNhjdcu2FkWjMwbC/OUQnYRoPPcRFYsuOMV5FFYz9WP339p
+	 FcljDkh5eBTNf+8mLX6LodBvmWSuSuw5PjFVUspf80YzBDmpYMzN1AUpFYQpf67D/p
+	 FGBFOOc7x+lmp0NpWG3r308g2rARe3uRscXB1OIEC/wxdVni0RLR4+m0ElrGgtdnic
+	 RsIxMY+wD1hFFOXg01o28kAFWjRUes6MXrfg9ntoDRc5DIR5pEakMgrY90t1u7Eyi4
+	 p8hscvFKnP2qQ==
+Date: Sun, 27 Apr 2025 14:23:19 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Dirk Behme <dirk.behme@gmail.com>
+Cc: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] rust: property: Introduce PropertyGuard
+Message-ID: <aA4ht5sUic39mnHj@pollux>
+References: <20250425150130.13917-1-remo@buenzli.dev>
+ <20250425150130.13917-4-remo@buenzli.dev>
+ <aAuryiI0lY4qYyIt@pollux>
+ <81a65d89-b3e1-4a52-b385-6c8544c76dd2@gmail.com>
+ <aAyyR5LyhmGVNQpm@pollux>
+ <0756503c-02e7-477a-9e89-e7d4881c8ce6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, catalin.marinas@arm.com, james.clark@linaro.org, james.morse@arm.com, joey.gouly@arm.com, kevin.brodsky@arm.com, broonie@kernel.org, mark.rutland@arm.com, oliver.upton@linux.dev, robh@kernel.org, shameerali.kolothum.thodi@huawei.com, shiqiliu@hust.edu.cn, will@kernel.org, yangyicong@hisilicon.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0756503c-02e7-477a-9e89-e7d4881c8ce6@gmail.com>
 
-On Fri, 25 Apr 2025 03:02:29 +0100,
-D Scott Phillips <scott@os.amperecomputing.com> wrote:
+On Sun, Apr 27, 2025 at 08:11:58AM +0200, Dirk Behme wrote:
+> On 26.04.25 12:15, Danilo Krummrich wrote:
+> > On Sat, Apr 26, 2025 at 08:19:09AM +0200, Dirk Behme wrote:
+> >> On 25.04.25 17:35, Danilo Krummrich wrote:
+> >>> On Fri, Apr 25, 2025 at 05:01:26PM +0200, Remo Senekowitsch wrote:
+> >>>> +impl<T> PropertyGuard<'_, '_, T> {
+> >>>> +    /// Access the property, indicating it is required.
+> >>>> +    ///
+> >>>> +    /// If the property is not present, the error is automatically logged. If a
+> >>>> +    /// missing property is not an error, use [`Self::optional`] instead.
+> >>>> +    pub fn required(self) -> Result<T> {
+> >>>> +        if self.inner.is_err() {
+> >>>> +            pr_err!(
+> >>>> +                "{}: property '{}' is missing\n",
+> >>>> +                self.fwnode.display_path(),
+> >>>> +                self.name
+> >>>> +            );
+> >>>
+> >>> Hm, we can't use the device pointer of the fwnode_handle, since it is not
+> >>> guaranteed to be valid, hence the pr_*() print...
+> >>>
+> >>> Anyways, I'm not sure we need to print here at all. If a driver wants to print
+> >>> that it is unhappy about a missing required property it can do so by itself, I
+> >>> think.
+> >>
+> >> Hmm, the driver said by using 'required' that it *is* required. So a
+> >> missing property is definitely an error here. Else it would have used
+> >> 'optional'. Which doesn't print in case the property is missing.
+> >>
+> >> If I remember correctly having 'required' and 'optional' is the result
+> >> of some discussion on Zulip. And one conclusion of that discussion was
+> >> to move checking & printing the error out of the individual drivers
+> >> into a central place to avoid this error checking & printing in each
+> >> and every driver. I think the idea is that the drivers just have to do
+> >> ...required()?; and that's it, then.
+> > 
+> > Yes, I get the idea.
+> > 
+> > If it'd be possible to use dev_err!() instead I wouldn't object in this specific
+> > case. But this code is used by drivers from probe(), hence printing the error
+> > without saying for which device it did occur is a bit pointless.
 > 
-> Marc Zyngier <maz@kernel.org> writes:
-> 
-> > On Tue, 15 Apr 2025 16:47:10 +0100,
-> > D Scott Phillips <scott@os.amperecomputing.com> wrote:
-> >> 
-> >> AC03_CPU_36 can cause asynchronous exceptions to be routed to the wrong
-> >> exception level if an async exception coincides with an update to the
-> >> controls for the target exception level in HCR_EL2. On affected
-> >> machines, always do writes to HCR_EL2 with async exceptions blocked.
-> >
-> > From the actual errata document [1]:
-> >
-> > <quote>
-> > If an Asynchronous Exception to EL2 occurs, while EL2 software is
-> > changing the EL2 exception control bits from a configuration where
-> > asynchronous exceptions are routed to EL2 to a configuration where
-> > asynchronous exceptions are routed to EL1, the processor may exhibit
-> > the incorrect exception behavior of routing an interrupt taken at EL2
-> > to EL1.  The affected system register is HCR_EL2, which contains
-> > control bits for routing and enabling of EL2 exceptions.
-> > </quote>
-> >
-> > My reading is that things can go wrong when clearing the xMO bits.
-> >
-> > I don't think we need to touch the xMO bits at all when running
-> > VHE. So my preference would be to:
-> >
-> > - simply leave the xMO bits set at all times (nothing bad can happen
-> >   from that, can it?)
-> >
-> > - prevent these systems from using anything but VHE (and fail KVM init
-> >   otherwise)
-> 
-> Hi Marc, I started writing up this patch and then realized that the
-> issue can also not happen in nvhe mode. While xMO bits are modified
-> there, async exceptions are always masked and so the "simultaneously
-> take an async exception" part of the erratum can't happen.
-> 
-> Does that sound right to you, or are there cases that I'm missing. If
-> it's right the nvhe is also can't hit the erratum case, then what do you
-> think is the right thing for me to do here?
+> Thinking a little about this, yes, we don't know the device here. But:
+> Does the device matter here?
 
-That's an interesting point. We always run the nVHE/hVHE hypervisor
-code with interrupts disabled by virtue of taking an HVC exception
-into EL2, so that particular case seems OK as it literally implements
-the proposed workaround.
+If the above fails it means that for a (specific) device a driver expects that
+a specific property of some firmware node is present. So, yes, I think it does
+matter.
 
-However, there's at least one catch: the SError handling code in
-hyp/entry.S relies on clearing PSTATE.A to take a pending abort (the
-so-called VAXorcism). I take that this CPU implements FEAT_RAS, and
-that we don't need to worry about this code path either, and that the
-erratum cannot trigger on speculatively executed paths?
+> There is nothing wrong with the (unknown)
+> device, no? What is wrong here is the firmware (node). It misses
+> something.
 
-If we're OK with that, then I don't think there is much to do, other
-than always setting the xMO bits at all times, for which I already
-have a patch in review (v2 coming shortly).
+How do we know the firmware node is wrong? Maybe the driver has wrong
+expectations for this device?
 
-	M.
+> And this is exactly what the message tells: "There is an
+> error due to the missing node 'name' in 'path', please fix it". That
+> should be sufficient to identify the firmware/device tree description
+> and fix it.
 
--- 
-Without deviation from the norm, progress is not possible.
+I think we can't always fix them, even if they're wrong. How do we fix ACPI
+firmware nodes for instance?
+
+(Software nodes provide a solution for that, see also commit 59abd83672f7
+("drivers: base: Introducing software nodes to the firmware node framework").)
