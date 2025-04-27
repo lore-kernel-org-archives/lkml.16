@@ -1,181 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2389DF9EC;
-	Sun, 27 Apr 2025 12:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1E433EA;
+	Sun, 27 Apr 2025 12:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745757536; cv=none; b=P9UkgcxwRvNr4Mqu9KI9GxyslvX5jgIcoYzUe0GCL4g4byV9lShmp24g/539vXWPjyy25peDyIKDR+4xFx/8sdhsL4jX+qv8WRgclHL8zHAriOPoYMpz7AHyxQ/4oq0NO4DuaB9r1p4q5x7Fab/qspXUHn6xUkoy7uG+pTMFgWg=
+	t=1745757716; cv=none; b=nXjhFm65rCTuvbs9lo+nBI35xbVdXcPeYsqqcg8edbxbXxEP2OP2rD9RNVYmKeDJ2wtSinwvkeWcMr7Cz0JW2rCOj1jLa3f+hdLnDRoqXuaF2R6s8dfsb+6RTje7P5+Y+aLV5k3dRq5g0fSh8vrIBUWzz6CAQHub2k4ajMevzWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745757536; c=relaxed/simple;
-	bh=S35W/9aqzailueRgElY9DlBTQStTjMqlL6uqjqJp9k4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YjSU+McSw4csg23NThTqFiDA1cIOU9fxt92S551ZNUtXrVrtMZqGFT+V9bg3jzkeqHDwRYWka3rulwI4aagcukSTR8NRQplnRtmz1xK+mF/YiQ/YI1BKmzL2EAKVVs3OLDBBEboH2nFxZr69psuG/YBKxHx16qmE4lPyZWSFD2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UapWAE06; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745757716; c=relaxed/simple;
+	bh=HlWSQte4tLw9PjoHfjPm7m9bE0tjBHVsK0uKDx2ObhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RvUaF4m2oTQpVGzrX+4W+l/Y4OC4+CW1ERjThOWr/pXA+Pd0rMvQpiwuQWivU6km76GsC0LjZMntPt6LyRfyqoUNyPanTBO1D92HBouLhxqM0p+/JYh8KREN8f/PoNbyd7Xwdnbw89311fOrCsaQ4WesozgztXhl+wxIqsJdY/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=LB/WZAlf; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UapWAE06"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03931C4CEE3;
-	Sun, 27 Apr 2025 12:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745757535;
-	bh=S35W/9aqzailueRgElY9DlBTQStTjMqlL6uqjqJp9k4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UapWAE06JFlaj9EkSf9ZZ2EEIggXbAq3JmfZanBX/VzjxOTjMxUKEdI11taez1ouM
-	 N8wJo56yn1byLbF2vCCnsgqTTI8Y6HqZnHnL1Iy8TrGsSsqrNGc0nh1VrycB8F5oMw
-	 lcKVBHsNVo/yge8ygtbRXGnTC3St9JDgcF2EZYiMZ11/sE0rg/R8zLyV2VO3HpvkrJ
-	 x3cu8l+itkTIjsKu3hPxGSHnMh8KuDyNzOgr4UW5ZdwAjPE75fvSc1fmwawA0RjETR
-	 jTryf6cCleEslIwGxy6PTPVL6JVAsg73eLLGK3SL6I0PBWR+IMfuvZ6qBnAT4mR2v3
-	 Xz8+ahtacutkw==
-Date: Sun, 27 Apr 2025 13:38:47 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v7 09/11] iio: accel: adxl345: add inactivity feature
-Message-ID: <20250427133847.6f3b164c@jic23-huawei>
-In-Reply-To: <20250421220641.105567-10-l.rubusch@gmail.com>
-References: <20250421220641.105567-1-l.rubusch@gmail.com>
-	<20250421220641.105567-10-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="LB/WZAlf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=8B83JaeVQLHgFCWXWffwqUb0JmXK1uEo4GZHcdcva+Y=; b=LB/WZAlfGOzyKCTr/sq7hB3Rdp
+	87DGEL/SX99F82X/5S3CEt+KMPNil4eQ5XKn9HKMnUxA4cfDf2PrRlmreWsvqfNqxji0Ahm+IqUQd
+	wXdO33aEhGmFBOIXuWpE+8bZioYkuicGAN5B/jPJ2fK2P8K9cQiDFC/DlSxp1X3SHny4nVm15XAer
+	aSB48aWcfnwfs22dSqJc1WnuG99u9FTL86VXIeZNZAw4NPoARt7CX+u2bzA4RtU1Kraqbddk4uCU/
+	yAMqvxfq3a/ZkqN2tSwmIOwRD7TQsIjCpK6QaSzQIFGD7u7OUwRc33CrLVfbIPdhLP99OmnTsWDY/
+	Uek3AdhQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u91KE-001OSo-2c;
+	Sun, 27 Apr 2025 20:41:39 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 27 Apr 2025 20:41:38 +0800
+Date: Sun, 27 Apr 2025 20:41:38 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [v2 PATCH 00/13] Architecture-optimized SHA-256 library API
+Message-ID: <aA4mAlozk3RvxvTe@gondor.apana.org.au>
+References: <cover.1745734678.git.herbert@gondor.apana.org.au>
+ <20250427123514.GA1161@quark>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427123514.GA1161@quark>
 
-On Mon, 21 Apr 2025 22:06:39 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On Sun, Apr 27, 2025 at 05:35:14AM -0700, Eric Biggers wrote:
+>
+> Well, barely a day and you've already ruined my patch series.  Now instead of a
+> clean design where the crypto_shash API is built on top of the normal library
+> API (sha256_update() etc.), there's now a special low-level API
+> "sha256_choose_blocks()" just for shash that it's built on top of instead, for
+> no good reason.  You're also still pushing your broken BLOCK_HASH_UPDATE_BLOCKS
+> macro that doesn't work with size_t, and putting my name on your broken code
+> that uses it.
 
-> Add the inactivity feature of the sensor. When activity and inactivity
-> are enabled, a link bit will be set linking activity and inactivity
-> handling. Additionally, the auto-sleep mode will be enabled. Due to the
-> link bit the sensor is going to auto-sleep when inactivity was
-> detected.
-> 
-> Inactivity detection needs a threshold to be configured, and a time
-> after which it will go into inactivity state if measurements under
-> threshold.
-> 
-> When a ODR is configured this time for inactivity is adjusted with a
-> corresponding reasonable default value, in order to have higher
-> frequencies and lower inactivity times, and lower sample frequency but
-> give more time until inactivity. Both with reasonable upper and lower
-> boundaries, since many of the sensor's features (e.g. auto-sleep) will
-> need to operate beween 12.5 Hz and 400 Hz. This is a default setting
-> when actively changing sample frequency, explicitly setting the time
-> until inactivity will overwrite the default.
-> 
-> Similarly, setting the g-range will provide a default value for the
-> activity and inactivity thresholds. Both are implicit defaults, but
-> equally can be overwritten to be explicitly configured.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Your design is unacceptable because you're forcing the partial block
+handling on shash where it's not needed, just as you're forcing the
+hardirq support on everything.
 
-Tweaked - see below for why.  Please sanity check I didn't mess it up!
+I'll take your point about size_t and update the BLOCK_HASH helper.
 
-
-diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-index dd8cea5c48f3..a61c97c086e9 100644
---- a/drivers/iio/accel/adxl345_core.c
-+++ b/drivers/iio/accel/adxl345_core.c
-@@ -241,16 +241,14 @@ static const struct iio_event_spec adxl345_all_event_spec[] = {
-                .mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-                BIT(IIO_EV_INFO_PERIOD),
-        },
--};
--
--/* inactivity */
--static const struct iio_event_spec adxl345_inactivity_event_spec = {
-+       /* inactivity */
-+       {
-                .type = IIO_EV_TYPE_THRESH,
-                .dir = IIO_EV_DIR_FALLING,
-                .mask_separate = BIT(IIO_EV_INFO_ENABLE),
-                .mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
--                       BIT(IIO_EV_INFO_PERIOD),
--
-+               BIT(IIO_EV_INFO_PERIOD),
-+       },
- };
- 
- static const struct iio_chan_spec adxl345_channels[] = {
-@@ -265,14 +263,6 @@ static const struct iio_chan_spec adxl345_channels[] = {
-                .event_spec = adxl345_all_event_spec,
-                .num_event_specs = ARRAY_SIZE(adxl345_all_event_spec),
-        },
--       {
--               .type = IIO_ACCEL,
--               .modified = 1,
--               .channel2 = IIO_MOD_X_AND_Y_AND_Z,
--               .scan_index = -1, /* Fake channel */
--               .event_spec = &adxl345_inactivity_event_spec,
--               .num_event_specs = 1,
--       },
- };
- 
- static const unsigned long adxl345_scan_masks[] = {
-
-> ---
->  drivers/iio/accel/adxl345_core.c | 172 ++++++++++++++++++++++++++++++-
->  1 file changed, 167 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-> index 680981609d83..b25efcad069b 100644
-> --- a/drivers/iio/accel/adxl345_core.c
-> +++ b/drivers/iio/accel/adxl345_core.c
-> @@ -37,11 +37,17 @@
-
->  
-> +/* inactivity */
-> +static const struct iio_event_spec adxl345_inactivity_event_spec = {
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
-> +			BIT(IIO_EV_INFO_PERIOD),
-> +
-> +};
-> +
->  static const struct iio_chan_spec adxl345_channels[] = {
->  	ADXL345_CHANNEL(0, chan_x, X),
->  	ADXL345_CHANNEL(1, chan_y, Y),
-> @@ -244,6 +263,14 @@ static const struct iio_chan_spec adxl345_channels[] = {
->  		.event_spec = &adxl345_freefall_event_spec,
->  		.num_event_specs = 1,
->  	},
-> +	{
-> +		.type = IIO_ACCEL,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_X_AND_Y_AND_Z,
-> +		.scan_index = -1, /* Fake channel */
-> +		.event_spec = &adxl345_inactivity_event_spec,
-> +		.num_event_specs = 1,
-Why do we need a separate fake channel for this?
-
-Should reuse the one that we have for freefall which has the same definition.
-
-+	{
-+		.type = IIO_ACCEL,
-+		.modified = 1,
-+		.channel2 = IIO_MOD_X_AND_Y_AND_Z,
-+		.scan_index = -1, /* Fake channel */
-+		.event_spec = &adxl345_freefall_event_spec,
-+		.num_event_specs = 1,
-+	},
-
-> +	},
->  };
->  
->  static const unsigned long adxl345_scan_masks[] = {
-> @@ -287,7 +314,8 @@ static int adxl345_set_measure_en(struct adxl345_state *st, bool en)
->  {
->  	unsigned int val = en ? ADXL345_POWER_CTL_MEASURE : ADXL345_POWER_CTL_STANDBY;
->  
-> -	return regmap_write(st->regmap, ADXL345_REG_POWER_CTL, val);
-> +	return regmap_update_bits(st->regmap, ADXL345_REG_POWER_CTL,
-> +				  ADXL345_POWER_CTL_MEASURE, val);
->  }
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
