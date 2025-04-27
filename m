@@ -1,149 +1,99 @@
-Received: from mailrelay1-3.pub.mailoutpod2-cph3.one.com (mailrelay1-3.pub.mailoutpod2-cph3.one.com [46.30.212.32])
+Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B3E198A2F
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 20:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824328F5A;
+	Sun, 27 Apr 2025 20:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745785279; cv=none; b=rlWQwKxi2NzkLupm0n02CF2Nex0YpEuqKB9ZZbnwfJ4nCmeDPpzksa8IWXvgBmstAlJCDbTQA+0MTBeO3NwYPwNzeA9kuDtxArOhH6rb3GU1Z4wrjbPtE0e5jVK3rY3WhRY5oK4wumuKUrVshTM1t+9iEpOLvsa7ujogWDrc8so=
+	t=1745786163; cv=none; b=GSGt5louijwbkdNhQtDBFC20HJjeg+ZemQ28ym7/x/8dhH2Af6iYTUNecFruG4yzjQymYpQu5+Hd7iZO89VUbaMI3YgCp4OI97Y08YoUie2X9u0BWsO1cKjLkRa0q8UCLDNtYRJHNmGy3GuZ67ksNwVineL1RHdRM4V+vSraOQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745785279; c=relaxed/simple;
-	bh=eLRslRB7s5810Rx/NxtJKXu+MAnkzRe2TiRahEzc9sI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gAl8dHwB28y9x9Nc/Sw8BkFhIvps6Z2HhtnC/NWI9clJJajD9/8K3O6uFkXPSYTs02SwBRnRo90KqsryPsthV7HH4YHtgGKBtvM2Y9gw1oNRZmc320lWI4kz/kIMbWEDLMiHHyNH3XrHGXn2yMfp2OOadvBRxC+QuF9vysDQ4fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=g/Er9Wek; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=4jm8heKT; arc=none smtp.client-ip=46.30.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1745786163; c=relaxed/simple;
+	bh=SWMTbEmm5//wR2OBFc2QnhX7Z0C+SqWQvafmLIydBS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KP/FKyEGse4nHLpFgjoV3zvExZrg5QOdAyGjaHlDvj0ceN4bJpsRf0cOWhKNGfwdmjxX/x1FxTzkTyQxwVhxkQwHTx1VFWhd/YOIMw5fbooI1TOeUaMHjfrRavh0QzJiDU8H8eXin/UYnCMF0VNxOrYjA1ZsyQkpCLXRLD3Q6nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=GtnbAlsq; arc=none smtp.client-ip=82.68.155.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="g/Er9Wek";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="4jm8heKT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1745785204; x=1746390004;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=shcxpfrjccaKCRDXtBOgbh/oAMtnscrtDvkyx1+IXRA=;
-	b=g/Er9WekUwpmWcDDy3sjuBAS4CpG+Trb9s1Ooq7jm/ATKBsNilGE1e+46f0gVrlUsq5f/UyuvVH2i
-	 hfzZKNnm2to6ykEl8BFet6g+qbSio/MDuSJEwAqzl5T0sL3zdf9fTXVh0708AvOYtzgHxP3HrBX5WP
-	 d50pZgLFuuW4yiEFtahHggZ7WvaOZPe4jbrOmoFJnu9LG1G/i/aAUSyiUVdpPHRvkvd5XXp8BEMC3t
-	 09t97HRss4SRqK52go4mdBz7jskbhQtK3nYr3s9YFi096Ua4lAj5zqO3z6VAELXjVN/vMiF7mGenkA
-	 UoKRsNhuoCOKc+0OB644pSOC/GhHxEw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1745785204; x=1746390004;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=shcxpfrjccaKCRDXtBOgbh/oAMtnscrtDvkyx1+IXRA=;
-	b=4jm8heKT72nmPUF6TliX6XalAWuXQAec98RL6agqhJvmtEukyGSBuOsbU3T51Wr/S/YINPFQ3IB48
-	 thzFCGXAw==
-X-HalOne-ID: fd90db7a-23a4-11f0-90b3-4d2191f5f3b5
-Received: from localhost.localdomain (host-90-233-217-8.mobileonline.telia.com [90.233.217.8])
-	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id fd90db7a-23a4-11f0-90b3-4d2191f5f3b5;
-	Sun, 27 Apr 2025 20:20:04 +0000 (UTC)
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	minchan@kernel.org,
-	nphamcs@gmail.com,
-	senozhatsky@chromium.org,
-	shakeel.butt@linux.dev,
-	yosry.ahmed@linux.dev,
-	Igor Belousov <igor.b@beldev.am>,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: [PATCH mm-new] mm/zblock: add debugfs
-Date: Sun, 27 Apr 2025 22:19:58 +0200
-Message-Id: <20250427201958.491806-1-vitaly.wool@konsulko.se>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="GtnbAlsq"
+Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
+	by wylie.me.uk (Postfix) with ESMTP id 05F87120713;
+	Sun, 27 Apr 2025 21:35:49 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+	s=mydkim006; t=1745786149;
+	bh=SWMTbEmm5//wR2OBFc2QnhX7Z0C+SqWQvafmLIydBS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=GtnbAlsqxgtEdG+qrGaaRfb7yyBU17yk/maPGOzJuxlHOxwiEkoJ8RvuwJgzQe0we
+	 QJ525afA393TQxmEZekt9f8w9rpYndnftsGTRcil4eISuKo6pyqWURxHQ2VI2TJKFR
+	 e0P0SWXCI+JMnJDt42+/zWjEaIZhwM/nGx0VEt0LVCMcFVTrjXwIt1VwtT6JpG8cCj
+	 dLPZvJw+dyC86ucyOI9zk3NDchTPpRri2b4qT/asglXgG1GD6DV+oyTxQ9z586MNBz
+	 WPujbcvJLCvn7hgzkQf7mW9xQpz33ghA4o7fS2se3do6eFQyjiGiAtEgUkquv0SAi2
+	 gZ0pP8GtKD/jg==
+Date: Sun, 27 Apr 2025 21:35:48 +0100
+From: "Alan J. Wylie" <alan@wylie.me.uk>
+To: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>,
+ Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Jiri
+ Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>, Toke
+ =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+ stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <20250427213548.73efc7b9@frodo.int.wylie.me.uk>
+In-Reply-To: <20250427204254.6ae5cd4a@frodo.int.wylie.me.uk>
+References: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+	<20250421210927.50d6a355@frodo.int.wylie.me.uk>
+	<20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+	<4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+	<aAf/K7F9TmCJIT+N@pop-os.localdomain>
+	<20250422214716.5e181523@frodo.int.wylie.me.uk>
+	<aAgO59L0ccXl6kUs@pop-os.localdomain>
+	<20250423105131.7ab46a47@frodo.int.wylie.me.uk>
+	<aAlAakEUu4XSEdXF@pop-os.localdomain>
+	<20250424135331.02511131@frodo.int.wylie.me.uk>
+	<aA6BcLENWhE4pQCa@pop-os.localdomain>
+	<20250427204254.6ae5cd4a@frodo.int.wylie.me.uk>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Igor Belousov <igor.b@beldev.am>
+On Sun, 27 Apr 2025 20:42:54 +0100
+"Alan J. Wylie" <alan@wylie.me.uk> wrote:
 
-Add debugfs entry to monitor number of blocks allocated for different
-block sizes.
+> That would be https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/ ?
+> 
+> I've just cloned that. I'll do a build and a test.
 
-Signed-off-by: Igor Belousov <igor.b@beldev.am>
-Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+$ uname -r
+6.15.0-rc3-00109-gf73f05c6f711
 
----
+It's crashed. Same place as usual. I tried again, same thing.
 
- mm/zblock.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ htb_dequeue+0x42e/0x610 [sch_htb]
 
-diff --git a/mm/zblock.c b/mm/zblock.c
-index 6afe6986260d..7182b1ac85ad 100644
---- a/mm/zblock.c
-+++ b/mm/zblock.c
-@@ -17,6 +17,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/atomic.h>
-+#include <linux/debugfs.h>
- #include <linux/list.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-@@ -27,6 +28,7 @@
- #include "zblock.h"
- 
- static struct rb_root block_desc_tree = RB_ROOT;
-+static struct dentry *zblock_debugfs_root;
- 
- /* Encode handle of a particular slot in the pool using metadata */
- static inline unsigned long metadata_to_handle(struct zblock_block *block,
-@@ -111,6 +113,22 @@ static struct zblock_block *alloc_block(struct zblock_pool *pool,
- 	return block;
- }
- 
-+static int zblock_blocks_show(struct seq_file *s, void *v)
-+{
-+	struct zblock_pool *pool = s->private;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
-+		struct block_list *block_list = &pool->block_lists[i];
-+
-+		seq_printf(s, "%d: %ld blocks of %d pages (total %ld pages)\n",
-+			i, block_list->block_count, block_desc[i].num_pages,
-+			block_list->block_count * block_desc[i].num_pages);
-+	}
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(zblock_blocks);
-+
- /*****************
-  * API Functions
-  *****************/
-@@ -140,6 +158,9 @@ static struct zblock_pool *zblock_create_pool(gfp_t gfp)
- 		INIT_LIST_HEAD(&block_list->active_list);
- 		block_list->block_count = 0;
- 	}
-+
-+	debugfs_create_file("blocks", S_IFREG | 0444, zblock_debugfs_root,
-+			    pool, &zblock_blocks_fops);
- 	return pool;
- }
- 
-@@ -426,12 +447,15 @@ static int __init init_zblock(void)
- 		return ret;
- 
- 	zpool_register_driver(&zblock_zpool_driver);
-+
-+	zblock_debugfs_root = debugfs_create_dir("zblock", NULL);
- 	return 0;
- }
- 
- static void __exit exit_zblock(void)
- {
- 	zpool_unregister_driver(&zblock_zpool_driver);
-+	debugfs_remove_recursive(zblock_debugfs_root);
- 	delete_rbtree();
- }
- 
+Rather than a ping flood, I was running a Speedtest. Both times it
+crashed during the upload test, not the download.
+
+https://www.speedtest.net/
+
+Could running an iptables firewall perhaps have anything to do with it?
+
+HTH
+Alan
+
+
+
+
 -- 
-2.49.0
+Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
 
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
