@@ -1,101 +1,185 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A4F245025;
-	Sun, 27 Apr 2025 08:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E8124503E
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745741946; cv=none; b=pvc/FmkiYjRPS7g9nxbJYKANnPaktqsX9zijVpMZrkE6yBry6ojLQyX0HJdMcSzhyO6t6RyO67kKMhz6UFYph+psz345s/P/nLfSOUYOZRgR8bhIsfygGUNy4b69WPiLX2Czqf9mCOuqQrMrpYk7YT2cJG/AUp/G5uUPNFtG3YI=
+	t=1745742085; cv=none; b=NF7MuNwtVz1vhSDeQuYkWwXpTlO7v6XzHk9bhxQRbKvlbL6jxuvRqwV8Y9tAbbTWLV2Y015NhXkHZP/1PpbWLVBUFDQx8wfz+DU6p8G32ZcemB++6BlRs7PeXwNCHcpQc79tbM6D2i/ZqUHvSChJ7SKo51cv7tDYoU9b5aSRJlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745741946; c=relaxed/simple;
-	bh=A1CWx9yqefNbhEO9vpGa8WQOXqi4+UVxXczhgu15hVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lpqUQN1nWRGecc/oQ2ZpnJKy6m8eiPJ0DEsj3IfGrM0Gc0llPWZEbCNzeRzb3tItkAwnTK5gv4JQuLd71woDTrV+KTZAcHSVOAXe4/WA/0Hml2WHciMty/ihZmX2XL7LSplzQQyteuNWqmBMAbOJL+1mER90wvCZS6+JARSanho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1u8xE4-0007QT-00; Sun, 27 Apr 2025 10:19:00 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id DD734C0A20; Sun, 27 Apr 2025 10:16:16 +0200 (CEST)
-Date: Sun, 27 Apr 2025 10:16:16 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v7 0/2] MIPS: Fix idle VS timer enqueue
-Message-ID: <aA3n0Cs42R5I9pJ5@alpha.franken.de>
-References: <20250403161143.361461-1-marco.crivellari@suse.com>
+	s=arc-20240116; t=1745742085; c=relaxed/simple;
+	bh=buMXtnro85aLbJ8vzlE+WVBcMzVVJdOoueenXL85wUI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OLEIEj/VMAGFQR/lo73nDJKa7qPW27JmaoTFyi4Q5H0S9dN5z/TpFjaPB3H5+8BFv9t84IVsyXdWM0Naqc8yYZ8GvPBT4Let4Tv4stVCUmv9PyL6HeBsmbsSnLPGWMQmUmjQe2gb885IwUJ1vBARplgoCEeLF0LutZFS3iUl38k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85ed07f832dso354916639f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 01:21:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745742082; x=1746346882;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+vAf/JFA/8xW4355KhkGlJwhLhf96j10N4gFAjUa7/E=;
+        b=rRCpCwTA+RWlGXcWtE/SToeoKoiibfCFbZpgEp9dWiY0yOxaNedwC+scHpyojZMfaE
+         VHP6khBs1tKrimd773jEer30ow1RkhaCEUeiMv9MY4K40PwrM7NXa2k7PLgLz5XsMBAJ
+         2y878HBNlDTjoq13lrP0PI9rklFlzyU5+3ewbwEFlk/QrqEsybe+GoAnjsSsk0PoelTb
+         a4hOC0I0Nvljm9kIKX7K4KECM60IB5cWddKlamrw5ajdyamhI+2erJUcNuQTsvmuwT9Z
+         GRYKhTzmXq43B1AMDh+9SJtNPSI0g3jGN5UANxouVBAufQdIu+f5Rput6ytHOl6KWuIH
+         rRug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3rWsQTPl5npaxIM7IqybQFIY4sR04ymIH9dkGMtCSyOLVEA04wzh5+1GLc+q1fGfbn40DVEVFchfUCds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjtRhRO8AF1+QUrFoWS1K8lR06BmdFUUiK9L2xY/+S0SF5G7qI
+	DvPdWRtVzCkyGBRj64tv/C9TnGPEgWicJ+Ek4MRaDWpkANMObr/czhED5zmJasY6LIW/UINzZxu
+	/58OF03+PrJEQ630GhPoarwJiWcQIM4EgrLjUCw/VyYnvt4+Ob6NdOJg=
+X-Google-Smtp-Source: AGHT+IGE7hEw88NJG3K6Qu+an7B7jyY6Me8dPkz4tLYNe3C6IrTsSxcikrvR7eDOrshYhqZ7dVNPNAvG4BlInsb2fOMtRDDeBa2k
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403161143.361461-1-marco.crivellari@suse.com>
+X-Received: by 2002:a05:6602:6c0b:b0:864:48eb:30fd with SMTP id
+ ca18e2360f4ac-8645cd45231mr786974639f.11.1745742082674; Sun, 27 Apr 2025
+ 01:21:22 -0700 (PDT)
+Date: Sun, 27 Apr 2025 01:21:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680de902.050a0220.3b8549.0081.GAE@google.com>
+Subject: [syzbot] [ext4?] general protection fault in jbd2_journal_dirty_metadata
+From: syzbot <syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com>
+To: jack@suse.com, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 03, 2025 at 06:11:41PM +0200, Marco Crivellari wrote:
-> This patch aims to fix idle routine while the CPU receive an interrupt,
-> because __r4k_wait() only checks if TIF_NEED_RESCHED is set before
-> going to sleep.
-> The same behavior has been changed in LoongArch [1].
-> 
-> Code (cross) compiled successfully and I manage to test it on a VM
-> emulating a malta board. I ran QEMU with:
-> 
-> qemu-system-mips64el -M malta -m 2G -kernel vmlinux -serial stdio -drive \
-> file=rootfs.ext2,format=raw -append "rootwait root=/dev/sda" -cpu 5Kc
-> 
-> rootfs generated using buildroot (malta default configuration).
-> 
-> - [1] https://github.com/chenhuacai/linux/commit/a8aa673ea46c03b3f62992ffa4ffe810ac84f6e3
-> 
-> ---
-> Changes in v7:
->  - patch 2 to handle __r4k_wait() moved to .cpuidle.text section
->  - removed .noreorder section from __r4k_wait()
->  - idle region of 32-bytes
->  - removed C wrapper r4k_wait() and renamed __r4k_wait() to r4k_wait()
->  - changes discussed in:
->     https://lore.kernel.org/lkml/20250315194002.13778-1-marco.crivellari@suse.com/T/#m07f2568d9099101637063bd057a497ceb846be3d
-> 
-> Changes in v6:
->  - typo in comment, capitalise sentences and full stops
-> 
-> Changes in v5:
->  - comment: idle interrupt region, instead of rollback region
-> 
-> Changes in v4:
->  - comments: 36 byte region
-> 
-> Changes in v3:
->  - changed "daddiu k0, 1" with PTR_ADDIU k0, 5
->  - replaced CONFIG_CPU_MICROMIPS with 3 _ssnop followed by _ehb
->  - integrated the commit message with explanation about
->    CONFIG_CPU_MICROMIPS replacement
-> 
-> Changes in v2:
->  - Changes introduced by Huacai:
->     https://lore.kernel.org/linux-mips/20250214105047.150835-1-marco.crivellari@suse.com/T/#m75d9c587829e15e0d7baec13078be4e65c936408
-> 
-> Marco Crivellari (2):
->   MIPS: Fix idle VS timer enqueue
->   MIPS: Move __r4k_wait() to .cpuidle.text section
-> 
->  arch/mips/include/asm/idle.h |  3 +-
->  arch/mips/kernel/genex.S     | 63 +++++++++++++++++++++---------------
->  arch/mips/kernel/idle.c      |  7 ----
->  3 files changed, 38 insertions(+), 35 deletions(-)
+Hello,
 
-series applied to mips-fixes.
+syzbot found the following issue on:
 
-Thomas.
+HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12730374580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
+dashboard link: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149e6270580000
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-5bc10186.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3a2f39285e07/vmlinux-5bc10186.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2a37a55f34fb/bzImage-5bc10186.xz
+mounted in repro #1: https://storage.googleapis.com/syzbot-assets/852ff332bbf1/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=14730374580000)
+mounted in repro #2: https://storage.googleapis.com/syzbot-assets/e42a022d555a/mount_9.gz
+mounted in repro #3: https://storage.googleapis.com/syzbot-assets/7cbdc25f298f/mount_13.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=109e6270580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+
+(syz.0.497,7529,0):ocfs2_xa_prepare_entry:2151 ERROR: status = -30
+(syz.0.497,7529,0):ocfs2_xa_set:2254 ERROR: status = -30
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 UID: 0 PID: 7529 Comm: syz.0.497 Not tainted 6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:jbd2_journal_dirty_metadata+0x234/0xcd0 fs/jbd2/transaction.c:1531
+Code: 74 08 4c 89 ff e8 ec a5 9c ff 4d 39 37 0f 84 49 01 00 00 e8 de b0 3a ff 31 c0 e9 5e 05 00 00 4c 8b 34 24 4c 89 f0 48 c1 e8 03 <80> 3c 18 00 74 08 4c 89 f7 e8 be a5 9c ff 49 8b 06 48 89 44 24 38
+RSP: 0018:ffffc9000d47ec18 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: ffff88801f980000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff888043abc420 R08: ffff888043aacd9f R09: 1ffff110087559b3
+R10: dffffc0000000000 R11: ffffed10087559b4 R12: 1ffff1100382e0df
+R13: 1ffff11008757884 R14: 0000000000000000 R15: 1ffff1100382e0dc
+FS:  00007f9939c2b6c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f5fec172720 CR3: 000000004e785000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ocfs2_journal_dirty+0x149/0x740 fs/ocfs2/journal.c:812
+ ocfs2_xa_journal_dirty fs/ocfs2/xattr.c:1453 [inline]
+ ocfs2_xa_set+0x2516/0x3050 fs/ocfs2/xattr.c:2263
+ ocfs2_xattr_block_set+0x3c4/0x2bc0 fs/ocfs2/xattr.c:2985
+ __ocfs2_xattr_set_handle+0x661/0xf20 fs/ocfs2/xattr.c:3387
+ ocfs2_xattr_set+0xde8/0x11f0 fs/ocfs2/xattr.c:3650
+ __vfs_setxattr+0x439/0x480 fs/xattr.c:200
+ __vfs_setxattr_noperm+0x12d/0x660 fs/xattr.c:234
+ vfs_setxattr+0x16b/0x2f0 fs/xattr.c:321
+ do_setxattr fs/xattr.c:636 [inline]
+ filename_setxattr+0x274/0x600 fs/xattr.c:665
+ path_setxattrat+0x364/0x3a0 fs/xattr.c:713
+ __do_sys_setxattr fs/xattr.c:747 [inline]
+ __se_sys_setxattr fs/xattr.c:743 [inline]
+ __x64_sys_setxattr+0xbc/0xe0 fs/xattr.c:743
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9938d8e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9939c2b038 EFLAGS: 00000246 ORIG_RAX: 00000000000000bc
+RAX: ffffffffffffffda RBX: 00007f9938fb6160 RCX: 00007f9938d8e969
+RDX: 0000200000000240 RSI: 0000200000000140 RDI: 0000200000000080
+RBP: 00007f9938e10ab1 R08: 0000000000000002 R09: 0000000000000000
+R10: 000000000000001e R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f9938fb6160 R15: 00007fff798d5618
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:jbd2_journal_dirty_metadata+0x234/0xcd0 fs/jbd2/transaction.c:1531
+Code: 74 08 4c 89 ff e8 ec a5 9c ff 4d 39 37 0f 84 49 01 00 00 e8 de b0 3a ff 31 c0 e9 5e 05 00 00 4c 8b 34 24 4c 89 f0 48 c1 e8 03 <80> 3c 18 00 74 08 4c 89 f7 e8 be a5 9c ff 49 8b 06 48 89 44 24 38
+RSP: 0018:ffffc9000d47ec18 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: ffff88801f980000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff888043abc420 R08: ffff888043aacd9f R09: 1ffff110087559b3
+R10: dffffc0000000000 R11: ffffed10087559b4 R12: 1ffff1100382e0df
+R13: 1ffff11008757884 R14: 0000000000000000 R15: 1ffff1100382e0dc
+FS:  00007f9939c2b6c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c000940c71 CR3: 000000004e785000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	74 08                	je     0xa
+   2:	4c 89 ff             	mov    %r15,%rdi
+   5:	e8 ec a5 9c ff       	call   0xff9ca5f6
+   a:	4d 39 37             	cmp    %r14,(%r15)
+   d:	0f 84 49 01 00 00    	je     0x15c
+  13:	e8 de b0 3a ff       	call   0xff3ab0f6
+  18:	31 c0                	xor    %eax,%eax
+  1a:	e9 5e 05 00 00       	jmp    0x57d
+  1f:	4c 8b 34 24          	mov    (%rsp),%r14
+  23:	4c 89 f0             	mov    %r14,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	80 3c 18 00          	cmpb   $0x0,(%rax,%rbx,1) <-- trapping instruction
+  2e:	74 08                	je     0x38
+  30:	4c 89 f7             	mov    %r14,%rdi
+  33:	e8 be a5 9c ff       	call   0xff9ca5f6
+  38:	49 8b 06             	mov    (%r14),%rax
+  3b:	48 89 44 24 38       	mov    %rax,0x38(%rsp)
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
