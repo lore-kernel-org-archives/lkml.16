@@ -1,104 +1,76 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0F41A9B53;
-	Sun, 27 Apr 2025 10:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCA81A3145
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745748032; cv=none; b=WSCCQwyPvZfMIn1Nz6n8BtJQtwLfdTDLJRYx4fnyByUHzaxBAqrkxYr2/ZuChbI3jgm1qpH+YUI9i3JD4XsJy1y1d+PsGhs9mXeBv1hG9lH1fo3AcDfUMfiYbmDhWgL0d6o3FYbi+ywnC21Rc5YYOYtCtWa5tqgEz1mzQZRyCac=
+	t=1745748294; cv=none; b=qYwqhyVQX/rNIbPuOkdKJ9qq3D7vMOAR3I3KIDYW2Iv8zF3Utc5BqdKxw2j8hbyDz1SqfyaR17CMcDy1M2Ql84rok/HcOslqQfYqAM1+yqtYkmDFwm4OXBVGIIlswcjVxIVdV8KN/K//TnecgcVYx0u92fJ/H2uEckFubNp7u9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745748032; c=relaxed/simple;
-	bh=2AJESlIzrICkfNVKItN+ZI13DbHRQ2WIsWRmd0Gg2bQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YcesudXeWRCk900HMFEFrTmB8Iop1q8nNz10enKcCvcYRmuzVwjeIVBT4UNt0LIIX/+wARq0ZpwTGFlIXSuCUbAfCzE4/iS22rvqtgyZjSMcRH/MwkhYmcJIMbYEyJ1Nl9O0v2afnUORFxU+xEyzUEuLYL5Dd7R4r/r/ohhd5es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aecdf.dynamic.kabel-deutschland.de [95.90.236.223])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2CCF561E647A7;
-	Sun, 27 Apr 2025 11:59:42 +0200 (CEST)
-Message-ID: <5b26202c-475f-48be-b6d4-b32b62eff7b1@molgen.mpg.de>
-Date: Sun, 27 Apr 2025 11:59:41 +0200
+	s=arc-20240116; t=1745748294; c=relaxed/simple;
+	bh=c9UqvVJ2/MCwfV5zHOTMwYiiXbKeScmps3lkPQjrlVE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o8qZ9Efoiwf65VCqZlXS7hVJF1FYjhFnTUWztn21jO6Elcqt9nvXhYRV/FbWokmZMJSC5PyQR6vsBGS+2P8Mu5K89iM5J37sBnaOLoH8NecyCd6eHR3dyMWCWsC6T46epMY8PJIvPqNAVgSALqpgHwL7yVejFzRe3HqnPTKR0O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RZ2UX+N9; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RZ2UX+N9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745748289;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4EzL0gg/ZOMcD64AXocynJGMI3aJnHhcWM7AS860QNo=;
+	b=RZ2UX+N9vyQgPJL2SnGB91RBsqWrw6PuCcuw9Y3kiQphG+BaeZVLw2JCKhtIWoTBZWDsFB
+	s4roRYTc1aoaCNM51jP3RbqSgxqSLTt0sVzUFOtOG6/29lGDW8I3VdiOXy7PQ3+oOfwhHK
+	IulEnz/Xax9PV6PgMYX3hUXEiAUVpRY=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	rppt@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	david@redhat.com,
+	harry.yoo@oracle.com,
+	riel@surriel.com,
+	vbabka@suse.cz,
+	liuye@kylinos.cn,
+	ye.liu@linux.dev
+Subject: [PATCH 0/3] mm: small cleanups for io-mapping, debug_page_alloc and numa
+Date: Sun, 27 Apr 2025 18:04:39 +0800
+Message-Id: <20250427100442.958352-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/9] md: fix is_mddev_idle()
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@infradead.org, axboe@kernel.dk, xni@redhat.com, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- yukuai3@huawei.com, cl@linux.com, nadav.amit@gmail.com, ubizjak@gmail.com,
- akpm@linux-foundation.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com
-References: <20250427082928.131295-1-yukuai1@huaweicloud.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250427082928.131295-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Dear Kuai,
+From: Ye Liu <liuye@kylinos.cn>
 
+This series includes three small cleanups to mm/:
 
-Thank you for your patch series. Some minor comments below.
+- io-mapping: simplify remap protection flag calculation
+- debug_page_alloc: improve error message by printing invalid input
+- numa: remove unnecessary variable for clarity
 
+No functional changes.
 
-Am 27.04.25 um 10:29 schrieb Yu Kuai:
-> From: Yu Kuai <yukuai3@huawei.com>
+Ye Liu (3):
+  mm/io-mapping: precompute remap protection flags for clarity
+  mm/debug_page_alloc: improve error message for invalid guardpage
+    minorder
+  mm/numa: remove unnecessary local variable in alloc_node_data()
 
-If a full cover letter is not warranted, maybe state, what patch to look 
-at? (In this case 8/9.)
+ mm/debug_page_alloc.c | 2 +-
+ mm/io-mapping.c       | 7 ++++---
+ mm/numa.c             | 4 +---
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
-> Changes in v2:
->   - add patch 1-5
->   - add reviewed-by in patch 6,7,9
->   - rename mddev->last_events to mddev->normal_IO_events in patch 8
-> 
-> Yu Kuai (9):
->    blk-mq: remove blk_mq_in_flight()
->    block: reuse part_in_flight_rw for part_in_flight
->    block: WARN if bdev inflight counter is negative
->    block: cleanup blk_mq_in_flight_rw()
+-- 
+2.25.1
 
-cleanup → clean up
-
->    block: export API to get the number of bdev inflight IO
->    md: record dm-raid gendisk in mddev
->    md: add a new api sync_io_depth
-
-add a new → add new
-
->    md: fix is_mddev_idle()
->    md: cleanup accounting for issued sync IO
-
-cleanup → clean up
-
->   block/blk-core.c          |   2 +-
->   block/blk-mq.c            |  22 ++---
->   block/blk-mq.h            |   5 +-
->   block/blk.h               |   1 -
->   block/genhd.c             |  69 ++++++++------
->   drivers/md/dm-raid.c      |   3 +
->   drivers/md/md.c           | 193 +++++++++++++++++++++++++++-----------
->   drivers/md/md.h           |  18 +---
->   drivers/md/raid1.c        |   3 -
->   drivers/md/raid10.c       |   9 --
->   drivers/md/raid5.c        |   8 --
->   include/linux/blkdev.h    |   1 -
->   include/linux/part_stat.h |   2 +
->   13 files changed, 194 insertions(+), 142 deletions(-)
-
-
-
-Kind regards,
-
-Paul
