@@ -1,152 +1,158 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC78F2459C5
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBF51FAC23
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745752689; cv=none; b=MnM04f9d+3X++nt1g8solIML+1TT/+h2ywZJXWifrPeruysjb2YqAxb3SZ1fvedLUHy8iQh1zZxcxY8MpzDnLH8TWawPJtbU+dTVx4Lj2hOEFq9TFR2GOlvg+QxPuOtu7Yjl/0YJt4UF4ATtnqfFN1uNrZRu1RXoH3ygI6IvCf0=
+	t=1745752816; cv=none; b=t4JGJPS4eLMfGpOeBU/3ERLnFibTChH4NkTWqBltAGTXSjeNixKwmaHafgpw3qsitm9Ed6N7Sq74o4uwb62YvkMZtjrBEQCaDETwYmMWwNzZRRG20lAF+KIRdX2wCf6WqZHH99hbSwN1qsck+JRlxrB++yyNc+Ab4RcAY5IulIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745752689; c=relaxed/simple;
-	bh=eHhA5tnc+faC6C/bJ5+HpYMF0LeEZc76OZByQLRSITo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VDanLKuqyOfgmm0YE3uL4ENKOfh3fWpGM4JQGEzZyCwpDWYf+rHuBkmqGaK5QbaBHO5kUFKpLjTv4sd8/FwmKHUuhL4pjR2A60H8AK7XU/PZm+r76F/20foaBp+1FR29hOyScCaf/3zKgVGMhl8p/M3u4cFfCNdBep5dxCLXBV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fqOsPg0I; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1745752816; c=relaxed/simple;
+	bh=l+r6gW/k4AiLNiqCdXWLcYbQjOS4aPFNelQN+qJ9t9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6OrLpaGamQmBDifkfVu6N2J6HDzMoOk35peiBWfLw+/gTRTPiUXC5J963qrZ0peOTNSvVxywhHfiOlRdDBP3VBcOt+9bVYvLJTbMA1+FIqMU7w3+q/967I2aGgcjAdOb3tiOHG1I6HjTXZHbN+sW060mMQiKPlJaEGYfIdzK6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CF7jWAeL; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fqOsPg0I"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6065803ef35so314170eaf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:18:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CF7jWAeL"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-739be717eddso3078083b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1745752685; x=1746357485; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MprAgNPWqGJ7CHG6RWipvBG6sPPJFir2MiaXJK5t8Ec=;
-        b=fqOsPg0I4lQ79ZaRg24VyPvNY0jGQTTbU6hXTXNbV+ronr+PTDnzedtLIOwtr2deEt
-         Z98wS56l55KV2hOFskhlXMZX7rumRG0/DCo5tQTLntiBZmW2czemNXlZG6+3lXodl6IZ
-         VMC1juWXjoCiZ2+TFZ7eZsafxZ1+Vj9dbuQDBYAr1Ndl8Sz5GDZ/kiDEMf7+hfZuiK0I
-         NoNzwgBedILUiPtvhhKfgvlddWZPbRGRMXF25psugvbJDMnFLHrpQxPOM4elkUJi1TKP
-         KKYbUDL/hZme99Qc+GUQb56WklF4JG9eIEk58xa1wlWX9eWmkiB2v3LnPg+YJd3LEHnQ
-         fFBg==
+        d=linaro.org; s=google; t=1745752814; x=1746357614; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U8PIzBYTDnuUJNOzFhZUf8k7SMLmkkalf0cCtjYXloU=;
+        b=CF7jWAeLWUh32TNDoevWzHxzVVh+lNUIB8fAYFsWN/Jx2rBQ41vT7WItxvaVhEkNZJ
+         pqqbd8jLK90FASYgCmT0ZqyGJ4OGBYdOLap0YT/rrqf7LvJlxq4B6KD0pBWk6WkTGxge
+         9r+QCSSH3LaotXG9QpLTTezerqJQbQMI4sQHyd9rZ1LHd+1XYzGlhIX1TiFnQiI/oL/c
+         EnlNmGOVYDWkXCNcZ+U7tmp/bhQ55Sk7CJX44WW2m2wCGli3ozQI1xpZ+NGNbiH5LCtJ
+         ZtcPchEBo+bs/83qHteyoXWMWltU89bPKKKu4g+Jl7zL3G2jHRFhxBWn5IdFhHsz5HeI
+         gzsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745752685; x=1746357485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MprAgNPWqGJ7CHG6RWipvBG6sPPJFir2MiaXJK5t8Ec=;
-        b=JLZkYf2/8FlWp/+5g/WTZXIz4y2CAtMkttF8obFRT9asRSVkfMx0R3q5H72+yTAkMS
-         WYaPFXrmBM69jYlSr6RoPVVFWhvwTcOri3V+x5p4r2hL1Jg7TxdBnXagWhiy1SDyoeOA
-         CY0aJullwUXlksU7q24LxweecUNGPaCduZ/3zDl+Ad3NRdHXFrs/GpG/0nGIcLOz5xwI
-         l4V2cjuDoyibeZ3+XpsLZDIJJ2/JDHoVmiFNkjNrG+KnJfzhcrTjysi5Qs60Xc9bqvL8
-         aj40CeQZdIXAg90+JUadUOD6AxqP9Gp9Z8r7NETmD1WC8Zirf+dMjC3PpQ88hlqiIqhT
-         alTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW04L1yLQtlHa95AYhAlkYR45mhRrYVv+rcxS5l5+VOaMO0LMRGVngj/4i/KVSmeal6W9051KlZ5EkPaI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV6K4wDfrlnA8OTVFBAgZ1nGhNg+SBFzUuVrbrpsY0sDHY3Ogw
-	mxmHyZ8vq5tkTLq2xE2fkAHECM/OCi+6eHmk2JEskP8ZmtVbKkdn7orNPVJkEnahl+JLB+31GqD
-	UVXEYUv9y7Y0oOYZiEBiXFlAR5pTIdjFEMaLyCQ==
-X-Gm-Gg: ASbGnctQj9UIGp4cbQYv9Igd/f6c/0KA7E0B1hbUWVT7rGGuCBgzacoOAxxmZdYT57q
-	9eKPlQqOFyTpYyhay88TghHXUDgQ0tpy4i+AzHVbfe3YIhm+xLk2Fogv4JI4UQSLVBlVQAJ+Elc
-	1u7yR+Bj//ziLDfOmLOAe7oFga6RCbk6zViWz9Hos=
-X-Google-Smtp-Source: AGHT+IG8fZxwzHNuZuL5P2Cv7KAs0gI3eNFTOYs+RhBLwnkpjnoQB1qDpHKnfQqP0F4gpRdFEEwyCpU317ouvssDGqY=
-X-Received: by 2002:a05:6820:c83:b0:604:9c9b:d096 with SMTP id
- 006d021491bc7-60658f242e1mr3557749eaf.4.1745752685422; Sun, 27 Apr 2025
- 04:18:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745752814; x=1746357614;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U8PIzBYTDnuUJNOzFhZUf8k7SMLmkkalf0cCtjYXloU=;
+        b=n12bJ3VZPRTJAoKkzIuu7cvuXe/OGPnWcss00a0EG2ARJ4c3mrCnpgPvFyOitPghSV
+         mlOrL2WbsdB+/tDt4qOXO0WK3prZCPiSAfg8s0wkCsBPlhA3/Gs7z5JgM54+Q+Ya9rkw
+         xhGCmEOcguApt4jVzMm5pN9g+ezux8GGPlBzJm7TNf842yc3J94l/H+siSQmY0FfJMn8
+         oqagScWKZqkYsETd6scQpFNOyoN3uL0Da6/x9WF0wjQAPqJ/UFEg4I5RhAxMOUixZSN6
+         TWude3/jGy+/grZ0XIznAg6qD3/QNBbGZzX/sotBcHL8Y3IK5AZOlLtXnzCip2rFGY9R
+         1CnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRmdaJJnQ4RKL5Z5bzzQFrIfHM5wCincl5FgPPQhHOwLLLk7IQQc8mYU8ntf6iKYrver4hyP81PSe/4ZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweYB1KRsfa800iqAswGr9f4uMYPrpBSJyUkVjmDnF3s8aigZdx
+	1y8+kFh+wVoIfjs9ECM1QsMJXErXWF9UsyvDekkGk5X8DeSWUP48kVGznoWqbw==
+X-Gm-Gg: ASbGnctNGKU5ZPhHDQ0GHaf8hduYxbUXqwjlJzMo5tJr0u0AfeI4+DNdVJReO2euxiQ
+	5uQ8jTy11mM8WpMVNgBlPxbVxpx9Xd/PzZBzm5DBUvtA+5fgL51894OWDGKSaxY8vUuteW1qFeF
+	uwpxRiR/aYfMDq11tyddCuN0qFkmOZ2l7zR3kX9s3XFWkp8PR0xZQvfIav7ZaHjOZFj0KXZ5BEg
+	w8w4bLDbl+lZnoGONUGMz85SE3jFr5TRQUtK3BBliE66cTMWnfekRSi+CF3vd/SEpdhopFoxxrC
+	8BEt/NipgJRuopbiQDsHnq5crnlz7ddSsvPRWpj09y9K9fxrkwo0
+X-Google-Smtp-Source: AGHT+IFv79IfZh1GxCFHYniWlVSDWEu/6IbqRbKPw+om4ozt3ytyq0VaNeh7LhP4FfVYP6Dn5aHP7g==
+X-Received: by 2002:a05:6a00:2da6:b0:73c:3060:d53 with SMTP id d2e1a72fcca58-73fd8b6bc26mr10692158b3a.18.1745752813817;
+        Sun, 27 Apr 2025 04:20:13 -0700 (PDT)
+Received: from thinkpad ([120.60.143.241])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a17csm6054959b3a.111.2025.04.27.04.20.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 04:20:13 -0700 (PDT)
+Date: Sun, 27 Apr 2025 16:50:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v6 6/7] PCI: imx6: Add PLL clock lock check for
+ i.MX95 PCIe
+Message-ID: <fnaivdfzjrzcivpegdozhp5i4cjqehze5smp23xiwktce7x4a2@2ryfqsuyvfec>
+References: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
+ <20250416081314.3929794-7-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425062425.68761-1-cuiyunhui@bytedance.com>
- <20250425062425.68761-4-cuiyunhui@bytedance.com> <57d75d55-81e3-445f-a705-e8c116281515@kernel.org>
- <9d4e7002-48fe-4fa0-8e23-7c2160419910@kernel.org>
-In-Reply-To: <9d4e7002-48fe-4fa0-8e23-7c2160419910@kernel.org>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Sun, 27 Apr 2025 19:17:53 +0800
-X-Gm-Features: ATxdqUGrND2eWKgTBQAFuWZ7ZU2WztQbLWkJMVgxrAn4tCVQU7wPRICwW2BvD3A
-Message-ID: <CAEEQ3w=MOSU2mNo8qq8qz9KE9M0Zb55xeS9aw1263osXtP+8SA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v4 4/4] serial: 8250_dw: fix PSLVERR on RX_TIMEOUT
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: arnd@arndb.de, andriy.shevchenko@linux.intel.com, 
-	benjamin.larsson@genexis.eu, gregkh@linuxfoundation.org, 
-	heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com, 
-	jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de, 
-	paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com, 
-	sunilvl@ventanamicro.com, tim.kryger@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250416081314.3929794-7-hongxing.zhu@nxp.com>
 
-Hi js,
+On Wed, Apr 16, 2025 at 04:13:13PM +0800, Richard Zhu wrote:
+> Add PLL clock lock check for i.MX95 PCIe.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Fri, Apr 25, 2025 at 2:43=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org> w=
-rote:
->
-> On 25. 04. 25, 8:41, Jiri Slaby wrote:
-> > On 25. 04. 25, 8:24, Yunhui Cui wrote:
-> >> In the case of RX_TIMEOUT, to avoid PSLVERR, disable the FIFO
-> >> before reading UART_RX when UART_LSR_DR is not set.
-> >>
-> >> Fixes: 424d79183af0 ("serial: 8250_dw: Avoid "too much work" from
-> >> bogus rx timeout interrupt")
-> >> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> >> ---
-> >>   drivers/tty/serial/8250/8250_dw.c | 13 ++++++++++++-
-> >>   1 file changed, 12 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/
-> >> serial/8250/8250_dw.c
-> >> index 07f9be074b4b..1e364280a108 100644
-> >> --- a/drivers/tty/serial/8250/8250_dw.c
-> >> +++ b/drivers/tty/serial/8250/8250_dw.c
-> >> @@ -273,6 +273,7 @@ static int dw8250_handle_irq(struct uart_port *p)
-> >>       unsigned int quirks =3D d->pdata->quirks;
-> >>       unsigned int status;
-> >>       unsigned long flags;
-> >> +    unsigned char old_fcr;
-> >
-> > No more unsigned char, please. Use u8.
-> >
-> >> @@ -288,9 +289,19 @@ static int dw8250_handle_irq(struct uart_port *p)
-> >>           uart_port_lock_irqsave(p, &flags);
-> >>           status =3D serial_lsr_in(up);
-> >> -        if (!(status & (UART_LSR_DR | UART_LSR_BI)))
-> >> +        if (!(status & (UART_LSR_DR | UART_LSR_BI))) {
-> >> +            /* To avoid PSLVERR, disable the FIFO first. */
-> >> +            if (up->fcr & UART_FCR_ENABLE_FIFO) {
-> >> +                old_fcr =3D serial_in(up, UART_FCR);
->
-> Wait, read(FCR) actually means read(IIR). FCR is write only. Or is DW
-> special in this?
+One comment below. But I'll fix it up while applying.
 
-Indeed, the valid bits of the FCR are write-only. It seems that here
-we can only do serial_out(up, UART_FCR, up->fcr); What do you think?
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 29 +++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 7dcc9d88740d..4cff66794990 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -45,6 +45,9 @@
+>  #define IMX95_PCIE_PHY_GEN_CTRL			0x0
+>  #define IMX95_PCIE_REF_USE_PAD			BIT(17)
+>  
+> +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
+> +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
+> +
+>  #define IMX95_PCIE_SS_RW_REG_0			0xf0
+>  #define IMX95_PCIE_REF_CLKEN			BIT(23)
+>  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
+> @@ -132,6 +135,7 @@ struct imx_pcie_drvdata {
+>  	int (*init_phy)(struct imx_pcie *pcie);
+>  	int (*enable_ref_clk)(struct imx_pcie *pcie, bool enable);
+>  	int (*core_reset)(struct imx_pcie *pcie, bool assert);
+> +	int (*wait_pll_lock)(struct imx_pcie *pcie);
+>  	const struct dw_pcie_host_ops *ops;
+>  };
+>  
+> @@ -479,6 +483,23 @@ static void imx7d_pcie_wait_for_phy_pll_lock(struct imx_pcie *imx_pcie)
+>  		dev_err(dev, "PCIe PLL lock timeout\n");
+>  }
+>  
+> +static int imx95_pcie_wait_for_phy_pll_lock(struct imx_pcie *imx_pcie)
+> +{
+> +	u32 val;
+> +	struct device *dev = imx_pcie->pci->dev;
+> +
+> +	if (regmap_read_poll_timeout(imx_pcie->iomuxc_gpr,
+> +				     IMX95_PCIE_PHY_MPLLA_CTRL, val,
+> +				     val & IMX95_PCIE_PHY_MPLL_STATE,
+> +				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
+> +				     PHY_PLL_LOCK_WAIT_TIMEOUT)) {
+> +		dev_err(dev, "PCIe PLL lock timeout\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int imx_setup_phy_mpll(struct imx_pcie *imx_pcie)
+>  {
+>  	unsigned long phy_rate = 0;
+> @@ -1225,6 +1246,12 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  		goto err_phy_off;
+>  	}
+>  
+> +	if (imx_pcie->drvdata->wait_pll_lock) {
+> +		ret = imx_pcie->drvdata->wait_pll_lock(imx_pcie);
+> +		if (ret < 0)
+> +			goto err_phy_off;
 
->
-> >> +                serial_out(up, UART_FCR, old_fcr & ~1);
-> >
-> > s/1/UART_FCR_ENABLE_FIFO/
-> >
-> >> +            }
-> >> +
-> >>               (void) p->serial_in(p, UART_RX);
-> >> +            if (up->fcr & UART_FCR_ENABLE_FIFO)
-> >> +                serial_out(up, UART_FCR, old_fcr);
-> >> +        }
-> >> +
-> >>           uart_port_unlock_irqrestore(p, flags);
-> >>       }
-> >
-> >
->
-> --
-> js
-> suse labs
->
+You should also assert core reset in the error path.
 
-Thanks,
-Yunhui
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
