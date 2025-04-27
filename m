@@ -1,344 +1,117 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013014.outbound.protection.outlook.com [52.101.67.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6E9241122;
-	Sun, 27 Apr 2025 07:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745738595; cv=fail; b=Rro6BMe+/hrtKN99Q88z4byjriSPkrT7CEvVg1VDFOd3QDPIvuWyEWAYn9JCCMmWsH/FsexpI9UHg4R/Cfzo36w+wo1+vHMhQkz48oPzz4yO3Ps1fITy6AoLX3evq3pOzC1ebEBJZVEhbpyfhOu1CKEM+wRiA5QVUehg80eoERg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745738595; c=relaxed/simple;
-	bh=AuOnKZSyYqKtiDq6H98rgoG+GulpanoU3PBpw0cQi8U=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mgc1x/5pkczUhcP9PcH/cCg7F9IzkRKojRAmbpE9d22JKZan5gFZ2WhW1QgLkyKKY7Wtu7FwIaAZiY0srPkNQrlikLIjI4T5DnDV4L/lufu4zJALA2Ktulmmi24fkZAZdaRp71tfKwuVNQ53BwG2TM+kSYjHIx7bHiJoBK5ThQs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=LYwXHUQu; arc=fail smtp.client-ip=52.101.67.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823868BE7;
+	Sun, 27 Apr 2025 07:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745738712; cv=none; b=m8A1ONpjtDWfN/06FtimLX3dQUc+seGSV4cjYLxQVMBr3T10zSz6OFjQoOxNo/vvC/XrBxC/VSFYdJYooEj1qdTGZdCYZN3CrKSgR54MQePw8lkspeS2n/Jnn/ZuLwa0lyrVnwE8mdxNfpDTLCqEjBGEkNq8nzuP/d7gQXe6Yaw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745738712; c=relaxed/simple;
+	bh=bERqNoVKbx4P/SwDDUOXyFXrxjwzNnYFUoDcCNKCVfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cje/cKoF1gV8pQ6CBVfcjehbzOMIoEQZAq5pRKC5DnsU0sjL+HkCw1AJ2j5bQTYwXwMbRQx64JkMHr+CcWJL8pOCh/7WtryWX/aZesAYAJdMRHKZ/YjOtGyq3Fj1m5c3cLNk95Cwpq1xI76PEdDKquujyhEuzRooHD6IzJX/PFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1xqE+mq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="LYwXHUQu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PIXExQ7UdgwklW6MHJj5XpZy0eXZoIeMm9aOkyQl6OXDQmb9may+TBUhY4jG7FtdE8dOhXKlyy83JaOEMtesjVSNRO9A7VjxOgSyEPxWzX4aZI+bBfzMRf+PyZTm/7f7w42pCqCvaVLRwY117QOUBAawJ5uScrFfPlOs7XA3AS2iUfklglilUjx3HIt47uKmgiNWXV5HEcRx6cUOko0p7Rb519JRl7JVSZAR6EPysRdLu5N/TDR8llCbJ0x6mjMnlAA67o/GwGokBzzPEFuTWCshTACRcAJo4DFnOx7uTmagmnpsOHDHQ+HNM1GPsASA2aCMQpxMPgqTB55Bx9fN2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6GCbgElHZ2CxzCrYryvtDPZlLRR7eip9wa9HUlP9Y90=;
- b=M4FFYiXeh+7TyZ7uRwroQN/9ubkuiiM+Psyy6gHQESxUEaOo5/5NHbusifpALC7kB4ZZu7ZbUl8czbZJbn1AmYuQd1Xq5HH/gABlRjtFLpQvMLBO7BIkkvVVP5xkQ2oX1hKTtzSZhlb+U7XoleU/cYVT/RmxMEhNSw++Y9CIIyQJ6pTnL7bvCEHBAcjmdhUOvogTvmlfToC84jiLfKLwkHkFF3JpMSEAoGln+Qt2BAn8zVyHRRhpyU01FRcIO70+oCNV1kn2xqJ6n7E4U+z6UNBffyah1qXGdvv53FzxFfKIaaY+p1dW4rokRin2NtMd3FBci/xdiw91inaBT/272g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6GCbgElHZ2CxzCrYryvtDPZlLRR7eip9wa9HUlP9Y90=;
- b=LYwXHUQuGqMTSZa4o8ihgWOleqIXKXnviKxkC6x4mCw2Vc54+QWeCftQXDzpFGAqNaF7E26yFE61FENRS2V2p/wtCY0Cc6Q7K7EeYUvdUFbK+IP15G+sDzKUoiybPFJ3KLDaLScFZCsFRN66QHsgcVs1unjiUIOjiqP04t1aowQWRM2djQn7i61fXF4uNUxYshcOrSfT3KoKOo25XTAQB+HCf1Y7g3vTSZ+0VIW+pdXvcXdkqzTms4d4dAQ9uM6taApdrfjwwddF8ZGDkdqA+k0lY+1E+LPD9vTPOLr7PvN9CM37pvmqZqtxVDCzKbro2PFDK1BVpcdTY0JzIWSriw==
-Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
- (2603:10a6:800:293::14) by DU4PR04MB11032.eurprd04.prod.outlook.com
- (2603:10a6:10:58a::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.28; Sun, 27 Apr
- 2025 07:23:10 +0000
-Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
- ([fe80::75ad:fac7:cfe7:b687]) by VI2PR04MB11147.eurprd04.prod.outlook.com
- ([fe80::75ad:fac7:cfe7:b687%7]) with mapi id 15.20.8678.028; Sun, 27 Apr 2025
- 07:23:09 +0000
-From: Carlos Song <carlos.song@nxp.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-CC: Aisheng Dong <aisheng.dong@nxp.com>, Frank Li <frank.li@nxp.com>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
-	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-i2c@vger.kernel.org"
-	<linux-i2c@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Thread-Topic: [PATCH] i2c: imx-lpi2c: Fix clock count when probe defers
-Thread-Index: AQHbt0U64ghCGMLe5Eig6819ak6AgA==
-Date: Sun, 27 Apr 2025 07:23:09 +0000
-Message-ID:
- <VI2PR04MB111474EAC1B4DB8EB6DD32628E8862@VI2PR04MB11147.eurprd04.prod.outlook.com>
-References: <20250421062341.2471922-1-carlos.song@nxp.com>
- <34ally74jbpae6etevqskr4zmcv5xyac46n4hl2j5ybihwtezn@jd2gvr762gs7>
-In-Reply-To: <34ally74jbpae6etevqskr4zmcv5xyac46n4hl2j5ybihwtezn@jd2gvr762gs7>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI2PR04MB11147:EE_|DU4PR04MB11032:EE_
-x-ms-office365-filtering-correlation-id: 4db59d63-4910-47e8-ecd5-08dd855c5cc7
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?CRmRGCCXl5yAdPKKf2nn5XiMbZWWQ91CjykrtF9mwZ6dljmgFCZqH3T/G+n6?=
- =?us-ascii?Q?60lVBVtaLOvD6/S1ORgadBgBWC0v77/BxKYiGR4CEJjiP/y+bTqSJ6gG0FLk?=
- =?us-ascii?Q?MLbN8RjSNm1LPxulXCu/BGtm+rdWcwwFt9v5vunxv6BFh07g0SUKZXtNM/uf?=
- =?us-ascii?Q?zCLvTSkl6JKWyByTcD5pN2RDlRIKevkdLHVZBbhVonlb3ZsoS9ws9vJsnbgn?=
- =?us-ascii?Q?z6Xc0X81abGvUEJcfwcSl/PCKPiM/3sWaAUFPA6rlcVVzg3/nlQEC2wLmf6m?=
- =?us-ascii?Q?rwthY5gM7O8Eo5eHqU7sUOnNY0dh0RFUXXkHgrT7RcnUkoB+WTG3oBt6frD6?=
- =?us-ascii?Q?Ofkf6aM4m+GnNBHSbYrrL3DGui2msEfIp0+JTECy/3aok31X0fRLlTCteaMg?=
- =?us-ascii?Q?CD1i4//EMgdsDJL3m+EM3EkaMyB/7l4cFOBspyd7zLt8aV/+/DC6B7y/uyNU?=
- =?us-ascii?Q?B61lMqWfzrCMGXUVX7V481Hn0RmhR4a08cQEqXD7Ojl/1rA3ZY3UY2xVI+EM?=
- =?us-ascii?Q?7k2uYCDj3kF/C2bToEQMUF5a7AKdkkBxMnQEcMBZCiNKnODU0K752M1/KA3D?=
- =?us-ascii?Q?d7aRn+qmldzobWg0uNtrFTkvwH2W4TBUDQ+wHxA6NV6WWmFH5D0to1htcBG8?=
- =?us-ascii?Q?oY9WzjozV4NRdNFKqwNGVsIQ6dzVy1+UehIxfw/fvtB2nTpfGaMynlEpa80Y?=
- =?us-ascii?Q?RbepU4OAeGnSyouePJmHyPIGDDqeEdNHIKOc/P1mhrcoCz4gjMwfDW7cr9Eu?=
- =?us-ascii?Q?r83ucV3X4xQwCvTEEJ8qJYorU0pah2zbJnI4EUKqA6FrcKnAw/XdjDbCxayR?=
- =?us-ascii?Q?xay9NYrQ6Sa35fmFHIXIxfRlrz/x196p54cvqNlc7uF2oknVMYYP22YIm7CU?=
- =?us-ascii?Q?NZbMbip51yG5Xnkif9W2EgeNK7PvBaZh4xTA2Krh8SVqhM8GBbqPRJijQj2r?=
- =?us-ascii?Q?GHc959g7IWfzcdHI0EDAQa6tSI6wcQlrVTU+wr8HN3ik4bF7CE06HwXwO9TF?=
- =?us-ascii?Q?pBM60s/bCOcx2tP046hdkAxhATFLQyyScpvm4FlhNyeetN6OBxJRQ1IrvMmE?=
- =?us-ascii?Q?/A6qrAypjsa1xrOYv1s/NXFXG0m3IuMOK0nnQyZ/EN0/hk63XCfVhvqVJCxy?=
- =?us-ascii?Q?Jdx8cToF+aQ0KhJ/Ci5Ix8dqvPvloKhl/JbTr8zz494U2kwY9dw5wnfreSIc?=
- =?us-ascii?Q?igEKBkBgVYW50rKm+sJ7JFAkOXUvIn8lZhiUpT47j7K+R6WAUmbTwvK0uc/3?=
- =?us-ascii?Q?a2H9MNt4ajA1NdxvjddKW0CgQyuieUIHjY1b7vpQ3odzBMqO1vlYd7ZLclYc?=
- =?us-ascii?Q?GDf0/7BMuh7i91Q8k+hGXXvKKCBkLsyJOxqHZzv16ZyYoGNF5/G7b1Pbn4rP?=
- =?us-ascii?Q?/vHBaNaBRrGyELxV7tfLJajyk+FrSa0/lZmJGjLRO9lbl1lFTykJtuJbfR3q?=
- =?us-ascii?Q?FbZhibqIPKlb6o9fSgeL/FOfuL3z4YvkQmPe6y84kSN1FUnxetJokWvfsqto?=
- =?us-ascii?Q?F5Nm//z24POQtkE=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI2PR04MB11147.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?/RBfo3m+UWIf9cepVNm0wO8eKc/Jzyb3z3tKm4GH3kuV0RdyW7zgMKL0qlbK?=
- =?us-ascii?Q?Kv3rkqxUi5i+BLdOw0tskkhO3dAIcwZjLHIlSn9uTT+zaYCY873K3utjp6TP?=
- =?us-ascii?Q?lc1Kr6cvWbqNKrRP1+SREC9xuXHHsI63dxEQbYHSwKuQK2pPKJGufxwSVtyf?=
- =?us-ascii?Q?cVD7EJ6pCDoTMq3TXZBxVH/Tb6GrYwEapz87GRk4231mIqZ9RKyapz1HyiRc?=
- =?us-ascii?Q?HkqSUSI/JRBdRu9xQzVv2nghVoqfKXBxmTVO9QaIa/bNlf+gYOQgWFxgg1n4?=
- =?us-ascii?Q?MZ+PEdi8qPzYvLYc3x+lT8la22j8nD/bsSSE6yzpglqYDHEuxCUef6KRolDy?=
- =?us-ascii?Q?EmGmy3C0b0CyPOK+dw26gxj1IbyE/RCOXF9ykSB36fjspTwXCjI3f1nW9JUW?=
- =?us-ascii?Q?UR+pnm89CSjtupwtKl4iPaJmEW2Et8Yc944A/VBjXZXKInikeZGA6nY+MBUm?=
- =?us-ascii?Q?/Lh0oIYY2Dtp3rn+kLGM7MCpsYCJaY7vSifeehcza05Buj91UTc1q1nS/3OR?=
- =?us-ascii?Q?8QgyrqEinlxswrgYsyd28EoxfOlYSo5DF70ppIHldVdaZfEAgeDQMr9VIgkp?=
- =?us-ascii?Q?h23olORQHX3bWKp0jXgFAsIs2h8KMiGBChUhOe3FNZM2yTcRO0Q7v40WX3iT?=
- =?us-ascii?Q?FA1kwb1gYZ/W4VfcKVk5CTP9RQ0qAqjuQSvTJAnvvcZxJNo0pJqRPLwldqC6?=
- =?us-ascii?Q?/KsA/Vqao8y96flGy9h9c0pkPy5fjdYU1ioxyLresbXDADQjmchVeNXyjpUT?=
- =?us-ascii?Q?v/ii7cBJvjvUPw6jrk1XRl10ZL/FitbZnnBl+lvZTh+Kj8Kx9zZ1IwWqAI/L?=
- =?us-ascii?Q?NaxWeBa0PGslHJit57ZjrI/x8BHts38cXoDa+gR0B2XIvnWe2njAOtjaKUjE?=
- =?us-ascii?Q?BPsQDvxDeIE6wRDojIwWgtZ/iwvB+QLPBX3A84h/HqgC0OBRvZHaGhs8QIP1?=
- =?us-ascii?Q?6HreKfVRp9d8Oxgek7LwYLPz8Jt6uGd1RhLDxSYBdzziUfihby8YfMJeHg8s?=
- =?us-ascii?Q?taurJPbX4xoUAu9GIaPHi9GK/EQ9a39lFcQvbptU5B25FE0qe8QSNDD9eILz?=
- =?us-ascii?Q?DYa4Y4hVh4Dktttqo5xzS8BVvBN3u0EgeMhDPL9csFyXIRPAFT5RetIgXaQR?=
- =?us-ascii?Q?fCxItyNs6A2Nf47RcUDzCvjtOETtGnoa7N2Mhet2V9XMPisy8MFQrOBM26i2?=
- =?us-ascii?Q?o9MK59z83GLZRb6UqB4anlPf0VrhlOQvxRA0/KD9K6k45CBAOESf45E5UVMg?=
- =?us-ascii?Q?xp7aavMbobmtX4E0T5OQTeQfmxfzPE6af8eHpz9KQkNDvSrqmTHsZtIHdKff?=
- =?us-ascii?Q?fuGMdDzY+z6Ar7RBMXJ5fldpBXeB/ZFGsS27Kk3pAisWX/5M/je+IEk6pPcQ?=
- =?us-ascii?Q?8vLQmbD/1k1f9R4onwWIUmes44EA0xhmqO4Teh3tHbkfmdt5mOy/1Bb5bY+P?=
- =?us-ascii?Q?q0rurJ3VOvHepLx8gh7UHfrenWW/mUNAS9R9g/5+YGHo9RBBRm8Y+y4GF+Gg?=
- =?us-ascii?Q?dH57IrJPOoOYYtxHBMGLDRWBmMkrr8SKUv5aDYncsUOuCuVdzhIe5oV5sLm5?=
- =?us-ascii?Q?Nel/6nVzyRog8WA+GLo=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1xqE+mq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40495C4CEE3;
+	Sun, 27 Apr 2025 07:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745738712;
+	bh=bERqNoVKbx4P/SwDDUOXyFXrxjwzNnYFUoDcCNKCVfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O1xqE+mqwh8U+55fROspjUrKNzRVSIzJfDGM+Ls83njMJYStvF3kCZtrxDGnS8SVT
+	 FH2Y3/4QmPSaIrhVwSXIBJfNKQb2jOqg/0R9XOlNO+8e0XTTOVDsgTNzItS/cuPjFL
+	 PJCX+bYuGxOwMqFXAxDt9oJubodYIurQ+knbiSyXMkoJmOUGIl6AyOiN49LQkcuXwW
+	 lX4Zt8yUC+E7ZRN3ptmo7qa1Dn9p3RQqNw+5yoy5YM9m0zO7K7IBGHJkXHsUDSieM4
+	 qCQegX3jtiPkdIH87I9vQ2L9GafYOjlgT1bfZh8UZrFfu8pXhN2WP2XoeZGCszveQ5
+	 tJLYM5tBLk6AQ==
+Date: Sun, 27 Apr 2025 10:25:07 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 01/24] PCI/P2PDMA: Refactor the p2pdma mapping helpers
+Message-ID: <20250427072507.GB5848@unreal>
+References: <cover.1745394536.git.leon@kernel.org>
+ <3a962f9039f0265de939f4c81924ee8208fc93a6.1745394536.git.leon@kernel.org>
+ <aAwnJwLeOs7rfkHL@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI2PR04MB11147.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4db59d63-4910-47e8-ecd5-08dd855c5cc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2025 07:23:09.6268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AGmaajJZLqTLlcIgGMLsdad74dUgW5Ao4BeDujkL5EeNPjOzkWUgui5cmkT/hNwjjO1p7DGW81Ai3lie+jnxEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB11032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAwnJwLeOs7rfkHL@bombadil.infradead.org>
 
+On Fri, Apr 25, 2025 at 05:21:59PM -0700, Luis Chamberlain wrote:
+> On Wed, Apr 23, 2025 at 11:12:52AM +0300, Leon Romanovsky wrote:
+> > From: Christoph Hellwig <hch@lst.de>
+> > 
+> > The current scheme with a single helper to determine the P2P status
+> > and map a scatterlist segment force users to always use the map_sg
+> > helper to DMA map, which we're trying to get away from because they
+> > are very cache inefficient.
+> > 
+> > Refactor the code so that there is a single helper that checks the P2P
+> > state for a page, including the result that it is not a P2P page to
+> > simplify the callers, and a second one to perform the address translation
+> > for a bus mapped P2P transfer that does not depend on the scatterlist
+> > structure.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Tested-by: Jens Axboe <axboe@kernel.dk>
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Might make it easier for patch review to split off adding
+> __pci_p2pdma_update_state() in a seprate patch first.
 
+Original code __pci_p2pdma_update_state() had this code and was
+dependent on SG, which we are removing in this patch.
 
-> -----Original Message-----
-> From: Andi Shyti <andi.shyti@kernel.org>
-> Sent: Friday, April 25, 2025 7:29 PM
-> To: Carlos Song <carlos.song@nxp.com>
-> Cc: Aisheng Dong <aisheng.dong@nxp.com>; Frank Li <frank.li@nxp.com>;
-> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> festevam@gmail.com; linux-i2c@vger.kernel.org; imx@lists.linux.dev;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [EXT] Re: [PATCH] i2c: imx-lpi2c: Fix clock count when probe def=
-ers
->=20
-> Caution: This is an external email. Please take care when clicking links =
-or
-> opening attachments. When in doubt, report the message using the 'Report =
-this
-> email' button
->=20
->=20
-> On Mon, Apr 21, 2025 at 02:23:41PM +0800, carlos.song@nxp.com wrote:
-> > From: Clark Wang <xiaoning.wang@nxp.com>
-> >
-> > Deferred probe with pm_runtime_put() may delay clock disable, causing
-> > incorrect clock usage count. Use pm_runtime_put_sync() to ensure the
-> > clock is disabled immediately.
->=20
-> What is the outcome of the incorrect clock usage count? Do you have any l=
-ogs?
->=20
+       if (state->map == PCI_P2PDMA_MAP_BUS_ADDR) {
+               sg->dma_address = sg_phys(sg) + state->bus_off;
+               sg_dma_len(sg) = sg->length;
+               sg_dma_mark_bus_address(sg);
+       }
 
-Hi, Andi
+So to split, we would need to introduce new version of __pci_p2pdma_update_state(),
+rename existing one to something like __pci_p2pdma_update_state2() and
+remove it in next patch. Such pattern of adding and immediately deleting
+code is not welcomed.
 
-Thank you!
+> Other than that, looks good.
+> 
+> Reviewed-by: Luis Chamberlain <mcgrof@kenrel.org>
 
-At imx943 board, I notice sometimes after boot one of lpi2cs enable count i=
-s 1, but now the controller has been suspend(enable count should be 0).
+Thanks
 
-This is a lpi2c4 example:
-
-root@imx943evk:~# cat /sys/kernel/debug/clk/clk_summary
-                                 enable  prepare  protect                  =
-              duty  hardware                            connection
-   clock                          count    count    count        rate   acc=
-uracy phase  cycle    enable   consumer                         id
-
-    lpi2c8                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c7                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c6                           0       2        1        24000000    =
-0          0     50000      Y      i2c@426c0000                    no_conne=
-ction_id
-    lpi2c5                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
--->  lpi2c4                           1       2        1        24000000   =
- 0          0     50000      Y      i2c@42540000                    no_conn=
-ection_id
-    lpi2c3                           0       2        1        24000000    =
-0          0     50000      Y      i2c@42530000                    no_conne=
-ction_id
-    lpi2c2                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c1                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-
-root@imx943evk:~# cat /sys/devices/platform/soc/42000000.bus/42540000.i2c/p=
-ower/runtime_status
-suspended
-
-Normal case should be this:
-Enable count is 0 and controller is suspended.
-
-root@imx943evk:~#  cat /sys/kernel/debug/clk/clk_summary | grep i2c
-                                 enable  prepare  protect                  =
-              duty  hardware                            connection
-   clock                          count    count    count        rate   acc=
-uracy phase  cycle    enable   consumer                         id
-    lpi2c8                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c7                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c6                           0       2        1        24000000    =
-0          0     50000      Y      i2c@426c0000                    no_conne=
-ction_id
-    lpi2c5                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c4                           0       2        1        24000000    =
-0          0     50000      Y      i2c@42540000                    no_conne=
-ction_id
-    lpi2c3                           0       2        1        24000000    =
-0          0     50000      Y      i2c@42530000                    no_conne=
-ction_id
-    lpi2c2                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c1                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-root@imx943evk:~# cat /sys/devices/platform/soc/42000000.bus/42540000.i2c/p=
-ower/runtime_status
-suspended
-
-Add debug log, when defer probe happened on imx-lpi2c 42540000.i2c.
-goto rpm_disable path:=20
-
-rpm_disable:
-	pm_runtime_put(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
-	pm_runtime_dont_use_autosuspend(&pdev->dev);
-
-pm_runtime_put() may not work really sometimes.
-
-[    3.203715] imx-lpi2c 42530000.i2c: defer probe
-[    3.208324] imx-lpi2c 42530000.i2c: lpi2c_runtime_suspend
-[    3.214801] imx-lpi2c 42540000.i2c: defer probe
----> (No lpi2c_runtime_suspend callback(pm_runtime_put() is not really wrok=
-))
-[    3.220672] imx-lpi2c 426c0000.i2c: defer probe
-[    3.225248] imx-lpi2c 426c0000.i2c: lpi2c_runtime_suspend
-
-After apply this change:
-rpm_disable:
-	pm_runtime_dont_use_autosuspend(&pdev->dev);
-	pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
-
-all issues gone.
-[    3.093025] imx-lpi2c 42530000.i2c: defer probe
-[    3.097592] imx-lpi2c 42530000.i2c: lpi2c_runtime_suspend
-[    3.104281] imx-lpi2c 42540000.i2c: defer probe
-[    3.108858] imx-lpi2c 42540000.i2c: lpi2c_runtime_suspend
-[    3.115278] imx-lpi2c 426c0000.i2c: defer probe
-[    3.119818] imx-lpi2c 426c0000.i2c: lpi2c_runtime_suspend
-
-root@imx943evk:~# cat /sys/kernel/debug/clk/clk_summary | grep i2c
-                                 enable  prepare  protect                  =
-              duty  hardware                            connection
-   clock                          count    count    count        rate   acc=
-uracy phase  cycle    enable   consumer                         id
-    lpi2c8                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c7                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c6                           0       2        1        24000000    =
-0          0     50000      Y      i2c@426c0000                    no_conne=
-ction_id
-    lpi2c5                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c4                           0       2        1        24000000    =
-0          0     50000      Y      i2c@42540000                    no_conne=
-ction_id
-    lpi2c3                           0       2        1        24000000    =
-0          0     50000      Y      i2c@42530000                    no_conne=
-ction_id
-    lpi2c2                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-    lpi2c1                           0       0        0        24000000    =
-0          0     50000      Y      deviceless                      no_conne=
-ction_id
-
-
-> > Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> > Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> > Signed-off-by: Jun Li <jun.li@nxp.com>
-> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
->=20
-> Carlo's SoB should be at the end of the chain. Should be nice to know wha=
-t these
-> are, though, are they co-developed-by? tested-by?
-> Why so many SoB's?
->=20
-
-This patch author is not me and they meet similar issue at some boards(Vagu=
-e history), now
-I meet this issue at new SOC again. I think this local patch is helpful and=
- looks reasonable.
-So I send the patch to community adding my SoB.
-
-> (no need to resend for this)
->=20
-> Andi
+> 
+>   Luis
