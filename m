@@ -1,92 +1,129 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D92F1F462E;
-	Sun, 27 Apr 2025 11:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF43124BBEF
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745752228; cv=none; b=sk8Mz1X7aoY4BveNvZr0FmuqtXJrC1jMbd99xDVF5eRy0B+kAB2Kn2GhboEZdXEdpku7mQ+a37nvQ6uAfbf0SLBo8AMQZWZJQXTt7kFLcdyP0xULkmJLnlCKwpMN/DltmhCu6RjwCjvHL55cfNYofo0M6EF6gjWvsiyaMr2Ss/c=
+	t=1745752248; cv=none; b=R14gXsIuLezmJr0hFYeqF7AClSXin1GtzB9hV+cHopsga2ZaIlz0rdG7VbU4inlD3qdJRS44eMMpAmZlX2Zvo6TIHOEWfXa465VdPZm9JVo1BU7ZWlPxOmD14mRu4JNxirKG/+MSoF1+FxfCDl1LpUmliK94imLrhMa0PQZEwvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745752228; c=relaxed/simple;
-	bh=kcYaWRW42OiIwBPtRUtbQoSo/+BH+rXcK3hwfw8l6T0=;
+	s=arc-20240116; t=1745752248; c=relaxed/simple;
+	bh=ZyrwLP9XEIiDz1z8JytEuEmEd+Zga84Fim/mBFMVhKU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEbmfA8esEojmu4//kLG/VtZroT9LJip5TNaX/1kg5KA3nU1qQu0PI38uH3/2JZiO8cW5uKpj+K/+I+UidLV39pKKiqukdpMAvB+iSG5ntyD6CrEinVbwvDIWgkfbEGqhCIDSKinU5jiuhhxP57lkq3+NHUt8zazTZoSss9PboE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoqjPwUW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WA1NExewWDA76AaaSYWHbBNuREY2nAvojNQ0sFAX1Zcy9jrUm7qnypoTPm7JsBPrmQRGL3Ktmdp07cSXMpW3MUlA86mtvWax5V3MQ0cUw54kavwpokoeIaos9gR3IAlFPWtIZEXNPTH7sL/YhJdzLaoMbt++MJD1b8hm9Chp4X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E2OhU7Qh; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoqjPwUW"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39149bccb69so3407877f8f.2;
-        Sun, 27 Apr 2025 04:10:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E2OhU7Qh"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2254e0b4b79so58086625ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:10:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745752225; x=1746357025; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745752246; x=1746357046; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=IZ6YYAg8Ss5u+Qu/mL9ZNCceDcajR2cHqi1V2GCUqag=;
-        b=aoqjPwUWTKNmmwuqfoKbfTm1UInGA0OqL16i4GIhdPD1xxRab98MjhcXMUkc3paAn/
-         qIl+j3f9W+hDxgbZMRL0V8+wYyRRviEMKtXo7h3gAQzHmXCKW70QCqUvAMwawC9q1Owp
-         8EYaF0ID7mqbUj6R8yzjz2qJdgNNwtvUv41NZYHeiiQ3WGhKbcPHpFlcM4x1pfpSlWXi
-         v6Be55uLEoIrSvudAWKCGnHYI+y+wxfvIYdWfkUAJicxX4qJmHOfaUEHSL07budYIplV
-         mtwyTW2eyZ3vmzAr8/KV1hb7T08tiJ7zHJP+mSIz3ZL0R9ekndcGk2qeqBEREFp1vdSu
-         NKFQ==
+        bh=BCW3fClu8hd3i15UY5+BkYv0EoS+YjFdR94yHfWo7NI=;
+        b=E2OhU7QhsyUfvTaE+st4BY0s6ipnPG0LBkS9v9iFBjEJn8qlBUD7R8dLO+CFprpIbJ
+         unMHVtWS5e6JvwY4PVrsR2pMBN0nRC8w0jeurSXNp4SDmwE2uP8RudUg9Pgohx4eJlpb
+         CBGCGtxquUw4XXpLhI/aWiJwa0IPdcl5vA+g+WpdRrFZvqZaNdIBfHMv+xQeuft1dmKy
+         jxTpHABjh/wlM2kmzV5FOgjPH51ZEtAS/CfLzcP6tyLdZgcI3VzDH9Gfuv6ubKZa/9ba
+         SwKrT4OyiAma7IHn4n0Iqbq3sXDnxszcH1HHJe+VTiJermghiOsWiHhdz2n6HlPgj7ev
+         +9+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745752225; x=1746357025;
+        d=1e100.net; s=20230601; t=1745752246; x=1746357046;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IZ6YYAg8Ss5u+Qu/mL9ZNCceDcajR2cHqi1V2GCUqag=;
-        b=Q6vuBT8KM93arSpUyLU+/CduJhEiq6Qcba9V3uWFGAGqUNpLoMS1oeApn/MG5i1cSh
-         ycnC/7glMlsKcNKZj+kDF4O7MNdaxSPBU0mXDY9PlGhTFctSfaBraonaAeDyKxmE1zdt
-         EGMPkjv0amyvEMALtw9M5i0YmVNDnrjgGiszVHnI+BTNxA9QeLsPzVRCggk7hvDCVdxM
-         tjq9Kr+iUGqxC8YSEmrtn/0qWwbMmLIWVL/60fnZ0OQWiC2bkfPp0znU9uS8w2sjwiK8
-         /jynZFrnWurwMstIPD9zSKCm26GE4X4LzHTlNhT8ojO6HK/9vd36qcUSIkjz6nPVWJcH
-         s4GA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6urEDis0Z5Culy2DBmrku92JTqMJyoWEz6e+qftSFPw4vIuF9IViUt5HUPPMXD/VV7+AJ5mYlcFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnBicqHGFNnJ83Rk0+LrFzmFYsEODWCJcl4O9Zsj1SOBlrIYZP
-	ggJMAwn+4XRYV8TrqWswm5wsAvbEMMz9myfMzwjyqajyJ8/NyUKhE4lSCA==
-X-Gm-Gg: ASbGnctOogcNS59jlitg0ggFuP0ufVHY3E3Wh1g6CNAO08tVdQUraFljGxyxrrX/Fcc
-	TaSDsuDpbyRE2ZXvPc7p3xZQyQV7nF75SKnRXhzEFRJbWWf8OABTCmqEvS11FOQhDRiwx66pzrD
-	zQ6ACc5iuQ0FzJG2iPyi5WCUavBRgWMlO+ffmDtqLVvjpV56Y3tr0wMZgAfPq6SdEfyvmHW0153
-	9kcej+yJUpZN57nzyGPIdKm51N+W3/xf67wsekIVUEZXQlN1Au8a5I1lF3qDki0lutOg7Ns7kaw
-	byX61HAkWJFhquleKQkJ3hSa81Gte5ocqFUAgNKk9Q==
-X-Google-Smtp-Source: AGHT+IEQ83us02W3E5+nauikCl5Tq1Km3IzPVAuRsxKICstvHbuw/VuRV/NinlqPrn0qrA06Fr+pCw==
-X-Received: by 2002:a05:6000:40e1:b0:3a0:7a7c:366a with SMTP id ffacd0b85a97d-3a07a7c370amr3945974f8f.24.1745752225441;
-        Sun, 27 Apr 2025 04:10:25 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073e460b2sm8172727f8f.70.2025.04.27.04.10.24
+        bh=BCW3fClu8hd3i15UY5+BkYv0EoS+YjFdR94yHfWo7NI=;
+        b=uGFySBTCh+2d/OvyXYKmL3dLRZ5Rk4K8m04himuEwMutq3GAnAE7IHs1vJRzcVAClY
+         COMxS/Y4NBs9grq4nu8qAG0jx2p7PlnkAbAhaGPHjrB0J5DbPf6CAwoOeQcL5ksSAg0n
+         JJ+CocD+wB/N1+Lj+SRetz1G64dmpsv9KkaqU8fIOX8M97RkFgDuSkpvx1QKGtyreOh2
+         WNOstcQJxWF4ZVj9kgnwFXkhkLIcAa6Dh8Vh6V/WZEywS6D7N2UIX6NyjxJyZxNoTw4N
+         I/ry4PoOt8RgGJWKd5kBgbUraeeg0Yf414ynQd45+YXJIdPe2tW0TWBWJ/FhIATjQwkn
+         q3cA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsxh4fIVI8WLX6woL98L7GEjCS89OVW6c/lCaYlwH4TUtitzJCI6+/9we9SAVOUiUMkuogdl9qTsHZ4e0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyANTxTZWXrxGHYwuiU8jXxVozLoMGsAD6nVQo3BMGzmBHR0KYO
+	WxG8dcfuXGp4vcBvV2CnQ+mPh6ltTcncEV5SH+pq2qWzcNb3bzpSHJy7OqZFqw==
+X-Gm-Gg: ASbGncvVw7xcsRyBWGVm1BSGgmMvglREXkLog0oclBzXFKO9FycwIJilwobIShnJN14
+	VgCAvDWmyxeypCxBEDQueJRkcUdE/7isGUD9+zSiNCfcseJkL7SWDQMPVWri0Z0NR+tiKNZHNaO
+	GIBjFZfxSsBL0MWV463WCl4FrF8AmVc+Ia4kFLgKi1KjYAqSrHpv0G/BmOGPUQdFFBQ6TRyNOv+
+	5lm4SDGrbTwcylxbnrXVXDVMl0sc34UebzpG87YbhAjE7MN2mMEo5Y23C6OzI2Ep473B3VHxMqk
+	IePHoGkQQL0VnqU4sXwgr8Fl2o44LcFA5mHoJWHlBoD0kCXYwIQH
+X-Google-Smtp-Source: AGHT+IESxIRh9ywcqSB83gIp43lT9P2vpMm3xBJxMCs41iZKziBWs0161UNH7ZZMchhUoZ94nY/2tw==
+X-Received: by 2002:a17:903:1b23:b0:220:e5be:29c7 with SMTP id d9443c01a7336-22dbf63a2c2mr132522725ad.39.1745752245995;
+        Sun, 27 Apr 2025 04:10:45 -0700 (PDT)
+Received: from thinkpad ([120.60.143.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d74c93sm62360595ad.11.2025.04.27.04.10.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 04:10:24 -0700 (PDT)
-Date: Sun, 27 Apr 2025 13:10:22 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: gregkh@linuxfoundation.org, johan@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] crypto: sun8i-ss: do not use sg_dma_len before calling
- DMA functions
-Message-ID: <aA4Qnhy5DKMrcwGa@Red>
-References: <20250427110503.14775-1-clabbe.montjoie@gmail.com>
+        Sun, 27 Apr 2025 04:10:45 -0700 (PDT)
+Date: Sun, 27 Apr 2025 16:40:36 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com, shawn.lin@rock-chips.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 0/3] PCI: dw-rockchip: Reorganize register and
+ bitfield definitions
+Message-ID: <yhcnrmmmphqz2egrws5sxobysf6ntnd7xxl5vuzo34y5aunbj5@pe7i352kgdm7>
+References: <20250423153214.16405-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250427110503.14775-1-clabbe.montjoie@gmail.com>
+In-Reply-To: <20250423153214.16405-1-18255117159@163.com>
 
-Le Sun, Apr 27, 2025 at 01:05:03PM +0200, Corentin Labbe a �crit :
-> When testing sun8i-ss with multi_v7_defconfig, all CBC algorithm fail crypto
-> selftests.
-> This is strange since on sunxi_defconfig, everything was ok.
-> The problem was in the IV setup loop which never run because sg_dma_len
-> was 0.
+On Wed, Apr 23, 2025 at 11:32:11PM +0800, Hans Zhang wrote:
+> 1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+> 2. PCI: dw-rockchip: Reorganize register and bitfield definitions
+> 3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
 > 
-> Fixes: 359e893e8af4 ("crypto: sun8i-ss - rework handling of IV")
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 > ---
+> Changes for v3:
+> - Delete the redundant Spaces in the comments of patch 2/3.
 > 
+> Changes for v2:
+> - Add register annotations to enhance readability.
+> - Use macro definitions instead of magic numbers.
+> 
+> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+> 
+> Bjorn Helgaas:
+> These would be material for a separate patch:
+> 
+> - The #defines for register offsets and bits are kind of a mess,
+>   e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+>   PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+>   PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+>   names, and they're not even defined together.
+> 
+> - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+>   PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
+> 
+> - PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
+>   Sure wouldn't guess that from the names or the order of #defines.
+> 
+> - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+> 
+> - Submissions based on the following v5 patches:
+> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
 
-Sorry my system didnt generate correct CC/TO, please ignore.
-I resend on correct people.
+> https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+
+Because of *this* dependency, I couldn't apply this series. I'd suggest to
+respin this series avoiding the above mentioned patch and just rebase on top of
+controller/dw-rockchip branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dw-rockchip
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
