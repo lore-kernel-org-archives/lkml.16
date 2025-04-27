@@ -1,98 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30819D898
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C827199385;
+	Sun, 27 Apr 2025 14:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745763905; cv=none; b=Q1i1QL8+bCb7T+YzDCzLl8B4oiLPjQD0wQKBQiAa3Wiwzn2cqhqyfnHCoixn9QB6NvhV1MIkazNA9i/ijUs4wGqw63AGwuJ9z8lWmAmHY7ImzpzESR107QebDbwRAi6RqF/M6kdw7IL59SdjfFvp6RI1buk+9P1qrUBxXDn4nBo=
+	t=1745763916; cv=none; b=BOL582egVV0xOnFuha1mBW0ZEzNuwaPu9n9r+Xm7mAi/XjToShxSQ1FlPx3QzPPoykBX4ZtVm+NzRBfcT3XmDKx6ILPrpbDy32rpQLagICxafdr6vsG34qGw/tWlZk6650LHIa/eqaLoxJ/e96yMY38/jcZXIpdeRekWGZbj6xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745763905; c=relaxed/simple;
-	bh=Ps7sTe8S6LYJCX4j2bIheJAnRl1QnQmJk/rY3rgwsbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvlnIjFAt+Ban1ZRPb+kBrCPARoEd/iaOK8G48zm+5tyzlOcfQyvSSL6S68KTiqb7zYhMhXj2WPkvowowQ1bPaHnSOlPyvJ1otZbHeIu6VtrV+OjOercw5SkleNJ/mAfAWgNU7glPLDSsr0SxYYKDQ7GmhiSckaF1bXe/i3OyCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fs4koffE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745763916; c=relaxed/simple;
+	bh=4RuQwRBAdLPTYq/a4FeieIjOWizMZ9M2PNfdmCov5UQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k8Uibvv5zA9yoFr81/X2kjb7uj2g1uwAtVdKOrpuH3MZgzvv9DNs7Hu3n+F6Ls5RiY7Z9He3Omk6Hlj1lUo7wm0bSa/06ZGe5/GYwDKP8MRlYUHMI/fjkbwrulnDkS0lRaI64wiLQdXQA2/3t1Fen5yXBQ7onTnBR25sfEhY0RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1erEWoz; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fs4koffE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745763901;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tmwk3zN05evJEspzQM+NK/fIVHBMNvMlBhD9GL7xf0s=;
-	b=Fs4koffE2yGBnrvWcFZiWY525VdBEYs++6zLJLxtQLYEi7lGo+N+HI+B2r40FP8ftsJ4eR
-	L0JRFYkYmKlH+griUaOzDlFtrxTiJBQhLG9FSJ4MpgiLWQtCJbQmguuGyQMLdjbxXWr7XI
-	c6pWuLBqDx5b128cRb+aUUDVSb7ORgQ=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-167-b92HLJ8VP0-OFpGc71vt3A-1; Sun,
- 27 Apr 2025 10:24:53 -0400
-X-MC-Unique: b92HLJ8VP0-OFpGc71vt3A-1
-X-Mimecast-MFC-AGG-ID: b92HLJ8VP0-OFpGc71vt3A_1745763888
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9EF7F195608C;
-	Sun, 27 Apr 2025 14:24:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EEC51195608D;
-	Sun, 27 Apr 2025 14:24:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 27 Apr 2025 16:24:09 +0200 (CEST)
-Date: Sun, 27 Apr 2025 16:24:01 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 07/22] uprobes: Remove breakpoint in
- unapply_uprobe under mmap_write_lock
-Message-ID: <20250427142400.GB9350@redhat.com>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-8-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1erEWoz"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3105ef2a071so38683191fa.1;
+        Sun, 27 Apr 2025 07:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745763912; x=1746368712; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l+/h+HUw5Fa9i+auYLXdmFTVTqLMJ8IF6VQixN6G/8c=;
+        b=R1erEWozsynBtkY7tq/1Aeruwl9LB18PPTgZs/rSW4RzH56ck/NMaQ+GQQNtF5sKkV
+         udHAzE3Hs3JVx2M3BtkcBPAwCS4pYyPudodsUWQQVeDSxf27aP1bxazq73kCt5+EOZ4b
+         EzhMQl53HOaOR16KIS+SJhKHc8ar2Di6n/8iM6uT+jGT0igRsVptxttEpXu722lujPZW
+         jOD8HDFjF2MD/HUv9tQnF/5Rrw37iyBZjP8j2mE7uu6KMn1T2p61pZluNCxNRXkGrJ8N
+         PA1B+z9JOTK85Ue89iU9MNhRNCFqAxW621d87dhwhMIFWRaDBgC5yLTaHHHl211XbIqn
+         M3lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745763912; x=1746368712;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l+/h+HUw5Fa9i+auYLXdmFTVTqLMJ8IF6VQixN6G/8c=;
+        b=OseQftm9+hyneiUMkf5f9V0HqYwFwlYGNm9PQgl/hrop+v3+LxYbDDKe9Gh+hgOsPB
+         RKGU3ad1CUEZ5F0KXM9yD2dP9mjXjZexo/+G4o29/Qan2qPz6bBNS0ZPHfPnIa/wksOI
+         NHJy0tbazx/zX/TWXDMTRZfzhnXws1MAY6fwqJDvz/Sg5AJ+Hwh9miwocZodlEiN4HZF
+         UOOjIl41YIluPumGHeNEG83nvXt1TIOE5uHzU5c/d0uMPrB7ipgvtt1uzCHmhqVMt/i/
+         H1eai9cPpa1E9gbYZA6D9vdUaLUuvKY+DsKm1xI4s44AOZlf3zpGKojXmkxRlaQN5134
+         ti5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU29g8sj2ci/Ce0CGvlkaedNrkOVhdUuChDSnYK/5Nb3qnMTku+1rKL5eVVRJWh+o4i8IyWBo3caVOH@vger.kernel.org, AJvYcCWyXc3oe3VC80lpvLtpTJo8gN0NslybCWo9P83BJQoyoKGceaZgKh407GnrX1VybXRxz0UE2LueK3cZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw24Cm6DPdtKGak7+0sVgPoVbJXafFAJoJOiTNnA6JDkoxxWudp
+	dU6XiSLnvb0A0cgE1RMEtWFfYWiaIxHdW7uZ3ThOc2Ys4gmrGisyLTaARmhc1UVu
+X-Gm-Gg: ASbGncuRhV+7b+ZSAIo2C9DfNHQKSp44BkSor+OqbZ9oy4ZvaIZGLEOZFbO9Hch6FmJ
+	HtHWkEfYD8ndsghe6mw3S3JaRaetzjMyfP3t3lL9W7LOoOPvtTKGFBt+N0N9ww/9PuhSJ6/XH+5
+	427pVzRrEM35RmKDRb+2rZf4RinhFt551Q+pM+X6QtjMPqqr7vkdpg/+7upUcKdRGrhmC265W92
+	eX3L6m09IFibn4H8cSUELOe33fhbusIzq3bSs6WsdosgYrHtZ3HPH7UKgXzYMKGG/xykjwDnbDy
+	9fSVOWvB224Ycvynphla8Bs6iRulv2mk6zBztm59R3y+Zl3jJjZj4wEI
+X-Google-Smtp-Source: AGHT+IEZEKc9Vnf/efSmBJgLhw4tTfU2F09GmxdHClCejQ/XhLFf9brnK906waqbWQ74zPb6LP0ysg==
+X-Received: by 2002:a05:651c:158c:b0:30b:cd68:b68d with SMTP id 38308e7fff4ca-319dc02035cmr14537211fa.10.1745763911951;
+        Sun, 27 Apr 2025 07:25:11 -0700 (PDT)
+Received: from localhost.localdomain ([178.176.177.108])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317cfb482b1sm17659191fa.29.2025.04.27.07.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 07:25:11 -0700 (PDT)
+From: Aleksandr Shubin <privatesub2@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Aleksandr Shubin <privatesub2@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Cheo Fusi <fusibrandon13@gmail.com>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v12 0/3] Add support for Allwinner PWM on D1/T113s/R329 SoCs
+Date: Sun, 27 Apr 2025 17:24:52 +0300
+Message-Id: <20250427142500.151925-1-privatesub2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421214423.393661-8-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
 
-On 04/21, Jiri Olsa wrote:
->
-> @@ -1483,7 +1483,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
->  	struct vm_area_struct *vma;
->  	int err = 0;
->
-> -	mmap_read_lock(mm);
-> +	mmap_write_lock(mm);
+v2:
+ - fix dt-bindings
+ - fix a remark in the driver
 
-So uprobe_write_opcode() is always called under down_write(), right?
-Then this
+v3:
+ - fix dt-bindings
+ - fix sunxi-d1s-t113.dtsi
 
-	* Called with mm->mmap_lock held for read or write.
+v4:
+ - fix a remark in the driver
 
-comment should be probably updated.
+v5:
+ - dropped unused varibale in the driver
+ - fix dt-bindings
 
-And perhaps the comment above mmap_write_lock() in register_for_each_vma()
-should be updated too... or even removed.
+v6:
+ - add apb0 clock
 
-Oleg.
+v7:
+ - fix a remark in the driver
+ - add maintainer
+
+v8:
+ - fix compile driver for 6.8-rc
+
+v9:
+ - fix a remark in the driver
+ - fix dt-bindings
+ - rename apb0 -> apb
+
+v10:
+ - fix a remark in the driver
+ - fix compile driver for 6.12-rc2
+
+v11:
+ - fix a remark in the driver
+ - fix compile driver for 6.14.0-rc2
+
+v12:
+ - fix a remark in the driver
+ - fix a remark in the dt-bindings
+ - check driver build on 6.15.0-rc3
+
+Aleksandr Shubin (3):
+  dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
+    controller
+  pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
+  riscv: dts: allwinner: d1: Add pwm node
+
+ .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  84 ++++
+ .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  12 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sun20i.c                      | 379 ++++++++++++++++++
+ 5 files changed, 486 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-sun20i.c
+
+-- 
+2.25.1
 
