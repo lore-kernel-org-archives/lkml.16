@@ -1,93 +1,82 @@
-Received: from mail-m93197.xmail.ntesmail.com (mail-m93197.xmail.ntesmail.com [103.126.93.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899CD1A3145
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.126.93.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBEF1AA1E0;
+	Sun, 27 Apr 2025 10:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745748409; cv=none; b=fsfoPEY8zxKIZBn/6ICEmr5FrhRUHNKoCKYOUQeTw6OnuWAeXNogXlnkM4Ml1JiTbh0uJ38rG9VwII4TmwbwrYCr3fhgq0TJJ5ewCtjoH9nYPoI09DKMkwZAxAxwxsRkBBWawtyyRuDmrnu05cFUBN/6wVtOxCbqTJBQ7Hky+MI=
+	t=1745748621; cv=none; b=OXvdqoZxhPHcyNZ7JS1UZelzqDWC6js+wPozmzkJlNllbDAjlCLT1sB6X1pjmVBhqTcg0vVnV/+VUbboYbGKJmnj9kAN343nB96wFJNSD4+IKFiKSAGZ/s5gxByp/ab6gLKr3QW2Zrutaofmjrthx+ecEk8K++3QWxo7LpqjS/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745748409; c=relaxed/simple;
-	bh=asQztV10Eu4C1KXhcgwNRdm6QTg2lik5SZm7MbwcNuI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hSrBpdCzW50SMja4iEgMDCANLsAADUeAj1Fs1n3cj9NgmTXDIP9IIhYCjVZkzdzu8Tr0SncH40k3exTWf1/BIVkg1PkoXiDYf9LQpMeuB5Kc2WiTKvO1SaY7MK9d7dqMMI83bGLJk2phjCFvYRkYPpbGF8QASRkPwP6npl65d0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=KrV+/+4C; arc=none smtp.client-ip=103.126.93.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1745748621; c=relaxed/simple;
+	bh=LmDoB/y/g1bdzjAapvVCYn6JmM5/tIwS924XhVIG9LQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tRT5jgzK0E75OwxZ1M/+Nqw8XlWdVEW5Iyl+k2QBiEUwnFWDot9b4vvq6Eska79jL9g10IGAS69yhl4ty0mI6T+LMkSjSMu4l/7F7qDQp/QLd1RUeH0BhQji3Kgsfc+C+hvjok+k5v2R2u+g+iZ3Ajj1TyeXbULKiYg7J9Ykk7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPmh0aTR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="KrV+/+4C"
-Received: from crj-HP.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 13467afd3;
-	Sun, 27 Apr 2025 17:51:26 +0800 (GMT+08:00)
-From: Algea Cao <algea.cao@rock-chips.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	heiko@sntech.de,
-	cristian.ciocaltea@collabora.com,
-	andy.yan@rock-chips.com
-Cc: linux-phy@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Algea Cao <algea.cao@rock-chips.com>
-Subject: [PATCH v2] phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25MHz error
-Date: Sun, 27 Apr 2025 17:51:24 +0800
-Message-ID: <20250427095124.3354439-1-algea.cao@rock-chips.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPmh0aTR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E756EC4CEE3;
+	Sun, 27 Apr 2025 10:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745748619;
+	bh=LmDoB/y/g1bdzjAapvVCYn6JmM5/tIwS924XhVIG9LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DPmh0aTRh7wrs7iTIVCj28MZ/dSZhj96rprOfXQkBASNBIMmoXp1zUqcK5xO9p93v
+	 9NKBXJ+eqCKBvtPR7BGmwV14Wp/he2/i1QkF/iGqq5k98xB6Zrolzw2QPhNZhLChFH
+	 m7lCy27/qWLe1ZfKw8wszZNUgrwbWHK1JlOaBXXKbsjtkKfsgPlv/GhisRN0ITVqR5
+	 SCInFD3mkOKmEuwqf9vuoF6+x+jjz4ZaJsk3gN9lcTdkKboJh9f+ViJ1zBuniSHlIt
+	 4KZuVCcV0sSbe96t1okyz/Ac5w1mEqnUfurO447BqFXoxEuXCiXtc17ZgyWgnTFMJh
+	 9/gOflF8ltPFQ==
+Date: Sun, 27 Apr 2025 12:10:12 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
+	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
+Message-ID: <aA4ChLR5xf0I7YJY@pollux>
+References: <D9GUR8Y08PQ6.2ULV6V4UJAGQB@proton.me>
+ <aA1O8Wem1FhyybF5@pollux>
+ <D9HAC6KW2GTG.ICOFCQX4A2U3@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhoeHlZCQkoeQh1OGExOHRhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9676a8a62a09dakunm13467afd3
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ohw6TAw5EDJKNzAjIiEXAg88
-	IR4wFE5VSlVKTE9OTE9MT0NMSUNMVTMWGhIXVRoXHB4aVRgaFDsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlJSEg3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=KrV+/+4CPUARt4u7JXOYH09ZtCg74JjPajJcsbOdnLlHIU6yfpJARmdeDu3KozYLYmuQKiI1t1YmH9sjIf+oQ9Ahi9Jkw9SngZpIOvbLyE4kPq3/jojUMZA82LpTUlQ854nhYhE73BThCJqbG1Am1I2zSLCezAdhfbqs5dkvyq0=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=SoYz/XFXV7qWYJpDDDScC20wyuaAqrciDeZizEc1w4E=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9HAC6KW2GTG.ICOFCQX4A2U3@proton.me>
 
-When using HDMI PLL frequency division coefficient at 50.25MHz
-that is calculated by rk_hdptx_phy_clk_pll_calc(), it fails to
-get PHY LANE lock. Although the calculated values are within the
-allowable range of PHY PLL configuration.
+On Sun, Apr 27, 2025 at 08:41:02AM +0000, Benno Lossin wrote:
+> On Sat Apr 26, 2025 at 11:24 PM CEST, Danilo Krummrich wrote:
+> > On Sat, Apr 26, 2025 at 08:28:30PM +0000, Benno Lossin wrote:
+> >> On Sat Apr 26, 2025 at 3:30 PM CEST, Danilo Krummrich wrote:
+> >> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> Result<&'s T> {
+> >> 
+> >> I don't think that we need the `'d` lifetime here (if not, we should
+> >> remove it).
+> >
+> > If the returned reference out-lives dev it can become invalid, since it means
+> > that the device could subsequently be unbound. Hence, I think we indeed need to
+> > require that the returned reference cannot out-live dev.
+> 
+> I meant the following signature:
+> 
+>     pub fn access_with<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a T>
+> 
+> You don't need to specify the additional `'d` one, since lifetimes allow
+> subtyping [1]. So if I have a `&'s self` and a `&'d Device<Bound>` and
+> `'d: 's`, then I can supply those arguments to my suggested function and
+> the compiler will shorten `'d` to be `'s` or whatever is correct in the
+> context.
+> 
+> [1]: https://doc.rust-lang.org/nomicon/subtyping.html#subtyping
 
-In order to fix the PHY LANE lock error and provide the expected
-50.25MHz output, manually compute the required PHY PLL frequency
-division coefficient and add it to ropll_tmds_cfg configuration
-table.
-
-Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-
----
-
-Changes in v2:
-- Modify some descriptions in commit message.
----
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index fe7c05748356..77236f012a1f 100644
---- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-+++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -476,6 +476,8 @@ static const struct ropll_config ropll_tmds_cfg[] = {
- 	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
- 	{ 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
- 	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-+	{ 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
-+	  4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
- 	{ 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
- 	  1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
- 	{ 400000, 100, 100, 1, 1, 11, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
--- 
-2.43.0
-
+Makes sense, and I don't mind changing it, but I still think the orignal version
+makes the actual requirement more obvious to the reader, i.e. dev must live *at
+least* as long as self, but not dev must live *exactly* as long as self.
