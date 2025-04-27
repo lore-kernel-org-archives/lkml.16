@@ -1,89 +1,132 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED1F245025
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C8B2459E0
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745739506; cv=none; b=PCAsEQp/jc2veku/CsZHqu2s8f7L8vKO1UWTwcXE/nNY8lV73go5at54IhC1NxZW5zCzSEq0dF7GIuYiljoWCDH/a71Dx01YzMZrYu4PPyyNaOTQ7jEYSHuxign9YPT2riJFDdE6CgViEcp6K6yUB03j2YkPIqh/o2xs5i5ad9g=
+	t=1745739851; cv=none; b=jnlJfUdLcH/a12vB8M3RpzvERpUewAllYnamTAa7DsplLWYnsLRg3wrr0M5Y/b/7VqVw8uvjTmwRO57rn08WG8Damm+5bTF168YRDMyRTSjVmNEO6bKKKoWTnYPd9P+zSTKHrLtdpnM/37XKGKb94D0tQe+wfLsTtByJtD+E1zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745739506; c=relaxed/simple;
-	bh=wudRz7/AQO9EHZhb5YXMaPRFMRyJ84p5SKMJ9sMIwcI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=twGT5CZeTnbjBCuyoGlfVi6FnR5VdJyI8uy7nR6bc66MFF521rjhhdPH/KTIHINMysvi4Y/lR22vEIU2ym2Amr9vo8dEnkCbkGYtqh/SoA5LT+dMYlMSLWHKMQ6mNPfokgtIWUs6sde1B0iyhrvQFxTr/6z/sWdYYNQbKJfNkpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VYAwnUYj; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745739851; c=relaxed/simple;
+	bh=+55CHDPhy7ugVr8afIZtwPoA5z6AhwOB1hiT1fHQRa4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kS24UKa2geHYmL1qNqLHuqnyDIf3mpPMWgvHdIDxR2HVR6rOvPQ2Ezuni3pVAfUsAgfkZ3WMgcMOKpBrxbWwMlJLZMi7SG+R2NzmL4ga5tLTO4UWQRrWjsr0gukg+d+fO5kpgr2KQ7pzjwr6SYOgqJD+VmB1kTipfDMs3wvmsKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=asB6wenO; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VYAwnUYj"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfed67e08so39480561fa.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:38:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="asB6wenO"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso23519625e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745739502; x=1746344302; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wudRz7/AQO9EHZhb5YXMaPRFMRyJ84p5SKMJ9sMIwcI=;
-        b=VYAwnUYjk9uUicZkz7iikK37f2/HhyQok9vMGQXpWm1sWYqlHlW/nG7qyHtjVbJJcQ
-         IaPIW6x+iTefZ/bLbPtXA5aL6UC3UMLjg3YzyanMR4OvuhVNVp7oqOb32zvia0/eTM0r
-         9AfteDjSIfmw00AZWmSI9IFdOuGZJrLkDQJaB5NHVR/Q5B8wxHQYPK0Gptf5GNp8qX69
-         1lvgCS94r19s1/tDLlfn7tFvIHTsDhGm6COWvlqMtvuUYs2mS8w9VfZ8rR2W2i+YBF48
-         Db9mfRYlvsb+9tF4DD5WLZFCv1OsZTo5gSfis9GGQXQIpQjUVZqobvw85L/KgvHnIYgQ
-         gggA==
+        d=amarulasolutions.com; s=google; t=1745739848; x=1746344648; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oinzcqCiVbGgyb0iiuzscDKJeJyyI76yLcJfoJ0sjS8=;
+        b=asB6wenOLclOyq7FHXYw1YG2fz2XoC/uueIFoZ8vp99pHKebvqvPfuKdD5JlSRqnos
+         P9Hc9OPYmiXfZIPdGUIocm1CYwLpUMoP/OPKSu2bMg30GUs9LThh1263tITDbzP2E55A
+         H1RKIoTfbPO8//DtgPMNyZW4/8E0QWjUnmXuY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745739502; x=1746344302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wudRz7/AQO9EHZhb5YXMaPRFMRyJ84p5SKMJ9sMIwcI=;
-        b=CbE7NTheqko5UJtTvFUvtVIdWPyrispkTJQf3lqJEADNav32WuS0YUnoMHVZCYov4+
-         bcUSv4YJgVigSe259uq2okzU4JxxBJHAXzegjOkBvQnep0T9Kq4DsPRIY7Uj70yhM4Mb
-         66Q3z3PrgIzq+Mm+pw7AsFOCyW8qaw3n4TO95zyGq4+TA0nIzTuFvyfSrYqOcVyVd4ev
-         14ZWpFR4JG2ZQx3nnMlNHwVlPdacF7MX6JeWu5PvJFy2NhK3M6g7MqHIqYYquXzgiA0l
-         v4UUdOBJx5rzcpTU2mj7CGdAsPLKHKrbLpjbg6D5AX+nZbAQoyhP2a726kG5YdVJSlGN
-         uAdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdxd9BZBHoZAEf3qQggOfq4cECNm+C9Pf4i/oKzDWkV5kKvbvMsSo+h1qchgsewkMmE2mWYsfvslYrlyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoxGCGQbDDFWmJEgThlbz5DCqUWVposAvWBZVlqlrCywcjLJYv
-	kDsMeRAaHeDfboumw8hYQUm7FE0Nb+4OFlMAxYXa45unuNX2+nrh7zQ1WTKnJQO9irD+8LsU6xF
-	dFU3ElfME+zr1YEBH024nWC/Vg5ugCh8p3y87Og==
-X-Gm-Gg: ASbGnctaLgxZflxhJ1aDq0uP+76+A5Fz+UfdJCb4i48akoNjut0euM3S6CTBqkGxXSc
-	wn5CLMesMW3BOEqK8j2mba/7TjViJXa4FZynNDb93VrttNJnAb013W6lC9GFRNZ3FQhlVsJnBIX
-	YUnUUnMq58Te6eN6tfpcRqXDnBRik8cQ4I
-X-Google-Smtp-Source: AGHT+IE0s6Y/2DxO2oROrDBBRGXlGGPZtUWHEiRyI3o907MEd15+YOXjnMQoNhz24D3InZPz100+EiGjxCAdswEVKq8=
-X-Received: by 2002:a05:651c:30d6:b0:300:5c57:526b with SMTP id
- 38308e7fff4ca-319dc020492mr13207661fa.11.1745739502282; Sun, 27 Apr 2025
- 00:38:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745739848; x=1746344648;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oinzcqCiVbGgyb0iiuzscDKJeJyyI76yLcJfoJ0sjS8=;
+        b=DYRSZKNOGDeKS9n7iX2ovC4IW+ZJoalyyG1jYNSXIS659Q+uAqRkOeMK3zm5jSrDYg
+         0hy45wZct49ky4HEMQf3lTUTIBaymZTOCAZd91FtSLR8Etx5WuQHEavZnTUHr8OwQ3QX
+         AnC6czC9FhfQ0fA/synrY1RsfIsik7ENrjiDuMLhFrzwv99i4eut93UjdcLgX0lVyrfz
+         OEUYekLK4S6UF5AIM0RVTxq5sFu11QSiuaDAbSvlN8YKnzkPoZF+6n8Z43nOW9HEUpwR
+         BxFUNoBYVrmtmoG3jF9iwJG7BkCcrkV8z+ka1MzzU8ga5fJkS/le5VBqG7NxdGM+kS2N
+         fj4g==
+X-Gm-Message-State: AOJu0YwKVMWZp02n0BBsEGrPZ9sRGxI9iZ2q9aQxzKkrMwidr+4IfsCz
+	K+vFdesvMwDljOdWWEguG0kXqkFz7cTNZ3lEk509+i5/kCzZfI/0J3GhnSD38S7scylLda/DDHm
+	e
+X-Gm-Gg: ASbGnctpRlhdXkoL79TmbdeUvlAbSW8fCrVr5BLx0MOEphRb4SMrJ7bp0intRF0PSGS
+	tluu3smZ7LbsHRbtQCo+04iytZhn3eEpkklUamFvN7SwDofA3BgcD4m1Y0imoLg43CTbZIz8G2Z
+	/5l3aP6G+HPcVfBFSkFSXSQGyZaqScdKR3xsxyD6RwKDRmEEIpH3NElUwPU6z23T8TPQcmLEBP6
+	m7XUv0oDxP4NeOk429YxSfd0z+5crbnKTGE+h/QvFY+MT/9b8zG5UBbMiqRKegKx4Jjziy5GXov
+	gf5vIGNn+0sFq8xnFeWWB3JVlvA8sZoXKTrnlAIZTpx7vjpM8/gbOl2dTE5sOcQyi9MK/D6uUZK
+	3uGwbwg==
+X-Google-Smtp-Source: AGHT+IG55beBCMeEpoU+v9sBHrbcIgFnVINAwcpqdyMq90VQ1/y+K+5G8xBe1CVGW38gxB0HOPdp+A==
+X-Received: by 2002:a05:600c:3148:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-440a65dd132mr80678905e9.14.1745739848202;
+        Sun, 27 Apr 2025 00:44:08 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.40.180])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm87682015e9.7.2025.04.27.00.44.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 00:44:07 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-amarula@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Amelie Delaunay <amelie.delaunay@foss.st.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Jander <david@protonic.nl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Roan van Dijk <roan@protonic.nl>,
+	Rob Herring <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Stephen Boyd <sboyd@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 0/8] Support STM32h747i-disco board
+Date: Sun, 27 Apr 2025 09:43:19 +0200
+Message-ID: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427055020.176099-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20250427055020.176099-1-peng.fan@oss.nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 27 Apr 2025 09:38:11 +0200
-X-Gm-Features: ATxdqUEN0tZTG3EpwyOmhaizHZmLuZi7m9-yOjcb6bOSaW1uiAGqfGaE8fOVGtQ
-Message-ID: <CACRpkdbn_B6QumJ6k1+jXDp-EXSD2CVKArWVMawUVTxPdroZUA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] ASoC: codec: sma1307: Remove including of_gpio.h
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: kiseok.jo@irondevice.com, lgirdwood@gmail.com, broonie@kernel.org, 
-	perex@perex.cz, tiwai@suse.com, brgl@bgdev.pl, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 27, 2025 at 7:51=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
+The series adds support for STM32h747i-disco board
 
-> From: Peng Fan <peng.fan@nxp.com>
->
-> of_gpio.h is deprecated. And there is no user in this driver
-> using API in of_gpio.h, so remove it.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+The board includes an STM32H747XI SoC with the following resources:
+ - 2 Mbytes Flash
+ - 1 Mbyte SRAM
+ - LCD-TFT controller
+ - MIPI-DSI interface
+ - FD-CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
+ - camera interface
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Detailed information can be found at:
+https://www.st.com/en/evaluation-tools/stm32h747i-disco.html
 
-Yours,
-Linus Walleij
+
+Dario Binacchi (8):
+  ARM: dts: stm32h7-pinctrl: add _a suffix to u[s]art_pins phandles
+  dt-bindings: arm: stm32: add compatible for stm32h747i-disco board
+  ARM: stm32: add a new SoC - STM32H747
+  clk: stm32h7: rename USART{7,8}_CK to UART{7,8}_CK
+  ARM: dts: stm32: add uart8 node for stm32h743 MCU
+  ARM: dts: stm32: add pin map for UART8 controller on stm32h743
+  ARM: dts: stm32: add an extra pin map for USART1 on stm32h743
+  ARM: dts: stm32: support STM32h747i-disco board
+
+ .../devicetree/bindings/arm/stm32/stm32.yaml  |   4 +
+ arch/arm/boot/dts/st/Makefile                 |   1 +
+ arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi     |  34 ++++-
+ arch/arm/boot/dts/st/stm32h743.dtsi           |   8 ++
+ arch/arm/boot/dts/st/stm32h743i-disco.dts     |   2 +-
+ arch/arm/boot/dts/st/stm32h743i-eval.dts      |   2 +-
+ arch/arm/boot/dts/st/stm32h747i-disco.dts     | 136 ++++++++++++++++++
+ arch/arm/boot/dts/st/stm32h750i-art-pi.dts    |   6 +-
+ arch/arm/mach-stm32/board-dt.c                |   1 +
+ include/dt-bindings/clock/stm32h7-clks.h      |   4 +-
+ 10 files changed, 187 insertions(+), 11 deletions(-)
+ create mode 100644 arch/arm/boot/dts/st/stm32h747i-disco.dts
+
+-- 
+2.43.0
+
