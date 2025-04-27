@@ -1,136 +1,117 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D40D24EF7F
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6B670810;
+	Sun, 27 Apr 2025 11:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745751084; cv=none; b=icprwK/k55uIdV3vcShu/YwK1oft4aWaTbi+C0RSABSya+67jL3HG5pjn9b3iLa6j38XyOBlGO9ZeH0TuYXzS/BBZcbAomShggvhf+nUjr2us431j7bVie3bvNnR3H/DLrhK3PKPChUtxpUMDxc1HNUZgVDQ1ZLi3cmN3Ktu8Lo=
+	t=1745751691; cv=none; b=inbuGd3DvtPUZo8VcwFOv+pVse/Zk54Ql59EkBn11efY91kNr/bq/C2KtjgDHARKq2Cm2kGG5EaSOF/r2Sw15qBvNM18JUiyL0uNlgo6XBPfeUD5b54T2Zk/fETufbrdOLXDtFMsigWEP9HWhIA7i54t+2+CX7vrxb2L+25piWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745751084; c=relaxed/simple;
-	bh=Uk35tE2qO25Ol/DPpUFiuym8i93OvRDohaSn1NmlUNU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qzPu/oDNWzfNV+t64ckQKj8HJwIuj3drshVes5M6PNS5TU8ZpKMQqpqOsgxvdXSYFN/utN/iUrqX6hKb4s6vrhfafUYr9VWAuNim9psS9n/YpLyf/JECbf2F8v455piOnyALBvWUPOQXm9L+XaVJXWnd/DbGD9C9KdMvjpaGYS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l1NFKSuT; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745751691; c=relaxed/simple;
+	bh=YeMt7dkQnhXF4IfSaEU3l4RDYBOk60yfTsaLfgVWoCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q/VexGZogs+cT5J6hlofSLsvSy29I8VYQsLCTeIFhes4wwbnRhTVwoZHcGd3Jp4EtoYfCsbr+5xIv3iMXbfTy4bUc59UCd30RJq1TsU8WkiNXD9c0hrsB+KFXPH7ZevlTyRz46AmbQNrgQvCttN0AguaEZACsXEtCa+/ksJ3lE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBKVT71c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1NFKSuT"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5edc468a7daso610210a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 03:51:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745751080; x=1746355880; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BrWWKZ5utl0kO8/6Sgtpal0J9i01h1Iy5zytxjONv8g=;
-        b=l1NFKSuTSk4ij0SE2W2LPU72+EQw1ILVnaoIizHa8cyYWo1HZfzWFho4mUX62qKpFB
-         HClr7nULiPTRVIN4LRe8Q8mpTwNV/5MPibFE2AM8z7u3PHj5MSey6IreruP9ly6P0NvP
-         YHGvmcpact7SlmCCAQ5Bbzp0n0Q2rXQAcmuQ3AVeUpv/lrTWFa4aEb+ZyNOOGBT54UIQ
-         x06iw2WGPGiiija0tivmcV0hQZfEvFOZALWOPXFCNGCuDkIIg9Um+XzWDFSAp3HDv0nB
-         Dqkl5RiB/nErljTR+kOlhJ2xF/93Dh+2a2Ru5NPYO+5iml4LDzhTuZf5CLZayrN341Od
-         dgfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745751080; x=1746355880;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BrWWKZ5utl0kO8/6Sgtpal0J9i01h1Iy5zytxjONv8g=;
-        b=RwEMgSeHf3yPPqjT/cVVXSAH1c1QtjBiZj/4kGcHgPdu+0y6rtr7HLt5ZcxFpIrVCn
-         SQr7IRoRDOWqgwSRQ3xcQ/qIB5zq6Pls6PPQQumyeFEBv7iyUkQpA/zYI4SLhje/WJPZ
-         m6WoYZdRXLfrtI3I14bWywsys/MFwzPO37E6C82E6G6xQRzaufDNQd/krae7UMBSJj8N
-         YuaE336koPNL45Up9EMZ/LVDgD/rmjhPRfJK9Hqfm6WamNF0djQRddOmxKkQ/NvGT4m6
-         r3+iVUmAFQN+gLexRZRwPhBUdX+6q+AA32cLHJPHrodTKFUff3h5A/cjMiXUpOicJEDM
-         ezyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQXjODUqPavGZGSmCoBcuHG3cLo+U0YuKBRpkJNL8BWmLP3OPxGUh6YYfm25kQR/BQoMkPEZlJIoR9VSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8kSrnvdlTDE+xoLOBrep/QabGh6sIFQ+tCtckdv/yctM7sfMp
-	241etrzCxg2UZ1wtcHEaFVMTHcLua3HGp+phxeP7TRMUEnFW6XcPC9qO8Cgf+8w=
-X-Gm-Gg: ASbGncsjhRYCINWSR8IG9Ls/BK0H2+NMkp6rMoo0cVG7dJ+i6TxsWHvw0og4Ngo9j8I
-	+iF26Yd1HiGn4xGRCDThXb1uQzrzMQbjGa+HNBVcHPgTL2MT207wz0WPC3fX9RNv9xZibGJ0wjW
-	wM5nQtAetW6g9vbZrnbtCORFB9ovtXsX5b/k1a/0nk8+rCuHy9lVfH3uAbRQlbGGQ0/CU1WGhgT
-	a34/xes1P75uSFuDS5xvAvSVHU1mk7ub+11PB3229XoIq3gT0ScDedvygNQfKPLdic/GhGFibKI
-	sVZ823EWQKb1KOrmiNvah/5t0LhyygpBRAwSxLIbVYo6dNTZBA==
-X-Google-Smtp-Source: AGHT+IGUXQAnom5Q0EWJSItpVLYLtZk6UF1nj50XD++JXpYgnBPgROhaxvz7NIhI7DF5oF4HYgfXrQ==
-X-Received: by 2002:a17:907:948a:b0:acb:6081:1507 with SMTP id a640c23a62f3a-ace713655c2mr240652566b.10.1745751080157;
-        Sun, 27 Apr 2025 03:51:20 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e5087e4sm425679266b.73.2025.04.27.03.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 03:51:19 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Shenghao Ding <shenghao-ding@ti.com>,
-	Kevin Lu <kevin-lu@ti.com>,
-	Baojun Xu <baojun.xu@ti.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] ASoC: codecs: tas2764: Fix Wvoid-pointer-to-enum-cast warning
-Date: Sun, 27 Apr 2025 12:51:07 +0200
-Message-ID: <20250427105105.18164-4-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250427105105.18164-3-krzysztof.kozlowski@linaro.org>
-References: <20250427105105.18164-3-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBKVT71c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CACB1C4CEE3;
+	Sun, 27 Apr 2025 11:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745751691;
+	bh=YeMt7dkQnhXF4IfSaEU3l4RDYBOk60yfTsaLfgVWoCo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jBKVT71c3wmReKX5McZmbDtXMgNi/5jB7ibfdyuYCxN/WPxPVZzO6T1j6YTaCI3R2
+	 27mMbadPQeUqj6KUoSqNk2lYCCSJ/hyhx5YPID9u+nmVo0ir7W30fWT0Ale/z84SOB
+	 iBTE9uK9VKiRbReppaFXYDpGR38rfb8q+hkdFjai0zDdN9Py+2u2L4mZ02u7AXFlRC
+	 FNR3sj/qqyDr5+Wjr3+pT6MCHiIZO6cJMToPOtffqi9Kcm/M90XZs1byFhTAP8ZVib
+	 WAyqtRUenDzPoAlhiFGcv7IizOn0fxMgmbBjKtRereizGFS4ZlSLlHyMNZGle+xwoK
+	 RZ2bU9KVDCEng==
+Message-ID: <60b92fba-8170-4e9a-bdae-1ad7dd6beefb@kernel.org>
+Date: Sun, 27 Apr 2025 13:01:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1222; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=Uk35tE2qO25Ol/DPpUFiuym8i93OvRDohaSn1NmlUNU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoDgwchoqo8qZ7tpRlydSzbLL5LHIcT5imcAQdh
- lmBJlaYMa+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaA4MHAAKCRDBN2bmhouD
- 1zBvD/wMLwsj4jm0yAIY7dk4aMpXOmJG+Ltq3m/n8p9kRV5iNva1LvWrKSCPnUds8dCcXnYROgi
- MdUdgEsBa3kdCGUeRv5EUhyEM41jnBvWxl0z/ipgl3va5F0xZVRhRrUuegXkpQAJ37X0Zt56WYA
- 9C4SZ91I3zR0K1s0nOGPg2SHv0eBt+ApXW1GVR366AB57TvkfnhPqLIHZ0lDxhXh+cBzCxKfSp4
- aGe1+NBUSQFDKg9MJWdP7yKsTRX0IHu5E4FKkRyiuti/uG/FfWg6kwDUt4J83lfm8RqB5Ne059A
- CLTJbHpxZAXMiyDZXcVph717ix3+L80SFy7RhGmgMZM+2BGGZA9FoHx5f5XbM8aWDENRp6L1rmi
- 2acaOSY0QMJMXNmzgFwYKYvqNynMyqvRbdK1L5h0RNNKbsGE9lWFAgw21fCgujLpMvLvMxOg0Yx
- qG9unLzCUNU0Tqx+iMmypnYGVRVVI2wOj3/4mS+5AoElwxqiCDbX9KORuEEDXZwasur1m4/PzXg
- /3EQj1gkjSppcgSoDL3SLJh4yBvHJqyCme+JL7S7uhLCJiTh4bkPY+HUTwGe3T1xFyygKh08oVI
- 0hTawH5Kve+sJPrul3RpSqYjNRzrtBhBeZwf40omUAdndG/ohII/3jUgIwsdw681nAZHnZkJzu9 9eJJWWpVw+haFVA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/7] mfd: stmpe-spi: Correct the name used in
+ MODULE_DEVICE_TABLE
+To: Alexey Gladkov <legion@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+References: <cover.1745591072.git.legion@kernel.org>
+ <79d5a847303e45a46098f2d827d3d8a249a32be3.1745591072.git.legion@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <79d5a847303e45a46098f2d827d3d8a249a32be3.1745591072.git.legion@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-'devid' is an enum, thus cast of pointer on 64-bit compile test with
-clang and W=1 causes:
+On 26/04/2025 18:16, Alexey Gladkov wrote:
+> The name used in the macro does not exist.
+> 
+> drivers/mfd/stmpe-spi.c:132:26: error: use of undeclared identifier 'stmpe_id'
+>   132 | MODULE_DEVICE_TABLE(spi, stmpe_id);
+>       |                          ^
+> 1 error generated.
 
-  tas2764.c:879:19: error: cast to smaller integer type 'enum tas2764_devid' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
 
-One of the discussions in 2023 on LKML suggested warning is not suitable
-for kernel.  Nothing changed in this regard for more than a year, so
-assume the warning will stay and we want to have warnings-free builds.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Link: https://lore.kernel.org/all/20230814160457.GA2836@dev-arch.thelio-3990X/
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- sound/soc/codecs/tas2764.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+P.S. You can trim the error messages to relevant parts, e.g. "1 error
+generated" is really redundant and not needed to store in git history.
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index 97968ee3af42..36e25e48b354 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -876,7 +876,7 @@ static int tas2764_i2c_probe(struct i2c_client *client)
- 	if (!tas2764)
- 		return -ENOMEM;
- 
--	tas2764->devid = (enum tas2764_devid)of_device_get_match_data(&client->dev);
-+	tas2764->devid = (kernel_ulong_t)of_device_get_match_data(&client->dev);
- 
- 	tas2764->dev = &client->dev;
- 	tas2764->irq = client->irq;
--- 
-2.45.2
+> 
 
+Best regards,
+Krzysztof
