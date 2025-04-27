@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0FC2405F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E09B24110F;
 	Sun, 27 Apr 2025 06:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745735245; cv=none; b=BIupG1p1eMk9VfQypWtoVsb/ugd1PNqJFpTja6PnxFuEvJWBs/ss8QKQIBM5UmOUkPb4qJSSDqQ1W8+f3DEliDeoWqONkzFyfe0gNAqJ1LsK0oPybcwj5dx9yx4oi2eIkamXvSxTABqQ44BDYbPzYjXDOMeOXfaz5YQVrrQ2C3U=
+	t=1745735245; cv=none; b=IkwNa4AgONRd4byuxgjB0QoFBQDHoxZy9AgO6cSyEsgxSfJicOu6RY9K/Os7HV6hq1yxSfqW0EiTSc3mTNiWcKT3mvYi/vcMm94Lwez++kIDWywhCbBpRV3HY7qJN9I9BXQmzrWEzk86BOalCsfdkvS4eSSJjvAc5gGAQdKMwHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745735245; c=relaxed/simple;
-	bh=jWtCk7OJxJQP4aFGkbiIAjpWZekDiU1uBW1a10F2xG8=;
+	bh=UV4OpBMoMTlShXKyn8UmyYCKddaIG6XlUTTU3xfZsLg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TF7A9qNIepItADE62V0z+X+6vTTcPbUegujmecs2HKZxWyjjMX2gogfvWLbSsTMLdaosFJIeSRAx6blN49nUGzvLgxuWFuZYmICJDzXkaa5YkOVAFCjYFwqc1FNnwa5kBKSrOlz35jF5wFzB7sy4zFpXsX1k2YYkoAs0nRXqswk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTkEuwO1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=eHLgYqzTKbE2amabbHWR/IxHDngdeEL+J5u0KPExB+/M/1jjAlMI1DVh2x1pfoOPFzJSfbBZVv3PhiksUMGhHnsJooO2wKojg/I1qUL8NxYebKqrhPjX8lw5wFuV68MHaq+VDPxjojLya4UsW1OTDyUzjAzyrhSXktdmc3aJ744=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlW2u0zW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTkEuwO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 69F56C4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlW2u0zW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AF921C4CEF4;
 	Sun, 27 Apr 2025 06:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745735244;
-	bh=jWtCk7OJxJQP4aFGkbiIAjpWZekDiU1uBW1a10F2xG8=;
+	bh=UV4OpBMoMTlShXKyn8UmyYCKddaIG6XlUTTU3xfZsLg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=bTkEuwO15ymYuQl68J5FUjpvWt7g80+BavxY1iIGfMg3yvoMy8WVXgCWnrRcvx6YP
-	 HL3nm2lEKTW9MU76RjViPfRQR0czj1NzXB6LDhSKesvb9IhU5zzPjjUKMISAKE6UKJ
-	 aXashXNiPN1reKrqivhbmnT2Xfebaar4ystNFTO/g+g8Zl0CAdKkZADeYwAK/JXz69
-	 rRKGwmBUK7I70nYP2rZTvDa3DC3M0gLagutZ/x1/a3+kSCONBSwA1uZPoqI953mXbW
-	 ozDc+dZy+mN8adUnGsUH+yMwg3NqANT97n9IUwg61SUaXD4ZRWfomJkNJ5AFnlzo6r
-	 apSXGyTnRq0gQ==
+	b=jlW2u0zW5r4ZKF8ZXrYEcU8IszTjm6iDcPX6gpL5r0pamoB6HN7VJy+YdHKA9SoFF
+	 StS3KY+sACE+1NmqzMdjtPw5S+UbInI0fpf3BF5V6bzH9v65SC6zUcGX6oDJ+Ob9YG
+	 a3p8V7zb5ykzZHIBlX3rJgEEWNyvf+SzXOYU6ZUlPwfvYcjsRNoKadIbNZ1/HJluBd
+	 R2j2lC0uiQf8U7gCFJtH0m+kPn0YfxUSfIQqygPf/QTkUm6GQ9AtftFmSfhzx3Hsl9
+	 i3oBIb1hhdjt2kTpki4X9TvLotiB8Ne9DHG/TPMWF+VeA1TdW4OIpNxUzFjx5Rqz4L
+	 Rw9n6xAmYyopA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBACC3ABA0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C03C369D9;
 	Sun, 27 Apr 2025 06:27:24 +0000 (UTC)
 From: Keke Li via B4 Relay <devnull+keke.li.amlogic.com@kernel.org>
-Date: Sun, 27 Apr 2025 14:27:13 +0800
-Subject: [PATCH v9 05/10] dt-bindings: media: Add amlogic,c3-isp.yaml
+Date: Sun, 27 Apr 2025 14:27:17 +0800
+Subject: [PATCH v9 09/10] Documentation: media: add documentation file
+ metafmt-c3-isp.rst
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250427-c3isp-v9-5-e0fe09433d94@amlogic.com>
+Message-Id: <20250427-c3isp-v9-9-e0fe09433d94@amlogic.com>
 References: <20250427-c3isp-v9-0-e0fe09433d94@amlogic.com>
 In-Reply-To: <20250427-c3isp-v9-0-e0fe09433d94@amlogic.com>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -49,14 +50,13 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com, 
  laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, 
- jacopo.mondi@ideasonboard.com, Keke Li <keke.li@amlogic.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ jacopo.mondi@ideasonboard.com, Keke Li <keke.li@amlogic.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745735242; l=3274;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745735242; l=5017;
  i=keke.li@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=DHW5YzMz2Tg8z/3eAjFGTJeeaROJ1MXnWBp20XrExEs=;
- b=rfY8efsUhL+HuYDu99Ct3r36WBbdofhFJainG4C3SBRUyEEh0Eawekcg0yOcgN4UiJHL+u3Mk
- tyz4urr2t3HBbC3QmbPe0yZSPYpMOnU3RCjoz5jsb/At+FHDBA88VV+
+ bh=EtKmaDXYyLgan/JfVMq79P6TWGfHTe2a+kG7bKr0G0A=;
+ b=WvAmsc5/hdrGRwpaQazfklpsIYhCcDVRmKcPaojQcxbEusXl8X9Lhd7QQaTH2W/VPrzKouMqU
+ gzdXQNAbgZBAWtBzlvRDCxK14F/20jA7ssRetEpGIvuuTTwviU+I+/o
 X-Developer-Key: i=keke.li@amlogic.com; a=ed25519;
  pk=XxNPTsQ0YqMJLLekV456eoKV5gbSlxnViB1k1DhfRmU=
 X-Endpoint-Received: by B4 Relay for keke.li@amlogic.com/20240902 with
@@ -66,126 +66,133 @@ Reply-To: keke.li@amlogic.com
 
 From: Keke Li <keke.li@amlogic.com>
 
-c3-isp is used to process raw image.
+Add the file 'metafmt-c3-isp.rst' that documents
+the meta format of c3-isp.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Keke Li <keke.li@amlogic.com>
 ---
- .../devicetree/bindings/media/amlogic,c3-isp.yaml  | 88 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 ++
- 2 files changed, 94 insertions(+)
+ .../userspace-api/media/v4l/meta-formats.rst       |  1 +
+ .../userspace-api/media/v4l/metafmt-c3-isp.rst     | 86 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 3 files changed, 88 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml b/Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
+diff --git a/Documentation/userspace-api/media/v4l/meta-formats.rst b/Documentation/userspace-api/media/v4l/meta-formats.rst
+index 86ffb3bc8ade..bb6876cfc271 100644
+--- a/Documentation/userspace-api/media/v4l/meta-formats.rst
++++ b/Documentation/userspace-api/media/v4l/meta-formats.rst
+@@ -12,6 +12,7 @@ These formats are used for the :ref:`metadata` interface only.
+ .. toctree::
+     :maxdepth: 1
+ 
++    metafmt-c3-isp
+     metafmt-d4xx
+     metafmt-generic
+     metafmt-intel-ipu3
+diff --git a/Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst b/Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
 new file mode 100644
-index 000000000000..123bf462f098
+index 000000000000..449b45c2ec24
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/amlogic,c3-isp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+@@ -0,0 +1,86 @@
++.. SPDX-License-Identifier: (GPL-2.0-only OR MIT)
 +
-+title: Amlogic C3 Image Signal Processing Unit
++.. _v4l2-meta-fmt-c3isp-stats:
++.. _v4l2-meta-fmt-c3isp-params:
 +
-+maintainers:
-+  - Keke Li <keke.li@amlogic.com>
++***********************************************************************
++V4L2_META_FMT_C3ISP_STATS ('C3ST'), V4L2_META_FMT_C3ISP_PARAMS ('C3PM')
++***********************************************************************
 +
-+description:
-+  Amlogic ISP is the RAW image processing module
-+  and supports three channels image output.
++.. c3_isp_stats_info
 +
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,c3-isp
++3A Statistics
++=============
 +
-+  reg:
-+    maxItems: 1
++The C3 ISP can collect different statistics over an input Bayer frame.
++Those statistics are obtained from the "c3-isp-stats" metadata capture video nodes,
++using the :c:type:`v4l2_meta_format` interface.
++They are formatted as described by the :c:type:`c3_isp_stats_info` structure.
 +
-+  reg-names:
-+    items:
-+      - const: isp
++The statistics collected are  Auto-white balance,
++Auto-exposure and Auto-focus information.
 +
-+  power-domains:
-+    maxItems: 1
++.. c3_isp_params_cfg
 +
-+  clocks:
-+    maxItems: 2
++Configuration Parameters
++========================
 +
-+  clock-names:
-+    items:
-+      - const: vapb
-+      - const: isp0
++The configuration parameters are passed to the c3-isp-params metadata output video node,
++using the :c:type:`v4l2_meta_format` interface. Rather than a single struct containing
++sub-structs for each configurable area of the ISP, parameters for the C3-ISP
++are defined as distinct structs or "blocks" which may be added to the data
++member of :c:type:`c3_isp_params_cfg`. Userspace is responsible for
++populating the data member with the blocks that need to be configured by the driver, but
++need not populate it with **all** the blocks, or indeed with any at all if there
++are no configuration changes to make. Populated blocks **must** be consecutive
++in the buffer. To assist both userspace and the driver in identifying the
++blocks each block-specific struct embeds
++:c:type:`c3_isp_params_block_header` as its first member and userspace
++must populate the type member with a value from
++:c:type:`c3_isp_params_block_type`. Once the blocks have been populated
++into the data buffer, the combined size of all populated blocks shall be set in
++the data_size member of :c:type:`c3_isp_params_cfg`. For example:
 +
-+  interrupts:
-+    maxItems: 1
++.. code-block:: c
 +
-+  port:
-+    $ref: /schemas/graph.yaml#/properties/port
-+    description: input port node.
++	struct c3_isp_params_cfg *params =
++		(struct c3_isp_params_cfg *)buffer;
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - port
++	params->version = C3_ISP_PARAM_BUFFER_V0;
++	params->data_size = 0;
 +
-+additionalProperties: false
++	void *data = (void *)params->data;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/amlogic,c3-peripherals-clkc.h>
-+    #include <dt-bindings/power/amlogic,c3-pwrc.h>
++	struct c3_isp_params_awb_gains *gains =
++		(struct c3_isp_params_awb_gains *)data;
 +
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++	gains->header.type = C3_ISP_PARAMS_BLOCK_AWB_GAINS;
++	gains->header.flags = C3_ISP_PARAMS_BLOCK_FL_ENABLE;
++	gains->header.size = sizeof(struct c3_isp_params_awb_gains);
 +
-+        isp: isp@ff000000 {
-+            compatible = "amlogic,c3-isp";
-+            reg = <0x0 0xff000000 0x0 0xf000>;
-+            reg-names = "isp";
-+            power-domains = <&pwrc PWRC_C3_ISP_TOP_ID>;
-+            clocks = <&clkc_periphs CLKID_VAPB>,
-+                     <&clkc_periphs CLKID_ISP0>;
-+            clock-names = "vapb", "isp0";
-+            assigned-clocks = <&clkc_periphs CLKID_VAPB>,
-+                              <&clkc_periphs CLKID_ISP0>;
-+            assigned-clock-rates = <0>, <400000000>;
-+            interrupts = <GIC_SPI 145 IRQ_TYPE_EDGE_RISING>;
++	gains->gr_gain = 256;
++	gains->r_gain = 256;
++	gains->b_gain = 256;
++	gains->gb_gain = 256;
 +
-+            port {
-+                c3_isp_in: endpoint {
-+                    remote-endpoint = <&c3_adap_out>;
-+                };
-+            };
-+        };
-+    };
-+...
++	data += sizeof(struct c3_isp__params_awb_gains);
++	params->data_size += sizeof(struct c3_isp_params_awb_gains);
++
++	struct c3_isp_params_awb_config *awb_cfg =
++		(struct c3_isp_params_awb_config *)data;
++
++	awb_cfg->header.type = C3_ISP_PARAMS_BLOCK_AWB_CONFIG;
++	awb_cfg->header.flags = C3_ISP_PARAMS_BLOCK_FL_ENABLE;
++	awb_cfg->header.size = sizeof(struct c3_isp_params_awb_config);
++
++	awb_cfg->tap_point = C3_ISP_AWB_STATS_TAP_BEFORE_WB;
++	awb_cfg->satur = 1;
++	awb_cfg->horiz_zones_num = 32;
++	awb_cfg->vert_zones_num = 24;
++
++	params->data_size += sizeof(struct c3_isp_params_awb_config);
++
++Amlogic C3 ISP uAPI data types
++===============================
++
++.. kernel-doc:: include/uapi/linux/media/amlogic/c3-isp-config.h
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6f1326bc60fa..a2fed5b24c9a 100644
+index 82de88b82550..5bbfda5662b3 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -1258,6 +1258,12 @@ F:	Documentation/devicetree/bindings/perf/amlogic,g12-ddr-pmu.yaml
- F:	drivers/perf/amlogic/
- F:	include/soc/amlogic/
- 
-+AMLOGIC ISP DRIVER
-+M:	Keke Li <keke.li@amlogic.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
-+
- AMLOGIC MIPI ADAPTER DRIVER
- M:	Keke Li <keke.li@amlogic.com>
+@@ -1263,6 +1263,7 @@ M:	Keke Li <keke.li@amlogic.com>
  L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
++F:	Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+ F:	drivers/media/platform/amlogic/c3/isp/
+ F:	include/uapi/linux/media/amlogic/
+ 
 
 -- 
 2.49.0
