@@ -1,32 +1,34 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F801E5B70;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329E623F405;
 	Sun, 27 Apr 2025 08:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745741945; cv=none; b=ui2Zm0ie+ZcJ1AaVneZMEbR29Pq6gH5ho/VlmXi2OY88nEUJuG1yjKVbFOK/um+vECdekwCqzcTiuYswu2HFylrUX+QeUuFSPlVuJUwCtoUJPTeJ391S5ZaXnyDlUIPmq58zNAc7WIpkggbZYavghDPGn78haoO8fZC9R0des+4=
+	t=1745741946; cv=none; b=H+c7uaAAKgoHK1zM2tt4g73HxrvIrQIyFtLso24NEm99k1s5SZ+oWFfacQMgYmjrSwE8SnjjxcKjY2u6HQc5ooOXbPjeqYdsgComem85MmcsCkgQmGXvgqBfuC8b8f4gsVAK27G5jGxAsoiX/mDKT1xEPtErsg6A/5aCKrBVu6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745741945; c=relaxed/simple;
-	bh=OjOVHRKl00qf7ebsaNQ7cBxmG2t6RRyVhkeJXzM0cok=;
+	s=arc-20240116; t=1745741946; c=relaxed/simple;
+	bh=Ijg8SeK53NZeNsOWw9D+jmGbqG48rxmkdalilXk4r8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kI7tSoVkSdeZDxNgCDdqBUR4uNkBJDgPrO0ZlPjFd1gwmmNOUP1jHdunR+gHkmiG1xDq3cbSDZ6uKRAquDucpBADOLkF/duTxggNSyK8qwSf1EGGKzp2TZmIQjJ/KKtb6T7txGgRzibGJ3NwQS366PTr+wFosBnAPh8v7oFNZHU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=nyd5av/FB9bRSTnsMIEHj1NmdJdNghswsjiPB6d/mCclUT1OnoPCPRPVvTOKb7VysA962tx3gj8/xr3tGanULgMBgvWDPMGvvrHWt0d/EOJvs9WE/CYrdtHlRhDGZOy6arMPGDEVEGGicsh9GSqeQNApxe7RTqEDSTrPSZSiP6o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1u8xE4-0007QP-00; Sun, 27 Apr 2025 10:19:00 +0200
+	id 1u8xE4-0007QV-00; Sun, 27 Apr 2025 10:19:00 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 76B29C01A2; Sun, 27 Apr 2025 10:03:32 +0200 (CEST)
-Date: Sun, 27 Apr 2025 10:03:32 +0200
+	id E45F8C0A9A; Sun, 27 Apr 2025 10:16:49 +0200 (CEST)
+Date: Sun, 27 Apr 2025 10:16:49 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Kees Cook <kees@kernel.org>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3] mips: Add -std= flag specified in KBUILD_CFLAGS to
- vdso CFLAGS
-Message-ID: <aA3k1MqAHzE76vpQ@alpha.franken.de>
-References: <20250329153903.32963-1-raj.khem@gmail.com>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH] MIPS: rename rollback_handler with skipover_handler
+Message-ID: <aA3n8Z-NIff3n7Zw@alpha.franken.de>
+References: <20250405143705.343960-1-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,52 +37,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250329153903.32963-1-raj.khem@gmail.com>
+In-Reply-To: <20250405143705.343960-1-marco.crivellari@suse.com>
 
-On Sat, Mar 29, 2025 at 08:39:03AM -0700, Khem Raj wrote:
-> GCC 15 changed the default C standard dialect from gnu17 to gnu23,
-> which should not have impacted the kernel because it explicitly requests
-> the gnu11 standard in the main Makefile. However, mips/vdso code uses
-> its own CFLAGS without a '-std=' value, which break with this dialect
-> change because of the kernel's own definitions of bool, false, and true
-> conflicting with the C23 reserved keywords.
+On Sat, Apr 05, 2025 at 04:37:05PM +0200, Marco Crivellari wrote:
+> Recently the rollback region has been changed into an
+> idle interrupt region [1]. This patch make the appropriate
+> changes renaming functions and macro, to reflact the change.
 > 
->   include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
->      11 |         false   = 0,
->         |         ^~~~~
->   include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
->   include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
->      35 | typedef _Bool                   bool;
->         |                                 ^~~~
->   include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
+> [1] https://lore.kernel.org/linux-mips/20250403161143.361461-2-marco.crivellari@suse.com/
 > 
-> Add -std as specified in KBUILD_CFLAGS to the decompressor and purgatory
-> CFLAGS to eliminate these errors and make the C standard version of these
-> areas match the rest of the kernel.
-> 
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> Cc: stable@vger.kernel.org
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 > ---
-> v2: Filter the -std flag from KBUILD_CFLAGS instead of hardcoding
-> v3: Adjust subject and commit message
-> 
->  arch/mips/vdso/Makefile | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-> index fb4c493aaffa..69d4593f64fe 100644
-> --- a/arch/mips/vdso/Makefile
-> +++ b/arch/mips/vdso/Makefile
-> @@ -27,6 +27,7 @@ endif
->  # offsets.
->  cflags-vdso := $(ccflags-vdso) \
->  	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
-> +	$(filter -std=%,$(KBUILD_CFLAGS)) \
->  	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
->  	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
->  	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+>  arch/mips/include/asm/idle.h |  2 +-
+>  arch/mips/kernel/genex.S     | 10 +++++-----
+>  arch/mips/kernel/traps.c     | 10 +++++-----
+>  3 files changed, 11 insertions(+), 11 deletions(-)
 
-applied to mips-next.
+applied to mips-fixes.
 
 Thomas.
 
