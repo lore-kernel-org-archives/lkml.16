@@ -1,79 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BC61A26B;
-	Sun, 27 Apr 2025 14:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DAA1A26B
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745764476; cv=none; b=Y8WJPilrvck5bdoQho2gQBpZ5ITyE47lGJQu959wSqetKxGXH70NsAIDbF221t00YNchwyW8Q4FvvkXrl+SOC4JEsI9wIYMGdLn6W1x3uVVwnXCgGvjl0ZyjjAFliLNRArBW2d6bI/0MtJF7uKiLu7Kyc0Kf9Y2x6M4bj5mY91o=
+	t=1745764544; cv=none; b=oBme9DlXHiQmJg0G28QffQmGliv3MQ+rFgH3+WFnqjpOW3dpBctN4/ZXOXOuVM2FntObsCHL6l49s85IHv1HSTH6Sfp0wxW+tGyD/xkVEjMjB6vZhtHSglAK5ynUrhxKwAUo2aQ9OjuY2513BxsyzPo4gsFxc7fQXiOFz+WgTHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745764476; c=relaxed/simple;
-	bh=NbPi7v2fcHtvZgqUTQ1dl6O9dGxetp7gtyiRFqKI/+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WNjPYtZz/Alp5DgdTJRqVOof00nB53nS5msbQkb3RJsTkPYFMhHa4gl+XJQtUuqRaMZeXxQ/1X1k2ULpK5U/EH/XPZ+W+pQ9H4uLbI9ZtlbHF+CQQxSCn63VkBaZYlGXMMBdn459bPafqyyMNm5jxTpzXR43+svbTHDgYMySDDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FA+sNILf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FA+sNILf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107B6C4CEE3;
-	Sun, 27 Apr 2025 14:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745764475;
-	bh=NbPi7v2fcHtvZgqUTQ1dl6O9dGxetp7gtyiRFqKI/+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FA+sNILf5rtEzqRuG/+03Ybs5wwmNo/p2rUOWp21NuC5yUzQ4XTTbqqspTvbM90m/
-	 h8Mvyma0PJGGoTk4TgRE08gjOIlt8Fwz72O5Z/kF92Hq6oKbBAznRL+aKQQdrcG1QA
-	 AEQ+znnHKk69xJGaWiFxHtRlZtrVhwkQgM9CaXsBlXmxFGPmH27QlMCToSAwuTo9X2
-	 lfSdZPC0jOyzk85ECGMKdlTx1YcoJX3mUHTu2F7r+rBLcxWNbkgZrvUiIS2rQ6Iqq4
-	 jk3T9NVhCP4SH1EfMludDAoNcBlbFNmPSq6V6TxMuYxpIIQL5JWCstbLLLJrKdUTXg
-	 nuONruk+y+QJA==
-Date: Sun, 27 Apr 2025 15:34:31 +0100
-From: Mark Brown <broonie@kernel.org>
-To: linux@treblig.org
-Cc: lgirdwood@gmail.com, linux-doc@vger.kernel.org, corbet@lwn.net,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Regulator deadcode cleanups
-Message-ID: <aA5Ad6bXfH5jPiss@finisterre.sirena.org.uk>
-References: <20250426175143.128086-1-linux@treblig.org>
+	s=arc-20240116; t=1745764544; c=relaxed/simple;
+	bh=dj8b2XvmB5C6xHo8TJIDjLPYJebUQfkh132l9bjwf4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OSPWuS3YlGV9FZA+STjFO4wRPyYYsjonppV07pvL7ufVhQD+a9HNWIED7zoEhE3MhdPT2Iz+ClkKDACG2KUrwQqdX3ETf9GWmeDPG68H4hAabxEugWi7rQ5Sv6gvvfg9JiMm6G9hwCpoXVDQ3K6S2SBue3YmH/MMv80oT3O8cJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7AD1106F;
+	Sun, 27 Apr 2025 07:35:34 -0700 (PDT)
+Received: from [10.163.78.169] (unknown [10.163.78.169])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A5AD3F66E;
+	Sun, 27 Apr 2025 07:35:35 -0700 (PDT)
+Message-ID: <2b8d688e-a1b2-420a-8c09-6c3a28bf892a@arm.com>
+Date: Sun, 27 Apr 2025 20:05:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hLGYvnp8vxUYw5Od"
-Content-Disposition: inline
-In-Reply-To: <20250426175143.128086-1-linux@treblig.org>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: pageattr: Explicitly bail out when changing
+ permissions for vmalloc_huge mappings
+To: catalin.marinas@arm.com, will@kernel.org
+Cc: gshan@redhat.com, rppt@kernel.org, steven.price@arm.com,
+ suzuki.poulose@arm.com, tianyaxiong@kylinos.cn, ardb@kernel.org,
+ david@redhat.com, ryan.roberts@arm.com, urezki@gmail.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250403052844.61818-1-dev.jain@arm.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250403052844.61818-1-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Gentle Ping
 
---hLGYvnp8vxUYw5Od
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 03/04/25 10:58 am, Dev Jain wrote:
+> arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
+> which does not support changing permissions for block mappings. This function
+> will change permissions until it encounters a block mapping, and will bail
+> out with a warning. Since there are no reports of this triggering, it
+> implies that there are currently no cases of code doing a vmalloc_huge()
+> followed by partial permission change. But this is a footgun waiting to
+> go off, so let's detect it early and avoid the possibility of permissions
+> in an intermediate state. So,  explicitly disallow changing permissions
+> for VM_ALLOW_HUGE_VMAP mappings.
+> 
+> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+> v1->v2:
+>   - Improve changelog, keep mention of page mappings in comment
+> 
+>   arch/arm64/mm/pageattr.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 39fd1f7ff02a..04d4a8f676db 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -96,8 +96,8 @@ static int change_memory_common(unsigned long addr, int numpages,
+>   	 * we are operating on does not result in such splitting.
+>   	 *
+>   	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
+> -	 * Those are guaranteed to consist entirely of page mappings, and
+> -	 * splitting is never needed.
+> +	 * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
+> +	 * mappings are updated and splitting is never needed.
+>   	 *
+>   	 * So check whether the [addr, addr + size) interval is entirely
+>   	 * covered by precisely one VM area that has the VM_ALLOC flag set.
+> @@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int numpages,
+>   	area = find_vm_area((void *)addr);
+>   	if (!area ||
+>   	    end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
+> -	    !(area->flags & VM_ALLOC))
+> +	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
+>   		return -EINVAL;
+>   
+>   	if (!numpages)
 
-On Sat, Apr 26, 2025 at 06:51:38PM +0100, linux@treblig.org wrote:
-
->   This is a bunch of deadcode cleanups for functions
-> that are unused (for quite some time).
->   The first patch was originally sent in October last
-> year but didn't get any traction; the rest are new.
-
-Please do some analysis as to why the functions are there, don't just
-blindly delete things.
-
---hLGYvnp8vxUYw5Od
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgOQHQACgkQJNaLcl1U
-h9BrbAf8CNJD2aWkJQCkVrQY74vLkoJAIC7IqC9BYZ6yTeJXXsuGPY4WydwrRfU2
-+rw1i80YRhYx3HbVW4hwpYVPde/IItrbxT0E5kyBQOA/U68RyXfLm/oSNL3mHM/e
-kaZHC4uXU1uwrauQVw9aivgrTcydPGEaAuMZhEKGLOfG4Kg1ACnRsnPx4l3ui1GH
-fSnhdhyFNDHQWRxnXPjBmaXrw6K7DcDjNL7wx3GY9G9JlItKfL5lRey8c6QdQava
-nVNVWZcJIsPa9ZbZcF9Ppf/VjK80r7e8LuAF+Dw473xtvaVx0l+nI4nSTYTK8cZF
-iG0ArlAXdZTVkmgA91mgBrPwbcqQKA==
-=P8oF
------END PGP SIGNATURE-----
-
---hLGYvnp8vxUYw5Od--
