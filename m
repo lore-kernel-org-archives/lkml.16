@@ -1,161 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B8D1DE3AC
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B722172E;
+	Sun, 27 Apr 2025 07:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745738970; cv=none; b=Pum33gyZtYI7W9bVPm6s9HKLV1qdCdFuZ9PRPyR48M4vn3OvRa2e5acQThjwqnvWK5OIGuUwzuymlNbYbb0teYqutwhqg8UDlDlplviEjrIXgegQN4p6SBZDbUljd0fwjvhuJruuZ1+QiDYpp1mD/+rctY67UXflTsJ/BvLmBzk=
+	t=1745739289; cv=none; b=fu3wXUo7wSHct5Q0Q5eHaxQCOgaBF8/lqVgBluYrZ5a9n/c1eiGEguOODufve4fMzaArVQoocxdZwbJhNlTNT0EZAp9sBw5Y1XzbVj7gkAuQwRurKJoeUK9IyGZ7aIbZOWeo/RXCpfIrUYcdPYn3kVV9h+i7CcIdn+ex/bXtPJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745738970; c=relaxed/simple;
-	bh=YmIdSq43KeqVX2RY3EWr0cE19/g+nxXYj6wkj+8bK7M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UB+gdYaGGBm9ujTKY/p63SmklOeTH877nsFubp2y8YgJ1ZlFsnCLXFFwt3vhMQlTzNnt589gQXSa/cqtMX/gqdJDbW6ITvWT8/pdJDL6F2AteF0KaFExHFiRDUBRpzYRYzLuFgYHMa26DhdfDvKtFaCsX7Yzw84y1p0d4+d1/BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Is+oWpTV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745739289; c=relaxed/simple;
+	bh=oyve19ueN96/Ebh5Km24Q9h/X7zpZCSCr04LTX9kF8o=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ftx4HfVx1i2PH4xTXkqm72XYobG0jgvdqnCV1Hs2yaKZZq7eDtVrC3sN+uQXCJbfUAOSQesaFfbVcaqIm3gcWT/afU+O6wSTmxipYVdYOjIDhITokMrzp5OsRQ5jOeuLm5yPL2ohoyZ6zAH+orkYg09wmNcUBWFYyND43eQiH24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rz8/HI0q; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Is+oWpTV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745738967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wcGQpFTguItVa6CDu+q0byxuNxLDL/Np928mwDKp2zQ=;
-	b=Is+oWpTV6S7/aK/v/Ng3NVe5/7DfH8YuLnihzo7J5jXqu4OB6r8Z5/yAQ88foLmlx6iVeW
-	jJL2GN05tCzxgI0SVK0g/WFmiCUy1X09+ZeOoqUcBDh5JQLB+bTtaYi5NS36tSlziIYd4j
-	uMB1DSsn5unJ7x37W63KhwRcsxrChVo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-TT62dsfcNpirg4YClsN7jw-1; Sun, 27 Apr 2025 03:29:25 -0400
-X-MC-Unique: TT62dsfcNpirg4YClsN7jw-1
-X-Mimecast-MFC-AGG-ID: TT62dsfcNpirg4YClsN7jw_1745738964
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so18142635e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:29:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz8/HI0q"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39bf44be22fso2414662f8f.0;
+        Sun, 27 Apr 2025 00:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745739286; x=1746344086; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6UpTuTX+eZ8EYTzEMiVidNK8ap2WyoAJZ6DfeDCGGdo=;
+        b=Rz8/HI0qSksEKV0KZdFQmqtKfJXyb46RFdX6N4Lm4AoI1uHBnit5rhGR/n6PME/ede
+         Dz9hLeLEzzQFveBfd5dErHgyvCFGGsUJ26VJpriCTEXTMf6VY+JFbcOxENQdxctT6Qqm
+         umPVZ6dfnSx1+CwQz7XmTjjJUJuEZh2vnrfalmcEcMQjTZUBePJf/N/O2hyCmOObrESE
+         XPdTonY3rzUlVLP4F/2yOJJtepo0kEM7CD9/ShUThMsgZwL96hmHgztkeGoRIp2/jhVQ
+         xKN06XFBV5QGMXeERul8f9b1QJIEK1aEaBSeYNwEhTawh3YtMilPkIBLdkfORoHNAl7x
+         VOgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745738964; x=1746343764;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wcGQpFTguItVa6CDu+q0byxuNxLDL/Np928mwDKp2zQ=;
-        b=mMy7chRj0B4HP6SLb3EU5TF1N9d50sjx1Zbiav2TgvX0wDYftkp61qOvb9l/EspPXp
-         P2ydbwH1deyJhLHODAfdhuFhad7qDK1cpOuJnLLlkBfs13AHBp9KpY1D51gfT01iFw0A
-         aJvxh8iCwUlGZruoLEU1NIu8SBpsw7FRL18lQzi84jVJurKFtVruz5y3YnyZKc5d4Uds
-         BOVm/FYMGfzfEQn7/WNUDOXsIGAUFXFKQnvyayT9UezAST7mLlGJY7gBUsWrx0eI+mzt
-         fQjOUHA/77XUqSRQ0+yOL5RkP1exqj5ngCy4Ebo4UbbA7zJuYVQwPrgwGwoN1e57I8Kx
-         dBJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSVRN4TUd6klSakIBxZknl7P4+0PsQFvg6eHLJB5wMBtPXGjwsm4umX+LvEALFPmQTIyctkgah/FGT0L4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx571ffbqCxZsNK+YxVhmqqAv4aPeX8ry+YnVo3s2xuFQMHsgXN
-	OAztuv+pjPiithYtNIKjkArt+UGzqBTZPxNJcGI82+T4BUlfGGRkMdRhdSxgBM7g939zLLRa4xD
-	WhCUFowU7KfTjpDkjABc6yGfYZ8Dr/Fjx/Vk8H0QHxN+SXqaO6YqqGMGD90iqEA==
-X-Gm-Gg: ASbGncuhLbdWqmWpufQgHwssFwT4PM475XCXG3Y5Al2CYb+hGCdF5W7R8IGfCxD/sZC
-	n61Go8DgCRjUhhudsvrt4i/XL8YWBOb0NtqufGYIeR+kjLmJxhSFWdRQX5ErPc0QTuj93rEgSiu
-	cgKO92pir2tR2RjPK+T2wKJUdKiyQwlQqa0EB9bFIREA81UHi0NaHJZkw0JJiSxi+twTTS3zn25
-	jg6MbYd3zbPzdeJtAgU46RiV0II+e5KrwpgcRC+Bj8rrL+IFv2K+mMlV6BchmJYodFQo4qS7KqP
-	9przDwcIvU0sRgXYZ34dxxAYpNQMnbvN6uIDb9zYjCr52MVob0YmRkL78tTylAVvt53AOQ==
-X-Received: by 2002:a05:600c:1e84:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-440a66b7b68mr66727295e9.29.1745738963930;
-        Sun, 27 Apr 2025 00:29:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHimZlDfyKX+dV1RunsI8DPPpzKCieKScXo5Xcy7H8gXFHsd947YK1+IzF4ivCFxFOjPMb/Zw==
-X-Received: by 2002:a05:600c:1e84:b0:43d:172:50b1 with SMTP id 5b1f17b1804b1-440a66b7b68mr66727125e9.29.1745738963562;
-        Sun, 27 Apr 2025 00:29:23 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d0a7802sm102831515e9.1.2025.04.27.00.29.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 00:29:22 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>
-Cc: drawat.floss@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
- simona@ffwll.ch, jfalempe@redhat.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH drm-next v2] drm/hyperv: Replace simple-KMS with regular
- atomic helpers
-In-Reply-To: <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
-References: <20250425063234.757344-1-ryasuoka@redhat.com>
- <87wmb8yani.fsf@minerva.mail-host-address-is-not-set>
- <CAHpthZqJPKtXUjFiVRLP+LEmTKFowUKVHGDe9=NS4aGx7WWcMA@mail.gmail.com>
-Date: Sun, 27 Apr 2025 09:29:20 +0200
-Message-ID: <87selugizz.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1745739286; x=1746344086;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6UpTuTX+eZ8EYTzEMiVidNK8ap2WyoAJZ6DfeDCGGdo=;
+        b=cIgeKgp5s7+uH95d8Xq6hdgwXTgQzGcAo4JyN0iDI/uqt+bCv86/yMLPi4OVkA1Sq1
+         zD0wD+hxPK9ngGPYGQ1MK1Sloj2yk5qFQVlMLjLrfy8F9em6y+Qq+13uZQ+3UOoDV79S
+         phjdU/x+RnU/zB6C2CMuLlA2D7y1+2lkPn6oc3TMw30tflTzR10J0nNFCZBXpjZ5po5U
+         zc0U42ngsnGvSP3mcG6AlV7FVBWvcXYj0ReTA8A2fiM895lPXsK5TTpeuB/KPhvBYPLa
+         CNCUE+QPr2x1/TlA6xN8HhXKRgqVIZ5NTiDa1o40F3Si8cMKXgBRudOCVmtxpSx1mNL/
+         ndqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqT1P0D8HCuqIxAmombmjKGvSiwjo7qkO8FRjZ+JFgVUFQEyvZZQ7MUsPaqihYLy3seTeS0U8r@vger.kernel.org, AJvYcCX49uIJmCLqtrpDlzWV/xt2lZqHqnFt+x3lFvihq3f7GI+WtHLuL8++6LTEizd+OB2GBwbecgNz+kG3Cow=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4ecqpxuVds4VRxzHHPS02oWN1CpHQMSmE4lp9hXbU2uF7z84t
+	7O/ie1BGRgu8he6rAOYmGjAq75cx2ow51Q9M+84uJ0IHhnm5U3HNF8B5UmHlkoychBfed3z9jYC
+	Xrs0I6idR2qa8UNVbSIjwa4jcuBg=
+X-Gm-Gg: ASbGnculApg2sB/2VVN30IC8Lg4w3bfC2ueHPavwZ5jGVPNFG7WSNJUEUvif2Rc+TSG
+	BQhw+WCmP6NOgNjG1mLHRigkcWHHSn1NI6jvCVJxxE9AUHdnaO9r5+gpBbC3/2Hns5R7k47HDYM
+	1E/VGqbjK9zuzzKntdLuh3d8cWuRVXywvk/Jg=
+X-Google-Smtp-Source: AGHT+IEr1ICI4Sa6Cc3bM3qmIYa7BjTkiB9IxJiUdBntrpJcUBhQruUXxGfs4tiq8D4RUwn5CRFWLRfonKq/SzWoHt0=
+X-Received: by 2002:a05:6000:1864:b0:3a0:7017:61f6 with SMTP id
+ ffacd0b85a97d-3a074e1d763mr6721576f8f.14.1745739285562; Sun, 27 Apr 2025
+ 00:34:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Qiang Zhang <dtzq01@gmail.com>
+Date: Sun, 27 Apr 2025 15:34:32 +0800
+X-Gm-Features: ATxdqUHE4SnAhnPG-R5Lf_lcBdJHpgd7uUJGjudIOzr2TiLa2B2euenvR6HH8bo
+Message-ID: <CAPx+-5u1k_JfTGpRz7hSbGug1CgU5EZzOpbOEM9phH6kaaxKgQ@mail.gmail.com>
+Subject: tc-vlan push 1ad vlan on 1Q packet at ingress abnormal
+To: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
+Hi, all.
+I met an problem when I tried to use bridge forward QinQ packet.
+Use tc vlan instead of pvid due to I wanna push different vlans on rules.
+It seemed that 1ad vlan pushed abnormal on 1q packet at ingress for the bri=
+dge.
+The steps to reproduce the issue:
+/*
+        PC0                              PC1
+        br  1ad
+ens37            ens38   ------- ens36--vlan2
+                                             32.24
+ */
+1. Config on PC0:
+  ip link add dev br up type bridge vlan_protocol 802.1ad vlan_filtering 1
+  ip link set ens37 master br
+  ip link set ens38 master br
+  bridge vlan add vid 2 dev ens37
+  bridge vlan add vid 2 dev ens38
+  //Del the default vlan
+  bridge vlan del vid 1 dev ens37
+  bridge vlan del vid 1 dev ens38
+  bridge vlan del vid 1 dev br self
+  tc qdisc add dev ens38 clsact
+  //Use tc vlan to add 1ad vlan 2.
+  tc filter add dev ens38 ingress matchall action vlan push id 2
+protocol 802.1ad
 
-Hello Ryosuke,
+2. Config on PC1:
+  ip link add vlan2 up link ens37 type vlan id 2
+  ip addr add dev vlan2 192.168.32.24/24
 
-> Hi Javier,
->
-> On Fri, Apr 25, 2025 at 4:15=E2=80=AFPM Javier Martinez Canillas
-> <javierm@redhat.com> wrote:
->>
->> Ryosuke Yasuoka <ryasuoka@redhat.com> writes:
->>
->> Hello Ryosuke,
->>
->> > Drop simple-KMS in favor of regular atomic helpers to make the code mo=
-re
->> > modular. The simple-KMS helper mix up plane and CRTC state, so it is
->> > obsolete and should go away [1]. Since it just split the simple-pipe
->> > functions into per-plane and per-CRTC, no functional changes is
->> > expected.
->> >
->> > [1] https://lore.kernel.org/lkml/dae5089d-e214-4518-b927-5c4149babad8@=
-suse.de/
->> >
->> > Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
->> >
->>
->>
->>
->> > -static void hyperv_pipe_enable(struct drm_simple_display_pipe *pipe,
->> > -                            struct drm_crtc_state *crtc_state,
->> > -                            struct drm_plane_state *plane_state)
->> > +static const uint32_t hyperv_formats[] =3D {
->> > +     DRM_FORMAT_XRGB8888,
->> > +};
->> > +
->> > +static const uint64_t hyperv_modifiers[] =3D {
->> > +     DRM_FORMAT_MOD_LINEAR,
->> > +     DRM_FORMAT_MOD_INVALID
->> > +};
->> > +
->>
->> I think the kernel u32 and u64 types are preferred ?
->
-> I'm not sure if I should fix this in this patch because I did not add the=
-se
-> variables. IMO, we need to split the commit if we fix them.
->
+3. Ping on PC1, then capture packet on ens37 and ens38 on PC0.
+Find that dst mac and src mac changed, and 1q vlan 2 missed.
+Expect that 1ad vlan 2 inserted between src mac and 1q vlan.
+Details are below:
+  PC1:
+  # ping 192.168.32.1 -W1 -c1
+  PING 192.168.32.1 (192.168.32.1) 56(84) bytes of data.
 
-Right, I got confused for how the diff showed the changes. But I agree with
-you that should be a separate patch since the variables already exist.
+  --- 192.168.32.1 ping statistics ---
+  1 packets transmitted, 0 received, 100% packet loss, time 0ms
 
-[...]
+  PC0:
+  #tcpdump -iens38 -nnvvepXX
+  tcpdump: listening on ens38, link-type EN10MB (Ethernet), snapshot
+length 262144 bytes
+  06:56:11.491285 00:0c:29:1a:32:8c > ff:ff:ff:ff:ff:ff, ethertype
+802.1Q (0x8100),
+  length 64: vlan 2, p 0, ethertype ARP (0x0806), Ethernet (len 6),
+IPv4 (len 4),
+  Request who-has 192.168.32.1 tell 192.168.32.24, length 46
+  0x0000:  ffff ffff ffff 000c 291a 328c 8100 0002  ........).2.....
+  0x0010:  0806 0001 0800 0604 0001 000c 291a 328c  ............).2.
+  0x0020:  c0a8 2018 0000 0000 0000 c0a8 2001 0000  ................
+  0x0030:  0000 0000 0000 0000 0000 0000 0000 0000  ................
 
->>
->> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
->
-> Thank you for your review and comment. I'll fix them and add your ack.
->
+  #tcpdump -iens37 -nnvvepXX
+  tcpdump: listening on ens37, link-type EN10MB (Ethernet), snapshot
+length 262144 bytes
+  06:56:11.491548 32:8c:81:00:00:02 > ff:ff:00:0c:29:1a, ethertype
+802.1Q-QinQ (0x88a8),
+  length 64: vlan 2, p 0, ethertype ARP (0x0806), Ethernet (len 6),
+IPv4 (len 4),
+  Request who-has 192.168.32.1 tell 192.168.32.24, length 46
+  0x0000:  ffff 000c 291a 328c 8100 0002 88a8 0002  ....).2.........
+  0x0010:  0806 0001 0800 0604 0001 000c 291a 328c  ............).2.
+  0x0020:  c0a8 2018 0000 0000 0000 c0a8 2001 0000  ................
+  0x0030:  0000 0000 0000 0000 0000 0000 0000 0000  ................
 
-Thanks!
+  Display config on PC0=EF=BC=9A
+  # bridge vlan
+  port              vlan-id
+  ens37             2
+  ens38             2
 
-> Best regards,
-> Ryosuke
->
+  # tc -s filter ls dev ens38 ingress
+  filter protocol all pref 49152 matchall chain 0
+  filter protocol all pref 49152 matchall chain 0 handle 0x1
+    not_in_hw (rule hit 3)
+  action order 1: vlan  push id 2 protocol 802.1ad priority 0 pipe
+  index 1 ref 1 bind 1 installed 506 sec used 365 sec firstused 367 sec
+  Action statistics:
+  Sent 138 bytes 3 pkt (dropped 0, overlimits 0 requeues 0)
+  backlog 0b 0p requeues 0
 
---=20
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+  # ip -d link ls dev br
+  17: br: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue
+state UP mode DEFAULT group default qlen 1000
+    link/ether ca:dc:7a:b2:df:f0 brd ff:ff:ff:ff:ff:ff promiscuity 0
+minmtu 68 maxmtu 65535
+    bridge forward_delay 1500 hello_time 200 max_age 2000 ageing_time
+30000 stp_state 0 priority 32768 vlan_filtering 1 vlan_protocol
+802.1ad bridge_id 8000.ca:dc:7a:b2:df:f0 designated_root
+8000.ca:dc:7a:b2:df:f0 root_port 0 root_path_cost 0 topology_change 0
+topology_change_detected 0 hello_timer    0.00 tcn_timer    0.00
+topology_change_timer    0.00 gc_timer  158.49 vlan_default_pvid 1
+vlan_stats_enabled 0 vlan_stats_per_port 0 group_fwd_mask 0
+group_address 01:80:c2:00:00:08 mcast_snooping 1 mcast_router 1
+mcast_query_use_ifaddr 0 mcast_querier 0 mcast_hash_elasticity 16
+mcast_hash_max 4096 mcast_last_member_count 2
+mcast_startup_query_count 2 mcast_last_member_interval 100
+mcast_membership_interval 26000 mcast_querier_interval 25500
+mcast_query_interval 12500 mcast_query_response_interval 1000
+mcast_startup_query_interval 3125 mcast_stats_enabled 0
+mcast_igmp_version 2 mcast_mld_version 1 nf_call_iptables 0
+nf_call_ip6tables 0 nf_call_arptables 0 addrgenmode eui64 numtxqueues
+1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+  # uname -a
+  Linux code 5.15.0-131-lowlatency #141-Ubuntu SMP PREEMPT Thu Jan 16
+18:36:23 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
