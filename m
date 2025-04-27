@@ -1,43 +1,50 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8AE42A83;
-	Sun, 27 Apr 2025 01:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E52442A83;
+	Sun, 27 Apr 2025 01:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745715975; cv=none; b=nngeVPGkRrTsLzSAFUP62l9CxnIDIQaQI2gRPwaDAy10PUAHvrpalGzmXSO/ZqOgGqoUKNpjbe2mSdtBZbhcAJKeUL726VnYAjhXsihwqpLXaSM8/rbyoItMx7jyMy60LXetahe6AoAAOxJ1WMA9fKxHuJ6Hmi0asirs7sGV0Z0=
+	t=1745716019; cv=none; b=mbgUd5koTJwWY+4CCw5I6meoJlzBZGcfB+E1bVn0sb7vLkFisMN4xCyYCph3u9pnrzlmT+PxtFTfLSehRFS+5mGDkrB73Um5vzT9OuYTwijoe5HeDmmkLKbTphQjLv/jiHuYGcYYoEd66ogQKEHeZI7swi0ZTXjEwSuvTvKih3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745715975; c=relaxed/simple;
-	bh=kDctFkkJ2SUzn8l0v91DYSyiok3K2+3MqU3WKVzjD6E=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mQp+uW2JpGy50l3DZQHy4j8du9wqWbeyoclNQCwDV0baTSDnOBltbjPVaek55Kjyp6+6+gpswqUPtqRBr1vebEHcZSFE9Tnh59412jtO1wiX4ZFWGLkRKZqphcHFrqrPdCkRI1r7RjNW+Kf5yy+YTKs00nF3POguNCcul7jL3gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1u8qNO-000000006ZO-2KL7;
-	Sun, 27 Apr 2025 01:06:06 +0000
-Date: Sun, 27 Apr 2025 02:05:44 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Chad Monroe <chad@monroe.io>, Felix Fietkau <nbd@nbd.name>,
-	Bc-Bocun Chen <bc-bocun.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net v2] net: ethernet: mtk_eth_soc: fix SER panic with 4GB+
- RAM
-Message-ID: <4adc2aaeb0fb1b9cdc56bf21cf8e7fa328daa345.1745715843.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1745716019; c=relaxed/simple;
+	bh=NEjCPwylKFu5h1oJCIOdgWyzeTdHMf2449XU97bfmA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=sLWdmNcM1367378YZT5DxydMCQiRISVQdGRfCoRfJnAcoF5My6YJd8UMDeUM+RMxe1tldBacYPBrnBYUFurJN2NqNQNhE72bBuV+h7zr725x6AzL+pdBLIUatY+gbScD9TtITaaaOkLl14xR+b41nK9PecBpFljaJh+08OmGso4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ZBrOvF8Q; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ZBrOvF8Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jYBIW8eL1CHTTgYqVhOJdPq6bgjz5FSbg7i5wPZVhNg=; b=ZBrOvF8Qo8J4cuQs3xdMmfCOmr
+	a75wN5BWC+Ggi02u2OkOXrfsQ9WcEbBmShuNkPBIwY5k8gKcO64kwqMOWu5SPYtCvTaxpGgh1merV
+	okY/E4Dc3UjeuouK5DAuujPEUKJfgmyff4qyX0PDfV+qHY82qO5T9bV8EaMigXon62TNK2EShmvTo
+	ycU37GIkPwCW2lxYAvbAPFbfWsCtQGn/1V5XhZLm7Uc2ZJ/D0WP+sndPm7ZWFW45zCDDyvSMrD663
+	EmNxoqe0ba9PaADtu/SUu+jI7XAmTYVSPafPQOTMCQhhe/7wTYd2mJVuiomGfs3Ucf7Lp5k0I/HvN
+	DyF1yCTQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u8qTr-001JP9-0H;
+	Sun, 27 Apr 2025 09:06:52 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 27 Apr 2025 09:06:51 +0800
+Date: Sun, 27 Apr 2025 09:06:51 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
+	linux-s390@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
+	Jason@zx2c4.com, torvalds@linux-foundation.org
+Subject: Re: [PATCH 01/13] crypto: sha256 - support arch-optimized lib and
+ expose through shash
+Message-ID: <aA2DKzOh8xhCYY8C@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,55 +53,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250426065041.1551914-2-ebiggers@kernel.org>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-From: Chad Monroe <chad@monroe.io>
+Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> +static int crypto_sha256_update_arch(struct shash_desc *desc, const u8 *data,
+> +                                    unsigned int len)
+> +{
+> +       sha256_update(shash_desc_ctx(desc), data, len);
+> +       return 0;
+> +}
 
-If the mtk_poll_rx() function detects the MTK_RESETTING flag, it will
-jump to release_desc and refill the high word of the SDP on the 4GB RFB.
-Subsequently, mtk_rx_clean will process an incorrect SDP, leading to a
-panic.
+Please use the block functions directly in the shash implementation.
 
-Add patch from MediaTek's SDK to resolve this.
-
-Fixes: 2d75891ebc09 ("net: ethernet: mtk_eth_soc: support 36-bit DMA addressing on MT7988")
-Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/71f47ea785699c6aa3b922d66c2bdc1a43da25b1
-Signed-off-by: Chad Monroe <chad@monroe.io>
----
-Changes since v1:
- * fix Link:
- * improve formatting
-
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 47807b202310..a817fdf468d4 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2252,14 +2252,18 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
- 		ring->data[idx] = new_data;
- 		rxd->rxd1 = (unsigned int)dma_addr;
- release_desc:
-+		if (MTK_HAS_CAPS(eth->soc->caps, MTK_36BIT_DMA)) {
-+			if (unlikely(dma_addr == DMA_MAPPING_ERROR))
-+				addr64 = FIELD_GET(RX_DMA_ADDR64_MASK,
-+						   rxd->rxd2);
-+			else
-+				addr64 = RX_DMA_PREP_ADDR64(dma_addr);
-+		}
-+
- 		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
- 			rxd->rxd2 = RX_DMA_LSO;
- 		else
--			rxd->rxd2 = RX_DMA_PREP_PLEN0(ring->buf_size);
--
--		if (MTK_HAS_CAPS(eth->soc->caps, MTK_36BIT_DMA) &&
--		    likely(dma_addr != DMA_MAPPING_ERROR))
--			rxd->rxd2 |= RX_DMA_PREP_ADDR64(dma_addr);
-+			rxd->rxd2 = RX_DMA_PREP_PLEN0(ring->buf_size) | addr64;
- 
- 		ring->calc_idx = idx;
- 		done++;
+Thanks,
 -- 
-2.49.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
