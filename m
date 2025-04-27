@@ -1,32 +1,32 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CF024889B
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218E12512ED
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 10:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745748298; cv=none; b=QJ+nuS86piHphYaJVe+l8idd70cD6gCV6L7YruDwbmK+LuxamfGbbxy7l2UPyG/LHlhq8cvUEq52wZiugaufEYfSCh/mjHyv3zgjmBiT3pT1QtoEMm6S33v1duNLQnMqtGADVgfUgZS/BV1HrEh3XIFtD18JISae6qBzJjxiTYo=
+	t=1745748301; cv=none; b=BQIiiQR/K2N6jvzcnrWShvSoZ6tG1VPcMjo/TWvtZvcC3FFs2gMutb++klSxv64pdc5AI8w5unh6dyy/aF+p5uWTpAaVopblfeAW5NXBXmrDVRfwci8ZcsS9TxQWevFWtNJ/wqExJeb/lEDkFn715IDlqAP4tdPictWzLD0QHZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745748298; c=relaxed/simple;
-	bh=mydvLjJBnHeE5NSycpyqpNudDH9TuVuCg/ncb1LLdyA=;
+	s=arc-20240116; t=1745748301; c=relaxed/simple;
+	bh=lL7p8RT66GHHZlIHqFx0KN/mJgxQUJS29/Uta+I56Y4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PbeE7faJYyB2gbEP7RtfzFzd/pN8T5ERO2f3bk0XlWbhfCQctSHeggHCD/NGJx9DglSsMtSoJycTWED5oHY/wYqqb5BZ5YSb0kn27u82EpXgxgilPCq7al9UA4vMfdoFuEJ0zZWPwZYGpd9I72iJaCjZjZNUftXgIq+Sg22N+3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PEg/uTS2; arc=none smtp.client-ip=95.215.58.172
+	 MIME-Version; b=hn6YlTrwr73tGAIFLDeaxmlE5spmTL3gJ1xEf2hXclg33kbeEKDTAz1lFb7x6fa8hnD5tB9dqB6AlunDCtjmHeCULgxQgCxsBb7CAuA3RALbdpkrYAXpfN6thyamBsnQ/UhEfyZZ+lXomde6/qpSYdNJiSqZ9/f4sDDvqGF2/8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WjpksMWS; arc=none smtp.client-ip=95.215.58.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PEg/uTS2"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WjpksMWS"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745748293;
+	t=1745748296;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kbBrGSlttyJqDmbUGbneT8Q4Vin8RnOijYhB+MLIS+I=;
-	b=PEg/uTS2wvCSic3eeEgSsJTlL+SDg6uQF696X8jumoihxpQWBpM98gDOn5yDJrEoTxQeL7
-	AOyVjzXTVEkHr7ZXb6b8LvxWORoczRPrjgNV6MsQZix9A+bMWZAJSe5RieUox9DWjCrgGm
-	jDK9g1j+nFbGlsFqNylJyku53PjXSQo=
+	bh=XKKLGxZU8OZ2xGEdKDaDexux1b0MqIrEZ+95uLGz+D4=;
+	b=WjpksMWSRMcE8F8KxbqeV1cjbX+wDqK4BuuChXc4mi7qsHRsc/1iSo9Q/yCcEh268rwn4j
+	pDWluFmC9NpuQd0lvXyo5a6nozSR8s4D02IkiIv9TExrWI4lNyRen8Rjiv1/JQTMUL3JmT
+	Kf/5gN5EHDdrxrFh6RQVhStNNkOO3ZQ=
 From: Ye Liu <ye.liu@linux.dev>
 To: akpm@linux-foundation.org
 Cc: linux-kernel@vger.kernel.org,
@@ -40,9 +40,9 @@ Cc: linux-kernel@vger.kernel.org,
 	vbabka@suse.cz,
 	liuye@kylinos.cn,
 	ye.liu@linux.dev
-Subject: [PATCH 1/3] mm/io-mapping: precompute remap protection flags for clarity
-Date: Sun, 27 Apr 2025 18:04:40 +0800
-Message-Id: <20250427100442.958352-2-ye.liu@linux.dev>
+Subject: [PATCH 2/3] mm/debug_page_alloc: improve error message for invalid guardpage minorder
+Date: Sun, 27 Apr 2025 18:04:41 +0800
+Message-Id: <20250427100442.958352-3-ye.liu@linux.dev>
 In-Reply-To: <20250427100442.958352-1-ye.liu@linux.dev>
 References: <20250427100442.958352-1-ye.liu@linux.dev>
 Precedence: bulk
@@ -56,34 +56,30 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Ye Liu <liuye@kylinos.cn>
 
-In io_mapping_map_user(), precompute the page protection flags in a local
-variable before calling remap_pfn_range_notrack().
+When an invalid debug_guardpage_minorder value is provided, include the
+user input in the error message. This helps users and developers diagnose
+configuration issues more easily.
 
 No functional change.
 
 Signed-off-by: Ye Liu <liuye@kylinos.cn>
 ---
- mm/io-mapping.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ mm/debug_page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/io-mapping.c b/mm/io-mapping.c
-index 01b362799930..f44a6a134712 100644
---- a/mm/io-mapping.c
-+++ b/mm/io-mapping.c
-@@ -21,9 +21,10 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
- 	if (WARN_ON_ONCE((vma->vm_flags & expected_flags) != expected_flags))
- 		return -EINVAL;
+diff --git a/mm/debug_page_alloc.c b/mm/debug_page_alloc.c
+index d46acf989dde..6a26eca546c3 100644
+--- a/mm/debug_page_alloc.c
++++ b/mm/debug_page_alloc.c
+@@ -23,7 +23,7 @@ static int __init debug_guardpage_minorder_setup(char *buf)
+ 	unsigned long res;
  
-+	pgprot_t remap_prot = __pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
-+				       (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK));
-+
- 	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
--	return remap_pfn_range_notrack(vma, addr, pfn, size,
--		__pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
--			 (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK)));
-+	return remap_pfn_range_notrack(vma, addr, pfn, size, remap_prot);
- }
- EXPORT_SYMBOL_GPL(io_mapping_map_user);
+ 	if (kstrtoul(buf, 10, &res) < 0 ||  res > MAX_PAGE_ORDER / 2) {
+-		pr_err("Bad debug_guardpage_minorder value\n");
++		pr_err("Bad debug_guardpage_minorder value: %s\n", buf);
+ 		return 0;
+ 	}
+ 	_debug_guardpage_minorder = res;
 -- 
 2.25.1
 
