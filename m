@@ -1,109 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CE61A26B;
-	Sun, 27 Apr 2025 14:37:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C965661;
+	Sun, 27 Apr 2025 14:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745764624; cv=none; b=GALkU2DXqJ2FB1zfIj5iH8d+U/SB6/FmRSnzZJzurNVsa46jA3RNKxEYkO+mjgXmredW7j9+sd9z8quRzUIPXIUa1ooI/3hwOq12aKUq3z8xUP5WMXsGx7Y9abrnJ4S8/zr9KibztVlc7IBKmjEkJzh4Q03weXU1NyygDYVinbQ=
+	t=1745764727; cv=none; b=DRGkLoZqts2jkhIoUz+BwfkcO2GZkddnI7oKnUQ9ocU4//7Gk6WtNsD3V2ZrCGFPYGIy9SZjviHn9n5fd/TRX0P8mCfWQY9M8PyIlUuVOs969SsAFZRKb8WrcdbvIjgDD9/oZi82laKdrfAl2L1hic3UhtkUG31OwsO0gAo/xl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745764624; c=relaxed/simple;
-	bh=AMdLYG3+WT6NBLQbhEHdi3IVWXd1ydQkS0B2yNrUsqE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hbbG4PKAZutyfXvuy4Ye8iy4sI3X1YRNX4f0YIqxuQark/ZR/UwdQCJQrkEXIB615h5juPABB8iXHQ1Iiawq6zpmWacUxiZcigOBZeLvNdw8MgUQl5+g/j18cNgRZxb8QbxIWQqZFrML1SH4Lz8pQsCQkJYjoTHQv6cp0hPJej4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJfI1nq7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745764727; c=relaxed/simple;
+	bh=iqNyrXhXtNWzKzdJcnAl3HmTmEDJLWGh4BiARlXXw+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fn8lVFZ7SVHWyXFI+AwOvGxb48hxI6+iujBpvDjJbvx6VX2wugKCFq2p3vAad/6oNyLfdMva0CSlwxzMoPHJi6SFZ5vDC0SI85Ktn9JHpDuN+8x/fFM/hN0E3QP0aIXyHjtgWIrPJdZn9NojJFGwiuFQzpdeq0+/8Qm6gQYJMas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYminJdb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJfI1nq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C833AC4CEE3;
-	Sun, 27 Apr 2025 14:37:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYminJdb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC2CC4CEE3;
+	Sun, 27 Apr 2025 14:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745764623;
-	bh=AMdLYG3+WT6NBLQbhEHdi3IVWXd1ydQkS0B2yNrUsqE=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=pJfI1nq7bGzPxvntNyepy15lbzZ9Mn2WgORpkQxHBSWFATuZc5F7OE1yp3GL6rB+i
-	 wjJPLdrb9JzQCP8WffIGn/zl3GoCNqWYfJWW2RToZRsoFHz3zvB2a9MH0UkrtcZYH6
-	 dpce3hIdojox8weJEtYnuqYW6MgVzaRlAj5X9zcCogb54hPY8WsQdCZjgdnVsONzhY
-	 sPNg4R5z7BHHyqKAIu5RP1OE5D2TwEVgtLeYERsfM67qhTyKZN14FA3M4dDnEFidRc
-	 DnIjs3HDN7dxMjVY9YTfsIKxFnhrrEkuypfnEckgDF9RImRXzFCgHZg+pz9wzAbk1Y
-	 7dFXV0zFLoLNw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFEDC369D1;
-	Sun, 27 Apr 2025 14:37:03 +0000 (UTC)
-From: Levi Zim via B4 Relay <devnull+rsworktech.outlook.com@kernel.org>
-Date: Sun, 27 Apr 2025 22:36:59 +0800
-Subject: [PATCH net] docs: tproxy: fix code block style
+	s=k20201202; t=1745764726;
+	bh=iqNyrXhXtNWzKzdJcnAl3HmTmEDJLWGh4BiARlXXw+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aYminJdb1iacYydize7B8EO9+rtgl1RduKYbdZt/fehYyNTEJ6uAUbOFdIGe9PyUA
+	 yD6YMMJGPnXxIn1kTDztj8Yg1QtlvwEU1GXYepn47jUqvLgt2Cj165flaPrG3X0ORT
+	 YgPa/hQUJC0FADRBzgYKWmX81JRAry0SYqEIZ/i2vt1v9s19jhobaYp6440SKt7A/n
+	 bG6XzUCp12D1FRzuFv/lcjSknDTMXxuJnzWUDiFGRIrLsKnv3JLqu4rAnwq6vLK86b
+	 YM3FYhkJopA70DAo54k5ShGcWsvMka3tn0rETGw15PrvlCXxNn+iPABHAosXp5RKhG
+	 I7PnYt4mVGh/Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u939c-000000005vL-0heY;
+	Sun, 27 Apr 2025 16:38:48 +0200
+Date: Sun, 27 Apr 2025 16:38:48 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [PATCH v2 2/4] firmware: arm_scmi: Add Quirks framework
+Message-ID: <aA5BeONpC3CJE5-Z@hovoldconsulting.com>
+References: <20250425125250.1847711-1-cristian.marussi@arm.com>
+ <20250425125250.1847711-3-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250427-tproxy-docs-fix-v1-1-988e94844ccb@outlook.com>
-X-B4-Tracking: v=1; b=H4sIAAtBDmgC/x2MQQqAIBAAvyJ7bqHEiPpKdEhbay8qKmGEf086z
- sDMC4kiU4JFvBDp5sTeNRg6Aeba3UnIR2OQvRx7JSfMIfry4OFNQssFjdFaWyVHNVtoVYjU9H9
- cwVGGrdYPkk9mnmYAAAA=
-X-Change-ID: 20250427-tproxy-docs-fix-ccbbbf42549f
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Levi Zim <rsworktech@outlook.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1174;
- i=rsworktech@outlook.com; s=not_default; h=from:subject:message-id;
- bh=cby+1jVkm77u6wkNVFnwY7Zel5ns9SwCbUFjdQo23d8=;
- b=owEBbQKS/ZANAwAIAW87mNQvxsnYAcsmYgBoDkEMC9YQa4pYiRQ4m8eDAv3pFcvx3SdQvUtxA
- t5FkHu8dVyJAjMEAAEIAB0WIQQolnD5HDY18KF0JEVvO5jUL8bJ2AUCaA5BDAAKCRBvO5jUL8bJ
- 2KgHEADOuGO9cGsSUh1JGInQtQK/Nj56a2IhHlhvZbMELaEFp7sz389+1psGnMqwmAtijjz311F
- ScH6yNQ01ox8XzUj/zHbhP7+5d3yXT1KMuyArrVWYwWkQ/3rPfOqtNxNNBTNCWVdqaW5RzT9Y+f
- u2BdaEPreaXeVkTsu5ze6vTout+y31EDzPihMqgKu5NZL6XsHt9QDSCSi9MeBCCFDpSZKzKGjrP
- 9zwR17lLhc37Z92qsSKVl+p5LOdXwAzFM/XqTTFHji1p6HUME/ygaR2RyeAfU8D1tq0Q5bSsXfm
- av6DyFc+rLqnlFAiEYA3gmjS6yndiWJOkMLPYv91+qPYAJr0pa47DCtJeH9VpXOrZhRJXlZVpNI
- 4aTZsHYqPLYPYHxecSGDJlE1v7m4jq/X2wrogJRqr/9AOES0OyRkWbtW22XPYKvW250yW+LrNB/
- Z/sY7utlfFRSLxPBVBHBMB24bxoeornVdZUwYV75RrtiSHCspMbgq/T3phsT2lj5+t8s2Ti0wRA
- 2XBXggkU5sPTaJDdqeei6a9GoAYNWlykcG+9/wU6LFx/CDDKFJS7t3pbPoW2oFINQMHjucyAsIY
- A2HVmOQ5+2x/jKEpgyjIG10C28uZDKp0YWCp1McjMBHaQahP2kXS0PQE2t+Q7GxTfLR/09LvjfQ
- IchJaG0Q92+xFyQ==
-X-Developer-Key: i=rsworktech@outlook.com; a=openpgp;
- fpr=17AADD6726DDC58B8EE5881757670CCFA42CCF0A
-X-Endpoint-Received: by B4 Relay for rsworktech@outlook.com/not_default
- with auth_id=390
-X-Original-From: Levi Zim <rsworktech@outlook.com>
-Reply-To: rsworktech@outlook.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425125250.1847711-3-cristian.marussi@arm.com>
 
-From: Levi Zim <rsworktech@outlook.com>
+On Fri, Apr 25, 2025 at 01:52:48PM +0100, Cristian Marussi wrote:
+> Add a common framework to describe SCMI quirks and associate them with a
+> specific platform or a specific set of SCMI firmware versions.
+> 
+> All the matching SCMI quirks will be enabled when the SCMI core stack
+> probes and after all the needed SCMI firmware versioning information was
+> retrieved using Base protocol.
+> 
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> ---
+> V1 -> V2
+> - compile quirk snippets even when SCMI Quirks are disabled
+> - added support for quirks matches on multiple compatibles
+>   (via NULl terminated compats strings)
+> - removed stale unneeded include
+> - added some more docs
 
-The last command is not indented thus does not show as code block when
-rendered. This patch fixes it.
+> +static void scmi_enable_matching_quirks(struct scmi_info *info)
+> +{
+> +	struct scmi_revision_info *rev = &info->version;
+> +	const char *compatible = NULL;
+> +	struct device_node *root;
+> +
+> +	root = of_find_node_by_path("/");
+> +	if (root) {
+> +		of_property_read_string(root, "compatible", &compatible);
+> +		of_node_put(root);
+> +	}
+> +
+> +	dev_dbg(info->dev, "Looking for quirks matching: %s/%s/%s/0x%08X\n",
+> +		compatible, rev->vendor_id, rev->sub_vendor_id, rev->impl_ver);
 
-Fixes: 4ac0b122ee63 ("docs: networking: convert tproxy.txt to ReST")
-Signed-off-by: Levi Zim <rsworktech@outlook.com>
----
- Documentation/networking/tproxy.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+You're now just looking up the most specific compatible string in order
+to include it in this dev_dbg(). Since you're now matching on all
+compatible strings, perhaps you can consider just dropping it.
 
-diff --git a/Documentation/networking/tproxy.rst b/Documentation/networking/tproxy.rst
-index 7f7c1ff6f159ed98d96c63d99c98ddbaefd47124..102c030e3cf06d6e9607f7668b417b99a3a62300 100644
---- a/Documentation/networking/tproxy.rst
-+++ b/Documentation/networking/tproxy.rst
-@@ -71,7 +71,7 @@ add rules like this to the iptables ruleset above::
- 
- Or the following rule to nft:
- 
--# nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
-+    # nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set 1 accept
- 
- Note that for this to work you'll have to modify the proxy to enable (SOL_IP,
- IP_TRANSPARENT) for the listening socket.
+> +
+> +	/* Enable applicable quirks */
+> +	scmi_quirks_enable(info->dev, rev->vendor_id,
+> +			   rev->sub_vendor_id, rev->impl_ver);
+> +}
 
----
-base-commit: f73f05c6f711fd1628c7565441b9febc0c4d6c58
-change-id: 20250427-tproxy-docs-fix-ccbbbf42549f
+> +/**
+> + * DOC: Theory of operation
+> + *
+> + * A framework to define SCMI quirks and their activation conditions based on
+> + * existing static_keys Kernel facilities.
 
-Best regards,
--- 
-Levi Zim <rsworktech@outlook.com>
+nit: kernel
 
+> +/*
+> + * Define a quirk by name and provide the matching tokens where:
+> + *
+> + *  _qn: A string which will be used to build the quirk and the global
+> + *	 static_key names.
+> + *  _ven : SCMI Vendor ID string match, NULL means any.
+> + *  _sub : SCMI SubVendor ID string match, NULL means any.
+> + *  _impl : SCMI Implementation Version string match, NULL means any.
+> + *          This string can be used to express version ranges which will be
+> + *          interpreted as follows:
+> + *
+> + *			NULL		[0, 0xFFFFFFFF]
+> + *			"X"		[X, X]
+> + *			"X-"		[X, 0xFFFFFFFF]
+> + *			"-X"		[0, X]
+> + *			"X-Y"		[X, Y]
+> + *
+> + *          with X <= Y and <v> in [X, Y] meaning X <= <v> <= Y
+> + *
+> + *  ... : An optional variadic macros argument used to provide a coma-separated
 
+comma
+
+> + *	  list of compatible strings matches; when no variadic argument is
+> + *	  provided, ANY compatible will match this quirk.
+
+> +void scmi_quirks_enable(struct device *dev, const char *vend,
+> +			const char *subv, const u32 impl)
+> +{
+> +	for (int i = 3; i >= 0; i--) {
+> +		struct scmi_quirk *quirk;
+> +		unsigned int hkey;
+> +
+> +		hkey = scmi_quirk_signature(i > 1 ? vend : NULL,
+> +					    i > 2 ? subv : NULL);
+> +
+> +		/*
+> +		 * Note that there could be multiple matches so we
+> +		 * will enable multiple quirk part of an hash collision
+
+nit: "quirks that are part of a"?
+
+> +		 * domain...BUT we cannot assume that ALL quirks on the
+> +		 * same collision domain are a full match.
+> +		 */
+> +		hash_for_each_possible(scmi_quirks_ht, quirk, hash, hkey) {
+> +			if (quirk->enabled || quirk->hkey != hkey ||
+> +			    impl < quirk->start_range ||
+> +			    impl > quirk->end_range)
+> +				continue;
+> +
+> +			if (quirk->compats[0] &&
+> +			    !of_machine_compatible_match(quirk->compats))
+> +				continue;
+> +
+> +			dev_info(dev, "Enabling SCMI Quirk [%s]\n",
+> +				 quirk->name);
+> +
+> +			dev_dbg(dev,
+> +				"Quirk matched on: %s/%s/%s/[0x%08X-0x%08X]\n",
+> +				quirk->compats[0], quirk->vendor,
+
+You can now match on more than one compats string, but I guess printing
+just the first one is fine.
+
+> +				quirk->sub_vendor_id,
+> +				quirk->start_range, quirk->end_range);
+> +
+> +			static_branch_enable(quirk->key);
+> +			quirk->enabled = true;
+> +		}
+> +	}
+> +}
+
+This seems to work as intended and I've tried matching on machine and
+SoC compatible strings and/or vendor and protocol version:
+
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+
+Johan
