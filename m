@@ -1,124 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77ABB23AD;
-	Sun, 27 Apr 2025 14:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EC779C4;
+	Sun, 27 Apr 2025 14:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745763463; cv=none; b=jQENo1Gqk26MSWl9c7v0fILkFkaJ0180A/0Y+VNckxvJFXNbuCZHsrZIaAcMDM2bAzhMx3DP3dJ6htiXRIzCISwq0zafs7hIRc88wkt9LhbQCon58Y8SsUqAjPJsxvnLl+CEZAWqjNl0+e9exHfuNyKCr5cBnUT1OfkeuUtpHS0=
+	t=1745763867; cv=none; b=PnKtDE0BhGgc5tCXPOMbI5MMviOPBYEjlRhCqvkgNN1hin00GJfQQKVLsLgy4rKfnXAtOtO+Uqpoux/8fBv/U/xhxiVPJYRoyUnhimVSrUA6dS9dkYC6b2YlFqNrrPcIoIx/6R3Ftk64irEAIZxRYvDYVTIvCUx/bdC5CN2Yn8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745763463; c=relaxed/simple;
-	bh=MacNpFrVB9lWzT12etspQTBQaCfmPqMr9/4hdD7jTA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=saBYVVSeYDN2u1cZKoha6jvx8AkJ582s9+dah3Kltgvz/2SAXauD/cJLk1ZV2xOT5y2du5LkTHr64dy2audFCdLrYwGckAtWLCv+dFaVaxW0J4d1Eq7G69vmimQzxzYHczq6gwEJaq/yb9YTdFY29300Pwg6f2V80vx12NbMaTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADklFkzv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745763867; c=relaxed/simple;
+	bh=CYELTFpR5RO+UOyF9XdelPjNz+Bh+smiwCLw6IrLdZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BfydODlMa+fxj7gR9FXW2CyQJphJdPUlVmzEdlXFyYKYGXTU85rbJDO2BmOMRIcKWHpK/TbMws6n+pF/qYC5ZC9repbfgEV/wjazLCCFvMm4McdjJJMcclcu2ZtEiTz8mChkmITjv7cidEJ2gm5EK/MsBzeU1h3KuFb8Wkc8zi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUz0RzZK; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADklFkzv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAFFC4CEE3;
-	Sun, 27 Apr 2025 14:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745763462;
-	bh=MacNpFrVB9lWzT12etspQTBQaCfmPqMr9/4hdD7jTA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ADklFkzv+4jwcEEx/tTAg0khYw6qhHY7i23kzmvV1iS56dwwV/3mxN7so7Vh44qjG
-	 J6V2spXCw6NcJBPE2iRXKfyj/wjUiZbYdGYgow1fsSqHTY/YuOifTzzam1TBWNNC0I
-	 hHHKg1KYztcCA65o6MYfSTluy5yIln9ExswXrmsnmB0tnk7gGJUC837ADiSJn95Pca
-	 EGD4tbgUIm+PDXZiktZZHSTsUyi4iw16FuVFEd1KIHlHXLr0jvFbfZ2kPF7JNeA+oG
-	 CEkMt3wAIVhP+4JPr42dVHVFPHHkqPF4219+folsVha50SVzO8UuDywiv+KmZCIH1z
-	 e5wFKxr6lns/w==
-Date: Sun, 27 Apr 2025 16:17:35 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	joelagnelf@nvidia.com, ttabi@nvidia.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] rust: devres: implement Devres::access_with()
-Message-ID: <aA48f5Bbhe6ZXGJX@pollux>
-References: <20250426133254.61383-1-dakr@kernel.org>
- <20250426133254.61383-3-dakr@kernel.org>
- <D9HG66ONN8E4.1DK7SLRLD0YJZ@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUz0RzZK"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso7385117a12.3;
+        Sun, 27 Apr 2025 07:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745763864; x=1746368664; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bTdCSXyXKLGjb4xxRuXuC2QAcp6Bhl4G5LPZiZnxAkg=;
+        b=CUz0RzZKR05KT7vLGB8Rn5afblt+COzKsUCyeZ8JqLq2msC9J+R6ej5B2cNnKYXpqZ
+         BEqMOLs4MlqUStdcW6t5YA8rhr2cep/5X/zx43YnzmQdmcZPmZf3Kcqog271b+cWqGa6
+         VJFm1O6xO+SA3NszDUSM40+PuFuZSrbQBtN0s6+qs54HLZ5u+67pPgu2hfIlgAlvLLuF
+         AwWuh4kAx8lm5OYFP+WJ2Mskdl7Ojl7AM0DtBzaJiCO28OTfkGM830l5Wy6hT04KT9lo
+         tpW48Zkw+9jirf2A1qBvs8PXGuOy0wf5tNoyJ4inDptr0zTuxyEDIqwiBxC4YRffbq0Z
+         mexQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745763864; x=1746368664;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bTdCSXyXKLGjb4xxRuXuC2QAcp6Bhl4G5LPZiZnxAkg=;
+        b=GOrhTMJiuoo0xAoHPiQDUa/iyugy3wuz0CkX0hDXNIUTd3+V5rK2IbfJYVT8SXh4SB
+         sOKG2HQz6M4nBrVcFZs9BD0R/UalY9Fok3QXPjo729X9hBdFOP0ZzYVONLShdygz+fqt
+         sJXFKWe5cINXvqVqiEuUwpw6MBT44U6/fHA4TBg5JtMGfAn3gtHs8uWLWSsxoqxBIfXF
+         NuKaoXval8kmzcI5D3VJmQCF/oNK49mQqo6Z7xg5O6gX6skUPmKsBIMNiVtxkU9Oxmg4
+         ZmW+o5tG6QNntROR0UDYWz38JCH44sp6RfyPtH1avI6klqrqJF9r1a2qhuGX5xoJtOKv
+         2SxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPt0x6lHUEvrvZhRP3u5znZeERZn1KzlsAR0deTBVWZPMwhAmS0LapezBpfnGAFh5SLG5KC9Rl899KFQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZriykhYm0X0FNM4WX1p8XUG3bAURiX8CaH5PUA/NpKBEN8ZFk
+	t5kk0URWnv2d19/A8XVmCJgvDTz+kx7/XQFTR+mHY5hjo2j6bsqf
+X-Gm-Gg: ASbGncvMM/X9vfP+PTe5NnEMLOXnYaCqPINMSviwp9iZf1WuSdUZzfLcQg2z5PngkLV
+	fp7em6SLTupiCRlUulqiUTLb0WtDKenqhH7befM+y5aZYAVAR2gIlQiTEwlnrSr6CbMhX3aCnfE
+	0rYn8ZfJH79P6M5zMoa2Jxo6Yozlcm9SRTrhKEZcXGJ9+oLGa7AtDqnGRczW3HPfPPAEZE4U5eC
+	dRej1E7Z6WHbZTtgeU1Kr3BWB1MJKaEGYjFQOHl2cX8GsJWgeHFoLbqtr9xLDm0i76D+3v7HU+l
+	WZiAO87BVkgwMnzSh6xMtKzjrcA5R8OT1K0HCBKAfzgMj5qzSnoY7B8LgK4hvxZ2pWeOZL8dGlC
+	FvkQdcQ6eiJ0rCX9Bw1vIZbTXWFvb7OQb7n0LPgVVB2jbiXnAKCV8Gl5aQ4s7VCRbP98Vu80tl9
+	0hBG8n5+2pGZjb
+X-Google-Smtp-Source: AGHT+IEGGx+E6y0ja04a6qnyw/DrZz43zsPPJqJEON+oYaLNJPZ/6oFZnmp5gDVsYnh60N40JF2ChQ==
+X-Received: by 2002:a17:907:97c9:b0:aca:d54d:a1f8 with SMTP id a640c23a62f3a-ace711175a7mr969009066b.31.1745763863610;
+        Sun, 27 Apr 2025 07:24:23 -0700 (PDT)
+Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-1150-51db-ebed-e084.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:1150:51db:ebed:e084])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed6fea9sm447956566b.127.2025.04.27.07.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 07:24:23 -0700 (PDT)
+From: Thomas Andreatta <thomasandreatta2000@gmail.com>
+X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+To: andy@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	thomas.andreatta2000@gmail.com
+Subject: Re: [PATCH 2/2] Staging: media: atomisp: style corrections
+Date: Sun, 27 Apr 2025 16:24:22 +0200
+Message-Id: <20250427142422.88271-1-thomas.andreatta2000@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CAHp75Vef0DuupHr9CAaU9qnDEw6O6KRPaO51uzrKXPwvfAiiJA@mail.gmail.com>
+References: <CAHp75Vef0DuupHr9CAaU9qnDEw6O6KRPaO51uzrKXPwvfAiiJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9HG66ONN8E4.1DK7SLRLD0YJZ@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 27, 2025 at 10:15:17PM +0900, Alexandre Courbot wrote:
-> On Sat Apr 26, 2025 at 10:30 PM JST, Danilo Krummrich wrote:
-> > Implement a direct accessor for the data stored within the Devres for
-> > cases where we can proof that we own a reference to a Device<Bound>
-> > (i.e. a bound device) of the same device that was used to create the
-> > corresponding Devres container.
+On Sun, Apr 27, 2025 at 12:41:34PM +0300, Andy Shevchenko wrote:
+> On Sat, Apr 26, 2025 at 11:15 PM Thomas Andreatta
+> <thomasandreatta2000@gmail.com> wrote:
 > >
-> > Usually, when accessing the data stored within a Devres container, it is
-> > not clear whether the data has been revoked already due to the device
-> > being unbound and, hence, we have to try whether the access is possible
-> > and subsequently keep holding the RCU read lock for the duration of the
-> > access.
-> >
-> > However, when we can proof that we hold a reference to Device<Bound>
-> > matching the device the Devres container has been created with, we can
-> > guarantee that the device is not unbound for the duration of the
-> > lifetime of the Device<Bound> reference and, hence, it is not possible
-> > for the data within the Devres container to be revoked.
-> >
-> > Therefore, in this case, we can bypass the atomic check and the RCU read
-> > lock, which is a great optimization and simplification for drivers.
-> >
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/devres.rs | 35 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >
-> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> > index 1e58f5d22044..ec2cd9cdda8b 100644
-> > --- a/rust/kernel/devres.rs
-> > +++ b/rust/kernel/devres.rs
-> > @@ -181,6 +181,41 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
-> >  
-> >          Ok(())
-> >      }
-> > +
-> > +    /// Obtain `&'a T`, bypassing the [`Revocable`].
-> > +    ///
-> > +    /// This method allows to directly obtain a `&'a T`, bypassing the [`Revocable`], by presenting
-> > +    /// a `&'a Device<Bound>` of the same [`Device`] this [`Devres`] instance has been created with.
-> > +    ///
-> > +    /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
-> > +    /// has been created with.
-> > +    ///
-> > +    /// # Example
-> > +    ///
-> > +    /// ```no_run
-> > +    /// # use kernel::{device::Core, devres::Devres, pci};
-> > +    ///
-> > +    /// fn from_core(dev: &pci::Device<Core>, devres: Devres<pci::Bar<0x4>>) -> Result<()> {
-> > +    ///     let bar = devres.access_with(dev.as_ref())?;
-> > +    ///
-> > +    ///     let _ = bar.read32(0x0);
-> > +    ///
-> > +    ///     // might_sleep()
-> > +    ///
-> > +    ///     bar.write32(0x42, 0x0);
-> > +    ///
-> > +    ///     Ok(())
-> > +    /// }
-> > +    pub fn access_with<'s, 'd: 's>(&'s self, dev: &'d Device<Bound>) -> Result<&'s T> {
+> > Corrected consistent spacing around '*' and braces positions
 > 
-> Coming from `Revocable::try_access_with` (and the standard library in
-> general), the name of this method made me think that it would take a
-> closure to run while the resource is held. Maybe we should differenciate
-> the names a bit more? Maybe just `access` is fine, or
-> `access_with_device`?
+> Missed period.
+> And what is the correct spacing and why?
 
-Seems reasonable -- access() it is then.
+I agree that the spacing looks weird and I questioned it too, but the script
+checkpatch.pl highlights as error:
+`sh_css.c:336: ERROR: need consistent spacing around '*' (ctx:WxV)`
+`sh_css.c:338: ERROR: need consistent spacing around '*' (ctx:WxV)`
+
+Should this be ignored because the script tries its best and it becomes common
+sense that the suggested spacing is "wrong"?
+
+> 
+> ...
+> 
+> >  static unsigned int get_crop_lines_for_bayer_order(const struct
+> > -       ia_css_stream_config *config);
+> > +       ia_css_stream_config * config);
+> >  static unsigned int get_crop_columns_for_bayer_order(const struct
+> > -       ia_css_stream_config *config);
+> > +       ia_css_stream_config * config);
+> 
+> No, this makes it the opposite. Please, read Coding Style if it sheds
+> a light on this. In any case the kernel style is to avoid spacing
+> between asterisk and name.
+
+Understood. I'll resubmit with the correct spacing.
+
+Thanks,
+Thomas
