@@ -1,146 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E6A18871F
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0602810942;
+	Sun, 27 Apr 2025 14:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745765824; cv=none; b=J/VI3uJXD8it6YYTuvmKUjujUxzRipM8QKAnoOmuvgO+rRL6AJ7c4InICFplxjqNuUrvQRFjrpPClFHXJwXfryzUnKTtAmtpEKcKgaLDWjgFcMyTDUgIm6Rk1i4sW4Waq0dT93yS1ZpWeWO4NMlbZA3E4zUgesLpOL6wfG/xaeE=
+	t=1745765891; cv=none; b=quM04Es4LDh8ZqIr1P0Pm9P5PPxBkIVYNMK5MkfSb2VSTM5TebJy74PD2W3w7LX/mglj/bkrPL6ImCC38uL3srTEzovg3JqopYXow5b6BkqOM34lCp8Fxi4QPVSvdVELr5nSuhunTRICkNKfcGpP8c3NbG4Aj4yAqihoZ6Pd9W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745765824; c=relaxed/simple;
-	bh=d2uDCVX6vy5fgINTJAoPSXWz99AZILOOAgGVtDIVWIY=;
+	s=arc-20240116; t=1745765891; c=relaxed/simple;
+	bh=jg94VLsINpu8YEl40duGRf8dqgQxrXXgUAScLGneAU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E0svrwJFyol4jRpyi9c/SM7l4dUnZNSyGUKy4Xd5XpzFcJY2bq7JtSjYT/xo+oZJGYQ8HbA6WGILrSP42ab2gCt7/ZucvwMe67ZA3deTL887hUjNq93wopt+KSZN6cEIT4/YZWnWSfhTVqQdhr6i0ZoCNo8PFex+MaajfzR+y70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f9uu1pMH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lSBkW7ZseSSMn/cVfnLU7TMqjZJKhWNafBW9n2GSox3jXdDAfMqvcTfU7SML1JzBV0VAXUINtkY/fSPMHpyEy7lDea7JdD+Jaes4PbwJ/WiXu30KphG5tTLpu7i1AzMxrX1vTuPVtP5mM/0/U/Nmqwc2R8ClUYQu/9UjGUtaTIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=eL+zur8z; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f9uu1pMH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745765821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=icw4AxzsZTsOJJ+P8ibwCbXmBIE2aO1l9yKvVx2uDRo=;
-	b=f9uu1pMHwQa6QpE23oSsuFLJkeyPUrm4DLP2vGM6b+Ko7hmKzvoT36vLsDM+J3X6gkgjUA
-	QVzwiFeSkglz3pC+bwAdMHZnQ3qPxipGTFMdD8zi5zxEmjzpZBJVhRyMPFiPXzXFKAaN1/
-	GDSC69SAxcun/Sswjba9hnGndzHCrRQ=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-270-O4ZXsu8TO7GR1XelWUl6qg-1; Sun,
- 27 Apr 2025 10:56:55 -0400
-X-MC-Unique: O4ZXsu8TO7GR1XelWUl6qg-1
-X-Mimecast-MFC-AGG-ID: O4ZXsu8TO7GR1XelWUl6qg_1745765813
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B5311955DDE;
-	Sun, 27 Apr 2025 14:56:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D563E1800368;
-	Sun, 27 Apr 2025 14:56:45 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 27 Apr 2025 16:56:14 +0200 (CEST)
-Date: Sun, 27 Apr 2025 16:56:06 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-Message-ID: <20250427145606.GC9350@redhat.com>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-9-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="eL+zur8z"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=KLoXnd2vz/RwoKw+jyebA+BqhR28jj4sOIBNnWN/wkw=; b=eL+zur8zvg7AgkWD
+	NwI4zPxFUD7ujB9vQ5EkogHAn6qwDNWe/y2jl/QEwN3m5EnihRXylkh37OvnLab7+VTDs7As0Mk4A
+	W1pEpv4tVnMjGlFrmiUTTKMWenqQVHNJGoT3shxBht/wHVvezd9vEq+dxcWiy3ApDz/pmufXFQVPB
+	dgICazlnB0wA/b03uuCaChife2ukqHN++OCK3Aa2Dy+UFXzcxnoT5jJkL0O33f5761FXuhQtxfxhf
+	bqaEc97lZMhuJTyxAQPyItyEId2YuWlueNM2NEh8FdUqba4WpuciIBxKi1wRr7GreOhLurnfYquMD
+	9HG8r7yTZQJ17Rw+7g==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1u93SF-00E97A-1B;
+	Sun, 27 Apr 2025 14:58:03 +0000
+Date: Sun, 27 Apr 2025 14:58:03 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: lgirdwood@gmail.com, linux-doc@vger.kernel.org, corbet@lwn.net,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Regulator deadcode cleanups
+Message-ID: <aA5F-_kJO0jFgKpQ@gallifrey>
+References: <20250426175143.128086-1-linux@treblig.org>
+ <aA5Ad6bXfH5jPiss@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250421214423.393661-9-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <aA5Ad6bXfH5jPiss@finisterre.sirena.org.uk>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 14:47:03 up 354 days,  2:01,  1 user,  load average: 0.13, 0.03,
+ 0.01
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On 04/21, Jiri Olsa wrote:
->
-> +static unsigned long find_nearest_page(unsigned long vaddr)
-> +{
-> +	struct vm_area_struct *vma, *prev = NULL;
-> +	unsigned long prev_vm_end = PAGE_SIZE;
-> +	VMA_ITERATOR(vmi, current->mm, 0);
-> +
-> +	vma = vma_next(&vmi);
-> +	while (vma) {
-> +		if (prev)
-> +			prev_vm_end = prev->vm_end;
-> +		if (vma->vm_start - prev_vm_end  >= PAGE_SIZE) {
-> +			if (is_reachable_by_call(prev_vm_end, vaddr))
-> +				return prev_vm_end;
-> +			if (is_reachable_by_call(vma->vm_start - PAGE_SIZE, vaddr))
-> +				return vma->vm_start - PAGE_SIZE;
-> +		}
-> +		prev = vma;
-> +		vma = vma_next(&vmi);
-> +	}
-> +
-> +	return 0;
-> +}
+* Mark Brown (broonie@kernel.org) wrote:
+> On Sat, Apr 26, 2025 at 06:51:38PM +0100, linux@treblig.org wrote:
+> 
+> >   This is a bunch of deadcode cleanups for functions
+> > that are unused (for quite some time).
+> >   The first patch was originally sent in October last
+> > year but didn't get any traction; the rest are new.
+> 
+> Please do some analysis as to why the functions are there, don't just
+> blindly delete things.
 
-This can be simplified afaics... We don't really need prev, and we can
-use for_each_vma(),
+I'd appreciate some more idea of what you're after;  each patch
+shows where and when the function was added or last used.  Some have
+comments saying things like the devm_ version is being used (so it
+seemed reasonable to me to delete the plain version if no one uses it).
 
-	static unsigned long find_nearest_page(unsigned long vaddr)
-	{
-		struct vm_area_struct *vma;
-		unsigned long prev_vm_end = PAGE_SIZE;
-		VMA_ITERATOR(vmi, current->mm, 0);
+For each one I've checked _when_ it was last used and not deleted
+anything that's been used in the last few years; I've not deleted
+anything which has been recently added or only recently unused.
 
-		for_each_vma(vmi, vma) {
-			if (vma->vm_start - prev_vm_end  >= PAGE_SIZE) {
-				if (is_reachable_by_call(prev_vm_end, vaddr))
-					return prev_vm_end;
-				if (is_reachable_by_call(vma->vm_start - PAGE_SIZE, vaddr))
-					return vma->vm_start - PAGE_SIZE;
-			}
-			prev_vm_end = vma->vm_end;
-		}
+That level seems to have been fine on the other ~300 clean up 
+patches other maintainers have taken; you seem to be after something
+different - I'm fine to add that if you can just explain what
+you want.
 
-		return 0;
-	}
+Just point me in the right direction and I can have more of a dig.
 
-> +static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
-> +{
-> +	struct pt_regs *regs = task_pt_regs(current);
-> +	struct mm_struct *mm = current->mm;
-> +	struct uprobe_trampoline *tramp;
-> +	struct vm_area_struct *vma;
-> +
-> +	if (!user_64bit_mode(regs))
-> +		return NULL;
+Dave
 
-Cosmetic, but I think it would be better to move this check into the
-caller, uprobe_trampoline_get().
-
-> +	vma = _install_special_mapping(mm, tramp->vaddr, PAGE_SIZE,
-> +				VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
-> +				&tramp_mapping);
-
-Note that xol_add_vma() -> _install_special_mapping() uses VM_SEALED_SYSMAP.
-Perhaps create_uprobe_trampoline() should use this flag too for consistency?
-
-Oleg.
-
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
