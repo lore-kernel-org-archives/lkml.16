@@ -1,120 +1,124 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549B6241665
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68802522B4
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 11:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745755016; cv=none; b=uU5E8knQ+BVrTkCH1Bt8udSvMG730Sj9PyP2dDccz2HPRAyXDfCMPzZPBKQ/glOe9ANkR7TAoKOYG2T3oAoZMX/vLQ3gYJ4xyBTc6r7xD/Lj9BAPfDmRcRbJ/GxDJafh19h4x/6THV3cyAGRTHxosGLdY0K7zUpj5Fg7jl8UhQ4=
+	t=1745755060; cv=none; b=h3V1QdSVRMyzWTDlz0LFh7jHLpa8NBLMr/hveQ9L8C1YzA0KlIboeszkeywIaeCRSfqysGVIOwY7pjnjahHKsVbY48ffbbiYJi8uCxapKYc44XZVgK+bnlaOlqQ92Qc2fsm5wI3Oi3csv2mQ/8tS2nKoku/5oQeWYj+f/lR4/2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745755016; c=relaxed/simple;
-	bh=KkuM9J9srAIq0iB1EJ3En1a60/DwuR89aCnCUTZyRvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZq4C3N/md6pHcdLOA5C9yTMR5rJFC4D+weUr4BWf048xGLMG7ACG6mD521xaQ4th62eSzd+Xua7zDNTRPhMTYuIMVyXTrdhFKIEdrUlAx9j/dLB5wg2WVx3dqGVZKS7/yjOO2rryp2w8ijW1AsiPGnfsbHxadXzwNaxQZoS8rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=W72OZ96j; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1745755060; c=relaxed/simple;
+	bh=PBjPcyuMpEZLQB0/vy9bfQ0v8f/kjSCCYbtmIsssx3U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P/+n6TbDyjckNm6Yq6Ro8wTpjps0ENfJ6lj5Zw7PLl5hCIWvhJB8kaJszLqkeiORIYRqWAhaqE5B6/rVLVdcTP4caVt/3I9ILhiBz8R45/rzepR6NmSSCtm3oKwtsnSmaScApgkFSchMJ0VDRQzlaOE+/4cl9/oxK9MSs+cgHJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jd4oxdYl; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="W72OZ96j"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8f8657f29so38859096d6.3
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:56:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jd4oxdYl"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso45041145ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:57:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745755013; x=1746359813; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3aguYnD7Euw8idfB6uGeUk5hHv75Psmkn+8V49As6tk=;
-        b=W72OZ96jwlqEREiWjDrLNbrF/uzXSIldIXQebSRqIcgiVRLh6crdRhT4yvOmsMKXAm
-         W9zPJEoypdsV5PgX1nAKNjGV5L5vtczxe7CQJvpPSkPVB996unpNooSzKOFgeCh+w9Kk
-         JgrKAYGbMUAq0Jt99k+oEH2bFDjnCF3oFLDxyqODtjnAlPY+82rOv5Uv6q5oKL1tjREA
-         cl+VpSQhiS2EF3vBY0AG8dg45LjPqFYJ1RIAaKP15CCl6RF/qCEQ47Ns9YA+OvMlrUgj
-         lPcK7uSr8v1yqsfE4uh/cLmvCF79g/YJEL2A/u1UeU0rIsTVge19Iq8ayYiYJDnosoIJ
-         69gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745755013; x=1746359813;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1745755058; x=1746359858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3aguYnD7Euw8idfB6uGeUk5hHv75Psmkn+8V49As6tk=;
-        b=E4elVbd/iNk6IkcBD3IRypR8Ohl9pdXKKC3Z70dT+GduaUCcrVapw7Gtrf2DBZ7DiD
-         GQy7Szo6kPF6PpNzUMiRy0dia3kLjXIaa23041DilV9kgwHFurm0oKMih6E83dyS8OxQ
-         YjOgeQTQLIa31ICukUzjxPumtKMSuWhgjwyoUpdIZJTktdoQP9panifl36oSHb6QNOjK
-         Zy8vGvvBkVYQj0uF6oUit8AJnU9JPOyuwTE2ZQTYIs/75sCKwDgUq2k91e+HLNzLvvwL
-         X56bYIWdkfkCOC4rglHL3bN9qYG6mkhf7GCJ4Nla3RgBqowC03aF6o/xmzddErbpGiSG
-         NPCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoJFtuBLlM2RirjpLXj70tQfdOeZ3oMTJ2AkzPs/phta2b17VCBlRGMCD7c1f1q7rLU+6IXvdGukK5yw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz59OheaXcbk6kcZT63RuGD5amUZvsgUdfTxYUKFSnIaZkJ6POP
-	otCBl9ZdzQ5k4mWcNu2UR39UThdmY/QWDmMS8Pe4vMOAoK5VTeJeS1F82XwQ7Aw=
-X-Gm-Gg: ASbGnctAdB0Lwm9qI4e8a5h0//UiOq46/ZLuK/IQEtf0uE5aYr7toiH9tX8mM7I4HYy
-	VGj/ZGJGR1MN2Ql4jEMzfq6+a0Jg2RYvk7EjtuXgrijlTO57wF1JjY+Z8rslLbKw6fZ/r08OKSo
-	3s0Lmiuzmxaw5KfOzo4r5daqZ6N8gRKAoli7OUiCB6V4W07I1GforpZxmZg8v5qd4bedSGVlxlX
-	HNnPXVKOZ84zwvd1+Ikyjg2P0dTOHShvwIBQdh0BOxhwdQ3kysDN4zKbeZzu9CoTE32kHOMhf1c
-	KAtDYevUul1g99PqX9HU+uCdpQACRz0JOc8RCP8=
-X-Google-Smtp-Source: AGHT+IEDgU2yzVXpkA7DFn1W4/QXxXBxTe6pwCbgIO5g9SsnH+5MeNqwj18r14AAziVsNIFTvvqe0w==
-X-Received: by 2002:ad4:5c66:0:b0:6e4:2872:45f5 with SMTP id 6a1803df08f44-6f4d1f16818mr102027586d6.25.1745755012925;
-        Sun, 27 Apr 2025 04:56:52 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f4c0a7429asm43859846d6.69.2025.04.27.04.56.52
+        bh=8RUGcbbLGFA1723YUU8ZP07EgO2qAswkxsFY9VKy3CQ=;
+        b=jd4oxdYl7a3NsbJR/n601htvltqlVFMHsf1khc22SANgvMJh8j2exWQ8ae0qOAFFIl
+         1U9BRsmRjkyVdi6upAgIROnSo6uQ42/Ji5OW4F23kRmwl2iCzGfqgXAF1Jlm9RjgKsbk
+         y0HxAI/cR7AeNNL14bSyDbnxEZrsyHW2/BLGXPxACsDmRb9RBX4/xWJWgG1zWMSoREQf
+         t25BBI8L4RuEi3mBX8TzrdPLSqo2AZOi/jHNtZGXdVnmrwEjUfo3s9CkTpQoor1bdx1p
+         oP1BaA5VOGId6zPlwFhfE/xBpZWVZM8o5f5mvNsAWoO4uc93jD9i+CbwjAS7zKoq9BZV
+         b0QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745755058; x=1746359858;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8RUGcbbLGFA1723YUU8ZP07EgO2qAswkxsFY9VKy3CQ=;
+        b=e9zqMOk8d1yRlrhj+ADHMgtU42PzlscA7VKNd2aMDbQZ4eqrOm5FbjET3JyFJkVoed
+         aqmTtqoHyl+obIzaDaamDV3yG+gR62vWSJ/oSu8fILGDDvGNI51VXx2wlpt4i6igaRzX
+         7d1PBsgZqQwNeuc0C+jwpYiQhebTKLKXduV+djutoAFI7qAMPlB0yValKCmQ86ilsqN1
+         01oJtfBB7lqW8jRv52p9mr3FkoYs0Wp2HgsDPjfGV17GGUz9+tH9B6QcGis2XcOCrJtk
+         3SCpzTZHgEZBkZAIN1PhJsymyB+N4BpWJKR/aWTsmhkn9jDjnt08Hp5ke0g4geqbI4pE
+         cW2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXL6D3blRLFhGc/GbWt2hyn+eJHMTpG9ZAGHgnfsr5zbJ3h6n9UIx9bAdph2cYW/tvQPndogZjPyT7B4L4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxvk8nLwul/UusWWQRwsInvVb6sO+BiLhr9p7GtIa+p0E3tVhKM
+	tPDU6i1wummzSFuqlAe4VMCjdZ92PzGuoeG4eqqhB4759MoMV1rBlgSUsOJofg==
+X-Gm-Gg: ASbGncuUCMgNp3MnSFPV15m2AgepV5fcwRr/ZRz2HRPYwud5+s8mMD7EHremggV9Ijz
+	0Wvkv0oayOSzLu14AXTJ4jk0RsjdLmARvmynR7W93MQh7Y4QBaNqy8D9/kmGWNf17r9neJPOiFi
+	LLDAlKAyQUgMOf2Ymm7jz9ilGlix0pyk+AafX011NYJmMFncP5O10sDAEp+WEVzHZkgevwhqVtE
+	4vPD+nOW1M77Na8vj3iYj92cTM102otseMPVuM8YM7tRYxFNl8OsbnOZvr5NheFoGPK7YS8EzzI
+	GYcPKdgoZdc/mZrwRaR17+KEWRhG6McmjtN7z8Z4YIBrzrwU5ukpvNo=
+X-Google-Smtp-Source: AGHT+IF5v/6Ko/fvCwFf4ZE0KXGbwqh1gFSaF2rE1KE1z2Bwiq95JPxzfmr1/BPwNIqto7+dgvX58A==
+X-Received: by 2002:a17:902:da8e:b0:225:b718:4dff with SMTP id d9443c01a7336-22dbf7487ffmr128283355ad.53.1745755057990;
+        Sun, 27 Apr 2025 04:57:37 -0700 (PDT)
+Received: from thinkpad.. ([120.60.143.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5103259sm62956035ad.185.2025.04.27.04.57.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 04:56:52 -0700 (PDT)
-Date: Sun, 27 Apr 2025 07:56:47 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Huan Yang <link@vivo.com>
-Cc: Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Francesco Valla <francesco@valla.it>,
-	Raul E Rangel <rrangel@chromium.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Guo Weikang <guoweikang.kernel@gmail.com>,
-	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	opensource.kernel@vivo.com
-Subject: Re: [PATCH v3 2/3] mm/memcg: use kmem_cache when alloc memcg
-Message-ID: <20250427115647.GB116315@cmpxchg.org>
-References: <20250425031935.76411-1-link@vivo.com>
- <20250425031935.76411-3-link@vivo.com>
+        Sun, 27 Apr 2025 04:57:37 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: frank.li@nxp.com,
+	l.stach@pengutronix.de,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v6 0/7] Add some enhancements for i.MX95 PCIe
+Date: Sun, 27 Apr 2025 17:27:28 +0530
+Message-ID: <174575498081.15979.12453799870165824890.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
+References: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425031935.76411-3-link@vivo.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 11:19:24AM +0800, Huan Yang wrote:
-> When tracing mem_cgroup_alloc() with kmalloc ftrace, we observe:
-> 
-> kmalloc: call_site=mem_cgroup_css_alloc+0xd8/0x5b4 ptr=000000003e4c3799
->     bytes_req=2312 bytes_alloc=4096 gfp_flags=GFP_KERNEL|__GFP_ZERO node=-1
->     accounted=false
-> 
-> The output indicates that while allocating mem_cgroup struct (2312 bytes),
-> the slab allocator actually provides 4096-byte chunks. This occurs because:
-> 
-> 1. The slab allocator predefines bucket sizes from 64B to 8096B
-> 2. The mem_cgroup allocation size (2312B) falls between the 2KB and 4KB
->    slabs
-> 3. The allocator rounds up to the nearest larger slab (4KB), resulting in
->    ~1KB wasted memory per allocation
-> 
-> This patch introduces a dedicated kmem_cache for mem_cgroup structs,
-> achieving precise memory allocation. Post-patch ftrace verification shows:
-> 
-> kmem_cache_alloc: call_site=mem_cgroup_css_alloc+0xbc/0x5d4
->     ptr=00000000695c1806 bytes_req=2312 bytes_alloc=2368
->     gfp_flags=GFP_KERNEL|__GFP_ZERO node=-1 accounted=false
-> 
-> Each memcg alloc offer 2368bytes(include hw cacheline align), compare to
-> 4096, avoid waste.
-> 
-> Signed-off-by: Huan Yang <link@vivo.com>
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+On Wed, 16 Apr 2025 16:13:07 +0800, Richard Zhu wrote:
+> Add some enhancements for i.MX95 PCIe.
+> - Refine the link procedure to speed up link training.
+> - Add two ERRATA SW workarounds.
+> - To align PHY's power on sequency, add COLD reset.
+> - Add PLL clock lock check.
+> - Save/retore the LUT table in supend/resume callbacks.
+> - 3/7 relies on "arm64: dts: imx95: Correct the range of PCIe app-reg region"
+>   https://lore.kernel.org/imx/20250314060104.390065-1-hongxing.zhu@nxp.com/
+> 
+> [...]
+
+Applied, thanks!
+
+[1/7] PCI: imx6: Start link directly when workaround is not required
+      commit: 9c03e30e3ade32136fed5a4ab7872dcb205687d3
+[2/7] PCI: imx6: Skip one dw_pcie_wait_for_link() in workaround link training
+      commit: 4a4be0c088e3029a482ef8ac98bb2acb94af960e
+[3/7] PCI: imx6: Toggle the cold reset for i.MX95 PCIe
+      commit: 47f54a902dcd3b756e8e761f2c4c742af57dfff0
+[4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit L23 ready
+      commit: ce0c43e855c7f652b6351110aaaabf9b521debd7
+[5/7] PCI: imx6: Let i.MX95 PCIe compliance with 8GT/s Receiver Impedance ECN
+      commit: 744a1c20ce933dcaca0f161fe7da115902a2f343
+[6/7] PCI: imx6: Add PLL clock lock check for i.MX95 PCIe
+      commit: 047e8b6b3bc3e6b25bfa12896a39d9fb82b591be
+[7/7] PCI: imx6: Save and restore the LUT setting for i.MX95 PCIe
+      commit: e4d66131caaf18d7c3c69914513f4be0519ddaaf
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
