@@ -1,124 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317F02FB2;
-	Sun, 27 Apr 2025 13:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9525661
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 13:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745760655; cv=none; b=TALSal9ocm34r5EXvRqEezKZR5XTFUasWKteIc2bhOE9eCPsFDc+Nx0G2hTyTKoXzLusbi1Wq8EQ9nShimWvJyPZlRzIXYmk7nleaBg3TNdQWNvE5QQbdUEERqW48hBXALozdSXoi8OMqzVVdgcpSYRCPYUy5+woWcwyxoybhcI=
+	t=1745761278; cv=none; b=MrWHW3wIfMz3l4JceXHsyLb80RpeitWHyjeUZAfAyvb827vJCLO0x2+RTGORr3Msouyz+8+V58xBv+1fGfI9R2drx9Unptsm77JZOWNKjtIau6+eLtsdo7TNZtTg4g41H5sDSTvc02Aq1q9u8ZURfutNk3it3ZGmcVDdLkuNYIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745760655; c=relaxed/simple;
-	bh=QLiSECn3J1/AoHA6NaWfFJNX/bjAlbfQgr0GWvmK1uM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ts4Mbwtr7oAXnIqvFp6f882M32L4g9X06IQIA61QQ67IWsoOifDXBfQoR0vMvGA/uVyQoYefmBsFZSePvhgIxoQt9Y/IZAuMOik2pxedk9xR+jy2zeKDWtF8b9bFEJGcqJsMBigCKPj/xqUguo7/6q47+rEQOrFHe4OwJMuEzGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8MDgaqL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8MDgaqL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3430C4CEEE;
-	Sun, 27 Apr 2025 13:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745760654;
-	bh=QLiSECn3J1/AoHA6NaWfFJNX/bjAlbfQgr0GWvmK1uM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B8MDgaqLoKOPGGAsWYWN0ZxpmwAD8BT7JBGtAWIPfmq7jaRoGgaRSG0QIRUmqmu7R
-	 7rZR8Xz2AUjUVzwGbna1M1V+fHNi4ZVs7Vc1lp3JnvLtmw6asc7XrHeFOCAQwp/2SB
-	 dVZ44YlUk9I/tB+rTo58AsyGocAem4dobFg5Y8W983ldv7JBYKxvzIsIVqrlmbroII
-	 EDFyKXdn8B0nRRtD+3SsunT5xlxBYVSSPfUWUIHbAL1anS32DQoRX7zsRHJ7FK+GTG
-	 NU0CLZyZgv9ALAfbESwHQSC2H5+1fTPTrQ7pzapUiVgt66qFNpQmA3Mv8YsnlkyCk+
-	 v5nb9JRLubupQ==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acbb48bad09so706267066b.0;
-        Sun, 27 Apr 2025 06:30:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXJWMcm3KyJjTVWkhrTaJYvOvBej6RZNQDBN32O+Vyt3DJJCEWac6mHXwRxM131ldqvtKwoB6PqYhsD2A==@vger.kernel.org, AJvYcCXK6AWyDGcGZWSYxkgSVY70VG2HaDf8On0mIs0jv2vpW/AAUoaDO+aXzO+GkrCXQtDxwWLlNi1AQYnmlL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxEO1EzRXEG7Dbl6IXft1IzibbFqWgaNJyIYOJJP+zXlu3zMEq
-	WrMo8e50MJ5nUPaIDZ8cj0JEPLkrNNBa9zS1sZR22PZUNxQfIsVhSFOfvZeyuemF5mt3+HZGzuS
-	BB1U4HWnxRiLgQwZNZk7h4lIFALI=
-X-Google-Smtp-Source: AGHT+IELro+phFjtaVGxtncGcQOnucAqf+tQMoMbzdt3GTdUS9DdgwUZlCNRkRA243xc4XMIHCW9JV6DEPCljNYWiqc=
-X-Received: by 2002:a17:906:7305:b0:ac7:391a:e158 with SMTP id
- a640c23a62f3a-ace84bb104fmr474167366b.59.1745760653256; Sun, 27 Apr 2025
- 06:30:53 -0700 (PDT)
+	s=arc-20240116; t=1745761278; c=relaxed/simple;
+	bh=ikFGBs4KPnaLHm/wpDtXdgUB435DQd98kOARQxyqFsQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rbJn5sO+bDjhbcwzNFshZxfhU9ZSUHt8VlSl4v1QqtTLPm4ni+2TnUO9fHLPtW5QtgyvWWIhAHpfcBTKOvyH9fU79hUS5G9yN3EfoJBFy55Z1U0UblfZKABMAlY0pBxTuVArYyOgdZyj7xOWQZbIhX0/exGPMAv1WWxeKBNttDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u92FO-0002FE-Jm; Sun, 27 Apr 2025 15:40:42 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u92FI-002N5b-32;
+	Sun, 27 Apr 2025 15:40:36 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u92FI-00AJYY-2k;
+	Sun, 27 Apr 2025 15:40:36 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	Simon Horman <horms@kernel.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH net-next v2 1/1] Documentation: networking: expand and clarify EEE_GET/EEE_SET documentation
+Date: Sun, 27 Apr 2025 15:40:34 +0200
+Message-Id: <20250427134035.2458430-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427113423.67040-2-thorsten.blum@linux.dev>
- <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com> <aA4oag9MAXT3y0t8@alpha.franken.de>
-In-Reply-To: <aA4oag9MAXT3y0t8@alpha.franken.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 27 Apr 2025 21:30:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5A_xFMXOXPJFz6FyD_FixDW2msGM1fRe-FdDSq=anS8w@mail.gmail.com>
-X-Gm-Features: ATxdqUFip4HUK7Uxe6BBXA9iokWAlwJhotVBkFvZZQCh6f6NtaFBjOHIESBxbIo
-Message-ID: <CAAhV-H5A_xFMXOXPJFz6FyD_FixDW2msGM1fRe-FdDSq=anS8w@mail.gmail.com>
-Subject: Re: [PATCH v3] MIPS: Fix MAX_REG_OFFSET
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>, Oleg Nesterov <oleg@redhat.com>, 
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sun, Apr 27, 2025 at 8:52=E2=80=AFPM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Sun, Apr 27, 2025 at 08:32:05PM +0800, Huacai Chen wrote:
-> > Hi, Thorsten,
-> >
-> > On Sun, Apr 27, 2025 at 7:35=E2=80=AFPM Thorsten Blum <thorsten.blum@li=
-nux.dev> wrote:
-> > >
-> > > Fix MAX_REG_OFFSET to point to the last register in 'pt_regs' and not=
- to
-> > > the marker itself, which could allow regs_get_register() to return an
-> > > invalid offset.
-> > >
-> > > Fixes: 40e084a506eb ("MIPS: Add uprobes support.")
-> > > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > > ---
-> > > Compile-tested only.
-> > >
-> > > Changes in v2:
-> > > - Fix MAX_REG_OFFSET as suggested by Maciej (thanks!)
-> > > - Link to v1: https://lore.kernel.org/lkml/20250411090032.7844-1-thor=
-sten.blum@linux.dev/
-> > >
-> > > Changes in v3:
-> > > - Keep the marker and avoid using #ifdef by adjusting MAX_REG_OFFSET =
-as
-> > >   suggested by Thomas and Maciej
-> > > - Link to v2: https://lore.kernel.org/lkml/20250417174712.69292-2-tho=
-rsten.blum@linux.dev/
-> > > ---
-> > >  arch/mips/include/asm/ptrace.h | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/p=
-trace.h
-> > > index 85fa9962266a..ef72c46b5568 100644
-> > > --- a/arch/mips/include/asm/ptrace.h
-> > > +++ b/arch/mips/include/asm/ptrace.h
-> > > @@ -65,7 +65,8 @@ static inline void instruction_pointer_set(struct p=
-t_regs *regs,
-> > >
-> > >  /* Query offset/name of register from its name/offset */
-> > >  extern int regs_query_register_offset(const char *name);
-> > > -#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last))
-> > > +#define MAX_REG_OFFSET \
-> > > +       (offsetof(struct pt_regs, __last) - sizeof(unsigned long))
-> > There is no 80 columns limit now, so no new line needed here.
->
-> but not forbidden to care about it. I still prefer this limit.
-Of course you are free to choose. But in my opinion "force to long
-lines" and "force to short lines" are both bad, code readability is
-the first thing to be considered.
+Improve the documentation for ETHTOOL_MSG_EEE_GET and ETHTOOL_MSG_EEE_SET
+to provide accurate descriptions of all netlink attributes involved.
 
-Huacai
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ Documentation/networking/ethtool-netlink.rst | 111 ++++++++++++++++---
+ include/uapi/linux/ethtool.h                 |   3 +
+ 2 files changed, 96 insertions(+), 18 deletions(-)
 
->
-> Thomas.
->
-> --
-> Crap can work. Given enough thrust pigs will fly, but it's not necessaril=
-y a
-> good idea.                                                [ RFC1925, 2.3 =
-]
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index b6e9af4d0f1b..78ee481437a4 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -1215,20 +1215,16 @@ Kernel response contents:
+ 
+   =====================================  ======  ==========================
+   ``ETHTOOL_A_EEE_HEADER``               nested  request header
+-  ``ETHTOOL_A_EEE_MODES_OURS``           bool    supported/advertised modes
+-  ``ETHTOOL_A_EEE_MODES_PEER``           bool    peer advertised link modes
++  ``ETHTOOL_A_EEE_MODES_OURS``           bitset  supported/advertised modes
++  ``ETHTOOL_A_EEE_MODES_PEER``           bitset  peer advertised link modes
+   ``ETHTOOL_A_EEE_ACTIVE``               bool    EEE is actively used
+   ``ETHTOOL_A_EEE_ENABLED``              bool    EEE is enabled
+-  ``ETHTOOL_A_EEE_TX_LPI_ENABLED``       bool    Tx lpi enabled
+-  ``ETHTOOL_A_EEE_TX_LPI_TIMER``         u32     Tx lpi timeout (in us)
++  ``ETHTOOL_A_EEE_TX_LPI_ENABLED``       bool    Tx LPI enabled
++  ``ETHTOOL_A_EEE_TX_LPI_TIMER``         u32     Tx LPI timeout (in us)
+   =====================================  ======  ==========================
+ 
+-In ``ETHTOOL_A_EEE_MODES_OURS``, mask consists of link modes for which EEE is
+-enabled, value of link modes for which EEE is advertised. Link modes for which
+-peer advertises EEE are listed in ``ETHTOOL_A_EEE_MODES_PEER`` (no mask). The
+-netlink interface allows reporting EEE status for all link modes but only
+-first 32 are provided by the ``ethtool_ops`` callback.
+-
++For detailed explanation of each attribute, see the ``EEE Attributes``
++section.
+ 
+ EEE_SET
+ =======
+@@ -1239,17 +1235,96 @@ Request contents:
+ 
+   =====================================  ======  ==========================
+   ``ETHTOOL_A_EEE_HEADER``               nested  request header
+-  ``ETHTOOL_A_EEE_MODES_OURS``           bool    advertised modes
++  ``ETHTOOL_A_EEE_MODES_OURS``           bitset  advertised modes
+   ``ETHTOOL_A_EEE_ENABLED``              bool    EEE is enabled
+-  ``ETHTOOL_A_EEE_TX_LPI_ENABLED``       bool    Tx lpi enabled
+-  ``ETHTOOL_A_EEE_TX_LPI_TIMER``         u32     Tx lpi timeout (in us)
++  ``ETHTOOL_A_EEE_TX_LPI_ENABLED``       bool    Tx LPI enabled
++  ``ETHTOOL_A_EEE_TX_LPI_TIMER``         u32     Tx LPI timeout (in us)
+   =====================================  ======  ==========================
+ 
+-``ETHTOOL_A_EEE_MODES_OURS`` is used to either list link modes to advertise
+-EEE for (if there is no mask) or specify changes to the list (if there is
+-a mask). The netlink interface allows reporting EEE status for all link modes
+-but only first 32 can be set at the moment as that is what the ``ethtool_ops``
+-callback supports.
++For detailed explanation of each attribute, see the ``EEE Attributes``
++section.
++
++EEE Attributes
++==============
++
++Limitations:
++
++The netlink interface allows configuring all link modes up to
++``__ETHTOOL_LINK_MODE_MASK_NBITS``, but if the driver relies on legacy
++``ethtool_ops``, only the first 32 link modes are supported.
++
++The following structure is used for the ioctl interface (``ETHTOOL_GEEE`` and
++``ETHTOOL_SEEE``):
++
++.. kernel-doc:: include/uapi/linux/ethtool.h
++    :identifiers: ethtool_eee
++
++Mapping between netlink attributes and struct fields:
++
++  ================================  ================================
++  Netlink attribute                 struct ethtool_eee field
++  ================================  ================================
++  ``ETHTOOL_A_EEE_MODES_OURS``       advertised
++  ``ETHTOOL_A_EEE_MODES_PEER``       lp_advertised
++  ``ETHTOOL_A_EEE_ACTIVE``           eee_active
++  ``ETHTOOL_A_EEE_ENABLED``          eee_enabled
++  ``ETHTOOL_A_EEE_TX_LPI_ENABLED``   tx_lpi_enabled
++  ``ETHTOOL_A_EEE_TX_LPI_TIMER``     tx_lpi_timer
++  ================================  ================================
++
++
++``ETHTOOL_A_EEE_MODES_OURS`` (bitset)
++-------------------------------------
++- Value: link modes that the driver intends to advertise for EEE.
++- Mask: subset of link modes supported for EEE by the interface.
++
++The advertised EEE capabilities are maintained in software state and persist
++across toggling EEE on or off. If ``ETHTOOL_A_EEE_ENABLED`` is false, the PHY
++does not advertise EEE, but the configured value is reported.
++
++``ETHTOOL_A_EEE_MODES_PEER`` (bitset)
++-------------------------------------
++- Value: link modes that the link partner advertises for EEE.
++- Mask: empty.
++
++This value is typically reported by the hardware and may represent only a
++subset of the actual capabilities supported and advertised by the link partner.
++The local hardware may not be able to detect or represent all EEE-capable modes
++of the peer.
++
++``ETHTOOL_A_EEE_ACTIVE`` (bool)
++-------------------------------
++Indicates whether EEE is currently active on the link. EEE is considered active
++if:
++
++ - ``ETHTOOL_A_EEE_ENABLED`` is true,
++ - Autonegotiation is enabled,
++ - The current link mode is EEE-capable,
++ - Both the local advertisement and the peer advertisement include this link
++   mode.
++
++``ETHTOOL_A_EEE_ENABLED`` (bool)
++--------------------------------
++A software-controlled flag.
++
++When ``ETHTOOL_A_EEE_ENABLED`` is set to true and autonegotiation is active,
++the kernel programs the EEE advertisement settings into the PHY hardware
++registers. This enables negotiation of EEE capability with the link partner.
++
++When ``ETHTOOL_A_EEE_ENABLED`` is set to false, EEE advertisement is disabled.
++The PHY will not include EEE capability in its autonegotiation pages, and EEE
++will not be negotiated even if it remains configured in software state.
++
++``ETHTOOL_A_EEE_TX_LPI_ENABLED`` (bool)
++---------------------------------------
++Controls whether the system may enter the Low Power Idle (LPI) state after
++transmission has stopped.
++
++``ETHTOOL_A_EEE_TX_LPI_TIMER`` (u32)
++------------------------------------
++Defines the delay in microseconds after the last transmitted frame before the
++MAC may enter the Low Power Idle (LPI) state. This value applies globally to
++all link modes. A higher timer value delays LPI entry.
+ 
+ 
+ TSINFO_GET
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 84833cca29fe..c596618633bc 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -366,6 +366,9 @@ struct ethtool_eeprom {
+  *	its tx lpi (after reaching 'idle' state). Effective only when eee
+  *	was negotiated and tx_lpi_enabled was set.
+  * @reserved: Reserved for future use; see the note on reserved space.
++ *
++ * More detailed documentation can be found in
++ * Documentation/networking/ethtool-netlink.rst section "EEE Attributes".
+  */
+ struct ethtool_eee {
+ 	__u32	cmd;
+-- 
+2.39.5
+
