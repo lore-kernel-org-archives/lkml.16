@@ -1,47 +1,66 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7471E98EF
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 07:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F43B173;
+	Sun, 27 Apr 2025 07:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745737546; cv=none; b=l6N8syJvxiuBAYgnoig8nYhFR4Zt8lO4/aqtwCEY8vB9px/hls//ONLR4XLqZv0D7cIrB6NruErEAwcGbKEOlCyQRa9LSiasPwMWOH/udJgIPkVD0V6eczq0rNYw3aiJ9z68qp5Z4MeoL+LrVHrze2W+NuWeBjLhKUzs7UHyfT4=
+	t=1745737833; cv=none; b=C6j1/ZlAv9na6uhfYAI06H53qIjhyqzh/v0lg4INQRC043yroqIDqHEa6+RRgXGDZ9b6BYY41gwH0MkxzLo8iSuOmtc/CTK7mtiUbQ193yMsFFqpr9kJBqRDQzJMPDBgzyvqvMCz/pgOEDxLOg7zjt2DJgLaPl/hnOZUwWn4nnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745737546; c=relaxed/simple;
-	bh=cP6/XJCXVqldEshjXYoc8yE5Oq3R5dY8qFB9/WC3g1M=;
+	s=arc-20240116; t=1745737833; c=relaxed/simple;
+	bh=CGnsiRcgcTLWNshlRKt3+TY3846/zeQqAZXDX5kQlSo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifVasdEPVAp0tLekGue6xDlHRg/HvS0Nc6myj41gVznR/brSFwpY4NvJOxNzqp28W/sAbI7pUSJ3D5ZhI0KpVBwab9Ag5sSl8V3me04muGS181Zmc0YSwdmYdCMMvVNJUE6eu/GdkmznkF7/RrJEIS3car7RTpBdBf4clUW/R7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=ie5YftHH; arc=none smtp.client-ip=212.77.101.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqkWi8+P2ZDAkrg1g3/cQELePi0zNRNAsMgpWyC/+fYJMcSxojzW6zQQueR8s8sTOupZz7FFn3t7G/VbGTFyv0Os2qAP/5aWFDlG0+aA6seBOPhMDYiimwozYy/gYyc8NOn/ACxl7+7NitRrn1i0mRhviqnx5kiQ5mG8+kWPiO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M96skoYC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="ie5YftHH"
-Received: (wp-smtpd smtp.wp.pl 17292 invoked from network); 27 Apr 2025 08:39:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1745735941; bh=o3uXY+03fHMqEVm7xfc1m3HwM3CT7TcojXJU2tbxrfA=;
-          h=From:To:Cc:Subject;
-          b=ie5YftHHgYaGWXxljKQT+IURdnwlKkaXBpvqN124lcpaqyFuTYF3rQUBUZJPdS/Ip
-           LT9lXqsla0AerdAd6slIu4XlXtkjJl1TYiloi99J77+2syjmq42Fe0vp+BzgVlkZhN
-           inNgKhQmag6+Jx75X0Rqn5VxQ6sArK8ZzsivRzHTLRktD97WGW2Kz9m1AvuIp5C6JB
-           er77cb2I8R5vjeXyRljAfqYV4WYnYgvkwhlWC4r4AIgFziyo6I7JqkqruMryXkLW4I
-           wQ65e0K0CgkzOXYvugtgrdXlTZSiJPX636d3LBopgqC8s0GKBiNruJ+0Q0Dv8jZRpS
-           04RjbOA5UK7XA==
-Received: from 89-64-9-175.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.9.175])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <a.safin@rosa.ru>; 27 Apr 2025 08:39:01 +0200
-Date: Sun, 27 Apr 2025 08:39:00 +0200
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Alexei Safin <a.safin@rosa.ru>
-Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH v2] iwlegacy: 4965: fix possible out-of-bounds access in
- il4965_tx_cmd_build_rate()
-Message-ID: <20250427063900.GA48509@wp.pl>
-References: <20250424185244.3562-1-a.safin@rosa.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M96skoYC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7284DC4CEE3;
+	Sun, 27 Apr 2025 07:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745737832;
+	bh=CGnsiRcgcTLWNshlRKt3+TY3846/zeQqAZXDX5kQlSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M96skoYCIAliV9mE/cHFjQyXeYgIKCso7ocEVoV4QwsavwZFE3rfEM0dziGcjOR6b
+	 7kjkhtEE/0EQdgXtARUS6cI7T75h7ppRVSbbVbM6R6qxPwg9Sg1vSFr6VbnyOZQ57g
+	 o/iTgqG/YLNmmypwMR2+p+Nr3hxoD01W7r5hdZeZwzGeiH97kZ/4Ut5fcVkg1wzjts
+	 hXvK19kK7wEZSW5jdM0EDEgy9k/RevkU6uLUiXDosGVulyNXnwwR8BBoNXzP3d0oXt
+	 HjLpbmZL7Uu8naYplITM7UrID84hix6jY7jTs9NC+PEEEgVOxLpTdYZy8aECiq9kdG
+	 KVcDCKntZyoxA==
+Date: Sun, 27 Apr 2025 10:10:26 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Nitesh Shetty <nj.shetty@samsung.com>
+Subject: Re: [PATCH v9 23/24] nvme-pci: convert to blk_rq_dma_map
+Message-ID: <20250427071026.GA5848@unreal>
+References: <cover.1745394536.git.leon@kernel.org>
+ <7c5c5267cba2c03f6650444d4879ba0d13004584.1745394536.git.leon@kernel.org>
+ <20250423092437.GA1895@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,68 +69,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424185244.3562-1-a.safin@rosa.ru>
-X-WP-MailID: 3dfcb9b3360eb4c1b73ce68492ffa8f3
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000001 [gSIx]                               
+In-Reply-To: <20250423092437.GA1895@lst.de>
 
-Hi
+On Wed, Apr 23, 2025 at 11:24:37AM +0200, Christoph Hellwig wrote:
+> I don't think the meta SGL handling is quite right yet, and the
+> single segment data handling also regressed.  
 
-On Thu, Apr 24, 2025 at 09:52:44PM +0300, Alexei Safin wrote:
-> Prevent out-of-bounds access in il4965_tx_cmd_build_rate() by rejecting
-> rate_idx values greater than or equal to RATE_COUNT_LEGACY.
-> 
-> Use a correct bounds check to avoid accessing il_rates[] with
-> an invalid index. The previous comparison allowed rate_idx to become
-> equal to RATE_COUNT_LEGACY, which exceeds the array limit.
+If my testing is correct, my dma-split-wip branch passes all tests,
+including single segment.
 
-Thanks for the patch, however I think it's not correct.
-
-The definitions are:
-
-enum {
-        RATE_1M_IDX = 0,
-	...
-	RATE_54M_INDEX,
-	RATE_60M_INDEX,
-	RATE_COUNT
-        RATE_COUNT_LEGACY = RATE_COUNT - 1,     /* Excluding 60M */
-}
-
-extern const struct il_rate_info il_rates[RATE_COUNT];
-
-> Replace the check 'rate_idx > RATE_COUNT_LEGACY' with
-> 'rate_idx >= RATE_COUNT_LEGACY' to ensure memory safety.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-> Fixes: 7ac9a364c172 ("iwlegacy: move under intel directory")
-> Signed-off-by: Alexei Safin <a.safin@rosa.ru>
-> ---
-> v2: change reciepent
->  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> index 78dee8ccfebf..f60d9b9798c1 100644
-> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-> @@ -1572,7 +1572,7 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
->  	 */
->  	rate_idx = info->control.rates[0].idx;
->  	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
-> -	    || rate_idx > RATE_COUNT_LEGACY)
-> +	    || rate_idx >= RATE_COUNT_LEGACY)
->  		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
-
-.. so looks the check is fine already and changing it will induce a bug
-for RATE_54M_INDEX.
-
-Regards
-Stanislaw
-
->  	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
->  	if (info->band == NL80211_BAND_5GHZ)
-> -- 
-> 2.39.5 (Apple Git-154)
-> 
+Thanks
