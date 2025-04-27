@@ -1,197 +1,123 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C562E1DED57;
-	Sun, 27 Apr 2025 09:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7905F1F30B3
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 09:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745747141; cv=none; b=qk3b/0oI2+ODL/zcvfC+WiUN4D4S6cFk/0gZKARokNRK1dooE9eOPUM+tsMR30XvzQKHrn0cZSot1xbNLJAqJZs1oWiFk80hHPdaQ7P7DfshzeDzpuNCHS5/yiSY5dHDkIvvniCldqJUohE+xMHq3Rc7Rp0qv9JD97gAI891mJo=
+	t=1745747164; cv=none; b=jckg6klW14hbE+pQVgEQCA4zrO7yPM5Cw2H8Jd/gTdVpbOcn0JGNvJrrZ2L1CrMtJwN0GDUVG4zI7ZhRLC8R425J8oMBHlzWk+PMqi33ZgLRr0TLZCDtQ/0cnADvE4fXUWdBlju5JSb26bxF1fUtGO/xxAytEr/dJIKrHVKAK+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745747141; c=relaxed/simple;
-	bh=wtXNaCiZwHuFeeesE9U1dOeQMH3rki85RDwtlsNWFFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LlEhS80I9xERSxmYVhfCOto11aq6vY60uZzMdLprsplKfe4faqoGpxIQFoKmXmzD2K7N5rcf6MZExnEkSOWlE5NGYtx84o9HcepWuIdURGn8/DJ/dG6Anu4bYA7XIlC97+VFc1lIoYSuyR+RoZ//sUcaU/Bz83iAN1v+asc0NxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=ulaOntCI; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	s=arc-20240116; t=1745747164; c=relaxed/simple;
+	bh=/FO6yhO05huvKy/pSwZ4uAuIF9UsVQjw2MqIJ/Y44dk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o3aVPeFvWyEJoXkPaa+j6hggA3JYNZz6WR1WqVSbX1gvz2Y/9wzPm4UZk2tYsJTqyxTX4xRo0H4QyGGt2kWkJNNDtn+AjTDNwZma4S0aekeUR/RYoCd9KEFpgct118FaFNaWON2plBYirVcCZvHojBKtu6ScKFFIxzWrOEWsgQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DeDSY/JE; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="ulaOntCI"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4ZlhX52CFlz18nP;
-	Sun, 27 Apr 2025 09:45:25 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4ZlhX44ByKz2xMF;
-	Sun, 27 Apr 2025 09:45:24 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=ulaOntCI;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1745747125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=rswjIovrocctqrjdm39BXUqHn6IGAn3W8NnLInumgwU=;
-	b=ulaOntCIhUSrAW6OW8ty5K0Gl38Tb7ZOTVJPYvcRrsyXtR9ndGq4cnhc1/EToahAZ+oHMc
-	jQsILqVxNnNzfoW3LgDxaCLvHg/aZhjoZHnlG3VtnHeo1WXU/LoFalamJ74yzAGrQEHzBZ
-	17akmoxzFo+i3DS1VaPz8kOqfuV0P6FKkMWlEAs+dxk1KEGEGqvRUe+63q6KsFxiZMBX5U
-	R1WyTP/cZ7FbVHglj/3QpXsdA7hZR1STIFyjt7VFosEWgi9r8+sd1FI7ptMF/9OCKvit6x
-	s1wONsTha4JVLNV8AZNDf0TbzXy8WXTnb6lnkt7rgm2GR1xsPWc6MeDAxZDbvg==
-X-CM-Analysis: v=2.4 cv=d/oPyQjE c=1 sm=1 tr=0 ts=680dfcb5 a=smkfPCmiGCBx+NgG8pXs4w==:117 a=smkfPCmiGCBx+NgG8pXs4w==:17 a=IkcTkHD0fZMA:10 a=-CwenhCMtp_CBWieSUQA:9 a=QEXdDO2ut3YA:10
-X-CM-Envelope: MS4xfIujUoz9Hu2jSc4hDAl8kRs58D4H4AGQC6ckbOLP5kili1KLi8EAUVGhYD2j+TvDs6HUK7LL6p0ByrOfCL4B5azj83rbaMphPvOy/lEyFrA/qwKzdMRn HgPnthsGS5jqpkZSPP0fUs3tlV/s6vI9mWw1onZPqC5ydW8yBteLanFcNUqQIlgEtNssBjMiV3sdRlOxatRUJfpWKln7ZG3o/2frVUqL46IJ90LfME8+/4rq IY9J0rtgS/2JmdFLgscAFK+EHU/4H7dddOwAfBSgMdMgdSFaHwttb9lwMqzJsld8ZfZjuUUvIsAjd3djTO28ii6N1GTINgQk2gjWfc0TnGZKGu/0p4EcTsmX QJDBbDX2sMxBKS/uVUujKAlu46/xklI2P+b8otacy1QIhO1UsnRFnvXxEFj+dEu9cAW1M5Q+WM8Ub0JzA4vH5rGN6dHboGbTdAAIUeTzwZTLFBmpvns2UFm/ 8CXdplipv8Ub2rUWwUgTT+PaCeVxxN4QWUfgoGRa8BtYL0D17HNJg/v4H7qCLoX9tVF0XF0n2xeh7rCZYB4XaOUAfhgopMtMPuFT6V5cN9Ea1J7Bu7NEX7ie J5Y=
-Message-ID: <09726b7e-4ac4-4ebe-b1eb-4d142c2ee0fb@jjverkuil.nl>
-Date: Sun, 27 Apr 2025 11:45:24 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeDSY/JE"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22403c99457so8832805ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 02:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745747163; x=1746351963; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+KDTqcMZlGtBruM/CFwkX9atXMGLUR7NjJmS88z9xoA=;
+        b=DeDSY/JEPY0nf3mO4cf4pfi7/EYy0U2N66DiktI/lbtEAMDtx/N+oZhR61pInM+BPu
+         wSudk7XT9BaK1hvh23qntJEMwDzIY0Vl1ByYSGznlMzzkrXRVEnn58XIlEVQThE0ZjhI
+         LX01crFtBcjLWCmu3/S8SQzvMDWwfrkdXVOy58rDcmO4FFQ2DHN0gocVjgQSrgNrO/tx
+         d7c5ObuUCt4H7gX+jL30/rt22oQAtstTHh5KjwNIx6VFAR7NRHEyeYUPzRP8+H2EeGVG
+         PC+AOS1MvYFrGXLza7IvqTXG1xVsHR4SEoN62TH2Img4WhppxCu1DkYnfTzlavbFO3ty
+         jI5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745747163; x=1746351963;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+KDTqcMZlGtBruM/CFwkX9atXMGLUR7NjJmS88z9xoA=;
+        b=NqlZTVdeS+681pTLxWOi3StLnexOmZkh6B4K3lrzA3JxfTUAehGNcJHrJohQTOmWYa
+         wVLQQ0jpLqaL0mTq9jMhVDCraJsBZcvWguy/K4vh0/TrpknesniTnELczR4b54XN7WP0
+         Mbda5zXwe/PV/C3H8UdXQMe1+WtCI0DpyAEq8tBTp5IoG3TUJ+E595zmvuYlrIuTMbtp
+         QM8UldqZhkZyL2eW1fUVYks1JrVS6DUg1jx/mlolxAf8QOkOdJBFcnByU0aSXsX6tOuV
+         EdqYzK3hR/eOxqJ0UIm9It6N8uVV/ImSZ8Yyv7wnLXewP3RljaIhtSDfpbdt/Weog9Uu
+         +Khg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+DecS33YPf2034J+a0VxY55Yf3N40+08azQBUz8wo0LgIxHVXCwYAYo9JLDDlPuqbF9qIIFvqZbPjXCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPwzn/cYkJeV4UZtyE3BKOFzslOLOHlcBMaD3D6J6+QJIbHW4O
+	NlU6lOI6IkOLL4kw6Wt1vRnc5qJZxm3em41ghVC/wFsNnexkAqiJ
+X-Gm-Gg: ASbGnctK5pUZJO4QlWKDZBEf4D+bDwJc024GPQCezMT3PGM+cqnxu8SHTCJpk/bobVw
+	6s3tNLznSLGlBX5Wy/UZotjZebixElBHsn8cIkbOujdP3oDhhSzGsm5wVDlzsAPmjwqSrsePrU4
+	j1eRff1VRu/VZpiAxctCu2NbO5EYiZ48k4BtgCMhanw0NPMo0fYURh2eH4s+Fxrw0H9xNZFLE2b
+	3ort4n/0BzkEJ3E05bQ5Gjy4qK4TubiklOAIovT/eRYUy2uZo1K6xeJ6yw/G7iJIXppTWABRzDQ
+	zEMlUZczXx3yk3EFynICky+EnZUx8R4dJtVRqmZqivVUwQcj5y0=
+X-Google-Smtp-Source: AGHT+IFgcciqD50PlJmVfjc1kvZFMb6P1l5O/9ptq2pZnaHuOKXwCR7aBlX0yzuIsyy5e/DKD2Gdyg==
+X-Received: by 2002:a17:902:dac2:b0:21f:356:758f with SMTP id d9443c01a7336-22dbf5df830mr46268985ad.3.1745747162689;
+        Sun, 27 Apr 2025 02:46:02 -0700 (PDT)
+Received: from dev.. ([2402:e280:214c:86:df9f:2e4f:f8a7:6d85])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7a33sm61557025ad.146.2025.04.27.02.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 02:46:02 -0700 (PDT)
+From: R Sundar <prosunofficial@gmail.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sunil Khatri <sunil.khatri@amd.com>,
+	Tim Huang <Tim.Huang@amd.com>,
+	"Jesse . zhang @ amd . com" <Jesse.zhang@amd.com>,
+	Boyuan Zhang <boyuan.zhang@amd.com>,
+	Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+	Yang Wang <kevinyang.wang@amd.com>,
+	Peyton Lee <peytolee@amd.com>
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	R Sundar <prosunofficial@gmail.com>,
+	kernel test robot <lkp@intel.com>,
+	Julia Lawall <julia.lawall@inria.fr>
+Subject: [PATCH linux-next] drm/amdgpu: use string choice helpers
+Date: Sun, 27 Apr 2025 15:15:36 +0530
+Message-Id: <20250427094536.353823-1-prosunofficial@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] media: vim2m: add multiplanar API support
-To: Matthew Majewski <mattwmajewski@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Uwe Kleine-Konig <u.kleine-koenig@baylibre.com>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Naushir Patuck <naush@raspberrypi.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250304191701.2957096-1-mattwmajewski@gmail.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hans@jjverkuil.nl>
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250304191701.2957096-1-mattwmajewski@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+Content-Transfer-Encoding: 8bit
 
-Hi Matthew,
+Use string choice helpers for better readability.
 
-On 04/03/2025 20:16, Matthew Majewski wrote:
-> Hi everyone,
-> 
-> This patch series adds multiplane API support for the virtual M2M
-> driver, along with some minor driver refactoring/improvements.
-> 
-> I followed the lead of the vivid driver and made multiplanar support
-> selectable with a module parameter, and the default is to use the
-> single planar api.
-> 
-> Although there are not yet any pixelformats in the driver that make
-> use of multiple memory planes, adding support for these should be
-> easier now with the API level changes taken care of.
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Closes: https://lore.kernel.org/r/202503222049.sUXL3q6w-lkp@intel.com/
+Signed-off-by: R Sundar <prosunofficial@gmail.com>
+---
 
-Are you planning follow-up patches adding support for at least one
-multiplanar format? That would be really nice.
+Reported in linux repository.
 
-Regards,
+cocci warnings: (new ones prefixed by >>)
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c:311:49-70: opportunity for str_true_false(vpe -> collaborate_mode)
 
-	Hans
+vim +311 drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
 
-> 
-> v4l2-compliance reports the following with multiplane support disabled:
-> 
->   Total for vim2m device /dev/video0: 48, Succeeded: 48, Failed: 0, Warnings: 0
-> 
-> and the same with multiplane support enabled:
-> 
->   Total for vim2m device /dev/video0: 48, Succeeded: 48, Failed: 0, Warnings: 0
-> 
-> Patches need to be applied in increasing numerical order (Patch [3/3]
-> depends on [1/3] and [2/3]).
-> 
-> Since the multi-plane changes had to touch a lot of the driver, I did
-> a basic regression test with the following script which generates a
-> test input image with vivid and an output image from vim2m for each
-> supported format. I confirmed all outputs visually and verified they
-> were identical to the outputs before the change. Testing was done on
-> an x86_64 qemu image.
-> 
-> #!/bin/sh
-> 
-> # tested with HDMI vivid emulation
-> # modprobe vivid num_inputs=1 input_types=3
-> 
-> vim2m=/dev/video0
-> vivid=/dev/video1
-> 
-> width=640
-> height=480
-> out_width=320
-> out_height=240
-> 
-> capture_formats=$(v4l2-ctl -d $vim2m --list-formats | awk '/\]:/ {print $2}' | sed "s/'//g")
-> output_formats=$(v4l2-ctl -d $vim2m --list-formats-out | awk '/\]:/ {print $2}' | sed "s/'//g")
-> 
-> # Turn off text mode so that images will be identical
-> v4l2-ctl -d $vivid -c osd_text_mode=2
-> 
-> for ofmt in ${output_formats}; do
->     # generate input image
->     inname="${width}x${height}.${ofmt}"
->     v4l2-ctl -d $vivid -v pixelformat=$ofmt,width=$width,height=$height,field=none \
->              --stream-mmap --stream-count=1 --stream-to=$inname
->     for cfmt in ${capture_formats}; do
->         outname="${out_width}x${out_height}-out.${cfmt}"
->         v4l2-ctl -d $vim2m -x pixelformat=$ofmt,width=$width,height=$height \
->                  -v pixelformat=$cfmt,width=$out_width,height=$out_height \
->                  --stream-from=$inname --stream-to=$outname --stream-mmap --stream-out-mmap \
->                  --stream-count=1
->     done
-> done
-> 
-> Matthew Majewski (3):
->   media: v4l2-common: Add RGBR format info
->   media: vim2m: Simplify try_fmt
->   media: vim2m: Add parametized support for multiplanar API
-> 
->  drivers/media/test-drivers/vim2m.c    | 327 +++++++++++++++++++++-----
->  drivers/media/v4l2-core/v4l2-common.c |   1 +
->  2 files changed, 274 insertions(+), 54 deletions(-)
-> 
+for linux-next:
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
+index 121ee17b522b..442d137e0fed 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c
+@@ -317,7 +317,7 @@ static int vpe_early_init(struct amdgpu_ip_block *ip_block)
+ 	vpe_set_ring_funcs(adev);
+ 	vpe_set_regs(vpe);
+ 
+-	dev_info(adev->dev, "VPE: collaborate mode %s", vpe->collaborate_mode ? "true" : "false");
++	dev_info(adev->dev, "VPE: collaborate mode %s", str_true_false(vpe->collaborate_mode));
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
 
