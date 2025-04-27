@@ -1,82 +1,68 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408E37081E;
-	Sun, 27 Apr 2025 02:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id AF70BA55;
+	Sun, 27 Apr 2025 02:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745719946; cv=none; b=bW0X6aJe6c9zEa3ufEp91uwwgEOSXCYYaPw/SHWgrXK0lprkfk6yotEPVBDVcKSPp2qvPWfS6PqPC7MEBqY3GvYg2nQT5rvYdvDesJMYUM9n+2KmRNx+Zmz7b43oL+8tYlNrryQKWqYvTdSayoTZ1XtPBbm8o0esr4ztl7lbXOo=
+	t=1745720186; cv=none; b=S9HKC/fjuX8aq4/ROXCPDfyreQZflkGiFwaLabcLyvB69zINlhXrat5GBT7rhaAJpilxA92mMCrZ0Sgb3fA1LPDhw0a4YhqDWqFK/uVf/jmN+o0mQUAHcCEqFaGTuKKkr6aGYYnZghnUiU7PdhVDifXRCIDaKD2SsTtlikAPKTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745719946; c=relaxed/simple;
-	bh=8SlZx8IDK4mrOVwOhaBkfuNILVycHluTOoS33F7tk/o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nTm35kQdo8XKm+9FqeTHkPsdqnuSkyQqwBtbB8efgtfPIBO+ACRVtOfZzTmlTcE+gPjWUXLeLY2z1JU38r10vqqSFMG4tdMOP+XxpaVBESCqdF2Uoqp+DQsyZqj0wecNwwCqy2eIDiJjZcHkJr2N6OEMsKrPI3STwH8qIW/U0rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 051703be230d11f0b29709d653e92f7d-20250427
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:f5da28e7-f15c-4baa-b8d3-4f661a13e098,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:25
-X-CID-META: VersionHash:6493067,CLOUDID:26e37ef5d2fd9291bbbd5166ffbfe02f,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 051703be230d11f0b29709d653e92f7d-20250427
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 562180624; Sun, 27 Apr 2025 10:12:07 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 5C05016003841;
-	Sun, 27 Apr 2025 10:12:07 +0800 (CST)
-X-ns-mid: postfix-680D9277-121054143
-Received: from kylin-pc.. (unknown [172.25.130.133])
-	by node4.com.cn (NSMail) with ESMTPA id A643A16003840;
-	Sun, 27 Apr 2025 02:12:06 +0000 (UTC)
-From: Ai Chao <aichao@kylinos.cn>
-To: rydberg@bitmath.org,
-	dmitry.torokhov@gmail.com
-Cc: linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH] Input: MT - add input sync to refresh touch points after screen locked
-Date: Sun, 27 Apr 2025 10:12:03 +0800
-Message-ID: <20250427021203.1888063-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1745720186; c=relaxed/simple;
+	bh=/q0FRE+v1qPsc0eFD8lo0CCwkZ5YXnSjk3zedmKHqR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=ffleMR9OJhZcwAbGiD/9vgAlKzXiFsK2DipAvVdf4D3BPIfwiTu0vy+grnRQoxCJu49cWsT5jSKyAyojQvVns/IHA4kWbbZYbSnnENvc2+ZGW03+PkTup6PhTZr8ZLEYNxzAV/MhZvtn6AvpQlrzyJDsCrOnEAmFlbuWJIPBCJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 24EBC60171E8E;
+	Sun, 27 Apr 2025 10:16:00 +0800 (CST)
+Message-ID: <d306f10c-457e-493e-8d06-6d9bd90485ea@nfschina.com>
+Date: Sun, 27 Apr 2025 10:15:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] alarmtimer: switch spin_{lock,unlock}_irqsave() to
+ guard()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Language: en-US
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <1ec38ba3-000f-4e26-b18f-95ffb3583836@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If the touchscreen support ten-figers press it to lock touchscreen. When
-the touchscreen is locked, the ABS_MT_TRACKING_ID event remains
-buffered. We need to used input-sync to refresh the event buffer.
+On 2025/4/25 21:04, Dan Carpenter wrote:
+> On Thu, Apr 24, 2025 at 10:48:20PM +0800, Su Hui wrote:
+>> @@ -230,15 +226,15 @@ static int alarmtimer_suspend(struct device *dev)
+>>   	ktime_t min, now, expires;
+>>   	int i, ret, type;
+>>   	struct rtc_device *rtc;
+>> -	unsigned long flags;
+>>   	struct rtc_time tm;
+>>   
+>> -	spin_lock_irqsave(&freezer_delta_lock, flags);
+>> -	min = freezer_delta;
+>> -	expires = freezer_expires;
+>> -	type = freezer_alarmtype;
+>> -	freezer_delta = 0;
+>> -	spin_unlock_irqrestore(&freezer_delta_lock, flags);
+>> +	scoped_guard(spinlock_irqsave, &freezer_delta_lock) {
+>> +		min = freezer_delta;
+>> +		expires = freezer_expires;
+>> +		type = freezer_alarmtype;
+>> +		freezer_delta = 0;
+>> +	}
+>> +
+>>   
+> Don't add the extra blank line here.
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
- drivers/input/input-mt.c | 1 +
- 1 file changed, 1 insertion(+)
+Will update in v2 patch, thanks for the suggestion.
 
-diff --git a/drivers/input/input-mt.c b/drivers/input/input-mt.c
-index 337006dd9dcf..659d752ca830 100644
---- a/drivers/input/input-mt.c
-+++ b/drivers/input/input-mt.c
-@@ -147,6 +147,7 @@ bool input_mt_report_slot_state(struct input_dev *dev=
-,
-=20
- 	if (!active) {
- 		input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1);
-+		input_sync(dev);
- 		return false;
- 	}
-=20
---=20
-2.47.1
+Su Hui
 
