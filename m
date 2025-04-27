@@ -1,62 +1,150 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358C72C181;
-	Sun, 27 Apr 2025 15:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E052C181
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 15:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745769454; cv=none; b=cv0mo+FQCl1eA6jMzt7dlAGCNmqr1SgFG1pDhmPX2Wto6CdmiZ2Ta3f5ZIOIOASz7+G9PQL1AlxbS+EiZVTxVK1+hbyfMnE4s2w7mQycb2l5PLq0A8A8ujZ8QOQKaHJOIaOopHHgRWt5W/1T8ilx18UfKVifrIE3twuDlpht5+c=
+	t=1745769471; cv=none; b=Z6ZeLNvBFYu1JapZECA3qnA+MQuSVJbH32vjSz3zVPl5DJXniXDRuNenFfkfcJ7kowbebmt+aVyAjliYejIZx/rR38wnowx9ZAfw/kNOEIH+END5iSFzqZtQzzy1pGBnYGrTglPnoUSS8fDRDBPmWDp+CX9fVaW5xQ/TnVhuH2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745769454; c=relaxed/simple;
-	bh=XOQafipO7beyZgz2C3iXwZ08d33zoF7SkznZ/YaEObw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C0R27DUearyIm2YCW/JZbsv2yhN7WpZ+DXIVIsDjFpnq8uCsIpGanXfYyg+LrAbZ9Q0ne0m9VeaBdMOXqaItJjfdR/xy/Dge76RGwXoZsBUL9iLDZs/Yuqj7xO1ek5P1hDdYFuDcIhWpVjNSeg6T6/CzRTo526vLTG7QkfFQdKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:d84:340a:c5d0:109f])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 84DE740A25;
-	Sun, 27 Apr 2025 15:57:23 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:d84:340a:c5d0:109f) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: syzbot+3291296495fc970e4b1c@syzkaller.appspotmail.com
-Cc: axboe@kernel.dk,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: syztest
-Date: Sun, 27 Apr 2025 17:57:17 +0200
-Message-ID: <20250427155717.69658-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <680addfc.050a0220.2c0118.0c71.GAE@google.com>
-References: <680addfc.050a0220.2c0118.0c71.GAE@google.com>
+	s=arc-20240116; t=1745769471; c=relaxed/simple;
+	bh=vsvOb7IMd7UFDjWg/sdkTHiSVZXXld7fUcITTiCZhaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bC7cnFrmNA5/AKsIZqbF3QgSyd/d6mnSWsYugkTnWFikYw2Yw3yDqeq/gZM5RlPB6dSGHsy8DMyDDwDPiqca0/lIhNdJ9iK/cUUEswXhn5AnYPrT8equgNQqOTLA0SyNPup4AAvoys/a9nHxKYzOUvS6kmPt72B4BDpowjtaK2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KNtknHeO; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KNtknHeO"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22409077c06so62937745ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745769469; x=1746374269; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wAQOexojybAGTeMdsNoO2UVvORn8VBszuxGfnJS/v7k=;
+        b=KNtknHeOWJs1uNWVfpf04+mUdU6DD62crEVxIx9Ny02iDROnSoZDZWhlsk6nzT1iTx
+         byhlXUEAT9Es88FpDMM6Pu2yEw57DFfzpScncRqgIRFz+TOBBgyIAWyLYiWz+oxxT3YR
+         +WJuwznddB7Y0am1YcsEj6WHpvoIv2ItkAoz1jxjLgIr76xP3pEiHIv67ljfKcMaQgrk
+         lnytceXm2aBZ4pZrDQDJp7Zlmxc0aOBsxUt/AzMeR8Fx1pdR4k501bvurMRcJgymvLdt
+         OvJd6+7LwuH7V5sp9mkg6E1bmQRyG5VLJZb4PWGOYS0kYxEUxFalyEm6zoaYKsZpnp8T
+         DP6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745769469; x=1746374269;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wAQOexojybAGTeMdsNoO2UVvORn8VBszuxGfnJS/v7k=;
+        b=TgJWCDvS8sODFV5e1thfmcP3KOsOSSSeBv7NNmjdO0ovvFv6EOniR3LF0gldkAuJbW
+         Q2lkecWD4DonPZ94Q+0dEEt+Zjdb1a98ZRlPEPC8/+0pQdNYbgO96GNQzPQMk0rZEBsg
+         VKPQ1E6+EzmrA6J/v1dCkFxvVxy8pvH60dYB7jUPOOMfZQ24K5CTa/pl1CCbjT59BZ+2
+         ya3vjJbTU8zT4mapsOxdrv+dzxV2BaShoCeIbJy/QHLolirp6OK2plsgiaFFm32paEe0
+         viIDdvfqja0AY1EI9w/r9TdomfF9x0CX3dVRVgOW8oQG8bmSpRmCMU594zipqH4ZBFkF
+         Srig==
+X-Forwarded-Encrypted: i=1; AJvYcCVuE1UsQsRecVquux9BAG0a5Xno2/Rhzl+GgoMtk2RzisVZPcOjDyTK6yB10wbvCpZn2iVh6GKXtaRElc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFgtfvbj2gYciIF9beT+kbZ8qPCWqUZRlrXvh4dNZVwp7ks0Wo
+	fpHr8g7G1j1TmKZKWFeLv/SIzeviwZVwpOTkh3k6uVXt7rVErnAI10NCOjXB6fu9G0H1Cw5JhEc
+	=
+X-Gm-Gg: ASbGncvURH97/yCxHewKjC68Qu6uR3H7qPPTHeWOcQTy+F5kxmLeWsl/sPH7gCobgMs
+	++A67FECrj2IdWE2ow6kyMpolLFKPB70/baNFjii6zA62VNfLGlm6p1OM1YgCewoGLsTYflnxrc
+	fCLSVWiqNYZy8rGI34G8T7zBc658m/cMWzsnkoTHZ9vN6sO4S0GloN9OhVdrxoJjAH8bsYrPYwS
+	4LQwu/yHkpmRxzUC3fxmx/RUJE840FuAPZTkpO7Uttkn2OR+HbbeNp7ddO/WmQ9jFmW2ptrevOu
+	mjd77N/Cl7rKOTqgj3jeowp/P7dEUu2VjjtILMCqXkTZlO7mJw==
+X-Google-Smtp-Source: AGHT+IEP13Jf8XrJ95hgr9B14nxiB8ZEhLY+BdmhSptU0N+CRKp6D1Tz5feKkZ7HgdcKBmp5ELALrA==
+X-Received: by 2002:a17:902:ec8b:b0:224:13a4:d61e with SMTP id d9443c01a7336-22dbf7472bbmr124495975ad.51.1745769468973;
+        Sun, 27 Apr 2025 08:57:48 -0700 (PDT)
+Received: from thinkpad ([120.60.52.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5216728sm65551085ad.231.2025.04.27.08.57.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 08:57:48 -0700 (PDT)
+Date: Sun, 27 Apr 2025 21:27:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
+Message-ID: <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
+References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
+ <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
+ <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
+ <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
+ <lk37wtb25pr2rj3zhct5udaykr7joqw2mpgtupjq33of2xhesi@rmdgucbzxmgz>
+ <CALHNRZ8gSzOVpN_au_ntSan7or=uRBrPSRFdbDqAHxitcEfs7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174576944393.5571.4486595482979274817@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+In-Reply-To: <CALHNRZ8gSzOVpN_au_ntSan7or=uRBrPSRFdbDqAHxitcEfs7g@mail.gmail.com>
 
-#syz test
+On Mon, Apr 21, 2025 at 11:33:01AM -0500, Aaron Kling wrote:
+> On Mon, Apr 21, 2025 at 3:54 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Mon, Apr 21, 2025 at 03:09:42AM -0500, Aaron Kling wrote:
+> > > On Mon, Apr 21, 2025 at 2:52 AM Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > >
+> > > > On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Relay wrote:
+> > > > > From: Aaron Kling <webgeek1234@gmail.com>
+> > > > >
+> > > > > The driver works fine as a module, so allow building as such.
+> > > > >
+> > > >
+> > > > In the past, the former irqchip maintainer raised concerns for allowing the
+> > > > irqchip drivers to be removed from the kernel. The concern was mostly (afaik)
+> > > > due to not disposing all IRQs before removing the irq_domain.
+> > > >
+> > > > So Marek submitted a series [1] that added a new API for that. But that series
+> > > > didn't progress further. So if you want to make this driver a module, you need
+> > > > to do 2 things:
+> > > >
+> > > > 1. Make sure the cited series gets merged and this driver uses the new API.
+> > > > 2. Get an Ack from Thomas (who is the only irqchip maintainer now).
+> > >
+> > > Should this be a hard blocker for building this one driver as a
+> > > module? I did a quick grep of drivers/pci/controller for irq_domain,
+> > > then compared several of the hits to the Kconfig. And every single one
+> > > is tristate. Tegra is by far not a unique offender here.
+> > >
+> >
+> > Not 'unique', yes. But the situation is a bit worse atm. Some of the patches
+> > (making the driver as a module) were merged in the past without addressing the
+> > mapping issue.
+> >
+> > Please take a look at the reply from Marc:
+> > https://lkml.iu.edu/hypermail/linux/kernel/2207.2/08367.html
+> >
+> > Even though Marc said that disposing IRQs is not enough to make sure there are
+> > no dangling pointers of the IRQs in the client drivers, I'm inclined to atleast
+> > allow modular drivers if they could dispose all the mappings with the new API.
+> > This doesn't mean that I'm not cared about the potential issue, but the removing
+> > of modules is always an 'experimental' feature in the kernel. So users should be
+> > aware of what they are doing. Also, we have not seen any reported issues after
+> > disposing the IRQs from the controller drivers. That also adds to my view on
+> > this issue.
+> >
+> > That being said, the safest option would be to get rid of the remove callback
+> > and make the module modular. This will allow the driver to be built as a module
+> > but never getting removed (make sure .suppress_bind_attrs is also set).
+> .suppress_bind_attrs is already set in this driver. But what happens
+> cleanup on shutdown if the remove is dropped? Would it be better to
+> move remove to shutdown for this case?
+> 
 
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -691,6 +691,9 @@ static void bio_truncate(struct bio *bio, unsigned new_size)
-  */
- void guard_bio_eod(struct bio *bio)
- {
-+	if (unlikely(!bio->bi_bdev)
-+		return;
-+
- 	sector_t maxsector = bdev_nr_sectors(bio->bi_bdev);
- 
- 	if (!maxsector)
+remove() won't be called on shutdown path, you need to populate the shutdown()
+callback for that. But do note that both remove() and shutdown() serves
+different purpose, so do not just rename the function.
+
+- Mani
+
 -- 
-2.43.0
-
-
+மணிவண்ணன் சதாசிவம்
