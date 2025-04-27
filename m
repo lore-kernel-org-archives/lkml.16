@@ -1,93 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D8A55;
-	Sun, 27 Apr 2025 14:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DCF256D;
+	Sun, 27 Apr 2025 14:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745765205; cv=none; b=kLz4Uk28i+YnK4aOwaMbocIQHXB3MdNvAsDoUwa49FVS7bBRy/7CPjgFafsV2bAuHvmoWFcBFjczaKfXIqm+s36qcsxkEftlUYP2V8j2MfIIMkvKwGhIbm0sqaHbmKumvY1FkjgK1Ar91LP/Zu2BvT6eOS+yM7nmhGpkPJd6Z5Q=
+	t=1745765357; cv=none; b=VU32vICBOIHv5RsnrrzvZHnzYRUYKUhWY2EckkpaxVSyrS/67+ijruVf8n7iUNcGAP0tommJuHnLNWXQedPtJx+dyUSPgKqR4jXR6Un+19NUg0GY6Zz9CO2oCgWYcB1oG5T9VlfqQ6sCNHJ3akqIq/SXqGTRrYNylj970fCuKjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745765205; c=relaxed/simple;
-	bh=EMjN1NRJqH0mdrr+kOIC6gH8ti4J53ARzCK2WMPH2sY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJjIMwmahMFa0tfGCqxu2aIVKq1tX1F+woKY21yC4W8kTlM1mo/OGQjjJCOH2ubuf61nlxljrAmSgopP1quSSOu3x+LCo80N8d9VsCS09d7in1Y7qQ7SE5elLKw+YR2tjfszIpvyHmvQQ929zwtToQ0EdIsOLleSMr/LPupCrqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlxiK2xx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745765357; c=relaxed/simple;
+	bh=0a42uMHCJ6tn6btSKVR6Lqwkol5igzhpYqwX4QopxA0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UubUFqqf5nTGWbDoF6yOOmC1bDGVUNzwBaBw2LqpJGgqpJ+hz7Uqn420X3/ewbtX0Am0LkcU8+vuhsukWS0rhk2M1ozaZob6Ho243jAsMJaAmpYte/ei9NIno+oOUAyw+OY/OQXeDDb9lTHyMOhRE2aZEgI+N9Xnr2Dw2dmAPXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P6w/79a0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlxiK2xx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 982FFC4CEE3;
-	Sun, 27 Apr 2025 14:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745765204;
-	bh=EMjN1NRJqH0mdrr+kOIC6gH8ti4J53ARzCK2WMPH2sY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hlxiK2xxd8rpaDGVIJu20NpNhJW5Pwly63H5m5nDrHTy8PxEDP0avOeBdk6L5skf6
-	 BBGenUCsyemIT4F2O7gRJhYXwUSnUl0z61ZlAauKrFczbPJAN7rCTVSNibjEOLS8Uh
-	 COD0x68Rdhvzpf7MUZK/eWwAQ6pCbvIh4llans1Zh86X2rbSvG8L20n4ma4sko0fjT
-	 ND6qMijIcJy6Y6fy0V0m+eEO6Fq9yvy1ds566lmFr0oUIRmwyKkXq4N8gXzetmY+BA
-	 zhcln19HPtcBqC4NaOE6F0piDaqFVs8hL82zFvlgXrd3tjZWVwRjLwLmNHrHM4bp6h
-	 3eCGUL2iag+FA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u93HL-0000000065N-0XPr;
-	Sun, 27 Apr 2025 16:46:47 +0200
-Date: Sun, 27 Apr 2025 16:46:47 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
-	michal.simek@amd.com, quic_sibis@quicinc.com,
-	dan.carpenter@linaro.org, maz@kernel.org
-Subject: Re: [PATCH v2 4/4] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk:
- Ignore FC bit in attributes
-Message-ID: <aA5DVxP7n5GDFxoO@hovoldconsulting.com>
-References: <20250425125250.1847711-1-cristian.marussi@arm.com>
- <20250425125250.1847711-5-cristian.marussi@arm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P6w/79a0"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53QMdEZ8018043;
+	Sun, 27 Apr 2025 14:49:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rAfxxbLFTHijIeHRc6MHPm6CxODoOnFMVCXXJq5grxM=; b=P6w/79a076a4qOqb
+	CGgwW0cRH5TKww8JT7f66OF053CDIroMEOePUQ0j/lZXT998SgtuZhf23AR6PekW
+	YF/kJ/AZz1tw609z8IJ1kB+abmq/TTvG9wyV391F1a1n4ukOWnDg6TcyiQ+5Xs4Y
+	N9CmqjfBSvwIBYGQnmQFX1VjwXjm75Q4ZCeWv0jiyEF6knSsfaPudpW9a4G4fXxm
+	Ma5cDPa1WUF/QJbjqGB6B3nG38xPw85QB6npvZOGAnFJjf9KLjGximR8LxTZpalg
+	XEPj8wQX66cc9tXUxdNsiZ+cK49b0eL1z3LutZlP04lutbfR6SK7r+Y+1xZ8I5Vv
+	aue5kw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qq5c4wy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 27 Apr 2025 14:49:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53REnBCt008055
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 27 Apr 2025 14:49:11 GMT
+Received: from [10.50.44.234] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 27 Apr
+ 2025 07:49:06 -0700
+Message-ID: <3427ceb9-7f95-729a-48f8-5837d5bad8fe@quicinc.com>
+Date: Sun, 27 Apr 2025 20:19:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425125250.1847711-5-cristian.marussi@arm.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v5 2/5] media: iris: fix the order of compat strings
+Content-Language: en-US
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>
+ <20250424-qcs8300_iris-v5-2-f118f505c300@quicinc.com>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20250424-qcs8300_iris-v5-2-f118f505c300@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: G4pbjCk6Wzgjjsm2yvs4SnInsUREZjS6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI3MDEyMiBTYWx0ZWRfX8mhre1YF4jIo FJ9HINvv28yfXa/xi1kLTa0F4ucqQ8MNNz0AfxSmCdnuYhVzh3E2DW+xaAYrIK9wXJcCaTuqsgu JAH49phNwvTE2hNLEUjRz0vqPfsdTNcWemxyiIRb7E9U1Am//9o41k/xEubM5NkPohjUZEap3eE
+ G8H/GrGr63Pq0rEsuzFwlwGwrHoRg9ZPxqhwY83blyZ2yJSdhjg0GLc/wlM8BuRIspILrHy4Ww5 nMWw4QZmxtp9nlXjO75eh8mWez6eI9HxNy9VyWzjNyWgZicmkjVziO2F8wmpDnDLyKQ58snEmrY 1Rc/S+jbLDr8O4dIAPaHwSaXoc/kSpFtIOG7bUARKZ8NpBMbk6Z3R5FYiKoGYxI8uvgyvDDkbt1
+ 6yG9q4a9ji72DRLw6Ctxa+ivicSYYtqjERtIDMLChrCE33xP9+sEkkr2f/odsaOuWQoDW3oP
+X-Authority-Analysis: v=2.4 cv=QP1oRhLL c=1 sm=1 tr=0 ts=680e43e8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=P3qF7pMSZMhhegKZg4MA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: G4pbjCk6Wzgjjsm2yvs4SnInsUREZjS6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-27_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504270122
 
-On Fri, Apr 25, 2025 at 01:52:50PM +0100, Cristian Marussi wrote:
-> Some platform misreported the support of FastChannel when queried: ignore
-> that bit on selected platforms.
+
+
+On 4/24/2025 2:20 PM, Vikash Garodia wrote:
+> Fix the order of compatible strings to make it in alpha numeric order.
 > 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 > ---
-> Match features has to be set-up properly before upstreaming this.
-> Ideally the out-of-spec firmware should be matched with a quirk matching
-> pattern based on Vendor/SubVendor/ImplVersion....but it is NOT clear if the
-> platform at hand will ship with future fixed firmwares where the ImplVersion
-> field is properly handled.
-> If we cannot be sure about that, we should fallback to a compatible match.
+>  drivers/media/platform/qcom/iris/iris_probe.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> v1 -> v2
-> - use multiple compats quirks syntax
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index 7cd8650fbe9c09598670530103e3d5edf32953e7..fa3b9c9b1493e4165f8c6d9c1cc0b76d3dfa9b7b 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -335,16 +335,16 @@ static const struct dev_pm_ops iris_pm_ops = {
+>  };
+>  
+>  static const struct of_device_id iris_dt_match[] = {
+> +#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+> +	{
+> +		.compatible = "qcom,sm8250-venus",
+> +		.data = &sm8250_data,
+> +	},
+> +#endif
+>  	{
+>  		.compatible = "qcom,sm8550-iris",
+>  		.data = &sm8550_data,
+>  	},
+> -#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+> -		{
+> -			.compatible = "qcom,sm8250-venus",
+> -			.data = &sm8250_data,
+> -		},
+> -#endif
+>  	{
+>  		.compatible = "qcom,sm8650-iris",
+>  		.data = &sm8650_data,
 > 
-> RFC->V1
-> - fix QUIRKS conditions
-
->  /* Global Quirks Definitions */
->  DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL);
-> +DEFINE_SCMI_QUIRK(perf_level_get_fc_force,
-> +		  "bad-vend", NULL, "0x20000-", "bad-compat", "bad-compat-2");
-
-Still works when matching on vendor and version (and/or machine or SoC
-compatible):
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-I think we can go ahead and merge this based on vendor and version
-"0x20000-".
-
-Depending on what Sibi finds out, or if it turns out to be needed, we
-can always add an upper version bound later.
-
-Johan
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
