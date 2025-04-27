@@ -1,93 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300E124633C
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 08:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966701DE4DC;
+	Sun, 27 Apr 2025 08:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745742229; cv=none; b=kPMJlqe16KkktzLL0uWwV21VWzQtmfb2MQYSkznc/CPreB+8ofJkCwUjwe0aXU9YG5xLkyK9SZeyFPe9Md4xsFaqg2n1s14Iimeqq8fR2O7NNvem1n5s3VpKkU9cJW/Jz/BYGt1kV+QrKqZXB3aLW9ryvFYap4XaL8QOaF/OTlo=
+	t=1745742326; cv=none; b=bqVJH+fp/tA2DSXaIu3+lWcLCwscz0J7v1TrGFsMJGVR+brps97NKl13XcZ8HwSGmONgLGwMAQ3tLfP66RpURDxFO4j9PthUeKmNqwphPjMIlkQDIDey4IjA0lT+0OMaLwkWaV/nXuLe0KIe7SakO7BvZxX69tLq216lv1Hbq+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745742229; c=relaxed/simple;
-	bh=uu3Id7BaKiuYp8X7N0f2NYbS+RKebNKAqxJJZ6XhhCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibdSXrMA0ojdawtvqLTxaMhvW/xyQo1xpR2oNYGjuu5Z739tA9yO+4haJL7a946p8gQwzfrWAFVUfrLhT3dDD/b1dAzOV5DQ3/EJxspUvtpMlc6zYIlipzc6zAYPYYxrkwX9l66vtGBD432NOUpzVkABZ7fbA23FNpVPGlN6wJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8Ej9x7v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745742326; c=relaxed/simple;
+	bh=PBw0PDf9JbDzfQqKH6sato0veB6RTeDZnFhWwNwJsCU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Qnn0sF8e0i0ZInNhl8S9liFfkyuwTGl7XLZFD8GMSuWTyPaLJbafSlRUKcTcgbIkgpiWQDcLwU8uhaHmLnyUv8lU1CxCO4448mXTsYoyo1QnyeE1wn77Pnb0peN+HdmqT2L3BxBEL9yIh0zLl7jZvBNzaXKX+SHWRyw1HOmW/z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKYBEPCM; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8Ej9x7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C318C4CEE3;
-	Sun, 27 Apr 2025 08:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745742228;
-	bh=uu3Id7BaKiuYp8X7N0f2NYbS+RKebNKAqxJJZ6XhhCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L8Ej9x7vx4aCVDUecNowkfGymxTbc3JCx1kVL5AXWzu4UX17ZwV8+Cz+AezTKmDSn
-	 zzsGscK5DcIZG0K+aDXEm+3sgfb86WSEa4ulPXdmTywFBAaQn5qjIA/nmLw5XzL2GW
-	 ugFspVWuCJJWHu3UlaiuKsSo+Ybey8XN3CVOlOcWrla5yB3U4pjT3LZWLw9uDQBJmZ
-	 02G9yPPmZkjl6NVFLV4pmb9CmRn/CC8wMIWtnMvLSl/GI+oKg1HWp74fd3zb1U+f3l
-	 djrsoKQRMZXZl343PI389Wdp/soX2o8libGRY3Pz8tQ3kan/GH0Y57JRpoy9PQENtH
-	 omwE4i3BkRwDw==
-Date: Sun, 27 Apr 2025 10:23:43 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Brian Gerst <brgerst@gmail.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-	"Ahmed S . Darwish" <darwi@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 15/15] x86/atomics: Remove !CONFIG_X86_CX8 methods
-Message-ID: <aA3pj0yVIizZPRxT@gmail.com>
-References: <20250425084216.3913608-1-mingo@kernel.org>
- <20250425084216.3913608-16-mingo@kernel.org>
- <5c175b6a-e9c8-2546-a4fe-98572c3f4935@gmail.com>
- <CAMzpN2jNPxAF75iuNwNjz7PqYygYgLeCM77rQV2ZCj=o6-qJDQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKYBEPCM"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736a7e126c7so3503173b3a.3;
+        Sun, 27 Apr 2025 01:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745742324; x=1746347124; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bSy3QbJRv7DmGrlDT8/1wLtqRMpqrMZ9rZcc0aoNiSs=;
+        b=WKYBEPCMk57HulaMQLVrjbGvfc9M17CcqQpJ8weWnAv6YInzyMvcEk7gFW8jrCEbN9
+         MobBF+Z6bvL2RxpHCnu0CgebfXbPZFfTST37JYBOTOvllHKW4ftyu4HdL12bxLHawWI9
+         rcqAiA3HZkCrS8c9EOih3dpt3QTPbrX7Q1BIGoXfidrOvNU4aXHZXus5EDa0IvEb1KsL
+         nTsZddt7BNpBmr6TZwsIzBXkR+dmo7vnWMNuRhwB/Faj6Qg6zUlz7eas6rLgVEJFVL6W
+         n+g1Un5DUux5Gx7iTIhXFhCZRUbsB1WMvuFKDeF9IWVt/3xdEgVrf/XSSdApdo1wV/hv
+         CTKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745742324; x=1746347124;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bSy3QbJRv7DmGrlDT8/1wLtqRMpqrMZ9rZcc0aoNiSs=;
+        b=IFj91cHvasGlyJYB+B/NQIw3gMjHssewvN5LycPzB4ntqrfilC6TH/EXtsLcphnuG2
+         kvdgOqOLlXUt80nLkoivkz+lT3eosiUBT7gzlGjPfVnG8YIE0ujZ228R5avYDJIsILTq
+         AmJKiDfM5T5gYBAIYsVmtUzarlFLJJS7jwCu1B9A3co0k7NRXDMcDfSwT2NdFKP/sWlu
+         gSroSpAtIWuMkE8UERHwbIpqJQFfwf8507wllSw1QNrecRGF+RPTfi/24uOxm6Q6QXWi
+         7P36UttWoY/BlM7j7dSVHkpKrW+wFGpE6h+7ORq0ytyGakU0vEapjNwlMVz4FjyZpsO6
+         aJKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVgc3JGZuEopbJBPRxpgg1gXwtGXkDCeS5xHcOdDlkjjGMfOjRnmQnzYr1KxGlFVol4UQu4QwY/xi2W@vger.kernel.org, AJvYcCX0CezuuCd+zJI/shg28BxEj77eTGsWZrPWt22zU6LTYFZ8ibk3R3kYgkyuVjWT2gWg+NqJ8gaS2839DvUm@vger.kernel.org, AJvYcCXe8mAkqe33TGU53frpL6dbZVezcfljF10Q2f18vc9iL+3ZEE2NFXBc8JQIOSBESO4ZJN4nshZzAjUf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCdmzao94DpSmiGIoF3tXDFY6Qeh4Zmgkd5YdwCPT4NeA3msr6
+	JLFKFc3wQ2Q+FCGn3u5TfT6ZRpEM4duKQhh9nhPeZEZP7SMDIGFYR3RuitOj
+X-Gm-Gg: ASbGncvaiChOv3T7NqHNbtyUYM0+Z8iTZyLw+APDCQMEXLSW7th+e7xgs2heNwshdxP
+	HkhwKwQzSYNjY1k56mIJv9aaawsDLAcLf6rITSm/wyD/skmhvo9jDUmUbE6HT/JIfd59ywb/IuB
+	QmXjXoBxqInqkVHrZ2TSwLKQ29/OtJbSlW4OgWfzTSuI6LzIBWe92GW0oDcYhSW1xVrmBHZaZBZ
+	PMKS2egftFb5nomxmAeOfAT5S4Xlw1ZBaBoFFNc4muXpphSQOHYZsxvuEhqW0u0/srYixqBYmKQ
+	6NnerU8QMZC+cj79ZpANJJnYrXCxIkyei1fubEQ7igq3jyXEDuhf7A==
+X-Google-Smtp-Source: AGHT+IG5qnz5GOAH6oZvY00TzTjs1/+wlVcc1GWPA84EcPujdbxxX4tiX1r/bvb+09d6pEDael2hEg==
+X-Received: by 2002:aa7:8889:0:b0:736:5c8e:bab8 with SMTP id d2e1a72fcca58-73ff7247e46mr7010787b3a.3.1745742323637;
+        Sun, 27 Apr 2025 01:25:23 -0700 (PDT)
+Received: from localhost.localdomain ([14.171.43.210])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e2549f570sm5900852b3a.0.2025.04.27.01.25.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 01:25:23 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: andy@kernel.org
+Cc: geert@linux-m68k.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	corbet@lwn.net,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	Nam Tran <trannamatk@gmail.com>
+Subject: [PATCH v8 0/5] auxdisplay: add support for TI LP5812 4x3 Matrix LED driver
+Date: Sun, 27 Apr 2025 15:24:42 +0700
+Message-Id: <20250427082447.138359-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMzpN2jNPxAF75iuNwNjz7PqYygYgLeCM77rQV2ZCj=o6-qJDQ@mail.gmail.com>
+
+This patch series adds support for the TI/National Semiconductor LP5812
+4x3 matrix RGB LED driver. The driver supports features such as autonomous
+animation and time-cross-multiplexing (TCM) for dynamic LED effects.
+
+Signed-off-by: Nam Tran <trannamatk@gmail.com>
+---
+Changes in v8:
+- Move driver to drivers/auxdisplay/ instead of drivers/leds/.
+- Rename files from leds-lp5812.c/.h to lp5812.c/.h.
+- Move ti,lp5812.yaml binding to auxdisplay/ directory,
+  and update the title and $id to match new path.
+- No functional changes to the binding itself (keep Reviewed-by).
+- Update commit messages and patch titles to reflect the move.
+- Link to v7: https://lore.kernel.org/linux-leds/20250422190121.46839-1-trannamatk@gmail.com/
+
+Changes in v7:
+- Mark `chip_leds_map` as const.
+- Use consistent `ret` initialization.
+- Simplify the function `set_mix_sel_led()`.
+- Refactor `dev_config_show()` and `led_auto_animation_show()` to avoid temp buffer, malloc/free.
+- Simplify the code and ensure consistent use of mutex lock/unlock in show/store functions.
+- Remove `total_leds` and `total_aeu`.
+- Link to v6: https://lore.kernel.org/linux-leds/20250419184333.56617-1-trannamatk@gmail.com/
+
+Changes in v6:
+- Add `vcc-supply` property to describe the LP5812 power supply.
+- Remove `chan-name` property and entire LED subnodes, as they are not needed.
+- Update LP5812 LED driver node to Raspberry Pi 4 B Device Tree, based on updated binding.
+- Link to v5: https://lore.kernel.org/linux-leds/20250414145742.35713-1-trannamatk@gmail.com/
+
+Changes in v5:
+- Rebase on v6.15-rc2
+- Removed unused functions (lp5812_dump_regs, lp5812_update_bit).
+- Address Krzysztof's review comments
+- Link to v4: https://lore.kernel.org/linux-leds/20250405183246.198568-1-trannamatk@gmail.com/
+---
+
+Nam Tran (5):
+  dt-bindings: auxdisplay: add TI LP5812 4×3 Matrix RGB LED Driver
+  auxdisplay: add TI LP5812 4×3 Matrix RGB LED Driver
+  docs: ABI: Document LP5812 sysfs interfaces
+  docs: auxdisplay: document TI LP5812 RGB LED driver
+  arm64: dts: Add LP5812 node for Raspberry Pi 4 Model B
+
+ .../ABI/testing/sysfs-bus-i2c-devices-lp5812  |  144 +
+ .../admin-guide/auxdisplay/index.rst          |    3 +-
+ .../admin-guide/auxdisplay/lp5812.rst         |   79 +
+ .../bindings/auxdisplay/ti,lp5812.yaml        |   46 +
+ MAINTAINERS                                   |   12 +
+ .../arm/boot/dts/broadcom/bcm2711-rpi-4-b.dts |   10 +
+ drivers/auxdisplay/Kconfig                    |   17 +
+ drivers/auxdisplay/Makefile                   |    1 +
+ drivers/auxdisplay/lp5812.c                   | 2736 +++++++++++++++++
+ drivers/auxdisplay/lp5812.h                   |  348 +++
+ 10 files changed, 3395 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-lp5812
+ create mode 100644 Documentation/admin-guide/auxdisplay/lp5812.rst
+ create mode 100644 Documentation/devicetree/bindings/auxdisplay/ti,lp5812.yaml
+ create mode 100644 drivers/auxdisplay/lp5812.c
+ create mode 100644 drivers/auxdisplay/lp5812.h
 
 
-* Brian Gerst <brgerst@gmail.com> wrote:
+base-commit: f1a3944c860b0615d0513110d8cf62bb94adbb41
+-- 
+2.25.1
 
-> On Fri, Apr 25, 2025 at 10:30 AM Uros Bizjak <ubizjak@gmail.com> wrote:
-> >
-> >
-> >
-> > On 25. 04. 25 10:42, Ingo Molnar wrote:
-> >
-> > > -#endif
-> > > +#define arch_cmpxchg64                       __cmpxchg64
-> > > +#define arch_cmpxchg64_local         __cmpxchg64_local
-> > > +#define arch_try_cmpxchg64           __try_cmpxchg64
-> > > +#define arch_try_cmpxchg64_local     __try_cmpxchg64_local
-> > >
-> > >   #define system_has_cmpxchg64()              boot_cpu_has(X86_FEATURE_CX8)
-> >
-> > #define system_has_cmpxchg64()          1
-> 
-> Or just outright removed, since x86 was the only arch that defined it.
-
-No, it cannot be removed, x86-32 *is* still the only 32-bit arch that 
-enables it.
-
-I.e. defining it to 1 is the correct solution, and that unconditionally 
-enables the SLUB code optimizations. It depended on a runtime 
-boot_cpu_has() check before.
-
-Removing it would remove the optimization from x86-32 for no good 
-reason.
-
-Thanks,
-
-	Ingo
