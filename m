@@ -1,83 +1,96 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B86C5661;
-	Sun, 27 Apr 2025 01:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698C88BE7;
+	Sun, 27 Apr 2025 01:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745717838; cv=none; b=fJLUWz8YESQtjodFa1vds99e1Q3UjnHoarOeJdjOdJxQq9MHfZTtG4rF88MvI8AWzf7s3GJHrtv4AjS9SzmCSfAL/IMy4VFywxkGYa4RnO+B64g//ol7LTCcg38A4X9FBd9+JaWGCPJnX1d890h6jDBGiJzRxZk367opvlorTaU=
+	t=1745717919; cv=none; b=qau31aixhwTpTq/4LxB8qBu2EQyO9r7G0MXgSJZsCnU+TFeTvVUWPqTu83JOETPTf4E3tIRzI4mq1VoDYViNn13biSdxCLBBlreBI7wgnbSJy1guyooAeI3bzxTV5VCcYGbdRByBnxRcdLakHAgl2uyuqob0mJ2JNRaDhePnPYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745717838; c=relaxed/simple;
-	bh=FvBxvV778LoatI+v+YK3cVyGvx8TJr8MXzRsyaqkYbU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=T9WAA1gI3g8wwJt1wRuHgilG1XTtPEW/545A2yEuoHnCLP03+5UEp9vKxCXMFL2Tz/4qaVoS+5fSomRkzgYLiyE4W/QS+kFT7eFqwnPNzLTi5tmntHRqB7QDvZgH1hZsh1vMngnB2stAe9THk+vVKqXx40RlTX7zTNEzCoWm2wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZlTh80Dlsz4f3kvh;
-	Sun, 27 Apr 2025 09:36:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A05181A06D7;
-	Sun, 27 Apr 2025 09:37:05 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCH618+ig1obRS4Kg--.18096S3;
-	Sun, 27 Apr 2025 09:37:05 +0800 (CST)
-Subject: Re: [PATCH v2 4/5] md: fix is_mddev_idle()
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
- song@kernel.org, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
- nadav.amit@gmail.com, ubizjak@gmail.com, cl@linux.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
- <20250418010941.667138-5-yukuai1@huaweicloud.com>
- <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <f14eac30-ab65-85b2-3e65-de6d50ea15e2@huaweicloud.com>
-Date: Sun, 27 Apr 2025 09:37:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1745717919; c=relaxed/simple;
+	bh=W6SN/J+RmPz+uzurgEk6TqbUvQ3pMLDP/yQDqSqqdIo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=N9ALYtJ8mHO5b9GsCfe2z4+k3HLXKqClspWn7WrCRW3byY6g60/+0+pi3k9XdfVoIk/Nrem73XoCl2fBEOw3hrjNSNQS25YP5E9wrZkatsFsMBkK5U/9rAshCtKhKN3prtSak/pIedsdGLMLpm1r1q+rNZFp1RKGebKNcntgT5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKNEOsP2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKNEOsP2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD454C4AF0C;
+	Sun, 27 Apr 2025 01:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745717918;
+	bh=W6SN/J+RmPz+uzurgEk6TqbUvQ3pMLDP/yQDqSqqdIo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PKNEOsP26KcYZcTw0psvOQxNfhzsvt6h3QRZZHErbdaEBG72PcaD42zYA4Yq+8vVr
+	 DqqrWpEyXJttG8H4HAla1KAPbY0JW7EkTPs9BKxHzoeuUeWYtfep2x6d21p4F+WL2F
+	 CzYFQgBoStQhQq95omVQWDB9Bw4JEEzqLyzn/pwcHrpC+HJ2talD45ADh/Ne9PIQj7
+	 wSryssH+UalegFIK7qCqhKFqaGWiJEM4VfelRqsY/DsOMB51O1Yd35HRx6F4JcRi3P
+	 vdh0yY8Vm/NLOxjKSfvNkS6qoDTZhyJc+CjNdSkJ/3ONAoPG6fjD3Y69iCCpersa14
+	 wcLBpx191OdmQ==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Mark Brown <broonie@kernel.org>,
+	WangYuli <wangyuli@uniontech.com>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Petr Mladek <pmladek@suse.com>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Diego Vieira <diego.daniel.professional@gmail.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH 0/3] randstruct: gcc-plugin: Remove bogus void member
+Date: Sat, 26 Apr 2025 18:38:32 -0700
+Message-Id: <20250427013604.work.926-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALTww29aehPQcbcy0j+V69r+RVgzNPwNhpAQ-7wWMdD-VPfNgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=918; i=kees@kernel.org; h=from:subject:message-id; bh=W6SN/J+RmPz+uzurgEk6TqbUvQ3pMLDP/yQDqSqqdIo=; b=owGbwMvMwCVmps19z/KJym7G02pJDBm8XTPP1rEcOrBGSNM6XOiD8hwjxi0cHwK5Ex6bPGkuk jzid9Swo5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCI6JowMS3L1mTLWJv9NnXJR KNtr6/ezprOfT478rSTv+n2h/EnOXwx/pVw5hbjMD/4uzl2ydJHinJStwfOlrikYd+Q2zwxZGLC FFwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCH618+ig1obRS4Kg--.18096S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
-	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
-	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
-	1l4c8EcI0Ec7CjxVAaw2AFwI0_GFv_Wryl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
-	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
-	OmhFUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 Hi,
 
-在 2025/04/22 14:35, Xiao Ni 写道:
->> +       unsigned long                   last_events;    /* IO event timestamp */
-> Can we use another name? Because mddev has events counter. This name
-> can easily be confused with that counter.
+Okay, I've tracked down the problem with the randstruct GCC plugin,
+and written a KUnit test to validate behaviors. This lets us add
+it back the COMPILE_TEST builds.
 
-Sorry for the late reply.
+No need for https://lore.kernel.org/all/20250421000854.work.572-kees@kernel.org/
 
-Sure, how about, normal_IO_events?
+-Kees
 
-Thanks,
-Kuai
+Kees Cook (3):
+  randstruct: gcc-plugin: Remove bogus void member
+  lib/tests: Add randstruct KUnit test
+  Revert "hardening: Disable GCC randstruct for COMPILE_TEST"
+
+ MAINTAINERS                                   |   1 +
+ lib/Kconfig.debug                             |   8 +
+ lib/tests/Makefile                            |   1 +
+ lib/tests/randstruct_kunit.c                  | 283 ++++++++++++++++++
+ scripts/gcc-plugins/randomize_layout_plugin.c |  18 +-
+ security/Kconfig.hardening                    |   2 +-
+ 6 files changed, 295 insertions(+), 18 deletions(-)
+ create mode 100644 lib/tests/randstruct_kunit.c
+
+-- 
+2.34.1
 
