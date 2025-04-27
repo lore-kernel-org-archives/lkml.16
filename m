@@ -1,162 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA52633991
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 09:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B99622D4FF;
+	Sun, 27 Apr 2025 09:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745745961; cv=none; b=YXqt+MPzHGufc+NsM/fO1tk4RGx5tavmW+HkHorZTub3Peg7B2U5bBA6efy0L17xINueB5urnkwP/hTpm/QdBGCkYHh8hTJEbXhBGeNu9iXGTeq3PWGkBk92B16z4whyruJesK+o5T+aOrEhZylMOilYoELfXJuJ3o4o/6z9mS8=
+	t=1745746027; cv=none; b=us3Dlcy84H2RbkuKvJ5n2DT/yVm0nTnkzhtNHs8NbbHuHeZm2SG4Rga7MXyG5m/Tj7IJkhMPtSGR8ofSFdp1Z04X/lXtbXgMeEJ+OIjH+YEOzfTR9S6kB7ZfQCEglyawTyvlULqb53F8fs4FMQG4uOuiwusC4WhHAYnxJnr7wrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745745961; c=relaxed/simple;
-	bh=wQ+9+CaKroXSFjH6SdbYajYrQLIb9k+/sJK4T31VvCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oCIdnNahaZrZK17GGttXD0Ka8AjWJ5eb8UMzswVEIG076TiZeGZUnH41C2OmQUCxjnRxGJox/a0NdHZXwKMsl7r/NUe+12oE34DdZmMfn7K9Ry9wDhiM33oYiR1EUeDO4FKZjMxQZSpy4s22K+UpkJErKzWq5cmiaTKwS3fgH6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VuzM6TUb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745746027; c=relaxed/simple;
+	bh=MIEw6Uk+Yy3hODU6rwhHvIU2GjFINvMLe/ajDksnc7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TIuVWn0tMG8l0AhF0zED3/GcYcaapiBhYth42B7oI8vwV1j3sNGQhGbiLCctcb6kCfwqbg+7a8RmZzuaOC1a2o4HfKYkuDx9mU0eRH4z+YUgsp4QYJCNxoPO2Pm0CTkEeAROWz5SPkrm/jHaPUdNIHRln5QgIAx9D3OwWgj9qiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=M//ALZ9S; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VuzM6TUb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A060C4CEE3;
-	Sun, 27 Apr 2025 09:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745745960;
-	bh=wQ+9+CaKroXSFjH6SdbYajYrQLIb9k+/sJK4T31VvCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VuzM6TUbkGoHtmE1u6yd9RZcBQMs+s/atFXXzgWjTC/A45OYt2lEJP6nWsR9lJRj2
-	 4HD20nvkGwURzDu8yLZPesQcd7I6PkyvtD3ZQARP8Hc+kZgponcqPrT4n/pvcYKJM1
-	 PxIpri24zsK5BOzMAINm2cv/U1ogVZGD7NpfFNqPSfNX20Bjpuh2RE7F+pnibZpvgf
-	 0IMub8m26x2Yc81OT0k5G6KRlLwhuLtoUPSqWOKnaU5RTwpeWMYnMQwX7rU90G4fP+
-	 FyudpJxJeReJLUzdFEcmZHEeHsjSKfalKblXliD7IzMLP9jaiNC8ZdBsvggE1iUe6D
-	 NwVD4YDvd27eA==
-Date: Sun, 27 Apr 2025 11:25:55 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	"Ahmed S . Darwish" <darwi@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 13/15] x86/cpu: Make CONFIG_X86_CX8 unconditional
-Message-ID: <aA34I9rY1-1QQo0R@gmail.com>
-References: <20250425084216.3913608-1-mingo@kernel.org>
- <20250425084216.3913608-14-mingo@kernel.org>
- <956412a3-43c2-4d6e-bea2-2573c98233ae@app.fastmail.com>
- <8D770F85-5417-4A9E-80DE-1B6A890DECEF@zytor.com>
- <1d4ddcab-cf46-4d7e-9e33-de12b6bd350c@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="M//ALZ9S"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R9QJ7P1607230
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sun, 27 Apr 2025 02:26:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R9QJ7P1607230
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745745982;
+	bh=MIEw6Uk+Yy3hODU6rwhHvIU2GjFINvMLe/ajDksnc7g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M//ALZ9Sj+luXQrDMRpV2wKmumbHvDVNiTfeqhmsOqEn27FbweEdRBGxeQudcHytg
+	 mjZ0mzPUGKx3F/LVuWSdCk4ViQohkiMVOe6rMp1EIjc/BK+o1SZ+H9XVTS5+G+kSeO
+	 zQ3NHolfCn7sahiOBdM1OBsESpcIUtcW9qo6sKNY60Vfxfvch+08cpnvAyLmXFnYsQ
+	 93Y7Wskrdj3G6wb4UcX3Mz6aoc2egCpy0NZxMDGruB37nyn5jhzeGyVdMqPgshwSiv
+	 6FXv61KqgGYM/rKMdEXcU26QtoBhaWUY+LA1ZxkaC+aC++GFPJfxtH4TbeC8zG4BPw
+	 6m/0oO6Lz9THg==
+Message-ID: <5a953dcc-96c1-4312-a8b5-25ca7ee4d0f7@zytor.com>
+Date: Sun, 27 Apr 2025 02:26:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d4ddcab-cf46-4d7e-9e33-de12b6bd350c@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/14] x86/xen/msr: Remove calling
+ native_{read,write}_msr{,_safe}() in pmu_msr_{read,write}()
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250425083442.2390017-1-xin@zytor.com>
+ <20250425083442.2390017-10-xin@zytor.com>
+ <d2bdd61d-cab6-401f-9b6a-17b28f3cd19c@linux.intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <d2bdd61d-cab6-401f-9b6a-17b28f3cd19c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 4/27/2025 2:21 AM, Mi, Dapeng wrote:
+> Reviewed-by: Dapeng Mi<dapeng1.mi@linux.intel.com>
 
-* Arnd Bergmann <arnd@kernel.org> wrote:
+Thanks!
 
-> On Fri, Apr 25, 2025, at 17:15, H. Peter Anvin wrote:
-> > On April 25, 2025 5:10:27 AM PDT, Arnd Bergmann <arnd@kernel.org> wrote:
-> >>
-> >>I just noticed this one: the final 'default "4"' is no longer possible
-> >>here and can be removed. All the remaining CPUs report family "5" or
-> >>higher.
-> >>
-> >>There is an old issue for some rare CPUs (Geode LX and Crusoe) that
-> >>support CMOV but report family=6. These to boot a kernel with X86_MINIMUM_CPU_FAMILY=6 because it triggers the boot time check.
-> >>
-> >
-> > They report family=5 because family=6 implies fcomi and nopl support 
-> > (in the case of Crusoe, they have fcomi but didn't support movl.)
-> 
-> Ah right, I see now. I had only checked that the kernel itself
-> no longer uses nopl after your ba0593bf553c ("x86: completely
-> disable NOPL on 32 bits"), and I had seen that Debian intentionally
-> builds 32-bit i686 kernels with CONFIG_MGEODEGX1.
-> 
-> I now found that both Debian 12 and gcc 11 changed their definition
-> if 686 to actually require nopl for Indirect branch tracking 
-> (-fcf-protection) in user space, as discussed in
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=104713
-> 
-> So even if it makes sense for GeodeLX specific kernel to use CMOV,
-> any general-purpose i686 distro would still want to enable IBT
-> in userspace to gain IBT on Tiger Lake and newer 64-bit CPUs.
-
-And the kernel Debian 12 uses is a "686" one:
-
-  ./pool/main/l/linux-signed-i386/linux-image-6.1.0-32-686_6.1.129-1_i386.deb
-  ./pool/main/l/linux-signed-i386/linux-image-686_6.1.129-1_i386.deb
-
-and the kernel is set to CONFIG_MGEODE_LX=y:
-
-  $ grep CONFIG_MGEODE_LX ./boot/config-6.1.0-32-686
-  CONFIG_MGEODE_LX=y
-
-... which CPU has CMOV support:
-
-  config X86_CMOV
-        def_bool y
-        depends on (MK7 || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MCRUSOE || MEFFICEON || MATOM || MGEODE_LX || X86_64)                                                                                                                                                                                                                                           ^^^^^^^^^
-So I'd argue that the kernel's x86-32 CPU support cutoff should match 
-the i386 CPU support cutoff of the Debian i386 installer.
-
-Survey of other distros:
-
- - Fedora dropped x86-32 with Fedora 31, almost 5 years ago.
-
- - Ubuntu dropped x86-32 after 18 LTS, more than 5 years ago. The LTS 
-   kernel is v5.6 based.
-
- - Arch Linux dropped i686 support even earlier than that, the 
-   spin-off-community project of archlinux32.org has 486 and 686 
-   variants. 686 variant includes CMOV.
-
- - Gentoo has an 'x86' variant with 486 and 686 stages. 686 stage 
-   includes CMOV.
-
-Ie. I think we can also make CMOV a hard requirement, and keep support 
-for all family 5 CPUs that have CMOV and have a chance to boot current 
-32-bit distros. Even distros that had 486 builds have 686 variants that 
-should still work.
-
-I.e. remove support for M586MMX, M586TSC, MCYRIXIII, MGEODEGX1 and MK6 
-as well, these don't have CMOV support and won't even boot i386 Debian 
-12.
-
-Summary, the plan would be to remove support for the following pre-CMOV 
-CPUs (the ones not yet in this series are marked 'NEW'):
-
-  M486
-  M486SX
-  M586
-  M586MMX         # NEW
-  M586TSC         # NEW
-  MCYRIXIII       # NEW
-  MELAN
-  MGEODEGX1       # NEW
-  MK6             # NEW
-  MWINCHIP3D
-  MWINCHIPC6
-
-And to keep these:
-
-  M686
-  MATOM
-  MCRUSOE
-  MEFFICEON
-  MGEODE_LX
-  MK7
-  MPENTIUM4
-  MPENTIUMII
-  MPENTIUMIII
-  MPENTIUMM
-  MVIAC3_2
-  MVIAC7
-
-Thanks,
-
-	Ingo
+I just sent out v4, so unless a v5 is needed, leave it to our x86
+maintainers.
