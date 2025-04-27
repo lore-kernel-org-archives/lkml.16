@@ -1,139 +1,56 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5F578F2D
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 16:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5136E522A;
+	Sun, 27 Apr 2025 16:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745770444; cv=none; b=GGnnAVjykUZtEl09ndkySPeZYs+GeCMz6DiyAfWA4ghOKwVhJ6E4psfmw9LU/jQBpDJcnKbffZh/55g4ljPHcMHJpznIZLg/f9A3uHjaDJbWSDfxrpm3TE8m+tRY1STPmZxbca50jYHUaMtUe3KQMluibIO17hibMsWncdKnyBs=
+	t=1745770992; cv=none; b=cQBdbGPxZd8HWxfUcKSoLWaMVIub+rFQRQ26UyYVHPFzANfgyc0nA8oMnJJ7zsVZV7cR8tjQmfODYZgze689raukYpehI+mb+yvhElZ4xj5G8dPKGCjvQWQ8GNgzzPfcQyhsiUdiFvMP/18q3+2PD7NGfLz8cFpLxpdcxJVfIkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745770444; c=relaxed/simple;
-	bh=hx8hAIbVZKXJ6NdczBq4hsXhxoMiVDDi5Djd78nRAA0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=epfSfvlkDu58/aiKd1Iqrz9LR8OxhLx6ensK7WzH2YpiS/YkMFuNHw/pLRi00hePf/sWMsAfvNby6ZL6ohSq/pe8la6Fczi1pnkEDDo3XsNpcrYoToGGVM/mMnRIUR04yQ+aFPWELq7Wux0CfqBg0J/t8ZYeyvtCgoduDqlpVw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85e4f920dacso300856139f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 09:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745770442; x=1746375242;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b/24+5yhqgAMZJMq09oV46bPc+VDFkdU0uH5+23nwk0=;
-        b=E3NfxKvjBx53J6a3e0BkSLWO1w5CoQSMTkZs9TU3hqdR8Cr4oriM8J7SPtFd5tzuGY
-         69sZA6SNqobNMj5gcsWmSEeXveFXbh5bljYJqgwU54rr6rphQABb8/6Lh6iAM0hHm8Pj
-         K0BO2107GKhpEYfsT+CTD8bvInVKE+HRbzfDuvoXY/nC8dOU/xFByYPDSE0hppxd+Zj9
-         A78iAPMv6uGzV175ZWhOsmo6zhIdwKdUZc/ceeKqAZLHaSOmwyasMZZL0y49doI/zhOx
-         A35pg0jdYhirOcnsfYStoI5y5sv7U8ox47nmYu1KNncrmYUNb/q//xig+DlfuAHTUvzW
-         s3wg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPGUKxatTHqGZ21AR7Wx2Vx4mJe7eGoEfJF2ryPc+f1cF5awcwiqHuO9Y4XuwF/uf+e6fsteQi8Ga8TpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj8hUIC7ICnNc3TPiZJIgv1vRN0jibnc1Q62v2YcdU2MumjWBY
-	40Luq2h17lWUl/0pEpNVaKCR6E1AJ/8/BPkGAn+t6Cec/pkuvqOYA1H7dE/3afwic8sUE8wnnz0
-	D+GcvTfeig2oBamEEDdXLGoRFNYKnrN9X8ii2JKcW8+9OAdq8zIWNEic=
-X-Google-Smtp-Source: AGHT+IEbDj4X1qOn6/mM7rZmyNSgw/gA80oF4b/ios748ScLtAy65IDqJ3XE6BOQ17NyE3vsPFrvC9mj/znxzju28t4jxkOQlT8T
+	s=arc-20240116; t=1745770992; c=relaxed/simple;
+	bh=EIOPmxx/fF9h+f6rhelUy6/ZY96XIzB0YB+Bilpm+es=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G9D+qxdXisIQ/h+o9+zyus/SCTAqVMWEngvv2WWxzndQ2JTv6BcR5OZpmj9oJ/ybL1KVAyAqojB/K+w3lzxlrkBkmN+UDDd/uvkXiMltDvjTtx40EcVzQ8Vcx+8AH53MJ7FWqS+K6dWEtnKnzvCw6LydilmMYp49t5/WBQ1vu28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1u94mV-0001Ut-00; Sun, 27 Apr 2025 18:23:03 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id D6D1CC01A2; Sun, 27 Apr 2025 18:22:50 +0200 (CEST)
+Date: Sun, 27 Apr 2025 18:22:50 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+	Oleg Nesterov <oleg@redhat.com>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] MIPS: Fix MAX_REG_OFFSET and remove zero-length
+ struct member
+Message-ID: <aA5Z2izR-HKAdi99@alpha.franken.de>
+References: <20250417174712.69292-2-thorsten.blum@linux.dev>
+ <aAIF_kEFlOOVNDaE@alpha.franken.de>
+ <DAD22E95-6D33-43D5-B5E5-3A7B45A63944@linux.dev>
+ <alpine.DEB.2.21.2504181108170.18253@angie.orcam.me.uk>
+ <EC98BAE8-8269-4169-B3A2-5F426E77C223@linux.dev>
+ <alpine.DEB.2.21.2504181337350.18253@angie.orcam.me.uk>
+ <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6b06:b0:864:58a6:5916 with SMTP id
- ca18e2360f4ac-8645cd61441mr852292039f.10.1745770442467; Sun, 27 Apr 2025
- 09:14:02 -0700 (PDT)
-Date: Sun, 27 Apr 2025 09:14:02 -0700
-In-Reply-To: <20250427160341.70153-1-contact@arnaud-lcm.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680e57ca.050a0220.2b69d1.00e3.GAE@google.com>
-Subject: Re: [syzbot] [block?] BUG: unable to handle kernel NULL pointer
- dereference in guard_bio_eod
-From: syzbot <syzbot+3291296495fc970e4b1c@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, contact@arnaud-lcm.com, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B71034AC-B0FC-4C5F-8562-661D6AD11056@linux.dev>
 
-Hello,
+On Fri, Apr 18, 2025 at 03:38:36PM +0200, Thorsten Blum wrote:
+> Would it make sense to also change the register arrays 'mpl' and 'mtp'
+> from ULL to UL? ULL seems unnecessarily confusing to me.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-BUG: unable to handle kernel NULL pointer dereference in submit_bio_noacct
+no, ULL is correct. These registers are always 64bit independent whether
+CPU is in 32bit or 64bit mode.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
-Mem abort info:
-  ESR = 0x0000000096000006
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x06: level 2 translation fault
-Data abort info:
-  ISV = 0,
-  ISV = 0, ISS = 0x00000006, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-user pgtable: 4k pages, 52-bit VAs, pgdp=000000004592d480
-[0000000000000018] pgd=0800000046c2f403, p4d=0800000052289403, pud=080000005227c403, pmd=0000000000000000
-Internal error: Oops: 0000000096000006 [#1]  SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 3990 Comm: syz.1.17 Not tainted 6.15.0-rc3-syzkaller-g5bc1018675ec-dirty #0 PREEMPT 
-Hardware name: linux,dummy-virt (DT)
-pstate: 41402009 (nZcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-pc : bdev_get_queue include/linux/blkdev.h:951 [inline]
-pc : submit_bio_noacct+0x20/0x500 block/blk-core.c:780
-lr : submit_bio+0xa8/0x1e0 block/blk-core.c:916
-sp : ffff80008975b8a0
-x29: ffff80008975b8a0 x28: f8f0000003f32000 x27: ffff80008975b9e0
-x26: 0000000000000000 x25: ffff80008975b9c0 x24: 0000000000000000
-x23: 0000000000000000 x22: 0000000000000000 x21: ffffc1ffc044c900
-x20: 0000000000000000 x19: f8f0000003f32000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-x14: ffffc1ffc044c900 x13: 0000000000000000 x12: f8f0000003f32000
-x11: 0000000000000000 x10: fff000007f9ff330 x9 : 0000000000000002
-x8 : 00000000000000b0 x7 : f7f000000446467c x6 : f7f00000032e0c00
-x5 : f7f00000032e0c00 x4 : 0000000000000000 x3 : 0000000000000000
-x2 : 0000000000000078 x1 : 0000000000000000 x0 : 0000000000080000
-Call trace:
- submit_bio_noacct+0x20/0x500 block/blk-core.c:789 (P)
- submit_bio+0xa8/0x1e0 block/blk-core.c:916
- mpage_bio_submit_read fs/mpage.c:75 [inline]
- do_mpage_readpage+0x2d8/0x6dc fs/mpage.c:296
- mpage_readahead+0xcc/0x164 fs/mpage.c:371
- blkdev_readahead+0x18/0x24 block/fops.c:472
- read_pages+0x70/0x2b8 mm/readahead.c:160
- page_cache_ra_order+0x238/0x400 mm/readahead.c:515
- do_sync_mmap_readahead mm/filemap.c:3262 [inline]
- filemap_fault+0x444/0x924 mm/filemap.c:3403
- __do_fault+0x3c/0x21c mm/memory.c:5098
- do_shared_fault mm/memory.c:5582 [inline]
- do_fault mm/memory.c:5656 [inline]
- do_pte_missing mm/memory.c:4160 [inline]
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault+0xadc/0x1b00 mm/memory.c:6140
- handle_mm_fault+0x164/0x314 mm/memory.c:6309
- do_page_fault+0x118/0x688 arch/arm64/mm/fault.c:647
- do_translation_fault+0xac/0xbc arch/arm64/mm/fault.c:783
- do_mem_abort+0x44/0x94 arch/arm64/mm/fault.c:919
- el0_da+0x78/0xa8 arch/arm64/kernel/entry-common.c:604
- el0t_64_sync_handler+0xc4/0x138 arch/arm64/kernel/entry-common.c:765
- el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
-Code: aa0003f3 a9025bf5 f9400414 b9401000 (f9400e96) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	aa0003f3 	mov	x19, x0
-   4:	a9025bf5 	stp	x21, x22, [sp, #32]
-   8:	f9400414 	ldr	x20, [x0, #8]
-   c:	b9401000 	ldr	w0, [x0, #16]
-* 10:	f9400e96 	ldr	x22, [x20, #24] <-- trapping instruction
+Thomas.
 
-
-Tested on:
-
-commit:         5bc10186 Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11cd2374580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eb8161d1e10a2d09
-dashboard link: https://syzkaller.appspot.com/bug?extid=3291296495fc970e4b1c
-compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1625a368580000
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
