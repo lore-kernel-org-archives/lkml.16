@@ -1,38 +1,39 @@
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A135C24A07B;
-	Sun, 27 Apr 2025 09:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB481FF603;
+	Sun, 27 Apr 2025 09:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745745085; cv=none; b=Htm37DFWxyxkCWlFh7pgsTtRwUBH/J7G7KlzFxn6gNONCuDl3jQexEBBH2yc+xbpuKLy/BFYuEdQTdGMcwZSqxFaDy9I79eD5QgHglzSywiMSgfzUYZz65ZDu1lXDFyltOWbUY2VGXQYiAieUikYCOxWRNPEJEZEvkHx09fMnGs=
+	t=1745745086; cv=none; b=GW9Yvm01iCo6RZi9UJvgwOQlWti4UduGq3P+enTHMEO7okMnx3wVUcYPuMjxUlEyK/vzNEXezmvoELW9IjPOdfYUYzyWcEwWGBWqPAeth97io79Sj6MzSkWKN+9A2vjx3mfynLSJv/hqF7yIESHQci/6esQrJDuhoE/dacDowmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745745085; c=relaxed/simple;
-	bh=QdLkz9HIQwG0Lztr/8GKFq4ltt3zfOwpXgoolgkFwhw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LaCJZKlEXq9pBnWnFGi/NU1x6BtTx7XvtaXlJ7KvKo6OTgbsgn+K7YSNUEdWfaIDcBnGVIXgiyI5xb+6Z/mJ8Yj7niEHkPhEqQMMXG7n50Q9g35nqcNBp4ajorJEG3AKo/OOMU7sMOzcHO9H3Goy1NUMXf6/U8+VQ4Z+3lYGyPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=X8p3q0j+; arc=none smtp.client-ip=5.75.144.95
+	s=arc-20240116; t=1745745086; c=relaxed/simple;
+	bh=rLSKQ1asDTNhO5B/izUawAE1MMvNz5upM8rDt891q8s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rLGymCcHeeoawToirb0+jymUvJBfFT+1rH3duASedJIcvV28+rcX+UmelyiSWcC1Lv7Bbfl9+jd3MM7NJCkc95Sohiv0plsJcQtC1NH8gTM/6XRasdlI03kfDHVmmui7u0xlp2LHnbvDdkAfC7RSD9Qq+kgwkZclQMUkTSkEk/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=nDrEQXBM; arc=none smtp.client-ip=5.75.144.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="X8p3q0j+"
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="nDrEQXBM"
 Received: from [192.168.80.162] (254C2712.nat.pool.telekom.hu [37.76.39.18])
-	by mail.mainlining.org (Postfix) with ESMTPSA id DFCBBBBAC4;
-	Sun, 27 Apr 2025 09:11:14 +0000 (UTC)
+	by mail.mainlining.org (Postfix) with ESMTPSA id 144D9BBAD2;
+	Sun, 27 Apr 2025 09:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1745745075;
+	s=psm; t=1745745076;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fhWq+YLEhSYtuiJd7ME2LnrPPOIcmR8L3Aqjf8KIYI8=;
-	b=X8p3q0j+10RjfxkQH6cnTW076eux+Gjy0ds5Roe/C4y2nh63gEbwk8TdtqC1lXQWmslEC7
-	7Bybg5h0O1zHsyIgFyV2vGlPUozIQWq9wsZPxIi0WSax+nwYX3lJ8tZZkEBOaMZUIkNXwo
-	dJFx8MF8HfJe+8psN0luNU6ZLPx2xuk89Q/pC2XkqUE+PK/SygZPSDrpYm5sj0M5xDQaUh
-	QBUoGs63N0jHp/WcZkrLScLYRyjpQD9mqXMzIjqUF+PFfLZVQQgSEoUCUvwg3QL5LUgNfW
-	JL42eOgvwMxpEJMmcA4Ck7EyANNLTGdN2wCcquXQtNpeE4n60sFIpUnC8tjwog==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/17gyGjoNnK/er1nxCSklg7YJaA8S5f+P6ovINRH7sw=;
+	b=nDrEQXBMiec0ebUITRNj0RaslqCXA3wFUuVqJ8M7korG5FGVjDvw+9IGr9jYDNlKUQEE2z
+	ESjqAp/X599UAewQuwsWt6J2ilCSEQN2vLF8VczlDWV15LjtyNZpTEVGhurxXCH151b1II
+	iqxtkL6KbMN38qlz9ErJJTLVHcxMBccfzB+GLCcZsZ78xdsWFB/R3zpdOHBXS5xhHelgs2
+	G+Kn3HqGpGRRYc1XZwXmlzitRZdva7STY1/OV0o5UVFTZtBsS6o1mzEi6Ny72sv+JWmWqz
+	KcLW1fBwblleExGqzwBMpp2m/PfxN5tDCx2FN4Cge0oNlU8dyHqjeqwNFI3eaA==
 From: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
-Subject: [PATCH 0/2] BOE TD4320 panel
-Date: Sun, 27 Apr 2025 11:11:10 +0200
-Message-Id: <20250427-lavender-panel-v1-0-b2611674166c@mainlining.org>
+Date: Sun, 27 Apr 2025 11:11:11 +0200
+Subject: [PATCH 1/2] dt-bindings: display: panel: Add BOE TD4320
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAK70DWgC/x3MQQqAIBBA0avIrBN0sKCuEi1MxxoICwUJxLsnL
- d/i/wqZElOGRVRIVDjzHTv0IMCdNh4k2XcDKhyVwUletlD0lORjI10SgzbG4Oyc3qFHT6LA7z9
- ct9Y+HiDDzWAAAAA=
-X-Change-ID: 20250426-lavender-panel-2f144429cc1b
+Message-Id: <20250427-lavender-panel-v1-1-b2611674166c@mainlining.org>
+References: <20250427-lavender-panel-v1-0-b2611674166c@mainlining.org>
+In-Reply-To: <20250427-lavender-panel-v1-0-b2611674166c@mainlining.org>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, 
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -56,33 +56,84 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745745074; l=770;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745745074; l=1812;
  i=barnabas.czeman@mainlining.org; s=20240730; h=from:subject:message-id;
- bh=QdLkz9HIQwG0Lztr/8GKFq4ltt3zfOwpXgoolgkFwhw=;
- b=XTt+GUT7Xba1BsNgCZvGcr6f4GQDyvbIuUdFu8DvFjlqfiFJ/T3mcQv8pzSekP1GdyP2d/lSv
- fAg5U+LElu7B43PY2NoQ482JK5F3SArdI+Xqr2oluUrqho+qHo0BlqW
+ bh=rLSKQ1asDTNhO5B/izUawAE1MMvNz5upM8rDt891q8s=;
+ b=1W1wSCluk194NTWwwjo9qPc1ESUmyJvgoqt6BeNTBMfqeP/Q/Pd9unn+lX+RiNWV51J2YEIwQ
+ esfKvI9rxm6Dwrxy58hQcwWlTohdbB0oG9xT76WfLzgQLTXSle3Goim
 X-Developer-Key: i=barnabas.czeman@mainlining.org; a=ed25519;
  pk=TWUSIGgwW/Sn4xnX25nw+lszj1AT/A3bzkahn7EhOFc=
 
-Add driver for BOE TD4320 DSI panel, used in Xiaomi Redmi Note 7
-smartphones.
+Document BOE TD4320 6.3" 2340x1080 panel
+found in Xiaomi Redmi Note 7 smartphone.
 
 Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
 ---
-Barnabás Czémán (2):
-      dt-bindings: display: panel: Add BOE TD4320
-      drivers: gpu: drm: panel: Add BOE TD4320
+ .../bindings/display/panel/boe,td4320.yaml         | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
- .../bindings/display/panel/boe,td4320.yaml         |  55 +++++
- drivers/gpu/drm/panel/Kconfig                      |   9 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-boe-td4320.c           | 224 +++++++++++++++++++++
- 4 files changed, 289 insertions(+)
----
-base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-change-id: 20250426-lavender-panel-2f144429cc1b
+diff --git a/Documentation/devicetree/bindings/display/panel/boe,td4320.yaml b/Documentation/devicetree/bindings/display/panel/boe,td4320.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..65da1c392cafbb7cd3ce32e347fba1b9244c1ad8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/boe,td4320.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/boe,td4320.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BOE TD4320 MIPI-DSI panels
++
++maintainers:
++  - Barnabas Czeman <barnabas.czeman@mainlining.org>
++
++description:
++  BOE TD4320 6.3" 1080x2340 panel found in Xiaomi Redmi Note 7 smartphone.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: boe,td4320
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - reset-gpios
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "boe,td4320";
++            reg = <0>;
++            backlight = <&backlight>;
++            reset-gpios = <&tlmm 45 GPIO_ACTIVE_LOW>;
++
++            port {
++                panel_in: endpoint {
++                    remote-endpoint = <&dsi_out>;
++                };
++            };
++        };
++    };
++
++...
 
-Best regards,
 -- 
-Barnabás Czémán <barnabas.czeman@mainlining.org>
+2.49.0
 
