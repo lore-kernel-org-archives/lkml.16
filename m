@@ -1,73 +1,193 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 46DFF250C1B;
-	Sun, 27 Apr 2025 11:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08BF241665;
+	Sun, 27 Apr 2025 11:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745753745; cv=none; b=gQqJLHMjKL4dl1nX2n8DZUGJn6lK2hgmqCOznT+M6UlPYWfF4SzHG/vVm/rAbwTk1aDBcFNI5nEbGxEkwumbC6bEhVDpCa7fZsVONOrgFBkMTZpxCX62SWJaqvqvG8iBVU5suIoKLr+E/RMiZoH7tlpq6EmQirvZsNKDQxmDeeY=
+	t=1745754111; cv=none; b=K9qMRa9CYPzodKoWAQNqBUGoXETE1t5rCRcJdbvS2ziFglK/Fw8Ek8+UEpjGAFWHXo940St7X1lHtQTKpteCK83rovOTMJdjvmvfQNH4SQTkx2H/bep8noJD5pKNk3tl9uTPs93AnE1dMkAfRJJKGY5CWIq112YjtMiRXKhp/2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745753745; c=relaxed/simple;
-	bh=zxQTEz/XdBY5l0leyKw4SwbwYncF+kiPd4MampvnMsw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=J5pQaQJAITCkp6T2pGWjeMwqI0eWhaRkuGZiy6AxjjJtVh6Hg/oqzfXWaRc+rLFmeqBcSFJO4qdkPVEOkGbH0DtNpvQ7JPioDDfcGfs8/jWPcBJIT5qLUbPuCXhmuUL34q9MMe3N96fQiby86XawcYwMf3F6zLoriHELuNIF5pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id EB8556019643E;
-	Sun, 27 Apr 2025 19:35:38 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: jstultz@google.com,
-	tglx@linutronix.de,
-	sboyd@kernel.org
-Cc: Su Hui <suhui@nfschina.com>,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2 2/3] alarmtimer: remove dead return value in clock2alarm()
-Date: Sun, 27 Apr 2025 19:35:29 +0800
-Message-Id: <20250427113529.1473800-3-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20250427113529.1473800-1-suhui@nfschina.com>
+	s=arc-20240116; t=1745754111; c=relaxed/simple;
+	bh=+cqCkaeUWEl0iWYWRdN72D7ckuS7/Zv++x0oh64L6GE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NTJJqGqt/5Sl8tG/hnoysHBlAnK2UijGTvX2HFsHJSFcVj9ldEefsRwkc7g3JtZl5tGRorXFDM8wP6FBNHA7HZlQDoOo8ZuxSam/nxUY3U5dhRPmaB6EEMKfZQx/hKG0OU3/1FTJ0zaKqt2NFTyFUPlDNX0QEqu6xnZTRR6akDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISVZbkAq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISVZbkAq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28C4DC4CEE3;
+	Sun, 27 Apr 2025 11:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745754110;
+	bh=+cqCkaeUWEl0iWYWRdN72D7ckuS7/Zv++x0oh64L6GE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ISVZbkAqga2zsQRxAAwXARS92uVIyf1aoZksGM02qRne9+xqmEHGbe0UY+jU5A3X8
+	 Duwhz/y/pj+O2uYlW+/CYtkoLdX1+dfZMMZhfNwVMt8Xpq8p7MfThlzj5V5H0Nz+kj
+	 QcgGND0ZbWrrxPPzgf2JVttaSn+h8fxT5dY/0DS2nX1nQkwQ6KEVkewXkObzNW7ujY
+	 Xy9upVmzQuuIvOoUeZvkEEozzAfcHf1HsmLtqxtu/ei8+ZLm28pr+PpQvDx+Uaii/Z
+	 QgtjVLgz5IOxKIb164sqM8oNP8QsaVAhMmoPKGAZJYuBHWe/N1aLxK3IlQdj4Wy+3a
+	 XLhFyg9jld0xw==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c2dc6c30c2so1066188fac.2;
+        Sun, 27 Apr 2025 04:41:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ5riA+642j8J4BPAO5c7aqdFL+yjIjVaQ8MW2EjVEq2P8dMfF2gdD4nodU2a65IWOGOnGJ7ebdDd8LpQ=@vger.kernel.org, AJvYcCXTRW5nmFkI4isR1iIbc2priDR9cocdp/1XbhFBXsVjY+NRyZhY1P2EOYm0IBTlBWaQ+4e8WBoUHdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/uP8rj9RGPNKVBLr56G0hAMAy8YDRBjSRMTpGZtFawKqudJ+v
+	X1b7t/6lL0AXUQ78VBYQ5O1Iryz9h9Jbjq3eAjhRdENrX5Sd/hWPGzDnyFxxu7791T4VWU+DzEC
+	haXVZQvOBtMFRKjFAWzh1mHSniWs=
+X-Google-Smtp-Source: AGHT+IHVHE3tASPIO1AlswjYgOJkqDBPbXr3vHFZYgQyalO2yDAxBDhdKxdKj/IkkDVwexBCyedCydSNdmtayuoY6nE=
+X-Received: by 2002:a05:6870:911f:b0:2d5:ba2d:80da with SMTP id
+ 586e51a60fabf-2d99de8afd2mr4571552fac.36.1745754109465; Sun, 27 Apr 2025
+ 04:41:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <5896780.DvuYhMxLoT@rjwysocki.net> <2fd8c27d-7206-4af6-b30b-d8f786827d94@huawei.com>
+In-Reply-To: <2fd8c27d-7206-4af6-b30b-d8f786827d94@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sun, 27 Apr 2025 13:41:36 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hTbdTaos9gc8ubPNdjq+K-pBwYpAvT8Rm887EZpSm1bw@mail.gmail.com>
+X-Gm-Features: ATxdqUGvVQEYb8hwUdHjADdXcKmp7kg_WG1uRPDY-zHoEe5H8iE1RC5O9dPDels
+Message-ID: <CAJZ5v0hTbdTaos9gc8ubPNdjq+K-pBwYpAvT8Rm887EZpSm1bw@mail.gmail.com>
+Subject: Re: [PATCH v2] cpufreq: Fix setting policy limits when frequency
+ tables are used
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	Christian Loehle <christian.loehle@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Sultan Alsawaf <sultan@kerneltoast.com>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-'clockid' only can be ALARM_REALTIME and ALARM_BOOTTIME. It's impossible
-to return -1 and callers never check the value of -1.
+On Sun, Apr 27, 2025 at 4:26=E2=80=AFAM zhenglifeng (A) <zhenglifeng1@huawe=
+i.com> wrote:
+>
+> On 2025/4/25 19:36, Rafael J. Wysocki wrote:
+>
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Commit 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and
+> > policy->max") overlooked the fact that policy->min and policy->max were
+> > accessed directly in cpufreq_frequency_table_target() and in the
+> > functions called by it.  Consequently, the changes made by that commit
+> > led to problems with setting policy limits.
+> >
+> > Address this by passing the target frequency limits to __resolve_freq()
+> > and cpufreq_frequency_table_target() and propagating them to the
+> > functions called by the latter.
+> >
+> > Fixes: 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and=
+ policy->max")
+> > Link: https://lore.kernel.org/linux-pm/aAplED3IA_J0eZN0@linaro.org/
+> > Reported-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > The v1 is here: https://lore.kernel.org/linux-pm/12665363.O9o76ZdvQC@rj=
+wysocki.net/
+> >
+> > v1 -> v2:
+> >    * Do clamp_val(target_freq, min, max) before checking freq_table aga=
+inst
+> >      NULL in __resolve_freq().
+> >    * Update comment in cpufreq_frequency_table_target() to match the ne=
+w code.
+> >
+> > ---
+> >  drivers/cpufreq/cpufreq.c          |   22 ++++++---
+> >  drivers/cpufreq/cpufreq_ondemand.c |    3 -
+> >  drivers/cpufreq/freq_table.c       |    6 +-
+> >  include/linux/cpufreq.h            |   83 ++++++++++++++++++++++++----=
+---------
+> >  4 files changed, 73 insertions(+), 41 deletions(-)
+> >
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -491,14 +491,18 @@
+> >  EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
+> >
+> >  static unsigned int __resolve_freq(struct cpufreq_policy *policy,
+> > -             unsigned int target_freq, unsigned int relation)
+> > +                                unsigned int target_freq,
+> > +                                unsigned int min, unsigned int max,
+> > +                                unsigned int relation)
+> >  {
+> >       unsigned int idx;
+> >
+> > +     target_freq =3D clamp_val(target_freq, min, max);
+> > +
+> >       if (!policy->freq_table)
+> >               return target_freq;
+> >
+> > -     idx =3D cpufreq_frequency_table_target(policy, target_freq, relat=
+ion);
+> > +     idx =3D cpufreq_frequency_table_target(policy, target_freq, min, =
+max, relation);
+> >       policy->cached_resolved_idx =3D idx;
+> >       policy->cached_target_freq =3D target_freq;
+> >       return policy->freq_table[idx].frequency;
+> > @@ -532,8 +536,7 @@
+> >       if (unlikely(min > max))
+> >               min =3D max;
+> >
+> > -     return __resolve_freq(policy, clamp_val(target_freq, min, max),
+> > -                           CPUFREQ_RELATION_LE);
+> > +     return __resolve_freq(policy, target_freq, min, max, CPUFREQ_RELA=
+TION_LE);
+> >  }
+> >  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+> >
+> > @@ -2351,8 +2354,8 @@
+> >       if (cpufreq_disabled())
+> >               return -ENODEV;
+> >
+> > -     target_freq =3D clamp_val(target_freq, policy->min, policy->max);
+> > -     target_freq =3D __resolve_freq(policy, target_freq, relation);
+> > +     target_freq =3D __resolve_freq(policy, target_freq, policy->min,
+> > +                                  policy->max, relation);
+> >
+> >       pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kH=
+z\n",
+> >                policy->cpu, target_freq, relation, old_target_freq);
+> > @@ -2650,8 +2653,11 @@
+> >        * compiler optimizations around them because they may be accesse=
+d
+> >        * concurrently by cpufreq_driver_resolve_freq() during the updat=
+e.
+> >        */
+> > -     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUF=
+REQ_RELATION_H));
+> > -     new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ_REL=
+ATION_L);
+> > +     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max,
+> > +                                            new_data.min, new_data.max=
+,
+> > +                                            CPUFREQ_RELATION_H));
+> > +     new_data.min =3D __resolve_freq(policy, new_data.min, new_data.mi=
+n,
+> > +                                   new_data.max, CPUFREQ_RELATION_L);
+> >       WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max =
+: new_data.min);
+>
+> It might be better like:
+>
+> -       WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUF=
+REQ_RELATION_H));
+> -       new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ_REL=
+ATION_L);
+> -       WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max =
+: new_data.min);
+> +       WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max,
+> +                                              new_data.min, new_data.max=
+,
+> +                                              CPUFREQ_RELATION_H));
+> +       WRITE_ONCE(policy->min, __resolve_freq(policy, new_data.min,
+> +                                              new_data.min, policy->max,
+> +                                              CPUFREQ_RELATION_L));
+>
 
-Only alarm_clock_get_timespec(), alarm_clock_get_ktime(),
-alarm_timer_create() and alarm_timer_nsleep() call clock2alarm(). These
-callers using clockid_to_kclock() to get 'struct k_clock', this ensures
-clock2alarm() never returns -1.
-
-Signed-off-by: Su Hui <suhui@nfschina.com>
----
-v2:
- - No Change.
- kernel/time/alarmtimer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 0ddccdff119a..e5450a77ada9 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -515,9 +515,9 @@ static enum alarmtimer_type clock2alarm(clockid_t clockid)
- {
- 	if (clockid == CLOCK_REALTIME_ALARM)
- 		return ALARM_REALTIME;
--	if (clockid == CLOCK_BOOTTIME_ALARM)
--		return ALARM_BOOTTIME;
--	return -1;
-+
-+	/* CLOCK_BOOTTIME_ALARM case */
-+	return ALARM_BOOTTIME;
- }
- 
- /**
--- 
-2.30.2
-
+Not really because policy->max may be less than new_data.min at this
+point AFAICS.
