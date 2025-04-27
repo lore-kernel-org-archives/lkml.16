@@ -1,116 +1,110 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E0C33EA
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 00:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2D523AD;
+	Sun, 27 Apr 2025 00:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745712202; cv=none; b=oKLYqa/B37K6rz0KNzaMowtDqhJ495p+UzzFr2+4kiA3X1mLACgf0KnOzx6t9bCxMoRQ7pQZV7GnY1XLkJjzumfN6lVt39WvqeyXFWWqls+nXei2WQ7/SP80hqKjCmmzpXMiu7nS9xuyZXjJt+yvb7Mp5PGg9Xxn+ayYoj1Vcvk=
+	t=1745712485; cv=none; b=EKXwIO+CKAVUDriUry4ncr55EVET8vJUhuXePMd9DTKZeg8CfHBLeT2IxIlCEuWMOUbhkrnDrWLLqBynao+BquGARDBYeMHDHRpsabFYCw8x/EkOUBR6hpu3Oy8Drt7IxRrH6JrvuM5uLyU2kD0LDHmjN8JkUInXxpKeEuueEIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745712202; c=relaxed/simple;
-	bh=3SfQbIv4OvLq6P21nmEpbcGExFkyFSCw89XsCc7aY2Y=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=dzA3nbggHUwN8gqC24TzbXiR6X32UhYhvqT/zzqm3OU8ND9SJ89btJ+OFng2IJPe14Mjf+yhjSkyQjKy0qPDW30m7X+nmgu5MU7SkKa90ftJ5+auDZjRfnBTWRcJL9ELcxCaozJxheDRTBowmFCAdZX1wf4JbVmmIb4KzQTc2SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=GUyFr7K2; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745712485; c=relaxed/simple;
+	bh=wjfCCLlYwZmCYTqqiEjtNJ6/c6Tb+wztP3xDkbSqKdw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TXQ5fNpdU7gTQr73Le04HkI55yB60Tmov/y+39Fb2cRJd0Y5WXuWHko8I0HOXvwjHTGPmqaa814bWKC98gT4lglb/m3cdnqTzZSBuCS4eeByEiDCW0bB0yrXpw9AvnBPNfzRoxUWI+8oihVo5qoULgI90WO+EzwarHC/rFRBw9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aetFolDD; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GUyFr7K2"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53R02fAD1021270
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 26 Apr 2025 17:02:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53R02fAD1021270
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745712163;
-	bh=jlk0WySUzgwBSqt89FwWE6HuFZFIM3PirCQAzgIEfcA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=GUyFr7K2Ifwtz4UyT6aZbS1skxkjefr619W1KEmSvlIYIusEr8s2C5D/56D1S/gaj
-	 5TIg5JaG2cI23TADG/Bsd+kXCKGboPeBrpMjXmOtBC0A/41RaH+c8Dp5bjiIZT9zr7
-	 4JGSVevyBY0e+wYSYf2+bharQF9IOMt9JRGOYXsi1GFL+LCkjoNrZwcocIy66HQz37
-	 9qZ8STeOk05F+fX/1GmMUejEYb4soCu0SkgLOdQRJe2GhWq+ZTPfr9xuib8WfJZRWv
-	 lod+D8/4hNBdCeO1yair463GuclnA5ooNhp2eVTr2xpsX1fF40aHLA7M92L4ghUwlQ
-	 bYOdRku2zWt7Q==
-Date: Sat, 26 Apr 2025 17:02:41 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-CC: Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-        Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] [RFC] x86/cpu: rework instruction set selection
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
-References: <20250425141740.734030-1-arnd@kernel.org> <aAyiganPp_UsNlnZ@gmail.com> <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com> <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com> <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
-Message-ID: <F6CAB3B2-B8CB-4A66-AF4A-B2CD3767BE04@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aetFolDD"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476ae781d21so41496201cf.3;
+        Sat, 26 Apr 2025 17:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745712483; x=1746317283; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCT/HRgqINzLY7CNRmoeSWmRK0EmClZ132m+Jd5dekw=;
+        b=aetFolDDcFDNAiJwkUZQqxIloKVF0KnKh9PZ7g7703AQSkbvy4jc+fii57eQpOMKGL
+         nGmxTuRrH80KyMO1ItiXmKSLV0/eH+O6Tf0f072LHt8FmrRx4MHRK3gNTIciKYcNEGeE
+         P6q22FTkeQBSwdSDb0Rmkj/qyZJQQQmrRVX10LEAuGGy/jidKXJUhJtAb3Kfo1r9p3dI
+         1gA1+O+I+kUGcv5svYgybduswTFazni+ui+viZL9HyYyoQ1tIZGSpKhUW0yvVBzxvw8k
+         O40/sIqvkjUl2LKW64DE2Wj74syBWevKcH666h+376p2Nw/yjdHGDD1qk9bW6V8egzY8
+         gqqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745712483; x=1746317283;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RCT/HRgqINzLY7CNRmoeSWmRK0EmClZ132m+Jd5dekw=;
+        b=Q6VwWbv7UyYAbl6wCnhtweuy3LmoroH2ayM5LhKaDK9FeJfwG6bFki+aD59nboD37q
+         5vptBUGKq4WtNqV+WjeCwjoNrOcwsr+z/oRan0hLvqguOeTY6+KO1RpeZWfu0zj5hsiW
+         JIsTVEOCc05Kv9fJjrIcYLCtlPwRAANAPhC/IU4ALo+ngu5H74Vyt3CB5HIOVfe66HkK
+         /uh2aVs1RbwrmVknLFfZI0v9zeUodRfJW6aM9ycoC1Pz/SevLWH8x9Jbw/0Amvv/MI5n
+         GODfhLeFeEyhSyREpzV5xdlUDf13fT+ss0e9NUXagWR1cBjt/FTPto9MPkitMyCmp0y2
+         yKVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYve9UnsL0q4nY2vhsGNSoEQs3sEYVSFWaWfvGzveyZrsXQvWhwx2VU68J9VCjWO+7OTIluIXoz2lTKpvF@vger.kernel.org, AJvYcCV7rErHIsVTzb1dvtSzXSDB8ZPFdD1I6SYIZCKWgqrFyh0z6OMimpCEYgvtclTXTXaZzA6Tt9S1oEm5WRzbAi4=@vger.kernel.org, AJvYcCVyg7MtqnNxGZLD68kQ8TuXD+hKIta57yfG7YWFb1bnIXL5NN3XWf/+Dd4+iM+KdqNZuPNM2C6RhrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE8mF2hx1CfaHUEwcthV3Ugsy5LiFBeM3sSg79W0IWtJ4ZBOjf
+	Iy5FDKwUclzXZwZ8uVfLFXJvfXrsaIau3kboDElgH6XylMemtC6+SPCiNJiD
+X-Gm-Gg: ASbGncsF3SPnlhxdVqJQ0Bv6WmCyYS/yrv8nrw8VlY4gGM+LyR0757v61SRNBrJz9QB
+	zXsEbRudOyfvc4QvJsizm0t0wGTyaEWL0GELAUvQqYQn91QQf07L5OSj2xWcNHtT5WCaneWAnKk
+	hVPHEiOe2psg5nOgO4hbSfTBkWhiTxHwcr26vUhuLPiPyis+6B/xNLL3InrTT+x6fl6S1BAF2Hk
+	sEbDTa5B3k71QvT3PfYFDa32Jc6Hr07RerpzU90O1J0zZM8CqW6cYmYoC3T+bPxF3FmcDtXNMy4
+	arK2jQNTdMmK5siBt3w/7YPJRV6PZndb4Z+7CxVd46ettkqKaWix8gaYAG1dF4cE
+X-Google-Smtp-Source: AGHT+IGJRjTpMxSkNOT4b/hu4ZKYONDwvEUcE81889nOKyIcHfYOkBgTJk5UAGkzu0u6JlnnrSv6cw==
+X-Received: by 2002:ad4:5f0b:0:b0:6e4:3ddc:5d33 with SMTP id 6a1803df08f44-6f4d1efe8abmr89438496d6.13.1745712482754;
+        Sat, 26 Apr 2025 17:08:02 -0700 (PDT)
+Received: from localhost.localdomain ([142.113.95.30])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0ad455asm39529296d6.122.2025.04.26.17.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 17:08:02 -0700 (PDT)
+From: Ann Yun <by.ann.yun@gmail.com>
+To: jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi,
+	shorne@gmail.com
+Cc: corbet@lwn.net,
+	linux-openrisc@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ann Yun <by.ann.yun@gmail.com>
+Subject: [PATCH v3] Documentation:openrisc: Add build instructions with initramfs
+Date: Sat, 26 Apr 2025 20:07:26 -0400
+Message-Id: <20250427000726.17015-1-by.ann.yun@gmail.com>
+X-Mailer: git-send-email 2.37.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On April 26, 2025 12:55:13 PM PDT, Linus Torvalds <torvalds@linux-foundatio=
-n=2Eorg> wrote:
->On Sat, 26 Apr 2025 at 12:24, Linus Torvalds
-><torvalds@linux-foundation=2Eorg> wrote:
->>
->> (And yes, one use in a x86 header file that is pretty questionable
->> too: I think the reason for the cmov is actually i486-only behavior
->> and we could probably unify the 32-bit and 64-bit implementation)
->
->Actually, what we *should* do is to remove that manual use of 'cmov'
->entirely - even if we decide that yes, that undefined zero case is
->actually real=2E
->
->We should probably change it to use CC_SET(), and the compiler will do
->a much better job - and probably never use cmov anyway=2E
->
->And yes, that will generate worse code if you have an old compiler
->that doesn't do ASM_FLAG_OUTPUTS, but hey, that's true in general=2E If
->you want good code, you need a good compiler=2E
->
->And clang needs to learn the CC_SET() pattern anyway=2E
->
->So I think that manual cmov pattern for x86-32 should be replaced with
->
->        bool zero;
->
->        asm("bsfl %[in],%[out]"
->            CC_SET(z)
->            : CC_OUT(z) (zero),
->              [out]"=3Dr" (r)
->            : [in] "rm" (x));
->
->        return zero ? 0 : r+1;
->
->instead (that's ffs(), and fls() would need the same thing except with
->bsrl insteadm, of course)=2E
->
->I bet that would actually improve code generation=2E
->
->And I also bet it doesn't actually matter, of course=2E
->
->           Linus
+Mention how to include initramfs when building the kernel and
+direct the reader to ramfs-rootfs-initramfs.rst documentation for more
+details
 
-It is unfortunate, if understandable, that we ended up using a convention =
-other than what ended up becoming standard=2E (Return the size in bits if t=
-he input is 0=2E)
+Signed-off-by: Ann Yun <by.ann.yun@gmail.com>
+---
+V2 -> V3: Fix the styling error (trailing whitespace)
+V1 -> V2: Mention Documentation/filesystems/ramfs-rootfs-initramfs.rst
 
-This would let us use __builtin_ctz() > tzcnt which I believe is always in=
-line on x86, and probably would help several other architectures too=2E
+ Documentation/arch/openrisc/openrisc_port.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-How much of a pain would it really be to fix this interface?
+diff --git a/Documentation/arch/openrisc/openrisc_port.rst b/Documentation/arch/openrisc/openrisc_port.rst
+index a8f307a3b499..60b0a9e51d70 100644
+--- a/Documentation/arch/openrisc/openrisc_port.rst
++++ b/Documentation/arch/openrisc/openrisc_port.rst
+@@ -40,6 +40,12 @@ Build the Linux kernel as usual::
+ 	make ARCH=openrisc CROSS_COMPILE="or1k-linux-" defconfig
+ 	make ARCH=openrisc CROSS_COMPILE="or1k-linux-"
+ 
++If you want to embed initramfs in the kernel, also pass ``CONFIG_INITRAMFS_SOURCE``. For example::
++
++	make ARCH=openrisc CROSS_COMPILE="or1k-linux-" CONFIG_INITRAMFS_SOURCE="path/to/rootfs path/to/devnodes"
++
++For more information on this, please check Documentation/filesystems/ramfs-rootfs-initramfs.rst.
++
+ 3) Running on FPGA (optional)
+ 
+ The OpenRISC community typically uses FuseSoC to manage building and programming
+-- 
+2.37.2
+
