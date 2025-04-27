@@ -1,262 +1,174 @@
-Received: from mail-vk1-f228.google.com (mail-vk1-f228.google.com [209.85.221.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F420A228CB0
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 04:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8833FD
+	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 05:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745729899; cv=none; b=W0eko2g4V4j+OouYg6IxfXarb/st9GhMv2441cKpV0oeLaT/T2IsYiC03anblWhDSI5a4p0rR75p6w49T7rFhyA7AM0HYj9cMpz5nT0zDQF2TTnkizzwwdiOxo4au9jgjYD0yRYI9/kxxwaHd+iYFK3OcB4CZvoVCmYAxYj1X00=
+	t=1745730878; cv=none; b=Dhdn3M70XZEY6IguXdKgAvYwXzGjkmrI9zIqaD2hPCVa7uqLgv07uNQhvx1UvT13ucE7OD9KUEBQ+iCug3jbHZ9HH3hYAajQlccqdx/fmDQYdJbd3YombL9qinPcZsHBdYn4w0nZSd+D/YSR4LNbmSCxbWLAYdjnhNOTV12a8Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745729899; c=relaxed/simple;
-	bh=Yddx/b/XLifFgaO7M9pcSF5tFH4TSSpS5U9UUhl2Gro=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BKjzzWidUdfdWj6AnrQXOZ+drF8zmAADHaAkboDXVndykV29ntopiqMJHxN8S16+yi6jLgIpGiK+yD1+htfqElAP6LgYlUuBJ6UOc8D55kFyzRwKyJtBalTGQoC4V18fyH2ch+y1V4JhIZTfVvyV/kF7fIdTA+jMqy3mK4ohHR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=JTy8hNJz; arc=none smtp.client-ip=209.85.221.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1745730878; c=relaxed/simple;
+	bh=jkBLzN2drb+fa2jLDURCQoV3/FrHTdVbdplP8s7EN14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GE6Njw/ybIH+MXa3rs7s/IWkWabMJI+rxgJDDGSrr1PyH5FZqB5Eac3clYbCOWvs7lj3wSUsirghngcw5QHFcOhLWibzmR4cff2S1I6mv3LI46AmRubr5GULQxvj6xOH2TSaWuqLifVWOosBssZj5c39C+dvXPqb8+BeRUTvoAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k4I025Hw; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="JTy8hNJz"
-Received: by mail-vk1-f228.google.com with SMTP id 71dfb90a1353d-5245e9a0628so103813e0c.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Apr 2025 21:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745729896; x=1746334696; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ytSjcOrjW6yVMNgL4en3Ee4QjHFYgZn3+Z4PMl0t05Q=;
-        b=JTy8hNJziupGwXHlgIimOajX+ysYZmC9dQVCo0/sR7Tj677WK2Ss9TQ9XsC8LxswAl
-         axF7TweLvfVcknhmnTn6d2AtkRYK9lIGmZHN7qaf7v3RNkWAOo82Ja6z5dVrf5LaOoz1
-         gdxVNkC5BXwcBYwBVt6sQwj/curcz95DASrL2bgG+DhT+M+LUA3PDRdbhABimLiqx3di
-         B0tYmDZ15jXFrMHNSMZMJAb4MRWk51anlb+IVKuXoVEqmjVpzDVUXAvIHEpbKAT+dbi6
-         7rxuEh/ivwD3SU/lXcZrqFow3xEC7dQPRCsp+Oeo3uywCAonl6kSPmRiUOUMYegiLTB6
-         nPeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745729896; x=1746334696;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ytSjcOrjW6yVMNgL4en3Ee4QjHFYgZn3+Z4PMl0t05Q=;
-        b=ll9bhJa6HpmuPuQYGyEq7LV75fkwJNiAHHKGplmnMGODre3ljvGcvXRBCe/AyHMyif
-         rtVwpA7MwitTIodjLN0PLgjWXmUZpnOu/gQLA1oiGk0xgguLlLHr9iF35YaXm2gneWY+
-         r1W00DYh+YRJV9LIHEOw43hkEmnttp0hKFW4BRy6B3G702/M1+ql+6VCnl30z7X/DH7d
-         l/LjM0ZP0Cy9sJtGOY7JuZQNs/VKMovToMuhQ+K5pE+MJu17cmMxdsEV2ykH6Bjz9bqd
-         nutTdaLfiM9nMoe1jsjoXRbJH4A0DNbzXOPypjnvZqKdbqII35BReQQVXbtzBFgYLKvG
-         HO+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXpxyr1i5xjYJTd0tqG5TDl8JtjvAz2OYCr+cEjLqXIN2X+wWt443w8w2Br53jQShLDZjT35AvuJ2bZots=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5RVVwLIm3Gty6guWQ3aLFOUIYrx+N5vNbq7GTQbGjg5MfmzBc
-	5QAu1d5G8Z4uDIsWA7MxD+WFItHizqHqE8umrWFRHyxTAF1usFy/2epVIbO0e8RUPXXEGqkV+Sr
-	HjXfo6Ynv+RUO+6lETjx5PLGt7Y9T90m+UVTHEQSeYGxBgkz3
-X-Gm-Gg: ASbGncvVu6FJkcgNfZfVmaEYrGbtKuIxr22f82MBxl4RBrZ5drTomgg+ksFzQJKXpKR
-	9YMYvnP9g1VTlg6w8E8rmH962E0/0WqXEFiDy9vh4Dey2Gz+7/gv9pd/4eml/JSrZhJ6qows6jS
-	SOuaHHhWHKqQFGLUfKTNxJtwq96QfJ7jSaUEf22H8xsmJmdbhspIJMAG3yDvbxuYa0IhYZ6iZr8
-	YNmiaUgxQgWcExUiArlSZOsNkWGt56lmC6bpMTkOAiNmMTyyhl+qVFnyT+YKYMjj/5q8reGbswE
-	pCWD2l4Ly7tQYP5K3StkKxN2aSN5iA==
-X-Google-Smtp-Source: AGHT+IHoLpNHmupUBvpZTdwrVhBb64jDbVe8o7JFOrNypTGplRppNwOstdfnmpLrihKVCgFjc8cg5G+8seE6
-X-Received: by 2002:ac5:cde4:0:b0:523:e1cf:5aef with SMTP id 71dfb90a1353d-52a89eb065fmr1612097e0c.2.1745729895693;
-        Sat, 26 Apr 2025 21:58:15 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 71dfb90a1353d-52a9924306dsm341210e0c.5.2025.04.26.21.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 21:58:15 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 9A18A340615;
-	Sat, 26 Apr 2025 22:58:14 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 97946E40C3E; Sat, 26 Apr 2025 22:58:14 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Uday Shankar <ushankar@purestorage.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 8/8] ublk: store request pointer in ublk_io
-Date: Sat, 26 Apr 2025 22:58:03 -0600
-Message-ID: <20250427045803.772972-9-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250427045803.772972-1-csander@purestorage.com>
-References: <20250427045803.772972-1-csander@purestorage.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k4I025Hw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745730877; x=1777266877;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jkBLzN2drb+fa2jLDURCQoV3/FrHTdVbdplP8s7EN14=;
+  b=k4I025Hwq9gzeVbOyMeh0LxgGg/6IUBkRKBSYym8lQlsIjeGNTmO3dJy
+   PIAqMtxIJbz9EAi9L77A5cixBEi/E5+rQ8w2n9Yz0d8zODXBVI8X74Yyl
+   C70e+Rmuv6qlj+5wzOEiePZXuhbD2JgoRpmu30XMdo4ldH+u/shTzspmt
+   wAD1OPG9HhSBsBZMep590yJafOLBQMHPhdJAAbxWQLTVbo4Q+x867EI9s
+   /zKPWRhTika5LU0P693N17EP3Lh3Fdvi+qDX1ayxT4CDFwULR6LK8igzz
+   zgZLH8uD40gy7yqB9XmzHndI/IFH2KONwtcEJeNN/J0H0aEvfCapFZlKJ
+   w==;
+X-CSE-ConnectionGUID: l96kE1c+S/iStj01sg/mCA==
+X-CSE-MsgGUID: i0vuRK/KQX6Zzy16KVsH5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11415"; a="34956138"
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="34956138"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 22:14:36 -0700
+X-CSE-ConnectionGUID: 4+peumw0T/SilcU3U+0Ezg==
+X-CSE-MsgGUID: IGh30APlRTq38v9Kp8sAgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,243,1739865600"; 
+   d="scan'208";a="133758639"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 22:14:33 -0700
+Message-ID: <8373789b-929e-4ad9-ab0b-6ec620719a7e@linux.intel.com>
+Date: Sun, 27 Apr 2025 13:10:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] iommu/vt-d: Simplify domain_attach_iommu()
+To: Dan Williams <dan.j.williams@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250423031020.2189546-1-baolu.lu@linux.intel.com>
+ <20250423031020.2189546-4-baolu.lu@linux.intel.com>
+ <680bd94098249_1d522945b@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <680bd94098249_1d522945b@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-A ublk_io is converted to a request in several places in the I/O path by
-looking up the (qid, tag) on the ublk device's tagset. This involves a
-bunch of pointer dereferences and a bounds check of the tag.
+On 4/26/25 02:49, Dan Williams wrote:
+> Lu Baolu wrote:
+>> Use the __free(kfree) attribute with kzalloc() to automatically handle
+>> the freeing of the allocated struct iommu_domain_info on error or early
+>> exit paths, eliminating the need for explicit kfree() calls in error
+>> handling branches.
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c | 29 ++++++++---------------------
+>>   1 file changed, 8 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index 3a9ea0ad2cd3..12382c85495f 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -1337,13 +1337,14 @@ static bool first_level_by_default(struct intel_iommu *iommu)
+>>   
+>>   int domain_attach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
+>>   {
+>> -	struct iommu_domain_info *info, *curr;
+>> -	int num, ret = -ENOSPC;
+>> +	struct iommu_domain_info *curr;
+>> +	int num;
+>>   
+>>   	if (domain->domain.type == IOMMU_DOMAIN_SVA)
+>>   		return 0;
+>>   
+>> -	info = kzalloc(sizeof(*info), GFP_KERNEL);
+>> +	struct iommu_domain_info *info __free(kfree) =
+>> +		kzalloc(sizeof(*info), GFP_KERNEL);
+>>   	if (!info)
+>>   		return -ENOMEM;
+>>   
+>> @@ -1351,34 +1352,20 @@ int domain_attach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
+> [..]
+>> -err_clear:
+>> -	ida_free(&iommu->domain_ida, info->did);
+>> -err_unlock:
+>> -	kfree(info);
+>> -	return ret;
+>> +	return xa_err(xa_store(&domain->iommu_array, iommu->seq_id,
+>> +			       no_free_ptr(info), GFP_KERNEL));
+>>   }
+> 
+> This pattern looks like it wants a "xa_store_or_{reset,kfree}()" helper that
+> handles both canceling a scope based cleanup and taking responsibility for
+> error-exit-freeing @info in one statement.
+> 
+> I.e. this is similar to a:
+> 
+> 	"return devm_add_action_or_reset(..., no_free_ptr(obj), ...)"
+> 
+> ...pattern.
+> 
 
-To make this conversion cheaper, store the request pointer in ublk_io.
-Overlap this storage with the io_uring_cmd pointer. This is safe because
-the io_uring_cmd pointer is only valid if UBLK_IO_FLAG_ACTIVE is set on
-the ublk_io, the request pointer is valid if UBLK_IO_FLAG_OWNED_BY_SRV,
-and these flags are mutually exclusive.
+Yes. Perhaps adding a xa_store variant would be beneficial in all
+places that require this pattern.
 
-Suggested-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- drivers/block/ublk_drv.c | 43 ++++++++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+Something like this?
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 2296fa677d0d..c69c234adb4e 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -140,11 +140,16 @@ struct ublk_io {
- 	/* userspace buffer address from io cmd */
- 	__u64	addr;
- 	unsigned int flags;
- 	int res;
- 
--	struct io_uring_cmd *cmd;
-+	union {
-+		/* valid if UBLK_IO_FLAG_ACTIVE is set */
-+		struct io_uring_cmd *cmd;
-+		/* valid if UBLK_IO_FLAG_OWNED_BY_SRV is set */
-+		struct request *req;
-+	};
- };
- 
- struct ublk_queue {
- 	int q_id;
- 	int q_depth;
-@@ -1123,24 +1128,29 @@ static void ublk_complete_rq(struct kref *ref)
- 	struct request *req = blk_mq_rq_from_pdu(data);
- 
- 	__ublk_complete_rq(req);
- }
- 
--static void ublk_complete_io_cmd(struct ublk_io *io, int res,
--				 unsigned issue_flags)
-+static void ublk_complete_io_cmd(struct ublk_io *io, struct request *req,
-+				 int res, unsigned issue_flags)
- {
-+	/* read cmd first because req will overwrite it */
-+	struct io_uring_cmd *cmd = io->cmd;
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index 78eede109b1a..efbdff7ebda4 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -626,6 +626,35 @@ static inline void *xa_store_irq(struct xarray *xa, 
+unsigned long index,
+         return curr;
+  }
+
++/**
++ * xa_store_or_kfree() - Store this entry in the XArray.
++ * @xa: XArray.
++ * @index: Index into array.
++ * @entry: New entry.
++ * @gfp: Memory allocation flags.
++ *
++ * This function is like calling xa_store() except it kfrees the new
++ * entry if an error happened.
++ *
++ * Context: Process context. Any context. Takes and releases the xa_lock.
++ * May sleep if the @gfp flags permit.
++ * Return: The old entry at this index or xa_err() if an error happened.
++ */
++static inline void *xa_store_or_kfree(struct xarray *xa, unsigned long 
+index,
++               void *entry, gfp_t gfp)
++{
++       void *curr;
 +
- 	/* mark this cmd owned by ublksrv */
- 	io->flags |= UBLK_IO_FLAG_OWNED_BY_SRV;
- 
- 	/*
- 	 * clear ACTIVE since we are done with this sqe/cmd slot
- 	 * We can only accept io cmd in case of being not active.
- 	 */
- 	io->flags &= ~UBLK_IO_FLAG_ACTIVE;
- 
-+	io->req = req;
++       xa_lock(xa);
++       curr = __xa_store(xa, index, entry, gfp);
++       xa_unlock(xa);
 +
- 	/* tell ublksrv one io request is coming */
--	io_uring_cmd_done(io->cmd, res, 0, issue_flags);
-+	io_uring_cmd_done(cmd, res, 0, issue_flags);
- }
- 
- #define UBLK_REQUEUE_DELAY_MS	3
- 
- static inline void __ublk_abort_rq(struct ublk_queue *ubq,
-@@ -1213,17 +1223,17 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
- 		 * and notify it.
- 		 */
- 		io->flags |= UBLK_IO_FLAG_NEED_GET_DATA;
- 		pr_devel("%s: need get data. qid %d tag %d io_flags %x\n",
- 				__func__, ubq->q_id, req->tag, io->flags);
--		ublk_complete_io_cmd(io, UBLK_IO_RES_NEED_GET_DATA,
-+		ublk_complete_io_cmd(io, req, UBLK_IO_RES_NEED_GET_DATA,
- 				     issue_flags);
- 		return;
- 	}
- 
- 	ublk_start_io(ubq, req, io);
--	ublk_complete_io_cmd(io, UBLK_IO_RES_OK, issue_flags);
-+	ublk_complete_io_cmd(io, req, UBLK_IO_RES_OK, issue_flags);
- }
- 
- static void ublk_cmd_tw_cb(struct io_uring_cmd *cmd,
- 			   unsigned int issue_flags)
- {
-@@ -1607,16 +1617,12 @@ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
- 	int i;
- 
- 	for (i = 0; i < ubq->q_depth; i++) {
- 		struct ublk_io *io = &ubq->ios[i];
- 
--		if (io->flags & UBLK_IO_FLAG_OWNED_BY_SRV) {
--			struct request *rq;
--
--			rq = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], i);
--			__ublk_fail_req(ubq, io, rq);
--		}
-+		if (io->flags & UBLK_IO_FLAG_OWNED_BY_SRV)
-+			__ublk_fail_req(ubq, io, io->req);
- 	}
- }
- 
- /* Must be called when queue is frozen */
- static void ublk_mark_queue_canceling(struct ublk_queue *ubq)
-@@ -1986,16 +1992,16 @@ static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_queue *ubq,
- 
- static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
- 				 struct ublk_io *io, struct io_uring_cmd *cmd,
- 				 const struct ublksrv_io_cmd *ub_cmd)
- {
--	struct blk_mq_tags *tags = ubq->dev->tag_set.tags[ub_cmd->q_id];
--	struct request *req = blk_mq_tag_to_rq(tags, ub_cmd->tag);
-+	struct request *req;
- 
- 	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
- 		return -EINVAL;
- 
-+	req = io->req;
- 	if (ublk_need_map_io(ubq)) {
- 		/*
- 		 * COMMIT_AND_FETCH_REQ has to provide IO buffer if
- 		 * NEED GET DATA is not enabled or it is Read IO.
- 		 */
-@@ -2023,13 +2029,14 @@ static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
- 		ublk_put_req_ref(ubq, req);
- 
- 	return 0;
- }
- 
--static void ublk_get_data(struct ublk_queue *ubq, struct ublk_io *io,
--			  struct request *req)
-+static void ublk_get_data(struct ublk_queue *ubq, struct ublk_io *io)
- {
-+	struct request *req = io->req;
++       if (xa_err(curr))
++               kfree(entry);
 +
- 	/*
- 	 * We have handled UBLK_IO_NEED_GET_DATA command,
- 	 * so clear UBLK_IO_FLAG_NEED_GET_DATA now and just
- 	 * do the copy work.
- 	 */
-@@ -2051,11 +2058,10 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 	struct ublk_queue *ubq;
- 	struct ublk_io *io;
- 	u32 cmd_op = cmd->cmd_op;
- 	unsigned tag = ub_cmd->tag;
- 	int ret = -EINVAL;
--	struct request *req;
- 
- 	pr_devel("%s: received: cmd op %d queue %d tag %d result %d\n",
- 			__func__, cmd->cmd_op, ub_cmd->q_id, tag,
- 			ub_cmd->result);
- 
-@@ -2107,12 +2113,11 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		break;
- 	case UBLK_IO_NEED_GET_DATA:
- 		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
- 			goto out;
- 		io->addr = ub_cmd->addr;
--		req = blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag);
--		ublk_get_data(ubq, io, req);
-+		ublk_get_data(ubq, io);
- 		return UBLK_IO_RES_OK;
- 	default:
- 		goto out;
- 	}
- 	ublk_prep_cancel(cmd, issue_flags, ubq, tag);
--- 
-2.45.2
++       return curr;
++}
++
+  /**
+   * xa_erase_bh() - Erase this entry from the XArray.
+   * @xa: XArray.
 
+Thanks,
+baolu
