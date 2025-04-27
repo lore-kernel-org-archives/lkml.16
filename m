@@ -1,147 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69254433D9
-	for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 21:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D42433D9;
+	Sun, 27 Apr 2025 21:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745789846; cv=none; b=BEuXT2Z7Q532ic0V+3sLJndAWo6ya8ux3xizXG7SHmGdlrMlypqQMZkjMqokrx/8piomziY0996oN+E1dTThLZABkMsa0HZh5kKKsxjST6DKMHTZt4iJ13fBGrRh/j33meW+0qKT9HyESU7os3YqgMdywKhrs94KNZojysphcLM=
+	t=1745789973; cv=none; b=epxfVkQZM96M2IZMw0x8hgVH+TCqTG0jH9Dapv48JzAtXzvHRLIoGysemjfk4mgaRXszBl9jGkENYKpZ956WmmvNuC0akTbXst0WmGKjaoB+jRZELlpktynvgRROrdXWc8RPgaEHoxsmGmEIOHRLWOjsNqCdVhQFQN8sUz7Gy0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745789846; c=relaxed/simple;
-	bh=4/N/81IEoXrJM9MBN/nJeS0up7G3RDxRZwPnPkRY+3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fIQs/A71uMPITL/HM6vylNlRmoJuBqFZUBp+wMhO3ONS8/l7yR9fFJ0XYCaiTS/sVER6Rbb0Kxocak8x1jvxL5Rsl6OfLjwq72R8kz4FyMT0HOLKCbOCl/c2wVnTD0QRKZYO7Ap5HdKjOrwaXZmkmEotv5j+pEn83elC7DNNDqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q1xgdtkc; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745789973; c=relaxed/simple;
+	bh=6QGJ0a9Ht2gElXiaPuOCn6CfzvHDVIJKiI1NHI+hYTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ff61Z5f5/7pgmch3JlyfCFPBa31X+Jh8UkOH2F9nZk2yqveB7ZUxbLgjVaxsddCBms8wizxNOKgEOjjjvV57oX3EH8MKZbLNvwhb64dBCHJrB6D8qYDWfLI3VKbl0m/HqzZCFmORiy8bX4DERl6sDmnq5o9Zljts6E3dxISu8Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=DtzT4i8Z; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q1xgdtkc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745789843; x=1777325843;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4/N/81IEoXrJM9MBN/nJeS0up7G3RDxRZwPnPkRY+3I=;
-  b=Q1xgdtkceTN+w4luVSdlk+/UOUHjXId+DBbv5FA8fB5ESLwHBs2M3rfy
-   3d1nudGU3aPfICQdU0w8wJJ01kfUAYSX92qYCJhzB40iYvxF0U/p6NeNg
-   NB1raheyP/oViDKKyLOYRS4kUVm58bTq3d0MhVwj17G9t5J1KD8ZxlePR
-   yDLXiFuRm8cZOOI2Aa6in1RoMAi63bp2cB9DrhDSMwlDIsMf2SeGp1xG/
-   fX1QAIoHXZEBzU52waUW1Z8Iryi1U5v5Rtpjnsrrjdj6mDdawLcF6KpzG
-   N7J/F4l5BEbB5ytLG8vhG08H4NtWB3IKI/B0p3gHuoU26vfUvSNN8VJJS
-   Q==;
-X-CSE-ConnectionGUID: CrCUVtGgRyWSA8cQf73dKA==
-X-CSE-MsgGUID: MKbSmDK/SXyWB4v3PhYxVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="34986294"
-X-IronPort-AV: E=Sophos;i="6.15,244,1739865600"; 
-   d="scan'208";a="34986294"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 14:37:22 -0700
-X-CSE-ConnectionGUID: VoaLz8KeSD2MI1YZQyFxQQ==
-X-CSE-MsgGUID: dm4W74+/R+SIZyn3OWmSmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,244,1739865600"; 
-   d="scan'208";a="156575098"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Apr 2025 14:37:20 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u99gb-0006TV-1S;
-	Sun, 27 Apr 2025 21:37:17 +0000
-Date: Mon, 28 Apr 2025 05:37:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
-	linux-kernel@vger.kernel.org, Kairui Song <kasong@tencent.com>
-Subject: Re: [PATCH 5/6] mm: move folio_index to mm/swap.h and remove no
- longer needed helper
-Message-ID: <202504280515.4WwtyfOc-lkp@intel.com>
-References: <20250427185908.90450-6-ryncsn@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DtzT4i8Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745789969;
+	bh=g6bcMdHT8g3bxJqpi93cPewdqgSG/KDxynKqC+KzDCM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DtzT4i8ZkZ2MsDl1f66BVokfsFE0NF1U71vGZ16oBj782fI1BSLA/Uy4tpp91KO95
+	 aA+i+amr6NbPD6C/PMIrGqeIgF/LTJVeGi+MKJf9DCrQYBrsoE/AILuNeAtwjds5O+
+	 xBrTa2MMQ5uESimtfk29ToVxfqpj+ojTI4LErdevCVy4acX501327ajXny7pA55WsN
+	 gVk3nGfyIXi9eFiur4w/0WLYRAtmi+urNLzKz7k6ykda7EuWC0TLeY4QYpjWn+mops
+	 kYZgWYOIas5G7y5UKS8mI5srfEl0Uhso4tSethffsl4RjIU4SVIQLjt42mD3iLRx/D
+	 Vz8DM/jaFs0AQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm0N06Hygz4wyh;
+	Mon, 28 Apr 2025 07:39:28 +1000 (AEST)
+Date: Mon, 28 Apr 2025 07:39:28 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Wu Hao
+ <hao.wu@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the fpga tree
+Message-ID: <20250428073928.373426d8@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427185908.90450-6-ryncsn@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/08CBCxnPvxyT6paf00rb9Cb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Kairui,
+--Sig_/08CBCxnPvxyT6paf00rb9Cb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build errors:
+Hi all,
 
-[auto build test ERROR on akpm-mm/mm-everything]
+The following commit is also in Linus Torvalds' tree as a different commit
+(but the same patch):
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kairui-Song/fuse-drop-usage-of-folio_index/20250428-030234
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250427185908.90450-6-ryncsn%40gmail.com
-patch subject: [PATCH 5/6] mm: move folio_index to mm/swap.h and remove no longer needed helper
-config: m68k-allnoconfig (https://download.01.org/0day-ci/archive/20250428/202504280515.4WwtyfOc-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250428/202504280515.4WwtyfOc-lkp@intel.com/reproduce)
+  e8af44909c1d ("fpga: tests: add module descriptions")
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504280515.4WwtyfOc-lkp@intel.com/
+This is commit
 
-All errors (new ones prefixed by >>):
+  6810431bc473 ("fpga: tests: add module descriptions")
 
-   mm/page-writeback.c: In function '__folio_mark_dirty':
->> mm/page-writeback.c:2767:50: error: implicit declaration of function 'folio_index'; did you mean 'folio_inode'? [-Wimplicit-function-declaration]
-    2767 |                 __xa_set_mark(&mapping->i_pages, folio_index(folio),
-         |                                                  ^~~~~~~~~~~
-         |                                                  folio_inode
---
-   mm/gup.c: In function 'memfd_pin_folios':
->> mm/gup.c:3652:49: error: implicit declaration of function 'folio_index'; did you mean 'folio_inode'? [-Wimplicit-function-declaration]
-    3652 |                                     next_idx != folio_index(fbatch.folios[i]))
-         |                                                 ^~~~~~~~~~~
-         |                                                 folio_inode
+in Linus' tree.
 
+--=20
+Cheers,
+Stephen Rothwell
 
-vim +2767 mm/page-writeback.c
+--Sig_/08CBCxnPvxyT6paf00rb9Cb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-b9ea25152e5636 Konstantin Khlebnikov   2015-04-14  2742  
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2743) /*
-dc6e0ae5b1700c Kemeng Shi              2024-04-25  2744   * Mark the folio dirty, and set it dirty in the page cache.
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2745)  *
-203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2746)  * If warn is true, then emit a warning if the folio is not uptodate and has
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2747)  * not been truncated.
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2748)  *
-a8cd9d4ce35eae Shakeel Butt            2024-10-24  2749   * It is the caller's responsibility to prevent the folio from being truncated
-a8cd9d4ce35eae Shakeel Butt            2024-10-24  2750   * while this function is in progress, although it may have been truncated
-3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2751)  * before this function is called.  Most callers have the folio locked.
-3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2752)  * A few have the folio blocked from truncation through other means (e.g.
-3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2753)  * zap_vma_pages() has it mapped and is holding the page table lock).
-3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2754)  * When called from mark_buffer_dirty(), the filesystem should hold a
-3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2755)  * reference to the buffer_head that is being marked dirty, which causes
-3d84d897920c75 Matthew Wilcox (Oracle  2024-04-16  2756)  * try_to_free_buffers() to fail.
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2757)  */
-203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2758) void __folio_mark_dirty(struct folio *folio, struct address_space *mapping,
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2759) 			     int warn)
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2760) {
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2761) 	unsigned long flags;
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2762) 
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2763) 	xa_lock_irqsave(&mapping->i_pages, flags);
-203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2764) 	if (folio->mapping) {	/* Race with truncate? */
-203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2765) 		WARN_ON_ONCE(warn && !folio_test_uptodate(folio));
-203a3151661611 Matthew Wilcox (Oracle  2021-05-04  2766) 		folio_account_dirtied(folio, mapping);
-203a3151661611 Matthew Wilcox (Oracle  2021-05-04 @2767) 		__xa_set_mark(&mapping->i_pages, folio_index(folio),
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2768) 				PAGECACHE_TAG_DIRTY);
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2769) 	}
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2770) 	xa_unlock_irqrestore(&mapping->i_pages, flags);
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2771) }
-6e1cae881a0646 Matthew Wilcox (Oracle  2021-06-28  2772) 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgOpBAACgkQAVBC80lX
+0Gypawf/Ry1yySJOZmRCDQryw8geoYmEHThQKFZ3iE6kXy9ggyr1zx4AvClqOY5Y
+1pyRct0NPaZBCKSZCJPAtP3EKLJox5QFHVU7VL8IDhJNmsk55WmCwy+XxENk20pg
+skyNEaFQwods274rdcs/tJi5afK9CFYNNxX6WNF23wiNlUISjDmhkucxG8MjiaNI
+GzIjbQMfRPK8cnwNRgpE5mIV/dKjELznpCoY7ulQKvhlB8rUkeyBAmzCWpjYkTJm
+rLLQfsLlBsK+EcqpOeTh/3/vhUzuzzVYXOYV4d+BZsqWIrmi0biHhlNCKW8WHTZN
+YRz/HH/c4G4KXgV0v5zS7es3gNSnBQ==
+=2sjD
+-----END PGP SIGNATURE-----
+
+--Sig_/08CBCxnPvxyT6paf00rb9Cb--
