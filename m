@@ -1,90 +1,74 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCEA7E9;
-	Sun, 27 Apr 2025 05:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63221F17E8;
+	Sun, 27 Apr 2025 05:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745731287; cv=none; b=CvGc/rYXqdv1eU+bFEFeKa5iyyjpDqnhmpt3fC5KK0zUBu/70cUMYEJJfe1YTmt9x4+vWDUO1Se8y4kSrXCzjAvkFuqtwm+afJ/uHrJmZMoS9wNACuugNNHx5mLIhxvXIQwafPq5f0js21G+uz/oUFhOqYoW3snufS7FoTi8CXM=
+	t=1745731667; cv=none; b=WHSCkLAIaINzXnwm76BbjIOl0OG3tp428ZNN1p+GAlRZNWDhT6gvGEuDj4wNmMDSb2oI0GTLQ9RdzWZkFL/JymM0EJhmjuB+WTGTer5EkVCXaLmF6GF1fZvXUj6h4h3bMGl2hAB/iXayE95m7i8bdGGTsZgM9cEP7RxbwNO2j/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745731287; c=relaxed/simple;
-	bh=uT6wQrZz+Og81uIA0fnWp17n5iisubP/qNtIyRxnCXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bQyVu+5FpL43AVu8FsRCARLLdvbP6bvvwSNzMWctxRskqFXgzEnU8v2ryoKtu1ttruwDr4HjmuVJF7GIIxLkVTpAe3hK/GQAh0i0FkmE5gXxoEAVO2eMtrE1DLyc+tQRbWP5UcigLCeKTsGjrkJMBrEfiEtw4kw9b5iefsG0IGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=dGnaoUBg; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745731667; c=relaxed/simple;
+	bh=fzrxUPVaU/GrsOioMdBpn8u9ZTG/DPM0oQ8gYWLDrOU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NMZOiVoFo093ffh+kmBzr4/Ev3hd7BocYg/zAc59uKHqhbQPJ2a//PKrJLmtQKWMzjWHVMnCt1KRCmbeEvTjgv7cOIcSaw0H0GFNxibZO+kBAz3ClveyDsn5VON16X5kIHhqOhscIFAAE05xjicjAD+yq0gg5pc+iwsO8DPY7kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=RcgxGrrG; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="dGnaoUBg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="RcgxGrrG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Cc:From:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Pl2+iJoLEKyoEY1+QMbzNQxE4vs1/OpqeGo2MbFswoc=; b=dGnaoUBgwG+MFM/UgCXPevwWE5
-	1SBPXmQTDAAc/9iOYOSD/BlyZtCEk3qq8qm0xiPTxGOsP0Dv0Cw7NIlflY5pITkraHSwdkFx7tBEu
-	kNOVMTuERLnZjhJ97P/WUb5iDMqM7BFVuNjR2p1i8CPh29AUn0QzldJUQHx63UY9Gtj4dZFw+4J60
-	7EAM3fs081VqfaaOkty5cnDU3lpHYiWRncdhaPEG3RRHmegrSfjx8TOlUtTKeao0saw22Kz+s2kbK
-	iDNll0edL8bDHDIHJMTq0JiEhdzcGql3p4Was7EPbmHmk5EEwlBqueiaFepnGV2nfCTSxBFlxEi4C
-	UTWU99PQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u8uRz-001KyE-1U;
-	Sun, 27 Apr 2025 13:21:12 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 27 Apr 2025 13:21:11 +0800
-Date: Sun, 27 Apr 2025 13:21:11 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
-	linux-s390@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 11/13] crypto: x86/sha256 - implement library instead of
- shash
-Message-ID: <aA2-x-grUfoulkDf@gondor.apana.org.au>
-References: <20250426065041.1551914-1-ebiggers@kernel.org>
- <20250426065041.1551914-12-ebiggers@kernel.org>
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=8X3JADG65msb77SJ0YeZV7UxLe9dIEM9+QPErSSGqtA=; b=RcgxGrrGkBQRsfqFThiUcTsHM2
+	bRR+42bG3iTkGAwxFTZ8s6F57RoT4rxHv4s6s/0RgB/gbH8IRTao1MagQ/fS54q1j/XekyC4zhu1g
+	buVoK3PXqAvSKuYNMomceAiGwbrJ/rV3bk+yhR9mg3pPoJ0Dz/P1fxclNrSDNULTqCPG/NhuAWwOB
+	2qu/u7zWooZ+j5X36sneH93bipFVCsz5Qp/ZY5M6d3WpNUUwrl6CsniC9Jn2YguUm/VoPgrDickSt
+	E8ktsS/eQ0gN69gjdcp+BvTwgirB+ZipO6kZ/w0dHDNmuvSRn+XMaL4RxxfORzXJM0iB+xQOKE+im
+	6ulyKutQ==;
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	Tony Lindgren <tony@atomide.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3 0/2] ARM: dts: omap4: panda: TiWilink improvements
+Date: Sun, 27 Apr 2025 07:27:33 +0200
+Message-Id: <20250427052735.88133-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.5
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426065041.1551914-12-ebiggers@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 11:50:37PM -0700, Eric Biggers wrote:
->
-> +void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
-> +			const u8 *data, size_t nblocks)
-> +{
-> +	if (static_branch_likely(&have_sha256_x86) && crypto_simd_usable()) {
-> +		kernel_fpu_begin();
-> +		static_call(sha256_blocks_x86)(state, data, nblocks);
-> +		kernel_fpu_end();
-> +	} else {
-> +		sha256_blocks_generic(state, data, nblocks);
-> +	}
-> +}
-> +EXPORT_SYMBOL(sha256_blocks_arch);
+Add proper definitions for 32k clock and enable bluetooth
+everywhere.
 
-Because of the back-reference to sha256_blocks_generic, I get
-this with a fully modular build:
+Changes:
+v3:
+  - better commit message to describe what the clocks are for
 
-depmod: ERROR: Cycle detected: libsha256 -> sha256_x86_64 -> libsha256
-depmod: ERROR: Found 2 modules in dependency cycles!
+v2:
+  - extend comments by trading in checkpatch compliance for readability
+  - remove one unnecessary newline
 
-I'm going to split libsha256 up into the block function and the
-lib API.
+Andreas Kemnade (2):
+  ARM: dts: omap4: panda: fix resources needed for Wifi
+  ARM: dts: omap4: panda: cleanup bluetooth
 
-Cheers,
+ .../boot/dts/ti/omap/omap4-panda-common.dtsi  | 39 +++++++++++++++++--
+ arch/arm/boot/dts/ti/omap/omap4-panda-es.dts  | 32 ---------------
+ 2 files changed, 36 insertions(+), 35 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.39.5
+
