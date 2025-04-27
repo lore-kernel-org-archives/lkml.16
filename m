@@ -1,86 +1,168 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F9A7610C;
-	Sun, 27 Apr 2025 12:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CF1C610C;
+	Sun, 27 Apr 2025 12:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745758329; cv=none; b=Lot/MKUrM1vWjFA+xQ0VAHDJliA6UV4wRj2MSB7T9L2o+ANA3bP3lmvtmz845NGAUeqSgckEmMSpQKTilEFu0esjf7PPo9ql1j+3bfFobR7Z5QfKQ8g/zFuoiFjgDpF0mAddISAfWh48Iarfc9FUoaAbyrUqs0OsHpsz8C869yM=
+	t=1745758446; cv=none; b=r6xvmQcZWgTo5rHkWl0tRv97DXw4jXmnOV+XkFqEpRfbjeb6fA3QBlj2c3rejTxdb4HEpyJqMJQO4kiAK5614cXAyD1LX/vodfvobIZcnx+Ibkfi2ViXWOzqVbz5dyKXr8C35BfV9ig8Jt/OuVMvqa7xfxibjIm88+JwegBG5GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745758329; c=relaxed/simple;
-	bh=6cEZKR3sZKuXHUIDeK4kcLFUsoi8b21G0ldm2TLtdWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BQN9PJvFSD134XlHfkvpq11vzdGAgtgYfjPuB1SKLY/Jo2QNphG5EEB91HXWwBMxlpIREhmC0mNftKV5uZk3EvNAFJhJFWmfm/ZDAB5ILMWE544N/+ZSKi3/TeHN+dh/JTDb/FCxd+ph/HfIeo7hTExsL0sXa7j1nb+XqVKkAg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1u91UK-0000ST-00; Sun, 27 Apr 2025 14:52:04 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 7CAA9C01A2; Sun, 27 Apr 2025 14:51:54 +0200 (CEST)
-Date: Sun, 27 Apr 2025 14:51:54 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Oleg Nesterov <oleg@redhat.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] MIPS: Fix MAX_REG_OFFSET
-Message-ID: <aA4oag9MAXT3y0t8@alpha.franken.de>
-References: <20250427113423.67040-2-thorsten.blum@linux.dev>
- <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com>
+	s=arc-20240116; t=1745758446; c=relaxed/simple;
+	bh=FdTjp+dk1xGjoVbBoFe//xPsEZun+tS/AecF7pRBh4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ypw4/vsjYSgniaQf/Yovptq4DRMXQs2viFSfxynKtaAWuMD/54ZDENF+cRT8ainLHS/6vlBrNatynmaqNX0pWIHybOHaOPnLQevNxdAG+l4HMJhWSurf8NTTH0muDSygrfCJNA0qTAymnzcZaref0CB9cKPiXlfLGbItwcJy1bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=E93R1CwM; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="E93R1CwM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=97YC0
+	bzVCpna+dBptpsih7bsJjCrsnz2SlPWFzXL9qY=; b=E93R1CwM6aYHsBlhNWRy4
+	oUbPkInEGGdbzRBsbmfPwroTnew/QJNyptGQlkyZKnWR0ISAeM+AwxuepBQ4NtQ4
+	WENWpE36mwMSmYXte5fi5WzvlC4IYgkkEm54ww0oCSJDMAA4DYHXrJVfRzGCdkcw
+	7dt5VJq2KODqbVJzSSmZjY=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3LwC9KA5oNqx8Cw--.63816S4;
+	Sun, 27 Apr 2025 20:53:24 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	heiko@sntech.de
+Cc: manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v4 2/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
+Date: Sun, 27 Apr 2025 20:53:15 +0800
+Message-Id: <20250427125316.99627-3-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250427125316.99627-1-18255117159@163.com>
+References: <20250427125316.99627-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H6kxy9NaWXqq1QLfobVvVz9-VMybHC6M+0V-sE3MY9SRA@mail.gmail.com>
+X-CM-TRANSID:_____wD3LwC9KA5oNqx8Cw--.63816S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWFWxWryktw1DKrWxuw4fuFg_yoWrur48pa
+	4DAFyIkr45Ka1av3s3CF98ZFWIqrnIkFW7Jrsag3yUu3Z3Zw18Gw1UWF95Wry7Jr4kCFy3
+	uwn8C34xWF4akrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoE__UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgQ8o2gOIuqhhwABso
 
-On Sun, Apr 27, 2025 at 08:32:05PM +0800, Huacai Chen wrote:
-> Hi, Thorsten,
-> 
-> On Sun, Apr 27, 2025 at 7:35 PM Thorsten Blum <thorsten.blum@linux.dev> wrote:
-> >
-> > Fix MAX_REG_OFFSET to point to the last register in 'pt_regs' and not to
-> > the marker itself, which could allow regs_get_register() to return an
-> > invalid offset.
-> >
-> > Fixes: 40e084a506eb ("MIPS: Add uprobes support.")
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > ---
-> > Compile-tested only.
-> >
-> > Changes in v2:
-> > - Fix MAX_REG_OFFSET as suggested by Maciej (thanks!)
-> > - Link to v1: https://lore.kernel.org/lkml/20250411090032.7844-1-thorsten.blum@linux.dev/
-> >
-> > Changes in v3:
-> > - Keep the marker and avoid using #ifdef by adjusting MAX_REG_OFFSET as
-> >   suggested by Thomas and Maciej
-> > - Link to v2: https://lore.kernel.org/lkml/20250417174712.69292-2-thorsten.blum@linux.dev/
-> > ---
-> >  arch/mips/include/asm/ptrace.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-> > index 85fa9962266a..ef72c46b5568 100644
-> > --- a/arch/mips/include/asm/ptrace.h
-> > +++ b/arch/mips/include/asm/ptrace.h
-> > @@ -65,7 +65,8 @@ static inline void instruction_pointer_set(struct pt_regs *regs,
-> >
-> >  /* Query offset/name of register from its name/offset */
-> >  extern int regs_query_register_offset(const char *name);
-> > -#define MAX_REG_OFFSET (offsetof(struct pt_regs, __last))
-> > +#define MAX_REG_OFFSET \
-> > +       (offsetof(struct pt_regs, __last) - sizeof(unsigned long))
-> There is no 80 columns limit now, so no new line needed here.
+Register definitions were scattered with ambiguous names (e.g.,
+PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
+hierarchical grouping. Magic values for bit operations reduced code
+clarity.
 
-but not forbidden to care about it. I still prefer this limit.
+Group registers and their associated bitfields logically. This improves
+maintainability and aligns the code with hardware documentation.
 
-Thomas.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 49 ++++++++++++-------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index e7d33d545d5b..a778f4f61595 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -33,24 +33,37 @@
+ 
+ #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
+ 
+-#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+-#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+-#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+-#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+-#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+-#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+-#define PCIE_SMLH_LINKUP		BIT(16)
+-#define PCIE_RDLH_LINKUP		BIT(17)
+-#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+-#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
+-#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+-#define PCIE_CLIENT_GENERAL_CONTROL	0x0
++/* General Control Register */
++#define PCIE_CLIENT_GENERAL_CON		0x0
++#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
++#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
++#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
++#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
++
++/* Interrupt Status Register Related to Legacy Interrupt */
+ #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
++
++/* Interrupt Status Register Related to Miscellaneous Operation */
++#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
++#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
++#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
++
++/* Interrupt Mask Register Related to Legacy Interrupt */
+ #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
++
++/* Interrupt Mask Register Related to Miscellaneous Operation */
++#define PCIE_CLIENT_INTR_MASK_MISC	0x24
++
++/* Hot Reset Control Register */
+ #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
++#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
++
++/* LTSSM Status Register */
+ #define PCIE_CLIENT_LTSSM_STATUS	0x300
+-#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+-#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
++#define  PCIE_SMLH_LINKUP		BIT(16)
++#define  PCIE_RDLH_LINKUP		BIT(17)
++#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
++#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+ 
+ struct rockchip_pcie {
+ 	struct dw_pcie pci;
+@@ -161,13 +174,13 @@ static u32 rockchip_pcie_get_ltssm(struct rockchip_pcie *rockchip)
+ static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+ {
+ 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+-				 PCIE_CLIENT_GENERAL_CONTROL);
++				 PCIE_CLIENT_GENERAL_CON);
+ }
+ 
+ static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
+ {
+ 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
+-				 PCIE_CLIENT_GENERAL_CONTROL);
++				 PCIE_CLIENT_GENERAL_CON);
+ }
+ 
+ static int rockchip_pcie_link_up(struct dw_pcie *pci)
+@@ -516,7 +529,7 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+ 	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+ 
+ 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
+-				 PCIE_CLIENT_GENERAL_CONTROL);
++				 PCIE_CLIENT_GENERAL_CON);
+ 
+ 	pp = &rockchip->pci.pp;
+ 	pp->ops = &rockchip_pcie_host_ops;
+@@ -562,7 +575,7 @@ static int rockchip_pcie_configure_ep(struct platform_device *pdev,
+ 	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+ 
+ 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_EP_MODE,
+-				 PCIE_CLIENT_GENERAL_CONTROL);
++				 PCIE_CLIENT_GENERAL_CON);
+ 
+ 	rockchip->pci.ep.ops = &rockchip_pcie_ep_ops;
+ 	rockchip->pci.ep.page_size = SZ_64K;
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.25.1
+
