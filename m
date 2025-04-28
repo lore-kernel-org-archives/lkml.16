@@ -1,102 +1,182 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E943720012C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C5D20B7FD;
+	Mon, 28 Apr 2025 22:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745879755; cv=none; b=A5QJfjO8MFzfg0ykPWgaGccyCAt7ITARWrVNiTuedYjTPYZftAaHWKY5AoBHqcFBI9a+5m/DkMB/ZpvE7o9VMNG1EIm1zEr9tsYU5eaF/YX1Lw5/V/WbGiORO4kBEfyWin5mBEGZ+qDYfcvgr0w9EOaNAUea2hBd9K0B8/em7FA=
+	t=1745879980; cv=none; b=fJqX52qbrPI3MmeMjajpFAxoHRqZ+2Uzcx41Vf2w0bEv8NOTJZqVmNNyiQqGYg/kd0J/Qr6sgco9yAkUoy61yvaD+bkddeVhmLk0q27c3eskueyHKB1DIpeWn0VLwrTgUpCQnoATE3fFzEmLckzBrADNXNgOgckR/H3FwSGwU/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745879755; c=relaxed/simple;
-	bh=FwyHQnqFrh89JvdkJDVJBT8VrtDoavVGWMSbA8mnvTk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f6184aBqMflyY+jhHYnKzFT9wIxDoBeEYMOk2R29u0qklcpzdlX9Cs3bn19tBGp6sYNzae23ujWH+8jbmM+Ch+bXweCiDFEa+4IyCredQVjhS/iewKFRX4tsL6v5DH3R/mos6JaaGRHPXHqLosyGIWzYuMuTb26Px3iC0ejp2a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u49nEmfn; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745879980; c=relaxed/simple;
+	bh=8kijEYLCWz6PW7HEQrKNd0RhweHY8H7pf4r3gg5DYqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sFzawNiC8S9pKxSv+zekQsn7srpI9zTjfuJEXnrRWXcFdrpznwqKPuhIVOXiNBpdrOQUBBxSSg/VqnHPlHXzW5K3kgY/ahNmuO6SynmIPQImgRUECyxstwMn/lEhPAlYllcMF8Hx3vYfB3IQWsgjDePUONvNA7ALQ09TtFSL9Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=De9DHTTz; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u49nEmfn"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so4005731f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:35:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="De9DHTTz"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54993c68ba0so6386614e87.2;
+        Mon, 28 Apr 2025 15:39:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745879752; x=1746484552; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=teMx1EKcu+nxRoUAc/DsVYixOahJbe6wbg+W2p7Xk8A=;
-        b=u49nEmfnyNB0HgfUsVBOjWtwpehf2fO4xLX7U1qLb/K5EuAFge1CxIBr/1X2Su+KnU
-         xJB/zRrJdNhTYTvcAvQtHsTMabGjql0d2Y9MogOPrTsIx/VEitxZkvjCKrqkfYO1TkPW
-         ccE/E2TL6eoTHMb3QR3BLgbGmbSBm+w6TTmi2yWV+gfgSjeuPChs8po06uVd3hd//cNK
-         J3arBtUqkvNYwH5kOeXRziYk7CVuaZXvnn5+Ni39WTE2mZlNVqF6Xo9QnE5Eyqcp4urV
-         nt+uanErBW7o2YMTJ2WtR7vHnptZi6rOiyWHevPQEBbsHGrAIZf+5fTs+BqjRKTpTYOw
-         5Cog==
+        d=gmail.com; s=20230601; t=1745879975; x=1746484775; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8kijEYLCWz6PW7HEQrKNd0RhweHY8H7pf4r3gg5DYqk=;
+        b=De9DHTTzTBL5O21Rz4MiyID2FIOFuode+oQO26pUQXPa84QwBw5zSu/ViOZgJTasLp
+         hnQ6JpncroSfS3eFhBRi6SvXF/G9X9Fvxlm9As9KJC9v01EEXB2kAvdpWD2xvRB76Qww
+         DQ6bj1q2s+yb2EBf1MNU/V/YgHcHYcYfh01rte1uzOFkzixAaE+gOB0WMXpPNAssuPCS
+         Vd1vTWFi2kOxF/xp51OYK0B+R3H5ZGhB8wHKioThooP7efLgwkSWAZ+MW7G1qI4tpLA3
+         1gdEHQhthX4KjJEJpgIFlpuCesCy2MJ1W10MXcYx2sf/7W0l9Ezx06P3KzxIaOVWBJgv
+         oEaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745879752; x=1746484552;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=teMx1EKcu+nxRoUAc/DsVYixOahJbe6wbg+W2p7Xk8A=;
-        b=bVKAAL/mCLWUfmNpVs4jxXPfcy4ULeL1nmCJA4uSpYf1U5gPkC9b13ivBZumLRV3U+
-         rGprohB8KwqS2h9tfeoQRJE82t+GW63Dkz/Pzwm7sfpKQrECzhbWowNKUyoVIQ9MCIQq
-         Dcav9SM6FyutPvqCBkIOfwth8EDJZEzSVOTY0BvY7fbfe4oErEUhidEfvRmrYM88s0ZU
-         PHLtsC7GYRN0dK8dq48SMjRokEpzR20mWJsPpIEQL9oWRyqg1c/HCNE5xEWKsKIdUDA6
-         D27TRSidnW6F16ANJp3E0qyPFTtudbGzV8Ryx4FA3W96eV4UxzcABgrxyfntRpm052WH
-         XLdQ==
-X-Gm-Message-State: AOJu0YxLCHfvVj3id9yiuFUo09Yeu8ddFAzC9YoYRdcHhO//Su1wTFNG
-	pFo4jfDii30RL16k8m2icV2pB1aYCoHWKmhtKoD1tsnyKogL0L1H58A/j4s6mb6aQ0wPrSxWrAr
-	p
-X-Gm-Gg: ASbGncuMsL09AuTqmysoElUCalniNk09XA8hD1isqMhagLwBdfz1Pd1v7t06LtYInOj
-	kR9msgCAtzkz2+N6LxqQMKO4JIcNyvYrDPRp9+zpwVZNCxIRNy7pYVj0XybbfsfzMjV3owh8/eD
-	e5N6TyQ4n55MESSMp/o7snoPckz7AQItlpgNRNLCVm+ioRaGj1VYhd2RIrwzBIrgxslNJ7TcPMh
-	hoWVxDoCoHOgBIaivmyFtX3UGkDHmKo4MYz9wb8sus77oaBHOG0VEcsn7SlxzyMH/x0gymd/JBT
-	azPH+5CqbgWuHOZ1tneIa/GSvW+Q+eohZ0z58oZIF9Xl4Sm6ByDExpXncd3rEhWu6/emy2mdy3u
-	a7u+7AU083T+7Wwg=
-X-Google-Smtp-Source: AGHT+IFLzQYBKaJ+yZ4y9ZfnxYq/3Mki6Xg18rb0tO8Pz3I+4CpctlEV58FoB4J6FdFttDLeDgn8QQ==
-X-Received: by 2002:adf:ffcb:0:b0:390:fb37:1bd with SMTP id ffacd0b85a97d-3a08949fec5mr1180949f8f.46.1745879752231;
-        Mon, 28 Apr 2025 15:35:52 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073c8c973sm12284081f8f.5.2025.04.28.15.35.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 15:35:51 -0700 (PDT)
-Message-ID: <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
-Date: Tue, 29 Apr 2025 00:35:49 +0200
+        d=1e100.net; s=20230601; t=1745879975; x=1746484775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8kijEYLCWz6PW7HEQrKNd0RhweHY8H7pf4r3gg5DYqk=;
+        b=jXiaP3QslrTAV/8O9VMGc5Y+TpcPLkKN+W+ZrKTwheqhi4doCLpbzirSChqr6ip9U6
+         WuyNTIvVlM8Cocdj1QvOOPLSrowtXr6N2erpEAjq+5nRfDksF/ZTdz5FtIL6KPtqpnLF
+         JlFKD9/pf0ZX+uXN6KBYM1VhJrKAMzD5oyANLFfCqAWQYit5RR9rTdB9glBCKcgQRSP7
+         /f3ZCtVwzjkmmGkTnq0cNbBJpsvqNLFjmQVQuTgeR00YnLWBy4FfEZ2GIWOCcLRtQsOy
+         SyGgGUMat4+uUvMxf/8NRncGzMbDRa/Da9ux2RLs9Ucy7Xavh2fnByuVuUe13+xZuRU7
+         lFIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaNvoS9Kc1uDvvmB7o8gj35qFPO3FwBZhXiys7XD+VpLPKmPtoQo1ReidNyCDdHQXYjP+ieHQAVNG89Lc=@vger.kernel.org, AJvYcCXpisqHT/bNmY3Y5NH863rTIrlpyVVizNifDLHOLKlaxwo/Y4bUMYWLU/1rn3iiBePe2cGR+oIAfuQP@vger.kernel.org, AJvYcCXq1vOcxb3qGQaWDxSA7bmN55W7T4aMvJZcHdc2WQ3tnXBKwTkLE6MiYrggaRn8D9RiqObten3O1oJkk8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/+Jtx3cGsInGAUrowevrAkhoWMH60NEBJ1MZnbFlroobYYVcB
+	kZsemYylhbn0b1SCdUAUSYm3M/j2cWgtxt6ho3RMpOxlamHvwFp4F7AX/se4S2qwHAOLFn6zVqN
+	cqj0+6feTgUZqePqcveluJ3Rn8yo=
+X-Gm-Gg: ASbGncupxE1qSvL3A81WAWs3VbicvKclJVgSaqkk7pvszg18DukEE15Ig6pc5nyTvF6
+	2+3PM/nmPEH/Dvh0CgFxWiKVVxgb0wt5mISlVwErhpj89B54NrkofS7/mV9aQtMh7oJuYx3cHNn
+	F5V1YKAyY+X/UGFHOxxaQ94g==
+X-Google-Smtp-Source: AGHT+IGpUU0Dr0j69ZA43/sVTpHzX+UlOHTGI9+6U92xp3Xaam4yUKm6LCwuXZkWvHHEBkYoRFB8tLHhw7Kp4fLsTjM=
+X-Received: by 2002:a05:6512:3f12:b0:54b:117b:b54d with SMTP id
+ 2adb3069b0e04-54e9e568194mr150477e87.56.1745879974899; Mon, 28 Apr 2025
+ 15:39:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: error trying to fetch the clockevents tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250429082047.4af75695@canb.auug.org.au>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250429082047.4af75695@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
+ <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com> <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
+ <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
+ <lk37wtb25pr2rj3zhct5udaykr7joqw2mpgtupjq33of2xhesi@rmdgucbzxmgz>
+ <CALHNRZ8gSzOVpN_au_ntSan7or=uRBrPSRFdbDqAHxitcEfs7g@mail.gmail.com> <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
+In-Reply-To: <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 28 Apr 2025 17:39:23 -0500
+X-Gm-Features: ATxdqUH3PvKTZWXJSIROsnb_Oqs6Z73ioWcRg9tAM4X2zDrHkmm1o-UaBnHoPx4
+Message-ID: <CALHNRZ-vVzNzfJRMM+i044qwvuv-bm0hB8fTZu0XQJA_qT9Mow@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29/04/2025 00:20, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Fetching the clockevents tree produces this error:
-> 
-> fatal: unable to access 'https://git.linaro.org/people/daniel.lezcano/linux.git/': The requested URL returned error: 503
+On Sun, Apr 27, 2025 at 10:57=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Mon, Apr 21, 2025 at 11:33:01AM -0500, Aaron Kling wrote:
+> > On Mon, Apr 21, 2025 at 3:54=E2=80=AFAM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > On Mon, Apr 21, 2025 at 03:09:42AM -0500, Aaron Kling wrote:
+> > > > On Mon, Apr 21, 2025 at 2:52=E2=80=AFAM Manivannan Sadhasivam
+> > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > >
+> > > > > On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Rela=
+y wrote:
+> > > > > > From: Aaron Kling <webgeek1234@gmail.com>
+> > > > > >
+> > > > > > The driver works fine as a module, so allow building as such.
+> > > > > >
+> > > > >
+> > > > > In the past, the former irqchip maintainer raised concerns for al=
+lowing the
+> > > > > irqchip drivers to be removed from the kernel. The concern was mo=
+stly (afaik)
+> > > > > due to not disposing all IRQs before removing the irq_domain.
+> > > > >
+> > > > > So Marek submitted a series [1] that added a new API for that. Bu=
+t that series
+> > > > > didn't progress further. So if you want to make this driver a mod=
+ule, you need
+> > > > > to do 2 things:
+> > > > >
+> > > > > 1. Make sure the cited series gets merged and this driver uses th=
+e new API.
+> > > > > 2. Get an Ack from Thomas (who is the only irqchip maintainer now=
+).
+> > > >
+> > > > Should this be a hard blocker for building this one driver as a
+> > > > module? I did a quick grep of drivers/pci/controller for irq_domain=
+,
+> > > > then compared several of the hits to the Kconfig. And every single =
+one
+> > > > is tristate. Tegra is by far not a unique offender here.
+> > > >
+> > >
+> > > Not 'unique', yes. But the situation is a bit worse atm. Some of the =
+patches
+> > > (making the driver as a module) were merged in the past without addre=
+ssing the
+> > > mapping issue.
+> > >
+> > > Please take a look at the reply from Marc:
+> > > https://lkml.iu.edu/hypermail/linux/kernel/2207.2/08367.html
+> > >
+> > > Even though Marc said that disposing IRQs is not enough to make sure =
+there are
+> > > no dangling pointers of the IRQs in the client drivers, I'm inclined =
+to atleast
+> > > allow modular drivers if they could dispose all the mappings with the=
+ new API.
+> > > This doesn't mean that I'm not cared about the potential issue, but t=
+he removing
+> > > of modules is always an 'experimental' feature in the kernel. So user=
+s should be
+> > > aware of what they are doing. Also, we have not seen any reported iss=
+ues after
+> > > disposing the IRQs from the controller drivers. That also adds to my =
+view on
+> > > this issue.
+> > >
+> > > That being said, the safest option would be to get rid of the remove =
+callback
+> > > and make the module modular. This will allow the driver to be built a=
+s a module
+> > > but never getting removed (make sure .suppress_bind_attrs is also set=
+).
+> > .suppress_bind_attrs is already set in this driver. But what happens
+> > cleanup on shutdown if the remove is dropped? Would it be better to
+> > move remove to shutdown for this case?
+> >
+>
+> remove() won't be called on shutdown path, you need to populate the shutd=
+own()
+> callback for that. But do note that both remove() and shutdown() serves
+> different purpose, so do not just rename the function.
 
-Seems like there is some issues with the servers recently.
+I did some more looking into this today and came across 662b94c3195654
+[0]. That commit stated to add support to the driver to be built as a
+module, but didn't touch the Kconfig, so I'm unsure how that ever
+worked. But Manivannan, can you please take a look at that commit and
+its message? I'm not familiar with pcie and what is required for
+proper de-initialization. That commit added the remove method for the
+stated purpose of making the driver a module. Implying that none of
+that was needed on shutdown when built-in. So if the intent is to make
+a permanent module which cannot be unloaded, as you're asking for,
+does that mean it's safe to just fully revert that commit?
 
-Could you please disable the tree while I migrate it to kernel.org ?
+Sincerely,
+Aaron
 
-Thanks in advance
-
-   -- Daniel
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+[0] https://github.com/torvalds/linux/commit/662b94c3195654c225174c68009455=
+5c0d750d41
