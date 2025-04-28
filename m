@@ -1,141 +1,126 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406321FBE8A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EC71F4720
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 20:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745873631; cv=none; b=g0GkQO4r2pDRhj1DG61v2fTE1R+g1Y4hcrB5plJVEqu5yXn2lxbJ/q6t7zaselIhWh/GIePH3W8WK+GOutLxM67Hdy1Ts0APmd5VlSnSvdxuRP9vhSHK6YWxPw/4EUV05MdxqQX5cJHxruO+ywLtjgJOfUFjloKTLPsGJYYScCg=
+	t=1745873648; cv=none; b=sfqhXW+Y9GGgOjH5fhMnXMmD3vu/vTCKOp8pvZZnCXviW//NtzLNQKFmfR+xaMfH9oFBqGk0U9aJHZ1vkt5CPXCI7/bYwmWWS8lhh3osQ+SIwZG/pZ7qnlaZ67DvPytDo/8JLB5nAzjWKJ/hGcSjhbUXWL9YuYvzFKUggPWGEPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745873631; c=relaxed/simple;
-	bh=pInPQLUtMI6WPc5FK33MH4c5RvY3/0InJhwRLV7jmP4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lujhrQzrXmHOzw4xFBDK6ism4ponPxh2bh44kqTSEcAxk8DNX+SI9E2ragtAdq0iNZUqVL1fsqGvS5qxrlnCj71sYcaDA0DVF+Pc9UsTwfeRm1u8bsX6J5n68fNVmf+STx1D5/QgdRir6P7TPhmVuqWs1zPg8G/I7UNm1tMDEr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tIkCqS96; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745873648; c=relaxed/simple;
+	bh=n4WGwCItyZewiOJcBSp4Eaj+wnGcnc5O6i3QGT0fNG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pHiDHmpc2sjAzoR6YWONIIGNqYZiFI//8gO87GCIljwLA+GFuaB01CQKS96pYXT/y6+Bl+MIvLg97b9YBs41mKdhiJkVtiagS0S4uX5qixM8sl+es83kOH+j3VqU6jqmUtXYubPo/G4d2DUhRCOns5EBRiuXzhkCV1I4BKpnijU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YHujt9MM; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tIkCqS96"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SKrad12906825
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 15:53:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745873617;
-	bh=DH6GXAu28P+paRygaPvQ/RCNUmo6GrCq7ae0FlmoHS4=;
-	h=From:To:CC:Subject:Date;
-	b=tIkCqS96wkIjSuqqpycbEf2sku3SYJpatOs8xxcULW/FkpWfRJUuOgO3o34GQa4gJ
-	 ufRt+VpFg/0FGTshQ0vNVoupZVNg/bdAGdr2uqPlH+IWR1WWZieWfKggMgAJKONXHj
-	 I2cXp9iaS9GkWiYRaB7m248drQB0OPLAsOK+4rIk=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SKragN030028
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 28 Apr 2025 15:53:36 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
- Apr 2025 15:53:36 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 28 Apr 2025 15:53:36 -0500
-Received: from uda0506412.dhcp.ti.com (uda0506412.dhcp.ti.com [128.247.81.19])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SKraQl061891;
-	Mon, 28 Apr 2025 15:53:36 -0500
-From: Kendall Willis <k-willis@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <ssantosh@kernel.org>, <d-gole@ti.com>
-CC: <khilman@baylibre.com>, <msp@baylibre.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <k-willis@ti.com>
-Subject: [PATCH v2] firmware: ti_sci: Convert CPU latency constraint from us to ms
-Date: Mon, 28 Apr 2025 15:53:36 -0500
-Message-ID: <20250428205336.2947118-1-k-willis@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YHujt9MM"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-73972a54919so4473660b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745873645; x=1746478445; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=duqrSY39uZvRf9QP4FI5wn82Hvp3y0G6BGsbl6wCfsU=;
+        b=YHujt9MMTp8bKrMsFmXM63bMM8a+I2YXydtfpVDqQAF3DVIzLp41fZ7aZMRYjXHg1l
+         DhEJEskBspuF4q7G933v3fo40LBtspLETpFYAIzL7KWa41H2k04Aq+LRX3YOefHIPU/Q
+         nfKgompPqt/dqYsgIAhR4l+BSNllmue2YLiEI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745873645; x=1746478445;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=duqrSY39uZvRf9QP4FI5wn82Hvp3y0G6BGsbl6wCfsU=;
+        b=NKKxcNrtv+S9oio87TKP2h4yoDfMLzMZo6/EEc+jqtsRUp3w0FjkXCB71LFeBNOHUE
+         Y9SkH0R6DE+zlWNetWx5l/Pb5GDpMx5ilVZnDC37NwT5wFsnt7z5Ae9EBKhKT3ykv+GR
+         9cfemUrjW896AXrhLr+AkztlJvhnmCC44acrDi36sqvJoRxrDg3b/LL7xZ7/Hq2XzHju
+         0O84GifJxjnaZj1+B9wDqg6ILu2WO7Z6Qtv3rL4TKbyaZDRoSAefo5dO9TsIOMYG+LwT
+         eoE+VFUKOfsSLHaw1kqeMHuXJa/D475AdYtjN3YZYDQs0mpQXc6F0zbRCADa8fIoSZWS
+         IFng==
+X-Forwarded-Encrypted: i=1; AJvYcCXuSIoKmDjqaVbDk+cjAavyqbmmjBNaPUAvMvhL5srpHtnvlRczkdm2N5eUImlj04jJHFCzgF63qbNJmgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLNuC932G8BsCXNVUCZLuWLWoSh7hseN72PaOinHDLNm7aqpXH
+	L2Zt4lhw0A83OTCT8CUqq83YwSeE4svkPv8yghFf5L2RxCpnMaTc87JAbVI5BIDJtvNNrHg/xQk
+	=
+X-Gm-Gg: ASbGncuFVamuZrHVqGzvGQrZ1cZBKiKZvslIeT29mITUc5WQb6HIXLBdRJN0E37DUXv
+	hBYGIGHwhwX0PJTC1LlgS6PLMoLEWgEbbRztRhDMg9N0jXNnUGPaHgj+vLmc0oGXc78iDv4F4pZ
+	yiPX2ss9ViZ0uPnMdji5j8m4n+Qp8KVp4JDwX+t9voHvbO/P+q4r017/3cspJN7D5ysC7y1Jxna
+	MY+YMGCPUp4HMejUzMRgeq9MCXKiwYGcABVIbAf3ZGFCCKGyd401xLhVysK7cKpKi2KMXQxAISg
+	0MTVmcFAzl7Xafs96mxirltu2GqGOoU8zMiSsNyXNAxBel9PrSUlRuwxMaUZWEmAatLqSpAV/cd
+	CW/yGdj8mm5o0L9gDg0M=
+X-Google-Smtp-Source: AGHT+IF3Bi94CxAHL97eJS91iuNb6rJiq3P3EwiR/TTRRbF/5RkQv32y2rcE3yw211WOk61XSxOHtA==
+X-Received: by 2002:a05:6a21:31c8:b0:1f5:7862:7f3a with SMTP id adf61e73a8af0-2093c7e1f0emr1283275637.14.1745873645392;
+        Mon, 28 Apr 2025 13:54:05 -0700 (PDT)
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com. [209.85.215.169])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25941eecsm8782624b3a.54.2025.04.28.13.54.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 13:54:05 -0700 (PDT)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so4205344a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:54:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWMje5rJSdifAoyghELCK3hJuwCWjrFvgHW1M0Y++szHAtMP5JGzwKkUIeeNomBFyl9dH8iGl9HmX9HHeM=@vger.kernel.org
+X-Received: by 2002:a17:90b:2d08:b0:2fe:b9be:216 with SMTP id
+ 98e67ed59e1d1-30a215a9e35mr1596359a91.31.1745873644318; Mon, 28 Apr 2025
+ 13:54:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-13-8f91a404d86b@bootlin.com>
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-13-8f91a404d86b@bootlin.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 28 Apr 2025 13:53:52 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WBxgJ9HZK=UyE8R17OiM0+ME2Lp5O7zoZRVOw2z6_sng@mail.gmail.com>
+X-Gm-Features: ATxdqUGX6srhk44LYXds4__tJ7VKjYOOGbCee4VbhetmdBaO7SswZM-oniFpcj8
+Message-ID: <CAD=FV=WBxgJ9HZK=UyE8R17OiM0+ME2Lp5O7zoZRVOw2z6_sng@mail.gmail.com>
+Subject: Re: [PATCH v2 13/34] drm/bridge: ti-sn65dsi86: convert to
+ devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	Herve Codina <herve.codina@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix CPU resume latency constraint units sent to device manager through the
-TI SCI API. The device manager expects CPU resume latency to be in msecs
-which is passed in with the TI SCI API [1]. CPU latency constraints are
-set in userspace using the PM QoS framework which uses usecs as the unit.
-Since PM QoS uses usecs for units and the device manager expects msecs as
-the unit, TI SCI needs to convert from usecs to msecs before passing to
-device manager.
+Hi,
 
-[1] https://software-dl.ti.com/tisci/esd/latest/2_tisci_msgs/pm/lpm.html#tisci-msg-lpm-set-latency-constraint
+On Thu, Apr 24, 2025 at 12:00=E2=80=AFPM Luca Ceresoli
+<luca.ceresoli@bootlin.com> wrote:
+>
+> This is the new API for allocating DRM bridges.
+>
+> Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 
-Cc: stable@vger.kernel.org
-Fixes: a7a15754c7f7 ("firmware: ti_sci: add CPU latency constraint management")
-Signed-off-by: Kendall Willis <k-willis@ti.com>
----
-Link to v1:
-https://lore.kernel.org/all/20250425153754.2141984-1-k-willis@ti.com/
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Changes from v1 to v2:
-- reworded commit message to clearer about TI SCI CPU resume latency API
-- added comment about converting to msecs and rounding down for the
-  device manager
-- changed commit to be inline with stable kernel rules
-- rebased on linux-next
+I can confirm that I can still build/boot on a board with ti-sn65dsi86
+after this patch. Thus, happy with:
 
-Test log [2] shows entry to MCU Only low power mode by sending a CPU
-resume latency constraint of 100000 us using PM QoS. On line 860,
-MCU Only is shown to be entered by 0x1 as the printed mode [3].
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-[2] https://gist.github.com/kwillis01/4cf6e19893927d232e7faa0676ea2425 
-[3] https://software-dl.ti.com/tisci/esd/latest/2_tisci_msgs/pm/lpm.html#supported-low-power-modes
----
- drivers/firmware/ti_sci.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 806a975fff22..ae5fd1936ad3 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -2,7 +2,7 @@
- /*
-  * Texas Instruments System Control Interface Protocol Driver
-  *
-- * Copyright (C) 2015-2024 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2015-2025 Texas Instruments Incorporated - https://www.ti.com/
-  *	Nishanth Menon
-  */
- 
-@@ -3670,6 +3670,7 @@ static int __maybe_unused ti_sci_suspend(struct device *dev)
- 	struct ti_sci_info *info = dev_get_drvdata(dev);
- 	struct device *cpu_dev, *cpu_dev_max = NULL;
- 	s32 val, cpu_lat = 0;
-+	u16 cpu_lat_ms;
- 	int i, ret;
- 
- 	if (info->fw_caps & MSG_FLAG_CAPS_LPM_DM_MANAGED) {
-@@ -3682,9 +3683,16 @@ static int __maybe_unused ti_sci_suspend(struct device *dev)
- 			}
- 		}
- 		if (cpu_dev_max) {
--			dev_dbg(cpu_dev_max, "%s: sending max CPU latency=%u\n", __func__, cpu_lat);
-+			/*
-+			 * PM QoS latency unit is usecs, device manager uses msecs.
-+			 * Convert to msecs and round down for device manager.
-+			 */
-+			cpu_lat_ms = cpu_lat / USEC_PER_MSEC;
-+			dev_dbg(cpu_dev_max, "%s: sending max CPU latency=%u ms\n", __func__,
-+				cpu_lat_ms);
- 			ret = ti_sci_cmd_set_latency_constraint(&info->handle,
--								cpu_lat, TISCI_MSG_CONSTRAINT_SET);
-+								cpu_lat_ms,
-+								TISCI_MSG_CONSTRAINT_SET);
- 			if (ret)
- 				return ret;
- 		}
-
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
--- 
-2.34.1
-
+Happy to have someone else land this through drm-misc-next or I can
+land it there myself.
