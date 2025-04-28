@@ -1,80 +1,83 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CBA211497
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C34C215F7C;
+	Mon, 28 Apr 2025 21:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745874132; cv=none; b=no+KFR6eqjCigP5Cx8Xw1WY6q+JkraHT08XVdbkx1vis+epMlQMuOK0uQliWaYFbSf/WmboIB50PLboPo3I12oFu6AAx8Ckv+lTY1Yrhj2R7U6HnFx0TEyb0UOWtcHU8TSS9ZWPbFfL5hEin2u2NkP5/OtwRGi3GH4TME3XB+GQ=
+	t=1745874145; cv=none; b=nxP/2v8NujGJYoTrjXU6OyJRMup+HiBQPoeMn6irFmx0Mi3Ny0vmt6yPh3NFnHHkOzUEvKSmn24mqfR40xbA2KfgywJbgyzzAuHIQ8GmrjbZXMMxgQXozQsZaEwLBFIAOOE1uzHzQERynOEh7XCmYhIRtxNwfXK4EZ2t7j6W/ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745874132; c=relaxed/simple;
-	bh=2ZfuLVsCa3uyg/dV83Ti5a2MISfnFj53Uosz+hvO9pQ=;
+	s=arc-20240116; t=1745874145; c=relaxed/simple;
+	bh=Itbp7clee2hvnWfOWGWjGxRJxSbIg8VzQq6yzzThnsM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMe2Raxe2TgQFjHwTayWGDfCS+9PI2Qgqe7fG72FkRxE57XK4JhXLnks1lqbWpKIHX6RbTUENMX1LZtz2bbJDPrI36I1j05WLaNQ03gCvsRfc8Noy+k3AziGl1CRLRgrRWf2BVX7VVxknn857D1jES+/zyAHOgL7N4AqoSXtrGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lQyujIb3; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HUgB63TJSGswHeZN85/a94/YnrYFron3oHvvaq/Unb6mXYWRkr6F0BCPW7W0F5F6ybvA2Q3+bkTLwLFbBV9ppFbU4FPV+kC93TPnb2kcw9K7ZlNimMjfoCANGSEJMP9VmxLYYaQQcBPUoBpsKQOzNuKVgcpTUteClPYmBMZhQAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/HhiYNJ; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQyujIb3"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2263428c8baso14155ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:02:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/HhiYNJ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so4590224b3a.2;
+        Mon, 28 Apr 2025 14:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745874130; x=1746478930; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745874142; x=1746478942; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YTPDgyBQFtwamlv7MOGnKiNXfQ7Dnv+t8g+TQ5a6GG8=;
-        b=lQyujIb3M0N2fS87nJJnXN2/MRoFi2d0yYqLtIxzYHmfyDOzXMYl3IgaiOeZ6RPfPl
-         xwqkDy0Wu93ESuBReZI8i7TFKgz6NBdfKLDL2cBI7MUot5IxxXJ4H/ZsrIstqM8Szmga
-         PwkyiX7p8lr1NlBYML1W2EZMYSuNXoVTxyDbrR3C9fX91PSOxNF/IiPxifrqbhMUHIeO
-         svXULhg40SL0CPo2RKbt6/s4jgLwuXjcDCVR22/9T8C/RZlH7sgHUA2xrrdqkofOsRoq
-         1OqAVyWA2CXWcGbXFnV1a539Kq3thmrJoS7FoaahKHcycS+LZS0tBQiek1eZS82bIe8I
-         7f8Q==
+        bh=hXXB00A+dPp6J1rZLZ3Xtsxe/hEjJz2VYrs1MOq8CDM=;
+        b=Y/HhiYNJ9ZELl149/g3NsDz3LJcwL3jfFU1ZCeBn6FgyT/sePacU+qBXIcujPWgaQ5
+         goxRw05nBGWQBlVlHwIaafnPzhjEykcqqRsMRvdjmVuXMRtm3GULQfJoRgpFtLjkl96s
+         OsmiIxur/OryLntdgYhmKs/Uq/i2WcZjegwYHqoRC/F49hppS8GuSUpHbaHvKd4BnZ+k
+         v8YcoIIWCioyk3TFBQ5xEjKnFgruFsxkxMezdIgnCO77pby3rokXSh1K8zaqSxOIH7cO
+         kihB0l7ZwWWyBlVrD1K1L2f5co3494KUeLt2e7jYjGd6GzZkO+08nGX/b4olqt4y6emj
+         LWdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745874130; x=1746478930;
+        d=1e100.net; s=20230601; t=1745874142; x=1746478942;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YTPDgyBQFtwamlv7MOGnKiNXfQ7Dnv+t8g+TQ5a6GG8=;
-        b=iRz3w6alNqD8MkqN2Acy7S5B+LnCey9fMBNtxImTrEpFux19/ag7QAcoInRwmA8iaB
-         DDuNZbeUO8dzE2lqy6OOfO50g3RyWuqDGhcqXMbSUMspVkQ9EjoH2FVDKXwq7u9JjtH0
-         GNT6N2GRNn0KDJVI/a0SW6DGKpZKKrHyrX0SHjZPXJXYW/mi384Rdl1kXB+hQ6M+8/6Z
-         +I/I3IzIIYuSS+fnnlPUd+Mw0jJxETgu6K6bs17toJZWp47upO768oVHQWqUf401rPfM
-         On5C2WDskVjAvd4UZZXC+KTCAwS84yobjpdcmLzXB3LV/Z0IhfN5cvPwdSefu0J4EP/G
-         k2OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNwWL8LCWnNJcaPCoq2vfUgBkbRTir0RonzIkL/KMKcAmivzYU+L+pmpkGP6B8w5wjc9DQq8ARZ6LFMgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBb0ZeF0FRREam/RtEAthw7VA2Kgjq+OXLQQzN4OXWye6MOlA3
-	WqVTgR4Ja1rrdWm/AJp7ulkt1XlOVArnIWW7567R+HtTF7aN3komgEEE0wq0aw==
-X-Gm-Gg: ASbGncsbfHTDLqnm9Rm2L2xhQlp094vUnd5mF1bq/vplPhzGoryVk+rnh2dn8hg1Hcv
-	BHmQXnjnrjdcfuq/a+pF7n/mcFW5RnwVdoM3QUZTHW4Eicsqlkzjkl85EjUGy6kJgROYXsDgI4K
-	0nKZT7LBXe3qeQ8WYpER1ikMZijUZQCpEOLJ8SY/0qehShzhjCEwp8kG3PDW0aW+pZxlVKF3H54
-	kpVjWdNyyI0hRjQG2kwGfB6nPnfWQoTQY1U0pQJZiiXxVltBipHHUL7JtrRJWkCmcU2qGflcWfg
-	vK/xA5yTgkNUp3ZLvILGscJ6j9oAkX4h+f+vwZAmvhOXtEsgDKTJlprY9G2gsutjVo6NiO0kZMK
-	ege4YdX4=
-X-Google-Smtp-Source: AGHT+IGSuMnWnZQ91ixDrXUdSEwCsKBdyqU3BwTCUj27r44/z7SX9aXDHYQTjWFgiPOhsJhMa9YvFg==
-X-Received: by 2002:a17:903:124d:b0:223:37ec:63be with SMTP id d9443c01a7336-22de6c49626mr781305ad.4.1745874129655;
-        Mon, 28 Apr 2025 14:02:09 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6a3casm8778803b3a.96.2025.04.28.14.02.04
+        bh=hXXB00A+dPp6J1rZLZ3Xtsxe/hEjJz2VYrs1MOq8CDM=;
+        b=F36kJZxioCLJAE2dL/XuTshBhxpuJ4VmHTjQRDxzFWJMHymceSy/0yGvqRY6PtZVen
+         /0kkpfY2hrFzkWZW7XBYVYOdmGdzjFV0QY4HMya7jn6rweyMXdnZfu+WUfRXU/Eal6TK
+         RSTsFykYbk7caf5MUG334cZK4b8u0fKNRKMSGUifNY1IPBWZuj2YY6y4WT/td59Y6KEC
+         FdylfzjOiNmxfoRYyRyopwxJoYZ2cS30dXDXkaxWUMUU4m2kTWvuij/uVIsM3we9PiIf
+         337Vc4huc5SfnXl6AUZ8AI8iMl1kjA4daWYl3mriGN0lktC0mptXETGGVLkgpz8AXCLe
+         WECg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6kNPN/qbEmrw/NFo4FqKW7Nn81wdB5pkQGx87QpRnQWiujM1VFiE7Pa0/BNm0qVT7A7Pb0lF2@vger.kernel.org, AJvYcCVzMHA3ZJ063mEK8DPJ2n7sHgE1zJAEth4+bnlLCQjxqxKWsDmT1CA1xmAVmtYijaG+b9VTPHW9r+FBsJg=@vger.kernel.org, AJvYcCW+5kMTcPxAqVnVAxW70IPQ+6G8DuwpWyULUHlz2VF/UeoWTZAC87JvGfXG0GIRI4/FiZKNcg2a@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn3KicfdSeRFfP1paiIeKdzL/jTLhn13nvnRv5MZxJwQY99Rny
+	B3cZ5DUqGDCnwqCgxvwqzupICSax4XW7Xnz8IzY+sZt8fp/2uCtI
+X-Gm-Gg: ASbGnctfxX1m5hqS/Cz1CvLcHKZ5DfWK8FMPCNKX8kKSWtHvUdrqFnozZR6MyBk1U2G
+	5Nqjm+8n8NTXQcjpKGgyCQQV5mXiSARVBbdFog40MuksLPFM2RhcO5ue6QJDg0Vi4i1fX1QnmB9
+	KMeAa9W2sJCo6re/oRrDf4ySkTAoKExY3+rluP6k1m8+08LSbRZV5uCPR7usv093WuvMTwOpgvT
+	8ICrJnMsZl4z2fTGvDi75gOvX+y0yvB2/dVfFIZQL35XKgLRqFMqHo3zoGz9fyqIWU4YrdcJlCt
+	52TRVx5mcgIiJuPs5hSyRgpdbtfAFy/b23RJLzj/iWQw
+X-Google-Smtp-Source: AGHT+IGQzTQOkq544Fxw04oa9VgEQc7AcWpngUxeHCjtqSAJ/vTs9P8Z2id3ozh+5cNJhu5851lR7w==
+X-Received: by 2002:a05:6a20:7f87:b0:1f5:8072:d7f3 with SMTP id adf61e73a8af0-2093e724297mr1426828637.30.1745874141571;
+        Mon, 28 Apr 2025 14:02:21 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25aca62csm8484928b3a.167.2025.04.28.14.02.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 14:02:09 -0700 (PDT)
-Date: Mon, 28 Apr 2025 21:01:58 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 09/22] iommufd/viommu: Introduce IOMMUFD_OBJ_VCMDQ and
- its related struct
-Message-ID: <aA_sxstJRbG1znKs@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <8bab0069503fa21b48298ed2ffe29a06963f71f5.1745646960.git.nicolinc@nvidia.com>
+        Mon, 28 Apr 2025 14:02:21 -0700 (PDT)
+Date: Mon, 28 Apr 2025 14:02:20 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: "Alan J. Wylie" <alan@wylie.me.uk>
+Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <aA/s3GBuDc5t1nY5@pop-os.localdomain>
+References: <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+ <20250422214716.5e181523@frodo.int.wylie.me.uk>
+ <aAgO59L0ccXl6kUs@pop-os.localdomain>
+ <20250423105131.7ab46a47@frodo.int.wylie.me.uk>
+ <aAlAakEUu4XSEdXF@pop-os.localdomain>
+ <20250424135331.02511131@frodo.int.wylie.me.uk>
+ <aA6BcLENWhE4pQCa@pop-os.localdomain>
+ <20250427204254.6ae5cd4a@frodo.int.wylie.me.uk>
+ <20250427213548.73efc7b9@frodo.int.wylie.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,101 +86,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8bab0069503fa21b48298ed2ffe29a06963f71f5.1745646960.git.nicolinc@nvidia.com>
+In-Reply-To: <20250427213548.73efc7b9@frodo.int.wylie.me.uk>
 
-On Fri, Apr 25, 2025 at 10:58:04PM -0700, Nicolin Chen wrote:
-> Add a new IOMMUFD_OBJ_VCMDQ with an iommufd_vcmdq structure, representing
-> a command queue type of physical HW passed to a user space VM. This vCMDQ
-> object, is a subset of vIOMMU resources of a physical IOMMU's, such as:
->  - NVIDIA's virtual command queue
->  - AMD vIOMMU's command buffer
+On Sun, Apr 27, 2025 at 09:35:48PM +0100, Alan J. Wylie wrote:
+> On Sun, 27 Apr 2025 20:42:54 +0100
+> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
 > 
-> Inroduce a struct iommufd_vcmdq and its allocator iommufd_vcmdq_alloc().
-> Also add a pair of viommu ops for iommufd to forward user space ioctls to
-> IOMMU drivers.
+> > That would be https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/ ?
+> > 
+> > I've just cloned that. I'll do a build and a test.
 > 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> $ uname -r
+> 6.15.0-rc3-00109-gf73f05c6f711
+> 
+> It's crashed. Same place as usual. I tried again, same thing.
+> 
+>  htb_dequeue+0x42e/0x610 [sch_htb]
+> 
+> Rather than a ping flood, I was running a Speedtest. Both times it
+> crashed during the upload test, not the download.
+> 
+> https://www.speedtest.net/
+> 
+> Could running an iptables firewall perhaps have anything to do with it?
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+I doubt it is related to iptables. I will try some TCP traffic on my
+side later, but I suspect this is related to the type of packets.
 
-> ---
->  include/linux/iommufd.h | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
-> index ef0d3c4765cf..e91381aaec5a 100644
-> --- a/include/linux/iommufd.h
-> +++ b/include/linux/iommufd.h
-> @@ -37,6 +37,7 @@ enum iommufd_object_type {
->  	IOMMUFD_OBJ_VIOMMU,
->  	IOMMUFD_OBJ_VDEVICE,
->  	IOMMUFD_OBJ_VEVENTQ,
-> +	IOMMUFD_OBJ_VCMDQ,
->  #ifdef CONFIG_IOMMUFD_TEST
->  	IOMMUFD_OBJ_SELFTEST,
->  #endif
-> @@ -112,6 +113,14 @@ struct iommufd_vdevice {
->  	u64 id; /* per-vIOMMU virtual ID */
->  };
->  
-> +struct iommufd_vcmdq {
-> +	struct iommufd_object obj;
-> +	struct iommufd_ctx *ictx;
-> +	struct iommufd_viommu *viommu;
-> +	dma_addr_t addr;
-> +	size_t length;
-> +};
-> +
->  /**
->   * struct iommufd_viommu_ops - vIOMMU specific operations
->   * @destroy: Clean up all driver-specific parts of an iommufd_viommu. The memory
-> @@ -135,6 +144,13 @@ struct iommufd_vdevice {
->   * @vdevice_destroy: Clean up all driver-specific parts of an iommufd_vdevice.
->   *                   The memory of the vDEVICE will be free-ed by iommufd core
->   *                   after calling this op
-> + * @vcmdq_alloc: Allocate a @type of iommufd_vcmdq as a user space command queue
-> + *               for a @viommu. @index carries the logical vcmdq ID (for a multi-
-> + *               queue case); @addr carries the guest physical base address of
-> + *               the queue memory; @length carries the size of the queue memory
-> + * @vcmdq_destroy: Clean up all driver-specific parts of an iommufd_vcmdq. The
-> + *                 memory of the iommufd_vcmdq will be free-ed by iommufd core
-> + *                 after calling this op
->   */
->  struct iommufd_viommu_ops {
->  	void (*destroy)(struct iommufd_viommu *viommu);
-> @@ -147,6 +163,10 @@ struct iommufd_viommu_ops {
->  						 struct device *dev,
->  						 u64 virt_id);
->  	void (*vdevice_destroy)(struct iommufd_vdevice *vdev);
-> +	struct iommufd_vcmdq *(*vcmdq_alloc)(struct iommufd_viommu *viommu,
-> +					     unsigned int type, u32 index,
-> +					     dma_addr_t addr, size_t length);
-> +	void (*vcmdq_destroy)(struct iommufd_vcmdq *vcmdq);
->  };
->  
->  #if IS_ENABLED(CONFIG_IOMMUFD)
-> @@ -286,6 +306,21 @@ static inline int iommufd_viommu_report_event(struct iommufd_viommu *viommu,
->  		ret;                                                           \
->  	})
->  
-> +#define iommufd_vcmdq_alloc(viommu, drv_struct, member)                        \
-> +	({                                                                     \
-> +		drv_struct *ret;                                               \
-> +									       \
-> +		static_assert(__same_type(struct iommufd_viommu, *viommu));    \
-> +		static_assert(__same_type(struct iommufd_vcmdq,                \
-> +					  ((drv_struct *)NULL)->member));      \
-> +		static_assert(offsetof(drv_struct, member.obj) == 0);          \
-> +		ret = (drv_struct *)_iommufd_object_alloc(                     \
-> +			viommu->ictx, sizeof(drv_struct), IOMMUFD_OBJ_VCMDQ);  \
-> +		if (!IS_ERR(ret))                                              \
-> +			ret->member.viommu = viommu;                           \
-> +		ret;                                                           \
-> +	})
-> +
->  /* Helper for IOMMU driver to destroy structures created by allocators above */
->  #define iommufd_struct_destroy(ictx, drv_struct, member)                       \
->  	({                                                                     \
-> -- 
-> 2.43.0
-> 
+Meanwhile, since I still can't reproduce it here, do you mind applying
+both of my patches on top of -net and test again?
+
+For your convenience, below is the combined patch of the previous two
+patches, which can be applied on -net.
+
+Thanks!
+
+----->
+
+diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
+index 4b9a639b642e..9d88fff120bc 100644
+--- a/net/sched/sch_htb.c
++++ b/net/sched/sch_htb.c
+@@ -348,7 +348,8 @@ static void htb_add_to_wait_tree(struct htb_sched *q,
+  */
+ static inline void htb_next_rb_node(struct rb_node **n)
+ {
+-	*n = rb_next(*n);
++	if (*n)
++		*n = rb_next(*n);
+ }
+ 
+ /**
+@@ -1487,7 +1488,8 @@ static void htb_qlen_notify(struct Qdisc *sch, unsigned long arg)
+ 
+ 	if (!cl->prio_activity)
+ 		return;
+-	htb_deactivate(qdisc_priv(sch), cl);
++	if (!cl->leaf.q->q.qlen)
++		htb_deactivate(qdisc_priv(sch), cl);
+ }
+ 
+ static inline int htb_parent_last_child(struct htb_class *cl)
