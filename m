@@ -1,337 +1,350 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEDC224244
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEEE8836;
+	Mon, 28 Apr 2025 12:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843469; cv=none; b=hFDWW4OEaWnMlW1qWBxHCoqyY+svIRoSe/Xoirh/laXnrTpnF+UBhoCYQiaMTRo7nSh5WyS8m5huh/T8cpXuwXiNlTeWfRY8Kkk5UrlDyUKzNRMXpQc7gABVtZvpS7hOZdzMwgkQGaoRn7ZjM3Km+LWh4T6gntrWi16NAeXmryg=
+	t=1745843488; cv=none; b=saJWcowVgN/IAFZu2NdXKBe6ELNNrFw0uDVieBalURRmgDGqpRTpRG7OoVEwDX3x+WX9FRaJLKeqM+5TfiCXwV6nN61TT0/P3uZtS1Eu7y2/BBKAgk8QOaE0iMSshRgdMVWi9FJAXUEiE9pr+FJ9WD3dpd5QmOp0Bng2wRVEShM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843469; c=relaxed/simple;
-	bh=t9BBSnsURVFrBBj9h2/2B1TCyqnSBwOK4oOsrZuGCR4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=BMYeW2edGtE0JDJMUW+B1VvMffKI9kj5VBShVjAvOlmUkIZ1WksdlWxxiu/e7gUXs0NjNXiIyLvgmo+c+BRSukbLeyFT/6WYIt8BmcONlQElu5c8j66rKZb+WJygjcrR0Dj7ZOUdJfZwKfRIZTvxH298RauuTgAOdjy7zXI5Xbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SuqVfhJw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Pe7cUy/E; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745843488; c=relaxed/simple;
+	bh=BgKTiqhajdSHJykhI+xCv3FfICE135d0VMIS7bVZG9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=piAA1NsQvv3S52Zr7iziXe0PEAdTtHeYW+pvL2cibUnU87oo80qO75gxGKF9BarCwHYjBCjF8v/IAUxWWeylbm/Ao9H1Zg7qRY+5HE3Ma4VTE4/ZBPjWCFHHqWc04B9XbjWHIWC6FhOD4Uhkcjmx3/N5NIR8fvHV/J5bjrtnrxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=jMy6Jn1j; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SuqVfhJw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pe7cUy/E"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 5131D114025B;
-	Mon, 28 Apr 2025 08:31:03 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Mon, 28 Apr 2025 08:31:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745843463;
-	 x=1745929863; bh=l85d+c/VTG74vQy/NEAzc1LT42PJmdxc2NSt71v6MF8=; b=
-	SuqVfhJw+Y3Ur7fgmVIU3Rp0m+MvJO5yJrvKVuxiNbJpYoA5ZEpGjdlX1ipnT/Uq
-	NRYfNwBXA9MFNp/2YTmNVPIrlZsADnE43RAQu8DIvotj6dGLQFFIjZcXmSqx7maz
-	reA3azZRDFIFZ6Znv9YmXzQKivfZbG8sd7c0O0tjNyKsdmOOe6yYGC/oWq1TQxqD
-	qIjuiGOPH4XBkAETKoHOmx2QOYR0pwTUQ6U9zw3L5ss06in4+OQmiw9JFGGohkgs
-	vux+Ypr3DDuPI0KnlM6VlTFbNXO+yVJNSGPf2CXBQzQXXAlywvIfrTxsoUpflgmD
-	WdSfsaEUO5/rvtm+PmQYdA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745843463; x=
-	1745929863; bh=l85d+c/VTG74vQy/NEAzc1LT42PJmdxc2NSt71v6MF8=; b=P
-	e7cUy/ED4IPc+xS8XIUNFU+UA3mshvlZb8hAp88inYhPsvwBdXKBlae+RASnNxOh
-	ELbsgfJhdc3Ow6lmm5bW6BCRWfHgW6NXXWPT5Z+tiZ0VrDahHGAkjRFRjxcu5lSg
-	z/kTZ0JKsKE4UsMuScKG6w9WwOXijYVyMQaPa+MQTJIfQKla7V5bDlu8XtBxNwJz
-	r/tIgrynqylLOXFu48utceWn0XXwmQtBNhVxGPegR2kCozc1O7uL5adxi6hexcK4
-	I2K5hW851mZBhfHH/qfa/QbDGDbzt45oJYDqFlQUxMDgRNMuBpLHc90kDx6RWvgX
-	LLl6o3rpLa8stUhXQWFZA==
-X-ME-Sender: <xms:BXUPaDezTL1TN0-r_UEi_3XH69IDfnAXbjZUMVi4L7KGDhMvh5n1pA>
-    <xme:BXUPaJPUVbNa1w2G92w8YZiV4Kq3KYhgrgj2EtSthgqLLX11iquLFAGOlvOhDN2cj
-    nxt_vO5eaIAIQ9rwO0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtleehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    vddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopegrnhgurhgvfidrtghoohhpvghrfeestghithhrihigrdgtohhmpdhr
-    tghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprg
-    hlvgigrghnuggvrhdruhhshihskhhinhesihhnthgvlhdrtghomhdprhgtphhtthhopegr
-    rhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehr
-    phhptheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorh
-    hg
-X-ME-Proxy: <xmx:BXUPaMjsa-EdZVMkQozKoOZL5CsDf8FrJh6sGT2tsVxuSqi-cmsThw>
-    <xmx:BXUPaE_t8u4Cp2aH4korOXy6tG5ARYegDCcuV2jQc6HeF5mUiGPPUg>
-    <xmx:BXUPaPvIu4EkBpVC3vhm9XNZJObQFKjQgmO3NLcyWmyguuNXP0cRNA>
-    <xmx:BXUPaDGx0GUBpjL7k75UIGpdtm5e3wHXRVo_Sy41bRu4EZGL8EINug>
-    <xmx:B3UPaLkozNo8AMc5E-AbMwXx-fMoG20mUaw5xfVSxqUuoRLHQfgAgDjy>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BEC902220075; Mon, 28 Apr 2025 08:31:01 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jMy6Jn1j"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4BC6D7E6;
+	Mon, 28 Apr 2025 14:31:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745843478;
+	bh=BgKTiqhajdSHJykhI+xCv3FfICE135d0VMIS7bVZG9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jMy6Jn1jlMehViF7yrDUVGYeumBJlasP0OR+Fkf1GbJbzCIavej1NHZqI1xqXYERc
+	 sQWlqMbq4PRHIwD4tH6mHk+OjPjn8AXr8ZNC/muA0weHmXpxyxBcDdVxoi/rcUWbTt
+	 RNGWSQzxWgfHrMp9/OMNYpGr/mWMiHgOdGma5Zj4=
+Date: Mon, 28 Apr 2025 15:31:17 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v6 3/5] media: uvcvideo: Increase/decrease the PM counter
+ per IOCTL
+Message-ID: <20250428123117.GH3371@pendragon.ideasonboard.com>
+References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
+ <20250327-uvc-granpower-ng-v6-3-35a2357ff348@chromium.org>
+ <20250422203753.GM17813@pendragon.ideasonboard.com>
+ <CANiDSCumGeLf8qsWbnrJ2bjQEkQNM_-fD66ZDMG_ig-7XmvWcw@mail.gmail.com>
+ <300e71dc-27f0-4193-a99f-3f6880add883@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T1abce48479718f0e
-Date: Mon, 28 Apr 2025 14:30:41 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ingo Molnar" <mingo@kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: "Andrew Cooper" <andrew.cooper3@citrix.com>,
- "Arnd Bergmann" <arnd@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Juergen Gross" <jgross@suse.com>,
- "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
- "Alexander Usyskin" <alexander.usyskin@intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
- "Mike Rapoport" <rppt@kernel.org>, "Ard Biesheuvel" <ardb@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- xen-devel@lists.xenproject.org
-Message-Id: <acc95bb8-f277-4e5c-9647-3c034748ed2c@app.fastmail.com>
-In-Reply-To: <aA8q4Ot-1zTzv_Kt@gmail.com>
-References: <20250425141740.734030-1-arnd@kernel.org>
- <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
- <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
- <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
- <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
- <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
- <aA8nF0moBYOIgC5J@gmail.com> <aA8oqKUaFU-0wb-D@gmail.com>
- <aA8q4Ot-1zTzv_Kt@gmail.com>
-Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case handling to
- C
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <300e71dc-27f0-4193-a99f-3f6880add883@redhat.com>
 
-On Mon, Apr 28, 2025, at 09:14, Ingo Molnar wrote:
->
-> ... and unless I messed up the patch, it seems to have a surprisingly 
-> low impact - maybe because the compiler can amortize its cost by 
-> adjusting all dependent code mostly at build time, so the +1 doesn't 
-> end up being generated most of the time?
+On Mon, Apr 28, 2025 at 01:54:38PM +0200, Hans de Goede wrote:
+> On 23-Apr-25 00:58, Ricardo Ribalda wrote:
+> > On Wed, 23 Apr 2025 at 04:37, Laurent Pinchart wrote:
+> >> On Thu, Mar 27, 2025 at 09:05:29PM +0000, Ricardo Ribalda wrote:
+> >>> Now we call uvc_pm_get/put from the device open/close. This low
+> >>> level of granularity might leave the camera powered on in situations
+> >>> where it is not needed.
+> >>>
+> >>> Increase the granularity by increasing and decreasing the Power
+> >>> Management counter per ioctl. There are two special cases where the
+> >>> power management outlives the ioctl: async controls and streamon. Handle
+> >>> those cases as well.
+> >>>
+> >>> In a future patch, we will remove the uvc_pm_get/put from open/close.
+> >>>
+> >>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> >>> ---
+> >>>  drivers/media/usb/uvc/uvc_ctrl.c | 37 +++++++++++++++++++++++++++----------
+> >>>  drivers/media/usb/uvc/uvc_v4l2.c | 39 +++++++++++++++++++++++++++++++++++++--
+> >>>  2 files changed, 64 insertions(+), 12 deletions(-)
+> >>>
+> >>> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> >>> index cbf19aa1d82374a08cf79b6a6787fa348b83523a..3fad289e41fd5a757f8dcf30a6238c694fc4250c 100644
+> >>> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> >>> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> >>> @@ -1812,38 +1812,49 @@ static void uvc_ctrl_send_slave_event(struct uvc_video_chain *chain,
+> >>>       uvc_ctrl_send_event(chain, handle, ctrl, mapping, val, changes);
+> >>>  }
+> >>>
+> >>> -static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> >>> -                             struct uvc_fh *new_handle)
+> >>> +static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> >>> +                            struct uvc_fh *new_handle)
+> >>>  {
+> >>>       lockdep_assert_held(&handle->chain->ctrl_mutex);
+> >>>
+> >>>       if (new_handle) {
+> >>> +             int ret;
+> >>> +
+> >>>               if (ctrl->handle)
+> >>>                       dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+> >>>                                            "UVC non compliance: Setting an async control with a pending operation.");
+> >>>
+> >>>               if (new_handle == ctrl->handle)
+> >>> -                     return;
+> >>> +                     return 0;
+> >>>
+> >>>               if (ctrl->handle) {
+> >>>                       WARN_ON(!ctrl->handle->pending_async_ctrls);
+> >>>                       if (ctrl->handle->pending_async_ctrls)
+> >>>                               ctrl->handle->pending_async_ctrls--;
+> >>> +                     ctrl->handle = new_handle;
+> >>> +                     handle->pending_async_ctrls++;
+> >>
+> >> As commented previously, your usage of the handle variable is confusing.
+> >>
+> >>                         ctrl->handle->pending_async_ctrls++;
+> > 
+> > I believe what makes it confusing is the function arguments.
+> > 
+> > Would you mind if I send a new patch introducing:
+> > uvc_ctrl_set_handle() and uvc_ctrl_clear_handle().
 
-Is there any reason we can't just use the compiler-builtins directly
-like we do on other architectures, at least for 32-bit?
+It seems worth a try. I would still like the above change to be
+addressed. Can you please send a patch for that too ?
 
-Looking at a couple of vmlinux objects confirms the  findings from
-fdb6649ab7c1 ("x86/asm/bitops: Use __builtin_ctzl() to evaluate
-constant expressions") from looking at the object file that using
-the built-in helpers is slightly better than the current asm code
-for all 32-bit targets with both gcc and clang. It's also better
-for 64-bit targets with clang, but not with gcc, where the inline
-asm often saves a cmov but in other cases the compiler finds an
-even better instruction sequence.
+> Ricardo, if you do end up making this change, please do so as a follow-up
+> patch on top of current uvc/next so that we don't have to drop the whole
+> series and then rebuild uvc/next from scratch.
 
-     Arnd
+Ack, that's my preference too.
 
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index eebbc8889e70..bdeae9a497e5 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -246,184 +246,18 @@ arch_test_bit_acquire(unsigned long nr, const volatile unsigned long *addr)
- 					  variable_test_bit(nr, addr);
- }
- 
--static __always_inline unsigned long variable__ffs(unsigned long word)
--{
--	asm("tzcnt %1,%0"
--		: "=r" (word)
--		: ASM_INPUT_RM (word));
--	return word;
--}
--
--/**
-- * __ffs - find first set bit in word
-- * @word: The word to search
-- *
-- * Undefined if no bit exists, so code should check against 0 first.
-- */
--#define __ffs(word)				\
--	(__builtin_constant_p(word) ?		\
--	 (unsigned long)__builtin_ctzl(word) :	\
--	 variable__ffs(word))
--
--static __always_inline unsigned long variable_ffz(unsigned long word)
--{
--	return variable__ffs(~word);
--}
--
--/**
-- * ffz - find first zero bit in word
-- * @word: The word to search
-- *
-- * Undefined if no zero exists, so code should check against ~0UL first.
-- */
--#define ffz(word)				\
--	(__builtin_constant_p(word) ?		\
--	 (unsigned long)__builtin_ctzl(~word) :	\
--	 variable_ffz(word))
--
--/*
-- * __fls: find last set bit in word
-- * @word: The word to search
-- *
-- * Undefined if no set bit exists, so code should check against 0 first.
-- */
--static __always_inline unsigned long __fls(unsigned long word)
--{
--	if (__builtin_constant_p(word))
--		return BITS_PER_LONG - 1 - __builtin_clzl(word);
--
--	asm("bsr %1,%0"
--	    : "=r" (word)
--	    : ASM_INPUT_RM (word));
--	return word;
--}
--
- #undef ADDR
- 
--#ifdef __KERNEL__
--static __always_inline int variable_ffs(int x)
--{
--	int r;
--
--#ifdef CONFIG_X86_64
--	/*
--	 * AMD64 says BSFL won't clobber the dest reg if x==0; Intel64 says the
--	 * dest reg is undefined if x==0, but their CPU architect says its
--	 * value is written to set it to the same as before, except that the
--	 * top 32 bits will be cleared.
--	 *
--	 * We cannot do this on 32 bits because at the very least some
--	 * 486 CPUs did not behave this way.
--	 */
--	asm("bsfl %1,%0"
--	    : "=r" (r)
--	    : ASM_INPUT_RM (x), "0" (-1));
--#elif defined(CONFIG_X86_CMOV)
--	asm("bsfl %1,%0\n\t"
--	    "cmovzl %2,%0"
--	    : "=&r" (r) : "rm" (x), "r" (-1));
--#else
--	asm("bsfl %1,%0\n\t"
--	    "jnz 1f\n\t"
--	    "movl $-1,%0\n"
--	    "1:" : "=r" (r) : "rm" (x));
--#endif
--	return r + 1;
--}
--
--/**
-- * ffs - find first set bit in word
-- * @x: the word to search
-- *
-- * This is defined the same way as the libc and compiler builtin ffs
-- * routines, therefore differs in spirit from the other bitops.
-- *
-- * ffs(value) returns 0 if value is 0 or the position of the first
-- * set bit if value is nonzero. The first (least significant) bit
-- * is at position 1.
-- */
--#define ffs(x) (__builtin_constant_p(x) ? __builtin_ffs(x) : variable_ffs(x))
--
--/**
-- * fls - find last set bit in word
-- * @x: the word to search
-- *
-- * This is defined in a similar way as the libc and compiler builtin
-- * ffs, but returns the position of the most significant set bit.
-- *
-- * fls(value) returns 0 if value is 0 or the position of the last
-- * set bit if value is nonzero. The last (most significant) bit is
-- * at position 32.
-- */
--static __always_inline int fls(unsigned int x)
--{
--	int r;
--
--	if (__builtin_constant_p(x))
--		return x ? 32 - __builtin_clz(x) : 0;
--
--#ifdef CONFIG_X86_64
--	/*
--	 * AMD64 says BSRL won't clobber the dest reg if x==0; Intel64 says the
--	 * dest reg is undefined if x==0, but their CPU architect says its
--	 * value is written to set it to the same as before, except that the
--	 * top 32 bits will be cleared.
--	 *
--	 * We cannot do this on 32 bits because at the very least some
--	 * 486 CPUs did not behave this way.
--	 */
--	asm("bsrl %1,%0"
--	    : "=r" (r)
--	    : ASM_INPUT_RM (x), "0" (-1));
--#elif defined(CONFIG_X86_CMOV)
--	asm("bsrl %1,%0\n\t"
--	    "cmovzl %2,%0"
--	    : "=&r" (r) : "rm" (x), "rm" (-1));
--#else
--	asm("bsrl %1,%0\n\t"
--	    "jnz 1f\n\t"
--	    "movl $-1,%0\n"
--	    "1:" : "=r" (r) : "rm" (x));
--#endif
--	return r + 1;
--}
--
--/**
-- * fls64 - find last set bit in a 64-bit word
-- * @x: the word to search
-- *
-- * This is defined in a similar way as the libc and compiler builtin
-- * ffsll, but returns the position of the most significant set bit.
-- *
-- * fls64(value) returns 0 if value is 0 or the position of the last
-- * set bit if value is nonzero. The last (most significant) bit is
-- * at position 64.
-- */
--#ifdef CONFIG_X86_64
--static __always_inline int fls64(__u64 x)
--{
--	int bitpos = -1;
--
--	if (__builtin_constant_p(x))
--		return x ? 64 - __builtin_clzll(x) : 0;
--	/*
--	 * AMD64 says BSRQ won't clobber the dest reg if x==0; Intel64 says the
--	 * dest reg is undefined if x==0, but their CPU architect says its
--	 * value is written to set it to the same as before.
--	 */
--	asm("bsrq %1,%q0"
--	    : "+r" (bitpos)
--	    : ASM_INPUT_RM (x));
--	return bitpos + 1;
--}
--#else
-+#include <asm-generic/bitops/__ffs.h>
-+#include <asm-generic/bitops/ffz.h>
-+#include <asm-generic/bitops/builtin-fls.h>
-+#include <asm-generic/bitops/__fls.h>
- #include <asm-generic/bitops/fls64.h>
--#endif
- 
--#include <asm-generic/bitops/sched.h>
- 
-+#include <asm-generic/bitops/sched.h>
-+#include <asm-generic/bitops/builtin-ffs.h>
- #include <asm/arch_hweight.h>
--
- #include <asm-generic/bitops/const_hweight.h>
- 
- #include <asm-generic/bitops/instrumented-atomic.h>
-@@ -434,5 +268,4 @@ static __always_inline int fls64(__u64 x)
- 
- #include <asm-generic/bitops/ext2-atomic-setbit.h>
- 
--#endif /* __KERNEL__ */
- #endif /* _ASM_X86_BITOPS_H */
+> >>> +                     return 0;
+> >>>               }
+> >>>
+> >>> +             ret = uvc_pm_get(handle->chain->dev);
+> >>> +             if (ret)
+> >>> +                     return ret;
+> >>> +
+> >>>               ctrl->handle = new_handle;
+> >>>               handle->pending_async_ctrls++;
+> >>
+> >>                 ctrl->handle->pending_async_ctrls++;
+> >>
+> >>> -             return;
+> >>> +             return 0;
+> >>>       }
+> >>>
+> >>>       /* Cannot clear the handle for a control not owned by us.*/
+> >>>       if (WARN_ON(ctrl->handle != handle))
+> >>> -             return;
+> >>> +             return -EINVAL;
+> >>>
+> >>>       ctrl->handle = NULL;
+> >>>       if (WARN_ON(!handle->pending_async_ctrls))
+> >>> -             return;
+> >>> +             return -EINVAL;
+> >>>       handle->pending_async_ctrls--;
+> >>> +     uvc_pm_put(handle->chain->dev);
+> >>> +     return 0;
+> >>>  }
+> >>>
+> >>>  void uvc_ctrl_status_event(struct uvc_video_chain *chain,
+> >>> @@ -2137,15 +2148,16 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+> >>>
+> >>>               ctrl->dirty = 0;
+> >>>
+> >>> +             if (!rollback && handle && !ret &&
+> >>> +                 ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+> >>> +                     ret = uvc_ctrl_set_handle(handle, ctrl, handle);
+> >>> +
+> >>>               if (ret < 0) {
+> >>>                       if (err_ctrl)
+> >>>                               *err_ctrl = ctrl;
+> >>>                       return ret;
+> >>>               }
+> >>>
+> >>> -             if (!rollback && handle &&
+> >>> -                 ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+> >>> -                     uvc_ctrl_set_handle(handle, ctrl, handle);
+> >>>       }
+> >>>
+> >>>       return 0;
+> >>> @@ -3222,6 +3234,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+> >>>  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >>>  {
+> >>>       struct uvc_entity *entity;
+> >>> +     int i;
+> >>>
+> >>>       guard(mutex)(&handle->chain->ctrl_mutex);
+> >>>
+> >>> @@ -3236,7 +3249,11 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >>>               }
+> >>>       }
+> >>>
+> >>> -     WARN_ON(handle->pending_async_ctrls);
+> >>> +     if (!WARN_ON(handle->pending_async_ctrls))
+> >>> +             return;
+> >>> +
+> >>> +     for (i = 0; i < handle->pending_async_ctrls; i++)
+> >>> +             uvc_pm_put(handle->stream->dev);
+> >>>  }
+> >>>
+> >>>  /*
+> >>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> >>> index 1d5be045d04ecbf17e65e14b390e494a294b735f..8bccf7e17528b62f2594c0dad99405034532973d 100644
+> >>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> >>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> >>> @@ -697,6 +697,9 @@ static int uvc_v4l2_release(struct file *file)
+> >>>       if (uvc_has_privileges(handle))
+> >>>               uvc_queue_release(&stream->queue);
+> >>>
+> >>> +     if (handle->is_streaming)
+> >>> +             uvc_pm_put(stream->dev);
+> >>> +
+> >>>       /* Release the file handle. */
+> >>>       uvc_dismiss_privileges(handle);
+> >>>       v4l2_fh_del(&handle->vfh);
+> >>> @@ -862,6 +865,11 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+> >>>       if (ret)
+> >>>               return ret;
+> >>>
+> >>> +     ret = uvc_pm_get(stream->dev);
+> >>
+> >> Shouldn't this be done before calling uvc_queue_streamon() ? There's
+> >> another PM reference being held by the ioctl handler, but if the code is
+> >> refactored later, it would be good to make sure we resume the device
+> >> before starting streaming.
+> > 
+> > I was trying to simplify the error handling and, as you say, the ioctl
+> > handler already holds a reference. I do not mind sending a follow-up
+> > patch changing the order.
+
+One of the two uvc_queue_streamon() or uvc_pm_get() calls will need to
+perform cleanup in case of error. As the cleanup should just be
+uvc_pm_put(), it seems equally easy. I'd appreciate a follow-up patch.
+
+> >>> +     if (ret) {
+> >>> +             uvc_queue_streamoff(&stream->queue, type);
+> >>> +             return ret;
+> >>> +     }
+> >>>       handle->is_streaming = true;
+> >>>
+> >>>       return 0;
+> >>> @@ -879,7 +887,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+> >>>       guard(mutex)(&stream->mutex);
+> >>>
+> >>>       uvc_queue_streamoff(&stream->queue, type);
+> >>> -     handle->is_streaming = false;
+> >>> +     if (handle->is_streaming) {
+> >>> +             handle->is_streaming = false;
+> >>> +             uvc_pm_put(stream->dev);
+> >>> +     }
+> >>>
+> >>>       return 0;
+> >>>  }
+> >>> @@ -1378,9 +1389,11 @@ static int uvc_v4l2_put_xu_query(const struct uvc_xu_control_query *kp,
+> >>>  #define UVCIOC_CTRL_MAP32    _IOWR('u', 0x20, struct uvc_xu_control_mapping32)
+> >>>  #define UVCIOC_CTRL_QUERY32  _IOWR('u', 0x21, struct uvc_xu_control_query32)
+> >>>
+> >>> +DEFINE_FREE(uvc_pm_put, struct uvc_device *, if (_T) uvc_pm_put(_T))
+> >>>  static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >>>                    unsigned int cmd, unsigned long arg)
+> >>>  {
+> >>> +     struct uvc_device *uvc_device __free(uvc_pm_put) = NULL;
+> >>>       struct uvc_fh *handle = file->private_data;
+> >>>       union {
+> >>>               struct uvc_xu_control_mapping xmap;
+> >>> @@ -1389,6 +1402,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >>>       void __user *up = compat_ptr(arg);
+> >>>       long ret;
+> >>>
+> >>> +     ret = uvc_pm_get(handle->stream->dev);
+> >>> +     if (ret)
+> >>> +             return ret;
+> >>> +
+> >>> +     uvc_device = handle->stream->dev;
+> >>
+> >> Ouch... That's not nice very :-/
+> > 
+> > IIt is nicer than changing the returns with breaks, believe me I tried
+> > :), and it is more prone to errors.
+> > 
+> > I thought about the CLASS, but it is not worth it with a single user.
+> > I believe the current code is a good compromise, but I might be
+> > biased.
+
+Yes, a class may be a bit of an over-engineering. I'd prefer breaks
+though.
+
+> >> If you want to use the cleanup API, I think we could use guards with an
+> >> init function such as
+> >>
+> >> struct uvc_device *__uvc_pm_get_init(struct uvc_device *dev, int *ret)
+> >> {
+> >>         *ret = uvc_pm_get(dev);
+> >>         return *ret ? NULL : dev;
+> >> }
+> >>
+> >> You can use DEFINE_CLASS() instead of DEFINE_GUARD() to control the
+> >> arguments to the init function. Users of the guard could do
+> >>
+> >>         int ret;
+> >>
+> >>         guard(uvc_pm)(dev, &ret);
+> >>         if (ret)
+> >>                 return ret;
+> >>
+> >>         ...
+> >>
+> >> Another, simpler option would be to replace returns with breaks in
+> >> uvc_v4l2_compat_ioctl32(). I'm tempted to do that in this patch, and
+> >> switching to the cleanup API as a patch on top if desired.
+> >>
+> >>> +
+> >>>       switch (cmd) {
+> >>>       case UVCIOC_CTRL_MAP32:
+> >>>               ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
+> >>> @@ -1423,6 +1442,22 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >>>  }
+> >>>  #endif
+> >>>
+> >>> +static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> >>> +                                 unsigned int cmd, unsigned long arg)
+> >>> +{
+> >>> +     struct uvc_fh *handle = file->private_data;
+> >>> +     int ret;
+> >>> +
+> >>> +     ret = uvc_pm_get(handle->stream->dev);
+> >>> +     if (ret)
+> >>> +             return ret;
+> >>> +
+> >>> +     ret = video_ioctl2(file, cmd, arg);
+> >>> +
+> >>> +     uvc_pm_put(handle->stream->dev);
+> >>> +     return ret;
+> >>> +}
+> >>> +
+> >>>  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
+> >>>                   size_t count, loff_t *ppos)
+> >>>  {
+> >>> @@ -1507,7 +1542,7 @@ const struct v4l2_file_operations uvc_fops = {
+> >>>       .owner          = THIS_MODULE,
+> >>>       .open           = uvc_v4l2_open,
+> >>>       .release        = uvc_v4l2_release,
+> >>> -     .unlocked_ioctl = video_ioctl2,
+> >>> +     .unlocked_ioctl = uvc_v4l2_unlocked_ioctl,
+> >>>  #ifdef CONFIG_COMPAT
+> >>>       .compat_ioctl32 = uvc_v4l2_compat_ioctl32,
+> >>>  #endif
+
+-- 
+Regards,
+
+Laurent Pinchart
