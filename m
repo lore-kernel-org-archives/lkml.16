@@ -1,173 +1,129 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C264AEE2
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F2A18DB0A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745862497; cv=none; b=BAWKbA0j0TzBEbzSt6ZPyV+FKmpO8VN+PjgFlkewDxZrl1YEJVtaKuGTkpdp4iJy4BqzVw6dwtlzGRhdllSURUBb3kihOLYW+BRnx/8BWLJu/8SupAQfWHEU8T55PlZrKOt8kYqZbtP/W+KCgRipo8IS+WSOTmsiYEMzsxcSOEk=
+	t=1745862522; cv=none; b=JjydoQTLuJWTzValdFZZQjhsaa/crnlBMRHv7hZ5FXSNkdpgHsm/zocyBvVFxY4UZbSRyEZuwsepvG5XyBhlZBJubbzcxlJScuR7hVgYqNJn6O8tlVKGvRT2Wluxf7K1U0mURtPhLXsEzoqMdqbptVaBlJx8PYdQZLfoPyIkEzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745862497; c=relaxed/simple;
-	bh=jWXOCVZkFHj/VcDgv2xU9asu2w3m/3zaM/fO1ILaYV8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nrRlUhWUBYJljc03NyQdpNvadY7fur645NpAdJ+pY+YUqT+ymXvOmueyoHCZ6smqEy/TcBG9+uefZauHJ3E5t/sAlAFFcHeHTYsl45L24RJbf1y0aV2QPiuuUno7WWZle+k5Pv08Qy7TCdOUf8D6IaC4CzddWOu0T895tf/aKdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=ndt4JKgI; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1745862522; c=relaxed/simple;
+	bh=LAPyuo4qTGLqNiq7tRoSZMooG2Sce1BAP3WQqZkKRxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LPSmTd0MS1vgkrYqPZOKGtN45O8AKma0LleYeB/2i4MYHIY/NPsQHrdolvhnUv8S29HHwxwBBh+j4UWaB7quZ6Hz1LMyg4ru6a3mpJ34N0Dueux9osVdJnzauVz/pjxRhSBKNtoI40NB3nO7Gt9hytTKX5rkNlVFwJYaZ8N4XFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WRGnydAK; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="ndt4JKgI"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ff4faf858cso35804467b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:48:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WRGnydAK"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so3607515a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1745862494; x=1746467294; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Br89HP6MhUe/ahwBGiB5/BbIYpp/iTR1g5Mpqa7I33k=;
-        b=ndt4JKgIzhVXVKP9AIQoYHmcr0mUqiiyOVxK1wNfIy4eCvk3P6PVh83Adnt7YJA2MD
-         ePM6v/EwwYPYdq4ynj9rZxJ/Sx+XLJoHmp9eYQJWM74yQ0BZEOy1QEbjFKoEyO2A/jXe
-         Tg+ISlO8xgZCFjqv7hn7sR/w2uoBdxrZhcuJNeNQul1mv6jsTHvKp8i26MPEqdHynKEG
-         eDKo6OlLdyVIR6MYiZ+wn/5h+6uJNuhfr2af4uY+i5mjG/IvJ44Rl0AYxhwe45TnNQDm
-         xaa+UihRsAFaDdmkVfCEdCPGGtzE+l+S/v5Ob3BjN0USNhI+tBSSHKdoDTiBZ3ZJUxqF
-         oh4A==
+        d=chromium.org; s=google; t=1745862520; x=1746467320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nkQi3qYu1F8pnFJIyEPr/pJR3vsWi3szKANU55XaSrU=;
+        b=WRGnydAKSferMfPwY+YiF8+d6Nz89kJaYQ7ITFJY096awln67nb7NDo8kIRgHwcoWS
+         YZ7iaT5Qqo7emIwluTOphp7lPBCrfgahj55sOI6VsrY5UuAk9H7u8Z9MbdCFe6p3G82A
+         oPI7FS9SUuwQTfKzTzZ2uWH8ObwcIk4st52Do=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745862494; x=1746467294;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Br89HP6MhUe/ahwBGiB5/BbIYpp/iTR1g5Mpqa7I33k=;
-        b=cyeT3j23ps+j2GCAijQ72X6ZbbfOTfLArdv6bZwmej7Q2hqoDlcJwiFuCQxjYy8eLG
-         2JhAeh6yI8P0fhVJ2xFCkF9xrXIg+aR2RhF9O09JPG2nk+Fg9tF8Lj8B67f3YcAOejqg
-         WWwt7hmtqJfzit1z7vIfIX3DEaRiaTrCRrYlDBydxgR52ib59xQcbtxKDpUTDtERFBzD
-         LqflBX8qQUmhfdW24sCmUKtesvoF0yR2v5PY3mz0bkXmzPHNBPYvmMYgdTuhizciVpxc
-         XnO1MAHhMSzAnbY2UMvDuTJwR8df0JTM2Jsz9FH7EPEDcvcDzPRZ+vL/4LlvCrQ+HPBk
-         WXYA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3fQ3Bi30QkwMT5bk1T+d7dOcwoKbYAA5e6aaJJW0X77oIc622B50n/PppYVRTyp5rn0QU9SrS2waE2Bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMn/zFZomD0UToCsDxGxFN+GreixGGL0RBUqHdpjrEEcYFwyrm
-	XTlK9bsJeXzaWzxcdUaVM0U4Bcith1WAeJyoWvdme4ezry6TBHF5hONJAfsybnd0h9NUd6Mq//R
-	IrkCn144ytUm3uDD7SBjjSR4dh9jmvMCt27abSA==
-X-Gm-Gg: ASbGncsqZWGxmttJVpjALMzCvQxYePbv3VGRoQ/ZdwBsY6POdlh3kXI4DkTG15Wk6Fh
-	mQYB8X3g4ALkS5ddgRgeusazniOGCXagVb4ysXctkhZUlcVNI5RDS8CsVvc2YGKU9zUQs2xg+Gg
-	dgffbgdkQsIfUWRBpFTuKw/Rr7oxDb1ngowC8NFUrwf9QhV8cxFI5p
-X-Google-Smtp-Source: AGHT+IGqT38ux5vaBWGblzcdGmBhZyaMpSO70W/U+56Y5rFaiMiEKupGmQkwT4XDzj6P2STWaAz7Pgso32FQ1wf1fIw=
-X-Received: by 2002:a05:690c:6d01:b0:708:3a47:3d2c with SMTP id
- 00721157ae682-7089965c286mr10536507b3.13.1745862494536; Mon, 28 Apr 2025
- 10:48:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745862520; x=1746467320;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nkQi3qYu1F8pnFJIyEPr/pJR3vsWi3szKANU55XaSrU=;
+        b=uqm1lVGUMzANjIpoLzpZimSmeSsPfXukbvVrdfiwEBYaX/xmMGFWCnvfptoolh5fto
+         ff8VN8Q5TmfAAw1oza2UgR62nA8Qn/KlIndDGVlaNJoKUMh+Q0S+ixgbQiCHEfvQOngW
+         hTdP7nlXiMX0UEkKYn+KKxxmI4O1NzPy/DFIKBMMs5EesA2kvo83brlc90J+9lUh8fPl
+         vh27kduMO0K9BUYFxIrUXYpa/DfZXGxleFJcBbexXv/K0ydcfl02vboDQIdYNtX6EcE7
+         LzK2M/1pLrjf21MQzPmk39ObYf5UkbLSCyHY6T2rRZo8u1QkofeDNAmYE3Gpfx4ZidMS
+         RSgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbtrlJffuSMw7YNsVWlWBEkA4Ux4EVA0u395R58tKxlhAslBAr73TDn2sREfcNxggZFPVeIzshAxvXXmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxubSn+EirhLMV3mKNC61YVRm1cD6Z5ey9RLBfMmX67qe99iRgW
+	XtmHnjVXUn4vOEld5qwOyiyvXWQ1fKrgj5EtkcRSL3xHsJnKplwwax27LtJviw==
+X-Gm-Gg: ASbGncuQBent0nK7LfWDLLn2ZVKZustmaJQBzu9phKq8UH/ZGhXWlQu6sjedmWjbZ95
+	YMnKuCRhEP4inFToBwX7ZqjTftPPoLQM+PlXve5NpZX/GaMovy6i2xtj0PnphSK8hYscRl7nwzE
+	9iNF2gdbJN1+wQ5wlwvbV9w6LRUvkloXct1v2yVPxSPeHo77DRI+XwhDhAjLYa251/1MXAF8kdn
+	d12A2a5AEYd6Uy/amf3wGf3T3X4hxJdk9rX4rCLmMCtw289IJOe5r0Rw2y/Pn4XEnzhRNWBBV2n
+	7Tep34Nm5Nv+JsFXSNEr65uNWr4ZLt4BrbEC3kxmiU8Fg0uI//B50uU1Ee/MGE0ic9kN92Conmv
+	jRassTUTyB7QbLv7zZKXwPtYwk/d2gw==
+X-Google-Smtp-Source: AGHT+IHo79Xwon0l3qUnRl+ZO2KJhCGKB28PjUYLLf+CEUhzlw2T5PW/6v6fBq/mxNwFTJI3f94TpQ==
+X-Received: by 2002:a05:6a20:e68b:b0:1f5:8a03:ea22 with SMTP id adf61e73a8af0-2045b99ba90mr16427916637.33.1745862520239;
+        Mon, 28 Apr 2025 10:48:40 -0700 (PDT)
+Received: from bleungmegatop.c.googlers.com.com (28.67.125.34.bc.googleusercontent.com. [34.125.67.28])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9a14asm8513987b3a.131.2025.04.28.10.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 10:48:39 -0700 (PDT)
+From: Benson Leung <bleung@chromium.org>
+To: abhishekpandit@chromium.org,
+	jthies@google.com,
+	akuchynski@chromium.org,
+	tzungbi@kernel.org,
+	chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: sukoo@google.com,
+	bleung@google.com,
+	Benson Leung <bleung@chromium.org>
+Subject: [PATCH v2] platform/chrome: cros_ec_typec: Set Pin Assignment E in DP PORT VDO
+Date: Mon, 28 Apr 2025 17:48:28 +0000
+Message-ID: <20250428174828.13939-1-bleung@chromium.org>
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+In-Reply-To: <20250426024810.3876884-1-bleung@chromium.org>
+References: <20250426024810.3876884-1-bleung@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426-vc4-audio-inf-probe-v1-1-a500785b71df@gmail.com>
-In-Reply-To: <20250426-vc4-audio-inf-probe-v1-1-a500785b71df@gmail.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 28 Apr 2025 18:47:58 +0100
-X-Gm-Features: ATxdqUGhyN8MsnmzldLq3CrZVM8rsc0UmD66HlBXP3YuWCGQVL9or9qwouRQw84
-Message-ID: <CAPY8ntDqKBBt-uOb9m58jKhCn79RE26890X0EdxKiwWrypXN4Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/vc4: fix infinite EPROBE_DEFER loop
-To: Gabriel Dalimonte <gabriel.dalimonte@gmail.com>
-Cc: Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Dmitry Baryshkov <lumag@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Gabriel
+Pin C and D are used on C-to-C cable applications including docks,
+and for USB-C adapters that convert from DP over USB-C to other
+video standards.
 
-On Sat, 26 Apr 2025 at 07:23, Gabriel Dalimonte
-<gabriel.dalimonte@gmail.com> wrote:
->
-> `vc4_hdmi_audio_init` calls `devm_snd_dmaengine_pcm_register` which may
-> return EPROBE_DEFER. Calling `drm_connector_hdmi_audio_init` adds a
-> child device. The driver model docs[1] state that adding a child device
-> prior to returning EPROBE_DEFER may result in an infinite loop.
->
-> [1] https://www.kernel.org/doc/html/v6.14/driver-api/driver-model/driver.html
->
-> Signed-off-by: Gabriel Dalimonte <gabriel.dalimonte@gmail.com>
-> ---
-> Starting with v6.14, my Raspberry Pi 4B on the mainline kernel started seeing
-> the vc4 driver looping during probe with:
->
-> vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops [vc4])
-> Registered IR keymap rc-cec
-> rc rc0: vc4-hdmi-0 as /devices/platform/soc/fef00700.hdmi/rc/rc0
-> input: vc4-hdmi-0 as /devices/platform/soc/fef00700.hdmi/rc/rc0/input3503
-> vc4_hdmi fef00700.hdmi: Could not register PCM component: -517
->
-> repeating several times per second.
->
-> From my understanding, this happens due to the mainline kernel missing the
-> patches to support audio portion of the HDMI interface. In this case, or
-> other cases where the sound subsystem can't create a device, it returns
-> -517 (EPROBE_DEFER). All of this is consistent with what I experienced prior
-> to 6.14 as well. However, prior to 6.14 it did not try to probe infinitely.
+Pin Assignment E is intended to be used with adapter from USB-C to DP
+plugs or receptacles.
 
-Mainline should have all the bits for HDMI audio on Pi4.
-It doesn't have the bits for Pi5 as it needs the newer DMA controller.
+All Chromebook USB-C DFPs support DisplayPort Alternate Mode as the DP
+Source with support for all 3 pin assignments. Pin Assignment E is required
+in order to support if the user attaches a Pin E C-to-DP cable.
 
-> Bisecting 6.13 -> 6.14, it looks like
-> 9640f1437a88d8c617ff5523f1f9dc8c3ff29121 [1] moved HDMI audio connector
-> initialization from audio vc4 audio initialization to vc4 connector
-> initialization. If my understanding is correct, this change causes a child
-> device to be added before EPROBE_DEFER is returned and queues the device probe
-> to happen when a new device is added, which happens immediately because the
-> audio child device was added earlier in the probe.
+Without this, the displayport.c alt mode driver will error out of
+dp_altmode_probe with an -ENODEV, as it cannot find a compatible matching
+pin assignment between the DFP_D and UFP_D.
 
-cc Dmitry as the author of that patch.
+Fixes: dbb3fc0ffa95 ("platform/chrome: cros_ec_typec: Displayport support")
 
-However I don't see an issue with moving the init back to vc4_hdmi_audio_init.
-I'm not an expert on the sequencing of things around the audio side
-though, so I wonder if Dmitry or Maxime could comment.
+Signed-off-by: Benson Leung <bleung@chromium.org>
+Reviewed-by: Jameson Thies <jthies@google.com>
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
 
-The patch could do with a Fixes: tag if 9640f1437a88 if it is
-definitely the commit that breaks things.
+Notes:
+    v2 - Add Fixes to commit message.
 
-Thanks
-  Dave
+ drivers/platform/chrome/cros_ec_typec.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9640f1437a88d8c617ff5523f1f9dc8c3ff29121
-> ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index a29a6ef266f9a5952af53030a9a2d313e2ecdfce..163d092bd973bb3dfc5ea61187ec5fdf4f4f6029 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -560,12 +560,6 @@ static int vc4_hdmi_connector_init(struct drm_device *dev,
->         if (ret)
->                 return ret;
->
-> -       ret = drm_connector_hdmi_audio_init(connector, dev->dev,
-> -                                           &vc4_hdmi_audio_funcs,
-> -                                           8, false, -1);
-> -       if (ret)
-> -               return ret;
-> -
->         drm_connector_helper_add(connector, &vc4_hdmi_connector_helper_funcs);
->
->         /*
-> @@ -2291,6 +2285,12 @@ static int vc4_hdmi_audio_init(struct vc4_hdmi *vc4_hdmi)
->                 return ret;
->         }
->
-> +       ret = drm_connector_hdmi_audio_init(&vc4_hdmi->connector, dev,
-> +                                           &vc4_hdmi_audio_funcs, 8, false,
-> +                                           -1);
-> +       if (ret)
-> +               return ret;
-> +
->         dai_link->cpus          = &vc4_hdmi->audio.cpu;
->         dai_link->codecs        = &vc4_hdmi->audio.codec;
->         dai_link->platforms     = &vc4_hdmi->audio.platform;
->
-> ---
-> base-commit: b60301774a8fe6c30b14a95104ec099290a2e904
-> change-id: 20250426-vc4-audio-inf-probe-f67a8aa2a180
->
-> Best regards,
-> --
-> Gabriel Dalimonte <gabriel.dalimonte@gmail.com>
->
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index d2228720991f..7678e3d05fd3 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -22,8 +22,10 @@
+ 
+ #define DRV_NAME "cros-ec-typec"
+ 
+-#define DP_PORT_VDO	(DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D)) | \
+-				DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
++#define DP_PORT_VDO	(DP_CAP_DFP_D | DP_CAP_RECEPTACLE | \
++			 DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | \
++						BIT(DP_PIN_ASSIGN_D) | \
++						BIT(DP_PIN_ASSIGN_E)))
+ 
+ static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
+ {
+-- 
+2.49.0.901.g37484f566f-goog
+
