@@ -1,123 +1,266 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE48078F54;
-	Mon, 28 Apr 2025 15:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E085378F54
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855631; cv=none; b=lf1Fj2YhTZ6dGInvDEWi3JL3B1ZvU0jVwToRVvVZ446/xOaj3avfL/xWb72vxGNyw119MouQZD7xsWpq/d7We/lB9nZflfZ6/hUXk4F6LEEcFhSPQSiuqEr6kqQKXOHSwfbqR5Lpp1IX6ZjaorYHEdisWQ/+pdod2fP309tqoSc=
+	t=1745855693; cv=none; b=iby8N9ywZ/4FhHVfNaD06EEMYwoXlSTON88ovQVHTBjxnBFEYCjAGUF8Z1KRQz+xNND8hU4+7kC7kqG0GvR2j2uas2FeMz0h8LoFHJH2DnjW+AM9O3BdurzvzOBKV22NS+tZnqgDAHFBUCn/bYgC6dKvUdrQX3uB050Ca5oSGSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855631; c=relaxed/simple;
-	bh=B2y1+QxYf7rk0CFLRxjX2EEpZWEepC5pVNNibzK5yyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LkyANk4gqDyWksS98BUVqILfPY3EGEwQZxCeaBDiqi48yyx51zXi3BlwfM3Fx1qmBI0EkdDox6WE4NnzWxkxs3c/LBEsiuG+M+1qFlVJdGi3SN9Zpeygrlo0Prn2yu6piomiQuTyjCObDal/yA/aH7hnAvSTVbXNiCAoQ9/zrSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AjI8LMxA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745855693; c=relaxed/simple;
+	bh=xeqXr4SqaI/eLOe3InrD2GKGIhXdG8NG8Y/PDv70Mr0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=arF39SODepmXudtjT7yybaJGvfxr878tj1A6xeIe8Z1dS1Ah7DFLkL9/8Y4OMuiiGxxnOQP5OyQvn8aawwP4UIyfeNn1QCYyOZSfnXk/5A408d6h18wtNXaRq6DYPNk3iqgU/IUpDLLDEsvi0s/RPmB4fTkDbXahlnq+CGzVlUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FaA0Twe5; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AjI8LMxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745855630; x=1777391630;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=B2y1+QxYf7rk0CFLRxjX2EEpZWEepC5pVNNibzK5yyE=;
-  b=AjI8LMxARwyXfNcKrv7ZntyhZ7lhdaBMlD0lQlXTjoKqv/4uHap2OjOt
-   cyYK5sltRGeeL1tUn8uFSfUB7MFGseCDjRI31EwGKJULG/zKrMbQsTfHx
-   gN5CjhUao7HgQAbS3Wn9CWD+M2jG0MrwPykcLoOnGhjfgkgOemOwAJgYs
-   W6i9vCL9kot+cWMX0flLXZw/wQQ5+6K3zUEn+P3BOMGV27ruJR7IHJM/u
-   tsJhVWtOOeNBelZ4t/PISdc0XuF4/N5K0NA6XctyMGItSeBA0KaBDNCmP
-   /XbDQO+vcJDHr/cexTeFyVqNiztKW9+lzCAxcYtzffcFw3kVdXzGUPZmX
-   w==;
-X-CSE-ConnectionGUID: iZ0Hi9bPRrSU93WsOUl4wQ==
-X-CSE-MsgGUID: wQAFxSOCTsyOTyG2NPFyrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51123249"
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="51123249"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 08:53:50 -0700
-X-CSE-ConnectionGUID: nHgEBM0pRMuANucrr0hEBw==
-X-CSE-MsgGUID: qOSliL3yQ8a6JcL8sVp4YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="156788783"
-Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.222.199]) ([10.124.222.199])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 08:53:49 -0700
-Message-ID: <9a4b347f-9a18-4578-9031-0d1bc98e668d@intel.com>
-Date: Mon, 28 Apr 2025 08:53:47 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FaA0Twe5"
+Message-ID: <6a0b4d81-a1b8-4533-8b4e-de270e39c5aa@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745855688;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dawl8i88r8gHM8GMLkwVV5hNLqE1msotfeeEvyM0UGg=;
+	b=FaA0Twe5lUPFZNu4Y8Ll6qulwKqptD919xn9eQA4GemadbkvSp/kBtsBN6cXgzPo6c5Bys
+	0vMyUWz47EYj2SSEgpHpVWO2bEjAKyuDU58SILPTrWX76GLpW6uVnLbhjNNtDoNYSOtu3f
+	obX5tmczNYhctTAqE69zHyFgFSiNFjo=
+Date: Mon, 28 Apr 2025 23:54:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] x86/devmem: Drop /dev/mem access for confidential
- guests
-To: Dan Williams <dan.j.williams@intel.com>, dave.hansen@linux.intel.com
-Cc: x86@kernel.org, Kees Cook <kees@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Naveen N Rao <naveen@kernel.org>,
- Vishal Annapurve <vannapurve@google.com>,
- Kirill Shutemov <kirill.shutemov@linux.intel.com>,
- Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
- <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 6/7] mm: Batch around can_change_pte_writable()
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250428120414.12101-1-dev.jain@arm.com>
+ <20250428120414.12101-7-dev.jain@arm.com>
+ <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
+ <29c70c06-42c2-4bc0-a56e-443a1200fde0@linux.dev>
+In-Reply-To: <29c70c06-42c2-4bc0-a56e-443a1200fde0@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 4/18/25 13:04, Dan Williams wrote:
-> Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
-> address space) via /dev/mem results in an SEPT violation.
 
-Would most developers reading this know what an "SEPT violation" is or
-what its implications are?
 
-This results in an immediate exit from and termination of the TDX guest,
-right?
+On 2025/4/28 21:16, Lance Yang wrote:
+> 
+> 
+> On 2025/4/28 20:50, Lance Yang wrote:
+>> Hey Dev,
+>>
+>> On 2025/4/28 20:04, Dev Jain wrote:
+>>> In preparation for patch 7, we need to properly batch around
+>>> can_change_pte_writable(). We batch around pte_needs_soft_dirty_wp() by
+>>> the corresponding fpb flag, we batch around the page-anon exclusive 
+>>> check
+>>> using folio_maybe_mapped_shared(); modify_prot_start_ptes() collects the
+>>> dirty and access bits across the batch, therefore batching across
+>>> pte_dirty(): this is correct since the dirty bit on the PTE really
+>>> is just an indication that the folio got written to, so even if
+>>> the PTE is not actually dirty (but one of the PTEs in the batch is),
+>>> the wp-fault optimization can be made.
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   include/linux/mm.h | 4 ++--
+>>>   mm/gup.c           | 2 +-
+>>>   mm/huge_memory.c   | 4 ++--
+>>>   mm/memory.c        | 6 +++---
+>>>   mm/mprotect.c      | 9 ++++++---
+>>>   5 files changed, 14 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>> index 5eb0d77c4438..ffa02e15863f 100644
+>>> --- a/include/linux/mm.h
+>>> +++ b/include/linux/mm.h
+>>> @@ -2710,8 +2710,8 @@ int get_cmdline(struct task_struct *task, char 
+>>> *buffer, int buflen);
+>>>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>>>                           MM_CP_UFFD_WP_RESOLVE)
+>>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> -                 pte_t pte);
+>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> +                 pte_t pte, struct folio *folio, unsigned int nr);
+>>>   extern long change_protection(struct mmu_gather *tlb,
+>>>                     struct vm_area_struct *vma, unsigned long start,
+>>>                     unsigned long end, unsigned long cp_flags);
+>>> diff --git a/mm/gup.c b/mm/gup.c
+>>> index 84461d384ae2..6a605fc5f2cb 100644
+>>> --- a/mm/gup.c
+>>> +++ b/mm/gup.c
+>>> @@ -614,7 +614,7 @@ static inline bool can_follow_write_common(struct 
+>>> page *page,
+>>>           return false;
+>>>       /*
+>>> -     * See can_change_pte_writable(): we broke COW and could map the 
+>>> page
+>>> +     * See can_change_ptes_writable(): we broke COW and could map 
+>>> the page
+>>>        * writable if we have an exclusive anonymous page ...
+>>>        */
+>>>       return page && PageAnon(page) && PageAnonExclusive(page);
+>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>> index 28c87e0e036f..e5496c0d9e7e 100644
+>>> --- a/mm/huge_memory.c
+>>> +++ b/mm/huge_memory.c
+>>> @@ -2032,12 +2032,12 @@ static inline bool 
+>>> can_change_pmd_writable(struct vm_area_struct *vma,
+>>>           return false;
+>>>       if (!(vma->vm_flags & VM_SHARED)) {
+>>> -        /* See can_change_pte_writable(). */
+>>> +        /* See can_change_ptes_writable(). */
+>>>           page = vm_normal_page_pmd(vma, addr, pmd);
+>>>           return page && PageAnon(page) && PageAnonExclusive(page);
+>>>       }
+>>> -    /* See can_change_pte_writable(). */
+>>> +    /* See can_change_ptes_writable(). */
+>>>       return pmd_dirty(pmd);
+>>>   }
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index b9e8443aaa86..b1fda3de8d27 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -750,7 +750,7 @@ static void restore_exclusive_pte(struct 
+>>> vm_area_struct *vma,
+>>>           pte = pte_mkuffd_wp(pte);
+>>>       if ((vma->vm_flags & VM_WRITE) &&
+>>> -        can_change_pte_writable(vma, address, pte)) {
+>>> +        can_change_ptes_writable(vma, address, pte, NULL, 1)) {
+>>>           if (folio_test_dirty(folio))
+>>>               pte = pte_mkdirty(pte);
+>>>           pte = pte_mkwrite(pte, vma);
+>>> @@ -5767,7 +5767,7 @@ static void numa_rebuild_large_mapping(struct 
+>>> vm_fault *vmf, struct vm_area_stru
+>>>               ptent = pte_modify(ptent, vma->vm_page_prot);
+>>>               writable = pte_write(ptent);
+>>>               if (!writable && pte_write_upgrade &&
+>>> -                can_change_pte_writable(vma, addr, ptent))
+>>> +                can_change_ptes_writable(vma, addr, ptent, NULL, 1))
+>>>                   writable = true;
+>>>           }
+>>> @@ -5808,7 +5808,7 @@ static vm_fault_t do_numa_page(struct vm_fault 
+>>> *vmf)
+>>>        */
+>>>       writable = pte_write(pte);
+>>>       if (!writable && pte_write_upgrade &&
+>>> -        can_change_pte_writable(vma, vmf->address, pte))
+>>> +        can_change_ptes_writable(vma, vmf->address, pte, NULL, 1))
+>>>           writable = true;
+>>>       folio = vm_normal_folio(vma, vmf->address, pte);
+>>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>>> index 33eabc995584..362fd7e5457d 100644
+>>> --- a/mm/mprotect.c
+>>> +++ b/mm/mprotect.c
+>>> @@ -40,8 +40,8 @@
+>>>   #include "internal.h"
+>>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> -                 pte_t pte)
+>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>>> long addr,
+>>> +                  pte_t pte, struct folio *folio, unsigned int nr)
+>>>   {
+>>>       struct page *page;
+>>> @@ -67,6 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct 
+>>> *vma, unsigned long addr,
+>>>            * write-fault handler similarly would map them writable 
+>>> without
+>>>            * any additional checks while holding the PT lock.
+>>>            */
+>>> +        if (unlikely(nr != 1))
+>>> +            return !folio_maybe_mapped_shared(folio);
+>>> +
+>>>           page = vm_normal_page(vma, addr, pte);
+>>>           return page && PageAnon(page) && PageAnonExclusive(page);
+>>>       }
+>>
+>> IIUC, As mentioned in the comment above, we should do the same 
+>> anonymous check
+>> to large folios. And folio_maybe_mapped_shared() already handles both 
+>> order-0
+>> and large folios nicely, so we could simplify the logic as follows:
+> 
+> Forget to add:
+> 
+> Note that the exclusive flag is set only for non-large folios or the head
+> page of large folios during mapping, so PageAnonExclusive() will always
+> return false for tail pages of large folios, IIUC.
+
+Correction: the exclusive flag would be set for all sub pages of large 
+folios
+during mapping.
+
+Thanks,
+Lance
+
+> 
+> Thanks,
+> Lance
+> 
+>>
+>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>> index 1605e89349d2..df56a30bb241 100644
+>> --- a/mm/mprotect.c
+>> +++ b/mm/mprotect.c
+>> @@ -43,8 +43,6 @@
+>>   bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>> long addr,
+>>                                pte_t pte, struct folio *folio, 
+>> unsigned int nr)
+>>   {
+>> -       struct page *page;
+>> -
+>>          if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+>>                  return false;
+>>
+>> @@ -67,11 +65,7 @@ bool can_change_ptes_writable(struct vm_area_struct 
+>> *vma, unsigned long addr,
+>>                   * write-fault handler similarly would map them 
+>> writable without
+>>                   * any additional checks while holding the PT lock.
+>>                   */
+>> -               if (unlikely(nr != 1))
+>> -                       return !folio_maybe_mapped_shared(folio);
+>> -
+>> -               page = vm_normal_page(vma, addr, pte);
+>> -               return page && PageAnon(page) && PageAnonExclusive(page);
+>> +               return folio_test_anon(folio) && ! 
+>> folio_maybe_mapped_shared(folio);
+>>          }
+>>
+>>          VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+>> -- 
+>>
+>> Thanks,
+>> Lance
+>>
+>>> @@ -222,7 +225,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                */
+>>>               if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+>>>                   !pte_write(ptent) &&
+>>> -                can_change_pte_writable(vma, addr, ptent))
+>>> +                can_change_ptes_writable(vma, addr, ptent, folio, 1))
+>>>                   ptent = pte_mkwrite(ptent, vma);
+>>>               ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
+>>
+> 
+
