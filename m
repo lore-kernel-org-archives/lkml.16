@@ -1,144 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC525279911
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC8118FC92
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855082; cv=none; b=q9h2XXGjW07OLJyub8MPbsx00InuzC08xlUGjU3DtNIjatQqNUR8d/W3MtSEdmGMAZ7L/F4c1rMoo1YyjwvqgtXcF7XERB6Yt2ywZV27wDdMqE9dmYALOeBWzPFkTfnatbsEPAeVs+xsygIwrjRq/w2uOnRAIvwzpExzkzGD7rU=
+	t=1745855127; cv=none; b=VQkPuqHMcTua0J9A9p94+mJCCZ4Jo8CDdlW0OTqUpeoqNJRwB82FyDLSdjTg6kWkZVmTznXlnq51gz6gzuE6ZMOUUGsHqhG17H7TdUcTkDeNou4L/RMCK/pi3dCx/DxfvI9LgznfUmiqwXm8ujaxk6+KKowURdUHEj+zc5iEA/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855082; c=relaxed/simple;
-	bh=JRoFg1ifrt/ihL83AT1Ka7YY9StfO8fc3iHKwc1eEVs=;
+	s=arc-20240116; t=1745855127; c=relaxed/simple;
+	bh=dwgYOym45oyNAdQ44afULSTNmEmOJnzMpDMS/yioqQY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h4VTlesyzxAPYVWVrqJao3R8w3+lJQmdUoEwv4QkGHgjk9jcKXib5ZJ6+1JuYTZpuyOYfbU+/v/gU+6vwwWhh1l9ETRFaZ9fpIeD6xMP5AO6ms2nQHa9V5YO2UQh4YqD6Aqh59YW+cw5GKhB55QEbLP8zWWIgNHJw9vwzO1Uct0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WW3YURQy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=Oq5GKkH2fga28zXU4UbJ0+Y8d/nu0RXxxITUcoUPIjJI1fEJ3w2CrmmIiJ9GTwi3axXrkxVIIXySy3KCoS2XvJIaoMpwUaiDKZnHrU635pKhH/EP6Lh2JEBlmZnzC6PBVJrkLrxl+9DetHD55obdRojF41J5PNp3KtbUpmyGTGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=j5baIypc; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WW3YURQy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745855078;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pxbbN4qJN6Ru59aJPa/Q4S65KBGqqKkgsmmSWCFTdOU=;
-	b=WW3YURQyJugjSroH4gZrtDImnGWHmT1q6+777CO7nm+UWN1lKj90ZbaPH/BlOBUEpicKFD
-	JKjAxht73Ln92wZoIlsgWcWlerjqElOIdRb2XJL5xNH2m8CUEY2cZvc5AvJw0J3nDMZs35
-	4iIwtQc7WalpeovpUYCe4x2j3j4XgoU=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-FmNsl47TODCVYYf0dE0BQA-1; Mon, 28 Apr 2025 11:44:37 -0400
-X-MC-Unique: FmNsl47TODCVYYf0dE0BQA-1
-X-Mimecast-MFC-AGG-ID: FmNsl47TODCVYYf0dE0BQA_1745855077
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-70552c16b9eso62045947b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:44:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="j5baIypc"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso3478715276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1745855125; x=1746459925; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PU/sixtY71LvEi4Fz6DQo24QLlRpV93TUetQH3mfBu0=;
+        b=j5baIypc9i0K05RdO5/l5gRBUgEUeMq61cNw9dtP/9FCbgmHNBsKy/Pcm4Zi9BnPNy
+         9HbzMAY0RVj+QjPwlII6QHZ7j0Mr1QZDok24o0gYW/2wfZp9KNHYpwwgwUhFgC/eZ87h
+         keJnKSsoArCQlrOJ6ScrhmbW1LBGFbQFrXQDQiV75U2OfHNaHrUWYrTWBJiKzoLgkXnS
+         J9/ceWK/yk/dAvGSjomzx1g5KJ9E3VMVl1QuiCRccA102Ege/PyOy4xibceml3NB8QmX
+         9ek86APh13k3BUAxhwWuKq4nff+TEW/qsOfm8HiKAbGWjPCHJ6EEbRQmdfU6t02MadpI
+         QMUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745855076; x=1746459876;
+        d=1e100.net; s=20230601; t=1745855125; x=1746459925;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pxbbN4qJN6Ru59aJPa/Q4S65KBGqqKkgsmmSWCFTdOU=;
-        b=r/CrSdMiDeaNoJM9P6Ao75xU+FTcSoA99fV6y3f8YdHuOmXkwkGTqvteMhmnrMJRI0
-         BboFy2BBMVvRrNGl7vdWfeV2b2NDl4Nm1GD+p5WlmxwjwiEhq5b2eL73Mj7bQTBwDFqJ
-         HFNFeBHtT69TJwfdWhtZCQ4KrjTDXWHA0JjOFIM+85aGnEa4AmP6ZEyMAhFtiXgYvA4p
-         ilC/aX59ChIHUpOjqcP7spvkyySvwv27td5c6wfL+HaHPCoe+NcS1aqwwED5NFHhVJYg
-         ZdxNJTfcN7LOSOzoOxhdXHc1cjlOvfstBFGfDOcPtu73rHjXDYbm/OAqMIJKjQdspFyO
-         pExw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGd6up16JNvLeglKeBAUS3JaA5zkAj6l7b6gcqMtj7sQpiZ5Wm3hpYEN9zcWD9QePOEPsSoJMxfCfI99U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlKYECLyHkpoqU1p5DPlMv75NBcTUvHD8pv/QDMiY7ADXBeGZR
-	aicTy78CtKx3msvMaZLxGIbvVj3Wo1kKoClNPL/FbTSVc+xEtnZNuvUhFO4IA4+E0ra+57PcDPF
-	Lf0W4Jpv79b4Ym/6Pj/TBv3q8F3ol9NPhFsWlhpeHsGfGX98YQcRI53utdZkXM4cRx27aCXv0oi
-	/+eO8p+HXYIIwAEwImuxtdm3BTlemSap8t0/OB
-X-Gm-Gg: ASbGncv9eqWr8TgfB0VbktwsvWhTQTCT8g5km5W6Ct7aDi1YoF37TzM6oQUO5f6RQ4x
-	Ks4/fUhojGRWFbo/0bihgXlV9qMP6Wz1YI8kDIoQkuhJ1E67WyQ9BP14NghbwvOciiPNKVJwh/o
-	3lMcajqJU=
-X-Received: by 2002:a05:690c:6b87:b0:6ef:5c57:904 with SMTP id 00721157ae682-708540ce38amr156786607b3.7.1745855076652;
-        Mon, 28 Apr 2025 08:44:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6qCK0RP1Osqb6P+Q+6TNekm7P5LWk3+X90KpMgq7ufBwRs3S0yE0ZPxUoRWXjGPRpcWW70ryslqWVN+3xc60=
-X-Received: by 2002:a05:690c:6b87:b0:6ef:5c57:904 with SMTP id
- 00721157ae682-708540ce38amr156785937b3.7.1745855076172; Mon, 28 Apr 2025
- 08:44:36 -0700 (PDT)
+        bh=PU/sixtY71LvEi4Fz6DQo24QLlRpV93TUetQH3mfBu0=;
+        b=QWFDFF5HoV+M+0hB/O2iFkumAPPHJl6oTRu/NxpzgxX99lG3GTBdkPg8/fJYsZfRgf
+         45ZN3LlAUghWKx+eItJaac1rfSon2qC9JuLPR5H5YMCUPvoMJM6nsYQpbwC+pAWm7Dwk
+         riskf6HoDavZI4AdB2jHyoV3Z+o77mbZSXZFQKfeZPrJymEh4dSzB8bfW6xzwvPibLnm
+         2INRS10i00tVV84l3ruW8A7OMBELpdL0J9gK/QYr9ePimTHmj93aW6JMOoBccJNftNRk
+         0OvAOVVBrfZTUwluvvn5gMhZxQ87IFn8XSphQAZa0JdUl6pQ1jIcoRXyln0Q9Y1UR+TJ
+         pDYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXczolqtXCZTqNjxQ7zbvFf8sH/3hFgltRgrh+1iG9+UdSZa3F4VQYERGWsHl91XE3Fb1/nLz/Eixz6CPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDftgrfAY8yN6lk9hv+tJmnkhXV/b192ZDjNYhW0nQ0XyTsY/r
+	ZvXt6HO7OcV6BnT3Y2VHg95vpKF89022v5MJjULs7Gq0BhSWXvRkGkrYAAZ6VMWiwMcJnjl5Ezf
+	4Mscvw/TwnjzTQRBXeJGLuVu/5CMtqV96eBnjrg==
+X-Gm-Gg: ASbGncvhZ/VOFwgjv1q3cv01M9n3AX2RRD3WIhqiLlsmgAiioJcdfLeeKZPaOye4kCH
+	y+wf4DREF2esl4EF2+62oAuC3W7CXGzRxlNSmBD/eIYSJNZ7TNOUkCQkD2Pd3He6hr7YkvX6NP3
+	qgiJBKHcfYGDjCPaaU97xFoLZVUNaZaqRLIo7DRVLwtt30AECOAehrPAtXs1US7fI=
+X-Google-Smtp-Source: AGHT+IEF9MSlc844cuGTIRN/jaSQKExcmjeU1UeJwf54mw2x30vI+iBpqqWrdgOqbrjU+FD8mBfkUxmgGRAbgf2Y+6M=
+X-Received: by 2002:a05:6902:2701:b0:e72:d88e:7a9a with SMTP id
+ 3f1490d57ef6-e73500e777emr136870276.45.1745855124717; Mon, 28 Apr 2025
+ 08:45:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417000238.74567-1-npache@redhat.com> <20250417000238.74567-9-npache@redhat.com>
- <fb932eac-86ce-4f7d-8eed-8dc44f5a40c1@linux.alibaba.com>
-In-Reply-To: <fb932eac-86ce-4f7d-8eed-8dc44f5a40c1@linux.alibaba.com>
-From: Nico Pache <npache@redhat.com>
-Date: Mon, 28 Apr 2025 09:44:09 -0600
-X-Gm-Features: ATxdqUE76Pjv3zn_HiGc1qM-i1cE-erjrnyMNKG7-H8ENZEIid857QeclmukKN8
-Message-ID: <CAA1CXcCEsdW+k96DX3LZ6J4MmNEnugyxCXcHkneqxV4-nahmsg@mail.gmail.com>
-Subject: Re: [PATCH v4 08/12] khugepaged: skip collapsing mTHP to smaller orders
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
-	baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org, 
-	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
-	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
-	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
-	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
-	rdunlap@infradead.org
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-27-8f91a404d86b@bootlin.com>
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-27-8f91a404d86b@bootlin.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Mon, 28 Apr 2025 16:45:08 +0100
+X-Gm-Features: ATxdqUF8zRJ18UCRRqpYogjOFDok1I-AvafpDPPJcxH-STXodhofR9H1CLM8tQg
+Message-ID: <CAPY8ntDwK0DZ6sThryDRBUgjTb+muNHtRNp+LohTs6+FWeB5TQ@mail.gmail.com>
+Subject: Re: [PATCH v2 27/34] drm/vc4: convert to devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 1:49=E2=80=AFAM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
+On Thu, 24 Apr 2025 at 20:01, Luca Ceresoli <luca.ceresoli@bootlin.com> wro=
+te:
 >
+> This is the new API for allocating DRM bridges.
 >
+> This driver already implements refcounting of the struct vc4_dsi, which
+> embeds struct drm_bridge. Now this is a duplicate of the refcounting
+> implemented by the DRM bridge core, so convert the vc4_dsi_get/put() call=
+s
+> into drm_bridge_get/put() calls and get rid of the driver-specific
+> refcounting implementation.
 >
-> On 2025/4/17 08:02, Nico Pache wrote:
-> > khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
-> > some pages being unmapped. Skip these cases until we have a way to chec=
-k
-> > if its ok to collapse to a smaller mTHP size (like in the case of a
-> > partially mapped folio).
-> >
-> > This patch is inspired by Dev Jain's work on khugepaged mTHP support [1=
-].
-> >
-> > [1] https://lore.kernel.org/lkml/20241216165105.56185-11-dev.jain@arm.c=
-om/
-> >
-> > Co-developed-by: Dev Jain <dev.jain@arm.com>
-> > Signed-off-by: Dev Jain <dev.jain@arm.com>
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   mm/khugepaged.c | 7 ++++++-
-> >   1 file changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index ece39fd71fe6..383aff12cd43 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -625,7 +625,12 @@ static int __collapse_huge_page_isolate(struct vm_=
-area_struct *vma,
-> >               folio =3D page_folio(page);
-> >               VM_BUG_ON_FOLIO(!folio_test_anon(folio), folio);
-> >
-> > -             /* See hpage_collapse_scan_pmd(). */
-> > +             if (order !=3D HPAGE_PMD_ORDER && folio_order(folio) >=3D=
- order) {
-> > +                     result =3D SCAN_PTE_MAPPED_HUGEPAGE;
-> > +                     goto out;
-> > +             }
->
-> Should we also add this check in hpage_collapse_scan_pmd() to abort the
-> scan early?
-No I dont think so, we can't abort there because we dont know the
-attempted collapse order, and we dont want to miss potential mTHP
-collapses (by bailing out early and not populating the bitmap).
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
--- Nico
->
+Acked-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
+Thanks.
+
+> ---
+>
+> Cc: "Ma=C3=ADra Canal" <mcanal@igalia.com>
+> Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
+>
+> Changed in v2:
+> - fix error code checking
+> ---
+>  drivers/gpu/drm/vc4/vc4_dsi.c | 34 +++++-----------------------------
+>  1 file changed, 5 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.=
+c
+> index efc6f6078b026764c59cfb2a33b28a88b7018c3a..458e5d9879645f18bcbcaeeb7=
+1b5f1038f9581da 100644
+> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
+> @@ -552,8 +552,6 @@ struct vc4_dsi {
+>         struct vc4_encoder encoder;
+>         struct mipi_dsi_host dsi_host;
+>
+> -       struct kref kref;
+> -
+>         struct platform_device *pdev;
+>
+>         struct drm_bridge *out_bridge;
+> @@ -1622,29 +1620,11 @@ static void vc4_dsi_dma_chan_release(void *ptr)
+>         dsi->reg_dma_chan =3D NULL;
+>  }
+>
+> -static void vc4_dsi_release(struct kref *kref)
+> -{
+> -       struct vc4_dsi *dsi =3D
+> -               container_of(kref, struct vc4_dsi, kref);
+> -
+> -       kfree(dsi);
+> -}
+> -
+> -static void vc4_dsi_get(struct vc4_dsi *dsi)
+> -{
+> -       kref_get(&dsi->kref);
+> -}
+> -
+> -static void vc4_dsi_put(struct vc4_dsi *dsi)
+> -{
+> -       kref_put(&dsi->kref, &vc4_dsi_release);
+> -}
+> -
+>  static void vc4_dsi_release_action(struct drm_device *drm, void *ptr)
+>  {
+>         struct vc4_dsi *dsi =3D ptr;
+>
+> -       vc4_dsi_put(dsi);
+> +       drm_bridge_put(&dsi->bridge);
+>  }
+>
+>  static int vc4_dsi_bind(struct device *dev, struct device *master, void =
+*data)
+> @@ -1655,7 +1635,7 @@ static int vc4_dsi_bind(struct device *dev, struct =
+device *master, void *data)
+>         struct drm_encoder *encoder =3D &dsi->encoder.base;
+>         int ret;
+>
+> -       vc4_dsi_get(dsi);
+> +       drm_bridge_get(&dsi->bridge);
+>
+>         ret =3D drmm_add_action_or_reset(drm, vc4_dsi_release_action, dsi=
+);
+>         if (ret)
+> @@ -1810,15 +1790,12 @@ static int vc4_dsi_dev_probe(struct platform_devi=
+ce *pdev)
+>         struct device *dev =3D &pdev->dev;
+>         struct vc4_dsi *dsi;
+>
+> -       dsi =3D kzalloc(sizeof(*dsi), GFP_KERNEL);
+> -       if (!dsi)
+> -               return -ENOMEM;
+> +       dsi =3D devm_drm_bridge_alloc(&pdev->dev, struct vc4_dsi, bridge,=
+ &vc4_dsi_bridge_funcs);
+> +       if (IS_ERR(dsi))
+> +               return PTR_ERR(dsi);
+>         dev_set_drvdata(dev, dsi);
+>
+> -       kref_init(&dsi->kref);
+> -
+>         dsi->pdev =3D pdev;
+> -       dsi->bridge.funcs =3D &vc4_dsi_bridge_funcs;
+>  #ifdef CONFIG_OF
+>         dsi->bridge.of_node =3D dev->of_node;
+>  #endif
+> @@ -1836,7 +1813,6 @@ static void vc4_dsi_dev_remove(struct platform_devi=
+ce *pdev)
+>         struct vc4_dsi *dsi =3D dev_get_drvdata(dev);
+>
+>         mipi_dsi_host_unregister(&dsi->dsi_host);
+> -       vc4_dsi_put(dsi);
+>  }
+>
+>  struct platform_driver vc4_dsi_driver =3D {
+>
+> --
+> 2.49.0
+>
