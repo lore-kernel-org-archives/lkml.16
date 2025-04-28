@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707B726980C;
-	Mon, 28 Apr 2025 12:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B38A26B2A5;
+	Mon, 28 Apr 2025 12:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844014; cv=none; b=KFmamXfQy3qvkesi1gQ3I+GWjsceI/WrQaMCAL2KOktVxwuPevr3suNdYgjYmE1PKqrHMODY+do0ERPOrK6KN3KCVO1jx/Zfno1EpZxfrIhbaOyZFXf1rKCv3dQlirMzim148iIoU7ThvG1E7qhp4Pu4Wb0bmYZkoN3Xlr9lO6A=
+	t=1745844016; cv=none; b=tl1d7kq8dZ5k55D+GKS4hbOlAqgLqbi1ybJW7OUEI/U7RTQTprgbjAspa5K9QdgK3Nh71nw9+Okx5+fxk7MK7ITtfpQzm+hSXtG8/4tf+GX7geL+K52IE9wsuMZoDpRydnOQ/rrSTGNXcjxAXiDKuAOKFjCehjbN/CGGz86Z7Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844014; c=relaxed/simple;
-	bh=x7vlVk9lwh5FEmDyAto9R37oXEH+y51IIvotdJ4TcKw=;
+	s=arc-20240116; t=1745844016; c=relaxed/simple;
+	bh=2XfhIYrUpwPiS3xNMEeUtDZt+yUx0Is6L7LMEnS4xiI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BW304drDgR2Q/Vza0g6Mjlf427h0fkONj1pfGlsBJYCDyTyMJEThFU67sCR+mIbjGvVAxrH0BiI1wUzezJlkxTyz5T+TeEwwNzKxS2WDFokKy/Ky62o6kpWr9d3kbTIZUoKsvUipZl9vlT1Psx6VXXSt5wsDVlg5JRWGUNvtBIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gIwg4Tsu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lcFmL2Cm; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=FAaD4ZPx3G9W8COm760duzLy/9p9PNmNBGeisseNYgTL9QN8mK0/wMKYe4em6+jt5tYzhYaK195RADpUbLSNIrHvWMxr0fILDgE9VpVJk+pXCL/c6ZQpJLblAn1JEV51h5dezzxdRv80nna71MFt6Xdm4tgkNVRsgj4y6jGqbDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xkS7MhE9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cTq+Brhn; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gIwg4Tsu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lcFmL2Cm"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xkS7MhE9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cTq+Brhn"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745844010;
+	s=2020; t=1745844012;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QbPWjHhlJoETnAz824XzmvX5jyZFPtPy6g/2Y6azr8U=;
-	b=gIwg4TsuLI74B/q4WScfk1HlnLV7sSeJzpII3Vrv8ZY3wNX1HePkzU9VQZw+YCdix1hXNK
-	rEFsSgH6WV5xzACdB1XhvOoLz3EOjII1hkwtrRn0+grFetrFxgUDomjY12kUXzHewIQdfl
-	S14nrMhlgW+BBYUcsJ/rTOAR8mCIwSwsciEt0aGJb9wzfjcoOIoAZ745Wu+rv6dbpWPUC6
-	u9jnCYrCROz4oC2cAJp5MEDASKb2sJw7ujOhSfUyvY0m+yPSZPZeUO3G6FtfLua05ZhUBD
-	KRDHjmsqGf57G/PiQqoXWfP6bmKWN22oWExKaEkMwWg5k+azXaJ+9yzAUjT+EA==
+	bh=ZKovy5nOL4qPV4KCSZjTnwgma6hkKTxr26X+/tQlD6c=;
+	b=xkS7MhE9vXG6V3ZzGaeAIEGqggxQP6Ii+aw3DcwndvQkO5WBYa7YXBim1wh8vkfK7Po27w
+	8fKSpx3nwbk3y5LYrOYc0CCggRgpOl0absLeohbBRV4r4IJJNiVDg61vIGUl7vdqySVW5y
+	Gm4mzugcc3+7OEx6EMYEt6YG4OfDxi1+CPCNr15f1xnIwYxsi4bFl7HGCno4lProSo2tqE
+	xMEbXiREIp0QTOiBO2h+kIZEMN57c6A2rcKb5VxIPoq/g+WxlfLOoOnynU3Eap0w4PV87G
+	xD/ePGeA+S18G1pG16RsZWxqR5B/n5Zb0Fp8qAfU6wj4bv3Ydsr7WZjiTwcpfg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745844010;
+	s=2020e; t=1745844012;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QbPWjHhlJoETnAz824XzmvX5jyZFPtPy6g/2Y6azr8U=;
-	b=lcFmL2Cmeme180KmjzZH8dso5SwlCBOV0SRr6gwoudEdeU0wjSGgWlgRNt2ttKzNEtaCkA
-	nfBoleFlK2FQoiAg==
-Date: Mon, 28 Apr 2025 14:40:05 +0200
-Subject: [PATCH v2 04/15] tools/nolibc: add mremap()
+	bh=ZKovy5nOL4qPV4KCSZjTnwgma6hkKTxr26X+/tQlD6c=;
+	b=cTq+Brhnh/O4B9RxZfiPxS2B3Jhv8/1GuSwGh9ZDIrpl4VHHuBV0RJxJnNYBzG2IPBKZe2
+	mQOQg4eSrfKY2KBQ==
+Date: Mon, 28 Apr 2025 14:40:08 +0200
+Subject: [PATCH v2 07/15] tools/nolibc: add support for access() and
+ faccessat()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250428-nolibc-misc-v2-4-3c043eeab06c@linutronix.de>
+Message-Id: <20250428-nolibc-misc-v2-7-3c043eeab06c@linutronix.de>
 References: <20250428-nolibc-misc-v2-0-3c043eeab06c@linutronix.de>
 In-Reply-To: <20250428-nolibc-misc-v2-0-3c043eeab06c@linutronix.de>
 To: Willy Tarreau <w@1wt.eu>, 
@@ -57,11 +58,11 @@ To: Willy Tarreau <w@1wt.eu>,
  Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745844007; l=2698;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745844007; l=2299;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=x7vlVk9lwh5FEmDyAto9R37oXEH+y51IIvotdJ4TcKw=;
- b=2+mGdTIJWB7jJfMqgtCXuSBYTlP2bzo4FbtOCG6JqBZehw+Fsa0ydAIjWxTsgXafLmHUA1E1X
- Ida/KUW9TD7Cc9H38GhkfFa9JM9cKFUKWe3dQxv8i39yXdaJw6Gu8Gi
+ bh=2XfhIYrUpwPiS3xNMEeUtDZt+yUx0Is6L7LMEnS4xiI=;
+ b=R/X5VEjcDnfZETbZ9ZKyE6N3oDm78sxoUudDSbHg8TvpDPuyZVfG7wbrp3cHq3mFCkwWR1VFN
+ eWDq11G/7rpCuDpyrBUvmSkAWLGMn6VlJ9HjOBOtn7CwHZBSPO09gwT
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -71,78 +72,62 @@ those with nolibc.
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Acked-by: Willy Tarreau <w@1wt.eu>
 ---
- tools/include/nolibc/sys/mman.h              | 19 +++++++++++++++++++
- tools/testing/selftests/nolibc/nolibc-test.c | 14 +++++++++++---
- 2 files changed, 30 insertions(+), 3 deletions(-)
+ tools/include/nolibc/unistd.h                | 28 ++++++++++++++++++++++++++++
+ tools/testing/selftests/nolibc/nolibc-test.c |  2 ++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/tools/include/nolibc/sys/mman.h b/tools/include/nolibc/sys/mman.h
-index 41c7bf45e427b96efec949364890e9c2b9c226a5..5228751b458c8d8a1bdfb5006623d016a48155fb 100644
---- a/tools/include/nolibc/sys/mman.h
-+++ b/tools/include/nolibc/sys/mman.h
-@@ -48,6 +48,25 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
- 	return ret;
- }
+diff --git a/tools/include/nolibc/unistd.h b/tools/include/nolibc/unistd.h
+index ed253305fdbafd040ca5820207d8c53c6ea9f9fc..25bfc7732ec7e72a60f445588a233f72c008f7ef 100644
+--- a/tools/include/nolibc/unistd.h
++++ b/tools/include/nolibc/unistd.h
+@@ -20,6 +20,34 @@
+ #define STDOUT_FILENO 1
+ #define STDERR_FILENO 2
  
++#define F_OK 0
++#define X_OK 1
++#define W_OK 2
++#define R_OK 4
++
++/*
++ * int access(const char *path, int amode);
++ * int faccessat(int fd, const char *path, int amode, int flag);
++ */
++
 +static __attribute__((unused))
-+void *sys_mremap(void *old_address, size_t old_size, size_t new_size, int flags, void *new_address)
++int sys_faccessat(int fd, const char *path, int amode, int flag)
 +{
-+	return (void *)my_syscall5(__NR_mremap, old_address, old_size,
-+				   new_size, flags, new_address);
++       return my_syscall4(__NR_faccessat, fd, path, amode, flag);
 +}
 +
 +static __attribute__((unused))
-+void *mremap(void *old_address, size_t old_size, size_t new_size, int flags, void *new_address)
++int faccessat(int fd, const char *path, int amode, int flag)
 +{
-+	void *ret = sys_mremap(old_address, old_size, new_size, flags, new_address);
-+
-+	if ((unsigned long)ret >= -4095UL) {
-+		SET_ERRNO(-(long)ret);
-+		ret = MAP_FAILED;
-+	}
-+	return ret;
++	return __sysret(sys_faccessat(fd, path, amode, flag));
 +}
 +
++static __attribute__((unused))
++int access(const char *path, int amode)
++{
++	return faccessat(AT_FDCWD, path, amode, 0);
++}
++
+ 
  static __attribute__((unused))
- int sys_munmap(void *addr, size_t length)
- {
+ int msleep(unsigned int msecs)
 diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index b7440a667db6b541a2548bdf5182bee0277100ed..abe0ae794208762f6d91ad81e902fbf77253a1c1 100644
+index 14a27bc6c83e4fda595b10dc29cf56b63904272a..10db118b8b111ec17f713d57240f193c7b18c70f 100644
 --- a/tools/testing/selftests/nolibc/nolibc-test.c
 +++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -926,7 +926,7 @@ int test_mmap_munmap(void)
- {
- 	int ret, fd, i, page_size;
- 	void *mem;
--	size_t file_size, length;
-+	size_t file_size, length, mem_length;
- 	off_t offset, pa_offset;
- 	struct stat stat_buf;
- 	const char * const files[] = {
-@@ -966,14 +966,22 @@ int test_mmap_munmap(void)
- 		offset = 0;
- 	length = file_size - offset;
- 	pa_offset = offset & ~(page_size - 1);
-+	mem_length = length + offset - pa_offset;
- 
--	mem = mmap(NULL, length + offset - pa_offset, PROT_READ, MAP_SHARED, fd, pa_offset);
-+	mem = mmap(NULL, mem_length, PROT_READ, MAP_SHARED, fd, pa_offset);
- 	if (mem == MAP_FAILED) {
- 		ret = 1;
- 		goto end;
- 	}
- 
--	ret = munmap(mem, length + offset - pa_offset);
-+	mem = mremap(mem, mem_length, mem_length * 2, MREMAP_MAYMOVE, 0);
-+	if (mem == MAP_FAILED) {
-+		munmap(mem, mem_length);
-+		ret = 1;
-+		goto end;
-+	}
-+
-+	ret = munmap(mem, mem_length * 2);
- 
- end:
- 	close(fd);
+@@ -1112,6 +1112,8 @@ int run_syscall(int min, int max)
+ 		 * test numbers.
+ 		 */
+ 		switch (test + __LINE__ + 1) {
++		CASE_TEST(access);            EXPECT_SYSZR(proc, access("/proc/self", R_OK)); break;
++		CASE_TEST(access_bad);        EXPECT_SYSER(proc, access("/proc/self", W_OK), -1, EPERM); break;
+ 		CASE_TEST(getpid);            EXPECT_SYSNE(1, getpid(), -1); break;
+ 		CASE_TEST(getppid);           EXPECT_SYSNE(1, getppid(), -1); break;
+ 		CASE_TEST(gettid);            EXPECT_SYSNE(has_gettid, gettid(), -1); break;
 
 -- 
 2.49.0
