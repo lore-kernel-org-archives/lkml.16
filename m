@@ -1,215 +1,122 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACF5267B91
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7138827470;
+	Mon, 28 Apr 2025 13:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745847208; cv=none; b=IzL6jUAblwbWOEK+sJVXQ3htLmr3xAkDNCkP219f+lg0XpWs3S6L4mWooyir4oBa8B+p9klK9v7IdJm01ixqZTlW61lYzmvezlULqzUM6poB5ik49064oEUgSLzDakdzM3qSpgw3xtMp7S1mgPKlbUyIx8hTqwFin8M8he3UrTs=
+	t=1745847224; cv=none; b=Nx2wrwjJc5zM5tbaFIVxxH+Y6fXGgJOl8/18F5m+cuFfrKqcVzu/kLD+u3D302ED52oB2O8v0CltExrKEK+30D2aUF7vtYe9iv7OzBGaqo0uyTnd65a9MxmISm3tnfnBKFw9+SnL58vnwl57ClLB0h0Z6FDY23MsLbNx/kSLyDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745847208; c=relaxed/simple;
-	bh=g/ypKnZkMGeLcmgWUKLIgk7T/52QPBl11q0ebRP6Xr0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fHk4TAzJomSWHkMWX3JGdqRZaBY504p1S2NVdICjo9mgrnpSW3msMpOs/671TcrS21skYr/t904SNi30S84yZxgxU7RZzLW3+nwhCeZ7WRmZWHQOVmKWSpT300qErLuTWoEZcu23NjGfypT5DjDJUyU+YW7mq3DIyOBm/e5xttM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w0c3hE7m; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w0c3hE7m"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso46606681fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745847205; x=1746452005; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OTzOZIYgOSm5iHgHYHs17cr0e11rjTGNrgKqn3vjBeY=;
-        b=w0c3hE7muChvyVZshVP/5PmPST8cfuMQEQmUmcRERLVnCSEmgTVmT+erlEuth75t2Q
-         khVqYQ6XILEsD0RJlbZY0IOPD2prq4ym9D/YEzhs2YZhCTWYgPwafF48ICzCiWy+BzbA
-         T3Aiz1TQHyFecXwOfPrpDBFYjcTkdgzFh/4eZ1ihLdQrA3k2OeKNHbMRxju1BuijZcSp
-         HwApYHYWm7V0iUZm/CIOLmYAbFKBhhXZBi4Vjnx4flVZoZlWeg5ACA8JpnYSQNPILZ6I
-         Pj5i+p9LU0vy+6vUx2TH0pKRAzmlrjGVOFPVzOSUf0n7Qxfz7u/wUXxU/Pbdo32n3QB+
-         uVmQ==
+	s=arc-20240116; t=1745847224; c=relaxed/simple;
+	bh=gpUxEEVy3sIsimESLtWHg+JgdxY1t3rGmbuJEiKpzNQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=un+t87csMLn2+yzCsgeIT+6S5GmowdGlL+EiU4PVvKv3zcrbMZUZLYU9G+EQ06Aur81wCLxRJCOL/kN7rGU/StlJkrc0iSfo9SqsAuMHztn6XrFDLBf2rdlOf4lmRG7fnWDE1SK2TGlPHdPvQlFbPxlwXNxKyesKwibO/dcpdD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4775ce8a4b0so100953211cf.1;
+        Mon, 28 Apr 2025 06:33:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745847205; x=1746452005;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OTzOZIYgOSm5iHgHYHs17cr0e11rjTGNrgKqn3vjBeY=;
-        b=Oe6b/lXJ9cItzeQADJt0dgqTfxLYJvKIQ5wN12A/JPu3vO20HotnARKzV2GHlBPqNN
-         8PmtdAjkZVU8Ja1Y9un1717Ol5AjfX4QChMLS1aXaC42UE9SiYgS5wC9Vi4D3xWUXuWa
-         uCWXPLm/6YR7pPUFDgRV0wPNlpATx0ACT+pxSWkoTw3y3PVYssHGM6nKCglzomNIMeK5
-         j25froXaXhu7J3rRxXGSwzNQnrDFugXb0CfSGvLOG2Rvxb/Rshb9YpeLXZTJ88Lql+WR
-         Albi+p2HU2nWMQREeYgAN4KbjJ3COX8KWtgp8RGovM7Z+KW9uKR+XnkkmtzvYYFo4vBN
-         KNMg==
-X-Gm-Message-State: AOJu0YzfRgqxrRbxeLny2bd3MvkktbPg7t8ndotdbAy3eQN9UX5PM90i
-	Y6DNI/e8Zcwps5GZTRnGV05wKhtjYLTRHbA7+yuOgwd/Gpc0I9Ba30YhbVdpCEl0EExrRpA92ZW
-	BraGt6UBt4+gAkjjdCrL7z67ln+Mum2nanzVT/A==
-X-Gm-Gg: ASbGncsmNxvWmG+gdovWpPzdjmb167dFRr8zXzTANyOeNn4eyB63j0zwvSX3NZA3/7n
-	r8vEWtBdsw1rU/E0U80ktJCYotcmlTjS6uGAuXilZaGN+Hw1EcHU5hAoNgiGnuLiPI8+wUeZfF4
-	F47p4yqdsysIssFQJQaEh6tg==
-X-Google-Smtp-Source: AGHT+IHg0AT7QEt67ZcddZlZ0cst6ypLtze1zVI2LlhtcUEjYYjpW8WKEZ9byzb7Kcir1ctsBebclNZzqHA8eROwPPw=
-X-Received: by 2002:a05:651c:210f:b0:309:2653:5dda with SMTP id
- 38308e7fff4ca-31907611ed5mr41639391fa.29.1745847204931; Mon, 28 Apr 2025
- 06:33:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745847219; x=1746452019;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0BEsm26/ULBWvXKeKH9l2FyVqKv47K9xZOm0eiyll4M=;
+        b=oG/twDsCjuTBTZIDyNWuqVTadZNA+aLretqnrVzohi9HiWoe+JeIJn/4mEK4LKGBa0
+         SrFcSY08klMHfi16u7Uz2aotSI2+Q6NEtE1zCRCTJxj/lnS3N7K/e5AILUWmx3ayFV5b
+         m81f+YHd6l+v4X3DvdGa7RMyAxYRmQ7r7a24J4H7NG3afU9368RAdT7NsWA2S2PTkkJM
+         zRDggaCKJhBClzWRflo0dUafs1I97PEPMYUyxIhOmverVIe4K1Y1k2Sw4Hv13iAT4n+H
+         AQwpIEA3xZuGE1JtnfSbYdHyZ7xnEOARg5JhIDNKsPyxQC6GemgyP0tbqKaz+JGAYXxJ
+         uugw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8SevAJ48BYibhXkFU/8azqP6yV/n3MsL3Dy8+xxgYzInqZbbwAKvJQGVoDmDH4ccRf440etAfRH6DOaqU@vger.kernel.org, AJvYcCVbX4Fm2gh3DM9DbpnG9RDOSUiPi6hOrT6oyjdXSIpm0l1UV9MtrFHxgyG3Bo64DuYiYo37EinlFQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+biwShyRgmvXmg240+rQcoLgsC4u9gfxtZ8BSQ5js3HarB0tf
+	Qa6eJC+pkkm5ctGqRdPC+OMn68jQk/qCjJEBQEw7QmREaf4+BnI3J0HMdg0O
+X-Gm-Gg: ASbGnctgyCxFqJP6mIYGevaBPNgusTeHZupjs3b5kgO+CMR+vY7s54TmgXjNtv6axbE
+	YXD58l/YsUCIlh2jZBf+SY7NTX0qOG7xWYczAlOwr9Sy+wuk0ZL1fEWrDZ+StfN3MoUKFzA7xBu
+	LGKRTDMTzKirfwCcsvnNi3E37ySxn8gI8mSgR1dPMrW4EVBWn/WW6+eXlyqFIuZgZ10igVQbx2S
+	IeSc8vp9skWI2DBB2JGhM+7DP2ukFz0GBrzzBSux75MdyISBPSv6fQInK/44fvIJ4laUjhD+U/P
+	J9xEakgzMz1WjJMoOoBpsB3y7+e5mZ5cdBMyXYza9vG6SrltjM6TMKr1nFTugqMc0CjwLo8WScb
+	0oHBGmTw=
+X-Google-Smtp-Source: AGHT+IGNQolzTzwT/yZkX048Wv2PAFwWfmNgX0cLcEBeWxcL3ExopurkRC4lBo0TaPq5PFZ7k4PIvQ==
+X-Received: by 2002:a05:622a:1a04:b0:476:7cc2:3f57 with SMTP id d75a77b69052e-48131227accmr139594871cf.10.1745847219609;
+        Mon, 28 Apr 2025 06:33:39 -0700 (PDT)
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com. [209.85.222.176])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-480ae7b591csm45947111cf.57.2025.04.28.06.33.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 06:33:38 -0700 (PDT)
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c54b651310so789313585a.0;
+        Mon, 28 Apr 2025 06:33:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgSAiGhzfJpMxyMpQ62IAQWv+kU3bhGNFz+pQKYrWVOdkoX4vYLNqWpi+YpGl7867A9CvmlqoRX8w=@vger.kernel.org, AJvYcCVMnO/3Rcd3KkzDKbVlGPNAjhJVprJx5zSLnkxBt1rlutXIbs0QZddBwsg4r03U1vwfpT1qmDBVrNGqC88q@vger.kernel.org
+X-Received: by 2002:a05:620a:1787:b0:7c3:cde7:a685 with SMTP id
+ af79cd13be357-7c96686a84bmr1764084385a.13.1745847218260; Mon, 28 Apr 2025
+ 06:33:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 28 Apr 2025 15:33:13 +0200
-X-Gm-Features: ATxdqUGU8Ix5hUMDuCCK8X0KpttsBjuthMDapQsBmSFhrZWTWQmiRbpNq7qfXFY
-Message-ID: <CACRpkdaAiF0=SCNBuOT7fyJwbHdMXMfBsRUiQEPnqWO-7nYz5A@mail.gmail.com>
-Subject: [GIT PULL] Generic entry for ARM for v6.16
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Russell King <rmk+kernel@armlinux.org.uk>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+References: <20250428123132.578771-1-pmladek@suse.com>
+In-Reply-To: <20250428123132.578771-1-pmladek@suse.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 28 Apr 2025 15:33:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX07EUSL2q5=jD17NX0gRMuLcWNec6i_18_vdnk5iC0bg@mail.gmail.com>
+X-Gm-Features: ATxdqUFmD3scy2HsHjle6vsPCd-N6jvnwhDUq0YXyuK0ax-ge1T-9jGSCM3VE7o
+Message-ID: <CAMuHMdX07EUSL2q5=jD17NX0gRMuLcWNec6i_18_vdnk5iC0bg@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: Use %p4chR instead of %p4cn for reading data in
+ reversed host ordering
+To: Petr Mladek <pmladek@suse.com>
+Cc: alyssa@rosenzweig.io, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>, airlied@redhat.com, 
+	Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com, 
+	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com, 
+	Kees Cook <kees@kernel.org>, tamird@gmail.com, Aditya Garg <gargaditya08@live.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
+	linux-doc@vger.kernel.org, Hector Martin <marcan@marcan.st>, 
+	Asahi Linux Mailing List <asahi@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Russell,
+On Mon, 28 Apr 2025 at 14:31, Petr Mladek <pmladek@suse.com> wrote:
+> The generic FourCC format always prints the data using the big endian
+> order. It is generic because it allows to read the data using a custom
+> ordering.
+>
+> The current code uses "n" for reading data in the reverse host ordering.
+> It makes the 4 variants [hnbl] consistent with the generic printing
+> of IPv4 addresses.
+>
+> Unfortunately, it creates confusion on big endian systems. For example,
+> it shows the data &(u32)0x67503030 as
+>
+>         %p4cn   00Pg (0x30305067)
+>
+> But people expect that the ordering stays the same. The network ordering
+> is a big-endian ordering.
+>
+> The problem is that the semantic is not the same. The modifiers affect
+> the output ordering of IPv4 addresses while they affect the reading order
+> in case of FourCC code.
+>
+> Avoid the confusion by replacing the "n" modifier with "hR", aka
+> reverse host ordering. It is inspired by the existing %p[mM]R printf
+> format.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Closes: https://lore.kernel.org/r/CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-please consider pulling the following git branch for ARM generic entry,
-for v6.16 see below.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This branch is identical to the v6 patch series:
-https://lore.kernel.org/linux-arm-kernel/20250420-arm-generic-entry-v6-0-95f1fcdfeeb2@linaro.org/
+Gr{oetje,eeting}s,
 
-It's possible to squash patches, even all of them into one
-big all-or-nothing patch, given the not very gradual nature generic
-entry conversion seems to have.
+                        Geert
 
-Main upsides and downsides are in the signed tag.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-This series contains the ACKs from tglx and paulmck.
-
-What's new apart from rebasing is the two following remasks in the
-signed tag:
-
-- Makes it possible to move ahead with ARCH_WANTS_NO_INSTR.
-
-- Good base for CONFIG_ARCH_HAS_RESCHED_LAZY which is a good
-  base for CONFIG_PREEMPT_RT.
-
-I think Arnd may be working on this and this could be a good starting
-point for PREEMPT_RT.
-
-Yours,
-Linus Walleij
-
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git
-tags/arm-generic-entry-for-v6.16
-
-for you to fetch changes up to 8c259349fa675315e1a80a463b04803501a045f6:
-
-  ARM: entry: Reimplement local restart in C (2025-04-07 14:51:17 +0200)
-
-----------------------------------------------------------------
-Main upsides:
-
-- Using the same common entry as used by x86_64, RISCV, S390
-  and Loongarch, probably soon also ARM64.
-
-- Moves ARM away from the obsoleted context tracker entry points
-  user_enter_callable() and user_exit_callable() are now only used
-  by ARM, CSKY and Xtensa.
-
-- Solves a few lockdep warnings in the process.
-
-- Converts a bit of assembly into C.
-
-- Makes it possible to move ahead with ARCH_WANTS_NO_INSTR.
-
-- Good base for CONFIG_ARCH_HAS_RESCHED_LAZY which is a good
-  base for CONFIG_PREEMPT_RT.
-
-Main downside:
-
-- Slightly increased system call overhead, around 6% in
-  measurements.
-
-----------------------------------------------------------------
-Linus Walleij (32):
-      ARM: Switch to generic entry
-      ARM: Prepare includes for generic entry
-      ARM: ptrace: Split report_syscall()
-      ARM: entry: Skip ret_slow_syscall label
-      ARM: process: Rewrite ret_from_fork i C
-      ARM: process: Remove local restart
-      ARM: entry: Invoke syscalls using C
-      ARM: entry: Rewrite two asm calls in C
-      ARM: entry: Move trace entry to C function
-      ARM: entry: save the syscall sp in thread_info
-      ARM: entry: move all tracing invocation to C
-      ARM: entry: Merge the common and trace entry code
-      ARM: entry: Rename syscall invocation
-      ARM: entry: Create user_mode_enter/exit
-      ARM: entry: Drop trace argument from usr_entry macro
-      ARM: entry: Separate call path for syscall SWI entry
-      ARM: entry: Drop argument to asm_irqentry macros
-      ARM: entry: Implement syscall_exit_to_user_mode()
-      ARM: entry: Drop the superfast ret_fast_syscall
-      ARM: entry: Remove fast and offset register restore
-      ARM: entry: Untangle ret_fast_syscall/to_user
-      ARM: entry: Do not double-call exit functions
-      ARM: entry: Move work processing to C
-      ARM: entry: Stop exiting syscalls like IRQs
-      ARM: entry: Complete syscall and IRQ transition to C
-      ARM: entry: Create irqentry calls from kernel mode
-      ARM: entry: Move in-kernel hardirq tracing to C
-      ARM: irq: Add irqstack helper
-      ARM: entry: Convert to generic entry
-      ARM: entry: Handle dabt, pabt, and und as interrupts
-      ARM: entry: Block IRQs in early IRQ context
-      ARM: entry: Reimplement local restart in C
-
- arch/arm/Kconfig                    |   1 +
- arch/arm/include/asm/entry-common.h |  66 ++++++++++++
- arch/arm/include/asm/entry.h        |  14 +++
- arch/arm/include/asm/ptrace.h       |   8 +-
- arch/arm/include/asm/signal.h       |   4 -
- arch/arm/include/asm/stacktrace.h   |   2 +-
- arch/arm/include/asm/switch_to.h    |   4 +
- arch/arm/include/asm/syscall.h      |   7 ++
- arch/arm/include/asm/thread_info.h  |  22 ++--
- arch/arm/include/asm/traps.h        |   5 +-
- arch/arm/include/uapi/asm/ptrace.h  |   2 +
- arch/arm/kernel/Makefile            |   5 +-
- arch/arm/kernel/asm-offsets.c       |   1 +
- arch/arm/kernel/entry-armv.S        |  82 ++++-----------
- arch/arm/kernel/entry-common.S      | 198 +++++++++++++-----------------------
- arch/arm/kernel/entry-header.S      | 100 ++----------------
- arch/arm/kernel/entry.c             | 120 ++++++++++++++++++++++
- arch/arm/kernel/irq.c               |   6 ++
- arch/arm/kernel/irq.h               |   2 +
- arch/arm/kernel/process.c           |  25 ++++-
- arch/arm/kernel/ptrace.c            |  81 +--------------
- arch/arm/kernel/signal.c            |  68 +++----------
- arch/arm/kernel/syscall.c           |  59 +++++++++++
- arch/arm/kernel/traps.c             |  30 +-----
- arch/arm/mm/abort-ev4.S             |   2 +-
- arch/arm/mm/abort-ev4t.S            |   2 +-
- arch/arm/mm/abort-ev5t.S            |   4 +-
- arch/arm/mm/abort-ev5tj.S           |   6 +-
- arch/arm/mm/abort-ev6.S             |   2 +-
- arch/arm/mm/abort-ev7.S             |   2 +-
- arch/arm/mm/abort-lv4t.S            |  36 +++----
- arch/arm/mm/abort-macro.S           |   2 +-
- arch/arm/mm/abort-nommu.S           |   2 +-
- arch/arm/mm/fault.c                 |   4 +-
- arch/arm/mm/fault.h                 |   8 +-
- arch/arm/mm/pabort-legacy.S         |   2 +-
- arch/arm/mm/pabort-v6.S             |   2 +-
- arch/arm/mm/pabort-v7.S             |   2 +-
- 38 files changed, 484 insertions(+), 504 deletions(-)
- create mode 100644 arch/arm/include/asm/entry-common.h
- create mode 100644 arch/arm/include/asm/entry.h
- create mode 100644 arch/arm/kernel/entry.c
- create mode 100644 arch/arm/kernel/irq.h
- create mode 100644 arch/arm/kernel/syscall.c
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
