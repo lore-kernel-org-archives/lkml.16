@@ -1,176 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C7F27934D
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FE4279359
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745852234; cv=none; b=srs3RrIWQnnqJ+5dk8wkSpZqxa6GKdPWGT2SlyDEc3vHhlGSMuinfeh12FwjPOsFVBDne2JQHxwEYokyt9o664/0fX2CKYx3HMTm8+K+QDNikFqxA9PtNl6peAR9vre/1cD6UXxoSAGAEZNf6BS1m0bGHGI746IqtljpnhRQPx8=
+	t=1745852277; cv=none; b=Z4RSw4JaQ/Jb4E269JKwJX/0Vpa1n2QpNfKxkLJ5i0+AuGzTIKZj2t88NbNqsAQGRwLBEHO/H6mK4u/NlbvNMkTxgfXe9UoJ7At3w312MHORQqi+v0RUQDAFYkrY822TXIfdJ4vUenFFoFHpXp2ytYEiRM1AoAS8nBNXLwj5Uu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745852234; c=relaxed/simple;
-	bh=tQKS6ESMU4XqVh1loYK5WinArQ9UR2bn/2B7Gb7Oafo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mjoOFu/aglP1JQSVv6zW/3wDAxfmybOZtop4C5W6nrcUwLHEPqmfif34+uD1IFG9OEJrm0ajLRlXzQSdIdtn18L0ultcriyLHHA9cpiXghVvMoiwxZQxfhI/F7PWqRHiNKHVFAhoD4Q6qNMIbcaHCWOJL8k0kzogJK9yMtHgx9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HtHhelRj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745852277; c=relaxed/simple;
+	bh=jl/85CEp+jYn5edTqQooRO3DoXXM/9+6NLc8K/sY13A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d8sUZZIZUAV/DP9xwq8NwPa1s1XQvbXBB/mgxMIhACm6QmbmWu+sOJHjmQ/MbIVcdWPd6JUPIsZ6YRr7tMW8m9o9+3DWVsoTzoXyLn/V+FyBsFyY5NQNkuki14NhtpCcUToRBNMhJY53hfn2XJnDS8FgMKhHTQ5hWCWRDjf0A2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TSyOEyPO; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HtHhelRj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745852231;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y35svQEUNVinLjrbig+h/RI+A+7BGDLM2oykyzI/Jak=;
-	b=HtHhelRj7gSgc/EShf5Jp8kUnl/OW5PeEIfvjWEI0olxfKMFcDwI/jckBWqSJPmrhbMI1C
-	z8yuCky6Xofzha5UMZIVsvfNaXUvNt889/BICWAjcctINx0wZIU6AtfwpI9wvKE68jXjNU
-	3Y5lLTUj/GSmNMAz+E8U3lTzd3upYCA=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-490-7ZqEuQwkPceAFYML0JSk6g-1; Mon, 28 Apr 2025 10:55:16 -0400
-X-MC-Unique: 7ZqEuQwkPceAFYML0JSk6g-1
-X-Mimecast-MFC-AGG-ID: 7ZqEuQwkPceAFYML0JSk6g_1745852115
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-7040773fd79so64733197b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:55:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TSyOEyPO"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso7551516a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745852273; x=1746457073; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Makd3DTqklPXUuIAq4gszh2iW6GJfZJUHbvqfYYQa+U=;
+        b=TSyOEyPOc8Ttlgq8ncUhZi6odhfSETVpbzLT80UnLV7uVrSh7PJ4p6l2OpeeYtswqi
+         2cGW4ihWQmLJ5t/CQttl4bFs5kd78BC/6DbELt6MjtSR1O21936KcKXr3I1+MvZTTldn
+         tsNrHDMa+z8qzJ3o+raP+J/2vFdgtZpS14myy4zS7ZE4xlfCLK13eSez3717U9axb5a1
+         U9KZRdMzvQsAP90Tn3OzY7zgvOpYJ2euHito0b/fMwmHUhB3/f2qXY5eoVykBVFH3nPx
+         1Oz9ziMgOgSzr8uQpmk4sjLPz4LFf+eCi55B+W3DqizRYzWS/b7GkvrjHmiiys+1n/Nm
+         SbuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745852115; x=1746456915;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y35svQEUNVinLjrbig+h/RI+A+7BGDLM2oykyzI/Jak=;
-        b=xIdoMQMioeoI65w8aUCSs0YVr/Wf+0oFOwh52YZTWmiHCeNvmz5bVi6I8UVfSLAxum
-         AHTgnmD1zWoz/cJlUOHmiPhyXxKKJOYrqRqQ7VAH5UBnnlet20taXmIogu/5A0c7cTkx
-         fpVuteDG+DcSeOT3O6samX5UfSBZB0VBgP6DBgNxnZQRBvqIM1B5zmhniIJROSJNqZ4k
-         lIQpqIBE+J50NBxYV2caA+tJZTrtmWNETer92Gv8SUL6oAIp70UVTJt0fqGDLb44Lj82
-         q+TV5rj1qgFRJUURy5LUcnG2x0fIBRNrehWZ1ovjfTbJHXUWKc7d08MKsQ1RQb8waaw7
-         pv4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWvI44tztwUiORiDqxJ7Bhs4cLo59RCqKIt80f9p9po8VYr6RiYo4poyy38QRJ4OHkOvNCT/Rw9xSuPYqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaTSkfuF2VxxiweQwSYhdNlslA05P0RFQQWM6yGx55apgGDapU
-	/B73vreiw5nVjmhQtkDqkVYRQMfhqLqut06WCaLDXuoIICV1TJlF5hAZvN+8n0U3Cgfz9fb5hsS
-	wEiCE+pTy4ad1YF2J8g5Vew81ftyeKxaou1P28koyWLUwmwwzd4wBm975SNZI4AUEe/klKl+xu0
-	TfBgdfTMGg6mEEfCMPRKJyLNldREMr6P0EhToWV9sHObldgj0=
-X-Gm-Gg: ASbGncsmZ2cN1QB7vnixps0Lw42utlf+TJLAjOiuKyM4sSnniilaRs+dxv3SbCVFusN
-	AgFu7tVi6bs03a3aaWWt79wlQ72jrYjGf+fTqvhifgfUfXiDIYffXUcLzpQL6Fg8TxUFSYSdCQn
-	hVTYnn3+E=
-X-Received: by 2002:a05:690c:39b:b0:708:1d15:e013 with SMTP id 00721157ae682-7089963f2cemr326127b3.7.1745852115080;
-        Mon, 28 Apr 2025 07:55:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFmPzgoIcf2zjGWAfQJdt3FvqX6eeOCmgl+PxaPPQiwuCUtJ53kFcyZuTL8sqPiYecQmPEK1B0eYwqIXjEZnPg=
-X-Received: by 2002:a05:690c:39b:b0:708:1d15:e013 with SMTP id
- 00721157ae682-7089963f2cemr325477b3.7.1745852114651; Mon, 28 Apr 2025
- 07:55:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745852273; x=1746457073;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Makd3DTqklPXUuIAq4gszh2iW6GJfZJUHbvqfYYQa+U=;
+        b=JG1XvGO7KH6QnPz0k6/FuaBvVPxrjQ16DOwA63MoCGjF2vHYVLVuz2z5ilpQ76CfGF
+         oxuldH1q5IDU+G0M04ICFPjaCYkj7orLKRXWCCqLtgPNKfg4iu4DxiTvSz0B3XzuYbUh
+         9uLQo/XnF9m3u/rSMP6okd6itQ6PdufoRG7f/jEk5YihXEDYUFZjFhCDgLiS0lC723/j
+         VkBMqMJh3b7D3vN+KUzftXueiL+aLs5R28TpMmyphJjwcksIFxSIukOFUoU/UMizSxBa
+         yQL84PtIHZgA4j6MJ0Y4WPLWbPwwaSaQfDqYmDOUFLEfTcTjitYNe6rjMTFaIrV17zsn
+         cDdQ==
+X-Gm-Message-State: AOJu0YzmWjt6/Yb4VcIKXnsnsbDY5F9SUOMeCxN2QOtIBRE4pIqgno3l
+	0cwh4u3+zHA45cMyBXdzWLZRLqvxCDM4tsCA1r+LshyDXebm7vG9i1DCl2UKLrY=
+X-Gm-Gg: ASbGncuIXeomoc2Ggi84Qyn2rxhQEq1Nf41+5hmnIvdVO3hQUgRIN8NvlJrw6u0gNmN
+	10zi42vSO9Oh909252DPcZ/12Olj0mJZZywY7sfZ0KyYsOwnVKVa5/dX9toFEW1mYJqZE6mBU2c
+	Sa6beIrRRQapWiGkGeUlN8LvK0y1tPXZzCSA9PAHs8inICZcGr6LI/ABxX/PH3IwMCi42l/9Dar
+	iq/4xNe+NRBZjn/IZY85zZsTQfAW6XZg6mr6C3HysNgQ34lZdrbpL69H6n+emXWhiwNJLtqMTsk
+	wm4ObXIoYB5+J678WsftiFyAKolqkP5Qh7fsQIip6n0=
+X-Google-Smtp-Source: AGHT+IH9fOvXRR1ynG3jhwLzW7DEMUQtzfgBZz/+50IlIniGFg6YSl8bO+ybnmhVC8MvXEoyK3eepg==
+X-Received: by 2002:a05:6402:34d5:b0:5e0:8937:6ef2 with SMTP id 4fb4d7f45d1cf-5f72278aa18mr9640578a12.8.1745852273455;
+        Mon, 28 Apr 2025 07:57:53 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7035464e6sm5926699a12.64.2025.04.28.07.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 07:57:53 -0700 (PDT)
+Date: Mon, 28 Apr 2025 16:57:51 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Bert Karwatzki <spasswolf@web.de>,
+	"Aithal, Srikanth" <sraithal@amd.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 10/20] ratelimit: Allow zero ->burst to disable
+ ratelimiting
+Message-ID: <aA-Xb89sgQd5ZaGO@pathway.suse.cz>
+References: <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
+ <20250425002826.3431914-10-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417000238.74567-1-npache@redhat.com> <20250417000238.74567-13-npache@redhat.com>
- <b22e222f-1d6a-4685-871c-1aaee319b744@gmail.com>
-In-Reply-To: <b22e222f-1d6a-4685-871c-1aaee319b744@gmail.com>
-From: Nico Pache <npache@redhat.com>
-Date: Mon, 28 Apr 2025 08:54:47 -0600
-X-Gm-Features: ATxdqUEM4Y4YSJdY2ZlnauGjTRYOP-E22W7On3YrDJ0KhY5tdri4FdTql7M6Xhs
-Message-ID: <CAA1CXcBQ6G70Pg93XphsXAwwHtJPbFuJb=OmfwK2s3q3aevGuA@mail.gmail.com>
-Subject: Re: [PATCH v4 12/12] Documentation: mm: update the admin guide for
- mTHP collapse
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, 
-	willy@infradead.org, peterx@redhat.com, ziy@nvidia.com, 
-	wangkefeng.wang@huawei.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
-	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
-	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
-	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
-	rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425002826.3431914-10-paulmck@kernel.org>
 
-On Thu, Apr 24, 2025 at 9:04=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
- wrote:
+On Thu 2025-04-24 17:28:16, Paul E. McKenney wrote:
+> If ->interval is zero, then rate-limiting will be disabled.
+> Alternatively, if interval is greater than zero and ->burst is zero,
+> then rate-limiting will be applied unconditionally.
+> 
+> Therefore, make this classification be lockless.
+> 
+> Note that although negative ->interval and ->burst happen to be treated
+> as if they were zero, this is an accident of the current implementation.
+> The semantics of negative values for these fields is subject to change
+> without notice.  Especially given that Bert Karwatzki determined that
+> current calls to ___ratelimit() currently never have negative values
+> for these fields.
 >
->
->
-> On 17/04/2025 01:02, Nico Pache wrote:
-> > Now that we can collapse to mTHPs lets update the admin guide to
-> > reflect these changes and provide proper guidence on how to utilize it.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >  Documentation/admin-guide/mm/transhuge.rst | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation=
-/admin-guide/mm/transhuge.rst
-> > index dff8d5985f0f..06814e05e1d5 100644
-> > --- a/Documentation/admin-guide/mm/transhuge.rst
-> > +++ b/Documentation/admin-guide/mm/transhuge.rst
-> > @@ -63,7 +63,7 @@ often.
-> >  THP can be enabled system wide or restricted to certain tasks or even
-> >  memory ranges inside task's address space. Unless THP is completely
-> >  disabled, there is ``khugepaged`` daemon that scans memory and
-> > -collapses sequences of basic pages into PMD-sized huge pages.
-> > +collapses sequences of basic pages into huge pages.
-> >
-> >  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
-> >  interface and using madvise(2) and prctl(2) system calls.
-> > @@ -144,6 +144,14 @@ hugepage sizes have enabled=3D"never". If enabling=
- multiple hugepage
-> >  sizes, the kernel will select the most appropriate enabled size for a
-> >  given allocation.
-> >
-> > +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP =
-size to
-> > +determine collapses. When using mTHPs it's recommended to set max_ptes=
-_none
-> > +low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This w=
-ill
-> > +prevent undesired "creep" behavior that leads to continuously collapsi=
-ng to a
-> > +larger mTHP size. max_ptes_shared and max_ptes_swap have no effect whe=
-n
-> > +collapsing to a mTHP, and mTHP collapse will fail on shared or swapped=
- out
-> > +pages.
-> > +
->
-> Hi Nico,
->
-> Could you add a bit more explanation of the creep behaviour here in docum=
-entation.
-> I remember you explained in one of the earlier versions that if more than=
- half of the
-> collapsed mTHP is zero-filled, it for some reason becomes eligible for co=
-llapsing to
-> larger order, but if less than half is zero-filled its not eligible? I ca=
-nt exactly
-> remember what the reason was :) Would be good to have it documented more =
-if possible.
-Hi Usama,
+> This commit replaces an earlier buggy versions.
 
-You can think of the creep as a byproduct of introducing N new
-non-zero pages to a N sized mTHP, essentially doubling the size. On a
-second pass of this mTHP the same condition would be eligible, leading
-to constant promotion to the next size. If we allow khugepaged to
-double the size of mTHP, by introducing non-zero pages, it will keep
-doubling.
+If there was another revision then it would be nice to explicitly
+describe also the reason why both zero ->interval and ->burst never
+rate-limits. It is the state when the structure is zeroed. Some
+existing code relied in this behavior.
 
-I'll see how I can incorporate this description into the admin guide.
+If I get it correctly then this is the difference between this and
+the previous version of this patch. And the previous version
+caused regressions described by the Links...
 
--- Nico
->
-> Thanks
->
-> >  It's also possible to limit defrag efforts in the VM to generate
-> >  anonymous hugepages in case they're not immediately free to madvise
-> >  regions or to never try to defrag memory and simply fallback to regula=
-r
->
+> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
+> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
+> Reported-by: Bert Karwatzki <spasswolf@web.de>
+> Reported-by: "Aithal, Srikanth" <sraithal@amd.com>
+> Closes: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/all/257c3b91-e30f-48be-9788-d27a4445a416@sirena.org.uk/
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Tested-by: "Aithal, Srikanth" <sraithal@amd.com>
 
+Otherwise, it looks good to me:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
