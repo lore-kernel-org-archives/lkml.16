@@ -1,367 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BB11C84D3
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9EF26A0A6;
+	Mon, 28 Apr 2025 14:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745851667; cv=none; b=eVyAAiVlRCisk4RvWw+D/z7ImQmUkcfBmKJT4Jq/D7LHKK9cAPoApsr+8fUpu+eQgPqeNEzPWPzIu/EarY/HsokuvhSLVXx3U+9NobYEkXe7c5UB8hzR4ESDCNt/L+S5BilH0gJhbbLvsAoFuYi/lbWmCmZ4zqHp3CBhjK+o1OI=
+	t=1745851684; cv=none; b=QJcgPGbQeXsrdI+jozJPUA+W3XBqlpAqveLtGClREB0A6czKYR9ZWc//X4rKsidVR0HNgSSc+WY8mdgege9m2fDa1rVUDxxcgTO4oib+zyJVbtwW0bDUMmlvlItX5nrmzYe+mWsf4vu2STH81xDMv2zTWRAMH3YoKitCxhHguaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745851667; c=relaxed/simple;
-	bh=7FNG+ItrdJ7ATPBw2w+D+H3RCmUh5MRebGnlgLlyoW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cLy3mmqLA1M/9zDGNT9KfRV8tWlJUWr7nHKAtebIbOYrJF0kQxtqlAQCQfxhhZvFYVNFhlQJAo2MAAVKk/34XxDT2mSmwRzIBO82K20Wqms+WR3ZwGelcphpNnJzhDZWvYZP/lVt+tYN0gfvCXLPr5q1o1aOlhj1tXgczhPU9qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FfK0nyNy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745851684; c=relaxed/simple;
+	bh=kuQ5RBS/v6Y1BV434gFacRwWCK5fX/TwA/KVwBQWMR4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Nc8hNjDxk1F1wA1YEvKMF5/RAEOM0ooLmWxzimqKTQ16SkcA6thsOr4e5C4GgDwDm6HxMbhOXyDHdR8gg5jdVb8HYVwBXxkSnltDLDfILui8EPSPlYPyd8+34ovCUSl9AeNUV5mQBFiazHw7tN5fqWRCDxu99qJneq57FzP2TTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dwoN0zla; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FfK0nyNy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745851664;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ACNt1upMe6tBP1vArcgHmRSi246KnVFiBA1nlkLjZ1Y=;
-	b=FfK0nyNyLZSaffJMZGP+Qz5hGnpxInoSjEKhm1ujNZvOLH1o93MAIgmZC+kDgRYd+NfEwl
-	PvHAObBjKo3zVnZKm/pIBYMxZpW6+UbJhob38r207DVbOtHx+fklAHTQbbIk1RBLDGZf+U
-	jDOzCIg5t7QcloNTqgIafp63GKrQLJY=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-2Qv4rOm1PhCUQWDT0mpMVA-1; Mon, 28 Apr 2025 10:47:42 -0400
-X-MC-Unique: 2Qv4rOm1PhCUQWDT0mpMVA-1
-X-Mimecast-MFC-AGG-ID: 2Qv4rOm1PhCUQWDT0mpMVA_1745851661
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-703d7a66d77so65569427b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:47:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745851661; x=1746456461;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ACNt1upMe6tBP1vArcgHmRSi246KnVFiBA1nlkLjZ1Y=;
-        b=UGBEV+tZ7zYzI3kzU9j+SJjQ8clJyJbeTcxnKesYiqJUVUN44p1jOVEH5xBbHkxjvH
-         71rsWCuYq/q8jhULiP5Jc32M8Jm7+XpoVZpQBnN6KI9NAY88pHrHo72rS23NY6jWT3ej
-         q0FcVS0nEP3F/kwj1JFfjGXulfbPApYKecRtxC7LbLbFrVFnfgJqx0+uFj7zrp4uSgsb
-         O3oCY7l54ZFFJPbRF45D1gEIfthEmJxREQbEUqHBrscxH63kiC5aohzVV8ozqXOyO+AB
-         BAcU+uN0K6rIAbUH16FnnFrhiSsdkBqWBAe3uXVH0QjtQVS0rHcmWPewcCGk+EkxuwqI
-         qV2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnp/qaMUjTnIpn1Nhn8spH6mZplDwTEIxZ5SQKvYWlzjqGOsax4aOr+rCQJabXR+x6ypgYvrZr2GZ/0bI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNTKA21L9cdM7gh3n8c95hpLTuZtFYxHBa50DijwSkMGy0Liiu
-	54+3fBwir45sXbOPJ38T1PsTJ+IlGvbmcrlvtDKAyUcWkanKchu5o7TOAa9X5tuCA0uhF4ct5Wt
-	6+ViQrZuHs9vSbpgOQwor50FSFkwTuZHfPBHeJZUp6bTrU2YI7qFGvNtrC9GYjEsxA8SG4ebhKg
-	5IT0uFtslBF2XUkjYIUpdDOHtq8iqSVAThEbYa
-X-Gm-Gg: ASbGnctbu8xxWVmS6kh8cTICMtrwvbGWkmW8r4S6P6XiRdJza5H9S7UC5grhP0BWwGV
-	pieWZseWCiVdfMUMjB7lgt3GECy5vBiUq9RxX3ye5ZalXT2bJUCjo+io6hE3SaYgsXKLbAK334l
-	984AS0+7E=
-X-Received: by 2002:a05:690c:6b89:b0:6fb:9445:d28e with SMTP id 00721157ae682-708543f3f8bmr150019547b3.10.1745851661551;
-        Mon, 28 Apr 2025 07:47:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVkmkE4Vcb08AcXyxikoE1TU4PLRHPVJn8yw3P8lrANxyblubLndQgNm2O8lhMvIXPZ36Drl3GMiypgwM8vns=
-X-Received: by 2002:a05:690c:6b89:b0:6fb:9445:d28e with SMTP id
- 00721157ae682-708543f3f8bmr150018817b3.10.1745851661161; Mon, 28 Apr 2025
- 07:47:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dwoN0zla"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SADENS027055;
+	Mon, 28 Apr 2025 14:47:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=f2NMXreXM3PVotN+YOuIh9
+	CVsLx7a/b/tTxSsV5l3oo=; b=dwoN0zlaeO97k3/XunMckPwwB72EHzpLgz//7h
+	DrOERivFPo4oiZPOXeEAWyhRG9hrhLlKV/H4gRPwhmN67fvgw0EP7OVe0jC53wbD
+	4LuhpaEMN5fNqTIcHwByHI9bVZiregF1nNeHz8cGoF9q1IeF+zWc/JMz35WlDGxT
+	+/PBdCxllZmPljXXbmVrUn8+zZW/9dPljhlt13mfptmk16oxDiL1Cd2lcKZHu3WY
+	eOIJS5iJH2MRdyuM/L6kqb8xe42hzFJEzK1+0J5DLX7PjES5fEiVyhj9sROtD/aw
+	wyjNPRopE2v3Z1m9HRtgeKN8E1DrKygIvkfDtahDU0KQFMJA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468q321gf5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 14:47:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53SElkPT027712
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 14:47:46 GMT
+Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 28 Apr 2025 07:47:45 -0700
+From: Mike Tipton <quic_mdtipton@quicinc.com>
+To: Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi
+	<cristian.marussi@arm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Viresh
+ Kumar" <viresh.kumar@linaro.org>
+CC: <arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Peng Fan
+	<peng.fan@oss.nxp.com>,
+        Mike Tipton <quic_mdtipton@quicinc.com>, Peng Fan
+	<peng.fan@nxp.com>
+Subject: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by the CPUs
+Date: Mon, 28 Apr 2025 07:47:28 -0700
+Message-ID: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417000238.74567-1-npache@redhat.com> <20250417000238.74567-7-npache@redhat.com>
- <5de38fe3-4a73-443b-87d1-0c836ffdbe30@linux.alibaba.com>
-In-Reply-To: <5de38fe3-4a73-443b-87d1-0c836ffdbe30@linux.alibaba.com>
-From: Nico Pache <npache@redhat.com>
-Date: Mon, 28 Apr 2025 08:47:15 -0600
-X-Gm-Features: ATxdqUFjy2qJlYlOt48ZRabeCVJgfUsYAeyPhh9bvAeZHSwObmUxYSjsHfeo0u8
-Message-ID: <CAA1CXcAiiBJ4mMp0WJUk7tWTF20guJi80P8wBh271yJ9P+c_VA@mail.gmail.com>
-Subject: Re: [PATCH v4 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
-	baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org, 
-	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
-	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
-	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
-	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
-	rdunlap@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=M7xNKzws c=1 sm=1 tr=0 ts=680f9513 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=8AirrxEcAAAA:8 a=z2bt77sjNeVQpZcblNcA:9
+ a=TjNXssC_j7lpFel5tvFf:22 a=ST-jHhOKWsTCqRlWije3:22
+X-Proofpoint-GUID: K3-w76dxuPNYILj9uBgxADKSN0N5mjIB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEyMSBTYWx0ZWRfX31ICRIqjwAzc uyDtbrNxPt3Uyl8GaFw3Pb76Plhj+IAMFgeA9U5Je51HQ59TTaa8esEoVz6PXR/TmHjx1GNTHqa X3i9QW6NbAphFyb3hebWw0l/cgzvu+saYWjM79GkaJkP9VK2zw+pHinonx/0WRgeGl9ebL9FuVC
+ ktHa3epY1OHt0OR+Xwqi+mXqbtIZgvaa4i7xxUfPOok4ZpN8WtkVJXc84bhpPGA9CEutojZwCob nkLKVTd4oqWPbKcA2MaR3r/8Nwo8xhXKtkCGu7rg6RImX9TrPqEOzH5NuIaD0AxfT3Y44f6/Jh/ 0ijhETY3gdqlBhJE5ag3B+QAts7MI8FfMYFB5XXw86pXm+HNiHQCFg/vNrpzIpQdG9Pc9oLUl23
+ giFdI/g+LZLH2OIRv/Fsr3nOuCJ7i5g72n8Xp3HGwR7BUe0xmJW6T9k8Eowl+25r3Hcahoz8
+X-Proofpoint-ORIG-GUID: K3-w76dxuPNYILj9uBgxADKSN0N5mjIB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 clxscore=1011 mlxlogscore=999 spamscore=0 phishscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280121
 
-On Sat, Apr 26, 2025 at 8:52=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 2025/4/17 08:02, Nico Pache wrote:
-> > khugepaged scans PMD ranges for potential collapse to a hugepage. To ad=
-d
-> > mTHP support we use this scan to instead record chunks of utilized
-> > sections of the PMD.
-> >
-> > khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
-> > that represents chunks of utilized regions. We can then determine what
-> > mTHP size fits best and in the following patch, we set this bitmap whil=
-e
-> > scanning the PMD.
-> >
-> > max_ptes_none is used as a scale to determine how "full" an order must
-> > be before being considered for collapse.
-> >
-> > When attempting to collapse an order that has its order set to "always"
-> > lets always collapse to that order in a greedy manner without
-> > considering the number of bits set.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   include/linux/khugepaged.h |  4 ++
-> >   mm/khugepaged.c            | 94 ++++++++++++++++++++++++++++++++++---=
--
-> >   2 files changed, 89 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-> > index 1f46046080f5..18fe6eb5051d 100644
-> > --- a/include/linux/khugepaged.h
-> > +++ b/include/linux/khugepaged.h
-> > @@ -1,6 +1,10 @@
-> >   /* SPDX-License-Identifier: GPL-2.0 */
-> >   #ifndef _LINUX_KHUGEPAGED_H
-> >   #define _LINUX_KHUGEPAGED_H
-> > +#define KHUGEPAGED_MIN_MTHP_ORDER    2
->
-> Why is the minimum mTHP order set to 2? IMO, the file large folios can
-> support order 1, so we don't expect to collapse exec file small folios
-> to order 1 if possible?
-I should have been more specific in the patch notes, but this affects
-anonymous only. I'll go over my commit messages and make sure this is
-reflected in the next version.
->
-> (PS: I need more time to understand your logic in this patch, and any
-> additional explanation would be helpful:) )
+Currently, all SCMI devices with performance domains attempt to register
+a cpufreq driver, even if their performance domains aren't used to
+control the CPUs. The cpufreq framework only supports registering a
+single driver, so only the first device will succeed. And if that device
+isn't used for the CPUs, then cpufreq will scale the wrong domains.
 
-We are currently scanning ptes in a PMD. The core principle/reasoning
-behind the bitmap is to keep the PMD scan while saving its state. We
-then use this bitmap to determine which chunks of the PMD are active
-and are the best candidates for mTHP collapse. We start at the PMD
-level, and recursively break down the bitmap to find the appropriate
-sizes for the bitmap.
+To avoid this, return early from scmi_cpufreq_probe() if the probing
+SCMI device isn't referenced by the CPU device phandles.
 
-looking at a simplified example: we scan a PMD and get the following
-bitmap, 1111101101101011 (in this case MIN_MTHP_ORDER=3D 5, so each bit
-=3D=3D 32 ptes, in the actual set each bit =3D=3D 4 ptes).
-We would first attempt a PMD collapse, while checking the number of
-bits set vs the max_ptes_none tunable. If those conditions arent
-triggered, we will try the next enabled mTHP order, for each half of
-the bitmap.
+This keeps the existing assumption that all CPUs are controlled by a
+single SCMI device.
 
-ie) order 8 attempt on 11111011 and order 8 attempt on 01101011.
+Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+---
+Changes in v3:
+- Use dev_of_node(dev) instead of dev->of_node.
+- Sanity check scmi_np.
+- Pick up Reviewed-by from Peng.
+- Link to v2: https://lore.kernel.org/all/20250421195206.3736128-1-quic_mdtipton@quicinc.com/
 
-If a collapse succeeds we dont keep recursing on that portion of the
-bitmap. If not, we continue attempting lower orders.
+Changes in v2:
+- Return -ENODEV instead of 0 for irrelevant devices.
+- Link to v1: https://lore.kernel.org/all/20250411212941.1275572-1-quic_mdtipton@quicinc.com/
 
-Hopefully that helps you understand my logic here! Let me know if you
-need more clarification.
+ drivers/cpufreq/scmi-cpufreq.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-I gave a presentation on this that might help too:
-https://docs.google.com/presentation/d/1w9NYLuC2kRcMAwhcashU1LWTfmI5TIZRaTW=
-uZq-CHEg/edit?usp=3Dsharing&resourcekey=3D0-nBAGld8cP1kW26XE6i0Bpg
-
-Cheers,
--- Nico
->
-> > +#define KHUGEPAGED_MIN_MTHP_NR       (1<<KHUGEPAGED_MIN_MTHP_ORDER)
-> > +#define MAX_MTHP_BITMAP_SIZE  (1 << (ilog2(MAX_PTRS_PER_PTE) - KHUGEPA=
-GED_MIN_MTHP_ORDER))
-> > +#define MTHP_BITMAP_SIZE  (1 << (HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP=
-_ORDER))
-> >
-> >   extern unsigned int khugepaged_max_ptes_none __read_mostly;
-> >   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 5e9272ab82da..83230e9cdf3a 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -94,6 +94,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, M=
-M_SLOTS_HASH_BITS);
-> >
-> >   static struct kmem_cache *mm_slot_cache __ro_after_init;
-> >
-> > +struct scan_bit_state {
-> > +     u8 order;
-> > +     u16 offset;
-> > +};
-> > +
-> >   struct collapse_control {
-> >       bool is_khugepaged;
-> >
-> > @@ -102,6 +107,18 @@ struct collapse_control {
-> >
-> >       /* nodemask for allocation fallback */
-> >       nodemask_t alloc_nmask;
-> > +
-> > +     /*
-> > +      * bitmap used to collapse mTHP sizes.
-> > +      * 1bit =3D order KHUGEPAGED_MIN_MTHP_ORDER mTHP
-> > +      */
-> > +     DECLARE_BITMAP(mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
-> > +     DECLARE_BITMAP(mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
-> > +     struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_SIZE];
-> > +};
-> > +
-> > +struct collapse_control khugepaged_collapse_control =3D {
-> > +     .is_khugepaged =3D true,
-> >   };
-> >
-> >   /**
-> > @@ -851,10 +868,6 @@ static void khugepaged_alloc_sleep(void)
-> >       remove_wait_queue(&khugepaged_wait, &wait);
-> >   }
-> >
-> > -struct collapse_control khugepaged_collapse_control =3D {
-> > -     .is_khugepaged =3D true,
-> > -};
-> > -
-> >   static bool khugepaged_scan_abort(int nid, struct collapse_control *c=
-c)
-> >   {
-> >       int i;
-> > @@ -1118,7 +1131,8 @@ static int alloc_charge_folio(struct folio **foli=
-op, struct mm_struct *mm,
-> >
-> >   static int collapse_huge_page(struct mm_struct *mm, unsigned long add=
-ress,
-> >                             int referenced, int unmapped,
-> > -                           struct collapse_control *cc)
-> > +                           struct collapse_control *cc, bool *mmap_loc=
-ked,
-> > +                               u8 order, u16 offset)
-> >   {
-> >       LIST_HEAD(compound_pagelist);
-> >       pmd_t *pmd, _pmd;
-> > @@ -1137,8 +1151,12 @@ static int collapse_huge_page(struct mm_struct *=
-mm, unsigned long address,
-> >        * The allocation can take potentially a long time if it involves
-> >        * sync compaction, and we do not need to hold the mmap_lock duri=
-ng
-> >        * that. We will recheck the vma after taking it again in write m=
-ode.
-> > +      * If collapsing mTHPs we may have already released the read_lock=
-.
-> >        */
-> > -     mmap_read_unlock(mm);
-> > +     if (*mmap_locked) {
-> > +             mmap_read_unlock(mm);
-> > +             *mmap_locked =3D false;
-> > +     }
-> >
-> >       result =3D alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
-> >       if (result !=3D SCAN_SUCCEED)
-> > @@ -1273,12 +1291,72 @@ static int collapse_huge_page(struct mm_struct =
-*mm, unsigned long address,
-> >   out_up_write:
-> >       mmap_write_unlock(mm);
-> >   out_nolock:
-> > +     *mmap_locked =3D false;
-> >       if (folio)
-> >               folio_put(folio);
-> >       trace_mm_collapse_huge_page(mm, result =3D=3D SCAN_SUCCEED, resul=
-t);
-> >       return result;
-> >   }
-> >
-> > +// Recursive function to consume the bitmap
-> > +static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long =
-address,
-> > +                     int referenced, int unmapped, struct collapse_con=
-trol *cc,
-> > +                     bool *mmap_locked, unsigned long enabled_orders)
-> > +{
-> > +     u8 order, next_order;
-> > +     u16 offset, mid_offset;
-> > +     int num_chunks;
-> > +     int bits_set, threshold_bits;
-> > +     int top =3D -1;
-> > +     int collapsed =3D 0;
-> > +     int ret;
-> > +     struct scan_bit_state state;
-> > +     bool is_pmd_only =3D (enabled_orders =3D=3D (1 << HPAGE_PMD_ORDER=
-));
-> > +
-> > +     cc->mthp_bitmap_stack[++top] =3D (struct scan_bit_state)
-> > +             { HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER, 0 };
-> > +
-> > +     while (top >=3D 0) {
-> > +             state =3D cc->mthp_bitmap_stack[top--];
-> > +             order =3D state.order + KHUGEPAGED_MIN_MTHP_ORDER;
-> > +             offset =3D state.offset;
-> > +             num_chunks =3D 1 << (state.order);
-> > +             // Skip mTHP orders that are not enabled
-> > +             if (!test_bit(order, &enabled_orders))
-> > +                     goto next;
-> > +
-> > +             // copy the relavant section to a new bitmap
-> > +             bitmap_shift_right(cc->mthp_bitmap_temp, cc->mthp_bitmap,=
- offset,
-> > +                               MTHP_BITMAP_SIZE);
-> > +
-> > +             bits_set =3D bitmap_weight(cc->mthp_bitmap_temp, num_chun=
-ks);
-> > +             threshold_bits =3D (HPAGE_PMD_NR - khugepaged_max_ptes_no=
-ne - 1)
-> > +                             >> (HPAGE_PMD_ORDER - state.order);
-> > +
-> > +             //Check if the region is "almost full" based on the thres=
-hold
-> > +             if (bits_set > threshold_bits || is_pmd_only
-> > +                     || test_bit(order, &huge_anon_orders_always)) {
-> > +                     ret =3D collapse_huge_page(mm, address, reference=
-d, unmapped, cc,
-> > +                                     mmap_locked, order, offset * KHUG=
-EPAGED_MIN_MTHP_NR);
-> > +                     if (ret =3D=3D SCAN_SUCCEED) {
-> > +                             collapsed +=3D (1 << order);
-> > +                             continue;
-> > +                     }
-> > +             }
-> > +
-> > +next:
-> > +             if (state.order > 0) {
-> > +                     next_order =3D state.order - 1;
-> > +                     mid_offset =3D offset + (num_chunks / 2);
-> > +                     cc->mthp_bitmap_stack[++top] =3D (struct scan_bit=
-_state)
-> > +                             { next_order, mid_offset };
-> > +                     cc->mthp_bitmap_stack[++top] =3D (struct scan_bit=
-_state)
-> > +                             { next_order, offset };
-> > +                     }
-> > +     }
-> > +     return collapsed;
-> > +}
-> > +
-> >   static int khugepaged_scan_pmd(struct mm_struct *mm,
-> >                                  struct vm_area_struct *vma,
-> >                                  unsigned long address, bool *mmap_lock=
-ed,
-> > @@ -1445,9 +1523,7 @@ static int khugepaged_scan_pmd(struct mm_struct *=
-mm,
-> >       pte_unmap_unlock(pte, ptl);
-> >       if (result =3D=3D SCAN_SUCCEED) {
-> >               result =3D collapse_huge_page(mm, address, referenced,
-> > -                                         unmapped, cc);
-> > -             /* collapse_huge_page will return with the mmap_lock rele=
-ased */
-> > -             *mmap_locked =3D false;
-> > +                                         unmapped, cc, mmap_locked, HP=
-AGE_PMD_ORDER, 0);
-> >       }
-> >   out:
-> >       trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenc=
-ed,
->
+diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+index 944e899eb1be..b63992de9fc7 100644
+--- a/drivers/cpufreq/scmi-cpufreq.c
++++ b/drivers/cpufreq/scmi-cpufreq.c
+@@ -393,6 +393,35 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
+ 	.set_boost	= cpufreq_boost_set_sw,
+ };
+ 
++static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
++{
++	struct device_node *scmi_np = dev_of_node(scmi_dev);
++	struct device_node *np;
++	struct device *cpu_dev;
++	int cpu, idx;
++
++	if (!scmi_np)
++		return false;
++
++	for_each_possible_cpu(cpu) {
++		cpu_dev = get_cpu_device(cpu);
++		if (!cpu_dev)
++			continue;
++
++		np = dev_of_node(cpu_dev);
++
++		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
++			return true;
++
++		idx = of_property_match_string(np, "power-domain-names", "perf");
++
++		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
++			return true;
++	}
++
++	return false;
++}
++
+ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+ {
+ 	int ret;
+@@ -401,7 +430,7 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+ 
+ 	handle = sdev->handle;
+ 
+-	if (!handle)
++	if (!handle || !scmi_dev_used_by_cpus(dev))
+ 		return -ENODEV;
+ 
+ 	scmi_cpufreq_driver.driver_data = sdev;
+-- 
+2.34.1
 
