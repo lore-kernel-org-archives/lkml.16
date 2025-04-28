@@ -1,68 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083AC1DF99C;
-	Mon, 28 Apr 2025 08:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD005D530
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745828957; cv=none; b=gOh0XtIWSsJtMdDnvP+lMR72ihJjn2Tbl6Y6SkI5MZ08ogCNOwUP/FZs6cqNpQWgo+lZJQmsLJt1ydJcJ1//MGXCLk0V+/rEawrnstw5DA/bEAAh3Lk3r943VKKf5qJntac6t8T/9mqDTyLIo4QJnWoOPht6f7IoFiArrRx8XyE=
+	t=1745829038; cv=none; b=u9Lh3mPpcCUaSaYxkw3+rKFQw+BOgO4MSRHGSmUHHnBkFSRWgmfJ9i7N4meP7BWMNihauUdoXWZf9Epc2ZPeytwrGktIKmltq7suIHieMM7K3f0KDcvU6XVqPje4sd7izbwkAV48HmF4B4vX+q5oVGLzgr5ndLhr7wuC0xjTl6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745828957; c=relaxed/simple;
-	bh=cGQWR8jhKsA88ie48McerFwOTjkySfn7kxfyN/o03kc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eF4nwb3yPVGc/dq8LBN0CVeMjKLNdUOik3MWv/lf6n2zUlXioHp1AU0teSvTKjkzs62HJdwHwqb6yKnoRqPCgmeNYhNkl62wgT/BPrLV3cxCI/tI5Kflgq3QHypReZQ35zamfOA2/GAaC2+zscf7QMp+eG3wGFC5Z6BqZXVpiFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSsc9NbZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745829038; c=relaxed/simple;
+	bh=XnizB9100UNA68Nhrc/NPH0GHRaRUl3WPQShtsDYwHI=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=FGDq8ze7HZ18dHHqyWboHZMu4hYuQW6VAn4sQoyjM2KWwd3288AsKq/yOCs4NwkGr6V3qZDTfCaWNhKPCanLJtYO1uBaYytTyhJYh2d7kwkT3FQPRV1BcfzJUeBay2lfeOwZ1gDLBqRq0hEG5z5PycNtgTY4odh+Vr/v4OkfdKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q/87Crtp; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSsc9NbZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23DB9C4CEE4;
-	Mon, 28 Apr 2025 08:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745828956;
-	bh=cGQWR8jhKsA88ie48McerFwOTjkySfn7kxfyN/o03kc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iSsc9NbZ2OSX6s0FYmkOrwZ4Y74di5SxQ6HBbf6tgdP7n2h957ekjxLAv9ilO/rD2
-	 dirqo66vOK6jJtwxntmnjuAfK9JdXlgGf4sMesLv7Z90drZS9fZqpl1+Rp8d65/pPI
-	 mp7I/0Yp9ILFuLR+wwL2ZEysja3HLgT2u23WG603H1EOPEP/zec4Hv1SlX2AiT5/nb
-	 8OFdNeDp7A5nB5ztO+cBYLW9M5WOIRlOvIMjX8G0jPGnf+7haxCnlpQL6CHQOT65AI
-	 GyiRBBGT0lQxy/mI6HpomVcx38Hje4+xxayzjLfDhLTb1r1mr+OiVaHn6TNEDuzojP
-	 3GREHEKb+H+TA==
-Date: Mon, 28 Apr 2025 10:29:14 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Primoz Fiser <primoz.fiser@norik.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	upstream@lists.phytec.de
-Subject: Re: [PATCH 1/2] bindings: arm: fsl: Add PHYTEC phyBOARD-Nash-i.MX93
- board
-Message-ID: <20250428-neat-manul-from-avalon-b2db3a@kuoka>
-References: <20250425064107.174548-1-primoz.fiser@norik.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q/87Crtp"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250425064107.174548-1-primoz.fiser@norik.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745829034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OfSbmzDs/o0LQ7Atw6SIKmR3v4ivn9bHhtZs1yGAZZA=;
+	b=q/87CrtpsyJ8M2YC/zH4KQ/bpMf4u2N4OXQdJCZQ68guxuzAhOq+mymE1jGMGPn1dCgYoA
+	C8HpXLjVkQjixc5ZqNPmJ+B7Eaog6h98GW1ISN0ZX8hOpQmVk8K3AhgFwSW9gcnSfRAUB3
+	VvF89ZUwE3hxL8M+/drxRQTIOZ2lEg4=
+Date: Mon, 28 Apr 2025 08:30:24 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <7adb633683ed40587a379260857c7a48ce69638c@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v2] pid: annotate data-races around pid_ns->pid_allocated
+To: "=?utf-8?B?TWljaGFsIEtvdXRuw70=?=" <mkoutny@suse.com>
+Cc: linux-kernel@vger.kernel.org, mrpre@163.com,
+ syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com,
+ syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com,
+ syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Christian Brauner" <brauner@kernel.org>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, "Suren Baghdasaryan" <surenb@google.com>, "Wei
+ Yang" <richard.weiyang@gmail.com>, "David Hildenbrand"
+ <david@redhat.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Mateusz Guzik"
+ <mjguzik@gmail.com>, "Oleg Nesterov" <oleg@redhat.com>, "Joel Granados"
+ <joel.granados@kernel.org>, "Bill O'Donnell" <bodonnel@redhat.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, "Frederic Weisbecker"
+ <frederic@kernel.org>
+In-Reply-To: <fo436hdqzkevk7jqszyprjjwehqge7rrqxz6gqbmgoqqsqwdxl@efe2r5jeouwl>
+References: <20250425055824.6930-1-jiayuan.chen@linux.dev>
+ <fo436hdqzkevk7jqszyprjjwehqge7rrqxz6gqbmgoqqsqwdxl@efe2r5jeouwl>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 25, 2025 at 08:41:06AM GMT, Primoz Fiser wrote:
-> Add devicetree bindings for PHYTEC phyBOARD-Nash-i.MX93 board based on
-> the existing PHYTEC phyCORE-i.MX93 SoM (System-on-Module).
-> 
-> Adjust the compatibles for the existing phyBOARD-Segin-i.MX93 board, to
-> be able to add additional board based on the phyCORE-i.MX93 SoM.
-> 
-> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+April 25, 2025 at 17:25, "Michal Koutn=C3=BD" <mkoutny@suse.com> wrote:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
+>=20On Fri, Apr 25, 2025 at 01:58:14PM +0800, Jiayuan Chen <jiayuan.chen@=
+linux.dev> wrote:
+>=20
+>=20>=20
+>=20> Suppress syzbot reports by annotating these accesses using data_rac=
+e().
+> >=20
+>=20
+> Thanks for trying this approach.
+>=20
+>=20scripts/checkpatch.pl has quite some remarks about the current form :=
+-)
+>=20
+>=20I mean, the data_race annotation should document why the race is
+>=20
+>=20harmless. I only glanced over this so I can't tell myself whether it'=
+s a
+>=20
+>=20bug or OK.
+>=20
+>=20>=20
+>=20> Reported-by: syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com
+> >=20
+>=20>  Reported-by: syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com
+> >=20
+>=20>  Reported-by: syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com
+> >=20
+>=20
+> How can I get to see full syzbot reports? (Stacktrace would be helpful,
+>=20
+>=20I cannot resolve those as message-ids on (LK)ML.)
+>=20
+>=20Thanks,
+>=20
+>=20Michal
+>
 
-Best regards,
-Krzysztof
+Hi Michal,
 
+We can find such reports at https://syzkaller.appspot.com/upstream/s/kern=
+el
