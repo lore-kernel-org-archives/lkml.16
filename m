@@ -1,94 +1,109 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A378263F5B;
-	Mon, 28 Apr 2025 11:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F66E264604
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840329; cv=none; b=Ji+85UNMaaa0HKZ5oLuudvObVpR7v8naICuA5RJuyj3ywA0YdLa+YPqFWzlsxU/8Lu4vIMYZiWxoVTm3RC7xEqHdghz1ZMwmMWgeFdbV8Jeex9URKW8cblGzKSRm803arWQNRbRbyY5/AS2b+ciX71O95FY7tKl1Nq37iSY7G+k=
+	t=1745840350; cv=none; b=OEr4qU6gL4I08AjOiycCVF18MmsgdNUd7p061o/Dj0jFyZHv45PFjUNfn6ETFfyWZyQj0orN1bAeAnnyy7sodzEVrWE/PGHTbH+AqcBzGeNHKyS5JeMjMTWpQ5Z9qM7PAhYIp95mPWKNeTQ2akyU3D59sMVUuTYTq8Ra4R/aNek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840329; c=relaxed/simple;
-	bh=4cpvRsbrs+OFOHOlffa586ezOSMHPYLTzsL3WEzziSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n9Af7kSRHmoIRD2VpCSy1VqWpw4hUalS7DaBVItQKxXGJ7s6PnkWFADwgric+4vb+0ocpUETO4v5PFmhG5skNaEh51naEUpGOfBgjTdnSbuo8rdMwOlM57+TWgCdiTX+0HX2ermC1clzwxJfkatxC1WP7o2eaCJoeMJbiwI2fSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=CpukX6sv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745840350; c=relaxed/simple;
+	bh=r+bKtVRMoREgbBikFSIQumk3XCPBbJ1IWQQriCVNGRc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Jg2qCyTrSHNYo+si6qjnTpVSkXFBYhG1HlXyx3c7AIF6eyzW4M3MvPvFHuhrkzQxY18ZEdFQrM/2uyiVhHcEMerVolWRkx0Fh8PQuhA3OZC4v+uvEG1ZhzmFTgfEXA2PouXEHbLaZBFNSdWF92zdlD0rWyoxc6uV8J/8qF9lIS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TsNvLvQ1; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CpukX6sv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745840324;
-	bh=I12fWHgs69X6sL3loq0v7C93iUi9OzrXMYCznnNHNnE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CpukX6svm5MJ90pJqNDao3H2sQGzGfn5QSibye3qbOXyAmCjOjp6TAlNj2iqLdwSQ
-	 vZWeyw6G8QaSTTrbK1DgYO2JI3LTMr5Bo/MIHD7EHVYaF8dyTtS/VWWpfjmW23mPqz
-	 s8SHIYRhWBnDSpc8kJxvq3SBZeNKi0wZHOcyuSkbWWsitmuTt1G5qsnM573+eBvKfy
-	 df1lSBk34WKhLPv39CUZnlDcWYwTcmSfC72kpUopCPCsmd8XYEiG6wm9pEpFjJP5o0
-	 EUvqgOQ5usABE/WWuXxt/iqxxJ71XtZJ9lO53fufWJaVSeVV5QBNCsfK7G2hyTubm1
-	 NwkCLOJMZR0xQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmM0M2SlVz4wcx;
-	Mon, 28 Apr 2025 21:38:43 +1000 (AEST)
-Date: Mon, 28 Apr 2025 21:38:42 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: Andre Przywara <andre.przywara@arm.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the sunxi tree
-Message-ID: <20250428213842.6b0cbde3@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TsNvLvQ1"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c1389so3365455f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745840346; x=1746445146; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=r+bKtVRMoREgbBikFSIQumk3XCPBbJ1IWQQriCVNGRc=;
+        b=TsNvLvQ1u+UXkVCmI1VitBomvGa+pCVfZhgyAnXLdyFEdrvqzwCP1wLM8lnYqFGpsi
+         kGH1VuVd8MvxqP7vW/fQq1Jv78my6C3QnMLKDzNhb5XrhPXl1UVgBcUbyYX+VBz4j3Ry
+         wHsxsE3EI1RjV3XkttJG6J2L4d4KUQntuQG3J8C0g7e0LYDAPcJlYTJUKpu9le/IpwmQ
+         4rgwg9vmENmO6eWNMbZg3phpcgtycZFPQ0/CrYjtl2DcP/5rg8QZ8Tyxechz37v9Ozi/
+         DQOufDDHzwCwWx6kh60N8DFV6lTj0L0Ej7PEOpi0kcf4yGU+/P0RTxSkFmoeJ4R25WgW
+         /IQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745840346; x=1746445146;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r+bKtVRMoREgbBikFSIQumk3XCPBbJ1IWQQriCVNGRc=;
+        b=YfvzC/WIIpP/2GQq/KXeU9HuvMQWt3Of365h+CcUoD3LxvRNySCrPUZYsvioaSh/JJ
+         nG1fdl2Q5Bp9FjP8eoMhZuJXtK3VQNfE18DaCvk0NX5TFEkgoP4CYbbJd2NhQBot/Lwz
+         nV+n1r9oTeIeIGZPoL7Q+r4n/hGB1osVoKexSnUe+PvgMlosuM5gQ8cSrU5V4J6zaqHn
+         Ogv4ZIeKMmZkHEusN5R+u3zUfQJfaLlEi93F/dZtcsE0/0QKVryw04CzNq83MySoW/KR
+         MppguQvzhg3REB07JtErk+epGcHpQ1l4DoclmM/0Zz9Bp+ei0RCuOCVRzQSe2DUUCtHF
+         5jsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWe128I3aQVSaG9KOHopI5nsuBgHrqZflXy1sLLNPFJd60wW47XWOgXv1Ef1KlupMESd8BCuK9CyCl6oKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZlzHKvhWJZZ1pJs58Zo3mvt8mjmOQ+cgWordsl247CjlNNtkO
+	rsOFqbNTFRxQl7aNTB3iN9o69FZBZpVoUvwJhmK2qMIKpvFEwRh+aYJAhWg/2jc=
+X-Gm-Gg: ASbGncsyYqqxdfzXofz1J+boW4bLSVJvkrZnaBpug03bYKzhYEYA4DIzducsdT3zeSu
+	YUZjSKRy6dJFHpYPNgJvrzNR2ky0UIsYWPFtpPDkXn7Ig9ZjDKsSGWlNmeuk7yj+U7kuTZTozPQ
+	VjbgNJ7vSOlDTAzARlGvRZTb3Ky+JPLC7eofbTekFxYdmNnXujBuoOIxRYdhpYiuSqWKfTHgD9q
+	R2v1RfHADJqHqPPXxPUSqNOupzMDRKsjrL+++4t6jrIDILgUIR93gr7ER277m0tvbe6xNQcgHHZ
+	s+pVE60xvVrI0QkrgnvMATZ76glMXY4EhdkQG2vb0rAT
+X-Google-Smtp-Source: AGHT+IEHc9Zu/+wGVNqphD8k46BwlK1q8MygLAL16FZGjby9AUt0bgrJdeoGeu53URCQ7olNvcu9og==
+X-Received: by 2002:a05:6000:1ace:b0:3a0:8712:5983 with SMTP id ffacd0b85a97d-3a0871259cdmr1278905f8f.51.1745840346615;
+        Mon, 28 Apr 2025 04:39:06 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073c8d495sm10655161f8f.2.2025.04.28.04.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 04:39:05 -0700 (PDT)
+Message-ID: <4ab9946d0fe17c825657ed04f7d76047ac7f8167.camel@linaro.org>
+Subject: Re: [PATCH v6 0/6] Maxim Integrated MAX77759 PMIC MFD-based drivers
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Srinivas
+ Kandagatla <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Peter Griffin	
+ <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
+ McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org, Bartosz
+ Golaszewski	 <bartosz.golaszewski@linaro.org>
+Date: Mon, 28 Apr 2025 12:39:03 +0100
+In-Reply-To: <20250410091924.GR372032@google.com>
+References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
+	 <20250410091924.GR372032@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3-2+build1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nLlgY_uyVbU2u+FgyAFu+4j";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/nLlgY_uyVbU2u+FgyAFu+4j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Lee,
 
-Hi all,
+On Thu, 2025-04-10 at 10:19 +0100, Lee Jones wrote:
+> On Tue, 25 Mar 2025, Andr=C3=A9 Draszik wrote:
+>=20
+> > Hi,
+> >=20
+> > This series improves support for the Maxim Integrated MAX77759
+> > companion PMIC for USB Type-C applications using the MFD framework.
+> >=20
+> > [...]
+>=20
+>=20
+> Didn't apply cleanly.=C2=A0 Please rebase onto v6.15-rc1.
 
-After merging the sunxi tree, today's linux-next build (arm64 defconfig)
-failed like this:
+I've rebased against next-20250424 in=20
+https://lore.kernel.org/r/20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.or=
+g
 
-make[4]: *** No rule to make target 'arch/arm64/boot/dts/allwinner/sun55i-a=
-527-radxa-a5e.dtb', needed by 'arch/arm64/boot/dts/allwinner/'.  Stop.
-
-Caused by commit
-
-  dd97ddc4da0a ("arm64: dts: allwinner: a523: add Radxa A5E support")
-
-I have reverted that commit for today (and commit
-
-  3f2bdc908d21 ("arm64: dts: allwinner: correct the model name for Radxa Cu=
-bie A5E")
-
-that depends on it).
-
---=20
 Cheers,
-Stephen Rothwell
+Andre'
 
---Sig_/nLlgY_uyVbU2u+FgyAFu+4j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPaMIACgkQAVBC80lX
-0GxvcAf8DHmyPMXeULn25ly6HGTWxwZxGJLmiCzQRZJsXCyyPqhgV8k9JwO6m8+f
-TAjSYqKV03UIOroANq+aQh5NcRQKtia2FhsrkAQUMciFaMHfLUjKty//ersJN9vp
-JfIYncCoUHHKZLG9hisF8qxMZWAI8cGhO4OX/MXt+q4Su7SvhMmrNNeicA+r9QyY
-S2C79Imur/NRH3ogZl3DPVe8JmdH9AZK9mRJdSx+Da6KTKU2dnp4Oq8SjBynTwCg
-kahuY4Ph7WaU3cwd5PSlk65E8TGJ6E/M89FuaZZpYpnheQcAS8pWNa4tGqDj/sSZ
-RkRIGDkMCASYaOJgzzq6MbSzzs3UIQ==
-=rjpf
------END PGP SIGNATURE-----
-
---Sig_/nLlgY_uyVbU2u+FgyAFu+4j--
