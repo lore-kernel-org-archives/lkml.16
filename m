@@ -1,79 +1,49 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 783E021147B;
-	Mon, 28 Apr 2025 21:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6DF217659
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745874472; cv=none; b=LShYobNQe1tPuhJu3zjHCbwXEFPXe9bVD6A9MPuGm0j6hjGmkEYgiQ+Pfn4VdPnTYuPR64Q4YrkwUf3c2+xJfJYhmi0P5GRnXhpNTL06DoTiam/k2Oxsxhc3ceG5XeTjKp2fQWfk1Hv+Px1zv+yobgvzlpr8FTFN5M0x6rTpoes=
+	t=1745874476; cv=none; b=EIrhhyeqxXeFIeyLkHQwHxbqdJ91tKDyO/03fCT+XWZ4AXyznijR7WdFoUHtDJ6owg8ikUPxeNndrMJwPY6IuaMJR7w8+5Lx7ttNslWs+s22QhfLlsjaunNneA+IJJx22tNIJrCkSRloL9yLeRzbo9ahlkQ2onccsPmwYA0c+EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745874472; c=relaxed/simple;
-	bh=SKdz72k2NkyXGdqtVsqW7yFxP3EnThWVkZ2UEaRCYAE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tmjjc5UeSVGnmpUqoNOin6E5U2xjhx+5v2uQKhTp3AnCPZEHPE/pf9UhZxzwez2sXOQHsKMYMu8H/sz5Bz6fQpPI/zP3sOzwNEWp5lscBiDzTUMGKxny0xs8RcDb8ugplobkMGWFOFOBg9HKfB4pGUwi4R0sn+amchBq5bvFbTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Jwo1/Znv; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745874476; c=relaxed/simple;
+	bh=f6Ivb5X5pkMHM4s201C1kB1phD/8VjqDKvpUccGBZXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YwqGtG245OTJIckY/1hcXMODhZR1hqXVEPz9nOmkXb/wJPFuqRxUw03ZK4QY3JCEaAOx2OCTByrDP3QmiFo83WJ5ndjGDhl+BKbFpB/6kfZivdLf7o5hQDJCsu3NJtvds4Z9QDASUHaY2LBCKupaaRF7mIUU0bgTAC/xzR1jbk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=U1T3vtwf; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Jwo1/Znv"
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 68E9E211AD1F;
-	Mon, 28 Apr 2025 14:07:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 68E9E211AD1F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745874467;
-	bh=6NhcoKa6JL1NM9sMn3gmj98XuhFiqjkn7M2jrThtdQE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jwo1/Znv21DwhCwBkZB4bkCP3jGQY+BoKRyw9i0SnKH+c977NDRZA1JeslcM8DbHq
-	 d0gSlA/QJgMEoWGPIf6suAfT1E7CtJZ7rMQZtSBLnC1X++4Xdm7IDBonL6NldD89EM
-	 krWea9gXWRuVAAeJbQq9ZPvxkkv97n8QniJlU+8Y=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@arndb.de,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	catalin.marinas@arm.com,
-	conor+dt@kernel.org,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	joey.gouly@arm.com,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	kys@microsoft.com,
-	lenb@kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	mark.rutland@arm.com,
-	maz@kernel.org,
-	mingo@redhat.com,
-	oliver.upton@linux.dev,
-	rafael@kernel.org,
-	robh@kernel.org,
-	ssengar@linux.microsoft.com,
-	sudeep.holla@arm.com,
-	suzuki.poulose@arm.com,
-	tglx@linutronix.de,
-	wei.liu@kernel.org,
-	will@kernel.org,
-	yuzenghui@huawei.com,
-	linux-hyperv@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v9 10/11] ACPI: irq: Introduce acpi_get_gsi_dispatcher()
-Date: Mon, 28 Apr 2025 14:07:41 -0700
-Message-ID: <20250428210742.435282-11-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250428210742.435282-1-romank@linux.microsoft.com>
-References: <20250428210742.435282-1-romank@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U1T3vtwf"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745874470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jUS0s/tdQHjXzAtC64/fbqpJmBqxqUB4naODkeZs7IA=;
+	b=U1T3vtwfTe5bOElYIfF/krvWpK5HgvnWcdnXVLyZarrrKWxfFXLo9xJmXvcmeMnH2AFG2I
+	kpTxztQwONsX8FRRY2Yvhm8qR/ywGZQi7Ih5eDLUiJIEg1+pKROu4XNCWkU3e/KW2/8+0Q
+	/cmhYKq/mB8Qi73n6JKhrjJEvwsGvYo=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: Replace offsetof() with struct_size()
+Date: Mon, 28 Apr 2025 23:06:39 +0200
+Message-ID: <20250428210638.30219-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,82 +51,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Using acpi_irq_create_hierarchy() in the cases where the code
-also handles OF leads to code duplication as the ACPI subsystem
-doesn't provide means to compute the IRQ domain parent whereas
-the OF does.
+Compared to offsetof(), struct_size() provides additional compile-time
+checks for structs with flexible arrays (e.g., __must_be_array()).
 
-Introduce acpi_get_gsi_dispatcher() so that the drivers relying
-on both ACPI and OF may use irq_domain_create_hierarchy() in the
-common code paths.
+No functional changes intended.
 
-No functional changes.
-
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- drivers/acpi/irq.c   | 16 ++++++++++++++--
- include/linux/acpi.h |  5 ++++-
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ kernel/bpf/syscall.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
-index 1687483ff319..76a856c32c4d 100644
---- a/drivers/acpi/irq.c
-+++ b/drivers/acpi/irq.c
-@@ -12,7 +12,7 @@
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 9794446bc8c6..d7287f3e260b 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -36,6 +36,7 @@
+ #include <linux/memcontrol.h>
+ #include <linux/trace_events.h>
+ #include <linux/tracepoint.h>
++#include <linux/overflow.h>
  
- enum acpi_irq_model_id acpi_irq_model;
+ #include <net/netfilter/nf_bpf_link.h>
+ #include <net/netkit.h>
+@@ -693,7 +694,7 @@ struct btf_record *btf_record_dup(const struct btf_record *rec)
  
--static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
-+static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
- static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
- 
- /**
-@@ -307,12 +307,24 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
-  *	for a given GSI
-  */
- void __init acpi_set_irq_model(enum acpi_irq_model_id model,
--			       struct fwnode_handle *(*fn)(u32))
-+			       acpi_gsi_domain_disp_fn fn)
- {
- 	acpi_irq_model = model;
- 	acpi_get_gsi_domain_id = fn;
- }
- 
-+/*
-+ * acpi_get_gsi_dispatcher() - Get the GSI dispatcher function
-+ *
-+ * Return the dispatcher function that computes the domain fwnode for
-+ * a given GSI.
-+ */
-+acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
-+{
-+	return acpi_get_gsi_domain_id;
-+}
-+EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
-+
- /**
-  * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
-  * callback to fallback to arch specified implementation.
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 4e495b29c640..1917044dea72 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity
- int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
- int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
- 
-+typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
-+
- void acpi_set_irq_model(enum acpi_irq_model_id model,
--			struct fwnode_handle *(*)(u32));
-+			acpi_gsi_domain_disp_fn fn);
-+acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
- void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
- 
- struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+ 	if (IS_ERR_OR_NULL(rec))
+ 		return NULL;
+-	size = offsetof(struct btf_record, fields[rec->cnt]);
++	size = struct_size(rec, fields, rec->cnt);
+ 	new_rec = kmemdup(rec, size, GFP_KERNEL | __GFP_NOWARN);
+ 	if (!new_rec)
+ 		return ERR_PTR(-ENOMEM);
+@@ -748,7 +749,7 @@ bool btf_record_equal(const struct btf_record *rec_a, const struct btf_record *r
+ 		return false;
+ 	if (rec_a->cnt != rec_b->cnt)
+ 		return false;
+-	size = offsetof(struct btf_record, fields[rec_a->cnt]);
++	size = struct_size(rec_a, fields, rec_a->cnt);
+ 	/* btf_parse_fields uses kzalloc to allocate a btf_record, so unused
+ 	 * members are zeroed out. So memcmp is safe to do without worrying
+ 	 * about padding/unused fields.
 -- 
-2.43.0
+2.49.0
 
