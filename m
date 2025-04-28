@@ -1,43 +1,70 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5CF266567
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840451; cv=none; b=GMRPhu7re7rwkS00wJpktDcb/fmpWulE0L+2fXxfrutFMlVnTZEPvO2vYQa/lB1MY7pJQAhdiiZ1buR78N9Zd5tpY/BXnFsqoxKxoy28/uCed+5UlOCU1NCWBVJIEXMieLufD+vaZTb3nPmY8iaukLHkrCnb0eLKiEksdoLq5RQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840451; c=relaxed/simple;
-	bh=nzt/f6c1LIWwQHAw6ZUO4VvSc1zWD9M1Qn1JPfbiXLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GJMufJZAjKS6VD3a6kM5M7KXZnK5MVVQscTvfjWqFPtLyQOpd85PEZGuU9PmLh/Q4qqaTJjXOgkWK04tcF8ZHFccD8OcAD6NSmYlnjoCoEmdFXrRytI057BHRaUHrGLNExr7dnJbS3UNohEKNRn43RarpEfk7LkDoEL93KC97vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=fiAf+NIj; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="fiAf+NIj"
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id B31FF496F0;
-	Mon, 28 Apr 2025 13:40:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1745840448;
-	bh=nzt/f6c1LIWwQHAw6ZUO4VvSc1zWD9M1Qn1JPfbiXLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fiAf+NIjZWzChFvI501+oH7j4H8Oo1dZ3E59+2M7rp1k8FfxSLIi6y665WU+Ikllx
-	 7zEu0mf0pepLuvA7lDlX1+B6YOsi3noC/AyCx7IYo+HHp84JCKAf/0rirugxIudjQX
-	 Ida3G7CSRBJSPVQoPETVtL/IUBopP1yxWTkXdgFL9ap22ZYlSgP8LXT7SBex5MtqM9
-	 waFQFd2gWKfp21reKUqWbSHLdVCH5SMDx/3soV7yVkAKPzxFxgkO5VZBiVXnfih4Z1
-	 n+yWB/o421+4gfcn5UNvwVTdRKiWwdgiRmjT/Qx4O8X2NuvcYeURoT0Xd2FnFa0ZUm
-	 lj29ANMeREM0A==
-Date: Mon, 28 Apr 2025 13:40:47 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/amd: Ensure GA log notifier callbacks finish
- running before module unload
-Message-ID: <aA9pP_InHAgskqcM@8bytes.org>
-References: <20250315031048.2374109-1-seanjc@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C6B264FB0
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745840508; cv=none; b=mqmXA67n27aq3j/jJrGdoKuhv7grWh+4FGg3hBUm5/qXoSlmX5Jw0yNZkftK5GR32p9+TYtRUtKAteVEOdi76YsfP9bUbTsr104gwZdwu4BdbD5Wp7KqZAf0ecKMHB7VQOY4jKjjCjhJmbPEtxTKcxlq9v8YVHgoELors7w6e4k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745840508; c=relaxed/simple;
+	bh=LII0rjVz6xDpWfX4i2Uq1BgoozfTJSUr+S+3gbMdj/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XXt7DBfJMS30V1GhqZG0KgzMYMiiER7kQAo+CV5CWSCSaHp37nQHkyurNihz4G1PzoyvTC/O+3ZhM4xSSLTJ3xfmNsgIaskUbNv0m4kDP9VdIoG++GA+O3hpRsGOWILQntUHVqYf32nvw3sRa8NB5yGZd6E0KIyKGjy0zjwdE1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HZKb0Pnh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HZKb0Pnh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745840506;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LII0rjVz6xDpWfX4i2Uq1BgoozfTJSUr+S+3gbMdj/w=;
+	b=HZKb0PnhkR1U97Z3uYGDigMN5Lpt3xkxhHHELI0X6KgFwCEjqR3waoB60NPEp3rT3HMsea
+	5xjL+azTQO5hcaH7WSN2iIa8AJqyDaNLBLP54U1n3WTwu5sghlyO09JmPvNOErCnfUatc8
+	rsBbqoIzlXwlI5qBq40oyrng7Lf9Ma8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-uO0EMHMxP_mVulmeWplVgg-1; Mon,
+ 28 Apr 2025 07:41:41 -0400
+X-MC-Unique: uO0EMHMxP_mVulmeWplVgg-1
+X-Mimecast-MFC-AGG-ID: uO0EMHMxP_mVulmeWplVgg_1745840499
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0E0C19560AF;
+	Mon, 28 Apr 2025 11:41:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.48])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DCA7C19560A3;
+	Mon, 28 Apr 2025 11:41:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 28 Apr 2025 13:40:59 +0200 (CEST)
+Date: Mon, 28 Apr 2025 13:40:52 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 07/22] uprobes: Remove breakpoint in
+ unapply_uprobe under mmap_write_lock
+Message-ID: <20250428114051.GD27775@redhat.com>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-8-jolsa@kernel.org>
+ <20250427142400.GB9350@redhat.com>
+ <aA9iUIsdiWfrFcRR@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,10 +73,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250315031048.2374109-1-seanjc@google.com>
+In-Reply-To: <aA9iUIsdiWfrFcRR@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Fri, Mar 14, 2025 at 08:10:48PM -0700, Sean Christopherson wrote:
->  drivers/iommu/amd/iommu.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+On 04/28, Jiri Olsa wrote:
+>
+> On Sun, Apr 27, 2025 at 04:24:01PM +0200, Oleg Nesterov wrote:
+> >
+> > And perhaps the comment above mmap_write_lock() in register_for_each_vma()
+> > should be updated too... or even removed.
+>
+> hum, not sure now how it's related to this change, but will stare at it bit more
 
-Applied, thanks.
+That comment tries to explain why register_for_each_vma() has to take
+mm->mmap_lock for writing. Without the described race it could use
+mmap_read_lock(). See 84455e6923c79 for the details.
+
+Now that we have another (obvious) reason for mmap_write_lock(mm), this
+comment looks confusing.
+
+Oleg.
+
