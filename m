@@ -1,202 +1,216 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E35628D83E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F36184E;
+	Mon, 28 Apr 2025 17:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745862217; cv=none; b=B7OEW4ozoyfvfcjViN9cD8NtIUH0t7uL5yuS++fhjTD1KADaqnGhgGoVzGpBe7Z+pCauXEQXXePx6pXo/vZMWdZQ/U1H3qXPmQRVNvEOGL66e0QWSB8PI1+3P9lmXSCTwfVcDT6ObAV2HAcuGNnpTpKyD3DzVQ9y74a1OKWu+1Y=
+	t=1745862249; cv=none; b=JaCSBUjXehemFkv2ZVtM/mLubaI/2A9vH4fJY/eGhFDQUiJeOL1dbb9WynopQngJ57LpKkZA8fvBwf6DaUwaooM7w10vvxVXER+K/Vlqx6c6xvL2QBQFGmFOJKcXwqWWkihp6woXy0QSdAAK0B0gT+F3q0jrqmk1KWXvPHr8gXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745862217; c=relaxed/simple;
-	bh=eC4hnSICOLldxzWsqCNKPWHQ9spSJAIzP/aFlUIu2m4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jsjT7JULk4KBD7lsfPqYTMnCv0fpmAr9xLQC/2wVF2CRlAxT1UnHCGKjLPQBejp1ehvfJp5/uBe9oRNTts57hMi8aD8swoNquL0GwmZLXlpSIvjVq3WjaXzRWW0r9yoYvzPwaiCfBMau416Xlrk9UUdpKrt2DzLo+KWsH2X9EW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UBALPa9G; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1745862249; c=relaxed/simple;
+	bh=BX5ANofv8Tzy8FiYDhkTq16cUhjuxc9r8ycpbZRSeA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u7vNC5LKcZ2w4GfKyNgn6oYCH+uWB3P8L7A6mJyXkY6jL3Wp/zTnLoVkIoKU3nt68Kgyxl/b+g2VMIItQa7d7SGqmxD0YuzgjChPd/rUeLo8xtqp/2VCVhyKU3m7Vf3wH1evvOr8elKoIQGGOaWuUkV7j+QzRCEHqUzM//DTGZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GuhnONED; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UBALPa9G"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so26664815e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745862214; x=1746467014; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b13otSG5T9YE2UWElXsRfq/klSsjCrs3vll5JxMFIWg=;
-        b=UBALPa9GC7jXFsAn/1DywB2fAOEw+Ycw+jB75BXLqCW2XI03MXNo5ufY2+gDSRThJ4
-         RN9v9CCCJWbajT0Kd945jCB6WWwRzrDtyZpoHD0ON1xZd43pGBkzgUlUBunCSCvrIYqF
-         aMvdnMdZLsaCADRmAt/8JkgJjg5t6vmCbfnnVk/7qJNnoFPkqhD2QamYe6pZkHMbyEka
-         isnF3eA2xQ8VNDivb1v6Da3uxUjs/DCVAX8FtwxU2DPwKBgLs6uhMhWPe7+P5RRqeXeH
-         eWgrCAkM16otq3tqCrx18YCcXirDRasG074LEZSKbdo/8jt/26ybD8THnw8jguAm4JUx
-         stZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745862214; x=1746467014;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b13otSG5T9YE2UWElXsRfq/klSsjCrs3vll5JxMFIWg=;
-        b=InIxWt55zurZGgKLqX6rpuBOnSI5ULsZCX1BdAXala3vP8YJx1wClq9I/8VQ6PwyHh
-         3ocsNNey6KGhJh4lzhEikua7ZpTNJAFblAd1wAKD7vfGdPVL/K+koIoLKzHdpv010oYj
-         A5JidC7Ul+3ehH1uhsLKBF1zZm+7/I5FMQJhLVbDC4jZIcN+rZrfel3wpZhQWRxYsthC
-         bfqR/16Y3x0+AOq/EhQYWz+tQ7qUX05sOMFyJL9DXW4jjUpM584SlArQ51vuAjB/HnO3
-         ov+ZqWamebb1nFdIrUCMf/8Unc3n3C1NfmVVqu7rVq3Q+Q9YYm0hxVdrdtovmDz/qhRv
-         TliQ==
-X-Gm-Message-State: AOJu0YwFqa4+Uksiv8NMelBRh9n2aGPEVN9ruPXgIc8PKMqcpRuHBQHU
-	AN0NFgMZ1TjvxSJCX5GskyeQK/m+ZVTYsRNi9ej0xSv5YHIOIokVM7OBBcYp+2JQLFd3Ag==
-X-Google-Smtp-Source: AGHT+IHdvP7lyYwbk2+MKSLhcPItmAxpa7W6McyocWvOJM+LpQV//QoGdQsxfPunb/KDq69AvZKxXJio
-X-Received: from wrbel6.prod.google.com ([2002:a05:6000:2286:b0:39a:be3a:407])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a5d:5f91:0:b0:391:29f:4f87
- with SMTP id ffacd0b85a97d-3a0894a393emr613583f8f.49.1745862214070; Mon, 28
- Apr 2025 10:43:34 -0700 (PDT)
-Date: Mon, 28 Apr 2025 19:43:22 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GuhnONED"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5B508211AD0B;
+	Mon, 28 Apr 2025 10:44:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B508211AD0B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745862247;
+	bh=0gnmKWUnbMHCfcNqstlfcnIlrj4YYehGlgG0xE+sm/o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GuhnONEDcTekGfT1tFgdiCfAbP7cXrNmpzBCGdechut07pUmUvvgl5e6L7PTKRGob
+	 syUskQMIhXYqeGYfzkyWvFcwHPK7rIT51g52So47GFP4C+JIljwoI3dUkQJ78Ce61o
+	 0Uf0JhYtOznRR9NNINZDkNIuzya1ceqPpvGObhgI=
+Message-ID: <b5710b79-5939-422c-9b91-4e5738ce2c03@linux.microsoft.com>
+Date: Mon, 28 Apr 2025 10:44:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4034; i=ardb@kernel.org;
- h=from:subject; bh=cblhaOnVfTJ9gIB7KoLwy8L/HaMT+xWe94HrwaoMuAc=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYN/n7XlnqlT2OwfzgmoDl2/Klbix1L1ifo27GcrfRkD7
- yb21qR3lLIwiHEwyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIlsOMbwv9zKnXv60tUvHWIk
- gvUm7s+/L+a5ybn3yNP2jScXnZmS2sLI0P+vpcr/y67gIL+j35y8svZz3fq6OPV55LlSWdYz2T0 FPAA=
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250428174322.2780170-2-ardb+git@google.com>
-Subject: [PATCH] x86/boot/sev: Support memory acceptance in the EFI stub under SVSM
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v2] x86/hyperv: Fix APIC ID and VP index
+ confusion in hv_snp_boot_ap()
+To: Michael Kelley <mhklinux@outlook.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "tiala@microsoft.com" <tiala@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250425213512.1837061-1-romank@linux.microsoft.com>
+ <SN6PR02MB415714E8EAF22D01DEF6F7C4D4872@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB415714E8EAF22D01DEF6F7C4D4872@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
 
-Commit
 
-  d54d610243a4 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
+On 4/26/2025 6:26 AM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, April 25, 2025 2:35 PM
 
-provided a fix for SEV-SNP memory acceptance from the EFI stub when
-running at VMPL #0. However, that fix was insufficient for SVSM SEV-SNP
-guests running at VMPL >0, as those rely on a SVSM calling area, which
-is a shared buffer whose address is programmed into a SEV-SNP MSR, and
-the SEV init code that sets up this calling area executes much later
-during the boot.
+[...]
 
-Given that booting via the EFI stub at VMPL >0 implies that the firmware
-has configured this calling area already, reuse it for performing memory
-acceptance in the EFI stub.
+>> +	if (!hv_result_success(status)) {
+>> +		pr_err("failed to get vp id from apic id %d, status %#llx\n",
+> 
+> Nit:  The error message should say "vp index" instead of "vp id"
+> 
 
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Kevin Loughlin <kevinloughlin@google.com>
-Cc: <stable@vger.kernel.org>
-Fixes: fcd042e86422 ("x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0")
-Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
-Tom,
+Missed that, thanks! Will send a fix.
 
-Please confirm that this works as you intended.
+[...]
 
-Thanks,
+>> +	/*
+>> +	 * Find the Linux CPU number for addressing the per-CPU data, and it
+>> +	 * might not be the same as APIC ID.
+>> +	 *
+>> +	 * "APIC ID != VP index" is rare/pathological and might be observed with
+>> +	 * more than 16 non power-of-two number of virtual processors. This is not
+>> +	 * something backed up by the TLFS, just a heuristic.
+> 
+> I don't understand these two sentences. Since the TLFS doesn't tell us anything
+> about how Hyper-V assigns the VP index value, any comparison with the APIC
+> ID seems invalid. Even as a heuristic, the comparison could give a false positive
+> or a false negative, so it's hard to take any definite action based on the comparison.
 
- arch/x86/boot/compressed/mem.c |  5 +--
- arch/x86/boot/compressed/sev.c | 40 ++++++++++++++++++++
- arch/x86/boot/compressed/sev.h |  2 +
- 3 files changed, 43 insertions(+), 4 deletions(-)
+I coded against the observed behavior and used the phrasing that
+wouldn't be too restricting. Upon taking another look, that all comes
+off rather silly, should not have done that. The O(n) complexity
+here isn't the end of the world but wanted to do better.
 
-diff --git a/arch/x86/boot/compressed/mem.c b/arch/x86/boot/compressed/mem.c
-index f676156d9f3d..0e9f84ab4bdc 100644
---- a/arch/x86/boot/compressed/mem.c
-+++ b/arch/x86/boot/compressed/mem.c
-@@ -34,14 +34,11 @@ static bool early_is_tdx_guest(void)
- 
- void arch_accept_memory(phys_addr_t start, phys_addr_t end)
- {
--	static bool sevsnp;
--
- 	/* Platform-specific memory-acceptance call goes here */
- 	if (early_is_tdx_guest()) {
- 		if (!tdx_accept_memory(start, end))
- 			panic("TDX: Failed to accept memory\n");
--	} else if (sevsnp || (sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED)) {
--		sevsnp = true;
-+	} else if (early_is_sevsnp_guest()) {
- 		snp_accept_memory(start, end);
- 	} else {
- 		error("Cannot accept memory: unknown platform\n");
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 89ba168f4f0f..0003e4416efd 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -645,3 +645,43 @@ void sev_prep_identity_maps(unsigned long top_level_pgt)
- 
- 	sev_verify_cbit(top_level_pgt);
- }
-+
-+bool early_is_sevsnp_guest(void)
-+{
-+	static bool sevsnp;
-+
-+	if (sevsnp)
-+		return true;
-+
-+	if (!(sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED))
-+		return false;
-+
-+	sevsnp = true;
-+
-+	if (!snp_vmpl) {
-+		unsigned int eax, ebx, ecx, edx;
-+
-+		/*
-+		 * CPUID Fn8000_001F_EAX[28] - SVSM support
-+		 */
-+		eax = 0x8000001f;
-+		ecx = 0;
-+		native_cpuid(&eax, &ebx, &ecx, &edx);
-+		if (eax & BIT(28)) {
-+			struct msr m;
-+
-+			/* Obtain the address of the calling area to use */
-+			boot_rdmsr(MSR_SVSM_CAA, &m);
-+			boot_svsm_caa = (void *)m.q;
-+			boot_svsm_caa_pa = m.q;
-+
-+			/*
-+			 * The real VMPL level cannot be discovered, but the
-+			 * memory acceptance routines make no use of that so
-+			 * any non-zero value suffices here.
-+			 */
-+			snp_vmpl = U8_MAX;
-+		}
-+	}
-+	return true;
-+}
-diff --git a/arch/x86/boot/compressed/sev.h b/arch/x86/boot/compressed/sev.h
-index 4e463f33186d..d3900384b8ab 100644
---- a/arch/x86/boot/compressed/sev.h
-+++ b/arch/x86/boot/compressed/sev.h
-@@ -13,12 +13,14 @@
- bool sev_snp_enabled(void);
- void snp_accept_memory(phys_addr_t start, phys_addr_t end);
- u64 sev_get_status(void);
-+bool early_is_sevsnp_guest(void);
- 
- #else
- 
- static inline bool sev_snp_enabled(void) { return false; }
- static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
- static inline u64 sev_get_status(void) { return 0; }
-+static inline bool early_is_sevsnp_guest(void) { return false; }
- 
- #endif
- 
+> 
+> Also, the condition for APIC IDs not being dense is having multiple NUMA nodes,
+> and the number of vCPUs in a NUMA node is not a power of 2. The number "16"
+> specifically doesn't come into play except that more than 16 vCPUs might (or might
+> not) indicate multiple NUMA nodes. And I wouldn't characterize these conditions
+> as "rare/pathological" -- there are quite a few VM sizes in Azure that meet these
+> conditions, and they are perfectly good and normal VMs.
+> 
 
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+Agreed, too many words on my side with not so much logic. Right,
+the APIC <=> VP ID mapping is calculated htrough NUMA nodes, yet the
+TLFS doesn't decree how so shouldn't rely on the observed behavior.
+Speaking of using "rare/pathological" you're right of the VMs. I'll
+remove that whole paragraph.
+
+>> +          * We'd like to move this
+>> +	 * code over to the place the CPU number is known rather than has to be
+>> +	 * computed via the linear scan like is done here.
+> 
+> Again, I don't understand the statement about "moving this code over".  Could
+> you clarify?
+> 
+
+Adding another callback, or as you're suggesting below extending the
+existing one.
+
+[...]
+
+> Unfortunately, I think we're stuck doing the linear search for the matching
+> apic_id in order to get the "cpu" value. However, in the bigger picture,
+> I would note that the caller of hv_snp_boot_ap() is do_boot_cpu(). And
+> do_boot_cpu() has the "cpu" value along with the "apic_id" value.
+> Unfortunately, it only passes the apic_id as a parameter. You could
+> consider changing the call signature to add the "cpu" as a parameter.
+> That change itself is a bit messy because it touches several other places,
+> but it would certainly clean up this code and the similar VTL code.
+> 
+
+I'll remove my unfortunate and silly if statement for this patch, and
+will propose updating the wakeup AP callback parameters list in another
+patch. Thinking maybe instead of adding another (third) parameter, could
+have a structure where all the parameters would live.
+
+>> +	}
+>> +	if (cpu >= nr_cpu_ids)
+>> +		return -EINVAL;
+>> +
+>>   	native_store_gdt(&gdtr);
+>>
+>>   	vmsa->gdtr.base = gdtr.address;
+>> @@ -348,7 +376,7 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
+>>   	start_vp_input = (struct hv_enable_vp_vtl *)ap_start_input_arg;
+>>   	memset(start_vp_input, 0, sizeof(*start_vp_input));
+>>   	start_vp_input->partition_id = -1;
+>> -	start_vp_input->vp_index = cpu;
+>> +	start_vp_input->vp_index = vp_index;
+>>   	start_vp_input->target_vtl.target_vtl = ms_hyperv.vtl;
+>>   	*(u64 *)&start_vp_input->vp_context = __pa(vmsa) | 1;
+>>
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+>> index 07aadf0e839f..323132f5e2f0 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -268,11 +268,11 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct
+>> hv_interrupt_entry *entry);
+>>   #ifdef CONFIG_AMD_MEM_ENCRYPT
+>>   bool hv_ghcb_negotiate_protocol(void);
+>>   void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
+>> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
+>> +int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip);
+>>   #else
+>>   static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
+>>   static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
+>> -static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { return 0; }
+>> +static inline int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip) { return 0; }
+>>   #endif
+>>
+>>   #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
+>> @@ -306,6 +306,7 @@ static __always_inline u64 hv_raw_get_msr(unsigned int reg)
+>>   {
+>>   	return __rdmsr(reg);
+>>   }
+>> +int hv_apicid_to_vp_index(u32 apic_id);
+>>
+>>   #else /* CONFIG_HYPERV */
+>>   static inline void hyperv_init(void) {}
+>> @@ -327,6 +328,7 @@ static inline void hv_set_msr(unsigned int reg, u64 value) { }
+>>   static inline u64 hv_get_msr(unsigned int reg) { return 0; }
+>>   static inline void hv_set_non_nested_msr(unsigned int reg, u64 value) { }
+>>   static inline u64 hv_get_non_nested_msr(unsigned int reg) { return 0; }
+>> +static inline int hv_apicid_to_vp_index(u32 apic_id) { return -EINVAL; }
+>>   #endif /* CONFIG_HYPERV */
+>>
+>>
+>> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+>> index abf0bd76e370..6f5976aca3e8 100644
+>> --- a/include/hyperv/hvgdk_mini.h
+>> +++ b/include/hyperv/hvgdk_mini.h
+>> @@ -475,7 +475,7 @@ union hv_vp_assist_msr_contents {	 /*
+>> HV_REGISTER_VP_ASSIST_PAGE */
+>>   #define HVCALL_CREATE_PORT				0x0095
+>>   #define HVCALL_CONNECT_PORT				0x0096
+>>   #define HVCALL_START_VP					0x0099
+>> -#define HVCALL_GET_VP_ID_FROM_APIC_ID			0x009a
+>> +#define HVCALL_GET_VP_INDEX_FROM_APIC_ID			0x009a
+>>   #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE	0x00af
+>>   #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST	0x00b0
+>>   #define HVCALL_SIGNAL_EVENT_DIRECT			0x00c0
+>>
+>> base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
+>> --
+>> 2.43.0
+>>
+> 
+
 -- 
-2.49.0.906.g1f30a19c02-goog
+Thank you,
+Roman
 
