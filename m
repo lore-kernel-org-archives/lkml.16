@@ -1,126 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC302040B2;
-	Mon, 28 Apr 2025 23:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782A22135C7;
+	Mon, 28 Apr 2025 23:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881415; cv=none; b=qan9eTE6YnE82OSQIb86c/6rrPEw6SDyJ2y+5ucqWfBf3DYrbNpByAy8YAKNIT2qTmI+gtosdjSCHiKSJ1l4RsLjky6bq1DLtlOyaFo6kYaY7NHfPWK2OP74bZRca41qbcEo2ABDFnlFK9i7iUo29c9ctQCJIWO2WNfu9OVDeVg=
+	t=1745881425; cv=none; b=CxIK1b9O3PS2E6eUwQrA8vNpjRoSMvDEkDcqKsw5PMccDcZV0JAGUW5w42pRpeDWJ2nL6DGjo6Do30TKkxeJ38N3vQQVeU8qAwfeYnlz5u35ntdAzuA4wbtTNqyULPkt+ZWWu7VQI4gfvqDF5s0tCnPePQbt26Ua+Iu4xKAJ03A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881415; c=relaxed/simple;
-	bh=d96J7/O94xadSvA6zuIRLFQTYEw18yGoq0qlApnvezw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZhPjXy88qwktjlJfrOKR99slVm2RS9haVCiYtYIGQbB2k1iMdi7b7XEwgOWfDT7Zql713WSE/9iE3TozlOMZlAmzweNCMmYRmi7HqGcqIaLFtRBCH/p7BEOOwvvqAL8/Bgird45KEsLJAv1iluU4VYK/l7yYFBTAxvI+mjDZiLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JCZRLrjM; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745881425; c=relaxed/simple;
+	bh=kI8IlL3QI3aVmXNNJOCB7Eu2xcTR9zSAMidcgL+otWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aPBCtuFjhx/B53LEkED79ONfZPlSn2hkOfDU4W7s+6KYvrFjGxnBzQe1XfGCz3sKV5b7l8ZSbneOHBl3ZA2fUKwd/sA3v2D+rC7aTysGAzzHVf5yXIB5IHGBjv9yEhnm0j0BCacxr7S6oZi5G49U0dA/GT4Bj+EAdLtY7FiQ9RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=svD9qBHY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DPrtvh6e; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JCZRLrjM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745881411; x=1777417411;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=d96J7/O94xadSvA6zuIRLFQTYEw18yGoq0qlApnvezw=;
-  b=JCZRLrjM8cLlF7od4a4k2gEr2kqZesAicEHUNopUX76ZDsisSXDl+52j
-   qyjlWWNNLYho0SoYGhAd+IRjrzvoMmKVohz7N2VraZxF2qN6H+Pux+7wk
-   JmN1K92xW6gFNnjgK2FbpNv3p0RtHek3BKr3PQh07Se4QZXbgiVV03IVc
-   ctr3E93llKPn22swK4cRctv6VxTYvuGDyFom0geUhQF2rGd+Ixq2LTrrw
-   GZXWTnCzYF/SomTNJCx0c7X8eyFSCJRY4t5/Jzastrbrdi1a0rzjJsgm4
-   mp+EBnh31AY5kboX1TKoPWe7GXvgyFCPfvfUm311pW6Aw9GH3Bfiklk1q
-   A==;
-X-CSE-ConnectionGUID: /dw6Ff4sTSGydc+dqJHzKw==
-X-CSE-MsgGUID: hlD2nsnaSYCBh4hvkx3q6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11417"; a="51156506"
-X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="51156506"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 16:03:30 -0700
-X-CSE-ConnectionGUID: NXDABcl3Sx6lL3EUtd9DpQ==
-X-CSE-MsgGUID: dR1Atr8eRkalc7zlpmDo+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,247,1739865600"; 
-   d="scan'208";a="138841492"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.109.95]) ([10.125.109.95])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 16:03:28 -0700
-Message-ID: <f6ad2f58-4bd6-4238-8baf-a185d58e497d@intel.com>
-Date: Mon, 28 Apr 2025 16:03:24 -0700
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="svD9qBHY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DPrtvh6e"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 776C013801AC;
+	Mon, 28 Apr 2025 19:03:42 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Mon, 28 Apr 2025 19:03:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745881422;
+	 x=1745967822; bh=pHqx1GykFQWZVkLUWBRThPy9+CwWC9fTddnGKdpIZK8=; b=
+	svD9qBHYmtIjhjQpMVYNcLKM3L5DMsZ+GLtDxJKnkAL9ezDGTpx8PO4hmqH/bjZG
+	l4aOu9BMs60Y8tu1ZYmVlgC2iSrsXzA8WsyyqGBLxinqxMlNS53VnCclGonXf3Z6
+	nTT+WxV/1/1BkGpqBpI7o2mee4PZ8XML4zWG6nNp9mpWK0aUMXFuVwRxKN1aNXBg
+	XDvpTjeZV7t56R5WYAEdrRPkLcuwOgULTycR6Ghi1Ru5fZAeCP1u7UdKO8Z+xEvL
+	ORJys3iOohu/axUUHvWkcQv21ClVqKWtVs3aawc5i3guHeNbRAf1DS19uMbMPLOQ
+	UQSIjH/jFE+Z6LiOV8qq3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745881422; x=
+	1745967822; bh=pHqx1GykFQWZVkLUWBRThPy9+CwWC9fTddnGKdpIZK8=; b=D
+	Prtvh6eunoXGGqOO3tdocxwR2olO7ENAGzJJRfmzoJq0vgVV9cHUQERDfvZ8niW9
+	l6XhZF4NrEWWtQVNKeuJpN24Ae/bXlgd0SynS4b/Vpul1Ndq/k1eQbb47W5JXjh1
+	wmoX20IvsCGjJwFDyoWzjpyuYRbWJ6uoebFpEnHYKMsH9Z6Ti8wQvqzAz8Or7lc0
+	bJaRffxWmCLhLDLL65QWQQpQeQKGbfHJj+nxcVP0pqzEPlgAUo9+c372OK9MnfEt
+	xPApVdgKWtsVus0sL4U0Bqtx3idKg7Q6Px4nOw6OP4UaJX/hmEHYMsGAgGbAFqok
+	5OhOKuarou34GLf9YfpTQ==
+X-ME-Sender: <xms:TgkQaA2bIcG1Nf3RyyUwEDqolAzGxumyzsHNi2xue3twCj868fNe_Q>
+    <xme:TgkQaLHOjuqSV4jl9UltIHakDYXWqgyrZo9PEPvfJWAkks-voXC2wMXVhzyyJNyuc
+    pumL27saL5t4XJnyuY>
+X-ME-Received: <xmr:TgkQaI5fDS0v9TPs6eIzuxgmpyrtInt-G2hEa6GVuhTWeZVvaBp4_IJAsL58pAdIabC20ayo3VaDVXUPz0IRuazWG07_4AuU9g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedvvddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
+    houggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeev
+    teegtddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdr
+    shhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeejpd
+    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdo
+    rhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthh
+    gvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhs
+    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirg
+    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghs
+    rghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
+    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgv
+    hhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:TgkQaJ2vVrJ4bgQKXSInNO6jD00iol9T9zT9OtgH7vAi_Kup6xCmKg>
+    <xmx:TgkQaDGYrxcHGBTQzpL8cOcE1tOBaqE-liHwpYRZvAmO9hsFWReKSQ>
+    <xmx:TgkQaC9vkiS0VXudaYBwRjIwiA12_eNnzED2D4qSmsnpP4q__Rkung>
+    <xmx:TgkQaIkiL9bMseCkW9xSoxCEqBDGEW-0WzzqjQK_vkQfy7eof-jbuA>
+    <xmx:TgkQaMQGYplNY4UH3N79MZMSAvOGCkP-ji9pk2aSDdf2YYssedBM8lD5>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 28 Apr 2025 19:03:41 -0400 (EDT)
+Date: Tue, 29 Apr 2025 01:03:40 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: [PATCH v2 4/4] media: rcar-vin: Fix RAW10
+Message-ID: <20250428230340.GD1969140@ragnatech.se>
+References: <20250424-rcar-fix-raw-v2-0-f6afca378124@ideasonboard.com>
+ <20250424-rcar-fix-raw-v2-4-f6afca378124@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/14] cxl/port: Replace put_cxl_root() by a cleanup
- helper
-To: Robert Richter <rrichter@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>,
- "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Terry Bowman <terry.bowman@amd.com>
-References: <20250428214318.1682212-1-rrichter@amd.com>
- <20250428214318.1682212-9-rrichter@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250428214318.1682212-9-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250424-rcar-fix-raw-v2-4-f6afca378124@ideasonboard.com>
 
+Hello Tomi,
 
+Thanks for your work.
 
-On 4/28/25 2:43 PM, Robert Richter wrote:
-> Function put_cxl_root() is only used by its cleanup helper. Remove the
-> function entirely and only use the helper.
+On 2025-04-24 10:05:36 +0300, Tomi Valkeinen wrote:
+> Fix the following to get RAW10 formats working:
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
+> 16-bit containers, the bpp should be 2.
+> 
+> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
+> Through Mode", used for YUV formats and should not be set for RAW10.
+> 
+> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
 > ---
->  drivers/cxl/core/port.c | 9 ---------
->  drivers/cxl/cxl.h       | 4 ++--
->  2 files changed, 2 insertions(+), 11 deletions(-)
+>  drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 2 +-
+>  drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index c9087515d743..e325f08aaf32 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1037,15 +1037,6 @@ struct cxl_root *find_cxl_root(struct cxl_port *port)
->  }
->  EXPORT_SYMBOL_NS_GPL(find_cxl_root, "CXL");
+> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> index a38c7b835231..9de1d3d91fa6 100644
+> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+> @@ -890,7 +890,7 @@ static int rvin_setup(struct rvin_dev *vin)
+>  	case V4L2_PIX_FMT_SGBRG10:
+>  	case V4L2_PIX_FMT_SGRBG10:
+>  	case V4L2_PIX_FMT_SRGGB10:
+> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
+> +		dmr = VNDMR_RMODE_RAW10;
+>  		break;
+>  	default:
+>  		vin_err(vin, "Invalid pixelformat (0x%x)\n",
+> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+> index 756fdfdbce61..65da8d513b52 100644
+> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
+>  	},
+>  	{
+>  		.fourcc			= V4L2_PIX_FMT_SBGGR10,
+> -		.bpp			= 4,
+> +		.bpp			= 2,
+>  	},
+>  	{
+>  		.fourcc			= V4L2_PIX_FMT_SGBRG10,
+> -		.bpp			= 4,
+> +		.bpp			= 2,
+>  	},
+>  	{
+>  		.fourcc			= V4L2_PIX_FMT_SGRBG10,
+> -		.bpp			= 4,
+> +		.bpp			= 2,
+>  	},
+>  	{
+>  		.fourcc			= V4L2_PIX_FMT_SRGGB10,
+> -		.bpp			= 4,
+> +		.bpp			= 2,
+>  	},
+>  };
 >  
-> -void put_cxl_root(struct cxl_root *cxl_root)
-> -{
-> -	if (!cxl_root)
-> -		return;
-> -
-> -	put_device(&cxl_root->port.dev);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
-> -
->  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
->  {
->  	struct cxl_dport *dport;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 960efcc60476..ea06850ecaea 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -737,10 +737,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
->  struct cxl_root *devm_cxl_add_root(struct device *host,
->  				   const struct cxl_root_ops *ops);
->  struct cxl_root *find_cxl_root(struct cxl_port *port);
-> -void put_cxl_root(struct cxl_root *cxl_root);
-> -DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_cxl_root(_T))
->  
-> +DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
->  DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
-> +
->  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
->  void cxl_bus_rescan(void);
->  void cxl_bus_drain(void);
+> 
+> -- 
+> 2.43.0
+> 
 
+-- 
+Kind Regards,
+Niklas Söderlund
