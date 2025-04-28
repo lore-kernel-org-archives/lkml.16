@@ -1,89 +1,91 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243434C80;
-	Mon, 28 Apr 2025 22:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F624C80;
+	Mon, 28 Apr 2025 22:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745880591; cv=none; b=tH5GwHwIuNhxM0MK60BwzMMfyeHMlqxj6yfHItKmF9beXkE/p7xTck6titEjHT41TeAxzqGpSGleZ+pRb/naEX7y8fmEKHh1NfJ4Yni/IVyplaNyU9+na3ZQFOu0RCnov0JP9sk4pZk8HL828XMwp5Oii/iZqKWm/n2kbHFR+IA=
+	t=1745880654; cv=none; b=k0D+lqMkBTCbf0AHUwKKvTHHbtTo6tIpYPXaDbHGqi54tSxA4T2FX6V+B26ZJdc4H7bplk0z8/shCMRiVON/35bsI0a08cNi1pRFDTNHNucQxEfeD2vOZqE9b6xGYwdpH2XZeWZy+nRtZM0HDYo5lmSk+Y9fNHgHNH36KIDECMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745880591; c=relaxed/simple;
-	bh=NGsqrbZETszqdda8n882oCreq4vk+atqRTD3v4fd4Bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Frc2KaLMBuO8PIOTvb2ETBNsbYtc3jiIanSPNQWeZgVbviuoApJHU4VqPoI8jUAvQdScUE996qFhVk8LFKYBIegrkIuZZGUQwydvvK7+68KwOjocE9ZDDzjLLOM30kYVao+jXuAO0uHeGathW3SjUaHZcHxoMZ82sT5TAh4FHQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=A942cwmp; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745880654; c=relaxed/simple;
+	bh=Tzdsf9kK0NGmmWnF6pyX+kuF4d22g/O4KYkrQy6PkTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F9/uA9VmIGYqMl2diC2fqg9235c03ZGebHjT+VFRe0wUQ07fO0MOkUFq1nrEXhe0kddUOY//4lkTGz77CI2ODUr9IT72rqEBfHVLqRy56eBzPcaQWc8THLaxF7sKU25Tq4rsZxnjsYiI4V+r5aJ8Mm326fc8tFG1qeATp6oJ8e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGAgw0jT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A942cwmp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745880584;
-	bh=NGsqrbZETszqdda8n882oCreq4vk+atqRTD3v4fd4Bk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=A942cwmppAq9eVoPZi0vuHwaQKTaIeBaKKr5zAUOFSZ1eX5QPKXaDbdWuvk6Iotte
-	 CMDN0XFOfQG5Aja7zMiSBE5Vmf11jSNWe9ZC/z0qOWsQ3hx0nf7VcfPs0Ey+lMZ0gq
-	 uSzVApV2LE+3i0byLd7KDPWr/9ygDrwAw6+DahJ4OAWbzWCkRkLIXKbxsW8C6jjQmp
-	 JbDr1CglH1itc9fsTr8MJECqbc42Wbsm4JKLm04JWAsABpWZtHqvxDl/bDqUSTQ61K
-	 kJR4Eg2i+vMhTw+BitWAaZZL84Q8NHuUW6TnzMI09Aiu5BUQfquvbFUhg2Y1sd8Kuv
-	 JjFtEbM7SedBA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zmdtc6TDqz4x1w;
-	Tue, 29 Apr 2025 08:49:44 +1000 (AEST)
-Date: Tue, 29 Apr 2025 08:49:13 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: error trying to fetch the clockevents tree
-Message-ID: <20250429084913.36846723@canb.auug.org.au>
-In-Reply-To: <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
-References: <20250429082047.4af75695@canb.auug.org.au>
-	<db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGAgw0jT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03ADEC4CEE4;
+	Mon, 28 Apr 2025 22:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745880654;
+	bh=Tzdsf9kK0NGmmWnF6pyX+kuF4d22g/O4KYkrQy6PkTY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PGAgw0jTtOQ9rwOUye1SbsUdQCUnG8hTI+lmfLD+BJPGPEk7sEzCWyWyuiaxdCK2k
+	 8BIhekDE5xhqhh3x3ngYs9BrixU6hgs2E7//iOURq1ZC2pbVNNr6x5VoLId5xzzS5W
+	 MCd9qXx/Xp5JzLtc78jY8UkPG3Zd/79csVRl4KzAH7COm26LVmj9eL0awtJhZWnGov
+	 EXUEFlgjdLRoSU/UiUI8R6vkMWWsQF3UjcXETbXLpnnzNSc4s/lGzczzzYvoeTDwZ2
+	 l1v5EUsrS31ckMN+mO+TDLwKZCnbot+fJ80jVzbrKEBNhvGHqZ6P979owp456gQIhu
+	 X+tq9lfHikqlQ==
+Message-ID: <12141842-39ff-47fc-ac2b-7a72d778117a@kernel.org>
+Date: Mon, 28 Apr 2025 16:50:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/186SkVbskYydBWo.AKfWEKi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ipv4: fib: Fix fib_info_hash_alloc() allocation type
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>, "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Kuniyuki Iwashima <kuniyu@amazon.com>
+References: <20250426060529.work.873-kees@kernel.org>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <20250426060529.work.873-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/186SkVbskYydBWo.AKfWEKi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/25/25 11:05 PM, Kees Cook wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+> 
+> This was allocating many sizeof(struct hlist_head *) when it actually
+> wanted sizeof(struct hlist_head). Luckily these are the same size.
+> Adjust the allocation type to match the assignment.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: David Ahern <dsahern@kernel.org>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: <netdev@vger.kernel.org>
+> ---
+>  net/ipv4/fib_semantics.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+> index f68bb9e34c34..37d12b0bc6be 100644
+> --- a/net/ipv4/fib_semantics.c
+> +++ b/net/ipv4/fib_semantics.c
+> @@ -365,7 +365,7 @@ static struct hlist_head *fib_info_laddrhash_bucket(const struct net *net,
+>  static struct hlist_head *fib_info_hash_alloc(unsigned int hash_bits)
+>  {
+>  	/* The second half is used for prefsrc */
+> -	return kvcalloc((1 << hash_bits) * 2, sizeof(struct hlist_head *),
+> +	return kvcalloc((1 << hash_bits) * 2, sizeof(struct hlist_head),
+>  			GFP_KERNEL);
+>  }
+>  
 
-Hi Daniel,
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-On Tue, 29 Apr 2025 00:35:49 +0200 Daniel Lezcano <daniel.lezcano@linaro.or=
-g> wrote:
->
-> Seems like there is some issues with the servers recently.
->=20
-> Could you please disable the tree while I migrate it to kernel.org ?
-
-OK, no worries.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/186SkVbskYydBWo.AKfWEKi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgQBekACgkQAVBC80lX
-0GzjXwf+IRysPwBLodXMnZMboCr4csbrystSW1TWkSE0XNqWs9YprXG6gyPoKwLn
-lVAifh3/pMYNuy20oL4tIxVFGLuOZKLzIqULqroupAlgl90LQHRGZRDAsPciXXa0
-2EprjKsVqYf+yg2eGqZa1AgX5QNbYxRG8E/LdmvGUSMFbQ0nABTbYGMBklR+YNCS
-2X3IHOBmm3PM5ypIjjyoODx+YJ6/tuoLCBGXMt+h6AwFQ9zM593+XWH82MyxKSoV
-cnlgmhooz5PjGm+R+AxhcdAhCMyStEDfnaMSCfDrD3/5K2/tFCQeBuUeqpWlenDJ
-6d98NG7hIY3SU7QIj/B5jDgO/II+lQ==
-=8ivN
------END PGP SIGNATURE-----
-
---Sig_/186SkVbskYydBWo.AKfWEKi--
+Fixes: fa336adc100e ("ipv4: fib: Allocate fib_info_hash[] and
+fib_info_laddrhash[] by kvcalloc().)
