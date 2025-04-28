@@ -1,105 +1,82 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA6C28F529;
-	Mon, 28 Apr 2025 17:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10FAD28F92E;
+	Mon, 28 Apr 2025 17:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861168; cv=none; b=aMEr3HoyKoqKmi4hy/yQxuNbKLyyuS3dIizTT3wPw73RPPScrjhYxLG++uaHfeGE756C/9f9KMbxFb9zXnAfKxTmBjf7DuIL7cYwW8iYuWVHqro9UiSl8culVMFjxZjOcydlag1xKY4s0TBhVG4lQ2ELsXIqUtfnWV4jBCZo+v8=
+	t=1745861193; cv=none; b=LeOSzcguJlMnyHC5GSynguMpL7ROiDxbcp0EXmHXA1qNev3tU1pOHRsNtv5dgrxJvfo4j/cASgHd6AVufNj1JPKya3uSorR1AB5PZtt0NrDKQ/FOyrLg+sr3mnSKwnWDjw6zvB7XFLyPvXBy9utJa7JPojbgX7HBC6+qA2UiZyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861168; c=relaxed/simple;
-	bh=cmQBBf3nlrtWpI6KU14LdCq98gV6uMF56G0Dt/F29vA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cnFDqkil5T3n+1u7nLkt6ZZWjUCvwhr11XADz0m4m5lzM35tQ8ejoYchezzY5DFN6xSBmg0FCg/ub7re0kOvsi6iIb77ME2utHtM4zcjgSzjYOMUaiCSbUynKWqdHFkesdgxwZ1NJF/IB6XgAAnLUYPNJsUrzpKKLFLGDWngVyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KOAlFSVg; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745861193; c=relaxed/simple;
+	bh=SmMhoffXqK5lFgsuCUxRFgviJ4w3YYRhp4ncDtar3kg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P/enlIuYzMbHyYtBacjhCKIv0EbbaIsPBdyF4gmy16bFs2GnoTiKq1e/T71PPoczKaWpwFII+vpZh1y9gttmCK/uXUFHAqznnODdXRS2y+KtISvGZC8bXw8+qisHh/vREtt0NPQKwvTXH47oykXFlRF2/zFdPm/vAbuRSy3tMHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KA1aSlDG; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KOAlFSVg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745861161;
-	bh=cmQBBf3nlrtWpI6KU14LdCq98gV6uMF56G0Dt/F29vA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KOAlFSVgb2w2fzFPmcnlJp+nWpbUg6M2Ysqyv50fykpqHWN9svrNe0ta8xSRTGVah
-	 Z3/mBDRwsqzu0rYvgsEiKkE1hTyFgYusbxwwt+gly7F/7mmjoW+K8qYdT6hADMknhQ
-	 /dBqMPKC45u3E92n++ouWpnh7JWs+zcmWk+w+EXgtEOyEcCvo+hxBEaFICJrezbZY3
-	 tvTeAi07VF+7r52N/Rlo+6o2xaG1RM+oTd7LQhh9bokm2GVFX0GcUG+ux7OAKQX9tm
-	 UIcXbOLx0r16fMz/Ygz4QAol8VO2adR32dcrL+wFqMTgUvkGiYryl++jsva7K8GUJP
-	 ye0BP1hUYsnAw==
-Received: from [IPv6:2606:6d00:15:9913::5ac] (unknown [IPv6:2606:6d00:15:9913::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9D3E717E0F66;
-	Mon, 28 Apr 2025 19:26:00 +0200 (CEST)
-Message-ID: <d901822b2710a2d642f1372fbfb53f99f1e60b2e.camel@collabora.com>
-Subject: Re: [PATCH] media: verisilicon: Free post processor buffers on error
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Detlev Casanova <detlev.casanova@collabora.com>, 
-	linux-kernel@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@collabora.com>, Philipp Zabel
-	 <p.zabel@pengutronix.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	kernel@collabora.com
-Date: Mon, 28 Apr 2025 13:25:59 -0400
-In-Reply-To: <20250425192447.227063-1-detlev.casanova@collabora.com>
-References: <20250425192447.227063-1-detlev.casanova@collabora.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KA1aSlDG"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 53F9820BCAD1;
+	Mon, 28 Apr 2025 10:26:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 53F9820BCAD1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745861191;
+	bh=incaWFa4r0jzEYqcW4jYJnnsM7UwCGhmzrmcbqC2GKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KA1aSlDGRWrYrjf0ftjz5Q8jkXXEy5bhP98G69tM1baZS6323NnCsTcPiJXGxkF8q
+	 GUmZeiljJPG8x6bwTHVcnO5q2+tQCuS0EMAF6qL4nZE5mg6pHb4x6LazqTroQMvZH3
+	 RR377wkP0uPIoLW9UofamfT/Q2SR63Oi624mfiHw=
+Message-ID: <53760b43-fd0f-4996-87cd-9615cdbc4618@linux.microsoft.com>
+Date: Mon, 28 Apr 2025 10:26:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH hyperv-next] x86/hyperv: Fix APIC ID and VP
+ ID confusion in hv_snp_boot_ap()
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>, "bp@alien8.de"
+ <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+ "mikelley@microsoft.com" <mikelley@microsoft.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ Tianyu Lan <Tianyu.Lan@microsoft.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, Allen Pais <apais@microsoft.com>,
+ Ben Hillis <Ben.Hillis@microsoft.com>,
+ Brian Perkins <Brian.Perkins@microsoft.com>,
+ Sunil Muthuswamy <sunilmut@microsoft.com>
+References: <20250424215746.467281-1-romank@linux.microsoft.com>
+ <aAsonR1r7esKxjNR@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+ <KUZP153MB1444118E6199CBED8C78E6D4BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <8fa1045a-c3e9-48e0-86fe-ab554d7475c8@linux.microsoft.com>
+ <KUZP153MB14448BEFA81251661433CE33BE842@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <c57c6ce9-6ff8-431c-ab77-fa2c727fee09@linux.microsoft.com>
+ <aAv6slMtA7Kioy_3@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aAv6slMtA7Kioy_3@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Le vendredi 25 avril 2025 à 15:24 -0400, Detlev Casanova a écrit :
-> When initializing the post processor, it allocates the same number of
 
-What do you think reworking as:
 
-  During initialization, the post processor allocates the same number of
-
-> buffers as the buf queue.
-> As the init function is called in streamon(), if an allocation fails,
-> streamon will return an error and streamoff() will not be called, keeping
-> all post processor buffers allocated.
+On 4/25/2025 2:12 PM, Wei Liu wrote:
+> On Fri, Apr 25, 2025 at 11:22:08AM -0700, Roman Kisel wrote:
+[...]
+>>
+>> Yep, I see the issue. Will resend the patch.
 > 
-> To avoid that, all post proc buffers are freed in case of an allocation
-> error.
-> 
-> Fixes: 26711491a807 ("media: verisilicon: Refactor postprocessor to store more buffers")
-> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> I have removed this from hyperv-fixes.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
-If you are fine with the suggestion, I can make the changes while
-applying.
-
-> ---
->  drivers/media/platform/verisilicon/hantro_postproc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/verisilicon/hantro_postproc.c b/drivers/media/platform/verisilicon/hantro_postproc.c
-> index c435a393e0cb7..9f559a13d409b 100644
-> --- a/drivers/media/platform/verisilicon/hantro_postproc.c
-> +++ b/drivers/media/platform/verisilicon/hantro_postproc.c
-> @@ -250,8 +250,10 @@ int hantro_postproc_init(struct hantro_ctx *ctx)
->  
->  	for (i = 0; i < num_buffers; i++) {
->  		ret = hantro_postproc_alloc(ctx, i);
-> -		if (ret)
-> +		if (ret) {
-> +			hantro_postproc_free(ctx);
->  			return ret;
-> +		}
->  	}
->  
->  	return 0;
+Thank you, Wei! I'm working on resolving feedback for v2.
 
 -- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+Thank you,
+Roman
+
