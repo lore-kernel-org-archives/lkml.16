@@ -1,147 +1,114 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3B813AC1;
-	Mon, 28 Apr 2025 02:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BF68460;
+	Mon, 28 Apr 2025 02:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745806465; cv=none; b=uDo4tWDdGRkXNIbCukJSnTu8swdYxSJGsUcnPIW9hxOLZRQbGoJkoQBuNumd9hE7SDRCBEQTDScMoUGIdIQXIv1+R2voVKHLEnUhP0gEsW7mT34rMqaxKw2OZ6J05oHYlhWYyvaHRSCo2AGY9QVlG3y8QtOHmDvBF8pd9sG7L30=
+	t=1745806517; cv=none; b=Da79w1Z4x7ncrfhrqN/4+Oki3aUbGdMg23/U7h5UI621k6ZJiMYV7ihw9m+4HbrNEsbiSv6P/BfqrIi4L9NiDqD4bgnBjec4zdHNPUM7ORoAmTil0oaznIATzpQdHzwTYdwdJpK6/aSvK3PQpXPCpMK0n0Sv2DvwjscdRPk9G94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745806465; c=relaxed/simple;
-	bh=hWIa3pYS2MhlFME8LNN/Sw/meR4rq/DXnNiOz65h0xs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hUP7sSCXqXcNHl9LSSz4GpwgigNS0UTULKp3z4la049mcKNBt4QekYByU2jFEXkFLA7VPgoyNkjeMpQbdCvYhdltnh2EspewQfgU0S+tJmjkyDBDAToodkqefuOpMMUH1MLXnVLL5tYY9LZV7kwv3BD6cEdoGBaQ2v/WSvFaf4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzZ2aWVN; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745806517; c=relaxed/simple;
+	bh=R5BZyUZJNqf7kFB4ElGeI8qLK3cY5fD1DOoVzkYDkSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jpc7Uc24WGaRQsCMJQ8vKjMD5NLjGb2REUEGIo9+asovcYS+Mxs2OhOC209H7BuSgN1ISXzj+qmZTwGgzdGRpdCBAkjLKW7GyhCr71CW0Nzga35LdxNCwSDhgWQj/ZJ98D/3Qjwuyyf8g4rfjzDYOkHArg21xerMEScEKRxFPJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=reVZvE9K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzZ2aWVN"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so35550621fa.2;
-        Sun, 27 Apr 2025 19:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745806461; x=1746411261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6L7mReCEPPU3SVcDk4HNDfLPe55YhTxKj7HSojarmXE=;
-        b=KzZ2aWVNmzx6wQxBBWaYfntZsbQu5G6kh0phAbxIigzdY8lE6mDpOOatPpODdsX94G
-         Up2MRrt0GkQcP8/thq+JGfCuVKLVwdQerNJihrn1FODNIpxZNKpxInQCWudURolBSFtM
-         /+O9Uv+vXsiAQF/OQvX7PTev+QpEGuLpMnCDerjaNY+GSyjs5l8WPNut1lc32YNuaW94
-         8sPkdwArwqgkJ36uhTpVfVk3orJFYhQ4PDGyp+VM5y9S6AdIc6TvrNMnZYTk7xEo+f46
-         PgrduVcQDVx0TUUP5Z+se5Bldn5bk82RWgWoq7dBMFB5WzWhzDfshipCsNKtKJa8vBqD
-         PyXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745806461; x=1746411261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6L7mReCEPPU3SVcDk4HNDfLPe55YhTxKj7HSojarmXE=;
-        b=e/Cfbnz+V1enYylo8Fgq4PJvrjIpSFoUwJIC+PRcgh3LaAddPbnCxzCvv8/Hdfjru2
-         gCkT384VK02m3ez12gbKjRlpKHt4k89+rlkAB4s4TuUocNNarHxfDqPVbKOt8gPDtirP
-         VmzZCOsQVvb2uRsTI9sOUCvs9+M0X9wfcJUcJ37s7NqynonyvyutiH3vQVY4gv6KpIng
-         Tzrjo9S1btVZRTBHAZH5cCR5PR9NHJDm5W0NZjAKe1dIfNogLk+1BZmcGsIoD8OVP0Tf
-         k4qfRpohwMjd6DYdgLg+gd/bEVfnsh9HzdbZJdHz2QsO3ai8Liy19FKAriya70gBEKuR
-         UwsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjj4nB2ZiY6hdLoqJBTq3kkqKrMy+ptfSX0PXoYpJC8HE9bVg2EBGeYVOmszsLvNlCsOh8dtxOyuKihSZm@vger.kernel.org, AJvYcCUm8LtNRc+8+EiQCc5Qvf81tPrKJelyi3HlA2gsQSV7qonP2AoutzXECmHRh4gKNK738uqkKKttow61Vg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy35vjuLaysq8uDYWsYv32Z/sOXSsbQJ1KEuIxx5K6fVgSGmy/0
-	kHf0XFugV/aFxrgCA5Wfxy5MnHwne5682QnRl5DIbbk1IPbkKiY4BCcug/6p43u/vdP6xOJQGTc
-	8NPkgO3bwSINWsYhCRoTwsEY4tkE=
-X-Gm-Gg: ASbGncvXBZ84Mt7394Wnuya+ku4ChOGSQyBRJYpX0ETANDgqPrcK+KLVZ61hltD7ahP
-	fYb+hwmZtsqryaozXZvGNJMoCCiiDSAoJjF01h0cTquKKFFOY/QXQvlYVQa+SZIBYVxHgnWwsuc
-	gbNNpQD4lRgMbFYB0UJffbqA==
-X-Google-Smtp-Source: AGHT+IFqG9IvL4DdVin/erLTT+mbKNl7H+n8o92o8qsmXMKCS3wOobNfOjdFUutakNI3AHxLZMz1lW/P8kipZLZf9Qg=
-X-Received: by 2002:a05:651c:1465:b0:30b:d05a:c103 with SMTP id
- 38308e7fff4ca-31907be7ee1mr36751781fa.29.1745806460856; Sun, 27 Apr 2025
- 19:14:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reVZvE9K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DECD4C4CEE3;
+	Mon, 28 Apr 2025 02:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745806516;
+	bh=R5BZyUZJNqf7kFB4ElGeI8qLK3cY5fD1DOoVzkYDkSQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=reVZvE9K460TlqXKQgxoCldD0z5NRQz5FMCQV2tOSP7Uv3AnKFzerQg0MF9RHSOXb
+	 Ra9Bd3uMGrsrxiH9ORCsya1asAoIc8d+lPCBK4DYDs7m/Lnr1sviYS6zXEygU4u4aT
+	 f9tqzQh0qGXi8+2Cx/HyZhlCpqwXFfBtYItOyt/2fCTSVutIaGAWtWEY7uYpqpKQVm
+	 4pRGp0zQY65zBtRycgze1szYUnl0b7+PJrKfc0E6ao8EOcwLtwIbuhGDnjsDkCtKg5
+	 DCWuCdlaqAcfkHQDUtWumjhpN2S5dHVZHn6h9DnjRY0Xm/zilc30pUhBc+GhRgGG2J
+	 kC2ikmwyDuXIQ==
+Date: Sun, 27 Apr 2025 19:15:14 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Matthew Wilcox <willy@infradead.org>, Theodore Ts'o <tytso@mit.edu>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <20250428021514.GB6134@sol.localdomain>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <aAvlM1G1k94kvCs9@casper.infradead.org>
+ <ahdxc464lydwmyqugl472r3orhrj5dasevw5f6edsdhj3dm6zc@lolmht6hpi6t>
+ <20250428013059.GA6134@sol.localdomain>
+ <ytjddsxe5uy4swchkn2hh56lwqegv6hinmlmipq3xxinqzkjnd@cpdw4thi3fqq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427185908.90450-1-ryncsn@gmail.com> <20250427185908.90450-3-ryncsn@gmail.com>
- <30968c68-7ec2-4185-9b48-f8335dc2e0b0@gmx.com>
-In-Reply-To: <30968c68-7ec2-4185-9b48-f8335dc2e0b0@gmx.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 28 Apr 2025 10:14:03 +0800
-X-Gm-Features: ATxdqUE43AwjPoI39IyPOxqKFyZI2qqvwM-fZ2nBNpIE4zuv8EfJ6_f8pPBi_4M
-Message-ID: <CAMgjq7CGhkgfOhCEEBKrto82jPVzwHib6skVwnnwJbMExEh5xw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] btrfs: drop usage of folio_index
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, 
-	Chris Li <chrisl@kernel.org>, Yosry Ahmed <yosryahmed@google.com>, 
-	"Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>, 
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ytjddsxe5uy4swchkn2hh56lwqegv6hinmlmipq3xxinqzkjnd@cpdw4thi3fqq>
 
-On Mon, Apr 28, 2025 at 8:55=E2=80=AFAM Qu Wenruo <quwenruo.btrfs@gmx.com> =
-wrote:
->
->
->
-> =E5=9C=A8 2025/4/28 04:29, Kairui Song =E5=86=99=E9=81=93:
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > folio_index is only needed for mixed usage of page cache and swap
-> > cache, for pure page cache usage, the caller can just use
-> > folio->index instead.
->
-> The patch looks good to me, but I'm afraid the next commit message is
-> not accurate.
->
-> >
-> > It can't be a swap cache folio here.  Swap mapping may only call into f=
-s
-> > through `swap_rw` and that is not supported for btrfs.  So just drop it
-> > and use folio->index instead.
->
+On Sun, Apr 27, 2025 at 09:43:43PM -0400, Kent Overstreet wrote:
+> On Sun, Apr 27, 2025 at 06:30:59PM -0700, Eric Biggers wrote:
+> > On Sun, Apr 27, 2025 at 08:55:30PM -0400, Kent Overstreet wrote:
+> > > The thing is, that's exactly what we're doing. ext4 and bcachefs both
+> > > refer to a specific revision of the folding rules: for ext4 it's
+> > > specified in the superblock, for bcachefs it's hardcoded for the moment.
+> > > 
+> > > I don't think this is the ideal approach, though.
+> > > 
+> > > That means the folding rules are "whatever you got when you mkfs'd".
+> > > Think about what that means if you've got a fleet of machines, of
+> > > different ages, but all updated in sync: that's a really annoying way
+> > > for gremlins of the "why does this machine act differently" variety to
+> > > creep in.
+> > > 
+> > > What I'd prefer is for the unicode folding rules to be transparently and
+> > > automatically updated when the kernel is updated, so that behaviour
+> > > stays in sync. That would behave more the way users would expect.
+> > > 
+> > > But I only gave this real thought just over the past few days, and doing
+> > > this safely and correctly would require some fairly significant changes
+> > > to the way casefolding works.
+> > > 
+> > > We'd have to ensure that lookups via the case sensitive name always
+> > > works, even if the casefolding table the dirent was created with give
+> > > different results that the currently active casefolding table.
+> > > 
+> > > That would require storing two different "dirents" for each real dirent,
+> > > one normalized and one un-normalized, because we'd have to do an
+> > > un-normalized lookup if the normalized lookup fails (and vice versa).
+> > > Which should be completely fine from a performance POV, assuming we have
+> > > working negative dentries.
+> > > 
+> > > But, if the unicode folding rules are stable enough (and one would hope
+> > > they are), hopefully all this is a non-issue.
+> > > 
+> > > I'd have to gather more input from users of casefolding on other
+> > > filesystems before saying what our long term plans (if any) will be.
+> > 
+> > Wouldn't lookups via the case-sensitive name keep working even if the
+> > case-insensitivity rules change?  It's lookups via a case-insensitive name that
+> > could start producing different results.  Applications can depend on
+> > case-insensitive lookups being done in a certain way, so changing the
+> > case-insensitivity rules can be risky.
+> 
+> No, because right now on a case-insensitive filesystem we _only_ do the
+> lookup with the normalized name.
 
-Thanks for the review.
+Well, changing the case-insensitivity rules on an existing filesystem breaks the
+directory indexing, so when the filesystem does an indexed lookup in a directory
+it might no longer look in the right place.  But if the dentry were to be
+examined regardless, it would still match.  (Again, assuming that the lookup
+uses a name that is case-sensitively the same as the name the file was created
+with.  If it's not case-sensitively the same, that's another story.)  ext4 and
+f2fs recently added a fallback to a linear search for dentries in "casefolded"
+directories, which handle this by no longer relying solely on the directory
+indexing.  See commits 9e28059d56649 and 91b587ba79e1b.
 
-> Btrfs supports swap file, it's just not through the swap_rw() callback.
-
-Right, I just meant btrfs is not using `swap_rw`. Of course it
-supports swap files. Let me update the commit message a bit to clarify
-that.
-
->
-> In this particular case, the folio belongs to the metadata (btree)
-> inode, thus it will never be swap cache folio.
->
-> With that changed, it looks good to me.
->
-> Reviewed-by: Qu Wenruo <wqu@suse.com>
->
-> Thanks,
-> Qu
->
-> >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
-> > Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
-> > Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
-> > Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >   fs/btrfs/extent_io.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> > index 197f5e51c474..e08b50504d13 100644
-> > --- a/fs/btrfs/extent_io.c
-> > +++ b/fs/btrfs/extent_io.c
-> > @@ -3509,7 +3509,7 @@ static void btree_clear_folio_dirty_tag(struct fo=
-lio *folio)
-> >       xa_lock_irq(&folio->mapping->i_pages);
-> >       if (!folio_test_dirty(folio))
-> >               __xa_clear_mark(&folio->mapping->i_pages,
-> > -                             folio_index(folio), PAGECACHE_TAG_DIRTY);
-> > +                             folio->index, PAGECACHE_TAG_DIRTY);
-> >       xa_unlock_irq(&folio->mapping->i_pages);
-> >   }
-> >
->
->
+- Eric
