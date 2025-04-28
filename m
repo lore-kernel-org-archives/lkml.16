@@ -1,173 +1,93 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782A22135C7;
-	Mon, 28 Apr 2025 23:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03278F49
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881425; cv=none; b=CxIK1b9O3PS2E6eUwQrA8vNpjRoSMvDEkDcqKsw5PMccDcZV0JAGUW5w42pRpeDWJ2nL6DGjo6Do30TKkxeJ38N3vQQVeU8qAwfeYnlz5u35ntdAzuA4wbtTNqyULPkt+ZWWu7VQI4gfvqDF5s0tCnPePQbt26Ua+Iu4xKAJ03A=
+	t=1745881547; cv=none; b=KPAwMqsLMG+Wsh3+eT63dirDjN1V6EVKuCa7ifbHLxZGOX3ztaYoE/JixsCFsA+GTPQcxOtaZKoTyw2GhrjXO2emHcFtRZM3fODYgtmWQRI9rQV5IX9Ha3XmxpLeX9B0S5kHOdes+aPkWXV8+GI+OkT3niqKVUhqU+5k2GBeojw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881425; c=relaxed/simple;
-	bh=kI8IlL3QI3aVmXNNJOCB7Eu2xcTR9zSAMidcgL+otWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aPBCtuFjhx/B53LEkED79ONfZPlSn2hkOfDU4W7s+6KYvrFjGxnBzQe1XfGCz3sKV5b7l8ZSbneOHBl3ZA2fUKwd/sA3v2D+rC7aTysGAzzHVf5yXIB5IHGBjv9yEhnm0j0BCacxr7S6oZi5G49U0dA/GT4Bj+EAdLtY7FiQ9RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=svD9qBHY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DPrtvh6e; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1745881547; c=relaxed/simple;
+	bh=0PgKhQbGjNMa4yQ9lcnfermV7YSX85o0Zl+7gzx5SiA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NgkvNcsua9xOuWCaa9PoImGktfwxGlPM43xI43gNEogiUnuwLXYvNeSCyQY1VZSKzoYA9v/5vQ4Spud+gRNhFK6HnckxEV2fS0EDG+yiV+X7PIQNpJoS/ZdSekpPNFbP3Xd2GlUjbvv+rX7CEmQ1RTnlkuZdmCOtgNoPht5E46c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtGr9xTm; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="svD9qBHY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DPrtvh6e"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 776C013801AC;
-	Mon, 28 Apr 2025 19:03:42 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 28 Apr 2025 19:03:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745881422;
-	 x=1745967822; bh=pHqx1GykFQWZVkLUWBRThPy9+CwWC9fTddnGKdpIZK8=; b=
-	svD9qBHYmtIjhjQpMVYNcLKM3L5DMsZ+GLtDxJKnkAL9ezDGTpx8PO4hmqH/bjZG
-	l4aOu9BMs60Y8tu1ZYmVlgC2iSrsXzA8WsyyqGBLxinqxMlNS53VnCclGonXf3Z6
-	nTT+WxV/1/1BkGpqBpI7o2mee4PZ8XML4zWG6nNp9mpWK0aUMXFuVwRxKN1aNXBg
-	XDvpTjeZV7t56R5WYAEdrRPkLcuwOgULTycR6Ghi1Ru5fZAeCP1u7UdKO8Z+xEvL
-	ORJys3iOohu/axUUHvWkcQv21ClVqKWtVs3aawc5i3guHeNbRAf1DS19uMbMPLOQ
-	UQSIjH/jFE+Z6LiOV8qq3g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745881422; x=
-	1745967822; bh=pHqx1GykFQWZVkLUWBRThPy9+CwWC9fTddnGKdpIZK8=; b=D
-	Prtvh6eunoXGGqOO3tdocxwR2olO7ENAGzJJRfmzoJq0vgVV9cHUQERDfvZ8niW9
-	l6XhZF4NrEWWtQVNKeuJpN24Ae/bXlgd0SynS4b/Vpul1Ndq/k1eQbb47W5JXjh1
-	wmoX20IvsCGjJwFDyoWzjpyuYRbWJ6uoebFpEnHYKMsH9Z6Ti8wQvqzAz8Or7lc0
-	bJaRffxWmCLhLDLL65QWQQpQeQKGbfHJj+nxcVP0pqzEPlgAUo9+c372OK9MnfEt
-	xPApVdgKWtsVus0sL4U0Bqtx3idKg7Q6Px4nOw6OP4UaJX/hmEHYMsGAgGbAFqok
-	5OhOKuarou34GLf9YfpTQ==
-X-ME-Sender: <xms:TgkQaA2bIcG1Nf3RyyUwEDqolAzGxumyzsHNi2xue3twCj868fNe_Q>
-    <xme:TgkQaLHOjuqSV4jl9UltIHakDYXWqgyrZo9PEPvfJWAkks-voXC2wMXVhzyyJNyuc
-    pumL27saL5t4XJnyuY>
-X-ME-Received: <xmr:TgkQaI5fDS0v9TPs6eIzuxgmpyrtInt-G2hEa6GVuhTWeZVvaBp4_IJAsL58pAdIabC20ayo3VaDVXUPz0IRuazWG07_4AuU9g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedvvddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
-    houggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvqeenucggtffrrghtthgvrhhnpeev
-    teegtddvvdfhtdekgefhfeefheetheekkeegfeejudeiudeuleegtdehkeekteenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdr
-    shhouggvrhhluhhnugesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopeejpd
-    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhdo
-    rhgvnhgvshgrshesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthh
-    gvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhs
-    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhgvughirg
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrvghnvghs
-    rghsqdhsohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthhgv
-    hhgrsgdohhhurgifvghisehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:TgkQaJ2vVrJ4bgQKXSInNO6jD00iol9T9zT9OtgH7vAi_Kup6xCmKg>
-    <xmx:TgkQaDGYrxcHGBTQzpL8cOcE1tOBaqE-liHwpYRZvAmO9hsFWReKSQ>
-    <xmx:TgkQaC9vkiS0VXudaYBwRjIwiA12_eNnzED2D4qSmsnpP4q__Rkung>
-    <xmx:TgkQaIkiL9bMseCkW9xSoxCEqBDGEW-0WzzqjQK_vkQfy7eof-jbuA>
-    <xmx:TgkQaMQGYplNY4UH3N79MZMSAvOGCkP-ji9pk2aSDdf2YYssedBM8lD5>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 28 Apr 2025 19:03:41 -0400 (EDT)
-Date: Tue, 29 Apr 2025 01:03:40 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH v2 4/4] media: rcar-vin: Fix RAW10
-Message-ID: <20250428230340.GD1969140@ragnatech.se>
-References: <20250424-rcar-fix-raw-v2-0-f6afca378124@ideasonboard.com>
- <20250424-rcar-fix-raw-v2-4-f6afca378124@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtGr9xTm"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5499614d3d2so5697017e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745881544; x=1746486344; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0R4S0korJIrkvFdB5mdwO4NQZalt4RfkVbC62YLqZVI=;
+        b=QtGr9xTm6A1F24pnhsy1Y0+CnQhY5Dro3t4OV1UlOkywGkksYSs0Csu5BJfNHoxbFf
+         0+m8bee6y/QfLjWVVRoumT+VkyJAi/BsmSKGOWDTGblb8FQsyqxrVfVtpv2w40rr5e6a
+         s2F3Z4jtXAV3hOUOuX1z67NZRWEUA7KBJRzZVX4q7JqrLtcDZaqWKBhTDZ9Y3Y3NTeYc
+         7qvX7ysbeJS6Q11e0fNNygxOCJboUqJitrHwlZDFtHHkTaqygCwgndwxgmk1owxNTsM+
+         xVxYaZc2uH5cBCJOYtbVw9Naw1pIH0mJ/m2+Sf0iM6VrgSZIntZWNwav+CADtSdzFYe2
+         lhbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745881544; x=1746486344;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0R4S0korJIrkvFdB5mdwO4NQZalt4RfkVbC62YLqZVI=;
+        b=fb0s5F5BDm4Gp2Hjh2AXxA/5zGH0F/Cl7Ggd0vYQSTU45W8krkpoD+iIwXJpJzVk4U
+         Co9Ixkc4rbchvp9BnDWMaGDzgJoP/G96c8qvz+/5WklTuhE5cfM1SHG4liTXmoWok8xn
+         jgAUJyDyo6phmchPJcFiTDyxK+d1MLT718ERbNEnwT0mVw+I7t7XAHUVIg34c/7FXDjd
+         vCrNrG6cJBcibnFdGqn4tOV8QUi8Y5oc6MyfmKQgr3DiuJzKUclJ+R41KByDP5oil89s
+         AB+1hVUUCdjNVQMjS37WtidyfiI7VXjHsCoiHi6DVmjlocty6vYJnmQ3LW4sfmZ/Lnv6
+         PG/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWZcPCZ38FkPNMknWrfZnSyfDsz2Jgp/xLBWAf+c/czrwXmsFjzBCfTZOj5GHjGwNlGHcoJ8xNXgd0qTZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpfYoaRnsj1GsNLLsmMlyJthgewBZDy8/RvRc3JTfzQ6uByXSo
+	rVMfOUn2SqHhT0bSytsmfLAjhyKdX20RrdXAf6t2ZTeZEMMg/N2P2uVMAXHFN+tEMGlMLARI+f6
+	/nhMfzsRsvZZXkQZx2bef+Wg2YCflY4uhf58=
+X-Gm-Gg: ASbGncuErmp8LWbcHBrIbOIT5KyLRPfwUA5+TT1ANHOg1lAvqnM2DbQk/ZzgD26E9Mu
+	Nk0IEQ3o+QTNAULzkJ7PwMlTCSgjXzmnAB+FDoPEFBR3l1POANVTrePjlcO7OYR4z5ewUvYoVOR
+	5ZLLIU6Nb86sKTDoWdqsH6TgATRhi5Dz8uyb7uPwrrrSS0wRncV14=
+X-Google-Smtp-Source: AGHT+IHMtZ2H3E9dDAX+Lx7o7uEqvP6SiH/aFQ7OE7orf6EiGXGqwg/UlqZz7z3mMAwYhKQt1ZTox86LKxCvfNL+L8A=
+X-Received: by 2002:a05:6512:b18:b0:545:b28:2fa2 with SMTP id
+ 2adb3069b0e04-54e9daeabb2mr386730e87.7.1745881543829; Mon, 28 Apr 2025
+ 16:05:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424-rcar-fix-raw-v2-4-f6afca378124@ideasonboard.com>
+References: <20250427113529.1473800-1-suhui@nfschina.com> <20250427113529.1473800-4-suhui@nfschina.com>
+In-Reply-To: <20250427113529.1473800-4-suhui@nfschina.com>
+From: John Stultz <jstultz@google.com>
+Date: Mon, 28 Apr 2025 16:05:32 -0700
+X-Gm-Features: ATxdqUETLThP5uo4PFWVkPRipIHv_RwOQNEBYPTINWSsM8VaP1HCUT0gsYdiilE
+Message-ID: <CANDhNCpg0WRm6=7cb2pTqNswCE=3__7k6oFeGKKuZD7oQ_rmkg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] alarmtimer: switch some spin_{lock,unlock}_irqsave()
+ to guard()
+To: Su Hui <suhui@nfschina.com>
+Cc: tglx@linutronix.de, sboyd@kernel.org, dan.carpenter@linaro.org, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Tomi,
-
-Thanks for your work.
-
-On 2025-04-24 10:05:36 +0300, Tomi Valkeinen wrote:
-> Fix the following to get RAW10 formats working:
-> 
-> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
-> 16-bit containers, the bpp should be 2.
-> 
-> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
-> Through Mode", used for YUV formats and should not be set for RAW10.
-> 
-> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
+On Sun, Apr 27, 2025 at 4:35=E2=80=AFAM Su Hui <suhui@nfschina.com> wrote:
+>
+> Using guard/scoped_guard() to simplify code. Using guard() to remove
+> 'goto unlock' label is neater especially.
+>
+> Signed-off-by: Su Hui <suhui@nfschina.com>
 > ---
->  drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 2 +-
->  drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> index a38c7b835231..9de1d3d91fa6 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-> @@ -890,7 +890,7 @@ static int rvin_setup(struct rvin_dev *vin)
->  	case V4L2_PIX_FMT_SGBRG10:
->  	case V4L2_PIX_FMT_SGRBG10:
->  	case V4L2_PIX_FMT_SRGGB10:
-> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
-> +		dmr = VNDMR_RMODE_RAW10;
->  		break;
->  	default:
->  		vin_err(vin, "Invalid pixelformat (0x%x)\n",
-> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-> index 756fdfdbce61..65da8d513b52 100644
-> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
-> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
->  	},
->  	{
->  		.fourcc			= V4L2_PIX_FMT_SBGGR10,
-> -		.bpp			= 4,
-> +		.bpp			= 2,
->  	},
->  	{
->  		.fourcc			= V4L2_PIX_FMT_SGBRG10,
-> -		.bpp			= 4,
-> +		.bpp			= 2,
->  	},
->  	{
->  		.fourcc			= V4L2_PIX_FMT_SGRBG10,
-> -		.bpp			= 4,
-> +		.bpp			= 2,
->  	},
->  	{
->  		.fourcc			= V4L2_PIX_FMT_SRGGB10,
-> -		.bpp			= 4,
-> +		.bpp			= 2,
->  	},
->  };
->  
-> 
-> -- 
-> 2.43.0
-> 
+> v2:
+>  - Remove some guard() usages acrodding to john's suggestions.
+>
+>  kernel/time/alarmtimer.c | 56 +++++++++++++++++-----------------------
+>  1 file changed, 23 insertions(+), 33 deletions(-)
 
--- 
-Kind Regards,
-Niklas Söderlund
+Looks ok to me.
+Acked-by: John Stultz <jstultz@google.com>
+
+thanks!
+-john
