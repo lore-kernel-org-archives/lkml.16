@@ -1,137 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0861DA617
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D464E15748F
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745824488; cv=none; b=EhXzkTUmbQNVOmq6Gan9nZO5tD9Bs6wlt/41WCMD2laWM7ffDmmN+kjN6GehLrr1kytAijUFAaO3mPGG4Gbn9/ScdfSU5LfJZDMz7rrl2mD2wsIB62k+0mbBZSixUQ1tX+LadeuEOyPoKGN91AkfMd+kRcDZ3JdwHvmDQZsb7MQ=
+	t=1745824602; cv=none; b=mCcJ6LN8XAGuRFscnOAmF/Z57vvB88kQFMqn7dy8qs9fVOxKuLgqEuX2rznIAKZLg+lNRPzue4DQ+XjdddyuCcZVXTRnn+XFg8stxw2X+RGs06lWi2eHa4jSnFnuHc+nPDngUCuots+cdFSulzjndcpn+JvRCOv+iUTh/iHJif8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745824488; c=relaxed/simple;
-	bh=HU7iY1werGlJ+QoJB51RFGwv+gbaO9ieC2TdEUyfC+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kfax7K1DYg8UIAP0Y5pHyJPMIIdNdyO4NwGv+tLSmrvHhI8G28nogdxIC59rc1Z55O3VsY6tmERAqWAJ5zVONdeuPrjXAn1bX4WkLT4R36gISZssGfL+pgk9zlGAJ7U7nVkF1mKNpZO5nD5X13LCUGUW1v+CvQjunF3nkUD3Aoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHPzu1pa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745824602; c=relaxed/simple;
+	bh=KBLb/tzZzgags6HxVGiD3V3/GtAE+/sw48XMlxBGB3A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tUhcn9OhA3VMalVGynQ2ZJm7FblmJEltyCZOR7D/k4LsR6s8+tI762fRA4FP7KXZQSUaS3AeDa0V/AP/D+OelLGXW1mpzO53DJR2+xFtXiKsFd9LwJWAKN4xydlDzu+Tx+PnqtdwFT0ACKBhsw0C4j+aGYqyV29tysz/mlenJYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i2qS9m1u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHPzu1pa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74333C4CEEC;
-	Mon, 28 Apr 2025 07:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745824487;
-	bh=HU7iY1werGlJ+QoJB51RFGwv+gbaO9ieC2TdEUyfC+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XHPzu1paNX9zJyODrlzu6FElO4xhbEEZHYa20acxNqEtlqZF+nm4tKsTED6vEJvL8
-	 yTvbrFIm2nCrPIIUVDcY6KSQapmLZfkO5RY1hpBE5A/4rh/d1OhBNxm+FCcxnddYtW
-	 zrGxxT/iAqBcgX+g0nU6KKkNpaREP840N+xO2lkofe3/XyPCCkeUx1koDMsMSK9Hon
-	 I+ZymKySOfDFK8DBZfF9HKimQmUDUIQAFmsb7vG+5xsR7XxsQ+gB1MdkoglzMR3GXW
-	 3Qnrd6fTag/tIm9Obf/bxHu6QKnQUKfy65MVbupaRJc0jBWlC0zimT+7XGLduXjNH+
-	 uaHdoy5OwgT+g==
-Date: Mon, 28 Apr 2025 09:14:40 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
-	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
- handling to C
-Message-ID: <aA8q4Ot-1zTzv_Kt@gmail.com>
-References: <20250425141740.734030-1-arnd@kernel.org>
- <aAyiganPp_UsNlnZ@gmail.com>
- <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
- <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
- <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
- <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
- <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
- <aA8nF0moBYOIgC5J@gmail.com>
- <aA8oqKUaFU-0wb-D@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2qS9m1u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745824599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=16CNKajqgwGmZ8oI9vbBSydbJPDHhv2hM7VyKx5uLvo=;
+	b=i2qS9m1u4ncuH7r0iSqFcB/F69MJjbmS+AgqQEJMYkDK9AUsFsIOkCgYmuki98+5foyMQN
+	5Hly4BhwtnyL7jdGd/mReqycMAij/sPRNgzuhmD1Zh3tb2w27LynFjB09F0H/0gGq+eHpf
+	S3WUUqSYJtYtqcmxFjDw5Z/AMDHNMtA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-592-o3msMSZ4OxqM61ewL4GAOg-1; Mon, 28 Apr 2025 03:16:35 -0400
+X-MC-Unique: o3msMSZ4OxqM61ewL4GAOg-1
+X-Mimecast-MFC-AGG-ID: o3msMSZ4OxqM61ewL4GAOg_1745824594
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-440a4e2bad7so10280245e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:16:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745824594; x=1746429394;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=16CNKajqgwGmZ8oI9vbBSydbJPDHhv2hM7VyKx5uLvo=;
+        b=t6Awbd1BUp/5AXGbiWIHLsFAAd3lMrw39VND3Vm0u8qkP/oX2ym+y54J582Rmq5s17
+         7xmAF6WhyD3mUd5hkkdqswXQYy0YTlHeIPWY6lnESpqFxdL18paZi7Nt6Z8lbw7sWdXw
+         qniQuU2kZV9gRj2S53My0U4wOSJY5QCmbCbmH7RaH448frHsLZJq0r5azvzpJkPwth32
+         1s27K4Ux90unIWWY/g8hEbVye0DSHbqDanqKLgoFKCc+ufDpJVAvj2UTPAgFIpHkGJpc
+         +816Qyp6y9Hl9cHGn3eP+9pNzQqMmWX/tnKwvbQ71x2JA5xo2GhMZ0R9PfMlg8P8txTz
+         FC3g==
+X-Gm-Message-State: AOJu0YzbMeXWB/ZRnf0+Z9cZ7enZpZv8h7Yk3jk95JEBrrxh9HezhTYM
+	gn+S+rifi37GzUxSIex3dxs7widZWPtZBdiFI4Y8SFN7pDK5yIRFMPBrFwFQwJjYELkbIoVqY3n
+	wWIjvMfNsaEBL1bAxSb+m8z07h3K2YmPLIQs+By7V2lR93XHc3BDCurHI7kPaMA==
+X-Gm-Gg: ASbGncuYN4d1UcC2nrIZTSKEJGw3NBKvcm4HZxiRHC2NFPHpiMtc6sagAcfESewTofk
+	AOioYti4yHbgs1ObT2qMvDemcfzfmadGa5/g+IdmbbmPGcTS1VZiDvn5kg8NH5X50CO2ohs4Mnn
+	2Pu4jZwImPz1SGRxriRPg84TBdjMpJ3beAbMZ6HtoHQ6tj0cKPwOedNN6vg+MTijy7j8+Wm1a5S
+	kyXg2FSX1zt7Cc3ZnlhPI8k0IsFNtS8s0uizbTbBFP/jwGx2/kCpQxrRwISnu5d+Hvu7cNsV8St
+	+J0phUTRkJvVh0uFuXF46Hgsa275EFYwcPrlHK19bQ==
+X-Received: by 2002:a05:6000:4285:b0:38d:e0a9:7e5e with SMTP id ffacd0b85a97d-3a06d641ee8mr13559949f8f.6.1745824594520;
+        Mon, 28 Apr 2025 00:16:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIrPcunVHLnlQ1AatF9UYAiW856wnW8cOclcw7+LA1ObWz8K2SToJ1c1vlFs6uRPgv8kBJdA==
+X-Received: by 2002:a05:6000:4285:b0:38d:e0a9:7e5e with SMTP id ffacd0b85a97d-3a06d641ee8mr13559929f8f.6.1745824594178;
+        Mon, 28 Apr 2025 00:16:34 -0700 (PDT)
+Received: from localhost ([195.166.127.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46257sm10241681f8f.77.2025.04.28.00.16.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 00:16:33 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, David Lechner <david@lechnology.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Marcus
+ Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH] drm/sitronix: move tiny Sitronix drivers to their own
+ subdir
+In-Reply-To: <20250428-sitronix-v1-1-4e7cc0a8195a@gmail.com>
+References: <20250428-sitronix-v1-1-4e7cc0a8195a@gmail.com>
+Date: Mon, 28 Apr 2025 09:16:32 +0200
+Message-ID: <877c3421tb.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA8oqKUaFU-0wb-D@gmail.com>
+Content-Type: text/plain
 
+Marcus Folkesson <marcus.folkesson@gmail.com> writes:
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Hello Marcus,
 
-> And once we remove 486, I think we can do the optimization below to 
-> just assume the output doesn't get clobbered by BS*L in the 
-> zero-case, right?
-> 
-> In the text size space it's a substantial optimization on x86-32 
-> defconfig:
-> 
->         text	   data	       bss	     dec	    hex	filename
->   16,577,728    7598826    1744896      25921450        18b87aa vmlinux.vanilla      # CMOV+BS*L
->   16,577,908	7598838	   1744896	25921642	18b886a	vmlinux.linus_patch  # if()+BS*L
->   16,573,568	7602922	   1744896	25921386	18b876a	vmlinux.noclobber    # BS*L
+> We start to have support many Sitronix displays in the tiny directory,
+> and we expect more to come.
+>
+> Move them to their own subdirectory.
+>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
 
-And BTW, *that* is a price that all of non-486 x86-32 was paying for 
-486 support...
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-And, just out of intellectual curiosity, I also tried to measure the 
-code generation price of the +1 standards-quirk in the fls()/ffs() 
-interface as well:
+You can also include the following if you feel like it:
 
-         text	   data	       bss	     dec	    hex	filename
-   16,577,728   7598826    1744896      25921450        18b87aa vmlinux.vanilla      # CMOV+BS*L
-   16,577,908	7598838	   1744896	25921642	18b886a	vmlinux.linus_patch  # if()+BS*L
-   16,573,568	7602922	   1744896	25921386	18b876a	vmlinux.noclobber    # BS*L
-   ..........
-   16,573,552	7602922	   1744896	25921370	18b875a	vmlinux.broken       # BROKEN: 0 baseline instead of 1
+Suggested-by: Javier Martinez Canillas <javierm@redhat.com>
 
-... and unless I messed up the patch, it seems to have a surprisingly 
-low impact - maybe because the compiler can amortize its cost by 
-adjusting all dependent code mostly at build time, so the +1 doesn't 
-end up being generated most of the time?
+-- 
+Best regards,
 
-Thanks,
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
-	Ingo
-
-===============================>
-
-This broken patch is broken: it intentionally breaks the ffs()/fls() 
-interface in an attempt to measure the code generation effects of 
-interface details.
-
-NOT-Signed-off-by: <anyone@anywhere.anytime>
----
- arch/x86/include/asm/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index e3e94a806656..21707696bafe 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -318,7 +318,7 @@ static __always_inline int variable_ffs(int x)
- 	    : "=r" (r)
- 	    : ASM_INPUT_RM (x), "0" (-1));
- 
--	return r + 1;
-+	return r;
- }
- 
- /**
-@@ -362,7 +362,7 @@ static __always_inline int fls(unsigned int x)
- 	    : "=r" (r)
- 	    : ASM_INPUT_RM (x), "0" (-1));
- 
--	return r + 1;
-+	return r;
- }
- 
- /**
