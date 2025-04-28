@@ -1,137 +1,84 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CC026AF6
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042BD26AF6;
+	Mon, 28 Apr 2025 18:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745864190; cv=none; b=sPwU9L+tfBYQqjugyfopMJIcWWJ3Tx/VM/ngcLACfuEEBJZprKnHZopw4O4AEZfwGmqu14ma2Zavn1YIwfq8f2CiYFTRwzfMqf8/OyF60/W1ol+NgkIAXxt7ECuv+QpUA57fxLhvcShuVzx61a9UNcD8UZ78dFvj7lhUk+fui+4=
+	t=1745864200; cv=none; b=LIX+TFR0OPRaYL1hKpoHY47o+WoXALpy0tXHCQ3DtvjNxTW6SwF4q2IucRNfaZCI0A7UHUUALU9NNQhuVFcswtf8RDQ5er29o1BQta3SSOo/mqc9k/0ytYsMRT61MaWBxMYBfCXTLnoEnjyDObG9VYYAUTEr1KxtiLPjDg9Bw2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745864190; c=relaxed/simple;
-	bh=J2NjDwqxbCREVF7cYbxWhVeVD5IjGCL+8llBMNF4IB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NsvALyJeJlQhUnVer5IWxFtcRQaAzADMKlBSfio3NEj4bs6zQY89D6lbVnQ9bSMi9PgpAxM/cmLEayj8d6LkLtx5DwIhp61gYX2qHf0VZbwv902TNtvfD7inkUVjCq2/AtzJ2yJYlx8zlfcyZS5pK7RLzoa3SIDANUBPRJO7Tuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=U+dlezha; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745864200; c=relaxed/simple;
+	bh=LTWucmA5QArXmJiKqCaHcfaGujpFrEweYB221Xdig9E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AFpZOle2oB2PWNG47faRFQ3XErERPpYB1XXuVGDfuziGn1t6zSE/fwr7u3rcu33eo4xMngkQZ7DjG3E26QMpOY5pw1emInOmPZebdwrahxB3815/niZdXrR+z5aJ9aaDNW4JmbFXyaS0fQ9XSKov+nqf8g0AIt1a6D+StgNzl3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8A1tUd6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="U+dlezha"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SDKtlp014200
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:16:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pyzYPzNdKJ5hQ6D4PSTvT03qdPB40WqZn1pcHvBuv1I=; b=U+dlezhaBSxpQQJ1
-	hbS01xOAyQrW/KVOqtyup9H//GPuLtniOmmFvSGngRTTUkDSFpxwTO8AuErYjhKf
-	PatmdMrXCAfq796TA7HUFXXGDw1FRpFyJnIkyf6WZ50dSNWk6c5mOxB1tCKbSfw0
-	KHVquU6LRrvwJ9BRZUeUQh/ZM/ps0Pu1VpORuRMYtAhi0bq3vOJ8tC6yOHINJ0RW
-	DOUFNBypgdE0aMT1+ZvpE6czD2SvcPQxRgWIe0l/fL5/1EzHVWXT7ZLNQjkeWCwA
-	sCqeIc2J45eoPa/6wx9incf5JhFD4HuqI710wfbDZkqaSMzy8hZ+tlmF/5xgIQR3
-	HrEJRA==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468qq5h6j5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:16:27 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47983a580dbso10849901cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:16:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745864186; x=1746468986;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pyzYPzNdKJ5hQ6D4PSTvT03qdPB40WqZn1pcHvBuv1I=;
-        b=OKTpYgEUH8j8qn3+BOgLpbkpa8LZhpVYtY0eEKSxK7XSZU6x48sHy553U/kM++Nsc4
-         DWSkfXzRVfJtPT8ZTG3FGXNfy5682cqzYtOgSdOrx7dzKZE3olHnGPD2PeVt/sTQ25Ke
-         Ebmc5U6Y1psZW2YcchycVag95XaHIZlGDgHWgoPTPaAhTIp7US3v65Mva0Rm0qJMS6qb
-         J5gHEy1QyfpR5432Z1yMoBhfF/lhyrq0W51O54F8iVxABjN8s1xewVj1zegs2IVVBBtM
-         X74vKYe2gHsiqsw2wtxsgMCePnf6Kt1YlX3bF9kfR/zzk3bwctR4PhAbIZV6ggAVZa7E
-         09vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVj+i876HqyhlC5ywuHjffMhLYEyGgXKjN4oR10A/19eK3jvkipyDAbv5jHIEBdK8WUNdV7cTcUbYXVWWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmbohCKIwf0ZljRgT3TRqxa3VnYA8teOFp48bETIirFgrTcYH3
-	wEg9utT/do4VW9u+dZpjqKpvm6f3ZS2/2OLEaq4W+FR+8UzDl8sda+rCSxP77eu+XZXDZF4kBEL
-	adlpKkJKB58qDvLhtaaPW4u9CPOM8ionkJSV1ZnpfqgEytTcnynOqW8MWIwTOb+Q=
-X-Gm-Gg: ASbGncuOvEAJt6ihnJ8uwlcOYS0abVsENmOlQ4Tk5l5MOos6LpnEW1nRgo/PLJ+qf8M
-	v8WYnRI+64UXUTR7AdRas561u2oudPz3dZ7s0oyWaO6EzkBsArvYBhESPofMMCGoEBh1t6DbR1+
-	Ysn3h11qdfyWZzRnyCRQW7dl5iKbqxmQAzo37teAT16GvTjoIdw7CvkD1uwi5ud1bN3WMrxJr0h
-	Rv1EnPAkkgIWKRjUT789FftGHbq/PRt4pJPvCbOwqeJKYxPhdnS0EggK5w3f9P8OAujtyr0ZbAJ
-	BM17wXVjPOOI4WvJvG+Z/P2t7+IqxIJpkZt0jXErGWz+nYtYuv+7vE1Fzl/IxwFjkw==
-X-Received: by 2002:ac8:5709:0:b0:476:add4:d2b5 with SMTP id d75a77b69052e-48864dc24aemr677521cf.2.1745864186513;
-        Mon, 28 Apr 2025 11:16:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFiBHTGPzXdz71tkCZQWognqMTsRKpmoKTruiCpJpeGT+JHe1UiZNWbwkpyFf9Bf70YBU8p6w==
-X-Received: by 2002:ac8:5709:0:b0:476:add4:d2b5 with SMTP id d75a77b69052e-48864dc24aemr677331cf.2.1745864186191;
-        Mon, 28 Apr 2025 11:16:26 -0700 (PDT)
-Received: from [192.168.65.47] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecfb339sm658100166b.115.2025.04.28.11.16.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 11:16:25 -0700 (PDT)
-Message-ID: <4b467493-5ea1-48d9-b4c0-56f05b7edb46@oss.qualcomm.com>
-Date: Mon, 28 Apr 2025 20:16:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8A1tUd6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1E1C4CEEE;
+	Mon, 28 Apr 2025 18:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745864199;
+	bh=LTWucmA5QArXmJiKqCaHcfaGujpFrEweYB221Xdig9E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=F8A1tUd6vekn0150oPD3r7iCDzXFxcxozbBlK4ubr2loaK8uSlCF5Wi6+2Kl+6Iu/
+	 iVn5p4rA5qmomQD/OjD37QPMu5F8cFOFfXkAz+cXYbhsegS3Fc2qmHj8Uyuhl3BVHL
+	 ggIz4YqfK7pfv4ZqEatUZzSEdYIXZDei/Vwp3bwRjDDxBMF63979359Ab29E66xeci
+	 OJMf6nkI2An0BF4W0Wftaxx2KUeBkqjwiT2iIXOgIHmx7ejFMAcGIqOFwqAoaJjmtN
+	 BJ548IUOVpGL2tStjxg/Yl0+IE0FnlrZQMqvC16ZeSw5Wig1mvY2Sok+bWUTpyoAnR
+	 MIkBPIUSbGbiQ==
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c559b3eb0bso305234885a.1;
+        Mon, 28 Apr 2025 11:16:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3c60BGEyHG8DXAdA0WopyoSrwXUnkuFike1NbwmkkBvy1q7WRNsox0OciZD+lEK1+iVVhjJYKdhc9evm0@vger.kernel.org, AJvYcCVKdS72NMBZpJnTBWtoJYf8v932uroBR9b/H5n5wyqb5iv4U0iR6Fk1D5NgNl7JOiOUCUBIxOc4zCJpBCruYsm+@vger.kernel.org, AJvYcCVzSVKjYOMY1g50dtEK6Ysx0NzT2j89en79QcPHwxNNOzNMFJGRFDdLlff+U3KU71CSvsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhGwFn5WqaSDgSy86yeTd6IRolEnKEiHAy7bnjSHmLaCKkD0ie
+	xWaVbqAJM3nepzcpGyEXWotFu+GFVvPZMRwZaaoWIm+ejZhsESCm5fMt2PFsgTaASjzFPyScuKH
+	xK7vszxvbMhFJqv73MJZJZi5/oes=
+X-Google-Smtp-Source: AGHT+IEG76nmyhkuJhZJM1YlhssBhIEISbVFYcNrAKVYzp5llD/EZQUCazNjmvrM0m4H32FVhUnXAkWHvufEX6CwBsE=
+X-Received: by 2002:a05:620a:4590:b0:7c0:9f12:2b7e with SMTP id
+ af79cd13be357-7cabdd6f780mr104404385a.11.1745864198561; Mon, 28 Apr 2025
+ 11:16:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: qcom: msm8998-lenovo-miix-630: add Venus
- node
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250425-miix-630-venus-v2-1-cdfca385a0c8@oss.qualcomm.com>
- <CAOCk7NrcpwAnUKcVsc5D03Aazt=qWLZB034xa2FH2PF9LuL6ZA@mail.gmail.com>
- <vxwbzzds4lkixt2zsvjwnmfk22u3mmvp3cqk36aak2thomyagu@znr6b7gcue6w>
- <CAOCk7NqLQdpbvdknEHEB0NNU7OPhmmHkH3Q4PCYiOzf2fBQBkw@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAOCk7NqLQdpbvdknEHEB0NNU7OPhmmHkH3Q4PCYiOzf2fBQBkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: wu52Gg8p2jTYSRHN_hzqm-y51a_2jA-M
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE0NyBTYWx0ZWRfX+sHgsg8Auezl 4PXX7LUmOFlwLKMhJ3t099ZIRnei73HTEb7jwU8WKPbYTJ0JYBOBYwK9f7axFumw0G1zjGIZ9mM OqA/bvDTmPelGI3hchaT6eOW38FrE/Rey17BfDHQgt7+NBE4MvzEbQnSfRSgvccvpa7cLyo/9IO
- fD/cm/6FNe9V/mpYU3L6Qzi280nSLvm+h1jVFjjshV6Riqmx5kCLdsezwGauhaRAyIo1AdiRfCG KaKVSq2YLsojDgre48LWYAcwi8rrqQsfU8fJYrKXOIbssPWLc8EPRWfe73KX7DM1oQLHkAhzH/H BHzaDOG0QCAzu2BFwkI9MINgqvymm2cD+osxY0H/Q3VQ42halo3qpcHMUUB3hW+yP1Qryc8HdGa
- iA0br1mu9PacRIoYZTuxRh9usEZ82lXcjpPT+v4dFlT5D6u+S2uN3e0/+pGtsuP3g+c80MGL
-X-Authority-Analysis: v=2.4 cv=QP1oRhLL c=1 sm=1 tr=0 ts=680fc5fb cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VeHn5rkiVmJbRrHcbRoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-GUID: wu52Gg8p2jTYSRHN_hzqm-y51a_2jA-M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_07,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- clxscore=1015 mlxlogscore=999 lowpriorityscore=0 adultscore=0 mlxscore=0
- bulkscore=0 phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280147
+References: <20250428180256.1482899-1-tjmercier@google.com>
+In-Reply-To: <20250428180256.1482899-1-tjmercier@google.com>
+From: Song Liu <song@kernel.org>
+Date: Mon, 28 Apr 2025 11:16:26 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5m32t2-7f6EH+A35-htHcL-kQToJ=_Z2BEBe8dK9xyOg@mail.gmail.com>
+X-Gm-Features: ATxdqUEfqMGxBKalVPnccR6NYIdAiyLCB71Tw9QjYzbC0c75PUlTpGO5qpjNSRM
+Message-ID: <CAPhsuW5m32t2-7f6EH+A35-htHcL-kQToJ=_Z2BEBe8dK9xyOg@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Fix kmem_cache iterator draining
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/28/25 7:48 PM, Jeffrey Hugo wrote:
-> On Mon, Apr 28, 2025 at 10:21 AM Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com> wrote:
->>
->> On Mon, Apr 28, 2025 at 09:40:52AM -0600, Jeffrey Hugo wrote:
->>> On Fri, Apr 25, 2025 at 12:28 PM Dmitry Baryshkov
->>> <dmitry.baryshkov@oss.qualcomm.com> wrote:
->>>>
->>>> Enable Venus on Lenovo Miix 630 and specify corresponding firmware file.
->>>
->>> I'm curious, how did this get validated?  I didn't think there was
->>> enough infrastructure enabled on this platform to check that the
->>> lights were even on on in Venus.
->>
->> I must admit, I basically checked that the firmware starts up. Marc
->> Gonzalez worked on enablement of Venus on MSM8998 (on the freebox), so I
->> didn't perform a thorough check.
-> 
-> If you got the FW starting up, that is farther than I expected.  I
-> must be wrong about the capabilities then.
-> The DT node looks right to me.
+On Mon, Apr 28, 2025 at 11:03=E2=80=AFAM T.J. Mercier <tjmercier@google.com=
+> wrote:
+>
+> The closing parentheses around the read syscall is misplaced, causing
+> single byte reads from the iterator instead of buf sized reads. While
+> the end result is the same, many more read calls than necessary are
+> performed.
+>
+> $ tools/testing/selftests/bpf/vmtest.sh  "./test_progs -t kmem_cache_iter=
+"
+> 145/1   kmem_cache_iter/check_task_struct:OK
+> 145/2   kmem_cache_iter/check_slabinfo:OK
+> 145/3   kmem_cache_iter/open_coded_iter:OK
+> 145     kmem_cache_iter:OK
+> Summary: 1/3 PASSED, 0 SKIPPED, 0 FAILED
+>
+> Fixes: a496d0cdc84d ("selftests/bpf: Add a test for kmem_cache_iter")
+> Signed-off-by: T.J. Mercier <tjmercier@google.com>
 
-If PIL accepts it, it's basically good to go
-
-Konrad
+Acked-by: Song Liu <song@kernel.org>
