@@ -1,66 +1,66 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B1D265CD2
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA040267AE4
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840172; cv=none; b=eIE4isilrorbxa3V+Va/ad/8kQCh3oUDMg0Rx6vc7eC7feYDSqg4AfOTAGMe5xriIGvQNR1TpjcPz/zpIHyg6J6K1EWmgojFxYoXO5Udwqd+LqYfpzwGK7zr2UeFrDLu/CUk7X2pgdwap96oxMmklIq7p6omaB9aFjqEN0joaII=
+	t=1745840173; cv=none; b=dv8xK7QA6dIDyPxnOda7sN53t21QSO6rmh+Sf07K+jqrYBLSTAsDva81KpMHVSEtxWPG/uzYvTFwBHQTOVkQ1Y5GvA2BSWtYg5HBHNEONIKhbdmE9tOHA12fwJL9+/C8oVQz7bSfDlz1Yl2lRKmWDlYS2AsQB14IlIxH0UB0qOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840172; c=relaxed/simple;
-	bh=fxP0E3oz31A0KyqJHCt4y3Tc5HhatDkn1hFi7T2wZvw=;
+	s=arc-20240116; t=1745840173; c=relaxed/simple;
+	bh=czCaHwjdEKe3NKt0rJIH+1zUCm2b7l284FqXlB+S5Vw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NBcs7io7gJreeCr6sSNpQGKXGGM2+vj80oDcn4xiKShCY6XB/IFxtA6I+VbilDZ916x6FJWGzcctESikonpEq+tPZmf2HkRI13tC+qIJTJq1HilbIT2FJ28PXEbNs30z4MF7ER/MSLEK+l2u1pahJaKsPcHweEMmji54ah2Tee4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Saoau0wL; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:To:Cc; b=Yg5udvTK5qiWBxkUEeKgOxD/HmTRcDXNqpkw++X0dgQ7ecfb6ubSuYUe/AKdSPxM7GlniRn0Z96C3G33azZ0JtTm09ETzU3+ipboc8OtIu45a/bz2YRiCXY+jdZqS7dbWc55ALmUyKorqdklW+1TkNS9ikzlZNkuGuK5IQ9/Lkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ot1E999+; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Saoau0wL"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so894068466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:36:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ot1E999+"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so8495109a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:36:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745840168; x=1746444968; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745840169; x=1746444969; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JJrHTizPWTsQy0MnTcATy6dqXS5edeA6vLqdvTWuGUs=;
-        b=Saoau0wLBhkrpZbYWZuQbyRR1ITEtrJCc1GFCiqLA7RzJlt23CnoP+JZcHVMyE+4nJ
-         XWincusB+epT1ALz34ppRzKxCNQ0zTw+gh5PLBdfjwdlYCvH9IplIB2aAAzYpy2+1/Mw
-         p9PBjWvfgpKj8/MKfChYs6eRna94BFMdpXQgQd2tIfHC5LAqmcBM4jgzth478TU1JA3O
-         LmzOEAnj6vVQ3GdJOTHRFaPvSydjDuuVD07VI7JdgXrh8g6yhnpSLrJzHvqWFsaw4UyT
-         9X09EeqA5dcSVWLDhviU+AWpZ3NUIAc6koMX7eD+hKqmdIpsb19yIwHGf77lNksF9G9h
-         6Pvg==
+        bh=8VxOVJp6hEBHMDCosFs6ZILrioIDtRgANEDqPaH5GyA=;
+        b=ot1E999+n4zAfsnQhrEexGU6YI6Ag7M+zN6Y05AXOIbClgut8fGFMmjly6tHZWZLe4
+         cotflAjRhvOMEjzGezg8VP0loOue2T+fw+zJBHc8llq+4Y3Yd1uks/UAt6VHI4vcxqkI
+         jRDT4La8wfvXEX2+RBPW8su29PcVisNlSKcDbMPQhWqvknuY7fc2FxPDFNQXYH9XD+5v
+         QDapUbV56oSZlZj61DsXwPuQOUwJ9sZ8EzhMeCsb7+KavosPNy0Q56AB2JBOjOK5iPCh
+         OyxNwncNxT6LqB4P7LOrikQ6ZJdWtYn3i/qTbwBM7y+EBlQH/SgzNDTwYIpb49qX2XHX
+         RrAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745840168; x=1746444968;
+        d=1e100.net; s=20230601; t=1745840169; x=1746444969;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JJrHTizPWTsQy0MnTcATy6dqXS5edeA6vLqdvTWuGUs=;
-        b=MtQqgVkWV0ta85sgsA3ZT2s+0lrUIdlafs346xbT/mKva2YqhybS/nXd1m8/f2XDB6
-         Sgif44jJVCmRx8odt/ecSUWFrY07pVMi05r6Lz3lsGKf/B/BMlJMWUdBGNthM9mbnQqO
-         L4x8mxj4RZJYkrPSrFkPM/yVpuMELlDTxqKiY7OO1nG3p887loLdQJlfhzOj3bJn+rHr
-         xJLkAuquW2PDs+UNbY12geDJCC52aEVi68Tjo0ZMvHJnF/naIMA658j0MiQmBJxj4UnL
-         ABw1Lm0uSBSo0JPvodiDnZx8qJdA7AGZxOomYmRjTzyJ0B0OmFb5x4dwIKNwWys2Lo5i
-         J60g==
-X-Forwarded-Encrypted: i=1; AJvYcCX+I6+kRxfGTcX3Ly0MqvoUFSFvaNxqtYQJTCr/fBPme/KQ291wDDO6N9vN5X+dyREBRsMRbK7CNxZgUDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt2HhXVC07hhBypqh/vIp4ryy1WD9+/UodLnGeK/qXq4zbWJZw
-	Q7RwBaU/k5sDKTxxck8wyEJUoa+U+u0PGekKmwpq91+4DgWzPuNj2LSDhIIO8ZE=
-X-Gm-Gg: ASbGncsK5hBFdBpqqHd+4x0JnFWI90EOBiNU6uDRiYIBZznfu4Dv1iZLOWRNpC+UA4J
-	TUUzMixrg+SkW27BmWzxgeM47QxPGi7l/mPQp8t9/yK8KHK5VyzaBTPcJ5Idiou3Ec7L1xBQUIr
-	sp3xctUIU+pSyXHWG7fcKdgTd5k3YNGwihionaw5Sprilj8iWWQ9cChHZekmlLBv/3mgij1a4Mb
-	ruMFPpd+IWDfTAE+XSmAABCQqWWABEPaJIMHdvUBx9eG+2PE0CGCq7dZ2pYBBHUlC94K2ltDztg
-	Ngk/K3h0KDdDObqBmA1Sr5uYZq8lr1cbyCQMhCl3FYEVr571D4GBpg7yTbF0vlMQQpTaUKZjMGU
-	XG1m2zroc2hW7sN4X/Od7BUjJ
-X-Google-Smtp-Source: AGHT+IE27mdFaZB6jZVVsaB4JQjYpoU/Ho+LVougKPbVNZmJzND9lyh1kpDE5xRO5oFbeL2yqRSVeA==
-X-Received: by 2002:a17:907:7255:b0:acb:4f46:9d18 with SMTP id a640c23a62f3a-ace710384b7mr1113661266b.3.1745840168003;
+        bh=8VxOVJp6hEBHMDCosFs6ZILrioIDtRgANEDqPaH5GyA=;
+        b=N5267UCbtgiH2UNhAQUbU/rGwTZ4q4E4rZEm3rr5GLhVFcRXRGCu7vA7iiWYhOcNKv
+         gXxr1oUQ5u8YIzjsEM4ylCyEUPN+lFhgmguWDgpj6sixH4gLD3BrLecloeSUR7h5yx9y
+         OpIxBsmk4E+RUJPzaAxVjnXDkAQdJmEdEBxMEA4ARAOMTNPRYtVMAFCrxg4o4EVtv6OJ
+         te1YXaXKqrl8et2acuSicqc7m4g//48pMgUGr0NW6gKRON4Yp5eeN5D6T8VF1EfqiWs1
+         HxVcXY+Olp0stpuX0ATNqqajHq0xB1B2EuuXiha6hWXAJQUlOWoI4DW9VCzT3MIxLNxY
+         GpZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Jv/GOZB+jKGG410DmKIr4hxQlKEO+BRFXYF/WIgBMtxMvhffNFFm76McGoczlZhHFrzq+bXnrG6tp7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHTHcjVqPRnT5s00yNH+lmZDORc+adrMjGvMHagczcG/9a0lM1
+	MEs/oSj4LOzICvAnEZ+ET14kRGaq1GdJmDjR+tj5QuL0rMwhvTIWePcmGTxACyM=
+X-Gm-Gg: ASbGncsvtAQYb4dvnBsTeXhtQZZh3E5CB7zNBywP6leKX+eVpczVCa4ZMf+UMSnbnsc
+	rkcgRzmR69cScOCEXL00vZWT5F53cfo/R8KbYpPDVEAaiQaYtPNAm03PMtjMdg6ttpq9bAdEIH4
+	DPK5iUAbwPzWKr4AiBEKzbBtKKGb964zUUvGNgkii7SgUHm1fc4R0RJD/E9MO+cS48yYrrltZEH
+	M7N/V5Dmj5xzxeA31lfJ6ehFHHO6VaPYX6hxWFo7FJz9gTlFWsjKNu+yfPOt1MQYjsH4xIW+Voj
+	1hL+zGErStyDHwV43DYDTtijMS0tozvuAqM6fpU81dN/6elBzxBV2lzJMwR2ItOBCR8k7DtceUy
+	65GRYcNbrFKaQeQS+ZQ/Nid6u
+X-Google-Smtp-Source: AGHT+IF2Mpec2Ou5p/cywTqDhvwcf0ewlmn9clUMEbkPcU/0VUXa88a61N24Naca0NbKAtf/tGsywQ==
+X-Received: by 2002:a17:907:9617:b0:aca:d4f0:2b9f with SMTP id a640c23a62f3a-ace848c0531mr707750066b.10.1745840168997;
         Mon, 28 Apr 2025 04:36:08 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb1580sm619937766b.175.2025.04.28.04.36.07
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edb1580sm619937766b.175.2025.04.28.04.36.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:36:07 -0700 (PDT)
+        Mon, 28 Apr 2025 04:36:08 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 28 Apr 2025 12:36:04 +0100
-Subject: [PATCH v7 1/6] dt-bindings: gpio: add max77759 binding
+Date: Mon, 28 Apr 2025 12:36:06 +0100
+Subject: [PATCH v7 3/6] dt-bindings: mfd: add max77759 binding
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250428-max77759-mfd-v7-1-edfe40c16fe8@linaro.org>
+Message-Id: <20250428-max77759-mfd-v7-3-edfe40c16fe8@linaro.org>
 References: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
 In-Reply-To: <20250428-max77759-mfd-v7-0-edfe40c16fe8@linaro.org>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,94 +84,138 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
 The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
 includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
 Port Controller (TCPC), NVMEM, and a GPIO expander.
 
-This describes its GPIO module.
+This describes the top-level device.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-v2:
-* drop 'interrupts' property and sort properties alphabetically
----
- .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 +++
- 2 files changed, 50 insertions(+)
+v3:
+* drop gpio-controller and gpio-cells, GPIO is provided by the child
+  (Rob)
 
-diff --git a/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
+v2:
+* rename expected nvmem subdev nodename to 'nvmem-0'
+  I'd have preferred just 'nvmem', but that matches nvmem-consumer.yaml
+  and fails validation.
+
+Note: MAINTAINERS doesn't need updating, the binding update for the
+first leaf device (gpio) adds a wildcard matching all max77759 bindings
+---
+ .../devicetree/bindings/mfd/maxim,max77759.yaml    | 99 ++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
 new file mode 100644
-index 0000000000000000000000000000000000000000..55734190d5ebdbc351e1f91675dddd8a9db80cd7
+index 0000000000000000000000000000000000000000..525de9ab3c2b7b431e48497330640857540625b1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml
-@@ -0,0 +1,44 @@
++++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+@@ -0,0 +1,99 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpio/maxim,max77759-gpio.yaml#
++$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Maxim Integrated MAX77759 GPIO
++title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
 +
 +maintainers:
 +  - André Draszik <andre.draszik@linaro.org>
 +
 +description: |
-+  This module is part of the MAX77759 PMIC. For additional information, see
-+  Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
++  This is a part of device tree bindings for the MAX77759 companion Power
++  Management IC for USB Type-C applications.
 +
-+  The MAX77759 is a PMIC integrating, amongst others, a GPIO controller
-+  including interrupt support for 2 GPIO lines.
++  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sensors, USB
++  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
 +
 +properties:
 +  compatible:
-+    const: maxim,max77759-gpio
++    const: maxim,max77759
 +
-+  "#gpio-cells":
-+    const: 2
++  interrupts:
++    maxItems: 1
 +
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 2
++  interrupt-controller: true
 +
 +  "#interrupt-cells":
 +    const: 2
 +
-+  interrupt-controller: true
++  reg:
++    maxItems: 1
++
++  gpio:
++    $ref: /schemas/gpio/maxim,max77759-gpio.yaml
++
++  nvmem-0:
++    $ref: /schemas/nvmem/maxim,max77759-nvmem.yaml
 +
 +required:
 +  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - "#interrupt-cells"
-+  - interrupt-controller
++  - interrupts
++  - reg
 +
 +additionalProperties: false
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b2c3be5f6131432647dd01f22bbf4bf1c8bde9e6..e4115fd92e879706d999fbccc2e41a97222eb0fe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14656,6 +14656,12 @@ F:	Documentation/devicetree/bindings/mfd/maxim,max77714.yaml
- F:	drivers/mfd/max77714.c
- F:	include/linux/mfd/max77714.h
- 
-+MAXIM MAX77759 PMIC MFD DRIVER
-+M:	André Draszik <andre.draszik@linaro.org>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
 +
- MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
- M:	Javier Martinez Canillas <javier@dowhile0.org>
- L:	linux-kernel@vger.kernel.org
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@66 {
++            compatible = "maxim,max77759";
++            reg = <0x66>;
++            interrupts-extended = <&gpa8 3 IRQ_TYPE_LEVEL_LOW>;
++
++            interrupt-controller;
++            #interrupt-cells = <2>;
++
++            gpio {
++                compatible = "maxim,max77759-gpio";
++
++                gpio-controller;
++                #gpio-cells = <2>;
++
++                interrupt-controller;
++                #interrupt-cells = <2>;
++            };
++
++            nvmem-0 {
++                compatible = "maxim,max77759-nvmem";
++
++                nvmem-layout {
++                    compatible = "fixed-layout";
++                    #address-cells = <1>;
++                    #size-cells = <1>;
++
++                    reboot-mode@0 {
++                        reg = <0x0 0x4>;
++                    };
++
++                    boot-reason@4 {
++                        reg = <0x4 0x4>;
++                    };
++
++                    shutdown-user-flag@8 {
++                        reg = <0x8 0x1>;
++                    };
++
++                    rsoc@10 {
++                        reg = <0xa 0x2>;
++                    };
++                };
++            };
++        };
++    };
 
 -- 
 2.49.0.850.g28803427d3-goog
