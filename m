@@ -1,121 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED76027A121;
-	Mon, 28 Apr 2025 16:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D741262FCE;
+	Mon, 28 Apr 2025 16:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745859055; cv=none; b=cBXI5RG0ElL8gx6s9k64Ij7jMvHE0LBwlEjyV4Gw3jH8NiZv0ISG5pUahj3vDm7a9hTPmKGP7VthevX/+FJeVA63zUcZ+cYb5jBIXm6fEnQG6sUoxKU/KUUnEImFF7cEe1uvaKMvurVeqlVg3o/dT/OJxVmTisUx0oOrdi48tGY=
+	t=1745859098; cv=none; b=m0PonB+72TkJC7wvX8bkiQOroZW+tXL3VWHnvDNjcV60B06FF0/jC4Soj/tcQUQU0vyIh1ByhH2yjbnExiB/rEXq9ECq2zhmLjc9CtS63G3JLKM5v1fqQlzbWTgYuP4mEaU0E6aux44WR0SDJnzRwixCA+MF3anJHc4dAE1wRpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745859055; c=relaxed/simple;
-	bh=w8GeZnfKH54B+v/IYdcqkdWVdQCakOpqtic13lGX4Zw=;
+	s=arc-20240116; t=1745859098; c=relaxed/simple;
+	bh=oEmUhIZbZAiYMOXn+vdBkUJvA4KYj2yAlYhV5SRxVNA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N0/ulx63MpS1VXG2KDAtRFi4k7cHttKCFFLbiAOFaXKyX+u1jesN/p92yxlVsJ9myE6bpK69wHUcWNshFm/YP4PgiCiU8i7Uv5V2mMuYITZyT8gK9jD/UCpqHgSOcTHy9mgPwnF5HeWcmwm+2scelj7ZA9mbwQaIb97IWRxRx14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl1YQ7se; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+H6q+lF60pEeJ1Cg8lyago5lFkHwidK9fZWTjVsbTM41JWet3knWt72CDLJRItcw+sqUEFW2ugV5EjtkkvEYyl/9Vff1bSMXpGJIAH6zrXNCoQtYpI7dawLquGrITtwfbJj/aR48geF48vq7WKgC8IlhRM7czguGMkNcbihoiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BqdlwEzT; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl1YQ7se"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D10C4CEE4;
-	Mon, 28 Apr 2025 16:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745859054;
-	bh=w8GeZnfKH54B+v/IYdcqkdWVdQCakOpqtic13lGX4Zw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zl1YQ7seWqYm7DELGZwOo1oAwoe1+S11syjyi5Ia9aq4xVSUQhxNm6VSwt05ST0Hb
-	 Xu1Qr2lGagi56zAKiit6UXOL1+VoEQ8Md5ExCthQ7PEbMqCpb4+i9KsLEIqE/LjlKr
-	 CYEbuwa72PAOsdXw0LbeRvQHfD9tAAkJTtJVsl9nQOfdNpoAJ7dS75FBEhW82ZcZ8E
-	 MBWjpGfg1obcuiL4/UHesWK/cCREy9znXg9jY2bXKgLDXT3Iqugyo8I7yKpauAXuxF
-	 ACcXKVDEV4KbSJzxapAUF8uQdvGPWWz0IbVXa5GWVTn3roiYIMNCIyGP4PJ/7EM4pC
-	 pjJQmgLqz06AA==
-Date: Mon, 28 Apr 2025 17:50:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt: bindings: arm: add bindings for TQMa95xxSA
-Message-ID: <20250428-scalding-coffee-70507d952247@spud>
-References: <20250428135915.520432-1-alexander.stein@ew.tq-group.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BqdlwEzT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=CJS+qSb/Irxv/rV6XyY0hXCjZ08w1k6CYeop3aogqes=; b=BqdlwEzTD2qxPrV8XyBSf510EI
+	H6+ZmHFaMJNLkJnpgpZ3mA00kK3Y8ob+ge9ZTgdkHPGS16Fw5UOx5O1fYeu7mA/SsHzLcZAAWea5W
+	zomDoyTf7Sp2FvqiDc2/3ITWP6FywZrDC+FTd6fmzJF2w7UJLG/BQ6FsEph8pt7TM2DI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u9RhP-00ArGQ-9B; Mon, 28 Apr 2025 18:51:19 +0200
+Date: Mon, 28 Apr 2025 18:51:19 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	"Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>, stable@vger.kernel.org,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net v1 1/2] net: dsa: microchip: let phylink manage PHY
+ EEE configuration on KSZ switches
+Message-ID: <4d8a3e79-f454-4e2f-9362-c842354b123a@lunn.ch>
+References: <20250428125119.3414046-1-o.rempel@pengutronix.de>
+ <20250428125119.3414046-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Nhw6v3yNy4dTm1za"
-Content-Disposition: inline
-In-Reply-To: <20250428135915.520432-1-alexander.stein@ew.tq-group.com>
-
-
---Nhw6v3yNy4dTm1za
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250428125119.3414046-2-o.rempel@pengutronix.de>
 
-On Mon, Apr 28, 2025 at 03:59:08PM +0200, Alexander Stein wrote:
-> TQMa95xxSA is a SOM using NXP i.MX95 CPU. MB-SMARC-2 is a carrier
-> reference design.
->=20
-> [1] https://www.tq-group.com/en/products/tq-embedded/arm-architecture/tqm=
-a95xxsa/
->=20
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> +/**
+> + * ksz_phylink_mac_disable_tx_lpi() - Dummy handler to disable TX LPI
+> + * @config: phylink config structure
+> + *
+> + * For ports with integrated PHYs, LPI is managed internally by hardware.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Could you expand that.
 
-> ---
-> Changes in v2:
-> * None
->=20
->  Documentation/devicetree/bindings/arm/fsl.yaml | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentati=
-on/devicetree/bindings/arm/fsl.yaml
-> index 447054b52ea39..a6cf65e10d43f 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -1419,6 +1419,16 @@ properties:
->            - const: kontron,imx93-osm-s    # Kontron OSM-S i.MX93 SoM
->            - const: fsl,imx93
-> =20
-> +      - description:
-> +          TQMa95xxSA is a series of SOM featuring NXP i.MX95 SoC variant=
-s.
-> +          It has the SMARC form factor and is designed to be placed on
-> +          different carrier boards. MB-SMARC-2 is a carrier reference de=
-sign.
-> +        items:
-> +          - enum:
-> +              - tq,imx95-tqma9596sa-mb-smarc-2 # TQ-Systems GmbH i.MX95 =
-TQMa95xxSA SOM on MB-SMARC-2
-> +          - const: tq,imx95-tqma9596sa         # TQ-Systems GmbH i.MX95 =
-TQMa95xxSA SOM
-> +          - const: fsl,imx95
-> +
->        - description:
->            Freescale Vybrid Platform Device Tree Bindings
-> =20
-> --=20
-> 2.43.0
->=20
+Does it mean the hardware will look at the results of the autoneg and
+disable/enable LPI depending on those results? I also assume this
+means it is not possible to force LPI on/off, independent of autoneg?
 
---Nhw6v3yNy4dTm1za
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaA+x6QAKCRB4tDGHoIJi
-0gVvAP0YmLaFnU0LzkqbM1C1p2Iq6QSPxnYt3l/wmcpd2kus0wEAiAs1v+vcr16G
-FoAD7cwjXSKih7VMnauIiYZDgL4bigw=
-=RYkS
------END PGP SIGNATURE-----
-
---Nhw6v3yNy4dTm1za--
+	Andrew
