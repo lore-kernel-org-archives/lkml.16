@@ -1,71 +1,90 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0478728E0F
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539C8184524;
+	Mon, 28 Apr 2025 16:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855854; cv=none; b=WKzOu+4IWKOYaLTBtMtgo/6suepFiVKhhmilPTOlpSZ1fytXSgYTPoKjP6P64DiFl0+FxSPkerdrXXguTy2fqLRAZrbvJPXyyh/7AHkWlzQqDrvvYUPJoqyYzNTXNuv/Piw6p782bOQ/LsTVwFgsYjOy6NPPGarh+2Cc/cF1/fo=
+	t=1745856035; cv=none; b=fSHXo32ldmqrA7/G3nEI/ibiDyUA/Jwlzu84ElL+5fe+64uWY/QZlLEp+0BfeYOIustWh/L22iCKgAtX3gLnCWWrZQeY8XCNpwPxZ3G/i163x2yLy8luzq/5JirrlG8lqbLHH8obbkZw58n2EF7r3yPJFROxG3OFvWPplE/UNlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855854; c=relaxed/simple;
-	bh=/+ElyNpYM8zyHS9izkAr7mmwS9VGIpfHbMxX+MIunwc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzjEIdD+7Hg1qA8QYzd892VC4l/G/UovIQxwvRVj2pCpE0rUtcFZMPhDOncFJ342MAryoe9STs+jdrP67xB+AFMd5sq9gZME1F4GbO8yUCfG1ybp3gZEiiErG5JEUAdAKaCqcTSY57MKeF7hnVhdOjfZcvEkgczij+XwPqgRrNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=HY3YA+Uk; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1745856035; c=relaxed/simple;
+	bh=2pF5ZVuvv6ywjV5CAQxpNFVYGGO75yrto/uXyKHjBqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tHRa1csF3wmYIgHPRSQgz8ZK6y0pQoJgvUyhNREv6ySAN2v6kCOhjKm5+X+VqpdEsQB27aFP1+jgspl7XKJnDAw+eJ8klcZm7F3xJLgH6gJMVJQsx12AZ3czNFRYDxKx6hmbPTQAaqGw0NTctjG8cRo/mCFErVnMGjW1Vz4Q/a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LsdBoFYO; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="HY3YA+Uk"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so32928345e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:57:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsdBoFYO"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8efefec89so51683936d6.3;
+        Mon, 28 Apr 2025 09:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1745855850; x=1746460650; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745856032; x=1746460832; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h8k8GbusSWoHhblzsaJpqJaQkqdvemo/Ic1QZvAiFIU=;
-        b=HY3YA+UkHlLcjUBi0+rFi+XchRCSPBixP4Lb8AJ8BKR54liJiPnGGI9TyJnhe2G1s8
-         y0bDZsQUrCNH/NgkVaGWYLs7O1ztL8BPX69sruQpbCfEKo6EHWu7QPiqV8FOO6jlD3XO
-         Mmo9ySh+KeeN4KmUWEBpa7wauCkCf7OzufZJs0dOF158QhIlvN3NsmY9IQhMMXgm3Vfn
-         9qjzRMCHPQ3fHWCioU1sUguDgQwtwnfzy+Xb8wi3FTfnx+P+5qh5HBxCou43QmRT9T6h
-         O1wg3sQjxrQbar6hSODTz3q0ckHVNjIq146zMUZ1ecEN2uCJABL4oequfgiP0GyP+o9O
-         AFfg==
+        bh=5r+fit36PDk6bbKWFNNj/Jg/r2XACS3LZjEojHndMuU=;
+        b=LsdBoFYOpcUtBbZ2j/zapDWy/REZXYgOaHfTWylyCbJjilciLBBWH9nRF0ZoPJjk0j
+         ZH7qQCmG72c9Gx7WIf6FJFAfgKQGDwcQl3eWJ2INtxgU/W89xwOIGWeHv+EkyETYeoFF
+         ePG8O5wb+oGQJKCX32lw3QhC+j3l5paNr0N7XWE8uj4St0MW9Ow0zOdcHcaqhy82yzkS
+         ezIunAmE5/2h8trW6yb1QKniBJuZJAtgDL/uecAwIsNe0smZiWH1XCYyQh2TFsE3LhxA
+         UI3/sTAZiCH4GY/5iPjQPGOzwIGb/+aKUcE72310lPDU/ALxEc04tbDUYBer3ys5uG2L
+         u9PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745855850; x=1746460650;
+        d=1e100.net; s=20230601; t=1745856032; x=1746460832;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=h8k8GbusSWoHhblzsaJpqJaQkqdvemo/Ic1QZvAiFIU=;
-        b=PzVi7S8zMkSGnFo98hb7pKJe6ntJ9ehC7w8+MAYlXPiP5LBF7NiAMlSZqrQ5eVwHd7
-         BalHe3k52MPOAEGIjbbZjBG2GdDeFV2UVyqc0yRBjFBYTd/L4R+SYc10ksV8G1e7/0zg
-         40SuEbSO1blnN2PU0tDPY7fKQIakTLirxq3hdFB/XFH8vqsnskLK20XHqw/LmqkTA7kW
-         CSyZCLW4mPKfbRxnyyZ6NQDPOZB6QDXSCZWCI5yP3IqEh3RcGqHG9CVs2xfApCJW1zTk
-         LqULvuRoFyCOdIR5bsZChAYr+bvHT27R5gVeKT0hjC/P9XBPv2fQ1L8Pc1GnX5UssjWK
-         o6WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVa4OCax705OJ+Tv/Ci/x/ubHXTfnFI6aVanSh7GyQDfSAd9lsd6VaqVkZTj5WImAWmubNYmhrJh8lW37M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUgrgW7gPzIbwi0Q18/EqInRab77lSKpwNqUAmqjvN8uf+O2Ay
-	J43T9rR0n7+EedNWJAF2ekXZwxmpvo3ZC/rUDer/gWebySb8LUIDARZN0N323ghZ0uZqySSxIY5
-	O
-X-Gm-Gg: ASbGncvEfFeucyY+2gSmeg+hw7/Rmsp/ThlV6m/qCIiZfv0fnLpeBY/0Lsg/YXOt9/o
-	9eRT4/xNf0jTJhqkR6q3K6NR6+K430WcwLOGjOLjM+wkr3G65V0AAtb2pxuXP8h+/HGJL2UDXfT
-	YpFA+XZP9xd+VdgVO+altLfvyuJwf83iRFxxRGTaAgKriP7hJ89i3mK8SH3Rsb6QIuSAQmoZdkT
-	UkbVf8dSa4Hv4xRUvUtTnA9GYktIO7MrGZqPVq8O1x7VwmFt2QwB/a8l08jmY1+0COHX74g9Lff
-	JKCA+T79iM5oc4F4j4H65+B6AgC45VC854CzPo+B6S3v1qBm8u/q5yR/bUWOkuJZcmivVmJIb/s
-	D/GF60fVmp1/NwFxGHNvCOU6Skc53IbxG72wUfQrf
-X-Google-Smtp-Source: AGHT+IHgzKEUKO80zi/b004bjiVYBj1oQPb9A/FB2EBufBGzxcyqRgqJT39mMOKpdJ8YmxsiPshzyw==
-X-Received: by 2002:a05:600c:3d05:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-440a65c5643mr108737965e9.2.1745855850327;
-        Mon, 28 Apr 2025 08:57:30 -0700 (PDT)
-Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5a74314sm132398955e9.4.2025.04.28.08.57.29
+        bh=5r+fit36PDk6bbKWFNNj/Jg/r2XACS3LZjEojHndMuU=;
+        b=dKXnQp7V/YC0ryBEAumzFayP1o7Q52QtiYsTa+omuWMx1VDCph0cw85qNNcX2LkOyi
+         FZf+jQsw8m9vc7AgGoDbvpY1US1hwehjGSfZQakwppFr2UvsrIbpd/yBp//E61wCuNgT
+         zeP9cdHgDJbBAVh+8dpdONU7UUwyrJuSYXrxAdYFHi66gtIWrle7Kr2QAt+ImX0oW/ZI
+         KO5TZDx+NNIf7YM15oQrbsVw0xFH/R45A1pASCt6CPc5FMSmUsKeb2iLC+c9qHKkMKmx
+         Z+25yXL+pyFumVlMis0KXqx7fF9w+gb9LGo1DDL6vMDM/CSnmYR/Yc8uZmnz8kDvta7i
+         JxIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJKhUf45rsrv5LLL9C62GJ/tHUJJ9G4bTJ2V2IORYJSIW31DwU65qbeZJjIOUJ2Pwbta4VyCiEXywLX/1S@vger.kernel.org, AJvYcCUQuNuIPJQ92IxoXKFkm4S5a3KknOU0rPl9zjuVt9Ctb0e+Ni2RQDCOZbc0s31tz6WsWwBtMDrn2fV/C7Gy1YC0UAcMlcHV@vger.kernel.org, AJvYcCUtCBv4gXxDWcRMxPJbu3Zyrb4Ex2srDOHekTgQlbaehtYzsKkgtl/EjmaiQdwgOkiCY9u9zOQscrOp/T9P@vger.kernel.org, AJvYcCV/ppjwCU9uG3od+4ZF3J3TvBkTm+FULM8Zaapkkwj79FY52KEszNCXXmIdnRTXkRcJn9ZlXRR2@vger.kernel.org, AJvYcCVsi+5pctAIEYmfdHTF952fP3HQzP2vsZuhCkgNnHX4aUPpn5r3IcUYGBTPkuIYQm55RhAr3MXRTBdx@vger.kernel.org, AJvYcCWGUUMpJRe7hd/4JHr7WHrMkWr/8KeJCH+SQUosP2WwJ2QwzqxidPBUdqSkV0j2+W/5GB62nRvdrw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvTD2ckl1lrRkkUxnBxSmFyHn9SuvSpD7++W9cuXXetDQFqwUr
+	jC3v/7s3AW/YFU0ihVG7CCZLBc7Kd0XdkO9lBSIPB/QLjsk/eJMe85cRNPLoIjU=
+X-Gm-Gg: ASbGncuxb4lxux8Vl2JC1H9Ib1jAoKee+MkfHST9ObkM2LRPIZpcWIsOxjZUrkczQSq
+	QcatiSUeh0iJHUmoqkSwuZnTTlLFhcllErHSahueN0r1E8bLG0CPdU8aeSt4s+KDOJ+zENdTKMF
+	Md7dz13GMMEEK4rOn6ZCr0dohZyd9FqeyrCY6vIILQPb3TqZlo4o0UbX9OqkmmVEnn7IkkTfaLg
+	7FB5HlEX2lbcrADMSox8XpCAdD5ftKXYdyjYQco/kFz5I6pZp96kO401cKl5bntEh1JqE6Y6lMZ
+	mNzUYcZI65B3z6VS9oZhlulMHOuLJn9Fxm+XDngn82ONDEAYpfcWKVDqHne2AAEXoKg7q2BFv6+
+	RjBeK2lMJlzl8uVhWTekLYLftmTqHxHFQPRwvFFD9s4djaNyVpMBAAyMktZySJYR+WIei
+X-Google-Smtp-Source: AGHT+IEaHqdauwA3gBnLn9R84FGC9rQTXYgsEqW4m0sWTxpVGx7bmQRrDTucoMS5bvojIJd4YNLjLw==
+X-Received: by 2002:a0c:f201:0:b0:6e8:97f6:3229 with SMTP id 6a1803df08f44-6f4cbcb9e24mr226814186d6.16.1745856031452;
+        Mon, 28 Apr 2025 09:00:31 -0700 (PDT)
+Received: from fuse-fed34-svr.evoforge.org (ec2-52-70-167-183.compute-1.amazonaws.com. [52.70.167.183])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c09341d6sm62947416d6.32.2025.04.28.09.00.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 08:57:30 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: brauner@kernel.org,
-	dhowells@redhat.com,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] folio_queue: remove unused field `marks3`
-Date: Mon, 28 Apr 2025 17:57:25 +0200
-Message-ID: <20250428155725.3231451-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.47.2
+        Mon, 28 Apr 2025 09:00:30 -0700 (PDT)
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+To: paul@paul-moore.com
+Cc: Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	netdev@vger.kernel.org,
+	selinux@vger.kernel.org
+Subject: [PATCH] security,fs,nfs,net: update security_inode_listsecurity() interface
+Date: Mon, 28 Apr 2025 11:55:31 -0400
+Message-ID: <20250428155535.6577-2-stephen.smalley.work@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,113 +93,233 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The last user was removed by commit e2d46f2ec332 ("netfs: Change the
-read result collector to only use one work item").
+Update the security_inode_listsecurity() interface to allow
+use of the xattr_list_one() helper and update the hook
+implementations.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
+
+Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 ---
- Documentation/core-api/folio_queue.rst |  3 --
- include/linux/folio_queue.h            | 42 --------------------------
- 2 files changed, 45 deletions(-)
+This patch is relative to the one linked above, which in theory is on
+vfs.fixes but doesn't appear to have been pushed when I looked.
 
-diff --git a/Documentation/core-api/folio_queue.rst b/Documentation/core-api/folio_queue.rst
-index 1fe7a9bc4b8d..83cfbc157e49 100644
---- a/Documentation/core-api/folio_queue.rst
-+++ b/Documentation/core-api/folio_queue.rst
-@@ -151,19 +151,16 @@ The marks can be set by::
+ fs/nfs/nfs4proc.c             |  9 +++++----
+ fs/xattr.c                    | 20 ++++++++------------
+ include/linux/lsm_hook_defs.h |  4 ++--
+ include/linux/security.h      |  5 +++--
+ net/socket.c                  |  8 +-------
+ security/security.c           | 16 ++++++++--------
+ security/selinux/hooks.c      | 10 +++-------
+ security/smack/smack_lsm.c    | 13 ++++---------
+ 8 files changed, 34 insertions(+), 51 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 970f28dbf253..a1d7cb0acb5e 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -8023,12 +8023,13 @@ static int nfs4_xattr_get_nfs4_label(const struct xattr_handler *handler,
+ static ssize_t
+ nfs4_listxattr_nfs4_label(struct inode *inode, char *list, size_t list_len)
+ {
+-	int len = 0;
++	ssize_t len = 0;
++	int err;
  
- 	void folioq_mark(struct folio_queue *folioq, unsigned int slot);
- 	void folioq_mark2(struct folio_queue *folioq, unsigned int slot);
--	void folioq_mark3(struct folio_queue *folioq, unsigned int slot);
- 
- Cleared by::
- 
- 	void folioq_unmark(struct folio_queue *folioq, unsigned int slot);
- 	void folioq_unmark2(struct folio_queue *folioq, unsigned int slot);
--	void folioq_unmark3(struct folio_queue *folioq, unsigned int slot);
- 
- And the marks can be queried by::
- 
- 	bool folioq_is_marked(const struct folio_queue *folioq, unsigned int slot);
- 	bool folioq_is_marked2(const struct folio_queue *folioq, unsigned int slot);
--	bool folioq_is_marked3(const struct folio_queue *folioq, unsigned int slot);
- 
- The marks can be used for any purpose and are not interpreted by this API.
- 
-diff --git a/include/linux/folio_queue.h b/include/linux/folio_queue.h
-index 45ad2408a80c..adab609c972e 100644
---- a/include/linux/folio_queue.h
-+++ b/include/linux/folio_queue.h
-@@ -34,7 +34,6 @@ struct folio_queue {
- 	struct folio_queue	*prev;		/* Previous queue segment of NULL */
- 	unsigned long		marks;		/* 1-bit mark per folio */
- 	unsigned long		marks2;		/* Second 1-bit mark per folio */
--	unsigned long		marks3;		/* Third 1-bit mark per folio */
- #if PAGEVEC_SIZE > BITS_PER_LONG
- #error marks is not big enough
- #endif
-@@ -58,7 +57,6 @@ static inline void folioq_init(struct folio_queue *folioq, unsigned int rreq_id)
- 	folioq->prev = NULL;
- 	folioq->marks = 0;
- 	folioq->marks2 = 0;
--	folioq->marks3 = 0;
- 	folioq->rreq_id = rreq_id;
- 	folioq->debug_id = 0;
+ 	if (nfs_server_capable(inode, NFS_CAP_SECURITY_LABEL)) {
+-		len = security_inode_listsecurity(inode, list, list_len);
+-		if (len >= 0 && list_len && len > list_len)
+-			return -ERANGE;
++		err = security_inode_listsecurity(inode, &list, &len);
++		if (err)
++			len = err;
+ 	}
+ 	return len;
  }
-@@ -178,45 +176,6 @@ static inline void folioq_unmark2(struct folio_queue *folioq, unsigned int slot)
- 	clear_bit(slot, &folioq->marks2);
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 2fc314b27120..fdd2f387bfd5 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -492,9 +492,12 @@ vfs_listxattr(struct dentry *dentry, char *list, size_t size)
+ 	if (inode->i_op->listxattr) {
+ 		error = inode->i_op->listxattr(dentry, list, size);
+ 	} else {
+-		error = security_inode_listsecurity(inode, list, size);
+-		if (size && error > size)
+-			error = -ERANGE;
++		char *buffer = list;
++		ssize_t len = 0;
++
++		error = security_inode_listsecurity(inode, &buffer, &len);
++		if (!error)
++			error = len;
+ 	}
+ 	return error;
+ }
+@@ -1469,17 +1472,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 	if (err)
+ 		return err;
+ 
+-	err = security_inode_listsecurity(inode, buffer, remaining_size);
+-	if (err < 0)
++	err = security_inode_listsecurity(inode, &buffer, &remaining_size);
++	if (err)
+ 		return err;
+ 
+-	if (buffer) {
+-		if (remaining_size < err)
+-			return -ERANGE;
+-		buffer += err;
+-	}
+-	remaining_size -= err;
+-
+ 	read_lock(&xattrs->lock);
+ 	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
+ 		xattr = rb_entry(rbp, struct simple_xattr, rb_node);
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index bf3bbac4e02a..3c3919dcdebc 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -174,8 +174,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct mnt_idmap *idmap,
+ 	 struct inode *inode, const char *name, void **buffer, bool alloc)
+ LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
+ 	 const char *name, const void *value, size_t size, int flags)
+-LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
+-	 size_t buffer_size)
++LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffer,
++	 ssize_t *remaining_size)
+ LSM_HOOK(void, LSM_RET_VOID, inode_getlsmprop, struct inode *inode,
+ 	 struct lsm_prop *prop)
+ LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index cc9b54d95d22..0efc6a0ab56d 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -457,7 +457,7 @@ int security_inode_getsecurity(struct mnt_idmap *idmap,
+ 			       struct inode *inode, const char *name,
+ 			       void **buffer, bool alloc);
+ int security_inode_setsecurity(struct inode *inode, const char *name, const void *value, size_t size, int flags);
+-int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size);
++int security_inode_listsecurity(struct inode *inode, char **buffer, ssize_t *remaining_size);
+ void security_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop);
+ int security_inode_copy_up(struct dentry *src, struct cred **new);
+ int security_inode_copy_up_xattr(struct dentry *src, const char *name);
+@@ -1077,7 +1077,8 @@ static inline int security_inode_setsecurity(struct inode *inode, const char *na
+ 	return -EOPNOTSUPP;
  }
  
--/**
-- * folioq_is_marked3: Check third folio mark in a folio queue segment
-- * @folioq: The segment to query
-- * @slot: The slot number of the folio to query
-- *
-- * Determine if the third mark is set for the folio in the specified slot in a
-- * folio queue segment.
-- */
--static inline bool folioq_is_marked3(const struct folio_queue *folioq, unsigned int slot)
--{
--	return test_bit(slot, &folioq->marks3);
--}
--
--/**
-- * folioq_mark3: Set the third mark on a folio in a folio queue segment
-- * @folioq: The segment to modify
-- * @slot: The slot number of the folio to modify
-- *
-- * Set the third mark for the folio in the specified slot in a folio queue
-- * segment.
-- */
--static inline void folioq_mark3(struct folio_queue *folioq, unsigned int slot)
--{
--	set_bit(slot, &folioq->marks3);
--}
--
--/**
-- * folioq_unmark3: Clear the third mark on a folio in a folio queue segment
-- * @folioq: The segment to modify
-- * @slot: The slot number of the folio to modify
-- *
-- * Clear the third mark for the folio in the specified slot in a folio queue
-- * segment.
-- */
--static inline void folioq_unmark3(struct folio_queue *folioq, unsigned int slot)
--{
--	clear_bit(slot, &folioq->marks3);
--}
--
+-static inline int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
++static inline int security_inode_listsecurity(struct inode *inode,
++					char **buffer, ssize_t *remaining_size)
+ {
+ 	return 0;
+ }
+diff --git a/net/socket.c b/net/socket.c
+index 9a0e720f0859..52e3670dc89b 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -562,15 +562,9 @@ static ssize_t sockfs_listxattr(struct dentry *dentry, char *buffer,
+ 	ssize_t len;
+ 	ssize_t used = 0;
+ 
+-	len = security_inode_listsecurity(d_inode(dentry), buffer, size);
++	len = security_inode_listsecurity(d_inode(dentry), &buffer, &used);
+ 	if (len < 0)
+ 		return len;
+-	used += len;
+-	if (buffer) {
+-		if (size < used)
+-			return -ERANGE;
+-		buffer += len;
+-	}
+ 
+ 	len = (XATTR_NAME_SOCKPROTONAME_LEN + 1);
+ 	used += len;
+diff --git a/security/security.c b/security/security.c
+index fb57e8fddd91..3985d040d5a9 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2710,22 +2710,22 @@ int security_inode_setsecurity(struct inode *inode, const char *name,
  /**
-  * folioq_append: Add a folio to a folio queue segment
-  * @folioq: The segment to add to
-@@ -318,7 +277,6 @@ static inline void folioq_clear(struct folio_queue *folioq, unsigned int slot)
- 	folioq->vec.folios[slot] = NULL;
- 	folioq_unmark(folioq, slot);
- 	folioq_unmark2(folioq, slot);
--	folioq_unmark3(folioq, slot);
+  * security_inode_listsecurity() - List the xattr security label names
+  * @inode: inode
+- * @buffer: buffer
+- * @buffer_size: size of buffer
++ * @buffer: pointer to buffer
++ * @remaining_size: pointer to remaining size of buffer
+  *
+  * Copy the extended attribute names for the security labels associated with
+- * @inode into @buffer.  The maximum size of @buffer is specified by
+- * @buffer_size.  @buffer may be NULL to request the size of the buffer
+- * required.
++ * @inode into *(@buffer).  The remaining size of @buffer is specified by
++ * *(@remaining_size).  *(@buffer) may be NULL to request the size of the
++ * buffer required. Updates *(@buffer) and *(@remaining_size).
+  *
+- * Return: Returns number of bytes used/required on success.
++ * Return: Returns 0 on success, or -errno on failure.
+  */
+ int security_inode_listsecurity(struct inode *inode,
+-				char *buffer, size_t buffer_size)
++				char **buffer, ssize_t *remaining_size)
+ {
+ 	if (unlikely(IS_PRIVATE(inode)))
+ 		return 0;
+-	return call_int_hook(inode_listsecurity, inode, buffer, buffer_size);
++	return call_int_hook(inode_listsecurity, inode, buffer, remaining_size);
+ }
+ EXPORT_SYMBOL(security_inode_listsecurity);
+ 
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index b8115df536ab..e6c98ebbf7bc 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3612,16 +3612,12 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
+ 	return 0;
  }
  
- #endif /* _LINUX_FOLIO_QUEUE_H */
+-static int selinux_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
++static int selinux_inode_listsecurity(struct inode *inode, char **buffer,
++				ssize_t *remaining_size)
+ {
+-	const int len = sizeof(XATTR_NAME_SELINUX);
+-
+ 	if (!selinux_initialized())
+ 		return 0;
+-
+-	if (buffer && len <= buffer_size)
+-		memcpy(buffer, XATTR_NAME_SELINUX, len);
+-	return len;
++	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SELINUX);
+ }
+ 
+ static void selinux_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop)
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 99833168604e..3f7ac865532e 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -1619,17 +1619,12 @@ static int smack_inode_getsecurity(struct mnt_idmap *idmap,
+  * smack_inode_listsecurity - list the Smack attributes
+  * @inode: the object
+  * @buffer: where they go
+- * @buffer_size: size of buffer
++ * @remaining_size: size of buffer
+  */
+-static int smack_inode_listsecurity(struct inode *inode, char *buffer,
+-				    size_t buffer_size)
++static int smack_inode_listsecurity(struct inode *inode, char **buffer,
++				    ssize_t *remaining_size)
+ {
+-	int len = sizeof(XATTR_NAME_SMACK);
+-
+-	if (buffer != NULL && len <= buffer_size)
+-		memcpy(buffer, XATTR_NAME_SMACK, len);
+-
+-	return len;
++	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SMACK);
+ }
+ 
+ /**
 -- 
-2.47.2
+2.49.0
 
