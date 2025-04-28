@@ -1,30 +1,43 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B047A19B3CB;
-	Mon, 28 Apr 2025 04:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745814873; cv=none; b=rnQYpCyN2CCoD6D49m4GoyDJ6WgeKsuWwL05xGfxmb9HoiluPjbdQiGu4QKOvCaF22MSTDk7Kb7kU5bK3bkiUVLd0vv9ihTShOiaWToScLHjl6lI6V4VU3rAZJlp4o/T5eswACHaWrbaa4x72F1HgkA1a0CN5A1F47tB4vLE2oE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745814873; c=relaxed/simple;
-	bh=YgYp62UqQEYf4XBik3kZic3wxkJmHyo/wSwqGIZg4DM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zijn1Xt8l1xWYUyqs0hGH7jf26rZwTN68AXRGvwybJMGks8mlJ5lO2pxmTkVZ3+G57owOeg91MkysEyqjtUdbwJ7EiOh2ZJ8REx24/Q1T0YGeqQSWwf44My0uHh3cP1ErDv1k20wLJwTKBUL0OxQdi3RVoBOV8iJqGOnRsSENts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zm9ZK5ghFz4f3kvh;
-	Mon, 28 Apr 2025 12:34:01 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6EF841A19C3;
-	Mon, 28 Apr 2025 12:34:27 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgB3219SBQ9oYaMoKw--.53973S3;
-	Mon, 28 Apr 2025 12:34:27 +0800 (CST)
-Message-ID: <01c1241e-9f80-44fc-8b04-c219aeacfc08@huaweicloud.com>
-Date: Mon, 28 Apr 2025 12:34:25 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A59FBF6;
+	Mon, 28 Apr 2025 04:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745814986; cv=pass; b=RrWrb8CeVY6TluvPCBSvBK5BbrSG2nvZYKIV71t5AZp8SUAmr9n/AyUnkBZVQKzXrk5wmGiNY6waYtMFibdlNdzBUMK5tT7JDBOE1TYkQ5VGq1yS4frkCMiQ8q6wP/1cUPepfla1e40f1vXzWJxCB5vHBdPTe/OUr9PZsS+9XPE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745814986; c=relaxed/simple;
+	bh=7NzPxFDCjoVYFYldvDP+JNk7iVkn0yogdQHW79W4AyE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qekKko37ttYGve3rJh3tXzlCf11HVgDQ7RF53P84zu7/vh6lx0aXnX8bbnBk0VNB5mWLpRtaZoD1ZNeV3EoWEwJVx2fxRCIdFQnzSa5UKGLP48Uci/lEqceCt6IMwtQ6YWMzEXYbqRJzkE5a4w/P0JQQDxlbNJvew9M+mMujotE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=agl9AlWx; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="agl9AlWx"
+ARC-Seal: i=1; a=rsa-sha256; t=1745814959; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=edilIt4dSo/yunV/YZpulBxWmWEheVnH2qByv9pM8x3mWT8WLfEUFrgjKOZD1ZlnBsGc5ekmaDl7+1nJj06BWL9QaVwpvBkKk6/ZzqOoYg/BbRW3tOKuf6gw+c8Ew3cFhs7kVp4IWdQC4OL3hd0txCZHgeP9UyUpaYwr39YUkeA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745814959; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=rc2LNRC1473KtbUTlBXY0VjET6Xd2eY/BCp0ByumbA8=; 
+	b=l9aUoducX4+Xaf/rxzPxYM8mSlchqpShYGtYxLRbg+VCZ6YSOc5LOATOsAC5VOcyDuI/R72bSAjoFckxW1Tv2vh4p5fGLnY9IAPOd58nA7XJpYtjp/6Xjjl9trNI7SA2bCGULJMIGcCd+zWTeDgRhVUBDx3L5TxQKKkdHzZsr1E=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745814959;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=rc2LNRC1473KtbUTlBXY0VjET6Xd2eY/BCp0ByumbA8=;
+	b=agl9AlWxZo7IS3Ba90mtDugjkMEosy/b9wbV8vICW4VCV4hWgCgZk3ps3aD0DCWj
+	s71eEGJ9PJQ3xa6rcprbgnTjwbDfvpW1WU/LsTXrULlb+C6ztTap8v4W6gKQMLYHCp0
+	/t5mjwOvL5jXgZIhbBu4YJu1g051Wk1rtblMsnbI=
+Received: by mx.zohomail.com with SMTPS id 174581495773834.76018741853284;
+	Sun, 27 Apr 2025 21:35:57 -0700 (PDT)
+Message-ID: <8981527a-7bf9-4a34-acd8-38099d37ba6d@collabora.com>
+Date: Mon, 28 Apr 2025 09:35:51 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,95 +45,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH blktests 0/3] blktest: add unmap write zeroes tests
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- hch <hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>,
- "djwong@kernel.org" <djwong@kernel.org>,
- "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
- "bmarzins@redhat.com" <bmarzins@redhat.com>,
- "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>,
- "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
- "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
- "yukuai3@huawei.com" <yukuai3@huawei.com>,
- "yangerkun@huawei.com" <yangerkun@huawei.com>
-References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
- <yxfbr3na7iyci7rs3rk4m7zmjrfw3zdccrnur2nkk2lddlowmx@wy32rpgrlzoh>
+Cc: usama.anjum@collabora.com, kernel@collabora.com,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] wifi: ath11k: Fix MHI target memory reuse logic
+To: Baochen Qiang <quic_bqiang@quicinc.com>, jeff.johnson@oss.qualcomm.com,
+ Jeff Johnson <jjohnson@kernel.org>
+References: <20250425110424.2530460-1-usama.anjum@collabora.com>
+ <dee649f1-0516-4a59-a70d-ba206388e568@quicinc.com>
+ <4b3a18e3-14ac-4876-9b51-acee142464b3@quicinc.com>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <yxfbr3na7iyci7rs3rk4m7zmjrfw3zdccrnur2nkk2lddlowmx@wy32rpgrlzoh>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <4b3a18e3-14ac-4876-9b51-acee142464b3@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgB3219SBQ9oYaMoKw--.53973S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWxAFyrJFyrKrW5Jry8uFg_yoW8tr13pF
-	1rAa40yr4fKFnFg3W09FZIqr15Ars3Aay5Ars5Gr10krn8ZF1a9ryjg3yjywsFgr13W3Z2
-	yay2ga4S9ayUAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	bAw3UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-ZohoMailClient: External
 
-On 2025/4/3 15:55, Shinichiro Kawasaki wrote:
-> On Mar 18, 2025 / 15:28, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> The Linux kernel is planning to support FALLOC_FL_WRITE_ZEROES in
->> fallocate(2). Add tests for the newly added BLK_FEAT_WRITE_ZEROES_UNMAP
->> feature flag on the block device queue limit. These tests test block
->> device unmap write zeroes sysfs interface
->>
->>         /sys/block/<disk>/queue/write_zeroes_unmap
->>
->> with various SCSI/NVMe/device-mapper devices.
->>
->> The /sys/block/<disk>/queue/write_zeroes_unmap interface should return
->> 1 if the block device supports unmap write zeroes command, and it should
->> return 0 otherwise.
->>
->>  - scsi/010 test SCSI devices.
->>  - dm/003 test device mapper stacked devices.
->>  - nvme/060 test NVMe devices.
+On 4/28/25 7:03 AM, Baochen Qiang wrote:
 > 
-> Zhang, thank you again for the patches. The test contents look meaningful
-> for me :)  When the kernel side changes get ready, I will run the test cases
-> and do further review.
 > 
-> One thing I noticed is that the patches trigger shellcheck warnings. When you
-> respin the patches, please run "make check" and address the warnings.
+> On 4/25/2025 7:08 PM, Baochen Qiang wrote:
+>>
+>>
+>> On 4/25/2025 7:04 PM, Muhammad Usama Anjum wrote:
+>>> Firmware requests 2 segments at first. The first segment is of 6799360
+>>> whose allocation fails due to dma remapping not available. The success
+>>> is returned to firmware. Then firmware asks for 22 smaller segments
+>>> instead of 2 big ones. Those get allocated successfully. At suspend/
+>>> hibernation time, these segments aren't freed as they will be reused
+>>> by firmware after resuming.
+>>>
+>>> After resuming, the firmware asks for the 2 segments again with the
+>>> first segment of 6799360 size. Since chunk->vaddr is not NULL, the
+>>> type and size are compared with the previous type and size to know if
+>>> it can be reused or not. Unfortunately, it is detected that it cannot
+>>> be reused and this first smaller segment is freed. Then we continue to
+>>> allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
+>>> is called which frees the second smaller segment as well. Later success
+>>> is returned to firmware which asks for 22 smaller segments again. But
+>>> as we had freed 2 segments already, we'll allocate the first 2 new
+>>> smaller segments again and reuse the remaining 20. Hence 20 small
+>>> segments are being reused instead of 22.
+>>>
+>>> Add skip logic when vaddr is set, but size/type don't match. Use the
+>>> same skip and success logic as used when dma_alloc_coherent() fails.
+>>> By skipping, the possibility of resume failure due to kernel failing to
+>>> allocate memory for QMI can be avoided.
+>>>
+>>> 	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
+>>> 	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+>>>
+>>> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+>>>
+>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>> ---
+>>> Changes since v1:
+>>> - Update description
+>>>
+>>> Changes since v2:
+>>> - Update description
+>>>
+>>> Changes since v3:
+>>> - Update description
 > 
-> $ make check
-> shellcheck -x -e SC2119 -f gcc check common/* \
->         tests/*/rc tests/*/[0-9]*[0-9] src/*.sh
-> common/rc:624:7: note: Use $(...) notation instead of legacy backticks `...`. [SC2006]
-> common/rc:626:7: note: Double quote to prevent globbing and word splitting. [SC2086]
-> common/rc:632:7: warning: Quote this to prevent word splitting. [SC2046]
-> common/rc:632:7: note: Useless echo? Instead of 'echo $(cmd)', just use 'cmd'. [SC2005]
-> common/rc:632:7: note: Use $(...) notation instead of legacy backticks `...`. [SC2006]
-> common/rc:632:17: warning: Quote this to prevent word splitting. [SC2046]
-> common/rc:632:29: note: Double quote to prevent globbing and word splitting. [SC2086]
-> tests/dm/003:28:8: warning: Declare and assign separately to avoid masking return values. [SC2155]
-> tests/nvme/060:32:8: warning: Declare and assign separately to avoid masking return values. [SC2155]
-> make: *** [Makefile:21: check] Error 1
+> The subject since previous is changed, but not mentioned here.
+> 
+> Please describe all your changes.
+> 
+>>> ---
+>>>  drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
+>>> index 47b9d4126d3a9..2782f4723e413 100644
+>>> --- a/drivers/net/wireless/ath/ath11k/qmi.c
+>>> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
+>>> @@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
+>>>  			    chunk->prev_size == chunk->size)
+>>>  				continue;
+>>>  
+>>> +			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
+>>> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
+>>> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
+>>> +					    chunk->size, chunk->type,
+>>> +					    chunk->prev_size, chunk->prev_type);
+>>> +				ab->qmi.target_mem_delayed = true;
+>>> +				return 0;
+>>> +			}
+>>> +
+>>>  			/* cannot reuse the existing chunk */
+>>>  			dma_free_coherent(ab->dev, chunk->prev_size,
+>>>  					  chunk->vaddr, chunk->paddr);
+>>
+>> LGTM
+>>
+>> Reviewed-by: Baochen Qiang <quic_bqiang@quicinc.com>
+> 
+> Withdraw above tag as I didn't notice that the patch subject is incorrect since v3.
+> 
+> The QMI memory has nothing to do with MHI. IMO the v1/v2 subject is good:
+> 
+> 	wifi: ath11k: Fix memory reuse logic
+> 
+> while even better mention QMI:
+> 
+> 	wifi: ath11k: Fix QMI memory reuse logicJeff had asked for changed subject here [1]. Let me change again and
+send the patch.
 
-Sure, I'll do this check in my next iteration.
+[1]
+https://lore.kernel.org/all/228546c4-a4b5-4f21-950d-2623a48f60a6@oss.qualcomm.com
 
-Thanks,
-Yi,
+> 
+> 
+>>
+> 
 
+
+-- 
+Regards,
+Usama
