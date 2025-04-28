@@ -1,49 +1,49 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D29262FDB;
-	Mon, 28 Apr 2025 09:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068AC262FE5;
+	Mon, 28 Apr 2025 09:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745832626; cv=none; b=p8+qFEqfqb7Z/sesIrGfLwRyCP3+3/5262MfvPZbyfq/CI15t3Rqvc4qTlSTNSad0TnRCsjVAC4lyNSFuxBGefhYQGkgfkVY0r8NEbSEFHaIQgSbtDeBkQdpsdkoWRPP6W4mnEQH4Z5zwnkOMUwPqxq7/jogLN02uswUoRkGRdY=
+	t=1745832639; cv=none; b=LEGIOEmFS4dfQDH4gcXU6hjlSwx1A7r4dpLRFKjbkKC9t728qVgZyYjxk59q54pXXb3j7rSq87BIKvMOCTyNbuj/rGYGMNS/6Go8Ri2xWQ0/lDn08VHjQ71BIjpIoCDdFzmQTQn32KKYA5k0QZEmKd1kkAIDyNyLsq96GJSQ/DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745832626; c=relaxed/simple;
-	bh=dDdfhPRntqCrFz+asXcKeeWI7fYJmQNXL34AK6GAWCI=;
+	s=arc-20240116; t=1745832639; c=relaxed/simple;
+	bh=kLBER01Qlx+dNoS9e/2UemlgkmnR3JGS4ktGQdZcyWU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=L8ioeirZdtTioec756cJq/Fhdco7tzVp0KBKRey0WxQsG3myUaoWxww5VQIAgcXiGeZ1GrTjXZABNt/C3SdfnJpmqTIVuCVshqXvbxaS1lYxbxuPh4crxLJzLl9Kry1Oue3woLGM9UZih3Q2YW8ypO9PvzytDD2dHC8OwufLR5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DP5ZPVdV; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=MAxSinEODPksYsZwr/eboSidwMDcw4hFhiK1rQXNDnPIEyuDSMEp+rsKl+/wf1sHL3vi2jx4xUCiefemJqjc9Jb6myGFU9F0n4NOn6oVLXena00EZbS+dEaUr2zZaSm1g5tVdQD74zCNRF8l5m7J1iSoomMvUxiH5EqU/+Kgj/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XEe8AIQ0; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DP5ZPVdV"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S6YhNd011849;
-	Mon, 28 Apr 2025 09:30:21 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XEe8AIQ0"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S8DLNG010057;
+	Mon, 28 Apr 2025 09:30:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2WgHwR3Vktmh0BeQ0Q+0QkNME5irGAtZ/Zvs1Cqj0bo=; b=DP5ZPVdV5KkrxeG6
-	hC8xB3E7ZIdY5TbyVm7g6UHF8Dw0yD8tkELzK6a8XovLSpQ9XygHE9GU/lp9K2cs
-	SiTDEN45HiyiTC0/jCv9/RLNwK6MBzLXMghMeDtjP5cCbQ0PuMDqT/zIO3wJQa1X
-	IvfH1J0W0YHNl+tbL43eNFiJmg4WoPnJJL0kvY54j0WFuaTINwuWy6uok3qBlAeR
-	qZSUzoVjtpB6NBUehAS+bodeCg6KEXQDjcsPCE1N5MPYby3OlamDe5cidRRDLnw6
-	e6rjtVZlVJvpwbgs1lR93x7mRe3qZIdW0sPeLKY15jlWrS1BWjFfXHZRyWgtljca
-	36EKoQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rsb7fky-1
+	QdX3xGu2C9JbCf4DuFnaz+/4FSQ/8jGKc0Bc1ZtyDuI=; b=XEe8AIQ00aYmr56g
+	PHYS69VsYVDH0zIUAIGP6rmR45xDWkOGu8FE5QLsZ0ccTCsy9EJdnA7xZQ4c18SF
+	s++qsRsc+4OLQotrFUc/7RMJRVg3gd2+vCQeOy7pLRlpLdj0rJ8eUcVbkiBLiUbW
+	75SyMCQCkKpjaHQiV72XHJUOq01xCpLkebdzBFix2SlZv+ujrsu6YMIS0bBVwKoO
+	L68yrmu3x69OcigG104cFRRh2bF+gH1gIK4yByLp5r1YTnnggJo+2Dzfvpb3wvrb
+	uwzyzkwqiWLwvadUngoS8yXmrPf5g3+iKwmOSM+0i/pk+mUz2Mo+1B3CPfZx1u4j
+	GGVqqw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rnmyfjw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:30:21 +0000 (GMT)
+	Mon, 28 Apr 2025 09:30:34 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53S9UKiu006460
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53S9UWTd021726
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 09:30:20 GMT
+	Mon, 28 Apr 2025 09:30:32 GMT
 Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 28 Apr 2025 02:30:14 -0700
+ 15.2.1544.9; Mon, 28 Apr 2025 02:30:26 -0700
 From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Mon, 28 Apr 2025 14:58:55 +0530
-Subject: [PATCH v2 07/23] media: iris: Add handling for no show frames
+Date: Mon, 28 Apr 2025 14:58:57 +0530
+Subject: [PATCH v2 09/23] media: iris: Skip flush on first sequence change
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250428-qcom-iris-hevc-vp9-v2-7-3a6013ecb8a5@quicinc.com>
+Message-ID: <20250428-qcom-iris-hevc-vp9-v2-9-3a6013ecb8a5@quicinc.com>
 References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
 In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
@@ -81,71 +81,61 @@ CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
         <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
         <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745832570; l=1844;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745832570; l=1297;
  i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=dDdfhPRntqCrFz+asXcKeeWI7fYJmQNXL34AK6GAWCI=;
- b=xBNUbx68mzRjQJdeuW0p6dB3ijfWbYzZ76/QNXcM3/fph6oOGTjPS8XM+bH60FRvWayMtwdeR
- xHldnGo1UfHCHXVbaUkOLWb/seMIUQ3eRG2WBZMsd+Qjzd5N1AM5qMy
+ bh=kLBER01Qlx+dNoS9e/2UemlgkmnR3JGS4ktGQdZcyWU=;
+ b=tN8iFbOkc6dBEL+6K0mpa3r0I3pK7jP3+FMW0BOgQ8ARlBI6S750QNOETB7XQc+1WAx2xy0hI
+ vYS57z2Ek9mCLhHw0WMKwPXl067fkpE1rK7at449y2cDQgCEQO0Cgpy
 X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
  pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA3OCBTYWx0ZWRfX4AFFZPKBgpy1 xNuMxdnYpuftKgjiygBluwpBnwZjXUVy3pBpu85CBx1iIeGmuG9mw/kMEYSGpK4H9e8lgNdWeUf mtcX22qIuQzDYyEo1pzqDtVj8lvwVcjmpDzuZTV99palnCYVA9aCIc7UZIfG4/WeafqC6mjIQge
- poCcqTCSoCXZRcM+LClCwqETs+Jczb3/8hb3Xp2aVKuBp+zWokHmDd2q/0cm55AvToShvgl1BV+ VwJVDZZ27KvjoWdBpbBlTJ9hPZ63PrL+HSRbMfJ+Tk3eM57SS18biDESYjzYhPCwZmW8c5dWZRK zoNcTWEq4xMj8u9a9YlBY930fJLc3TcVA2cFeTqeCb0sabGQKOtgqq54As54coysgswEYS4pSDz
- 2Xug9vQGzlH5QG0wG03AFbczwbqAa1Dh08JTtblBIrBKcA9GkusPRhg1KmXKFVyO85SxL0iQ
-X-Proofpoint-GUID: y252Y_Qk31d9Xm67TNjUFOQOnw_d_qjL
-X-Proofpoint-ORIG-GUID: y252Y_Qk31d9Xm67TNjUFOQOnw_d_qjL
-X-Authority-Analysis: v=2.4 cv=I8ZlRMgg c=1 sm=1 tr=0 ts=680f4aad cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=8LAZgHa4aglvpo7nPw4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: O5esRSE0Jzp-X1ZzZowW7yxnnI8pdxsC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA3OCBTYWx0ZWRfX5Q/h5KV5x4Iu 6aHI669apGYeK7b5ZwkywOk8s6aHYw02gsvxroJdaOoS6oMNH6i1GNYHR6EBkTF8bhLfv+lRyA9 qttAAG0/85Mo2k7+MZeM1t9dxHpite4fEFpM/Zx01yb2QYJUh3UEOfJ/P4aMFTkIWrZ0wJnsHNx
+ PFncdMQn+WmCV/jnFsDvQ9L3DuFvQznxLRo2yRxevaum4Q3XDXIwXm26z50UX7OQ6Hq6/QZrPkZ upBtoa9NX+XJ0+gdYkvXpHU9gBptTOPQfW4s/H+m0NbKxpKEiuJZvlMuEuGEjw3GrK4X5lgzW6K ty21LsEHKgeSEmkOOkGBj5GJ5HVd7qcWskJb4L8IAynG8sy7pzLZd51oJroDjDEjHvAMNrRpwgD
+ comLTn6C2cr0fHgm4ZfbAa3ApxZiqYhn0omLLakTatv0LKef6aN1d4d951AC86+u/OgF6wVG
+X-Proofpoint-GUID: O5esRSE0Jzp-X1ZzZowW7yxnnI8pdxsC
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=680f4aba cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=bTiEC21CLpSyVAFLm5UA:9 a=QEXdDO2ut3YA:10
  a=TjNXssC_j7lpFel5tvFf:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 priorityscore=1501 clxscore=1011
- malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 spamscore=0
- mlxlogscore=857 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 mlxlogscore=946 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504280078
 
-Firmware sends the picture type as NO_SHOW for frames which are not
-supposed to be displayed, add handling for the same in driver to drop
-them.
+Add a condition to skip the flush operation during the first sequence
+change event. At this point, the capture queue is not streaming, making
+the flush unnecessary.
+
+Additionally, remove the reinit_completion call for the flush completion
+signal, as it is not needed. This simplifies the code and avoids
+unnecessary reinitialization.
 
 Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
- drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h  | 1 +
- drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-index 806f8bb7f505..666061a612c3 100644
---- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-+++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-@@ -113,6 +113,7 @@ enum hfi_picture_type {
- 	HFI_PICTURE_I				= 0x00000008,
- 	HFI_PICTURE_CRA				= 0x00000010,
- 	HFI_PICTURE_BLA				= 0x00000020,
-+	HFI_PICTURE_NOSHOW			= 0x00000040,
- };
+diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+index ba858abab336..dfca45d85759 100644
+--- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
++++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+@@ -201,8 +201,7 @@ static void iris_hfi_gen1_event_seq_changed(struct iris_inst *inst,
  
- enum hfi_buffer_type {
-diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-index 5bb20ec0d67f..1ed798d31a3f 100644
---- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-+++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
-@@ -91,7 +91,9 @@ static int iris_hfi_gen2_get_driver_buffer_flags(struct iris_inst *inst, u32 hfi
- 	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
- 	u32 driver_flags = 0;
+ 	iris_hfi_gen1_read_changed_params(inst, pkt);
  
--	if (inst_hfi_gen2->hfi_frame_info.picture_type & keyframe)
-+	if (inst_hfi_gen2->hfi_frame_info.picture_type & HFI_PICTURE_NOSHOW)
-+		driver_flags |= V4L2_BUF_FLAG_ERROR;
-+	else if (inst_hfi_gen2->hfi_frame_info.picture_type & keyframe)
- 		driver_flags |= V4L2_BUF_FLAG_KEYFRAME;
- 	else if (inst_hfi_gen2->hfi_frame_info.picture_type & HFI_PICTURE_P)
- 		driver_flags |= V4L2_BUF_FLAG_PFRAME;
+-	if (inst->state != IRIS_INST_ERROR) {
+-		reinit_completion(&inst->flush_completion);
++	if (inst->state != IRIS_INST_ERROR && !(inst->sub_state & IRIS_INST_SUB_FIRST_IPSC)) {
+ 
+ 		flush_pkt.shdr.hdr.size = sizeof(struct hfi_session_flush_pkt);
+ 		flush_pkt.shdr.hdr.pkt_type = HFI_CMD_SESSION_FLUSH;
 
 -- 
 2.34.1
