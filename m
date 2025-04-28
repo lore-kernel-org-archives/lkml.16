@@ -1,166 +1,123 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7760B27935F;
-	Mon, 28 Apr 2025 16:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F9A27BF79
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857461; cv=none; b=BofYacpVOdaChGaBNY/b2RYWK61HXJLQLUIP/LyUlmUicMpagQh4Rgd6b1ypD8qCwivBKSimAWxtfi2PsNuXMy8lBa7boo6NhF4qaPxG1DxmaAMBbtWT/SzwtnDKrJHDxqr5SSK73IlQpCvA540u6mRUCNhVKuzTeJQ+GtrO9mM=
+	t=1745857465; cv=none; b=B5wRL9cc0VloiVndIzS1wTZJU2jLM8BNl1+tMuzunauxo6xMSYcEKXDlLL70NPPaK9bOUkDvuAyMw3Rroz1W5nJZr9iK0HURmr206wUnqnOrhGs4L3ujCMtX1aFg+0owwYLtiQif7KYOQkbr6EvM2463RxUyrpq3HV3ddLjLyDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857461; c=relaxed/simple;
-	bh=CHBCp6cdsJoZymwJjoigCt9VlbbXnAa9bSNchk1wmqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qj6LUSVC4KPcPTd1/Vd9vdYgYEY3/9jaUgaWi9iHjvopWCEJcBQEKl1dpYP5IMP1/Fx7YdlMaIZkc6XuAE3JsA0oouLgjM5xhYzYCq/iuM7sC4AtJRaWfVjpv9DkxaVxpTa0ctz/XGdwLNF1wflMgEF5uRCrhPMy27iren1YHgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BPDZRIut; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745857465; c=relaxed/simple;
+	bh=aBET2R+cdNEs2JBLTJV2J6n/I6DLqblbM0N9jJcdptE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ta5TFD6c7rlv+hb+1T0FN43Mu/riMlePsgrHyAObS7EIyITwodAOuv2GPvqckCx+8ZMgqPtTCm3nvGRfIQkt5LHQuEvMp6Y51epx016CDoj5TUIPxfLH7xBZmiNnY6aI1QzNRwbXgL0NsuhgC+xOoZYWXwj197kD1IpyJwxfr1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kLsizspE; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BPDZRIut"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SGOCqJ2821103
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 11:24:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745857452;
-	bh=pLCRaOu6Tt3QIEat0TyIkyelowGCiPWKGTNSyRo/nPE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=BPDZRIutC8V4ELh+wV6b8dCune1mLxqJ2gVOwKmJ58FO2WOuRKvinMXHUI91+rEJF
-	 7upqnTaJpw5Q6Z+twKycCmru6wZ6qzJb7kkMfKCuFPwfflNzjIIVETWsprTrvxwLG+
-	 Rg37T5jK54Q3TIGJIq2jQfu9j4gT3b3VJoxUUH3w=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SGOCPL028905
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 28 Apr 2025 11:24:12 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
- Apr 2025 11:24:12 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 28 Apr 2025 11:24:12 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SGOB4S127609;
-	Mon, 28 Apr 2025 11:24:11 -0500
-Message-ID: <f8424c7e-e778-4140-9cf9-83f43cef1a04@ti.com>
-Date: Mon, 28 Apr 2025 11:24:11 -0500
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kLsizspE"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6fda22908d9so37682257b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:24:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745857462; x=1746462262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9vEM8AjK36qQ7ZkludDbMcF49w6ZyxlSpknwM0aWu08=;
+        b=kLsizspE8BU1GrXFUIXDRwYc++r0+F7m4bFeihtAODYfbJXA9F2UaIMNdwl3nB0kzU
+         X4eEQBklMSne74bqJ3xgbZhWoMymESHGOQEoUar9b4x7IxjhG4x+6guiKXrJQue1UzL4
+         5lnnIA6lUrv/ldB/fyGji9wMVyc2cRHiw+pWk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745857462; x=1746462262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9vEM8AjK36qQ7ZkludDbMcF49w6ZyxlSpknwM0aWu08=;
+        b=A1gtrw3ea7fwvmChyP/ZIdVHZFvoSlz8/va9efKO0fUl2dPagDnkOegqmvRGwocTku
+         3GRq7U09c9lqpppE9EK8VloV2wZhXVcw+r//rNmP1W90KnaqK1SJ/P6Ai0oQ0YmAbC5r
+         gEV8RzyXh8YtI1pwPdAbikDF2bl/e+HdhG7LlL3k3d3FLHa8SNhD7eDGaSUZFv7M7vep
+         WVTcz4+126coTyuSBwqIo/Ge69g+ayGixT9/lYTrfEDZtF464CZLMsoKQG40ClVB/uJR
+         CbDN2FtVfHZTiK8vqwp9EtOPyU5Ih2LB5uI/hYdZ81stgQrDh1d+jQkzIwLblD6ucgSH
+         pkwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcNKu/ECsvdH+3RxE119ET2H9CdG7S2zl//feFCtWNapkyNc6NNbNU8QejCfwEYqplozPi5vJSsrtv8Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyhm5GgxOR6SPTGZVZ1paWdBNXvtz6SCsOQK/GRIs9v7R2uLC2
+	Lg8Rl0gT1Ov8pOQuzl42kYEWHOnGJfl/aPAySRvBTcEYAyz1BHkMG2+sNw8T2l5ddUC9LhcI0Dv
+	PUAfa6N9y6D7Ahy7Q/8A1lEA3TMNyrkBENIik
+X-Gm-Gg: ASbGnctZAWl5qevJ+GbpR/I/I7gNIXBGEFXBF+DP/9zFY6sFSQ3Fs7MoiDT2j6Z2Jtk
+	ZH4CyJNAxzfkd8YdA+iF4unkLBqPtvTrI/g4z+2iU2+dlEwYj2bU7BT0HKQ14j9Y//57uNgXPpQ
+	2NVzxCIwb1lxMY05/E8AP1UQ==
+X-Google-Smtp-Source: AGHT+IEhniT1NFmVEmjCJcZ/tyyHLtc8q6IQL+mdJBR1gMRGoa/2Ox7aQE8eMb4K8ZNe3XWShmP+9vlTRiq6Qvv+Pv4=
+X-Received: by 2002:a05:690c:7082:b0:705:5fde:1b82 with SMTP id
+ 00721157ae682-7089966442cmr6121787b3.13.1745857462449; Mon, 28 Apr 2025
+ 09:24:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/11] arm64: dts: ti: k3-am62x-sk-common: Enable IPC
- with remote processors
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar
- Prasad <b-padhi@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>,
-        Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>
-References: <20250415153147.1844076-1-jm@ti.com>
- <20250415153147.1844076-9-jm@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250415153147.1844076-9-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250426024810.3876884-1-bleung@chromium.org>
+In-Reply-To: <20250426024810.3876884-1-bleung@chromium.org>
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date: Mon, 28 Apr 2025 09:24:08 -0700
+X-Gm-Features: ATxdqUHQarXuxCaiWX4uFxpbdmPmqgWPPrC_naZwTg8naWtVoPfxvgrCj4bzKVU
+Message-ID: <CANFp7mWQPy2z1dWtHSw1uzMnUCcRJfaqJvGayyjmEvVjnM3KXQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Set Pin Assignment E in
+ DP PORT VDO
+To: Benson Leung <bleung@chromium.org>
+Cc: jthies@google.com, akuchynski@chromium.org, tzungbi@kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	sukoo@google.com, bleung@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/15/25 10:31 AM, Judith Mendez wrote:
-> From: Hari Nagalla <hnagalla@ti.com>
-> 
-> For each remote proc, reserve memory for IPC and bind the mailbox
-> assignments. Two memory regions are reserved for each remote processor.
-> The first region of 1MB of memory is used for Vring shared buffers
-> and the second region is used as external memory to the remote processor
-> for the resource table and for tracebuffer allocations.
-> 
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Judith Mendez <jm@ti.com>
+On Fri, Apr 25, 2025 at 7:48=E2=80=AFPM Benson Leung <bleung@chromium.org> =
+wrote:
+>
+> Pin C and D are used on C-to-C cable applications including docks,
+> and for USB-C adapters that convert from DP over USB-C to other
+> video standards.
+>
+> Pin Assignment E is intended to be used with adapter from USB-C to DP
+> plugs or receptacles.
+>
+> All Chromebook USB-C DFPs support DisplayPort Alternate Mode as the DP
+> Source with support for all 3 pin assignments. Pin Assignment E is requir=
+ed
+> in order to support if the user attaches a Pin E C-to-DP cable.
+>
+> Without this, the displayport.c alt mode driver will error out of
+> dp_altmode_probe with an -ENODEV, as it cannot find a compatible matching
+> pin assignment between the DFP_D and UFP_D.
+>
+> Signed-off-by: Benson Leung <bleung@chromium.org>
 > ---
+>  drivers/platform/chrome/cros_ec_typec.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/c=
+hrome/cros_ec_typec.c
+> index d2228720991f..7678e3d05fd3 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -22,8 +22,10 @@
+>
+>  #define DRV_NAME "cros-ec-typec"
+>
+> -#define DP_PORT_VDO    (DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BI=
+T(DP_PIN_ASSIGN_D)) | \
+> -                               DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
+> +#define DP_PORT_VDO    (DP_CAP_DFP_D | DP_CAP_RECEPTACLE | \
+> +                        DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | \
+> +                                               BIT(DP_PIN_ASSIGN_D) | \
+> +                                               BIT(DP_PIN_ASSIGN_E)))
+>
+>  static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
+>  {
+> --
+> 2.49.0.850.g28803427d3-goog
+>
 
-Acked-by: Andrew Davis <afd@ti.com>
+Please add a Fixes: dbb3fc0ffa95788e00e50ffc6501eb0085d48231
 
->   .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 34 ++++++++++++++++---
->   1 file changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-> index d52cb2a5a589a..364b2ba6af958 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-> @@ -70,6 +70,18 @@ mcu_m4fss_memory_region: m4f-memory@9cc00000 {
->   			no-map;
->   		};
->   
-> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9da00000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9da00000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_memory_region: r5f-memory@9db00000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9db00000 0x00 0xc00000>;
-> +			no-map;
-> +		};
-> +
->   		secure_tfa_ddr: tfa@9e780000 {
->   			reg = <0x00 0x9e780000 0x00 0x80000>;
->   			alignment = <0x1000>;
-> @@ -82,11 +94,6 @@ secure_ddr: optee@9e800000 {
->   			no-map;
->   		};
->   
-> -		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
-> -			compatible = "shared-dma-pool";
-> -			reg = <0x00 0x9db00000 0x00 0xc00000>;
-> -			no-map;
-> -		};
->   	};
->   
->   	leds {
-> @@ -476,10 +483,17 @@ cpsw3g_phy0: ethernet-phy@0 {
->   };
->   
->   &mailbox0_cluster0 {
-> +	status = "okay";
-> +
->   	mbox_m4_0: mbox-m4-0 {
->   		ti,mbox-rx = <0 0 0>;
->   		ti,mbox-tx = <1 0 0>;
->   	};
-> +
-> +	mbox_r5_0: mbox-r5-0 {
-> +		ti,mbox-rx = <2 0 0>;
-> +		ti,mbox-tx = <3 0 0>;
-> +	};
->   };
->   
->   &mcu_m4fss {
-> @@ -489,6 +503,16 @@ &mcu_m4fss {
->   	status = "okay";
->   };
->   
-> +&wkup_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&wkup_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-> +			<&wkup_r5fss0_core0_memory_region>;
-> +};
-> +
->   &usbss0 {
->   	bootph-all;
->   	status = "okay";
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
