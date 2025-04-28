@@ -1,32 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D92570831
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363FF70831;
+	Mon, 28 Apr 2025 23:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745884165; cv=none; b=SCIA36tmpecR5biy4n98W2vDTMR+b2TBVz/tEQffgEndi5xPiU39sOzWeqDz9vzCPEuyIbUSPZrVnCNWMwguAvcf+D4eDp+teczmWNehpYSIjBSvH0hpe+4YGs5pI0r0zhZBad6oTvpnUTj5yUyTe94cCdGGERDxvYCUdWz+Ci0=
+	t=1745884201; cv=none; b=VQJdzn8fY5drjYclcayvJZACahRIdeWMKqyrta0IxX51u/prNDgJQyKroekNFjUtda2pKalVOu5FbI2iCVOvLj2wDLaMfKosxzQAK4U+/rWNg8wtM4mYaLQTUFJLL3bg+XDMrB3y0+eIa35I62z+YXsIdY0qCzDQIUpr9q2YZt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745884165; c=relaxed/simple;
-	bh=RPecJtYrTRe3sMGzhINU2fSMF3oytGDr3+63rCcMlYU=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=BrmRB3P293wlLgjPgj6qujXGlRDzRZn8enlpCOAhvXCXh0J3ajXwXSBMc1Q5qBnAOsLQZV/pFT6HqkvnYJEzvIYWJfTwAXKQs0+Vsn6pvAnOIPclhLyuUcLA829dISCW2SgZQhoVLUJO/xtB4tR/CqjeKhl/ywHdBXr1lOZYQQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAsemGmP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745884201; c=relaxed/simple;
+	bh=vsCYRJOu2+7O/vaGXslstlkjSpMCXUDLAHK65Ew0rG0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Xpmro3vUSm6tUYe5s2e9Bv6M75be7CG9elwNLbbjZ4pnZG1fjJ4+aI7fn9MM2cdRLTqvS+HlXizfJ81U8oFV7ftcSf9xfYFHOdrkvpPgj/maAoxIURUL95BiHV8c4JpzgTOFxm5ilWp9IqkSN3zVsAcmeszeNVmhRIcLkkFke3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGJP4i/u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAsemGmP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45BDC4CEE4;
-	Mon, 28 Apr 2025 23:49:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGJP4i/u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A6AC4CEE4;
+	Mon, 28 Apr 2025 23:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745884164;
-	bh=RPecJtYrTRe3sMGzhINU2fSMF3oytGDr3+63rCcMlYU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=ZAsemGmPkNa4upqFCm9RXc0nbaLwySd/YF+c9pdyTX6MBbIvvKZOWM+cIe7Ing6Cn
-	 4bmHkIdnRK5ossvGL/g49JttGtATiuBGfh6bMZ1Ch+vUmdv/l7CPXx05Zrgg4zNUw7
-	 0wImbPKFICmbAyX/TqcSPR/MdhlZyX9RE4QpJI5Kx2NVnK8+00AeXqth7DFlFA/VAv
-	 pM9TYdXY2BYsHOFdCESyTEhPJhnQQTyk31WUTrkE9FdB2CVBaTnMhfcdXhB+I0IH9A
-	 jZIQZSiD15BgGDoMPs+GtcIj/UwtRKdWWqesbCm2gWjl2IFnNywfyXkOxEv1PEv8F3
-	 WQmai7Iq+oB0g==
-Message-ID: <1de0fc4c00120ee6541693d13f7b8f9c@kernel.org>
+	s=k20201202; t=1745884200;
+	bh=vsCYRJOu2+7O/vaGXslstlkjSpMCXUDLAHK65Ew0rG0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=aGJP4i/u7wVlXy+99f3czCJoOsn4bi4HjuC4uYD0eZ7DUNidJen8244Hc5WgthPof
+	 xDwv5RreNyi0aZOIMyRC0qnk154UIAX0cN4yZyR+N+53PRCBLF/xwrkAaBRRr1vZVU
+	 iCSP7q8GciiXf1yZIym1xY6MU1eLTJrfZgBJMQ8YbqEg6CFYVrI3WAoY888ZQWJm4E
+	 NTcCeUS2nIA84m0TuKhDRddrr3YXCJkzd+Eic63sX4vhsCHEPjgzPqKgBtzefarWMo
+	 ERTHZYuurxiVhCgkHMwUYhls6WP/8qcPEUACvh1fDucevmJcB4Qx8V8D5NyhzPwJAi
+	 Is1By8WOGx3jw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADEC83822D4A;
+	Mon, 28 Apr 2025 23:50:40 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,30 +36,72 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250319092951.37667-37-jirislaby@kernel.org>
-References: <20250319092951.37667-1-jirislaby@kernel.org> <20250319092951.37667-37-jirislaby@kernel.org>
-Subject: Re: [PATCH v2 36/57] irqdomain: spmi: Switch to irq_domain_create_tree()
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org, Jiri Slaby (SUSE) <jirislaby@kernel.org>
-To: Jiri Slaby (SUSE) <jirislaby@kernel.org>, tglx@linutronix.de
-Date: Mon, 28 Apr 2025 16:49:22 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/8] Phase out hybrid PCI devres API
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174588423950.1081621.6688170836136857875.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Apr 2025 23:50:39 +0000
+References: <20250425085740.65304-2-phasta@kernel.org>
+In-Reply-To: <20250425085740.65304-2-phasta@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: sgoutham@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, gakula@marvell.com,
+ sbhatta@marvell.com, hkelam@marvell.com, bbhushan2@marvell.com,
+ taras.chornyi@plvision.eu, venza@brownhat.org, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, deller@gmx.de, horms@kernel.org,
+ jacob.e.keller@intel.com, mingo@kernel.org, tglx@linutronix.de,
+ viro@zeniv.linux.org.uk, shannon.nelson@amd.com, sd@queasysnail.net,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
 
-Quoting Jiri Slaby (SUSE) (2025-03-19 02:29:29)
-> irq_domain_add_tree() is going away as being obsolete now. Switch to
-> the preferred irq_domain_create_tree(). That differs in the first
-> parameter: It takes more generic struct fwnode_handle instead of struct
-> device_node. Therefore, of_fwnode_handle() is added around the
-> parameter.
->=20
-> Note some of the users can likely use dev->fwnode directly instead of
-> indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
-> guaranteed to be set for all, so this has to be investigated on case to
-> case basis (by people who can actually test with the HW).
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> ---
+Hello:
 
-Applied to spmi-next
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 25 Apr 2025 10:57:33 +0200 you wrote:
+> Changes in v2:
+>   - Rename error path. (Jakub)
+>   - Apply some RBs
+> 
+> Fixes a number of minor issues with the usage of the PCI API in net.
+> Notbaly, it replaces calls to the sometimes-managed
+> pci_request_regions() to the always-managed pcim_request_all_regions(),
+> enabling us to remove that hybrid functionality from PCI.
+> Philipp Stanner (8):
+>   net: prestera: Use pure PCI devres API
+>   net: octeontx2: Use pure PCI devres API
+>   net: tulip: Use pure PCI devres API
+>   net: ethernet: natsemi: Use pure PCI devres API
+>   net: ethernet: sis900: Use pure PCI devres API
+>   net: mdio: thunder: Use pure PCI devres API
+>   net: thunder_bgx: Use pure PCI devres API
+>   net: thunder_bgx: Don't disable PCI device manually
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,1/8] net: prestera: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/66ada7471155
+  - [v2,2/8] net: octeontx2: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/48217b834529
+  - [v2,3/8] net: tulip: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/adc36d0914f6
+  - [v2,4/8] net: ethernet: natsemi: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/2a5a74947a2b
+  - [v2,5/8] net: ethernet: sis900: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/6e5f7a5b5e0c
+  - [v2,6/8] net: mdio: thunder: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/fad4d94d9ae5
+  - [v2,7/8] net: thunder_bgx: Use pure PCI devres API
+    https://git.kernel.org/netdev/net-next/c/06133ddc3590
+  - [v2,8/8] net: thunder_bgx: Don't disable PCI device manually
+    https://git.kernel.org/netdev/net-next/c/1549bd06e340
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
