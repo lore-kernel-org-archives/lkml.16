@@ -1,128 +1,87 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846AC1E008B;
-	Mon, 28 Apr 2025 08:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745827398; cv=pass; b=m7kT/i1K3OiLITkTaj1rPdJuCjiylb0P/S5hvZd3CA1TXkWGIgIwK0R/viztJy7+DbHl4s9qJ41gheQmcqUbBI6nCyoHNgk+GngUsqkZkXa1+BtPwu6mHa8H6elayBzoSyIUuu3ZcWe4llSjKaaV4BEcnEiZSsyqn50zDqJqCVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745827398; c=relaxed/simple;
-	bh=ew1IfLBM9f06Fw88Dbsj3hnpG8lJBszmC0PC/QSTYHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=glU9RUUSnXhbcT3KuyySLO7OT7IJaYPzmPruR0FBwcAQgnMzdDzDC/I2SZ/qRK2WOWr8d3SGNm5eDZF4vtgtRNu6VwrAAgm/Dqr+4v/2ikGX0XRWn+DZvbKSG8yPnFLmblTss7errLMy7C5l123Lha/MzBsb4HY8jpB7t8loX1w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=G6YCB5cF; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540D51FECB4
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745827550; cv=none; b=ETPKEpibC2/yyTEarm6rzDb35NwjSV+rI/PTy1u9DFbxhOklflDuVZqq5lYZ9bCn10bM/o5AwhX7fWguXOQWNfjsKyTiH2/1uXPhKmsSfyx9gcDNRy+usFTAWfBIaBsfg+2Od2xnLhn+Fq781fLxznpYjL4zR/w18G8o/pSA+Dk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745827550; c=relaxed/simple;
+	bh=O7+wBp3jrxFqs0rsHHQxwu6iKcNOltLmKuL98WKINYs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZJSOpf5v7Uj2zI7lGeNVCliqaXWAP8WAlcxbSZWhImiApbhTKFQhSGaMlFi81tSJguRV62ztHdQGwDNfmmszQfrsfI7Uq4YWujUJZvbDQmo4QM2LAQtuFjrzVqO76eSX7mEwpwcZA5W3sv8Tsv/MJi91bB16K0jXKfHhrPd4GLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D5+M0xwz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6H6zXolH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="G6YCB5cF"
-ARC-Seal: i=1; a=rsa-sha256; t=1745827377; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kvha5oB3W+E/O+6g3QQB7u/du0v5WtZ58cDy/K++LTGtdU/kUPhIDQctDA9tnVZT5gBTocvn7MElQ3CZfdsHzrR+Hc0Er3YRENRquzw581mxTPw6b8GFsb2xzzAH7T4ZTvYOabzICGYGqczmJAOvr4IkZaXhx8lYwLGCbTCYv9A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745827377; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=jMYgEFRVsJYcspvAglHyagEafBPWF1ONaARAIwZKKbg=; 
-	b=YSx1XczLaFjc+3PlgRhvkIRofgBCou1m8hCLLUn8G4se/9yIpTWY0tjWRyzA7wipy3s+ay/eHTWK1wsiK+lWpoYS8mSc2nRkcLivmBHMWKyKqMyDXLBe4awiHX1mke9skmnwHGzn6M/iXHjt3LjmOkKbGyTO5VNPdJtoG3GjsCs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745827377;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=jMYgEFRVsJYcspvAglHyagEafBPWF1ONaARAIwZKKbg=;
-	b=G6YCB5cFG5UHYJP9vjLATjuiH3oviKkPfeHCDKN/NmF26NhLkUHXzT1uvg8jB9ZS
-	NgtQ6q9eub7HixYIyZlJJ/ExmyuWkEkOB4FHzXIv3qdWyfiiu2LAg+F7z07haprPU2Z
-	g6N3iPTNKdB+DFpI0hqojZRo44Sruzd9LJ0Bvjm4=
-Received: by mx.zohomail.com with SMTPS id 1745827375811103.4201133913308;
-	Mon, 28 Apr 2025 01:02:55 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: quic_bqiang@quicinc.com,
-	jeff.johnson@oss.qualcomm.com,
-	Jeff Johnson <jjohnson@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5] wifi: ath11k: Fix memory reuse logic
-Date: Mon, 28 Apr 2025 13:02:41 +0500
-Message-ID: <20250428080242.466901-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D5+M0xwz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6H6zXolH"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745827547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O7+wBp3jrxFqs0rsHHQxwu6iKcNOltLmKuL98WKINYs=;
+	b=D5+M0xwzsQBCKtJetI9jZNWCZVECj9GmZvmqLDL5cxEcjozOSXuQppMT7dw36nBmLYFf+S
+	c73vhY/yAevcoQp9xF0JwA52eBSTNl3dfrCDM2KeqHCfsD2jHrmAyljRkeNonW5ekv/gNP
+	9vN8525cHwfqcm/n5Zuo7hwY1KkYMSQinZQaygSSHmn4KSsSGw23LP5sniPRGyU3br4b8x
+	pekm/C7i/kWG94atRikIaCYRC75XZTXNbQo6Iv0hfytAgqd28T6j1jH4Ew159VitgIKGlB
+	Rn6IDysM5zdERFMyJyaOlJAKa357jnzpfBFWraq9TGD9HcUNQsEWqSQKr6FxlQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745827547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O7+wBp3jrxFqs0rsHHQxwu6iKcNOltLmKuL98WKINYs=;
+	b=6H6zXolH+MrLWuO0OsmpDiyO8AAZkH/ZgC3gD/QHYbsPuVD+jSZv4mmLjDXN8vpND4uyrF
+	jtRnVDu+NyxYTEAA==
+To: Petr Mladek <pmladek@suse.com>, Tomasz Figa <tfiga@chromium.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Ingo Molnar
+ <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Steven Rostedt
+ <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hung_task: configurable hung-task stacktrace loglevel
+In-Reply-To: <aAuq-3yjYM97rvj1@pathway.suse.cz>
+References: <20250424070436.2380215-1-senozhatsky@chromium.org>
+ <aAoZbwEtkQ3gVl5d@pathway.suse.cz>
+ <CAAFQd5A6J-UCy46bp1MYP0imJf3oUL29mxFVLZZZ4JmP2YTvhQ@mail.gmail.com>
+ <aAuq-3yjYM97rvj1@pathway.suse.cz>
+Date: Mon, 28 Apr 2025 10:11:46 +0206
+Message-ID: <84selszp5x.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain
 
-Firmware requests 2 segments at first. The first segment is of 6799360
-whose allocation fails due to dma remapping not available. The success
-is returned to firmware. Then firmware asks for 22 smaller segments
-instead of 2 big ones. Those get allocated successfully. At suspend/
-hibernation time, these segments aren't freed as they will be reused
-by firmware after resuming.
+On 2025-04-25, Petr Mladek <pmladek@suse.com> wrote:
+> I am afraid that manipulating log levels is a lost fight because
+> different people might have different opinion about how various
+> messages are important.
 
-After resuming, the firmware asks for the 2 segments again with the
-first segment of 6799360 size. Since chunk->vaddr is not NULL, the
-type and size are compared with the previous type and size to know if
-it can be reused or not. Unfortunately, it is detected that it cannot
-be reused and this first smaller segment is freed. Then we continue to
-allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
-is called which frees the second smaller segment as well. Later success
-is returned to firmware which asks for 22 smaller segments again. But
-as we had freed 2 segments already, we'll allocate the first 2 new
-smaller segments again and reuse the remaining 20. Hence 20 small
-segments are being reused instead of 22.
+Wasn't that the whole point of Sergey's patch? To make it configurable?
 
-Add skip logic when vaddr is set, but size/type don't match. Use the
-same skip and success logic as used when dma_alloc_coherent() fails.
-By skipping, the possibility of resume failure due to kernel failing to
-allocate memory for QMI can be avoided.
+I must admit that I am not happy with the patch. Mostly because it is
+too specific. And I am not sure if we really want to try to make it all
+dynamic with a report API either. At least we need to think about it
+more carefully.
 
-	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
-	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+One thing that crossed my mind was that we have enter/exit markers for
+emergency mode, which should be used whenever something "bad" happens. I
+am wondering if a fixed loglevel could be configured for all messages
+stored by a CPU in emergency mode. This might also encourage developers
+to track down and mark more emergency sections. For the nbcon series, I
+really only picked a few obvious ones, but I am sure there are more.
 
-Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+In other words, I would prefer to recycle the emergenceny enter/exit
+markers rather than introduce new ones. (Unless we are also talking
+about reports that are totally normal and acceptable during runtime.)
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
-Changes since v1:
-- Update description
-
-Changes since v2:
-- Update description and title of patch
-
-Changes since v3:
-- Update description and title of patch
-
-Changes since v4:
-- Update title of the patch
----
- drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index 47b9d4126d3a9..2782f4723e413 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
- 			    chunk->prev_size == chunk->size)
- 				continue;
- 
-+			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
-+				ath11k_dbg(ab, ATH11K_DBG_QMI,
-+					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
-+					    chunk->size, chunk->type,
-+					    chunk->prev_size, chunk->prev_type);
-+				ab->qmi.target_mem_delayed = true;
-+				return 0;
-+			}
-+
- 			/* cannot reuse the existing chunk */
- 			dma_free_coherent(ab->dev, chunk->prev_size,
- 					  chunk->vaddr, chunk->paddr);
--- 
-2.43.0
-
+John
