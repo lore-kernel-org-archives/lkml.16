@@ -1,100 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B053E39ACC
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C91725F996
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745832415; cv=none; b=JDaPpB751M6D+WffpCB2W9ANoSA0UAJF8vHUOTLoj5o9NZ1ALyT+0SSrzLeyA5TMooyRD8ONwxICcEu84hzwXcij1V7KPhcq4FgR7sxsaWLCSkDExdK3383DiqiBTfFeFmvQ2wCToFBL4PvJ5xKkVRN9nf4PCOVeXjY9Ihaoxw8=
+	t=1745832438; cv=none; b=qdV42JX8frdVt5whmlirJbiIyxFYlAAkqjtdU0JdCFqzDvKhtNJ2+62kvubmm0hLS4fzVkAiNF4+FkpnYPPgla+0cjk5+bSOWGd+wysIOXKq0k4LWPMCosQ2jaES0efSdkhlmxrM/2HapsRFFTPpFJbMuSCRxPGHKdQ9qj6vdxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745832415; c=relaxed/simple;
-	bh=+2qhm637vQUw7DbxYJ4ygSdPfB53CFDELSKmZ66HHVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kDTq5c2iP88rhaCfirGqI+aKjOYp6gGQGONg6BvTxtUwVEoYG6GulI5dYqrYasnr2Y3EHAuej3P7ZfYARGj8tECuB0Mmt8yzaQkABQcrhTZLPvHGJxd/SfwuMt72AChMg+LTyZctK/rxY46DHF73Wyba8pmNyoT1oteU5K6t/uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0D651595;
-	Mon, 28 Apr 2025 02:26:45 -0700 (PDT)
-Received: from [10.57.19.90] (unknown [10.57.19.90])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 308763F673;
-	Mon, 28 Apr 2025 02:26:49 -0700 (PDT)
-Message-ID: <a7ae0472-5003-40a5-9dfa-7e279b4a611f@arm.com>
-Date: Mon, 28 Apr 2025 10:26:47 +0100
+	s=arc-20240116; t=1745832438; c=relaxed/simple;
+	bh=UVd/rZR8AOYdXyQtZJAfNFYpT83jERDleZoZwn1jpHI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JiDb6r63PEyeCEGQ0W2KpYI/X0aE1FI9esrGbLo+cXsvLZ1Le4M0ImfTVApWTvblFAJ8CWITkJWRoL/TI/npcou4KRtSGNKtBLkmt+AgwntsuUkKtM0pOCkXIPY7EMUP2LAwnvGhMSt7UVgTFc31yh+0dsixNZT1Wjy6mHOb8RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=pgW8Tc3B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="pgW8Tc3B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4123C4CEE9;
+	Mon, 28 Apr 2025 09:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745832437;
+	bh=UVd/rZR8AOYdXyQtZJAfNFYpT83jERDleZoZwn1jpHI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pgW8Tc3Blxaz/ouF3jFGGuHxZnfmv5VdmsIFhZq7gRB/LI9sACW5nzH4FwIpgNAUc
+	 cLeQv6K4j+6zt45EM7nSYHaVUKyROi5gR/MiMvNrEbsU8OjEIP1DlQEEDdDYg2Rftj
+	 1qaIWmKL1X+NcIPg/8HrWBjXNFgVNzD/uXTmo+gs=
+Date: Mon, 28 Apr 2025 02:27:16 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Igor Belousov <igor.b@beldev.am>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org,
+ minchan@kernel.org, nphamcs@gmail.com, senozhatsky@chromium.org,
+ shakeel.butt@linux.dev, yosry.ahmed@linux.dev
+Subject: Re: [PATCH mm-new] mm/zblock: avoid failing the build
+Message-Id: <20250428022716.99ee57590fe7878dccfaa6a0@linux-foundation.org>
+In-Reply-To: <20250428065727.57990-1-igor.b@beldev.am>
+References: <20250428065727.57990-1-igor.b@beldev.am>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] drm/panfrost: enable G31 on H616
-To: Philippe Simons <simons.philippe@gmail.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Andre Przywara <andre.przywara@arm.com>,
- =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>
-References: <20250403055210.54486-1-simons.philippe@gmail.com>
- <3aea4181-427f-4859-8a89-54c139775da6@gmail.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <3aea4181-427f-4859-8a89-54c139775da6@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 28/04/2025 07:10, Philippe Simons wrote:
-> Hi, is there any issue with this serie
+On Mon, 28 Apr 2025 08:57:27 +0200 Igor Belousov <igor.b@beldev.am> wrote:
 
-Hi,
-
-Sorry, no nothing wrong - it's just slipped through. Thanks for the
-reminder. I've applied it to drm-misc-next.
-
-Thanks,
-Steve
-
-> Thanks,
+> Don't break the build for a PAGE_SIZE that is not fully supported,
+> just print out a warning in that case.
 > 
-> Philippe
-> 
-> On 4/3/25 07:52, Philippe Simons wrote:
->> Allwinner H616 has a dedicated power domain for its Mali G31.
->>
->> Currently after probe, the GPU is put in runtime suspend which
->> disable the power domain.
->> On first usage of GPU, the power domain enable hangs the system.
->>
->> This series adds the necessary calls to enable the clocks and
->> deasserting the reset line after the power domain enabling and
->> asserting the reset line and disabling the clocks prior to the
->> power domain disabling.
->>
->> This allows to use the Mali GPU on all Allwinner H616
->> boards and devices.
->>
->> Changelog v1 .. v2:
->> - merge flags to a single GPU_PM_RT flag
->> - reorder init/deinit powerup/down sequences according to
->>    Mali manuals.
->> Link to v1:
->> https://lore.kernel.org/linux-sunxi/20250312232319.25712-1-
->> simons.philippe@gmail.com/
->>
->> Philippe Simons (3):
->>    drm/panfrost: Add PM runtime flag
->>    drm/panfrost: add h616 compatible string
->>    drm/panfrost: reorder pd/clk/rst sequence
->>
->>   drivers/gpu/drm/panfrost/panfrost_device.c | 71 ++++++++++++++++------
->>   drivers/gpu/drm/panfrost/panfrost_device.h |  3 +
->>   drivers/gpu/drm/panfrost/panfrost_drv.c    |  8 +++
->>   3 files changed, 63 insertions(+), 19 deletions(-)
->>
->>
->> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
->> prerequisite-patch-id: eb8a11e2b24bb282970d8b8528834dea7ee392cc
 
+I queued these two patches and this fix:
+
+--- a/mm/zblock.h~mm-zblock-avoid-failing-the-build-fix
++++ a/mm/zblock.h
+@@ -21,7 +21,7 @@
+ /* max 256 slots per block, max table size 64 */
+ #define SLOT_BITS 8
+ #else
+-#warn This PAGE_SIZE is not quite supported yet
++#warning This PAGE_SIZE is not quite supported yet
+ #define SLOT_BITS 8
+ #endif
+ 
+
+But please be aware that I consider the zblock zeries to be stuck until
+there is clarity that zblock is something we should add to Linux. 
+Let's continue to address this in the main thread(s), please.
+
+Or perhaps to restart things, do a full resend after having reworked
+the [0/N] changelog to fully address the issues which have thus far
+been raised.  And Cc'ing the various individuals who have thus far
+commented.
+
+Thanks.
