@@ -1,163 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FF92F29
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241221E884
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745849768; cv=none; b=b5k9d8aOh0oq238dPgydF2g4VD7AS9ATciEVDVFFBTKQTX5WwohzTeu752wJ9iLtKTa6ZgzSAK29etEkH9fiwB7yKmxGBLyyLtAsCq+tkFlwdwL4kUauIOUkFx/a7PlcBHx/dyycWcKQ5QNau9fDBpKBjV98Lbl7Oo3XBEJehDI=
+	t=1745849835; cv=none; b=rrKFxxPa0OO+j8QCCFKuNLWDA70F4aHXUfcL/BoiwxAmVZPy0mcA3a1Cq1MOmAIKpiZotktdonMZbiUleo2n1Nc1FN271+2HEhsVvH/BEX4n/mAhDqLYP/kmdBHaFQ9StzJmERSDXbAATJzinPBz5taSMxh7sTK9JgPwNoL9nzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745849768; c=relaxed/simple;
-	bh=7jpFf0X44mvZPBwHm4oi95YMAiHMwB3njgHS2bzbL6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KKSsyGYIvnh3yYSU38yvXrHvlcJGoP/iCbz6ERdOjtVQrnrzWEx0vTAIZc0+DUKC4UX4clFCAgol2gocw4Ldn8WFNqi4YY2hWaldiJZAzxXYC+yGbOoftfmHZhIP0f45D+NVI6kTOSQemK7ywXBOrPxtVjVN9cvN5DRzAWL21v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FWxqQTTQ; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1745849835; c=relaxed/simple;
+	bh=TG3qiJ8FxpJ+JhDJyMQMenN08PNsduLpDMO/zg592Wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kjo3mAKzdzwu3CA3iwtFC6APQ6geopUn+sH1VKOW5e4GBZktLoKEfkXP8zAI5h8k4VX/4XGighvlAN1I+FsVuksDgmDMewKqPzhqq2//eaC9OKJm6LLE2gZkSdNewLOIk/pC4SCbKjeXPIJc/jTVFYYg3oh4MCb1jsblJlqcESY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bkTVUxHh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWxqQTTQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bkTVUxHh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745849765;
+	s=mimecast20190719; t=1745849832;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uVeCmrqrUzw7XcCq/Od4x1SVTaUBINUIH5X6q+EccXM=;
-	b=FWxqQTTQ7130GdvGTT2+0ExFlXju/EpheUZ0x5rUk30XNjlnIbmM94rISxbeuyfJLQIJ3G
-	8ZKnPrkbP7ivblENM+q24z/Z4dKCGYlbXOAJaP5f0a4tBwvRB3T8TC7YfIz2HZnCfkrTOT
-	9O2h2XLIfRR26muM8NZXs2TM2jFvE7k=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=TG3qiJ8FxpJ+JhDJyMQMenN08PNsduLpDMO/zg592Wc=;
+	b=bkTVUxHhifEKIdgBP41Ivrtkb/o+gJhuemM60gzcbY5JuRGMb3GYPPE2KknzC8OxaFs7TZ
+	4RRTIBJHYCL00RI8GiIR6zwdjdFfilrzsODg9/0OR9fkwUlS3e2Rw7OZGSaEUGNliOh12z
+	92NtbP/N/ygz3gXLpfkgYdQznnF5cQ4=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-ykXCCHRFPeqt3a6zrsOMRQ-1; Mon, 28 Apr 2025 10:16:04 -0400
-X-MC-Unique: ykXCCHRFPeqt3a6zrsOMRQ-1
-X-Mimecast-MFC-AGG-ID: ykXCCHRFPeqt3a6zrsOMRQ_1745849763
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac28f255a36so337376566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:16:04 -0700 (PDT)
+ us-mta-688-DXEtVFEnODOVvMljwxNmLw-1; Mon, 28 Apr 2025 10:17:11 -0400
+X-MC-Unique: DXEtVFEnODOVvMljwxNmLw-1
+X-Mimecast-MFC-AGG-ID: DXEtVFEnODOVvMljwxNmLw_1745849830
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac3db5469fbso407775766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:17:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745849763; x=1746454563;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uVeCmrqrUzw7XcCq/Od4x1SVTaUBINUIH5X6q+EccXM=;
-        b=uC80Nh2d9q8qDhp0kFO4eH9GUc4Dtu4KMfwsS2AKuG4yGOcBe3dDyWir1F9G6nwaI7
-         aUABkkP7PpD1oW66wu3jCIJBwvHJv9xsNKg8uRuyTkBYY2oukEC4Lve2WIaXU7ckorgP
-         k12WOvsLX5lbxCrjOiLHAea/AvZSEMbfCu10AzygB17hefinFryLVMBBO3V9Iay5ec73
-         Cb4oDF6tjTpHwYm/stIyef0abQ3GfcVa5WuVv7lf4fBfOddH55eMrL9oHJ8nBf/bNCj8
-         BVuJeoyjCnFx9VO3cup5M4CHzwTbVgsX8R6by2Rmcl55O/VG452jVFAgIY5ovDu1gbLY
-         kBMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSbBeNE4DuoOYQPCGhdb+bUfKJ5xjwpgsrxYuSlIaNyKCbqG86KASidDU5unNzWwz9TI53sfziTECaN70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYz1aILfBetLz6j8YTlGinFR3m/Jz17q4n17BcwFqGVxIXOFcF
-	44Y1CQhVBlbtWlMbUav9jSoDTQtRX6lNBg+Np/tDYYn1Iz6Teyp0fdDoP2bKBHPLma6fLwXZOiW
-	9AL9VRNKbv+dXUHR0HkF/CWoPlzWR/wTnjMMJRmOO4pfeh5sOSAh+JqUYhW4zp6JIBDT2pw==
-X-Gm-Gg: ASbGncs45w7Gi1KqzgII9rm/1xgExrQGFVK+wURyOuNmhTzkbK0Np/7vGf/cghLR1TA
-	/hgXjtEIOgaXtdspQWsIENOc/HcOm/qxjFuOZyWXUws8NZaZ4sP2G5c4hJysBTRjURJezzADwJw
-	vlydjj4EgwoJc7NYPRACYBCa4JVaGACNBk35hX4Koclrsr5GXuQk0tW2LVohZaivagF0WG+kx5j
-	c/QgSVnmdX32VhnnsRqwN/eIk8YzRIk/2XZkqgPeDQVVMt7SBWVWtvl69VVykWXU74W2XkIXnsz
-	otECWtCVmeGEDQY=
-X-Received: by 2002:a17:907:720d:b0:ace:3ede:9d26 with SMTP id a640c23a62f3a-ace711175b7mr1232459466b.27.1745849762804;
-        Mon, 28 Apr 2025 07:16:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGR/e9QmbwHOiCLBIV4zMYiJpJwXtmPx7xY++qV/czLNz8zUG7J1jnJV/Ws/7DrjDPUG1JACw==
-X-Received: by 2002:a17:907:720d:b0:ace:3ede:9d26 with SMTP id a640c23a62f3a-ace711175b7mr1232455266b.27.1745849762340;
-        Mon, 28 Apr 2025 07:16:02 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7013ff9c5sm5977861a12.28.2025.04.28.07.16.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 07:16:01 -0700 (PDT)
-Message-ID: <a9e32617-c8c8-4c26-a1ce-6908bc64f802@redhat.com>
-Date: Mon, 28 Apr 2025 16:16:00 +0200
+        d=1e100.net; s=20230601; t=1745849830; x=1746454630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TG3qiJ8FxpJ+JhDJyMQMenN08PNsduLpDMO/zg592Wc=;
+        b=WILKha4MoKIm4kWc7WtNns6S8NbSS3imU61sJKjpLe7XdEYFEAfgSSNkae4tZpYoaC
+         pz4N+k1GDC4/iNMw+0JXJ4QdH1uXShbSXpyZcOD2Rx7bjsi9z+oTsEMoq0OzVK7wq8dx
+         t8qoBMqYCf8Y+JYrJwJ/bMteI3lvt9WkwsgSTBCxWp/8pqozWjxDcceoCqpMWU+qhRi+
+         vSvxEyAz9KjaX4gG9fM9u8qg4L55kQv5GqMq5GwRBrfeNo7iNzRMEnG8DKEB+tqdD4bH
+         EzyJSd2mAC6IpF+cTiVO5WDfq/sNwb9LVQqWyOunRy5iUzGhYvj1bPN9N44Zpa61Pyds
+         H1Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2X0XThH22c9H8p3UBn4KVc86hYm+PW2X0SxRFz6I20h4hvCK2Dxta7fHP3JoQ5LK2kTCQd3zRyoRd9CI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+WGfA1a6y30EaPuMxSjZvlzf5e1uJqou+DO3IJU6Ua7yo6/45
+	XEaK/sWy75JMt1vYgnDKPRKJ2dHH4BSYA62zt/J+6k62bu7WMoJ4/ae/q+HWWWu+Vz7pTLFN20q
+	sVBuIqSLJEhVhxLNYKSd/quX0IofuD6adKiIfesdpzr8D89K9u1mKy7SabfartsAG4AUd4UpeU/
+	OYQQ2urLVIffNmVxLnvwz8QFPsx/pERrOSzXKM
+X-Gm-Gg: ASbGnct4wRcpgZDWmqp1ULqXMa9Xk6I918cTmXJZl2ynUUqMxd0mivwFbkKPKwhHmx4
+	YgdWpj0OXmxdNCS+EbpSrZqu8PINIKHwp2gA6wpf7L88fSQgElc/grWDwvNZi5wi+aVjIP1AUt0
+	c0QIhtQR5e0g1CqRhxdX1YTxA=
+X-Received: by 2002:a17:907:f496:b0:acb:b9db:aa22 with SMTP id a640c23a62f3a-ace70e91b4dmr1008720366b.0.1745849830107;
+        Mon, 28 Apr 2025 07:17:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGbJTr40xzov/JpEN1AZCFq/hEiKT9H91c5FgG1/zMnJuTUP4Lf2zreV1Yqu5sM418yv7kpmQlzPbxZhBEi5NU=
+X-Received: by 2002:a17:907:f496:b0:acb:b9db:aa22 with SMTP id
+ a640c23a62f3a-ace70e91b4dmr1008717866b.0.1745849829773; Mon, 28 Apr 2025
+ 07:17:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] platform/x86: int3472: add hpd pin support
-To: Dongcheng Yan <dongcheng.yan@intel.com>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, sakari.ailus@linux.intel.com,
- hverkuil@xs4all.nl, andriy.shevchenko@linux.intel.com,
- u.kleine-koenig@baylibre.com, ricardo.ribalda@gmail.com,
- bingbu.cao@linux.intel.com
-Cc: stable@vger.kernel.org, dongcheng.yan@linux.intel.com, hao.yao@intel.com
-References: <20250425104331.3165876-1-dongcheng.yan@intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250425104331.3165876-1-dongcheng.yan@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAP4=nvTab7BnT4uu0iCuFJpZ-_MdY-MYU+Q25QnpygEZKmsQ8A@mail.gmail.com>
+ <20250428101234.GB551819@e132581.arm.com> <CAP4=nvQ_7oS5ZAsKmOd_ORg0tyHS=B+i2m63K=TLg22rTEiRGQ@mail.gmail.com>
+ <20250428124727.GE551819@e132581.arm.com>
+In-Reply-To: <20250428124727.GE551819@e132581.arm.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 28 Apr 2025 16:16:58 +0200
+X-Gm-Features: ATxdqUEGAw_xe9AuQufWCZ0vkmil018tY3jNyZt-_SnQ-ewecW2yh5rZ4pI92sw
+Message-ID: <CAP4=nvTdD=eKcO_sJL3G7U0KxRTQ6XjJeJxNrmeD3n8UGBv5+g@mail.gmail.com>
+Subject: Re: [BUG] perf segfaults when combining --overwrite and intel_pt event
+To: Leo Yan <leo.yan@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Wander Costa <wcosta@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+po 28. 4. 2025 v 14:47 odes=C3=ADlatel Leo Yan <leo.yan@arm.com> napsal:
+> I would leave this fix to the Intel-PT developers, who know this part
+> best.
 
-On 25-Apr-25 12:43, Dongcheng Yan wrote:
-> Typically HDMI to MIPI CSI-2 bridges have a pin to signal image data is
-> being received. On the host side this is wired to a GPIO for polling or
-> interrupts. This includes the Lontium HDMI to MIPI CSI-2 bridges
-> lt6911uxe and lt6911uxc.
-> 
-> The GPIO "hpd" is used already by other HDMI to CSI-2 bridges, use it
-> here as well.
-> 
-> Signed-off-by: Dongcheng Yan <dongcheng.yan@intel.com>
+Makes sense.
 
-Thanks, patch looks good to me:
+Just FYI, I tried applying the patch above, and after swapping
+mmap_ovw for overwrite_mmap (which appears to be the correct name in
+struct evlist) to make it build, the segfaults are gone:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+$ perf record --overwrite -a -e intel_pt/cyc,noretcomp/k sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 40,533 MB perf.data
 
-Regards,
+However, the data cannot be read:
 
-Hans
+$ perf report
+0x7620 [0x30]: failed to process type: 71 [Invalid argument]
+Error:
+failed to process sample
+# To display the perf.data header info, please use
+--header/--header-only options.
+#
 
+Data generated without --overwrite is fine.
 
-
-> ---
->  drivers/platform/x86/intel/int3472/common.h   | 1 +
->  drivers/platform/x86/intel/int3472/discrete.c | 6 ++++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-> index 51b818e62a25..4593d567caf4 100644
-> --- a/drivers/platform/x86/intel/int3472/common.h
-> +++ b/drivers/platform/x86/intel/int3472/common.h
-> @@ -23,6 +23,7 @@
->  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
->  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
->  #define INT3472_GPIO_TYPE_HANDSHAKE				0x12
-> +#define INT3472_GPIO_TYPE_HOTPLUG_DETECT			0x13
->  
->  #define INT3472_PDEV_MAX_NAME_LEN				23
->  #define INT3472_MAX_SENSOR_GPIOS				3
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index 394975f55d64..efa3bc7af193 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -191,6 +191,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->  		*con_id = "privacy-led";
->  		*gpio_flags = GPIO_ACTIVE_HIGH;
->  		break;
-> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
-> +		*con_id = "hpd";
-> +		*gpio_flags = GPIO_ACTIVE_HIGH;
-> +		break;
->  	case INT3472_GPIO_TYPE_POWER_ENABLE:
->  		*con_id = "avdd";
->  		*gpio_flags = GPIO_ACTIVE_HIGH;
-> @@ -221,6 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->   * 0x0b Power enable
->   * 0x0c Clock enable
->   * 0x0d Privacy LED
-> + * 0x13 Hotplug detect
->   *
->   * There are some known platform specific quirks where that does not quite
->   * hold up; for example where a pin with type 0x01 (Power down) is mapped to
-> @@ -290,6 +295,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  	switch (type) {
->  	case INT3472_GPIO_TYPE_RESET:
->  	case INT3472_GPIO_TYPE_POWERDOWN:
-> +	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
->  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
->  		if (ret)
->  			err_msg = "Failed to map GPIO pin to sensor\n";
-> 
-> base-commit: 4d1e8c8f11c611db5828e4bae7292bc295eea8ef
+Tomas
 
