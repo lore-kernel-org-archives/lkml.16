@@ -1,31 +1,45 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4954126B2C4;
-	Mon, 28 Apr 2025 12:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BED71F8AC5;
+	Mon, 28 Apr 2025 12:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745844741; cv=none; b=M7oVVUx90DDT/uOVIh/ORmlMpVjf9kh0zEhGhZGi9rjSPTtye0yXTe1frP2QC1PI0cTxfNGC+wnKFtz+V0R7L9/uNQdyWAFFspRBfFnrg8Z2WHgMvNpcHvTs0JId9lYHnGwB1CnwMud8kb81L7u1Ubs6qRaQtoC9UczZO/nP1ts=
+	t=1745844849; cv=none; b=VJb7E+beKp4IAgJcOWf+S2QSV+FomVRg+vkle1MQvgazILqc3O51uJRuAUN3WitpAYvqFWznMSfQPUnXFx50atA/1o1uekhrsYEbCqZSwg62VqfTFz8DdzP4AO0KZ8P2tD5TbOInKjK+lgZ4KpzgcKd9zDwx3ojEE2BVCJXFkCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745844741; c=relaxed/simple;
-	bh=40ThPwpXuivqdi8Tl+p7raANpndrmO0JgQyfQV6OeZ0=;
+	s=arc-20240116; t=1745844849; c=relaxed/simple;
+	bh=ljVmkwfyBpxbZuNNqkJ6Uc4gcwYncJlBYXT65/Ip3V8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OjraPr1dwu69ujFmltckJY1Ok8O8EUv0gVcnwYvBHp15RmwfZFyHoMtqP2m7CUzW7skyRGpWvZrluqboHzCHkYWH1QmM8Zl30AyD8qxwfC+ICsIFbFEoQnjXByvYX+MWL5oA+wAEvKA6tQwwr1clqQfRIohiqaFAxtPiCskbaKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 760D368C4E; Mon, 28 Apr 2025 14:52:07 +0200 (CEST)
-Date: Mon, 28 Apr 2025 14:52:07 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, axboe@kernel.dk, kbusch@kernel.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: Re: [PATCH v2 1/3] brd: protect page with rcu
-Message-ID: <20250428125207.GB27794@lst.de>
-References: <20250427083925.157984-1-yukuai1@huaweicloud.com> <20250427083925.157984-2-yukuai1@huaweicloud.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqWrlXbhRhK7Br5VXgRJ2YuAbhQla2mLa0g4RyBOdYUyGTtt2uPRH1vfFoliE2S2J1mVzWzyxNl+7p29OsbrMeqZVRFXFeAUtVS3XqhfadHNgfJW74lhD20NR4gJ72Bt1UpNbN2qGozUNHCTrwOR6NAZuHyZIpeehUWWZk6gVDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TyTI+CiJ; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TyTI+CiJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=KuthMj4SVMiZzJYTH3vd30SFc9+oF/zdEInnc/IAW3I=; b=TyTI+CiJ2BuRPrHGUpV3WnqfK5
+	pQHGHEiVzGirZafi2MBTbScvTMlVUkWI4B1Uq1BlJQGwXJUP0ZBrOMQ08AFtFSVdok8NwhLo7IrD9
+	srcEU0Yf9668WCud4JinfuHuAEnFCMxouxXhdBk96mxRhIORVK61LG5lhfsDg+kwHsjA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u9Nzf-00Apzo-1Z; Mon, 28 Apr 2025 14:53:55 +0200
+Date: Mon, 28 Apr 2025 14:53:55 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: daniel.braunwarth@kuka.com
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: phy: realtek: Add support for WOL magic
+ packet on RTL8211F
+Message-ID: <39f9fa02-7fa9-4246-aaa5-2f14d6319f90@lunn.ch>
+References: <20250428-realtek_wol-v1-1-15de3139d488@kuka.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,36 +48,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427083925.157984-2-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250428-realtek_wol-v1-1-15de3139d488@kuka.com>
 
-On Sun, Apr 27, 2025 at 04:39:23PM +0800, Yu Kuai wrote:
->  	page = brd_lookup_page(brd, sector);
->  
->  	kaddr = bvec_kmap_local(&bv);
->  	if (op_is_write(opf)) {
-> -		BUG_ON(!page);
-> -		memcpy_to_page(page, offset, kaddr, bv.bv_len);
-> +		if (page)
-> +			memcpy_to_page(page, offset, kaddr, bv.bv_len);
+> +static void rtl8211f_get_wol(struct phy_device *dev, struct ethtool_wolinfo *wol)
+> +{
+> +	struct rtl821x_priv *priv = dev->priv;
+> +
+> +	wol->supported = WAKE_MAGIC;
+> +	wol->wolopts = priv->saved_wolopts;
 
-This could use a comment on why page can be NULL here.
+Can the current configuration be read from the hardware, rather than
+using a cached value. The BIOS could for example enable magic packet,
+and Linux inherits it.
 
->  	} else if (page) {
->  		memcpy_from_page(kaddr, page, offset, bv.bv_len);
->  	} else {
->  		memset(kaddr, 0, bv.bv_len);
+> +static int rtl8211f_set_wol(struct phy_device *dev, struct ethtool_wolinfo *wol)
+> +{
+> +	struct rtl821x_priv *priv = dev->priv;
+> +	const u8 *mac_addr = dev->attached_dev->dev_addr;
+> +	int oldpage;
+> +
+> +	oldpage = phy_save_page(dev);
+> +	if (oldpage < 0)
+> +		goto err;
+> +
+> +	if (wol->wolopts & WAKE_MAGIC) {
+> +		/* Store the device address for the magic packet */
+> +		rtl821x_write_page(dev, 0xd8c);
 
-And why the above change my if/else cascade doesn't really make much sense
-any more and this should become:
+Does the datasheet have names for these magic values? Please add
+#defines.
 
-	} else {
-		if (page)
-	 		memcpy_from_page(kaddr, page, offset, bv.bv_len);
-		else
-	 		memset(kaddr, 0, bv.bv_len);
- 	}
-
-Otherwise looks good:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+	Andrew
