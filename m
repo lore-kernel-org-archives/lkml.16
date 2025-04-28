@@ -1,83 +1,81 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0920E84A3E;
-	Mon, 28 Apr 2025 13:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA2D26158D;
+	Mon, 28 Apr 2025 13:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848360; cv=none; b=Hp3rp4vedSafq3ZSCyU/GhdyhyYhQKxFE80o4QxcHdLCNlPH0ouiuOOS9WNzQg1d1Y0Qfi1+PnVyB956q2cxTcwG8D8iymNnr/zFIOnNyigKuN/zJ9qaNoWQd5WNEvZdr8/9JsUCETu2pbDmQmjXWsP15rZzYMpWFr6OvTiyAC0=
+	t=1745848418; cv=none; b=mDAmjkUB6QT/rAnh1ggChuwmsbo7OfxYB7JOSsTYfnuVH7vKiNHB71N8RV8CdZRl3AGHKqdVAUg0YdUl3iGwhXaO1pWl+DAjcqAsvEzQyvMxHPSXB+xwTzHXzklw83qr0WGwHkBmDGwNjiEiMB1YoXVc5sk9k49m6aTKauFeCks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848360; c=relaxed/simple;
-	bh=YiyXYAEWOyufLlYVbFQj0/ql5q+We2qBq2b+gWBE84U=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rnECjMr4q7cPy3q0AMbLxzYIRuxBThc5sa661wORoRg6dIzeWGDUn0crnYM1t5koYQ85047R2Yy64nw3DUcQRJESP9iBqbkQvG5kS5SoE/UHINaW5h6YHdoehTribBoxSS/b9BwXAoMY2xVHuiMQaTS9qhX4Ww+19zoRMnBsOfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZgTx7sDu; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745848418; c=relaxed/simple;
+	bh=/mtzWRmpXWF29O14pU2ML458uV5VjhqyGj0MRnqGEBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9BEPijYndXnxnstbb4f/Szjd9b1kZFqpgqo6n70p6uSy9sQeIxUcArpPgT1V2KHjiA2RNx43kL8pum96JWj///87B75nrNFWow+NulnM8nPfvRrjBfkvFqil7/Ao26ux1Dzch/cEGC/fnDbmDhk0qM/zW9AMqMNMLIwfETVS8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aCwUBW9V; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgTx7sDu"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso7735290a12.2;
-        Mon, 28 Apr 2025 06:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745848357; x=1746453157; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Qk7xr9uuwRSjYwMy4U3HtiuvB8Yd+TZDsggDR+t+kE=;
-        b=ZgTx7sDukc30/Rqrw2G801PVXGN4yU0If7yVdfv52cxe45Ls1+NEm3HOFsYG6+19yX
-         /lSX5ld9ycUTxIVvZGxp2aYTp/31mlTpMksiuuemLkti+lt0Y/DqVcm9ObE0PkFDKoIX
-         VI0zPr6pSdzfP5ZpE0irJA3PQFMGiV8VbruBlQEX+eQ/29kqSd9IEIPUW6Dous6yALJX
-         +RkNcdN7PR3AuaMqUtoptxeL2wOH7SVE2RhAVHBGej3Uw0VGue0wEI9hSY85/073onDb
-         0kGTRCuTYqpALzcChYspTTT6VdGyiiZHxwnBm5EXbV6BtZOYXxg/bhbXUQGhj9tibs6u
-         MgXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745848357; x=1746453157;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Qk7xr9uuwRSjYwMy4U3HtiuvB8Yd+TZDsggDR+t+kE=;
-        b=pn+Dndy+MmAqlbw5xN9s9fbOkp8M22SmeBEcdPsdy0cLUDZ1xp4s4QOAwWg4fgm+O/
-         u0EM02O2VTTqRadGaUPXQiHoNdV3y9j4Uwgg/JaTZV7OLoPV+ii9GGg4ozziLnbp2pcY
-         boFTgYy5N9xWSCgNnTjZELMhctxvBrzEswUgC/PZd8/8gJbUBHdS72xpxSogkQqXKZZ0
-         SD+HNqolzE+vVqY3A+pM5R1lUUz1CMdSdImjJ9aXUiSPIRa/U7cGuHOcxT7t3oTANIiL
-         o2tvVxUAhFd3Zkt3TtgvnBBH2OdnMEQyTxbQYbSuFrrRSzqW/Uc1z0ll0CRKDkNTpusS
-         xhHg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1FqVSEqQJ30KVj3hvJ7c06QSiEUxoCd10y2DN6tczSAMgXXCla6QDU3fsk0LsdvFszZDBICrf9QMDRMXkpHzUSJ+X@vger.kernel.org, AJvYcCVAQQr9u4KbllC54NzCyrHzlyBMI9nqXh/6NiT67mK3z/8UkXLNUw9CC1Qa+6HkXMUb824=@vger.kernel.org, AJvYcCXH/CCkLs7eAMNCJcXwmBS6hCxREFMBKJ38ZxzzaMGc3tmWnwzw5NIqiaOCIDIKYERx9YVbGOXGKXC8DsUD@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNvfxRjLLev0SSVM6Qd/Oz/sj3Z4wuiOM7Ri1LlAGxlmCeFpyG
-	V531Yi2I4NHpaz5gsyteqUn8L0pE90ZfUtf5RUOWn5nGbduyGbEP
-X-Gm-Gg: ASbGnctonopq1OWdxj94eosfXT3CDeSx02ekCa+BuVC8y+Sdbo0v6sEEPXkgbDri/Sl
-	c2poTzG0qigbjxUdmPOBIHaY9NEkxnDPSc3c9pZUgs1sX5kbH51o91wqx93Rmv8vwHVAbqHwK1M
-	nkoAOnTO8yhn6CpM9hWLp20vWqod6ewbonTS69kpQq98caczKFvrFEVztHC4rkgZh7Oi37IljwU
-	Gn5pLLhrqxLdbX4oCMexK31JDYAE1Mi3zOUEeC+a2ObEahtiB/ngtMQnue3Ipx4uQfdVcCY8glO
-	1Mvrx52T6wmAKv482iZS4dLi9qA=
-X-Google-Smtp-Source: AGHT+IFCZpU/YmUHW/2njA9mieI/iJ8o1Jbs9JAI3+cFa+yteR0Hhm7avQ8WWUBvxAG0GEHM4GYQrA==
-X-Received: by 2002:a05:6402:5021:b0:5f6:c638:c72d with SMTP id 4fb4d7f45d1cf-5f72257a2bdmr9221828a12.7.1745848357133;
-        Mon, 28 Apr 2025 06:52:37 -0700 (PDT)
-Received: from krava ([173.38.220.34])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f808b23ad5sm856452a12.66.2025.04.28.06.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:52:36 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 28 Apr 2025 15:52:34 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-Message-ID: <aA-IImjaT33ZSHcY@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-9-jolsa@kernel.org>
- <20250427180432.GC27775@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aCwUBW9V"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SBYd4C005858;
+	Mon, 28 Apr 2025 13:52:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=J7jj3U/6yykZIC3my3HQUM838Nstgf
+	V6I3GnhczP5Z0=; b=aCwUBW9VRdlSz9TnrnG+cYo6r0olxApVqClNy63OHFmY6T
+	AZqHDpTjMGaeaFKN/5fa9N2R4Jx+VKSbIIjpLALxCN6McIo3VFwe7PWYzfyWMCaq
+	H8lgNy5r2d1JvN0B9HusZM2pDz6nTVKW+fD8Yx81Gv5iFfhzWUJBkjDDIXpMCMMm
+	tCwU9XmRp//dKdB+P6aPMDLnNfkRxdhihPwsV0JLxXtIu0YB6D5d+xt1RnKCHFbq
+	j3Mbiv69ih34YM3TTTzXuBjya22DnmL+DRQTNfH3vgJW0ROPylFlO3zkwSZ9aesa
+	tzbdDpQD6VSfd8+ynZtpKYMfveLSJ3DnDGlI503g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469vqvkf0m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 13:52:58 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53SDpBAU025144;
+	Mon, 28 Apr 2025 13:52:58 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469vqvkf0f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 13:52:57 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53SCWF9V024643;
+	Mon, 28 Apr 2025 13:52:57 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1kxecc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 13:52:56 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53SDqt3N41550148
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 13:52:55 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 454AB2004B;
+	Mon, 28 Apr 2025 13:52:55 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5CACD20040;
+	Mon, 28 Apr 2025 13:52:54 +0000 (GMT)
+Received: from osiris (unknown [9.111.53.81])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 28 Apr 2025 13:52:54 +0000 (GMT)
+Date: Mon, 28 Apr 2025 15:52:52 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Chris Li <chrisl@kernel.org>, Barry Song <v-songbaohua@oppo.com>,
+        Hugh Dickins <hughd@google.com>, Yosry Ahmed <yosryahmed@google.com>,
+        "Huang, Ying" <ying.huang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>, Nhat Pham <nphamcs@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] mm, swap: remove swap slot cache
+Message-ID: <20250428135252.25453B17-hca@linux.ibm.com>
+References: <20250313165935.63303-1-ryncsn@gmail.com>
+ <20250313165935.63303-7-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,37 +84,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427180432.GC27775@redhat.com>
+In-Reply-To: <20250313165935.63303-7-ryncsn@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDExMiBTYWx0ZWRfX8TneiJicY9f7 cADjOIUkSdvsMffym++5F4lA6e068C52aElb8G0kmeV8/WFaJ4kWNY23aebyZcAGTymLZ38crhJ EvHeWRvXSTXZfxJh5ZikhHVeiqF/naQPfhwqaF4a/5aPG86XnT690ejpA163XwhHqJJanJNUvDE
+ LBZRwIpQhJVWutgAiI1MlHXEB0niJ0xZFQiWKth5jgBtQbEDNnnLeoGnFnKmVnq6TYRe6abC+gY /kWXeTqe9KOnYk62167DI7C+ZlFiGD8QfNy7X+YoxEJRrNhsM2IimROkMpahinCVUfQCIlPoDtG KNBAlmmqEQoC8TXhyTwZ2AvxH4Pb8W4A/OOF4/jzBsOt9guLJ9o+h/AfLZKUDel3CCCbhjbS/cu
+ 7EZBpkfkouyWbrUjtGo8frkMR5oIaFQBHxv2y1OL9g8bS7GWJ9jBSavqISL6YkHreTNaVq4k
+X-Authority-Analysis: v=2.4 cv=AP4PelLR c=1 sm=1 tr=0 ts=680f883a cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=GvQkQWPkAAAA:8 a=20KFwNOVAAAA:8 a=jrbkKmnBssjbu1LxJvIA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: TxDqPJHBmM4AOdE3pbn0iCzwEX74Iqsj
+X-Proofpoint-GUID: i3ND3R8RIX7NIjtCkfguEd7d2TJDbmcf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 malwarescore=0 mlxscore=0 mlxlogscore=627 phishscore=0
+ spamscore=0 impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280112
 
-On Sun, Apr 27, 2025 at 08:04:32PM +0200, Oleg Nesterov wrote:
-> On 04/21, Jiri Olsa wrote:
-> >
-> > +struct uprobe_trampoline {
-> > +	struct hlist_node	node;
-> > +	unsigned long		vaddr;
-> > +	atomic64_t		ref;
-> > +};
+Hi Kairui,
+
+On Fri, Mar 14, 2025 at 12:59:34AM +0800, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
 > 
-> I don't really understand the point of uprobe_trampoline->ref...
-> 
-> set_orig_insn/swbp_unoptimize paths don't call uprobe_trampoline_put().
-> It is only called in unlikely case when swbp_optimize() fails, so perhaps
-> we can kill this member and uprobe_trampoline_put() ? At least in the initial
-> version.
+> Slot cache is no longer needed now, removing it and all related code.
+...
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> Reviewed-by: Baoquan He <bhe@redhat.com>
+> ---
+>  include/linux/swap.h       |   3 -
+>  include/linux/swap_slots.h |  28 ----
+>  mm/Makefile                |   2 +-
+>  mm/swap_slots.c            | 295 -------------------------------------
+>  mm/swap_state.c            |   8 +-
+>  mm/swapfile.c              | 194 ++++++++----------------
+>  6 files changed, 67 insertions(+), 463 deletions(-)
+>  delete mode 100644 include/linux/swap_slots.h
+>  delete mode 100644 mm/swap_slots.c
+...
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+...
+> +swp_entry_t folio_alloc_swap(struct folio *folio)
+>  {
+> -	int order = swap_entry_order(entry_order);
+> -	unsigned long size = 1 << order;
+> +	unsigned int order = folio_order(folio);
+> +	unsigned int size = 1 << order;
+>  	struct swap_info_struct *si, *next;
+> -	int n_ret = 0;
+> +	swp_entry_t entry = {};
+> +	unsigned long offset;
+>  	int node;
+>  
+> +	if (order) {
+> +		/*
+> +		 * Should not even be attempting large allocations when huge
+> +		 * page swap is disabled. Warn and fail the allocation.
+> +		 */
+> +		if (!IS_ENABLED(CONFIG_THP_SWAP) || size > SWAPFILE_CLUSTER) {
+> +			VM_WARN_ON_ONCE(1);
+> +			return entry;
+> +		}
+> +	}
 
-right, we can remove that
+This warning triggers on s390. CONFIG_THP_SWAP is disabled and order
+is 8 when this triggers (reproduced with ltp's swapon01 test case):
 
-> 
-> > +static void uprobe_trampoline_put(struct uprobe_trampoline *tramp)
-> > +{
-> > +	if (tramp && atomic64_dec_and_test(&tramp->ref))
-> > +		destroy_uprobe_trampoline(tramp);
-> > +}
-> 
-> Why does it check tramp != NULL ?
-
-I think some earlier version of the code could have called that with NULL,
-will remove that
-
-thanks,
-jirka
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 895 at mm/swapfile.c:1227 folio_alloc_swap+0x438/0x440
+Modules linked in:
+CPU: 1 UID: 0 PID: 895 Comm: swapon01 Not tainted 6.14.0-rc6-00227-g0ff67f990bd4-dirty #25
+Hardware name: IBM 3931 A01 704 (z/VM 7.4.0)
+Krnl PSW : 0704d00180000000 000003ffe051210c (folio_alloc_swap+0x43c/0x440)
+           R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0 RI:0 EA:3
+Krnl GPRS: 0000000080000000 0000000000000001 0000000000000013 0000000000070000
+           0000000000000006 fffffef40e9da000 0000000000000000 0000037202fc4000
+           0000037f00000100 0000000000000100 0000037fe2e4b770 0000037202fc4000
+           0000000000000000 0000000000000000 000003ffe0512108 0000037fe2e4b3c8
+Krnl Code: 000003ffe05120fe: b9160044            llgfr   %r4,%r4
+           000003ffe0512102: c0e5ffdf8c0b        brasl   %r14,000003ffe0103918
+          #000003ffe0512108: af000000            mc      0,0
+          >000003ffe051210c: a7f4fe94            brc     15,000003ffe0511e34
+           000003ffe0512110: c0040069ce74        brcl    0,000003ffe124bdf8
+           000003ffe0512116: eb8ff0580024        stmg    %r8,%r15,88(%r15)
+           000003ffe051211c: b90400ef            lgr     %r14,%r15
+           000003ffe0512120: e3f0ffb8ff71        lay     %r15,-72(%r15)
+Call Trace:
+ [<000003ffe051210c>] folio_alloc_swap+0x43c/0x440 
+ [<000003ffe050afa6>] add_to_swap+0x56/0xf0 
+ [<000003ffe045fdc0>] shrink_folio_list+0xe80/0x13b0 
+ [<000003ffe0461946>] shrink_inactive_list+0x1a6/0x550 
+ [<000003ffe04624a2>] shrink_lruvec+0x2b2/0x410 
+ [<000003ffe0462840>] shrink_node_memcgs+0x240/0x2d0 
+ [<000003ffe0462986>] shrink_node+0xb6/0x3e0 
+ [<000003ffe046302a>] do_try_to_free_pages+0xda/0x610 
+ [<000003ffe0464d2c>] try_to_free_mem_cgroup_pages+0x14c/0x2a0 
+ [<000003ffe0568270>] try_charge_memcg+0x220/0x5d0 
+ [<000003ffe056867a>] charge_memcg+0x5a/0x270 
+ [<000003ffe056a484>] __mem_cgroup_charge+0x44/0x80 
+ [<000003ffe04acf20>] alloc_anon_folio+0x280/0x610 
+ [<000003ffe04ad45a>] do_anonymous_page+0x1aa/0x5e0 
+ [<000003ffe04af4c4>] __handle_mm_fault+0x244/0x500 
+ [<000003ffe04af820>] handle_mm_fault+0xa0/0x170 
+ [<000003ffe01533f8>] do_exception+0x1d8/0x4a0 
+ [<000003ffe11fb92a>] __do_pgm_check+0x13a/0x220 
+ [<000003ffe120c3ce>] pgm_check_handler+0x11e/0x170 
+---[ end trace 0000000000000000 ]---
