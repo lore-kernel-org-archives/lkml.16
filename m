@@ -1,174 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8881B4236
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790FF1F462C
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745833978; cv=none; b=vAh4mSVt1IIE+A4ao7PV3SqyuOWp9MbXKA6v77mFWclSe1JxLiqwyZHWRe8+NTijD0uuARj4I1FRFb97+BV/Zl4Mw1Fs9qU+7jXew+ZSfDbTM2l4EksDTWLc/vGO81XX95pXLK3ZbSzN+SySpcSAzUiQe0q9JwKPpw1zix5qT34=
+	t=1745834010; cv=none; b=EQWGm7HfYmZcobcOKXVHmXATHv78/3Wq2N9wQREak/PSFRQt6nZ31bWm6Y0U9B6ErZdhSoom/QSOz0GUKgUvhWdmiPHD/H935kAxsgsmYN17AvZViDxspM2ZvvSqpx24p0EXzXCcmATJmhckOm/fgvL4FVTWUuGvg0ssNy30VuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745833978; c=relaxed/simple;
-	bh=Qra0jDZ082u3o61wFUg8DO/d33Nm/eecQ74+ZCXcKP0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tdwyuyMN8Jap6XndLL1ft19Gbe0ShYsJlxvXOJqAsbtJUflK/Rb3zMn1BrkFLbHIlzuHMM+rGBr07uRpJTSRvt1BJZ/qmeC+z2FLTVhHS1gbt0Wf5bk8rO42gHcTujNVRUtr9ymumb4JWdCRggucM428MgbQpd1YyTsmvcsDgDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEuGzhmw; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745834010; c=relaxed/simple;
+	bh=AjyB/sbxVDWriPqsJPvQovSOAwFVq9YRBy0W4A17yro=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ByiBLN58it97KW00RLEm1kanhw/DvouvWLXMOJ/2QUkNSAWEGhcY2l/1Euj6gN2ecmLba4Dq+1JByK4aOxvGPx+7wXib+07yLHOQ/jm1w7IW2fkcUxXbU7186vUOm7mCzrOKAWF18iX261AoawYokxp0RK28nDJ3BX4byZJ4fwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=a6o18NKf; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEuGzhmw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745833976; x=1777369976;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=Qra0jDZ082u3o61wFUg8DO/d33Nm/eecQ74+ZCXcKP0=;
-  b=gEuGzhmw5GK3b8gzOTpXQYQJW/5uz2F21F6/RqZNQiG0BnU067u1O4Nz
-   cnjjnMBd8EDzTHg4ub+FP3kXvTP91tjRNNc45M9IbKbx9FkiPOZ6OYLa7
-   RMQoKR08aFMj534hNimfeskZv9xYw4jX8YCEXD2Ty8rvh6EIPBkUSogqY
-   suS8usLaPZ3leHIo5TKWrVoxo7orCMcXEhf+ZXusSYwUx2q1Hm9k8Pcs8
-   62qpdcW4ij5oLMH3LBfP1mblrySQ0i153qRpkYjA2Ef8ShBRyLADsgym+
-   TC/TG1vUaWQFT0/6mVr8SmDZHAPAd0q7Pd4txZVFWABhTvJW3MyhkYtlD
-   w==;
-X-CSE-ConnectionGUID: KLOPHo22TjuotmgLYqnhnw==
-X-CSE-MsgGUID: 4S3eICFnQ3+TmnjbsmwukQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="35029878"
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="35029878"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 02:52:55 -0700
-X-CSE-ConnectionGUID: AlJxoydRT3yVcmDz1WNpAQ==
-X-CSE-MsgGUID: xdpgg3BkR0qF/8jnBps79w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="164439560"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.174])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 02:52:51 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Dmitry Baryshkov
- <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>,
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/23] drm/tests: hdmi: Add macro to simplify EDID setup
-In-Reply-To: <20250425-hdmi-conn-yuv-v4-8-5e55e2aaa3fa@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-8-5e55e2aaa3fa@collabora.com>
-Date: Mon, 28 Apr 2025 12:52:47 +0300
-Message-ID: <87cycwy5n4.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="a6o18NKf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1745834005; x=1777370005;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=CJ9V2Ue301c3Mhn7ZN2+hlhZ2/bUKJOp0yfrB5IvETA=;
+  b=a6o18NKfDabhTyeQAnxM5BgBPMYcmihT0KsyJMvekFcDitUIs+z4t+Np
+   MGjShqoxr5VSGnXbe8N8LFtOwhbxwqz2usOGbiMVnNae2irt6K08kgJbv
+   FIZYO/czLfv14V+X7ajotcCeeXQKrGhHOfJpLC/JhrtgmxbmL2KMzHuvH
+   I=;
+X-IronPort-AV: E=Sophos;i="6.15,246,1739836800"; 
+   d="scan'208";a="292234928"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 09:53:23 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.17.79:18526]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.19.253:2525] with esmtp (Farcaster)
+ id cbd36dde-692d-4f89-b0f0-b1dd114db2cd; Mon, 28 Apr 2025 09:53:22 +0000 (UTC)
+X-Farcaster-Flow-ID: cbd36dde-692d-4f89-b0f0-b1dd114db2cd
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 28 Apr 2025 09:53:21 +0000
+Received: from dev-dsk-bercantu-1c-725598d7.eu-west-1.amazon.com
+ (10.253.100.253) by EX19D014EUC004.ant.amazon.com (10.252.51.182) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 28 Apr 2025
+ 09:53:18 +0000
+From: "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de>
+To: <rppt@kernel.org>
+CC: <akpm@linux-foundation.org>, <bercantu@amazon.de>, <dwmw2@infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <lkp@intel.com>,
+	<yajun.deng@linux.dev>
+Subject: Re: [PATCH] mm: memblock: Fix arguments passed to memblock_set_node()
+Date: Mon, 28 Apr 2025 09:53:10 +0000
+Message-ID: <20250428095310.68227-1-bercantu@amazon.de>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aAyXzywgqH2qFRKn@kernel.org>
+References: <aAyXzywgqH2qFRKn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-ClientProxiedBy: EX19D037UWC004.ant.amazon.com (10.13.139.254) To
+ EX19D014EUC004.ant.amazon.com (10.252.51.182)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Fri, 25 Apr 2025, Cristian Ciocaltea <cristian.ciocaltea@collabora.com> wrote:
-> Factor out the HDMI connector initialization from
-> drm_kunit_helper_connector_hdmi_init_funcs() into a common
-> __connector_hdmi_init() function, while extending its functionality to
-> allow setting custom (i.e. non-default) EDID data.
+On Sat, Apr 26, 2025 at 10:22:39AM +0200, Mike Rapoport wrote:
+> Hi Bernardo,
+> 
+> On Fri, Apr 25, 2025 at 10:20:03AM +0000, Bernardo C. Gutierrez Cantu wrote:
+> > memblock_set_node() receives a `base` and a `size` arguments, but we are
+> > passing the `start` and `end` of the memory regions when iterating over
+> > them in memmap_init_reserved_pages() to set their node ids.
+> > 
+> > This results in the function setting the node ids for the reserved memory
+> > regions in `[base, base + base + size)` instead of `[base, base + size)`.
+> > 
+> > Pass `start` and `size`, so that we iterate over the correct range.
+> > 
+> > Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
+> > 
+> > Signed-off-by: Bernardo C. Gutierrez Cantu <bercantu@amazon.de>
+> 
+> There's already a fix in memblock tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock.git/commit/?h=for-next&id=06eaa824fd239edd1eab2754f29b2d03da313003
+> 
+> Will send PR to Linus soon.
 >
-> Introduce a macro as a wrapper over the new helper to allow dropping the
-> open coded EDID setup from all test cases.
->
-> The actual conversion will be handled separately; for now just apply it
-> to drm_kunit_helper_connector_hdmi_init() helper.
->
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> ---
->  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 46 +++++++++++++---------
->  1 file changed, 28 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> index c8dc6fa0f925e35e9903a18bac7f78f9d8165960..36734639d19a3f279abc4631eb19d5c2b20ca315 100644
-> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-> @@ -140,10 +140,11 @@ static const struct drm_connector_funcs dummy_connector_funcs = {
->  
->  static
->  struct drm_atomic_helper_connector_hdmi_priv *
-> -drm_kunit_helper_connector_hdmi_init_funcs(struct kunit *test,
-> -					   unsigned int formats,
-> -					   unsigned int max_bpc,
-> -					   const struct drm_connector_hdmi_funcs *hdmi_funcs)
-> +__connector_hdmi_init(struct kunit *test,
-> +		      unsigned int formats,
-> +		      unsigned int max_bpc,
-> +		      const struct drm_connector_hdmi_funcs *hdmi_funcs,
-> +		      const char *edid_data, size_t edid_len)
+Hi Mike
 
-char* is weird for EDID data, but it's a pre-existing thing, and
-actually making it unsigned char or u8 isn't much better.
+Oh ok, I see. Thank you, that patch should fix the issue.
 
-A follow-up could switch edid_data to just const void *, and ditto for
-set_connector_edid() and current_edid member in struct
-drm_atomic_helper_connector_hdmi_priv.
+Will it also be backported to LTS kernels affected by the bug, which was
+introduced in v6.5?
 
-BR,
-Jani.
+> > ---
+> >  mm/memblock.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index 0a53db4d9f7b..9639f04b4fdf 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+> > @@ -2196,7 +2196,7 @@ static void __init memmap_init_reserved_pages(void)
+> >  		if (memblock_is_nomap(region))
+> >  			reserve_bootmem_region(start, end, nid);
+> >  
+> > -		memblock_set_node(start, end, &memblock.reserved, nid);
+> > +		memblock_set_node(start, region->size, &memblock.reserved, nid);
+> >  	}
+> >  
+> >  	/*
+> > -- 
+> > 2.47.1
+> 
+> -- 
+> Sincerely yours,
+> Mike.
 
->  {
->  	struct drm_atomic_helper_connector_hdmi_priv *priv;
->  	struct drm_connector *conn;
-> @@ -197,29 +198,38 @@ drm_kunit_helper_connector_hdmi_init_funcs(struct kunit *test,
->  
->  	drm_mode_config_reset(drm);
->  
-> +	if (edid_data && edid_len) {
-> +		ret = set_connector_edid(test, &priv->connector, edid_data, edid_len);
-> +		KUNIT_ASSERT_GT(test, ret, 0);
-> +	}
-> +
->  	return priv;
->  }
->  
-> +static
-> +struct drm_atomic_helper_connector_hdmi_priv *
-> +drm_kunit_helper_connector_hdmi_init_funcs(struct kunit *test,
-> +					   unsigned int formats,
-> +					   unsigned int max_bpc,
-> +					   const struct drm_connector_hdmi_funcs *hdmi_funcs)
-> +{
-> +	return __connector_hdmi_init(test, formats, max_bpc, hdmi_funcs, NULL, 0);
-> +}
-> +
-> +#define drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test, formats, max_bpc, funcs, edid) \
-> +	__connector_hdmi_init(test, formats, max_bpc, funcs, edid, ARRAY_SIZE(edid))
-> +
->  static
->  struct drm_atomic_helper_connector_hdmi_priv *
->  drm_kunit_helper_connector_hdmi_init(struct kunit *test,
->  				     unsigned int formats,
->  				     unsigned int max_bpc)
->  {
-> -	struct drm_atomic_helper_connector_hdmi_priv *priv;
-> -	int ret;
-> -
-> -	priv = drm_kunit_helper_connector_hdmi_init_funcs(test,
-> -							  formats, max_bpc,
-> -							  &dummy_connector_hdmi_funcs);
-> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
-> -
-> -	ret = set_connector_edid(test, &priv->connector,
-> -				 test_edid_hdmi_1080p_rgb_max_200mhz,
-> -				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_max_200mhz));
-> -	KUNIT_ASSERT_GT(test, ret, 0);
-> -
-> -	return priv;
-> +	return drm_kunit_helper_connector_hdmi_init_with_edid_funcs(test,
-> +				formats,
-> +				max_bpc,
-> +				&dummy_connector_hdmi_funcs,
-> +				test_edid_hdmi_1080p_rgb_max_200mhz);
->  }
->  
->  /*
+Best regards
+Bernardo
 
--- 
-Jani Nikula, Intel
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
