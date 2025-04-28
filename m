@@ -1,202 +1,177 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416855684;
-	Mon, 28 Apr 2025 02:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DFC2BD04;
+	Mon, 28 Apr 2025 02:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745805769; cv=none; b=p4RR00gIVNZ4DSy3KjPUlzTRWirDpZoY6lIyTgV12EbVO2nqdyUAhsXtNltawMvym0vF5tLoUGlP9tAFvAogS+Zt4e19eGv6ykbMHBaIipQs0eI/GKkNAQ7DBDajMf8aG/2J09QHa2VsVTx/q1VwvZI1lLplQbpZHlLi/Q5BizU=
+	t=1745805807; cv=none; b=QDXPxcTybfA2pfO+R1ktmWgqhnwZG0QRo8fgISUUyoNvD8LjxQ7/LeLBCKG9DXnHPpe4RLgPrvtBK+y67ug7G0E5X8QYjXXf3+MBT1hrUP4SrUMjm8IZIg5JHLy6qWHZ7O4CmNn+9F9nxkfPVXnk9SX/7Wp5U/VLTV8HpzGYJS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745805769; c=relaxed/simple;
-	bh=DCMxUV6dX20mSSL3i2v8r0AeC9taHPlfwabBfcmx5+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VsJ/8xhfrfdnBa3Qhk8pLeOHJfqeVJqqjUCoL4QlGGyfZP6xxSXPgbQpjrtnQIf6WOMdwWf+4fki6O7j9hmpFKgEGIyvZqVbmLo2cVDXNVh2OLH4kREUQsoOxwe2BxbU/Ehe3hrrmL8gdoIEJ5PBPx/PUb5d9831J05LNSUJ+dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhjBQR7B; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745805807; c=relaxed/simple;
+	bh=Re5T5HkJFL3+//qx6iiThSGteEkUA/xDo3pm7gWirxg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=KHJ84SmXWbm0dQjPmkLbynOzVwosSPcKLXYlSHHuHsM47UgmDnUpD0TH232Ueh1b8uOp0fVjliq10CZDissACJBxDHlmDDP+2YbAPOHYcXiP3BOSnko5zpEp2gz22uqXE9MlRbzL+eCHxZFCc5CvfdEweM4chlD3iTARqVYhcIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OlYRwfjx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhjBQR7B"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22c33677183so42928055ad.2;
-        Sun, 27 Apr 2025 19:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745805767; x=1746410567; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7CvA9rPJDY9mWPFla5C2Yb++zkc3I+YZAklp33A2++s=;
-        b=fhjBQR7BbTg0GtBLdiPWQR1DkpC0ElXTZnRIpsZoEwFVT0b9boudewslqfOuHdbt6X
-         0wMHOz+SAAiYDN1Je8oB56aVio04LVTM2kUmc6sFd3KErnjpmR3USUWSyfvroM486GJ3
-         TINkQNVaDLdmVNOFvvxXUZOL2dqEoINGYS7IFJBIjeAVirzqR0WmA3/Ab4sDTS1kKEus
-         nVi4IuROZ1z3s5Z4R+yXoeQj4KJOO/JpQ5xweyOoaOHoQhVEhNaXlCVn5OpAUQCnqXJ/
-         c+9ORUs27JLuuj+QM4uAFKOyEXpmIEGTqxpodf+dxMg7uXFNkKs7rKefX2qWYgay42xC
-         R3gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745805767; x=1746410567;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7CvA9rPJDY9mWPFla5C2Yb++zkc3I+YZAklp33A2++s=;
-        b=lTZBuz9I1jbwj8v8RD9ouDO30WRXAoA5J7MP7CKHWKM77D5MO2f53fw2N+fIpxBwJr
-         0Eb/rUx7OQjklgphkPvWRn1fa+96JYBrg0oHLPv1QjxBYL4EwYzblX1mykGoLPh3pvgy
-         +CNbbiZNPxnwEROT66wqMVQCJZ4S0fy5/5o2eSzy8+0SmlJen3ydUaaWlS/Ootve7cEo
-         177gLNNVIRYQ4HtT3R/l0J7PnL63CBa8SOsbmbdd1254Q90eXnd4ioaVBBpOhFJ2ZwSF
-         zvcc4LS0puSXs7XLVW6SSHk2hxkUaRuqRXQz8CTOkExastcoAI+l0dukE/LaVX3pzUq3
-         +/sw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2dZpOeuANI0Rf4HzEP5QWNZwh0VWSNpN7t6zvsLCDwCU60we6M6eW86ELtxPd2bEtKbZWL0tkWl1jQec=@vger.kernel.org, AJvYcCVpsoQyc6alVqXaYPhE+UTGk+mQDgNkGtD2mFwL6RkozVZnnrtU2ZOSLW+fibGilS/tTOPETbc/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWjl9jVnodhNrVGLcvaG0lTHL43mkNqf4TbklCLyOfkaRFMUwa
-	PH6J/Van3GtznbdLFuHVJ6sIKvRJEB49NJJwkF1smlZdbTqdAJbw
-X-Gm-Gg: ASbGncuSXu9GDHHjOctz5pwuwnlz6Zb3GtXwI8qSA2F28J4YEQoeeZjFVF6VddAfn2k
-	FpcPYGw/wSqurmKT96huNiBhRyF3jvN0SWHFfX1zrZI3YH4nrz/7D1n6/Rc1Dz5CfrktWe2Dy17
-	uTqe/76DVzbuX0R+jBmLpX7IlldUXzHaIcMCfXLCHBUFMdcdtls20QthR3rhqBqAW5UOn9cKuRz
-	QAd3POe/Cg3NI+GyX/WjR9lV6xzOJyRoakRva1UZLXTY3ZY6RZw9i2ZafEQwWfmF8T60BnY44zY
-	ay0wslO1e85Kor2BgZjXYOtOoAGTMZx798sZn2REcu/YVg==
-X-Google-Smtp-Source: AGHT+IE8pdSnJtrq62dkbclKPqe2AcUe+Xlxu8UQ+JJDlx6obZtvFZLPYXgn2MEq1NvIBWYqRr4b/A==
-X-Received: by 2002:a17:902:c945:b0:224:194c:694c with SMTP id d9443c01a7336-22dc6a0f2ebmr117743375ad.28.1745805767371;
-        Sun, 27 Apr 2025 19:02:47 -0700 (PDT)
-Received: from fedora ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22dd9530465sm8887785ad.10.2025.04.27.19.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Apr 2025 19:02:46 -0700 (PDT)
-Date: Mon, 28 Apr 2025 02:02:40 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Wang Liang <wangliang74@huawei.com>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, jv@jvosburgh.net, andrew+netdev@lunn.ch,
-	linux-kernel@vger.kernel.org,
-	syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
-Subject: Re: [PATCH net v2] bonding: hold ops lock around get_link
-Message-ID: <aA7hwMhd3kyKpvUu@fedora>
-References: <20250410161117.3519250-1-sdf@fomichev.me>
- <11fb538b-0007-4fe7-96b2-6ddb255b496e@huawei.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OlYRwfjx"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53RCiPpG026812;
+	Mon, 28 Apr 2025 02:03:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Ry/gvYyfmaVfNkedSDaTq+oPl2tD9g2MgdxbWL4JXFw=; b=OlYRwfjxrSXTL0TJ
+	yORwWjJstKfOgTZqm5SEil9Qmw6w5QRR/8H/z5Wrm/vtMoM/LggM+w6zYcjEuJ0f
+	QrrvzxfIVMdlRHDbpBqJwG4azf0tZkNj2vN1bKvzgV7DDNqKJs0b1ZEJoCGSUTXY
+	7KwvLTxQh/Tr2WCGAnwLq4i15cFvdnd75gsguOxEOc+gaUHIa3hX8ZXx2l4WL6O8
+	gHB8dZktSYY1lOV3pjMvOlWiqdhtmL7QD+S3+9pHgr/1t4W53vA4sEyg+wWHPTwi
+	J46SuNre3UR7XoR/ztizVeVC1BCFhBiHXQzN0X175X5T0rIOdeSQRW7nNP0G9zvL
+	sVuvDg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468rsb59m5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 02:03:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53S23K0A020564
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 02:03:20 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 27 Apr
+ 2025 19:03:17 -0700
+Message-ID: <4b3a18e3-14ac-4876-9b51-acee142464b3@quicinc.com>
+Date: Mon, 28 Apr 2025 10:03:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <11fb538b-0007-4fe7-96b2-6ddb255b496e@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] wifi: ath11k: Fix MHI target memory reuse logic
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        <jeff.johnson@oss.qualcomm.com>, Jeff Johnson <jjohnson@kernel.org>
+CC: <kernel@collabora.com>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250425110424.2530460-1-usama.anjum@collabora.com>
+ <dee649f1-0516-4a59-a70d-ba206388e568@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <dee649f1-0516-4a59-a70d-ba206388e568@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDAxNSBTYWx0ZWRfXyXy7ULkk/EtN Y3MmrYYlqKXSbjL9MTKtvQPpDyiHPfO7JAss3irAUSbnzTVt3yuM2B2UqKUqOR5mrNVa0CnIlW/ D94cCjlZxlUN+oqfae1W9HKn/ov5GpUh21tTr8xH6LWkVhpEId6FDwlB99rUkZhzZJTY9IjZoJt
+ csvoKE4UGQwqe6zDDEsFI2MACmH4v7DOstmSl7mSGQZ2EWodePYe8fz3ZQq9tDCnNu/Yj7MdwIU KVq80hsimGBo7Rqb9tD83ifmcVmvACfjtdH5LMU0ryz5lh8utDeXmmNyVlZX2mlPCOmIh3g5tpV zZLtbGizSHEUB9wvUAXo9R/aM7rDS1FHolVWE7GbmyFxGZk8YoJ84c/xPrDggcOqzX2n+IwxKwb
+ Iq7OjU38H9jnHJQ7gEM9r/4ohVIA+kp8WJeSje6nq9CuAZQ1RNM4A3SH4hMa3nyoCjBO/HxG
+X-Proofpoint-GUID: Ig6s0WvLLKgxgO7K9ytZNOqP7T_G4Vcj
+X-Proofpoint-ORIG-GUID: Ig6s0WvLLKgxgO7K9ytZNOqP7T_G4Vcj
+X-Authority-Analysis: v=2.4 cv=I8ZlRMgg c=1 sm=1 tr=0 ts=680ee1e8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=QX4gbG5DAAAA:8 a=COk6AnOGAAAA:8 a=OC3NTexeB3fIAc-p7tYA:9
+ a=QEXdDO2ut3YA:10 a=AbAUZ8qAyYyZVLSsDulk:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
+ malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 spamscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280015
 
-On Sun, Apr 27, 2025 at 11:06:32AM +0800, Wang Liang wrote:
-> 
-> 在 2025/4/11 0:11, Stanislav Fomichev 写道:
-> > syzbot reports a case of ethtool_ops->get_link being called without
-> > ops lock:
-> > 
-> >   ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:63
-> >   bond_check_dev_link+0x1fb/0x4b0 drivers/net/bonding/bond_main.c:864
-> >   bond_miimon_inspect drivers/net/bonding/bond_main.c:2734 [inline]
-> >   bond_mii_monitor+0x49d/0x3170 drivers/net/bonding/bond_main.c:2956
-> >   process_one_work kernel/workqueue.c:3238 [inline]
-> >   process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
-> >   worker_thread+0x870/0xd50 kernel/workqueue.c:3400
-> >   kthread+0x7b7/0x940 kernel/kthread.c:464
-> >   ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-> >   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> > 
-> > Commit 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
-> > changed to lockless __linkwatch_sync_dev in ethtool_op_get_link.
-> > All paths except bonding are coming via locked ioctl. Add necessary
-> > locking to bonding.
-> > 
-> > Reviewed-by: Hangbin Liu <liuhangbin@gmail.com>
-> > Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
-> > Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
-> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
-> > ---
-> > v2:
-> > - move 'BMSR_LSTATUS : 0' part out (Jakub)
-> > ---
-> >   drivers/net/bonding/bond_main.c | 13 +++++++++----
-> >   1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-> > index 950d8e4d86f8..8ea183da8d53 100644
-> > --- a/drivers/net/bonding/bond_main.c
-> > +++ b/drivers/net/bonding/bond_main.c
-> > @@ -850,8 +850,9 @@ static int bond_check_dev_link(struct bonding *bond,
-> >   			       struct net_device *slave_dev, int reporting)
-> >   {
-> >   	const struct net_device_ops *slave_ops = slave_dev->netdev_ops;
-> > -	struct ifreq ifr;
-> >   	struct mii_ioctl_data *mii;
-> > +	struct ifreq ifr;
-> > +	int ret;
-> >   	if (!reporting && !netif_running(slave_dev))
-> >   		return 0;
-> > @@ -860,9 +861,13 @@ static int bond_check_dev_link(struct bonding *bond,
-> >   		return netif_carrier_ok(slave_dev) ? BMSR_LSTATUS : 0;
-> >   	/* Try to get link status using Ethtool first. */
-> > -	if (slave_dev->ethtool_ops->get_link)
-> > -		return slave_dev->ethtool_ops->get_link(slave_dev) ?
-> > -			BMSR_LSTATUS : 0;
-> > +	if (slave_dev->ethtool_ops->get_link) {
-> > +		netdev_lock_ops(slave_dev);
-> > +		ret = slave_dev->ethtool_ops->get_link(slave_dev);
-> > +		netdev_unlock_ops(slave_dev);
-> > +
-> > +		return ret ? BMSR_LSTATUS : 0;
-> > +	}
-> >   	/* Ethtool can't be used, fallback to MII ioctls. */
-> >   	if (slave_ops->ndo_eth_ioctl) {
+
+
+On 4/25/2025 7:08 PM, Baochen Qiang wrote:
 > 
 > 
-> Hello, I find that a WARNING still exists:
+> On 4/25/2025 7:04 PM, Muhammad Usama Anjum wrote:
+>> Firmware requests 2 segments at first. The first segment is of 6799360
+>> whose allocation fails due to dma remapping not available. The success
+>> is returned to firmware. Then firmware asks for 22 smaller segments
+>> instead of 2 big ones. Those get allocated successfully. At suspend/
+>> hibernation time, these segments aren't freed as they will be reused
+>> by firmware after resuming.
+>>
+>> After resuming, the firmware asks for the 2 segments again with the
+>> first segment of 6799360 size. Since chunk->vaddr is not NULL, the
+>> type and size are compared with the previous type and size to know if
+>> it can be reused or not. Unfortunately, it is detected that it cannot
+>> be reused and this first smaller segment is freed. Then we continue to
+>> allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
+>> is called which frees the second smaller segment as well. Later success
+>> is returned to firmware which asks for 22 smaller segments again. But
+>> as we had freed 2 segments already, we'll allocate the first 2 new
+>> smaller segments again and reuse the remaining 20. Hence 20 small
+>> segments are being reused instead of 22.
+>>
+>> Add skip logic when vaddr is set, but size/type don't match. Use the
+>> same skip and success logic as used when dma_alloc_coherent() fails.
+>> By skipping, the possibility of resume failure due to kernel failing to
+>> allocate memory for QMI can be avoided.
+>>
+>> 	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
+>> 	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+>>
+>> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>> Changes since v1:
+>> - Update description
+>>
+>> Changes since v2:
+>> - Update description
+>>
+>> Changes since v3:
+>> - Update description
+
+The subject since previous is changed, but not mentioned here.
+
+Please describe all your changes.
+
+>> ---
+>>  drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
+>> index 47b9d4126d3a9..2782f4723e413 100644
+>> --- a/drivers/net/wireless/ath/ath11k/qmi.c
+>> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
+>> @@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
+>>  			    chunk->prev_size == chunk->size)
+>>  				continue;
+>>  
+>> +			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
+>> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
+>> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
+>> +					    chunk->size, chunk->type,
+>> +					    chunk->prev_size, chunk->prev_type);
+>> +				ab->qmi.target_mem_delayed = true;
+>> +				return 0;
+>> +			}
+>> +
+>>  			/* cannot reuse the existing chunk */
+>>  			dma_free_coherent(ab->dev, chunk->prev_size,
+>>  					  chunk->vaddr, chunk->paddr);
 > 
->   RTNL: assertion failed at ./include/net/netdev_lock.h (56)
->   WARNING: CPU: 1 PID: 3020 at ./include/net/netdev_lock.h:56
-> netdev_ops_assert_locked include/net/netdev_lock.h:56 [inline]
->   WARNING: CPU: 1 PID: 3020 at ./include/net/netdev_lock.h:56
-> __linkwatch_sync_dev+0x30d/0x360 net/core/link_watch.c:279
->   Modules linked in:
->   CPU: 1 UID: 0 PID: 3020 Comm: kworker/u8:10 Not tainted
-> 6.15.0-rc2-syzkaller-00257-gb5c6891b2c5b #0 PREEMPT(full)
->   Hardware name: Google Compute Engine, BIOS Google 02/12/2025
->   Workqueue: bond0 bond_mii_monitor
->   RIP: 0010:netdev_ops_assert_locked include/net/netdev_lock.h:56 [inline]
+> LGTM
 > 
-> It is report by syzbot (link:
-> https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086).
-> 
-> Because ASSERT_RTNL() failed in netdev_ops_assert_locked().
-> 
-> I wonder if should add rtnl lock in bond_check_dev_link()?
-> 
-> Like this:
-> 
->   +++ b/drivers/net/bonding/bond_main.c
->   @@ -862,10 +862,12 @@  static int bond_check_dev_link(struct bonding
-> *bond,
-> 
->        /* Try to get link status using Ethtool first. */
->        if (slave_dev->ethtool_ops->get_link) {
->   -        netdev_lock_ops(slave_dev);
->   -        ret = slave_dev->ethtool_ops->get_link(slave_dev);
->   -        netdev_unlock_ops(slave_dev);
->   -
->   +        if (rtnl_trylock()) {
->   +            netdev_lock_ops(slave_dev);
->   +            ret = slave_dev->ethtool_ops->get_link(slave_dev);
->   +            netdev_unlock_ops(slave_dev);
->   +            rtnl_unlock();
->   +        }
->            return ret ? BMSR_LSTATUS : 0;
->        }
+> Reviewed-by: Baochen Qiang <quic_bqiang@quicinc.com>
+
+Withdraw above tag as I didn't notice that the patch subject is incorrect since v3.
+
+The QMI memory has nothing to do with MHI. IMO the v1/v2 subject is good:
+
+	wifi: ath11k: Fix memory reuse logic
+
+while even better mention QMI:
+
+	wifi: ath11k: Fix QMI memory reuse logic
+
+
 > 
 
-What if rtnl_trylock() failed? This will return ret directly.
-Maybe
-	if (slave_dev->ethtool_ops->get_link && rtnl_trylock()) {
-		netdev_lock_ops(slave_dev);
-		ret = slave_dev->ethtool_ops->get_link(slave_dev);
-		netdev_unlock_ops(slave_dev);
-		rtnl_unlock();
-		return ret ? BMSR_LSTATUS : 0;
-	}
-
-Thanks
-Hangbin
