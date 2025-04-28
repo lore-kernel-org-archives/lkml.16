@@ -1,93 +1,150 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03278F49
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B803E20E71E
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 23:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881547; cv=none; b=KPAwMqsLMG+Wsh3+eT63dirDjN1V6EVKuCa7ifbHLxZGOX3ztaYoE/JixsCFsA+GTPQcxOtaZKoTyw2GhrjXO2emHcFtRZM3fODYgtmWQRI9rQV5IX9Ha3XmxpLeX9B0S5kHOdes+aPkWXV8+GI+OkT3niqKVUhqU+5k2GBeojw=
+	t=1745881647; cv=none; b=O21e0Jw8gx0Bw6PoUudve7gfQVVqukhq5njwwCQprdfgFm98DoZNICSR607QS8V+0SjcaKFM7cdBEJ+Ib74//p1paCztH5sLDk5U1iRsXLND6ciioX67Yi5xmZfrLOy7d95UH2qjC8k3xW2QkwjLSVcNflJ5BnB2pP/Sp1Dvpww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881547; c=relaxed/simple;
-	bh=0PgKhQbGjNMa4yQ9lcnfermV7YSX85o0Zl+7gzx5SiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NgkvNcsua9xOuWCaa9PoImGktfwxGlPM43xI43gNEogiUnuwLXYvNeSCyQY1VZSKzoYA9v/5vQ4Spud+gRNhFK6HnckxEV2fS0EDG+yiV+X7PIQNpJoS/ZdSekpPNFbP3Xd2GlUjbvv+rX7CEmQ1RTnlkuZdmCOtgNoPht5E46c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtGr9xTm; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745881647; c=relaxed/simple;
+	bh=apnH3bEuRUU8KI+YFuI5iLEfzLc9vXU3H3OL8ulbcSM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aaRFN/09x+ZW8XSiKJhJnr/P30O8hezDvvxBvd60BeK6uUcvshTrnwUFyPxcsL94s2SRqj9jrGaGQTxpIM9Uub3ydyucuxDxyxgp7Qx2//0Ua+Zb8oQ79mtpXQ/eWHwnydPtUpG/SXJPUdRKY33y5r8swQiFTw9lzgdDc1LmyvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QZo4e2y2; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtGr9xTm"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5499614d3d2so5697017e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:05:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QZo4e2y2"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso31133825ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745881544; x=1746486344; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0R4S0korJIrkvFdB5mdwO4NQZalt4RfkVbC62YLqZVI=;
-        b=QtGr9xTm6A1F24pnhsy1Y0+CnQhY5Dro3t4OV1UlOkywGkksYSs0Csu5BJfNHoxbFf
-         0+m8bee6y/QfLjWVVRoumT+VkyJAi/BsmSKGOWDTGblb8FQsyqxrVfVtpv2w40rr5e6a
-         s2F3Z4jtXAV3hOUOuX1z67NZRWEUA7KBJRzZVX4q7JqrLtcDZaqWKBhTDZ9Y3Y3NTeYc
-         7qvX7ysbeJS6Q11e0fNNygxOCJboUqJitrHwlZDFtHHkTaqygCwgndwxgmk1owxNTsM+
-         xVxYaZc2uH5cBCJOYtbVw9Naw1pIH0mJ/m2+Sf0iM6VrgSZIntZWNwav+CADtSdzFYe2
-         lhbg==
+        d=linuxfoundation.org; s=google; t=1745881645; x=1746486445; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XPP/5KGfjBnqjCuxTaAmBO1WBCG9qi44AyjUIhX5v40=;
+        b=QZo4e2y27m6weg7DF/PxOujhHz5t2kEHEmlbuYnkzboHrwA7+n15vEsMALsKmtFsy0
+         6ZJ15Yn9kircxl+6Gj+cYcbUu4bsXZYMiGAfUf3AFAfoc6skzy/jVAXHgOj2eLWCdn7z
+         CmRl7Z8R4syyU+oMQrmPwVBX2425DroLm1Cdc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745881544; x=1746486344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0R4S0korJIrkvFdB5mdwO4NQZalt4RfkVbC62YLqZVI=;
-        b=fb0s5F5BDm4Gp2Hjh2AXxA/5zGH0F/Cl7Ggd0vYQSTU45W8krkpoD+iIwXJpJzVk4U
-         Co9Ixkc4rbchvp9BnDWMaGDzgJoP/G96c8qvz+/5WklTuhE5cfM1SHG4liTXmoWok8xn
-         jgAUJyDyo6phmchPJcFiTDyxK+d1MLT718ERbNEnwT0mVw+I7t7XAHUVIg34c/7FXDjd
-         vCrNrG6cJBcibnFdGqn4tOV8QUi8Y5oc6MyfmKQgr3DiuJzKUclJ+R41KByDP5oil89s
-         AB+1hVUUCdjNVQMjS37WtidyfiI7VXjHsCoiHi6DVmjlocty6vYJnmQ3LW4sfmZ/Lnv6
-         PG/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWZcPCZ38FkPNMknWrfZnSyfDsz2Jgp/xLBWAf+c/czrwXmsFjzBCfTZOj5GHjGwNlGHcoJ8xNXgd0qTZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpfYoaRnsj1GsNLLsmMlyJthgewBZDy8/RvRc3JTfzQ6uByXSo
-	rVMfOUn2SqHhT0bSytsmfLAjhyKdX20RrdXAf6t2ZTeZEMMg/N2P2uVMAXHFN+tEMGlMLARI+f6
-	/nhMfzsRsvZZXkQZx2bef+Wg2YCflY4uhf58=
-X-Gm-Gg: ASbGncuErmp8LWbcHBrIbOIT5KyLRPfwUA5+TT1ANHOg1lAvqnM2DbQk/ZzgD26E9Mu
-	Nk0IEQ3o+QTNAULzkJ7PwMlTCSgjXzmnAB+FDoPEFBR3l1POANVTrePjlcO7OYR4z5ewUvYoVOR
-	5ZLLIU6Nb86sKTDoWdqsH6TgATRhi5Dz8uyb7uPwrrrSS0wRncV14=
-X-Google-Smtp-Source: AGHT+IHMtZ2H3E9dDAX+Lx7o7uEqvP6SiH/aFQ7OE7orf6EiGXGqwg/UlqZz7z3mMAwYhKQt1ZTox86LKxCvfNL+L8A=
-X-Received: by 2002:a05:6512:b18:b0:545:b28:2fa2 with SMTP id
- 2adb3069b0e04-54e9daeabb2mr386730e87.7.1745881543829; Mon, 28 Apr 2025
- 16:05:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745881645; x=1746486445;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XPP/5KGfjBnqjCuxTaAmBO1WBCG9qi44AyjUIhX5v40=;
+        b=BgpxxJpAcO+lRrfh0eddx21p8zb8g9nF93BP52ffgewp+IW5pix3MVggM0ffdPOGda
+         dm1iTekAO4KX/6dwoXrye5hlwrEs9M3kxPO60NvvkF4ir60LVg3/03nP6uEKcab6EopB
+         CnvOmuAEOun42xaIZKuRdOI/a/KgemCEsYPflAa/PzNR0RSy7E0REHoJ5RJOoOklsoVm
+         oXNkKkE+YXVLrkcvLGRju18SdiEpSaFf5IDlGc6AxQICuUgv6NZZKbWotvPsA9LFjzct
+         FWmNFNHRNZKigd+i/aS/P1KfiXZGHCrli9d19Sy4mJ2O5pl6ui/12qU3rTppQZTZVO4F
+         uABQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUNeR+65uw7ZOIUeN3WyVX9CwP49S5NPvJ4qR15YigjFowsVcjKLBRaVTfyM1UQHIbhKSdMr4zGTbJIRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhSuuUDI0UrzeoRU+lN9R8nLnMaZmFyvuYdYc82f9O+W7Hp1hB
+	/GrguCVpi4oMVPoa1B9m0FOKNcoXnahYv5Cc16jAd7fSclua2lCUHxiorSjanCOAv0B+fi6qf6v
+	C
+X-Gm-Gg: ASbGncv/J/No6tjI1yZqg+0G9zSWxGUfMyxWZUVhfXKwJfID02fkYPX0PrUvzICij9y
+	the3dR+DDN0Wdzy5yf7zVQIuBQ8ALsrpp6nqvAV6+hIruvY+zPNi87eeVbdFhlXX0cj8nU0zDOl
+	gMRtQ/QA/TnRJU0lAo0NHxAlUJFHWlo4w+TIiznVDX2IjS0AMZtne8nyMtmSVmG2Q+VDZvBBWwk
+	1rXpOAnlAsvOdXUBMs021CZjTvaxaISsB4GxMMVupactLqERfWP9UPG8PYb0pHmX2xtEbFKsR+n
+	QwDYoYxu1wORoGjp3QWQOhSWH1whk8IKhs79ioAMsnEYcMH+5G4r5fBL93hYYA==
+X-Google-Smtp-Source: AGHT+IHQE+85TMfrsbnGODRvg4LxK3jcR91C6KwZlgnW7IxUBMmbkKOZWfg0RaAUTwvghI7wsv/I0A==
+X-Received: by 2002:a05:6e02:1489:b0:3d8:1fe7:4439 with SMTP id e9e14a558f8ab-3d942e05e9bmr107015395ab.17.1745881644663;
+        Mon, 28 Apr 2025 16:07:24 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f8631a1327sm31454173.142.2025.04.28.16.07.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 16:07:24 -0700 (PDT)
+Message-ID: <097ad0fd-db38-4174-8e34-4ceb485e7e23@linuxfoundation.org>
+Date: Mon, 28 Apr 2025 17:07:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427113529.1473800-1-suhui@nfschina.com> <20250427113529.1473800-4-suhui@nfschina.com>
-In-Reply-To: <20250427113529.1473800-4-suhui@nfschina.com>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 28 Apr 2025 16:05:32 -0700
-X-Gm-Features: ATxdqUETLThP5uo4PFWVkPRipIHv_RwOQNEBYPTINWSsM8VaP1HCUT0gsYdiilE
-Message-ID: <CANDhNCpg0WRm6=7cb2pTqNswCE=3__7k6oFeGKKuZD7oQ_rmkg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] alarmtimer: switch some spin_{lock,unlock}_irqsave()
- to guard()
-To: Su Hui <suhui@nfschina.com>
-Cc: tglx@linutronix.de, sboyd@kernel.org, dan.carpenter@linaro.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usbip: set the dma mask to 64bit default for vhci-driver
+To: Greg KH <gregkh@linuxfoundation.org>, Zongmin Zhou <min_halo@163.com>
+Cc: Christoph Hellwig <hch@infradead.org>, i@zenithal.me,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, shuah@kernel.org,
+ valentina.manea.m@gmail.com, Zongmin Zhou <zhouzongmin@kylinos.cn>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <3e1f8fab-0155-4ff9-800d-5fa9df88c48c@linuxfoundation.org>
+ <20250422063409.607859-1-min_halo@163.com> <aAdEM0crDfSP9JYf@infradead.org>
+ <4c6660a6-29ce-4b97-b092-8fc15585e52a@163.com>
+ <2025042512-corsage-handpick-bf2a@gregkh>
+ <575ce02c-9128-4098-a852-d9e14f14010e@163.com>
+ <2025042812-sinister-shaping-bded@gregkh>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <2025042812-sinister-shaping-bded@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 27, 2025 at 4:35=E2=80=AFAM Su Hui <suhui@nfschina.com> wrote:
->
-> Using guard/scoped_guard() to simplify code. Using guard() to remove
-> 'goto unlock' label is neater especially.
->
-> Signed-off-by: Su Hui <suhui@nfschina.com>
-> ---
-> v2:
->  - Remove some guard() usages acrodding to john's suggestions.
->
->  kernel/time/alarmtimer.c | 56 +++++++++++++++++-----------------------
->  1 file changed, 23 insertions(+), 33 deletions(-)
+On 4/28/25 04:04, Greg KH wrote:
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+> 
+> A: No.
+> Q: Should I include quotations after my reply?
+> 
+> http://daringfireball.net/2007/07/on_top
+> 
+> On Mon, Apr 28, 2025 at 05:51:08PM +0800, Zongmin Zhou wrote:
+>> Dear Greg and Shuah,
+>>
+>> I found out that the vhci-hcd driver added this virtual device
+>> as a platform device from the very beginning since 2014.
+> 
+> Ah, I should have caught it back then, but at the time there really
+> wasn't another option.
+> 
 
-Looks ok to me.
-Acked-by: John Stultz <jstultz@google.com>
+>> I'm just getting in touch with this module and
+>> don't have a deep understanding of it，shuah should be clearer.
 
-thanks!
--john
+faux_device should work fine for this. We do have to test of course.
+
+There are several examples of converting  platform device to faux device.
+
+72239a78f9f5b9f05ea4bb7a15b92807906dab71
+dcd2a9a5550ef556c8fc11601a0f729fb71ead5d
+
+> 
+> See the recent patches I did converting drivers to use the faux bus
+> code, it should be pretty simple to do.
+> 
+>> I don't know if using the faux bus to replace the platform bus can solve the
+>> problem that the error limitation on max_hw_sectors for usbip device
+>> since commit d74ffae8b8dd applied.
+> 
+> That is for the storage driver, not usbip.  As the faux bus does not
+> have any real dma operations, this should cause it to work properly
+> given the default values involed, but that's up to you to test to verify
+> it does just that.  Try it and see!
+> 
+>> But this change will request user to update kernel version to support faux
+>> bus.
+> 
+> That's just a normal kernel update to a newer version, what is wrong
+> with that?
+
+With one difference that the fix depends on faux_device feature - hence
+we can't apply it to stables. I do think it is the right direction to
+go to faux_device.
+
+> 
+>> This will also be an expensive change to fix the problem?
+> 
+> Fixing things properly is the correct thing to do in all cases.
+> 
+
+Zongmin, do let me know if you are unable to make the change.
+
+thanks,
+-- Shuah
