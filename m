@@ -1,113 +1,105 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5724418CC15
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEC225DD15
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745830214; cv=none; b=ujEE9RZywHCgqejfO/1ZgZuor9j/whr/neU4+cGSIWApkfb3DacRL0QZ5u+1qVbcvWxWZl69zKa1Yktf5wCo0peJTS2j6r+nX0B5MS/bhsQnYbs1mWdSr+j3FzHSOjCtnrT3UGZ+x7lIrTaO+ufKtE005wp4ls+f8B1MXvmsMpg=
+	t=1745830236; cv=none; b=nN4rD6jMpP5KoYeD9qZ86mH09ZOfG6CmAFTbhjeKdFi2X0cJhMd+2avrExDFwfDpTWUQVzycAIZcOxP4e1zzuc5vPbZl+GeWZBbvsS9JU4uiVyaeYxxT8dh9EO7GWOkookTjc4aZP5de/6HN0GqiblFi7ojgIY7rOUzbfqkh1D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745830214; c=relaxed/simple;
-	bh=Lsdqd6slK8yIoftJSFtfY5uw27VXZs4Ue1D0rA2Dk3Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=hJ9sSV1qpLrUgsR8Nc7x0KFtZyR1EzUzXJNQnRlvH7vvrP/GYwPpIV2dCpOCSrj3nnOUcJPYSmk8AMRR5s8BaWkwiUy88tquVKl1REdE5V5qA10rAlKxAM71+LZfL1o8jlYwQDVMbo/Qaax6VmNySFIjVudujKahkBHqIZeqrPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Rca96GAA; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Rca96GAA"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S10wD1009691;
-	Mon, 28 Apr 2025 10:49:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=U11p1IY2aK2v6bA7NuFH2S
-	koo0U6MbsQxOYKzBo9dzc=; b=Rca96GAABPkgMmwgmIBMQrb/IQ1Cv5krsECLbv
-	rUneOz0zCUfLj/67KK7Jna7nwOGVQabWLi3O7RQaJI5v4pxD6/locx+iOzZmeH1N
-	c8YM0bq8CmYWxkV8rbYlUvIrzfD1NDIQEjam9RtzLYk1/siPSBfJptyg6L7swnkz
-	MHRAZuqijtfz/7Xx2nsp/H/7f5poxno9jaS3+3BR1kGA++jSn6ss14p5orJ6CTM4
-	1uQpJoiNJqYyZBs2EuqTalCEcZQk7YP+Xnez/YvUC97idlH6rv8Nuv1FW4bLSikj
-	XFu5XALQn+3Ybli6cVF3azxuTfH5G7YBlhYfOkCVtQ/dtlLQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 468pcg5pda-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 10:49:58 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E8BDA4005D;
-	Mon, 28 Apr 2025 10:49:15 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 00C32A3B91A;
-	Mon, 28 Apr 2025 10:47:44 +0200 (CEST)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 28 Apr
- 2025 10:47:43 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 28 Apr 2025 10:47:35 +0200
-Subject: [PATCH v9] arm64: defconfig: Enable STM32 Octo Memory Manager and
- OcstoSPI driver
+	s=arc-20240116; t=1745830236; c=relaxed/simple;
+	bh=F7+2e2LCRjyzP5iiptXwOuLsBQTadyTATFPLcCgPpCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ym8ZgN2efpb/nQqUWim3TwUU39aY10DnVY2gP4gZ7VhsQnmre07nIyt2/h3bS5V9a7bqHbKkNyjGqRsKPORiJL9GDEzP6cR0nmOt8u2DLieoV4JkN2wep/DxTQMDbQUfhmF+u7i73tcVHjIYvxkeG6pf+39JJ0x5LoXguSwRE2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u9KC3-0004nA-Gt; Mon, 28 Apr 2025 10:50:27 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1u9KC3-00042U-05;
+	Mon, 28 Apr 2025 10:50:27 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id A8E9D403502;
+	Mon, 28 Apr 2025 08:50:26 +0000 (UTC)
+Date: Mon, 28 Apr 2025 10:50:21 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Antonios Salios <antonios@mwa.re>
+Cc: rcsekar@samsung.com, mailhol.vincent@wanadoo.fr, 
+	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@mwa.re, jan@mwa.re, 
+	msp@baylibre.com
+Subject: Re: [PATCH v2] can: m_can: initialize spin lock on device probe
+Message-ID: <20250428-tentacled-stoat-of-warranty-a9465c-mkl@pengutronix.de>
+References: <20250424142525.69930-2-antonios@mwa.re>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250428-upstream_omm_ospi_defconfig-v9-1-66c1bbac5461@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAKZAD2gC/x3MQQqAIBBA0avErBPMiqirRITpWLNIxakIorsnL
- f7ibf4DjImQYSgeSHgRU/AZfVmA2bRfUZDNBiVVK5tKijPykVDvc9hzHGm26EzwjlZhFrS6M0s
- tlYZ8iAkd3f99nN73A+OtOFttAAAA
-X-Change-ID: 20250410-upstream_omm_ospi_defconfig-cbeda7cb302a
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="77v3de343k77ggtf"
+Content-Disposition: inline
+In-Reply-To: <20250424142525.69930-2-antonios@mwa.re>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Enable STM32 OctoSPI driver.
-Enable STM32 Octo Memory Manager (OMM) driver which is needed
-for OSPI usage on STM32MP257F-EV1 board.
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
-Changes in v9:
-  - split patchset by susbsystem, current one include only defconfig related
-    patch.
-  - Link to v8: https://lore.kernel.org/r/20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+--77v3de343k77ggtf
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] can: m_can: initialize spin lock on device probe
+MIME-Version: 1.0
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5bb8f09422a22116781169611482179b10798c14..288b3beff20246c59b497fc869c5f366a21b089a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -580,6 +580,7 @@ CONFIG_SPI_QUP=y
- CONFIG_SPI_QCOM_GENI=m
- CONFIG_SPI_S3C64XX=y
- CONFIG_SPI_SH_MSIOF=m
-+CONFIG_SPI_STM32_OSPI=m
- CONFIG_SPI_SUN6I=y
- CONFIG_SPI_TEGRA210_QUAD=m
- CONFIG_SPI_TEGRA114=m
-@@ -1520,6 +1521,7 @@ CONFIG_EXTCON_USB_GPIO=y
- CONFIG_EXTCON_USBC_CROS_EC=y
- CONFIG_FSL_IFC=y
- CONFIG_RENESAS_RPCIF=m
-+CONFIG_STM32_OMM=m
- CONFIG_IIO=y
- CONFIG_EXYNOS_ADC=y
- CONFIG_IMX8QXP_ADC=m
+On 24.04.2025 16:25:26, Antonios Salios wrote:
+> The spin lock tx_handling_spinlock in struct m_can_classdev is not being
+> initialized. This leads to bug complaints from the kernel, eg. when
+> trying to send CAN frames with cansend from can-utils.
+>=20
+> This patch fixes that by initializing the spin lock in the corresponding
+> device probe functions.
+>=20
+> Fixes: 1fa80e23c150 ("can: m_can: Introduce a tx_fifo_in_flight counter")
+>=20
+> Signed-off-by: Antonios Salios <antonios@mwa.re>
 
----
-base-commit: 1990c01f0bcc5655596709d0b8cf4e412b4c837c
-change-id: 20250410-upstream_omm_ospi_defconfig-cbeda7cb302a
+Applied to linux-can.
 
-Best regards,
--- 
-Patrice Chotard <patrice.chotard@foss.st.com>
+Thanks,
+Marc
 
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--77v3de343k77ggtf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgPQUoACgkQDHRl3/mQ
+kZzpGQf/UtMKCSbXC45rXta8h+DvIjkCOyBK6tgzc3aQ4fqOtEMTMPML/+G9iQz2
+d6QtEBO2SoyvAmVB/4PUSnoFXW3/AwV35d3mvzFFBSGHMGX7BOmOMzue5R7vProV
+nB2C9r+e1JQphUb5TUA16cnSXuKy0MDxK/zSSooLwXgxZ3ruO1RLWalMfIsOESjq
+c//WxjK+/E9AdiUar4FEMo4Z/qnxyGPn2f5cdDLi6WWcvRE2VhG1nuOFQNAQT9FL
+YPYLYSjJbZ/i4UaxrBAnVOlJNByJ3+Q73XaOgp0jdSa4BGDvHwz1J6dq6Ghod1p/
+Zgoqk9sqIYFZQg+TuqJyBvGKWOnWMg==
+=605h
+-----END PGP SIGNATURE-----
+
+--77v3de343k77ggtf--
