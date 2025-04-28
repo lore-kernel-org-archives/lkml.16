@@ -1,108 +1,250 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C711A3159
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 18:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C592951DF;
+	Mon, 28 Apr 2025 18:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745863436; cv=none; b=WohUEyLH5GTm63/2p4p4ippvH6wL0mLjWIOoo4INbnELsKZsWz03U1OyfH7AUGOmRAFM7NrAVJlBT1K3owEHdw3vshB7fDt/9f84aMQ0agI3rlU5Q5iPysFFdv9ZYLxhNeFXaXq4kB8ElN20QqECSAW5zPKcRXmKu7F7KIYN8F8=
+	t=1745863438; cv=none; b=Thp89GhNvFGlNJJVFQqn9Sqc8bIMjtNqGocsZp0tYKDQ5SZMnaK6HNlVQ9VTrPErRo0CQHpEH8PSXp+w9V1jqjrZMQW/H6JEkbYDcBRAxUpLM7NOSOGaHHIRT093G5GzBd7JVzAcK3j4CvRjFG0wVtNgnuEqg7LlH90mbcUMNQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745863436; c=relaxed/simple;
-	bh=/mL7HPcjZJGRPYi0Z91nMrxEdW1H1DRgXdBETT/v/m0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GxvhdKnXja/t6wzJV0H6mkrRRv/IVlUYO7AEfKWQSZMD1nvGYyfJHNbaq4PhKOyEvetCdVbpAMbrbLFklpXN9TN91M+vU1sK0X1xl4nxLUx6Vg+YdSoIoTO778TvJe9MSL5bK/Uny2/waR/Gn4g9/Wz3t6YetY1h64F6416A19Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Dywj3PP; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
+	s=arc-20240116; t=1745863438; c=relaxed/simple;
+	bh=3mrunX2wCW3v8UoNSP/xGZpZLdEawxATxyP2Eq6jwvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HIAy62xOvDIVEiy8K2lp6TIwgiyN/BKCVfnDkkVvbn3Gv+Rbgz4HMV5HBiED2D615kNwGcWRkPiT9ZF/jOZk5kEvyT+pxXOXrRdzFANlnT/nQS+t86Ldc56EmhEtI5GXanGrhkZP6haxWUWr3WRtX5h05wsgL3jIis6f64DMoMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNUJfWsp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Dywj3PP"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b00e4358a34so2932070a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745863434; x=1746468234; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Jrm6Nx7Z5Mh8oLM61Urr/bTwwYotksqIY3MvIPdnC9o=;
-        b=1Dywj3PPfwyS/hAzq50dRSIrzoO563wn66dysDIgProw9tQZgfNC1gYviTTWdtKIvf
-         kcxi9ztFBvuQx9QbV2Z+2aRHDkRQP1So6+YGLhY/018YvDJ/qO7OEbXyt2btv3lQUr0Y
-         3Vjibv3a11ZGVgC3WzNVb+KVG5qWG75s0XIQ25V2hicJgmW90ly2vvYNLTOlit6Msfy5
-         ssORyUNZB84qgGzEws2usWK02pjteobEPvXR6H9WKr+Lbs4FaaSM77auC9gaYfa33n2v
-         E8c5imY9gt9CgB8YE5NzegmoBb+lBNbRRnpNnKFabu0CoWwsVAxDHg04luCcPCpP1IY+
-         ldTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745863434; x=1746468234;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jrm6Nx7Z5Mh8oLM61Urr/bTwwYotksqIY3MvIPdnC9o=;
-        b=n/1d/d28iz6szPlBqkVuyXAgOap4Di/qYnFCwnV7rBSZpFlVzUkCYtuU0KaprbRACt
-         254nC1uWE+M/YfS91+ystPZx/s/TOC7bZqvmEVhZ87pidJLqURebg+9FZJ3gpB4UxCPK
-         EavUt76Wml8+v/wN/NUw0cGA/XlGdYcWXQcS5JeIrCnpPHaxaBwfnh4WHlzJYueQHJgc
-         VDDsLoPcvvtE3C7TspCt7ShahaqJ4EnmDCW6KbWf1sIPMw6xkYTSjdqjHzYEe3sMbphR
-         8OVCMd59rdtGzdrI/UIZKz/pL7bBJ3B79ZsOG6CnERLTyAqznvesVD2+fVc+2idLyc2u
-         DX8w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCx3mpVoToNxzr5QvicanWw+AlKS/VSwEWuhPZm1kBTnmEAjwpZaHRgbQqQBjQLy3HAa/3Y7PgpfWfdYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztquKlNjejZ8dUk36k2DPVYgFkC+rJ0kVmfVv4WNhsra0nqIa9
-	opEr4C4lBOghmMEYGHLxk7pudp/mUaOQBpLHzAUGKQXMzGRyjnJNPo38BBLjpjHzNbFkuiY2R3e
-	R2sZ0B46SKhEA5g==
-X-Google-Smtp-Source: AGHT+IGFy7WG9oO3uBh4Wi8t7O9tAPuPJeA5DbCGTeCTVwRypV0To3vLIJ2Ay+WqLvKrHqdhPZuiAH+PfgHZ0k0=
-X-Received: from pjbnt15.prod.google.com ([2002:a17:90b:248f:b0:30a:2020:e2bd])
- (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:554f:b0:2fe:dd2c:f8e7 with SMTP id 98e67ed59e1d1-30a21551e90mr1172926a91.10.1745863433996;
- Mon, 28 Apr 2025 11:03:53 -0700 (PDT)
-Date: Mon, 28 Apr 2025 18:02:54 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNUJfWsp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1279CC4CEE4;
+	Mon, 28 Apr 2025 18:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745863437;
+	bh=3mrunX2wCW3v8UoNSP/xGZpZLdEawxATxyP2Eq6jwvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RNUJfWspUi7bWN54awdeqtZ35YhV76uh9X5LOJWgO7OCwYtAR0f0BAC3CU/4pecdS
+	 iYWmQ/wrPlJlb0cl5uRjCHlnne9h/wJQ1w/f39RgtheWim/kLv4ewNmHAHVTRFJS2g
+	 srScl+O4IyYI4889G9HgSu7bzb1rbhNDyfLenmk1pf9mXzTZML56oCN5hHgyMQ/UJ4
+	 vLKowqVmECRrzvfBt2GN5IHXTsE5QO87hJPTWPueOquwSezWn33DfWGRAZr+UKEu09
+	 38Nwb/pM9B8X9BzHdm5eXH33EOUe5HRGpY58Mi9k1xOH10XLSAKd5zvLIhd/oJi/FO
+	 mKbzhj3vNSz0A==
+Date: Mon, 28 Apr 2025 19:03:49 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Michal Kubiak <michal.kubiak@intel.com>
+Subject: Re: [PATCH iwl-next v2 08/14] idpf: refactor idpf to use libie
+ controlq and Xn APIs
+Message-ID: <20250428180349.GF3339421@horms.kernel.org>
+References: <20250424113241.10061-1-larysa.zaremba@intel.com>
+ <20250424113241.10061-9-larysa.zaremba@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250428180256.1482899-1-tjmercier@google.com>
-Subject: [PATCH] selftests/bpf: Fix kmem_cache iterator draining
-From: "T.J. Mercier" <tjmercier@google.com>
-To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
-Cc: "T.J. Mercier" <tjmercier@google.com>, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424113241.10061-9-larysa.zaremba@intel.com>
 
-The closing parentheses around the read syscall is misplaced, causing
-single byte reads from the iterator instead of buf sized reads. While
-the end result is the same, many more read calls than necessary are
-performed.
+On Thu, Apr 24, 2025 at 01:32:31PM +0200, Larysa Zaremba wrote:
+> From: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> 
+> Support to initialize and configure controlq, Xn manager,
+> MMIO and reset APIs was introduced in libie. As part of it,
+> most of the existing controlq structures are renamed and
+> modified. Use those APIs in idpf and make all the necessary changes.
+> 
+> Previously for the send and receive virtchnl messages, there
+> used to be a memcpy involved in controlq code to copy the buffer
+> info passed by the send function into the controlq specific
+> buffers. There was no restriction to use automatic memory
+> in that case. The new implementation in libie removed copying
+> of the send buffer info and introduced DMA mapping of the
+> send buffer itself. To accommodate it, use dynamic memory for
+> the send buffers. In case of receive, idpf receives a page pool
+> buffer allocated by the libie and care should be taken to
+> release it after use in the idpf.
+> 
+> The changes are fairly trivial and localized, with a notable exception
+> being the consolidation of idpf_vc_xn_shutdown and idpf_deinit_dflt_mbx
+> under the latter name. This has some additional consequences that are
+> addressed in the following patches.
+> 
+> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+> Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> ---
+>  drivers/net/ethernet/intel/idpf/Kconfig       |    1 +
+>  drivers/net/ethernet/intel/idpf/Makefile      |    2 -
+>  drivers/net/ethernet/intel/idpf/idpf.h        |   42 +-
+>  .../net/ethernet/intel/idpf/idpf_controlq.c   |  624 -------
+>  .../net/ethernet/intel/idpf/idpf_controlq.h   |  130 --
+>  .../ethernet/intel/idpf/idpf_controlq_api.h   |  177 --
+>  .../ethernet/intel/idpf/idpf_controlq_setup.c |  171 --
+>  drivers/net/ethernet/intel/idpf/idpf_dev.c    |   91 +-
+>  drivers/net/ethernet/intel/idpf/idpf_lib.c    |   49 +-
+>  drivers/net/ethernet/intel/idpf/idpf_main.c   |   87 +-
+>  drivers/net/ethernet/intel/idpf/idpf_mem.h    |   20 -
+>  drivers/net/ethernet/intel/idpf/idpf_txrx.h   |    2 +-
+>  drivers/net/ethernet/intel/idpf/idpf_vf_dev.c |   89 +-
+>  .../net/ethernet/intel/idpf/idpf_virtchnl.c   | 1622 ++++++-----------
+>  .../net/ethernet/intel/idpf/idpf_virtchnl.h   |   89 +-
+>  .../ethernet/intel/idpf/idpf_virtchnl_ptp.c   |  303 ++-
+>  16 files changed, 886 insertions(+), 2613 deletions(-)
 
-$ tools/testing/selftests/bpf/vmtest.sh  "./test_progs -t kmem_cache_iter"
-145/1   kmem_cache_iter/check_task_struct:OK
-145/2   kmem_cache_iter/check_slabinfo:OK
-145/3   kmem_cache_iter/open_coded_iter:OK
-145     kmem_cache_iter:OK
-Summary: 1/3 PASSED, 0 SKIPPED, 0 FAILED
+This patch is rather large.
+Is there a way it could be split up into more easily reviewable chunks?
 
-Fixes: a496d0cdc84d ("selftests/bpf: Add a test for kmem_cache_iter")
-Signed-off-by: T.J. Mercier <tjmercier@google.com>
----
- tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  delete mode 100644 drivers/net/ethernet/intel/idpf/idpf_controlq.c
+>  delete mode 100644 drivers/net/ethernet/intel/idpf/idpf_controlq.h
+>  delete mode 100644 drivers/net/ethernet/intel/idpf/idpf_controlq_api.h
+>  delete mode 100644 drivers/net/ethernet/intel/idpf/idpf_controlq_setup.c
+>  delete mode 100644 drivers/net/ethernet/intel/idpf/idpf_mem.h
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c b/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c
-index 8e13a3416a21..1de14b111931 100644
---- a/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c
-+++ b/tools/testing/selftests/bpf/prog_tests/kmem_cache_iter.c
-@@ -104,7 +104,7 @@ void test_kmem_cache_iter(void)
- 		goto destroy;
- 
- 	memset(buf, 0, sizeof(buf));
--	while (read(iter_fd, buf, sizeof(buf) > 0)) {
-+	while (read(iter_fd, buf, sizeof(buf)) > 0) {
- 		/* Read out all contents */
- 		printf("%s", buf);
- 	}
+...
 
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
--- 
-2.49.0.906.g1f30a19c02-goog
+> diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
 
+...
+
+> @@ -2520,15 +2045,18 @@ static void idpf_finalize_ptype_lookup(struct libeth_rx_pt *ptype)
+>   */
+>  int idpf_send_get_rx_ptype_msg(struct idpf_vport *vport)
+>  {
+> -	struct virtchnl2_get_ptype_info *get_ptype_info __free(kfree) = NULL;
+> -	struct virtchnl2_get_ptype_info *ptype_info __free(kfree) = NULL;
+> +	struct libie_ctlq_xn_send_params xn_params = {
+> +		.timeout_ms	= IDPF_VC_XN_DEFAULT_TIMEOUT_MSEC,
+> +		.chnl_opcode	= VIRTCHNL2_OP_GET_PTYPE_INFO,
+> +	};
+>  	struct libeth_rx_pt *ptype_lkup __free(kfree) = NULL;
+> +	struct virtchnl2_get_ptype_info *get_ptype_info;
+>  	int max_ptype, ptypes_recvd = 0, ptype_offset;
+>  	struct idpf_adapter *adapter = vport->adapter;
+> -	struct idpf_vc_xn_params xn_params = {};
+> +	struct virtchnl2_get_ptype_info *ptype_info;
+> +	int buf_size = sizeof(*get_ptype_info);
+>  	u16 next_ptype_id = 0;
+> -	ssize_t reply_sz;
+> -	int i, j, k;
+> +	int i, j, k, err = 0;
+>  
+>  	if (vport->rx_ptype_lkup)
+>  		return 0;
+> @@ -2542,22 +2070,11 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *vport)
+>  	if (!ptype_lkup)
+>  		return -ENOMEM;
+>  
+> -	get_ptype_info = kzalloc(sizeof(*get_ptype_info), GFP_KERNEL);
+> -	if (!get_ptype_info)
+> -		return -ENOMEM;
+> -
+> -	ptype_info = kzalloc(IDPF_CTLQ_MAX_BUF_LEN, GFP_KERNEL);
+> -	if (!ptype_info)
+> -		return -ENOMEM;
+> -
+> -	xn_params.vc_op = VIRTCHNL2_OP_GET_PTYPE_INFO;
+> -	xn_params.send_buf.iov_base = get_ptype_info;
+> -	xn_params.send_buf.iov_len = sizeof(*get_ptype_info);
+> -	xn_params.recv_buf.iov_base = ptype_info;
+> -	xn_params.recv_buf.iov_len = IDPF_CTLQ_MAX_BUF_LEN;
+> -	xn_params.timeout_ms = IDPF_VC_XN_DEFAULT_TIMEOUT_MSEC;
+> -
+>  	while (next_ptype_id < max_ptype) {
+> +		get_ptype_info = kzalloc(buf_size, GFP_KERNEL);
+> +		if (!get_ptype_info)
+> +			return -ENOMEM;
+> +
+>  		get_ptype_info->start_ptype_id = cpu_to_le16(next_ptype_id);
+>  
+>  		if ((next_ptype_id + IDPF_RX_MAX_PTYPES_PER_BUF) > max_ptype)
+> @@ -2567,13 +2084,15 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *vport)
+>  			get_ptype_info->num_ptypes =
+>  				cpu_to_le16(IDPF_RX_MAX_PTYPES_PER_BUF);
+>  
+> -		reply_sz = idpf_vc_xn_exec(adapter, &xn_params);
+> -		if (reply_sz < 0)
+> -			return reply_sz;
+> +		err = idpf_send_mb_msg(adapter, &xn_params, get_ptype_info,
+> +				       buf_size);
+> +		if (err)
+> +			goto free_tx_buf;
+>  
+> +		ptype_info = xn_params.recv_mem.iov_base;
+>  		ptypes_recvd += le16_to_cpu(ptype_info->num_ptypes);
+>  		if (ptypes_recvd > max_ptype)
+> -			return -EINVAL;
+
+Should err be set to -EINVAL here?
+
+Flagged by Smatch.
+
+> +			goto free_rx_buf;
+>  
+>  		next_ptype_id = le16_to_cpu(get_ptype_info->start_ptype_id) +
+>  				le16_to_cpu(get_ptype_info->num_ptypes);
+> @@ -2589,8 +2108,8 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *vport)
+>  					((u8 *)ptype_info + ptype_offset);
+>  
+>  			ptype_offset += IDPF_GET_PTYPE_SIZE(ptype);
+> -			if (ptype_offset > IDPF_CTLQ_MAX_BUF_LEN)
+> -				return -EINVAL;
+> +			if (ptype_offset > LIBIE_CTLQ_MAX_BUF_LEN)
+> +				goto free_rx_buf;
+>  
+>  			/* 0xFFFF indicates end of ptypes */
+>  			if (le16_to_cpu(ptype->ptype_id_10) ==
+> @@ -2720,12 +2239,24 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *vport)
+>  
+>  			idpf_finalize_ptype_lookup(&ptype_lkup[k]);
+>  		}
+> +		libie_ctlq_release_rx_buf(adapter->arq,
+> +					  &xn_params.recv_mem);
+> +		if (libie_cp_can_send_onstack(buf_size))
+> +			kfree(get_ptype_info);
+>  	}
+>  
+>  out:
+>  	vport->rx_ptype_lkup = no_free_ptr(ptype_lkup);
+>  
+>  	return 0;
+> +
+> +free_rx_buf:
+> +	libie_ctlq_release_rx_buf(adapter->arq, &xn_params.recv_mem);
+> +free_tx_buf:
+> +	if (libie_cp_can_send_onstack(buf_size))
+> +		kfree(get_ptype_info);
+> +
+> +	return err;
+>  }
+>  
+>  /**
+
+...
