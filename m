@@ -1,164 +1,165 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E754726D4DA;
-	Mon, 28 Apr 2025 13:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E0A20968E
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845852; cv=none; b=NljnD9gXXIgaJghAHNn+NRaIE2LgQFXxb67YeUYdI3AkA9qHKEt+DDmQt1YBw8dYYMLoJpvjXRaNuK/NzTSIj8Co9XrOiOrv5tf+79c5T6n6jIegI2YaqeZPYdgODhCjLm5sNss3CUbL+3FsptzoEwWrh26wRV9DP+SqGKkAByQ=
+	t=1745845916; cv=none; b=csOTiDYxU7LVMtTau702kZs4AZm9fVOAkcWRBkIp92mvPPQwyJVh7MxpM7KKU7VnNLUvtLVYINfXbt8z7/P6AyL7xQ3VlqzGxDhiQhyo23/HBo6Zakd4yD8inLf90dzuUWCJUhAE5jYbH2SJ9Yjys6MXYyifm+ALEOXBMw/Tx0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845852; c=relaxed/simple;
-	bh=j9Uzm1w8Fd75eezPJkkUVqfV0l0UWce0x32TsE1Prd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cElU3ldoI5lUIeXrQR1sV4wWotnlNG4JtLYTyD8w8LuxO4nuo+2x2PQ2jhC8JsbAg4SZDqYzhSkXNdSyV/EaIr5usyF0d4mHJS9GEgH83bupBCl1H/CtlPusFD/Pg46BhFXgBC/EpSQrYEPO0OCA0nSU7RpQboPouF5UmP2iYfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mIP7XYq3; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745845916; c=relaxed/simple;
+	bh=vmT2BPuNeQMRR4MvPACHB6GbxLQA/K2IZKLlEqetco4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tjK8U2i73X3u2rlajA5l3UDWICvSxEuQCenDBATp7jFdlQ/0lt3UmPE7+gQ59kHsu9otpJEfSLwQFz5IugszSgcNxa2TqNlpCUD71l5ptLc9MZn4r9gJSRP2FhNoSsrS23TpkQLBNfSZ0Uujt3x7JoyAxih6656eB7/wsk2A/k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=XcCIlJRv; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIP7XYq3"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30c091b54aaso41735051fa.3;
-        Mon, 28 Apr 2025 06:10:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="XcCIlJRv"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac56756f6so4832874f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745845849; x=1746450649; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Tu4QfTgg80SyZ/aPn5oHJnGIimNmX+43hWgOIQN+JZc=;
-        b=mIP7XYq3MkvPrURsORCFNOtPS3JuTwy0Fq3VfBKaqzZWYVx6vRIE1tkWU6QkY5b52f
-         tWlCd8kn+4BTkNA2cFO+/aobmEKNnSNcWRr3R+CqpX0m3NxE6iO00iR5POlY9jQFz7Zh
-         zoovsFgaN1oCxVt4CPVOfFQNdPD2vmjfGQDizmMEP0AopRIVn94IcjW4+/ECBXz52Dna
-         scibnvywMBWQxOq35hkAxI5M4qd2eelYzkme16myKbbVS9uBJarCynPAI7NtzfnMgA4q
-         4WS/0vFO4BJXGW+g9Suxbes9V3rDK2phmqFUqpFA5GFET86VSDk9wKR0xPhrOi9KDVRC
-         hxcg==
+        d=ionos.com; s=google; t=1745845912; x=1746450712; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q4J207YyuAGkV1CbUzAQtkN//0ZWB3j4SQpv1vFi2Uk=;
+        b=XcCIlJRvzgEFaTv5NCN0bG5EKOCfMVKGEJwv6uAceDzjKQusRAe0HgAe89jvS/uG2G
+         NeH7go/wzkwnOhv1AyyhIy1aRFo2tN9SFW0qrrj/iZoln969PfuOIKu/Id4gGTKD4LYZ
+         SIarSVFdtDohwnEt6ToHSkadMoVZats3yYCpu9IQY6DlG3jEkc+dfHFrFUBNxzK4BJT6
+         1fNK9CJSR0QHKvkSAmdTdpo4CalzYG1Mes2bEP3Gyx6P3svqBH1jQSesjcVorJzj6tar
+         f/elkHBclhhUb1Plz0TxlfmE8Cpuhm1PpnKnmIv+fAZDNZ2a3bHnSk/xJoEMycTxg1qO
+         VSvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745845849; x=1746450649;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tu4QfTgg80SyZ/aPn5oHJnGIimNmX+43hWgOIQN+JZc=;
-        b=KIlWI62t8oH7zrOhZIH8X0YP3VEu+S5DPzNSG/jR9QtNdBfX8FcoVRu6IDmYMrHpWf
-         XFbv1LOP07KqkpvYOaiLyyDi+5DLXAgRu/POyIRB+zXO62p/BGuQGbh9Ev5FKxr4rmxM
-         Nx7FuxfD7Yni198cvy8wVhGvBWSvHs7KKVnCJEBFnLsnyftMwoBWdb/CjtM0rVcTLAf5
-         5GtYkQl42RLe4uxNSembRaJMJpX0QeTz+ATLaYD6SpnDmJ3435f6RZhvZqBXRY5Eqeqn
-         /Ved00jUiPHMT4niurGXV59BQndxp3KaS/gQFgyrws/L6fEYRxv8etg3mAJhYvQD7jO7
-         tp3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTtWKmjB6sWfQMHVlWGV69IP0WJIyizjctjC3zXm1zUvn2ZbCfzMJlsTMNO2ApyYja1hwbpDVHoy38Nt+G@vger.kernel.org, AJvYcCXtTbxTi+4wzeE0hb2k/y2MXea1MJky0QG7/3TKIA5VPZNPjm994lGlSS3uD/w2CeScGvus8cWJHNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtco6wPn7ps6EOO3TRYytr8s3cI1pvmdZworvr48+ayKdaTb3c
-	J1vYy9GF48Ia2o2EVSIH6VY2Cvxo5OacttzZVRnEqGMjoZeRPiSp
-X-Gm-Gg: ASbGncthrOWYI4RL50qeX7OmV1c+u6UqZ/RD213mKga6fMtief0znMB1CnHBA36dmb2
-	yvwgkvQjgS0lhVJMC6KcfWZfhA5og073beXO99dItAbwJ2Hz9zF2UmV6smykuNClyHnUTOaFw+a
-	B/uSIvoytxLz3pPhBj+917gvL+OkwEECVbnjGanH/223sqlHC4+AUUhC4Brl92iNOl0FdbIlFB4
-	e7Xr9b8qarbTCVV04IMwhnaJ2aM/f892Pr0gT0BGWS08iSs9+vLuOtnbMLNpPH6nKLCCbhPUP+n
-	+KLz1Z13j4ckq0v+xOmqTUaLSJGUFHx9Wy4hDMU2fVdAvxMOhba9mQ==
-X-Google-Smtp-Source: AGHT+IHqfoIC67IeYJTwogL9O/vl3stgQv17WOClfj/CoQYz6df1Fr8+mevirsbjZBqxPpkJc7r+ug==
-X-Received: by 2002:a05:651c:1468:b0:30d:b31e:262d with SMTP id 38308e7fff4ca-31905b6a911mr43951891fa.8.1745845848534;
-        Mon, 28 Apr 2025 06:10:48 -0700 (PDT)
-Received: from [172.16.183.207] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317cf659b79sm21359461fa.14.2025.04.28.06.10.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 06:10:47 -0700 (PDT)
-Message-ID: <e0f8a39e-195d-4b72-8787-36769c1e62c8@gmail.com>
-Date: Mon, 28 Apr 2025 16:10:47 +0300
+        d=1e100.net; s=20230601; t=1745845912; x=1746450712;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q4J207YyuAGkV1CbUzAQtkN//0ZWB3j4SQpv1vFi2Uk=;
+        b=VOoA08Sc1uC8mY7QYQxzg1n4Tdlf+tx5vhEOsdoOnTM+npJ8yUNfqBUL1gQ5un+V21
+         1rdjXc2FJRDBcSeyvL2YZOFOqXG2+rddCcBQo9tBB0cN64XSjMinEG0uCk4R4LIcW/K2
+         DoB6ZEwHSA7jprVwG8suxiA7n008o8q2+hCcCZZwguBr0sGpqFMg2q7DRfuwg9delEa8
+         nXs3/F1kpYG8QFMBCLUuOsM25SkzI04anaGU5tW30OxVfba1Ex76dMVKBth/g4B2q06y
+         B/dgGZMkrn38l5eg7GzG0AKItZoAr2RU2CXeA3wU/L4bJwOkRdVP3/2F6MKs9SvUwY5Z
+         /VHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjZmtyCiHKkVdjiJLYuzpLXjc3fvJQNtjOybvQY3IDjIg+G1wxlt/o72xwNhVT1ZwhmcSdPpjV3lrBHtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWx67uQR/X7BmLk+BkYz/ya45jxR3X1+SjwJUm/8LTABVY9CQ/
+	a0g883Ujk4Vgz9MsY0HId/4AnZ+TCtXHtAIS/X3b+KOIDoMO70m4bYSH+6FlLHQ=
+X-Gm-Gg: ASbGncvlSzZqEEXegGQ803zM2yu/mVcBvSbQgR06PtWzNlOpY+1zttGy8M9NeGou1Xd
+	Mod48ewPucCmGy3Z/4wzE7js7HFNhb/BaudMENhzEfhOJ4i+oxoDvc5yoxQgHv/E4tKyAAhtvMU
+	7hrPPz/wQV6lbUX3bAz4Ih+c0wHNunWbH2cyVbS5fOVjgv+3D/pfefvyA5nB3/hZcwrnD0NCBbZ
+	ejTg9A40NbVUPRdIxysZ36++sgJNnz4I78S/Sm0khOv/4qhbl997LZEn3RW9YuwAPXoNg161YXO
+	q99vUXMsM9M/R4apUrxPeG2VrPjfFSNDp/cyAme7Q7PruAQnIWTs14TIKnoqNcY9bqzxh1my3LF
+	PtLV3MfMGPZK6erKlnyyh4xYAuCuIuntKQKLa8Lhm
+X-Google-Smtp-Source: AGHT+IFeEs3neKdh4mQxt/dEhTHmRuQ9dywG7AxB1fh+tdreaTzRhkNeBWh/xRaAkPWiQL9l+gfCpw==
+X-Received: by 2002:a05:6000:2405:b0:39e:cbde:8889 with SMTP id ffacd0b85a97d-3a07aa5fe38mr6168054f8f.6.1745845912502;
+        Mon, 28 Apr 2025 06:11:52 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a53031acsm122256695e9.9.2025.04.28.06.11.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 06:11:52 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: dhowells@redhat.com,
+	netfs@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] fs/netfs: remove unused netfs_io_request flags
+Date: Mon, 28 Apr 2025 15:11:49 +0200
+Message-ID: <20250428131149.3195399-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: ti-adc128s052: Drop variable vref
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <59106e24332743a7f9eb0b13ad6a2f5595ab485a.1745823530.git.mazziesaccount@gmail.com>
- <CAHp75VcUcrj-BLp9QDsYMDY_SeQS76LDGge5vVqrx-MVwukP0w@mail.gmail.com>
- <4085fd58-c92c-406b-842b-ecda2fb3c895@gmail.com>
- <CAHp75VdAEefH5Vgk5BZz8vGDXyu0EmEy3hwoeRDJsKmkjaQW9w@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CAHp75VdAEefH5Vgk5BZz8vGDXyu0EmEy3hwoeRDJsKmkjaQW9w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 28/04/2025 12:49, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 12:45 PM Matti Vaittinen
-> <mazziesaccount@gmail.com> wrote:
->> On 28/04/2025 10:08, Andy Shevchenko wrote:
->>> On Mon, Apr 28, 2025 at 10:02 AM Matti Vaittinen
->>> <mazziesaccount@gmail.com> wrote:
-> 
-> ...
-> 
->>>> +       int vref_mv;
->>>
->>> vref_mV please. And yes, I know historical and other reasons for them
->>> all being small, but let's try to be more scientific in these crazy
->>> days.
->>
->> Sorry Andy but I see zero reason to use capital letters here. In my
->> opinion, this is perfectly clear as it is. Capital letters in variables
->> are ugly (to me) and absolutely not needed to explain the meaning.
-> 
-> And I see zero reason to not use the correct scientific unitis there.
+NETFS_RREQ_DONT_UNLOCK_FOLIOS has never been used ever since it was
+added by commit 3d3c95046742 ("netfs: Provide readahead and readpage
+netfs helpers").
 
-I find this ridiculous reason. There is zero confusion what the vref_mv 
-stands for, and I prefer variables in lower case.
+NETFS_RREQ_BLOCKED was added by commit 016dc8516aec ("netfs: Implement
+unbuffered/DIO read support") but has never been used either.  Without
+NETFS_RREQ_BLOCKED, NETFS_RREQ_NONBLOCK makes no sense, and thus can
+be removed as well.
 
-> Note, that regulator framework
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ fs/netfs/direct_read.c  |  3 ---
+ fs/netfs/objects.c      |  2 --
+ fs/netfs/read_collect.c | 14 ++++++--------
+ include/linux/netfs.h   |  3 ---
+ 4 files changed, 6 insertions(+), 16 deletions(-)
 
-Actually, the regulator framework uses _both_ lower and upper case in 
-some places, and I believe the reason is that bikeshedding over the 
-capitalization isn't Mark's cup of tea.
-
-> and some other drivers are using that
-> and I consider this is the correct way to go.
-> 
-> ...
-> 
->>> Or actually a time to introduce MILLIVOLT_PER_VOLT in units.h ?
->>
->> I really fail to see the benefit. Do you think we should add
->> MILLIx_PER_x for each unit we can imagine/use?
->>
->> That doesn't really scale or make sense to me. We have MILLI. It does
->> not really matter if it is volts, amps, ohms or horse heads - it's still
->> 1000. It just gets cumbersome to search the headers to see if we have
->> some fancy define for unit we have at our hands.
-> 
-> In some contexts this gives the understanding of the units and how big
-> the value is. Even with some defined constants it's not possible to
-> describe in their names everything that this definition adds. I do see
-> a benefit of it.
-
-You can suggest adding it if you wish. I still find it silly as I don't 
-see why one wouldn't then end up adding base SI units too.
-
-MILLIVOLT_PER_VOLT
-MILLIKILOGRAM_PER_KILOGRAM
-MILLIMETER_PER_METER
-MILLISECOND_PER_SECON
-MILLIAMPERE_PER_AMPERE
-MILLIKELVIN_PER_KELVIN
-MILLIMOLE_PER_MOLE
-MILLICANDELA_PER_CANDELA
-
-Oh, and because Volt is added, then also:
-
-Newton, Heryz, Coulomb, Henry, Farad, Ohm, Siemens, Weber, Tesla, Joule, 
-Watt, Radian, Bequerel and Lumen.
-
-And, sure adding Kelvin warrants adding Celsius and Fahrenheit. Oh, 
-probably also imperial units, right?
-
-All being the same MILLI.
-
-No thanks. I am opposing this as it will only make life of a code writer 
-(and maybe also reader) harder. I'm not suggesting a patch adding 
-something I feel is rather silly.
-
-Yours,
-	-- Matti
+diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
+index 5e3f0aeb51f3..f11a89f2fdd9 100644
+--- a/fs/netfs/direct_read.c
++++ b/fs/netfs/direct_read.c
+@@ -106,9 +106,6 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
+ 			netfs_wait_for_pause(rreq);
+ 		if (test_bit(NETFS_RREQ_FAILED, &rreq->flags))
+ 			break;
+-		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
+-		    test_bit(NETFS_RREQ_NONBLOCK, &rreq->flags))
+-			break;
+ 		cond_resched();
+ 	} while (size > 0);
+ 
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index dc6b41ef18b0..d6f8984f9f5b 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -64,8 +64,6 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	}
+ 
+ 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
+-	if (file && file->f_flags & O_NONBLOCK)
+-		__set_bit(NETFS_RREQ_NONBLOCK, &rreq->flags);
+ 	if (rreq->netfs_ops->init_request) {
+ 		ret = rreq->netfs_ops->init_request(rreq, file);
+ 		if (ret < 0) {
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index 23c75755ad4e..173433d61ea6 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -83,14 +83,12 @@ static void netfs_unlock_read_folio(struct netfs_io_request *rreq,
+ 	}
+ 
+ just_unlock:
+-	if (!test_bit(NETFS_RREQ_DONT_UNLOCK_FOLIOS, &rreq->flags)) {
+-		if (folio->index == rreq->no_unlock_folio &&
+-		    test_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags)) {
+-			_debug("no unlock");
+-		} else {
+-			trace_netfs_folio(folio, netfs_folio_trace_read_unlock);
+-			folio_unlock(folio);
+-		}
++	if (folio->index == rreq->no_unlock_folio &&
++	    test_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags)) {
++		_debug("no unlock");
++	} else {
++		trace_netfs_folio(folio, netfs_folio_trace_read_unlock);
++		folio_unlock(folio);
+ 	}
+ 
+ 	folioq_clear(folioq, slot);
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index c86a11cfc4a3..e0c3a63f4f86 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -268,13 +268,10 @@ struct netfs_io_request {
+ 	unsigned long		flags;
+ #define NETFS_RREQ_OFFLOAD_COLLECTION	0	/* Offload collection to workqueue */
+ #define NETFS_RREQ_NO_UNLOCK_FOLIO	2	/* Don't unlock no_unlock_folio on completion */
+-#define NETFS_RREQ_DONT_UNLOCK_FOLIOS	3	/* Don't unlock the folios on completion */
+ #define NETFS_RREQ_FAILED		4	/* The request failed */
+ #define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes */
+ #define NETFS_RREQ_FOLIO_COPY_TO_CACHE	6	/* Copy current folio to cache from read */
+ #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
+-#define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
+-#define NETFS_RREQ_BLOCKED		10	/* We blocked */
+ #define NETFS_RREQ_PAUSE		11	/* Pause subrequest generation */
+ #define NETFS_RREQ_USE_IO_ITER		12	/* Use ->io_iter rather than ->i_pages */
+ #define NETFS_RREQ_ALL_QUEUED		13	/* All subreqs are now queued */
+-- 
+2.47.2
 
