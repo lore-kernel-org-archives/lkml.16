@@ -1,138 +1,199 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDF05684;
-	Mon, 28 Apr 2025 13:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A1826D4F7;
+	Mon, 28 Apr 2025 13:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745847492; cv=none; b=tShWOPjI4T/5j0ZkrzA+gu1HlLs9KvujIOYWQ6br8189kSGTGCXgs/anGhlq7fumd1ZOCxWIOx0qvoRrZFs+HqmcWavfBbs04pap/IU/DU+ftCurkjDsO2GkaF5e/dPaY6JJrpW4EitKRQJknHpSA+NcGeYpDF10vgmWi5kK78Y=
+	t=1745847495; cv=none; b=gwXb/afGDrGcDfLxxX8psOpiN69V34+0Ll3UyOZ8MKwuZEFW1luCpr+crizXdrqZCRxiva4rxoNUGWk1+g56e///mqeF0V13HQIuB64BDE78kAv4pKYwlRUAfC32JGiRt5H4D+eU4R8chfdGt4nosrdnCBW/Ft2JFbkDO2X0HBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745847492; c=relaxed/simple;
-	bh=HbmgZWLdgBsVQOSIyH96vvLbK8YHogMY5PAm6n3oBKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dD5fSeptZTlaX7ZaXGZDlE+nc2JdL9waLbRH0+lV1ruuvPXZwCqftJIp2tAxY7Ba9zgF2Kgv9QEZc6Aw0gz0PsIngr5J074lWqfmMu7WqGKxICFjZnMdppaCMU4wfS3AwlMoHqQQ9wvfYZVJ0An1TDkvm2rnL/s75CniXkUQSUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bKVpJRu8; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1745847495; c=relaxed/simple;
+	bh=Y8a9r3EgWkVGW/NaaXXnSZIWyMg0dEIj3OYjoGicD5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HeI4Az825KFnVSscBJTGKMmN8oQLoyWNGn6FxWm4Sj9Y/yrVlzKkxOkN3ZsVUwiyChbohJeRM90MLuDyed7g3F68tsT3DR0LKM3dBFPPzB81+bAukPwff8swphZtnOXHZTHzAx73EOLWFbn2x/1sAbRtrphHO3k74ypw2ULNNjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bKVpJRu8"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b12b984e791so4626519a12.2;
-        Mon, 28 Apr 2025 06:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745847489; x=1746452289; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7CsTnOUQ3ebbTHW7zXMmbWjM+gr5dHufbWP4IM4V66E=;
-        b=bKVpJRu8/o+C8ZbkVpMq8JlV1tLqGPVIRMkCKRYLyW6QLuzXlPUgOxOCX8y7hkEgqD
-         zcavmaZu+8A00WxjoYp65ezpskhutW+ujCg7mE7Qg9VoNm4R/oaRxadsbCFZUFQeadpt
-         5Tw69M6XACCEzmwDy5XqszVH7cRqHezNt/2AlceLlcn1gXSB8pAQgX7brE8VsX785esC
-         dx8nOcsHmvaBD5rqhswQlgVR1wi12t40kdGm943d5XufErd+gIl5tVqWVQUDZ62sD1/K
-         k0AMOFKMN36GlLuXG7YSARt+QxolwDkOOmzC1VU0+ZwEgKEMZf38Byd0Ru9Q2zCHhbpb
-         2+tQ==
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5240a432462so4921361e0c.1;
+        Mon, 28 Apr 2025 06:38:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745847489; x=1746452289;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7CsTnOUQ3ebbTHW7zXMmbWjM+gr5dHufbWP4IM4V66E=;
-        b=lQRdNHPObwFo233zeSD44AR4bipVKmNk5j40bc+FCwT9Z9cBnSjCoUM2t43D8FE69E
-         QAzh7FOmFdBSUhlc4nZ5tAm6K7aZ2fjFr3SqJfZrEirWs4hFKYFFIGlBooqon78GR1uN
-         43UrA7FvBXGr30F+QvOatMVZWzZxDy+2q50W/YTEdbZEOiZVoSO6uX4pTrvwCP/3RS3B
-         YohtWiUtRAaReTiE2BFPigUYtUDy3xz5JKL4MU/AV1pV7nTxAUjqeh25cn+immfWr4WK
-         MzS/3BsHBJk8L3PqWC0Sy0R+0dfrsF3WEJVGrIGzjq74g6H+KpI6GWawfAB81sdnBsyx
-         06Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKEbrfkRa6QcWmTqXGEz0ADr9ZbV85JTfMq9SqMtEfc2tD1Q3FyjeLPKMfo/Lskt4exH4TEuZF@vger.kernel.org, AJvYcCUTosTYU4UakSBnIftKNb6UMQeQulKpCcXjxr0SNoNDz7YEXkp2siK9I6TolU/5eenVzRNXcP+l2RXAaCQ=@vger.kernel.org, AJvYcCV2Aq7dqJCst+8tA09WwdJ4v4QjKnPsgf8bu7a2KtgKYuGd2Lx3E5UfvO8S/Z581MOCzLQPMBbC5UnF@vger.kernel.org, AJvYcCXF0rVryKUAbfmgrrxFgbqvTPXcZf+uPuL9cfdBhp5EculB1W1DJqc28nLdUFOKbo+nvc/KS4uIEaOtBQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgzTbiGjhLMLmp+Y6kPn4r47hUA//roBKtBWheF7UGF3KsOwaI
-	XmehtA/D/iAEjiLEduYAdfT8ga3IlZYCbRBboiTGKKQooJhmnj6X
-X-Gm-Gg: ASbGncuWqWBYUOI4LgbYAW2luEjvbotimZhpTw1K+44adBm7Gc+z7LziQ10Zv9Y+4tP
-	X7bpgcOA8ZkVUTS2tZSViWqISIGlBjinaXuerrYatL4iHT3A/eTJCYsZP12aOc4d8uC3O9vWQ2F
-	mg4T/Eme5l+T981aL5+kP03K/XLg/jGutXv3L4+pRhTquFejYLGS7txknxP0N7TKOFk/rHKPobU
-	kfC3Dl0MO01SLv4KKAWiM0kSSjhoZRmBnp+QrCe9CJXAptTzL8Z74p/UpkJu45rVaH0Gx+0yao9
-	8KNd7AOjl1VbPRgLF80R/OVGyF7wRS3teimKLHvz
-X-Google-Smtp-Source: AGHT+IGF48JsooX8LvUnStKsqx9/OInoNYqYy4bWcDkMAodF96jjJHm5fMiSfC86jPErTi/QwM+ipw==
-X-Received: by 2002:a05:6a20:c90c:b0:1f5:7eee:bb10 with SMTP id adf61e73a8af0-2045b6a96abmr20069432637.8.1745847489177;
-        Mon, 28 Apr 2025 06:38:09 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f7ec3116sm7207927a12.31.2025.04.28.06.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:38:08 -0700 (PDT)
-Date: Mon, 28 Apr 2025 09:38:06 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v2 3/3] net: mana: Allocate MSI-X vectors dynamically as
- required
-Message-ID: <aA-Evojnzt2z0RdH@yury>
-References: <1745578407-14689-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
+        d=1e100.net; s=20230601; t=1745847491; x=1746452291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ckIN8bioKf6xmw0I7uAg33/9/Yp1zTgcen6pbefLTOo=;
+        b=EOaz6XVNy1vjFPvZ3fzbwSycJieeSk0fQiuDVa1jyXJRRr+H4jtKOxV4Qr6ii/kYZa
+         RoyiVCFBjZPkYPaaSE4nW5uPz99D6Pw7NTxxWbMkmYCRYWLHOIUKLRmhvlLw9S8+YEUr
+         UKchWF0T+cln4AUQpIbvU9BlOm6zezV4LO2U5gJbP0w8LIKmsGG65tnqTzTFPV6OQ5og
+         ZSxSPH9xZBL8T0t1Brc4BJrN+V2W69aGL4rQ9TjbWhG91NRyCK5PoQCiq8IQEbVLV7SN
+         muP9sMF5rm1tq9sSuVTI7yCCWrYtx9riDvBpOHFNB7dwf90IjnN9unJLOvLr7AlNN3dA
+         YScg==
+X-Forwarded-Encrypted: i=1; AJvYcCUC9xUdkkos1LuE6AgwaFTNmaGxgVH5B7JxVM3sQVZfC53j3OhbZmXgMlJvWIR4vBgOVu7PFkSus+88atIiBU+h00M=@vger.kernel.org, AJvYcCUq8hL7E32B+pQzwr+EMlqsgkYTx+52h8849um+LA+KmcU2JcMEpX8o+rp84B4y2CQ+QYryZBE9srjLtQE=@vger.kernel.org, AJvYcCWxe0/LYKQctnlwXueAark9QPOxCsfZiWf6zv93BtuqqRy88FwwekbCaNp/b6vNRGVfD1xmKGGISEGp+Zc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxTL0qSg7/3V3pKK7CoqjY6Kptel7cE1zjFjfoi9r8CAdQYCAR
+	AnaOmnHaksGKo3fesGOgiOcnjfqTbRs2AH3b3lxei/BGNMXCtiRklVuOGZUi
+X-Gm-Gg: ASbGnctVPqWD+Ol9CmBBQ7RYsppjYOY0+gQQp6QF0vmFH4LlBiL4hq4AAvxSynsExvo
+	hJMs/n+JJpQ/uNow1x1kWu2XY4I09CFu//xGfB9f9fOYaor2feYeBg+kTLXo+i8qaVHxFqsbZri
+	6UlwE+qZzdo2awbQyELZ9YtuEC47nPRPJlby0MLmZlFP0TP32evmSzoLD+8OdWkUqjL2JlmI0Un
+	1wRq4MjELPveXiYK/idwbhOYcnnw9vb9oWacmxuSMgQRUY5Coy6B9ZbY9UkGlPvbDi4V+WjIc92
+	b3x2pwntFui2FgnrZAzQeJHIyiXC89J0lkxE4D8NlylD0b5hgKBaHjNQ6TAiQ0vH5SUYeTUI4ZJ
+	mGEY=
+X-Google-Smtp-Source: AGHT+IFfx99XTesXD3jEWAhHpG6pFjn3I5bkN8HBbGweYPiR5Ji+aOt0wbW/EdQ14uAo5ZTFm2fH1Q==
+X-Received: by 2002:a05:6122:c84:b0:527:b7a3:dda8 with SMTP id 71dfb90a1353d-52a8a7973bfmr7135596e0c.7.1745847491286;
+        Mon, 28 Apr 2025 06:38:11 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a993d518dsm909508e0c.47.2025.04.28.06.38.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Apr 2025 06:38:10 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso6901584241.0;
+        Mon, 28 Apr 2025 06:38:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgcstAHYDsfdy/unB2+12rX4t6xx04SNZv0ZBfZE+x75vxbkiGF2K7WfupewrcVvgX2g9lB1wwZ7PFk0U=@vger.kernel.org, AJvYcCVHB1MkPac8BBAa8+sPQpSpkuVVbIGaynTYd81J05q/+J70S1P+WPCeGavLrJMKPJIVrzQy11agyi969qw=@vger.kernel.org, AJvYcCXXOey2HS3Si1wpqC6Ig5pxI++6NyKA29lGApXuZnKs/hp9kUBM/KZESv3U0vVccu35LIooHgtgp+c+ioSSufnWhks=@vger.kernel.org
+X-Received: by 2002:a05:6122:12d:b0:523:6eef:af62 with SMTP id
+ 71dfb90a1353d-52a79e74a4fmr7069801e0c.4.1745847490496; Mon, 28 Apr 2025
+ 06:38:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1745578478-15195-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <20250428095208.99062-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250428095940.GE3371@pendragon.ideasonboard.com> <CA+V-a8taFdmCgiUAwmDG93OA+P9UH-FEw3PeMFW4sLQ2KPnEPQ@mail.gmail.com>
+ <20250428112516.GG3371@pendragon.ideasonboard.com> <CA+V-a8vDDLZ422nZds7pEEW+gZ1n7s-U3eJjmG8DsOJT9uJygQ@mail.gmail.com>
+ <CAMuHMdVqQqg6oK_oxTNWbPbPues38BH+W125Ts5UEATXT8LWmg@mail.gmail.com> <CA+V-a8t1VGau1WbS4BtCdC-koZ1if8MfrG4Q3JGCrxkH9uLTrQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8t1VGau1WbS4BtCdC-koZ1if8MfrG4Q3JGCrxkH9uLTrQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 28 Apr 2025 15:37:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUZYsm_v=sh5yt2eVEMULoxumYuMPMsbzZQsLAp9cg7hw@mail.gmail.com>
+X-Gm-Features: ATxdqUEO0z-b_p84X9LRS45f7A1tj0PkbcOdeBHXWi9z5HCegbCgt4syw8o0Pr4
+Message-ID: <CAMuHMdUZYsm_v=sh5yt2eVEMULoxumYuMPMsbzZQsLAp9cg7hw@mail.gmail.com>
+Subject: Re: [PATCH] media: renesas: rzg2l-cru: Simplify FIFO empty check
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 03:54:38AM -0700, Shradha Gupta wrote:
-> Currently, the MANA driver allocates MSI-X vectors statically based on
-> MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> up allocating more vectors than it needs. This is because, by this time
-> we do not have a HW channel and do not know how many IRQs should be
-> allocated.
-> 
-> To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-> after getting the value supported by hardware, dynamically add the
-> remaining MSI-X vectors.
-> 
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  Changes in v2:
->  * Use string 'MSI-X vectors' instead of 'pci vectors'
->  * make skip-cpu a bool instead of int
->  * rearrange the comment arout skip_cpu variable appropriately
->  * update the capability bit for driver indicating dynamic IRQ allocation
->  * enforced max line length to 80
->  * enforced RCT convention
->  * initialized gic to NULL, for when there is a possibility of gic
->    not being populated correctly
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 323 ++++++++++++++----
->  include/net/mana/gdma.h                       |  11 +-
->  2 files changed, 269 insertions(+), 65 deletions(-)
+Hi Prabhakar,
 
-To me, this patch looks too big, and it doesn't look like it does
-exactly one thing.
+On Mon, 28 Apr 2025 at 15:25, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Mon, Apr 28, 2025 at 12:36=E2=80=AFPM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Mon, 28 Apr 2025 at 13:33, Lad, Prabhakar <prabhakar.csengg@gmail.co=
+m> wrote:
+> > > On Mon, Apr 28, 2025 at 12:25=E2=80=AFPM Laurent Pinchart
+> > > <laurent.pinchart@ideasonboard.com> wrote:
+> > > > On Mon, Apr 28, 2025 at 12:17:54PM +0100, Lad, Prabhakar wrote:
+> > > > > On Mon, Apr 28, 2025 at 10:59=E2=80=AFAM Laurent Pinchart wrote:
+> > > > > > On Mon, Apr 28, 2025 at 10:52:08AM +0100, Prabhakar wrote:
+> > > > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > > >
+> > > > > > > Simplify the `rzg2l_fifo_empty()` helper by removing the redu=
+ndant
+> > > > > > > comparison in the return path. Now the function explicitly re=
+turns `true`
+> > > > > > > if the FIFO write and read pointers match, and `false` otherw=
+ise, improving
+> > > > > > > readability without changing behavior.
+> > > > > > >
+> > > > > > > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > > > > > > Closes: https://lore.kernel.org/all/aAtQThCibZCROETx@stanley.=
+mountain/
+> > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.ren=
+esas.com>
+> > > > > > > ---
+> > > > > > >  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +=
+-
+> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-v=
+ideo.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > > > > > > index 067c6af14e95..97faefcd6019 100644
+> > > > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > > > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > > > > > > @@ -348,7 +348,7 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_de=
+v *cru)
+> > > > > > >       if (amnfifopntr_w =3D=3D amnfifopntr_r_y)
+> > > > > > >               return true;
+> > > > > > >
+> > > > > > > -     return amnfifopntr_w =3D=3D amnfifopntr_r_y;
+> > > > > > > +     return false;
+> > > > > >
+> > > > > > So the function always returned true. This seems to be a bug fi=
+x, please
+> > > > > > add a Fixes: tag. The commit message should also make it clear =
+that
+> > > > > > you're fixing an issue, not just simplifying the code.
+> > > > >
+> > > > > No, the function returned true only if the pointers matched;
+> > > > > otherwise, amnfifopntr_w =3D=3D amnfifopntr_r_y would return fals=
+e. I was
+> > > > > simply removing the repetitive pointer check and directly returni=
+ng
+> > > > > false at the end of the function, as we can be certain at that po=
+int.
+> > > > > Hence, I did not add a Fixes tag. Am I missing something?
+> > > >
+> > > > Oops, you're right, my bad.
+> > > >
+> > > > > > Personally I'd have written
+> > > > > >
+> > > > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-vid=
+eo.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > > > > > index 067c6af14e95..3d0810b3c35e 100644
+> > > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+> > > > > > @@ -345,8 +345,6 @@ bool rzg2l_fifo_empty(struct rzg2l_cru_dev =
+*cru)
+> > > > > >         amnfifopntr_w =3D amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
+> > > > > >         amnfifopntr_r_y =3D
+> > > > > >                 (amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
+> > > > > > -       if (amnfifopntr_w =3D=3D amnfifopntr_r_y)
+> > > > > > -               return true;
+> > > > > >
+> > > > > >         return amnfifopntr_w =3D=3D amnfifopntr_r_y;
+> > > > > >  }
+> > > > > >
+> > > > > > but that's also a bit of a style preference.
+> > > > >
+> > > > > I wanted to keep this consistent with the rz3e_fifo_empty(). If y=
+ou
+> > > > > prefer the above I'll do that in v2.
+> > > >
+> > > > Up to you.
+> > > >
+> > > Thanks. OK, let's keep this patch as is to stay consistent with
+> > > rz3e_fifo_empty().
+> >
+> > rz3e_fifo_empty() has a rather complex conditional expression.
+> >
+> Hmm yes.
+>
+> > This one will probably be converted to a simple return statement by
+> > a random janitor, soon after its introduction ;-)
+> >
+> Agreed, are you already working on it?
 
-Can you split it to a few small more reviewable chunks? For example,
-I authored irq_setup() helper. If you split its rework and make it
-a small preparation patch, I'll be able to add my review tag.
+Nice try ;-)
 
-Thanks,
-Yury
+-EBUSY.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
