@@ -1,74 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2DB4A00;
-	Mon, 28 Apr 2025 07:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA431D514E;
+	Mon, 28 Apr 2025 07:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745825070; cv=none; b=jHPWDDKscZurAtaCQQXsQRMMEVMgOMIun+QblYQ/LQosEncNTpUFQ5sgwKCU467yLAFxi//75Gqnv3+C6mWSPL35aKkBmNQBn70UZhblnaeP5fi941RfFrHmjk0xqJjcTRdJ2W6DPr8ZFbn8Qy2hXPlwLfglXFUuYA8ilXgzhhU=
+	t=1745825117; cv=none; b=UntrRbAvbeMHmtsLB5STptfk/xGuaLQT8WhfyAUGyaDt/A6I3SfT+jIUXAYzMLYklxnH3xuZxwqItYu26NLxUE6t1QqLX6eZ2hPruulUfoeeO4y2LuKlaYJDUfBKk02FJZxMq4EMfctKkSiwl6JKh1yg8DQ0jvwX36vh3iBYasY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745825070; c=relaxed/simple;
-	bh=l2Q0gVsxUqyisBJ2iI60NbNxaAxhgA/lnFVxrp9bRkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THH4RkMKiQHn5xGFW13uMSwQ/Kj3sJTCB5ogTnViX3ea35R8R+U/76tnTLLDDzDAHo+XZ38yP8G1Nry8MiYV8taXdBq1RSNH8AUf4oIOajOwkbh6r3FxZfXBE1kcNd+DVfE+2ZOFuC9iLyyla7Bfr6oV2HVJJek+SYvuJQFcKkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8mUjBEX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745825117; c=relaxed/simple;
+	bh=1XfRHpMN7FdDWOn92sRc2bykGert03rj8/SmnH9bqWo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DUezx4+xbDVoDd+ZEaQD1E7JpiOGRcRPPhIyAzxdpsMIXo8zmO7RtR58l0DHHvjDhJR8JEAmzYZ3TR0HXxkQu8vxROFUJcWs8h7NJNISeJF8bcTIRCL9jRxUiTkCcBgHCNFzj+geaeDgEfRmjZ3/d6SdGpr49oej+G1qoMgeLK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i3mVEHrA; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8mUjBEX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F53C4CEE4;
-	Mon, 28 Apr 2025 07:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745825070;
-	bh=l2Q0gVsxUqyisBJ2iI60NbNxaAxhgA/lnFVxrp9bRkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l8mUjBEX3qghyYxxSLaMxhfEAUelgqIa9poC9QElj8JHQ+ydGZJfRC4p7TfqmBb0N
-	 o1/MTx3M6+coi8AxWIslo93Bb66PERi7D9k44xGPLZflp8SD5SWrvyMFBXbGk+WCJs
-	 5MmxyH+s+Dzdhr8pi3xbMM98IsTSVDLXUm7vGUiTHxrZJhb6++yPoRHTWhNKadFQdS
-	 c9Vm3ENcA8+LgKdrPlT6Lk3wnWvvd2XrrkS/oLPGvot1Fy/zIfXyG/2SuSpCDzxvQ/
-	 c3bXW3WNYvT8+G456CTP8Zoqd3jY0dFsxdKmFlY+e0uPH/EXcaeAjOH71LillOekLR
-	 kRsa2sUwZednA==
-Date: Mon, 28 Apr 2025 09:24:27 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Jiaxin Yu <jiaxin.yu@mediatek.com>, linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Trevor Wu <trevor.wu@mediatek.com>
-Subject: Re: [PATCH v2 01/13] ASoC: dt-bindings: Convert MT8173 AFE binding
- to dt-schema
-Message-ID: <20250428-remarkable-authentic-mink-74cef6@kuoka>
-References: <20250424102509.1083185-1-wenst@chromium.org>
- <20250424102509.1083185-2-wenst@chromium.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i3mVEHrA"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53S7Ki9O3334061
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 02:20:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745824844;
+	bh=j3ziubjMM4iDinkRWPpqOq279fOOole6d1gFV+rphZk=;
+	h=From:To:Subject:Date;
+	b=i3mVEHrAl64u6xIjvnBtDnJ+JjrjhuXGnPUCo7pVPv03G9yjJTIsQW2bfWUFEFOTz
+	 7MRUPA1U7mjppe5IllSWrJB0FIJeBtcNpWaSlxbB9VDw9T5rgF9wc7glZ+ZceRYloH
+	 SP9oRM3LS9hybOrIxaGB6bxawHDfy9GumJv+Re2g=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53S7KiCC003072
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 28 Apr 2025 02:20:44 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
+ Apr 2025 02:20:44 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 28 Apr 2025 02:20:44 -0500
+Received: from uda0498651.dhcp.ti.com (uda0498651.dhcp.ti.com [172.24.227.7])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53S7KdMZ068873;
+	Mon, 28 Apr 2025 02:20:40 -0500
+From: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+To: <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>, <s-adivi@ti.com>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>
+Subject: [PATCH 0/8] dmaengine: ti: Add support for BCDMA v2 and PKTDMA v2
+Date: Mon, 28 Apr 2025 12:50:24 +0530
+Message-ID: <20250428072032.946008-1-s-adivi@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250424102509.1083185-2-wenst@chromium.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Apr 24, 2025 at 06:24:55PM GMT, Chen-Yu Tsai wrote:
-> Convert the MT8173 AFE (audio frontend) binding from text to dt-schema
-> in YAML. "clocks" is added to the list of required properties to match
-> "clock-names". And the example was slightly fixed up in style. Otherwise
-> everything is as before.
-> 
-> A contributer and maintainer for a recently added MediaTek audio binding
-> was chosen instead of the original submitter.
-> 
-> Cc: Trevor Wu <trevor.wu@mediatek.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
->  .../sound/mediatek,mt8173-afe-pcm.yaml        | 87 +++++++++++++++++++
->  .../devicetree/bindings/sound/mtk-afe-pcm.txt | 45 ----------
+This series adds support for the BCDMA_V2 and PKTDMA_V2 which is
+introduced in AM62L.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The key differences between the existing DMA and DMA V2 are:
+- Absence of TISCI: Instead of configuring via TISCI calls, direct
+  register writes are required.
+- Autopair: There is no longer a need for PSIL pair and instead AUTOPAIR
+  bit needs to set in the RT_CTL register.
+- Static channel mapping: Each channel is mapped to a single peripheral.
+- Direct IRQs: There is no INT-A and interrupt lines from DMA are
+  directly connected to GIC.
+- Remote side configuration handled by DMA. So no need to write to PEER
+  registers to START / STOP / PAUSE / TEARDOWN.
 
-Best regards,
-Krzysztof
+Sai Sree Kartheek Adivi (8):
+  dt-bindings: dma: ti: Add document for K3 BCDMA V2
+  dt-bindings: dma: ti: Add document for K3 PKTDMA V2
+  drivers: dma: ti: Refactor TI K3 UDMA driver
+  dmaengine: ti: k3-psil-am62l: Add AM62Lx PSIL and PDMA data
+  drivers: soc: ti: k3-ringacc: handle absence of tisci
+  dmaengine: ti: New driver for K3 BCDMA_V2
+  dmaengine: ti: k3-udma-v2: Add support for PKTDMA V2
+  dmaengine: ti: k3-udma-v2: Update glue layer to support PKTDMA V2
+
+ .../bindings/dma/ti/k3-bcdma-v2.yaml          |   97 +
+ .../bindings/dma/ti/k3-pktdma-v2.yaml         |   73 +
+ drivers/dma/ti/Kconfig                        |   14 +-
+ drivers/dma/ti/Makefile                       |    4 +-
+ drivers/dma/ti/k3-psil-am62l.c                |  132 +
+ drivers/dma/ti/k3-psil-priv.h                 |    1 +
+ drivers/dma/ti/k3-psil.c                      |    1 +
+ drivers/dma/ti/k3-udma-common.c               | 2974 +++++++++++++
+ drivers/dma/ti/k3-udma-glue.c                 |   91 +-
+ drivers/dma/ti/k3-udma-private.c              |   48 +-
+ drivers/dma/ti/k3-udma-v2.c                   | 1513 +++++++
+ drivers/dma/ti/k3-udma.c                      | 3751 ++---------------
+ drivers/dma/ti/k3-udma.h                      |  571 ++-
+ drivers/soc/ti/k3-ringacc.c                   |  162 +-
+ include/linux/soc/ti/k3-ringacc.h             |    7 +
+ 15 files changed, 5873 insertions(+), 3566 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma-v2.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-pktdma-v2.yaml
+ create mode 100644 drivers/dma/ti/k3-psil-am62l.c
+ create mode 100644 drivers/dma/ti/k3-udma-common.c
+ create mode 100644 drivers/dma/ti/k3-udma-v2.c
+
+-- 
+2.34.1
 
