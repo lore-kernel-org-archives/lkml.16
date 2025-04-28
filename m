@@ -1,109 +1,157 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001CFE555;
-	Mon, 28 Apr 2025 04:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABC22F44
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745814298; cv=none; b=Yq/R5DCEkexvNUAC1HnLspe30DpZaDi9YyUdliGjr06o/g7SkpdY29V3W0YrmNU2bdCHCtkwNVh9nitoVXIHb752jTNMjQyJXmtNtMIALxXsh4sRi73UGoSuerNMC3V4/QYCMzZc1RX4PEbMzsBoc29uzzDlbtlXt1V7LrXa1X4=
+	t=1745814536; cv=none; b=XKzPYlJJ/xwZJsNkLoLE9NN0ijFp/DggOOamrLCzjhgK9zXljOvx4/TRSAX1eZuLb9QCsQ5zOKwMkIwogN2roX2HkkjD7IrzB9TyRVo7PMHuCMDdPF4JgDuTCqIG3sl9dXbjjYRVtxSP6OdGMAxToFUIZ7PE7RBmei4C9UYzjMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745814298; c=relaxed/simple;
-	bh=0qoOvckDY2gmkeh0yd8PI0ndX1X9ymOdAMaZE8BscTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xfr97QG6fr/UCv7bHOH/gxJOGbk4tOxuRi2wP+ntmD4lkeVlZrjrE/0uJijttQdhJjaY3dKh5PJcqNuKW0C3Dy+HQ4ATLYU+mFmFatT/Jh9bgZxlA0KhmZL/g98hMxlojuIuMj3XDgVVP/QB/83qeaC7+TBoLyRdcuZme5xTG7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=n+OR4rGl; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745814536; c=relaxed/simple;
+	bh=d1lImxcL5KXXt5ekjHY3CgyCvgBRY/NhyBhBex+CUxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TmjJpvxZpQIs4pCOb/6p0qdfzEdkAgDwWb3n94cXs7Na56OqsAcjFq6TOMC9IYss/51V6DJYNx316Lvzp86DQT8KQCwSoojGwd70HLHQR0xwmREtKK1aLqOOW1EWajPIJls24Z3C6n2Giyg36n5MPKoXhXE4vVD5j1DXFpjCw1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FunUyaLx; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n+OR4rGl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745814294;
-	bh=Pi/iIMCSJTDwYpAX7VGNjNL+T038S3Xs7GDOBapDxyk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=n+OR4rGl69tAMaeHFyv40owrPKk2Qvq0FgWnuAWtmdHunJocbqdP2hZS7BBU9RDjw
-	 aSzyrrpsibL76AZFlL5+MwbI56Apclq/k7wTUrLahWkfWf2Y6IhiDfv6/rKkwbg0in
-	 +P190Z8qMYmgFJxlc51RTcGRNd06Pj5EtGLXLzDCdPWTyhAwMMDAzHjoeaXRWTqkJX
-	 eon2+44oBJOqXC0VCO/dQJnmUFrXsjN1kqQ6sXHn5J3/oR54ua1uUSo5MBMu7Y+JQn
-	 mDOLR7jlTzCeyrJRNkNhX+RrVPx7Z6hBhn3xu6GLs6mYx5BRkgMWrmLLBlKJtftaTY
-	 a41wzzm/V2ZIA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm9Mp0Bf5z4wyh;
-	Mon, 28 Apr 2025 14:24:53 +1000 (AEST)
-Date: Mon, 28 Apr 2025 14:24:52 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Dave Airlie <airlied@redhat.com>, DRI <dri-devel@lists.freedesktop.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?=
- <thomas.hellstrom@linux.intel.com>, DRM XE List
- <intel-xe@lists.freedesktop.org>
-Subject: Re: linux-next: build failure after merge of the drm tree
-Message-ID: <20250428142452.64ff7dd7@canb.auug.org.au>
-In-Reply-To: <20250428133013.5ad6b6b7@canb.auug.org.au>
-References: <20250428133013.5ad6b6b7@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FunUyaLx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745814534; x=1777350534;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=d1lImxcL5KXXt5ekjHY3CgyCvgBRY/NhyBhBex+CUxo=;
+  b=FunUyaLxSo7hp/bZi4S+FdaYSbCKSX5u833d9pnKyqSegMxcBxFrlERZ
+   jm8O5jnaca+xKXkDG0L1kISFHBeTfGbskp1Z6cRn2Jy9ubpGvOS2ViUeI
+   kXbcC3K7m86O0xBYBQrLhGUlsGLzy7jJfDKqSptNIq9kjrCoSMUf75f9+
+   sHMqJMDfNFuO4cZtsB2YlhfZF2V2jUvssh2dDsQ787h2PaABcsWCvZsz2
+   HP25ZOIPQYjSyeWoBuJJOk+JSoN3+e3KvXUxoqHcIWvMcHs1uOpCqVlUj
+   O31Nl+hPb35EDEEvxY6PSTERO8zoWRR3CdGuox9OfXqodO2SqNpNHdp3D
+   A==;
+X-CSE-ConnectionGUID: 7dMV5zQ8QOqhXLgDA0iLng==
+X-CSE-MsgGUID: xRtwtIMkR4aOW1wA/sGSdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="58034495"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="58034495"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 21:28:53 -0700
+X-CSE-ConnectionGUID: IF32Jd26QMinyimSE+FmbA==
+X-CSE-MsgGUID: 51ynQFvFTCCb2YY9zK27RA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="133140879"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 27 Apr 2025 21:28:51 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u9G6q-0006bt-1J;
+	Mon, 28 Apr 2025 04:28:48 +0000
+Date: Mon, 28 Apr 2025 12:28:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Wei Liu <wei.liu@kernel.org>,
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Jinank Jain <jinankjain@microsoft.com>,
+	Mukesh Rathor <mrathor@linux.microsoft.com>,
+	Muminul Islam <muislam@microsoft.com>,
+	Praveen K Paladugu <prapal@linux.microsoft.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Roman Kisel <romank@linux.microsoft.com>
+Subject: drivers/hv/mshv_root_main.c:1341:25: sparse: sparse: incorrect type
+ in argument 1 (different address spaces)
+Message-ID: <202504281257.v5WVmO03-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/A2wB=lPK0WB_n+yZjXAX+G5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---Sig_/A2wB=lPK0WB_n+yZjXAX+G5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02ddfb981de88a2c15621115dd7be2431252c568
+commit: 621191d709b14882270dfd8ea5d7d6cdfebe2c35 Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs
+date:   5 weeks ago
+config: arm64-randconfig-r111-20250428 (https://download.01.org/0day-ci/archive/20250428/202504281257.v5WVmO03-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce: (https://download.01.org/0day-ci/archive/20250428/202504281257.v5WVmO03-lkp@intel.com/reproduce)
 
-Hi all,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504281257.v5WVmO03-lkp@intel.com/
 
-On Mon, 28 Apr 2025 13:30:13 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
->=20
-> In file included from drivers/gpu/drm/xe/xe_bo.c:3118:
-> drivers/gpu/drm/xe/tests/xe_bo.c: In function 'ccs_test_migrate':
-> drivers/gpu/drm/xe/tests/xe_bo.c:63:15: error: too many arguments to func=
-tion 'xe_bo_evict'
->    63 |         ret =3D xe_bo_evict(bo, true);
->       |               ^~~~~~~~~~~
-> drivers/gpu/drm/xe/xe_bo.c:2939:5: note: declared here
->  2939 | int xe_bo_evict(struct xe_bo *bo)
->       |     ^~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   55df7c0c62c1 ("drm/ttm/xe: drop unused force_alloc flag")
->=20
-> I have used the drm tree from next-20250424 for today.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/hv/mshv_root_main.c:1341:25: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const [noderef] __user *addr @@     got void const * @@
+   drivers/hv/mshv_root_main.c:1341:25: sparse:     expected void const [noderef] __user *addr
+   drivers/hv/mshv_root_main.c:1341:25: sparse:     got void const *
+   drivers/hv/mshv_root_main.c:2192:23: sparse: sparse: symbol 'mshv_reboot_nb' was not declared. Should it be static?
 
-The fix for this turned up in the drm-xe tree while I was writing the
-above.  I have now used the current drm tree combined with the current
-drm-xe tree for today.  So the drm tree on its own is broken as above,
-but linux-next is not.
+vim +1341 drivers/hv/mshv_root_main.c
 
---=20
-Cheers,
-Stephen Rothwell
+  1317	
+  1318	/*
+  1319	 * This maps two things: guest RAM and for pci passthru mmio space.
+  1320	 *
+  1321	 * mmio:
+  1322	 *  - vfio overloads vm_pgoff to store the mmio start pfn/spa.
+  1323	 *  - Two things need to happen for mapping mmio range:
+  1324	 *	1. mapped in the uaddr so VMM can access it.
+  1325	 *	2. mapped in the hwpt (gfn <-> mmio phys addr) so guest can access it.
+  1326	 *
+  1327	 *   This function takes care of the second. The first one is managed by vfio,
+  1328	 *   and hence is taken care of via vfio_pci_mmap_fault().
+  1329	 */
+  1330	static long
+  1331	mshv_map_user_memory(struct mshv_partition *partition,
+  1332			     struct mshv_user_mem_region mem)
+  1333	{
+  1334		struct mshv_mem_region *region;
+  1335		struct vm_area_struct *vma;
+  1336		bool is_mmio;
+  1337		ulong mmio_pfn;
+  1338		long ret;
+  1339	
+  1340		if (mem.flags & BIT(MSHV_SET_MEM_BIT_UNMAP) ||
+> 1341		    !access_ok((const void *)mem.userspace_addr, mem.size))
+  1342			return -EINVAL;
+  1343	
+  1344		mmap_read_lock(current->mm);
+  1345		vma = vma_lookup(current->mm, mem.userspace_addr);
+  1346		is_mmio = vma ? !!(vma->vm_flags & (VM_IO | VM_PFNMAP)) : 0;
+  1347		mmio_pfn = is_mmio ? vma->vm_pgoff : 0;
+  1348		mmap_read_unlock(current->mm);
+  1349	
+  1350		if (!vma)
+  1351			return -EINVAL;
+  1352	
+  1353		ret = mshv_partition_create_region(partition, &mem, &region,
+  1354						   is_mmio);
+  1355		if (ret)
+  1356			return ret;
+  1357	
+  1358		if (is_mmio)
+  1359			ret = hv_call_map_mmio_pages(partition->pt_id, mem.guest_pfn,
+  1360						     mmio_pfn, HVPFN_DOWN(mem.size));
+  1361		else
+  1362			ret = mshv_partition_mem_region_map(region);
+  1363	
+  1364		if (ret)
+  1365			goto errout;
+  1366	
+  1367		/* Install the new region */
+  1368		hlist_add_head(&region->hnode, &partition->pt_mem_regions);
+  1369	
+  1370		return 0;
+  1371	
+  1372	errout:
+  1373		vfree(region);
+  1374		return ret;
+  1375	}
+  1376	
 
---Sig_/A2wB=lPK0WB_n+yZjXAX+G5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPAxQACgkQAVBC80lX
-0GzHOgf+I1NaDO9ZHmexBHMt/XiPvkGsTAvn9fA8pR3qyGKurtxJOPAuea/9Rjvx
-OI8a8icC4ZFa0w4IqnSdtU4uF+fZje6rUVm7HLeBf6nBr5zOb3y3Myv5/DlakR+Q
-tTlscB7tBnTgJozR9ZcfhaBGQXblxL4IYZkbvDwpnMfEAuMqQDwlOHTpZI4+Wb8T
-wnnv2h47yZ13H8g7P8qA4GiEjpdtz41b43/IKWB6Smebr3MqtYEoMw86OIxwysiI
-h9vGr6/rlO3/d5RS6N/QGaL/Z/jqJkAb6aAsRbkKZali9Qp/iIjyQXcGu9KTD43G
-Hx/kWZ8z/yYKDKLmBgsSWDsNLZ8+WQ==
-=qDw9
------END PGP SIGNATURE-----
-
---Sig_/A2wB=lPK0WB_n+yZjXAX+G5--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
