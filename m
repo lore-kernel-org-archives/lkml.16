@@ -1,122 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCB2254879;
-	Mon, 28 Apr 2025 10:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550CD79F2;
+	Mon, 28 Apr 2025 10:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745835257; cv=none; b=GLxeMc1RdFdEjU/+HRY7qNFXfEH0QrQ7pedUGLzG251eGuy6CdAs40VA/g8oCT2kXOBNPeNp4rkRDtQIUxnBkI9jUI0IoM9rOJwebW93qPfwPO0nye3JgTHwVNkRdu6OoFvMZZUx/zI+0PD5iXfxxWcA+ES2sGCF0v8By1On/vA=
+	t=1745835397; cv=none; b=ElB6FJDDCsEdTw7pq0HXgFbp8aLN+4wm8LN/t6CreQXDCkcbzBtC1a4BC5tjKILGjRbb6aoM9osqsSxPxcihdOhVGwD8RS2wRxdhr5ulRottmTsng5iYAfqeOrBrkbwZBeARYaMXKxmy2kJ04+eNSINxLK8zjH72r6wkPzkDD2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745835257; c=relaxed/simple;
-	bh=cO7Tg6haOhSZ9heSi1IY0OcBr+NiJRQt7NeKbzMWWmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sQxSeJMML/ISZ6ZD/CwnwcVyxIgGtgByybJLS3wUBpO0ZXCLIJlYSQ7grP2mNDq0wZfMw1H3UhDLV4zdxfqmTYqd7jQoykBKn6MBmyRjyPwf4eMw9xPxn0e7t9KNMXMDrzGFRlpxf0aOx2DZ1I7WHqWIVJeBki/vaiQVWITvg4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzw0n9Gc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745835397; c=relaxed/simple;
+	bh=Q7cgqe+R5RLye1ej3E4XBmN/ZN/xMhAbSz+W/zM7mZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eAMvUb1FP1TanmVyvigEWK6oVaBatp3/DqA3cytZ4pSCFwJNHi1Hwuu1V9XKFH1wL6LphkU6lRLy3Ks6UZP1yyH4RGuYVIenTxS9dF6WgP6T82iWocSXC4t4oNAD3SNuRfVtdYsoeP2dCDFjcxW71PIMkzaO7n8qfEDCScskgrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CljZnVi0; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzw0n9Gc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBF2C4CEE4;
-	Mon, 28 Apr 2025 10:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745835256;
-	bh=cO7Tg6haOhSZ9heSi1IY0OcBr+NiJRQt7NeKbzMWWmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nzw0n9GcgT5Fbx+XhjHugEd/2EqfYnxi7XasvWM5DU+bAZ03DqipoLsxlFUvDV66h
-	 3QKCnLDFPRjM5taZkG8spldhQ7V2xGwLX9sP+fVBfwUK03STXHWSQOfQEqZH/X7z10
-	 MyDPKpQcxoY4yz19Pz+y+DQ509GK3aX630qFVnYEv85r8F4KHNzd4G3lu0oZ31yQO3
-	 dCzVq48QuHydSoix7/vx4baTt9sAPDP8AJETpErJvSeVI3a5ajbSzIgv42ehGVhq9O
-	 66lIdsCBCCHA+zRsLAaMzubh+0dtuaE7G/CIIyghfEuLSopkh3pQWXs4+mdSws4YZ3
-	 2t+hWLNmxePjg==
-Date: Mon, 28 Apr 2025 12:14:13 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Zqiang <qiang.zhang1211@gmail.com>
-Cc: paulmck@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu/nocb: Add Safe checks for access offloaded rdp
-Message-ID: <aA9U9QvB2t2MLuU2@pavilion.home>
-References: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CljZnVi0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A60E84396C;
+	Mon, 28 Apr 2025 10:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745835388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5aOZv2zdVkXsCWd9bP5Yd4I7as6l3L4TZW0Lw2hS1HA=;
+	b=CljZnVi0ickz6gf0L4dBJL4EIrU93xzsDrr038fZY0AerxHfFIOjiuasmYdle0ECIiYBBR
+	TnIvx4grk6Fo9M8Dp9RvGAQw4AuUT5SevFKn68mhSsQcnd98tdcwLZNKR1MgLyN/D02sfr
+	gFqhAouAdhvIphwL6Kbo/z1i6yKtNReqX69ACzWRM17XU5wPs2razeqtWH2kvyyK6A0yGr
+	TwmayLBWtmsx6/1AjXwG4adt+vFzIQuDkSZezFurNt9x74pU3uZx986Tz4GEW1vDmInF//
+	jvx6EzGUgVPd06a8qoCHTqR7O7mdSLbN6KpqAd8xoKubao1JAV2w9GlFqcyh5g==
+Date: Mon, 28 Apr 2025 12:16:25 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Thierry
+ Reding <thierry.reding@gmail.com>, Laurent Pinchart
+ <laurent.pinchart+renesas@ideasonboard.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC v2 1/5] dt-bindings: display: panel: Fix port
+ binding
+Message-ID: <20250428121625.72c0bfa8@kmaincent-XPS-13-7390>
+In-Reply-To: <20250428-refined-nyala-of-engineering-0556fb@kuoka>
+References: <20250424-feature_sfto340xc-v2-0-ff7da6192df2@bootlin.com>
+ <20250424-feature_sfto340xc-v2-1-ff7da6192df2@bootlin.com>
+ <20250428-refined-nyala-of-engineering-0556fb@kuoka>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtieekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehli
+ hhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Le Mon, Apr 28, 2025 at 05:54:03PM +0800, Zqiang a écrit :
-> For Preempt-RT kernel, when enable CONFIG_PROVE_RCU Kconfig,
-> disable local bh in rcuc kthreads will not affect preempt_count(),
-> this resulted in the following splat:
-> 
-> WARNING: suspicious RCU usage
-> kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
-> stack backtrace:
-> CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
-> Call Trace:
-> [    0.407907]  <TASK>
-> [    0.407910]  dump_stack_lvl+0xbb/0xd0
-> [    0.407917]  dump_stack+0x14/0x20
-> [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
-> [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
-> [    0.407939]  rcu_core+0x471/0x900
-> [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
-> [    0.407954]  rcu_cpu_kthread+0x25f/0x870
-> [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
-> [    0.407966]  smpboot_thread_fn+0x34c/0xa50
-> [    0.407970]  ? trace_preempt_on+0x54/0x120
-> [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
-> [    0.407982]  kthread+0x40e/0x840
-> [    0.407990]  ? __pfx_kthread+0x10/0x10
-> [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
-> [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
-> [    0.408000]  ? __pfx_kthread+0x10/0x10
-> [    0.408006]  ? __pfx_kthread+0x10/0x10
-> [    0.408011]  ret_from_fork+0x40/0x70
-> [    0.408013]  ? __pfx_kthread+0x10/0x10
-> [    0.408018]  ret_from_fork_asm+0x1a/0x30
-> [    0.408042]  </TASK>
-> 
-> Currently, triggering an rdp offloaded state change need the
-> corresponding rdp's CPU goes offline, and at this time the rcuc
-> kthreads has already in parking state. this means the corresponding
-> rcuc kthreads can safely read offloaded state of rdp while it's
-> corresponding cpu is online.
-> 
-> This commit therefore add rdp->rcu_cpu_kthread_task check for
-> Preempt-RT kernels.
-> 
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> ---
->  kernel/rcu/tree_plugin.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 003e549f6514..fe728eded36e 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -31,7 +31,9 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
->  		  lockdep_is_held(&rcu_state.nocb_mutex) ||
->  		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
->  		   rdp == this_cpu_ptr(&rcu_data)) ||
-> -		  rcu_current_is_nocb_kthread(rdp)),
-> +		  rcu_current_is_nocb_kthread(rdp) ||
-> +		  (IS_ENABLED(CONFIG_PREEMPT_RT) &&
-> +		   current == rdp->rcu_cpu_kthread_task)),
+On Mon, 28 Apr 2025 09:32:21 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Isn't it safe also on !CONFIG_PREEMPT_RT ?
+> On Thu, Apr 24, 2025 at 05:07:39PM GMT, Kory Maincent wrote:
+> > Faced a binding error check while adding the data-lanes property in the
+> > ilitek,ili9881c binding. See the next patch for the binding changes.
+> > Here is the error:
+> > Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.example=
+.dtb:
+> > panel@0: port:endpoint: Unevaluated properties are not allowed
+> > ('data-lanes' was unexpected) =20
+>=20
+> There is no error at this point so your rationale is not correct. You
+> cannot use possible error as reason to fix something... You can use
+> instead other arguments that the binding is incomplete or incorrect.
 
-Thanks.
+As I have said in the cover letter, I faced this error and this patch fixed=
+ it
+but I didn't get the ins and outs.
+Indeed, I didn't understand the conflict between the port definition in
+panel-common and the panel binding change from the 2nd patch.
 
->  		"Unsafe read of RCU_NOCB offloaded state"
->  	);
->  
-> -- 
-> 2.17.1
-> 
+> > Change the reference of properties/port to $defs/port-base to makes it
+> > work.
+> > The only difference between port and port-base is the unevaluatedProper=
+ty
+> > set to false. I have tried to use properties/port in both panel-common
+> > and ilitek,ili9881c bindings but the error is still there. The only way
+> > to not face the error is to use $defs/port-base reference. I don't
+> > really understand the ins and outs, maybe it is a issue from the binding
+> > check tool.
+> >=20
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> > ---
+> >=20
+> > Changes in v2:
+> > - New patch
+> > ---
+> >  Documentation/devicetree/bindings/display/panel/panel-common.yaml | 2 =
++-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > b/Documentation/devicetree/bindings/display/panel/panel-common.yaml ind=
+ex
+> > 087415753d606ce67bceabaa9b0ba7d463282f92..635f67ced0cb7103684a1415ab740=
+d83409a7dbb
+> > 100644 ---
+> > a/Documentation/devicetree/bindings/display/panel/panel-common.yaml +++
+> > b/Documentation/devicetree/bindings/display/panel/panel-common.yaml @@
+> > -76,7 +76,7 @@ properties: # Connectivity port:
+> > -    $ref: /schemas/graph.yaml#/properties/port
+> > +    $ref: /schemas/graph.yaml#/$defs/port-base =20
+>=20
+> This allows anything in the port in every other binding, so is not
+> correct. You need to fully describe the port here with
+> additionalProps:false, probably. Just like every other binding with
+> port-base is doing.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+Yeah that was expected.
+As I said I tried with port-base but it throw me this error and I didn't ma=
+nage
+to remove it with only the panel binding change for now.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
