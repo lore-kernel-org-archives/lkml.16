@@ -1,189 +1,127 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0B3263F4E;
-	Mon, 28 Apr 2025 11:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DCA264A67;
+	Mon, 28 Apr 2025 11:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745840429; cv=none; b=gvKVB0Jy7FafRMIbzzJfR6NNa6p6yrbrX9ADA2S+cwYSL8yDcH5jnXYTBQ5Q/hgC1u6MMxSZ7DxE0C8I0OoBGX9I9R2nx4z/4cIW998qXiAeYZwoM7nMJeE4jUHCYFUK3hyb8BVmMJj4C05LnA04Ov9bduqHezuefI/md61aTwM=
+	t=1745840431; cv=none; b=mV4hdr9cOMnro8Qf01yNdO6F672CNoy6gVvsRyfYtqwl1KDLoSy75cdpzfy9JR3Pi+ZPeSe0rtFOY6reqmjQsqpnqS1YiXHndlXtD26dXzunMC5pEmsKEmmfJKT2GN52tCiKVZFX5aBf587IXc/kCwBQFDQPeQir7lovH+wVnbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745840429; c=relaxed/simple;
-	bh=Yr0OVRKVLcR4kLqw7USdLKGcxixB6myn2j81M3mgoCk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=ItIXCqtmLHm5XrQLkj9AKtdNhED22dlI4h31gR5J4gcxtBm8gBEV6pQUzBtkWUbQmYSPaofKue8sb8srQ1/UUr8C/jYQiPTcE3P8VTXDzy3gbJK1lTaxRfU3Sf3Qh+i04dQjCXdkSM+7diFbT/FLT1US7nXGMWwsYHhe60pu+Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EO31SXQJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745840431; c=relaxed/simple;
+	bh=2ljdbjIEAmsAMoG7EZuv5JDe8PK4yJfG5z1oFt03uik=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eVoH82UfIGuSH0n+dNyNGDFGTSh9+eWP9Bs4EzuCwCoTKys1uhYDoYtlqLTEisM5jCZSLIwaLnu7FTMAXxE/wB4d88Kx1TO8jNRmvehlCE5aRy5Pw7xwnv5mNs8lC/2AYrtwHLTby1aLt1Zcpt/+om47uovd7bPX3sIRzkYsIJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GMlqDxrS; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EO31SXQJ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SABAQj005953;
-	Mon, 28 Apr 2025 11:40:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SnYLMW7hNTuN+uxvXlj0duCk+F+WxlQuRFFtaHZfAIg=; b=EO31SXQJM3+gv2nz
-	RWcyhJbFaNLKyQT+Rg6emmInxaTMSx4jN5j8IVerpVMkyBYThmeFmUUcs148YfL6
-	Loc9M47Sm8nhjx+v3A2j8P4+2PnRKhABGw30zbqmE6HgVEDmyxqiMTnB4ATwiKAr
-	d8ZrVze5yBIIWXzLj22bh9cc2fUOdSeDTYhRa7V3EUGavHkNMRMfYDTknh4Zelc1
-	huZZBUhtdY98dCmRdaRglMWfaqHx8PL0je1PG/yNy8z+fWeP8vqlT8U78h6eBGXL
-	FatJoMpcATDGSxsobfTazIX5kGxx9ZbsYUf3PDPe7hoVpPKAZ/VZO4zbcCjMYJ9l
-	DXAOeg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqh6fm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 11:40:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53SBeE0h024302
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 11:40:14 GMT
-Received: from [10.239.133.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Apr
- 2025 04:40:10 -0700
-Message-ID: <774ba18b-3319-4d20-854b-cc21b48ce3f6@quicinc.com>
-Date: Mon, 28 Apr 2025 19:40:08 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GMlqDxrS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745840430; x=1777376430;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=2ljdbjIEAmsAMoG7EZuv5JDe8PK4yJfG5z1oFt03uik=;
+  b=GMlqDxrSFE8HCHCRw35rYnGzBAXeCYZ3syfIsj2A+GkNkLAqzkG04rHi
+   LLjB0+qXPAqJFlSxR5Yto6JSlEspGZzrOKlv+H6Oe/I4Bwplnd/kCNY5A
+   58MgZnsnj2ZD8zHHweIGJUq/SKsG90XViJFv4BFYMn1+9m0/BXhFy/xaa
+   ONhUd9LmKMbJRrxl28UcbFbklcqVPmkOZpvN67kcPLP5aHbZKSTPQHvNj
+   5MxUkk1lxNDGknRaT82VC8kl1tk/f8HKG31RpGAb294sP6hcaFit0SsX0
+   zk6aAp+m+OYHwQk2CX4fyNYPtv/sTKub2FnqZMLiYVpvu3YTCqQOM3676
+   w==;
+X-CSE-ConnectionGUID: nOM4/Qr9QT6FqbjEeIqVYA==
+X-CSE-MsgGUID: X2YuJ8iUTDq6n3CcryODIw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="69925580"
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="69925580"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 04:40:29 -0700
+X-CSE-ConnectionGUID: 5iHD+CUZTyKAnyN9TDF4lQ==
+X-CSE-MsgGUID: pHkfg4rhQkW7AMEaFOTh1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
+   d="scan'208";a="170719838"
+Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.174])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 04:40:20 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>,
+ Gustavo Sousa <gustavo.sousa@intel.com>, Andi Shyti
+ <andi.shyti@linux.intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, Gnattu
+ OC <gnattuoc@me.com>, Nitin Gote <nitin.r.gote@intel.com>, Ranu Maurya
+ <ranu.maurya@intel.com>, Ville =?utf-8?B?U3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>,
+ Angus Chen <angus.chen@intel.com>, Juha-Pekka Heikkila
+ <juhapekka.heikkila@gmail.com>, Yu Jiaoliang <yujiaoliang@vivo.com>,
+ Dnyaneshwar Bhadane <dnyaneshwar.bhadane@intel.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/gt: Remove const from struct i915_wa list
+ allocation
+In-Reply-To: <20250426061357.work.749-kees@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250426061357.work.749-kees@kernel.org>
+Date: Mon, 28 Apr 2025 14:40:16 +0300
+Message-ID: <874iy8y0nz.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: arm: Add Qualcomm extended CTI
-From: Jinlong Mao <quic_jinlmao@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, James Clark
-	<james.clark@arm.com>,
-        Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn
- Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20240903121847.6964-1-quic_jinlmao@quicinc.com>
- <20240903121847.6964-2-quic_jinlmao@quicinc.com>
- <8d203417-e3da-4969-87ea-f77cdb720756@kernel.org>
- <04d46109-d499-4e91-88aa-4187145b811d@quicinc.com>
- <cbb1191d-4e90-4887-9227-e4e8761a9b46@kernel.org>
- <b313ab73-850e-4d75-ae19-797a8c6a16f2@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <b313ab73-850e-4d75-ae19-797a8c6a16f2@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA5NiBTYWx0ZWRfXyAoJwu1Hy6T8 esh7wK5DFBtawOa4sAyEcv6hjxXB0x/rnLOzvHLBjdDy0+6BeS56YQ4LsLe3FNltmddsxIJT1Vm lmATnlG3b371tZfjdUY3AxPZSVk8DIA/tFusJhg9O0g4zotvKbcYxGK9UbnxtoeMe6dhS4iu15/
- hfMXOVaoPGEg+l1igqcIzLomRsA/4blmrDmetAjjLABfOvAsbGxZK5vs3fyPrvXb+k+KCBLcMxh R1Rs9noJlsdpsPI60Z7VFRJ/aQ0Io2KZJuP5zoYjuhEHNKc4dMbHNFqHiHtW9BB2RUMp9LX0su6 igmdIlsSfYXp4rPCHtZdcIBOJW4QZnxmTXpU27AThS/yL/ZdDYc1K6gi7yLXABKy1wD4XnYJDLA
- iL/MU3+1Y/U5cnGvled5Ii2FHmBbGK1xCOjFdf+ekAtemFrvBuQcM2sAmttbgjNpolND0qbS
-X-Proofpoint-GUID: 5iWqGjB5BUTYX3FdkWHbfDIhzJwcoEA3
-X-Proofpoint-ORIG-GUID: 5iWqGjB5BUTYX3FdkWHbfDIhzJwcoEA3
-X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=680f691f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=68lWJni6-NFX7yfVmSUA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280096
+Content-Type: text/plain
 
+On Fri, 25 Apr 2025, Kees Cook <kees@kernel.org> wrote:
+> In preparation for making the kmalloc family of allocators type aware,
+> we need to make sure that the returned type from the allocation matches
+> the type of the variable being assigned. (Before, the allocator would
+> always return "void *", which can be implicitly cast to any pointer type.)
+>
+> The assigned type is "struct i915_wa *". The returned type, while
+> technically matching, will be const qualified. As there is no general
+> way to remove const qualifiers, adjust the allocation type to match
+> the assignment.
+>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-On 2025/4/28 16:09, Jinlong Mao wrote:
-> 
-> 
-> On 2025/4/28 15:39, Krzysztof Kozlowski wrote:
->> On 28/04/2025 09:31, Jinlong Mao wrote:
->>>
->>>
->>> On 2024/9/3 20:42, Krzysztof Kozlowski wrote:
->>>> On 03/09/2024 14:18, Mao Jinlong wrote:
->>>>> Add Qualcomm extended CTI support in CTI binding file. Qualcomm
->>>>> extended CTI supports up to 128 triggers.
->>>>>
->>>>> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
->>>>> ---
->>>>>    .../devicetree/bindings/arm/arm,coresight-cti.yaml | 14 ++++++++ 
->>>>> ++++++
->>>>>    1 file changed, 14 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/arm/arm,coresight- 
->>>>> cti.yaml b/Documentation/devicetree/bindings/arm/arm,coresight- 
->>>>> cti.yaml
->>>>> index 6a73eaa66a42..141efba7c697 100644
->>>>> --- a/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
->>>>> +++ b/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
->>>>> @@ -87,6 +87,10 @@ properties:
->>>>>              - const: arm,coresight-cti-v8-arch
->>>>>              - const: arm,coresight-cti
->>>>>              - const: arm,primecell
->>>>> +      - items:
->>>>> +          - const: qcom,coresight-cti-extended
->>>>
->>>> That's just enum in previous entry/list.
->>> Sorry for the late response. This is a new CTI type. Need the three
->>> items in compatible at the same time, just like other kind of CTIs.
->>
->>
->> Comment stays valid, you did not address it at all.
-> Hi Krzysztof,
-> 
-> Do you mean we only need const: qcom,coresight-cti-extended here ?
-> No need const: arm,coresight-cti and const: arm,primecell as they are
-> in previous entry/list, right ?
-> 
+for merging via whichever tree you find best; please let us know if you
+want us to pick this up via drm-intel.
 
-Hi Krzysztof,
+> ---
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: Matt Roper <matthew.d.roper@intel.com>
+> Cc: Gustavo Sousa <gustavo.sousa@intel.com>
+> Cc: Andi Shyti <andi.shyti@linux.intel.com>
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: <intel-gfx@lists.freedesktop.org>
+> Cc: <dri-devel@lists.freedesktop.org>
+> ---
+>  drivers/gpu/drm/i915/gt/intel_workarounds.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/gt/intel_workarounds.c b/drivers/gpu/drm/i915/gt/intel_workarounds.c
+> index 116683ebe074..b37e400f74e5 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_workarounds.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_workarounds.c
+> @@ -156,7 +156,7 @@ static void _wa_add(struct i915_wa_list *wal, const struct i915_wa *wa)
+>  	if (IS_ALIGNED(wal->count, grow)) { /* Either uninitialized or full. */
+>  		struct i915_wa *list;
+>  
+> -		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*wa),
+> +		list = kmalloc_array(ALIGN(wal->count + 1, grow), sizeof(*list),
+>  				     GFP_KERNEL);
+>  		if (!list) {
+>  			drm_err(&i915->drm, "No space for workaround init!\n");
 
-Do you mean make changes like this ?
-       - items:
-           - enum:
-             - arm,coresight-cti-v8-arch
-             - qcom,coresight-cti-extended
-           - const: arm,coresight-cti
-           - const: arm,primecell
-
-
-Thanks
-Jinlong Mao
-
->>
->>>
->>>>
->>>>> +          - const: arm,coresight-cti
->>>>> +          - const: arm,primecell
->>>>>      reg:
->>>>>        maxItems: 1
->>>>> @@ -254,6 +258,16 @@ examples:
->>>>>          clocks = <&soc_smc50mhz>;
->>>>>          clock-names = "apb_pclk";
->>>>>        };
->>>>> +  # minimum extended CTI definition.
->>>>> +  - |
->>>>
->>>> No need for new example. No differences here.
->>> This is a new type CTI.
->>
->>
->> Comment stays valid, you did not address it at all.
->>
->> Best regards,
->> Krzysztof
-> 
-> _______________________________________________
-> CoreSight mailing list -- coresight@lists.linaro.org
-> To unsubscribe send an email to coresight-leave@lists.linaro.org
-
+-- 
+Jani Nikula, Intel
