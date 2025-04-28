@@ -1,182 +1,249 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2047.outbound.protection.outlook.com [40.107.236.47])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5833126158D;
-	Mon, 28 Apr 2025 13:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848500; cv=fail; b=u77RSW73clX2s/aIi3Mx6pe29dQbnY9iNAKqbcseUxNcCYxcKqPCmOIw9WjoGyNY5rp3CNaVN5ihkZt7BTiF4VT0PuUXhz+VxAm2eLPtt4kSPgosLyI/X+aG8YvV3iYW+GIMEbXeaRhB4ldWH1Zq9R1fB8Sfeejro5mym+q9C0Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848500; c=relaxed/simple;
-	bh=RdxqCTq2plqynh6U3tdRjM16g6Vpr3VOxfhLT7m4sfQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fQ+/Lm3kI9Jh5shyDpJa/LnGuEfBVypxEdQiWK0WI91tLrZ2g60xiZCO1aXtU7bybnJvFm0bA3X7qB6dhzXq53qmPkRb5C4g6FSxZ3bzd/srrjRQu1llGaO9205/M2CcTOvp4uDKNAjx6CfN2IgvGmOTVcCiJZleu6Y7nHOp4Iw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Yyc4v3lK; arc=fail smtp.client-ip=40.107.236.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Yyc4v3lK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KJhYAhnGDdGDg8N9IKUAkUsraRj96FlhIz7oqm+8bC+Tc/d+zPrUJRyfnSq6RGABiTsbS75BajIazwOPP+XQEcGzNUfgGCveTWbSJgMe0AX5hQg6N5egkl3Y6p9sfeHdgOl8oZBO6hy5NbF3/JllVN6dn/jqgdmbVcK+0pPeBM2tDrxn3wEarv2ioWXvfAAID0bLodcdER9ObFpQ1CfvR8IzZWHDO4vKc3FPOkSgWdt5C1SYgGX44so+gQF55CDSWq9C+hme+tal08BCM8ei4mPaV4S0HsY1Q21IsqP/7zSMA/JtHFFh6w1YkRPYB37fy+7vJA5We39q/JoNHo62tQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3ueHCRFX0jP3bpz7Ri/uMZKuqUVtF7a2LkaEXeqVk7M=;
- b=Dgz862hso8b4/RgHo9bfsIJOjCTQra5a91f9TVETxwvq6FfrlcHyjY3TY59Fa2hG8loUH+LI8IHgADFvXX6TOJ4CyLXYpOXbsi8SKCh3Do37ChEvEHRK8exFUYUXiS05LVVhFU1HuqOZZ9WLW1ftbaVEepqYoS6aVz2/0xyrLJfz08rEp4xdbykSQc6fQRdh8UV3w85601urMNSGbZnEe3nyRvCPGAL7G4ssPZ3GDkADVvqZ8/50ZIGaZs5D3VMLB2yBIMPEmsH1j3yOScZ8/CsJBbvnNuskbJbo6uwGRMlIY7MVtbFfP1yX8EAPnbL8peGOGmTenxcdq7TVSMvc4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ueHCRFX0jP3bpz7Ri/uMZKuqUVtF7a2LkaEXeqVk7M=;
- b=Yyc4v3lKt1BI0ddYGuo4oImbgrdPMajW4POVcIn18sdAjGxjG0ge3nVQZX2zFlr0BSwXSREeEdU2jEaaDopzkvtcCyEPbJDr3KWWfXUXrJdiGe6U1XhQ+KrpFxJBH0PopSrb1v+YKyy3WJVFXsDfskV5oMcR4sA2/06BPc339HM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DM4PR12MB6086.namprd12.prod.outlook.com (2603:10b6:8:b2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
- 2025 13:54:55 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8678.033; Mon, 28 Apr 2025
- 13:54:55 +0000
-Message-ID: <1f056b35-d455-4e65-8063-db66ab764a08@amd.com>
-Date: Mon, 28 Apr 2025 08:54:51 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH] x86/cpufeatures: Define X86_FEATURE_PREFETCHI (AMD)
-To: Sean Christopherson <seanjc@google.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- pbonzini@redhat.com
-Cc: x86@kernel.org, hpa@zytor.com, daniel.sneddon@linux.intel.com,
- jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
- thomas.lendacky@amd.com, perry.yuan@amd.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-References: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
- <174562166515.1002335.4837189500291274188.b4-ty@google.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <174562166515.1002335.4837189500291274188.b4-ty@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0097.namprd13.prod.outlook.com
- (2603:10b6:806:24::12) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A951262FCA;
+	Mon, 28 Apr 2025 13:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745848551; cv=none; b=Chq+npscWYBjww39FWAyHDya6M2J5wnT2dkzkp+yN13YAS3ajZJlotlofI2n1aHCsA+5MnhlVl+ZjX7RsicdjtfjHIFi7EJEZyD+hCOhgTL/AtTiSzmuCejoXNPZUpglbTdCNVJkaoXdeJzKiyeyF31Ddz8buqYTxdjnjv8/sOA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745848551; c=relaxed/simple;
+	bh=2wDSomBKx4zZNDuqvc7GRdEVnF9G4IW/tpgoVrJAAEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gk57X0rFuCHgzfyF4KaBcw92hmglJ9HnviV7/v1MB14qizaysQ38MY1XHmMINcuSKrfYhefoGEFNeWTKbWxiJy1uEGJ2bB+DCGWUJkA6+ohIXX8mJW2PHTCoyIC4mS41zTLdemq2mI/9ArhEn748Jpl4vmZyeafPfMpSTEqUP6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZmQ2V4x3qzKHMXc;
+	Mon, 28 Apr 2025 21:55:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A16A11A0EC8;
+	Mon, 28 Apr 2025 21:55:45 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl_fiA9o2mtPKw--.49456S3;
+	Mon, 28 Apr 2025 21:55:45 +0800 (CST)
+Message-ID: <58f1e9e2-8c4f-42a0-800e-cefe17a7faaa@huaweicloud.com>
+Date: Mon, 28 Apr 2025 21:55:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DM4PR12MB6086:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f80d3a5-7f82-4456-70ac-08dd865c4156
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Wm5ZQmQ3RnF6TXM0WHFyU3NhMDBjN0dWSFBiODk0OFFrZEFGZVJTMHBQeFp6?=
- =?utf-8?B?M0tCRWJBVW9kK2poMWRjY3hldGY0Rjd1TEEzZFRGRXZxckNvdEQ4WnBic09z?=
- =?utf-8?B?RllSK2ZSUUdGb3RJeGxUZFoya3JFckpNbTFUMExGd2tCcTQ0SXgvcE50RkhM?=
- =?utf-8?B?NStvRnZROWxtU254TEJvSHhCTFVYT1llRkU1dFlHTVZjV2l4YnpHbmN2cGRv?=
- =?utf-8?B?QVJPUEtuTXQzTENzOWhhWXp6aGlOVVBuRzU0aVVtcVhwYXBxUDhIR000ZUF6?=
- =?utf-8?B?alg5UnNxcFJQMHFLaWRWSW1tT2lGbC8zVS84aE9RcTJjaWRJMXMxN0hHdE91?=
- =?utf-8?B?Yko2eStXT1dlZUJ0Zm1EOGxTelVVWUdjQU10dWR4M2hFUTB1UkEvd1dINllD?=
- =?utf-8?B?SWEyM3F4M003MThUTXR0MXZXOXYwUDJzU2Z4c0ZnaVRIY09XSnRqZVBpQVFN?=
- =?utf-8?B?ZGNLTjFtcW8wTzduelhqZmlXc2pLckJtWWp1dEtjMDF2enhvcG04ejZNSm91?=
- =?utf-8?B?YjJWNXNFeFBnVUpLbkM3WUxyZGlYK3EvUUR6ZU4yczEybnZTZTN3bEwyUzhS?=
- =?utf-8?B?RE0wdU1DUjlCaHZjeXNXUzdyNWdKRHAzTmNPb1NscXVyT0dRbEtLdy9LWGs4?=
- =?utf-8?B?dFBWQ3NLaVRmdVlCUTRPRVNoMmtvVnJkZEd4dEw2S2NQeVoxTkJ5Z0FWOGtn?=
- =?utf-8?B?NkluWEhwWWxXVjBhTXIwWCtGaWJxQ0NpMFVxZVlqK2h5TnZuUUdPRE5ETUZ6?=
- =?utf-8?B?T3VwQmMweHdUQUVvN2NFTXZnbW9mWWYxODZ2VytEb2I3UGFnQ0xsc2JUNzFO?=
- =?utf-8?B?bTFHajcyMExOUWcrUHBPOTFwWVc5NU1OcGR5M0I0Wis4akkyODNmWFpCTWdN?=
- =?utf-8?B?ckVEaHJyeHJDbjBCeVRyd21KVFFCdUwvQWxucUhzNXRMUlZNb3V0bHIrUXlM?=
- =?utf-8?B?L0VWYWlBeDhqTjAvTWI4THNta0lmOHZMOUJFVWQ0ZUNLcEJjdko4bXdkZW85?=
- =?utf-8?B?OTBSTENSUXV0OThuU21PUFg4dXNDanQzVUNuVG9FQ2FzV2U5eXBZUFFLTzNm?=
- =?utf-8?B?TW1ud0MyS2x0VUhnNXpxVFNGbFdEeWtEdWIxWGpjaGFNdytaeTR1NDF3VHVC?=
- =?utf-8?B?dXFQRnRmcXU5M3U3NWcwL2FSZDYvOUwrMVJnVEpjTm5xVUdCZGVTSnpQc3c0?=
- =?utf-8?B?bkZqaFNzWDExNW1GZFpSWTlZZElmV1ZRVHY3ZTRGcTNyMWhYK1E1L05OdmFq?=
- =?utf-8?B?K3pTMFBSbExQVXIrQ2FZbHEvdXlKWXk0eDhIQ1M5RUZpVDdTR2ZJSmhkZE90?=
- =?utf-8?B?ZEZrRmdzS3NyYkk2NDg2S1BpN0pOeURFd0VIRXg3aDhHUFp4OVlYYjFabHlJ?=
- =?utf-8?B?THpSMGZ1VzByRGIwY2RkTGkvY1hCWWZSS2RXeHhqa1JJR0xZQzZsYzB6ZDJR?=
- =?utf-8?B?RDlEZUxWSWxXZmJVNDN3U2VJc1plS1ZtakxHNmwxeFFmSGVaaVBZRENxVVNr?=
- =?utf-8?B?eG5Sd1YzYUgxbTRjR1NtbU9RWHJZaVdLN2hPQWxxMyt3elJKT0wyaWRDOTZC?=
- =?utf-8?B?ZEUvMjd2elRJWjRzSDZ3em5GVW5Ub0xsRGI5RkVpMkJQZVA2QkxFREdpdGc3?=
- =?utf-8?B?ak1Bbm93Y3RTQWo4OCs3Qm40ekM2WkF6c1FiV0c0b1hHTGRzaEE5UjI5d1pl?=
- =?utf-8?B?NEQvSFVCRGpmenZnSHpucFN2bmQvK3hGM2ZNVVRKR2RScG83SWUrUnBza283?=
- =?utf-8?B?RlZ1aUZRbk9yNW50cVFZUXQyd1lEOEVvZTlKcEhuZ2NOUmUxRDlFZWxma2xz?=
- =?utf-8?B?NGhYTHBNeEZIdlBndzdCNm1TakJMVG02TDgwU2M5UzRzYXc0bFVkTk5vOHp5?=
- =?utf-8?B?M2N3NzdyblppbVVvN0hCRVJwV0NWdlhSMDM3K1ZnVFRsdUtDSzRjSkY3WGJM?=
- =?utf-8?Q?z10WJoXPX3Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bW1CSmtkNnFjV1BvdTlTcksyanJpbFFzWjNYOGtuNXNUVnE0MEZ6VldqTHlY?=
- =?utf-8?B?QUQ5QVd6UUVJZkYwSS9BNThxM1lvZ3Q4U1JFdllKVWJBc2tZTnBTUUFuRjBD?=
- =?utf-8?B?UUFLREVTellNV1pQVU50dTNUMnFHTFQ3dTlqY3pPajdrUXd2NTgzd2JVNHhn?=
- =?utf-8?B?dzAzai9yWWNoNkRJNStDNkdNZStiMUFSMTFIOFlNdkkybFZqSmRNMi9zaXVo?=
- =?utf-8?B?MmFKWDlxcFA3YlFMUkN0L2pmYU1OVnJkUFo3N1l6dlpPSXJQaW1YTEsrMHBS?=
- =?utf-8?B?MTZtc3YxRVJTU2xVZ05Fc0JLeUlrM0Z6eWFSR3NLd01ScHJNcmpSUWttWE9B?=
- =?utf-8?B?VGtad1U5QlhFbWJoUzc3Z2xHYVMyMHVYd0R4bGNHWDJqdkhsM3B5N0NvOGUw?=
- =?utf-8?B?WStZaXo0ckZYK0dXRlBxdUw3WW5VZWlKeVFUVFMyaGdRc09ZT1ZtemppcTgr?=
- =?utf-8?B?S0tzeXFKWkVMcVNmZm9NcEpIbXovemZ4a0tFSE9Lc2FWYWJoNitLVXkvSGZ4?=
- =?utf-8?B?TEdCRURuUkk2MHBuSklUQmRoMTNqZGZsRHVoUGFPd1NEcWdtRHBLeHVLRW15?=
- =?utf-8?B?Z0l4bmJlczlqQUxLeHo0djRzQnkxZi9TdnpIMkFYVTYzVFk5WFozakpEbFBM?=
- =?utf-8?B?MDFBVEFFSzFoeis5NTF3OE9CTGIyZTZsL21KcGh6WTBXeUN6WTU3NFhDcU14?=
- =?utf-8?B?RHRGbmJ0MEx2QVdJdDJPRERkSFBTaHV5L0hmZFI2bk4yWDJYRnYvdVhSZERY?=
- =?utf-8?B?WlI3dkVLd3hEanVtb2Z4QXRwV0JLbU5NQi9aS01iRmNXNHdkNm9IV1FscStK?=
- =?utf-8?B?RWVMUDJERlRqWXhyUGZYbTZqV0VlK1BWUVNCZ0VOdjlFN05OVEhlc2xsTC82?=
- =?utf-8?B?dyszcXp2Y1BJRTQ2NHZzTXkvK0ZmOFlIMUwvQldTdE5VOTF1ZUszSWVWdjlx?=
- =?utf-8?B?V3FPbm9FUGZtUHU4QXJCZjBTaGZ3TDl5dStQME9CUTM5SzV1MnJsSlNQRko2?=
- =?utf-8?B?VWVUaGJVT3VpMWFOTWxnUUVBUHNraXB4a2wyeENlUndiRkg0RzJuT01XUUVO?=
- =?utf-8?B?VFNvcG9UNTRvUUZKbHpwWEU2QzRIbjFLMHFKbG5HUE1ZMUFlM3Z0S1FQeTJj?=
- =?utf-8?B?azJWM09nZzg1VWRvMEdsVklwa1hPeThQM05LRWlVYXE4eGpVY2dQMmVla0FQ?=
- =?utf-8?B?aXJzdEd3Y0JNci9TbzJSeTJuT0N5bVJGMkVnWjdzVWZyeUsvODJkdVM3aXdE?=
- =?utf-8?B?My91RTJhZGVuWGc2UjBuQWVVZERlTm9LUXM1b0VVaFZkZnNlazFxeStqdSs3?=
- =?utf-8?B?cnhUb216eTNmUCtNdnZsNXU2UWgrclV0NlpkVU9qbWhLQkFXbUZGTU9ENXNq?=
- =?utf-8?B?ZDA5TEFmbVpCRzd0WVY2dE9OeWNyUVViRGdQc0NPaXlINngrempHU1VHMDJv?=
- =?utf-8?B?dUF5QldXbFJZMUxhZW9iS3hTSGRrbk9jVU0yeE5na2JuMXZPOGQyNGxuTUcv?=
- =?utf-8?B?cUROMCtRUEJiaWZJaGIxa0hELzc3WTJ6bFdXWXo4d0VQWkFpT3NzWE5VQlZO?=
- =?utf-8?B?Y1lNTlc5a3FiTWtJSHlBVmZTMENJcUR1TVMxL0ZNc0JkR2JVK1B6Mi9DYTIx?=
- =?utf-8?B?Y2hZclVnc1U4akttT3AvYzdqc3c0VUd4em9sZGg2aTdCT0NBbE1keUZmM3VJ?=
- =?utf-8?B?TGNrR0N3NUkwWGdtNXl5K1hDVFA0ajlOdkkvc2JJaUVSQnFObW40TGZrODRh?=
- =?utf-8?B?YkZqZTJLOWUwQWVBdjZ6bEVmaUV6QVpYeXlhZ3N5ZDByMU1qZjBVVDk3M04y?=
- =?utf-8?B?YzRxKzlLUUZ5ZTBVWm91clYrZzRvYlRvaXNSN2duTVpEekRDZ3pQTXpjVUdo?=
- =?utf-8?B?WER4Ym1nclhXa0Yrb1Uzb1Mvcm5SZkRuRmUvSmRzSGphZjUzazNSOEd5T1FF?=
- =?utf-8?B?TFlWUmR4anlyOWd1Y0ZBNGVibGNqNlNiZVB6ZUFoaDFLeWxHMWp1bG9sdzlv?=
- =?utf-8?B?WURwNVZXbFdNb0JIYXJDb29jVEIxV2pWMEk5YXoxTDRaN1JKSVdDT0NlRnBn?=
- =?utf-8?B?elZETDkvWm1lb1NLZ2FOOGRCT1FiWDNCQWNZWWV6VzFYbW9Tc285YWUyYjBv?=
- =?utf-8?Q?dkOs=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f80d3a5-7f82-4456-70ac-08dd865c4156
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 13:54:54.9883
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GiWuGzzgaYrSjOOnf3mk9qgU1dHhu+pDTRdglz0qHmRqrzCsyccPEt6IVh0U7adQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6086
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH blktests 2/3] dm/003: add unmap write zeroes tests
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
+ "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ hch <hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>,
+ "djwong@kernel.org" <djwong@kernel.org>,
+ "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
+ "bmarzins@redhat.com" <bmarzins@redhat.com>,
+ "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>,
+ "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
+ "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
+ "yukuai3@huawei.com" <yukuai3@huawei.com>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>
+References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
+ <20250318072835.3508696-3-yi.zhang@huaweicloud.com>
+ <t4vmmsupkbffrp3p33okbdjtf6il2ahp5omp2s5fvuxkngipeo@4thxzp4zlcse>
+ <7b0319ac-cad4-4285-800c-b1e18ee4d92b@huaweicloud.com>
+ <6p2dh577oiqe7lfaexv4fzct4aqhc56lxrz2ecwwctvbuxrjx3@oual7hmxfiqc>
+ <a5d847d1-9799-4294-ac8f-e78d73e3733d@huaweicloud.com>
+ <pbuxtmwqk5bdmxckwwkjob3lh6mg3et52w3xdvsnjjwmofschm@pkotcbnp4ypt>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <pbuxtmwqk5bdmxckwwkjob3lh6mg3et52w3xdvsnjjwmofschm@pkotcbnp4ypt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDXOl_fiA9o2mtPKw--.49456S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFWrKw1xuF1UAr17ur45KFg_yoWrKF1kpr
+	yfAFyktrWUKF17tr1jvF13Zr1ay3y5Gw17Xw15Jry8A34qvr13KFZ7GF4Uuas7XrW3ZF40
+	vayUXa9I9r15tFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-
-
-On 4/25/25 18:23, Sean Christopherson wrote:
-> On Tue, 08 Apr 2025 17:57:09 -0500, Babu Moger wrote:
->> The latest AMD platform has introduced a new instruction called PREFETCHI.
->> This instruction loads a cache line from a specified memory address into
->> the indicated data or instruction cache level, based on locality reference
->> hints.
+On 2025/4/28 17:25, Shinichiro Kawasaki wrote:
+> On Apr 28, 2025 / 17:04, Zhang Yi wrote:
+>> On 2025/4/28 16:13, Shinichiro Kawasaki wrote:
+>>> On Apr 28, 2025 / 12:32, Zhang Yi wrote:
+>>>> On 2025/4/3 15:43, Shinichiro Kawasaki wrote:
+>>> [...]
+>>>>>> +
+>>>>>> +setup_test_device() {
+>>>>>> +	if ! _configure_scsi_debug "$@"; then
+>>>>>> +		return 1
+>>>>>> +	fi
+>>>>>
+>>>>> In same manner as the 1st patch, I suggest to check /queue/write_zeroes_unmap
+>>>>> here.
+>>>>>
+>>>>> 	if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
+>>>>> 		_exit_scsi_debug
+>>>>> 		SKIP_REASONS+=("kernel does not support unmap write zeroes sysfs interface")
+>>>>> 		return 1
+>>>>> 	fi
+>>>>>
+>>>>> The caller will need to check setup_test_device() return value.
+>>>>
+>>>> Sure.
+>>>>
+>>>>>
+>>>>>> +
+>>>>>> +	local dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
+>>>>>> +	local blk_sz="$(blockdev --getsz "$dev")"
+>>>>>> +	dmsetup create test --table "0 $blk_sz linear $dev 0"
+>>>>>
+>>>>> I suggest to call _real_dev() here, and echo back the device name.
+>>>>>
+>>>>> 	dpath=$(_real_dev /dev/mapper/test)
+>>>>> 	echo ${dpath##*/}
+>>>>>
+>>>>> The bash parameter expansion ${xxx##*/} works in same manner as the basename
+>>>>> command. The caller can receive the device name in a local variable. This will
+>>>>> avoid a bit of code duplication, and allow to avoid _short_dev().
+>>>>>
+>>>>
+>>>> I'm afraid this approach will not work since we may set the
+>>>> SKIP_REASONS parameter. We cannot pass the device name in this
+>>>> manner as it will overlook the SKIP_REASONS setting when the caller
+>>>> invokes $(setup_test_device xxx), this function runs in a subshell.
+>>>
+>>> Ah, that's right. SKIP_REASONS modification in subshell won't work.
+>>>
+>>>>
+>>>> If you don't like _short_dev(), I think we can pass dname through a
+>>>> global variable, something like below:
+>>>>
+>>>> setup_test_device() {
+>>>> 	...
+>>>> 	dpath=$(_real_dev /dev/mapper/test)
+>>>> 	dname=${dpath##*/}
+>>>> }
+>>>>
+>>>> if ! setup_test_device lbprz=0; then
+>>>> 	return 1
+>>>> fi
+>>>> umap="$(< "/sys/block/${dname}/queue/write_zeroes_unmap")"
+>>>>
+>>>> What do you think?
+>>>
+>>> I think global variable is a bit dirty. So my suggestion is to still echo back
+>>> the short device name from the helper, and set the SKIP_REASONS after calling
+>>> the helper, as follows:
+>>>
+>>> diff --git a/tests/dm/003 b/tests/dm/003
+>>> index 1013eb5..e00fa99 100755
+>>> --- a/tests/dm/003
+>>> +++ b/tests/dm/003
+>>> @@ -20,13 +20,23 @@ device_requries() {
+>>>  }
+>>>  
+>>>  setup_test_device() {
+>>> +	local dev blk_sz dpath
+>>> +
+>>>  	if ! _configure_scsi_debug "$@"; then
+>>>  		return 1
 >>
->> Feature bit definition:
->> CPUID_Fn80000021_EAX [bit 20] - Indicates support for IC prefetch.
->>
->> [...]
+>> Hmm, if we encounter an error here, the test will be skipped instead of
+>> returning a failure. This is not the expected outcome.
 > 
-> Applied to kvm-x86 misc, with a rewritten shortlog and changelog to make it super
-> clear this is KVM enabling.
+> Ah, rigth. That's not good.
+> How about to return differnt values for the failure case above,
+> 
+>>
+>> Thanks,
+>> Yi.
+>>
+>>>  	fi
+>>>  
+>>> -	local dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
+>>> -	local blk_sz="$(blockdev --getsz "$dev")"
+>>> +        if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
+>>> +		_exit_scsi_debug
+>>> +                return 1
+> 
+> and this "should skip" case?
+> 
+> 
+> diff --git a/tests/dm/003 b/tests/dm/003
+> index 1013eb5..5e617fd 100755
+> --- a/tests/dm/003
+> +++ b/tests/dm/003
+> @@ -19,14 +19,26 @@ device_requries() {
+>  	_require_test_dev_sysfs queue/write_zeroes_unmap
+>  }
+>  
+> +readonly TO_SKIP=255
+> +
+>  setup_test_device() {
+> +	local dev blk_sz dpath
+> +
+>  	if ! _configure_scsi_debug "$@"; then
+>  		return 1
+>  	fi
+>  
+> -	local dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
+> -	local blk_sz="$(blockdev --getsz "$dev")"
+> +        if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
+> +		_exit_scsi_debug
+> +		return $TO_SKIP
+> +	fi
+> +
+> +	dev="/dev/${SCSI_DEBUG_DEVICES[0]}"
+> +	blk_sz="$(blockdev --getsz "$dev")"
+>  	dmsetup create test --table "0 $blk_sz linear $dev 0"
+> +
+> +	dpath=$(_real_dev /dev/mapper/test)
+> +	echo "${dpath##*/}"
+>  }
+>  
+>  cleanup_test_device() {
+> @@ -38,17 +50,25 @@ test() {
+>  	echo "Running ${TEST_NAME}"
+>  
+>  	# disable WRITE SAME with unmap
+> -	setup_test_device lbprz=0
+> -	umap="$(cat "/sys/block/$(_short_dev /dev/mapper/test)/queue/write_zeroes_unmap")"
+> +	local dname
+> +	dname=$(setup_test_device lbprz=0)
+> +	ret=$?
+> +	if ((ret)); then
+> +		if ((ret == TO_SKIP)); then
+> +			SKIP_REASONS+=("kernel does not support unmap write zeroes sysfs interface")
+> +		fi
+> +		return 1
+> +	fi
+> +	umap="$(cat "/sys/block/${dname}/queue/zoned")"
+>  	if [[ $umap -ne 0 ]]; then
+>  		echo "Test disable WRITE SAME with unmap failed."
+>  	fi
+>  	cleanup_test_device
+>  
 
-Sean, Thank you.
-Babu Moger
+Yeah, I believe this will work, and it looks good to me. Thank you for
+the suggestion！
+
+Thanks,
+Yi.
+
+
