@@ -1,207 +1,238 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2043.outbound.protection.outlook.com [40.107.95.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3625D199EAD;
-	Mon, 28 Apr 2025 12:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845030; cv=fail; b=gwP/pwXEfVUzpUdQ6rmwbhlXP+YCxT0paFjZ8iKZXf7mJuFLQf/FIGWfEEcXgZoProL9mvFk3Q622gsNCqsf6q9QMMDYAT0h+rLGr/6jldjMHUFK9cdFfN5H2R2kywbTcEjEgYBvAT9eaKqiKoyeVYn4L9LRWRfa/dqCnugv3Bw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845030; c=relaxed/simple;
-	bh=0wHyHTqusehnJjhgYYXoWPYnUPw//B6GepxtDaOkom4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aQXk87XacUkxJvbSopXYVvI2Z1q97u/InlAcQdWHdHwGJsK1KswDPuq/TxxMU8U+Y4f+SgUGmm5euZRkTjMGCN2cbo7H3kgwu6MelWnQgyiuu1gxEDuUh4iNlcL2+DtsiJTE4YeBsMiEmeLq1rNlTVNzHDWHPU5wvvDhRNurxz0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VjEwuCi6; arc=fail smtp.client-ip=40.107.95.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VjEwuCi6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bUb8d+LaXcGHqisXy+sEVSXq7ogGtVVm4e3ZJDiLHOJYlUklm8bXfJIFU6AxPenhcd4YwJ9/Z0/ixlazacCLlDpNQYm+5UlE3IEekLzAyWTO4YBENkBXLPPyHMFmjPc6+2jH7VYl7WdO+tsT1NN1mLDUfMMqMH8DwUWTXlpsqQSqVu05NeCcwD/LF6b7oY2JHLOh9de2TIMe7C6nlfIM2tbMhltWLsroD5q3q27KMXOOercDhsou0HtxcoCVYTrwLUxx5jAvvOnEkHweaz2IsRBTfhoBlmseACwa6gFTr1lMI+1ygOWCv8aIkOY2eFOJOuZA5KYN7c5HO46ShhTrrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0wHyHTqusehnJjhgYYXoWPYnUPw//B6GepxtDaOkom4=;
- b=DZjjvw0p66RGtTX91Lngg4W8t8UURoamDHzLD4Ix+2SK27VsZNSxOwhvJzVGC5DW+QjZuabJILHdb+oBJk+b6IoodBpxrgCTxNTZtlETcPL9GhyQJ1wgRqNAsNqvmlKrLKX86+yHx7sGYy7k1+tWIVBNvRQJuGlsfbVxmSXggbknq6sQ7BTCHyPTXovMzAth6GMz6oYFEe0W9lsJCKyoYCNt5IRQIU/ZHe32dq/hiNF8yyC00HBcbNF8VgvAxBBh/1dDZJrgyT7gRw2c9hpRJ0BVW9k4olYRElLtA8iEGnAvchr+a4cktLnqXOyLGL7osHV030tZzM2cFFPAoYmyAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0wHyHTqusehnJjhgYYXoWPYnUPw//B6GepxtDaOkom4=;
- b=VjEwuCi61vbdpdRU5qKdwXx+/MXQozCPphaZ5artuNbzkLaqGCipkn2px05vbr9GNjf950X2vvSn6m8Hvj7KAlOs90baLtcoBQdd6QNk5QLsWzETljr6SA/pDnCNKxnrZw4BttNf0xF3JwZrHHvYoamTtLolRWJ+y+ZATBXDingGsViJAyrfF/huT5PXZqwJh4wxN4lIoM4KZBmqkIzgUW7l+e3ddu7fgxUdZPA5HOkc+X5vAG8PeTVH2iLMayxs2KzvxfpNzz3bzib0sR50CDMuzG+s/51XGqj0vrcZETtyS0VCvQZ+1Mk1NYXynW4cF3q42V0No/PU+uv+vD/77A==
-Received: from SN7PR11MB7589.namprd11.prod.outlook.com (2603:10b6:806:34a::14)
- by DM4PR11MB5326.namprd11.prod.outlook.com (2603:10b6:5:391::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Mon, 28 Apr
- 2025 12:57:05 +0000
-Received: from SN7PR11MB7589.namprd11.prod.outlook.com
- ([fe80::df51:5691:df7d:9a34]) by SN7PR11MB7589.namprd11.prod.outlook.com
- ([fe80::df51:5691:df7d:9a34%7]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 12:57:05 +0000
-From: <Victor.Duicu@microchip.com>
-To: <jic23@kernel.org>
-CC: <Marius.Cristea@microchip.com>, <andy@kernel.org>,
-	<dlechner@baylibre.com>, <linux-iio@vger.kernel.org>, <nuno.sa@analog.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] iio: temperature: add support for MCP998X
-Thread-Topic: [PATCH v1 2/2] iio: temperature: add support for MCP998X
-Thread-Index: AQHbrgobzeBGETVwGUalvAKTnXO4a7OpvYoAgA9gdIA=
-Date: Mon, 28 Apr 2025 12:57:05 +0000
-Message-ID: <303fbf2f6c64241966009be59f68c1d2f8cdc786.camel@microchip.com>
-References: <20250415132623.14913-1-victor.duicu@microchip.com>
-					<20250415132623.14913-3-victor.duicu@microchip.com>
-				 <20250418190757.2b007737@jic23-huawei>
-In-Reply-To: <20250418190757.2b007737@jic23-huawei>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR11MB7589:EE_|DM4PR11MB5326:EE_
-x-ms-office365-filtering-correlation-id: 01baad10-9bc7-4f84-a576-08dd86542d61
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?bFZRdncySEtCdmttbjE1R0ZXbmhVOFBsVXVYTytTNmlucEtKT1FiUTI5UGJU?=
- =?utf-8?B?YXhDMlVlN2tvMi9GajJKamV1SXovZGtUbmY5RFZIUUh3UnpsdDNGd3luOWdB?=
- =?utf-8?B?Qm0xWFlVb2xLNTdtRWZxZWRQS3V5RDY0YVdXV1VhbzlxR0pkb1NlSmNwcFU5?=
- =?utf-8?B?TGdicjlrR25nWHUvMWlKdHc0ajdoWU0wM2R1eVlkaTFkdnBFMXRqNkZKUzhw?=
- =?utf-8?B?MTFwSXd3Mnd5QWhPaXBNQk10RVVIMjlzcGF2L2pCaU5MSGNMVE5kcHRMYmdj?=
- =?utf-8?B?eVU5bjdhTFlpKy92dWZHbjQ2MG1JSThZeklibW03dEdIdFAxTnluVmhac3Zo?=
- =?utf-8?B?SDdhdkpPSTdqc3NmVUU3S3FTcmRPVlpMODN6a3JJcjRMeVcxdDNmMDVUTE1m?=
- =?utf-8?B?ZTZ2ZjQ4R3hpcFVRN3EwMU5uUlljNDhzb3pIaTFCb2J1VjRzeU5CbWNMczVR?=
- =?utf-8?B?QXIwcGhaQS9PZ0U2UzlUK09Ta1NuMmN5RTFvQzNsSVdqVDZBZ2FUMUxOd2VF?=
- =?utf-8?B?bDM1TXkrNy9tVzBiR0xuN2piTkIza0tpVHcyZXd4bGc5NXVqN29WaWZRYjZQ?=
- =?utf-8?B?SmE2WGJMTDFuZXhsNHNDa2tnK0tMWW85c29TWmRmTkFieFR4ZmcvZmYzbzRv?=
- =?utf-8?B?ZWU0dE1CcjExSmN5ekxqVzRoODV5RmNIaDA5bWJBSG5wM3RkWVpzWlJmV3Fm?=
- =?utf-8?B?TDhXTGVOdDFIVDQreXZ1cXdWQVBBZzZtZDhEVUlYSkJad1JLUERDdndzRUN3?=
- =?utf-8?B?VnlIY0xQTjZ1dlhMb2RGWVNyckF6M3U1WHpzL29KTCs5ZWtSOFEydi9aYUFz?=
- =?utf-8?B?V3ZwUm9vR25Bd1o4QkRCOHdGdmg5ZzBqYTRhc1dUNGl2SitsTFZyRCtxY2NM?=
- =?utf-8?B?MG0rQjBPWXFRMkZJTFVBRXZRNnlETXJUbjRSQWxEWmtnNFdnMFBrNE05dkh1?=
- =?utf-8?B?b0pqSHhtNFNmYlEyNXQ1cDdKcjRXeDRIMWJiRWV4akJjbTV0THkrZ2FtYTdF?=
- =?utf-8?B?VXRhWm9Fa1I4UjR4Vy9FdmdzMTBnN0Rqai9RNERvMFVPQ0o2UEdWMzZpbnJ3?=
- =?utf-8?B?blZCL0ozRGVzUlk5dlRMSWNJZ3plK2NrMFBuSkNFdk9qcUhFeFVYYk1TSmFa?=
- =?utf-8?B?elgwbWhEV01FWHJhRkFkZmNXRjBaa3J3aFdhMUxPNGNscm16OVB2V0Vab1NP?=
- =?utf-8?B?eGtZbzlsd1puNHAzS0FYVkxrZE5qUFdLUktSWldUMFdkNnNZZTNPTGVrYkpk?=
- =?utf-8?B?RHl0VXRmNnE4ZjlBbHgwWjAzTXZndnhOdWs4UXgyQVJDamorNnBncmJSTVdN?=
- =?utf-8?B?UjFZWTFUdVcvTFJmL3N0SWdhbmpvNERsV1VRaTBab2hlSWs3MDJKY3lUZkJZ?=
- =?utf-8?B?Yk9wbEZyYnJRWU1kZzBEZTUrNC9WMlhTclFnMlgwS0JxT0FlRTRNbDk1cXpW?=
- =?utf-8?B?cmZVdHhhTGsvamNnemtWbXh6bXRuMVI1NnU5TFBZVDZnRFpDYzJQdWJYQzJp?=
- =?utf-8?B?N0tOODgrNStad3hKYVFUT1JBYklyYkZ1NkIyeHMrbjl6YStIdisxRzhnVTUw?=
- =?utf-8?B?RnU2WEFCaUhZeFJ3dlZrZmdoUjBZNkdiL0NRdFhxdlBUQjhuUlRmOTdXOW5L?=
- =?utf-8?B?eWdISEYxVGlwWHJkWFEzY3NQLzRGcG9qU2p2YzFYSWhEeUZMSnBmYXJCRkZv?=
- =?utf-8?B?S09sTFZQS2w2dFoxWXIzV3QxTUlwelpnSUZkTkFYbHdzWSszT0lKMWNJa2VV?=
- =?utf-8?B?ZldCbzRFeDdPblcvTnduQVNpU3Z4ZlBQTncvZEM4MjQ0cEdjLzBZT203d1p2?=
- =?utf-8?B?RUhCTDJuajhhaWxRcFVCVkJ3ZThkNTNTZ2h3Yk0zRkx4SGwrdVRDZlhNMFdJ?=
- =?utf-8?B?UkJucWUrcDRoSDhzZkJKUWp6eDBNWjhiRDIxU0tsZXhzYzM1M2lYYWxMcVl0?=
- =?utf-8?B?bm5naUg0bWhOdnI1WWNFV2doK3ZEUjc4bmsyeW5SOThuUEFzV0IxUml1UndV?=
- =?utf-8?B?N2dPMndzYVJRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7589.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?bzlXVGtlTERkK0NZSHAvajNLVU9YNjhPRGJoYlZid3R6S0xsM1IrUmhUOThH?=
- =?utf-8?B?a1N6VmtoV0lUSXRudCtKR2xlUXRPOWxnSU9IZ0pVK2x3bG9ucXhZdUtJSFdo?=
- =?utf-8?B?WC9GbU5rMEVKemVDMFk0UHJKSzNqL25Wak9nb0twb21VSVlPcnFkWWNUdnJY?=
- =?utf-8?B?cktpMFlQeEIzUUtsazlTMjlvZThNSUpGbWloWGU5Y1VHcEUxdlJ2eG9CVzRr?=
- =?utf-8?B?N1BpZVoxMUZwRXREd29VYnNsTGtaaDNMMzIxSDI5eWhnQ2lZQnhkeHZXQVJi?=
- =?utf-8?B?cVBoQzR1aHBVY1RkMUVQdHZVdVNMVVl4WitXc1FRUGJMTUxsRXhxVFYxT2ZG?=
- =?utf-8?B?ZEt3N201UUZKdk96WW0xNGJUUTQxVjNmOUlCWURCNTZRMU0zU1plckdpZEN4?=
- =?utf-8?B?aWp1ZEhFMi84Kzl2Tk5IMndQVlBiRERLa3JiUnZCVk5leXFQU1QxWGVUL3dE?=
- =?utf-8?B?SXFsZTV5U0p3elVYWGY4dm1PV0h5SGJjS0tzbE9oOXdvbnZHb1I4QzFNZ1lV?=
- =?utf-8?B?MWtJcXc5SEVER0hqQVZ2V0JMZlM5Qk12bzBkdWtPNHFSSmxlcE9ZRVpTbnMy?=
- =?utf-8?B?RkRqVStINWg1MmllT3VFaFNyYXlPQjlndGk2V0tTY3N4UVFQRituRjBPK25C?=
- =?utf-8?B?cGxKTjZqMXlNcjRETGxzSnBlUlU3a3ByYTQ3YSt1UnNmTW5ERzZlWkRSQmZT?=
- =?utf-8?B?amVGMTJmUVdpcGhGTVpUbWdjUVMxOVZ5b1dKallITlVMRXdGSnA4alYvRUJI?=
- =?utf-8?B?alFMZzE3a3l6czhPbmhoR3pWTGV2M3Q3OXZlR3p1ZS8yU1RMeER3VEd4enF6?=
- =?utf-8?B?SzFzMW10OVRrN2xpbkE4cUJOOVpnVGllcWd2QmZ2aHExaUpQcUZJWUwyVXdM?=
- =?utf-8?B?cFZ3eGlzeVFFYU1LTGdqdTk1QlcxZ3V4eGpOS0FZaGRPT0NxQlJ1cXJkaHcz?=
- =?utf-8?B?STROcE9qWXRTYXM3Y3RWV2l2bnBtM2x5VFF4OWp4VUhKRHFpRjBMN1RBSStm?=
- =?utf-8?B?MVNNMWZPSm8xUjhxbVM5TEtkck83QVlkRTVTcWRDcEFtL3kyU1dVWXhtbFBa?=
- =?utf-8?B?dGllZ0hISVpGaGYvMnF5RlQrdllObm1aUkVPTFJOMlRoVXNnVDMxRU9pQjJm?=
- =?utf-8?B?L2p1b2JrdlhGbElseXJoL1FNbm1TWi9saFVCL2I4RUFjaUlQUWNEL1Z4VmRP?=
- =?utf-8?B?UVhocXpWc25FekNXTUdZVE4xajkxVDlYbTB0VE4vWTlxdm5DRmNxL1hqQ3JY?=
- =?utf-8?B?TkgzeFpocSs1SnBsZVMvMW44aTBSN3pETnFLT3RhbmdjRWJuc2RlNWs5cURK?=
- =?utf-8?B?ZFdJdVBHYzlla3MwN29YcXlIVU5CTFVEaW5QeWs0ZWlmU3dvK1RHUlFoMUx1?=
- =?utf-8?B?Ti9WeXhtL0VPbHNTRHRaalY5T2g4ck9JREozN0RaUjY2U083VVJzUEMvRjVY?=
- =?utf-8?B?dDlxU3dSdUxkWXZ1U0IrTHI5U3hXOGVjR1FLdlRwZHg0a2ZqZ1hIMzZSYUQ5?=
- =?utf-8?B?cU9ySVVPYXg5aEw0R3Zibi9qNnZ5Z3I3NnBQaHpLQnFYZnVvUjljR2VyKzJl?=
- =?utf-8?B?L0xoc0JDYmx1Mmh1NERLVWNmQzUzZ0VNbFc2YzZRbkoxcmNpS1hacUduc1lD?=
- =?utf-8?B?QzhGSm40dkFmN0VxMEZhejBnUVpVSlprWHFNdUVQSVJLaFpFbEZkVkpURkxG?=
- =?utf-8?B?cVVETlk0c29xekswUUVYN1FXQ3BldktFd3JPak9LK0ozV2F3TDQ3M0hGV1Ru?=
- =?utf-8?B?VmlsZDgyNFJMT1NXTlVqUUNsc3VDa1pjVmtIZUFrWXRKdkQwSEVFV0JGNXdN?=
- =?utf-8?B?RFNtWVJJcDNKeFhWOTZKREZYSTNyTjJEUzR2bFpZZklQMDh4OTRLR28yZUNs?=
- =?utf-8?B?MWxwbWw5L0lVKzdiUDYzUTdjNFRIVjhmaldzWXduOWpodE9zTGRra2VyTkZU?=
- =?utf-8?B?Mm9nQjk3UTJ4cTZmUDZHeUk3MWpsVEV2WHp6d3paQUM1aXpXQnZHMWs4VW13?=
- =?utf-8?B?dStldDBsaWQvSk9qbENIV2dOUHFzTXJEYndWam9uTEtXU2xoMS9qMXU0YnU2?=
- =?utf-8?B?T2c5SEFsb01Kakd2WFVkM2RJbFJTY1E0QXJwUGJkMjJFQ3d3QmlqMnd5UFpB?=
- =?utf-8?B?OHRUbWVLZGN3N3dyS3VzYjc4cUZ1Ym82VUltRm1UUDZsTkhscVBpdnVid0dN?=
- =?utf-8?B?SHc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB760143AE18934CA97C9F1BFC9357AE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A296D8836
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745845175; cv=none; b=oqN+FXQzJHmfU2xTxf5/AfkfTS1B2OxdTrGiQGkonJdzTfXQIH5t57SKQpKjozcnj7P4s9KcH5jEAT85neBi9xNIly0R5dFP/eyL9t3I+c02C37h+gn/SstVuIPa17EsmbEhEyYlG0lt94tD9GrMrj3FiLX9c7i9lUaW73JhjL4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745845175; c=relaxed/simple;
+	bh=0GQvU8kdMNgMQU00RZEy0992u3ZkS1YUzOHK87urxg0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dGJD1ahtDUxuaFvNlMr8YNXYLV3qa5gYotbv5jj9WZNtfek+IE2igOg/ndwS01I/9vdceudWbjHzlLBTOCJGkwwBIbHj6VhD/F7muZC5f0CMBeeYxG32NtXXRsCsgwHXW/PT2epxdcPh7q624xrM5BPzgn9JlMj2+94j/DvRsZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 651F21516;
+	Mon, 28 Apr 2025 05:59:26 -0700 (PDT)
+Received: from [10.163.78.210] (unknown [10.163.78.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9353F673;
+	Mon, 28 Apr 2025 05:59:24 -0700 (PDT)
+Message-ID: <083865e8-572b-41b2-9221-3cee01349fab@arm.com>
+Date: Mon, 28 Apr 2025 18:29:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7589.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01baad10-9bc7-4f84-a576-08dd86542d61
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2025 12:57:05.2912
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: otnVRTsJ0e9bZKeXmfdn0idY2dP79EDIRY+yOjccDiIzEVernB9HB98FC/AqfmG+doByaAJlnW3xf4tWkaAPulckRTJgTSYXv5M3lpFreIY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5326
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] mm: Batch around can_change_pte_writable()
+To: Lance Yang <lance.yang@linux.dev>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250428120414.12101-1-dev.jain@arm.com>
+ <20250428120414.12101-7-dev.jain@arm.com>
+ <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <edf768ec-e874-4ca6-9fd7-b94ccc1c1059@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-T24gRnJpLCAyMDI1LTA0LTE4IGF0IDE5OjA3ICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVu
-dHMgdW5sZXNzIHlvdQ0KPiBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIFR1ZSwg
-MTUgQXByIDIwMjUgMTY6MjY6MjMgKzAzMDANCj4gPHZpY3Rvci5kdWljdUBtaWNyb2NoaXAuY29t
-PiB3cm90ZToNCj4gDQo+ID4gRnJvbTogVmljdG9yIER1aWN1IDx2aWN0b3IuZHVpY3VAbWljcm9j
-aGlwLmNvbT4NCj4gPiANCj4gPiBUaGlzIGlzIHRoZSBkcml2ZXIgZm9yIE1pY3JvY2hpcCBNQ1A5
-OThYLzMzIGFuZCBNQ1A5OThYRC8zM0QNCj4gPiBNdWx0aWNoYW5uZWwgQXV0b21vdGl2ZSBNb25p
-dG9yIEZhbWlseS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBWaWN0b3IgRHVpY3UgPHZpY3Rv
-ci5kdWljdUBtaWNyb2NoaXAuY29tPg0KPiANCg0KSGkgSm9uYXRoYW4sDQoNCj4gSGkgVmljdG9y
-LA0KPiANCj4gVmFyaW91cyBjb21tZW50cyBpbmxpbmUsDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBK
-b25hdGhhbg0KPiANCj4gPiAtLS0NCj4gPiDCoC4uLi90ZXN0aW5nL3N5c2ZzLWJ1cy1paW8tdGVt
-cGVyYXR1cmUtbWNwOTk4MiB8wqAgMTcgKw0KPiA+IMKgTUFJTlRBSU5FUlPCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
-wqDCoCA3ICsNCj4gPiDCoGRyaXZlcnMvaWlvL3RlbXBlcmF0dXJlL0tjb25maWfCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAxMCArDQo+ID4gwqBkcml2ZXJzL2lpby90ZW1wZXJhdHVy
-ZS9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDEgKw0KPiA+IMKgZHJp
-dmVycy9paW8vdGVtcGVyYXR1cmUvbWNwOTk4Mi5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
-Nzk0DQo+ID4gKysrKysrKysrKysrKysrKysrDQo+ID4gwqA1IGZpbGVzIGNoYW5nZWQsIDgyOSBp
-bnNlcnRpb25zKCspDQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9BQkkv
-dGVzdGluZy9zeXNmcy1idXMtaWlvLQ0KPiA+IHRlbXBlcmF0dXJlLW1jcDk5ODINCj4gPiDCoGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2lpby90ZW1wZXJhdHVyZS9tY3A5OTgyLmMNCj4gPiAN
-Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1idXMtaWlv
-LXRlbXBlcmF0dXJlLQ0KPiA+IG1jcDk5ODIgYi9Eb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5
-c2ZzLWJ1cy1paW8tdGVtcGVyYXR1cmUtDQo+ID4gbWNwOTk4Mg0KPiA+IG5ldyBmaWxlIG1vZGUg
-MTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kZTMzNjBmYjA1YmUNCj4gPiAtLS0gL2Rl
-di9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1idXMtaWlv
-LXRlbXBlcmF0dXJlLW1jcDk5ODINCj4gPiBAQCAtMCwwICsxLDE3IEBADQo+ID4gK1doYXQ6wqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDQo+ID4gL3N5cy9idXMvaWlvL2RldmljZXMvaWlv
-OmRldmljZVgvcnVubmluZ19hdmVyYWdlX3dpbmRvdw0KPiANCj4gQXMgbGF0ZXIgaW4gcmV2aWV3
-LCBJIHRoaW5rIHdlIGNhbiBjb250cm9sIHRoaXMgdmlhIHRoZSBsb3cgcGFzcw0KPiBmaWx0ZXIg
-M2RCIHBvaW50DQo+IGFuZCB1c2Ugc3RhbmRhcmQgQUJJLg0KPiANCj4gDQo+ID4gDQouLi4NCg0K
-PiBIbW0uwqAgQSBydW5uaW5nIGF2ZXJhZ2UgaXMgYSBsb3cgcGFzcyBmaWx0ZXIuwqAgQ2FuIHdl
-IGNvbnRyb2wgdGhpcw0KPiBpbnN0ZWFkIHZpYQ0KPiBzdGFuZGFyZCBBQkkgYW5kIHRoZSAzZEIg
-cG9pbnQ/wqAgVGFrZSBhIGxvb2sgYXQgdGhlIGZpbHRlciBBQkkgaW4NCj4gRG9jdW1lbnRhdGlv
-bi9BQkkvdGVzdGluZy9zeXNmcy1idXMtaWlvDQo+IA0KPiBDdXN0b20gQUJJIGlzIHJhcmVseSB1
-c2VkIGluIHJlYWwgY2FzZXMgYmVjYXVzZSB0aGUgdG9vbHMgdGVuZCBub3QgdG8NCj4ga25vdyBh
-Ym91dCBpdA0KPiBzbyB3ZSBhdm9pZCBpdCBpZiB3ZSBwb3NzaWJseSBjYW4uDQo+IA0KPiA+ICsN
-Cj4gPiANCg0KDQpUaGUgbW92aW5nIGF2ZXJhZ2UgZmlsdGVyIGlzIHVzZWQgdG8gc21vb3RoIHRo
-ZSB0ZW1wZXJhdHVyZSBzcGlrZXMuDQpUaGUgdXNlciBzaG91bGQgYmUgYWJsZSB0byBzZXQgdGhl
-IHNpemUgb2YgdGhlIHdpbmRvdyB0bw0KYSBmZXcgdmFsdWVzOiAxKGRpc2FibGUgdGhlIGZpbHRl
-ciksIDQgYW5kIDguDQpUaGUgdXNlciBkb2VzIG5vdCBoYXZlIGFjY2VzcyB0byB0aGUgZnJlcXVl
-bmN5IHByb3BlcnRpZXMuDQoNCkJlc3QgUmVnYXJkcywNClZpY3Rvcg0KPiANCg0K
+
+
+On 28/04/25 6:20 pm, Lance Yang wrote:
+> Hey Dev,
+> 
+> On 2025/4/28 20:04, Dev Jain wrote:
+>> In preparation for patch 7, we need to properly batch around
+>> can_change_pte_writable(). We batch around pte_needs_soft_dirty_wp() by
+>> the corresponding fpb flag, we batch around the page-anon exclusive check
+>> using folio_maybe_mapped_shared(); modify_prot_start_ptes() collects the
+>> dirty and access bits across the batch, therefore batching across
+>> pte_dirty(): this is correct since the dirty bit on the PTE really
+>> is just an indication that the folio got written to, so even if
+>> the PTE is not actually dirty (but one of the PTEs in the batch is),
+>> the wp-fault optimization can be made.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>   include/linux/mm.h | 4 ++--
+>>   mm/gup.c           | 2 +-
+>>   mm/huge_memory.c   | 4 ++--
+>>   mm/memory.c        | 6 +++---
+>>   mm/mprotect.c      | 9 ++++++---
+>>   5 files changed, 14 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 5eb0d77c4438..ffa02e15863f 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -2710,8 +2710,8 @@ int get_cmdline(struct task_struct *task, char 
+>> *buffer, int buflen);
+>>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>>                           MM_CP_UFFD_WP_RESOLVE)
+>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
+>> long addr,
+>> -                 pte_t pte);
+>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>> long addr,
+>> +                 pte_t pte, struct folio *folio, unsigned int nr);
+>>   extern long change_protection(struct mmu_gather *tlb,
+>>                     struct vm_area_struct *vma, unsigned long start,
+>>                     unsigned long end, unsigned long cp_flags);
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index 84461d384ae2..6a605fc5f2cb 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -614,7 +614,7 @@ static inline bool can_follow_write_common(struct 
+>> page *page,
+>>           return false;
+>>       /*
+>> -     * See can_change_pte_writable(): we broke COW and could map the 
+>> page
+>> +     * See can_change_ptes_writable(): we broke COW and could map the 
+>> page
+>>        * writable if we have an exclusive anonymous page ...
+>>        */
+>>       return page && PageAnon(page) && PageAnonExclusive(page);
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 28c87e0e036f..e5496c0d9e7e 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -2032,12 +2032,12 @@ static inline bool 
+>> can_change_pmd_writable(struct vm_area_struct *vma,
+>>           return false;
+>>       if (!(vma->vm_flags & VM_SHARED)) {
+>> -        /* See can_change_pte_writable(). */
+>> +        /* See can_change_ptes_writable(). */
+>>           page = vm_normal_page_pmd(vma, addr, pmd);
+>>           return page && PageAnon(page) && PageAnonExclusive(page);
+>>       }
+>> -    /* See can_change_pte_writable(). */
+>> +    /* See can_change_ptes_writable(). */
+>>       return pmd_dirty(pmd);
+>>   }
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index b9e8443aaa86..b1fda3de8d27 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -750,7 +750,7 @@ static void restore_exclusive_pte(struct 
+>> vm_area_struct *vma,
+>>           pte = pte_mkuffd_wp(pte);
+>>       if ((vma->vm_flags & VM_WRITE) &&
+>> -        can_change_pte_writable(vma, address, pte)) {
+>> +        can_change_ptes_writable(vma, address, pte, NULL, 1)) {
+>>           if (folio_test_dirty(folio))
+>>               pte = pte_mkdirty(pte);
+>>           pte = pte_mkwrite(pte, vma);
+>> @@ -5767,7 +5767,7 @@ static void numa_rebuild_large_mapping(struct 
+>> vm_fault *vmf, struct vm_area_stru
+>>               ptent = pte_modify(ptent, vma->vm_page_prot);
+>>               writable = pte_write(ptent);
+>>               if (!writable && pte_write_upgrade &&
+>> -                can_change_pte_writable(vma, addr, ptent))
+>> +                can_change_ptes_writable(vma, addr, ptent, NULL, 1))
+>>                   writable = true;
+>>           }
+>> @@ -5808,7 +5808,7 @@ static vm_fault_t do_numa_page(struct vm_fault 
+>> *vmf)
+>>        */
+>>       writable = pte_write(pte);
+>>       if (!writable && pte_write_upgrade &&
+>> -        can_change_pte_writable(vma, vmf->address, pte))
+>> +        can_change_ptes_writable(vma, vmf->address, pte, NULL, 1))
+>>           writable = true;
+>>       folio = vm_normal_folio(vma, vmf->address, pte);
+>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>> index 33eabc995584..362fd7e5457d 100644
+>> --- a/mm/mprotect.c
+>> +++ b/mm/mprotect.c
+>> @@ -40,8 +40,8 @@
+>>   #include "internal.h"
+>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
+>> long addr,
+>> -                 pte_t pte)
+>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+>> long addr,
+>> +                  pte_t pte, struct folio *folio, unsigned int nr)
+>>   {
+>>       struct page *page;
+>> @@ -67,6 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct 
+>> *vma, unsigned long addr,
+>>            * write-fault handler similarly would map them writable 
+>> without
+>>            * any additional checks while holding the PT lock.
+>>            */
+>> +        if (unlikely(nr != 1))
+>> +            return !folio_maybe_mapped_shared(folio);
+>> +
+>>           page = vm_normal_page(vma, addr, pte);
+>>           return page && PageAnon(page) && PageAnonExclusive(page);
+>>       }
+> 
+> IIUC, As mentioned in the comment above, we should do the same anonymous 
+> check
+> to large folios. And folio_maybe_mapped_shared() already handles both 
+> order-0
+> and large folios nicely, so we could simplify the logic as follows:
+
+Thanks. Although we will have to call vm_normal_folio() in case of 
+!folio, since we may not have the folio already for nr == 1 case.
+
+> 
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index 1605e89349d2..df56a30bb241 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -43,8 +43,6 @@
+>   bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
+> long addr,
+>                                pte_t pte, struct folio *folio, unsigned 
+> int nr)
+>   {
+> -       struct page *page;
+> -
+>          if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+>                  return false;
+> 
+> @@ -67,11 +65,7 @@ bool can_change_ptes_writable(struct vm_area_struct 
+> *vma, unsigned long addr,
+>                   * write-fault handler similarly would map them 
+> writable without
+>                   * any additional checks while holding the PT lock.
+>                   */
+> -               if (unlikely(nr != 1))
+> -                       return !folio_maybe_mapped_shared(folio);
+> -
+> -               page = vm_normal_page(vma, addr, pte);
+> -               return page && PageAnon(page) && PageAnonExclusive(page);
+> +               return folio_test_anon(folio) && ! 
+> folio_maybe_mapped_shared(folio);
+>          }
+> 
+>          VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+> -- 
+> 
+> Thanks,
+> Lance
+> 
+>> @@ -222,7 +225,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>                */
+>>               if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+>>                   !pte_write(ptent) &&
+>> -                can_change_pte_writable(vma, addr, ptent))
+>> +                can_change_ptes_writable(vma, addr, ptent, folio, 1))
+>>                   ptent = pte_mkwrite(ptent, vma);
+>>               ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
+> 
+> 
+
