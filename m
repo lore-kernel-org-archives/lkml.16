@@ -1,38 +1,39 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8FC1CD213;
-	Mon, 28 Apr 2025 11:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDEC267B1B;
+	Mon, 28 Apr 2025 11:57:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841471; cv=none; b=tZS0erqdP1Kbbwp10MEmBCtbos3VoEIK1S4YulPz24Lzh4fJLo0A7D0bjqwYEftbCwCVj/zGii6sauo1QikMRa1vjD23mUguyH5vQe6hVxcgGjy1jaZQ0lSw5dUPiuTls208mmb5p8X+Q5SD9tBBffFMcFdyap9a1g/rbP5ZrGs=
+	t=1745841474; cv=none; b=iIo4YyW/DAUCKo0GALYtULaoR4Eqi1F/bzKscoaVAgj6+W3KreyN8f6S7oxSxgM778ZhNbVk4IiXZKfIowLwdqxiFKJNNnaqYcKhyOSGXN2c9+r7bxb3zwu3yav/TsDHkAkdS6QSsg+pyxuH4uIOsxIVufiIePTOIKeaMi8hJxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841471; c=relaxed/simple;
-	bh=HD55kveJW1t0BxKHz4Ojum7iT8TYrloBzPETnE9aaCU=;
+	s=arc-20240116; t=1745841474; c=relaxed/simple;
+	bh=ybgSWHgWZ4VKpqIsz4Pgop6pV1Fj4Uq0Uc3EapEIeKM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dkFDL1KaJgI0UyraA6mqDAMLrZoD3V+T7oPuHPLbuCoxcN06P/eocIq0gw2lVD54323AkwOJVvCLqF2MFjkVHoV7CdLEAqwaedELpO2KE22YnWYID1Gn73nmvvTym0x7N/LtdYrjj+vb9nOUqfxsyWt4niJtgacsY108dqJA6ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UVEx7Cfm; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=DJCKKAfSqrVISl2bUGacIF8K6fW0zXrcORmduVv/ksjSFsW5UP/JssCNv1Zi3V7z1gptYvoIUbk6xCCVTJS3XQmsrReU+xp26hdvf67/qSvs8/LokDbp1VhTlxCU7yjJzP+ZtujltZzjQawT+A9dPoox3hnIZtyPVlldcdBTx6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TArQRk+z; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UVEx7Cfm"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C7B7543A1A;
-	Mon, 28 Apr 2025 11:57:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TArQRk+z"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 24EEE43A14;
+	Mon, 28 Apr 2025 11:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745841466;
+	t=1745841463;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xahwFNkhXkATYSPoXd3ZuEFajeVbF9RH37gecLJXZeg=;
-	b=UVEx7Cfmc4ns29tM7NKbZXPirJnKhnIQssxcRSa2mq1U0pbszOKcC6vD6/waA9+uuAcwiy
-	SEYA86eM0TY2oXyBcBI+aVSqHwEcIv+zYYgcWCl4VO5DAGXsnyddHbAVih6b+zaUuSeEoQ
-	rO+mhkbucBqNrrqMG8sRheuM91EXS6+lCfmq4QSDMJvjWZxl6AS+WIv0+xI4tAUYucDVTv
-	AKCoR80gP5N/03BODz3qESj1fwEczUfWaH0e8aFMKffd82/io/h2DUaOqk0nKcnHa67WgY
-	TlQbJkpn5p2dw+f8XWlGHzVTjl5adAH15ZTt61sodxd3ED+ONBPE7xoBzjhfAg==
+	bh=Y20oB8KlBm5WGWEpzHDlN78OfEOa84/mn1pZsBszXv8=;
+	b=TArQRk+zp9F5u1p/QD7G0cBT+4p2dGOKosteM+L+KrRSoGIJH+MqK5PIY9I2p6oVdsJEdo
+	Cadj0NsCg/KD1iWLsRajn81pqQvQv1IVeKDYdWo9aiHybndMd8RLmb4fT3ho7J/bcXWwHy
+	zdnbxgHOv1G9WBfyefVFg+I1LhcatWWXc9Y37KKP2Rurk0AAV9gJj3xoOUU5loVdaAC7Q6
+	TbnN1fF7M1KgWe+otWmnOy/3uM0MGksowSsbTmsndfM+2PP3tvvvzq5KKHo4gyLbK0Q7M6
+	S1K8ndavEfB5kyLoU11fALKiTEl7oToig1kYjFGJ1jIP0BLWGQUpe/kKIAEZyQ==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Mon, 28 Apr 2025 13:57:27 +0200
-Subject: [PATCH v7 09/11] input: keyboard: Add support for MAX7360 keypad
+Date: Mon, 28 Apr 2025 13:57:23 +0200
+Subject: [PATCH v7 05/11] regmap: irq: Add support for chips without
+ separate IRQ status
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
+Message-Id: <20250428-mdb-max7360-support-v7-5-4e0608d0a7ff@bootlin.com>
 References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
 In-Reply-To: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -60,374 +61,255 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
  =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745841456; l=11377;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745841456; l=7440;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=HD55kveJW1t0BxKHz4Ojum7iT8TYrloBzPETnE9aaCU=;
- b=zJ4pbK2F5MnFM+ES3TA14BR9XSNF6vrfykHsyzdOQZVuhSM5cAimNqlIow38lTNVWjNfNEI1d
- J2LgMH1Jp0lBrv7wwsbZgPkIUliATJ3mmSZYV1BCjsqe3rBMxVh8XHI
+ bh=ybgSWHgWZ4VKpqIsz4Pgop6pV1Fj4Uq0Uc3EapEIeKM=;
+ b=BoHX3YTWvGGrag5vgjWFkQ2VLvEUlLHOq8ueY0L9W0zjXt9goq1+H9kgX4MNIK0JZpjUT4l9A
+ D6cYpdoAycxCu3oWk8cX3n7rO+39M/48txmP81QSH7sk2X67T9b2qF9
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedthfegtedvvdehjeeiheehheeuteejleektdefheehgfefgeelhfetgedttdfhteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedthfegtedvvdehjeeiheehheeuteejleektdefheehgfefgeelhfetgedttdfhteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhko
+ heslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhm
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add driver for Maxim Integrated MAX7360 keypad controller, providing
-support for up to 64 keys, with a matrix of 8 columns and 8 rows.
+Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
+provide an IRQ status for each separate line: only the current gpio
+level can be retrieved.
+
+Add support for these chips, emulating IRQ status by comparing GPIO
+levels with the levels during the previous interrupt.
 
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/input/keyboard/Kconfig          |  12 ++
- drivers/input/keyboard/Makefile         |   1 +
- drivers/input/keyboard/max7360-keypad.c | 302 ++++++++++++++++++++++++++++++++
- 3 files changed, 315 insertions(+)
+ drivers/base/regmap/regmap-irq.c | 97 +++++++++++++++++++++++++++-------------
+ include/linux/regmap.h           |  3 ++
+ 2 files changed, 69 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 721ab69e84ac..93b5cccf6892 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -421,6 +421,18 @@ config KEYBOARD_MAX7359
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called max7359_keypad.
+diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
+index 6c6869188c31..c1b0dcd7280f 100644
+--- a/drivers/base/regmap/regmap-irq.c
++++ b/drivers/base/regmap/regmap-irq.c
+@@ -6,6 +6,7 @@
+ //
+ // Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
  
-+config KEYBOARD_MAX7360
-+	tristate "Maxim MAX7360 Key Switch Controller"
-+	select INPUT_MATRIXKMAP
-+	depends on I2C
-+	depends on MFD_MAX7360
-+	help
-+	  If you say yes here you get support for the keypad controller on the
-+	  Maxim MAX7360 I/O Expander.
++#include <linux/array_size.h>
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
+@@ -33,6 +34,7 @@ struct regmap_irq_chip_data {
+ 	void *status_reg_buf;
+ 	unsigned int *main_status_buf;
+ 	unsigned int *status_buf;
++	unsigned int *prev_status_buf;
+ 	unsigned int *mask_buf;
+ 	unsigned int *mask_buf_def;
+ 	unsigned int *wake_buf;
+@@ -332,27 +334,13 @@ static inline int read_sub_irq_data(struct regmap_irq_chip_data *data,
+ 	return ret;
+ }
+ 
+-static irqreturn_t regmap_irq_thread(int irq, void *d)
++static int read_irq_data(struct regmap_irq_chip_data *data)
+ {
+-	struct regmap_irq_chip_data *data = d;
+ 	const struct regmap_irq_chip *chip = data->chip;
+ 	struct regmap *map = data->map;
+ 	int ret, i;
+-	bool handled = false;
+ 	u32 reg;
+ 
+-	if (chip->handle_pre_irq)
+-		chip->handle_pre_irq(chip->irq_drv_data);
+-
+-	if (chip->runtime_pm) {
+-		ret = pm_runtime_get_sync(map->dev);
+-		if (ret < 0) {
+-			dev_err(map->dev, "IRQ thread failed to resume: %d\n",
+-				ret);
+-			goto exit;
+-		}
+-	}
+-
+ 	/*
+ 	 * Read only registers with active IRQs if the chip has 'main status
+ 	 * register'. Else read in the statuses, using a single bulk read if
+@@ -379,10 +367,8 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 			reg = data->get_irq_reg(data, chip->main_status, i);
+ 			ret = regmap_read(map, reg, &data->main_status_buf[i]);
+ 			if (ret) {
+-				dev_err(map->dev,
+-					"Failed to read IRQ status %d\n",
+-					ret);
+-				goto exit;
++				dev_err(map->dev, "Failed to read IRQ status %d\n", ret);
++				return ret;
+ 			}
+ 		}
+ 
+@@ -398,10 +384,8 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 				ret = read_sub_irq_data(data, b);
+ 
+ 				if (ret != 0) {
+-					dev_err(map->dev,
+-						"Failed to read IRQ status %d\n",
+-						ret);
+-					goto exit;
++					dev_err(map->dev, "Failed to read IRQ status %d\n", ret);
++					return ret;
+ 				}
+ 			}
+ 
+@@ -418,9 +402,8 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 				       data->status_reg_buf,
+ 				       chip->num_regs);
+ 		if (ret != 0) {
+-			dev_err(map->dev, "Failed to read IRQ status: %d\n",
+-				ret);
+-			goto exit;
++			dev_err(map->dev, "Failed to read IRQ status: %d\n", ret);
++			return ret;
+ 		}
+ 
+ 		for (i = 0; i < data->chip->num_regs; i++) {
+@@ -436,7 +419,7 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 				break;
+ 			default:
+ 				BUG();
+-				goto exit;
++				return -EIO;
+ 			}
+ 		}
+ 
+@@ -447,10 +430,8 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 			ret = regmap_read(map, reg, &data->status_buf[i]);
+ 
+ 			if (ret != 0) {
+-				dev_err(map->dev,
+-					"Failed to read IRQ status: %d\n",
+-					ret);
+-				goto exit;
++				dev_err(map->dev, "Failed to read IRQ status: %d\n", ret);
++				return ret;
+ 			}
+ 		}
+ 	}
+@@ -459,6 +440,42 @@ static irqreturn_t regmap_irq_thread(int irq, void *d)
+ 		for (i = 0; i < data->chip->num_regs; i++)
+ 			data->status_buf[i] = ~data->status_buf[i];
+ 
++	return 0;
++}
 +
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max7360_keypad.
-+
- config KEYBOARD_MPR121
- 	tristate "Freescale MPR121 Touchkey"
- 	depends on I2C
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 1e0721c30709..b49d32d4003d 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_KEYBOARD_LPC32XX)		+= lpc32xx-keys.o
- obj-$(CONFIG_KEYBOARD_MAPLE)		+= maple_keyb.o
- obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
- obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
-+obj-$(CONFIG_KEYBOARD_MAX7360)		+= max7360-keypad.o
- obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
- obj-$(CONFIG_KEYBOARD_MT6779)		+= mt6779-keypad.o
- obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
-diff --git a/drivers/input/keyboard/max7360-keypad.c b/drivers/input/keyboard/max7360-keypad.c
-new file mode 100644
-index 000000000000..0cf6f9cd5f7f
---- /dev/null
-+++ b/drivers/input/keyboard/max7360-keypad.c
-@@ -0,0 +1,302 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2025 Bootlin
-+ *
-+ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device/devres.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/input/matrix_keypad.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/regmap.h>
-+
-+struct max7360_keypad {
-+	struct input_dev *input;
-+	unsigned int rows;
-+	unsigned int cols;
-+	unsigned int debounce_ms;
-+	int irq;
-+	struct regmap *regmap;
-+	unsigned short keycodes[MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS];
-+};
-+
-+static irqreturn_t max7360_keypad_irq(int irq, void *data)
++static irqreturn_t regmap_irq_thread(int irq, void *d)
 +{
-+	struct max7360_keypad *max7360_keypad = data;
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	unsigned int val;
-+	unsigned int row, col;
-+	unsigned int release;
-+	unsigned int code;
-+	int error;
++	struct regmap_irq_chip_data *data = d;
++	const struct regmap_irq_chip *chip = data->chip;
++	struct regmap *map = data->map;
++	int ret, i;
++	bool handled = false;
++	u32 reg;
 +
-+	do {
-+		error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
-+		if (error) {
-+			dev_err(dev, "Failed to read max7360 FIFO");
-+			return IRQ_NONE;
++	if (chip->handle_pre_irq)
++		chip->handle_pre_irq(chip->irq_drv_data);
++
++	if (chip->runtime_pm) {
++		ret = pm_runtime_get_sync(map->dev);
++		if (ret < 0) {
++			dev_err(map->dev, "IRQ thread failed to resume: %d\n", ret);
++			goto exit;
 +		}
-+
-+		/* FIFO overflow: ignore it and get next event. */
-+		if (val == MAX7360_FIFO_OVERFLOW)
-+			dev_warn(dev, "max7360 FIFO overflow");
-+	} while (val == MAX7360_FIFO_OVERFLOW);
-+
-+	if (val == MAX7360_FIFO_EMPTY) {
-+		dev_dbg(dev, "Got a spurious interrupt");
-+
-+		return IRQ_NONE;
 +	}
 +
-+	row = FIELD_GET(MAX7360_FIFO_ROW, val);
-+	col = FIELD_GET(MAX7360_FIFO_COL, val);
-+	release = val & MAX7360_FIFO_RELEASE;
++	ret = read_irq_data(data);
++	if (ret < 0)
++		goto exit;
 +
-+	code = MATRIX_SCAN_CODE(row, col, MAX7360_ROW_SHIFT);
++	if (chip->status_is_level) {
++		for (i = 0; i < data->chip->num_regs; i++) {
++			unsigned int val = data->status_buf[i];
 +
-+	dev_dbg(dev, "key[%d:%d] %s\n", row, col, release ? "release" : "press");
-+
-+	input_event(max7360_keypad->input, EV_MSC, MSC_SCAN, code);
-+	input_report_key(max7360_keypad->input, max7360_keypad->keycodes[code], !release);
-+	input_sync(max7360_keypad->input);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max7360_keypad_open(struct input_dev *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	int error;
-+
-+	/* Somebody is using the device: get out of sleep. */
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG,
-+				  MAX7360_CFG_SLEEP, MAX7360_CFG_SLEEP);
-+	if (error) {
-+		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
-+		return error;
++			data->status_buf[i] ^= data->prev_status_buf[i];
++			data->prev_status_buf[i] = val;
++		}
 +	}
 +
-+	return 0;
-+}
-+
-+static void max7360_keypad_close(struct input_dev *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	int error;
-+
-+	/* Nobody is using the device anymore: go to sleep. */
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG, MAX7360_CFG_SLEEP, 0);
-+	if (error)
-+		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
-+}
-+
-+static int max7360_keypad_hw_init(struct max7360_keypad *max7360_keypad)
-+{
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	unsigned int val;
-+	int error;
-+
-+	val = max7360_keypad->debounce_ms - MAX7360_DEBOUNCE_MIN;
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_DEBOUNCE,
-+				  MAX7360_DEBOUNCE,
-+				  FIELD_PREP(MAX7360_DEBOUNCE, val));
-+	if (error)
-+		return dev_err_probe(dev, error,
-+				     "Failed to write max7360 debounce configuration\n");
-+
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_INTERRUPT,
-+				  MAX7360_INTERRUPT_TIME_MASK,
-+				  FIELD_PREP(MAX7360_INTERRUPT_TIME_MASK, 1));
-+	if (error)
-+		return dev_err_probe(dev, error,
-+				     "Failed to write max7360 keypad interrupt configuration\n");
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_build_keymap(struct max7360_keypad *max7360_keypad)
-+{
-+	struct input_dev *input_dev = max7360_keypad->input;
-+	struct device *dev = input_dev->dev.parent->parent;
-+	struct matrix_keymap_data keymap_data;
-+	const char *propname = "linux,keymap";
-+	unsigned int max_keys;
-+	int error;
-+	int size;
-+
-+	size = device_property_count_u32(dev, propname);
-+	if (size <= 0) {
-+		dev_err(dev, "missing or malformed property %s: %d\n", propname, size);
-+		return size < 0 ? size : -EINVAL;
+ 	/*
+ 	 * Ignore masked IRQs and ack if we need to; we ack early so
+ 	 * there is no race between handling and acknowledging the
+@@ -705,6 +722,13 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 	if (!d->status_buf)
+ 		goto err_alloc;
+ 
++	if (chip->status_is_level) {
++		d->prev_status_buf = kcalloc(chip->num_regs, sizeof(*d->prev_status_buf),
++					     GFP_KERNEL);
++		if (!d->prev_status_buf)
++			goto err_alloc;
 +	}
 +
-+	max_keys = max7360_keypad->cols * max7360_keypad->rows;
-+	if (size > max_keys) {
-+		dev_err(dev, "%s size overflow (%d vs max %u)\n", propname, size, max_keys);
-+		return -EINVAL;
+ 	d->mask_buf = kcalloc(chip->num_regs, sizeof(*d->mask_buf),
+ 			      GFP_KERNEL);
+ 	if (!d->mask_buf)
+@@ -881,6 +905,15 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 		}
+ 	}
+ 
++	/* Store current levels */
++	if (chip->status_is_level) {
++		ret = read_irq_data(d);
++		if (ret < 0)
++			goto err_alloc;
++
++		memcpy(d->prev_status_buf, d->status_buf, array_size(d->prev_status_buf));
 +	}
 +
-+	u32 *keys __free(kfree) = kmalloc_array(size, sizeof(*keys), GFP_KERNEL);
-+	if (!keys)
-+		return -ENOMEM;
-+
-+	error = device_property_read_u32_array(dev, propname, keys, size);
-+	if (error) {
-+		dev_err(dev, "failed to read %s property: %d\n", propname, error);
-+		return error;
-+	}
-+
-+	keymap_data.keymap = keys;
-+	keymap_data.keymap_size = size;
-+	error = matrix_keypad_build_keymap(&keymap_data, NULL,
-+					   max7360_keypad->rows, max7360_keypad->cols,
-+					   max7360_keypad->keycodes, max7360_keypad->input);
-+
-+	return error;
-+}
-+
-+static int max7360_keypad_parse_fw(struct device *dev,
-+				   struct max7360_keypad *max7360_keypad,
-+				   bool *autorepeat)
-+{
-+	int error;
-+
-+	error = matrix_keypad_parse_properties(dev->parent, &max7360_keypad->rows,
-+					       &max7360_keypad->cols);
-+	if (error)
-+		return error;
-+
-+	if (!max7360_keypad->rows || !max7360_keypad->cols ||
-+	    max7360_keypad->rows > MAX7360_MAX_KEY_ROWS ||
-+	    max7360_keypad->cols > MAX7360_MAX_KEY_COLS) {
-+		dev_err(dev, "Invalid number of columns or rows (%ux%u)\n",
-+			max7360_keypad->cols, max7360_keypad->rows);
-+		return -EINVAL;
-+	}
-+
-+	*autorepeat = device_property_read_bool(dev->parent, "autorepeat");
-+
-+	max7360_keypad->debounce_ms = MAX7360_DEBOUNCE_MIN;
-+	error = device_property_read_u32(dev->parent, "keypad-debounce-delay-ms",
-+					 &max7360_keypad->debounce_ms);
-+	if (error == -EINVAL) {
-+		dev_info(dev, "Using default keypad-debounce-delay-ms: %u\n",
-+			 max7360_keypad->debounce_ms);
-+	} else if (error < 0) {
-+		dev_err(dev, "Failed to read keypad-debounce-delay-ms property\n");
-+		return error;
-+	}
-+
-+	if (!in_range(max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN,
-+		      MAX7360_DEBOUNCE_MAX - MAX7360_DEBOUNCE_MIN)) {
-+		dev_err(dev, "Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
-+			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_probe(struct platform_device *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad;
-+	struct device *dev = &pdev->dev;
-+	struct input_dev *input;
-+	struct regmap *regmap;
-+	bool autorepeat;
-+	int error;
-+	int irq;
-+
-+	regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!regmap)
-+		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
-+
-+	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "intk");
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
-+
-+	max7360_keypad = devm_kzalloc(dev, sizeof(*max7360_keypad), GFP_KERNEL);
-+	if (!max7360_keypad)
-+		return -ENOMEM;
-+
-+	max7360_keypad->regmap = regmap;
-+
-+	error = max7360_keypad_parse_fw(dev, max7360_keypad, &autorepeat);
-+	if (error)
-+		return error;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	max7360_keypad->input = input;
-+
-+	input->id.bustype = BUS_I2C;
-+	input->name = pdev->name;
-+	input->open = max7360_keypad_open;
-+	input->close = max7360_keypad_close;
-+
-+	error = max7360_keypad_build_keymap(max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to build keymap\n");
-+
-+	input_set_capability(input, EV_MSC, MSC_SCAN);
-+	if (autorepeat)
-+		__set_bit(EV_REP, input->evbit);
-+
-+	input_set_drvdata(input, max7360_keypad);
-+
-+	error = devm_request_threaded_irq(dev, irq, NULL, max7360_keypad_irq,
-+					  IRQF_ONESHOT,
-+					  "max7360-keypad", max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to register interrupt\n");
-+
-+	error = input_register_device(input);
-+	if (error)
-+		return dev_err_probe(dev, error, "Could not register input device\n");
-+
-+	error = max7360_keypad_hw_init(max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to initialize max7360 keypad\n");
-+
-+	device_init_wakeup(dev, true);
-+	error = dev_pm_set_wake_irq(dev, irq);
-+	if (error)
-+		dev_warn(dev, "Failed to set up wakeup irq: %d\n", error);
-+
-+	return 0;
-+}
-+
-+static void max7360_keypad_remove(struct platform_device *pdev)
-+{
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+}
-+
-+static struct platform_driver max7360_keypad_driver = {
-+	.driver = {
-+		.name	= "max7360-keypad",
-+	},
-+	.probe		= max7360_keypad_probe,
-+	.remove		= max7360_keypad_remove,
-+};
-+module_platform_driver(max7360_keypad_driver);
-+
-+MODULE_DESCRIPTION("MAX7360 Keypad driver");
-+MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
-+MODULE_LICENSE("GPL");
+ 	ret = regmap_irq_create_domain(fwnode, irq_base, chip, d);
+ 	if (ret)
+ 		goto err_alloc;
+@@ -908,6 +941,7 @@ int regmap_add_irq_chip_fwnode(struct fwnode_handle *fwnode,
+ 	kfree(d->mask_buf);
+ 	kfree(d->main_status_buf);
+ 	kfree(d->status_buf);
++	kfree(d->prev_status_buf);
+ 	kfree(d->status_reg_buf);
+ 	if (d->config_buf) {
+ 		for (i = 0; i < chip->num_config_bases; i++)
+@@ -985,6 +1019,7 @@ void regmap_del_irq_chip(int irq, struct regmap_irq_chip_data *d)
+ 	kfree(d->main_status_buf);
+ 	kfree(d->status_reg_buf);
+ 	kfree(d->status_buf);
++	kfree(d->prev_status_buf);
+ 	if (d->config_buf) {
+ 		for (i = 0; i < d->chip->num_config_bases; i++)
+ 			kfree(d->config_buf[i]);
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index d17c5ea3d55d..02b83f5499b8 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -1641,6 +1641,8 @@ struct regmap_irq_chip_data;
+  * @ack_invert:  Inverted ack register: cleared bits for ack.
+  * @clear_ack:  Use this to set 1 and 0 or vice-versa to clear interrupts.
+  * @status_invert: Inverted status register: cleared bits are active interrupts.
++ * @status_is_level: Status register is actuall signal level: Xor status
++ *		     register with previous value to get active interrupts.
+  * @wake_invert: Inverted wake register: cleared bits are wake enabled.
+  * @type_in_mask: Use the mask registers for controlling irq type. Use this if
+  *		  the hardware provides separate bits for rising/falling edge
+@@ -1704,6 +1706,7 @@ struct regmap_irq_chip {
+ 	unsigned int ack_invert:1;
+ 	unsigned int clear_ack:1;
+ 	unsigned int status_invert:1;
++	unsigned int status_is_level:1;
+ 	unsigned int wake_invert:1;
+ 	unsigned int type_in_mask:1;
+ 	unsigned int clear_on_unmask:1;
 
 -- 
 2.39.5
