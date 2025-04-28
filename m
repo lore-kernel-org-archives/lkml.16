@@ -1,88 +1,103 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FDA211C;
-	Mon, 28 Apr 2025 14:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1C926B975;
+	Mon, 28 Apr 2025 14:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745851536; cv=none; b=STzoMnmDP0O9ZivNR2T+76dp2E3ofwXPpGne5FDo18R0ehR+N0pUnQ+uS9hhZdP1m74VA8YeEVUnlQe7sJ/Zwja1kqh6kJenUUb1elOqdqBxPuo1lNAPKIgJM0+XVebox3QvhyAWS2BtySXIGStACTW9wWr/KzNWTjTZfrZldFE=
+	t=1745851539; cv=none; b=aynZKsaV9OtD/gLfKFsKKeo91ColQG6c0fJUJ/3lSgXkHwSa5IXiaJ7tqEftU0Lwp/52khzodcy6FywlMIUQUW7q6Oo+hEwx64qGfShVd4guXu5N81kmL/5EvLOc7W7ELhedaads9UTDgnLu5tMjQMKEVAU3eSgNtvQ0K2hL3f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745851536; c=relaxed/simple;
-	bh=0qaxyed43SixLZaczHjhBLWkwQQOVtcs72WgDQpM0uI=;
+	s=arc-20240116; t=1745851539; c=relaxed/simple;
+	bh=if1ElJXs4BD2wEbzwPikS2BmwQMxk0vvMfZzdFI8wyk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IYRIBjjfLorcBLJ738uja8E2Gu7l5+VlsdAy3sS+AZcq5Y4uh/E3VkV79w8r8zIqCXO70f4wwBmzWSo7Hg4BDY+yCXxnwrmmKoXdZBKFOeYimf90GIgjYsecwuzIR6QaCYsonyQd25UCeTN0Yvkg106Cf0muEYJcINuGiEGS8Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HxF2K4Tu; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=WNBRIPKjDiydyLBpvsPNN2XweTLVpKDLeeXYcMzJ8DvWg5k3EQHy5zdQDYKIEfb4rduYJftaZcmlkhtG/+rZmlIp2YWrFuCSt8NRgkppRxJ34daaa3CvbjymShEIZdNUj5MzjYfTU+Uijv5qSNswbsaOKzN49KqZtCK37cyL4Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B6d7HThx; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HxF2K4Tu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=XWuVVEEzCO6CTK/zeEtGw6vKXtOS128jKZE/G/8MKJ0=; b=HxF2K4TuhzmH1NjzQixF1OySKO
-	6MKUqFdnxdCWEKsJdo/LQnQxKBW241ZeAuPOLZ57ZLBLUd/Be4x7yxuNKTOpt3Kjrah/W39Ja9icC
-	q6pyoJ12YKinvnVisGPYKJqe1oQDgDObnQz2WSjrqlXLFcpLszegSM8gg16lbr9btloM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u9PjR-00AqaV-0z; Mon, 28 Apr 2025 16:45:17 +0200
-Date: Mon, 28 Apr 2025 16:45:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	"Russell King (Oracle)" <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <e5f75ff1-a4ed-40f7-9919-aecd2f9a0ae8@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
- <a53b5f22-d603-4b7d-9765-a1fc8571614d@lunn.ch>
- <aAe2NFFrcXDice2Z@shell.armlinux.org.uk>
- <fdc02e46e4906ba92b562f8d2516901adc85659b.camel@ew.tq-group.com>
- <9b9fc5d0-e973-4f4f-8dd5-d3896bf29093@lunn.ch>
- <8b166e41-8d21-4519-bd59-01b5ae877655@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6d7HThx"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso35013975e9.1;
+        Mon, 28 Apr 2025 07:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745851535; x=1746456335; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=x0gqk8PcI67gFYGLqmc9GmDGJSBdRzcr5ObnxNnUlmc=;
+        b=B6d7HThxa5/bJJTE/OR3oNQlXvngAHOFyzJZBe/B4LF6ucsD9XvnJPoqj5iC1T3mp5
+         i70xckXJWY0Cq7blgvSW3seSZeWKGgYA+HT9v5ThLBUyKTeeXOnMU/m4dfLEq1ANR7r0
+         y6HQ4GH2+91NEZk4BbpNfLJ9OkWW4X4AgZuDqTytYIVOHzuV/u2RD1+/MEYw/8Vk6fAP
+         XomOV6ORlVhv0361cO9lwSoHtOt1J5if1P94lgnQZ0PmN5EH+U04ANVR3Szo47qUszXK
+         fXwVPhSX4e3hW02T0rjGe0yYwRk/iDXxTaf84axx9nJ/EX70IrAXdvFys5WLcyKWBIv0
+         mDOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745851535; x=1746456335;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x0gqk8PcI67gFYGLqmc9GmDGJSBdRzcr5ObnxNnUlmc=;
+        b=U6YJYzwhAwUBXxgknfDJ/6mBHTwy8AuYONbe21hmk3l3Cob5wdSoovl/p3sw4dh5i2
+         9GKSGQE+qCgVlIYR4iMZf6vjZekzh7KpqyvPiQuMFxoAisCLQ38zda9bLKH9crCG/XBD
+         E8cQsAop9sRGVemCeL6WJn4PM6sBjiakR7ILYTf2bwY/WjV90q1V3QV0DDtNHZ8twjZS
+         u1tCrCloEaQfEmtDAQdO0LnbF+hC5Tgkc6DJGPehQ/bkWYJdF/N5u7ZzMp3Ks1T31vrr
+         qGQXkU16I1qbT35TiWpWNiWO4B2rArnw/d5XsRDmAC+HWlWR7GxPI00keGRo6t3tNKsn
+         C7kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdE8AErd5gl00ic4anM43yP0Bg1FuwZjgeetmJNxMoVe1v3wM64TU9DGYkVx7aY5ITXrZ4jP/icbxv@vger.kernel.org, AJvYcCUjCWFue3bTHaw3qdDvzV74vgPI/C1ZY4Uxhq9WpQC5KRzBHAXfcQjX/Hmb3EKeDEJQEuh1jZOZVXE4q6jc@vger.kernel.org, AJvYcCUt2qsPcXGb5kGst4NLJIV22solwtqaeE9FNC6nzKsW8WVJ6Aw6Cggu60xhEstRX2cv4qIS99rpMqjF@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh+StI3ltBg1BnkoVajP7NySc5JYXaqRLTDPMhZ4KROmEIQecL
+	i6GnrC6+2oUc05XbuDiXEk/xAm1gEYaoBSrzq9nkf25fcqyWYSXN70CNoznI
+X-Gm-Gg: ASbGncspEiEzYkUNFnoL910BduIC/t4TdGciHSGKCJj7Uo0B5pT5bh6hYw1gfn+h41y
+	JxdtEVLfNwB7FgcDFfKnCVQRRM2AcU1Wo3m/ukDr87J5kwKCSLETrGlda42vTNbCTsChnUEzixt
+	PREFH1gThuumBKG+93WV6zlnCGT1sDHPNbxAB08kR2cFtQqvn6a8lADGm9FKHTaJNILCrgTt+ka
+	JTKeiBno/Osr0yK8w5wmcjK1pkzyRFrOprZpqSGBZQbaNTczYnGho8939JLkd4+fol0ZyFsAbqa
+	mgL/HfQwDP9jy3Qbsvzo8BVL07MORQt6dBgHRCUNcDDsL0pylOsDFOJBJBwI+UEzlv/PtUQ4ga0
+	=
+X-Google-Smtp-Source: AGHT+IEE8H5H5jgUoXBtcMdT/naMhVHvzUf2cqBjkIMV0r7lbe9x4XD7kY53798eAZulnwNl3wfhVA==
+X-Received: by 2002:a05:6000:2483:b0:39c:13fd:ea9c with SMTP id ffacd0b85a97d-3a07ab85d86mr7417671f8f.47.1745851534559;
+        Mon, 28 Apr 2025 07:45:34 -0700 (PDT)
+Received: from ubuntu2204 (207-pool1.nat.godollo.uni-mate.hu. [192.188.242.207])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e461bfsm11462195f8f.79.2025.04.28.07.45.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 07:45:34 -0700 (PDT)
+Date: Mon, 28 Apr 2025 16:45:32 +0200
+From: =?utf-8?B?VMOzdGggSsOhbm9z?= <gomba007@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: Document SEN0322
+Message-ID: <uju5lntp3hzibbrw6ej53xhgvkkpjory74l5et2jspwocuj2xr@bbterxtg3ba7>
+References: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
+ <20250428-iio-chemical-sen0322-v1-1-9b18363ffe42@gmail.com>
+ <9463c3b0-ce67-4c67-a8e9-91b4ffd09a58@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8b166e41-8d21-4519-bd59-01b5ae877655@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9463c3b0-ce67-4c67-a8e9-91b4ffd09a58@kernel.org>
 
-> A complete description might be something like:
+Hi!
+
+> No other properties like supplies or configuration? If so, this could go
+> to trivial-devices.
+
+I don't think so, I'll add it as a trivial-device then.
+
+> > +      sen0322@73 {
 > 
-> mac {
-> 	pcb-traces {
-> 		mac-to-phy-trace-delay = <X>; // Nanoseconds
-> 		phy-to-mac-trace-delay = <Y>; // Nanoseconds
-> 	};
+> Node names should be generic. See also an explanation and list of
+> examples (not exhaustive) in DT specification:
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+> 
+> Choose something from above or similar devices.
 
-> In some designs, the "mac-to-phy-trace" and the "phy-to-mac-trace" are
-> treated as a part of the MAC block for example.
+Noted, thanks!
 
-PCB traces cannot be part of the MAC block, since they are copper on
-the PCB. In fact, such a consideration just adds to the confusion,
-because how do you know which designs do and which don't include the
-MAC block?
-
-	Andrew
+Best regards,
+János
 
