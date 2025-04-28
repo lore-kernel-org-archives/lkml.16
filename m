@@ -1,116 +1,86 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8651FFC45;
-	Mon, 28 Apr 2025 11:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C6C86323
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745839237; cv=none; b=iT0RCjmIoA+k68qX0jmEAVrtCwmanOnNE2fQIdiQVr3e+PHp8qeruO+Lmh+WcOQKH64JPY4Juu15Wq8YqiWcXCxMBJ+Oj1hBz+YD3SIsMErXZ8u3lBYkelKjVRBCQgYpc+x9c6SPJnIwe31kZ99Clni648gkGxWP+0d0ala+rrw=
+	t=1745839301; cv=none; b=ItHk/No9n+e7/DYC+SQ8FHYgb1+LTHmnhStoHZzyvKGM9i1xyNmbp4lP+JZqgbI41qlR7MFgBGyG7JzsUSmWzbaC8lAGcgqSSIM05cbjV+D8fi3YEVjoRVYlPojySi+sxCYGrcmkWPTrYLE7VE030YLe7Xw1j7y0yEDVm68sNPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745839237; c=relaxed/simple;
-	bh=1MAE2vSA2ExeGztIwI2W5Euf1qO2TGGX1pDG/xYRq5c=;
+	s=arc-20240116; t=1745839301; c=relaxed/simple;
+	bh=jFrsfwfTYQ7dXpFsD3Sru6Up31GNZknEmTipo/HFJpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Opps29npTV0idvh5eZtFgJaK2y/DK0BZKX9IwknQj0tjAKg19goK/QndCZAVuS3NvoJKYz5kYn7D8MrlH2LKAPfnr5zMlgtBNNzDNO2VPdyTRn1SiWIt06BI9YfXRPNh0wPYVuUSShIS5Fmc7yFpplWn0FJtIZJhK2L5giWXTSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LI0ek4yE; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+0wVFnNn+kUw8u2kSYaXitbAQLy2n9uyG5fo1SdMxUzMZemrFB+4KTzNooIY0AYUe7XN9IHvAWrOMpjx1KHxvjhcymZ7guCY2K8fpX6V2XfUlb8P53QpB75kD1iBKrTmXax/fYEPdBqZbpSOM6Zgr0/d4422TII7x1AJ2lIQSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=SEGxtmmi; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LI0ek4yE"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22c336fcdaaso53406475ad.3;
-        Mon, 28 Apr 2025 04:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745839235; x=1746444035; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zeoiKe2W1Yc48k3zPSEuqht0Q72/jv/tcMqw/BIER4c=;
-        b=LI0ek4yEsEuvqsi9LPXeMurrr9T28GPxNd51CuJd1XtPqle3ODF1LWFlQHt5qxGEr6
-         12XMoTVYYJX4kxQAhWiCCZesNKS3tAtKW2lpybCgh57jXvAkTDtC/LGPD3A7wZ8qZztE
-         bH8lbzitHwOEUf5G1Arg5o+7IM7cZLh/3qaLet9nUQqJqLaCWlTbENL17VH/f5YJKw14
-         CQD0nmjX1/hNES1g1lWdkbcQtspOChZt28hdc1ZUgHeIg7MwvZrLg8hLbBBVn6Rm0Zex
-         +NaM3OxhLHEfEyZYsnDXKQtCD430vxcGdX9xniKJFBYe29meK9mCRaU4RpV6RTtmgP0p
-         d9zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745839235; x=1746444035;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zeoiKe2W1Yc48k3zPSEuqht0Q72/jv/tcMqw/BIER4c=;
-        b=e9eaiugJQ7NSzGbL7yVNRONQWHgYDzRQv3Bj89Ld/HrdW8X2DMTQ6D7UIe1cs0Kjdg
-         KxI2q6iNKGFErJFcj773j7D6FHhAQdbxNMXIrJ6QRqs20vKZyvkp2IKR4ZbOSmHOLda3
-         fmfdWF0uJVkL9lOHNv94ookeH0lZxivBnktDvwGBHRsnZ7PgazhrD4auHus6+35zT/Qb
-         gohgM2rdARuHX4TpqBb85xaBxoYioVWC5atCCznk9iCuFz8hmVvRZ0j0h8y2Xh8icmw+
-         c+rb6yqwa+d/bd++pS78YmcWuZUnicyCIgqe71jXP/qwknZWXLs2O/UAgkRG7qPCrHSG
-         Q+9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWAu2M1/KQxRK3zv8rI7qaHz07aNLwJwi7zdGdyjkB4bSLfQYim6b0y1CpuEAM7Jerc/J5yAvY9KYmZ3R83@vger.kernel.org, AJvYcCWnfggQ/ftEFgHsmLr7/GJkJTv3ry08E8u3N7NcaXgInX8X0Xti0ysJgCrlLFnjq1hthL9znodYtj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwX8zdGOG+w2ND++qOrAOzwuJxmJJ8OPhU1YcErY99+DqprFSJA
-	YGivWAKAihMBJAzmV3RM/qG93Ztp2vhLhmxR999mP6VbuYzhSu6u
-X-Gm-Gg: ASbGncu843+6qcbtyOJSfMzzks+uUGfOamaAib8KZCP3p8gUtXo3rpJpHagbqbXKecL
-	349N0t857VINBE5jqqiWAnRKog1ZGnlPDv6ezlY0O+t9xu4SnwZKeVfmWtu/mHu0nNTLQf8AHoy
-	DxK4nowqLktWYOj/2/rIobf8uy6VXLOtYQhcujpJ48a+0BobuwF2yN8gR4ZnwxM1K6ko4pDuImM
-	ByG9dpsuecVAOVdvV8UxejO8rmatZmyFdxOmQwEYfi5N5RCQ4YXYwmtDzAvoEsB1iv+3FtRiq30
-	+MRVDMWfTrjRp9GRH1BChqRcbCvu2VW9F+JMbGIv
-X-Google-Smtp-Source: AGHT+IFGo7DVUABwaW2xSoYjag2d0XbhQQHIzS6EBrTnK+orzIMck6P4yW4cL4RcL+wb9o2csFNgUg==
-X-Received: by 2002:a17:90b:2f4c:b0:2ee:dd9b:e402 with SMTP id 98e67ed59e1d1-309f7da68f2mr22025870a91.12.1745839234596;
-        Mon, 28 Apr 2025 04:20:34 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50ea440sm80008005ad.123.2025.04.28.04.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 04:20:33 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id F23A941CA464; Mon, 28 Apr 2025 18:20:30 +0700 (WIB)
-Date: Mon, 28 Apr 2025 18:20:30 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: rsworktech@outlook.com, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="SEGxtmmi"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id E970549624;
+	Mon, 28 Apr 2025 13:21:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1745839298;
+	bh=jFrsfwfTYQ7dXpFsD3Sru6Up31GNZknEmTipo/HFJpg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SEGxtmmik/K6fkhQ4NI7uolht/jxJ7Ow0ZNIw3eNPKa8pjma84lXMpx/iXv2B86PQ
+	 JSJlW+c1oBtgwt6dbQucGX8vwX1GDzZApHdak3F2/jwrdVDBKANcA0q2/73qlZZqsw
+	 SMxUZMOQch6JXX+1xunhxpCEH6h4Opx7sfEp61vCetlgFNS6BodM0F2vGnjfO+HPDZ
+	 vUgIgAPLhkTLSZXOcwwtnptLaLxVvNqACg0Z/VWxtj//g579KADmF/6DcS21NvSBVA
+	 s6mhQ9zZ8ikEBXHQ2HqE1a+6JZLrVC3kZFM6/az/rdGTyXQAdGGWi+qWCjJVkx1m+T
+	 TpHLA1UysTlIg==
+Date: Mon, 28 Apr 2025 13:21:36 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>, Mostafa Saleh <smostafa@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Lu Baolu <baolu.lu@linux.intel.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Ashish Mhetre <amhetre@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] docs: tproxy: fix code block style
-Message-ID: <aA9kfiqQpbONuv6W@archie.me>
-References: <20250427-tproxy-docs-fix-v1-1-988e94844ccb@outlook.com>
+Subject: Re: [PATCH] [v2] iommu/io-pgtable-arm: dynamically allocate selftest
+ device struct
+Message-ID: <aA9kwHff-88QVkLa@8bytes.org>
+References: <20250423164826.2931382-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zdG46O1MrI4y82Oq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427-tproxy-docs-fix-v1-1-988e94844ccb@outlook.com>
+In-Reply-To: <20250423164826.2931382-1-arnd@kernel.org>
 
+On Wed, Apr 23, 2025 at 06:48:16PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> In general a 'struct device' is way too large to be put on the kernel
+> stack. Apparently something just caused it to grow a slightly larger,
+> which pushed the arm_lpae_do_selftests() function over the warning
+> limit in some configurations:
+> 
+> drivers/iommu/io-pgtable-arm.c:1423:19: error: stack frame size (1032) exceeds limit (1024) in 'arm_lpae_do_selftests' [-Werror,-Wframe-larger-than]
+>  1423 | static int __init arm_lpae_do_selftests(void)
+>       |                   ^
+> 
+> Change the function to use a dynamically allocated faux_device
+> instead of the on-stack device structure.
+> 
+> Fixes: ca25ec247aad ("iommu/io-pgtable-arm: Remove iommu_dev==NULL special case")
+> Link: https://lore.kernel.org/all/ab75a444-22a1-47f5-b3c0-253660395b5a@arm.com/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: use faux device instead of platform_device, as Robin suggested.
+>     The faux device is more appropriate here since the is no actual physical
+>     device, though on the other hand the v1 patch had the advantage of not
+>     actually needing to register the device.
+> ---
+>  drivers/iommu/io-pgtable-arm.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
---zdG46O1MrI4y82Oq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Apr 27, 2025 at 10:36:59PM +0800, Levi Zim via B4 Relay wrote:
->  Or the following rule to nft:
-> =20
-> -# nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark set=
- 1 accept
-> +    # nft add rule filter divert tcp dport 80 tproxy to :50080 meta mark=
- set 1 accept
-
-Use double-colon syntax instead to wrap the rule above in literal code block
-like in other rules.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---zdG46O1MrI4y82Oq
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaA9kdQAKCRD2uYlJVVFO
-oy7iAQD/6Huyhp7ZIhbYOVeO5jcZVhkqnIyi9AuJZwfdpLSMsgEApUqTiO64fBoN
-nwgDjHv7yQAAyInl9yKYLEB5nxdR0ww=
-=ax8J
------END PGP SIGNATURE-----
-
---zdG46O1MrI4y82Oq--
+Applied, thanks.
