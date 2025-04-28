@@ -1,269 +1,199 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2AA209F45;
-	Mon, 28 Apr 2025 19:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745866861; cv=fail; b=cfSTLBaEWuJOMRYV4af+Pp0bsitJNrl7d5cvBpAsLQj2EMgOGF36CQ6BjDxCwUErIla2bj2+WqEeZ+5hu8QDgbi01KCFspAYKjHlb/IZHgwBp5oTDwsc+LXS1p+DBJjkXnSq+LiZVkxFbinX/oCjvZVN7l3O83SfNRt61DE9OvM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745866861; c=relaxed/simple;
-	bh=73ji123s28QfG+Jkyptz1Ttjaqjd3OXu/L/vT8g5sYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Di5sekX5b7WUP+6TiBeLtr1QBBoYU/Kqyh3oc/h8urqYhJcETiWkHGaSdT/UgIMUvyhgbjSCY1UpLBcazOMRG7GJZb/YAbdUMDCLeMzku/KAa1nRyDl/YRTMPHjiKk4ZaIWS7pinJUZmT2q567rSJvT4ilaPHtzKxuK0yqDDLmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ek6eB+9Q; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=u+FxdZAh; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B650296159
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745866934; cv=none; b=I8xLssO3D3pEQ3AkHAbXRJazL4Lyy7tK+i+ZL3iG3fL2CeG5FkHea4znzYyoXHUBMvHLhK56JrhHa/EFRnhu+jn4FNtM01jplSsENant+2ZeEgFrjRuEXE19IDjhVSPC1pvBAjntOiQ/ALbYHGSrMZu2d5HyCi7c239dBJzToYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745866934; c=relaxed/simple;
+	bh=dPbGPFboill6iT76EBtr4PZn6lvH5BMhMgDL2shmMZs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LcGi9hRe4X2CTRNHO3HcqVdhDakv9B3uVTwzwUZhWGgz0iMesDcFGNpZYdPDJdwXt1ofPl4N0b79FD+4/brl1/EgSDx8FKxjrtn8OShqqD5lbLtig9hndnI5tKtIpV/nf8sCt8+56IszVg9Ie/CxODMKGwKHqux27qnmYaSPTdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iQuiPrLy; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ek6eB+9Q";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="u+FxdZAh"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SInnZc009829;
-	Mon, 28 Apr 2025 18:59:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=AFanksFgJNpZiy9aLf
-	1Jeqx8tD4rw98eSIMQK2giwGA=; b=Ek6eB+9QYA0RCKK1GVmpr6MdAKrvONlTGy
-	PM/JlVMFQ/F0JFqbBFHdGU0MM5GHVgp+nmlavfmjCjclg7EtMK1/mpOIr8GAq0QU
-	o2UmkoeHNWbVOCxkTk1H9ZEDZ61Pjobmlb+z0DI31/BvriqY5OzDMeLcYpHWSIPc
-	TEgD4djNV72+KHcTBU/FHJXlwgRA9yC0axz1WDM4u3AyanG6pxMHl9SOxapF/O4m
-	rJCfzeKokKQzLG5D2DO4uy1wNHZOxn75H/CPyZHQEc/ljm/4jCWesXrL8Q8L9CzU
-	8mWP2B5TR2UifoUFFG7pjqrVKzlejYwlOcOh5mv0MJk9hdBWk0iQ==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46af3001m0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 18:59:41 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53SIM9Hs033510;
-	Mon, 28 Apr 2025 18:59:40 GMT
-Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazlp17011031.outbound.protection.outlook.com [40.93.13.31])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nx8ucuw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 18:59:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=voPcW87FyfSDcShjZDu+qLz4ueoMA86FmdWPqv0n1uLD0wAc+APQO52zLLHpe1HZIRIm95axSoe8hR2tFvsVAWUpaxyuPkzjFiSg07espvu2Jve3a+edcaS0r3V+1dygY2vF7KtvwkfLssL1y/rkq2ydbYiXfcuW1j65Rhd4A+nlWYJis2sLGAnWxYDyo0tE5cSSf3fHQ7MNczA353ox3kdp8ZwsIODlA23O1juezf7jfTko7Kk/rH0nXJID6PYNwjy0oAkrrfakL2wdOJax1kX2qWByc3bKy1ilzm0WH+CG5e+zl9NmOhXDoHtafB3hwjtaH9aR86UNNOlLDSltYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AFanksFgJNpZiy9aLf1Jeqx8tD4rw98eSIMQK2giwGA=;
- b=hxgEOn84E1YFhQQxFTa3YNS3b3OnIOVTMrDZURP2X2kFo30WwQOamrE7xXvJ3t1ORNe6hKJyqdMzR41QgMEtYu8/b6m7d7WmsplKWzum4GG8u+OUjOT6I5SWneSIQdLK7LIb/QUJaCdsfFpE2rPH1QD1kOgfOu/V9iVjLrEEF2NBEBQ6fKQPTtQbkHdnK+KsIvdVwh7zvYVEuj5/66NMiUiK8uscQwngGhMhxp9hmyuWxW4nmqc/QPolIMOGKsDr+/DQKRBLn/PaIZoLEzqB7mLvOmNxj44TjKfKCHY+8jhi5OsRRc+FOX/nj7Q9IP9tSu+HhL5FoqAiZP1ZlOm8rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iQuiPrLy"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2242ac37caeso23285ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AFanksFgJNpZiy9aLf1Jeqx8tD4rw98eSIMQK2giwGA=;
- b=u+FxdZAhdR4ggWeL21ar1wmqDlLSXsVqdJ5RJnj8JZSm47Q9jkxOX+eiQ7rFFxOxohgvLgN7k0OSXYPAljpMo8eY6RgeAYWB7krEEEPZqp0qMPct0NyDsPkeWTFfDAVsrFmpmUJCAds/xTNyNMsch4kub22XzbYNRo82riU8EtA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by LV8PR10MB7920.namprd10.prod.outlook.com (2603:10b6:408:1fd::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Mon, 28 Apr
- 2025 18:58:17 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 18:58:17 +0000
-Date: Mon, 28 Apr 2025 19:58:14 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-trace-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1 03/11] x86/mm/pat: introduce pfnmap_track() and
- pfnmap_untrack()
-Message-ID: <632e9033-047d-4b40-8677-cd2c5da286dc@lucifer.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-4-david@redhat.com>
- <554a6063-268c-49a7-883b-c39cf541c146@lucifer.local>
- <fc8117d9-57f8-4c28-9c46-328e4a3c4613@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc8117d9-57f8-4c28-9c46-328e4a3c4613@redhat.com>
-X-ClientProxiedBy: LO4P123CA0246.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a7::17) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=google.com; s=20230601; t=1745866932; x=1746471732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0d6vKqkeMQuJL7A/bSp8ZFP6OrnkpLdgBb2QvNCbFNU=;
+        b=iQuiPrLyQzMczzwkfGmQLBxtixjLOSO60zomBAo3cMFOsYCE41n7K6w6BPAce4HVCy
+         fOuSoCs9U1wkhZv7qSaW/AFiiJhNh9cimvtaHIZl8k0+qkWFiGyWPjFBY4yn7TnGR+Kw
+         grmEA62eDz5ttqA9WgxqZ1WDP6zwdOiBNpHaxjIt/PTtID/oEcnzAvAoK7eTkVW+PJyn
+         DJD/x3SWCu/atUoh4ITJjdkMnnYVt/mJ+ZsIG374vsm2GnF/bzIap0DQmOVKbvFs5daQ
+         +mr+QJk1LTuVQm9teLn4N5sNTWL+P29YiXmczoguTi5axlJhyWMsxj6egiuxezujIVUu
+         XohQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745866932; x=1746471732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0d6vKqkeMQuJL7A/bSp8ZFP6OrnkpLdgBb2QvNCbFNU=;
+        b=xPDB+038dyZCwfqXBLkkQtY8SpCW0eM03ZW7v9SSBHvUI2LeTSZgjbwmhy2cc6x0Ag
+         4Hj0hht/Ha2VwZLPC4x6aTBF05ri3accNP1VnEtg4fHaV/iZxY+Z5u9seQy0vKbdHnLn
+         WjjsMDbj/+E5htyo1B85l6DCtjA6Tr/AkYtpTxdXgR9FmRc8RJ0d0QxbQcUFriNKl0/x
+         VW0WZyqCx/HDOXon05E2ox9gZKi08L5Ph041E6rb9B2WHgZp4k52R/NDfi6b4xWV7K6O
+         yy8hfBOx4+mEwYLgkrYiiYyJJ0Vu7p5Ga64umi27HG6iLCfL8Wxh09I4qEfhuLJFOQa1
+         C2vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrwIxSiba/zV9IhSfZzuMaGIpslzeSGbydp6h0TB7FnKoDDfcORA1ckIhD/2bhEl9xCF5QCBVITbxJbTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB5mrRAAIxrVAoSXxu3CC03qcG8b2tDcVJJ/w6im0iM2A49uM4
+	wL6BOlRitji1msBwHaQrgpCRZlrjbtjjnUAi+x+xraMuYEtgGm3DsVOpf+NipBJGPDiJDaXGpdl
+	WX919E+TdzXxMEx/J8Bmoo7RJFuMM9egzCWR9
+X-Gm-Gg: ASbGncsWFG5o2MIG+iQNUB+9wFKUs9kApeAxu59o05etLvy2+1ag+zbCbW6/h1ijaib
+	WdYsBl9WIwdts2moaySoySAQ/P562Lpc5Dfray7VU/5FGDBwr4RF1AvfRPYRbpvFmkC2y2QbNMU
+	yLrYo5/gXd189eTocKwUtytLYxAQaHDKH/0K3Pl8bm02GjDMRsguNsoM/enCs56Us=
+X-Google-Smtp-Source: AGHT+IGHVt/gKeNNEkBuiDZ/WNCdhRReTsGIQqOMd5cCX92xfcbOewQ1LqrEb8wI4CAhtx4rSrkAMWhGeINdBb7YCZY=
+X-Received: by 2002:a17:902:f54c:b0:215:65f3:27ef with SMTP id
+ d9443c01a7336-22de6c47e20mr422765ad.12.1745866932074; Mon, 28 Apr 2025
+ 12:02:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|LV8PR10MB7920:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf206ecb-4e4d-42e0-5cd2-08dd8686a2a7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2uShY7VOKxkMLoFbAy9fDvN0Ll05VNrDpqih4Y+86o4bo5AxgAb5BNg1LNjv?=
- =?us-ascii?Q?l/nAdwrRBooYoJ+RPIV/2b6SUWla/NSekuU78sS0KKxAMlsXJYy/pB0v9Qgg?=
- =?us-ascii?Q?kaIwudVGNp3PRhvSuieLideEwBItnZzOW6p7iAZ7pJpq0S/x2+T/RTfqLS5R?=
- =?us-ascii?Q?83FDZVlYfJ89nGTfR2CQVyHv78mA+dh374bE2qtWNrLLYHD7ewYu67sh5Jr0?=
- =?us-ascii?Q?YLenkaMphTnmdtAVPEBtVagRdRh9tNsJiaAAkd7NMxf+XafQk4Fz4ZG8MAZn?=
- =?us-ascii?Q?ATsoxLk8llyu1v1mawpVay1j6935+TfTe5pHCVPEYwD6ZgkKIsntZf0F0AHq?=
- =?us-ascii?Q?Yqi95enooeCBCYVD+WHzg/ZfKVxw0qlvI0C49yWTQOAsfDVnaU7NbY31mRSV?=
- =?us-ascii?Q?F86jIBELBaoy0VHPRZPj4VeLV7rrD/fwpa9DZzAuo2/kIBL4B3XcJsdOd+HW?=
- =?us-ascii?Q?juP/HB2H7LWM4f2Mo8xRGmCu7R4hjYuhHY9BJ4hr6i8+sqUEjzjIaaG24DyB?=
- =?us-ascii?Q?AhXwm1KOmr5Xeqx0qDbHdPvTctZIQzXlK9us6q1SDweUZtu7OisCC5srPk3q?=
- =?us-ascii?Q?+vMztJM9l0HzQXZYAfQYZrnskzkDuQhsVL5+Is06Q5Vh3OpV80adwDnynnyJ?=
- =?us-ascii?Q?9mekgx53ajlby/mQMTwdMHtscEm9seuoTWRRWbv4r3o06YNVZta1H/x+Lkog?=
- =?us-ascii?Q?9dlzozlR3vQLy5CgFxrn7P0Dkce4sbzk1ezRrkog2r57Gj9k0etKOaEa9WEI?=
- =?us-ascii?Q?KbcRSwsshl5Sq5zabUKwff0Kqn0eHU/wbFzKbBsr5XGTSzG3ZVOI5ljm1M2B?=
- =?us-ascii?Q?136D33khlKnfm/ecoGwN4ZtF5IaybfXYjZ5ZUtHl5Du2uU8xy/RSln8Tt6aS?=
- =?us-ascii?Q?Ph4GZVfUy/clZ5MObR/J9GFNPu8Oa/py+7eISU3LHOIlWdU5GdPDksGveRoz?=
- =?us-ascii?Q?BlRuxHUogRgZFJCdiDgzcvBkijnrJk02TS8sn3Dt1JgHfDaehe0vLD+Cms0V?=
- =?us-ascii?Q?+OYh8b9HACn0ESPSeg9g6QsNyUqwe4EvHvem6ICLoEga1GX2p+syCLJz9lIW?=
- =?us-ascii?Q?B4+zgHi3HmPYPRTZET0TeZmNUmZxDRQHmEr+jceinaT7fqEl5zB767ddxPmV?=
- =?us-ascii?Q?py37UVn7OKl3rovUDbeKfOwoXV3f2ExCTtCIOiakVeulCpQEOXWTHZSE8/r8?=
- =?us-ascii?Q?7829Xmgdego1/UzWteRK4tcZw1jjfJtdV9N0lKGeN8oIcbp1qSIjE74YXsq7?=
- =?us-ascii?Q?HhH5M7e4YtDi25x8hYupFaomjHGqaijazC3AGE3To4ySy0C6QEp5pt0dqUS5?=
- =?us-ascii?Q?yofWOzWhenR/isZH2BnPP+M1X8BF/Dch8DOTJVgbK0vLIclb7nUYnKLK4Rsc?=
- =?us-ascii?Q?dQtVg+AwH6MJO+uHS9Mw+ZoKeAk9nvqDWgPAJA8dVNLFd1Xm/+I5ZeIAGjuW?=
- =?us-ascii?Q?vZpqMHEyjVM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?V9w7bbvkt1p2pvZ7MIAZdigh9lgcwbRU9SsTNrzFgo6PhXmAU/8dmTjY/XSU?=
- =?us-ascii?Q?uSOHZVHCDJe8ZKd4rdyM9A3RUnC30Y8TcsaukHZdKxWIM47kCcBPsQTqLsZc?=
- =?us-ascii?Q?moOxtR5icKJrzrkDt+l2LH55V1Nuz4o4SXLBW3WQ+PgyQut+cybwd9RfKT7G?=
- =?us-ascii?Q?N9fNF5zQmCbyKmyQg7kZNyisCS41ToxWFiXFeoAdUvyQMflYWAht5j3UOsNP?=
- =?us-ascii?Q?j6we78TYWMwDdaojC5dTdswOM9dEci4IHWYX2RNgy1huPZ6GcZDE4GNXesvD?=
- =?us-ascii?Q?7HcAnJQinhNIGpczs5ntsWsyc31ur90Nn+0Sgx553FbdsMUr8qPJqU89Z7bk?=
- =?us-ascii?Q?6BMX5F7l1Iq/juQXDSVOZXwKpnrhGABu57kyMcWbNMUnq5lMQdaYDy3zFIl9?=
- =?us-ascii?Q?6wc0k3JHaAz9DDh2Om924YjK7BfsaaKcU+xMnktRwELWUr4tFxyu7CVC3ZK+?=
- =?us-ascii?Q?oy/yedas9yW53HTVkNni3D+GDBj1Xle4DQttoKk9hRgaZDmwZH0/9kEN++7T?=
- =?us-ascii?Q?ynbC/+QSKO8Hkc0MYIUVMEyUe9a8RqedngRDDi3c5x+cTEvaoKr3Vxnx3w7f?=
- =?us-ascii?Q?6bWeZ0aoJvtdQemc8qgot8YoIe02Tu025sXnncqZO153D43qyz0zqzOzH4gd?=
- =?us-ascii?Q?dvenrb1rqWMkrdAC1R91Q6XrubKn4sytp06+XKyrOB/V57of87lkaj3w2MYg?=
- =?us-ascii?Q?l7LJN/NsrjINxrBn9rAIChOHan5OMTZwKSh821YJtI41mwBLapN6np/T2C/b?=
- =?us-ascii?Q?XPK3FeRCI2a9LVcmlo/xWONRJgo2BA5cmMQaSbwr8fxNo1k+RsHdirOlDSDc?=
- =?us-ascii?Q?lr6e4r3YtFHw8sEedltW9s2SXjLEvKX2Nppa9VozOerTcJUkB6cX5DYHJlJU?=
- =?us-ascii?Q?hMXUj7RLRa+rkfeUy7b8ftQeh8Q3do97oMOdaHPrs09QxdeZjZpTr1DGo/aL?=
- =?us-ascii?Q?c9uJ6FLRpOU6oB/PP8EK/Qp8GpxZwh5lIOFly8EOGCU8SKI60I3CyvOsc353?=
- =?us-ascii?Q?6T79Mn5oh2UIWtbj2bBKD7acnr4MXeSUepnCv7dVdWASdL21pXmOohi4xrGM?=
- =?us-ascii?Q?jZJ+3+8rDG3DVRanEzCJZCHuwa35ViPGg+i68k5i5UIKpt6SSWI7iz8DrZrg?=
- =?us-ascii?Q?NBX+M8v5yodZdK4ent1fSPbz45t29eiHz5faeQniFY1KESiY2xJOdgcu+Pde?=
- =?us-ascii?Q?r0aykKbF1nZjor0mVjRlpyXmwt6e+tmqn6ASI+VTdUq6Qz3Znbuy6Xn8ywcb?=
- =?us-ascii?Q?B1I7aKWzFMumtvSd0JI01/xOWhRHapQ/g0idJ/ojdnyRvDscCBJ1JvHjSqQ7?=
- =?us-ascii?Q?WNSB2tleH4mplaeTjuvgCaWPWGCaWxyn4Io3tt9TsqgSSFTaqqHFiMT7AFOQ?=
- =?us-ascii?Q?ymfbbJrIH63YNyWvL2rCJXwqrVBTL6quVf+ufy+bunXyl4ZIvZ8O3RRRf1Id?=
- =?us-ascii?Q?zwvhY5eCyp4fw0Cv9dv+zDAOV/nAo9yBArIJITMKjxXhK74NkRv9K7DQvL7e?=
- =?us-ascii?Q?8osis5UvSSmne1kbfaBXg7V6X50hvZzIaUMqFe2O2pnHseoUOpQAc1oFmmwi?=
- =?us-ascii?Q?ihU5xeGLK6qxQ0szwtazAlOT4VpgokaNRoVcTvpNSP0GIROC5myVEN0abMJ8?=
- =?us-ascii?Q?4Q=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	PI1vfyP+jz1l3Y7M7URG3Vk6o6aMRteDQpmkLEd0OOeSzKgwkWCs1ilrQliLTsdFBWn0wa+1KIT4MKTVAuO9vUoxiQx6Fm3xMcmzxwq/A2Cq04MDxc1jU8esdThUWsDEpKF532s6uROUdwPE2jDy8hRYO3gFfSCNZf4+F0QGHAllYXhDWy6cIEwuLQJRYATVuWhds9QEp7fc7zwbODA5h955mQ1ur6EyRy4UVGbwcBw1jXIOQxJfC3H2qkeAHKYpLzG6Q4duu8o1ejvKxjDedev43RX7U9S+YmB3q2UPJtsUylVMDkjGoVFw2jchz7orvL8LXC/T3NawP7SZPqaD2RPzHpAZUrAdRalTTx0G+5tLaudjn/21Dj8PdFKP8FM97iaqDmCsMULsCTJFi1g7ssVLWkjCYSYPgp47cKMMIQUAt9r0oKB6zZSISrkACC1xA6GBW2pWMj5xprJWVw5nfrOCSUXwNR8UavrvBLajvHIHVaWWPEYx+EePterWUwt4AIZIxQxk4KwawokcqL5V73jKUG9UhK549De5bHKyJj6tzseasaHz07u2plz7ftsjoS5ZjXU4rk7CGg8nw7c6Jt+6YFcC8BE6rjnU3Kt2aYs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf206ecb-4e4d-42e0-5cd2-08dd8686a2a7
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 18:58:17.0308
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T46p2LIo+nRd+MgWXhG81GofdaWGoomRss4JOoiMJ08o3V+RHfnTHcXXAZ7vED0oK8T7heKl9XkFgxoKEI3wNfxuxjGkyic5xjOBqpKETlg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR10MB7920
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_07,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2504280153
-X-Proofpoint-GUID: GmxfeoMyPNTIjX8imw5-u-UG8SGAqDGV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE1MiBTYWx0ZWRfX8Sf3wf3RvQMi 7Exp7LBCEPIe3na1vfW+UbNYZAU7UTUBPxeQS/yY9zNGC8vA9RBorapZF3YLnpmOXz/BzLh3xM0 aH71HaJszlT6055HsTvZnLoScgsPbrxrnf6E9eauTDyV9AV71zn0SkqGi2J3qMk1KfDKAqFJdAa
- JULgnt0oFreETfSnSuWFKWt6d7/BVSsAYZ8PKStR+izHemP+xyr71EKJD5+66vFHMvmuIX9xAjm zh/dniFqy4aCR62Z9FjKx+0TYGSORz21IY4qRawUEbpaFmbarPtmYNKVE+3xf/K8qDR7CmnDVww PvakigexP66IkGQEiMdF5Ajhb+yJEgb26H04FtSuUPDGrYZsATk7UBd5rrNx3ZZAkH06BVaujnD NtBs9Sjm
-X-Proofpoint-ORIG-GUID: GmxfeoMyPNTIjX8imw5-u-UG8SGAqDGV
+References: <Z+6AGxEvBRFkN5mN@yzhao56-desk.sh.intel.com> <diqzh62ezgdh.fsf@ackerleytng-ctop.c.googlers.com>
+ <aAmPQssuN9Zba//b@yzhao56-desk.sh.intel.com> <aAm9OHGt6Ag7ztqs@yzhao56-desk.sh.intel.com>
+ <c4dae65f-b5e6-44fa-b5ab-8614f1d47cb5@intel.com> <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
+ <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
+ <diqz7c39zas0.fsf@ackerleytng-ctop.c.googlers.com> <aAsJZuLjOAYriz8v@yzhao56-desk.sh.intel.com>
+ <diqzwmb7yi67.fsf@ackerleytng-ctop.c.googlers.com> <aA7UXI0NB7oQQrL2@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aA7UXI0NB7oQQrL2@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 28 Apr 2025 12:02:00 -0700
+X-Gm-Features: ATxdqUFfs0t7N5eWmI-1jNaKWhFko9iPatrQfOG5_SqVZrK0K5YoR1PgPQdgCTU
+Message-ID: <CAGtprH8o=vE+_4maevXmFv4REg2+Ls-kKK8i0vjc7D6OYDCRkw@mail.gmail.com>
+Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
+ HugeTLB page
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, Chenyi Qiang <chenyi.qiang@intel.com>, tabba@google.com, 
+	quic_eberman@quicinc.com, roypat@amazon.co.uk, jgg@nvidia.com, 
+	peterx@redhat.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
+	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
+	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
+	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 07:12:11PM +0200, David Hildenbrand wrote:
+On Sun, Apr 27, 2025 at 6:08=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wro=
+te:
 >
+> On Fri, Apr 25, 2025 at 03:45:20PM -0700, Ackerley Tng wrote:
+> > Yan Zhao <yan.y.zhao@intel.com> writes:
+> > ...
 > > >
-> > > +int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot)
-> > > +{
-> > > +	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
-> > > +
-> > > +	return reserve_pfn_range(paddr, size, prot, 0);
+> > > For some memory region, e.g., "pc.ram", it's divided into 2 parts:
+> > > - one with offset 0, size 0x80000000(2G),
+> > >   positioned at GPA 0, which is below GPA 4G;
+> > > - one with offset 0x80000000(2G), size 0x80000000(2G),
+> > >   positioned at GPA 0x100000000(4G), which is above GPA 4G.
+> > >
+> > > For the second part, its slot->base_gfn is 0x100000000, while slot->g=
+mem.pgoff
+> > > is 0x80000000.
+> > >
 > >
-> > Nitty, but a pattern established by Liam which we've followed consistently
-> > in VMA code is to prefix parameters that might be less than obvious,
-> > especially boolean parameters, with a comment naming the parameter, e.g.:
-> > > 	return reserve_pfn_range(paddr, size, prot, /*strict_prot=*/0);
->
-> Not sure I like that. But as this parameter goes away patch #8, I'll leave
-> it as is in this patch and not start a bigger discussion on better
-> alternatives (don't use these stupid boolean variables ...) ;)
->
-> [...]
->
-> > > +
-> > > +/**
-> > > + * pfnmap_track - track a pfn range
+> > Nope I don't mean to enforce that they are equal, we just need the
+> > offsets within the page to be equal.
 > >
-> > To risk sounding annoyingly pedantic and giving the kind of review that is
-> > annoying, this really needs to be expanded, I think perhaps this
-> > description is stating the obvious :)
+> > I edited Vishal's code snippet, perhaps it would help explain better:
 > >
-> > To me the confusing thing is that the 'generic' sounding pfnmap_track() is
-> > actually PAT-specific, so surely the description should give a brief
-> > overview of PAT here, saying it's applicable on x86-64 etc. etc.
+> > page_size is the size of the hugepage, so in our example,
 > >
-> > I'm not sure there's much use in keeping this generic when it clearly is
-> > not at this point?
+> >   page_size =3D SZ_2M;
+> >   page_mask =3D ~(page_size - 1);
+> page_mask =3D page_size - 1  ?
 >
-> Sorry, is your suggestion to document more PAT stuff or what exactly?
->
-> As you know, I'm a busy man ... so instructions/suggestions please :)
-
-Haha sure, I _think_ the model here is to have a brief summary then underneath a
-more detailed explanation, so that could be:
-
-	This address range is requested to be 'tracked' by a hardware
-	implementation allowing fine-grained control of memory attributes at
-	page level granularity.
-
-	This allows for fine-grained control of memory cache behaviour. Tracking
-	memory this way is persisted across VMA split and merge.
-
-	Currently there is only one implementation for this - x86 Page Attribute
-	Table (PAT). See Documentation/arch/x86/pat.rst for more details.
-
->
+> >   offset_within_page =3D slot->gmem.pgoff & page_mask;
+> >   gfn_within_page =3D (slot->base_gfn << PAGE_SHIFT) & page_mask;
 > >
-> > > + * @pfn: the start of the pfn range
-> > > + * @size: the size of the pfn range
+> > We will enforce that
 > >
-> > In what units? Given it's a pfn range it's a bit ambiguous as to whether it
-> > should be expressed in pages/bytes.
+> >   offset_within_page =3D=3D gfn_within_page;
+> For "pc.ram", if it has 2.5G below 4G, it would be configured as follows
+> - slot 1: slot->gmem.pgoff=3D0, base GPA 0, size=3D2.5G
+> - slot 2: slot->gmem.pgoff=3D2.5G, base GPA 4G, size=3D1.5G
 >
-> Agreed. It's bytes. (not my favorite here, but good enough)
+> When binding these two slots to the same guest_memfd created with flag
+> KVM_GUEST_MEMFD_HUGE_1GB:
+> - binding the 1st slot will succeed;
+> - binding the 2nd slot will fail.
+>
+> What options does userspace have in this scenario?
 
-Ack, definitely need to spell it out here! Cheers :)
+Userspace can create new gmem files that have aligned offsets. But I
+see your point, enforcing alignment at binding time will lead to
+wastage of memory. i.e. Your example above could be reworked to have:
+- slot 1: slot->gmem.pgoff=3D0, base GPA 0, size=3D2.5G, gmem_fd =3D x, gme=
+m_size =3D 3G
+- slot 2: slot->gmem.pgoff=3D0, base GPA 4G, size=3D1.5G, gmem_fd =3D y,
+gmem_size =3D 2G
 
+This will waste 1G of memory as gmem files will have to be hugepage aligned=
+.
+
+> It can't reduce the flag to KVM_GUEST_MEMFD_HUGE_2MB. Adjusting the gmem.=
+pgoff
+> isn't ideal either.
+>
+> What about something similar as below?
+>
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index d2feacd14786..87c33704a748 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -1842,8 +1842,16 @@ __kvm_gmem_get_pfn(struct file *file, struct kvm_m=
+emory_slot *slot,
+>         }
+>
+>         *pfn =3D folio_file_pfn(folio, index);
+> -       if (max_order)
+> -               *max_order =3D folio_order(folio);
+> +       if (max_order) {
+> +               int order;
+> +
+> +               order =3D folio_order(folio);
+> +
+> +               while (order > 0 && ((slot->base_gfn ^ slot->gmem.pgoff) =
+& ((1 << order) - 1)))
+
+This sounds better. Userspace will need to avoid this in general or
+keep such ranges short so that most of the guest memory ranges can be
+mapped at hugepage granularity. So maybe a pr_warn could be spewed
+during binding that the alignment is not optimal.
+
+> +                       order--;
+> +
+> +               *max_order =3D order;
+> +       }
+>
+>         *is_prepared =3D folio_test_uptodate(folio);
+>         return folio;
 >
 >
-> --
-> Cheers,
->
-> David / dhildenb
->
+> > >> Adding checks at binding time will allow hugepage-unaligned offsets =
+(to
+> > >> be at parity with non-guest_memfd backing memory) but still fix this
+> > >> issue.
+> > >>
+> > >> lpage_info will make sure that ranges near the bounds will be
+> > >> fragmented, but the hugepages in the middle will still be mappable a=
+s
+> > >> hugepages.
+> > >>
+> > >> [1] https://lpc.events/event/18/contributions/1764/attachments/1409/=
+3706/binding-must-have-same-alignment.svg
