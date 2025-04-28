@@ -1,114 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EF178F3A;
-	Mon, 28 Apr 2025 05:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614EC1917F4
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 05:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745818473; cv=none; b=ZjWqAdg8mMU1qBCVb1u0TIviJCZMa1/TPF2edFC3MWKnJ1fA2tX0ksUZrruUwWfCLJJH6lHhCMA+by9cZDyY6HH+8lNLxE7uW6daKxt+27oCRNy7MB500AgGGVIEXc9nbh3ksNB0vYxkTSmmGv4c26482Ue5i3u51GRnCokmvbg=
+	t=1745818561; cv=none; b=XuBVyq5dM21LvFClziaDV4MJCcZCtwdNsLHk+dsVZettTjCrdShMOm9bixP5KRNh9eRVMcJEjqngx/a/pGpQC7Ntg5IsuI0nCfh0LmmgZiy0ykXxFYls4cq775nIGLDcpS+TazRS2s2cTP5pJdReTGhkxz9Nn3z4O4kBAFp0UjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745818473; c=relaxed/simple;
-	bh=UgmQWhj4hdnfNJBu/n9Xbriwc16DsEnwzsNiGkBhpts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nGbyCW3kA/nn2oEmDrZ7z/ZQb1WgDGrvzhaquH8S53Ksj9IFNiYgFnqeUtgU6lgA+epi9VYUywInzU1r+1DgSDVF7m4kSl9lUsPC1/JtYWkUUikLtucXf3qNA/r5eHB5FR6FG/YAw+RHRdIdbBYcAvyOqH5V7hcf7C4eSNrRfaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOY+BQD9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745818561; c=relaxed/simple;
+	bh=r5SnptIAVywpfucvTbP/7W4oUyHQ5FhX7Q7NJyeaIek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=do69o3gKDzvo8tTgKW2o96/XL1pPTVWw42rx/ODGDlFWsQdvcLs8m2Ned4hNl6CftREaDjQ+jRKqcWJ4L//c/SvIxURrsUi4puTzEvm3gJ+fEpI8FpSRxzDk8iIO8WCE40fk7GcIHe2RKTHZHTuwtmIhzzPH3mcHRuF2usAjM54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oj1eJLlP; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOY+BQD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACFDFC4CEE4;
-	Mon, 28 Apr 2025 05:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745818473;
-	bh=UgmQWhj4hdnfNJBu/n9Xbriwc16DsEnwzsNiGkBhpts=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=rOY+BQD9FraR0wFeVwWm5mfWk1CcO8uYk+XzGKhWd4iZFOinV+ohC6ieyY/VYP2dA
-	 SN3YvSKffnPHHojsINhP+8WTS2If9ZF9dHNsM7Cy6OrplGCTGpDILQATBCgrHvHfH+
-	 f4smJChfKXcovCACKWCt0iYfw4VZnRmpm1gt2WBJMWWa1T1g8+tjoZNV3CbJXmg7RH
-	 hacNkXoT+0t4cZzV1I2GWdaBF92LuktJ47w4dJHlTqDqkJ47rNbq9Y4fkkg00YCO9t
-	 VZlVDMz4NNFDWBAtGfpEGpddezGdOjR0mXEfG0n903/z5L7Dxgv3GByRzr7z40BU5g
-	 2EdBZLKMjI5pg==
-Message-ID: <b56a3b02-3fd9-4461-b223-ba8b50d25157@kernel.org>
-Date: Mon, 28 Apr 2025 07:34:29 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oj1eJLlP"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso41178455e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 22:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745818558; x=1746423358; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jRhSTAhIhJUxG2IYSr9xqa5KsMX7Idz8w3xmMGK2klo=;
+        b=Oj1eJLlPCug6OTE24U2n0xStK6l64exbPybETifiXpg1+Fe5i7KYTXCdeMcHYTeYX5
+         dqK5T8dlTgbVjsOzFr+n18nrbh626LmM4yomqy7hb81ek0WR/PdkzuBWgd/nBeTymTbq
+         8dnyKdA3AOP0hfSfEB+yGliWrQzo/JpPl38hGQqW7yseVcpdZ/kxhhEJwZa0GgSzJgxo
+         hU3QuK4Ach5j2x7TeeGZsw09IwnhlkuTiSXTIJtKXurAuf3/JgLI06KUaIcpXj9LxxW1
+         zVfNczxixTgf2znB5SJzxpHon/MaL+yj/3hGzy4VZDPT3av79IrUClsTxhhoLYfv7r1+
+         fENA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745818558; x=1746423358;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jRhSTAhIhJUxG2IYSr9xqa5KsMX7Idz8w3xmMGK2klo=;
+        b=v0D0lSuTuR8O0hjwP3p3qWA9/2S7PRtCxIkjJRrNULX9niywyBecx8VZ4LXuixgmvh
+         vUL8VNCFx97Y29oa6XzczseYCfdC06Y5SCjFhsh7x90+LDPQ6BDaQSzbxoYGbMszynyE
+         aYWVCe+CT0FTN/9WXQT2Sp6mLa/pGF0/oSawcT/H8mjtGXGeRMg//Hrm8OLaOZL0jAhN
+         RLm0ylQ97h5w/lzanH0mXi54gmnCoo/qLzIu0irm5fvYSelWTcmg+eAyCRQpJZ6pthon
+         qz6jRZSgq1gYQXvFIPNAR3028ofAytjAkXqQ7aK5Jlm/REHOO/+tlvQ8XiQOidg1KNX1
+         Yrbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNSazhfNu2ewN5+E5ylJbtgkbp7HRrmWXnzRsLvAcH7eqN4t6V3Ns4IOAtJ5Rk8qxlb5aE3/s7U56USmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwziTkMF76Pp9sRK8o7iU555SAyQCa0lr5wzKirI++Fizm/uA6A
+	1I+1K44hTiGli1Esyrv9Wq8l/uf6/IifLNETbi1bD6Wye8UlHdC+zx5ZlVLee8k=
+X-Gm-Gg: ASbGncuX362bf+W3Unr0APyCxn6+cV4wBTG65srlPN9bf4+pUi+CLQBlwmOZg3d/n5R
+	78u7FBI4gxCck2/mFvBuphvCsWELmkjO4SoeMVTRAAl1NsDsRrpo16rCGXqaHXEekjEz8LKgrGQ
+	pTHk+5+FLHaXy1CWpu+BbonVZKmeQyM8s2EWLp9VwCqwWW1BcIPK4K6XYJm+3ifxD7zTr18fzQX
+	VqTExJrKr7a567RyI/P2vP7L2M68+5I9x5O83BdYMoD+ed0wZSBdzLFbbwTHxA1zf5ajSOvoRbl
+	lr4xHAorcADNHh6TMx7iW5yKmCOVWqLLUDai/fmeUWQIPGVxwdeZKDQd
+X-Google-Smtp-Source: AGHT+IF1k216EZNsBGTmdju6CAJoZ+K+NFTttBSZJ8/wDMK8c9nqKANzs8CN4pL4YN+3Yqzmvv+weg==
+X-Received: by 2002:a05:600c:3d87:b0:43d:745a:5a50 with SMTP id 5b1f17b1804b1-440aa428c9cmr59743105e9.19.1745818557711;
+        Sun, 27 Apr 2025 22:35:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-440a5310ad2sm111378905e9.21.2025.04.27.22.35.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Apr 2025 22:35:57 -0700 (PDT)
+Date: Mon, 28 Apr 2025 08:35:54 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Dave Penkler <dpenkler@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3 V2] staging: gpib: Avoid unused variable warning
+Message-ID: <74272412-93e3-41df-be70-93df01c5c653@stanley.mountain>
+References: <20250427091902.16301-1-dpenkler@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 tty-next] 8250: microchip: pci1xxxx: Add PCIe Hot reset
- disable support for Rev C0 and later devices
-To: Rengarajan S <rengarajan.s@microchip.com>,
- kumaravel.thiagarajan@microchip.com, tharunkumar.pasumarthi@microchip.com,
- gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, unglinuxdriver@microchip.com
-References: <20250425145500.29036-1-rengarajan.s@microchip.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250425145500.29036-1-rengarajan.s@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427091902.16301-1-dpenkler@gmail.com>
 
-On 25. 04. 25, 16:55, Rengarajan S wrote:
-> Systems that issue PCIe hot reset requests during a suspend/resume
-> cycle cause PCI1XXXX device revisions prior to C0 to get its UART
-> configuration registers reset to hardware default values. This results
-> in device inaccessibility and data transfer failures. Starting with
-> Revision C0, support was added in the device hardware (via the Hot
-> Reset Disable Bit) to allow resetting only the PCIe interface and its
-> associated logic, but preserving the UART configuration during a hot
-> reset. This patch enables the hot reset disable feature during suspend/
-> resume for C0 and later revisions of the device.
+On Sun, Apr 27, 2025 at 11:19:02AM +0200, Dave Penkler wrote:
+> This addresses a warning produced by make W=1 with the configuration
+> parameter CONFIG_GPIB_PCMCIA=y
 > 
-> Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
+> ines/ines_gpib.c:1115:28: warning: variable 'dev' set but not used [-Wunused-but-set-variable]
+> 
+> Remove the declaration and assignment of the unused variable.
+> 
+> Signed-off-by: Dave Penkler <dpenkler@gmail.com>
+> ---
+> V1 -> V2
+>   Remove the setting of the unused variable and say so in
+>   the commit message
 
-My
+You'll need to resend the whole patchset.
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+regards,
+dan carpenter
 
-still holds.
 
--- 
-js
-suse labs
