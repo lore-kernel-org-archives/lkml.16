@@ -1,99 +1,191 @@
-Received: from server4.hayhost.am (server4.hayhost.am [2.56.206.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42121D88A4
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.56.206.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D90757F3
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745823493; cv=none; b=Ut/HytRFP6ibgeivsD/LlJicU8Or/yYWAIM/UBhE09h9fAcBU9JwNILh8M4JoN/NFiXxRCzg+k4xWrhtUa5FJXL41v3RDx9YrtBi2FQt4B7ovhp4+80EtaKtUWKr1u2271zzR5/8Hwjva9JKssCCgz4C5J1ozVWkjW5N6ni31MY=
+	t=1745823518; cv=none; b=cbx1nG57ONnjaOSL9Kk/FqYPSD3+zGjj44bnND7fQpunu8ay3141doojEUkEghJemp1weYEavbueUscNC5e65AAfRbc8PxaDLY4ObM30/YxlK1dISccR7QJNclkd9b1PBelq1Edfkdm7VUFfI7x7fagn86DXlFU9VCr1q7RZixI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745823493; c=relaxed/simple;
-	bh=QesdOeuFd/3U5ADek4FnursgFsJEeQKVIGbHn5fY02w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NW1o1gjR5O4ODpQD3PHnk+OhjS/Lk7bHm4f8m+UqxuGjgfJzVAo51BGXbPCnfpD7/SuhGRN/stwjnnHtggaAMSZT/VJcn5nU60RpwGW3WKlDWEBPrsdnfXzFtHqCx43izelxQCZtRvOGa+txcWRcrfoemLRnIXgbIedKeI5+Kfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am; spf=pass smtp.mailfrom=beldev.am; dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b=tJ+uUBjI; arc=none smtp.client-ip=2.56.206.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=beldev.am
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beldev.am
+	s=arc-20240116; t=1745823518; c=relaxed/simple;
+	bh=pPJ8R19J2/szrRXylX5/tWCymsrUsn/Hl5OGFoBEBSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PnYcM+2d7aBGTUwqX7tCzzRtXGMg6GRJcR1C3dUuZhrMPXSUopfqkD8RgVM/aobOwruMEAjjJ7bgr5QqWWPuarElhsm1IOypdslpX8ChJhvwXZnaxfEAmwI4B+aBa8ZYytMfrbOFVxciYkFWFLN5UQJTrvdefDJs696EeeBvfCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBwmuAg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beldev.am header.i=@beldev.am header.b="tJ+uUBjI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=beldev.am;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=PgSNGRhDDLimUACzMmlpyYb3XHHooMd5BY0OOU8/LWc=; b=tJ+uUBjIOr4Oo3rLKAqL6nVZrp
-	mWmW7T6aRG7X5BUaNvlEpPK3jbgSlgp38C2lNW19AZCt+ngqS2Y4I1+jS//WbyrHDZYwx66R94iuy
-	Gk3+k2j+0vQ5wkBllKM4pNGHIPE+yEan5cx23DKWYdladr4VPkYJwsRz9DjSCzNWe/HIJmOK1n6DT
-	veyA2Ymq7xogkugdmrS3dFLYUn9scoFluif5+a+kjVytzimMaDdfZlOjn8mDGwBiU0/YEpZIfe5eJ
-	ewpIfgjveqpLta8rvk4yuVm5D++ah1Hy+znIh6qFOX0u7XY/TAMLxeMfoHJKVrp6RmZVbVpHMrXUw
-	bRXseRVg==;
-Received: from host-90-233-217-8.mobileonline.telia.com ([90.233.217.8]:64580 helo=localhost.localdomain)
-	by server4.hayhost.am with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <igor.b@beldev.am>)
-	id 1u9IRh-00000000A3R-1Px4;
-	Mon, 28 Apr 2025 10:58:29 +0400
-From: Igor Belousov <igor.b@beldev.am>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	minchan@kernel.org,
-	nphamcs@gmail.com,
-	senozhatsky@chromium.org,
-	shakeel.butt@linux.dev,
-	yosry.ahmed@linux.dev,
-	Igor Belousov <igor.b@beldev.am>
-Subject: [PATCH mm-new] mm/zblock: avoid failing the build
-Date: Mon, 28 Apr 2025 08:57:27 +0200
-Message-ID: <20250428065727.57990-1-igor.b@beldev.am>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBwmuAg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5CD1C4CEE4;
+	Mon, 28 Apr 2025 06:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745823517;
+	bh=pPJ8R19J2/szrRXylX5/tWCymsrUsn/Hl5OGFoBEBSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dBwmuAg8gdgySu+Dso+50czrM27i9adBTCNGKbFopGertwGmXvg+EXHTGSC/LII3w
+	 OOiQvXI6nmTe5mdAul07ryxnGeqbNKU2TJV55XvbjBOkhs+Sf0TAHsFtzzzAnN+El/
+	 4zfWFWERnPei7BLat2VsFSYo3DGbPWaTo+XG1yMW31vZbiMjOMZr2igKVwaKxRwOCc
+	 hA8L8g50+TPIGA6RNsgrXNeH8TuH33QJeDeOmpIszuvwc+j7gtFBgNJMyL3TZYFzE8
+	 1UGB1hQLdXt52S3MeiHESNkgrVuaFhfLCbEgjghtIffhPpyD+KMZNihmVsINSybWxz
+	 5Rin8vh5R2oig==
+Date: Mon, 28 Apr 2025 08:58:31 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+	Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	Mike Rapoport <rppt@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case
+ handling to C
+Message-ID: <aA8nF0moBYOIgC5J@gmail.com>
+References: <20250425141740.734030-1-arnd@kernel.org>
+ <aAyiganPp_UsNlnZ@gmail.com>
+ <d2b0e71c-e79b-40d6-8693-3202cd894d66@app.fastmail.com>
+ <CAHk-=wh=TUsVv6xhtzYsWJwJggrjyOfYT3kBu+bHtoYLK0M9Xw@mail.gmail.com>
+ <CAHk-=wgfk69H-T-vMWR33xUpVsWJLrF34d0OwUXa2sHhtpSwZg@mail.gmail.com>
+ <e54f1943-e0ff-4f59-b24f-9b5a7a38becf@citrix.com>
+ <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server4.hayhost.am
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - beldev.am
-X-Get-Message-Sender-Via: server4.hayhost.am: authenticated_id: igor.b@beldev.am
-X-Authenticated-Sender: server4.hayhost.am: igor.b@beldev.am
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj0S2vWui0Y+1hpYMEhCiXKexbQ01h+Ckvww8hB29az_A@mail.gmail.com>
 
-Don't break the build for a PAGE_SIZE that is not fully supported,
-just print out a warning in that case.
 
-Signed-off-by: Igor Belousov <igor.b@beldev.am>
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Sun, 27 Apr 2025 at 12:17, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+> >
+> > ffs/fls are commonly found inside loops where x is the loop condition
+> > too.  Therefore, using statically_true() to provide a form without the
+> > zero compatibility turns out to be a win.
+> 
+> We already have the version without the zero capability - it's just
+> called "__ffs()" and "__fls()", and performance-critical code uses
+> those.
+> 
+> So fls/ffs are the "standard" library functions that have to handle
+> zero, and add that stupid "+1" because that interface was designed by
+> some Pascal person who doesn't understand that we start counting from
+> 0.
+> 
+> Standards bodies: "companies aren't sending their best people".
+> 
+> But it's silly that we then spend effort on magic cmov in inline asm
+> on those things when it's literally the "don't use this version unless
+> you don't actually care about performance" case.
+> 
+> I don't think it would be wrong to just make the x86-32 code just do
+> the check against zero ahead of time - in C.
+> 
+> And yes, that will generate some extra code - you'll test for zero
+> before, and then the caller might also test for a zero result that
+> then results in another test for zero that can't actually happen (but
+> the compiler doesn't know that). But I suspect that on the whole, it
+> is likely to generate better code anyway just because the compiler
+> sees that first test and can DTRT.
+> 
+> UNTESTED patch applied in case somebody wants to play with this. It
+> removes 10 lines of silly code, and along with them that 'cmov' use.
+> 
+> Anybody?
+
+Makes sense - it seems to boot here, but I only did some very light 
+testing.
+
+There's a minor text size increase on x86-32 defconfig, GCC 14.2.0:
+
+      text       data        bss         dec        hex    filename
+  16577728    7598826    1744896    25921450    18b87aa    vmlinux.before
+  16577908    7598838    1744896    25921642    18b886a    vmlinux.after
+
+bloatometer output:
+
+  add/remove: 2/1 grow/shrink: 201/189 up/down: 5681/-3486 (2195)
+
+Patch with changelog and your SOB added attached. Does it look good to 
+you?
+
+Thanks,
+
+	Ingo
+
+================>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 28 Apr 2025 08:38:35 +0200
+Subject: [PATCH] bitops/32: Convert variable_ffs() and fls() zero-case handling to C
+
+Don't do the complicated and probably questionable BS*L+CMOVZL
+asm() optimization in variable_ffs() and fls(): performance-critical
+code is already using __ffs() and __fls() that use sane interfaces
+close to the machine instruction ABI. Check ahead for zero in C.
+
+There's a minor text size increase on x86-32 defconfig:
+
+      text       data        bss         dec        hex    filename
+  16577728    7598826    1744896    25921450    18b87aa    vmlinux.before
+  16577908    7598838    1744896    25921642    18b886a    vmlinux.after
+
+bloatometer output:
+
+  add/remove: 2/1 grow/shrink: 201/189 up/down: 5681/-3486 (2195)
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- mm/zblock.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/bitops.h | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-diff --git a/mm/zblock.h b/mm/zblock.h
-index fd72961c077a..8610196b651e 100644
---- a/mm/zblock.h
-+++ b/mm/zblock.h
-@@ -21,7 +21,8 @@
- /* max 256 slots per block, max table size 64 */
- #define SLOT_BITS 8
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 100413aff640..6061c87f14ac 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -321,15 +321,10 @@ static __always_inline int variable_ffs(int x)
+ 	asm("bsfl %1,%0"
+ 	    : "=r" (r)
+ 	    : ASM_INPUT_RM (x), "0" (-1));
+-#elif defined(CONFIG_X86_CMOV)
+-	asm("bsfl %1,%0\n\t"
+-	    "cmovzl %2,%0"
+-	    : "=&r" (r) : "rm" (x), "r" (-1));
  #else
--#error Unsupported PAGE_SIZE
-+#warn This PAGE_SIZE is not quite supported yet
-+#define SLOT_BITS 8
+-	asm("bsfl %1,%0\n\t"
+-	    "jnz 1f\n\t"
+-	    "movl $-1,%0\n"
+-	    "1:" : "=r" (r) : "rm" (x));
++	if (!x)
++		return 0;
++	asm("bsfl %1,%0" : "=r" (r) : "rm" (x));
  #endif
- 
- #define MAX_SLOTS (1 << SLOT_BITS)
-@@ -101,7 +102,7 @@ static const struct block_desc block_desc[] = {
- 	{ SLOT_SIZE(10, 3), 10, 3 },
- 	{ SLOT_SIZE(9, 3), 9, 3 },
- 	{ SLOT_SIZE(4, 2), 4, 2 },
--#elif PAGE_SIZE == 0x4000
-+#else
- 	{ SLOT_SIZE(255, 0), 255, 0 },
- 	{ SLOT_SIZE(185, 0), 185, 0 },
- 	{ SLOT_SIZE(145, 0), 145, 0 },
--- 
-2.49.0
-
+ 	return r + 1;
+ }
+@@ -378,15 +373,10 @@ static __always_inline int fls(unsigned int x)
+ 	asm("bsrl %1,%0"
+ 	    : "=r" (r)
+ 	    : ASM_INPUT_RM (x), "0" (-1));
+-#elif defined(CONFIG_X86_CMOV)
+-	asm("bsrl %1,%0\n\t"
+-	    "cmovzl %2,%0"
+-	    : "=&r" (r) : "rm" (x), "rm" (-1));
+ #else
+-	asm("bsrl %1,%0\n\t"
+-	    "jnz 1f\n\t"
+-	    "movl $-1,%0\n"
+-	    "1:" : "=r" (r) : "rm" (x));
++	if (!x)
++		return 0;
++	asm("bsrl %1,%0" : "=r" (r) : "rm" (x));
+ #endif
+ 	return r + 1;
+ }
