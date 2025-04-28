@@ -1,135 +1,171 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D402BD04
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 01:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCAE3211;
+	Mon, 28 Apr 2025 01:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745804644; cv=none; b=mqrulp5SMw7sW8BP3FpKbuLirzH9tElgOTTRMXGa1waPVT8usneXzzDnA8dGr+NEsVe0tFrUG/md6xgMyAyI/lsuDfzachktXT7S0oUD11j2VHUxcrb55UPmy5VxcdajaHqY/1I167lBNR2U0FyZUpvjJunYlvFW+bP8wpK7zlE=
+	t=1745804668; cv=none; b=KR+brbKmmB3KMgLariSAhB67tngye57HGBw3bKzytgQ7lRkW6erxrvx/B+GUiGMEU4bgnIvzZeTBIPeWxUionnEQvIZFOHGH0NMNBjETRHEvAKoIFEQiXzUAQpk7hOxXhOrMgXPRR9oEenzpkvSROG6xgaxobI7/HWkGDTyRHHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745804644; c=relaxed/simple;
-	bh=+z8s4NRg+vluVW0bANv1ENerc7PuASiqv1WqBf6olv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rU+R71XBz9raBntSCzQ70nQjlCQzcvz5kujkwDYjMRaQVYx7NbMPXxYpxU/UzgGMo2/H1iPA4ngWvWphTwJ4ohRIaXF2Vlfgj9Nkj/xwdRaA9lE7qMkRTVF2vgUV6B1FrDPiKkUJXMEuElvAer7e4KSvBIoHLJvDDbxoB3LRmig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xs3Y1uxg; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xs3Y1uxg"
-Date: Sun, 27 Apr 2025 21:43:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745804629;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VMhrp+exMrjPtRykhMgVAHxGjayNq4JxRu9e/LqfsE0=;
-	b=Xs3Y1uxgJTQiU/M6jPzlTXWeXVJkDsRMGYt+B6bnu6sM/iVo6Eo5oS9pkWhVC8u5e8Vyx8
-	sQYWWee6tJzLr5j/seKSbIUIumxR//CTglVSYWujHieLXGGIXECaCIeMEQzE3w5dbI3vW2
-	cdzZGX9Rww6jgiJVqFrYNZ8MgAD2/4c=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Theodore Ts'o <tytso@mit.edu>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
-Message-ID: <ytjddsxe5uy4swchkn2hh56lwqegv6hinmlmipq3xxinqzkjnd@cpdw4thi3fqq>
-References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
- <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
- <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
- <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
- <aAvlM1G1k94kvCs9@casper.infradead.org>
- <ahdxc464lydwmyqugl472r3orhrj5dasevw5f6edsdhj3dm6zc@lolmht6hpi6t>
- <20250428013059.GA6134@sol.localdomain>
+	s=arc-20240116; t=1745804668; c=relaxed/simple;
+	bh=6yidVzjYmwPuLcSRZ87m2YYDPaydS1ngk9JJx+nd7xs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZZTk5P/FvxclQMzpBZ26SBD1bu2p4TGaaJYp5OiitgqHM2Tt406HLf2B7UJQLpYW5/8WMBNFz8pOilsIerorXG/fjkW00M4yfjQG8hmyAKC080nexK+6eKfRPQqoiq9LDXB/W0yyZOxwQA/LRgVjsyprytvw5uoHDwOmiP9LAYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Zm5k528XGz5vMt;
+	Mon, 28 Apr 2025 09:40:29 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id B1EE9180B50;
+	Mon, 28 Apr 2025 09:44:22 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 28 Apr
+ 2025 09:44:17 +0800
+Message-ID: <3ac90a52-f4ad-4aec-a4f5-0e80ab9d9dc5@huawei.com>
+Date: Mon, 28 Apr 2025 09:44:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428013059.GA6134@sol.localdomain>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cpufreq: Fix setting policy limits when frequency
+ tables are used
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+	<linux-pm@vger.kernel.org>, Christian Loehle <christian.loehle@arm.com>, LKML
+	<linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Mario Limonciello
+	<mario.limonciello@amd.com>, Sultan Alsawaf <sultan@kerneltoast.com>, Stephan
+ Gerhold <stephan.gerhold@linaro.org>, "Rafael J. Wysocki"
+	<rafael.j.wysocki@intel.com>
+References: <5896780.DvuYhMxLoT@rjwysocki.net>
+ <2fd8c27d-7206-4af6-b30b-d8f786827d94@huawei.com>
+ <CAJZ5v0hTbdTaos9gc8ubPNdjq+K-pBwYpAvT8Rm887EZpSm1bw@mail.gmail.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <CAJZ5v0hTbdTaos9gc8ubPNdjq+K-pBwYpAvT8Rm887EZpSm1bw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On Sun, Apr 27, 2025 at 06:30:59PM -0700, Eric Biggers wrote:
-> On Sun, Apr 27, 2025 at 08:55:30PM -0400, Kent Overstreet wrote:
-> > The thing is, that's exactly what we're doing. ext4 and bcachefs both
-> > refer to a specific revision of the folding rules: for ext4 it's
-> > specified in the superblock, for bcachefs it's hardcoded for the moment.
-> > 
-> > I don't think this is the ideal approach, though.
-> > 
-> > That means the folding rules are "whatever you got when you mkfs'd".
-> > Think about what that means if you've got a fleet of machines, of
-> > different ages, but all updated in sync: that's a really annoying way
-> > for gremlins of the "why does this machine act differently" variety to
-> > creep in.
-> > 
-> > What I'd prefer is for the unicode folding rules to be transparently and
-> > automatically updated when the kernel is updated, so that behaviour
-> > stays in sync. That would behave more the way users would expect.
-> > 
-> > But I only gave this real thought just over the past few days, and doing
-> > this safely and correctly would require some fairly significant changes
-> > to the way casefolding works.
-> > 
-> > We'd have to ensure that lookups via the case sensitive name always
-> > works, even if the casefolding table the dirent was created with give
-> > different results that the currently active casefolding table.
-> > 
-> > That would require storing two different "dirents" for each real dirent,
-> > one normalized and one un-normalized, because we'd have to do an
-> > un-normalized lookup if the normalized lookup fails (and vice versa).
-> > Which should be completely fine from a performance POV, assuming we have
-> > working negative dentries.
-> > 
-> > But, if the unicode folding rules are stable enough (and one would hope
-> > they are), hopefully all this is a non-issue.
-> > 
-> > I'd have to gather more input from users of casefolding on other
-> > filesystems before saying what our long term plans (if any) will be.
+
+
+On 2025/4/27 19:41, Rafael J. Wysocki wrote:
+> On Sun, Apr 27, 2025 at 4:26 AM zhenglifeng (A) <zhenglifeng1@huawei.com> wrote:
+>>
+>> On 2025/4/25 19:36, Rafael J. Wysocki wrote:
+>>
+>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>
+>>> Commit 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and
+>>> policy->max") overlooked the fact that policy->min and policy->max were
+>>> accessed directly in cpufreq_frequency_table_target() and in the
+>>> functions called by it.  Consequently, the changes made by that commit
+>>> led to problems with setting policy limits.
+>>>
+>>> Address this by passing the target frequency limits to __resolve_freq()
+>>> and cpufreq_frequency_table_target() and propagating them to the
+>>> functions called by the latter.
+>>>
+>>> Fixes: 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and policy->max")
+>>> Link: https://lore.kernel.org/linux-pm/aAplED3IA_J0eZN0@linaro.org/
+>>> Reported-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> ---
+>>>
+>>> The v1 is here: https://lore.kernel.org/linux-pm/12665363.O9o76ZdvQC@rjwysocki.net/
+>>>
+>>> v1 -> v2:
+>>>    * Do clamp_val(target_freq, min, max) before checking freq_table against
+>>>      NULL in __resolve_freq().
+>>>    * Update comment in cpufreq_frequency_table_target() to match the new code.
+>>>
+>>> ---
+>>>  drivers/cpufreq/cpufreq.c          |   22 ++++++---
+>>>  drivers/cpufreq/cpufreq_ondemand.c |    3 -
+>>>  drivers/cpufreq/freq_table.c       |    6 +-
+>>>  include/linux/cpufreq.h            |   83 ++++++++++++++++++++++++-------------
+>>>  4 files changed, 73 insertions(+), 41 deletions(-)
+>>>
+>>> --- a/drivers/cpufreq/cpufreq.c
+>>> +++ b/drivers/cpufreq/cpufreq.c
+>>> @@ -491,14 +491,18 @@
+>>>  EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
+>>>
+>>>  static unsigned int __resolve_freq(struct cpufreq_policy *policy,
+>>> -             unsigned int target_freq, unsigned int relation)
+>>> +                                unsigned int target_freq,
+>>> +                                unsigned int min, unsigned int max,
+>>> +                                unsigned int relation)
+>>>  {
+>>>       unsigned int idx;
+>>>
+>>> +     target_freq = clamp_val(target_freq, min, max);
+>>> +
+>>>       if (!policy->freq_table)
+>>>               return target_freq;
+>>>
+>>> -     idx = cpufreq_frequency_table_target(policy, target_freq, relation);
+>>> +     idx = cpufreq_frequency_table_target(policy, target_freq, min, max, relation);
+>>>       policy->cached_resolved_idx = idx;
+>>>       policy->cached_target_freq = target_freq;
+>>>       return policy->freq_table[idx].frequency;
+>>> @@ -532,8 +536,7 @@
+>>>       if (unlikely(min > max))
+>>>               min = max;
+>>>
+>>> -     return __resolve_freq(policy, clamp_val(target_freq, min, max),
+>>> -                           CPUFREQ_RELATION_LE);
+>>> +     return __resolve_freq(policy, target_freq, min, max, CPUFREQ_RELATION_LE);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+>>>
+>>> @@ -2351,8 +2354,8 @@
+>>>       if (cpufreq_disabled())
+>>>               return -ENODEV;
+>>>
+>>> -     target_freq = clamp_val(target_freq, policy->min, policy->max);
+>>> -     target_freq = __resolve_freq(policy, target_freq, relation);
+>>> +     target_freq = __resolve_freq(policy, target_freq, policy->min,
+>>> +                                  policy->max, relation);
+>>>
+>>>       pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
+>>>                policy->cpu, target_freq, relation, old_target_freq);
+>>> @@ -2650,8 +2653,11 @@
+>>>        * compiler optimizations around them because they may be accessed
+>>>        * concurrently by cpufreq_driver_resolve_freq() during the update.
+>>>        */
+>>> -     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
+>>> -     new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
+>>> +     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max,
+>>> +                                            new_data.min, new_data.max,
+>>> +                                            CPUFREQ_RELATION_H));
+>>> +     new_data.min = __resolve_freq(policy, new_data.min, new_data.min,
+>>> +                                   new_data.max, CPUFREQ_RELATION_L);
+>>>       WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
+>>
+>> It might be better like:
+>>
+>> -       WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
+>> -       new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
+>> -       WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
+>> +       WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max,
+>> +                                              new_data.min, new_data.max,
+>> +                                              CPUFREQ_RELATION_H));
+>> +       WRITE_ONCE(policy->min, __resolve_freq(policy, new_data.min,
+>> +                                              new_data.min, policy->max,
+>> +                                              CPUFREQ_RELATION_L));
+>>
 > 
-> Wouldn't lookups via the case-sensitive name keep working even if the
-> case-insensitivity rules change?  It's lookups via a case-insensitive name that
-> could start producing different results.  Applications can depend on
-> case-insensitive lookups being done in a certain way, so changing the
-> case-insensitivity rules can be risky.
+> Not really because policy->max may be less than new_data.min at this
+> point AFAICS.
 
-No, because right now on a case-insensitive filesystem we _only_ do the
-lookup with the normalized name.
+I see.
 
-> Regardless, the long-term plan for the case-insensitivity rules should be to
-> deprecate the current set of rules, which does Unicode normalization which is
-> way overkill.  It should be replaced with a simple version of case-insensitivity
-> that matches what FAT does.  And *possibly* also a version that matches what
-> NTFS does (a u16 upcase_table[65536] indexed by UTF-16 coding units), if someone
-> really needs that.
-> 
-> As far as I know, that was all that was really needed in the first place.
-> 
-> People misunderstood the problem as being about language support, rather than
-> about compatibility with legacy filesystems.  And as a result they incorrectly
-> decided they should do Unicode normalization, which is way too complex and has
-> all sorts of weird properties.
+Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
 
-Believe me, I do see the appeal of that.
-
-One of the things I should really float with e.g. Valve is the
-possibility of providing tooling/auditing to make it easy to fix
-userspace code that's doing lookups that only work with casefolding.
-
-And, another thing I'd like is a way to make casefolding per-process, so
-that it could be opt-in for the programs that need it - so that new code
-isn't accidentally depending on casefolding.
-
-That's something we really should have, anyways.
-
-But, as much as we might hate it, casefolding is something that users
-like and do expect in other contexts, so if casefolding is going to
-exist (as more than just a compatibility thing for legacy code) - it
-really ought to be unicode, and utf8 really has won at this point.
-
-Mainly though, it's not a decision I care to revisit, I intend to stick
-with casefolding that's compatible with how it's done on our other
-filesystems where it's widely used.
