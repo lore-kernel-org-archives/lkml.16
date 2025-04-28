@@ -1,130 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C367E268FFF;
-	Mon, 28 Apr 2025 12:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F26268FFF;
+	Mon, 28 Apr 2025 12:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843845; cv=none; b=KP+QNu7Y8qnkeC6JACnv1Wb5A/qOOG+a+cSK/6vvOqGwua2hWiYOUZlrkFGtlJcDqn8In5Tiqz++eknmFao+v9DyK/Cljk7fSuqjoAEapNqTKtBkW0ZB61uibzmt9dQJdCOJ1FxHKyGHg/vnu1H3L71jngntw64FNO5Vkldp2Ys=
+	t=1745843886; cv=none; b=CR0HyqdM/rIOOSG7CSTY66UjntRlPkNl23kz610tmAVBuOEcFtr0KXFx47xeuTu31lWdiGstkrvNZmZridI/CosaJVsh9AIDBiY/WJ8YXBDgGtPL3M903G8I8exdm+9cD8RKKp+tM1Ig4yIOmYySuWVtpv6C40Nkxi5z1kyt9WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843845; c=relaxed/simple;
-	bh=lemq0WlyiYPKOz4ZlJK1Z0Iz2kxrqAihbWSTOP9Bc/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rt8/+X6SkzTBju8wZV7j5ET1OLKF6ms02DfHTptrRnpbqGdhBAGkPOpv5uU+ex2OHN0RKk4bNS9iddHJdKp1zMmP62SmQ+jJuKHB1bBz/ztok1TF1UEC1ntXNaYSVvb/HrNUc3qm/dALHVwfDLT43cLN8kGTdTZYXOwDBEn2ugE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KCyfF1SN; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745843886; c=relaxed/simple;
+	bh=meHWLVZ0S5MilVqdf5x6PAb4kftFLYvDmsZ1UCGAZoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J9uDrYLJHkbxD0skslweNt4s4PDe2a44/LGk54/KfYtkN1zSzeBDVS2EzMquw0KVPELk3KSEA3BzUzFfHOlVVuSAEOwogQT3zBzMyHVe2gjM8o1r24lsWOBcCPph8Z6//7dUvLrsEtVw6A1cMFwKnaNrxUwUWIcl50skWR6X0kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=d0FVi0lS; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KCyfF1SN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745843844; x=1777379844;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lemq0WlyiYPKOz4ZlJK1Z0Iz2kxrqAihbWSTOP9Bc/w=;
-  b=KCyfF1SNbR6sqyK1f4qJqD5z7YC6jJfcxgqZ9z+jNq9H3OAGHTnLroR3
-   EpSUeyyGF7UjgdhpEhQ5Sg86xzlUx4qUkvaRtFeNKapedcs4GSFXZcBKL
-   9fUS1By2t8f2lRbcsSE/Zey4PQyCGvKPw5yOMmKzKwdxHKnZRvRiBBWW4
-   bBp+Nw3CTHndOX/uqrL4TqA3LPIvSy0Q0E3Bhr87NDqM8Ao+z/VyWaHyp
-   SBzOmyG2uW8FgjNLTKfFNYBOz5UmjjLszemw2LZXHQxXs8Yek3OckoFk8
-   v8HK1wK9KpyCIoM3wDIO1o3PkYnBiT22vwNrzcZXBDryMU28+1PgnGBZC
-   w==;
-X-CSE-ConnectionGUID: u4ijRB9nTay3v0B14fJFVA==
-X-CSE-MsgGUID: 2FdgqztvSBeq5pcHV6zQQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47520774"
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="47520774"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 05:37:23 -0700
-X-CSE-ConnectionGUID: xxjgWQxfQBa2LbEbvdEngw==
-X-CSE-MsgGUID: N2DtIr1zTu2/5Z4md6qsKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,246,1739865600"; 
-   d="scan'208";a="133479337"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO [10.245.249.122]) ([10.245.249.122])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 05:37:18 -0700
-Message-ID: <a154e7eb-2708-411d-a494-868abe7052b7@linux.intel.com>
-Date: Mon, 28 Apr 2025 15:38:30 +0300
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="d0FVi0lS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=dH/FvjHE8lshhA2GzAYCh4KC+tngQVadf9pdXMFOnjI=; b=d0
+	FVi0lSLJts6XaHlfuaVTqfbQlGFln20eaztuujqTEbBR2i8yn4Zf7TAF06sWq8vpWuEQb0cWOxG+g
+	e5pbH2bSpZAXbo7Waa46KZIhptnYsMfl6hxPJ9ILCMu5iR7AiZ6FXWvIItQ4gllGkewnTfHNY/cHB
+	dLMHkIPA6XTVe8Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u9Nk4-00Apse-Im; Mon, 28 Apr 2025 14:37:48 +0200
+Date: Mon, 28 Apr 2025 14:37:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, wens@csie.org,
+	samuel@sholland.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Add OrangePi 3 LTS DTS
+Message-ID: <34e30bf2-6f80-4c43-9e52-c1ebe0521c43@lunn.ch>
+References: <20250413134318.66681-1-jernej.skrabec@gmail.com>
+ <20250425135429.174a1871@donnerap.manchester.arm.com>
+ <cd7fd026-2f82-43d1-abdb-482bfe600bb5@lunn.ch>
+ <2219754.irdbgypaU6@jernej-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: SOF: ipc4-pcm: Adjust pipeline_list->pipelines
- allocation type
-To: Kees Cook <kees@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, sound-open-firmware@alsa-project.org,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250426062511.work.859-kees@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-In-Reply-To: <20250426062511.work.859-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2219754.irdbgypaU6@jernej-laptop>
 
-
-
-On 26/04/2025 09:25, Kees Cook wrote:
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
+On Sat, Apr 26, 2025 at 08:00:49PM +0200, Jernej Škrabec wrote:
+> Dne petek, 25. april 2025 ob 17:34:14 Srednjeevropski poletni čas je Andrew Lunn napisal(a):
+> > > > +&emac {
+> > > > +	pinctrl-names = "default";
+> > > > +	pinctrl-0 = <&ext_rgmii_pins>;
+> > > > +	phy-mode = "rgmii-rxid";
+> > > 
+> > > So relating to what Andrew said earlier today, should this read rgmii-id
+> > > instead? Since the strap resistors just set some boot-up value, but we
+> > > want the PHY driver to enable both RX and TX delay programmatically?
+> > 
+> > Yes.
+> > 
+> > There is a checkpatch.pl patch working its way through the system
+> > which will add warning about any rgmii value other than rgmii-id. Such
+> > values need a comment that the PCB has extra long clock
+> > lines. Hopefully that will make people actually stop and think about
+> > this, rather than just copy broken vendor code.
 > 
-> The assigned type is "struct snd_sof_pipeline **", but the returned type
-> will be "struct snd_sof_widget **". These are the same size allocation
-> (pointer size) but the types don't match. Adjust the allocation type to
-> match the assignment.
+> I spent quite some time working on ethernet support for this board. Once
+> I've found PHY datasheet, I confirmed that there is added delay. So this
+> particular board needs "rgmii-rxid" mode.
 
-It looks like that this is indeed an oversight and a bug introduced by a
-mostly mechanical change (introduced in v6.3).
+There have been numerous discussions about what these rgmii modes
+mean, because DT developers frequently get them wrong.
 
-Can you add:
-Fixes: 9c04363d222b ("ASoC: SOF: Introduce struct snd_sof_pipeline")
+Does the PCB have an extra long clock line in the TX direction? That
+is what rgmii-rxid means, the PCB is providing the TX delay, the
+MAC/PHY pair needs to add the RX delay.
 
-and:
-Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Jaroslav Kysela <perex@perex.cz>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: <sound-open-firmware@alsa-project.org>
-> Cc: <linux-sound@vger.kernel.org>
-> ---
->  sound/soc/sof/ipc4-pcm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/sof/ipc4-pcm.c b/sound/soc/sof/ipc4-pcm.c
-> index 1a2841899ff5..52903503cf3b 100644
-> --- a/sound/soc/sof/ipc4-pcm.c
-> +++ b/sound/soc/sof/ipc4-pcm.c
-> @@ -784,7 +784,8 @@ static int sof_ipc4_pcm_setup(struct snd_sof_dev *sdev, struct snd_sof_pcm *spcm
->  
->  		/* allocate memory for max number of pipeline IDs */
->  		pipeline_list->pipelines = kcalloc(ipc4_data->max_num_pipelines,
-> -						   sizeof(struct snd_sof_widget *), GFP_KERNEL);
-> +						   sizeof(*pipeline_list->pipelines),
-> +						   GFP_KERNEL);
->  		if (!pipeline_list->pipelines) {
->  			sof_ipc4_pcm_free(sdev, spcm);
->  			return -ENOMEM;
+Ignore strapping. That is just a power on default which gets over
+ridden once the PHY driver is running.
 
--- 
-Péter
+What PHY is this?
 
+	Andrew
