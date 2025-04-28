@@ -1,64 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFFF1DF988;
-	Mon, 28 Apr 2025 22:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B0313C9C4
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745880317; cv=none; b=Ps2Iqdj53byfkfprnQKl/MpVqX8fO3v3Y09QCY1RozbvMfWWCJw5ft5h/fuY5EcNcqgbzwg4wGKkCowdQUahD5bpZ5bDsXvUCI3A99YCysYaaGgUOB7K4sWlWhQ5dlOJvfhQZqZYACSCihRH2FaWGn1D5iy8fgE45wfuidG09ks=
+	t=1745880482; cv=none; b=nDZydRdIdpsLxbkhRK0wo8VYGvelnBk8yBJSQ+mdrqXvfkI4gCUdGs3rEtY2FcP1TAFJ86GfVTrtCDbJQYD2UiYAIRXlEdBHt/9fjanF7P9XJaCLcfIIVJDSF2zOTDoxhFyqm5mYycLDcW/oFZAQnyICO6e+b1Vq4wi3ZSHwBWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745880317; c=relaxed/simple;
-	bh=iEgcLTkDkFJOT7HlI3aSWIUb6zLNar111Rw+B+KVd0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMUd9a018oGnlQgHmEdOLpxFIiBzBEcxJsUNVTqUezeQVALVCuw9rgKNeVNPsX2xElyopL+JGZXF6949F+NZQoMF6ZINn99AJmxbg62Av2M6UXdKPs4gY5b4MoD3nPA0b+oaYV/xKWJHkiuga/i7QP4XBytkMs1sXCQQ9rkUML0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKGA7d4I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745880482; c=relaxed/simple;
+	bh=61hw2WjKWqr8vrs64icdWDbWk2Ur0bzT3WBhvqAtzOY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GesY6colJfYnvsqELWyEAtARMfQ1vyKoFMzLPbiriPjqdPXq9tMHv8SDhLrc2xV+wXZOm4v3XzXQkbv+hDrx2sAYzRhyShur6qw4jG1u95xLQl5RcKsMkEotYOX4LrtdvseeiTQp2fLMCw8VfMLhe1ef/0S8QGd3/HPE4tFbzCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gbk/utjp; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKGA7d4I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986C3C4CEE4;
-	Mon, 28 Apr 2025 22:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745880316;
-	bh=iEgcLTkDkFJOT7HlI3aSWIUb6zLNar111Rw+B+KVd0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qKGA7d4I1Xv4lnO2QEvAFptiF/Bk8yCyZlzREFkxc8/ZbydV/Io4cKBOfsFiepgbx
-	 faoR2VNi7zkUBoJk10MO/Cy+DPlgiJf7FQnBHCd9GwRokCO6HNBXQbFFhr65FUiFmc
-	 Ipt4egabLR2vqhIJpvijiGY3y+5zCOUMlvVDnL2w8K1EyM6OSneipar6rwIBIpfLoh
-	 35ITA8fTL4cG8OcFr5r1VIiZArG0GO2mf8LM1FVUQBBaql/FwO029E5PPjrIARsiUD
-	 Rz990rOVpRtTaZxytBdzAqS8q3wpYYuBhgM+LS8juAwbkU0X1hvbS00qrq3xI/G00c
-	 BPha6HbRhfIKg==
-Date: Tue, 29 Apr 2025 00:45:12 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: sven@svenpeter.dev
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
-	linuxppc-dev@lists.ozlabs.org, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Apple/PASemi i2c error recovery fixes
-Message-ID: <enap4curtpjaiazxpcsw3sk64aq2i7wqi3iwm6l2pfph5qduwj@gkagpeazcumg>
-References: <20250427-pasemi-fixes-v3-0-af28568296c0@svenpeter.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gbk/utjp"
+Message-ID: <3b05d1a0-c873-4e61-b98c-b725d0dbb350@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745880477;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wcxC+Ay3y++e8Uv8HSaPaQbT8svhorPAd8NEoyT9pQI=;
+	b=gbk/utjp8SkhpN2UgzGCFAPMbnS1Kbgb7ZVz2I/t/rMrQETR+n3GqokpmvE7WiWgDWPYPX
+	/JeD4wVWLBC8aDNWmBSoea57Ec18zpj6W9h3E9HYcwQZvFizVSfbmwAyLRp+a26L8Ukoq9
+	YUvPHUR6+gr98+SWOqpUx33iB6ZR1/A=
+Date: Mon, 28 Apr 2025 15:47:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250427-pasemi-fixes-v3-0-af28568296c0@svenpeter.dev>
+Subject: Re: [PATCH 1/3] KVM: riscv: selftests: Add stval to exception
+ handling
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250324-kvm_selftest_improve-v1-0-583620219d4f@rivosinc.com>
+ <20250324-kvm_selftest_improve-v1-1-583620219d4f@rivosinc.com>
+ <20250425-dc44cb547ab5e2f994c94e80@orel>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250425-dc44cb547ab5e2f994c94e80@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Sven,
 
-> Hector Martin (3):
->       i2c: pasemi: Enable the unjam machine
->       i2c: pasemi: Improve error recovery
->       i2c: pasemi: Log bus reset causes
-> 
-> Sven Peter (1):
->       i2c: pasemi: Improve timeout handling
+On 4/25/25 6:50 AM, Andrew Jones wrote:
+> On Mon, Mar 24, 2025 at 05:40:29PM -0700, Atish Patra wrote:
+>> Save stval during exception handling so that it can be decoded to
+>> figure out the details of exception type.
+>>
+>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+>> ---
+>>   tools/testing/selftests/kvm/include/riscv/processor.h | 1 +
+>>   tools/testing/selftests/kvm/lib/riscv/handlers.S      | 2 ++
+>>   2 files changed, 3 insertions(+)
+>>
+>> diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
+>> index 5f389166338c..f4a7d64fbe9a 100644
+>> --- a/tools/testing/selftests/kvm/include/riscv/processor.h
+>> +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
+>> @@ -95,6 +95,7 @@ struct ex_regs {
+>>   	unsigned long epc;
+>>   	unsigned long status;
+>>   	unsigned long cause;
+>> +	unsigned long stval;
+>>   };
+>>   
+>>   #define NR_VECTORS  2
+>> diff --git a/tools/testing/selftests/kvm/lib/riscv/handlers.S b/tools/testing/selftests/kvm/lib/riscv/handlers.S
+>> index aa0abd3f35bb..2884c1e8939b 100644
+>> --- a/tools/testing/selftests/kvm/lib/riscv/handlers.S
+>> +++ b/tools/testing/selftests/kvm/lib/riscv/handlers.S
+>> @@ -45,9 +45,11 @@
+>>   	csrr  s0, CSR_SEPC
+>>   	csrr  s1, CSR_SSTATUS
+>>   	csrr  s2, CSR_SCAUSE
+>> +	csrr  s3, CSR_STVAL
+>>   	sd    s0, 248(sp)
+>>   	sd    s1, 256(sp)
+>>   	sd    s2, 264(sp)
+>> +	sd    s3, 272(sp)
+> We can't add stval without also changing how much stack we allocate at the
+> top of this macro, but since we need to keep sp 16-byte aligned in order
+> to call C code (route_exception()) we'll need to decrement -8*36, not
 
-merged to i2c/i2c-host.
+Yes. Thanks for catching that.
 
-Thanks,
-Andi
+> -8*35. Or, we could just switch struct ex_regs to be the kernel's struct
+> pt_regs which has 36 unsigned longs. The 'badaddr' member is for stval and
+> the additional long is orig_a0.
+
+I think switching to pt_regs is better in terms of maintainability in 
+the future.
+I will do that.
+
+>>   .endm
+>>   
+>>   .macro restore_context
+> I guess we should restore stval too.
+
+Do we ?  stval is written by hardware and doesn't contain any state of 
+the interrupted program.
+Once, the trap handler processes the trap using stval information, there 
+is no need to restore it.
+
+Am I missing something ?
+
+> Thanks,
+> drew
+>
+>> -- 
+>> 2.43.0
+>>
+>>
+>> -- 
+>> kvm-riscv mailing list
+>> kvm-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kvm-riscv
