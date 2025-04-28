@@ -1,95 +1,167 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC8174BE1;
-	Mon, 28 Apr 2025 03:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00F14A11;
+	Mon, 28 Apr 2025 03:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745811023; cv=none; b=sr8BFTw12u+czSCqKkQWET5A4WucNwEDk5UrYYC1MTrMT0N5cmee5xy5fWfWHfE8xFzMX6igBykBC/Rf+WApKh4HJCb65GPbUXtBh5A0GD6503k5hsLm25ARhgIeZk4j4/5ciCd6B1R+c4OqSVB9FNle3zQrNAsnmAOV/SUrtTY=
+	t=1745811181; cv=none; b=ca4CWR0fwazAo/JDw5/ZGlow81shiXUpeqjjeCd/lyh3H1fAZGL5BBoU1vCS7q9z0jfR9vXwBFhEwQ1dPkfqXbZ0e3XdpDZE8gspg0YNb1FSdcbnYhjxQhl1Dl7/PYEDEiWFP5L8fHK8NUmc9JfOxyQ81aDsksi4Ivpcv8aL9h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745811023; c=relaxed/simple;
-	bh=6mWKq3lQatyjNdW/Cihez/BnWTvB8tMdp4PkpiNWnRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=go6H7x6cdr/lt/ye6ouLzZlZv7JePZ9548x9yAByhpuGtllRAH4B0T5DJuQrJo/xzHY9SQ/lIWOaIhAgqGq23Ee3zetKT4tkmSwyNcv1D9NNC6C25ZBmY2C7tq9fbS502Rk1qYuO/1iheXbTImMwuDFDFPOUld7eYODNQnjEdV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=kd6k1BOw; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kd6k1BOw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745811015;
-	bh=jVsaLEXMNvidpLj40+o8rBlX0uwUjWHgmyDQFjNXlMI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=kd6k1BOwa61cmlciiPYmM6pN5yRqfo+mp5qaCkWAQMzTzfa7DQBpUafIwraXz5flX
-	 MBIJprT0sKJtg4DqDrPmxbfreDAT0DKDKmMi+GgWWK4YbZ0l23rlyFo1QShfPPfg/E
-	 by3vnNN7vXKh9n+tQnKLRWX0MQRqej/kLgLj2VL++DKPlu91stKVNDOUDuD2oZ8ewp
-	 qlNPaIWUShf4jkJOaRYizzV8dsb29qf70bGqgrhXInYalUtHQNcZfWpCUnI3129New
-	 S/xQ+VqydPn9VBQ9CZKZpRRVj2umbNdKhYPIXpwIgaiBy1X8J1zi/cb1crlFvZLicf
-	 6FAmiNOFYOucA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zm88k3gypz4wbb;
-	Mon, 28 Apr 2025 13:30:14 +1000 (AEST)
-Date: Mon, 28 Apr 2025 13:30:13 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Dave Airlie <airlied@redhat.com>, DRI <dri-devel@lists.freedesktop.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the drm tree
-Message-ID: <20250428133013.5ad6b6b7@canb.auug.org.au>
+	s=arc-20240116; t=1745811181; c=relaxed/simple;
+	bh=rZPb+nYyN6fqWnBmjxisPyPRLgUVCz2sdtg+z7gQqTk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YrMNRzSPwh6WMIfgOgD/o4RBGxiibJAuwgdVb7OUg/GsqXpN+Id62Rlhu7nPh9R8bNOjKWBUBTRnBPCF6bz5Z+w/91HZ7wb6ncDHx/OSZ6MqrrpMhheG13MSgjPvbxjPTYPzSCnQvjE5k8gM76nE92L5xfsP718gxyYvpmaaWSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zm8CB3ynMz4f3kvw;
+	Mon, 28 Apr 2025 11:32:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 344901A1AF2;
+	Mon, 28 Apr 2025 11:32:48 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu1_d9g5ov1YkKw--.49750S3;
+	Mon, 28 Apr 2025 11:32:47 +0800 (CST)
+Message-ID: <6db8d3e6-44ce-4b2b-b496-ec0104aee997@huaweicloud.com>
+Date: Mon, 28 Apr 2025 11:32:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NBBoeFV7ZF2NNzEQXKV3LoQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH blktests 1/3] scsi/010: add unmap write zeroes tests
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
+ "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ hch <hch@lst.de>, "tytso@mit.edu" <tytso@mit.edu>,
+ "djwong@kernel.org" <djwong@kernel.org>,
+ "john.g.garry@oracle.com" <john.g.garry@oracle.com>,
+ "bmarzins@redhat.com" <bmarzins@redhat.com>,
+ "chaitanyak@nvidia.com" <chaitanyak@nvidia.com>,
+ "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
+ "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
+ "yukuai3@huawei.com" <yukuai3@huawei.com>,
+ "yangerkun@huawei.com" <yangerkun@huawei.com>
+References: <20250318072835.3508696-1-yi.zhang@huaweicloud.com>
+ <20250318072835.3508696-2-yi.zhang@huaweicloud.com>
+ <krhbty6cnaj3zv4bka4jmpwmm74v7k3cts6csp6yoc7xjexoyu@6yrwd7rr2rip>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <krhbty6cnaj3zv4bka4jmpwmm74v7k3cts6csp6yoc7xjexoyu@6yrwd7rr2rip>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXu1_d9g5ov1YkKw--.49750S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy8Cw48GryUuFyUZFWrXwb_yoW5Gry5pF
+	WxGa9Ykr1ktr17G3WSvF45Wr13J3yfAr47AFWxCw1UCr98Zryakr1IgrWUWa4fGrZ8Gw1F
+	y3WUXFySkryUt3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
---Sig_/NBBoeFV7ZF2NNzEQXKV3LoQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Shinichiro！
 
-Hi all,
+I apologize for the significant delay, and I greatly appreciate your
+review and suggestions.
 
-After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+On 2025/4/3 15:26, Shinichiro Kawasaki wrote:
+> Hello Zhang, thank you for the patches.
+> 
+> On Mar 18, 2025 / 15:28, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>>
+>> Test block device unmap write zeroes sysfs interface with various SCSI
+>> debug devices. The /sys/block/<disk>/queue/write_zeroes_unmap interface
+>> should return 1 if the SCSI device enable the WRITE SAME command with
+>> unmap functionality, and it should return 0 otherwise.
+>>
+>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+>> ---
+>>  tests/scsi/010     | 56 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  tests/scsi/010.out |  2 ++
+>>  2 files changed, 58 insertions(+)
+>>  create mode 100755 tests/scsi/010
+>>  create mode 100644 tests/scsi/010.out
+>>
+>> diff --git a/tests/scsi/010 b/tests/scsi/010
+>> new file mode 100755
+>> index 0000000..27a672c
+>> --- /dev/null
+>> +++ b/tests/scsi/010
+>> @@ -0,0 +1,56 @@
+>> +#!/bin/bash
+>> +# SPDX-License-Identifier: GPL-3.0+
+>> +# Copyright (C) 2025 Huawei.
+>> +#
+>> +# Test block device unmap write zeroes sysfs interface with various scsi
+>> +# devices.
+>> +
+>> +. tests/scsi/rc
+>> +. common/scsi_debug
+>> +
+>> +DESCRIPTION="test unmap write zeroes sysfs interface with scsi devices"
+>> +QUICK=1
+>> +
+>> +requires() {
+>> +	_have_scsi_debug
+>> +}
+>> +
+>> +device_requries() {
+>> +	_require_test_dev_sysfs queue/write_zeroes_unmap
+>> +}
+> 
+> The device_requries() hook does not work for test cases which implement test().
+> It is rather dirty, but I think we need to delay the check for
+> write_zeroes_unmap sysfs attribute availability until test() gets called.
+> See below for my idea.
+> 
 
-In file included from drivers/gpu/drm/xe/xe_bo.c:3118:
-drivers/gpu/drm/xe/tests/xe_bo.c: In function 'ccs_test_migrate':
-drivers/gpu/drm/xe/tests/xe_bo.c:63:15: error: too many arguments to functi=
-on 'xe_bo_evict'
-   63 |         ret =3D xe_bo_evict(bo, true);
-      |               ^~~~~~~~~~~
-drivers/gpu/drm/xe/xe_bo.c:2939:5: note: declared here
- 2939 | int xe_bo_evict(struct xe_bo *bo)
-      |     ^~~~~~~~~~~
+Indeed, I completely missed that.
 
-Caused by commit
+>> +
+>> +test() {
+>> +	echo "Running ${TEST_NAME}"
+>> +
+>> +	# disable WRITE SAME with unmap
+>> +	if ! _configure_scsi_debug lbprz=0; then
+>> +		return 1
+>> +	fi
+> 
+> I suggest to check queue/write_zeroes_unmap here. If it's not available, set
+> SKIP_REASONS and return like this (totally untested):
+> 
+> 	if [[ ! -f /sys/block/${SCSI_DEBUG_DEVICES[0]}/queue/write_zeroes_unmap ]]; then
+> 		_exit_scsi_debug
+> 		SKIP_REASONS+=("kernel does not support unmap write zeroes sysfs interface")
+> 		return 1
+> 	fi
+> 
 
-  55df7c0c62c1 ("drm/ttm/xe: drop unused force_alloc flag")
+Yeah, I agree with you. For now, there is no helper available for
+checking the sysfs interface of the SCSI debugging device.
 
-I have used the drm tree from next-20250424 for today.
+I will add a new helper setup_test_device() in this test as the
+following two patches do, and put this check into that helper.
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks,
+Yi.
 
---Sig_/NBBoeFV7ZF2NNzEQXKV3LoQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgO9kUACgkQAVBC80lX
-0GyAnggAmHLlVC9qQysUQOD+ukgNvCJLzL3FXgmP2knj7KjKvyCQWOyErdEN3Jv9
-6wrIetk12gRZ3mSzPtS1bhN5/s1l/a3CPaG7bXFUaTbwffTDetIA+gPWnDJJHaCb
-eCVbVD+qM0lPWIMBJALxexRimirVBoAesxq+2CFO9bl3gUQo7Gg2eSbP5tUHLIfP
-kUgUtSV6/MhlrqcRglU5TsyQI4LeU/XaxzTpAg36x4reRnJxKmV6soxDx7KmoteH
-le3nYh2VZ6nCObeq9zs7AeZCeoLWFYHKqxX4Rjjis/L0sxeHXEXCa3IFyqM/I5oL
-HgKeB1QmTqZoDVtp4n2/6WSISwZ0QQ==
-=HIGf
------END PGP SIGNATURE-----
-
---Sig_/NBBoeFV7ZF2NNzEQXKV3LoQ--
