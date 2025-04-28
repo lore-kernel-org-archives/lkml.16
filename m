@@ -1,241 +1,123 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1768C440C;
-	Mon, 28 Apr 2025 16:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ABA21CC64
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745859161; cv=none; b=aJZGp58z/6ReKVMJmTzIQkAZG6Q3Ximh1dS368RTRKOsGDyzB5GqeHM/zscI+YagCgqBzhQGlLBUDsXkjJENDEYr48jIXqM98gLzWdk/9dYP9+9PVvrFC6BKYr34PBVeL2VnKq9KNDxZrDS7sLQkBmMD9t9P5fnkvJnAjbtqEpI=
+	t=1745859172; cv=none; b=LfQ6DBomueEWZtakr3jDBFFzcMwsuFN0NbJ84Oh+Gjtmx2ERpFKYbtu9cIZYBS5dlqj5/aR0yG6yTcThvbfwcY6R4wQ4hu+oOT/T/DQNHR9zDVZ7x0xHWLM3Q88r6ZSnZ3IJh+GKvTXAmc7fyaBdKFzTQdoQjc/0nGpDgxKaEK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745859161; c=relaxed/simple;
-	bh=VUF/o4RE1v1hk1nOAcb1fGdra/R4W25gdM3uBlpyVcs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Xyoznu4tnYGvOKRhHwjgT8VY0v7P2IuOnNU9XaVNft9tHLG/DFv4kv21XTxWIOH36r7QpLhRdxBXMEZklRqhldJbpAJv68x2O3sAnXy9z4Ve+L6e08uxYINbP09s4CUluJgvhGxAA6mKPio3HpX8tPlNNezgSQWnG7/pUg802w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ASREfJFa; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745859172; c=relaxed/simple;
+	bh=6xY2nc0RaB26C8Wx9+EpDD+pS50ZQFFzgqmN0vDJVM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZY2K6qgg7gC+VEK/YO1NMH+un3kt/RKCoh4PX47WtVb+Fby0OvegHbYUEmYl/oYYJGfOKBinZwqFzdmRqhxNBk9b3Bh8QtUzchQj97njtzmhe21DxV0LO4hTrHk1f4QlpkpTduJC01k6xR3WP7XZ27NMDDRdpomOwN/xBCkpkDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=TmShkLv5; arc=none smtp.client-ip=66.163.188.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASREfJFa"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223fb0f619dso57045055ad.1;
-        Mon, 28 Apr 2025 09:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745859159; x=1746463959; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IjvZYK2d2GAr0o6m4ARn5rvHXuqogyOYirhk7zcNjLo=;
-        b=ASREfJFaiE1Lce4P0fvnoDuCXJBQ3RX0CnAMthRqg6T/5wqC9SS+MTWK0xTpuLx0Gu
-         yMDHQqUzIlKybqYmvVFUOHTD/iR0BG25oUpASZtA+EziAzEOnpPK4ow8iDdlU/NhkDYg
-         JBl6rjJsdx9x9fhDby5/6xQ1cMNYzqDmJdq1h5UxlyldPFXQu3gD1HpnpJDJy9Y4IAOZ
-         aT18eSIMATCLcUL57n+YQNkWOBeEOyAhJyo1Md0V+ubvWIW9RQmnT9t1n3K1Bh533ZDy
-         O239MykPXvceLsnijGxiJ8OVz9rBGMjUdiF+K9hSZrrl1pVPjtwJnj70UzbZciOzX6qc
-         4fKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745859159; x=1746463959;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IjvZYK2d2GAr0o6m4ARn5rvHXuqogyOYirhk7zcNjLo=;
-        b=v3xA67P1TVsYlrZ4AxxWDltL0nlyBGzjg2d/M17jI+tcB3rCq+i0hdfQBakaxPmzuD
-         nLBAN1pwXYz2GArCkK5SNBun5FjmaHu9Ts02qq8hmkND8N7/22Txq4pDCRScMCE829K2
-         JepsIeT5WOCBu5OIn0vHEsgM3UzC1VVbAjtQ01/iJcniwxgx9nQwd+W9noJuCMvOPmpz
-         p8zvRwP9CHYj08ZA1wTz8SsenP8o6YxQAOaeoclk8DH/7qA3cMgAZRXPdYFJGKaMqQxk
-         jrV5odb+0yfFtqR27HTZf6bimq147VSkh/ZWBvAo5KFm0CzFQfutuGtMeADRMohHwSWg
-         MUjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTZLSQD6tg10hn5WvKcvLEpx9q+VxUH/DguJbkoA+1Rb3Axr57jxnhCnBzjZH237UKdG8=@vger.kernel.org, AJvYcCVrEXIg/sAreH4bqyTLdTxUTReufzr09HGJE9XVQ2ukvJaaGsFG4Qic0xCZhOsbVw/PnwCEIGb9izxRsaah@vger.kernel.org, AJvYcCWxqbrCqcjY6hqUeISiGPfWwaDFLOrPhw7yzugxyduU7ppqc8jUUOXHXVrb48W0gb7OUH7bgO0gIvhQzAWjyWR3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx50f4uebkm3bscCqQeOUWAu7tWS9vM55tz6L9eYxlvRPfAusHj
-	c48+tdK1ffuub3qxT3lfnF4gcqmueUU7uP+qYjh/XiS8BOI44MjB
-X-Gm-Gg: ASbGnctwfVEl2yo1wspYw567ArKYOMFFd1pa4S8i6zbNoUHuEj+dvampA3yINK8FXsX
-	OYzILm71ZMBuH4UDFx8v/9ewSJs6VdX0PLpEgUggLKFQIh13YEOxr6ZW54YkW0TqAGdQ6hzBAaB
-	2GPm/WdGbcJeM/sXsD47F9LgQ6kfVTZaHikiUzRP0tecLa2QGEHm0s//yE2AidOsdYY1h+FRJIB
-	/1xMXhm/hkLwKwkGR1fXcgKjXS1Dncb8fdJti6cOq5ryqRG6iS6Xm9J05Hvw39x1WSfR4NzxO5R
-	rfkpIXAkIA2xTFBoKpt+UkQatLGQtb8hkSdvATEJRl+TrUXIbw==
-X-Google-Smtp-Source: AGHT+IGBCRKNAZsf7FtVymPsCdsoGJ/DJafrNa9HOoRlQsbwOsn8q7cEi76BNaSHeHA2zQC4abBnMA==
-X-Received: by 2002:a17:903:40cb:b0:224:1935:fb91 with SMTP id d9443c01a7336-22dbf5fd432mr161245665ad.27.1745859159109;
-        Mon, 28 Apr 2025 09:52:39 -0700 (PDT)
-Received: from ezingerman-mba ([2620:10d:c090:500::6:6628])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22dd86032dcsm25258755ad.181.2025.04.28.09.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:52:38 -0700 (PDT)
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Alexis =?utf-8?Q?Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>,  "Daniel Borkmann"
- <daniel@iogearbox.net>,  "John Fastabend" <john.fastabend@gmail.com>,
-  "Andrii Nakryiko" <andrii@kernel.org>,  "Martin KaFai Lau"
- <martin.lau@linux.dev>,  "Song Liu" <song@kernel.org>,  "Yonghong Song"
- <yonghong.song@linux.dev>,  "KP Singh" <kpsingh@kernel.org>,  "Stanislav
- Fomichev" <sdf@fomichev.me>,  "Hao Luo" <haoluo@google.com>,  "Jiri Olsa"
- <jolsa@kernel.org>,  "Puranjay Mohan" <puranjay@kernel.org>,  "Xu Kuohai"
- <xukuohai@huaweicloud.com>,  "Catalin Marinas" <catalin.marinas@arm.com>,
-  "Will Deacon" <will@kernel.org>,  "Mykola Lysenko" <mykolal@fb.com>,
-  "Shuah Khan" <shuah@kernel.org>,  "Maxime Coquelin"
- <mcoquelin.stm32@gmail.com>,  "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>,  "Florent Revest" <revest@chromium.org>,
-  "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
-  <ebpf@linuxfoundation.org>,  "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>,  <bpf@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-arm-kernel@lists.infradead.org>,
-  <linux-kselftest@vger.kernel.org>,
-  <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH RFC bpf-next 3/4] bpf/selftests: add tests to validate
- proper arguments alignment on ARM64
-In-Reply-To: <D9I6TQN2I6B1.QC4FFHEWAURZ@bootlin.com> ("Alexis =?utf-8?Q?Lo?=
- =?utf-8?Q?thor=C3=A9=22's?=
-	message of "Mon, 28 Apr 2025 12:08:32 +0200")
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
-	<20250411-many_args_arm64-v1-3-0a32fe72339e@bootlin.com>
-	<3a16fae0346d4f733fb1a67ae6420d8bf935dbd8.camel@gmail.com>
-	<D9I6TQN2I6B1.QC4FFHEWAURZ@bootlin.com>
-Date: Mon, 28 Apr 2025 09:52:35 -0700
-Message-ID: <m21ptcmdnw.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="TmShkLv5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745859164; bh=sqVT6q/gS2IO11mPSx1zGKMYT49soEThtm+blh315uA=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=TmShkLv5LTcjqhtI1S3E3yTKqUlFEaq6/9edfX4pUbh5DQYJIMFgMv/rdLoDv/ZrSd9SBRx3IWFDa3Fp30+k24uzLUqqZxUOriyrA/fm6A9i6KveGjRl3pf0lDv7vW9GsIOpcvuFCDZJk/o7EGyR1+KJnxJVykYZyjmBSRXL0mbJVauuoC3Ma5Th3qsjw7eeVn3TxpvbsKgXpN+4PndNu8CatyyD8gGlMxNkGfku6xOt/OVJF82rWFt42naM8+hrycFNslm6pnoKTyN+6qg5xq7kjQIY6tcXq9gak99IFS+FhFlNUY5nosl4awH7/TFsm25LuYfevukmI+yAU2Z7ZQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745859164; bh=1ocgATpWUMwDoqL1q7zfHtIKlCWRZ8QGGEvu4gHsels=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=CfaVzAbwXQaWtjfP7NSeZUnNEArlCi9pQcFy7WS7n0tRLu5NnwjgbJh00KrgNN0RRDnhTI0ZKfPMabVrmmt9yLqMshGnJPHSkUh4AcHF8yz43SwKgTmwjMzVEoJeaFqsrgnBzBUhDBA8pt5L1vCAvOQlTwQap8j8utAmMBXTbnhqkigN2RdqHBpeQr6jUinyLGnCcoXnjJ2NlEU9ppF5bsoKpklFLJLAlOA+rzgcq0J/Xuzy4QOVjNw4Jd803gLYGnLCsUdEJo1cxMBx2Lg2kHDQzYoLkck11WqvTdafY+HvHsSjpOuYtzMioRoiW27gEdP2kUCAkEOlec618qg/FA==
+X-YMail-OSG: UYxsJJYVM1nve9Q1xFVLkeERBzVnVqyeHNPd50KUB7jgbH3qnYdOeQSyfMHuvbW
+ qdxenoAyQY4kfeXtpWqZncnvV4pEA65QrNlhYkSBm5eHxEzqJaN_MrUWFi4HLAdU3NTv9ONO8gLT
+ cLAu_MOBPS_LgVGCglF1z0Y3_8ytqhiuFo_TP8MCy0UFNM6a1IbxYWDG86Cox61EjEcmypBIvpe1
+ uWuUd4TD4tK.3ul8yWMxqrd25_WVjmqzIPeI2kQxA80v8bDSvAvS9fRfgBQie1dFmB7b.lMgWFOP
+ ZilW7mYqGAUAEd5sIHhRbM5sX06GQSi1mpsVcYkc8PJknupzijLUWFVZter12xVOFjb0BA55oSAH
+ 77H4.ISHRjuvqylanW3b5ADWiS95coLks.f8xOjtuxNenvVMAg8nqxpdtyEdsA_UdRr4ecIQECqE
+ bmgJN.bhYwx3oMX6z3Jz1bkOJklFDEYmnAKw3D3str.Nht9hC_xVNgrbLJZ9.rNr.mOFSxqa6jfR
+ NzTWQm.Ytw63L55tA06hyzHHdrjVR2OXcgnBOkat708FMl_IPur7I3GO7c4xZx1cLwYxLsVyQlM2
+ vLwoPcqv2JNGJlx.k_S6poZ78DMhnZPo1Fi5UANnyldKm0qx2nvSkgFeSxH_dSA2oUxF38Jv05Ex
+ uPnh4LNRt2ILoAAhOXhYaQBMOFAHUmDPQjBMyjx8eZA84SDu2cVeBZrZdVN01GhuztLQNAVp294G
+ ULILjvCOs.54DRfxU1wtH17Sk79MRyUWr7F2m1MfzeT0xDCQ2oSEuRMV9JWeS7rkBFeYtUEFcUW.
+ Ps03SFKOZwHHSe7i1CUN1AQL79JqCpL2D2vGFmZElBKd654KIWGglrDvQzz9go6t_dnC_0XNuFFz
+ Wqfs7cwGDr1KAQbGHT1tMMN62xIPoyd_lYLpXpPLS6T.i1PVqtCeHq0agMU62JEcFBVVHeNq0Q5y
+ mMIR8R_58uuJGV80TTO8N1InesdhPtkZG17KfzZZvINBYepDdFtaqqkiiBMdwmDvIJnUKUTq8RqS
+ x80QqukyMnMk8ThsUJYJh7MuGF59h2T8N7GxnM7K9zgIZvCApcvG2ecW.Hagm535fBKgeZ0GuN6T
+ wiN7fj8CSnxIEf_0tjTs2hd_CtNjs8SOo.FceppCmCHalLAesziEagVow2DCsId4mAsLZ71.1NYv
+ UM92W_x6lVQ2vZW8fpmNtXDjV6DeZgshzQGWrjWc5lF9TmZ55DoTsPTGyMcqDW8Mhi8Y4z9i5EMw
+ CWoPC1chtCz9ZdvpDp4qoHVc_j3gH9PNFj8xOBHxZOnW6EAV76Srgpn_yfaAL6R1qRitIkQ3zVba
+ se2GMNKCv42Z4LlEa6TVZnzW7d.s1xmc4I5nEbAM6as4EXDBMCURXjgZkS8G2BpYfHRXrvrLN9An
+ Plqi._0rEVZ2rLX5T9oTpcEATS9cFX7LHkTPtZQDEEDSiq5419tp0MLu0nUE0Mzc_BaWFqe7j6MV
+ lJUinby15mI.gtJVB88ANtxOgY0xa4bjspGMx0ECpJNHzOzwvRhcjz6fru4tXGfll_EI0ippPIKM
+ W8anfa3hFd3u5KeQF0v38m8BShW4c229uA06WOCdxy16JBMDZNRX6wC8iiwbUX6O8zmrAjhjzGCq
+ 8DBAN9gSguBrMmyQfB9o1y_vYNPbiRJhNk5BckAjmHuytY.ZPhAU6RKnJsxHUkntiUL3Yj_vuUv0
+ ZApsmGak9pq3qlG5QUcnQvs6v0DMvfgq50PynoFhABZkdJVH0q9P8DdveQcOMI7OKHSgrLik59kD
+ zaAPDwdXDMgvaHXZGiHD_O7bBbCYplhKf2VkM9JNis2_GH.mGmPc0wDqk2xNoJsy_iRm4YJQmnZ1
+ Jw2c_L2ut7ybkHC9Psxxp_7UnGIAXvGz0NIIJuf8qh4T._FjQXNr69vuYWFV7T76pOB8boFnM5ja
+ l7YhKZuFRVmZ5L9nsUvkc.gHXv1JPVQofrP2YOb4NQ0c2zJhGP9RqrTDcMjCUxhYdYydxislMlC9
+ 5h9hTDI2E0ppdVWQHyCCtUufdASICa2N11Z._oEMpPJA4daZpCA_mE.C2jtNPkKssc5BJ9BN9lrt
+ nLrLJj3TroWEET.3j7WUAXcboQKa9astOlpVySbvvahbPdIInXS0_eNLewaYQdPs9jgfKzFjlmfK
+ T1srwHLociI00t176XO8hSn3oi0EoSBcwNnUUgDQU6Y_pXmS753OvERIzjlzBKsc_l58.0hGdfjW
+ a2f_2_EOabiLHJtwbquFCYOboie.Js47cjFkCbFEceb5TxLWGaqgqoGFms5rdJF23KIRecTSMtda
+ VUg--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: dc9f098f-28ea-41ed-87ec-fab9cfeed3e1
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Mon, 28 Apr 2025 16:52:44 +0000
+Received: by hermes--production-gq1-74d64bb7d7-4ndhm (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0d3d3196c6fbd5ff60aed6348ba5f11a;
+          Mon, 28 Apr 2025 16:32:29 +0000 (UTC)
+Message-ID: <f24142d4-e0eb-4d35-b230-80dff1e58331@schaufler-ca.com>
+Date: Mon, 28 Apr 2025 09:32:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] security,fs,nfs,net: update security_inode_listsecurity()
+ interface
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: paul@paul-moore.com, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Ondrej Mosnacek <omosnace@redhat.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ netdev@vger.kernel.org, selinux@vger.kernel.org,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20250428155535.6577-2-stephen.smalley.work@gmail.com>
+ <988adabb-4236-4401-9db1-130687b0d84f@schaufler-ca.com>
+ <CAEjxPJ66vErSdqaMkdx8H2xcYXQ1hrscLpkWDSQ906q8c2VTFQ@mail.gmail.com>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <CAEjxPJ66vErSdqaMkdx8H2xcYXQ1hrscLpkWDSQ906q8c2VTFQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23737 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com> writes:
+On 4/28/2025 9:23 AM, Stephen Smalley wrote:
+> On Mon, Apr 28, 2025 at 12:17 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>> On 4/28/2025 8:55 AM, Stephen Smalley wrote:
+>>> Update the security_inode_listsecurity() interface to allow
+>>> use of the xattr_list_one() helper and update the hook
+>>> implementations.
+>>>
+>>> Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
+>>>
+>>> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+>>> ---
+>>> This patch is relative to the one linked above, which in theory is on
+>>> vfs.fixes but doesn't appear to have been pushed when I looked.
+>>> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+>>> index bf3bbac4e02a..3c3919dcdebc 100644
+>>> --- a/include/linux/lsm_hook_defs.h
+>>> +++ b/include/linux/lsm_hook_defs.h
+>>> @@ -174,8 +174,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct mnt_idmap *idmap,
+>>>        struct inode *inode, const char *name, void **buffer, bool alloc)
+>>>  LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
+>>>        const char *name, const void *value, size_t size, int flags)
+>>> -LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
+>>> -      size_t buffer_size)
+>>> +LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffer,
+>>> +      ssize_t *remaining_size)
+>> How about "rem", "rsize" or some other name instead of the overly long
+>> "remaining_size_"?
+> I don't especially care either way but was just being consistent with
+> the xattr_list_one() code.
 
-[...]
+Sigh. Then I'd leave it as is.
 
->> The function listened to is defined as accepting 'struct bpf_testmod_str=
-uct_arg_7',
->> at the same time this function uses 'struct bpf_testmod_struct_arg_5'.
->
-> That's not an accidental mistake, those are in fact the same definition.
-> bpf_testmod_struct_arg_7 is the kernel side definition in bpf_testmod.c:
->
-> struct bpf_testmod_struct_arg_7 {
-> 	__int128 a;
-> };
->
-> and struct bpf_testmode_struct_arg_5 is the one defined in the bpf test
-> program:
->
-> struct bpf_testmod_struct_arg_5 {
-> 	__int128 a;
-> };
-
-Apologies, but I'm still confused:
-- I apply this series on top of:
-  224ee86639f5 ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bp=
-f after rc4")
-
-- line 12 of tracing_struct_many_args.c has the following definition:
-
-  struct bpf_testmod_struct_arg_5 {
-         char a;
-         short b;
-         int c;
-         long d;
-  };
-
-- line 135 of the same file has the following definition:
-
-   SEC("fentry/bpf_testmod_test_struct_arg_11")
-   int BPF_PROG2(test_struct_many_args_9, struct bpf_testmod_struct_arg_5, =
-a,
-                 struct bpf_testmod_struct_arg_5, b,
-                 struct bpf_testmod_struct_arg_5, c,
-                 struct bpf_testmod_struct_arg_5, d, int, e,
-                 struct bpf_testmod_struct_arg_5, f)
-
-- line 70 of tools/testing/selftests/bpf/test_kmods/bpf_testmod.c:
-
-   struct bpf_testmod_struct_arg_7 {
-         __int128 a;
-   };
-
-- line 152 of the same file:
-
-  noinline int bpf_testmod_test_struct_arg_11(struct bpf_testmod_struct_arg=
-_7 a,
-                                              struct bpf_testmod_struct_arg=
-_7 b,
-                                              struct bpf_testmod_struct_arg=
-_7 c,
-                                              struct bpf_testmod_struct_arg=
-_7 d,
-                                              short e,
-                                              struct bpf_testmod_struct_arg=
-_7 f)
-
-Do I use a wrong base to apply the series?
-
-[...]
-
->> Nevertheless, the assertion persists even with correct types.
->
-> So I digged a bit further to better share my observations here. This is t=
-he
-> function stack when entering the trampoline after having triggered the
-> target function execution:
->
-> (gdb) x/64b $rbp+0x18
-> 0xffffc9000015fd60:     41      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd68:     0       0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd70:     42      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd78:     35      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd80:     43      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd88:     0       0       0       0       0       0       0=
-       0
->
-> We see the arguments that did not fit in registers, so d, e and f.
->
-> This is the ebpf context generated by the trampoline for the fentry
-> program, from the content of the stack above + the registers:
->
-> (gdb) x/128b $rbp-60
-> 0xffffc9000015fce8:     38      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fcf0:     0       0       0       0       0       0       0=
-       0
-> 0xffffc9000015fcf8:     39      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd00:     0       0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd08:     40      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd10:     0       0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd18:     41      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd20:     0       0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd28:     42      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd30:     35      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd38:     43      0       0       0       0       0       0=
-       0
-> 0xffffc9000015fd40:     37      0       0       0       0       0       0=
-       0
->
-> So IIUC, this is wrong because the "e" variable in the bpf program being
-> an int (and about to receive value 42), it occupies only 1 "tracing conte=
-xt
-> 8-byte slot", so the value 43 (representing the content for variable f),
-> should be right after it, at 0xffffc9000015fd30. What we have instead is a
-> hole, very likely because we copied silently the alignment from the
-> original function call (and I guess this 35 value is a remnant from the
-> previous test, which uses values from 27 to 37)
-
-Interesting, thank you for the print outs.
-
-> Regardless of this issue, based on discussion from last week, I think I'll
-> go for the implementation suggested by Alexei: handling the nominal cases,
-> and detecting and blocking the non trivial cases (eg: structs passed on
-> stack). It sounds reasonable as there seems to be no exisiting kernel
-> function currently able to trigger those very specific cases, so it could
-> be added later if this changes.
-
-Yes, this makes sense.
