@@ -1,153 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEA1267F4B;
-	Mon, 28 Apr 2025 12:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC766267F6A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842222; cv=none; b=ZSxR0S2jm0JdKSf0zR2T1lkFVVXVTPGvZhE/RPJn+KiNkN0wq5JjU568QHvI7uzoADimkUSezx/nw67dBzEZ2qSe/TuhrVBRRsDTfLnlVrJPWWWiHCig27oEt104qGVu2nu+08jVhH5Hc6/bgbOGaV+9LVbSVomXAw02Y+Qhpko=
+	t=1745842253; cv=none; b=e4HgJEVwPA0y1UBF51yKwNCc/VG0UzlmkjppljFyzXlfqOI50Tai2PeU+1uLyG5zRoyq6JZqoU36tN2c1VfCOhNy3i9Ebx28vFPNBBrheheQnTQl9AjvOX6lxls9RnOXx1LAp6StQuegsQJE2Y9y8yqAZJx5iFiDPolKPYhS/TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842222; c=relaxed/simple;
-	bh=tihlxCw9xow20KLzV+QRCQ0j3IZPQ5YvvZyBkopd9ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HoTdRgrBkAKmsuQvokZKF+U7Xs8duHAoyMuTtrajaLL6MM/JRSn5C8yyB4c86ppX27+HeYeaWk03Lf9LUJr9sqGjO0Jk18TlICmcUstphCA5kOu/ka4E+e0bFlt2svlKXMZv5D8rrGqQGISSLxRbeCNJt9B+zMOc7KM0uAJT+dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eqxRQRqC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745842253; c=relaxed/simple;
+	bh=ciDUO+ZfgBJWhR8Wy8ySlqBr5GQZDATAmzWc5PieIvU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iSqi2ANmZa48Thqa3RiD3BmGUwGX/y9nIcap01DIXgtN69un0N9RylUYUdT6ZuXo1KqMZQuHDJtRLG3FFMPoLpnVj5yWEjTLPwm40ovY/OsZRg4SaJ7j+QRbb7jNksc2EH7AQunssTldY/3AQawvGoRKlNYQDAiTQ5siloempUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DW2mwWgC; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eqxRQRqC"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SACxFH009165;
-	Mon, 28 Apr 2025 12:10:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RXuJJ+2KCuTh5goOcqcW9zknJ6CINhYX33RHPc2p+80=; b=eqxRQRqCYRQXclXb
-	gPSeQOh2uIYGkn0LezOTv9ZKQTN7EbdFh2NphCT7v1Z7vyxTL1lmNLhkacitFb7a
-	kLV0KwK3fpHtLqT38dkJqMQrFsNI2TjzfWKq/aIwUD7PBU/ZQGIirxb9dHNE85xn
-	+5DSsNGjhnkEjfhLtZR2rE9KqLNuDBhSE/GZrPaqd7Fo4G/qIHJCdkgooNHBMyHS
-	yUfA4WEeINhQpEDsyl/0q2pE+li6VTP3KA1fF31Soqs797j60MpSefETSQOtc/YD
-	0SlsdS/plvR7sphkvpzi0FVCzZW0b4xnQBXBUeBUOR4y0crW1LSe4Vaa+YbRlTmQ
-	VpuFWw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468muqh976-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 12:10:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53SCAEpt000745
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 12:10:14 GMT
-Received: from [10.50.5.200] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 28 Apr
- 2025 05:10:05 -0700
-Message-ID: <7ef2daa2-a6fa-2285-6619-b2f25baabc55@quicinc.com>
-Date: Mon, 28 Apr 2025 17:40:01 +0530
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DW2mwWgC"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53SCAVxa3394001
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 07:10:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745842231;
+	bh=iW5UthSAfG9p2EdnrYC7wnlYQMDTwki3KWY3AVQ73rw=;
+	h=From:To:CC:Subject:Date;
+	b=DW2mwWgCofB8UDX4P/StHrHIWtrlaYuiopuAqMrL4ymHk31pf0DEh5jJc+UMt9BvY
+	 faIGw17oENK7ictZxlUojtYJOOVhFeND4M/eirOV6FGuq8B4Wg4MXK60IdCzKk3Cj1
+	 ntFrdEdCUxYxLN3BgiV6PcuLKawQ1lPYoRziriMQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53SCAVff040847
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 28 Apr 2025 07:10:31 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 28
+ Apr 2025 07:10:30 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 28 Apr 2025 07:10:30 -0500
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53SCAUnv019741;
+	Mon, 28 Apr 2025 07:10:30 -0500
+Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 53SCATbu027172;
+	Mon, 28 Apr 2025 07:10:29 -0500
+From: Meghana Malladi <m-malladi@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>
+CC: <prabhakar.mahadev-lad.rj@bp.renesas.com>, <quic_tdas@quicinc.com>,
+        <nfraprado@collabora.com>, <arnd@arndb.de>, <lumag@kernel.org>,
+        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
+        <bjorn.andersson@oss.qualcomm.com>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Roger Quadros
+	<rogerq@kernel.org>, <danishanwar@ti.com>,
+        <m-malladi@ti.com>
+Subject: [PATCH] arm64: defconfig: Enable XDP socket support for high-performance networking
+Date: Mon, 28 Apr 2025 17:40:25 +0530
+Message-ID: <20250428121025.246119-1-m-malladi@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 14/23] media: iris: Fix NULL pointer dereference
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>,
-        <stable@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-14-3a6013ecb8a5@quicinc.com>
- <7f37ec27-0221-4bb2-91f9-182244014b5a@stanley.mountain>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <7f37ec27-0221-4bb2-91f9-182244014b5a@stanley.mountain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEwMCBTYWx0ZWRfX9qTkxysjzOdX vbYKg9wW/B3oUy+7fBGpN0NI67mY9XNaBkA53O+OkCTFiS7cEaUQQEhG+634TbuBODeq1xsAqHI bWf65H2cgRFx3CCKZ2L7bNZKn8VKoBnr4R1AGBCEZy9tjpHw0rg5puu3swVed8WZg6nTe7GPFFU
- qw9UjyPmuk52YEVxZJJXP8qoWn6w7/sTyVZLD+qbFo5kK+Q5CzUOOMxUsNzo5i0CKHLgefOov9R f20r2DpOVyttJXiuLzjQ7//KAYeXkgRVo7uiciLxqxQDWQhlSSKg6QO9G6EScWcsV+GboD4SUCy fkj3Vm1OfkNlLomgTCrwTm01CwqSIt0lDLhSRrIhzt3g4ehZPw2b5IdDyHwMTZWx0+iJydOBRqU
- 16P80vqRh263y0R+QsS/+iJ9xW3EPAgnJjojTBg/heNWpv/mWt2dJfuHMbHz/YVknReDrXDJ
-X-Proofpoint-GUID: uqIE7-Tc042rMp5myf4w9S68coRbWEF_
-X-Proofpoint-ORIG-GUID: uqIE7-Tc042rMp5myf4w9S68coRbWEF_
-X-Authority-Analysis: v=2.4 cv=M/5NKzws c=1 sm=1 tr=0 ts=680f7027 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=VLf8UrQIVRTUJMQaSbwA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280100
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+From: MD Danish Anwar <danishanwar@ti.com>
 
+Enable CONFIG_XDP_SOCKETS to allow for eXpress Data Path (XDP) socket
+support specifically on TI SoC platforms such as the AM64x and AM65x.
+This enables the use of XDP sockets for high-performance, low-latency
+networking applications, allowing for efficient processing of network
+packets and improved overall system performance.
 
-On 4/28/2025 3:10 PM, Dan Carpenter wrote:
-> On Mon, Apr 28, 2025 at 02:59:02PM +0530, Dikshita Agarwal wrote:
->> A warning reported by smatch indicated a possible null pointer
->> dereference where one of the arguments to API
->> "iris_hfi_gen2_handle_system_error" could sometimes be null.
->>
->> To fix this, add a check to validate that the argument passed is not
->> null before accessing its members.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: fb583a214337 ("media: iris: introduce host firmware interface with necessary hooks")
->> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Closes: https://lore.kernel.org/linux-media/634cc9b8-f099-4b54-8556-d879fb2b5169@stanley.mountain/
->> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
->> ---
->>  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> index 1ed798d31a3f..cba71b5db943 100644
->> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
->> @@ -267,7 +267,8 @@ static int iris_hfi_gen2_handle_system_error(struct iris_core *core,
->>  {
->>  	struct iris_inst *instance;
->>  
->> -	dev_err(core->dev, "received system error of type %#x\n", pkt->type);
->> +	if (pkt)
->> +		dev_err(core->dev, "received system error of type %#x\n", pkt->type);
-> 
-> I feel like it would be better to do:
-> 
-> 	dev_err(core->dev, "received system error of type %#x\n", pkt ? pkt->type: -1);
-we don't need to print anything if pkt is NULL.
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Dikshita
-> 
-> regards,
-> dan carpenter
-> 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 9e16b494ab0e..5c3abd51074d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -130,6 +130,7 @@ CONFIG_MEMORY_FAILURE=y
+ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
++CONFIG_XDP_SOCKETS=y
+ CONFIG_UNIX=y
+ CONFIG_INET=y
+ CONFIG_IP_MULTICAST=y
+
+base-commit: 2c9c612abeb38aab0e87d48496de6fd6daafb00b
+-- 
+2.43.0
+
