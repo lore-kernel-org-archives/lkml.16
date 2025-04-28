@@ -1,123 +1,91 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F478C1E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 19:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646038C1E;
+	Mon, 28 Apr 2025 19:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745868778; cv=none; b=PH73UhzTKK2Mgr31bUTFqNpwhqFwizC+ekPhM7NI6eLsDA7fRsIs0Of6EhiRVpO/Ah7xruYycb4kswcYEy6htCQo3P4qhVia5OYtJn89pIUoQMQUI3VCspHXbTe2XXhKVEfe7oHRUbXWMtMgSi3SSRDmj7j+4BKqJyA971jUBfE=
+	t=1745868812; cv=none; b=jKsrYSt44mkI38jNNLXnNvUYbm8W33XowRPGzp1XCR2EMVifnEzRGkj8j32vZaIRHWtg5x98GukbE+6FrEHPxLdz5vtpq5JBby1GbDe84Z37ufajBiP9fjiT5b3cprV+6FuWou32YTNQO9v0ljD0NUtgiYLahIPj3QlssiSHQCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745868778; c=relaxed/simple;
-	bh=Y6n23dawAWFH2JLNBPqMIuR/bd0pb0K07Z82KXD09aQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Twy1R5BphlhSUddUvPLiySGOwW7iOPWnyRvvMFRk9EvJcAZcp0cEJ6W3BPmP7w8uS7H8zvJR5dKeCOHoko1YbKtw0PTFkmGW+OPT83pdLuJXvk6Ec/2Eag/9Va1GOwtKD34xI8zTYlqUZUfjqR6HI7IQCF6+Ott7zjbuFN/v8UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BKodFuoK; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745868812; c=relaxed/simple;
+	bh=fX3wJzMvCpmppQx9eX7xDgMDyv3PO2lJW4kBkq2APOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KH9t1BHsIYcH2SaBRsm6jbpqCWGxlsjBHvCQdZOY5NVrRL3QrYCYvsTk6syRzwkhxxRjds5iAYyCjRfD6mYS2G1dfXA07NCTlF/c9OSKhedpGzl0GctEDV+B0cMAjFkiUZ4y3WOy7QVwpWM0OmNCMBHtOvWOvf2u4LeVNuyWJOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSoMrtCG; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BKodFuoK"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2295d78b433so56166925ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:32:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSoMrtCG"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2cc57330163so3446007fac.2;
+        Mon, 28 Apr 2025 12:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745868773; x=1746473573; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745868810; x=1746473610; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mfzpR+XCt8jA2E6ve9YtKygB0tbO6iFuLJbvzZ6DwIk=;
-        b=BKodFuoKyZy8EeF8JGblYjA4dNh7RUvbhVYB4VOiJuAtCloHpwPo/hNawAYITUwYzP
-         Bz0ttIaUuhb5txq6vLM+Sl9/v1FgytfpnKy+Ya8YGXtTlDgARHf2r36Di/PUYcAE/WI0
-         kspqsYXLB6hITEOCcJg3sW26Qp5IJt0K6tlCQ=
+        bh=fX3wJzMvCpmppQx9eX7xDgMDyv3PO2lJW4kBkq2APOo=;
+        b=QSoMrtCGNdtBduhY3i7WilJQWhs4BW8XVZBTg8CaMrpPTyk9xnluZMpPECzEc6HKPn
+         Y/CtmXS1CYqT69jk4CfyH0Voob6JsvluS2l8kA7cKnkL7IJT8LWTbAnXB6TGm89r5F3b
+         B8bW7X65/7Gcs81GFTNXMa7Nsu8xSOHn+5U0AXdv2r/JcPKRtO+WJZgKhbXccr6L3mCY
+         Sff3+bByKaw1kHnSFTHKXO1dwcLtW1sDAbIaW7OhF/8rbYMRKuywunLAXKZHmQ5ihp6t
+         B9ZniXwl7E2TWhNTX+vO5QiLOX26+yJt7ubi9+9buXoso58dA+MMkhVUNB8zvLm7/7nv
+         SZDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745868773; x=1746473573;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745868810; x=1746473610;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mfzpR+XCt8jA2E6ve9YtKygB0tbO6iFuLJbvzZ6DwIk=;
-        b=HeRXdtJpFWg4/kmb0GE/TWIZPTTNtphGEUAmWQYLp/e4PddBh5AW6ma7S0Bfj7N8Bp
-         0auqXtADji2llW83jDXc3+iVC0tSHf8WORmlB0ML94YgWfWEUqogDf7xBZT7eiom+zn+
-         NV8lkhxWn+WbvVXJOF5Ul57bJuECO6FOa7F+aRdJY7KvMfRBAL0MZz/VGt48+fIsuR2d
-         vFfu1RKrVd5ICnqUD0onjWDyGJ0NnLFuKO+cl+IHlqpFzEMfopnnVC1BZh6SLuA2lOSw
-         /Cz5Zta29Hj8QtrcVsZ6c0BaaxnU4ajP61Ovp2LbcfrwxFTayEeGOdUSBzEZOiIMqenF
-         QCjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSJhKRIv5F5b1xBzmKhrVbT3q/r1kbTZVBHBw+CBvqVnnLu5WDJiSK8bfW2sOYaLooUSwj+4ziStlFMAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0ltaRPgYG+3bVN7Xwc0O+GtuMpfXmiIYBwr+dF4MhjMCwN1hU
-	ONEEStvx7tO7rGLWTlnePhmlv7gDKAB5RWWsdbrYgT8gq+8cX01DC3Vp1+F/J4fUMB+jjkJLXcs
-	=
-X-Gm-Gg: ASbGnctbfsdLH/TuMyk/lBVfo5kMeZKclk91Dc7G5bkQdjenuSquE6XGD/f88bmi79r
-	haZTTlIvYyUtTpMDmUzEGOMrHCFCB1N18Wv89w48/4fpZWrxUZNNvFeZLmGFZlxdZUXd53a50Jo
-	p6+9ZT9RrKZh4GuXa6LeflILjU6U7mLOxP8i50vWm3VCPS2jSA3bVMtGLjJJ7hulMehkuEO5/TX
-	U6w1tFtYL47XHrkLp8zyX5z/77T1GVyLSLZ/weJdOcrfRLwLin3t4PmAASeDaZP+U/DlQHshjzC
-	UhQ5b3yrrOol1UbXBmmChn2n87k93rxX2HlZSs9h8Oj8vpJ3fgijboCsBpQqKaf/3zyJ9gCVLdw
-	0BzEqkSVDiRO6UdheJ9U=
-X-Google-Smtp-Source: AGHT+IGJ+GmNinwhdGaGycWHizhk/hWVEHMK339wghQFUqcNWHjpf27eVy7VO+9nWeQmQKyvtwWX1Q==
-X-Received: by 2002:a17:902:f60e:b0:224:c47:cb7 with SMTP id d9443c01a7336-22dc6809c39mr165024165ad.0.1745868773400;
-        Mon, 28 Apr 2025 12:32:53 -0700 (PDT)
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com. [209.85.215.177])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76e16sm86817775ad.44.2025.04.28.12.32.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 12:32:51 -0700 (PDT)
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af5085f7861so3876282a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:32:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVxEFo6pBHn9DOSE+y7UInibFMi/xeP3ojz3I0q7QD17bZvpfasOiNxHBlZAbB52+WQYJ3zOhEabZtd9ec=@vger.kernel.org
-X-Received: by 2002:a17:90b:5490:b0:309:f5c6:4c5c with SMTP id
- 98e67ed59e1d1-30a01398884mr14674637a91.25.1745868770606; Mon, 28 Apr 2025
- 12:32:50 -0700 (PDT)
+        bh=fX3wJzMvCpmppQx9eX7xDgMDyv3PO2lJW4kBkq2APOo=;
+        b=bu7shPUZfKS+EQn7LIruBAmu3JYJAb2od1E3QyzkfRW6ZSjjtblbPI4rmkwSvXaA4a
+         X64L9vKgrprNT/lu3PMl7SN1Eoprt95BGklYXCXhcuyCyjawQxMuDaucSBPeR3wr9Fds
+         XGX70E8kMxKv6x6Ir703Nd6a0fH78ksM1746qA9TFN8HsiSSOihwHYkI0y5XVQYmLh62
+         6iLgKvDFCZCz2pZ9RmjROtB/w8uR04GNxUhOtyUeljw5IhJd6JBZagFTWrPxFu3nLYyC
+         ng8y14XEQ/x6+wBprKBMbS/s1esSPhLJVipfQbVECKZ9/3Yy/atLtd/uWbNMGiw8hOui
+         2Tpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUusY3tlHe82ITnDvm6uNLnGdfADzXcBTSWbiyzVlyZiFcgOmUdbE4AC1l9nk4i8NED/KRPqZQY/ws=@vger.kernel.org, AJvYcCXQQWtScJM1c+xCQg0CgxrWhSr0x2ThiRWg9DMNDeEGF7drYzbAzlBO8D+jt2CbNISvpXZUHDsaL4gVOTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp9OLSrvZZsX+RZz2K21sj3DP+ncD1Y82uyNWyAzmuG67cHlFF
+	+tJ2UGnLRG4oHQR01Gsvc+I9DzPSQ9WLsPBNTVBGm6Uu2h1+b44x1K5J9g==
+X-Gm-Gg: ASbGncsuBbWPUAQT/t2fL37Z8lH/y2n8V/T/Dl61cP8RSckju+LPdvfOTY9iWQ1ewBu
+	WMWuHxvYmH5z58oSi0xR+VYT60vBgtfTMYIK0LRIxZKmAzDollofoQrggpCxqA/kBPqNp1wYtJc
+	Y34XqdaOLXpbhnYD/x0ajachFYFC0rOCUvg7LQFJ9CR2pq/uBPbC6Hhef+b65LaSly5C36CR+LE
+	Sd/CDsqMj1obq1o2Ny6OmI5pChozqvxbuxUCMBzMBCYsmpyOab06y1hVuYZ9IeOfVOk2bNfNW51
+	+RPfgRd67TE24eJmSCkjFgURA0002N9LTAgBpm9RtA==
+X-Google-Smtp-Source: AGHT+IFucS+go6LKq+JUwgvoDuptmo8PyOjo7aYF+zk9OasgwvP/cfm1kll04Xv8npNY6Lsr5M4vWA==
+X-Received: by 2002:a05:6871:33a0:b0:2d4:d820:6d82 with SMTP id 586e51a60fabf-2da486a7c1bmr53271fac.26.1745868809865;
+        Mon, 28 Apr 2025 12:33:29 -0700 (PDT)
+Received: from debian ([200.92.175.161])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d973736065sm2447490fac.16.2025.04.28.12.33.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 12:33:29 -0700 (PDT)
+Date: Mon, 28 Apr 2025 13:34:01 -0600
+From: Your Name <kike.correo99.f@gmail.com>
+To: daniel.lezcano@linaro.org
+Cc: glaroque@baylibre.com, rafael@kernel.org, rui.zhang@intel.com,
+	lukasz.luba@arm.com, linux-pm@vger.kernel.org,
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RESEND][PATCH] thermal: amlogic: Rename Uptat to uptat to follow
+ kernel coding style
+Message-ID: <aA_YKeU45ZTXYUes@debian.debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421101248.426929-1-wenst@chromium.org> <20250421101248.426929-2-wenst@chromium.org>
-In-Reply-To: <20250421101248.426929-2-wenst@chromium.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 28 Apr 2025 12:32:39 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XLonF5qM+f6diESvnqAHKm4Y7wwPsNssdNqZfkn2OzSw@mail.gmail.com>
-X-Gm-Features: ATxdqUEnTKoRxhC-TaBEXil7UFoCr2GvfRCzsqwspS2g_INzWAwlvG_Di1SAl68
-Message-ID: <CAD=FV=XLonF5qM+f6diESvnqAHKm4Y7wwPsNssdNqZfkn2OzSw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: HID: i2c-hid: elan: Introduce Elan eKTH8D18
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, chrome-platform@lists.linux.dev, 
-	linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Daniel,
 
-On Mon, Apr 21, 2025 at 3:13=E2=80=AFAM Chen-Yu Tsai <wenst@chromium.org> w=
-rote:
->
-> The Elan eKTH8D18 touchscreen controller is an I2C HID device with a
-> longer boot-up time. Power sequence timing wise it is compatible with
-> the eKTH6A12NAY, with a power-on delay of at least 5ms, 20ms
-> out-of-reset for I2C ack response, and 150ms out-of-reset for I2C HID
-> enumeration, both shorter than what the eKTH6A12NAY requires.
-> Enumeration and subsequent operation follows the I2C HID standard.
->
-> Add a compatible string for it with the ekth6a12nay one as a fallback.
-> No enum was used as it is rare to actually add new entries. These
-> chips are commonly completely backward compatible, and unless the
-> power sequencing delays change, there is no real effort being made to
-> keep track of new parts, which come out constantly.
->
-> Also drop the constraints on the I2C address since it's not really
-> part of the binding.
->
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> Changes since v1:
-> - Reworded commit message
-> - Dropped the enum for the new compatible string entry
-> - Dropped constraint on I2C address completely
-> ---
->  .../devicetree/bindings/input/elan,ekth6915.yaml     | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
+Apologies for my previous email being sent in an incorrect format.
+Thank you for applying my patch! I’m trying to verify where it was merged.
+Could you confirm if my commit below was merged into the `staging-testing` branch or another tree?
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Commit hash: 84fe0cc6fddb6afcdca838d80756080f84cf9ecd
+
+Best regards,
+Enrique Vazquez
+
+---
+Signed-off-by: Enrique Vazquez <tu-correo@gmail.com>
