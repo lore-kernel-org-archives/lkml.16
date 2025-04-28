@@ -1,294 +1,401 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C18E211710
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 22:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D331721505E;
+	Mon, 28 Apr 2025 22:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745881141; cv=none; b=gXJwul8+xO481FHABsGFuJM5NSYKpH5M5y94KitRr8O6l77DDbSSaFLZ3Ii0FDEMmXA2VYNSgq/MsB+lD5IwKKtknV9fajeFjH4hJm2LpFo6wG9ncD43fHbX2jJWBTkMaibrvaSLEtoN83bWPT3RnLilc5Jfvh8c7Wo5mXoOWPk=
+	t=1745881193; cv=none; b=oHXvHLgrXta4IARI7JTFUac2poMJXoHeoP/utZ9wzDKjS61FdWyC1JvmegRRZMuER5BSo3bHw0UI5PfSHgoR3yoe5c7LYSvvXj1bQm5U2fBs1P8Yr+iVd+CAYYq2Ti0iu0ndhc4quJ1Hwjjx3nTjUjMohme9CEowJcg/idpLl1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745881141; c=relaxed/simple;
-	bh=RIX4Kwt34hcbslmf4nvbrtcvGmHfBuA915iIyWV1G0A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OHDcQPtU+nR+eGWTp2MjtKthvqShzp7PsvCE6prQae6mZKiWqcw0cMOdvcWIiv02x22HmVKDsJ847xyjwsMN52KurUcxZlYiu2zMLnAJ0YrnlbhY3w6Vq/SHtCuwe30Efi2IOUdPRKsNl1mXAPMl4cOMoUcpei10+elxONQyKPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F7Ddex0h; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745881193; c=relaxed/simple;
+	bh=L4te2qUMfMTITd5+XghShl31UbVtFM2OlQ00sskQCKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qxl0BU/pA0NrILk85O236KuHWFhL3Xh8uSSKkqEfva8+sIC1c3L4MjX40v16tKFTEddh6AdChR5LhKnM3A0YvdNmqcYglcWvhWfhr0b1fIadqbnDYaQ06AjTDwL0nzWwi3grnBPIDkpOoI152qG94cdbq+YVdb3ZQSzW9n3PDRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HiiMjvnc; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F7Ddex0h"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2242f3fd213so45763085ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745881137; x=1746485937; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+a7zPclX7FI9TXPBv9nI9R812htaSbFg8fCv5xqaUYY=;
-        b=F7Ddex0hQiKUMiAxhsJFm7H12p26P3xlm7iJaMkG8ql4AiD/wIQQ043l8wYY3AVnwj
-         r7oBercWEnrxKE8Lm+CjPK7ijEoQrgPORm9J+iNkDF+7CrXTS8Ny2Kr2ogFk+bGiqmIP
-         UCW97/5GKY/FFCtl+w5Sin25JjGfFyjVEruSpja/ayIQcbYQ3F9CuuQ9fVB0dUJvQzqm
-         tqvzht3M/lLJ53HhPFxx93LtIBgRO8MH50elTksYj8gaJX70hwCi4ZPQmdOeitT1QXtI
-         4GsMRirCY7oYUUTXsvOw9sMtx0A//5fu0VIWFe9999W/Pvat7tHmeDiNsKwOSRzvFy3+
-         FBww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745881137; x=1746485937;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+a7zPclX7FI9TXPBv9nI9R812htaSbFg8fCv5xqaUYY=;
-        b=jEybuSVEjFF9/SYj653MV5iwiL8sXo1HOjA/mb1/AgOwlqiGOP4iWmPMFBkgjlKBFh
-         GliDVKpzzEsXMu1JDvGpP2+qfmg3TDgRNdvMnzcMuEtPUnTPZpIudpJYefwcD250K04N
-         R5MstTIv36X9cheBIPthMDwj/fweZMu2YXiNO9oEbw039yf/C5r/Ld8bQ2VZ/jD7sRl4
-         GPGqMmEXn8n0PXn1S48sWf+4UTCpZq4KlWEA2/BZiDy6FCZbAX79KMv5zAux9G5Nf26H
-         rGTz/goJs52s0srDMB/NnsWbglcTGuZax/y1p0953wSgF9N8XPB9FHIcwLSaFTHlOG+p
-         /bsw==
-X-Gm-Message-State: AOJu0YyKEnKYRNZxEQlQE1qfiHrjU9A/k6OGOx+/a7Mvp1ROnJeTRg4f
-	N6PJQavrsdw1v9/ey6CZ1meXg/7YUeSN3JoP83QcqbEkbE2yxQsVqkbVp/xfQyKkwv1DFSHScCw
-	2Pg==
-X-Google-Smtp-Source: AGHT+IEvZHozDkA4Ik3NDdiJwEua5M3JTELb7OyCHbNd5VAQvFbLEUkaY/6CDJLZt4RwobaUGj+GE5U6tdA=
-X-Received: from plhl18.prod.google.com ([2002:a17:903:1212:b0:223:3ab:e4a0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a05:b0:21f:3e2d:7d42
- with SMTP id d9443c01a7336-22dc6a08d51mr167921165ad.23.1745881137613; Mon, 28
- Apr 2025 15:58:57 -0700 (PDT)
-Date: Mon, 28 Apr 2025 15:58:55 -0700
-In-Reply-To: <20250321221444.2449974-2-jmattson@google.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HiiMjvnc"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.183])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 348FB211AD04;
+	Mon, 28 Apr 2025 15:59:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 348FB211AD04
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745881191;
+	bh=Ki5KeXAVraOSauDknkltjux3zzRVtw6GUNk+0cIhOFo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HiiMjvnc+CRiV2YRuVssXcQRX7YaNCzNgfj8iZi0/tVyaknO7v6obfSB9CuJAHtQm
+	 2ZBx5jmQxdwbG82mGk5NiNosF8rmzfzjRYGFv8OkKhGKhmJmVUGZ/aUAzDgdB7p9VY
+	 4QdnBzjObibxChNJWE+hfpVc3Z5ZLGJuTyTwltXs=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: ardb@kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	dimitri.sivanich@hpe.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	imran.f.khan@oracle.com,
+	jacob.jun.pan@linux.intel.com,
+	jgross@suse.com,
+	justin.ernst@hpe.com,
+	kprateek.nayak@amd.com,
+	kyle.meyer@hpe.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	mingo@redhat.com,
+	nikunj@amd.com,
+	papaluri@amd.com,
+	perry.yuan@amd.com,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	romank@linux.microsoft.com,
+	russ.anderson@hpe.com,
+	steve.wahl@hpe.com,
+	tglx@linutronix.de,
+	thomas.lendacky@amd.com,
+	tim.c.chen@linux.intel.com,
+	tony.luck@intel.com,
+	wei.liu@kernel.org,
+	xin@zytor.com,
+	yuehaibing@huawei.com,
+	linux-acpi@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next] arch/x86: Provide the CPU number in the wakeup AP callback
+Date: Mon, 28 Apr 2025 15:59:47 -0700
+Message-ID: <20250428225948.810147-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250321221444.2449974-1-jmattson@google.com> <20250321221444.2449974-2-jmattson@google.com>
-Message-ID: <aBAIL6oGYJ7IV85X@google.com>
-Subject: Re: [PATCH v3 1/2] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 21, 2025, Jim Mattson wrote:
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 2b52eb77e29c..6431cd33f06a 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -7684,6 +7684,7 @@ Valid bits in args[0] are::
->    #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
->    #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
->    #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-> +  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
+When starting APs, confidential guests and paravisor guests
+need to know the CPU number, and the pattern of using the linear
+search has emerged in several places. With N processors that leads
+to the O(N^2) time complexity.
 
-Might be pre-existing with C-states, but I think the documentation needs to call
-out that userspace is responsible for enumerating APERFMPERF in guest CPUID.
+Provide the CPU number in the AP wake up callback so that one can
+get the CPU number in constant time.
 
-And more importantly, KVM either needs to honor APERFMPERF in each vCPU's CPUID,
-or the documentation needs to call out that KVM doesn't honor guest CPUID for 
-APERF/MPERF MSRs.  I don't have a strong preference either way, but I'm leaning
-toward having KVM honor CPUID so that if someone copy+pastes the KVM selftest   
-code for the host enabling, it'll do the right thing.  On the other hand, KVM  
-doesn't (and shouldn't) fully emulate the MSRs, so I'm a-ok if we ignore CPUID
-entirely (but document it).
-
-Ignoring CPUID entirely would also make it easier to document that KVM doesn't
-upport loading/saving C-state or APERF/MPERF MSRs via load/store lists on VM-Enter
-and VM-Exit.  E.g. we can simply say KVM doesn't emulate the MSRs in any capacity,
-and that the capability disable the exit/interception, no more no less.
-
-Heh, I guess maybe I've talked myself into having KVM ignore guest CPUID :-) 
-
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index ea44c1da5a7c..5b38d5c00788 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
->  #define	IOPM_SIZE PAGE_SIZE * 3
->  #define	MSRPM_SIZE PAGE_SIZE * 2
->  
-> -#define MAX_DIRECT_ACCESS_MSRS	48
-> +#define MAX_DIRECT_ACCESS_MSRS	50
-
-Ugh, I really need to get the MSR interception cleanup series posted.
-
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 4b64ab350bcd..1b3cdca806b4 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4535,6 +4535,9 @@ static u64 kvm_get_allowed_disable_exits(void)
->  {
->  	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
->  
-> +	if (boot_cpu_has(X86_FEATURE_APERFMPERF))
-> +		r |= KVM_X86_DISABLE_EXITS_APERFMPERF;
-> +
->  	if (!mitigate_smt_rsb) {
->  		r |= KVM_X86_DISABLE_EXITS_HLT |
->  			KVM_X86_DISABLE_EXITS_CSTATE;
-> @@ -6543,7 +6546,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->  
->  		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
->  		    cpu_smt_possible() &&
-> -		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-> +		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
-> +				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
->  			pr_warn_once(SMT_RSB_MSG);
->  
->  		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
-> @@ -6554,6 +6558,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->  			kvm->arch.hlt_in_guest = true;
->  		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
->  			kvm->arch.cstate_in_guest = true;
-> +		if (cap->args[0] & KVM_X86_DISABLE_EXITS_APERFMPERF)
-> +			kvm->arch.aperfmperf_in_guest = true;
-
-Rather that an ever-growing stream of a booleans, what about tracing the flags
-as a u64 and providing a builder macro to generate the helper?  The latter is a
-bit gratuitous, but this seems like the type of boilerplate that would be
-embarassingly easy to screw up without anyone noticing.
-
-Very lightly tested...
-
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 28 Apr 2025 11:35:47 -0700
-Subject: [PATCH] KVM: x86: Consolidate DISABLE_EXITS_xxx handling into a
- single kvm_arch field
-
-Replace the individual xxx_in_guest booleans with a single field to track
-exits that have been disabled for a VM.  To further cut down on the amount
-of boilerplate needed for each disabled exit, add a builder macro to
-generate the accessor.
-
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 ---
- arch/x86/include/asm/kvm_host.h |  5 +----
- arch/x86/kvm/svm/svm.c          |  2 +-
- arch/x86/kvm/vmx/vmx.c          |  2 +-
- arch/x86/kvm/x86.c              | 25 ++++++++-----------------
- arch/x86/kvm/x86.h              | 28 +++++++++-------------------
- 5 files changed, 20 insertions(+), 42 deletions(-)
+ arch/x86/coco/sev/core.c           | 18 ++++++++----------
+ arch/x86/hyperv/hv_vtl.c           | 17 +++++++----------
+ arch/x86/hyperv/ivm.c              |  8 +++++++-
+ arch/x86/include/asm/apic.h        | 14 ++++++++++----
+ arch/x86/include/asm/mshyperv.h    |  5 +++--
+ arch/x86/kernel/acpi/madt_wakeup.c |  8 +++++++-
+ arch/x86/kernel/apic/apic_noop.c   |  2 +-
+ arch/x86/kernel/apic/x2apic_uv_x.c |  7 ++++++-
+ arch/x86/kernel/smpboot.c          | 19 +++++++++++++++----
+ 9 files changed, 64 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 6c06f3d6e081..4b174499b29c 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1389,10 +1389,7 @@ struct kvm_arch {
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 82492efc5d94..063f176854fd 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1179,17 +1179,24 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+ 		free_page((unsigned long)vmsa);
+ }
  
- 	gpa_t wall_clock;
+-static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
++static int wakeup_cpu_via_vmgexit(struct wakeup_secondary_cpu_data *wakeup)
+ {
+ 	struct sev_es_save_area *cur_vmsa, *vmsa;
+ 	struct ghcb_state state;
++	unsigned long start_ip;
+ 	struct svsm_ca *caa;
+ 	unsigned long flags;
+ 	struct ghcb *ghcb;
+ 	u8 sipi_vector;
+ 	int cpu, ret;
++	u32 apic_id;
+ 	u64 cr4;
  
--	bool mwait_in_guest;
--	bool hlt_in_guest;
--	bool pause_in_guest;
--	bool cstate_in_guest;
-+	u64 disabled_exits;
++
++	cpu = wakeup->cpu;
++	apic_id = wakeup->apicid;
++	start_ip = wakeup->start_ip;
++
+ 	/*
+ 	 * The hypervisor SNP feature support check has happened earlier, just check
+ 	 * the AP_CREATION one here.
+@@ -1208,15 +1215,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
  
- 	unsigned long irq_sources_bitmap;
- 	s64 kvmclock_offset;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index cc1c721ba067..0f0c06be85d6 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -5053,7 +5053,7 @@ static int svm_vm_init(struct kvm *kvm)
+ 	/* Override start_ip with known protected guest start IP */
+ 	start_ip = real_mode_header->sev_es_trampoline_start;
+-
+-	/* Find the logical CPU for the APIC ID */
+-	for_each_present_cpu(cpu) {
+-		if (arch_match_cpu_phys_id(cpu, apic_id))
+-			break;
+-	}
+-	if (cpu >= nr_cpu_ids)
+-		return -EINVAL;
+-
+ 	cur_vmsa = per_cpu(sev_vmsa, cpu);
+ 
+ 	/*
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 582fe820e29c..7ed3c639d612 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -237,17 +237,14 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+ 	return ret;
+ }
+ 
+-static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
++static int hv_vtl_wakeup_secondary_cpu(struct wakeup_secondary_cpu_data *wakeup)
+ {
+-	int vp_id, cpu;
++	unsigned long start_ip;
++	u32 apicid;
++	int vp_id;
+ 
+-	/* Find the logical CPU for the APIC ID */
+-	for_each_present_cpu(cpu) {
+-		if (arch_match_cpu_phys_id(cpu, apicid))
+-			break;
+-	}
+-	if (cpu >= nr_cpu_ids)
+-		return -EINVAL;
++	apicid = wakeup->apicid;
++	start_ip = wakeup->start_ip;
+ 
+ 	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
+ 	vp_id = hv_vtl_apicid_to_vp_id(apicid);
+@@ -261,7 +258,7 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
+ 		return -EINVAL;
  	}
  
- 	if (!pause_filter_count || !pause_filter_thresh)
--		kvm->arch.pause_in_guest = true;
-+		kvm->arch.disabled_exits |= KVM_X86_DISABLE_EXITS_PAUSE;
+-	return hv_vtl_bringup_vcpu(vp_id, cpu, start_eip);
++	return hv_vtl_bringup_vcpu(vp_id, wakeup->cpu, start_ip);
+ }
  
- 	if (enable_apicv) {
- 		int ret = avic_vm_init(kvm);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ef2d7208dd20..109ade8fc47b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7613,7 +7613,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- int vmx_vm_init(struct kvm *kvm)
+ int __init hv_vtl_early_init(void)
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index c0039a90e9e0..6037cabc1ae0 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -9,6 +9,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/types.h>
+ #include <linux/slab.h>
++#include <asm/apic.h>
+ #include <asm/svm.h>
+ #include <asm/sev.h>
+ #include <asm/io.h>
+@@ -288,7 +289,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa)
+ 		free_page((unsigned long)vmsa);
+ }
+ 
+-int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
++int hv_snp_boot_ap(struct wakeup_secondary_cpu_data *wakeup)
  {
- 	if (!ple_gap)
--		kvm->arch.pause_in_guest = true;
-+		kvm->arch.disabled_exits |= KVM_X86_DISABLE_EXITS_PAUSE;
+ 	struct sev_es_save_area *vmsa = (struct sev_es_save_area *)
+ 		__get_free_page(GFP_KERNEL | __GFP_ZERO);
+@@ -296,11 +297,16 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
+ 	struct desc_ptr gdtr;
+ 	u64 ret, retry = 5;
+ 	struct hv_enable_vp_vtl *start_vp_input;
++	unsigned long start_ip;
+ 	unsigned long flags;
++	u32 cpu;
  
- 	if (boot_cpu_has(X86_BUG_L1TF) && enable_ept) {
- 		switch (l1tf_mitigation) {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f6ce044b090a..3800d6cfecce 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6591,27 +6591,18 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 			break;
+ 	if (!vmsa)
+ 		return -ENOMEM;
  
- 		mutex_lock(&kvm->lock);
--		if (kvm->created_vcpus)
--			goto disable_exits_unlock;
--
-+		if (!kvm->created_vcpus) {
- #define SMT_RSB_MSG "This processor is affected by the Cross-Thread Return Predictions vulnerability. " \
- 		    "KVM_CAP_X86_DISABLE_EXITS should only be used with SMT disabled or trusted guests."
++	cpu = wakeup->cpu;
++	start_ip = wakeup->apicid;
++
+ 	native_store_gdt(&gdtr);
  
--		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
--		    cpu_smt_possible() &&
--		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
--			pr_warn_once(SMT_RSB_MSG);
-+			if (!mitigate_smt_rsb && cpu_smt_possible() &&
-+			    boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
-+			    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-+				pr_warn_once(SMT_RSB_MSG);
+ 	vmsa->gdtr.base = gdtr.address;
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index f21ff1932699..7e660125f749 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -262,6 +262,12 @@ extern void __init check_x2apic(void);
  
--		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
--			kvm->arch.pause_in_guest = true;
--		if (cap->args[0] & KVM_X86_DISABLE_EXITS_MWAIT)
--			kvm->arch.mwait_in_guest = true;
--		if (cap->args[0] & KVM_X86_DISABLE_EXITS_HLT)
--			kvm->arch.hlt_in_guest = true;
--		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
--			kvm->arch.cstate_in_guest = true;
--		r = 0;
--disable_exits_unlock:
-+			kvm->arch.disabled_exits |= cap->args[0];
-+			r = 0;
-+		}
- 		mutex_unlock(&kvm->lock);
- 		break;
- 	case KVM_CAP_MSR_PLATFORM_INFO:
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 88a9475899c8..1675017eea88 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -481,25 +481,15 @@ static inline u64 nsec_to_cycles(struct kvm_vcpu *vcpu, u64 nsec)
- 	    __rem;						\
- 	 })
+ struct irq_data;
  
--static inline bool kvm_mwait_in_guest(struct kvm *kvm)
--{
--	return kvm->arch.mwait_in_guest;
--}
--
--static inline bool kvm_hlt_in_guest(struct kvm *kvm)
--{
--	return kvm->arch.hlt_in_guest;
--}
--
--static inline bool kvm_pause_in_guest(struct kvm *kvm)
--{
--	return kvm->arch.pause_in_guest;
--}
--
--static inline bool kvm_cstate_in_guest(struct kvm *kvm)
--{
--	return kvm->arch.cstate_in_guest;
--}
-+#define BUILD_DISABLED_EXITS_HELPER(lname, uname)				\
-+static inline bool kvm_##lname##_in_guest(struct kvm *kvm)			\
-+{										\
-+	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_##uname;	\
-+}
-+BUILD_DISABLED_EXITS_HELPER(hlt, HLT);
-+BUILD_DISABLED_EXITS_HELPER(pause, PAUSE);
-+BUILD_DISABLED_EXITS_HELPER(mwait, MWAIT);
-+BUILD_DISABLED_EXITS_HELPER(cstate, CSTATE);
++struct wakeup_secondary_cpu_data {
++	int cpu;
++	u32 apicid;
++	unsigned long start_ip;
++};
++
+ /*
+  * Copyright 2004 James Cleverdon, IBM.
+  *
+@@ -313,9 +319,9 @@ struct apic {
+ 	u32	(*get_apic_id)(u32 id);
  
- static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
+ 	/* wakeup_secondary_cpu */
+-	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
++	int	(*wakeup_secondary_cpu)(struct wakeup_secondary_cpu_data *data);
+ 	/* wakeup secondary CPU using 64-bit wakeup point */
+-	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
++	int	(*wakeup_secondary_cpu_64)(struct wakeup_secondary_cpu_data *data);
+ 
+ 	char	*name;
+ };
+@@ -333,8 +339,8 @@ struct apic_override {
+ 	void	(*send_IPI_self)(int vector);
+ 	u64	(*icr_read)(void);
+ 	void	(*icr_write)(u32 low, u32 high);
+-	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
+-	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
++	int	(*wakeup_secondary_cpu)(struct wakeup_secondary_cpu_data *data);
++	int	(*wakeup_secondary_cpu_64)(struct wakeup_secondary_cpu_data *data);
+ };
+ 
+ /*
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 07aadf0e839f..62c64778ad01 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -6,6 +6,7 @@
+ #include <linux/nmi.h>
+ #include <linux/msi.h>
+ #include <linux/io.h>
++#include <asm/apic.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/paravirt.h>
+ #include <hyperv/hvhdk.h>
+@@ -268,11 +269,11 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ bool hv_ghcb_negotiate_protocol(void);
+ void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
+-int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
++int hv_snp_boot_ap(struct wakeup_secondary_cpu_data *wakeup);
+ #else
+ static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
+ static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
+-static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { return 0; }
++static inline int hv_snp_boot_ap(struct wakeup_secondary_cpu_data *wakeup) { return 0; }
+ #endif
+ 
+ #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index d5ef6215583b..5de1bd4e49ed 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -169,8 +169,14 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
+ 	return 0;
+ }
+ 
+-static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
++static int acpi_wakeup_cpu(struct wakeup_secondary_cpu_data *wakeup)
  {
++	unsigned long start_ip;
++	u32 apicid;
++
++	start_ip = wakeup->start_ip;
++	apicid = wakeup->apicid;
++
+ 	if (!acpi_mp_wake_mailbox_paddr) {
+ 		pr_warn_once("No MADT mailbox: cannot bringup secondary CPUs. Booting with kexec?\n");
+ 		return -EOPNOTSUPP;
+diff --git a/arch/x86/kernel/apic/apic_noop.c b/arch/x86/kernel/apic/apic_noop.c
+index b5bb7a2e8340..dd4ba29042f9 100644
+--- a/arch/x86/kernel/apic/apic_noop.c
++++ b/arch/x86/kernel/apic/apic_noop.c
+@@ -27,7 +27,7 @@ static void noop_send_IPI_allbutself(int vector) { }
+ static void noop_send_IPI_all(int vector) { }
+ static void noop_send_IPI_self(int vector) { }
+ static void noop_apic_icr_write(u32 low, u32 id) { }
+-static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { return -1; }
++static int noop_wakeup_secondary_cpu(struct wakeup_secondary_cpu_data *data) { return -1; }
+ static u64 noop_apic_icr_read(void) { return 0; }
+ static u32 noop_get_apic_id(u32 apicid) { return 0; }
+ static void noop_apic_eoi(void) { }
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index 7fef504ca508..b76f865c31ef 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -667,11 +667,16 @@ static __init void build_uv_gr_table(void)
+ 	}
+ }
+ 
+-static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip)
++static int uv_wakeup_secondary(struct wakeup_secondary_cpu_data *wakeup)
+ {
++	unsigned long start_rip;
+ 	unsigned long val;
++	u32 phys_apicid;
+ 	int pnode;
+ 
++	phys_apicid = wakeup->apicid;
++	start_rip = wakeup->start_ip;
++
+ 	pnode = uv_apicid_to_pnode(phys_apicid);
+ 
+ 	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index c10850ae6f09..341620f1e1fe 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -715,8 +715,14 @@ static void send_init_sequence(u32 phys_apicid)
+ /*
+  * Wake up AP by INIT, INIT, STARTUP sequence.
+  */
+-static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip)
++static int wakeup_secondary_cpu_via_init(struct wakeup_secondary_cpu_data *wakeup)
+ {
++	unsigned long start_eip;
++	u32 phys_apicid;
++
++	start_eip = wakeup->start_ip;
++	phys_apicid = wakeup->apicid;
++
+ 	unsigned long send_status = 0, accept_status = 0;
+ 	int num_starts, j, maxlvt;
+ 
+@@ -865,6 +871,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
+ {
+ 	unsigned long start_ip = real_mode_header->trampoline_start;
++	struct wakeup_secondary_cpu_data wakeup;
+ 	int ret;
+ 
+ #ifdef CONFIG_X86_64
+@@ -906,6 +913,10 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
+ 		}
+ 	}
+ 
++	wakeup.cpu = cpu;
++	wakeup.apicid = apicid;
++	wakeup.start_ip = start_ip;
++
+ 	smp_mb();
+ 
+ 	/*
+@@ -916,11 +927,11 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
+ 	 * - Use an INIT boot APIC message
+ 	 */
+ 	if (apic->wakeup_secondary_cpu_64)
+-		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
++		ret = apic->wakeup_secondary_cpu_64(&wakeup);
+ 	else if (apic->wakeup_secondary_cpu)
+-		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
++		ret = apic->wakeup_secondary_cpu(&wakeup);
+ 	else
+-		ret = wakeup_secondary_cpu_via_init(apicid, start_ip);
++		ret = wakeup_secondary_cpu_via_init(&wakeup);
+ 
+ 	/* If the wakeup mechanism failed, cleanup the warm reset vector */
+ 	if (ret)
 
-base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
---
+base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
+-- 
+2.43.0
+
