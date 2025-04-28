@@ -1,115 +1,89 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A0E1DA4E
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFACE1DA4E;
+	Mon, 28 Apr 2025 02:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745809110; cv=none; b=GehvAR6UANe7ImODmeu9k95yI3Afw44ZZ8ng0jBTiuH2j5dlvyx254Z8pRJ+2ldeOcc/0bZrYvoQzfhFXlXAQuInc/52zcyuMNgbCFCihyKzQOcjNbpYaqVdPVPiAEJwvj4mhz4xV/pTtVRxGEGccfT+gYMzUYK0fkU7c6qEGg8=
+	t=1745809197; cv=none; b=NHUqwg5VxwCA61GGJAPiUk80nTcQjFV+TVu7EdV586GQxIOhWNZQvGnqRw54w2ZN6I4FmuY05KRbQwz6aJrjwGfRw7VQLTAZCbqhKTXrrpmV7vmshSc+qRTUhrMUDFClXuuH5dB5h79lyIV9yaEOkagAuM+oeKq34oT+fF9aMT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745809110; c=relaxed/simple;
-	bh=CrWa0zaqR+fioX4ZGe0U5ET7aY952ibB9y2/fFe/jSA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lme6BY91wCZytQr7io5cXMIFxnVfbO34raSpRftHzp/hLgIoHMakr3a/HjlaJK94Sfg7uysSO90AsPnmO+CB/JpT0lU+iLn2Bygu3LcCmWbV515XwOEzqtnRqLb5tiIAHYT4i1fbhP77abqkbbDDyF8rmD2LZIlv//ZrnVUOajo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGiAqE2+; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGiAqE2+"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-310447fe59aso49188531fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 19:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745809106; x=1746413906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sgaskaohNiGB8SMl25dOp7kdmIomeDvKcnSgFFSAa/Q=;
-        b=mGiAqE2+jaXe5hKJWyjWNw5FmZJtFbwaYeCJgYkSR/cjVzZK2gKZq3WZ8zWRukyet6
-         8IEV0xxYpncMWjkbt5le7tLbBDVTwrkRWUcF4+K8WnFh1w37a4jAvBXgQJgY/77xlxJI
-         HfdOPTdfRfIwXAc2SOOtIAwnb1r25gPASx8m/wRyrKRjyoi5vxshKIjvD+o0P4DzNAMc
-         fQuwj0eX6sA8tfzAO++6GOVWG5U9/ohX3QTIHVAcVJH3Ihww7LZ5P/Q7Js4D27CDsXRP
-         p3lrjp4EhAtKAaiNSu5uaSYEWQBIHQUVdIGD6ldldU/yR1nfOdZ8F74G1F6NHRCTatfI
-         Y6DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745809106; x=1746413906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sgaskaohNiGB8SMl25dOp7kdmIomeDvKcnSgFFSAa/Q=;
-        b=wbLVUahQUcsE6DINhnHXea3AWu3jiebLzFpwn1yzkhLfw/ktkReFWs3zJN0U+NWTVy
-         9liYRMYj1ARrvpUlVE7C1wp4nXgYDVU8mcU46fZr9vPebi3sfk6ucdtPCANggVC8VBKK
-         8GcIDv1Fyhnxhzed5b9ZT4Al0ioGNHll4IHWzKcAK1wv2vxiqkmc8ApmBphARmpY9jk2
-         a5MavjsWyRUa6mnLQ93iy7DIiVTenPNUr58QJVU0nPE5FKbnHiQ/DDXCik5JKFU8N+A4
-         ds5qTG10DHKgzYkHSaJpn7/O5Awd2q2DfLxqefoY/RDyJiPA9+ZOCGEP9o5tqGGZbWVl
-         /63A==
-X-Forwarded-Encrypted: i=1; AJvYcCWexs2FqcqlhZVeXKIfZlry9QTGdQOqD2nrUQ3xS8nMQdBGHPfz2vz+EnUg+vF4RfOHksT+/65GIE+ANXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym5IVAbRDd7KiDlIbrp2W3tR5cc5eogJXcbCLnw45YHxlW0ANL
-	cMNP4k9UjhoJgZBp9Z6cfPqxrv5zN7AVcJLtahLZfR23mRJ2Z0ag97V5ZIbE3Qm1mmRaMCJodRn
-	cttrMqiB3joG48sNBasUbeiUy9zk=
-X-Gm-Gg: ASbGncsEPVpswCInrwkRXoHGvfL/8lRBxaktZU6MLJccqtiE9QQJrA7a6xRYoI4usZe
-	t30XjvHQKIU4lb22454oBMjSgp/E4Y9bvrgEhTUFmUiHse6lBMfjVJDKdArN4Zcs9OVVtGDtK3/
-	4n6cAx+IUsgpx/zHAvWsTEkI3gzvSY957q
-X-Google-Smtp-Source: AGHT+IGZOTubn4VjyvSeuz299nYuDnHDnNdU5pA5hyhqNITQwhbGXmiPCTox/7qcT8nfbShuuY9sWWcjVmSf5erf208=
-X-Received: by 2002:a05:651c:248:b0:30c:5190:b264 with SMTP id
- 38308e7fff4ca-3190673b945mr33604131fa.20.1745809106179; Sun, 27 Apr 2025
- 19:58:26 -0700 (PDT)
+	s=arc-20240116; t=1745809197; c=relaxed/simple;
+	bh=/QcFu8jTMwn4D7EBmAXB8sLko0XzPZNY3u8sLFMOwlc=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=eT5QmMwu2do/7XLMQhLe+n/RZ5NnUUyoQWqdYm6KFnO/ZiriQuYg0G0Ntm7x6OqW7a6ZKszluABNK/FVKAdMIFxkmDolNMvJysVRZZv+I0HxIjYHJGJp3sm9bbBsk3EGA5LOtfbvwTcLgwE4rldVQBKyyY9tcz5OpKisXr1VBNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
+X-QQ-mid: zesmtpgz1t1745809183t446ab101
+X-QQ-Originating-IP: yt5W9iMGYhv6nhUbpzCKD90bJXJC/iXzbFaZIaC4rV8=
+Received: from localhost.localdomain ( [175.9.43.233])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 28 Apr 2025 10:59:42 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 10774730210279231519
+From: Liu Dalin <liudalin@kylinsec.com.cn>
+To: alexandre.belloni@bootlin.com,
+	linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rtc: loongson: Add missing alarm notifications for ACPI RTC events
+Date: Mon, 28 Apr 2025 10:59:40 +0800
+Message-Id: <20250428025940.980313-1-liudalin@kylinsec.com.cn>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250427185908.90450-1-ryncsn@gmail.com> <20250427185908.90450-5-ryncsn@gmail.com>
- <aA7PbiXv92WiTy8T@casper.infradead.org>
-In-Reply-To: <aA7PbiXv92WiTy8T@casper.infradead.org>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 28 Apr 2025 10:58:09 +0800
-X-Gm-Features: ATxdqUGu6YXco98zNPmPLy-X9iEnBe9n5XHBSiGkhoZ7yVSo6O49Fou8fYKa8H4
-Message-ID: <CAMgjq7CTtJ69W=6kOaEn740seY9Nh7To7WL+JTb_hFUHJ-TqAg@mail.gmail.com>
-Subject: Re: [PATCH 4/6] filemap: do not use folio_contains for swap cache folios
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
-	Yosry Ahmed <yosryahmed@google.com>, "Huang, Ying" <ying.huang@linux.alibaba.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz7a-0
+X-QQ-XMAILINFO: M8BaT0GEeXPxg5nrbAvk+UCRcnUxWSxI+pVua2GjS5uSb3Ck2wbqch5J
+	UxHh9z4FvGYZw7jE594J2gXbe8D5eGwpeulyTaQ4RSV0wsgmh5JpxrvGVkGy/qQcHh6d0mB
+	1z7wLJOavE/mrOFIFrrV8ieBvd7HHWD49ZFuD0ey1zg0TX794sJlEPzsRDJVvEC1E5uc3he
+	EY0/uNbbMyrRUHWMIUImHBa4TrONMCZAjaTSuJuiWW1FcpZHrZMLQwxTA8GyMSeoCgsd/aL
+	ptCgUrHIIxo7nSQ7RoNKWWdTU+IdWaADmqJji6il0MiNC2PPj2DBbDUMWAKAvnigDFpBIM2
+	uXwkEfrXb83JUmLMoKJyIWWGXPFqtr/End5P4DI69ToJGzs1fnzcdAXoFKU6896EiM9ezl0
+	KvG94lNPJc20laN1M6MKJ+t4dwbAewRaVT8PnkHYubi6Q00j9IwnlMiufy5+ZZOSbVJH8R0
+	Sgyr6q/YsWwybbCF4BHfNwVXKUs8NzU49AIZYXY2ScW2X1tiJGWBL/tONNoVVfCoMNg3Jn3
+	kv7YP9hsf8d4z55llCLyOjawK3FBc0C/PBDN/WUZlQO5ky6LpJh9HeQ1X6PD05bXNj1g3WP
+	kpwhBnkgMCkjTWDxTDHtXvjH34Ri/sSs2zT4ZxQfQNipOVBa1V6856THIMy0VE4GfCBtfqg
+	5ttN0bX9qzrFd268IjMbZhifvnjuYvdR10XeuRSjG2U6ePyNJzTeCRWdOO27tCghX0g0fdM
+	o3mH+n3t67RkYvx8QORM1/cOAGT8IVIcG+Ow3Pn88dEYnd5U1z9qqnPaY795V3s+v0gC4fa
+	oEAL3Esr+ynkHrlm8yqIqx0kr9/ZH3nopPzdJfZF9hiUMjYulnPXWPuxMaPyfFLwuI8VAZ1
+	PWP3q5JWcCST+/pyBCg5ETpYQsYZg+8coKHczkt/2YFI8Tb/YQqwJqDL5wRuEUgIpkr0oKl
+	1GIo44kOUxcnLmH74cWPdbwzJjOfpSiaMJ//wqtYxaigb2A9I6VijSQDXE2pqiIalBFoN90
+	ftCpX0m/rWyMI6XvTN8J1RatoA/PvhFXZn71qHlNRFHx92Gg2DzoeOxhEaEAB/Kz7xmOe/z
+	kYTniAnCLdz9GIQoY1qV5chHrRQILECvQ==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 28, 2025 at 8:44=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Mon, Apr 28, 2025 at 02:59:06AM +0800, Kairui Song wrote:
-> > For filemap and truncate, folio_contains is only used for sanity checks
-> > to verify the folio index matches the expected lookup/invalidation targ=
-et.
-> > The swap cache does not utilize filemap or truncate helpers in ways tha=
-t
-> > would trigger these checks, as it mostly implements its own cache manag=
-ement.
-> >
-> > Shmem won't interact with these sanity checks either unless thing went
-> > wrong, it would directly trigger a BUG, because swap cache index are
-> > unrelated to shmem index, and would almost certainly mismatch (unless
-> > on collide).
->
-> It does happen though.  If shmem is writing the folio to swap at the
-> same time that the file containing the folio is being truncated, we
-> can hit this.
+When an application sets and enables an alarm on Loongson RTC devices,
+the alarm notification fails to propagate to userspace because the
+ACPI event handler omits calling rtc_update_irq().
 
-Thanks for the info! I didn't check it in detail because that would
-likley trigger a BUG_ON but so far I didn't see any BUG_ON commit from
-there.
+As a result, processes waiting via select() or poll() on RTC device
+files fail to receive alarm notifications.
 
-Just checked there are two users in truncate:
+Fixes: 1b733a9ebc3d ("rtc: Add rtc driver for the Loongson family chips")
+Signed-off-by: Liu Dalin <liudalin@kylinsec.com.cn>
+---
+ drivers/rtc/rtc-loongson.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-One will lock the folio and check if `folio->mapping !=3D mapping`
-first, on swapout shmem removes the folio from shmem mapping so this
-check will skip the folio_contains check.
+diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
+index 97e5625c064c..0c573f198f63 100644
+--- a/drivers/rtc/rtc-loongson.c
++++ b/drivers/rtc/rtc-loongson.c
+@@ -129,6 +129,8 @@ static u32 loongson_rtc_handler(void *id)
+ {
+ 	struct loongson_rtc_priv *priv = (struct loongson_rtc_priv *)id;
+ 
++	rtc_update_irq(priv->rtcdev, 1, RTC_AF | RTC_IRQF);
++
+ 	spin_lock(&priv->lock);
+ 	/* Disable RTC alarm wakeup and interrupt */
+ 	writel(readl(priv->pm_base + PM1_EN_REG) & ~RTC_EN,
+-- 
+2.33.0
 
-Another seems might hit the check, the time window is extremely tiny
-though, only if the truncate's `xa_is_value(folio)` check passed while
-another CPU is running between `folio_alloc_swap` and
-`shmem_delete_from_page_cache` in shmem_writepage, then the next
-VM_BUG_ON_FOLIO(!folio_contains) will fail as folio is now  a
-swap cache, not shmem folio anymore. Let me double check if this needs
-another fix.
