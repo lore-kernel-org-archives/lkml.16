@@ -1,110 +1,232 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EA035973
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 21:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AAD13AC1;
+	Mon, 28 Apr 2025 21:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745876980; cv=none; b=moc+hcyKgESAInmf0ptLjc+DwkkO7tKTdpnQ4jgJOkriDqk1rcwJNC21iqqheltZMAJKRoWeMMwI5RvQEMHIzsX2sBzu7dHKQX6r+w9DWqWic+BtBE0ZAy8E6e+lIBrC9n5KxNRjMNXDWZvdKq6x9IcDc749yX/JbfOlYFnksOY=
+	t=1745877025; cv=none; b=mc9x3rqY7NZPReZv+x5SqeHlA3jyUMG+7qvXtOh3zbqxqUSXNg4mJ5G5y2t1czf5YYH1egCWd5aGekm7VhQtwLCcVFmPGolQ6/VFlDo76QdXiUy2VDFQHSdPbVokjqwB84SIpXzlFllnSq43luQn6sK52T2KId2lwgq2TVXUhqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745876980; c=relaxed/simple;
-	bh=ghcCM9Iq6q5DZLQLtCB6Yi+vMX+2oa4GKdC99dDy0lI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Epw2YHXBTFZpWLVPbDratH7yi0ffhaHE9iFCqHff4cHz2y5Ikexv0JcTu3UiBggq//S8t1EBaIxgFDiCEAc4qaJmMpPKkV4d56DSb10wLqcaHA8hrmtjuFW0sEb/JyC+mNZHkQxth384C7M5uvTm0DJrZ+4RU6fQO1UDZRb+Z20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G6W9Jj5Q; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745877025; c=relaxed/simple;
+	bh=dbmaV3E3h4lzYFk8d0epf+uHNQ3tGXBVp5Kd2F8iQCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jf90yA9C1DY7Mv0pl6DTfd3BXNGBD5eNOt6I42xBa3Bz5O1+j/TmoIPWDTn53DchtJk6EjKOA/vHSF1EkWRINneTFddl5KPFj8GItusUn2TIDNc0LLj233vutuk6g+bxC47kse6Ozlgmo3zMaUtSr67DfZmPK5yhPtNnAdkMm1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=VNnSOA2l; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G6W9Jj5Q"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac3b12e8518so892932966b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745876977; x=1746481777; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
-        b=G6W9Jj5Qjo3JB2NJCOkPpqn8c/SGaCQjf4m4v1T/jauDk6MwOk+AnfY55C2YL3ApTW
-         Bwq4kwNEbsMQu/R3it3Lmss7esE32okgNBGrt0+Mf4dllBzO0JE5mEHJgaY9nGjRSovQ
-         X0ZRTg4q6H56L6Vu0VDZokTuHnLD1E3EjN32jHRvyL6BhxX21ZppKZGMtf9fFopPDby0
-         DvXPaIQ4dTd6Z8Zwmsao1CuZEOQw50oepEWm3EPkYY749mE3f/nZlQOcG+672oOm7Dcb
-         c2x9VqJBkySGkl29EVPg9h0cvmRJVFPGBj5stSv8UDX8AQvB1HrRFFU2E5oX58QNe2Rz
-         VrbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745876977; x=1746481777;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
-        b=iQKWx3IDCco00wXYKDqbGWzGbEV5s/FvMt48n3SyeF2TENLpGsqwknlqYVO7xUmxIg
-         TNhk/HQzFmUE01pnPrzdm/z4KtOCYHe270O0XVciYYoM5R1eOyPvOhBDgQDtxBuzABey
-         FRhgSzRvN68V7oGtxTSR5ed9I3q6pwC9duQRuiMmCc6ED4IQS3VwO4/raKv9mopxAchd
-         9JY+SBscWQkbI3iwzvj/UOmxrHt6iqmOYwXdyxDU1GNnTyHS9bCXhXyvaeabEo47OEw5
-         ku/o26nfrmz0h9ch43Hzw9Qcr14cHc8BhapmwMEbXLM+wH5k0azHVd3FnDTOMXxcwUEY
-         FmMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNmFGL2HTpEiI9SKio9mQrtver6dTGFc5HKrI6JtNaElTXcrIU1KSS80Ty6XTyNzwfCJ1tXgA4sVuf0qA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnN4yBdSq51ZvZXrL86qBirDH7f1TF7HkekAsK5lp3J647176f
-	p4GPbjYGy3ocH32iEvsQJkMXdc94X+nNHWgGvZBGYAVqfwjDneuFnwQ/VYjEiKuf2+rlGtn2ap2
-	q9h0TATKvqZQYW9esYTP4dfgxiymGPC7Jbv7A
-X-Gm-Gg: ASbGncsDIEqWzMEPqmnOALyobwhMsQRCaJjemPN0+k5so1oqFhjFXISWau56QVMvPet
-	DKc8n6cVWbY/Z3v7xZ41Z6iWSK6MN9T2jp9EYB0ubx47aE5kdPheMaWac2FB8PfcK11fz/LwH4d
-	qLoHWEZ/HM171owUUEkDHqt97//ad67hTB1X8hKuVQfhCQUc8IBuRi
-X-Google-Smtp-Source: AGHT+IEhiL11RcDgB5cdm/WKbBzF4reBDVGF/eKqJBGAFN4+OR+rR4wotFOAWpQCpwoRviJDtI5D1kPWUosQ4mYyNnQ=
-X-Received: by 2002:a17:907:9495:b0:ace:6882:510d with SMTP id
- a640c23a62f3a-ace848f79d2mr984974166b.24.1745876976648; Mon, 28 Apr 2025
- 14:49:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="VNnSOA2l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1745877011; bh=dbmaV3E3h4lzYFk8d0epf+uHNQ3tGXBVp5Kd2F8iQCU=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=VNnSOA2lZO0jE+UwRY8bmtnEdtevhYdm6cwD8sWmMISfl0nb4ZRlOfdFiAVo4kwOo
+	 qcxilVFRjK+Xn2KxF6x1AUlEJtJ7uT6xm57OPPQ4mTN/aPNMI2qpoJIYpU/A95s4Z5
+	 HRnUI5ibuuxOAHvw/4WGSHzsPCx35OtBUqtbfuNc=
+Date: Mon, 28 Apr 2025 23:50:11 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"open list:REALTEK WIRELESS DRIVER (rtw89)" <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH] wifi: rtw89: Fix inadverent sharing of struct
+ ieee80211_supported_band data
+Message-ID: <yurmw275hyo3zwstdwfqyepan3mj3anqavnpv6hu2742h4ofgx@c56eohg3s6ue>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Ping-Ke Shih <pkshih@realtek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"open list:REALTEK WIRELESS DRIVER (rtw89)" <linux-wireless@vger.kernel.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20250427002414.410791-1-megi@xff.cz>
+ <d3c6e149a2794551ba4570bdd7f1b7e7@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423061023.131354-1-dhavale@google.com> <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
-In-Reply-To: <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Mon, 28 Apr 2025 14:49:25 -0700
-X-Gm-Features: ATxdqUFDtwc5SK3EYtcYAuQ_6XyuzSDvFJe-PtDs8peDgGVgf_ScKK1LcKd9hxc
-Message-ID: <CAB=BE-Ru31S1Qq0Gmi9UXtaL6k4dcLdTUa-CJbmhuXb7a2dSeQ@mail.gmail.com>
-Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Chao Yu <chao@kernel.org>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
-	hsiangkao@linux.alibaba.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d3c6e149a2794551ba4570bdd7f1b7e7@realtek.com>
 
-Hi Chao,
+Hello,
 
->
-> - mount #1                              - mount #2
->  - z_erofs_init_pcpu_workers
->   - atomic_xchg(, 1)
->                                          - z_erofs_init_pcpu_workers
->                                           - atomic_xchg(, 1)
->                                           : return 0 since atomic variable is 1
->                                           it will run w/o percpu workers and hotplug
->   : update atomic variable to 1
->   - erofs_init_percpu_workers
->   : fail
->   - atomic_set(, 0)
->   : update atomic variable to 0 & fail the mount
->
-> Can we add some logs to show we succeed/fail to initialize workers or
-> hotplugs? As for mount #2, it expects it will run w/ them, but finally
-> it may not. So we'd better have a simple way to know?
->
-> Thanks,
->
-What you have laid out as race, indeed can happen if
-erofs_init_percpu_workers() fails with ENOMEM. For me that is still
-not catastrophic as workqueue fallback is in place so the filesystem
-is still functional.  And at the next mount, the logic will be
-reattempted as the atomic variable is reset to 0 after failure.
+On Mon, Apr 28, 2025 at 01:53:44AM +0000, Ping-Ke Shih wrote:
+> Ondřej Jirman <megi@xff.cz> wrote:
+> > 
+> > Internally wiphy writes to individual channels in this structure,
+> > so we must not share one static definition of channel list between
+> > multiple device instances, because that causes hard to debug
+> > breakage.
+> > 
+> > For example, with two rtw89 driven devices in the system, channel
+> > information may get incoherent, preventing channel use.
+> > 
+> > Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> > ---
+> > 
+> > This patch relates to this report of mine:
+> > 
+> > 
+> > https://lore.kernel.org/linux-wireless/2goskmst4na36v42p2bs47uernp6kh3gzpadhr3u3r2yvyoxlg@bfprgq2qae7p
+> > /T/#u
+> > 
+> >  drivers/net/wireless/realtek/rtw89/core.c | 48 ++++++++++++++++++-----
+> >  1 file changed, 38 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/realtek/rtw89/core.c b/drivers/net/wireless/realtek/rtw89/core.c
+> > index cc9b014457ac..ae22954f5f5c 100644
+> > --- a/drivers/net/wireless/realtek/rtw89/core.c
+> > +++ b/drivers/net/wireless/realtek/rtw89/core.c
+> > @@ -4398,16 +4398,44 @@ static void rtw89_init_he_eht_cap(struct rtw89_dev *rtwdev,
+> >         _ieee80211_set_sband_iftype_data(sband, iftype_data, idx);
+> >  }
+> > 
+> > +static struct ieee80211_supported_band *rtw89_copy_sband(const struct ieee80211_supported_band *sband)
+> 
+> prefer naming rtw89_core_sband_dup().
+> 
+> > +{
+> > +       struct ieee80211_supported_band *copy = kmemdup(sband, sizeof(*sband), GFP_KERNEL);
+> 
+> Then, '*dup'. 
+> 
+> > +
+> > +       copy->channels = kmemdup(sband->channels, sizeof(struct ieee80211_channel) * sband->n_channels,
+> > GFP_KERNEL);
+> 
+> I'm planning to use devm_ series to manage sband data, so we don't need to
+> free them one by one. Do you interest to adjust that along with this patchset? 
+> I mean adding additional patches to adjust the code before this patch, and
+> make them as a patchset. 
 
-If you still think we need to have a log message, I will be happy to
-spin up the next revision with logging for ENOMEM.
+Yes.
 
-Thanks for the review!
+> For kmemdup, the corresponding one is devm_kmemdup. 
+> 
+> The line is too long. Less than 80 characters is preferred. 
+> 
+> > +       if (!copy->channels) {
+> > +               kfree(copy);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       copy->bitrates = kmemdup(sband->bitrates, sizeof(struct ieee80211_rate) * sband->n_bitrates,
+> > GFP_KERNEL);
+> 
+> Since you have duplicated arrays of channels and bitrate, we should add const
+> to them, like:
+> 
+>   static const struct ieee80211_channel rtw89_channels_{2ghz,5ghz,6ghz}[]
+>   static const struct ieee80211_rate rtw89_bitrates[]
 
-Regards,
-Sandeep.
+That will produce:
+
+  initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+
+warnings, because  struct ieee80211_supported_band doesn't have these fields
+as const. The discarding of const qualifiers is apparently safe in this case,
+so I can either cast the pointers to non-const when assigned here:
+
+ 270 static const struct ieee80211_supported_band rtw89_sband_2ghz = {
+ 271         .band           = NL80211_BAND_2GHZ,
+ 272         .channels       = rtw89_channels_2ghz,
+ 273         .n_channels     = ARRAY_SIZE(rtw89_channels_2ghz),
+ 274         .bitrates       = rtw89_bitrates,
+ 275         .n_bitrates     = ARRAY_SIZE(rtw89_bitrates),
+ 276         .ht_cap         = {0},
+ 277         .vht_cap        = {0},
+ 278 };
+
+Or the code would have to get quite a bit less readable in
+rtw89_core_set_supported_band() to duplicate and assign copies of bitrates and
+channels there for each supported band individually instead of relying on
+a common implementation in rtw89_core_sband_dup() function, and remove
+assignments from const ieee80211_supported_band definitions.
+
+Do you have a preference?
+
+kind regards,
+	o.
+
+> 
+> > +       if (!copy->bitrates) {
+> > +               kfree(copy->channels);
+> > +               kfree(copy);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       return copy;
+> > +}
+> > +
+> > +static void rtw89_free_sband(const struct ieee80211_supported_band *sband)
+> > +{
+> > +       if (sband) {
+> > +               kfree(sband->bitrates);
+> > +               kfree(sband->channels);
+> > +               kfree(sband);
+> > +       }
+> > +}
+> > +
+> >  static int rtw89_core_set_supported_band(struct rtw89_dev *rtwdev)
+> >  {
+> >         struct ieee80211_hw *hw = rtwdev->hw;
+> >         struct ieee80211_supported_band *sband_2ghz = NULL, *sband_5ghz = NULL;
+> >         struct ieee80211_supported_band *sband_6ghz = NULL;
+> > -       u32 size = sizeof(struct ieee80211_supported_band);
+> >         u8 support_bands = rtwdev->chip->support_bands;
+> > 
+> >         if (support_bands & BIT(NL80211_BAND_2GHZ)) {
+> > -               sband_2ghz = kmemdup(&rtw89_sband_2ghz, size, GFP_KERNEL);
+> > +               sband_2ghz = rtw89_copy_sband(&rtw89_sband_2ghz);
+> >                 if (!sband_2ghz)
+> >                         goto err;
+> >                 rtw89_init_ht_cap(rtwdev, &sband_2ghz->ht_cap);
+> > @@ -4416,7 +4444,7 @@ static int rtw89_core_set_supported_band(struct rtw89_dev *rtwdev)
+> >         }
+> > 
+> >         if (support_bands & BIT(NL80211_BAND_5GHZ)) {
+> > -               sband_5ghz = kmemdup(&rtw89_sband_5ghz, size, GFP_KERNEL);
+> > +               sband_5ghz = rtw89_copy_sband(&rtw89_sband_5ghz);
+> >                 if (!sband_5ghz)
+> >                         goto err;
+> >                 rtw89_init_ht_cap(rtwdev, &sband_5ghz->ht_cap);
+> > @@ -4426,7 +4454,7 @@ static int rtw89_core_set_supported_band(struct rtw89_dev *rtwdev)
+> >         }
+> > 
+> >         if (support_bands & BIT(NL80211_BAND_6GHZ)) {
+> > -               sband_6ghz = kmemdup(&rtw89_sband_6ghz, size, GFP_KERNEL);
+> > +               sband_6ghz = rtw89_copy_sband(&rtw89_sband_6ghz);
+> >                 if (!sband_6ghz)
+> >                         goto err;
+> >                 rtw89_init_he_eht_cap(rtwdev, NL80211_BAND_6GHZ, sband_6ghz);
+> > @@ -4445,9 +4473,9 @@ static int rtw89_core_set_supported_band(struct rtw89_dev *rtwdev)
+> >                 kfree((__force void *)sband_5ghz->iftype_data);
+> >         if (sband_6ghz)
+> >                 kfree((__force void *)sband_6ghz->iftype_data);
+> > -       kfree(sband_2ghz);
+> > -       kfree(sband_5ghz);
+> > -       kfree(sband_6ghz);
+> > +       rtw89_free_sband(sband_2ghz);
+> > +       rtw89_free_sband(sband_5ghz);
+> > +       rtw89_free_sband(sband_6ghz);
+> >         return -ENOMEM;
+> >  }
+> > 
+> > @@ -4461,9 +4489,9 @@ static void rtw89_core_clr_supported_band(struct rtw89_dev *rtwdev)
+> >                 kfree((__force void *)hw->wiphy->bands[NL80211_BAND_5GHZ]->iftype_data);
+> >         if (hw->wiphy->bands[NL80211_BAND_6GHZ])
+> >                 kfree((__force void *)hw->wiphy->bands[NL80211_BAND_6GHZ]->iftype_data);
+> > -       kfree(hw->wiphy->bands[NL80211_BAND_2GHZ]);
+> > -       kfree(hw->wiphy->bands[NL80211_BAND_5GHZ]);
+> > -       kfree(hw->wiphy->bands[NL80211_BAND_6GHZ]);
+> > +       rtw89_free_sband(hw->wiphy->bands[NL80211_BAND_2GHZ]);
+> > +       rtw89_free_sband(hw->wiphy->bands[NL80211_BAND_5GHZ]);
+> > +       rtw89_free_sband(hw->wiphy->bands[NL80211_BAND_6GHZ]);
+> >         hw->wiphy->bands[NL80211_BAND_2GHZ] = NULL;
+> >         hw->wiphy->bands[NL80211_BAND_5GHZ] = NULL;
+> >         hw->wiphy->bands[NL80211_BAND_6GHZ] = NULL;
+> 
+> Like I mentioned above, with devm_ series, I suppose this function can be
+> removed entirely. 
+> 
+> 
