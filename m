@@ -1,165 +1,128 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7404262FC1
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D58B25FA2C;
+	Mon, 28 Apr 2025 11:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745838550; cv=none; b=FTmI3nI3oGCe/PjrU/qVSL67Br9jgVxo0fnxI9yfoCDaLdXHFSXFd0qNR2lBqaIHQDV6QSXmXj8ZZCOUPGlXg0WKHHupiG1qOZ/H4k3zgyWahDMxI48Ck5mWlgalsf9uthjvwRLhFsEKsaXabjdYrFSgm6l+7SujNpyo2ZuByto=
+	t=1745838592; cv=none; b=RxBNobVfCPGUYEkqh3Ui7/Ot5GfCafiF2MYBkPAAC9s87M6HXFbxZ2Pbs/mhg1wbmTUXQBYt6j4d3xhyCG1X/i2mOuSGktosy1itZhhVzL99lXJ3/YWnJtMMtfwUz24X4ojHkYqUatR49pvyZmNMYHcKlZctmFdvlu6elWv5dbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745838550; c=relaxed/simple;
-	bh=UO7J2oJdaZ6eFcmWZ2Ha3oDv7n8CZchlBO538or7ACA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/96kGmB8HKVLZPg11RwFN+Rp+86nXpYzufEoJarPxSLkNUU9diakS5PgpT+9A3luwdMp3kOCtbZdErbXUI6ZwM66ebb9K3zXucKXpOzM1SxXSB5rT+SxYj6ZnmAL5HfAjZvfAW1VU2vLKOkVmT5JyETCfKHk9PreIwM9ioZAxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dIZem5C3; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745838592; c=relaxed/simple;
+	bh=orbQAPlvpu4cO2V110q6r97tgb2WdYc8nKDUsMaEFek=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=F3mu5dewHBwtdVM9ZEFoS0ayrfEHkhx2OX01HyaN4iLufQMFuhUjlMIxBswt+tnYaaXl5yhAnf115gznDne6O76gM3exmY3JZsqN3cHOsZJRuwFwEgp2XIB5Ur1tKXswADDWqWj89qoHLgUdfvoPaqUC3WyEU5TUJLDda9aji6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=SbaZUfTn; arc=none smtp.client-ip=91.207.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dIZem5C3"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac56756f6so4678883f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 04:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745838547; x=1746443347; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H3Iext1v0JcemyuBv4epctIApvlADaZRKwnLcwjpgzU=;
-        b=dIZem5C3NuRdwvxi77CXfxFfNK2NO5C8feHN5ES+m3RhIKmT10MEFokK0O6/AjoMH6
-         LWDX0RIAw0We4RDSc90DdgM96lC25ctB2wi91D9ONDMj21Lm7R8+TsFxDctCQNb5dUev
-         BV9KJ9HTzmZiQ39Z7uVeiiV5XkH4qk72PVjSeI/QUYtdUyNpd/ptteDerecCWp607nvS
-         6pem4ST7Al2lQTJxbeWb1mFyqfQbk9XiK+hWwQKcNf62SGMN/ETbIUwkTtIbLKIL3uxt
-         3h88aoDCt0ruVcdisfegsyW+wSIcJJxMb10b6OiwWawQXJK7pJgi9qLPd7qqKiN9V+LG
-         5ufw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745838547; x=1746443347;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H3Iext1v0JcemyuBv4epctIApvlADaZRKwnLcwjpgzU=;
-        b=Nrisf/70xJOFFQfOb87+5YlUEldpFEf1UnP4FqbwE3BxRarmHMLV30ty1Yt2DC0HTW
-         5xDS+qJ1MbH86ym4WyeA3bPFKOhbDNaLWD/T/sb3X4b/5kaufVLfsMENLKyIag7uIj3i
-         UCDEp2ffexjk02ylhhHrTzb2mwisPMvkODVda2qxKmb+ZFLxtFXEd2ZS4mL+kJiyDuQj
-         N+JXFdo+gK4ZNVOC3vhftIU+ivN0hC145UWR/21EHfgqgLoablJ0EdYHuRlqIzZoOwT3
-         Ja7fXvc6QwRIDpXEDrnCkaQJNhV+CZ6NJOA+IA8ba5i9EjOGJVDCSijcH8sGVagJCJiu
-         lnTg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4FwwHi8tbLH05Z3UDKZWm6h7zr2dcej5QJ6gZK6f6KcHiG79qWwYNRpcIIqflhxfUtC/BMC75H+bRj5U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziHAelWSpEejPGkLJiWG4bQfPs5i8T462uQ9zWPnRIbbRSRQ15
-	c11e6iP51s9PZCL6zaZTtTGZSnXg2EBdcdbFWPEe5iN+Z3pgcEsouigIswv8ERQ=
-X-Gm-Gg: ASbGncsFmNt5jhq8iNL9DOn3xOZZ4VPt5wrklmqKyg+RdR1cCsk6uWhOPAc7fyT8RpE
-	qrj07SCP5V5JfrDb4KGgl/TtyBD9LsGRZ5qDQBD/S4aNgsj3T48qUf4lg/jpHXgMCtNTVwUWF5+
-	4nT3RJaNQpFR3SFo1Gkb+nSRkJIdrlHVT85xsWF6AWyaoKt7UzuKOksJ/e0rkIkE/NSUjRPUfaK
-	b3YbSwatkWQe4b8eONiAOtx1Lg77gRqVJ6WiNQdeKU1RgJJYs4RD0GhLvP5ynb8TArMn8XxxqeS
-	lw7p2WfV0OkosskxJfrZ2Hx668T4QYOmwzccbaJI8i6F/yhNVywjzDf6Lv/IYz9INDzRLr+nEoE
-	ysug96WkJcdXFsUIw
-X-Google-Smtp-Source: AGHT+IEQIpsf8GZoWzshfufjQ9ey+bXCZghfq/VC5/gL8/e0yZpaGRqIW9/smwUfizsp0r9wBNaNuw==
-X-Received: by 2002:a05:6000:401e:b0:39c:e0e:bb46 with SMTP id ffacd0b85a97d-3a07aa5fd30mr5223293f8f.4.1745838547199;
-        Mon, 28 Apr 2025 04:09:07 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d4b0sm10741276f8f.89.2025.04.28.04.09.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 04:09:06 -0700 (PDT)
-Message-ID: <67b385cf-a953-4e40-a164-45535d6da212@linaro.org>
-Date: Mon, 28 Apr 2025 12:09:05 +0100
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="SbaZUfTn"
+Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
+	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S6jub6031219;
+	Mon, 28 Apr 2025 12:09:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=dk201812; bh=9d81k80bj5ZawJ6WripMhbF
+	IgGjG7bvJfsEGXp7LwEk=; b=SbaZUfTnaOYzi40hW/EPWUaLWQoIRJBJJ57r2Bc
+	mmnadcHmI0+w7r9wQ7/Sc1HU4BVFPflsywDVFzKXQ3vicNG9cbKt11IxH+hc9hia
+	O72c5Dz3Qnu+TYFLLS+Gb8D1f+pfpo/eLqEqHgG5Q50iNhlU6+WRJd0XPfkLF9Yi
+	1rcz+Ywxl754l4l07VSnbh1JE50RXJdFYGvb/xysFKY1RU41nH/8NIemgaEwf8NS
+	uuJn2SQO0+lDXIeE1KFV0jIzawtkyGJvtaPE+RJZhJ23EsnV3HsJE2YYkP4Y2+Dq
+	AobIhpl637o/mNnrDN5N6ifQD+SIcXLCTkPtzMRCzdbuy/g==
+Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
+	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 4694618xrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 28 Apr 2025 12:09:25 +0100 (BST)
+Received: from
+ 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+ (172.25.2.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 28 Apr 2025 12:09:22 +0100
+From: Matt Coster <matt.coster@imgtec.com>
+Subject: [PATCH v4 0/2] Imagination BXS-4-64 MC1 GPU support (DTS changes)
+Date: Mon, 28 Apr 2025 12:07:13 +0100
+Message-ID: <20250428-bxs-4-64-dts-v4-0-eddafb4ae19f@imgtec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: dt-bindings: Add OminiVision 0V02C10
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Bryan O'Donoghue <bod@kernel.org>, Hans de Goede <hansg@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-v1-1-9a46124fae7b@linaro.org>
- <aA8uN5Y4MuqR-p7H@kekkonen.localdomain>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <aA8uN5Y4MuqR-p7H@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGJhD2gC/3XMvQ6DIBiF4VsxzKXhH+3U+2g6KHwog9qAITbGe
+ y86WZuO5yTPu6AIwUNEt2JBAZKPfhzyEJcCma4eWsDe5o0YYZIIKnEzRyywEthOEZuqFJaUWkm
+ pUCavAM7Pe+7xzLvzcRrDe68nur1/Qoligp223NVEKSbt3fftBOZqxh5tpcSOWp80y7pypSEV4
+ 5xS8aP5QTN20jxrMEpJ3VigXH7pdV0/34e8WyUBAAA=
+X-Change-ID: 20250415-bxs-4-64-dts-c984d0876556
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        "Tero
+ Kristo" <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Frank Binns <frank.binns@imgtec.com>,
+        "Alessio Belle" <alessio.belle@imgtec.com>,
+        Alexandru Dadu
+	<alexandru.dadu@imgtec.com>,
+        Luigi Santivetti <luigi.santivetti@imgtec.com>,
+        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
+        Matt Coster
+	<matt.coster@imgtec.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1485;
+ i=matt.coster@imgtec.com; h=from:subject:message-id;
+ bh=orbQAPlvpu4cO2V110q6r97tgb2WdYc8nKDUsMaEFek=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMWTwJz5i/ymlrT5bfdHOpdfZWn5JeHxnz2izrORr/eC8L
+ 6pg1d6vHaUsDGIcDLJiiiw7VliuUPujpiVx41cxzBxWJpAhDFycAjCR7G0M/70Xy/9ne24TudK2
+ N+aT+26JmQ7GGffXcxhxe3oJmra1bmb4n7hvn/OcOVITEo9+ZngoUri3yTHtd3eB/fJpkkJNh8P
+ XMgMA
+X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
+ fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
+X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
+X-Authority-Analysis: v=2.4 cv=WoMrMcfv c=1 sm=1 tr=0 ts=680f61e5 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=OXfeAiaCWNgA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=sozttTNsAAAA:8
+ a=_yRp58ONHCnQFu2M2WYA:9 a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-GUID: vJAn27_55nW5NvkDdL71U6BqSCcCok9C
+X-Proofpoint-ORIG-GUID: vJAn27_55nW5NvkDdL71U6BqSCcCok9C
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA5MiBTYWx0ZWRfXy/HmxkTQZ7tW RrMCPkndTWel2oaMIAEM0cgqmKp4b6ZnPsIfh4BaR5cc/m6EFjUfh/bx0fnpfJliLushV9WKd3+ 6+FjCJzW/hNCdPyujHAjPUYUnlRNkCuovMoIq522JEo6M7T53b/4iWvc9r8r/n14CH7Y6QUQNYn
+ RlkqjHmAjtFfxdVT/Y/yOql2P7IHfXhx/TMNm2+LVihFVbVmdzUDU6jL04rCvTx0gFZTl8L8dVd XtN6gQ2fdx2wmyHDA7dBF0T4mRyoKVMQxdY0bfvADHbe6kZum0OR6kdNCD97Adprjw4423MUnWC ark393WcBN+ezvWxFNj9i+sEVSRFNMwsP1a2qSwVV3yMzL12xLfmVeZzMJbg4l7gVE0AhE8iCCg
+ 5CiWtNiYfznYZLQzZvFM09Z/9s02PK2+XecRtCufgMdScsy29kJ+2UCODBFHe36b2lhZiea8
 
-On 28/04/2025 08:28, Sakari Ailus wrote:
-> Hi Bryan,
-> 
-> Thanks for the patch.
-> 
-> On Sat, Apr 26, 2025 at 11:35:21PM +0100, Bryan O'Donoghue wrote:
->> Extend the ov02e10 bindings yaml to describe the ov02c10 sensor which has
->> the same bindings with a different compat string and different i2c
->> address only.
->>
->> Other differences in sensor capabilities exist but are not expressed in
->> devicetree.
->>
->> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->> I previously submitted a standalone ov02c10 yaml file but, it was pointed
->> out to me by Krzysztof that the ov02e10 yaml has exactly the same bindings
->> and we should therefore extend the ov02e10 yaml.
->>
->> Link: https://lore.kernel.org/linux-media/da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org/
->>
->> The accompanying patch:
->>
->> - Updates the overall description to differentiate between the two sensors
->> - Adds ovti,ov02c10 compat string
->> - Adds an example for the ov02c10
->>
->> Once merged we can also merge the ov02c10 driver, which contains a compat
->> string requiring yaml description as precursor to merge.
->> ---
->>   .../bindings/media/i2c/ovti,ov02e10.yaml           | 47 ++++++++++++++++++++--
->>   1 file changed, 43 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
->> index 4ac4e11a16c8bb7a53db0c44289b1004dbdc282a..1561a3e96caa8b09a4c105b87536bb0d00b2adf8 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
->> +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
->> @@ -11,12 +11,22 @@ maintainers:
->>     - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->>   
->>   description: |
->> -  The Omnivision OV02E10 is a 2 megapixel, CMOS image sensor which supports:
->> +  The Omnivision OV02E10 and 0V02C10 sensors are 2 megapixel, CMOS image sensors which support:
->>     - Automatic black level calibration (ABLC)
->>     - Programmable controls for frame rate, mirror and flip, binning, cropping
->>       and windowing
->> -  - Output formats 10-bit 4C RGB RAW, 10-bit Bayer RAW
->> -  - 2-lane MIPI D-PHY TX @ 720 Mbps per lane
->> +  - OVO2C10
->> +    - 10 bit 1920x1080 60 fps 2-lane @ 800 Mbps/lane
->> +    - 10 bit 1920x1080 60 fps 1-lane @ 1500 Mbps/lane
->> +    - 10 bit 1280x720 60 fps cropped 1-lane @ 960 Mbps/lane
->> +    - 10 bit RGB/BW 640x480 60 fps bin2 or skip2 1-lane @ 800 Mbps/lane
->> +    - 10 bit RGB/BW 480x270 60 fps bin4 or skip4 1-lane @ 800 Mbps/lane
->> +  - OV02E10
->> +    - 10 bit 1920x1088 60 fps 2-lane @ 720 Mbps/lane
->> +    - 10 bit 1280x1080 60 fps 2-lane @ 720 Mbps/lane
->> +    - 10 bit 960x540 60 fps 2-lane 4c1 360 Mbps/lane
->> +    - 8 bit 480x270 1/3/5/10 fps 4c1 sub2 288 Mbps/lane
->> +    - 8 bit 232x132 1/3/5/10 fps 4c1 sub4 144 Mbps/lane
-> 
-> These look like driver features rather than hardware properties. What are
-> the hardware differences of the two sensors that could be listed here?
+Now that the binding and driver changes to support the Imagination
+BXS-4-64 [1] have landed in a DRM tree, here are the corresponding DTS
+changes without the [DO NOT MERGE] tag.
 
-The only real DT difference and its not something I think we usually 
-describe in a binding is the i2c address.
+This GPU is found in the TI AM68 family of SoCs, with initial support
+added to the k3-j721s2 devicetree and tested on a TI SK-AM68 board.
 
-0x36 for the ov02c10
-0x10 for the ov02e10
+[1]: https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com
 
-It seems like "no harm" to list some of the non-DT hardware differences 
-for informational purposes anyway.
-
-You're right, these differences aren't manifest in the yaml/dt though.
-
-> The earlier description also said this is 4C which I understand is
-> Omnivision term for quad Bayer pattern. It'd be nice to refer to that, too.
-> (I'd use quad Bayer instead in fact.)np
+Reviewed-by: Randolph Sapp <rs@ti.com>
+Signed-off-by: Matt Coster <matt.coster@imgtec.com>
 
 ---
-bod
+Changes in v4:
+- Remove lore link to previous commit (P1)
+- Fix typo in commit message (P2)
+- Link to v3: https://lore.kernel.org/r/20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com
+
+Changes in v3:
+- Use assigned-clocks to pre-load the frequency of the core clock (P2)
+- Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-0-9f8c09233114@imgtec.com
+
+Changes in v2:
+- Add details of the source of the interrupt index (P2)
+- Add Randolph's Rb
+- Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-0-f7d3fa06625d@imgtec.com
+
+---
+Matt Coster (2):
+      arm64: dts: ti: k3-am62: New GPU binding details
+      arm64: dts: ti: k3-j721s2: Add GPU node
+
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi   |  4 +++-
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 14 ++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+---
+base-commit: dcbd5dcc956e2331414fd7020b4655df08deeb87
+change-id: 20250415-bxs-4-64-dts-c984d0876556
+
