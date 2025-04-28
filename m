@@ -1,116 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E84325F79B
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED2E25F780;
+	Mon, 28 Apr 2025 10:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745837408; cv=none; b=Qlu7JxjblXobJ0g4jZFhosXRK/+d3hXcczRf5xBZI6+N/eRsX/kMKSRWhCD2kN94BTvwYQfMLrPsJy5UHkTsf6k/J8+awtwgIpneGO3QN5xMy7qKI5XPRDVdIUjmnJw2ETpkaF3+ug+8iYze0E5zYzteaSstR8omMZXgBRLPHss=
+	t=1745837434; cv=none; b=RKq+9qBTbTLh1x/bkho5Y5XZapBxQhrdNDhEFXwkZcHq4eMwhnSYCoQ58FgCvqOHwq+C9SHiro589D3YMPPhbnE0OBE0ZD8S8Ta0Tv8Rj4HIQqF6Z0LAtUXFCUTp/kf+xVN/3872vMN0NGnZwhmij4mgBdi1fbaBwUOLwzetifU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745837408; c=relaxed/simple;
-	bh=4DG7DJDZIP3rwGwgzQDgRgJ6Vj6kbPvlRlQ3XKozzaU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f73Yo81usQ4rB3NECTlqjbIP//ircp/IaNTC0+lp1UveJkTpemUzz9Dm52eTR4EUSm5A6hk0rS0xWZqOXA+ymJXWrietYMhpmGHOCV6s7VidnVgMfItAzRfQo1g8kxoQN1XKezm7wsDl2FAULTtJpo2qQFlVc2u9g8GI8Mbg/8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RYUL0Rkq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745837434; c=relaxed/simple;
+	bh=bYzWEyx7wF1a4iH6jkzQs6rTKgOzlRhswyhO+IHRbag=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nD/Qisxhjs1kJvCdBR9l6ot5sFov8VQhIJ53qedvmUdjl2q2WULZ+Zgvym8h/551vc5GZl0Ut69K79hoDzk7CHpuARCKv1jw7kvgY0GG7fi4BAeCxTmFDKHcMYRJYmE8Ujiz9YeHS/4gjTXgPJeISY9/efPibXKaQ/KSAElw5PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvwPhd8h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYUL0Rkq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745837405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vNFChF0dDP2Lc1kQ3WfgCxr/zYTrec8rsbzbDUeAX4U=;
-	b=RYUL0RkqggPa0o75ulv0KQl4cntBfrCJ/mt6zuUCyfCGHBUvUio7ldj2p1uV9I4IsBVUlG
-	TIeEGcRYt4nyCl3NgMC6Ly/o+zGGPSMS4EVFiE5uHeEtjj28XkbkMFjoFUdUg4CwIpXTmv
-	egIoNZzYj/shD+SbaWoeVwXARWum7Rc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-440-QvHH5SNZO3OM6aACR78_kA-1; Mon,
- 28 Apr 2025 06:50:00 -0400
-X-MC-Unique: QvHH5SNZO3OM6aACR78_kA-1
-X-Mimecast-MFC-AGG-ID: QvHH5SNZO3OM6aACR78_kA_1745837399
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC6FF1956096;
-	Mon, 28 Apr 2025 10:49:58 +0000 (UTC)
-Received: from [10.22.80.45] (unknown [10.22.80.45])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC02819560A3;
-	Mon, 28 Apr 2025 10:49:56 +0000 (UTC)
-Date: Mon, 28 Apr 2025 12:49:53 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Kees Cook <kees@kernel.org>
-cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
-    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] dm: dm-zoned: Adjust dmz_load_mapping() allocation
- type
-In-Reply-To: <20250426061707.work.587-kees@kernel.org>
-Message-ID: <dc1191b4-1010-260b-b7cb-dc748a05e571@redhat.com>
-References: <20250426061707.work.587-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvwPhd8h"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F4BAC4CEE4;
+	Mon, 28 Apr 2025 10:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745837434;
+	bh=bYzWEyx7wF1a4iH6jkzQs6rTKgOzlRhswyhO+IHRbag=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=RvwPhd8hJjp1sWfflu6gENQP4CYuMhK4ip59pK1MC03JIZyMVOUxL5nC2kkhzlOOZ
+	 DkZzYNsaChWD9CsnElKoFuPLDjZEiTZ2JsyC8r3pMZAh69kLys3UPyT2u0ZVMVIhJ/
+	 SMH5l/1Gt7eeckpAM6GnELrdc/8UCn64Rj8jvlUzT1lldUxjcAlMr0wzbdTqVTSFj7
+	 JAlPx3rjHGgKVL3/rvql+Roq+hNSZDVxr5cXyCmyoCmc4c+oKRxdDLNScKNCDfhHu6
+	 Q73ABg5SJmloa3cQa+gtlEwWngYcoyfADZYhlThSRDRJir/n9Gd/rMiRf6Tnbgce39
+	 EtIyz4rQMtKiQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15212C369D9;
+	Mon, 28 Apr 2025 10:50:34 +0000 (UTC)
+From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
+Subject: [PATCH 0/2] Add support for the DFRobot SEN0322 oxygen sensor
+Date: Mon, 28 Apr 2025 12:50:12 +0200
+Message-Id: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGRdD2gC/x3MQQqAIBBA0avErBuwSSu6SrRIG2ugLBQiiO6et
+ HyL/x9IHIUT9MUDkS9JcoSMqizArVNYGGXOBlJklKYORQ50K+/ipg0TB1UTofOdt9Zya3QDOT0
+ je7n/7TC+7wfFS4LRZgAAAA==
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745837432; l=803;
+ i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
+ bh=bYzWEyx7wF1a4iH6jkzQs6rTKgOzlRhswyhO+IHRbag=;
+ b=FX53BKRvsPXfLu9zX6oIbWxnJrO3cEa7YLggqBsOhEtfUwHaoMjdIw5SrfKzq3Iyj6hfpsfeF
+ KpvfqlNujtWAihX3N9vNXNLBKI8rxrhFNNIPCIfJTOxZIw3LZ1C9F4N
+X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
+ pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
+X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
+ auth_id=60
+X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+Reply-To: gomba007@gmail.com
 
-Hi
+This patchset adds a driver and the documentation for the
+DFRobot SEN0322 oxygen sensor.
 
-I accepted both patches.
+Signed-off-by: Tóth János <gomba007@gmail.com>
+---
+Tóth János (2):
+      dt-bindings: iio: chemical: Document SEN0322
+      iio: chemical: Add driver for SEN0322
 
-Just nit-picking - I prefer type name as an argument to the sizeof 
-operator rather than variable name - because when someone needs to find 
-out where variables with a particular type are allocated, it can be easily 
-done with grep if the sizeof operator contains the type name. So I changed 
-your patches so that there are type names.
+ .../bindings/iio/chemical/dfrobot,sen0322.yaml     |  41 ++++
+ MAINTAINERS                                        |   6 +
+ drivers/iio/chemical/Kconfig                       |  10 +
+ drivers/iio/chemical/Makefile                      |   1 +
+ drivers/iio/chemical/sen0322.c                     | 238 +++++++++++++++++++++
+ 5 files changed, 296 insertions(+)
+---
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+change-id: 20250428-iio-chemical-sen0322-cf8fbbbe7546
 
-Mikulas
+Best regards,
+-- 
+Tóth János <gomba007@gmail.com>
 
-
-
-On Fri, 25 Apr 2025, Kees Cook wrote:
-
-> In preparation for making the kmalloc family of allocators type aware,
-> we need to make sure that the returned type from the allocation matches
-> the type of the variable being assigned. (Before, the allocator would
-> always return "void *", which can be implicitly cast to any pointer type.)
-> 
-> The assigned type is "struct dmz_mblock **" but the returned type will
-> be "struct dmz_mblk **". These are the same allocation size (pointer
-> size), but the types do not match. Adjust the allocation type to match
-> the assignment.
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Alasdair Kergon <agk@redhat.com>
-> Cc: Mike Snitzer <snitzer@kernel.org>
-> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> Cc: <dm-devel@lists.linux.dev>
-> ---
->  drivers/md/dm-zoned-metadata.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-> index deff22ecccbb..8934ad20012c 100644
-> --- a/drivers/md/dm-zoned-metadata.c
-> +++ b/drivers/md/dm-zoned-metadata.c
-> @@ -1687,7 +1687,7 @@ static int dmz_load_mapping(struct dmz_metadata *zmd)
->  
->  	/* Metadata block array for the chunk mapping table */
->  	zmd->map_mblk = kcalloc(zmd->nr_map_blocks,
-> -				sizeof(struct dmz_mblk *), GFP_KERNEL);
-> +				sizeof(*zmd->map_mblk), GFP_KERNEL);
->  	if (!zmd->map_mblk)
->  		return -ENOMEM;
->  
-> -- 
-> 2.34.1
-> 
 
