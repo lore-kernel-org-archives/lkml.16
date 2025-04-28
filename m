@@ -1,102 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D100B23C9;
-	Mon, 28 Apr 2025 07:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738DB211A0E;
+	Mon, 28 Apr 2025 07:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826467; cv=none; b=o/h7NxLsXUjdhlvkrHUOniQqsBpY+sctjeUfMGDrA1Kyr5gz5dbfaOaC8cLcVHpCgXI3pQyqOEmh26EWb6LomgMnePbF3rmLbGjiN4QnkjlM+Y7mU8mUxFmRsCV8y/53yEeQg89oRIG/uX2qDbZS9rPuA3o3hMarxXqYdhtEo14=
+	t=1745826524; cv=none; b=phPBdIjL0sZCn2vESeZKZtUSLKUyvx5GzugXnszwleqpKOkqRdsIykKpwiJ7ZjjGh+FCm6F5HPpIA+4iKFqgiO5Y6czTDTW+A80unQ/xz4Bp03mj/aolwaz53nFFQ5dTXs7O4Bd3AYX9ap3W0Tn4+lAPEDPrCctb/DIqYwlY+FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826467; c=relaxed/simple;
-	bh=V9VO8d7GqRn1Ql1CwDZyQu1tYggE7XNW+vS8mR6BDDc=;
+	s=arc-20240116; t=1745826524; c=relaxed/simple;
+	bh=XIum2Jp2SetQmeZuKWfStoEDCIoEugFgfOxrXV8EvhM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXTa+8bB12MI8+NgaTDfjPSUgdT/VzeAYaGGNqonvBFwZKyvSKxepsrv8SFfEsMjEj0uUm00Ip5asr/e3+Cz9iJTr2+S1epZRWSYQC2gtf09YKbUbzBXSlkivvhLK158H9bJhIO62ESABj23b6GmGGdOdUPVVjVDEH1EkVXLBGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPktEH1D; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=h8CmI9WA/eNwURTTjzr6ak+2Q6pDTtw/UzNZRXG1ESV5zkS54RZLUjS4BPVlqAGtQAWc52qAhG++AfKDQuO15Sjdya7oJ8K2MFcEOhf+WlEPkyXEdiYRzn9Z1kF6EyQgtV7+UVkAwzPgFLRwG53n89xJPa+jsSFRX9O4v5l+na8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bSvL4eLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPktEH1D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745826466; x=1777362466;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V9VO8d7GqRn1Ql1CwDZyQu1tYggE7XNW+vS8mR6BDDc=;
-  b=EPktEH1D6VAx/+uXcUPUusV7Z7SVdMVa4NxcfMzyMS+iBlPoaKyLPVc0
-   86wXNmRjnb1zJbW40SmorTP4woAeuADB2fMfNyQhsWe6HSG8VA0a3HrJo
-   ugJdLNFG8lMpA322UT/THA4qnlyxePsw3PlqPhoTKM0Yl9TdrHnEVnByM
-   s4ZtyVQ+dpCifUggT3u0VtXsCBt9EB9aUkoQro3o8NXllkhvoSzZ9SBCh
-   tP5NxxrP7mPm+UoZRolvcbaorcEv/YsB20ykAcBNpUG9MDGV95POSlVtN
-   wbobr6t9a/W11mRH4xWaXqnrA0/V54VjGJo/2l3IFDaFCTf4qxQorraX+
-   A==;
-X-CSE-ConnectionGUID: 6g0JmwdYQyavyS68Zdm4RQ==
-X-CSE-MsgGUID: pml7PYGeTVq66dwedX6L8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="50060258"
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="50060258"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:47:45 -0700
-X-CSE-ConnectionGUID: sbVqtqoyQiO34GlzQs/iVw==
-X-CSE-MsgGUID: hw9NucE/RAmkdkz81dmYqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="137494097"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 00:47:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u9JDH-000000011Mm-3j3O;
-	Mon, 28 Apr 2025 10:47:39 +0300
-Date: Mon, 28 Apr 2025 10:47:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: (subset) [PATCH v2 0/3] gpiolib: finish conversion to
- devm_*_action*() APIs
-Message-ID: <aA8ym3GYoAK4lI2y@smile.fi.intel.com>
-References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
- <174582608319.15717.12211907178640999391.b4-ty@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSvL4eLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775A7C4CEE4;
+	Mon, 28 Apr 2025 07:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745826523;
+	bh=XIum2Jp2SetQmeZuKWfStoEDCIoEugFgfOxrXV8EvhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bSvL4eLQRxoOQECyI+1vl4D+9jez5mbHG3rxYtCbzKndtQrf5zv+QN5g4LDoeWTJy
+	 iFSgyyzGHrEBHOIOVcHMQS2DGOSawhKDijh5TESPXUvZLK2e3uvaXZnsWtfBOxSWz5
+	 xnog/XtUjYJOixhALrqUyFzcYEoelwMj91HcUP2mgVMc33XTSzcshmoZQPsqEhaTVZ
+	 LOrMeJ7DUBwzdYzCw/gWNh+/DshtrM6VRQgMYNzUKZ7iNua1eXI9WEE5VYuAipr47R
+	 gQAuB2rQu5cH/XdvFFbKQhLhnYKikJGhFPlP799mh7C0NXQbtsjXzkTLjYJVvFgjsC
+	 80XU1V46dlXow==
+Date: Mon, 28 Apr 2025 09:48:41 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Lijuan Gao <quic_lijuang@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Konrad Dybcio <konradybcio@kernel.org>, kernel@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: remoteproc: qcom,sm8150-pas: Document
+ QCS615 remoteproc
+Message-ID: <20250428-hopeful-mushroom-of-pleasure-1aef73@kuoka>
+References: <20250423-add_qcs615_remoteproc_support-v1-0-a94fe8799f14@quicinc.com>
+ <20250423-add_qcs615_remoteproc_support-v1-1-a94fe8799f14@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <174582608319.15717.12211907178640999391.b4-ty@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250423-add_qcs615_remoteproc_support-v1-1-a94fe8799f14@quicinc.com>
 
-On Mon, Apr 28, 2025 at 09:41:52AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> On Thu, 20 Feb 2025 18:20:25 +0200, Andy Shevchenko wrote:
-> > GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
-> > calls. This mini-series is for that. The necessary prerequisites are here
-> > as well, namely:
-> > 1) moving the respective APIs to the devres.h;
-> > 2) adding a simple helper that GPIOLIB will rely on;
-> > 3) finishing the GPIOLIB conversion to the device managed action APIs.
+On Wed, Apr 23, 2025 at 05:17:37PM GMT, Lijuan Gao wrote:
+>  
+>    reg:
+>      maxItems: 1
+> @@ -59,16 +68,17 @@ allOf:
+>    - if:
+>        properties:
+>          compatible:
+> -          enum:
+> -            - qcom,sc8180x-adsp-pas
+> -            - qcom,sc8180x-cdsp-pas
+> -            - qcom,sc8180x-slpi-pas
 
-[...]
+This needs fixes, but it is not related to this patch. I'll send a fix
+but might conflict in first diff chunk.
 
-> Applied, thanks!
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks!
-
-> [3/3] gpiolib: devres: Finish the conversion to use devm_add_action()
->       https://git.kernel.org/brgl/linux/c/d1d52c6622a61a0ae8dd2bd2097b25c0f553d2f3
-
-Only one? What about the first two?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
