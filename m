@@ -1,114 +1,176 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B941B1DED7C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD94262FDE
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 14:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745849905; cv=none; b=pFfSif9ekcSnHBfmNOh6mf+tRDxZ0uNnpT/VLfm0KFxZD+Mq3k0A09+f/tLgPYdvUq4Q+/6YWVZMt1Dpe8gMYsb4SWB40qdwN81wnRtddfx4Tfg7n3zdeby33yH0+rMWeyZkkRrUQcCWl5jy50g7Apo9KLsIGM67iOLFWKt5Qbs=
+	t=1745850173; cv=none; b=sUdXA6pTjx4CYvh6Upu+rQBbk7f/cNbtfmJ+t/ZIrBq/OWh5wJfKH2zovXGLQVK7xmy4fH7nQ9PI6J6PTUT618n+tCCl91KI85mHC6WgUsRtyQ6Flt1UPzG9ZRlooVCExo6G6SXVaXSd18FVa3dq1EWNVxSTydOdITAjEbe1gig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745849905; c=relaxed/simple;
-	bh=PjRdXlsmJUpPvlWjlRcduIR1Eq5Vgg2u25y7fkkDmyw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YmJ4gXaVVG89qP1bP4g+x1e1Xx/LGXQVWteV8Fp1HhdPS7jAuRj9ut7fjzq71u+XOkT19faEaF17QH01pqX3UpPbcRu9VO/ygeuCiO7c5guzfFWoqBHip+mg0P4fhb7bioyQdfwUpzqnm6XqzMmjdn93Ug6rBBaZdZKWajgiA6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jDr2VHzL; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745850173; c=relaxed/simple;
+	bh=hZEdc0bpwJBdYluEz9kgtxHO3SQNNIVXhxeoIhEyHBY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JxKxNcpX0QvR9wX7uSkOWG4UFJSnWVBx4YlJSzSZPy+S4/kcuYn4TMmnI8eRIGhIPg8E1H015iUq+zN85tmtYhhzOeOt2FgsxAaJCAtZg1fvzpxlCCPxHRHp/Jb5jIVeyZm/H8PRGFjQZbbEYdTeLTg+RHLt43LrrkPKdD4wOas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=slVRI8F9; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jDr2VHzL"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54e98f73850so946748e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:18:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="slVRI8F9"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af50f56b862so3299245a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:22:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745849902; x=1746454702; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nXVvurz23J2+L5kt96WXTroBQ39jU0y6cCqiWeSQLFk=;
-        b=jDr2VHzLbJ50BiFc8j1G0V7lsRiKW0Se2ri1Et6wLxdaTxeg0lkudTAWLFGqdvz0AF
-         lD+teb4cYJzIBQ7buAdqQV78SOo7R6uod5Gh92hVNbqhSAOxQpqiu1kpyPXyZAjoGgSz
-         gmWDu67pV/X9SBZfns7cFhc+0Fip+luuTNVntv5/y61h7C6CclqkedG0nUlrYmAAYezP
-         UU2GrIxHri4vbhyGsNhoWp2UjyfANNbzCaN/JK16ZRU8JFPgZnCO1+7eDmVkQJyuHGh8
-         x9nPpSfMpXCPLHa6AbXE8KY7YhSYLyb4pUPdskyJOJvXiBis/yyZBkw21SuRGnOnKKM0
-         3GHQ==
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1745850171; x=1746454971; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k1VLQpwt/b6cSsAE8AUGeAK7cqEZniw2aJSi1QifTAo=;
+        b=slVRI8F9y2Beinolo+2xYjslmN7m0uhtXJ3CrUhoGZ8YMrFPZdITw2JpR/7KUzZbxA
+         1MNoGTKRtGlRLFmQq7FkxjszdnKxsAVgALpBbeAihOpNEnSC4IxoJXgwgEX8aBDm8zWK
+         SbDZBEawzVYkfF9u9fTNpoCqDNfaiGa9GezOBSqdU72yJaqXtarvI4ATRvx0o9gCYMA7
+         s9PKDGNJU2UkdSKwdA8AKlqcLMfKw00c2/M9Cj4MaoAx58sszQA+Js7MOO0fb49L4QMX
+         zAm7MvueEmLPh3LzwcPQDeyBEQTFLDNnsKyzGTa+JVMN+INyyKaDAjIrY9IzjbtRq9jK
+         24Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745849902; x=1746454702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nXVvurz23J2+L5kt96WXTroBQ39jU0y6cCqiWeSQLFk=;
-        b=nAHIkzssmAX9caWdzCy+DJMte+HFpoBg9PlVxzCa8O8g+tuQYDvPPBuNPHKIh2R3tS
-         1TIkIt6vGmFlLb2pGOnzyrwWtuIyu6vpNC3cd8Qff1aD0yeQctdDaTXpG/7c3jk1EDMD
-         9Y3mAfl2xP6juk5g6zatSFGVYstTW1wQrUdAl+x7L6GrCBzPXC8/fVTRiHRbosRAPdom
-         +DgaQuaNIGdRTrxmMmSsZsXHKB9JQnXIU/dNw2gVl809rt7ecreMYr3oU78kD8R7tnu5
-         yR3q8ZTrH0IPPO1f5pFzqD0oxNdHwRHQ2+H/MxBcjFQDoDWmcr6rWLP+sHQNKLlqDPn+
-         a0YA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEAkH9k4BKvFxqvk+36FluMYhueOMRFxO7dMr87lOBV/fIywp03Ez/WUjGhVlYgDhqa58QaYm8OmTL/rA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN9RAIxgLemLjgzZp+KZmmVTreSAigBtKQxZKSNCsV0RrYJotE
-	RUHZTKTOTD87LSLuR0Re1n609S1rQXRkEnaq8OybMpg+YPGcNx61E87ODFU6NphqimsfZo3XI2o
-	vDLei+47EQdo84erCg8glc7EdKEPbbcRPWFHFhQ==
-X-Gm-Gg: ASbGnctA39zI44Tx322H0R8eFT1ecHjb1vUS//O+PCw8JjgXIVslxk84mtmPCz02FRB
-	YRe+YDrgajZ27zY3wGOpHVvm8I4eVkGrH6I9cUyZxVRSdlGUrAk8bT7bB8dFOUqt/b6+fsLj/++
-	MwbaQdJuHtTFgfjID5GW52Kg==
-X-Google-Smtp-Source: AGHT+IGvhJeqWQVl7wUSjEu9Tai7VZXnkdRdnljHuHSmsEW0zEOC9vXIPg78pJyadRV6QxI6VqKiX008Vk2HwfUHtNE=
-X-Received: by 2002:a05:6512:108f:b0:549:6cac:6717 with SMTP id
- 2adb3069b0e04-54e8cc0cb31mr3406763e87.53.1745849901807; Mon, 28 Apr 2025
- 07:18:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745850171; x=1746454971;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k1VLQpwt/b6cSsAE8AUGeAK7cqEZniw2aJSi1QifTAo=;
+        b=TfjrGR6VjsKSkgayVpjRC075H0V0oVWX7pkh6ltP25kncZnfo9RcKVLLS01Z/Ln/hj
+         lWpLwyhHCeXXtn+KOcrvs0fXWPV0F2+6J+s5VWgUdgDqqowOwkQHIjkfpc30hi+Us1s6
+         MZfUj8jcMhu2cmvR8PxGrLKRjPZudgq8gN1NWCLxU449oy+1s8iVIKQZQs+KiM2b0twk
+         yTyhav60AYnGqAWpufCFT5zBDvRp13BZzXgiwNNAH4vJ0pEKcX+3sNDIXwR/ooVJ7aI9
+         5anr12fr9xIlr8/m9VlvlcmNqttX1eBM7RM8SxYRQINUgzX9AFK227HxMl/izoqKgglC
+         P6iw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjYXXU9+TtFt91VtNmlcH7PQWa8kbdcps67wzIpV+2eYzLUyct73XefL9Nr1Lqe+gLKxF3sWWqs3xDqDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwASK+RtiI61dco5rfKx5zgWsrFhKzdAfCMZu8MEu3uk2NGPq7E
+	I4VgscvGR+EBRisxjgjs5Fts90IF14ZhfappYsZSM2SQF6fTHNhvN7v+ycW3yw==
+X-Gm-Gg: ASbGncsE9QBZ2oF7Q+53zPDg8RS2He3qEG9fsUF4eIk7a9h+EX6EJYgEFSQczD03+ot
+	fd0ZKrE1PQZp3y3wRqUHusFuicEKvjZNpPySeePljbt5Yw8kXglWUZz6IzzCmJvcYMbQixiXazr
+	kgeDBUijlC4mdcHmIBFMF+TdJlEyO8gfItUIahoJbpxKO+vIGL/IHQeuUr+MZBO/8JF4GNkukYo
+	aP28NkgY/FncPgan6IOl4eBVrjr25eP3j5MYg+XhOXZ5JnoWeEFKkW7tDXxWWpYH4miB8nbUSpF
+	hPLhQ8Ko0uOuyk9PJHl7Tj71029PgITm/HmIzsd7EbydiJA=
+X-Google-Smtp-Source: AGHT+IFhDRZasLWzYreSoVHtE29Eoz0rL8n8l2unUGWLW4ysgVhFNqHQroyMVilFT/a4TTGY4GdyZw==
+X-Received: by 2002:a05:6a21:3942:b0:1f5:8e94:2e83 with SMTP id adf61e73a8af0-2046a402b0emr13340137637.8.1745850171204;
+        Mon, 28 Apr 2025 07:22:51 -0700 (PDT)
+Received: from [172.16.116.85] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f45b1sm7294859a12.1.2025.04.28.07.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 07:22:50 -0700 (PDT)
+From: Ayush Singh <ayush@beagleboard.org>
+Date: Mon, 28 Apr 2025 19:52:29 +0530
+Subject: [PATCH] rust: kernel: device: Add of_platform_populate/depopulate
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424062017.652969-1-uwu@icenowy.me> <20250424062017.652969-2-uwu@icenowy.me>
- <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
- <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
- <CACRpkdY0DXxDixZVhnRuKvSVbKQ6pSfLMiT2hf9818sbNG-4hg@mail.gmail.com> <0606c146d97ff98ff1412b98f49e6da0071801d1.camel@icenowy.me>
-In-Reply-To: <0606c146d97ff98ff1412b98f49e6da0071801d1.camel@icenowy.me>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 28 Apr 2025 16:18:10 +0200
-X-Gm-Features: ATxdqUFE5Aj3lBDc4lYvvht68VXq-83pWEXQcwlO7tgbNAkueD3gpN4Y7TmGwKM
-Message-ID: <CACRpkdbPhKwjb0dkOom6HyzTrhPWvMPhX5M=nyxw1HBHNJa0fQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250428-rust-of-populate-v1-1-1d33777427c4@beagleboard.org>
+X-B4-Tracking: v=1; b=H4sIACSPD2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyML3aLS4hLd/DTdgvyC0pzEklTdJKM0SzNDcwtjExNDJaC2gqLUtMw
+ KsJHRsbW1AG/5dUJiAAAA
+X-Change-ID: 20250428-rust-of-populate-b2f961783441
+To: Jason Kridner <jkridner@beagleboard.org>, 
+ Deepak Khatri <lorforlinux@beagleboard.org>, 
+ Robert Nelson <robertcnelson@beagleboard.org>, Dhruva Gole <d-gole@ti.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ayush Singh <ayush@beagleboard.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2578; i=ayush@beagleboard.org;
+ h=from:subject:message-id; bh=hZEdc0bpwJBdYluEz9kgtxHO3SQNNIVXhxeoIhEyHBY=;
+ b=owEBbQKS/ZANAwAKAQXO9ceJ5Vp0AcsmYgBoD48r/9QXO1GQ26m1PVIh4wMiOl0GiUzNErDjd
+ 1JLRf4dKUaJAjMEAAEKAB0WIQTfzBMe8k8tZW+lBNYFzvXHieVadAUCaA+PKwAKCRAFzvXHieVa
+ dKFvD/0cneVTvkFhFrmGWokLYNi5Ku9sTRvwELaqEiTh+ADmyIvHxTq1fUWq0iK74amHKsUSGzX
+ 0Uo/Z7HVIEt7nFdcKN9iIsUUcIf2u62GJBSK7GB7mI7nKAJaqzP86TeU7MvnhaWhY4YHJ4swOWT
+ ycJ3EEsRQy8udKMn8hpq0qcgN+hBipnZISxyyT0Rg16fOXNYUA3G7gABp+NqwXhAH3/7HzLn78A
+ Bs6wrNC3tRMSV3lnjlMdXDlVZBqPmKgsbHUXwN/bFcAaoAehreXJt7s3a/xJkG4P5j/44kFl7JK
+ TX+R26iYVBZgegXgdHdL5LLg3WbMRfCRx8y3lMLhll1Uk+/fx6X+oI85PPhoj5KtHfCjsGL2w+Z
+ 0rxen4xj373HB+AVfTRDICmAOYPihCuI4H4Ls45eicOvosh0PTZIz5EvnzpwPvJ8Cu4blx+xv23
+ p4m++tzJ5aqB7Yul9x54AZ6snPZ6KDtuK63RUkPboHRQ0E4LwB/i2ky7vPssn8mO95uGJV0KisV
+ q6DUD9HF8Zo7Ss2/ZK1BFcCMe8Qii8AT1MgTFBPxsA40hwGYtlK1w+3pugSjqCUF6WXX1Rkqq3T
+ 9nPKLqs9HPtIC62HpKpdfQgkLqo+DU7EnpAouwRs0JTbx3n47q76VsiB6MSDb0S3PDmHIl92b3D
+ 7izHlHjHJXOA9MQ==
+X-Developer-Key: i=ayush@beagleboard.org; a=openpgp;
+ fpr=DFCC131EF24F2D656FA504D605CEF5C789E55A74
 
-On Thu, Apr 24, 2025 at 2:26=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> wrot=
-e:
-[Me]
-> > I guess what rubs me the wrong way is why the external users
-> > (devices, device drivers or even pin hogs) cannot trigger the chain
-> > of
-> > events leading to this configuration, instead of different "magic"
-> > configurations that are just set up in the pin controller itself.
->
-> Well I am just extending what's already in use...
->
-> Currently it's already supported to route GPIOs to GPI signals, I added
-> the support to route fixed level sources to them, in a similar way.
->
-> If any external users ever have the need of banging the internal
-> signals instead of tying it fixedly, maybe switching between different
-> pinctrl configuration sets is enough? (Because this kind of operation
-> could never be as high speed enough as real hardware pins)
+Add abstractions for managed of_platform_populate and
+of_platform_depopulate.
 
-What I am thinking is that one of the following must be true:
+Signed-off-by: Ayush Singh <ayush@beagleboard.org>
+---
+Allow calling platform_populate/depopulate from Rust code.
 
-1. The internal pads are always set up the same way for this SoC
-  in which case they should be just hardcoded instead, or at
-  least just implied from the compatible string of the pin controller.
+To see how the bindings look in usage, see my working tree [0] for a
+connector driver  I am working on.
 
-2. The internal pads are routed differently depending on different
-  use cases, in which case they need to be set up or implied
-  from configuration in other DT nodes describing this use.
+Open Questions
+***************
 
-I guess this binding if for (2)?
+1. Function names
 
-Yours,
-Linus Walleij
+The rust implementations are based on devm_* versions of these
+functions, i.e of_platform_depopulate() is called when the device is
+unbound. Since in case of Rust, these are methods on the Device struct,
+I am not sure if the `devm_` prefix is required.
+
+2. Maybe should be functions instead of methods?
+
+Not sure what the policy is regarding this.
+
+[0]: https://github.com/Ayush1325/linux/commits/b4/beagle-cape/
+---
+ rust/bindings/bindings_helper.h |  1 +
+ rust/kernel/device.rs           | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index 8a2add69e5d66d1c2ebed9d2c950380e61c48842..51ec0754960377e5fc6bc0703487bf2086eff0e6 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -25,6 +25,7 @@
+ #include <linux/mdio.h>
+ #include <linux/miscdevice.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/pci.h>
+ #include <linux/phy.h>
+ #include <linux/pid_namespace.h>
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 40c1f549b0bae9fd9aa3f41539ccb69896c2560d..7186fe9658ff2a143a43bd6b3500c9a6d6ef9630 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -207,6 +207,16 @@ pub fn property_present(&self, name: &CStr) -> bool {
+         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+         unsafe { bindings::device_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+     }
++
++    /// Populate platform_devices from device tree data
++    pub fn of_platform_populate(&self) -> crate::error::Result<()> {
++        crate::error::to_result(unsafe { bindings::devm_of_platform_populate(self.as_raw()) })
++    }
++
++    /// Remove devices populated from device tree
++    pub fn of_platform_depopulate(&self) {
++        unsafe { bindings::devm_of_platform_depopulate(self.as_raw()) }
++    }
+ }
+ 
+ // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
+
+---
+base-commit: 33035b665157558254b3c21c3f049fd728e72368
+change-id: 20250428-rust-of-populate-b2f961783441
+
+Best regards,
+-- 
+Ayush Singh <ayush@beagleboard.org>
+
