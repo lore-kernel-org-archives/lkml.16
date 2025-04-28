@@ -1,140 +1,81 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0824BE67;
-	Mon, 28 Apr 2025 07:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F4E2629C;
+	Mon, 28 Apr 2025 07:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745824771; cv=none; b=Qcru2GqNW1fS91Q6IWwc2rjPf6jHXmQHbEcYsnvSwzAj9jGUezb7dqEOlbw8d3hBh3TpT/yafuZQTaemIDra90PGnDcRzrWoiF8WEB0+Is6QXd8L2mXwxt8VK3j+0Q3JrSqlsL/w3CJRq1LdITmz89A2lfVBvaxEZAZ3z1UZ520=
+	t=1745824851; cv=none; b=qGSkKGqSzbe5ieG4VfeC8BhXMEW29ilocaJip7kKhWvdkEuP7G3RliVDvNG3bqPWaB8h+aIFpv0xz+NJWDTtKS/f8CMadMfbc3qVyBR0fgYhJEUl51lZxNJIpmN0MlSU6O7mCO95zduMARAuHyeFlmZ1e+PdBGvkjdcR59UZciM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745824771; c=relaxed/simple;
-	bh=SK4ddA8HzYC+KUfP2k0/WCmcI111NkEGUqOsBHoq1Bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cQilZcCiuyaZH02c9imMF29cLsdXho/eFfx5+3ZGXkQ369CrBE8CNXQkp2ww4qKAFx9edkf9yPYnQvDgtSNvTV/DiaUGI7SRX04/wuKwD2MbEgoAV/2+KBB3gEB/T6y/edQBbwu51cDUOLDN4yct+FI6AudnYeS8bxrGq2pIXKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PF0WiXgd; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745824851; c=relaxed/simple;
+	bh=5tPn82Z4K4C3F6jERk27M/8ekeMYd4Wx2QdTkLSm6RU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G2XjKi6X3rSBdbZoub9hD9OO5fRkqSil3rF2CSsXMM+C4wTaXMIEVnwahikCJIbfIieBXh9LOJ1V9UYOfZIPND7SICjsqdlHXrrbRsI66hsXQJtpRbvvs1yytj2N+Y/5HXoav56y2Ont/jtr7H9MIQpsDH6ZaJ7KoDt0x/NO5zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iEEvrYUw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PF0WiXgd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745824764;
-	bh=p5S7r+9+LrTkJDSOqXTMk9hxb/ouo5NJ7kDZBb+ZTeY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PF0WiXgdfX9wZkNfUwDzNXtb0R4B0QqwqGxor9KYF6QR87o2XdiDft+bW571PaZof
-	 8ok3jwqukcmSVAaBIgIQz8tQ4QlG2B/vrmA7OfmCKOlM7hklEQI2bn+WtjxtlVy9Ya
-	 +AfcggWWBqVcvXyowQxR9UIhG9ZJQKMrifXxh+y4f54NPhddXVKCCRxeg7M34Q10XU
-	 o3ufXmQR8yMoesGUftV4CDD9GbAxdqrjpI6r9sNTS131HQowvUc1oHA5pvkPL0jHS6
-	 54xG8Riu13GG11Vq2+pLa7hZAVTl4rISEvLS5dvDTScQImV0ao2UYcyenIHyxfvKEJ
-	 +skbepmE+aPjw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmFF7648tz4wcy;
-	Mon, 28 Apr 2025 17:19:23 +1000 (AEST)
-Date: Mon, 28 Apr 2025 17:18:52 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>
-Cc: Athira Rajeev <atrajeev@linux.ibm.com>, Shrikanth Hegde
- <sshegde@linux.ibm.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20250428171852.36d8533a@canb.auug.org.au>
-In-Reply-To: <F5AD4FED-338E-4DC6-97BF-396F7EB73CA1@linux.ibm.com>
-References: <20250415133518.2c8d4325@canb.auug.org.au>
-	<20250417134959.37204d48@canb.auug.org.au>
-	<20250422163502.02ceeb0d@canb.auug.org.au>
-	<bb1f2928-617f-4943-bdd0-dfa74904ffb3@linux.ibm.com>
-	<D66D1529-714C-4700-BD74-AC6AFA7C97A8@linux.ibm.com>
-	<F5AD4FED-338E-4DC6-97BF-396F7EB73CA1@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iEEvrYUw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE7BC4CEE4;
+	Mon, 28 Apr 2025 07:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745824851;
+	bh=5tPn82Z4K4C3F6jERk27M/8ekeMYd4Wx2QdTkLSm6RU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iEEvrYUwjp5iD+Fwc8MWJgYhGQRqUuE9fE+OTTYmEvR6lmLht2I+gnmBlAN9+ZWDo
+	 oejuqWMM4LZLxEfzZ06PO+Hc0+jhsD0XxXffO/s5ofPgBkkzGoY0MCO/7YENkyWVcD
+	 k35jZGWBRIgpA/53uaolNXyMfakImTsgEE+56sWE/FeMucH7ii6bjvZLEcvrtXV8kH
+	 rIxucaj2U0WIS2SOYNrtY8TPKZ55/E0x/8OeEuoB3yU3on1KT59kc09plYHP2uy5hD
+	 hSA21tKdd7XQ6U67JnwRgpgNX9xst/5/U8DRcbnxmOeC/Tv/9ZboLx+FWN3FgQCzqX
+	 SaicGIYWeHBlQ==
+Date: Mon, 28 Apr 2025 09:20:48 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+Message-ID: <20250428-smiling-azure-sunfish-7c1c25@kuoka>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+ <20250424062017.652969-2-uwu@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SEQCxJKfbwLlfkhccXJJfVY";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250424062017.652969-2-uwu@icenowy.me>
 
---Sig_/SEQCxJKfbwLlfkhccXJJfVY
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 24, 2025 at 02:20:15PM GMT, Icenowy Zheng wrote:
+> The JH7110 SoC could support internal GPI signals to be routed to not
+> external GPIO but internal low/high levels.
+> 
+> Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two virtual
+> "pads" to represent internal GPI sources with fixed low/high levels.
+> 
+> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> ---
+>  include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> index 3865f01396395..3cca874b2bef7 100644
+> --- a/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> +++ b/include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+> @@ -126,6 +126,10 @@
+>  #define	PAD_GMAC0_TXEN		18
+>  #define	PAD_GMAC0_TXC		19
+>  
+> +/* virtual pins for forcing GPI */
+> +#define PAD_INTERNAL_LOW	254
+> +#define PAD_INTERNAL_HIGH	255
 
-Hi all,
+Why this cannot be 20 and 21? These are not values for registers, but
+abstract numbers.
 
-On Thu, 24 Apr 2025 22:03:05 +0530 Athira Rajeev <atrajeev@linux.ibm.com> w=
-rote:
->
-> > On 24 Apr 2025, at 8:07=E2=80=AFPM, Athira Rajeev <atrajeev@linux.ibm.c=
-om> wrote:
-> >  =20
-> >> On 22 Apr 2025, at 3:26=E2=80=AFPM, Shrikanth Hegde <sshegde@linux.ibm=
-.com> wrote:
-> >>=20
-> >> On 4/22/25 12:05, Stephen Rothwell wrote: =20
-> >>  =20
-> >>> On Thu, 17 Apr 2025 13:49:59 +1000 Stephen Rothwell <sfr@canb.auug.or=
-g.au> wrote: =20
-> >>>>=20
-> >>>> On Tue, 15 Apr 2025 13:35:18 +1000 Stephen Rothwell <sfr@canb.auug.o=
-rg.au> wrote: =20
-> >>>>>=20
-> >>>>> After merging the tip tree, today's linux-next build (native perf)
-> >>>>> failed like this:
-> >>>>>=20
-> >>>>> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directo=
-ry
-> >>>>> In file included from util/amd-sample-raw.c:12:
-> >>>>> tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal err=
-or: asm/msr-index.h: No such file or directory
-> >>>>>   10 | #include <asm/msr-index.h>
-> >>>>>      |          ^~~~~~~~~~~~~~~~~
-> >>>>> compilation terminated.
-> >>>>>=20
-> >>>>> Maybe caused by commit
-> >>>>>=20
-> >>>>>  3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header t=
-o <asm/amd/ibs.h>")
-> >>>>> or associated commits?
->
-> Posted the fix in mailing here: https://lore.kernel.org/linux-perf-users/=
-20250424163033.6601-1-atrajeev@linux.ibm.com/T/#u
-> Please share feedback if it fixes the compilation issue.
+Best regards,
+Krzysztof
 
-OK, so to progress things ...
-
-Just reverting the changes to tools/perf in commit
-
-  3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/=
-amd/ibs.h>")
-
-Allows perf to build again on ppc64el (and gets rid of the warning), so
-is that a reasonable thing to do - and leave the tools perf update to
-the perf guys?
-
-If so, can that partial revert be added to the tip tree, please?
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SEQCxJKfbwLlfkhccXJJfVY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPK9wACgkQAVBC80lX
-0GyBGgf8CvhUQl3Kd6I66RwI6x0BE4JTj41gBzuuE2A6hPKHypSEBIutoPTgruxK
-mp/TTcZHd027eDMCnyhsooovrwOZkhWNQ6zfZ4jHH9ZfpiryMXhwlsFzi3wvxQJa
-W3CQbLyPMnUGCGXdStheqoLWriK/RjzkiZurPBrg+5BapTAC5c4hHZ/EXbNKtG5C
-TMKRZOGyxzeg3J9HWXsLcPEMIANMmQp1TI7lC9c5svEvBYOOZQsSLJh16WXW9sbv
-gXv+YaLhsVflcdFkhxKeJhIjCXcITfNWLSozgqWCaJlEvTKRuOsuB9zxBtdxZymR
-OzQ08Vdvoam2ugQg4+6oWAtwCuXw5w==
-=4/IE
------END PGP SIGNATURE-----
-
---Sig_/SEQCxJKfbwLlfkhccXJJfVY--
