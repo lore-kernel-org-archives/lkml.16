@@ -1,91 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D64E253F02;
-	Mon, 28 Apr 2025 08:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B0A253F02;
+	Mon, 28 Apr 2025 08:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745829496; cv=none; b=so5PdeMaQ6F88qcbUxZ2wPF4aW4SCihhl688ACBHp7yshwCb12gQKsHYVrii6qw82qqpF/BFYhCV0FY/apNFWw2sfJyxy0z72guSyQZWb2yicE2rX8dm6GwVxMoy5dfpTwfrXoRe/iUF7YeN1rLJdwGru6bLzmoickE0t3v+c0k=
+	t=1745829506; cv=none; b=U+o9/z+GFW+xVeGfpW8W6gc4xweKb507DsgNL7rH8g5UQurFq6UAwgNLNe6VLYe0quTWX7++6lIqgpnYd/Gs8goiQKpodDGExaxUhiGBZG+u3PdAWWNfyCVtkpX4y6gtExDAx6qa/YmEV53dLyVaNy8wvNnvH20AKtFdeq5Ga8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745829496; c=relaxed/simple;
-	bh=IX7uaMoyrktq0xBAn6VHTtGaVdJeibN2qLU0Auh6A40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFgiaF7dFIL6D91xet3+9HOQAx/puIW/sEfcfnhH6SqAcbKxCwyXf7osqSkgb3TUERsQn9aTtqxt+uydUMhkVssWGL3W5WE4PK650LUKXSLayvMZ1qG35wALbTDeE64/6PQQ8VhE6gW0rXOQmbPRSyzL+c/W8Ce2KDTfCG+2QVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRUXQzyT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745829506; c=relaxed/simple;
+	bh=T1CqvJ1bqV0CsLeslskTg8ylge4lzLdILPvoFVmXlmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n1akph1ZzcfgvDcSttnGGPX0VMXS0Ob0V5uIjfXJomT01cNVV/ybs2DfxlHS7/CppBH53/vPe5o/GQis0na7pkLKMg6I8pFNhRUp5grF0EsDp87u6pn/2T2wK/QNn8vpNPOxTkqIRP8kS2mKZdLFsI2F0SUQ58CtDLuqWm+i+G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=UH92gE26; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRUXQzyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF8FC4CEE4;
-	Mon, 28 Apr 2025 08:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745829495;
-	bh=IX7uaMoyrktq0xBAn6VHTtGaVdJeibN2qLU0Auh6A40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FRUXQzyTnc5p1UtaD090us0IGEgkFTWdz2PYUoExUp3EEGGLxopgJ5TeQIFOtzgkZ
-	 JeaTxIdyMNRV/KBMA9bR+3kQVXHOMdnsWB2b3sM5Hdn4kNjVbPVf9+jRfmdPFNyJZZ
-	 6bOiFaCHKXwdqaGPVHB8OqHkxGqtHFaK6/2p0mpw+SWbCEgSJr6/8LCmGJPhIW2VOq
-	 bhQRbSL+lj4SMf5aVAJ6qfYDH5gFLUHRUR+q4KeT5ejcoKXbuhPwASvD+8p4gf7Hvr
-	 DtZ+0m8N7OoD1jX9Dr6i5VQwEzuzSFOjT3fQSMvoedHFhJrt742n4V/D4yvDi17nL4
-	 D/wT1SUYwuZ/g==
-Date: Mon, 28 Apr 2025 10:38:12 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Bryan O'Donoghue <bod@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: dt-bindings: Add OminiVision 0V02C10
-Message-ID: <20250428-spry-mustard-flamingo-78ef4d@kuoka>
-References: <20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-v1-1-9a46124fae7b@linaro.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UH92gE26"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745829501;
+	bh=7ekObu0vcatDYa+40ZeGkLU5xmQgqCAvyvzbtuJ+8bE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=UH92gE26TshpDBfPIfhbnD1+6zw59FfbLHuJwCc2iyOGAyQernFgJMJE5nIxPc6GB
+	 SfuQSPevvZGXJzefCug1/hAwe3B46NfUmbtKa5Hkal6Vz/JvBba9+x/OIwLLO9sHAD
+	 CkgKqXMtGtMciN602leQOrOzjwjGqjTpJQrNALkD1XM7zgXP2QhGu6KI8GEFe4alj4
+	 /S6wTDMgGYqoGdbMmDvFdywamOjAiFCxyrKu6ihVmzmyrvhwL7NqGJOzHA4DGJINrS
+	 aEIi/uSscC/Scj9RmPLfyPuKnJW26EesLWhEfwRWIhGlDjoRaPCp7O4AQgMjgSMCTp
+	 H1kItI9G1g00w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZmH0F0mFLz4wcy;
+	Mon, 28 Apr 2025 18:38:21 +1000 (AEST)
+Date: Mon, 28 Apr 2025 18:38:20 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Rob Herring
+ <robh@kernel.org>
+Cc: Alexey Charkov <alchark@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the pwm tree with the devicetree tree
+Message-ID: <20250428183820.5f0ccfb5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250426-b4-sailusfor-6-16-1-5-signed-ov02c10-yaml-v1-1-9a46124fae7b@linaro.org>
+Content-Type: multipart/signed; boundary="Sig_/L713ZtHE0//Q67HueB2Dd4f";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Sat, Apr 26, 2025 at 11:35:21PM GMT, Bryan O'Donoghue wrote:
-> Extend the ov02e10 bindings yaml to describe the ov02c10 sensor which has
-> the same bindings with a different compat string and different i2c
-> address only.
-> 
-> Other differences in sensor capabilities exist but are not expressed in
-> devicetree.
-> 
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
-> I previously submitted a standalone ov02c10 yaml file but, it was pointed
-> out to me by Krzysztof that the ov02e10 yaml has exactly the same bindings
-> and we should therefore extend the ov02e10 yaml.
-> 
-> Link: https://lore.kernel.org/linux-media/da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org/
-> 
-> The accompanying patch:
-> 
-> - Updates the overall description to differentiate between the two sensors
-> - Adds ovti,ov02c10 compat string
-> - Adds an example for the ov02c10
-> 
-> Once merged we can also merge the ov02c10 driver, which contains a compat
-> string requiring yaml description as precursor to merge.
-> ---
->  .../bindings/media/i2c/ovti,ov02e10.yaml           | 47 ++++++++++++++++++++--
->  1 file changed, 43 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02e10.yaml
+--Sig_/L713ZtHE0//Q67HueB2Dd4f
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-There is no such file in recent next (0424) and no dependencies
-mentioned, so I cannot verify and I just assume that below:
+Hi all,
 
-> +        ov02c10: camera@36 {
+Today's linux-next merge of the pwm tree got a conflict in:
 
-makes sense and you are not duplicating I2C address on the same bus.
+  MAINTAINERS
 
-You should document the dependencies.
+between commit:
 
-Best regards,
-Krzysztof
+  2b18eda58c86 ("dt-bindings: interrupt-controller: via,vt8500-intc: Conver=
+t to YAML")
 
+from the devicetree tree and commit:
+
+  b6b5683e9692 ("dt-bindings: pwm: vt8500-pwm: Convert to YAML")
+
+from the pwm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index b5c2ce4cb560,26ef29a0c9bf..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -3453,7 -3428,7 +3453,8 @@@ M:	Krzysztof Kozlowski <krzk@kernel.org
+  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+  S:	Odd Fixes
+  F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
+ +F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc=
+.yaml
++ F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+  F:	arch/arm/boot/dts/vt8500/
+  F:	arch/arm/mach-vt8500/
+  F:	drivers/clocksource/timer-vt8500.c
+
+--Sig_/L713ZtHE0//Q67HueB2Dd4f
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgPPnwACgkQAVBC80lX
+0Gzpnwf+LaDdn8sVhTred7zhPGh7MCsp02wMIg0zuyRNeHgdFai+Rf3Idj8EJGKO
+ro5Wnj3x+VKKdBvgokTMP8MhJghyllUstRQUSw6PCh5lfIYPNm4kpxY9dCDU/oCS
+WbJsaNy7IqeG2PBSQOaMmlqNVhm7GJ9sqdpyeP2lTB2VY/hzDsZOgUgSTSO8tRuC
+IQ7BNDUGK0UMhORqS2sh8tarhqHoEOotYisIOuNxBiQcwUwvwbenyUG48MO0Rwru
+8je9SsJ8jQ1QxQd6wJivD4AYGqHzh4Uj1anmQeKMsNWpZ6e1lYupE43a2vovAue+
+r37TGrWI48oEd2C3PkZIHf3lx7DW8w==
+=pJRX
+-----END PGP SIGNATURE-----
+
+--Sig_/L713ZtHE0//Q67HueB2Dd4f--
