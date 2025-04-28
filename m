@@ -1,196 +1,135 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565BC39ACC;
-	Mon, 28 Apr 2025 09:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E3A26770A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745832440; cv=none; b=hgThvm8zqRs/Ww27cTRAk/AMp1QJyrBHm+/6XR2YDbZrSG8XuKn+r7UWQLqV3R/sm4HVdPrVA052CSMOQWXngmhZ+X1Dftl59NMLZbcfKrA4Ncsr54hnZhGqV+2DS36QfiHRAEQl2ylrfP/VUNzKZ4JwPIWACEwejKoIq/bYozw=
+	t=1745832451; cv=none; b=CN5ne7uryHhM4Gl1Szxhlk0IZDtA+sOGu+q92J6yoBG+jhwfloMxhnYCJE0QCZFBAAUPUnYhnTHW5N4J2IEZh+mr9VKqlOybbBabaNqgUKJkA6xIIlJMKpRVat9B3RMalMcWUbq9yKpeH0f9RPt/OIT4g3YvVoisiAbrrjjFXXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745832440; c=relaxed/simple;
-	bh=AOrurvQBPdJGDSxym+li72GM0IQJ3l3EzJzWO5hc4DY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L5NRR+Wh+abp1s1e932XStavncBUJhRyiloprPCjAjSiqnKbyP1WdLoO2zCca7htvaKzu8vRpiHhpjI70wQcgFZn65YJQfjRm1bfTO0zXLYW9PTFvSXwoupXAiF0geoUCHtXmuduk6Axw86U3DphXOp2gFiqMbdk5EYSEV6o2fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LZG81D1C; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZG81D1C"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43f106a3591so5293875e9.3;
-        Mon, 28 Apr 2025 02:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745832435; x=1746437235; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lYaYDnkKtvyys/HpXygeG1INqfDgvABU5oOAJzzLV30=;
-        b=LZG81D1C0alX8hYO1eA84JINb46VCFYlolYjOl+VYQq37Jqy4eM5CAdzUCx5LJcjjD
-         hNUa7WvCxjx1u01BrltyKTO9Z+MkiODdu/3edXkhYqr9HX96UfMLxZaKDA/q8Zv/ra5T
-         BWDXdLtnTXj6dhyI89K26eVWNe/75xfz4tmKNqt9r8SW4cdbZOMvSn9NyrOD0DiKk3V+
-         e88i3ovFvhapNrjefaAz7K8i3H9fs2fFLOrexUrHflwL/69lx9ee7je0h0GAKdcpuGF+
-         gbsL6TzfzUObw9sHtlm1AhUC+JP9BIIqQ94jyORURdzuVW5XXxYuou9aVPiiXqhJb8xA
-         rU3A==
+	s=arc-20240116; t=1745832451; c=relaxed/simple;
+	bh=C2IwoB62GsX3hNTk0ae5FPG+0sKvNLFRkU1NxbBlgg4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=H8ZlNe09FS6j+SHtLSN/eWIh4bpFaJvp7Fhrq6LDzZB40KrHOd5H5NqjX52NxdtrIfxTpZEdcyl9KEaUxTu8enN9qPUnchx/OiqWuio2f549YE7vppsZZvzAE+F0dDesRsGPWSmMQwB0I/CH0gFthW0INgks+I5Qr3a3Xv/ok/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86186c58c41so444951139f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 02:27:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745832435; x=1746437235;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lYaYDnkKtvyys/HpXygeG1INqfDgvABU5oOAJzzLV30=;
-        b=fB5ptWAawoyQGTJCM0OgaswNLhQUVbRYdA53V5UIJ97oRC1alOzUEc8X/w06t01G+O
-         0ioybpskdvx4RiTSivMq5wOVwIdINKNAjjnGZ8DatR4LHRgRGBBs97TYExb8CNa65Rvm
-         ieaG+odrFjVlnD5nZ+Ip2ESBCqv6lLpJBqahVFZR6tibwUS4qzov76wBDVhBVUWCtw4f
-         gQ4vgn0xtAZ2pBrZ4u6CEhyVlw0QHB8Z3MWW7PZAKuqFeuZT9ZyLkv4m3upL6aijjxNr
-         brfQMRlFfuH8yUir2hoZE94ODHslm+DZxIlGzL9iEyunZ7IeV19D3HbuZYtC+aX4cspV
-         vqbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnnkq9MojjiqgMIvpRQEiz94JGCto6XA/X0x+xPF5oRIHr2aVPIkMgYoW4kfL7PROBNDkEtC9V@vger.kernel.org, AJvYcCWEAaFgxD4tSsUHzROkEnSXkp/xAsCbdbwlEXbkjkaIb7TqdbHI4mTr9Y2fU0qApzh2VbQlLf5v7X0Qzdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypzpYWXDldPtNk8BvFOxqQsOg5IQwUqxwa0XmJ/dJKAWZq6NJV
-	cmg81TR0sNXZxFckTDvV2VwoguyvS+R8tGYVBEIFU9LrcpcC8+6e
-X-Gm-Gg: ASbGnctKMohug5AabFQVCnrWJug2rQ+vNblNpphpDziQNS5ZfBipE0lhUueCisDFXfa
-	Bz7+ut0szfYK85lFhkKEw11yZR3RJ8kGkaoszTF0xUKDvTAdOUy1JLgf9QvAnflcYKBbvgHVur8
-	53yr1pYyb+JWqRByQDTwuOBhu5JTbXZxZ1ZY/VIe3EJyQW1QLhZjCvWGI01EXxzX6emNH/Pieq2
-	RgyrkmBDRGLBHgUhcdfVe7nTIys4Y0B+4j3l0UySS/pOJ5QtUCvLlssvYnRIynYcU8a5UC0dIe7
-	OMCBenzyhuz4SvQhpzMk8qAi/wvGr/swnBTFR7o=
-X-Google-Smtp-Source: AGHT+IGdmXZ2WAYACHeYiosmtulUcS+64qMJ9n/kaYqoVRIYxIERpMSoHIgkytpkfgQXmZpijzs6dw==
-X-Received: by 2002:a05:6000:18ae:b0:3a0:6c12:237e with SMTP id ffacd0b85a97d-3a074f8fa42mr2996394f8f.16.1745832435237;
-        Mon, 28 Apr 2025 02:27:15 -0700 (PDT)
-Received: from skbuf ([188.25.50.178])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8976sm149400125e9.27.2025.04.28.02.27.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 02:27:14 -0700 (PDT)
-Date: Mon, 28 Apr 2025 12:27:12 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dsa: fix VLAN 0 filter imbalance when toggling
- filtering
-Message-ID: <20250428092712.7owj62ct2dj5t2r4@skbuf>
-References: <20250422184913.20155-1-jonas.gorski@gmail.com>
- <20250424102509.65u5zmxhbjsd5vun@skbuf>
- <04ac4aec-e6cd-4432-a31d-73088e762565@gmail.com>
- <CAOiHx==5p2O6wVa42YtR-d=Sufbb2Ljy64mFSHavX2bguVXPWg@mail.gmail.com>
- <20250424225738.7xr36vll3vg4irzf@skbuf>
- <CAOiHx=m0nkxczOHQycCjsXcRvs-eP+wGgrUDDuB5UpSnMBSLkw@mail.gmail.com>
- <20250425114225.w24quv7gnp5vlcyd@skbuf>
- <CAOiHx==qdf+NVk5wG2J48gVBovp-UQuO1iS+6cCFbKyGyR0uqw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745832448; x=1746437248;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v+ebg1KbTm9vvKY1TuOB6zxAWxwzKfz0azG98FkmiYQ=;
+        b=H5MgVMu5Yt45hEeQAc4Xmm0dJ6CFPXoESlkj/Dp8qL/6uou80UCjXxSThPs2KJGt1d
+         Bs/oHJgi4wNtV6Gw+mYF8ALLlU3jN+uLzObZpBHswaJXG4Vio2ZMyMN2vksnC0yYE0NZ
+         y53C/AEAVb9Z3iOmE2a74nFua3KYO66vbaIkC+nQherDLNf0fHp7xFmTsmRhtCI5hScO
+         iFJMq36RAGiamLTfxJ+SAPquoBtLd26bHdsTvpozi05o8YPxh4JG3zG5B6tPONWIMOX7
+         B3BbFuNI7L7hm53/PTcD0ehgy1y27068qtoKdLtgO9o+repEUsTpz6p4k6Q+9dQhs63o
+         QTtg==
+X-Gm-Message-State: AOJu0Yy0ao0/xeVAAalYdsaAZs5vIttqa2XKwYjvzgDtFPtlUTubAdqf
+	WnpSG4w8womSzGXZ6KjaTN3n/W64n7ja6YYL6LSkpU/oQYgmzRr16EtrHMFvu+oktAb82cNmlJB
+	msg+y1uORmysnc5BT3mPEZ5AwD4vK8ZprXvTFpo2Yupij6dJ6kWgzIK7R7A==
+X-Google-Smtp-Source: AGHT+IGQs6sOsykJKYePy/3LjqotbpsJu1Amy4LjmJCjyaWW0LeEhrB360Ldj5/Xy3KLoBTr5wmutVFytf1mDj1omP5crV6Ql7/0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOiHx==qdf+NVk5wG2J48gVBovp-UQuO1iS+6cCFbKyGyR0uqw@mail.gmail.com>
+X-Received: by 2002:a05:6602:4899:b0:864:589c:3264 with SMTP id
+ ca18e2360f4ac-86467ad2d22mr953533039f.4.1745832448455; Mon, 28 Apr 2025
+ 02:27:28 -0700 (PDT)
+Date: Mon, 28 Apr 2025 02:27:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <680f4a00.050a0220.2b69d1.032a.GAE@google.com>
+Subject: [syzbot] [kernel?] KCSAN: data-race in copy_mm / copy_page_range
+From: syzbot <syzbot+cfd78ff95994c614d233@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Apr 26, 2025 at 05:44:33PM +0200, Jonas Gorski wrote:
-> On Fri, Apr 25, 2025 at 1:42 PM Vladimir Oltean <vladimir.oltean@nxp.com> wrote:
-> > We have insufficient coverage in dsa_user_prechangeupper_sanity_check()
-> > and dsa_port_can_apply_vlan_filtering(), but we should add another
-> > restriction for this: 8021q uppers with the same VID should not be
-> > installed to ports spanning the same VLAN-aware bridge. And there should
-> > be a new test for it in tools/testing/selftests/net/forwarding/no_forwarding.sh.
-> >
-> > The restriction can be selectively lifted if there ever appear drivers
-> > which can make the distinction you are talking about, but I don't think
-> > that any of them can, at the moment.
-> 
-> AFAICT, we probably then also need to deny any vlan uppers on ports
-> bridged via vlan unaware bridges for now, as we currently don't
-> actually configure them at all.
+Hello,
 
-So it seems.
+syzbot found the following issue on:
 
-> switchdev.rst says "Frames ingressing the device with a VID that is
-> not programmed into the bridge/switch's VLAN table must be forwarded
-> and may be processed using a VLAN device (see below)" (I thought with
-> a vlan unaware bridge we do not program the VLAN table? anway ...)
+HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=152930d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fc7049672597c030
+dashboard link: https://syzkaller.appspot.com/bug?extid=cfd78ff95994c614d233
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-I think the sentence just intended to clarify what it means for the port
-to be non-filtering, but in the process introduced the ambiguity of
-whether VLANs should be committed to hardware tables or not.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-To be clear, from the bridge perspective, VLAN filtering = VLAN awareness
-(there doesn't exist any option to, say, have per-VLAN learning but not
-filtering). I suppose that if the hardware supports mechanisms of being
-VLAN-aware but not filtering, and still do VLAN-unaware learning, those
-mechanisms can be used as long as the bridging layer expectations are met.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b07ed9969a13/disk-5bc10186.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3abab03798d3/vmlinux-5bc10186.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8fca26b1845c/bzImage-5bc10186.xz
 
-> "- with VLAN filtering turned off, the bridge will process all ingress traffic
->   for the port, except for the traffic tagged with a VLAN ID destined for a
->   VLAN upper."
-> 
-> This is currently not happening when creating a vlan upper, at least I
-> don't see any port_vlan_add() (?) calls for that. And even then, it
-> would be indistinguishable from the port_vlan_add() calls that happen
-> if you add a vlan to the bridge's vlan table, which you can, and DSA
-> passes on, but should not be acted upon by the switch until vlan
-> filtering is turned on.
-> 
-> Also in general vlan unaware bridges feel like they have a lot of
-> complicated and probably unsupportable setups.
-> 
-> Like for example:
-> 
-> br0 { sw1p1, sw1p2, sw1p3, sw1p4 }
-> br1 { sw1p1.10, sw1p4.10 }
-> 
-> would AFAIU mean:
-> 
-> - forward all traffic except vlan 10 tagged between all 4 ports
-> - vlan 10 tagged traffic from sw1p1 can only go to sw1p4
-> - vlan 10 tagged traffic from sw1p4 can only go to sw1p1
-> - vlan 10 tagged traffic from sw1p2 and sw1p3 can go to all other ports
-> 
-> I'm not confident that I could program that correctly on a Broadcom
-> XGS switch, and these support a *lot* of VLAN shenanigans.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cfd78ff95994c614d233@syzkaller.appspotmail.com
 
-You can add restrictions for these cases for 'net', as I don't think any
-current DSA driver handles this correctly. Then, if you want to take a
-stab at offloading these configurations, feel free to do so in net-next.
+==================================================================
+BUG: KCSAN: data-race in copy_mm / copy_page_range
 
-> This probably leaves:
-> 
-> "    * Treat bridge ports with VLAN upper interfaces as standalone, and let
->       forwarding be handled in the software data path."
-> 
-> as the only viable option here
+write to 0xffff88810a1bc868 of 8 bytes by task 15516 on cpu 0:
+ __list_add include/linux/list.h:153 [inline]
+ list_add include/linux/list.h:169 [inline]
+ copy_nonpresent_pte mm/memory.c:803 [inline]
+ copy_pte_range mm/memory.c:1143 [inline]
+ copy_pmd_range mm/memory.c:1255 [inline]
+ copy_pud_range mm/memory.c:1292 [inline]
+ copy_p4d_range mm/memory.c:1316 [inline]
+ copy_page_range+0x2525/0x3760 mm/memory.c:1410
+ dup_mmap kernel/fork.c:726 [inline]
+ dup_mm kernel/fork.c:1734 [inline]
+ copy_mm+0xab6/0x1310 kernel/fork.c:1786
+ copy_process+0xcf1/0x1f90 kernel/fork.c:2429
+ kernel_clone+0x16c/0x5b0 kernel/fork.c:2844
+ __do_sys_clone kernel/fork.c:2987 [inline]
+ __se_sys_clone kernel/fork.c:2971 [inline]
+ __x64_sys_clone+0xe6/0x120 kernel/fork.c:2971
+ x64_sys_call+0x2c59/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:57
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd0/0x1a0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Keep in mind that we haven't experimented with dynamically unoffloading
-a bridge port before (calling switchdev_bridge_port_unoffload() at
-runtime). That will be necessary when toggling the bridge vlan_filtering
-option. It should work, but I can't guarantee that it does. In general,
-software bridging was retrofitted onto DSA drivers which also support
-bridge offload, and not all of them may work correctly (they may still
-have address learning enabled, things like that). I'd only consider that
-path as suitable for net-next.
+read to 0xffff88810a1bc780 of 1344 bytes by task 12894 on cpu 1:
+ dup_mm kernel/fork.c:1728 [inline]
+ copy_mm+0xfb/0x1310 kernel/fork.c:1786
+ copy_process+0xcf1/0x1f90 kernel/fork.c:2429
+ kernel_clone+0x16c/0x5b0 kernel/fork.c:2844
+ __do_sys_clone kernel/fork.c:2987 [inline]
+ __se_sys_clone kernel/fork.c:2971 [inline]
+ __x64_sys_clone+0xe6/0x120 kernel/fork.c:2971
+ x64_sys_call+0x2c59/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:57
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd0/0x1a0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> (I have to admit I don't really understand what the first option is
-> suggesting to do).
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 UID: 0 PID: 12894 Comm: syz-executor Not tainted 6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+==================================================================
 
-The first option suggests that you can implement a VLAN-unaware bridge
-by mapping the entire 4K VLAN space to a single VLAN within the hardware
-switch. It has to be configured specially at the driver level, to always
-preserve the VLAN tag (and ID) when egressing the packet. Then exempt
-certain VLAN IDs (of 8021q uppers) from this treatment, and include only
-the user port and CPU port in their forwarding mask.
 
-The above can also be reinterpreted in the key that packets with a VLAN
-ID that isn't in the VLAN database aren't "filtered" but forwarded as-is,
-and learned all together. It seems to be similar with your own
-suggestion above.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-It's just an idea, and requires hardware support to achieve that. This
-circles back to the idea that the port can be configured as VLAN "aware"
-as long as it's not "filtering" from the bridge perspective, and there
-is no address space segregation per VLAN in the FDB. The bridge doesn't
-need to be aware of this custom mode of operation, the driver may decide
-to transition to it only in the presence of 8021q uppers on top of
-VLAN-unaware bridge ports.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
