@@ -1,127 +1,115 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5678C70810
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B65C1714B3;
+	Mon, 28 Apr 2025 06:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745820658; cv=none; b=mnWZfP/el2R1EvORgltj8+BjyDPugMZDHl5P3zgG4G0euXoX9WKIhKEszvJ3mLfrZ5oWQ1ipqmjLHQp+jIAEKWAO7WzU8UyYB0BWqf1IlIrcHHst5avV+AHMrRD+jBTr/g2l65RRu8W2EUfji5mqdCE14ApG4HchRylSQD7igdg=
+	t=1745820727; cv=none; b=fjnNSE0CC30pYkE+10xAQe+bWHDrJW0kgVr5dO2uJS9GBfTuQAwyyskLIuGr8/FDQjIfoskFWc8/YIrdXUsl+113AzLn+owi0RxMMcPVGHZbmHu5wPy5LAnSpGnNsQG/RioDFDXXrz16RYxedw4+Xux96cVKrf2tVsXC+FSTP4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745820658; c=relaxed/simple;
-	bh=9Otz/d2gzrWoOePyNeKzlIpVCpLA5uOam+AtSbppq4k=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pe8MmCcGJL6nWtmn+w33ywCkz5as0NOh5NONR6jtx3s3IV+OPOlL6YdG7AmGKryF/almg0JqzBcx+nTeAsLZT5qNbcjS9/akN3dEVl4yeP/rEf1hlu+uue81Z3RfsFXTrrUvXcVUlykedYOZ7MONdDHSKR8OfTozdFoHbIJijFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3oufHE8; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745820727; c=relaxed/simple;
+	bh=9VFKEeiK6JI4XVbE/KksWzGslEhHpjfYU+UURnodd6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a98uy6P8oGrnEmYpWPktxgIoytqqLrezveOKFPJmHEZuDG8mxI2qXIZ1Ol7Ng7jX6R45jFXHepS9p63bCLKLLtQF50JnF3qsL/9bBxGBeKk16F1bM7Oi0a1JAboNwNPp3Mz3bLAOlAWe9Gg3mzRebGV8V2AnXaKwGD1d2FyBywM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RAQlzICX; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3oufHE8"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so844286466b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Apr 2025 23:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745820655; x=1746425455; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QphPfE+vUE67L3trT4TGohjxqNrvuWYQckH1kmeBzLI=;
-        b=Q3oufHE8krJzjrCbJdctCb/d7isHMp944GMq8wkT00sERHuMMHrR2EED6v+Rp4Q4VX
-         fP3ug8sv+gEIAQzoyLyaagUknGtxQddjTNoLO8PcYCKIb6unPTwuU/mPTA+XWLStusj2
-         65cvh14Ryila8Y2AqD/BO8cNG+x+Ac7m2SKhfoUBdfTFthLn94qWu65inuqRhmwWPhDl
-         J0FA3o4eYBrY542XKqzBXL2/+m2YUQCvxKdBW6Wh2N+NmXO6GFRst3oY0odfYH75YVsH
-         KnGNfsKLnoCkb6B9HuZQRXavpJPoXOcEnjuhvJxk6+FQ/pz9CefB+ssN9uC4gnG3kW5F
-         da1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745820655; x=1746425455;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QphPfE+vUE67L3trT4TGohjxqNrvuWYQckH1kmeBzLI=;
-        b=az8izs4OWxE2vIN/oo3i4Qt8I/Y+NiZJw6DUHHDa+czyCrOn+FswTa7CPc0lL6gFw0
-         e7Jc/nQTrcFfjC7oJ24vN/BortlpkBy8ZnpgOAxAxX7bEMOIlNhhJBB2F3SdIu9niPYg
-         j+SijcfAz4ocncmtG1+M0JDbYQQ+Z2U/0p+n8jxVvFc67fkn3Y3nEFG+9OoRd0zobl/v
-         7vWjaQwPfWyAcM/5lejRpGpY3Hn/MiSHmFBoKxzKbTzWMuUYTii37sl9jkADV9ITHQ2X
-         WSL1MbrvWz0oq2o755Iw1e3Gdrjeq8qDFv+qFU9AeblhNyTqfqQdQn9VDXLkd1b4Mitf
-         sBkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmRUcVssnX3vXBL5sO4WUJnMa0zIMqPrA9I6ZG+eYjgU213uEqluQF85R8E2cTuCOEpHAlOnHE174gNb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6D3TfZD5uIbOCkAjgyCI1nZ0tc4wlKgka+wtKulqeNX9PMaG5
-	QW/L7aHowgILOLCtrazuXWVO1cH3lcOtRJv8K7rlsuwBhbwpMRMN
-X-Gm-Gg: ASbGncs9X7/cYGP+7MR6qNv6fC72FWzsjpHdTrgI2UGWHuoMAczM05BOXFC7bgosP7l
-	0PdHYaU8FL328ootY8YBVP4LQRtHWC2ipErqCBg7dOG3XdPYAquEjXHlHP1NiCTA5vOIMQ4r5iz
-	YAemjuAEycw2KEZ0UYsTGT/+4cvuDXkwM+DTPfcj6VkdA0pHfX0bj6COWEJIdU62b4uV3ptd2dT
-	Yw1OrF875pgOzbJPiCvhFAA5sEMg2h5W5dNLHyZECGfo2CRKZDnkIxtg6N7o8UFFodz668j6eA2
-	l/poHHWkwGv90xxdPakVym32TsAQCVjPpwOQTzCmpKdsIadDvgbqsgFxPTIRPHjJssh1yYN7/Pp
-	82/zzVwUyJCtLgbntVw==
-X-Google-Smtp-Source: AGHT+IHkHGWY//K0wfWb5JEsBAo4EX5tBYhxssfjjb2vj5Y0wAC7SsY0YE6ZYBAcqI4jC1DXrJwMuA==
-X-Received: by 2002:a17:906:f59f:b0:aca:a162:67bb with SMTP id a640c23a62f3a-ace739dcdd6mr918382966b.4.1745820654333;
-        Sun, 27 Apr 2025 23:10:54 -0700 (PDT)
-Received: from [192.168.1.18] (146.10-240-81.adsl-dyn.isp.belgacom.be. [81.240.10.146])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed70611sm569224466b.143.2025.04.27.23.10.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Apr 2025 23:10:53 -0700 (PDT)
-Message-ID: <3aea4181-427f-4859-8a89-54c139775da6@gmail.com>
-Date: Mon, 28 Apr 2025 08:10:53 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RAQlzICX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745820725; x=1777356725;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9VFKEeiK6JI4XVbE/KksWzGslEhHpjfYU+UURnodd6M=;
+  b=RAQlzICXBchaNII48Xe0MgvbpNJAT8Q4VI7kWFXX2IQcWkiBIyVNg90i
+   oB9Ij3ujtWpRrf9WCRfhk4XVipMCSWo8+Tat6E/SAkUAMKMh3wQtbPD3z
+   hPdg4tkp+SoY3uPYwwMSr+veBc6N0ebKwQeEIR73gP0kLvXOfl7D0C99z
+   QWQAs52WjrNh0R7WtyG/d6K3W+v0SKHhBdW/FBkTGX7yZrnF1HomyqK+R
+   ikcihAPwSC7Y11AzX+rlSbq7iSD62Kge/swsW40Uy5C+u+jB4AP40f/Mc
+   Y9yQb+BqZOlceoNAZqAjXPI75aqWI5eIp6rVDyi7rx2R9yOhO+oodtPcu
+   A==;
+X-CSE-ConnectionGUID: kZJl5FjwT8S1sZMyGyfjBA==
+X-CSE-MsgGUID: H6N5xXFaTQ22j7EgEfKihw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="58380874"
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="58380874"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 23:12:04 -0700
+X-CSE-ConnectionGUID: 1+/wircxSC+zaa1j+jwsmw==
+X-CSE-MsgGUID: i3LZolW/SKSAhNUcSdgi4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
+   d="scan'208";a="133730131"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 27 Apr 2025 23:12:01 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u9Hig-0006fZ-25;
+	Mon, 28 Apr 2025 06:11:58 +0000
+Date: Mon, 28 Apr 2025 14:11:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Roman Gushchin <roman.gushchin@linux.dev>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
+	bpf@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>
+Subject: Re: [PATCH rfc 09/12] sched: psi: bpf hook to handle psi events
+Message-ID: <202504281309.smYiDStM-lkp@intel.com>
+References: <20250428033617.3797686-10-roman.gushchin@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] drm/panfrost: enable G31 on H616
-From: Philippe Simons <simons.philippe@gmail.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Andre Przywara <andre.przywara@arm.com>,
- =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>
-References: <20250403055210.54486-1-simons.philippe@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250403055210.54486-1-simons.philippe@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428033617.3797686-10-roman.gushchin@linux.dev>
 
-Hi, is there any issue with this serie
+Hi Roman,
 
-Thanks,
+kernel test robot noticed the following build warnings:
 
-Philippe
+[auto build test WARNING on akpm-mm/mm-everything]
 
-On 4/3/25 07:52, Philippe Simons wrote:
-> Allwinner H616 has a dedicated power domain for its Mali G31.
->
-> Currently after probe, the GPU is put in runtime suspend which
-> disable the power domain.
-> On first usage of GPU, the power domain enable hangs the system.
->
-> This series adds the necessary calls to enable the clocks and
-> deasserting the reset line after the power domain enabling and
-> asserting the reset line and disabling the clocks prior to the
-> power domain disabling.
->
-> This allows to use the Mali GPU on all Allwinner H616
-> boards and devices.
->
-> Changelog v1 .. v2:
-> - merge flags to a single GPU_PM_RT flag
-> - reorder init/deinit powerup/down sequences according to
->    Mali manuals.
-> Link to v1:
-> https://lore.kernel.org/linux-sunxi/20250312232319.25712-1-simons.philippe@gmail.com/
->
-> Philippe Simons (3):
->    drm/panfrost: Add PM runtime flag
->    drm/panfrost: add h616 compatible string
->    drm/panfrost: reorder pd/clk/rst sequence
->
->   drivers/gpu/drm/panfrost/panfrost_device.c | 71 ++++++++++++++++------
->   drivers/gpu/drm/panfrost/panfrost_device.h |  3 +
->   drivers/gpu/drm/panfrost/panfrost_drv.c    |  8 +++
->   3 files changed, 63 insertions(+), 19 deletions(-)
->
->
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> prerequisite-patch-id: eb8a11e2b24bb282970d8b8528834dea7ee392cc
+url:    https://github.com/intel-lab-lkp/linux/commits/Roman-Gushchin/mm-introduce-a-bpf-hook-for-OOM-handling/20250428-113742
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250428033617.3797686-10-roman.gushchin%40linux.dev
+patch subject: [PATCH rfc 09/12] sched: psi: bpf hook to handle psi events
+config: sh-randconfig-001-20250428 (https://download.01.org/0day-ci/archive/20250428/202504281309.smYiDStM-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250428/202504281309.smYiDStM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504281309.smYiDStM-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from kernel/sched/build_utility.c:94:
+>> kernel/sched/psi.c:193:38: warning: 'bpf_psi_hook_set' defined but not used [-Wunused-const-variable=]
+     193 | static const struct btf_kfunc_id_set bpf_psi_hook_set = {
+         |                                      ^~~~~~~~~~~~~~~~
+
+
+vim +/bpf_psi_hook_set +193 kernel/sched/psi.c
+
+   192	
+ > 193	static const struct btf_kfunc_id_set bpf_psi_hook_set = {
+   194		.owner = THIS_MODULE,
+   195		.set   = &bpf_psi_hooks,
+   196	};
+   197	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
