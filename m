@@ -1,106 +1,95 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9B44C91;
-	Mon, 28 Apr 2025 12:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896E81D54D1;
+	Mon, 28 Apr 2025 12:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745842723; cv=none; b=pxdhGhCg2/WvF38NlSliEnsRmer2my8/vTGqTMAJSMkUvopjdhyO9du40idg6WMJKb9U+Bb5q7F+Muow+QKcyQpbgIvFtcW/YBaxp2wTColLkRqrDGf/GaC2nQ/KPEdlnifGpQmU5CYkhgBBWAQy8AXsgK77MrykT/Rp2MwhVg4=
+	t=1745842831; cv=none; b=MQ2V4PVLVYHv+yDz1Qf4XFNY+rVA9Axwe0fVXPf4Y2pKVWpAqmCFhMlOptWOugEUDjddWbJLjoBamYt8zK/GEi6t9xvR5EyxKhllDPrU1fU8iImd9aV/ylP92jX1KoJ46JYAuL/K7AAepmpketfn40qtrG47FI3KpZ1OsIyAeNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745842723; c=relaxed/simple;
-	bh=Ewjf3tyBr+R5RFwbWFFcn5c/Rmv/H8aXqAjKjGy6Rm4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=SLZBkB98GLq/lveJTHqt5s7VBcUHyq1qJg5gLIJSYXNkKWmcUiFmo1McodXLWobkAs8nl5DYHNVE8uoTKouS155qBBfZ6H14nUwZOP6/yGPUwQVGDXBKdGrhjZBxoa3hFrkPRT9a59380xHU1Zxn0/uPFPnpOfbQP9u6Zg23kaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=WROXFXya; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FW5cTupg; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745842831; c=relaxed/simple;
+	bh=5LJVD7EEo2QIoCV1sD+YeaR74gXBmkqhDW5rQm+7VG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CM+fUbCx1u8eKrBOE/atWK7QKxknc50Wwofz1N6AffsJ8bZkJcpXS8123J1rkkI99hgotO1pQxkmj0VU/TI9k4QqdV7QJXiZaBZ/b8ny6b8jo1OPBYvoVDmzXAvnAMWqxMn/b3wCkaYOAzXScRYkPyOdg73Rh6Ppo13b50y7qWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4GQDDo4; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="WROXFXya";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FW5cTupg"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 6AB8C254026E;
-	Mon, 28 Apr 2025 08:18:38 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Mon, 28 Apr 2025 08:18:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745842718;
-	 x=1745929118; bh=y3dDG05EPV18g7EQNyeKpiaJtlzZMl+EXyCOzy4Migs=; b=
-	WROXFXyaFO2gM33IP9NPiPuro3todaWviWyem7ZByy1+HiiFxKdt9oeGbC4lVhuI
-	k8umGA+h6p3v7fSl4ogtguAAT09Tgd2dhKYxgfxryGQ3mgjkgS+uvPOmBlW90h2P
-	bQUcPUzxJXw9Us3ADnpE96M48pm7cshEmeUyRr00GUZx6ibi/Lrrfk1hD0tDf/Yp
-	aTQ0GXC2hmtoZ8OUSintxIyDUnRVRD+rk0wngy4cos+KvQ9SJwtENSffd1Q7jlwb
-	fFCacgxim8Eqz/Nn2WNfgQzpuR0zgqofrtk+XO+uqCMvpGcF7gj3V6gx7A2M4bC9
-	sld69AtyP5fWU9/0TrgVUA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745842718; x=
-	1745929118; bh=y3dDG05EPV18g7EQNyeKpiaJtlzZMl+EXyCOzy4Migs=; b=F
-	W5cTupgdPknifv2gBMxJysTc2inSkeQbRrSb7WqpKBOkT0CtlFefU+Zs0xTFwWhC
-	hl8NO/X6Kpjm5Pc56AFMwSICkQgkCWyfHbODpgqt3htTAewxosb2zrdEPSPWNf+3
-	C1UCECNt8OfB77/+1pxgOGrAXySG2DH8dfYeDITj1DcSDMMaRybDfoFNAUpjDlW+
-	4D1k09eozo5ed+Zov6eUu8fYyVFnSf0HwNaMwPpHfLc/m/yv28Vv9v/ApS/OL492
-	AzJ8NA057adxVnpMGBcFwJsNC8oB2fSBL3eKR4zKGV5L4JpNufrpM70JogI6RHms
-	SFD0ezlaGSTkdjEH8RjBQ==
-X-ME-Sender: <xms:HXIPaO56dI61zPH2_80uGMSeBw6HgTBNnQADQp0vXym8Ti2N9fMazQ>
-    <xme:HXIPaH5HaE22KiDf1mb3sxsiQGJ5BpP0F43nfK9FmUQT0yPGS75ul0CMCtwzkSd2Q
-    FQf4zYnLVYWn3J7f-U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtleefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    hedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrsh
-    esghhlihguvghrrdgsvgdprhgtphhtthhopehsrhhinhhisehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehlihhnuhigqd
-    guohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:HXIPaNf8KcnB6wfaRG64cIwZFGDzfZfJS5_lGnvqNmGBFI8JFcVJOw>
-    <xmx:HXIPaLI9IS139tocELkntrYr_JSNlAzBUaNHFjiE4gS7cWa4YcRuEw>
-    <xmx:HXIPaCL18IxstUK_rvKBDa4r0f8mW9MHSbP66dZWADZzaUlqpyt60w>
-    <xmx:HXIPaMyHE3ekzNMDKYAU5jbl4QZo-UjqR5Gdn_y87BqjbNPFYc4cRA>
-    <xmx:HnIPaDrP7oEpjsiJAGhHwl7cWt9YAvxx6xm9b4TjJzLDu-fe_denQ56Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9EBAD2220073; Mon, 28 Apr 2025 08:18:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4GQDDo4"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-310447fe59aso54014801fa.0;
+        Mon, 28 Apr 2025 05:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745842827; x=1746447627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWpWmVQh5LkKQ38Ckz6b68wz7ZGK8S3wIAjuRScvxvk=;
+        b=Y4GQDDo4D0JetboM2ofJnJCPDTEsngQR3nHR/tnu5SB/UTgTpmhOjV8OdCAd/Ptugi
+         FRJ7Gdrn12yHvl8R+B+dc3mk7LgbAUcMw949aBwPRnrrQbFqiq7IuyehHY6FCxA6plsL
+         PL0mF0Vshqi434Bd68SEihnzjPj6AlF3oZbrmfk0L6dPnwOAeflKtFVnwTbBFwgQiZAy
+         UUeei3IPU24MKFIESLFZLjoWDdQDSwmZgfgKdZvjoxYOUXZf8x/QKd1s26eM7+Ah9i5d
+         dFjHT/TATSK8AdJkL5NxPNpnXba+OGkfTgw2yyybVIe3RLcwYzeAAw3RPCn7C2MsA6GF
+         scIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745842827; x=1746447627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TWpWmVQh5LkKQ38Ckz6b68wz7ZGK8S3wIAjuRScvxvk=;
+        b=J7CZZ34L5mpLDCxs15WNqK6m3UDVhpyFFApm09IQYeHUKwUl5XrPGrpBrSu+bCjOLx
+         jt5WArikpSx8Pi/8mPTFrLQeozWkQUEdg2ebvjlWjl2mFoZUV6+wb45Lg+9geeg+b8OX
+         A+i4pLQLm1GgkdW3li8dg6G25V8U+HkqnVWK5JtZ2lXo/kb6s7WbMnCSA3kd6gi7e1V0
+         N51a7ZfoRMSKWrl91uHdFH4VuHw6BBvS27f0SH+0zWutK0qYuSs9StIo4e7LgIR2b9tP
+         +wI54D3zH8/nRG49Op9Qcj2hmeqXh6gJ8moInDh/JXFbTKSynZ+UEI7yv33thCARtKqz
+         Duxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzNOywBae+hWxwsZVbmQ0cQ3zXm8VTJtbd5Hm6tR7SKjr0U4SxV+9CLYR8ZthIcPT2+yKjAdv1qj1Sixnn@vger.kernel.org, AJvYcCXnixzhUXFudiTGnLTAStfTrwVDJYRc8LO+CGLCMymI8YkY1osnzOVsdMkqI/Z+dgO1vOIh9c9F6f5K@vger.kernel.org, AJvYcCXrY+ibE2Lh3BAuP3jsrPuU6R1MWnG6fOJWzVN9AQsm+OsMLVwqCZ5kc2sqdXpyFIJkzI3Z5mzB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm6qncv/XoH0Dw5bd7wZzL8M8Og3mR9hIHan5J1T8GwyHuOxDs
+	o1cM8bz/F1MD3pXaoTmNIxhlnpQ9PFVQD8/DSiuPgk8QYj+UfoiMPGU2lGCIo2J16PZGi1PLFN0
+	6U4yrUZGx4pJzsJ17J6fEW5qYwtU=
+X-Gm-Gg: ASbGncsqAb8s/yECzhYaFK8e6IosrPDLQm9y8bTlTJ+soDJ9yPU9FW9DrBwQwtF56G2
+	79wmNiFMs3u8IZCRiYCrUH57ofYA29uU70soaUj2fxAx2u3nSwC5YeqqJMAWCuqX0F54dUXuK1h
+	oKfjeVbjc1QVMaSzNp/E958d3UZRzOUDROza4FhQoDiXYtbQENt5SMQLGOqmfN5c3g
+X-Google-Smtp-Source: AGHT+IEH7MzW5oALwsc/C1WmzilPjbYvu0ys4k1ey8nO0994HXLEhmlKcG8IDGOmdq5NvefT7TwCpG/T3Y0sA3Y96g4=
+X-Received: by 2002:a2e:8048:0:b0:31a:56a5:8454 with SMTP id
+ 38308e7fff4ca-31a56a58783mr13285171fa.15.1745842827247; Mon, 28 Apr 2025
+ 05:20:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tdf882a97cf9ebc13
-Date: Mon, 28 Apr 2025 14:18:17 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Srinivas Kandagatla" <srini@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Message-Id: <e5002084-b324-4627-8155-9abc28391d3f@app.fastmail.com>
-In-Reply-To: 
- <edc7373f33955f6dc4c9e6268afcb1a40566b39b.1745840884.git.geert+renesas@glider.be>
-References: 
- <edc7373f33955f6dc4c9e6268afcb1a40566b39b.1745840884.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] nvmem: Remove unused nvmem cell table support
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250428074424.3311978-1-lukma@denx.de> <20250428074424.3311978-2-lukma@denx.de>
+In-Reply-To: <20250428074424.3311978-2-lukma@denx.de>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Mon, 28 Apr 2025 09:20:15 -0300
+X-Gm-Features: ATxdqUF9vhWUQdAh6ucd_rpBTSQD6jiO0FGzDnLrY9eVB0nzIxQ7MHR_oHtFiUs
+Message-ID: <CAOMZO5CYq8YKZBM6nk2pk8W0005MBBPdVqS_qe-O4-ZzkUG0bA@mail.gmail.com>
+Subject: Re: [net-next v8 1/7] dt-bindings: net: Add MTIP L2 switch description
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Stefan Wahren <wahrenst@gmx.net>, 
+	Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025, at 13:56, Geert Uytterhoeven wrote:
-> Board files are deprecated by DT, and the last user of
-> nvmem_add_cell_table() was removed by commit 2af4fcc0d3574482 ("ARM:
-> davinci: remove unused board support") in v6.3.  Hence remove all
-> support for nvmem cell tables, and update the documentation.
->
-> Device drivers can still register a single cell using
-> nvmem_add_one_cell() (which was not documented before).
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Lukasz,
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+On Mon, Apr 28, 2025 at 4:44=E2=80=AFAM Lukasz Majewski <lukma@denx.de> wro=
+te:
+
+> +            reset-gpios =3D <&gpio2 13 0>;
+
+The zero here means active high.
+
+I assume active low is more common, and you even used active low in
+the XEA board.
+
+I suggest using
+
+ reset-gpios =3D <&gpio2 13 GPIO_ACTIVE_LOW>; in the dt-binding example.
