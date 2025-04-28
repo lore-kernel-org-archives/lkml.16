@@ -1,333 +1,243 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6543D23C9;
-	Mon, 28 Apr 2025 20:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745871320; cv=none; b=XrSo4sCq9WMF/1oF9Qugu3o33qDqUAUNny5z2WCQTPW0JCfvcgtljiFJB+cDp8kyNvAbA9FkWBYOBmAyzj7Elgpzvwyk1AVacTiOJSe3dtIpx8xZzK0rPfdNrv/E1zUjKW/qvQakAHnK9UqW+kHtz+e6eUca9W7b7ndSWC0Su3s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745871320; c=relaxed/simple;
-	bh=7eobBzQqN4HNMyhKQ+/dQH6xVTxkj2pXU4HMJHKjGBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IIT/7XUvLyim5aS9ExwbQ+D2hfetFo5MsFGaWwp6O9jwURqa+WURoAncibZGA1BBnwU1QUx3+DjmcOA/1DfkFH1IhxFHihOqIYR5LCFWv6XofnZQw93MHta9TkfscwNBSfA2DsalCeeCvxRLOKLlNr9JLG9OLcET/VFUS6h6ZZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=guigTfFn; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394F43EA63;
+	Mon, 28 Apr 2025 20:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745871426; cv=fail; b=TXTy4fplbzd09MYO7aGfj8B25yuJtqUJz3ClIQ0FylRcXpZYPmb8gGzH/r8qI5a0SMnu4MGFl+VFan9qFDYrVtwvyKyMm1reSM9WEYN+eVwfgGoypPsNxIHFJBACzMklMGDlMU+0PuW1HKMuTDGV3vhwwWZZkQqTnFcmqV8dbyY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745871426; c=relaxed/simple;
+	bh=JBsquuT0TRP8dPPQPj6h8JGF9aHBet1qWZqMx9D2vpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=UuUH1hi19ftBUMHoGJAGb5uacVuF7ES5pKUqKI31MGY13lYjEoTdrsVe7AkPQ0STNm/ehRIPtbo27DtcerC/PlqWH2nzIVm/vVay6pQlIzatmECGED+JfwxnyaUYoswOHevR5rbc5cEoJysmXQA2M0dFpT9zF2J0hMMcmk7MeDU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AKXA2Ok2; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aF19TYW7; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="guigTfFn"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47ae894e9b7so114791361cf.3;
-        Mon, 28 Apr 2025 13:15:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AKXA2Ok2";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aF19TYW7"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SJ23UB016725;
+	Mon, 28 Apr 2025 20:16:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=VcwUpRR1nhUj/Ijs4k
+	kR5yTejTXzrDqciUVjE1nezb8=; b=AKXA2Ok2+6IGepth0vuzioQ8FEJ6T2yJor
+	Z9xQqc1H7nmurnTAfbGU8mqWdJdyNANBFKAT+Nhgd3e17TFS4OWm3w8KZeuHUipC
+	MKXLHpgWnXsrI3UdSNgbkRfJDRmhZKGD9qmOxXr+eYMEwx4b3Fb6YaFvROGIsvnR
+	ZmpfAKVwr6YWTcX4bP2h9SBlpuKQ4w8BpyNaqohbqByZ10RDOIzoz/i1fcJmdjUj
+	2Ls6ACeeDP6yEUI8XBXSfyp/bp6SfopgKffm6XtvRf3I368DlsSPaZI7YXgyx2AV
+	s3/trkTDCRpw/L3q8d66m4REH82OJu+WVWMTI+NLaPYZkY5cbh7w==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46affpg53f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 20:16:21 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53SINS6U001321;
+	Mon, 28 Apr 2025 20:16:19 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2045.outbound.protection.outlook.com [104.47.70.45])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nx8wka1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 20:16:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BspyhDT2sNyTLSh733y48f/CTWCYXMruqWp/uafgtbJ5hzeqRj6ilcf5+tIleh85PkXxYwm5nbMoRBt9FxQp2ksZC8ziMFf/q94IF5Gl7vbBJ7srkCc2Ba+HkJSMOsW9qge41zYbQoguV6QLoaWCikg0QNrWJ6MsxphyKI5slaiplHSu5/Y07P0Z/KpgJv9LL1ihHI7O9RejOHqRx5S/mp/1XSTR0rGDQdFZ8r/3PjflylmC4U8tp8pPwMnq+4+lGgEvA06cOwOfq+BTcKdHHp9gwJ2e0aM97XhUNZ9RJoNyVSFBrwh9MNf2T4jZv+o0S8t9JGxyaVkfb6CxUMwUiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VcwUpRR1nhUj/Ijs4kkR5yTejTXzrDqciUVjE1nezb8=;
+ b=VMX/8tz/kbCwWIY1GROMSi28fCOdFysAkNz1O9WR8Kwi6ORBxMzRoSyqfLJWYV6XBQS7Yjr+n64zXGAx2YPYUshgBamsps8q/XPWRmk5M7gKABtFDl4Vqry5FaZ6a2HGfYpDs9+CScM1AYFX+yqrzUXs1jFKpWZpbvWVS1RXKZOssziDWazgEA4MehPH9AfWo/gHefuhtFG921BxvITj6Cvdq/R4h05AvEMeP9fzdq1KPLyqPrOuJOwENrAs/bGIdNZmxZzddOqQAGwKu8JoU090jpnNJqNHoKQhMLU0GCWPFnCs12VuP3FavvwTfTvY33ZMSKu+opcSLpK81b1B7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745871315; x=1746476115; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkfZcfzzBiDH8faCF+27QhjG8w+VTH8k8055ar9MiOM=;
-        b=guigTfFnQnukgFqC9c4QhROIH4G9QbRvOZpXG9/AhYeVUZi65v6MIxpO7Byf/rXTn5
-         TPnt6GLF5wOR+Vyuj4myLPoy56tKQlcb/oeDtDLWOgoi/SNlTCZUnB7kHAEK1p5o4XZ5
-         Ls9n4z5uhIUcEcKCxxjmlPB7/as9zGrL+ECLsqZ3sUPlKJxJYp23r8c1XOo4z5w1F/b6
-         MWlRtrE9tgNyeYytVr1akYV8O1jfksq2Cz3rWHmXvaCVCtfgMXbdqw5r6OMBx1qadVPv
-         m8MwucZh6N6XpKsmAbZGcrjZcZbpWRIMSUW5fSIbfkzgq7z2W/vL64xgpV1QPDSWUmkQ
-         dxjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745871315; x=1746476115;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fkfZcfzzBiDH8faCF+27QhjG8w+VTH8k8055ar9MiOM=;
-        b=Dqv44qk8FfrxVlZyMo/x30TwCu7ITl1JAlBHDWikmg9DNGgZR1PZqqY78gCCE24ghu
-         hEm+fqr8mq3LMpzOuC8n/RxbHkFvrwFxhoiCYMlf74mdvJp2Q8a4sF1w4pm1O1zO2U+B
-         L54qIJu0N3MugGtZ9NX4TKM2L5KCMOhuOs7eiuPlEUHRz7B+XxgM14GBbGxuSPBGoMob
-         0OyBiRKkRuOoDfUWXdTTjuYQTNUp8fMc+EbP/7vb9pZRnIbJw2XAWU9h002joEYxh36F
-         o9l2jcwzNba22muRkHnxYWeiUy2IuB33mpsjaFxCWclmfQR+dCviF7hstBxmxi6pftxs
-         eq6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUh03+QS7vBGo0yqS5tF+W+nBZWxFGevwzz0DaVzPUXQYwvfm6tDf7hAtkBWrlLw1I8w8IigLRP@vger.kernel.org, AJvYcCVgWldiZoAQH8U72Mj00l+Qgrf7E6DvDLATzEogK/f+KFJQyR/fa6W25lnjrA0NjqtqaEq+6l7TMw==@vger.kernel.org, AJvYcCX/t8pQP4cBdOl9V/0d/MwSZTmspvyqKGkyJTKXJSpHHC7iM1Q5ufpczwFnDUkNQFwftx9TH/ZwMmuUH8P3@vger.kernel.org, AJvYcCXCexf+gzif+kPxC1ugaI+72q1I0a4bZEST/jsOvYHWRfXeaPzoTNj/PEFt5cnMNFooidWf/mUeUv4Q@vger.kernel.org, AJvYcCXI4S9z33QquKbYJpm1h3T411y9Z0FTIwZYLb+ZvrvpC9sR0/ueGGjU/AZmwzfsOTVLFLSOMG7hlcj0lkBVSg+C8Z4YiAgT@vger.kernel.org, AJvYcCXnYfyFhJAQMzWae/6KWlfaqM4/Zbj6j4qc/8HRJx1coKUW/tjKosY39jRH1xgY8XM1+ItozqIufzH6VK4Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWCtOOxeROdgYbq/T47LPhqNmnA1FTUtZiR4URMfJ7ZLksEG4O
-	1aozQh98wFBKd/HzVjnEbWydXiuZBHvXQ/lHsput35isLHyFvIrT
-X-Gm-Gg: ASbGnctaJAmUmvwUZ6exbiIeBJyhfwuL3TT4h0VNI5vq78afG8C9TOzxVyk4Ek32GRg
-	GyU75f44hchpYUCbg1Tx6NDBV/SaDN/VeTzYzbciAN/bTEfkAqa0cjHhcbjW3bSzgJge9PJeVz4
-	X8acBkStWVq0GwRqu9Avg24mkhwxNQD9MvJNifG5C8DENslZePLoHRHKyL8GaHV6wFuflVxprVS
-	3/P/U8sbMf39dhty1AO77oDsghvUU9giMjkk3IRSCeY4DQ6pZBwVkIT3cpAJfaBScf2gMmSvmhk
-	bIIasnM0ncrBW72LszCKAyLGeZrinknl5z+0xYponCG3q0SfKHA1LHiV1jE0JewJk/72juVzIPk
-	QL5sJJoYJXK2oteAY+zwilxhMFEZYZ1Q927IYvi9eYT9SQdOSUVKuLc1jry7n4eRK+tL9
-X-Google-Smtp-Source: AGHT+IGFQWMTKoT2tNkGrF7UZsx6phPpBMGBgRckUMhIYKDPBp78LzqrBzYVWo5FQneUANSHSRsU6g==
-X-Received: by 2002:a05:6214:21cc:b0:6d8:9062:6616 with SMTP id 6a1803df08f44-6f4d1eef321mr192627306d6.7.1745871315015;
-        Mon, 28 Apr 2025 13:15:15 -0700 (PDT)
-Received: from fuse-fed34-svr.evoforge.org (ec2-52-70-167-183.compute-1.amazonaws.com. [52.70.167.183])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0a73d63sm64707846d6.86.2025.04.28.13.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 13:15:14 -0700 (PDT)
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-To: paul@paul-moore.com
-Cc: Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	netdev@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [PATCH v2] security,fs,nfs,net: update security_inode_listsecurity() interface
-Date: Mon, 28 Apr 2025 15:50:19 -0400
-Message-ID: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
-X-Mailer: git-send-email 2.49.0
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VcwUpRR1nhUj/Ijs4kkR5yTejTXzrDqciUVjE1nezb8=;
+ b=aF19TYW7BRfg5IUzt2ONXtjhuB/ALtYj1AoWkiAy+GwKqC2jw6x67TesW5VvJWGuDkBrNzbnEo83b9e6sMkLez+X9EB096gGV/+bjLU8EXwRA0Y28WkRAsCHHvOWA9p1wbDYTRAtqBM8hEgRxjQvSjbnzX0aSaIdgQLPLMSjn6w=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DS4PPF109C7C399.namprd10.prod.outlook.com (2603:10b6:f:fc00::d0a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Mon, 28 Apr
+ 2025 20:16:15 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
+ 20:16:15 +0000
+Date: Mon, 28 Apr 2025 21:16:13 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-trace-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v1 07/11] mm: remove VM_PAT
+Message-ID: <3c24daa4-5013-417c-ba95-df9dddab0113@lucifer.local>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-8-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425081715.1341199-8-david@redhat.com>
+X-ClientProxiedBy: LO0P123CA0007.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:354::16) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS4PPF109C7C399:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72e3db9a-8fc1-4174-64a4-08dd86918779
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0VRCygbqg7+iN2f3Wc3+6eWOLtIfqUg3Xugi37RpFPBfdRUQD9iCLYGouxxc?=
+ =?us-ascii?Q?t8WJDy+X48xVVCGqvnhUtZlnHUeP7Sit/mj+ihaGz3kTMMVWaFYqKxwluzcx?=
+ =?us-ascii?Q?L/Cyn9S1mWEFVXlXZ2wMquQJYiMvurltfE6m0tYhwHayUT6rUXsvYSOcj1bB?=
+ =?us-ascii?Q?YIPwTR6OYA8YLt4Urv2tDJtk72IqJ2MqLUBQYFFbkXVQN8TC0YwO3vjoAWbU?=
+ =?us-ascii?Q?6FIkF3BiV+k8uzv+QUBF6iED/XjLNAcfOiiiSNQGt5X9rzuCK5HF+Lb6kyTI?=
+ =?us-ascii?Q?03lNZvLhlpa7ECYVe4t8dTG8Oi6Jk54pyrrlebD8PdOGAycKvjPy6vRZU9Kc?=
+ =?us-ascii?Q?UeLWAF4sQPrWR4JseRXelzWvZifNkcqMSwPH91oCXX3VoYJ/j+QSuezuak0U?=
+ =?us-ascii?Q?pGxQ46XzLYbKTkYgYPBwRfak2K5PUYlSabKRBF5rPtpNFGYNMfGfFd1dUlSE?=
+ =?us-ascii?Q?7WWmGpMgTA6yLuqLpJ7WELgtVd0X1oRI9vx+oBPYjWS6aJ07iYdb/lst9kq1?=
+ =?us-ascii?Q?L4LRt55hKUv2bgk8jLl3m1CGuLSt74dHYiO06D5e5rXY7uIs9EjfeQGpwNiR?=
+ =?us-ascii?Q?1qNGphq+ylZAAg83w3ob+cbif9Qk35vDEHH7rtWtBvkfScfvIz8ThpNvS5Vx?=
+ =?us-ascii?Q?7fePZXg20YQBXdPREz5K9ZMjAL13XoHHPaaK+FyR69tJJkfGwcSuiwV9hEEz?=
+ =?us-ascii?Q?bPwYuI4y2cnC/YAULlC9zrYTxfR25ujXTt4bHz98uYMuyFlyNVtwkzoKraTk?=
+ =?us-ascii?Q?OYsfmrmgVkPOMbBrlvjQOIIN7fFYTMxjHfbhWP7Xd4lu337zRdfTTEueTqPF?=
+ =?us-ascii?Q?XTZLodBObpOKTNzi9a0TurtZN16xA98UidUDRObEItpVLp0RtRSwOns2inp7?=
+ =?us-ascii?Q?dc274Cgg66uLl6pMJmSOk58nC23QEob79poRGT19uh5hlQ0BQKc5xxYkgmsg?=
+ =?us-ascii?Q?y6BSHqkLB3Avc9d0NMl0SbiyEX9g2e/Ieql1k71Ek9rjoXX9fhrUhSzc70BS?=
+ =?us-ascii?Q?u82vkgq2R2BuDbeGAWUKid0sjZfpiLdE4GoVt/wW+Huv8LZ84HONa7EwaJcc?=
+ =?us-ascii?Q?ZRzH5kPBjab9NnEleLJCEOxq1MnYPiEBF12BbF1TYWwA88+ZMJwTa0z+DQDC?=
+ =?us-ascii?Q?+2hTLbvwembBE5yZSSkUWISHEA+w8a1FeIo+Q7zQp8LfF61u5RgYYNDbAe7C?=
+ =?us-ascii?Q?swbVPoIadJmaaZpmIpExUUQ7ttWlKp0Hgq2Nc091Fhdi8ihsG2ECb4R38RX5?=
+ =?us-ascii?Q?BSntmRJpTDt7ve5Cb0s63Hz8VxQxrDIe8I+rPX4PY0uRdDwdDoh5MnJJQV0O?=
+ =?us-ascii?Q?+eZxw5Y6IrvBz6BVjrq8Dw0LBB3zpj6ci/uNA9iK3jesnvhzdwo0a844B6qu?=
+ =?us-ascii?Q?zEaXwJZon1Pv8rhVKF1xuwk4nc0dja1C9+YJUaOkWjTOBI6UVvNzhX3dqBNo?=
+ =?us-ascii?Q?+2yYxhizieQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kaAYun1rQlegzvV8E2vIN4iMAp7stKVDbhr0Twq2zNerNssMgS2+VbLPW04E?=
+ =?us-ascii?Q?oLa9GXJi4lVmPE02k6Qu9BcNH7s8b/ERdl7evz9lRcfl7bb+HwEEkcK7llNx?=
+ =?us-ascii?Q?1QjRiA10354VwSG0LteWL094zpnW4iojTX2JsQYrpMceuQ8LKzQ91QuJ77tZ?=
+ =?us-ascii?Q?cVVZkGXga8gi5anwvZzFSIJ6k41G6Ttc67mN8w6wzOmgr3hLaVHHhBcckLKJ?=
+ =?us-ascii?Q?uxfWiKKdNDW6E/6ngf9DeQWSZyGdgU6ew2u5JoSfNX6KeDzSLS6QcVIwPVdb?=
+ =?us-ascii?Q?zzQK3ieLbN8sto94tD10ND/0p0eneIzg8J7mlCzH19I8KDD8/3Pg2x/7FtwF?=
+ =?us-ascii?Q?OEUK2oDkKqGmicrj2Yy6r22scx441WH1zD7AmIv4yzCe+zojfzuW5YFUM894?=
+ =?us-ascii?Q?BTprI1ONEw3mTQT2Z9GcPH76cy3MI5lq6rI56AHL6KEuJRgBrCuJT943GJqa?=
+ =?us-ascii?Q?CmHu/MzhfkLUDOfFjTK58Qoacgx9p83NFBuoNNCEi+vJxdPL+YGKNd2Ir3fj?=
+ =?us-ascii?Q?fyNOe2prBAIsnlHprMkGiYzc2KmPua7xnxhCpXpA2Acx85s6TndWy3FeJf3s?=
+ =?us-ascii?Q?BgSMnfCv4oKRR9AYaj438cEYx0+vpI+OOH6f9ZlPz/aS/xKMhidldj7MTtJk?=
+ =?us-ascii?Q?FItfXf9b/xn6n3ecCmH9X+xtj1+2kbGRW+jXP4Wz9QtBQ8ZOI8qCoD3Nhj2A?=
+ =?us-ascii?Q?MNF0k4HHatXpAyB+6R4LpNyb3c8qANX9OWnYkuYtEAN6Jq4c/gJcXnS93sZ8?=
+ =?us-ascii?Q?plRLHuqW3Lq8rJVYWlJueK1JRMu07RHTHKFx6gULTnqnnBVx4o+pKLjX0MpC?=
+ =?us-ascii?Q?V6EIOuYq9RivJ5+1rP9BpNv8ILzxUk1trTTez6fMIrMNCvwi8GgHpMbsyzX6?=
+ =?us-ascii?Q?vAIqvnf02GVz8+KzhcmQ+fp9I+7Z6pRxznKbSNYzOjDxvdWSdMCtnZCOFkYx?=
+ =?us-ascii?Q?cxLpFyO6fNUy+mbDCuaLmcEVVCZXhPr2fgvrP59UPtuyWsS72IxqhmRb9G5x?=
+ =?us-ascii?Q?Oaw5inYj0/84TP1D5tlGJgnLKqsbY35g+lVqXwGT0xttZOWshf7aQ1JrtNth?=
+ =?us-ascii?Q?Gf64w+nCX9oW7gQcV8zsJ6HS12buT6KUxdl1utJWOOsBVkbyICCxSlifr/bg?=
+ =?us-ascii?Q?+Q2kLYKt9Rt1RAPJR3/YG8rT/K+xTDfseq6bzLoVe7JeLKNF4hlgPAoOPaVl?=
+ =?us-ascii?Q?peMQ/Xd5oDApVUv0m1pNfEG397mzHYP3Dpt19fA47Tb7IpC+VSbWx+HGlauV?=
+ =?us-ascii?Q?FJfC+OVYnYre+towmEqXW29FrNMqgdmY/keGQ1BNkoYE6teI+wgda666G+mZ?=
+ =?us-ascii?Q?62Yfk4ac9PfOsRIVgK94GyrBkL7HJpVVKr0Xw7rmYdJ21ObCmg58Y949rib3?=
+ =?us-ascii?Q?uA+QqPARgklmq5u3uKMGvQTFdY6ay3sJxb/5LwUTdeU9GfyH/xfFyghjFIVG?=
+ =?us-ascii?Q?tHF50pTj2FyI1+/QWNHXh9A3b31MXDYEklJfL6nyTIgeRCf0RPd5MVZLHUq6?=
+ =?us-ascii?Q?2RgsygjwTyrMX/48EpOlh7kRL2kFYmnMvL/gQUEIrtrXZzu2qcEJ5vI+t2vg?=
+ =?us-ascii?Q?LVlMyoBTtEnS+rdF9D+P6Xt77w43K5tI9mAYBmLCYTj77jC1EMVqfmVU4VVJ?=
+ =?us-ascii?Q?ng=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	08Pwj6pWyXDsqE/UfJlWpHdm/Im0HgisSlnUK5yzWSCztDeQAEa44X2qbcvEQPXOjQ2YGlJvVy4BuhFi3WliJeE03ET46SaPCGFuSrN/8aztqcGsySQoXU4LpMbmFJi6tjDOMW04dO+bDXZerdlZfcYBZ4acGEHv+G2YayPABjMzbbMtLiU1orbyz8iVdTl8XDvDsqksToWA17Jizl5ivjO4ocBdi3HBzQsOxF0RSslcuAtEyKbRRcPbmkpbYgy1UFzvznYdn1xVAoqNbfhcKRHyLKCFYpOlSshpxzhRT/yfnEw6k5GFdnbQwN1GvC+z9LI3BrcCE3DGQBN03zbO9sfHMt3OayaAwvDDySqJU+Z4qbCIuSx5z/SfF9tVZzHqQiVUejFpBFlbbjGINe2f8eVIq09ARvK8j4ak3GqYq8bC6g/DOLsHnYxvqb8EOBwK7QjAhk/fmbRtmgcxYoayd9SAnOBb3Hqcu59SpnVA0gVQvmSvTRCLFkJNevFsBhkVJWC5uFciNZBQb+NMFv9dehLWfwa45+Sk6dRJcFQmTBVI2ZPkX7QmbmjoemZJqUzWiM98WMN5qHH5Ri//EQYshEvkJzP/IM2/WmKesUvBdX4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72e3db9a-8fc1-4174-64a4-08dd86918779
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 20:16:15.8653
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ayLwpmoyrG1MJhFZ3MaxxL6ZMsWknlDpVScjgJWiesXaDAi+HgQrjluY5I5nSkFsvvcfsz6Uy6h7bMlXCBPhbFXL7t/GnOxgTkhFyPO+FcQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF109C7C399
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_08,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504280163
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDE2MyBTYWx0ZWRfXyiatdjvacsko lITcvy65n7vcVLP4lGM+OMp1FqRbQ0pwV04qhCDjlXhB4ZPjZGa9lNEE1XYxYjUTqVy2g8xKGYA K+hhBqs8YpA7BywIMWMRSt1zMydA/emUE0jtV4S+UBMw5l+3T1M34AKteQinbHLPh1AShItnOTs
+ WhEj52vRUq+7+G85d4BdGVFDM/3fJlyLAf4DATOlCFAdZ5yEp1aV1A429Y33L/Jl0fewDX5PMWp xEPLu4dA/sXvVogoDGmjopypg2XZ2ygTyD3awVq+Y+ideppLLHMy+EL2Tj0df/qMKkRIz2ji0Kq X8DtViothWFENQRHDx4c0HhcJFWxtGM3Azn6fPA7o182+eEuV2BkkUW+zPGHqZrE+XgYAGs5hmf 4k8vg1Ii
+X-Proofpoint-ORIG-GUID: SEbOsfZC9nrfWBGylkutQudyTtMen_lF
+X-Proofpoint-GUID: SEbOsfZC9nrfWBGylkutQudyTtMen_lF
 
-Update the security_inode_listsecurity() interface to allow
-use of the xattr_list_one() helper and update the hook
-implementations.
+On Fri, Apr 25, 2025 at 10:17:11AM +0200, David Hildenbrand wrote:
+> It's unused, so let's remove it.
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
+I have only <3 for this patch :) byyyyeee VM_PAT!
 
-Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
----
-This patch is relative to the one linked above, which in theory is on
-vfs.fixes but doesn't appear to have been pushed when I looked.
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
- fs/nfs/nfs4proc.c             | 10 ++++++----
- fs/xattr.c                    | 19 +++++++------------
- include/linux/lsm_hook_defs.h |  4 ++--
- include/linux/security.h      |  5 +++--
- net/socket.c                  | 17 +++++++----------
- security/security.c           | 16 ++++++++--------
- security/selinux/hooks.c      | 10 +++-------
- security/smack/smack_lsm.c    | 13 ++++---------
- 8 files changed, 40 insertions(+), 54 deletions(-)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 970f28dbf253..6168a35cbd15 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -8023,12 +8023,14 @@ static int nfs4_xattr_get_nfs4_label(const struct xattr_handler *handler,
- static ssize_t
- nfs4_listxattr_nfs4_label(struct inode *inode, char *list, size_t list_len)
- {
--	int len = 0;
-+	ssize_t len = 0;
- 
- 	if (nfs_server_capable(inode, NFS_CAP_SECURITY_LABEL)) {
--		len = security_inode_listsecurity(inode, list, list_len);
--		if (len >= 0 && list_len && len > list_len)
--			return -ERANGE;
-+		ssize_t remaining = list_len;
-+
-+		len = security_inode_listsecurity(inode, &list, &remaining);
-+		if (!len)
-+			len = list_len - remaining;
- 	}
- 	return len;
- }
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 2fc314b27120..78387acab31b 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -492,9 +492,11 @@ vfs_listxattr(struct dentry *dentry, char *list, size_t size)
- 	if (inode->i_op->listxattr) {
- 		error = inode->i_op->listxattr(dentry, list, size);
- 	} else {
--		error = security_inode_listsecurity(inode, list, size);
--		if (size && error > size)
--			error = -ERANGE;
-+		ssize_t remaining = size;
-+
-+		error = security_inode_listsecurity(inode, &list, &remaining);
-+		if (!error)
-+			error = size - remaining;
- 	}
- 	return error;
- }
-@@ -1469,17 +1471,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
- 	if (err)
- 		return err;
- 
--	err = security_inode_listsecurity(inode, buffer, remaining_size);
--	if (err < 0)
-+	err = security_inode_listsecurity(inode, &buffer, &remaining_size);
-+	if (err)
- 		return err;
- 
--	if (buffer) {
--		if (remaining_size < err)
--			return -ERANGE;
--		buffer += err;
--	}
--	remaining_size -= err;
--
- 	read_lock(&xattrs->lock);
- 	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
- 		xattr = rb_entry(rbp, struct simple_xattr, rb_node);
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index bf3bbac4e02a..3c3919dcdebc 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -174,8 +174,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct mnt_idmap *idmap,
- 	 struct inode *inode, const char *name, void **buffer, bool alloc)
- LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
- 	 const char *name, const void *value, size_t size, int flags)
--LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
--	 size_t buffer_size)
-+LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffer,
-+	 ssize_t *remaining_size)
- LSM_HOOK(void, LSM_RET_VOID, inode_getlsmprop, struct inode *inode,
- 	 struct lsm_prop *prop)
- LSM_HOOK(int, 0, inode_copy_up, struct dentry *src, struct cred **new)
-diff --git a/include/linux/security.h b/include/linux/security.h
-index cc9b54d95d22..0efc6a0ab56d 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -457,7 +457,7 @@ int security_inode_getsecurity(struct mnt_idmap *idmap,
- 			       struct inode *inode, const char *name,
- 			       void **buffer, bool alloc);
- int security_inode_setsecurity(struct inode *inode, const char *name, const void *value, size_t size, int flags);
--int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size);
-+int security_inode_listsecurity(struct inode *inode, char **buffer, ssize_t *remaining_size);
- void security_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop);
- int security_inode_copy_up(struct dentry *src, struct cred **new);
- int security_inode_copy_up_xattr(struct dentry *src, const char *name);
-@@ -1077,7 +1077,8 @@ static inline int security_inode_setsecurity(struct inode *inode, const char *na
- 	return -EOPNOTSUPP;
- }
- 
--static inline int security_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
-+static inline int security_inode_listsecurity(struct inode *inode,
-+					char **buffer, ssize_t *remaining_size)
- {
- 	return 0;
- }
-diff --git a/net/socket.c b/net/socket.c
-index 9a0e720f0859..bbcaa3371fcd 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -560,17 +560,14 @@ static ssize_t sockfs_listxattr(struct dentry *dentry, char *buffer,
- 				size_t size)
- {
- 	ssize_t len;
--	ssize_t used = 0;
-+	ssize_t used, remaining;
-+	int err;
- 
--	len = security_inode_listsecurity(d_inode(dentry), buffer, size);
--	if (len < 0)
--		return len;
--	used += len;
--	if (buffer) {
--		if (size < used)
--			return -ERANGE;
--		buffer += len;
--	}
-+	err = security_inode_listsecurity(d_inode(dentry), &buffer,
-+					  &remaining);
-+	if (err)
-+		return err;
-+	used = size - remaining;
- 
- 	len = (XATTR_NAME_SOCKPROTONAME_LEN + 1);
- 	used += len;
-diff --git a/security/security.c b/security/security.c
-index fb57e8fddd91..3985d040d5a9 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2710,22 +2710,22 @@ int security_inode_setsecurity(struct inode *inode, const char *name,
- /**
-  * security_inode_listsecurity() - List the xattr security label names
-  * @inode: inode
-- * @buffer: buffer
-- * @buffer_size: size of buffer
-+ * @buffer: pointer to buffer
-+ * @remaining_size: pointer to remaining size of buffer
-  *
-  * Copy the extended attribute names for the security labels associated with
-- * @inode into @buffer.  The maximum size of @buffer is specified by
-- * @buffer_size.  @buffer may be NULL to request the size of the buffer
-- * required.
-+ * @inode into *(@buffer).  The remaining size of @buffer is specified by
-+ * *(@remaining_size).  *(@buffer) may be NULL to request the size of the
-+ * buffer required. Updates *(@buffer) and *(@remaining_size).
-  *
-- * Return: Returns number of bytes used/required on success.
-+ * Return: Returns 0 on success, or -errno on failure.
-  */
- int security_inode_listsecurity(struct inode *inode,
--				char *buffer, size_t buffer_size)
-+				char **buffer, ssize_t *remaining_size)
- {
- 	if (unlikely(IS_PRIVATE(inode)))
- 		return 0;
--	return call_int_hook(inode_listsecurity, inode, buffer, buffer_size);
-+	return call_int_hook(inode_listsecurity, inode, buffer, remaining_size);
- }
- EXPORT_SYMBOL(security_inode_listsecurity);
- 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index b8115df536ab..e6c98ebbf7bc 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3612,16 +3612,12 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
- 	return 0;
- }
- 
--static int selinux_inode_listsecurity(struct inode *inode, char *buffer, size_t buffer_size)
-+static int selinux_inode_listsecurity(struct inode *inode, char **buffer,
-+				ssize_t *remaining_size)
- {
--	const int len = sizeof(XATTR_NAME_SELINUX);
--
- 	if (!selinux_initialized())
- 		return 0;
--
--	if (buffer && len <= buffer_size)
--		memcpy(buffer, XATTR_NAME_SELINUX, len);
--	return len;
-+	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SELINUX);
- }
- 
- static void selinux_inode_getlsmprop(struct inode *inode, struct lsm_prop *prop)
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 99833168604e..3f7ac865532e 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -1619,17 +1619,12 @@ static int smack_inode_getsecurity(struct mnt_idmap *idmap,
-  * smack_inode_listsecurity - list the Smack attributes
-  * @inode: the object
-  * @buffer: where they go
-- * @buffer_size: size of buffer
-+ * @remaining_size: size of buffer
-  */
--static int smack_inode_listsecurity(struct inode *inode, char *buffer,
--				    size_t buffer_size)
-+static int smack_inode_listsecurity(struct inode *inode, char **buffer,
-+				    ssize_t *remaining_size)
- {
--	int len = sizeof(XATTR_NAME_SMACK);
--
--	if (buffer != NULL && len <= buffer_size)
--		memcpy(buffer, XATTR_NAME_SMACK, len);
--
--	return len;
-+	return xattr_list_one(buffer, remaining_size, XATTR_NAME_SMACK);
- }
- 
- /**
--- 
-2.49.0
-
+> ---
+>  include/linux/mm.h             | 4 +---
+>  include/trace/events/mmflags.h | 4 +---
+>  2 files changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 9b701cfbef223..a205020e2a58b 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -357,9 +357,7 @@ extern unsigned int kobjsize(const void *objp);
+>  # define VM_SHADOW_STACK	VM_NONE
+>  #endif
+>
+> -#if defined(CONFIG_X86)
+> -# define VM_PAT		VM_ARCH_1	/* PAT reserves whole VMA at once (x86) */
+> -#elif defined(CONFIG_PPC64)
+> +#if defined(CONFIG_PPC64)
+>  # define VM_SAO		VM_ARCH_1	/* Strong Access Ordering (powerpc) */
+>  #elif defined(CONFIG_PARISC)
+>  # define VM_GROWSUP	VM_ARCH_1
+> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+> index 15aae955a10bf..aa441f593e9a6 100644
+> --- a/include/trace/events/mmflags.h
+> +++ b/include/trace/events/mmflags.h
+> @@ -172,9 +172,7 @@ IF_HAVE_PG_ARCH_3(arch_3)
+>  	__def_pageflag_names						\
+>  	) : "none"
+>
+> -#if defined(CONFIG_X86)
+> -#define __VM_ARCH_SPECIFIC_1 {VM_PAT,     "pat"           }
+> -#elif defined(CONFIG_PPC64)
+> +#if defined(CONFIG_PPC64)
+>  #define __VM_ARCH_SPECIFIC_1 {VM_SAO,     "sao"           }
+>  #elif defined(CONFIG_PARISC)
+>  #define __VM_ARCH_SPECIFIC_1 {VM_GROWSUP,	"growsup"	}
+> --
+> 2.49.0
+>
