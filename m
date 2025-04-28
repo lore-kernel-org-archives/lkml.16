@@ -1,144 +1,96 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8B1BA34;
-	Mon, 28 Apr 2025 07:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC2BBA34;
+	Mon, 28 Apr 2025 07:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745823671; cv=none; b=X4DnQUiYBHGZDIPR5Kze0dWtrJGnngOCz/EK7VWyqF+eF9VVeVXcDLC1H2JBDLLmKl+RR4MkFEyqhikM8HHp/Dq8DJZYCmk1DpYOc0uqKPYm3JeVdffEXVz3lEMTVXjrubqnCW/4DvFdaGtYEWF861wcEqYBXg+jH4Z9OezKMGw=
+	t=1745823678; cv=none; b=dzdnfRIgXGDieX8ktCV3KNt8R7YQpVDcrbvZJOieElCq0prz9zqy3sbnrsVVTm4S637Luw+MEjckVCCjKpBhmtg7Xfw4f6lR+tDByfkV2NgQS/IiMzRE7EckuYMgXOC4I5ZfKfJDOpBhouPTImrCCgRt4uQdIgbnyeGq7mb5cKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745823671; c=relaxed/simple;
-	bh=LxquXLKCLwZcPsxPnxkwIdYRyzBiKzetFpKc+QaqwC8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dzD6WCZZapxGNtLEhUKlH33ez0FuE1en4s2VN9bYXH9p3R6Y8zjEuLNRM1V1CE58r33lLJ4APE+5jDfBaeayrFw8gvuyQ2fC1dtyadVSdStfZ8DnGvA7ijpQkNucx45wCsFfupi6IUA9g6Pl5TI6wYKjHbquLX8/tidGIQO4Fzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehZX5cPa; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745823678; c=relaxed/simple;
+	bh=3kWcnczSy9PqVkb7D7BZRFCEGExRBTJJZ1RAYq2S0wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ux5JW7t39LvBp70imlnCFJFnD4Ha+YHWuCtrpNkwJN6JLCqgBE3NUyt84fYtoDDC0fo94VD4ZJHkBEr15hjwA4qIP841VtEUzjVdhCY852ZfjSlUuCLiboJIfExySNe6cr5WMfT4jc4X7GX+69LXL4cD/w7I6kwE2zPnuTpxB/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAVHa/Pb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehZX5cPa"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so4406857b3a.1;
-        Mon, 28 Apr 2025 00:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745823668; x=1746428468; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9yZmW0hn3MrvYOWlnfGa/3CtDPfOpCdnzl3M85GUApc=;
-        b=ehZX5cPa0imdfRHezLMbtXPSRvHhsG3VB/FLbyya0vRK+3aZG5qxFe7jL/lbrj3wEx
-         4ey/JhOtMy8cazQfPMAuMfGW2teao+PBhU+93A5aJ8AlnkBYQq5XUSJqJiGh2dQ622Va
-         vR0eRsSyeL1cBPvit/kPW7E6Dxjnc/BNTlWBIvniu3votmkQgK1HA93R4yAPbWVTgW9N
-         Ixf2CLC8AHqz5VSsZMp+/8eikyBAQFsSXRGv0Eo8a1/bgG2+madAD5RZpYzEQFEaEBQv
-         EwX+4mT/ATJWQ0+fdQG3L4Mxi+Rqa3zFPkQqSYU0FJOqopuT33q0uMXMxsAjPsp35vBd
-         Kaqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745823668; x=1746428468;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9yZmW0hn3MrvYOWlnfGa/3CtDPfOpCdnzl3M85GUApc=;
-        b=YUeR/RUGPHJrD0rCU54MmJXCur+iyk3c2WnchgqN9KmRux204nbPiGUx4cclF7qvni
-         CRsHWq+zW4FAa7MCth+L4QUA623t9MToqKU+pTM3exTwLeqYrBWZ/QjLwImQ/aA7LEqL
-         26eDYx3otyM9j56tPAxl0nUbBtPvAA0gIcIG3YumT1ETa1qmcWlAyC6AhOfWWolrG7wm
-         HN+j5V3m7esyz7LSZQ5ezsx6bDJpcJoPRxkAjteTJDdIsOzTM8a5T4iWjXIHBQptO7A4
-         Yn0ks2P/s1o5Sgf628LiKEfkXddF1Nmi4sgyspo49/Qe8KjzOdZ/3fojhGicNioOSCKV
-         7T0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAZ5i4M2BPsKZ6KtgrH6rlyalogUqkvGAxNG5hQCDypHNFlj0+qkFLZf897BIuTI0KqQfebzIEI5PtAhx37gTx@vger.kernel.org, AJvYcCVspNc/c+CWlx4pUP1j8lxOmbVeeEMWi9/kW0/WlYLXoQLEPgw0Aes4JN1rtAS6+WzC1URRN5yeK6MAKjC6@vger.kernel.org, AJvYcCX+Ia49FzJ+7EMSfRIGFAcHpskOjcJdCrcrJIqFRT1GrsuBr8iEJophuUn9pzHKpWDregE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGBc11K6Zvi/ub3qxVPTuySwjNIOHqV6Q2AAeFgwBqQHTPZgCB
-	Tk1/L5Qlbo9KlAqagZnnwuWksPyO7d9OgkWnLvxUnca/gIoMgHAX
-X-Gm-Gg: ASbGncvlmmZiRHcEGB5hLh7Ro7vFgmbIgbnobpBHTkXQQRXuw8zr6XXUTsQUVCNF335
-	dMY2/4ALmZ4H1g2R7ZDd9HsMqbFusxO8ItdP7hDOqfFjZ7pXrvi7tRRindc9ovp0X7m2deNdHQL
-	RT3o9CEMZ0TD8waPkh8SSjohcuU4Ruv7o0J7/041ntg83F8+9BNn7/nPfObbfMAs/Qouar8ssIi
-	OA1XWZJh30rPNw7QBq1fOD4USLCWW5Wj1M9nruCtR2qR3+YwyWdIKofJF+Kaxex6queqmkFr5+q
-	ZN7IEZdDpJbqRCadDRPQm0JvtwKkyhcc2HDf
-X-Google-Smtp-Source: AGHT+IGP4IZjA+2oOl5Xp+BcG0TkWdBytzGu1mFgdq9c4ypqmC8f8TKCih+yUOSsexG/Sbbus31DKg==
-X-Received: by 2002:a05:6a00:2e14:b0:736:5664:53f3 with SMTP id d2e1a72fcca58-73ff73bcf1emr9419880b3a.15.1745823668236;
-        Mon, 28 Apr 2025 00:01:08 -0700 (PDT)
-Received: from [192.168.0.56] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9abf2sm7173316b3a.122.2025.04.28.00.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 00:01:07 -0700 (PDT)
-Message-ID: <3a16fae0346d4f733fb1a67ae6420d8bf935dbd8.camel@gmail.com>
-Subject: Re: [PATCH RFC bpf-next 3/4] bpf/selftests: add tests to validate
- proper arguments alignment on ARM64
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Alexis =?ISO-8859-1?Q?Lothor=E9?= "(eBPF Foundation)"	
- <alexis.lothore@bootlin.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko	 <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu	 <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, KP Singh	 <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo	 <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Puranjay Mohan	 <puranjay@kernel.org>, Xu Kuohai
- <xukuohai@huaweicloud.com>, Catalin Marinas	 <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Mykola Lysenko	 <mykolal@fb.com>, Shuah Khan
- <shuah@kernel.org>, Maxime Coquelin	 <mcoquelin.stm32@gmail.com>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>,  Florent Revest <revest@chromium.org>
-Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>, 
-	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com
-Date: Mon, 28 Apr 2025 00:01:05 -0700
-In-Reply-To: <20250411-many_args_arm64-v1-3-0a32fe72339e@bootlin.com>
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
-	 <20250411-many_args_arm64-v1-3-0a32fe72339e@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAVHa/Pb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59775C4CEE4;
+	Mon, 28 Apr 2025 07:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745823677;
+	bh=3kWcnczSy9PqVkb7D7BZRFCEGExRBTJJZ1RAYq2S0wc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YAVHa/PbhnSOL50m/Ox3H2JFZOnDthqZy5wgNh1d/VTRwGiahXD6IW+bSUAw4Ruc/
+	 dbT39t4Ack+U5dlRr/nkk7RFAsaSMCOl8xxnCudXu2ifXTN9Ovn4pL5YrctWU8adOo
+	 RmNpQZ6WEJRD2/tPNPTQkn8ivP96YbhXhIiFbS3+ugyBk7d0DJQb8QreEZe/0aobEJ
+	 /1+mjIZRAoWSRP4jlLXj1RcwxzpFu9i+cW+KcUJECZUuntH5njEnma4NW97EYKDY3r
+	 QTY4FDs9sUOluGOPFA2YedLJvFPHEyjDEIdxhNeU2KWQjGd9w93H6/wsKtOavHkRI/
+	 S1m7HCzMoSP0A==
+Date: Mon, 28 Apr 2025 09:01:15 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kyrie Wu <kyrie.wu@mediatek.com>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kyrie wu <kyrie.wu@mediatek.corp-partner.google.com>, 
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 00/12] Enable jpeg enc & dec multi-hardwares for MT8196
+Message-ID: <20250428-inescapable-smiling-oriole-bfbe3e@kuoka>
+References: <20250425085328.16929-1-kyrie.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250425085328.16929-1-kyrie.wu@mediatek.com>
 
-On Fri, 2025-04-11 at 22:32 +0200, Alexis Lothor=C3=A9 (eBPF Foundation) wr=
-ote:
-> When dealing with large types (>8 bytes), ARM64 trampolines need to take
-> extra care about the arguments alignment to respect the calling
-> convention set by AAPCS64.
->=20
-> Add two tests ensuring that the BPF trampoline arranges arguments with
-> the relevant layout. The two new tests involve almost the same
-> arguments, except that the second one requires a more specific alignment
-> to be set by the trampoline when preparing arguments before calling the
-> the target function.
->=20
-> Signed-off-by: Alexis Lothor=C3=A9 (eBPF Foundation) <alexis.lothore@boot=
-lin.com>
+On Fri, Apr 25, 2025 at 04:53:16PM GMT, Kyrie Wu wrote:
+> This series adds support for mt8196 multi-hardwares jpeg enc & dec,
+> by first adding mt8196 jpegdec and jpegenc compatible to install
+> kernel driver. Add smmu setting to support smmu and iommu at the
+> same time.
+> Secondly refactor buffer and clock setting to support multi-hw jpeg
+> working.
+> Lastly, fix some bugs, including resolution change handleing, stop
+> streaming sw flow and others.
+> 
+> This series has been tested with MT8196 tast test.
+> Encoding and decoding worked for this chip.
+> 
+> Patches 1-3 Adds jpeg encoder and decoder compatible.
+> Patches 4 add jpeg smmu sid setting.
+> Patches 5 fix jpeg hw count setting to support different chips.
+> Patches 6 refactor jpeg buffer payload setting to handle buffer
+> size bug while resolution changed.
+> Patches 7 reconstruct jpeg dst buffer layout.
+> Patches 8 fix multi-core stop streaming flow
+> Patches 9 refactor multi-core clk suspend/resume setting
+> Patches 10 fix decoding buffer number setting timing issue
+> Patches 11 refactor decoding resolution change operation
+> Patches 12 fix remove buffer operation
+> 
 > ---
+> This series patches dependent on:
+> [1]
+> https://patchwork.kernel.org/project/linux-mediatek/patch/20250424090824.5309-1-jianhua.lin@mediatek.com/
+> 
+> Changes compared with v2:
+> --refactor smmu sid setting function interface
+> --Some modifications for patch v2's review comments.
 
-[...]
+This is very vague. What exactly changed.
 
-> +SEC("fentry/bpf_testmod_test_struct_arg_11")
-> +int BPF_PROG2(test_struct_many_args_9, struct bpf_testmod_struct_arg_5, =
-a,
-> +	      struct bpf_testmod_struct_arg_5, b,
-> +	      struct bpf_testmod_struct_arg_5, c,
-> +	      struct bpf_testmod_struct_arg_5, d, int, e,
-> +	      struct bpf_testmod_struct_arg_5, f)
+> 
+> Changes compared with v1:
+> --refine jpeg dt-bindings for MT8196
 
-Hello Alexis,
+This tells me nothing.
 
-I'm trying to double check the error you've seen for x86.
-I see that tracing_struct/struct_many_args fails with assertion:
-"test_struct_many_args:FAIL:t11:f unexpected t11:f: actual 35 !=3D expected=
- 43".
-Could you please help me understand this test?
-The function listened to is defined as accepting 'struct bpf_testmod_struct=
-_arg_7',
-at the same time this function uses 'struct bpf_testmod_struct_arg_5'.
-Nevertheless, the assertion persists even with correct types.
-
-> +{
-> +	t11_a =3D a.a;
-> +	t11_b =3D b.a;
-> +	t11_c =3D c.a;
-> +	t11_d =3D d.a;
-> +	t11_e =3D e;
-> +	t11_f =3D f.a;
-> +	return 0;
-> +}
-
-[...]
+Best regards,
+Krzysztof
 
