@@ -1,129 +1,117 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F2A18DB0A
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA724AEE2;
+	Mon, 28 Apr 2025 17:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745862522; cv=none; b=JjydoQTLuJWTzValdFZZQjhsaa/crnlBMRHv7hZ5FXSNkdpgHsm/zocyBvVFxY4UZbSRyEZuwsepvG5XyBhlZBJubbzcxlJScuR7hVgYqNJn6O8tlVKGvRT2Wluxf7K1U0mURtPhLXsEzoqMdqbptVaBlJx8PYdQZLfoPyIkEzQ=
+	t=1745862535; cv=none; b=b44YCknkXNB77UKKYAUkwG11uFTcivbbA4KBLczHMoAIZQwx0Gzse27yoHhRlBvrIlx65gga5V+u4l+MTJHbA5pmUulTYm1zAOOOqJRVv3W20l0TFejHM05Of2H0P9eJyxKLu6sXB5QktBVzRMP6NJlWAHaxgIfxNUYuO4eECZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745862522; c=relaxed/simple;
-	bh=LAPyuo4qTGLqNiq7tRoSZMooG2Sce1BAP3WQqZkKRxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LPSmTd0MS1vgkrYqPZOKGtN45O8AKma0LleYeB/2i4MYHIY/NPsQHrdolvhnUv8S29HHwxwBBh+j4UWaB7quZ6Hz1LMyg4ru6a3mpJ34N0Dueux9osVdJnzauVz/pjxRhSBKNtoI40NB3nO7Gt9hytTKX5rkNlVFwJYaZ8N4XFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WRGnydAK; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745862535; c=relaxed/simple;
+	bh=aaZVB+aDpBymAkd6Y7OtgM+QVFrwZS+gg1+NpH1ktaw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u/6bDSkFgBx8z2wGqYgZNPPRB+dUBYyOWT46M/RXqLQCZhAnmfJo5FQyqMrW3n8fSqUMzrCVOoln7b7likgS/cy/az2E1ebDQEbdLZpnIBaDsqaX8tUPTn+rhsU3TP7R11vKrQLbSd1aO7U3JxGCUIWGplFre8L6LnCYtyFux9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ems+49sF; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WRGnydAK"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so3607515a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:48:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ems+49sF"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so7980076a12.1;
+        Mon, 28 Apr 2025 10:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745862520; x=1746467320; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745862531; x=1746467331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nkQi3qYu1F8pnFJIyEPr/pJR3vsWi3szKANU55XaSrU=;
-        b=WRGnydAKSferMfPwY+YiF8+d6Nz89kJaYQ7ITFJY096awln67nb7NDo8kIRgHwcoWS
-         YZ7iaT5Qqo7emIwluTOphp7lPBCrfgahj55sOI6VsrY5UuAk9H7u8Z9MbdCFe6p3G82A
-         oPI7FS9SUuwQTfKzTzZ2uWH8ObwcIk4st52Do=
+        bh=4Vf/mI66Rv8XzHy9E+ZX7qvMAU+JZA/4MEEE+2e0H/k=;
+        b=Ems+49sFUWh2UXpBDE9/RG0abUTBdxIYUS82zB9nmRfasRLkUGHwm81zAlUApqLPhV
+         iDgdbbHq2AKwK7TM/gHMzKYCEOPNTPQPxrwHhdRBUi9yQltChR3iLhGNoKn+HcncZdwH
+         AdP/RibBrYlDTEvvcJ/V4J4OJA+opiVLZdrU+0htjttFZVZZsB+4Sr6byPg92MxG82lo
+         7/5S1q4QLJkBrm78BkLFBmuaa4ciXxZPmWOYCAT4UCqQwFZS7WbaduAKfJ9RVUyDpcWk
+         dHo/GgWQjfbKRYnu0/c0q59pQXdMCrewmsbNm9HhL+ZjdkB7Aiy/0lqyqyvpwZAsxtNY
+         6zmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745862520; x=1746467320;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745862531; x=1746467331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nkQi3qYu1F8pnFJIyEPr/pJR3vsWi3szKANU55XaSrU=;
-        b=uqm1lVGUMzANjIpoLzpZimSmeSsPfXukbvVrdfiwEBYaX/xmMGFWCnvfptoolh5fto
-         ff8VN8Q5TmfAAw1oza2UgR62nA8Qn/KlIndDGVlaNJoKUMh+Q0S+ixgbQiCHEfvQOngW
-         hTdP7nlXiMX0UEkKYn+KKxxmI4O1NzPy/DFIKBMMs5EesA2kvo83brlc90J+9lUh8fPl
-         vh27kduMO0K9BUYFxIrUXYpa/DfZXGxleFJcBbexXv/K0ydcfl02vboDQIdYNtX6EcE7
-         LzK2M/1pLrjf21MQzPmk39ObYf5UkbLSCyHY6T2rRZo8u1QkofeDNAmYE3Gpfx4ZidMS
-         RSgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbtrlJffuSMw7YNsVWlWBEkA4Ux4EVA0u395R58tKxlhAslBAr73TDn2sREfcNxggZFPVeIzshAxvXXmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxubSn+EirhLMV3mKNC61YVRm1cD6Z5ey9RLBfMmX67qe99iRgW
-	XtmHnjVXUn4vOEld5qwOyiyvXWQ1fKrgj5EtkcRSL3xHsJnKplwwax27LtJviw==
-X-Gm-Gg: ASbGncuQBent0nK7LfWDLLn2ZVKZustmaJQBzu9phKq8UH/ZGhXWlQu6sjedmWjbZ95
-	YMnKuCRhEP4inFToBwX7ZqjTftPPoLQM+PlXve5NpZX/GaMovy6i2xtj0PnphSK8hYscRl7nwzE
-	9iNF2gdbJN1+wQ5wlwvbV9w6LRUvkloXct1v2yVPxSPeHo77DRI+XwhDhAjLYa251/1MXAF8kdn
-	d12A2a5AEYd6Uy/amf3wGf3T3X4hxJdk9rX4rCLmMCtw289IJOe5r0Rw2y/Pn4XEnzhRNWBBV2n
-	7Tep34Nm5Nv+JsFXSNEr65uNWr4ZLt4BrbEC3kxmiU8Fg0uI//B50uU1Ee/MGE0ic9kN92Conmv
-	jRassTUTyB7QbLv7zZKXwPtYwk/d2gw==
-X-Google-Smtp-Source: AGHT+IHo79Xwon0l3qUnRl+ZO2KJhCGKB28PjUYLLf+CEUhzlw2T5PW/6v6fBq/mxNwFTJI3f94TpQ==
-X-Received: by 2002:a05:6a20:e68b:b0:1f5:8a03:ea22 with SMTP id adf61e73a8af0-2045b99ba90mr16427916637.33.1745862520239;
-        Mon, 28 Apr 2025 10:48:40 -0700 (PDT)
-Received: from bleungmegatop.c.googlers.com.com (28.67.125.34.bc.googleusercontent.com. [34.125.67.28])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a9a14asm8513987b3a.131.2025.04.28.10.48.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 10:48:39 -0700 (PDT)
-From: Benson Leung <bleung@chromium.org>
-To: abhishekpandit@chromium.org,
-	jthies@google.com,
-	akuchynski@chromium.org,
-	tzungbi@kernel.org,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: sukoo@google.com,
-	bleung@google.com,
-	Benson Leung <bleung@chromium.org>
-Subject: [PATCH v2] platform/chrome: cros_ec_typec: Set Pin Assignment E in DP PORT VDO
-Date: Mon, 28 Apr 2025 17:48:28 +0000
-Message-ID: <20250428174828.13939-1-bleung@chromium.org>
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-In-Reply-To: <20250426024810.3876884-1-bleung@chromium.org>
-References: <20250426024810.3876884-1-bleung@chromium.org>
+        bh=4Vf/mI66Rv8XzHy9E+ZX7qvMAU+JZA/4MEEE+2e0H/k=;
+        b=CjSwu9hDlPvKXSBboKR5ib7fxZfPDtIdmswBdT7RMkdEoFmE15CyQ2sLqukn+4WB0h
+         T/mu5wQiBqTIKn2CYzIso9AWZvKCxfh7Ppliv914b1vr5GuNLjqa9QbGufyNxwQ3v7P9
+         C2w1dARk3GtsPqYcqA/BbAeLIljEEo7qo5Z7sKvfEMaOkbkkttc81ZXAQDloIE84r5Y1
+         dIv0SMaGrz5oZ4ye0bZVqLSruuMEMgOzTynBYW1ch8qPJ275+dB+d7EMx2p3XWMzSX79
+         k3LjC0s6HMJ9NLfSGVqieoOXCtkZhCZXmxIxtpOC04+xO/ZzrBFCp7fnLMAeL0UnsFzt
+         RH2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUz/WcJtRa4EIxTWTlpBtQPz7L1HwzAgGrLU23PiqKZ5uGSM/bYDmv7GaQSkBP/TpYd8PbpAWUf+rRJcdqF2Q==@vger.kernel.org, AJvYcCVSRdqTS8p3HroFo2SN+xsOZJcGNOOL2NW2wg6AKcS7tkhtGKkpM/4qM2TCWrPQc+is4EKAr6TBxYcAA7CN@vger.kernel.org, AJvYcCVe53ds+bIdys+KaAjfmnxJC1xsRChPtYieBH8IwGqUB5U8ogLab4Mnd++byc0JMiy1pA7pcIkicxcs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV8rMB7KufHVP1EmgIeLs9JBKh8hnpwaJ8ekSUYV1s46eC9JMj
+	gSlmCkmg35UFEFrTYUemntyOeTK9xaAlQNFald3NmOx6GdVSxJ0g67BYn2vCGR7x5GXm5LfDjEI
+	2w4G9+h1f3VelkO4C0bNuB6JlJmnbVPk/
+X-Gm-Gg: ASbGncuFPaNKc1Wp2f59XGtNCUMKaKFa0+g/aZShTt2VtlramLfohr2P2TskqvquRhZ
+	eBRXylPK0Hv6wvi8S0uUIMkmxCN5o8wbGqBg8ES/dmr1H3nMiPkN/CKOW8dGRWE8WrA89qubkni
+	oJEzx9x5bcrlp9vubx4NLf9YjE
+X-Google-Smtp-Source: AGHT+IGkEVMGuSbs52hJFtdDACZAKZBg6rFsmJZeiNRRWH8v3gKGVwRXQX51w7ypjbM0bIqr3OKtwO7zZieGhOhYSRg=
+X-Received: by 2002:a05:6402:2803:b0:5ec:9513:1eaa with SMTP id
+ 4fb4d7f45d1cf-5f739838f99mr7758343a12.23.1745862531335; Mon, 28 Apr 2025
+ 10:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250425-miix-630-venus-v2-1-cdfca385a0c8@oss.qualcomm.com>
+ <CAOCk7NrcpwAnUKcVsc5D03Aazt=qWLZB034xa2FH2PF9LuL6ZA@mail.gmail.com> <vxwbzzds4lkixt2zsvjwnmfk22u3mmvp3cqk36aak2thomyagu@znr6b7gcue6w>
+In-Reply-To: <vxwbzzds4lkixt2zsvjwnmfk22u3mmvp3cqk36aak2thomyagu@znr6b7gcue6w>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date: Mon, 28 Apr 2025 11:48:39 -0600
+X-Gm-Features: ATxdqUGktcu0J7t2I4ixs3X_7ObRlCOmP1j6lxe04liPkzVFBas9H1tZkKrd_YY
+Message-ID: <CAOCk7NqLQdpbvdknEHEB0NNU7OPhmmHkH3Q4PCYiOzf2fBQBkw@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: msm8998-lenovo-miix-630: add Venus node
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pin C and D are used on C-to-C cable applications including docks,
-and for USB-C adapters that convert from DP over USB-C to other
-video standards.
+On Mon, Apr 28, 2025 at 10:21=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> On Mon, Apr 28, 2025 at 09:40:52AM -0600, Jeffrey Hugo wrote:
+> > On Fri, Apr 25, 2025 at 12:28=E2=80=AFPM Dmitry Baryshkov
+> > <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> > >
+> > > Enable Venus on Lenovo Miix 630 and specify corresponding firmware fi=
+le.
+> >
+> > I'm curious, how did this get validated?  I didn't think there was
+> > enough infrastructure enabled on this platform to check that the
+> > lights were even on on in Venus.
+>
+> I must admit, I basically checked that the firmware starts up. Marc
+> Gonzalez worked on enablement of Venus on MSM8998 (on the freebox), so I
+> didn't perform a thorough check.
 
-Pin Assignment E is intended to be used with adapter from USB-C to DP
-plugs or receptacles.
+If you got the FW starting up, that is farther than I expected.  I
+must be wrong about the capabilities then.
+The DT node looks right to me.
 
-All Chromebook USB-C DFPs support DisplayPort Alternate Mode as the DP
-Source with support for all 3 pin assignments. Pin Assignment E is required
-in order to support if the user attaches a Pin E C-to-DP cable.
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Without this, the displayport.c alt mode driver will error out of
-dp_altmode_probe with an -ENODEV, as it cannot find a compatible matching
-pin assignment between the DFP_D and UFP_D.
-
-Fixes: dbb3fc0ffa95 ("platform/chrome: cros_ec_typec: Displayport support")
-
-Signed-off-by: Benson Leung <bleung@chromium.org>
-Reviewed-by: Jameson Thies <jthies@google.com>
-Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-
-Notes:
-    v2 - Add Fixes to commit message.
-
- drivers/platform/chrome/cros_ec_typec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index d2228720991f..7678e3d05fd3 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -22,8 +22,10 @@
- 
- #define DRV_NAME "cros-ec-typec"
- 
--#define DP_PORT_VDO	(DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | BIT(DP_PIN_ASSIGN_D)) | \
--				DP_CAP_DFP_D | DP_CAP_RECEPTACLE)
-+#define DP_PORT_VDO	(DP_CAP_DFP_D | DP_CAP_RECEPTACLE | \
-+			 DP_CONF_SET_PIN_ASSIGN(BIT(DP_PIN_ASSIGN_C) | \
-+						BIT(DP_PIN_ASSIGN_D) | \
-+						BIT(DP_PIN_ASSIGN_E)))
- 
- static void cros_typec_role_switch_quirk(struct fwnode_handle *fwnode)
- {
--- 
-2.49.0.901.g37484f566f-goog
-
+>
+> > > Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> > > ---
+> > > Changes in v2:
+> > > - Rebasde on top of linux-next
+> > > - Link to v1: https://lore.kernel.org/r/20250408-miix-630-venus-v1-1-=
+771c330ee279@oss.qualcomm.com
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+>
+> --
+> With best wishes
+> Dmitry
