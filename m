@@ -1,202 +1,99 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AD727FD69
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF34268C51;
+	Mon, 28 Apr 2025 16:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745859008; cv=none; b=njvwKaJXoi8vAjlB5PvbbnGPseUK7DzZEV1QxH5z8HCoHG/PDnCnc78M8Vc5m9nR9OdueWWCchGvh08cBNB2qPHKw04HRjw+7ZxlTxrLTBIO7U7aMUlv5nvlAf0bFgpA6wdT1OY4NV3/520xTcbLHd+zUPcEP8vY9+L233KxnTU=
+	t=1745859036; cv=none; b=CnxAZeKdihO0rbc9KQuORb9rSayigg6zHjTlwCG1BqSMJsFpkzlAUL3o4/t55CPErI4oecxS7+TZEHqxA48b3N/sEjWSWeWeKbeU4d0hgMEUt5uqKr/b8PMaRsck6zSiaVP/SQmemEUk3cilf7u5WL+JisdGfEHlGB7H563yCr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745859008; c=relaxed/simple;
-	bh=1pYUHNmmRhmffZ/oXj+QDXKvFyX8YH3f073PSotF/c0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=io+HJgxA083sN7kWrHC3Xo3zdnu8xcncj5bpwdFw+horb46jmnFmn2lfmYiH9HzS0FZR+2aBTl1swJ/Fw27uZbFiIrR/M5O3FnYVCPNFoYk2ARphCXXkudgQ70y+WbEVA2uhxo8Ie1Z658NWchSK4qn9sxNr+fN/HeDFDtdplRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=cx5PnLA4; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1745859036; c=relaxed/simple;
+	bh=jDCO39/hs+ZwMillcnuEdfEDY+rJe1BnRJvppt32CF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eZSPee2S3pH3EYwHxc1C0GEFuMoGEtSLitGqs71ZBF7H68KW0yEsQfZ5m5n2VY9Nq2JKvNoV7VUjSdYkCfeFU/Iz4M3UsxWbpPta3DLK4AjIzOvG11dJom5bQJNHPKE8Gm25sAi5uAyTc11s9Q0l2xAhvb/SJHAwxiKdH4vKSuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YpD1hQQj; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="cx5PnLA4"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2254e0b4b79so76017255ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:50:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpD1hQQj"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so3017517a12.1;
+        Mon, 28 Apr 2025 09:50:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745859006; x=1746463806; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p8hjmFzsOPHOabsUErIWDP2Q0Dc1B9wUOOmnKrCLHDs=;
-        b=cx5PnLA4nQ4H1hYujlmPLZeowamA+adiYp3Z15LrkYJ1rvx1QWaF4wewJKKxmUpG8c
-         OIA2/VAUCpK7XdKIVdfBLhjkdd88V2JQJ8GIOBo62gVGZzjwLx5tU1K2947J7uGBSAie
-         4x4yktv778R54sPnyvhNttWJ+xlUrgGqtYa0U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745859006; x=1746463806;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745859032; x=1746463832; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p8hjmFzsOPHOabsUErIWDP2Q0Dc1B9wUOOmnKrCLHDs=;
-        b=LLqjgdiy9ntRdKlctz49KMCGvTcPISxsM+8K7i8rp7G5DDVmZy06fss6k8nN2QRvD4
-         YE7dotbW73qhDWSTAYoBGr7b7dETua4VQVO69ltW4U8peEoQ3FQC1AkFbu2HGk+A96dP
-         0KcCOCyrYWNuTUJMBjvg+1lbtoBdE1aK8x732IRJDQ2FjYGe9L5WHKAjspnpr3ZKcDj1
-         WpIli0nREtXzDhveGt/kfMBe+SWkbg74K7Rm4n9ly8FpF2p18j3Z5vpPcxsMZFFMy7gN
-         wD0F7rKy00M37JLgFftMd7apPxTGj+Js3kcLVdR3gBYMcjVXI9HQEbXPEAWgXT16TLZz
-         kmug==
-X-Forwarded-Encrypted: i=1; AJvYcCVoiRUl+0dwlXXKU90xyzBAb5vdVn3SrBp8whEwNRj+MyVdsr4o396MSo1KjBDA9HD2w95xeLfaWdQNmtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl3vnSAnfO81Rggfjmb+SpabOSe8/7NsDuyCZiImFngGEMrbpP
-	eVQyIjs8AGoYf6D/U5TW9JjdjNzz49mOtbVZD6Ma23Y/m+lmu9Jejlx1lAOLHdEPHvevGpXWaKw
-	l
-X-Gm-Gg: ASbGncu9A69dbitxgtog8gyUPBCxSDVXgfOkqrO/LjdUoD5w/rrZNST5YF+Gvn9FseU
-	H1pnJmpPN6owhJfIzt3HOdvMskKY6CzK4wKFQwB/iReFfSo7ihrafZ3w+LoPntASY7ONmzpa7X5
-	MdkvqJboPjcd3wrz3kvFP6W/hHUO7ppRyDbA936i0tRNg3hA7g01lccnFWjhJ9/ayllPCRojYPS
-	9+ZmccVH0vXBh2aGTBqXyv8me3ive86gfQqbWft9JkHIQMGwvwhzE8ZSZ+fuIJNSyWxw75sNKhv
-	C3yOYR1msWIPPAqhHK3192U/zX/3bULYm+eozTWHWKfKPJ4Kfxpb3rwF+n2FZgteHaiRz0Fb5LL
-	YVnYn4YdXexQ0z/lQwA==
-X-Google-Smtp-Source: AGHT+IHY3bokBHGJg2FzLyU1MQSqp3umpxucPs1Yju26bRC8o6rQvZzZFlDgWiTF1ZIeMvuMwyeRJQ==
-X-Received: by 2002:a17:903:298e:b0:223:52fc:a15a with SMTP id d9443c01a7336-22de6058d25mr4907115ad.33.1745859005858;
-        Mon, 28 Apr 2025 09:50:05 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5102e13sm85222465ad.201.2025.04.28.09.50.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:50:04 -0700 (PDT)
-Date: Mon, 28 Apr 2025 09:50:02 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Alexander Duyck <alexander.h.duyck@intel.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH vfs/vfs.fixes v2] eventpoll: Set epoll timeout if it's in
- the future
-Message-ID: <aA-xutxtw3jd00Bz@LQ3V64L9R2>
-References: <20250416185826.26375-1-jdamato@fastly.com>
- <20250426-haben-redeverbot-0b58878ac722@brauner>
- <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
+        bh=jDCO39/hs+ZwMillcnuEdfEDY+rJe1BnRJvppt32CF0=;
+        b=YpD1hQQj0X65SKOSDPm2WKk7V0Gdd13jCcShqT4cIUau5DMAE0oHu+F0NHqOn7i+Do
+         fzxB2pU2+z00mQ+lz9fosf4Of9H69yOSBXkDCJS2Q/S8bz0fbGxeuKbCod0x0krKhm2V
+         Kh6gNvgQ+XHg47swrB8Im96md2qrZkL9D+nXD+au9xy846mZFkZufnracH+SbwxVzfLD
+         O83E7UL7Nx9X0k4xKUbfEmXZzF4d03tC2y3pn85720BZCe7rH2K1WTh1fgPZpKfzjgCX
+         3TqExBVpYBSS9AzbhEGSJQnCum/vE2fDBAeuKbvxn5QUnOmAnKJommQ9OGKK2BXn0Mjl
+         aLMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745859032; x=1746463832;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jDCO39/hs+ZwMillcnuEdfEDY+rJe1BnRJvppt32CF0=;
+        b=HQLoYXF2zk4CIkMpK+zaI37k27TDeK2CMSh6LPgwc7/9QgOoP18dvAXN+R2jr0N0RP
+         Tu2vTiPBaVGGJWAEAtgDl4Hbz9WqmtnXjd8A2yPfsFDQlBUd+MtZHPF2sET61wiiT4VK
+         l/TmwOF54d/1UaEksJ1azZeJe+lhxGTo0s+AU2G5tsqL4lMNaxNKG9ts+dqAwp8ek4x6
+         UWWanT+W6wAKt+TnoklNxtpP6EsMW4VmtiPeow9W+ZZfBnabXFlKE/5NTgnnpj9r1x31
+         SSvf1fUgfDXTuVRLVbC+sle8gvKqxVijSrf6aLKCmrEMRYQzhGj+6AzObfgWgQZj2M0m
+         OjZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxQ4K2FOQAbMc1D0SOAPnR11ReFEpE1Jkm7NZc5fev51BBHSj8BIg3883EFRx7HvGawjMhABXOz5AxgY8=@vger.kernel.org, AJvYcCW/N9hz/v+O6Wntdpn4AyWWfWVXVprR7cATgKKWBPQ/kTdag7rsYHY07PMv/d2VL21fj1oPYBLvAPdV3oA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzauUgEXfpTWbcb98h/CN3mUGomj1dEh/B9qDY3Ru9QkZgE0kMv
+	NRPMwfNXdeVy2kjAHv9aJukAyLNjZAr1iRSlzJGJZlqN6rdcZ1BcGc4eJkonbgUw0PnFCClClD+
+	wvURQwhEg8A15Vec3m5Twe+UqLBk=
+X-Gm-Gg: ASbGncu5hoa8CV+hPGO6YyaZygc2R1sEuK5HuZWQnAhCyBSyGILm0wcTuJ44OQ+vUvo
+	1O1BlWMvoxeihvhn/M8z1NSNHPvr4uh0W74NQ8Gq28+j54cj+Rt7XjcpVWupsE+4Wq8Jk4FprwX
+	nEhV/geF/NADUgimAXBLHk8dc=
+X-Google-Smtp-Source: AGHT+IGI8v7PDHY/Lp1BHCcSAppZx37v1ebO95EwXmrWNUcOgw1ylwg5FVKqNvX10dP+azameA3ze2h9GEqyI9hzmew=
+X-Received: by 2002:a17:906:6db:b0:ace:4ed9:a8c1 with SMTP id
+ a640c23a62f3a-ace711175e8mr827843666b.30.1745859032158; Mon, 28 Apr 2025
+ 09:50:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ernjemvwu6ro2ca3xlra5t752opxif6pkxpjuegt24komexsr6@47sjqcygzako>
+References: <20250428161236.126200-1-laurentiumihalcea111@gmail.com>
+In-Reply-To: <20250428161236.126200-1-laurentiumihalcea111@gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Mon, 28 Apr 2025 19:50:10 +0300
+X-Gm-Features: ATxdqUFmw4_SpJjE_h3pfWCT_7xaVQP1K-2_RunOVPd4ywM1CYGZQMncxadN-Vc
+Message-ID: <CAEnQRZByMFrDoPsQ+aoqfS7+1eDuiLGZYYywf+Cn=hGjRm-BzA@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: SOF: topology: check if machine is NULL during tplg load
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>, julien.massot@collabora.com
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+	Bard Liao <yung-chuan.liao@linux.intel.com>, 
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
+	Mark Brown <broonie@kernel.org>, Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 02:14:45PM +0200, Jan Kara wrote:
-> On Sat 26-04-25 14:29:15, Christian Brauner wrote:
-> > On Wed, Apr 16, 2025 at 06:58:25PM +0000, Joe Damato wrote:
-> > > Avoid an edge case where epoll_wait arms a timer and calls schedule()
-> > > even if the timer will expire immediately.
-> > > 
-> > > For example: if the user has specified an epoll busy poll usecs which is
-> > > equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
-> > > unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
-> > > consumed the entire timeout duration so it is unnecessary to induce
-> > > scheduling latency by calling schedule() (via schedule_hrtimeout_range).
-> > > 
-> > > This can be measured using a simple bpftrace script:
-> > > 
-> > > tracepoint:sched:sched_switch
-> > > / args->prev_pid == $1 /
-> > > {
-> > >   print(kstack());
-> > >   print(ustack());
-> > > }
-> > > 
-> > > Before this patch is applied:
-> > > 
-> > >   Testing an epoll_wait app with busy poll usecs set to 1000, and
-> > >   epoll_wait timeout set to 1ms using the script above shows:
-> > > 
-> > >      __traceiter_sched_switch+69
-> > >      __schedule+1495
-> > >      schedule+32
-> > >      schedule_hrtimeout_range+159
-> > >      do_epoll_wait+1424
-> > >      __x64_sys_epoll_wait+97
-> > >      do_syscall_64+95
-> > >      entry_SYSCALL_64_after_hwframe+118
-> > > 
-> > >      epoll_wait+82
-> > > 
-> > >   Which is unexpected; the busy poll usecs should have consumed the
-> > >   entire timeout and there should be no reason to arm a timer.
-> > > 
-> > > After this patch is applied: the same test scenario does not generate a
-> > > call to schedule() in the above edge case. If the busy poll usecs are
-> > > reduced (for example usecs: 100, epoll_wait timeout 1ms) the timer is
-> > > armed as expected.
-> > > 
-> > > Fixes: bf3b9f6372c4 ("epoll: Add busy poll support to epoll with socket fds.")
-> > > Signed-off-by: Joe Damato <jdamato@fastly.com>
-> > > Reviewed-by: Jan Kara <jack@suse.cz>
-> > > ---
-> > >  v2: 
-> > >    - No longer an RFC and rebased on vfs/vfs.fixes
-> > >    - Added Jan's Reviewed-by
-> > >    - Added Fixes tag
-> > >    - No functional changes from the RFC
-> > > 
-> > >  rfcv1: https://lore.kernel.org/linux-fsdevel/20250415184346.39229-1-jdamato@fastly.com/
-> > > 
-> > >  fs/eventpoll.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> > > index 100376863a44..4bc264b854c4 100644
-> > > --- a/fs/eventpoll.c
-> > > +++ b/fs/eventpoll.c
-> > > @@ -1996,6 +1996,14 @@ static int ep_try_send_events(struct eventpoll *ep,
-> > >  	return res;
-> > >  }
-> > >  
-> > > +static int ep_schedule_timeout(ktime_t *to)
-> > > +{
-> > > +	if (to)
-> > > +		return ktime_after(*to, ktime_get());
-> > > +	else
-> > > +		return 1;
-> > > +}
-> > > +
-> > >  /**
-> > >   * ep_poll - Retrieves ready events, and delivers them to the caller-supplied
-> > >   *           event buffer.
-> > > @@ -2103,7 +2111,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
-> > >  
-> > >  		write_unlock_irq(&ep->lock);
-> > >  
-> > > -		if (!eavail)
-> > > +		if (!eavail && ep_schedule_timeout(to))
-> > >  			timed_out = !schedule_hrtimeout_range(to, slack,
-> > >  							      HRTIMER_MODE_ABS);
-> > 
-> > Isn't this buggy? If @to is non-NULL and ep_schedule_timeout() returns
-> > false you want to set timed_out to 1 to break the wait. Otherwise you
-> > hang, no?
-> 
-> Yep, looks like that. Good spotting!
+On Mon, Apr 28, 2025 at 7:16=E2=80=AFPM Laurentiu Mihalcea
+<laurentiumihalcea111@gmail.com> wrote:
+>
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>
+> Check if "sof_pdata->machine" is NULL before calling the machine-specific
+> "get_function_tplg_files()". Otherwise, for OF-based machines (which set
+> the "of_machine" instead of the "machine" field), the operation will
+> result in a NULL pointer dereference fault.
+>
+> Fixes: 6d5997c412cc ("ASoC: SOF: topology: load multiple topologies")
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Thank you for spotting that and sorry for the trouble.
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Christian / Jan what would be the correct way for me to deal with
-this? Would it be to post a v3 (re-submitting the patch in its
-entirety) or to post a new patch that fixes the original and lists
-the commit sha from vfs.fixes with a Fixes tag ?
+I think same patch was sent by Julien, but this one has better explanation.
 
-I was going to propose the following, which if I understand
-correctly, should fix the issue Christian identified:
+Julien, I think you can add your S-o-B tag here.
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 4bc264b854c4..1a5d1147f082 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -2111,7 +2111,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
-
-                write_unlock_irq(&ep->lock);
-
--               if (!eavail && ep_schedule_timeout(to))
-+               if (!ep_schedule_timeout(to))
-+                       timed_out = 1;
-+               else if (!eavail)
-                        timed_out = !schedule_hrtimeout_range(to, slack,
-                                                              HRTIMER_MODE_ABS);
-                __set_current_state(TASK_RUNNING);
+Thanks,
+Daniel.
