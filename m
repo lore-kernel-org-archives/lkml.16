@@ -1,84 +1,112 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9021C1B85F8
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611F7154BF5;
+	Mon, 28 Apr 2025 06:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745820860; cv=none; b=bhIGxTl40oEfWNnxacFQFodkTKHPho1hNMDFLSKmYZRbccp2elih9GGQYVrHU2QlibcKH45bK6J0kIWsBX5TnD2vAB4xaLRJBQ9OCOiLHf7r94WfoKTjIE9gqd9W6E0u8Yg+AcNSgKaLePr/2UZHPXprQwtulaENZFQKpZNpgdk=
+	t=1745821127; cv=none; b=HiyU3sIAvKKPpxVmZ7AkqbxUr3eY8mr19MlpMfGH7ce0+q7HjV4+vA+kKRsPa52iJMA0UJ9rU26NqFL9/84twZvGlsVJJTelrI+whAIS3Mc08fP6xlY15T40HKRnsCSFqcLChu+RqIvtlAAPDNFdCimmvr6Nfh44ey+jjcANRG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745820860; c=relaxed/simple;
-	bh=7KMQeuyOyCYitIjR2rMb2L1WE/OVDkFQ75pBih7W5fk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kU9wN3+kDURSM9UtNsekQ4GgFEE32dVcZbPXN/ov4FnF97VqkhHewVgfycRQxvNsqz1zp1fKVTDwibFIG5gBdL+1Ww9qolIxljBjTMBi7h0DT8qXHGMvSuJ9JMLBGjlejUBSKdEw23raFrqjr0duWrNEBo6ohFeJPuBat8cxtiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VvVx3kIz; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745821127; c=relaxed/simple;
+	bh=KulOy69QqyWLWtblZJ/FwSt5eW5A9Zb9CMMbpjMFvkU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y/bLl1dR8frxF716Y/Y4Fod9BOX41dsq4xLvqYN6SLFKHKSnb02i0qVLvVNG6fnwoE4ZTBPvHcaUldz8fzML4/KIdYO5Bk3+QJOBGB2MSxk1AuiRZIs3Oo1T5QB5IbeL6EJSYurFBo5sS/fjgAILNwXhgq5ng0r8SAGjZBTCvrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyKlyGJv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VvVx3kIz"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745820855;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=I8nsf8o70Qa3W09KtF1+Bj1jDIeGKTvvrbUdrVUnHOE=;
-	b=VvVx3kIzXIBO01o5AL9TafTNmC7MsL3SX4Y8iEK5kFhKEPw4wLdW1s6nfKqX3jeduGbXe+
-	4Tdj3wTR0DMUC60Qk52mCDum4LqbEXWQQJJ6pEfYLZrEV98V+djibYzbmKfbPkw3yCHJ0c
-	3xpv8ao3GAEQvVkTuNlUM1Ge1/k4NJU=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] regcache: Use sort()'s default swap() implementation
-Date: Mon, 28 Apr 2025 08:13:18 +0200
-Message-ID: <20250428061318.88859-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyKlyGJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73DFBC4CEE4;
+	Mon, 28 Apr 2025 06:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745821122;
+	bh=KulOy69QqyWLWtblZJ/FwSt5eW5A9Zb9CMMbpjMFvkU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WyKlyGJvU4VHjUl22faneoHWmxur8Sq5Smy67eeGStMaQdIrWYWQc3njywQuf/Wei
+	 QUZXxLNRpH0gp7G5ilAC17CShyXckMF19PX8c2V6StrANL1SDZkIBlnACMhaBc1vkw
+	 h3TVQb8r03rwwTSHSSa9xKdTtW0MmHe75KtZq08sYC2NSILM0QUW89ae52C6mZAuJD
+	 aeAtN5LgZ7G7A/7U1BEqdMd8uRSYIqVZF+n7c5sfuB8R5iWkBdPPYsz0qbnGhAEVXA
+	 5n6drj8SQQLw2oyjw7PNQyTR7waKJPHZqVW/fud3nG4JrprYQovbbw9kOhVUdy+ZvP
+	 dzkQoNWqykNvw==
+Message-ID: <90b34641-40e0-43d4-938f-d05dba852d03@kernel.org>
+Date: Mon, 28 Apr 2025 08:18:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dt-bindings: arm: qcom,ids: add SoC ID for SM8750
+To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250425140346.1087527-1-mukesh.ojha@oss.qualcomm.com>
+ <20250425140346.1087527-2-mukesh.ojha@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250425140346.1087527-2-mukesh.ojha@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use sort()'s default swap() implementation and remove the custom
-regcache_defaults_swap() function.
+On 25/04/2025 16:03, Mukesh Ojha wrote:
+> Add the unique ID for Qualcomm SM8750 SoC.
+> This value is used to differentiate the SoC across qcom targets.
+> 
+> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> ---
+>  include/dt-bindings/arm/qcom,ids.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/base/regmap/regcache.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/base/regmap/regcache.c b/drivers/base/regmap/regcache.c
-index f7fcf2de1301..c7650fa434ad 100644
---- a/drivers/base/regmap/regcache.c
-+++ b/drivers/base/regmap/regcache.c
-@@ -34,21 +34,10 @@ static int regcache_defaults_cmp(const void *a, const void *b)
- 		return 0;
- }
- 
--static void regcache_defaults_swap(void *a, void *b, int size)
--{
--	struct reg_default *x = a;
--	struct reg_default *y = b;
--	struct reg_default tmp;
--
--	tmp = *x;
--	*x = *y;
--	*y = tmp;
--}
--
- void regcache_sort_defaults(struct reg_default *defaults, unsigned int ndefaults)
- {
- 	sort(defaults, ndefaults, sizeof(*defaults),
--	     regcache_defaults_cmp, regcache_defaults_swap);
-+	     regcache_defaults_cmp, NULL);
- }
- EXPORT_SYMBOL_GPL(regcache_sort_defaults);
- 
--- 
-2.49.0
+Although you have a checkpatch warning there... Run checkpatch BEFORE
+EVERY patch.
 
+
+Best regards,
+Krzysztof
