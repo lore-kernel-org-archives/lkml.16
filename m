@@ -1,169 +1,163 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7409E1AC88A;
-	Mon, 28 Apr 2025 09:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F15263F44;
+	Mon, 28 Apr 2025 09:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745833258; cv=none; b=SHgOI6G1lYrcV4AbBWwSY9YxIZNkYD4ocgMwWKAiPhUabuFBP9hw24Rn+Nn4XhPsJZ7G+EEscYgidiOmACbvNIIuL5UwGIQmd/9zcj2CbMTcZjdBWu4JYwkMHKqnxM+FDAUqrhWfukrJg2e3JJusu+TkMA12+sxbHnKw8dMqRxg=
+	t=1745833297; cv=none; b=X/Yb3FDk2KCLJUPHDYQqe/dzgjBnnCfvG/DLUbew3UOeArpUlb0Kct2M/Qd021f3Un+aPaLUkcHEjirv1pVLyjEBbYp1XPiw+UkhLWzgqpFhEDY7qF4hg5fe8VTSy/3qFwZwinRcART7N2cnPiWp3iVWn1JxH709e2iQP/uDfuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745833258; c=relaxed/simple;
-	bh=QtEl+2m1eYszmz+3dFc2Lm7goH/HtdUxHXhZ2+8CrUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NKvWhx0YLDzmuewLO/yze02j1BrcA7KT258LKoOadsrclwx/ZTC6mFmZpxfB5ub0OSxkDQZriVC/SXWKws9ZZKAwZkzBGZKu3c22QppTsmViq2Rig8jfJJqq9IzJ8HNNE3gcxQyxp+ay8mLrr9SZC/0EZAfC7txlnYbT8gCdyZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h04g84a7; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745833297; c=relaxed/simple;
+	bh=I3UZ8yw9vctYavrl+mnunAivPdDwRdaT/Lu3gz+ndk0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2hfFlRci4dw07ESbKNqdmLtHuUKnvJAPBbW5d2WpUgqAvuLVMzFxodlYiQ6sWGm+YNsemAmHoo6IzVs+qGQFeLxjxw0t9eGrmm9ni6S58odWDZroPn3mz0SZzzVLHBAMAPRNxA6QbziV595QzhguoRICl/J7mlrfjcCYNETcgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oOsatzxp; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h04g84a7"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso43521375e9.1;
-        Mon, 28 Apr 2025 02:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745833255; x=1746438055; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eWdl+Kqq58dT2qY6KpY9tsh+8ZNojmQ7ty0C+vUxAbM=;
-        b=h04g84a7jpDGBhGPaigWQdk+0AID4S7B5+IZlsA6oUG6xwpYXj46ejvglURbvLoRSz
-         bdcmHOwE7s+UW8hgnUYXTyGe3Rb3vwqCiVttmTBztuZrkmXSQ1hrAtAopw+yI+Q3yKcT
-         IqJk+ct3QXORxteNrljBBu4rn4Wm1qUHQcXbKjA+ryPOil90RVJNxvfJKeKyrh+pFOzT
-         YJy3NGBtNgayTRxOmi+sKyI1bn0+uq90Um7qgnanLZ2/nOo1pHwCMgdlO6TzvmZmj/3I
-         aNfNUp7GqBiJmHM3srjsA+6AaEsAVICTUyY36hOsafaTDqzvolLhXmBZdaGJuQeSdYNS
-         4Syg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745833255; x=1746438055;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eWdl+Kqq58dT2qY6KpY9tsh+8ZNojmQ7ty0C+vUxAbM=;
-        b=DyrFa31jEGUnR5mB1QS+ZDB1/5KmXeoAJsybq2YXP6c5Fdchv6InETI0VB/tTOh2rM
-         DFU07aWH0eMbpJu75AZsytgebU2V/LlTctOXu9TmDljOwE+EhLifPdkY2ae2ShoQ7Yjp
-         WrVj3j9tSpRRa7UsPVOcLQG7Nz1hVn9oo5asazcP8cBmZrDyFieWSnWWZSV6ZhJnf2Q2
-         Q0IT4gslXOt/y4x8ZKP02OL6Ita6V0wmVGcrbYTGkb55aodHDyZwbT70SNtPxTGkpRw0
-         Sdfhr5b5dOr0qoNQm5E9va277InoDbVjzvXvpAWNOfCrWWUO8y4BUsuZRVLZ5N10OAnA
-         XQbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnvkd40E9wf0tPiIxJkr1C3ptmzqV5rrqVwC3RcLQ90M5yptgy0FsPE6THJrLskbkPyNxCI2Db@vger.kernel.org, AJvYcCVyYp+/0Apniner+prjqnYRuhbiyLqUuKfakHDWWFwGr0MQ/fDf//keIcpZgz+5A8Bo224+Aq/XqubnOc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIQRnHOffK7pzDQ1GD+WoTrsNaNIHmBRsRP1vnYGt+PVArKxK/
-	Q8CtIvfM6hhoTf2GpWpkuUpUf+tsIFumSZtFdnvZwGi1iJK3kQbP
-X-Gm-Gg: ASbGncu158dVv/QmOq9uMrdX6HNeta3BTBs6KmQT9vRGwvMkiBNJM98sLGNUrSrNeON
-	wgiWy861ysMLPo6cCCzzFxgXLzPqsarzerCUMaM/NZmspnNADnRVtiH23R3mqttUYqGVks2ciIc
-	OFye1w3/11OTkMdb/XclPrH8qBfyS5IK7p51wJaUSLzDat4/LPdjuJJqv36nwd+VQ5lnzdGAPlw
-	grtNyZHBIl/mQ1y0GNt2HvdlWHoDt1FyPDxR+pciudqoExyfwEGqkjwPdyDHAIqSMZnn814SyXz
-	r/3ZBxt0i1uILo9kgIFUzsrw3NiRrOdSSzd0MA==
-X-Google-Smtp-Source: AGHT+IH5WZ2I2b6xONMXmkTLp55tTW8AkFEOLovibWPPY96a7fFSfSjudvpq3AXJ+RQ8zoo5DYpahA==
-X-Received: by 2002:a05:600c:5120:b0:43d:22d9:4b8e with SMTP id 5b1f17b1804b1-440a65d8e5bmr109031545e9.10.1745833254418;
-        Mon, 28 Apr 2025 02:40:54 -0700 (PDT)
-Received: from vitor-nb.. ([2001:8a0:e602:d900:4f54:7a4f:dfe1:ebb6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8343sm152687785e9.28.2025.04.28.02.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 02:40:54 -0700 (PDT)
-From: Vitor Soares <ivitro@gmail.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Vitor Soares <vitor.soares@toradex.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	ivitro@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH v1] drm/bridge: cdns-dsi: Replace deprecated UNIVERSAL_DEV_PM_OPS()
-Date: Mon, 28 Apr 2025 10:40:48 +0100
-Message-Id: <20250428094048.1459620-1-ivitro@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oOsatzxp"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53RLfGHd016501;
+	Mon, 28 Apr 2025 09:41:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ovzO73
+	6OqnS+DHkXDt/EEWkOgm2AQbagVbjGOAgfd9g=; b=oOsatzxpfe1nPkI+K09CTI
+	H8zPnqeKwRCu7HxcTjNHv2fIlxp5t8dbo3BJA8uvWvnCYQ719Ityx/rKMAZMbFv4
+	QCGklMzhPiu/FYkzqLCa9YPpicb3xSrn36Bv6UcMZL4HCtwT4e8ypCzl0hIEVhhK
+	Nv86ZEVSIFI5WkNqVtKGB6tuLblbNYv/bTMCuai1p9hfIGBlP9t5bmg+ESULvmCG
+	FrxTP5Li4dK4tivrbDZpLAGN0BhceHqfV4QcI0eod15Jc4Esfx4SwiWc6xiKRFUK
+	41mhujdymSm6l3Sws5k248NgLEFzpjAeWYpqvepqwxhRJKsX0ug0GYqf0avk/V/A
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 469v5kjeb2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 09:41:12 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53S781Mq000666;
+	Mon, 28 Apr 2025 09:41:11 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469atp5t6h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Apr 2025 09:41:11 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53S9fAvr3801752
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 09:41:10 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 909C458065;
+	Mon, 28 Apr 2025 09:41:10 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 578365805E;
+	Mon, 28 Apr 2025 09:41:07 +0000 (GMT)
+Received: from [9.204.204.179] (unknown [9.204.204.179])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Apr 2025 09:41:07 +0000 (GMT)
+Message-ID: <33aabaae-5789-4b67-bd06-06b79d03ea38@linux.ibm.com>
+Date: Mon, 28 Apr 2025 15:11:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linux-next]Build Failure: kernel/watchdog.c:936:2: error: too
+ many arguments
+To: Stephen Rothwell <sfr@canb.auug.org.au>, luogengkun@huaweicloud.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        dianders@chromium.org, joel.granados@kernel.org, song@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <339e2b3e-c7ee-418f-a84c-9c6360dc570b@linux.ibm.com>
+ <20250428084117.31215b8c@canb.auug.org.au>
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250428084117.31215b8c@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3Jd9e6VET3uap56e_FWsM-TE4J19HF5S
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA3OSBTYWx0ZWRfX97bQxrdDGmPs CH56xF21WsOd2HwKoWc1Imw4QMCD9KBXhCLYtDUPr6HX5+hACWVaL3IpWt9URdKr8dC+sIcysVG VJoYF9kSxK7h1uNfVGOABkfO8YCNai47SPOy8FUn9CCKnZvDPjf9lq9fbI61C82cx53AZdom14m
+ Ib+ucM8k9V61BWwoxHmbhsNXf2QV7pzjuY6Ye6pemi6Rm6Dk8iTMJLVnccgMrMi44kZaxWlurA5 CnPHVBlH8bcLx7XEU8AHCi+/J7o7VKHWvCW2o0nnIkqShj5FsXZnjCd05aIDR36EqoBbP7xzC4b X3LIz+ySs4DT67D1YsB68L96kLhFf0WQGuxgbpMq4cbuNNqBUl3ZbAb2/MDZ+RVxs7k4iyiGS8D
+ th02ypM9qY6cUYHigZJ3oo0WhgIz5RGAzgqka5NpnPAlHq4rtIdiJ6tfeMziq9cMrFN4k+Q2
+X-Proofpoint-GUID: 3Jd9e6VET3uap56e_FWsM-TE4J19HF5S
+X-Authority-Analysis: v=2.4 cv=DvxW+H/+ c=1 sm=1 tr=0 ts=680f4d38 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=flcYxCUImN8H2Fr_exYA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504280079
 
-From: Vitor Soares <vitor.soares@toradex.com>
 
-The deprecated UNIVERSAL_DEV_PM_OPS() macro uses the provided callbacks
-for both runtime PM and system sleep. This causes the DSI clocks to be
-disabled twice: once during runtime suspend and again during system
-suspend, resulting in a WARN message from the clock framework when
-attempting to disable already-disabled clocks.
+On 28/04/25 4:11 am, Stephen Rothwell wrote:
+> Hi all,
+>
+> On Sat, 26 Apr 2025 20:39:26 +0530 Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>> I am observing below build failure on IBM Power8 server with linux-next-20250424 repo.
+>>
+>> This issue seems to be introduced by the below commit. After reverting the below commit, kernel build is successful.
+>>
+>> Bad Commit: 6b07f9a0fa41 watchdog: fix watchdog may detect false positive of softlockup
+>>
+>> Note: To hit this issue, one should first resolve this [1] <https://lore.kernel.org/all/e8bf676e-7bf0-4896-b104-ac75e1b22d2e@linux.ibm.com/>
+>>
+>> Repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>> Branch: master
+>> GCC: 8.5.0 20210514
+>> ldd (GNU libc) 2.28
+>>
+>> Attached is the .config file.
+>>
+>> Errors:
+>>
+>> kernel/watchdog.c: In function 'lockup_detector_reconfigure':
+>> kernel/watchdog.c:936:2: error: too many arguments to function '__lockup_detector_reconfigure'
+>>     __lockup_detector_reconfigure(false);
+>>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/watchdog.c:926:13: note: declared here
+>>    static void __lockup_detector_reconfigure(void)
+>>                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/watchdog.c: In function 'lockup_detector_setup':
+>> kernel/watchdog.c:940:2: error: too many arguments to function '__lockup_detector_reconfigure'
+>>     __lockup_detector_reconfigure(false);
+>>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/watchdog.c:926:13: note: declared here
+>>    static void __lockup_detector_reconfigure(void)
+>>                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/watchdog.c: In function 'proc_watchdog_update':
+>> kernel/watchdog.c:962:2: error: too many arguments to function '__lockup_detector_reconfigure'
+>>     __lockup_detector_reconfigure(thresh_changed);
+>>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/watchdog.c:926:13: note: declared here
+>>    static void __lockup_detector_reconfigure(void)
+>>                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>
+>> If you happen to fix this, please add below tag.
+>>
+>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Yeah, the CONFIG_SOFTLOCKUP_DETECTOR unset version of
+> __lockup_detector_reconfigure() was not updated :-(
 
-[   84.384540] clk:231:5 already disabled
-[   84.388314] WARNING: CPU: 2 PID: 531 at /drivers/clk/clk.c:1181 clk_core_disable+0xa4/0xac
-...
-[   84.579183] Call trace:
-[   84.581624]  clk_core_disable+0xa4/0xac
-[   84.585457]  clk_disable+0x30/0x4c
-[   84.588857]  cdns_dsi_suspend+0x20/0x58 [cdns_dsi]
-[   84.593651]  pm_generic_suspend+0x2c/0x44
-[   84.597661]  ti_sci_pd_suspend+0xbc/0x15c
-[   84.601670]  dpm_run_callback+0x8c/0x14c
-[   84.605588]  __device_suspend+0x1a0/0x56c
-[   84.609594]  dpm_suspend+0x17c/0x21c
-[   84.613165]  dpm_suspend_start+0xa0/0xa8
-[   84.617083]  suspend_devices_and_enter+0x12c/0x634
-[   84.621872]  pm_suspend+0x1fc/0x368
 
-To address this issue, replace UNIVERSAL_DEV_PM_OPS() with
-DEFINE_RUNTIME_DEV_PM_OPS(), which avoids redundant suspend/resume calls
-by checking if the device is already runtime suspended.
+After seeting CONFIG_SOFTLOCKUP_DETECTOR kernel build is successful.
 
-Cc: <stable@vger.kernel.org> # 6.1.x
-Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
-Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
----
- drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index b022dd6e6b6e..62179e55e032 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -1258,7 +1258,7 @@ static const struct mipi_dsi_host_ops cdns_dsi_ops = {
- 	.transfer = cdns_dsi_transfer,
- };
- 
--static int __maybe_unused cdns_dsi_resume(struct device *dev)
-+static int cdns_dsi_resume(struct device *dev)
- {
- 	struct cdns_dsi *dsi = dev_get_drvdata(dev);
- 
-@@ -1269,7 +1269,7 @@ static int __maybe_unused cdns_dsi_resume(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused cdns_dsi_suspend(struct device *dev)
-+static int cdns_dsi_suspend(struct device *dev)
- {
- 	struct cdns_dsi *dsi = dev_get_drvdata(dev);
- 
-@@ -1279,8 +1279,8 @@ static int __maybe_unused cdns_dsi_suspend(struct device *dev)
- 	return 0;
- }
- 
--static UNIVERSAL_DEV_PM_OPS(cdns_dsi_pm_ops, cdns_dsi_suspend, cdns_dsi_resume,
--			    NULL);
-+static DEFINE_RUNTIME_DEV_PM_OPS(cdns_dsi_pm_ops, cdns_dsi_suspend,
-+				 cdns_dsi_resume, NULL);
- 
- static int cdns_dsi_drm_probe(struct platform_device *pdev)
- {
-@@ -1427,7 +1427,7 @@ static struct platform_driver cdns_dsi_platform_driver = {
- 	.driver = {
- 		.name   = "cdns-dsi",
- 		.of_match_table = cdns_dsi_of_match,
--		.pm = &cdns_dsi_pm_ops,
-+		.pm = pm_ptr(&cdns_dsi_pm_ops),
- 	},
- };
- module_platform_driver(cdns_dsi_platform_driver);
--- 
-2.34.1
+Regards,
 
+Venkat.
+
+>
+> This is now commit
+>
+>    45c4eb661074 ("watchdog: fix watchdog may detect false positive of softlockup")
+>
+> in the mm-nonmm-unstable tree.
+>
