@@ -1,198 +1,231 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E92B261398;
-	Mon, 28 Apr 2025 10:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9D91F8676;
+	Mon, 28 Apr 2025 10:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745834855; cv=none; b=o1/dyIRrr5WlbukyRV2ASIXuyQiCmWQxzFPu7lB59RVJNrZJLtlgCkr1RJr17XlWn19QTaKt/0LH0x9l3/MkNJkAJnAKJb3waqYbKyYCqfLqFn5nGIPdbaUdcCyfurLEAsMc/byGCzSLq8yJseqoezbDWUpAzMLjBpvKxkX1DIg=
+	t=1745834921; cv=none; b=eXOe09/YZwxaMT7jqNoqA2a8HuJNNXWj412KeAFchTJiuIeViPUEo7Fko+KwWoENMha5EXS7nUsx5k4YQnewXNcB7cVpU1akowdf2/G/OeehmtJkuIyRl2n/g394b9iX/TUvNDi8DhZ0qs/2r7NBWsJw8BVttn2inmTP+/MxNvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745834855; c=relaxed/simple;
-	bh=jXwUVvExxc5z7Z8jSiT7683GcJvsn0SjsTrr/ZaHQ7c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GLXnwSgCyuF/75M8rxOOlBWvyyzzDxXXG+mr1Whjg3eB8VR5qZHU5n0JbNcsCj0ClqCRIS46WIae69HkSKHZLLv6JcatlXe4qJe1sGbirdeNeiXcsGLssOtK2cPYNkfepMpkE+TBakBqkzkD/2e8xlPSQCYe9TqH6CeUWoTRd2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=M7nrpeQe; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745834921; c=relaxed/simple;
+	bh=lr6pQ3NIoD+lRzXdXbL+Byvxr/QgEuEyFJ7ZHAW6OTs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=jms9nBwEZzPieZAPkh3n64RSgnr7wChsfNDNKrecn09TWpw+dxTYxyid5jHfGNGUszXp6WOtRM+u9YlHJUhY8xkxrIGcsZNTAiGbzSiPJibiCjZgT9rIKihloNPvXaOsM+5lfXOTuu66alj3FijMv5h0Pke6rkLVvVomnwuNGWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n0pN73mO; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="M7nrpeQe"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53S8fBf7010204;
-	Mon, 28 Apr 2025 10:07:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=eWaIen6eo2SXPif9Yt6V2b
-	lg9we19vELALYOzhSIwtc=; b=M7nrpeQeE08a79PiuiT/onuZBlKondtEc4KlAX
-	y2XiCzDCeYv3VtRL+e6xNaRWjsAcI69yogdvdVJ0CpBGJfZ8hbBBQcXU0ciLrltW
-	mU18z/0hRRQh3q7u5pn8zNrkv3ufYPQiQdd6A37BKc1W7ccascZ13kiTqAFLSaT6
-	lXQZVK22qhR5wVWrTKPfgRZrKMJ+P++4/Zux26LOhoa/aRAjOiJH3LOvV0ChE0uU
-	meZFgXnQpfewT7fByQq8wiL9KXOXCFqSmkvKW/WlwKm5yAzWUXqPm3HzOt3R49F+
-	j75blA1+uIEVLhr7AMc6zLH2siVQIY0He0fUi8ZwxeQdKEDA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 468pevfu88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 10:07:06 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53SA755w003634
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Apr 2025 10:07:05 GMT
-Received: from hyiwei-gv.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 28 Apr 2025 03:06:59 -0700
-From: Huang Yiwei <quic_hyiwei@quicinc.com>
-To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <bp@alien8.de>
-CC: Huang Yiwei <quic_hyiwei@quicinc.com>, <xueshuai@linux.alibaba.com>,
-        <quic_aiquny@quicinc.com>, <quic_satyap@quicinc.com>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@quicinc.com>,
-        <kernel@oss.qualcomm.com>
-Subject: [PATCH] firmware: SDEI: Allow sdei initialization without ACPI_APEI_GHES
-Date: Mon, 28 Apr 2025 17:56:23 +0800
-Message-ID: <20250428095623.3220369-1-quic_hyiwei@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n0pN73mO"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0378941E0D;
+	Mon, 28 Apr 2025 10:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745834916;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EyLLSu+6S+6dxer7LO6vuNlydixelSCtlsd/r01CLYw=;
+	b=n0pN73mOyqcHetOyty577p3pErAzkt7nOjTmTs7YgE7Q0kFnEUjpP51kQxEZbEasxxXrt7
+	JLvkjuOt0AXoXFzIgQigzMagk7hFGPyQUdle3Zb9jKfyz12z4ip3NeyasSIldXmsRciGHI
+	DAPPFmRMZw65TNO0ONyFX1B9VOWdBPbWVfFQRxq7GDgZTyiOu6KiIQmtgUPrBgjq25ltX4
+	fXs7Qr6/wadKGI1e/wzLtxDQu6R/a1PPKI1hnCq8qK3a+JQ9bdUmnQfv6UUGKYpoRgrzG2
+	3kbgk9SijtBUMuGij0XV/jKboUCdiajElMI6QPih9raiz1GLhgDuUXF1++0s5Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: J4vdveoOh9iAt7PvfjFwRV7BSYaA87bJ
-X-Authority-Analysis: v=2.4 cv=aeBhnQot c=1 sm=1 tr=0 ts=680f534a cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=SRrdq9N9AAAA:8 a=COk6AnOGAAAA:8
- a=ODOW-txAOSA8bPpV2xoA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: J4vdveoOh9iAt7PvfjFwRV7BSYaA87bJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDA4MyBTYWx0ZWRfX1WcCnLhv2G4G qk+Is7tNLX0h15/gqmvE97xI7941ISJfzPn9Y0giX7IRIHDRlhz8M2f2A7myxmdd0ZnEUYpjEEn iDcOMigECOaf2pKNQsWPgM75w5bgACdFm0Gny75mpgvvmcZft2lVas5HOnmfkpbbytDObirsLeE
- iZ55j8U3aMpRIUjcKM8DbBr8WOoVH8D3hz+GieLZErHRfztbRhRo7sciCX46KHtPOhJgzeFkkaP 0K8D1YFWv03WUP7A/yH2HTDvLBjeBH3X5OOxgxCzRhGsWT6C2/RuG8pjSmKdDj2aIqxiUjv2qST WdAXeX/HIFchjGd3xuCJsb6FdcaKzpkZ/y8Q2TZIpLIZXpNifstrivr3NZiO8VSdYwJ+leC0/+f
- 5xfjQUNaKB3QS0KtYR03DiqK6BR/9QiTh+/mrPjdOhInnI/00NpAk+byp4LqjKhPijoLA3s9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 spamscore=0
- mlxlogscore=537 phishscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504280083
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 28 Apr 2025 12:08:32 +0200
+Message-Id: <D9I6TQN2I6B1.QC4FFHEWAURZ@bootlin.com>
+Cc: "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
+ <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH RFC bpf-next 3/4] bpf/selftests: add tests to validate
+ proper arguments alignment on ARM64
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: "Eduard Zingerman" <eddyz87@gmail.com>, "Alexei Starovoitov"
+ <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
+ Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu"
+ <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
+ <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
+ <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
+ <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
+ Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
+ <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-3-0a32fe72339e@bootlin.com>
+ <3a16fae0346d4f733fb1a67ae6420d8bf935dbd8.camel@gmail.com>
+In-Reply-To: <3a16fae0346d4f733fb1a67ae6420d8bf935dbd8.camel@gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelkeehiefhfeehvefhtdegueelkeehffffffeuvdekkeekuddvueeguefgieeukeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdelpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhnhdrfhgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeihohhnghhhohhnghdrshhonhhgsehlihhnuhigrdguvghv
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-SDEI usually initialize with the ACPI table, but on platforms where
-ACPI is not used, the SDEI feature can still be used to handle
-specific firmware calls or other customized purposes. Therefore, it
-is not necessary for ARM_SDE_INTERFACE to depend on ACPI_APEI_GHES.
+Hello Eduard,
 
-In commit dc4e8c07e9e2 ("ACPI: APEI: explicit init of HEST and GHES
-in acpi_init()"), to make APEI ready earlier, sdei_init was moved
-into acpi_ghes_init instead of being a standalone initcall, adding
-ACPI_APEI_GHES dependency to ARM_SDE_INTERFACE. This restricts the
-flexibility and usability of SDEI.
+On Mon Apr 28, 2025 at 9:01 AM CEST, Eduard Zingerman wrote:
+> On Fri, 2025-04-11 at 22:32 +0200, Alexis Lothor=C3=A9 (eBPF Foundation) =
+wrote:
+>> When dealing with large types (>8 bytes), ARM64 trampolines need to take
+>> extra care about the arguments alignment to respect the calling
+>> convention set by AAPCS64.
+>>=20
+>> Add two tests ensuring that the BPF trampoline arranges arguments with
+>> the relevant layout. The two new tests involve almost the same
+>> arguments, except that the second one requires a more specific alignment
+>> to be set by the trampoline when preparing arguments before calling the
+>> the target function.
+>>=20
+>> Signed-off-by: Alexis Lothor=C3=A9 (eBPF Foundation) <alexis.lothore@boo=
+tlin.com>
+>> ---
+>
+> [...]
+>
+>> +SEC("fentry/bpf_testmod_test_struct_arg_11")
+>> +int BPF_PROG2(test_struct_many_args_9, struct bpf_testmod_struct_arg_5,=
+ a,
+>> +	      struct bpf_testmod_struct_arg_5, b,
+>> +	      struct bpf_testmod_struct_arg_5, c,
+>> +	      struct bpf_testmod_struct_arg_5, d, int, e,
+>> +	      struct bpf_testmod_struct_arg_5, f)
+>
+> Hello Alexis,
+>
+> I'm trying to double check the error you've seen for x86.
 
-This patch corrects the dependency in Kconfig and allows the
-initialization of SDEI without ACPI_APEI_GHES enabled.
+Thanks for taking a look at this.
 
-Fixes: dc4e8c07e9e2 ("ACPI: APEI: explicit init of HEST and GHES in apci_init()")
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
----
-Link: https://lore.kernel.org/all/20230906130900.12218-1-schspa@gmail.com/
+> I see that tracing_struct/struct_many_args fails with assertion:
+> "test_struct_many_args:FAIL:t11:f unexpected t11:f: actual 35 !=3D expect=
+ed 43".
+> Could you please help me understand this test?
 
-Current patch has been verified in the following scenarios:
-  - ACPI_APEI_GHES enabled and ARM_SDE_INTERFACE enabled
-  - ACPI_APEI_GHES disabled and ARM_SDE_INTERFACE enabled
-  - ACPI_APEI_GHES disabled and ARM_SDE_INTERFACE disabled
-  - SDEI works well with DT node and compatiable firmware when
-    ACPI_APEI_GHES disabled
+Sure. When we attach fentry/fexit programs to a kernel function,  a small
+trampoline is generated to handle the attached programs execution. This
+trampoline has to:
+1. properly read and aggregate the functions arguments into a bpf tracing
+context. Those arguments comes from registers, and possibly from the stack
+if not all function arguments fit in registers
+2. if the trampoline is in charge of calling the target function (that's
+the case for example when we have both a fentry and a fexit programs
+attached), it must prepare the arguments for the target function, by
+filling again the registers, and possibly pushing the additional arguments
+on the stack at the relevant offset.
 
-The scenario where CONFIG_ACPI enabled but not used has not been
-considered in this patch due to the absence of such platform.
+This test is about validating the first point: ensuring that the trampoline
+has correctly read the initial arguments from the target function and
+forwarded them to the fentry program. So the actual test triggers the
+targeted function, it triggers the attached fentry program which record the
+values passed by the trampoline in t11_a, t11_b, etc, and then the
+test checks back that those "spied" values are the one that it has actually
+passed when executing the target function.
 
- drivers/acpi/apei/Kconfig   | 1 +
- drivers/firmware/Kconfig    | 1 -
- drivers/firmware/arm_sdei.c | 9 +++++++--
- include/linux/arm_sdei.h    | 4 ++--
- 4 files changed, 10 insertions(+), 5 deletions(-)
+> The function listened to is defined as accepting 'struct bpf_testmod_stru=
+ct_arg_7',
+> at the same time this function uses 'struct bpf_testmod_struct_arg_5'.
 
-diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
-index 3cfe7e7475f2..070c07d68dfb 100644
---- a/drivers/acpi/apei/Kconfig
-+++ b/drivers/acpi/apei/Kconfig
-@@ -23,6 +23,7 @@ config ACPI_APEI_GHES
- 	select ACPI_HED
- 	select IRQ_WORK
- 	select GENERIC_ALLOCATOR
-+	select ARM_SDE_INTERFACE if ARM64
- 	help
- 	  Generic Hardware Error Source provides a way to report
- 	  platform hardware errors (such as that from chipset). It
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index aadc395ee168..7df19d82aa68 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -31,7 +31,6 @@ config ARM_SCPI_PROTOCOL
- config ARM_SDE_INTERFACE
- 	bool "ARM Software Delegated Exception Interface (SDEI)"
- 	depends on ARM64
--	depends on ACPI_APEI_GHES
- 	help
- 	  The Software Delegated Exception Interface (SDEI) is an ARM
- 	  standard for registering callbacks from the platform firmware
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index 3e8051fe8296..ddb10389b340 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -1062,14 +1062,14 @@ static bool __init sdei_present_acpi(void)
- 	return true;
- }
- 
--void __init sdei_init(void)
-+int __init sdei_init(void)
- {
- 	struct platform_device *pdev;
- 	int ret;
- 
- 	ret = platform_driver_register(&sdei_driver);
- 	if (ret || !sdei_present_acpi())
--		return;
-+		return ret;
- 
- 	pdev = platform_device_register_simple(sdei_driver.driver.name,
- 					       0, NULL, 0);
-@@ -1079,7 +1079,12 @@ void __init sdei_init(void)
- 		pr_info("Failed to register ACPI:SDEI platform device %d\n",
- 			ret);
- 	}
-+
-+	return ret;
- }
-+#ifndef CONFIG_ACPI_APEI_GHES
-+subsys_initcall_sync(sdei_init);
-+#endif
- 
- int sdei_event_handler(struct pt_regs *regs,
- 		       struct sdei_registered_event *arg)
-diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-index 255701e1251b..1a54f0eebb0d 100644
---- a/include/linux/arm_sdei.h
-+++ b/include/linux/arm_sdei.h
-@@ -46,12 +46,12 @@ int sdei_unregister_ghes(struct ghes *ghes);
- /* For use by arch code when CPU hotplug notifiers are not appropriate. */
- int sdei_mask_local_cpu(void);
- int sdei_unmask_local_cpu(void);
--void __init sdei_init(void);
-+int __init sdei_init(void);
- void sdei_handler_abort(void);
- #else
- static inline int sdei_mask_local_cpu(void) { return 0; }
- static inline int sdei_unmask_local_cpu(void) { return 0; }
--static inline void sdei_init(void) { }
-+static inline int sdei_init(void) { return 0; }
- static inline void sdei_handler_abort(void) { }
- #endif /* CONFIG_ARM_SDE_INTERFACE */
- 
--- 
-2.25.1
+That's not an accidental mistake, those are in fact the same definition.
+bpf_testmod_struct_arg_7 is the kernel side definition in bpf_testmod.c:
+
+struct bpf_testmod_struct_arg_7 {
+	__int128 a;
+};
+
+and struct bpf_testmode_struct_arg_5 is the one defined in the bpf test
+program:
+
+struct bpf_testmod_struct_arg_5 {
+	__int128 a;
+};
+
+I agree while being correct, this is confusing :/ I have kind of blindly
+applied the logic I have observed in here for declaring test structs, and
+so declared it twice (in kernel part and in bpf part), just incrementing
+the index of the last defined structure. But I guess it could benefit from
+some index syncing, or better, some refactoring to properly share those
+declarations. I'll think about it for a new rev.
+
+> Nevertheless, the assertion persists even with correct types.
+
+So I digged a bit further to better share my observations here. This is the
+function stack when entering the trampoline after having triggered the
+target function execution:
+
+(gdb) x/64b $rbp+0x18
+0xffffc9000015fd60:     41      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd68:     0       0       0       0       0       0       0  =
+     0
+0xffffc9000015fd70:     42      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd78:     35      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd80:     43      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd88:     0       0       0       0       0       0       0  =
+     0
+
+We see the arguments that did not fit in registers, so d, e and f.
+
+This is the ebpf context generated by the trampoline for the fentry
+program, from the content of the stack above + the registers:
+
+(gdb) x/128b $rbp-60
+0xffffc9000015fce8:     38      0       0       0       0       0       0  =
+     0
+0xffffc9000015fcf0:     0       0       0       0       0       0       0  =
+     0
+0xffffc9000015fcf8:     39      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd00:     0       0       0       0       0       0       0  =
+     0
+0xffffc9000015fd08:     40      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd10:     0       0       0       0       0       0       0  =
+     0
+0xffffc9000015fd18:     41      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd20:     0       0       0       0       0       0       0  =
+     0
+0xffffc9000015fd28:     42      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd30:     35      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd38:     43      0       0       0       0       0       0  =
+     0
+0xffffc9000015fd40:     37      0       0       0       0       0       0  =
+     0
+
+So IIUC, this is wrong because the "e" variable in the bpf program being
+an int (and about to receive value 42), it occupies only 1 "tracing context
+8-byte slot", so the value 43 (representing the content for variable f),
+should be right after it, at 0xffffc9000015fd30. What we have instead is a
+hole, very likely because we copied silently the alignment from the
+original function call (and I guess this 35 value is a remnant from the
+previous test, which uses values from 27 to 37)
+
+Regardless of this issue, based on discussion from last week, I think I'll
+go for the implementation suggested by Alexei: handling the nominal cases,
+and detecting and blocking the non trivial cases (eg: structs passed on
+stack). It sounds reasonable as there seems to be no exisiting kernel
+function currently able to trigger those very specific cases, so it could
+be added later if this changes.
+
+Alexis
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
