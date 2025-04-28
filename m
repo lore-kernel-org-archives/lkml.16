@@ -1,130 +1,75 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B17CE201113
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA53266F08
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 12:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745843055; cv=none; b=WaMspkAWdUy1Y7EvtIT/BE1zOUzVTSWiV/P2IZD1H4YB7CfPfIdYbRzLJfvATNSHOsjyXoy3mEETheEnm4dKOBnF7FZ2iphOPswc6o1KVwKSkBJGCVsS9jFVyBdwAIMd96s1LtwqPp9OQtJrtsc60V+xbKEMJnZeKGZy92D8Eh4=
+	t=1745843077; cv=none; b=NHfasmLidM8S3alPTyUY4WxIMqk89bLFOlxdPXlW1pxy5ql/gKVsrG2GP9/m+ruiHWtLttT/Qz5zdrzNNsPTFrO0i/8c3aGEdgeyUXPfyw0Nw5Qnh6x5RznBCBuxzBZNY4Nd/R1mYmXQQsEKAEiKlgmKHRv1Y+d3kei36ZRJxvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745843055; c=relaxed/simple;
-	bh=WqRsuCDnUVhmDtSvUR6iirR6z5lLYozWt1SFYrUy48Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XhjAUNEXFt8NHEcbC/23EdrhppCaiKlRIC5dt7Fanp00yfZJwKZyq3nz/A/+iSj5XzQiDnMZfAXLJZKuPjKfqOmwGpRCI1XBJuHr53NXcl7BMb/NhwWBsWPDK+2EuKtMq7btziT6+UPnqsb9EJbQETiCA4GrVDJLHnZKvYjV8IY=
+	s=arc-20240116; t=1745843077; c=relaxed/simple;
+	bh=KmIXJS/6YcffXQD7u5MajtiR00J5pbjGugvwWwumVbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DuJFCZ4Pe/ddvPE+BmRNTFmSRXX5mEqCX/coYgqxwdE44s2JGAwn979Ll1ZKTCIDnTal3uOrNd64DNByX+RKieQ7iUH9FQB/O5/yzew85vM2eQQXuBg758GCYjcLIW746q9/p6HxhskBm4UsCdXkBzgov3BOBwFtVIJ3X4hfexc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 769EC1516;
-	Mon, 28 Apr 2025 05:24:06 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85DFA3F66E;
-	Mon, 28 Apr 2025 05:24:12 -0700 (PDT)
-Date: Mon, 28 Apr 2025 13:24:08 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Mike Leach <mike.leach@linaro.org>
-Cc: Yabin Cui <yabinc@google.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Jie Gan <quic_jiegan@quicinc.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coresight: trbe: Save/restore state across CPU low power
- state
-Message-ID: <20250428122408.GD551819@e132581.arm.com>
-References: <20250423230046.1134389-1-yabinc@google.com>
- <731dbb1d-e804-4678-9b8c-40f6395e94a7@arm.com>
- <CALJ9ZPNExud7ZQ-ZgpVtPJHUsAyJv_O-CH8mCa6gUyu1E1T8zg@mail.gmail.com>
- <CAJ9a7VhMJDMbowRuB5zgjQw+UfxP7eumZX1SKF2MJQ2_2NebHA@mail.gmail.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62F821516;
+	Mon, 28 Apr 2025 05:24:29 -0700 (PDT)
+Received: from [10.163.50.165] (unknown [10.163.50.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BE063F66E;
+	Mon, 28 Apr 2025 05:24:30 -0700 (PDT)
+Message-ID: <6914fe24-e36d-4d8c-b664-73ee4195c15f@arm.com>
+Date: Mon, 28 Apr 2025 17:54:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ9a7VhMJDMbowRuB5zgjQw+UfxP7eumZX1SKF2MJQ2_2NebHA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mm/debug_page_alloc: improve error message for
+ invalid guardpage minorder
+To: Ye Liu <ye.liu@linux.dev>, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, rppt@kernel.org,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, david@redhat.com,
+ harry.yoo@oracle.com, riel@surriel.com, vbabka@suse.cz, liuye@kylinos.cn
+References: <20250427100442.958352-1-ye.liu@linux.dev>
+ <20250427100442.958352-3-ye.liu@linux.dev>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250427100442.958352-3-ye.liu@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi all,
 
-On Mon, Apr 28, 2025 at 11:53:26AM +0100, Mike Leach wrote:
 
-[...]
-
-> > > > @@ -362,6 +362,10 @@ enum cs_mode {
-> > > >   * @alloc_buffer:    initialises perf's ring buffer for trace collection.
-> > > >   * @free_buffer:     release memory allocated in @get_config.
-> > > >   * @update_buffer:   update buffer pointers after a trace session.
-> > > > + * @percpu_save:     saves state when CPU enters idle state.
-> > > > + *                   Only set for percpu sink.
-> > > > + * @percpu_restore:  restores state when CPU exits idle state.
-> > > > + *                   only set for percpu sink.
-> > > >   */
-> > > >  struct coresight_ops_sink {
-> > > >       int (*enable)(struct coresight_device *csdev, enum cs_mode mode,
-> > > > @@ -374,6 +378,8 @@ struct coresight_ops_sink {
-> > > >       unsigned long (*update_buffer)(struct coresight_device *csdev,
-> > > >                             struct perf_output_handle *handle,
-> > > >                             void *sink_config);
-> > > > +     void (*percpu_save)(struct coresight_device *csdev);
-> > > > +     void (*percpu_restore)(struct coresight_device *csdev);
-> > >
-> > > Again - why this percpu_* prefix ?
-> > >
-> > > >  };
-> > > >
-> > > >  /**
+On 4/27/25 15:34, Ye Liu wrote:
+> From: Ye Liu <liuye@kylinos.cn>
 > 
-> I do not think this is the best approach.
+> When an invalid debug_guardpage_minorder value is provided, include the
+> user input in the error message. This helps users and developers diagnose
+> configuration issues more easily.
 > 
-> The TRBE driver has its own power management registration functions,
-> so is it not possible for the save and restore should be handled
-> there, through a PM notifier, just as the ETM/ETE is?
+> No functional change.
 > 
-> Drop the unnecessary DT entry - TRBE is a per cpu architectural device
-> - if a TRBE is present, we know it will power down with the PE.
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+> ---
+>  mm/debug_page_alloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> The CoreSight architecture permits an ETE to drive trace to an
-> external sink - so the TRBE might be present but unused, therefore
-> hooking into a source driver that may not be driving trace into the
-> device does not seem wise..
+> diff --git a/mm/debug_page_alloc.c b/mm/debug_page_alloc.c
+> index d46acf989dde..6a26eca546c3 100644
+> --- a/mm/debug_page_alloc.c
+> +++ b/mm/debug_page_alloc.c
+> @@ -23,7 +23,7 @@ static int __init debug_guardpage_minorder_setup(char *buf)
+>  	unsigned long res;
+>  
+>  	if (kstrtoul(buf, 10, &res) < 0 ||  res > MAX_PAGE_ORDER / 2) {
+> -		pr_err("Bad debug_guardpage_minorder value\n");
+> +		pr_err("Bad debug_guardpage_minorder value: %s\n", buf);
+>  		return 0;
+>  	}
+>  	_debug_guardpage_minorder = res;
 
-Sorry I jumped in a bit late (I saw the patch at last week and it is
-on my review list).
 
-I would suggest to hold on for this patch.  I am refactoring CPU PM and
-hotplug in CoreSight based on the CoreSight path.
-
-The idea is when we do CPU power management for CoreSight devices, we
-cannot simply control individual devices.  Alternatively, we need to
-control logics based on the linkages on CoreSight path as it can reflect
-dependencies crossing the components.  For example, for a CoreSight
-path, when running into CPU low power state, we need firstly disable
-tracer, then links, and at the end sinks.  When CPU resumes back, we
-need to use the reversed ordering for turning on devices.
-
-As a result, except the tracers (ETM / ETE) should be saved and
-restored contexts during CPU power states, other components on the
-path will be controlled by traversing CoreSight paths.  The benefit is
-if a component (e.g., a link or a sink module) is shared by multiple
-CoreSight paths, then the component can be disabled or enabled based on
-reference counter.
-
-I know I am a bit lagged - as I also need to support the locking on
-CoreSight paths.  Please expect in next 1~2 weeks I will send out
-patches for public review.
-
-> The TRBE PM can follow the model of the ETE / ETMv4 and save and
-> restore if currently in use.
-
-If TRBE PM is registered as a seperate PM notifier, a prominent issue is
-it cannot promise the depedency between ETE and TRBE when execute CPU
-power management.  E.g., when entering CPU idle states, ETE should be
-disabled prior to switch off TRBE, otherwise, it might cause lockup
-issue in hardware.  If ETE and TRBE register PM notifier separately,
-we cannot ensure the sequence between ETE and TRBE, this is why we need
-to do the operations based on CoreSight paths.
-
-Thanks,
-Leo
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
