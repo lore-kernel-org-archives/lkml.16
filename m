@@ -1,44 +1,41 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEC8265CD2;
-	Mon, 28 Apr 2025 11:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA00225DB1A
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 11:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841355; cv=none; b=gK1aNURunedbhAzQvK5OSGx5l4gYNeLp/eHZ+LazcmiPH7/gK3A/KLlwcY0ETNgMuF+sXDxy97NsGhmyq7wK5li72oEHxgACE6Ogq0bF6GYPE9gbhh4ZcraDoVMWdj4+P4LuSY0WfcsYsuKHNY+DTWGjZwSoZbHztDwXuw/11/w=
+	t=1745841408; cv=none; b=Oc9LDZcBzyuqW2QsAIZ7KPxqQpfgMl83Kthvl+jGO9VvoW3KGQGvShmylk1RIRLH16DFAwMWUNPhER1i6ERBi6UjHN1oIWYiE93KX9MzfEdR1zbyx1I6AOl9O0SUoQ0VD2XN/GCOKkiTSaJanydMwLQXjFcGo6mRuUvYouvjd5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841355; c=relaxed/simple;
-	bh=bs4sVu1SDPDV04Utncap5yMSBI6QPAR58r0OfdUFcg0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CXBivMs5vBhDngX7AT+9Y0ush7NVMxo1Rj8dFdKBiDTPue3LIY/yerfhgyfkLNHuHjFjhkIT1p9wtVnOEN20CtWtS/WbmWfnQug7d1VS+pS/VAG7DwVJ5a9v6QnofR2Bexp7vgSOfV8ql8d1duQuDTpGzfxUom/S/Tskk4Xi1Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: zesmtpsz3t1745841187td2361a33
-X-QQ-Originating-IP: ys7IB8NA/ghcXVMpoph0BeV5U9UDEae97i3K2hj40cY=
-Received: from localhost.localdomain ( [175.9.43.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 28 Apr 2025 19:53:05 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 18270107804818011286
-EX-QQ-RecipientCnt: 9
-From: Zhou Bowen <zhoubowen@kylinsec.com.cn>
-To: horms@kernel.org
-Cc: Shyam-sundar.S-k@amd.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	zhoubowen@kylinsec.com.cn
-Subject: Re: [PATCH] amd-xgbe: Add device IDs for Hygon 10Gb ethernet controller
-Date: Mon, 28 Apr 2025 19:50:44 +0800
-Message-Id: <20250428115044.2472511-1-zhoubowen@kylinsec.com.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20250416185218.GY395307@horms.kernel.org>
-References: <20250415132006.11268-1-zhoubowen@kylinsec.com.cn>
+	s=arc-20240116; t=1745841408; c=relaxed/simple;
+	bh=wzm1eXQ1YFCUhGLq6tOsKVMzw5DGOSWMdTKgN5XiChM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YlJqzg5EaqByPQr8/7KpyI+lVIJczDGwy1E2IyHhI45BeRJetZOkhDDVNArkKfB1jxKlygTcUiglYjDpXiQYYLJlnKAiHbKwiBXpn5JXayAkzqoBSRU7jaitanLC6rzK5Diyhy2NHFkl6/z2Hi4ieGYPzzoOixrdk4GFOCTicGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:b9c4:1670:abc0:a1fc])
+	by albert.telenet-ops.be with cmsmtp
+	id ibwc2E0084Aed8c06bwcF2; Mon, 28 Apr 2025 13:56:38 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1u9N6B-00000000F7M-0bTd;
+	Mon, 28 Apr 2025 13:56:36 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1u9N5x-00000006xI6-3POW;
+	Mon, 28 Apr 2025 13:56:21 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Srinivas Kandagatla <srini@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] nvmem: Remove unused nvmem cell table support
+Date: Mon, 28 Apr 2025 13:56:15 +0200
+Message-ID: <edc7373f33955f6dc4c9e6268afcb1a40566b39b.1745840884.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,52 +43,204 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NiYVgwQNWo+48meKEqbT6gaYaTShYr6EMXuDvC7wDClzUxwDeUyB4dAs
-	fWnjh8tpejbHs6rHe0JPgLJVt4RpQY1/ofzmTtVO0GEaKp9fUwDlgjLX6srp+tpnewo1nbs
-	e6LTmGdAR0fR5ujIa0n9HEQYDpTan6qsuViWcmUxWTUN4GgVlJXG16b/BMmxgIY6fOR4c2e
-	uXUIfmdtz9RQvlPOkBFzv9bKMXEwWcrBJ+Z5UBAbVwO6cKGpJNaAxxZ0/5iIx4Zd2aEMVw4
-	ON1G8iEPzamYYoYREzo0GONT7Nt8TMBHBKU5Zi/wCGr3qec8mz+D/y9WbeP5Z/mUHtX7tuQ
-	MDSp24Tt+zaf+hS/x9FXC+lxeHxzJBh4YZsDjxPOwqunwADe2UOKHAYxKb5iqW2lmUiBBiQ
-	6SHrYcm79VBsOGNCTxqnoji8TWrgkTxqfbtB69K3YoPe6rNXLqGeDIZ4ijjUJRppgOHw6vI
-	NzfwDs9gjUhDoga+Zpyd+8fC2zZtc8JbeKNRaIkAmr+fY/JSyZLN5LNQ+8ph9/ADmYMmnQF
-	r6Vbu+xw5r7xN1O0rPGlHQWZXHL2J9nah6MuQXZ1IEACV7sXnWFIPHopPqgKfoIHxKMxr2k
-	1QFqnekv6uBno8rBk9xQpw5IEetDJmu2NwGfbj7eCXjkJ8krnmNGgQ6EwD8PNyzCkWEyVt5
-	2SU/q5Ke9K+Mt3QQmtl5y1ya3mFJXCw+k00C26RO0va+MsFrcD1Wa/kTMWrkPs7YpPYDrXO
-	iYLerDB6KZkyVRA0HZfoETY1I8LBCYdL66dCTGTRfn4vWxPAagwauU7ZN81W+mOHzWXAABn
-	X7i8xzkQSAUj13DNwRWlNiZPr/c9PPm6R+qxynlBH8hj2/U8XFZHAV8T1FcuhB2tdTRr51n
-	mo8Inffsbgf3TJecx9u5FxFCN4PCK6Gh41ebvdiEU6+qQwnkSWO4JlRD85perTZMBjkzXpk
-	pHs4cUTgNCrwV5XVeK7/ipZHKMI8j7OyZr5ZcH0vNGJ2U18K90mkCVJZhEOaunF9dsa/g+T
-	QnvLAC5JWg0JKy8lqWEduAl4N5Hp9P40dx7mLVKz/PStkPIDThhSjFS/uDXLbBlKPZFzTur
-	jzKDS3f6pp/HDdwXJWOpVhvx30hrOSJtfIdvvkNk828
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
 
-Hi Simon,
+Board files are deprecated by DT, and the last user of
+nvmem_add_cell_table() was removed by commit 2af4fcc0d3574482 ("ARM:
+davinci: remove unused board support") in v6.3.  Hence remove all
+support for nvmem cell tables, and update the documentation.
 
-Thank you for reviewing the patch!
+Device drivers can still register a single cell using
+nvmem_add_one_cell() (which was not documented before).
 
->On Tue, Apr 15, 2025 at 09:20:06PM +0800, zhoubowen wrote:
->> Add device IDs for Hygon 10Gb Ethernet controller.
->
->Am I correct in assuming that with this change in place these devices
->function correctly with this driver without further modification to it?
->
-
-Yes, this patch has been validated on the Hygon C86-3G platform with the on-board 10GbE NIC.
-It works properly (link up/down, data transfer, etc.) without any additional modifications.
-
->> Signed-off-by: zhoubowen <zhoubowen@kylinsec.com.cn>
->
->Please consider adding a space between your first and family name,
->and capitalising each name in the Signed-off-by and From of
->the patch. e.g. Zhou Bowen
-
-Thanks for your comments, I will fix it,and the corresponding patch will be reissued next time.
-
---
-Best regards,
-Zhou Bowen
-
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
+ Documentation/driver-api/nvmem.rst | 14 ++----
+ drivers/nvmem/core.c               | 68 ------------------------------
+ include/linux/nvmem-provider.h     | 24 -----------
+ 3 files changed, 4 insertions(+), 102 deletions(-)
+
+diff --git a/Documentation/driver-api/nvmem.rst b/Documentation/driver-api/nvmem.rst
+index 5d9500d21ecc4254..790e2dc652c00c3a 100644
+--- a/Documentation/driver-api/nvmem.rst
++++ b/Documentation/driver-api/nvmem.rst
+@@ -59,10 +59,10 @@ For example, a simple nvram case::
+ 	devm_nvmem_register(&config);
+   }
+ 
+-Users of board files can define and register nvmem cells using the
+-nvmem_cell_table struct::
++Device drivers can define and register an nvmem cell using the nvmem_cell_info
++struct::
+ 
+-  static struct nvmem_cell_info foo_nvmem_cells[] = {
++  static const struct nvmem_cell_info foo_nvmem_cell = {
+ 	{
+ 		.name		= "macaddr",
+ 		.offset		= 0x7f00,
+@@ -70,13 +70,7 @@ nvmem_cell_table struct::
+ 	}
+   };
+ 
+-  static struct nvmem_cell_table foo_nvmem_cell_table = {
+-	.nvmem_name		= "i2c-eeprom",
+-	.cells			= foo_nvmem_cells,
+-	.ncells			= ARRAY_SIZE(foo_nvmem_cells),
+-  };
+-
+-  nvmem_add_cell_table(&foo_nvmem_cell_table);
++  int nvmem_add_one_cell(nvmem, &foo_nvmem_cell);
+ 
+ Additionally it is possible to create nvmem cell lookup entries and register
+ them with the nvmem framework from machine code as shown in the example below::
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index fff85bbf0ecd0f63..5070390c9f076a63 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -47,9 +47,6 @@ struct nvmem_cell {
+ static DEFINE_MUTEX(nvmem_mutex);
+ static DEFINE_IDA(nvmem_ida);
+ 
+-static DEFINE_MUTEX(nvmem_cell_mutex);
+-static LIST_HEAD(nvmem_cell_tables);
+-
+ static DEFINE_MUTEX(nvmem_lookup_mutex);
+ static LIST_HEAD(nvmem_lookup_list);
+ 
+@@ -705,41 +702,6 @@ int nvmem_unregister_notifier(struct notifier_block *nb)
+ }
+ EXPORT_SYMBOL_GPL(nvmem_unregister_notifier);
+ 
+-static int nvmem_add_cells_from_table(struct nvmem_device *nvmem)
+-{
+-	const struct nvmem_cell_info *info;
+-	struct nvmem_cell_table *table;
+-	struct nvmem_cell_entry *cell;
+-	int rval = 0, i;
+-
+-	mutex_lock(&nvmem_cell_mutex);
+-	list_for_each_entry(table, &nvmem_cell_tables, node) {
+-		if (strcmp(nvmem_dev_name(nvmem), table->nvmem_name) == 0) {
+-			for (i = 0; i < table->ncells; i++) {
+-				info = &table->cells[i];
+-
+-				cell = kzalloc(sizeof(*cell), GFP_KERNEL);
+-				if (!cell) {
+-					rval = -ENOMEM;
+-					goto out;
+-				}
+-
+-				rval = nvmem_cell_info_to_nvmem_cell_entry(nvmem, info, cell);
+-				if (rval) {
+-					kfree(cell);
+-					goto out;
+-				}
+-
+-				nvmem_cell_entry_add(cell);
+-			}
+-		}
+-	}
+-
+-out:
+-	mutex_unlock(&nvmem_cell_mutex);
+-	return rval;
+-}
+-
+ static struct nvmem_cell_entry *
+ nvmem_find_cell_entry_by_name(struct nvmem_device *nvmem, const char *cell_id)
+ {
+@@ -1024,10 +986,6 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+ 			goto err_remove_cells;
+ 	}
+ 
+-	rval = nvmem_add_cells_from_table(nvmem);
+-	if (rval)
+-		goto err_remove_cells;
+-
+ 	if (config->add_legacy_fixed_of_cells) {
+ 		rval = nvmem_add_cells_from_legacy_of(nvmem);
+ 		if (rval)
+@@ -2127,32 +2085,6 @@ int nvmem_device_write(struct nvmem_device *nvmem,
+ }
+ EXPORT_SYMBOL_GPL(nvmem_device_write);
+ 
+-/**
+- * nvmem_add_cell_table() - register a table of cell info entries
+- *
+- * @table: table of cell info entries
+- */
+-void nvmem_add_cell_table(struct nvmem_cell_table *table)
+-{
+-	mutex_lock(&nvmem_cell_mutex);
+-	list_add_tail(&table->node, &nvmem_cell_tables);
+-	mutex_unlock(&nvmem_cell_mutex);
+-}
+-EXPORT_SYMBOL_GPL(nvmem_add_cell_table);
+-
+-/**
+- * nvmem_del_cell_table() - remove a previously registered cell info table
+- *
+- * @table: table of cell info entries
+- */
+-void nvmem_del_cell_table(struct nvmem_cell_table *table)
+-{
+-	mutex_lock(&nvmem_cell_mutex);
+-	list_del(&table->node);
+-	mutex_unlock(&nvmem_cell_mutex);
+-}
+-EXPORT_SYMBOL_GPL(nvmem_del_cell_table);
+-
+ /**
+  * nvmem_add_cell_lookups() - register a list of cell lookup entries
+  *
+diff --git a/include/linux/nvmem-provider.h b/include/linux/nvmem-provider.h
+index 515676ebe59875fa..615a560d9edb84d1 100644
+--- a/include/linux/nvmem-provider.h
++++ b/include/linux/nvmem-provider.h
+@@ -137,25 +137,6 @@ struct nvmem_config {
+ 	struct device		*base_dev;
+ };
+ 
+-/**
+- * struct nvmem_cell_table - NVMEM cell definitions for given provider
+- *
+- * @nvmem_name:		Provider name.
+- * @cells:		Array of cell definitions.
+- * @ncells:		Number of cell definitions in the array.
+- * @node:		List node.
+- *
+- * This structure together with related helper functions is provided for users
+- * that don't can't access the nvmem provided structure but wish to register
+- * cell definitions for it e.g. board files registering an EEPROM device.
+- */
+-struct nvmem_cell_table {
+-	const char		*nvmem_name;
+-	const struct nvmem_cell_info	*cells;
+-	size_t			ncells;
+-	struct list_head	node;
+-};
+-
+ /**
+  * struct nvmem_layout - NVMEM layout definitions
+  *
+@@ -190,9 +171,6 @@ void nvmem_unregister(struct nvmem_device *nvmem);
+ struct nvmem_device *devm_nvmem_register(struct device *dev,
+ 					 const struct nvmem_config *cfg);
+ 
+-void nvmem_add_cell_table(struct nvmem_cell_table *table);
+-void nvmem_del_cell_table(struct nvmem_cell_table *table);
+-
+ int nvmem_add_one_cell(struct nvmem_device *nvmem,
+ 		       const struct nvmem_cell_info *info);
+ 
+@@ -223,8 +201,6 @@ devm_nvmem_register(struct device *dev, const struct nvmem_config *c)
+ 	return nvmem_register(c);
+ }
+ 
+-static inline void nvmem_add_cell_table(struct nvmem_cell_table *table) {}
+-static inline void nvmem_del_cell_table(struct nvmem_cell_table *table) {}
+ static inline int nvmem_add_one_cell(struct nvmem_device *nvmem,
+ 				     const struct nvmem_cell_info *info)
+ {
+-- 
+2.43.0
+
