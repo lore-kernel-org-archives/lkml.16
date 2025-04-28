@@ -1,123 +1,132 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A45CA55
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75600A55;
+	Mon, 28 Apr 2025 09:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745831643; cv=none; b=Ea7Duf1VYfLj8ZlwhWmkzJaTjBwGJNSzulwAXKh/8EguGsTDnbJNL3EZRHMax7gB6qX+CZTg7O4YzRDZHMPSTNXhDwoRae7BGk0kaY0t883j2hncerDoIEpsZH0orhgDKz5AbW18+InuP2japYNqKEGShjrL4fWmhyWjg53IkfE=
+	t=1745831679; cv=none; b=S7dFLyrn3mXzpuF4iAk5fxla83i264Tyxdg2eIq2SLlX0mN/aTRBHljMxxYD2avIBBUety1W8oD6bHa5JmumqNG/bYHwZwKZASZ9XNIphv/VVWuAnlRDlXskqmoY/XYl71cFT4GOk1t2MTJheUwMilS36Zh4Mb4rC81MHS0SjBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745831643; c=relaxed/simple;
-	bh=lpLR6PF/omX9CepkaRhE8mIQpFXnZBa6VvnVfSjfzss=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oDf3gF3++A1OUGTgACQCUx7OHTwt/LB+i6UuqmUC991V4A3AJr/Ys95NHURTwBrQP6Y4DXSbsH8Y3r7d3FRp4u+hSw+xHbe+HPmwFNkP0W6TPWpUnrC7Kn4ztiq2aaOdEwfUxkQoKSz7yoGSYbUlAZx3q74GHa1lDNdAZIlvZkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=TNcF9spK; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1745831679; c=relaxed/simple;
+	bh=3mooRQIC6lHjmcuTQZDbijgFKmau+h4oMhEwGe252X4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=smeQxHqlhf9M47mTYuxv7ausKAalONx2Hk4qsYZrQ3uXpdc9PzKYWADnp9v5SAit1aCnX3ptPCndO6l+ulGNRFqOJcMlwCMdgER5KXMl08j5KTBw/7Av9LsIb7vvflNzWig0JJL0ts1dqSTLObTbLLSZLZGu3FuhbZUIBtIITow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+II3cay; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="TNcF9spK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1745831642; x=1777367642;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pyYUZlU0kPDTIR6PqpPn1Y1eN8DjEsEk5RarAm93ECk=;
-  b=TNcF9spKnXXd0j5P2oEyIOrS4si6saQDombFzA0dqWilOj0Bk5qAvHBB
-   psDMYB6NIEfhgI4QbuJYMF/afQBMmKiGNHTUwiFKKiTW5Cjetv+RFhq04
-   T33yY7Ed+Kvo9nOGm+PuFPIw3MlBYv79ruQFp2sjeuNDKXZkIu6B0uHDZ
-   o=;
-X-IronPort-AV: E=Sophos;i="6.15,245,1739836800"; 
-   d="scan'208";a="515189629"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2025 09:13:56 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:10646]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.41.40:2525] with esmtp (Farcaster)
- id 0a8945ba-130b-4357-89ef-013a5d46b884; Mon, 28 Apr 2025 09:13:54 +0000 (UTC)
-X-Farcaster-Flow-ID: 0a8945ba-130b-4357-89ef-013a5d46b884
-Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 28 Apr 2025 09:13:52 +0000
-Received: from dev-dsk-bercantu-1c-725598d7.eu-west-1.amazon.com
- (10.253.100.253) by EX19D014EUC004.ant.amazon.com (10.252.51.182) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 28 Apr 2025
- 09:13:49 +0000
-From: "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de>
-To: <akpm@linux-foundation.org>
-CC: <bercantu@amazon.de>, <dwmw2@infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <lkp@intel.com>,
-	<rppt@kernel.org>, <yajun.deng@linux.dev>
-Subject: Re: [PATCH] mm: memblock: Fix arguments passed to memblock_set_node()
-Date: Mon, 28 Apr 2025 09:13:33 +0000
-Message-ID: <20250428091333.35120-1-bercantu@amazon.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250425180539.2b780a8b3d0958fcc2e8a500@linux-foundation.org>
-References: <20250425180539.2b780a8b3d0958fcc2e8a500@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+II3cay"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE0A1C4CEE4;
+	Mon, 28 Apr 2025 09:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745831679;
+	bh=3mooRQIC6lHjmcuTQZDbijgFKmau+h4oMhEwGe252X4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X+II3cayIGgO6GRr9Ux3EeSzND6LJbGGipMPQIpkJP6Huhdgsanttzf/8p92QeSR1
+	 lNYbUYQoBm8ck8HKqy1oOyoWfGn11VovJM5TqVxBW111/9YPYuuCRB2WSDkye7sJ+V
+	 WF6ZDmjurQgLDet2+l/QKIvAWzUUfmEwDL0eA6WcesVWeTVUXyRVvwB/qtOxZlFabc
+	 m/ZR1Gbb6pIuUfQ6tRHimrS43ndhE9N7801oywPngP3tYOApkkltNrrnibGkjCDbmp
+	 Fm8grY3pEUmfx9wfnQ9sYkC1ElbNlk37aUnMeHsKAPg1YiF6u3vcNOscs7hyOE/sPu
+	 RbhWFMvMyYwgw==
+Message-ID: <a3438b8b-0fd2-454f-a539-39aa7cfcd57b@kernel.org>
+Date: Mon, 28 Apr 2025 11:14:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D039UWB004.ant.amazon.com (10.13.138.57) To
- EX19D014EUC004.ant.amazon.com (10.252.51.182)
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] clk: samsung: exynosautov920: add cpucl1/2 clock
+ support
+To: Shin Son <shin.son@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250428084721.3832664-1-shin.son@samsung.com>
+ <CGME20250428084728epcas2p17a0253f04de15c23ab6362113a0d47bb@epcas2p1.samsung.com>
+ <20250428084721.3832664-3-shin.son@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250428084721.3832664-3-shin.son@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Sat, 26 Apr 2025 03:05:39 +0200 Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Fri, 25 Apr 2025 10:20:03 +0000 "Bernardo C. Gutierrez Cantu" <bercantu@amazon.de> wrote:
+On 28/04/2025 10:47, Shin Son wrote:
+> Register compatible and cmu_info data to support clock CPUCL1/2
+> (CPU Cluster 1 and CPU Cluster 2),
+> these provide clock for CPUCL1/2_SWTICH/CLUSTER.
 > 
-> > memblock_set_node() receives a `base` and a `size` arguments, but we are
-> > passing the `start` and `end` of the memory regions when iterating over
-> > them in memmap_init_reserved_pages() to set their node ids.
-> > 
-> > This results in the function setting the node ids for the reserved memory
-> > regions in `[base, base + base + size)` instead of `[base, base + size)`.
-> > 
-> > Pass `start` and `size`, so that we iterate over the correct range.
-> > 
-> > Fixes: 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
-> > 
-> > ...
-> >
-> > --- a/mm/memblock.c
-> > +++ b/mm/memblock.c
-> > @@ -2196,7 +2196,7 @@ static void __init memmap_init_reserved_pages(void)
-> >  		if (memblock_is_nomap(region))
-> >  			reserve_bootmem_region(start, end, nid);
-> >  
-> > -		memblock_set_node(start, end, &memblock.reserved, nid);
-> > +		memblock_set_node(start, region->size, &memblock.reserved, nid);
-> >  	}
-> >  
-> >  	/*
+> These clocks are required early during boot for the CPUs,
+> so they are declared using CLK_OF_DECLARE instead of being registered
+> through a platform driver.
 > 
-> What were the runtime effects of this bug?
-
-I found the bug via code introspection while trying to learn how the boot time
-memory allocation of Linux worked. I was not actively pursuing to fix a runtime
-issue that I could then prove was fixed by this.
-
-But I see that in most cases this bug should be mostly benign (which could
-explain why it was not caught before). In kernels compiled with CONFIG_NUMA, the
-memblock_set_node() function would iterate over more memblock regions and
-potentially set incorrect node ids, which would then be overwritten with the
-correct node ids once the caller function memmap_init_reserved_pages() iterates
-over the next regions. So the resultant node ids after initialization should
-still be correct.
-
-It could still impact the length of the mm init process on kernel boot, but I
-did not measure the improvement, as it is highly dependent on the memory
-configuration system, and in my specific system under test, it was neglible.
+> Signed-off-by: Shin Son <shin.son@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynosautov920.c | 208 ++++++++++++++++++++++-
+>  1 file changed, 207 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynosautov920.c b/drivers/clk/samsung/clk-exynosautov920.c
+> index 8021e0912e50..f8168eed4a66 100644
+> --- a/drivers/clk/samsung/clk-exynosautov920.c
+> +++ b/drivers/clk/samsung/clk-exynosautov920.c
+> @@ -18,7 +18,9 @@
+>  
+>  /* NOTE: Must be equal to the last clock ID increased by one */
+>  #define CLKS_NR_TOP			(DOUT_CLKCMU_TAA_NOC + 1)
+> -#define CLKS_NR_CPUCL0			(CLK_DOUT_CLUSTER0_PERIPHCLK + 1)
+> +#define CLKS_NR_CPUCL0			(CLK_DOUT_CPUCL0_NOCP + 1)
 
 
+You just added that line a week ago and it is already incorrect? Then it
+needs patch on its own explaining what are you fixing.
 
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
 
+Best regards,
+Krzysztof
