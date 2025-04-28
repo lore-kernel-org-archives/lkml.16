@@ -1,124 +1,99 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF37B1B3934;
-	Mon, 28 Apr 2025 18:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4F61B3934;
+	Mon, 28 Apr 2025 18:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745864224; cv=none; b=Hcx2XDu61oER/LuOZ4NaLPuneJh7pvFn5J1oIyH1vR4BX6sWFeKGCFKxCxrje+XZIb40QwOcJ1oGZAGkKUg2OUd+bqm1m1XeZ6P8GJzacEHnyCe40KiCmIq9xCNIO0iJzuyAmNjSYB2iIkQJjiKAxHzlK2mE0fcdWZ24xmCaGwI=
+	t=1745864233; cv=none; b=KVDGDvsXFJ5ekSbAfX0npOsb80Vyw+elakfbu0xGoGQBO8IVwvujHssCAtg+2tnukcCaxR5eH0yYTtJEhlKnRTMzDzlC0oZaTrGd/ZvWifErNQWl2W4dz96Jf1ofCXC8OQo0eTWVaulJhyyLcBlTBdMd8Sf/H03wGFfH4+p3vnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745864224; c=relaxed/simple;
-	bh=3eJ7+1F6vKndxynrgWcSaZggI3ByYlMFxo9DcAdV4jQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=pBVvYwcepGRADjGi08o94sMs6qmRosrunfaXiOTKhntPITNpsJNSJdjXqpuX4aWHK2LFTZyBCEOD4IPr/sObM242S0hDCPWxQSOFp/iKxvhVP7/zuMJE8Nw7243/G115xJQgZkJXudnHkY5eXjsExKaP9zlYQAy3NzIYy9DajR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=disterhof.eu; spf=pass smtp.mailfrom=disterhof.eu; dkim=pass (2048-bit key) header.d=disterhof.eu header.i=@disterhof.eu header.b=dbhdAvtE; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=disterhof.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disterhof.eu
+	s=arc-20240116; t=1745864233; c=relaxed/simple;
+	bh=Y1DSDc1Cb+MniuTTVRtcL44FfEn7caDQAAMJwCKlyHE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GE3+CSdDkbklvnGGMtf3WF4g6HmbVx57uIFO5uQ2TzdJ05Aeioq2ZhWB1lZbIyuLyXnHYdR99SWceA+sIp8FR+tj/bQ1ucAh7gxljo3yrYsiWRtp1YKcQ/5Sg2jAVFNEY1kKWMVD6nmPaIQQmvLnfZE0SGGwFKFdlxggaJBiTd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8QfYLCf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disterhof.eu header.i=@disterhof.eu header.b="dbhdAvtE"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZmWqm3ql7z9tX4;
-	Mon, 28 Apr 2025 20:16:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=disterhof.eu;
-	s=MBO0001; t=1745864212;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:autocrypt:autocrypt;
-	bh=RBU3Rxa/SeWrdolSbblILy8+ZXtT8fErI4neuezE2pw=;
-	b=dbhdAvtEN4/lllBI4NhtqRkilnpOwGXWQx00tKIgBhRU15ZirnWByvf7M/Sxi8WQSKBziA
-	Wi7EkOOc7gJNGoom2bssEtU8YxoN0is5IYMMUojGswVvi+J3uEc2wZcPCKa6++K9crIYqE
-	Oqd7bRt69J64K8LDapvQYoeLCIVC2NghIplMbn0QawrYvJW/vwjaTPohysjS/Z2GB/Un5L
-	hVCbKyTs18f5XpkxMzC/IOl9t+pxH8A03ClNyXtCPtbMEjsy1uuK3GT2FaVg7IsS6iHsOU
-	IpxhmhiZYEaS44eBVOUbIVQk/JkUMUqWdGAwshCh86BXxRuuPJrKLjLTkM3NfA==
-Message-ID: <dd4693d2-3ecb-4081-8227-35e4e89ec7d4@disterhof.eu>
-Date: Mon, 28 Apr 2025 20:16:50 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8QfYLCf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9526DC4CEE4;
+	Mon, 28 Apr 2025 18:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745864232;
+	bh=Y1DSDc1Cb+MniuTTVRtcL44FfEn7caDQAAMJwCKlyHE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=T8QfYLCfKZRhkunaHwEHeDkJM2azc+73pBQV+8y+O76/a0eltWcJCe5hotrZUkw2T
+	 6kcN6XxnJarRXKdiRCx77cNqyUnZL9a4766S+qLHAHxfufcgV7pm/dK9r5JQIqhVUy
+	 swwfvYp+ClLv7YjGPvIiHp5TV4vSz/Eew6OnQWDLtn1BOqOiRBNZ4oV/tSQPxIMoFi
+	 uTnd4AeLTJig+O7TWCjlotOIbub3Q/Kc7fXtoFywA2PE7NE70Xelb3RzB9P2TmghW5
+	 2QTbU2V/V8NLT34vUuvHeIYYWtHyiGofvAXImQiWUEQ5plyBp0WuQvGQi6lu9IrTkP
+	 YOvDLeQ6FOrLQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+Cc: <rust-for-linux@vger.kernel.org>,  "Gary Guo" <gary@garyguo.net>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-kernel@vger.kernel.org>,  <netdev@vger.kernel.org>,
+  <andrew@lunn.ch>,  <hkallweit1@gmail.com>,  <tmgross@umich.edu>,
+  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
+  <bjorn3_gh@protonmail.com>,  <benno.lossin@proton.me>,
+  <a.hindborg@samsung.com>,  <anna-maria@linutronix.de>,
+  <frederic@kernel.org>,  <tglx@linutronix.de>,  <arnd@arndb.de>,
+  <jstultz@google.com>,  <sboyd@kernel.org>,  <mingo@redhat.com>,
+  <peterz@infradead.org>,  <juri.lelli@redhat.com>,
+  <vincent.guittot@linaro.org>,  <dietmar.eggemann@arm.com>,
+  <rostedt@goodmis.org>,  <bsegall@google.com>,  <mgorman@suse.de>,
+  <vschneid@redhat.com>,  <tgunders@redhat.com>,
+  <david.laight.linux@gmail.com>,  <boqun.feng@gmail.com>
+Subject: Re: [PATCH v15 5/6] rust: time: Add wrapper for fsleep() function
+In-Reply-To: <20250423192857.199712-6-fujita.tomonori@gmail.com> (FUJITA
+	Tomonori's message of "Thu, 24 Apr 2025 04:28:55 +0900")
+References: <20250423192857.199712-1-fujita.tomonori@gmail.com>
+	<6qQX4d2uzNlS_1BySS6jrsBgbZtaF9rsbHDza0bdk8rdArVf_YmGDTnaoo6eeNiU4U_tAg1-RkEOm2Wtcj7fhg==@protonmail.internalid>
+	<20250423192857.199712-6-fujita.tomonori@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Mon, 28 Apr 2025 20:16:47 +0200
+Message-ID: <871ptc40ds.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Language: en-US
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mchehab@kernel.org, hverkuil@xs4all.nl
-From: Ludwig Disterhof <ludwig@disterhof.eu>
-Autocrypt: addr=ludwig@disterhof.eu; keydata=
- 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
-Subject: [PATCH] media: usbtv: Lock resolution while streaming
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-When an program is streaming (ffplay) and another program (qv4l2)
-changes the TV standard from NTSC to PAL, the kernel crashes due to trying
-to copy to unmapped memory.
+Hi Tomonori,
 
-Changing from NTSC to PAL increases the resolution in the usbtv struct,
-but the video plane buffer isn't adjusted, so it overflows.
+"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
 
-Fixes: 0e0fe3958fdd13d ("[media] usbtv: Add support for PAL video source")
+> Add a wrapper for fsleep(), flexible sleep functions in
+> include/linux/delay.h which typically deals with hardware delays.
+>
+> The kernel supports several sleep functions to handle various lengths
+> of delay. This adds fsleep(), automatically chooses the best sleep
+> method based on a duration.
+>
+> sleep functions including fsleep() belongs to TIMERS, not
+> TIMEKEEPING. They are maintained separately. rust/kernel/time.rs is an
+> abstraction for TIMEKEEPING. To make Rust abstractions match the C
+> side, add rust/kernel/time/delay.rs for this wrapper.
+>
+> fsleep() can only be used in a nonatomic context. This requirement is
+> not checked by these abstractions, but it is intended that klint [1]
+> or a similar tool will be used to check it in the future.
 
-Signed-off-by: Ludwig Disterhof <ludwig@disterhof.eu>
----
- drivers/media/usb/usbtv/usbtv-video.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I get an error when building this patch for arm32:
 
-diff --git a/drivers/media/usb/usbtv/usbtv-video.c b/drivers/media/usb/usbtv/usbtv-video.c
-index be22a9697197..965a8ae82afe 100644
---- a/drivers/media/usb/usbtv/usbtv-video.c
-+++ b/drivers/media/usb/usbtv/usbtv-video.c
-@@ -73,6 +73,10 @@ static int usbtv_configure_for_norm(struct usbtv *usbtv, v4l2_std_id norm)
- 	}
- 
- 	if (params) {
-+		if (vb2_is_streaming(&usbtv->vb2q) &&
-+		    (usbtv->width != params->cap_width ||
-+		     usbtv->height != params->cap_height))
-+			return -EBUSY;
- 		usbtv->width = params->cap_width;
- 		usbtv->height = params->cap_height;
- 		usbtv->n_chunks = usbtv->width * usbtv->height
--- 
-2.43.0
+  + kernel-make -j 96 O=/home/aeh/src/linux-rust/test-build-arm-1.78.0 vmlinux modules
+  ld.lld: error: undefined symbol: __aeabi_uldivmod
+  >>> referenced by kernel.df165ca450b1fd1-cgu.0
+  >>>               rust/kernel.o:(kernel::time::delay::fsleep) in archive vmlinux.a
+  >>> did you mean: __aeabi_uidivmod
+  >>> defined in: vmlinux.a(arch/arm/lib/lib1funcs.o)
+
+Looks like a division function of some sort is not defined. Can you
+reproduce?
+
+
+Best regards,
+Andreas Hindborg
+
+
