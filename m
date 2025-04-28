@@ -1,85 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40533440C
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC46149C64;
+	Mon, 28 Apr 2025 15:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745853489; cv=none; b=q/xUrcd5UZko4VD0qTnKS+L1QkZv3BmxLYzW95YmU0zI79VtxcTKyPYlQTYhmTdQ5m84oMoBKQeWIINYCycXGOaY5F5WVMTkEky27bdY6xmQVMriccJUVR+E0B90xrdTDfQ1lNvhw2IKeJIpdiVXw3Tr1UMzFt3bAuCyjmXPUCQ=
+	t=1745853527; cv=none; b=qqsRhataGg2rbYLkaTinf6Q1FCtFxiMYCL9ek8WdxK4eau3nyEqr07D8tG9EZmBQ2zTq5LpJ8cui8jyLBbkGnKQ0JA/RW3JKpYXz5zefoOYVElm3+kR1/ZzsTW+bpIkBkLI0akRgyNpBTucmy5BvcW6UEHrsuJTbK34IYaaYsac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745853489; c=relaxed/simple;
-	bh=0QaZy3x9iZ+hVcd/x8o7A0W/pgFKdMUgTsqmMwkaCSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWRU66Q1ovzR33cVw88ZsubG7Kk0o0rP2DEqVX5nAGltlU+z5iARQM+neeBuTLRpXfZJsubCq2/zXYHPhySPAmw2sdmCPobdAunutVSJ31/gPNTz28UShvjCKGmgtYmZ4yhQmA4BK7KfA1Nv3su3qBTfWe+PaIycAs53Ij7yYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OM2D782X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745853527; c=relaxed/simple;
+	bh=S5kZANsls9MU1jQapT7zNFbxF7EWA8i0Z3uUdx0AWh4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d9UCXfgifcamS81RV8moj+Hd7DRa/VyZ01oAut6CvIEET7FrCdzdipxw8i2GHRXLEbZtq2IKWS+sIMwoAyi3UKBV0YaA2zklYCQIethlcJAvcUX1x5qdCPGm/FrMf65PvKtpJnh6staXP6+dJwKSqaWk8ZBE7GZCbO1CiLFhiSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kqLSa4iZ; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OM2D782X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EADEC4CEE4;
-	Mon, 28 Apr 2025 15:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745853489;
-	bh=0QaZy3x9iZ+hVcd/x8o7A0W/pgFKdMUgTsqmMwkaCSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OM2D782XSDdLRIq2ieqOHPLD1hOcs5bva6n2UnFdZX8gOZ3pKKgGvTBeNInln1x/C
-	 UjVr4X/Lt7irzYQ+a34LIeNhXw2XwCKSF4GPHLlmDFkttVlXFYIhOMvXIKzVtfBQmA
-	 ECg6D6Lv1omDioGpP1E76hW4OHtMeNMe0JsYAeVMGAE7D7A2VVprmrNWoNS+LVN34F
-	 D4VYfHA9IsMZyJsCTrzXmv4ZaRVTgI+ZPzFUFNcrQqbCWKlb/LdiVOWtCZn08VopT+
-	 EKVOLOpW7qDLShNBfYegcH6GAtt+kmQbmRgc42zx16jVe/oJWNb99XrIy/gWX9KQkE
-	 fQq97LuMAgDrw==
-Date: Mon, 28 Apr 2025 23:17:59 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com, dhavale@google.com,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] erofs: remove unused enum type
-Message-ID: <aA+cJ+aMfWdfMBWH@debian>
-Mail-Followup-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org,
-	chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
-	dhavale@google.com, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-References: <20250428142631.488431-1-lihongbo22@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqLSa4iZ"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3105ef2a071so48617411fa.1;
+        Mon, 28 Apr 2025 08:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745853523; x=1746458323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O5KI4iCYzUE4mcEDBVLQLUdVyhSyVSWFm4H2BuphI+Y=;
+        b=kqLSa4iZr3+PwjwqWq2ATZZHQ6wvsUImIKSWKfBUBUhTmd/KDozKMcO1NA7wYG4Cz1
+         idCwHGr1HClgLoxEoTTu4BU+OOH5OzmovP6IlViigbNZ3JllHxY2qai6DeQOBFpR8iXi
+         2kb6VkV/869Ao8/dDICUAALZnJgAFLkW55El83hmGxVZ/wgDNdH3WfAt9owUEBqUMtL/
+         axzTWXeIyvqWiMKYA5S0ZD8ZUbA/lScAIhqMaGRmM/J/F5EgSrcapJfBwCqg0HvKVuDA
+         VhpJ2P+xS97xwGReG1cHaDoDfZh1cs6t2whXj6wgxlsFrHeY8AfQSUEHo17ZW0riJGis
+         CzMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745853523; x=1746458323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O5KI4iCYzUE4mcEDBVLQLUdVyhSyVSWFm4H2BuphI+Y=;
+        b=j04blJrilr2XrIEPfHvHncTI2DPtsjFAKsGvPkUODjiPUqt3slSOfY4j6Y+7RnyCu1
+         l2bRZatz2VfF8d4h68RB6XFZbWX0gAth6Z3v3IfIP3eBIS/QgO/48auycvLmwFGyTqgH
+         nlJYEtilu8vQXV3fWbAVeHzbEqJQRnnowzxdEG63cftYbnpSjNpA1vy3IRWKhxCMcoqJ
+         3OKp4JvZ++MVEx2Yx+1Oi8V/Vsy4y/R/E/kw/b/JuT96XufFvqLk0PmjCHF1TqR+Xb+F
+         +h9junJlxWbCqXW53A8Lu8FEzOAtSN5H7d2JlO8mvM/GcyOVMksZKnSvUBuQmAHQs41Z
+         yiXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0QNHxJE3kdWGbbdt2yysCim1/fbflJxZImkY1995kw1PgYX9QZA7k1VFfCUZKefAYQa5mn3yNVqquNA==@vger.kernel.org, AJvYcCVvy+MuABVk7IE2Ugbilu8+wTA+hfJ2CWiSPIDELP6CzoqSO4hXaIKyD1upY+JYnJ9XKbMnsY1oRJG39jI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0BVqbxNuKsk2dcCvQGa0i9IWgFjfxlBgy9DptjNA8Hr/Xra49
+	eE7W6ZKwnv2/HaWLewa37Xt6YzoPqlbyE9BiDdp6aW2kj+zSpTB8/ym8EPFs
+X-Gm-Gg: ASbGncsIJdn4+A5v114CHLwYZMVb+EIZ8n9pvcV5zpNFKf+8ITgmGazOvWysdHxoprj
+	hjJXxUIo3KR7ByfDvWlc+zq0RO04ryjJoAxCt3LaC9p44A+pKnBNf7Oy8TRGXtE/fq9jtcPkKA9
+	6L5OxruWWPK6NkpHoT3KFeLoBFzRxKZkhHRmlL2F+a4Ws4wufRv3uK8IfQgXzc74sDqE4cu6vAv
+	3ZaIZd9fDxeeD+gHjm5eRvyNk/l3sgd+nK11JWxqfiGoruDTnmTSkzA+mpCLbCjUgSfrHeCCIIP
+	11eRL/7S11SEBp29f8fqmj96Xy5j1W/pQbR+njrFMXBY690zZvA9HSNO9mq/iYiR99loGhHO/E/
+	QEXs=
+X-Google-Smtp-Source: AGHT+IFH9kBa3gbYhE+I/QfTW2KgG031/GHYhbw2sykrAzVlr2hwLhgjIl2l51QIZCAFm/Sbh6U1nQ==
+X-Received: by 2002:a2e:b888:0:b0:310:85ba:115f with SMTP id 38308e7fff4ca-319ddd667c7mr37026941fa.33.1745853522855;
+        Mon, 28 Apr 2025 08:18:42 -0700 (PDT)
+Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317cf659c4fsm21262841fa.21.2025.04.28.08.18.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 08:18:42 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 28 Apr 2025 17:18:40 +0200
+To: Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: linux-next: duplicate patch in the paulmck tree
+Message-ID: <aA-cUPL6NZEms1ZY@pc636>
+References: <20250428175438.0209858e@canb.auug.org.au>
+ <aA-RAjmhvIbI_z9b@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250428142631.488431-1-lihongbo22@huawei.com>
+In-Reply-To: <aA-RAjmhvIbI_z9b@Mac.home>
 
-On Mon, Apr 28, 2025 at 02:26:31PM +0000, Hongbo Li wrote:
-> Opt_err is not used in EROFS, we can remove it.
+On Mon, Apr 28, 2025 at 07:30:26AM -0700, Boqun Feng wrote:
+> [Cc Joel]
 > 
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-> ---
->  fs/erofs/super.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> On Mon, Apr 28, 2025 at 06:08:45PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > The following commit is also in the rcu tree as a different commit
+> > (but the same patch):
+> > 
+> >   5c9e0062989e ("tools/memory-model/Documentation: Fix SRCU section in explanation.txt")
+> > 
+> > This is commit
+> > 
+> >   8e40035aab95 ("tools/memory-model/Documentation: Fix SRCU section in explanation.txt")
+> > 
+> > in the rcu tree.
+> > 
 > 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index c1c350c6fbf4..fd365a611f13 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -356,8 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
->  
->  enum {
->  	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
-> -	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
-> -	Opt_err
-> +	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio
-
-We'd better to leave the trailing ',' so that we don't need to change
-this line again if a new line is introduced.
-
-Otherwise LGTM.
-
-Thanks,
-Gao Xiang
-
->  };
->  
->  static const struct constant_table erofs_param_cache_strategy[] = {
-> -- 
-> 2.22.0
+> @Joel, should we drop this commit from rcu?
 > 
+IMO, it should be dropped from the RCU tree as soon as it is from
+another kernel part.
+
+Paul was about to deliver this via another track. But it can be that
+plans have been changed.
+
+--
+Uladzislau Rezki
