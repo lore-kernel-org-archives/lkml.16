@@ -1,80 +1,232 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3368F9D9
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E095C262FD8
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745845529; cv=none; b=OXql3+v9Rx2GWVhw8uSvCbfhXWKFtXrvHVsa2950Yc0aQji5oEQqS59dVvoUr/9GIX4AclCwYYm/wwjNq6NW9xZo43aFT58PlbQ/BBr93eEc5Kdl58thAkGf3hwuHuE3Fp9hU2LTtzmYBivFkuMjgV+rnkaNO19ChxVvKmo/tOA=
+	t=1745845552; cv=none; b=rd52ymv69u69dB4v9aROWAV7nrFHmzDZmsJNgeORJ2GA+cOGz/MNfDdPCHKvYB0aVt+tLQ0DSzQnlSkFaV6f8VIT/8fH/eXuM6bvD5f/BK+oplnWOPHaA4YtM0uBkCegTAG+LywX5quYHOCEB3PVBeRI2ZS1iy+fv4RseXGcVCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745845529; c=relaxed/simple;
-	bh=p6MaeNDDWI06pgM7o1x7lmB0gE7Nusu6ip0/6BgLPpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MRB1zexaWZIWE5pTpqE+QTeZD4o8QE+zh3ICt+Sj2JvABUuHJ+7QCUVVsskL5x7TuECvQJT48ErRGUZpkpxgczOpX7gAwblvDdmalk0xC7NyZYcadI4/7tXEuDHKggeoTn0shoESnwSiUG3EX7F3jn19Yp8HdrxwVGl3enwhW9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBF6F1516;
-	Mon, 28 Apr 2025 06:05:17 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD5A63F673;
-	Mon, 28 Apr 2025 06:05:23 -0700 (PDT)
-Date: Mon, 28 Apr 2025 14:05:19 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Mike Leach <mike.leach@linaro.org>
-Cc: Yabin Cui <yabinc@google.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Jie Gan <quic_jiegan@quicinc.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coresight: trbe: Save/restore state across CPU low power
- state
-Message-ID: <20250428130519.GF551819@e132581.arm.com>
-References: <20250423230046.1134389-1-yabinc@google.com>
- <731dbb1d-e804-4678-9b8c-40f6395e94a7@arm.com>
- <CALJ9ZPNExud7ZQ-ZgpVtPJHUsAyJv_O-CH8mCa6gUyu1E1T8zg@mail.gmail.com>
- <CAJ9a7VhMJDMbowRuB5zgjQw+UfxP7eumZX1SKF2MJQ2_2NebHA@mail.gmail.com>
- <20250428122408.GD551819@e132581.arm.com>
- <CAJ9a7VjhCRk9BxGvE3ZyyZzq__+A1PpD=oRtFQOcD8BwXKa27Q@mail.gmail.com>
+	s=arc-20240116; t=1745845552; c=relaxed/simple;
+	bh=Ym/VO1lsf4cxLe2zwu26BSqCE0/7Tphe1tRXLpCeV9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dcA8kt2VWUUyTVaX85FEEIqE5ZKuD70gMeI/9/4ZC1IxxXVr91qSUhGmryDCjUEWfXWPvSZRSqeJG0jTgpDS+pECgOxC0gdnqzDPOsxEfCpRAjXm83U/hZRsG64Bay7CSVLeZxFr0zK7M5SxaDSp31MgcaCs1WGSCqSGmPbs8Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u9OB7-0000MV-L7; Mon, 28 Apr 2025 15:05:45 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u9OB6-0006FR-19;
+	Mon, 28 Apr 2025 15:05:44 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u9OB6-00GJ9Z-0X;
+	Mon, 28 Apr 2025 15:05:44 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	Phil Elwell <phil@raspberrypi.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v7 07/12] net: usb: lan78xx: Extract flow control configuration to helper
+Date: Mon, 28 Apr 2025 15:05:37 +0200
+Message-Id: <20250428130542.3879769-8-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250428130542.3879769-1-o.rempel@pengutronix.de>
+References: <20250428130542.3879769-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ9a7VjhCRk9BxGvE3ZyyZzq__+A1PpD=oRtFQOcD8BwXKa27Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, Apr 28, 2025 at 01:55:29PM +0100, Mike Leach wrote:
+Move flow control register configuration from
+lan78xx_update_flowcontrol() into a new helper function
+lan78xx_configure_flowcontrol(). This separates hardware-specific
+programming from policy logic and simplifies the upcoming phylink
+integration.
 
-[...]
+The values used in this initial version of
+lan78xx_configure_flowcontrol() are taken over as-is from the original
+implementation to avoid functional changes. While they may not be
+optimal for all USB and link speed combinations, they are known to work
+reliably. Optimization of pause time and thresholds based on runtime
+conditions can be done in a separate follow-up patch.
 
-> > > The TRBE PM can follow the model of the ETE / ETMv4 and save and
-> > > restore if currently in use.
-> >
-> > If TRBE PM is registered as a seperate PM notifier, a prominent issue is
-> > it cannot promise the depedency between ETE and TRBE when execute CPU
-> > power management.  E.g., when entering CPU idle states, ETE should be
-> > disabled prior to switch off TRBE, otherwise, it might cause lockup
-> > issue in hardware.  If ETE and TRBE register PM notifier separately,
-> > we cannot ensure the sequence between ETE and TRBE, this is why we need
-> > to do the operations based on CoreSight paths.
-> >
-> 
-> I believe that the architecture requires that if the disabled TRBE
-> cannot receive trace then the ETE should regard the trace as having
-> been output (A1.4 ETE spec). Incorrect sequencing should only result
-> in missing trace, not a core lockup - unless the implementation is not
-> compliant.
+The forward declaration of lan78xx_configure_flowcontrol() will also be
+removed later during the phylink conversion.
 
-Thanks for clarification, Mike.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+changes v6:
+- this patch is added in v6
+---
+ drivers/net/usb/lan78xx.c | 105 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 87 insertions(+), 18 deletions(-)
 
-I would prefer to stick with the CoreSight path approach, as this will
-help us to resolve the issue in a general way - not just for ETE / TRBE
-case, this would be applicable for other types of links and sinks.
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index bff53324c70a..58e3589e3b89 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -1554,10 +1554,12 @@ static void lan78xx_set_multicast(struct net_device *netdev)
+ 	schedule_work(&pdata->set_multicast);
+ }
+ 
++static int lan78xx_configure_flowcontrol(struct lan78xx_net *dev,
++					 bool tx_pause, bool rx_pause);
++
+ static int lan78xx_update_flowcontrol(struct lan78xx_net *dev, u8 duplex,
+ 				      u16 lcladv, u16 rmtadv)
+ {
+-	u32 flow = 0, fct_flow = 0;
+ 	u8 cap;
+ 
+ 	if (dev->fc_autoneg)
+@@ -1565,27 +1567,13 @@ static int lan78xx_update_flowcontrol(struct lan78xx_net *dev, u8 duplex,
+ 	else
+ 		cap = dev->fc_request_control;
+ 
+-	if (cap & FLOW_CTRL_TX)
+-		flow |= (FLOW_CR_TX_FCEN_ | 0xFFFF);
+-
+-	if (cap & FLOW_CTRL_RX)
+-		flow |= FLOW_CR_RX_FCEN_;
+-
+-	if (dev->udev->speed == USB_SPEED_SUPER)
+-		fct_flow = FLOW_CTRL_THRESHOLD(FLOW_ON_SS, FLOW_OFF_SS);
+-	else if (dev->udev->speed == USB_SPEED_HIGH)
+-		fct_flow = FLOW_CTRL_THRESHOLD(FLOW_ON_HS, FLOW_OFF_HS);
+-
+ 	netif_dbg(dev, link, dev->net, "rx pause %s, tx pause %s",
+ 		  (cap & FLOW_CTRL_RX ? "enabled" : "disabled"),
+ 		  (cap & FLOW_CTRL_TX ? "enabled" : "disabled"));
+ 
+-	lan78xx_write_reg(dev, FCT_FLOW, fct_flow);
+-
+-	/* threshold value should be set before enabling flow */
+-	lan78xx_write_reg(dev, FLOW, flow);
+-
+-	return 0;
++	return lan78xx_configure_flowcontrol(dev,
++					     cap & FLOW_CTRL_TX,
++					     cap & FLOW_CTRL_RX);
+ }
+ 
+ static void lan78xx_rx_urb_submit_all(struct lan78xx_net *dev);
+@@ -2550,6 +2538,87 @@ static int lan78xx_configure_usb(struct lan78xx_net *dev, int speed)
+ 	}
+ }
+ 
++/**
++ * lan78xx_configure_flowcontrol - Set MAC and FIFO flow control configuration
++ * @dev: pointer to the LAN78xx device structure
++ * @tx_pause: enable transmission of pause frames
++ * @rx_pause: enable reception of pause frames
++ *
++ * This function configures the LAN78xx flow control settings by writing
++ * to the FLOW and FCT_FLOW registers. The pause time is set to the
++ * maximum allowed value (65535 quanta). FIFO thresholds are selected
++ * based on USB speed.
++ *
++ * The Pause Time field is measured in units of 512-bit times (quanta):
++ *   - At 1 Gbps: 1 quanta = 512 ns → max ~33.6 ms pause
++ *   - At 100 Mbps: 1 quanta = 5.12 µs → max ~335 ms pause
++ *   - At 10 Mbps: 1 quanta = 51.2 µs → max ~3.3 s pause
++ *
++ * Flow control thresholds (FCT_FLOW) are used to trigger pause/resume:
++ *   - RXUSED is the number of bytes used in the RX FIFO
++ *   - Flow is turned ON when RXUSED ≥ FLOW_ON threshold
++ *   - Flow is turned OFF when RXUSED ≤ FLOW_OFF threshold
++ *   - Both thresholds are encoded in units of 512 bytes (rounded up)
++ *
++ * Thresholds differ by USB speed because available USB bandwidth
++ * affects how fast packets can be drained from the RX FIFO:
++ *   - USB 3.x (SuperSpeed):
++ *       FLOW_ON  = 9216 bytes → 18 units
++ *       FLOW_OFF = 4096 bytes →  8 units
++ *   - USB 2.0 (High-Speed):
++ *       FLOW_ON  = 8704 bytes → 17 units
++ *       FLOW_OFF = 1024 bytes →  2 units
++ *
++ * Note: The FCT_FLOW register must be configured before enabling TX pause
++ *       (i.e., before setting FLOW_CR_TX_FCEN_), as required by the hardware.
++ *
++ * Return: 0 on success or a negative error code on failure.
++ */
++static int lan78xx_configure_flowcontrol(struct lan78xx_net *dev,
++					 bool tx_pause, bool rx_pause)
++{
++	/* Use maximum pause time: 65535 quanta (512-bit times) */
++	const u32 pause_time_quanta = 65535;
++	u32 fct_flow = 0;
++	u32 flow = 0;
++	int ret;
++
++	/* Prepare MAC flow control bits */
++	if (tx_pause)
++		flow |= FLOW_CR_TX_FCEN_ | pause_time_quanta;
++
++	if (rx_pause)
++		flow |= FLOW_CR_RX_FCEN_;
++
++	/* Select RX FIFO thresholds based on USB speed
++	 *
++	 * FCT_FLOW layout:
++	 *   bits [6:0]   FLOW_ON threshold (RXUSED ≥ ON → assert pause)
++	 *   bits [14:8]  FLOW_OFF threshold (RXUSED ≤ OFF → deassert pause)
++	 *   thresholds are expressed in units of 512 bytes
++	 */
++	switch (dev->udev->speed) {
++	case USB_SPEED_SUPER:
++		fct_flow = FLOW_CTRL_THRESHOLD(FLOW_ON_SS, FLOW_OFF_SS);
++		break;
++	case USB_SPEED_HIGH:
++		fct_flow = FLOW_CTRL_THRESHOLD(FLOW_ON_HS, FLOW_OFF_HS);
++		break;
++	default:
++		netdev_warn(dev->net, "Unsupported USB speed: %d\n",
++			    dev->udev->speed);
++		return -EINVAL;
++	}
++
++	/* Step 1: Write FIFO thresholds before enabling pause frames */
++	ret = lan78xx_write_reg(dev, FCT_FLOW, fct_flow);
++	if (ret < 0)
++		return ret;
++
++	/* Step 2: Enable MAC pause functionality */
++	return lan78xx_write_reg(dev, FLOW, flow);
++}
++
+ /**
+  * lan78xx_register_fixed_phy() - Register a fallback fixed PHY
+  * @dev: LAN78xx device
+-- 
+2.39.5
 
-Thanks,
-Leo
