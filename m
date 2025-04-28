@@ -1,107 +1,218 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B201D6DAA
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726571CEADB
+	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 07:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745826118; cv=none; b=i7umv+s79/TY+QaTDMsgfhJyanSTkDXZ8sDZMy5LwBlQEYF80Znr2gyY/xkiL7SfdqsqqWrvfRdviODnDAO1fVElVkn/QM/C7l+LXL1ggbIWgNN13qD5qb56v9Lk6EAKSUCgAc05kKr9lm2Oma2q7vmGuF0yZl2ofwmj2IrpjyY=
+	t=1745826143; cv=none; b=ZOtUR0S1CDpw/ZmUhljcg1OEM/fRct2G3ltl78W7caB8MqQQn7UCHSZb2Waeuf34HaNltxzmmi/8HuxwFvmwKBY5HPk0lHp8DCdKKqJSV+t4H9AabYoTWLUSWTY9R0kuKA+5pfIOikRpx8/whPcXZlwyTCQ024ed44wt30KcetY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745826118; c=relaxed/simple;
-	bh=oSqIkRupR8TYRhDce+2kE5eyvj9Skfdy3j9c3wxau/Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pemIEouDKjWb77sRSuj4DccphPTJNnYA/lXJmjkzULWAwj3fMXFBvYWB2HlKJdFUnr9OcgeuBet+aichURWZnXCKTaVxHMWNnPifnb+VGUyIIRGmqVTtyDyHqMiS4mLgFaCQTXEXTWP3+cV0Zz/GlsCrbvZ9Z87GWvS/j0jn2t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jvpMGZMu; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745826143; c=relaxed/simple;
+	bh=RO4fe7hF3YRJO+Sakz3qlIuEQu+QpUlcCFkVjyWJZoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1I5+p0JZcQGz7uoGD0SmVycQMwT6wJu9/MX2M2tGn+G7uH3i57bDSApXfRvNZqG4junm6gmo1ZDKp6mP9aWW5AN4dmtwS0yljQ8Z6sgqMy24RiuD+dICFVd1ssMbkJVCzv4TtyMVjrjkovvTZBNXPrJhBO2aR2GMxbDfEw+28s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BvhsmWnE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jvpMGZMu"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0782d787so27297685e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745826115; x=1746430915; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gtXe3DJwZopbQ1jjaiS1Q49hS2sBgO4tG8niY++hBCc=;
-        b=jvpMGZMuIBW5Fes64T4SrkieG/tEKaG79TtuznW4p5qUYTocF1nEtwoDeXyfWwBqsM
-         jMAumiskwWveynJ0T4ZkV3goSx+0w+qu/f2lHUxorFMgvEmn5dImP613X9CI8f2nabX9
-         YSdVBDzwJyBjgTnhuP0B7uM6YXJym/1FjyIoxRLxgXwNusXPS8Cn/1TsWNVJK7Fg47ZY
-         5zU24DOnhlDZHY6l5NdP2NQ1vSE+g51sd7uC6XtPCzj/QidBiqecrhD82bJhLXtgzq9u
-         gsHvjzqh4DGAut04sNpKWbn+rtDCY1oLkYzdYs5PhxhmosFaPrcm3N1/8VuNEHeObmYr
-         /5KA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BvhsmWnE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745826140;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dpj7I8mgxfJqgam51CzzudZUWclMLZg1KKSrTJW4zYg=;
+	b=BvhsmWnEqyNYNCIOmCz5HCnXmGQyaybbRz7mlkHGHx/lm2YQczr6dglfcWTQpt4Ny1jtog
+	G5DDEbqSIp82RaY3kcWJncAU+el3Z1CnZY+JyaUXP1iY7thdiV9Y7GDFQt6hXUFHhwPSin
+	PaPMUIYDaAg/19biSWLGBbepVJAJJg0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-x2yU-W0hMjKz4u5apKOdWA-1; Mon, 28 Apr 2025 03:42:16 -0400
+X-MC-Unique: x2yU-W0hMjKz4u5apKOdWA-1
+X-Mimecast-MFC-AGG-ID: x2yU-W0hMjKz4u5apKOdWA_1745826135
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac2aa3513ccso318162766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 00:42:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745826115; x=1746430915;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gtXe3DJwZopbQ1jjaiS1Q49hS2sBgO4tG8niY++hBCc=;
-        b=ak/LG8O3Mr7U+ngtqxl/mx6k6Dbz8In4R9Ly8kq5eTxntF3tCXjonNsyfEErvpgUEZ
-         umnMed7asoLV3kyV9e9NVCQetBy4iVlMThLVa7EHbywGey5aAyBNSE5/dy3Ix2/CVQKe
-         9Z+KA32hxs1+soDYa+9FKmMQ/YUe+tErCRjnUJhMTIFDFOrl4PUdnU9ArpPOGgYq17gd
-         mCgqmLkavJhPMsyWt6fG2fgYgBujVNF0NvqNBoSFlEaVNMRjB9ywS+W0QH5s8yIajbd6
-         7maGeS0rEsZEsSLGNgUShsYwLN8ujYE1kDleNzdvwdwglRVzU9rKObNq93Vr7f46TWyM
-         OeQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWE6675vmHxn/HolsYchkr1nwLclbBYEH0/QxDRWaaAUQKEHJnDJJz57Jp0CTfeG/XJo0n9nIzCn+c87mE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLlo72GL7z7w7fL8ULt0LLO7+a+bc6FWGR+nqvBGE+3LsD0bvI
-	n9xAUGq0nOhDui3JlVx7T+vMMxlnyoEkgYOpkD8el4jAqJ2bFwS++dRZfeAKud8=
-X-Gm-Gg: ASbGncsV/coTd3tSddTQ3J1tRwbA/kicBLWFi/LAb/R9PeIoGjQjiIMkga33K3FXoGZ
-	pmMTj+TEB9Nv/T2l2F6Z5trbodB9foSrq5Bw1hrDNM+v/WynWhml1eKCEZAfShaJmoct/49z9Rz
-	y8QWMAXCqubn8ycDQC1jdvPqPCEKmKKpqLRe5qy5KAxaouGeNXKuSazOdnkxYl37abSlmnS+u6s
-	OkrSv+4zhcWqhESqFR9Lxa9b9ezqGFB6Orho1tCYiCGgcOyiImiqWR/F+i6XEFJ82zUPjWfER7e
-	B9TmmCqsXXl5Qd+py6QHuO4hfeI9AzQaD60JBWeM
-X-Google-Smtp-Source: AGHT+IG6vJMcPDbbB8aJXp4GBvSvxlx9tDVNz+S/2DNAZ5R+nMzSTlCe5ma26a9KdD4uVH3db2JQjg==
-X-Received: by 2002:a05:600c:a0d:b0:43a:b0ac:b10c with SMTP id 5b1f17b1804b1-440a6699e8dmr82436405e9.26.1745826114893;
-        Mon, 28 Apr 2025 00:41:54 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:96f1:a768:3c75:f123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c7d6ccdsm130656105e9.0.2025.04.28.00.41.54
+        d=1e100.net; s=20230601; t=1745826135; x=1746430935;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dpj7I8mgxfJqgam51CzzudZUWclMLZg1KKSrTJW4zYg=;
+        b=tOkcUHY8I46XT4Lmc2nm6A7CP2XxJklAxnrnqHa397LiAbtiyjBpGsn4x0/bcxmcW1
+         oA2jNKqvqS8nWnCBKSp2IY2U2P5wTh1H0LuUSzjFv6NsJ6OVkPHw5MHnjy/amSvZLBzT
+         ILGsLy4E0UuXbDWhB5Vtl/21DfpJedcjuy4+Xja5S6yKDJ0DKe4jpcK3af2LbI5oifqy
+         2+4J1XdQMKbu4auANWbECsRxKV7Kei6j3AfxpFo09bBFD3JB3ddFpvebsjTv76EYy1/z
+         ulhJhqzOQh/1oS4OOS8jtMMO1NReVuJkA66MaFZLdGm7xY9pTfkLSxg6yD88CMFDWoB3
+         FTPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCeSRX0Q4tbxR7/MHDcdAd7g6PXf0zlFBnB+6HdPz5i2oBD0fsKc40WUPNzopOk1qXvMI7UrxqwhHJLU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy8ihkOAiczxWOR4KmfpyJyR4NECGHjD8buuzYTwvtaCxZiyLp
+	/KrF4e5vAIn/PHtd/laMVE4nTlojqQh70PPUrS9ev9Sf/6IpkBq5x/gI9H28ZIqA6/bT4UKY5kh
+	muKJ794q/TOooLaqViaMkqJyBdK7UxRBQS2Ni3mHkUNUuwZNZo3aFBnZcvvZ1oA==
+X-Gm-Gg: ASbGnct+EpHuuU8IR/K7994l7E8rg4W+PoAwEEBml3HAZ0SG7UTAmxNCEZdF9PydyvE
+	AoZHY/CPRQVN15o7+NBihS3QhUqRfDo+5tEeqxnoGQcwxbRb8PkJhjAX044YCdNb5WjXFGBNz/1
+	JxwyDeAI2cHLt9vGwpRgwQniowTZwBg6OlOZqDneKrLYT3DgFwhm0cXjvP1IcYkjnl9b5KgcQrx
+	cSCTkqHWbtW5Whja0hf0rs+aYGQcSpL8tQIt2U+k4adokB19BjLo7kaJcOmg7/mdTRmL843fwf1
+	CyxORzoTBdXtzn8O2A==
+X-Received: by 2002:a17:907:1c27:b0:ac4:3cd:2cb2 with SMTP id a640c23a62f3a-ace7104e5d8mr1000674866b.1.1745826135422;
+        Mon, 28 Apr 2025 00:42:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXzAr0+bjExObNijhwwYl1i6kI6R1HoChQXPYHAU+nUMCp81+2mz+T7WI44sNlBU3yht/5vw==
+X-Received: by 2002:a17:907:1c27:b0:ac4:3cd:2cb2 with SMTP id a640c23a62f3a-ace7104e5d8mr1000672266b.1.1745826134717;
+        Mon, 28 Apr 2025 00:42:14 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.219.109])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e70bbsm587228966b.63.2025.04.28.00.42.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 00:41:54 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Raag Jadav <raag.jadav@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: (subset) [PATCH v2 0/3] gpiolib: finish conversion to devm_*_action*() APIs
-Date: Mon, 28 Apr 2025 09:41:52 +0200
-Message-ID: <174582608319.15717.12211907178640999391.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
-References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
+        Mon, 28 Apr 2025 00:42:14 -0700 (PDT)
+Date: Mon, 28 Apr 2025 09:42:10 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Ingo Molnar <mingo@kernel.org>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, mst@redhat.com
+Subject: Re: [mainline]Warning while building tools/perf
+Message-ID: <CAGxU2F4X2TYM+fD-TnLjTPd+AcwSccREBnO1+geSFs-KVM4kRg@mail.gmail.com>
+References: <9c40ab1a-3d08-4af8-a430-0ba245842959@linux.ibm.com>
+ <43507075-ec04-44c8-a95f-49e074d933d8@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43507075-ec04-44c8-a95f-49e074d933d8@linux.ibm.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, 25 Apr 2025 at 18:07, Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>
+>
+> My bad, missed to mention the warning in the previous mail.
+>
+> On 25/04/25 9:32 pm, Venkat Rao Bagalkote wrote:
+> > Hello,
+> >
+> >
+> > I am seeing a new build warning while building tools/perf on the
+> > mainline kernel, with base:
+> >
+> > commit 02ddfb981de88a2c15621115dd7be2431252c568 (HEAD -> master,
+> > origin/master, origin/HEAD)
+> > Merge: 30e268185e59 b0b7ee3b574a
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Thu Apr 24 13:01:31 2025 -0700
+> >
+> >     Merge tag 'scsi-fixes' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> >
+> >     Pull SCSI fixes from James Bottomley:
+> >      "The single core change is an obvious bug fix (and falls within
+> > the LF
+> >       guidelines for patches from sanctioned entities). The other driver
+> >       changes are a bit larger but likewise pretty obvious"
+> >
+> >     * tag 'scsi-fixes' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi:
+> >       scsi: mpi3mr: Add level check to control event logging
+> >       scsi: ufs: core: Add NULL check in
+> > ufshcd_mcq_compl_pending_transfer()
+> >       scsi: core: Clear flags for scsi_cmnd that did not complete
+> >       scsi: ufs: Introduce quirk to extend PA_HIBERN8TIME for UFS devices
+> >       scsi: ufs: qcom: Add quirks for Samsung UFS devices
+> >       scsi: target: iscsi: Fix timeout on deleted connection
+> >       scsi: mpi3mr: Reset the pending interrupt flag
+> >       scsi: mpi3mr: Fix pending I/O counter
+> >       scsi: ufs: mcq: Add NULL check in ufshcd_mcq_abort()
+> >
+>
+> Warning:
+>
+> diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> include/uapi/linux/vhost.h
+>
+> >
+> > Git Bisect is pointing to below commit as first bad commit.
+> >
+> >
+> > a940e0a685575424d33324ec7f0089045249de0a is the first bad commit
+> > commit a940e0a685575424d33324ec7f0089045249de0a
 
+That commit just updated the documentation, no code change.
 
-On Thu, 20 Feb 2025 18:20:25 +0200, Andy Shevchenko wrote:
-> GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
-> calls. This mini-series is for that. The necessary prerequisites are here
-> as well, namely:
-> 1) moving the respective APIs to the devres.h;
-> 2) adding a simple helper that GPIOLIB will rely on;
-> 3) finishing the GPIOLIB conversion to the device managed action APIs.
-> 
-> [...]
+I guess in tools/perf they copied vhost.h and there is some check to 
+control if they are in sync.
 
-Applied, thanks!
+CCing Arnaldo who has updated the copy several times.
 
-[3/3] gpiolib: devres: Finish the conversion to use devm_add_action()
-      https://git.kernel.org/brgl/linux/c/d1d52c6622a61a0ae8dd2bd2097b25c0f553d2f3
+Thanks,
+Stefano
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Author: Stefano Garzarella <sgarzare@redhat.com>
+> > Date:   Mon Mar 3 09:52:37 2025 +0100
+> >
+> >     vhost: fix VHOST_*_OWNER documentation
+> >
+> >     VHOST_OWNER_SET and VHOST_OWNER_RESET are used in the documentation
+> >     instead of VHOST_SET_OWNER and VHOST_RESET_OWNER respectively.
+> >
+> >     To avoid confusion, let's use the right names in the documentation.
+> >     No change to the API, only the documentation is involved.
+> >
+> >     Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> >     Message-Id: <20250303085237.19990-1-sgarzare@redhat.com>
+> >     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> >
+> >  include/uapi/linux/vhost.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> >
+> > Upon reverting the above commit, warning is not seen.
+> >
+> >
+> > Bisect log:
+> >
+> >
+> > git bisect start
+> > # status: waiting for both good and bad commits
+> > # good: [9c32cda43eb78f78c73aee4aa344b777714e259b] Linux 6.15-rc3
+> > git bisect good 9c32cda43eb78f78c73aee4aa344b777714e259b
+> > # status: waiting for bad commit, 1 good commit known
+> > # bad: [02ddfb981de88a2c15621115dd7be2431252c568] Merge tag
+> > 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+> > git bisect bad 02ddfb981de88a2c15621115dd7be2431252c568
+> > # good: [cc0dec3f659d19805fcaf8822204137c9f27a912] Merge branch
+> > 'net-stmmac-fix-timestamp-snapshots-on-dwmac1000'
+> > git bisect good cc0dec3f659d19805fcaf8822204137c9f27a912
+> > # bad: [0251ddbffbeb213f0f74ef94b2cacce580eb8d76] Merge tag
+> > 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
+> > git bisect bad 0251ddbffbeb213f0f74ef94b2cacce580eb8d76
+> > # good: [bc3372351d0c8b2726b7d4229b878342e3e6b0e8] Merge tag
+> > 'for-6.15-rc3-tag' of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> > git bisect good bc3372351d0c8b2726b7d4229b878342e3e6b0e8
+> > # bad: [fbd3039a64b01b769040677c4fc68badeca8e3b2] virtio_console: fix
+> > missing byte order handling for cols and rows
+> > git bisect bad fbd3039a64b01b769040677c4fc68badeca8e3b2
+> > # bad: [a940e0a685575424d33324ec7f0089045249de0a] vhost: fix
+> > VHOST_*_OWNER documentation
+> > git bisect bad a940e0a685575424d33324ec7f0089045249de0a
+> > # good: [16c22c56d4282584742022a37d4f79a46ca6094a] virtio_pci: Use
+> > self group type for cap commands
+> > git bisect good 16c22c56d4282584742022a37d4f79a46ca6094a
+> > # first bad commit: [a940e0a685575424d33324ec7f0089045249de0a] vhost:
+> > fix VHOST_*_OWNER documentation
+> >
+> >
+> > If you happen to fix this, please add below tag.
+> >
+> >
+> > Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> >
+> >
+> > Regards,
+> >
+> > Venkat.
+> >
+>
+
