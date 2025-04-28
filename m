@@ -1,67 +1,149 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB99256C64;
-	Mon, 28 Apr 2025 13:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EA716A94A;
+	Mon, 28 Apr 2025 13:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745848181; cv=none; b=GamFH4ilfm9hxA03DEtp3eaU9VW+fv9wiwInH9RZKPfRbSCArX1QqiXijHIi86ajFdVR7jJgAfL2y3NBFgnWOHUEWkSktQCvZP+Ja3TIR52BBu/uRKDo/qn9lniCatmjoLyMK3jgZ8xcdHXcmy/4B5+cDniKguAnZV2xHl7Q0Dw=
+	t=1745848249; cv=none; b=eg+W+MAvuz55iDSGKlHd8HZ+ThpROSosrRQWXipnsQWyqye9aMyPnvGQ6EXzxjuTm/Suf1wPQeQUi9hpIgyZvf5qC/hyscjFmGsoAVTpo0vplXk0cnVQHd+9hAhoM4uwrrINv+Cyu6ckSOHpeKrap7GEVhqpjqKqACUI8yy5aew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745848181; c=relaxed/simple;
-	bh=LT76VkU+lFukegnTMvC4JliKRH/Fi6SPsJ5TQpTHPC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhUv/8iBeu8YNMHXWZAVKpB/Pzm2NOpWfwDPE9spG5tQTaitJcXdH/0ziOD73xbkh/Js3+OC/ChoT+hWKdhycWYP/yYr4Sp+XrKIdwlkdgvAziv89pluqPC6nUhjOXnuLeNMjMlBCaRRhayDo2KdItIhiZUV6AePIHC9ysGWTDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j1EZ11zB; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1745848249; c=relaxed/simple;
+	bh=/EUQY98NFzeIEIUFDQZR6dkrXp0+5Uo3ivzFJbutpQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p7G6ojXaBywmoebNP+WeimC83MiXtfiESTczHhBoKAmofeesmV3zW3STDeOBAdlTURoXmzPt+2C6V9spDy0KZSvGCOnho0FHCu2LU5Tde3ro8BoGfwtgep+SenfIaQTNJTVi1nMoqMCZ6sIu66YlpFClZHHXEd7A4iE1vXj8tio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WffDrwpx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j1EZ11zB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pbGuZAKrq2M6ndsNnuI2WPrOZ34Dz7W83BsoQOyP4bg=; b=j1EZ11zBtFaXtgygx9ge6OVZf4
-	/ssHMzy/EOVOR3vkPZVJoI6Dt2gVmLBxhYDFgNsAhLcFYgcc4qsqOmow06Eg+PDKfy+dtl74Tws6i
-	6L8n0VUH9C6Pxduso1FrhESg49Gq9BCk0kJtRdeJYOa6SHOmzIPzVtXfG9V64qZcEzh+Vw/HzZ2nQ
-	T//sUcCOyhUEcenm9LU43zNMDKcx4RX3GoMSMcmRTWKDF03uF3NpGNEMUFUMuHITW4KPnM+jC9dQo
-	ICXLyVpR9e2e0p0CidHoPw4YYNV2oaTR1il8ULjF71kfPp/cISRTlH2a2+hyAMeRHrxrDW/xS1S0S
-	XPFZfCUw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u9Orb-00000006XZw-3oH7;
-	Mon, 28 Apr 2025 13:49:39 +0000
-Date: Mon, 28 Apr 2025 06:49:39 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: hch@infradead.org, axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ming.lei@redhat.com,
-	syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH V2] loop: Add sanity check for read/write_iter
-Message-ID: <aA-Hc5w4DwHHikyQ@infradead.org>
-References: <aA94oQekLdgnjt67@infradead.org>
- <20250428134812.3225991-1-lizhi.xu@windriver.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WffDrwpx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 468BBC4CEE4;
+	Mon, 28 Apr 2025 13:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745848249;
+	bh=/EUQY98NFzeIEIUFDQZR6dkrXp0+5Uo3ivzFJbutpQU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WffDrwpxJBR6sKe7djK8zG6L8beJGTvRL4uFGMOX1XekZO84Dxt9hvuAWYcgr9Itm
+	 A5dwuBOIIL8YW/4CjUCZQ27q8j4D2zB63rTtoQyu+JdnAedvhKC6Cuv8ecr9XCaaWy
+	 nV8z3N+ZYF307mIcNoSZ92Y9b9be9khlhIyELyRd6B9ncNmyt+e4XyfV9c6ezfeR1F
+	 kL9abguIPcPmGI7D0T46UDgLG5nHV2Amvx8icDl8J5iU+wPIe0DRzQo8idTR4EP5XH
+	 twJr30Hib0vtMvop1V/Umo8tsd/3FcKdtCslh7t52sk9x/LDRp6o/WT6H5YB5D0Vat
+	 FSxRc1nt83GFQ==
+Message-ID: <a7e82a84-2610-4132-90a8-42b371f57fb0@kernel.org>
+Date: Mon, 28 Apr 2025 08:50:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428134812.3225991-1-lizhi.xu@windriver.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] Input: Add a Kconfig to emulate KEY_SCREENLOCK
+ with META + L
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
+References: <20250425162949.2021325-1-superm1@kernel.org>
+ <aAyWFI+o/kU9hDVs@duo.ucw.cz>
+ <b4bc07aa-e4b5-4a2a-a4ad-91c1e5071f00@kernel.org>
+ <aA0o2SWGtd/iMYM2@duo.ucw.cz>
+ <db4dfc85-ce8b-4922-9558-670c3bb6eff2@kernel.org>
+ <aA3KXNCKKH17mb+a@duo.ucw.cz>
+ <63fbf7e7-8d61-4942-b401-51366705252b@kernel.org>
+ <7tnn7sa654c3irqxprnqgbxawl6pnvuuonps3t5qkhso3h6fp6@fc3ph7fkukgm>
+ <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <owigkmidrmavvcdewxx3fvqyp4klvchklgwbtpzncqiado4kwb@akuzxqxp5jpm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 09:48:12PM +0800, Lizhi Xu wrote:
-> On Mon, 28 Apr 2025 05:46:25 -0700, Christoph Hellwig wrote:
-> > > > and maybe add a blurb that vfs_iter_read/write had this check.
-> > > It makes no sence. The current issue context does not involve vfs layer
-> > > iter_read/write related routines.
-> > 
-> > Yes.  But explaining how a change caused a regression is good
-> > information for a commit log.
-> What changes?
-> The check in vfs_iter_read/write is not relevant to this case.
-> It is best to not write something irrelevant.
+On 4/28/2025 12:51 AM, Dmitry Torokhov wrote:
+> On Sun, Apr 27, 2025 at 10:30:24PM -0700, Dmitry Torokhov wrote:
+>> Apologies for extended absence...
+>>
+>> On Sun, Apr 27, 2025 at 07:15:31AM -0500, Mario Limonciello wrote:
+>>>
+>>>
+>>> On 4/27/25 01:10, Pavel Machek wrote:
+>>>> Hi!
+>>>>
+>>>>>>>>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+>>>>>>>>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+>>>>>>>>> to lock the screen. Modern hardware [2] also sends this sequence of
+>>>>>>>>> events for keys with a silkscreen for screen lock.
+>>>>>>>>>
+>>>>>>>>> Introduced a new Kconfig option that will change KEY_SCREENLOCK when
+>>>>>>>>> emitted by driver to META + L.
+>>>>>>>>
+>>>>>>>> Fix gnome and kde, do not break kernel...
+>>>>>>>
+>>>>>>> I'm sorry; fix them to do what exactly?  Switch to KEY_SCREENLOCK?
+>>>>>>>
+>>>>>>> That's going to break modern hardware lockscreen keys.  They've all
+>>>>>>> obviously moved to META+L because that's what hardware today uses.
+>>
+>> Vendors do all kind of weird things. They want to ship their
+>> peripherals here and now and they do not care of shortcuts will change a
+>> few years down the road.
+>>
+>> FWIW there are plenty of external keyboards that use KEY_SCREENLOCK and
+>> do not emit any shortcurts. Anything that is "Woks with Chromebooks"
+>> will use KEY_SCREENLOCK.
+>>
+>>
+>>>>>>
+>>>>>> Gnome / KDE should accept either META+L _or_ KEY_SCREENLOCK to do the
+>>>>>> screen locking, no?
+>>
+>> KDE by default recognizes Meta+L combination (which used to be
+>> Alt+Ctrl+L), Screensaver key, and allows users to define their custom
+>> shortcuts.
+>>
+>> I also wonder how many other DEs beside Gnome do not recognize
+>> KEY_SCREENLOCK.
+> 
+> So I poked around Gnome a bit. According to the gnome-settings-daemon
+> source code KEY_SCREENLOCK should be recognized. It is set up as
+> "screensaver-static" key which is hidden and shoudl not be changed by
+> user:
+> 
+> https://github.com/GNOME/gnome-settings-daemon/blob/master/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in#L504
+> 
+>      <key name="screensaver-static" type="as">
+>        <default>['XF86ScreenSaver']</default>
+>        <summary>Lock screen</summary>
+>        <description>Static binding to lock the screen.</description>
+>      </key>
+> 
+> 
+> 
+>>
+>>>>>
+>>>>> This was actually the first path I looked down before I even started the
+>>>>> kernel patch direction for this problem.
+>>>>>
+>>>>> GNOME doesn't support assigning more than one shortcut key for an action.
+> 
+> It sure does even if it is not shown in UI. Poke around with
+> dconf-editor and look in /org/gnome/settings-daemon/plugins/media-keys/
+> and you will see plenty of "*-static" keys with multiple
+> keycodes/shortcuts assigned.
+> 
+> "touchpad-toggle-static" - ['XF86TouchpadToggle', '<Ctrl><Super>XF86TouchpadToggle']
+> "rotate-video-lock-static" - ['<Super>o', 'XF86RotationLockToggle']
+> 
+> and so on...
+> 
+> Maybe Gnome broke screen lock key in recent release?
+> 
+> Thanks.
+> 
 
-It is releavant in that vfs_iter_read/write have the check, and removal
-of their used caused szybot to be able to hit this issue.
+Thanks for your feedback and looking into what GNOME is doing.  It sure 
+/sounds/ like this should have worked with no kernel changes and GNOME 
+has a bug with the lock screen key.
+
+I'll abandon the kernel series.
