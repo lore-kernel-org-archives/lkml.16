@@ -1,133 +1,176 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CA61FFC45
-	for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 13:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F4925E81D;
+	Mon, 28 Apr 2025 13:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745846700; cv=none; b=skVzYxmvhhAUyYUV/uAknJVfDYWNn3u8AETUuJch/GcbW3BZ+Yo4Bh0IoQuVUSkq31dnu7GexYMYvh03kRQrhgpe5pT7ZJq93ZEazjIv8JGg5iojbNgb8+A+1mV00PflR1yRGJ7e9MXPUKogvUmKH3cwFmb7zaTnhl+DZ9CqO44=
+	t=1745846726; cv=none; b=C8/kaqfY37+kFGzRCnW0rayo2DJUXLBfq5GFV60LchJKAokmXSbwvM28rp6cqZ/U6m+LTN0LQq7/SKGaWqvJMkNLDsFHH+38XOjQDUAIVfd9UXQDvnyvRbTM/tPt0M8bjNaJomAWXjKUPF0GOPDNxK/NSZhmrx7VckeZs+2vIJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745846700; c=relaxed/simple;
-	bh=WMDF+xF8cv9egZiq3dKhKzV9V89Oqq0Xru+OujRAu9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WT6g85Zv3uWK/q1kfAGIVVzFNdelVmz9oJLts6hvOfVjNMli17QHFSiD/T/YvmuMuD6IxaGX+NcEffSrns8Y0TUn+CdRa1JHewbEkezJnaI3Vmq+HarViPV0zKyTn4xrhHZXeXHPQLHGyrh2mDjeq9y3BqAMpCgcLqeI5Mdccyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=a8/rmBUs; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1745846726; c=relaxed/simple;
+	bh=Q5epIT9vkC2ffUHrmbmnekIOUXkIx6JfZPoEscs9+uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dJ065xyzuvLz6Xp/8tXDwDDgWdMcxdFXbkoeW1kiWoHtJ3H+Gws2Xv3V+wASQlIcpRLY681TBba0aaNUOrEt93EspQmFWtABOUXJQnvCMcPzGVZD3R6M3gxknJbVgyHYvM2a0dAqW1Osvf+tkUQEHmoInd/D0hD+Qii1P+tXKJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGh3sS0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="a8/rmBUs"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0ad744811so35370196d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 28 Apr 2025 06:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745846697; x=1746451497; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TghuZvI1NqWY2rKkKrKVWO9Hy4Hhr0amNahvHhrH2wo=;
-        b=a8/rmBUst1R9TjBHzyC3Rl7He+DPBljFvXOcSbBhR/iXiGfg8dhPtUruErD1PurwRF
-         4iIwOaP5OEoCakNzjmeJrvaTZi9rKQw8WWQOzq+RLwEU44e6S/zd6vaZKKYRvDLRFUjr
-         pvR/iim0F6OwB1KDOxLWgXP/kpivOnv1Rk4OXflqTxOB6tuOwQG731NTd4W1nJozoNZg
-         2KOHnJRBLn2XPFftZMmZnSTSop5FBFFrARRX8XTgI4OSNdISm2YRr5l9HaOi6HoMUqgH
-         /FAu8Cz46qvmwCc42MtXg2LBI7o+UDjBcMbBCmay0+Efgt/eItjoiv4MpYat6yJUj8wK
-         wNxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745846697; x=1746451497;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TghuZvI1NqWY2rKkKrKVWO9Hy4Hhr0amNahvHhrH2wo=;
-        b=xDCpFHquxUGm7Q+7eoYuiNHAvDNTe3a+J0c6t0fX2xkhVIPY7Fht64HEGrA5qzSkBl
-         KwXMYHnOfsY4sk+pc+r68XbPAT8xcpTDKFQmtK0L+555pu7z+JUb90WYqSdm2oE8BCg+
-         AwDnb1d2eB0JLYvMiGgy8NCP9leKKdXequZYZzsiDjiHmbl+DKcz/ogPr6lh6TjfC/o+
-         QPLe04H71iqPDhVt+3IiAqsHtWeBGMSTPfjN2uNKiIDouLOXE7BLwxfZIs5xZRCduIlU
-         0TVu1c7oAoad0xdvGOsr7ttr7J3f9iRtNtfmAHo9r4Ws9jhR2wcwrBszlSomYofqglOo
-         z9vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnWNeHbvkkEQkRhrGmcZf5XdS6EJ3cMVBpJofdmzFXVgUnSgeEPEkswR5oGbYgMh1hOvrlB/MvEUZIlwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG34ijvEIgpsCxZs4M4zRYZ4H6QboftLOLgTdKZ32b3eX/gBCH
-	C2Vc89xx6k9Nm7yXuyDHqpknn+fQSaE+ujSHCHsf4ZEVOMSzelU7HYXj1NFZxjY=
-X-Gm-Gg: ASbGncsTDiXLTC7r1o15YBTok45VTwdEyMYbjCXQdOaMK2Q6PrN45MDXZ8hrWsHvmGJ
-	71tDHs+6QdCduNLgM4pFxjJYl7L2N1B3gC1oATY3wpnoUKue3H+AZ4k7NU0ENWujjFWUhcKOG5C
-	mxKAUKAPR0L+LPkVfita9S29VFSR/x+KZ6J6nPsSaZzT1OVvYVxGhU2f2M1gySnQ9GV6eXmy4v5
-	NNDhUwTacpJXizi+ZPn/4+FUPlMzhlV6YX8QOaQXvROBsHKY/H66frn1pDsYuphkrS2XR+UGsBg
-	KmisbaQg9KKOvrDH93U2gxrXn3I5eNexfRb8vY7zT8Q3xf+6u7NhSkNkacK7X4j+7M1lbK/59Lt
-	Fm4nJEr5YzxAoID3s1CI=
-X-Google-Smtp-Source: AGHT+IHS+LiKPwUgJdOq9cWDDSpsQLmT0n1tW9M/V5tmDv3MAmBTgvwZIZ3Uzue2gsWFtJHsf7k49Q==
-X-Received: by 2002:ad4:5746:0:b0:6eb:1e80:19fa with SMTP id 6a1803df08f44-6f4cb99d537mr193763226d6.1.1745846696983;
-        Mon, 28 Apr 2025 06:24:56 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0968a44sm61218186d6.60.2025.04.28.06.24.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 06:24:56 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u9OTf-00000009Tsv-49gX;
-	Mon, 28 Apr 2025 10:24:56 -0300
-Date: Mon, 28 Apr 2025 10:24:55 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
-Cc: kvm@vger.kernel.org, Chathura Rajapaksha <chath@bu.edu>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Xin Zeng <xin.zeng@intel.com>, Yahui Cao <yahui.cao@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Yunxiang Li <Yunxiang.Li@amd.com>,
-	Dongdong Zhang <zhangdongdong@eswincomputing.com>,
-	Avihai Horon <avihaih@nvidia.com>, linux-kernel@vger.kernel.org,
-	audit@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] vfio/pci: Block and audit accesses to unassigned
- config regions
-Message-ID: <20250428132455.GC1213339@ziepe.ca>
-References: <20250426212253.40473-1-chath@bu.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGh3sS0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB9FC4AF0F;
+	Mon, 28 Apr 2025 13:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745846726;
+	bh=Q5epIT9vkC2ffUHrmbmnekIOUXkIx6JfZPoEscs9+uc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=JGh3sS0DYPTOEsAAb5z6YqdEk10MOsTYiw+aGr8e6Z1FcPxhklU7RTBklJ2EA+Huk
+	 AmD0Jp36G7R1ghBag5iq8xSIgnNPzn5ka5KfqXHd2WKTeD23H/M0vKRstOEoCnwWwi
+	 FWqFlMPw7ILU2WW0imCpV6lugGBUIj5bB/VHyz67RbhQ3KSQIfUp7WLqQP75kAsjl1
+	 +GYpS2zMSw0RekI4m+vi1Fm/5K5QqBBSv+ulo53suvIz3jQesuK8ev+fKdFu9ClmWU
+	 ZCva3OrFzSoGdnlBSMSOcL+T0bAMiAq0cSnsoDOYEt/BUScAHpThQVLoFHFo4Z5IN0
+	 uX7tDSBMkkW6g==
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72fffa03ac6so3722927a34.3;
+        Mon, 28 Apr 2025 06:25:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpp92gcC2UQIa1n7YQT5eUi8tldigACxJAIkhhdCaGVhHQ7MmJ1TeeGJPc3kmZRTbuG6ZOeyiB2jzr3PM=@vger.kernel.org, AJvYcCWt1UJHrXYaZURlemp3ntJFaWLU19UdiAFLXU0mFQwDYX9uXSZQp5ZIEssan1z24Dw/KN0dbfwtNPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxjam/91N+r10zG4/s5EiQN1C3n5+0k7eYQez+QsqHKqiSQgrsY
+	8lvZ8I8IDoWECNOsFDRYsNxQldxJUs0keA8kwozNRmRQVAaRlE58UriE/MFlgPzvszSVe7049OY
+	sA3+wXOjcfiqBjyr7LB0wclprFrk=
+X-Google-Smtp-Source: AGHT+IHR4NEN3o+J4MxeKYIU+Wtc4tI7CeCDDEHAZRAaJ/veNsm+AmNtDEK/VbELg9D6XvQZRn7g3s0k2D0BRVh9e2E=
+X-Received: by 2002:a05:6870:241d:b0:2a3:832e:5492 with SMTP id
+ 586e51a60fabf-2d9a34ed851mr6471027fac.25.1745846725508; Mon, 28 Apr 2025
+ 06:25:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250426212253.40473-1-chath@bu.edu>
+References: <20250428043356.3169-1-ImanDevel@gmail.com>
+In-Reply-To: <20250428043356.3169-1-ImanDevel@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 28 Apr 2025 15:25:11 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j8PvDdAc5WdFV-AM8V7srhsOdD3ACv=g0rhWhhbX19aA@mail.gmail.com>
+X-Gm-Features: ATxdqUFRHRvv741ADdl4ebFkKnvfNwLZOQE6WiitTlvhX3LhTfSKWf3lEJL9gNY
+Message-ID: <CAJZ5v0j8PvDdAc5WdFV-AM8V7srhsOdD3ACv=g0rhWhhbX19aA@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: fix locking order in store_local_boost to
+ prevent deadlock
+To: Seyediman Seyedarab <imandevel@gmail.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 26, 2025 at 09:22:47PM +0000, Chathura Rajapaksha wrote:
-> Some PCIe devices trigger PCI bus errors when accesses are made to
-> unassigned regions within their PCI configuration space. On certain
-> platforms, this can lead to host system hangs or reboots.
+On Mon, Apr 28, 2025 at 6:31=E2=80=AFAM Seyediman Seyedarab <imandevel@gmai=
+l.com> wrote:
+>
+> Lockdep reports a possible circular locking dependency[1] when
+> writing to /sys/devices/system/cpu/cpufreq/policyN/boost,
+> triggered by power-profiles-daemon at boot.
+>
+> store_local_boost() acquires cpu_hotplug_lock *AFTER* policy->rwsem
+> has already been taken by the store() handler. However, the expected
+> locking hierarchy is to acquire cpu_hotplug_lock before policy->rwsem.
+> This inverted lock order creates a *theoretical* deadlock possibility.
+>
+> Take cpu_hotplug_lock in the store() before down_write(&policy->rwsem),
+> and remove the internal cpus_read_lock/unlock pair
+> inside store_local_boost().
 
-Do you have an example of this? What do you mean by bus error?
+The patch does more than this, though.  It adds CPU offline/online
+locking to multiple cpufreq sysfs attributes where it is not needed.
 
-I would expect the device to return some constant like 0, or to return
-an error TLP. The host bridge should convert the error TLP to
-0XFFFFFFF like all other read error conversions.
+>
+>  [1]
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>  WARNING: possible circular locking dependency detected
+>  6.15.0-rc3-debug #28 Not tainted
+>  ------------------------------------------------------
+>  power-profiles-/596 is trying to acquire lock:
+>  ffffffffb147e910 (cpu_hotplug_lock){++++}-{0:0}, at: store_local_boost+0=
+x6a/0xd0
+>
+>  but task is already holding lock:
+>  ffff9eaa48377b80 (&policy->rwsem){++++}-{4:4}, at: store+0x37/0x90
+>
+>  which lock already depends on the new lock.
+>
+>  the existing dependency chain (in reverse order) is:
+>
+>  -> #2 (&policy->rwsem){++++}-{4:4}:
+>         down_write+0x29/0xb0
+>         cpufreq_online+0x841/0xa00
+>         cpufreq_add_dev+0x71/0x80
+>         subsys_interface_register+0x14b/0x170
+>         cpufreq_register_driver+0x154/0x250
+>         amd_pstate_register_driver+0x36/0x70
+>         amd_pstate_init+0x1e7/0x270
+>         do_one_initcall+0x67/0x2c0
+>         kernel_init_freeable+0x230/0x270
+>         kernel_init+0x15/0x130
+>         ret_from_fork+0x2c/0x50
+>         ret_from_fork_asm+0x11/0x20
+>
+>  -> #1 (subsys mutex#3){+.+.}-{4:4}:
+>         __mutex_lock+0xc2/0x930
+>         subsys_interface_register+0x83/0x170
+>         cpufreq_register_driver+0x154/0x250
+>         amd_pstate_register_driver+0x36/0x70
+>         amd_pstate_init+0x1e7/0x270
+>         do_one_initcall+0x67/0x2c0
+>         kernel_init_freeable+0x230/0x270
+>         kernel_init+0x15/0x130
+>         ret_from_fork+0x2c/0x50
+>         ret_from_fork_asm+0x11/0x20
+>
+>  -> #0 (cpu_hotplug_lock){++++}-{0:0}:
+>         __lock_acquire+0x1087/0x17e0
+>         lock_acquire.part.0+0x66/0x1b0
+>         cpus_read_lock+0x2a/0xc0
+>         store_local_boost+0x6a/0xd0
+>         store+0x50/0x90
+>         kernfs_fop_write_iter+0x135/0x200
+>         vfs_write+0x2ab/0x540
+>         ksys_write+0x6c/0xe0
+>         do_syscall_64+0xbb/0x1d0
+>         entry_SYSCALL_64_after_hwframe+0x56/0x5e
+>
+> Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index acf19b004..6e672dcba 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -653,10 +653,7 @@ static ssize_t store_local_boost(struct cpufreq_poli=
+cy *policy,
+>
+>         policy->boost_enabled =3D enable;
+>
+> -       cpus_read_lock();
+>         ret =3D cpufreq_driver->set_boost(policy, enable);
+> -       cpus_read_unlock();
+> -
+>         if (ret) {
+>                 policy->boost_enabled =3D !policy->boost_enabled;
+>                 return ret;
+> @@ -1045,10 +1042,12 @@ static ssize_t store(struct kobject *kobj, struct=
+ attribute *attr,
+>         if (!fattr->store)
+>                 return -EIO;
+>
+> +       cpus_read_lock();
+>         down_write(&policy->rwsem);
+>         if (likely(!policy_is_inactive(policy)))
+>                 ret =3D fattr->store(policy, buf, count);
+>         up_write(&policy->rwsem);
+> +       cpus_read_unlock();
 
-Is it a device problem or host bridge problem you are facing?
+So you'd need to do this for local_boost only, not for all attributes
+using store().
 
-> 1. Support for blocking guest accesses to unassigned
->    PCI configuration space, and the ability to bypass this access control
->    for specific devices. The patch introduces three module parameters:
-> 
->    block_pci_unassigned_write:
->    Blocks write accesses to unassigned config space regions.
-> 
->    block_pci_unassigned_read:
->    Blocks read accesses to unassigned config space regions.
-> 
->    uaccess_allow_ids:
->    Specifies the devices for which the above access control is bypassed.
->    The value is a comma-separated list of device IDs in
->    <vendor_id>:<device_id> format.
-> 
->    Example usage:
->    To block guest write accesses to unassigned config regions for all
->    passed through devices except for the device with vendor ID 0x1234 and
->    device ID 0x5678:
-> 
->    block_pci_unassigned_write=1 uaccess_allow_ids=1234:5678
-
-No module parameters please.
-
-At worst the kernel should maintain a quirks list to control this,
-maybe with a sysfs to update it.
-
-Jason
+>
+>         return ret;
+>  }
+> --
